@@ -23,6 +23,7 @@ export const theme = {
   },
   //   space: [0, 4, 8, 16, 24, 32, 48, 64, 128, 256, 512],
   fontSizes: {
+    xxs: '0.6rem',
     xs: '0.75rem',
     sm: '0.875rem',
     base: '1rem',
@@ -69,6 +70,7 @@ export const GlobalStyleEdi = createGlobalStyle`
     --stone-700: #1C1917;
 
     /* text */
+    --text-xxs: 0.6rem;
     --text-xs: 0.75rem;
     --text-sm: 0.875rem;
     --text-base: 1rem;
@@ -121,6 +123,11 @@ export const GlobalStyleEdi = createGlobalStyle`
     --rounded-7xl: 3.5rem;
     --rounded-full: 9999px;
 
+    /* containers */
+    --container-base: ${props => (props.theme?.containerSize?.base ? props.theme.containerSize.base : 'min(100% - 2rem, 50rem)')}; 
+    --container-lg: ${props => (props.theme?.containerSize?.lg ? props.theme.containerSize.lg : 'min(100% - 2rem, 60rem)')}; 
+    --container-xl: ${props => (props.theme?.containerSize?.xl ? props.theme.containerSize.xl : 'min(100% - 2rem, 70rem)')}; 
+
     /* Miscellaneous */
     --minTapSize: 44px;
   }
@@ -142,18 +149,18 @@ export const GlobalStyleEdi = createGlobalStyle`
     font-family: ${props => props.theme?.fontFamily};
   }
 
-  .container {
-    width: ${props => (props.theme?.containerSize?.base ? props.theme.containerSize.base : 'min(100% - 2rem, 50rem)')}; 
+  .container-base {
+    width: var(--container-base);
     margin-inline: auto;
   }
   
   .container-lg {
-    width: ${props => (props.theme?.containerSize?.lg ? props.theme.containerSize.lg : 'min(100% - 2rem, 50rem)')}; 
+    width: var(--container-lg); 
     margin-inline: auto;
   }
 
   .container-xl {
-    width: ${props => (props.theme?.containerSize?.xl ? props.theme.containerSize.xl : 'min(100% - 2rem, 50rem)')}; 
+    width: var(--container-xl); 
     margin-inline: auto;
   }
 
@@ -172,7 +179,17 @@ export const GlobalStyleEdi = createGlobalStyle`
     width: 100%;
     height: auto;
   }
-  
+
+/* Text */
+
+.dl-inline dt {
+  float: left;
+  clear: left;
+  margin-right: 10px;
+}
+.dl-inline dd {
+  margin-left: 0px;
+}
 
 /* font-sizes */
 .text-sm {
@@ -203,6 +220,12 @@ export const GlobalStyleEdi = createGlobalStyle`
 
 .text-right {
   text-align: right;
+}
+
+/* font-weight */
+
+.font-semibold {
+  font-weight: var(--font-semibold);
 }
 
 /* font-colors */
@@ -391,6 +414,26 @@ input:focus:not(:focus-visible) {
 .rounded-xl {
   border-radius: 0.75rem;
 }
+
+/* Components */
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+[role=tooltip] {
+  visibility: hidden;
+  position: absolute;
+}
+[aria-describedby]:hover,
+[aria-describedby]:focus {
+  position: relative;
+}
+[aria-describedby]:hover + [role=tooltip],
+[aria-describedby]:focus + [role=tooltip] {
+ visibility: visible;
+}
+
 
 
 /* A11Y */

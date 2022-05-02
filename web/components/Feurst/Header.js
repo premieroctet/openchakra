@@ -12,6 +12,8 @@ const HeaderContainer = styled.header`
   justify-content: space-around;
   column-gap: var(--spc-8);
   margin-bottom: var(--spc-6);
+  width: var(--container-lg);
+  margin-inline: auto;
 
   a {
     text-decoration-line: none;

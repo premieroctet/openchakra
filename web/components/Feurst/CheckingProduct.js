@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import {withTranslation} from 'react-i18next'
 import {screen} from '../../styles/screenWidths'
 import {localeMoneyFormat} from '../../utils/converters'
 import {snackBarError} from '../../utils/notifications'
@@ -55,20 +56,17 @@ const CheckingProductArea = styled.div`
 `
 
 
-const CheckingProduct = ({article, setArticle, addProduct}) => {
+const CheckingProduct = ({endpoint, orderid, article, setArticle, addProduct, wordingSection, t}) => {
 
   const {info, qty} = article
 
   const confirmAdd = async() => {
-    const addTo = await addProduct(article)
+    await addProduct({endpoint, orderid, ...article})
+      .then(() => {
+        setArticle({...article, showArticlePanel: false})
+      })
       .catch(() => snackBarError(`Ajout de l'article non effectué`))
 
-    if (addTo) {
-      setArticle({...article, showArticlePanel: false})
-    }
-    else {
-      snackBarError(`Ajout de l'article non effectué`)
-    }
   }
 
   return (
@@ -79,7 +77,7 @@ const CheckingProduct = ({article, setArticle, addProduct}) => {
         <dt>Référence :</dt>
         <dd>{info.reference}</dd>
         <dt>Quantité disponible :</dt>
-        <dd>{qty > info.stock ? `${info.stock} sur ${qty} ⚠️ stock partiel` : `${qty} sur ${qty}`} </dd>
+        <dd>{qty > info.stock ? `${info.stock || 0} sur ${qty} ⚠️ stock partiel` : `${qty} sur ${qty}`} </dd>
       </dl>
       <dl>
         <dt>Prix catalogue :</dt>
@@ -95,11 +93,11 @@ const CheckingProduct = ({article, setArticle, addProduct}) => {
         rounded={'full'}
         onClick={confirmAdd}
       >
-        Ajouter&nbsp;à&nbsp;ma commande
+        {t(`${wordingSection}.addTo`)}
       </PleasantButton>
 
     </CheckingProductArea>
   )
 }
 
-export default CheckingProduct
+export default withTranslation('feurst', {withRef: true})(CheckingProduct)

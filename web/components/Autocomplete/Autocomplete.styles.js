@@ -18,6 +18,8 @@ const StyledAutocomplete = styled.div.attrs(props => ({
 
   label {
     grid-area: downlabel;
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
   }
 
   .loading {

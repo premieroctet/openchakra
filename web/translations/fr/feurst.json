@@ -79,5 +79,26 @@
   "TRES ABRASIF": "TRES ABRASIF",
   "TRES DUR": "TRES DUR",
   "ABRASIF": "ABRASIF",
-  "TRES ABRASIF": "TRES ABRASIF"
+  "TRES ABRASIF": "TRES ABRASIF",
+
+
+  "EDI.ORDER.create": "Créer une commande",
+  "EDI.QUOTATION.create": "Créer un devis",
+  "EDI.ORDER.details": "Détails de la commande en cours :",
+  "EDI.QUOTATION.details": "Détails du devis en cours :",
+  "EDI.ORDER.valid": "Valider ma commande",
+  "EDI.QUOTATION.valid": "Valider mon devis",
+  "EDI.ORDER.dialogAddressValid": "Pour valider votre commande, veuillez&nbsp;:",
+  "EDI.QUOTATION.dialogAddressValid": "Pour valider votre devis, veuillez&nbsp;:",
+  "EDI.ORDER.addTo": "Ajouter à la commande",
+  "EDI.QUOTATION.addTo": "Ajouter au devis",
+  "EDI.ORDER.total": "Total de votre commande",
+  "EDI.QUOTATION.total": "Total de votre devis",
+  "EDI.ORDER.name": "Nom de la commande :",
+  "EDI.QUOTATION.name": "Nom du devis :",
+  "EDI.ORDER.date": "Date de la commande :",
+  "EDI.QUOTATION.date": "Date du devis :",
+  "EDI.delivery": "Livraison"
+  
+
 }

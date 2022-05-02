@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react'
 import styled from 'styled-components'
-import {TextField} from '@material-ui/core'
+import {withTranslation} from 'react-i18next'
+import ReactHtmlParser from 'react-html-parser'
 import Address from '../Address/Address'
 import DeliveryAddresses from '../Feurst/DeliveryAddresses'
 import ShippingFees from '../Feurst/ShippingFees'
@@ -8,7 +9,6 @@ import PureDialog from '../Dialog/PureDialog'
 import {client} from '../../utils/client'
 import isEmpty from '../../server/validation/is-empty'
 import {API_PATH} from '../../utils/consts'
-import {ORDER_CREATED} from '../../utils/feurst/consts'
 import {PleasantButton} from './Button'
 import {Input} from './components.styles'
 
@@ -78,28 +78,50 @@ const StyledDialog = styled(PureDialog)`
   }
   .phone {
     grid-area: phone;
-  }
-
-  
+  }  
 `
 
 
-const DialogAddress = ({isOpenDialog, setIsOpenDialog, accessRights, id, endpoint, state, setState, validateAddress}) => {
+const DialogAddress = ({
+  isOpenDialog,
+  setIsOpenDialog,
+  accessRights,
+  orderid,
+  endpoint,
+  state,
+  requestUpdate,
+  validateAddress,
+  wordingSection,
+  t,
+}) => {
 
   const {orderref, address, shippingOption, errors} = state
   const [shippingfees, setShippingFees] = useState({})
   const [valid, setValid] = useState(false)
   const formData = useRef()
 
+  const isAllItemsAvailable = state?.items.map(item => {
+    const desiredQuantity = item.quantity
+    const availableQuantities = item?.product?.stock || 0
+    return !(desiredQuantity > availableQuantities)
+  }).every(av => av === true)
+
+
   const getShippingFees = useCallback(async zipcode => {
-    const res_shippingfees = await client(`${API_PATH}/${endpoint}/${id}/shipping-fee?zipcode=${zipcode}`)
+    const res_shippingfees = await client(`${API_PATH}/${endpoint}/${orderid}/shipping-fee?zipcode=${zipcode}`)
       .catch(e => {
         console.error(e, `Can't get shipping fees ${e}`)
       })
 
       
     res_shippingfees && setShippingFees(res_shippingfees)
-  }, [endpoint, id])
+  }, [endpoint, orderid])
+
+  const submitAddress = ev => {
+    ev.preventDefault()
+    setIsOpenDialog(false)
+    validateAddress({endpoint, orderid, shipping: {orderref, address, shippingOption}})
+  }
 
 
   useEffect(() => {
@@ -115,36 +137,45 @@ const DialogAddress = ({isOpenDialog, setIsOpenDialog, accessRights, id, endpoin
       open={isOpenDialog}
       onClose={() => setIsOpenDialog(false)}
     >
-
-      <div className='disclaimer'>
-        <p>Certaines quantités ne sont pas disponibles dans votre commande.</p>
-        <p>Le service ADV reviendra vers vous avec un délai de livraison dès le
+      {!isAllItemsAvailable
+        ?
+        <div className='disclaimer'>
+          <p>Certaines quantités ne sont pas disponibles dans votre commande.</p>
+          <p>Le service ADV reviendra vers vous avec un délai de livraison dès le
 traitement de votre commande.</p>
-      </div>
+        </div>
+        : null
+      }
 
-      <form ref={formData} onSubmit={validateAddress}>
+      <form ref={formData} onSubmit={submitAddress}>
 
-        <h2>Pour valider votre commande, veuillez&nbsp;:</h2>
+        <h2>{ReactHtmlParser(t(`${wordingSection}.dialogAddressValid`))}</h2>
         <h3>Indiquer une référence</h3>
 
         {/* order ref */}
         <label htmlFor='reforder' className='sr-only'>Référence</label>
-        <Input noborder id="reforder" className='ref' value={orderref || ''} onChange={ev => setState({...state, orderref: ev.target.value})} placeholder={'Ex : Equipements carrière X'} />
+        <Input noborder id="reforder" className='ref' value={orderref || ''} onChange={ev => requestUpdate({orderref: ev.target.value})} placeholder={'Ex : Equipements carrière X'} />
 
         {/* order address */}
         <h3>Indiquer l'adresse de livraison</h3>
-        <DeliveryAddresses state={state} setState={setState} />
-        <Address state={state} setState={setState} getShippingFees={getShippingFees} errors={errors} />
+        <DeliveryAddresses state={state} requestUpdate={requestUpdate} />
+        <Address state={state} requestUpdate={requestUpdate} errors={errors} />
 
           
         {/* order shipping fees */}
         {!isEmpty(shippingfees) ? (<>
           <h3>Indiquez l'option de livraison</h3>
-          <ShippingFees state={state} setState={setState} shippingoptions={shippingfees} />
+          <ShippingFees state={state} requestUpdate={requestUpdate} shippingoptions={shippingfees} />
         </>) : null
         }
 
-        <PleasantButton disabled={!valid} type='submit' onSubmit={() => validateAddress()}>Valider ces informations</PleasantButton>
+        <PleasantButton
+          disabled={!valid}
+          type='submit'
+          onSubmit={() => submitAddress}
+        >
+            Valider ces informations
+        </PleasantButton>
       </form>
 
     </StyledDialog>
@@ -152,4 +183,4 @@ traitement de votre commande.</p>
 
 }
 
-export default DialogAddress
+export default withTranslation('feurst', {withRef: true})(DialogAddress)

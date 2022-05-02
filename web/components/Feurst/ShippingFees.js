@@ -23,7 +23,7 @@ label {
 
 `
 
-const ShippingFees = ({state, setState, shippingoptions}) => {
+const ShippingFees = ({state, requestUpdate, shippingoptions}) => {
 
   return (
     <ShippingOptions>
@@ -35,7 +35,7 @@ const ShippingFees = ({state, setState, shippingoptions}) => {
             name={'shippingOption'}
             value={key}
             checked={key == state.shippingOption}
-            onChange={e => setState({...state, shippingOption: e.target.value})}
+            onChange={e => requestUpdate({shippingOption: e.target.value})}
           />
           <span>Livraison {key} - environ {localeMoneyFormat({value})}</span>
         </label>

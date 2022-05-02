@@ -136,7 +136,7 @@ const Tabs = props => {
 
   return (
     <>
-      <Tabstyled className='container'>
+      <Tabstyled className='container-base'>
         {filteredContents.map((elem, i) => (
           <Link key={`tab${i}`} href={elem.url} passHref>
             <a className={router.pathname == elem.url ? 'highlight' : ''}>{elem.title}</a>

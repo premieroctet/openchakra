@@ -164,11 +164,11 @@ ButtonFront.defaultProps = ButtonEdge.defaultProps = ButtonShadow.defaultProps =
 
 const PleasantButton = ({
   type = 'button',
-  size,
-  rounded,
-  bgColor,
-  borderColor,
-  textColor,
+  size = null,
+  rounded = null,
+  bgColor = null,
+  borderColor = null,
+  textColor = null,
   children,
   ...rest
 }) => {

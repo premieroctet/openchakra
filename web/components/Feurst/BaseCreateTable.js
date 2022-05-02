@@ -1,4 +1,4 @@
-import React, {useMemo, useState, useEffect, useCallback} from 'react'
+import React, {useState, useEffect, useCallback} from 'react'
 import useLocalStorageState from 'use-local-storage-state'
 import dynamic from 'next/dynamic'
 import {useRouter} from 'next/router'
@@ -9,139 +9,72 @@ import {
   ORDER_CREATED,
   ORDER_FULFILLED,
   ORDER_VALID,
+  ORDER_PARTIALLY_HANDLED,
+  ORDER_HANDLED,
+  QUOTATION_CREATED,
+  QUOTATION_FULFILLED,
+  QUOTATION_COMPLETE,
+  QUOTATION_VALID,
+  QUOTATION_PARTIALLY_HANDLED,
+  QUOTATION_HANDLED,
 } from '../../utils/consts'
 import FeurstTable from '../../styles/feurst/FeurstTable'
 import {client} from '../../utils/client'
 import {localeMoneyFormat} from '../../utils/converters'
+import isEmpty from '../../server/validation/is-empty'
+import withEdiRequest from '../../hoc/withEdiRequest'
 import {H2confirm} from './components.styles'
 import AddArticle from './AddArticle'
 import ImportExcelFile from './ImportExcelFile'
 import {PleasantButton} from './Button'
 import Delivery from './Delivery'
+const {withTranslation} = require('react-i18next')
 const {snackBarError, snackBarSuccess} = require('../../utils/notifications')
 const {
   getAuthToken,
 } = require('../../utils/authentication')
 
+
 const DialogAddress = dynamic(() => import('./DialogAddress'))
 
-const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
-
-  const [state, setState] = useState({
-    items: useMemo(() => [], []),
-    reference: null,
-    address: {},
-    shippingOption: null,
-    status: ORDER_CREATED,
-    errors: null,
-  })
+const BaseCreateTable = ({
+  id,
+  storage,
+  endpoint,
+  columns,
+  accessRights,
+  wordingSection,
+  t,
+  createOrderId,
+  getContentFrom,
+  addProduct,
+  deleteProduct,
+  requestUpdate,
+  validateAddress,
+  resetAddress,
+  state,
+}) => {
 
   const [language, setLanguage] = useState('fr')
   const [orderID, setOrderId, {removeItem}] = useLocalStorageState(storage, {defaultValue: null})
-  const dataToken = getAuthToken()
   const [isOpenDialog, setIsOpenDialog] = useState(false)
   const [refresh, setRefresh]=useState(false)
-
+  
   const toggleRefresh= () => setRefresh(!refresh)
-
+  
   const router = useRouter()
-
-  const updateMyData = (rowIndex, columnId, value) => {
-
-    setState({
-      ...state,
-      items: state.items.map((row, index) => {
-        if (index === rowIndex) {
-          return {
-            ...state.items[rowIndex],
-            [columnId]: value,
-          }
-        }
-        return row
-      }),
-    })
+  
+  const canAdd = [ORDER_CREATED, ORDER_FULFILLED, QUOTATION_CREATED, QUOTATION_FULFILLED].includes(state.status)
+  const canValidate = [ORDER_COMPLETE, QUOTATION_COMPLETE].includes(state.status)
+  const isView = [ORDER_VALID, ORDER_PARTIALLY_HANDLED, ORDER_HANDLED, QUOTATION_VALID, QUOTATION_PARTIALLY_HANDLED, QUOTATION_HANDLED].includes(state.status)
+ 
+  const updateMyOrderContent = data => {
+    addProduct({endpoint, orderid: orderID, ...data})
   }
 
-  const createOrderId = useCallback(async() => {
+  const submitOrder = async({endpoint, orderid}) => {
 
-    if (state.status !== ORDER_COMPLETE) { // Prevent order creation juste after submitting an order
-      const creation = await client(`${API_PATH}/${endpoint}`, {data: {user: dataToken.id}})
-        .catch(e => console.error(e, `Can't create ${endpoint}`))
-
-      creation && setOrderId(creation?._id)
-    }
-
-  }, [dataToken.id, endpoint, setOrderId, state.status])
-
-  const getContentFrom = useCallback(async id => {
-
-    const currentOrder = id ?
-      await client(`${API_PATH}/${endpoint}/${id}`)
-        .catch(err => snackBarError(err))
-      : []
-
-    currentOrder && setState({...state, ...currentOrder})
-
-  }, [endpoint])
-
-  useEffect(() => {
-    getContentFrom(orderID)
-  }, [refresh, orderID])
-
-
-  const addProduct = async({item, qty}) => {
-    if (!item) { return }
-
-    const {
-      _id,
-    } = item
-
-    await client(`${API_PATH}/${endpoint}/${orderID}/items`, {data: {product: _id, quantity: qty}, method: 'PUT'})
-      .then(() => getContentFrom(orderID))
-      .catch(() => {
-        console.error(`Can't add product`)
-        return false
-      })
-  }
-
-  const deleteProduct = useCallback(async({idItem}) => {
-    if (!idItem) { return }
-
-    await client(`${API_PATH}/${endpoint}/${orderID}/items/${idItem}`, {method: 'DELETE'})
-      .then(() => getContentFrom(orderID))
-      .catch(e => console.error(`Can't delete product ${e}`))
-
-  }, [endpoint, getContentFrom, orderID])
-
-  // bind address, shipping info and ref to the current order/quotation
-  const validateAddress = async e => {
-    e.preventDefault()
-
-    await client(`${API_PATH}/${endpoint}/${orderID}`, {data: {address: state.address, reference: state.reference, shipping_mode: state.shippingOption}, method: 'PUT'})
-      .then(() => {
-        getContentFrom(orderID)
-        setIsOpenDialog(false)
-      })
-      .catch(e => {
-        console.error(`Can't bind address to order/quotation`, e)
-        setState({...state, errors: e})
-      })
-  }
-
-  const resetAddress = async() => {
-
-    await client(`${API_PATH}/${endpoint}/${orderID}/rewrite`, {method: 'PUT'})
-      .then(res => setState({...state, status: res.status}))
-      .catch(e => {
-        console.error(`Can't unbind address to order/quotation`, e)
-        setState({...state, errors: e})
-      })
-
-  }
-
-  const submitOrder = async() => {
-
-    await client(`${API_PATH}/${endpoint}/${orderID}/validate`, {method: 'POST'})
+    await client(`${API_PATH}/${endpoint}/${orderid}/validate`, {method: 'POST'})
       .then(() => {
         removeItem()
         snackBarSuccess('Enregistré')
@@ -155,18 +88,25 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
   }
 
 
-  // Init language and order
+  // Init language
   useEffect(() => {
     setLanguage(Navigator.language)
-    if (!orderID) {
-      createOrderId()
-    }
-  }, [orderID, createOrderId, language])
+  }, [language])
 
   // Init table
   useEffect(() => {
-    if (orderID) { getContentFrom(orderID) }
-  }, [getContentFrom, orderID])
+    if (isEmpty(orderID)) {
+      createOrderId()
+    }
+    else {
+      getContentFrom({endpoint, orderid: orderID})
+    }
+  }, [createOrderId, endpoint, getContentFrom, orderID, refresh])
+
+  /* supplied id for a view ? */
+  useEffect(() => {
+    if (!isEmpty(id)) { setOrderId(id) }
+  }, [id, setOrderId])
 
 
   /**
@@ -175,84 +115,96 @@ const BaseCreateTable = ({storage, endpoint, columns, accessRights}) => {
     [data, deleteProduct, language],
   )
   */
-  const cols=columns({language, ...state.items, setState, deleteProduct: deleteProduct})
+  const cols=columns({language, endpoint, orderid: orderID, deleteProduct: canAdd ? deleteProduct : null})
 
   const importURL=`${API_PATH}/${endpoint}/${orderID}/import`
   const templateURL=`${API_PATH}/${endpoint}/template`
 
-  return (<div className='container-lg'>
+  return (<>
 
-    {[ORDER_CREATED, ORDER_FULFILLED].includes(state.status) &&
-      <>
-        <ImportExcelFile importURL={importURL} templateURL={templateURL} onImport={toggleRefresh}/>
-        <AddArticle addProduct={addProduct} />
-      </>}
+    {canAdd &&
+      <div className='container-base'>
+        <ImportExcelFile importURL={importURL} templateURL={templateURL}/>
+        <AddArticle endpoint={endpoint} orderid={orderID} addProduct={addProduct} wordingSection={wordingSection} />
+      </div>}
 
-    {[ORDER_COMPLETE].includes(state?.status) && <H2confirm>Récapitulatif de votre commande</H2confirm>}
+    {canValidate && <H2confirm>Récapitulatif de votre commande</H2confirm>}
 
+    {isView && <div>
+      <dl className='dl-inline text-xl font-semibold'>
+        <dt>{t(`${wordingSection}.name`)}</dt>
+        <dd>{state.reference}</dd>
+        <dt>{t(`${wordingSection}.date`)}</dt>
+        <dd>{new Date(state.creation_date).toLocaleDateString()}</dd>
+      </dl>
+    </div>}
 
     <FeurstTable
-      caption="Détails de la commande en cours :"
+      caption={t(`${wordingSection}.details`)}
       data={state.items}
       columns={cols}
-      updateMyData={updateMyData}
+      footer={canValidate || isView}
+      updateMyData={updateMyOrderContent}
     />
 
-    {[ORDER_VALID, ORDER_COMPLETE].includes(state?.status) ?
+    {canValidate || isView ?
       <div className='flex justify-between items-end mb-8'>
         <Delivery address={state.address} shipping={{shipping_mode: state.shipping_mode, shipping_fee: state.shipping_fee}} />
-        <h4 className='text-2xl mb-0 text-black'>Total de votre commande : {localeMoneyFormat({value: state.total_amount})}</h4>
+        {!isView ? <h4 className='text-2xl mb-0 text-black'>{t(`${wordingSection}.total`)} : {localeMoneyFormat({value: state.total_amount})}</h4> : null}
       </div>: null
     }
 
-    <div className='flex flex-wrap justify-between gap-y-4 mb-6'>
-      {state.status === ORDER_COMPLETE
-        ?
-        <PleasantButton
-          rounded={'full'}
-          bgColor={'#fff'}
-          textColor={'#141953'}
-          borderColor={'1px solid #141953'}
-          onClick={resetAddress}
-        >
+    {!isView ?
+      <div className='flex flex-wrap justify-between gap-y-4 mb-6'>
+        {canValidate
+          ?
+          <PleasantButton
+            rounded={'full'}
+            bgColor={'#fff'}
+            textColor={'#141953'}
+            borderColor={'1px solid #141953'}
+            onClick={() => resetAddress({endpoint, orderid: orderID})}
+          >
         Revenir à la saisie
-        </PleasantButton>
-        :
+          </PleasantButton>
+          :
+          <PleasantButton
+            rounded={'full'}
+            disabled={[ORDER_CREATED].includes(state.status)}
+            bgColor={'#fff'}
+            textColor={'#141953'}
+            borderColor={'1px solid #141953'}
+            onClick={() => true}
+          >
+        Demande de devis
+          </PleasantButton>
+        }
+
+
         <PleasantButton
           rounded={'full'}
           disabled={[ORDER_CREATED].includes(state.status)}
-          bgColor={'#fff'}
-          textColor={'#141953'}
-          borderColor={'1px solid #141953'}
-          onClick={() => true}
+          onClick={() => (state.status === ORDER_FULFILLED ? setIsOpenDialog(true) : submitOrder({endpoint, orderid: orderID}))}
         >
-        Demande de devis
+          {t(`${wordingSection}.valid`)} {/* Valid order/quotation */}
         </PleasantButton>
-      }
-
-
-      <PleasantButton
-        rounded={'full'}
-        disabled={[ORDER_CREATED].includes(state.status)}
-        onClick={() => (state.status === ORDER_FULFILLED ? setIsOpenDialog(true) : submitOrder())}
-      >
-        Valider ma commande
-      </PleasantButton>
-    </div>
+      </div>
+      : null }
 
     <DialogAddress
-      id={orderID}
+      orderid={orderID}
       endpoint={endpoint}
       isOpenDialog={isOpenDialog}
       setIsOpenDialog={setIsOpenDialog}
       accessRights={accessRights}
       state={state}
-      setState={setState}
+      requestUpdate={requestUpdate}
       validateAddress={validateAddress}
+      wordingSection={wordingSection}
     />
 
-  </div>
+  </>
   )
 }
 
-module.exports=BaseCreateTable
+module.exports=withTranslation('feurst', {withRef: true})(withEdiRequest(BaseCreateTable))
