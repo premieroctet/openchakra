@@ -21,7 +21,7 @@ const ToTheBin = props => (
   </button>
 )
 
-const orderColumns = ({language, deleteProduct}) => {
+const orderColumns = ({endpoint, orderid, language, deleteProduct}) => {
 
   const orderColumnsBase = [
     {
@@ -89,7 +89,7 @@ const orderColumns = ({language, deleteProduct}) => {
     attribute: 'product_delete',
     Cell: ({cell: {row}}) => (
       <ToTheBin onClick={() => {
-        deleteProduct({idItem: row.original._id})
+        deleteProduct({endpoint, orderid, idItem: row.original._id})
       }}/>
     ),
   }
@@ -97,7 +97,7 @@ const orderColumns = ({language, deleteProduct}) => {
   return deleteProduct ? [...orderColumnsBase, deleteItem] : orderColumnsBase
 }
 
-const orderViewColumns = ({language, deleteProduct}) => {
+const orderViewColumns = ({endpoint, orderid, language, deleteProduct}) => {
 
   const orderColumnsBase = [
     {
@@ -165,7 +165,7 @@ const orderViewColumns = ({language, deleteProduct}) => {
     attribute: 'product_delete',
     Cell: ({cell: {row}}) => (
       <ToTheBin onClick={() => {
-        deleteProduct({idItem: row.original._id})
+        deleteProduct({endpoint, orderid, idItem: row.original._id})
       }}/>
     ),
   }
