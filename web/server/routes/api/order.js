@@ -4,16 +4,18 @@ const moment = require('moment')
 const xlsx=require('node-xlsx')
 const lodash=require('lodash')
 const {
+  addItem,
+  computeShipFee,
+  getProductPrices,
+  updateShipFee,
+  updateStock,
+} = require('../../utils/commands')
+const Product = require('../../models/Product')
+const {
   EXPRESS_SHIPPING,
   STANDARD_SHIPPING,
   VALIDATE,
 } = require('../../../utils/feurst/consts')
-const {
-  addItem,
-  computeShipFee,
-  updateShipFee,
-  updateStock,
-} = require('../../utils/commands')
 const {
   filterOrderQuotation,
   isActionAllowed,
@@ -40,6 +42,7 @@ router.get('/:order_id/addresses', passport.authenticate('jwt', {session: false}
   MODEL.findById(order_id)
     .populate({path: 'user', populate: 'company'})
     .then(order => {
+      console.log(`Order:${JSON.stringify(order.user)}`)
       if (!order) {
         return res.status(404).json()
       }
@@ -161,7 +164,7 @@ router.put('/:id/rewrite', passport.authenticate('jwt', {session: false}), (req,
     })
 })
 // @Route PUT /myAlfred/api/orders/:id
-// Add item to a order {address_id?, reference?}
+// Set attributes(s) of an order {address_id?, reference?}
 // @Access private
 router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
@@ -219,6 +222,9 @@ router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, r
     })
     .then(data => {
       return updateShipFee(data)
+    })
+    .then(data => {
+      return data.save()
     })
     .then(data => {
       return res.json(data)
@@ -323,6 +329,39 @@ router.delete('/:order_id', passport.authenticate('jwt', {session: false}), (req
     .catch(err => {
       console.error(err)
       return res.status(500).json(err)
+    })
+})
+
+// @Route GET /myAlfred/api/products/:product_id
+// View one product
+// @Access private
+router.get('/:order_id/products/:product_id', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  const order_id=req.params.order_id
+  const product_id=req.params.product_id
+  let product=null
+  let user=null
+
+  MODEL.findById(order_id, {user: 1})
+    .then(order => {
+      user=order.user
+      return Product.findById(product_id).lean()
+    })
+    .then(result => {
+      if (!result) {
+        return res.status(404).json()
+      }
+      product=result
+      return getProductPrices(product.reference, user._id)
+    })
+    .then(prices => {
+      product.catalog_price=prices.catalog_price
+      product.net_price=prices.net_price
+      return res.json(product)
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json(err)
     })
 })
 

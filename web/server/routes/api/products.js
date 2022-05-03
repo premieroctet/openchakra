@@ -43,36 +43,6 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     })
 })
 
-// @Route GET /myAlfred/api/products/:product_id
-// View one product
-// @Access private
-router.get('/:product_id', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const user_id=req.query.user
-  if (!user_id) {
-    return res.status(500).json('Missing user_id parameter')
-  }
-  const product_id=req.params.product_id
-  let product=null
-  Product.findById(product_id)
-    .lean()
-    .then(result => {
-      if (!result) {
-        return res.status(404).json()
-      }
-      product=result
-      return getProductPrices(product.reference, user_id)
-    })
-    .then(prices => {
-      product.catalog_price=prices.catalog_price
-      product.net_price=prices.net_price
-      return res.json(product)
-    })
-    .catch(err => {
-      console.error(err)
-      res.status(500).json(err)
-    })
-})
-
 // @Route POST /myAlfred/api/products
 // Create a product
 // @Access private
