@@ -1,17 +1,17 @@
 const mongoose=require('mongoose')
 const lodash=require('lodash')
 const {
-  QUOTATION_COMPLETE,
-  QUOTATION_CREATED,
-  QUOTATION_FULFILLED,
-  QUOTATION_VALID,
+  COMPLETE,
+  CREATED,
+  FULFILLED,
   ROLES,
+  VALID,
 } = require('../../../utils/feurst/consts')
 const BaseSchema = require('./QuotationBookingBaseSchema')
 
-const OrderSchema = BaseSchema.clone()
+const QuotationSchema = BaseSchema.clone()
 
-OrderSchema.add({
+QuotationSchema.add({
   reference: {
     type: String,
     required: false, // TODO Required for a valid order
@@ -34,15 +34,15 @@ OrderSchema.add({
   },
 })
 
-OrderSchema.virtual('status').get(function() {
+QuotationSchema.virtual('status').get(function() {
   if (!lodash.isEmpty(this.address) && !lodash.isEmpty(this.shipping_mode)) {
-    return this.user_validated ? QUOTATION_VALID : QUOTATION_COMPLETE
+    return this.user_validated ? VALID : COMPLETE
   }
   if (this.items?.length>0) {
-    return QUOTATION_FULFILLED
+    return FULFILLED
   }
-  return QUOTATION_CREATED
+  return CREATED
 })
 
 
-module.exports = OrderSchema
+module.exports = QuotationSchema

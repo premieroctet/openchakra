@@ -18,7 +18,7 @@ const StyledDialog = styled(PureDialog)`
     background-color: var(--gray-200);
     padding: var(--spc-10);
   }
-  
+
   .disclaimer {
     padding-inline: var(--spc-8);
     background: var(--stone-400);
@@ -78,7 +78,7 @@ const StyledDialog = styled(PureDialog)`
   }
   .phone {
     grid-area: phone;
-  }  
+  }
 `
 
 
@@ -113,7 +113,7 @@ const DialogAddress = ({
         console.error(e, `Can't get shipping fees ${e}`)
       })
 
-      
+
     res_shippingfees && setShippingFees(res_shippingfees)
   }, [endpoint, orderid])
 
@@ -158,10 +158,10 @@ traitement de votre commande.</p>
 
         {/* order address */}
         <h3>Indiquer l'adresse de livraison</h3>
-        <DeliveryAddresses state={state} requestUpdate={requestUpdate} />
+        <DeliveryAddresses state={state} requestUpdate={requestUpdate} endpoint={endpoint}/>
         <Address state={state} requestUpdate={requestUpdate} errors={errors} />
 
-          
+
         {/* order shipping fees */}
         {!isEmpty(shippingfees) ? (<>
           <h3>Indiquez l'option de livraison</h3>

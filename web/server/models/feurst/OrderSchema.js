@@ -31,12 +31,12 @@ OrderSchema.add({
 
 OrderSchema.virtual('status').get(function() {
   if (!lodash.isEmpty(this.address) && !lodash.isEmpty(this.shipping_mode)) {
-    return this.user_validated ? ORDER_VALID : ORDER_COMPLETE
+    return this.user_validated ? VALID : COMPLETE
   }
   if (this.items?.length>0) {
-    return ORDER_FULFILLED
+    return FULFILLED
   }
-  return ORDER_CREATED
+  return CREATED
 })
 
 

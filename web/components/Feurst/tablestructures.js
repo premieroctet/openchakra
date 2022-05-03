@@ -229,6 +229,10 @@ const quotationsColumns = ({language, deleteProduct}) => [
     attribute: 'total_amount',
   },
   {
+    label: 'Statut',
+    attribute: 'status',
+  },
+  {
     label: 'Détails',
     attribute: '_id',
     Cell: ({value}) => (<Link href={`/edi/quotations/view/${value}`}>voir</Link>),
