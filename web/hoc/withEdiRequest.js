@@ -15,6 +15,7 @@ const withEdiRequest = (Component = null) => {
     constructor(props) {
       super(props)
       this.state = {
+        orders: [],
         items: [],
         reference: null,
         address: {},
@@ -46,8 +47,16 @@ const withEdiRequest = (Component = null) => {
     
     getList = async({endpoint}) => {
       return await client(`${API_PATH}/${endpoint}`)
-        .then(data => this.setState(data))
+        .then(data => this.setState({...this.state, orders: data}))
         .catch(err => snackBarError(err?.msg))
+    }
+
+    deleteOrder = async({endpoint, orderid}) => {
+      if (!orderid) { return }
+  
+      return await client(`${API_PATH}/${endpoint}/${orderid}`, {method: 'DELETE'})
+        .then(() => this.getList({endpoint}))
+        .catch(e => console.error(`Can't delete order ${e}`))
     }
   
   
@@ -110,6 +119,7 @@ const withEdiRequest = (Component = null) => {
           createOrderId={this.createOrderId}
           getContentFrom={this.getContentFrom}
           getList={this.getList}
+          deleteOrder={this.deleteOrder}
           addProduct={this.addProduct}
           deleteProduct={this.deleteProduct}
           requestUpdate={this.requestUpdate}

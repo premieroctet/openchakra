@@ -2,6 +2,8 @@ import React, {useState, useEffect, useCallback} from 'react'
 import useLocalStorageState from 'use-local-storage-state'
 import dynamic from 'next/dynamic'
 import {useRouter} from 'next/router'
+import Autocomplete from '../Autocomplete/Autocomplete'
+
 import {
   BASEPATH_EDI,
   API_PATH,
@@ -56,6 +58,8 @@ const BaseCreateTable = ({
 }) => {
 
   const [language, setLanguage] = useState('fr')
+  const dataToken = getAuthToken()
+  const [orderuser, setOrderuser] = useState(dataToken.id)
   const [orderID, setOrderId, {removeItem}] = useLocalStorageState(storage, {defaultValue: null})
   const [isOpenDialog, setIsOpenDialog] = useState(false)
   const [refresh, setRefresh]=useState(false)
@@ -120,7 +124,26 @@ const BaseCreateTable = ({
   const importURL=`${API_PATH}/${endpoint}/${orderID}/import`
   const templateURL=`${API_PATH}/${endpoint}/template`
 
+  const paramsComboboxUser = {
+    itemToString: item => (item ? `${item.reference}` : ''),
+    onSelectedItemChange: ({selectedItem}) => {
+      setOrderuser(selectedItem)
+    },
+  }
+
   return (<>
+
+    <Autocomplete
+      urlToFetch={`${API_PATH}/products?pattern=`}
+      item={orderuser}
+      setItem={setOrderuser}
+      paramsCombobox={paramsComboboxUser}
+      errorMsg= 'Aucun article trouvé'
+      dbSearchField= 'reference'
+      label={'Nom du client'}
+      placeholder='Nom du client'
+      formattingResult={item => `${item.reference} - ${item.description} ${item.description_2}`}
+    />
 
     {canAdd &&
       <div className='container-base'>

@@ -100,7 +100,7 @@ const orderColumns = ({endpoint, orderid, language, deleteProduct}) => {
   return deleteProduct ? [...orderColumnsBase, deleteItem] : orderColumnsBase
 }
 
-const ordersColumns = ({language, deleteProduct}) => [
+const ordersColumns = ({endpoint, language, deleteOrder}) => [
   {
     label: 'Date commande',
     attribute: 'creation_date',
@@ -144,11 +144,9 @@ const ordersColumns = ({language, deleteProduct}) => [
     label: 'Recommander',
     id: 'product_delete',
     attribute: 'product_delete',
-    Cell: tableProps => (
+    Cell: ({cell: {row}}) => (
       <ToTheBin onClick={() => {
-        const dataCopy = [...data]
-        dataCopy.splice(tableProps.row.index, 1)
-        setData(dataCopy)
+        deleteOrder({endpoint, orderid: row.original._id})
       }}/>
     ),
   },
