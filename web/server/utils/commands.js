@@ -1,6 +1,7 @@
+const lodash=require('lodash')
+const Product = require('../models/Product')
 const PriceList = require('../models/PriceList')
 const User = require('../models/User')
-const Product = require('../models/Product')
 const {EXPRESS_SHIPPING} = require('../../utils/feurst/consts')
 const {roundCurrency} = require('../../utils/converters')
 const ShipRate = require('../models/ShipRate')
@@ -102,13 +103,36 @@ const updateShipFee = data => {
   })
 }
 
-/**
-Updates shipping fee depending on ShipRate
-Data is an Order or a Quotation
+/** Update stock using depending on order/quotation items provided
+If product is a group (i.e. has sub-products), update stock for each sub-component then set group's stock to the smallest one
+Else update stock
 */
-const updateDiscount = data => {
-  throw new Error('Not implemented')
+const updateStock = orderQuot => {
+  return orderQuot.items.map(it => {
+    return Product.findById(it.product)
+      .populate('components')
+      .then(product => {
+        let promises
+        const components=product.components
+        if (components.length>0) {
+          components.forEach(p => (p.stock=p.stock-it.quantity))
+          product.stock=lodash.min(components.map(v => v.stock))
+        }
+        else {
+          product.stock=product.stock-it.quantity
+        }
+        promises=[product.save(), ...components.map(p => p.save())]
+        Promise.allSettled(promises)
+          .then(res => {
+            // const grouped=lodash.groupBy(res, 'status')
+            return Promise.resolve(orderQuot)
+          })
+          .catch(err => {
+            console.error(err)
+            return Promise.reject(orderQuot)
+          })
+      })
+  })
 }
 
-
-module.exports = {addItem, computeShipFee, updateShipFee, updateDiscount, getProductPrices}
+module.exports = {addItem, computeShipFee, updateShipFee, getProductPrices, updateStock}

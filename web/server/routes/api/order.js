@@ -4,27 +4,28 @@ const moment = require('moment')
 const xlsx=require('node-xlsx')
 const lodash=require('lodash')
 const {
-  filterOrderQuotation,
-  isActionAllowed,
-} = require('../../utils/userAccess')
-const {
   EXPRESS_SHIPPING,
   STANDARD_SHIPPING,
   VALIDATE,
 } = require('../../../utils/feurst/consts')
-const {lineItemsImport} = require('../../utils/import')
-const {XL_FILTER, createMemoryMulter} = require('../../utils/filesystem')
 const {
   addItem,
   computeShipFee,
   updateShipFee,
+  updateStock,
 } = require('../../utils/commands')
+const {
+  filterOrderQuotation,
+  isActionAllowed,
+} = require('../../utils/userAccess')
+const {lineItemsImport} = require('../../utils/import')
+const {XL_FILTER, createMemoryMulter} = require('../../utils/filesystem')
 const {validateZipCode} = require('../../validation/order')
 
 const router = express.Router()
 const Order = require('../../models/Order')
 const {validateOrder, validateOrderItem}=require('../../validation/order')
-const {ORDER, CREATE, UPDATE, VIEW, DELETE}=require('../../../utils/consts')
+const {ORDER, CREATE, CREATE_FOR, UPDATE, VIEW, DELETE}=require('../../../utils/consts')
 moment.locale('fr')
 
 const DATA_TYPE=ORDER
@@ -33,12 +34,16 @@ const MODEL=Order
 // PRODUCTS
 const uploadItems = createMemoryMulter(XL_FILTER)
 
-router.get('/addresses', passport.authenticate('jwt', {session: false}), (req, res) => {
-  MODEL.find({}, {address: 1})
-    .then(orders => {
-      orders=filterOrderQuotation(orders, req.user, VIEW)
-      const uniques=lodash.uniqBy(orders, lodash.isEqual)
-      return res.json(uniques)
+router.get('/:order_id/addresses', passport.authenticate('jwt', {session: false}), (req, res) => {
+  const order_id=req.params.order_id
+
+  MODEL.findById(order_id)
+    .populate({path: 'user', populate: 'company'})
+    .then(order => {
+      if (!order) {
+        return res.status(404).json()
+      }
+      return res.json(order.user.company.adresses)
     })
 })
 
@@ -62,7 +67,7 @@ router.get('/template', passport.authenticate('jwt', {session: false}), (req, re
 router.post('/:order_id/import', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, UPDATE)) {
-    return res.status(301).json()
+    return res.status(401).json()
   }
 
   uploadItems.single('buffer')(req, res, err => {
@@ -79,7 +84,7 @@ router.post('/:order_id/import', passport.authenticate('jwt', {session: false}),
       .then(data => {
         if (!data) {
           console.error(`No order #${order_id}`)
-          return res.status(404)
+          return res.status(404).json()
         }
         // db field => import field
         const DB_MAPPING={
@@ -104,8 +109,8 @@ router.post('/:order_id/import', passport.authenticate('jwt', {session: false}),
 // @Access private
 router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  if (!isActionAllowed(req.user.roles, DATA_TYPE, CREATE)||!isActionAllowed(req.user.roles, DATA_TYPE, CREATE_FOR)) {
-    return res.status(301)
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, CREATE) && !isActionAllowed(req.user.roles, DATA_TYPE, CREATE_FOR)) {
+    return res.status(401).json()
   }
 
   const {errors, isValid}=validateOrder(req.body)
@@ -114,17 +119,7 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   }
 
   let attributes=req.body
-  // Customer
-  if (isActionAllowed(req.user.roles, DATA_TYPE, CREATE)) {
-    attributes={...attributes, user: req.user}
-  }
-  // Feurst sales
-  else {
-    if (!req.query.user) {
-      return res.status(400).json(`User id is required`)
-    }
-    attributes={...attributes, user: req.query.user, created_by: req.user}
-  }
+  attributes={...attributes, created_by: req.user}
 
   MODEL.create(attributes)
     .then(data => {
@@ -142,7 +137,7 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 router.put('/:id/rewrite', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, UPDATE)) {
-    return res.status(301)
+    return res.status(401).json()
   }
 
   const order_id=req.params.id
@@ -171,7 +166,7 @@ router.put('/:id/rewrite', passport.authenticate('jwt', {session: false}), (req,
 router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, UPDATE)) {
-    return res.status(301)
+    return res.status(401).json()
   }
 
   const order_id=req.params.id
@@ -202,7 +197,7 @@ router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
 router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, UPDATE)) {
-    return res.status(301).json()
+    return res.status(401).json()
   }
 
   const {errors, isValid}=validateOrderItem(req.body)
@@ -218,15 +213,12 @@ router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, r
     .then(data => {
       if (!data) {
         console.error(`No order #${order_id}`)
-        return res.status(404)
+        return res.status(404).json()
       }
       return addItem(data.user._id, data, product, null, quantity, replace)
     })
     .then(data => {
       return updateShipFee(data)
-    })
-    .then(result => {
-      return result.save()
     })
     .then(data => {
       return res.json(data)
@@ -243,7 +235,7 @@ router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, r
 router.delete('/:order_id/items/:item_id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, UPDATE)) {
-    return res.status(301)
+    return res.status(401).json()
   }
 
   const order_id=req.params.order_id
@@ -275,7 +267,7 @@ router.delete('/:order_id/items/:item_id', passport.authenticate('jwt', {session
 router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, VIEW)) {
-    return res.status(401)
+    return res.status(401).json()
   }
 
   MODEL.find()
@@ -297,7 +289,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 router.get('/:order_id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, VIEW)) {
-    return res.status(301)
+    return res.status(401).json()
   }
 
   MODEL.findOne()
@@ -321,7 +313,7 @@ router.get('/:order_id', passport.authenticate('jwt', {session: false}), (req, r
 router.delete('/:order_id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, DELETE)) {
-    return res.status(301)
+    return res.status(401).json()
   }
 
   MODEL.findOneAndDelete()
@@ -340,12 +332,13 @@ router.delete('/:order_id', passport.authenticate('jwt', {session: false}), (req
 router.post('/:order_id/validate', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, VALIDATE)) {
-    return res.status(301)
+    return res.status(401).json()
   }
 
   const order_id=req.params.order_id
 
   MODEL.findById(order_id)
+    .populate('items.product')
     .then(data => {
       if (!data) {
         return res.status(404).json(`Order ${order_id} not found`)
@@ -355,6 +348,9 @@ router.post('/:order_id/validate', passport.authenticate('jwt', {session: false}
       }
       data.user_validated=true
       return data.save()
+    })
+    .then(data => {
+      return updateStock(data)
     })
     .then(() => {
       return res.json()
@@ -371,7 +367,7 @@ router.post('/:order_id/validate', passport.authenticate('jwt', {session: false}
 router.get('/:id/shipping-fee', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, VIEW)) {
-    return res.status(301)
+    return res.status(401).json()
   }
 
   const zipCode=req.query.zipcode
