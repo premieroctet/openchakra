@@ -7,7 +7,7 @@ import {client} from '../../utils/client'
 import {API_PATH} from '../../utils/consts'
 import SpinnerEllipsis from '../Spinner/SpinnerEllipsis'
 
-const DeliveryAddresses = ({state, requestUpdate}) => {
+const DeliveryAddresses = ({state, requestUpdate, endpoint}) => {
 
   const {
     data,
@@ -48,7 +48,7 @@ const DeliveryAddresses = ({state, requestUpdate}) => {
 
   useEffect(() => {
     if (debouncedQuery && searchTerm.length > 0) {
-      run(client(`${API_PATH}/orders/${state.id}/addresses`))
+      run(client(`${API_PATH}/${endpoint}/${state.id}/addresses`))
         .catch(e => {
           console.error(`Can't fetch addresses in autocomplete ${e}`)
         })

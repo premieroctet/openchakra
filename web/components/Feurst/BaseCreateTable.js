@@ -7,18 +7,12 @@ import {StyledAutocomplete} from '../Autocomplete/Autocomplete.styles'
 import {
   BASEPATH_EDI,
   API_PATH,
-  ORDER_COMPLETE,
-  ORDER_CREATED,
-  ORDER_FULFILLED,
-  ORDER_VALID,
-  ORDER_PARTIALLY_HANDLED,
-  ORDER_HANDLED,
-  QUOTATION_CREATED,
-  QUOTATION_FULFILLED,
-  QUOTATION_COMPLETE,
-  QUOTATION_VALID,
-  QUOTATION_PARTIALLY_HANDLED,
-  QUOTATION_HANDLED,
+  COMPLETE,
+  CREATED,
+  FULFILLED,
+  VALID,
+  PARTIALLY_HANDLED,
+  HANDLED,
   CREATE_FOR,
 } from '../../utils/consts'
 import FeurstTable from '../../styles/feurst/FeurstTable'
@@ -64,18 +58,18 @@ const BaseCreateTable = ({
   const [orderID, setOrderId, {removeItem}] = useLocalStorageState(storage, {defaultValue: null})
   const [isOpenDialog, setIsOpenDialog] = useState(false)
   const [refresh, setRefresh]=useState(false)
-  
+
   const toggleRefresh= () => setRefresh(!refresh)
-  
+
   const router = useRouter()
-  
+
   const isFeurstSales = accessRights.actions.map(acc => acc.action).includes(CREATE_FOR)
 
-  const justCreated = [ORDER_CREATED, QUOTATION_CREATED].includes(state.status)
-  const canAdd = [ORDER_CREATED, ORDER_FULFILLED, QUOTATION_CREATED, QUOTATION_FULFILLED].includes(state.status)
-  const canValidate = [ORDER_COMPLETE, QUOTATION_COMPLETE].includes(state.status)
-  const isView = [ORDER_VALID, ORDER_PARTIALLY_HANDLED, ORDER_HANDLED, QUOTATION_VALID, QUOTATION_PARTIALLY_HANDLED, QUOTATION_HANDLED].includes(state.status)
- 
+  const justCreated = [CREATED, CREATED].includes(state.status)
+  const canAdd = [CREATED, FULFILLED, CREATED, FULFILLED].includes(state.status)
+  const canValidate = [COMPLETE, COMPLETE].includes(state.status)
+  const isView = [VALID, PARTIALLY_HANDLED, HANDLED, VALID, PARTIALLY_HANDLED, HANDLED].includes(state.status)
+
   const updateMyOrderContent = data => {
     addProduct({endpoint, orderid: orderID, ...data})
   }
@@ -101,14 +95,14 @@ const BaseCreateTable = ({
     // console.log('language')
     setLanguage(Navigator.language)
   }, [language])
-  
+
   // Init table
   useEffect(() => {
     // console.log('getContent', orderID)
     !isEmpty(orderID) && getContentFrom({endpoint, orderid: orderID})
   }, [endpoint, getContentFrom, orderID, refresh])
-  
-  
+
+
   useEffect(() => {
     // console.log('createOrder', orderID, orderuser)
     if (isEmpty(orderID)) {
@@ -117,13 +111,13 @@ const BaseCreateTable = ({
       }
     }
   }, [createOrderId, endpoint, orderID, orderuser, setOrderId])
-  
+
   useEffect(() => {
     // console.log('setOrderUser', dataToken.id)
     !isFeurstSales && setOrderuser(dataToken.id)
   }, [dataToken.id, isFeurstSales, setOrderuser])
-  
-  
+
+
   /* supplied id for a view ? */
   useEffect(() => {
     console.log('isView', id)
@@ -150,8 +144,8 @@ const BaseCreateTable = ({
   }
 
   return (<>
-    
-    
+
+
     {justCreated && isFeurstSales && !orderuser ?
       <div className='container-sm mb-8'>
         <StyledAutocomplete>
@@ -168,7 +162,7 @@ const BaseCreateTable = ({
       </div> :
       null
     }
-    
+
     { orderID ? <div>
 
       {isFeurstSales && <H2confirm>{state?.user?.full_name}</H2confirm>}
@@ -221,7 +215,7 @@ const BaseCreateTable = ({
             :
             <PleasantButton
               rounded={'full'}
-              disabled={[ORDER_CREATED].includes(state.status)}
+              disabled={[CREATED].includes(state.status)}
               bgColor={'#fff'}
               textColor={'#141953'}
               borderColor={'1px solid #141953'}
@@ -234,8 +228,8 @@ const BaseCreateTable = ({
 
           <PleasantButton
             rounded={'full'}
-            disabled={[ORDER_CREATED].includes(state.status)}
-            onClick={() => (state.status === ORDER_FULFILLED ? setIsOpenDialog(true) : submitOrder({endpoint, orderid: orderID}))}
+            disabled={[CREATED].includes(state.status)}
+            onClick={() => (state.status === FULFILLED ? setIsOpenDialog(true) : submitOrder({endpoint, orderid: orderID}))}
           >
             {t(`${wordingSection}.valid`)} {/* Valid order/quotation */}
           </PleasantButton>
