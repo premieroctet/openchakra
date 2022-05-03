@@ -63,11 +63,12 @@ const BaseCreateTable = ({
 
   const router = useRouter()
 
+  // TODO filtrer sur model
   const isFeurstSales = accessRights.actions.map(acc => acc.action).includes(CREATE_FOR)
 
-  const justCreated = [CREATED, CREATED].includes(state.status)
-  const canAdd = [CREATED, FULFILLED, CREATED, FULFILLED].includes(state.status)
-  const canValidate = [COMPLETE, COMPLETE].includes(state.status)
+  const justCreated = [CREATED].includes(state.status)
+  const canAdd = [CREATED, FULFILLED].includes(state.status)
+  const canValidate = [COMPLETE].includes(state.status)
   const isView = [VALID, PARTIALLY_HANDLED, HANDLED, VALID, PARTIALLY_HANDLED, HANDLED].includes(state.status)
 
   const updateMyOrderContent = data => {
@@ -78,9 +79,9 @@ const BaseCreateTable = ({
 
     await client(`${API_PATH}/${endpoint}/${orderid}/validate`, {method: 'POST'})
       .then(() => {
-        removeItem()
         snackBarSuccess('Enregistré')
         router.push(`${BASEPATH_EDI}/${endpoint}`)
+        removeItem()
       })
       .catch(() => {
         console.error(`Didn't submit order`)
@@ -106,8 +107,10 @@ const BaseCreateTable = ({
   useEffect(() => {
     // console.log('createOrder', orderID, orderuser)
     if (isEmpty(orderID)) {
-      if (orderuser !== null) {
-        createOrderId({endpoint, user: orderuser}).then(data => setOrderId(data._id))
+      if (orderuser !== null && !canValidate) {
+        createOrderId({endpoint, user: orderuser})
+          .then(data => setOrderId(data._id))
+          .catch(e => console.error('cant create order'))
       }
     }
   }, [createOrderId, endpoint, orderID, orderuser, setOrderId])
@@ -215,7 +218,7 @@ const BaseCreateTable = ({
             :
             <PleasantButton
               rounded={'full'}
-              disabled={[CREATED].includes(state.status)}
+              disabled={justCreated}
               bgColor={'#fff'}
               textColor={'#141953'}
               borderColor={'1px solid #141953'}
@@ -228,8 +231,8 @@ const BaseCreateTable = ({
 
           <PleasantButton
             rounded={'full'}
-            disabled={[CREATED].includes(state.status)}
-            onClick={() => (state.status === FULFILLED ? setIsOpenDialog(true) : submitOrder({endpoint, orderid: orderID}))}
+            disabled={justCreated}
+            onClick={() => ([COMPLETE].includes(state.status) ? submitOrder({endpoint, orderid: orderID}): setIsOpenDialog(true))}
           >
             {t(`${wordingSection}.valid`)} {/* Valid order/quotation */}
           </PleasantButton>

@@ -41,9 +41,9 @@ const withEdiRequest = (Component = null) => {
       if (orderid) {
         return await client(`${API_PATH}/${endpoint}/${orderid}`)
           .then(data => this.setState(data))
-          .catch(err => {
-            snackBarError(err)
-            return []
+          .catch(() => {
+            snackBarError('Commande à créer')
+            return false
           })
       }
     }
