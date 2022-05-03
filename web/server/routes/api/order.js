@@ -297,7 +297,9 @@ router.get('/:order_id', passport.authenticate('jwt', {session: false}), (req, r
     return res.status(401).json()
   }
 
-  MODEL.findOne()
+  const order_id=req.params.order_id
+
+  MODEL.findById(order_id)
     .populate('items.product')
     .populate('user')
     .then(order => {
