@@ -8,7 +8,7 @@ import {API_PATH} from '../../utils/consts'
 import SpinnerEllipsis from '../Spinner/SpinnerEllipsis'
 
 const DeliveryAddresses = ({state, requestUpdate}) => {
-  
+
   const {
     data,
     isLoading,
@@ -16,10 +16,10 @@ const DeliveryAddresses = ({state, requestUpdate}) => {
     error,
     run,
   } = useAsync({data: []})
-  
+
   const [searchTerm, setSearchTerm] = useState('')
   const debouncedQuery = useDebounce(searchTerm, 1000)
-  
+
   const {
     isOpen,
     getToggleButtonProps,
@@ -44,24 +44,24 @@ const DeliveryAddresses = ({state, requestUpdate}) => {
     },
     inputValue: state?.address?.label || '',
   })
-  
-      
+
+
   useEffect(() => {
     if (debouncedQuery && searchTerm.length > 0) {
-      run(client(`${API_PATH}/users/addresses`))
+      run(client(`${API_PATH}/orders/${state.id}/addresses`))
         .catch(e => {
           console.error(`Can't fetch addresses in autocomplete ${e}`)
         })
     }
   }
   , [debouncedQuery, searchTerm, run, selectedItem])
-  
+
   const labelAutocomplete = 'complete'
-  
+
   return (
     <StyledAutocomplete noborder={true}>
       {isError ? <p className='error'>{error}</p> : null }
-         
+
       <label {...getLabelProps} htmlFor={`auto${labelAutocomplete}`} className="sr-only">
         Adresse
       </label>
@@ -90,11 +90,11 @@ const DeliveryAddresses = ({state, requestUpdate}) => {
         >
           <span role="img">✕</span>
         </button>
-  
-              
+
+
       </div>
-  
-          
+
+
       <ul
         {...getMenuProps()}
       >
@@ -110,9 +110,9 @@ const DeliveryAddresses = ({state, requestUpdate}) => {
         }
       </ul>
     </StyledAutocomplete>
-      
+
   )
-    
+
 
 }
 

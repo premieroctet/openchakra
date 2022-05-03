@@ -178,12 +178,17 @@ const quotationColumns = ({language, deleteProduct}) => [
   },
   {
     label: 'Remise',
-    attribute: 'discount',
+    attribute: v => formatPercent(v.discount),
     sortType: 'number',
   },
   {
     label: 'Votre prix',
-    attribute: 'net_price',
+    attribute: v => localeMoneyFormat({lang: language, value: v.net_price}),
+    sortType: 'number',
+  },
+  {
+    label: 'Total',
+    attribute: v => localeMoneyFormat({lang: language, value: v.total_amount}),
     sortType: 'number',
   },
   {
