@@ -42,11 +42,10 @@ router.get('/:order_id/addresses', passport.authenticate('jwt', {session: false}
   MODEL.findById(order_id)
     .populate({path: 'user', populate: 'company'})
     .then(order => {
-      console.log(`Order:${JSON.stringify(order.user)}`)
       if (!order) {
         return res.status(404).json()
       }
-      return res.json(order.user.company.adresses)
+      return res.json(order.user.company.addresses)
     })
 })
 
@@ -86,7 +85,7 @@ router.post('/:order_id/import', passport.authenticate('jwt', {session: false}),
       .populate('items.product')
       .then(data => {
         if (!data) {
-          console.error(`No order #${order_id}`)
+          console.error(`${DATA_TYPE} #${order_id} not found`)
           return res.status(404).json()
         }
         // db field => import field
@@ -148,7 +147,7 @@ router.put('/:id/rewrite', passport.authenticate('jwt', {session: false}), (req,
     .populate('items.product')
     .then(result => {
       if (!result) {
-        return res.status(404).json(`Order #${order_id} not found`)
+        return res.status(404).json(`${DATA_TYPE} #${order_id} not found`)
       }
       return updateShipFee(result)
     })
@@ -177,7 +176,7 @@ router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
     .populate('items.product')
     .then(result => {
       if (!result) {
-        return res.status(404).json(`Order #${order_id} not found`)
+        return res.status(404).json(`${DATA_TYPE} #${order_id} not found`)
       }
       return updateShipFee(result)
     })
@@ -251,7 +250,7 @@ router.delete('/:order_id/items/:item_id', passport.authenticate('jwt', {session
     .populate('items.product')
     .then(result => {
       if (!result) {
-        return res.status(404).json(`Order #${order_id} not found`)
+        return res.status(404).json(`${DATA_TYPE} #${order_id} not found`)
       }
       return updateShipFee(result)
     })
