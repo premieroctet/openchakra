@@ -56,20 +56,17 @@ const orderColumns = ({endpoint, orderid, language, deleteProduct}) => {
     },
     {
       label: 'Prix catalogue',
-      attribute: 'catalog_price',
-      Cell: ({cell: {value}}) => localeMoneyFormat({lang: language, value}),
+      attribute: v => localeMoneyFormat({lang: language, value: v.catalog_price}),
       sortType: 'number',
     },
     {
       label: 'Remise',
       attribute: v => formatPercent(v.discount),
-      Cell: ({cell: {value}}) => `${value}%`,
       sortType: 'number',
     },
     {
       label: 'Votre prix',
-      attribute: 'net_price',
-      Cell: ({cell: {value}}) => localeMoneyFormat({lang: language, value}),
+      attribute: v => localeMoneyFormat({lang: language, value: v.net_price}),
       sortType: 'number',
       Footer: info => {
         const total = React.useMemo(
@@ -81,81 +78,10 @@ const orderColumns = ({endpoint, orderid, language, deleteProduct}) => {
         return <>{localeMoneyFormat({lang: language, value: total})}</>
       },
     },
-
-  ]
-
-  const deleteItem = {
-    label: '',
-    id: 'product_delete',
-    attribute: 'product_delete',
-    Cell: ({cell: {row}}) => (
-      <ToTheBin onClick={() => {
-        deleteProduct({endpoint, orderid, idItem: row.original._id})
-      }}/>
-    ),
-  }
-
-  return deleteProduct ? [...orderColumnsBase, deleteItem] : orderColumnsBase
-}
-
-const orderViewColumns = ({endpoint, orderid, language, deleteProduct}) => {
-
-  const orderColumnsBase = [
     {
-      label: 'Réf. catalogue',
-      attribute: 'product.reference',
-      disableFilters: true,
-      Footer: 'Total',
-    },
-    {
-      label: 'Désignation',
-      attribute: item => `${item.product.description} ${item.product.description_2}`,
-    },
-    {
-      label: 'Quantité',
-      attribute: 'quantity',
-    },
-    {
-      label: 'Poids',
-      attribute: 'total_weight',
-      Cell: ({cell: {value}}) => `${value} kg`,
-      Footer: info => {
-        const total = React.useMemo(
-          () =>
-            info.rows.reduce((sum, row) => row.values.total_weight + sum, 0),
-          [info.rows],
-        )
-
-        return <>{total} kg</>
-      },
-
-    },
-    {
-      label: 'Prix catalogue',
-      attribute: 'catalog_price',
-      Cell: ({cell: {value}}) => localeMoneyFormat({lang: language, value}),
+      label: 'Total',
+      attribute: v => localeMoneyFormat({lang: language, value: v.total_amount}),
       sortType: 'number',
-    },
-    {
-      label: 'Remise',
-      attribute: 'discount',
-      Cell: ({cell: {value}}) => `${value}%`,
-      sortType: 'number',
-    },
-    {
-      label: 'Votre prix',
-      attribute: 'target_price',
-      Cell: ({cell: {value}}) => localeMoneyFormat({lang: language, value}),
-      sortType: 'number',
-      Footer: info => {
-        const total = React.useMemo(
-          () =>
-            info.rows.reduce((sum, row) => row.values.target_price + sum, 0),
-          [info.rows],
-        )
-
-        return <>{localeMoneyFormat({lang: language, value: total})}</>
-      },
     },
 
   ]
@@ -404,5 +330,5 @@ const handledOrdersColumns = ({language}) => [
   },
 
 ]
-module.exports={orderColumns, orderViewColumns, ordersColumns, quotationColumns, quotationsColumns,
+module.exports={orderColumns, ordersColumns, quotationColumns, quotationsColumns,
   accountsColumns, productsColumns, shipratesColumns, handledOrdersColumns, pricesColumns}

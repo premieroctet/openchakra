@@ -35,7 +35,7 @@ BookingItemSchema.virtual('discount').get(function() {
   if (!this.catalog_price || !this.net_price) {
     return 0
   }
-  return (this.catalog_price-this.net_price)/100.0
+  return (this.catalog_price-this.net_price)/this.catalog_price
 })
 
 BookingItemSchema.virtual('total_weight').get(function() {
@@ -44,6 +44,11 @@ BookingItemSchema.virtual('total_weight').get(function() {
   }
   const total_weight=this.product.weight*this.quantity
   return total_weight
+})
+
+BookingItemSchema.virtual('total_amount').get(function() {
+  const total_amount=this.net_price*this.quantity
+  return total_amount
 })
 
 
@@ -83,7 +88,10 @@ const QuotationBookingBaseSchema=new Schema({
 }, {toJSON: {virtuals: true, getters: true}})
 
 QuotationBookingBaseSchema.virtual('total_amount').get(function() {
-  const items_amount=lodash.sumBy(this.items||[], i => i.catalog_price*i.quantity*(1.0-i.discount))
+  if (lodash.isEmpty(this.items)) {
+    return 0
+  }
+  const items_amount=lodash.sumBy(this.items, i => i.net_price*i.quantity)
   const total_amount=roundCurrency(items_amount+this.shipping_fee)
   return total_amount
 })

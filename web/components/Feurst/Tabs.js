@@ -3,6 +3,7 @@ import React from 'react'
 import styled from 'styled-components'
 import Link from 'next/link'
 import {screen} from '../../styles/screenWidths'
+const {CREATE_FOR, HANDLE} = require('../../utils/feurst/consts')
 const {CREATE, ORDER, QUOTATION, VIEW, PRODUCT, SHIPRATE, ACCOUNT, BASEPATH_EDI, PRICELIST} = require('../../utils/consts')
 
 const Tabstyled = styled.div`
@@ -64,7 +65,7 @@ const tabsContent = [
     title: 'Commandes à traiter',
     url: `${BASEPATH_EDI}/orders/handle`,
     model: ORDER,
-    action: CREATE,
+    action: HANDLE,
     visible: [ORDER, QUOTATION],
   },
   {
@@ -72,6 +73,13 @@ const tabsContent = [
     url: `${BASEPATH_EDI}/orders/create`,
     model: ORDER,
     action: CREATE,
+    visible: [ORDER, QUOTATION],
+  },
+  {
+    title: 'Créer une commande',
+    url: `${BASEPATH_EDI}/orders/create`,
+    model: ORDER,
+    action: CREATE_FOR,
     visible: [ORDER, QUOTATION],
   },
   {

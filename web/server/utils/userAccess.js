@@ -17,7 +17,7 @@ const isActionAllowed = (roles, model, action) => {
   return allowed
 }
 
-const filterData = (data, model, user, action) => {
+const filterOrderQuotation = (data, model, user, action) => {
   const userActions=getActions(user.roles, model, action)
   if (userActions.some(userAction => userAction.visibility==ALL)) {
     return data
@@ -34,10 +34,27 @@ const filterData = (data, model, user, action) => {
   return []
 }
 
+const filterUsers = (data, model, user, action) => {
+  const userActions=getActions(user.roles, model, action)
+  if (userActions.some(userAction => userAction.visibility==ALL)) {
+    return data
+  }
+  if (userActions.some(userAction => userAction.visibility==RELATED)) {
+    return data.filter(d => user.companies.map(c => String(c._id)).includes(String(d.company._id)))
+  }
+  if (userActions.some(userAction => userAction.visibility==COMPANY)) {
+    return data.filter(d => String(d.company?._id)==String(user.company?._id))
+  }
+  if (userActions.some(userAction => userAction.visibility==MINE)) {
+    return data.filter(d => String(d._id)==String(user._id))
+  }
+  return []
+}
+
 const getActionsForRoles = roles => {
   let actions=lodash.flattenDeep(roles.map(role => USER_ACTIONS[role]))
   actions=lodash.uniq(actions)
   return actions
 }
 
-module.exports={isActionAllowed, filterData, getActionsForRoles}
+module.exports={isActionAllowed, filterOrderQuotation, getActionsForRoles, filterUsers}

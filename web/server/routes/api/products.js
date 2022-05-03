@@ -24,10 +24,6 @@ const DATA_TYPE=PRODUCT
 // @Access private
 router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  if (!isActionAllowed(req.user.roles, DATA_TYPE, VIEW)) {
-    return res.status(301)
-  }
-
   const pattern = new RegExp(req.query.pattern, 'i')
   const filter=req.query.pattern ? {
     $or: [
@@ -51,7 +47,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 // View one product
 // @Access private
 router.get('/:product_id', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const user_id=req.user._id // req.query.user
+  const user_id=req.query.user
   if (!user_id) {
     return res.status(500).json('Missing user_id parameter')
   }

@@ -173,13 +173,12 @@ const capitalize = text => {
 
 const guessDelimiter = text => {
   const delimiter=csv_string.detect(text)
-  console.log(`Guess delimiter:${delimiter}`)
   return delimiter
 }
 
 const formatPercent = value => {
   if (!value) { return null }
-  return `${parseInt(value)/100}%`
+  return `${parseInt(value*100)}%`
 }
 
 module.exports = {

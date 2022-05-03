@@ -1,9 +1,7 @@
-const {filterData} = require('../../utils/userAccess')
-const {CREATE} = require('../../../utils/feurst/consts')
-const mongoose = require('mongoose')
 const crypto = require('crypto')
-
 const fs = require('fs').promises
+const mongoose = require('mongoose')
+const lodash=require('lodash')
 const express = require('express')
 const passport = require('passport')
 const bcrypt = require('bcryptjs')
@@ -11,12 +9,12 @@ const CronJob = require('cron').CronJob
 const moment = require('moment')
 const axios = require('axios')
 const gifFrames = require('gif-frames')
+const {filterUsers} = require('../../utils/userAccess')
+const {CREATE} = require('../../../utils/feurst/consts')
 const {XL_FILTER, createMemoryMulter} = require('../../utils/filesystem')
 const {accountsImport} = require('../../utils/import')
 const {ACCOUNT, LINK, VIEW} = require('../../../utils/feurst/consts')
 const {ORDER, QUOTATION} = require('../../../utils/feurst/consts')
-const Order = require('../../models/Order')
-const Quotation = require('../../models/Quotation')
 const Shop = require('../../models/Shop')
 const {is_development} = require('../../../config/config')
 const {getActionsForRoles} = require('../../utils/userAccess')
@@ -76,8 +74,10 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     .populate('company')
     .populate('companies')
     .then(data => {
-      data=filterData(data, DATA_TYPE, req.user, VIEW)
-      res.json(data)
+      data=filterUsers(data, DATA_TYPE, req.user, VIEW)
+      const companies=loadsh.uniqBy(data.map(d => d.company), c => String(c._id))
+      const adresses=lodash.flattenDeep(companies.map(c => c.addresses))
+      res.json(adresses)
     })
     .catch(err => {
       console.error(err)
@@ -1319,15 +1319,11 @@ router.get('/addresses', passport.authenticate('jwt', {session: false}), (req, r
     return res.status(401)
   }
 
-  let addresses=[]
-  Order.find(getDataFilter(req.user, ORDER, VIEW), {address: true})
+  User.find()
+    .populate('company')
     .then(result => {
-      addresses=[...addresses, ...result.map(o => o.address)]
-      return Quotation.find(getDataFilter(req.user, ORDER, VIEW), {address: true})
-    })
-    .then(result => {
-      addresses=[...addresses, ...result.map(q => q.address)]
-      addresses=addresses.filter(a => !!a)
+      const users=filterUsers(result, DATA_TYPE, req.user, VIEW)
+      const addresses=lodash.flattenDeep(users.map(u => u.company).filter(c => !!c).map(c => c.addresses))
       return res.json(addresses)
     })
     .catch(err => {

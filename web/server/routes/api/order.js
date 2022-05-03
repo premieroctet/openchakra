@@ -4,7 +4,7 @@ const moment = require('moment')
 const xlsx=require('node-xlsx')
 const lodash=require('lodash')
 const {
-  filterData,
+  filterOrderQuotation,
   isActionAllowed,
 } = require('../../utils/userAccess')
 const {
@@ -34,9 +34,9 @@ const MODEL=Order
 const uploadItems = createMemoryMulter(XL_FILTER)
 
 router.get('/addresses', passport.authenticate('jwt', {session: false}), (req, res) => {
-  Order.find({}, {address: 1})
+  MODEL.find({}, {address: 1})
     .then(orders => {
-      orders=filterData(orders, req.user, VIEW)
+      orders=filterOrderQuotation(orders, req.user, VIEW)
       const uniques=lodash.uniqBy(orders, lodash.isEqual)
       return res.json(uniques)
     })
@@ -74,7 +74,7 @@ router.post('/:order_id/import', passport.authenticate('jwt', {session: false}),
     const order_id=req.params.order_id
     const options=JSON.parse(req.body.options)
 
-    Order.findOneById(order_id)
+    MODEL.findOneById(order_id)
       .populate('items.product')
       .then(data => {
         if (!data) {
@@ -146,7 +146,7 @@ router.put('/:id/rewrite', passport.authenticate('jwt', {session: false}), (req,
   }
 
   const order_id=req.params.id
-  Order.findByIdAndUpdate(order_id, {address: null, shipping_mode: null, user_validated: false}, {new: true})
+  MODEL.findByIdAndUpdate(order_id, {address: null, shipping_mode: null, user_validated: false}, {new: true})
     .populate('items.product')
     .then(result => {
       if (!result) {
@@ -175,7 +175,7 @@ router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
   }
 
   const order_id=req.params.id
-  Order.findByIdAndUpdate(order_id, req.body, {new: true})
+  MODEL.findByIdAndUpdate(order_id, req.body, {new: true})
     .populate('items.product')
     .then(result => {
       if (!result) {
@@ -213,7 +213,7 @@ router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, r
   const order_id=req.params.id
   const {product, quantity, replace=false}=req.body
 
-  Order.findById(order_id)
+  MODEL.findById(order_id)
     .populate('items.product')
     .then(data => {
       if (!data) {
@@ -249,7 +249,7 @@ router.delete('/:order_id/items/:item_id', passport.authenticate('jwt', {session
   const order_id=req.params.order_id
   const item_id=req.params.item_id
 
-  Order.findOneAndUpdate({_id: order_id}, {$pull: {items: {_id: item_id}}}, {new: true})
+  MODEL.findOneAndUpdate({_id: order_id}, {$pull: {items: {_id: item_id}}}, {new: true})
     .populate('items.product')
     .then(result => {
       if (!result) {
@@ -278,11 +278,11 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     return res.status(401)
   }
 
-  Order.find()
+  MODEL.find()
     .populate('items.product')
     .populate({path: 'user', populate: 'company'})
     .then(orders => {
-      orders=filterData(orders, DATA_TYPE, req.user, VIEW)
+      orders=filterOrderQuotation(orders, DATA_TYPE, req.user, VIEW)
       return res.json(orders)
     })
     .catch(err => {
@@ -300,7 +300,7 @@ router.get('/:order_id', passport.authenticate('jwt', {session: false}), (req, r
     return res.status(301)
   }
 
-  Order.findOne()
+  MODEL.findOne()
     .populate('items.product')
     .populate('user')
     .then(order => {
@@ -324,7 +324,7 @@ router.delete('/:order_id', passport.authenticate('jwt', {session: false}), (req
     return res.status(301)
   }
 
-  Order.findOneAndDelete()
+  MODEL.findOneAndDelete()
     .then(() => {
       return res.json()
     })
@@ -345,7 +345,7 @@ router.post('/:order_id/validate', passport.authenticate('jwt', {session: false}
 
   const order_id=req.params.order_id
 
-  Order.findById(order_id)
+  MODEL.findById(order_id)
     .then(data => {
       if (!data) {
         return res.status(404).json(`Order ${order_id} not found`)
@@ -385,7 +385,7 @@ router.get('/:id/shipping-fee', passport.authenticate('jwt', {session: false}), 
 
   const fee={[EXPRESS_SHIPPING]: 0, [STANDARD_SHIPPING]: 0}
   let order=null
-  Order.findById(req.params.id)
+  MODEL.findById(req.params.id)
     .populate('items.product')
     .then(result => {
       if (!result) {

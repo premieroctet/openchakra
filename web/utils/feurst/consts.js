@@ -117,8 +117,10 @@ const USER_ACTIONS={
     createUserAction(PRODUCT, VIEW, {visibility: ALL}),
     [CREATE_FOR, VIEW, VALIDATE].map(action => createUserAction(QUOTATION, action, {visibility: ALL})),
     [CREATE_FOR, VIEW, VALIDATE].map(action => createUserAction(ORDER, action, {visibility: ALL})),
+    [VIEW].map(action => createUserAction(ACCOUNT, action, {visibility: ALL})),
   ]),
   [FEURST_SALES]: lodash.flattenDeep([
+    [VIEW].map(action => [CUSTOMER_ADMIN].map(type => createUserAction(ACCOUNT, action, {type: type, visibility: COMPANY}))),
     [CREATE_FOR, VIEW, VALIDATE].map(action => createUserAction(QUOTATION, action, {visibility: RELATED})),
     [CREATE_FOR, VIEW].map(action => createUserAction(ORDER, action, {visibility: RELATED})),
   ]),
@@ -126,12 +128,10 @@ const USER_ACTIONS={
     [VIEW, CREATE, UPDATE, DELETE].map(action => [CUSTOMER_ADMIN, CUSTOMER_SLAVE].map(type => createUserAction(ACCOUNT, action, {type: type, visibility: COMPANY}))),
     [CREATE, VIEW, UPDATE, CONVERT, VALIDATE].map(action => createUserAction(QUOTATION, action, {visibility: COMPANY})),
     [CREATE, VIEW, UPDATE].map(action => createUserAction(ORDER, action, {visibility: COMPANY})),
-    [VIEW].map(action => createUserAction(PRODUCT, action, {visibility: ALL})),
   ]),
   [CUSTOMER_SLAVE]: lodash.flattenDeep([
     [CREATE, VIEW, UPDATE, CONVERT, DELETE, VALIDATE].map(action => createUserAction(QUOTATION, action, {visibility: MINE})),
     [CREATE, VIEW, UPDATE, DELETE, VALIDATE].map(action => createUserAction(ORDER, action, {visibility: MINE})),
-    [VIEW].map(action => createUserAction(PRODUCT, action, {visibility: ALL})),
   ]),
 }
 
