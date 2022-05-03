@@ -103,19 +103,36 @@ const updateShipFee = data => {
   })
 }
 
+/** Update stock using depending on order/quotation items provided
+If product is a group (i.e. has sub-products), update stock for each sub-component then set group's stock to the smallest one
+Else update stock
+*/
 const updateStock = orderQuot => {
-  console.log(`Updating stock for ${orderQuot.items.map(i => ([i.product, i.quantity]))}`)
-  const promises=orderQuot.items.map(it => Product.findByIdAndUpdate(it.product, {$inc: {stock: -it.quantity}}))
-  Promise.allSettled(promises)
-    .then(res => {
-      const grouped=lodash.groupBy(res, 'status')
-      console.log(`Result:${grouped}`)
-      return Promise.resolve(orderQuot)
-    })
-    .catch(err => {
-      console.error(err)
-      return Promise.reject(orderQuot)
-    })
+  return orderQuot.items.map(it => {
+    return Product.findById(it.product)
+      .populate('components')
+      .then(product => {
+        let promises
+        const components=product.components
+        if (components.length>0) {
+          components.forEach(p => (p.stock=p.stock-it.quantity))
+          product.stock=lodash.min(components.map(v => v.stock))
+        }
+        else {
+          product.stock=product.stock-it.quantity
+        }
+        promises=[product.save(), ...components.map(p => p.save())]
+        Promise.allSettled(promises)
+          .then(res => {
+            // const grouped=lodash.groupBy(res, 'status')
+            return Promise.resolve(orderQuot)
+          })
+          .catch(err => {
+            console.error(err)
+            return Promise.reject(orderQuot)
+          })
+      })
+  })
 }
 
 module.exports = {addItem, computeShipFee, updateShipFee, getProductPrices, updateStock}

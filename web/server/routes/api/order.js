@@ -347,6 +347,7 @@ router.post('/:order_id/validate', passport.authenticate('jwt', {session: false}
   const order_id=req.params.order_id
 
   MODEL.findById(order_id)
+    .populate('items.product')
     .then(data => {
       if (!data) {
         return res.status(404).json(`Order ${order_id} not found`)
