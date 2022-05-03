@@ -1,7 +1,12 @@
 const mongoose=require('mongoose')
 const lodash=require('lodash')
-const {ORDER_COMPLETE} = require('../../../utils/feurst/consts')
-const {ORDER_VALID, ORDER_FULFILLED, ORDER_CREATED, ROLES} = require('../../../utils/consts')
+const {
+  COMPLETE,
+  CREATED,
+  FULFILLED,
+  ROLES,
+  VALID,
+} = require('../../../utils/feurst/consts')
 const BaseSchema = require('./QuotationBookingBaseSchema')
 
 const OrderSchema = BaseSchema.clone()
