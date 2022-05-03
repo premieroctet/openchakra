@@ -4,6 +4,11 @@ const moment = require('moment')
 const xlsx=require('node-xlsx')
 const lodash=require('lodash')
 const {
+  EXPRESS_SHIPPING,
+  STANDARD_SHIPPING,
+  VALIDATE,
+} = require('../../../utils/feurst/consts')
+const {
   addItem,
   computeShipFee,
   updateShipFee,
@@ -13,11 +18,6 @@ const {
   filterOrderQuotation,
   isActionAllowed,
 } = require('../../utils/userAccess')
-const {
-  EXPRESS_SHIPPING,
-  STANDARD_SHIPPING,
-  VALIDATE,
-} = require('../../../utils/feurst/consts')
 const {lineItemsImport} = require('../../utils/import')
 const {XL_FILTER, createMemoryMulter} = require('../../utils/filesystem')
 const {validateZipCode} = require('../../validation/order')
@@ -25,7 +25,7 @@ const {validateZipCode} = require('../../validation/order')
 const router = express.Router()
 const Order = require('../../models/Order')
 const {validateOrder, validateOrderItem}=require('../../validation/order')
-const {ORDER, CREATE, UPDATE, VIEW, DELETE}=require('../../../utils/consts')
+const {ORDER, CREATE, CREATE_FOR, UPDATE, VIEW, DELETE}=require('../../../utils/consts')
 moment.locale('fr')
 
 const DATA_TYPE=ORDER
@@ -34,12 +34,16 @@ const MODEL=Order
 // PRODUCTS
 const uploadItems = createMemoryMulter(XL_FILTER)
 
-router.get('/addresses', passport.authenticate('jwt', {session: false}), (req, res) => {
-  MODEL.find({}, {address: 1})
-    .then(orders => {
-      orders=filterOrderQuotation(orders, req.user, VIEW)
-      const uniques=lodash.uniqBy(orders, lodash.isEqual)
-      return res.json(uniques)
+router.get('/:order_id/addresses', passport.authenticate('jwt', {session: false}), (req, res) => {
+  const order_id=req.params.order_id
+
+  MODEL.findById(order_id)
+    .populate({path: 'user', populate: 'company'})
+    .then(order => {
+      if (!order) {
+        return res.status(404).json()
+      }
+      return res.json(order.user.company.adresses)
     })
 })
 
@@ -105,8 +109,8 @@ router.post('/:order_id/import', passport.authenticate('jwt', {session: false}),
 // @Access private
 router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  if (!isActionAllowed(req.user.roles, DATA_TYPE, CREATE)||!isActionAllowed(req.user.roles, DATA_TYPE, CREATE_FOR)) {
-    return res.status(301)
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, CREATE) && !isActionAllowed(req.user.roles, DATA_TYPE, CREATE_FOR)) {
+    return res.status(301).json()
   }
 
   const {errors, isValid}=validateOrder(req.body)
@@ -126,7 +130,6 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     }
     attributes={...attributes, user: req.query.user, created_by: req.user}
   }
-
   MODEL.create(attributes)
     .then(data => {
       return res.json(data)

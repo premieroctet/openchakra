@@ -1,4 +1,6 @@
 const lodash=require('lodash')
+const {CUSTOMER_ADMIN} = require('../../utils/feurst/consts')
+
 const {RELATED} = require('../../utils/feurst/consts')
 
 const {USER_ACTIONS, ALL, COMPANY, MINE} = require('../../utils/consts')
@@ -40,7 +42,7 @@ const filterUsers = (data, model, user, action) => {
     return data
   }
   if (userActions.some(userAction => userAction.visibility==RELATED)) {
-    return data.filter(d => user.companies.map(c => String(c._id)).includes(String(d.company._id)))
+    return data.filter(u => !!u.company && u.roles.includes(CUSTOMER_ADMIN) && user.companies.map(c => String(c._id)).includes(String(u.company._id)))
   }
   if (userActions.some(userAction => userAction.visibility==COMPANY)) {
     return data.filter(d => String(d.company?._id)==String(user.company?._id))

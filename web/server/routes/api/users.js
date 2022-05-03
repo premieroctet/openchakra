@@ -74,10 +74,9 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     .populate('company')
     .populate('companies')
     .then(data => {
+      console.log(`Before:${data.map(u => u.email)}`)
       data=filterUsers(data, DATA_TYPE, req.user, VIEW)
-      const companies=loadsh.uniqBy(data.map(d => d.company), c => String(c._id))
-      const adresses=lodash.flattenDeep(companies.map(c => c.addresses))
-      res.json(adresses)
+      res.json(data)
     })
     .catch(err => {
       console.error(err)
@@ -1309,26 +1308,6 @@ router.get('/hook', (req, res) => {
     .catch(err => {
       console.error(err)
       res.status(200).json()
-    })
-})
-
-// TODO Feurst only - make it general later
-router.get('/addresses', passport.authenticate('jwt', {session: false}), (req, res) => {
-
-  if (!isActionAllowed(req.user.roles, ORDER, VIEW) || !isActionAllowed(req.user.roles, QUOTATION, VIEW)) {
-    return res.status(401)
-  }
-
-  User.find()
-    .populate('company')
-    .then(result => {
-      const users=filterUsers(result, DATA_TYPE, req.user, VIEW)
-      const addresses=lodash.flattenDeep(users.map(u => u.company).filter(c => !!c).map(c => c.addresses))
-      return res.json(addresses)
-    })
-    .catch(err => {
-      console.error(err)
-      res.status(500).json(err)
     })
 })
 
