@@ -25,13 +25,16 @@ const withEdiRequest = (Component = null) => {
       }
     }
 
-    createOrderId = async({endpoint, status, user_id}) => {
-      if (status !== ORDER_COMPLETE) { // Prevent order creation after submitting an order
-        return await client(`${API_PATH}/${endpoint}`, {data: {user: user_id}})
-          .then(data => this.setState({...this.state, data}))
-          .catch(e => console.error(e, `Can't create ${endpoint}`))
-      }
-      return false
+    createOrderId = async({endpoint, user}) => {
+      // if (status !== ORDER_COMPLETE) { // Prevent order creation after submitting an order
+      return await client(`${API_PATH}/${endpoint}`, {data: {user}})
+        .then(data => {
+          this.setState({...this.state, data})
+          return data
+        })
+        .catch(e => console.error(e, `Can't create ${endpoint}`))
+      // }
+      // return false
     }
     
     getContentFrom = async({endpoint, orderid}) => {
