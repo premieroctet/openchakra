@@ -99,30 +99,35 @@ const BaseCreateTable = ({
 
   // Init language
   useEffect(() => {
+    // console.log('language')
     setLanguage(Navigator.language)
   }, [language])
   
   // Init table
   useEffect(() => {
+    // console.log('getContent', orderID)
     !isEmpty(orderID) && getContentFrom({endpoint, orderid: orderID})
   }, [endpoint, getContentFrom, orderID, refresh])
   
   
   useEffect(() => {
+    // console.log('createOrder', orderID, orderuser)
     if (isEmpty(orderID)) {
       if (orderuser !== null) {
-        createOrderId({endpoint, user: orderuser}).then(id => setOrderId(id))
+        createOrderId({endpoint, user: orderuser}).then(data => setOrderId(data._id))
       }
     }
   }, [createOrderId, endpoint, orderID, orderuser, setOrderId])
   
   useEffect(() => {
-    !isFeurstSales && setOrderuser(dataToken.id)
+    // console.log('setOrderUser', dataToken.id)
+    // !isFeurstSales && setOrderuser(dataToken.id)
   }, [dataToken.id, isFeurstSales, setOrderuser])
   
   
   /* supplied id for a view ? */
   useEffect(() => {
+    console.log('isView', id)
     if (!isEmpty(id)) { setOrderId(id) }
   }, [id, setOrderId])
 
@@ -165,9 +170,9 @@ const BaseCreateTable = ({
       null
     }
     
-    { orderuser ? <div>
+    { orderID ? <div>
 
-      {isFeurstSales && <h2>Devis Mme Michu</h2>}
+      {isFeurstSales && <H2confirm>{state?.user?.full_name}</H2confirm>}
 
       {canAdd &&
       <div className='container-base'>
