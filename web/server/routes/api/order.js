@@ -67,7 +67,7 @@ router.get('/template', passport.authenticate('jwt', {session: false}), (req, re
 router.post('/:order_id/import', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, UPDATE)) {
-    return res.status(301).json()
+    return res.status(401).json()
   }
 
   uploadItems.single('buffer')(req, res, err => {
@@ -84,7 +84,7 @@ router.post('/:order_id/import', passport.authenticate('jwt', {session: false}),
       .then(data => {
         if (!data) {
           console.error(`No order #${order_id}`)
-          return res.status(404)
+          return res.status(404).json()
         }
         // db field => import field
         const DB_MAPPING={
@@ -110,7 +110,7 @@ router.post('/:order_id/import', passport.authenticate('jwt', {session: false}),
 router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, CREATE) && !isActionAllowed(req.user.roles, DATA_TYPE, CREATE_FOR)) {
-    return res.status(301).json()
+    return res.status(401).json()
   }
 
   const {errors, isValid}=validateOrder(req.body)
@@ -119,17 +119,8 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   }
 
   let attributes=req.body
-  // Customer
-  if (isActionAllowed(req.user.roles, DATA_TYPE, CREATE)) {
-    attributes={...attributes, user: req.user}
-  }
-  // Feurst sales
-  else {
-    if (!req.query.user) {
-      return res.status(400).json(`User id is required`)
-    }
-    attributes={...attributes, user: req.query.user, created_by: req.user}
-  }
+  attributes={...attributes, created_by: req.user}
+
   MODEL.create(attributes)
     .then(data => {
       return res.json(data)
@@ -146,7 +137,7 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 router.put('/:id/rewrite', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, UPDATE)) {
-    return res.status(301)
+    return res.status(401).json()
   }
 
   const order_id=req.params.id
@@ -175,7 +166,7 @@ router.put('/:id/rewrite', passport.authenticate('jwt', {session: false}), (req,
 router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, UPDATE)) {
-    return res.status(301)
+    return res.status(401).json()
   }
 
   const order_id=req.params.id
@@ -206,7 +197,7 @@ router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
 router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, UPDATE)) {
-    return res.status(301).json()
+    return res.status(401).json()
   }
 
   const {errors, isValid}=validateOrderItem(req.body)
@@ -222,7 +213,7 @@ router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, r
     .then(data => {
       if (!data) {
         console.error(`No order #${order_id}`)
-        return res.status(404)
+        return res.status(404).json()
       }
       return addItem(data.user._id, data, product, null, quantity, replace)
     })
@@ -244,7 +235,7 @@ router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, r
 router.delete('/:order_id/items/:item_id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, UPDATE)) {
-    return res.status(301)
+    return res.status(401).json()
   }
 
   const order_id=req.params.order_id
@@ -276,7 +267,7 @@ router.delete('/:order_id/items/:item_id', passport.authenticate('jwt', {session
 router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, VIEW)) {
-    return res.status(401)
+    return res.status(401).json()
   }
 
   MODEL.find()
@@ -298,7 +289,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 router.get('/:order_id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, VIEW)) {
-    return res.status(301)
+    return res.status(401).json()
   }
 
   MODEL.findOne()
@@ -322,7 +313,7 @@ router.get('/:order_id', passport.authenticate('jwt', {session: false}), (req, r
 router.delete('/:order_id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, DELETE)) {
-    return res.status(301)
+    return res.status(401).json()
   }
 
   MODEL.findOneAndDelete()
@@ -341,7 +332,7 @@ router.delete('/:order_id', passport.authenticate('jwt', {session: false}), (req
 router.post('/:order_id/validate', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, VALIDATE)) {
-    return res.status(301)
+    return res.status(401).json()
   }
 
   const order_id=req.params.order_id
@@ -376,7 +367,7 @@ router.post('/:order_id/validate', passport.authenticate('jwt', {session: false}
 router.get('/:id/shipping-fee', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, VIEW)) {
-    return res.status(301)
+    return res.status(401).json()
   }
 
   const zipCode=req.query.zipcode
