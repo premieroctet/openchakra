@@ -39,7 +39,7 @@ router.get('/template', passport.authenticate('jwt', {session: false}), (req, re
 router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, VIEW)) {
-    return res.status(301)
+    return res.sendStatus(301)
   }
 
   MODEL.find(getDataFilter(req.user, DATA_TYPE, VIEW))

@@ -43,36 +43,6 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     })
 })
 
-// @Route GET /myAlfred/api/products/:product_id
-// View one product
-// @Access private
-router.get('/:product_id', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const user_id=req.query.user
-  if (!user_id) {
-    return res.status(500).json('Missing user_id parameter')
-  }
-  const product_id=req.params.product_id
-  let product=null
-  Product.findById(product_id)
-    .lean()
-    .then(result => {
-      if (!result) {
-        return res.status(404).json()
-      }
-      product=result
-      return getProductPrices(product.reference, user_id)
-    })
-    .then(prices => {
-      product.catalog_price=prices.catalog_price
-      product.net_price=prices.net_price
-      return res.json(product)
-    })
-    .catch(err => {
-      console.error(err)
-      res.status(500).json(err)
-    })
-})
-
 // @Route POST /myAlfred/api/products
 // Create a product
 // @Access private
@@ -114,7 +84,7 @@ router.put('/:product_id', passport.authenticate('jwt', {session: false}), (req,
 router.delete('/:product_id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, DELETE)) {
-    return res.status(301).json()
+    return res.sendStatus(301)
   }
 
   Product.findByIdAndDelete(req.params.product_id, {runValidators: true, new: true})
@@ -135,7 +105,7 @@ router.delete('/:product_id', passport.authenticate('jwt', {session: false}), (r
 router.post('/import', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, CREATE)) {
-    return res.status(301).json()
+    return res.sendStatus(301)
   }
 
   uploadProducts.single('buffer')(req, res, err => {
@@ -155,13 +125,13 @@ router.post('/import', passport.authenticate('jwt', {session: false}), (req, res
 
     const options=JSON.parse(req.body.options)
 
-    fileImport(Product, req.file.buffer, DB_MAPPING, {...options, key: 'reference'})
+    productsImport(Product, req.file.buffer, DB_MAPPING, {...options, key: 'reference'})
       .then(result => {
-        res.json(result)
+        return res.json(result)
       })
       .catch(err => {
         console.error(err)
-        res.status(500).error(err)
+        return res.status(500).json(err)
       })
   })
 })
@@ -193,7 +163,7 @@ router.post('/import-stock', passport.authenticate('jwt', {session: false}), (re
       })
       .catch(err => {
         console.error(err)
-        res.status(500).error(err)
+        return res.status(500).json(err)
       })
   })
 })

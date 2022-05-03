@@ -40,7 +40,7 @@ const uploadEmployees = createMemoryMulter(TEXT_FILTER)
 // @Access private
 router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   if (!isActionAllowed(req.user.roles, ACCOUNT, LINK)) {
-    return res.status(301)
+    return res.sendStatus(301)
   }
 
   Company.find()

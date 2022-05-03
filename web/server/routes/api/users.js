@@ -67,14 +67,13 @@ const DATA_TYPE=ACCOUNT
 // Register
 router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   if (!isActionAllowed(req.user.roles, DATA_TYPE, VIEW)) {
-    return res.status(301)
+    return res.sendStatus(301)
   }
 
   User.find()
     .populate('company')
     .populate('companies')
     .then(data => {
-      console.log(`Before:${data.map(u => u.email)}`)
       data=filterUsers(data, DATA_TYPE, req.user, VIEW)
       res.json(data)
     })
@@ -628,7 +627,10 @@ router.get('/all', (req, res) => {
       }
       res.json(user)
     })
-    .catch(err => res.status(404).json({user: 'No users found'}))
+    .catch(err => {
+      console.error(err)
+      res.status(404).json({user: 'No users found'})
+    })
 })
 
 // @Route GET /myAlfred/api/users/users
@@ -648,7 +650,7 @@ router.get('/users', (req, res) => {
 // Get roles for an email's user
 router.get('/roles/:email', (req, res) => {
 
-  User.findOne({email: req.params.email}, 'roles')
+  User.findOne({email: new RegExp(req.params.email, 'i')}, 'roles')
     .then(user => {
       if (!user) {
         console.log(`Request roles for email ${req.params.email}:[]`)
@@ -657,7 +659,10 @@ router.get('/roles/:email', (req, res) => {
       console.log(`Request roles for email ${req.params.email}:${user.roles}`)
       res.json(user.roles)
     })
-    .catch(err => res.status(404).json({user: 'No user found'}))
+    .catch(err => {
+      console.error(err)
+      res.status(404).json({user: 'No user found'})
+    })
 })
 
 // @Route GET /myAlfred/api/users/users/:id
@@ -1224,7 +1229,7 @@ router.post('/profile/album/picture/add', uploadAlbumPicture.single('myImage'), 
 router.put('/:user_id/companies', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, LINK)) {
-    return res.status(301)
+    return res.sendStatus(301)
   }
 
   const user_id=req.params.user_id
@@ -1319,7 +1324,7 @@ const uploadAccounts = createMemoryMulter(XL_FILTER)
 router.post('/import', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, CREATE)) {
-    return res.status(301).json()
+    return res.sendStatus(301)
   }
 
   uploadAccounts.single('buffer')(req, res, err => {

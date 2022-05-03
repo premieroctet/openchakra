@@ -90,10 +90,14 @@ const dataImport=(model, headers, records, mapping, options) => {
   })
 }
 
-const fileImport= (model, bufferData, mapping, options) => {
+/**
+Post import: Promise (fileRecord, dbRecord) => dBrecord
+To modify record after reading & mapping, before DB insertion
+*/
+const fileImport= (model, bufferData, mapping, options, postImport=null) => {
   return extractData(bufferData, options)
     .then(({headers, records}) => {
-      return dataImport(model, headers, records, mapping, options)
+      return dataImport(model, headers, records, mapping, options, postImport)
     })
     .catch(err => {
       return ({created: 0, updated: 0, errors: [String(err)], warnings: []})
@@ -281,5 +285,18 @@ const accountsImport = (model, buffer, mapping, options) => {
   })
 }
 
+const productsImport = (model, bufferData, mapping, options) => {
+  const importComponents = record => {
+    const FIELDS='Adapteur,Chapeau,Fourreau,Clavette,BouchonGBouchonD,Pointe'.split(',')
+    const compIds = FIELDS.map(f => record[f]).filter(v => !!v)
+    if (compIds.length==0) {
+      return Promise.reolve(record)
+    }
+
+  }
+
+  return fileImport(model, bufferData, mapping, options)
+}
+
 module.exports={fileImport, shipRatesImport, lineItemsImport,
-  priceListImport, accountsImport}
+  priceListImport, accountsImport, productsImport}

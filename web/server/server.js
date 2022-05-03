@@ -88,6 +88,7 @@ checkConfig()
 
     // Context handling
     app.use((req, res, next) => {
+      // console.log(`REQUEST:${req.method}, ${req.originalUrl}, ${JSON.stringify(req.body)}`)
       serverContextFromRequest(req)
         .then(context => {
           req.context=context
