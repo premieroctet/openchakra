@@ -19,6 +19,7 @@ import {
   QUOTATION_VALID,
   QUOTATION_PARTIALLY_HANDLED,
   QUOTATION_HANDLED,
+  CREATE_FOR,
 } from '../../utils/consts'
 import FeurstTable from '../../styles/feurst/FeurstTable'
 import {client} from '../../utils/client'
@@ -100,7 +101,7 @@ const BaseCreateTable = ({
   // Init table
   useEffect(() => {
     if (isEmpty(orderID)) {
-      createOrderId()
+      createOrderId({endpoint})
     }
     else {
       getContentFrom({endpoint, orderid: orderID})
@@ -125,24 +126,22 @@ const BaseCreateTable = ({
   const templateURL=`${API_PATH}/${endpoint}/template`
 
   const paramsComboboxUser = {
-    itemToString: item => (item ? `${item.reference}` : ''),
+    itemToString: item => (item ? `${item.full_name}` : ''),
     onSelectedItemChange: ({selectedItem}) => {
       setOrderuser(selectedItem)
     },
   }
 
   return (<>
-
     <Autocomplete
-      urlToFetch={`${API_PATH}/products?pattern=`}
+      urlToFetch={`${API_PATH}/users`}
       item={orderuser}
       setItem={setOrderuser}
       paramsCombobox={paramsComboboxUser}
-      errorMsg= 'Aucun article trouvé'
-      dbSearchField= 'reference'
+      errorMsg= 'Aucun utilisateur trouvé'
       label={'Nom du client'}
       placeholder='Nom du client'
-      formattingResult={item => `${item.reference} - ${item.description} ${item.description_2}`}
+      formattingResult={item => `${item.full_name} / ${item.company.name}`}
     />
 
     {canAdd &&
