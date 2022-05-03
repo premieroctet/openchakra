@@ -1,4 +1,7 @@
-const {accountsImport} = require('../../../server/utils/import')
+const {
+  accountsImport,
+  productsImport,
+} = require('../../../server/utils/import')
 
 const fs = require('fs').promises
 const mongoose = require('mongoose')
@@ -81,7 +84,7 @@ describe('XL & CSV imports', () => {
       })
   })
 
-  test('Import products xlsx', () => {
+  test.only('Import products xlsx', () => {
     return fs.readFile(`tests/data/products.xlsx`)
       .then(contents => {
         const DB_MAPPING={
@@ -93,7 +96,7 @@ describe('XL & CSV imports', () => {
           'weight': {column: "Poids d'expédition", transform: v => parseFloat(String(v).replace(',', '.')) || null},
         }
 
-        return fileImport(Product, contents, DB_MAPPING, {key: 'reference', format: XL_TYPE, tab: 'Travail'})
+        return productsImport(Product, contents, DB_MAPPING, {key: 'reference', format: XL_TYPE, tab: 'Travail'})
       })
       .then(result => {
         expect(result.warnings.length).toBe(0)
@@ -103,7 +106,7 @@ describe('XL & CSV imports', () => {
       })
   })
 
-  test.only('Import price list xlsx', () => {
+  test('Import price list xlsx', () => {
     return fs.readFile(`tests/data/products.xlsx`)
       .then(contents => {
         return priceListImport(PriceList, contents, null, {key: 'reference', format: XL_TYPE, tab: 'Travail'})
@@ -116,7 +119,7 @@ describe('XL & CSV imports', () => {
       })
   }, 10000)
 
-  test.only('Import clients/compagnies/tarifs', () => {
+  test('Import clients/compagnies/tarifs', () => {
     return fs.readFile(`tests/data/clients.xlsx`)
       .then(contents => {
         return accountsImport(User, contents, null, {format: XL_TYPE, tab: 'DONNEES CLIENT FEURST'})

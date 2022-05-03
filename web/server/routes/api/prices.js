@@ -23,7 +23,7 @@ const DATA_TYPE=PRICELIST
 router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, VIEW)) {
-    return res.status(301)
+    return res.sendStatus(301)
   }
 
   PriceList.find()
@@ -42,7 +42,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 router.post('/import', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, CREATE)) {
-    return res.status(301).json()
+    return res.sendStatus(301)
   }
 
   uploadProducts.single('buffer')(req, res, err => {

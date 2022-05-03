@@ -40,7 +40,7 @@ router.get('/template', passport.authenticate('jwt', {session: false}), (req, re
 router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, CREATE)) {
-    return res.status(301)
+    return res.sendStatus(301)
   }
 
   const {errors, isValid}=validateQuotation(req.body)
@@ -68,7 +68,7 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, UPDATE)) {
-    return res.status(301)
+    return res.sendStatus(301)
   }
   throw new Error('Not implemented')
 })
@@ -79,7 +79,7 @@ router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
 router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, UPDATE)) {
-    return res.status(301)
+    return res.sendStatus(301)
   }
 
   const {errors, isValid}=validateOrderItem(req.body)
@@ -94,7 +94,7 @@ router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, r
     .then(data => {
       if (!data) {
         console.error(`No quotation #${quotation_id}`)
-        return res.status(404)
+        return res.sendStatus(404)
       }
       return addItem(data, product, quantity)
     })
@@ -116,7 +116,7 @@ router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, r
 router.delete('/:quotation_id/items/:item_id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, DELETE)) {
-    return res.status(301)
+    return res.sendStatus(301)
   }
 
   const quotation_id=req.params.quotation_id
@@ -138,7 +138,7 @@ router.delete('/:quotation_id/items/:item_id', passport.authenticate('jwt', {ses
 router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, VIEW)) {
-    return res.status(301)
+    return res.sendStatus(301)
   }
 
   Quotation.find(getDataFilter(req.user, DATA_TYPE, VIEW))
@@ -158,7 +158,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 router.get('/:quotation_id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, VIEW)) {
-    return res.status(301)
+    return res.sendStatus(301)
   }
 
   Quotation.findOne({_id: req.params.quotation_id, ...getDataFilter(req.user, DATA_TYPE, VIEW)})
@@ -181,7 +181,7 @@ router.get('/:quotation_id', passport.authenticate('jwt', {session: false}), (re
 router.delete('/:quotation_id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, DELETE)) {
-    return res.status(301)
+    return res.sendStatus(301)
   }
 
   Quotation.findOneAndDelete({_id: req.params.quotation_id, ...getDataFilter(req.user, DATA_TYPE, VIEW)})
@@ -196,7 +196,7 @@ router.delete('/:quotation_id', passport.authenticate('jwt', {session: false}), 
 
 router.post('/:quotation_id/convert', passport.authenticate('jwt', {session: false}), (req, res) => {
   if (!isActionAllowed(reQ.user.roles, DATA_TYPE, CONVERT)) {
-    return res.status(301)
+    return res.sendStatus(301)
   }
 
   const quotation_id=req.params.quotation_id
@@ -204,7 +204,7 @@ router.post('/:quotation_id/convert', passport.authenticate('jwt', {session: fal
   MODEL.findById(quotation_id)
     .then(quotation => {
       if (!quotation) {
-        return res.status(404)
+        return res.sendStatus(404)
       }
       const attributes=lodash.omit(quotation, ['_id', 'id'])
       attributes.source_quotation=quotation
@@ -225,7 +225,7 @@ router.post('/:quotation_id/convert', passport.authenticate('jwt', {session: fal
 router.get('/:id/shipping-fee', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, VIEW)) {
-    return res.status(301)
+    return res.sendStatus(301)
   }
 
   const zipCode=req.query.zipcode

@@ -48,7 +48,7 @@ const filterUsers = (data, model, user, action) => {
     return data.filter(d => String(d.company?._id)==String(user.company?._id))
   }
   if (userActions.some(userAction => userAction.visibility==MINE)) {
-    return data.filter(d => String(d._id)==String(user._id))
+    return data.filter(u => String(u._id)==String(user._id))
   }
   return []
 }

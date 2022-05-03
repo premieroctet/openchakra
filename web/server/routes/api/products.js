@@ -114,7 +114,7 @@ router.put('/:product_id', passport.authenticate('jwt', {session: false}), (req,
 router.delete('/:product_id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, DELETE)) {
-    return res.status(301).json()
+    return res.sendStatus(301)
   }
 
   Product.findByIdAndDelete(req.params.product_id, {runValidators: true, new: true})
@@ -135,7 +135,7 @@ router.delete('/:product_id', passport.authenticate('jwt', {session: false}), (r
 router.post('/import', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, CREATE)) {
-    return res.status(301).json()
+    return res.sendStatus(301)
   }
 
   uploadProducts.single('buffer')(req, res, err => {
@@ -155,13 +155,13 @@ router.post('/import', passport.authenticate('jwt', {session: false}), (req, res
 
     const options=JSON.parse(req.body.options)
 
-    fileImport(Product, req.file.buffer, DB_MAPPING, {...options, key: 'reference'})
+    productsImport(Product, req.file.buffer, DB_MAPPING, {...options, key: 'reference'})
       .then(result => {
-        res.json(result)
+        return res.json(result)
       })
       .catch(err => {
         console.error(err)
-        res.status(500).error(err)
+        return res.status(500).json(err)
       })
   })
 })
@@ -193,7 +193,7 @@ router.post('/import-stock', passport.authenticate('jwt', {session: false}), (re
       })
       .catch(err => {
         console.error(err)
-        res.status(500).error(err)
+        return res.status(500).json(err)
       })
   })
 })
