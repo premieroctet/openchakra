@@ -69,8 +69,7 @@ const BaseCreateTable = ({
   
   const router = useRouter()
   
-  const isFeurstSales = accessRights.actions
-    .filter(acc => acc.action == CREATE_FOR)
+  const isFeurstSales = accessRights.actions.map(acc => acc.action).includes(CREATE_FOR)
 
   const justCreated = [ORDER_CREATED, QUOTATION_CREATED].includes(state.status)
   const canAdd = [ORDER_CREATED, ORDER_FULFILLED, QUOTATION_CREATED, QUOTATION_FULFILLED].includes(state.status)
@@ -121,7 +120,7 @@ const BaseCreateTable = ({
   
   useEffect(() => {
     // console.log('setOrderUser', dataToken.id)
-    // !isFeurstSales && setOrderuser(dataToken.id)
+    !isFeurstSales && setOrderuser(dataToken.id)
   }, [dataToken.id, isFeurstSales, setOrderuser])
   
   
