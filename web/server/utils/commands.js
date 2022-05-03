@@ -1,6 +1,7 @@
+const lodash=require('lodash')
+const Product = require('../models/Product')
 const PriceList = require('../models/PriceList')
 const User = require('../models/User')
-const Product = require('../models/Product')
 const {EXPRESS_SHIPPING} = require('../../utils/feurst/consts')
 const {roundCurrency} = require('../../utils/converters')
 const ShipRate = require('../models/ShipRate')
@@ -102,13 +103,19 @@ const updateShipFee = data => {
   })
 }
 
-/**
-Updates shipping fee depending on ShipRate
-Data is an Order or a Quotation
-*/
-const updateDiscount = data => {
-  throw new Error('Not implemented')
+const updateStock = orderQuot => {
+  console.log(`Updating stock for ${orderQuot.items.map(i => ([i.product, i.quantity]))}`)
+  const promises=orderQuot.items.map(it => Product.findByIdAndUpdate(it.product, {$inc: {stock: -it.quantity}}))
+  Promise.allSettled(promises)
+    .then(res => {
+      const grouped=lodash.groupBy(res, 'status')
+      console.log(`Result:${grouped}`)
+      return Promise.resolve(orderQuot)
+    })
+    .catch(err => {
+      console.error(err)
+      return Promise.reject(orderQuot)
+    })
 }
 
-
-module.exports = {addItem, computeShipFee, updateShipFee, updateDiscount, getProductPrices}
+module.exports = {addItem, computeShipFee, updateShipFee, getProductPrices, updateStock}

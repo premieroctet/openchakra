@@ -4,6 +4,12 @@ const moment = require('moment')
 const xlsx=require('node-xlsx')
 const lodash=require('lodash')
 const {
+  addItem,
+  computeShipFee,
+  updateShipFee,
+  updateStock,
+} = require('../../utils/commands')
+const {
   filterOrderQuotation,
   isActionAllowed,
 } = require('../../utils/userAccess')
@@ -14,11 +20,6 @@ const {
 } = require('../../../utils/feurst/consts')
 const {lineItemsImport} = require('../../utils/import')
 const {XL_FILTER, createMemoryMulter} = require('../../utils/filesystem')
-const {
-  addItem,
-  computeShipFee,
-  updateShipFee,
-} = require('../../utils/commands')
 const {validateZipCode} = require('../../validation/order')
 
 const router = express.Router()
@@ -225,9 +226,6 @@ router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, r
     .then(data => {
       return updateShipFee(data)
     })
-    .then(result => {
-      return result.save()
-    })
     .then(data => {
       return res.json(data)
     })
@@ -355,6 +353,9 @@ router.post('/:order_id/validate', passport.authenticate('jwt', {session: false}
       }
       data.user_validated=true
       return data.save()
+    })
+    .then(data => {
+      return updateStock(data)
     })
     .then(() => {
       return res.json()
