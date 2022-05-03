@@ -29,11 +29,9 @@ const AddArticle = ({endpoint, orderid, updateTable, addProduct, wordingSection}
   const checkProduct = async article => {
 
     if (article?.item?._id) {
-      const articleInfoCheck = await client(`${API_PATH}/products/${article.item._id}`)
+      return await client(`${API_PATH}/products/${article.item._id}`)
+        .then(articleInfoCheck => setArticle({...article, info: articleInfoCheck, showArticlePanel: true}))
         .catch(error => `Cant fetch article info ${error}`)
-
-      setArticle({...article, info: articleInfoCheck, showArticlePanel: true})
-      return
     }
 
     snackBarError('Veuillez renseigner une référence')
