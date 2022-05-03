@@ -3,7 +3,7 @@ import useLocalStorageState from 'use-local-storage-state'
 import dynamic from 'next/dynamic'
 import {useRouter} from 'next/router'
 import Autocomplete from '../Autocomplete/Autocomplete'
-
+import {StyledAutocomplete} from '../Autocomplete/Autocomplete.styles'
 import {
   BASEPATH_EDI,
   API_PATH,
@@ -60,7 +60,7 @@ const BaseCreateTable = ({
 
   const [language, setLanguage] = useState('fr')
   const dataToken = getAuthToken()
-  const [orderuser, setOrderuser] = useState(dataToken.id)
+  const [orderuser, setOrderuser] = useState(null)
   const [orderID, setOrderId, {removeItem}] = useLocalStorageState(storage, {defaultValue: null})
   const [isOpenDialog, setIsOpenDialog] = useState(false)
   const [refresh, setRefresh]=useState(false)
@@ -69,6 +69,10 @@ const BaseCreateTable = ({
   
   const router = useRouter()
   
+  const isFeurstSales = accessRights.actions
+    .filter(acc => acc.action == CREATE_FOR)
+
+  const justCreated = [ORDER_CREATED, QUOTATION_CREATED].includes(state.status)
   const canAdd = [ORDER_CREATED, ORDER_FULFILLED, QUOTATION_CREATED, QUOTATION_FULFILLED].includes(state.status)
   const canValidate = [ORDER_COMPLETE, QUOTATION_COMPLETE].includes(state.status)
   const isView = [ORDER_VALID, ORDER_PARTIALLY_HANDLED, ORDER_HANDLED, QUOTATION_VALID, QUOTATION_PARTIALLY_HANDLED, QUOTATION_HANDLED].includes(state.status)
@@ -95,21 +99,35 @@ const BaseCreateTable = ({
 
   // Init language
   useEffect(() => {
+    // console.log('language')
     setLanguage(Navigator.language)
   }, [language])
-
+  
   // Init table
   useEffect(() => {
+    // console.log('getContent', orderID)
+    !isEmpty(orderID) && getContentFrom({endpoint, orderid: orderID})
+  }, [endpoint, getContentFrom, orderID, refresh])
+  
+  
+  useEffect(() => {
+    // console.log('createOrder', orderID, orderuser)
     if (isEmpty(orderID)) {
-      createOrderId({endpoint})
+      if (orderuser !== null) {
+        createOrderId({endpoint, user: orderuser}).then(data => setOrderId(data._id))
+      }
     }
-    else {
-      getContentFrom({endpoint, orderid: orderID})
-    }
-  }, [createOrderId, endpoint, getContentFrom, orderID, refresh])
-
+  }, [createOrderId, endpoint, orderID, orderuser, setOrderId])
+  
+  useEffect(() => {
+    // console.log('setOrderUser', dataToken.id)
+    // !isFeurstSales && setOrderuser(dataToken.id)
+  }, [dataToken.id, isFeurstSales, setOrderuser])
+  
+  
   /* supplied id for a view ? */
   useEffect(() => {
+    console.log('isView', id)
     if (!isEmpty(id)) { setOrderId(id) }
   }, [id, setOrderId])
 
@@ -128,103 +146,115 @@ const BaseCreateTable = ({
   const paramsComboboxUser = {
     itemToString: item => (item ? `${item.full_name}` : ''),
     onSelectedItemChange: ({selectedItem}) => {
-      setOrderuser(selectedItem)
+      selectedItem && setOrderuser(selectedItem._id)
     },
   }
 
   return (<>
-    <Autocomplete
-      urlToFetch={`${API_PATH}/users`}
-      item={orderuser}
-      setItem={setOrderuser}
-      paramsCombobox={paramsComboboxUser}
-      errorMsg= 'Aucun utilisateur trouvé'
-      label={'Nom du client'}
-      placeholder='Nom du client'
-      formattingResult={item => `${item.full_name} / ${item.company.name}`}
-    />
+    
+    
+    {justCreated && isFeurstSales && !orderuser ?
+      <div className='container-sm mb-8'>
+        <StyledAutocomplete>
+          <Autocomplete
+            urlToFetch={`${API_PATH}/users`}
+            item={orderuser}
+            setItem={setOrderuser}
+            paramsCombobox={paramsComboboxUser}
+            errorMsg= 'Aucun utilisateur trouvé'
+            placeholder='Nom du client'
+            formattingResult={item => `${item.full_name} / ${item.company.name}`}
+          />
+        </StyledAutocomplete>
+      </div> :
+      null
+    }
+    
+    { orderID ? <div>
 
-    {canAdd &&
+      {isFeurstSales && <H2confirm>{state?.user?.full_name}</H2confirm>}
+
+      {canAdd &&
       <div className='container-base'>
         <ImportExcelFile importURL={importURL} templateURL={templateURL}/>
         <AddArticle endpoint={endpoint} orderid={orderID} addProduct={addProduct} wordingSection={wordingSection} />
       </div>}
 
-    {canValidate && <H2confirm>Récapitulatif de votre commande</H2confirm>}
+      {canValidate && <H2confirm>Récapitulatif de votre commande</H2confirm>}
 
-    {isView && <div>
-      <dl className='dl-inline text-xl font-semibold'>
-        <dt>{t(`${wordingSection}.name`)}</dt>
-        <dd>{state.reference}</dd>
-        <dt>{t(`${wordingSection}.date`)}</dt>
-        <dd>{new Date(state.creation_date).toLocaleDateString()}</dd>
-      </dl>
-    </div>}
+      {isView && <div>
+        <dl className='dl-inline text-xl font-semibold'>
+          <dt>{t(`${wordingSection}.name`)}</dt>
+          <dd>{state.reference}</dd>
+          <dt>{t(`${wordingSection}.date`)}</dt>
+          <dd>{new Date(state.creation_date).toLocaleDateString()}</dd>
+        </dl>
+      </div>}
 
-    <FeurstTable
-      caption={t(`${wordingSection}.details`)}
-      data={state.items}
-      columns={cols}
-      footer={canValidate || isView}
-      updateMyData={updateMyOrderContent}
-    />
+      <FeurstTable
+        caption={t(`${wordingSection}.details`)}
+        data={state.items}
+        columns={cols}
+        footer={canValidate || isView}
+        updateMyData={updateMyOrderContent}
+      />
 
-    {canValidate || isView ?
-      <div className='flex justify-between items-end mb-8'>
-        <Delivery address={state.address} shipping={{shipping_mode: state.shipping_mode, shipping_fee: state.shipping_fee}} />
-        {!isView ? <h4 className='text-2xl mb-0 text-black'>{t(`${wordingSection}.total`)} : {localeMoneyFormat({value: state.total_amount})}</h4> : null}
-      </div>: null
-    }
+      {canValidate || isView ?
+        <div className='flex justify-between items-end mb-8'>
+          <Delivery address={state.address} shipping={{shipping_mode: state.shipping_mode, shipping_fee: state.shipping_fee}} />
+          {!isView ? <h4 className='text-2xl mb-0 text-black'>{t(`${wordingSection}.total`)} : {localeMoneyFormat({value: state.total_amount})}</h4> : null}
+        </div>: null
+      }
 
-    {!isView ?
-      <div className='flex flex-wrap justify-between gap-y-4 mb-6'>
-        {canValidate
-          ?
-          <PleasantButton
-            rounded={'full'}
-            bgColor={'#fff'}
-            textColor={'#141953'}
-            borderColor={'1px solid #141953'}
-            onClick={() => resetAddress({endpoint, orderid: orderID})}
-          >
+      {!isView ?
+        <div className='flex flex-wrap justify-between gap-y-4 mb-6'>
+          {canValidate
+            ?
+            <PleasantButton
+              rounded={'full'}
+              bgColor={'#fff'}
+              textColor={'#141953'}
+              borderColor={'1px solid #141953'}
+              onClick={() => resetAddress({endpoint, orderid: orderID})}
+            >
         Revenir à la saisie
-          </PleasantButton>
-          :
+            </PleasantButton>
+            :
+            <PleasantButton
+              rounded={'full'}
+              disabled={[ORDER_CREATED].includes(state.status)}
+              bgColor={'#fff'}
+              textColor={'#141953'}
+              borderColor={'1px solid #141953'}
+              onClick={() => true}
+            >
+        Demande de devis
+            </PleasantButton>
+          }
+
+
           <PleasantButton
             rounded={'full'}
             disabled={[ORDER_CREATED].includes(state.status)}
-            bgColor={'#fff'}
-            textColor={'#141953'}
-            borderColor={'1px solid #141953'}
-            onClick={() => true}
+            onClick={() => (state.status === ORDER_FULFILLED ? setIsOpenDialog(true) : submitOrder({endpoint, orderid: orderID}))}
           >
-        Demande de devis
+            {t(`${wordingSection}.valid`)} {/* Valid order/quotation */}
           </PleasantButton>
-        }
+        </div>
+        : null }
 
-
-        <PleasantButton
-          rounded={'full'}
-          disabled={[ORDER_CREATED].includes(state.status)}
-          onClick={() => (state.status === ORDER_FULFILLED ? setIsOpenDialog(true) : submitOrder({endpoint, orderid: orderID}))}
-        >
-          {t(`${wordingSection}.valid`)} {/* Valid order/quotation */}
-        </PleasantButton>
-      </div>
-      : null }
-
-    <DialogAddress
-      orderid={orderID}
-      endpoint={endpoint}
-      isOpenDialog={isOpenDialog}
-      setIsOpenDialog={setIsOpenDialog}
-      accessRights={accessRights}
-      state={state}
-      requestUpdate={requestUpdate}
-      validateAddress={validateAddress}
-      wordingSection={wordingSection}
-    />
-
+      <DialogAddress
+        orderid={orderID}
+        endpoint={endpoint}
+        isOpenDialog={isOpenDialog}
+        setIsOpenDialog={setIsOpenDialog}
+        accessRights={accessRights}
+        state={state}
+        requestUpdate={requestUpdate}
+        validateAddress={validateAddress}
+        wordingSection={wordingSection}
+      />
+    </div> : null}
   </>
   )
 }

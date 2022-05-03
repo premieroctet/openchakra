@@ -124,6 +124,8 @@ export const GlobalStyleEdi = createGlobalStyle`
     --rounded-full: 9999px;
 
     /* containers */
+    --container-sm: ${props => (props.theme?.containerSize?.sm ? props.theme.containerSize.sm : 'min(100% - 2rem, 30rem)')}; 
+    --container-md: ${props => (props.theme?.containerSize?.md ? props.theme.containerSize.md : 'min(100% - 2rem, 40rem)')}; 
     --container-base: ${props => (props.theme?.containerSize?.base ? props.theme.containerSize.base : 'min(100% - 2rem, 50rem)')}; 
     --container-lg: ${props => (props.theme?.containerSize?.lg ? props.theme.containerSize.lg : 'min(100% - 2rem, 60rem)')}; 
     --container-xl: ${props => (props.theme?.containerSize?.xl ? props.theme.containerSize.xl : 'min(100% - 2rem, 70rem)')}; 
@@ -149,6 +151,16 @@ export const GlobalStyleEdi = createGlobalStyle`
     font-family: ${props => props.theme?.fontFamily};
   }
 
+
+  
+  .container-sm {
+    width: var(--container-sm);
+    margin-inline: auto;
+  }
+  .container-md {
+    width: var(--container-md);
+    margin-inline: auto;
+  }
   .container-base {
     width: var(--container-base);
     margin-inline: auto;
