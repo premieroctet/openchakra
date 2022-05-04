@@ -100,7 +100,10 @@ const BaseCreateTable = ({
   // Init table
   useEffect(() => {
     // console.log('getContent', orderID)
-    !isEmpty(orderID) && getContentFrom({endpoint, orderid: orderID})
+    if (!isEmpty(orderID)) {
+      getContentFrom({endpoint, orderid: orderID})
+        .then(data => setOrderuser(data.user))
+    }
   }, [endpoint, getContentFrom, orderID, refresh])
 
 
@@ -113,7 +116,7 @@ const BaseCreateTable = ({
           .catch(e => console.error('cant create order'))
       }
     }
-  }, [createOrderId, endpoint, orderID, orderuser, setOrderId])
+  }, [canValidate, createOrderId, endpoint, orderID, orderuser, setOrderId])
 
   useEffect(() => {
     // console.log('setOrderUser', dataToken.id)
@@ -123,7 +126,7 @@ const BaseCreateTable = ({
 
   /* supplied id for a view ? */
   useEffect(() => {
-    console.log('isView', id)
+    // console.log('isView', id)
     if (!isEmpty(id)) { setOrderId(id) }
   }, [id, setOrderId])
 
@@ -149,7 +152,7 @@ const BaseCreateTable = ({
   return (<>
 
 
-    {justCreated && isFeurstSales && !orderuser ?
+    {isFeurstSales && !orderuser ?
       <div className='container-sm mb-8'>
         <StyledAutocomplete>
           <Autocomplete

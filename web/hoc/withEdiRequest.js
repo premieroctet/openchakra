@@ -26,24 +26,23 @@ const withEdiRequest = (Component = null) => {
     }
 
     createOrderId = async({endpoint, user}) => {
-      // if (status !== ORDER_COMPLETE) { // Prevent order creation after submitting an order
       return await client(`${API_PATH}/${endpoint}`, {data: {user}})
         .then(data => {
           this.setState({...this.state, data})
           return data
         })
         .catch(e => console.error(e, `Can't create ${endpoint}`))
-      // }
-      // return false
     }
     
     getContentFrom = async({endpoint, orderid}) => {
       if (orderid) {
         return await client(`${API_PATH}/${endpoint}/${orderid}`)
-          .then(data => this.setState(data))
+          .then(data => {
+            this.setState(data)
+            return data
+          })
           .catch(() => {
-            snackBarError('Commande à créer')
-            return false
+            snackBarError('Commande/devis non existant')
           })
       }
     }
@@ -70,10 +69,11 @@ const withEdiRequest = (Component = null) => {
         _id,
       } = item
       
-      return await client(`${API_PATH}/${endpoint}/${orderid}/items`, {data: {product: _id, quantity: qty, replace}, method: 'PUT'})
+      await client(`${API_PATH}/${endpoint}/${orderid}/items`, {data: {product: _id, quantity: qty, replace}, method: 'PUT'})
         .then(() => this.getContentFrom({endpoint, orderid}))
-        .catch(() => {
+        .catch(errorMsg => {
           console.error(`Can't add product`)
+          snackBarError(errorMsg?.message)
           return false
         })
     }
@@ -83,7 +83,7 @@ const withEdiRequest = (Component = null) => {
   
       return await client(`${API_PATH}/${endpoint}/${orderid}/items/${idItem}`, {method: 'DELETE'})
         .then(() => this.getContentFrom({endpoint, orderid}))
-        .catch(e => console.error(`Can't delete product ${e}`))
+        .catch(e => console.error(`Can't delete product`, e))
     }
 
     requestUpdate = items => {

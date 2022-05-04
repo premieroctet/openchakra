@@ -34,16 +34,21 @@ async function client(
       /* if content-type is part of data considered as files... */
       if (blobContentTypes.includes(headers['content-type'])) {
         const blob = await response.blob()
-          .catch(e => console.log(`Error when fetching blob ${e}`))
+          .catch(e => console.log(`Error when fetching blob`, e))
         return blob
       }
 
-      const data = await response.json()
-        .catch(e => console.log(`Error when fetching ${e}`))
-      return data
+      return await response.json()
+        .catch(e => console.log(`Error when fetching`, e))
     }
-    return Promise.reject(response)
+    
+    const error = await response.json()
+    throw new Error(error)
   })
+    .catch(err => {
+      throw err
+    },
+    )
 }
 
 

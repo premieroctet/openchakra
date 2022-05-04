@@ -22,6 +22,7 @@ const ToTheBin = props => (
   </button>
 )
 
+
 const orderColumns = ({endpoint, orderid, language, deleteProduct}) => {
 
   const orderColumnsBase = [
@@ -68,20 +69,20 @@ const orderColumns = ({endpoint, orderid, language, deleteProduct}) => {
       label: 'Votre prix',
       attribute: v => localeMoneyFormat({lang: language, value: v.net_price}),
       sortType: 'number',
-      Footer: info => {
-        const total = React.useMemo(
-          () =>
-            info.rows.reduce((sum, row) => row.values.target_price + sum, 0),
-          [info.rows],
-        )
-
-        return <>{localeMoneyFormat({lang: language, value: total})}</>
-      },
     },
     {
       label: 'Total',
       attribute: v => localeMoneyFormat({lang: language, value: v.total_amount}),
       sortType: 'number',
+      Footer: info => {
+        const total = React.useMemo(
+          () =>
+            info.rows.reduce((sum, row) => row.original.total_amount + sum, 0),
+          [info.rows],
+        )
+
+        return <>{localeMoneyFormat({lang: language, value: total})}</>
+      },
     },
 
   ]
