@@ -37,7 +37,10 @@ const withEdiRequest = (Component = null) => {
     getContentFrom = async({endpoint, orderid}) => {
       if (orderid) {
         return await client(`${API_PATH}/${endpoint}/${orderid}`)
-          .then(data => this.setState(data))
+          .then(data => {
+            this.setState(data)
+            return data
+          })
           .catch(() => {
             snackBarError('Commande/devis non existant')
           })

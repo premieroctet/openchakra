@@ -29,7 +29,6 @@ const AddArticle = ({endpoint, orderid, updateTable, addProduct, wordingSection}
   const checkProduct = async article => {
 
     if (article?.item?._id) {
-      console.info('On appelle la verification')
       await client(`${API_PATH}/${endpoint}/${orderid}/products/${article.item._id}`)
         .then(articleInfoCheck => setArticle({...article, info: articleInfoCheck, showArticlePanel: true}))
         .catch(errorMsg => {
