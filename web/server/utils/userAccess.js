@@ -25,10 +25,10 @@ const filterOrderQuotation = (data, model, user, action) => {
     return data
   }
   if (userActions.some(userAction => userAction.visibility==RELATED)) {
-    return data.filter(d => user.companies.map(c => String(c._id)).includes(String(d.user.company._id)))
+    return data.filter(d => user.companies.map(c => String(c._id)).includes(String(d.user.company?._id)))
   }
   if (userActions.some(userAction => userAction.visibility==COMPANY)) {
-    return data.filter(d => String(d.user.company._id)==String(user.company._id))
+    return data.filter(d => String(d.user.company?._id)==String(user.company?._id))
   }
   if (userActions.some(userAction => userAction.visibility==MINE)) {
     return data.filter(d => String(d.user._id)==String(user._id))
