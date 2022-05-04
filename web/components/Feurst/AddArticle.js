@@ -39,6 +39,8 @@ const AddArticle = ({endpoint, orderid, updateTable, addProduct, wordingSection}
   }
 
 
+  const checkProductEnabled = article?.item && article?.qty
+
   return (
     <>
       <FormAddArticle>
@@ -64,11 +66,11 @@ const AddArticle = ({endpoint, orderid, updateTable, addProduct, wordingSection}
             id='articleQty'
             placeholder='Qté souhaitée'
             value={article.qty}
-            disabled={article.showArticlePanel}
+            disabled={false}
             onChange={ev => !isNaN(parseInt(ev.target.value)) && setArticle({...article, qty: parseInt(ev.target.value)})}
           />
         </Refquantity>
-        <PleasantButton disabled={article.showArticlePanel} rounded={'full'} onClick={() => checkProduct(article)}>Vérifier</PleasantButton>
+        <PleasantButton disabled={!checkProductEnabled} rounded={'full'} onClick={() => checkProduct(article)}>Vérifier</PleasantButton>
 
 
       </FormAddArticle>
