@@ -97,6 +97,13 @@ const tabsContent = [
     visible: [ORDER, QUOTATION],
   },
   {
+    title: 'Créer un devis',
+    url: `${BASEPATH_EDI}/quotations/create`,
+    model: QUOTATION,
+    action: CREATE_FOR,
+    visible: [ORDER, QUOTATION],
+  },
+  {
     title: 'Mes devis',
     url: `${BASEPATH_EDI}/quotations`,
     model: QUOTATION,
