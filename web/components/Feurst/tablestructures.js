@@ -165,7 +165,7 @@ const quotationColumns = ({language, deleteProduct}) => [
   {
     label: 'Quantité',
     attribute: 'quantity',
-    Cell: EditableCell,
+    Cell: UpdateCell,
   },
   {
     label: 'Poids',

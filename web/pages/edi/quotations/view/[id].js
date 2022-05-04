@@ -2,8 +2,10 @@ import React from 'react'
 import {useRouter} from 'next/router'
 import withEdiAuth from '../../../../hoc/withEdiAuth'
 import BaseCreateTable from'../../../../components/Feurst/BaseCreateTable'
+const {
+  quotationColumns,
+} = require('../../../../components/Feurst/tablestructures')
 const {BASEPATH_EDI, QUOTATION, VIEW} = require('../../../../utils/consts')
-const {orderViewColumns} = require('../../../../components/Feurst/tablestructures')
 
 
 const View = ({accessRights}) => {
@@ -16,7 +18,7 @@ const View = ({accessRights}) => {
       id={quotationid}
       storage={'quotationview'}
       endpoint='quotations'
-      columns={orderViewColumns}
+      columns={quotationColumns}
       wordingSection={'EDI.QUOTATION'}
       accessRights={accessRights}
     />
