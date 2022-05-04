@@ -69,7 +69,7 @@ const CheckingProduct = ({endpoint, orderid, article, setArticle, addProduct, wo
 
   }
 
-  return (
+  return (info ?
     <CheckingProductArea role={'status'} aria-live='polite'>
       <dl>
         <dt>Désignation du produit :</dt>
@@ -81,11 +81,11 @@ const CheckingProduct = ({endpoint, orderid, article, setArticle, addProduct, wo
       </dl>
       <dl>
         <dt>Prix catalogue :</dt>
-        <dd>{localeMoneyFormat({value: info.catalog_price})}</dd>
+        <dd>{localeMoneyFormat({value: info?.catalog_price})}</dd>
         <dt>Poids unitaire :</dt>
-        <dd>{info.weight.toLocaleString()} kg</dd>
+        <dd>{info?.weight?.toLocaleString()} kg</dd>
         <dt>Votre prix :</dt>
-        <dd>{localeMoneyFormat({value: info.net_price})}</dd>
+        <dd>{localeMoneyFormat({value: info?.net_price})}</dd>
       </dl>
 
       <PleasantButton
@@ -97,6 +97,7 @@ const CheckingProduct = ({endpoint, orderid, article, setArticle, addProduct, wo
       </PleasantButton>
 
     </CheckingProductArea>
+    : null
   )
 }
 

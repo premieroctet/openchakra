@@ -193,7 +193,7 @@ const moneyFormat = value => {
 }
 
 const localeMoneyFormat = ({lang = 'fr', value, currency = 'EUR'}) => {
-  return new Intl.NumberFormat(lang, {style: 'currency', currency}).format(value)
+  return new Intl.NumberFormat(lang, {style: 'currency', currency}).format(+value)
 }
 
 const todayDate = () => {
