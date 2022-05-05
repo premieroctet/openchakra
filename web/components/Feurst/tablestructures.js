@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useMemo} from 'react'
 import Link from 'next/link'
 import UpdateCell from '../Table/UpdateCell'
 import EditableCell from '../Table/EditableCell'
@@ -15,6 +15,26 @@ const datetime = (a, b) => {
   if(a1<b1) { return 1 }
   else if(a1>b1) { return -1 }
   return 0
+}
+
+const FooterTotalWeight = info => {
+  const total = useMemo(
+    () =>
+      info.rows.reduce((sum, row) => row.values.total_weight + sum, 0),
+    [info.rows],
+  )
+
+  return <>{total} kg</>
+}
+
+const FooterTotalPrice = (info, language = null) => {
+  const total = useMemo(
+    () =>
+      info.rows.reduce((sum, row) => row.original.total_amount + sum, 0),
+    [info.rows],
+  )
+
+  return <>{localeMoneyFormat({lang: language, value: total})}</>
 }
 
 const ToTheBin = props => (
@@ -45,15 +65,7 @@ const orderColumns = ({endpoint, orderid, language, deleteProduct}) => {
     {
       label: 'Poids',
       attribute: 'total_weight',
-      Footer: info => {
-        const total = React.useMemo(
-          () =>
-            info.rows.reduce((sum, row) => row.values.total_weight + sum, 0),
-          [info.rows],
-        )
-
-        return <>{total} kg</>
-      },
+      Footer: FooterTotalWeight,
 
     },
     {
@@ -75,15 +87,7 @@ const orderColumns = ({endpoint, orderid, language, deleteProduct}) => {
       label: 'Total',
       attribute: v => localeMoneyFormat({lang: language, value: v.total_amount}),
       sortType: 'number',
-      Footer: info => {
-        const total = React.useMemo(
-          () =>
-            info.rows.reduce((sum, row) => row.original.total_amount + sum, 0),
-          [info.rows],
-        )
-
-        return <>{localeMoneyFormat({lang: language, value: total})}</>
-      },
+      Footer: FooterTotalPrice,
     },
 
   ]
@@ -159,6 +163,7 @@ const quotationColumns = ({language, deleteProduct}) => [
   {
     label: 'Réf. catalogue',
     attribute: 'product.reference',
+    Footer: 'Total',
   },
   {
     label: 'Désignation',
@@ -171,7 +176,8 @@ const quotationColumns = ({language, deleteProduct}) => [
   },
   {
     label: 'Poids',
-    attribute: 'product.weight',
+    attribute: 'total_weight',
+    Footer: FooterTotalWeight,
   },
   {
     label: 'Prix catalogue',
@@ -193,6 +199,7 @@ const quotationColumns = ({language, deleteProduct}) => [
     label: 'Total',
     attribute: v => localeMoneyFormat({lang: language, value: v.total_amount}),
     sortType: 'number',
+    Footer: data => FooterTotalPrice(data, language),
   },
   {
     label: '',

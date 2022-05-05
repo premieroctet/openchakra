@@ -17,7 +17,7 @@ const AccountsList = ({accessRights}) => {
   return (
     <>
       <div display='flex' flexDirection='row'>
-        {IMPORTS.map(imp => (<ImportExcelFile caption={imp.title} importURL={imp.url} templateURL={null} onImport={toggleRefresh}/>))}
+        {IMPORTS.map((imp, i) => (<ImportExcelFile key={`imp${i}`} caption={imp.title} importURL={imp.url} templateURL={null} onImport={toggleRefresh}/>))}
       </div>
       <FeurstRegister onSuccess={toggleRefresh}/>
       <BaseListTable caption='Liste des comptes' key={moment()} endpoint='users' columns={accountsColumns} refresh={refresh}/>
