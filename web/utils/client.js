@@ -23,11 +23,16 @@ async function client(
 
   return window.fetch(endpoint, config).then(async response => {
     if (response.status === 401) {
+      return Promise.reject({message: 'Action non authorisée.'})
+    }
+
+    if (response.status === 403) {
       clearAuthenticationToken()
       // refresh the page for them
       window.location.assign(window.location)
-      return Promise.reject({message: 'Please re-authenticate.'})
+      return Promise.reject({message: 'Accès interdit.'})
     }
+    
     if (response.ok) {
       const headers = [...response.headers].reduce((a, v) => ({...a, [v[0]]: v[1]}), {})
 

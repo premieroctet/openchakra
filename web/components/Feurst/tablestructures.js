@@ -2,6 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 import UpdateCell from '../Table/UpdateCell'
 import {localeMoneyFormat} from '../../utils/converters'
+import OrderStatus from './OrderStatus'
 const axios = require('axios')
 const {setAxiosAuthentication} = require('../../utils/authentication')
 const {
@@ -9,6 +10,7 @@ const {
   PARTIALLY_HANDLED,
   VALID,
 } = require('../../utils/feurst/consts')
+
 const {formatPercent} = require('../../utils/text')
 const {ROLES} = require('../../utils/consts')
 const {DateRangeColumnFilter} = require('../Table/TableFilter')
@@ -146,6 +148,7 @@ const ordersColumns = ({endpoint, language, deleteOrder}) => [
   {
     label: 'Statut',
     attribute: 'status',
+    Cell: ({value}) => <OrderStatus status={value} />,
   },
   {
     label: 'Recommander',

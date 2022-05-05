@@ -6,12 +6,13 @@ import {screen} from '../screenWidths'
 const TablesStyles = styled.div`
 
   table {
-    display: table;
+    display: block;
     border: 1px solid var(--stone-300);
     border-collapse: collapse;
     text-align: center;
     width: 100%;
-    margin: 0 auto;
+    max-width: fit-content;
+    margin-inline: auto;
     overflow-x: auto;
     white-space: nowrap;
     margin-bottom: var(--spc-8);
@@ -20,6 +21,8 @@ const TablesStyles = styled.div`
   @media (${screen.lg}) {
 
     table {
+      display: table;
+      max-width: unset;
       overflow-x: visible;
       white-space: unset;
     }
@@ -58,12 +61,18 @@ const TablesStyles = styled.div`
     font-weight: var(--font-bold);
   }
 
-
   input {
     max-width: var(--spc-24);
     padding: var(--spc-2) var(--spc-4);
     background: inherit;
     border: 1px solid var(--stone-400);
+  }
+
+  a {
+    font-weight: var(--font-bold);
+    font-size: var(--text-base);
+    color: var(--brand-color);
+    text-decoration:none;
   }
 
 

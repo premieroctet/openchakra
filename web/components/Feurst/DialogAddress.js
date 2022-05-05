@@ -120,7 +120,7 @@ const DialogAddress = ({
   const submitAddress = ev => {
     ev.preventDefault()
     setIsOpenDialog(false)
-    validateAddress({endpoint, orderid, shipping: {orderref, address, shippingOption}})
+    validateAddress({endpoint, orderid, shipping: {reference: orderref, address, shippingOption}})
   }
 
 
