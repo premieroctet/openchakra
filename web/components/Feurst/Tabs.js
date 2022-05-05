@@ -62,13 +62,6 @@ const Tabstyled = styled.div`
 
 const tabsContent = [
   {
-    title: 'Commandes à traiter',
-    url: `${BASEPATH_EDI}/orders/handle`,
-    model: ORDER,
-    action: HANDLE,
-    visible: [ORDER, QUOTATION],
-  },
-  {
     title: 'Créer une commande',
     url: `${BASEPATH_EDI}/orders/create`,
     model: ORDER,
@@ -90,6 +83,13 @@ const tabsContent = [
     visible: [ORDER, QUOTATION],
   },
   {
+    title: 'Traitement des commandes',
+    url: `${BASEPATH_EDI}/orders/handle`,
+    model: ORDER,
+    action: HANDLE,
+    visible: [ORDER, QUOTATION],
+  },
+  {
     title: 'Créer un devis',
     url: `${BASEPATH_EDI}/quotations/create`,
     model: QUOTATION,
@@ -108,6 +108,13 @@ const tabsContent = [
     url: `${BASEPATH_EDI}/quotations`,
     model: QUOTATION,
     action: VIEW,
+    visible: [ORDER, QUOTATION],
+  },
+  {
+    title: 'Traitement des devis',
+    url: `${BASEPATH_EDI}/quotations/handle`,
+    model: QUOTATION,
+    action: HANDLE,
     visible: [ORDER, QUOTATION],
   },
   {
@@ -145,9 +152,17 @@ const Tabs = props => {
 
   const router = useRouter()
 
-  const filteredContents=tabsContent
-    .filter(c => accessRights.isActionAllowed(c.model, c.action))
-    .filter(c => c.visible.includes(accessRights.getModel()))
+  const allowTab = tab => {
+    if (!accessRights.isActionAllowed(tab.model, tab.action)) {
+      return false
+    }
+    if (!tab.visible.includes(accessRights.getModel())) {
+      return false
+    }
+    return true
+  }
+
+  const filteredContents=tabsContent.filter(t => allowTab(t))
 
   return (
     <>

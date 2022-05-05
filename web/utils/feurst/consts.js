@@ -44,6 +44,7 @@ const COMPLETE='COMPLETE'
 const VALID='VALID'
 const PARTIALLY_HANDLED='PARTIALLY_HANDLED'
 const HANDLED='HANDLED'
+const EXPIRED='EXPIRED'
 
 const QUOTATION_STATUS={
   [CREATED]: 'QUOTATION_STATUS.created',
@@ -52,6 +53,7 @@ const QUOTATION_STATUS={
   [VALID]: 'QUOTATION_STATUS.valid',
   [PARTIALLY_HANDLED]: 'QUOTATION_STATUS.partially_handled',
   [HANDLED]: 'QUOTATION_STATUS.partially_handled',
+  [EXPIRED]: 'QUOTATION_STATUS.expired',
 }
 
 const ORDER_STATUS={
@@ -109,8 +111,8 @@ const USER_ACTIONS={
   ]),
   [FEURST_ADV]: lodash.flattenDeep([
     createUserAction(PRODUCT, VIEW, {visibility: ALL}),
-    [CREATE_FOR, VIEW, VALIDATE].map(action => createUserAction(QUOTATION, action, {visibility: ALL})),
-    [CREATE_FOR, VIEW, VALIDATE].map(action => createUserAction(ORDER, action, {visibility: ALL})),
+    [VIEW, VALIDATE, HANDLE].map(action => createUserAction(QUOTATION, action, {visibility: ALL})),
+    [VIEW, VALIDATE, HANDLE].map(action => createUserAction(ORDER, action, {visibility: ALL})),
     [VIEW].map(action => createUserAction(ACCOUNT, action, {visibility: ALL})),
   ]),
   [FEURST_SALES]: lodash.flattenDeep([
@@ -148,6 +150,9 @@ const FEURST_PHONE_NUMBER = '+33 4 77 27 40 63'
 const XL_TYPE='XL'
 const TEXT_TYPE='TEXT'
 
+// Quotation validity in days
+const QUOTATION_VALIDITY=30
+
 module.exports={
   PIN, SOLD, NONE, FIX_TYPES,
   DROITE, DELTA, SEMI_DELTA, UNKNOWN, BLADE_SHAPES,
@@ -158,5 +163,5 @@ module.exports={
   COMPANY, MINE, RELATED,
   CREATED, FULFILLED, VALID, PARTIALLY_HANDLED, HANDLED, SHIPPING_MODES,
   COMPLETE, LINK, FEURST_SALES, HANDLE, XL_TYPE, TEXT_TYPE, PRICELIST, LINKED_ROLES, CREATE_FOR,
-  CONVERT,
+  CONVERT, QUOTATION_VALIDITY, EXPIRED,
 }

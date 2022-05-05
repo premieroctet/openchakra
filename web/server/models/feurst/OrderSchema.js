@@ -4,6 +4,8 @@ const {
   COMPLETE,
   CREATED,
   FULFILLED,
+  HANDLED,
+  PARTIALLY_HANDLED,
   ROLES,
   VALID,
 } = require('../../../utils/feurst/consts')
@@ -27,14 +29,17 @@ OrderSchema.add({
   receipt_number: {
     type: String,
   },
-  source_quotation: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'quotation',
-    required: false,
+  // Was the order handled by Feurst ?
+  handle_status: {
+    type: String,
+    enum: [null, PARTIALLY_HANDLED, HANDLED],
   },
 })
 
 OrderSchema.virtual('status').get(function() {
+  if (!lodash.isNil(this.handle_status)) {
+    return this.handle_status
+  }
   if (!lodash.isEmpty(this.address) && !lodash.isEmpty(this.shipping_mode)) {
     return this.user_validated ? VALID : COMPLETE
   }

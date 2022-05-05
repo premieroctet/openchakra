@@ -1,8 +1,14 @@
 import React from 'react'
 import Link from 'next/link'
 import UpdateCell from '../Table/UpdateCell'
-import EditableCell from '../Table/EditableCell'
 import {localeMoneyFormat} from '../../utils/converters'
+const axios = require('axios')
+const {setAxiosAuthentication} = require('../../utils/authentication')
+const {
+  API_PATH,
+  PARTIALLY_HANDLED,
+  VALID,
+} = require('../../utils/feurst/consts')
 const {formatPercent} = require('../../utils/text')
 const {ROLES} = require('../../utils/consts')
 const {DateRangeColumnFilter} = require('../Table/TableFilter')
@@ -325,18 +331,50 @@ const HandledOrderStatus = order => {
   )
 }
 
-const handledOrdersColumns = ({language}) => [
-  {
-    label: 'Description',
-    attribute: o => o,
-    Cell: ({cell: {value}}) => HandledOrderDescription(value),
-  },
-  {
-    label: 'Etat',
-    attribute: o => o,
-    Cell: ({cell: {value}}) => HandledOrderStatus(value),
-  },
+const HandleCell = ({status, endpoint, id}) => {
+  const setHandled = total => {
+    setAxiosAuthentication()
+    axios.put(`${API_PATH}/${endpoint}/${id}/handle`, {total: total})
+  }
+  const displayPartialButton = status==VALID
+  const displayFullButton = status==VALID || status == PARTIALLY_HANDLED
+  return <>
+    {displayFullButton && <PleasantButton onClick={() => setHandled(true)}>Commande traitée</PleasantButton>}
+    {displayPartialButton && <PleasantButton onClick={() => setHandled(false)}>Partiellement traitée</PleasantButton>}
+  </>
+}
 
+const handledOrdersColumns = ({language, endpoint}) => [
+  {
+    label: 'Date commande',
+    attribute: 'creation_date',
+    Cell: ({cell: {value}}) => new Date(value).toLocaleString(),
+    sortType: datetime,
+    Filter: DateRangeColumnFilter,
+    filter: 'dateBetween', /* Custom Filter Type */
+  },
+  {
+    label: 'Client',
+    attribute: v => v.user.full_name,
+  },
+  {
+    label: 'Ref. commande',
+    attribute: 'reference',
+  },
+  {
+    label: 'Détails',
+    attribute: '_id',
+    Cell: ({value}) => (<Link href={`/edi/orders/view/${value}`}>voir</Link>),
+  },
+  {
+    label: 'Statut',
+    attribute: 'status',
+  },
+  {
+    label: 'Validation',
+    attribute: v => v,
+    Cell: ({value}) => (<HandleCell status={value.status} endpoint={endpoint} id={value._id}/>),
+  },
 ]
 module.exports={orderColumns, ordersColumns, quotationColumns, quotationsColumns,
   accountsColumns, productsColumns, shipratesColumns, handledOrdersColumns, pricesColumns}

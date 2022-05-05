@@ -1,9 +1,13 @@
-const mongoose=require('mongoose')
+const mongoose = require('mongoose')
+const moment = require('moment')
 const lodash=require('lodash')
 const {
   COMPLETE,
   CREATED,
+  EXPIRED,
   FULFILLED,
+  HANDLED,
+  QUOTATION_VALIDITY,
   ROLES,
   VALID,
 } = require('../../../utils/feurst/consts')
@@ -27,14 +31,20 @@ QuotationSchema.add({
   receipt_number: {
     type: String,
   },
-  source_quotation: {
+  linked_order: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'quotation',
+    ref: 'order',
     required: false,
   },
 })
 
 QuotationSchema.virtual('status').get(function() {
+  if (moment(this.creation_date).add(QUOTATION_VALIDITY, 'days')<moment()) {
+    return EXPIRED
+  }
+  if (this.linked_order) {
+    return HANDLED
+  }
   if (!lodash.isEmpty(this.address) && !lodash.isEmpty(this.shipping_mode)) {
     return this.user_validated ? VALID : COMPLETE
   }

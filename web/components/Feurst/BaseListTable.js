@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react'
 import withEdiRequest from '../../hoc/withEdiRequest'
 const {withTranslation} = require('react-i18next')
 const FeurstTable = require('../../styles/feurst/FeurstTable')
-const {API_PATH} = require('../../utils/feurst/consts')
 
 
 const BaseListTable = ({
@@ -13,8 +12,8 @@ const BaseListTable = ({
   getList,
   deleteOrder,
   state,
+  filter,
 }) => {
-
 
   const [language, setLanguage] = useState('fr')
 
@@ -40,8 +39,8 @@ const BaseListTable = ({
 
   // Init table
   useEffect(() => {
-    getList({endpoint})
-  }, [endpoint, getList])
+    getList({endpoint, filter})
+  }, [endpoint, getList, filter])
 
   const cols= columns({language, endpoint, deleteOrder})
 

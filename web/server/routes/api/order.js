@@ -4,6 +4,14 @@ const moment = require('moment')
 const xlsx=require('node-xlsx')
 const lodash=require('lodash')
 const {
+  EXPRESS_SHIPPING,
+  HANDLE,
+  HANDLED,
+  PARTIALLY_HANDLED,
+  STANDARD_SHIPPING,
+  VALIDATE,
+} = require('../../../utils/feurst/consts')
+const {
   addItem,
   computeShipFee,
   getProductPrices,
@@ -11,11 +19,6 @@ const {
   updateStock,
 } = require('../../utils/commands')
 const Product = require('../../models/Product')
-const {
-  EXPRESS_SHIPPING,
-  STANDARD_SHIPPING,
-  VALIDATE,
-} = require('../../../utils/feurst/consts')
 const {
   filterOrderQuotation,
   isActionAllowed,
@@ -126,6 +129,31 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   MODEL.create(attributes)
     .then(data => {
       return res.json(data)
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(500).json(err)
+    })
+})
+
+// @Route PUT /myAlfred/api/orders/:id/rewrite
+// Resets address && shipping_mode to allow edition
+// @Access private
+router.put('/:id/handle', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, HANDLE)) {
+    return res.status(401).json()
+  }
+
+  const total=req.body.total
+  if (lodash.isNil(total)) {
+    return res.status(400).json(`Paramètre 'total' (booléen) attendu`)
+  }
+
+  const order_id=req.params.id
+  MODEL.findByIdAndUpdate(order_id, {handle_status: total ? HANDLED: PARTIALLY_HANDLED}, {new: true})
+    .then(result => {
+      return res.json(result)
     })
     .catch(err => {
       console.error(err)
