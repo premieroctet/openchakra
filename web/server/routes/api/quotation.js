@@ -3,13 +3,14 @@ const passport = require('passport')
 const moment = require('moment')
 const xlsx=require('node-xlsx')
 const lodash=require('lodash')
-const Quotation = require('../../models/Quotation')
 const {
+  CONVERT,
   EXPRESS_SHIPPING,
   QUOTATION,
   STANDARD_SHIPPING,
   VALIDATE,
 } = require('../../../utils/feurst/consts')
+const Quotation = require('../../models/Quotation')
 const {
   addItem,
   computeShipFee,
@@ -287,6 +288,49 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     .catch(err => {
       console.error(err)
       res.status(500).json(err)
+    })
+})
+
+// @Route GET /myAlfred/api/orders
+// View all orders
+// @Access private
+router.post('/:quotation_id/convert', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, CONVERT)) {
+    return res.status(401).json()
+  }
+
+  const quotation_id=req.params.quotation_id
+
+  let quotation=null
+  let order=null
+
+  MODEL.findById(quotation_id)
+    .populate({path: 'user', populate: 'company'})
+    .then(result => {
+      if (!result) {
+        return res.status(404).json(`${DATA_TYPE} #${quotation_id} not found`)
+      }
+      quotation=result
+      if (quotation.address?.zip_code && !isInDeliveryZone(quotation)) {
+        return Promise.reject('break')
+      }
+      const order={...lodash.omit(quotation, '_id'), items: quotation.items.map(item => lodash.omit(item, '_id'))}
+      return Order.create(order)
+    })
+    .then(result => {
+      order=result
+      return quotation.remove()
+    })
+    .then(() => {
+      return res.json(order)
+    })
+    .catch(err => {
+      console.error(err)
+      if (err=='break') {
+        return res.status(412).json("Conversion impossible : l'adresse de livraison est hors de la zone de chalandise")
+      }
+      return res.status(500).json(err)
     })
 })
 

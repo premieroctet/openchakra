@@ -25,11 +25,13 @@ import AddArticle from './AddArticle'
 import ImportExcelFile from './ImportExcelFile'
 import {PleasantButton} from './Button'
 import Delivery from './Delivery'
+const axios = require('axios')
 const {withTranslation} = require('react-i18next')
-const {snackBarError, snackBarSuccess} = require('../../utils/notifications')
 const {
   getAuthToken,
+  setAxiosAuthentication,
 } = require('../../utils/authentication')
+const {snackBarError, snackBarSuccess} = require('../../utils/notifications')
 
 
 const DialogAddress = dynamic(() => import('./DialogAddress'))
@@ -149,6 +151,18 @@ const BaseCreateTable = ({
     },
   }
 
+  const convert = () => {
+    setAxiosAuthentication()
+    axios.post(`${API_PATH}/${endpoint}/${orderID}/convert`)
+      .then(() => {
+        snackBarSuccess('Conversion réussie')
+      })
+      .catch(err => {
+        console.error(err)
+        snackBarError(err.response)
+      })
+  }
+
   return (<>
 
 
@@ -241,6 +255,13 @@ const BaseCreateTable = ({
           </PleasantButton>
         </div>
         : null }
+
+      <PleasantButton
+        rounded={'full'}
+        onClick={convert}
+      >
+          Convertir
+      </PleasantButton>
 
       <DialogAddress
         orderid={orderID}

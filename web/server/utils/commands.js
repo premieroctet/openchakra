@@ -6,6 +6,9 @@ const {EXPRESS_SHIPPING} = require('../../utils/feurst/consts')
 const {roundCurrency} = require('../../utils/converters')
 const ShipRate = require('../models/ShipRate')
 
+const extractDept = address => {
+  return parseInt(String(address.zip_code).slice(0, -3))
+}
 
 const getProductPrices = (product_ref, user_id) => {
   const result={catalog_price: 0, net_price: 0}
@@ -89,7 +92,7 @@ Data is an Order or a Quotation
 const updateShipFee = data => {
   return new Promise((resolve, reject) => {
     if (data.address?.zip_code && data.shipping_mode) {
-      const department=parseInt(String(data.address.zip_code).slice(0, -3))
+      const department=extractDept(data.address)
       computeShipFee(department, data.total_weight, result.shipping_mode==EXPRESS_SHIPPING)
         .then(fee => {
           data.shipping_fee=fee
@@ -123,7 +126,7 @@ const updateStock = orderQuot => {
         }
         promises=[product.save(), ...components.map(p => p.save())]
         Promise.allSettled(promises)
-          .then(res => {
+          .then(() => {
             // const grouped=lodash.groupBy(res, 'status')
             return Promise.resolve(orderQuot)
           })
@@ -135,4 +138,13 @@ const updateStock = orderQuot => {
   })
 }
 
-module.exports = {addItem, computeShipFee, updateShipFee, getProductPrices, updateStock}
+// Checks wether quotation or order is in the expected delivery zone
+const isInDeliveryZone = quotOrder => {
+  const addressDept=extractDept(quotOrder)
+  const inZone=addressDept in quotOrder.company.delivery_zip_codes
+  console.log(`isInZone:${addressDept}, ${quotOrder.company.delivery_zip_codes}: ${inZone}`)
+  return inZone
+}
+
+module.exports = {addItem, computeShipFee, updateShipFee, getProductPrices,
+  updateStock, isInDeliveryZone}
