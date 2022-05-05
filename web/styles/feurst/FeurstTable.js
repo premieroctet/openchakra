@@ -21,6 +21,8 @@ const TablesStyles = styled.div`
   @media (${screen.lg}) {
 
     table {
+      display: table;
+      max-width: unset;
       overflow-x: visible;
       white-space: unset;
     }

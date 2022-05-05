@@ -308,6 +308,9 @@ input:focus:not(:focus-visible) {
 .justify-center {
   justify-content: center;
 }
+.justify-end {
+  justify-content: end;
+}
 .justify-evenly {
   justify-content: space-evenly;
 }

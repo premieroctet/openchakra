@@ -79,6 +79,7 @@ const BaseCreateTable = ({
   /*  */
   const convertToQuotation = !isView && accessRights.model == ORDER && accessRights.actions.map(acc => acc.action).includes(CONVERT)
   const convertToOrder = !isView && accessRights.model == QUOTATION && accessRights.actions.map(acc => acc.action).includes(CONVERT)
+  const onlyValidButton = !canValidate && !convertToOrder && !convertToQuotation
 
   /* Update product quantities  */
   const updateMyOrderContent = data => {
@@ -237,14 +238,14 @@ const BaseCreateTable = ({
       />
 
       {canValidate || isView ?
-        <div className='flex justify-between items-end mb-8'>
+        <div className='flex flex-wrap gap-x-4 justify-between items-end mb-8'>
           <Delivery address={state.address} shipping={{shipping_mode: state.shipping_mode, shipping_fee: state.shipping_fee}} />
           {!isView ? <h4 className='text-2xl mb-0 text-black'>{t(`${wordingSection}.total`)} : {localeMoneyFormat({value: state.total_amount})}</h4> : null}
         </div>: null
       }
 
       {!isView ?
-        <div className='flex flex-wrap justify-between gap-y-4 mb-6'>
+        <div className={`flex flex-wrap ${onlyValidButton ? 'justify-end' : 'justify-between'} gap-y-4 mb-6`}>
           {canValidate
             ?
             <PleasantButton
