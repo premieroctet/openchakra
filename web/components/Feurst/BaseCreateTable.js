@@ -14,6 +14,9 @@ import {
   PARTIALLY_HANDLED,
   HANDLED,
   CREATE_FOR,
+  CONVERT,
+  ORDER,
+  QUOTATION,
 } from '../../utils/consts'
 import FeurstTable from '../../styles/feurst/FeurstTable'
 import {client} from '../../utils/client'
@@ -72,7 +75,12 @@ const BaseCreateTable = ({
   const canAdd = [CREATED, FULFILLED].includes(state.status)
   const canValidate = [COMPLETE].includes(state.status)
   const isView = [VALID, PARTIALLY_HANDLED, HANDLED, VALID, PARTIALLY_HANDLED, HANDLED].includes(state.status)
+  
+  /*  */
+  const convertToQuotation = !isView && accessRights.model == ORDER && accessRights.actions.map(acc => acc.action).includes(CONVERT)
+  const convertToOrder = !isView && accessRights.model == QUOTATION && accessRights.actions.map(acc => acc.action).includes(CONVERT)
 
+  /* Update product quantities  */
   const updateMyOrderContent = data => {
     addProduct({endpoint, orderid: orderID, ...data})
   }
@@ -92,6 +100,26 @@ const BaseCreateTable = ({
       })
   }
 
+  const convert = ({endpoint, orderid}) => {
+    setAxiosAuthentication()
+    axios.post(`${API_PATH}/${endpoint}/${orderid}/convert`)
+      .then(res => {
+        if(res.data) {
+          const finalDestination = endpoint === 'orders' ? 'quotations' : 'orders'
+          router.push(`${BASEPATH_EDI}/${finalDestination}`)
+          removeItem()
+          snackBarSuccess('Conversion réussie')
+        }
+        else {
+          console.error('Convert error', res)
+        }
+      })
+      .catch(err => {
+        console.error(err)
+        snackBarError('Conversion non effectuée')
+      })
+  }
+
 
   // Init language
   useEffect(() => {
@@ -104,9 +132,16 @@ const BaseCreateTable = ({
     // console.log('getContent', orderID)
     if (!isEmpty(orderID)) {
       getContentFrom({endpoint, orderid: orderID})
-        .then(data => setOrderuser(data.user))
+        .then(data => {
+          if (data) {
+            setOrderuser(data.user)
+          }
+          else {
+            removeItem()
+          }
+        })
     }
-  }, [endpoint, getContentFrom, orderID, refresh])
+  }, [endpoint, getContentFrom, orderID, refresh, removeItem])
 
 
   useEffect(() => {
@@ -121,7 +156,7 @@ const BaseCreateTable = ({
   }, [canValidate, createOrderId, endpoint, orderID, orderuser, setOrderId])
 
   useEffect(() => {
-    // console.log('setOrderUser', dataToken.id)
+    // console.log('setOrderUser', orderuser, dataToken.id)
     !isFeurstSales && setOrderuser(dataToken.id)
   }, [dataToken.id, isFeurstSales, setOrderuser])
 
@@ -151,17 +186,6 @@ const BaseCreateTable = ({
     },
   }
 
-  const convert = () => {
-    setAxiosAuthentication()
-    axios.post(`${API_PATH}/${endpoint}/${orderID}/convert`)
-      .then(() => {
-        snackBarSuccess('Conversion réussie')
-      })
-      .catch(err => {
-        console.error(err)
-        snackBarError(err.response)
-      })
-  }
 
   return (<>
 
@@ -232,17 +256,31 @@ const BaseCreateTable = ({
             >
         Revenir à la saisie
             </PleasantButton>
-            :
-            <PleasantButton
-              rounded={'full'}
-              disabled={justCreated}
-              bgColor={'#fff'}
-              textColor={'#141953'}
-              borderColor={'1px solid #141953'}
-              onClick={() => true}
-            >
+            : (<>
+              {convertToQuotation && <PleasantButton
+                rounded={'full'}
+                disabled={justCreated}
+                bgColor={'#fff'}
+                textColor={'#141953'}
+                borderColor={'1px solid #141953'}
+                onClick={() => convert({endpoint, orderid: orderID})}
+              >
         Demande de devis
-            </PleasantButton>
+              </PleasantButton>}
+              {convertToOrder && <PleasantButton
+                rounded={'full'}
+                disabled={justCreated}
+                bgColor={'#fff'}
+                textColor={'#141953'}
+                borderColor={'1px solid #141953'}
+                onClick={() => convert({endpoint, orderid: orderID})}
+              >
+        Convertir en commande
+              </PleasantButton>}
+            </>
+            )
+          
+            
           }
 
 
@@ -256,12 +294,6 @@ const BaseCreateTable = ({
         </div>
         : null }
 
-      <PleasantButton
-        rounded={'full'}
-        onClick={convert}
-      >
-          Convertir
-      </PleasantButton>
 
       <DialogAddress
         orderid={orderID}
