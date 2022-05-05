@@ -69,7 +69,7 @@ const tabsContent = [
     visible: [ORDER, QUOTATION],
   },
   {
-    title: 'Créer une commande',
+    title: 'Créer une commande pour',
     url: `${BASEPATH_EDI}/orders/create`,
     model: ORDER,
     action: CREATE_FOR,
@@ -97,7 +97,7 @@ const tabsContent = [
     visible: [ORDER, QUOTATION],
   },
   {
-    title: 'Créer un devis',
+    title: 'Créer un devis pour',
     url: `${BASEPATH_EDI}/quotations/create`,
     model: QUOTATION,
     action: CREATE_FOR,

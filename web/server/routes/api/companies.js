@@ -5,8 +5,16 @@ const moment = require('moment')
 const lodash = require('lodash')
 const axios = require('axios')
 const csv_parse = require('csv-parse/lib/sync')
-const {ACCOUNT, LINK} = require('../../../utils/feurst/consts')
-const {isActionAllowed} = require('../../utils/userAccess')
+const {
+  ACCOUNT,
+  COMPANY,
+  LINK,
+  ORDER,
+  QUOTATION,
+  VIEW,
+  CREATE,
+} = require('../../../utils/feurst/consts')
+const {filterCompanies, isActionAllowed} = require('../../utils/userAccess')
 const Group = require('../../models/Group')
 const Company = require('../../models/Company')
 const Booking = require('../../models/Booking')
@@ -39,12 +47,17 @@ const uploadEmployees = createMemoryMulter(TEXT_FILTER)
 // Get companies list
 // @Access private
 router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
-  if (!isActionAllowed(req.user.roles, ACCOUNT, LINK)) {
+  if (!isActionAllowed(req.user.roles, ACCOUNT, LINK)
+  && !isActionAllowed(req.user.roles, ORDER, CREATE)
+  && !isActionAllowed(req.user.roles, QUOTATION, CREATE)
+  ) {
     return res.sendStatus(301)
   }
 
   Company.find()
+    .sort('name')
     .then(companies => {
+      companies=filterCompanies(companies, COMPANY, req.user, VIEW)
       res.json(companies)
     })
     .catch(err => {

@@ -1,7 +1,6 @@
 const lodash=require('lodash')
 const Product = require('../models/Product')
 const PriceList = require('../models/PriceList')
-const User = require('../models/User')
 const {EXPRESS_SHIPPING} = require('../../utils/feurst/consts')
 const {roundCurrency} = require('../../utils/converters')
 const ShipRate = require('../models/ShipRate')
@@ -10,16 +9,15 @@ const extractDept = address => {
   return parseInt(String(address.zip_code).slice(0, -3))
 }
 
-const getProductPrices = (product_ref, user_id) => {
+const getProductPrices = (product_ref, company) => {
+  if (!product_ref) {
+    return Promise.reject(`Mandatory product_ref`)
+  }
+  if (!company) {
+    return Promise.reject(`Mandatory company`)
+  }
   const result={catalog_price: 0, net_price: 0}
-  let company=null
-  return User.findById(user_id)
-    .populate({path: 'company', populate: 'catalog_prices net_prices'})
-    .then(user => {
-      if (!user) { return Promise.reject('User not found') }
-      company=user.company
-      return PriceList.findOne({reference: product_ref, name: company.catalog_prices})
-    })
+  return PriceList.findOne({reference: product_ref, name: company.catalog_prices})
     .then(price => {
       if (!price) { return Promise.reject(`Prix catalogue introuvable pour ${product_ref}`) }
       result.catalog_price=price.price
@@ -35,7 +33,7 @@ const getProductPrices = (product_ref, user_id) => {
 If product is present, adds quantity if replace is false else sets quantity
 If product is not present, adds the item to the order
 */
-const addItem = (user_id, data, product_id, reference, quantity, replace=false) => {
+const addItem = (data, product_id, reference, quantity, replace=false) => {
   if (isNaN(parseInt(quantity))) {
     return Promise.reject(`Article ${reference}: quantité ${quantity} incorrect`)
   }
@@ -46,7 +44,7 @@ const addItem = (user_id, data, product_id, reference, quantity, replace=false) 
         return Promise.reject(`Article ${reference} inconnu`)
       }
       product=result
-      return getProductPrices(product.reference, user_id)
+      return getProductPrices(product.reference, data.company)
     })
     .then(prices => {
       if (!prices) { return Promise.reject(`Tarif inconnu pour ${product.reference}`) }
@@ -142,7 +140,7 @@ const updateStock = orderQuot => {
 const isInDeliveryZone = quotOrder => {
   const addressDept=extractDept(quotOrder)
   const inZone=addressDept in quotOrder.company.delivery_zip_codes
-  console.log(`isInZone:${addressDept}, ${quotOrder.company.delivery_zip_codes}: ${inZone}`)
+  console.log(`isInZone for ${JSON.stringify(quotOrder)}:${inZone}`)
   return inZone
 }
 

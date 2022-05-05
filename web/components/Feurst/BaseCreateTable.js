@@ -30,6 +30,7 @@ import {PleasantButton} from './Button'
 import Delivery from './Delivery'
 const axios = require('axios')
 const {withTranslation} = require('react-i18next')
+const {CREATE, RELATED} = require('../../utils/feurst/consts')
 const {
   getAuthToken,
   setAxiosAuthentication,
@@ -59,7 +60,7 @@ const BaseCreateTable = ({
 
   const [language, setLanguage] = useState('fr')
   const dataToken = getAuthToken()
-  const [orderuser, setOrderuser] = useState(null)
+  const [orderCompany, setOrderCompany] = useState(null)
   const [orderID, setOrderId, {removeItem}] = useLocalStorageState(storage, {defaultValue: null})
   const [isOpenDialog, setIsOpenDialog] = useState(false)
   const [refresh, setRefresh]=useState(false)
@@ -69,13 +70,13 @@ const BaseCreateTable = ({
   const router = useRouter()
 
   // TODO filtrer sur model
-  const isFeurstSales = accessRights.actions.map(acc => acc.action).includes(CREATE_FOR)
+  const isFeurstSales = accessRights.getFullAction()?.visibility==RELATED
 
   const justCreated = [CREATED].includes(state.status)
   const canAdd = [CREATED, FULFILLED].includes(state.status)
   const canValidate = [COMPLETE].includes(state.status)
   const isView = [VALID, PARTIALLY_HANDLED, HANDLED, VALID, PARTIALLY_HANDLED, HANDLED].includes(state.status)
-  
+
   /*  */
   const convertToQuotation = !isView && accessRights.model == ORDER && accessRights.actions.map(acc => acc.action).includes(CONVERT)
   const convertToOrder = !isView && accessRights.model == QUOTATION && accessRights.actions.map(acc => acc.action).includes(CONVERT)
@@ -135,7 +136,7 @@ const BaseCreateTable = ({
       getContentFrom({endpoint, orderid: orderID})
         .then(data => {
           if (data) {
-            setOrderuser(data.user)
+            setOrderCompany(data.company)
           }
           else {
             removeItem()
@@ -146,21 +147,15 @@ const BaseCreateTable = ({
 
 
   useEffect(() => {
-    // console.log('createOrder', orderID, orderuser)
+    // console.log('createOrder', orderID, orderCompany)
     if (isEmpty(orderID)) {
-      if (orderuser !== null && !canValidate) {
-        createOrderId({endpoint, user: orderuser})
+      if ((orderCompany !== null || !isFeurstSales) && !canValidate) {
+        createOrderId({endpoint, company: orderCompany})
           .then(data => setOrderId(data._id))
           .catch(e => console.error('cant create order'))
       }
     }
-  }, [canValidate, createOrderId, endpoint, orderID, orderuser, setOrderId])
-
-  useEffect(() => {
-    // console.log('setOrderUser', orderuser, dataToken.id)
-    !isFeurstSales && setOrderuser(dataToken.id)
-  }, [dataToken.id, isFeurstSales, setOrderuser])
-
+  }, [canValidate, createOrderId, endpoint, orderID, orderCompany, setOrderId])
 
   /* supplied id for a view ? */
   useEffect(() => {
@@ -180,10 +175,10 @@ const BaseCreateTable = ({
   const importURL=`${API_PATH}/${endpoint}/${orderID}/import`
   const templateURL=`${API_PATH}/${endpoint}/template`
 
-  const paramsComboboxUser = {
-    itemToString: item => (item ? `${item.full_name}` : ''),
+  const paramsComboboxCompany = {
+    itemToString: item => (item && item.name || ''),
     onSelectedItemChange: ({selectedItem}) => {
-      selectedItem && setOrderuser(selectedItem._id)
+      selectedItem && setOrderCompany(selectedItem._id)
     },
   }
 
@@ -191,17 +186,17 @@ const BaseCreateTable = ({
   return (<>
 
 
-    {isFeurstSales && !orderuser ?
+    {isFeurstSales && !orderCompany ?
       <div className='container-sm mb-8'>
         <StyledAutocomplete>
           <Autocomplete
-            urlToFetch={`${API_PATH}/users`}
-            item={orderuser}
-            setItem={setOrderuser}
-            paramsCombobox={paramsComboboxUser}
-            errorMsg= 'Aucun utilisateur trouvé'
-            placeholder='Nom du client'
-            formattingResult={item => `${item.full_name} / ${item.company.name}`}
+            urlToFetch={`${API_PATH}/companies`}
+            item={orderCompany}
+            setItem={setOrderCompany}
+            paramsCombobox={paramsComboboxCompany}
+            errorMsg= 'Aucune société trouvée'
+            placeholder='Nom de la société'
+            formattingResult={item => item.name}
           />
         </StyledAutocomplete>
       </div> :
@@ -229,6 +224,7 @@ const BaseCreateTable = ({
         </dl>
       </div>}
 
+      <h1>Client: {state.company?.name}</h1>
       <FeurstTable
         caption={t(`${wordingSection}.details`)}
         data={state.items}
@@ -280,8 +276,8 @@ const BaseCreateTable = ({
               </PleasantButton>}
             </>
             )
-          
-            
+
+
           }
 
 

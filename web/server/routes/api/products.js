@@ -1,7 +1,6 @@
 const express = require('express')
 const passport = require('passport')
 const moment = require('moment')
-const {getProductPrices} = require('../../utils/commands')
 const {fileImport} = require('../../utils/import')
 const {isActionAllowed} = require('../../utils/userAccess')
 const {DELETE} = require('../../../utils/feurst/consts')

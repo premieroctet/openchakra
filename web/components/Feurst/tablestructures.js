@@ -119,8 +119,8 @@ const ordersColumns = ({endpoint, language, deleteOrder}) => [
     filter: 'dateBetween', /* Custom Filter Type */
   },
   {
-    label: 'Créateur',
-    attribute: 'user.full_name',
+    label: 'Client',
+    attribute: 'company.name',
   },
   {
     label: 'Référence',
@@ -221,6 +221,10 @@ const quotationsColumns = ({language, deleteProduct}) => [
     sortType: 'datetime',
     Filter: DateRangeColumnFilter,
     filter: 'dateBetween', /* Custom Filter Type */
+  },
+  {
+    label: 'Client',
+    attribute: 'company.name',
   },
   {
     label: 'Référence',

@@ -3,7 +3,7 @@ const {CUSTOMER_ADMIN} = require('../../utils/feurst/consts')
 
 const {RELATED} = require('../../utils/feurst/consts')
 
-const {USER_ACTIONS, ALL, COMPANY, MINE} = require('../../utils/consts')
+const {USER_ACTIONS, ALL, COMPANY} = require('../../utils/consts')
 
 const getActions = (roles, model, action) => {
   const actions=lodash.flattenDeep(roles.map(role => USER_ACTIONS[role]))
@@ -25,13 +25,10 @@ const filterOrderQuotation = (data, model, user, action) => {
     return data
   }
   if (userActions.some(userAction => userAction.visibility==RELATED)) {
-    return data.filter(d => user.companies.map(c => String(c._id)).includes(String(d.user.company?._id)))
+    return data.filter(d => user.companies.map(c => String(c._id)).includes(String(d.company._id)))
   }
   if (userActions.some(userAction => userAction.visibility==COMPANY)) {
-    return data.filter(d => String(d.user.company?._id)==String(user.company?._id))
-  }
-  if (userActions.some(userAction => userAction.visibility==MINE)) {
-    return data.filter(d => String(d.user._id)==String(user._id))
+    return data.filter(d => String(d.company._id)==String(user.company?._id))
   }
   return []
 }
@@ -47,8 +44,19 @@ const filterUsers = (data, model, user, action) => {
   if (userActions.some(userAction => userAction.visibility==COMPANY)) {
     return data.filter(d => String(d.company?._id)==String(user.company?._id))
   }
-  if (userActions.some(userAction => userAction.visibility==MINE)) {
-    return data.filter(u => String(u._id)==String(user._id))
+  return []
+}
+
+const filterCompanies = (data, model, user, action) => {
+  const userActions=getActions(user.roles, model, action)
+  if (userActions.some(userAction => userAction.visibility==ALL)) {
+    return data
+  }
+  if (userActions.some(userAction => userAction.visibility==RELATED)) {
+    return data.filter(c => user.companies.map(c => String(c._id)).includes(String(c._id)))
+  }
+  if (userActions.some(userAction => userAction.visibility==COMPANY)) {
+    return data.filter(c => String(c._id)==String(user.company?._id))
   }
   return []
 }
@@ -59,4 +67,5 @@ const getActionsForRoles = roles => {
   return actions
 }
 
-module.exports={isActionAllowed, filterOrderQuotation, getActionsForRoles, filterUsers}
+module.exports={isActionAllowed, filterOrderQuotation, getActionsForRoles,
+  filterUsers, filterCompanies}

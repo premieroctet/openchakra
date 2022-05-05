@@ -33,6 +33,14 @@ class AccessRights {
   getAction = () => {
     return this.action
   }
+
+  getFullAction = () => {
+    const actions=this.actions.filter(a => a.model==this.model && a.action==this.action)
+    if (actions.length!=1) {
+      return null
+    }
+    return actions[0]
+  }
 }
 
 

@@ -171,7 +171,7 @@ const lineItemsImport = (model, buffer, mapping, options) => {
           return Promise.reject('break')
         }
         data.records=data.records.map(r => mapRecord(r, mapping))
-        const promises=data.records.map(r => addItem(model.user._id, model, null, r.reference, parseInt(r.quantity)))
+        const promises=data.records.map(r => addItem(model, null, r.reference, parseInt(r.quantity)))
         return Promise.allSettled(promises)
       })
       .then(res => {

@@ -54,9 +54,9 @@ BookingItemSchema.virtual('total_amount').get(function() {
 
 const QuotationBookingBaseSchema=new Schema({
   // Order destinee
-  user: {
+  company: {
     type: Schema.Types.ObjectId,
-    ref: 'user',
+    ref: 'company',
     required: true,
   },
   // Order creator (i.e. Feurst sales, may be null)

@@ -43,12 +43,12 @@ router.get('/:order_id/addresses', passport.authenticate('jwt', {session: false}
   const order_id=req.params.order_id
 
   MODEL.findById(order_id)
-    .populate({path: 'user', populate: 'company'})
+    .populate('company')
     .then(order => {
       if (!order) {
         return res.status(404).json()
       }
-      return res.json(order.user.company.addresses)
+      return res.json(order.company.addresses)
     })
 })
 
@@ -124,7 +124,7 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   }
 
   let attributes=req.body
-  attributes={...attributes, created_by: req.user}
+  attributes={...attributes, company: req.body.company || req.user.company, created_by: req.user}
 
   MODEL.create(attributes)
     .then(data => {
@@ -240,12 +240,13 @@ router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, r
 
   MODEL.findById(order_id)
     .populate('items.product')
+    .populate('company')
     .then(data => {
       if (!data) {
         console.error(`No order #${order_id}`)
         return res.status(404).json()
       }
-      return addItem(data.user._id, data, product, null, quantity, replace)
+      return addItem(data, product, null, quantity, replace)
     })
     .then(data => {
       return updateShipFee(data)
@@ -305,7 +306,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   MODEL.find()
     .populate('items.product')
-    .populate({path: 'user', populate: 'company'})
+    .populate('company')
     .then(orders => {
       orders=filterOrderQuotation(orders, DATA_TYPE, req.user, VIEW)
       return res.json(orders)
@@ -329,7 +330,7 @@ router.get('/:order_id', passport.authenticate('jwt', {session: false}), (req, r
 
   MODEL.findById(order_id)
     .populate('items.product')
-    .populate('user')
+    .populate('company')
     .then(order => {
       if (order) {
         return res.json(order)
@@ -369,11 +370,12 @@ router.get('/:order_id/products/:product_id', passport.authenticate('jwt', {sess
   const order_id=req.params.order_id
   const product_id=req.params.product_id
   let product=null
-  let user=null
+  let data=null
 
-  MODEL.findById(order_id, {user: 1})
-    .then(order => {
-      user=order.user
+  MODEL.findById(order_id)
+    .populate('company')
+    .then(result => {
+      data=result
       return Product.findById(product_id).lean()
     })
     .then(result => {
@@ -381,7 +383,7 @@ router.get('/:order_id/products/:product_id', passport.authenticate('jwt', {sess
         return res.status(404).json()
       }
       product=result
-      return getProductPrices(product.reference, user._id)
+      return getProductPrices(product.reference, data.company)
     })
     .then(prices => {
       product.catalog_price=prices.catalog_price

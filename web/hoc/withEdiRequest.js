@@ -25,8 +25,8 @@ const withEdiRequest = (Component = null) => {
       }
     }
 
-    createOrderId = async({endpoint, user}) => {
-      return await client(`${API_PATH}/${endpoint}`, {data: {user}})
+    createOrderId = async({endpoint, company}) => {
+      return await client(`${API_PATH}/${endpoint}`, {data: {company}})
         .then(data => {
           this.setState({...this.state, data})
           return data

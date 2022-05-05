@@ -29,7 +29,7 @@ function FeurstRegister({className, style, onSuccess}) {
 
   useEffect(() => {
     setAxiosAuthentication()
-    axios.get('/myAlfred/api/admin/companies')
+    axios.get('/myAlfred/api/companies')
       .then(result => {
         setCompanies(result.data.map(c => c.name))
       })

@@ -20,8 +20,8 @@ const AccountsList = ({accessRights}) => {
         {IMPORTS.map(imp => (<ImportExcelFile caption={imp.title} importURL={imp.url} templateURL={null} onImport={toggleRefresh}/>))}
       </div>
       <FeurstRegister onSuccess={toggleRefresh}/>
-      <BaseListTable caption='Liste des comptes' key={moment()} endpoint='users' columns={accountsColumns} refresh={refresh}/>
       {accessRights.isActionAllowed(ACCOUNT, LINK) && <AccountLink />}
+      <BaseListTable caption='Liste des comptes' key={moment()} endpoint='users' columns={accountsColumns} refresh={refresh}/>
     </>
   )
 }

@@ -90,10 +90,10 @@ const LINKED_ROLES={
 }
 const [ORDER, QUOTATION, ACCOUNT, SHIPRATE, PRODUCT, PRICELIST]=['ORDER', 'QUOTATION', 'ACCOUNT', 'SHIPRATE', 'PRODUCT', 'PRICELIST']
 const [VIEW, CREATE, UPDATE, DELETE, VALIDATE, CONVERT, LINK, HANDLE, CREATE_FOR]=['VIEW', 'CREATE', 'UPDATE', 'DELETE', 'VALIDATE', 'CONVERT', 'LINK', 'HANDLE', 'CREATE_FOR']
-const [ALL, MINE, COMPANY, RELATED]=['ALL', 'MINE', 'COMPANY', 'RELATED']
+const [ALL, COMPANY, RELATED]=['ALL', 'COMPANY', 'RELATED']
 const MODELS=[ORDER, QUOTATION, ACCOUNT, SHIPRATE, PRODUCT, PRICELIST]
 const ACTIONS=[VIEW, CREATE, UPDATE, DELETE, VALIDATE, CONVERT]
-const VISIBILITY=[ALL, MINE, COMPANY, RELATED]
+const VISIBILITY=[ALL, COMPANY, RELATED]
 
 const createUserAction= (model, action, extra={}) => {
   return {model: model, action: action, ...extra}
@@ -108,6 +108,7 @@ const USER_ACTIONS={
     [VIEW, CREATE].map(action => createUserAction(SHIPRATE, action, {visibility: ALL})),
     [VIEW, CREATE, UPDATE, DELETE].map(action => createUserAction(PRODUCT, action, {visibility: ALL})),
     [VIEW, CREATE, UPDATE, DELETE].map(action => createUserAction(PRICELIST, action, {visibility: ALL})),
+    [CREATE, VIEW, UPDATE].map(action => createUserAction(COMPANY, action, {visibility: ALL})),
   ]),
   [FEURST_ADV]: lodash.flattenDeep([
     createUserAction(PRODUCT, VIEW, {visibility: ALL}),
@@ -117,8 +118,9 @@ const USER_ACTIONS={
   ]),
   [FEURST_SALES]: lodash.flattenDeep([
     createUserAction(ACCOUNT, VIEW, {type: CUSTOMER_ADMIN, visibility: RELATED}),
-    [CREATE_FOR, VIEW, UPDATE, VALIDATE].map(action => createUserAction(QUOTATION, action, {visibility: RELATED})),
-    [CREATE_FOR, VIEW, UPDATE, VALIDATE].map(action => createUserAction(ORDER, action, {visibility: RELATED})),
+    [CREATE, VIEW, UPDATE, VALIDATE].map(action => createUserAction(QUOTATION, action, {visibility: RELATED})),
+    [CREATE, VIEW, UPDATE, VALIDATE].map(action => createUserAction(ORDER, action, {visibility: RELATED})),
+    createUserAction(COMPANY, VIEW, {visibility: RELATED}),
   ]),
   [CUSTOMER_ADMIN]: lodash.flattenDeep([
     [VIEW, CREATE, UPDATE, DELETE].map(action => [CUSTOMER_ADMIN, CUSTOMER_SLAVE].map(type => createUserAction(ACCOUNT, action, {type: type, visibility: COMPANY}))),
@@ -126,8 +128,8 @@ const USER_ACTIONS={
     [CREATE, VIEW, UPDATE].map(action => createUserAction(ORDER, action, {visibility: COMPANY})),
   ]),
   [CUSTOMER_SLAVE]: lodash.flattenDeep([
-    [CREATE, VIEW, UPDATE, CONVERT, DELETE, VALIDATE].map(action => createUserAction(QUOTATION, action, {visibility: MINE})),
-    [CREATE, VIEW, UPDATE, DELETE, VALIDATE].map(action => createUserAction(ORDER, action, {visibility: MINE})),
+    [CREATE, VIEW, UPDATE, CONVERT, DELETE, VALIDATE].map(action => createUserAction(QUOTATION, action, {visibility: COMPANY})),
+    [CREATE, VIEW, UPDATE, DELETE, VALIDATE].map(action => createUserAction(ORDER, action, {visibility: COMPANY})),
   ]),
 }
 
@@ -160,7 +162,7 @@ module.exports={
   ORDER_STATUS, QUOTATION_STATUS, FEURST_ADMIN, FEURST_ADV, CUSTOMER_ADMIN, CUSTOMER_SLAVE,
   ROLES, USER_ACTIONS, ORDER, QUOTATION, ACCOUNT, VIEW, CREATE, UPDATE, DELETE, VALIDATE,
   SHIPRATE, MAX_WEIGHT, PRODUCT, STANDARD_SHIPPING, EXPRESS_SHIPPING, BASEPATH_EDI, ALL, FEURST_PHONE_NUMBER, FEURST_IMG_PATH, API_PATH,
-  COMPANY, MINE, RELATED,
+  COMPANY, RELATED,
   CREATED, FULFILLED, VALID, PARTIALLY_HANDLED, HANDLED, SHIPPING_MODES,
   COMPLETE, LINK, FEURST_SALES, HANDLE, XL_TYPE, TEXT_TYPE, PRICELIST, LINKED_ROLES, CREATE_FOR,
   CONVERT, QUOTATION_VALIDITY, EXPIRED,
