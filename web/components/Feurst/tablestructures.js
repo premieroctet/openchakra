@@ -106,7 +106,7 @@ const ordersColumns = ({endpoint, language, deleteOrder}) => [
   {
     label: 'Date commande',
     attribute: 'creation_date',
-    Cell: ({cell: {value}}) => new Date(value).toLocaleDateString(),
+    Cell: ({cell: {value}}) => new Date(value).toLocaleString(),
     sortType: datetime,
     Filter: DateRangeColumnFilter,
     filter: 'dateBetween', /* Custom Filter Type */
