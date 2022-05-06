@@ -345,6 +345,10 @@ input:focus:not(:focus-visible) {
   row-gap: 0.25rem;
 }
 
+.gap-y-3 {
+  row-gap: 0.75rem;
+}
+
 .gap-y-4 {
   row-gap: 1rem;
 }
