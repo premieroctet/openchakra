@@ -1,36 +1,30 @@
 import React, {useState, useEffect} from 'react'
 import withEdiRequest from '../../hoc/withEdiRequest'
+import {
+  ORDER,
+  QUOTATION,
+  HANDLE,
+} from '../../utils/consts'
 const {withTranslation} = require('react-i18next')
 const FeurstTable = require('../../styles/feurst/FeurstTable')
 
 
 const BaseListTable = ({
+  accessRights,
   endpoint,
   columns,
   refresh,
   caption,
   getList,
   deleteOrder,
+  handleValidation,
   state,
   filter,
 }) => {
 
   const [language, setLanguage] = useState('fr')
 
-  const updateMyData = (rowIndex, columnId, value) => {
-    setData(old =>
-      old.map((row, index) => {
-        if (index === rowIndex) {
-          return {
-            ...old[rowIndex],
-            [columnId]: value,
-          }
-        }
-        return row
-      }),
-    )
-  }
-
+  const handleOrderValidStatus = accessRights?.isActionAllowed(ORDER, HANDLE)
 
   // Init language and order
   useEffect(() => {
@@ -42,14 +36,14 @@ const BaseListTable = ({
     getList({endpoint, filter})
   }, [endpoint, getList, filter])
 
-  const cols= columns({language, endpoint, deleteOrder})
+  const cols= columns({language, endpoint, deleteOrder, handleValidation: handleOrderValidStatus ? handleValidation : null, filter})
 
   return (
     <FeurstTable
       caption={caption}
       data={state.orders}
       columns={cols}
-      updateMyData={updateMyData}
+      filter={filter}
     />
   )
 }

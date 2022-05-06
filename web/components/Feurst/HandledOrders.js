@@ -65,7 +65,7 @@ const Tabstyled = styled.div`
 `
 
 
-const HandledOrders = () => {
+const HandledOrders = ({accessRights}) => {
 
   const [selectedTab, setSelectedTab]=useState(0)
 
@@ -90,7 +90,13 @@ const HandledOrders = () => {
         ))}
       </Tabstyled>
 
-      <BaseListTable caption='Historique des commandes' endpoint='orders' filter={currentFilter} columns={handledOrdersColumns} />
+      <BaseListTable
+        caption='Historique des commandes'
+        endpoint='orders'
+        filter={currentFilter}
+        accessRights={accessRights}
+        columns={handledOrdersColumns}
+      />
     </>
   )
 }

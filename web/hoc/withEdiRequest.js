@@ -47,7 +47,7 @@ const withEdiRequest = (Component = null) => {
       }
     }
 
-    getList = async({endpoint, filter}) => {
+    getList = async({endpoint, filter = null}) => {
       return await client(`${API_PATH}/${endpoint}`)
         .then(data => {
           if (filter) { data=data.filter(filter) }
@@ -61,7 +61,14 @@ const withEdiRequest = (Component = null) => {
 
       return await client(`${API_PATH}/${endpoint}/${orderid}`, {method: 'DELETE'})
         .then(() => this.getList({endpoint}))
-        .catch(e => console.error(`Can't delete order ${e}`))
+        .catch(e => console.error(`Can't delete order`, e))
+    }
+
+    handleValidation = async({endpoint, orderid, status, filter = null}) => {
+      
+      return await client(`${API_PATH}/${endpoint}/${orderid}/handle`, {data: {total: status}, method: 'PUT'})
+        .then(() => this.getList({endpoint, filter}))
+        .catch(e => console.error(`Can't update status validation`, e))
     }
 
 
@@ -129,6 +136,7 @@ const withEdiRequest = (Component = null) => {
           addProduct={this.addProduct}
           deleteProduct={this.deleteProduct}
           requestUpdate={this.requestUpdate}
+          handleValidation={this.handleValidation}
           validateAddress={this.validateAddress}
           resetAddress={this.resetAddress}
           state={this.state}

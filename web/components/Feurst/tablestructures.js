@@ -345,20 +345,46 @@ const HandledOrderStatus = order => {
   )
 }
 
-const HandleCell = ({status, endpoint, id}) => {
-  const setHandled = total => {
-    setAxiosAuthentication()
-    axios.put(`${API_PATH}/${endpoint}/${id}/handle`, {total: total})
-  }
-  const displayPartialButton = status==VALID
-  const displayFullButton = status==VALID || status == PARTIALLY_HANDLED
-  return <>
-    {displayFullButton && <PleasantButton onClick={() => setHandled(true)}>Commande traitée</PleasantButton>}
-    {displayPartialButton && <PleasantButton onClick={() => setHandled(false)}>Partiellement traitée</PleasantButton>}
-  </>
+const ConfirmHandledValidation = ({onClick, children}) => (
+  <PleasantButton
+    rounded={'full'}
+    bgColor={'#80b150'}
+    textColor={'#fff'}
+    borderColor={'1px solid #80b150'}
+    onClick={onClick}
+  >{children}</PleasantButton>
+)
+
+const ConfirmPartialHandledValidation = ({onClick, children}) => {
+  
+  return (<PleasantButton
+    rounded={'full'}
+    bgColor={'#fff'}
+    textColor={'var(--black)'}
+    borderColor={'1px solid #80b150'}
+    onClick={onClick}
+  >
+    {children}
+  </PleasantButton>
+  )
 }
 
-const handledOrdersColumns = ({language, endpoint}) => [
+const HandleValidationStatusCell = ({status, endpoint, id, handleValidation, filter}) => {
+  
+  const displayPartialButton = status==VALID
+  const displayFullButton = status==VALID || status == PARTIALLY_HANDLED
+  return <div className='flex items-center flex-col gap-y-3'>
+    {displayFullButton && <ConfirmHandledValidation onClick={() => {
+      if (window.confirm('Êtes-vous sûr(e) ?')) {
+        handleValidation({endpoint, orderid: id, filter, status: true})
+      }
+    }
+    }>Commande traitée</ConfirmHandledValidation>}
+    {displayPartialButton && <ConfirmPartialHandledValidation onClick={() => handleValidation({endpoint, orderid: id, filter, status: false})}>Partiellement traitée</ConfirmPartialHandledValidation>}
+  </div>
+}
+
+const handledOrdersColumns = ({endpoint, handleValidation = null, filter = null}) => [
   {
     label: 'Date commande',
     attribute: 'creation_date',
@@ -369,7 +395,7 @@ const handledOrdersColumns = ({language, endpoint}) => [
   },
   {
     label: 'Client',
-    attribute: v => v.user.full_name,
+    attribute: v => v.company.full_name,
   },
   {
     label: 'Ref. commande',
@@ -383,11 +409,12 @@ const handledOrdersColumns = ({language, endpoint}) => [
   {
     label: 'Statut',
     attribute: 'status',
+    Cell: ({value}) => <OrderStatus status={value} />,
   },
   {
     label: 'Validation',
     attribute: v => v,
-    Cell: ({value}) => (<HandleCell status={value.status} endpoint={endpoint} id={value._id}/>),
+    Cell: ({value}) => (<HandleValidationStatusCell status={value.status} handleValidation={handleValidation} endpoint={endpoint} id={value._id} filter={filter} />),
   },
 ]
 module.exports={orderColumns, ordersColumns, quotationColumns, quotationsColumns,
