@@ -59,13 +59,10 @@ const BaseCreateTable = ({
 }) => {
 
   const [language, setLanguage] = useState('fr')
-  const dataToken = getAuthToken()
   const [orderCompany, setOrderCompany] = useState(null)
-  const [orderID, setOrderId, {removeItem}] = useLocalStorageState(storage, {defaultValue: null})
+  const [orderIDLocal, setOrderIDLocal, {removeItem}] = useLocalStorageState(storage, {defaultValue: id})
   const [isOpenDialog, setIsOpenDialog] = useState(false)
-  const [refresh, setRefresh]=useState(false)
 
-  const toggleRefresh= () => setRefresh(!refresh)
 
   const router = useRouter()
 
@@ -84,7 +81,7 @@ const BaseCreateTable = ({
 
   /* Update product quantities  */
   const updateMyOrderContent = data => {
-    addProduct({endpoint, orderid: orderID, ...data})
+    addProduct({endpoint, orderid: orderIDLocal, ...data})
   }
 
   const submitOrder = async({endpoint, orderid}) => {
@@ -132,8 +129,8 @@ const BaseCreateTable = ({
   // Init table
   useEffect(() => {
     // console.log('getContent', orderID)
-    if (!isEmpty(orderID)) {
-      getContentFrom({endpoint, orderid: orderID})
+    if (!isEmpty(orderIDLocal)) {
+      getContentFrom({endpoint, orderid: orderIDLocal})
         .then(data => {
           if (data) {
             setOrderCompany(data.company)
@@ -143,25 +140,19 @@ const BaseCreateTable = ({
           }
         })
     }
-  }, [endpoint, getContentFrom, orderID, refresh, removeItem])
+  }, [endpoint, getContentFrom, orderIDLocal, removeItem])
 
 
   useEffect(() => {
     // console.log('createOrder', orderID, orderCompany)
-    if (isEmpty(orderID)) {
+    if (isEmpty(orderIDLocal)) {
       if ((orderCompany !== null || !isFeurstSales) && !canValidate) {
         createOrderId({endpoint, company: orderCompany})
-          .then(data => setOrderId(data._id))
+          .then(data => setOrderIDLocal(data._id))
           .catch(e => console.error('cant create order'))
       }
     }
-  }, [canValidate, createOrderId, endpoint, orderID, orderCompany, setOrderId])
-
-  /* supplied id for a view ? */
-  useEffect(() => {
-    // console.log('isView', id)
-    if (!isEmpty(id)) { setOrderId(id) }
-  }, [id, setOrderId])
+  }, [canValidate, createOrderId, endpoint, orderIDLocal, orderCompany, setOrderIDLocal])
 
 
   /**
@@ -170,9 +161,9 @@ const BaseCreateTable = ({
     [data, deleteProduct, language],
   )
   */
-  const cols=columns({language, endpoint, orderid: orderID, deleteProduct: canAdd ? deleteProduct : null})
+  const cols=columns({language, endpoint, orderid: orderIDLocal, deleteProduct: canAdd ? deleteProduct : null})
 
-  const importURL=`${API_PATH}/${endpoint}/${orderID}/import`
+  const importURL=`${API_PATH}/${endpoint}/${orderIDLocal}/import`
   const templateURL=`${API_PATH}/${endpoint}/template`
 
   const paramsComboboxCompany = {
@@ -203,14 +194,14 @@ const BaseCreateTable = ({
       null
     }
 
-    { orderID ? <div>
+    { orderIDLocal ? <div>
 
       {isFeurstSales && <H2confirm>{state?.user?.full_name}</H2confirm>}
 
       {canAdd &&
       <div className='container-base'>
         <ImportExcelFile importURL={importURL} templateURL={templateURL}/>
-        <AddArticle endpoint={endpoint} orderid={orderID} addProduct={addProduct} wordingSection={wordingSection} />
+        <AddArticle endpoint={endpoint} orderid={orderIDLocal} addProduct={addProduct} wordingSection={wordingSection} />
       </div>}
 
       {canValidate && <H2confirm>Récapitulatif de votre commande</H2confirm>}
@@ -249,7 +240,7 @@ const BaseCreateTable = ({
               bgColor={'#fff'}
               textColor={'#141953'}
               borderColor={'1px solid #141953'}
-              onClick={() => resetAddress({endpoint, orderid: orderID})}
+              onClick={() => resetAddress({endpoint, orderid: orderIDLocal})}
             >
         Revenir à la saisie
             </PleasantButton>
@@ -260,7 +251,7 @@ const BaseCreateTable = ({
                 bgColor={'#fff'}
                 textColor={'#141953'}
                 borderColor={'1px solid #141953'}
-                onClick={() => convert({endpoint, orderid: orderID})}
+                onClick={() => convert({endpoint, orderid: orderIDLocal})}
               >
         Demande de devis
               </PleasantButton>}
@@ -270,7 +261,7 @@ const BaseCreateTable = ({
                 bgColor={'#fff'}
                 textColor={'#141953'}
                 borderColor={'1px solid #141953'}
-                onClick={() => convert({endpoint, orderid: orderID})}
+                onClick={() => convert({endpoint, orderid: orderIDLocal})}
               >
         Convertir en commande
               </PleasantButton>}
@@ -284,7 +275,7 @@ const BaseCreateTable = ({
           <PleasantButton
             rounded={'full'}
             disabled={justCreated}
-            onClick={() => ([COMPLETE].includes(state.status) ? submitOrder({endpoint, orderid: orderID}): setIsOpenDialog(true))}
+            onClick={() => ([COMPLETE].includes(state.status) ? submitOrder({endpoint, orderid: orderIDLocal}): setIsOpenDialog(true))}
           >
             {t(`${wordingSection}.valid`)} {/* Valid order/quotation */}
           </PleasantButton>
@@ -293,7 +284,7 @@ const BaseCreateTable = ({
 
 
       <DialogAddress
-        orderid={orderID}
+        orderid={orderIDLocal}
         endpoint={endpoint}
         isOpenDialog={isOpenDialog}
         setIsOpenDialog={setIsOpenDialog}
