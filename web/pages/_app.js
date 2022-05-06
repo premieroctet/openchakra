@@ -71,6 +71,8 @@ class MyApp extends App {
           <meta property="og:image:secure_url" content="https://my-alfred.io/static/presentation.jpg"/>
           <meta property="og:title" content="My Alfred - services autour de chez vous"/>
           <meta property="fb:app_id" content="512626602698236"/>
+          {/* Use minimum-scale=1 to enable GPU rasterization */}
+          <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
           <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
             integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
             crossOrigin=""/>
