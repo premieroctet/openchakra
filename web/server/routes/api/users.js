@@ -1,4 +1,3 @@
-const {BASEPATH_EDI} = require('../../../utils/feurst/consts')
 
 const crypto = require('crypto')
 
@@ -12,6 +11,7 @@ const CronJob = require('cron').CronJob
 const moment = require('moment')
 const axios = require('axios')
 const gifFrames = require('gif-frames')
+const {BASEPATH_EDI, FEURST_ADMIN, FEURST_ADV, FEURST_SALES, CUSTOMER_ADMIN, CUSTOMER_SLAVE} = require('../../../utils/consts')
 const {filterUsers} = require('../../utils/userAccess')
 const {CREATE} = require('../../../utils/feurst/consts')
 const {XL_FILTER, createMemoryMulter} = require('../../utils/filesystem')
@@ -1354,20 +1354,20 @@ router.post('/import', passport.authenticate('jwt', {session: false}), (req, res
  Returns landing page URL depending on role
  */
 router.get('/landing-page', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const roles=req.users.roles
-  if (roles.includes[FEURST_ADMIN]) {
+  const roles=req.user.roles
+  if (roles.includes(FEURST_ADMIN)) {
     return res.json(`${BASEPATH_EDI}/orders/handle`)
   }
-  if (roles.includes[FEURST_ADV]) {
+  if (roles.includes(FEURST_ADV)) {
     return res.json(`${BASEPATH_EDI}/orders/handle`)
   }
-  if (roles.includes[FEURST_SALES]) {
+  if (roles.includes(FEURST_SALES)) {
     return res.json(`${BASEPATH_EDI}/quotations/handle`)
   }
-  if (roles.includes[CUSTOMER_ADMIN]) {
+  if (roles.includes(CUSTOMER_ADMIN)) {
     return res.json(`${BASEPATH_EDI}/orders/create`)
   }
-  if (roles.includes[CUSTOMER_SLAVE]) {
+  if (roles.includes(CUSTOMER_SLAVE)) {
     return res.json(`${BASEPATH_EDI}/quotations/handle`)
   }
   return res.status(404).json(`Unknown loading page for ${roles}`)

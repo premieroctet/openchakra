@@ -5,7 +5,8 @@ import Login from '../../components/Feurst/Login'
 import Header from '../../components/Feurst/Header'
 import {theme, GlobalStyleEdi} from '../../styles/feurst/feurst.theme'
 import {screen} from '../../styles/screenWidths'
-const {BASEPATH_EDI} = require('../../utils/consts')
+import {client} from '../../utils/client'
+const {API_PATH} = require('../../utils/consts')
 
 const {
   removeAlfredRegistering,
@@ -41,14 +42,17 @@ const LoginPage = () => {
     }
   }, [router])
 
-  const redirect = () => {
+  const redirect = async() => {
+
     const path = localStorage.getItem('path')
     if (path) {
       localStorage.removeItem('path')
       router.push(path)
     }
     else {
-      router.push(BASEPATH_EDI)
+      const landingPage = await client(`${API_PATH}/users/landing-page`)
+        .catch(e => console.error(`Type de role non reconnu`, e))
+      router.push(landingPage)
     }
   }
 
