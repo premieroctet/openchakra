@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   formSchedule: {
     [theme.breakpoints.down('xs')]: {
       width: '100%',
@@ -28,3 +28,4 @@ export default theme => ({
     color: theme.palette.error.main,
   },
 })
+module.exports=Style

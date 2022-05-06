@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   root: {
     overflow: 'hidden',
     width: '100%',
@@ -86,3 +86,4 @@ export default theme => ({
     },
   },
 })
+module.exports=Style

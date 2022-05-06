@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   container: {
     backgroundColor: '#0D5169',
     width: '100%',
@@ -25,3 +25,4 @@ export default theme => ({
     paddingRight: '10% !important',
   },
 })
+module.exports=Style

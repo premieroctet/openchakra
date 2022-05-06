@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   mainContainerFooter:{
     display:'flex',
     flexDirection: 'row',
@@ -37,3 +37,4 @@ export default theme => ({
     }
   }
 })
+module.exports=Style

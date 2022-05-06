@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   aboutHastagsContainer: {
     [theme.breakpoints.down('sm')]: {
       marginBottom: '12vh',
@@ -96,3 +96,4 @@ export default theme => ({
     },
   },
 })
+module.exports=Style

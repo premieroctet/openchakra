@@ -4,3 +4,4 @@ export default theme =>({
     height: 80,
   },
 })
+module.exports=Style

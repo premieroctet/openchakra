@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   ourAlfredMainStyle: {
     display: 'flex',
     flexDirection: 'column',
@@ -118,3 +118,4 @@ export default theme => ({
     height: 70,
   },
 })
+module.exports=Style

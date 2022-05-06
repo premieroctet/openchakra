@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   howItWorksComponent: {
     justifyContent: 'center',
     marginTop: '2%',
@@ -16,3 +16,4 @@ export default theme => ({
     },
   },
 })
+module.exports=Style

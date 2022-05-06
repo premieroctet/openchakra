@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   closeButton: {
     position: 'absolute',
     right: theme.spacing(1),
@@ -11,3 +11,4 @@ export default theme => ({
     margin: '5px',
   },
 })
+module.exports=Style

@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   formSchedule: {
     '& .MuiPickersBasePicker-pickerView': {
       backgroundColor: 'red',
@@ -32,3 +32,4 @@ export default theme => ({
     color: theme.palette.error.main,
   },
 })
+module.exports=Style

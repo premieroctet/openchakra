@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   fullContainer: {
     display: 'flex',
     flexDirection: 'row',
@@ -161,3 +161,4 @@ export default theme => ({
     alignItems: 'center',
   },
 })
+module.exports=Style

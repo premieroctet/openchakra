@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   bigContainer: {
     marginTop: 100,
     marginBottom: 70,
@@ -124,3 +124,4 @@ export default theme => ({
 
   },
 })
+module.exports=Style
