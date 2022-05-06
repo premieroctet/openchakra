@@ -34,7 +34,7 @@ import DialogActions from '@material-ui/core/DialogActions'
 let parse = require('url-parse')
 const moment=require('moment')
 const {STEPS}=require('../../utils/registerSteps')
-import '../../static/assets/css/custom.css'
+
 
 registerLocale('fr', fr)
 

@@ -1,4 +1,4 @@
-import '../../../static/assets/css/custom.css'
+
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'

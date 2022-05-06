@@ -10,7 +10,7 @@ import axios from 'axios'
 import styles from '../../../static/css/components/BookingPreference/BookingPreference'
 import Checkbox from '@material-ui/core/Checkbox'
 import {SHOP} from '../../../utils/i18n'
-import '../../../static/assets/css/custom.css'
+
 
 // FIX : réafficher la ville de référence
 

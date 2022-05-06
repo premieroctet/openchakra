@@ -23,7 +23,7 @@ import {snackBarError} from '../utils/notifications'
 import {getLoggedUser} from '../utils/context'
 import {COMPANY_NAME} from '../utils/i18n'
 import i18n from '../server/utils/i18n_init'
-
+import '../static/assets/css/custom.css'
 
 class MyApp extends App {
   constructor() {

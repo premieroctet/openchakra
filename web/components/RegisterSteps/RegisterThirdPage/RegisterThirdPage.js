@@ -8,7 +8,7 @@ import Grid from '@material-ui/core/Grid'
 import {Typography} from '@material-ui/core'
 import {Link} from '@material-ui/core'
 import styles from '../../../static/css/components/RegisterSteps/RegisterThirdPage/RegisterThirdPage'
-import '../../../static/assets/css/custom.css'
+
 import {REGISTER_THIRD_PAGE} from '../../../utils/i18n'
 
 class RegisterThirdPage extends React.Component {
