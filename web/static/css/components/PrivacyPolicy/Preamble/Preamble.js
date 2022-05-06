@@ -1,3 +1,5 @@
 const Style = theme => ({
 
-})module.exports=Style
+})
+
+module.exports=Style
