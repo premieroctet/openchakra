@@ -7,7 +7,7 @@ import styles from '../../static/css/components/Layout/LayoutFaq/LayoutFaq'
 import Header from './About/Header'
 import Footer from './About/Footer'
 import Router from 'next/router'
-import '../../static/assets/css/custom.css'
+
 
 
 class LayoutFaq extends React.Component {

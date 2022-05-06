@@ -1,5 +1,5 @@
 import ReactHtmlParser from 'react-html-parser'
-import '../../static/assets/css/custom.css'
+
 
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'

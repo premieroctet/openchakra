@@ -15,3 +15,4 @@ export default theme =>({
     width: '100%'
   }
 })
+module.exports=Style

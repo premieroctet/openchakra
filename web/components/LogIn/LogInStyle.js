@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   fullContainer: {
     display: 'flex',
     flexDirection: 'row',
@@ -104,3 +104,4 @@ export default theme => ({
     cursor: 'pointer',
   },
 })
+module.exports=Style

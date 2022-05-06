@@ -21,7 +21,7 @@ import AskQuestion from '../../components/AskQuestion/AskQuestion'
 import ProfileLayout from '../../hoc/Layout/ProfileLayout'
 import LayoutMobileProfile from '../../hoc/Layout/LayoutMobileProfile'
 import {isEditableUser} from '../../utils/context'
-import '../../static/assets/css/custom.css'
+
 import Hidden from '@material-ui/core/Hidden'
 import {rgbaToHex} from '../../utils/functions'
 import Head from 'next/head'

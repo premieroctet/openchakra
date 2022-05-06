@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   navbarModal: {
     display: 'flex',
     alignItems: 'center',
@@ -77,3 +77,4 @@ export default theme => ({
   },
 
 })
+module.exports=Style

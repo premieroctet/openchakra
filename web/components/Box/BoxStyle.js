@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   borderBox: {
     borderRadius: 17,
     border: '1px solid rgba(210, 210, 210, 0.5)',
@@ -16,3 +16,4 @@ export default theme => ({
     },
   },
 })
+module.exports=Style

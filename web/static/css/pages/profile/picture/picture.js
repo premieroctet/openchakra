@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   pictureContainer:{
     [theme.breakpoints.down('xs')]:{
       display: 'flex',
@@ -38,3 +38,4 @@ export default theme => ({
 
   }
 })
+module.exports=Style

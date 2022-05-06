@@ -19,7 +19,7 @@ import DialogContent from '@material-ui/core/DialogContent'
 import CguContent from '../../CguContent/CguContent'
 import DialogActions from '@material-ui/core/DialogActions'
 const {ACCOUNT_MIN_AGE} = require('../../../utils/consts')
-import '../../../static/assets/css/custom.css'
+
 import {REGISTER_SECOND_PAGE} from '../../../utils/i18n'
 import CustomIcon from '../../CustomIcon/CustomIcon'
 

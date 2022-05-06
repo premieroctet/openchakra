@@ -18,7 +18,7 @@ import SelectSlotTimer from '../../SelectSlotTimer/SelectSlotTimer'
 import withStyles from '@material-ui/core/styles/withStyles'
 import styles from './DrawerSettingScheduleStyle'
 import axios from 'axios'
-import '../../../static/assets/css/custom.css'
+
 import {DRAWER_SETTING_SCHEDULE} from '../../../utils/i18n'
 
 const {timelapsesSetToArray} = require('../../../utils/dateutils')

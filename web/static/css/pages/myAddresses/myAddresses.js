@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   hideOnlyMobile: {
     [theme.breakpoints.only('xs')]: {
       display: 'none',
@@ -19,3 +19,4 @@ export default theme => ({
     },
   },
 })
+module.exports=Style

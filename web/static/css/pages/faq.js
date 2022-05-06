@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   menuContainer: {
     display: 'flex',
     justifyContent: 'center',
@@ -49,3 +49,4 @@ export default theme => ({
     width: 50,
   },
 })
+module.exports=Style

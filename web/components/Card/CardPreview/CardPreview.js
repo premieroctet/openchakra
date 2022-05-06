@@ -8,7 +8,7 @@ import Avatar from '@material-ui/core/Avatar'
 import styles from '../../../static/css/components/Card/CardPreview/CardPreview'
 import withStyles from '@material-ui/core/styles/withStyles'
 import Typography from '@material-ui/core/Typography'
-import '../../../static/assets/css/custom.css'
+
 
 class CardPreview extends React.Component {
 

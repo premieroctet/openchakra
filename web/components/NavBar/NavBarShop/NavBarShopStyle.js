@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   topbar: {
     visibility: 'visible',
     position: 'sticky',
@@ -9,3 +9,4 @@ export default theme => ({
     },
   },
 })
+module.exports=Style

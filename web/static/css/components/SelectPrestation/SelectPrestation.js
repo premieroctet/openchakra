@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   policySizeTitle: {
     fontSize: 24,
     lineHeight: '1.25em',
@@ -71,3 +71,4 @@ export default theme => ({
     color: 'white',
   },
 })
+module.exports=Style

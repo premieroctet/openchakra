@@ -43,7 +43,7 @@ import ClearIcon from '@material-ui/icons/Clear'
 import {getLoggedUserId, isLoggedUserRegistered, removeAlfredRegistering, setAlfredRegistering, getRole} from '../../../utils/context'
 const {formatAddress} = require('../../../utils/text.js')
 import Slider from '@material-ui/core/Slider'
-import '../../../static/assets/css/custom.css'
+
 const {PART, EMPLOYEE}=require('../../../utils/consts')
 import Logo from '../../../components/Logo/Logo'
 import Hidden from '@material-ui/core/Hidden'

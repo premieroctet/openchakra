@@ -25,7 +25,7 @@ import Router from 'next/router'
 import {Skeleton} from '@material-ui/lab'
 import {CARD_SERVICE} from '../../../utils/i18n'
 const {isEditableUser, hideEmptyEvaluations}=require('../../../utils/context')
-import '../../../static/assets/css/custom.css'
+
 import ListIconsSkills from '../../ListIconsSkills/ListIconsSkills'
 
 class RawCardServiceInfo extends React.Component {

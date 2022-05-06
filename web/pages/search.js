@@ -22,7 +22,7 @@ import Typography from '@material-ui/core/Typography'
 import withWidth from '@material-ui/core/withWidth'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import Hidden from '@material-ui/core/Hidden'
-import '../static/assets/css/custom.css'
+
 import {SEARCH} from '../utils/i18n'
 const {setAxiosAuthentication}=require('../utils/authentication')
 const BasePage=require('./basePage')

@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
 
   mainContainer: {
     width: '100%',
@@ -45,3 +45,4 @@ export default theme => ({
     color: 'rgb(72, 72, 72)',
   },
 })
+module.exports=Style

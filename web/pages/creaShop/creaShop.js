@@ -1,5 +1,5 @@
 import CustomButton from '../../components/CustomButton/CustomButton'
-import '../../static/assets/css/custom.css'
+
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
 import CssBaseline from '@material-ui/core/CssBaseline'

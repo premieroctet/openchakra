@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   loginContainer: {
     alignItems: 'center',
     height: '100vh',
@@ -25,3 +25,4 @@ export default theme => ({
     margin: 2,
   },
 })
+module.exports=Style

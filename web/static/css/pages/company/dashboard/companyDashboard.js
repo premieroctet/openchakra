@@ -98,3 +98,4 @@ export default theme =>({
     height: '100%'
   }
 })
+module.exports=Style

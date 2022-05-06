@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   button: {
     margin: theme.spacing(1),
     [theme.breakpoints.down('xs')]: {
@@ -105,4 +105,5 @@ export default theme => ({
       display: 'none',
     },
   },
-});
+})
+module.exports=Style
