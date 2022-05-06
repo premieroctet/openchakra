@@ -1,7 +1,7 @@
 import React from 'react'
-const {setAuthToken, setAxiosAuthentication}=require('../utils/authentication')
 import Validator from 'validator'
 import axios from 'axios'
+const {setAuthToken, setAxiosAuthentication}=require('../utils/authentication')
 const {snackBarError}=require('../utils/notifications')
 
 function withLogin(WrappedComponent) {
@@ -26,16 +26,7 @@ function withLogin(WrappedComponent) {
       const newState = {...this.state, [name]: value}
       if(name === 'username') {
         Object.assign(newState, {roles: null, selectedRole: null})
-      }
-      this.setState(newState)
-    }
-  
-    checkRoles = e => {
-      const {name, value} = e.target
-      const newState = {...this.state, [name]: value}
-  
-      if(name === 'username') {
-        // TODO aller chercher les rôles au bout d'une tepo, sinon GET /roles trop nombreux
+
         const usermail = e.target.value
         if (Validator.isEmail(usermail)) {
           axios.get(`/myAlfred/api/users/roles/${usermail}`)
@@ -52,10 +43,9 @@ function withLogin(WrappedComponent) {
             })
         }
       }
-      else {
-        this.setState(newState)
-      }
+      this.setState(newState)
     }
+  
   
     onSubmit = e => {
       e.preventDefault()
@@ -93,7 +83,6 @@ function withLogin(WrappedComponent) {
       return <WrappedComponent
         state={this.state}
         onChange={this.onChange}
-        checkRoles={this.checkRoles}
         onSubmit={this.onSubmit}
         handleClickShowPassword={this.handleClickShowPassword}
         handleMouseDownPassword={this.handleMouseDownPassword}

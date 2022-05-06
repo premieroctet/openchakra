@@ -2,8 +2,9 @@ import React, {useState, useEffect, useCallback} from 'react'
 import useLocalStorageState from 'use-local-storage-state'
 import dynamic from 'next/dynamic'
 import {useRouter} from 'next/router'
-import Autocomplete from '../Autocomplete/Autocomplete'
-import {StyledAutocomplete} from '../Autocomplete/Autocomplete.styles'
+import Autocomplete from '@material-ui/lab/Autocomplete'
+import TextField from '@material-ui/core/TextField'
+
 import {
   BASEPATH_EDI,
   API_PATH,
@@ -13,7 +14,6 @@ import {
   VALID,
   PARTIALLY_HANDLED,
   HANDLED,
-  CREATE_FOR,
   CONVERT,
   ORDER,
   QUOTATION,
@@ -58,10 +58,13 @@ const BaseCreateTable = ({
   state,
 }) => {
 
+  const dataToken = getAuthToken()
+
   const [language, setLanguage] = useState('fr')
   const [orderCompany, setOrderCompany] = useState(null)
-  const [orderIDLocal, setOrderIDLocal, {removeItem}] = useLocalStorageState(storage, {defaultValue: id})
+  const [orderIDLocal, setOrderIDLocal, {removeItem}] = useLocalStorageState(`${storage}-${dataToken.id}`, {defaultValue: id})
   const [isOpenDialog, setIsOpenDialog] = useState(false)
+  const [companies, setCompanies] = useState([])
 
 
   const router = useRouter()
@@ -75,8 +78,8 @@ const BaseCreateTable = ({
   const isView = [VALID, PARTIALLY_HANDLED, HANDLED, VALID, PARTIALLY_HANDLED, HANDLED].includes(state.status)
 
   /*  */
-  const convertToQuotation = !isView && accessRights.model == ORDER && accessRights.actions.map(acc => acc.action).includes(CONVERT)
-  const convertToOrder = !isView && accessRights.model == QUOTATION && accessRights.actions.map(acc => acc.action).includes(CONVERT)
+  const convertToQuotation = !isView && accessRights.isActionAllowed(ORDER, CONVERT)
+  const convertToOrder = !isView && accessRights.isActionAllowed(QUOTATION, CONVERT)
   const onlyValidButton = !canValidate && !convertToOrder && !convertToQuotation
 
   /* Update product quantities  */
@@ -152,7 +155,18 @@ const BaseCreateTable = ({
           .catch(e => console.error('cant create order'))
       }
     }
-  }, [canValidate, createOrderId, endpoint, orderIDLocal, orderCompany, setOrderIDLocal])
+  }, [canValidate, createOrderId, endpoint, orderIDLocal, orderCompany, setOrderIDLocal, isFeurstSales])
+
+  /* Feurst ? => Fetch companies */
+  useEffect(() => {
+    if (isFeurstSales) {
+      const fetchCompanies = async() => {
+        const companies = await client(`${API_PATH}/companies`)
+        setCompanies(companies)
+      }
+      fetchCompanies()
+    }
+  }, [isFeurstSales])
 
 
   /**
@@ -166,30 +180,22 @@ const BaseCreateTable = ({
   const importURL=`${API_PATH}/${endpoint}/${orderIDLocal}/import`
   const templateURL=`${API_PATH}/${endpoint}/template`
 
-  const paramsComboboxCompany = {
-    itemToString: item => (item && item.name || ''),
-    onSelectedItemChange: ({selectedItem}) => {
-      selectedItem && setOrderCompany(selectedItem._id)
-    },
-  }
-
-
+  
   return (<>
 
 
     {isFeurstSales && !orderCompany ?
       <div className='container-sm mb-8'>
-        <StyledAutocomplete>
-          <Autocomplete
-            urlToFetch={`${API_PATH}/companies`}
-            item={orderCompany}
-            setItem={setOrderCompany}
-            paramsCombobox={paramsComboboxCompany}
-            errorMsg= 'Aucune société trouvée'
-            placeholder='Nom de la société'
-            formattingResult={item => item.name}
-          />
-        </StyledAutocomplete>
+        <Autocomplete
+          disablePortal
+          id="combo-box-demo"
+          options={companies}
+          value={orderCompany}
+          onChange={(ev, value) => setOrderCompany(value)}
+          getOptionLabel={option => option.name}
+          sx={{width: 300}}
+          renderInput={params => <TextField {...params} label="Nom de la société" />}
+        />
       </div> :
       null
     }

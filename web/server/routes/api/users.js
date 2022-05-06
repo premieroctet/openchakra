@@ -1,4 +1,7 @@
+const {BASEPATH_EDI} = require('../../../utils/feurst/consts')
+
 const crypto = require('crypto')
+
 const fs = require('fs').promises
 const mongoose = require('mongoose')
 const lodash=require('lodash')
@@ -1344,6 +1347,30 @@ router.post('/import', passport.authenticate('jwt', {session: false}), (req, res
         res.status(500).error(err)
       })
   })
+})
+
+/**
+ @Route GET /myAlfred/api/users/landing-page
+ Returns landing page URL depending on role
+ */
+router.get('/landing-page', passport.authenticate('jwt', {session: false}), (req, res) => {
+  const roles=req.users.roles
+  if (roles.includes[FEURST_ADMIN]) {
+    return res.json(`${BASEPATH_EDI}/orders/handle`)
+  }
+  if (roles.includes[FEURST_ADV]) {
+    return res.json(`${BASEPATH_EDI}/orders/handle`)
+  }
+  if (roles.includes[FEURST_SALES]) {
+    return res.json(`${BASEPATH_EDI}/quotations/handle`)
+  }
+  if (roles.includes[CUSTOMER_ADMIN]) {
+    return res.json(`${BASEPATH_EDI}/orders/create`)
+  }
+  if (roles.includes[CUSTOMER_SLAVE]) {
+    return res.json(`${BASEPATH_EDI}/quotations/handle`)
+  }
+  return res.status(404).json(`Unknown loading page for ${roles}`)
 })
 
 // DEV tricks : set any atribute, log without password
