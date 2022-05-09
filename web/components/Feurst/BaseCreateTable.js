@@ -21,8 +21,7 @@ import {
   RELATED,
   UPDATE,
   UPDATE_ALL,
-  ORDERURLSEGMENT,
-  QUOTATIONURLSEGMENT,
+  ENDPOINTS,
 } from '../../utils/consts'
 import FeurstTable from '../../styles/feurst/FeurstTable'
 import {client} from '../../utils/client'
@@ -86,8 +85,8 @@ const BaseCreateTable = ({
   const canUpdatePrice = accessRights.isActionAllowed(QUOTATION, UPDATE_ALL)
   const canUpdateQuantity = (accessRights.isActionAllowed(QUOTATION, UPDATE) && !isView) || (isFeurstSales && isValid)
 
-  const convertToQuotation = endpoint === ORDERURLSEGMENT && !isView && accessRights.isActionAllowed(ORDER, CONVERT)
-  const convertToOrder = endpoint === QUOTATIONURLSEGMENT && !isView && accessRights.isActionAllowed(QUOTATION, CONVERT)
+  const convertToQuotation = accessRights.model=ORDER && !isView && accessRights.isActionAllowed(ORDER, CONVERT)
+  const convertToOrder = accessRights.model=QUOTATION && !isView && accessRights.isActionAllowed(QUOTATION, CONVERT)
   const onlyValidButton = !canValidate && !convertToOrder && !convertToQuotation
 
   /* Update product quantities or price */
@@ -115,7 +114,7 @@ const BaseCreateTable = ({
     axios.post(`${API_PATH}/${endpoint}/${orderid}/convert`)
       .then(res => {
         if(res.data) {
-          const finalDestination = endpoint === ORDERURLSEGMENT ? QUOTATIONURLSEGMENT : ORDERURLSEGMENT
+          const finalDestination = ENDPOINTS[accessRights.model==ORDER ? QUOTATION : ORDER]
           router.push(`${BASEPATH_EDI}/${finalDestination}`)
           removeItem()
           snackBarSuccess('Conversion réussie')
