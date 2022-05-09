@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "nodemon -w server -w package.json -w utils server/server.js",
     "devreport": "nodemon --report-uncaught-exception --report-on-signal --report-on-fatalerror -w server -w package.json server/server.js",
-    "build": "export NODE_OPTIONS=--max_old_space_size=4096 && next build",
+    "build": "export NODE_OPTIONS=--max_old_space_size=8192 && next build",
     "start": "SET NODE_ENV=production & node server/server.js",
     "server": "nodemon server/server.js",
     "test": "jest"
