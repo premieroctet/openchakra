@@ -1,6 +1,6 @@
 import React from 'react'
 import {useRouter} from 'next/router'
-import {BASEPATH_EDI, ORDER, VIEW, ORDERURLSEGMENT} from '../../utils/consts'
+import {BASEPATH_EDI, ORDER, VIEW, ENDPOINTS} from '../../utils/consts'
 import withEdiAuth from '../../../../hoc/withEdiAuth'
 import BaseCreateTable from'../../../../components/Feurst/BaseCreateTable'
 const {
@@ -17,7 +17,7 @@ const View = ({accessRights}) => {
     <BaseCreateTable
       id={orderid}
       storage={'orderview'}
-      endpoint={ORDERURLSEGMENT}
+      endpoint={ENDPOINTS[ORDER]}
       columns={orderColumns}
       wordingSection={'EDI.ORDER'}
       accessRights={accessRights}
