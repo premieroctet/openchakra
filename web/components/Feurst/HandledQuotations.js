@@ -7,7 +7,7 @@ const {
   PARTIALLY_HANDLED,
   VALID,
 } = require('../../utils/feurst/consts')
-const {handledOrdersColumns} = require('./tablestructures')
+const {handledQuotationsColumns} = require('./tablestructures')
 const BaseListTable = require('./BaseListTable')
 
 const Tabstyled = styled.div`
@@ -65,16 +65,16 @@ const Tabstyled = styled.div`
 `
 
 
-const HandledOrders = ({accessRights}) => {
+const HandledQuotations = ({accessRights}) => {
 
   const [selectedTab, setSelectedTab]=useState(0)
 
   const TABS=[{
-    title: 'Commandes à traiter',
+    title: 'Devis à traiter',
     filter: o => [PARTIALLY_HANDLED, VALID].includes(o.status),
   },
   {
-    title: 'Commandes traitées',
+    title: 'Devis traités',
     filter: o => [HANDLED].includes(o.status),
   }]
 
@@ -91,14 +91,14 @@ const HandledOrders = ({accessRights}) => {
       </Tabstyled>
 
       <BaseListTable
-        caption='Traitement des commandes'
-        endpoint='orders'
+        caption='Traitement des devis'
+        endpoint='quotations'
         filter={currentFilter}
         accessRights={accessRights}
-        columns={handledOrdersColumns}
+        columns={handledQuotationsColumns}
       />
     </>
   )
 }
 
-module.exports=HandledOrders
+module.exports=HandledQuotations

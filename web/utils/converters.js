@@ -2,6 +2,7 @@ const {RRule, RRuleSet, rrulestr} = require('rrule')
 const moment = require('moment-timezone')
 const {ALL_SERVICES, generate_id} = require('./consts.js')
 const EV_AVAIL_DAY_MAPPING = 'monday tuesday wednesday thursday friday saturday sunday'.split(' ')
+const isEmpty = require('../server/validation/is-empty')
 
 const DAYS = 'Lundi Mardi Mercredi Jeudi Vendredi Samedi Dimanche'.split(' ')
 const LONG_DAYS = 'lundis mardis mercredis jeudis vendredis samedis dimanches'.split(' ')
@@ -192,8 +193,11 @@ const moneyFormat = value => {
   return value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
 }
 
-const localeMoneyFormat = ({lang = 'fr', value, currency = 'EUR'}) => {
-  return new Intl.NumberFormat(lang, {style: 'currency', currency}).format(+value)
+const localeMoneyFormat = ({lang, value, currency = 'EUR'}) => {
+  if (!isEmpty(value)) {
+    return new Intl.NumberFormat(lang ? lang : 'fr', {style: 'currency', currency}).format(+value)
+  }
+  return value
 }
 
 const todayDate = () => {

@@ -2,7 +2,6 @@ import React from 'react'
 import {client} from '../utils/client'
 import {
   API_PATH,
-  ORDER_COMPLETE,
   ORDER_CREATED,
 } from '../utils/consts'
 const {snackBarError} = require('../utils/notifications')
@@ -72,14 +71,14 @@ const withEdiRequest = (Component = null) => {
     }
 
 
-    addProduct = async({endpoint, orderid, item, qty, replace = false}) => {
+    addProduct = async({endpoint, orderid, item, quantity, replace = false, ...rest}) => {
       if (!item) { return }
 
       const {
         _id,
       } = item
 
-      await client(`${API_PATH}/${endpoint}/${orderid}/items`, {data: {product: _id, quantity: qty, replace}, method: 'PUT'})
+      await client(`${API_PATH}/${endpoint}/${orderid}/items`, {data: {product: _id, quantity, replace, ...rest}, method: 'PUT'})
         .then(() => this.getContentFrom({endpoint, orderid}))
         .catch(errorMsg => {
           console.error(`Can't add product`)

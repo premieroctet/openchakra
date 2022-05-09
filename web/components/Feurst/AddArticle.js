@@ -14,7 +14,7 @@ const AddArticle = ({endpoint, orderid, updateTable, addProduct, wordingSection}
   const [article, setArticle] = useState({
     item: null,
     info: null,
-    qty: 1,
+    quantity: 1,
     showArticlePanel: false,
   })
 
@@ -39,7 +39,7 @@ const AddArticle = ({endpoint, orderid, updateTable, addProduct, wordingSection}
   }
 
 
-  const checkProductEnabled = article?.item && article?.qty
+  const checkProductEnabled = article?.item && article?.quantity
 
   return (
     <>
@@ -65,9 +65,9 @@ const AddArticle = ({endpoint, orderid, updateTable, addProduct, wordingSection}
             type="number"
             id='articleQty'
             placeholder='Qté souhaitée'
-            value={article.qty}
+            value={article.quantity}
             disabled={false}
-            onChange={ev => !isNaN(parseInt(ev.target.value)) && setArticle({...article, qty: parseInt(ev.target.value)})}
+            onChange={ev => !isNaN(parseInt(ev.target.value)) && setArticle({...article, quantity: parseInt(ev.target.value)})}
           />
         </Refquantity>
         <PleasantButton disabled={!checkProductEnabled} rounded={'full'} onClick={() => checkProduct(article)}>Vérifier</PleasantButton>

@@ -1,11 +1,11 @@
 import React from 'react'
 import {useRouter} from 'next/router'
+import {BASEPATH_EDI, ORDER, VIEW, ORDERURLSEGMENT} from '../../utils/consts'
 import withEdiAuth from '../../../../hoc/withEdiAuth'
 import BaseCreateTable from'../../../../components/Feurst/BaseCreateTable'
 const {
   orderColumns,
 } = require('../../../../components/Feurst/tablestructures')
-const {BASEPATH_EDI, ORDER, VIEW} = require('../../../../utils/consts')
 
 
 const View = ({accessRights}) => {
@@ -17,7 +17,7 @@ const View = ({accessRights}) => {
     <BaseCreateTable
       id={orderid}
       storage={'orderview'}
-      endpoint='orders'
+      endpoint={ORDERURLSEGMENT}
       columns={orderColumns}
       wordingSection={'EDI.ORDER'}
       accessRights={accessRights}

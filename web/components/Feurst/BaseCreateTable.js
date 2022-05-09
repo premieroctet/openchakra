@@ -17,6 +17,12 @@ import {
   CONVERT,
   ORDER,
   QUOTATION,
+  CREATE,
+  RELATED,
+  UPDATE,
+  UPDATE_ALL,
+  ORDERURLSEGMENT,
+  QUOTATIONURLSEGMENT,
 } from '../../utils/consts'
 import FeurstTable from '../../styles/feurst/FeurstTable'
 import {client} from '../../utils/client'
@@ -30,7 +36,7 @@ import {PleasantButton} from './Button'
 import Delivery from './Delivery'
 const axios = require('axios')
 const {withTranslation} = require('react-i18next')
-const {CREATE, RELATED} = require('../../utils/feurst/consts')
+
 const {
   getAuthToken,
   setAxiosAuthentication,
@@ -62,27 +68,29 @@ const BaseCreateTable = ({
 
   const [language, setLanguage] = useState('fr')
   const [orderCompany, setOrderCompany] = useState(null)
-  const [orderIDLocal, setOrderIDLocal, {removeItem}] = useLocalStorageState(`${storage}-${dataToken.id}`, {defaultValue: id})
+  const [orderIDLocal, setOrderIDLocal, {removeItem}] = useLocalStorageState(`${storage}-${dataToken?.id}`, {defaultValue: id})
   const [isOpenDialog, setIsOpenDialog] = useState(false)
   const [companies, setCompanies] = useState([])
 
 
   const router = useRouter()
 
-  // TODO filtrer sur model
-  const isFeurstSales = accessRights.getFullAction()?.visibility==RELATED
-
+  // Possibles actions
   const justCreated = [CREATED].includes(state.status)
   const canAdd = [CREATED, FULFILLED].includes(state.status)
   const canValidate = [COMPLETE].includes(state.status)
-  const isView = [VALID, PARTIALLY_HANDLED, HANDLED, VALID, PARTIALLY_HANDLED, HANDLED].includes(state.status)
+  const isValid = [VALID].includes(state.status)
+  const isView = [VALID, PARTIALLY_HANDLED, HANDLED].includes(state.status)
 
-  /*  */
-  const convertToQuotation = !isView && accessRights.isActionAllowed(ORDER, CONVERT)
-  const convertToOrder = !isView && accessRights.isActionAllowed(QUOTATION, CONVERT)
+  const isFeurstSales = accessRights.getFullAction()?.visibility==RELATED
+  const canUpdatePrice = accessRights.isActionAllowed(QUOTATION, UPDATE_ALL)
+  const canUpdateQuantity = (accessRights.isActionAllowed(QUOTATION, UPDATE) && !isView) || (isFeurstSales && isValid)
+
+  const convertToQuotation = endpoint === ORDERURLSEGMENT && !isView && accessRights.isActionAllowed(ORDER, CONVERT)
+  const convertToOrder = endpoint === QUOTATIONURLSEGMENT && !isView && accessRights.isActionAllowed(QUOTATION, CONVERT)
   const onlyValidButton = !canValidate && !convertToOrder && !convertToQuotation
 
-  /* Update product quantities  */
+  /* Update product quantities or price */
   const updateMyOrderContent = data => {
     addProduct({endpoint, orderid: orderIDLocal, ...data})
   }
@@ -107,7 +115,7 @@ const BaseCreateTable = ({
     axios.post(`${API_PATH}/${endpoint}/${orderid}/convert`)
       .then(res => {
         if(res.data) {
-          const finalDestination = endpoint === 'orders' ? 'quotations' : 'orders'
+          const finalDestination = endpoint === ORDERURLSEGMENT ? QUOTATIONURLSEGMENT : ORDERURLSEGMENT
           router.push(`${BASEPATH_EDI}/${finalDestination}`)
           removeItem()
           snackBarSuccess('Conversion réussie')
@@ -152,7 +160,7 @@ const BaseCreateTable = ({
       if ((orderCompany !== null || !isFeurstSales) && !canValidate) {
         createOrderId({endpoint, company: orderCompany})
           .then(data => setOrderIDLocal(data._id))
-          .catch(e => console.error('cant create order'))
+          .catch(e => console.error('cant create order', e))
       }
     }
   }, [canValidate, createOrderId, endpoint, orderIDLocal, orderCompany, setOrderIDLocal, isFeurstSales])
@@ -175,7 +183,13 @@ const BaseCreateTable = ({
     [data, deleteProduct, language],
   )
   */
-  const cols=columns({language, endpoint, orderid: orderIDLocal, deleteProduct: canAdd ? deleteProduct : null})
+  const cols=columns({
+    language,
+    endpoint,
+    orderid: orderIDLocal,
+    canUpdatePrice,
+    canUpdateQuantity,
+    deleteProduct: canAdd ? deleteProduct : null})
 
   const importURL=`${API_PATH}/${endpoint}/${orderIDLocal}/import`
   const templateURL=`${API_PATH}/${endpoint}/template`
@@ -202,9 +216,9 @@ const BaseCreateTable = ({
 
     { orderIDLocal ? <div>
 
-      {isFeurstSales && <H2confirm>{state?.user?.full_name}</H2confirm>}
+      {isFeurstSales && <H2confirm>{state?.company?.name}</H2confirm>}
 
-      {canAdd &&
+      {(canAdd || (isFeurstSales && isValid)) &&
       <div className='container-base'>
         <ImportExcelFile importURL={importURL} templateURL={templateURL}/>
         <AddArticle endpoint={endpoint} orderid={orderIDLocal} addProduct={addProduct} wordingSection={wordingSection} />
@@ -221,7 +235,6 @@ const BaseCreateTable = ({
         </dl>
       </div>}
 
-      <h1>Client: {state.company?.name}</h1>
       <FeurstTable
         caption={t(`${wordingSection}.details`)}
         data={state.items}

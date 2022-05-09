@@ -1,12 +1,10 @@
 import React, {useMemo} from 'react'
 import Link from 'next/link'
-import UpdateCell from '../Table/UpdateCell'
 import {localeMoneyFormat} from '../../utils/converters'
+import UpdateCellQuantity from './UpdateCellQuantity'
+import UpdateCellPrice from './UpdateCellPrice'
 import OrderStatus from './OrderStatus'
-const axios = require('axios')
-const {setAxiosAuthentication} = require('../../utils/authentication')
 const {
-  API_PATH,
   PARTIALLY_HANDLED,
   VALID,
 } = require('../../utils/feurst/consts')
@@ -16,6 +14,7 @@ const {ROLES} = require('../../utils/consts')
 const {DateRangeColumnFilter} = require('../Table/TableFilter')
 const {PleasantButton} = require('./Button')
 
+// to order by datetime
 const datetime = (a, b) => {
   let a1 = new Date(a).getTime()
   let b1 = new Date(b).getTime()
@@ -34,11 +33,11 @@ const FooterTotalWeight = info => {
   return <>{total} kg</>
 }
 
-const FooterTotalPrice = (info, language = null) => {
+const FooterTotalPrice = ({data, language = null}) => {
   const total = useMemo(
     () =>
-      info.rows.reduce((sum, row) => row.original.total_amount + sum, 0),
-    [info.rows],
+      data.rows.reduce((sum, row) => row.original.total_amount + sum, 0),
+    [data.rows],
   )
 
   return <>{localeMoneyFormat({lang: language, value: total})}</>
@@ -51,7 +50,7 @@ const ToTheBin = props => (
 )
 
 
-const orderColumns = ({endpoint, orderid, language, deleteProduct}) => {
+const orderColumns = ({endpoint, orderid, language, canUpdateQuantity, deleteProduct}) => {
 
   const orderColumnsBase = [
     {
@@ -67,7 +66,7 @@ const orderColumns = ({endpoint, orderid, language, deleteProduct}) => {
     {
       label: 'Quantité',
       attribute: 'quantity',
-      Cell: UpdateCell,
+      Cell: canUpdateQuantity ? UpdateCellQuantity : ({value}) => value,
     },
     {
       label: 'Poids',
@@ -94,7 +93,7 @@ const orderColumns = ({endpoint, orderid, language, deleteProduct}) => {
       label: 'Total',
       attribute: v => localeMoneyFormat({lang: language, value: v.total_amount}),
       sortType: 'number',
-      Footer: FooterTotalPrice,
+      Footer: data => FooterTotalPrice(data, language),
     },
 
   ]
@@ -166,7 +165,7 @@ const ordersColumns = ({endpoint, language, deleteOrder}) => [
   },
 ]
 
-const quotationColumns = ({language, deleteProduct}) => [
+const quotationColumns = ({language, deleteProduct, canUpdateQuantity, canUpdatePrice}) => [
   {
     label: 'Réf. catalogue',
     attribute: 'product.reference',
@@ -179,7 +178,7 @@ const quotationColumns = ({language, deleteProduct}) => [
   {
     label: 'Quantité',
     attribute: 'quantity',
-    Cell: UpdateCell,
+    Cell: canUpdateQuantity ? UpdateCellQuantity : ({value}) => value,
   },
   {
     label: 'Poids',
@@ -199,14 +198,15 @@ const quotationColumns = ({language, deleteProduct}) => [
   },
   {
     label: 'Votre prix',
-    attribute: v => localeMoneyFormat({lang: language, value: v.net_price}),
+    attribute: 'net_price',
     sortType: 'number',
+    Cell: canUpdatePrice ? UpdateCellPrice : ({value}) => <div>{localeMoneyFormat({lang: language, value})}</div>,
   },
   {
     label: 'Total',
     attribute: v => localeMoneyFormat({lang: language, value: v.total_amount}),
     sortType: 'number',
-    Footer: data => FooterTotalPrice(data, language),
+    Footer: data => <FooterTotalPrice data={data} language={language} />,
   },
   {
     label: '',
@@ -414,8 +414,43 @@ const handledOrdersColumns = ({endpoint, handleValidation = null, filter = null}
   {
     label: 'Validation',
     attribute: v => v,
+    disableFilters: true,
     Cell: ({value}) => (<HandleValidationStatusCell status={value.status} handleValidation={handleValidation} endpoint={endpoint} id={value._id} filter={filter} />),
   },
 ]
+const handledQuotationsColumns = ({endpoint, handleValidation = null, filter = null}) => [
+  {
+    label: 'Date',
+    attribute: 'creation_date',
+    Cell: ({cell: {value}}) => new Date(value).toLocaleString(),
+    sortType: datetime,
+    Filter: DateRangeColumnFilter,
+    filter: 'dateBetween', /* Custom Filter Type */
+  },
+  {
+    label: 'Client',
+    attribute: v => v.company.full_name,
+  },
+  {
+    label: 'Ref. devis',
+    attribute: 'reference',
+  },
+  {
+    label: 'Détails',
+    attribute: '_id',
+    Cell: ({value}) => (<Link href={`/edi/quotations/view/${value}`}>voir</Link>),
+  },
+  {
+    label: 'Statut',
+    attribute: 'status',
+    Cell: ({value}) => <OrderStatus status={value} />,
+  },
+  {
+    label: 'Validation',
+    attribute: v => v._id,
+    disableFilters: true,
+    Cell: ({value}) => (<Link href={`/edi/quotations/view/${value}`}>A traiter</Link>),
+  },
+]
 module.exports={orderColumns, ordersColumns, quotationColumns, quotationsColumns,
-  accountsColumns, productsColumns, shipratesColumns, handledOrdersColumns, pricesColumns}
+  accountsColumns, productsColumns, shipratesColumns, handledOrdersColumns, handledQuotationsColumns, pricesColumns}

@@ -1,5 +1,6 @@
 import React from 'react'
 import {useRouter} from 'next/router'
+import {QUOTATIONURLSEGMENT} from '../../utils/consts'
 import withEdiAuth from '../../../../hoc/withEdiAuth'
 import BaseCreateTable from'../../../../components/Feurst/BaseCreateTable'
 const {
@@ -17,7 +18,7 @@ const View = ({accessRights}) => {
     <BaseCreateTable
       id={quotationid}
       storage={'quotationview'}
-      endpoint='quotations'
+      endpoint={QUOTATIONURLSEGMENT}
       columns={quotationColumns}
       wordingSection={'EDI.QUOTATION'}
       accessRights={accessRights}

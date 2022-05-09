@@ -58,7 +58,7 @@ const CheckingProductArea = styled.div`
 
 const CheckingProduct = ({endpoint, orderid, article, setArticle, addProduct, wordingSection, t}) => {
 
-  const {info, qty} = article
+  const {info, quantity} = article
 
   const confirmAdd = async() => {
     await addProduct({endpoint, orderid, ...article})
@@ -77,7 +77,7 @@ const CheckingProduct = ({endpoint, orderid, article, setArticle, addProduct, wo
         <dt>Référence :</dt>
         <dd>{info.reference}</dd>
         <dt>Quantité disponible :</dt>
-        <dd>{qty > info.stock ? `${info.stock || 0} sur ${qty} ⚠️ stock partiel` : `${qty} sur ${qty}`} </dd>
+        <dd>{quantity > info.stock ? `${info.stock || 0} sur ${quantity} ⚠️ stock partiel` : `${quantity} sur ${quantity}`} </dd>
       </dl>
       <dl>
         <dt>Prix catalogue :</dt>
