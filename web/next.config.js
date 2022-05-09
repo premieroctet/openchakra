@@ -1,3 +1,4 @@
+const WebpackBar = require('webpackbar')
 const withCSS = require('@zeit/next-css')
 
 module.exports = withCSS({
@@ -13,6 +14,13 @@ module.exports = withCSS({
       exclude: /(node_modules)/,
       loader: require.resolve('url-loader'),
     })
+
+    config.plugins.push(new WebpackBar({
+      fancy: true,
+      profile: true,
+      basic: false,
+    }))
+
     return config
   },
 })
