@@ -9,6 +9,7 @@ const {
   HANDLED,
   PARTIALLY_HANDLED,
   STANDARD_SHIPPING,
+  UPDATE_ALL,
   VALIDATE,
 } = require('../../../utils/feurst/consts')
 const {
@@ -236,7 +237,11 @@ router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, r
   }
 
   const order_id=req.params.id
-  const {product, quantity, replace=false}=req.body
+  const {product, quantity, net_price, replace=false}=req.body
+
+  if (net_price && !isActionAllowed(req.user.roles, DATA_TYPE, UPDATE_ALL)) {
+    return res.status(401).json(`Droits insuffisants pour modifier le prix de l'article`)
+  }
 
   MODEL.findById(order_id)
     .populate('items.product')
@@ -246,7 +251,7 @@ router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, r
         console.error(`No order #${order_id}`)
         return res.status(404).json()
       }
-      return addItem(data, product, null, quantity, replace)
+      return addItem(data, product, null, quantity, net_price, replace)
     })
     .then(data => {
       return updateShipFee(data)

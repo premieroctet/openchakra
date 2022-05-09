@@ -33,7 +33,7 @@ const getProductPrices = (product_ref, company) => {
 If product is present, adds quantity if replace is false else sets quantity
 If product is not present, adds the item to the order
 */
-const addItem = (data, product_id, reference, quantity, replace=false) => {
+const addItem = (data, product_id, reference, quantity, net_price, replace=false) => {
   if (isNaN(parseInt(quantity))) {
     return Promise.reject(`Article ${reference}: quantité ${quantity} incorrect`)
   }
@@ -51,9 +51,12 @@ const addItem = (data, product_id, reference, quantity, replace=false) => {
       let item=data.items.find(item => item.product._id.toString()==product._id.toString())
       if (item) {
         item.quantity = replace ? parseInt(quantity) : item.quantity+parseInt(quantity)
+        if (net_price) {
+          item.net_price=net_price
+        }
       }
       else {
-        item = {product: product, quantity: parseInt(quantity), catalog_price: prices.catalog_price, net_price: prices.net_price}
+        item = {product: product, quantity: parseInt(quantity), catalog_price: prices.catalog_price, net_price: net_price || prices.net_price}
         data.items.push(item)
       }
       return Promise.resolve(data)
