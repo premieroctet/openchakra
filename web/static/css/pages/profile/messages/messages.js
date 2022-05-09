@@ -45,4 +45,5 @@ const Style = theme => ({
     margin: 'auto',
   },
 })
+
 module.exports=Style
