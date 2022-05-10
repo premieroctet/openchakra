@@ -21,6 +21,8 @@ module.exports = withCSS({
       basic: false,
     }))
 
+    config.optimization.minimize = false
+
     return config
   },
 })
