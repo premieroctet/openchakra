@@ -496,5 +496,31 @@ router.get('/:id/shipping-fee', passport.authenticate('jwt', {session: false}), 
     })
 })
 
+// @Route GET /myAlfred/api/orders/:id/shipping-fee?zipcode
+// Computes shipping fees
+// @Access private
+router.put('/:id/shipping-fee', passport.authenticate('jwt', {session: false}), (req, res) => {
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, UPDATE_ALL)) {
+    return res.status(401).json()
+  }
+
+  const shipping_fee=parseFloat(req.body.shipping_fee)
+
+  if (!shipping_fee || isNaN(shipping_fee)) {
+    return res.status(400).json(`Missing parameter shipping_fee`)
+  }
+
+  MODEL.findByIdAndUpdate(order_id, {shipping_fee: shipping_fee}, {new: true})
+    .then(result => {
+      if (!result) {
+        return res.status(404).json(`${DATA_TYPE} #${order_id} not found`)
+      }
+      return res.json(result)
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(500).json(err)
+    })
+})
 
 module.exports = router

@@ -50,12 +50,20 @@ const addItem = (data, product_id, reference, quantity, net_price, replace=false
       if (!prices) { return Promise.reject(`Tarif inconnu pour ${product.reference}`) }
       let item=data.items.find(item => item.product._id.toString()==product._id.toString())
       if (item) {
-        item.quantity = replace ? parseInt(quantity) : item.quantity+parseInt(quantity)
+        if (quantity) {
+          item.quantity = replace ? parseInt(quantity) : item.quantity+parseInt(quantity)
+        }
         if (net_price) {
           item.net_price=net_price
         }
       }
       else {
+        if (replace) {
+          return Promise.reject(`Update d'une ligne de commande inexistante`)
+        }
+        if (!quantity) {
+          return Promise.reject(`Update d'un tarif sans quantité`)
+        }
         item = {product: product, quantity: parseInt(quantity), catalog_price: prices.catalog_price, net_price: net_price || prices.net_price}
         data.items.push(item)
       }
