@@ -4,7 +4,7 @@ import {
   API_PATH,
   ORDER_CREATED,
 } from '../utils/consts'
-const {snackBarError} = require('../utils/notifications')
+import {snackBarError} from '../utils/notifications'
 
 
 const withEdiRequest = (Component = null) => {
@@ -114,6 +114,10 @@ const withEdiRequest = (Component = null) => {
 
     updateShippingFees = async({endpoint, orderid, shippingfees}) => {
       
+      this.requestUpdate(shippingfees)
+
+      console.log(this.state)
+
       return await client(`${API_PATH}/${endpoint}/${orderid}`, {data: {address: shipping.address, reference: shipping.reference, shipping_mode: shipping.shippingOption}, method: 'PUT'})
         .then(() => {
           this.getContentFrom({endpoint, orderid})
@@ -161,4 +165,4 @@ const withEdiRequest = (Component = null) => {
   return withEdiRequest
 }
 
-module.exports=withEdiRequest
+export default withEdiRequest

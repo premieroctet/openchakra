@@ -1,7 +1,7 @@
 import React from 'react'
 import withEdiAuth from '../../../hoc/withEdiAuth'
-const Prices = require('../../../components/Feurst/Prices')
-const {PRICELIST, VIEW, BASEPATH_EDI} = require('../../../utils/consts')
+import Prices from '../../../components/Feurst/Prices'
+import {PRICELIST, VIEW, BASEPATH_EDI} from '../../../utils/consts'
 
 const List = ({accessRights}) => {
 
@@ -10,4 +10,4 @@ const List = ({accessRights}) => {
   </>)
 }
 
-module.exports=withEdiAuth(List, {model: PRICELIST, action: VIEW, pathAfterFailure: `${BASEPATH_EDI}/login`})
+export default withEdiAuth(List, {model: PRICELIST, action: VIEW, pathAfterFailure: `${BASEPATH_EDI}/login`})

@@ -1,6 +1,6 @@
 import React from 'react'
-const BaseListTable = require('./BaseListTable')
-const {quotationsColumns} = require('./tablestructures')
+import BaseListTable from './BaseListTable'
+import {quotationsColumns} from './tablestructures'
 
 const MyQuotations = () => {
 
@@ -9,4 +9,4 @@ const MyQuotations = () => {
   )
 }
 
-module.exports=MyQuotations
+export default MyQuotations

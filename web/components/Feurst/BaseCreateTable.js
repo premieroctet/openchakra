@@ -5,6 +5,8 @@ import {useRouter} from 'next/router'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import TextField from '@material-ui/core/TextField'
 
+import axios from 'axios'
+import {withTranslation} from 'react-i18next'
 import {
   BASEPATH_EDI,
   API_PATH,
@@ -28,19 +30,16 @@ import {client} from '../../utils/client'
 import {localeMoneyFormat} from '../../utils/converters'
 import isEmpty from '../../server/validation/is-empty'
 import withEdiRequest from '../../hoc/withEdiRequest'
+import {
+  getAuthToken,
+  setAxiosAuthentication,
+} from '../../utils/authentication'
+import {snackBarError, snackBarSuccess} from '../../utils/notifications'
 import {H2confirm} from './components.styles'
 import AddArticle from './AddArticle'
 import ImportExcelFile from './ImportExcelFile'
 import {PleasantButton} from './Button'
 import Delivery from './Delivery'
-const axios = require('axios')
-const {withTranslation} = require('react-i18next')
-
-const {
-  getAuthToken,
-  setAxiosAuthentication,
-} = require('../../utils/authentication')
-const {snackBarError, snackBarSuccess} = require('../../utils/notifications')
 
 
 const DialogAddress = dynamic(() => import('./DialogAddress'))
@@ -319,4 +318,4 @@ const BaseCreateTable = ({
   )
 }
 
-module.exports=withTranslation('feurst', {withRef: true})(withEdiRequest(BaseCreateTable))
+export default withTranslation('feurst', {withRef: true})(withEdiRequest(BaseCreateTable))
