@@ -35,14 +35,18 @@ const DeliveryStyles = styled.div`
   }
 `
 
+const UpdateShippingFees = ({shipping_fee}) => (
+  <input width={30} value={shipping_fee} />
+)
 
-const Delivery = ({address, shipping: {shipping_fee, shipping_mode}}) => {
+
+const Delivery = ({address, shipping: {shipping_fee, shipping_mode, update}}) => {
 
   return address !== null ? (
     <DeliveryStyles>
       <h4>Livraison</h4>
       <div>
-        <p>Livraison {shipping_mode?.toLowerCase()} {localeMoneyFormat({value: shipping_fee})}</p>
+        <p>Livraison {shipping_mode?.toLowerCase()} {update ? <UpdateShippingFees shipping_fee={shipping_fee}/> : localeMoneyFormat({value: shipping_fee})}</p>
         <address>
           {address.address} <br />
           {address.zip_code} {address.city}<br />

@@ -1,6 +1,6 @@
 import React from 'react'
 import {useRouter} from 'next/router'
-import {ENDPOINTS, BASEPATH_EDI, QUOTATION, VIEW} from '../../utils/consts'
+import {ENDPOINTS, BASEPATH_EDI, QUOTATION, VIEW} from '../../../../utils/consts'
 import withEdiAuth from '../../../../hoc/withEdiAuth'
 import BaseCreateTable from'../../../../components/Feurst/BaseCreateTable'
 const {

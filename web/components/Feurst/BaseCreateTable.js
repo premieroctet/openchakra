@@ -59,6 +59,7 @@ const BaseCreateTable = ({
   deleteProduct,
   requestUpdate,
   validateAddress,
+  updateShippingFees,
   resetAddress,
   state,
 }) => {
@@ -84,9 +85,10 @@ const BaseCreateTable = ({
   const isFeurstSales = accessRights.getFullAction()?.visibility==RELATED
   const canUpdatePrice = accessRights.isActionAllowed(QUOTATION, UPDATE_ALL)
   const canUpdateQuantity = (accessRights.isActionAllowed(QUOTATION, UPDATE) && !isView) || (isFeurstSales && isValid)
+  const canUpdateShipping = canUpdatePrice
 
-  const convertToQuotation = accessRights.model=ORDER && !isView && accessRights.isActionAllowed(ORDER, CONVERT)
-  const convertToOrder = accessRights.model=QUOTATION && !isView && accessRights.isActionAllowed(QUOTATION, CONVERT)
+  const convertToQuotation = accessRights.getModel() === ORDER && !isView && accessRights.isActionAllowed(ORDER, CONVERT)
+  const convertToOrder = accessRights.getModel() === QUOTATION && !isView && accessRights.isActionAllowed(QUOTATION, CONVERT)
   const onlyValidButton = !canValidate && !convertToOrder && !convertToQuotation
 
   /* Update product quantities or price */
@@ -244,7 +246,7 @@ const BaseCreateTable = ({
 
       {canValidate || isView ?
         <div className='flex flex-wrap gap-x-4 justify-between items-end mb-8'>
-          <Delivery address={state.address} shipping={{shipping_mode: state.shipping_mode, shipping_fee: state.shipping_fee}} />
+          <Delivery address={state.address} shipping={{shipping_mode: state.shipping_mode, shipping_fee: state.shipping_fee, update: canUpdateShipping ? updateShippingFees : null}} />
           {!isView ? <h4 className='text-2xl mb-0 text-black'>{t(`${wordingSection}.total`)} : {localeMoneyFormat({value: state.total_amount})}</h4> : null}
         </div>: null
       }

@@ -112,6 +112,18 @@ const withEdiRequest = (Component = null) => {
         })
     }
 
+    updateShippingFees = async({endpoint, orderid, shippingfees}) => {
+      
+      return await client(`${API_PATH}/${endpoint}/${orderid}`, {data: {address: shipping.address, reference: shipping.reference, shipping_mode: shipping.shippingOption}, method: 'PUT'})
+        .then(() => {
+          this.getContentFrom({endpoint, orderid})
+        })
+        .catch(e => {
+          console.error(`Can't bind address to order/quotation`, e)
+          return {errors: e}
+        })
+    }
+
     resetAddress = async({endpoint, orderid}) => {
 
       return await client(`${API_PATH}/${endpoint}/${orderid}/rewrite`, {method: 'PUT'})
@@ -136,6 +148,7 @@ const withEdiRequest = (Component = null) => {
           deleteProduct={this.deleteProduct}
           requestUpdate={this.requestUpdate}
           handleValidation={this.handleValidation}
+          updateShippingFees={this.updateShippingFees}
           validateAddress={this.validateAddress}
           resetAddress={this.resetAddress}
           state={this.state}
