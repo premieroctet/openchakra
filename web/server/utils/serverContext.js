@@ -61,7 +61,7 @@ const send_cookie = (user, role, res, logged_as=null) => {
       httpOnly: false,
       secure: true,
       sameSite: true,
-    }).status('201').json()
+    }).status(201).json()
   })
 }
 
