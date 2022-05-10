@@ -93,7 +93,7 @@ const orderColumns = ({endpoint, orderid, language, canUpdateQuantity, deletePro
       label: 'Total',
       attribute: v => localeMoneyFormat({lang: language, value: v.total_amount}),
       sortType: 'number',
-      Footer: data => FooterTotalPrice(data, language),
+      Footer: data => <FooterTotalPrice data={data} language={language} />,
     },
 
   ]
