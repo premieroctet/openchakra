@@ -1,8 +1,8 @@
 import React from 'react'
 import Link from 'next/link'
 import styled from 'styled-components'
-const {FEURST_PHONE_NUMBER, BASEPATH_EDI} = require('../../utils/consts')
-const QuickMenu = require('./QuickMenu')
+import {FEURST_PHONE_NUMBER, BASEPATH_EDI} from '../../utils/consts'
+import QuickMenu from './QuickMenu'
 
 const HeaderContainer = styled.header`
 
@@ -18,7 +18,7 @@ const HeaderContainer = styled.header`
   a {
     text-decoration-line: none;
     font-size: var(--text-sm);
-    font-weight: var(--font-medium);FEURST_PHONE
+    font-weight: var(--font-medium);
     transition: all var(--delayIn) ease-out;
     color: ${props => props.theme.colors?.black || '#111'};
 
@@ -49,4 +49,4 @@ const Header = ({accessRights}) => {
   )
 }
 
-module.exports=Header
+export default Header

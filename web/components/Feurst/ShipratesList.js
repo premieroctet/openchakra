@@ -1,12 +1,12 @@
 import React, {useState} from 'react'
-const {SHIPRATE, CREATE} = require('../../utils/consts')
+import {SHIPRATE, CREATE} from '../../utils/consts'
 
-const DataImport = require('../DataImport/DataImport')
-const DialogBase = require('../Dialog/DialogBase')
-const {PleasantButton} = require('./Button')
+import DataImport from '../DataImport/DataImport'
+import DialogBase from '../Dialog/DialogBase'
+import {PleasantButton} from './Button'
 
-const {shipratesColumns} = require('./tablestructures')
-const BaseListTable = require('./BaseListTable')
+import {shipratesColumns} from './tablestructures'
+import BaseListTable from './BaseListTable'
 
 const ShipratesList = ({accessRights}) => {
 
@@ -36,4 +36,4 @@ const ShipratesList = ({accessRights}) => {
   )
 }
 
-module.exports=ShipratesList
+export default ShipratesList

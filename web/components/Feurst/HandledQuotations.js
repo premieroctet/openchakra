@@ -2,13 +2,13 @@ import React, {useState} from 'react'
 import styled from 'styled-components'
 import Link from 'next/link'
 import {screen} from '../../styles/screenWidths'
-const {
+import {
   HANDLED,
   PARTIALLY_HANDLED,
   VALID,
-} = require('../../utils/feurst/consts')
-const {handledQuotationsColumns} = require('./tablestructures')
-const BaseListTable = require('./BaseListTable')
+} from '../../utils/feurst/consts'
+import {handledQuotationsColumns} from './tablestructures'
+import BaseListTable from './BaseListTable'
 
 const Tabstyled = styled.div`
 
@@ -101,4 +101,4 @@ const HandledQuotations = ({accessRights}) => {
   )
 }
 
-module.exports=HandledQuotations
+export default HandledQuotations

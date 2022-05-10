@@ -1,13 +1,13 @@
 import React from 'react'
 import withEdiAuth from '../../../hoc/withEdiAuth'
-const {CREATE, ORDER, BASEPATH_EDI} = require('../../../utils/consts')
-const OrderCreate = require('../../../components/Feurst/OrderCreate')
+import {CREATE, ORDER, BASEPATH_EDI} from '../../../utils/feurst/consts'
+import OrderCreate from '../../../components/Feurst/OrderCreate'
 
-const Orders = ({accessRights}) => {
+const CreateOrder = ({accessRights}) => {
 
   return (<>
     <OrderCreate accessRights={accessRights} />
   </>)
 }
 
-module.exports=withEdiAuth(Orders, {model: ORDER, action: CREATE, pathAfterFailure: `${BASEPATH_EDI}/login`})
+export default withEdiAuth(CreateOrder, {model: ORDER, action: CREATE, pathAfterFailure: `${BASEPATH_EDI}/login`})

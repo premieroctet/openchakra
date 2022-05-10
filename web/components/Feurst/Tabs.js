@@ -3,8 +3,7 @@ import React from 'react'
 import styled from 'styled-components'
 import Link from 'next/link'
 import {screen} from '../../styles/screenWidths'
-const {CREATE_FOR, HANDLE} = require('../../utils/feurst/consts')
-const {CREATE, ORDER, QUOTATION, VIEW, PRODUCT, SHIPRATE, ACCOUNT, BASEPATH_EDI, PRICELIST} = require('../../utils/consts')
+import {CREATE_FOR, HANDLE, CREATE, ORDER, QUOTATION, VIEW, PRODUCT, SHIPRATE, ACCOUNT, BASEPATH_EDI, PRICELIST} from '../../utils/feurst/consts'
 
 const Tabstyled = styled.div`
 
@@ -177,4 +176,5 @@ const Tabs = props => {
     </>
   )
 }
-module.exports=Tabs
+
+export default Tabs
