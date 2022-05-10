@@ -55,10 +55,13 @@ router.get('/check_register_code/:code', (req, res) => {
 // Register
 router.post('/register', (req, res) => {
 
+  // TODO Réactiver les cookies 
+  /**
   const accept_cookie = req.cookies[ACCEPT_COOKIE_NAME]
   if (accept_cookie !== 'true') {
     return res.status(403).json({security: 'Vous devez accepter les cookies pour vous inscrire'})
   }
+  */
 
   const {errors, isValid} = validateSimpleRegisterInput(req.body)
 
@@ -496,10 +499,13 @@ router.delete('/profile/registrationProof', passport.authenticate('jwt', {sessio
 // TODO 934169 Gérer si cookies non autorisés (pas de login)
 router.post('/login', (req, res) => {
 
+  // TODO Réactiver les cookies 
+  /**
   const accept_cookie = req.cookies[ACCEPT_COOKIE_NAME]
   if (accept_cookie !== 'true') {
     return res.status(403).json({security: 'Vous devez accepter les cookies pour vous connecter'})
   }
+  */
 
   const {errors, isValid} = validateLoginInput(req.body)
 
