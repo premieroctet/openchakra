@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react'
+import React, {useState, useEffect} from 'react'
 import useLocalStorageState from 'use-local-storage-state'
 import dynamic from 'next/dynamic'
 import {useRouter} from 'next/router'
@@ -17,7 +17,6 @@ import {
   CONVERT,
   ORDER,
   QUOTATION,
-  CREATE,
   RELATED,
   UPDATE,
   UPDATE_ALL,
@@ -306,6 +305,14 @@ const BaseCreateTable = ({
           </PleasantButton>
         </div>
         : null }
+
+
+      {isFeurstSales ? (
+        <div className='flex items-center bg-brand text-xl text-white font-semibold justify-between p-2 pl-6 pr-6 mb-8'>
+          <span>Total</span>
+          <span>{state?.total_amount && localeMoneyFormat({value: state.total_amount})}</span>
+        </div>
+      ) : null}
 
 
       <DialogAddress

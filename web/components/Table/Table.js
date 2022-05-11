@@ -1,6 +1,5 @@
 import React, {useMemo} from 'react'
 import {useTable, useSortBy, useFilters, useGlobalFilter} from 'react-table'
-import lodash from 'lodash'
 import {GlobalFilter} from './TableFilter'
 import {fuzzyTextFilterFn} from './table-helper'
 import TableDialogFilter from './TableDialogFilter'
@@ -97,7 +96,6 @@ const Table = (
     rows,
     prepareRow,
     state,
-    visibleColumns,
     preGlobalFilteredRows,
     setGlobalFilter,
   } = useTable(
@@ -129,7 +127,7 @@ const Table = (
         <thead>
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column, i) => (
+              {headerGroup.headers.map(column => (
                 <th {...column.getHeaderProps()}>
                   {column.render('Header') !== '' &&
                     <div className='header'>
