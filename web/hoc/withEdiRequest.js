@@ -2,9 +2,11 @@ import React from 'react'
 import {client} from '../utils/client'
 import {
   API_PATH,
+  ENDPOINTS,
+  QUOTATION,
   ORDER_CREATED,
-} from '../utils/consts'
-import {ENDPOINTS, QUOTATION} from '../utils/feurst/consts'
+  HANDLED,
+} from '../utils/feurst/consts'
 import {snackBarError} from '../utils/notifications'
 
 
@@ -133,6 +135,10 @@ const withEdiRequest = (Component = null) => {
 
     }
 
+    sendQuotationToCustomer = async({endpoint, orderid}) => {
+      // HANDLED ?
+    }
+
 
     render() {
 
@@ -149,6 +155,7 @@ const withEdiRequest = (Component = null) => {
           updateShippingFees={this.updateShippingFees}
           validateAddress={this.validateAddress}
           resetAddress={this.resetAddress}
+          sendQuotationToCustomer={this.sendQuotationToCustomer}
           state={this.state}
           {...this.props}
         />

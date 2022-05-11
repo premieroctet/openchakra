@@ -60,6 +60,7 @@ const BaseCreateTable = ({
   validateAddress,
   updateShippingFees,
   resetAddress,
+  sendQuotationToCustomer,
   state,
 }) => {
 
@@ -98,6 +99,11 @@ const BaseCreateTable = ({
   /* Update product quantities or price */
   const updateMyOrderContent = data => {
     addProduct({endpoint, orderid: orderIDLocal, ...data})
+  }
+
+  const changeCompany = e => {
+    setOrderCompany(null)
+    removeItem()
   }
 
   const submitOrder = async({endpoint, orderid}) => {
@@ -221,7 +227,7 @@ const BaseCreateTable = ({
 
     { orderIDLocal ? <div>
 
-      {isFeurstSales && <H2confirm>{state?.company?.name}</H2confirm>}
+      {isFeurstSales && <div><H2confirm>{state?.company?.name}</H2confirm> <button onClick={changeCompany}>Changer d'entreprise</button></div>}
 
       {(canAdd || (isFeurstSales && isValid)) &&
       <div className='container-base'>
@@ -307,11 +313,23 @@ const BaseCreateTable = ({
         : null }
 
 
-      {isFeurstSales ? (
+      {isFeurstSales ? (<>
         <div className='flex items-center bg-brand text-xl text-white font-semibold justify-between p-2 pl-6 pr-6 mb-8'>
           <span>Total</span>
           <span>{state?.total_amount && localeMoneyFormat({value: state.total_amount})}</span>
         </div>
+
+        <div className='flex gap-x-4 justify-end mb-8'>
+
+          <PleasantButton
+            rounded={'full'}
+            disabled={justCreated}
+            bgColor={'#707071'}
+            textColor={'#ffffff'}
+            onClick={() => true}
+          >Envoyer au client</PleasantButton>
+        </div>
+      </>
       ) : null}
 
 
