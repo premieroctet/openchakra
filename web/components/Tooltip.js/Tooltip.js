@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {useKeyPress} from '../../hooks/use-keypress'
+import {useKeyPress} from '../../hooks/use-keypress.hook'
 
 const Tooltip = ({trigger: TriggerComponent, content: ContentComponent}) => {
 

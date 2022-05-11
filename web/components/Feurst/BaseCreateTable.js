@@ -83,9 +83,14 @@ const BaseCreateTable = ({
   const isView = [VALID, PARTIALLY_HANDLED, HANDLED].includes(state.status)
 
   const isFeurstSales = accessRights.getFullAction()?.visibility==RELATED
-  const canUpdatePrice = accessRights.isActionAllowed(QUOTATION, UPDATE_ALL)
-  const canUpdateQuantity = (accessRights.isActionAllowed(QUOTATION, UPDATE) && !isView) || (isFeurstSales && isValid)
-  const canUpdateShipping = canUpdatePrice
+  const canUpdatePrice = accessRights.isActionAllowed(QUOTATION, UPDATE_ALL) && accessRights.getModel() === QUOTATION
+  const canUpdateQuantity = (
+    (accessRights.isActionAllowed(QUOTATION, UPDATE) && accessRights.getModel() === QUOTATION)
+    || (accessRights.isActionAllowed(ORDER, UPDATE) && accessRights.getModel() === ORDER)
+    && !isView
+  ) || (isFeurstSales && isValid)
+    
+  const canUpdateShipping = canUpdatePrice && isValid
 
   const convertToQuotation = accessRights.getModel() === ORDER && !isView && accessRights.isActionAllowed(ORDER, CONVERT)
   const convertToOrder = accessRights.getModel() === QUOTATION && !isView && accessRights.isActionAllowed(QUOTATION, CONVERT)
@@ -246,7 +251,7 @@ const BaseCreateTable = ({
 
       {canValidate || isView ?
         <div className='flex flex-wrap gap-x-4 justify-between items-end mb-8'>
-          <Delivery address={state.address} shipping={{shipping_mode: state.shipping_mode, shipping_fee: state.shipping_fee, update: canUpdateShipping ? updateShippingFees : null}} />
+          <Delivery orderid={orderIDLocal} address={state.address} shipping={{shipping_mode: state.shipping_mode, shipping_fee: state.shipping_fee, update: canUpdateShipping ? updateShippingFees : null}} />
           {!isView ? <h4 className='text-2xl mb-0 text-black'>{t(`${wordingSection}.total`)} : {localeMoneyFormat({value: state.total_amount})}</h4> : null}
         </div>: null
       }
@@ -295,7 +300,7 @@ const BaseCreateTable = ({
           <PleasantButton
             rounded={'full'}
             disabled={justCreated}
-            onClick={() => ([COMPLETE].includes(state.status) ? submitOrder({endpoint, orderid: orderIDLocal}): setIsOpenDialog(true))}
+            onClick={() => (canValidate ? submitOrder({endpoint, orderid: orderIDLocal}): setIsOpenDialog(true))}
           >
             {t(`${wordingSection}.valid`)} {/* Valid order/quotation */}
           </PleasantButton>

@@ -4,7 +4,8 @@ import {
   API_PATH,
   ORDER_CREATED,
 } from '../utils/consts'
-const {snackBarError} = require('../utils/notifications')
+import {ENDPOINTS, QUOTATION} from '../utils/feurst/consts'
+import {snackBarError} from '../utils/notifications'
 
 
 const withEdiRequest = (Component = null) => {
@@ -112,12 +113,9 @@ const withEdiRequest = (Component = null) => {
         })
     }
 
-    updateShippingFees = async({endpoint, orderid, shippingfees}) => {
-      
-      return await client(`${API_PATH}/${endpoint}/${orderid}`, {data: {address: shipping.address, reference: shipping.reference, shipping_mode: shipping.shippingOption}, method: 'PUT'})
-        .then(() => {
-          this.getContentFrom({endpoint, orderid})
-        })
+    updateShippingFees = async({orderid, shippingfees}) => {
+
+      return await client(`${API_PATH}/${ENDPOINTS[QUOTATION]}/${orderid}/shipping-fee`, {data: {shipping_fee: shippingfees}, method: 'PUT'})
         .catch(e => {
           console.error(`Can't bind address to order/quotation`, e)
           return {errors: e}

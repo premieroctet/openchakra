@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import styled from 'styled-components'
 import {localeMoneyFormat} from '../../utils/converters'
 
@@ -33,24 +33,38 @@ const DeliveryStyles = styled.div`
       color: var(--black);
     }
   }
+
+  input {
+    max-width: 10ch;
+    padding: var(--spc-2)
+  }
 `
 
-const UpdateShippingFees = ({shipping_fee}) => (
-  <input width={30} value={shipping_fee} />
-)
+
+const UpdateShippingFees = ({orderid, shipping_fee, update}) => {
+
+  const [shippingFees, setShippingFees] = useState(shipping_fee)
+
+  const updateShipFee = () => {
+    update({orderid, shippingfees: shippingFees})
+  }
+  
+  return (
+    <input value={shippingFees} onChange={e => !isNaN(parseFloat(e.target.value)) && setShippingFees(parseFloat(e.target.value))} onBlur={updateShipFee}/>
+  )
+}
 
 
-const Delivery = ({address, shipping: {shipping_fee, shipping_mode, update}}) => {
+const Delivery = ({orderid, address, shipping: {shipping_fee, shipping_mode, update}}) => {
 
   return address !== null ? (
     <DeliveryStyles>
       <h4>Livraison</h4>
       <div>
-        <p>Livraison {shipping_mode?.toLowerCase()} {update ? <UpdateShippingFees shipping_fee={shipping_fee}/> : localeMoneyFormat({value: shipping_fee})}</p>
+        <p>Livraison {shipping_mode?.toLowerCase()} {update ? <UpdateShippingFees orderid={orderid} update={update} shipping_fee={shipping_fee}/> : localeMoneyFormat({value: shipping_fee})}</p>
         <address>
           {address.address} <br />
-          {address.zip_code} {address.city}<br />
-          {address.country}
+          {address.zip_code} {address.city} - {address.country}
         </address>
         <p>Livraison estimée : J+{shipping_mode == 'EXPRESS' ? '2' : '3'}</p>
       </div>
