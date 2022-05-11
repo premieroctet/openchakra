@@ -1,9 +1,10 @@
 import React, {useState} from 'react'
-import {API_PATH} from '../../utils/feurst/consts'
-import ImportExcelFile from './ImportExcelFile'
+const {Grid} = require('@material-ui/core')
+const {API_PATH} = require('../../utils/feurst/consts')
+const ImportExcelFile = require('./ImportExcelFile')
 
-import {productsColumns} from './tablestructures'
-import BaseListTable from './BaseListTable'
+const {productsColumns} = require('./tablestructures')
+const BaseListTable = require('./BaseListTable')
 
 const ProductsList = ({accessRights}) => {
 
@@ -26,4 +27,4 @@ const ProductsList = ({accessRights}) => {
   )
 }
 
-export default ProductsList
+module.exports=ProductsList

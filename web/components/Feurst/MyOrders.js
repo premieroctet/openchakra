@@ -1,6 +1,6 @@
 import React from 'react'
-import {ordersColumns} from './tablestructures'
-import BaseListTable from './BaseListTable'
+const {ordersColumns} = require('./tablestructures')
+const BaseListTable = require('./BaseListTable')
 
 const MyOrders = () => {
 
@@ -9,4 +9,4 @@ const MyOrders = () => {
   )
 }
 
-export default MyOrders
+module.exports=MyOrders

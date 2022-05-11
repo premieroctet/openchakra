@@ -1,23 +1,23 @@
 import React, {useState, useEffect} from 'react'
 import styled from 'styled-components'
 import dynamic from 'next/dynamic'
-import {
+import {PleasantButton} from './Button'
+const {
   MenuItem,
   Select,
   TextField,
   Typography,
-} from '@material-ui/core'
-import lodash from 'lodash'
-import axios from 'axios'
-import {is_development} from '../../config/config'
-import {snackBarError} from '../../utils/notifications'
-import {guessDelimiter} from '../../utils/text'
-import {extractSample, getTabs, guessFileType} from '../../utils/import'
-import {TEXT_TYPE, XL_TYPE} from '../../utils/feurst/consts'
-import {setAxiosAuthentication} from '../../utils/authentication'
-import {client} from '../../utils/client'
-import {XL_EXTENSIONS} from '../../utils/consts'
-import {PleasantButton} from './Button'
+} = require('@material-ui/core')
+const lodash=require('lodash')
+const axios = require('axios')
+const {is_development} = require('../../config/config')
+const {snackBarError} = require('../../utils/notifications')
+const {guessDelimiter} = require('../../utils/text')
+const {extractSample, getTabs, guessFileType} = require('../../utils/import')
+const {TEXT_TYPE, XL_TYPE} = require('../../utils/feurst/consts')
+const {setAxiosAuthentication} = require('../../utils/authentication')
+const {client} = require('../../utils/client')
+const {XL_EXTENSIONS}=require('../../utils/consts')
 
 const PureDialog = dynamic(() => import('../Dialog//PureDialog'))
 
@@ -207,4 +207,4 @@ const ImportExcelFile = ({importURL, templateURL, caption}) => {
   )
 }
 
-export default ImportExcelFile
+module.exports=ImportExcelFile

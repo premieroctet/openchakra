@@ -1,8 +1,8 @@
 import React, {useState} from 'react'
-import ImportExcelFile from './ImportExcelFile'
+const ImportExcelFile = require('./ImportExcelFile')
 
-import {pricesColumns} from './tablestructures'
-import BaseListTable from './BaseListTable'
+const {pricesColumns} = require('./tablestructures')
+const BaseListTable = require('./BaseListTable')
 
 const PricesList = ({accessRights}) => {
 
@@ -23,4 +23,4 @@ const PricesList = ({accessRights}) => {
   )
 }
 
-export default PricesList
+module.exports=PricesList

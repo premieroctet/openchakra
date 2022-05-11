@@ -7,4 +7,4 @@ const HomeEdi = ({user}) => {
   return (<div>Hello, {JSON.stringify(user)}</div>)
 }
 
-export default withEdiAuth(HomeEdi, {pathAfterFailure: `${BASEPATH_EDI}/login`})
+module.exports=withEdiAuth(HomeEdi, {pathAfterFailure: `${BASEPATH_EDI}/login`})

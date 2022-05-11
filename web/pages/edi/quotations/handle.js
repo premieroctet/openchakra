@@ -1,7 +1,8 @@
 import React from 'react'
 import withEdiAuth from '../../../hoc/withEdiAuth'
 import HandledQuotations from '../../../components/Feurst/HandledQuotations'
-import {BASEPATH_EDI, HANDLE, QUOTATION} from '../../../utils/feurst/consts'
+const {ORDER, BASEPATH_EDI} = require('../../../utils/consts')
+const {HANDLE, QUOTATION} = require('../../../utils/feurst/consts')
 
 const HandleQuotations = ({accessRights}) => {
 
@@ -10,4 +11,4 @@ const HandleQuotations = ({accessRights}) => {
   </>)
 }
 
-export default withEdiAuth(HandleQuotations, {model: QUOTATION, action: HANDLE, pathAfterFailure: `${BASEPATH_EDI}/login`})
+module.exports=withEdiAuth(HandleQuotations, {model: QUOTATION, action: HANDLE, pathAfterFailure: `${BASEPATH_EDI}/login`})

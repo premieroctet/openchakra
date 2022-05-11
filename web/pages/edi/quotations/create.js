@@ -1,13 +1,13 @@
 import React from 'react'
 import withEdiAuth from '../../../hoc/withEdiAuth'
-import {BASEPATH_EDI, CREATE, QUOTATION} from '../../../utils/consts'
-import Quotationcreate from '../../../components/Feurst/QuotationCreate'
+const {BASEPATH_EDI, CREATE, QUOTATION} = require('../../../utils/consts')
+const Quotationcreate = require('../../../components/Feurst/QuotationCreate')
 
-const CreateQuotation = ({accessRights}) => {
+const Orders = ({accessRights}) => {
 
   return (<>
     <Quotationcreate accessRights={accessRights} />
   </>)
 }
 
-export default withEdiAuth(CreateQuotation, {model: QUOTATION, action: CREATE, pathAfterFailure: `${BASEPATH_EDI}/login`})
+module.exports=withEdiAuth(Orders, {model: QUOTATION, action: CREATE, pathAfterFailure: `${BASEPATH_EDI}/login`})

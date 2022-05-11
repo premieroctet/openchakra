@@ -1,9 +1,9 @@
 const React=require('react')
 const {Page, Text, View, Document, StyleSheet, Image}=require('@react-pdf/renderer')
 const moment=require('moment')
-const {PDFStyle} = require('../../static/css/components/Quotation/Quotation')
+import pdfStyle from '../../static/css/components/Quotation/Quotation'
 
-const styles = StyleSheet.create(PDFStyle())
+const styles = StyleSheet.create(pdfStyle())
 moment.locale('fr')
 
 const LOGO='static/assets/icon/feurst/logo.png'

@@ -3,9 +3,9 @@ import {useRouter} from 'next/router'
 import {ENDPOINTS, BASEPATH_EDI, QUOTATION, VIEW} from '../../../../utils/consts'
 import withEdiAuth from '../../../../hoc/withEdiAuth'
 import BaseCreateTable from'../../../../components/Feurst/BaseCreateTable'
-import {
+const {
   quotationColumns,
-} from '../../../../components/Feurst/tablestructures'
+} = require('../../../../components/Feurst/tablestructures')
 
 
 const View = ({accessRights}) => {
@@ -25,4 +25,4 @@ const View = ({accessRights}) => {
   </>)
 }
 
-export default withEdiAuth(View, {model: QUOTATION, action: VIEW, pathAfterFailure: `${BASEPATH_EDI}/login`})
+module.exports=withEdiAuth(View, {model: QUOTATION, action: VIEW, pathAfterFailure: `${BASEPATH_EDI}/login`})

@@ -1,7 +1,8 @@
 import React from 'react'
 import {ENDPOINTS, ORDER} from '../../utils/consts'
 import BaseCreateTable from'./BaseCreateTable'
-import {orderColumns} from './tablestructures'
+const {orderColumns} = require('./tablestructures')
+
 
 const OrderCreate = ({accessRights}) => {
 
@@ -10,4 +11,4 @@ const OrderCreate = ({accessRights}) => {
   )
 }
 
-export default OrderCreate
+module.exports=OrderCreate

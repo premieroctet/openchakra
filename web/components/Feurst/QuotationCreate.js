@@ -1,7 +1,7 @@
 import React from 'react'
-import {ENDPOINTS, QUOTATION} from '../../utils/feurst/consts'
+import {ENDPOINTS, QUOTATION} from '../../utils/consts'
 import BaseCreateTable from'./BaseCreateTable'
-import {quotationColumns} from './tablestructures'
+const {quotationColumns} = require('./tablestructures')
 
 
 const QuotationCreate = ({accessRights}) => {
@@ -11,4 +11,4 @@ const QuotationCreate = ({accessRights}) => {
   )
 }
 
-export default QuotationCreate
+module.exports=QuotationCreate

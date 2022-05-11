@@ -1,6 +1,6 @@
 const Validator = require('validator')
-const {isInternationalPhoneOK} = require('../../utils/sms')
 const isEmpty = require('./is-empty')
+import {isInternationalPhoneOK} from '../../utils/sms'
 
 module.exports = function validateFeurstProspect(data) {
   let errors = {}

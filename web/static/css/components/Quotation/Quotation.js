@@ -7,7 +7,7 @@ const LIGHT_FONT = '#4B4B4B'
 const FONT_FAMILY='Roboto'
 const MARGIN='10px'
 
-const PDFStyle = theme => ({
+const Style = theme => ({
   body: {
     padding: 50,
     fontSize: 11,
@@ -99,5 +99,4 @@ const PDFStyle = theme => ({
     textAlign: 'center',
   },
 })
-
-export {PDFStyle}
+module.exports=Style

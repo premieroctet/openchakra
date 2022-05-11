@@ -1,13 +1,13 @@
-import React from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import withEdiAuth from '../../../hoc/withEdiAuth'
-import {ORDER, VIEW, BASEPATH_EDI} from '../../../utils/consts'
-import MyOrders from '../../../components/Feurst/MyOrders'
+const {ORDER, VIEW, BASEPATH_EDI} = require('../../../utils/consts')
+const MyOrders = require('../../../components/Feurst/MyOrders')
 
-const OrdersList = ({accessRights}) => {
+const Orders = ({accessRights}) => {
 
   return (<>
     <MyOrders accessRights={accessRights} />
   </>)
 }
 
-export default withEdiAuth(OrdersList, {model: ORDER, action: VIEW, pathAfterFailure: `${BASEPATH_EDI}/login`})
+module.exports=withEdiAuth(Orders, {model: ORDER, action: VIEW, pathAfterFailure: `${BASEPATH_EDI}/login`})

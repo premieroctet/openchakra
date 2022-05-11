@@ -1,8 +1,8 @@
 import React from 'react'
 import Link from 'next/link'
-import {getLoggedUser} from '../../utils/context'
-import {CREATE, ORDER, QUOTATION, BASEPATH_EDI, PRODUCT, SHIPRATE, ACCOUNT} from '../../utils/consts'
 import ContactUs from './ContactUs'
+const {getLoggedUser} = require('../../utils/context')
+const {CREATE, ORDER, QUOTATION, BASEPATH_EDI, PRODUCT, SHIPRATE, ACCOUNT} = require('../../utils/consts')
 
 const MENUS=[
   {
@@ -45,4 +45,4 @@ const QuickMenu = ({accessRights}) => {
   )
 }
 
-export default QuickMenu
+module.exports=QuickMenu

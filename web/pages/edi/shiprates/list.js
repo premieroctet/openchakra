@@ -1,7 +1,8 @@
 import React from 'react'
 import withEdiAuth from '../../../hoc/withEdiAuth'
-import {SHIPRATE, VIEW, BASEPATH_EDI} from '../../../utils/feurst/consts'
-import ShipratesList from './list'
+const {BASEPATH_EDI} = require('../../../utils/feurst/consts')
+const {SHIPRATE, VIEW} = require('../../../utils/consts')
+const ShipratesList = require('./list')
 
 const List = ({accessRights}) => {
 
@@ -10,4 +11,4 @@ const List = ({accessRights}) => {
   </>)
 }
 
-export default withEdiAuth(List, {model: SHIPRATE, action: VIEW, pathAfterFailure: `${BASEPATH_EDI}/login`})
+module.exports=withEdiAuth(List, {model: SHIPRATE, action: VIEW, pathAfterFailure: `${BASEPATH_EDI}/login`})

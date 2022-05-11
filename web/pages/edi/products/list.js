@@ -1,13 +1,13 @@
 import React from 'react'
 import withEdiAuth from '../../../hoc/withEdiAuth'
-import ProductsList from '../../../components/Feurst/ProductsList'
-import {PRODUCT, VIEW, BASEPATH_EDI} from '../../../utils/consts'
+const ProductsList = require('../../../components/Feurst/ProductsList')
+const {PRODUCT, VIEW, BASEPATH_EDI} = require('../../../utils/consts')
 
-const ProductList = ({accessRights}) => {
+const List = ({accessRights}) => {
 
   return (<>
     <ProductsList accessRights={accessRights} />
   </>)
 }
 
-export default withEdiAuth(ProductList, {model: PRODUCT, action: VIEW, pathAfterFailure: `${BASEPATH_EDI}/login`})
+module.exports=withEdiAuth(List, {model: PRODUCT, action: VIEW, pathAfterFailure: `${BASEPATH_EDI}/login`})

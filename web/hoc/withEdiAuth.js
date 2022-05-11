@@ -1,15 +1,15 @@
 import React from 'react'
 import Router from 'next/router'
 import {ThemeProvider} from 'styled-components'
-import {uniqBy} from 'lodash'
 import Header from '../components/Feurst/Header'
 import {getLoggedUser} from '../utils/context'
 import {theme, GlobalStyleEdi} from '../styles/feurst/feurst.theme'
 import {client} from '../utils/client'
-import {API_PATH, BASEPATH_EDI} from '../utils/feurst/consts'
-
-import {is_development} from '../config/config'
-import Tabs from '../components/Feurst/Tabs'
+const lodash=require('lodash')
+const {API_PATH} = require('../utils/feurst/consts')
+const {BASEPATH_EDI} = require('../utils/consts')
+const {is_development} = require('../config/config')
+const Tabs = require('../components/Feurst/Tabs')
 
 class AccessRights {
   constructor(model, action, actions) {
@@ -19,7 +19,7 @@ class AccessRights {
   }
 
   getModels= () => {
-    return uniqBy(this.actions, a => a.model).map(a => a.model)
+    return lodash.uniqBy(this.actions, a => a.model).map(a => a.model)
   }
   hasModel= model => {
     return !!this.actions.find(a => a.model==model)
@@ -45,7 +45,7 @@ class AccessRights {
 
 
 const withEdiAuth = (Component = null, options = {}) => {
-  return class WithEdiAuth extends React.Component {
+  class WithEdiAuth extends React.Component {
     state = {
       loading: true,
       actions: [],
@@ -98,6 +98,7 @@ const withEdiAuth = (Component = null, options = {}) => {
     }
   }
 
+  return WithEdiAuth
 }
 
-export default withEdiAuth
+module.exports=withEdiAuth

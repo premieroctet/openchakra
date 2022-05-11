@@ -2,13 +2,13 @@ import React, {useState} from 'react'
 import styled from 'styled-components'
 import Link from 'next/link'
 import {screen} from '../../styles/screenWidths'
-import {
+const {
   HANDLED,
   PARTIALLY_HANDLED,
   VALID,
-} from '../../utils/feurst/consts'
-import {handledOrdersColumns} from './tablestructures'
-import BaseListTable from './BaseListTable'
+} = require('../../utils/feurst/consts')
+const {handledOrdersColumns} = require('./tablestructures')
+const BaseListTable = require('./BaseListTable')
 
 const Tabstyled = styled.div`
 
@@ -101,4 +101,4 @@ const HandledOrders = ({accessRights}) => {
   )
 }
 
-export default HandledOrders
+module.exports=HandledOrders

@@ -1,18 +1,18 @@
 import React, {useMemo} from 'react'
 import Link from 'next/link'
 import {localeMoneyFormat} from '../../utils/converters'
-import {
+import UpdateCellQuantity from './UpdateCellQuantity'
+import UpdateCellPrice from './UpdateCellPrice'
+import OrderStatus from './OrderStatus'
+const {
   PARTIALLY_HANDLED,
   VALID,
-} from '../../utils/feurst/consts'
+} = require('../../utils/feurst/consts')
 
-import {formatPercent} from '../../utils/text'
-import {ROLES} from '../../utils/consts'
-import {DateRangeColumnFilter} from '../Table/TableFilter'
-import OrderStatus from './OrderStatus'
-import UpdateCellPrice from './UpdateCellPrice'
-import UpdateCellQuantity from './UpdateCellQuantity'
-import {PleasantButton} from './Button'
+const {formatPercent} = require('../../utils/text')
+const {ROLES} = require('../../utils/consts')
+const {DateRangeColumnFilter} = require('../Table/TableFilter')
+const {PleasantButton} = require('./Button')
 
 // to order by datetime
 const datetime = (a, b) => {
@@ -452,5 +452,5 @@ const handledQuotationsColumns = ({endpoint, handleValidation = null, filter = n
     Cell: ({value}) => (<Link href={`/edi/quotations/view/${value}`}>A traiter</Link>),
   },
 ]
-export {orderColumns, ordersColumns, quotationColumns, quotationsColumns,
+module.exports={orderColumns, ordersColumns, quotationColumns, quotationsColumns,
   accountsColumns, productsColumns, shipratesColumns, handledOrdersColumns, handledQuotationsColumns, pricesColumns}
