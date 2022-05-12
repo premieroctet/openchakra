@@ -1,5 +1,7 @@
 import {createGlobalStyle} from 'styled-components'
 import {screen} from '../screenWidths'
+import Roboto from '../../static/assets/fonts/Roboto-Regular.woff2'
+import RobotoBold from '../../static/assets/fonts/Roboto-Bold-webfont.woff2'
 
 const blue = '#141953'
 const blueFeurst = 'hsl(210.6, 50.9%, 41.6%)'
@@ -29,7 +31,7 @@ export const theme = {
     base: '1rem',
     lg: '1.125rem',
   },
-  fontFamily: 'Roboto',
+  fontFamily: `Roboto, 'Source Sans Pro', sans-serif !important`,
   fontWeights: [100, 200, 300, 400, 500, 600, 700, 800, 900],
   lineHeights: {
     normal: 1,
@@ -41,6 +43,19 @@ export const theme = {
 
 export const GlobalStyleEdi = createGlobalStyle`
   
+  @font-face {
+    font-family: 'Roboto';
+    src: local('Roboto'), url(${Roboto}) format('woff2');
+    font-weight: 500;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'Roboto';
+    src: local('Roboto'), url(${RobotoBold}) format('woff2');
+    font-weight: 700;
+    font-style: normal;
+  }
+
   :root {
     /* Colors */
     accent-color: ${props => props.theme?.accentColor || 'auto'};
@@ -151,6 +166,9 @@ export const GlobalStyleEdi = createGlobalStyle`
     font-family: ${props => props.theme?.fontFamily};
   }
 
+  a, p {
+    font-family: inherit !important;
+  }
 
   
   .container-sm {
