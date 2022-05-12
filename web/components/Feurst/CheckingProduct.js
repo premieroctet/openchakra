@@ -63,7 +63,7 @@ const CheckingProduct = ({endpoint, orderid, article, setArticle, addProduct, wo
   const confirmAdd = async() => {
     await addProduct({endpoint, orderid, ...article})
       .then(() => {
-        setArticle({...article, showArticlePanel: false})
+        setArticle({...article, quantity: null, showArticlePanel: false})
       })
       .catch(() => snackBarError(`Ajout de l'article non effectué`))
 
