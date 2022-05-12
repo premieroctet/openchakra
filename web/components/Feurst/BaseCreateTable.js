@@ -68,7 +68,7 @@ const BaseCreateTable = ({
 
   const [language, setLanguage] = useState('fr')
   const [orderCompany, setOrderCompany] = useState(null)
-  const [orderIDLocal, setOrderIDLocal, {removeItem}] = useLocalStorageState(`${storage}-${dataToken?.id}`, {defaultValue: id})
+  const [orderIDLocal, setOrderIDLocal, {removeItem}] = useLocalStorageState(`${storage}-${dataToken?.id}`, {ssr: true, defaultValue: id})
   const [isOpenDialog, setIsOpenDialog] = useState(false)
   const [companies, setCompanies] = useState([])
 
@@ -152,17 +152,23 @@ const BaseCreateTable = ({
   useEffect(() => {
     // console.log('getContent', orderID)
     if (!isEmpty(orderIDLocal)) {
-      getContentFrom({endpoint, orderid: orderIDLocal})
-        .then(data => {
-          if (data) {
-            setOrderCompany(data.company)
-          }
-          else {
-            removeItem()
-          }
-        })
+      // Prevents loading inadequate order in LocalStorage
+      if (id && id !== orderIDLocal) {
+        setOrderIDLocal(id)
+      }
+      else {
+        getContentFrom({endpoint, orderid: orderIDLocal})
+          .then(data => {
+            if (data) {
+              setOrderCompany(data.company)
+            }
+            else {
+              removeItem()
+            }
+          })
+      }
     }
-  }, [endpoint, getContentFrom, orderIDLocal, removeItem])
+  }, [endpoint, getContentFrom, id, orderIDLocal, removeItem, setOrderIDLocal])
 
 
   useEffect(() => {
