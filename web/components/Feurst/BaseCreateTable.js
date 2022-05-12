@@ -15,6 +15,7 @@ import {
   PARTIALLY_HANDLED,
   HANDLED,
   CONVERT,
+  HANDLE,
   ORDER,
   QUOTATION,
   RELATED,
@@ -83,6 +84,7 @@ const BaseCreateTable = ({
   const isView = [VALID, PARTIALLY_HANDLED, HANDLED].includes(state.status)
 
   const isFeurstSales = accessRights.getFullAction()?.visibility==RELATED
+  const isFeurstADV = accessRights.isActionAllowed(QUOTATION, HANDLE) || accessRights.isActionAllowed(ORDER, HANDLE)
   const canUpdatePrice = accessRights.isActionAllowed(QUOTATION, UPDATE_ALL) && accessRights.getModel() === QUOTATION
   const canUpdateQuantity = (
     (accessRights.isActionAllowed(QUOTATION, UPDATE) && accessRights.getModel() === QUOTATION)
