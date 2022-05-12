@@ -1,3 +1,4 @@
+import React, {useEffect, useState, useMemo, useRef} from 'react'
 const RequiredField = require('../misc/RequiredField')
 const {is_development} = require('../../config/config')
 const axios = require('axios')
@@ -6,6 +7,7 @@ const Quotation = require('../Feurst/Quotation')
 const {PDFViewer} = require('@react-pdf/renderer')
 const lodash=require('lodash')
 import NoSSR from 'react-no-ssr'
+import countryList from 'react-select-country-list'
 
 const {withTranslation} = require('react-i18next')
 const {BLADE_SHAPES, FIX_TYPES} = require('../../utils/consts')
@@ -20,7 +22,6 @@ const {
   MenuItem,
 } = require('@material-ui/core')
 const Validator = require('validator')
-import React, {useEffect, useState} from 'react'
 
 
 const PhoneNumber = ({t, error, onPhoneChange, isValueExpected}) => {
@@ -102,12 +103,18 @@ function Summary(props) {
 
   const [precos, setPrecos]=useState(null)
 
+  const formRef = useRef()
+  const countryOptions = useMemo(() => countryList().getData(), [])
+  const nativeCountries = useMemo(() => countryList().native(), [])
+
   const {
     error,
     name,
     firstname,
     company,
     email,
+    zipcode,
+    country = 'FR',
     type,
     mark,
     model,
@@ -160,7 +167,6 @@ function Summary(props) {
       value: company,
       required: true,
     },
-
   ]
 
   useEffect(() => {
@@ -177,11 +183,15 @@ function Summary(props) {
 
   }, [])
 
+  useEffect(() => {
+    onValueChange({inputName: 'country', value: formRef?.current?.elements?.country?.value})
+  }, [])
+
   return (
     <div className='summary'>
       <h2 className='pl-6'>{props.t('SUMMARY.receive_label')}</h2>
       <p className='text-base text-right'><RequiredField />{props.t('SUMMARY.mandatory_label')}</p>
-      <form className='personaldata'>
+      <form ref={formRef} className='personaldata'>
 
         {formInputs.map((inp, i) => (
           <FormControl key={`summary${i}`} variant="standard">
@@ -200,6 +210,42 @@ function Summary(props) {
               onBlur={() => isValueExpected(inp.name)}
             />
           </FormControl>))}
+
+        <div className='flex w-full gap-x-4'>
+          <FormControl variant="standard" className='grow'>
+            <label htmlFor='country'>{props.t('SUMMARY.country_label')} <RequiredField /></label>
+            <Select
+              value={country}
+              name="country"
+              id="country"
+              required
+              onChange={ev => onValueChange({inputName: 'country', value: ev.target.value})}
+              autoComplete='country-name'
+              error={!!error?.country || false}
+            >
+              {countryOptions.map(({label, value}) => (
+                <MenuItem key={value} value={value}>
+                  {label} {nativeCountries.getLabel(value) != label ? `(${nativeCountries.getLabel(value)})`:''}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          { country === 'FR' ?
+            <FormControl variant="standard">
+              <label htmlFor='zipcode'>{props.t('SUMMARY.zipcode_label')} <RequiredField /></label>
+              <TextField
+                value={zipcode}
+                name="zipcode"
+                id="zipcode"
+                inputProps={{pattern: '[0-9]{5}'}}
+                required
+                autoComplete='postal-code'
+                onChange={ev => onValueChange({inputName: 'zipcode', value: ev.target.value})}
+                placeholder={props.t('SUMMARY.zipcode_placeholder')}
+              />
+            </FormControl> : null}
+        </div>
 
         <PhoneNumber {...props} />
       </form>
@@ -228,7 +274,7 @@ function Summary(props) {
             <dd>{props.t(FIX_TYPES[borderShieldFixType])}</dd>
           </dl>
         </div>
-        <div>
+        <div className='max-w-lg'>
           <BladePicture width={400} height={265} shape={props.bladeShape} teeth_count={props.teeth_count} />
         </div>
       </div>

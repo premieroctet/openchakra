@@ -336,12 +336,12 @@ const computePrecos = data => {
 const computeDescription = (data, full_info) => {
   let description='type mark model'.split(' ').map(att => data[att] || '').join(' ')
   if (full_info) {
-    if (data.bladeShape) { description += `, lame:${BLADE_SHAPES[data.bladeShape]}` }
-    if (data.bladeThickness) { description += `, épaisseur:${data.bladeThickness}mm` }
-    if (data.bucketWidth) { description += `, L:${data.bucketWidth}mm` }
-    if (data.ground) { description += `, terrain:${data.ground}` }
-    if (data.teethShieldFixType) { description += `, fixation boucliers dents:${FIX_TYPES[data.teethShieldFixType]}` }
-    if (data.borderShieldFixType) { description += `, fixation boucliers flancs:${FIX_TYPES[data.borderShieldFixType]}` }
+    if (data.bladeShape) { description += `, lame : ${data.bladeShape}` }
+    if (data.bladeThickness) { description += `, épaisseur : ${data.bladeThickness}mm` }
+    if (data.bucketWidth) { description += `, L: ${data.bucketWidth}mm` }
+    if (data.ground) { description += `, terrain : ${data.ground}` }
+    if (data.teethShieldFixType) { description += `, fixation boucliers dents : ${data.teethShieldFixType}` }
+    if (data.borderShieldFixType) { description += `, fixation boucliers flancs : ${data.borderShieldFixType}` }
   }
   return description
 }

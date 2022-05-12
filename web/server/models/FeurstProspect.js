@@ -23,6 +23,14 @@ const FeurstProspectSchema = new Schema({
     type: String,
     required: true,
   },
+  country: {
+    type: String,
+    required: true,
+  },
+  zipcode: {
+    type: String,
+    required: false,
+  },
 }, {toJSON: {virtuals: true, getters: true}})
 
 module.exports = mongoose.model('feurstProspect', FeurstProspectSchema)

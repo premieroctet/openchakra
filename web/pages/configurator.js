@@ -1,6 +1,9 @@
 const {
   BLADE_SHAPES,
+  DROITE,
+  EXCAVATRICE,
   FIX_TYPES,
+  NONE,
   PELLE_BUTTE,
 } = require('../utils/consts')
 import React from 'react'
@@ -53,6 +56,8 @@ class Configurator extends React.Component {
       teethShieldFixType: null,
       borderShieldFixType: null,
       auto_quotation: false,
+      zipcode: '',
+      country: '',
     }
 
   }
@@ -335,7 +340,7 @@ class Configurator extends React.Component {
     setAxiosAuthentication()
 
     const data=lodash.pick(this.state,
-      'type,mark,model,weight,power,bladeShape,bladeThickness,bucketWidth,teethShieldFixType,borderShieldFixType,ground,firstname,name,company,phone,email'.split(','))
+      'type,mark,model,weight,power,bladeShape,bladeThickness,bucketWidth,teethShieldFixType,borderShieldFixType,ground,firstname,name,company,phone,email,zipcode,country'.split(','))
     axios.post('/feurst/api/auto_quotation', data)
       .then(() => {
         snackBarSuccess('Préconisation envoyée')
@@ -351,7 +356,7 @@ class Configurator extends React.Component {
     setAxiosAuthentication()
 
     const data=lodash.pick(this.state,
-      'type,mark,model,weight,power,bladeShape,bladeThickness,bucketWidth,teethShieldFixType,borderShieldFixType,ground,firstname,name,company,phone,email'.split(','))
+      'type,mark,model,weight,power,bladeShape,bladeThickness,bucketWidth,teethShieldFixType,borderShieldFixType,ground,firstname,name,company,phone,email,zipcode,country'.split(','))
     axios.post('/feurst/api/custom_quotation', data)
       .then(() => {
         snackBarSuccess('Demande envoyée')
@@ -387,6 +392,7 @@ class Configurator extends React.Component {
             {component({...this.state, ...this})}
           </div>
           <div className={`flex gap-y-4 justify-between flex-wrap w-full bg-white p-4 mb-6 ${STEPS.length - 1 === step ?'flex-column-reverse md-flex-row' : ''}`}>
+
             
             {step !== 0 ?
               <Button className='previous w-fit' disabled={step == 0} onClick={this.previousPage}>
@@ -395,6 +401,7 @@ class Configurator extends React.Component {
             {STEPS.length - 1 !== step ? <Button className='next' disabled={!validator(this.state)} onClick={this.nextPage}>
               {t('NAVIGATION.next')}
             </Button> : null}
+
             
 
             {STEPS.length - 1 === step &&
@@ -410,6 +417,7 @@ class Configurator extends React.Component {
           </div>
         </div>
       </Styles>)
+
       
   }
 }

@@ -107,6 +107,7 @@
     "react-pdfmake": "^0.3.0",
     "react-responsive-carousel": "^3.2.12",
     "react-select": "^3.2.0",
+    "react-select-country-list": "^2.2.3",
     "react-social-login-buttons": "^3.1.2",
     "react-star-ratings": "^2.3.0",
     "react-table": "^7.7.0",
