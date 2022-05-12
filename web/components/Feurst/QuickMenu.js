@@ -1,8 +1,10 @@
 import React from 'react'
+import {useRouter} from 'next/router'
 import Link from 'next/link'
 import ContactUs from './ContactUs'
 const {getLoggedUser} = require('../../utils/context')
 const {CREATE, ORDER, QUOTATION, BASEPATH_EDI, PRODUCT, SHIPRATE, ACCOUNT} = require('../../utils/consts')
+
 
 const MENUS=[
   {
@@ -27,8 +29,18 @@ const MENUS=[
   },
 ]
 
+
 const QuickMenu = ({accessRights}) => {
+  
+  function containsPartUrl(possibleurl, currentpath) {
+    const regEx = new RegExp(possibleurl)
+    return regEx.test(currentpath)
+  }
+
+  const router = useRouter()
+  
   const menus=MENUS.filter(m => accessRights && m.enabled(accessRights))
+  
 
   if (!menus.length) {
     return (<ContactUs />)
@@ -36,11 +48,11 @@ const QuickMenu = ({accessRights}) => {
 
   return (
     <>
-      {menus.map((menu, i) => (
-        <div key={`menu${i}`} className='flex gap-x-4 items-center'>
-          <Link key={menu} href={menu.url}><a>{menu.label}</a></Link>
-        </div>
-      ))}
+      <div className='flex w-full justify-evenly gap-x-4 items-baseline'>
+        {menus.map((menu, i) => (
+          <Link key={`menu${i}`} href={menu.url}><a className={containsPartUrl(menu.url, router.pathname) ? 'current' : null}>{menu.label}</a></Link>
+        ))}
+      </div>
     </>
   )
 }

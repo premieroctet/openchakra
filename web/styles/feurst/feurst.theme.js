@@ -308,29 +308,15 @@ input:focus:not(:focus-visible) {
   place-items: center;
 }
 
-.justify-center {
-  justify-content: center;
-}
-.justify-end {
-  justify-content: end;
-}
-.justify-evenly {
-  justify-content: space-evenly;
-}
-.justify-between {
-  justify-content: space-between;
-}
-.justify-self-end {
-  justify-self: end;
-}	
+.justify-center {justify-content: center;}
+.justify-end {justify-content: end;}
+.justify-evenly {justify-content: space-evenly;}
+.justify-between {justify-content: space-between;}
+.justify-self-end {justify-self: end;}	
 
-.items-center {
-  align-items: center;
-}
-
-.items-end {
-  align-items: end;
-}
+.items-baseline	{align-items: baseline;}
+.items-center {align-items: center;}
+.items-end {align-items: end;}
 
 .gap-x-2 {
   column-gap: 0.5rem;
@@ -386,6 +372,9 @@ input:focus:not(:focus-visible) {
   height: 100%;
 }
 
+.max-w-200 {
+  max-width: 200px;
+}
 .max-w-350 {
   max-width: 350px;
 }
