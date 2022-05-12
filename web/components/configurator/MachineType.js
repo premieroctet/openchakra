@@ -101,7 +101,7 @@ function MachineType(props) {
             freeSolo
             className='w-full'
             options={props.powers}
-            getOptionLabel={option => option.toString() }
+            getOptionLabel={option => option?.toString()}
             aria-labelledby='machinepower'
             value={props.power || ''}
             disabled={props.models?.includes(props.model) && props.powers?.length===1}

@@ -1,7 +1,8 @@
 const isEmpty = require('../server/validation/is-empty')
 const {MODES, LOCAL_HOST, AMAZON_HOST}=require('../utils/consts')
 const {MODE, TAWKTO_URL, DISABLE_ALFRED_SELF_REGISTER, DISABLE_ALFRED_PARTICULAR_REGISTER,
-  SIB_TEMPLATES, DATABASE_NAME, HIDE_STORE_DIALOG, MANGOPAY_CLIENTID, MANGOPAY_APIKEY, SKIP_FAILED_PAYMENT}=require('../mode')
+  SIB_TEMPLATES, DATABASE_NAME, HIDE_STORE_DIALOG, MANGOPAY_CLIENTID, MANGOPAY_APIKEY,
+  SKIP_FAILED_PAYMENT, SIB_APIKEY}=require('../mode')
 
 const MONGO_BASE_URI='mongodb://localhost/'
 
@@ -98,6 +99,10 @@ const SIRET = {
   sirenUrl: 'https://api.insee.fr/entreprises/sirene/V3/siren',
 }
 
+const getSibApiKey = () => {
+  return SIB_APIKEY
+}
+
 const canAlfredSelfRegister = () => {
   return !DISABLE_ALFRED_SELF_REGISTER
 }
@@ -142,6 +147,10 @@ const checkConfig = () => {
     if (isEmpty(SIB_TEMPLATES)) {
       reject(`SIB_TEMPLATES non renseigné`)
     }
+    // TODO check database name correctness
+    if (isEmpty(SIB_APIKEY)) {
+      reject(`SIB_APIKEY non renseigné`)
+    }
     if (isEmpty(MANGOPAY_CLIENTID)) {
       reject(`MANGOPAY_CLIENTID non renseigné`)
     }
@@ -179,4 +188,5 @@ module.exports = {
   canAlfredSelfRegister, canAlfredParticularRegister,
   getSibTemplates, checkConfig, getDatabaseUri, hideStoreDialog,
   skipFailedPayment,
+  getSibApiKey,
 }

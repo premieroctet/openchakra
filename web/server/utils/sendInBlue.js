@@ -1,6 +1,8 @@
+const {getSibApiKey}=require('../../config/config')
 const SibApiV3Sdk = require('sib-api-v3-sdk')
+const lodash=require('lodash')
 
-const SIB_API_KEY_V3 = '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'
+const SIB_API_KEY_V3 = getSibApiKey()
 
 class SIB_V3 {
 
@@ -36,7 +38,7 @@ class SIB_V3 {
       })
       .catch(err => {
         console.error(err)
-        console.error(`Error while sending ${JSON.stringify(emailData)}:${JSON.stringify(err.response.body)}`)
+        console.error(`Error while sending ${JSON.stringify(lodash.omit(emailData, 'attachment'))}:${JSON.stringify(err.response.body)}`)
         return false
       })
   }
