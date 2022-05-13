@@ -55,7 +55,7 @@ createAccount = (name, compName) => {
       return Promise.all(mails_roles(name).map(([email, role]) => {
         const company=[CUSTOMER_ADMIN, CUSTOMER_BUYER, CUSTOMER_TCI].includes(role) ? selfCompany : null
         const companies=FEURST_SALES==role ? [selfCompany, otherCompany] : null
-        let log=`Création compte ${[name, name, email]}, rôle ${ROLES[role]}, mdp Alfred123;`
+        let log=`Création compte ${email}, rôle ${ROLES[role]}, mdp Alfred123;`
         if (companies) {
           log+= ` rattaché aux compagnies ${selfCompany.name}.com et ${otherCompany.name}`
         }
