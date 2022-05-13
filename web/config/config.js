@@ -194,10 +194,6 @@ const skipFailedPayment = () => {
   return !is_production() && !!SKIP_FAILED_PAYMENT
 }
 
-const getSibApiKey = () => {
-  return SIB_APIKEY
-}
-
 // DEV mode: allow https without certificate
 if (is_development()) {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
