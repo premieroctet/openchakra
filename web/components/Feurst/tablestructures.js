@@ -385,9 +385,7 @@ const HandleValidationStatusCell = ({status, endpoint, id, handleValidation, fil
   const displayFullButton = status==VALID || status == PARTIALLY_HANDLED
   return <div className='flex items-center flex-col gap-y-3'>
     {displayFullButton && <ConfirmHandledValidation onClick={() => {
-      if (window.confirm('Êtes-vous sûr(e) ?')) {
-        handleValidation({endpoint, orderid: id, filter, status: true})
-      }
+      handleValidation({endpoint, orderid: id, filter, status: true})
     }
     }>Commande traitée</ConfirmHandledValidation>}
     {displayPartialButton && <ConfirmPartialHandledValidation onClick={() => handleValidation({endpoint, orderid: id, filter, status: false})}>Partiellement traitée</ConfirmPartialHandledValidation>}
