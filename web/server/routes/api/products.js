@@ -23,8 +23,8 @@ const DATA_TYPE=PRODUCT
 // @Access private
 router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  const pattern = new RegExp(req.query.pattern.split(' ').join('|'), 'i')
-  const filter=req.query.pattern ? {
+  const pattern = req.query.pattern && new RegExp(req.query.pattern.split(' ').join('|'), 'i')
+  const filter=pattern ? {
     $or: [
       {reference: pattern},
       {description: pattern},
