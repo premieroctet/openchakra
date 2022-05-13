@@ -780,6 +780,7 @@ router.get('/alfred', (req, res) => {
 router.get('/current', passport.authenticate('jwt', {session: false}), (req, res) => {
   User.findById(req.user.id)
     .populate('resetToken')
+    .populate('company')
     .then(user => {
       res.json(user)
     })

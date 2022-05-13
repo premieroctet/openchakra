@@ -49,6 +49,7 @@ const withEdiAuth = (Component = null, options = {}) => {
     state = {
       loading: true,
       actions: [],
+      account: null,
     };
 
 
@@ -72,10 +73,17 @@ const withEdiAuth = (Component = null, options = {}) => {
       else {
         Router.push(options.pathAfterFailure || `${BASEPATH_EDI}/login`)
       }
+
+      if (is_development()) {
+        client(`${API_PATH}/users/current`)
+          .then(res => {
+            this.setState({account: `${res.full_name} (${res.email}), société ${res.company?.name}, rôles ${res.roles}`})
+          })
+      }
     }
 
     render() {
-      const {loading, actions} = this.state
+      const {loading, actions, account} = this.state
 
       if (loading) {
         return <div>...</div>
@@ -87,7 +95,7 @@ const withEdiAuth = (Component = null, options = {}) => {
       return (
         <ThemeProvider theme={theme}>
           {is_development() &&
-            <h1>{`model:${accessRights.getModel()}, action:${accessRights.getAction()}, compte:${['firstname', 'name'].map(a => getLoggedUser()[a])}`}</h1>
+            <h1>{`model:${accessRights.getModel()}, action:${accessRights.getAction()}, compte:${account}`}</h1>
           }
           <Header accessRights={accessRights} />
           <Tabs accessRights={accessRights} />
