@@ -54,7 +54,15 @@ const DeliveryAddresses = ({state, requestUpdate, endpoint}) => {
         })
     }
   }
-  , [debouncedQuery, searchTerm, run, selectedItem])
+  , [debouncedQuery, searchTerm, run, selectedItem, endpoint, state.id])
+
+  /* load addresses on start */
+  useEffect(() => {
+    run(client(`${API_PATH}/${endpoint}/${state.id}/addresses`))
+      .catch(e => {
+        console.error(`Can't fetch addresses in autocomplete ${e}`)
+      })
+  }, [])
 
   const labelAutocomplete = 'complete'
 
