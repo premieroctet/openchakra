@@ -301,7 +301,7 @@ const accountsColumns = ({language}) => [
   },
   {
     label: 'Client(s)',
-    attribute: u => u.companies.map(u => u.name).join(','),
+    attribute: u => u.companies?.map(u => u.name).join(','),
   },
   {
     label: 'Roles',
@@ -366,7 +366,7 @@ const ConfirmHandledValidation = ({onClick, children}) => (
 )
 
 const ConfirmPartialHandledValidation = ({onClick, children}) => {
-  
+
   return (<PleasantButton
     rounded={'full'}
     bgColor={'#fff'}
@@ -380,7 +380,7 @@ const ConfirmPartialHandledValidation = ({onClick, children}) => {
 }
 
 const HandleValidationStatusCell = ({status, endpoint, id, handleValidation, filter}) => {
-  
+
   const displayPartialButton = status==VALID
   const displayFullButton = status==VALID || status == PARTIALLY_HANDLED
   return <div className='flex items-center flex-col gap-y-3'>
