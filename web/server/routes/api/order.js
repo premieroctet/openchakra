@@ -31,7 +31,7 @@ const {validateZipCode} = require('../../validation/order')
 const router = express.Router()
 const Order = require('../../models/Order')
 const {validateOrder, validateOrderItem}=require('../../validation/order')
-const {ORDER, CREATE, CREATE_FOR, UPDATE, VIEW, DELETE}=require('../../../utils/consts')
+const {ORDER, CREATE, UPDATE, VIEW, DELETE}=require('../../../utils/consts')
 moment.locale('fr')
 
 const DATA_TYPE=ORDER
@@ -115,7 +115,7 @@ router.post('/:order_id/import', passport.authenticate('jwt', {session: false}),
 // @Access private
 router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  if (!isActionAllowed(req.user.roles, DATA_TYPE, CREATE) && !isActionAllowed(req.user.roles, DATA_TYPE, CREATE_FOR)) {
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, CREATE)) {
     return res.status(401).json()
   }
 
@@ -406,6 +406,7 @@ router.get('/:order_id/products/:product_id', passport.authenticate('jwt', {sess
 // @Access private
 router.post('/:order_id/validate', passport.authenticate('jwt', {session: false}), (req, res) => {
 
+  console.log(req.user.roles)
   if (!isActionAllowed(req.user.roles, DATA_TYPE, VALIDATE)) {
     return res.status(401).json()
   }

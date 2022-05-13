@@ -31,7 +31,7 @@ const {validateZipCode} = require('../../validation/order')
 const router = express.Router()
 const Order = require('../../models/Order')
 const {validateOrder, validateOrderItem}=require('../../validation/order')
-const {CREATE, CREATE_FOR, UPDATE, VIEW, DELETE}=require('../../../utils/consts')
+const {CREATE, UPDATE, VIEW, DELETE}=require('../../../utils/consts')
 moment.locale('fr')
 
 const DATA_TYPE=QUOTATION
@@ -115,7 +115,7 @@ router.post('/:order_id/import', passport.authenticate('jwt', {session: false}),
 // @Access private
 router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  if (!isActionAllowed(req.user.roles, DATA_TYPE, CREATE) && !isActionAllowed(req.user.roles, DATA_TYPE, CREATE_FOR)) {
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, CREATE)) {
     return res.status(401).json()
   }
 
