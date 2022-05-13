@@ -1,11 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
-import {CREATED,
+import {
+  CREATED,
   FULFILLED,
   COMPLETE,
   VALID,
   PARTIALLY_HANDLED,
-  HANDLED} from '../../utils/consts'
+  HANDLED,
+  EXPIRED,
+} from '../../utils/consts'
 
 
 const statusColors = {
@@ -31,7 +34,20 @@ const StyledOrderStatus = styled.div`
   }
 `
 
-const OrderStatus = ({status, endpoint}) => {
+const labelStatus = {
+  [CREATED]: {
+    'SALES': {
+
+    },
+    'CUSTOMER': {
+
+    },
+
+  },
+}
+
+const OrderStatus = ({endpoint, sales, status}) => {
+  
 
   const statusLabel = status => {
     switch(status) {

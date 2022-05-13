@@ -1,5 +1,7 @@
 import {createGlobalStyle} from 'styled-components'
 import {screen} from '../screenWidths'
+import Roboto from '../../static/assets/fonts/Roboto-Regular.woff2'
+import RobotoBold from '../../static/assets/fonts/Roboto-Bold-webfont.woff2'
 
 const blue = '#141953'
 const blueFeurst = 'hsl(210.6, 50.9%, 41.6%)'
@@ -29,7 +31,7 @@ export const theme = {
     base: '1rem',
     lg: '1.125rem',
   },
-  fontFamily: 'Roboto',
+  fontFamily: `Roboto, 'Source Sans Pro', sans-serif !important`,
   fontWeights: [100, 200, 300, 400, 500, 600, 700, 800, 900],
   lineHeights: {
     normal: 1,
@@ -41,6 +43,19 @@ export const theme = {
 
 export const GlobalStyleEdi = createGlobalStyle`
   
+  @font-face {
+    font-family: 'Roboto';
+    src: local('Roboto'), url(${Roboto}) format('woff2');
+    font-weight: 500;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'Roboto';
+    src: local('Roboto'), url(${RobotoBold}) format('woff2');
+    font-weight: 700;
+    font-style: normal;
+  }
+
   :root {
     /* Colors */
     accent-color: ${props => props.theme?.accentColor || 'auto'};
@@ -151,6 +166,9 @@ export const GlobalStyleEdi = createGlobalStyle`
     font-family: ${props => props.theme?.fontFamily};
   }
 
+  a, p {
+    font-family: inherit !important;
+  }
 
   
   .container-sm {
@@ -244,6 +262,9 @@ export const GlobalStyleEdi = createGlobalStyle`
 .text-black {
   color: var(--black);
 }
+.text-white {
+  color: var(--white);
+}
 
 .no-underline	{text-decoration-line: none;}
 
@@ -305,29 +326,15 @@ input:focus:not(:focus-visible) {
   place-items: center;
 }
 
-.justify-center {
-  justify-content: center;
-}
-.justify-end {
-  justify-content: end;
-}
-.justify-evenly {
-  justify-content: space-evenly;
-}
-.justify-between {
-  justify-content: space-between;
-}
-.justify-self-end {
-  justify-self: end;
-}	
+.justify-center {justify-content: center;}
+.justify-end {justify-content: end;}
+.justify-evenly {justify-content: space-evenly;}
+.justify-between {justify-content: space-between;}
+.justify-self-end {justify-self: end;}	
 
-.items-center {
-  align-items: center;
-}
-
-.items-end {
-  align-items: end;
-}
+.items-baseline	{align-items: baseline;}
+.items-center {align-items: center;}
+.items-end {align-items: end;}
 
 .gap-x-2 {
   column-gap: 0.5rem;
@@ -383,46 +390,53 @@ input:focus:not(:focus-visible) {
   height: 100%;
 }
 
+.max-w-200 {
+  max-width: 200px;
+}
 .max-w-350 {
   max-width: 350px;
 }
 
 /* Espacements */
 
-.m-4 {margin: 1em;}
-.m-8 {margin: 2em;}
+.m-4 {margin: var(--spc-4);}
+.m-8 {margin: var(--spc-8);}
 
 .mx-auto {margin: 0 auto;}
 
-.mr-8 {margin-right: 2rem;}
+.mr-8 {margin-right: var(--spc-8);}
 
 .mb-0 {margin-bottom: 0}
-.mb-4 {margin-bottom: 1rem !important;}
-.mb-6 {margin-bottom: 1.5rem !important;}
-.mb-8 {margin-bottom: 2rem !important;}
+.mb-4 {margin-bottom: var(--spc-4) !important;}
+.mb-6 {margin-bottom: var(--spc-6) !important;}
+.mb-8 {margin-bottom: var(--spc-8) !important;}
 
-.ml-12 {margin-left: 3rem;}
+.ml-12 {margin-left: var(--spc-12);}
 
-.p-2 {padding: 0.5rem;}
-.p-4 {padding: 1rem;}
+.p-2 {padding: var(--spc-2);}
+.p-4 {padding: var(--spc-4);}
 
-.pl-4 {padding-left: 1rem;}
-.pl-6 {padding-left: 1.5rem;}
+.pl-4 {padding-left: var(--spc-4);}
+.pl-6 {padding-left: var(--spc-6);}
+.pr-6 {padding-right: var(--spc-6);}
 
 .px-1 {
-  padding-left: 0.25rem;
-  padding-right: 0.25rem;
+  padding-left: var(--spc-1);
+  padding-right: var(--spc-1);
 }
 
 .py-2 {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  padding-top: var(--spc-2);
+  padding-bottom: var(--spc-2);
 }
 
 /* Backgrounds */
 
 .bg-white {
   background-color: var(--white);
+}
+.bg-brand {
+  background-color: var(--brand-color);
 }
 .bg-gray-200 {
   background-color: var(--gray-200);

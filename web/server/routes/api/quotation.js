@@ -504,6 +504,7 @@ router.put('/:id/shipping-fee', passport.authenticate('jwt', {session: false}), 
     return res.status(401).json()
   }
 
+  const order_id = req.params.id
   const shipping_fee=parseFloat(req.body.shipping_fee)
 
   if (!shipping_fee || isNaN(shipping_fee)) {

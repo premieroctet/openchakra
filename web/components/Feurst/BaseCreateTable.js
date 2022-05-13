@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react'
+import React, {useState, useEffect} from 'react'
 import useLocalStorageState from 'use-local-storage-state'
 import dynamic from 'next/dynamic'
 import {useRouter} from 'next/router'
@@ -15,9 +15,9 @@ import {
   PARTIALLY_HANDLED,
   HANDLED,
   CONVERT,
+  HANDLE,
   ORDER,
   QUOTATION,
-  CREATE,
   RELATED,
   UPDATE,
   UPDATE_ALL,
@@ -61,6 +61,7 @@ const BaseCreateTable = ({
   validateAddress,
   updateShippingFees,
   resetAddress,
+  sendQuotationToCustomer,
   state,
 }) => {
 
@@ -68,7 +69,7 @@ const BaseCreateTable = ({
 
   const [language, setLanguage] = useState('fr')
   const [orderCompany, setOrderCompany] = useState(null)
-  const [orderIDLocal, setOrderIDLocal, {removeItem}] = useLocalStorageState(`${storage}-${dataToken?.id}`, {defaultValue: id})
+  const [orderIDLocal, setOrderIDLocal, {removeItem}] = useLocalStorageState(`${storage}-${dataToken?.id}`, {ssr: true, defaultValue: id})
   const [isOpenDialog, setIsOpenDialog] = useState(false)
   const [companies, setCompanies] = useState([])
 
@@ -83,9 +84,15 @@ const BaseCreateTable = ({
   const isView = [VALID, PARTIALLY_HANDLED, HANDLED].includes(state.status)
 
   const isFeurstSales = accessRights.getFullAction()?.visibility==RELATED
-  const canUpdatePrice = accessRights.isActionAllowed(QUOTATION, UPDATE_ALL)
-  const canUpdateQuantity = (accessRights.isActionAllowed(QUOTATION, UPDATE) && !isView) || (isFeurstSales && isValid)
-  const canUpdateShipping = canUpdatePrice
+  const isFeurstADV = accessRights.isActionAllowed(QUOTATION, HANDLE) || accessRights.isActionAllowed(ORDER, HANDLE)
+  const canUpdatePrice = accessRights.isActionAllowed(QUOTATION, UPDATE_ALL) && accessRights.getModel() === QUOTATION
+  const canUpdateQuantity = (
+    (accessRights.isActionAllowed(QUOTATION, UPDATE) && accessRights.getModel() === QUOTATION)
+    || (accessRights.isActionAllowed(ORDER, UPDATE) && accessRights.getModel() === ORDER)
+    && !isView
+  ) || (isFeurstSales && isValid)
+    
+  const canUpdateShipping = canUpdatePrice && isValid
 
   const convertToQuotation = accessRights.getModel() === ORDER && !isView && accessRights.isActionAllowed(ORDER, CONVERT)
   const convertToOrder = accessRights.getModel() === QUOTATION && !isView && accessRights.isActionAllowed(QUOTATION, CONVERT)
@@ -94,6 +101,11 @@ const BaseCreateTable = ({
   /* Update product quantities or price */
   const updateMyOrderContent = data => {
     addProduct({endpoint, orderid: orderIDLocal, ...data})
+  }
+
+  const changeCompany = e => {
+    setOrderCompany(null)
+    removeItem()
   }
 
   const submitOrder = async({endpoint, orderid}) => {
@@ -142,17 +154,23 @@ const BaseCreateTable = ({
   useEffect(() => {
     // console.log('getContent', orderID)
     if (!isEmpty(orderIDLocal)) {
-      getContentFrom({endpoint, orderid: orderIDLocal})
-        .then(data => {
-          if (data) {
-            setOrderCompany(data.company)
-          }
-          else {
-            removeItem()
-          }
-        })
+      // Prevents loading inadequate order in LocalStorage
+      if (id && id !== orderIDLocal) {
+        setOrderIDLocal(id)
+      }
+      else {
+        getContentFrom({endpoint, orderid: orderIDLocal})
+          .then(data => {
+            if (data) {
+              setOrderCompany(data.company)
+            }
+            else {
+              removeItem()
+            }
+          })
+      }
     }
-  }, [endpoint, getContentFrom, orderIDLocal, removeItem])
+  }, [endpoint, getContentFrom, id, orderIDLocal, removeItem, setOrderIDLocal])
 
 
   useEffect(() => {
@@ -217,7 +235,7 @@ const BaseCreateTable = ({
 
     { orderIDLocal ? <div>
 
-      {isFeurstSales && <H2confirm>{state?.company?.name}</H2confirm>}
+      {isFeurstSales && <div><H2confirm>{state?.company?.name}</H2confirm> <button onClick={changeCompany}>Changer d'entreprise</button></div>}
 
       {(canAdd || (isFeurstSales && isValid)) &&
       <div className='container-base'>
@@ -246,7 +264,7 @@ const BaseCreateTable = ({
 
       {canValidate || isView ?
         <div className='flex flex-wrap gap-x-4 justify-between items-end mb-8'>
-          <Delivery address={state.address} shipping={{shipping_mode: state.shipping_mode, shipping_fee: state.shipping_fee, update: canUpdateShipping ? updateShippingFees : null}} />
+          <Delivery orderid={orderIDLocal} address={state.address} shipping={{shipping_mode: state.shipping_mode, shipping_fee: state.shipping_fee, update: canUpdateShipping ? updateShippingFees : null}} />
           {!isView ? <h4 className='text-2xl mb-0 text-black'>{t(`${wordingSection}.total`)} : {localeMoneyFormat({value: state.total_amount})}</h4> : null}
         </div>: null
       }
@@ -295,12 +313,32 @@ const BaseCreateTable = ({
           <PleasantButton
             rounded={'full'}
             disabled={justCreated}
-            onClick={() => ([COMPLETE].includes(state.status) ? submitOrder({endpoint, orderid: orderIDLocal}): setIsOpenDialog(true))}
+            onClick={() => (canValidate ? submitOrder({endpoint, orderid: orderIDLocal}): setIsOpenDialog(true))}
           >
             {t(`${wordingSection}.valid`)} {/* Valid order/quotation */}
           </PleasantButton>
         </div>
         : null }
+
+
+      {isFeurstSales ? (<>
+        <div className='flex items-center bg-brand text-xl text-white font-semibold justify-between p-2 pl-6 pr-6 mb-8'>
+          <span>Total</span>
+          <span>{state?.total_amount && localeMoneyFormat({value: state.total_amount})}</span>
+        </div>
+
+        <div className='flex gap-x-4 justify-end mb-8'>
+
+          <PleasantButton
+            rounded={'full'}
+            disabled={justCreated}
+            bgColor={'#707071'}
+            textColor={'#ffffff'}
+            onClick={() => true}
+          >Envoyer au client</PleasantButton>
+        </div>
+      </>
+      ) : null}
 
 
       <DialogAddress

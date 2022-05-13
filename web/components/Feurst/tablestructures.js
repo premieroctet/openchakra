@@ -30,7 +30,7 @@ const FooterTotalWeight = info => {
     [info.rows],
   )
 
-  return <>{total} kg</>
+  return <>{total.toLocaleString('fr-FR', {maximumSignificantDigits: 2})} kg</>
 }
 
 const FooterTotalPrice = ({data, language = null}) => {
@@ -136,7 +136,7 @@ const ordersColumns = ({endpoint, language, deleteOrder}) => [
   {
     label: 'Poids total',
     attribute: 'total_weight',
-    Cell: ({value}) => `${value} kg`,
+    Cell: ({value}) => `${value.toLocaleString(language, {maximumSignificantDigits: 2})} kg`,
   },
   {
     label: 'Détails',

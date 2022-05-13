@@ -6,7 +6,7 @@ import {getLoggedUser} from '../utils/context'
 import {theme, GlobalStyleEdi} from '../styles/feurst/feurst.theme'
 import {client} from '../utils/client'
 const lodash=require('lodash')
-const {API_PATH} = require('../utils/feurst/consts')
+const {API_PATH, VIEW, HANDLE} = require('../utils/feurst/consts')
 const {BASEPATH_EDI} = require('../utils/consts')
 const {is_development} = require('../config/config')
 const Tabs = require('../components/Feurst/Tabs')
@@ -82,6 +82,8 @@ const withEdiAuth = (Component = null, options = {}) => {
       }
 
       const accessRights=new AccessRights(options.model, options.action, actions)
+      const canAccess = accessRights.isActionAllowed(accessRights.getModel(), accessRights.getAction())
+
       return (
         <ThemeProvider theme={theme}>
           {is_development() &&
@@ -90,7 +92,9 @@ const withEdiAuth = (Component = null, options = {}) => {
           <Header accessRights={accessRights} />
           <Tabs accessRights={accessRights} />
           <div className='container-lg'>
-            <Component accessRights={accessRights} />
+            {canAccess ?
+              <Component accessRights={accessRights} />
+              : <div>Vous n'avez pas accès à cette rubrique</div>}
           </div>
           <GlobalStyleEdi />
         </ThemeProvider>

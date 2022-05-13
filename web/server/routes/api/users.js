@@ -1368,7 +1368,7 @@ router.get('/landing-page', passport.authenticate('jwt', {session: false}), (req
     return res.json(`${BASEPATH_EDI}/orders/create`)
   }
   if (roles.includes(CUSTOMER_SLAVE)) {
-    return res.json(`${BASEPATH_EDI}/quotations/handle`)
+    return res.json(`${BASEPATH_EDI}/orders/create`)
   }
   return res.status(404).json(`Unknown loading page for ${roles}`)
 })

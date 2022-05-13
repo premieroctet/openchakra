@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
 import Autocomplete from '../Autocomplete/Autocomplete'
 import {StyledAutocomplete} from '../Autocomplete/Autocomplete.styles'
 import {API_PATH} from '../../utils/consts'
@@ -14,7 +14,7 @@ const AddArticle = ({endpoint, orderid, updateTable, addProduct, wordingSection}
   const [article, setArticle] = useState({
     item: null,
     info: null,
-    quantity: 1,
+    quantity: null,
     showArticlePanel: false,
   })
 
@@ -65,7 +65,7 @@ const AddArticle = ({endpoint, orderid, updateTable, addProduct, wordingSection}
             type="number"
             id='articleQty'
             placeholder='Qté souhaitée'
-            value={article.quantity}
+            value={article?.quantity || ''}
             disabled={false}
             onChange={ev => !isNaN(parseInt(ev.target.value)) && setArticle({...article, quantity: parseInt(ev.target.value)})}
           />
