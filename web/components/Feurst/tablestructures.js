@@ -1,18 +1,17 @@
 import React, {useMemo} from 'react'
 import Link from 'next/link'
 import {localeMoneyFormat} from '../../utils/converters'
+import {
+  PARTIALLY_HANDLED,
+  VALID,
+  ROLES,
+} from '../../utils/feurst/consts'
+import {formatPercent} from '../../utils/text'
+import {DateRangeColumnFilter} from '../Table/TableFilter'
 import UpdateCellQuantity from './UpdateCellQuantity'
 import UpdateCellPrice from './UpdateCellPrice'
 import OrderStatus from './OrderStatus'
-const {
-  PARTIALLY_HANDLED,
-  VALID,
-} = require('../../utils/feurst/consts')
-
-const {formatPercent} = require('../../utils/text')
-const {ROLES} = require('../../utils/consts')
-const {DateRangeColumnFilter} = require('../Table/TableFilter')
-const {PleasantButton} = require('./Button')
+import {PleasantButton} from './Button'
 
 // to order by datetime
 const datetime = (a, b) => {
@@ -23,6 +22,15 @@ const datetime = (a, b) => {
   return 0
 }
 
+const formatDate = (date, lang) => {
+  let options = {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric'}
+  return date.toLocaleString(lang, options)
+}
+
+const formatWeight = (val, lang='fr-FR') => {
+  return `${val.toLocaleString(lang, {style: 'decimal', maximumFractionDigits: 2})} kg`
+}
+
 const FooterTotalWeight = info => {
   const total = useMemo(
     () =>
@@ -30,7 +38,7 @@ const FooterTotalWeight = info => {
     [info.rows],
   )
 
-  return <>{total.toLocaleString('fr-FR', {maximumSignificantDigits: 2})} kg</>
+  return <>{formatWeight(total)} kg</>
 }
 
 const FooterTotalPrice = ({data, language = null}) => {
@@ -116,7 +124,7 @@ const ordersColumns = ({endpoint, language, deleteOrder}) => [
   {
     label: 'Date commande',
     attribute: 'creation_date',
-    Cell: ({cell: {value}}) => new Date(value).toLocaleString(),
+    Cell: ({cell: {value}}) => formatDate(new Date(value), language),
     sortType: datetime,
     Filter: DateRangeColumnFilter,
     filter: 'dateBetween', /* Custom Filter Type */
@@ -136,7 +144,7 @@ const ordersColumns = ({endpoint, language, deleteOrder}) => [
   {
     label: 'Poids total',
     attribute: 'total_weight',
-    Cell: ({value}) => `${value.toLocaleString(language, {maximumSignificantDigits: 2})} kg`,
+    Cell: ({value}) => formatWeight(value, language),
   },
   {
     label: 'Détails',
@@ -224,7 +232,7 @@ const quotationsColumns = ({language, deleteProduct}) => [
   {
     label: 'Date commande',
     attribute: 'creation_date',
-    Cell: ({cell: {value}}) => <div>{new Date(value).toLocaleString()}</div>,
+    Cell: ({cell: {value}}) => formatDate(new Date(value), language),
     sortType: 'datetime',
     Filter: DateRangeColumnFilter,
     filter: 'dateBetween', /* Custom Filter Type */
@@ -240,6 +248,7 @@ const quotationsColumns = ({language, deleteProduct}) => [
   {
     label: 'Poids total',
     attribute: 'total_weight',
+    Cell: ({value}) => formatWeight(value, language),
   },
   {
     label: 'Frais de livraison',
@@ -384,11 +393,11 @@ const HandleValidationStatusCell = ({status, endpoint, id, handleValidation, fil
   </div>
 }
 
-const handledOrdersColumns = ({endpoint, handleValidation = null, filter = null}) => [
+const handledOrdersColumns = ({endpoint, language, handleValidation = null, filter = null}) => [
   {
     label: 'Date commande',
     attribute: 'creation_date',
-    Cell: ({cell: {value}}) => new Date(value).toLocaleString(),
+    Cell: ({cell: {value}}) => formatDate(new Date(value), language),
     sortType: datetime,
     Filter: DateRangeColumnFilter,
     filter: 'dateBetween', /* Custom Filter Type */
@@ -418,11 +427,11 @@ const handledOrdersColumns = ({endpoint, handleValidation = null, filter = null}
     Cell: ({value}) => (<HandleValidationStatusCell status={value.status} handleValidation={handleValidation} endpoint={endpoint} id={value._id} filter={filter} />),
   },
 ]
-const handledQuotationsColumns = ({endpoint, handleValidation = null, filter = null}) => [
+const handledQuotationsColumns = ({language, endpoint, handleValidation = null, filter = null}) => [
   {
     label: 'Date',
     attribute: 'creation_date',
-    Cell: ({cell: {value}}) => new Date(value).toLocaleString(),
+    Cell: ({cell: {value}}) => formatDate(new Date(value), language),
     sortType: datetime,
     Filter: DateRangeColumnFilter,
     filter: 'dateBetween', /* Custom Filter Type */
