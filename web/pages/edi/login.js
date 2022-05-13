@@ -6,7 +6,7 @@ import Header from '../../components/Feurst/Header'
 import {theme, GlobalStyleEdi} from '../../styles/feurst/feurst.theme'
 import {screen} from '../../styles/screenWidths'
 import {client} from '../../utils/client'
-const {API_PATH} = require('../../utils/consts')
+import {API_PATH, FEURST_IMG_PATH} from '../../utils/consts'
 
 const {
   removeAlfredRegistering,
@@ -15,12 +15,13 @@ const {clearAuthenticationToken} = require('../../utils/authentication')
 
 const HomeGrid = styled.div`
   display: grid;
-  column-gap: var(--spc-12);
+  column-gap: var(--spc-6);
   grid-template-columns: 1fr;
   justify-items: center;
+  align-items: center;
 
   @media (${screen.lg}) {
-    grid-template-columns: 3fr 2fr;
+    grid-template-columns: 1fr 1fr;
   }
 `
 
@@ -62,7 +63,7 @@ const LoginPage = () => {
       <GlobalStyleEdi />
       <Header />
       <HomeGrid>
-        <ResponsiveImg src="" alt='' width={500} height={500} />
+        <ResponsiveImg src={`${FEURST_IMG_PATH}/dent_accueil_feurst.webp`} alt='' />
         <Login login={redirect}/>
       </HomeGrid>
     </ThemeProvider>)
