@@ -1,9 +1,7 @@
-
 const crypto = require('crypto')
 
 const fs = require('fs').promises
 const mongoose = require('mongoose')
-const lodash=require('lodash')
 const express = require('express')
 const passport = require('passport')
 const bcrypt = require('bcryptjs')
@@ -11,13 +9,12 @@ const CronJob = require('cron').CronJob
 const moment = require('moment')
 const axios = require('axios')
 const gifFrames = require('gif-frames')
-const {BASEPATH_EDI, FEURST_ADMIN, FEURST_ADV, FEURST_SALES, CUSTOMER_ADMIN, CUSTOMER_SLAVE} = require('../../../utils/consts')
+const {BASEPATH_EDI, FEURST_ADMIN, FEURST_ADV, FEURST_SALES, CUSTOMER_ADMIN, CUSTOMER_BUYER, CUSTOMER_TCI} = require('../../../utils/consts')
 const {filterUsers} = require('../../utils/userAccess')
 const {CREATE} = require('../../../utils/feurst/consts')
 const {XL_FILTER, createMemoryMulter} = require('../../utils/filesystem')
 const {accountsImport} = require('../../utils/import')
 const {ACCOUNT, LINK, VIEW} = require('../../../utils/feurst/consts')
-const {ORDER, QUOTATION} = require('../../../utils/feurst/consts')
 const Shop = require('../../models/Shop')
 const {is_development} = require('../../../config/config')
 const {getActionsForRoles} = require('../../utils/userAccess')
@@ -39,7 +36,7 @@ moment.locale('fr')
 const {ROLES}=require('../../../utils/consts')
 const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, createMangoProvider, install_hooks} = require('../../utils/mangopay')
 const {send_cookie}=require('../../utils/serverContext')
-const {getDataFilter, isActionAllowed} = require('../../utils/userAccess')
+const {isActionAllowed} = require('../../utils/userAccess')
 const ResetToken = require('../../../server/models/ResetToken')
 
 axios.defaults.withCredentials = true
@@ -1367,8 +1364,11 @@ router.get('/landing-page', passport.authenticate('jwt', {session: false}), (req
   if (roles.includes(CUSTOMER_ADMIN)) {
     return res.json(`${BASEPATH_EDI}/orders/create`)
   }
-  if (roles.includes(CUSTOMER_SLAVE)) {
+  if (roles.includes(CUSTOMER_BUYER)) {
     return res.json(`${BASEPATH_EDI}/orders/create`)
+  }
+  if (roles.includes(CUSTOMER_TCI)) {
+    return res.json(`${BASEPATH_EDI}/quotations`)
   }
   return res.status(404).json(`Unknown loading page for ${roles}`)
 })

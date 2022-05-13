@@ -70,7 +70,8 @@ const FEURST_ADMIN='FEURST_ADMIN'
 const FEURST_ADV='FEURST_ADV'
 const FEURST_SALES='FEURST_SALES'
 const CUSTOMER_ADMIN='CUSTOMER_ADMIN'
-const CUSTOMER_SLAVE='CUSTOMER_SLAVE'
+const CUSTOMER_BUYER='CUSTOMER_BUYER'
+const CUSTOMER_TCI='CUSTOMER_TCI'
 
 
 const ROLES = {
@@ -78,16 +79,17 @@ const ROLES = {
   [FEURST_ADV]: 'ADV',
   [FEURST_SALES]: 'Commercial Feurst',
   [CUSTOMER_ADMIN]: 'Administrateur client',
-  [CUSTOMER_SLAVE]: 'Client',
+  [CUSTOMER_BUYER]: 'Client acheteur',
+  [CUSTOMER_TCI]: 'Client consultatif',
 }
-
 // Auto associated roles
 const LINKED_ROLES={
   [FEURST_ADMIN]: [FEURST_ADMIN, FEURST_ADV, FEURST_SALES],
   [FEURST_SALES]: [FEURST_SALES],
   [FEURST_ADV]: [FEURST_ADV, FEURST_SALES],
-  [CUSTOMER_ADMIN]: [CUSTOMER_ADMIN, CUSTOMER_SLAVE],
-  [CUSTOMER_SLAVE]: [CUSTOMER_SLAVE],
+  [CUSTOMER_ADMIN]: [CUSTOMER_ADMIN, CUSTOMER_BUYER, CUSTOMER_TCI],
+  [CUSTOMER_BUYER]: [CUSTOMER_BUYER],
+  [CUSTOMER_TCI]: [CUSTOMER_TCI],
 }
 const [ORDER, QUOTATION, ACCOUNT, SHIPRATE, PRODUCT, PRICELIST]=['ORDER', 'QUOTATION', 'ACCOUNT', 'SHIPRATE', 'PRODUCT', 'PRICELIST']
 const [VIEW, CREATE, UPDATE, UPDATE_ALL, DELETE, VALIDATE, CONVERT, LINK, HANDLE, CREATE_FOR]=['VIEW', 'CREATE', 'UPDATE', 'UPDATE_ALL', 'DELETE', 'VALIDATE', 'CONVERT', 'LINK', 'HANDLE', 'CREATE_FOR']
@@ -109,7 +111,7 @@ const USER_ACTIONS={
   [FEURST_ADMIN]: lodash.flattenDeep([
     [VIEW, CREATE, UPDATE, DELETE, LINK].map(action => [FEURST_ADMIN, FEURST_ADV, FEURST_SALES, CUSTOMER_ADMIN].map(tp => createUserAction(ACCOUNT, action, {type: tp, visibility: ALL}))),
     [VIEW].map(action => createUserAction(ACCOUNT, action, {visibility: ALL})),
-    [VIEW, VALIDATE].map(action => createUserAction(ORDER, action, {visibility: ALL})),
+    [VIEW, VALIDATE, HANDLE].map(action => createUserAction(ORDER, action, {visibility: ALL})),
     [VIEW, VALIDATE].map(action => createUserAction(QUOTATION, action, {visibility: ALL})),
     [VIEW, CREATE].map(action => createUserAction(SHIPRATE, action, {visibility: ALL})),
     [VIEW, CREATE, UPDATE, DELETE].map(action => createUserAction(PRODUCT, action, {visibility: ALL})),
@@ -124,18 +126,22 @@ const USER_ACTIONS={
   ]),
   [FEURST_SALES]: lodash.flattenDeep([
     createUserAction(ACCOUNT, VIEW, {type: CUSTOMER_ADMIN, visibility: RELATED}),
-    [CREATE, VIEW, UPDATE, UPDATE_ALL, VALIDATE].map(action => createUserAction(QUOTATION, action, {visibility: RELATED})),
+    [CREATE, VIEW, UPDATE, HANDLE, UPDATE_ALL, VALIDATE].map(action => createUserAction(QUOTATION, action, {visibility: RELATED})),
     [CREATE, VIEW, UPDATE, VALIDATE].map(action => createUserAction(ORDER, action, {visibility: RELATED})),
     createUserAction(COMPANY, VIEW, {visibility: RELATED}),
   ]),
   [CUSTOMER_ADMIN]: lodash.flattenDeep([
-    [VIEW, CREATE, UPDATE, DELETE].map(action => [CUSTOMER_ADMIN, CUSTOMER_SLAVE].map(type => createUserAction(ACCOUNT, action, {type: type, visibility: COMPANY}))),
+    [VIEW, CREATE, UPDATE, DELETE].map(action => [CUSTOMER_ADMIN, CUSTOMER_BUYER, CUSTOMER_TCI].map(type => createUserAction(ACCOUNT, action, {type: type, visibility: COMPANY}))),
     [CREATE, VIEW, UPDATE, CONVERT, VALIDATE].map(action => createUserAction(QUOTATION, action, {visibility: COMPANY})),
     [CREATE, VIEW, UPDATE].map(action => createUserAction(ORDER, action, {visibility: COMPANY})),
   ]),
-  [CUSTOMER_SLAVE]: lodash.flattenDeep([
+  [CUSTOMER_BUYER]: lodash.flattenDeep([
     [CREATE, VIEW, UPDATE, CONVERT, DELETE, VALIDATE].map(action => createUserAction(QUOTATION, action, {visibility: COMPANY})),
     [CREATE, VIEW, UPDATE, DELETE, VALIDATE].map(action => createUserAction(ORDER, action, {visibility: COMPANY})),
+  ]),
+  [CUSTOMER_TCI]: lodash.flattenDeep([
+    [CREATE, VIEW, UPDATE, DELETE, VALIDATE].map(action => createUserAction(QUOTATION, action, {visibility: COMPANY})),
+    [VIEW].map(action => createUserAction(ORDER, action, {visibility: COMPANY})),
   ]),
 }
 
@@ -166,7 +172,7 @@ module.exports={
   DROITE, DELTA, SEMI_DELTA, UNKNOWN, BLADE_SHAPES,
   EXCAVATRICE, CHARGEUSE, PELLE_BUTTE, MACHINE_TYPES,
   ENDPOINTS,
-  ORDER_STATUS, QUOTATION_STATUS, FEURST_ADMIN, FEURST_ADV, CUSTOMER_ADMIN, CUSTOMER_SLAVE,
+  ORDER_STATUS, QUOTATION_STATUS, FEURST_ADMIN, FEURST_ADV, CUSTOMER_ADMIN, CUSTOMER_BUYER, CUSTOMER_TCI,
   ROLES, USER_ACTIONS, ORDER, QUOTATION, ACCOUNT, VIEW, CREATE, UPDATE, DELETE, VALIDATE,
   SHIPRATE, MAX_WEIGHT, PRODUCT, STANDARD_SHIPPING, EXPRESS_SHIPPING, BASEPATH_EDI, ALL, FEURST_PHONE_NUMBER, FEURST_IMG_PATH, API_PATH,
   COMPANY, RELATED,

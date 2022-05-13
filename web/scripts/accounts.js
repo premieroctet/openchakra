@@ -28,8 +28,8 @@ const mails_roles= name => {
     [`${name.toLowerCase()}_sales@feurst.com`, FEURST_SALES],
     [`${name.toLowerCase()}_adv@feurst.com`, FEURST_ADV],
     [`${name.toLowerCase()}_admin@${name.toLowerCase()}.com`, CUSTOMER_ADMIN],
-    [`${name.toLowerCase()}_buyer@${name.toLowerCase()}.com`, CUSTOMER_BUYER],
-    [`${name.toLowerCase()}_tci@${name.toLowerCase()}.com`, CUSTOMER_TCI],
+    [`${name.toLowerCase()}_buyer@${name.toLowerCase()}.com`, FEURST_SALES],
+    [`${name.toLowerCase()}_tci@${name.toLowerCase()}.com`, FEURST_SALES],
   ]
 }
 

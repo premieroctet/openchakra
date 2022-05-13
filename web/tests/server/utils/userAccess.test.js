@@ -1,7 +1,13 @@
 const https = require('https')
+const axios = require('axios')
+const {
+  CUSTOMER_BUYER,
+  FEURST_ADMIN,
+  FEURST_ADV,
+} = require('../../../utils/feurst/consts')
+
 https.globalAgent.options.rejectUnauthorized = false
 
-const axios = require('axios')
 
 const storeAuth = res => {
   return new Promise(resolve => {
@@ -35,7 +41,7 @@ const createUser = (firstname, name, company) => {
         .catch(err => { console.error(err); return Promise.reject(err) })
     })
 }
-describe('Orders/quotation ac cess tests', () => {
+describe('Orders/quotation access tests', () => {
 
   beforeAll(() => {
     return login('sebastien.auvray@my-alfred.io')
@@ -58,15 +64,15 @@ describe('Orders/quotation ac cess tests', () => {
       })
   }
   test('Rôle client esclave', () => {
-    return checkOrders('CUSTOMER_SLAVE', 1)
+    return checkOrders(CUSTOMER_BUYER, 1)
   })
 
   test('Rôle FEURST ADMIN', () => {
-    return checkOrders('FEURST_ADMIN', 2)
+    return checkOrders(FEURST_ADMIN, 2)
   })
 
   test('Rôle FEURST ADV', () => {
-    return checkOrders('FEURST_ADV', 2)
+    return checkOrders(FEURST_ADV, 2)
   })
 
 })
