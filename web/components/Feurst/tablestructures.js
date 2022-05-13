@@ -79,8 +79,8 @@ const orderColumns = ({endpoint, orderid, language, canUpdateQuantity, deletePro
     {
       label: 'Poids',
       attribute: 'total_weight',
+      Cell: ({value}) => formatWeight(value, language),
       Footer: FooterTotalWeight,
-
     },
     {
       label: 'Prix catalogue',
@@ -191,6 +191,7 @@ const quotationColumns = ({language, deleteProduct, canUpdateQuantity, canUpdate
   {
     label: 'Poids',
     attribute: 'total_weight',
+    Cell: ({value}) => formatWeight(value, language),
     Footer: FooterTotalWeight,
   },
   {
