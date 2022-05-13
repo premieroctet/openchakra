@@ -1,11 +1,15 @@
 const mongoose = require('mongoose')
-const User = require('../server/models/User')
+const lodash=require('lodash')
 const {
   CUSTOMER_ADMIN,
+  CUSTOMER_BUYER,
+  CUSTOMER_TCI,
   FEURST_ADMIN,
   FEURST_ADV,
   FEURST_SALES,
+  ROLES,
 } = require('../utils/feurst/consts')
+const User = require('../server/models/User')
 const Company = require('../server/models/Company')
 const {getDatabaseUri} = require('../config/config')
 const {MONGOOSE_OPTIONS} = require('../server/utils/database')
@@ -42,21 +46,25 @@ const compAtts={
 
 
 createAccount = (name, compName) => {
-  console.log(compName)
-  let selfCompany, otherCompany
+  console.log(`Création compagnie ${name}.com`)
   return Company.updateOne({name: `${name}.com`}, compAtts, {upsert: true, new: true})
     .then(() => {
-      return Company.find({name: `${name}.com`})
+      return Promise.all([`${name}.com`, compName].map(n => Company.findOne({name: n})))
     })
-    .then(result => {
-      selfCompany=result
-      return Company.find({name: compName})
-    })
-    .then(result => {
-      otherCompany = result
+    .then(([selfCompany, otherCompany]) => {
       return Promise.all(mails_roles(name).map(([email, role]) => {
+        const company=[CUSTOMER_ADMIN, CUSTOMER_BUYER, CUSTOMER_TCI].includes(role) ? selfCompany : null
+        const companies=FEURST_SALES==role ? [selfCompany, otherCompany] : null
+        let log=`Création compte ${email}, rôle ${ROLES[role]}, mdp Alfred123;`
+        if (companies) {
+          log+= ` rattaché aux compagnies ${selfCompany.name}.com et ${otherCompany.name}`
+        }
+        if (company) {
+          log+= ` appartenant à la compagnie ${selfCompany.name}`
+        }
+        console.log(log)
         return User.updateOne({email: email},
-          {firstname: name, name: name, password: PASSWORD, roles: [role], companies: role==FEURST_SALES ? [selfCompany._id, otherCompany._id]:[]}, {upsert: true})
+          {firstname: name, name: name, password: PASSWORD, roles: [role], company: company, companies: companies}, {upsert: true})
       }))
     })
 }
