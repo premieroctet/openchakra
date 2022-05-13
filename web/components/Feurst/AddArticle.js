@@ -23,6 +23,7 @@ const AddArticle = ({endpoint, orderid, updateTable, addProduct, wordingSection}
 
   const {
     data,
+    setData,
     isLoading,
     isError,
     run,
@@ -45,6 +46,10 @@ const AddArticle = ({endpoint, orderid, updateTable, addProduct, wordingSection}
   } = useCombobox({
     items: data,
     onInputValueChange: ({inputValue, selectedItem}) => {
+
+      if (inputValue.length == 0) {
+        setData([])
+      }
 
       if (selectedItem && inputValue.trim() === selectedItem.reference) {
         return
@@ -98,14 +103,15 @@ const AddArticle = ({endpoint, orderid, updateTable, addProduct, wordingSection}
               disabled={disabled}
             />
             <span className='loading'>{isLoading ? '...' : null}</span>
-            <button
+            {data.length > 0 ? <button
               {...getToggleButtonProps()}
               type="button"
               disabled={disabled}
               aria-label="afficher la liste"
             >
               <span role="img">&#9661;</span>
-            </button>
+            </button> : null}
+            
             <button
               type="button"
               disabled={disabled}
