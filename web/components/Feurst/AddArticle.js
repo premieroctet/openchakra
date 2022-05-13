@@ -65,7 +65,7 @@ const AddArticle = ({endpoint, orderid, updateTable, addProduct, wordingSection}
             type="number"
             id='articleQty'
             placeholder='Qté souhaitée'
-            value={article.quantity}
+            value={article?.quantity || ''}
             disabled={false}
             onChange={ev => !isNaN(parseInt(ev.target.value)) && setArticle({...article, quantity: parseInt(ev.target.value)})}
           />
