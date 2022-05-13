@@ -1,14 +1,14 @@
 const {isPlatform} = require('../../../../config/config')
-const Prestation = require('../../../models/Prestation');
-const Service = require('../../../models/Service');
-const Equipment = require('../../../models/Equipment');
-const Category = require('../../../models/Category');
-const Job = require('../../../models/Job');
-const FilterPresentation = require('../../../models/FilterPresentation');
-const ServiceUser = require('../../../models/ServiceUser');
-const moment = require('moment');
-const { BOOK_STATUS } = require('../../../../utils/consts');
-const { mangoApi } = require('../../../utils/mangopay');
+const Prestation = require('../../../models/Prestation')
+const Service = require('../../../models/Service')
+const Equipment = require('../../../models/Equipment')
+const Category = require('../../../models/Category')
+const Job = require('../../../models/Job')
+const FilterPresentation = require('../../../models/FilterPresentation')
+const ServiceUser = require('../../../models/ServiceUser')
+const moment = require('moment')
+const {BOOK_STATUS} = require('../../../../utils/consts')
+const {mangoApi} = require('../../../utils/mangopay')
 const Review = require('../../../models/Review')
 const EventLog = require('../../../models/EventLog')
 const Commission = require('../../../models/Commission')
@@ -1002,7 +1002,7 @@ router.post('/service/editPicture/:id', uploadService.single('picture'), passpor
 // @Route GET /myAlfred/api/admin/service/all
 // View all service
 // @Access private
-router.get('/service/all', /*passport.authenticate('admin', {session: false}),*/ (req, res) => {
+router.get('/service/all', passport.authenticate('admin', {session: false}), (req, res) => {
 
   Service.find()
     .sort({'label': 1})
@@ -1244,9 +1244,9 @@ router.put('/prestation/all/:id', passport.authenticate('admin', {session: false
       price: req.body.price,
       service: mongoose.Types.ObjectId(req.body.service),
       billing: req.body.billing,
-      filter_presentation: mongoose.Types.ObjectId(req.body.filter_presentation),
+      filter_presentation: req.body.filter_presentation || null,
       category: mongoose.Types.ObjectId(req.body.service.category),
-      job: req.body.job ? mongoose.Types.ObjectId(req.body.job) : null,
+      job: req.body.job || null,
       description: req.body.description,
       cesu_eligible: req.body.cesu_eligible,
       professional_access: req.body.professional_access,
