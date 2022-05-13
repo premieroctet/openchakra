@@ -28,9 +28,9 @@ const PASSWORD='$2a$10$OlaUPHw1dNXx3wEfamFXb.iCqxGKjmsjxJaaJ1B5DIlt/6rdlBCFC'
 
 const mails_roles= name => {
   return [
-    [`${name.toLowerCase()}_admin@feurst.com`, FEURST_ADMIN],
-    [`${name.toLowerCase()}_sales@feurst.com`, FEURST_SALES],
-    [`${name.toLowerCase()}_adv@feurst.com`, FEURST_ADV],
+    [`${name.toLowerCase()}_admin@feurst.fr`, FEURST_ADMIN],
+    [`${name.toLowerCase()}_sales@feurst.fr`, FEURST_SALES],
+    [`${name.toLowerCase()}_adv@feurst.fr`, FEURST_ADV],
     [`${name.toLowerCase()}_admin@${name.toLowerCase()}.com`, CUSTOMER_ADMIN],
     [`${name.toLowerCase()}_buyer@${name.toLowerCase()}.com`, CUSTOMER_BUYER],
     [`${name.toLowerCase()}_tci@${name.toLowerCase()}.com`, CUSTOMER_TCI],
