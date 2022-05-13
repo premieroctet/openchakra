@@ -28,7 +28,7 @@ const StyledOrderStatus = styled.div`
   display: flex;
   align-items: center;
   column-gap: var(--spc-2);
-  
+
   span {
     flex-shrink: 20;
   }
@@ -47,14 +47,14 @@ const labelStatus = {
 }
 
 const OrderStatus = ({endpoint, sales, status}) => {
-  
+
 
   const statusLabel = status => {
     switch(status) {
       case CREATED:
-        return 'créé'
+        return 'en création'
       case FULFILLED:
-        return 'en cours'
+        return 'en création'
       case COMPLETE:
         return 'en attente de validation'
       case VALID:
