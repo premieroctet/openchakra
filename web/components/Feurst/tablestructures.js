@@ -38,7 +38,7 @@ const FooterTotalWeight = info => {
     [info.rows],
   )
 
-  return <>{formatWeight(total)} kg</>
+  return <>{formatWeight(total)}</>
 }
 
 const FooterTotalPrice = ({data, language = null}) => {

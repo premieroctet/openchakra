@@ -56,14 +56,15 @@ const CheckingProductArea = styled.div`
 `
 
 
-const CheckingProduct = ({endpoint, orderid, article, setArticle, addProduct, wordingSection, t}) => {
+const CheckingProduct = ({endpoint, orderid, article, setArticle, selectItem, addProduct, wordingSection, t}) => {
 
   const {info, quantity} = article
 
   const confirmAdd = async() => {
     await addProduct({endpoint, orderid, ...article})
       .then(() => {
-        setArticle({...article, quantity: null, showArticlePanel: false})
+        setArticle({...article, item: null, quantity: null, showArticlePanel: false})
+        selectItem(null)
       })
       .catch(() => snackBarError(`Ajout de l'article non effectué`))
 
