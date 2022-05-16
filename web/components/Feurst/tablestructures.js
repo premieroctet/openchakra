@@ -8,6 +8,7 @@ import {
 } from '../../utils/feurst/consts'
 import {formatPercent} from '../../utils/text'
 import {DateRangeColumnFilter} from '../Table/TableFilter'
+import {HandleLink} from '../../styles/feurst/StyledComponents'
 import UpdateCellQuantity from './UpdateCellQuantity'
 import UpdateCellPrice from './UpdateCellPrice'
 import OrderStatus from './OrderStatus'
@@ -64,7 +65,6 @@ const orderColumns = ({endpoint, orderid, language, canUpdateQuantity, deletePro
     {
       label: 'Réf. catalogue',
       attribute: 'product.reference',
-      disableFilters: true,
       Footer: 'Total',
     },
     {
@@ -75,6 +75,7 @@ const orderColumns = ({endpoint, orderid, language, canUpdateQuantity, deletePro
       label: 'Quantité',
       attribute: 'quantity',
       Cell: canUpdateQuantity ? UpdateCellQuantity : ({value}) => value,
+      disableFilters: true,
     },
     {
       label: 'Poids',
@@ -457,7 +458,7 @@ const handledQuotationsColumns = ({language, endpoint, handleValidation = null, 
     label: 'Validation',
     attribute: v => v._id,
     disableFilters: true,
-    Cell: ({value}) => (<Link href={`/edi/quotations/view/${value}`}>A traiter</Link>),
+    Cell: ({value}) => (<Link href={`/edi/quotations/view/${value}`}><HandleLink>A traiter</HandleLink></Link>),
   },
 ]
 module.exports={orderColumns, ordersColumns, quotationColumns, quotationsColumns,

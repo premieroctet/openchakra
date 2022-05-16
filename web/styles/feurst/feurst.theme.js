@@ -65,6 +65,7 @@ export const GlobalStyleEdi = createGlobalStyle`
     --black: #111;
     --white: ${props => props.theme?.colors?.white || '#FFF'};
     --yellow-500: ${props => props.theme?.colors?.yellow || rgb(218, 187, 66)};
+    --green-500: ${props => props.theme?.colors?.green || 'hsl(90.3, 38.3%, 50.4%)'};
     --bg-selectedZone: #bcc0cd;
     --text-selectedZone: #fff;
     --gray-800: rgb(190, 190, 190);
