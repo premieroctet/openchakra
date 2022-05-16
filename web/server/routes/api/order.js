@@ -4,6 +4,14 @@ const moment = require('moment')
 const xlsx=require('node-xlsx')
 const lodash=require('lodash')
 const {
+  addItem,
+  computeShipFee,
+  getProductPrices,
+  updateCompanyAddresses,
+  updateShipFee,
+  updateStock,
+} = require('../../utils/commands')
+const {
   EXPRESS_SHIPPING,
   HANDLE,
   HANDLED,
@@ -12,13 +20,6 @@ const {
   UPDATE_ALL,
   VALIDATE,
 } = require('../../../utils/feurst/consts')
-const {
-  addItem,
-  computeShipFee,
-  getProductPrices,
-  updateShipFee,
-  updateStock,
-} = require('../../utils/commands')
 const Product = require('../../models/Product')
 const {
   filterOrderQuotation,
@@ -201,6 +202,7 @@ router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
   }
 
   const order_id=req.params.id
+
   MODEL.findByIdAndUpdate(order_id, req.body, {new: true})
     .populate('items.product')
     .populate('company')
@@ -212,6 +214,9 @@ router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
     })
     .then(result => {
       return result.save()
+    })
+    .then(result => {
+      return updateCompanyAddresses(result)
     })
     .then(result => {
       return res.json(result)

@@ -1,13 +1,10 @@
 const lodash=require('lodash')
+const Company = require('../models/Company')
 const Product = require('../models/Product')
 const PriceList = require('../models/PriceList')
 const {EXPRESS_SHIPPING} = require('../../utils/feurst/consts')
 const {roundCurrency} = require('../../utils/converters')
 const ShipRate = require('../models/ShipRate')
-
-const extractDept = address => {
-  return parseInt(String(address.zip_code).slice(0, -3))
-}
 
 const getProductPrices = (product_ref, company) => {
   if (!product_ref) {
@@ -84,11 +81,12 @@ const computeShipFee = (model, express) => {
       console.trace(model)
       return reject(`Can not compute shipping fee: no address`)
     }
-    const department=parseInt(String(model.address.zip_code).slice(0, -3))
+    const orderDepartment=model.address?.department
+    const companyMainDepartment=model.company?.addresses[0]?.department
     const weight=model.total_weight
 
     // Carriage paid ?
-    if (!lodash.isNil(model.company.carriage_paid) && model.total_amount >= model.company.carriage_paid) {
+    if (!lodash.isNil(model.company.carriage_paid) && !lodash.isNil(orderDepartment) && companyMainDepartment==orderDepartment && model.total_amount >= model.company.carriage_paid) {
       console.log(`Order amount ${model.total_amount}> carriage paid ${model.company.carriage_paid} : no shipping fee`)
       return resolve(0)
     }
@@ -159,12 +157,34 @@ const updateStock = orderQuot => {
 }
 
 // Checks wether quotation or order is in the expected delivery zone
-const isInDeliveryZone = quotOrder => {
-  const addressDept=extractDept(quotOrder)
-  const inZone=addressDept in quotOrder.company.delivery_zip_codes
+const isInDeliveryZone = (address, company) => {
+  const addressDept=address?.department
+  const inZone=addressDept in company.delivery_zip_codes
   console.log(`isInZone for ${JSON.stringify(quotOrder)}:${inZone}`)
   return inZone
 }
 
+const updateCompanyAddresses= model => {
+  return Company.findById(model.company)
+    .then(company => {
+      const modelAddress=lodash.omit(model.address, ['id', '_id'])
+      // Update by label ?
+      const idx=company.addresses.findIndex(a => a.label==modelAddress.label)
+      if (idx!=-1) {
+        company.addresses[idx]=modelAddress
+      }
+      else {
+        company.addresses.push(modelAddress)
+      }
+      return company.save()
+    })
+    .then(() => {
+      return Promise.resolve(model)
+    })
+    .catch(err => {
+      return Promise.reject(err)
+    })
+}
+
 module.exports = {addItem, computeShipFee, updateShipFee, getProductPrices,
-  updateStock, isInDeliveryZone}
+  updateStock, isInDeliveryZone, updateCompanyAddresses}

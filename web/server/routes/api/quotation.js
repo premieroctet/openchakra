@@ -4,6 +4,15 @@ const moment = require('moment')
 const xlsx=require('node-xlsx')
 const lodash=require('lodash')
 const {
+  addItem,
+  computeShipFee,
+  getProductPrices,
+  isInDeliveryZone,
+  updateCompanyAddresses,
+  updateShipFee,
+  updateStock,
+} = require('../../utils/commands')
+const {
   CONVERT,
   EXPRESS_SHIPPING,
   QUOTATION,
@@ -12,13 +21,6 @@ const {
   VALIDATE,
 } = require('../../../utils/feurst/consts')
 const Quotation = require('../../models/Quotation')
-const {
-  addItem,
-  computeShipFee,
-  getProductPrices,
-  updateShipFee,
-  updateStock,
-} = require('../../utils/commands')
 const Product = require('../../models/Product')
 const {
   filterOrderQuotation,
@@ -189,6 +191,9 @@ router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
       return result.save()
     })
     .then(result => {
+      return updateCompanyAddresses(result)
+    })
+    .then(result => {
       return res.json(result)
     })
     .catch(err => {
@@ -319,7 +324,7 @@ router.post('/:quotation_id/convert', passport.authenticate('jwt', {session: fal
         return res.status(404).json(`${DATA_TYPE} #${quotation_id} not found`)
       }
       quotation=result
-      if (quotation.address?.zip_code && !isInDeliveryZone(quotation)) {
+      if (!isInDeliveryZone(quotation.address, quotation.company)) {
         return Promise.reject('break')
       }
       const order={...lodash.omit(quotation, '_id'), items: quotation.items.map(item => lodash.omit(item, '_id'))}

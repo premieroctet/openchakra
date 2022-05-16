@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs')
 const {
   CUSTOMER_ADMIN,
   LINKED_ROLES,
+  MAIN_ADDRESS_LABEL,
   MAX_WEIGHT,
 } = require('../../utils/feurst/consts')
 const PriceList = require('../models/PriceList')
@@ -233,7 +234,7 @@ const accountsImport = (model, buffer, mapping, options) => {
           const zip_code=record['Code postal'].match(/\d+/)[0]
           const city=record.Ville
           if (!address|| !zip_code || !city) { return Promise.reject(msg('Adresse incorrecte')) }
-          const addr={label: 'Principale', address, zip_code, city, country: 'France'}
+          const addr={label: MAIN_ADDRESS_LABEL, address, zip_code, city, country: 'France'}
           const companyName=record.Adresse
           const deliverZipCodesValues=record['Zone de chalandise']
           if (!deliverZipCodesValues) { return Promise.reject(msg(`Zone de chalandise incorrecte:${deliverZipCodesValues}`)) }
