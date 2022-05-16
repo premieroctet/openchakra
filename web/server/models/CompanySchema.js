@@ -55,7 +55,13 @@ const CompanySchema = new Schema({
   net_prices: {
     type: String,
   },
+  // Min amount for carriage_paid
+  carriage_paid: {
+    type: Number,
+    required: false,
+  },
   delivery_zip_codes: [Number],
+
 }, {toJSON: {virtuals: true, getters: true}})
 
 CompanySchema.virtual('full_name').get(function() {

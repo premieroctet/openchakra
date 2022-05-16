@@ -28,18 +28,21 @@ const ShippingFees = ({state, requestUpdate, shippingoptions}) => {
   return (
     <ShippingOptions>
       {/* {SHIPPING_MODES} */}
-      {Object.entries(shippingoptions).map(([key, value]) => (
-        <label key={key}>
-          <input
-            type={'radio'}
-            name={'shippingOption'}
-            value={key}
-            checked={key == state.shippingOption}
-            onChange={e => requestUpdate({shippingOption: e.target.value})}
-          />
-          <span>Livraison {key} - environ {localeMoneyFormat({value})}</span>
-        </label>
-      ),
+      {Object.entries(shippingoptions).map(([key, value]) => {
+        const priceLabel=value==0 ? 'franco de port' : `environ ${localeMoneyFormat({value})}`
+        return (
+          <label key={key}>
+            <input
+              type={'radio'}
+              name={'shippingOption'}
+              value={key}
+              checked={key == state.shippingOption}
+              onChange={e => requestUpdate({shippingOption: e.target.value})}
+            />
+            <span>Livraison {key} - {priceLabel}</span>
+          </label>
+        )
+      },
       )}
     </ShippingOptions>
   )

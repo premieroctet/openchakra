@@ -76,14 +76,26 @@ const addItem = (data, product_id, reference, quantity, net_price, replace=false
 }
 
 /**
-Computes Ship rate depending on zipcode, wieght and express (true||false)
+Computes Ship rate depending on zipcode, weight and express (true||false)
 */
-const computeShipFee = (zipcode, weight, express) => {
+const computeShipFee = (model, express) => {
   return new Promise((resolve, reject) => {
-    ShipRate.findOne({zipcode: zipcode, express: express, min_weight: {$lte: weight}, max_weight: {$gt: weight}})
+    if (!model.address?.zip_code) {
+      console.trace(model)
+      return reject(`Can not compute shipping fee: no address`)
+    }
+    const department=parseInt(String(model.address.zip_code).slice(0, -3))
+    const weight=model.total_weight
+
+    // Carriage paid ?
+    if (!lodash.isNil(model.company.carriage_paid) && model.total_amount >= model.company.carriage_paid) {
+      console.log(`Order amount ${model.total_amount}> carriage paid ${model.company.carriage_paid} : no shipping fee`)
+      return resolve(0)
+    }
+    ShipRate.findOne({zipcode: department, express: express, min_weight: {$lte: weight}, max_weight: {$gt: weight}})
       .then(rate => {
         if (!rate) {
-          return reject(`No rate found for zipcode:${zipcode} weight:${weight} express:${express}`)
+          return reject(`No rate found for dept:${department} weight:${weight} express:${express}`)
         }
         const fee=rate.fixed_price+rate.per_kg_price*parseInt(weight)
         return resolve(roundCurrency(fee))
@@ -101,8 +113,7 @@ Data is an Order or a Quotation
 const updateShipFee = data => {
   return new Promise((resolve, reject) => {
     if (data.address?.zip_code && data.shipping_mode) {
-      const department=extractDept(data.address)
-      computeShipFee(department, data.total_weight, result.shipping_mode==EXPRESS_SHIPPING)
+      computeShipFee(data, result.shipping_mode==EXPRESS_SHIPPING)
         .then(fee => {
           data.shipping_fee=fee
           return resolve(data)
