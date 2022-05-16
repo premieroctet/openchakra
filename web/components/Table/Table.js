@@ -54,6 +54,7 @@ const Table = (
     footer = null,
     updateMyData = null,
     globalfilter=null,
+    filtered=false,
   },
 ) => {
 
@@ -107,7 +108,7 @@ const Table = (
       visibleColumns: [],
       updateMyData,
     },
-    useFilters,
+    filtered && useFilters,
     useGlobalFilter,
     useSortBy,
   )
