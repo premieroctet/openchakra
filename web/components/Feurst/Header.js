@@ -31,15 +31,19 @@ const HeaderContainer = styled.header`
 
 const LogoLink = styled.a`
   justify-self: center;
+  cursor: pointer;
 `
 
 const Header = ({accessRights}) => {
+
+  const home_link = localStorage.getItem('landing') || BASEPATH_EDI
+
   return (
     <HeaderContainer role="banner">
       
       <a className='phonenumber' href={`tel:${FEURST_PHONE_NUMBER.replace(/\s+/g, '')}`}>{FEURST_PHONE_NUMBER}</a>
       
-      <Link href={`${BASEPATH_EDI}`}>
+      <Link href={`${home_link}`}>
         <LogoLink><img className='img-responsive max-w-200' src="https://feurst.fr/wp-content/uploads/2022/01/logo-feurst-01.svg" alt='' width={350} height={104} /></LogoLink>
       </Link>
       <QuickMenu accessRights={accessRights} />
