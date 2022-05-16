@@ -52,7 +52,6 @@ const LoginPage = () => {
     else {
       await client(`${API_PATH}/users/landing-page`)
         .then(landingPage => {
-          localStorage.setItem('landing', landingPage)
           router.push(landingPage)
         })
         .catch(e => console.error(`landingpage`, e))

@@ -1,8 +1,8 @@
-const React=require('react')
-const withEdiAuth=require('../../../hoc/withEdiAuth')
-const {ORDER, BASEPATH_EDI} = require('../../../utils/consts')
-const HandledOrders = require('../../../components/Feurst/HandledOrders')
-const {HANDLE} = require('../../../utils/feurst/consts')
+import React from 'react'
+import withEdiAuth from '../../../hoc/withEdiAuth'
+import {ORDER, BASEPATH_EDI} from '../../../utils/consts'
+import HandledOrders from '../../../components/Feurst/HandledOrders'
+import {HANDLE} from '../../../utils/feurst/consts'
 
 const Orders = ({accessRights}) => {
 
@@ -11,4 +11,4 @@ const Orders = ({accessRights}) => {
   </>)
 }
 
-module.exports=withEdiAuth(Orders, {model: ORDER, action: HANDLE, pathAfterFailure: `${BASEPATH_EDI}/login`})
+export default withEdiAuth(Orders, {model: ORDER, action: HANDLE, pathAfterFailure: `${BASEPATH_EDI}/login`})

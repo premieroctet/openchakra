@@ -45,7 +45,7 @@ class AccessRights {
 
 
 const withEdiAuth = (Component = null, options = {}) => {
-  class WithEdiAuth extends React.Component {
+  class ediAuth extends React.Component {
     state = {
       loading: true,
       actions: [],
@@ -110,7 +110,7 @@ const withEdiAuth = (Component = null, options = {}) => {
     }
   }
 
-  return WithEdiAuth
+  return ediAuth
 }
 
 export default withEdiAuth

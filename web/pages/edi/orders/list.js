@@ -1,7 +1,7 @@
-import React, {useEffect, useMemo, useState} from 'react'
+import React from 'react'
 import withEdiAuth from '../../../hoc/withEdiAuth'
-const {ORDER, VIEW, BASEPATH_EDI} = require('../../../utils/consts')
-const MyOrders = require('../../../components/Feurst/MyOrders')
+import {ORDER, VIEW, BASEPATH_EDI} from '../../../utils/consts'
+import MyOrders from '../../../components/Feurst/MyOrders'
 
 const Orders = ({accessRights}) => {
 
@@ -10,4 +10,4 @@ const Orders = ({accessRights}) => {
   </>)
 }
 
-module.exports=withEdiAuth(Orders, {model: ORDER, action: VIEW, pathAfterFailure: `${BASEPATH_EDI}/login`})
+export default withEdiAuth(Orders, {model: ORDER, action: VIEW, pathAfterFailure: `${BASEPATH_EDI}/login`})

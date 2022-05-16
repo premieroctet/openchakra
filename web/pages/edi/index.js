@@ -1,18 +1,24 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {useRouter} from 'next/router'
-import {BASEPATH_EDI} from '../../utils/consts'
+import {client} from '../../utils/client'
+import {BASEPATH_EDI, API_PATH} from '../../utils/consts'
 import withEdiAuth from '../../hoc/withEdiAuth'
 
 
 const HomeEdi = () => {
-
+  
   const router = useRouter()
-
-  const redirectToLanding = localStorage.getItem('landing')
-
-  if (redirectToLanding) {
-    router.push(redirectToLanding)
-  }
+  
+  useEffect(() => {
+    const landing = async() => {
+      await client(`${API_PATH}/users/landing-page`)
+        .then(landingPage => {
+          router.push(landingPage)
+        })
+        .catch(e => console.error(`landingpage`, e))
+    }
+    landing()
+  }, [])
 
   return (<div>Bienvenue</div>)
 }
