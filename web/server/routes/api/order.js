@@ -203,6 +203,7 @@ router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
   const order_id=req.params.id
   MODEL.findByIdAndUpdate(order_id, req.body, {new: true})
     .populate('items.product')
+    .populate('company')
     .then(result => {
       if (!result) {
         return res.status(404).json(`${DATA_TYPE} #${order_id} not found`)
@@ -406,7 +407,6 @@ router.get('/:order_id/products/:product_id', passport.authenticate('jwt', {sess
 // @Access private
 router.post('/:order_id/validate', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  console.log(req.user.roles)
   if (!isActionAllowed(req.user.roles, DATA_TYPE, VALIDATE)) {
     return res.status(401).json()
   }
@@ -453,22 +453,23 @@ router.get('/:id/shipping-fee', passport.authenticate('jwt', {session: false}), 
     return res.status(500).json(errors)
   }
 
-  const department=parseInt(String(zipCode).slice(0, -3))
-
   const fee={[EXPRESS_SHIPPING]: 0, [STANDARD_SHIPPING]: 0}
   let order=null
   MODEL.findById(req.params.id)
     .populate('items.product')
+    .populate('company')
     .then(result => {
       if (!result) {
         return res.status(404).json()
       }
       order=result
-      return computeShipFee(department, order.total_weight, false)
+      // Simulate address
+      order.address={zip_code: zipCode}
+      return computeShipFee(order, false)
     })
     .then(standard => {
       fee[STANDARD_SHIPPING]=standard
-      return computeShipFee(department, order.total_weight, true)
+      return computeShipFee(order, true)
     })
     .then(express => {
       fee[EXPRESS_SHIPPING]=express
