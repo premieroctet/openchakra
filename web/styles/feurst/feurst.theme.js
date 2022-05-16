@@ -161,7 +161,6 @@ export const GlobalStyleEdi = createGlobalStyle`
   body {
     padding: 0;
     margin: 0;
-    min-height: 100vh;
     color: ${props => (props.whiteColor ? 'white' : 'black')};
     font-family: ${props => props.theme?.fontFamily};
   }
