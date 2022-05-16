@@ -7,11 +7,10 @@ import {theme, GlobalStyleEdi} from '../../styles/feurst/feurst.theme'
 import {screen} from '../../styles/screenWidths'
 import {client} from '../../utils/client'
 import {API_PATH, FEURST_IMG_PATH} from '../../utils/consts'
-
-const {
+import {
   removeAlfredRegistering,
-} = require('../../utils/context')
-const {clearAuthenticationToken} = require('../../utils/authentication')
+} from '../../utils/context'
+import {clearAuthenticationToken} from '../../utils/authentication'
 
 const HomeGrid = styled.div`
   display: grid;
@@ -51,9 +50,12 @@ const LoginPage = () => {
       router.push(path)
     }
     else {
-      const landingPage = await client(`${API_PATH}/users/landing-page`)
-        .catch(e => console.error(`Type de role non reconnu`, e))
-      router.push(landingPage)
+      await client(`${API_PATH}/users/landing-page`)
+        .then(landingPage => {
+          localStorage.setItem('landing', landingPage)
+          router.push(landingPage)
+        })
+        .catch(e => console.error(`landingpage`, e))
     }
   }
 

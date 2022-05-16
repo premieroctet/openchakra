@@ -1,15 +1,15 @@
 import React from 'react'
 import Router from 'next/router'
 import {ThemeProvider} from 'styled-components'
+import uniqBy from 'lodash/uniqBy'
+import isUndefined from 'lodash/isUndefined'
 import Header from '../components/Feurst/Header'
 import {getLoggedUser} from '../utils/context'
 import {theme, GlobalStyleEdi} from '../styles/feurst/feurst.theme'
 import {client} from '../utils/client'
-const lodash=require('lodash')
-const {API_PATH, VIEW, HANDLE} = require('../utils/feurst/consts')
-const {BASEPATH_EDI} = require('../utils/consts')
-const {is_development} = require('../config/config')
-const Tabs = require('../components/Feurst/Tabs')
+import {BASEPATH_EDI, API_PATH} from '../utils/feurst/consts'
+import {is_development} from '../config/config'
+import Tabs from '../components/Feurst/Tabs'
 
 class AccessRights {
   constructor(model, action, actions) {
@@ -19,7 +19,7 @@ class AccessRights {
   }
 
   getModels= () => {
-    return lodash.uniqBy(this.actions, a => a.model).map(a => a.model)
+    return uniqBy(this.actions, a => a.model).map(a => a.model)
   }
   hasModel= model => {
     return !!this.actions.find(a => a.model==model)
@@ -90,7 +90,7 @@ const withEdiAuth = (Component = null, options = {}) => {
       }
 
       const accessRights=new AccessRights(options.model, options.action, actions)
-      const canAccess = accessRights.isActionAllowed(accessRights.getModel(), accessRights.getAction())
+      const canAccess = [accessRights.getModel(), accessRights.getAction()].every(isUndefined) || accessRights.isActionAllowed(accessRights.getModel(), accessRights.getAction())
 
       return (
         <ThemeProvider theme={theme}>
@@ -113,4 +113,4 @@ const withEdiAuth = (Component = null, options = {}) => {
   return WithEdiAuth
 }
 
-module.exports=withEdiAuth
+export default withEdiAuth
