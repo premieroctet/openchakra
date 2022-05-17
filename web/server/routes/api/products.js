@@ -23,18 +23,18 @@ const DATA_TYPE=PRODUCT
 // @Access private
 router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  const pattern = req.query.pattern && new RegExp(req.query.pattern.split(' ').join('|'), 'i')
-  const filter=pattern ? {
-    $or: [
-      {reference: pattern},
-      {description: pattern},
-      {description_2: pattern},
-    ],
-  }: {}
+  let andFilter= () => true
 
-  Product.find(filter)
+  if (req.query.pattern) {
+    const elements=req.query.pattern.split(' ')
+    const andPattern=new RegExp(elements.map(e => `(?=.*${e})`).join(''), 'i')
+    andFilter=p => `${p.reference} ${p.description} ${p.description_2}`.match(andPattern)
+  }
+
+  Product.find({})
     .then(products => {
-      res.json(products)
+      const andEdProducts=products.filter(p => andFilter(p))
+      res.json(andEdProducts)
     })
     .catch(err => {
       console.error(err)
