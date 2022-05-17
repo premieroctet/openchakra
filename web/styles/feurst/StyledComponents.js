@@ -68,26 +68,28 @@ const HandleLink = styled.a`
   cursor: pointer;
   position: relative;
   background-color: var(--green-500);
-
-  /* &::before {
-    border-radius: var(--rounded-3xl);
+  overflow: hidden;
+  transition: all 0.2s ease-out;
+  
+  &::before {
     content: "";
     position: absolute;
+    width: 60%;
     z-index: -1;
     inset: 0;
     background-color: hsl(90.3, 38.3%, 60.4%);
-    transform: scaleX(0);
-    transform-origin: 5% 50%;
-    transition-property: transform;
-    transition-duration: 0.2s;
-    transition-timing-function: ease-out;
+    transform-origin: 50% 50%; 
+    filter: blur(15px);
+    transition: none;
+    transform: translate(-20%, -120%);
   }
-
-  &:hover::before {
-    transform: scaleX(1);
-  } */
-
+    
+  &:hover::before, &:focus::before {
+    transform: translate(100%, 150%);
+    transition: transform 1s 0.5s ease-out;
+  }
   
 `
+
 
 export {StyledTabs, HandleLink}
