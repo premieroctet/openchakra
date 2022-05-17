@@ -11,4 +11,4 @@ const List = ({accessRights}) => {
   </>)
 }
 
-module.exports=withEdiAuth(List, {model: SHIPRATE, action: VIEW, pathAfterFailure: `${BASEPATH_EDI}/login`})
+export default withEdiAuth(List, {model: SHIPRATE, action: VIEW, pathAfterFailure: `${BASEPATH_EDI}/login`})

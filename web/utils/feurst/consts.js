@@ -145,7 +145,7 @@ const USER_ACTIONS={
 }
 
 // Max weight limit for ship fee (i.e. no max limit)
-const MAX_WEIGHT=1000000
+const MAX_WEIGHT=Number.MAX_SAFE_INTEGER
 
 const STANDARD_SHIPPING = 'STANDARD'
 const EXPRESS_SHIPPING = 'EXPRESS'
