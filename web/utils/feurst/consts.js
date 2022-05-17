@@ -40,26 +40,24 @@ Quotation & book status :
 
 
 const CREATED='CREATED'
-const FULFILLED='FULFILLED'
 const COMPLETE='COMPLETE'
 const VALID='VALID'
 const PARTIALLY_HANDLED='PARTIALLY_HANDLED'
 const HANDLED='HANDLED'
 const EXPIRED='EXPIRED'
+const CONVERTED='CONVERTED' // Converted to order
 
 const QUOTATION_STATUS={
   [CREATED]: 'QUOTATION_STATUS.created',
-  [FULFILLED]: 'QUOTATION_STATUS.fulfilled',
   [COMPLETE]: 'QUOTATION_STATUS.complete',
   [VALID]: 'QUOTATION_STATUS.valid',
-  [PARTIALLY_HANDLED]: 'QUOTATION_STATUS.partially_handled',
   [HANDLED]: 'QUOTATION_STATUS.partially_handled',
   [EXPIRED]: 'QUOTATION_STATUS.expired',
+  [CONVERTED]: 'QUOTATION_STATUS.converted', // Converted to order
 }
 
 const ORDER_STATUS={
   [CREATED]: 'ORDER_STATUS.created',
-  [FULFILLED]: 'ORDER_STATUS.fulfilled',
   [COMPLETE]: 'ORDER_STATUS.complete',
   [VALID]: 'ORDER_STATUS.valid',
   [PARTIALLY_HANDLED]: 'ORDER_STATUS.partially_handled',
@@ -83,14 +81,6 @@ const ROLES = {
   [CUSTOMER_TCI]: 'Client consultatif',
 }
 // Auto associated roles
-const LINKED_ROLES={
-  [FEURST_ADMIN]: [FEURST_ADMIN, FEURST_ADV, FEURST_SALES],
-  [FEURST_SALES]: [FEURST_SALES],
-  [FEURST_ADV]: [FEURST_ADV, FEURST_SALES],
-  [CUSTOMER_ADMIN]: [CUSTOMER_ADMIN, CUSTOMER_BUYER, CUSTOMER_TCI],
-  [CUSTOMER_BUYER]: [CUSTOMER_BUYER],
-  [CUSTOMER_TCI]: [CUSTOMER_TCI],
-}
 const [ORDER, QUOTATION, ACCOUNT, SHIPRATE, PRODUCT, PRICELIST]=['ORDER', 'QUOTATION', 'ACCOUNT', 'SHIPRATE', 'PRODUCT', 'PRICELIST']
 const [VIEW, CREATE, UPDATE, UPDATE_ALL, DELETE, VALIDATE, CONVERT, LINK, HANDLE, CREATE_FOR]=['VIEW', 'CREATE', 'UPDATE', 'UPDATE_ALL', 'DELETE', 'VALIDATE', 'CONVERT', 'LINK', 'HANDLE', 'CREATE_FOR']
 const [ALL, COMPANY, RELATED]=['ALL', 'COMPANY', 'RELATED']
@@ -110,16 +100,13 @@ const createUserAction= (model, action, extra={}) => {
 const USER_ACTIONS={
   [FEURST_ADMIN]: lodash.flattenDeep([
     [VIEW, CREATE, UPDATE, DELETE, LINK].map(action => [FEURST_ADMIN, FEURST_ADV, FEURST_SALES, CUSTOMER_ADMIN].map(tp => createUserAction(ACCOUNT, action, {type: tp, visibility: ALL}))),
-    [VIEW].map(action => createUserAction(ACCOUNT, action, {visibility: ALL})),
-    [VIEW, VALIDATE, HANDLE].map(action => createUserAction(ORDER, action, {visibility: ALL})),
-    [VIEW, VALIDATE].map(action => createUserAction(QUOTATION, action, {visibility: ALL})),
+    [VIEW, HANDLE].map(action => createUserAction(ORDER, action, {visibility: ALL})),
     [VIEW, CREATE].map(action => createUserAction(SHIPRATE, action, {visibility: ALL})),
     [VIEW, CREATE, UPDATE, DELETE].map(action => createUserAction(PRODUCT, action, {visibility: ALL})),
     [VIEW, CREATE, UPDATE, DELETE].map(action => createUserAction(PRICELIST, action, {visibility: ALL})),
     [CREATE, VIEW, UPDATE].map(action => createUserAction(COMPANY, action, {visibility: ALL})),
   ]),
   [FEURST_ADV]: lodash.flattenDeep([
-    createUserAction(PRODUCT, VIEW, {visibility: ALL}),
     [VIEW, VALIDATE, HANDLE].map(action => createUserAction(ORDER, action, {visibility: ALL})),
     [VIEW].map(action => createUserAction(ACCOUNT, action, {visibility: ALL})),
   ]),
@@ -178,7 +165,7 @@ module.exports={
   ROLES, USER_ACTIONS, ORDER, QUOTATION, ACCOUNT, VIEW, CREATE, UPDATE, DELETE, VALIDATE,
   SHIPRATE, MAX_WEIGHT, PRODUCT, STANDARD_SHIPPING, EXPRESS_SHIPPING, BASEPATH_EDI, ALL, FEURST_PHONE_NUMBER, FEURST_IMG_PATH, API_PATH,
   COMPANY, RELATED,
-  CREATED, FULFILLED, VALID, PARTIALLY_HANDLED, HANDLED, SHIPPING_MODES,
-  COMPLETE, LINK, FEURST_SALES, HANDLE, XL_TYPE, TEXT_TYPE, PRICELIST, LINKED_ROLES, CREATE_FOR,
+  CREATED, VALID, PARTIALLY_HANDLED, HANDLED, SHIPPING_MODES,
+  COMPLETE, LINK, FEURST_SALES, HANDLE, XL_TYPE, TEXT_TYPE, PRICELIST, CREATE_FOR,
   CONVERT, QUOTATION_VALIDITY, EXPIRED, UPDATE_ALL, MAIN_ADDRESS_LABEL,
 }

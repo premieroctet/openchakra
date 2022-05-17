@@ -4,6 +4,11 @@ const moment = require('moment')
 const xlsx=require('node-xlsx')
 const lodash=require('lodash')
 const {
+  filterOrderQuotation,
+  isActionAllowed,
+  isFeurstUser,
+} = require('../../utils/userAccess')
+const {
   addItem,
   computeShipFee,
   extractDepartment,
@@ -11,7 +16,6 @@ const {
   isInDeliveryZone,
   updateCompanyAddresses,
   updateShipFee,
-  updateStock,
 } = require('../../utils/commands')
 const {
   CONVERT,
@@ -23,10 +27,6 @@ const {
 } = require('../../../utils/feurst/consts')
 const Quotation = require('../../models/Quotation')
 const Product = require('../../models/Product')
-const {
-  filterOrderQuotation,
-  isActionAllowed,
-} = require('../../utils/userAccess')
 const {lineItemsImport} = require('../../utils/import')
 const {XL_FILTER, createMemoryMulter} = require('../../utils/filesystem')
 const {validateZipCode} = require('../../validation/order')
@@ -128,7 +128,7 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   }
 
   let attributes=req.body
-  attributes={...attributes, company: req.body.company || req.user.company, created_by: req.user}
+  attributes={...attributes, company: req.body.company || req.user.company, created_by_company: req.user.company?._id}
 
   MODEL.create(attributes)
     .then(data => {
@@ -150,16 +150,13 @@ router.put('/:id/rewrite', passport.authenticate('jwt', {session: false}), (req,
   }
 
   const order_id=req.params.id
-  MODEL.findByIdAndUpdate(order_id, {address: null, shipping_mode: null, user_validated: false, reference: null, shipping_fee: null}, {new: true})
+  MODEL.findByIdAndUpdate(order_id, {validation_date: null, handled_date: null}, {new: true})
     .populate('items.product')
     .then(result => {
       if (!result) {
         return res.status(404).json(`${DATA_TYPE} #${order_id} not found`)
       }
-      return result.save()
-    })
-    .then(result => {
-      return res.json(result)
+      return res.json()
     })
     .catch(err => {
       console.error(err)
@@ -433,22 +430,16 @@ router.post('/:order_id/validate', passport.authenticate('jwt', {session: false}
 
   const order_id=req.params.order_id
 
-  MODEL.findById(order_id)
-    .populate('items.product')
+  let attrs={validation_date: new Date()}
+  if (isFeurstUser(req.user)) {
+    attrs.handled_date=new Date()
+  }
+
+  MODEL.findByIdAndUpdate(order_id, attrs, {new: true})
     .then(data => {
       if (!data) {
         return res.status(404).json(`Order ${order_id} not found`)
       }
-      if (lodash.isEmpty(data.address) || lodash.isEmpty(data.shipping_mode)) {
-        return res.status(400).json(`Address and shipping mode are required to validate`)
-      }
-      data.user_validated=true
-      return data.save()
-    })
-    .then(data => {
-      return updateStock(data)
-    })
-    .then(() => {
       return res.json()
     })
     .catch(err => {

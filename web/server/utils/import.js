@@ -3,7 +3,6 @@ const lodash=require('lodash')
 const bcrypt = require('bcryptjs')
 const {
   CUSTOMER_ADMIN,
-  LINKED_ROLES,
   MAIN_ADDRESS_LABEL,
   MAX_WEIGHT,
 } = require('../../utils/feurst/consts')
@@ -265,7 +264,7 @@ const accountsImport = (model, buffer, mapping, options) => {
                     return Promise.reject(msg(`Erreur nom, prénom ou email`))
                   }
                   return User.findOneAndUpdate({email},
-                    {$set: {firstname, name, company: company, email, roles: LINKED_ROLES[CUSTOMER_ADMIN]},
+                    {$set: {firstname, name, company: company, email, roles: [CUSTOMER_ADMIN]},
                       $setOnInsert: {password: bcrypt.hashSync('Alfred123;', 10)}},
                     {upsert: true, new: true},
                   )

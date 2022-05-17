@@ -59,10 +59,10 @@ const QuotationBookingBaseSchema=new Schema({
     ref: 'company',
     required: true,
   },
-  // Order creator (i.e. Feurst sales, may be null)
-  created_by: {
+  // Company creator (null if created by Feurst)
+  created_by_company: {
     type: Schema.Types.ObjectId,
-    ref: 'user',
+    ref: 'company',
     required: false,
   },
   items: [BookingItemSchema],
@@ -80,10 +80,6 @@ const QuotationBookingBaseSchema=new Schema({
   creation_date: {
     type: Date,
     default: Date.now,
-  },
-  user_validated: {
-    type: Boolean,
-    default: false,
   },
 }, {toJSON: {virtuals: true, getters: true}})
 

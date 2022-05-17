@@ -127,7 +127,7 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   }
 
   let attributes=req.body
-  attributes={...attributes, company: req.body.company || req.user.company, created_by: req.user}
+  attributes={...attributes, company: req.body.company || req.user.company, created_by_company: req.user.company?._id}
 
   MODEL.create(attributes)
     .then(data => {
@@ -174,7 +174,7 @@ router.put('/:id/rewrite', passport.authenticate('jwt', {session: false}), (req,
   }
 
   const order_id=req.params.id
-  MODEL.findByIdAndUpdate(order_id, {address: null, shipping_mode: null, user_validated: false, reference: null, shipping_fee: null}, {new: true})
+  MODEL.findByIdAndUpdate(order_id, {address: null, shipping_mode: null, reference: null, shipping_fee: null}, {new: true})
     .populate('items.product')
     .then(result => {
       if (!result) {

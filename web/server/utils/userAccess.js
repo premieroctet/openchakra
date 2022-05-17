@@ -1,7 +1,10 @@
 const lodash=require('lodash')
-const {CUSTOMER_ADMIN} = require('../../utils/feurst/consts')
-
-const {RELATED} = require('../../utils/feurst/consts')
+const {
+  COMPLETE,
+  CREATED,
+  CUSTOMER_ADMIN,
+  RELATED,
+} = require('../../utils/feurst/consts')
 
 const {USER_ACTIONS, ALL, COMPANY} = require('../../utils/consts')
 
@@ -21,16 +24,20 @@ const isActionAllowed = (roles, model, action) => {
 
 const filterOrderQuotation = (data, model, user, action) => {
   const userActions=getActions(user.roles, model, action)
+  let models=[]
   if (userActions.some(userAction => userAction.visibility==ALL)) {
-    return data
+    models=data
   }
-  if (userActions.some(userAction => userAction.visibility==RELATED)) {
-    return data.filter(d => user.companies.map(c => String(c._id)).includes(String(d.company._id)))
+  else if (userActions.some(userAction => userAction.visibility==RELATED)) {
+    models=data.filter(d => user.companies.map(c => String(c._id)).includes(String(d.company._id)))
   }
-  if (userActions.some(userAction => userAction.visibility==COMPANY)) {
-    return data.filter(d => String(d.company._id)==String(user.company?._id))
+  else if (userActions.some(userAction => userAction.visibility==COMPANY)) {
+    models=data.filter(d => String(d.company._id)==String(user.company?._id))
   }
-  return []
+  // In progress : only display created by my company
+  console.log(models.map(m => m.created_by_company), user.company)
+  models=models.filter(m => ([CREATED, COMPLETE].includes(m.status) ? String(m.created_by_company?._id)==String(user.company?._id) : true))
+  return models
 }
 
 const filterUsers = (data, model, user, action) => {
@@ -67,5 +74,9 @@ const getActionsForRoles = roles => {
   return actions
 }
 
+isFeurstUser = user => {
+  return !user.company
+}
+
 module.exports={isActionAllowed, filterOrderQuotation, getActionsForRoles,
-  filterUsers, filterCompanies}
+  filterUsers, filterCompanies, isFeurstUser}

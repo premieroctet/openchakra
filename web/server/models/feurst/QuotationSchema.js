@@ -36,20 +36,31 @@ QuotationSchema.add({
     ref: 'order',
     required: false,
   },
+  validation_date: {
+    type: Date,
+    required: false,
+  },
+  handled_date: {
+    type: Date,
+    required: false,
+  },
 })
 
 QuotationSchema.virtual('status').get(function() {
-  if (moment(this.creation_date).add(QUOTATION_VALIDITY, 'days')<moment()) {
+  if (this.handled_date && moment(this.handled_date).add(QUOTATION_VALIDITY, 'days')<moment()) {
     return EXPIRED
   }
   if (this.linked_order) {
+    return CONVERTED
+  }
+  if (this.handled_date) {
     return HANDLED
   }
-  if (!lodash.isEmpty(this.address) && !lodash.isEmpty(this.shipping_mode)) {
-    return this.user_validated ? VALID : COMPLETE
+  if (this.validation_date) {
+    return VALID
   }
-  if (this.items?.length>0) {
-    return FULFILLED
+  if (!lodash.isEmpty(this.address) && !lodash.isEmpty(this.shipping_mode)) {
+    return COMPLETE
   }
   return CREATED
 })
