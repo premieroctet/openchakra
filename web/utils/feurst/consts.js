@@ -120,14 +120,13 @@ const USER_ACTIONS={
   ]),
   [FEURST_ADV]: lodash.flattenDeep([
     createUserAction(PRODUCT, VIEW, {visibility: ALL}),
-    [VIEW, VALIDATE, HANDLE].map(action => createUserAction(QUOTATION, action, {visibility: ALL})),
     [VIEW, VALIDATE, HANDLE].map(action => createUserAction(ORDER, action, {visibility: ALL})),
     [VIEW].map(action => createUserAction(ACCOUNT, action, {visibility: ALL})),
   ]),
   [FEURST_SALES]: lodash.flattenDeep([
     createUserAction(ACCOUNT, VIEW, {type: CUSTOMER_ADMIN, visibility: RELATED}),
     [CREATE, VIEW, UPDATE, HANDLE, UPDATE_ALL, VALIDATE].map(action => createUserAction(QUOTATION, action, {visibility: RELATED})),
-    [CREATE, VIEW, UPDATE, VALIDATE].map(action => createUserAction(ORDER, action, {visibility: RELATED})),
+    [VIEW].map(action => createUserAction(ORDER, action, {visibility: RELATED})),
     createUserAction(COMPANY, VIEW, {visibility: RELATED}),
   ]),
   [CUSTOMER_ADMIN]: lodash.flattenDeep([

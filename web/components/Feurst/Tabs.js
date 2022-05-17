@@ -115,7 +115,7 @@ const tabsContent = [
     url: `${BASEPATH_EDI}/quotations/handle`,
     model: QUOTATION,
     action: HANDLE,
-    visible: [ORDER, QUOTATION],
+    visible: [QUOTATION],
   },
   {
     title: 'Comptes',

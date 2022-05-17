@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const {getDataModel} = require('../../config/config')
 
 let CompanySchema=null
 
@@ -8,7 +7,7 @@ try {
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {
-    throw e
+    throw err
   }
 }
 
