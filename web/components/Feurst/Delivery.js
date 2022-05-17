@@ -41,12 +41,12 @@ const DeliveryStyles = styled.div`
 `
 
 
-const UpdateShippingFees = ({orderid, shipping_fee, update}) => {
+const UpdateShippingFees = ({endpoint, orderid, shipping_fee, update}) => {
 
   const [shippingFees, setShippingFees] = useState(shipping_fee)
 
   const updateShipFee = () => {
-    update({orderid, shippingfees: shippingFees})
+    update({endpoint, orderid, shippingfees: shippingFees})
   }
   
   return (
@@ -55,12 +55,13 @@ const UpdateShippingFees = ({orderid, shipping_fee, update}) => {
 }
 
 
-const Delivery = ({orderid, address, shipping: {shipping_fee, shipping_mode, update}}) => {
+const Delivery = ({orderid, address, shipping: {shipping_fee, shipping_mode, update}, setIsOpenDialog}) => {
 
   return address !== null ? (
     <DeliveryStyles>
       <h4>Livraison</h4>
       <div>
+        <button type='button' onClick={() => setIsOpenDialog(true)}>Modifier l'adresse</button>
         <p>Livraison {shipping_mode?.toLowerCase()} {update ? <UpdateShippingFees orderid={orderid} update={update} shipping_fee={shipping_fee}/> : localeMoneyFormat({value: shipping_fee})}</p>
         <address>
           {address.address} <br />

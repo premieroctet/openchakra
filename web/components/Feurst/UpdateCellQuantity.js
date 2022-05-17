@@ -1,3 +1,4 @@
+// @ts-check
 import React, {useState, useEffect} from 'react'
 import styled from 'styled-components'
 import Tooltip from '../Tooltip.js/Tooltip'
@@ -35,7 +36,8 @@ const UpdateCell = ({
   const itemToUpdate = row?.original?.product
   const qty = !isNaN(parseInt(value)) && parseInt(value)
 
-  const isAvailableStock = !!(row?.original?.product?.stock && qty > row.original.product.stock)
+  const stock = +row?.original?.product?.stock
+  const isAvailableStock = qty > stock
 
   const onChange = e => {
     setValue(e.target.value)

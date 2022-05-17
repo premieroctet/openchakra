@@ -54,6 +54,7 @@ const Table = (
     footer = null,
     updateMyData = null,
     globalfilter=null,
+    filtered=false,
   },
 ) => {
 
@@ -107,10 +108,11 @@ const Table = (
       visibleColumns: [],
       updateMyData,
     },
-    useFilters,
+    filtered && useFilters,
     useGlobalFilter,
     useSortBy,
   )
+  
 
   return (
     <div>
@@ -131,7 +133,10 @@ const Table = (
                 <th {...column.getHeaderProps()}>
                   {column.render('Header') !== '' &&
                     <div className='header'>
-                      <button {...column.getHeaderProps(column.getSortByToggleProps())}>
+                      <button {...{...column.getHeaderProps(column.getSortByToggleProps()), 'aria-label': `tri ${column.isSorted &&(
+                        column.isSortedDesc
+                          ? 'décroissant'
+                          : 'croissant') || ': non trié' }`, title: null}} >
                         {column.render('Header')}
                         {column.isSorted &&(
                           column.isSortedDesc

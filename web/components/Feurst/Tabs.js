@@ -1,64 +1,10 @@
-import {useRouter} from 'next/router'
 import React from 'react'
-import styled from 'styled-components'
+import {useRouter} from 'next/router'
 import Link from 'next/link'
-import {screen} from '../../styles/screenWidths'
-const {CREATE_FOR, HANDLE} = require('../../utils/feurst/consts')
-const {CREATE, ORDER, QUOTATION, VIEW, PRODUCT, SHIPRATE, ACCOUNT, BASEPATH_EDI, PRICELIST} = require('../../utils/consts')
+import {StyledTabs} from '../../styles/feurst/StyledComponents'
+import {CREATE_FOR, HANDLE} from '../../utils/feurst/consts'
+import {CREATE, ORDER, QUOTATION, VIEW, PRODUCT, SHIPRATE, ACCOUNT, BASEPATH_EDI, PRICELIST} from '../../utils/consts'
 
-const Tabstyled = styled.div`
-
-  display: grid;
-  grid-template-columns: var(--grid-cols-1);
-  margin-inline: auto;
-  margin-bottom: var(--spc-10);
-  align-items: center;
-  align-content: center;
-
-  @media (${screen.md}) {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  }
-
-  a, a::after {
-    transition: background-color ease-in-out var(--delayIn), color ease-in-out var(--delayIn), border ease-in-out var(--delayIn);
-    will-change: 'background-color, color, border';
-  }
-
-  a {
-    color: var(--black);
-    display: inherit;
-    align-items: center;
-    height: 100%;
-    padding: .5rem .5rem;
-    border:0;
-    font-size: var(--text-lg);
-    font-weight: var(--font-semibold);
-    position: relative;
-    text-align: center;
-    text-decoration: none;
-    background: ${props => props.theme?.colors?.lightGray || 'gray'};
-  }
-
-  a.highlight {
-    background: ${props => props.theme?.colors?.yellow || 'yellow'};
-    color: ${props => props.theme?.colors?.white || '#FFF'} !important;
-  }
-
-  a.highlight::after {
-    --trianglebase: 10px;
-    --trianglepeak: 15px;
-    position: absolute;
-    left: calc(50% - var(--trianglebase));
-    bottom: calc(var(--trianglepeak) * -1);
-    content: '';
-    width: 0;
-    height: 0;
-    border-left: var(--trianglebase) solid transparent;
-    border-right: var(--trianglebase) solid transparent;
-    border-top: var(--trianglepeak) solid ${props => props.theme.colors.yellow || 'yellow'};
-  }
-
-`
 
 const tabsContent = [
   {
@@ -166,15 +112,15 @@ const Tabs = props => {
 
   return (
     <>
-      <Tabstyled className='container-base'>
+      <StyledTabs className='container-base'>
         {filteredContents.map((elem, i) => (
           <Link key={`tab${i}`} href={elem.url} passHref>
             <a className={router.pathname == elem.url ? 'highlight' : ''}>{elem.title}</a>
           </Link>
         ))}
-      </Tabstyled>
+      </StyledTabs>
 
     </>
   )
 }
-module.exports=Tabs
+export default Tabs

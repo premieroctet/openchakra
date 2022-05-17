@@ -72,7 +72,6 @@ const FeurstLogin = ({
   t,
   onChange,
   onSubmit,
-  checkRoles,
   handleClickShowPassword,
   handleMouseDownPassword,
   state,
@@ -98,7 +97,6 @@ const FeurstLogin = ({
           value={username}
           autoComplete="email"
           onChange={onChange}
-          onBlur={checkRoles}
           error={errors.username}
         />
         <em>{errors.username}</em>

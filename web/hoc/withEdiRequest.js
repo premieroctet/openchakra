@@ -105,7 +105,7 @@ const withEdiRequest = (Component = null) => {
     // bind address, shipping info and ref to the current order/quotation
     validateAddress = async({endpoint, orderid, shipping}) => {
 
-      return await client(`${API_PATH}/${endpoint}/${orderid}`, {data: {address: shipping.address, reference: shipping.reference, shipping_mode: shipping.shippingOption}, method: 'PUT'})
+      return await client(`${API_PATH}/${endpoint}/${orderid}`, {data: {address: shipping.address, reference: shipping.reference, shipping_mode: shipping.shipping_mode}, method: 'PUT'})
         .then(() => {
           this.getContentFrom({endpoint, orderid})
         })
@@ -115,9 +115,12 @@ const withEdiRequest = (Component = null) => {
         })
     }
 
-    updateShippingFees = async({orderid, shippingfees}) => {
+    updateShippingFees = async({endpoint, orderid, shippingfees}) => {
 
       return await client(`${API_PATH}/${ENDPOINTS[QUOTATION]}/${orderid}/shipping-fee`, {data: {shipping_fee: shippingfees}, method: 'PUT'})
+        .then(() => {
+          this.getContentFrom({endpoint, orderid})
+        })
         .catch(e => {
           console.error(`Can't bind address to order/quotation`, e)
           return {errors: e}

@@ -66,13 +66,14 @@ const withEdiAuth = (Component = null, options = {}) => {
       const isLoggedUser = getLoggedUser()
 
       if (isLoggedUser) {
-        const actions = await this.getUserRoles()
+        await this.getUserRoles()
+          .then(actions => this.setState({loading: false, user: isLoggedUser, actions}))
           .catch(e => console.error(e))
-        this.setState({loading: false, user: isLoggedUser, actions})
       }
       else {
         Router.push(options.pathAfterFailure || `${BASEPATH_EDI}/login`)
       }
+      
 
       if (is_development()) {
         client(`${API_PATH}/users/current`)
@@ -84,10 +85,6 @@ const withEdiAuth = (Component = null, options = {}) => {
 
     render() {
       const {loading, actions, account} = this.state
-
-      if (loading) {
-        return <div>...</div>
-      }
 
       const accessRights=new AccessRights(options.model, options.action, actions)
       const canAccess = [accessRights.getModel(), accessRights.getAction()].every(isUndefined) || accessRights.isActionAllowed(accessRights.getModel(), accessRights.getAction())
@@ -102,7 +99,7 @@ const withEdiAuth = (Component = null, options = {}) => {
           <div className='container-lg'>
             {canAccess ?
               <Component accessRights={accessRights} />
-              : <div>Vous n'avez pas accès à cette rubrique</div>}
+              : loading ? '' : <div>Vous n'avez pas accès à cette rubrique</div>}
           </div>
           <GlobalStyleEdi />
         </ThemeProvider>

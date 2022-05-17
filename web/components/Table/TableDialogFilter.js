@@ -24,7 +24,7 @@ const TableDialogFilter = ({children}) => {
                 ${open ? '' : 'text-opacity-90'}
                 `}
             >
-              <img src='/static/assets/icon/funnel.svg' width={30} height={30} alt="" />
+              <img src='/static/assets/icon/funnel.svg' width={20} height={20} alt="" />
             </Popover.Button>
            
             <Popover.Panel className="filter_panel">

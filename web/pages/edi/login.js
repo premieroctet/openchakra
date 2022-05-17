@@ -1,16 +1,18 @@
 import styled, {ThemeProvider} from 'styled-components'
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import {useRouter} from 'next/router'
 import Login from '../../components/Feurst/Login'
 import Header from '../../components/Feurst/Header'
 import {theme, GlobalStyleEdi} from '../../styles/feurst/feurst.theme'
 import {screen} from '../../styles/screenWidths'
 import {client} from '../../utils/client'
-import {API_PATH, FEURST_IMG_PATH} from '../../utils/consts'
+import {API_PATH, BASEPATH_EDI, FEURST_IMG_PATH} from '../../utils/consts'
 import {
   removeAlfredRegistering,
 } from '../../utils/context'
 import {clearAuthenticationToken} from '../../utils/authentication'
+import {snackBarError} from '../../utils/notifications'
+import SpinnerCircle from '../../components/Spinner/SpinnerCircle'
 
 const HomeGrid = styled.div`
   display: grid;
@@ -33,6 +35,7 @@ const ResponsiveImg = styled.img`
 const LoginPage = () => {
 
   const router = useRouter()
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (router.query?.out) {
@@ -50,11 +53,21 @@ const LoginPage = () => {
       router.push(path)
     }
     else {
+      setLoading(true)
+      let landingPage
       await client(`${API_PATH}/users/landing-page`)
-        .then(landingPage => {
+        .then(res => {
+          landingPage = res
+        })
+        .catch(e => {
+          landingPage = BASEPATH_EDI
+          snackBarError('redirection personnalisée non trouvée')
+          console.error(`landingpage`, e)
+        })
+        .finally(() => {
+          setLoading(false)
           router.push(landingPage)
         })
-        .catch(e => console.error(`landingpage`, e))
     }
   }
 
@@ -65,7 +78,9 @@ const LoginPage = () => {
       <Header />
       <HomeGrid>
         <ResponsiveImg src={`${FEURST_IMG_PATH}/dent_accueil_feurst.webp`} alt='' />
-        <Login login={redirect}/>
+        <SpinnerCircle loading={loading}>
+          <Login login={redirect} />
+        </SpinnerCircle>
       </HomeGrid>
     </ThemeProvider>)
 }

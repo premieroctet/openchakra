@@ -25,9 +25,8 @@ function withLogin(WrappedComponent) {
       const {name, value} = e.target
       const newState = {...this.state, [name]: value}
       if(name === 'username') {
-        Object.assign(newState, {roles: null, selectedRole: null})
-
-        const usermail = e.target.value
+        const usermail = e.target.value.trim()
+        Object.assign(newState, {username: usermail, roles: null, selectedRole: null})
         if (Validator.isEmail(usermail)) {
           axios.get(`/myAlfred/api/users/roles/${usermail}`)
             .then(res => {

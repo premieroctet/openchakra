@@ -54,7 +54,8 @@ function DateRangeColumnFilter({
   }, [id, preFilteredRows])
 
   return (
-    <div>
+    <div className='flex items-center gap-x-2'>
+      {' De '}
       <input
         min={min.toISOString().slice(0, 10)}
         onChange={e => {
@@ -64,7 +65,7 @@ function DateRangeColumnFilter({
         type="date"
         value={filterValue[0] || ''}
       />
-      {' to '}
+      {' à '}
       <input
         max={max.toISOString().slice(0, 10)}
         onChange={e => {
