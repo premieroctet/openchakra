@@ -95,7 +95,7 @@ const DialogAddress = ({
   t,
 }) => {
 
-  const {orderref, address, shippingOption, errors} = state
+  const {reference, address, shipping_mode, errors} = state
   const [shippingfees, setShippingFees] = useState({})
   const [valid, setValid] = useState(false)
   const formData = useRef()
@@ -120,13 +120,13 @@ const DialogAddress = ({
   const submitAddress = ev => {
     ev.preventDefault()
     setIsOpenDialog(false)
-    validateAddress({endpoint, orderid, shipping: {reference: orderref, address, shippingOption}})
+    validateAddress({endpoint, orderid, shipping: {reference: reference, address, shipping_mode}})
   }
 
 
   useEffect(() => {
-    setValid(address?.address && address?.zip_code&& address?.city && address?.country && orderref && shippingOption)
-  }, [address, shippingOption, orderref])
+    setValid(address?.address && address?.zip_code&& address?.city && address?.country && reference && shipping_mode)
+  }, [address, shipping_mode, reference])
 
   useEffect(() => {
     address?.zip_code?.length == 5 && getShippingFees(address?.zip_code)
@@ -154,7 +154,7 @@ traitement de votre commande.</p>
 
         {/* order ref */}
         <label htmlFor='reforder' className='sr-only'>Référence</label>
-        <Input noborder id="reforder" className='ref' value={orderref || ''} onChange={ev => requestUpdate({orderref: ev.target.value})} placeholder={'Ex : Equipements carrière X'} />
+        <Input noborder id="reforder" className='ref' value={reference || ''} onChange={ev => requestUpdate({orderref: ev.target.value})} placeholder={'Ex : Equipements carrière X'} />
 
         {/* order address */}
         <h3>Indiquer l'adresse de livraison</h3>
@@ -165,7 +165,7 @@ traitement de votre commande.</p>
         {/* order shipping fees */}
         {!isEmpty(shippingfees) ? (<>
           <h3>Indiquez l'option de livraison</h3>
-          <ShippingFees state={state} requestUpdate={requestUpdate} shippingoptions={shippingfees} />
+          <ShippingFees requestUpdate={requestUpdate} shippingoptions={shippingfees} shipping_mode={shipping_mode} />
         </>) : null
         }
 

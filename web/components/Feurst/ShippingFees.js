@@ -23,7 +23,7 @@ label {
 
 `
 
-const ShippingFees = ({state, requestUpdate, shippingoptions}) => {
+const ShippingFees = ({shipping_mode, requestUpdate, shippingoptions}) => {
 
   return (
     <ShippingOptions>
@@ -36,8 +36,8 @@ const ShippingFees = ({state, requestUpdate, shippingoptions}) => {
               type={'radio'}
               name={'shippingOption'}
               value={key}
-              checked={key == state.shippingOption}
-              onChange={e => requestUpdate({shippingOption: e.target.value})}
+              checked={key == shipping_mode}
+              onChange={e => requestUpdate({shipping_mode: e.target.value, shipping_fee: value})}
             />
             <span>Livraison {key} - {priceLabel}</span>
           </label>

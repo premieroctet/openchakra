@@ -5,6 +5,8 @@ import {useRouter} from 'next/router'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import TextField from '@material-ui/core/TextField'
 
+import axios from 'axios'
+import {withTranslation} from 'react-i18next'
 import {
   BASEPATH_EDI,
   API_PATH,
@@ -28,19 +30,16 @@ import {client} from '../../utils/client'
 import {localeMoneyFormat} from '../../utils/converters'
 import isEmpty from '../../server/validation/is-empty'
 import withEdiRequest from '../../hoc/withEdiRequest'
+import {
+  getAuthToken,
+  setAxiosAuthentication,
+} from '../../utils/authentication'
+import {snackBarError, snackBarSuccess} from '../../utils/notifications'
 import {H2confirm} from './components.styles'
 import AddArticle from './AddArticle'
 import ImportExcelFile from './ImportExcelFile'
 import {PleasantButton} from './Button'
 import Delivery from './Delivery'
-const axios = require('axios')
-const {withTranslation} = require('react-i18next')
-
-const {
-  getAuthToken,
-  setAxiosAuthentication,
-} = require('../../utils/authentication')
-const {snackBarError, snackBarSuccess} = require('../../utils/notifications')
 
 
 const DialogAddress = dynamic(() => import('./DialogAddress'))
@@ -81,11 +80,10 @@ const BaseCreateTable = ({
   const canAdd = [CREATED, FULFILLED].includes(state.status)
   const canValidate = [COMPLETE].includes(state.status)
   const isValid = [VALID].includes(state.status)
-  const isView = [VALID, PARTIALLY_HANDLED, HANDLED].includes(state.status)
+  const isView = [PARTIALLY_HANDLED, HANDLED].includes(state.status)
 
   const isFeurstSales = accessRights.getFullAction()?.visibility==RELATED
-  const isFeurstADV = accessRights.isActionAllowed(QUOTATION, HANDLE) || accessRights.isActionAllowed(ORDER, HANDLE)
-  const canUpdatePrice = accessRights.isActionAllowed(QUOTATION, UPDATE_ALL) && accessRights.getModel() === QUOTATION
+  const canUpdatePrice = accessRights.isActionAllowed(accessRights.getModel(), UPDATE_ALL)
   const canUpdateQuantity = (
     (accessRights.isActionAllowed(QUOTATION, UPDATE) && accessRights.getModel() === QUOTATION)
     || (accessRights.isActionAllowed(ORDER, UPDATE) && accessRights.getModel() === ORDER)
@@ -94,9 +92,9 @@ const BaseCreateTable = ({
     
   const canUpdateShipping = canUpdatePrice && isValid
 
-  const convertToQuotation = accessRights.getModel() === ORDER && !isView && accessRights.isActionAllowed(ORDER, CONVERT)
-  const convertToOrder = accessRights.getModel() === QUOTATION && !isView && accessRights.isActionAllowed(QUOTATION, CONVERT)
-  const onlyValidButton = !canValidate && !convertToOrder && !convertToQuotation
+  const convertToQuotation = accessRights.getModel() === ORDER && accessRights.isActionAllowed(accessRights.getModel(), CONVERT)
+  const convertToOrder = accessRights.getModel() === QUOTATION && accessRights.isActionAllowed(accessRights.getModel(), CONVERT)
+
 
   /* Update product quantities or price */
   const updateMyOrderContent = data => {
@@ -261,84 +259,68 @@ const BaseCreateTable = ({
         footer={canValidate || isView}
         updateMyData={updateMyOrderContent}
       />
+        
+      <Delivery
+        endpoint={endpoint}
+        orderid={orderIDLocal}
+        address={state.address}
+        setIsOpenDialog={setIsOpenDialog}
+        shipping={{shipping_mode: state.shipping_mode, shipping_fee: state.shipping_fee, update: canUpdateShipping ? updateShippingFees : null}}
+      />
 
-      {canValidate || isView ?
-        <div className='flex flex-wrap gap-x-4 justify-between items-end mb-8'>
-          <Delivery orderid={orderIDLocal} address={state.address} shipping={{shipping_mode: state.shipping_mode, shipping_fee: state.shipping_fee, update: canUpdateShipping ? updateShippingFees : null}} />
-          {!isView ? <h4 className='text-2xl mb-0 text-black'>{t(`${wordingSection}.total`)} : {localeMoneyFormat({value: state.total_amount})}</h4> : null}
-        </div>: null
-      }
+      <div className='flex items-center bg-brand text-xl text-white font-semibold justify-between p-2 pl-6 pr-6 mb-8'>
+        <span>Total</span>
+        <span>{state?.total_amount && localeMoneyFormat({value: state.total_amount})}</span>
+      </div>
 
-      {!isView ?
-        <div className={`flex flex-wrap ${onlyValidButton ? 'justify-end' : 'justify-between'} gap-y-4 mb-6`}>
-          {canValidate
-            ?
-            <PleasantButton
+      
+      <div className={`flex flex-wrap justify-end gap-y-4 mb-6`}>
+        {canValidate || isValid
+          ?
+          <PleasantButton
+            rounded={'full'}
+            bgColor={'#fff'}
+            textColor={'#141953'}
+            borderColor={'1px solid #141953'}
+            onClick={() => resetAddress({endpoint, orderid: orderIDLocal})}
+          >
+        Revenir à la saisie
+          </PleasantButton>
+          : (<>
+            {convertToQuotation && <PleasantButton
               rounded={'full'}
+              disabled={justCreated}
               bgColor={'#fff'}
               textColor={'#141953'}
               borderColor={'1px solid #141953'}
-              onClick={() => resetAddress({endpoint, orderid: orderIDLocal})}
+              onClick={() => convert({endpoint, orderid: orderIDLocal})}
             >
-        Revenir à la saisie
-            </PleasantButton>
-            : (<>
-              {convertToQuotation && <PleasantButton
-                rounded={'full'}
-                disabled={justCreated}
-                bgColor={'#fff'}
-                textColor={'#141953'}
-                borderColor={'1px solid #141953'}
-                onClick={() => convert({endpoint, orderid: orderIDLocal})}
-              >
         Demande de devis
-              </PleasantButton>}
-              {convertToOrder && <PleasantButton
-                rounded={'full'}
-                disabled={justCreated}
-                bgColor={'#fff'}
-                textColor={'#141953'}
-                borderColor={'1px solid #141953'}
-                onClick={() => convert({endpoint, orderid: orderIDLocal})}
-              >
+            </PleasantButton>}
+            {convertToOrder && <PleasantButton
+              rounded={'full'}
+              disabled={justCreated}
+              bgColor={'#fff'}
+              textColor={'#141953'}
+              borderColor={'1px solid #141953'}
+              onClick={() => convert({endpoint, orderid: orderIDLocal})}
+            >
         Convertir en commande
-              </PleasantButton>}
-            </>
-            )
+            </PleasantButton>}
+          </>
+          )
+
+        }
 
 
-          }
-
-
-          <PleasantButton
-            rounded={'full'}
-            disabled={justCreated}
-            onClick={() => (canValidate ? submitOrder({endpoint, orderid: orderIDLocal}): setIsOpenDialog(true))}
-          >
-            {t(`${wordingSection}.valid`)} {/* Valid order/quotation */}
-          </PleasantButton>
-        </div>
-        : null }
-
-
-      {isFeurstSales ? (<>
-        <div className='flex items-center bg-brand text-xl text-white font-semibold justify-between p-2 pl-6 pr-6 mb-8'>
-          <span>Total</span>
-          <span>{state?.total_amount && localeMoneyFormat({value: state.total_amount})}</span>
-        </div>
-
-        <div className='flex gap-x-4 justify-end mb-8'>
-
-          <PleasantButton
-            rounded={'full'}
-            disabled={justCreated}
-            bgColor={'#707071'}
-            textColor={'#ffffff'}
-            onClick={() => true}
-          >Envoyer au client</PleasantButton>
-        </div>
-      </>
-      ) : null}
+        <PleasantButton
+          rounded={'full'}
+          disabled={justCreated}
+          onClick={() => (canValidate ? submitOrder({endpoint, orderid: orderIDLocal}): setIsOpenDialog(true))}
+        >
+          {t(`${wordingSection}.valid`)} {/* Valid order/quotation */}
+        </PleasantButton>
+      </div>
 
 
       <DialogAddress
@@ -357,4 +339,4 @@ const BaseCreateTable = ({
   )
 }
 
-module.exports=withTranslation('feurst', {withRef: true})(withEdiRequest(BaseCreateTable))
+export default withTranslation('feurst', {withRef: true})(withEdiRequest(BaseCreateTable))
