@@ -6,6 +6,13 @@ const {EXPRESS_SHIPPING} = require('../../utils/feurst/consts')
 const {roundCurrency} = require('../../utils/converters')
 const ShipRate = require('../models/ShipRate')
 
+
+const extractDepartment = zipCode => {
+  const dept=parseInt(String(zipCode).slice(0, -3))
+  console.log(`FOund dept ${dept} for zip ${zipCode}`)
+  return dept
+}
+
 const getProductPrices = (product_ref, company) => {
   if (!product_ref) {
     return Promise.reject(`Mandatory product_ref`)
@@ -75,14 +82,13 @@ const addItem = (data, product_id, reference, quantity, net_price, replace=false
 /**
 Computes Ship rate depending on zipcode, weight and express (true||false)
 */
-const computeShipFee = (model, express) => {
+const computeShipFee = (model, department, express) => {
   return new Promise((resolve, reject) => {
-    if (!model.address?.zip_code) {
-      console.trace(model)
-      return reject(`Can not compute shipping fee: no address`)
+    if (!department) {
+      return reject(`Can not compute shipping fee: no department`)
     }
-    const orderDepartment=model.address?.department
-    const companyMainDepartment=model.company?.addresses[0]?.department
+    const orderDepartment=department
+    const companyMainDepartment=extractDepartment(model.company?.addresses[0]?.zip_code)
     const weight=model.total_weight
 
     // Carriage paid ?
@@ -90,10 +96,10 @@ const computeShipFee = (model, express) => {
       console.log(`Order amount ${model.total_amount}> carriage paid ${model.company.carriage_paid} : no shipping fee`)
       return resolve(0)
     }
-    ShipRate.findOne({zipcode: department, express: express, min_weight: {$lte: weight}, max_weight: {$gt: weight}})
+    ShipRate.findOne({zipcode: orderDepartment, express: express, min_weight: {$lte: weight}, max_weight: {$gt: weight}})
       .then(rate => {
         if (!rate) {
-          return reject(`No rate found for dept:${department} weight:${weight} express:${express}`)
+          return reject(`No rate found for dept:${orderDepartment} weight:${weight} express:${express}`)
         }
         const fee=rate.fixed_price+rate.per_kg_price*parseInt(weight)
         return resolve(roundCurrency(fee))
@@ -110,8 +116,8 @@ Data is an Order or a Quotation
 */
 const updateShipFee = data => {
   return new Promise((resolve, reject) => {
-    if (data.address?.zip_code && data.shipping_mode) {
-      computeShipFee(data, result.shipping_mode==EXPRESS_SHIPPING)
+    if (extractDepartment(data.address?.zip_code) && data.shipping_mode) {
+      computeShipFee(data, extractDepartment(data.address?.zip_code), data.shipping_mode==EXPRESS_SHIPPING)
         .then(fee => {
           data.shipping_fee=fee
           return resolve(data)
@@ -158,7 +164,7 @@ const updateStock = orderQuot => {
 
 // Checks wether quotation or order is in the expected delivery zone
 const isInDeliveryZone = (address, company) => {
-  const addressDept=address?.department
+  const addressDept=extractDepartment(address?.zip_code)
   const inZone=addressDept in company.delivery_zip_codes
   console.log(`isInZone for ${JSON.stringify(quotOrder)}:${inZone}`)
   return inZone
@@ -187,4 +193,4 @@ const updateCompanyAddresses= model => {
 }
 
 module.exports = {addItem, computeShipFee, updateShipFee, getProductPrices,
-  updateStock, isInDeliveryZone, updateCompanyAddresses}
+  updateStock, isInDeliveryZone, updateCompanyAddresses, extractDepartment}

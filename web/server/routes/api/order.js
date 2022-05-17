@@ -6,6 +6,7 @@ const lodash=require('lodash')
 const {
   addItem,
   computeShipFee,
+  extractDepartment,
   getProductPrices,
   updateCompanyAddresses,
   updateShipFee,
@@ -138,7 +139,7 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     })
 })
 
-// @Route PUT /myAlfred/api/orders/:id/rewrite
+// @Route PUT /myAlfred/api/orders/:id/handle
 // Resets address && shipping_mode to allow edition
 // @Access private
 router.put('/:id/handle', passport.authenticate('jwt', {session: false}), (req, res) => {
@@ -173,15 +174,12 @@ router.put('/:id/rewrite', passport.authenticate('jwt', {session: false}), (req,
   }
 
   const order_id=req.params.id
-  MODEL.findByIdAndUpdate(order_id, {address: null, shipping_mode: null, user_validated: false}, {new: true})
+  MODEL.findByIdAndUpdate(order_id, {address: null, shipping_mode: null, user_validated: false, reference: null, shipping_fee: null}, {new: true})
     .populate('items.product')
     .then(result => {
       if (!result) {
         return res.status(404).json(`${DATA_TYPE} #${order_id} not found`)
       }
-      return updateShipFee(result)
-    })
-    .then(result => {
       return result.save()
     })
     .then(result => {
@@ -192,6 +190,7 @@ router.put('/:id/rewrite', passport.authenticate('jwt', {session: false}), (req,
       return res.status(500).json(err)
     })
 })
+
 // @Route PUT /myAlfred/api/orders/:id
 // Set attributes(s) of an order {address_id?, reference?}
 // @Access private
@@ -469,12 +468,11 @@ router.get('/:id/shipping-fee', passport.authenticate('jwt', {session: false}), 
       }
       order=result
       // Simulate address
-      order.address={zip_code: zipCode}
-      return computeShipFee(order, false)
+      return computeShipFee(order, extractDepartment(zipCode), false)
     })
     .then(standard => {
       fee[STANDARD_SHIPPING]=standard
-      return computeShipFee(order, true)
+      return computeShipFee(order, extractDepartment(zipCode), true)
     })
     .then(express => {
       fee[EXPRESS_SHIPPING]=express
