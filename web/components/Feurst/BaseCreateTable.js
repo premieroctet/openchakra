@@ -235,10 +235,9 @@ const BaseCreateTable = ({
       null
     }
 
-    { orderIDLocal ? <div>
-
+    { orderIDLocal ? <>
       
-      {isFeurstSales && !isView && <div className='flex '><H2confirm><button onClick={changeCompany}><span>⊕</span> Nouveau devis</button><span>{state?.company?.name}</span></H2confirm></div>}
+      {isFeurstSales && !isView && <div className='flex'><H2confirm><button onClick={changeCompany}><span>⊕</span> Nouveau devis</button><span>{state?.company?.name}</span></H2confirm></div>}
       
 
       {canModify &&
@@ -342,7 +341,7 @@ const BaseCreateTable = ({
         validateAddress={validateAddress}
         wordingSection={wordingSection}
       />
-    </div> : null}
+    </> : null}
   </>
   )
 }
