@@ -59,7 +59,7 @@ QuotationSchema.virtual('status').get(function() {
   if (this.validation_date) {
     return VALID
   }
-  if (!lodash.isEmpty(this.address) && !lodash.isEmpty(this.shipping_mode)) {
+  if (!lodash.isEmpty(this.address) && !lodash.isEmpty(this.shipping_mode) && !lodash.isEmpty(this.items) && !lodash.isNil(this.shipping_fee)) {
     return COMPLETE
   }
   return CREATED
