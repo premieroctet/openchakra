@@ -174,61 +174,69 @@ const ordersColumns = ({endpoint, language, deleteOrder}) => [
   },
 ]
 
-const quotationColumns = ({language, deleteProduct, canUpdateQuantity, canUpdatePrice}) => [
-  {
-    label: 'Réf. catalogue',
-    attribute: 'product.reference',
-    Footer: 'Total',
-  },
-  {
-    label: 'Désignation',
-    attribute: item => `${item.product.description} ${item.product.description_2}`,
-  },
-  {
-    label: 'Quantité',
-    attribute: 'quantity',
-    Cell: canUpdateQuantity ? UpdateCellQuantity : ({value}) => value,
-  },
-  {
-    label: 'Poids',
-    attribute: 'total_weight',
-    Cell: ({value}) => formatWeight(value, language),
-    Footer: FooterTotalWeight,
-  },
-  {
-    label: 'Prix catalogue',
-    attribute: 'catalog_price',
-    Cell: ({cell: {value}}) => localeMoneyFormat({lang: language, value}),
-    sortType: 'number',
-  },
-  {
-    label: 'Remise',
-    attribute: v => formatPercent(v.discount),
-    sortType: 'number',
-  },
-  {
-    label: 'Votre prix',
-    attribute: 'net_price',
-    sortType: 'number',
-    Cell: canUpdatePrice ? UpdateCellPrice : ({value}) => <div>{localeMoneyFormat({lang: language, value})}</div>,
-  },
-  {
-    label: 'Total',
-    attribute: v => localeMoneyFormat({lang: language, value: v.total_amount}),
-    sortType: 'number',
-    Footer: data => <FooterTotalPrice data={data} language={language} />,
-  },
-  {
+const quotationColumns = ({endpoint, orderid, language, deleteProduct, canUpdateQuantity, canUpdatePrice}) => {
+
+
+  const quotationColumnsBase = [
+    {
+      label: 'Réf. catalogue',
+      attribute: 'product.reference',
+      Footer: 'Total',
+    },
+    {
+      label: 'Désignation',
+      attribute: item => `${item.product.description} ${item.product.description_2}`,
+    },
+    {
+      label: 'Quantité',
+      attribute: 'quantity',
+      Cell: canUpdateQuantity ? UpdateCellQuantity : ({value}) => value,
+    },
+    {
+      label: 'Poids',
+      attribute: 'total_weight',
+      Cell: ({value}) => formatWeight(value, language),
+      Footer: FooterTotalWeight,
+    },
+    {
+      label: 'Prix catalogue',
+      attribute: 'catalog_price',
+      Cell: ({cell: {value}}) => localeMoneyFormat({lang: language, value}),
+      sortType: 'number',
+    },
+    {
+      label: 'Remise',
+      attribute: v => formatPercent(v.discount),
+      sortType: 'number',
+    },
+    {
+      label: 'Votre prix',
+      attribute: 'net_price',
+      sortType: 'number',
+      Cell: canUpdatePrice ? UpdateCellPrice : ({value}) => <div>{localeMoneyFormat({lang: language, value})}</div>,
+    },
+    {
+      label: 'Total',
+      attribute: v => localeMoneyFormat({lang: language, value: v.total_amount}),
+      sortType: 'number',
+      Footer: data => <FooterTotalPrice data={data} language={language} />,
+    },
+  ]
+
+
+  const deleteItem = {
     label: '',
     id: 'product_delete',
     attribute: 'product_delete',
-    Cell: ({cell: {value}}) => (
+    Cell: ({cell: {row}}) => (
       <ToTheBin onClick={() => {
-        deleteProduct({idItem: value})
+        deleteProduct({endpoint, orderid, idItem: row.original._id})
       }}/>
     ),
-  },
-]
+  }
+
+  return deleteProduct ? [...quotationColumnsBase, deleteItem] : quotationColumnsBase
+}
 
 const quotationsColumns = ({language, deleteProduct}) => [
   {
