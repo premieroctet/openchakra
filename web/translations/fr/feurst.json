@@ -78,6 +78,8 @@
   "EDI.QUOTATION.create": "Créer un devis",
   "EDI.ORDER.details": "Détails de la commande en cours :",
   "EDI.QUOTATION.details": "Détails du devis en cours :",
+  "EDI.ORDER.recap": "Récapitulatif de la commande",
+  "EDI.QUOTATION.recap": "Récapitulatif du devis",
   "EDI.ORDER.valid": "Valider ma commande",
   "EDI.QUOTATION.valid": "Valider mon devis",
   "EDI.ORDER.dialogAddressValid": "Pour valider votre commande, veuillez&nbsp;:",

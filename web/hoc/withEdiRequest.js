@@ -115,9 +115,9 @@ const withEdiRequest = (Component = null) => {
         })
     }
 
-    updateShippingFees = async({endpoint, orderid, shippingfees}) => {
+    updateShippingFees = async({endpoint, orderid, shipping_fee}) => {
 
-      return await client(`${API_PATH}/${ENDPOINTS[QUOTATION]}/${orderid}/shipping-fee`, {data: {shipping_fee: shippingfees}, method: 'PUT'})
+      return await client(`${API_PATH}/${endpoint}/${orderid}/shipping-fee`, {data: {shipping_fee}, method: 'PUT'})
         .then(() => {
           this.getContentFrom({endpoint, orderid})
         })
@@ -130,7 +130,9 @@ const withEdiRequest = (Component = null) => {
     resetAddress = async({endpoint, orderid}) => {
 
       return await client(`${API_PATH}/${endpoint}/${orderid}/rewrite`, {method: 'PUT'})
-        .then(res => this.setState({...this.state, status: res.status}))
+        .then(() => {
+          this.getContentFrom({endpoint, orderid})
+        })
         .catch(e => {
           console.error(`Can't unbind address to order/quotation`, e)
           return {errors: e}

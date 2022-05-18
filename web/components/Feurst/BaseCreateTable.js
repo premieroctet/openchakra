@@ -17,6 +17,7 @@ import {
   PARTIALLY_HANDLED,
   HANDLED,
   CONVERT,
+  VALIDATE,
   HANDLE,
   ORDER,
   QUOTATION,
@@ -72,28 +73,30 @@ const BaseCreateTable = ({
   const [isOpenDialog, setIsOpenDialog] = useState(false)
   const [companies, setCompanies] = useState([])
 
-
   const router = useRouter()
 
   // Possibles actions
-  const justCreated = [CREATED].includes(state.status)
+  const justCreated = !(state?.items?.length && true)
   const canAdd = [CREATED, FULFILLED].includes(state.status)
   const canValidate = [COMPLETE].includes(state.status)
+  const canModify = [CREATED, COMPLETE].includes(state.status)
   const isValid = [VALID].includes(state.status)
-  const isView = [PARTIALLY_HANDLED, HANDLED].includes(state.status)
+  const isView = [VALID, PARTIALLY_HANDLED, HANDLED].includes(state.status)
+
+  const canValidQuotation = accessRights.isActionAllowed(accessRights.getModel(), VALIDATE) && isValid
 
   const isFeurstSales = accessRights.getFullAction()?.visibility==RELATED
-  const canUpdatePrice = accessRights.isActionAllowed(accessRights.getModel(), UPDATE_ALL)
+  const canUpdatePrice = accessRights.isActionAllowed(accessRights.getModel(), UPDATE_ALL) && !isView
   const canUpdateQuantity = (
-    (accessRights.isActionAllowed(QUOTATION, UPDATE) && accessRights.getModel() === QUOTATION)
-    || (accessRights.isActionAllowed(ORDER, UPDATE) && accessRights.getModel() === ORDER)
+    ((accessRights.isActionAllowed(QUOTATION, UPDATE) && accessRights.getModel() === QUOTATION)
+    || (accessRights.isActionAllowed(ORDER, UPDATE) && accessRights.getModel() === ORDER))
     && !isView
-  ) || (isFeurstSales && isValid)
+  )
     
-  const canUpdateShipping = canUpdatePrice && isValid
+  const canUpdateShipping = canUpdatePrice
 
   const convertToQuotation = accessRights.getModel() === ORDER && accessRights.isActionAllowed(accessRights.getModel(), CONVERT)
-  const convertToOrder = accessRights.getModel() === QUOTATION && accessRights.isActionAllowed(accessRights.getModel(), CONVERT)
+  const convertToOrder = (accessRights.getModel() === QUOTATION && accessRights.isActionAllowed(accessRights.getModel(), CONVERT)) && isView
 
 
   /* Update product quantities or price */
@@ -233,15 +236,17 @@ const BaseCreateTable = ({
 
     { orderIDLocal ? <div>
 
-      {isFeurstSales && <div><H2confirm>{state?.company?.name}</H2confirm> <button onClick={changeCompany}>Changer d'entreprise</button></div>}
+      
+      {isFeurstSales && !isView && <div className='flex '><H2confirm><button onClick={changeCompany}><span>⊕</span> Nouveau devis</button><span>{state?.company?.name}</span></H2confirm></div>}
+      
 
-      {(canAdd || (isFeurstSales && isValid)) &&
+      {canModify &&
       <div className='container-base'>
         <ImportExcelFile importURL={importURL} templateURL={templateURL}/>
         <AddArticle endpoint={endpoint} orderid={orderIDLocal} addProduct={addProduct} wordingSection={wordingSection} />
       </div>}
 
-      {canValidate && <H2confirm>Récapitulatif de votre commande</H2confirm>}
+      {isView && <H2confirm>{t(`${wordingSection}.recap`)}</H2confirm>}
 
       {isView && <div>
         <dl className='dl-inline text-xl font-semibold'>
@@ -265,6 +270,8 @@ const BaseCreateTable = ({
         orderid={orderIDLocal}
         address={state.address}
         setIsOpenDialog={setIsOpenDialog}
+        isView={isView}
+        requestUpdate={requestUpdate}
         shipping={{shipping_mode: state.shipping_mode, shipping_fee: state.shipping_fee, update: canUpdateShipping ? updateShippingFees : null}}
       />
 
@@ -274,52 +281,47 @@ const BaseCreateTable = ({
       </div>
 
       
-      <div className={`flex flex-wrap justify-end gap-y-4 mb-6`}>
-        {canValidate || isValid
-          ?
-          <PleasantButton
-            rounded={'full'}
-            bgColor={'#fff'}
-            textColor={'#141953'}
-            borderColor={'1px solid #141953'}
-            onClick={() => resetAddress({endpoint, orderid: orderIDLocal})}
-          >
+      {isView ? <PleasantButton
+        rounded={'full'}
+        bgColor={'#fff'}
+        textColor={'#141953'}
+        borderColor={'1px solid #141953'}
+        onClick={() => resetAddress({endpoint, orderid: orderIDLocal})}
+      >
         Revenir à la saisie
-          </PleasantButton>
-          : (<>
-            {convertToQuotation && <PleasantButton
-              rounded={'full'}
-              disabled={justCreated}
-              bgColor={'#fff'}
-              textColor={'#141953'}
-              borderColor={'1px solid #141953'}
-              onClick={() => convert({endpoint, orderid: orderIDLocal})}
-            >
-        Demande de devis
-            </PleasantButton>}
-            {convertToOrder && <PleasantButton
-              rounded={'full'}
-              disabled={justCreated}
-              bgColor={'#fff'}
-              textColor={'#141953'}
-              borderColor={'1px solid #141953'}
-              onClick={() => convert({endpoint, orderid: orderIDLocal})}
-            >
-        Convertir en commande
-            </PleasantButton>}
-          </>
-          )
-
-        }
-
-
-        <PleasantButton
+      </PleasantButton> : null}
+      
+      <div className={`flex flex-wrap justify-end gap-y-4 mb-6`}>
+       
+        {convertToQuotation && <PleasantButton
           rounded={'full'}
           disabled={justCreated}
-          onClick={() => (canValidate ? submitOrder({endpoint, orderid: orderIDLocal}): setIsOpenDialog(true))}
+          bgColor={'#fff'}
+          textColor={'#141953'}
+          borderColor={'1px solid #141953'}
+          onClick={() => convert({endpoint, orderid: orderIDLocal})}
+        >
+        Demande de devis
+        </PleasantButton>}
+        {convertToOrder && <PleasantButton
+          rounded={'full'}
+          disabled={justCreated}
+          bgColor={'#fff'}
+          textColor={'#141953'}
+          borderColor={'1px solid #141953'}
+          onClick={() => convert({endpoint, orderid: orderIDLocal})}
+        >
+        Convertir en commande
+        </PleasantButton>}
+          
+
+        {(canModify || canValidQuotation) && <PleasantButton
+          rounded={'full'}
+          disabled={justCreated}
+          onClick={() => (justCreated ? setIsOpenDialog(true) : submitOrder({endpoint, orderid: orderIDLocal}))}
         >
           {t(`${wordingSection}.valid`)} {/* Valid order/quotation */}
-        </PleasantButton>
+        </PleasantButton>}
       </div>
 
 

@@ -99,6 +99,7 @@ const CheckingProductArea = styled.div`
         font-weight: var(--font-bold);
         padding: 6px 30px;
         border: 1px solid var(--gray-500);
+        min-width: 15ch;
       }
   }
 `

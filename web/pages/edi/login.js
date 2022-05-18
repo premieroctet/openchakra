@@ -42,6 +42,7 @@ const LoginPage = () => {
       clearAuthenticationToken()
       localStorage.removeItem('path')
       removeAlfredRegistering()
+      router.replace(`${BASEPATH_EDI}/login`)
     }
   }, [router])
 
