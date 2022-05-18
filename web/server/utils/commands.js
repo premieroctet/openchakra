@@ -165,8 +165,8 @@ const updateStock = orderQuot => {
 // Checks wether quotation or order is in the expected delivery zone
 const isInDeliveryZone = (address, company) => {
   const addressDept=extractDepartment(address?.zip_code)
-  const inZone=addressDept in company.delivery_zip_codes
-  console.log(`isInZone for ${JSON.stringify(quotOrder)}:${inZone}`)
+  const inZone=company.delivery_zip_codes?.includes(addressDept)
+  console.log(`isInZone for ${addressDept} amongst ${company.delivery_zip_codes}:${inZone}`)
   return inZone
 }
 
