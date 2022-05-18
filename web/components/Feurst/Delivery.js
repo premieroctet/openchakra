@@ -1,6 +1,8 @@
 import React, {useState} from 'react'
 import styled from 'styled-components'
+import {isEmpty} from 'lodash'
 import {localeMoneyFormat} from '../../utils/converters'
+import {FEURST_IMG_PATH} from '../../utils/feurst/consts'
 
 
 const UpdateShippingFees = ({endpoint, orderid, shipping_fee, requestUpdate, update}) => {
@@ -20,31 +22,39 @@ const UpdateShippingFees = ({endpoint, orderid, shipping_fee, requestUpdate, upd
 
 const Delivery = ({endpoint, orderid, address, shipping: {shipping_fee, shipping_mode, update}, setIsOpenDialog, isView, requestUpdate}) => {
 
-  console.log(shipping_fee, shipping_mode)
-  return address !== null ? (
+  return (
     <DeliveryStyles>
-      <h4>Livraison</h4>
-      <div>
-        {!isView && <button type='button' onClick={() => setIsOpenDialog(true)}>Modifier l'adresse</button>}
-        <p>Livraison {shipping_mode?.toLowerCase()} {update ? <UpdateShippingFees endpoint={endpoint} orderid={orderid} update={update} requestUpdate={requestUpdate} shipping_fee={shipping_fee}/> : localeMoneyFormat({value: shipping_fee})}</p>
-        <address>
-          {address.address} <br />
-          {address.zip_code} {address.city} - {address.country}
-        </address>
-        <p>Livraison estimée : J+{shipping_mode == 'EXPRESS' ? '2' : '3'}</p>
+      <h4>Informations de livraison</h4>
+      <div className='deliverybox'>
+        <div className='content'>
+          <p>Livraison {shipping_mode?.toLowerCase()} {update ? <UpdateShippingFees endpoint={endpoint} orderid={orderid} update={update} requestUpdate={requestUpdate} shipping_fee={shipping_fee}/> : localeMoneyFormat({value: shipping_fee})}</p>
+            
+          <div className='address'>
+            <address>
+              {address.address}<br />
+              {address.zip_code} {address.city} - {address.country}
+            </address>
+            <button type='button' onClick={() => setIsOpenDialog(true)} aria-label={'Modifier les informations de livraison'}>
+              <img width={20} height={20} src={`${FEURST_IMG_PATH}/edit.webp`} alt='' />
+            </button>
+          </div>
+          <p>Livraison estimée pour les quantités disponibles&nbsp;: J+{shipping_mode == 'EXPRESS' ? '2' : '3'}</p>
+        </div>
+        {isEmpty(address) ?
+          <div className='overlay'>
+            {!isView && <button type='button' onClick={() => setIsOpenDialog(true)}>Indiquez vos informations de livraison</button>}
+          </div>
+          : null}
       </div>
     </DeliveryStyles>
-  ) : null
+  )
 
 }
 
 const DeliveryStyles = styled.div`
-  border: 1px solid var(--stone-300);
-  max-width: var(--spc-96);
-  display: flex; 
-  flex-direction: column;
+  
   margin-bottom: var(--spc-4);
-  flex-grow: 1;
+  max-width: var(--spc-96);
 
   h4 {
       background: var(--brand-color);
@@ -53,12 +63,59 @@ const DeliveryStyles = styled.div`
       padding-left: var(--spc-6);
       margin:0;
   }
+  
+  .deliverybox {
+    display: grid;
 
-  div {
+    & > div {
+      grid-column: 1/-1;
+      grid-row: 1/-1;
+    }
+  }
+  
+  .overlay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--stone-100);
+
+    button {
+      border:0;
+      cursor: pointer;
+      padding-inline: var(--spc-6);
+      padding-block: var(--spc-3);
+      color: var(--white);
+      background-color: var(--brand-color);
+      font-size: var(--text-base);
+      font-weight: var(--font-bold);
+      border-radius: var(--rounded-3xl);
+    }
+  }
+
+
+  .address {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    column-gap: var(--spc-2);
+
+    button {
+      background: none;
+      border: 0;
+      cursor: pointer;
+    }
+  }
+
+  
+  .content {
+    border: 1px solid var(--stone-300);
+    display: flex; 
+    flex-direction: column;
+    flex-grow: 1;
     padding-inline: var(--spc-8);
-    margin-bottom: var(--spc-4);
+    margin-bottom: var(--spc-4);  
 
-    &>p, &>address {
+    &>address {
       font-style: italic;
       color: var(--stone-600);
     }
@@ -68,11 +125,11 @@ const DeliveryStyles = styled.div`
       font-weight: var(--font-bold);
       color: var(--black);
     }
-  }
 
-  input {
-    max-width: 10ch;
-    padding: var(--spc-2)
+    input {
+      max-width: 10ch;
+      padding: var(--spc-2)
+    }
   }
 `
 
