@@ -502,7 +502,7 @@ router.put('/:id/shipping-fee', passport.authenticate('jwt', {session: false}), 
   const order_id = req.params.id
   const shipping_fee=parseFloat(req.body.shipping_fee)
 
-  if (!shipping_fee || isNaN(shipping_fee)) {
+  if (isNaN(parseFloat(shipping_fee))) {
     return res.status(400).json(`Missing parameter shipping_fee`)
   }
 
