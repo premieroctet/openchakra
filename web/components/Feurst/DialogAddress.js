@@ -13,75 +13,6 @@ import {PleasantButton} from './Button'
 import {Input} from './components.styles'
 
 
-const StyledDialog = styled(PureDialog)`
-  .dialogcontent {
-    background-color: var(--gray-200);
-    padding: var(--spc-10);
-  }
-
-  .disclaimer {
-    padding-inline: var(--spc-8);
-    background: var(--stone-400);
-    border-radius: var(--rounded-7xl);
-    padding-block: var(--spc-3);
-    color: var(--white);
-    font-weight: var(--font-bold);
-
-    &>p {
-      font-size: var(--text-xs);
-    }
-  }
-
-  h2, h3 {
-    color: var(--black);
-  }
-
-  input {
-    width: 100%;
-    color: var(--black);
-  }
-
-  input:placeholder-shown {
-    font-style: italic;
-  }
-
-  button[type="submit"] {
-    display: block;
-    margin-inline: auto;
-    margin-top: var(--spc-5);
-  }
-
-  [role="combobox"] {
-    margin-bottom: var(--spc-2);
-  }
-
-  .full-address {
-    display: grid;
-    row-gap: var(--spc-2);
-    column-gap: var(--spc-2);
-    grid-template-areas: 'address address address'
-                          'zipcode city country'
-                          'phone phone phone';
-  }
-
-  .address {
-    grid-area: address;
-  }
-  .zip_code {
-    grid-area: zipcode;
-  }
-  .city {
-    grid-area: city;
-  }
-  .country {
-    grid-area: country;
-  }
-  .phone {
-    grid-area: phone;
-  }
-`
-
-
 const DialogAddress = ({
   isOpenDialog,
   setIsOpenDialog,
@@ -154,7 +85,7 @@ traitement de votre commande.</p>
 
         {/* order ref */}
         <label htmlFor='reforder' className='sr-only'>Référence</label>
-        <Input noborder id="reforder" className='ref' value={reference || ''} onChange={ev => requestUpdate({orderref: ev.target.value})} placeholder={'Ex : Equipements carrière X'} />
+        <Input noborder id="reforder" className='ref' value={reference || ''} onChange={ev => requestUpdate({reference: ev.target.value})} placeholder={'Ex : Equipements carrière X'} />
 
         {/* order address */}
         <h3>Indiquer l'adresse de livraison</h3>
@@ -180,7 +111,75 @@ traitement de votre commande.</p>
 
     </StyledDialog>
   )
-
 }
+
+
+const StyledDialog = styled(PureDialog)`
+  .dialogcontent {
+    background-color: var(--gray-200);
+    padding: var(--spc-10);
+  }
+
+  .disclaimer {
+    padding-inline: var(--spc-8);
+    background: var(--stone-400);
+    border-radius: var(--rounded-7xl);
+    padding-block: var(--spc-3);
+    color: var(--white);
+    font-weight: var(--font-bold);
+
+    &>p {
+      font-size: var(--text-xs);
+    }
+  }
+
+  h2, h3 {
+    color: var(--black);
+  }
+
+  input {
+    width: 100%;
+    color: var(--black);
+  }
+
+  input:placeholder-shown {
+    font-style: italic;
+  }
+
+  button[type="submit"] {
+    display: block;
+    margin-inline: auto;
+    margin-top: var(--spc-5);
+  }
+
+  [role="combobox"] {
+    margin-bottom: var(--spc-2);
+  }
+
+  .full-address {
+    display: grid;
+    row-gap: var(--spc-2);
+    column-gap: var(--spc-2);
+    grid-template-areas: 'address address address'
+                          'zipcode city country'
+                          'phone phone phone';
+  }
+
+  .address {
+    grid-area: address;
+  }
+  .zip_code {
+    grid-area: zipcode;
+  }
+  .city {
+    grid-area: city;
+  }
+  .country {
+    grid-area: country;
+  }
+  .phone {
+    grid-area: phone;
+  }
+`
 
 export default withTranslation('feurst', {withRef: true})(DialogAddress)
