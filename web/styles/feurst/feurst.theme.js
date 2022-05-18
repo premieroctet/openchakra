@@ -166,7 +166,7 @@ export const GlobalStyleEdi = createGlobalStyle`
     font-family: ${props => props.theme?.fontFamily};
   }
 
-  a, p {
+  * {
     font-family: inherit !important;
   }
 
