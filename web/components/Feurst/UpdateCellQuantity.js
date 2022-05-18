@@ -36,7 +36,7 @@ const UpdateCell = ({
   const itemToUpdate = row?.original?.product
   const qty = !isNaN(parseInt(value)) && parseInt(value)
 
-  const stock = +row?.original?.product?.stock
+  const stock = +row?.original?.product?.stock || 0
   const isAvailableStock = qty > stock
 
   const onChange = e => {

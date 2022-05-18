@@ -6,6 +6,54 @@ import {localeMoneyFormat} from '../../utils/converters'
 import {snackBarError} from '../../utils/notifications'
 import {PleasantButton} from './Button'
 
+
+const CheckingProduct = ({endpoint, orderid, article, setArticle, selectItem, addProduct, wordingSection, t}) => {
+
+  const {info, quantity} = article
+
+  const confirmAdd = async() => {
+    await addProduct({endpoint, orderid, ...article})
+      .then(() => {
+        setArticle({...article, item: null, quantity: null, showArticlePanel: false})
+        selectItem(null)
+      })
+      .catch(() => snackBarError(`Ajout de l'article non effectué`))
+
+  }
+
+  return (info ?
+    <CheckingProductArea role={'status'} aria-live='polite'>
+      <dl>
+        <dt>Désignation du produit :</dt>
+        <dd>{info.description} {info.description_2}</dd>
+        <dt>Référence :</dt>
+        <dd>{info.reference}</dd>
+        <dt>Quantité disponible :</dt>
+        <dd>{quantity > info.stock ? `${info.stock || 0} sur ${quantity} ⚠️ stock partiel` : `${quantity} sur ${quantity}`} </dd>
+      </dl>
+      <dl>
+        <dt>Prix catalogue :</dt>
+        <dd>{localeMoneyFormat({value: info?.catalog_price})}</dd>
+        <dt>Poids unitaire :</dt>
+        <dd>{info?.weight?.toLocaleString()} kg</dd>
+        <dt>Votre prix :</dt>
+        <dd>{localeMoneyFormat({value: info?.net_price})}</dd>
+      </dl>
+
+      <PleasantButton
+        bgColor={`#dabb42`}
+        rounded={'full'}
+        onClick={confirmAdd}
+      >
+        {t(`${wordingSection}.addTo`)}
+      </PleasantButton>
+
+    </CheckingProductArea>
+    : null
+  )
+}
+
+
 const CheckingProductArea = styled.div`
   display: grid;
   grid-template-columns: 1fr;
@@ -54,52 +102,5 @@ const CheckingProductArea = styled.div`
       }
   }
 `
-
-
-const CheckingProduct = ({endpoint, orderid, article, setArticle, selectItem, addProduct, wordingSection, t}) => {
-
-  const {info, quantity} = article
-
-  const confirmAdd = async() => {
-    await addProduct({endpoint, orderid, ...article})
-      .then(() => {
-        setArticle({...article, item: null, quantity: null, showArticlePanel: false})
-        selectItem(null)
-      })
-      .catch(() => snackBarError(`Ajout de l'article non effectué`))
-
-  }
-
-  return (info ?
-    <CheckingProductArea role={'status'} aria-live='polite'>
-      <dl>
-        <dt>Désignation du produit :</dt>
-        <dd>{info.description} {info.description_2}</dd>
-        <dt>Référence :</dt>
-        <dd>{info.reference}</dd>
-        <dt>Quantité disponible :</dt>
-        <dd>{quantity > info.stock ? `${info.stock || 0} sur ${quantity} ⚠️ stock partiel` : `${quantity} sur ${quantity}`} </dd>
-      </dl>
-      <dl>
-        <dt>Prix catalogue :</dt>
-        <dd>{localeMoneyFormat({value: info?.catalog_price})}</dd>
-        <dt>Poids unitaire :</dt>
-        <dd>{info?.weight?.toLocaleString()} kg</dd>
-        <dt>Votre prix :</dt>
-        <dd>{localeMoneyFormat({value: info?.net_price})}</dd>
-      </dl>
-
-      <PleasantButton
-        bgColor={`#dabb42`}
-        rounded={'full'}
-        onClick={confirmAdd}
-      >
-        {t(`${wordingSection}.addTo`)}
-      </PleasantButton>
-
-    </CheckingProductArea>
-    : null
-  )
-}
 
 export default withTranslation('feurst', {withRef: true})(CheckingProduct)
