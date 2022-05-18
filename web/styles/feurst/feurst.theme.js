@@ -295,6 +295,10 @@ input:focus:not(:focus-visible) {
   grid-template-columns: 1fr 2fr;
 }
 
+.col-end-auto	{grid-column-end: auto;}
+.col-start-2 {grid-column-start: 2;}
+.col-start-1 {grid-column-start: 1;}
+
 .col-span-2 {
   grid-column: span 2 / span 2;
 }
@@ -330,7 +334,8 @@ input:focus:not(:focus-visible) {
 .justify-end {justify-content: end;}
 .justify-evenly {justify-content: space-evenly;}
 .justify-between {justify-content: space-between;}
-.justify-self-end {justify-self: end;}	
+.justify-self-start {justify-self: start;}
+.justify-self-end {justify-self: end;}
 
 .items-baseline	{align-items: baseline;}
 .items-center {align-items: center;}

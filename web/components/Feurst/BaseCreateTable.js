@@ -82,6 +82,7 @@ const BaseCreateTable = ({
   const canModify = [CREATED, COMPLETE].includes(state.status)
   const isValid = [VALID].includes(state.status)
   const isView = [VALID, PARTIALLY_HANDLED, HANDLED].includes(state.status)
+  const isHandled = [HANDLED].includes(state.status)
 
   const canValidQuotation = accessRights.isActionAllowed(accessRights.getModel(), VALIDATE) && isValid
 
@@ -96,7 +97,7 @@ const BaseCreateTable = ({
   const canUpdateShipping = canUpdatePrice
 
   const convertToQuotation = accessRights.getModel() === ORDER && accessRights.isActionAllowed(accessRights.getModel(), CONVERT)
-  const convertToOrder = (accessRights.getModel() === QUOTATION && accessRights.isActionAllowed(accessRights.getModel(), CONVERT)) && isView
+  const convertToOrder = (accessRights.getModel() === QUOTATION && accessRights.isActionAllowed(accessRights.getModel(), CONVERT)) && isHandled
 
 
   /* Update product quantities or price */
@@ -275,29 +276,32 @@ const BaseCreateTable = ({
         shipping={{shipping_mode: state.shipping_mode, shipping_fee: state.shipping_fee, update: canUpdateShipping ? updateShippingFees : null}}
       />
 
+      {!justCreated &&
       <div className='flex items-center bg-brand text-xl text-white font-semibold justify-between p-2 pl-6 pr-6 mb-8'>
         <span>Total</span>
         <span>{state?.total_amount && localeMoneyFormat({value: state.total_amount})}</span>
-      </div>
-
+      </div>}
       
-      {isView ? <PleasantButton
-        rounded={'full'}
-        bgColor={'#fff'}
-        textColor={'#141953'}
-        borderColor={'1px solid #141953'}
-        onClick={() => resetAddress({endpoint, orderid: orderIDLocal})}
-      >
+      
+      <div className={`grid grid-cols-2 justify-between gap-y-4 mb-8`}>
+       
+        {isView ? <PleasantButton
+          rounded={'full'}
+          bgColor={'#fff'}
+          textColor={'#141953'}
+          borderColor={'1px solid #141953'}
+          className={'col-start-1'}
+          onClick={() => resetAddress({endpoint, orderid: orderIDLocal})}
+        >
         Revenir à la saisie
-      </PleasantButton> : null}
-      
-      <div className={`flex flex-wrap justify-end gap-y-4 mb-6`}>
+        </PleasantButton> : null}
        
         {convertToQuotation && <PleasantButton
           rounded={'full'}
           disabled={justCreated}
           bgColor={'#fff'}
           textColor={'#141953'}
+          className={'col-start-1'}
           borderColor={'1px solid #141953'}
           onClick={() => convert({endpoint, orderid: orderIDLocal})}
         >
@@ -308,6 +312,7 @@ const BaseCreateTable = ({
           disabled={justCreated}
           bgColor={'#fff'}
           textColor={'#141953'}
+          className={'justify-self-end col-start-2'}
           borderColor={'1px solid #141953'}
           onClick={() => convert({endpoint, orderid: orderIDLocal})}
         >
@@ -318,6 +323,7 @@ const BaseCreateTable = ({
         {(canModify || canValidQuotation) && <PleasantButton
           rounded={'full'}
           disabled={justCreated}
+          className={'justify-self-end col-start-2'}
           onClick={() => (justCreated ? setIsOpenDialog(true) : submitOrder({endpoint, orderid: orderIDLocal}))}
         >
           {t(`${wordingSection}.valid`)} {/* Valid order/quotation */}
