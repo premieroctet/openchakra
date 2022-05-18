@@ -196,7 +196,7 @@ const ImportExcelFile = ({importURL, templateURL, caption}) => {
         </div>
         </>}
       {importResult && <ImportResult result={importResult}/>}
-      <PleasantButton size={'full-width'} onClick={submitData}>Importer ce fichier</PleasantButton>
+      <PleasantButton rounded={'full'} onClick={submitData}>Importer ce fichier</PleasantButton>
     </PureDialog>
     {templateURL &&
       <DownloadExampleFile type='button' className='block text-lg no-underline text-center mb-6' href='#' onClick={fetchTemplate} >
