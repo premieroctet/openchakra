@@ -91,8 +91,8 @@ const getStatusLabel = (data, model, user) => {
       CREATED: () => 'En cours de création',
       COMPLETE: () => 'En cours de création',
       VALID: () => isCustomer && 'Votre commercial traite votre demande' || 'Nouvelle demande à traiter',
-      HANDLED: () => isCustomer && `Votre commercial a traité votre demande. Expiration le ${data.expiration_date}`
-        || `Devis envoyé au client. Expiration le ${data.expiration_date}`,
+      HANDLED: () => isCustomer && `Votre commercial a traité votre demande. Expiration le ${data.expiration_date ? data.expiration_date.format('L') : 'inconnue'}`
+        || `Devis envoyé au client. Expiration le ${data.expiration_date ? data.expiration_date.format('L') : 'inconnue'}`,
       CONVERTED: () => `Commande effectuée`,
       EXPIRED: () => `Proposition expirée`,
     },

@@ -41,6 +41,13 @@ QuotationSchema.add({
 
 QuotationSchema.plugin(mongooseLeanVirtuals)
 
+QuotationSchema.virtual('expiration_date').get(function() {
+  if (!this.handled_date) {
+    return null
+  }
+  return moment(this.handled_date).add(QUOTATION_VALIDITY, 'days')
+})
+
 QuotationSchema.virtual('status').get(function() {
   if (this.handled_date && !this.linked_order && moment(this.handled_date).add(QUOTATION_VALIDITY, 'days')<moment()) {
     return EXPIRED
