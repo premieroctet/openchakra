@@ -273,7 +273,6 @@ const BaseCreateTable = ({
         address={state.address}
         setIsOpenDialog={setIsOpenDialog}
         isView={isView}
-        isHandled={isHandled}
         requestUpdate={requestUpdate}
         shipping={{shipping_mode: state.shipping_mode, shipping_fee: state.shipping_fee, update: canUpdateShipping ? updateShippingFees : null}}
       />
