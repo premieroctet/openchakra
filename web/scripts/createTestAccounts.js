@@ -17,11 +17,11 @@ const {MONGOOSE_OPTIONS} = require('../server/utils/database')
 
 const ACCOUNTS={
   wa: 'ACB +',
-  sv: 'MAGSI ACCESSOIRES',
+  sv: 'KOMATSU FRANCE',
   sa: 'BLANCHARD TP',
   rp: '2 T SERVICES',
   md: 'A2F RHONES ALPES',
-  ed: 'TOPAZ',
+  eb: 'TOPAZ',
 }
 
 const PASSWORD='$2a$10$OlaUPHw1dNXx3wEfamFXb.iCqxGKjmsjxJaaJ1B5DIlt/6rdlBCFC'
