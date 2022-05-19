@@ -121,6 +121,7 @@ export const GlobalStyleEdi = createGlobalStyle`
     --spc-10: 2.5rem;
     --spc-11: 2.75rem;
     --spc-12: 3rem;
+    --spc-18: 4.5rem;
     --spc-24: 6rem;
     --spc-32: 8rem;
     --spc-96: 24rem;

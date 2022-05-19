@@ -21,14 +21,14 @@ function withLogin(WrappedComponent) {
       }
     }
   
-    onChange = e => {
+    onChange = async e => {
       const {name, value} = e.target
       const newState = {...this.state, [name]: value}
       if(name === 'username') {
         const usermail = e.target.value.trim()
         Object.assign(newState, {username: usermail, roles: null, selectedRole: null})
         if (Validator.isEmail(usermail)) {
-          axios.get(`/myAlfred/api/users/roles/${usermail}`)
+          await axios.get(`/myAlfred/api/users/roles/${usermail}`)
             .then(res => {
               const roles = res.data
               const selectedRole = roles.length == 1 ? roles[0] : null

@@ -71,8 +71,7 @@ const DialogAddress = ({
       {!isAllItemsAvailable
         ?
         <div className='disclaimer'>
-          <p>Certaines quantités ne sont pas disponibles dans votre commande.</p>
-          <p>Le service ADV reviendra vers vous avec un délai de livraison dès le
+          <p>Certaines quantités ne sont pas disponibles dans votre commande. Le service ADV reviendra vers vous avec un délai de livraison dès le
 traitement de votre commande.</p>
         </div>
         : null
@@ -129,7 +128,7 @@ const StyledDialog = styled(PureDialog)`
     font-weight: var(--font-bold);
 
     &>p {
-      font-size: var(--text-xs);
+      font-size: var(--text-base);
     }
   }
 

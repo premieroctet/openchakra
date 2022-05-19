@@ -12,7 +12,7 @@ const HeaderContainer = styled.header`
   row-gap: var(--spc-2);
   align-items: center;
   column-gap: var(--spc-8);
-  margin-block: var(--spc-8) var(--spc-12);
+  margin-block: var(--spc-8) var(--spc-18);
   width: var(--container-lg);
   margin-inline: auto;
 
