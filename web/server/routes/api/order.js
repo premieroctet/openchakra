@@ -4,6 +4,26 @@ const moment = require('moment')
 const xlsx=require('node-xlsx')
 const lodash=require('lodash')
 const {
+  COMPLETE,
+  CREATED,
+  EXPRESS_SHIPPING,
+  HANDLE,
+  HANDLED,
+  PARTIALLY_HANDLE,
+  PARTIALLY_HANDLED,
+  REWRITE,
+  STANDARD_SHIPPING,
+  TOTALLY_HANDLE,
+  UPDATE_ALL,
+  VALID,
+  VALIDATE,
+} = require('../../../utils/feurst/consts')
+const {
+  filterOrderQuotation,
+  getActionsForRoles,
+  isActionAllowed,
+} = require('../../utils/userAccess')
+const {
   addItem,
   computeShipFee,
   extractDepartment,
@@ -12,20 +32,7 @@ const {
   updateShipFee,
   updateStock,
 } = require('../../utils/commands')
-const {
-  EXPRESS_SHIPPING,
-  HANDLE,
-  HANDLED,
-  PARTIALLY_HANDLED,
-  STANDARD_SHIPPING,
-  UPDATE_ALL,
-  VALIDATE,
-} = require('../../../utils/feurst/consts')
 const Product = require('../../models/Product')
-const {
-  filterOrderQuotation,
-  isActionAllowed,
-} = require('../../utils/userAccess')
 const {lineItemsImport} = require('../../utils/import')
 const {XL_FILTER, createMemoryMulter} = require('../../utils/filesystem')
 const {validateZipCode} = require('../../validation/order')
@@ -154,7 +161,7 @@ router.put('/:id/handle', passport.authenticate('jwt', {session: false}), (req, 
   }
 
   const order_id=req.params.id
-  MODEL.findByIdAndUpdate(order_id, {handle_status: total ? HANDLED: PARTIALLY_HANDLED}, {new: true})
+  MODEL.findByIdAndUpdate(order_id, {handled_date: moment(), handle_status: total ? HANDLED: PARTIALLY_HANDLED}, {new: true})
     .then(result => {
       return res.json(result)
     })
@@ -477,6 +484,33 @@ router.get('/:id/shipping-fee', passport.authenticate('jwt', {session: false}), 
     .catch(err => {
       console.error(err)
       return res.status(500).json(err)
+    })
+})
+
+router.get('/:id/actions', passport.authenticate('jwt', {session: false}), (req, res) => {
+  let result=[]
+  const user=req.user
+  MODEL.findById(req.params.id)
+    .then(model => {
+      console.log(`Actions:${JSON.stringify(getActionsForRoles(user.roles))}`)
+      if (isActionAllowed(user.roles, DATA_TYPE, UPDATE) && model.status==COMPLETE) {
+        result.push(VALIDATE)
+      }
+      if (isActionAllowed(user.roles, DATA_TYPE, UPDATE) && model.status==VALID) {
+        result.push(REWRITE)
+      }
+      if (isActionAllowed(user.roles, DATA_TYPE, HANDLE) && model.status==VALID) {
+        result.push(PARTIALLY_HANDLE)
+        result.push(TOTALLY_HANDLE)
+      }
+      if (isActionAllowed(user.roles, DATA_TYPE, HANDLE) && model.status==PARTIALLY_HANDLED) {
+        result.push(TOTALLY_HANDLE)
+      }
+      if (isActionAllowed(user.roles, DATA_TYPE, DELETE) && [CREATED, COMPLETE].includes(model.status)) {
+        result.push(DELETE)
+      }
+      console.log(`Get actions for order ${model._id, model.reference, model.status}:${result}`)
+      return res.json(result)
     })
 })
 

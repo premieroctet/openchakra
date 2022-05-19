@@ -4,6 +4,19 @@ const moment = require('moment')
 const xlsx=require('node-xlsx')
 const lodash=require('lodash')
 const {
+  COMPLETE,
+  CONVERT,
+  CREATED,
+  EXPRESS_SHIPPING,
+  HANDLED,
+  QUOTATION,
+  REWRITE,
+  STANDARD_SHIPPING,
+  UPDATE_ALL,
+  VALID,
+  VALIDATE,
+} = require('../../../utils/feurst/consts')
+const {
   filterOrderQuotation,
   isActionAllowed,
   isFeurstUser,
@@ -17,14 +30,6 @@ const {
   updateCompanyAddresses,
   updateShipFee,
 } = require('../../utils/commands')
-const {
-  CONVERT,
-  EXPRESS_SHIPPING,
-  QUOTATION,
-  STANDARD_SHIPPING,
-  UPDATE_ALL,
-  VALIDATE,
-} = require('../../../utils/feurst/consts')
 const Quotation = require('../../models/Quotation')
 const Product = require('../../models/Product')
 const {lineItemsImport} = require('../../utils/import')
@@ -518,5 +523,29 @@ router.put('/:id/shipping-fee', passport.authenticate('jwt', {session: false}), 
       return res.status(500).json(err)
     })
 })
+
+router.get('/:id/actions', passport.authenticate('jwt', {session: false}), (req, res) => {
+  let result=[]
+  const user=req.user
+  MODEL.findById(req.params.id)
+    .then(model => {
+      if (isActionAllowed(req.user.roles, DATA_TYPE, UPDATE) &&
+      (model.status==COMPLETE || model.status==VALID && isFeurstUser(user))) {
+        result.push(VALIDATE)
+      }
+      if (isActionAllowed(req.user.roles, DATA_TYPE, UPDATE) && [VALID, HANDLED].includes(model.status)) {
+        result.push(REWRITE)
+      }
+      if (isActionAllowed(req.user.roles, DATA_TYPE, CONVERT) && model.status==HANDLED) {
+        result.push(CONVERT)
+      }
+      if (isActionAllowed(req.user.roles, DATA_TYPE, DELETE) && [CREATED, COMPLETE].includes(model.status)) {
+        result.push(DELETE)
+      }
+      console.log(`Get actions for quotation ${model._id, model.reference, model.status}:${result}`)
+      return res.json(result)
+    })
+})
+
 
 module.exports = router

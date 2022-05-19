@@ -41,6 +41,7 @@ import AddArticle from './AddArticle'
 import ImportExcelFile from './ImportExcelFile'
 import {PleasantButton} from './Button'
 import Delivery from './Delivery'
+const {is_development} = require('../../config/config')
 
 
 const DialogAddress = dynamic(() => import('./DialogAddress'))
@@ -88,12 +89,8 @@ const BaseCreateTable = ({
 
   const isFeurstSales = accessRights.getFullAction()?.visibility==RELATED
   const canUpdatePrice = accessRights.isActionAllowed(accessRights.getModel(), UPDATE_ALL) && !isView
-  const canUpdateQuantity = (
-    ((accessRights.isActionAllowed(QUOTATION, UPDATE) && accessRights.getModel() === QUOTATION)
-    || (accessRights.isActionAllowed(ORDER, UPDATE) && accessRights.getModel() === ORDER))
-    && !isView
-  )
-    
+  const canUpdateQuantity = accessRights.isActionAllowed(accessRights.getModel(), UPDATE) && !isView
+
   const canUpdateShipping = canUpdatePrice
 
   const convertToQuotation = accessRights.getModel() === ORDER && accessRights.isActionAllowed(accessRights.getModel(), CONVERT)
@@ -101,6 +98,16 @@ const BaseCreateTable = ({
 
   const isAddressRequired = isEmpty(state.address)
 
+  // DEV : display allowed buttons
+  const [actionButtons, setActionButtons]=useState([])
+
+  useEffect(() => {
+    if (is_development() && orderIDLocal) {
+      client(`${API_PATH}/${endpoint}/${orderIDLocal}/actions`)
+        .then(res => { setActionButtons(res) })
+        .catch(err => alert(JSON.stringify(err)))
+    }
+  }, [orderIDLocal])
 
   /* Update product quantities or price */
   const updateMyOrderContent = data => {
@@ -217,9 +224,15 @@ const BaseCreateTable = ({
   const importURL=`${API_PATH}/${endpoint}/${orderIDLocal}/import`
   const templateURL=`${API_PATH}/${endpoint}/template`
 
+
   
   return (<>
 
+    {is_development() &&
+      <>
+        <h1>Order:{orderIDLocal}, status: {state?.status}</h1>
+        <h1>Boutons actions:{JSON.stringify(actionButtons)}</h1>
+      </>}
 
     {isFeurstSales && !orderCompany ?
       <div className='container-sm mb-8'>
@@ -238,8 +251,10 @@ const BaseCreateTable = ({
     }
 
     { orderIDLocal ? <>
+
       
       {isFeurstSales && !isView && <div className='flex'><H2confirm><button onClick={changeCompany}><span>⊕</span> Nouveau devis</button><span>{state?.company?.name}</span></H2confirm></div>}
+
       
 
       {canModify &&
@@ -266,6 +281,7 @@ const BaseCreateTable = ({
         footer={canValidate || isView}
         updateMyData={updateMyOrderContent}
       />
+
         
       <Delivery
         endpoint={endpoint}
@@ -282,9 +298,12 @@ const BaseCreateTable = ({
         <span>Total</span>
         <span>{state?.total_amount && localeMoneyFormat({value: state.total_amount})}</span>
       </div>}
+
+
       
       
       <div className={`grid grid-cols-2 justify-between gap-y-4 mb-8`}>
+
        
         {isView ? <PleasantButton
           rounded={'full'}
@@ -296,6 +315,7 @@ const BaseCreateTable = ({
         >
         Revenir à la saisie
         </PleasantButton> : null}
+
        
         {convertToQuotation && <PleasantButton
           rounded={'full'}
@@ -319,6 +339,7 @@ const BaseCreateTable = ({
         >
         Convertir en commande
         </PleasantButton>}
+
           
 
         {(canModify || canValidQuotation) && <PleasantButton
