@@ -20,7 +20,7 @@ const UpdateShippingFees = ({endpoint, orderid, shipping_fee, requestUpdate, upd
 }
 
 
-const Delivery = ({endpoint, orderid, address, shipping: {shipping_fee, shipping_mode, update}, setIsOpenDialog, isView, isHandled, requestUpdate}) => {
+const Delivery = ({endpoint, orderid, address, shipping: {shipping_fee, shipping_mode, update}, setIsOpenDialog, isView, requestUpdate}) => {
 
   const shippingFeesMsg = shipping_fee === 0 ? 'franco de port' : `environ ${localeMoneyFormat({value: shipping_fee})}}`
 
@@ -36,7 +36,7 @@ const Delivery = ({endpoint, orderid, address, shipping: {shipping_fee, shipping
               {address.address}<br />
               {address.zip_code} {address.city} - {address.country}
             </address>
-            {!isHandled && <button type='button' onClick={() => setIsOpenDialog(true)} aria-label={'Modifier les informations de livraison'}>
+            {!isView && <button type='button' onClick={() => setIsOpenDialog(true)} aria-label={'Modifier les informations de livraison'}>
               <img width={20} height={20} src={`${FEURST_IMG_PATH}/edit.webp`} alt='' />
             </button>}
           </div>
