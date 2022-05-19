@@ -105,7 +105,6 @@ const BaseCreateTable = ({
   const [orderid, setOrderid, {removeItem}] = useLocalStorageState(`${storage}-${dataToken?.id}`, {ssr: true, defaultValue: id})
   const [isOpenDialog, setIsOpenDialog] = useState(false)
   const [companies, setCompanies] = useState([])
-  // DEV : display allowed buttons
   const [actionButtons, setActionButtons]=useState([])
 
   const router = useRouter()
@@ -115,9 +114,7 @@ const BaseCreateTable = ({
   const canAdd = [CREATED, FULFILLED].includes(state.status)
   const canValidate = [COMPLETE].includes(state.status)
   const canModify = [CREATED, COMPLETE].includes(state.status)
-  const isValid = [VALID].includes(state.status)
   const isView = [VALID, PARTIALLY_HANDLED, HANDLED].includes(state.status)
-  const isHandled = [HANDLED].includes(state.status)
 
 
   const isValidButton = actionButtons.includes(VALIDATE)
@@ -126,16 +123,11 @@ const BaseCreateTable = ({
   const isPartiallyHandled = actionButtons.includes(PARTIALLY_HANDLE)
   const isTotallyHandled = actionButtons.includes(TOTALLY_HANDLE)
 
-  const canValidQuotation = accessRights.isActionAllowed(accessRights.getModel(), VALIDATE) && isValid
-
   const isFeurstSales = accessRights.getFullAction()?.visibility==RELATED
   const canUpdatePrice = accessRights.isActionAllowed(accessRights.getModel(), UPDATE_ALL) && !isView
   const canUpdateQuantity = accessRights.isActionAllowed(accessRights.getModel(), UPDATE) && !isView
 
   const canUpdateShipping = canUpdatePrice
-
-  const convertToQuotation = accessRights.getModel() === ORDER && accessRights.isActionAllowed(accessRights.getModel(), CONVERT)
-  const convertToOrder = (accessRights.getModel() === QUOTATION && accessRights.isActionAllowed(accessRights.getModel(), CONVERT)) && isHandled
 
   const isAddressRequired = isEmpty(state.address)
 
@@ -239,11 +231,10 @@ const BaseCreateTable = ({
 
 
   useEffect(() => {
-    if (is_development() && orderid) {
-      client(`${API_PATH}/${endpoint}/${orderid}/actions`)
-        .then(res => { setActionButtons(res) })
-        .catch(err => console.error(JSON.stringify(err)))
-    }
+    client(`${API_PATH}/${endpoint}/${orderid}/actions`)
+      .then(res => { setActionButtons(res) })
+      .catch(err => console.error(JSON.stringify(err)))
+    
   }, [endpoint, orderid, state.status])
 
 
@@ -442,7 +433,6 @@ const BaseCreateTable = ({
 
         {isValidButton && <PleasantButton
           rounded={'full'}
-          disabled={!canValidate}
           className={'justify-self-end col-start-2'}
           onClick={() => (isAddressRequired ? setIsOpenDialog(true) : submitOrder({endpoint, orderid}))}
         >
