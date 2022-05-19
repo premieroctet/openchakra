@@ -165,16 +165,16 @@ const ordersColumns = ({endpoint, language, deleteOrder}) => [
     Cell: ({value}) => <OrderStatus status={value} />,
     */
   },
-  {
-    label: 'Recommander',
-    id: 'product_delete',
-    attribute: 'product_delete',
-    Cell: ({cell: {row}}) => (
-      <ToTheBin onClick={() => {
-        deleteOrder({endpoint, orderid: row.original._id})
-      }}/>
-    ),
-  },
+  // {
+  //   label: 'Recommander',
+  //   id: 'product_delete',
+  //   attribute: 'product_delete',
+  //   Cell: ({cell: {row}}) => (
+  //     <ToTheBin onClick={() => {
+  //       deleteOrder({endpoint, orderid: row.original._id})
+  //     }}/>
+  //   ),
+  // },
 ]
 
 const quotationColumns = ({endpoint, orderid, language, deleteProduct, canUpdateQuantity, canUpdatePrice}) => {
@@ -225,7 +225,6 @@ const quotationColumns = ({endpoint, orderid, language, deleteProduct, canUpdate
       Footer: data => <FooterTotalPrice data={data} language={language} />,
     },
   ]
-
 
   const deleteItem = {
     label: '',
@@ -371,29 +370,29 @@ const HandledOrderStatus = order => {
   )
 }
 
-const ConfirmHandledValidation = ({onClick, children}) => (
-  <PleasantButton
-    rounded={'full'}
-    bgColor={'#80b150'}
-    textColor={'#fff'}
-    borderColor={'1px solid #80b150'}
-    onClick={onClick}
-  >{children}</PleasantButton>
-)
+// const ConfirmHandledValidation = ({onClick, children}) => (
+//   <PleasantButton
+//     rounded={'full'}
+//     bgColor={'#80b150'}
+//     textColor={'#fff'}
+//     borderColor={'1px solid #80b150'}
+//     onClick={onClick}
+//   >{children}</PleasantButton>
+// )
 
-const ConfirmPartialHandledValidation = ({onClick, children}) => {
+// const ConfirmPartialHandledValidation = ({onClick, children}) => {
 
-  return (<PleasantButton
-    rounded={'full'}
-    bgColor={'#fff'}
-    textColor={'var(--black)'}
-    borderColor={'1px solid #80b150'}
-    onClick={onClick}
-  >
-    {children}
-  </PleasantButton>
-  )
-}
+//   return (<PleasantButton
+//     rounded={'full'}
+//     bgColor={'#fff'}
+//     textColor={'var(--black)'}
+//     borderColor={'1px solid #80b150'}
+//     onClick={onClick}
+//   >
+//     {children}
+//   </PleasantButton>
+//   )
+// }
 
 const HandleValidationStatusCell = ({status, endpoint, id, handleValidation, filter}) => {
 
@@ -435,12 +434,12 @@ const handledOrdersColumns = ({endpoint, language, handleValidation = null, filt
     attribute: 'status',
     Cell: ({value}) => <OrderStatus status={value} />,
   },
-  {
-    label: 'Validation',
-    attribute: v => v,
-    disableFilters: true,
-    Cell: ({value}) => (<HandleValidationStatusCell status={value.status} handleValidation={handleValidation} endpoint={endpoint} id={value._id} filter={filter} />),
-  },
+  // {
+  //   label: 'Validation',
+  //   attribute: v => v,
+  //   disableFilters: true,
+  //   Cell: ({value}) => (<HandleValidationStatusCell status={value.status} handleValidation={handleValidation} endpoint={endpoint} id={value._id} filter={filter} />),
+  // },
 ]
 const handledQuotationsColumns = ({language, endpoint, handleValidation = null, filter = null}) => [
   {
@@ -469,12 +468,12 @@ const handledQuotationsColumns = ({language, endpoint, handleValidation = null, 
     attribute: 'status',
     Cell: ({value}) => <OrderStatus status={value} />,
   },
-  {
-    label: 'Validation',
-    attribute: v => v._id,
-    disableFilters: true,
-    Cell: ({value}) => (<Link href={`/edi/quotations/view/${value}`}><HandleLink>A traiter</HandleLink></Link>),
-  },
+  // {
+  //   label: 'Validation',
+  //   attribute: v => v._id,
+  //   disableFilters: true,
+  //   Cell: ({value}) => (<Link href={`/edi/quotations/view/${value}`}><HandleLink>A traiter</HandleLink></Link>),
+  // },
 ]
 module.exports={orderColumns, ordersColumns, quotationColumns, quotationsColumns,
   accountsColumns, productsColumns, shipratesColumns, handledOrdersColumns, handledQuotationsColumns, pricesColumns}

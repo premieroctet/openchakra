@@ -91,5 +91,40 @@ const HandleLink = styled.a`
   
 `
 
+const HandleButton = styled.button`
+  display: inline-block;
+  color: var(--white) !important;
+  border-radius: var(--rounded-3xl);
+  font-size: var(--text-base);
+  z-index: 3;
+  margin-block: var(--spc-1);
+  padding: var(--spc-2) var(--spc-10);
+  border: 1px solid var(--stone-500);
+  cursor: pointer;
+  position: relative;
+  background-color: var(--green-500);
+  overflow: hidden;
+  transition: all 0.2s ease-out;
+  
+  &::before {
+    content: "";
+    position: absolute;
+    width: 60%;
+    z-index: -1;
+    inset: 0;
+    background-color: hsl(90.3, 38.3%, 60.4%);
+    transform-origin: 50% 50%; 
+    filter: blur(15px);
+    transition: none;
+    transform: translate(-20%, -120%);
+  }
+    
+  &:hover::before, &:focus::before {
+    transform: translate(100%, 150%);
+    transition: transform 1s 0.5s ease-out;
+  }
+  
+`
 
-export {StyledTabs, HandleLink}
+
+export {StyledTabs, HandleLink, HandleButton}

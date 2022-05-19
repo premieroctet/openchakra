@@ -17,7 +17,6 @@ const BaseListTable = ({
   caption,
   getList,
   deleteOrder,
-  handleValidation,
   state,
   filter,
 }) => {
@@ -36,7 +35,7 @@ const BaseListTable = ({
     getList({endpoint, filter})
   }, [endpoint, getList, filter])
 
-  const cols= columns({language, endpoint, deleteOrder, handleValidation: handleOrderValidStatus ? handleValidation : null, filter})
+  const cols= columns({language, endpoint, deleteOrder})
 
   return (
     <FeurstTable
