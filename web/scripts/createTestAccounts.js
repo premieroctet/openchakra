@@ -42,6 +42,7 @@ const compAtts={
   delivery_zip_codes: [76, 27, 14],
   catalog_prices: 'PVCDIS',
   net_prices: 'DISTFR',
+  carriage_paid: 2000,
 }
 
 
