@@ -4,6 +4,12 @@ const moment = require('moment')
 const xlsx=require('node-xlsx')
 const lodash=require('lodash')
 const {
+  filterOrderQuotation,
+  getActionsForRoles,
+  getStatusLabel,
+  isActionAllowed,
+} = require('../../utils/userAccess')
+const {
   COMPLETE,
   CREATED,
   EXPRESS_SHIPPING,
@@ -18,11 +24,6 @@ const {
   VALID,
   VALIDATE,
 } = require('../../../utils/feurst/consts')
-const {
-  filterOrderQuotation,
-  getActionsForRoles,
-  isActionAllowed,
-} = require('../../utils/userAccess')
 const {
   addItem,
   computeShipFee,
@@ -320,8 +321,12 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   MODEL.find()
     .populate('items.product')
     .populate('company')
+    .lean({virtuals: true})
     .then(orders => {
       orders=filterOrderQuotation(orders, DATA_TYPE, req.user, VIEW)
+      orders.forEach(o => {
+        o.status_label=getStatusLabel(o, DATA_TYPE, req.user)
+      })
       return res.json(orders)
     })
     .catch(err => {

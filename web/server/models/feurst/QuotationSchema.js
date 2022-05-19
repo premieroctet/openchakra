@@ -1,3 +1,4 @@
+const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 const mongoose = require('mongoose')
 const moment = require('moment')
 const lodash=require('lodash')
@@ -37,6 +38,8 @@ QuotationSchema.add({
     required: false,
   },
 })
+
+QuotationSchema.plugin(mongooseLeanVirtuals)
 
 QuotationSchema.virtual('status').get(function() {
   if (this.handled_date && !this.linked_order && moment(this.handled_date).add(QUOTATION_VALIDITY, 'days')<moment()) {

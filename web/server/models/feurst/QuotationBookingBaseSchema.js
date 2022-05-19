@@ -1,3 +1,4 @@
+const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 const {Schema}=require('mongoose')
 const lodash=require('lodash')
 const {SHIPPING_MODES} = require('../../../utils/feurst/consts')
@@ -51,6 +52,7 @@ BookingItemSchema.virtual('total_amount').get(function() {
   return total_amount
 })
 
+BookingItemSchema.plugin(mongooseLeanVirtuals)
 
 const QuotationBookingBaseSchema=new Schema({
   // Order destinee
@@ -115,5 +117,7 @@ QuotationBookingBaseSchema.virtual('total_quantity').get(function() {
   const total_quantity=lodash.sumBy(this.items, i => i.quantity)
   return total_quantity
 })
+
+QuotationBookingBaseSchema.plugin(mongooseLeanVirtuals)
 
 module.exports=QuotationBookingBaseSchema
