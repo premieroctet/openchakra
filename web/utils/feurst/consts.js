@@ -88,6 +88,12 @@ const MODELS=[ORDER, QUOTATION, ACCOUNT, SHIPRATE, PRODUCT, PRICELIST]
 const ACTIONS=[VIEW, CREATE, UPDATE, DELETE, VALIDATE, CONVERT]
 const VISIBILITY=[ALL, COMPANY, RELATED]
 
+const REWRITE='REWRITE'
+const PARTIALLY_HANDLE='PARTIALLY_HANDLE'
+const TOTALLY_HANDLE='TOTALLY_HANDLE'
+
+const BUTTONS=[VALIDATE, REWRITE, PARTIALLY_HANDLE, TOTALLY_HANDLE, CONVERT, DELETE]
+
 const ENDPOINTS = {
   [ORDER]: 'orders',
   [QUOTATION]: 'quotations',
@@ -107,7 +113,7 @@ const USER_ACTIONS={
     [CREATE, VIEW, UPDATE].map(action => createUserAction(COMPANY, action, {visibility: ALL})),
   ]),
   [FEURST_ADV]: lodash.flattenDeep([
-    [VIEW, VALIDATE, HANDLE].map(action => createUserAction(ORDER, action, {visibility: ALL})),
+    [VIEW, HANDLE].map(action => createUserAction(ORDER, action, {visibility: ALL})),
     [VIEW].map(action => createUserAction(ACCOUNT, action, {visibility: ALL})),
   ]),
   [FEURST_SALES]: lodash.flattenDeep([
@@ -168,4 +174,5 @@ module.exports={
   CREATED, VALID, PARTIALLY_HANDLED, HANDLED, SHIPPING_MODES,
   COMPLETE, LINK, FEURST_SALES, HANDLE, XL_TYPE, TEXT_TYPE, PRICELIST, CREATE_FOR,
   CONVERT, QUOTATION_VALIDITY, EXPIRED, UPDATE_ALL, MAIN_ADDRESS_LABEL, CONVERTED,
+  BUTTONS, REWRITE, TOTALLY_HANDLE, PARTIALLY_HANDLE,
 }

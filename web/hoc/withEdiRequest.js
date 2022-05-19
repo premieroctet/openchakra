@@ -66,10 +66,10 @@ const withEdiRequest = (Component = null) => {
         .catch(e => console.error(`Can't delete order`, e))
     }
 
-    handleValidation = async({endpoint, orderid, status, filter = null}) => {
+    handleValidation = async({endpoint, orderid, status}) => {
       
       return await client(`${API_PATH}/${endpoint}/${orderid}/handle`, {data: {total: status}, method: 'PUT'})
-        .then(() => this.getList({endpoint, filter}))
+        .then(() => this.getContentFrom({endpoint, orderid}))
         .catch(e => console.error(`Can't update status validation`, e))
     }
 
@@ -127,7 +127,7 @@ const withEdiRequest = (Component = null) => {
         })
     }
 
-    resetAddress = async({endpoint, orderid}) => {
+    revertToEdition = async({endpoint, orderid}) => {
 
       return await client(`${API_PATH}/${endpoint}/${orderid}/rewrite`, {method: 'PUT'})
         .then(() => {
@@ -159,7 +159,7 @@ const withEdiRequest = (Component = null) => {
           handleValidation={this.handleValidation}
           updateShippingFees={this.updateShippingFees}
           validateAddress={this.validateAddress}
-          resetAddress={this.resetAddress}
+          revertToEdition={this.revertToEdition}
           sendQuotationToCustomer={this.sendQuotationToCustomer}
           state={this.state}
           {...this.props}

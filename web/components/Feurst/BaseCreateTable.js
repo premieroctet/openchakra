@@ -25,6 +25,10 @@ import {
   UPDATE,
   UPDATE_ALL,
   ENDPOINTS,
+  REWRITE,
+  PARTIALLY_HANDLE,
+  TOTALLY_HANDLE,
+  BUTTONS,
 } from '../../utils/consts'
 import FeurstTable from '../../styles/feurst/FeurstTable'
 import {client} from '../../utils/client'
@@ -36,6 +40,8 @@ import {
   setAxiosAuthentication,
 } from '../../utils/authentication'
 import {snackBarError, snackBarSuccess} from '../../utils/notifications'
+import {HandleButton} from '../../styles/feurst/StyledComponents'
+import {is_development} from '../../config/config'
 import {H2confirm} from './components.styles'
 import AddArticle from './AddArticle'
 import ImportExcelFile from './ImportExcelFile'
@@ -44,6 +50,32 @@ import Delivery from './Delivery'
 
 
 const DialogAddress = dynamic(() => import('./DialogAddress'))
+
+const ConfirmHandledValidation = ({onClick, className, children}) => (
+  <PleasantButton
+    rounded={'full'}
+    bgColor={'#80b150'}
+    textColor={'#fff'}
+    borderColor={'1px solid #80b150'}
+    className={className}
+    onClick={onClick}
+  >{children}</PleasantButton>
+)
+
+const ConfirmPartialHandledValidation = ({onClick, className, children}) => {
+
+  return (<PleasantButton
+    rounded={'full'}
+    bgColor={'#fff'}
+    textColor={'var(--black)'}
+    borderColor={'1px solid #80b150'}
+    onClick={onClick}
+    className={className}
+  >
+    {children}
+  </PleasantButton>
+  )
+}
 
 const BaseCreateTable = ({
   id,
@@ -60,7 +92,8 @@ const BaseCreateTable = ({
   requestUpdate,
   validateAddress,
   updateShippingFees,
-  resetAddress,
+  revertToEdition,
+  handleValidation,
   sendQuotationToCustomer,
   state,
 }) => {
@@ -69,9 +102,10 @@ const BaseCreateTable = ({
 
   const [language, setLanguage] = useState('fr')
   const [orderCompany, setOrderCompany] = useState(null)
-  const [orderIDLocal, setOrderIDLocal, {removeItem}] = useLocalStorageState(`${storage}-${dataToken?.id}`, {ssr: true, defaultValue: id})
+  const [orderid, setOrderid, {removeItem}] = useLocalStorageState(`${storage}-${dataToken?.id}`, {ssr: true, defaultValue: id})
   const [isOpenDialog, setIsOpenDialog] = useState(false)
   const [companies, setCompanies] = useState([])
+  const [actionButtons, setActionButtons]=useState([])
 
   const router = useRouter()
 
@@ -80,31 +114,27 @@ const BaseCreateTable = ({
   const canAdd = [CREATED, FULFILLED].includes(state.status)
   const canValidate = [COMPLETE].includes(state.status)
   const canModify = [CREATED, COMPLETE].includes(state.status)
-  const isValid = [VALID].includes(state.status)
   const isView = [VALID, PARTIALLY_HANDLED, HANDLED].includes(state.status)
-  const isHandled = [HANDLED].includes(state.status)
 
-  const canValidQuotation = accessRights.isActionAllowed(accessRights.getModel(), VALIDATE) && isValid
+
+  const isValidButton = actionButtons.includes(VALIDATE)
+  const isRevertToEdition = actionButtons.includes(REWRITE)
+  const isConvertToQuotation = actionButtons.includes(CONVERT)
+  const isPartiallyHandled = actionButtons.includes(PARTIALLY_HANDLE)
+  const isTotallyHandled = actionButtons.includes(TOTALLY_HANDLE)
 
   const isFeurstSales = accessRights.getFullAction()?.visibility==RELATED
   const canUpdatePrice = accessRights.isActionAllowed(accessRights.getModel(), UPDATE_ALL) && !isView
-  const canUpdateQuantity = (
-    ((accessRights.isActionAllowed(QUOTATION, UPDATE) && accessRights.getModel() === QUOTATION)
-    || (accessRights.isActionAllowed(ORDER, UPDATE) && accessRights.getModel() === ORDER))
-    && !isView
-  )
-    
-  const canUpdateShipping = canUpdatePrice
+  const canUpdateQuantity = accessRights.isActionAllowed(accessRights.getModel(), UPDATE) && !isView
 
-  const convertToQuotation = accessRights.getModel() === ORDER && accessRights.isActionAllowed(accessRights.getModel(), CONVERT)
-  const convertToOrder = (accessRights.getModel() === QUOTATION && accessRights.isActionAllowed(accessRights.getModel(), CONVERT)) && isHandled
+  const canUpdateShipping = canUpdatePrice
 
   const isAddressRequired = isEmpty(state.address)
 
 
   /* Update product quantities or price */
   const updateMyOrderContent = data => {
-    addProduct({endpoint, orderid: orderIDLocal, ...data})
+    addProduct({endpoint, orderid, ...data})
   }
 
   const changeCompany = e => {
@@ -157,13 +187,13 @@ const BaseCreateTable = ({
   // Init table
   useEffect(() => {
     // console.log('getContent', orderID)
-    if (!isEmpty(orderIDLocal)) {
+    if (!isEmpty(orderid)) {
       // Prevents loading inadequate order in LocalStorage
-      if (id && id !== orderIDLocal) {
-        setOrderIDLocal(id)
+      if (id && id !== orderid) {
+        setOrderid(id)
       }
       else {
-        getContentFrom({endpoint, orderid: orderIDLocal})
+        getContentFrom({endpoint, orderid})
           .then(data => {
             if (data) {
               setOrderCompany(data.company)
@@ -174,19 +204,19 @@ const BaseCreateTable = ({
           })
       }
     }
-  }, [endpoint, getContentFrom, id, orderIDLocal, removeItem, setOrderIDLocal])
+  }, [endpoint, getContentFrom, id, orderid, removeItem, setOrderid])
 
 
   useEffect(() => {
     // console.log('createOrder', orderID, orderCompany)
-    if (isEmpty(orderIDLocal)) {
+    if (isEmpty(orderid)) {
       if ((orderCompany !== null || !isFeurstSales) && !canValidate) {
         createOrderId({endpoint, company: orderCompany})
-          .then(data => setOrderIDLocal(data._id))
+          .then(data => setOrderid(data._id))
           .catch(e => console.error('cant create order', e))
       }
     }
-  }, [canValidate, createOrderId, endpoint, orderIDLocal, orderCompany, setOrderIDLocal, isFeurstSales])
+  }, [canValidate, createOrderId, endpoint, orderid, orderCompany, setOrderid, isFeurstSales])
 
   /* Feurst ? => Fetch companies */
   useEffect(() => {
@@ -200,6 +230,14 @@ const BaseCreateTable = ({
   }, [isFeurstSales])
 
 
+  useEffect(() => {
+    client(`${API_PATH}/${endpoint}/${orderid}/actions`)
+      .then(res => { setActionButtons(res) })
+      .catch(err => console.error(JSON.stringify(err)))
+    
+  }, [endpoint, orderid, state.status])
+
+
   /**
   const columnsMemo = useMemo(
     () => columns({language, data, setData, deleteProduct: deleteProduct}).map(c => ({...c, Header: c.label, accessor: c.attribute})),
@@ -209,17 +247,22 @@ const BaseCreateTable = ({
   const cols=columns({
     language,
     endpoint,
-    orderid: orderIDLocal,
+    orderid,
     canUpdatePrice,
     canUpdateQuantity,
     deleteProduct: canAdd ? deleteProduct : null})
 
-  const importURL=`${API_PATH}/${endpoint}/${orderIDLocal}/import`
+  const importURL=`${API_PATH}/${endpoint}/${orderid}/import`
   const templateURL=`${API_PATH}/${endpoint}/template`
 
   
   return (<>
 
+    {is_development() &&
+      <>
+        <h1>Order:{orderid}, status: {state?.status}</h1>
+        <h1>Boutons actions:{JSON.stringify(actionButtons)}</h1>
+      </>}
 
     {isFeurstSales && !orderCompany ?
       <div className='container-sm mb-8'>
@@ -237,15 +280,19 @@ const BaseCreateTable = ({
       null
     }
 
-    { orderIDLocal ? <>
+    { orderid ? <>
       
-      {isFeurstSales && !isView && <div className='flex'><H2confirm><button onClick={changeCompany}><span>⊕</span> Nouveau devis</button><span>{state?.company?.name}</span></H2confirm></div>}
+      {isFeurstSales && !isView && <div className='flex'>
+        <H2confirm>
+          {justCreated && <button onClick={changeCompany}><span>⊕</span> Nouveau devis</button>}
+          <span>{state?.company?.name}</span>
+        </H2confirm></div>}
       
 
       {canModify &&
       <div className='container-base'>
         <ImportExcelFile importURL={importURL} templateURL={templateURL}/>
-        <AddArticle endpoint={endpoint} orderid={orderIDLocal} addProduct={addProduct} wordingSection={wordingSection} />
+        <AddArticle endpoint={endpoint} orderid={orderid} addProduct={addProduct} wordingSection={wordingSection} />
       </div>}
 
       {isView && <H2confirm>{t(`${wordingSection}.recap`)}</H2confirm>}
@@ -266,10 +313,11 @@ const BaseCreateTable = ({
         footer={canValidate || isView}
         updateMyData={updateMyOrderContent}
       />
+
         
       <Delivery
         endpoint={endpoint}
-        orderid={orderIDLocal}
+        orderid={orderid}
         address={state.address}
         setIsOpenDialog={setIsOpenDialog}
         editable={isView}
@@ -282,9 +330,9 @@ const BaseCreateTable = ({
         <span>Total</span>
         <span>{state?.total_amount && localeMoneyFormat({value: state.total_amount})}</span>
       </div>}
-      
-      
-      <div className={`grid grid-cols-2 justify-between gap-y-4 mb-8`}>
+
+
+      {/* <div className={`grid grid-cols-2 justify-between gap-y-4 mb-8`}>
        
         {isView ? <PleasantButton
           rounded={'full'}
@@ -292,10 +340,11 @@ const BaseCreateTable = ({
           textColor={'#141953'}
           borderColor={'1px solid #141953'}
           className={'col-start-1'}
-          onClick={() => resetAddress({endpoint, orderid: orderIDLocal})}
+          onClick={() => revertToEdition({endpoint, orderid})}
         >
         Revenir à la saisie
         </PleasantButton> : null}
+
        
         {convertToQuotation && <PleasantButton
           rounded={'full'}
@@ -304,7 +353,7 @@ const BaseCreateTable = ({
           textColor={'#141953'}
           className={'col-start-1'}
           borderColor={'1px solid #141953'}
-          onClick={() => convert({endpoint, orderid: orderIDLocal})}
+          onClick={() => convert({endpoint, orderid})}
         >
         Demande de devis
         </PleasantButton>}
@@ -315,7 +364,7 @@ const BaseCreateTable = ({
           textColor={'#141953'}
           className={'justify-self-end col-start-2'}
           borderColor={'1px solid #141953'}
-          onClick={() => convert({endpoint, orderid: orderIDLocal})}
+          onClick={() => convert({endpoint, orderid})}
         >
         Convertir en commande
         </PleasantButton>}
@@ -325,15 +374,77 @@ const BaseCreateTable = ({
           rounded={'full'}
           disabled={!canValidate}
           className={'justify-self-end col-start-2'}
-          onClick={() => (isAddressRequired ? setIsOpenDialog(true) : submitOrder({endpoint, orderid: orderIDLocal}))}
+          onClick={() => (isAddressRequired ? setIsOpenDialog(true) : submitOrder({endpoint, orderid}))}
+        >
+          {t(`${wordingSection}.valid`)} // Valid order/quotation
+        </PleasantButton>}
+      </div> */}
+
+      <div className={`grid grid-cols-2 justify-between gap-y-4 mb-8`}>
+       
+        {isRevertToEdition ? <PleasantButton
+          rounded={'full'}
+          bgColor={'#fff'}
+          textColor={'#141953'}
+          borderColor={'1px solid #141953'}
+          className={'col-start-1'}
+          onClick={() => revertToEdition({endpoint, orderid})}
+        >
+        Revenir à la saisie
+        </PleasantButton> : null}
+       
+        {/* {isConvertToQuotation && <PleasantButton
+          rounded={'full'}
+          disabled={justCreated}
+          bgColor={'#fff'}
+          textColor={'#141953'}
+          className={'col-start-1'}
+          borderColor={'1px solid #141953'}
+          onClick={() => convert({endpoint, orderid})}
+        >
+        Demande de devis
+        </PleasantButton>} */}
+        {isConvertToQuotation && <PleasantButton
+          rounded={'full'}
+          disabled={justCreated}
+          bgColor={'#fff'}
+          textColor={'#141953'}
+          className={'justify-self-end col-start-2'}
+          borderColor={'1px solid #141953'}
+          onClick={() => convert({endpoint, orderid})}
+        >
+        Convertir en commande
+        </PleasantButton>}
+       
+        {isPartiallyHandled && <ConfirmPartialHandledValidation
+          className={'justify-self-end col-start-2'}
+          onClick={() => handleValidation({endpoint, orderid, status: false})}
+        >
+        Partiellement traitée
+        </ConfirmPartialHandledValidation>}
+        
+        {isTotallyHandled && <ConfirmHandledValidation
+          className={'justify-self-end col-start-2'}
+          onClick={() => handleValidation({endpoint, orderid, status: true})}
+        >
+        Commande traitée
+        </ConfirmHandledValidation>}
+          
+
+        {isValidButton && <PleasantButton
+          rounded={'full'}
+          className={'justify-self-end col-start-2'}
+          onClick={() => (isAddressRequired ? setIsOpenDialog(true) : submitOrder({endpoint, orderid}))}
         >
           {t(`${wordingSection}.valid`)} {/* Valid order/quotation */}
         </PleasantButton>}
+
+
       </div>
 
 
       <DialogAddress
-        orderid={orderIDLocal}
+        orderid={orderid}
         endpoint={endpoint}
         isOpenDialog={isOpenDialog}
         setIsOpenDialog={setIsOpenDialog}

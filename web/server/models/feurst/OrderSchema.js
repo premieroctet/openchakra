@@ -1,3 +1,4 @@
+const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 const mongoose=require('mongoose')
 const lodash=require('lodash')
 const {
@@ -48,5 +49,6 @@ OrderSchema.virtual('status').get(function() {
   return CREATED
 })
 
+OrderSchema.plugin(mongooseLeanVirtuals)
 
 module.exports = OrderSchema

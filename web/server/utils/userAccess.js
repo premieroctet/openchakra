@@ -3,6 +3,8 @@ const {
   COMPLETE,
   CREATED,
   CUSTOMER_ADMIN,
+  HANDLE,
+  QUOTATION,
   RELATED,
 } = require('../../utils/feurst/consts')
 
@@ -37,10 +39,8 @@ const filterOrderQuotation = (data, model, user, action) => {
     console.log(user.company._id, data.map(d => d.status))
     models=data.filter(d => String(d.company._id)==String(user.company?._id))
   }
-  // In progress : only display created by my company
-  console.log(`Returning ${models.length} models`)
-  models=models.filter(m => ([CREATED, COMPLETE].includes(m.status) ? String(m.created_by_company?._id)==String(user.company?._id) : true))
-  console.log(`Returning ${models.length} models`)
+  // Only display quotations created by my company
+  models=models.filter(m => (model==QUOTATION && [CREATED, COMPLETE].includes(m.status) ? String(m.created_by_company?._id)==String(user.company?._id) : true))
   return models
 }
 
@@ -82,5 +82,34 @@ isFeurstUser = user => {
   return !user.company
 }
 
+const getStatusLabel = (data, model, user) => {
+  console.log(model, JSON.stringify(data?.status))
+  const isCustomer = !isFeurstUser(user)
+  const canHandle = isActionAllowed(user.roles, model, HANDLE)
+  const LABELS = {
+    QUOTATION: {
+      CREATED: () => 'En cours de création',
+      COMPLETE: () => 'En cours de création',
+      VALID: () => isCustomer && 'Votre commercial traite votre demande' || 'Nouvelle demande à traiter',
+      HANDLED: () => isCustomer && `Votre commercial a traité votre demande. Expiration le ${data.expiration_date ? data.expiration_date.format('L') : 'inconnue'}`
+        || `Devis envoyé au client. Expiration le ${data.expiration_date ? data.expiration_date.format('L') : 'inconnue'}`,
+      CONVERTED: () => `Commande effectuée`,
+      EXPIRED: () => `Proposition expirée`,
+    },
+    ORDER: {
+      CREATED: () => 'En cours de création',
+      COMPLETE: () => 'En cours de création',
+      VALID: () => (isCustomer ? 'Feurst traite votre commande' : canHandle ? 'Nouvelle commande à traiter' : 'En cours de traitement par ADV'),
+      HANDLED: () => (isCustomer ? 'Feurst a traité votre commande' : canHandle ? 'Commande traitée' : 'Traitée par ADV'),
+      PARTIALLY_HANDLED: () => (isCustomer ? 'Votre commande est partiellemennt traitée' : canHandle ? 'Commande partiellement traitée' : 'Partiellement traitée par ADV'),
+    },
+  }
+  const label=LABELS[model][data.status]()
+  if (!label) {
+    console.error(`Label not found for roles ${user.roles}, datatype ${model}, status ${data.status}`)
+  }
+  return label || ''
+}
+
 module.exports={isActionAllowed, filterOrderQuotation, getActionsForRoles,
-  filterUsers, filterCompanies, isFeurstUser}
+  filterUsers, filterCompanies, isFeurstUser, getStatusLabel}

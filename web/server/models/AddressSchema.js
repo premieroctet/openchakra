@@ -1,3 +1,4 @@
+const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 const {Schema}=require('mongoose')
 
 const AddressSchema=new Schema({
@@ -23,5 +24,6 @@ const AddressSchema=new Schema({
   },
 })
 
+AddressSchema.plugin(mongooseLeanVirtuals)
 
 module.exports=AddressSchema
