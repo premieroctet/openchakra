@@ -272,7 +272,7 @@ const BaseCreateTable = ({
         orderid={orderIDLocal}
         address={state.address}
         setIsOpenDialog={setIsOpenDialog}
-        isView={isView}
+        editable={isView}
         requestUpdate={requestUpdate}
         shipping={{shipping_mode: state.shipping_mode, shipping_fee: state.shipping_fee, update: canUpdateShipping ? updateShippingFees : null}}
       />
@@ -323,7 +323,7 @@ const BaseCreateTable = ({
 
         {(canModify || canValidQuotation) && <PleasantButton
           rounded={'full'}
-          disabled={justCreated}
+          disabled={!canValidate}
           className={'justify-self-end col-start-2'}
           onClick={() => (isAddressRequired ? setIsOpenDialog(true) : submitOrder({endpoint, orderid: orderIDLocal}))}
         >
