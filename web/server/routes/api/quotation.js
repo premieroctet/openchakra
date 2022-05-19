@@ -310,7 +310,7 @@ router.post('/:quotation_id/convert', passport.authenticate('jwt', {session: fal
   const quotation_id=req.params.quotation_id
 
   let quotation=null
-  let order=null
+  let order = null
 
   MODEL.findById(quotation_id)
     .populate('company')
@@ -322,12 +322,12 @@ router.post('/:quotation_id/convert', passport.authenticate('jwt', {session: fal
       if (!isInDeliveryZone(quotation.address, quotation.company)) {
         return Promise.reject('break')
       }
-      const order={...lodash.omit(quotation, '_id'), items: quotation.items.map(item => lodash.omit(item, '_id'))}
+      const order={...lodash.omit(quotation, '_id'), items: quotation.items.map(item => lodash.omit(item, '_id')), validation_date: moment(), handled_date: null}
       return Order.create(order)
     })
     .then(result => {
       order=result
-      return quotation.remove()
+      return Quotation.findByIdAndUpdate(quotation_id, {linked_order: order._id})
     })
     .then(() => {
       return res.json(order)

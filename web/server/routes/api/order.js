@@ -174,15 +174,11 @@ router.put('/:id/rewrite', passport.authenticate('jwt', {session: false}), (req,
   }
 
   const order_id=req.params.id
-  MODEL.findByIdAndUpdate(order_id, {address: null, shipping_mode: null, reference: null, shipping_fee: null}, {new: true})
-    .populate('items.product')
+  MODEL.findByIdAndUpdate(order_id, {validation_date: null, handle_status: null, handled_date: null}, {new: true})
     .then(result => {
       if (!result) {
         return res.status(404).json(`${DATA_TYPE} #${order_id} not found`)
       }
-      return result.save()
-    })
-    .then(result => {
       return res.json(result)
     })
     .catch(err => {
@@ -426,7 +422,7 @@ router.post('/:order_id/validate', passport.authenticate('jwt', {session: false}
       if (lodash.isEmpty(data.address) || lodash.isEmpty(data.shipping_mode)) {
         return res.status(400).json(`Address and shipping mode are required to validate`)
       }
-      data.user_validated=true
+      data.validation_date=moment()
       return data.save()
     })
     .then(data => {

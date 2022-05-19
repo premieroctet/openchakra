@@ -5,7 +5,6 @@ const {
   CREATED,
   EXPIRED,
   EXPRESS_SHIPPING,
-  FULFILLED,
   HANDLED,
   QUOTATION_VALIDITY,
   VALID,
@@ -79,12 +78,8 @@ describe('Feurst Quotation/Products test', () => {
         return Quotation.findByIdAndUpdate(store._id, {$set: {items: items}}, {new: true})
       })
       .then(quotation => {
-        expect(quotation.status).toBe(FULFILLED)
-        return Quotation.findByIdAndUpdate(quotation._id, {$set: {address: {address: 'Rue'}, shipping_mode: EXPRESS_SHIPPING}}, {new: true})
-      })
-      .then(quotation => {
         expect(quotation.status).toBe(COMPLETE)
-        return Quotation.findByIdAndUpdate(quotation._id, {$set: {user_validated: true}}, {new: true})
+        return Quotation.findByIdAndUpdate(quotation._id, {$set: {validaiton_date: moment()}}, {new: true})
       })
       .then(quotation => {
         expect(quotation.status).toBe(VALID)

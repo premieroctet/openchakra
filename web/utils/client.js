@@ -23,7 +23,7 @@ async function client(
 
   return window.fetch(endpoint, config).then(async response => {
     if (response.status === 401) {
-      return Promise.reject({message: 'Action non authorisée.'})
+      return Promise.reject({message: 'Action non autorisée.'})
     }
 
     if (response.status === 403) {

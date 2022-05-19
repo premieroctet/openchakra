@@ -9,6 +9,7 @@ import {
   HANDLED,
   EXPIRED,
 } from '../../utils/consts'
+const {CONVERTED} = require('../../utils/feurst/consts')
 
 
 const statusColors = {
@@ -63,6 +64,10 @@ const OrderStatus = ({endpoint, sales, status}) => {
         return 'partiellement traité'
       case HANDLED:
         return 'traité'
+      case CONVERTED:
+        return 'converti en commande'
+      case EXPIRED:
+        return 'expirée'
       default:
         return ''
     }
