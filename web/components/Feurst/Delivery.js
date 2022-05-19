@@ -20,7 +20,7 @@ const UpdateShippingFees = ({endpoint, orderid, shipping_fee, requestUpdate, upd
 }
 
 
-const Delivery = ({endpoint, orderid, address, shipping: {shipping_fee, shipping_mode, update}, setIsOpenDialog, isView, requestUpdate}) => {
+const Delivery = ({endpoint, orderid, address, shipping: {shipping_fee, shipping_mode, update}, setIsOpenDialog, editable, requestUpdate}) => {
 
   const shippingFeesMsg = shipping_fee === 0 ? 'franco de port' : `environ ${localeMoneyFormat({value: shipping_fee})}}`
 
@@ -36,7 +36,7 @@ const Delivery = ({endpoint, orderid, address, shipping: {shipping_fee, shipping
               {address.address}<br />
               {address.zip_code} {address.city} - {address.country}
             </address>
-            {!isView && <button type='button' onClick={() => setIsOpenDialog(true)} aria-label={'Modifier les informations de livraison'}>
+            {!editable && <button type='button' onClick={() => setIsOpenDialog(true)} aria-label={'Modifier les informations de livraison'}>
               <img width={20} height={20} src={`${FEURST_IMG_PATH}/edit.webp`} alt='' />
             </button>}
           </div>
@@ -44,7 +44,7 @@ const Delivery = ({endpoint, orderid, address, shipping: {shipping_fee, shipping
         </div>
         {isEmpty(address) ?
           <div className='overlay'>
-            {!isView && <button type='button' onClick={() => setIsOpenDialog(true)}>Indiquez vos informations de livraison</button>}
+            {!editable && <button type='button' onClick={() => setIsOpenDialog(true)}>Indiquez vos informations de livraison</button>}
           </div>
           : null}
       </div>
