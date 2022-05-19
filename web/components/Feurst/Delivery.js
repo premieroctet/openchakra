@@ -20,23 +20,25 @@ const UpdateShippingFees = ({endpoint, orderid, shipping_fee, requestUpdate, upd
 }
 
 
-const Delivery = ({endpoint, orderid, address, shipping: {shipping_fee, shipping_mode, update}, setIsOpenDialog, isView, requestUpdate}) => {
+const Delivery = ({endpoint, orderid, address, shipping: {shipping_fee, shipping_mode, update}, setIsOpenDialog, isView, isHandled, requestUpdate}) => {
+
+  const shippingFeesMsg = shipping_fee === 0 ? 'franco de port' : `environ ${localeMoneyFormat({value: shipping_fee})}}`
 
   return (
     <DeliveryStyles>
       <h4>Informations de livraison</h4>
       <div className='deliverybox'>
         <div className='content'>
-          <p>Livraison {shipping_mode?.toLowerCase()} {update ? <UpdateShippingFees endpoint={endpoint} orderid={orderid} update={update} requestUpdate={requestUpdate} shipping_fee={shipping_fee}/> : localeMoneyFormat({value: shipping_fee})}</p>
+          <p>Livraison {shipping_mode?.toLowerCase()} {update ? <UpdateShippingFees endpoint={endpoint} orderid={orderid} update={update} requestUpdate={requestUpdate} shipping_fee={shipping_fee}/> : shippingFeesMsg}</p>
             
           <div className='address'>
             <address>
               {address.address}<br />
               {address.zip_code} {address.city} - {address.country}
             </address>
-            <button type='button' onClick={() => setIsOpenDialog(true)} aria-label={'Modifier les informations de livraison'}>
+            {!isHandled && <button type='button' onClick={() => setIsOpenDialog(true)} aria-label={'Modifier les informations de livraison'}>
               <img width={20} height={20} src={`${FEURST_IMG_PATH}/edit.webp`} alt='' />
-            </button>
+            </button>}
           </div>
           <p>Livraison estimée pour les quantités disponibles&nbsp;: J+{shipping_mode == 'EXPRESS' ? '2' : '3'}</p>
         </div>
