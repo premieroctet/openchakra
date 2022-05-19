@@ -154,7 +154,7 @@ router.put('/:id/handle', passport.authenticate('jwt', {session: false}), (req, 
   }
 
   const order_id=req.params.id
-  MODEL.findByIdAndUpdate(order_id, {handle_status: total ? HANDLED: PARTIALLY_HANDLED}, {new: true})
+  MODEL.findByIdAndUpdate(order_id, {handled_date: moment(), handle_status: total ? HANDLED: PARTIALLY_HANDLED}, {new: true})
     .then(result => {
       return res.json(result)
     })
