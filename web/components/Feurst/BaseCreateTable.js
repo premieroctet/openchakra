@@ -99,6 +99,8 @@ const BaseCreateTable = ({
   const convertToQuotation = accessRights.getModel() === ORDER && accessRights.isActionAllowed(accessRights.getModel(), CONVERT)
   const convertToOrder = (accessRights.getModel() === QUOTATION && accessRights.isActionAllowed(accessRights.getModel(), CONVERT)) && isHandled
 
+  const isAddressRequired = isEmpty(state.address)
+
 
   /* Update product quantities or price */
   const updateMyOrderContent = data => {
@@ -271,6 +273,7 @@ const BaseCreateTable = ({
         address={state.address}
         setIsOpenDialog={setIsOpenDialog}
         isView={isView}
+        isHandled={isHandled}
         requestUpdate={requestUpdate}
         shipping={{shipping_mode: state.shipping_mode, shipping_fee: state.shipping_fee, update: canUpdateShipping ? updateShippingFees : null}}
       />
@@ -323,7 +326,7 @@ const BaseCreateTable = ({
           rounded={'full'}
           disabled={justCreated}
           className={'justify-self-end col-start-2'}
-          onClick={() => (justCreated ? setIsOpenDialog(true) : submitOrder({endpoint, orderid: orderIDLocal}))}
+          onClick={() => (isAddressRequired ? setIsOpenDialog(true) : submitOrder({endpoint, orderid: orderIDLocal}))}
         >
           {t(`${wordingSection}.valid`)} {/* Valid order/quotation */}
         </PleasantButton>}
