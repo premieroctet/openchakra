@@ -23,6 +23,7 @@ const isActionAllowed = (roles, model, action) => {
 }
 
 const filterOrderQuotation = (data, model, user, action) => {
+  console.log('filter commands')
   const userActions=getActions(user.roles, model, action)
   let models=[]
   if (userActions.some(userAction => userAction.visibility==ALL)) {
@@ -32,11 +33,14 @@ const filterOrderQuotation = (data, model, user, action) => {
     models=data.filter(d => user.companies.map(c => String(c._id)).includes(String(d.company._id)))
   }
   else if (userActions.some(userAction => userAction.visibility==COMPANY)) {
+    console.log('filter commands company')
+    console.log(user.company._id, data.map(d => d.status))
     models=data.filter(d => String(d.company._id)==String(user.company?._id))
   }
   // In progress : only display created by my company
-  console.log(models.map(m => m.created_by_company), user.company)
+  console.log(`Returning ${models.length} models`)
   models=models.filter(m => ([CREATED, COMPLETE].includes(m.status) ? String(m.created_by_company?._id)==String(user.company?._id) : true))
+  console.log(`Returning ${models.length} models`)
   return models
 }
 

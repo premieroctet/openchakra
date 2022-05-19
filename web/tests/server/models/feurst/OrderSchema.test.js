@@ -2,8 +2,6 @@ const mongoose = require('mongoose')
 const {
   COMPLETE,
   CREATED,
-  EXPRESS_SHIPPING,
-  FULFILLED,
   VALID,
 } = require('../../../../utils/feurst/consts')
 const {MONGOOSE_OPTIONS} = require('../../../../server/utils/database')
@@ -80,12 +78,8 @@ describe('Feurst Order/Products test', () => {
         return Order.findByIdAndUpdate(order._id, {$set: {items: items}}, {new: true})
       })
       .then(order => {
-        expect(order.status).toBe(FULFILLED)
-        return Order.findByIdAndUpdate(order._id, {$set: {address: {address: 'Rue'}, shipping_mode: EXPRESS_SHIPPING}}, {new: true})
-      })
-      .then(order => {
         expect(order.status).toBe(COMPLETE)
-        return Order.findByIdAndUpdate(order._id, {$set: {user_validated: true}}, {new: true})
+        return Order.findByIdAndUpdate(order._id, {$set: {validation_date: true}}, {new: true})
       })
       .then(order => {
         expect(order.status).toBe(VALID)

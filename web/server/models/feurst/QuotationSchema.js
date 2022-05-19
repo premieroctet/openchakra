@@ -3,9 +3,9 @@ const moment = require('moment')
 const lodash=require('lodash')
 const {
   COMPLETE,
+  CONVERTED,
   CREATED,
   EXPIRED,
-  FULFILLED,
   HANDLED,
   QUOTATION_VALIDITY,
   ROLES,
@@ -36,18 +36,10 @@ QuotationSchema.add({
     ref: 'order',
     required: false,
   },
-  validation_date: {
-    type: Date,
-    required: false,
-  },
-  handled_date: {
-    type: Date,
-    required: false,
-  },
 })
 
 QuotationSchema.virtual('status').get(function() {
-  if (this.handled_date && moment(this.handled_date).add(QUOTATION_VALIDITY, 'days')<moment()) {
+  if (this.handled_date && !this.linked_order && moment(this.handled_date).add(QUOTATION_VALIDITY, 'days')<moment()) {
     return EXPIRED
   }
   if (this.linked_order) {

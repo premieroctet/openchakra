@@ -271,6 +271,7 @@ const quotationsColumns = ({language, deleteProduct}) => [
   {
     label: 'Statut',
     attribute: 'status',
+    Cell: ({value}) => <OrderStatus status={value} />,
   },
   {
     label: 'Détails',

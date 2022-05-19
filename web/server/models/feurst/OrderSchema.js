@@ -3,7 +3,6 @@ const lodash=require('lodash')
 const {
   COMPLETE,
   CREATED,
-  FULFILLED,
   HANDLED,
   PARTIALLY_HANDLED,
   ROLES,
@@ -37,14 +36,14 @@ OrderSchema.add({
 })
 
 OrderSchema.virtual('status').get(function() {
-  if (!lodash.isNil(this.handle_status)) {
+  if (this.handled_date) {
     return this.handle_status
   }
-  if (!lodash.isEmpty(this.address) && !lodash.isEmpty(this.shipping_mode) && !lodash.isNil(this.shipping_fee) && !lodash.isEmpty(this.items)) {
-    return this.user_validated ? VALID : COMPLETE
+  if (this.validation_date) {
+    return VALID
   }
-  if (this.items?.length>0) {
-    return FULFILLED
+  if (!lodash.isEmpty(this.address) && !lodash.isEmpty(this.shipping_mode) && !lodash.isNil(this.shipping_fee) && !lodash.isEmpty(this.items)) {
+    return COMPLETE
   }
   return CREATED
 })
