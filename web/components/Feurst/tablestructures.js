@@ -159,11 +159,8 @@ const ordersColumns = ({endpoint, language, deleteOrder}) => [
   },
   {
     label: 'Statut',
-    attribute: 'status_label',
-    /**
-    attribute: 'status',
-    Cell: ({value}) => <OrderStatus status={value} />,
-    */
+    attribute: v => { console.log(v); return v },
+    Cell: ({value}) => <OrderStatus status={value.status} label={value.status_label} />,
   },
   // {
   //   label: 'Recommander',
@@ -272,11 +269,8 @@ const quotationsColumns = ({language, deleteProduct}) => [
   },
   {
     label: 'Statut',
-    attribute: 'status_label',
-    /**
-    attribute: 'status',
-    Cell: ({value}) => <OrderStatus status={value} />,
-    */
+    attribute: v => { console.log(v); return v },
+    Cell: ({value}) => <OrderStatus status={value.status} label={value.status_label} />,
   },
   {
     label: 'Détails',

@@ -14,8 +14,8 @@ const {CONVERTED} = require('../../utils/feurst/consts')
 
 const statusColors = {
   '#bbd5a2': [HANDLED], // Green
-  '#e0a469': [VALID], // Orange
-  'gray': [CREATED, FULFILLED, COMPLETE, PARTIALLY_HANDLED],
+  '#e0a469': [VALID, CONVERTED], // Orange
+  'gray': [CREATED, FULFILLED, COMPLETE, PARTIALLY_HANDLED], // Gray
 }
 
 const Spot = styled.div`
@@ -35,48 +35,13 @@ const StyledOrderStatus = styled.div`
   }
 `
 
-const labelStatus = {
-  [CREATED]: {
-    'SALES': {
+const OrderStatus = ({endpoint, sales, status, label}) => {
 
-    },
-    'CUSTOMER': {
-
-    },
-
-  },
-}
-
-const OrderStatus = ({endpoint, sales, status}) => {
-
-
-  const statusLabel = status => {
-    switch(status) {
-      case CREATED:
-        return 'en création'
-      case FULFILLED:
-        return 'en création'
-      case COMPLETE:
-        return 'en attente de validation'
-      case VALID:
-        return 'validé'
-      case PARTIALLY_HANDLED:
-        return 'partiellement traité'
-      case HANDLED:
-        return 'traité'
-      case CONVERTED:
-        return 'converti en commande'
-      case EXPIRED:
-        return 'expirée'
-      default:
-        return ''
-    }
-  }
 
   return (
     <StyledOrderStatus>
       <Spot status={status}/>
-      <span>{statusLabel(status)}</span>
+      <span>{label}</span>
     </StyledOrderStatus>
   )
 }
