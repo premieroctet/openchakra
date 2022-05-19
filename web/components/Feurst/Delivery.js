@@ -22,7 +22,7 @@ const UpdateShippingFees = ({endpoint, orderid, shipping_fee, requestUpdate, upd
 
 const Delivery = ({endpoint, orderid, address, shipping: {shipping_fee, shipping_mode, update}, setIsOpenDialog, editable, requestUpdate}) => {
 
-  const shippingFeesMsg = shipping_fee === 0 ? 'franco de port' : `environ ${localeMoneyFormat({value: shipping_fee})}}`
+  const shippingFeesMsg = shipping_fee === 0 ? 'franco de port' : `environ ${localeMoneyFormat({value: shipping_fee})}`
 
   return (
     <DeliveryStyles>
