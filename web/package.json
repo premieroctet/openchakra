@@ -63,7 +63,7 @@
     "moment-range": "^4.0.2",
     "mongoose": "^5.11.17",
     "multer": "^1.4.1",
-    "next": "^8.1.0",
+    "next": "9",
     "next-routes": "^1.4.2",
     "passport": "^0.4.0",
     "passport-facebook": "^3.0.0",
