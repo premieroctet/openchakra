@@ -3,6 +3,7 @@ import Router from 'next/router'
 import {ThemeProvider} from 'styled-components'
 import uniqBy from 'lodash/uniqBy'
 import isUndefined from 'lodash/isUndefined'
+import styled from 'styled-components'
 import Header from '../components/Feurst/Header'
 import Footer from '../components/Feurst/Footer'
 import {getLoggedUser} from '../utils/context'
@@ -95,14 +96,16 @@ const withEdiAuth = (Component = null, options = {}) => {
           {is_development() &&
             <h1>{`model:${accessRights.getModel()}, action:${accessRights.getAction()}, compte:${account}`}</h1>
           }
-          <Header accessRights={accessRights} />
-          <Tabs accessRights={accessRights} />
-          <div className='container-lg'>
-            {canAccess ?
-              <Component accessRights={accessRights} />
-              : loading ? '' : <div>Vous n'avez pas accès à cette rubrique</div>}
-          </div>
-          {/* <Footer /> */}
+          <Skeleton>
+            <Header accessRights={accessRights} />
+            <Tabs accessRights={accessRights} />
+            <div className='container-lg'>
+              {canAccess ?
+                <Component accessRights={accessRights} />
+                : loading ? '' : <div>Vous n'avez pas accès à cette rubrique</div>}
+            </div>
+            <Footer />
+          </Skeleton>
           <GlobalStyleEdi />
         </ThemeProvider>
       )
@@ -112,5 +115,11 @@ const withEdiAuth = (Component = null, options = {}) => {
   return ediAuth
 }
 
+const Skeleton = styled.div`
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: 3rem auto auto 1fr 3rem; // infobox, header, tabs, content, footer
+  grid-template-columns: 1fr;
+`
 
 export default withEdiAuth

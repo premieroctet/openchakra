@@ -11,7 +11,7 @@ const TablesStyles = styled.div`
     border-collapse: collapse;
     text-align: center;
     width: 100%;
-    max-width: fit-content;
+    max-width: 100vw;
     margin-inline: auto;
     overflow-x: auto;
     white-space: nowrap;

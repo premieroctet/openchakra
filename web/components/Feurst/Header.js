@@ -40,11 +40,13 @@ const LogoLink = styled.a`
 `
 
 const InfoBox = styled.div`
+  display: flex; 
+  justify-content: center;
+  align-items: center;
   background-color: var(--brand-color);
   color: var(--white);
   font-weight: var(--font-bold);
   text-align: center;
-
   padding-block: var(--spc-2);
 `
 
