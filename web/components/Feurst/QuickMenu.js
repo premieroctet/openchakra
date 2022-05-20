@@ -45,6 +45,7 @@ const QuickMenuStyled = styled.div`
 
   span {
     font-size: var(--text-sm);
+    font-weight: var(--font-bold);
     white-space: nowrap;
     color: var(--black) !important;
     
