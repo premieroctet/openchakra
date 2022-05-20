@@ -22,7 +22,7 @@ import Router from 'next/router'
 import {clearAuthenticationToken, setAxiosAuthentication} from '../../utils/authentication'
 import {snackBarError, snackBarSuccess} from '../../utils/notifications'
 import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined'
-import '../../static/assets/css/custom.css'
+
 import {HANDLE_ADDRESSES} from '../../utils/i18n'
 
 class HandleAddresses extends React.Component {

@@ -2,7 +2,7 @@ import React from 'react'
 import Carousel from 'react-material-ui-carousel'
 import Grid from '@material-ui/core/Grid'
 import Pagination from '@material-ui/lab/Pagination'
-import './SlideShow.css'
+import './SlideShow.module.css'
 
 function withSlide(WrappedComponent) {
 

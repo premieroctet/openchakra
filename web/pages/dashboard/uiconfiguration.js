@@ -29,7 +29,7 @@ import SaveIcon from '@material-ui/icons/Save'
 import Fab from '@material-ui/core/Fab'
 
 import dashboardstyles from '../../static/css/components/CompanyDashboard/CompanyDashboard'
-import custom from '../../static/assets/css/custom.css'
+
 
 import InfoIcon from '@material-ui/icons/Info'
 

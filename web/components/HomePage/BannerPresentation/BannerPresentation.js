@@ -8,7 +8,7 @@ import {Link} from '@material-ui/core'
 import Typography from '@material-ui/core/Typography'
 import axios from 'axios'
 const {setAxiosAuthentication}=require('../../../utils/authentication')
-import '../../../static/assets/css/custom.css'
+
 import {makeStyles} from '@material-ui/core/styles'
 
 const useStyles = makeStyles(theme => ({

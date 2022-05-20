@@ -3,7 +3,7 @@ import {is_development} from '../../config/config'
 import React from 'react'
 import {Typography} from '@material-ui/core'
 import {withTranslation} from 'react-i18next'
-import '../../static/assets/css/custom.css'
+
 import Carousel from 'react-material-ui-carousel'
 import Grid from '@material-ui/core/Grid'
 import {makeStyles} from '@material-ui/core/styles'

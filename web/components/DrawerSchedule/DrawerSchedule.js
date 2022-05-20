@@ -13,7 +13,7 @@ import DrawerSettingSchedule from '../Drawer/DrawerSettingSchedule/DrawerSetting
 import Drawer from '@material-ui/core/Drawer'
 import axios from 'axios'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
-import '../../static/assets/css/custom.css'
+
 import {DRAWER_SCHEDULE} from '../../utils/i18n'
 
 class DrawerSchedule extends React.Component {

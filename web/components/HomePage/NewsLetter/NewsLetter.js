@@ -16,7 +16,7 @@ import Slide from '@material-ui/core/Slide'
 import CloseIcon from '@material-ui/icons/Close'
 import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
-import '../../../static/assets/css/custom.css'
+
 import CustomIcon from '../../CustomIcon/CustomIcon'
 
 const Transition = React.forwardRef((props, ref) => {

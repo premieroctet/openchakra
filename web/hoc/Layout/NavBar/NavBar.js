@@ -47,7 +47,7 @@ import ClearIcon from '@material-ui/icons/Clear'
 import {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered, removeAlfredRegistering, setAlfredRegistering, getRole} from '../../../utils/context'
 const {formatAddress} = require('../../../utils/text.js')
 import Slider from '@material-ui/core/Slider'
-import '../../../static/assets/css/custom.css'
+
 const {PRO, PART, EMPLOYEE, ACCEPT_COOKIE_NAME}=require('../../../utils/consts')
 import {getCookieConsentValue, resetCookieConsentValue} from 'react-cookie-consent'
 import Logo from '../../../components/Logo/Logo'

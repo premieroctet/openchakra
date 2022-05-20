@@ -12,7 +12,7 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import Hidden from '@material-ui/core/Hidden'
 import {isMobile} from '../../utils/context'
 import Router from 'next/router'
-import '../../static/assets/css/custom.css'
+
 
 const {isDateAvailable, isMomentAvailable} = require('../../utils/dateutils')
 

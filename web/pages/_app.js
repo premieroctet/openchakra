@@ -27,6 +27,7 @@ import {I18nextProvider, withTranslation} from 'react-i18next'
 import i18n from '../server/utils/i18n_init'
 
 
+
 class MyApp extends App {
   constructor() {
     super()

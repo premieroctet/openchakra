@@ -32,7 +32,7 @@ import IconButton from '@material-ui/core/IconButton'
 import {isAndroid} from 'react-device-detect'
 const {PRO, PART} = require('../utils/consts')
 import Router from 'next/router'
-import '../static/assets/css/custom.css'
+
 import lodash from 'lodash'
 import RandomBanner from '../components/RandomBanner/RandomBanner'
 import {INDEX} from '../utils/i18n'

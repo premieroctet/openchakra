@@ -1,4 +1,4 @@
-import '../../static/assets/css/custom.css'
+
 import {booking_datetime_str} from '../../utils/dateutils'
 import {Tooltip} from '@material-ui/core'
 import CustomButton from '../../components/CustomButton/CustomButton'
