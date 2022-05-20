@@ -8,6 +8,7 @@ const {
   Button,
   MenuItem,
   Select,
+  FormLabel,
   TextField,
   Typography,
 } = require('@material-ui/core')
@@ -60,23 +61,23 @@ function FeurstRegister({className, style, onSuccess}) {
   }
   return(
     <>
-      <Grid style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-        <Typography >Ajouter</Typography>
-        <TextField style={{margin: '0px 10px 0px 10px'}} name={'firstname'} value={firstname} onChange={ev => setFirstname(ev.target.value)} placeholder={'Prénom'} />
-        <TextField style={{margin: '0px 10px 0px 10px'}} name={'name'} value={name} onChange={ev => setName(ev.target.value)} placeholder={'Nom'} />
-        <TextField style={{margin: '0px 10px 0px 10px'}} name={'email'} value={email} onChange={ev => setEmail(ev.target.value)} placeholder={'Adresse email'} />
-        <Typography>en tant que</Typography>
-        <Select
-          id="role"
-          value={role}
-          name={'role'}
-          onChange={ev => setRole(ev.target.value)}
-        >
-          {roles.map(r => (
-            <MenuItem value={r} key={r}>{ROLES[r]}</MenuItem>
-          )) }
-        </Select>
-        { role==CUSTOMER_ADMIN &&
+      <FormLabel>
+        <TextField name={'firstname'} value={firstname} onChange={ev => setFirstname(ev.target.value)} placeholder={'Prénom'} />
+      </FormLabel>
+      <TextField name={'name'} value={name} onChange={ev => setName(ev.target.value)} placeholder={'Nom'} />
+      <TextField name={'email'} value={email} onChange={ev => setEmail(ev.target.value)} placeholder={'Adresse email'} />
+      <Typography>en tant que</Typography>
+      <Select
+        id="role"
+        value={role}
+        name={'role'}
+        onChange={ev => setRole(ev.target.value)}
+      >
+        {roles.map(r => (
+          <MenuItem value={r} key={r}>{ROLES[r]}</MenuItem>
+        )) }
+      </Select>
+      { role==CUSTOMER_ADMIN &&
           <>
           pour la société
             <Autocomplete
@@ -91,8 +92,7 @@ function FeurstRegister({className, style, onSuccess}) {
               onInputChange={(ev, value) => setCompany(value)}
             />
           </>
-        }
-      </Grid>
+      }
       <Grid style={{display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '10px'}}>
         <Button variant={'outlined'} disabled={!enableRegister()} onClick={sendInvitation}>Envoyer</Button>
       </Grid>

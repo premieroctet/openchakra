@@ -70,12 +70,11 @@ const withEdiAuth = (Component = null, options = {}) => {
       if (isLoggedUser) {
         await this.getUserRoles()
           .then(actions => this.setState({loading: false, user: isLoggedUser, actions}))
-          .catch(e => console.error(e))
+          .catch(e => {
+            console.error(e)
+            Router.push(options.pathAfterFailure || `${BASEPATH_EDI}/login`)
+          })
       }
-      else {
-        Router.push(options.pathAfterFailure || `${BASEPATH_EDI}/login`)
-      }
-      
 
       if (is_development()) {
         client(`${API_PATH}/users/current`)
