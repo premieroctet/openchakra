@@ -25,7 +25,6 @@ const isActionAllowed = (roles, model, action) => {
 }
 
 const filterOrderQuotation = (data, model, user, action) => {
-  console.log('filter commands')
   const userActions=getActions(user.roles, model, action)
   let models=[]
   if (userActions.some(userAction => userAction.visibility==ALL)) {
@@ -35,8 +34,6 @@ const filterOrderQuotation = (data, model, user, action) => {
     models=data.filter(d => user.companies.map(c => String(c._id)).includes(String(d.company._id)))
   }
   else if (userActions.some(userAction => userAction.visibility==COMPANY)) {
-    console.log('filter commands company')
-    console.log(user.company._id, data.map(d => d.status))
     models=data.filter(d => String(d.company._id)==String(user.company?._id))
   }
   // Only display quotations created by my company
@@ -90,8 +87,8 @@ const getStatusLabel = (data, model, user) => {
     QUOTATION: {
       CREATED: () => 'En cours de création',
       COMPLETE: () => 'En cours de création',
-      VALID: () => isCustomer && 'Votre commercial traite votre demande' || 'Nouvelle demande à traiter',
-      HANDLED: () => isCustomer && `Votre commercial a traité votre demande. Expiration le ${data.expiration_date ? data.expiration_date.format('L') : 'inconnue'}`
+      VALID: () => isCustomer && `${data.sales_representative.firstname} traite votre demande` || 'Nouvelle demande à traiter',
+      HANDLED: () => isCustomer && `${data.sales_representative.firstname} a traité votre demande. Expiration le ${data.expiration_date ? data.expiration_date.format('L') : 'inconnue'}`
         || `Devis envoyé au client. Expiration le ${data.expiration_date ? data.expiration_date.format('L') : 'inconnue'}`,
       CONVERTED: () => `Commande effectuée`,
       EXPIRED: () => `Proposition expirée`,

@@ -139,7 +139,6 @@ router.post('/import', passport.authenticate('jwt', {session: false}), (req, res
 // Imports stock from csv
 router.post('/import-stock', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  console.log(`Actions:${JSON.stringify(req.user.roles, null, 2)}`)
   if (!isActionAllowed(req.user.roles, DATA_TYPE, CREATE)) {
     return res.status(401).json()
   }
