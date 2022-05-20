@@ -292,6 +292,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   }
 
   MODEL.find()
+    .sort({creation_date: -1})
     .populate('items.product')
     .populate('company')
     .lean({virtuals: true})
@@ -547,7 +548,6 @@ router.get('/:id/actions', passport.authenticate('jwt', {session: false}), (req,
       if (isActionAllowed(req.user.roles, DATA_TYPE, DELETE) && [CREATED, COMPLETE].includes(model.status)) {
         result.push(DELETE)
       }
-      console.log(`Get actions for quotation ${model._id, model.reference, model.status}:${result}`)
       return res.json(result)
     })
 })
