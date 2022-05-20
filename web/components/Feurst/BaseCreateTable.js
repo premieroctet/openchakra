@@ -7,6 +7,7 @@ import TextField from '@material-ui/core/TextField'
 
 import axios from 'axios'
 import {withTranslation} from 'react-i18next'
+import styled from 'styled-components'
 import {
   BASEPATH_EDI,
   API_PATH,
@@ -290,6 +291,7 @@ const BaseCreateTable = ({
       {canModify &&
       <div className='container-base'>
         <ImportExcelFile importURL={importURL} templateURL={templateURL}/>
+        <AddDivider>Ou</AddDivider>
         <AddArticle endpoint={endpoint} orderid={orderid} addProduct={addProduct} wordingSection={wordingSection} />
       </div>}
 
@@ -458,5 +460,22 @@ const BaseCreateTable = ({
   </>
   )
 }
+
+const AddDivider = styled.p`
+  display: flex;
+  align-items: center;
+  column-gap: 1rem;
+  width: 100%;
+  margin-bottom: var(--spc-6);
+  font-weight: var(--font-bold);
+  
+  &::after, &::before {
+    content: '';
+    height: 1px;
+    width: 100%;
+    background-color: var(--black);
+  }
+
+`
 
 export default withTranslation('feurst', {withRef: true})(withEdiRequest(BaseCreateTable))
