@@ -1,44 +1,38 @@
 import React, {useState, useEffect} from 'react'
 import styled from 'styled-components'
 import dynamic from 'next/dynamic'
-import {PleasantButton} from './Button'
-const {
+import {
   MenuItem,
   Select,
   TextField,
   Typography,
-} = require('@material-ui/core')
-const lodash=require('lodash')
-const axios = require('axios')
-const {is_development} = require('../../config/config')
-const {snackBarError} = require('../../utils/notifications')
-const {guessDelimiter} = require('../../utils/text')
-const {extractSample, getTabs, guessFileType} = require('../../utils/import')
-const {TEXT_TYPE, XL_TYPE} = require('../../utils/feurst/consts')
-const {setAxiosAuthentication} = require('../../utils/authentication')
-const {client} = require('../../utils/client')
-const {XL_EXTENSIONS}=require('../../utils/consts')
+} from '@material-ui/core'
+import isEmpty from 'lodash/isEmpty'
+import axios from 'axios'
+import {is_development} from '../../config/config'
+import {snackBarError} from '../../utils/notifications'
+import {guessDelimiter} from '../../utils/text'
+import {extractSample, getTabs, guessFileType} from '../../utils/import'
+import {TEXT_TYPE, XL_TYPE} from '../../utils/feurst/consts'
+import {setAxiosAuthentication} from '../../utils/authentication'
+import {client} from '../../utils/client'
+import {XL_EXTENSIONS} from '../../utils/consts'
+import {FEURST_IMG_PATH} from '../../utils/feurst/consts'
+import {PleasantButton} from './Button'
 
 const PureDialog = dynamic(() => import('../Dialog//PureDialog'))
-
-const DownloadExampleFile = styled.button`
-  background: none;
-  border: 0;
-  cursor: pointer;
-  width: 100%;
-`
 
 const ImportResult = ({result}) => {
   return (
     <>
       <div>Données créées : {result.created}</div>
       <div>Données mises à jour : {result.updated}</div>
-      {!lodash.isEmpty(result.errors) &&
+      {!isEmpty(result.errors) &&
         <><h2>Erreurs:</h2>
           {result.errors.map(err => (<div>{err}</div>))}
         </>
       }
-      {!lodash.isEmpty(result.warnings) &&
+      {!isEmpty(result.warnings) &&
         <><h2>Warnings:</h2>
           {result.warnings.map(war => (<div>{war}</div>))}
         </>
@@ -161,17 +155,28 @@ const ImportExcelFile = ({importURL, templateURL, caption}) => {
     <PleasantButton onClick={() => setIsOpenDialog(true)} rounded={'full'} className="mb-4" bgColor={'#141953'} textColor={'white'} size="full-width">
       {cap}
     </PleasantButton>
-    <PureDialog title={cap} open={isOpenDialog}
+    <ImportDialog open={isOpenDialog}
       onClose={() => setIsOpenDialog(false)} height='90%'>
-      {is_development() && <h1>{fileType},{delimiter},{tabs},{tab},{firstLine},</h1>}
-      <input type={'file'} onSubmit={() => uploadFile} onChange={onFileChange} accept={XL_EXTENSIONS.join(',')}/>
+      {/* {is_development() && <h1>{fileType},{delimiter},{tabs},{tab},{firstLine},</h1>} */}
+
+      {/* Design modal */}
+      <h2>{cap}</h2>
+
+      <label htmlFor='importfile'>
+        <div className='box'>
+          <img width={'171'} src={`${FEURST_IMG_PATH}/xls-icon.png`} alt=""/>
+          <span className='inputfiletext'>Parcourir…</span>
+          <input className='sr-only' id={'importfile'} type={'file'} onSubmit={() => uploadFile} onChange={onFileChange} accept={XL_EXTENSIONS.join(',')}/>
+        </div>
+      </label>
+
       {sample &&
         <><div style={{display: 'flex'}}>
           {fileType==TEXT_TYPE &&
           <>
             <Typography>Séparateur:</Typography>
             <TextField maxLength={1} defaultValue={delimiter} id='delimiter'
-              onChange={ev => !lodash.isEmpty(ev.target.value?.trim()) && setDelimiter(ev.target.value.trim())}
+              onChange={ev => !isEmpty(ev.target.value?.trim()) && setDelimiter(ev.target.value.trim())}
             />
           </>
           }
@@ -196,8 +201,10 @@ const ImportExcelFile = ({importURL, templateURL, caption}) => {
         </div>
         </>}
       {importResult && <ImportResult result={importResult}/>}
-      <PleasantButton rounded={'full'} onClick={submitData}>Importer ce fichier</PleasantButton>
-    </PureDialog>
+      <div className='importbutton flex'>
+        <PleasantButton size={'full-width'} rounded={'full'} onClick={submitData}>Importer</PleasantButton>
+      </div>
+    </ImportDialog>
     {templateURL &&
       <DownloadExampleFile type='button' className='block text-lg no-underline text-center mb-6' href='#' onClick={fetchTemplate} >
         Télécharger le modèle de fichier
@@ -206,5 +213,63 @@ const ImportExcelFile = ({importURL, templateURL, caption}) => {
   </>
   )
 }
+
+const DownloadExampleFile = styled.button`
+  background: none;
+  border: 0;
+  cursor: pointer;
+  width: 100%;
+`
+
+const ImportDialog = styled(PureDialog)`
+  
+  .dialogcontent {
+    aspect-ratio: 1 / 1;
+    max-width: 25rem;
+  }
+
+  h2 {
+    color: var(--black);
+    text-align: center;
+  }
+
+  .box {
+    aspect-ratio: 1 / 1;
+    background-color: #e4e4e4;
+    width: min(calc(100% - 2rem), calc(100% - 5rem));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-inline: auto;
+    margin-bottom: var(--spc-6);
+
+    img {
+      margin-bottom: var(--spc-2);
+      aspect-ratio: 1 / 1;
+      width: 6rem;
+    }
+  }
+
+  label {
+    cursor: pointer;
+  }
+
+  .inputfiletext {
+    background-color: var(--white);
+    padding: var(--spc-2) var(--spc-5);
+    text-align: center;
+    border-radius: var(--rounded-2xl);
+    width: min(calc(100% - 2rem), calc(100% - 5rem));
+  }
+  
+
+  .importbutton {
+    justify-content: center;
+    button {width: 80%;}
+  }
+
+
+`
 
 module.exports=ImportExcelFile
