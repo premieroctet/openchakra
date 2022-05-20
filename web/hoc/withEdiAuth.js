@@ -102,7 +102,7 @@ const withEdiAuth = (Component = null, options = {}) => {
               <Component accessRights={accessRights} />
               : loading ? '' : <div>Vous n'avez pas accès à cette rubrique</div>}
           </div>
-          <Footer />
+          {/* <Footer /> */}
           <GlobalStyleEdi />
         </ThemeProvider>
       )
@@ -111,5 +111,6 @@ const withEdiAuth = (Component = null, options = {}) => {
 
   return ediAuth
 }
+
 
 export default withEdiAuth
