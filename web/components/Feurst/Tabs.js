@@ -22,17 +22,17 @@ const tabsContent = [
     visible: [ORDER],
   },
   {
-    title: 'Mes commandes',
-    url: `${BASEPATH_EDI}/orders`,
-    model: ORDER,
-    action: VIEW,
-    visible: [ORDER],
-  },
-  {
     title: 'Traitement des commandes',
     url: `${BASEPATH_EDI}/orders/handle`,
     model: ORDER,
     action: HANDLE,
+    visible: [ORDER],
+  },
+  {
+    title: 'Mes commandes',
+    url: `${BASEPATH_EDI}/orders`,
+    model: ORDER,
+    action: VIEW,
     visible: [ORDER],
   },
   {
