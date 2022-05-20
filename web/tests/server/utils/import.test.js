@@ -16,7 +16,7 @@ const {TEXT_TYPE, XL_TYPE} = require('../../../utils/feurst/consts')
 
 const ProductSchema = require('../../../server/models/feurst/ProductSchema')
 const {fileImport, shipRatesImport} = require('../../../server/utils/import')
-const {computeShipFee} = require('../../../server/utils/commands')
+const {computeShippingFee} = require('../../../server/utils/commands')
 
 const Product=mongoose.model('product', ProductSchema)
 const PriceList=mongoose.model('priceList', PriceListSchema)
@@ -137,14 +137,14 @@ describe('XL & CSV imports', () => {
     test.each(cases)(
       'Zipcode %p, weight %p, express %p expects ship fee %p€',
       (zipcode, weight, express, expected) => {
-        return computeShipFee(zipcode, weight, express)
+        return computeShippingFee(zipcode, weight, express)
           .then(fee => {
             expect(fee).toBe(expected)
           })
       })
 
     test('No ship rate for Corsica', () => {
-      return expect(computeShipFee(20, 150, true)).rejects.toMatch('No rate found')
+      return expect(computeShippingFee(20, 150, true)).rejects.toMatch('No rate found')
     })
   })
 

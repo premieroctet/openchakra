@@ -82,7 +82,7 @@ const addItem = (data, product_id, reference, quantity, net_price, replace=false
 /**
 Computes Ship rate depending on zipcode, weight and express (true||false)
 */
-const computeShipFee = (model, department, express) => {
+const computeShippingFee = (model, department, express) => {
   return new Promise((resolve, reject) => {
     if (!department) {
       return reject(`Can not compute shipping fee: no department`)
@@ -117,7 +117,7 @@ Data is an Order or a Quotation
 const updateShipFee = data => {
   return new Promise((resolve, reject) => {
     if (extractDepartment(data.address?.zip_code) && data.shipping_mode) {
-      computeShipFee(data, extractDepartment(data.address?.zip_code), data.shipping_mode==EXPRESS_SHIPPING)
+      computeShippingFee(data, extractDepartment(data.address?.zip_code), data.shipping_mode==EXPRESS_SHIPPING)
         .then(fee => {
           data.shipping_fee=fee
           return resolve(data)
@@ -192,5 +192,5 @@ const updateCompanyAddresses= model => {
     })
 }
 
-module.exports = {addItem, computeShipFee, updateShipFee, getProductPrices,
+module.exports = {addItem, computeShippingFee, updateShipFee, getProductPrices,
   updateStock, isInDeliveryZone, updateCompanyAddresses, extractDepartment}

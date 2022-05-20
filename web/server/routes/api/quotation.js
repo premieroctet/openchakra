@@ -24,7 +24,7 @@ const {
 } = require('../../../utils/feurst/consts')
 const {
   addItem,
-  computeShipFee,
+  computeShippingFee,
   extractDepartment,
   getProductPrices,
   isInDeliveryZone,
@@ -488,11 +488,11 @@ router.get('/:id/shipping-fee', passport.authenticate('jwt', {session: false}), 
       }
       order=result
       // Simulate address
-      return computeShipFee(order, extractDepartment(zipCode), false)
+      return computeShippingFee(order, extractDepartment(zipCode), false)
     })
     .then(standard => {
       fee[STANDARD_SHIPPING]=standard
-      return computeShipFee(order, extractDepartment(zipCode), true)
+      return computeShippingFee(order, extractDepartment(zipCode), true)
     })
     .then(express => {
       fee[EXPRESS_SHIPPING]=express
