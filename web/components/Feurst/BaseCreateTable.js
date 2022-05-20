@@ -233,7 +233,7 @@ const BaseCreateTable = ({
     client(`${API_PATH}/${endpoint}/${orderid}/actions`)
       .then(res => { setActionButtons(res) })
       .catch(err => console.error(JSON.stringify(err)))
-    
+
   }, [endpoint, orderid, state.status])
 
 
@@ -254,7 +254,7 @@ const BaseCreateTable = ({
   const importURL=`${API_PATH}/${endpoint}/${orderid}/import`
   const templateURL=`${API_PATH}/${endpoint}/template`
 
-  
+
   return (<>
 
     {is_development() &&
@@ -279,14 +279,18 @@ const BaseCreateTable = ({
       null
     }
 
+    <h1 style={{color: 'red'}}>C'EST DEGUEU MAIS RICHARD VA FAIRE DU BEAUTIFUL</h1>
+    <h2>Compagnie: {state.company?.name}, Commercial: {state.sales_representative?.firstname}</h2>
+    <h1 style={{color: 'red'}}>N'EST-CE PAS, RICHARD ?</h1>
+
     { orderid ? <>
-      
+
       {isFeurstSales && !isView && <div className='flex'>
         <H2confirm>
           {justCreated && <button onClick={changeCompany}><span>⊕</span> Nouveau devis</button>}
           <span>{state?.company?.name}</span>
         </H2confirm></div>}
-      
+
 
       {canModify &&
       <div className='container-base'>
@@ -314,7 +318,7 @@ const BaseCreateTable = ({
         updateMyData={updateMyOrderContent}
       />
 
-        
+
       <Delivery
         endpoint={endpoint}
         orderid={orderid}
@@ -333,7 +337,7 @@ const BaseCreateTable = ({
 
 
       {/* <div className={`grid grid-cols-2 justify-between gap-y-4 mb-8`}>
-       
+
         {isView ? <PleasantButton
           rounded={'full'}
           bgColor={'#fff'}
@@ -345,7 +349,7 @@ const BaseCreateTable = ({
         Revenir à la saisie
         </PleasantButton> : null}
 
-       
+
         {convertToQuotation && <PleasantButton
           rounded={'full'}
           disabled={justCreated}
@@ -368,7 +372,7 @@ const BaseCreateTable = ({
         >
         Convertir en commande
         </PleasantButton>}
-          
+
 
         {(canModify || canValidQuotation) && <PleasantButton
           rounded={'full'}
@@ -381,7 +385,7 @@ const BaseCreateTable = ({
       </div> */}
 
       <div className={`grid grid-cols-2 justify-between gap-y-4 mb-8`}>
-       
+
         {isRevertToEdition ? <PleasantButton
           rounded={'full'}
           bgColor={'#fff'}
@@ -392,7 +396,7 @@ const BaseCreateTable = ({
         >
         Revenir à la saisie
         </PleasantButton> : null}
-       
+
         {/* {isConvertToQuotation && <PleasantButton
           rounded={'full'}
           disabled={justCreated}
@@ -415,7 +419,7 @@ const BaseCreateTable = ({
         >
         Convertir en commande
         </PleasantButton>}
-          
+
 
         {isValidButton && <PleasantButton
           rounded={'full'}
@@ -435,7 +439,7 @@ const BaseCreateTable = ({
         >
         Partiellement traitée
         </ConfirmPartialHandledValidation>}
-        
+
         {isTotallyHandled && <ConfirmHandledValidation
           className={'justify-self-end col-start-2'}
           onClick={() => handleValidation({endpoint, orderid, status: true})}

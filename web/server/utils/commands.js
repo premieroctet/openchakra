@@ -91,8 +91,8 @@ const computeShipFee = (model, department, express) => {
     const companyMainDepartment=extractDepartment(model.company?.addresses[0]?.zip_code)
     const weight=model.total_weight
 
-    // Carriage paid ?
-    if (!lodash.isNil(model.company.carriage_paid) && !lodash.isNil(orderDepartment) && companyMainDepartment==orderDepartment && model.total_amount >= model.company.carriage_paid) {
+    // Carriage paid for non express ?
+    if (!express && !lodash.isNil(model.company.carriage_paid) && !lodash.isNil(orderDepartment) && companyMainDepartment==orderDepartment && model.total_amount >= model.company.carriage_paid) {
       console.log(`Order amount ${model.total_amount}> carriage paid ${model.company.carriage_paid} : no shipping fee`)
       return resolve(0)
     }
