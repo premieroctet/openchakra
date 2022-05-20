@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   schedule_customToolbarStyle: {
     display: 'flex',
     width: '100%',
@@ -189,3 +189,4 @@ export default theme => ({
   },
 
 })
+export default style

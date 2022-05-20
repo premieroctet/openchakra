@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   servicesConntainer:{
     [theme.breakpoints.down('xs')]:{
       display: 'flex',
@@ -39,3 +39,4 @@ export default theme => ({
     },
   }
 })
+export default style

@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   container: {
     backgroundColor: '#0D5169',
     width: '100%',
@@ -25,3 +25,4 @@ export default theme => ({
     paddingRight: '10% !important',
   },
 })
+export default style

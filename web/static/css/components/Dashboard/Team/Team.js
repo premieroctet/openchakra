@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   searchSelectPadding: {
     paddingRight: '34px !important',
   },
@@ -40,3 +40,4 @@ export default theme => ({
     color: theme.palette.error.main,
   },
 })
+export default style

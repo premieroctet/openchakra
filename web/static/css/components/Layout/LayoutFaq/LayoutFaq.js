@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   mainContainerLayoutFaq: {
     position: 'relative',
     minHeight: '100vh',
@@ -41,3 +41,4 @@ export default theme => ({
 
   },
 })
+export default style

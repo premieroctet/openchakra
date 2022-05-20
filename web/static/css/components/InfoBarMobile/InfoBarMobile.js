@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   infoBarMainStyle: {
     backgroundColor: theme.palette.backgroundGrey.main,
     justifyContent: 'center',
@@ -36,3 +36,4 @@ export default theme => ({
     fontWeight: theme.typography.infoBar.fontWeight
   },
 })
+export default style

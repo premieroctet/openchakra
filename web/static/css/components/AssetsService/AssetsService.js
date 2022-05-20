@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   policySizeTitle: {
     fontSize: 24,
     lineHeight: '1.25em',
@@ -53,3 +53,4 @@ export default theme => ({
     width: '100%',
   },
 })
+export default style

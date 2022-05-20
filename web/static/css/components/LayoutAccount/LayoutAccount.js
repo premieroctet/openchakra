@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   boxlayout: {
     margin: '0 15%',
     display: 'flex',
@@ -15,3 +15,4 @@ export default theme => ({
     width: '100%',
   },
 })
+export default style

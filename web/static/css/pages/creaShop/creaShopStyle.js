@@ -2,7 +2,7 @@ const drawerWidth = 240
 
 import '../../../assets/icon/logo.svg'
 
-export default theme => ({
+const style=theme => ({
 
   containerNavigation: {
     margin: 0,
@@ -125,3 +125,4 @@ export default theme => ({
   },
 
 })
+export default style

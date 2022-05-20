@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   chipsContainer: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -16,3 +16,4 @@ export default theme => ({
     fontWeight: 'bold',
   },
 })
+export default style

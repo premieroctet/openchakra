@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   root: {
     margin: 0,
     padding: theme.spacing(2),
@@ -45,3 +45,4 @@ export default theme => ({
     margin: 'auto',
   },
 })
+export default style

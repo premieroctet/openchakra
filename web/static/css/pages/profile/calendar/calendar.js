@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   mainContainerSchedule:{
     [theme.breakpoints.down('xs')]:{
       marginBottom: '12vh'
@@ -24,3 +24,4 @@ export default theme => ({
     }
   }
 })
+export default style

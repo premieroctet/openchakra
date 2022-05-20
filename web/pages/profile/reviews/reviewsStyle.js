@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   bigContainer: {
     marginTop: 70,
     flexGrow: 1,
@@ -112,3 +112,4 @@ export default theme => ({
     },
   },
 })
+export default style

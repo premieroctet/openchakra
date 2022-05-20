@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   buttonSave: {
     textTransform: 'initial',
     fontWeight: 'bold',
@@ -18,3 +18,4 @@ export default theme => ({
     color: theme.palette.error.main,
   },
 })
+export default style

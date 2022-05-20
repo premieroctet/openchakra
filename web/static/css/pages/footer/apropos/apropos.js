@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   containerApropos:{
     display: 'flex',
     justifyContent: 'center'
@@ -7,3 +7,4 @@ export default theme => ({
     width: '100%'
   }
 })
+export default style

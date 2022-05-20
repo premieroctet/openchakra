@@ -1,4 +1,4 @@
-export default theme =>({
+const style=theme =>({
   loginContainer: {
     alignItems: 'center',
     padding: '5%',
@@ -15,3 +15,4 @@ export default theme =>({
     width: '100%'
   }
 })
+export default style

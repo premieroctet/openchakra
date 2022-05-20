@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   infoBarMainStyle: {
     backgroundColor: theme.palette.backgroundGrey.main,
     justifyContent: 'center',
@@ -45,3 +45,4 @@ export default theme => ({
     backgroundImage: 'url(static/assets/img/warning.svg)',
   },
 })
+export default style

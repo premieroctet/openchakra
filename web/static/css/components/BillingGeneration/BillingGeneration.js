@@ -4,7 +4,7 @@ const COLDESCRIPTION_WIDTH = 40
 const COLN_WIDTH = (100 - COLDESCRIPTION_WIDTH) / 3
 const BACKGROUND_COLOR = '#CCDCFB';
 
-export default theme => ({
+const style=theme => ({
   body: {
     padding: 50,
     fontFamily: 'SourceSansPro',
@@ -122,3 +122,4 @@ export default theme => ({
     backgroundColor: BACKGROUND_COLOR
   }
 });
+export default style

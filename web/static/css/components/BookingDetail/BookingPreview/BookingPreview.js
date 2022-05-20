@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   bigContainer: {
     marginTop: 0,
     flexGrow: 1,
@@ -157,3 +157,4 @@ export default theme => ({
     color: theme.palette.error.main,
   },
 })
+export default style

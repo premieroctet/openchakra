@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   ResaServiceMainContainer: {
     display: 'flex',
     flexDirection: 'row',
@@ -33,3 +33,4 @@ export default theme => ({
     padding: theme.padding.blackButton.padding,
   },
 })
+export default style

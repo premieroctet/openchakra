@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   containercalendar: {
     display: 'flex',
     marginTop: 100,
@@ -15,3 +15,4 @@ export default theme => ({
     zIndex: 0,
   },
 })
+export default style

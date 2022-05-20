@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   certifIcon: {
     color: '#696767',
   },
@@ -20,3 +20,4 @@ export default theme => ({
     width: 24,
   },
 })
+export default style

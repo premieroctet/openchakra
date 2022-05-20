@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   root: {
     margin: 0,
     padding: theme.spacing(2),
@@ -13,3 +13,4 @@ export default theme => ({
     color: theme.palette.error.main,
   },
 })
+export default style

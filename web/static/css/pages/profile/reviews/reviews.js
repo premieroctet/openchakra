@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   containerAskQuestion:{
     width: '100%',
     display: 'flex',
@@ -30,3 +30,4 @@ export default theme => ({
     },
   }
 })
+export default style

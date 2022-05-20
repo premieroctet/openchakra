@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
 
   formControl: {
     margin: 0,
@@ -28,3 +28,4 @@ export default theme => ({
     color: 'green'
   },
 })
+export default style

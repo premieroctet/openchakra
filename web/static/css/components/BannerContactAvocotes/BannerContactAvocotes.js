@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   mainContainer: {
     backgroundImage: 'url(/static/assets/img/avocotes/banner.jpeg)',
     width: '100%',
@@ -34,3 +34,4 @@ export default theme => ({
     },
   },
 })
+export default style

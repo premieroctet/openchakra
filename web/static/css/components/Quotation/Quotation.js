@@ -7,7 +7,7 @@ const LIGHT_FONT = '#4B4B4B'
 const FONT_FAMILY='Roboto'
 const MARGIN='10px'
 
-export default theme => ({
+const style=theme => ({
   body: {
     padding: 50,
     fontSize: 11,
@@ -99,3 +99,4 @@ export default theme => ({
     textAlign: 'center',
   },
 })
+export default style

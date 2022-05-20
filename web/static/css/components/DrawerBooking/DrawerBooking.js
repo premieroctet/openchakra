@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   userServicePreviewWarningContainer: {
     display: 'flex',
     alignItems: 'center',
@@ -72,3 +72,4 @@ export default theme => ({
     },
   },
 })
+export default style
