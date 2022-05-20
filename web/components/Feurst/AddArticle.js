@@ -93,7 +93,7 @@ const AddArticle = ({endpoint, orderid, updateTable, addProduct, wordingSection}
 
         <StyledAutocomplete>
           <label {...getLabelProps} htmlFor={`autosearchitem`}>
-          Réf. catalogue
+          Rechercher
           </label>
           <div {...getComboboxProps()}>
             <input

@@ -58,19 +58,23 @@ const ToTheBin = props => (
   </button>
 )
 
+const articleRef = {
+  label: 'Réf. article',
+  attribute: 'product.reference',
+  Footer: 'Total',
+}
+
+const articleName = {
+  label: 'Désignation',
+  attribute: item => `${item.product.description} ${item.product.description_2}`,
+}
+
 
 const orderColumns = ({endpoint, orderid, language, canUpdateQuantity, deleteProduct}) => {
 
   const orderColumnsBase = [
-    {
-      label: 'Réf. catalogue',
-      attribute: 'product.reference',
-      Footer: 'Total',
-    },
-    {
-      label: 'Désignation',
-      attribute: item => `${item.product.description} ${item.product.description_2}`,
-    },
+    {...articleRef},
+    {...articleName},
     {
       label: 'Quantité',
       attribute: 'quantity',
@@ -178,15 +182,8 @@ const quotationColumns = ({endpoint, orderid, language, deleteProduct, canUpdate
 
 
   const quotationColumnsBase = [
-    {
-      label: 'Réf. catalogue',
-      attribute: 'product.reference',
-      Footer: 'Total',
-    },
-    {
-      label: 'Désignation',
-      attribute: item => `${item.product.description} ${item.product.description_2}`,
-    },
+    {...articleRef},
+    {...articleName},
     {
       label: 'Quantité',
       attribute: 'quantity',

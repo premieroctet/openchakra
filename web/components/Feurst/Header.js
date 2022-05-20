@@ -54,7 +54,9 @@ const Header = ({accessRights}) => {
 
   return (
     <>
-      <InfoBox>Notre secrétariat est ouvert du lundi au vendredi de 9h00 à 17h00.</InfoBox>
+      <InfoBox>
+        <p>Toute commande passée avant 11h00 sera traitée dans la journée. Notre secrétariat est ouvert du lundi au vendredi de 9h00 à 17h00.</p>
+      </InfoBox>
       <HeaderContainer role="banner">
       
         <a className='phonenumber' href={`tel:${FEURST_PHONE_NUMBER.replace(/\s+/g, '')}`}>Une question ? {FEURST_PHONE_NUMBER}</a>
