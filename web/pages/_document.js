@@ -1,5 +1,5 @@
 import React from 'react'
-import Document, {Head, Main, NextScript} from 'next/document'
+import Document, {Html, Head, Main, NextScript} from 'next/document'
 import {ServerStyleSheets} from '@material-ui/core/styles'
 
 
@@ -9,7 +9,7 @@ class MyDocument extends Document {
     const {pageContext} = this.props
 
     return (
-      <html lang="fr" dir="ltr" xmlns:og="http://ogp.me/ns#">
+      <Html lang="fr" dir="ltr" xmlns:og="http://ogp.me/ns#">
         <Head>
           <meta charSet="utf-8"/>
           {/* Use minimum-scale=1 to enable GPU rasterization */}
@@ -24,7 +24,7 @@ class MyDocument extends Document {
           <Main/>
           <NextScript/>
         </body>
-      </html>
+      </Html>
     )
   }
 }
