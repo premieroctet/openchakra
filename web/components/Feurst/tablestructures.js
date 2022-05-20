@@ -412,7 +412,7 @@ const handledOrdersColumns = ({endpoint, language, handleValidation = null, filt
   },
   {
     label: 'Client',
-    attribute: v => v.company.full_name,
+    attribute: v => v.company.name,
   },
   {
     label: 'Ref. commande',
@@ -425,8 +425,8 @@ const handledOrdersColumns = ({endpoint, language, handleValidation = null, filt
   },
   {
     label: 'Statut',
-    attribute: 'status',
-    Cell: ({value}) => <OrderStatus status={value} />,
+    attribute: v => { console.log(v); return v },
+    Cell: ({value}) => <OrderStatus status={value.status} label={value.status_label} />,
   },
   // {
   //   label: 'Validation',
@@ -446,7 +446,7 @@ const handledQuotationsColumns = ({language, endpoint, handleValidation = null, 
   },
   {
     label: 'Client',
-    attribute: v => v.company.full_name,
+    attribute: v => v.company.name,
   },
   {
     label: 'Ref. devis',
@@ -459,8 +459,8 @@ const handledQuotationsColumns = ({language, endpoint, handleValidation = null, 
   },
   {
     label: 'Statut',
-    attribute: 'status',
-    Cell: ({value}) => <OrderStatus status={value} />,
+    attribute: v => { console.log(v); return v },
+    Cell: ({value}) => <OrderStatus status={value.status} label={value.status_label} />,
   },
   // {
   //   label: 'Validation',
