@@ -13,7 +13,9 @@ const AccountsList = ({accessRights}) => {
 
   const toggleRefresh= () => setRefresh(!refresh)
 
-  const IMPORTS=[{title: 'Import clients/compagnies/tarification', url: `${API_PATH}/users/import`}]
+  // TODO: Import action for FEURST_AD%MIN only
+  // const IMPORTS=[{title: 'Import clients/compagnies/tarification', url: `${API_PATH}/users/import`}]
+  const IMPORTS=[]
   return (
     <>
       <div display='flex' flexDirection='row'>
