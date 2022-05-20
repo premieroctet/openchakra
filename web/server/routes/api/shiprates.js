@@ -6,7 +6,7 @@ const {shipRatesImport} = require('../../utils/import')
 const {TEXT_FILTER, createMemoryMulter} = require('../../utils/filesystem')
 const {SHIPRATE} = require('../../../utils/feurst/consts')
 const ShipRate = require('../../models/ShipRate')
-const {getDataFilter, isActionAllowed} = require('../../utils/userAccess')
+const {isActionAllowed} = require('../../utils/userAccess')
 
 const router = express.Router()
 const {VIEW}=require('../../../utils/consts')
@@ -42,7 +42,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     return res.sendStatus(301)
   }
 
-  MODEL.find(getDataFilter(req.user, DATA_TYPE, VIEW))
+  MODEL.find()
     .then(data => {
       return res.json(data)
     })
