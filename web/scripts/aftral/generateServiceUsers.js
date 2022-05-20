@@ -28,9 +28,9 @@ mongoose.connect(getDatabaseUri(), MONGOOSE_OPTIONS)
         professional_access: true,
         service_address: user.billing_address,
         location: {client: false, alfred: false, visio: true},
-        prestations: [{prestation: prestation._id, price: prestation.company_price}],
+        prestations: [{prestation: prestation._id, price: prestation.company_price, billing: prestation.billing[0]}],
       },
-      {upsert: true})
+      {upsert: true, runValidators: true})
     })
     console.log(`Creating ${promises.length} service users`)
     return Promise.all(promises)
