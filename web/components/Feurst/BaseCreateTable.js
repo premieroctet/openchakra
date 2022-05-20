@@ -54,9 +54,7 @@ const DialogAddress = dynamic(() => import('./DialogAddress'))
 const ConfirmHandledValidation = ({onClick, className, children}) => (
   <PleasantButton
     rounded={'full'}
-    bgColor={'#80b150'}
     textColor={'#fff'}
-    borderColor={'1px solid #80b150'}
     className={className}
     onClick={onClick}
   >{children}</PleasantButton>
@@ -68,7 +66,7 @@ const ConfirmPartialHandledValidation = ({onClick, className, children}) => {
     rounded={'full'}
     bgColor={'#fff'}
     textColor={'var(--black)'}
-    borderColor={'1px solid #80b150'}
+    borderColor={'1px solid #141953'}
     onClick={onClick}
     className={className}
   >
@@ -415,7 +413,20 @@ const BaseCreateTable = ({
         >
         Convertir en commande
         </PleasantButton>}
-       
+          
+
+        {isValidButton && <PleasantButton
+          rounded={'full'}
+          className={'justify-self-end col-start-2'}
+          onClick={() => (isAddressRequired ? setIsOpenDialog(true) : submitOrder({endpoint, orderid}))}
+        >
+          {t(`${wordingSection}.valid`)} {/* Valid order/quotation */}
+        </PleasantButton>}
+
+      </div>
+
+      {/* Partially handled buttons  */}
+      <div className='flex gap-x-4 justify-end mb-8'>
         {isPartiallyHandled && <ConfirmPartialHandledValidation
           className={'justify-self-end col-start-2'}
           onClick={() => handleValidation({endpoint, orderid, status: false})}
@@ -429,17 +440,6 @@ const BaseCreateTable = ({
         >
         Commande traitée
         </ConfirmHandledValidation>}
-          
-
-        {isValidButton && <PleasantButton
-          rounded={'full'}
-          className={'justify-self-end col-start-2'}
-          onClick={() => (isAddressRequired ? setIsOpenDialog(true) : submitOrder({endpoint, orderid}))}
-        >
-          {t(`${wordingSection}.valid`)} {/* Valid order/quotation */}
-        </PleasantButton>}
-
-
       </div>
 
 

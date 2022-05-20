@@ -5,7 +5,9 @@ import styled from 'styled-components'
 import {getLoggedUser} from '../../utils/context'
 import {screen} from '../../../web/styles/screenWidths'
 import {CREATE, ORDER, QUOTATION, BASEPATH_EDI, PRODUCT, SHIPRATE, ACCOUNT} from '../../utils/consts'
+import {FEURST_IMG_PATH} from '../../utils/feurst/consts'
 import ContactUs from './ContactUs'
+
 
 const QuickMenuStyled = styled.div`
  a {
@@ -40,6 +42,16 @@ const QuickMenuStyled = styled.div`
       font-size: var(--text-base);
     }
   }
+
+  span {
+    font-size: var(--text-sm);
+    white-space: nowrap;
+    color: var(--black) !important;
+    
+    @media (${screen.lg}) {
+      font-size: var(--text-base);
+    }
+  }
 `
 
 const MENUS=[
@@ -58,12 +70,15 @@ const MENUS=[
     label: 'Administration',
     url: `${BASEPATH_EDI}/accounts`,
   },
-  {
-    enabled: () => !!getLoggedUser(),
-    label: 'Se déconnecter',
-    url: `${BASEPATH_EDI}/login?out=true`,
-  },
 ]
+
+const LogOut = () => {
+
+  return (getLoggedUser() ? (
+    <Link href={`${BASEPATH_EDI}/login?out=true`} >
+      <a title={'Se déconnecter'}><img width={20} height={20} src={`${FEURST_IMG_PATH}/logout.png`} alt="" /></a>
+    </Link>) : null)
+}
 
 
 const QuickMenu = ({accessRights}) => {
@@ -74,9 +89,11 @@ const QuickMenu = ({accessRights}) => {
   }
 
   const router = useRouter()
+
+  const loggedUser = getLoggedUser()
+  const firstname = loggedUser?.firstname || ''
   
   const menus=MENUS.filter(m => accessRights && m.enabled(accessRights))
-  
 
   if (!menus.length) {
     return (<ContactUs />)
@@ -84,10 +101,12 @@ const QuickMenu = ({accessRights}) => {
 
   return (
     <>
-      <QuickMenuStyled className='flex w-full justify-evenly gap-x-4 items-baseline'>
+      <QuickMenuStyled className='flex w-full justify-evenly gap-x-4'>
         {menus.map((menu, i) => (
           <Link key={`menu${i}`} href={menu.url}><a className={containsPartUrl(menu.url, router.pathname) ? 'current' : null}>{menu.label}</a></Link>
         ))}
+        
+        {getLoggedUser() ? <><span>{`Bienvenue ${firstname}`}</span><LogOut /></> : null}
       </QuickMenuStyled>
     </>
   )

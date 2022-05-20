@@ -4,6 +4,7 @@ import {ThemeProvider} from 'styled-components'
 import uniqBy from 'lodash/uniqBy'
 import isUndefined from 'lodash/isUndefined'
 import Header from '../components/Feurst/Header'
+import Footer from '../components/Feurst/Footer'
 import {getLoggedUser} from '../utils/context'
 import {theme, GlobalStyleEdi} from '../styles/feurst/feurst.theme'
 import {client} from '../utils/client'
@@ -101,6 +102,7 @@ const withEdiAuth = (Component = null, options = {}) => {
               <Component accessRights={accessRights} />
               : loading ? '' : <div>Vous n'avez pas accès à cette rubrique</div>}
           </div>
+          <Footer />
           <GlobalStyleEdi />
         </ThemeProvider>
       )

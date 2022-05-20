@@ -22,10 +22,15 @@ const HeaderContainer = styled.header`
 
 
   .phonenumber {
+    font-size: var(--text-sm);
     white-space: nowrap;
     color: ${props => props.theme.colors?.blueFeurst || '#00F'};
-    font-weight: var(--font-semibold);
+    font-weight: var(--font-bold);
     text-decoration: none;
+
+    @media (${screen.lg}) {
+      font-size: var(--text-base);
+    }
   }
 `
 
@@ -34,18 +39,30 @@ const LogoLink = styled.a`
   cursor: pointer;
 `
 
+const InfoBox = styled.div`
+  background-color: var(--brand-color);
+  color: var(--white);
+  font-weight: var(--font-bold);
+  text-align: center;
+
+  padding-block: var(--spc-2);
+`
+
 const Header = ({accessRights}) => {
 
   return (
-    <HeaderContainer role="banner">
+    <>
+      <InfoBox>Notre secrétariat est ouvert du lundi au vendredi de 9h00 à 17h00.</InfoBox>
+      <HeaderContainer role="banner">
       
-      <a className='phonenumber' href={`tel:${FEURST_PHONE_NUMBER.replace(/\s+/g, '')}`}>{FEURST_PHONE_NUMBER}</a>
+        <a className='phonenumber' href={`tel:${FEURST_PHONE_NUMBER.replace(/\s+/g, '')}`}>Une question ? {FEURST_PHONE_NUMBER}</a>
       
-      <Link href={`${BASEPATH_EDI}`}>
-        <LogoLink><img className='img-responsive max-w-200' src="https://feurst.fr/wp-content/uploads/2022/01/logo-feurst-01.svg" alt='' width={350} height={104} /></LogoLink>
-      </Link>
-      <QuickMenu accessRights={accessRights} />
-    </HeaderContainer>
+        <Link href={`${BASEPATH_EDI}`}>
+          <LogoLink><img className='img-responsive max-w-200' src="https://feurst.fr/wp-content/uploads/2022/01/logo-feurst-01.svg" alt='' width={350} height={104} /></LogoLink>
+        </Link>
+        <QuickMenu accessRights={accessRights} />
+      </HeaderContainer>
+    </>
   )
 }
 
