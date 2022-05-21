@@ -1,3 +1,4 @@
+const {STEPS} = require('../../components/CreaShop/creaShopSteps')
 import CustomButton from '../../components/CustomButton/CustomButton'
 
 import {withStyles} from '@material-ui/core/styles'
@@ -19,13 +20,11 @@ import Box from '../../components/Box/Box'
 import Stepper from '../../components/Stepper/Stepper'
 import styles from '../../static/css/pages/creaShop/creaShopStyle'
 import Logo from '../../components/Logo/Logo'
-const {STEPS}=require('./creaShopSteps')
 const {getDefaultAvailability}=require('../../utils/dateutils')
 const {getLoggedUserId}=require('../../utils/context')
 const {is_development, canAlfredParticularRegister}=require('../../config/config')
 const {setAuthToken, setAxiosAuthentication}=require('../../utils/authentication')
 const {snackBarSuccess}=require('../../utils/notifications')
-import {SHOP} from '../../utils/i18n'
 import ReactHtmlParser from 'react-html-parser'
 import lodash from 'lodash'
 
