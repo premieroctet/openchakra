@@ -1,3 +1,4 @@
+const withParams = require('../../components/withParams')
 import ReactHtmlParser from 'react-html-parser'
 import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
@@ -6,10 +7,11 @@ import Grid from '@material-ui/core/Grid'
 import MenuItem from '@material-ui/core/MenuItem'
 import React from 'react'
 import loadable from 'loadable-components'
-import BasePage from '../basePage'
+
 import Topic from '../../hoc/Topic/Topic'
 import styles from '../../static/css/pages/profile/statistics/statistics'
 const {setAxiosAuthentication}=require('../../utils/authentication')
+
 const Chart = loadable(() => import('react-apexcharts'))
 import Router from 'next/router'
 import axios from 'axios'
@@ -28,7 +30,7 @@ import Head from 'next/head'
 const MONTHS=['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
 const lodash=require('lodash')
 
-class ProfileStatistics extends BasePage {
+class ProfileStatistics extends React.Component {
 
   constructor(props) {
     super(props)
@@ -397,7 +399,7 @@ class ProfileStatistics extends BasePage {
 
   render() {
     const {classes, theme}=this.props
-    const {user}=this.getURLProps()
+    const {user}=this.props.params
 
     if (!user) {
       return null
@@ -428,4 +430,4 @@ class ProfileStatistics extends BasePage {
 }
 
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles, {withTheme: true})(ProfileStatistics))
+export default withTranslation('custom', {withRef: true})(withStyles(styles, {withTheme: true})(withParams(ProfileStatistics)))

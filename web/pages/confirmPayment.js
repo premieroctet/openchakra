@@ -1,3 +1,4 @@
+const withParams = require('../components/withParams')
 import ReactHtmlParser from 'react-html-parser'
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
@@ -7,7 +8,7 @@ import Router from 'next/router'
 import axios from 'axios'
 import moment from 'moment'
 import AddressAndFacturation from '../components/Payment/AddressAndFacturation/AddressAndFacturation'
-import BasePage from './basePage'
+
 import LayoutPayment from '../hoc/Layout/LayoutPayment'
 import PaymentChoice from '../components/Payment/PaymentChoice/PaymentChoice'
 import Stepper from '../components/Stepper/Stepper'
@@ -18,7 +19,7 @@ const {snackBarError}=require('../utils/notifications')
 
 moment.locale('fr')
 
-class ConfirmPayment extends BasePage {
+class ConfirmPayment extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -53,7 +54,7 @@ class ConfirmPayment extends BasePage {
   componentDidMount() {
 
     setAxiosAuthentication()
-    axios.get(`/myAlfred/api/booking/${this.getURLProps().booking_id}`)
+    axios.get(`/myAlfred/api/booking/${this.props.params.booking_id}`)
       .then(res => {
         const bookingObj = res.data
         this.setState({
@@ -117,7 +118,7 @@ class ConfirmPayment extends BasePage {
     if (pending) {
       return snackBarError(ReactHtmlParser(this.props.t('CONFIRM_PAYMENT.snackbar_error_payment')))
     }
-    const booking_id=this.getURLProps().booking_id
+    const booking_id=this.props.params.booking_id
     const total = parseFloat(this.state.grandTotal)
     const data = {
       booking_id: booking_id,
@@ -154,7 +155,7 @@ class ConfirmPayment extends BasePage {
   }
 
   pay = () => {
-    const booking_id=this.getURLProps().booking_id
+    const booking_id=this.props.params.booking_id
     const total = parseFloat(this.state.grandTotal)
     const data = {
       booking_id: booking_id,
@@ -249,4 +250,4 @@ class ConfirmPayment extends BasePage {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(ConfirmPayment))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(withParams(ConfirmPayment)))

@@ -1,3 +1,4 @@
+const withParams = require('../components/withParams')
 import Album from '../components/Album/Album'
 import {Divider, Link} from '@material-ui/core'
 const {
@@ -38,7 +39,6 @@ import ListIconsSkills from '../components/ListIconsSkills/ListIconsSkills'
 import CustomListGrades from '../components/CustomListGrades/CustomListGrades'
 import CustomIcon from '../components/CustomIcon/CustomIcon'
 const {setAxiosAuthentication}=require('../utils/authentication')
-const BasePage = require('./basePage')
 const {BOOK_STATUS, MANAGER}=require('../utils/consts')
 const isEmpty = require('../server/validation/is-empty')
 const {computeDistanceKm} = require('../utils/functions')
@@ -53,7 +53,7 @@ moment.locale('fr')
 registerLocale('fr', fr)
 
 // TODO : gérer affichage si utilisateur non connecté
-class UserServicesPreview extends BasePage {
+class UserServicesPreview extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -109,12 +109,12 @@ class UserServicesPreview extends BasePage {
 
   // Converts 'all' to 'main'
   get_prop_address = () => {
-    return this.getURLProps().address=='all' ? 'main' : this.getURLProps().address
+    return this.props.params.address=='all' ? 'main' : this.props.params.address
   }
 
   componentDidMount() {
 
-    const id = this.getURLProps().id
+    const id = this.props.params.id
 
     setAxiosAuthentication()
 
@@ -583,7 +583,7 @@ class UserServicesPreview extends BasePage {
     if (!user) {
       return null
     }
-    const{address}=this.getURLProps()
+    const{address}=this.props.params
     if (!address || ['client', 'main', 'all'].includes(address)) {
       return allAddresses.main
     }
@@ -1015,7 +1015,7 @@ class UserServicesPreview extends BasePage {
                         :
                         ''}
                     >
-                      <SummaryCommentary user={this.state.alfred._id} serviceUser={this.getURLProps().id}/>
+                      <SummaryCommentary user={this.state.alfred._id} serviceUser={this.props.params.id}/>
                     </Topic>
                   </Grid>
               }
@@ -1028,7 +1028,7 @@ class UserServicesPreview extends BasePage {
 
   render() {
     const {classes} = this.props
-    const {address} = this.getURLProps()
+    const {address} = this.props.params
     const {service, alfred, user} = this.state
 
     if (!this.state.serviceUser) {
@@ -1062,4 +1062,4 @@ class UserServicesPreview extends BasePage {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(UserServicesPreview))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(withParams(UserServicesPreview)))

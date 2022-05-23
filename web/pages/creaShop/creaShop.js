@@ -1,3 +1,4 @@
+const withParams = require('../../components/withParams')
 const {STEPS} = require('../../components/CreaShop/creaShopSteps')
 import CustomButton from '../../components/CustomButton/CustomButton'
 
@@ -15,7 +16,7 @@ import React from 'react'
 import Router from 'next/router'
 import axios from 'axios'
 import {ALF_CONDS, CANCEL_MODE, GID_LEN, CREASHOP_MODE} from '../../utils/consts.js'
-import BasePage from '../basePage'
+
 import Box from '../../components/Box/Box'
 import Stepper from '../../components/Stepper/Stepper'
 import styles from '../../static/css/pages/creaShop/creaShopStyle'
@@ -28,7 +29,7 @@ const {snackBarSuccess}=require('../../utils/notifications')
 import ReactHtmlParser from 'react-html-parser'
 import lodash from 'lodash'
 
-class creaShop extends BasePage {
+class creaShop extends React.Component {
 
   constructor(props) {
     super(props)
@@ -128,8 +129,8 @@ class creaShop extends BasePage {
             shop.is_certified=true
 
             // Si mode ajout de service, récupérer les services de la boutique pour les excludre des choix
-            if (this.getURLProps().serviceuser_id) {
-              axios.get(`/myAlfred/api/serviceUser/${this.getURLProps().serviceuser_id}`)
+            if (this.props.params.serviceuser_id) {
+              axios.get(`/myAlfred/api/serviceUser/${this.props.params.serviceuser_id}`)
                 .then(serviceUser => {
                   const su=serviceUser.data
                   shop.service = su.service._id
@@ -298,7 +299,7 @@ class creaShop extends BasePage {
       const noDiplomaShop = lodash.pickBy(cloned_shop, (v, k) => !k.match(/diploma|certification/i))
       axios.post('/myAlfred/api/shop/add', noDiplomaShop)
         .then(() => {
-          const su_url = `/myAlfred/api/serviceUser/addUpdate/${this.getURLProps().serviceuser_id || ''}`
+          const su_url = `/myAlfred/api/serviceUser/addUpdate/${this.props.params.serviceuser_id || ''}`
           axios.post(su_url, noDiplomaShop)
             .then(su_res => {
               const su = su_res.data
@@ -628,4 +629,4 @@ creaShop.propTypes = {
   window: PropTypes.func,
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(creaShop))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(withParams(creaShop)))

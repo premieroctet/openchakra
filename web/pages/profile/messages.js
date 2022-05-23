@@ -1,3 +1,4 @@
+const withParams = require('../../components/withParams')
 import ReactHtmlParser from 'react-html-parser'
 
 
@@ -22,14 +23,14 @@ import Typography from '@material-ui/core/Typography'
 import lodash from 'lodash'
 import axios from 'axios'
 import {MESSAGES} from '../../utils/i18n'
-import BasePage from '../basePage'
+
 import LayoutMessages from '../../hoc/Layout/LayoutMessages'
 import LayoutMobileMessages from '../../hoc/Layout/LayoutMobileMessages'
 import MessageSummary from '../../components/MessageSummary/MessageSummary'
 import MessagesDetails from '../../components/MessagesDetails/MessagesDetails'
 import UserAvatar from '../../components/Avatar/UserAvatar'
 import styles from '../../static/css/pages/profile/messages/messages'
-import Hidden from "@material-ui/core/Hidden";
+import Hidden from '@material-ui/core/Hidden'
 
 const moment=require('moment')
 
@@ -49,7 +50,7 @@ const DialogTitle = withStyles(styles)(props => {
   )
 })
 
-class Messages extends BasePage {
+class Messages extends React.Component {
 
   constructor(props) {
     super(props)
@@ -87,7 +88,7 @@ class Messages extends BasePage {
     axios.get('/myAlfred/api/chatRooms/userChatRooms')
       .then(res => {
         const chats=res.data.filter(c => c.booking && c.booking.alfred && c.messages)
-        const relative = this.getURLProps().relative
+        const relative = this.props.params.relative
         if (checkRelative && relative) {
           axios.get(`/myAlfred/api/users/users/${relative}`)
             .then(res => this.setState({chats: chats, relativeDetails: res.data}))
@@ -100,7 +101,7 @@ class Messages extends BasePage {
   }
 
   getChatsRelative = relativeId => {
-    const user=this.getURLProps().user
+    const user=this.props.params.user
     return this.state.chats.slice().filter(c =>
       (c.emitter._id===user && c.recipient._id===relativeId)
       ||
@@ -109,7 +110,7 @@ class Messages extends BasePage {
   }
 
   getRelatives = () => {
-    const user=this.getURLProps().user
+    const user=this.props.params.user
 
     let {chats, tabIndex} = this.state
     if (!chats || chats.length===0) {
@@ -301,4 +302,4 @@ class Messages extends BasePage {
   }
 
 }
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(Messages))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(withParams(Messages)))
