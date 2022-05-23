@@ -1,3 +1,4 @@
+import React, {useEffect, useState, useMemo, useRef} from 'react'
 const RequiredField = require('../misc/RequiredField')
 const {is_development} = require('../../config/config')
 const axios = require('axios')
@@ -6,6 +7,7 @@ const Quotation = require('../Feurst/Quotation')
 const {PDFViewer} = require('@react-pdf/renderer')
 const lodash=require('lodash')
 import NoSSR from 'react-no-ssr'
+import countryList from 'react-select-country-list'
 
 const {withTranslation} = require('react-i18next')
 const {BLADE_SHAPES, FIX_TYPES} = require('../../utils/feurst_consts')
@@ -20,7 +22,6 @@ const {
   MenuItem,
 } = require('@material-ui/core')
 const Validator = require('validator')
-import React, {useEffect, useState} from 'react'
 
 
 const PhoneNumber = ({t, error, onPhoneChange, isValueExpected}) => {
@@ -102,12 +103,18 @@ function Summary(props) {
 
   const [precos, setPrecos]=useState(null)
 
+  const formRef = useRef()
+  const countryOptions = useMemo(() => countryList().getData(), [])
+  const nativeCountries = useMemo(() => countryList().native(), [])
+
   const {
     error,
     name,
     firstname,
     company,
     email,
+    zipcode,
+    country = 'FR',
     type,
     mark,
     model,
@@ -125,7 +132,7 @@ function Summary(props) {
   const formInputs = [
     {
       label: props.t('SUMMARY.name_label'),
-      placeholder: 'Saisissez votre nom',
+      placeholder: props.t('SUMMARY.name_placeholder'),
       name: 'name',
       id: 'name',
       autoComplete: 'family-name',
@@ -134,7 +141,7 @@ function Summary(props) {
     },
     {
       label: props.t('SUMMARY.firstname_label'),
-      placeholder: 'Saisissez votre prénom',
+      placeholder: props.t('SUMMARY.firstname_placeholder'),
       name: 'firstname',
       id: 'firstname',
       autoComplete: 'given-name',
@@ -144,7 +151,7 @@ function Summary(props) {
     {
       type: 'email',
       label: props.t('SUMMARY.email_label'),
-      placeholder: 'Saisissez votre email',
+      placeholder: props.t('SUMMARY.email_placeholder'),
       name: 'email',
       id: 'email',
       autoComplete: 'email',
@@ -153,14 +160,13 @@ function Summary(props) {
     },
     {
       label: props.t('SUMMARY.company_label'),
-      placeholder: 'Saisissez votre société',
+      placeholder: props.t('SUMMARY.company_placeholder'),
       name: 'company',
       id: 'company',
       autoComplete: 'organization',
       value: company,
       required: true,
     },
-
   ]
 
   useEffect(() => {
@@ -177,11 +183,15 @@ function Summary(props) {
 
   }, [])
 
+  useEffect(() => {
+    onValueChange({inputName: 'country', value: formRef?.current?.elements?.country?.value})
+  }, [])
+
   return (
     <div className='summary'>
       <h2 className='pl-6'>{props.t('SUMMARY.receive_label')}</h2>
       <p className='text-base text-right'><RequiredField />{props.t('SUMMARY.mandatory_label')}</p>
-      <form className='personaldata'>
+      <form ref={formRef} className='personaldata'>
 
         {formInputs.map((inp, i) => (
           <FormControl key={`summary${i}`} variant="standard">
@@ -201,18 +211,54 @@ function Summary(props) {
             />
           </FormControl>))}
 
+        <div className='flex w-full gap-x-4'>
+          <FormControl variant="standard" className='grow'>
+            <label htmlFor='country'>{props.t('SUMMARY.country_label')} <RequiredField /></label>
+            <Select
+              value={country}
+              name="country"
+              id="country"
+              required
+              onChange={ev => onValueChange({inputName: 'country', value: ev.target.value})}
+              autoComplete='country-name'
+              error={!!error?.country || false}
+            >
+              {countryOptions.map(({label, value}) => (
+                <MenuItem key={value} value={value}>
+                  {label} {nativeCountries.getLabel(value) != label ? `(${nativeCountries.getLabel(value)})`:''}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          { country === 'FR' ?
+            <FormControl variant="standard">
+              <label htmlFor='zipcode'>{props.t('SUMMARY.zipcode_label')} <RequiredField /></label>
+              <TextField
+                value={zipcode}
+                name="zipcode"
+                id="zipcode"
+                inputProps={{pattern: '[0-9]{5}'}}
+                required
+                autoComplete='postal-code'
+                onChange={ev => onValueChange({inputName: 'zipcode', value: ev.target.value})}
+                placeholder={props.t('SUMMARY.zipcode_placeholder')}
+              />
+            </FormControl> : null}
+        </div>
+
         <PhoneNumber {...props} />
       </form>
 
       <p className='feurstconditions mb-6'>{props.t('SUMMARY.rgpdconditions')}</p>
 
       <h2 className='text-2xl pl-4'>{props.t('SUMMARY.summary_label')}</h2>
-      <div className='recap grid grid-cols-2 gap-x-4'>
+      <div className='recap grid grid-cols-1 md-grid-cols-2 gap-x-4'>
 
         <div>
           <dl className='text-lg dl-inline mb-6'>
             <dt className='text-gray-500'>{props.t('SUMMARY.machine_label')}</dt>
-            <dd>{type} {mark} {model}</dd>
+            <dd>{props.t(type.toUpperCase())} {mark} {model}</dd>
             <dt className='text-gray-500'>{props.t('SUMMARY.use_case_label')}</dt>
             <dd>{props.t('SUMMARY.quarrying_some')} {ground.toLowerCase()}</dd>
             <dt className='text-gray-500'>{props.t('SUMMARY.blade_label')}</dt>
@@ -221,15 +267,16 @@ function Summary(props) {
 
           <h3>{props.t('SUMMARY.equipment_label')}</h3>
 
-          <dl className='text-lg dl-inline ml-12'>
+          <dl className='text-lg dl-inline md-ml-12'>
             <dt className='text-gray-500'>{props.t('SUMMARY.teeth_shield_label')}</dt>
             <dd>{props.t(FIX_TYPES[teethShieldFixType])}</dd>
             <dt className='text-gray-500'>{props.t('SUMMARY.border_shield_label')}</dt>
             <dd>{props.t(FIX_TYPES[borderShieldFixType])}</dd>
           </dl>
         </div>
-
-        <BladePicture width={400} height={265} shape={props.bladeShape} teeth_count={props.teeth_count} />
+        <div className='max-w-lg'>
+          <BladePicture width={400} height={265} shape={props.bladeShape} teeth_count={props.teeth_count} />
+        </div>
       </div>
 
       {precos?.accessories && is_development() &&

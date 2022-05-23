@@ -1,4 +1,8 @@
-@font-face {
+import styled, {createGlobalStyle} from 'styled-components'
+
+
+const MyGlobalStyle = createGlobalStyle`
+ @font-face {
   font-family: 'Roboto';
   font-style: normal;
   font-weight: 400;
@@ -39,11 +43,6 @@ body {
   min-height: 100vh;
 }
 
-.img-responsive {
-  width: 100%;
-  height: auto;
-}
-
 /* Avoid Chrome to see Safari hack */
 @supports (-webkit-touch-callout: none) {
   body {
@@ -51,6 +50,19 @@ body {
     min-height: -webkit-fill-available;
   }
 }
+`
+
+
+const Styles = styled.div`
+
+
+.img-responsive {
+  width: 100%;
+  height: auto;
+}
+
+.max-w-md	{max-width: 28rem;}
+.max-w-lg	{max-width: 32rem;} 
 
 /* textes */
 
@@ -156,6 +168,10 @@ h2,
   display: grid !important;
 }
 
+.grid-cols-1{
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
 .grid-cols-2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
@@ -183,8 +199,16 @@ h2,
   flex-direction: column;
 }
 
+.flex-column-reverse {
+  flex-direction: column-reverse;
+}
+
 .flex-wrap {
   flex-wrap: wrap;
+}
+
+.grow	{
+  flex-grow: 1;
 }
 
 .place-items-center {
@@ -200,6 +224,10 @@ h2,
 .justify-between {
   justify-content: space-between;
 }
+.justify-end {
+  justify-content: end;
+}
+
 .justify-self-end {
   justify-self: end;
 }	
@@ -257,6 +285,8 @@ h2,
 .w-full {
   width: 100%;
 }
+
+.w-fit {width: fit-content;}
 
 .h-full {
   height: 100%;
@@ -418,8 +448,6 @@ h2,
 
 .rounded-container {
   background: #fff;
-  margin: 1rem;
-  padding: 1rem;
   border-radius: 20px;
 }
 
@@ -435,6 +463,13 @@ h2,
   padding: 1rem 1.5rem !important;
   border-radius: 30px !important;
   min-width: 100px !important;
+}
+
+.previous:disabled,
+.next:disabled {
+  cursor: not-allowed !important;
+  opacity: 0.5;
+  pointer-events: all !important;
 }
 
 .next {
@@ -500,7 +535,7 @@ h2,
 .summary .recap dl {
   margin: 0;
   display: grid;
-  grid-template-columns: max-content auto;;
+  grid-template-columns: 1fr;
 } 
 
 dd {
@@ -543,8 +578,20 @@ dl {
     grid-template-columns: repeat(3, 1fr);
   }
 
+  .summary .recap dl {
+    grid-template-columns: max-content auto;
+  }
+
+  .md-gap-x-4 {
+    column-gap: 1rem;
+  }
+
   .md-gap-y-8 {
     row-gap: 4rem;
+  }
+
+  .md-grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .md-col-span-2 {
@@ -558,9 +605,27 @@ dl {
   .md-flex-wrap {
     flex-wrap: wrap;
   }
+
+  .md-p-4 {
+    padding: 1rem;
+  }
+
+  .md-m-4 {
+    margin: 1rem;
+  }
+
+  .md-ml-12 {
+    margin-left: 3rem !important;
+  }
 }
 
-@media screen and (min-width: 1200px) {
+@media screen and (min-width: 1024px) {
+  .lg-flex-row {
+    flex-direction: row;
+  }
+}
+
+@media screen and (min-width: 1280px) {
   body {
     background: none !important;
   }
@@ -597,13 +662,6 @@ dl {
     justify-self: end;
   }
 
-  .previous:disabled,
-  .next:disabled {
-    cursor: not-allowed !important;
-    opacity: 0.5;
-    pointer-events: all !important;
-  }
-
   /* hack input */
 
   .MuiInput-underline::before {
@@ -635,3 +693,7 @@ dl {
     flex-direction: column;
   }
 }
+
+`
+
+export {Styles, MyGlobalStyle}

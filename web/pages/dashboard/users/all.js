@@ -29,7 +29,7 @@ class all extends DataPage {
       models.textColumn({headerName: `${this.props.t('DASHBOARD.alfred')} Mangopay`, field: 'mangopay_provider_id'}),
       models.warningColumn({headerName: 'Warning', field: 'warning'}),
       models.textColumn({headerName: 'Commentaire', field: 'comment', editable: true}),
-      models.booleanColumn({headerName: 'Masqué', field: 'hidden'}),
+      models.booleanColumn({headerName: 'Masqué', field: 'hidden', editable: true}),
     ]
   }
 
