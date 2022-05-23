@@ -473,6 +473,33 @@ input:focus:not(:focus-visible) {
  visibility: visible;
 }
 
+.opacity-100 {
+  opacity: 1;
+}
+
+.opacity-0 {
+  opacity: 0;
+}
+
+.scale-50 {
+  transform: scale(50%);
+}
+
+.scale-100 {
+  transform: scale(100%);
+}
+
+.translate-y-0 {
+  transform: translateY(0px);
+}
+
+.-translate-y-full {
+  transform: translateY(-100%);
+}
+
+.-translate-y-25	{ 
+  transform: translateY(-25%);
+}
 
 
 /* A11Y */

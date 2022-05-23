@@ -24,7 +24,7 @@ const AccountsList = ({accessRights}) => {
   const IMPORTS=[]
   return (
     <>
-      <div display='flex' flexDirection='row'>
+      <div>
         {IMPORTS.map((imp, i) => (<ImportExcelFile key={`imp${i}`} caption={imp.title} importURL={imp.url} templateURL={null} onImport={toggleRefresh}/>))}
       </div>
       
@@ -33,7 +33,7 @@ const AccountsList = ({accessRights}) => {
       </div>
       
       {accessRights.isActionAllowed(ACCOUNT, LINK) && <AccountLink />}
-      <BaseListTable caption='Liste des comptes' key={moment()} endpoint='users' columns={accountsColumns} refresh={refresh}/>
+      <BaseListTable caption='Liste des comptes' key={moment()} endpoint='users' columns={accountsColumns} refresh={refresh} />
 
       <AddAccountDialog title={'Ajouter un compte'} open={isOpenDialog}
         onClose={() => setIsOpenDialog(false)}>
@@ -49,6 +49,7 @@ const AddAccountDialog = styled(PureDialog)`
   h2 {
     text-align: center;
     color: var(--black);
+    margin-bottom: var(--spc-8);
   }
   
   .dialogcontent {
