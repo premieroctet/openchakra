@@ -10,8 +10,8 @@ import Profile from '../../Profile/Profile'
 import ListAlfredConditions from '../../ListAlfredConditions/ListAlfredConditions'
 import styles from '../../../static/css/components/AddressAndFacturation/AddressAndFacturation'
 import withStyles from '@material-ui/core/styles/withStyles'
-import {ADDRESS_FACTURATION} from '../../../utils/i18n'
 import ReactHtmlParser from 'react-html-parser'
+import lodash from 'lodash'
 
 class AddressAndFacturation extends React.Component {
 
@@ -53,24 +53,28 @@ class AddressAndFacturation extends React.Component {
                     user={alfred}
                   />
                 </Topic>
-               }
-              <Grid style={{marginTop: 30, marginBottom: 30}}>
-                <Divider className={`customadreandfacdivider ${classes.divider}`}/>
-              </Grid>
-              <Topic
-                titleTopic={ReactHtmlParser(this.props.t('BOOKING.stuff'))}
-                titleSummary={equipments.length === 0 ? ReactHtmlParser(this.props.t('BOOKING.no_stuff')) : false}
-                underline={false}
-              >
-                <ListAlfredConditions
-                  wrapperComponentProps={equipments}
-                  columnsXl={6}
-                  columnsLG={6}
-                  columnsMD={6}
-                  columnsSM={6}
-                  columnsXS={6}
-                />
-              </Topic>
+              }
+              {!lodash.isEmpty(equipments) &&
+                <>
+                  <Grid style={{marginTop: 30, marginBottom: 30}}>
+                    <Divider className={`customadreandfacdivider ${classes.divider}`}/>
+                  </Grid>
+                  <Topic
+                    titleTopic={ReactHtmlParser(this.props.t('BOOKING.stuff'))}
+                    titleSummary={equipments.length === 0 ? ReactHtmlParser(this.props.t('BOOKING.no_stuff')) : false}
+                    underline={false}
+                  >
+                    <ListAlfredConditions
+                      wrapperComponentProps={equipments}
+                      columnsXl={6}
+                      columnsLG={6}
+                      columnsMD={6}
+                      columnsSM={6}
+                      columnsXS={6}
+                    />
+                  </Topic>
+                </>
+              }
             </Grid>
           </Grid>
         </Grid>

@@ -276,7 +276,7 @@ class DrawerBooking extends React.Component {
                   <Typography style={{color: '#505050'}}>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.presta_place'))}</Typography>
                 </AccordionSummary>
                 <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
-                  { (serviceMode || (serviceUser.location && this.props.isInPerimeter())) &&
+                  { (serviceMode || (serviceUser.location.client && this.props.isInPerimeter())) &&
                     <Grid>
                       <ButtonSwitch
                         key={moment()}

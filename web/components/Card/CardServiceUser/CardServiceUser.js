@@ -243,7 +243,7 @@ class CardServiceUser extends React.Component {
                 <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={profileMode ? classes.labelServiceProfil : classes.labelService}>
                   <Typography className={classes.labelDataContainer}><strong>{cpData.label}</strong></Typography>
                 </Grid>
-                { profileMode || true ? null : // AFTRAL: hide all
+                { !profileMode && (cpData.location?.client || cpData.location?.alfred) && // Hide location if service is visio only
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.cardServiceUserPlaceContainer}>
                     <Grid className={classes.cardServiceUserPlaceLogo}>
                       <RoomIcon/>

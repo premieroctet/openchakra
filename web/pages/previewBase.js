@@ -784,10 +784,14 @@ class PreviewBase extends BasePage {
                   </Grid>
                   {!this.serviceMode && <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
                     <Grid item sm={6} xs={12}>
-                      <CustomButton variant={'outlined'} classes={{root: 'custompreviewshowprofil'}} className={classes.userServicePreviewButtonProfil}
-                        disabled={!showProfileEnabled} onClick={() => Router.push(`/profile/about?user=${alfred._id}`)}>
-                        {ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.button_show_profil'))}
-                      </CustomButton>
+                      {
+                        // TODO Aftral
+                        false &&
+                        <CustomButton variant={'outlined'} classes={{root: 'custompreviewshowprofil'}} className={classes.userServicePreviewButtonProfil}
+                          disabled={!showProfileEnabled} onClick={() => Router.push(`/profile/about?user=${alfred._id}`)}>
+                          {ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.button_show_profil'))}
+                        </CustomButton>
+                      }
                     </Grid>
                     <Grid item sm={6} xs={12}>
                       <Link href="#availabilities">
@@ -800,7 +804,7 @@ class PreviewBase extends BasePage {
                   }
                 </Grid>
               </Grid>
-              <Grid className={'custompreviewboxdescription'} style={{marginTop: '10%'}}>
+              {false && <Grid className={'custompreviewboxdescription'} style={{marginTop: '10%'}}>
                 <Grid className={classes.overrideCssChild}>
                   <Grid style={{width: '100%'}}>
                     <Grid>
@@ -829,7 +833,7 @@ class PreviewBase extends BasePage {
                     }
                   </Grid>
                 </Grid>
-              </Grid>
+              </Grid>}
               {!this.serviceMode &&
                 <Grid className={`custompreviewschedulecont ${classes.scheduleContainer}`}>
                   <Topic

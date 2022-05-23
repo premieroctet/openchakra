@@ -112,12 +112,6 @@ class SearchPage extends BasePage {
     return {date: true, perimeter: true, location: true, category: true, service: true}
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props !== prevProps) {
-      window.location.reload()
-    }
-  }
-
   componentDidMount() {
 
     if (getLoggedUserId()) {
