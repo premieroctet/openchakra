@@ -132,6 +132,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
   bookingFields.status = req.body.customer_booking ? BOOK_STATUS.TO_CONFIRM : req.body.status
   bookingFields.serviceUserId = req.body.serviceUserId
   bookingFields.cesu_amount = req.body.cesu_amount
+  bookingFields.cpf_amount = req.body.cpf_amount
   bookingFields.user_role = getRole(req) || null
   bookingFields.customer_booking = req.body.customer_booking
 

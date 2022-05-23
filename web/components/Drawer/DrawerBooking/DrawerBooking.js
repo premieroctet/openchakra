@@ -49,60 +49,60 @@ class DrawerBooking extends React.Component {
   selectedPresta = prestations => {
     const {readonly}=this.props
     return (
-    lodash.sortBy(prestations, p => p.order || 0).map((p, index) => (
-      <Grid container style={{display: 'flex', alignItems: 'center', width: '100%', marginBottom: '5%'}} key={index}>
-        <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
-          <Grid container style={{display: 'flex', flexDirection: 'column'}}>
-            <Grid>
-              <Typography>{p.label}</Typography>
-            </Grid>
-            <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+      lodash.sortBy(prestations, p => p.order || 0).map((p, index) => (
+        <Grid container style={{display: 'flex', alignItems: 'center', width: '100%', marginBottom: '5%'}} key={index}>
+          <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
+            <Grid container style={{display: 'flex', flexDirection: 'column'}}>
               <Grid>
-                <Typography style={{color: 'rgba(39,37,37,35%)'}}>
-                  {p.price ? p.price.toFixed(2) : '?'}€
-                </Typography>
+                <Typography>{p.label}</Typography>
               </Grid>
-              <Grid style={{marginLeft: '5%', marginRight: '5%'}}>
-                <Typography style={{color: 'rgba(39,37,37,35%)'}}>/</Typography>
+              <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                <Grid>
+                  <Typography style={{color: 'rgba(39,37,37,35%)'}}>
+                    {p.price ? p.price.toFixed(2) : '?'}€
+                  </Typography>
+                </Grid>
+                <Grid style={{marginLeft: '5%', marginRight: '5%'}}>
+                  <Typography style={{color: 'rgba(39,37,37,35%)'}}>/</Typography>
+                </Grid>
+                <Grid style={{whiteSpace: 'nowrap'}}>
+                  <Typography style={{color: 'rgba(39,37,37,35%)'}}>{p.billing ? p.billing.label : '?'}</Typography>
+                </Grid>
               </Grid>
-              <Grid style={{whiteSpace: 'nowrap'}}>
-                <Typography style={{color: 'rgba(39,37,37,35%)'}}>{p.billing ? p.billing.label : '?'}</Typography>
-              </Grid>
+              {p.cesu_eligible && this.props.use_cesu ?
+                <Grid>
+                  <Typography style={{color: 'rgba(39,37,37,35%)'}}><em>
+                    {ReactHtmlParser(this.props.t(this.props.alfred_pro ? 'PRESTATION.cis_eligible': 'PRESTATION.cesu_eligible'))}
+                  </em></Typography>
+                </Grid>
+                : null
+              }
             </Grid>
-            {p.cesu_eligible && this.props.use_cesu ?
-              <Grid>
-                <Typography style={{color: 'rgba(39,37,37,35%)'}}><em>
-                  {ReactHtmlParser(this.props.t(this.props.alfred_pro ? 'PRESTATION.cis_eligible': 'PRESTATION.cesu_eligible'))}
-                </em></Typography>
-              </Grid>
-              : null
-            }
           </Grid>
-        </Grid>
-        <Grid item xl={6} lg={6} md={6} sm={6} xs={6} style={{display: 'flex', flexDirection: 'row-reverse'}}>
-          <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-            {!readonly &&
+          <Grid item xl={6} lg={6} md={6} sm={6} xs={6} style={{display: 'flex', flexDirection: 'row-reverse'}}>
+            <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+              {!readonly &&
               <Grid>
                 <IconButton onClick={this.props.onQtyChanged(p._id, -1)}>
                   <RemoveIcon/>
                 </IconButton>
               </Grid>
-            }
-            <Grid style={{marginLeft: '4%', marginRight: '4%'}}>
-              <Typography>{this.props.count[p._id] ? this.props.count[p._id] : 0}</Typography>
-            </Grid>
-            {!readonly &&
+              }
+              <Grid style={{marginLeft: '4%', marginRight: '4%'}}>
+                <Typography>{this.props.count[p._id] ? this.props.count[p._id] : 0}</Typography>
+              </Grid>
+              {!readonly &&
               <Grid>
                 <IconButton onClick={this.props.onQtyChanged(p._id, 1)}>
                   <AddIcon/>
                 </IconButton>
               </Grid>
-            }
+              }
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
-    ))
-  )
+      ))
+    )
   }
 
   accordion = (prestations, fltr, classes) => {
@@ -140,7 +140,7 @@ class DrawerBooking extends React.Component {
     const {warningPerimeter, warningBudget, warningSelf, side, classes, service, alfred, prestation_date, errors,
       count, serviceUser, isChecked, location, pick_tax, total, customer_fee,
       cesu_total, filters, pricedPrestations, excludedDays, role, company_amount,
-      avocotes, all_avocotes, alfred_pro, title, serviceMode, readonly} = this.props
+      avocotes, all_avocotes, alfred_pro, title, serviceMode, readonly, cpf_amount} = this.props
 
     const excludedTimes = this.getExcludedTimes()
 
@@ -394,6 +394,7 @@ class DrawerBooking extends React.Component {
                       customer_fee={customer_fee}
                       cesu_total={cesu_total}
                       alfred_pro={alfred_pro}
+                      cpf_amount={cpf_amount}
                     />
                   </Grid>
                 </AccordionDetails>

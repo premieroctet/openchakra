@@ -472,6 +472,7 @@ class PreviewBase extends BasePage {
 
         this.setState({
           total: res.data.total,
+          cpf_amount: res.data.cpf_amount,
           totalPrestations: res.data.total_prestations,
           customer_fees: res.data.customer_fees,
           provider_fees: res.data.provider_fees,
@@ -625,6 +626,7 @@ class PreviewBase extends BasePage {
       travel_tax: this.state.travel_tax,
       pick_tax: this.state.pick_tax,
       cesu_amount: this.state.cesu_total,
+      cpf_amount: this.state.cpf_amount,
       customer_fee: this.state.customer_fee,
       provider_fee: this.state.provider_fee,
       customer_fees: this.state.customer_fees,

@@ -1,6 +1,6 @@
+const {CESU_DISABLED, CPF_RATE} = require('../../../utils/consts')
 const Commission = require('../../models/Commission')
 const lodash=require('lodash')
-const {CESU_DISABLED}=require('../../../utils/consts')
 
 class PaymentBase {
 
@@ -136,7 +136,9 @@ class PaymentBase {
         .then(customer_fees => {
           res.customer_fees=customer_fees
           res.customer_fee = lodash.sum(customer_fees.map(f => f.amount))
-          res.total=res.total_prestations+res.travel_tax+res.pick_tax+res.customer_fee
+          const grandTotal=res.total_prestations+res.travel_tax+res.pick_tax+res.customer_fee
+          res.cpf_amount=grandTotal*CPF_RATE
+          res.total=grandTotal-res.cpf_amount
           resolve(res)
         })
         .catch(err => {

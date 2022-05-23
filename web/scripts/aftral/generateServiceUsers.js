@@ -19,7 +19,7 @@ mongoose.connect(getDatabaseUri(), MONGOOSE_OPTIONS)
     console.log(result.email)
     return Billing.findOne({label: /forfait/i})
       .then(b => {
-        return Prestation.updateMany({}, {billing: [b._id]})
+        return Prestation.updateMany({}, {billing: [b._id], cesu_eligible: true})
       })
       .then(() => {
         return Service.find({}).populate('prestations')

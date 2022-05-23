@@ -31,7 +31,7 @@ class DrawerBookingRecap extends React.Component {
 
     const{pricedPrestations, countPrestations, grandTotal, customer_fee, travel_tax,
       classes, pick_tax, cesu_total, mode, prestations, bookingObj,
-      alfred, id_card, activeStep, pending, alfred_pro} = this.props
+      alfred, id_card, activeStep, pending, alfred_pro, cpf_amount} = this.props
 
     return(
       <Grid>
@@ -132,6 +132,7 @@ class DrawerBookingRecap extends React.Component {
               cesu_total={cesu_total}
               mode={mode}
               alfred_pro={alfred_pro}
+              cpf_amount={cpf_amount}
             />
           </Grid>
         </Grid>

@@ -56,6 +56,12 @@ const BookingSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'equipment',
   }],
+  // CPF Amount
+  cpf_amount: {
+    type: Number,
+    default: 0,
+    required: true,
+  },
   // Total amount
   amount: {
     type: Number,

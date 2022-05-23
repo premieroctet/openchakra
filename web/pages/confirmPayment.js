@@ -66,6 +66,7 @@ class ConfirmPayment extends BasePage {
           customer_fee: bookingObj.customer_fee,
           grandTotal: bookingObj.amount,
           cesu_total: bookingObj.cesu_amount,
+          cpf_amount: bookingObj.cpf_amount,
           equipments: bookingObj.equipments,
         })
 
