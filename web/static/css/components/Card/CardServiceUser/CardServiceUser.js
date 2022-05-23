@@ -183,6 +183,7 @@ export default theme => ({
       whiteSpace: 'nowrap',
       overflow: 'hidden',
     },
+    fontSize: '0.75rem',
   },
   profileModeCardServiceUser: {
     width: '90%',

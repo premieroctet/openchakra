@@ -222,9 +222,11 @@ class CardServiceUser extends React.Component {
                         </Grid>
                         :
                         <>
-                          <Grid className={profileMode ? classes.cardServiceUserChipNamePro : classes.cardServiceUserChipName}>
-                            <Chip label={alfred.firstname} avatar={<ListIconsSkills data={cpData} />} classes={{root: `customcardchipname ${classes.cardServiceUserChip}`}} />
-                          </Grid>
+                          { // AFTRAL :hide name
+                            false && <Grid className={profileMode ? classes.cardServiceUserChipNamePro : classes.cardServiceUserChipName}>
+                              <Chip label={alfred.firstname} avatar={<ListIconsSkills data={cpData} />} classes={{root: `customcardchipname ${classes.cardServiceUserChip}`}} />
+                            </Grid>
+                          }
                           {
                             cpData.is_professional ?
                               <Grid className={classes.cardServiceUserChipPro}>
@@ -241,7 +243,7 @@ class CardServiceUser extends React.Component {
                 <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={profileMode ? classes.labelServiceProfil : classes.labelService}>
                   <Typography className={classes.labelDataContainer}><strong>{cpData.label}</strong></Typography>
                 </Grid>
-                { profileMode ? null :
+                { profileMode || true ? null : // AFTRAL: hide all
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.cardServiceUserPlaceContainer}>
                     <Grid className={classes.cardServiceUserPlaceLogo}>
                       <RoomIcon/>
