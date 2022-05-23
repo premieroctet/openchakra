@@ -14,6 +14,7 @@ const {
   FIX_TYPES,
   MACHINE_TYPES,
   PIN,
+  SOLD,
 } = require('../../../utils/feurst_consts')
 const ExcelJS = require('exceljs')
 const lodash=require('lodash')
@@ -41,16 +42,17 @@ const GROUPS= (teeth, bladeShape, borderShieldFixType, teethShieldFixType) => {
       'BOUCLIER A CLAVETER DROITE': delta ? 1 : 0,
       'BOUCLIER A CLAVETER GAUCHE': delta ? 1 : 0,
       'CLE BOUCLIER': 1,
-    }:
+    }: teethShieldFixType==SOLD ?
       {
         'BOUCLIER A SOUDER': teeth-1,
         'BOUCLIER A SOUDER DROITE': delta ? 1 : 0,
         'BOUCLIER A SOUDER GAUCHE': delta ? 1 : 0,
-      },
+      }:
+      {},
     'Bouclier flanc': {
-      [teethShieldFixType==PIN ? 'BOUCLIER DE FLANC': undefined]: '2 ou 4',
-      [borderShieldFixType==PIN ? 'BOUCLIER DE FLANC A CLAVETER' : 'BOUCLIER DE FLANC A SOUDER']: '2 ou 4',
-      [teethShieldFixType==PIN ? 'BASE A SOUDER': undefined]: '2 ou 4',
+      [borderShieldFixType==PIN ? 'BOUCLIER DE FLANC': undefined]: '2 ou 4',
+      [borderShieldFixType==PIN ? 'BOUCLIER DE FLANC A CLAVETER' : borderShieldFixType==SOLD ?'BOUCLIER DE FLANC A SOUDER' : undefined]: '2 ou 4',
+      [borderShieldFixType==PIN ? 'BASE A SOUDER': undefined]: '2 ou 4',
     },
     'Bouclier talon': {
       'BOUCLIER DE TALON DE GODET': 10,
@@ -334,12 +336,12 @@ const computePrecos = data => {
 const computeDescription = (data, full_info) => {
   let description='type mark model'.split(' ').map(att => data[att] || '').join(' ')
   if (full_info) {
-    if (data.bladeShape) { description += `, lame:${BLADE_SHAPES[data.bladeShape]}` }
-    if (data.bladeThickness) { description += `, épaisseur:${data.bladeThickness}mm` }
-    if (data.bucketWidth) { description += `, L:${data.bucketWidth}mm` }
-    if (data.ground) { description += `, terrain:${data.ground}` }
-    if (data.teethShieldFixType) { description += `, fixation boucliers dents:${FIX_TYPES[data.teethShieldFixType]}` }
-    if (data.borderShieldFixType) { description += `, fixation boucliers flancs:${FIX_TYPES[data.borderShieldFixType]}` }
+    if (data.bladeShape) { description += `, lame : ${data.bladeShape}` }
+    if (data.bladeThickness) { description += `, épaisseur : ${data.bladeThickness}mm` }
+    if (data.bucketWidth) { description += `, L: ${data.bucketWidth}mm` }
+    if (data.ground) { description += `, terrain : ${data.ground}` }
+    if (data.teethShieldFixType) { description += `, fixation boucliers dents : ${data.teethShieldFixType}` }
+    if (data.borderShieldFixType) { description += `, fixation boucliers flancs : ${data.borderShieldFixType}` }
   }
   return description
 }

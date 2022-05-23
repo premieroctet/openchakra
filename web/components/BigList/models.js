@@ -5,7 +5,7 @@ import {REVIEW_STATUS} from '../../utils/consts'
 import React from 'react'
 import Checkbox from '@material-ui/core/Checkbox'
 const moment = require('moment')
-const { inspect } = require('util');
+const {inspect} = require('util')
 
 
 moment.locale('fr')
@@ -232,7 +232,12 @@ class BooleanRenderer extends React.Component {
     }
 
     return (
-      <CheckIcon />
+      <input
+        type="checkbox"
+        onClick={this.checkedHandler}
+        checked={this.props.value}
+        disabled={!this.props.colDef.editable}
+      />
     )
   }
 }
