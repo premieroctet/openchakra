@@ -793,6 +793,8 @@ class PreviewBase extends BasePage {
                         </CustomButton>
                       }
                     </Grid>
+                    { // TODO Aftral
+                      false &&
                     <Grid item sm={6} xs={12}>
                       <Link href="#availabilities">
                         <CustomButton variant={'outlined'} classes={{root: 'custompreviewshowprofil'}} className={classes.userServicePreviewButtonProfil}>
@@ -800,6 +802,7 @@ class PreviewBase extends BasePage {
                         </CustomButton>
                       </Link>
                     </Grid>
+                    }
                   </Grid>
                   }
                 </Grid>
