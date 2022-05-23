@@ -144,7 +144,10 @@ class CardServiceUser extends React.Component {
 
     const notes = cpData.reviews ? computeAverageNotes(cpData.reviews.map(r => r.note_alfred)) : {}
 
-    let resa_link = `/userServicePreview?id=${cpData._id}&booking_id=${booking_id}`
+    let resa_link = `/userServicePreview?id=${cpData._id}`
+    if (booking_id) {
+      resa_link+=`&booking_id=${booking_id}`
+    }
     if (address) {
       resa_link+=`&address=${address}`
     }
