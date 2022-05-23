@@ -35,7 +35,6 @@ import InfoIcon from '@material-ui/icons/Info'
 
 const styles = theme => ({
   ...dashboardstyles(theme),
-  ...custom,
   signupContainer: {
     alignItems: 'center',
     justifyContent: 'top',

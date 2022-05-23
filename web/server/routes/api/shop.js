@@ -213,7 +213,7 @@ router.get('/alfred/:id_alfred', (req, res) => {
       },
     })
     .then(shop => {
-      if (Object.keys(shop).length === 0 && shop.constructor === Object) {
+      if (!shop || Object.keys(shop).length === 0 && shop.constructor === Object) {
         return res.status(400).json({
           msg: 'No shop found',
         })
