@@ -4,6 +4,17 @@ const moment = require('moment')
 const xlsx=require('node-xlsx')
 const lodash=require('lodash')
 const {
+  addItem,
+  computeShippingFee,
+  extractDepartment,
+  getProductPrices,
+  isInDeliveryZone,
+  updateCompanyAddresses,
+  updateShipFee,
+  updateStock,
+} = require('../../utils/commands')
+const {StatusError} = require('../../utils/errors')
+const {
   filterOrderQuotation,
   getActionsForRoles,
   getStatusLabel,
@@ -24,15 +35,6 @@ const {
   VALID,
   VALIDATE,
 } = require('../../../utils/feurst/consts')
-const {
-  addItem,
-  computeShippingFee,
-  extractDepartment,
-  getProductPrices,
-  updateCompanyAddresses,
-  updateShipFee,
-  updateStock,
-} = require('../../utils/commands')
 const Product = require('../../models/Product')
 const {lineItemsImport} = require('../../utils/import')
 const {XL_FILTER, createMemoryMulter} = require('../../utils/filesystem')
@@ -417,9 +419,14 @@ router.get('/:order_id/products/:product_id', passport.authenticate('jwt', {sess
     })
 })
 
-// @Route DELETE /myAlfred/orders/:id
-// Delete one order
-// @Access private
+/**
+@Route POST /myAlfred/orders/:id/validate
+ Validates an order
+ Can return :
+ - 404 if order not found
+ - 422 if address or shipping mode is missing, or if address not in delivery zone
+@Access private
+*/
 router.post('/:order_id/validate', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, VALIDATE)) {
@@ -430,12 +437,16 @@ router.post('/:order_id/validate', passport.authenticate('jwt', {session: false}
 
   MODEL.findById(order_id)
     .populate('items.product')
+    .populate('company')
     .then(data => {
       if (!data) {
-        return res.status(404).json(`Order ${order_id} not found`)
+        throw new StatusError(`Order ${order_id} not found`, 404)
       }
       if (lodash.isEmpty(data.address) || lodash.isEmpty(data.shipping_mode)) {
-        return res.status(400).json(`Address and shipping mode are required to validate`)
+        throw new StatusError(`Address and shipping mode are required to validate`, 412)
+      }
+      if (!isInDeliveryZone(data.address, data.company)) {
+        throw new StatusError(`Address is outside delivery zone`, 422)
       }
       data.validation_date=moment()
       return data.save()
@@ -448,7 +459,7 @@ router.post('/:order_id/validate', passport.authenticate('jwt', {session: false}
     })
     .catch(err => {
       console.error(err)
-      return res.status(500).json(err)
+      return res.status(err.status||500).json(err.message)
     })
 })
 
@@ -461,12 +472,7 @@ router.get('/:id/shipping-fee', passport.authenticate('jwt', {session: false}), 
     return res.status(401).json()
   }
 
-  const zipCode=req.query.zipcode
-
-  const {errors, isValid}=validateZipCode(zipCode)
-  if (!isValid) {
-    return res.status(500).json(errors)
-  }
+  const address=JSON.parse(req.query.address)
 
   const fee={[EXPRESS_SHIPPING]: 0, [STANDARD_SHIPPING]: 0}
   let order=null
@@ -479,11 +485,11 @@ router.get('/:id/shipping-fee', passport.authenticate('jwt', {session: false}), 
       }
       order=result
       // Simulate address
-      return computeShippingFee(order, extractDepartment(zipCode), false)
+      return computeShippingFee(order, address, false)
     })
     .then(standard => {
       fee[STANDARD_SHIPPING]=standard
-      return computeShippingFee(order, extractDepartment(zipCode), true)
+      return computeShippingFee(order, address, true)
     })
     .then(express => {
       fee[EXPRESS_SHIPPING]=express

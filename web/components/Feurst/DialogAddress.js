@@ -38,8 +38,9 @@ const DialogAddress = ({
   }).every(av => av === true)
 
 
-  const getShippingFees = useCallback(async zipcode => {
-    const res_shippingfees = await client(`${API_PATH}/${endpoint}/${orderid}/shipping-fee?zipcode=${zipcode}`)
+  const getShippingFees = useCallback(async address => {
+    const strAddress=JSON.stringify(address)
+    const res_shippingfees = await client(`${API_PATH}/${endpoint}/${orderid}/shipping-fee?address=${strAddress}`)
       .catch(e => {
         console.error(e, `Can't get shipping fees ${e}`)
       })
@@ -60,8 +61,8 @@ const DialogAddress = ({
   }, [address, shipping_mode, reference])
 
   useEffect(() => {
-    address?.zip_code?.length == 5 && getShippingFees(address?.zip_code)
-  }, [address?.zip_code, getShippingFees, state?.status])
+    address && address.zip_code?.length == 5 && getShippingFees(address)
+  }, [address, getShippingFees, state?.status])
 
   return (
     <StyledDialog

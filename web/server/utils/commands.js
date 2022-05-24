@@ -9,7 +9,6 @@ const ShipRate = require('../models/ShipRate')
 
 const extractDepartment = zipCode => {
   const dept=parseInt(String(zipCode).slice(0, -3))
-  console.log(`FOund dept ${dept} for zip ${zipCode}`)
   return dept
 }
 
@@ -79,20 +78,30 @@ const addItem = (data, product_id, reference, quantity, net_price, replace=false
     })
 }
 
+const equalAddresses= (addr1, addr2) => {
+  if (!addr1 || !addr2) {
+    return false
+  }
+  return ['address', 'zip_code', 'city', 'country'].every(att => addr1[att]==addr2[att])
+}
 /**
 Computes Ship rate depending on zipcode, weight and express (true||false)
 */
-const computeShippingFee = (model, department, express) => {
+const computeShippingFee = (model, address, express) => {
   return new Promise((resolve, reject) => {
-    if (!department) {
-      return reject(`Can not compute shipping fee: no department`)
+    if (!address) {
+      return reject(`Can not compute shipping fee: no address`)
     }
-    const orderDepartment=department
-    const companyMainDepartment=extractDepartment(model.company?.addresses[0]?.zip_code)
+    const orderDepartment=extractDepartment(address?.zip_code)
+    if (!orderDepartment) {
+      return reject(`Can not compute shipping fee: no zip code`)
+    }
+    const orderAddress=address
+    const companyMainAddress=model.company?.addresses[0]
     const weight=model.total_weight
 
     // Carriage paid for non express ?
-    if (!express && !lodash.isNil(model.company.carriage_paid) && !lodash.isNil(orderDepartment) && companyMainDepartment==orderDepartment && model.total_amount >= model.company.carriage_paid) {
+    if (!express && !lodash.isNil(model.company.carriage_paid) && equalAddresses(orderAddress, companyMainAddress) && model.total_amount >= model.company.carriage_paid) {
       console.log(`Order amount ${model.total_amount}> carriage paid ${model.company.carriage_paid} : no shipping fee`)
       return resolve(0)
     }
@@ -116,8 +125,8 @@ Data is an Order or a Quotation
 */
 const updateShipFee = data => {
   return new Promise((resolve, reject) => {
-    if (extractDepartment(data.address?.zip_code) && data.shipping_mode) {
-      computeShippingFee(data, extractDepartment(data.address?.zip_code), data.shipping_mode==EXPRESS_SHIPPING)
+    if (data.address && data.shipping_mode) {
+      computeShippingFee(data, data.address, data.shipping_mode==EXPRESS_SHIPPING)
         .then(fee => {
           data.shipping_fee=fee
           return resolve(data)
