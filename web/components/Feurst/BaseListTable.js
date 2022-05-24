@@ -1,12 +1,11 @@
 import React, {useState, useEffect} from 'react'
+import {withTranslation} from 'react-i18next'
 import withEdiRequest from '../../hoc/withEdiRequest'
 import {
   ORDER,
-  QUOTATION,
   HANDLE,
 } from '../../utils/consts'
-const {withTranslation} = require('react-i18next')
-const FeurstTable = require('../../styles/feurst/FeurstTable')
+import FeurstTable from '../../styles/feurst/FeurstTable'
 
 
 const BaseListTable = ({
@@ -33,7 +32,7 @@ const BaseListTable = ({
   // Init table
   useEffect(() => {
     getList({endpoint, filter})
-  }, [endpoint, getList, filter])
+  }, [endpoint, getList, filter, refresh])
 
   const cols= columns({language, endpoint, deleteOrder})
 
@@ -47,4 +46,4 @@ const BaseListTable = ({
   )
 }
 
-module.exports=withTranslation('feurst', {withRef: true})(withEdiRequest(BaseListTable))
+export default withTranslation('feurst', {withRef: true})(withEdiRequest(BaseListTable))

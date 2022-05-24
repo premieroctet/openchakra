@@ -1,7 +1,7 @@
 import React from 'react'
 import withEdiAuth from '../../../hoc/withEdiAuth'
-const {BASEPATH_EDI, CREATE, QUOTATION} = require('../../../utils/consts')
-const Quotationcreate = require('../../../components/Feurst/QuotationCreate')
+import {BASEPATH_EDI, CREATE, QUOTATION} from '../../../utils/consts'
+import Quotationcreate from '../../../components/Feurst/QuotationCreate'
 
 const Orders = ({accessRights}) => {
 
@@ -10,4 +10,4 @@ const Orders = ({accessRights}) => {
   </>)
 }
 
-module.exports=withEdiAuth(Orders, {model: QUOTATION, action: CREATE, pathAfterFailure: `${BASEPATH_EDI}/login`})
+export default withEdiAuth(Orders, {model: QUOTATION, action: CREATE, pathAfterFailure: `${BASEPATH_EDI}/login`})

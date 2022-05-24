@@ -1,5 +1,4 @@
 import React, {useState} from 'react'
-import moment from 'moment'
 import styled from 'styled-components'
 import dynamic from 'next/dynamic'
 import {ACCOUNT, API_PATH, LINK} from '../../utils/feurst/consts'
@@ -10,7 +9,7 @@ import {accountsColumns} from './tablestructures'
 import BaseListTable from './BaseListTable'
 import {PleasantButton} from './Button'
 
-const PureDialog = dynamic(() => import('../Dialog//PureDialog'))
+const PureDialog = dynamic(() => import('../Dialog/PureDialog'))
 
 const AccountsList = ({accessRights}) => {
 
@@ -28,16 +27,16 @@ const AccountsList = ({accessRights}) => {
         {IMPORTS.map((imp, i) => (<ImportExcelFile key={`imp${i}`} caption={imp.title} importURL={imp.url} templateURL={null} onImport={toggleRefresh}/>))}
       </div>
       
-      <div className='container-md'>
+      <div className='container-md mb-8'>
         <PleasantButton onClick={() => setIsOpenDialog(true)} rounded={'full'} size={'full-width'}><span>⊕</span> Ajouter un compte</PleasantButton>
       </div>
       
-      {accessRights.isActionAllowed(ACCOUNT, LINK) && <AccountLink />}
-      <BaseListTable caption='Liste des comptes' key={moment()} endpoint='users' columns={accountsColumns} refresh={refresh} />
+      {/* {accessRights.isActionAllowed(ACCOUNT, LINK) && <AccountLink />} */}
+      <BaseListTable caption='Liste des comptes' endpoint='users' columns={accountsColumns} refresh={refresh}/>
 
       <AddAccountDialog title={'Ajouter un compte'} open={isOpenDialog}
-        onClose={() => setIsOpenDialog(false)}>
-        <FeurstRegister onSuccess={toggleRefresh} />
+        onClose={() => setIsOpenDialog(false)} >
+        <FeurstRegister onSuccess={toggleRefresh} onClose={() => setIsOpenDialog(false)}/>
       </AddAccountDialog>
     </>
   )

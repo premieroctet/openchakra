@@ -1,25 +1,18 @@
 import React, {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
-import Grid from '@material-ui/core/Grid'
 import {withTranslation} from 'react-i18next'
-import {
-  Button,
-  TextField,
-} from '@material-ui/core'
 import {Combobox, Transition} from '@headlessui/react'
-import {Autocomplete} from '@material-ui/lab'
 import Validator from 'validator'
 import styled from 'styled-components'
 import {setAxiosAuthentication} from '../../utils/authentication'
-import {snackBarError, snackBarSuccess} from '../../utils/notifications'
 import {API_PATH} from '../../utils/feurst/consts'
 import {CUSTOMER_ADMIN, ROLES, ACCOUNT, CREATE} from '../../utils/consts'
-import {normalize} from '../../utils/text'
+import {snackBarError, snackBarSuccess} from '../../utils/notifications'
 import {StyledCombobox} from '../../styles/feurst/StyledComponents'
 import {PleasantButton} from './Button'
 
 
-const FeurstRegister = ({className, style, onSuccess}) => {
+const FeurstRegister = ({className, style, onSuccess, onClose}) => {
 
   const [name, setName] = useState('')
   const [firstname, setFirstname] = useState('')
@@ -67,16 +60,17 @@ const FeurstRegister = ({className, style, onSuccess}) => {
       .then(() => {
         snackBarSuccess('L\'invitation a été envoyée')
         onSuccess && onSuccess()
+        onClose && onClose()
       })
       .catch(err => {
         console.error(err)
         snackBarError(err.response.data)
       })
   }
-
   const enableRegister = () => {
     return firstname && name && email && Validator.isEmail(email) && role && (role!=CUSTOMER_ADMIN || company)
   }
+
   return(
     <HandleAccount>
       <label htmlFor='firstname'>
@@ -116,11 +110,11 @@ const FeurstRegister = ({className, style, onSuccess}) => {
             <Combobox.Options>
               {query.length > 0 && (
                 <Combobox.Option value={{id: null, name: query}}>
-            Create "{query}"
+            Créer "{query}"
                 </Combobox.Option>
               )}
               {filteredRoles.map(role => (
-                <Combobox.Option key={role} value={role} className={({active}) => (active && 'active')} >
+                <Combobox.Option key={role} value={role} className={({active}) => (active ? 'active' : '')} >
                   {({selected}) => (selected ? <> {ROLES[role]} <span>✓</span></> : <>{ROLES[role]}</>)}
                 </Combobox.Option>
               ))}
@@ -156,12 +150,12 @@ const FeurstRegister = ({className, style, onSuccess}) => {
                 >
                   <Combobox.Options>
                     {queryCompany.length > 0 && (
-                      <Combobox.Option value={{id: null, name: queryCompany}}>
+                      <Combobox.Option value={queryCompany}>
             Créer "{queryCompany}"
                       </Combobox.Option>
                     )}
                     {filteredCompanies.map(company => (
-                      <Combobox.Option key={company} value={company} className={({active}) => (active && 'active')} >
+                      <Combobox.Option key={company} value={company} className={({active}) => (active ? 'active' : '')} >
                         {({selected}) => (selected ? <> {company} <span>✓</span></> : <>{company}</>)}
                       </Combobox.Option>
                     ))}
@@ -169,22 +163,17 @@ const FeurstRegister = ({className, style, onSuccess}) => {
                 </Transition>
               </Combobox>
             </StyledCombobox>
-            {/* pour la société */}
-            {/* <Autocomplete
-              freeSolo
-              className='w-full'
-              options={companies}
-              aria-labelledby='machinebrand'
-              value={company}
-              renderInput={params => (<TextField {...params} />)}
-              filterOptions={(opts, {inputValue}) => { return opts.filter(o => normalize(o).includes(normalize(company))) }}
-              onChange={(ev, value) => setCompany(value)}
-              onInputChange={(ev, value) => setCompany(value)}
-            /> */}
           </>
       }
       
-      <PleasantButton size={'full-width'} rounded={'full'} disabled={!enableRegister()} onClick={sendInvitation}>Envoyer</PleasantButton>
+      <PleasantButton
+        size={'full-width'}
+        rounded={'full'}
+        disabled={!enableRegister()}
+        onClick={() => sendInvitation({firstname, name, email, role, company})}
+      >
+        Ajouter
+      </PleasantButton>
       
     </HandleAccount>
   )
