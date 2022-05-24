@@ -1,4 +1,5 @@
 import React from 'react'
+import {Combobox} from '@headlessui/react'
 import styled from 'styled-components'
 import {screen} from '../../styles/screenWidths'
 
@@ -126,5 +127,67 @@ const HandleButton = styled.button`
   
 `
 
+const StyledCombobox = styled(Combobox)`
+  
+  position: relative;  
 
-export {StyledTabs, HandleLink, HandleButton}
+  [role="listbox"] {
+    border-bottom-left-radius: var(--spc-2);
+    border-bottom-right-radius: var(--spc-2);
+    border: 1px solid var(--gray-800);
+    background-color: var(--white);
+    border-top: 0;
+    position: absolute;
+    max-height: 300px;
+    overflow-y: scroll;
+    z-index: 2;
+    top: var(--spc-6);
+    width:100%;
+    font-size: inherit;
+    padding: 0;
+    
+    li {
+      display: flex;
+      justify-content: space-between;
+      list-style-type: none;
+      padding: var(--spc-2);
+      border-bottom: 1px solid var(--gray-800);
+
+      &.active {
+        background: var(--yellow-500);
+      }
+    }
+  }
+
+  .comboboxinput {
+    display: flex;
+    width: 100%;
+    position: relative;
+    align-items: center;
+
+    input {
+      width: 100%;
+    }
+    button {
+      position: absolute;
+      background: transparent;
+      border: 0;
+      right:0;
+      transform: rotate(180deg);
+      transition: transform var(--delayOut) cubic-bezier(.14,1.91,.83,.67);
+      
+      &[aria-expanded='true'] {
+        transform: rotate(0)
+      }
+    }
+    
+  }
+
+  input[aria-expanded='true'] {
+    border-bottom: 0;
+  }
+  
+`
+
+
+export {StyledTabs, HandleLink, HandleButton, StyledCombobox}
