@@ -1,7 +1,7 @@
 const express = require('express')
 const passport = require('passport')
 const moment = require('moment')
-const {fileImport} = require('../../utils/import')
+const {fileImport, productsImport} = require('../../utils/import')
 const {isActionAllowed} = require('../../utils/userAccess')
 const {DELETE} = require('../../../utils/feurst/consts')
 const {XL_FILTER, createMemoryMulter} = require('../../utils/filesystem')

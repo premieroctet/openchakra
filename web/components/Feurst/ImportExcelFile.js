@@ -222,6 +222,7 @@ const DownloadExampleFile = styled.button`
 `
 
 const ImportDialog = styled(PureDialog)`
+
   
   .dialogcontent {
     aspect-ratio: 1 / 1;
@@ -262,6 +263,7 @@ const ImportDialog = styled(PureDialog)`
     border-radius: var(--rounded-2xl);
     width: min(calc(100% - 2rem), calc(100% - 5rem));
   }
+
   
 
   .importbutton {
@@ -272,4 +274,4 @@ const ImportDialog = styled(PureDialog)`
 
 `
 
-module.exports=ImportExcelFile
+export default ImportExcelFile

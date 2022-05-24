@@ -290,7 +290,7 @@ const productsImport = (model, bufferData, mapping, options) => {
     const FIELDS='Adapteur,Chapeau,Fourreau,Clavette,BouchonGBouchonD,Pointe'.split(',')
     const compIds = FIELDS.map(f => record[f]).filter(v => !!v)
     if (compIds.length==0) {
-      return Promise.reolve(record)
+      return Promise.resolve(record)
     }
 
   }
