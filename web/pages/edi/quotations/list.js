@@ -1,14 +1,14 @@
 import React, {useEffect, useMemo, useState} from 'react'
 import withEdiAuth from '../../../hoc/withEdiAuth'
-const {BASEPATH_EDI} = require('../../../utils/feurst/consts')
-const {VIEW, QUOTATION} = require('../../../utils/consts')
-const MyQuotations = require('../../../components/Feurst/MyQuotations')
+import {BASEPATH_EDI} from '../../../utils/feurst/consts'
+import {VIEW, QUOTATION} from '../../../utils/consts'
+import MyQuotations from '../../../components/Feurst/MyQuotations'
 
-const Orders = ({accessRights}) => {
+const QuotationsList = ({accessRights}) => {
 
   return (<>
     <MyQuotations accessRights={accessRights} />
   </>)
 }
 
-module.exports=withEdiAuth(Orders, {model: QUOTATION, action: VIEW, pathAfterFailure: `${BASEPATH_EDI}/login`})
+export default withEdiAuth(QuotationsList, {model: QUOTATION, action: VIEW, pathAfterFailure: `${BASEPATH_EDI}/login`})

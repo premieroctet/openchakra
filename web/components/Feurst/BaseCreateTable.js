@@ -41,7 +41,6 @@ import {
   setAxiosAuthentication,
 } from '../../utils/authentication'
 import {snackBarError, snackBarSuccess} from '../../utils/notifications'
-import {HandleButton} from '../../styles/feurst/StyledComponents'
 import {is_development} from '../../config/config'
 import {H2confirm} from './components.styles'
 import AddArticle from './AddArticle'
@@ -279,10 +278,6 @@ const BaseCreateTable = ({
       null
     }
 
-    <h1 style={{color: 'red'}}>C'EST DEGUEU MAIS RICHARD VA FAIRE DU BEAUTIFUL</h1>
-    <h2>Compagnie: {state.company?.name}, Commercial: {state.sales_representative?.firstname}</h2>
-    <h1 style={{color: 'red'}}>N'EST-CE PAS, RICHARD ?</h1>
-
     { orderid ? <>
 
       {isFeurstSales && !isView && <div className='flex'>
@@ -307,6 +302,10 @@ const BaseCreateTable = ({
           <dd>{state.reference}</dd>
           <dt>{t(`${wordingSection}.date`)}</dt>
           <dd>{new Date(state.creation_date).toLocaleDateString()}</dd>
+          {state.sales_representative?.firstname && (<>
+            <dt>&Eacute;tabli par</dt>
+            <dd>{state.sales_representative.firstname}</dd>
+          </>)}
         </dl>
       </div>}
 
@@ -334,55 +333,7 @@ const BaseCreateTable = ({
         <span>Total</span>
         <span>{state?.total_amount && localeMoneyFormat({value: state.total_amount})}</span>
       </div>}
-
-
-      {/* <div className={`grid grid-cols-2 justify-between gap-y-4 mb-8`}>
-
-        {isView ? <PleasantButton
-          rounded={'full'}
-          bgColor={'#fff'}
-          textColor={'#141953'}
-          borderColor={'1px solid #141953'}
-          className={'col-start-1'}
-          onClick={() => revertToEdition({endpoint, orderid})}
-        >
-        Revenir à la saisie
-        </PleasantButton> : null}
-
-
-        {convertToQuotation && <PleasantButton
-          rounded={'full'}
-          disabled={justCreated}
-          bgColor={'#fff'}
-          textColor={'#141953'}
-          className={'col-start-1'}
-          borderColor={'1px solid #141953'}
-          onClick={() => convert({endpoint, orderid})}
-        >
-        Demande de devis
-        </PleasantButton>}
-        {convertToOrder && <PleasantButton
-          rounded={'full'}
-          disabled={justCreated}
-          bgColor={'#fff'}
-          textColor={'#141953'}
-          className={'justify-self-end col-start-2'}
-          borderColor={'1px solid #141953'}
-          onClick={() => convert({endpoint, orderid})}
-        >
-        Convertir en commande
-        </PleasantButton>}
-
-
-        {(canModify || canValidQuotation) && <PleasantButton
-          rounded={'full'}
-          disabled={!canValidate}
-          className={'justify-self-end col-start-2'}
-          onClick={() => (isAddressRequired ? setIsOpenDialog(true) : submitOrder({endpoint, orderid}))}
-        >
-          {t(`${wordingSection}.valid`)} // Valid order/quotation
-        </PleasantButton>}
-      </div> */}
+      
 
       <div className={`grid grid-cols-2 justify-between gap-y-4 mb-8`}>
 
