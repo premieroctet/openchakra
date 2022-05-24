@@ -74,6 +74,7 @@ const ConfirmPartialHandledValidation = ({onClick, className, children}) => {
 }
 
 const BaseCreateTable = ({
+  filtered,
   id,
   storage,
   endpoint,
@@ -311,6 +312,7 @@ const BaseCreateTable = ({
         data={state.items}
         columns={cols}
         footer={canValidate || isView}
+        filtered={filtered}
         updateMyData={updateMyOrderContent}
       />
 
