@@ -61,7 +61,11 @@ const CompanySchema = new Schema({
     required: false,
   },
   delivery_zip_codes: [Number],
-
+  sales_representative: {
+    type: Schema.Types.ObjectId,
+    ref: 'user',
+    required: true,
+  },
 }, {toJSON: {virtuals: true, getters: true}})
 
 CompanySchema.virtual('full_name').get(function() {
