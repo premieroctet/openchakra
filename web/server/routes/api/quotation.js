@@ -330,9 +330,6 @@ router.post('/:quotation_id/convert', passport.authenticate('jwt', {session: fal
         return res.status(404).json(`${DATA_TYPE} #${quotation_id} not found`)
       }
       quotation=result
-      if (!isInDeliveryZone(quotation.address, quotation.company)) {
-        return Promise.reject('break')
-      }
       const order={...lodash.omit(quotation, '_id'), items: quotation.items.map(item => lodash.omit(item, '_id')), validation_date: moment(), handled_date: null}
       return Order.create(order)
     })
@@ -345,9 +342,6 @@ router.post('/:quotation_id/convert', passport.authenticate('jwt', {session: fal
     })
     .catch(err => {
       console.error(err)
-      if (err=='break') {
-        return res.status(412).json("Conversion impossible : l'adresse de livraison est hors de la zone de chalandise")
-      }
       return res.status(500).json(err)
     })
 })

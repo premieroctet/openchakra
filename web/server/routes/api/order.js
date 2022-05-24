@@ -4,6 +4,23 @@ const moment = require('moment')
 const xlsx=require('node-xlsx')
 const lodash=require('lodash')
 const {
+  COMPLETE,
+  CONVERT,
+  CREATED,
+  EXPRESS_SHIPPING,
+  HANDLE,
+  HANDLED,
+  PARTIALLY_HANDLE,
+  PARTIALLY_HANDLED,
+  REWRITE,
+  STANDARD_SHIPPING,
+  TOTALLY_HANDLE,
+  UPDATE_ALL,
+  VALID,
+  VALIDATE,
+} = require('../../../utils/feurst/consts')
+const Quotation = require('../../models/Quotation')
+const {
   addItem,
   computeShippingFee,
   extractDepartment,
@@ -20,21 +37,6 @@ const {
   getStatusLabel,
   isActionAllowed,
 } = require('../../utils/userAccess')
-const {
-  COMPLETE,
-  CREATED,
-  EXPRESS_SHIPPING,
-  HANDLE,
-  HANDLED,
-  PARTIALLY_HANDLE,
-  PARTIALLY_HANDLED,
-  REWRITE,
-  STANDARD_SHIPPING,
-  TOTALLY_HANDLE,
-  UPDATE_ALL,
-  VALID,
-  VALIDATE,
-} = require('../../../utils/feurst/consts')
 const Product = require('../../models/Product')
 const {lineItemsImport} = require('../../utils/import')
 const {XL_FILTER, createMemoryMulter} = require('../../utils/filesystem')
@@ -339,6 +341,42 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     })
 })
 
+// @Route GET /myAlfred/api/orders
+// View all orders
+// @Access private
+router.post('/:order_id/convert', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, CONVERT)) {
+    return res.status(403).json()
+  }
+
+  const order_id=req.params.order_id
+
+  let quotation=null
+
+  MODEL.findById(order_id)
+    .populate('company')
+    .then(order => {
+      if (!result) {
+        return res.status(404).json(`${DATA_TYPE} #${order_id} not found`)
+      }
+      console.log(`Got order:${JSON.stringify(order)}`)
+      const quotation={...lodash.omit(order, '_id'), items: order.items.map(item => lodash.omit(item, '_id')), validation_date: moment(), handled_date: null}
+      return Quotation.create(quotation)
+    })
+    .then(result => {
+      quotation=result
+      return Order.findByIdAndRemove(order_id)
+    })
+    .then(() => {
+      return res.json(quotation)
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(500).json(err)
+    })
+})
+
 // @Route GET /myAlfred/api/orders/:id
 // View one booking
 // @Access public
@@ -424,7 +462,8 @@ router.get('/:order_id/products/:product_id', passport.authenticate('jwt', {sess
  Validates an order
  Can return :
  - 404 if order not found
- - 422 if address or shipping mode is missing, or if address not in delivery zone
+ - 412 if address or shipping mode is missing
+ - 422 if address not in delivery zone
 @Access private
 */
 router.post('/:order_id/validate', passport.authenticate('jwt', {session: false}), (req, res) => {
@@ -523,6 +562,9 @@ router.get('/:id/actions', passport.authenticate('jwt', {session: false}), (req,
         result.push(DELETE)
       }
       return res.json(result)
+    })
+    .catch(err => {
+      return res.status(err.status||500).json(err.message)
     })
 })
 
