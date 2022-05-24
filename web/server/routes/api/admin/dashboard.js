@@ -7,6 +7,7 @@ const bcrypt = require('bcryptjs')
 const axios = require('axios')
 const Validator = require('validator')
 const lodash=require('lodash')
+const {StatusError} = require('../../../utils/errors')
 const {is_development} = require('../../../../config/config')
 const Prestation = require('../../../models/Prestation')
 const Service = require('../../../models/Service')
@@ -1675,7 +1676,7 @@ router.post('/register_invitation', passport.authenticate('admin', {session: fal
     })
 })
 
-router.post('/feurst_register', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/feurst_register', passport.authenticate('jwt', {session: false}), (req, res, next) => {
   const {firstname, name, email, role, company}=req.body
   const {errors, isValid}=validateFeurstRegister(req.body)
   if (!isValid) {
@@ -1686,12 +1687,11 @@ router.post('/feurst_register', passport.authenticate('jwt', {session: false}), 
   User.findOne({email: new RegExp(email, 'i')})
     .then(user => {
       if (user) {
-        return Promise.reject('Un compte avec cet email existe déjà')
+        throw new StatusError('Un compte avec cet email existe déjà', 409)
       }
-      return (company || req.user.company) ? Company.findOneAndUpdate({name: new RegExp(company, 'i')}, {name: company}, {upsert: true, new: true}) : Promise.resolve(null)
+      return company ? Company.findOneAndUpdate({name: new RegExp(company, 'i')}, {name: company}, {upsert: true, new: true}) : Promise.resolve(req.user.company)
     })
     .then(company => {
-      console.log(`Company is ${company}`)
       return User.create({firstname: firstname, name: name, email: email, roles: role, company: company})
     })
     .then(user => {
@@ -1703,7 +1703,7 @@ router.post('/feurst_register', passport.authenticate('jwt', {session: false}), 
     })
     .catch(err => {
       console.error(err)
-      res.status(500).json(err)
+      return res.status(err.status||500).json(err.message)
     })
 })
 
