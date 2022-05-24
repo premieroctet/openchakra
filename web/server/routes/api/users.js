@@ -1226,24 +1226,6 @@ router.post('/profile/album/picture/add', uploadAlbumPicture.single('myImage'), 
     })
 })
 
-router.put('/:user_id/companies', passport.authenticate('jwt', {session: false}), (req, res) => {
-
-  if (!isActionAllowed(req.user.roles, DATA_TYPE, LINK)) {
-    return res.sendStatus(301)
-  }
-
-  const user_id=req.params.user_id
-
-  User.findByIdAndUpdate(user_id, {companies: req.body.companies.map(c => mongoose.Types.ObjectId(c))})
-    .then(result => {
-      res.json()
-    })
-    .catch(err => {
-      console.error(err)
-      res.status(500).json(err)
-    })
-})
-
 router.delete('/profile/album/picture/:pic_index', passport.authenticate('jwt', {session: false}), (req, res) => {
   const remove_idx=parseInt(req.params.pic_index)
   Album.findOne({user: req.user.id})

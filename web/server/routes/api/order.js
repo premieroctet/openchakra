@@ -326,7 +326,6 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     .sort({creation_date: -1})
     .populate('items.product')
     .populate('company')
-    .populate('sales_representative')
     .lean({virtuals: true})
     .then(orders => {
       orders=filterOrderQuotation(orders, DATA_TYPE, req.user, VIEW)
@@ -391,7 +390,6 @@ router.get('/:order_id', passport.authenticate('jwt', {session: false}), (req, r
   MODEL.findById(order_id)
     .populate('items.product')
     .populate('company')
-    .populate('sales_representative')
     .then(order => {
       if (order) {
         return res.json(order)

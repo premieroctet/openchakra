@@ -118,11 +118,8 @@ QuotationBookingBaseSchema.virtual('total_quantity').get(function() {
   return total_quantity
 })
 
-QuotationBookingBaseSchema.virtual('sales_representative', {
-  ref: 'user', // The Model to use
-  localField: 'company', // Find in Model, where localField
-  foreignField: 'companies', // is equal to foreignField
-  justOne: true,
+QuotationBookingBaseSchema.virtual('sales_representative').get(function() {
+  return this.company?.sales_representative
 })
 
 QuotationBookingBaseSchema.plugin(mongooseLeanVirtuals)

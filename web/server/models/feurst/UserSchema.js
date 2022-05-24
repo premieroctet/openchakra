@@ -47,11 +47,6 @@ const UserSchema = new Schema({
   }],
   // Comments for admins
   comment: String,
-  // For Feurst adv
-  companies: [{
-    type: Schema.Types.ObjectId,
-    ref: 'company',
-  }],
 }, {toJSON: {virtuals: true, getters: true}})
 
 UserSchema.virtual('avatar_letters').get(function() {
@@ -68,5 +63,13 @@ UserSchema.virtual('full_name').get(function() {
 UserSchema.virtual('is_registered').get(() => {
   return true
 })
+
+// For Feurst ADV/sales
+UserSchema.virtual('companies', {
+  ref: 'company', // The Model to use
+  localField: '_id', // Find in Model, where localField
+  foreignField: 'sales_representative', // is equal to foreignField
+})
+
 
 module.exports = UserSchema

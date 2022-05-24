@@ -5,6 +5,7 @@ const moment = require('moment')
 const lodash = require('lodash')
 const axios = require('axios')
 const csv_parse = require('csv-parse/lib/sync')
+const {StatusError} = require('../../utils/errors')
 const {
   ACCOUNT,
   COMPANY,
@@ -13,6 +14,8 @@ const {
   QUOTATION,
   VIEW,
   CREATE,
+  UPDATE,
+  FEURST_SALES,
 } = require('../../../utils/feurst/consts')
 const {filterCompanies, isActionAllowed} = require('../../utils/userAccess')
 const Group = require('../../models/Group')
@@ -726,6 +729,36 @@ router.get('/supported/:user_id/:service_id/:role', passport.authenticate('jwt',
     .catch(err => {
       console.error(err)
       return res.status(400).json(err)
+    })
+})
+
+router.put('/:company_id/sales_representative/:user_id', passport.authenticate('jwt', {session: false}), (req, res) => {
+  if (!isActionAllowed(COMPANY, UPDATE)) {
+    return res.status(403).json()
+  }
+
+  const company_id = req.params.company_id
+  const user_id = req.params.user_id
+  if (!user_id || !company_d) {
+    return res.status(400).json(`Representative and company expected`)
+  }
+
+  User.find({_id: user_id}, {roles: 1})
+    .then(user => {
+      if (!user.roles.includes[FEURST_SALES]) {
+        throw new StatusError(`Provided user has not FEURST_SALES role`, 400)
+      }
+      return Company.findByIdAndUpdate({_id: company_id}, {sales_representative: user._id}, {new: true})
+    })
+    .then(company => {
+      if (!company) {
+        throw new StatusError('Company not found', 404)
+      }
+      return res.json(company)
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(err.status||500).json(err.message)
     })
 })
 

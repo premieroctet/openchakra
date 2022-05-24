@@ -63,8 +63,17 @@ createAccount = (name, compName) => {
           log+= ` appartenant à la compagnie ${selfCompany.name}`
         }
         console.log(log)
-        return User.updateOne({email: email},
-          {firstname: name, name: name, password: PASSWORD, roles: [role], company: company, companies: companies}, {upsert: true})
+        return User.findOneAndUpdate({email: email},
+          {firstname: name, name: name, password: PASSWORD, roles: [role], company: company}, {upsert: true, new: true})
+          .then(user => {
+            console.log(`Maybe update company with ${JSON.stringify(user)}`)
+            if (companies && role==FEURST_SALES) {
+              console.log('Surely update company')
+              Company.updateMany({_id: {$in: companies.map(c => c._id)}}, {sales_representative: user._id})
+                .then(res => console.log(`ok:${JSON.stringify(res)}`))
+                .then(err => console.error(err))
+            }
+          })
       }))
     })
 }
@@ -74,8 +83,8 @@ mongoose.connect(getDatabaseUri(), MONGOOSE_OPTIONS)
   .then(() => {
     return Promise.all(Object.keys(ACCOUNTS).map(name => createAccount(name, ACCOUNTS[name])))
   })
-  .then(() => {
-    console.log('ok')
+  .then(res => {
+    console.log(res)
   })
   .catch(err => {
     console.error(err)
