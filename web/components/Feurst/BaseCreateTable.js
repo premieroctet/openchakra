@@ -18,7 +18,6 @@ import {
   HANDLED,
   CONVERT,
   VALIDATE,
-  HANDLE,
   ORDER,
   QUOTATION,
   RELATED,
@@ -28,7 +27,6 @@ import {
   REWRITE,
   PARTIALLY_HANDLE,
   TOTALLY_HANDLE,
-  BUTTONS,
 } from '../../utils/consts'
 import FeurstTable from '../../styles/feurst/FeurstTable'
 import {client} from '../../utils/client'
@@ -40,8 +38,7 @@ import {
   setAxiosAuthentication,
 } from '../../utils/authentication'
 import {snackBarError, snackBarSuccess} from '../../utils/notifications'
-import {HandleButton} from '../../styles/feurst/StyledComponents'
-import {is_development} from '../../config/config'
+import DevLog from '../DevLog'
 import {H2confirm} from './components.styles'
 import AddArticle from './AddArticle'
 import ImportExcelFile from './ImportExcelFile'
@@ -256,11 +253,10 @@ const BaseCreateTable = ({
 
   return (<>
 
-    {is_development() &&
-      <>
-        <h1>Order:{orderid}, status: {state?.status}</h1>
-        <h1>Boutons actions:{JSON.stringify(actionButtons)}</h1>
-      </>}
+    <DevLog>
+      <span>Order:{orderid}, status: {state?.status}</span>
+      <span>Boutons actions:{JSON.stringify(actionButtons)}</span>
+    </DevLog>
 
     {isFeurstSales && !orderCompany ?
       <div className='container-sm mb-8'>
