@@ -63,14 +63,37 @@ router.get('/check_register_code/:code', (req, res) => {
 })
 
 const DATA_TYPE=ACCOUNT
-// @Route POST /myAlfred/api/users/register
-// Register
+// @Route GET /myAlfred/api/users
+// Returns all users
+// @Access private
 router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   if (!isActionAllowed(req.user.roles, DATA_TYPE, VIEW)) {
     return res.sendStatus(301)
   }
 
   User.find()
+    .populate('company')
+    .populate('companies')
+    .then(data => {
+      data=filterUsers(data, DATA_TYPE, req.user, VIEW)
+      res.json(data)
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json(err)
+    })
+})
+
+
+// @Route GET /myAlfred/api/users/sales-representatives
+// Returns all FEURST_SALES users
+// @Access private
+router.get('/sales-representatives', passport.authenticate('jwt', {session: false}), (req, res) => {
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, VIEW)) {
+    return res.sendStatus(301)
+  }
+
+  User.find({roles: FEURST_SALES})
     .populate('company')
     .populate('companies')
     .then(data => {
@@ -1365,6 +1388,7 @@ if (is_development()) {
       .catch(err => {
         return res.status(500).json(err)
       })
+
   })
 
   router.post('/force-login', (req, res) => {
