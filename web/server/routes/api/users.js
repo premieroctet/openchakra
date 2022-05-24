@@ -1235,7 +1235,7 @@ router.put('/:user_id/companies', passport.authenticate('jwt', {session: false})
   const user_id=req.params.user_id
 
   User.findByIdAndUpdate(user_id, {companies: req.body.companies.map(c => mongoose.Types.ObjectId(c))})
-    .then(result => {
+    .then(res => {
       res.json()
     })
     .catch(err => {

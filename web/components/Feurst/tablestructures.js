@@ -10,6 +10,7 @@ import {formatPercent} from '../../utils/text'
 import {DateRangeColumnFilter} from '../Table/TableFilter'
 import {HandleLink} from '../../styles/feurst/StyledComponents'
 import UpdateCellQuantity from './UpdateCellQuantity'
+import UpdateSeller from './updateSeller'
 import UpdateCellPrice from './UpdateCellPrice'
 import OrderStatus from './OrderStatus'
 import {PleasantButton} from './Button'
@@ -288,32 +289,51 @@ const quotationsColumns = ({language, deleteProduct}) => [
   },
 ]
 
-const accountsColumns = ({language}) => [
-  {
-    label: 'Prénom',
-    attribute: 'firstname',
-  },
-  {
-    label: 'Nom',
-    attribute: 'name',
-  },
-  {
-    label: 'Email',
-    attribute: 'email',
-  },
-  {
-    label: 'Société',
-    attribute: 'company.name',
-  },
-  {
-    label: 'Client(s)',
-    attribute: u => u.companies?.map(u => u.name).join(','),
-  },
-  {
-    label: 'Roles',
-    attribute: u => u.roles.map(r => ROLES[r]).join(','),
-  },
-]
+const accountsColumns = ({language, visibility}) => {
+  
+  return [
+    {
+      label: 'Prénom',
+      attribute: 'firstname',
+    },
+    {
+      label: 'Nom',
+      attribute: 'name',
+    },
+    {
+      label: 'Email',
+      attribute: 'email',
+    },
+    {
+      label: 'Société',
+      attribute: 'company.name',
+    },
+    {
+      label: 'Client(s)',
+      attribute: u => u.companies?.map(u => u.name).join(','),
+    },
+    {
+      label: 'Rôles',
+      attribute: u => u.roles.map(r => ROLES[r]).join(','),
+    },
+  ]
+}
+
+const companiesColumns = ({language, updateSeller}) => {
+  
+  return [
+    {
+      label: 'Nom',
+      attribute: 'name',
+    },
+    {
+      label: 'Commercial',
+      attribute: '',
+      Cell: props => <UpdateSeller updateSeller={updateSeller} {...props}/>,
+    },
+    
+  ]
+}
 
 const productsColumns = ({language}) => [
   {label: 'Code article', attribute: 'reference'},
@@ -467,4 +487,4 @@ const handledQuotationsColumns = ({language, endpoint, handleValidation = null, 
   // },
 ]
 module.exports={orderColumns, ordersColumns, quotationColumns, quotationsColumns,
-  accountsColumns, productsColumns, shipratesColumns, handledOrdersColumns, handledQuotationsColumns, pricesColumns}
+  accountsColumns, companiesColumns, productsColumns, shipratesColumns, handledOrdersColumns, handledQuotationsColumns, pricesColumns}

@@ -2,8 +2,7 @@ import React, {useState, useEffect} from 'react'
 import {withTranslation} from 'react-i18next'
 import withEdiRequest from '../../hoc/withEdiRequest'
 import {
-  ORDER,
-  HANDLE,
+  UPDATE,
 } from '../../utils/consts'
 import FeurstTable from '../../styles/feurst/FeurstTable'
 
@@ -18,11 +17,13 @@ const BaseListTable = ({
   deleteOrder,
   state,
   filter,
+  filtered,
+  updateSeller,
 }) => {
 
   const [language, setLanguage] = useState('fr')
 
-  const handleOrderValidStatus = accessRights?.isActionAllowed(ORDER, HANDLE)
+  const canUpdateSeller = accessRights?.isActionAllowed(accessRights.getModel(), UPDATE)
 
   // Init language and order
   useEffect(() => {
@@ -34,7 +35,7 @@ const BaseListTable = ({
     getList({endpoint, filter})
   }, [endpoint, getList, filter, refresh])
 
-  const cols= columns({language, endpoint, deleteOrder})
+  const cols= columns({language, endpoint, deleteOrder, updateSeller: canUpdateSeller ? updateSeller : null})
 
   return (
     <FeurstTable
@@ -42,6 +43,7 @@ const BaseListTable = ({
       data={state.orders}
       columns={cols}
       filter={filter}
+      filtered={filtered}
     />
   )
 }
