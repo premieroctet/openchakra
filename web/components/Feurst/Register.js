@@ -82,7 +82,10 @@ const FeurstRegister = ({className, style, onSuccess, onClose}) => {
         Nom
       </label>
       <input id={'name'} name={'name'} value={name} onChange={ev => setName(ev.target.value)} placeholder={'Nom'} />
-      <input name={'email'} value={email} onChange={ev => setEmail(ev.target.value)} placeholder={'Adresse email'} />
+      <label htmlFor='email'>
+        email
+      </label>
+      <input id={'email'} name={'email'} value={email} onChange={ev => setEmail(ev.target.value)} placeholder={'Adresse email'} />
       
       <StyledCombobox>
         <Combobox as={'div'} value={role} onChange={setRole}>
@@ -108,11 +111,6 @@ const FeurstRegister = ({className, style, onSuccess, onClose}) => {
             afterLeave={() => setQuery('')}
           >
             <Combobox.Options>
-              {query.length > 0 && (
-                <Combobox.Option value={{id: null, name: query}}>
-            Créer "{query}"
-                </Combobox.Option>
-              )}
               {filteredRoles.map(role => (
                 <Combobox.Option key={role} value={role} className={({active}) => (active ? 'active' : '')} >
                   {({selected}) => (selected ? <> {ROLES[role]} <span>✓</span></> : <>{ROLES[role]}</>)}
@@ -146,11 +144,11 @@ const FeurstRegister = ({className, style, onSuccess, onClose}) => {
                   leave="leave"
                   leaveFrom="opacity-100 translate-y-0"
                   leaveTo="opacity-0 -translate-y-25"
-                  afterLeave={() => setQueryCompany('')}
+                  
                 >
                   <Combobox.Options>
                     {queryCompany.length > 0 && (
-                      <Combobox.Option value={queryCompany}>
+                      <Combobox.Option value={queryCompany} className={({active}) => (active ? 'active' : '')}>
             Créer "{queryCompany}"
                       </Combobox.Option>
                     )}
@@ -187,6 +185,10 @@ const HandleAccount = styled.div`
   width: min(calc(100% - 2rem), 20rem);
   margin-inline: auto;
   font-size: var(--text-xl);
+
+  & > button {
+    margin-top: var(--spc-6);
+  }
 
   label {
     position: absolute;
