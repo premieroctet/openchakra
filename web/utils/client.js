@@ -23,14 +23,14 @@ async function client(
 
   return window.fetch(endpoint, config).then(async response => {
     if (response.status === 401) {
-      return Promise.reject({message: 'Action non autorisée.'})
-    }
-
-    if (response.status === 403) {
       clearAuthenticationToken()
       // refresh the page for them
       window.location.assign(window.location)
       return Promise.reject({message: 'Accès interdit.'})
+    }
+    
+    if (response.status === 403) {
+      return Promise.reject({message: 'Action non autorisée.'})
     }
     
     if (response.ok) {
@@ -43,17 +43,23 @@ async function client(
         return blob
       }
 
-      return await response.json()
+      const data = await response.json()
         .catch(e => console.log(`Error when fetching`, e))
+
+      return data
+    }
+
+    const error = new Error()
+    error.info = {
+      status: response.status,
+      message: await response.json() || 'Something went wrong',
     }
     
-    const error = await response.json()
-    throw new Error(error)
+    throw error
   })
     .catch(err => {
       throw err
-    },
-    )
+    })
 }
 
 

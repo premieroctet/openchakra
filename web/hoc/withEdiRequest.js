@@ -2,10 +2,7 @@ import React from 'react'
 import {client} from '../utils/client'
 import {
   API_PATH,
-  ENDPOINTS,
-  QUOTATION,
   ORDER_CREATED,
-  HANDLED,
 } from '../utils/feurst/consts'
 import {snackBarError} from '../utils/notifications'
 
@@ -43,8 +40,8 @@ const withEdiRequest = (Component = null) => {
             this.setState(data)
             return data
           })
-          .catch(() => {
-            snackBarError('Commande/devis non existant')
+          .catch(e => {
+            console.error('Commande/devis non existant', e)
           })
       }
     }
