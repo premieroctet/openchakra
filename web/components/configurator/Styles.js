@@ -1,4 +1,4 @@
-import styled, { createGlobalStyle } from 'styled-components'
+import styled, {createGlobalStyle} from 'styled-components'
 
 
 const MyGlobalStyle = createGlobalStyle`
@@ -50,7 +50,7 @@ body {
     min-height: -webkit-fill-available;
   }
 }
-`;
+`
 
 
 const Styles = styled.div`
@@ -61,6 +61,8 @@ const Styles = styled.div`
   height: auto;
 }
 
+.max-w-md	{max-width: 28rem;}
+.max-w-lg	{max-width: 32rem;} 
 
 /* textes */
 
@@ -203,6 +205,10 @@ h2,
 
 .flex-wrap {
   flex-wrap: wrap;
+}
+
+.grow	{
+  flex-grow: 1;
 }
 
 .place-items-center {
