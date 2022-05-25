@@ -319,8 +319,8 @@ const accountsColumns = ({language, visibility}) => {
   ]
 }
 
-const companiesColumns = ({language, updateSeller}) => {
-  
+const companiesColumns = ({language, updateSeller, sellers}) => {
+
   return [
     {
       label: 'Nom',
@@ -329,7 +329,7 @@ const companiesColumns = ({language, updateSeller}) => {
     {
       label: 'Commercial',
       attribute: '',
-      Cell: props => <UpdateSeller updateSeller={updateSeller} {...props}/>,
+      Cell: props => <UpdateSeller updateSeller={updateSeller} sellers={sellers} {...props}/>,
     },
     
   ]
