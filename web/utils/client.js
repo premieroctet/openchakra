@@ -43,10 +43,11 @@ async function client(
         return blob
       }
 
-      return await response.json()
+      const data = await response.json()
         .catch(e => console.log(`Error when fetching`, e))
+
+      return data
     }
-    
 
     const error = new Error()
     error.info = {
@@ -58,8 +59,7 @@ async function client(
   })
     .catch(err => {
       throw err
-    },
-    )
+    })
 }
 
 

@@ -48,6 +48,7 @@ import Delivery from './Delivery'
 
 
 const DialogAddress = dynamic(() => import('./DialogAddress'))
+const DialogConvertQuotation = dynamic(() => import('./DialogConvertQuotation'))
 
 const ConfirmHandledValidation = ({onClick, className, children}) => (
   <PleasantButton
@@ -101,6 +102,7 @@ const BaseCreateTable = ({
   const [orderCompany, setOrderCompany] = useState(null)
   const [orderid, setOrderid, {removeItem}] = useLocalStorageState(`${storage}-${dataToken?.id}`, {ssr: true, defaultValue: id})
   const [isOpenDialog, setIsOpenDialog] = useState(false)
+  const [isOpenDialogConvert, setIsOpenDialogConvert] = useState(false)
   const [companies, setCompanies] = useState([])
   const [actionButtons, setActionButtons]=useState([])
 
@@ -116,7 +118,7 @@ const BaseCreateTable = ({
 
   const isValidButton = actionButtons.includes(VALIDATE)
   const isRevertToEdition = actionButtons.includes(REWRITE)
-  const isConvertToQuotation = actionButtons.includes(CONVERT)
+  const isConvertToOrder = actionButtons.includes(CONVERT)
   const isPartiallyHandled = actionButtons.includes(PARTIALLY_HANDLE)
   const isTotallyHandled = actionButtons.includes(TOTALLY_HANDLE)
 
@@ -147,10 +149,15 @@ const BaseCreateTable = ({
         router.push(`${BASEPATH_EDI}/${endpoint}`)
         removeItem()
       })
-      .catch(() => {
-        console.error(`Didn't submit order`)
-        snackBarError(`Problème d'enregistrement`)
-        return
+      .catch(error => {
+        if (error.info) {
+          // Address is outside delivery zone
+          if (error.info.status === 422) {
+
+            /* Display choices */
+            setIsOpenDialogConvert(true)
+          }
+        }
       })
   }
 
@@ -228,10 +235,11 @@ const BaseCreateTable = ({
 
 
   useEffect(() => {
-    client(`${API_PATH}/${endpoint}/${orderid}/actions`)
-      .then(res => { setActionButtons(res) })
-      .catch(err => console.error(JSON.stringify(err)))
-
+    if (!isEmpty(orderid)) {
+      client(`${API_PATH}/${endpoint}/${orderid}/actions`)
+        .then(res => { setActionButtons(res) })
+        .catch(err => console.error(JSON.stringify(err)))
+    }
   }, [endpoint, orderid, state.status])
 
 
@@ -347,18 +355,8 @@ const BaseCreateTable = ({
         Revenir à la saisie
         </PleasantButton> : null}
 
-        {/* {isConvertToQuotation && <PleasantButton
-          rounded={'full'}
-          disabled={justCreated}
-          bgColor={'#fff'}
-          textColor={'#141953'}
-          className={'col-start-1'}
-          borderColor={'1px solid #141953'}
-          onClick={() => convert({endpoint, orderid})}
-        >
-        Demande de devis
-        </PleasantButton>} */}
-        {isConvertToQuotation && <PleasantButton
+        
+        {isConvertToOrder && <PleasantButton
           rounded={'full'}
           disabled={justCreated}
           bgColor={'#fff'}
@@ -410,6 +408,18 @@ const BaseCreateTable = ({
         validateAddress={validateAddress}
         wordingSection={wordingSection}
       />
+      
+      <DialogConvertQuotation
+        orderid={orderid}
+        endpoint={endpoint}
+        isOpenDialog={isOpenDialogConvert}
+        setIsOpenDialog={setIsOpenDialogConvert}
+        accessRights={accessRights}
+        convert={convert}
+        revertToEdition={revertToEdition}
+      />
+      
+
     </> : null}
   </>
   )
