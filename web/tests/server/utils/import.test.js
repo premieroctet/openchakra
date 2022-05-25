@@ -26,15 +26,15 @@ const User=mongoose.model('user', UserSchema)
 describe('XL & CSV imports', () => {
 
   beforeAll(() => {
-    return mongoose.connect('mongodb://localhost/test')
+    return mongoose.connect('mongodb://localhost/test', {useUnifiedTopology: true, useNewUrlParser: true})
   })
 
   afterAll(() => {
-    // return mongoose.connection.db.dropDatabase()
+    return mongoose.connection.db.dropDatabase()
   })
 
   afterEach(() => {
-    return Product.deleteMany({})
+    // return Product.deleteMany({})
   })
 
   describe('Guess files types', () => {
@@ -55,14 +55,14 @@ describe('XL & CSV imports', () => {
   test('Import rates', () => {
     return fs.readFile(`tests/data/shiprates.csv`)
       .then(contents => {
-        return shipRatesImport(contents)
+        return shipRatesImport(contents, {format: TEXT_TYPE, delimiter: ';'})
       })
       .then(result => {
-        expect(result.created).toBe(564)
+        return expect(result.created).toBe(564)
       })
   })
 
-  test('Import products csv', () => {
+  test.only('Import products csv', () => {
     return fs.readFile(`tests/data/products.csv`)
       .then(contents => {
         const DB_MAPPING={
@@ -77,14 +77,19 @@ describe('XL & CSV imports', () => {
         return fileImport(Product, contents, DB_MAPPING, {key: 'reference', delimiter: ';', format: TEXT_TYPE})
       })
       .then(result => {
+        console.log(result)
         expect(result.warnings.length).toBe(0)
         expect(result.errors.length).toBe(0)
         expect(result.created).toBe(1014)
         expect(result.updated).toBe(0)
+        return Product.countDocuments()
+      })
+      .then(count => {
+        expect(count).toBe(1014)
       })
   })
 
-  test.only('Import products xlsx', () => {
+  test('Import products xlsx', () => {
     return fs.readFile(`tests/data/products.xlsx`)
       .then(contents => {
         const DB_MAPPING={
@@ -106,7 +111,7 @@ describe('XL & CSV imports', () => {
       })
   })
 
-  test('Import price list xlsx', () => {
+  test.only('Import price list xlsx', () => {
     return fs.readFile(`tests/data/products.xlsx`)
       .then(contents => {
         return priceListImport(PriceList, contents, null, {key: 'reference', format: XL_TYPE, tab: 'Travail'})
@@ -114,10 +119,14 @@ describe('XL & CSV imports', () => {
       .then(result => {
         expect(result.warnings.length).toBe(0)
         expect(result.errors.length).toBe(0)
-        expect(result.created).toBe(7524)
+        expect(result.created).toBe(7516)
         expect(result.updated).toBe(0)
+        return PriceList.countDocuments()
       })
-  }, 10000)
+      .then(count => {
+        return expect(count).toBe(7516)
+      })
+  }, 40000)
 
   test('Import clients/compagnies/tarifs', () => {
     return fs.readFile(`tests/data/clients.xlsx`)
@@ -137,14 +146,14 @@ describe('XL & CSV imports', () => {
     test.each(cases)(
       'Zipcode %p, weight %p, express %p expects ship fee %p€',
       (zipcode, weight, express, expected) => {
-        return computeShippingFee(zipcode, weight, express)
+        return computeShippingFee({}, {zip_code: zipcode*1000+123}, express)
           .then(fee => {
             expect(fee).toBe(expected)
           })
       })
 
     test('No ship rate for Corsica', () => {
-      return expect(computeShippingFee(20, 150, true)).rejects.toMatch('No rate found')
+      return expect(computeShippingFee({}, {zip_code: 20125}, true)).rejects.toMatch('No rate found')
     })
   })
 

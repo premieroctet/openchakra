@@ -72,18 +72,17 @@ const dataImport=(model, headers, records, mapping, options) => {
       model.updateOne({[uniqueKey]: record[uniqueKey]}, record, {upsert: true, new: true}),
     )
 
-    console.log(JSON.stringify(promises.length))
-
     Promise.allSettled(promises)
       .then(res => {
         const fulfilled=res.filter(r => r.status=='fulfilled').map(r => r.value)
         const rejected=res.filter(r => r.status=='rejected').map(r => r.reason)
-        result.updated=lodash.sum(fulfilled.map(f => f.modifiedCount))
-        result.created=lodash.sum(fulfilled.map(f => f.upsertedCount))
+        result.updated=lodash.sum(fulfilled.map(f => f.nModified))
+        result.created=lodash.sum(fulfilled.map(f => f.upserted.length))
         result.errors.push(...rejected.map(r => r.message))
         return resolve(result)
       })
       .catch(err => {
+        console.log(err)
         result.errors.push(err)
         return resolve(result)
       })
@@ -208,13 +207,17 @@ const priceListImport = (model, buffer, mapping, options) => {
           ))
         })
         const prices=lodash.flattenDeep(lists).filter(a => !!a.name && !!a.price)
-        const promises=prices.map(p => model.findOneAndUpdate({reference: p.reference, name: p.name}, p, {upsert: true}))
-        Promise.allSettled(promises)
-          .then(res => {
-            importResult.created +=res.filter(r => r.status=='fulfilled').length
-            importResult.warnings.push(...res.filter(r => r.status=='rejected').map(r => r.reason))
-            return resolve(importResult)
-          })
+        const promises=prices.map(p => p.reference && p.name && p.price && model.updateOne({reference: p.reference, name: p.name}, p, {upsert: true}) || Promise.reject('Chamsp manquants'))
+        return Promise.allSettled(promises)
+      })
+      .then(res => {
+        importResult.created +=res.filter(r => r.status=='fulfilled').length
+        importResult.warnings.push(...res.filter(r => r.status=='rejected').map(r => r.reason))
+        return resolve(importResult)
+      })
+      .catch(err => {
+        console.error(err)
+        return reject(err)
       })
   })
 }
@@ -251,7 +254,7 @@ const accountsImport = (model, buffer, mapping, options) => {
               const pvc=prices.find(p => p.name==catalogPrices)
               const discount=prices.find(p => p.name==netPrices)
               if (!pvc || !discount) { return Promise.reject(msg('Liste de prix inconnue, avez-vous importé les tarifs?')) }
-              return Company.findOneAndUpdate({name: companyName},
+              return Company.updateOne({name: companyName},
                 {addresses: [addr], catalog_prices: catalogPrices, net_prices: netPrices, franco: franco, delivery_zip_codes},
                 {upsert: true, new: true})
                 .then(company => {
@@ -263,7 +266,7 @@ const accountsImport = (model, buffer, mapping, options) => {
                   if (!(email && firstname && name && Validator.isEmail(email))) {
                     return Promise.reject(msg(`Erreur nom, prénom ou email`))
                   }
-                  return User.findOneAndUpdate({email},
+                  return User.updateOne({email},
                     {$set: {firstname, name, company: company, email, roles: [CUSTOMER_ADMIN]},
                       $setOnInsert: {password: bcrypt.hashSync('Alfred123;', 10)}},
                     {upsert: true, new: true},

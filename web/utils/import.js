@@ -24,12 +24,13 @@ const getTabs = buffer => {
 }
 
 const extractCsv=(bufferData, options) => {
+  if (!options.delimiter) {
+    return Promise.reject(`CSV loading: missing options.delimiter`)
+  }
   return new Promise((resolve, reject) => {
     const contents = bufferToString(bufferData)
     try {
       const opts={columns: true, bom: true, relax_column_count: true, ...options}
-      console.log(opts)
-      console.log(contents.slice(0, 50))
       const records=csv_parse(contents, opts)
       if (opts.columns) {
         const headers=Object.keys(records[0])
@@ -71,7 +72,7 @@ const extractXls=(bufferData, options) => {
 
 const extractData = (bufferData, options) => {
   options={columns: true, ...options}
-  if (!options.format || ![XL_TYPE, TEXT_TYPE].includes(options.format)) {
+  if (![XL_TYPE, TEXT_TYPE].includes(options?.format)) {
     return Promise.reject(`Null or invalid options.format:${options.format}`)
   }
   return options.format==XL_TYPE ? extractXls(bufferData, options):extractCsv(bufferData, options)
