@@ -1,14 +1,14 @@
 import React, {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
 import {withTranslation} from 'react-i18next'
-import {Combobox, Transition} from '@headlessui/react'
+import {Listbox, Combobox, Transition} from '@headlessui/react'
 import Validator from 'validator'
 import styled from 'styled-components'
 import {setAxiosAuthentication} from '../../utils/authentication'
 import {API_PATH} from '../../utils/feurst/consts'
 import {CUSTOMER_ADMIN, ROLES, ACCOUNT, CREATE} from '../../utils/consts'
 import {snackBarError, snackBarSuccess} from '../../utils/notifications'
-import {StyledCombobox} from '../../styles/feurst/StyledComponents'
+import {StyledListbox, StyledCombobox} from '../../styles/feurst/StyledComponents'
 import {PleasantButton} from './Button'
 
 
@@ -87,19 +87,12 @@ const FeurstRegister = ({className, style, onSuccess, onClose}) => {
       </label>
       <input id={'email'} name={'email'} value={email} onChange={ev => setEmail(ev.target.value)} placeholder={'Adresse email'} />
       
-      <StyledCombobox>
-        <Combobox as={'div'} value={role} onChange={setRole}>
-          <Combobox.Label>Type de compte</Combobox.Label>
-          <div className='comboboxinput'>
-            <Combobox.Input
-              onChange={event => setQuery(event.target.value)}
-              displayValue={role => ROLES[role] || null}
-              placeholder='Type de compte'
-            />
-            <Combobox.Button>
-          ▲
-            </Combobox.Button>
-          </div>
+      <StyledListbox>
+        <Listbox as={'div'} value={role} onChange={setRole}>
+          <Listbox.Label>Type de compte</Listbox.Label>
+          <Listbox.Button>
+            <span>{ROLES[role]}</span><span className='icon'>▲</span>
+          </Listbox.Button>
           <Transition
             as={Fragment}
             enter="enter"
@@ -110,16 +103,16 @@ const FeurstRegister = ({className, style, onSuccess, onClose}) => {
             leaveTo="opacity-0 -translate-y-25"
             afterLeave={() => setQuery('')}
           >
-            <Combobox.Options>
+            <Listbox.Options>
               {filteredRoles.map(role => (
-                <Combobox.Option key={role} value={role} className={({active}) => (active ? 'active' : '')} >
+                <Listbox.Option key={role} value={role} className={({active}) => (active ? 'active' : '')} >
                   {({selected}) => (selected ? <> {ROLES[role]} <span>✓</span></> : <>{ROLES[role]}</>)}
-                </Combobox.Option>
+                </Listbox.Option>
               ))}
-            </Combobox.Options>
+            </Listbox.Options>
           </Transition>
-        </Combobox>
-      </StyledCombobox>
+        </Listbox>
+      </StyledListbox>
   
       { role==CUSTOMER_ADMIN &&
           <>

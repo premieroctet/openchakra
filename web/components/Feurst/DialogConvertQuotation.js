@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import {withTranslation} from 'react-i18next'
 import {screen} from '../../styles/screenWidths'
@@ -27,7 +27,7 @@ const DialogConvertQuotation = ({
 
       <ul>
         <li>
-          <span> Vous pouvez modifier votre adresse de livraison</span>
+          Vous pouvez modifier votre adresse de livraison
           <PleasantButton
             rounded={'full'}
             bgColor={'#fff'}

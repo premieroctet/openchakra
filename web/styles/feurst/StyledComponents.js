@@ -1,5 +1,4 @@
 import React from 'react'
-import {Combobox} from '@headlessui/react'
 import styled from 'styled-components'
 import {screen} from '../../styles/screenWidths'
 
@@ -127,10 +126,9 @@ const HandleButton = styled.button`
   
 `
 
-const StyledCombobox = styled(Combobox)`
+const CommonHeadlessUI = styled.div`
+  position: relative;
   
-  position: relative;  
-
   [role="listbox"] {
     border-bottom-left-radius: var(--spc-2);
     border-bottom-right-radius: var(--spc-2);
@@ -145,7 +143,7 @@ const StyledCombobox = styled(Combobox)`
     width:100%;
     font-size: inherit;
     padding: 0;
-    
+  
     li {
       display: flex;
       justify-content: space-between;
@@ -158,6 +156,10 @@ const StyledCombobox = styled(Combobox)`
       }
     }
   }
+`
+
+
+const StyledCombobox = styled(CommonHeadlessUI)`
 
   .comboboxinput {
     display: flex;
@@ -189,5 +191,40 @@ const StyledCombobox = styled(Combobox)`
   
 `
 
+const StyledListbox = styled(CommonHeadlessUI)`
 
-export {StyledTabs, HandleLink, HandleButton, StyledCombobox}
+  button {
+    display: flex;
+    justify-content: space-between;
+    font-size: inherit;
+    background: none;
+    border: 0;
+    width: 100%;
+    border-bottom: 2px solid var(--stone-300);
+    padding-block: var(--spc-2);
+    transition: border 0.2s ease-in-out;
+    outline: 0;
+
+    .icon {
+      font-size: var(--text-sm);
+      transform: rotate(180deg);
+      transition: transform var(--delayOut) cubic-bezier(.14,1.91,.83,.67);
+    }
+
+    &[aria-expanded='true'] {
+      border-bottom: 0;
+
+      .icon {
+        transform: rotate(0)
+      }
+    }
+  }
+
+  ul {
+    outline: 0;
+  }
+
+`
+
+
+export {StyledTabs, HandleLink, HandleButton, StyledCombobox, StyledListbox}
