@@ -137,6 +137,16 @@ const withEdiRequest = (Component = null) => {
 
     }
 
+    updateSeller = async({company_id, user_id}) => {
+      // /:company_id/sales_representative/:user_id'
+      return await client(`${API_PATH}/companies/${company_id}/sales_representative/${user_id}`, {method: 'PUT'})
+        .catch(e => {
+          console.error(`Can't bind user to company`, e)
+          snackBarError(`Erreur lors de l'assignation du commercial`)
+        })
+
+    }
+
     sendQuotationToCustomer = async({endpoint, orderid}) => {
       // HANDLED ?
     }
@@ -158,6 +168,7 @@ const withEdiRequest = (Component = null) => {
           validateAddress={this.validateAddress}
           revertToEdition={this.revertToEdition}
           sendQuotationToCustomer={this.sendQuotationToCustomer}
+          updateSeller={this.updateSeller}
           state={this.state}
           {...this.props}
         />

@@ -1,43 +1,36 @@
 // @ts-check
 import React, {useState, useEffect, Fragment} from 'react'
-import styled from 'styled-components'
 import {Listbox, Transition} from '@headlessui/react'
 import {StyledListbox} from '../../styles/feurst/StyledComponents'
 
 
 const UpdateSeller = ({
   value: initialValue,
-  row: {index},
-  column: {id},
   cell: {row},
-  updateMyData, // This is a custom function that we supplied to our table instance
+  updateSeller, // This is a custom function that we supplied to our table instance
   sellers,
 }) => {
   // We need to keep and update the state of the cell normally
   const [value, setValue] = useState(initialValue)
-  console.log(sellers)
+  const [assignedSeller] = sellers.filter(seller => seller._id === initialValue)
 
-  // We'll only update the external data when the input is blurred
-  const onBlur = () => {
-    if (typeof updateMyData === 'function') {
-      console.log('Try to update ? In progress')
-      // updateMyData({item: itemToUpdate, quantity: qty, replace: true})
-    }
-    else {
-      console.error('React Table Data not updated. Did you forget the prop updateMyData on your table ?')
-    }
+
+  const onChangeSeller = e => {
+    updateSeller({company_id: row.original.id, user_id: e.id})
+    setValue(e)
   }
+
 
   // If the initialValue is changed external, sync it up with our state
   useEffect(() => {
-    setValue(initialValue)
-  }, [initialValue])
+    setValue(assignedSeller || initialValue)
+  }, [assignedSeller, initialValue])
 
   return <>
     <StyledListbox>
-      <Listbox as={'div'} value={value} onChange={setValue}>
+      <Listbox as={'div'} value={value} onChange={onChangeSeller}>
         <Listbox.Button>
-          <span>{value}</span><span className='icon'>▲</span>
+          <span>{value?.full_name}</span><span className='icon'>▲</span>
         </Listbox.Button>
         <Transition
           as={Fragment}
@@ -49,8 +42,8 @@ const UpdateSeller = ({
           leaveTo="opacity-0 -translate-y-25"
         >
           <Listbox.Options>
-            {sellers.map((seller, i) => (
-              <Listbox.Option key={`${seller._id}-${i}`} value={seller.full_name} className={({active}) => (active ? 'active' : '')} >
+            {sellers.map(seller => (
+              <Listbox.Option key={`${seller._id}`} value={seller} className={({active}) => (active ? 'active' : '')} >
                 {({selected}) => (selected ? <> {seller.full_name} <span>✓</span></> : <>{seller.full_name}</>)}
               </Listbox.Option>
             ))}

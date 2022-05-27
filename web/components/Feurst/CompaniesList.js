@@ -24,8 +24,14 @@ const CompaniesList = ({accessRights}) => {
   return (
     <>
       
-      {accessRights.isActionAllowed(ACCOUNT, LINK) && <AccountLink />}
-      <BaseListTable caption='Liste des comptes' endpoint='companies' columns={companiesColumns} sellers={sellers}/>
+      {/* {accessRights.isActionAllowed(ACCOUNT, LINK) && <AccountLink />} */}
+      <BaseListTable
+        accessRights={accessRights}
+        caption='Liste des comptes'
+        endpoint='companies'
+        columns={companiesColumns}
+        sellers={sellers}
+      />
     </>
   )
 }
