@@ -61,8 +61,10 @@ const Header = ({accessRights}) => {
       
         <a className='phonenumber' href={`tel:${FEURST_PHONE_NUMBER.replace(/\s+/g, '')}`}>Une question ? {FEURST_PHONE_NUMBER}</a>
       
-        <Link href={`${BASEPATH_EDI}`}>
-          <LogoLink><img className='img-responsive max-w-200' src="https://feurst.fr/wp-content/uploads/2022/01/logo-feurst-01.svg" alt='' width={350} height={104} /></LogoLink>
+        <Link aria-label="Accueil" href={`${BASEPATH_EDI}`}>
+          <LogoLink href={`${BASEPATH_EDI}`}>
+            <img className='img-responsive max-w-200' src="https://feurst.fr/wp-content/uploads/2022/01/logo-feurst-01.svg" alt='' width={350} height={104} />
+          </LogoLink>
         </Link>
         <QuickMenu accessRights={accessRights} />
       </HeaderContainer>
