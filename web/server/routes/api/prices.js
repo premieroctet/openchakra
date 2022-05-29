@@ -53,7 +53,7 @@ router.post('/import', passport.authenticate('jwt', {session: false}), (req, res
 
     const options=JSON.parse(req.body.options)
 
-    priceListImport(PriceList, req.file.buffer, null, {...options, key: 'reference', update: true})
+    priceListImport(req.file.buffer, {...options, update: true})
       .then(result => {
         res.json(result)
       })

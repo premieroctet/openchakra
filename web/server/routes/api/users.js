@@ -1340,7 +1340,7 @@ router.post('/import', passport.authenticate('jwt', {session: false}), (req, res
 
     const options=JSON.parse(req.body.options)
 
-    accountsImport(User, req.file.buffer, null, options)
+    accountsImport(req.file.buffer, null, options)
       .then(result => {
         res.json(result)
       })

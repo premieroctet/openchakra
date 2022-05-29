@@ -1,11 +1,10 @@
+const fs = require('fs').promises
+const mongoose = require('mongoose')
 const {
   accountsImport,
   productsImport,
 } = require('../../../server/utils/import')
 
-const fs = require('fs').promises
-const mongoose = require('mongoose')
-const UserSchema = require('../../../server/models/feurst/UserSchema')
 const {guessFileType} = require('../../../utils/import')
 const PriceListSchema =
   require('../../../server/models/feurst/PriceListSchema')
@@ -15,12 +14,11 @@ const {TEXT_TYPE, XL_TYPE} = require('../../../utils/feurst/consts')
 
 
 const ProductSchema = require('../../../server/models/feurst/ProductSchema')
-const {fileImport, shipRatesImport} = require('../../../server/utils/import')
+const {shipRatesImport} = require('../../../server/utils/import')
 const {computeShippingFee} = require('../../../server/utils/commands')
 
 const Product=mongoose.model('product', ProductSchema)
 const PriceList=mongoose.model('priceList', PriceListSchema)
-const User=mongoose.model('user', UserSchema)
 // const PriceList=mongoose.model('priceList', PriceListSchema)
 
 describe('XL & CSV imports', () => {
@@ -34,7 +32,7 @@ describe('XL & CSV imports', () => {
   })
 
   afterEach(() => {
-    // return Product.deleteMany({})
+    return Product.deleteMany({})
   })
 
   describe('Guess files types', () => {
@@ -62,22 +60,13 @@ describe('XL & CSV imports', () => {
       })
   })
 
-  test.only('Import products csv', () => {
+  test('Import products csv', () => {
     return fs.readFile(`tests/data/products.csv`)
       .then(contents => {
-        const DB_MAPPING={
-          'reference': 'Code article',
-          'description_2': 'Description 2',
-          'group': 'Grpe',
-          'family': 'Famille',
-          'description': 'Description',
-          'weight': {column: "Poids d'expédition", transform: v => parseFloat(v.replace(',', '.')) || null},
-        }
 
-        return fileImport(Product, contents, DB_MAPPING, {key: 'reference', delimiter: ';', format: TEXT_TYPE})
+        return productsImport(contents, {delimiter: ';', format: TEXT_TYPE})
       })
       .then(result => {
-        console.log(result)
         expect(result.warnings.length).toBe(0)
         expect(result.errors.length).toBe(0)
         expect(result.created).toBe(1014)
@@ -89,19 +78,10 @@ describe('XL & CSV imports', () => {
       })
   })
 
-  test('Import products xlsx', () => {
+  test.only('Import products xlsx', () => {
     return fs.readFile(`tests/data/products.xlsx`)
       .then(contents => {
-        const DB_MAPPING={
-          'reference': 'Code article',
-          'description_2': 'Description 2',
-          'group': 'Grpe',
-          'family': 'Famille',
-          'description': 'Description',
-          'weight': {column: "Poids d'expédition", transform: v => parseFloat(String(v).replace(',', '.')) || null},
-        }
-
-        return productsImport(Product, contents, DB_MAPPING, {key: 'reference', format: XL_TYPE, tab: 'Travail'})
+        return productsImport(contents, {format: XL_TYPE, tab: 'Travail'})
       })
       .then(result => {
         expect(result.warnings.length).toBe(0)
@@ -111,10 +91,10 @@ describe('XL & CSV imports', () => {
       })
   })
 
-  test.only('Import price list xlsx', () => {
+  test('Import price list xlsx', () => {
     return fs.readFile(`tests/data/products.xlsx`)
       .then(contents => {
-        return priceListImport(PriceList, contents, null, {key: 'reference', format: XL_TYPE, tab: 'Travail'})
+        return priceListImport(contents, null, {key: 'reference', format: XL_TYPE, tab: 'Travail'})
       })
       .then(result => {
         expect(result.warnings.length).toBe(0)
@@ -131,29 +111,30 @@ describe('XL & CSV imports', () => {
   test('Import clients/compagnies/tarifs', () => {
     return fs.readFile(`tests/data/clients.xlsx`)
       .then(contents => {
-        return accountsImport(User, contents, null, {format: XL_TYPE, tab: 'DONNEES CLIENT FEURST'})
+        return accountsImport(contents, null, {format: XL_TYPE, tab: 'DONNEES CLIENT FEURST'})
       })
       .then(result => {
+        console.log(result.warnings)
         expect(result.warnings.length).toBe(0)
         expect(result.errors.length).toBe(0)
         expect(result.created).toBe(64)
         expect(result.updated).toBe(0)
       })
-  }, 10000)
+  }, 40000)
 
   describe('Compute rates', () => {
     const cases=[[1, 50, false, 28], [28, 168, true, 115.92]]
     test.each(cases)(
       'Zipcode %p, weight %p, express %p expects ship fee %p€',
       (zipcode, weight, express, expected) => {
-        return computeShippingFee({}, {zip_code: zipcode*1000+123}, express)
+        return computeShippingFee({total_weight: weight, company: {carriage_paid: 1000000, addresses: []}}, {zip_code: zipcode*1000+123}, express)
           .then(fee => {
             expect(fee).toBe(expected)
           })
       })
 
     test('No ship rate for Corsica', () => {
-      return expect(computeShippingFee({}, {zip_code: 20125}, true)).rejects.toMatch('No rate found')
+      return expect(computeShippingFee({company: {carriage_paid: 100000, addresses: []}}, {zip_code: 20125}, true)).rejects.toMatch('No rate found')
     })
   })
 

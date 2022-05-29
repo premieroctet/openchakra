@@ -1,6 +1,7 @@
 const Validator = require('validator')
 const lodash=require('lodash')
 const bcrypt = require('bcryptjs')
+const Product = require('../models/Product')
 const {
   CUSTOMER_ADMIN,
   MAIN_ADDRESS_LABEL,
@@ -77,7 +78,7 @@ const dataImport=(model, headers, records, mapping, options) => {
         const fulfilled=res.filter(r => r.status=='fulfilled').map(r => r.value)
         const rejected=res.filter(r => r.status=='rejected').map(r => r.reason)
         result.updated=lodash.sum(fulfilled.map(f => f.nModified))
-        result.created=lodash.sum(fulfilled.map(f => f.upserted.length))
+        result.created=lodash.sum(fulfilled.map(f => f.upserted?.length || 0))
         result.errors.push(...rejected.map(r => r.message))
         return resolve(result)
       })
@@ -193,7 +194,7 @@ const lineItemsImport = (model, buffer, mapping, options) => {
   })
 }
 
-const priceListImport = (model, buffer, mapping, options) => {
+const priceListImport = (buffer, options) => {
   let importResult={created: 0, updated: 0, errors: [], warnings: []}
   return new Promise((resolve, reject) => {
     extractData(buffer, {...options, columns: false})
@@ -207,7 +208,7 @@ const priceListImport = (model, buffer, mapping, options) => {
           ))
         })
         const prices=lodash.flattenDeep(lists).filter(a => !!a.name && !!a.price)
-        const promises=prices.map(p => p.reference && p.name && p.price && model.updateOne({reference: p.reference, name: p.name}, p, {upsert: true}) || Promise.reject('Chamsp manquants'))
+        const promises=prices.map(p => p.reference && p.name && p.price && PriceList.updateOne({reference: p.reference, name: p.name}, p, {upsert: true}) || Promise.reject('Chamsp manquants'))
         return Promise.allSettled(promises)
       })
       .then(res => {
@@ -222,7 +223,7 @@ const priceListImport = (model, buffer, mapping, options) => {
   })
 }
 
-const accountsImport = (model, buffer, mapping, options) => {
+const accountsImport = (buffer, mapping, options) => {
   let importResult={created: 0, updated: 0, errors: [], warnings: []}
   return new Promise((resolve, reject) => {
     const firstLine=options.from_line || 1
@@ -288,7 +289,7 @@ const accountsImport = (model, buffer, mapping, options) => {
   })
 }
 
-const productsImport = (model, bufferData, mapping, options) => {
+const productsImport = (bufferData, options) => {
   const importComponents = record => {
     const FIELDS='Adapteur,Chapeau,Fourreau,Clavette,BouchonGBouchonD,Pointe'.split(',')
     const compIds = FIELDS.map(f => record[f]).filter(v => !!v)
@@ -298,7 +299,16 @@ const productsImport = (model, bufferData, mapping, options) => {
 
   }
 
-  return fileImport(model, bufferData, mapping, options)
+  const DB_MAPPING={
+    'reference': 'Code article',
+    'description_2': 'Description 2',
+    'group': 'Grpe',
+    'family': 'Famille',
+    'description': 'Description',
+    'weight': {column: "Poids d'expédition", transform: v => parseFloat(String(v).replace(',', '.')) || null},
+  }
+
+  return fileImport(Product, bufferData, DB_MAPPING, {key: 'reference', ...options})
 }
 
 module.exports={fileImport, shipRatesImport, lineItemsImport,

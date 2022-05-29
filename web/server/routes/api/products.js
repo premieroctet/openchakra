@@ -124,7 +124,7 @@ router.post('/import', passport.authenticate('jwt', {session: false}), (req, res
 
     const options=JSON.parse(req.body.options)
 
-    productsImport(Product, req.file.buffer, DB_MAPPING, {...options, key: 'reference'})
+    productsImport(req.file.buffer, DB_MAPPING, {...options, key: 'reference'})
       .then(result => {
         return res.json(result)
       })
