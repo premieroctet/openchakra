@@ -2,18 +2,14 @@ import React, {useMemo} from 'react'
 import Link from 'next/link'
 import {localeMoneyFormat} from '../../utils/converters'
 import {
-  PARTIALLY_HANDLED,
-  VALID,
   ROLES,
 } from '../../utils/feurst/consts'
 import {formatPercent} from '../../utils/text'
 import {DateRangeColumnFilter} from '../Table/TableFilter'
-import {HandleLink} from '../../styles/feurst/StyledComponents'
 import UpdateCellQuantity from './UpdateCellQuantity'
 import UpdateSeller from './updateSeller'
 import UpdateCellPrice from './UpdateCellPrice'
 import OrderStatus from './OrderStatus'
-import {PleasantButton} from './Button'
 
 // to order by datetime
 const datetime = (a, b) => {
@@ -70,6 +66,11 @@ const articleName = {
   attribute: item => `${item.product.description} ${item.product.description_2}`,
 }
 
+const companyName = {
+  label: 'Client',
+  attribute: 'company.name',
+}
+
 
 const orderColumns = ({endpoint, orderid, language, canUpdateQuantity, deleteProduct}) => {
 
@@ -109,7 +110,6 @@ const orderColumns = ({endpoint, orderid, language, canUpdateQuantity, deletePro
       sortType: 'number',
       Footer: data => <FooterTotalPrice data={data} language={language} />,
     },
-
   ]
 
   const deleteItem = {
@@ -135,10 +135,7 @@ const ordersColumns = ({endpoint, language, deleteOrder}) => [
     Filter: DateRangeColumnFilter,
     filter: 'dateBetween', /* Custom Filter Type */
   },
-  {
-    label: 'Client',
-    attribute: 'company.name',
-  },
+  {...companyName},
   {
     label: 'Référence',
     attribute: 'reference',
@@ -164,7 +161,7 @@ const ordersColumns = ({endpoint, language, deleteOrder}) => [
   },
   {
     label: 'Statut',
-    attribute: v => { console.log(v); return v },
+    attribute: v => { return v },
     Cell: ({value}) => <OrderStatus status={value.status} label={value.status_label} />,
   },
   // {
@@ -244,10 +241,7 @@ const quotationsColumns = ({language, deleteProduct}) => [
     Filter: DateRangeColumnFilter,
     filter: 'dateBetween', /* Custom Filter Type */
   },
-  {
-    label: 'Client',
-    attribute: 'company.name',
-  },
+  {...companyName},
   {
     label: 'Référence',
     attribute: 'reference',
@@ -267,7 +261,7 @@ const quotationsColumns = ({language, deleteProduct}) => [
   },
   {
     label: 'Statut',
-    attribute: v => { console.log(v); return v },
+    attribute: v => { return v },
     Cell: ({value}) => <OrderStatus status={value.status} label={value.status_label} />,
   },
   {
@@ -275,18 +269,18 @@ const quotationsColumns = ({language, deleteProduct}) => [
     attribute: '_id',
     Cell: ({value}) => (<Link href={`/edi/quotations/view/${value}`}>voir</Link>),
   },
-  {
-    label: '',
-    id: 'product_delete',
-    attribute: 'product_delete',
-    Cell: tableProps => (
-      <ToTheBin onClick={() => {
-        const dataCopy = [...data]
-        dataCopy.splice(tableProps.row.index, 1)
-        setData(dataCopy)
-      }}/>
-    ),
-  },
+  // {
+  //   label: '',
+  //   id: 'product_delete',
+  //   attribute: 'product_delete',
+  //   Cell: tableProps => (
+  //     <ToTheBin onClick={() => {
+  //       const dataCopy = [...data]
+  //       dataCopy.splice(tableProps.row.index, 1)
+  //       setData(dataCopy)
+  //     }}/>
+  //   ),
+  // },
 ]
 
 const accountsColumns = ({language, visibility}) => {
@@ -321,18 +315,27 @@ const accountsColumns = ({language, visibility}) => {
 
 const companiesColumns = ({language, updateSeller, sellers}) => {
 
-  return [
+  const baseCompaniesCols = [
     {
       label: 'Nom',
       attribute: 'name',
     },
-    {
-      label: 'Commercial',
-      attribute: 'sales_representative',
-      Cell: props => <UpdateSeller updateSeller={updateSeller} sellers={sellers} {...props}/>,
-    },
-    
   ]
+
+  const columnSeller = [{
+    label: 'Commercial',
+    attribute: 'sales_representative',
+    Cell: ({value}) => value?.full_name || '',
+  }]
+
+  const columnUpdateSeller = [{
+    label: 'Commercial',
+    attribute: seller => seller.sales_representative,
+    Cell: props => <UpdateSeller updateSeller={updateSeller} sellers={sellers} {...props}/>,
+  }]
+
+  return updateSeller ? [...baseCompaniesCols, ...columnUpdateSeller] : [...baseCompaniesCols, ...columnSeller]
+
 }
 
 const productsColumns = ({language}) => [
@@ -371,10 +374,7 @@ const handledOrdersColumns = ({endpoint, language, handleValidation = null, filt
     Filter: DateRangeColumnFilter,
     filter: 'dateBetween', /* Custom Filter Type */
   },
-  {
-    label: 'Client',
-    attribute: v => v.company.name,
-  },
+  {...companyName},
   {
     label: 'Ref. commande',
     attribute: 'reference',
@@ -386,7 +386,7 @@ const handledOrdersColumns = ({endpoint, language, handleValidation = null, filt
   },
   {
     label: 'Statut',
-    attribute: v => { console.log(v); return v },
+    attribute: v => { return v },
     Cell: ({value}) => <OrderStatus status={value.status} label={value.status_label} />,
   },
   
@@ -400,10 +400,7 @@ const handledQuotationsColumns = ({language, endpoint, handleValidation = null, 
     Filter: DateRangeColumnFilter,
     filter: 'dateBetween', /* Custom Filter Type */
   },
-  {
-    label: 'Client',
-    attribute: v => v.company.name,
-  },
+  {...companyName},
   {
     label: 'Ref. devis',
     attribute: 'reference',
@@ -415,7 +412,7 @@ const handledQuotationsColumns = ({language, endpoint, handleValidation = null, 
   },
   {
     label: 'Statut',
-    attribute: v => { console.log(v); return v },
+    attribute: v => { return v },
     Cell: ({value}) => <OrderStatus status={value.status} label={value.status_label} />,
   },
 ]
