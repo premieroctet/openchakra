@@ -2,33 +2,35 @@ import React from 'react'
 import styled from 'styled-components'
 
 
-const ImportWithWarnings = ({created, warnings}) => (<>
-  <p>Import partiel&nbsp;: {created.length} sur {warnings.length} produits ajoutés</p>
+const ImportWithWarnings = ({created, warnings, errors, total}) => (<>
+  <p>Import partiel&nbsp;: {created} sur {total} produits ajoutés</p>
   <div>
   Erreurs&nbsp;:
     <ul>
-      {warnings.map((warn, i) => <li key={`warn${i}`}>{warn}</li>)}
+      {errors.map((warn, i) => <li key={`warn${i}`}>{warn}</li>)}
     </ul>
 
   </div>
 </>
 )
 
-const ImportOK = ({created}) => (
-  <p>Import réussi&nbsp;: {created.length} produits ajoutés</p>
+const ImportOK = ({created, total}) => (
+  <p>Import réussi&nbsp;: {created} sur {total} produits ajoutés</p>
 )
 
 
 const ImportResult = ({result}) => {
 
-  const {created, warnings} = result
-  const warnQuantity = warnings?.length
+  console.log(result)
+
+  const {created, warnings, errors, total} = result
+  const warnQuantity = errors?.length
 
   return (
     <StyledImportResult className={warnQuantity ? 'notok' : 'ok'}>
       {warnQuantity ?
-        <ImportWithWarnings created={created} warnings={warnings} />
-        : <ImportOK created={created} />}
+        <ImportWithWarnings created={created} warnings={warnings} errors={errors}/>
+        : <ImportOK created={created} total={total} />}
     </StyledImportResult>
   )
 }

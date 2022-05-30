@@ -19,27 +19,11 @@ import {client} from '../../utils/client'
 import {XL_EXTENSIONS} from '../../utils/consts'
 import {FEURST_IMG_PATH} from '../../utils/feurst/consts'
 import {PleasantButton} from './Button'
+import ImportResult from './ImportResult'
 
 const PureDialog = dynamic(() => import('../Dialog//PureDialog'))
 
-const ImportResult = ({result}) => {
-  return (
-    <>
-      <div>Données créées : {result.created}</div>
-      <div>Données mises à jour : {result.updated}</div>
-      {!isEmpty(result.errors) &&
-        <><h2>Erreurs:</h2>
-          {result.errors.map(err => (<div>{err}</div>))}
-        </>
-      }
-      {!isEmpty(result.warnings) &&
-        <><h2>Warnings:</h2>
-          {result.warnings.map(war => (<div>{war}</div>))}
-        </>
-      }
-    </>
-  )
-}
+
 const ImportExcelFile = ({importURL, templateURL, caption}) => {
 
   const [isOpenDialog, setIsOpenDialog] = useState(false)
@@ -142,6 +126,7 @@ const ImportExcelFile = ({importURL, templateURL, caption}) => {
     axios.post(importURL, data)
       .then(result => {
         console.log(JSON.stringify(result))
+        setIsOpenDialog(false)
         setImportResult(result.data)
       })
       .catch(err => {
@@ -166,7 +151,14 @@ const ImportExcelFile = ({importURL, templateURL, caption}) => {
         <div className='box'>
           <img width={'171'} src={`${FEURST_IMG_PATH}/xls-icon.png`} alt=""/>
           <span className='inputfiletext'>Parcourir…</span>
-          <input className='sr-only' id={'importfile'} type={'file'} onSubmit={() => uploadFile} onChange={onFileChange} accept={XL_EXTENSIONS.join(',')}/>
+          <input
+            className='sr-only'
+            id={'importfile'}
+            type={'file'}
+            onSubmit={() => uploadFile}
+            onChange={onFileChange}
+            accept={XL_EXTENSIONS.join(',')}
+          />
         </div>
       </label>
 
@@ -194,7 +186,7 @@ const ImportExcelFile = ({importURL, templateURL, caption}) => {
           }
           <Typography>1ère ligne:</Typography>
           <TextField type='number' defaultValue={firstLine} id='firstLine'
-            onChange={ev => !isNaN(parseInt(ev.target.value)) && setFirstLine(parseInt(event.target.value))}
+            onChange={ev => !isNaN(parseInt(ev.target.value)) && setFirstLine(parseInt(ev.target.value))}
           />
         </div>
         <div style={{overflowX: 'auto', overflowY: 'auto'}}>
@@ -206,7 +198,7 @@ const ImportExcelFile = ({importURL, templateURL, caption}) => {
           </table>
         </div>
         </>}
-      {importResult && <ImportResult result={importResult}/>}
+      
       <div className='importbutton flex'>
         <PleasantButton size={'full-width'} rounded={'full'} onClick={submitData}>Importer</PleasantButton>
       </div>
@@ -216,6 +208,7 @@ const ImportExcelFile = ({importURL, templateURL, caption}) => {
         Télécharger le modèle de fichier
       </DownloadExampleFile>
     }
+    {importResult && <ImportResult result={importResult}/>}
   </>
   )
 }
