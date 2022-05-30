@@ -1,4 +1,5 @@
 import React from 'react'
+import styled from 'styled-components'
 import {withTranslation} from 'react-i18next'
 import {Input} from '../Feurst/components.styles'
 
@@ -11,7 +12,7 @@ const Address = ({t, state, requestUpdate, errors}) => {
   const isDisabled = false
 
   return (
-    <div className='full-address'>
+    <StyledAddress>
       <div className='address'>
         <em>{errors?.address}</em>
         <Input
@@ -78,8 +79,34 @@ const Address = ({t, state, requestUpdate, errors}) => {
         />
       </div>
 
-    </div>
+    </StyledAddress>
   )
 }
+
+const StyledAddress = styled.div`
+    display: grid;
+    row-gap: var(--spc-2);
+    column-gap: var(--spc-2);
+    grid-template-areas: 'address address address'
+                          'zipcode city country'
+                          'phone phone phone';
+
+  .address {
+    grid-area: address;
+  }
+  .zip_code {
+    grid-area: zipcode;
+  }
+  .city {
+    grid-area: city;
+  }
+  .country {
+    grid-area: country;
+  }
+  .phone {
+    grid-area: phone;
+  }
+
+`
 
 export default withTranslation('feurst', {withRef: true})(Address)
