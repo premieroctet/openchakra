@@ -171,7 +171,8 @@ const lineItemsImport = (model, buffer, options) => {
   }
 
   return new Promise((resolve, reject) => {
-    const importResult={created: 0, updated: 0, warnings: [], errors: []}
+    const importResult={total: 0, created: 0, updated: 0, warnings: [], errors: []}
+    let references=[]
     extractData(buffer, options)
       .then(data => {
         const headers=data.headers
@@ -182,15 +183,20 @@ const lineItemsImport = (model, buffer, options) => {
           importResult.errors=missingColumns.map(f => `Colonne ${f} manquante`)
           return Promise.reject('break')
         }
-        data.records=data.records.map(r => mapRecord(r, mapping))
-        const promises=data.records.map(r => addItem(model, null, r.reference, parseInt(r.quantity)))
+        const mappedRecords=data.records.map(r => mapRecord(r, mapping))
+        references=mappedRecords.map(r => r.destination)
+        const promises=mappedRecords.map(r => r.destination).map(r => addItem(model, null, r.reference, parseInt(r.quantity)))
         return Promise.allSettled(promises)
       })
       .then(res => {
+        importResult.total+=res.length
         importResult.created+=res.filter(r => r.status=='fulfilled').length
-        importResult.warnings.push(...res.filter(r => r.status=='rejected').map(r => r.reason))
+        importResult.errors.push(...res.filter(r => r.status=='rejected').map(r => r.reason))
+        // Check stocks
+        return Promise.all(references.map(r => Product.findOne({reference: r.reference, stock: {$lte: r.quantity}})))
       })
-      .then(() => {
+      .then(res => {
+        importResult.warnings=lodash.zip(references, res).filter(r => !!r[1]).map(r => `${r[1].reference} : stock partiel, ${r[1].stock}/${r[0].quantity} pièces disponibles`)
         return updateShipFee(model)
       })
       .then(model => {

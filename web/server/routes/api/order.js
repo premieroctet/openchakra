@@ -87,7 +87,7 @@ router.get('/template', passport.authenticate('jwt', {session: false}), (req, re
 router.post('/:order_id/import', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, UPDATE)) {
-    return res.status(401).json()
+    return res.status(403).json()
   }
 
   uploadItems.single('buffer')(req, res, err => {
@@ -99,17 +99,13 @@ router.post('/:order_id/import', passport.authenticate('jwt', {session: false}),
     const order_id=req.params.order_id
     const options=JSON.parse(req.body.options)
 
-    MODEL.findOneById(order_id)
+    MODEL.findById(order_id)
+      .populate('company')
       .populate('items.product')
       .then(data => {
         if (!data) {
           console.error(`${DATA_TYPE} #${order_id} not found`)
           return res.status(404).json()
-        }
-        // db field => import field
-        const DB_MAPPING={
-          'reference': 'Référence',
-          'quantity': 'Quantité',
         }
         return lineItemsImport(data, req.file.buffer, options)
       })

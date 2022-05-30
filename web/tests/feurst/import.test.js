@@ -1,3 +1,5 @@
+const {lineItemsImport} = require('../../server/utils/import')
+
 const fs = require('fs').promises
 const mongoose = require('mongoose')
 
@@ -129,6 +131,20 @@ describe('XL & CSV imports', () => {
       })
       .then(count => {
         return expect(count).toBe(7516)
+      })
+  }, 40000)
+
+  test.only('Import order items', () => {
+    const CONTENTS='Référence;Quantité\n001269NE00;10000\nABCD;15'
+    return Product.updateMany({}, {stock: 100})
+      .then(() => {
+        return lineItemsImport({items: [], company: {catalog_prices: 'DISTFR', net_prices: 'PVCDIS'}, save: () => {}}, CONTENTS, {format: TEXT_TYPE, delimiter: ';'})
+      })
+      .then(result => {
+        expect(result.warnings.length).toBe(1)
+        expect(result.errors.length).toBe(1)
+        expect(result.created).toBe(1)
+        expect(result.total).toBe(2)
       })
   }, 40000)
 

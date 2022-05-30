@@ -94,7 +94,8 @@ router.post('/:order_id/import', passport.authenticate('jwt', {session: false}),
     const order_id=req.params.order_id
     const options=JSON.parse(req.body.options)
 
-    MODEL.findOneById(order_id)
+    MODEL.findById(order_id)
+      .populate('company')
       .populate('items.product')
       .then(data => {
         if (!data) {
@@ -114,7 +115,7 @@ router.post('/:order_id/import', passport.authenticate('jwt', {session: false}),
 })
 
 
-// @Route POST /myAlfred/api/orders/
+// @Route POST /myAlfred/api/quotations/
 // Add a new order
 // @Access private
 router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
@@ -156,7 +157,7 @@ router.put('/:id/rewrite', passport.authenticate('jwt', {session: false}), (req,
       if (!result) {
         return res.status(404).json(`${DATA_TYPE} #${order_id} not found`)
       }
-      return res.json()
+      return res.json(result)
     })
     .catch(err => {
       console.error(err)

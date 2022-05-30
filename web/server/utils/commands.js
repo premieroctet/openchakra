@@ -38,7 +38,7 @@ If product is not present, adds the item to the order
 */
 const addItem = (data, product_id, reference, quantity, net_price, replace=false) => {
   if (isNaN(parseInt(quantity))) {
-    return Promise.reject(`Article ${reference}: quantité ${quantity} incorrect`)
+    return Promise.reject(`Article ${reference}: quantité ${quantity} incorrecte`)
   }
   let product=null
   return Product.findOne({$or: [{_id: product_id}, {reference: reference}]})
