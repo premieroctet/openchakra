@@ -193,6 +193,11 @@ const StyledCombobox = styled(CommonHeadlessUI)`
 
 const StyledListbox = styled(CommonHeadlessUI)`
 
+  /* Simulates placeholder */
+  input[value=""] + div button {
+    color: gray;
+  }
+
   button {
     display: flex;
     justify-content: space-between;
