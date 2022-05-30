@@ -105,12 +105,12 @@ const createUserAction= (model, action, extra={}) => {
 
 const USER_ACTIONS={
   [FEURST_ADMIN]: lodash.flattenDeep([
-    [VIEW, CREATE, UPDATE, DELETE, LINK].map(action => [FEURST_ADMIN, FEURST_ADV, FEURST_SALES, CUSTOMER_ADMIN].map(tp => createUserAction(ACCOUNT, action, {type: tp, visibility: ALL}))),
+    [VIEW, CREATE, UPDATE, DELETE, LINK].map(action => [FEURST_ADMIN, FEURST_ADV, FEURST_SALES].map(tp => createUserAction(ACCOUNT, action, {type: tp, visibility: ALL}))),
     [VIEW, HANDLE].map(action => createUserAction(ORDER, action, {visibility: ALL})),
     [VIEW, CREATE].map(action => createUserAction(SHIPRATE, action, {visibility: ALL})),
     [VIEW, CREATE, UPDATE, DELETE].map(action => createUserAction(PRODUCT, action, {visibility: ALL})),
     [VIEW, CREATE, UPDATE, DELETE].map(action => createUserAction(PRICELIST, action, {visibility: ALL})),
-    [CREATE, VIEW, UPDATE].map(action => createUserAction(COMPANY, action, {visibility: ALL})),
+    createUserAction(COMPANY, VIEW, {visibility: ALL}),
   ]),
   [FEURST_ADV]: lodash.flattenDeep([
     [VIEW, HANDLE].map(action => createUserAction(ORDER, action, {visibility: ALL})),
