@@ -111,7 +111,7 @@ router.post('/:order_id/import', passport.authenticate('jwt', {session: false}),
           'reference': 'Référence',
           'quantity': 'Quantité',
         }
-        return lineItemsImport(data, req.file.buffer, DB_MAPPING, options)
+        return lineItemsImport(data, req.file.buffer, options)
       })
       .then(result => {
         res.json(result)

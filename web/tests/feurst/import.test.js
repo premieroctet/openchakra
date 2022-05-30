@@ -1,30 +1,27 @@
 const fs = require('fs').promises
 const mongoose = require('mongoose')
+
+const {MONGOOSE_OPTIONS} = require('../../server/utils/database')
+
+const Product = require('../../server/models/Product')
+const PriceList = require('../../server/models/PriceList')
+
 const {
   accountsImport,
+  priceListImport,
   productsImport,
-} = require('../../../server/utils/import')
+  shipRatesImport,
+} = require('../../server/utils/import')
 
-const {guessFileType} = require('../../../utils/import')
-const PriceListSchema =
-  require('../../../server/models/feurst/PriceListSchema')
-const {priceListImport} = require('../../../server/utils/import')
+const {guessFileType} = require('../../utils/import')
+const {computeShippingFee} = require('../../server/utils/commands')
+const {TEXT_TYPE, XL_TYPE} = require('../../utils/feurst/consts')
 
-const {TEXT_TYPE, XL_TYPE} = require('../../../utils/feurst/consts')
-
-
-const ProductSchema = require('../../../server/models/feurst/ProductSchema')
-const {shipRatesImport} = require('../../../server/utils/import')
-const {computeShippingFee} = require('../../../server/utils/commands')
-
-const Product=mongoose.model('product', ProductSchema)
-const PriceList=mongoose.model('priceList', PriceListSchema)
-// const PriceList=mongoose.model('priceList', PriceListSchema)
 
 describe('XL & CSV imports', () => {
 
   beforeAll(() => {
-    return mongoose.connect('mongodb://localhost/test', {useUnifiedTopology: true, useNewUrlParser: true})
+    return mongoose.connect('mongodb://localhost/test', MONGOOSE_OPTIONS)
   })
 
   afterAll(() => {
@@ -32,7 +29,6 @@ describe('XL & CSV imports', () => {
   })
 
   afterEach(() => {
-    return Product.deleteMany({})
   })
 
   describe('Guess files types', () => {
@@ -61,16 +57,18 @@ describe('XL & CSV imports', () => {
   })
 
   test('Import products csv', () => {
-    return fs.readFile(`tests/data/products.csv`)
+    return Product.deleteMany()
+      .then(() => {
+        return fs.readFile(`tests/data/products.csv`)
+      })
       .then(contents => {
-
         return productsImport(contents, {delimiter: ';', format: TEXT_TYPE})
       })
       .then(result => {
         expect(result.warnings.length).toBe(0)
         expect(result.errors.length).toBe(0)
-        expect(result.created).toBe(1014)
         expect(result.updated).toBe(0)
+        expect(result.created).toBe(1014)
         return Product.countDocuments()
       })
       .then(count => {
@@ -78,7 +76,28 @@ describe('XL & CSV imports', () => {
       })
   })
 
-  test.only('Import products xlsx', () => {
+  test('Import products xlsx', () => {
+    return Product.deleteMany()
+      .then(() => {
+        return fs.readFile(`tests/data/products.xlsx`)
+      })
+      .then(contents => {
+        return productsImport(contents, {format: XL_TYPE, tab: 'Travail'})
+      })
+      .then(result => {
+        expect(result.warnings.length).toBe(0)
+        expect(result.errors.length).toBe(0)
+        expect(result.created).toBe(1014)
+        expect(result.updated).toBe(0)
+        return Product.findOne({reference: '001130NE00'})
+      })
+      .then(product => {
+        expect(product).not.toBeNull()
+        expect(product.components).toHaveLength(4)
+      })
+  })
+
+  test.skip('Import stock xlsx', () => {
     return fs.readFile(`tests/data/products.xlsx`)
       .then(contents => {
         return productsImport(contents, {format: XL_TYPE, tab: 'Travail'})
@@ -99,7 +118,7 @@ describe('XL & CSV imports', () => {
   test('Import price list xlsx', () => {
     return fs.readFile(`tests/data/products.xlsx`)
       .then(contents => {
-        return priceListImport(contents, null, {key: 'reference', format: XL_TYPE, tab: 'Travail'})
+        return priceListImport(contents, {key: 'reference', format: XL_TYPE, tab: 'Travail'})
       })
       .then(result => {
         expect(result.warnings.length).toBe(0)
@@ -116,7 +135,7 @@ describe('XL & CSV imports', () => {
   test('Import clients/compagnies/tarifs', () => {
     return fs.readFile(`tests/data/clients.xlsx`)
       .then(contents => {
-        return accountsImport(contents, null, {format: XL_TYPE, tab: 'DONNEES CLIENT FEURST'})
+        return accountsImport(contents, {format: XL_TYPE, tab: 'DONNEES CLIENT FEURST'})
       })
       .then(result => {
         expect(result.warnings.length).toBe(0)

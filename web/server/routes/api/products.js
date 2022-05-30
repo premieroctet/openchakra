@@ -1,7 +1,11 @@
 const express = require('express')
 const passport = require('passport')
 const moment = require('moment')
-const {fileImport, productsImport} = require('../../utils/import')
+const {
+  fileImport,
+  productsImport,
+  stockImport,
+} = require('../../utils/import')
 const {isActionAllowed} = require('../../utils/userAccess')
 const {DELETE} = require('../../../utils/feurst/consts')
 const {XL_FILTER, createMemoryMulter} = require('../../utils/filesystem')
@@ -139,14 +143,9 @@ router.post('/import-stock', passport.authenticate('jwt', {session: false}), (re
       console.error(err)
       return res.status(404).json({errors: err.message})
     }
-    // db field => import field
-    const DB_MAPPING={
-      'reference': 'Code article',
-      'stock': 'FSTMG',
-    }
 
     const options=JSON.parse(req.body.options)
-    fileImport(Product, req.file.buffer, DB_MAPPING, {...options, key: 'reference', update: true})
+    stockImport(req.file.buffer, options)
       .then(result => {
         res.json(result)
       })

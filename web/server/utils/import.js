@@ -163,7 +163,13 @@ const shipRatesImport = (buffer, options) => {
   })
 }
 
-const lineItemsImport = (model, buffer, mapping, options) => {
+const lineItemsImport = (model, buffer, options) => {
+  // db field => import field
+  const mapping={
+    'reference': 'Référence',
+    'quantity': 'Quantité',
+  }
+
   return new Promise((resolve, reject) => {
     const importResult={created: 0, updated: 0, warnings: [], errors: []}
     extractData(buffer, options)
@@ -206,7 +212,7 @@ const priceListImport = (buffer, options) => {
     extractData(buffer, {...options, columns: false})
       .then(({headers, records}) => {
         const keyIdx=0
-        const firstListIdx=headers.findIndex(i => i=='PVCDIS')
+        const firstListIdx=headers.findIndex(i => i=='Pointe')+1
         const listsRange=lodash.range(firstListIdx, headers.length+1)
         const lists=records.map(records => {
           return listsRange.map(idx => (
@@ -229,7 +235,7 @@ const priceListImport = (buffer, options) => {
   })
 }
 
-const accountsImport = (buffer, mapping, options) => {
+const accountsImport = (buffer, options) => {
   let importResult={created: 0, updated: 0, errors: [], warnings: []}
   return new Promise((resolve, reject) => {
     const firstLine=options.from_line || 1
@@ -256,30 +262,24 @@ const accountsImport = (buffer, mapping, options) => {
           if (lodash.isNil(franco)) { return Promise.reject(msg(`Valeur franco incorrect:${franco}`)) }
           const catalogPrices=record.PVC
           const netPrices=record['Liste de prix net']
-          return PriceList.find({name: {$in: [catalogPrices, netPrices]}})
-            .then(prices => {
-              const pvc=prices.find(p => p.name==catalogPrices)
-              const discount=prices.find(p => p.name==netPrices)
-              if (!pvc || !discount) { return Promise.reject(msg('Liste de prix inconnue, avez-vous importé les tarifs?')) }
-              return Company.updateOne({name: companyName},
-                {addresses: [addr], catalog_prices: catalogPrices, net_prices: netPrices, franco: franco, delivery_zip_codes},
-                {upsert: true, new: true})
-                .then(company => {
-                  if (!company) {
-                    return Promise.reject(msg('Compagnie inconnue'))
-                  }
-                  const email=(record.Messagerie.text || record.Messagerie).trim()
-                  const [firstname, name]=record['Administrateur (Prénom et Nom)'].replace(/\s+/, '|').split('|')
-                  if (!(email && firstname && name && Validator.isEmail(email))) {
-                    return Promise.reject(msg(`Erreur nom, prénom ou email`))
-                  }
-                  return User.updateOne({email},
-                    {$set: {firstname, name, company: company, email, roles: [CUSTOMER_ADMIN]},
-                      $setOnInsert: {password: bcrypt.hashSync('Alfred123;', 10)}},
-                    {upsert: true, new: true},
-                  )
-                })
-
+          if (!catalogPrices || !netPrices) { return Promise.reject(msg('Liste de prix inconnue')) }
+          return Company.findOneAndUpdate({name: companyName},
+            {addresses: [addr], catalog_prices: catalogPrices, net_prices: netPrices, franco: franco, delivery_zip_codes},
+            {upsert: true, new: true})
+            .then(company => {
+              if (!company) {
+                return Promise.reject(msg('Compagnie inconnue'))
+              }
+              const email=(record.Messagerie.text || record.Messagerie).trim()
+              const [firstname, name]=record['Administrateur (Prénom et Nom)'].replace(/\s+/, '|').split('|')
+              if (!(email && firstname && name && Validator.isEmail(email))) {
+                return Promise.reject(msg(`Erreur nom, prénom ou email`))
+              }
+              return User.updateOne({email},
+                {$set: {firstname, name, company: company, email, roles: [CUSTOMER_ADMIN]},
+                  $setOnInsert: {password: bcrypt.hashSync('Alfred123;', 10)}},
+                {upsert: true, new: true},
+              )
             })
         })
         Promise.allSettled(promises)
@@ -323,5 +323,16 @@ const productsImport = (bufferData, options) => {
   return fileImport(Product, bufferData, DB_MAPPING, {key: 'reference', ...options}, importComponents)
 }
 
+const stockImport = (bufferData, options) => {
+
+  // db field => import field
+  const DB_MAPPING={
+    'reference': 'Code article',
+    'stock': 'FSTMG',
+  }
+
+  return fileImport(Product, bufferData, DB_MAPPING, {...options, key: 'reference', update: true})
+}
+
 module.exports={fileImport, shipRatesImport, lineItemsImport,
-  priceListImport, accountsImport, productsImport}
+  priceListImport, accountsImport, productsImport, stockImport}

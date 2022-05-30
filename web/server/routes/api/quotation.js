@@ -101,12 +101,7 @@ router.post('/:order_id/import', passport.authenticate('jwt', {session: false}),
           console.error(`${DATA_TYPE} #${order_id} not found`)
           return res.status(404).json()
         }
-        // db field => import field
-        const DB_MAPPING={
-          'reference': 'Référence',
-          'quantity': 'Quantité',
-        }
-        return lineItemsImport(data, req.file.buffer, DB_MAPPING, options)
+        return lineItemsImport(data, req.file.buffer, options)
       })
       .then(result => {
         res.json(result)
