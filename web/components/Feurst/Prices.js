@@ -1,8 +1,8 @@
 import React, {useState} from 'react'
-const ImportExcelFile = require('./ImportExcelFile')
+import ImportExcelFile from './ImportExcelFile'
 
-const {pricesColumns} = require('./tablestructures')
-const BaseListTable = require('./BaseListTable')
+import {pricesColumns} from './tablestructures'
+import BaseListTable from './BaseListTable'
 
 const PricesList = ({accessRights}) => {
 
@@ -16,7 +16,7 @@ const PricesList = ({accessRights}) => {
   return (
     <>
       <div display='flex' flexDirection='row'>
-        {IMPORTS.map(imp => (<ImportExcelFile caption={imp.title} importURL={imp.url} onImport={toggleRefresh}/>))}
+        {IMPORTS.map((imp, i) => (<ImportExcelFile key={`impprice${i}`} caption={imp.title} importURL={imp.url} onImport={toggleRefresh}/>))}
       </div>
       <BaseListTable key={refresh} caption='Liste des prix' endpoint='prices' columns={pricesColumns} />
     </>
