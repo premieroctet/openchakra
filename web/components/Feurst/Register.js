@@ -1,14 +1,14 @@
 import React, {useState, useEffect, Fragment} from 'react'
 import axios from 'axios'
 import {withTranslation} from 'react-i18next'
-import {Listbox, Combobox, Transition} from '@headlessui/react'
+import {Listbox, Transition} from '@headlessui/react'
 import Validator from 'validator'
 import styled from 'styled-components'
 import {setAxiosAuthentication} from '../../utils/authentication'
 import {API_PATH} from '../../utils/feurst/consts'
 import {CUSTOMER_ADMIN, ROLES, ACCOUNT, CREATE} from '../../utils/consts'
 import {snackBarError, snackBarSuccess} from '../../utils/notifications'
-import {StyledListbox, StyledCombobox} from '../../styles/feurst/StyledComponents'
+import {StyledListbox} from '../../styles/feurst/StyledComponents'
 import {PleasantButton} from './Button'
 
 
@@ -22,22 +22,6 @@ const FeurstRegister = ({className, style, onSuccess, onClose}) => {
   
   const [role, setRole] = useState('')
   const [roles, setRoles] = useState([])
-  const [query, setQuery] = useState('')
-  const [queryCompany, setQueryCompany] = useState('')
-  const filteredRoles =
-    query === ''
-      ? roles
-      : roles.filter(role => {
-        return ROLES[role].toLowerCase().includes(query.toLowerCase())
-      })
-  
-  const filteredCompanies =
-  queryCompany === ''
-    ? companies
-    : companies.filter(company => {
-      return company.toLowerCase().includes(queryCompany.toLowerCase())
-    })
-
 
   useEffect(() => {
     setAxiosAuthentication()
@@ -67,6 +51,7 @@ const FeurstRegister = ({className, style, onSuccess, onClose}) => {
         snackBarError(err.response.data)
       })
   }
+
   const enableRegister = () => {
     return firstname && name && email && Validator.isEmail(email) && role && (role!=CUSTOMER_ADMIN || company)
   }
@@ -88,10 +73,15 @@ const FeurstRegister = ({className, style, onSuccess, onClose}) => {
       <input id={'email'} name={'email'} value={email} onChange={ev => setEmail(ev.target.value)} placeholder={'Adresse email'} />
       
       <StyledListbox>
-        <Listbox as={'div'} value={role} onChange={setRole}>
+        <Listbox
+          as={'div'}
+          value={role}
+          onChange={setRole}
+          name="accountype"
+        >
           <Listbox.Label>Type de compte</Listbox.Label>
           <Listbox.Button>
-            <span>{ROLES[role]}</span><span className='icon'>▲</span>
+            <span>{ROLES[role] || 'Type de compte'}</span><span className='icon'>▲</span>
           </Listbox.Button>
           <Transition
             as={Fragment}
@@ -101,10 +91,9 @@ const FeurstRegister = ({className, style, onSuccess, onClose}) => {
             leave="leave"
             leaveFrom="opacity-100 translate-y-0"
             leaveTo="opacity-0 -translate-y-25"
-            afterLeave={() => setQuery('')}
           >
             <Listbox.Options>
-              {filteredRoles.map(role => (
+              {roles.map(role => (
                 <Listbox.Option key={role} value={role} className={({active}) => (active ? 'active' : '')} >
                   {({selected}) => (selected ? <> {ROLES[role]} <span>✓</span></> : <>{ROLES[role]}</>)}
                 </Listbox.Option>
@@ -115,46 +104,36 @@ const FeurstRegister = ({className, style, onSuccess, onClose}) => {
       </StyledListbox>
   
       { role==CUSTOMER_ADMIN &&
-          <>
-
-            <StyledCombobox>
-              <Combobox as={'div'} value={company} onChange={setCompany}>
-                <Combobox.Label>Société</Combobox.Label>
-                <div className='comboboxinput'>
-                  <Combobox.Input
-                    onChange={event => setQueryCompany(event.target.value)}
-                    placeholder='Société'
-                  />
-                  <Combobox.Button>
-          ▲
-                  </Combobox.Button>
-                </div>
-                <Transition
-                  as={Fragment}
-                  enter="enter"
-                  enterFrom="opacity-0 -translate-y-25"
-                  enterTo="opacity-100 translate-y-0"
-                  leave="leave"
-                  leaveFrom="opacity-100 translate-y-0"
-                  leaveTo="opacity-0 -translate-y-25"
-                  
-                >
-                  <Combobox.Options>
-                    {queryCompany.length > 0 && (
-                      <Combobox.Option value={queryCompany} className={({active}) => (active ? 'active' : '')}>
-            Créer "{queryCompany}"
-                      </Combobox.Option>
-                    )}
-                    {filteredCompanies.map(company => (
-                      <Combobox.Option key={company} value={company} className={({active}) => (active ? 'active' : '')} >
-                        {({selected}) => (selected ? <> {company} <span>✓</span></> : <>{company}</>)}
-                      </Combobox.Option>
-                    ))}
-                  </Combobox.Options>
-                </Transition>
-              </Combobox>
-            </StyledCombobox>
-          </>
+        <StyledListbox>
+          <Listbox
+            as={'div'}
+            value={company}
+            onChange={setCompany}
+            name="company"
+          >
+            <Listbox.Label>Société</Listbox.Label>
+            <Listbox.Button>
+              <span>{company || 'Société'}</span><span className='icon'>▲</span>
+            </Listbox.Button>
+            <Transition
+              as={Fragment}
+              enter="enter"
+              enterFrom="opacity-0 -translate-y-25"
+              enterTo="opacity-100 translate-y-0"
+              leave="leave"
+              leaveFrom="opacity-100 translate-y-0"
+              leaveTo="opacity-0 -translate-y-25"
+            >
+              <Listbox.Options>
+                {companies.map(company => (
+                  <Listbox.Option key={company} value={company} className={({active}) => (active ? 'active' : '')} >
+                    {({selected}) => (selected ? <> {company} <span>✓</span></> : <>{company}</>)}
+                  </Listbox.Option>
+                ))}
+              </Listbox.Options>
+            </Transition>
+          </Listbox>
+        </StyledListbox>
       }
       
       <PleasantButton

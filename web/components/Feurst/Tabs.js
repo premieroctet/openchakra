@@ -3,7 +3,7 @@ import {useRouter} from 'next/router'
 import Link from 'next/link'
 import {StyledTabs} from '../../styles/feurst/StyledComponents'
 import {CREATE_FOR, HANDLE} from '../../utils/feurst/consts'
-import {CREATE, ORDER, QUOTATION, VIEW, PRODUCT, SHIPRATE, ACCOUNT, UPDATE, BASEPATH_EDI, PRICELIST} from '../../utils/consts'
+import {CREATE, ORDER, QUOTATION, VIEW, PRODUCT, COMPANY, SHIPRATE, ACCOUNT, BASEPATH_EDI, PRICELIST} from '../../utils/consts'
 
 
 const tabsContent = [
@@ -72,10 +72,10 @@ const tabsContent = [
   },
   {
     title: 'Sociétés',
-    url: `${BASEPATH_EDI}/accounts/companies`,
-    model: ACCOUNT,
-    action: UPDATE,
-    visible: [ACCOUNT],
+    url: `${BASEPATH_EDI}/companies`,
+    model: COMPANY,
+    action: VIEW,
+    visible: [ACCOUNT, PRODUCT, SHIPRATE, PRICELIST],
   },
   {
     title: 'Articles',

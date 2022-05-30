@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import styled from 'styled-components'
 import dynamic from 'next/dynamic'
-import {ACCOUNT, API_PATH, LINK} from '../../utils/feurst/consts'
+import {ACCOUNT, CREATE, API_PATH, LINK} from '../../utils/feurst/consts'
 import ImportExcelFile from './ImportExcelFile'
 import AccountLink from './AccountLink'
 import FeurstRegister from './Register'
@@ -15,8 +15,10 @@ const AccountsList = ({accessRights}) => {
 
   const [refresh, setRefresh]=useState(false)
   const [isOpenDialog, setIsOpenDialog] = useState(false)
-
   const toggleRefresh= () => setRefresh(!refresh)
+  
+  const canAddAccount = accessRights.isActionAllowed(ACCOUNT, CREATE)
+
 
   // TODO: Import action for FEURST_AD%MIN only
   // const IMPORTS=[{title: 'Import clients/compagnies/tarification', url: `${API_PATH}/users/import`}]
@@ -27,9 +29,11 @@ const AccountsList = ({accessRights}) => {
         {IMPORTS.map((imp, i) => (<ImportExcelFile key={`imp${i}`} caption={imp.title} importURL={imp.url} templateURL={null} onImport={toggleRefresh}/>))}
       </div>
       
+      {canAddAccount &&
       <div className='container-md mb-8'>
         <PleasantButton onClick={() => setIsOpenDialog(true)} rounded={'full'} size={'full-width'}><span>⊕</span> Ajouter un compte</PleasantButton>
       </div>
+      }
       
       {/* {accessRights.isActionAllowed(ACCOUNT, LINK) && <AccountLink />} */}
       <BaseListTable caption='Liste des comptes' endpoint='users' columns={accountsColumns} refresh={refresh}/>

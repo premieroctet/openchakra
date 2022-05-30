@@ -156,30 +156,7 @@ const StyledDialog = styled(PureDialog)`
     margin-bottom: var(--spc-2);
   }
 
-  .full-address {
-    display: grid;
-    row-gap: var(--spc-2);
-    column-gap: var(--spc-2);
-    grid-template-areas: 'address address address'
-                          'zipcode city country'
-                          'phone phone phone';
-  }
-
-  .address {
-    grid-area: address;
-  }
-  .zip_code {
-    grid-area: zipcode;
-  }
-  .city {
-    grid-area: city;
-  }
-  .country {
-    grid-area: country;
-  }
-  .phone {
-    grid-area: phone;
-  }
+  
 `
 
 export default withTranslation('feurst', {withRef: true})(DialogAddress)

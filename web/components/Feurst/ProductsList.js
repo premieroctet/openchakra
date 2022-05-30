@@ -19,7 +19,7 @@ const ProductsList = ({accessRights}) => {
   return (
     <>
       <div display='flex' flexDirection='row'>
-        {IMPORTS.map(imp => (<ImportExcelFile caption={imp.title} importURL={imp.url} templateURL={null} onImport={toggleRefresh}/>))}
+        {IMPORTS.map((imp, i) => (<ImportExcelFile key={`impproduct${i}`} caption={imp.title} importURL={imp.url} templateURL={null} onImport={toggleRefresh}/>))}
       </div>
       <BaseListTable caption='Liste des articles' endpoint='products' columns={productsColumns} />
     </>
