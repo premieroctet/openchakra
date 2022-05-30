@@ -27,10 +27,10 @@ const mapRecord=(record, mapping) => {
     let transform = lodash.isObject(dest) && dest.transform || lodash.identity
     newRecord[key]=transform(record[column])
   })
-  return newRecord
+  return {source: record, destination: newRecord}
 }
 
-const dataImport=(model, headers, records, mapping, options) => {
+const dataImport=(model, headers, records, mapping, options, postImport= () => Promise.resolve()) => {
   const updateOnly=!!options.update
   const uniqueKey=options.key
   const result={created: 0, updated: 0, warnings: [], errors: []}
@@ -57,29 +57,35 @@ const dataImport=(model, headers, records, mapping, options) => {
       }
     })
 
-    const formattedRecords=records.map(record => {
+    const mappedRecords=records.map(record => {
       return mapRecord(record, mapping)
     })
 
     // Check duplicates keys
     if (options.key) {
-      const duplicates=lodash(formattedRecords).groupBy(options.key).pickBy(x => x.length > 1).keys().value()
+      const duplicates=lodash(mappedRecords.destination).groupBy(options.key).pickBy(x => x.length > 1).keys().value()
       if (!lodash.isEmpty(duplicates)) {
         return reject(`Valeurs dupliquées dans la colonne '${mapping[options.key]}':${duplicates.join(', ')}`)
       }
     }
 
-    const promises=formattedRecords.map(record =>
-      model.updateOne({[uniqueKey]: record[uniqueKey]}, record, {upsert: true, new: true}),
+    const promises=mappedRecords.map(record => {
+      let promises=[]
+      promises.push(model.updateOne({[uniqueKey]: record.destination[uniqueKey]}, record.destination, {upsert: true, new: true}))
+      return promises
+    },
     )
 
-    Promise.allSettled(promises)
+    Promise.allSettled(lodash.flattenDeep(promises))
       .then(res => {
         const fulfilled=res.filter(r => r.status=='fulfilled').map(r => r.value)
         const rejected=res.filter(r => r.status=='rejected').map(r => r.reason)
         result.updated=lodash.sum(fulfilled.map(f => f.nModified))
         result.created=lodash.sum(fulfilled.map(f => f.upserted?.length || 0))
         result.errors.push(...rejected.map(r => r.message))
+        return postImport(mappedRecords)
+      })
+      .then(() => {
         return resolve(result)
       })
       .catch(err => {
@@ -94,7 +100,7 @@ const dataImport=(model, headers, records, mapping, options) => {
 Post import: Promise (fileRecord, dbRecord) => dBrecord
 To modify record after reading & mapping, before DB insertion
 */
-const fileImport= (model, bufferData, mapping, options, postImport=null) => {
+const fileImport= (model, bufferData, mapping, options, postImport) => {
   return extractData(bufferData, options)
     .then(({headers, records}) => {
       return dataImport(model, headers, records, mapping, options, postImport)
@@ -290,13 +296,19 @@ const accountsImport = (buffer, mapping, options) => {
 }
 
 const productsImport = (bufferData, options) => {
-  const importComponents = record => {
-    const FIELDS='Adapteur,Chapeau,Fourreau,Clavette,BouchonGBouchonD,Pointe'.split(',')
-    const compIds = FIELDS.map(f => record[f]).filter(v => !!v)
-    if (compIds.length==0) {
-      return Promise.resolve(record)
+  const importComponents = records => {
+    const FIELDS='Adapteur,Chapeau,Fourreau,Clavette,BouchonG,BouchonD,Pointe'.split(',')
+    let subCompsRecords=records.filter(record => FIELDS.map(f => record.source[f]).filter(v => !!(v || '').trim()).length>0)
+    if (subCompsRecords.length==0) {
+      return Promise.resolve()
     }
-
+    return Promise.all(records.map(record => {
+      const refs=FIELDS.map(f => record.source[f]).filter(v => (v||'').trim().length>0)
+      return Promise.all(refs.map(r => Product.findOne({reference: new RegExp(r, 'i')})))
+        .then(result => {
+          return Product.updateOne({reference: record.destination.reference}, {components: result.map(s => s._id)})
+        })
+    }))
   }
 
   const DB_MAPPING={
@@ -308,7 +320,7 @@ const productsImport = (bufferData, options) => {
     'weight': {column: "Poids d'expédition", transform: v => parseFloat(String(v).replace(',', '.')) || null},
   }
 
-  return fileImport(Product, bufferData, DB_MAPPING, {key: 'reference', ...options})
+  return fileImport(Product, bufferData, DB_MAPPING, {key: 'reference', ...options}, importComponents)
 }
 
 module.exports={fileImport, shipRatesImport, lineItemsImport,

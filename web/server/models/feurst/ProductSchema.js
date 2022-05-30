@@ -30,10 +30,13 @@ const ProductSchema = new Schema({
     min: 0,
     // required: true, TODO make mandatory then import
   },
-  components: [{
-    type: Schema.Types.ObjectId,
-    ref: 'product',
-  }],
+  components: {
+    type: [{
+      type: Schema.Types.ObjectId,
+      ref: 'product',
+    }],
+    'default': [],
+  },
 })
 
 module.exports=ProductSchema

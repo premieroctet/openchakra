@@ -88,6 +88,11 @@ describe('XL & CSV imports', () => {
         expect(result.errors.length).toBe(0)
         expect(result.created).toBe(1014)
         expect(result.updated).toBe(0)
+        return Product.findOne({reference: '001130NE00'})
+      })
+      .then(product => {
+        expect(product).not.toBeNull()
+        expect(product.components).toHaveLength(4)
       })
   })
 
@@ -114,7 +119,6 @@ describe('XL & CSV imports', () => {
         return accountsImport(contents, null, {format: XL_TYPE, tab: 'DONNEES CLIENT FEURST'})
       })
       .then(result => {
-        console.log(result.warnings)
         expect(result.warnings.length).toBe(0)
         expect(result.errors.length).toBe(0)
         expect(result.created).toBe(64)
