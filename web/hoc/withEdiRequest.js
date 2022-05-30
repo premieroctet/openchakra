@@ -2,10 +2,7 @@ import React from 'react'
 import {client} from '../utils/client'
 import {
   API_PATH,
-  ENDPOINTS,
-  QUOTATION,
   ORDER_CREATED,
-  HANDLED,
 } from '../utils/feurst/consts'
 import {snackBarError} from '../utils/notifications'
 
@@ -43,8 +40,8 @@ const withEdiRequest = (Component = null) => {
             this.setState(data)
             return data
           })
-          .catch(() => {
-            snackBarError('Commande/devis non existant')
+          .catch(e => {
+            console.error('Commande/devis non existant', e)
           })
       }
     }
@@ -140,6 +137,16 @@ const withEdiRequest = (Component = null) => {
 
     }
 
+    updateSeller = async({company_id, user_id}) => {
+      // /:company_id/sales_representative/:user_id'
+      return await client(`${API_PATH}/companies/${company_id}/sales_representative/${user_id}`, {method: 'PUT'})
+        .catch(e => {
+          console.error(`Can't bind user to company`, e)
+          snackBarError(`Erreur lors de l'assignation du commercial`)
+        })
+
+    }
+
     sendQuotationToCustomer = async({endpoint, orderid}) => {
       // HANDLED ?
     }
@@ -161,6 +168,7 @@ const withEdiRequest = (Component = null) => {
           validateAddress={this.validateAddress}
           revertToEdition={this.revertToEdition}
           sendQuotationToCustomer={this.sendQuotationToCustomer}
+          updateSeller={this.updateSeller}
           state={this.state}
           {...this.props}
         />

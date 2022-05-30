@@ -14,7 +14,9 @@ const UpdateShippingFees = ({endpoint, orderid, shipping_fee, requestUpdate, upd
   return (
     <input
       value={shipping_fee}
-      onChange={e => requestUpdate({shipping_fee: +e.target.value})}
+      type="number"
+      step={'0.01'}
+      onChange={e => requestUpdate({shipping_fee: e.target.value})}
       onBlur={updateShipFee} />
   )
 }

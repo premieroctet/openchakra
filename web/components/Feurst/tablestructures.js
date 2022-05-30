@@ -319,8 +319,8 @@ const accountsColumns = ({language, visibility}) => {
   ]
 }
 
-const companiesColumns = ({language, updateSeller}) => {
-  
+const companiesColumns = ({language, updateSeller, sellers}) => {
+
   return [
     {
       label: 'Nom',
@@ -328,8 +328,8 @@ const companiesColumns = ({language, updateSeller}) => {
     },
     {
       label: 'Commercial',
-      attribute: '',
-      Cell: props => <UpdateSeller updateSeller={updateSeller} {...props}/>,
+      attribute: 'sales_representative',
+      Cell: props => <UpdateSeller updateSeller={updateSeller} sellers={sellers} {...props}/>,
     },
     
   ]
@@ -361,62 +361,6 @@ const pricesColumns = ({language}) => [
   {label: 'Tarif', attribute: 'price'},
 ]
 
-const HandledOrderDescription = order => {
-  return (
-    <div alignItems='left'>
-      <h1>{order?.address?.label} par {order.user.full_name}</h1>
-      <div>Numéro de commande: {order.reference}</div>
-      <div>Date de commande: {order.creation_date}</div>
-    </div>
-  )
-}
-
-const HandledOrderStatus = order => {
-  return (
-    <div alignItems='left'>
-      <h1>Status de la commande</h1>
-      <div>{order.status}</div>
-      <PleasantButton>Voir la commande</PleasantButton>
-    </div>
-  )
-}
-
-// const ConfirmHandledValidation = ({onClick, children}) => (
-//   <PleasantButton
-//     rounded={'full'}
-//     bgColor={'#80b150'}
-//     textColor={'#fff'}
-//     borderColor={'1px solid #80b150'}
-//     onClick={onClick}
-//   >{children}</PleasantButton>
-// )
-
-// const ConfirmPartialHandledValidation = ({onClick, children}) => {
-
-//   return (<PleasantButton
-//     rounded={'full'}
-//     bgColor={'#fff'}
-//     textColor={'var(--black)'}
-//     borderColor={'1px solid #80b150'}
-//     onClick={onClick}
-//   >
-//     {children}
-//   </PleasantButton>
-//   )
-// }
-
-const HandleValidationStatusCell = ({status, endpoint, id, handleValidation, filter}) => {
-
-  const displayPartialButton = status==VALID
-  const displayFullButton = status==VALID || status == PARTIALLY_HANDLED
-  return <div className='flex items-center flex-col gap-y-3'>
-    {displayFullButton && <ConfirmHandledValidation onClick={() => {
-      handleValidation({endpoint, orderid: id, filter, status: true})
-    }
-    }>Commande traitée</ConfirmHandledValidation>}
-    {displayPartialButton && <ConfirmPartialHandledValidation onClick={() => handleValidation({endpoint, orderid: id, filter, status: false})}>Partiellement traitée</ConfirmPartialHandledValidation>}
-  </div>
-}
 
 const handledOrdersColumns = ({endpoint, language, handleValidation = null, filter = null}) => [
   {
@@ -445,12 +389,7 @@ const handledOrdersColumns = ({endpoint, language, handleValidation = null, filt
     attribute: v => { console.log(v); return v },
     Cell: ({value}) => <OrderStatus status={value.status} label={value.status_label} />,
   },
-  // {
-  //   label: 'Validation',
-  //   attribute: v => v,
-  //   disableFilters: true,
-  //   Cell: ({value}) => (<HandleValidationStatusCell status={value.status} handleValidation={handleValidation} endpoint={endpoint} id={value._id} filter={filter} />),
-  // },
+  
 ]
 const handledQuotationsColumns = ({language, endpoint, handleValidation = null, filter = null}) => [
   {
@@ -479,12 +418,6 @@ const handledQuotationsColumns = ({language, endpoint, handleValidation = null, 
     attribute: v => { console.log(v); return v },
     Cell: ({value}) => <OrderStatus status={value.status} label={value.status_label} />,
   },
-  // {
-  //   label: 'Validation',
-  //   attribute: v => v._id,
-  //   disableFilters: true,
-  //   Cell: ({value}) => (<Link href={`/edi/quotations/view/${value}`}><HandleLink>A traiter</HandleLink></Link>),
-  // },
 ]
 module.exports={orderColumns, ordersColumns, quotationColumns, quotationsColumns,
   accountsColumns, companiesColumns, productsColumns, shipratesColumns, handledOrdersColumns, handledQuotationsColumns, pricesColumns}

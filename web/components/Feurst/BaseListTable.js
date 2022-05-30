@@ -19,6 +19,7 @@ const BaseListTable = ({
   filter,
   filtered,
   updateSeller,
+  sellers,
 }) => {
 
   const [language, setLanguage] = useState('fr')
@@ -35,7 +36,7 @@ const BaseListTable = ({
     getList({endpoint, filter})
   }, [endpoint, getList, filter, refresh])
 
-  const cols= columns({language, endpoint, deleteOrder, updateSeller: canUpdateSeller ? updateSeller : null})
+  const cols= columns({language, endpoint, deleteOrder, updateSeller: canUpdateSeller ? updateSeller : null, sellers})
 
   return (
     <FeurstTable

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useCallback} from 'react'
 import styled from 'styled-components'
 import dynamic from 'next/dynamic'
 import {
@@ -79,10 +79,10 @@ const ImportExcelFile = ({importURL, templateURL, caption}) => {
     setFile(null)
   }, [])
 
-  const getOptions = () => {
+  const getOptions = useCallback(() => {
     const options={delimiter: delimiter, tab: tab, format: fileType, from_line: firstLine}
     return options
-  }
+  }, [delimiter, tab, fileType, firstLine])
 
   const readFile = file => {
     return new Promise((resolve, reject) => {
@@ -102,7 +102,7 @@ const ImportExcelFile = ({importURL, templateURL, caption}) => {
         console.error(err)
         setSample(null)
       })
-  }, [rawData, fileType, tab, delimiter, firstLine])
+  }, [rawData, fileType, tab, delimiter, firstLine, getOptions])
 
   useEffect(() => {
     if (!fileType) { return }
@@ -183,7 +183,13 @@ const ImportExcelFile = ({importURL, templateURL, caption}) => {
           {fileType==XL_TYPE &&
           <>
             <Typography>Onglet:</Typography>
-            <Select outline='standard' value={tab} onChange={ev => setTab(ev.target.value)}>{tabs.map(t => (<MenuItem value={t}>{t}</MenuItem>))}</Select>
+            <Select
+              outline='standard'
+              value={tab}
+              onChange={ev => setTab(ev.target.value)}
+            >
+              {tabs.map((t, i) => (<MenuItem key={`men${i}`} value={t}>{t}</MenuItem>))}
+            </Select>
           </>
           }
           <Typography>1ère ligne:</Typography>
@@ -193,9 +199,9 @@ const ImportExcelFile = ({importURL, templateURL, caption}) => {
         </div>
         <div style={{overflowX: 'auto', overflowY: 'auto'}}>
           <table border='1'>
-            <thead><tr>{sample[0].map(h => (<th>{String(h).slice(0, 10)}</th>))}</tr></thead>
-            <tbody>{sample.slice(1, 5).map(r => (
-              <tr>{r.map(v => <td>{String(v).slice(0, 10)}</td>)}</tr>
+            <thead><tr>{sample[0].map((h, i) => (<th key={`head${i}`}>{String(h).slice(0, 10)}</th>))}</tr></thead>
+            <tbody>{sample.slice(1, 5).map((r, i) => (
+              <tr key={`line${i}`}>{r.map((v, j) => <td key={`cell${i}${j}`} >{String(v).slice(0, 10)}</td>)}</tr>
             ))}</tbody>
           </table>
         </div>
@@ -263,8 +269,6 @@ const ImportDialog = styled(PureDialog)`
     border-radius: var(--rounded-2xl);
     width: min(calc(100% - 2rem), calc(100% - 5rem));
   }
-
-  
 
   .importbutton {
     justify-content: center;
