@@ -112,19 +112,10 @@ router.post('/import', passport.authenticate('jwt', {session: false}), (req, res
       console.error(err)
       return res.status(404).json({errors: err.message})
     }
-    // db field => import field
-    const DB_MAPPING={
-      'reference': 'Code article',
-      'description_2': 'Description 2',
-      'group': 'Grpe',
-      'family': 'Famille',
-      'description': 'Description',
-      'weight': "Poids d'expédition",
-    }
 
     const options=JSON.parse(req.body.options)
 
-    productsImport(req.file.buffer, DB_MAPPING, {...options, key: 'reference'})
+    productsImport(req.file.buffer, options)
       .then(result => {
         return res.json(result)
       })
