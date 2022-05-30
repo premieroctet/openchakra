@@ -114,18 +114,24 @@ const ImportExcelFile = ({importURL, templateURL, caption}) => {
         })
     }
     if (fileType==TEXT_TYPE) {
-      setDelimiter(guessDelimiter(rawData))
+      const delim=guessDelimiter(rawData)
+      setDelimiter(delim)
     }
   }, [rawData, fileType])
 
   useEffect(() => {
     rawData && guessFileType(rawData)
-      .then(fileType => setFileType(fileType))
+      .then(fileType => {
+        setFileType(fileType)
+      })
   }, [rawData])
 
   useEffect(() => {
     file && readFile(file)
-      .then(contents => setRawData(contents))
+      .then(contents => {
+        setImportResult(null)
+        setRawData(contents)
+      })
   }, [file])
 
   const onFileChange = event => {
@@ -170,7 +176,7 @@ const ImportExcelFile = ({importURL, templateURL, caption}) => {
         </div>
       </label>
 
-      {sample &&
+      {sample && !importResult &&
         <><div style={{display: 'flex'}}>
           {fileType==TEXT_TYPE &&
           <>
@@ -229,7 +235,7 @@ const DownloadExampleFile = styled.button`
 
 const ImportDialog = styled(PureDialog)`
 
-  
+
   .dialogcontent {
     aspect-ratio: 1 / 1;
     max-width: 25rem;
