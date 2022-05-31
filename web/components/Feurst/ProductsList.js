@@ -21,7 +21,7 @@ const ProductsList = ({accessRights}) => {
       <div display='flex' flexDirection='row'>
         {IMPORTS.map((imp, i) => (<ImportExcelFile key={`impproduct${i}`} caption={imp.title} importURL={imp.url} templateURL={null} onImport={toggleRefresh}/>))}
       </div>
-      <BaseListTable caption='Liste des articles' endpoint='products' columns={productsColumns} />
+      <BaseListTable caption='Liste des articles' endpoint='products' columns={productsColumns} accessRights={accessRights}/>
     </>
   )
 }

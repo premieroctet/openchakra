@@ -16,7 +16,7 @@ const AccountsList = ({accessRights}) => {
   const [refresh, setRefresh]=useState(false)
   const [isOpenDialog, setIsOpenDialog] = useState(false)
   const toggleRefresh= () => setRefresh(!refresh)
-  
+
   const canAddAccount = accessRights.isActionAllowed(ACCOUNT, CREATE)
 
 
@@ -28,15 +28,15 @@ const AccountsList = ({accessRights}) => {
       <div>
         {IMPORTS.map((imp, i) => (<ImportExcelFile key={`imp${i}`} caption={imp.title} importURL={imp.url} templateURL={null} onImport={toggleRefresh}/>))}
       </div>
-      
+
       {canAddAccount &&
       <div className='container-md mb-8'>
         <PleasantButton onClick={() => setIsOpenDialog(true)} rounded={'full'} size={'full-width'}><span>⊕</span> Ajouter un compte</PleasantButton>
       </div>
       }
-      
+
       {/* {accessRights.isActionAllowed(ACCOUNT, LINK) && <AccountLink />} */}
-      <BaseListTable caption='Liste des comptes' endpoint='users' columns={accountsColumns} refresh={refresh}/>
+      <BaseListTable caption='Liste des comptes' endpoint='users' columns={accountsColumns} refresh={refresh} accessRights={accessRights}/>
 
       <AddAccountDialog title={'Ajouter un compte'} open={isOpenDialog}
         onClose={() => setIsOpenDialog(false)} >
@@ -48,13 +48,13 @@ const AccountsList = ({accessRights}) => {
 
 
 const AddAccountDialog = styled(PureDialog)`
-  
+
   h2 {
     text-align: center;
     color: var(--black);
     margin-bottom: var(--spc-8);
   }
-  
+
   .dialogcontent {
     aspect-ratio: 1 / 1;
     max-width: 30rem;

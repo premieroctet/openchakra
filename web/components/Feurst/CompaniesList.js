@@ -12,12 +12,12 @@ const PureDialog = dynamic(() => import('../Dialog/PureDialog'))
 
 
 const CompaniesList = ({accessRights}) => {
-  
+
   const [refresh, setRefresh]=useState(false)
   const [sellers, setSellers] = useState([])
   const [isOpenDialog, setIsOpenDialog] = useState(false)
   const toggleRefresh= () => setRefresh(!refresh)
-  
+
   const canAddCompany = accessRights.isActionAllowed(COMPANY, CREATE)
 
   useEffect(() => {
@@ -31,7 +31,7 @@ const CompaniesList = ({accessRights}) => {
 
   return (
     <>
-      
+
       {canAddCompany &&
       <div className='container-md mb-8'>
         <PleasantButton onClick={() => setIsOpenDialog(true)} rounded={'full'} size={'full-width'}><span>⊕</span> Ajouter une société</PleasantButton>
