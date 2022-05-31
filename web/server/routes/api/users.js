@@ -1356,10 +1356,10 @@ router.get('/landing-page', passport.authenticate('jwt', {session: false}), (req
     return res.json(`${BASEPATH_EDI}/quotations/handle`)
   }
   if (roles.includes(CUSTOMER_ADMIN)) {
-    return res.json(`${BASEPATH_EDI}/orders/create`)
+    return res.json(`${BASEPATH_EDI}/orders`)
   }
   if (roles.includes(CUSTOMER_BUYER)) {
-    return res.json(`${BASEPATH_EDI}/orders/create`)
+    return res.json(`${BASEPATH_EDI}/orders`)
   }
   if (roles.includes(CUSTOMER_TCI)) {
     return res.json(`${BASEPATH_EDI}/quotations`)
