@@ -275,10 +275,10 @@ router.get('/users/all_light', passport.authenticate('admin', {session: false}),
 // @Access private
 router.get('/serviceUsersMap', passport.authenticate('admin', {session: false}), (req, res) => {
 
-  req.context.getModel('ServiceUser').find({}, '_id service_address.gps')
+  req.context.getModel('ServiceUser').find({}, '_id service_address.gps service_address.city')
     // .populate('user','-id_card')
     .populate('service', '_id label')
-    .populate('user', 'firstname')
+    .populate('user', 'firstname name')
     .then(services => {
       res.json(services)
     })
