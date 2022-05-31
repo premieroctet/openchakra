@@ -1,9 +1,12 @@
 import React, {useState, useEffect} from 'react'
 import {withTranslation} from 'react-i18next'
+import Link from 'next/link'
 import withEdiRequest from '../../hoc/withEdiRequest'
 import {
+  CREATE,
   UPDATE,
-} from '../../utils/consts'
+  BASEPATH_EDI,
+} from '../../utils/feurst/consts'
 import FeurstTable from '../../styles/feurst/FeurstTable'
 
 
@@ -24,7 +27,8 @@ const BaseListTable = ({
 
   const [language, setLanguage] = useState('fr')
 
-  const canUpdateSeller = accessRights?.isActionAllowed(accessRights.getModel(), UPDATE)
+  const canUpdateSeller = accessRights.isActionAllowed(accessRights.getModel(), UPDATE)
+  const canCreate = accessRights.isActionAllowed(accessRights.getModel(), CREATE)
 
   // Init language and order
   useEffect(() => {
@@ -37,8 +41,10 @@ const BaseListTable = ({
   }, [endpoint, getList, filter, refresh])
 
   const cols= columns({language, endpoint, deleteOrder, updateSeller: canUpdateSeller ? updateSeller : null, sellers})
+  
 
-  return (
+  return (<>
+    {canCreate && <Link href={`${BASEPATH_EDI}/${endpoint}/create`}>Créer</Link>}
     <FeurstTable
       caption={caption}
       data={state.orders}
@@ -46,6 +52,7 @@ const BaseListTable = ({
       filter={filter}
       filtered={filtered}
     />
+  </>
   )
 }
 

@@ -73,17 +73,18 @@ const withEdiAuth = (Component = null, options = {}) => {
           .catch(e => {
             console.error(e)
           })
+
+        if (is_development()) {
+          client(`${API_PATH}/users/current`)
+            .then(res => {
+              this.setState({account: `${res.full_name} (${res.email}), société ${res.company?.name}, rôles ${res.roles}`})
+            })
+        }
       }
       else {
         Router.push(options.pathAfterFailure || `${BASEPATH_EDI}/login`)
       }
-
-      if (is_development()) {
-        client(`${API_PATH}/users/current`)
-          .then(res => {
-            this.setState({account: `${res.full_name} (${res.email}), société ${res.company?.name}, rôles ${res.roles}`})
-          })
-      }
+      
     }
 
     render() {
