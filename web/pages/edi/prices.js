@@ -1,7 +1,7 @@
 import React from 'react'
-import withEdiAuth from '../../../hoc/withEdiAuth'
-import Prices from '../../../components/Feurst/Prices'
-import {PRICELIST, VIEW, BASEPATH_EDI} from '../../../utils/consts'
+import withEdiAuth from '../../hoc/withEdiAuth'
+import Prices from '../../components/Feurst/Prices'
+import {PRICELIST, VIEW, BASEPATH_EDI} from '../../utils/consts'
 
 const List = ({accessRights}) => {
 

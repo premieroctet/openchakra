@@ -1,8 +1,8 @@
 import React from 'react'
-import withEdiAuth from '../../../hoc/withEdiAuth'
-import {BASEPATH_EDI} from '../../../utils/feurst/consts'
-import {SHIPRATE, VIEW} from '../../../utils/consts'
-import ShipratesList from '../../../components/Feurst/ShipratesList'
+import withEdiAuth from '../../hoc/withEdiAuth'
+import {BASEPATH_EDI} from '../../utils/feurst/consts'
+import {SHIPRATE, VIEW} from '../../utils/consts'
+import ShipratesList from '../../components/Feurst/ShipratesList'
 
 const List = ({accessRights}) => {
 
