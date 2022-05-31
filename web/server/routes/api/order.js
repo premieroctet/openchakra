@@ -133,8 +133,12 @@ router.post('/:order_id/import', passport.authenticate('jwt', {session: false}),
 // @Access private
 router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
+  if (!req.headers.referer.includes('/create')) {
+    return res.status(403).json(`Creation allowed from /create url only`)
+  }
+
   if (!isActionAllowed(req.user.roles, DATA_TYPE, CREATE)) {
-    return res.status(401).json()
+    return res.status(403).json()
   }
 
   const {errors, isValid}=validateOrder(req.body)
