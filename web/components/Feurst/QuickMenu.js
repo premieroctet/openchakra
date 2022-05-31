@@ -107,7 +107,7 @@ const QuickMenu = ({accessRights}) => {
           <Link key={`menu${i}`} href={menu.url}><a className={containsPartUrl(menu.url, router.pathname) ? 'current' : null}>{menu.label}</a></Link>
         ))}
         
-        {getLoggedUser() ? <><span>{`Bienvenue ${firstname}`}</span><LogOut /></> : null}
+        {getLoggedUser() ? <><Link href={`${BASEPATH_EDI}/profile`}>{`Bienvenue ${firstname}`}</Link><LogOut /></> : null}
       </QuickMenuStyled>
     </>
   )
