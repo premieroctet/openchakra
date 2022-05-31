@@ -93,6 +93,7 @@ const BaseCreateTable = ({
   revertToEdition,
   handleValidation,
   sendQuotationToCustomer,
+  importFile,
   state,
 }) => {
 
@@ -295,7 +296,7 @@ const BaseCreateTable = ({
 
       {canModify &&
       <div className='container-base'>
-        <ImportExcelFile importURL={importURL} templateURL={templateURL}/>
+        <ImportExcelFile endpoint={endpoint} orderid={orderid} importURL={importURL} templateURL={templateURL} importFile={importFile}/>
         <AddDivider>Ou</AddDivider>
         <AddArticle endpoint={endpoint} orderid={orderid} addProduct={addProduct} wordingSection={wordingSection} />
       </div>}

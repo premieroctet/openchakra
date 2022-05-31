@@ -1,5 +1,7 @@
 import React from 'react'
+import axios from 'axios'
 import {client} from '../utils/client'
+import {setAxiosAuthentication} from '../utils/authentication'
 import {
   API_PATH,
   ORDER_CREATED,
@@ -144,9 +146,18 @@ const withEdiRequest = (Component = null) => {
           console.error(`Can't bind user to company`, e)
           snackBarError(`Erreur lors de l'assignation du commercial`)
         })
-
     }
 
+    importFile = async({endpoint, orderid, importURL, data}) => {
+      setAxiosAuthentication()
+      return await axios.post(importURL, data)
+        .then(res => {
+          this.getContentFrom({endpoint, orderid})
+          return res?.data
+        })
+        .catch(err => err)
+    }
+    
     sendQuotationToCustomer = async({endpoint, orderid}) => {
       // HANDLED ?
     }
@@ -169,6 +180,7 @@ const withEdiRequest = (Component = null) => {
           revertToEdition={this.revertToEdition}
           sendQuotationToCustomer={this.sendQuotationToCustomer}
           updateSeller={this.updateSeller}
+          importFile={this.importFile}
           state={this.state}
           {...this.props}
         />

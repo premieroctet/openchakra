@@ -19,28 +19,12 @@ import {client} from '../../utils/client'
 import {XL_EXTENSIONS} from '../../utils/consts'
 import {FEURST_IMG_PATH} from '../../utils/feurst/consts'
 import {PleasantButton} from './Button'
+import ImportResult from './ImportResult'
 
 const PureDialog = dynamic(() => import('../Dialog//PureDialog'))
 
-const ImportResult = ({result}) => {
-  return (
-    <>
-      <div>Données créées : {result.created}</div>
-      <div>Données mises à jour : {result.updated}</div>
-      {!isEmpty(result.errors) &&
-        <><h2>Erreurs:</h2>
-          {result.errors.map(err => (<div>{err}</div>))}
-        </>
-      }
-      {!isEmpty(result.warnings) &&
-        <><h2>Warnings:</h2>
-          {result.warnings.map(war => (<div>{war}</div>))}
-        </>
-      }
-    </>
-  )
-}
-const ImportExcelFile = ({importURL, templateURL, caption}) => {
+
+const ImportExcelFile = ({importURL, templateURL, caption, endpoint, orderid, importFile}) => {
 
   const [isOpenDialog, setIsOpenDialog] = useState(false)
   const [file, setFile]=useState(null)
@@ -139,16 +123,16 @@ const ImportExcelFile = ({importURL, templateURL, caption}) => {
     setFile(f)
   }
 
-  const submitData = () => {
+  const submitData = async({endpoint, orderid, importFile}) => {
+
     setImportResult(null)
     const data = new FormData()
     data.append('buffer', file)
     data.append('options', JSON.stringify(getOptions()))
-    setAxiosAuthentication()
-    axios.post(importURL, data)
+    await importFile({endpoint, orderid, importURL, data})
       .then(result => {
-        console.log(JSON.stringify(result))
-        setImportResult(result.data)
+        setIsOpenDialog(false)
+        setImportResult(result)
       })
       .catch(err => {
         snackBarError(err)
@@ -172,7 +156,14 @@ const ImportExcelFile = ({importURL, templateURL, caption}) => {
         <div className='box'>
           <img width={'171'} src={`${FEURST_IMG_PATH}/xls-icon.png`} alt=""/>
           <span className='inputfiletext'>Parcourir…</span>
-          <input className='sr-only' id={'importfile'} type={'file'} onSubmit={() => uploadFile} onChange={onFileChange} accept={XL_EXTENSIONS.join(',')}/>
+          <input
+            className='sr-only'
+            id={'importfile'}
+            type={'file'}
+            onSubmit={() => uploadFile}
+            onChange={onFileChange}
+            accept={XL_EXTENSIONS.join(',')}
+          />
         </div>
       </label>
 
@@ -200,7 +191,7 @@ const ImportExcelFile = ({importURL, templateURL, caption}) => {
           }
           <Typography>1ère ligne:</Typography>
           <TextField type='number' defaultValue={firstLine} id='firstLine'
-            onChange={ev => !isNaN(parseInt(ev.target.value)) && setFirstLine(parseInt(event.target.value))}
+            onChange={ev => !isNaN(parseInt(ev.target.value)) && setFirstLine(parseInt(ev.target.value))}
           />
         </div>
         <div style={{overflowX: 'auto', overflowY: 'auto'}}>
@@ -212,9 +203,9 @@ const ImportExcelFile = ({importURL, templateURL, caption}) => {
           </table>
         </div>
         </>}
-      {importResult && <ImportResult result={importResult}/>}
+      
       <div className='importbutton flex'>
-        <PleasantButton size={'full-width'} rounded={'full'} onClick={submitData}>Importer</PleasantButton>
+        <PleasantButton size={'full-width'} rounded={'full'} onClick={() => submitData({endpoint, orderid, importFile})}>Importer</PleasantButton>
       </div>
     </ImportDialog>
     {templateURL &&
@@ -222,6 +213,7 @@ const ImportExcelFile = ({importURL, templateURL, caption}) => {
         Télécharger le modèle de fichier
       </DownloadExampleFile>
     }
+    {importResult && <ImportResult result={importResult}/>}
   </>
   )
 }
