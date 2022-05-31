@@ -1,8 +1,16 @@
+const {sendOrderAlert} = require('../../utils/mailing')
+const {
+  ORDER_ALERT_CHECK_INTERVAL,
+  ORDER_ALERT_DELAY,
+} = require('../../../utils/feurst/consts')
 const express = require('express')
 const passport = require('passport')
 const moment = require('moment')
 const xlsx=require('node-xlsx')
 const lodash=require('lodash')
+
+const CronJob = require('cron').CronJob
+
 const {
   COMPLETE,
   CONVERT,
@@ -321,7 +329,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   MODEL.find()
     .sort({creation_date: -1})
     .populate('items.product')
-    .populate('company')
+    .populate({path: 'company', populate: 'sales_representative'})
     .lean({virtuals: true})
     .then(orders => {
       orders=filterOrderQuotation(orders, DATA_TYPE, req.user, VIEW)
@@ -385,7 +393,7 @@ router.get('/:order_id', passport.authenticate('jwt', {session: false}), (req, r
 
   MODEL.findById(order_id)
     .populate('items.product')
-    .populate('company')
+    .populate({path: 'company', populate: 'sales_representative'})
     .then(order => {
       if (order) {
         return res.json(order)
@@ -562,5 +570,31 @@ router.get('/:id/actions', passport.authenticate('jwt', {session: false}), (req,
     })
 })
 
+
+/** Check orders unhandled after ORDER_ALERT_DELAY minutes
+Check is done ervery ORDER_ALERT_CHECK_INTERVAL minutes
+*/
+const cronDef=`0 */${ORDER_ALERT_CHECK_INTERVAL} * * * *`
+new CronJob(cronDef, (() => {
+  const toDate = moment().add(-ORDER_ALERT_DELAY, 'minutes')
+  const fromDate = moment(toDate).add(-ORDER_ALERT_CHECK_INTERVAL, 'minutes')
+
+  Order.find({validation_date: {$gte: fromDate, $lte: toDate}})
+    .populate({path: 'company', populate: {path: 'sales_representative', select: 'email'}})
+    .then(result => {
+      const orders=result.filter(o => o.status==VALID)
+      console.log(`Cron: alerted orders ${orders.map(o => [o._id, o.validation_date])}`)
+      orders.forEach(order => {
+        sendOrderAlert(
+          order.company.sales_representative.email,
+          order.reference,
+          order.company.name,
+          order.url,
+        )
+      })
+    })
+    .catch(err => console.error(err))
+
+}), null, true, 'Europe/Paris')
 
 module.exports = router

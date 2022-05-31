@@ -310,8 +310,8 @@ const BaseCreateTable = ({
           <dt>{t(`${wordingSection}.date`)}</dt>
           <dd>{new Date(state.creation_date).toLocaleDateString()}</dd>
           {state.sales_representative?.firstname && (<>
-            <dt>&Eacute;tabli par</dt>
-            <dd>{state.sales_representative.firstname}</dd>
+            <dt>Suivi par</dt>
+            <dd>{state.company.sales_representative.firstname}</dd>
           </>)}
         </dl>
       </div>}
@@ -356,7 +356,7 @@ const BaseCreateTable = ({
         Revenir à la saisie
         </PleasantButton> : null}
 
-        
+
         {isConvertToOrder && <PleasantButton
           rounded={'full'}
           disabled={justCreated}
@@ -398,7 +398,7 @@ const BaseCreateTable = ({
       </div>
 
 
-      <DialogAddress
+      {isOpenDialog && <DialogAddress
         orderid={orderid}
         endpoint={endpoint}
         isOpenDialog={isOpenDialog}
@@ -408,8 +408,8 @@ const BaseCreateTable = ({
         requestUpdate={requestUpdate}
         validateAddress={validateAddress}
         wordingSection={wordingSection}
-      />
-      
+      />}
+
       <DialogConvertQuotation
         orderid={orderid}
         endpoint={endpoint}
@@ -419,7 +419,6 @@ const BaseCreateTable = ({
         convert={convert}
         revertToEdition={revertToEdition}
       />
-      
 
     </> : null}
   </>

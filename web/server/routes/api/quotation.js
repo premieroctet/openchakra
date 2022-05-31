@@ -4,6 +4,11 @@ const moment = require('moment')
 const xlsx=require('node-xlsx')
 const lodash=require('lodash')
 const {
+  getFeurstDestinee,
+  sendDataEvent,
+  sendDataNotification,
+} = require('../../utils/mailing')
+const {
   filterOrderQuotation,
   getStatusLabel,
   isActionAllowed,
@@ -25,9 +30,7 @@ const {
 const {
   addItem,
   computeShippingFee,
-  extractDepartment,
   getProductPrices,
-  isInDeliveryZone,
   updateCompanyAddresses,
   updateShipFee,
 } = require('../../utils/commands')
@@ -35,7 +38,6 @@ const Quotation = require('../../models/Quotation')
 const Product = require('../../models/Product')
 const {lineItemsImport} = require('../../utils/import')
 const {XL_FILTER, createMemoryMulter} = require('../../utils/filesystem')
-const {validateZipCode} = require('../../validation/order')
 
 const router = express.Router()
 const Order = require('../../models/Order')
@@ -157,6 +159,7 @@ router.put('/:id/rewrite', passport.authenticate('jwt', {session: false}), (req,
       if (!result) {
         return res.status(404).json(`${DATA_TYPE} #${order_id} not found`)
       }
+      sendDataNotification(req.user, result, 'Le devis est repassé en modification')
       return res.json(result)
     })
     .catch(err => {
@@ -289,7 +292,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   MODEL.find()
     .sort({creation_date: -1})
     .populate('items.product')
-    .populate('company')
+    .populate({path: 'company', populate: 'sales_representative'})
     .lean({virtuals: true})
     .then(orders => {
       orders=filterOrderQuotation(orders, DATA_TYPE, req.user, VIEW)
@@ -310,7 +313,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 router.post('/:quotation_id/convert', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, CONVERT)) {
-    return res.status(401).json()
+    return res.status(403).json()
   }
 
   const quotation_id=req.params.quotation_id
@@ -353,7 +356,7 @@ router.get('/:order_id', passport.authenticate('jwt', {session: false}), (req, r
   const order_id=req.params.order_id
   MODEL.findById(order_id)
     .populate('items.product')
-    .populate('company')
+    .populate({path: 'company', populate: 'sales_representative'})
     .then(order => {
       if (order) {
         return res.json(order)
@@ -436,10 +439,16 @@ router.post('/:order_id/validate', passport.authenticate('jwt', {session: false}
   }
 
   MODEL.findByIdAndUpdate(order_id, attrs, {new: true})
+    .populate({path: 'company', populate: {path: 'sales_representative', select: 'email'}})
     .then(data => {
       if (!data) {
         return res.status(404).json(`Order ${order_id} not found`)
       }
+
+      const msg=isFeurstUser(req.user) ?
+        'Le devis a été validé, vous pouvez le convertir en commande'
+        : 'Le devis a été validé, vous pouvez le vérifier et le confirmer'
+      sendDataNotification(req.user, data, msg)
       return res.json()
     })
     .catch(err => {
