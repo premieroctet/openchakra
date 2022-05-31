@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
   drawerAndSchedule_mainContainer:{
     width: '100%',
     display: 'flex',
@@ -20,4 +20,4 @@ const style=theme => ({
 
 
 })
-export default style
+module.exports=Style

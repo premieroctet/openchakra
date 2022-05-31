@@ -1,3 +1,5 @@
+const WebpackBar = require('webpackbar')
+
 module.exports = {
   webpack: (config, {isServer}) => {
     // Fixes npm packages that depend on `fs` module
@@ -11,6 +13,13 @@ module.exports = {
       exclude: /(node_modules)/,
       loader: require.resolve('url-loader'),
     })
+
+    config.plugins.push(new WebpackBar({
+      fancy: true,
+      profile: true,
+      basic: false,
+    }))
+
     return config
   },
 }

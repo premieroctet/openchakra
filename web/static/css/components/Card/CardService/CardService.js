@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
   cardServiceInfoPaper: {
     backgroundColor: theme.palette.primary.main,
     borderRadius: 20,
@@ -303,4 +303,4 @@ const style=theme => ({
     color: 'rgb(199, 199, 199)',
   },
 })
-export default style
+module.exports=Style

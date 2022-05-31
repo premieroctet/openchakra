@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
   infoWithPicsMainContainer: {
     display: 'flex',
     alignItems: 'center',
@@ -27,4 +27,4 @@ const style=theme => ({
     },
   },
 })
-export default style
+module.exports=Style

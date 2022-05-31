@@ -10,4 +10,4 @@ const ResetTokenSchema = new Schema({
   token: String,
 })
 
-module.exports = ResetToken = mongoose.model('resetToken', ResetTokenSchema)
+module.exports = mongoose.model('resetToken', ResetTokenSchema)

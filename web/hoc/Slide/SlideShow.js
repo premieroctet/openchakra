@@ -35,7 +35,7 @@ function withSlide(WrappedComponent) {
             next={ () => { this.setState({pageIndex: this.state.pageIndex + 1}) }}
             prev={ () => { this.setState({pageIndex: this.state.pageIndex - 1}) }}
             animation={'slide'}
-            navButtonsAlwaysVisible={false} //&& this.props.infinite || pageCount>1}
+            navButtonsAlwaysVisible={false} // && this.props.infinite || pageCount>1}
             navButtonsAlwaysInvisible={false && !model.isInfinite()}
           >
             { /** TODO importer les styles directement */ }

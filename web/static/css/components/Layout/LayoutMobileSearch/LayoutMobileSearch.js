@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
 
 })
-export default style
+module.exports=Style

@@ -23,6 +23,8 @@ import Typography from '@material-ui/core/Typography'
 import withWidth from '@material-ui/core/withWidth'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import Hidden from '@material-ui/core/Hidden'
+
+import {SEARCH} from '../utils/i18n'
 const {setAxiosAuthentication}=require('../utils/authentication')
 const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel')
 const {computeDistanceKm}=require('../utils/functions')

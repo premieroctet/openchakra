@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
   paymenChoiceMainContainer:{
     display: 'flex',
     flexDirection: 'column',
@@ -20,4 +20,4 @@ const style=theme => ({
 
   }
 })
-export default style
+module.exports=Style

@@ -703,7 +703,7 @@ class UserServicesPreview extends React.Component {
       }
 
       this.setState({pending: true})
-      axios.post('/myAlfred/api/booking/add', bookingObj)
+      axios.post('/myAlfred/api/booking', bookingObj)
         .then(response => {
           const booking = response.data
           axios.put(`/myAlfred/api/chatRooms/addBookingId/${bookingObj.chatroom}`, {booking: booking._id})

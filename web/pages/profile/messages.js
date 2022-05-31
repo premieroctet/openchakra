@@ -1,4 +1,3 @@
-const withParams = require('../../components/withParams')
 import ReactHtmlParser from 'react-html-parser'
 
 
@@ -22,6 +21,7 @@ import SendIcon from '@material-ui/icons/Send'
 import Typography from '@material-ui/core/Typography'
 import lodash from 'lodash'
 import axios from 'axios'
+import Hidden from '@material-ui/core/Hidden'
 import {MESSAGES} from '../../utils/i18n'
 
 import LayoutMessages from '../../hoc/Layout/LayoutMessages'
@@ -30,9 +30,9 @@ import MessageSummary from '../../components/MessageSummary/MessageSummary'
 import MessagesDetails from '../../components/MessagesDetails/MessagesDetails'
 import UserAvatar from '../../components/Avatar/UserAvatar'
 import styles from '../../static/css/pages/profile/messages/messages'
-import Hidden from '@material-ui/core/Hidden'
 
 const moment=require('moment')
+const withParams = require('../../components/withParams')
 
 const {setAxiosAuthentication}=require('../../utils/authentication')
 

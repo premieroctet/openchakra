@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
   chipsContainer: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -45,4 +45,4 @@ const style=theme => ({
     color: '#696767',
   },
 })
-export default style
+module.exports=Style

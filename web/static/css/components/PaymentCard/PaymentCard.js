@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
   containerNameCard:{
     [theme.breakpoints.down('lg')]:{
       textAlign: 'center'
@@ -17,4 +17,4 @@ const style=theme => ({
   }
 
 })
-export default style
+module.exports=Style

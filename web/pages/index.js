@@ -78,7 +78,6 @@ class Home extends React.Component {
       this.setState({open: true})
     }
 
-
     axios.get('/myAlfred/api/users/current')
       .then(res => {
         let data = res.data
@@ -103,6 +102,7 @@ class Home extends React.Component {
         let alfred = response.data
         this.setState({alfred: alfred})
       }).catch(err => console.error(err))
+
 
     this.setState({mounted: true})
   }

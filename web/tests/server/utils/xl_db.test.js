@@ -1,5 +1,5 @@
-const {DROITE, EXCAVATRICE} = require('../../../utils/feurst_consts')
-const {computePrecos} = require('./xl_db')
+const {DROITE, EXCAVATRICE} = require('../../../utils/consts')
+const {computePrecos} = require('../../../server/utils/feurst/xl_db')
 
 // excavatrice FKM 15
 const EX_FKM_15 = {type: EXCAVATRICE, mark: 'BOBCAT', model: 'E 08', power: 7.4, weight: 1, ground: 'GRAVIER', bladeThickness: 20, bladeShape: DROITE}

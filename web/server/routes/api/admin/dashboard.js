@@ -1,3 +1,14 @@
+const moment = require('moment')
+const {isValid} = require('date-fns')
+const express = require('express')
+const passport = require('passport')
+const mongoose = require('mongoose')
+const bcrypt = require('bcryptjs')
+const axios = require('axios')
+const Validator = require('validator')
+const lodash=require('lodash')
+const {StatusError} = require('../../../utils/errors')
+const {is_development} = require('../../../../config/config')
 const Prestation = require('../../../models/Prestation')
 const Service = require('../../../models/Service')
 const Equipment = require('../../../models/Equipment')
@@ -5,7 +16,6 @@ const Category = require('../../../models/Category')
 const Job = require('../../../models/Job')
 const FilterPresentation = require('../../../models/FilterPresentation')
 const ServiceUser = require('../../../models/ServiceUser')
-const moment = require('moment')
 const {BOOK_STATUS} = require('../../../../utils/consts')
 const {mangoApi} = require('../../../utils/mangopay')
 const Review = require('../../../models/Review')
@@ -15,7 +25,6 @@ const Company = require('../../../models/Company')
 const UIConfiguration = require('../../../models/UIConfiguration')
 const Booking = require('../../../models/Booking')
 const {IMAGE_FILTER, createDiskMulter} = require('../../../utils/filesystem')
-const {isValid} = require('date-fns')
 const User = require('../../../models/User')
 const Billing = require('../../../models/Billing')
 const {getRegisterCode}=require('../../../utils/register')
@@ -23,15 +32,12 @@ const {sendRegisterInvitation}=require('../../../utils/mailing')
 const {EDIT_PROFIL}=require('../../../../utils/i18n')
 const {hasRefs}=require('../../../utils/database')
 const {getIdentifiers, getKeys, getQueries}=require('../../../utils/i18n_extraction')
-const express = require('express')
 
 const router = express.Router()
-const passport = require('passport')
-const mongoose = require('mongoose')
-const bcrypt = require('bcryptjs')
 const crypto = require('crypto')
 
 const validateBillingInput = require('../../../validation/billing')
+const validateFeurstRegister = require('../../../validation/feurstRegister')
 const {validateCompanyProfile} = require('../../../validation/simpleRegister')
 const validatePrestationInput = require('../../../validation/prestation')
 const validateRegisterAdminInput = require('../../../validation/registerAdmin')
@@ -41,13 +47,10 @@ const {addIdIfRequired} = require('../../../utils/mangopay')
 const {normalize} = require('../../../../utils/text')
 const {counterArray} = require('../../../../utils/converters')
 const {ADMIN} = require('../../../../utils/consts')
-const axios = require('axios')
 const {computeUrl}=require('../../../../config/config')
 const {get_token, send_cookie, get_logged_id}=require('../../../utils/serverContext')
 const {createUIConfiguration} = require('../../../utils/ui_generation')
 const {logEvent}=require('../../../utils/events')
-const Validator = require('validator')
-const lodash=require('lodash')
 
 // Upload multers
 // CATEGORY
@@ -146,8 +149,8 @@ router.put('/billing/all/:id', passport.authenticate('admin', {session: false}),
 // @Route GET /myAlfred/api/admin/users/all
 // List all users
 router.get('/users/all', passport.authenticate('admin', {session: false}), (req, res) => {
-  User.find({}, 'firstname name email is_alfred is_admin id_mangopay mangopay_provider_id creation_date birthday billing_address phone comment hidden')
-    .populate({path: 'shop', select: 'creation_date'})
+  User.find({}, 'firstname name email is_alfred is_admin id_mangopay mangopay_provider_id creation_date birthday billing_address phone comment hidden roles')
+    .populate({path: 'shop', select: 'creation_date', strictPopulate: false})
     .sort({creation_date: -1})
     .then(users => {
       res.json(users)
@@ -173,11 +176,10 @@ router.put('/users/:user_id', passport.authenticate('admin', {session: false}), 
 
 // @Route GET /myAlfred/api/admin/serviceusers/all
 // List all serviuceusers
-router.get('/serviceusers/all', passport.authenticate('jwt', {session: false}), (req, res) => {
+ServiceUser && router.get('/serviceusers/all', passport.authenticate('jwt', {session: false}), (req, res) => {
   ServiceUser.find({}, '_id perimeter location service_address.zip_code service_address.city travel_tax')
     .populate({path: 'service', select: 'label category picture', populate: {path: 'category', select: 'label'}})
-  // .populate('service.category', 'label')
-    .populate({path: 'user', select: 'email shop', populate: {path: 'shop', select: 'is_professional'}})
+    .populate({path: 'user', select: 'email shop', populate: {path: 'shop', select: 'is_professional', strictPopulate: false}})
     .then(services => {
       res.json(services)
     })
@@ -204,7 +206,7 @@ router.get('/users/all_light', passport.authenticate('admin', {session: false}),
 // @Route GET /myAlfred/api/admin/serviceUsersMap
 // View all service per user for map view (light)
 // @Access private
-router.get('/serviceUsersMap', passport.authenticate('admin', {session: false}), (req, res) => {
+ServiceUser && router.get('/serviceUsersMap', passport.authenticate('admin', {session: false}), (req, res) => {
 
   ServiceUser.find({}, '_id service_address.gps')
     // .populate('user','-id_card')
@@ -229,7 +231,7 @@ router.post('/loginAs', passport.authenticate('admin', {session: false}), (req, 
 
   // Find user by email
   User.findOne({email})
-    .populate('shop', 'is_particular')
+    .populate({path: 'shop', select: 'is_particular', strictPopulate: false})
     .then(user => {
       // Check for user
       if (!user) {
@@ -722,7 +724,7 @@ router.put('/job/all/:id', passport.authenticate('admin', {session: false}), (re
 // @Route POST /myAlfred/api/admin/category/all
 // Add category for prestation
 // @Access private
-router.post('/category/all', uploadCat.single('picture'), passport.authenticate('admin', {session: false}), (req, res) => {
+Category && router.post('/category/all', uploadCat.single('picture'), passport.authenticate('admin', {session: false}), (req, res) => {
   const {errors, isValid} = validateCategoryInput(req.body)
   if (!isValid) {
     return res.status(400).json(errors)
@@ -751,7 +753,7 @@ router.post('/category/all', uploadCat.single('picture'), passport.authenticate(
 // @Route POST /myAlfred/api/admin/category/editPicture/:id
 // Edit the picture of a category
 // @Access private
-router.put('/category/editPicture/:id', uploadCat.fields([
+Category && router.put('/category/editPicture/:id', uploadCat.fields([
   {name: 'particular_picture', maxCount: 1},
   {name: 'professional_picture', maxCount: 1}]),
 passport.authenticate('admin', {session: false}), (req, res) => {
@@ -772,7 +774,7 @@ passport.authenticate('admin', {session: false}), (req, res) => {
 // @Route GET /myAlfred/api/admin/category/all
 // View all categories
 // @Access private
-router.get('/category/all', passport.authenticate('admin', {session: false}), (req, res) => {
+Category && router.get('/category/all', passport.authenticate('admin', {session: false}), (req, res) => {
   Category.find()
     .sort({'label': 1})
     .then(category => {
@@ -793,7 +795,7 @@ router.get('/category/all', passport.authenticate('admin', {session: false}), (r
 // @Route GET /myAlfred/api/admin/category/all/:id
 // View one category
 // @Access private
-router.get('/category/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
+Category && router.get('/category/all/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   Category.findById(req.params.id)
     .then(category => {
       if (!category) {
@@ -808,7 +810,7 @@ router.get('/category/all/:id', passport.authenticate('admin', {session: false})
 // @Route DELETE /myAlfred/api/admin/category/all/:id
 // Delete one category
 // @Access private
-router.delete('/category/:id', passport.authenticate('admin', {session: false}), (req, res) => {
+Category && router.delete('/category/:id', passport.authenticate('admin', {session: false}), (req, res) => {
   Promise.all(['Service.category', 'Prestation.category'].map(f => hasRefs(req, f, req.params.id)))
     .then(refs => {
       if (refs.some(t => t)) {
@@ -823,7 +825,7 @@ router.delete('/category/:id', passport.authenticate('admin', {session: false}),
 // @Route PUT /myAlfred/api/admin/category/all/:id
 // Update a category
 // @Access private
-router.put('/category/all/:id?', passport.authenticate('admin', {session: false}), (req, res) => {
+Category && router.put('/category/all/:id?', passport.authenticate('admin', {session: false}), (req, res) => {
 
   let attributes={
     particular_label: req.body.particular_label,
@@ -1482,7 +1484,18 @@ router.post('/kyc_validate/:alfred_id', passport.authenticate('admin', {session:
 
 })
 
-router.get('/context', passport.authenticate('admin', {session: false}), (req, res) => {
+router.delete('/companies/:id', passport.authenticate('admin', {session: false}), (req, res) => {
+  Company.findByIdAndRemove(req.params.id)
+    .then(() => {
+      res.json()
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json(err)
+    })
+})
+
+router.get('/context', passport.authenticate('jwt', {session: false}), (req, res) => {
   res.json(get_token(req))
 })
 
@@ -1660,6 +1673,37 @@ router.post('/register_invitation', passport.authenticate('admin', {session: fal
     .catch(err => {
       console.error(err)
       res.status(400).json(err)
+    })
+})
+
+router.post('/feurst_register', passport.authenticate('jwt', {session: false}), (req, res, next) => {
+  const {firstname, name, email, role, company}=req.body
+  const {errors, isValid}=validateFeurstRegister(req.body)
+  if (!isValid) {
+    return res.status(400).json(errors)
+  }
+
+  let currUser=null
+  User.findOne({email: new RegExp(email, 'i')})
+    .then(user => {
+      if (user) {
+        throw new StatusError('Un compte avec cet email existe déjà', 409)
+      }
+      return company ? Company.findOneAndUpdate({name: new RegExp(company, 'i')}, {name: company}, {upsert: true, new: true}) : Promise.resolve(req.user.company)
+    })
+    .then(company => {
+      return User.create({firstname: firstname, name: name, email: email, roles: role, company: company})
+    })
+    .then(user => {
+      currUser=user
+      return axios.post(new URL('/myAlfred/api/users/forgotPassword', computeUrl(req)).toString(), {email: user.email})
+    })
+    .then(() => {
+      res.json(currUser)
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(err.status||500).json(err.message)
     })
 })
 

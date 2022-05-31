@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
   primaryBackground: {
     backgroundColor: theme.palette.primary.main,
   },
@@ -6,4 +6,4 @@ const style=theme => ({
     backgroundColor: theme.palette.secondary.main,
   },
 })
-export default style
+module.exports=Style

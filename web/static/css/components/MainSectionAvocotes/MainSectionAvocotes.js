@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
   mainContainer: {
     margin: 0,
     width: '100%',
@@ -47,4 +47,4 @@ const style=theme => ({
     justifyContent: 'center',
   },
 })
-export default style
+module.exports=Style

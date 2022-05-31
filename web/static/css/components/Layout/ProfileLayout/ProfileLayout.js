@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
   profilLayoutMainContainer: {
     display: 'flex',
     justifyContent: 'center',
@@ -90,4 +90,4 @@ const style=theme => ({
     justifyContent: 'center',
   },
 })
-export default style
+module.exports=Style

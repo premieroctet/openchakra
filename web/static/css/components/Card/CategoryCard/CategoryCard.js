@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
   categoryCardMedia: {
     height: 180,
     width: 180,
@@ -20,4 +20,4 @@ const style=theme => ({
     textAlign: 'center',
   },
 })
-export default style
+module.exports=Style

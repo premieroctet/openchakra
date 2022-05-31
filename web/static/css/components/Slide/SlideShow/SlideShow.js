@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
   slideShowContainer:{
     display: 'flex',
     alignItems: 'center',
@@ -9,4 +9,4 @@ const style=theme => ({
     width: '100%'
   },
 })
-export default style
+module.exports=Style

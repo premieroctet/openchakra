@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
   searchSelectPadding: {
     paddingRight: '34px !important',
   },
@@ -40,4 +40,4 @@ const style=theme => ({
     color: theme.palette.error.main,
   },
 })
-export default style
+module.exports=Style

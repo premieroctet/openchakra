@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
   active: {
     backgroundColor: theme.palette.primary.main,
     textTransform: 'initial',
@@ -28,4 +28,4 @@ const style=theme => ({
   },
 
 })
-export default style
+module.exports=Style

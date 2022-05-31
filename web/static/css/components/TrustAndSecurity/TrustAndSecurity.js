@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
   trustAndSecurityMainContainer: {
     display: 'flex',
     justifyContent: 'space-around',
@@ -26,4 +26,4 @@ const style=theme => ({
 
   },
 })
-export default style
+module.exports=Style

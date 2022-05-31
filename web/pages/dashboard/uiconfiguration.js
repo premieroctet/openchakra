@@ -7,31 +7,32 @@ import {
   ListItemText,
   Tooltip,
 } from '@material-ui/core'
-import isEmpty from '../../server/validation/is-empty'
-import CustomButton from '../../components/CustomButton/CustomButton'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import {withStyles} from '@material-ui/core/styles'
-import DashboardLayout from '../../hoc/Layout/DashboardLayout'
 import Grid from '@material-ui/core/Grid'
-const {setAxiosAuthentication} = require('../../utils/authentication')
 import axios from 'axios'
 import lodash from 'lodash'
-import UIParameter from '../../components/Editor/UIParameter'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import Accordion from '@material-ui/core/Accordion'
 import AccordionSummary from '@material-ui/core/AccordionSummary'
 import AccordionDetails from '@material-ui/core/AccordionDetails'
 import TextField from '@material-ui/core/TextField'
 
-const {snackBarSuccess, snackBarError}=require('../../utils/notifications')
 import SaveIcon from '@material-ui/icons/Save'
 import Fab from '@material-ui/core/Fab'
 
+import InfoIcon from '@material-ui/icons/Info'
 import dashboardstyles from '../../static/css/components/CompanyDashboard/CompanyDashboard'
 
 
-import InfoIcon from '@material-ui/icons/Info'
+
+import UIParameter from '../../components/Editor/UIParameter'
+import DashboardLayout from '../../hoc/Layout/DashboardLayout'
+import CustomButton from '../../components/CustomButton/CustomButton'
+import isEmpty from '../../server/validation/is-empty'
+const {snackBarSuccess, snackBarError}=require('../../utils/notifications')
+const {setAxiosAuthentication} = require('../../utils/authentication')
 
 const styles = theme => ({
   ...dashboardstyles(theme),

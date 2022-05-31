@@ -82,4 +82,4 @@ const PrestationSchema = new Schema({
 
 PrestationSchema.index({label: 'text'})
 
-module.exports = Prestation = mongoose.model('prestation', PrestationSchema)
+module.exports = mongoose.model('prestation', PrestationSchema)

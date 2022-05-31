@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
   chip: {
     margin: 2,
   },
@@ -41,4 +41,4 @@ const style=theme => ({
     color: theme.palette.error.main,
   },
 })
-export default style
+module.exports=Style

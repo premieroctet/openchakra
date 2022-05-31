@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
   mainContainerAdressFactu: {
     [theme.breakpoints.down('sm')]: {
       marginBottom: 200,
@@ -42,4 +42,4 @@ const style=theme => ({
     backgroundColor: 'rgba(210, 210, 210, 0.5)',
   },
 })
-export default style
+module.exports=Style

@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
   layoutScrollMenu: {
     display: 'flex',
     justifyContent: 'center',
@@ -44,4 +44,4 @@ const style=theme => ({
     },
   },
 })
-export default style
+module.exports=Style

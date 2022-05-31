@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
   layoutMobileMessageHeader:{
     backgroundColor:'rgba(112,112,112,16%)'
   },
@@ -9,4 +9,4 @@ const style=theme => ({
     textTransform: 'initial'
   },
 })
-export default style
+module.exports=Style

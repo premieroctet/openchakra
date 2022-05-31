@@ -54,7 +54,7 @@ class HandleAddresses extends React.Component {
         this.setState({
           user: user,
           billing_address: user.billing_address,
-          service_address: user.service_address,
+          service_address: user?.service_address,
           new_label: '',
           edit_label: '',
           selected_address: null,
@@ -302,7 +302,7 @@ class HandleAddresses extends React.Component {
           </Grid>
         </Grid>
         <Grid container style={{marginTop: '5vh'}}>
-          {this.state.service_address.map((e, index) => (
+          {this.state?.service_address && this.state.service_address.map((e, index) => (
             <Grid key={index} style={{width: '100%'}}>
               <Grid>
                 <Grid container style={{display: 'flex', alignItems: 'center'}}>

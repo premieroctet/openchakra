@@ -4,9 +4,9 @@ import PropTypes from 'prop-types'
 import getCaretCoordinates from 'textarea-caret'
 import getInputSelection, {setCaretPosition} from 'get-input-selection'
 import './AutoCompleteTextField.module.css'
-const {getWordAt} = require('../../utils/text')
 let levenshtein = require('fast-levenshtein')
 const lodash=require('lodash')
+const {getWordAt} = require('../../utils/text')
 const KEY_UP = 38
 const KEY_DOWN = 40
 const KEY_RETURN = 13

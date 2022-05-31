@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
   scrollMenuIndicator:{
     backgroundColor: theme.palette.secondary.main
   },
@@ -22,4 +22,4 @@ const style=theme => ({
     }
   }
 })
-export default style
+module.exports=Style

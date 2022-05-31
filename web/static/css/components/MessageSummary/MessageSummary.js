@@ -1,7 +1,8 @@
-const style=theme =>({
+const Style=theme => ({
   cardPreviewLarge: {
     width: 80,
     height: 80,
   },
 })
-export default style
+
+module.exports=Style

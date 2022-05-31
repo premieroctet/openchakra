@@ -8,4 +8,4 @@ const BillingSchema = new Schema({
   },
 })
 
-module.exports = Billing = mongoose.model('billing', BillingSchema)
+module.exports = mongoose.model('billing', BillingSchema)

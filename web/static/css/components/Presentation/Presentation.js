@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
   textField:{
     width: '100%'
   },
@@ -21,4 +21,4 @@ const style=theme => ({
     }
   }
 })
-export default style
+module.exports=Style

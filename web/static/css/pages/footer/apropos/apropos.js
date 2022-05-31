@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
   containerApropos:{
     display: 'flex',
     justifyContent: 'center'
@@ -7,4 +7,4 @@ const style=theme => ({
     width: '100%'
   }
 })
-export default style
+module.exports=Style

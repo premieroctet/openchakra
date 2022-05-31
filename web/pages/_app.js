@@ -1,4 +1,3 @@
-import {getChatURL, mustDisplayChat} from '../config/config'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import 'react-datepicker/dist/react-datepicker.css'
 import 'react-input-range/lib/css/index.css'
@@ -9,23 +8,20 @@ import '../static/forminputs.css'
 import '../static/inputRange.css'
 import '../static/style1.css'
 import '../static/stylesfonts.css'
-import ReactHtmlParser from 'react-html-parser'
 import {MuiThemeProvider} from '@material-ui/core/styles'
 import App from 'next/app'
-import CookieConsent from 'react-cookie-consent'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Head from 'next/head'
 import JssProvider from 'react-jss/lib/JssProvider'
 import React from 'react'
 import Router from 'next/router'
-import {ACCEPT_COOKIE_NAME} from '../utils/consts'
-import {COOKIE_CONSENT, COMPANY_NAME} from '../utils/i18n'
-import {getLoggedUser} from '../utils/context'
-import {snackBarError} from '../utils/notifications'
-import getPageContext from '../lib/getPageContext'
 import {I18nextProvider, withTranslation} from 'react-i18next'
+import {getChatURL, mustDisplayChat} from '../config/config'
+import getPageContext from '../lib/getPageContext'
+import {snackBarError} from '../utils/notifications'
+import {getLoggedUser} from '../utils/context'
 import i18n from '../server/utils/i18n_init'
-
+import '../static/assets/css/custom.css'
 
 class MyApp extends App {
   constructor() {
@@ -87,23 +83,6 @@ class MyApp extends App {
           <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"/>
         </Head>
         {/* Wrap every page in Jss and Theme providers */}
-        {false &&
-            <CookieConsent // Désactivation cookie
-              buttonText={ReactHtmlParser(this.props.t('COOKIE_CONSENT.accept'))}
-              enableDeclineButton
-              declineButtonText={ReactHtmlParser(this.props.t('COOKIE_CONSENT.decline'))}
-              location="top"
-              cookieName={ACCEPT_COOKIE_NAME}
-              onDecline={this.onDeclineCookies}
-              containerClasses={'customcookiescontainer'}
-              contentClasses={'customcookiescontent'}
-              buttonClasses={'customcookiesaccept'}
-              declineButtonClasses={'customcookiesdecline'}
-            >
-              {ReactHtmlParser(this.props.t('COOKIE_CONSENT.message'))}
-            </CookieConsent>
-        }
-
         <JssProvider
           registry={this.pageContext.sheetsRegistry}
           generateClassName={this.pageContext.generateClassName}

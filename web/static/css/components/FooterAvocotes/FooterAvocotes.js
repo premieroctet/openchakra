@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
   mainContainer: {
     backgroundColor: '#525252',
     padding: '5%',
@@ -10,4 +10,4 @@ const style=theme => ({
     alignItems: 'center',
   },
 })
-export default style
+module.exports=Style

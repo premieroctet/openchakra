@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
   containerPaymentSuccess: {
     display: 'flex',
     justifyContent: 'center',
@@ -24,4 +24,4 @@ const style=theme => ({
     minHeight: '80vh',
   },
 })
-export default style
+module.exports=Style

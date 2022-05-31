@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
 
   filterMenuTitleContainer: {
     marginTop: '5%',
@@ -85,4 +85,4 @@ const style=theme => ({
     justifyContent: 'space-evenly',
   },
 })
-export default style
+module.exports=Style

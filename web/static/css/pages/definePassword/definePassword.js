@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
   card: {
     padding: '1.5rem 3rem',
     borderRadius: '35px',
@@ -30,4 +30,4 @@ const style=theme => ({
     }
   }
 })
-export default style
+module.exports=Style

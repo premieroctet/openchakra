@@ -1,8 +1,7 @@
 const MarketplacePayment = require('../plugins/payment/marketplacePayment')
-const PlatformPayment = require('../plugins/payment/platformPayment')
+// const PlatformPayment = require('../plugins/payment/platformPayment')
 const User=require('../models/User')
 const jwt = require('jsonwebtoken')
-const {ADMIN, MANAGER, EMPLOYEE} = require('../../utils/consts')
 const keys = require('../config/keys')
 
 const get_token = req => {
@@ -31,6 +30,14 @@ const getRole = req => {
   return null
 }
 
+const getRoles = req => {
+  const token = get_token(req)
+  if (token) {
+    return token.roles
+  }
+  return null
+}
+
 // Create JWT cookie with user credentials
 const send_cookie = (user, role, res, logged_as=null) => {
   const payload = {
@@ -41,6 +48,7 @@ const send_cookie = (user, role, res, logged_as=null) => {
     is_alfred: user.is_alfred,
     is_alfred_pro: user.shop && user.shop.length==1 && !user.shop[0].is_particular,
     role: role,
+    roles: user.roles,
     is_registered: user.is_registered,
     logged_as: logged_as,
   } // Create JWT payload
@@ -53,7 +61,7 @@ const send_cookie = (user, role, res, logged_as=null) => {
       httpOnly: false,
       secure: true,
       sameSite: true,
-    }).status('201').json()
+    }).status(201).json()
   })
 }
 
@@ -61,21 +69,25 @@ class RequestServerContext {
   constructor(request) {
     this.request=request
     this.user=null
-    const user_id=get_logged_id(request)
-    if (user_id) {
-      User.findById(user_id)
-        .then(user => {
-          this.user=user
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    }
     this.payment=new MarketplacePayment()
   }
 
-  getUser = () => {
-    return this.user
+  init = () => {
+    return new Promise((resolve, reject) => {
+      const user_id=get_logged_id(this.request)
+      if (!user_id) {
+        return resolve(null)
+      }
+      User.findById(user_id)
+        .then(user => {
+          this.user=user
+          return resolve(null)
+        })
+        .catch(err => {
+          console.error(err)
+          return reject(err)
+        })
+    })
   }
 
   isAdmin = () => {
@@ -91,9 +103,18 @@ class RequestServerContext {
 
 
 const serverContextFromRequest = req => {
-  return new RequestServerContext(req)
+  return new Promise((resolve, reject) => {
+    ctx=new RequestServerContext(req)
+    ctx.init()
+      .then(() => {
+        resolve(ctx)
+      })
+      .catch(err => {
+        reject(err)
+      })
+  })
 }
 
-module.exports = {get_logged_id, getRole,
+module.exports = {get_logged_id, getRole, getRoles,
   send_cookie, get_token, serverContextFromRequest,
 }

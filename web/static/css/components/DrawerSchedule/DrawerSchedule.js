@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
   drawerScheduleDrawerPaper: {
     width: '90%',
     borderRadius: 17,
@@ -42,4 +42,4 @@ const style=theme => ({
     fontWeight: 'bold',
   },
 })
-export default style
+module.exports=Style

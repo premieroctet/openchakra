@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
   infoBarMainStyle: {
     backgroundColor: theme.palette.backgroundGrey.main,
     justifyContent: 'center',
@@ -10,20 +10,20 @@ const style=theme => ({
     display: 'flex',
     [theme.breakpoints.down('md')]: {
       flexDirection: 'column',
-      textAlign: 'center'
-    }
+      textAlign: 'center',
+    },
   },
   infoBarColorText: {
     color: theme.palette.lightBlack.main,
     fontSize: theme.typography.infoBar.fontSize,
     lineHeight: theme.typography.infoBar.lineHeight,
     fontFamily: theme.typography.infoBar.fontFamily,
-    margin: 0
+    margin: 0,
   },
   infoBarPicsContainer: {
     width: 15,
     height: 15,
-    marginRight: 5
+    marginRight: 5,
   },
   showmoreContainer: {
     marginLeft: 5,
@@ -33,7 +33,8 @@ const style=theme => ({
     fontSize: theme.typography.infoBar.fontSize,
     lineHeight: theme.typography.infoBar.lineHeight,
     fontFamily: theme.typography.infoBar.fontFamily,
-    fontWeight: theme.typography.infoBar.fontWeight
+    fontWeight: theme.typography.infoBar.fontWeight,
   },
 })
-export default style
+
+module.exports=Style

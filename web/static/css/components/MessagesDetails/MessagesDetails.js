@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
   current: {
     display: 'flex',
     justifyContent: 'flex-end',
@@ -49,4 +49,4 @@ const style=theme => ({
     alignItems: 'flex-start',
   },
 })
-export default style
+module.exports=Style

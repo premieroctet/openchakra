@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
   policySizeTitle: {
     fontSize: 24,
     lineHeight: '1.25em',
@@ -21,4 +21,4 @@ const style=theme => ({
     },
   },
 })
-export default style
+module.exports=Style

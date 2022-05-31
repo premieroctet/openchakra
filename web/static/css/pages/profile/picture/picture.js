@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
   pictureContainer:{
     [theme.breakpoints.down('xs')]:{
       display: 'flex',
@@ -38,4 +38,4 @@ const style=theme => ({
 
   }
 })
-export default style
+module.exports=Style

@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
   howItWorksMainStyle: {
     padding: theme.padding.homePage.section.padding,
   },
@@ -37,4 +37,4 @@ const style=theme => ({
     fontFamily: theme.typography.text.fontFamily,
   },
 })
-export default style
+module.exports=Style

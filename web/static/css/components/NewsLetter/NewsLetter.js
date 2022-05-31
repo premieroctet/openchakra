@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
   newsLetterMainStyle: {
     paddingLeft: theme.padding.homePage.section.padding,
     paddingRight: theme.padding.homePage.section.padding,
@@ -86,4 +86,4 @@ const style=theme => ({
     color: theme.palette.grey[500],
   },
 })
-export default style
+module.exports=Style

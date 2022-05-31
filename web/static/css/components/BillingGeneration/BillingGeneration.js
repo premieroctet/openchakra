@@ -4,7 +4,7 @@ const COLDESCRIPTION_WIDTH = 40
 const COLN_WIDTH = (100 - COLDESCRIPTION_WIDTH) / 3
 const BACKGROUND_COLOR = '#CCDCFB';
 
-const style=theme => ({
+const Style = theme => ({
   body: {
     padding: 50,
     fontFamily: 'SourceSansPro',
@@ -121,5 +121,4 @@ const style=theme => ({
     textAlign: 'right',
     backgroundColor: BACKGROUND_COLOR
   }
-});
-export default style
+});module.exports=Style

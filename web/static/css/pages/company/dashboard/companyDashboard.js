@@ -1,6 +1,6 @@
 const drawerWidth = 240;
 
-const style=theme =>({
+export default theme =>({
   root: {
     display: 'flex',
     backgroundColor: 'rgba(249,249,249, 1)',
@@ -98,4 +98,4 @@ const style=theme =>({
     height: '100%'
   }
 })
-export default style
+module.exports=Style

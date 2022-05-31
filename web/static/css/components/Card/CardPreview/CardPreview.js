@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
   cardPreviewContainerAvatar: {
     position: 'relative',
     backgroundColor: 'white',
@@ -60,4 +60,4 @@ const style=theme => ({
     padding: 0,
   },
 })
-export default style
+module.exports=Style

@@ -1,24 +1,23 @@
+import React from 'react'
+import parsePhoneNumber from 'libphonenumber-js'
+import {Styles, MyGlobalStyle} from '../components/configurator/Styles'
+import i18n from '../server/utils/i18n_init'
+const {Button} = require('@material-ui/core')
+const axios = require('axios')
+const {withTranslation} = require('react-i18next')
+const lodash = require('lodash')
 const {STEPS} = require('../components/Feurst/configuratorSteps')
 const {
   BLADE_SHAPES,
   FIX_TYPES,
   PELLE_BUTTE,
-} = require('../utils/feurst_consts')
-const {Button} = require('@material-ui/core')
-const document = require('./_document')
-import React from 'react'
+} = require('../utils/feurst/consts')
 
 const {is_development} = require('../config/config')
-const axios = require('axios')
 const {setAxiosAuthentication} = require('../utils/authentication')
-const {withTranslation} = require('react-i18next')
 const ProgressBar = require('../components/ProgressBar/ProgressBar')
-const lodash = require('lodash')
 const {snackBarError, snackBarSuccess} = require('../utils/notifications')
-import {Styles, MyGlobalStyle} from '../components/configurator/Styles'
 const validateFeurstProspect=require('../server/validation/feurstProspect')
-import parsePhoneNumber from 'libphonenumber-js'
-import i18n from '../server/utils/i18n_init'
 
 export const feurstImgPath = './static/assets/img/feurst'
 

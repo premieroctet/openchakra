@@ -1,6 +1,6 @@
 const drawerWidth = 240
 
-const style=theme => ({
+const Style = theme => ({
   root: {
     display: 'flex',
   },
@@ -36,4 +36,4 @@ const style=theme => ({
     padding: theme.spacing(3),
   },
 })
-export default style
+module.exports=Style

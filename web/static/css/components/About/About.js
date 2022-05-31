@@ -1,4 +1,4 @@
-const style=theme => ({
+const Style = theme => ({
   skillsContainer: {
     display: 'flex',
     flexDirection: 'row',
@@ -74,4 +74,4 @@ const style=theme => ({
   }
 
 })
-export default style
+module.exports=Style

@@ -1,8 +1,8 @@
-const style=theme => ({
+const Style = theme => ({
   paymentPicsContainer:{
     [theme.breakpoints.only('xs')]:{
       display: 'none'
     }
   }
 })
-export default style
+module.exports=Style
