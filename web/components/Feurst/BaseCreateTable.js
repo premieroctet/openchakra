@@ -1,10 +1,8 @@
 import React, {useState, useEffect} from 'react'
-import useLocalStorageState from 'use-local-storage-state'
 import dynamic from 'next/dynamic'
 import {useRouter} from 'next/router'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import TextField from '@material-ui/core/TextField'
-
 import axios from 'axios'
 import {withTranslation} from 'react-i18next'
 import styled from 'styled-components'
@@ -101,7 +99,7 @@ const BaseCreateTable = ({
 
   const [language, setLanguage] = useState('fr')
   const [orderCompany, setOrderCompany] = useState(null)
-  const [orderid, setOrderid, {removeItem}] = useLocalStorageState(`${storage}-${dataToken?.id}`, {ssr: true, defaultValue: id})
+  const [orderid, setOrderid] = useState(id || null)
   const [isOpenDialog, setIsOpenDialog] = useState(false)
   const [isOpenDialogConvert, setIsOpenDialogConvert] = useState(false)
   const [companies, setCompanies] = useState([])
@@ -139,7 +137,6 @@ const BaseCreateTable = ({
 
   const changeCompany = e => {
     setOrderCompany(null)
-    removeItem()
   }
 
   const submitOrder = async({endpoint, orderid}) => {
@@ -148,7 +145,6 @@ const BaseCreateTable = ({
       .then(() => {
         snackBarSuccess('Enregistré')
         router.push(`${BASEPATH_EDI}/${endpoint}`)
-        removeItem()
       })
       .catch(error => {
         if (error.info) {
@@ -169,7 +165,6 @@ const BaseCreateTable = ({
         if(res.data) {
           const finalDestination = ENDPOINTS[accessRights.model==ORDER ? QUOTATION : ORDER]
           router.push(`${BASEPATH_EDI}/${finalDestination}`)
-          removeItem()
           snackBarSuccess('Conversion réussie')
         }
         else {
@@ -204,12 +199,12 @@ const BaseCreateTable = ({
               setOrderCompany(data.company)
             }
             else {
-              removeItem()
+              // removeItem()
             }
           })
       }
     }
-  }, [endpoint, getContentFrom, id, orderid, removeItem, setOrderid])
+  }, [endpoint, getContentFrom, id, orderid, setOrderid])
 
 
   useEffect(() => {
@@ -217,11 +212,14 @@ const BaseCreateTable = ({
     if (isEmpty(orderid)) {
       if ((orderCompany !== null || !isFeurstSales) && !canValidate) {
         createOrderId({endpoint, company: orderCompany})
-          .then(data => setOrderid(data._id))
+          .then(data => {
+            setOrderid(data._id)
+            router.push(`${BASEPATH_EDI}/${endpoint}/view/${data._id}`)
+          })
           .catch(e => console.error('cant create order', e))
       }
     }
-  }, [canValidate, createOrderId, endpoint, orderid, orderCompany, setOrderid, isFeurstSales])
+  }, [canValidate, createOrderId, endpoint, orderid, orderCompany, setOrderid, isFeurstSales, router])
 
   /* Feurst ? => Fetch companies */
   useEffect(() => {

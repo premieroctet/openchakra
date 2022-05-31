@@ -2,25 +2,11 @@ import React from 'react'
 import {useRouter} from 'next/router'
 import Link from 'next/link'
 import {StyledTabs} from '../../styles/feurst/StyledComponents'
-import {CREATE_FOR, HANDLE} from '../../utils/feurst/consts'
-import {CREATE, ORDER, QUOTATION, VIEW, PRODUCT, COMPANY, SHIPRATE, ACCOUNT, BASEPATH_EDI, PRICELIST} from '../../utils/consts'
+import {HANDLE} from '../../utils/feurst/consts'
+import {ORDER, QUOTATION, VIEW, PRODUCT, COMPANY, SHIPRATE, ACCOUNT, BASEPATH_EDI, PRICELIST} from '../../utils/consts'
 
 
 const tabsContent = [
-  {
-    title: 'Créer une commande',
-    url: `${BASEPATH_EDI}/orders/create`,
-    model: ORDER,
-    action: CREATE,
-    visible: [ORDER],
-  },
-  {
-    title: 'Créer une commande pour',
-    url: `${BASEPATH_EDI}/orders/create`,
-    model: ORDER,
-    action: CREATE_FOR,
-    visible: [ORDER],
-  },
   {
     title: 'Traitement des commandes',
     url: `${BASEPATH_EDI}/orders/handle`,
@@ -34,20 +20,6 @@ const tabsContent = [
     model: ORDER,
     action: VIEW,
     visible: [ORDER],
-  },
-  {
-    title: 'Créer un devis',
-    url: `${BASEPATH_EDI}/quotations/create`,
-    model: QUOTATION,
-    action: CREATE,
-    visible: [QUOTATION],
-  },
-  {
-    title: 'Créer un devis pour',
-    url: `${BASEPATH_EDI}/quotations/create`,
-    model: QUOTATION,
-    action: CREATE_FOR,
-    visible: [QUOTATION],
   },
   {
     title: 'Mes devis',
