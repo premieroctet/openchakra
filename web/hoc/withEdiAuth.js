@@ -72,8 +72,10 @@ const withEdiAuth = (Component = null, options = {}) => {
           .then(actions => this.setState({loading: false, user: isLoggedUser, actions}))
           .catch(e => {
             console.error(e)
-            Router.push(options.pathAfterFailure || `${BASEPATH_EDI}/login`)
           })
+      }
+      else {
+        Router.push(options.pathAfterFailure || `${BASEPATH_EDI}/login`)
       }
 
       if (is_development()) {
