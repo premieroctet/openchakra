@@ -2,41 +2,44 @@ import React from 'react'
 import styled from 'styled-components'
 
 
-const ImportWithWarnings = ({created, warnings, errors, total}) => (<>
-  <p>Import partiel&nbsp;: {created} sur {total} produits ajoutés</p>
-  <div>
+const ImportWithWarnings = ({created, warnings, errors, total}) => {
+  
+  const sentence = created
+    ? `Import partiel : ${created} sur ${total} ${total > 1 ? 'produits ajoutés' : 'produit ajouté'}.`
+    : `Import non effectué.`
+  
+  return (<>
+    <p>{sentence}</p>
+    <div>
   Erreurs&nbsp;:
-    <ul>
-      {errors.map((warn, i) => <li key={`warn${i}`}>{warn}</li>)}
-    </ul>
-
-  </div>
-</>
-)
+      <ul>
+        {errors.map((error, i) => <li key={`error${i}`}>{error}</li>)}
+        {warnings.map((warn, i) => <li key={`warn${i}`}>{warn}</li>)}
+      </ul>
+    </div>
+  </>
+  )
+}
 
 const ImportOK = ({created, total}) => (
-  <p>Import réussi&nbsp;: {created} sur {total} produits ajoutés</p>
+  <p>Import réussi&nbsp;: {created} {total > 1 ? 'produits ajoutés' : 'produit ajouté'}.</p>
 )
-
 
 const ImportResult = ({result}) => {
 
-  console.log(result)
-
   const {created, warnings, errors, total} = result
-  const warnQuantity = errors?.length
+  const warnQuantity = errors?.length || warnings?.length
 
   return (
     <StyledImportResult className={warnQuantity ? 'notok' : 'ok'}>
       {warnQuantity ?
-        <ImportWithWarnings created={created} warnings={warnings} errors={errors}/>
+        <ImportWithWarnings created={created} total={total} warnings={warnings} errors={errors}/>
         : <ImportOK created={created} total={total} />}
     </StyledImportResult>
   )
 }
 
 const StyledImportResult = styled.div`
-  
   
   padding-block: var(--spc-1);
   padding-inline: var(--spc-12);

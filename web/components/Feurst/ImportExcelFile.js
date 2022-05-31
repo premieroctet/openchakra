@@ -24,7 +24,7 @@ import ImportResult from './ImportResult'
 const PureDialog = dynamic(() => import('../Dialog//PureDialog'))
 
 
-const ImportExcelFile = ({importURL, templateURL, caption}) => {
+const ImportExcelFile = ({importURL, templateURL, caption, endpoint, orderid, importFile}) => {
 
   const [isOpenDialog, setIsOpenDialog] = useState(false)
   const [file, setFile]=useState(null)
@@ -117,17 +117,16 @@ const ImportExcelFile = ({importURL, templateURL, caption}) => {
     setFile(f)
   }
 
-  const submitData = () => {
+  const submitData = async({endpoint, orderid, importFile}) => {
+
     setImportResult(null)
     const data = new FormData()
     data.append('buffer', file)
     data.append('options', JSON.stringify(getOptions()))
-    setAxiosAuthentication()
-    axios.post(importURL, data)
+    await importFile({endpoint, orderid, importURL, data})
       .then(result => {
-        console.log(JSON.stringify(result))
         setIsOpenDialog(false)
-        setImportResult(result.data)
+        setImportResult(result)
       })
       .catch(err => {
         snackBarError(err)
@@ -200,7 +199,7 @@ const ImportExcelFile = ({importURL, templateURL, caption}) => {
         </>}
       
       <div className='importbutton flex'>
-        <PleasantButton size={'full-width'} rounded={'full'} onClick={submitData}>Importer</PleasantButton>
+        <PleasantButton size={'full-width'} rounded={'full'} onClick={() => submitData({endpoint, orderid, importFile})}>Importer</PleasantButton>
       </div>
     </ImportDialog>
     {templateURL &&
