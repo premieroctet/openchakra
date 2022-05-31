@@ -80,7 +80,6 @@ isFeurstUser = user => {
 }
 
 const getStatusLabel = (data, model, user) => {
-  console.log(model, JSON.stringify(data?.status))
   const isCustomer = !isFeurstUser(user)
   const canHandle = isActionAllowed(user.roles, model, HANDLE)
   const LABELS = {

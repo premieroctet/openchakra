@@ -1022,35 +1022,24 @@ router.put('/profile/editProProfile', passport.authenticate('jwt', {session: fal
 // Edit password
 // @Access private
 router.put('/profile/editPassword', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const password = req.body.password
   const newPassword = req.body.newPassword
-  const admin = req.user.is_admin
 
   if (!newPassword.match('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})')) {
     return res.status(400).json({error: 'Le nouveau mot de passe doit contenir au moins :\n\t- 8 caractères\n\t- 1 minuscule\n\t- 1 majuscule\n\t- 1 chiffre'})
   }
   User.findById(req.user.id)
     .then(user => {
-      const promise = admin ? Promise.resolve(true) : Promise.resolve(bcrypt.compare(password, user.password))
-      promise
-        .then(isMatch => {
-          if (isMatch) {
-            bcrypt.genSalt(10, (err, salt) => {
-              bcrypt.hash(newPassword, salt, (err, hash) => {
-                if (err) {
-                  throw err
-                }
-                user.password = hash
-                user.save()
-                  .then(user => res.json({success: 'Mot de passe mis à jour'}))
-                  .catch(err => console.error(err))
-              })
-            })
+      bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(newPassword, salt, (err, hash) => {
+          if (err) {
+            throw err
           }
-          else {
-            return res.status(400).json({error: 'Mot de passe incorrect', wrongPassword: true})
-          }
+          user.password = hash
+          user.save()
+            .then(user => res.json({success: 'Mot de passe mis à jour'}))
+            .catch(err => console.error(err))
         })
+      })
     })
 
 })
