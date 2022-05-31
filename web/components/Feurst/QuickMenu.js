@@ -1,12 +1,15 @@
+
+
 import React from 'react'
 import {useRouter} from 'next/router'
 import Link from 'next/link'
 import styled from 'styled-components'
-import {getLoggedUser} from '../../utils/context'
 import {screen} from '../../../web/styles/screenWidths'
 import {CREATE, ORDER, QUOTATION, BASEPATH_EDI, PRODUCT, SHIPRATE, ACCOUNT} from '../../utils/consts'
-import {FEURST_IMG_PATH} from '../../utils/feurst/consts'
 import ContactUs from './ContactUs'
+const {FEURST_IMG_PATH} = require('../../utils/feurst/consts')
+const {UPDATE} = require('../../utils/feurst/consts')
+const {getLoggedUser} = require('../../utils/context')
 
 
 const QuickMenuStyled = styled.div`
@@ -21,7 +24,7 @@ const QuickMenuStyled = styled.div`
     flex-direction: column;
     row-gap: var(--spc-1);
     align-items: center;
-    
+
     &.current::after, &::after {
       opacity: 0;
       transition: transform var(--delayIn) ease-out;
@@ -37,7 +40,7 @@ const QuickMenuStyled = styled.div`
       transform: translateY(0);
     }
 
-   
+
     @media (${screen.lg}) {
       font-size: var(--text-base);
     }
@@ -48,7 +51,7 @@ const QuickMenuStyled = styled.div`
     font-weight: var(--font-bold);
     white-space: nowrap;
     color: var(--black) !important;
-    
+
     @media (${screen.lg}) {
       font-size: var(--text-base);
     }
@@ -73,6 +76,16 @@ const MENUS=[
   },
 ]
 
+
+if (getLoggedUser()) {
+  const PROFILE_MENU={
+    enabled: rights => rights.isActionAllowed(ACCOUNT, UPDATE),
+    label: `Bienvenue ${getLoggedUser().firstname}`,
+    url: `${BASEPATH_EDI}/profile`,
+  }
+
+  MENUS.push(PROFILE_MENU)
+}
 const LogOut = () => {
 
   return (getLoggedUser() ? (
@@ -83,7 +96,7 @@ const LogOut = () => {
 
 
 const QuickMenu = ({accessRights}) => {
-  
+
   function containsPartUrl(possibleurl, currentpath) {
     const regEx = new RegExp(possibleurl)
     return regEx.test(currentpath)
@@ -91,9 +104,6 @@ const QuickMenu = ({accessRights}) => {
 
   const router = useRouter()
 
-  const loggedUser = getLoggedUser()
-  const firstname = loggedUser?.firstname || ''
-  
   const menus=MENUS.filter(m => accessRights && m.enabled(accessRights))
 
   if (!menus.length) {
@@ -106,8 +116,7 @@ const QuickMenu = ({accessRights}) => {
         {menus.map((menu, i) => (
           <Link key={`menu${i}`} href={menu.url}><a className={containsPartUrl(menu.url, router.pathname) ? 'current' : null}>{menu.label}</a></Link>
         ))}
-        
-        {getLoggedUser() ? <><Link href={`${BASEPATH_EDI}/profile`}>{`Bienvenue ${firstname}`}</Link><LogOut /></> : null}
+        {getLoggedUser() && <LogOut />}
       </QuickMenuStyled>
     </>
   )

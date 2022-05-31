@@ -6,6 +6,7 @@ import withEdiAuth from '../../../hoc/withEdiAuth'
 import RenewPassword from '../../../components/Password/RenewPassword'
 import {PleasantButton} from '../../../components/Feurst/Button'
 import {client} from '../../../utils/client'
+const {ACCOUNT, UPDATE} = require('../../../utils/feurst/consts')
 
 const Profile = () => {
 
@@ -31,7 +32,7 @@ const Profile = () => {
         <li>Mon compte</li>
       </ul>
     </SideBar>
-       
+
     <Content>
       <h2>Nom</h2>
       {loggedUser?.name} {loggedUser?.firstname}
@@ -69,13 +70,13 @@ const SideBar = styled.aside`
   border-bottom-right-radius: var(--rounded-2xl);
   box-shadow: 1px 0 2px 1px rgba(0, 0, 0, 0.2);
   width: calc(max-content - 1rem);
-  
+
   ul {
     list-style-type: none;
     margin-left: var(--spc-3);
     padding: 0;
   }
-    
+
   li {
     width: max-content;
     box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.2);
@@ -91,4 +92,4 @@ const Content = styled.div`
   margin-left: var(--spc-10);
 `
 
-export default withEdiAuth(Profile, {pathAfterFailure: `${BASEPATH_EDI}/login`})
+export default withEdiAuth(Profile, {model: ACCOUNT, action: UPDATE, pathAfterFailure: `${BASEPATH_EDI}/login`})

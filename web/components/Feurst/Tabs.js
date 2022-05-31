@@ -2,8 +2,7 @@ import React from 'react'
 import {useRouter} from 'next/router'
 import Link from 'next/link'
 import {StyledTabs} from '../../styles/feurst/StyledComponents'
-import {HANDLE} from '../../utils/feurst/consts'
-import {ORDER, QUOTATION, VIEW, PRODUCT, COMPANY, SHIPRATE, ACCOUNT, BASEPATH_EDI, PRICELIST} from '../../utils/consts'
+import {ORDER, QUOTATION, VIEW, PRODUCT, COMPANY, HANDLE, SHIPRATE, ACCOUNT, UPDATE, BASEPATH_EDI, PRICELIST} from '../../utils/consts'
 
 
 const tabsContent = [
@@ -69,6 +68,13 @@ const tabsContent = [
     model: SHIPRATE,
     action: VIEW,
     visible: [ACCOUNT, PRODUCT, SHIPRATE, PRICELIST],
+  },
+  {
+    title: 'Mon profil',
+    url: `${BASEPATH_EDI}/profile`,
+    model: ACCOUNT,
+    action: UPDATE,
+    visible: [ACCOUNT],
   },
 ]
 
