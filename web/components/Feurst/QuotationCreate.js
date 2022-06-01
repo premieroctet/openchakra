@@ -7,7 +7,12 @@ import {quotationColumns} from './tablestructures'
 const QuotationCreate = ({accessRights}) => {
 
   return (
-    <BaseCreateTable storage={'quotation'} endpoint={ENDPOINTS[QUOTATION]} columns={quotationColumns} wordingSection={'EDI.QUOTATION'} accessRights={accessRights}/>
+    <BaseCreateTable
+      endpoint={ENDPOINTS[QUOTATION]}
+      columns={quotationColumns}
+      wordingSection={'EDI.QUOTATION'}
+      accessRights={accessRights}
+    />
   )
 }
 

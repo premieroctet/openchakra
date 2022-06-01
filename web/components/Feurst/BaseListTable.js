@@ -8,10 +8,13 @@ import {
   BASEPATH_EDI,
 } from '../../utils/feurst/consts'
 import FeurstTable from '../../styles/feurst/FeurstTable'
+import {PleasantLink} from './Button'
 
 
 const BaseListTable = ({
+  t,
   accessRights,
+  createOrderId,
   endpoint,
   columns,
   refresh,
@@ -23,6 +26,7 @@ const BaseListTable = ({
   filtered,
   updateSeller,
   sellers,
+  wordingSection = null,
 }) => {
 
   const [language, setLanguage] = useState('fr')
@@ -44,7 +48,16 @@ const BaseListTable = ({
   
 
   return (<>
-    {canCreate && <Link href={`${BASEPATH_EDI}/${endpoint}/create`}>Créer</Link>}
+    {canCreate &&
+    <div className='mb-8'>
+      <Link href={`${BASEPATH_EDI}/${endpoint}/create`}>
+        <PleasantLink rounded={'full'} href={`${BASEPATH_EDI}/${endpoint}/create`}>
+          {t(`${wordingSection}.create`)}
+        </PleasantLink>
+      </Link>
+    </div>
+    }
+    
     <FeurstTable
       caption={caption}
       data={state.orders}

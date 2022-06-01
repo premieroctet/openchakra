@@ -10,6 +10,7 @@ const MyQuotations = ({accessRights}) => {
       endpoint='quotations'
       columns={quotationsColumns}
       accessRights={accessRights}
+      wordingSection={'EDI.QUOTATION'}
     />
   )
 }

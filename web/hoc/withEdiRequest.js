@@ -157,10 +157,6 @@ const withEdiRequest = (Component = null) => {
         })
         .catch(err => err)
     }
-    
-    sendQuotationToCustomer = async({endpoint, orderid}) => {
-      // HANDLED ?
-    }
 
 
     render() {
@@ -178,7 +174,6 @@ const withEdiRequest = (Component = null) => {
           updateShippingFees={this.updateShippingFees}
           validateAddress={this.validateAddress}
           revertToEdition={this.revertToEdition}
-          sendQuotationToCustomer={this.sendQuotationToCustomer}
           updateSeller={this.updateSeller}
           importFile={this.importFile}
           state={this.state}
