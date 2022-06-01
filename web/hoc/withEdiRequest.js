@@ -62,7 +62,15 @@ const withEdiRequest = (Component = null) => {
 
       return await client(`${API_PATH}/${endpoint}/${orderid}`, {method: 'DELETE'})
         .then(() => this.getList({endpoint}))
-        .catch(e => console.error(`Can't delete order`, e))
+        .catch(error => {
+          if (error.info) {
+            // Address is outside delivery zone
+            if (error.info.status === 403) {
+              snackBarError(error?.message)
+            }
+          }
+          console.error(`Can't delete order`, error)
+        })
     }
 
     handleValidation = async({endpoint, orderid, status}) => {

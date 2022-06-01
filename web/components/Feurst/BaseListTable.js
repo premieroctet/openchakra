@@ -5,6 +5,7 @@ import withEdiRequest from '../../hoc/withEdiRequest'
 import {
   CREATE,
   UPDATE,
+  DELETE,
   BASEPATH_EDI,
 } from '../../utils/feurst/consts'
 import FeurstTable from '../../styles/feurst/FeurstTable'
@@ -14,7 +15,6 @@ import {PleasantLink} from './Button'
 const BaseListTable = ({
   t,
   accessRights,
-  createOrderId,
   endpoint,
   columns,
   refresh,
@@ -33,6 +33,7 @@ const BaseListTable = ({
 
   const canUpdateSeller = accessRights.isActionAllowed(accessRights.getModel(), UPDATE)
   const canCreate = accessRights.isActionAllowed(accessRights.getModel(), CREATE) && wordingSection !== null
+  const canDelete = accessRights.isActionAllowed(accessRights.getModel(), DELETE)
 
   // Init language and order
   useEffect(() => {
@@ -44,7 +45,7 @@ const BaseListTable = ({
     getList({endpoint, filter})
   }, [endpoint, getList, filter, refresh])
 
-  const cols= columns({language, endpoint, deleteOrder, updateSeller: canUpdateSeller ? updateSeller : null, sellers})
+  const cols= columns({language, endpoint, deleteOrder: canDelete? deleteOrder:null, updateSeller: canUpdateSeller ? updateSeller : null, sellers})
   
 
   return (<>

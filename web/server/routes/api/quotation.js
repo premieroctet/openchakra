@@ -379,10 +379,10 @@ router.get('/:order_id', passport.authenticate('jwt', {session: false}), (req, r
 router.delete('/:order_id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, DELETE)) {
-    return res.status(401).json()
+    return res.status(403).json()
   }
 
-  MODEL.findOneAndDelete()
+  MODEL.findOneAndDelete({_id: req.params.order_id})
     .then(() => {
       return res.json()
     })
