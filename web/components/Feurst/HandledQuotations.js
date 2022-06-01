@@ -41,6 +41,7 @@ const HandledQuotations = ({accessRights}) => {
         filter={currentFilter}
         accessRights={accessRights}
         columns={handledQuotationsColumns}
+        wordingSection={'EDI.QUOTATION'}
       />
     </>
   )

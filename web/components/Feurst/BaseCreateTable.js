@@ -277,7 +277,6 @@ const BaseCreateTable = ({
 
       {isFeurstSales && !isView && <div className='flex'>
         <H2confirm>
-          {justCreated && <button onClick={changeCompany}><span>⊕</span> Nouveau devis</button>}
           <span>{state?.company?.name}</span>
         </H2confirm></div>}
 

@@ -32,7 +32,7 @@ const BaseListTable = ({
   const [language, setLanguage] = useState('fr')
 
   const canUpdateSeller = accessRights.isActionAllowed(accessRights.getModel(), UPDATE)
-  const canCreate = accessRights.isActionAllowed(accessRights.getModel(), CREATE)
+  const canCreate = accessRights.isActionAllowed(accessRights.getModel(), CREATE) && wordingSection !== null
 
   // Init language and order
   useEffect(() => {
