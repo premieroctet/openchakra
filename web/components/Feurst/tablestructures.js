@@ -126,55 +126,64 @@ const orderColumns = ({endpoint, orderid, language, canUpdateQuantity, deletePro
   return deleteProduct ? [...orderColumnsBase, deleteItem] : orderColumnsBase
 }
 
-const ordersColumns = ({endpoint, language, deleteOrder}) => [
-  {
-    label: 'Date commande',
-    attribute: 'creation_date',
-    Cell: ({cell: {value}}) => formatDate(new Date(value), language),
-    sortType: datetime,
-    Filter: DateRangeColumnFilter,
-    filter: 'dateBetween', /* Custom Filter Type */
-  },
-  {...companyName},
-  {
-    label: 'Référence',
-    attribute: 'reference',
-  },
-  {
-    label: 'Quantité',
-    attribute: 'total_quantity',
-  },
-  {
-    label: 'Poids total',
-    attribute: 'total_weight',
-    Cell: ({value}) => formatWeight(value, language),
-  },
-  {
-    label: 'Détails',
-    attribute: '_id',
-    Cell: ({value}) => (<Link href={`/edi/orders/view/${value}`}>voir</Link>),
-  },
-  {
-    label: 'Prix total',
-    attribute: 'total_amount',
-    Cell: ({value}) => localeMoneyFormat({lang: language, value}),
-  },
-  {
-    label: 'Statut',
-    attribute: v => { return v },
-    Cell: ({value}) => <OrderStatus status={value.status} label={value.status_label} />,
-  },
-  // {
-  //   label: 'Recommander',
-  //   id: 'product_delete',
-  //   attribute: 'product_delete',
-  //   Cell: ({cell: {row}}) => (
-  //     <ToTheBin onClick={() => {
-  //       deleteOrder({endpoint, orderid: row.original._id})
-  //     }}/>
-  //   ),
-  // },
-]
+const ordersColumns = ({endpoint, language, deleteOrder}) => {
+  
+  
+  const ordersColumnsBase = [
+    {
+      label: 'Date commande',
+      attribute: 'creation_date',
+      Cell: ({cell: {value}}) => formatDate(new Date(value), language),
+      sortType: datetime,
+      Filter: DateRangeColumnFilter,
+      filter: 'dateBetween', /* Custom Filter Type */
+    },
+    {...companyName},
+    {
+      label: 'Référence',
+      attribute: 'reference',
+    },
+    {
+      label: 'Quantité',
+      attribute: 'total_quantity',
+    },
+    {
+      label: 'Poids total',
+      attribute: 'total_weight',
+      Cell: ({value}) => formatWeight(value, language),
+    },
+    {
+      label: 'Détails',
+      attribute: '_id',
+      Cell: ({value}) => (<Link href={`/edi/orders/view/${value}`}>voir</Link>),
+    },
+    {
+      label: 'Prix total',
+      attribute: 'total_amount',
+      Cell: ({value}) => localeMoneyFormat({lang: language, value}),
+    },
+    {
+      label: 'Statut',
+      attribute: v => { return v },
+      Cell: ({value}) => <OrderStatus status={value.status} label={value.status_label} />,
+    },
+  ]
+
+  const deleteItem = {
+    label: '',
+    id: 'product_delete',
+    attribute: 'product_delete',
+    Cell: ({cell: {row}}) => (
+      <ToTheBin onClick={() => {
+        deleteOrder({endpoint, orderid: row.original._id})
+      }}/>
+    ),
+  }
+
+
+  return deleteOrder ? [...ordersColumnsBase, deleteItem] : ordersColumnsBase
+
+}
 
 const quotationColumns = ({endpoint, orderid, language, deleteProduct, canUpdateQuantity, canUpdatePrice}) => {
 

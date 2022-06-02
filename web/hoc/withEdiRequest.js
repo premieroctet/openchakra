@@ -5,6 +5,7 @@ import {setAxiosAuthentication} from '../utils/authentication'
 import {
   API_PATH,
   ORDER_CREATED,
+  DELETE,
 } from '../utils/feurst/consts'
 import {snackBarError} from '../utils/notifications'
 
@@ -60,17 +61,31 @@ const withEdiRequest = (Component = null) => {
     deleteOrder = async({endpoint, orderid}) => {
       if (!orderid) { return }
 
-      return await client(`${API_PATH}/${endpoint}/${orderid}`, {method: 'DELETE'})
-        .then(() => this.getList({endpoint}))
-        .catch(error => {
-          if (error.info) {
-            // Address is outside delivery zone
-            if (error.info.status === 403) {
-              snackBarError(error?.message)
+      const deleteIt = async() => {
+        return await client(`${API_PATH}/${endpoint}/${orderid}`, {method: 'DELETE'})
+          .then(() => this.getList({endpoint}))
+          .catch(error => {
+            if (error.info) {
+              if (error.info.status === 403) {
+                snackBarError(error?.message)
+              }
             }
+            console.error(`Can't delete order`, error)
+          })
+      }
+
+      return await client(`${API_PATH}/${endpoint}/${orderid}/actions`)
+        .then(res => {
+          // DELETE ACTION
+          if (res.includes(DELETE)) {
+            deleteIt()
           }
-          console.error(`Can't delete order`, error)
+          else {
+            snackBarError('Suppression non authorisée.')
+          }
         })
+
+      
     }
 
     handleValidation = async({endpoint, orderid, status}) => {
