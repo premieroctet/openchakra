@@ -24,6 +24,7 @@ const View = ({accessRights}) => {
 
   return (
     <BaseCreateTable
+      key={orderid}
       id={orderid}
       endpoint={ENDPOINTS[ORDER]}
       columns={orderColumns}

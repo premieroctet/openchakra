@@ -24,6 +24,7 @@ const View = ({accessRights}) => {
 
   return (
     <BaseCreateTable
+      key={quotationid}
       id={quotationid}
       endpoint={ENDPOINTS[QUOTATION]}
       columns={quotationColumns}
