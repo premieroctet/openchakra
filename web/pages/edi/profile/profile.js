@@ -40,29 +40,54 @@ const Profile = () => {
   return (<StyledProfile>
 
     {/* <h2><img width={30} height={30} src={`${FEURST_ICON_PATH }/user.icon.svg`} alt="" /><span className='underlined'>Mon profil</span></h2> */}
-    <h3>Nom</h3>
-    <p>{profile?.full_name}</p>
-   
-    <h3>Société</h3>
-    <p>{profile?.company.full_name}</p>
+    <div>
+      <h2>A propos de vous</h2>
 
-    <h3>Email</h3>
-    <p>{profile?.email}</p>
+      <div className='leftborder-blue'>
+        
+        <div className='flex gap-x-2'>
+          <div>
+            <h3>Prénom&nbsp;:</h3>
+            <p>{profile?.firstname}</p>
+          </div>
+   
+          <div>
+            <h3>Nom&nbsp;:</h3>
+            <p>{profile?.name}</p>
+
+          </div>
+
+        </div>
+
+        <div>
+          <h3>Email professionel&nbsp;:</h3>
+          <p>{profile?.email}</p>
+        </div>
+        <div>
+          <h3>Société&nbsp;:</h3>
+          <p>{profile?.company?.full_name}</p>
+        </div>
+      </div>
+  
+    </div>
     
 
-    <h3>Modification du mot de passe</h3>
+    <div>
+      <h2>Modification du mot de passe</h2>
 
-    <form onSubmit={renewPassword}>
-      <RenewPassword setPassword={setPassword} />
-      <PleasantButton
-        rounded={'full'}
-        disabled={!canSubmitPassword}
-        type='submit'
-        onClick={() => renewPassword}
-      >
+      <form onSubmit={renewPassword}>
+        <RenewPassword setPassword={setPassword} />
+        <PleasantButton
+          rounded={'full'}
+          disabled={!canSubmitPassword}
+          type='submit'
+          onClick={() => renewPassword}
+        >
             Enregistrer le mot de passe
-      </PleasantButton>
-    </form>
+        </PleasantButton>
+      </form>
+
+    </div>
 
     
   </StyledProfile>)
@@ -70,9 +95,22 @@ const Profile = () => {
 
 const StyledProfile = styled.div`
 
+  padding-top: var(--spc-4);
   border-top: 1px solid var(--black);
-  height: min(calc(100% - 2rem), 70vh);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
 
+  .leftborder-blue {
+    border-left: var(--spc-4) solid var(--brand-color);
+    padding-left: var(--spc-4);
+
+    h3, p {
+      display: inline-block;
+      margin-right: var(--spc-3);
+      font-weight: var(--font-medium);
+    }
+  }
+  
   h2, h3 {
     color: var(--black);
   }
@@ -86,15 +124,10 @@ const StyledProfile = styled.div`
   p {
     font-size: var(--text-lg);
   }
-
-  .underlined {
-    border-bottom: 10px solid var(--brand-color);
-  }
   
   h3 {
-    font-size: var(--text-2xl);
+    font-size: var(--text-lg);
     color: var(--black);
-    margin-bottom: 0;
   }
 
   form {
