@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import {useRouter} from 'next/router'
 import {ENDPOINTS, BASEPATH_EDI, QUOTATION, VIEW} from '../../../../utils/consts'
 import withEdiAuth from '../../../../hoc/withEdiAuth'
-import BaseCreateTable from'../../../../components/Feurst/BaseCreateTable'
+import BaseViewTable from'../../../../components/Feurst/BaseViewTable'
 import {
   quotationColumns,
 } from '../../../../components/Feurst/tablestructures'
@@ -23,7 +23,7 @@ const View = ({accessRights}) => {
   }, [quotationid, setQuotationid])
 
   return (
-    <BaseCreateTable
+    <BaseViewTable
       key={quotationid}
       id={quotationid}
       endpoint={ENDPOINTS[QUOTATION]}
