@@ -232,56 +232,63 @@ const quotationColumns = ({endpoint, orderid, language, deleteProduct, canUpdate
   return deleteProduct ? [...quotationColumnsBase, deleteItem] : quotationColumnsBase
 }
 
-const quotationsColumns = ({language, deleteProduct}) => [
-  {
-    label: 'Date commande',
-    attribute: 'creation_date',
-    Cell: ({cell: {value}}) => formatDate(new Date(value), language),
-    sortType: 'datetime',
-    Filter: DateRangeColumnFilter,
-    filter: 'dateBetween', /* Custom Filter Type */
-  },
-  {...companyName},
-  {
-    label: 'Référence',
-    attribute: 'reference',
-  },
-  {
-    label: 'Poids total',
-    attribute: 'total_weight',
-    Cell: ({value}) => formatWeight(value, language),
-  },
-  {
-    label: 'Frais de livraison',
-    attribute: 'shipping_fee',
-  },
-  {
-    label: 'Montant total',
-    attribute: 'total_amount',
-  },
-  {
-    label: 'Statut',
-    attribute: v => { return v },
-    Cell: ({value}) => <OrderStatus status={value.status} label={value.status_label} />,
-  },
-  {
-    label: 'Détails',
-    attribute: '_id',
-    Cell: ({value}) => (<Link href={`/edi/quotations/view/${value}`}>voir</Link>),
-  },
-  // {
-  //   label: '',
-  //   id: 'product_delete',
-  //   attribute: 'product_delete',
-  //   Cell: tableProps => (
-  //     <ToTheBin onClick={() => {
-  //       const dataCopy = [...data]
-  //       dataCopy.splice(tableProps.row.index, 1)
-  //       setData(dataCopy)
-  //     }}/>
-  //   ),
-  // },
-]
+const quotationsColumns = ({endpoint, language, deleteOrder}) => {
+  
+  const quotationsColumnsBase = [
+    {
+      label: 'Date commande',
+      attribute: 'creation_date',
+      Cell: ({cell: {value}}) => formatDate(new Date(value), language),
+      sortType: 'datetime',
+      Filter: DateRangeColumnFilter,
+      filter: 'dateBetween', /* Custom Filter Type */
+    },
+    {...companyName},
+    {
+      label: 'Référence',
+      attribute: 'reference',
+    },
+    {
+      label: 'Poids total',
+      attribute: 'total_weight',
+      Cell: ({value}) => formatWeight(value, language),
+    },
+    {
+      label: 'Frais de livraison',
+      attribute: 'shipping_fee',
+    },
+    {
+      label: 'Montant total',
+      attribute: 'total_amount',
+    },
+    {
+      label: 'Statut',
+      attribute: v => { return v },
+      Cell: ({value}) => <OrderStatus status={value.status} label={value.status_label} />,
+    },
+    {
+      label: 'Détails',
+      attribute: '_id',
+      Cell: ({value}) => (<Link href={`/edi/quotations/view/${value}`}>voir</Link>),
+    },
+ 
+  ]
+
+  const deleteItem = {
+    label: '',
+    id: 'product_delete',
+    attribute: 'product_delete',
+    Cell: ({cell: {row}}) => (
+      <ToTheBin onClick={() => {
+        deleteOrder({endpoint, orderid: row.original._id})
+      }}/>
+    ),
+  }
+  
+
+  return deleteOrder ? [...quotationsColumnsBase, deleteItem] : quotationsColumnsBase
+
+}
 
 const accountsColumns = ({language, visibility}) => {
   

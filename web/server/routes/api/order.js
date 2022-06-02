@@ -1,4 +1,4 @@
-const {sendOrderAlert} = require('../../utils/mailing')
+const {sendDataNotification, sendOrderAlert} = require('../../utils/mailing')
 const {
   ORDER_ALERT_CHECK_INTERVAL,
   ORDER_ALERT_DELAY,
@@ -195,10 +195,12 @@ router.put('/:id/rewrite', passport.authenticate('jwt', {session: false}), (req,
 
   const order_id=req.params.id
   MODEL.findByIdAndUpdate(order_id, {validation_date: null, handle_status: null, handled_date: null}, {new: true})
+    .populate({path: 'company', populate: 'sales_representative'})
     .then(result => {
       if (!result) {
         return res.status(404).json(`${DATA_TYPE} #${order_id} not found`)
       }
+      sendDataNotification(req.user, result, 'La commande est repassée en modification')
       return res.json(result)
     })
     .catch(err => {
@@ -416,10 +418,10 @@ router.get('/:order_id', passport.authenticate('jwt', {session: false}), (req, r
 router.delete('/:order_id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, DELETE)) {
-    return res.status(401).json()
+    return res.status(403).json()
   }
 
-  MODEL.findOneAndDelete()
+  MODEL.findOneAndDelete({_id: req.params.order_id})
     .then(() => {
       return res.json()
     })
@@ -480,10 +482,12 @@ router.post('/:order_id/validate', passport.authenticate('jwt', {session: false}
 
   const order_id=req.params.order_id
 
+  let order=null
   MODEL.findById(order_id)
     .populate('items.product')
-    .populate('company')
+    .populate({path: 'company', populate: {path: 'sales_representative', select: 'email'}})
     .then(data => {
+      order=data
       if (!data) {
         throw new StatusError(`Order ${order_id} not found`, 404)
       }
@@ -500,6 +504,8 @@ router.post('/:order_id/validate', passport.authenticate('jwt', {session: false}
       return updateStock(data)
     })
     .then(() => {
+      const msg='La commande a été validée, vous pouvez la traiter'
+      sendDataNotification(req.user, order, msg)
       return res.json()
     })
     .catch(err => {
@@ -551,6 +557,9 @@ router.get('/:id/actions', passport.authenticate('jwt', {session: false}), (req,
   const user=req.user
   MODEL.findById(req.params.id)
     .then(model => {
+      if (!model) {
+        return res.status(404).json()
+      }
       if (isActionAllowed(user.roles, DATA_TYPE, UPDATE) && model.status==COMPLETE) {
         result.push(VALIDATE)
       }

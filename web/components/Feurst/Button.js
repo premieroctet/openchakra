@@ -186,6 +186,34 @@ const PleasantButton = ({
     </StyledButton>
   )
 }
+
+const BaseLink = ({
+  size = null,
+  rounded = null,
+  bgColor = null,
+  borderColor = null,
+  textColor = null,
+  children,
+  ...rest
+}) => {
+
+  return (
+    <StyledButton
+      as={'a'}
+      size={size}
+      rounded={rounded}
+      {...rest}
+    >
+      <ButtonShadow rounded={rounded} />
+      <ButtonEdge bgColor={bgColor} rounded={rounded} borderColor={borderColor} />
+      <ButtonFront bgColor={bgColor} textColor={textColor} borderColor={borderColor} rounded={rounded} >{children}</ButtonFront>
+    </StyledButton>
+  )
+}
+
+const PleasantLink = styled(BaseLink)`
+  display: inline-block;
+`
   
 
-export {Button, PleasantButton}
+export {Button, PleasantButton, PleasantLink}

@@ -10,6 +10,7 @@ const MyOrders = ({accessRights}) => {
       endpoint='orders'
       columns={ordersColumns}
       accessRights={accessRights}
+      wordingSection={'EDI.ORDER'}
     />
   )
 }

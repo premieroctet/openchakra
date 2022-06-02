@@ -33,7 +33,6 @@ import {localeMoneyFormat} from '../../utils/converters'
 import isEmpty from '../../server/validation/is-empty'
 import withEdiRequest from '../../hoc/withEdiRequest'
 import {
-  getAuthToken,
   setAxiosAuthentication,
 } from '../../utils/authentication'
 import {snackBarError, snackBarSuccess} from '../../utils/notifications'
@@ -75,7 +74,6 @@ const ConfirmPartialHandledValidation = ({onClick, className, children}) => {
 const BaseCreateTable = ({
   filtered,
   id,
-  storage,
   endpoint,
   columns,
   accessRights,
@@ -90,21 +88,20 @@ const BaseCreateTable = ({
   updateShippingFees,
   revertToEdition,
   handleValidation,
-  sendQuotationToCustomer,
   importFile,
   state,
 }) => {
 
-  const dataToken = getAuthToken()
-
   const [language, setLanguage] = useState('fr')
   const [orderCompany, setOrderCompany] = useState(null)
-  const [orderid, setOrderid] = useState(id || null)
+  const [orderid, setOrderid] = useState(id)
   const [isOpenDialog, setIsOpenDialog] = useState(false)
   const [isOpenDialogConvert, setIsOpenDialogConvert] = useState(false)
   const [companies, setCompanies] = useState([])
   const [actionButtons, setActionButtons]=useState([])
-
+  
+  const importURL=`${API_PATH}/${endpoint}/${orderid}/import`
+  const templateURL=`${API_PATH}/${endpoint}/template`
   const router = useRouter()
 
   // Possibles actions
@@ -198,9 +195,6 @@ const BaseCreateTable = ({
             if (data) {
               setOrderCompany(data.company)
             }
-            else {
-              // removeItem()
-            }
           })
       }
     }
@@ -208,13 +202,12 @@ const BaseCreateTable = ({
 
 
   useEffect(() => {
-    // console.log('createOrder', orderID, orderCompany)
     if (isEmpty(orderid)) {
       if ((orderCompany !== null || !isFeurstSales) && !canValidate) {
         createOrderId({endpoint, company: orderCompany})
           .then(data => {
             setOrderid(data._id)
-            router.push(`${BASEPATH_EDI}/${endpoint}/view/${data._id}`)
+            router.replace(`${BASEPATH_EDI}/${endpoint}/view/${data._id}`)
           })
           .catch(e => console.error('cant create order', e))
       }
@@ -256,9 +249,6 @@ const BaseCreateTable = ({
     canUpdateQuantity,
     deleteProduct: canAdd ? deleteProduct : null})
 
-  const importURL=`${API_PATH}/${endpoint}/${orderid}/import`
-  const templateURL=`${API_PATH}/${endpoint}/template`
-
 
   return (<>
 
@@ -287,7 +277,6 @@ const BaseCreateTable = ({
 
       {isFeurstSales && !isView && <div className='flex'>
         <H2confirm>
-          {justCreated && <button onClick={changeCompany}><span>⊕</span> Nouveau devis</button>}
           <span>{state?.company?.name}</span>
         </H2confirm></div>}
 
@@ -295,7 +284,7 @@ const BaseCreateTable = ({
       {canModify &&
       <div className='container-base'>
         <ImportExcelFile endpoint={endpoint} orderid={orderid} importURL={importURL} templateURL={templateURL} importFile={importFile}/>
-        <AddDivider>Ou</AddDivider>
+        <LineDivider>Ou</LineDivider>
         <AddArticle endpoint={endpoint} orderid={orderid} addProduct={addProduct} wordingSection={wordingSection} />
       </div>}
 
@@ -423,7 +412,7 @@ const BaseCreateTable = ({
   )
 }
 
-const AddDivider = styled.p`
+const LineDivider = styled.p`
   display: flex;
   align-items: center;
   column-gap: 1rem;

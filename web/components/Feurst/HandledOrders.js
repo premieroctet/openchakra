@@ -41,6 +41,7 @@ const HandledOrders = ({accessRights}) => {
         filter={currentFilter}
         accessRights={accessRights}
         columns={handledOrdersColumns}
+        wordingSection={'EDI.ORDER'}
       />
     </>
   )
