@@ -342,6 +342,9 @@ input:focus:not(:focus-visible) {
 .items-center {align-items: center;}
 .items-end {align-items: end;}
 
+.gap-x-1 {
+  column-gap: var(--spc-1);
+}
 .gap-x-2 {
   column-gap: 0.5rem;
 }
