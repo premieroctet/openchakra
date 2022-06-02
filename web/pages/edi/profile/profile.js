@@ -5,7 +5,8 @@ import withEdiAuth from '../../../hoc/withEdiAuth'
 import RenewPassword from '../../../components/Password/RenewPassword'
 import {PleasantButton} from '../../../components/Feurst/Button'
 import {client} from '../../../utils/client'
-const {ACCOUNT, UPDATE} = require('../../../utils/feurst/consts')
+import {screen} from '../../../styles/screenWidths'
+import {ACCOUNT, UPDATE} from '../../../utils/feurst/consts'
 
 const Profile = () => {
 
@@ -39,9 +40,9 @@ const Profile = () => {
 
   return (<StyledProfile>
 
-    {/* <h2><img width={30} height={30} src={`${FEURST_ICON_PATH }/user.icon.svg`} alt="" /><span className='underlined'>Mon profil</span></h2> */}
+    {/* <h2><span className='underlined'>Mon profil</span></h2> */}
     <div>
-      <h2>A propos de vous</h2>
+      <h2><img width={30} height={30} src={`${FEURST_ICON_PATH }/user.icon.svg`} alt="" />A propos de vous</h2>
 
       <div className='leftborder-blue'>
         
@@ -98,7 +99,11 @@ const StyledProfile = styled.div`
   padding-top: var(--spc-4);
   border-top: 1px solid var(--black);
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr;
+  
+  @media (${screen.lg}) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 
   .leftborder-blue {
     border-left: var(--spc-4) solid var(--brand-color);
@@ -133,15 +138,17 @@ const StyledProfile = styled.div`
   form {
     display: flex; 
     flex-direction: column;
-    width: min(calc(100% - 2rem), 40vw);
+    width: min(calc(100% - 2rem), 40rem);
+    margin-bottom: var(--spc-10);
 
     & > div {
       margin-bottom: var(--spc-4);
     }
   }
-
+  
   button[type="submit"] {
     align-self: flex-end;
+    margin-bottom: var(--spc-4);
   }
 
   em {
