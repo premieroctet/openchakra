@@ -1,13 +1,13 @@
 import React from 'react'
 import {ENDPOINTS, ORDER} from '../../utils/consts'
-import BaseCreateTable from'./BaseCreateTable'
+import BaseCreate from'./BaseCreate'
 import {orderColumns} from './tablestructures'
 
 
 const OrderCreate = ({accessRights}) => {
 
   return (
-    <BaseCreateTable
+    <BaseCreate
       endpoint={ENDPOINTS[ORDER]}
       columns={orderColumns}
       wordingSection={'EDI.ORDER'}

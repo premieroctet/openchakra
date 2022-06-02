@@ -1,13 +1,13 @@
 import React from 'react'
 import {ENDPOINTS, QUOTATION} from '../../utils/consts'
-import BaseCreateTable from'./BaseCreateTable'
+import BaseCreate from'./BaseCreate'
 import {quotationColumns} from './tablestructures'
 
 
 const QuotationCreate = ({accessRights}) => {
 
   return (
-    <BaseCreateTable
+    <BaseCreate
       endpoint={ENDPOINTS[QUOTATION]}
       columns={quotationColumns}
       wordingSection={'EDI.QUOTATION'}
