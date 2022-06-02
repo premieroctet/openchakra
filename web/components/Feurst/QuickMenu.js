@@ -5,12 +5,9 @@ import {useRouter} from 'next/router'
 import Link from 'next/link'
 import styled from 'styled-components'
 import {screen} from '../../../web/styles/screenWidths'
-import {CREATE, ORDER, QUOTATION, BASEPATH_EDI, PRODUCT, SHIPRATE, ACCOUNT} from '../../utils/consts'
+import {CREATE, UPDATE, ORDER, QUOTATION, BASEPATH_EDI, PRODUCT, SHIPRATE, ACCOUNT, FEURST_IMG_PATH, FEURST_ICON_PATH} from '../../utils/consts'
+import {getLoggedUser} from '../../utils/context'
 import ContactUs from './ContactUs'
-const {FEURST_IMG_PATH} = require('../../utils/feurst/consts')
-const {UPDATE} = require('../../utils/feurst/consts')
-const {getLoggedUser} = require('../../utils/context')
-
 
 const MENUS=[
   {
@@ -34,7 +31,7 @@ const MENUS=[
 if (getLoggedUser()) {
   const PROFILE_MENU={
     enabled: rights => rights.isActionAllowed(ACCOUNT, UPDATE),
-    label: `Bienvenue ${getLoggedUser().firstname}`,
+    label: <div className='flex gap-x-1'><img width={20} height={20} src={`${FEURST_ICON_PATH }/user.icon.svg`} alt="" /> Bienvenue {getLoggedUser().firstname}</div>,
     url: `${BASEPATH_EDI}/profile`,
   }
 
