@@ -1,52 +1,54 @@
-const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
-import React, {Component} from 'react'
-import Button from '@material-ui/core/Button'
+import {DateRangePicker} from 'react-dates'
+import {Typography} from '@material-ui/core'
 import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
-import IconButton from '@material-ui/core/IconButton'
-import MenuItem from '@material-ui/core/MenuItem'
-import Menu from '@material-ui/core/Menu'
-import Router from 'next/router'
+import Button from '@material-ui/core/Button'
+import ClearIcon from '@material-ui/icons/Clear'
+import CloseIcon from '@material-ui/icons/Close'
+import DatePicker from 'react-datepicker'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import Divider from '@material-ui/core/Divider'
+import FormControl from '@material-ui/core/FormControl'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Grid from '@material-ui/core/Grid'
+import IconButton from '@material-ui/core/IconButton'
+import InputLabel from '@material-ui/core/InputLabel'
+import Menu from '@material-ui/core/Menu'
+import MenuIcon from '@material-ui/icons/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
+import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import MultipleSelect from 'react-select'
+import Paper from '@material-ui/core/Paper'
+import React, {Component} from 'react'
+import Router from 'next/router'
+import SearchIcon from '@material-ui/icons/Search'
+import Select from '@material-ui/core/Select'
+import Slide from '@material-ui/core/Slide'
+import Slider from '@material-ui/core/Slider'
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
+import Switch from '@material-ui/core/Switch'
+import Tab from '@material-ui/core/Tab'
+import Tabs from '@material-ui/core/Tabs'
+import TextField from '@material-ui/core/TextField'
+import Toolbar from '@material-ui/core/Toolbar'
+import TuneIcon from '@material-ui/icons/Tune'
+import axios from 'axios'
 import moment from 'moment'
+import withStyles from '@material-ui/core/styles/withStyles'
+
+import {SEARCHBAR, NAVBAR_MENU} from '../../../utils/i18n'
+import {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered, isB2BStyle, isB2BAdmin, isB2BManager, removeStatusRegister, setStatusRegister, getRole} from '../../../utils/context'
+import {isB2BDisabled} from '../../../config/config'
+import LocationSelect from '../../../components/Geo/LocationSelect'
 import LogIn from '../../../components/LogIn/LogIn'
 import Register from '../../../components/Register/Register'
-import Dialog from '@material-ui/core/Dialog'
-import DialogContent from '@material-ui/core/DialogContent'
-import Slide from '@material-ui/core/Slide'
-import MuiDialogTitle from '@material-ui/core/DialogTitle'
-import CloseIcon from '@material-ui/icons/Close'
-import Paper from '@material-ui/core/Paper'
-import Divider from '@material-ui/core/Divider'
-import MenuIcon from '@material-ui/icons/Menu'
-import SearchIcon from '@material-ui/icons/Search'
-import AlgoliaPlaces from 'algolia-places-react'
-import {SEARCHBAR, NAVBAR_MENU} from '../../../utils/i18n'
-import DatePicker from 'react-datepicker'
-import TextField from '@material-ui/core/TextField'
-import Select from '@material-ui/core/Select'
-import FormControl from '@material-ui/core/FormControl'
-import Tabs from '@material-ui/core/Tabs'
-import Tab from '@material-ui/core/Tab'
-import axios from 'axios'
-import withStyles from '@material-ui/core/styles/withStyles'
 import styles from '../../../static/css/components/NavBar/NavBar'
-import {Typography} from '@material-ui/core'
-import TuneIcon from '@material-ui/icons/Tune'
-import InputLabel from '@material-ui/core/InputLabel'
-import DialogActions from '@material-ui/core/DialogActions'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Switch from '@material-ui/core/Switch'
-import {DateRangePicker} from 'react-dates'
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
-import ClearIcon from '@material-ui/icons/Clear'
-import {isB2BDisabled} from '../../../config/config'
-import {getLoggedUserId, isLoggedUserAlfredPro, isLoggedUserRegistered, isB2BStyle, isB2BAdmin, isB2BManager, removeStatusRegister, setStatusRegister, getRole} from '../../../utils/context'
+
+const {PRO, PART, EMPLOYEE}=require('../../../utils/consts')
+const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 const {emptyPromise} = require('../../../utils/promise.js')
 const {formatAddress} = require('../../../utils/text.js')
-import Slider from '@material-ui/core/Slider'
-const {PRO, PART, EMPLOYEE}=require('../../../utils/consts')
 
 const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />
@@ -488,15 +490,9 @@ class NavBar extends Component {
                   </Grid>
                   :
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12} classes={{root: classes.navbarRootTextFieldWhereP}}>
-                    <AlgoliaPlaces
+                    <LocationSelect
                       placeholder={SEARCHBAR.where}
-                      options={{
-                        appId: 'plKATRG826CP',
-                        apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                        language: 'fr',
-                        countries: ['fr'],
-                        type: 'city',
-                      }}
+                      type='city'
                       onChange={suggestion => this.onChangeCity(suggestion)}
                       onClear={() => this.setState({city: '', gps: null})}
                     />
@@ -1001,15 +997,9 @@ class NavBar extends Component {
                         </Grid> : null
                     }
                     <Grid item xl={12} lg={12} md={12} sm={12} xs={12} classes={{root: classes.navbarRootTextFieldWhere}}>
-                      <AlgoliaPlaces
+                      <LocationSelect
                         placeholder={SEARCHBAR.where}
-                        options={{
-                          appId: 'plKATRG826CP',
-                          apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                          language: 'fr',
-                          countries: ['fr'],
-                          type: 'city',
-                        }}
+                        type='city'
                         onChange={suggestion => this.onChangeCity(suggestion)}
                         onClear={() => this.setState({city: '', gps: null})}
                       />

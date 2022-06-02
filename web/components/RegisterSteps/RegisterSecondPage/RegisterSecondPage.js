@@ -1,20 +1,22 @@
-import React from 'react'
-import withStyles from '@material-ui/core/styles/withStyles'
-import Grid from '@material-ui/core/Grid'
 import {Typography} from '@material-ui/core'
-import AlgoliaPlaces from 'algolia-places-react'
-import TextField from '@material-ui/core/TextField'
-import PhoneIphoneOutlinedIcon from '@material-ui/icons/PhoneIphoneOutlined'
-import Checkbox from '@material-ui/core/Checkbox'
 import Button from '@material-ui/core/Button'
-import NumberFormat from 'react-number-format'
-import PropTypes from 'prop-types'
-import styles from '../../../static/css/components/RegisterSteps/RegisterSecondPage/RegisterSecondPage'
+import Checkbox from '@material-ui/core/Checkbox'
 import Dialog from '@material-ui/core/Dialog'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import DialogContent from '@material-ui/core/DialogContent'
-import CguContent from '../../CguContent/CguContent'
 import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import Grid from '@material-ui/core/Grid'
+import NumberFormat from 'react-number-format'
+import PhoneIphoneOutlinedIcon from '@material-ui/icons/PhoneIphoneOutlined'
+import PropTypes from 'prop-types'
+import React from 'react'
+import TextField from '@material-ui/core/TextField'
+import withStyles from '@material-ui/core/styles/withStyles'
+
+import CguContent from '../../CguContent/CguContent'
+import LocationSelect from '../../Geo/LocationSelect'
+import styles from '../../../static/css/components/RegisterSteps/RegisterSecondPage/RegisterSecondPage'
+
 const {ACCOUNT_MIN_AGE} = require('../../../utils/consts')
 
 
@@ -99,17 +101,9 @@ class RegisterSecondPage extends React.Component {
           <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
             <Grid item style={{width: '100%'}}>
               <form>
-                <AlgoliaPlaces
+                <LocationSelect
                   className={classes.textFieldAlgo}
                   placeholder='Recherchez votre adresse'
-                  options={{
-                    appId: 'plKATRG826CP',
-                    apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                    language: 'fr',
-                    countries: ['fr'],
-                    type: 'address',
-
-                  }}
                   onChange={suggestion => this.props.onChangeAddress(suggestion)}
                   onClear={() => this.props.onChangeAddress(null)}
                 />

@@ -1,23 +1,27 @@
-import React, {useState, useEffect} from 'react'
-import withStyles from '@material-ui/core/styles/withStyles'
-import styles from '../../../static/css/components/FormAvocotes/FormAvocotes'
+import AddIcon from '@material-ui/icons/Add'
+import Button from '@material-ui/core/Button'
+import Divider from '@material-ui/core/Divider'
+import FormHelperText from '@material-ui/core/FormHelperText'
 import Grid from '@material-ui/core/Grid'
-import {AVOCOTES} from '../../../utils/i18n'
+import IconButton from '@material-ui/core/IconButton'
+import React, {useState, useEffect} from 'react'
+import RemoveIcon from '@material-ui/icons/Remove'
+import Router from 'next/router'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
-import IconButton from '@material-ui/core/IconButton'
-import AddIcon from '@material-ui/icons/Add'
-import RemoveIcon from '@material-ui/icons/Remove'
-import Divider from '@material-ui/core/Divider'
-import Button from '@material-ui/core/Button'
-const {snackBarSuccess, snackBarError}=require('../../../utils/notifications')
-const {AVOCOTES_COMPANY_NAME}=require('../../../utils/consts')
-import Router from 'next/router'
 import axios from 'axios'
-import AlgoliaPlaces from 'algolia-places-react'
-import FormHelperText from '@material-ui/core/FormHelperText'
+import withStyles from '@material-ui/core/styles/withStyles'
+
+import {AVOCOTES} from '../../../utils/i18n'
 import {isEmailOk, isPhoneOk} from '../../../utils/sms'
+import LocationSelect from '../../Geo/LocationSelect'
+import styles from '../../../static/css/components/FormAvocotes/FormAvocotes'
+
 const moment = require('moment')
+
+const {AVOCOTES_COMPANY_NAME}=require('../../../utils/consts')
+const {snackBarSuccess, snackBarError}=require('../../../utils/notifications')
+
 moment.locale('fr')
 
 
@@ -173,17 +177,9 @@ function Form({classes, booking_id}) {
           <TextField id="standard-basic" label="Nom" classes={{root: classes.textField}} value={name} onChange={e => setName(e.target.value)} helperText={name.length === 0 ? 'Veuillez entrer votre nom' : null} error={name.length==0}/>
         </Grid>
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-          <AlgoliaPlaces
+          <LocationSelect
             className={classes.algoliaplaces}
             placeholder='Adresse'
-            options={{
-              appId: 'plKATRG826CP',
-              apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-              language: 'fr',
-              countries: ['fr'],
-              type: 'address',
-
-            }}
             onChange={({query, rawAnswer, suggestion, suggestionIndex}) => onAddressChanged(suggestion)}
             onClear={() => setAddress({
               city: null,

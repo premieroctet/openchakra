@@ -1,46 +1,49 @@
-import SummaryCommentary from '../../components/SummaryCommentary/SummaryCommentary'
-const {snackBarSuccess} = require('../../utils/notifications')
-const {setAxiosAuthentication}=require('../../utils/authentication')
-import React from 'react'
-import Grid from '@material-ui/core/Grid'
-import ProfileLayout from '../../hoc/Layout/ProfileLayout'
-import About from '../../components/About/About'
-import Presentation from '../../components/Presentation/Presentation'
-import Skills from '../../components/Skills/Skills'
-import Badges from '../../components/Badges/Badges'
-import Hashtags from '../../components/Hashtags/Hashtags'
+import {TextField} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
-import styles from '../../static/css/pages/profile/about/about'
-import AskQuestion from '../../components/AskQuestion/AskQuestion'
-import Box from '../../components/Box/Box'
-import LayoutMobileProfile from '../../hoc/Layout/LayoutMobileProfile'
-import axios from 'axios'
-import Typography from '@material-ui/core/Typography'
+import Button from '@material-ui/core/Button'
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline'
-import IconButton from '@material-ui/core/IconButton'
+import CloseIcon from '@material-ui/icons/Close'
 import CreateIcon from '@material-ui/icons/Create'
-import {isEditableUser} from '../../utils/context'
 import Dialog from '@material-ui/core/Dialog'
 import DialogContent from '@material-ui/core/DialogContent'
-import Topic from '../../hoc/Topic/Topic'
-import AlgoliaPlaces from 'algolia-places-react'
-import MultipleSelect from 'react-select'
-import {COMPANY_ACTIVITY, COMPANY_SIZE, LANGUAGES} from '../../utils/consts'
 import Divider from '@material-ui/core/Divider'
-import Button from '@material-ui/core/Button'
-import MuiDialogTitle from '@material-ui/core/DialogTitle'
-import CloseIcon from '@material-ui/icons/Close'
-import {TextField} from '@material-ui/core'
 import FormControl from '@material-ui/core/FormControl'
+import Grid from '@material-ui/core/Grid'
+import IconButton from '@material-ui/core/IconButton'
 import InputLabel from '@material-ui/core/InputLabel'
-import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
-import ShowExperience from '../../components/ShowEperience/ShowExperience'
-import ShowDiploma from '../../components/ShowDiploma/ShowDiploma'
+import MuiDialogTitle from '@material-ui/core/DialogTitle'
+import MultipleSelect from 'react-select'
+import React from 'react'
+import Select from '@material-ui/core/Select'
+import Typography from '@material-ui/core/Typography'
+import axios from 'axios'
+
+import {COMPANY_ACTIVITY, COMPANY_SIZE, LANGUAGES} from '../../utils/consts'
+import {isEditableUser} from '../../utils/context'
+import About from '../../components/About/About'
+import AskQuestion from '../../components/AskQuestion/AskQuestion'
+import Badges from '../../components/Badges/Badges'
+import Box from '../../components/Box/Box'
+import Hashtags from '../../components/Hashtags/Hashtags'
+import LayoutMobileProfile from '../../hoc/Layout/LayoutMobileProfile'
+import LocationSelect from '../../components/Geo/LocationSelect'
+import Presentation from '../../components/Presentation/Presentation'
+import ProfileLayout from '../../hoc/Layout/ProfileLayout'
 import ShowCertification from '../../components/ShowCertification/ShowCertification'
-const CompanyComponent = require('../../hoc/b2b/CompanyComponent')
+import ShowDiploma from '../../components/ShowDiploma/ShowDiploma'
+import ShowExperience from '../../components/ShowEperience/ShowExperience'
+import Skills from '../../components/Skills/Skills'
+import SummaryCommentary from '../../components/SummaryCommentary/SummaryCommentary'
+import Topic from '../../hoc/Topic/Topic'
+import styles from '../../static/css/pages/profile/about/about'
 
 const moment=require('moment')
+
+const {setAxiosAuthentication}=require('../../utils/authentication')
+const {snackBarSuccess} = require('../../utils/notifications')
+const CompanyComponent = require('../../hoc/b2b/CompanyComponent')
+
 moment.locale('fr')
 
 const DialogTitle = withStyles(styles)(props => {
@@ -230,17 +233,8 @@ class ProfileAbout extends CompanyComponent {
                       onChange={this.handleChange}
                     />
                     :
-                    <AlgoliaPlaces
-                      key={moment()}
+                    <LocationSelect
                       placeholder={placeholder}
-                      options={{
-                        appId: 'plKATRG826CP',
-                        apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                        language: 'fr',
-                        countries: ['fr'],
-                        type: 'address',
-
-                      }}
                       onChange={this.onAddressChanged}
                       onClear={() => this.onAddressChanged(null)}
                     />

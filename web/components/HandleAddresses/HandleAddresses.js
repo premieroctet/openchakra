@@ -1,26 +1,27 @@
-import React from 'react'
-import withStyles from '@material-ui/core/styles/withStyles'
-import styles from '../../static/css/components/HandleAddresses/HandleAddresses'
-import Grid from '@material-ui/core/Grid'
-import Typography from '@material-ui/core/Typography'
-import Divider from '@material-ui/core/Divider'
-import AlgoliaPlaces from 'algolia-places-react'
+import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined'
 import Button from '@material-ui/core/Button'
-import TextField from '@material-ui/core/TextField'
-import IconButton from '@material-ui/core/IconButton'
-import EditIcon from '@material-ui/icons/Edit'
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
-import axios from 'axios'
 import Dialog from '@material-ui/core/Dialog'
-import DialogTitle from '@material-ui/core/DialogTitle'
+import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
-import DialogActions from '@material-ui/core/DialogActions'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import Divider from '@material-ui/core/Divider'
+import EditIcon from '@material-ui/icons/Edit'
+import Grid from '@material-ui/core/Grid'
+import IconButton from '@material-ui/core/IconButton'
+import React from 'react'
 import Router from 'next/router'
-import {isB2BAdmin} from '../../utils/context'
+import TextField from '@material-ui/core/TextField'
+import Typography from '@material-ui/core/Typography'
+import axios from 'axios'
+import withStyles from '@material-ui/core/styles/withStyles'
+
 import {clearAuthenticationToken, setAxiosAuthentication} from '../../utils/authentication'
+import {isB2BAdmin} from '../../utils/context'
 import {snackBarError, snackBarSuccess} from '../../utils/notifications'
-import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined'
+import LocationSelect from '../Geo/LocationSelect'
+import styles from '../../static/css/components/HandleAddresses/HandleAddresses'
 
 class HandleAddresses extends React.Component {
   constructor(props) {
@@ -285,15 +286,8 @@ class HandleAddresses extends React.Component {
               <Grid style={{marginTop: '5vh'}}>
                 <Grid container spacing={3}>
                   <Grid item xs={12} xl={12} lg={12} md={12} sm={12}>
-                    <AlgoliaPlaces
+                    <LocationSelect
                       placeholder='Modifiez votre adresse'
-                      options={{
-                        appId: 'plKATRG826CP',
-                        apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                        language: 'fr',
-                        countries: ['fr'],
-                        type: 'address',
-                      }}
                       onChange={suggestion => this.onMainAddressChange(suggestion)}
                     />
                   </Grid>
@@ -368,16 +362,8 @@ class HandleAddresses extends React.Component {
                   {this.addressLabel(e)}
                 </Typography>
                 {selected_address && selected_address._id == e._id ?
-                  <AlgoliaPlaces
+                  <LocationSelect
                     placeholder='Modifiez votre adresse'
-                    options={{
-                      appId: 'plKATRG826CP',
-                      apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                      language: 'fr',
-                      countries: ['fr'],
-                      type: 'address',
-
-                    }}
                     onChange={suggestion => this.onSecondaryAddressChange(suggestion)}
                   />
                   :
@@ -412,15 +398,8 @@ class HandleAddresses extends React.Component {
               />
             </Grid>
             <Grid item xs={12}>
-              <AlgoliaPlaces
+              <LocationSelect
                 placeholder='Recherchez votre adresse'
-                options={{
-                  appId: 'plKATRG826CP',
-                  apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                  language: 'fr',
-                  countries: ['fr'],
-                  type: 'address',
-                }}
                 onChange={suggestion => this.onNewAddressChange(suggestion)}
               />
             </Grid>

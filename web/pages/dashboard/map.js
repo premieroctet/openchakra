@@ -1,17 +1,19 @@
-const {setAxiosAuthentication}=require('../../utils/authentication')
-import React from 'react'
-import Checkbox from '@material-ui/core/Checkbox'
-import Grid from '@material-ui/core/Grid'
 import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
-import Router from 'next/router'
-import Layout from '../../hoc/Layout/Layout'
-import axios from 'axios'
-import MapComponent from '../../components/map'
-import Select from '@material-ui/core/Select'
+import Checkbox from '@material-ui/core/Checkbox'
+import Grid from '@material-ui/core/Grid'
 import MenuItem from '@material-ui/core/MenuItem'
+import React from 'react'
+import Router from 'next/router'
+import Select from '@material-ui/core/Select'
+import axios from 'axios'
+
+import Layout from '../../hoc/Layout/Layout'
+import LocationSelect from '../../components/Geo/LocationSelect'
+import MapComponent from '../../components/map'
+
 const {getLoggedUserId}=require('../../utils/context')
-import AlgoliaPlaces from 'algolia-places-react'
+const {setAxiosAuthentication}=require('../../utils/authentication')
 
 const styles = theme => ({
   signupContainer: {
@@ -142,16 +144,10 @@ class ServicesMap extends React.Component {
           <MapComponent position={[centerLat, centerLon]} zoom={6} circles={allCircles}/>
         </Grid>
         <Grid style={{width: '100%'}}>
-          <Grid><AlgoliaPlaces
+          <Grid><LocationSelect
             placeholder='Centrer sur une ville'
             style={{color: '#505050'}}
-            options={{
-              appId: 'plKATRG826CP',
-              apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-              language: 'fr',
-              countries: ['fr'],
-              type: 'city',
-            }}
+            type='city'
             onChange={suggestion => this.onChangeCity(suggestion)}
             onClear={() => this.setState({city: '', gps: null})}
           /></Grid>
