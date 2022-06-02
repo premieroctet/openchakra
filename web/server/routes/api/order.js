@@ -551,6 +551,9 @@ router.get('/:id/actions', passport.authenticate('jwt', {session: false}), (req,
   const user=req.user
   MODEL.findById(req.params.id)
     .then(model => {
+      if (!model) {
+        return res.status(404).json()
+      }
       if (isActionAllowed(user.roles, DATA_TYPE, UPDATE) && model.status==COMPLETE) {
         result.push(VALIDATE)
       }
