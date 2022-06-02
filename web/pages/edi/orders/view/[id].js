@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import {useRouter} from 'next/router'
 import {BASEPATH_EDI, ORDER, VIEW, ENDPOINTS} from '../../../../utils/consts'
 import withEdiAuth from '../../../../hoc/withEdiAuth'
-import BaseCreateTable from'../../../../components/Feurst/BaseCreateTable'
+import BaseViewTable from'../../../../components/Feurst/BaseViewTable'
 import {
   orderColumns,
 } from '../../../../components/Feurst/tablestructures'
@@ -23,7 +23,7 @@ const View = ({accessRights}) => {
   }, [orderid, setOrderid])
 
   return (
-    <BaseCreateTable
+    <BaseViewTable
       key={orderid}
       id={orderid}
       endpoint={ENDPOINTS[ORDER]}
