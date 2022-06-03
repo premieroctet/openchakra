@@ -1,18 +1,73 @@
-import AlgoliaPlaces from 'algolia-places-react'
-import React from 'react'
+import {Grid} from '@material-ui/core'
+import {useDebouncedCallback} from 'use-debounce'
+import Autocomplete from 'react-autocomplete'
+import React, {useState} from 'react'
+
+import {getLocationSuggestions} from '../../utils/functions'
 
 const LocationSelect = props => {
 
+  const [value, setValue] = useState(null)
+  const [items, setItems] = useState([])
+
+  const getSuggestions = query => {
+    getLocationSuggestions(query, props.type)
+      .then(res => {
+        setItems(res)
+      })
+      .catch(err => {
+        console.error(err)
+      })
+  }
+
+  const debouncedSuggestions = useDebouncedCallback(
+    query => {
+      getSuggestions(query)
+    }
+    , 500)
+
+  const onChange = query => {
+    setValue(query)
+    query=query.trim()
+    if (query) {
+      debouncedSuggestions(query)
+    }
+    else {
+      setItems([])
+      props.onClear && props.onClear()
+    }
+  }
+
+  const formatAddress = addr => {
+    if (!addr) { return '' }
+    return props.type=='city' ? `${addr.city} ${addr.postcode}` : `${addr.name}, ${addr.city} ${addr.postcode}`
+  }
+
+
+  const onSelect = (val, item) => {
+    setValue(formatAddress(item))
+    props.onChange && props.onChange({suggestion: item})
+  }
+
   return (
-    <AlgoliaPlaces
-      options={{
-        appId: 'plKATRG826CP',
-        apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-        language: 'fr',
-        countries: ['fr'],
-        type: props.type || 'address',
-      }}
-      {...props} />
+    <>
+      <Autocomplete
+        {...props}
+        wrapperStyle={{width: '100%'}}
+        inputProps={{...props, placeholder: props.placeholder,
+          style: {width: '100%', height: '40px', outline: 'none', fontSize: '16px', fontFamily: 'Montserrat, sans-serif'}}}
+        getItemValue={item => formatAddress(item) }
+        items={items}
+        renderItem={(item, isHighlighted) =>
+          <div style={{background: isHighlighted ? 'lightgray' : 'white'}}>
+            {formatAddress(item)}
+          </div>
+        }
+        value={value}
+        onChange={ev => onChange(ev.target.value)}
+        onSelect={onSelect}
+      />
+    </>
   )
 }
 

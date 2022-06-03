@@ -144,14 +144,17 @@ class ServicesMap extends React.Component {
           <MapComponent position={[centerLat, centerLon]} zoom={6} circles={allCircles}/>
         </Grid>
         <Grid style={{width: '100%'}}>
-          <Grid><LocationSelect
-            placeholder='Centrer sur une ville'
-            style={{color: '#505050'}}
-            type='city'
-            onChange={suggestion => this.onChangeCity(suggestion)}
-            onClear={() => this.setState({city: '', gps: null})}
-          /></Grid>
           <Grid style={{display: 'flex', 'align-items': 'center'}}>
+            <h2>Centrer sur une ville</h2>&nbsp;
+            <LocationSelect
+              placeholder='Centrer sur une ville'
+              style={{color: '#505050'}}
+              type='city'
+              onChange={suggestion => this.onChangeCity(suggestion)}
+              onClear={() => this.setState({city: '', gps: null})}
+            /></Grid>
+          <Grid style={{display: 'flex', 'align-items': 'center'}}>
+            <h2>Sélectionner les services</h2>&nbsp;
             <Select
               renderValue={selected => (selected == 'all' ? 'Tous' : selected == 'none' ? 'Aucun' : allServices.filter(s => s._id === selected)[0].label)}
               name={'selectedService'}
