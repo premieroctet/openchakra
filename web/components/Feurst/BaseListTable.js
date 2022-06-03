@@ -27,6 +27,7 @@ const BaseListTable = ({
   updateSeller,
   sellers,
   wordingSection = null,
+  ...props
 }) => {
 
   const [language, setLanguage] = useState('fr')
@@ -65,6 +66,8 @@ const BaseListTable = ({
       columns={cols}
       filter={filter}
       filtered={filtered}
+      pagination={true}
+      {...props}
     />
   </>
   )
