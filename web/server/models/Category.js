@@ -12,4 +12,4 @@ catch(err) {
   }
 }
 
-module.exports = CategorySchema ? mongoose.model('product', CategorySchema) : null
+module.exports = CategorySchema ? mongoose.model('category', CategorySchema) : null
