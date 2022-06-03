@@ -77,14 +77,14 @@ const getLocationSuggestions = (value, type) => {
     .then(res => {
       let suggestions=res
       if (citySearch) {
-        suggestions=res.filter(r => r.lat && r.address && (r.address.postcode && r.address.city || r.address.village || r.town))
+        suggestions=res.filter(r => r.address && r.lat && r.lon && (r.address.postcode && r.address.city || r.address.village || r.address.town))
       }
       else {
-        suggestions=res.filter(r => r.address && r.lat && r.lon && (r.address.postcode && r.address.road && (r.address.city || r.address.village || r.town)))
+        suggestions=res.filter(r => r.address && r.lat && r.lon && (r.address.postcode && r.address.road && (r.address.city || r.address.village || r.address.town)))
       }
       suggestions=suggestions.map(r => ({
         name: r.address.road,
-        city: r.address.city || r.address.village || r.town,
+        city: r.address.city || r.address.village || r.address.town,
         postcode: r.address.postcode,
         country: r.country,
         latlng: {lat: r.lat, lng: r.lon}}))
