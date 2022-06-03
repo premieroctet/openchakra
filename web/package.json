@@ -22,7 +22,6 @@
     "ag-grid-community": "^27.0.1",
     "ag-grid-enterprise": "^27.0.1",
     "ag-grid-react": "^27.0.1",
-    "algolia-places-react": "^1.6.1",
     "apexcharts": "^3.25.0",
     "axios": "0.21.1",
     "babel-preset-env": "^1.7.0",

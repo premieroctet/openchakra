@@ -62,7 +62,10 @@ const roundCurrency = amount => {
 
 const getLocationSuggestions = (value, type) => {
   const citySearch=type=='city'
-  const client = nominatim.createClient({})
+  const client = nominatim.createClient({
+    useragent: 'My Alfred',
+    referer: 'https://my-alfred.io',
+  })
   const query={q: value, addressdetails: 1, dedupe: 1, countrycodes: 'fr'}
   if (citySearch) {
     query.city=value
