@@ -46,13 +46,7 @@ export const GlobalStyleEdi = createGlobalStyle`
   @font-face {
     font-family: 'Roboto';
     src: local('Roboto'), url(${Roboto}) format('woff2');
-    font-weight: 500;
-    font-style: normal;
-  }
-  @font-face {
-    font-family: 'Roboto';
-    src: local('Roboto'), url(${RobotoBold}) format('woff2');
-    font-weight: 700;
+    font-weight: 400;
     font-style: normal;
   }
 

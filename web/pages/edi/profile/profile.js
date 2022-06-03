@@ -41,7 +41,6 @@ const Profile = () => {
 
   return (<StyledProfile>
 
-    {/* <h2><span className='underlined'>Mon profil</span></h2> */}
     <div>
       <h2><img width={30} height={30} src={`${FEURST_ICON_PATH }/user.icon.svg`} alt="" />A propos de vous</h2>
 
@@ -62,7 +61,7 @@ const Profile = () => {
         </div>
 
         <div>
-          <h3>Email professionel&nbsp;:</h3>
+          <h3>Email professionnel&nbsp;:</h3>
           <p>{profile?.email}</p>
         </div>
         <div>
@@ -113,11 +112,11 @@ const StyledProfile = styled.div`
     h3, p {
       display: inline-block;
       margin-right: var(--spc-3);
-      font-weight: var(--font-medium);
+      font-size: var(--text-lg);
     }
   }
   
-  h2, h3 {
+  h2, h3, p {
     color: var(--black);
   }
 
@@ -126,15 +125,7 @@ const StyledProfile = styled.div`
     column-gap: var(--spc-2);
     font-size: var(--text-2xl);
   }
-
-  p {
-    font-size: var(--text-lg);
-  }
   
-  h3 {
-    font-size: var(--text-lg);
-    color: var(--black);
-  }
 
   form {
     display: flex; 
@@ -149,7 +140,7 @@ const StyledProfile = styled.div`
   
   button[type="submit"] {
     align-self: flex-end;
-    margin-bottom: var(--spc-4);
+    margin-block: var(--spc-4);
   }
 
   em {
