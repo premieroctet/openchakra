@@ -114,6 +114,33 @@ const TablesStyles = styled.div`
     }
 
   }
+
+  .pagination {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: var(--spc-2);
+    margin-bottom: var(--spc-8);
+
+    button {
+      border-radius: var(--rounded-md);
+      background-color: var(--brand-color);
+      color: white;
+      padding: var(--spc-2) var(--spc-3);
+      cursor: pointer;
+    }
+
+    input {
+      padding: var(--spc-2) var(--spc-2);
+      max-width: 7ch;
+      text-align: center;
+    }
+
+    select {
+      background: none;
+      border:0;
+    }
+  }
 `
 
 const FeurstTable = props => {
