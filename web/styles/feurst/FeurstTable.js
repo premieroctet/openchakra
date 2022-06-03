@@ -116,7 +116,8 @@ const TablesStyles = styled.div`
   }
 
   .pagination {
-    display: inline-flex;
+    display: flex;
+    justify-content: center;
     flex-wrap: wrap;
     align-items: center;
     column-gap: var(--spc-2);
@@ -124,10 +125,28 @@ const TablesStyles = styled.div`
 
     button {
       border-radius: var(--rounded-md);
-      background-color: var(--brand-color);
-      color: white;
+      background-image: linear-gradient(
+        170deg,
+        hsl(24deg 6% 83%) 0%,
+        hsl(30deg 5% 84%) 24%,
+        hsl(24deg 6% 85%) 35%,
+        hsl(30deg 6% 86%) 45%,
+        hsl(15deg 6% 87%) 55%,
+        hsl(20deg 5% 88%) 65%,
+        hsl(15deg 7% 89%) 76%,
+        hsl(20deg 6% 90%) 100%
+      );
+      /* background: var(--stone-200); */
+      border: 1px solid var(--stone-300);
+      color: var(--stone-900);
+      font-weight: var(--font-bold);
       padding: var(--spc-2) var(--spc-3);
       cursor: pointer;
+    }
+    
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
 
     input {

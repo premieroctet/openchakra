@@ -19,16 +19,16 @@ const PaginationButtons = ({
 
   return (
     <div className="pagination">
-      <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+      <button onClick={() => gotoPage(0)} disabled={!canPreviousPage} title={'Première page'}>
         {'<<'}
       </button>{' '}
-      <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+      <button onClick={() => previousPage()} disabled={!canPreviousPage} title={'Page précédente'}>
         {'<'}
       </button>{' '}
-      <button onClick={() => nextPage()} disabled={!canNextPage}>
+      <button onClick={() => nextPage()} disabled={!canNextPage} title={'Page suivante'}>
         {'>'}
       </button>{' '}
-      <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+      <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage} title={'Dernière page'}>
         {'>>'}
       </button>{' '}
       <span>
