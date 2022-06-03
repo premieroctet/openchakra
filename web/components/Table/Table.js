@@ -1,8 +1,69 @@
 import React, {useMemo} from 'react'
-import {useTable, useSortBy, useFilters, useGlobalFilter} from 'react-table'
+import {useTable, useSortBy, useFilters, useGlobalFilter, usePagination} from 'react-table'
 import {GlobalFilter} from './TableFilter'
 import {fuzzyTextFilterFn} from './table-helper'
 import TableDialogFilter from './TableDialogFilter'
+
+const PaginationButtons = ({
+  canPreviousPage,
+  canNextPage,
+  pageOptions,
+  pageCount,
+  gotoPage,
+  nextPage,
+  previousPage,
+  setPageSize,
+  pageIndex,
+  pageSize,
+}) => {
+
+  return (
+    <div className="pagination">
+      <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+        {'<<'}
+      </button>{' '}
+      <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+        {'<'}
+      </button>{' '}
+      <button onClick={() => nextPage()} disabled={!canNextPage}>
+        {'>'}
+      </button>{' '}
+      <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+        {'>>'}
+      </button>{' '}
+      <span>
+          Page{' '}
+        <strong>
+          {pageIndex + 1} sur {pageOptions.length}
+        </strong>{' '}
+      </span>
+      <span>
+          | Aller à la page:{' '}
+        <input
+          type="number"
+          defaultValue={pageIndex + 1}
+          onChange={e => {
+            const page = e.target.value ? Number(e.target.value) - 1 : 0
+            gotoPage(page)
+          }}
+        />
+      </span>{' '}
+      <select
+        value={pageSize}
+        onChange={e => {
+          setPageSize(Number(e.target.value))
+        }}
+      >
+        {[10, 20, 30, 40, 50].map(pageSize => (
+          <option key={pageSize} value={pageSize}>
+            {pageSize} lignes
+          </option>
+        ))}
+      </select>
+    </div>
+  )
+}
+
 
 function DefaultColumnFilter({
   column: {filterValue, preFilteredRows, setFilter},
@@ -55,6 +116,7 @@ const Table = (
     updateMyData = null,
     globalfilter=null,
     filtered=false,
+    pagination=false,
   },
 ) => {
 
@@ -99,6 +161,16 @@ const Table = (
     state,
     preGlobalFilteredRows,
     setGlobalFilter,
+    page,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    state: {pageIndex, pageSize},
   } = useTable(
     {
       columns: cols,
@@ -111,11 +183,12 @@ const Table = (
     filtered && useFilters,
     useGlobalFilter,
     useSortBy,
+    pagination && usePagination,
   )
   
 
   return (
-    <div>
+    <>
       {globalfilter ?
         <GlobalFilter
           preGlobalFilteredRows={preGlobalFilteredRows}
@@ -166,16 +239,29 @@ const Table = (
 
         </thead>
         <tbody {...getTableBodyProps()}>
-          {rows.map(row => {
-            prepareRow(row)
-            return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map(cell => {
-                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                })}
-              </tr>
-            )
-          })}
+          {pagination ?
+            page.map((row, i) => {
+              prepareRow(row)
+              return (
+                <tr {...row.getRowProps()}>
+                  {row.cells.map(cell => {
+                    return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                  })}
+                </tr>
+              )
+            })
+            :
+            rows.map(row => {
+              prepareRow(row)
+              return (
+                <tr {...row.getRowProps()}>
+                  {row.cells.map(cell => {
+                    return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                  })}
+                </tr>
+              )
+            })
+          }
         </tbody>
         {footer ?
           <tfoot>
@@ -189,7 +275,20 @@ const Table = (
           </tfoot>
           : null}
       </table>
-    </div>
+
+      {pagination && <PaginationButtons {...{
+        canPreviousPage,
+        canNextPage,
+        pageOptions,
+        pageCount,
+        gotoPage,
+        nextPage,
+        previousPage,
+        setPageSize,
+        pageIndex,
+        pageSize,
+      }} />}
+    </>
   )
 }
 
