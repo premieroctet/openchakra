@@ -12,15 +12,16 @@ const Profile = () => {
 
   const [profile, setProfile] = useState()
   const [password, setPassword] = useState('')
+  const [passChanged, setPassChanged] = useState(false)
   const canSubmitPassword = !!(password?.check1 && password?.check2)
 
   const renewPassword = async e => {
     e.preventDefault()
 
     return await client(`${API_PATH}/users/profile/editPassword`, {data: {newPassword: password.newPassword}, method: 'PUT'})
-      .then(res => {
-        console.log(res)
-        setPassword({})
+      .then(() => {
+        setPassword(null)
+        setPassChanged(!passChanged)
       })
       .catch(err => console.error(err))
   }
@@ -77,7 +78,7 @@ const Profile = () => {
       <h2>Modification du mot de passe</h2>
 
       <form onSubmit={renewPassword}>
-        <RenewPassword setPassword={setPassword} />
+        <RenewPassword passChanged={passChanged} setPassword={setPassword} />
         <PleasantButton
           rounded={'full'}
           disabled={!canSubmitPassword}

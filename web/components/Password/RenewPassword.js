@@ -8,7 +8,7 @@ import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import {checkPass1, checkPass2} from '../../utils/passwords'
 
-const RenewPassword = ({t, setPassword}) => {
+const RenewPassword = ({t, setPassword, passChanged}) => {
 
   const [state, setState] = useState({
     newPassword: '',
@@ -33,6 +33,10 @@ const RenewPassword = ({t, setPassword}) => {
   useEffect(() => {
     setPassword(state)
   }, [setPassword, state])
+
+  useEffect(() => {
+    setState({...state, newPassword: '', newPassword2: ''})
+  }, [passChanged])
 
 
   const {showNewPassword, showConfirmPassword, newPassword, newPassword2} = state
