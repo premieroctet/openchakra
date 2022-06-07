@@ -51,10 +51,10 @@ const BaseListTable = ({
 
   return (<>
     {canCreate &&
-    <div className='mb-8'>
+    <div className='container-md mb-8'>
       <Link href={`${BASEPATH_EDI}/${endpoint}/create`}>
         <PleasantLink rounded={'full'} href={`${BASEPATH_EDI}/${endpoint}/create`}>
-          {t(`${wordingSection}.create`)}
+          <span>⊕</span> {t(`${wordingSection}.create`)}
         </PleasantLink>
       </Link>
     </div>
