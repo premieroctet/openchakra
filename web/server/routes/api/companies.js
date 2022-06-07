@@ -5,6 +5,7 @@ const moment = require('moment')
 const lodash = require('lodash')
 const axios = require('axios')
 const csv_parse = require('csv-parse/lib/sync')
+const {getHostUrl} = require('../../../config/config')
 const {StatusError} = require('../../utils/errors')
 const {
   ACCOUNT,
@@ -26,7 +27,6 @@ const {EDIT_PROFIL}=require('../../../utils/i18n')
 const {IMAGE_FILTER, TEXT_FILTER, createDiskMulter, createMemoryMulter} = require('../../utils/filesystem')
 
 const router = express.Router()
-const {computeUrl}=require('../../../config/config')
 const {validateCompanyProfile, validateCompanyMember} = require('../../validation/simpleRegister')
 moment.locale('fr')
 const {ADMIN, MANAGER, EMPLOYEE, ROLES, MICROSERVICE_MODE, CARETAKER_MODE, BOOK_STATUS} = require('../../../utils/consts')
@@ -574,7 +574,7 @@ router.put('/admin', passport.authenticate('b2badmin', {session: false}), (req, 
   User.findByIdAndUpdate(admin_id, {company: company_id, $addToSet: {roles: ADMIN}}, {new: true})
     .then(user => {
       if (new_account) {
-        axios.post(new URL('/myAlfred/api/users/forgotPassword', computeUrl(req)).toString(), {email: user.email, role: ADMIN})
+        axios.post(new URL('/myAlfred/api/users/forgotPassword', getHostUrl()).href, {email: user.email, role: ADMIN})
           .then(() => {})
           .catch(err => {})
       }

@@ -5,6 +5,7 @@ const axios = require('axios')
 const gifFrames = require('gif-frames')
 const {fs} = require('file-system')
 const express = require('express')
+const {getHostUrl, is_development} = require('../../../config/config')
 const Shop = require('../../models/Shop')
 const {
   ACCOUNT,
@@ -24,7 +25,6 @@ const {
   createDiskMulter,
   createMemoryMulter,
 } = require('../../utils/filesystem')
-const {is_development} = require('../../../config/config')
 const {filterUsers, getActionsForRoles} = require('../../utils/userAccess')
 const {accountsImport} = require('../../utils/import')
 const User = require('../../models/User')
@@ -36,7 +36,7 @@ const {EDIT_PROFIL}=require('../../../utils/i18n')
 const {logEvent}=require('../../utils/events')
 
 const router = express.Router()
-const {is_production, computeUrl}=require('../../../config/config')
+const {is_production}=require('../../../config/config')
 const {validateSimpleRegisterInput, validateEditProfile, validateEditProProfile, validateBirthday} = require('../../validation/simpleRegister')
 const validateLoginInput = require('../../validation/login')
 const {sendResetPassword, sendVerificationMail, sendVerificationSMS, sendB2BAccount, sendAlert} = require('../../utils/mailing')
@@ -179,7 +179,7 @@ router.post('/register', (req, res) => {
       if (!user.billing_address.gps.lat) {
         User.find({is_admin: true}, 'firstname email phone')
           .then(admins => {
-            let log_link = new URL(`/dashboard/logAsUser?email=${user.email}`, computeUrl(req))
+            let log_link = new URL(`/dashboard/logAsUser?email=${user.email}`, getHostUrl())
             const msg=`Compléter l'adresse pour le compte ${user.email}, connexion via ${log_link}`
             const subject=`Alerte adresse incorrecte pour ${user.email}`
             admins.forEach(admin => {

@@ -7,7 +7,12 @@ const passport = require('passport')
 const glob = require('glob')
 const cors = require('cors')
 const SocketIo = require('socket.io')
-const {checkConfig, getDatabaseUri} = require('../config/config')
+const {
+  checkConfig,
+  getDatabaseUri,
+  getHostUrl,
+  getPort,
+} = require('../config/config')
 const Shiprate = require('./models/ShipRate')
 
 const Product = require('./models/Product')
@@ -30,8 +35,7 @@ const prod = process.env.NODE_DEV === 'production' // true false
 const nextApp = is_production() || is_validation() ? next({prod}) : next({dev})
 const routes = require('./routes')
 const routerHandler = routes.getRequestHandler(nextApp)
-const {config, SERVER_PROD} = require('../config/config')
-const http = require('http')
+const {config} = require('../config/config')
 const https = require('https')
 const fs = require('fs')
 const authRoutes = require('./routes/api/authentication')
@@ -169,11 +173,6 @@ checkConfig()
     }
     app.get('*', routerHandler)
 
-    if (SERVER_PROD || is_development()) {
-      // HTTP only handling redirect to HTTPS
-      http.createServer(app).listen(80)
-      console.log('Created server on port 80')
-    }
     // HTTPS server using certificates
     const httpsServer = https.createServer({
       cert: fs.readFileSync(`${process.env.HOME}/.ssh/Main.txt`),
@@ -183,12 +182,7 @@ checkConfig()
     app)
     const io = SocketIo(httpsServer)
 
-    if (SERVER_PROD) {
-      httpsServer.listen(443, () => console.log(`${config.appName} running on http://localhost:80/ and https://localhost:443/`))
-    }
-    else {
-      httpsServer.listen(3122, () => console.log(`${config.appName} running on https://localhost:3122/`))
-    }
+    httpsServer.listen(getPort(), () => console.log(`${config.appName} running on ${getHostUrl()}`))
 
     let roomName = ''
     let bookingName = ''

@@ -4,6 +4,8 @@ const {googleCalendarEventUrl} = require('google-calendar-url')
 const mongoose = require('mongoose')
 const passport = require('passport')
 const moment = require('moment')
+const {getHostUrl} = require('../../../config/config')
+
 const CronJob = require('cron').CronJob
 const uuidv4 = require('uuid/v4')
 const {is_development} = require('../../../config/config')
@@ -26,7 +28,6 @@ const {getRole, get_logged_id} = require('../../utils/serverContext')
 const {validateAvocotesCustomer}=require('../../validation/simpleRegister')
 const {computeBookingReference, formatAddress}=require('../../../utils/text')
 const {createMangoClient}=require('../../utils/mangopay')
-const {computeUrl}=require('../../../config/config')
 const {stateMachineFactory} = require('../../utils/BookingStateMachine')
 
 moment.locale('fr')
@@ -342,8 +343,8 @@ router.get('/:id/ics', (req, res) => {
         geo: {lat: booking.address.gps.lat, lon: booking.address.gps.lng},
         status: booking.status==BOOK_STATUS.CANCELLED ? 'CANCELLED' : booking.status==BOOK_STATUS.TO_CONFIRM ? 'TENTATIVE' : 'CONFIRMED',
         busyStatus: 'BUSY',
-        url: new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)).toString(),
-        description: `<a href="${new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)).toString()}">Accéder à ma réservation</a>`,
+        url: new URL(`/reservations/reservations?id=${booking._id}`, getHostUrl()).href,
+        description: `<a href="${new URL(`/reservations/reservations?id=${booking._id}`, getHostUrl()).href}">Accéder à ma réservation</a>`,
       })
     })
     .then(result => {
@@ -381,7 +382,7 @@ router.get('/:id/google_calendar', (req, res) => {
         geo: {lat: booking.address.gps.lat, lon: booking.address.gps.lng},
         status: booking.status==BOOK_STATUS.CANCELLED ? 'CANCELLED' : booking.status==BOOK_STATUS.TO_CONFIRM ? 'TENTATIVE' : 'CONFIRMED',
         busyStatus: 'BUSY',
-        details: `<a href="${new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)).toString()}">Accéder à ma réservation</a>`,
+        details: `<a href="${new URL(`/reservations/reservations?id=${booking._id}`, getHostUrl()).href}">Accéder à ma réservation</a>`,
       })
       res.redirect(url)
     })
@@ -433,7 +434,7 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
             // Prévenir les admins d'une nouvelle résa
             User.find({is_admin: true}, 'firstname email phone')
               .then(admins => {
-                const search_link = new URL('/search', computeUrl(req))
+                const search_link = new URL('/search', getHostUrl())
                 const prestations=booking.prestations.map(p => p.name).join(',')
                 const msg=`Chercher les prestations '${prestations}' pour le compte ${booking.user.email} via ${search_link}`
                 const subject=`Nouvelle réservation Avocotés pour ${booking.user.email}`

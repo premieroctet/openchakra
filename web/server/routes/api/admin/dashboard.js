@@ -7,8 +7,8 @@ const bcrypt = require('bcryptjs')
 const axios = require('axios')
 const Validator = require('validator')
 const lodash=require('lodash')
+const {getHostUrl, is_development} = require('../../../../config/config')
 const {StatusError} = require('../../../utils/errors')
-const {is_development} = require('../../../../config/config')
 const Prestation = require('../../../models/Prestation')
 const Service = require('../../../models/Service')
 const Equipment = require('../../../models/Equipment')
@@ -47,7 +47,6 @@ const {addIdIfRequired} = require('../../../utils/mangopay')
 const {normalize} = require('../../../../utils/text')
 const {counterArray} = require('../../../../utils/converters')
 const {ADMIN} = require('../../../../utils/consts')
-const {computeUrl}=require('../../../../config/config')
 const {get_token, send_cookie, get_logged_id}=require('../../../utils/serverContext')
 const {createUIConfiguration} = require('../../../utils/ui_generation')
 const {logEvent}=require('../../../utils/events')
@@ -1439,7 +1438,7 @@ router.post('/companies', passport.authenticate('admin', {session: false}), (req
                     newUser.password = hash
                     User.create(newUser)
                       .then(() => {
-                        axios.post(new URL('/myAlfred/api/users/forgotPassword', computeUrl(req)).toString(), {email: req.body.admin_email, role: ADMIN})
+                        axios.post(new URL('/myAlfred/api/users/forgotPassword', getHostUrl()).href, {email: req.body.admin_email, role: ADMIN})
                           .then(() => {
                             return res.json(company)
                           })
@@ -1696,7 +1695,7 @@ router.post('/feurst_register', passport.authenticate('jwt', {session: false}), 
     })
     .then(user => {
       currUser=user
-      return axios.post(new URL('/myAlfred/api/users/forgotPassword', computeUrl(req)).toString(), {email: user.email})
+      return axios.post(new URL('/myAlfred/api/users/forgotPassword', getHostUrl()).href, {email: user.email})
     })
     .then(() => {
       res.json(currUser)
