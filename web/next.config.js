@@ -1,6 +1,21 @@
-const withCSS = require('@zeit/next-css')
+const WebpackBar = require('webpackbar')
+const {getDataModel} = require('./config/config')
 
-module.exports = withCSS({
+module.exports = {
+  // TODO Redirect for Feurst only
+  basePath: '',
+  async redirects() {
+    console.log(`DATAMODEL:${getDataModel()}`)
+    return getDataModel()=='feurst' ? [
+      {
+        source: '/',
+        destination: '/edi',
+        basePath: false,
+        permanent: false,
+      },
+    ]
+      : []
+  },
   webpack: (config, {isServer}) => {
     // Fixes npm packages that depend on `fs` module
     if (!isServer) {
@@ -13,6 +28,13 @@ module.exports = withCSS({
       exclude: /(node_modules)/,
       loader: require.resolve('url-loader'),
     })
+
+    config.plugins.push(new WebpackBar({
+      fancy: true,
+      profile: true,
+      basic: false,
+    }))
+
     return config
   },
-})
+}

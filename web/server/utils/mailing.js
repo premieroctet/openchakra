@@ -1,13 +1,17 @@
+const lodash=require('lodash')
+const {CUSTOMER_ADMIN} = require('../../utils/feurst/consts')
+const Company = require('../models/Company')
 const {
   ENABLE_MAILING,
   computeUrl,
   getSibTemplates,
   get_host_url,
 } = require('../../config/config')
-const {SIB} = require('./sendInBlue')
+const User = require('../models/User')
 const {booking_datetime_str} = require('../../utils/dateutils')
 const {fillSms} = require('../../utils/sms')
-const lodash=require('lodash')
+const {isFeurstUser} = require('./userAccess')
+const {SIB} = require('./sendInBlue')
 
 // Templates
 const SIB_IDS=require(`./sib_templates/${getSibTemplates()}.js`)
@@ -470,6 +474,58 @@ const sendBillingToAlfred = booking => {
   )
 }
 
+const sendOrderAlert = (email, reference, company_name, data_link) => {
+
+  sendNotification(
+    SIB_IDS.ORDER_ALERT,
+    {email: email},
+    {
+      reference: reference,
+      company: company_name,
+      data_link: data_link,
+    },
+  )
+}
+
+// Sends alert upon order/quotation status change
+const sendDataEvent = (email, reference, company_name, user_firstname, message, data_link) => {
+  sendNotification(
+    SIB_IDS.DATA_STATUS_NOTIFICATION,
+    {email: email},
+    {
+      reference: reference,
+      company: company_name,
+      user_firstname: user_firstname,
+      message: message,
+      data_link: data_link,
+    },
+  )
+}
+
+const getFeurstDestinee = data => {
+  return Company.findById(data.company)
+    .populate('sales_representative')
+    .then(company => {
+      return company.sales_representative
+    })
+}
+
+const getCompanyDestinee = data => {
+  return User.findOne({company: data.company, roles: CUSTOMER_ADMIN})
+}
+
+const sendDataNotification = (user, data, message) => {
+  const userPromise=isFeurstUser(user) ? getCompanyDestinee(data) : getFeurstDestinee(data)
+  userPromise
+    .then(destinee => {
+      const companyName = isFeurstUser(user) ? 'Feurst' : data.company.name
+      sendDataEvent(destinee.email, data.reference, companyName, user.firstname, message, data.url)
+    })
+    .catch(err => {
+      console.error(err)
+    })
+}
+
 module.exports = {
   sendVerificationMail,
   sendShopDeleted,
@@ -501,4 +557,6 @@ module.exports = {
   sendAutoQuotation,
   sendCustomQuotation,
   sendBillingToAlfred,
+  sendOrderAlert,
+  sendDataNotification,
 }

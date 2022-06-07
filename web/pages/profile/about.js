@@ -1,4 +1,4 @@
-const BasePage = require('../basePage')
+const withParams = require('../../components/withParams')
 import Album from '../../components/Album/Album'
 import {isEditableUser} from '../../utils/context'
 import CustomButton from '../../components/CustomButton/CustomButton'
@@ -64,7 +64,7 @@ const DialogTitle = withStyles(styles)(props => {
 })
 
 
-class ProfileAbout extends BasePage {
+class ProfileAbout extends React.Component {
 
   constructor(props) {
     super(props)
@@ -116,8 +116,7 @@ class ProfileAbout extends BasePage {
       })
     }).catch(err => console.error(err))
 
-    console.log(this.getURLProps())
-    axios.get(`/myAlfred/api/users/users/${this.getURLProps().user}`)
+    axios.get(`/myAlfred/api/users/users/${this.props.params.user}`)
       .then(res => {
         const user = res.data
         if (user.company) {
@@ -449,7 +448,7 @@ class ProfileAbout extends BasePage {
         }
         <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Box>
-            <Album user={this.getURLProps().user}/>
+            <Album user={this.props.params.user}/>
           </Box>
         </Grid>
       </Grid>
@@ -458,7 +457,7 @@ class ProfileAbout extends BasePage {
 
   render() {
     const {classes}=this.props
-    const {user}=this.getURLProps()
+    const {user}=this.props.params
     const {showEdition, alfred, company}=this.state
 
     if(!user && alfred) {
@@ -490,4 +489,4 @@ class ProfileAbout extends BasePage {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(ProfileAbout))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(withParams(ProfileAbout)))

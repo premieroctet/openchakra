@@ -1,13 +1,13 @@
 const {
   clearAuthenticationToken,
-  setAxiosAuthentication
-} = require('../../../utils/authentication');
+  setAxiosAuthentication,
+} = require('../../../utils/authentication')
 const {
   getLoggedUserId,
   getRole,
   isLoggedUserAlfredPro,
-  isLoggedUserRegistered
-} = require('../../../utils/context');
+  isLoggedUserRegistered,
+} = require('../../../utils/context')
 import CustomButton from '../../../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -100,15 +100,12 @@ class MobileNavbar extends React.Component {
     axios.get('/myAlfred/api/users/current')
       .then(res => {
         const user=res.data
-        Promise.resolve({data: user})
-          .then(res => {
-            let allAddresses = {'main': res.data.billing_address}
-            res.data.service_address.forEach(addr => {
-              allAddresses[addr._id] = addr
-            })
-            this.setState({user: user, allAddresses: allAddresses})
-          })
-      }).catch(err => console.error(err))
+        let allAddresses = {'main': user.billing_address}
+        user.service_address.forEach(addr => {
+          allAddresses[addr._id] = addr
+        })
+      })
+      .catch(err => console.error(err))
   }
 
   needRefresh = () => {

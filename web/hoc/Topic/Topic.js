@@ -4,7 +4,7 @@ import React, {useEffect, useState} from 'react'
 import Typography from '@material-ui/core/Typography'
 import {Divider} from '@material-ui/core'
 import Router from 'next/router'
-import '../../static/assets/css/custom.css'
+
 import {makeStyles} from '@material-ui/core/styles'
 
 const useStyle = makeStyles(theme => ({

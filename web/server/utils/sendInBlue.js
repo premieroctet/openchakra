@@ -1,6 +1,6 @@
-const {getSibApiKey}=require('../../config/config')
+const lodash = require('lodash')
 const SibApiV3Sdk = require('sib-api-v3-sdk')
-const lodash=require('lodash')
+const {getSibApiKey}=require('../../config/config')
 
 const SIB_API_KEY_V3 = getSibApiKey()
 
@@ -21,7 +21,7 @@ class SIB_V3 {
     let emailData = new SibApiV3Sdk.SendSmtpEmail()
 
     emailData.to = [{email: email}]
-    if (ccs && css.length>0) {
+    if (ccs && ccs.length>0) {
       emailData.cc=ccs.map(cc => ({email: cc}))
     }
     emailData.templateId = parseInt(index)

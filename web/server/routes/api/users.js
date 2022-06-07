@@ -1,32 +1,50 @@
+const passport = require('passport')
+const moment = require('moment')
+const axios = require('axios')
+const gifFrames = require('gif-frames')
+const {fs} = require('file-system')
+const express = require('express')
 const Shop = require('../../models/Shop')
+const {
+  ACCOUNT,
+  BASEPATH_EDI,
+  CREATE,
+  CUSTOMER_ADMIN,
+  CUSTOMER_BUYER,
+  CUSTOMER_TCI,
+  FEURST_ADMIN,
+  FEURST_ADV,
+  FEURST_SALES,
+  VIEW,
+} = require('../../../utils/feurst/consts')
+const {
+  IMAGE_FILTER,
+  XL_FILTER,
+  createDiskMulter,
+  createMemoryMulter,
+} = require('../../utils/filesystem')
+const {is_development} = require('../../../config/config')
+const {filterUsers, getActionsForRoles} = require('../../utils/userAccess')
+const {accountsImport} = require('../../utils/import')
 const User = require('../../models/User')
 const ServiceUser = require('../../models/ServiceUser')
-require('../../models/ResetToken')
 const Album = require('../../models/Album')
 const {REGISTER_WITHOUT_CODE}=require('../../../utils/context')
 const {checkRegisterCodeValidity, setRegisterCodeUsed}=require('../../utils/register')
 const {EDIT_PROFIL}=require('../../../utils/i18n')
 const {logEvent}=require('../../utils/events')
-const {IMAGE_FILTER, createDiskMulter} = require('../../utils/filesystem')
-const express = require('express')
 
 const router = express.Router()
-const passport = require('passport')
-const bcrypt = require('bcryptjs')
-const {is_production, is_validation, computeUrl}=require('../../../config/config')
-const CronJob = require('cron').CronJob
+const {is_production, computeUrl}=require('../../../config/config')
 const {validateSimpleRegisterInput, validateEditProfile, validateEditProProfile, validateBirthday} = require('../../validation/simpleRegister')
 const validateLoginInput = require('../../validation/login')
 const {sendResetPassword, sendVerificationMail, sendVerificationSMS, sendB2BAccount, sendAlert} = require('../../utils/mailing')
-const moment = require('moment')
 moment.locale('fr')
-const crypto = require('crypto')
-const axios = require('axios')
 const {ROLES}=require('../../../utils/consts')
 const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, createMangoProvider, install_hooks} = require('../../utils/mangopay')
 const {send_cookie}=require('../../utils/serverContext')
-const gifFrames = require('gif-frames')
-const fs = require('fs').promises
+const {isActionAllowed} = require('../../utils/userAccess')
+const ResetToken = require('../../../server/models/ResetToken')
 
 axios.defaults.withCredentials = true
 
@@ -48,6 +66,50 @@ router.get('/check_register_code/:code', (req, res) => {
     .catch(err => {
       console.error(err)
       res.status(400).json(err)
+    })
+})
+
+const DATA_TYPE=ACCOUNT
+// @Route GET /myAlfred/api/users
+// Returns all users
+// @Access private
+router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, VIEW)) {
+    return res.sendStatus(301)
+  }
+
+  User.find()
+    .populate('company')
+    .populate('companies')
+    .then(data => {
+      data=filterUsers(data, DATA_TYPE, req.user, VIEW)
+      res.json(data)
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json(err)
+    })
+})
+
+
+// @Route GET /myAlfred/api/users/sales-representatives
+// Returns all FEURST_SALES users
+// @Access private
+router.get('/sales-representatives', passport.authenticate('jwt', {session: false}), (req, res) => {
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, VIEW)) {
+    return res.sendStatus(301)
+  }
+
+  User.find({roles: FEURST_SALES})
+    .populate('company')
+    .populate('companies')
+    .then(data => {
+      data=filterUsers(data, DATA_TYPE, req.user, VIEW)
+      res.json(data)
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json(err)
     })
 })
 
@@ -137,6 +199,18 @@ router.post('/register', (req, res) => {
     .catch(err => {
       console.error(err)
     })
+})
+
+
+router.get('/actions', passport.authenticate('jwt', {session: false}), (req, res) => {
+  let actions=getActionsForRoles(req.user.roles)
+  if (req.query.model) {
+    actions=actions.filter(a => a.model==req.query.model)
+  }
+  if (req.query.action) {
+    actions=actions.filter(a => a.action==req.query.action)
+  }
+  res.json(actions)
 })
 
 // @Route GET /myAlfred/api/users/sendMailVerification
@@ -283,11 +357,12 @@ router.put('/profile/serviceAddress', passport.authenticate('jwt', {session: fal
         note: req.body.note,
         phone_address: req.body.phone,
       }
-      user.service_address.push(address)
 
+      if (user?.service_address) {
+        Object.assign(user.service_address, [...user.service_address, address])
+      }
 
       user.save().then(user => res.json(user)).catch(err => console.error(err))
-
 
     })
 })
@@ -504,7 +579,7 @@ router.post('/login', (req, res) => {
 
   // Find user by email
   User.findOne({email: new RegExp(`^${email}$`, 'i')})
-    .populate('shop', 'is_particular')
+    .populate({path: 'shop', select: 'is_particular', strictPopulate: false})
     .then(user => {
       // Check for user
       if (!user) {
@@ -554,7 +629,7 @@ router.post('/login', (req, res) => {
 
 router.get('/token', passport.authenticate('jwt', {session: false}), (req, res) => {
   User.findById(req.user.id)
-    .populate('shop', 'is_particular')
+    .populate({path: 'shop', select: 'is_particular', strictPopulate: false})
     .then(user => {
       send_cookie(user, null, res, req.context.getLoggedAs())
     })
@@ -581,7 +656,10 @@ router.get('/all', (req, res) => {
       }
       res.json(user)
     })
-    .catch(err => res.status(404).json({user: 'No users found'}))
+    .catch(err => {
+      console.error(err)
+      res.status(404).json({user: 'No users found'})
+    })
 })
 
 // @Route GET /myAlfred/api/users/users
@@ -601,7 +679,7 @@ router.get('/users', (req, res) => {
 // Get roles for an email's user
 router.get('/roles/:email', (req, res) => {
 
-  User.findOne({email: req.params.email}, 'roles')
+  User.findOne({email: new RegExp(req.params.email, 'i')}, 'roles')
     .then(user => {
       if (!user) {
         console.log(`Request roles for email ${req.params.email}:[]`)
@@ -610,7 +688,10 @@ router.get('/roles/:email', (req, res) => {
       console.log(`Request roles for email ${req.params.email}:${user.roles}`)
       res.json(user.roles)
     })
-    .catch(err => res.status(404).json({user: 'No user found'}))
+    .catch(err => {
+      console.error(err)
+      res.status(404).json({user: 'No user found'})
+    })
 })
 
 // @Route GET /myAlfred/api/users/users/:id
@@ -728,6 +809,7 @@ router.get('/alfred', (req, res) => {
 router.get('/current', passport.authenticate('jwt', {session: false}), (req, res) => {
   User.findById(req.user.id)
     .populate('resetToken')
+    .populate('company')
     .then(user => {
       res.json(user)
     })
@@ -761,6 +843,7 @@ router.post('/forgotPassword', (req, res) => {
         sendB2BAccount(user, user.email, ROLES[role], user.company.name, token, req)
       }
       else {
+        // TODO: prévoir un template pour feurst
         sendResetPassword(user, token, req)
       }
       res.json(user)
@@ -772,32 +855,30 @@ router.post('/forgotPassword', (req, res) => {
 router.post('/resetPassword', (req, res) => {
   const password = req.body.password
   const token = req.body.token
+  let resetToken=null
   ResetToken.findOne({token: token})
-    .then(resetToken => {
-      User.findOne({resetToken: resetToken._id})
-        .then(user => {
-          if (!user) {
-            throw 'No user'
-          }
-          bcrypt.genSalt(10, (err, salt) => {
-            bcrypt.hash(password, salt, (err, hash) => {
-              if (err) {
-                throw err
-              }
-              user.updateOne({password: hash, resetToken: undefined})
-                .then(result => res.json(user))
-                .catch(err => console.error(err))
-            })
-          })
-        })
-        .catch(err => {
-          console.error(err)
-          res.status(400).json({msg: 'Token expiré'})
-        })
+    .then(result => {
+      if (!result) {
+        return Promise.reject('Token expiré')
+      }
+      resetToken=result
+      return bcrypt.hash(password, 10)
+    })
+    .then(hash => {
+      return User.findOneAndUpdate({resetToken: resetToken._id}, {$set: {password: hash, resetToken: null}})
+    })
+    .then(result => {
+      if (!result) {
+        return Promise.reject('Token invalide')
+      }
+      return ResetToken.findOneAndRemove({token: token})
+    })
+    .then(() => {
+      return res.json()
     })
     .catch(err => {
       console.error(err)
-      res.status(400).json({msg: 'Token invalide'})
+      res.status(400).json(err)
     })
 })
 
@@ -948,35 +1029,24 @@ router.put('/profile/editProProfile', passport.authenticate('jwt', {session: fal
 // Edit password
 // @Access private
 router.put('/profile/editPassword', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const password = req.body.password
   const newPassword = req.body.newPassword
-  const admin = req.user.is_admin
 
   if (!newPassword.match('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})')) {
     return res.status(400).json({error: 'Le nouveau mot de passe doit contenir au moins :\n\t- 8 caractères\n\t- 1 minuscule\n\t- 1 majuscule\n\t- 1 chiffre'})
   }
   User.findById(req.user.id)
     .then(user => {
-      const promise = admin ? Promise.resolve(true) : Promise.resolve(bcrypt.compare(password, user.password))
-      promise
-        .then(isMatch => {
-          if (isMatch) {
-            bcrypt.genSalt(10, (err, salt) => {
-              bcrypt.hash(newPassword, salt, (err, hash) => {
-                if (err) {
-                  throw err
-                }
-                user.password = hash
-                user.save()
-                  .then(user => res.json({success: 'Mot de passe mis à jour'}))
-                  .catch(err => console.error(err))
-              })
-            })
+      bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(newPassword, salt, (err, hash) => {
+          if (err) {
+            throw err
           }
-          else {
-            return res.status(400).json({error: 'Mot de passe incorrect', wrongPassword: true})
-          }
+          user.password = hash
+          user.save()
+            .then(user => res.json({success: 'Mot de passe mis à jour'}))
+            .catch(err => console.error(err))
         })
+      })
     })
 
 })
@@ -1247,6 +1317,101 @@ router.get('/hook', (req, res) => {
     })
 })
 
+// PRODUCTS
+const uploadAccounts = createMemoryMulter(XL_FILTER)
+
+// @Route POST /myAlfred/api/products/import
+// Imports products from csv
+router.post('/import', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, CREATE)) {
+    return res.sendStatus(301)
+  }
+
+  uploadAccounts.single('buffer')(req, res, err => {
+    if (err) {
+      console.error(err)
+      return res.status(404).json({errors: err.message})
+    }
+
+    const options=JSON.parse(req.body.options)
+
+    accountsImport(req.file.buffer, options)
+      .then(result => {
+        res.json(result)
+      })
+      .catch(err => {
+        console.error(err)
+        res.status(500).error(err)
+      })
+  })
+})
+
+/**
+ @Route GET /myAlfred/api/users/landing-page
+ Returns landing page URL depending on role
+ */
+router.get('/landing-page', passport.authenticate('jwt', {session: false}), (req, res) => {
+  const roles=req.user.roles
+  if (roles.includes(FEURST_ADMIN)) {
+    return res.json(`${BASEPATH_EDI}/orders/handle`)
+  }
+  if (roles.includes(FEURST_ADV)) {
+    return res.json(`${BASEPATH_EDI}/orders/handle`)
+  }
+  if (roles.includes(FEURST_SALES)) {
+    return res.json(`${BASEPATH_EDI}/quotations/handle`)
+  }
+  if (roles.includes(CUSTOMER_ADMIN)) {
+    return res.json(`${BASEPATH_EDI}/orders`)
+  }
+  if (roles.includes(CUSTOMER_BUYER)) {
+    return res.json(`${BASEPATH_EDI}/orders`)
+  }
+  if (roles.includes(CUSTOMER_TCI)) {
+    return res.json(`${BASEPATH_EDI}/quotations`)
+  }
+  return res.status(404).json(`Unknown loading page for ${roles}`)
+})
+
+// DEV tricks : set any atribute, log without password
+if (is_development()) {
+  router.put('/current', passport.authenticate('jwt', {session: false}), (req, res) => {
+    User.findByIdAndUpdate(req.user, req.body)
+      .then(() => {
+        return res.json()
+      })
+      .catch(err => {
+        return res.status(500).json(err)
+      })
+
+  })
+
+  router.post('/force-login', (req, res) => {
+    const email = req.body.username.toLowerCase().trim()
+    // Find user by email
+    User.findOne({email: new RegExp(`^${email}$`, 'i')})
+      .populate({path: 'shop', select: 'is_particular', strictPopulate: false})
+      .then(user => {
+        if (!user) {
+          return res.status(400).json({username: `Email '${email}' incorrect`})
+        }
+        user.last_login.unshift(Date.now())
+        while (user.last_login.length>10) {
+          user.last_login.pop()
+        }
+        return user.save()
+      })
+      .then(user => {
+        send_cookie(user, null, res)
+      })
+      .catch(err => {
+        console.error(err)
+        res.status(500).json(err)
+      })
+  })
+
+}
 
 // Create mango client account for all user with no id_mangopay
 // DISABLED because it operates on ALL DATABASES !!

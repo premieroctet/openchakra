@@ -1,31 +1,15 @@
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+const {getDataModel}=require('../../config/config')
 
-const CategorySchema = new Schema({
-  particular_label: {
-    type: String,
-  },
-  s_particular_label: {
-    type: String,
-  },
-  professional_label: {
-    type: String,
-  },
-  s_professional_label: {
-    type: String,
-  },
-  particular_picture: {
-    type: String,
-  },
-  professional_picture: {
-    type: String,
-  },
-  description: {
-    type: String,
-  },
-})
+let CategorySchema=null
 
-CategorySchema.index({label: 'text'})
+try {
+  CategorySchema=require(`./${getDataModel()}/CategorySchema`)
+}
+catch(err) {
+  if (err.code !== 'MODULE_NOT_FOUND') {
+    throw e
+  }
+}
 
-const Category = mongoose.model('category', CategorySchema)
-module.exports = Category
+module.exports = CategorySchema ? mongoose.model('category', CategorySchema) : null

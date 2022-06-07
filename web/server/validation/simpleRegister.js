@@ -193,18 +193,20 @@ const validateCompanyProfile = data => {
     errors.vat_number = 'Veuillez saisir un n° de TVA'
   }
 
-  if (!Object.keys(COMPANY_ACTIVITY).includes(data.activity)) {
+  if (!Validator.isEmpty(data.activity) && !Object.keys(COMPANY_ACTIVITY).includes(data.activity)) {
     errors.activity = "Secteur d'activité incorrect"
   }
 
-  if (!Object.keys(COMPANY_SIZE).includes(data.size)) {
+  if (!Validator.isEmpty(data.size) && !Object.keys(COMPANY_SIZE).includes(data.size)) {
     errors.size = "Effectif de l'entreprise incorrect"
   }
 
+  /**
   if (!data.billing_address) {
     errors.billing_address = 'Veuillez saisir une adresse'
   }
-
+  */
+  
   if (data.admin_email && !Validator.isEmail(data.admin_email)) {
     errors.admin_email = "Email de l'administrateur incorrect"
   }

@@ -1,7 +1,7 @@
 import React from 'react'
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
-import '../../static/assets/css/custom.css'
+
 import {withTranslation} from 'react-i18next'
 import {makeStyles} from '@material-ui/core/styles'
 
@@ -28,7 +28,7 @@ function CustomTabMenu(props) {
         <Tabs value={false} aria-label="simple tabs example">
           {
             Object.keys(tabs).map((res, index) => (
-              <a href={tabs[res].url} style={{textTransform: 'initial'}}>
+              <a key={`tab${index}`} href={tabs[res].url} style={{textTransform: 'initial'}}>
                 <Tab
                   key={index}
                   classes={{root: `customnavbartab ${classes.navbarTabRoot}`}}

@@ -1,8 +1,17 @@
 const isEmpty = require('../server/validation/is-empty')
-const {MODES, LOCAL_HOST, AMAZON_HOST}=require('../utils/consts')
 const {MODE, TAWKTO_URL, DISABLE_ALFRED_SELF_REGISTER, DISABLE_ALFRED_PARTICULAR_REGISTER,
-  SIB_TEMPLATES, DATABASE_NAME, HIDE_STORE_DIALOG, MANGOPAY_CLIENTID, MANGOPAY_APIKEY,
-  SKIP_FAILED_PAYMENT, SIB_APIKEY}=require('../mode')
+  SIB_TEMPLATES, DATABASE_NAME, HIDE_STORE_DIALOG, MANGOPAY_CLIENTID, MANGOPAY_APIKEY, DATA_MODEL, SKIP_FAILED_PAYMENT,
+  SIB_APIKEY}=require('../mode')
+
+const MODES={
+  PRODUCTION: 'production',
+  VALIDATION: 'validation',
+  DEVELOPMENT: 'development',
+  DEVELOPMENT_NOSSL: 'development_nossl',
+}
+
+const AMAZON_HOST='my-alfred.io'
+const LOCAL_HOST='localhost'
 
 const MONGO_BASE_URI='mongodb://localhost/'
 
@@ -157,6 +166,12 @@ const checkConfig = () => {
     if (isEmpty(MANGOPAY_APIKEY)) {
       reject(`MANGOPAY_APIKEY non renseigné`)
     }
+    if (isEmpty(DATA_MODEL)) {
+      reject(`DATA_MODEL non renseigné`)
+    }
+    if (isEmpty(SIB_APIKEY)) {
+      reject(`SIB_APIKEY non renseigné`)
+    }
     displayConfig()
     resolve('Configuration OK')
   })
@@ -164,6 +179,10 @@ const checkConfig = () => {
 
 const getDatabaseUri = () => {
   return `${MONGO_BASE_URI}${DATABASE_NAME}`
+}
+
+const getDataModel = () => {
+  return DATA_MODEL
 }
 
 // Hide application installation popup
@@ -174,6 +193,12 @@ const hideStoreDialog = () => {
 const skipFailedPayment = () => {
   return !is_production() && !!SKIP_FAILED_PAYMENT
 }
+
+// DEV mode: allow https without certificate
+if (is_development()) {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
+}
+
 // Public API
 module.exports = {
   databaseName: databaseName,
@@ -187,6 +212,5 @@ module.exports = {
   mustDisplayChat, getChatURL,
   canAlfredSelfRegister, canAlfredParticularRegister,
   getSibTemplates, checkConfig, getDatabaseUri, hideStoreDialog,
-  skipFailedPayment,
-  getSibApiKey,
+  getDataModel, skipFailedPayment, getSibApiKey,
 }

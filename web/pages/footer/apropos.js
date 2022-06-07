@@ -6,7 +6,7 @@ import {withStyles} from '@material-ui/core/styles'
 import styles from '../../static/css/pages/footer/apropos/apropos'
 import LayoutFaq from '../../hoc/Layout/LayoutFaq'
 import Typography from '@material-ui/core/Typography'
-import '../../static/assets/css/custom.css'
+
 import {FAQ_ABOUT} from '../../utils/i18n'
 
 class Apropos extends React.Component {

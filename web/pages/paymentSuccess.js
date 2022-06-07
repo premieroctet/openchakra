@@ -1,3 +1,4 @@
+const withParams = require('../components/withParams')
 const {skipFailedPayment} = require('../config/config')
 const {delayedPromise} = require('../utils/promise')
 const {snackBarError} = require('../utils/notifications')
@@ -11,14 +12,14 @@ import Typography from '@material-ui/core/Typography'
 import axios from 'axios'
 import io from 'socket.io-client'
 
-import BasePage from './basePage'
+
 import LayoutPayment from '../hoc/Layout/LayoutPayment'
 import styles from '../static/css/pages/paymentSuccess/paymentSuccess'
 
 const {BOOK_STATUS}=require('../utils/consts')
 const {setAxiosAuthentication}=require('../utils/authentication')
 
-class paymentSuccess extends BasePage {
+class paymentSuccess extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -39,7 +40,7 @@ class paymentSuccess extends BasePage {
       .catch(err => {
         console.error(err)
       })
-    const booking_id = this.getURLProps().booking_id
+    const booking_id = this.props.params.booking_id
     let transaction=null
     let booking=null
     axios.get(`/myAlfred/api/booking/${booking_id}`)
@@ -128,4 +129,4 @@ class paymentSuccess extends BasePage {
 }
 
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(paymentSuccess))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(withParams(paymentSuccess)))

@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   categoryCardMedia: {
     height: 180,
     width: 180,
@@ -20,3 +20,4 @@ export default theme => ({
     textAlign: 'center',
   },
 })
+module.exports=Style

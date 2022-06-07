@@ -1,4 +1,4 @@
-import '../../static/assets/css/custom.css'
+const withParams = require('../../components/withParams')
 import {booking_datetime_str} from '../../utils/dateutils'
 import {Tooltip} from '@material-ui/core'
 import CustomButton from '../../components/CustomButton/CustomButton'
@@ -18,7 +18,7 @@ import Tabs from '@material-ui/core/Tabs'
 import Typography from '@material-ui/core/Typography'
 import axios from 'axios'
 import moment from 'moment'
-import BasePage from '../basePage'
+
 import BookingPreApprouve from '../../components/BookingDetail/BookingPreApprouve'
 import BookingPreview from '../../components/BookingDetail/BookingPreview'
 import LayoutMobileReservations from '../../hoc/Layout/LayoutMobileReservations'
@@ -49,7 +49,7 @@ moment.locale('fr')
 
 // TODO RASSEMBLER ALLRESERVATIONS + COMINGRESERVATIONS + FINISHEDRESERVATIONS
 
-class AllReservations extends BasePage {
+class AllReservations extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -77,8 +77,8 @@ class AllReservations extends BasePage {
           reservationType: result.is_alfred ? 0 : 1,
         })
         this.loadBookings()
-        if (this.getURLProps().id) {
-          setTimeout(() => this.setState({bookingPreview: this.getURLProps().id}), 1000)
+        if (this.props.params.id) {
+          setTimeout(() => this.setState({bookingPreview: this.props.params.id}), 1000)
         }
       })
       .catch(err => {
@@ -328,4 +328,4 @@ class AllReservations extends BasePage {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(AllReservations))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(withParams(AllReservations)))

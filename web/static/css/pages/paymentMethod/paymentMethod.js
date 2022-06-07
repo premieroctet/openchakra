@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   layoutAccountContainer: {
     [theme.breakpoints.only('xs')]: {
       display: 'none',
@@ -20,3 +20,4 @@ export default theme => ({
   },
 
 })
+module.exports=Style

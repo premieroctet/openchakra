@@ -1,5 +1,4 @@
-import '../../static/assets/css/custom.css'
-
+const withParams = require('../../components/withParams')
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
 import Grid from '@material-ui/core/Grid'
@@ -9,7 +8,7 @@ import axios from 'axios'
 import AddService from '../../components/AddService/AddService'
 import AlfredConditions from '../../components/AlfredConditions/AlfredConditions'
 import AskQuestion from '../../components/AskQuestion/AskQuestion'
-import BasePage from '../basePage'
+
 import Box from '../../components/Box/Box'
 import LayoutMobileProfile from '../../hoc/Layout/LayoutMobileProfile'
 import ProfileLayout from '../../hoc/Layout/ProfileLayout'
@@ -19,7 +18,7 @@ import Head from 'next/head'
 
 const {isEditableUser}=require('../../utils/context')
 
-class ProfileServices extends BasePage {
+class ProfileServices extends React.Component {
 
   constructor(props) {
     super(props)
@@ -29,7 +28,7 @@ class ProfileServices extends BasePage {
   }
 
   componentDidMount() {
-    axios.get(`/myAlfred/api/shop/alfred/${this.getURLProps().user}`)
+    axios.get(`/myAlfred/api/shop/alfred/${this.props.params.user}`)
       .then(response => {
         let shop = response.data
         this.setState({
@@ -82,7 +81,7 @@ class ProfileServices extends BasePage {
   render() {
     const {classes}=this.props
     const {shop}=this.state
-    const {user}=this.getURLProps()
+    const {user}=this.props.params
 
     if (!user) {
       return null
@@ -112,4 +111,4 @@ class ProfileServices extends BasePage {
   }
 
 }
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(ProfileServices))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(withParams(ProfileServices)))

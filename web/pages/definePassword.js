@@ -1,3 +1,4 @@
+const withParams = require('../components/withParams')
 import CustomButton from '../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withStyles} from '@material-ui/core/styles'
@@ -14,7 +15,7 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff'
 import axios from 'axios'
 import {DEFINE_PASSWORD} from '../utils/i18n'
 import {checkPass1, checkPass2} from '../utils/passwords'
-import BasePage from './basePage'
+
 import styles from '../static/css/pages/definePassword/definePassword'
 
 const lodash = require('lodash')
@@ -22,7 +23,7 @@ const lodash = require('lodash')
 const {ADMIN, MANAGER} = require('../utils/consts')
 const {snackBarSuccess, snackBarError} = require('../utils/notifications')
 
-class DefinePassword extends BasePage {
+class DefinePassword extends React.Component {
 
   constructor(props) {
     super(props)
@@ -53,7 +54,7 @@ class DefinePassword extends BasePage {
     e.preventDefault()
     const data = {
       password: this.state.password,
-      token: this.getURLProps().token,
+      token: this.props.params.token,
     }
     axios.post('/myAlfred/api/users/resetPassword', data)
       .then(res => {
@@ -172,4 +173,4 @@ class DefinePassword extends BasePage {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(DefinePassword))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(withParams(DefinePassword)))

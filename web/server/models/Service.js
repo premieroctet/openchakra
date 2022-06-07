@@ -1,73 +1,15 @@
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+const {getDataModel}=require('../../config/config')
 
-const ServiceSchema = new Schema({
-  label: {
-    type: String,
-    required: true,
-  },
-  category: {
-    type: Schema.Types.ObjectId,
-    ref: 'category',
-  },
-  equipments: [{
-    type: Schema.Types.ObjectId,
-    ref: 'equipment',
-  }],
-  picture: {
-    type: String,
-  },
-  description: {
-    type: String,
-  },
-  majoration: {
-    type: String,
-  },
-  location: {
-    // Adresse du client
-    client: Boolean,
-    // Adresse de l'Alfred
-    alfred: Boolean,
-    // Visioconférence
-    visio: Boolean,
-  },
-  // Frais livraison
-  pick_tax: {
-    type: Boolean,
-  },
-  s_label: {
-    type: String,
-    required: true,
-    sparse: true,
-  },
-  // Particulars can book
-  particular_access: {
-    type: Boolean,
-    required: true,
-    sparse: true,
-  },
-  // Professionals can book
-  professional_access: {
-    type: Boolean,
-    required: true,
-    sparse: true,
-  },
-}, {
-  toJSON: {virtuals: true, getters: true},
-  toObject: {virtuals: true, getters: true},
-})
+let ServiceSchema=null
 
-// travel_tax available for any service made at customer's place
-ServiceSchema.virtual('travel_tax').get(function() {
-  return this && this.location && this.location.client
-})
+try {
+  ServiceSchema=require(`./${getDataModel()}/ServiceSchema`)
+}
+catch(err) {
+  if (err.code !== 'MODULE_NOT_FOUND') {
+    throw e
+  }
+}
 
-ServiceSchema.virtual('prestations', {
-  ref: 'prestation', // The Model to use
-  localField: '_id', // Find in Model, where localField
-  foreignField: 'service', // is equal to foreignField
-})
-
-ServiceSchema.index({label: 'text'})
-
-module.exports = Service = mongoose.model('service', ServiceSchema)
+module.exports = ServiceSchema ? mongoose.model('product', ServiceSchema) : null

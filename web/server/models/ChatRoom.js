@@ -44,4 +44,4 @@ ChatRoomsSchema.virtual('latest').get(function() {
   return Math.max(...this.messages.map(m => m.date))
 })
 
-module.exports = ChatRoom = mongoose.model('chatRoom', ChatRoomsSchema)
+module.exports = mongoose.model('chatRoom', ChatRoomsSchema)

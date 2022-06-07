@@ -8,4 +8,4 @@ const FilterPresentationSchema = new Schema({
   },
 })
 
-module.exports = FilterPresentation = mongoose.model('filterPresentation', FilterPresentationSchema)
+module.exports = mongoose.model('filterPresentation', FilterPresentationSchema)

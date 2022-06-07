@@ -30,7 +30,7 @@ const moment = require('moment')
 const lodash = require('lodash')
 
 moment.locale('fr')
-import '../../../static/assets/css/custom.css'
+
 import {DRAWER_BOOKING} from '../../../utils/i18n'
 
 class DrawerBooking extends React.Component {

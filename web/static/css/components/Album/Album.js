@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   albumContainerHeader:{
     display: 'flex',
     flexDirection:'row',
@@ -26,3 +26,4 @@ export default theme => ({
     color: theme.palette.grey[500],
   },
 })
+module.exports=Style

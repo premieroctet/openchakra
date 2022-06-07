@@ -1,3 +1,4 @@
+const withParams = require('../../components/withParams')
 import CustomButton from '../../components/CustomButton/CustomButton'
 import {withTranslation} from 'react-i18next'
 import SnackBar from '../../components/SnackBar/SnackBar'
@@ -51,7 +52,7 @@ class Company extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      user: this.getURLProps().user,
+      user: this.props.params.user,
       company: null,
       showEdition: false,
       enabledEdition: true,
@@ -80,7 +81,7 @@ class Company extends React.Component {
   loadUser = () => {
     this.setState({showEdition: false})
     setAxiosAuthentication()
-    axios.get(`/myAlfred/api/users/${this.getURLProps().user}`)
+    axios.get(`/myAlfred/api/users/${this.props.params.user}`)
       .then(res => {
         const user = res.data
         this.setState({
@@ -291,8 +292,8 @@ class Company extends React.Component {
 
   render() {
     const {classes} = this.props
-    const user=this.getURLProps().user
-    const index=this.getURLProps().indexAccount
+    const user=this.props.params.user
+    const index=this.props.params.indexAccount
     const {company} = this.state
     if (!user && company) {
       return null
@@ -315,4 +316,4 @@ class Company extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(Company))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(withParams(Company)))

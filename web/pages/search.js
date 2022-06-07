@@ -1,3 +1,4 @@
+const withParams = require('../components/withParams')
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -22,12 +23,12 @@ import Typography from '@material-ui/core/Typography'
 import withWidth from '@material-ui/core/withWidth'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import Hidden from '@material-ui/core/Hidden'
-import '../static/assets/css/custom.css'
+
 import {SEARCH} from '../utils/i18n'
 const {setAxiosAuthentication}=require('../utils/authentication')
-const BasePage=require('./basePage')
 const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel')
 const {computeDistanceKm}=require('../utils/functions')
+
 const SearchResults=withSlide(withGrid(CardService))
 const {getLoggedUserId} =require('../utils/context')
 const {PRO, PART}=require('../utils/consts')
@@ -65,7 +66,7 @@ class SearchDataModel extends SlideGridDataModel {
 
 }
 
-class SearchPage extends BasePage {
+class SearchPage extends React.Component {
 
   // FIX : page blanche quand redirigée depuis home page non connectée
   constructor(props) {
@@ -96,12 +97,6 @@ class SearchPage extends BasePage {
     this.SCROLL_DELTA=30
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props !== prevProps) {
-      window.location.reload()
-    }
-  }
-
   componentDidMount() {
 
     if (getLoggedUserId()) {
@@ -110,7 +105,7 @@ class SearchPage extends BasePage {
 
     // Mount components gets criterion from URL
     // If date in URL then force filter after search
-    const url_props=this.getURLProps()
+    const url_props=this.props.params
 
     let st = {
       keyword: 'keyword' in url_props ? url_props.keyword : '',
@@ -277,7 +272,7 @@ class SearchPage extends BasePage {
   search = forceFilter => {
     this.setState({searching: true})
 
-    const url_props = this.getURLProps()
+    const url_props = this.props.params
     let filters = {}
 
     // GPS
@@ -483,4 +478,4 @@ class SearchPage extends BasePage {
 }
 
 
-export default withTranslation('custom', {withRef: true})(withWidth()(withStyles(styles)(SearchPage)))
+export default withTranslation('custom', {withRef: true})(withWidth()(withStyles(styles)(withParams(SearchPage))))

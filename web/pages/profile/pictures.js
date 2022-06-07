@@ -1,3 +1,4 @@
+const withParams = require('../../components/withParams')
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
 import Grid from '@material-ui/core/Grid'
@@ -5,7 +6,7 @@ import React from 'react'
 
 import Album from '../../components/Album/Album'
 import AskQuestion from '../../components/AskQuestion/AskQuestion'
-import BasePage from '../basePage'
+
 import Box from '../../components/Box/Box'
 import LayoutMobileProfile from '../../hoc/Layout/LayoutMobileProfile'
 import ProfileLayout from '../../hoc/Layout/ProfileLayout'
@@ -13,7 +14,7 @@ import styles from '../../static/css/pages/profile/picture/picture'
 
 const {getLoggedUserId, isEditableUser}=require('../../utils/context')
 
-class ProfilePictures extends BasePage {
+class ProfilePictures extends React.Component {
 
   constructor(props) {
     super(props)
@@ -21,7 +22,7 @@ class ProfilePictures extends BasePage {
   }
 
   getUserId() {
-    return this.getURLProps().user || getLoggedUserId()
+    return this.props.params.user || getLoggedUserId()
   }
 
   content = (classes, user) => {
@@ -73,4 +74,4 @@ class ProfilePictures extends BasePage {
 
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(ProfilePictures))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(withParams(ProfilePictures)))

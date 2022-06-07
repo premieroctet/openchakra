@@ -1,3 +1,4 @@
+const withParams = require('../../components/withParams')
 import CustomButton from '../../components/CustomButton/CustomButton'
 import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
@@ -10,7 +11,7 @@ import Router from 'next/router'
 import Select from 'react-dropdown-select'
 import axios from 'axios'
 
-import BasePage from '../basePage'
+
 import DashboardLayout from '../../hoc/Layout/DashboardLayout'
 
 const {ROLES} = require('../../utils/consts')
@@ -46,7 +47,7 @@ const styles = {
   },
 }
 
-class LogAsUser extends BasePage {
+class LogAsUser extends React.Component {
 
   constructor(props) {
     super(props)
@@ -77,7 +78,7 @@ class LogAsUser extends BasePage {
           }
         })
         this.setState({muUsers: muUsers})
-        const email=this.getURLProps().email
+        const email=this.props.params.email
         if (email) {
           this.setState({user: muUsers.find(m => m.key==email)})
         }
@@ -181,4 +182,4 @@ class LogAsUser extends BasePage {
 }
 
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(LogAsUser))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(withParams(LogAsUser)))

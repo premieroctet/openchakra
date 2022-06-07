@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   containerError: {
     display: 'flex',
     justifyContent: 'center',
@@ -16,3 +16,4 @@ export default theme => ({
     },
   },
 })
+module.exports=Style

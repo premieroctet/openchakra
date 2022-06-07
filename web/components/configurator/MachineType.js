@@ -6,7 +6,7 @@ const {
   EXCAVATRICE,
   MACHINE_TYPES,
   PELLE_BUTTE,
-} = require('../../utils/feurst_consts')
+} = require('../../utils/consts')
 import React from 'react'
 import {feurstImgPath} from '../../pages/configurator'
 

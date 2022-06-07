@@ -1,20 +1,11 @@
 import React, {useEffect, useState, useMemo, useRef} from 'react'
-const RequiredField = require('../misc/RequiredField')
-const {is_development} = require('../../config/config')
-const axios = require('axios')
-const {setAxiosAuthentication} = require('../../utils/authentication')
-const Quotation = require('../Feurst/Quotation')
-const {PDFViewer} = require('@react-pdf/renderer')
-const lodash=require('lodash')
 import NoSSR from 'react-no-ssr'
 import countryList from 'react-select-country-list'
-
+const axios = require('axios')
+const {PDFViewer} = require('@react-pdf/renderer')
+const lodash=require('lodash')
 const {withTranslation} = require('react-i18next')
-const {BLADE_SHAPES, FIX_TYPES} = require('../../utils/feurst_consts')
-const {isInternationalPhoneOK} = require('../../utils/sms')
 const {getCountries, getPhoneCode} = require('libphonenumber-js')
-const BladePicture=require('./BladePicture.js')
-
 const {
   TextField,
   FormControl,
@@ -22,6 +13,14 @@ const {
   MenuItem,
 } = require('@material-ui/core')
 const Validator = require('validator')
+const RequiredField = require('../misc/RequiredField')
+const {is_development} = require('../../config/config')
+const {setAxiosAuthentication} = require('../../utils/authentication')
+const Quotation = require('../Feurst/Quotation')
+
+const {BLADE_SHAPES, FIX_TYPES} = require('../../utils/consts')
+const {isInternationalPhoneOK} = require('../../utils/sms')
+const BladePicture=require('./BladePicture.js')
 
 
 const PhoneNumber = ({t, error, onPhoneChange, isValueExpected}) => {
@@ -279,12 +278,14 @@ function Summary(props) {
         </div>
       </div>
 
-      {precos?.accessories && is_development() &&
-        <NoSSR>
-          <PDFViewer style={{width: '100%', height: '800px'}}>
-            <Quotation data={precos} t={props.t}/>
-          </PDFViewer>
-        </NoSSR>
+      {precos?.accessories &&
+          <DevLog>
+            <NoSSR>
+              <PDFViewer style={{width: '100%', height: '800px'}}>
+                <Quotation data={precos} t={props.t}/>
+              </PDFViewer>
+            </NoSSR>
+          </DevLog>
       }
     </div>
   )

@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   avatarSize: {
     width: 100,
     height: 100,
@@ -103,3 +103,4 @@ export default theme => ({
     fontWeight: 'bold'
   }
 })
+export default style

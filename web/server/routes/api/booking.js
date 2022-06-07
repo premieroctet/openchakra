@@ -1,20 +1,21 @@
+const express = require('express')
+const ics=require('ics')
+const {googleCalendarEventUrl} = require('google-calendar-url')
+const mongoose = require('mongoose')
+const passport = require('passport')
+const moment = require('moment')
+const CronJob = require('cron').CronJob
+const uuidv4 = require('uuid/v4')
 const {is_development} = require('../../../config/config')
 const Booking = require('../../models/Booking')
 const Company = require('../../models/Company')
 const User = require('../../models/User')
 const ChatRoom = require('../../models/ChatRoom')
-const express = require('express')
-const ics=require('ics')
-const {googleCalendarEventUrl} = require('google-calendar-url')
 
 const router = express.Router()
-const passport = require('passport')
-const mongoose = require('mongoose')
 const crypto = require('crypto')
-const moment = require('moment')
 const {BOOK_STATUS, EXPIRATION_DELAY, AVOCOTES_COMPANY_NAME} = require('../../../utils/consts')
 const {payBooking} = require('../../utils/mangopay')
-const CronJob = require('cron').CronJob
 const {
   sendBookingConfirmed, sendBookingExpiredToAlfred, sendBookingExpiredToClient, sendBookingInfosRecap,
   sendBookingDetails, sendNewBooking, sendBookingRefusedToClient, sendBookingRefusedToAlfred, sendBookingCancelledByClient,
@@ -26,9 +27,8 @@ const {validateAvocotesCustomer}=require('../../validation/simpleRegister')
 const {computeBookingReference, formatAddress}=require('../../../utils/text')
 const {createMangoClient}=require('../../utils/mangopay')
 const {computeUrl}=require('../../../config/config')
-const uuidv4 = require('uuid/v4')
-
 const {stateMachineFactory} = require('../../utils/BookingStateMachine')
+
 moment.locale('fr')
 
 router.get('/test', (req, res) => res.json({msg: 'Booking Works!'}))
@@ -107,31 +107,19 @@ router.get('/confirmPendingBookings', passport.authenticate('jwt', {session: fal
     .catch(err => console.error(err))
 })
 
-router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) => {
+// @Route POST /myAlfred/api/booking/
+// Add a new booking
+// @Access private
+router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   const random = crypto.randomBytes(Math.ceil(5 / 2)).toString('hex').slice(0, 5)
 
-  const bookingFields = {}
-  bookingFields.reference = `${req.body.reference}_${random}`
-  bookingFields.service = req.body.service
-  bookingFields.address = req.body.address
-  bookingFields.equipments = req.body.equipments
-  bookingFields.amount = req.body.amount
-  bookingFields.company_amount = req.body.company_amount
-  bookingFields.alfred = mongoose.Types.ObjectId(req.body.alfred)
-  bookingFields.user = mongoose.Types.ObjectId(req.body.user)
-  bookingFields.chatroom = mongoose.Types.ObjectId(req.body.chatroom)
-  bookingFields.prestation_date = moment(req.body.prestation_date)
-  bookingFields.prestations = req.body.prestations
-  bookingFields.customer_fees = req.body.customer_fees
-  bookingFields.provider_fees = req.body.provider_fees
-  bookingFields.travel_tax = req.body.travel_tax
-  bookingFields.pick_tax = req.body.pick_tax
-  bookingFields.status = req.body.customer_booking ? BOOK_STATUS.TO_CONFIRM : req.body.status
-  bookingFields.serviceUserId = req.body.serviceUserId
-  bookingFields.cesu_amount = req.body.cesu_amount
-  bookingFields.user_role = getRole(req) || null
-  bookingFields.customer_booking = req.body.customer_booking
+  const bookingFields = {
+    ...req.body,
+    reference: `${req.body.reference}_${random}`,
+    status: req.body.customer_booking ? BOOK_STATUS.TO_CONFIRM : req.body.status,
+    user_role: getRole(req) || null,
+  }
 
   console.log(JSON.stringify(bookingFields))
 
@@ -188,6 +176,46 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
     .catch(err => {
       console.error(err)
       res.status(404)
+    })
+})
+
+// @Route PUT /myAlfred/api/booking/:id/item
+// Add item to a booking
+// @Access private
+router.put('/:id/item', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  const booking_id=req.params.id
+  const item=req.body
+
+  Booking.findByIdAndUpdate(booking_id, {$push: {items: item}}, {runValidators: true})
+    .then(result => {
+      if (!result) {
+        console.error(`No booking #${booking_id}`)
+        return Promise.reject(`No booking #${booking_id}`)
+      }
+      return res.json()
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(500).json(err)
+    })
+})
+
+// @Route PUT /myAlfred/api/booking/:id/item
+// Removes item from a booking
+// @Access private
+router.delete('/:booking_id/item/:item_id', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  const booking_id=req.params.booking_id
+  const item_id=req.params.item_id
+
+  Booking.findByIdAndUpdate(booking_id, {$pull: {items: {_id: item_id}}}, {runValidators: true})
+    .then(() => {
+      res.json()
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(500).json(err)
     })
 })
 
@@ -378,7 +406,7 @@ router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res)
 
 router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
   const obj = req.body
-  const canceller_id = req.context.user._id
+  const canceller_id = req.user._id
 
   console.log(`Booking ${req.params.id}: setting booking:${JSON.stringify(obj)}`)
   Booking.findById(req.params.id)
@@ -510,7 +538,8 @@ router.post('/avocotes', (req, res) => {
     })
 })
 
-new CronJob('0 */35 * * * *', (() => {
+// Check bookings to set to FINISHED
+Booking && new CronJob('0 */35 * * * *', (() => {
   console.log('Checking terminated bookings')
   const date = moment().startOf('day')
 
@@ -528,6 +557,10 @@ new CronJob('0 */35 * * * *', (() => {
             .then(bo => {
               sendLeaveCommentForAlfred(bo)
               sendLeaveCommentForClient(bo)
+              // Avocotes : send billing mail to provider
+              if (bo.customer_booking) {
+                sendBillingToAlfred(bo)
+              }
             })
             .catch(err => console.error(err))
         }
@@ -537,8 +570,8 @@ new CronJob('0 */35 * * * *', (() => {
     .catch(err => console.error(err))
 }), null, true, 'Europe/Paris')
 
-// Handle terminated but not paid bookings
-new CronJob('0 0 * * * *', (() => {
+// Check bookings to pay
+Booking && new CronJob('0 0 * * * *', (() => {
   console.log('Checking bookings to pay')
   Booking.find({status: BOOK_STATUS.FINISHED, paid: false})
     .populate('user')
@@ -560,7 +593,7 @@ new CronJob('0 0 * * * *', (() => {
 // Expiration réervation en attente de confirmation :
 // - soit EXPIRATION_DELAY jours après la date de création de la réservation
 // - soit après la date de prestation
-new CronJob('0 */15 * * * *', (() => {
+Booking && new CronJob('0 */15 * * * *', (() => {
   console.log('Checking expired bookings')
   const currentDate = moment().startOf('day')
   Booking.find({$or: [{status: BOOK_STATUS.TO_CONFIRM}, {status: BOOK_STATUS.TO_PAY}]})

@@ -12,7 +12,7 @@ import axios from 'axios'
 import isEmpty from '../../../server/validation/is-empty'
 import TextField from '@material-ui/core/TextField'
 import {SHOP} from '../../../utils/i18n'
-import '../../../static/assets/css/custom.css'
+
 
 // TODO : régler le pb du ButtonSwitch frais de déplacements
 class SettingService extends React.Component {

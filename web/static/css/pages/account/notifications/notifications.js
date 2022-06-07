@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   iosSwitchContainer: {
     [theme.breakpoints.down('lg')]: {
       display: 'flex',
@@ -70,3 +70,4 @@ export default theme => ({
   checked: {},
   focusVisible: {},
 })
+export default style

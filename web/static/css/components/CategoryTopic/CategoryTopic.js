@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   categoryMainContainer: {
     display: 'flex',
     flexDirection: 'column',
@@ -114,3 +114,4 @@ export default theme => ({
     height: 70,
   },
 })
+module.exports=Style
