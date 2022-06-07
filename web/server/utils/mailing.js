@@ -6,21 +6,16 @@ const {
   computeUrl,
   getSibTemplates,
   get_host_url,
-  is_development,
 } = require('../../config/config')
 const User = require('../models/User')
 const {booking_datetime_str} = require('../../utils/dateutils')
 const {fillSms} = require('../../utils/sms')
+const {isFeurstUser} = require('./userAccess')
 const {SIB} = require('./sendInBlue')
-
-const QUOTATION_CC=is_development() ? 'sebastien.auvray@alfredplace.io': 'florian.benetiere@safe-feurst.fr'
 
 // Templates
 const SIB_IDS=require(`./sib_templates/${getSibTemplates()}.js`)
 
-/**
- 21  VERS ALFRED == N'oubliez pas de mettre à jour vos disponibilités 🗓
- */
 
 const SMS_CONTENTS = {
   [SIB_IDS.NEW_BOOKING_MANUAL]: '{{ params.client_firstname }} a effectué une demande de réservation de votre service {{ params.service_label }}',
@@ -464,7 +459,19 @@ const sendCustomQuotation = (prospect_email, prospect_name, prospect_company, qu
       machine: machine_description,
     },
   )
+}
 
+const sendBillingToAlfred = booking => {
+  sendNotification(
+    BILLING_2_ALFRED,
+    [booking.alfred, booking.user.email],
+    {
+      firstname: booking.alfred.firstname,
+      city: booking.address.city,
+      prestation_date: booking.date_prestation,
+      alfred_amount: booking.alfred_amount,
+    },
+  )
 }
 
 const sendOrderAlert = (email, reference, company_name, data_link) => {
@@ -549,6 +556,7 @@ module.exports = {
   sendRegisterInvitation,
   sendAutoQuotation,
   sendCustomQuotation,
+  sendBillingToAlfred,
   sendOrderAlert,
   sendDataNotification,
 }

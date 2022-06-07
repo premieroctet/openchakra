@@ -16,12 +16,11 @@ import JssProvider from 'react-jss/lib/JssProvider'
 import React from 'react'
 import Router from 'next/router'
 import {I18nextProvider, withTranslation} from 'react-i18next'
-import {getChatURL, mustDisplayChat} from '../config/config'
-import getPageContext from '../lib/getPageContext'
-import {snackBarError} from '../utils/notifications'
 import {getLoggedUser} from '../utils/context'
+import {snackBarError} from '../utils/notifications'
+import getPageContext from '../lib/getPageContext'
+import {getChatURL, mustDisplayChat} from '../config/config'
 import i18n from '../server/utils/i18n_init'
-import '../static/assets/css/custom.css'
 
 class MyApp extends App {
   constructor() {
@@ -83,6 +82,7 @@ class MyApp extends App {
           <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"/>
         </Head>
         {/* Wrap every page in Jss and Theme providers */}
+
         <JssProvider
           registry={this.pageContext.sheetsRegistry}
           generateClassName={this.pageContext.generateClassName}

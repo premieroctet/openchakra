@@ -1,6 +1,15 @@
-const {getDataModel} = require('../../config/config')
 const mongoose = require('mongoose')
+const {getDataModel} = require('../../config/config')
 
-const OrderSchema=require(`./${getDataModel()}/OrderSchema`)
+let OrderSchema=null
 
-module.exports = mongoose.model('order', OrderSchema)
+try {
+  OrderSchema=require(`./${getDataModel()}/OrderSchema`)
+}
+catch(err) {
+  if (err.code !== 'MODULE_NOT_FOUND') {
+    throw e
+  }
+}
+
+module.exports = OrderSchema ? mongoose.model('order', OrderSchema) : null

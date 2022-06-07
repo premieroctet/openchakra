@@ -120,24 +120,24 @@ const USER_ACTIONS={
   [FEURST_SALES]: lodash.flattenDeep([
     createUserAction(ACCOUNT, UPDATE),
     createUserAction(ACCOUNT, VIEW, {type: CUSTOMER_ADMIN, visibility: RELATED}),
-    [CREATE, VIEW, UPDATE, HANDLE, UPDATE_ALL, VALIDATE].map(action => createUserAction(QUOTATION, action, {visibility: RELATED})),
+    [CREATE, VIEW, UPDATE, HANDLE, UPDATE_ALL, VALIDATE, REWRITE].map(action => createUserAction(QUOTATION, action, {visibility: RELATED})),
     [VIEW].map(action => createUserAction(ORDER, action, {visibility: RELATED})),
     createUserAction(COMPANY, VIEW, {visibility: RELATED}),
   ]),
   [CUSTOMER_ADMIN]: lodash.flattenDeep([
     createUserAction(ACCOUNT, UPDATE),
     [VIEW, CREATE, UPDATE, DELETE].map(action => [CUSTOMER_BUYER, CUSTOMER_TCI].map(type => createUserAction(ACCOUNT, action, {type: type, visibility: COMPANY}))),
-    [CREATE, VIEW, UPDATE, CONVERT, VALIDATE].map(action => createUserAction(QUOTATION, action, {visibility: COMPANY})),
+    [CREATE, VIEW, UPDATE, CONVERT, VALIDATE, REWRITE].map(action => createUserAction(QUOTATION, action, {visibility: COMPANY})),
     [CREATE, VIEW, UPDATE, VALIDATE, CONVERT].map(action => createUserAction(ORDER, action, {visibility: COMPANY})),
   ]),
   [CUSTOMER_BUYER]: lodash.flattenDeep([
     createUserAction(ACCOUNT, UPDATE),
     [CREATE, VIEW, UPDATE, DELETE, VALIDATE, CONVERT].map(action => createUserAction(ORDER, action, {visibility: COMPANY})),
-    [CREATE, VIEW, UPDATE, CONVERT, DELETE, VALIDATE].map(action => createUserAction(QUOTATION, action, {visibility: COMPANY})),
+    [CREATE, VIEW, UPDATE, CONVERT, DELETE, VALIDATE, REWRITE].map(action => createUserAction(QUOTATION, action, {visibility: COMPANY})),
   ]),
   [CUSTOMER_TCI]: lodash.flattenDeep([
     createUserAction(ACCOUNT, UPDATE),
-    [CREATE, VIEW, UPDATE, DELETE, VALIDATE].map(action => createUserAction(QUOTATION, action, {visibility: COMPANY})),
+    [CREATE, VIEW, UPDATE, DELETE, VALIDATE, REWRITE].map(action => createUserAction(QUOTATION, action, {visibility: COMPANY})),
     [VIEW].map(action => createUserAction(ORDER, action, {visibility: COMPANY})),
   ]),
 }

@@ -1,25 +1,26 @@
+const express = require('express')
+const ics=require('ics')
+const {googleCalendarEventUrl} = require('google-calendar-url')
+const mongoose = require('mongoose')
+const passport = require('passport')
+const moment = require('moment')
+const CronJob = require('cron').CronJob
+const uuidv4 = require('uuid/v4')
 const {is_development} = require('../../../config/config')
 const Booking = require('../../models/Booking')
 const Company = require('../../models/Company')
 const User = require('../../models/User')
 const ChatRoom = require('../../models/ChatRoom')
-const express = require('express')
-const ics=require('ics')
-const {googleCalendarEventUrl} = require('google-calendar-url')
 
 const router = express.Router()
-const passport = require('passport')
-const mongoose = require('mongoose')
 const crypto = require('crypto')
-const moment = require('moment')
 const {BOOK_STATUS, EXPIRATION_DELAY, AVOCOTES_COMPANY_NAME} = require('../../../utils/consts')
 const {payBooking} = require('../../utils/mangopay')
-const CronJob = require('cron').CronJob
 const {
   sendBookingConfirmed, sendBookingExpiredToAlfred, sendBookingExpiredToClient, sendBookingInfosRecap,
   sendBookingDetails, sendNewBooking, sendBookingRefusedToClient, sendBookingRefusedToAlfred, sendBookingCancelledByClient,
   sendBookingCancelledByAlfred, sendAskInfoPreapproved, sendAskingInfo, sendNewBookingManual,
-  sendLeaveCommentForClient, sendLeaveCommentForAlfred, sendAlert,
+  sendLeaveCommentForClient, sendLeaveCommentForAlfred, sendAlert, sendBillingToAlfred,
 } = require('../../utils/mailing')
 const {getRole, get_logged_id} = require('../../utils/serverContext')
 const {validateAvocotesCustomer}=require('../../validation/simpleRegister')
@@ -267,7 +268,7 @@ router.get('/currentAlfred', passport.authenticate('jwt', {session: false}), (re
 router.get('/avocotes', passport.authenticate('admin', {session: false}), (req, res) => {
   Booking.find({
     company_customer: {$exists: true, $ne: null},
-    status: {$nin: [BOOK_STATUS.TO_PAY, BOOK_STATUS.FINISHED, BOOK_STATUS.CANCELLED]},
+    status: {$nin: [BOOK_STATUS.TO_PAY, BOOK_STATUS.FINISHED, BOOK_STATUS.CANCELLED, BOOK_STATUS.EXPIRED]},
   })
     .populate('user')
     .then(customer_bookings => {
@@ -556,6 +557,10 @@ Booking && new CronJob('0 */35 * * * *', (() => {
             .then(bo => {
               sendLeaveCommentForAlfred(bo)
               sendLeaveCommentForClient(bo)
+              // Avocotes : send billing mail to provider
+              if (bo.customer_booking) {
+                sendBillingToAlfred(bo)
+              }
             })
             .catch(err => console.error(err))
         }
@@ -563,7 +568,6 @@ Booking && new CronJob('0 */35 * * * *', (() => {
       )
     })
     .catch(err => console.error(err))
-
 }), null, true, 'Europe/Paris')
 
 // Check bookings to pay

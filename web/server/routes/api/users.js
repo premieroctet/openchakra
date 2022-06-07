@@ -1,23 +1,32 @@
-const crypto = require('crypto')
-
-const fs = require('fs').promises
-const mongoose = require('mongoose')
-const express = require('express')
 const passport = require('passport')
 const bcrypt = require('bcryptjs')
-const CronJob = require('cron').CronJob
 const moment = require('moment')
 const axios = require('axios')
 const gifFrames = require('gif-frames')
-const {BASEPATH_EDI, FEURST_ADMIN, FEURST_ADV, FEURST_SALES, CUSTOMER_ADMIN, CUSTOMER_BUYER, CUSTOMER_TCI} = require('../../../utils/consts')
-const {filterUsers} = require('../../utils/userAccess')
-const {CREATE} = require('../../../utils/feurst/consts')
-const {XL_FILTER, createMemoryMulter} = require('../../utils/filesystem')
-const {accountsImport} = require('../../utils/import')
-const {ACCOUNT, LINK, VIEW} = require('../../../utils/feurst/consts')
+const {fs} = require('file-system')
+const express = require('express')
 const Shop = require('../../models/Shop')
+const {
+  ACCOUNT,
+  BASEPATH_EDI,
+  CREATE,
+  CUSTOMER_ADMIN,
+  CUSTOMER_BUYER,
+  CUSTOMER_TCI,
+  FEURST_ADMIN,
+  FEURST_ADV,
+  FEURST_SALES,
+  VIEW,
+} = require('../../../utils/feurst/consts')
+const {
+  IMAGE_FILTER,
+  XL_FILTER,
+  createDiskMulter,
+  createMemoryMulter,
+} = require('../../utils/filesystem')
 const {is_development} = require('../../../config/config')
-const {getActionsForRoles} = require('../../utils/userAccess')
+const {filterUsers, getActionsForRoles} = require('../../utils/userAccess')
+const {accountsImport} = require('../../utils/import')
 const User = require('../../models/User')
 const ServiceUser = require('../../models/ServiceUser')
 const Album = require('../../models/Album')
@@ -25,7 +34,6 @@ const {REGISTER_WITHOUT_CODE}=require('../../../utils/context')
 const {checkRegisterCodeValidity, setRegisterCodeUsed}=require('../../utils/register')
 const {EDIT_PROFIL}=require('../../../utils/i18n')
 const {logEvent}=require('../../utils/events')
-const {IMAGE_FILTER, createDiskMulter} = require('../../utils/filesystem')
 
 const router = express.Router()
 const {is_production, computeUrl}=require('../../../config/config')
