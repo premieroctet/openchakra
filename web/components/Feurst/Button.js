@@ -213,6 +213,8 @@ const BaseLink = ({
 
 const PleasantLink = styled(BaseLink)`
   display: inline-block;
+  width: 100%;
+  text-align: center;
 `
   
 

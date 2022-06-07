@@ -265,10 +265,12 @@ const quotationsColumns = ({endpoint, language, deleteOrder}) => {
     {
       label: 'Frais de livraison',
       attribute: 'shipping_fee',
+      Cell: ({cell: {value}}) => localeMoneyFormat({lang: language, value}),
     },
     {
       label: 'Montant total',
       attribute: 'total_amount',
+      Cell: ({cell: {value}}) => localeMoneyFormat({lang: language, value}),
     },
     {
       label: 'Statut',
