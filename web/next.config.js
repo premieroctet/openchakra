@@ -1,17 +1,20 @@
 const WebpackBar = require('webpackbar')
+const {getDataModel} = require('./config/config')
 
 module.exports = {
   // TODO Redirect for Feurst only
   basePath: '',
   async redirects() {
-    return [
+    console.log(`DATAMODEL:${getDataModel()}`)
+    return getDataModel()=='feurst' ? [
       {
         source: '/',
         destination: '/edi',
         basePath: false,
-        permanent: true,
+        permanent: false,
       },
     ]
+      : []
   },
   webpack: (config, {isServer}) => {
     // Fixes npm packages that depend on `fs` module

@@ -323,7 +323,7 @@ class UserServicesPreview extends React.Component {
       count[presta._id]=p.value
     })
     const allAddresses={'main': avocotes_booking.address}
-    this.setState({[name]: value, count: count, allAddresses: allAddresses}, () => this.computeTotal())
+    this.setState({[name]: value, count: count, allAddresses: allAddresses, location: 'main'}, () => this.computeTotal())
   }
 
   checkBook = () => {
