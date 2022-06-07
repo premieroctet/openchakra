@@ -102,7 +102,7 @@ checkConfig()
 
     // Hide test pages
     app.use((req, res, next) => {
-      if (!is_development() && req.url.match(/^\/test\//)) {
+      if (is_production() && req.url.match(/^\/test\//)) {
         return res.sendStatus(404)
       }
       return next()
