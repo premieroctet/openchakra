@@ -1,6 +1,18 @@
 const WebpackBar = require('webpackbar')
 
 module.exports = {
+  // TODO Redirect for Feurst only
+  basePath: '',
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/edi',
+        basePath: false,
+        permanent: true,
+      },
+    ]
+  },
   webpack: (config, {isServer}) => {
     // Fixes npm packages that depend on `fs` module
     if (!isServer) {

@@ -25,14 +25,13 @@ async function client(
     if (response.status === 401) {
       clearAuthenticationToken()
       // refresh the page for them
-      window.location.assign(window.location)
       return Promise.reject({message: 'Accès interdit.'})
     }
-    
+
     if (response.status === 403) {
       return Promise.reject({message: 'Action non autorisée.'})
     }
-    
+
     if (response.ok) {
       const headers = [...response.headers].reduce((a, v) => ({...a, [v[0]]: v[1]}), {})
 
@@ -54,7 +53,7 @@ async function client(
       status: response.status,
       message: await response.json() || 'Something went wrong',
     }
-    
+
     throw error
   })
     .catch(err => {
