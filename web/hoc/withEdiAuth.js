@@ -6,12 +6,12 @@ import isUndefined from 'lodash/isUndefined'
 import styled from 'styled-components'
 import Header from '../components/Feurst/Header'
 import Footer from '../components/Feurst/Footer'
-import {getLoggedUser} from '../utils/context'
 import {theme, GlobalStyleEdi} from '../styles/feurst/feurst.theme'
 import {client} from '../utils/client'
 import {BASEPATH_EDI, API_PATH} from '../utils/feurst/consts'
 import {is_development} from '../config/config'
 import Tabs from '../components/Feurst/Tabs'
+import {UserContext} from '../contextes/user.context'
 
 class AccessRights {
   constructor(model, action, actions) {
@@ -47,13 +47,18 @@ class AccessRights {
 
 
 const withEdiAuth = (Component = null, options = {}) => {
-  class ediAuth extends React.Component {
+  
+  class EdiAuth extends React.Component {
     state = {
       loading: true,
       actions: [],
       account: null,
     };
 
+    isLoggedUser = () => {
+      const {user} = this.context
+      return !!user
+    }
 
     async getUserRoles() {
       return await client(`${API_PATH}/users/actions`)
@@ -64,12 +69,11 @@ const withEdiAuth = (Component = null, options = {}) => {
     }
 
     async componentDidMount() {
+      
 
-      const isLoggedUser = getLoggedUser()
-
-      if (isLoggedUser) {
+      if (this.isLoggedUser) {
         await this.getUserRoles()
-          .then(actions => this.setState({loading: false, user: isLoggedUser, actions}))
+          .then(actions => this.setState({loading: false, actions}))
           .catch(e => {
             console.error(e)
           })
@@ -114,7 +118,9 @@ const withEdiAuth = (Component = null, options = {}) => {
     }
   }
 
-  return ediAuth
+  EdiAuth.contextType = UserContext
+
+  return EdiAuth
 }
 
 const Skeleton = styled.div`

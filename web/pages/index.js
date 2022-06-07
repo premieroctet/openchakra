@@ -1,39 +1,37 @@
-const {hideStoreDialog} = require('../config/config')
-const {
-  getLoggedUserId,
-  isApplication,
-  isMobile,
-} = require('../utils/context')
-import LoggedAsBanner from '../components/LoggedAsBanner'
-import CustomButton from '../components/CustomButton/CustomButton'
+import React from 'react'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
+import Router from 'next/router'
 import axios from 'axios'
-import React from 'react'
-import Footer from '../hoc/Layout/Footer/Footer'
 import Head from 'next/head'
 import Grid from '@material-ui/core/Grid'
-import InfoBar from '../components/InfoBar/InfoBar'
 import {withStyles} from '@material-ui/core/styles'
-import styles from '../static/css/pages/homePage/index'
-import NavBar from '../hoc/Layout/NavBar/NavBar'
-import BannerPresentation from '../components/HomePage/BannerPresentation/BannerPresentation'
-import CategoryTopic from '../components/HomePage/Category/CategoryTopic'
-import OurAlfred from '../components/HomePage/OurAlfred/OurAlfred'
-import NewsLetter from '../components/HomePage/NewsLetter/NewsLetter'
-import MobileNavbar from '../hoc/Layout/NavBar/MobileNavbar'
-import TrustAndSecurity from '../hoc/Layout/TrustAndSecurity/TrustAndSecurity'
+import lodash from 'lodash'
 import {Dialog, DialogActions, DialogContent, Divider} from '@material-ui/core'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
-import ResaService from '../components/HomePage/ResaService/ResaService'
 import Typography from '@material-ui/core/Typography'
 import CloseIcon from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
 import {isAndroid} from 'react-device-detect'
-const {PRO, PART} = require('../utils/consts')
-import Router from 'next/router'
-
-import lodash from 'lodash'
+import ResaService from '../components/HomePage/ResaService/ResaService'
+import TrustAndSecurity from '../hoc/Layout/TrustAndSecurity/TrustAndSecurity'
+import MobileNavbar from '../hoc/Layout/NavBar/MobileNavbar'
+import NewsLetter from '../components/HomePage/NewsLetter/NewsLetter'
+import {PRO, PART} from '../utils/consts'
+import OurAlfred from '../components/HomePage/OurAlfred/OurAlfred'
+import CategoryTopic from '../components/HomePage/Category/CategoryTopic'
+import BannerPresentation from '../components/HomePage/BannerPresentation/BannerPresentation'
+import NavBar from '../hoc/Layout/NavBar/NavBar'
+import styles from '../static/css/pages/homePage/index'
+import InfoBar from '../components/InfoBar/InfoBar'
+import Footer from '../hoc/Layout/Footer/Footer'
+import CustomButton from '../components/CustomButton/CustomButton'
+import LoggedAsBanner from '../components/LoggedAsBanner'
+import {
+  isApplication,
+  isMobile,
+} from '../utils/context'
+import {hideStoreDialog} from '../config/config'
 import RandomBanner from '../components/RandomBanner/RandomBanner'
 import {INDEX} from '../utils/i18n'
 
@@ -58,7 +56,6 @@ class Home extends React.Component {
     this.state = {
       category: {},
       alfred: {},
-      logged: false,
       user: {},
       open: false,
       mounted: false,
@@ -71,25 +68,10 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
-    if (getLoggedUserId()) {
-      this.setState({logged: true})
-    }
+    
     if (isMobile()) {
       this.setState({open: true})
     }
-
-    axios.get('/myAlfred/api/users/current')
-      .then(res => {
-        let data = res.data
-        this.setState({
-          user: data,
-          gps: data.billing_address ? data.billing_address.gps : null,
-        },
-        )
-      })
-      .catch(err => {
-        console.error((err))
-      })
 
     axios.get(`/myAlfred/api/category/${PART}`)
       .then(res => {
@@ -152,7 +134,7 @@ class Home extends React.Component {
 
   render() {
     const {classes, t} = this.props
-    const {mounted, categories, alfred, open, user} = this.state
+    const {mounted, categories, alfred, open} = this.state
 
     if (!mounted) {
       return null

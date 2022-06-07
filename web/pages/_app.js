@@ -21,6 +21,7 @@ import {snackBarError} from '../utils/notifications'
 import getPageContext from '../lib/getPageContext'
 import {getChatURL, mustDisplayChat} from '../config/config'
 import i18n from '../server/utils/i18n_init'
+import {UserWrapper} from '../contextes/user.context'
 
 class MyApp extends App {
   constructor() {
@@ -96,7 +97,9 @@ class MyApp extends App {
             <CssBaseline/>
             {/* Pass pageContext to the _document though the renderPage enhancer
                   to render collected styles on server-side. */}
-            <Component pageContext={this.pageContext} {...pageProps} />
+            <UserWrapper>
+              <Component pageContext={this.pageContext} {...pageProps} />
+            </UserWrapper>
           </MuiThemeProvider>
         </JssProvider>
 

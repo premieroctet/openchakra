@@ -1,10 +1,6 @@
-import AutoCompleteTextField from '../../../components/Search/AutoCompleteTextField'
-import {canAlfredSelfRegister} from '../../../config/config'
-import CustomButton from '../../../components/CustomButton/CustomButton'
+import React, {Component} from 'react'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
-const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
-import React, {Component} from 'react'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import IconButton from '@material-ui/core/IconButton'
@@ -30,7 +26,6 @@ import Select from '@material-ui/core/Select'
 import FormControl from '@material-ui/core/FormControl'
 import axios from 'axios'
 import withStyles from '@material-ui/core/styles/withStyles'
-import styles from '../../../static/css/components/NavBar/NavBar'
 import {Typography} from '@material-ui/core'
 import TuneIcon from '@material-ui/icons/Tune'
 import InputLabel from '@material-ui/core/InputLabel'
@@ -40,16 +35,21 @@ import Switch from '@material-ui/core/Switch'
 import {DateRangePicker} from 'react-dates'
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
 import ClearIcon from '@material-ui/icons/Clear'
-import {getLoggedUserId, isLoggedUserRegistered, removeAlfredRegistering, setAlfredRegistering, getRole} from '../../../utils/context'
-const {formatAddress} = require('../../../utils/text.js')
 import Slider from '@material-ui/core/Slider'
-
-const {PART, EMPLOYEE}=require('../../../utils/consts')
-import Logo from '../../../components/Logo/Logo'
 import Hidden from '@material-ui/core/Hidden'
-import CustomTabMenu from '../../../components/CustomTabMenu/CustomTabMenu'
 import lodash from 'lodash'
 import dynamic from 'next/dynamic'
+import CustomTabMenu from '../../../components/CustomTabMenu/CustomTabMenu'
+import Logo from '../../../components/Logo/Logo'
+import {getLoggedUserId, isLoggedUserRegistered, removeAlfredRegistering, setAlfredRegistering, getRole} from '../../../utils/context'
+import styles from '../../../static/css/components/NavBar/NavBar'
+import CustomButton from '../../../components/CustomButton/CustomButton'
+import {canAlfredSelfRegister} from '../../../config/config'
+import AutoCompleteTextField from '../../../components/Search/AutoCompleteTextField'
+import {PART, EMPLOYEE} from '../../../utils/consts'
+import {formatAddress} from '../../../utils/text.js'
+import {clearAuthenticationToken, setAxiosAuthentication} from '../../../utils/authentication'
+import {UserContext} from '../../../contextes/user.context'
 
 const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />
@@ -122,6 +122,11 @@ class NavBar extends Component {
     this.radius_marks=[1, 5, 10, 15, 20, 30, 50, 100, 200, 300].map(v => ({value: v, label: v>1 && v<50? '' : `${v}km`}))
   }
 
+  isLoggedUser = () => {
+    const {user} = this.context
+    return !!user
+  }
+
   componentDidMount() {
     let query = Router.query
     if (Router.pathname === '/') {
@@ -136,32 +141,28 @@ class NavBar extends Component {
     if (query.login === 'true') {
       this.handleOpenLogin()
     }
-    if (query.register && !getLoggedUserId()) {
+    if (query.register && !isLoggedUser()) {
       this.handleOpenRegister(query.register)
     }
 
-    setAxiosAuthentication()
-    axios.get('/myAlfred/api/users/current')
-      .then(res => {
-        const user = res.data
-        Promise.resolve({data: user})
-          .then(res => {
-            let allAddresses = {'main': res.data.billing_address}
-            if (res.data?.service_address) {
-              res.data.service_address.forEach(addr => {
-                allAddresses[addr._id] = addr
-              })
-            }
-            this.setState({
-              user: user,
-              allAddresses: allAddresses,
-              selectedAddress: this.props.selectedAddress || 'main', keyword: this.props.keyword || '',
-            })
-          })
+
+    const {user} = this.context
+
+    if (user) {
+
+      let allAddresses = {'main': user?.billing_address}
+      if (user?.service_address) {
+        user?.service_address.forEach(addr => {
+          allAddresses[addr._id] = addr
+        })
+      }
+      this.setState({
+        user,
+        allAddresses,
+        selectedAddress: this.props.selectedAddress || 'main', keyword: this.props.keyword || '',
       })
-      .catch(err => {
-        console.error(err)
-      })
+    }
+
 
     setAxiosAuthentication()
     axios.get(`/myAlfred/api/category/${PART}`)
@@ -1177,5 +1178,7 @@ class NavBar extends Component {
     )
   }
 }
+
+NavBar.contextType = UserContext
 
 export default withTranslation('custom', {withRef: true})(withStyles(styles)(NavBar))

@@ -7,10 +7,11 @@ import {PleasantButton} from '../../../components/Feurst/Button'
 import {client} from '../../../utils/client'
 import {screen} from '../../../styles/screenWidths'
 import {ACCOUNT, UPDATE} from '../../../utils/feurst/consts'
+import {useUserContext} from '../../../contextes/user.context'
+
 
 const Profile = () => {
 
-  const [profile, setProfile] = useState()
   const [password, setPassword] = useState('')
   const [passChanged, setPassChanged] = useState(false)
   const canSubmitPassword = !!(password?.check1 && password?.check2)
@@ -26,17 +27,7 @@ const Profile = () => {
       .catch(err => console.error(err))
   }
 
-  const getUserInfo = async() => {
-    return await client(`${API_PATH}/users/current`)
-      .then(res => {
-        setProfile(res)
-      })
-      .catch(err => console.error(err))
-  }
-
-  useEffect(() => {
-    getUserInfo()
-  }, [])
+  const {user} = useUserContext()
 
 
   return (<StyledProfile>
@@ -49,12 +40,12 @@ const Profile = () => {
         <div className='flex gap-x-2'>
           <div>
             <h3>Prénom&nbsp;:</h3>
-            <p>{profile?.firstname}</p>
+            <p>{user?.firstname}</p>
           </div>
    
           <div>
             <h3>Nom&nbsp;:</h3>
-            <p>{profile?.name}</p>
+            <p>{user?.name}</p>
 
           </div>
 
@@ -62,11 +53,11 @@ const Profile = () => {
 
         <div>
           <h3>Email professionnel&nbsp;:</h3>
-          <p>{profile?.email}</p>
+          <p>{user?.email}</p>
         </div>
         <div>
           <h3>Société&nbsp;:</h3>
-          <p>{profile?.company?.full_name}</p>
+          <p>{user?.company?.full_name}</p>
         </div>
       </div>
   
