@@ -1,15 +1,10 @@
-const {sendDataNotification, sendOrderAlert} = require('../../utils/mailing')
-const {
-  ORDER_ALERT_CHECK_INTERVAL,
-  ORDER_ALERT_DELAY,
-} = require('../../../utils/feurst/consts')
+const CronJob = require('cron').CronJob
 const express = require('express')
 const passport = require('passport')
 const moment = require('moment')
 const xlsx=require('node-xlsx')
 const lodash=require('lodash')
-
-const CronJob = require('cron').CronJob
+const {sendDataNotification, sendOrderAlert} = require('../../utils/mailing')
 
 const {
   COMPLETE,
@@ -26,12 +21,13 @@ const {
   UPDATE_ALL,
   VALID,
   VALIDATE,
+  ORDER_ALERT_CHECK_INTERVAL,
+  ORDER_ALERT_DELAY,
 } = require('../../../utils/feurst/consts')
 const Quotation = require('../../models/Quotation')
 const {
   addItem,
   computeShippingFee,
-  extractDepartment,
   getProductPrices,
   isInDeliveryZone,
   updateCompanyAddresses,
@@ -41,14 +37,12 @@ const {
 const {StatusError} = require('../../utils/errors')
 const {
   filterOrderQuotation,
-  getActionsForRoles,
   getStatusLabel,
   isActionAllowed,
 } = require('../../utils/userAccess')
 const Product = require('../../models/Product')
 const {lineItemsImport} = require('../../utils/import')
 const {XL_FILTER, createMemoryMulter} = require('../../utils/filesystem')
-const {validateZipCode} = require('../../validation/order')
 
 const router = express.Router()
 const Order = require('../../models/Order')
@@ -189,7 +183,7 @@ router.put('/:id/handle', passport.authenticate('jwt', {session: false}), (req, 
 // @Access private
 router.put('/:id/rewrite', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  if (!isActionAllowed(req.user.roles, DATA_TYPE, UPDATE)) {
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, REWRITE)) {
     return res.status(401).json()
   }
 
@@ -563,7 +557,7 @@ router.get('/:id/actions', passport.authenticate('jwt', {session: false}), (req,
       if (isActionAllowed(user.roles, DATA_TYPE, UPDATE) && model.status==COMPLETE) {
         result.push(VALIDATE)
       }
-      if (isActionAllowed(user.roles, DATA_TYPE, UPDATE) && model.status==VALID) {
+      if (isActionAllowed(user.roles, DATA_TYPE, REWRITE) && model.status==VALID) {
         result.push(REWRITE)
       }
       if (isActionAllowed(user.roles, DATA_TYPE, HANDLE) && model.status==VALID) {

@@ -125,7 +125,7 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   if (!req.headers.referer.includes('/create')) {
     return res.status(403).json(`Creation allowed from /create url only`)
   }
-  
+
   if (!isActionAllowed(req.user.roles, DATA_TYPE, CREATE)) {
     return res.status(403).json()
   }
@@ -539,7 +539,7 @@ router.get('/:id/actions', passport.authenticate('jwt', {session: false}), (req,
       (model.status==COMPLETE || model.status==VALID && isFeurstUser(user))) {
         result.push(VALIDATE)
       }
-      if (isActionAllowed(req.user.roles, DATA_TYPE, UPDATE) && [VALID, HANDLED].includes(model.status)) {
+      if (isActionAllowed(req.user.roles, DATA_TYPE, REWRITE) && [VALID, HANDLED].includes(model.status)) {
         result.push(REWRITE)
       }
       if (isActionAllowed(req.user.roles, DATA_TYPE, CONVERT) && model.status==HANDLED) {
