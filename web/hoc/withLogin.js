@@ -44,6 +44,12 @@ function withLogin(WrappedComponent) {
     onChange = async e => {
       const {name, value} = e.target
       const newState = {...this.state, [name]: value}
+      this.setState(newState)
+    }
+
+    onUserNameChange = e => {
+      const {name, value} = e.target
+      const newState = {...this.state, [name]: value}
       if(name === 'username') {
         const usermail = e.target.value
         Object.assign(newState, {username: usermail, roles: null, selectedRole: null})
@@ -89,6 +95,7 @@ function withLogin(WrappedComponent) {
       return <WrappedComponent
         state={this.state}
         onChange={this.onChange}
+        onUserNameChange={this.onUserNameChange}
         onSubmit={this.onSubmit}
         handleClickShowPassword={this.handleClickShowPassword}
         handleMouseDownPassword={this.handleMouseDownPassword}

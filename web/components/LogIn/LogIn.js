@@ -1,9 +1,7 @@
 import React from 'react'
-import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import {withStyles} from '@material-ui/core/styles'
-import styles from './LogInStyle'
 import Grid from '@material-ui/core/Grid'
 import {Link} from '@material-ui/core'
 import MailOutlineIcon from '@material-ui/icons/MailOutline'
@@ -13,14 +11,16 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import IconButton from '@material-ui/core/IconButton'
 import Input from '@material-ui/core/Input'
-const {ROLES} = require('../../utils/consts')
 import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined'
+import {ROLES} from '../../utils/consts'
+import CustomButton from '../CustomButton/CustomButton'
 import CustomIcon from '../CustomIcon/CustomIcon'
 import withLogin from '../../hoc/withLogin'
+import styles from './LogInStyle'
 
 
 const Login = ({callRegister,
@@ -28,7 +28,7 @@ const Login = ({callRegister,
   classes,
   onChange,
   onSubmit,
-  checkRoles,
+  onUserNameChange,
   showRoles,
   handleClickShowPassword,
   handleMouseDownPassword,
@@ -56,8 +56,7 @@ const Login = ({callRegister,
               name="username"
               value={username}
               autoComplete="email"
-              onChange={onChange}
-              onBlur={checkRoles}
+              onChange={onUserNameChange}
               error={errors.username}
             />
             <em>{errors.username}</em>
