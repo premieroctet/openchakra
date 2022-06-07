@@ -1,3 +1,4 @@
+const Shop = require('../../models/Shop')
 const User = require('../../models/User')
 const ServiceUser = require('../../models/ServiceUser')
 require('../../models/ResetToken')
@@ -225,7 +226,7 @@ router.put('/profile/billingAddress', passport.authenticate('jwt', {session: fal
             ServiceUser.updateMany({user: user.id}, {service_address: user.billing_address})
             createMangoClient(user)
             if (user.mangopay_provider_id) {
-              req.context.getModel('Shop').findOne({alfred: user._id})
+              Shop.findOne({alfred: user._id})
                 .then(shop => {
                   createMangoProvider(user, shop)
                 })

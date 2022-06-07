@@ -134,7 +134,7 @@ class BigList extends React.Component {
                 greaterThan: '>',
                 lessThanOrEqual: '<=',
                 greaterThanOrEqual: '>=',
-                inRange: "Dans l'intervalle",
+                inRange: 'Intervalle',
                 inRangeStart: 'Entre',
                 inRangeEnd: 'et',
                 contains: 'Contient',

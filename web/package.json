@@ -7,6 +7,8 @@
     "devreport": "nodemon --report-uncaught-exception --report-on-signal --report-on-fatalerror -w server -w package.json server/server.js",
     "build": "next build",
     "start": "SET NODE_ENV=production & node server/server.js",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook",
     "server": "nodemon server/server.js",
     "test": "jest"
   },
@@ -129,7 +131,7 @@
     "eslint-plugin-react": "^7.26.0",
     "geolib": "^3.2.1",
     "is-webview": "^1.0.1",
-    "jest": "^27.4.7",
+    "jest": "27.4.7",
     "nodemon": "^1.19.0",
     "systemjs-plugin-json": "^0.3.0"
   },

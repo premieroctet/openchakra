@@ -19,7 +19,7 @@ const {
   sendBookingConfirmed, sendBookingExpiredToAlfred, sendBookingExpiredToClient, sendBookingInfosRecap,
   sendBookingDetails, sendNewBooking, sendBookingRefusedToClient, sendBookingRefusedToAlfred, sendBookingCancelledByClient,
   sendBookingCancelledByAlfred, sendAskInfoPreapproved, sendAskingInfo, sendNewBookingManual,
-  sendLeaveCommentForClient, sendLeaveCommentForAlfred, sendAlert,
+  sendLeaveCommentForClient, sendLeaveCommentForAlfred, sendAlert, sendBillingToAlfred,
 } = require('../../utils/mailing')
 const {getRole, get_logged_id} = require('../../utils/serverContext')
 const {validateAvocotesCustomer}=require('../../validation/simpleRegister')
@@ -27,8 +27,8 @@ const {computeBookingReference, formatAddress}=require('../../../utils/text')
 const {createMangoClient}=require('../../utils/mangopay')
 const {computeUrl}=require('../../../config/config')
 const uuidv4 = require('uuid/v4')
-const {stateMachineFactory} = require('../../utils/BookingStateMachine')
 
+const {stateMachineFactory} = require('../../utils/BookingStateMachine')
 moment.locale('fr')
 
 router.get('/test', (req, res) => res.json({msg: 'Booking Works!'}))
@@ -240,7 +240,7 @@ router.get('/currentAlfred', passport.authenticate('jwt', {session: false}), (re
 router.get('/avocotes', passport.authenticate('admin', {session: false}), (req, res) => {
   Booking.find({
     company_customer: {$exists: true, $ne: null},
-    status: {$nin: [BOOK_STATUS.TO_PAY, BOOK_STATUS.FINISHED, BOOK_STATUS.CANCELLED]},
+    status: {$nin: [BOOK_STATUS.TO_PAY, BOOK_STATUS.FINISHED, BOOK_STATUS.CANCELLED, BOOK_STATUS.EXPIRED]},
   })
     .populate('user')
     .then(customer_bookings => {
@@ -535,7 +535,6 @@ new CronJob('0 */35 * * * *', (() => {
       )
     })
     .catch(err => console.error(err))
-
 }), null, true, 'Europe/Paris')
 
 // Handle terminated but not paid bookings
