@@ -5,7 +5,6 @@ module.exports = {
   // TODO Redirect for Feurst only
   basePath: '',
   async redirects() {
-    console.log(`DATAMODEL:${getDataModel()}`)
     return getDataModel()=='feurst' ? [
       {
         source: '/',
