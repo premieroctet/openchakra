@@ -2,7 +2,7 @@ const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 const mongoose = require('mongoose')
 const moment = require('moment')
 const lodash=require('lodash')
-const {get_host_url} = require('../../../config/config')
+const {getHostUrl} = require('../../../config/config')
 const {
   BASEPATH_EDI,
   COMPLETE,
@@ -70,7 +70,7 @@ QuotationSchema.virtual('status').get(function() {
 })
 
 QuotationSchema.virtual('url').get(function() {
-  const url=new URL(`${BASEPATH_EDI}/quotations/view/${this.id}`, get_host_url())
+  const url=new URL(`${BASEPATH_EDI}/quotations/view/${this.id}`, getHostUrl())
   return url.href
 })
 

@@ -1,17 +1,17 @@
+const express = require('express')
+const passport = require('passport')
+const moment = require('moment')
+const {getHostUrl} = require('../../../config/config')
 const {checkPaid} = require('../../utils/booking')
 const Group = require('../../models/Group')
 const Booking = require('../../models/Booking')
 const Company = require('../../models/Company')
 const User = require('../../models/User')
-const express = require('express')
 
 const router = express.Router()
-const passport = require('passport')
-const moment = require('moment')
 const {mangoApi, install_hooks, createCard} = require('../../utils/mangopay')
 const {maskIban} = require('../../../utils/text')
 moment.locale('fr')
-const {computeUrl} = require('../../../config/config')
 const {MICROSERVICE_MODE, CARETAKER_MODE}=require('../../../utils/consts')
 
 // TODO: PROBLEME : Le pay in id d'une résa client avcocotés n'est pas sauvegardé
@@ -128,13 +128,13 @@ router.post('/payIn', passport.authenticate('jwt', {session: false}), (req, res)
         AuthorId: mangopay_id,
         DebitedFunds: {Currency: 'EUR', Amount: amount},
         Fees: {Currency: 'EUR', Amount: 0},
-        ReturnURL: `${computeUrl(req)}${returnUrl}`,
+        ReturnURL: `${getHostUrl()}${returnUrl}`,
         CardType: 'CB_VISA_MASTERCARD',
         PaymentType: 'CARD',
         ExecutionType: 'WEB',
         Culture: 'FR',
         CreditedWalletId: wallet_id,
-        SecureModeReturnURL: `${computeUrl(req)}${returnUrl}`,
+        SecureModeReturnURL: `${getHostUrl()}${returnUrl}`,
       })
     })
     .then(payin => {
@@ -175,13 +175,13 @@ router.post('/avocotesPayIn', (req, res) => {
               Currency: 'EUR',
               Amount: fees,
             },
-            ReturnURL: `${computeUrl(req)}${returnUrl}`,
+            ReturnURL: `${getHostUrl()}${returnUrl}`,
             CardType: 'CB_VISA_MASTERCARD',
             PaymentType: 'CARD',
             ExecutionType: 'WEB',
             Culture: 'FR',
             CreditedWalletId: wallet_id,
-            SecureModeReturnURL: `${computeUrl(req)}${returnUrl}`,
+            SecureModeReturnURL: `${getHostUrl()}${returnUrl}`,
             Tag: `Booking ${booking.reference}`,
           })
             .then(payin => {
@@ -258,14 +258,14 @@ router.post('/payInDirect', passport.authenticate('jwt', {session: false}), (req
               Currency: 'EUR',
               Amount: 0,
             },
-            ReturnURL: `${computeUrl(req)}/paymentSuccess?booking_id=${req.body.booking_id}`,
+            ReturnURL: `${getHostUrl()}/paymentSuccess?booking_id=${req.body.booking_id}`,
             CardType: 'CB_VISA_MASTERCARD',
             PaymentType: 'CARD',
             ExecutionType: 'DIRECT',
             CreditedWalletId: wallet_id,
             CardId: id_card,
             Culture: 'FR',
-            SecureModeReturnURL: `${computeUrl(req)}/paymentSuccess?booking_id=${req.body.booking_id}`,
+            SecureModeReturnURL: `${getHostUrl()}/paymentSuccess?booking_id=${req.body.booking_id}`,
             BrowserInfo: browserInfo,
             IpAddress: ipAddress,
           })

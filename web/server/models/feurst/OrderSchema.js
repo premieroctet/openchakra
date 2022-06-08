@@ -1,7 +1,7 @@
 const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 const mongoose=require('mongoose')
 const lodash=require('lodash')
-const {get_host_url} = require('../../../config/config')
+const {getHostUrl} = require('../../../config/config')
 const {
   BASEPATH_EDI,
   COMPLETE,
@@ -52,7 +52,7 @@ OrderSchema.virtual('status').get(function() {
 })
 
 OrderSchema.virtual('url').get(function() {
-  const url=new URL(`${BASEPATH_EDI}/orders/view/${this.id}`, get_host_url())
+  const url=new URL(`${BASEPATH_EDI}/orders/view/${this.id}`, getHostUrl())
   return url.href
 })
 
