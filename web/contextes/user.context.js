@@ -7,7 +7,6 @@ export const UserContext = createContext()
 
 const pathnamesToAvoid = (route) => {
   return [
-    '/',
     '/edi/login'
   ].includes(route)
 }
