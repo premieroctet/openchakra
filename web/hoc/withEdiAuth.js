@@ -79,10 +79,8 @@ const withEdiAuth = (Component = null, options = {}) => {
           })
 
         if (is_development()) {
-          client(`${API_PATH}/users/current`)
-            .then(res => {
-              this.setState({account: `${res.full_name} (${res.email}), société ${res.company?.name}, rôles ${res.roles}`})
-            })
+          const {user} = this.context
+          this.setState({account: `${user?.full_name} (${user?.email}), société ${user?.company?.name}, rôles ${user?.roles}`})
         }
       }
       else {
@@ -118,7 +116,6 @@ const withEdiAuth = (Component = null, options = {}) => {
     }
   }
 
-  EdiAuth.contextType = UserContext
 
   return EdiAuth
 }
