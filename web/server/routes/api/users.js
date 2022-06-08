@@ -1,10 +1,13 @@
+const crypto = require('crypto')
+const express = require('express')
+const router = express.Router()
 const passport = require('passport')
 const bcrypt = require('bcryptjs')
 const moment = require('moment')
 const axios = require('axios')
 const gifFrames = require('gif-frames')
 const {fs} = require('file-system')
-const express = require('express')
+const CronJob = require('cron').CronJob
 const Shop = require('../../models/Shop')
 const {
   ACCOUNT,
@@ -34,8 +37,6 @@ const {REGISTER_WITHOUT_CODE}=require('../../../utils/context')
 const {checkRegisterCodeValidity, setRegisterCodeUsed}=require('../../utils/register')
 const {EDIT_PROFIL}=require('../../../utils/i18n')
 const {logEvent}=require('../../utils/events')
-
-const router = express.Router()
 const {is_production, computeUrl}=require('../../../config/config')
 const {validateSimpleRegisterInput, validateEditProfile, validateEditProProfile, validateBirthday} = require('../../validation/simpleRegister')
 const validateLoginInput = require('../../validation/login')

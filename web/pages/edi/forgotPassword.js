@@ -1,15 +1,14 @@
 import React from 'react'
-import styled, {ThemeProvider} from 'styled-components'
+import styled from 'styled-components'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import TextField from '@material-ui/core/TextField'
 import axios from 'axios'
 import {useRouter} from 'next/router'
-import Header from '../../components/Feurst/Header'
-import {theme, GlobalStyleEdi} from '../../styles/feurst/feurst.theme'
 import {snackBarSuccess, snackBarError} from '../../utils/notifications'
 import {ADMIN, MANAGER, BASEPATH_EDI} from '../../utils/consts'
 import CustomButton from '../../components/CustomButton/CustomButton'
+import EdiContainer from '../../components/Feurst/EdiContainer'
 
 
 const ForgotPassword = ({t}) => {
@@ -41,10 +40,7 @@ const ForgotPassword = ({t}) => {
 
 
   return (
-    <ThemeProvider theme={theme}>
-      <GlobalStyleEdi />
-      <Header />
-      
+    <EdiContainer>
       <Container>
         <h2>{ReactHtmlParser(t('FORGOT_PASSWORD.title'))}</h2>
         
@@ -67,7 +63,7 @@ const ForgotPassword = ({t}) => {
 
       </Container>
       
-    </ThemeProvider>
+    </EdiContainer>
   )
 }
 
