@@ -1,3 +1,4 @@
+const crypto = require('crypto')
 const passport = require('passport')
 const bcrypt = require('bcryptjs')
 const moment = require('moment')
@@ -5,6 +6,7 @@ const axios = require('axios')
 const gifFrames = require('gif-frames')
 const {fs} = require('file-system')
 const express = require('express')
+const {getDataModel} = require('../../../config/config')
 const {getHostUrl, is_development} = require('../../../config/config')
 const Shop = require('../../models/Shop')
 const {
@@ -845,7 +847,10 @@ router.post('/forgotPassword', (req, res) => {
       }
       else {
         // TODO: prévoir un template pour feurst
-        sendResetPassword(user, token, req)
+        const url=getDataModel()=='feurst' ?
+        `${BASEPATH_EDI}/resetPassword?token=${token}`
+          :`/resetPassword?token=${token}`
+        sendResetPassword(user, token, req, url)
       }
       res.json(user)
     })
