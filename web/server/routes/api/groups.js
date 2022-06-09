@@ -1,8 +1,9 @@
+const express = require('express')
+const {getHostUrl} = require('../../../config/config')
 const Service = require('../../models/Service')
 const Booking = require('../../models/Booking')
 const Group = require('../../models/Group')
 const User = require('../../models/User')
-const express = require('express')
 
 const router = express.Router()
 const passport = require('passport')
@@ -12,7 +13,6 @@ moment.locale('fr')
 const axios = require('axios')
 const {validateCompanyGroup} = require('../../validation/simpleRegister')
 const {MANAGER, ROLES, MONTH_PERIOD, YEAR_PERIOD, BOOK_STATUS, DASHBOARD_MODE, MICROSERVICE_MODE, CARETAKER_MODE} = require('../../../utils/consts')
-const {computeUrl}=require('../../../config/config')
 const lodash = require('lodash')
 const {getPeriodStart} = require('../../../utils/dateutils')
 axios.defaults.withCredentials = true
@@ -288,7 +288,7 @@ router.put('/:group_id/managers', passport.authenticate('b2badmin', {session: fa
           Group.updateMany({_id: {$ne: group_id}}, {$pull: {members: manager_id}})
             .then(() => {
               if (new_account) {
-                axios.post(new URL(`/myAlfred/api/users/forgotPassword`, computeUrl(req)).toString(), {email: user.email, role: MANAGER})
+                axios.post(new URL(`/myAlfred/api/users/forgotPassword`, getHostUrl()).href, {email: user.email, role: MANAGER})
                   .then(() => {})
                   .catch(err => {
                     console.error(err)
