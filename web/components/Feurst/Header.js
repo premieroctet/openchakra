@@ -49,6 +49,7 @@ const InfoBox = styled.div`
   font-weight: var(--font-bold);
   text-align: center;
   padding-block: var(--spc-2);
+  padding-inline: var(--spc-1);
 `
 
 const Header = ({accessRights}) => {
