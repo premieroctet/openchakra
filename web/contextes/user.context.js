@@ -1,22 +1,19 @@
 import React, {createContext, useContext, useState, useEffect, useCallback} from 'react'
 import {useRouter} from 'next/router'
 import {client} from '../utils/client'
-import {getLoggedUser} from '../utils/context'
 
 export const UserContext = createContext()
 
-const pathnamesToAvoid = (route) => {
+const pathnamesToAvoid = route => {
   return [
-    '/edi/login'
+    '/edi/login',
   ].includes(route)
 }
 
 export function UserWrapper({children}) {
-  const [user, setUser] = useState(false)
+  const [user, setUser] = useState(null)
 
   const router = useRouter()
-  // const loggerUser = getLoggedUser()
-  // console.log(loggerUser)
   
   const updateUser = useCallback(userdata => {
     setUser({...user, ...userdata})
@@ -32,13 +29,12 @@ export function UserWrapper({children}) {
 
   useEffect(() => {
     if (!pathnamesToAvoid(router.pathname)) {
-      console.log('Hewego', user)
-      !user && getCurrentUser()
-    } else {
-      console.log('userToFalse', user)
+      getCurrentUser()
+    }
+    else {
       setUser(false)
     }
-  }, [user, router.pathname])
+  }, [router.pathname])
 
   return (
     <UserContext.Provider value={{user}}>
