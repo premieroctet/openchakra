@@ -2,7 +2,6 @@ import React from 'react'
 import Router from 'next/router'
 import uniqBy from 'lodash/uniqBy'
 import isUndefined from 'lodash/isUndefined'
-import Footer from '../components/Feurst/Footer'
 import {client} from '../utils/client'
 import {BASEPATH_EDI, API_PATH} from '../utils/feurst/consts'
 import {is_development} from '../config/config'
@@ -96,15 +95,14 @@ const withEdiAuth = (Component = null, options = {}) => {
         }
 
         <EdiContainer accessRights={accessRights}>
-            <Tabs accessRights={accessRights} />
-            <div className='container-lg'>
-              {canAccess ?
-                <Component accessRights={accessRights} />
-                : loading ? '' : <div>Vous n'avez pas accès à cette rubrique</div>}
-            </div>
-            <Footer />
+          <Tabs accessRights={accessRights} />
+          <div className='container-lg'>
+            {canAccess ?
+              <Component accessRights={accessRights} />
+              : loading ? '' : <div>Vous n'avez pas accès à cette rubrique</div>}
+          </div>
         </EdiContainer>
-        </>
+      </>
       )
     }
   }

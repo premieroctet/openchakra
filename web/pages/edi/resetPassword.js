@@ -2,14 +2,10 @@ import React, {useState} from 'react'
 import ReactHtmlParser from 'react-html-parser'
 import styled from 'styled-components'
 import {withTranslation} from 'react-i18next'
-import Router from 'next/router'
-import axios from 'axios'
-import lodash from 'lodash'
-import {RESET_PASSWORD} from '../../utils/i18n'
-import {checkPass1, checkPass2} from '../../utils/passwords'
+import {useRouter} from 'next/router'
+import {API_PATH} from '../../utils/consts'
+import {client} from '../../utils/client'
 import withParams from '../../components/withParams'
-import {ADMIN, MANAGER} from '../../utils/consts'
-import {screen} from '../../styles/screenWidths'
 import {snackBarSuccess, snackBarError} from '../../utils/notifications'
 import RenewPassword from '../../components/Password/RenewPassword'
 import {PleasantButton} from '../../components/Feurst/Button'
@@ -20,51 +16,37 @@ const ResetPassword = ({t, params}) => {
   const [password, setPassword] = useState('')
   const [passChanged, setPassChanged] = useState(false)
   const canSubmitPassword = !!(password?.check1 && password?.check2)
+  const router = useRouter()
 
-  const renewPassword = async e => {
+  const resetPassword = async e => {
     e.preventDefault()
-
-    return await client(`${API_PATH}/users/profile/editPassword`, {data: {newPassword: password.newPassword}, method: 'PUT'})
-      .then(() => {
-        setPassword(null)
-        setPassChanged(!passChanged)
-      })
-      .catch(err => console.error(err))
-  }
-
-  const onSubmit = e => {
-    e.preventDefault()
+    
     const data = {
-      password,
+      password: password.newPassword,
       token: params.token,
     }
-    axios.post('/myAlfred/api/users/resetPassword', data)
-      .then(res => {
-        const user = res.data
+
+    console.log(data)
+    
+    return await client(`${API_PATH}/users/resetPassword`, {data})
+      .then(() => {
         snackBarSuccess(ReactHtmlParser(this.props.t('RESET_PASSWORD.password_update')))
-        // Rediriger vers /particular ou /professional suivant les rôles
-        if (lodash.intersection(user.roles, [ADMIN, MANAGER]).length>0) {
-          localStorage.setItem('b2b', 'true')
-        }
-        else {
-          localStorage.removeItem('b2b')
-        }
-        Router.push({pathname: '/'})
+        router.push({pathname: '/'})
       })
       .catch(err => {
         console.error(err)
-        snackBarError(err.response.data.msg)
+        snackBarError(err?.info.message)
       })
   }
   
 
   return (
     <EdiContainer>
-    
+      <div />
       <StyledReset>
         <h2>{ReactHtmlParser(t('RESET_PASSWORD.title'))}</h2>
       
-        <form onSubmit={renewPassword}>
+        <form onSubmit={resetPassword}>
           
           <RenewPassword passChanged={passChanged} setPassword={setPassword} />
         
@@ -72,7 +54,7 @@ const ResetPassword = ({t, params}) => {
             rounded={'full'}
             disabled={!canSubmitPassword}
             type='submit'
-            onClick={() => renewPassword}
+            onClick={() => resetPassword}
           >
             Enregistrer le nouveau mot de passe
           </PleasantButton>
@@ -88,8 +70,9 @@ const StyledReset = styled.div`
 
   padding-top: var(--spc-4);
   border-top: 1px solid var(--black);
-  display: grid;
-  justify-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   grid-template-columns: 1fr;
   
   h2 {
@@ -100,7 +83,7 @@ const StyledReset = styled.div`
   form {
     display: flex; 
     flex-direction: column;
-    width: min(calc(100% - 2rem), 40rem);
+    width: min(calc(100% - 2rem), 30rem);
     margin-bottom: var(--spc-10);
 
     & > div {

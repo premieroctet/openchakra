@@ -9,6 +9,7 @@ import {snackBarSuccess, snackBarError} from '../../utils/notifications'
 import {ADMIN, MANAGER, BASEPATH_EDI} from '../../utils/consts'
 import CustomButton from '../../components/CustomButton/CustomButton'
 import EdiContainer from '../../components/Feurst/EdiContainer'
+import {PleasantButton} from '../../components/Feurst/Button'
 
 
 const ForgotPassword = ({t}) => {
@@ -41,6 +42,7 @@ const ForgotPassword = ({t}) => {
 
   return (
     <EdiContainer>
+      <div/>
       <Container>
         <h2>{ReactHtmlParser(t('FORGOT_PASSWORD.title'))}</h2>
         
@@ -56,9 +58,13 @@ const ForgotPassword = ({t}) => {
             variant={'outlined'}
           />
           
-          <CustomButton variant="contained" color={'primary'} onClick={onSubmit}>
+          <PleasantButton
+            rounded={'full'}
+            type='submit'
+            onClick={() => onSubmit}
+          >
             {ReactHtmlParser(t('FORGOT_PASSWORD.button_confirm'))}
-          </CustomButton>
+          </PleasantButton>
         </form>
 
       </Container>
@@ -71,7 +77,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
 
   h2 {
     color: var(--black);
@@ -80,6 +85,7 @@ const Container = styled.div`
   form {
     display: flex;
     row-gap: var(--spc-4);
+    align-items: center;
     flex-direction: column;
   }
 `
