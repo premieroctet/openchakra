@@ -317,6 +317,20 @@ class DrawerBooking extends React.Component {
                           onChange={!readonly && this.props.onLocationChanged}/>
                       </Grid>
                   }
+                  {
+                    serviceUser.location && serviceUser.location.elearning &&
+                      <Grid>
+                        <ButtonSwitch
+                          key={moment()}
+                          id='elearning'
+                          label={'En e-learning'}
+                          isEditable={false}
+                          isPrice={false}
+                          isOption={false}
+                          checked={location === 'elearning'}
+                          onChange={!readonly && this.props.onLocationChanged}/>
+                      </Grid>
+                  }
                   <Grid>
                     <em className={classes.cancelButton}>{errors.location}</em>
                   </Grid>

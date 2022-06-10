@@ -94,6 +94,7 @@ router.post('/add', upload.fields([{name: 'diploma', maxCount: 1}, {
         home: req.body.home === 'true',
         alfred: req.body.alfred === 'true',
         visio: req.body.visio === 'true',
+        elearning: req.body.elearning === 'true',
       }
 
       fields.travel_tax = JSON.parse(req.body.travel_tax)
@@ -604,7 +605,7 @@ router.post('/search', (req, res) => {
       // Search corresponding booking : visio if gps is null
       else if (!gps && booking) {
         // Retain visio only
-        serviceUsers = serviceUsers.filter(su => !!su.location.visio)
+        serviceUsers = serviceUsers.filter(su => (!!su.location.visio || !!su.location.elearning))
       }
       console.log(`Remaining ${serviceUsers.length} after gps filtering`)
 

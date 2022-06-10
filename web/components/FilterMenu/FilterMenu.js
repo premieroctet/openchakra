@@ -473,6 +473,18 @@ class FilterMenu extends React.Component {
                         }
                         label={ReactHtmlParser(this.props.t('SEARCHBAR.remote'))}
                       />
+                      <FormControlLabel
+                        classes={{root: classes.filterMenuControlLabel}}
+                        control={
+                          <Switch
+                            checked={locations.includes('elearning')}
+                            onChange={this.onLocationFilterChanged}
+                            color="primary"
+                            name={'elearning'}
+                          />
+                        }
+                        label={ReactHtmlParser(this.props.t('SEARCHBAR.elearning'))}
+                      />
                     </Grid>
                     <Grid className={classes.filterMenuDateFilterButtonContainer}>
                       <Grid>

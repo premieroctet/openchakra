@@ -692,6 +692,18 @@ class NavBar extends Component {
                   }
                   label={ReactHtmlParser(this.props.t('SEARCHBAR.remote'))}
                 />
+                <FormControlLabel
+                  classes={{root: classes.filterMenuControlLabel}}
+                  control={
+                    <Switch
+                      checked={locations.includes('elearning')}
+                      onChange={this.onLocationFilterChanged}
+                      color="primary"
+                      name={'visio'}
+                    />
+                  }
+                  label={ReactHtmlParser(this.props.t('SEARCHBAR.elearning'))}
+                />
               </Grid>
             </Grid>
             <Grid className={classes.filterMenuContentMainStyleDateFilter}>

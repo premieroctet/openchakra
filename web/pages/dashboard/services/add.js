@@ -60,7 +60,7 @@ class add extends React.Component {
     this.state = {
       label: '',
       picture: '',
-      location: {alfred: false, client: false, visio: false},
+      location: {alfred: false, client: false, visio: false, elearning: false},
       category: '',
       equipments: [],
       description: '',
@@ -68,6 +68,7 @@ class add extends React.Component {
       home: false,
       alfred: false,
       visio: false,
+      elearning: false,
       isChecked: false,
       all_category: [],
       all_equipments: [],
@@ -144,6 +145,10 @@ class add extends React.Component {
     this.setState({visio: !this.state.visio})
   }
 
+  handleChecked5() {
+    this.setState({elearning: !this.state.elearning})
+  }
+
   onTaxChange = e => {
     console.log('onTaxChange')
     this.setState({[e.target.name]: e.target.checked})
@@ -168,6 +173,7 @@ class add extends React.Component {
     formData.append('home', this.state.home)
     formData.append('alfred', this.state.alfred)
     formData.append('visio', this.state.visio)
+    formData.append('elearning', this.state.elearning)
     formData.append('travel_tax', this.state.travel_tax)
     formData.append('pick_tax', this.state.pick_tax)
 
@@ -301,6 +307,14 @@ class add extends React.Component {
                     }
                     label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>En visioconférence</p></React.Fragment>}
                   />
+                  <FormControlLabel
+                    control={
+                      <Checkbox color="primary" icon={<CircleUnchecked/>} checkedIcon={<RadioButtonCheckedIcon/>}
+                        checked={this.state.location.elearning} value={this.state.location.elearning} name="elearning"
+                        onChange={this.onChangeLocation}/>
+                    }
+                    label={<React.Fragment><p style={{fontFamily: 'Helvetica'}}>En e-learning</p></React.Fragment>}
+                  />
                   <Typography style={{fontSize: 20}}>Frais possibles</Typography>
                   <FormControlLabel
                     control={
@@ -379,6 +393,21 @@ class add extends React.Component {
                       />
                     }
                     label="Visio"
+                  />
+
+                </Grid>
+                <Grid item>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={this.state.elearning}
+                        onChange={() => this.handleChecked5()}
+                        value={this.state.elearning}
+                        color="primary"
+                        name={'elearning'}
+                      />
+                    }
+                    label="E-learning"
                   />
 
                 </Grid>

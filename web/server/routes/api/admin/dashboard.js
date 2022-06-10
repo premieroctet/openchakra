@@ -977,6 +977,7 @@ router.post('/service/all', uploadService.single('picture'), passport.authentica
           alfred: req.body['location.alfred'] == 'true',
           client: req.body['location.client'] == 'true',
           visio: req.body['location.visio'] == 'true',
+          elearning: req.body['location.elearning'] == 'true',
         },
         pick_tax: req.body.pick_tax,
         travel_tax: req.body.travel_tax,

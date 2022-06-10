@@ -142,6 +142,7 @@ const ServiceUserSchema = new Schema({
     client: Boolean,
     alfred: Boolean,
     visio: Boolean,
+    elearning: Boolean,
   },
   // Frais livraison
   pick_tax: {

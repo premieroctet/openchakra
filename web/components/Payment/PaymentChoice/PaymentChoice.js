@@ -60,7 +60,7 @@ class PaymentChoice extends React.Component {
                     {...this.props}
                   />
                   :
-                  'En visio'
+                  'En visio/e-learning'
                 }
               </Topic>
             </Grid>
