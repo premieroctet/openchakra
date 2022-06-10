@@ -1,12 +1,10 @@
-
-
 import React from 'react'
 import {useRouter} from 'next/router'
 import Link from 'next/link'
 import styled from 'styled-components'
 import {screen} from '../../../web/styles/screenWidths'
-import {CREATE, UPDATE, ORDER, QUOTATION, BASEPATH_EDI, PRODUCT, SHIPRATE, ACCOUNT, FEURST_IMG_PATH, FEURST_ICON_PATH} from '../../utils/consts'
-import {getLoggedUser} from '../../utils/context'
+import {CREATE, ORDER, QUOTATION, BASEPATH_EDI, PRODUCT, SHIPRATE, ACCOUNT, FEURST_IMG_PATH, FEURST_ICON_PATH} from '../../utils/consts'
+import {useUserContext} from '../../contextes/user.context'
 import ContactUs from './ContactUs'
 
 const MENUS=[
@@ -28,18 +26,17 @@ const MENUS=[
 ]
 
 
-if (getLoggedUser()) {
-  const PROFILE_MENU={
-    enabled: rights => rights.isActionAllowed(ACCOUNT, UPDATE),
-    label: <div className='flex gap-x-1'><img width={20} height={20} src={`${FEURST_ICON_PATH }/user.icon.svg`} alt="" /> Bienvenue {getLoggedUser().firstname}</div>,
-    url: `${BASEPATH_EDI}/profile`,
-  }
+const LoggedUser = ({user}) => {
+  
+  return (user ? (
+    <Link href={`${BASEPATH_EDI}/profile`} >
+      <a><div className='flex gap-x-1'><img width={20} height={20} src={`${FEURST_ICON_PATH }/user.icon.svg`} alt="" /> Bienvenue {user.firstname}</div></a>
+    </Link>) : null)
 
-  MENUS.push(PROFILE_MENU)
 }
-const LogOut = () => {
 
-  return (getLoggedUser() ? (
+const LogOut = ({user}) => {
+  return (user ? (
     <Link href={`${BASEPATH_EDI}/login?out=true`} >
       <a title={'Se déconnecter'}><img width={20} height={20} src={`${FEURST_IMG_PATH}/logout.png`} alt="" /></a>
     </Link>) : null)
@@ -53,9 +50,9 @@ const QuickMenu = ({accessRights}) => {
     return regEx.test(currentpath)
   }
 
+  const {user} = useUserContext()
   const router = useRouter()
-
-  const menus=MENUS.filter(m => accessRights && m.enabled(accessRights))
+  const menus = MENUS.filter(m => accessRights && m.enabled(accessRights))
 
   if (!menus.length) {
     return (<ContactUs />)
@@ -69,11 +66,15 @@ const QuickMenu = ({accessRights}) => {
             <a className={containsPartUrl(menu.url, router.pathname) ? 'current' : null}>{menu.label}</a>
           </Link>
         ))}
-        {getLoggedUser() && <LogOut />}
+        {user && <>
+          <LoggedUser user={user} />
+          <LogOut user={user} />
+        </>}
       </QuickMenuStyled>
     </>
   )
 }
+
 
 const QuickMenuStyled = styled.div`
  a {

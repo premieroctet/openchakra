@@ -1,23 +1,100 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import Link from 'next/link'
 import {withTranslation} from 'react-i18next'
 import {withStyles} from '@material-ui/core/styles'
 import ReactHtmlParser from 'react-html-parser'
-import Grid from '@material-ui/core/Grid'
 import IconButton from '@material-ui/core/IconButton'
 import {TextField} from '@material-ui/core'
 import styled from 'styled-components'
 import withLogin from '../../hoc/withLogin'
-import CustomButton from '../CustomButton/CustomButton'
 import styles from '../LogIn/LogInStyle'
 import {screen} from '../../styles/screenWidths'
+import {BASEPATH_EDI} from '../../utils/consts'
 import {PleasantButton} from './Button'
+
+
+const FeurstLogin = ({
+  t,
+  onChange,
+  onUserNameChange,
+  onSubmit,
+  handleClickShowPassword,
+  handleMouseDownPassword,
+  state,
+}) => {
+
+  const {errors, username, password, showPassword} = state
+  const loginDisabled = !(username && password)
+
+
+  return <LoginStyles>
+    <h1>{ReactHtmlParser(t('LOGIN.title'))}</h1>
+
+    <LoginForm onSubmit={onSubmit}>
+
+      <h2>Connexion</h2>
+
+      <LoginInputs>
+        <TextField
+          id="username"
+          name="username"
+          label={t('LOGIN.input_label')}
+          variant="outlined"
+          value={username}
+          autoComplete="email"
+          onChange={onUserNameChange}
+          error={errors.username}
+        />
+        <em>{errors.username}</em>
+
+        <TextField
+          id="standard-with-placeholder"
+          label={ReactHtmlParser(t('LOGIN.input_password'))}
+          variant="outlined"
+          type={showPassword ? 'text' : 'password'}
+          name="password"
+          value={password}
+          autoComplete="current-password"
+          onChange={onChange}
+          error={errors.password}
+          InputProps={{
+            endAdornment: (
+              <IconButton
+                tabIndex="-1"
+                aria-label="toggle password visibility"
+                onClick={handleClickShowPassword}
+                onMouseDown={handleMouseDownPassword}
+              >
+                {showPassword ? 'cacher' : 'afficher'}
+              </IconButton>
+            ),
+          }}
+        />
+
+        <em>{errors.password}</em>
+
+      </LoginInputs>
+
+      <Link href={`${BASEPATH_EDI}/forgotPassword`}>
+        <a>
+          {ReactHtmlParser(t('LOGIN.forgotten_password'))}
+        </a>
+      </Link>
+
+      <PleasantButton type="submit" onClick={onSubmit} disabled={loginDisabled} size="full-width">
+        {ReactHtmlParser(t('LOGIN.button'))}
+      </PleasantButton>
+
+    </LoginForm>
+  </LoginStyles>
+}
+
 
 const LoginStyles = styled.div`
 
   width: min(calc(100% - 2rem), 35rem);
   color: var(--black);
-  
+
   h1 {
     color: inherit;
     font-size: var(--text-xl);
@@ -34,7 +111,7 @@ const LoginForm = styled.form`
   border-radius: var(--rounded-7xl);
   padding: var(--spc-3) var(--spc-3) var(--spc-10) var(--spc-3);
   margin: 0 var(--spc-2);
-  
+
   @media (${screen.md}) {
     padding: var(--spc-7) var(--spc-12) var(--spc-12) var(--spc-12);
   }
@@ -66,82 +143,6 @@ const LoginInputs = styled.div`
     text-decoration: underline;
   }
 `
-
- 
-const FeurstLogin = ({
-  t,
-  onChange,
-  onSubmit,
-  handleClickShowPassword,
-  handleMouseDownPassword,
-  state,
-}) => {
-
-  const {errors, username, password, showPassword, roles} = state
-  const loginDisabled = roles === null || roles.length === 0 || !password
-
-
-  return <LoginStyles>
-    <h1>{ReactHtmlParser(t('LOGIN.title'))}</h1>
-    
-    <LoginForm onSubmit={onSubmit}>
-      
-      <h2>Connexion</h2>
-      
-      <LoginInputs>
-        <TextField
-          id="username"
-          name="username"
-          label={t('LOGIN.input_label')}
-          variant="outlined"
-          value={username}
-          autoComplete="email"
-          onChange={onChange}
-          error={errors.username}
-        />
-        <em>{errors.username}</em>
-
-        <TextField
-          id="standard-with-placeholder"
-          label={ReactHtmlParser(t('LOGIN.input_password'))}
-          variant="outlined"
-          type={showPassword ? 'text' : 'password'}
-          name="password"
-          value={password}
-          autoComplete="current-password"
-          onChange={onChange}
-          error={errors.password}
-          InputProps={{
-            endAdornment: (
-              <IconButton
-                tabIndex="-1"
-                aria-label="toggle password visibility"
-                onClick={handleClickShowPassword}
-                onMouseDown={handleMouseDownPassword}
-              >
-                {showPassword ? 'cacher' : 'afficher'}
-              </IconButton>
-            ),
-          }}
-        />
-
-        <em>{errors.password}</em>
-      
-      </LoginInputs>
-
-      <Link href={'/forgotPassword'}>
-        <a>
-          {ReactHtmlParser(t('LOGIN.forgotten_password'))}
-        </a>
-      </Link>
-      
-      <PleasantButton type="submit" onClick={onSubmit} disabled={loginDisabled} size="full-width">
-        {ReactHtmlParser(t('LOGIN.button'))}
-      </PleasantButton>
-      
-    </LoginForm>
-  </LoginStyles>
-}
 
 
 export default withLogin(withTranslation('feurst', {withRef: true})(withStyles(styles)(FeurstLogin)))

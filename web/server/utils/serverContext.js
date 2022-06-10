@@ -40,7 +40,7 @@ const getRoles = req => {
 }
 
 // Create JWT cookie with user credentials
-const send_cookie = (user, role, res, logged_as=null) => {
+const send_cookie = (user, res, logged_as=null) => {
   const payload = {
     id: user.id,
     name: user.name,
@@ -48,8 +48,6 @@ const send_cookie = (user, role, res, logged_as=null) => {
     is_admin: user.is_admin,
     is_alfred: user.is_alfred,
     is_alfred_pro: user.shop && user.shop.length==1 && !user.shop[0].is_particular,
-    role: role,
-    roles: user.roles,
     is_registered: user.is_registered,
     is_super_admin: user.is_admin && user.email.match(/@my-alfred\.io$/),
     logged_as: logged_as,

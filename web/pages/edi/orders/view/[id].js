@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import {useRouter} from 'next/router'
-import {BASEPATH_EDI, ORDER, VIEW, ENDPOINTS} from '../../../../utils/consts'
+import {BASEPATH_EDI, ORDER, VIEW, ENDPOINTS} from '../../../../utils/feurst/consts'
 import withEdiAuth from '../../../../hoc/withEdiAuth'
 import BaseViewTable from'../../../../components/Feurst/BaseViewTable'
 import {

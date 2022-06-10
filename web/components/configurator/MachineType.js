@@ -1,17 +1,17 @@
-const RequiredField = require('../misc/RequiredField')
+
+import React from 'react'
+import {feurstImgPath} from '../../pages/configurator'
 const {withTranslation} = require('react-i18next')
 
+const {TextField} = require('@material-ui/core')
+const {Autocomplete} = require('@material-ui/lab')
 const {
   CHARGEUSE,
   EXCAVATRICE,
   MACHINE_TYPES,
   PELLE_BUTTE,
-} = require('../../utils/consts')
-import React from 'react'
-import {feurstImgPath} from '../../pages/configurator'
-
-const {TextField} = require('@material-ui/core')
-const {Autocomplete} = require('@material-ui/lab')
+} = require('../../utils/feurst/consts')
+const RequiredField = require('../misc/RequiredField')
 const {normalize} = require('../../utils/text')
 
 
