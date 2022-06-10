@@ -76,4 +76,4 @@ const EventLogSchema = new Schema({
 
 EventLogSchema.plugin(mongooseLeanVirtuals)
 
-module.exports = EventLog = mongoose.model('eventLog', EventLogSchema)
+module.exports = mongoose.model('eventLog', EventLogSchema)

@@ -1,3 +1,4 @@
+const withParams = require('../../components/withParams')
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
 import Grid from '@material-ui/core/Grid'
@@ -5,7 +6,7 @@ import React from 'react'
 
 import {isEditableUser} from '../../utils/context'
 import AskQuestion from '../../components/AskQuestion/AskQuestion'
-import BasePage from '../basePage'
+
 import Box from '../../components/Box/Box'
 import LayoutMobileProfile from '../../hoc/Layout/LayoutMobileProfile'
 import ProfileLayout from '../../hoc/Layout/ProfileLayout'
@@ -13,7 +14,7 @@ import SummaryCommentary from '../../components/SummaryCommentary/SummaryComment
 import styles from '../../static/css/pages/profile/reviews/reviews'
 import Head from 'next/head'
 
-class ProfileReviews extends BasePage {
+class ProfileReviews extends React.Component {
 
   constructor(props) {
     super(props)
@@ -47,7 +48,7 @@ class ProfileReviews extends BasePage {
 
   render() {
     const {classes}=this.props
-    const {user}=this.getURLProps()
+    const {user}=this.props.params
 
     if (!user) {
       return null
@@ -77,4 +78,4 @@ class ProfileReviews extends BasePage {
 
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(ProfileReviews))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(withParams(ProfileReviews)))

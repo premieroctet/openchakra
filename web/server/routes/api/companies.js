@@ -1,25 +1,38 @@
+const crypto = require('crypto')
+const passport = require('passport')
+const express = require('express')
+const moment = require('moment')
+const lodash = require('lodash')
+const axios = require('axios')
+const csv_parse = require('csv-parse/lib/sync')
+const {getHostUrl} = require('../../../config/config')
+const {StatusError} = require('../../utils/errors')
+const {
+  ACCOUNT,
+  COMPANY,
+  LINK,
+  ORDER,
+  QUOTATION,
+  VIEW,
+  CREATE,
+  UPDATE,
+  FEURST_SALES,
+} = require('../../../utils/feurst/consts')
+const {filterCompanies, isActionAllowed} = require('../../utils/userAccess')
 const Group = require('../../models/Group')
 const Company = require('../../models/Company')
 const Booking = require('../../models/Booking')
 const User = require('../../models/User')
 const {EDIT_PROFIL}=require('../../../utils/i18n')
 const {IMAGE_FILTER, TEXT_FILTER, createDiskMulter, createMemoryMulter} = require('../../utils/filesystem')
-const express = require('express')
 
 const router = express.Router()
-const passport = require('passport')
-const {computeUrl}=require('../../../config/config')
 const {validateCompanyProfile, validateCompanyMember} = require('../../validation/simpleRegister')
-const moment = require('moment')
 moment.locale('fr')
-const crypto = require('crypto')
-const axios = require('axios')
 const {ADMIN, MANAGER, EMPLOYEE, ROLES, MICROSERVICE_MODE, CARETAKER_MODE, BOOK_STATUS} = require('../../../utils/consts')
-const lodash = require('lodash')
 const {addRegistrationProof, createOrUpdateMangoCompany} = require('../../utils/mangopay')
 const {getPeriodStart}=require('../../../utils/dateutils')
 const {bufferToString, normalize} = require('../../../utils/text')
-const csv_parse = require('csv-parse/lib/sync')
 const {sendB2BRegistration}=require('../../utils/mailing')
 
 axios.defaults.withCredentials = true
@@ -32,6 +45,30 @@ const uploadRegProof = createDiskMulter('static/profile/registrationProof/', IMA
 // B2B Employees
 const uploadEmployees = createMemoryMulter(TEXT_FILTER)
 
+
+// @Route GET /myAlfred/api/companies
+// Get companies list
+// @Access private
+router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
+  if (!isActionAllowed(req.user.roles, ACCOUNT, LINK)
+  && !isActionAllowed(req.user.roles, ORDER, CREATE)
+  && !isActionAllowed(req.user.roles, QUOTATION, CREATE)
+  ) {
+    return res.sendStatus(301)
+  }
+
+  Company.find()
+    .populate('sales_representative')
+    .sort('name')
+    .then(companies => {
+      companies=filterCompanies(companies, COMPANY, req.user, VIEW)
+      res.json(companies)
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json(err)
+    })
+})
 
 // @Route PUT /myAlfred/api/companies/profile/billingAddress
 // Set the main address in the profile
@@ -537,7 +574,7 @@ router.put('/admin', passport.authenticate('b2badmin', {session: false}), (req, 
   User.findByIdAndUpdate(admin_id, {company: company_id, $addToSet: {roles: ADMIN}}, {new: true})
     .then(user => {
       if (new_account) {
-        axios.post(new URL('/myAlfred/api/users/forgotPassword', computeUrl(req)).toString(), {email: user.email, role: ADMIN})
+        axios.post(new URL('/myAlfred/api/users/forgotPassword', getHostUrl()).href, {email: user.email, role: ADMIN})
           .then(() => {})
           .catch(err => {})
       }
@@ -693,6 +730,36 @@ router.get('/supported/:user_id/:service_id/:role', passport.authenticate('jwt',
     .catch(err => {
       console.error(err)
       return res.status(400).json(err)
+    })
+})
+
+router.put('/:company_id/sales_representative/:user_id', passport.authenticate('jwt', {session: false}), (req, res) => {
+  if (!isActionAllowed(req.user.roles, COMPANY, UPDATE)) {
+    return res.status(403).json()
+  }
+
+  const company_id = req.params.company_id
+  const user_id = req.params.user_id
+  if (!user_id || !company_id) {
+    return res.status(400).json(`Representative and company expected`)
+  }
+
+  User.find({_id: user_id}, {roles: 1})
+    .then(user => {
+      if (!user[0].roles.includes(FEURST_SALES)) {
+        throw new StatusError(`Provided user has not FEURST_SALES role`, 400)
+      }
+      return Company.findByIdAndUpdate({_id: company_id}, {sales_representative: user_id}, {new: true})
+    })
+    .then(company => {
+      if (!company) {
+        throw new StatusError('Company not found', 404)
+      }
+      return res.json(company)
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(err.status||500).json(err.message)
     })
 })
 

@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   mainContainer: {
     marginTop: 50,
     display: 'flex',
@@ -352,3 +352,4 @@ export default theme => ({
     borderRadius: 27,
   },
 })
+export default style

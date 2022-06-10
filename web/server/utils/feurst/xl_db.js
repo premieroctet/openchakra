@@ -9,15 +9,15 @@ SUPPOSITIONS:
    - excavatrice : droite ou semi-delta
    - chargeuse : droite ou delta
 */
+const ExcelJS = require('exceljs')
+const lodash=require('lodash')
 const {
   BLADE_SHAPES,
   FIX_TYPES,
   MACHINE_TYPES,
   PIN,
   SOLD,
-} = require('../../../utils/feurst_consts')
-const ExcelJS = require('exceljs')
-const lodash=require('lodash')
+} = require('../../../utils/consts')
 
 const UNKNOWN_TEETH='nb de dents'
 

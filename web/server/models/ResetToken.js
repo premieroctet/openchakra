@@ -14,4 +14,4 @@ const ResetTokenSchema = new Schema({
 
 ResetTokenSchema.plugin(mongooseLeanVirtuals)
 
-module.exports = ResetToken = mongoose.model('resetToken', ResetTokenSchema)
+module.exports = mongoose.model('resetToken', ResetTokenSchema)

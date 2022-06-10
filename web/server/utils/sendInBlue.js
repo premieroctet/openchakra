@@ -1,6 +1,6 @@
-const {getSibApiKey}=require('../../config/config')
+const lodash = require('lodash')
 const SibApiV3Sdk = require('sib-api-v3-sdk')
-const lodash=require('lodash')
+const {getSibApiKey}=require('../../config/config')
 
 const SIB_API_KEY_V3 = getSibApiKey()
 

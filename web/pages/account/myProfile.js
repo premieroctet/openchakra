@@ -1,4 +1,3 @@
-const BasePage = require('../basePage')
 import CustomButton from '../../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -21,7 +20,7 @@ import UserAvatar from '../../components/Avatar/UserAvatar'
 const {getRole}=require('../../utils/context')
 
 
-class myProfile extends BasePage {
+class myProfile extends React.Component {
 
   constructor(props) {
     super(props)

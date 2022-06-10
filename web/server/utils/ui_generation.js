@@ -11,7 +11,7 @@ const I18N_PATH_ERR='/tmp/custom.json'
 const THEME_PATH='lib/theme.json'
 const THEME_PATH_ERR='/tmp/theme.json'
 
-CONST_CSS = {
+const CONST_CSS = {
   'a': {
     color: 'inherit',
   },
@@ -20,7 +20,7 @@ CONST_CSS = {
   Creates CSS from configurations
   config : {classname, attributes:{name,value}}
 */
-createCSSConfiguration = items => {
+const createCSSConfiguration = items => {
   console.log(`Generating ${items.length} CSS items`)
   // Couleur trait de lien <a>
   let cssClasses={}
@@ -111,7 +111,7 @@ createCSSConfiguration = items => {
     })
 }
 
-createI18NConfiguration = items => {
+const createI18NConfiguration = items => {
   console.log(`Generating ${items.length} I18N items`)
   items = items.filter(i => i.attributes && i.attributes.length)
   const formattedItems=items.map(it => `\t"${it.classname}": "${it.attributes[0].value.replace(/"/g, '\\"')}"`).join(',\n')
@@ -132,7 +132,7 @@ createI18NConfiguration = items => {
     })
 }
 
-createThemeConfiguration = items => {
+const createThemeConfiguration = items => {
   console.log(`Generating ${items.length} THEME items`)
   items = items.filter(i => i.attributes && i.attributes.length)
   items = Object.fromEntries(items.map(i => [i.classname, i.attributes[0].value]))
@@ -141,7 +141,7 @@ createThemeConfiguration = items => {
     .catch(err => (`I18N save error:${err}`))
 }
 
-createUIConfiguration = items => {
+const createUIConfiguration = items => {
   console.log(`Generating ${items.length} custom items`)
   const i18n_grouped=lodash.groupBy(items, it => (['text', 'sample'].includes(it.type) ? 'I18N': it.type=='palette' ? 'THEME' : 'CSS'))
   createCSSConfiguration(i18n_grouped.CSS || [])

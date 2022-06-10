@@ -1,8 +1,8 @@
-const multer = require('multer')
 const fs = require('fs')
 const path = require('path')
-const {IMAGE_EXTENSIONS, TEXT_EXTENSIONS} = require('../../utils/consts')
 const crypto = require('crypto')
+const multer = require('multer')
+const {IMAGE_EXTENSIONS, TEXT_EXTENSIONS, XL_EXTENSIONS} = require('../../utils/consts')
 
 const ensureDirectoryExists = dirName => {
   const rootDir = path.join(path.dirname(require.main.filename), '..')
@@ -27,6 +27,14 @@ const TEXT_FILTER = {
     return TEXT_EXTENSIONS.includes(ext)
   },
   message: `Texte attendu (${TEXT_EXTENSIONS.join(',')})`,
+}
+
+const XL_FILTER = {
+  filter: filename => {
+    const ext = path.extname(filename).toLowerCase()
+    return XL_EXTENSIONS.includes(ext)
+  },
+  message: `Fichier Excel attendu (${XL_EXTENSIONS.join(',')})`,
 }
 
 const createDiskMulter = (directory, fileFilter) => {
@@ -74,4 +82,5 @@ module.exports = {
   createMemoryMulter,
   IMAGE_FILTER,
   TEXT_FILTER,
+  XL_FILTER,
 }

@@ -1,4 +1,3 @@
-const BasePage = require('../../pages/basePage')
 import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -41,7 +40,7 @@ const DialogTitle = withStyles(styles)(props => {
 })
 
 
-class Presentation extends BasePage {
+class Presentation extends React.Component {
 
   constructor(props) {
     super(props)

@@ -12,4 +12,4 @@ const BillingSchema = new Schema({
 
 BillingSchema.plugin(mongooseLeanVirtuals)
 
-module.exports = Billing = mongoose.model('billing', BillingSchema)
+module.exports = mongoose.model('billing', BillingSchema)

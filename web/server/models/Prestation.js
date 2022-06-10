@@ -86,4 +86,4 @@ PrestationSchema.index({label: 'text'})
 
 PrestationSchema.plugin(mongooseLeanVirtuals)
 
-module.exports = Prestation = mongoose.model('prestation', PrestationSchema)
+module.exports = mongoose.model('prestation', PrestationSchema)

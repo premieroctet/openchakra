@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   textfield: {
     width: '50%',
     [theme.breakpoints.down('lg')]: {
@@ -69,3 +69,4 @@ export default theme => ({
   checked: {},
   focusVisible: {},
 })
+export default style

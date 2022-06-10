@@ -339,6 +339,7 @@ class ActionRenderer extends React.Component {
 const textColumn = obj => {
   let base={
     comparator: insensitiveComparator,
+    filter: 'agTextColumnFilter',
     filterParams: {
       textFormatter: normalize,
     },

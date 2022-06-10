@@ -1,4 +1,4 @@
-import {COMPANY_NAME, EDIT_PROFIL} from '../../utils/i18n'
+const withParams = require('../../components/withParams')
 import CustomButton from '../../components/CustomButton/CustomButton'
 import Head from 'next/head'
 import {withTranslation} from 'react-i18next'
@@ -24,7 +24,6 @@ import {
   COMPANY_SIZE,
   MAX_DESCRIPTION_LENGTH,
 } from '../../utils/consts'
-import BasePage from '../basePage'
 import DateField from '../../components/DateField/DateField'
 import LayoutAccount from '../../hoc/Layout/LayoutAccount'
 import LayoutMobile from '../../hoc/Layout/LayoutMobile'
@@ -38,7 +37,7 @@ const {snackBarSuccess, snackBarError} = require('../../utils/notifications')
 
 moment.locale('fr')
 
-class editProfileCompany extends BasePage {
+class editProfileCompany extends React.Component {
   constructor(props) {
     super(props)
     this.state={
@@ -470,7 +469,7 @@ class editProfileCompany extends BasePage {
   render() {
     const {classes, t} = this.props
     const {user} = this.state
-    const index=this.getURLProps().indexAccount
+    const index=this.props.params.indexAccount
 
     if (!user) {
       return null
@@ -498,4 +497,4 @@ class editProfileCompany extends BasePage {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(editProfileCompany))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(withParams(editProfileCompany)))

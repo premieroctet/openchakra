@@ -1,4 +1,4 @@
-const {isMarketplace} = require('../config/config')
+const withParams = require('../components/withParams')
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -8,30 +8,32 @@ import axios from 'axios'
 import 'react-dates/initialize'
 import moment from 'moment'
 import 'react-dates/lib/css/_datepicker.css'
-import styles from '../static/css/pages/searchPage/searchStyle'
-import FilterMenu from '../components/FilterMenu/FilterMenu'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
-import CardServiceUser from '../components/Card/CardServiceUser/CardServiceUser'
-import CardService from '../components/Card/CardService/CardService'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import Layout from '../hoc/Layout/Layout'
-import withSlide from '../hoc/Slide/SlideShow'
-import withGrid from '../hoc/Grid/GridCard'
-import LayoutMobileSearch from '../hoc/Layout/LayoutMobileSearch'
 import Typography from '@material-ui/core/Typography'
 import withWidth from '@material-ui/core/withWidth'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import Hidden from '@material-ui/core/Hidden'
-import '../static/assets/css/custom.css'
+import LayoutMobileSearch from '../hoc/Layout/LayoutMobileSearch'
+import withGrid from '../hoc/Grid/GridCard'
+import withSlide from '../hoc/Slide/SlideShow'
+import Layout from '../hoc/Layout/Layout'
+import CardService from '../components/Card/CardService/CardService'
+import CardServiceUser from '../components/Card/CardServiceUser/CardServiceUser'
+import FilterMenu from '../components/FilterMenu/FilterMenu'
+import styles from '../static/css/pages/searchPage/searchStyle'
+
+import {SEARCH} from '../utils/i18n'
 const {setAxiosAuthentication}=require('../utils/authentication')
-const BasePage=require('./basePage')
 const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel')
 const {computeDistanceKm}=require('../utils/functions')
-const {getLoggedUserId} =require('../utils/context')
-const {PART}=require('../utils/consts')
+
+const SearchResults=withSlide(withGrid(CardService))
 const lodash=require('lodash')
+const {PART}=require('../utils/consts')
+const {getLoggedUserId} =require('../utils/context')
 
 moment.locale('fr')
 
@@ -65,7 +67,7 @@ class SearchDataModel extends SlideGridDataModel {
 
 }
 
-class SearchPage extends BasePage {
+class SearchPage extends React.Component {
 
   // FIX : page blanche quand redirigée depuis home page non connectée
   constructor(props) {
@@ -93,104 +95,104 @@ class SearchPage extends BasePage {
     this.SCROLL_DELTA=3023
   }
 
-  isServiceSearch = () => {
-    if (isMarketplace()) {
-      return false
-    }
-    // Simple search => services
-    // Search on booking  => providers
-    if (this.getURLProps().booking_id) {
-      return false
-    }
-    return true
+isServiceSearch = () => {
+  if (isMarketplace()) {
+    return false
+  }
+  // Simple search => services
+  // Search on booking  => providers
+  if (this.getURLProps().booking_id) {
+    return false
+  }
+  return true
+}
+
+getFilters = () => {
+  if (this.isServiceSearch()) {
+    return {category: true, service: true}
+  }
+  return {date: true, perimeter: true, location: true, category: true, service: true}
+}
+
+componentDidMount() {
+
+  if (getLoggedUserId()) {
+    this.setState({logged: true})
   }
 
-  getFilters = () => {
-    if (this.isServiceSearch()) {
-      return {category: true, service: true}
-    }
-    return {date: true, perimeter: true, location: true, category: true, service: true}
-  }
+  // Mount components gets criterion from URL
+  // If date in URL then force filter after search
+  const url_props=this.props.params
 
-  componentDidMount() {
+  setAxiosAuthentication()
 
-    if (getLoggedUserId()) {
-      this.setState({logged: true})
-    }
-
-    // Mount components gets criterion from URL
-    // If date in URL then force filter after search
-    const url_props=this.getURLProps()
-
+  if (this.getURLProps().booking_id) {
     setAxiosAuthentication()
-
-    if (this.getURLProps().booking_id) {
-      setAxiosAuthentication()
-      axios.get(`/myAlfred/api/booking/${this.getURLProps().booking_id}`)
-        .then(res => {
-          this.setState({gps: res.data.address.gps}, () => { this.search() })
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    }
-    else {
-      this.setState({
-        keyword: url_props.keyword || '',
-        gps: 'gps' in url_props ? JSON.parse(url_props.gps) : null,
-        city: url_props.city || '',
-        category: url_props.category,
-        service: url_props.service,
-        prestation: url_props.prestation,
-      })
-      if ('date' in url_props && url_props.date) {
-        this.setState({
-          startDate: moment(parseInt(url_props.date)).startOf('day'),
-          endDate: moment(parseInt(url_props.date)).endOf('day'),
-        })
-      }
-      axios.get('/myAlfred/api/users/current')
-        .then(res => {
-          let user = res.data
-          this.setState({user: user})
-
-          Promise.resolve({data: user})
-            .then(res => {
-              let allAddresses = {'main': res.data.billing_address.gps}
-              res.data.service_address.forEach(addr => {
-                allAddresses[addr._id] = {lat: addr.lat, lng: addr.lng}
-              })
-
-              let gps=null
-              if ('selectedAddress' in url_props && url_props.selectedAddress !== 'all') {
-                gps=allAddresses[url_props.selectedAddress]
-              }
-              if (!url_props.selectedAddress && !url_props.gps) {
-                gps=allAddresses.main
-              }
-              this.setState({gps: gps}, () => { this.search() })
-            })
-        })
-        .catch(err => {
-          console.error(err)
-        })
-    }
-
-    axios.get(`/myAlfred/api/category/${PART}`)
+    axios.get(`/myAlfred/api/booking/${this.getURLProps().booking_id}`)
       .then(res => {
-        this.setState({categories: res.data})
-      })
-      .catch(err => {
-        console.error(err)
-      })
-    axios.get('/myAlfred/api/shop/allStatus')
-      .then(res => {
-        this.setState({shops: res.data})
+        this.setState({gps: res.data.address.gps}, () => { this.search() })
       })
       .catch(err => {
         console.error(err)
       })
   }
+  else {
+    this.setState({
+      keyword: url_props.keyword || '',
+      gps: 'gps' in url_props ? JSON.parse(url_props.gps) : null,
+      city: url_props.city || '',
+      category: url_props.category,
+      service: url_props.service,
+      prestation: url_props.prestation,
+    })
+    if ('date' in url_props && url_props.date) {
+      this.setState({
+        startDate: moment(parseInt(url_props.date)).startOf('day'),
+        endDate: moment(parseInt(url_props.date)).endOf('day'),
+      })
+    }
+    axios.get('/myAlfred/api/users/current')
+      .then(res => {
+        let user = res.data
+        this.setState({user: user})
+
+        Promise.resolve({data: user})
+          .then(res => {
+            let allAddresses = {'main': res.data.billing_address.gps}
+            res.data.service_address.forEach(addr => {
+              allAddresses[addr._id] = {lat: addr.lat, lng: addr.lng}
+            })
+
+            let gps=null
+            if ('selectedAddress' in url_props && url_props.selectedAddress !== 'all') {
+              gps=allAddresses[url_props.selectedAddress]
+            }
+            if (!url_props.selectedAddress && !url_props.gps) {
+              gps=allAddresses.main
+            }
+            this.setState({gps: gps}, () => { this.search() })
+          })
+      })
+      .catch(err => {
+        console.error(err)
+      })
+  }
+
+  axios.get(`/myAlfred/api/category/${PART}`)
+    .then(res => {
+      this.setState({categories: res.data})
+    })
+    .catch(err => {
+      console.error(err)
+    })
+  axios.get('/myAlfred/api/shop/allStatus')
+    .then(res => {
+      this.setState({shops: res.data})
+    })
+    .catch(err => {
+      console.error(err)
+    })
+}
 
   filter = data => {
     let criterion = data ? data : this.state
@@ -280,7 +282,7 @@ class SearchPage extends BasePage {
   search = forceFilter => {
     this.setState({searching: true})
 
-    const url_props = this.getURLProps()
+    const url_props = this.props.params
     let filters = {}
 
     if (this.getURLProps().booking_id) {
@@ -499,4 +501,4 @@ class SearchPage extends BasePage {
 }
 
 
-export default withTranslation('custom', {withRef: true})(withWidth()(withStyles(styles)(SearchPage)))
+export default withTranslation('custom', {withRef: true})(withWidth()(withStyles(styles)(withParams(SearchPage))))

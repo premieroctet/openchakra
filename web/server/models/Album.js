@@ -32,5 +32,4 @@ const AlbumSchema = new Schema({
 })
 
 AlbumSchema.plugin(mongooseLeanVirtuals)
-
-module.exports = Album = mongoose.model('album', AlbumSchema)
+module.exports = mongoose.model('album', AlbumSchema)

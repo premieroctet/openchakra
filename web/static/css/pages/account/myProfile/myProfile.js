@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   cardPreviewContainerAvatar:{
     width: 100,
     height:100,
@@ -17,3 +17,4 @@ export default theme => ({
     textTransform: 'initial'
   }
 })
+module.exports=Style

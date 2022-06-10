@@ -1,27 +1,28 @@
-const {
-  TRANSACTION_CREATED,
-  TRANSACTION_FAILED,
-  TRANSACTION_SUCCEEDED,
-} = require('../../utils/consts')
-const {checkPaid} = require('./booking')
-const Company = require('../models/Company')
-const {
-  MANGOPAY_CONFIG,
-  get_host_url,
-  is_development,
-}=require('../../config/config')
-const moment = require('moment')
 const path = require('path')
+const moment = require('moment')
 const mangopay = require('mangopay2-nodejs-sdk')
 const KycDocumentType = require('mangopay2-nodejs-sdk/lib/models/KycDocumentType')
 const KycDocumentStatus = require('mangopay2-nodejs-sdk/lib/models/KycDocumentStatus')
 const PersonType = require('mangopay2-nodejs-sdk/lib/models/PersonType')
 
-const mangoApi = new mangopay(MANGOPAY_CONFIG)
-const {MANGOPAY_ERRORS}=require('../../utils/mangopay_messages')
-const {ADMIN, MANAGER}=require('../../utils/consts')
-const {delayedPromise}=require('../../utils/promise')
 const axios=require('axios')
+const {
+  TRANSACTION_CREATED,
+  TRANSACTION_FAILED,
+  TRANSACTION_SUCCEEDED,
+} = require('../../utils/consts')
+const {delayedPromise}=require('../../utils/promise')
+const {ADMIN, MANAGER}=require('../../utils/consts')
+const {MANGOPAY_ERRORS}=require('../../utils/mangopay_messages')
+const {
+  MANGOPAY_CONFIG,
+  getHostUrl,
+  is_development,
+}=require('../../config/config')
+const mangoApi = new mangopay(MANGOPAY_CONFIG)
+const Company = require('../models/Company')
+const {checkPaid} = require('./booking')
+
 const DELAY=1000
 
 const getWallet = mangopay_id => {
@@ -512,7 +513,7 @@ const install_hooks= (hook_types, url) => {
     return console.log(`Dev mode: skipped install_hooks(${hook_types})`)
   }
 
-  let host=get_host_url()
+  let host=getHostUrl()
   if (is_development()) {
     host=host.replace('https', 'http')
   }

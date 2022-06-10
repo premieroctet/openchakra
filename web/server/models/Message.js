@@ -33,4 +33,4 @@ const MessageSchema = new Schema({
 
 MessageSchema.plugin(mongooseLeanVirtuals)
 
-module.exports = Message = mongoose.model('message', MessageSchema)
+module.exports = mongoose.model('message', MessageSchema)

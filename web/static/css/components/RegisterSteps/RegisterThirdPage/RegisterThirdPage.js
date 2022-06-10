@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   margin: {
     margin: theme.spacing(1),
     width: '100%',
@@ -41,3 +41,4 @@ export default theme => ({
     backgroundColor: theme.palette.error.main,
   },
 })
+module.exports=Style

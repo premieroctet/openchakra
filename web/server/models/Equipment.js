@@ -14,4 +14,4 @@ const EquipmentSchema = new Schema({
 
 EquipmentSchema.plugin(mongooseLeanVirtuals)
 
-module.exports = Equipment = mongoose.model('equipment', EquipmentSchema)
+module.exports = mongoose.model('equipment', EquipmentSchema)

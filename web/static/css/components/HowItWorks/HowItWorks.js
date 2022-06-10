@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   howItWorksMainStyle: {
     padding: theme.padding.homePage.section.padding,
   },
@@ -37,3 +37,4 @@ export default theme => ({
     fontFamily: theme.typography.text.fontFamily,
   },
 })
+module.exports=Style

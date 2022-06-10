@@ -13,7 +13,7 @@ import withGrid from '../../../hoc/Grid/GridCard'
 const {SlideGridDataModel}=require('../../../utils/models/SlideGridDataModel')
 
 const CategorySlide=withSlide(withGrid(CategoryCard))
-import '../../../static/assets/css/custom.css'
+
 
 class CategoryTopic extends React.Component {
   constructor(props) {

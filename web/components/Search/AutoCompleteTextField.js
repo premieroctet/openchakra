@@ -1,12 +1,12 @@
-import {TextField} from "@material-ui/core"
-import React, {createRef} from "react"
-import PropTypes from "prop-types"
-import getCaretCoordinates from "textarea-caret"
-import getInputSelection, {setCaretPosition} from "get-input-selection"
-import "./AutoCompleteTextField.css"
-const {getWordAt} = require("../../utils/text")
-let levenshtein = require("fast-levenshtein")
+import {TextField} from '@material-ui/core'
+import React, {createRef} from 'react'
+import PropTypes from 'prop-types'
+import getCaretCoordinates from 'textarea-caret'
+import getInputSelection, {setCaretPosition} from 'get-input-selection'
+import './AutoCompleteTextField.module.css'
+let levenshtein = require('fast-levenshtein')
 const lodash=require('lodash')
+const {getWordAt} = require('../../utils/text')
 const KEY_UP = 38
 const KEY_DOWN = 40
 const KEY_RETURN = 13
@@ -53,7 +53,7 @@ const propTypes = {
 
 const defaultProps = {
   Component: TextField,
-  defaultValue: "",
+  defaultValue: '',
   disabled: false,
   maxOptions: 6,
   onBlur: () => {},
@@ -63,13 +63,13 @@ const defaultProps = {
   onSelect: () => {},
   changeOnSelect: (trigger, slug) => trigger + slug,
   options: [],
-  regex: "^[A-Za-z0-9\\-_]+$",
+  regex: '^[A-Za-z0-9\\-_]+$',
   matchAny: false,
   minChars: 0,
   requestOnlyIfNoOptions: true,
-  spaceRemovers: [",", ".", "!", "?"],
-  spacer: " ",
-  trigger: "@",
+  spaceRemovers: [',', '.', '!', '?'],
+  spacer: ' ',
+  trigger: '@',
   offsetX: 0,
   offsetY: 0,
   value: null,
@@ -110,7 +110,7 @@ class AutocompleteTextField extends React.Component {
   }
 
   componentDidMount() {
-    window.addEventListener("resize", this.handleResize)
+    window.addEventListener('resize', this.handleResize)
   }
 
   componentDidUpdate(prevProps) {
@@ -123,7 +123,7 @@ class AutocompleteTextField extends React.Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener("resize", this.handleResize)
+    window.removeEventListener('resize', this.handleResize)
   }
 
   getMatch(str, caret, providedOptions) {
@@ -138,7 +138,7 @@ class AutocompleteTextField extends React.Component {
     matching = [...lodash.sortBy(groups.true || []), ...(lodash.sortBy(groups.false || [], m => levenshtein.get(m, w.word)))]
     if (matching.length>0) {
       return {
-        trigger: "",
+        trigger: '',
         matchStart: w.start,
         matchLength: w.end-w.start,
         options: matching,
@@ -385,7 +385,7 @@ class AutocompleteTextField extends React.Component {
 
       return (
         <li
-          className={idx === selection ? "active" : null}
+          className={idx === selection ? 'active' : null}
           key={val}
           onClick={() => { this.handleSelection(idx) }}
           onMouseEnter={() => { this.setState({selection: idx}) }}
@@ -398,7 +398,7 @@ class AutocompleteTextField extends React.Component {
     })
 
     return (
-      <div style={{left: 0, top: 10, position: "absolute", transform: "translate3d(0px, 30px, 0px)", willChange: "transform"}}>
+      <div style={{left: 0, top: 10, position: 'absolute', transform: 'translate3d(0px, 30px, 0px)', willChange: 'transform'}}>
         <ul className="react-autocomplete-input">
           {helperOptions}
         </ul>
@@ -422,9 +422,9 @@ class AutocompleteTextField extends React.Component {
     const propagated = Object.assign({}, rest)
     Object.keys(propTypes).forEach(k => { delete propagated[k] })
 
-    let val = ""
+    let val = ''
 
-    if (typeof value !== "undefined" && value !== null) {
+    if (typeof value !== 'undefined' && value !== null) {
       val = value
     }
     else if (stateValue) {
@@ -435,7 +435,7 @@ class AutocompleteTextField extends React.Component {
     }
 
     return (
-      <div style={{position: "relative"}}>
+      <div style={{position: 'relative'}}>
         <Component
           disabled={disabled}
           onBlur={onBlur}

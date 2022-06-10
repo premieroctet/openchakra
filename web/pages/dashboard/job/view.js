@@ -1,3 +1,4 @@
+const withParams = require('../../../components/withParams')
 const {
   snackBarError,
   snackBarSuccess,
@@ -13,7 +14,7 @@ import Router from 'next/router'
 import TextField from '@material-ui/core/TextField'
 import axios from 'axios'
 
-import BasePage from '../../basePage'
+
 import DashboardLayout from '../../../hoc/Layout/DashboardLayout'
 
 const {clearAuthenticationToken, setAxiosAuthentication}=require('../../../utils/authentication')
@@ -43,7 +44,7 @@ const styles = theme => ({
   },
 })
 
-class View extends BasePage {
+class View extends React.Component {
 
   constructor(props) {
     super(props)
@@ -57,7 +58,7 @@ class View extends BasePage {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname)
-    const id = this.getURLProps().id
+    const id = this.props.params.id
     setAxiosAuthentication()
     axios.get(`/myAlfred/api/admin/job/all/${id}`)
       .then(response => {
@@ -83,7 +84,7 @@ class View extends BasePage {
     e.preventDefault()
 
     const {label} = this.state.job
-    const id = this.getURLProps().id
+    const id = this.props.params.id
     const promise=id ? axios.put(`/myAlfred/api/admin/job/all/${id}`, {label}) : axios.post(`/myAlfred/api/admin/job/all`, {label})
     promise
       .then(() => {
@@ -103,7 +104,7 @@ class View extends BasePage {
   }
 
   handleClick() {
-    const id = this.getURLProps().id
+    const id = this.props.params.id
     axios.delete(`/myAlfred/api/admin/job/all/${id}`)
       .then(res => {
         snackBarSuccess('Métier supprimé avec succès')
@@ -126,7 +127,7 @@ class View extends BasePage {
     const {job} = this.state
 
 
-    const newJob=!this.getURLProps().id
+    const newJob=!this.props.params.id
     return (
       <DashboardLayout>
         <Grid container className={classes.loginContainer}>
@@ -171,4 +172,4 @@ class View extends BasePage {
 }
 
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(View))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(withParams(View)))

@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   contentFiltre: {
     display: 'flex',
     alignItems: 'flex-end',
@@ -66,3 +66,4 @@ export default theme => ({
   checked: {},
   focusVisible: {},
 })
+export default style

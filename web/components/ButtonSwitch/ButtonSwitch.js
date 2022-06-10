@@ -10,7 +10,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
 import styles from './ButtonSwitchStyle'
 import Typography from '@material-ui/core/Typography'
-import '../../static/assets/css/custom.css'
+
 import {BUTTON_SWITCH} from '../../utils/i18n'
 
 const CssTextField = withStyles({

@@ -27,7 +27,7 @@ import DateField from '../../components/DateField/DateField'
 const {is_production}=require('../../config/config')
 const {isPhoneOk} = require('../../utils/sms')
 const moment = require('moment')
-import '../../static/assets/css/custom.css'
+
 
 moment.locale('fr')
 

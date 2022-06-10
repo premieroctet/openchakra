@@ -7,7 +7,7 @@ import Layout from './Layout'
 import axios from 'axios'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import styles from '../../static/css/components/LayoutAccount/LayoutAccount'
-import '../../static/assets/css/custom.css'
+
 import {withStyles} from '@material-ui/core/styles'
 import {LAYOUT_ACCOUNT} from '../../utils/i18n'
 

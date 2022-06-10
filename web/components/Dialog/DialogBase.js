@@ -1,15 +1,15 @@
 import {Grid} from '@material-ui/core'
-import CustomButton from '../CustomButton/CustomButton'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Typography from '@material-ui/core/Typography'
 import {withStyles} from '@material-ui/core/styles'
-import styles from './DialogBaseStyle.js'
 import IconButton from '@material-ui/core/IconButton'
 import DialogContent from '@material-ui/core/DialogContent'
 import Dialog from '@material-ui/core/Dialog'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import CloseIcon from '@material-ui/icons/Close'
+import CustomButton from '../CustomButton/CustomButton'
+import styles from './DialogBaseStyle.js'
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props
@@ -67,4 +67,4 @@ render = () => {
 
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(DialogBase))
+module.exports=withTranslation('custom', {withRef: true})(withStyles(styles)(DialogBase))

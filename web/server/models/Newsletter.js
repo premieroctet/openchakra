@@ -12,4 +12,4 @@ const NewsletterSchema = new Schema({
 
 NewsletterSchema.plugin(mongooseLeanVirtuals)
 
-module.exports = NewsLetter = mongoose.model('newsletter', NewsletterSchema)
+module.exports = mongoose.model('newsletter', NewsletterSchema)

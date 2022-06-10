@@ -1,8 +1,8 @@
-const RequiredField = require('../misc/RequiredField')
-const {withTranslation} = require('react-i18next')
 import React from 'react'
 import {feurstImgPath} from '../../pages/configurator'
-const {PIN, SOLD, NONE} = require('../../utils/feurst_consts')
+const {withTranslation} = require('react-i18next')
+const RequiredField = require('../misc/RequiredField')
+const {PIN, SOLD, NONE} = require('../../utils/consts')
 
 
 function FixTypes(props) {

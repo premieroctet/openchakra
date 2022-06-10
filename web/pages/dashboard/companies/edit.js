@@ -1,3 +1,4 @@
+const withParams = require('../../../components/withParams')
 import CustomButton from '../../../components/CustomButton/CustomButton'
 import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
@@ -13,7 +14,7 @@ import Select from '@material-ui/core/Select'
 import TextField from '@material-ui/core/TextField'
 import axios from 'axios'
 
-import BasePage from '../../basePage'
+
 import DashboardLayout from '../../../hoc/Layout/DashboardLayout'
 
 const {COMPANY_SIZE, COMPANY_ACTIVITY}=require('../../../utils/consts')
@@ -51,7 +52,7 @@ const styles = () => ({
   },
 })
 
-class View extends BasePage {
+class View extends React.Component {
 
   constructor(props) {
     super(props)
@@ -72,7 +73,7 @@ class View extends BasePage {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname)
-    const id = this.getURLProps().id
+    const id = this.props.params.id
     if (!id) {
       this.setState({company: {}})
       return
@@ -347,4 +348,4 @@ class View extends BasePage {
 }
 
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(View))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(withParams(View)))

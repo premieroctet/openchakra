@@ -43,4 +43,4 @@ AvailabilitySchema.virtual('as_text').get(function() {
 
 AvailabilitySchema.plugin(mongooseLeanVirtuals)
 
-module.exports = Availability = mongoose.model('availability', AvailabilitySchema)
+module.exports = mongoose.model('availability', AvailabilitySchema)

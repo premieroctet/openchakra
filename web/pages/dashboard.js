@@ -1,14 +1,17 @@
-import {isLoggedUserAdmin, isLoggedUserSuperAdmin} from '../utils/context'
+import {Link, Typography} from '@material-ui/core'
+import axios from 'axios'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 
 import Card from '@material-ui/core/Card'
 import Grid from '@material-ui/core/Grid'
-import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
 import Router from 'next/router'
+import {isLoggedUserAdmin, isLoggedUserSuperAdmin} from '../utils/context'
 import DashboardLayout from '../hoc/Layout/DashboardLayout'
-import {Link} from '@material-ui/core'
+const {API_PATH} = require('../utils/feurst/consts')
+const {setAxiosAuthentication}=require('../utils/authentication')
+const {SHIPRATE, PRODUCT} = require('../utils/consts')
 
 const styles = () => ({
   signupContainer: {
@@ -38,6 +41,7 @@ class home extends React.Component {
     super(props)
     this.state={
       user: null,
+      actions: [],
     }
   }
 
@@ -46,6 +50,19 @@ class home extends React.Component {
     if (!isLoggedUserAdmin()) {
       Router.push('/login')
     }
+    setAxiosAuthentication()
+    axios.get('/myAlfred/api/users/current')
+      .then(response => {
+        this.setState({user: response.data})
+      })
+    axios.get(`${API_PATH}/users/actions`)
+      .then(response => {
+        this.setState({actions: response.data})
+      })
+  }
+
+  hasModelAccess = model => {
+    return !!this.state.actions.find(a => a.model==model)
   }
 
   render() {
@@ -70,6 +87,8 @@ class home extends React.Component {
                 <Link href="/dashboard/equipments/all"><a>Equipements</a></Link><br/>
                 <Link href="/dashboard/services/all"><a>Services</a></Link><br/>
                 <Link href="/dashboard/prestations/all"><a>Prestations</a></Link><br/>
+                {this.hasModelAccess(PRODUCT) && <><Link href="/dashboard/products"><a>Produits</a></Link><br/></>}
+                {this.hasModelAccess(SHIPRATE) && <Link href="/dashboard/shiprates"><a>Frais de livraison</a></Link>}
               </Grid>
               <Grid item xs={6}>
                 <Typography style={{fontSize: 30}}>Maintenance</Typography>

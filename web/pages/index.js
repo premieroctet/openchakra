@@ -33,7 +33,7 @@ import IconButton from '@material-ui/core/IconButton'
 import {isAndroid} from 'react-device-detect'
 const {PRO, PART} = require('../utils/consts')
 import Router from 'next/router'
-import '../static/assets/css/custom.css'
+
 import lodash from 'lodash'
 import RandomBanner from '../components/RandomBanner/RandomBanner'
 import {INDEX} from '../utils/i18n'
@@ -80,7 +80,6 @@ class Home extends React.Component {
       this.setState({open: true})
     }
 
-
     axios.get('/myAlfred/api/users/current')
       .then(res => {
         let data = res.data
@@ -112,6 +111,7 @@ class Home extends React.Component {
         let alfred = response.data
         this.setState({alfred: alfred})
       }).catch(err => console.error(err))
+
 
     this.setState({mounted: true})
   }

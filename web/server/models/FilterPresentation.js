@@ -12,4 +12,4 @@ const FilterPresentationSchema = new Schema({
 
 FilterPresentationSchema.plugin(mongooseLeanVirtuals)
 
-module.exports = FilterPresentation = mongoose.model('filterPresentation', FilterPresentationSchema)
+module.exports = mongoose.model('filterPresentation', FilterPresentationSchema)

@@ -52,4 +52,4 @@ UIConfigurationSchema.virtual('type_label').get(function() {
 
 UIConfigurationSchema.plugin(mongooseLeanVirtuals)
 
-module.exports = UIConfiguration = mongoose.model('uiconfiguration', UIConfigurationSchema)
+module.exports = mongoose.model('uiconfiguration', UIConfigurationSchema)
