@@ -1,4 +1,3 @@
-const BasePage = require('../../pages/basePage')
 import {canAlfredSelfRegister} from '../../config/config'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -14,7 +13,7 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import Typography from '@material-ui/core/Typography'
 import UserAvatar from '../../components/Avatar/UserAvatar'
 
-class ProfileLayout extends BasePage {
+class ProfileLayout extends React.Component {
 
   constructor(props) {
     super(props)

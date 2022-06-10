@@ -1,8 +1,7 @@
-const User = require('../../models/User')
-
 const router = require('express').Router()
 const passport = require('passport')
-const {get_host_url} = require('../../../config/config')
+const User = require('../../models/User')
+const {getHostUrl} = require('../../../config/config')
 const {send_cookie}=require('../../utils/serverContext')
 
 const googleAuth = passport.authenticate('google', {session: false, scope: ['profile', 'email']})
@@ -22,7 +21,7 @@ const redirectRegistration = (user, res) => {
     'picture': user.picture,
     'isLogin': false,
   })
-  res.status(200).redirect(new URL(`?${ url.toString()}`, get_host_url()))
+  res.status(200).redirect(new URL(`?${ url.toString()}`, getHostUrl()))
 }
 
 // Extract user data depending on the provider

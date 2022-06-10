@@ -1,3 +1,4 @@
+const express = require('express')
 const Booking = require('../../models/Booking')
 const Job = require('../../models/Job')
 const Group = require('../../models/Group')
@@ -11,7 +12,6 @@ const Category = require('../../models/Category')
 const {logEvent}=require('../../utils/events')
 const {sendAdminsAlert} =require('../../utils/mailing')
 const {IMAGE_FILTER, createDiskMulter} = require('../../utils/filesystem')
-const express = require('express')
 
 const router = express.Router()
 const passport = require('passport')
@@ -609,23 +609,9 @@ router.post('/search', (req, res) => {
       }
       console.log(`Remaining ${serviceUsers.length} after gps filtering`)
 
-      // Manager : filtrer les services autorisés
-      if (getRole(req)==MANAGER) {
-        Group.findOne({members: get_logged_id(req), type: MICROSERVICE_MODE}, 'allowed_services')
-          .then(group => {
-            const manager_sus = serviceFilters.filterServicesIds(serviceUsers, group.allowed_services.map(s => s.service._id))
-            return res.json(manager_sus)
-          })
-          .catch(err => {
-            console.error(err)
-            return res.status(400).json(err)
-          })
-      }
-      else {
-        const elapsed = process.hrtime(start2)
-        console.log(`Fast Search found ${serviceUsers.length} services in ${elapsed[0]}s ${elapsed[1] / 1e6}ms`)
-        return res.json(serviceUsers)
-      }
+      const elapsed = process.hrtime(start2)
+      console.log(`Fast Search found ${serviceUsers.length} services in ${elapsed[0]}s ${elapsed[1] / 1e6}ms`)
+      return res.json(serviceUsers)
     })
     .catch(err => {
       console.error(err)

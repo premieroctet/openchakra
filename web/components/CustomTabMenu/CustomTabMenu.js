@@ -1,7 +1,7 @@
 import React from 'react'
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
-import '../../static/assets/css/custom.css'
+
 import {withTranslation} from 'react-i18next'
 import {makeStyles} from '@material-ui/core/styles'
 

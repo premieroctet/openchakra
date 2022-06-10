@@ -34,4 +34,4 @@ const CommissionSchema = new Schema({
 
 CommissionSchema.plugin(mongooseLeanVirtuals)
 
-module.exports = Commission = mongoose.model('commission', CommissionSchema)
+module.exports = mongoose.model('commission', CommissionSchema)

@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   bigContainer: {
     overflowX: 'hidden',
     overflowY: 'hidden',
@@ -235,3 +235,4 @@ export default theme => ({
   },
 
 })
+export default style

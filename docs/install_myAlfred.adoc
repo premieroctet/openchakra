@@ -1,8 +1,8 @@
 
-## Requirements 
+## Requirements
 * node 14 + yarn
 * mongodb
-* filezilla  
+* filezilla
 
 
 clés ssh en place
@@ -26,9 +26,9 @@ Puis, dans le projet myalfred :
 [source, JavaScript]
 web/mode.js
 ----
-const MODE = 'development' /* validation (3122, 3123) démarre sur le port 22, ['production', 'development'] */
+const MODE = 'development'; /* 'production', 'development' */
 const TAWKTO_URL = 'https://embed.tawk.to/5de4db8c43be710e1d201adc/default'
-const SIB_TEMPLATES='my-alfred' /* Pour l'envoi de méls, envoi des templates via sendinblue ['all-inclusive', 'my-alfred'] */
+const SIB_TEMPLATES='all-inclusive' /* 'my-alfred', 'all-inclusive' */
 const DATABASE_NAME='test-myAlfred-V2'
 const MANGOPAY_CLIENTID='testmyalfredv2'
 const MANGOPAY_APIKEY='cSNrzHm5YRaQxTdZVqWxWAnyYDphvg2hzBVdgTiAOLmgxvF2oN'
@@ -50,7 +50,7 @@ $ yarn build
 # Puis, yarn start
 ----
 
-## Go 
+## Go
 
 yarn install
 

@@ -1,3 +1,4 @@
+const withParams = require('../../../components/withParams')
 import CustomButton from '../../../components/CustomButton/CustomButton'
 import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
@@ -9,7 +10,7 @@ import Router from 'next/router'
 import TextField from '@material-ui/core/TextField'
 import axios from 'axios'
 
-import BasePage from '../../basePage'
+
 import DocumentEditor from '../../../components/DocumentEditor/DocumentEditor'
 import DashboardLayout from '../../../hoc/Layout/DashboardLayout'
 
@@ -43,7 +44,7 @@ const styles = {
   },
 }
 
-class View extends BasePage {
+class View extends React.Component {
 
   constructor(props) {
     super(props)
@@ -67,7 +68,7 @@ class View extends BasePage {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname)
-    const id = this.getURLProps().id
+    const id = this.props.params.id
     this.setState({
       particular_id: null,
       particular_file: null,
@@ -136,7 +137,7 @@ class View extends BasePage {
       return
     }
 
-    const id = this.getURLProps().id
+    const id = this.props.params.id
     const data={
       'particular_label': particular_label,
       'professional_label': professional_label,
@@ -176,7 +177,7 @@ class View extends BasePage {
   }
 
   handleClick() {
-    const id = this.getURLProps().id
+    const id = this.props.params.id
     axios.delete(`/myAlfred/api/admin/category/all/${id}`)
       .then(() => {
         snackBarSuccess('Categorie supprimée avec succès')
@@ -279,4 +280,4 @@ class View extends BasePage {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(View))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(withParams(View)))

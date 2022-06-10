@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   contentStepper:{
     backgroundColor: 'rgba(249,249,249, 1)',
     display: 'flex',
@@ -10,3 +10,4 @@ export default theme => ({
     justifyContent: 'center',
   },
 })
+module.exports=Style

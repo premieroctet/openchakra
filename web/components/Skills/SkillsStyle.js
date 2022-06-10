@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   skillsContainer: {
     display: 'flex',
     flexDirection: 'row',
@@ -41,3 +41,4 @@ export default theme => ({
     alignItems: 'center'
   },
 })
+export default style

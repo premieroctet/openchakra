@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
 
   descriptionContainer: {
     [theme.breakpoints.down('sm')]:{
@@ -106,3 +106,4 @@ export default theme => ({
   }
 
 })
+export default style

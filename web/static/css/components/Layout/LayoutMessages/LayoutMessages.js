@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   scrollIndicator:{
     backgroundColor: theme.palette.secondary.main
   },
@@ -6,3 +6,4 @@ export default theme => ({
     textTransform: 'initial'
   },
 })
+module.exports=Style

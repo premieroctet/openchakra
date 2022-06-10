@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
+const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 const {BUDGET_PERIOD, DASHBOARD_MODE}=require('../../utils/consts')
 
-const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 
 const GroupSchema = new Schema({
   name: {
@@ -51,4 +51,4 @@ const GroupSchema = new Schema({
 
 GroupSchema.plugin(mongooseLeanVirtuals)
 
-module.exports = Group = mongoose.model('group', GroupSchema)
+module.exports = mongoose.model('group', GroupSchema)

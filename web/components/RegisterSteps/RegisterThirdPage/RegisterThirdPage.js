@@ -1,18 +1,17 @@
-const {
-  canAlfredParticularRegister,
-  canAlfredSelfRegister,
-} = require('../../../config/config')
-const axios = require('axios')
 import {Link, Typography} from '@material-ui/core'
-import CustomButton from '../../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 import Grid from '@material-ui/core/Grid'
-const {setAxiosAuthentication} = require('../../../utils/authentication')
+import CustomButton from '../../CustomButton/CustomButton'
 import styles from '../../../static/css/components/RegisterSteps/RegisterThirdPage/RegisterThirdPage'
-import '../../../static/assets/css/custom.css'
+const axios = require('axios')
+const {setAxiosAuthentication} = require('../../../utils/authentication')
+const {
+  canAlfredParticularRegister,
+  canAlfredSelfRegister,
+} = require('../../../config/config')
 
 class RegisterThirdPage extends React.Component {
 

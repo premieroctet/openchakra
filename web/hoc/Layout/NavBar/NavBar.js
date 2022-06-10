@@ -1,22 +1,6 @@
-const {
-  canAlfredParticularRegister,
-  canAlfredSelfRegister,
-} = require('../../../config/config')
-import {
-  getLoggedUserId,
-  isLoggedUserRegistered,
-  removeAlfredRegistering,
-  setAlfredRegistering,
-  getRole,
-} from '../../../utils/context'
-const {PART, EMPLOYEE, ACCEPT_COOKIE_NAME} = require('../../../utils/consts')
-import AutoCompleteTextField from
-'../../../components/Search/AutoCompleteTextField'
-import CustomButton from '../../../components/CustomButton/CustomButton'
+import React, {Component} from 'react'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
-const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
-import React, {Component} from 'react'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import IconButton from '@material-ui/core/IconButton'
@@ -26,8 +10,6 @@ import Router from 'next/router'
 import Grid from '@material-ui/core/Grid'
 import MultipleSelect from 'react-select'
 import moment from 'moment'
-import LogIn from '../../../components/LogIn/LogIn'
-import Register from '../../../components/Register/Register'
 import Dialog from '@material-ui/core/Dialog'
 import DialogContent from '@material-ui/core/DialogContent'
 import Slide from '@material-ui/core/Slide'
@@ -44,7 +26,6 @@ import Select from '@material-ui/core/Select'
 import FormControl from '@material-ui/core/FormControl'
 import axios from 'axios'
 import withStyles from '@material-ui/core/styles/withStyles'
-import styles from '../../../static/css/components/NavBar/NavBar'
 import {Typography} from '@material-ui/core'
 import TuneIcon from '@material-ui/icons/Tune'
 import InputLabel from '@material-ui/core/InputLabel'
@@ -54,14 +35,24 @@ import Switch from '@material-ui/core/Switch'
 import {DateRangePicker} from 'react-dates'
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
 import ClearIcon from '@material-ui/icons/Clear'
-const {formatAddress} = require('../../../utils/text.js')
 import Slider from '@material-ui/core/Slider'
-import '../../../static/assets/css/custom.css'
-import {getCookieConsentValue, resetCookieConsentValue} from 'react-cookie-consent'
-import Logo from '../../../components/Logo/Logo'
 import Hidden from '@material-ui/core/Hidden'
-import CustomTabMenu from '../../../components/CustomTabMenu/CustomTabMenu'
 import lodash from 'lodash'
+import dynamic from 'next/dynamic'
+import CustomTabMenu from '../../../components/CustomTabMenu/CustomTabMenu'
+import Logo from '../../../components/Logo/Logo'
+import {getLoggedUserId, isLoggedUserRegistered, removeAlfredRegistering, setAlfredRegistering, getRole} from '../../../utils/context'
+import styles from '../../../static/css/components/NavBar/NavBar'
+import CustomButton from '../../../components/CustomButton/CustomButton'
+import AutoCompleteTextField from '../../../components/Search/AutoCompleteTextField'
+import {PART, EMPLOYEE} from '../../../utils/consts'
+import {formatAddress} from '../../../utils/text.js'
+import {clearAuthenticationToken, setAxiosAuthentication} from '../../../utils/authentication'
+import {UserContext} from '../../../contextes/user.context'
+const {
+  canAlfredParticularRegister,
+  canAlfredSelfRegister,
+} = require('../../../config/config')
 
 const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />
@@ -81,6 +72,20 @@ const DialogTitle = withStyles(styles)(props => {
   )
 })
 
+
+const Register = dynamic(
+  () => import('../../../components/Register/Register'),
+  {
+    loading: () => <p>...</p>,
+  },
+)
+
+const LogIn = dynamic(
+  () => import('../../../components/LogIn/LogIn'),
+  {
+    loading: () => <p>...</p>,
+  },
+)
 
 class NavBar extends Component {
   constructor(props) {
@@ -120,6 +125,11 @@ class NavBar extends Component {
     this.radius_marks=[1, 5, 10, 15, 20, 30, 50, 100, 200, 300].map(v => ({value: v, label: v>1 && v<50? '' : `${v}km`}))
   }
 
+  isLoggedUser = () => {
+    const {user} = this.context
+    return !!user
+  }
+
   componentDidMount() {
     let query = Router.query
     if (Router.pathname === '/') {
@@ -134,30 +144,28 @@ class NavBar extends Component {
     if (query.login === 'true') {
       this.handleOpenLogin()
     }
-    if (query.register && !getLoggedUserId()) {
+    if (query.register && !isLoggedUser()) {
       this.handleOpenRegister(query.register)
     }
 
-    setAxiosAuthentication()
-    axios.get('/myAlfred/api/users/current')
-      .then(res => {
-        const user = res.data
-        this.setState({user: user})
-        Promise.resolve({data: user})
-          .then(res => {
-            let allAddresses = {'main': res.data.billing_address}
-            res.data.service_address.forEach(addr => {
-              allAddresses[addr._id] = addr
-            })
-            this.setState({
-              allAddresses: allAddresses,
-              selectedAddress: this.props.selectedAddress || 'main', keyword: this.props.keyword || '',
-            })
-          })
+
+    const {user} = this.context
+
+    if (user) {
+
+      let allAddresses = {'main': user?.billing_address}
+      if (user?.service_address) {
+        user?.service_address.forEach(addr => {
+          allAddresses[addr._id] = addr
+        })
+      }
+      this.setState({
+        user,
+        allAddresses,
+        selectedAddress: this.props.selectedAddress || 'main', keyword: this.props.keyword || '',
       })
-      .catch(err => {
-        console.error(err)
-      })
+    }
+
 
     setAxiosAuthentication()
     axios.get(`/myAlfred/api/category/${PART}`)
@@ -200,13 +208,6 @@ class NavBar extends Component {
   };
 
   handleOpenLogin = () => {
-    if (getCookieConsentValue(ACCEPT_COOKIE_NAME) !== 'true') {
-      if (getCookieConsentValue(ACCEPT_COOKIE_NAME)==='false') {
-        resetCookieConsentValue(ACCEPT_COOKIE_NAME)
-        window.location.reload()
-      }
-      return
-    }
     this.handleMenuClose()
     removeAlfredRegistering()
     this.setState({setOpenLogin: true, setOpenRegister: null})
@@ -218,13 +219,6 @@ class NavBar extends Component {
   };
 
   handleOpenRegister = user_id => {
-    if (getCookieConsentValue(ACCEPT_COOKIE_NAME) !== 'true') {
-      if (getCookieConsentValue(ACCEPT_COOKIE_NAME)==='false') {
-        resetCookieConsentValue(ACCEPT_COOKIE_NAME)
-        window.location.reload()
-      }
-      return
-    }
     this.handleMenuClose()
     this.setState({setOpenRegister: user_id, setOpenLogin: false})
   };
@@ -1204,5 +1198,7 @@ class NavBar extends Component {
     )
   }
 }
+
+NavBar.contextType = UserContext
 
 export default withTranslation('custom', {withRef: true})(withStyles(styles)(NavBar))

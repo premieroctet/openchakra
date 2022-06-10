@@ -1,4 +1,4 @@
-import '../../static/assets/css/custom.css'
+
 import {withTranslation} from 'react-i18next'
 import Grid from '@material-ui/core/Grid'
 import React from 'react'

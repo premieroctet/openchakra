@@ -1,5 +1,5 @@
 import React from 'react'
-import './cssOverride.css'
+import './cssOverride.module.css'
 
 class CssOverrideTest extends React.Component {
 

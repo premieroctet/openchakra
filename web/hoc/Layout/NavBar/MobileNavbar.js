@@ -1,17 +1,6 @@
-const {
-  clearAuthenticationToken,
-  setAxiosAuthentication
-} = require('../../../utils/authentication');
-const {
-  getLoggedUserId,
-  getRole,
-  isLoggedUserAlfredPro,
-  isLoggedUserRegistered
-} = require('../../../utils/context');
-import CustomButton from '../../../components/CustomButton/CustomButton'
+import React from 'react'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
-import React from 'react'
 import BottomNavigation from '@material-ui/core/BottomNavigation'
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction'
 import HomeIcon from '@material-ui/icons/Home'
@@ -20,15 +9,11 @@ import CalendarTodayIcon from '@material-ui/icons/CalendarToday'
 import MailOutlineIcon from '@material-ui/icons/MailOutline'
 import PersonIcon from '@material-ui/icons/Person'
 import withStyles from '@material-ui/core/styles/withStyles'
-import styles from '../../../static/css/components/MobileNavbar/MobileNavbar'
 import Router from 'next/router'
-import axios from 'axios'
-import LogIn from '../../../components/LogIn/LogIn'
 import DialogContent from '@material-ui/core/DialogContent'
 import Dialog from '@material-ui/core/Dialog'
 import Slide from '@material-ui/core/Slide'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
-import Register from '../../../components/Register/Register'
 import Grid from '@material-ui/core/Grid'
 import {Typography} from '@material-ui/core'
 import IconButton from '@material-ui/core/IconButton'
@@ -41,10 +26,24 @@ import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import AlgoliaPlaces from 'algolia-places-react'
-import {SEARCHBAR} from '../../../utils/i18n'
 import BusinessIcon from '@material-ui/icons/Business'
-const {EMPLOYEE}=require('../../../utils/consts')
-const {formatAddress} = require('../../../utils/text.js')
+import {SEARCHBAR} from '../../../utils/i18n'
+import Register from '../../../components/Register/Register'
+import LogIn from '../../../components/LogIn/LogIn'
+import styles from '../../../static/css/components/MobileNavbar/MobileNavbar'
+import CustomButton from '../../../components/CustomButton/CustomButton'
+import {
+  getLoggedUserId,
+  getRole,
+  isLoggedUserAlfredPro,
+  isLoggedUserRegistered,
+} from '../../../utils/context'
+import {
+  clearAuthenticationToken,
+} from '../../../utils/authentication'
+import {EMPLOYEE} from '../../../utils/consts'
+import {formatAddress} from '../../../utils/text.js'
+import {UserContext} from '../../../contextes/user.context'
 
 
 const Transition = React.forwardRef((props, ref) => {
@@ -96,19 +95,23 @@ class MobileNavbar extends React.Component {
       this.setState({logged: true, selectedAddress: 'main'})
     }
 
-    setAxiosAuthentication()
-    axios.get('/myAlfred/api/users/current')
-      .then(res => {
-        const user=res.data
-        Promise.resolve({data: user})
-          .then(res => {
-            let allAddresses = {'main': res.data.billing_address}
-            res.data.service_address.forEach(addr => {
-              allAddresses[addr._id] = addr
-            })
-            this.setState({user: user, allAddresses: allAddresses})
-          })
-      }).catch(err => console.error(err))
+    const {user} = this.context
+
+    if (user) {
+      let allAddresses = {'main': user?.billing_address}
+      if (user?.service_address) {
+        user?.service_address.forEach(addr => {
+          allAddresses[addr._id] = addr
+        })
+      }
+      
+      this.setState({
+        user,
+        allAddresses,
+        selectedAddress: this.props.selectedAddress || 'main', keyword: this.props.keyword || '',
+      })
+    }
+
   }
 
   needRefresh = () => {
@@ -412,5 +415,7 @@ class MobileNavbar extends React.Component {
   }
 
 }
+
+MobileNavbar.contextType = UserContext
 
 export default withTranslation('custom', {withRef: true})(withStyles(styles)(MobileNavbar))

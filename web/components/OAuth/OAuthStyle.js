@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   contentOauth: {
     display: 'flex',
     border: '1px solid rgba(0, 0, 0, 0.2)',
@@ -8,3 +8,4 @@ export default theme => ({
     cursor: 'pointer',
   },
 })
+export default style

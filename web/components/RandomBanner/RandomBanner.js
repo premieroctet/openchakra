@@ -3,7 +3,7 @@ import {is_development} from '../../config/config'
 import React from 'react'
 import {Typography} from '@material-ui/core'
 import {withTranslation} from 'react-i18next'
-import '../../static/assets/css/custom.css'
+
 import Carousel from 'react-material-ui-carousel'
 import Grid from '@material-ui/core/Grid'
 import {makeStyles} from '@material-ui/core/styles'
@@ -77,14 +77,14 @@ function RandomBanner(props) {
 
   function contentToRender(nbLoop) {
     return(
-      [...Array(nbLoop)].map((res, i= 0) => (
-        <Grid container spacing={2} key={i} className={`${classes.mainContainer} ${ !mobile ? `RANDOM_BANNER_BG_PICTURE_${i}` : `RANDOM_BANNER_BG_MOBILE_PICTURE_${i}` } `}>
-          <Grid item xs={12} className={classes.title} key={i} >
+      [...Array(nbLoop)].map((res, i) => (
+        <Grid container spacing={2} key={`${i}`} className={`${classes.mainContainer} ${ !mobile ? `RANDOM_BANNER_BG_PICTURE_${i}` : `RANDOM_BANNER_BG_MOBILE_PICTURE_${i}` } `}>
+          <Grid item xs={12} className={classes.title}>
             <Typography className={`${classes.colorText} customrandomdisplay`}>{i18n.exists(`RANDOM_BANNER_TITLE_${i}`) && ReactHtmlParser(t(`RANDOM_BANNER_TITLE_${i}`))}</Typography>
           </Grid>
           {
             [0, 1, 2, 3, 4, 5].map((val, index) => (
-              <>
+              <React.Fragment key={`${i}_${index}`}>
                 <Grid
                   container
                   spacing={1}
@@ -92,7 +92,6 @@ function RandomBanner(props) {
                   md={2}
                   xs={12}
                   className={`${classes.carouselStyle} RANDOM_BANNER_BG_PICTURE_${i}_${index}`}
-                  key={`${i}_${index}`}
                   style={{display: mobile && index === 0 || mobile && index === 1 ? 'none' : 'flex'}}
                 >
                   <Grid item xs={12} className={`${classes.containerTitle} customrandomdisplay_${i}_${index}`}>
@@ -102,7 +101,7 @@ function RandomBanner(props) {
                   <Grid item xs={12} className={`RANDOM_BANNER_PICTURE_${i}_${index} ${classes.randompics}`}
                     style={{display: mobile && i === 2 ? 'none' : 'inherit'}}/>
                 </Grid>
-              </>
+              </React.Fragment>
             ))
           }
         </Grid>

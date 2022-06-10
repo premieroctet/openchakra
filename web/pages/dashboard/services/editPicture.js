@@ -1,11 +1,12 @@
+const withParams = require('../../../components/withParams')
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 
-import BasePage from '../../basePage'
+
 import EditPicture from '../../../components/Dashboard/EditPicture/EditPicture'
 import DashboardLayout from '../../../hoc/Layout/DashboardLayout'
 
-class EditServicePicture extends BasePage {
+class EditServicePicture extends React.Component {
 
   constructor(props) {
     super(props)
@@ -19,10 +20,10 @@ class EditServicePicture extends BasePage {
   render() {
     return (
       <DashboardLayout>
-        <EditPicture type={this.state.type} id={this.getURLProps().id}/>
+        <EditPicture type={this.state.type} id={this.props.params.id}/>
       </DashboardLayout>
     )
   }
 }
 
-export default withTranslation('custom', {withRef: true})(EditServicePicture)
+export default withTranslation('custom', {withRef: true})(withParams(EditServicePicture))

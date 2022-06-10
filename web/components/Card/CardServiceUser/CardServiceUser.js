@@ -1,16 +1,13 @@
-import CustomButton from '../../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
 import axios from 'axios'
-import {computeAverageNotes, computeDistanceKm} from '../../../utils/functions'
 import Box from '@material-ui/core/Box'
 import Rating from '@material-ui/lab/Rating'
 import RoomIcon from '@material-ui/icons/Room'
 import Chip from '@material-ui/core/Chip'
-import styles from '../../../static/css/components/Card/CardServiceUser/CardServiceUser'
 import {withStyles} from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import EditIcon from '@material-ui/icons/Edit'
@@ -23,10 +20,11 @@ import DialogContent from '@material-ui/core/DialogContent'
 import Dialog from '@material-ui/core/Dialog'
 import Router from 'next/router'
 import {Skeleton} from '@material-ui/lab'
-import {CARD_SERVICE} from '../../../utils/i18n'
-const {isEditableUser, hideEmptyEvaluations}=require('../../../utils/context')
-import '../../../static/assets/css/custom.css'
+import styles from '../../../static/css/components/Card/CardServiceUser/CardServiceUser'
+import {computeAverageNotes, computeDistanceKm} from '../../../utils/functions'
+import CustomButton from '../../CustomButton/CustomButton'
 import ListIconsSkills from '../../ListIconsSkills/ListIconsSkills'
+const {isEditableUser, hideEmptyEvaluations}=require('../../../utils/context')
 
 class RawCardServiceUserInfo extends React.Component {
   constructor(props) {

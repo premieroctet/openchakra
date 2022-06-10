@@ -1,15 +1,13 @@
+const {withTranslation} = require('react-i18next')
 import ReactHtmlParser from 'react-html-parser'
-import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
-import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import styles from './style';
-import withStyles from '@material-ui/core/styles/withStyles';
-import PropTypes from 'prop-types';
-import DrawerAndSchedule from '../../components/Drawer/DrawerAndSchedule/DrawerAndSchedule';
-import axios from 'axios';
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
+import PropTypes from 'prop-types'
+import DrawerAndSchedule from '../../components/Drawer/DrawerAndSchedule/DrawerAndSchedule'
+import axios from 'axios'
 import {snackBarError, snackBarSuccess} from '../../utils/notifications'
-const I18N = require('../../utils/i18n');
+const I18N = require('../../utils/i18n')
 
 
 class scheduleTest extends React.Component {
@@ -90,4 +88,4 @@ scheduleTest.propTypes = {
   theme: PropTypes.object.isRequired,
 }
 
-export default withStyles(styles, {withTheme: true})(scheduleTest)
+export default withTranslation('custom', {withRef: true})(scheduleTest)

@@ -1060,7 +1060,7 @@
 	"NAVBAR_MENU.allEContact": "<span style=\"color: rgb(255, 255, 255);\">​<strong>Nous contacter</strong></span>",
 	"RESERVATION.infomessageAlfred": "​<span style=\"color: rgb(0, 0, 0); font-family: &quot;Helvetica Neue&quot;; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(248, 248, 248); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;\">Vous n'avez aucune réservation en tant qu'All-Entrepreneur.e</span>​<br>",
 	"RESERVATION.infomessageUser": "Vous n'avez aucune réservation en tant que client</div><div>​</div><div><br>",
-	"COMPANY_NAME": "All-Entrepreneurs",
+	"COMPANY_NAME": "Feurst",
 	"RANDOM_BANNER_TEXT_1_2": "<div style=\"text-align: center;\"><span style=\"font-size: 18px; color: rgb(255, 255, 255);\"><strong><a href=\"/footer/addService\" alt=\"Trouvez votre All-entrepreneur\">Trouvez votre All-entrepreneur</a></strong></span><br></div>",
 	"RANDOM_BANNER_TEXT_1_3": "<div style=\"text-align: center;\"><span style=\"font-size: 18px; color: rgb(255, 255, 255);\"><strong><a href=\"/footer/addService\" alt=\"Réservez votre service\">Réservez votre service</a></strong></span><br></div>",
 	"RANDOM_BANNER_TEXT_1_4": "<div style=\"text-align: center;\"><a href=\"/footer/addService\" alt=\"Payer en toute sécurité&nbsp;\" class=\"on\"><strong><span style=\"font-size: 18px; color: rgb(255, 255, 255);\">Payez en toute sécurité&nbsp;</span></strong></a><strong></strong></div>",

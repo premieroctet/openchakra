@@ -1,34 +1,15 @@
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+const {getDataModel}=require('../../config/config')
 
-const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
+let CategorySchema=null
 
-const CategorySchema = new Schema({
-  particular_label: {
-    type: String,
-  },
-  s_particular_label: {
-    type: String,
-  },
-  professional_label: {
-    type: String,
-  },
-  s_professional_label: {
-    type: String,
-  },
-  particular_picture: {
-    type: String,
-  },
-  professional_picture: {
-    type: String,
-  },
-  description: {
-    type: String,
-  },
-})
+try {
+  CategorySchema=require(`./${getDataModel()}/CategorySchema`)
+}
+catch(err) {
+  if (err.code !== 'MODULE_NOT_FOUND') {
+    throw err
+  }
+}
 
-CategorySchema.index({label: 'text'})
-
-CategorySchema.plugin(mongooseLeanVirtuals)
-
-module.exports = Category = mongoose.model('category', CategorySchema)
+module.exports = CategorySchema ? mongoose.model('category', CategorySchema) : null

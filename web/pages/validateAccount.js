@@ -1,3 +1,4 @@
+const withParams = require('../components/withParams')
 import CustomButton from '../components/CustomButton/CustomButton'
 import {Typography} from '@material-ui/core'
 import {snackBarError, snackBarSuccess} from '../utils/notifications'
@@ -8,7 +9,7 @@ import Grid from '@material-ui/core/Grid'
 import React from 'react'
 import Router from 'next/router'
 import axios from 'axios'
-import BasePage from './basePage'
+
 import Layout from '../hoc/Layout/Layout'
 
 const styles = () => ({
@@ -35,7 +36,7 @@ const styles = () => ({
   },
 })
 
-class validateAccount extends BasePage {
+class validateAccount extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -45,7 +46,7 @@ class validateAccount extends BasePage {
   onSubmit = e => {
     e.preventDefault()
 
-    const user_id = this.getURLProps().user
+    const user_id = this.props.params.user
     axios
       .post('/myAlfred/api/users/validateAccount', {user_id: user_id})
       .then(() => {
@@ -84,4 +85,4 @@ class validateAccount extends BasePage {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(validateAccount))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(withParams(validateAccount)))

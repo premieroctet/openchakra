@@ -1,4 +1,4 @@
-export default theme =>({
+const Style=theme => ({
   loginContainer: {
     alignItems: 'center',
     padding: '5%',
@@ -8,10 +8,12 @@ export default theme =>({
   card: {
     padding: '1.5rem 3rem',
   },
-  buttonSubmit:{
+  buttonSubmit: {
     textTransform: 'initial',
     fontWeight: 'bold',
-    color:'white',
-    width: '100%'
-  }
+    color: 'white',
+    width: '100%',
+  },
 })
+
+module.exports=Style

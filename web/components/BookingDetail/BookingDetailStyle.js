@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   flexContent: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -18,3 +18,4 @@ export default theme => ({
     },
   },
 })
+export default style

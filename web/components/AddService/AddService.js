@@ -8,7 +8,7 @@ import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 const {isLoggedUserAlfred}=require('../../utils/context')
-import '../../static/assets/css/custom.css'
+
 import {makeStyles} from '@material-ui/core'
 
 const useStyles = makeStyles(theme => ({

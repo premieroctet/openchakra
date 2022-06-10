@@ -1,24 +1,20 @@
+const lodash=require('lodash')
+const {CUSTOMER_ADMIN} = require('../../utils/feurst/consts')
+const Company = require('../models/Company')
 const {
   ENABLE_MAILING,
-  computeUrl,
   getSibTemplates,
-  get_host_url,
-  is_development,
+  getHostUrl,
 } = require('../../config/config')
 const User = require('../models/User')
-const {SIB} = require('./sendInBlue')
 const {booking_datetime_str} = require('../../utils/dateutils')
 const {fillSms} = require('../../utils/sms')
-const lodash=require('lodash')
-
-const QUOTATION_CC=is_development() ? 'sebastien.auvray@alfredplace.io': 'florian.benetiere@safe-feurst.fr'
+const {isFeurstUser} = require('./userAccess')
+const {SIB} = require('./sendInBlue')
 
 // Templates
 const SIB_IDS=require(`./sib_templates/${getSibTemplates()}.js`)
 
-/**
- 21  VERS ALFRED == N'oubliez pas de mettre à jour vos disponibilités 🗓
- */
 
 const SMS_CONTENTS = {
   [SIB_IDS.NEW_BOOKING_MANUAL]: '{{ params.client_firstname }} a effectué une demande de réservation de votre service {{ params.service_label }}',
@@ -85,7 +81,7 @@ const sendVerificationMail = (user, req) => {
     SIB_IDS.CONFIRM_EMAIL,
     user,
     {
-      link_confirmemail: new URL(`/validateAccount?user=${user._id}`, computeUrl(req)),
+      link_confirmemail: new URL(`/validateAccount?user=${user._id}`, getHostUrl()),
       user_firstname: user.firstname,
     },
   )
@@ -136,7 +132,7 @@ const sendBookingCancelledByAlfred = (booking, req) => {
       alfred_firstname: booking.alfred.firstname,
       service_label: booking.service,
       service_datetime: booking_datetime_str(booking),
-      link_findnewalfred: new URL('/search', computeUrl(req)),
+      link_findnewalfred: new URL('/search', getHostUrl()),
 
     },
   )
@@ -163,7 +159,7 @@ const sendLeaveCommentForClient = booking => {
       client_firstname: booking.user.firstname,
       alfred_firstname: booking.alfred.firstname,
       service_label: booking.service,
-      link_reviewsclient: new URL(`/evaluateClient?booking=${booking._id}&id=${booking.serviceUserId}&client=${booking.user._id}`, get_host_url()),
+      link_reviewsclient: new URL(`/evaluateClient?booking=${booking._id}&id=${booking.serviceUserId}&client=${booking.user._id}`, getHostUrl()),
     },
   )
 }
@@ -176,7 +172,7 @@ const sendLeaveCommentForAlfred = booking => {
       client_firstname: booking.user.firstname,
       alfred_firstname: booking.alfred.firstname,
       service_label: booking.service,
-      link_reviewsalfred: new URL(`/evaluate?booking=${booking._id}&id=${booking.serviceUserId}`, get_host_url()),
+      link_reviewsalfred: new URL(`/evaluate?booking=${booking._id}&id=${booking.serviceUserId}`, getHostUrl()),
     },
   )
 }
@@ -187,7 +183,7 @@ const sendResetPassword = (user, token, req) => {
     user,
     {
       user_firstname: user.firstname,
-      link_initiatenewpassword: new URL(`/resetPassword?token=${token}`, computeUrl(req)),
+      link_initiatenewpassword: new URL(`/resetPassword?token=${token}`, getHostUrl()),
     },
   )
 }
@@ -214,7 +210,7 @@ const sendBookingExpiredToClient = booking => {
       alfred_firstname: booking.alfred.firstname,
       service_label: booking.service,
       service_datetime: booking_datetime_str(booking),
-      link_booknewalfred: new URL('/search', get_host_url()),
+      link_booknewalfred: new URL('/search', getHostUrl()),
     },
   )
 }
@@ -243,7 +239,7 @@ const sendBookingInfosRecap = booking => {
       service_label: booking.service,
       service_datetime: booking_datetime_str(booking),
       total_cost: parseFloat(booking.amount).toFixed(2),
-      link_requestinformation: new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)),
+      link_requestinformation: new URL(`/reservations/reservations?id=${booking._id}`, getHostUrl()),
     },
   )
 }
@@ -258,7 +254,7 @@ const sendNewBooking = (booking, req) => {
       service_label: booking.service,
       service_datetime: booking_datetime_str(booking),
       total_revenue: parseFloat(booking.alfred_amount).toFixed(2),
-      link_showreservation: new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)),
+      link_showreservation: new URL(`/reservations/reservations?id=${booking._id}`, getHostUrl()),
 
     },
   )
@@ -270,7 +266,7 @@ const sendShopOnline = (alfred, req) => {
     alfred,
     {
       alfred_firstname: alfred.firstname,
-      link_manageshop: new URL(`/profile/services?user=${alfred._id}`, computeUrl(req)),
+      link_manageshop: new URL(`/profile/services?user=${alfred._id}`, getHostUrl()),
     },
   )
 }
@@ -284,7 +280,7 @@ const sendBookingRefusedToClient = (booking, req) => {
       alfred_firstname: booking.alfred.firstname,
       service_label: booking.service,
       service_datetime: booking_datetime_str(booking),
-      link_booknewalfred: new URL('/search', computeUrl(req)),
+      link_booknewalfred: new URL('/search', getHostUrl()),
     },
   )
 }
@@ -312,7 +308,7 @@ const sendAskingInfo = (booking, req) => {
       service_label: booking.service,
       service_datetime: booking_datetime_str(booking),
       total_revenue: parseFloat(booking.alfred_amount).toFixed(2),
-      link_requestinformation: new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)),
+      link_requestinformation: new URL(`/reservations/reservations?id=${booking._id}`, getHostUrl()),
     },
   )
 }
@@ -325,7 +321,7 @@ const sendNewMessageToAlfred = (booking, chatroom_id, req) => {
       client_firstname: booking.user.firstname,
       alfred_firstname: booking.alfred.firstname,
       service_label: booking.service,
-      link_showclientmessage: new URL(`/profile/messages?user=${booking.alfred._id}&relative=${booking.user._id}`, computeUrl(req)),
+      link_showclientmessage: new URL(`/profile/messages?user=${booking.alfred._id}&relative=${booking.user._id}`, getHostUrl()),
     },
   )
 }
@@ -338,7 +334,7 @@ const sendNewMessageToClient = (booking, chatroom_id, req) => {
       client_firstname: booking.user.firstname,
       alfred_firstname: booking.alfred.firstname,
       service_label: booking.service,
-      link_showalfredmessage: new URL(`/profile/messages?user=${booking.user._id}&relative=${booking.alfred._id}`, computeUrl(req)),
+      link_showalfredmessage: new URL(`/profile/messages?user=${booking.user._id}&relative=${booking.alfred._id}`, getHostUrl()),
     },
   )
 }
@@ -351,7 +347,7 @@ const sendAskInfoPreapproved = (booking, req) => {
       client_firstname: booking.user.firstname,
       alfred_firstname: booking.alfred.firstname,
       service_label: booking.service,
-      link_confirmbooking: new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)),
+      link_confirmbooking: new URL(`/reservations/reservations?id=${booking._id}`, getHostUrl()),
     },
   )
 }
@@ -366,7 +362,7 @@ const sendNewBookingManual = (booking, req) => {
       service_label: booking.service,
       service_datetime: booking_datetime_str(booking),
       total_revenue: parseFloat(booking.alfred_amount).toFixed(2),
-      link_confirmbooking: new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)),
+      link_confirmbooking: new URL(`/reservations/reservations?id=${booking._id}`, getHostUrl()),
     },
   )
 }
@@ -401,7 +397,7 @@ const sendB2BAccount = (user, email, role, company, token, req) => {
       role: role,
       company: company,
       user_email: email,
-      link_initiatenewpassword: new URL(`/resetPassword?token=${token}`, computeUrl(req)),
+      link_initiatenewpassword: new URL(`/resetPassword?token=${token}`, getHostUrl()),
     },
   )
 }
@@ -415,7 +411,7 @@ const sendB2BRegistration = (user, email, role, company, req) => {
       role: role,
       company: company,
       user_email: email,
-      link_initiatenewpassword: new URL(`?register=${user._id}`, computeUrl(req)),
+      link_initiatenewpassword: new URL(`?register=${user._id}`, getHostUrl()),
     },
   )
 }
@@ -426,7 +422,7 @@ const sendRegisterInvitation = (admin, email, code, req) => {
     {email: email},
     {
       admin_firstname: admin.firstname,
-      register_link: new URL(`/registerServices?id=${code}`, computeUrl(req)),
+      register_link: new URL(`/registerServices?id=${code}`, getHostUrl()),
     },
   )
 }
@@ -462,7 +458,71 @@ const sendCustomQuotation = (prospect_email, prospect_name, prospect_company, qu
       machine: machine_description,
     },
   )
+}
 
+const sendBillingToAlfred = booking => {
+  sendNotification(
+    BILLING_2_ALFRED,
+    [booking.alfred, booking.user.email],
+    {
+      firstname: booking.alfred.firstname,
+      city: booking.address.city,
+      prestation_date: booking.date_prestation,
+      alfred_amount: booking.alfred_amount,
+    },
+  )
+}
+
+const sendOrderAlert = (email, reference, company_name, data_link) => {
+
+  sendNotification(
+    SIB_IDS.ORDER_ALERT,
+    {email: email},
+    {
+      reference: reference,
+      company: company_name,
+      data_link: data_link,
+    },
+  )
+}
+
+// Sends alert upon order/quotation status change
+const sendDataEvent = (email, reference, company_name, user_firstname, message, data_link) => {
+  sendNotification(
+    SIB_IDS.DATA_STATUS_NOTIFICATION,
+    {email: email},
+    {
+      reference: reference,
+      company: company_name,
+      user_firstname: user_firstname,
+      message: message,
+      data_link: data_link,
+    },
+  )
+}
+
+const getFeurstDestinee = data => {
+  return Company.findById(data.company)
+    .populate('sales_representative')
+    .then(company => {
+      return company.sales_representative
+    })
+}
+
+const getCompanyDestinee = data => {
+  return User.findOne({company: data.company, roles: CUSTOMER_ADMIN})
+}
+
+const sendDataNotification = (user, data, message) => {
+  const userPromise=isFeurstUser(user) ? getCompanyDestinee(data) : getFeurstDestinee(data)
+  userPromise
+    .then(destinee => {
+      const companyName = isFeurstUser(user) ? 'Feurst' : data.company.name
+      sendDataEvent(destinee.email, data.reference, companyName, user.firstname, message, data.url)
+    })
+    .catch(err => {
+      console.error(err)
+    })
 }
 
 module.exports = {
@@ -495,4 +555,7 @@ module.exports = {
   sendRegisterInvitation,
   sendAutoQuotation,
   sendCustomQuotation,
+  sendBillingToAlfred,
+  sendOrderAlert,
+  sendDataNotification,
 }

@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   bigContainer: {
     display: 'flex',
     flexDirection: 'column',
@@ -35,3 +35,4 @@ export default theme => ({
     },
   }
 })
+module.exports=Style

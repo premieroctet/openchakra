@@ -1,5 +1,6 @@
+import {Link, Typography} from '@material-ui/core'
+const withParams = require('../../../components/withParams')
 import CustomButton from '../../../components/CustomButton/CustomButton'
-import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
 import Checkbox from '@material-ui/core/Checkbox'
@@ -7,7 +8,6 @@ import FormControl from '@material-ui/core/FormControl'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Grid from '@material-ui/core/Grid'
 import Input from '@material-ui/core/Input'
-import {Link} from '@material-ui/core'
 import MenuItem from '@material-ui/core/MenuItem'
 import React from 'react'
 import Router from 'next/router'
@@ -17,7 +17,7 @@ import TextField from '@material-ui/core/TextField'
 import axios from 'axios'
 
 import {snackBarSuccess} from '../../../utils/notifications'
-import BasePage from '../../basePage'
+
 import DashboardLayout from '../../../hoc/Layout/DashboardLayout'
 
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
@@ -54,7 +54,7 @@ const styles = theme => ({
   },
 })
 
-class View extends BasePage {
+class View extends React.Component {
 
   constructor(props) {
     super(props)
@@ -81,7 +81,7 @@ class View extends BasePage {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname)
-    const id = this.getURLProps().id
+    const id = this.props.params.id
     setAxiosAuthentication()
     axios.get(`/myAlfred/api/admin/service/all/${id}`)
       .then(response => {
@@ -176,7 +176,7 @@ class View extends BasePage {
 
     const category = this.state.category
     const equipments = arrayEquipments
-    const id = this.getURLProps().id
+    const id = this.props.params.id
     const service = this.state.service
     const {label, description, location} = service
     const {travel_tax, pick_tax, professional_access, particular_access, tag} = service
@@ -200,7 +200,7 @@ class View extends BasePage {
   };
 
   handleClick() {
-    const id = this.getURLProps().id
+    const id = this.props.params.id
     axios.delete(`/myAlfred/api/admin/service/all/${id}`)
       .then(() => {
         snackBarSuccess('Service supprimé avec succès')
@@ -399,7 +399,7 @@ class View extends BasePage {
                 </CustomButton>
               </Grid>
             </form>
-            <Link href={`editPicture?id=${this.getURLProps().id}`}>
+            <Link href={`editPicture?id=${this.props.params.id}`}>
               <CustomButton type="button" variant="contained" color="primary" style={{width: '100%'}}>
                   Modifier la photo
               </CustomButton>
@@ -412,4 +412,4 @@ class View extends BasePage {
 }
 
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(View))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(withParams(View)))

@@ -1,15 +1,12 @@
-import CustomButton from '../../CustomButton/CustomButton'
+import React from 'react'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
-import React, {useEffect, useState} from 'react'
 import Grid from '@material-ui/core/Grid'
-import {BANNER_PRESENTATION, BANNER_B2B_PRESENTATION} from '../../../utils/i18n'
 import {Link} from '@material-ui/core'
 import Typography from '@material-ui/core/Typography'
-import axios from 'axios'
-const {setAxiosAuthentication}=require('../../../utils/authentication')
-import '../../../static/assets/css/custom.css'
 import {makeStyles} from '@material-ui/core/styles'
+import {BANNER_PRESENTATION, BANNER_B2B_PRESENTATION} from '../../../utils/i18n'
+import CustomButton from '../../CustomButton/CustomButton'
 
 const useStyles = makeStyles(theme => ({
   bannerPresentationMainStyle: {
@@ -113,19 +110,9 @@ const useStyles = makeStyles(theme => ({
 function BannerPresentation(props) {
   const classes = useStyles()
   const {t} = props
-  const [user, setUser] = useState({})
   const title = ReactHtmlParser(t('BANNER_PRESENTATION.title'))
   const subTitle = ReactHtmlParser(t('BANNER_PRESENTATION.subTitle'))
   const text = ReactHtmlParser(t('BANNER_PRESENTATION.text'))
-
-  useEffect(() => {
-    setAxiosAuthentication()
-    axios.get('/myAlfred/api/users/current').then(res => {
-      let result = res.data
-      setUser(result)
-    }).catch(err => console.error(err))
-  }, [])
-
 
   return (
     <Grid container spacing={2} style={{width: '100%', margin: 0}}>

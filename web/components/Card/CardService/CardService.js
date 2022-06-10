@@ -1,15 +1,15 @@
-import CustomButton from '../../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
 import axios from 'axios'
-import styles from '../../../static/css/components/Card/CardServiceUser/CardServiceUser'
 import {withStyles} from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import {Skeleton} from '@material-ui/lab'
-import '../../../static/assets/css/custom.css'
+import styles from '../../../static/css/components/Card/CardServiceUser/CardServiceUser'
+import CustomButton from '../../CustomButton/CustomButton'
+import {CARD_SERVICE} from '../../../utils/i18n'
 
 class RawCardServiceInfo extends React.Component {
   constructor(props) {

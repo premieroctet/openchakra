@@ -1,9 +1,9 @@
 const {isAndroid, isIOS, getUA}=require('react-device-detect')
 const isWebview = require('is-webview')
-const {getAuthToken} = require('./authentication')
-const {ADMIN, MANAGER, EMPLOYEE} = require('./consts')
 const jwt = require('jsonwebtoken')
 const {HIDE_EMPTY_EVALUATIONS}=require('../mode')
+const {getAuthToken} = require('./authentication')
+const {FEURST_ADMIN} = require('./consts')
 
 const getLoggedUser = () => {
   if (typeof localStorage=='undefined') {
@@ -34,6 +34,14 @@ const getRole = () => {
     return null
   }
   return token.role
+}
+
+const getRoles = () => {
+  const token = getAuthToken()
+  if (!token) {
+    return null
+  }
+  return token.roles
 }
 
 const hideEmptyEvaluations = () => {
@@ -81,7 +89,7 @@ const getLoggedUserId = () => {
 
 const isLoggedUserAdmin = () => {
   const logged=getLoggedUser()
-  return logged && logged.is_admin
+  return logged && (logged.is_admin || (getRoles() && getRoles().includes(FEURST_ADMIN)))
 }
 
 const isLoggedUserSuperAdmin = () => {

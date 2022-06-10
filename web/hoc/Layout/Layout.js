@@ -28,17 +28,23 @@ class Layout extends React.Component {
   componentDidMount() {
     setAxiosAuthentication()
 
-    axios.get('/myAlfred/api/users/current')
-      .then(res => {
-        let data = res.data
-        this.setState({
-          user: data,
-          gps: data.billing_address ? data.billing_address.gps : null,
+    if (getLoggedUserId()) {
+      this.setState({logged: true})
+    }
+
+    if (this.state.logged) {
+      axios.get('/myAlfred/api/users/current')
+        .then(res => {
+          let data = res.data
+          this.setState({
+            user: data,
+            gps: data.billing_address ? data.billing_address.gps : null,
+          })
         })
-      })
-      .catch(err => {
-        console.error((err))
-      })
+        .catch(err => {
+          console.error((err))
+        })
+    }
 
     axios.get(`/myAlfred/api/category/${PART}`)
       .then(res => {
@@ -47,15 +53,12 @@ class Layout extends React.Component {
         cat.forEach(c => {
           c.label=c.particular_label
         })
-        this.setState({categories: cat})
       })
       .catch(err => {
-        console.error(err)
+        console.error((err))
       })
 
-    if (getLoggedUserId()) {
-      this.setState({logged: true})
-    }
+
   }
 
   render() {
