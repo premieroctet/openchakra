@@ -72,7 +72,7 @@ const app = express()
 const {serverContextFromRequest}=require('./utils/serverContext')
 
 // TODO Terminer les notifications
-throw new Error(`\n${'*'.repeat(30)}\n  TERMINER LES NOTIFICATIONS\n${'*'.repeat(30)}`)
+// throw new Error(`\n${'*'.repeat(30)}\n  TERMINER LES NOTIFICATIONS\n${'*'.repeat(30)}`)
 // checkConfig
 checkConfig()
   .then(() => {
