@@ -12,7 +12,7 @@ import {screen} from '../../styles/screenWidths'
 import {BASEPATH_EDI} from '../../utils/consts'
 import {PleasantButton} from './Button'
 
- 
+
 const FeurstLogin = ({
   t,
   onChange,
@@ -23,17 +23,17 @@ const FeurstLogin = ({
   state,
 }) => {
 
-  const {errors, username, password, showPassword, roles} = state
-  const loginDisabled = roles === null || roles.length === 0 || !password
+  const {errors, username, password, showPassword} = state
+  const loginDisabled = !(username && password)
 
 
   return <LoginStyles>
     <h1>{ReactHtmlParser(t('LOGIN.title'))}</h1>
-    
+
     <LoginForm onSubmit={onSubmit}>
-      
+
       <h2>Connexion</h2>
-      
+
       <LoginInputs>
         <TextField
           id="username"
@@ -72,7 +72,7 @@ const FeurstLogin = ({
         />
 
         <em>{errors.password}</em>
-      
+
       </LoginInputs>
 
       <Link href={`${BASEPATH_EDI}/forgotPassword`}>
@@ -80,11 +80,11 @@ const FeurstLogin = ({
           {ReactHtmlParser(t('LOGIN.forgotten_password'))}
         </a>
       </Link>
-      
+
       <PleasantButton type="submit" onClick={onSubmit} disabled={loginDisabled} size="full-width">
         {ReactHtmlParser(t('LOGIN.button'))}
       </PleasantButton>
-      
+
     </LoginForm>
   </LoginStyles>
 }
@@ -94,7 +94,7 @@ const LoginStyles = styled.div`
 
   width: min(calc(100% - 2rem), 35rem);
   color: var(--black);
-  
+
   h1 {
     color: inherit;
     font-size: var(--text-xl);
@@ -111,7 +111,7 @@ const LoginForm = styled.form`
   border-radius: var(--rounded-7xl);
   padding: var(--spc-3) var(--spc-3) var(--spc-10) var(--spc-3);
   margin: 0 var(--spc-2);
-  
+
   @media (${screen.md}) {
     padding: var(--spc-7) var(--spc-12) var(--spc-12) var(--spc-12);
   }

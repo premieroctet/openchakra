@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 const moment = require('moment')
 const {getMangopayMessage} = require('../../../utils/i18n')
 const {hideIllegal} = require('../../../utils/text')
-const {ACCOUNT_MIN_AGE, ROLES}=require('../../../utils/consts')
+const {ACCOUNT_MIN_AGE}=require('../../../utils/consts')
 
 const maxBirth=new Date(moment().add(-ACCOUNT_MIN_AGE, 'years'))
 
@@ -315,10 +315,6 @@ const UserSchema = new Schema({
   position: {
     type: String,
   },
-  roles: [{
-    type: String,
-    enum: Object.keys(ROLES),
-  }],
   // Avocotés : lien vers compagnie avocotes
   company_customer: {
     type: Schema.Types.ObjectId,
