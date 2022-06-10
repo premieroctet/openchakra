@@ -189,6 +189,9 @@ class NavBar extends Component {
       .then(res => {
         this.setState({keywords: res.data})
       })
+      .catch(err => {
+        console.error(err)
+      })
   }
 
   logout = () => {

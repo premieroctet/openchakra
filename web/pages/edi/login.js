@@ -1,9 +1,7 @@
-import styled, {ThemeProvider} from 'styled-components'
+import styled from 'styled-components'
 import React, {useEffect, useState} from 'react'
 import {useRouter} from 'next/router'
 import Login from '../../components/Feurst/Login'
-import Header from '../../components/Feurst/Header'
-import {theme, GlobalStyleEdi} from '../../styles/feurst/feurst.theme'
 import {screen} from '../../styles/screenWidths'
 import {client} from '../../utils/client'
 import {API_PATH, BASEPATH_EDI, FEURST_IMG_PATH} from '../../utils/consts'
@@ -13,6 +11,7 @@ import {
 import {clearAuthenticationToken} from '../../utils/authentication'
 import {snackBarError} from '../../utils/notifications'
 import SpinnerCircle from '../../components/Spinner/SpinnerCircle'
+import EdiContainer from '../../components/Feurst/EdiContainer'
 
 const HomeGrid = styled.div`
   display: grid;
@@ -74,16 +73,15 @@ const LoginPage = () => {
 
 
   return (
-    <ThemeProvider theme={theme}>
-      <GlobalStyleEdi />
-      <Header />
+    <EdiContainer>
+      <div />
       <HomeGrid>
         <ResponsiveImg src={`${FEURST_IMG_PATH}/dent_accueil_feurst.webp`} alt='' />
         <SpinnerCircle loading={loading}>
           <Login login={redirect} />
         </SpinnerCircle>
       </HomeGrid>
-    </ThemeProvider>)
+    </EdiContainer>)
 }
 
 export default LoginPage
