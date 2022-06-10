@@ -22,24 +22,23 @@ function withLogin(WrappedComponent) {
       }
     }
 
-    debouncedCallForUserName = debounce(async(usermail, newState) => {
-
-      if (Validator.isEmail(usermail)) {
-        return await axios.get(`/myAlfred/api/users/roles/${usermail}`)
+    debouncedCallForUserName = debounce(async username => {
+      
+      if (Validator.isEmail(username)) {
+        return await axios.get(`/myAlfred/api/users/roles/${username}`)
           .then(res => {
             const roles = res.data
             const selectedRole = roles.length == 1 ? roles[0] : null
-            Object.assign(newState, {roles, selectedRole})
+            console.log('here are the roles', roles)
+            this.setState({...this.state, roles, selectedRole})
           })
           .catch(err => {
             console.error(err)
-            Object.assign(newState, {selectedRole: null, roles: null})
-            
+            this.setState({...this.state, roles: [], selectedRole: null})
           })
-          .finally(() => this.setState(newState))
       }
-      
-    }, 800)
+      return
+    }, 700)
   
     onChange = async e => {
       const {name, value} = e.target
@@ -48,16 +47,10 @@ function withLogin(WrappedComponent) {
     }
 
     onUserNameChange = e => {
-      const {name, value} = e.target
-      const newState = {...this.state, [name]: value}
-      if(name === 'username') {
-        const usermail = e.target.value
-        Object.assign(newState, {username: usermail, roles: null, selectedRole: null})
-        this.debouncedCallForUserName(usermail, newState)
-      }
-      this.setState(newState)
+      const username = e.target.value
+      this.setState({...this.state, username})
+      this.debouncedCallForUserName(username)
     }
-  
   
     onSubmit = e => {
       e.preventDefault()

@@ -10,12 +10,13 @@ const HeaderContainer = styled.header`
 
   display: grid;
   grid-template-columns: 1fr;
-  row-gap: var(--spc-2);
+  row-gap: var(--spc-4);
   align-items: center;
   column-gap: var(--spc-8);
   margin-block: var(--spc-8) var(--spc-18);
   width: var(--container-lg);
   margin-inline: auto;
+  justify-items: center;
 
   @media (${screen.md}) {
     grid-template-columns: 1fr 1fr 1fr;
@@ -49,6 +50,7 @@ const InfoBox = styled.div`
   font-weight: var(--font-bold);
   text-align: center;
   padding-block: var(--spc-2);
+  padding-inline: var(--spc-1);
 `
 
 const Header = ({accessRights}) => {
