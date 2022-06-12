@@ -12,4 +12,4 @@ catch(err) {
   }
 }
 
-module.exports = ServiceSchema ? mongoose.model('product', ServiceSchema) : null
+module.exports = ServiceSchema ? mongoose.model('service', ServiceSchema) : null

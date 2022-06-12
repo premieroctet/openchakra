@@ -1,13 +1,13 @@
-import withParams from '../../components/withParams'
 import React from 'react'
+import withParams from '../../components/withParams'
 
-class QueryParamsTest extends React.Component {
+const QueryParamsTest = props => {
 
-  render() {
-    return (
-      <p>Params : {JSON.stringify(this.props.params.value)}</p>
-    )
-  }
+  return (
+    <>
+      <p>Params : {JSON.stringify(props.params)}</p>
+    </>
+  )
 }
 
 module.exports=withParams(QueryParamsTest)
