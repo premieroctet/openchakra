@@ -11,12 +11,6 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import IconButton from '@material-ui/core/IconButton'
 import Input from '@material-ui/core/Input'
-import InputLabel from '@material-ui/core/InputLabel'
-import MenuItem from '@material-ui/core/MenuItem'
-import FormControl from '@material-ui/core/FormControl'
-import Select from '@material-ui/core/Select'
-import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined'
-import {ROLES} from '../../utils/consts'
 import CustomButton from '../CustomButton/CustomButton'
 import CustomIcon from '../CustomIcon/CustomIcon'
 import withLogin from '../../hoc/withLogin'
@@ -29,15 +23,14 @@ const Login = ({callRegister,
   onChange,
   onSubmit,
   onUserNameChange,
-  showRoles,
   handleClickShowPassword,
   handleMouseDownPassword,
   state,
 }) => {
 
-  const {errors, username, password, showPassword, roles, selectedRole} = state
+  const {errors, username, password, showPassword} = state
 
-  const loginDisabled = roles == null || (roles.length>0 && !selectedRole) || !password
+  const loginDisabled = !(username && password)
 
 
   return <div>
@@ -97,35 +90,6 @@ const Login = ({callRegister,
           </Grid>
         </Grid>
       </Grid>
-      {showRoles ?
-        <Grid item className={classes.margin}>
-          <Grid container className={classes.genericContainer}>
-            <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
-              <Grid item>
-                <GroupOutlinedIcon className={classes.colorIcon}/>
-              </Grid>
-              <Grid item className={classes.widthTextField}>
-                <FormControl className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-label">{ReactHtmlParser(t('LOGIN.input_role'))}</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={selectedRole}
-                    onChange={onChange}
-                    name={'selectedRole'}
-                  >
-                    {
-                      Object.keys(roles).map((role, index) => (
-                        <MenuItem key={index} value={roles[role]}>{ROLES[roles[role]]}</MenuItem>
-                      ))
-                    }
-                  </Select>
-                </FormControl>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid> : null
-      }
       <Grid item className={classes.margin}>
         <Grid container className={classes.genericContainer}>
           <CustomButton onClick={onSubmit} disabled={loginDisabled} variant="contained" color="primary" classes={{root: `custombuttonlogin ${classes.buttonlogin}`}}>

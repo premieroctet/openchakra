@@ -1,12 +1,10 @@
 import React from 'react'
-import Validator from 'validator'
 import axios from 'axios'
-import debounce from 'lodash/debounce'
 import {setAuthToken, setAxiosAuthentication} from '../utils/authentication'
 import {snackBarError} from '../utils/notifications'
 
 function withLogin(WrappedComponent) {
-  
+
   return class extends React.Component {
 
     constructor(props) {
@@ -16,30 +14,9 @@ function withLogin(WrappedComponent) {
         password: '',
         errors: {},
         showPassword: false,
-        // Roles : null : pas de réposne du serveur, [] : réponse serveur pas de rôle pour l'email
-        roles: null,
-        selectedRole: null,
       }
     }
 
-    debouncedCallForUserName = debounce(async username => {
-      
-      if (Validator.isEmail(username)) {
-        return await axios.get(`/myAlfred/api/users/roles/${username}`)
-          .then(res => {
-            const roles = res.data
-            const selectedRole = roles.length == 1 ? roles[0] : null
-            console.log('here are the roles', roles)
-            this.setState({...this.state, roles, selectedRole})
-          })
-          .catch(err => {
-            console.error(err)
-            this.setState({...this.state, roles: [], selectedRole: null})
-          })
-      }
-      return
-    }, 700)
-  
     onChange = async e => {
       const {name, value} = e.target
       const newState = {...this.state, [name]: value}
@@ -47,20 +24,20 @@ function withLogin(WrappedComponent) {
     }
 
     onUserNameChange = e => {
-      const username = e.target.value
-      this.setState({...this.state, username})
-      this.debouncedCallForUserName(username)
+      const {name, value} = e.target
+      const newState = {...this.state, [name]: value}
+      this.setState(newState)
     }
-  
+
+
     onSubmit = e => {
       e.preventDefault()
-  
+
       const user = {
         username: this.state.username,
         password: this.state.password,
-        role: this.state.selectedRole,
       }
-  
+
       axios.post('/myAlfred/api/users/login', user)
         .then(() => {
           setAuthToken()
@@ -75,11 +52,11 @@ function withLogin(WrappedComponent) {
           }
         })
     }
-  
+
     handleClickShowPassword = () => {
       this.setState({...this.state, showPassword: !this.state.showPassword})
     }
-  
+
     handleMouseDownPassword = event => {
       event.preventDefault()
     }

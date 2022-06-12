@@ -1,14 +1,14 @@
-const {ROLES} = require('../../../utils/consts')
-import {snackBarError, snackBarSuccess} from '../../../utils/notifications'
-import {setAxiosAuthentication} from '../../../utils/authentication'
 import {withTranslation} from 'react-i18next'
-const {DataPage, styles}=require('../../../components/AlfredDashboard/DataPage')
 import {withStyles} from '@material-ui/core/styles'
 import axios from 'axios'
+import {snackBarError, snackBarSuccess} from '../../../utils/notifications'
+import {setAxiosAuthentication} from '../../../utils/authentication'
+const moment = require('moment')
+const {ROLES} = require('../../../utils/feurst/consts')
+const {DataPage, styles}=require('../../../components/AlfredDashboard/DataPage')
 const models=require('../../../components/BigList/models')
 const {MANGOPAY_CONFIG}=require('../../../config/config')
 const regions=require('../../../static/assets/data/regions')
-const moment = require('moment')
 
 class all extends DataPage {
 

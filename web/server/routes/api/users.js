@@ -40,9 +40,8 @@ const {logEvent}=require('../../utils/events')
 const {is_production}=require('../../../config/config')
 const {validateSimpleRegisterInput, validateEditProfile, validateEditProProfile, validateBirthday} = require('../../validation/simpleRegister')
 const validateLoginInput = require('../../validation/login')
-const {sendResetPassword, sendVerificationMail, sendVerificationSMS, sendB2BAccount, sendAlert} = require('../../utils/mailing')
+const {sendResetPassword, sendVerificationMail, sendVerificationSMS, sendAlert} = require('../../utils/mailing')
 moment.locale('fr')
-const {ROLES}=require('../../../utils/consts')
 const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, createMangoProvider, install_hooks} = require('../../utils/mangopay')
 const {send_cookie}=require('../../utils/serverContext')
 const {isActionAllowed} = require('../../utils/userAccess')
@@ -577,7 +576,6 @@ router.post('/login', (req, res) => {
 
   const email = req.body.username.toLowerCase().trim()
   const password = req.body.password
-  let role = req.body.role
 
   // Find user by email
   User.findOne({email: new RegExp(`^${email}$`, 'i')})
@@ -587,21 +585,6 @@ router.post('/login', (req, res) => {
       if (!user) {
         console.warn(`Invalid login : no user for ${email}`)
         errors.username = 'Mot de passe ou email incorrect'
-        return res.status(400).json(errors)
-      }
-
-      // Si roles et pas de rôle indiqué, prendre le seul possible
-      if (!role && user.roles.length==1) {
-        role=user.roles[0]
-      }
-
-      if (user.is_employee && !role) {
-        errors.role = 'Vous devez sélectioner un rôle'
-        return res.status(400).json(errors)
-      }
-
-      if (user.is_employee && !ROLES[role]) {
-        errors.role = `Rôle ${role} inconnu`
         return res.status(400).json(errors)
       }
 
@@ -618,7 +601,7 @@ router.post('/login', (req, res) => {
               .then(() => {})
               .catch(err => console.error(err))
             // Sign token
-            send_cookie(user, role, res)
+            send_cookie(user, res)
           }
           else {
             console.warn(`Invalid login : bad password ${password} for ${email}`)
@@ -633,7 +616,7 @@ router.get('/token', passport.authenticate('jwt', {session: false}), (req, res) 
   User.findById(req.user.id)
     .populate({path: 'shop', select: 'is_particular', strictPopulate: false})
     .then(user => {
-      send_cookie(user, null, res, req.context.getLoggedAs())
+      send_cookie(user, res, req.context.getLoggedAs())
     })
     .catch(err => {
       console.error(err)
@@ -675,25 +658,6 @@ router.get('/users', (req, res) => {
       res.json(user)
     })
     .catch(err => res.status(404).json({users: 'No billing found'}))
-})
-
-// @Route GET /myAlfred/api/users/roles/:email
-// Get roles for an email's user
-router.get('/roles/:email', (req, res) => {
-
-  User.findOne({email: new RegExp(req.params.email, 'i')}, 'roles')
-    .then(user => {
-      if (!user) {
-        console.log(`Request roles for email ${req.params.email}:[]`)
-        return res.json([])
-      }
-      console.log(`Request roles for email ${req.params.email}:${user.roles}`)
-      res.json(user.roles)
-    })
-    .catch(err => {
-      console.error(err)
-      res.status(404).json({user: 'No user found'})
-    })
 })
 
 // @Route GET /myAlfred/api/users/users/:id
@@ -825,7 +789,6 @@ router.get('/current', passport.authenticate('jwt', {session: false}), (req, res
 // Send email with link for reset password
 router.post('/forgotPassword', (req, res) => {
   const email = (req.body.email || '').toLowerCase().trim()
-  const role = req.body.role
 
   User.findOne({email: new RegExp(`^${email}$`, 'i')})
     .populate('company')
@@ -840,18 +803,8 @@ router.post('/forgotPassword', (req, res) => {
           user.update({resetToken: token._id})
             .catch(err => console.error(err))
         })
-      // Role ? création d'un compte B2B
-      if (req.body.role) {
-        sendB2BAccount(user, user.email, ROLES[role], user.company.name, token, req)
-      }
-      else {
-        // TODO: prévoir un template pour feurst
-        const url=getDataModel()=='feurst' ?
-        `${BASEPATH_EDI}/resetPassword?token=${token}`
-          :`/resetPassword?token=${token}`
-        sendResetPassword(user, token, req, url)
-      }
-      res.json(user)
+      sendResetPassword(user, token, req)
+      return res.json(user)
     })
 })
 
@@ -1408,7 +1361,7 @@ if (is_development()) {
         return user.save()
       })
       .then(user => {
-        send_cookie(user, null, res)
+        send_cookie(user, res)
       })
       .catch(err => {
         console.error(err)

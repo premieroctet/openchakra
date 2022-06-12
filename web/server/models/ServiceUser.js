@@ -8,8 +8,8 @@ try {
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {
-    throw e
+    throw err
   }
 }
 
-module.exports = ServiceUserSchema ? mongoose.model('product', ServiceUserSchema) : null
+module.exports = ServiceUserSchema ? mongoose.model('serviceUser', ServiceUserSchema) : null
