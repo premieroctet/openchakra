@@ -1,11 +1,12 @@
 const lodash=require('lodash')
-const {CUSTOMER_ADMIN} = require('../../utils/feurst/consts')
-const Company = require('../models/Company')
 const {
   ENABLE_MAILING,
-  getSibTemplates,
   getHostUrl,
+  getSibTemplates,
+  is_validation,
 } = require('../../config/config')
+const {CUSTOMER_ADMIN} = require('../../utils/feurst/consts')
+const Company = require('../models/Company')
 const User = require('../models/User')
 const {booking_datetime_str} = require('../../utils/dateutils')
 const {fillSms} = require('../../utils/sms')
@@ -39,9 +40,9 @@ const sendNotification = (notif_index, destinees, params, attachment=null) => {
   const msg = `Sending notif ${notif_index} to ${destinee.email}(${destinee._id}) using ${JSON.stringify(params)}`
 
   let enable_mails = ENABLE_MAILING
-  const ALLOW_EMAILS=/@.*alfred/i
+  const ALLOW_EMAILS=/@.*alfred|safe/i
   // En validation, envoyer les notifications et SMS aux membres de @.*alfred.*
-  if (!enable_mails && ALLOW_EMAILS.test(destinee.email||'')) {
+  if (!enable_mails && is_validation() && ALLOW_EMAILS.test(destinee.email||'')) {
     console.log('Mailing disabled except for my-alfred.io mails on validation platform')
     enable_mails = true
   }

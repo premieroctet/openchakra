@@ -92,5 +92,16 @@
   "EDI.QUOTATION.name": "Nom du devis :",
   "EDI.ORDER.date": "Date de la commande :",
   "EDI.QUOTATION.date": "Date du devis :",
-  "EDI.delivery": "Livraison"
+  "EDI.delivery": "Livraison",
+
+  "EDI.QUOTATION_VALID_2_FEURST": "Le devis a été validé, vous pouvez le vérifier et le confirmer",
+  "EDI.QUOTATION_VALID_2_CUSTOMER": "Le devis a été validé, vous pouvez le convertir en commande",
+  "EDI.QUOTATION_REWRITE_2_FEURST": "Le devis est repassé en modification",
+  "EDI.QUOTATION_REWRITE_2_CUSTOMER": "Le devis est repassé en modification",
+  "EDI.QUOTATION_CONVERT_2_FEURST": "Le devis a été converti en commande, la commande peut etre traitée.",
+
+  "EDI.ORDER_CONVERTED_2_FEURST": "La commande a été convertie en devis",
+  "EDI.ORDER_VALID_2_FEURST": "La commande a été validée, vous pouvez la traiter",
+  "EDI.ORDER_HANDLED_2_CUSTOMER": "La commande a été totalement traitée",
+  "EDI.ORDER_PARTIALLY_HANDLED_2_CUSTOMER": "La commande a été partiellement traitée"
 }

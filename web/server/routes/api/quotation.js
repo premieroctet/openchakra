@@ -4,8 +4,6 @@ const moment = require('moment')
 const xlsx=require('node-xlsx')
 const lodash=require('lodash')
 const {
-  getFeurstDestinee,
-  sendDataEvent,
   sendDataNotification,
 } = require('../../utils/mailing')
 const {
@@ -43,6 +41,7 @@ const router = express.Router()
 const Order = require('../../models/Order')
 const {validateOrder, validateOrderItem}=require('../../validation/order')
 const {CREATE, UPDATE, VIEW, DELETE}=require('../../../utils/consts')
+const feurstfr=require('../../../translations/fr/feurst')
 moment.locale('fr')
 
 const DATA_TYPE=QUOTATION
@@ -163,7 +162,10 @@ router.put('/:id/rewrite', passport.authenticate('jwt', {session: false}), (req,
       if (!result) {
         return res.status(404).json(`${DATA_TYPE} #${order_id} not found`)
       }
-      sendDataNotification(req.user, result, 'Le devis est repassé en modification')
+      // TODO Fix i18n import
+      // const t=i18n.default.getFixedT(null, 'feurst')
+      const msg=feurstfr[isFeurstUser(req.user)? 'EDI.QUOTATION_REWRITE_2_CUSTOMER' : 'EDI.QUOTATION_REWRITE_2_FEURST']
+      sendDataNotification(req.user, result, msg)
       return res.json(result)
     })
     .catch(err => {
@@ -340,7 +342,9 @@ router.post('/:quotation_id/convert', passport.authenticate('jwt', {session: fal
       return Quotation.findByIdAndUpdate(quotation_id, {linked_order: order._id})
     })
     .then(() => {
-      sendDataNotification(req.user, order, 'Le devis a été converti en commande, vous pouvez la traiter')
+      // const t=i18n.default.getFixedT(null, 'feurst')
+      const msg=feurstfr['EDI.QUOTATION_CONVERT_2_FEURST']
+      sendDataNotification(req.user, order, msg)
       return res.json(order)
     })
     .catch(err => {
@@ -449,10 +453,8 @@ router.post('/:order_id/validate', passport.authenticate('jwt', {session: false}
       if (!data) {
         return res.status(404).json(`Order ${order_id} not found`)
       }
-
-      const msg=isFeurstUser(req.user) ?
-        'Le devis a été validé, vous pouvez le convertir en commande'
-        : 'Le devis a été validé, vous pouvez le vérifier et le confirmer'
+      // const t=i18n.default.getFixedT(null, 'feurst')
+      const msg=feurstfr[isFeurstUser(req.user) ?'EDI.QUOTATION_VALID_2_CUSTOMER':'EDI.QUOTATION_VALID_2_FEURST']
       sendDataNotification(req.user, data, msg)
       return res.json()
     })
