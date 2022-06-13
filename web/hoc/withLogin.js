@@ -1,7 +1,5 @@
 import React from 'react'
-import Validator from 'validator'
 import axios from 'axios'
-import debounce from 'lodash/debounce'
 import {setAuthToken, setAxiosAuthentication} from '../utils/authentication'
 import {snackBarError} from '../utils/notifications'
 

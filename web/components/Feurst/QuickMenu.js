@@ -28,11 +28,20 @@ const MENUS=[
 
 const LoggedUser = ({user}) => {
   
-  return (user ? (
+  return user ?
     <Link href={`${BASEPATH_EDI}/profile`} >
-      <a><div className='flex gap-x-1'><img width={20} height={20} src={`${FEURST_ICON_PATH }/user.icon.svg`} alt="" /> Bienvenue {user.firstname}</div></a>
-    </Link>) : null)
-
+      <a>
+        <div className='flex gap-x-1'>
+          <img 
+            width={20} 
+            height={20} 
+            src={FEURST_ICON_PATH + '/user.icon.svg'} 
+            alt="" /> 
+            Bienvenue {user?.firstname} 
+          
+        </div>
+      </a>
+    </Link> : null
 }
 
 const LogOut = ({user}) => {

@@ -1,10 +1,13 @@
+const crypto = require('crypto')
+const express = require('express')
+const router = express.Router()
 const passport = require('passport')
 const bcrypt = require('bcryptjs')
 const moment = require('moment')
 const axios = require('axios')
 const gifFrames = require('gif-frames')
 const {fs} = require('file-system')
-const express = require('express')
+const {getDataModel} = require('../../../config/config')
 const {getHostUrl, is_development} = require('../../../config/config')
 const Shop = require('../../models/Shop')
 const {
@@ -34,8 +37,6 @@ const {REGISTER_WITHOUT_CODE}=require('../../../utils/context')
 const {checkRegisterCodeValidity, setRegisterCodeUsed}=require('../../utils/register')
 const {EDIT_PROFIL}=require('../../../utils/i18n')
 const {logEvent}=require('../../utils/events')
-
-const router = express.Router()
 const {is_production}=require('../../../config/config')
 const {validateSimpleRegisterInput, validateEditProfile, validateEditProProfile, validateBirthday} = require('../../validation/simpleRegister')
 const validateLoginInput = require('../../validation/login')
@@ -788,7 +789,6 @@ router.get('/current', passport.authenticate('jwt', {session: false}), (req, res
 // Send email with link for reset password
 router.post('/forgotPassword', (req, res) => {
   const email = (req.body.email || '').toLowerCase().trim()
-  const role = req.body.role
 
   User.findOne({email: new RegExp(`^${email}$`, 'i')})
     .populate('company')
@@ -803,7 +803,6 @@ router.post('/forgotPassword', (req, res) => {
           user.update({resetToken: token._id})
             .catch(err => console.error(err))
         })
-      // Role ? création d'un compte B2B
       sendResetPassword(user, token, req)
       return res.json(user)
     })
