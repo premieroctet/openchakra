@@ -10,7 +10,6 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import withSlide from '../../../hoc/Slide/SlideShow'
 import withGrid from '../../../hoc/Grid/GridCard'
 const {SlideGridDataModel}=require('../../../utils/models/SlideGridDataModel')
-import '../../../static/assets/css/custom.css'
 
 const ServiceSlide=withSlide(withGrid(CardService))
 
