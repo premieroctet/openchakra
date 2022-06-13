@@ -167,8 +167,8 @@ class DrawerBooking extends React.Component {
                   <Typography variant='h6' style={{color: '#505050', fontWeight: 'bold'}}>{title}</Typography>
                 </Grid>
                 <Grid className={classes.hideOnBigSreen}>
-                  <IconButton aria-label='Edit' className={classes.iconButtonStyle}>
-                    <CloseIcon classes={{root: classes.cancelButton}} onClick={this.props.toggleDrawer(side, false)}/>
+                  <IconButton aria-label='Edit' className={classes.iconButtonStyle} onClick={this.props.toggleDrawer(side, false)}>
+                    <CloseIcon classes={{root: classes.cancelButton}} />
                   </IconButton>
                 </Grid>
               </Grid>

@@ -103,6 +103,9 @@ class CardService extends React.Component {
 
     let picture = cpData.picture
 
+    if (picture && !picture.startsWith('http') && !picture.startsWith('/')) {
+      picture=`/${picture}`
+    }
     return(
       loading ?
         cardServiceLoading() :
@@ -111,7 +114,7 @@ class CardService extends React.Component {
             <Grid container spacing={1} className={classes.cardServiceUserMainStyle} onClick={() => { window.open(resa_link, '_blank') }}>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.cardServiceUserFlexContainer}>
                 <Grid className={classes.cardServiceUserPicsContainer}>
-                  <Grid style={{backgroundImage: `url("/${picture}")`}} className={classes.cardServiceUserBackgroundPics}>
+                  <Grid style={{backgroundImage: `url("${picture}")`}} className={classes.cardServiceUserBackgroundPics}>
                   </Grid>
                 </Grid>
 

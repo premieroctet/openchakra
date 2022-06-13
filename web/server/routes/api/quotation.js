@@ -340,6 +340,7 @@ router.post('/:quotation_id/convert', passport.authenticate('jwt', {session: fal
       return Quotation.findByIdAndUpdate(quotation_id, {linked_order: order._id})
     })
     .then(() => {
+      sendDataNotification(req.user, order, 'Le devis a été converti en commande, vous pouvez la traiter')
       return res.json(order)
     })
     .catch(err => {

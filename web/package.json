@@ -156,6 +156,7 @@
     "geolib": "^3.2.1",
     "is-webview": "^1.0.1",
     "jest": "^27.5.1",
+    "jssoup": "^0.0.15",
     "systemjs-plugin-json": "^0.3.0"
   },
   "version": "0.0.0"

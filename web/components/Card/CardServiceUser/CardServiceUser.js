@@ -193,6 +193,10 @@ class CardServiceUser extends React.Component {
       picture=`myAlfred/api/users/still_profile/${filename}`
     }
 
+    if (picture && !picture.startsWith('http') && !picture.startsWith('/')) {
+      picture=`/${picture}`
+    }
+
     const editable = isEditableUser(alfred)
 
     return(
@@ -203,7 +207,7 @@ class CardServiceUser extends React.Component {
             <Grid container spacing={1} className={profileMode ? classes.profileModeCardServiceUser : classes.cardServiceUserMainStyle} onClick={() => { profileMode && editable ? null : window.open(resa_link, '_blank') }}>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={profileMode ? classes.profileModeCardServiceUserFlexContainer : classes.cardServiceUserFlexContainer}>
                 <Grid className={profileMode ? classes.profileModeCardServiceUserPicsContainer : classes.cardServiceUserPicsContainer}>
-                  <Grid style={{backgroundImage: `url("/${picture}")`}} className={profileMode ? classes.cardServiceUserBackgroundPicsProfil : classes.cardServiceUserBackgroundPics}>
+                  <Grid style={{backgroundImage: `url("${picture}")`}} className={profileMode ? classes.cardServiceUserBackgroundPicsProfil : classes.cardServiceUserBackgroundPics}>
                     {
                       profileMode && editable ?
                         <Grid style={{position: 'absolute', top: '5px', right: '5px', display: 'flex'}}>
@@ -229,6 +233,12 @@ class CardServiceUser extends React.Component {
                             cpData.is_professional ?
                               <Grid className={classes.cardServiceUserChipPro}>
                                 <Chip label={'Pro'} classes={{root: `customcardchippro ${classes.cardServiceUserChipBckg}`}}/>
+                              </Grid> : null
+                          }
+                          {
+                            cpData.cpf ?
+                              <Grid className={classes.cardServiceUserChipPro}>
+                                <Chip label={'CPF'} classes={{root: `customcardchippro ${classes.cardServiceUserChipBckg}`}}/>
                               </Grid> : null
                           }
                         </>

@@ -111,6 +111,7 @@ const LoginForm = styled.form`
   border-radius: var(--rounded-7xl);
   padding: var(--spc-3) var(--spc-3) var(--spc-10) var(--spc-3);
   margin: 0 var(--spc-2);
+  margin-bottom: var(--spc-12);
 
   @media (${screen.md}) {
     padding: var(--spc-7) var(--spc-12) var(--spc-12) var(--spc-12);

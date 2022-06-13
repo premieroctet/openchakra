@@ -170,31 +170,8 @@ router.put('/:id/handle', passport.authenticate('jwt', {session: false}), (req, 
   const order_id=req.params.id
   MODEL.findByIdAndUpdate(order_id, {handled_date: moment(), handle_status: total ? HANDLED: PARTIALLY_HANDLED}, {new: true})
     .then(result => {
-      return res.json(result)
-    })
-    .catch(err => {
-      console.error(err)
-      return res.status(500).json(err)
-    })
-})
-
-// @Route PUT /myAlfred/api/orders/:id/rewrite
-// Resets address && shipping_mode to allow edition
-// @Access private
-router.put('/:id/rewrite', passport.authenticate('jwt', {session: false}), (req, res) => {
-
-  if (!isActionAllowed(req.user.roles, DATA_TYPE, REWRITE)) {
-    return res.status(401).json()
-  }
-
-  const order_id=req.params.id
-  MODEL.findByIdAndUpdate(order_id, {validation_date: null, handle_status: null, handled_date: null}, {new: true})
-    .populate({path: 'company', populate: 'sales_representative'})
-    .then(result => {
-      if (!result) {
-        return res.status(404).json(`${DATA_TYPE} #${order_id} not found`)
-      }
-      sendDataNotification(req.user, result, 'La commande est repassée en modification')
+      const msg=`La commande a été ${total ? 'totalement' : 'partiellement'} traitée`
+      sendDataNotification(req.user, result, msg)
       return res.json(result)
     })
     .catch(err => {
@@ -371,7 +348,8 @@ router.post('/:order_id/convert', passport.authenticate('jwt', {session: false})
       quotation=result
       return Order.findByIdAndRemove(order_id)
     })
-    .then(() => {
+    .then(order => {
+      sendDataNotification(req.user, order, 'La commande a été convertie en devis')
       return res.json(quotation)
     })
     .catch(err => {
