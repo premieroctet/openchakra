@@ -177,13 +177,13 @@ const sendLeaveCommentForAlfred = booking => {
   )
 }
 
-const sendResetPassword = (user, token, req) => {
+const sendResetPassword = (user, token, req, url) => {
   sendNotification(
     SIB_IDS.RESET_PASSWORD,
     user,
     {
       user_firstname: user.firstname,
-      link_initiatenewpassword: new URL(`/resetPassword?token=${token}`, getHostUrl()),
+      link_initiatenewpassword: new URL(url, getHostUrl()),
     },
   )
 }

@@ -15,5 +15,4 @@ catch(err) {
   }
 }
 
-
 module.exports = ServiceUserSchema ? mongoose.model('serviceUser', ServiceUserSchema) : null
