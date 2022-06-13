@@ -4,28 +4,31 @@ import styled from 'styled-components'
 // import {client} from '../../utils/client'
 import axios from 'axios'
 import Layout from '../../hoc/Layout/Layout'
+import {screen} from '../../styles/screenWidths'
 
 
-const useIntersectionObserver = (ref, options) => {
-  const [isIntersecting, setIsIntersecting] = React.useState(false)
+// const useIntersectionObserver = (ref, options) => {
+//   const [isIntersecting, setIsIntersecting] = React.useState(false)
 
-  React.useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      console.log(entry)
-      setIsIntersecting(entry.isIntersecting)
-    }, options)
+//   React.useEffect(() => {
+//     const observer = new IntersectionObserver(([entry]) => {
+//       console.log(entry)
+//       setIsIntersecting(entry.isIntersecting)
+//     }, options)
 
-    if (ref.current) {
-      observer.observe(ref.current)
-    }
+//     if (ref.current) {
+//       observer.observe(ref.current)
+//     }
 
-    return () => {
-      observer.unobserve(ref.current)
-    }
-  }, [])
+//     return () => {
+//       observer.unobserve(ref.current)
+//     }
+//   }, [])
 
-  return isIntersecting
-}
+//   return isIntersecting
+// }
+
+const AFTRAL_ICON_PATH = '/static/assets/icon/aftral'
 
 
 const Training = () => {
@@ -56,7 +59,7 @@ const Training = () => {
     <StyledTraining>
      
       
-      <div className="container-lg">
+      <div className="container-xl">
         
         <div className='cover'>
 
@@ -69,7 +72,7 @@ const Training = () => {
 
           {/* <div className='cover-desc'> */}
 
-          <div className='card'>
+          <div className='cover-card'>
             <h1>Formation AC transport Léger de marchandises</h1>
             <button type='button'>Acheter</button>
           </div>
@@ -80,16 +83,78 @@ const Training = () => {
             <dd>{trainingid}</dd>
             <dt>Durée de la formation</dt>
             <dd>2jours</dd>
-            <dt>Eligigle au CPF</dt>
+            <dt>Eligigle au <abbr title='compte personnel de formation'>CPF</abbr></dt>
             <dd></dd>
           </dl>
             
           {/* </div> */}
         </div>
-      
-      Training {trainingid}
 
       </div>
+
+      <div className="container-lg">
+        <RoundedBox3items>
+          <h2><span role={'img'} alt="">➟</span>Objectif de la formation</h2>
+
+          <div>
+
+            <p>
+              <img width={100} height={100} src={`${AFTRAL_ICON_PATH}/diplome.svg`} alt="diplôme" />
+              Obtention de l’Attestation de capacité professionnelle en transport routier léger de marchandises.
+            </p>
+           
+            <p>
+              <img width={60} height={60} src={`${AFTRAL_ICON_PATH}/gestionnaireCompte.svg`} alt="Gestionnaire" />
+              Être le gestionnaire de transport d’une entreprise de transport routier de marchandises.
+            </p>
+
+            <p>
+              <img width={60} height={60} src={`${AFTRAL_ICON_PATH}/camion.svg`} alt="véhicule léger" />
+              Utiliser exclusivement des véhicules n’excédant pas un poids maximum autorisé de 3,5 tonnes.
+            </p>
+
+          </div>
+          
+ 
+        </RoundedBox3items>
+
+        <BoxVideoAndDownload>
+          <RoundedBox>
+            <h2><span role={'img'} alt="">📹</span>Vidéo</h2>
+            {/* <video src='https://www.youtube.com/watch?v=dQw4w9WgXcQ'></video> */}
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+            </iframe>
+          </RoundedBox>
+          <RoundedBox>
+            <a href='#' className='download'>
+              <img width={100} height={100} src={`${AFTRAL_ICON_PATH}/download.svg`} alt=''/>
+              <span>Télécharger</span>
+              <span>le programme complet</span>
+            </a>
+          </RoundedBox>
+        </BoxVideoAndDownload>
+      </div>
+
+      <BookingButton>Réserver cette formation</BookingButton>
+
+      <Figures>
+        <li>
+          <span>14</span>
+          <span>heures</span>
+          <span>de formation</span>
+        </li>
+        <li>
+          <span>790,80</span>
+          <span>euros</span>
+          <span>Tarif hors dispositif</span>
+        </li>
+        <li>
+          <span>100%</span>
+          <span>pris en charge</span>
+          <span>par le CPF</span>
+        </li>
+
+      </Figures>
     
     
     </StyledTraining>
@@ -98,75 +163,260 @@ const Training = () => {
   )
 }
 
+
+const RoundedBox = styled.div`
+  padding: 1rem;
+  min-height: 20rem;
+  background-color: white;
+  border-radius: 2.5rem;
+  border: 1px solid lightgray;
+  margin-bottom: var(--spc-8);
+
+  h2 {
+    color: #111;
+
+    span {
+      color: var(--redaftral);
+      font-size: 2rem;
+      margin-inline: var(--spc-4) var(--spc-2);
+    } 
+  }
+`
+
+const RoundedBox3items = styled(RoundedBox)`
+  div {
+    display: grid;
+    column-gap: var(--spc-8);
+    justify-content: center;
+    grid-template-columns: 1fr;
+    align-items: center;
+    text-align: center;
+    
+    @media (${screen.md}) {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+  }
+
+  p {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+    justify-items: center;
+    row-gap: var(--spc-2);
+    height: 100%;
+    margin-inline: var(--spc-4);
+
+    img {
+      align-self: center;
+    }
+  }
+`
+
+const BoxVideoAndDownload = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: var(--spc-8);
+
+  .download {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    row-gap: var(--spc-2);
+
+    span {
+      color: black;
+    }
+
+    span:first-of-type {
+      font-size: 2rem;
+    }
+
+  }
+  
+  @media (${screen.md}) {
+    grid-template-columns: 2fr 1fr;
+  }
+`
+
+const BookingButton = styled.button`
+  color: white;
+  background-color: var(--redaftral);
+  font-size: 2rem;
+  display: block;
+  position: sticky;
+  bottom: 1rem;
+  cursor: pointer;
+  width: min(calc(100vw - 2rem), 75rem);
+  margin-inline: auto;
+  border-radius: 3rem;
+  border: 0;
+  padding: var(--spc-8) var(--spc-4);
+`
+
+const Figures = styled.ul`
+  background-color: white;
+  display: grid;
+  grid-template-columns: 1fr;
+
+  @media (${screen.md}) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+`
+
 const StyledTraining = styled.div`
 
    --bg-color: #f7f7f7;
    --bg-card-color: #39466b;
+   --spc-2: 0.5rem;
+   --spc-3: 0.75rem;
    --spc-4: 1rem;
    --spc-8: 2rem;
-
- background-color: var(--bg-color);
+   --text-lg: 1.125rem;
+   --text-xl: 1.25rem;
+   --redaftral: #a13849;
+   --rounded-xl: 0.75rem;
+   --rounded-2xl: 1rem;
+   --rounded-3xl: 1.5rem;
+   
+  min-height: 100vh;
+  background-color: var(--bg-color);
+  position: relative;
+ 
+ .container-xl {
+  width: min(calc(100vw - 2rem), 70rem);
+  margin-inline: auto;
+ }
  
  .container-lg {
-    width: min(calc(100vw - 40px), 60rem);
-    margin-inline: auto;
-    min-height: 100vh;
-  }
+  width: min(calc(100vw - 2rem), 60rem);
+  margin-inline: auto;
+ }
 
-  .cover {
-    position: relative;
-  }
 
   .cover {
     position: relative;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr auto;
-    grid-template-areas: 'img img' 'card ref'
+    grid-template-columns: 1fr;
+    margin-bottom: var(--spc-8);
+
+    img {
+      /* grid-area: img; */
+      width: 100%;
+      height: auto;
+      object-position: 50% 30%;
+      aspect-ratio: 9 / 3;
+      /* max-height: 300px; */
+      object-fit: cover;
+      grid-column: 1 / -1;
+      grid-row: 1 / -1;
+    }
   }
 
-  /* .cover-desc {
-    position: absolute;
-    bottom: -2rem;
-    left: var(--spc-8);
+  
+
+  .cover-card {
+    /* grid-area: card; */
     display: flex;
-    column-gap: var(--spc-4);
-    justify-content: space-between;
-  } */
-
-  img {
-    grid-area: img;
-    margin-top: 5rem;
-    width: 100%;
-    height: auto;
-    aspect-ratio: 16/9;
-  }
-
- .card {
-    /* position: absolute;
-    bottom: 2rem;
-    left: var(--spc-8); */
-    grid-area: card;
+    flex-direction: column;
+    justify-content: center;
+    row-gap: var(--spc-4);
+    margin-top: var(--spc-4);
     background-color: var(--bg-card-color);
-    width: min(calc(100% - 2rem), 20rem);
+    /* width: min(calc(100% - 2rem), 20rem); */
+    min-width: 20rem;
     aspect-ratio: 3/2;
     border: 1px solid #fff;
-    box-shadow: 0 0 0.5rem rgba(0,0,0,0.2);
- }
-
- .training-ref {
-    grid-area: ref;
+    box-shadow: 0.7rem 1rem 1rem rgba(0,0,0,0.2);
+    margin-bottom: var(--spc-4);
+    
+    
+    h1 {
+      font-size: var(--text-xl);
+      padding-inline: var(--spc-3);
+      color: white;
+      text-align: center;
+      text-transform: uppercase;
+    }
+    
+    button {
+      cursor: pointer;
+      color: white;
+      display: block;
+      margin-inline: auto;
+      text-transform: uppercase;
+      background-color: var(--redaftral);
+      border: 1px solid gray;
+      padding-block: 0.5rem;
+      padding-inline: 2.5rem;
+      border-radius: var(--rounded-xl);
+    }
+  }
+  
+  .training-ref {
     display: flex;
+    justify-content: space-between;
+    column-gap: var(--spc-2);
     flex-wrap: wrap;
     background-color: #fff;
     height: min-content;
-    align-items: flex-end;
-    align-self: flex-end;
- }
+    padding: var(--spc-4);
+    border: 1px solid black;
+    border-radius: var(--rounded-2xl);
 
+    dt {
+      color: var(--redaftral);
+      font-weight: bold;
+    }
+    dd {margin: 0}
 
+    dt + dd {
+      margin-right: var(--spc-4);
+    }
+  }
+  
+
+  @media (${screen.md}) {
+    .cover { 
+      grid-template-columns: 2rem 1fr 1fr 1fr 2rem;
+      grid-template-rows: repeat(3, 1fr);
+      column-gap: var(--spc-4);
+    }
+    .cover-card {
+      grid-column: 2 / 3;
+      grid-row: 2 / 4;
+      margin-bottom: 0;
+    }
+
+    .training-ref {
+      grid-row: 3;
+      grid-column: 3 / span 2;
+    }
+  }
+
+  @media (${screen.lg}) {
+    .cover { 
+      grid-template-columns: 2rem 1fr 1fr 1fr 2rem;
+      grid-template-rows: repeat(4, 1fr);
+      column-gap: var(--spc-4);
+    }
+
+    .cover-card {
+      grid-column: 2 / 3;
+      grid-row: 3 / 5;
+    }
+
+    .training-ref {
+      margin-top: 0;
+      grid-row: 4;
+      grid-column: 3 / span 2;
+    }
+  }
  
 
 `
+
 
 export default Training
