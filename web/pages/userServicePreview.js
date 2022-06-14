@@ -1,53 +1,49 @@
-const withParams = require('../components/withParams')
-import Album from '../components/Album/Album'
-import {Divider, Link} from '@material-ui/core'
-const {
-  getDeadLine,
-  isDateAvailable,
-  isMomentAvailable,
-} = require('../utils/dateutils')
-import {snackBarError} from '../utils/notifications'
-import CustomButton from '../components/CustomButton/CustomButton'
+import {Link} from '@material-ui/core'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import {withStyles} from '@material-ui/core/styles'
-import Layout from '../hoc/Layout/Layout'
-import styles from '../static/css/pages/userServicePreviewPage/userServicePreviewStyle'
 import Grid from '@material-ui/core/Grid'
 import Router from 'next/router'
 import axios from 'axios'
-import UserAvatar from '../components/Avatar/UserAvatar'
 import Typography from '@material-ui/core/Typography'
-import Schedule from '../components/Schedule/Schedule'
 import Drawer from '@material-ui/core/Drawer'
 import Hidden from '@material-ui/core/Hidden'
-import MapComponent from '../components/map'
 import {registerLocale} from 'react-datepicker'
 import fr from 'date-fns/locale/fr'
 import Head from 'next/head'
+import lodash from 'lodash'
+import DevLog from '../components/DevLog'
+import Place from '../components/Place'
+import ServiceUserDescription from '../components/ServiceUserDescription'
+import Planning from '../components/Planning'
 import Topic from '../hoc/Topic/Topic'
-import ListAlfredConditions from '../components/ListAlfredConditions/ListAlfredConditions'
-import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon'
-import CalendarTodayIcon from '@material-ui/icons/CalendarToday'
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
+import UserAvatar from '../components/Avatar/UserAvatar'
+import styles from '../static/css/pages/userServicePreviewPage/userServicePreviewStyle'
+import Layout from '../hoc/Layout/Layout'
+import CustomButton from '../components/CustomButton/CustomButton'
+import {snackBarError} from '../utils/notifications'
+import Album from '../components/Album/Album'
 import SummaryCommentary from '../components/SummaryCommentary/SummaryCommentary'
 import DrawerBooking from '../components/Drawer/DrawerBooking/DrawerBooking'
 import LayoutMobile from '../hoc/Layout/LayoutMobile'
 
 import ListIconsSkills from '../components/ListIconsSkills/ListIconsSkills'
-import CustomListGrades from '../components/CustomListGrades/CustomListGrades'
-import CustomIcon from '../components/CustomIcon/CustomIcon'
-const {setAxiosAuthentication}=require('../utils/authentication')
-const {BOOK_STATUS, MANAGER}=require('../utils/consts')
-const isEmpty = require('../server/validation/is-empty')
-const {computeDistanceKm} = require('../utils/functions')
-const {roundCurrency} = require('../utils/converters')
-const {computeBookingReference} = require('../utils/text')
-const lodash = require('lodash')
+import Equipments from '../components/Equipments'
 
 const moment = require('moment')
-const {getRole, isLoggedUserAdmin}=require('../utils/context')
+const {computeBookingReference} = require('../utils/text')
+const {computeDistanceKm} = require('../utils/functions')
+const isEmpty = require('../server/validation/is-empty')
+const {BOOK_STATUS}=require('../utils/consts')
+const {
+  getDeadLine,
+  isDateAvailable,
+  isMomentAvailable,
+} = require('../utils/dateutils')
+const {setAxiosAuthentication}=require('../utils/authentication')
+const withParams = require('../components/withParams')
+const {isLoggedUserAdmin}=require('../utils/context')
 
 moment.locale('fr')
 registerLocale('fr', fr)
@@ -58,18 +54,9 @@ class UserServicesPreview extends React.Component {
     super(props)
     this.state = {
       user: null,
-      shop: {},
+      shop: null,
       reviews: [],
-      serviceUser: {},
-      alfred: {},
-      service: {},
-      equipments: [],
-      allDetailEquipments: [],
-      prestations: [],
-      flexible: false,
-      moderate: false,
-      strict: false,
-      allEquipments: [],
+      serviceUser: null,
       availabilities: [],
       bottom: false,
       count: {},
@@ -78,8 +65,6 @@ class UserServicesPreview extends React.Component {
       provider_fee: 0,
       cesu_total: 0,
       total: 0,
-      company_amount: 0,
-      company_percent: 0,
       location: null,
       date: null,
       time: null,
@@ -94,8 +79,7 @@ class UserServicesPreview extends React.Component {
       use_cesu: false,
       albums: [],
       excludedDays: [],
-      available_budget: Number.MAX_SAFE_INTEGER,
-      allAddresses: null,
+      allAddresses: [],
       pending: false,
       avocotes: null,
       all_avocotes: [],
@@ -116,6 +100,10 @@ class UserServicesPreview extends React.Component {
 
     const id = this.props.params.id
 
+    if (!id) {
+      return
+    }
+
     setAxiosAuthentication()
 
     let bookingObj = JSON.parse(localStorage.getItem('bookingObj'))
@@ -132,6 +120,7 @@ class UserServicesPreview extends React.Component {
       .catch(err => {
         console.error(err)
       })
+
     axios.get(`/myAlfred/api/serviceUser/${id}`)
       .then(res => {
         let serviceUser = res.data
@@ -139,121 +128,70 @@ class UserServicesPreview extends React.Component {
 
         if (bookingObj) {
           serviceUser.prestations.forEach(p => {
-            const bookP = bookingObj.prestations.find(bp => {
-              return bp.name === p.prestation.label
-            })
-            if (bookP) {
-              count[p._id] = parseInt(bookP.value)
-            }
+            const bookP = bookingObj.prestations.find(bp => bp.name === p.prestation.label)
+            if (bookP) { count[p._id] = parseInt(bookP.value) }
           })
         }
 
-        let st = []
-        axios.get('/myAlfred/api/users/current')
-          .catch(err => {
-            console.error(err)
+        // Filter private_company prestations
+        serviceUser.prestations=serviceUser.prestations.filter(p => {
+          const company=p.prestation.private_company
+          return !company || isLoggedUserAdmin()
+        })
+        this.setState({serviceUser: serviceUser})
+
+        axios.get(`/myAlfred/api/reviews/${serviceUser.user._id}`)
+          .then(response => {
+            this.setState({skills: response.data})
           })
+        axios.get(`/myAlfred/api/shop/alfred/${ serviceUser.user._id}`)
           .then(res => {
-            let user = res ? res.data : null
-            // Filter private_company prestations
-            serviceUser.prestations=serviceUser.prestations.filter(p => {
-              const company=p.prestation.private_company
-              if (company) {
-                return isLoggedUserAdmin()
-              }
-              return true
-            })
-            // Mode compagnie : l'admin a un budget illimité comme un user standard, le manager a le budget de son département
-            if (user && user.company) {
-              axios.get(`/myAlfred/api/companies/budget/${user._id}/${getRole()}`)
-                .then(res => {
-                  this.setState({available_budget: res.data, role: getRole()})
-                })
-                .catch(err => {
-                  console.error(err)
-                  this.setState({available_budget: 0})
-                })
-              axios.get(`/myAlfred/api/companies/supported/${user._id}/${serviceUser.service._id}/${getRole()}`)
-                .then(res => {
-                  const percent=res.data
-                  this.setState({company_percent: percent})
-                })
-                .catch(err => {
-                  console.error(err)
-                })
-
-            }
-            st.user=user
-            const promise = Promise.resolve({data: user})
-            promise
-              .then(res => {
-                if (res.data) {
-                  let allAddresses = {'main': {...res.data.billing_address, label: this.props.t('USERSERVICEPREVIEW.at_home')}}
-                  res.data.service_address.forEach(addr => {
-                    allAddresses[addr._id] = addr
-                  })
-                  st.allAddresses=allAddresses
-                }
-                else {
-                  st.allAddresses = {}
-                }
-
-                axios.get(`/myAlfred/api/availability/userAvailabilities/${serviceUser.user._id}`)
-                  .then(res => {
-                    let availabilities = res.data
-                    st.availabilities=availabilities
-                    const excludedDays = this.getExcludedDays(availabilities)
-                    st.excludedDays=excludedDays
-                    axios.get(`/myAlfred/api/reviews/${serviceUser.user._id}`)
-                      .then(response => {
-                        const skills = response.data
-                        st.skills=skills
-                        axios.get(`/myAlfred/api/shop/alfred/${ serviceUser.user._id}`)
-                          .then(res => {
-                            let shop = res.data
-                            st.shop=shop
-                            st.flexible=shop.flexible_cancel
-                            st.moderate=shop.moderate_cancel
-                            st.strict=shop.strict_cancel
-                            st.use_cesu=shop.cesu !== 'Disabled'
-                            axios.get(`/myAlfred/api/reviews/profile/customerReviewsCurrent/${serviceUser.user._id}`)
-                              .then(res => {
-                                let reviews = res.data
-                                if (id) {
-                                  reviews = reviews.filter(r => r.serviceUser._id === id)
-                                }
-                                st.reviews=reviews
-                                const equipmentsPromise=serviceUser.service.equipments.map(res => axios.get(`/myAlfred/api/equipment/${res}`))
-                                Promise.all(equipmentsPromise)
-                                  .then(res => {
-                                    st.allDetailEquipments=res.map(r => r.data)
-                                    this.setState({
-                                      serviceUser: serviceUser,
-                                      service: serviceUser.service,
-                                      equipments: serviceUser.equipments,
-                                      prestations: serviceUser.prestations,
-                                      allEquipments: serviceUser.service.equipments,
-                                      alfred: serviceUser.user,
-                                      count: count,
-                                      pick_tax: null,
-                                      date: bookingObj && bookingObj.prestation_date ? moment(bookingObj.prestation_date, 'DD/MM/YYYY').toDate() : null,
-                                      time: bookingObj && bookingObj.prestation_date ? moment(bookingObj.prestation_date).toDate() : null,
-                                      location: bookingObj ? bookingObj.location : null,
-                                      customer_fee: bookingObj ? bookingObj.customer_fee : null,
-                                      provider_fee: bookingObj ? bookingObj.provider_fee : null,
-                                      ...st,
-                                    }, () => {
-                                      this.setDefaultLocation()
-                                      this.computeTotal()
-                                    })
-                                  })
-                              })
-                          })
-                      })
-                  })
-              })
-              .catch(err => console.error(err))
+            let shop = res.data
+            this.setState({shop: shop})
+            this.setState({use_cesu: shop.cesu !== 'Disabled'})
           })
+        axios.get(`/myAlfred/api/reviews/profile/customerReviewsCurrent/${serviceUser.user._id}`)
+          .then(res => {
+            let reviews = res.data
+            if (id) {
+              reviews = reviews.filter(r => r.serviceUser._id === id)
+            }
+            this.setState({reviews: reviews})
+            this.setState({
+              count: count,
+              pick_tax: null,
+              date: bookingObj && bookingObj.prestation_date ? moment(bookingObj.prestation_date, 'DD/MM/YYYY').toDate() : null,
+              time: bookingObj && bookingObj.prestation_date ? moment(bookingObj.prestation_date).toDate() : null,
+              location: bookingObj ? bookingObj.location : null,
+              customer_fee: bookingObj ? bookingObj.customer_fee : null,
+              provider_fee: bookingObj ? bookingObj.provider_fee : null,
+            }, () => {
+              this.setDefaultLocation()
+              this.computeTotal()
+            })
+          })
+
+        axios.get(`/myAlfred/api/availability/userAvailabilities/${serviceUser.user._id}`)
+          .then(res => {
+            let availabilities = res.data
+            this.setState({availabilities: availabilities, excludedDays: this.getExcludedDays(availabilities)})
+          })
+
+      })
+      .catch(err => console.error(err))
+
+
+    axios.get('/myAlfred/api/users/current')
+      .then(res => {
+        let user = res.data
+        this.setState({user: user})
+        if (user) {
+          let allAddresses = {'main': {...res.data.billing_address, label: this.props.t('USERSERVICEPREVIEW.at_home')}}
+          res.data.service_address.forEach(addr => {
+            allAddresses[addr._id] = addr
+          })
+          this.setState({allAddresses: allAddresses})
+        }
       })
       .catch(err => console.error(err))
 
@@ -345,7 +283,7 @@ class UserServicesPreview extends React.Component {
 
     const reservationDate = this.computeReservationDate()
     if (!errors.datetime && reservationDate.isValid() && !isMomentAvailable(reservationDate, this.state.availabilities)) {
-      errors.datetime = ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.error_not_available', {firstname: this.state.alfred.firstname}))
+      errors.datetime = ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.error_not_available', {firstname: this.state.serviceUser.user.firstname}))
     }
 
     const minBookingDate = getDeadLine(this.state.serviceUser.deadline_before_booking)
@@ -361,9 +299,6 @@ class UserServicesPreview extends React.Component {
       errors.location = ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.error_place'))
     }
 
-    if (this.hasWarningBudget()) {
-      errors.total = ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.error_amount_too_high'))
-    }
     if (this.hasWarningSelf()) {
       errors.user = ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.error_resa_myself'))
     }
@@ -376,10 +311,11 @@ class UserServicesPreview extends React.Component {
 
   extractFilters = () => {
     let result = {}
-    if (this.state.prestations.length === 0) {
+    const {prestations}=this.state.serviceUser
+    if (!prestations?.length) {
       return result
     }
-    this.state.prestations.forEach(p => {
+    prestations.forEach(p => {
       if (p.prestation == null) {
         // FIX : réaffecter les prestations persos
         console.error(`Error:${p.id} has a null prestation`)
@@ -455,49 +391,7 @@ class UserServicesPreview extends React.Component {
 
   computeTotal = () => {
 
-    /**
-    const {available_budget, company_percent, count, serviceUser}=this.state
-
-    let totalPrestations = 0
-    let totalCesu = 0
-    this.state.prestations.forEach(p => {
-      if (count[p._id] > 0) {
-        totalPrestations += count[p._id] * p.price
-        if (p.prestation.cesu_eligible && this.state.use_cesu) {
-          totalCesu += count[p._id] * p.price
-        }
-      }
-    })
-    const travelTax = this.computeTravelTax()
-    const pickTax = this.computePickTax()
-    totalPrestations += travelTax ? parseFloat(travelTax) : 0
-    totalPrestations += pickTax ? parseFloat(pickTax) : 0
-
-    // Ajout frais dep & retrait/livraison si CESU
-    if (totalCesu) {
-      totalCesu += travelTax ? parseFloat(travelTax) : 0
-      totalCesu += pickTax ? parseFloat(pickTax) : 0
-    }
-
-    let customer_fee = totalPrestations * COMM_CLIENT
-    const avocotes=this.getAvocotesBooking()
-    if (avocotes) {
-      customer_fee = avocotes.amount-totalPrestations
-    }
-    let total = totalPrestations
-    total += customer_fee
-
-    const company_amount=Math.min(total*company_percent, available_budget)
-    this.setState({
-      totalPrestations: roundCurrency(totalPrestations),
-      customer_fee: roundCurrency(customer_fee),
-      total: roundCurrency(total),
-      company_amount: roundCurrency(company_amount),
-      cesu_total: roundCurrency(totalCesu),
-    }, () => this.checkBook())
-    */
-
-    const {available_budget, company_percent, count, serviceUser, location}=this.state
+    const {count, serviceUser, location}=this.state
 
     const avocotes=this.getAvocotesBooking()
     const avocotes_amount = avocotes ? avocotes.amount : null
@@ -511,8 +405,6 @@ class UserServicesPreview extends React.Component {
       avocotes_amount: avocotes_amount,
     })
       .then(res => {
-        const company_amount= roundCurrency(Math.min(res.data.total*company_percent, available_budget))
-
         this.setState({
           total: res.data.total,
           totalPrestations: res.data.total_prestations,
@@ -523,7 +415,6 @@ class UserServicesPreview extends React.Component {
           travel_tax: res.data.travel_tax,
           pick_tax: res.data.pick_tax,
           cesu_total: res.data.total_cesu,
-          company_amout: company_amount,
         },
         this.checkBook)
       })
@@ -565,16 +456,8 @@ class UserServicesPreview extends React.Component {
     return false
   }
 
-  hasWarningBudget = () => {
-    if (getRole()==MANAGER) {
-      const warningBudget = this.state.company_amount < this.state.total
-      return warningBudget
-    }
-    return false
-  }
-
   hasWarningSelf = () => {
-    const {user, alfred}=this.state
+    const {user, serviceUser: {user: alfred}}=this.state
     return user && alfred && user._id.toString()==alfred._id.toString()
   }
 
@@ -600,17 +483,17 @@ class UserServicesPreview extends React.Component {
       return `Chez ${avocotes_booking.user.full_name} (${avocotes_booking.user.billing_address.city})`
     }
     const {user, allAddresses}=this.state
-    if (!user || !allAddresses) {
+    if (!user || !allAddresses?.length==0) {
       return ''
     }
-    return allAddresses? allAddresses[this.get_prop_address()].label : ''
+    return allAddresses? allAddresses[this.get_prop_address()]?.label : ''
   }
 
   getLocationLabel = () => {
     const titles = {
       'client': this.getClientAddressLabel(),
       'main': this.getClientAddressLabel(),
-      'alfred': `Chez ${this.state.alfred.firstname}`,
+      'alfred': `Chez ${this.state.serviceUser.user.firstname}`,
       'visio': ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.at_remote')),
     }
     if (!this.state.location) {
@@ -663,7 +546,6 @@ class UserServicesPreview extends React.Component {
       location: this.state.location,
       equipments: this.state.serviceUser.equipments,
       amount: this.state.total,
-      company_amount: this.state.company_amount,
       prestation_date: prestation_date,
       alfred: this.state.serviceUser.user._id,
       user: user ? user._id : null,
@@ -726,17 +608,10 @@ class UserServicesPreview extends React.Component {
     })
   }
 
-  formatDeadline = dl => {
-    if (!dl) {
-      return dl
-    }
-    return dl.replace('jours', 'jour(s)').replace('semaines', 'semaine(s)').replace('heures', 'heure(s)')
-  }
-
   computePricedPrestations = () => {
-    const count = this.state.count
+    const {count, serviceUser: {prestations}} = this.state
     let result = {}
-    this.state.prestations.forEach(p => {
+    prestations?.forEach(p => {
       if (count[p._id]) {
         result[p.prestation.label] = count[p._id] * p.price
       }
@@ -746,49 +621,23 @@ class UserServicesPreview extends React.Component {
 
   // TODO : force computing disponibility
   scheduleDateChanged = (dates, mmt, mode) => {
-    const dt = new Date([...dates][0])
-    this.setState({date: dt, time: mode==='week' ? mmt : undefined}, () => this.checkBook())
-  }
-
-  loadAlbums = () => {
-    axios.get(`/myAlfred/api/users/profile/albums/${this.state.alfred._id}`)
-      .then(res => {
-        this.setState({albums: res.data})
-      })
-      .catch(err => console.error(err))
-  }
-
-  getAlbum = id => {
-    return this.state.albums.find(a => a._id===id)
+    const dt = moment(mmt)
+    if (dt.isValid() && isMomentAvailable(dt, this.state.availabilities)) {
+      this.setState({date: dt.toDate(), time: dt.toDate()}, () => this.checkBook())
+    }
   }
 
   content = classes => {
-    const serviceAddress = this.state.serviceUser.service_address
     const filters = this.extractFilters()
     const pricedPrestations = this.computePricedPrestations()
     const avocotes_booking=this.getAvocotesBooking()
-    const {shop, serviceUser, alfred}=this.state
+    const {shop, serviceUser, availabilities}=this.state
 
-    const showProfileEnabled = alfred && alfred._id
+    const showProfileEnabled = !!serviceUser?.user?._id
 
-    const listCondition = [
-      {
-        label: alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_label')) : '',
-        summary: alfred.firstname ? this.state.alfred.firstname + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_summary')) + this.formatDeadline(this.state.serviceUser.deadline_before_booking) + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_summary_end')) : '',
-        IconName: alfred.firstname ? <CustomIcon className={'custompreviewsmiley'} style={{height: 35, width: 35, backgroundSize: 'contain'}} materialIcon={<InsertEmoticonIcon fontSize="large"/> }/> : '',
-      },
-      {
-        label: alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_condition_label')) : '',
-        summary: alfred.firstname ? this.state.alfred.firstname + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_list_condition_summary')) + this.state.flexible ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.one_day')) : this.state.moderate ? `${
-          ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.five_days'))}` : ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.ten_days')) + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.before_end_date')) : '',
-        IconName: alfred.firstname ? <CustomIcon className={'custompreviewcalendar'} style={{height: 35, width: 35, backgroundSize: 'contain'}} materialIcon={<CalendarTodayIcon fontSize="large"/>}/> : '',
-      },
-      {
-        label: alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.minimum_basket')) : '',
-        summary: alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.minimum_basket_of', {firstname: this.state.alfred.firstname, minimum_basket: this.state.serviceUser.minimum_basket})) : '',
-        IconName: alfred.firstname ? <CustomIcon className={'custompreviewshopping'} style={{height: 35, width: 35, backgroundSize: 'contain'}} materialIcon={<ShoppingCartIcon fontSize="large"/>}/> : '',
-      },
-    ]
+    const warnings=[
+      this.hasWarningPerimeter() && this.props.t('DRAWER_BOOKING.warning_perimiter'),
+      this.hasWarningSelf() && this.props.t('DRAWER_BOOKING.warning_self')].filter(v => !!v)
 
     return(
       <Grid style={{width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
@@ -799,23 +648,25 @@ class UserServicesPreview extends React.Component {
                 <Grid container className={classes.avatarAnDescription}>
                   <Grid item sm={3} className={classes.avatarContainer}>
                     <Grid item className={classes.itemAvatar}>
-                      <UserAvatar user={alfred} animateStartup={true}/>
+                      <UserAvatar user={serviceUser.user} animateStartup={true}/>
                     </Grid>
                   </Grid>
                   <Grid item sm={9} className={classes.flexContentAvatarAndDescription}>
                     <Grid className={classes.marginAvatarAndDescriptionContent}>
                       <Grid container spacing={1} style={{margin: 0, width: '100%'}}>
                         <Grid item xl={10} lg={10} md={12} sm={12} xs={12}>
-                          <Typography variant="h6">{alfred.firstname} - {this.state.service.label}</Typography>
+                          <Typography variant="h6">{serviceUser.user.firstname} - {serviceUser.service.label}</Typography>
                         </Grid>
                         <Grid item xl={2} lg={2} md={12} sm={12} xs={12} className={classes.containerListSkills}>
                           <ListIconsSkills data={{insurance_text: shop.insurance_text, grade_text: serviceUser.grade_text}}/>
                         </Grid>
                       </Grid>
                       {
-                        serviceAddress &&
+                        serviceUser.service_address &&
                           <Grid>
-                            <Typography style={{color: 'rgba(39,37,37,35%)'}} className={'custompreviewplace'}>{serviceAddress.city}, {serviceAddress.country} - {this.state.serviceUser.perimeter}km autour de {serviceAddress.city}</Typography>
+                            <Typography style={{color: 'rgba(39,37,37,35%)'}} className={'custompreviewplace'}>
+                              {serviceUser.service_address.city}, {serviceUser.service_address.country} - {serviceUser.perimeter}km autour de {serviceUser.service_address.city}
+                            </Typography>
                           </Grid>
                       }
                       {
@@ -828,7 +679,7 @@ class UserServicesPreview extends React.Component {
                     <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
                       <Grid item sm={6} xs={12}>
                         <CustomButton variant={'outlined'} classes={{root: 'custompreviewshowprofil'}} className={classes.userServicePreviewButtonProfil}
-                          disabled={!showProfileEnabled} onClick={() => Router.push(`/profile/about?user=${alfred._id}`)}>
+                          disabled={!showProfileEnabled} onClick={() => Router.push(`/profile/about?user=${serviceUser.user._id}`)}>
                           {ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.button_show_profil'))}
                         </CustomButton>
                       </Grid>
@@ -843,94 +694,32 @@ class UserServicesPreview extends React.Component {
                   </Grid>
                 </Grid>
                 <Grid className={'custompreviewboxdescription'} style={{marginTop: '10%'}}>
-                  <Grid className={classes.overrideCssChild}>
-                    <Grid style={{width: '100%'}}>
-                      <Grid>
-                        <h3>{ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_description'))}</h3>
-                      </Grid>
-                      <Grid>
-                        <Typography style={{color: 'rgba(39,37,37,35%)'}}>{this.state.serviceUser.description ? this.state.serviceUser.description : ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_description_summary'))}</Typography>
-                      </Grid>
-                      <Grid>
-                        <CustomListGrades grade={this.state.serviceUser.grade_text} insurance={this.state.shop.insurance_text}/>
-                      </Grid>
-                      <Grid style={{marginTop: '2%'}}>
-                        <Divider className={`customtopicdivider ${classes.topicDivider}`}/>
-                      </Grid>
-                      <Grid className={`customuserpreviewboxcustom ${classes.boxCustom}`}>
-                        <ListAlfredConditions
-                          columnsXl={12}
-                          columnsLG={12}
-                          columnsMD={12}
-                          columnsSM={12}
-                          columnsXS={12}
-                          wrapperComponentProps={listCondition}
-                        />
-                      </Grid>
-                    </Grid>
-                  </Grid>
+                  <ServiceUserDescription classes={classes} serviceUser={serviceUser} alfred={serviceUser.user}
+                    flexible={shop.flexible_cancel} moderate={shop.moderate_cancel} strict={shop.strict_cancel}/>
                 </Grid>
                 <Grid className={`custompreviewschedulecont ${classes.scheduleContainer}`}>
-                  <Topic
-                    id={'availabilities'}
-                    underline={true}
-                    titleTopic={ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_title_date'))}
-                    titleSummary={alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_title_date_summary')) + alfred.firstname : ''}
-                  >
-                    <Schedule
-                      availabilities={this.state.availabilities}
-                      bookings={[]}
-                      services={[]}
-                      selectable={true}
-                      height={400}
-                      nbSchedule={1}
-                      handleSelection={this.scheduleDateChanged}
-                      singleSelection={true}
-                      mode={'week'}
-                      underline={true}
-                      style={classes}
-                    />
-                  </Topic>
+                  <Planning availabilities={availabilities} scheduleDateChanged={this.scheduleDateChanged}
+                    alfred={serviceUser.user} classes={classes}/>
                 </Grid>
-                {this.state.allDetailEquipments.length !== 0 ?
+                {this.state.serviceUser.service &&
                   <Grid className={classes.equipmentsContainer}>
-                    <Topic
-                      titleTopic={ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_title_stuff'))}
-                      needBackground={true}
-                      underline={true}
-                      titleSummary={alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_title_stuff_summary')) + alfred.firstname : ''}
-                    >
-                      <ListAlfredConditions
-                        columnsXl={6}
-                        columnsLG={6}
-                        columnsMD={6}
-                        columnsSM={6}
-                        columnsXS={6}
-                        wrapperComponentProps={this.state.allDetailEquipments}
-                        equipmentsSelected={this.state.equipments}
-                      />
-                    </Topic>
-                  </Grid> : null
+                    <Equipments classes={classes}
+                      allEquipments={serviceUser.service.equipments}
+                      selectedEquipments={serviceUser.equipments}
+                      alfred={serviceUser.user}/>
+                  </Grid>
                 }
                 <Grid className={`custompreviewbookingmap ${classes.perimeterContent}`}>
                   {
-                    this.state.serviceUser && this.state.serviceUser.service_address ?
-                      <Grid style={{width: '100%'}}>
-                        <Topic
-                          underline={true}
-                          titleTopic={ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_place'))}
-                          titleSummary={alfred.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_zone_intervention')) + alfred.firstname + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_zone_intervention_end')) : ''}
-                        >
-                          <MapComponent
-                            position={[this.state.serviceUser.service_address.gps.lat, this.state.serviceUser.service_address.gps.lng]}
-                            perimeter={this.state.serviceUser.perimeter * 1000}
-                          />
-                        </Topic>
-                      </Grid> : ''
+                    serviceUser?.service_address &&
+                      <Place title={ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_place'))}
+                        subTitle={serviceUser.user.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_zone_intervention')) + serviceUser.user.firstname + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_zone_intervention_end')) : ''}
+                        location={[serviceUser.service_address.gps.lat, serviceUser.service_address.gps.lng]}
+                        perimeter={serviceUser.perimeter * 1000}/>
                   }
                 </Grid>
                 <Grid style={{height: '300px'}}>
-                  <Album user={alfred._id} key={moment()} underline={true} readOnly={true}/>
+                  <Album user={serviceUser.user._id} key={serviceUser} underline={true} readOnly={true}/>
                 </Grid>
                 <Hidden only={['xl', 'lg']} implementation={'css'} className={classes.hidden}>
                   <Grid className={classes.showReservation}>
@@ -960,14 +749,11 @@ class UserServicesPreview extends React.Component {
                           travelTax={this.state.travel_tax}
                           getLocationLabel={this.getLocationLabel}
                           onAvocotesChanged={this.onAvocotesChanged}
-                          warningPerimeter={this.hasWarningPerimeter()}
-                          warningBudget={this.hasWarningBudget()}
-                          warningSelf={this.hasWarningSelf()}
+                          warnings={warnings}
                           clientAddress={this.getClientAddressLabel()}
                           clientAddressId={this.get_prop_address()}
                           book={this.book}
                           alfred_pro={shop.is_professional}
-                          {...this.state}
                         />
                       </Grid>
                     </Drawer>
@@ -989,9 +775,7 @@ class UserServicesPreview extends React.Component {
                     travelTax={this.state.travel_tax}
                     getLocationLabel={this.getLocationLabel}
                     onAvocotesChanged={this.onAvocotesChanged}
-                    warningPerimeter={this.hasWarningPerimeter()}
-                    warningBudget={this.hasWarningBudget()}
-                    warningSelf={this.hasWarningSelf()}
+                    warnings={warnings}
                     clientAddress={this.getClientAddressLabel()}
                     clientAddressId={this.get_prop_address()}
                     book={this.book}
@@ -1010,12 +794,12 @@ class UserServicesPreview extends React.Component {
                     <Topic
                       underline={true}
                       titleTopic={ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_commentary'))}
-                      titleSummary={alfred.firstname ?
-                        ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_commentary_summary', {firstname: alfred.firstname}))
+                      titleSummary={serviceUser.user.firstname ?
+                        ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_commentary_summary', {firstname: serviceUser.user.firstname}))
                         :
                         ''}
                     >
-                      <SummaryCommentary user={this.state.alfred._id} serviceUser={this.props.params.id}/>
+                      <SummaryCommentary user={serviceUser.user._id} serviceUser={this.props.params.id}/>
                     </Topic>
                   </Grid>
               }
@@ -1029,23 +813,29 @@ class UserServicesPreview extends React.Component {
   render() {
     const {classes} = this.props
     const {address} = this.props.params
-    const {service, alfred, user} = this.state
+    const {serviceUser, user, shop} = this.state
 
-    if (!this.state.serviceUser) {
+    if (!serviceUser || !shop) {
       return null
+    }
+    const description=`${serviceUser.service.label} par ${serviceUser.user.firstname}`
+    let picture=serviceUser.service.picture
+    if (!picture.startsWith('http') && !picture.startsWith('/')) {
+      picture = `/${picture}`
     }
 
     const res = (
       <React.Fragment>
         <Head>
-          <title>{service.label} par {alfred.full_name}</title>
-          <meta property="og:image" content={`/${service.picture}`}/>
-          <meta property="og:image:secure_url" content={`/${service.picture}`}/>
-          <meta property="og:description" content={`${service.label} par ${alfred.firstname}`}/>
-          <meta property="description" content={`${service.label} par ${alfred.firstname}`}/>
+          <title>{serviceUser.service.label} par {serviceUser.user.full_name}</title>
+          <meta property="og:image" content={picture}/>
+          <meta property="og:image:secure_url" content={picture}/>
+          <meta property="og:description" content={description}/>
+          <meta property="description" content={description}/>
           <meta property="og:type" content="website"/>
           <meta property="og:url" content="https://my-alfred.io"/>
         </Head>
+        <DevLog>{JSON.stringify(this.state.serviceUser?.service?.location)}</DevLog>
         <Hidden only={['xs']} implementation={'css'} className={classes.hidden}>
           <Layout user={user} selectedAddress={address}>
             {this.content(classes)}

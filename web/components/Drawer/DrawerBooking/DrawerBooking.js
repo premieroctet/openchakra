@@ -19,6 +19,7 @@ import AddIcon from '@material-ui/icons/Add'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import withStyles from '@material-ui/core/styles/withStyles'
+import DevLog from '../../DevLog'
 import styles from '../../../static/css/components/DrawerBooking/DrawerBooking'
 import BookingDetail from '../../BookingDetail/BookingDetail'
 import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch'
@@ -30,8 +31,6 @@ const {getLoggedUserId} = require('../../../utils/context')
 const {isMomentAvailable} = require('../../../utils/dateutils')
 
 moment.locale('fr')
-
-import {DRAWER_BOOKING} from '../../../utils/i18n'
 
 class DrawerBooking extends React.Component {
 
@@ -130,7 +129,7 @@ class DrawerBooking extends React.Component {
   render() {
 
     const {expanded} = this.state
-    const {warningPerimeter, warningBudget, warningSelf, side, classes, service, alfred, date, time, errors,
+    const {warnings, side, classes, date, time, errors,
       count, serviceUser, isChecked, location, pick_tax, total, customer_fee,
       cesu_total, filters, pricedPrestations, excludedDays, role, company_amount,
       avocotes, all_avocotes, alfred_pro} = this.props
@@ -140,24 +139,22 @@ class DrawerBooking extends React.Component {
     const res = (
       <Grid>
         {
-          warningPerimeter || warningBudget || warningSelf ?
+          warnings?.length>0 &&
             <Grid className={classes.userServicePreviewWarningContainer}>
               <Grid>
                 <CancelIcon classes={{root: classes.cancelButton}}/>
               </Grid>
               <Grid>
-                { warningPerimeter ? <Typography>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.warning_perimiter'))}</Typography> : null }
-                { warningBudget ? <Typography>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.warning_budget'))}</Typography> : null }
-                { warningSelf ? <Typography>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.warning_self'))}</Typography> : null }
+                { warnings.map(w => <Typography>{w}</Typography>)}
               </Grid>
-            </Grid> : null
+            </Grid>
         }
         <Grid className={classes.borderContentRight}>
           <Grid className={classes.mainDrawerBooking}>
             <Grid style={{marginBottom: 30}}>
               <Grid style={{display: 'flex', justifyContent: 'space-between'}}>
                 <Grid>
-                  <Typography variant='h6' style={{color: '#505050', fontWeight: 'bold'}}>{service.label} - {alfred.firstname}</Typography>
+                  <Typography variant='h6' style={{color: '#505050', fontWeight: 'bold'}}>{serviceUser.service.label} - {serviceUser.user.firstname}</Typography>
                 </Grid>
                 <Grid className={classes.hideOnBigSreen}>
                   <IconButton aria-label='Edit' className={classes.iconButtonStyle} onClick={this.props.toggleDrawer(side, false)}>
@@ -266,7 +263,7 @@ class DrawerBooking extends React.Component {
                   <Typography style={{color: '#505050'}}>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.presta_place'))}</Typography>
                 </AccordionSummary>
                 <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
-                  { serviceUser.location && this.props.isInPerimeter() &&
+                  { serviceUser.service.location.client && this.props.isInPerimeter() &&
                     <Grid>
                       <ButtonSwitch
                         key={moment()}
@@ -280,12 +277,12 @@ class DrawerBooking extends React.Component {
                     </Grid>
                   }
                   {
-                    serviceUser.location && serviceUser.location.alfred && alfred.firstname &&
+                    serviceUser.service.location.alfred && serviceUser?.user.firstname &&
                       <Grid>
                         <ButtonSwitch
                           key={moment()}
                           id='alfred'
-                          label={`Chez ${ alfred.firstname}`}
+                          label={`Chez ${ serviceUser.user.firstname}`}
                           isEditable={false}
                           isPrice={false}
                           isOption={false}
@@ -294,7 +291,7 @@ class DrawerBooking extends React.Component {
                       </Grid>
                   }
                   {
-                    serviceUser.location && serviceUser.location.visio &&
+                    serviceUser.service.location.visio &&
                       <Grid>
                         <ButtonSwitch
                           key={moment()}
