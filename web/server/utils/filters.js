@@ -41,7 +41,7 @@ const isServiceUserAroundGPS = (serviceUser, coordinates) => {
 }
 
 const isServiceUserAtAlfredOrVisio = su => {
-  return su.location.alfred || su.location.visio
+  return su.location.alfred || su.location.visio || su.location.elearning
 }
 
 

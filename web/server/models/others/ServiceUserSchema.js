@@ -1,8 +1,7 @@
 const mongoose = require('mongoose')
+const {hideIllegal} = require('../../../utils/text')
 
 const Schema = mongoose.Schema
-
-const {hideIllegal} = require('../../utils/text')
 
 const ServiceUserSchema = new Schema({
   user: {

@@ -448,7 +448,7 @@ class PreviewBase extends BasePage {
   }
 
   isServiceAtHome = () => {
-    return this.state.location && (!['visio', 'alfred'].includes(this.state.location))
+    return this.state.location && (!['elearning', 'visio', 'alfred'].includes(this.state.location))
   }
 
   computeTotal = () => {

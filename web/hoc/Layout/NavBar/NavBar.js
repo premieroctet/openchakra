@@ -41,11 +41,11 @@ import lodash from 'lodash'
 import dynamic from 'next/dynamic'
 import CustomTabMenu from '../../../components/CustomTabMenu/CustomTabMenu'
 import Logo from '../../../components/Logo/Logo'
-import {getLoggedUserId, isLoggedUserRegistered, removeAlfredRegistering, setAlfredRegistering, getRole} from '../../../utils/context'
+import {removeAlfredRegistering, setAlfredRegistering} from '../../../utils/context'
 import styles from '../../../static/css/components/NavBar/NavBar'
 import CustomButton from '../../../components/CustomButton/CustomButton'
 import AutoCompleteTextField from '../../../components/Search/AutoCompleteTextField'
-import {PART, EMPLOYEE} from '../../../utils/consts'
+import {PART} from '../../../utils/consts'
 import {formatAddress} from '../../../utils/text.js'
 import {clearAuthenticationToken, setAxiosAuthentication} from '../../../utils/authentication'
 import {UserContext} from '../../../contextes/user.context'
@@ -95,7 +95,6 @@ class NavBar extends Component {
       anchorElB2b: null,
       setOpenLogin: false,
       setOpenRegister: null,
-      user: null,
       activeStep: 0,
       keyword: '',
       city: undefined,
@@ -245,14 +244,8 @@ class NavBar extends Component {
       localStorage.removeItem('path')
       Router.push(path)
     }
-    else if (!isLoggedUserRegistered() && getRole()==EMPLOYEE) {
-      const user_id=getLoggedUserId()
-      clearAuthenticationToken()
-      this.handleOpenRegister(user_id)
-    }
-    else {
-      Router.push('/search')
-    }
+    // TODO finish partial registration for all-E
+    Router.push('/search')
   };
 
   getData = e => {
@@ -689,6 +682,18 @@ class NavBar extends Component {
                   }
                   label={ReactHtmlParser(this.props.t('SEARCHBAR.remote'))}
                 />
+                <FormControlLabel
+                  classes={{root: classes.filterMenuControlLabel}}
+                  control={
+                    <Switch
+                      checked={locations.includes('elearning')}
+                      onChange={this.onLocationFilterChanged}
+                      color="primary"
+                      name={'visio'}
+                    />
+                  }
+                  label={ReactHtmlParser(this.props.t('SEARCHBAR.elearning'))}
+                />
               </Grid>
             </Grid>
             <Grid className={classes.filterMenuContentMainStyleDateFilter}>
@@ -839,7 +844,7 @@ class NavBar extends Component {
   };
 
   searchBarInput = classes => {
-    const logged = this.state.user != null
+    const logged = this.isLoggedUser()
     const {ifHomePage, user} = this.state
     const {excludeSearch} = this.props
 
@@ -885,7 +890,7 @@ class NavBar extends Component {
               </Grid>
             </Grid>
             {
-              this.state.user ?
+              logged ?
                 <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
                   <FormControl className={classes.navbarFormControlAddress}>
                     {this.state.ifHomePage ?

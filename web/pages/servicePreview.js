@@ -55,7 +55,8 @@ class ServicePreview extends PreviewBase {
 
   setDefaultLocation = () => {
     const {serviceUser} = this.state
-    let location = serviceUser.location.client ? this.get_prop_address() || 'main' : serviceUser.location.alfred ? 'alfred' : serviceUser.location.visio ? 'visio' : null
+    let location = serviceUser.location.client ? this.get_prop_address() || 'main' :
+      serviceUser.location.alfred ? 'alfred' : serviceUser.location.visio ? 'visio' : serviceUser.location.elearning ? 'elearning': null
     this.setState({location: location})
   }
 

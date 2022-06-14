@@ -789,7 +789,6 @@ router.get('/current', passport.authenticate('jwt', {session: false}), (req, res
 // Send email with link for reset password
 router.post('/forgotPassword', (req, res) => {
   const email = (req.body.email || '').toLowerCase().trim()
-  const role = req.body.role
 
   User.findOne({email: new RegExp(`^${email}$`, 'i')})
     .populate('company')
@@ -804,7 +803,6 @@ router.post('/forgotPassword', (req, res) => {
           user.update({resetToken: token._id})
             .catch(err => console.error(err))
         })
-      // Role ? création d'un compte B2B
       sendResetPassword(user, token, req)
       return res.json(user)
     })

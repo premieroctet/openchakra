@@ -38,7 +38,7 @@ class PaymentBase {
 
   // Return toal prestations & CESU subtotal
   computeTravelTax = (serviceUser, location, totalPrestations, distance) => {
-    if (!distance || ['alfred', 'visio'].includes(location) || !totalPrestations || !serviceUser.travel_tax) {
+    if (!distance || ['alfred', 'visio', 'elearning'].includes(location) || !totalPrestations || !serviceUser.travel_tax) {
       return Promise.resolve(0)
     }
     const tt = serviceUser.travel_tax

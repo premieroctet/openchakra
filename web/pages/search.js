@@ -1,3 +1,4 @@
+const {isMarketplace} = require('../config/config')
 const withParams = require('../components/withParams')
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -101,7 +102,7 @@ isServiceSearch = () => {
   }
   // Simple search => services
   // Search on booking  => providers
-  if (this.getURLProps().booking_id) {
+  if (this.props.params.booking_id) {
     return false
   }
   return true
@@ -126,9 +127,9 @@ componentDidMount() {
 
   setAxiosAuthentication()
 
-  if (this.getURLProps().booking_id) {
+  if (url_props.booking_id) {
     setAxiosAuthentication()
-    axios.get(`/myAlfred/api/booking/${this.getURLProps().booking_id}`)
+    axios.get(`/myAlfred/api/booking/${url_props.booking_id}`)
       .then(res => {
         this.setState({gps: res.data.address.gps}, () => { this.search() })
       })
@@ -285,8 +286,8 @@ componentDidMount() {
     const url_props = this.props.params
     let filters = {}
 
-    if (this.getURLProps().booking_id) {
-      filters.booking_id=this.getURLProps().booking_id
+    if (url_props.booking_id) {
+      filters.booking_id=this.url_props.booking_id
     }
 
     else {
@@ -352,6 +353,8 @@ componentDidMount() {
 
   content = classes => {
     let results = this.state.filteredResuls
+    const url_props=this.props.params
+
     const {gps, scroll_count} = this.state
 
     const {width, selectedAddress} = this.props
@@ -445,7 +448,7 @@ componentDidMount() {
                         gps={gps}
                         user={this.state.user}
                         address={selectedAddress}
-                        booking_id={this.getURLProps().booking_id}
+                        booking_id={url_props.booking_id}
                       />
                     </Grid>
                     <Hidden only={['xl', 'lg', 'md', 'sm']} >

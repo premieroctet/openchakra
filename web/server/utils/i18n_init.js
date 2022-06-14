@@ -30,6 +30,7 @@ i18n
     },
     ns: ['custom', 'feurst'],
     defaultNS: 'custom',
+    fallbackNS: 'custom',
     react: {
       useSuspense: false,
     },

@@ -310,6 +310,15 @@ class View extends React.Component {
                   }
                   label={<React.Fragment><p>en visioconférence</p></React.Fragment>}
                 />
+                <FormControlLabel
+                  control={
+                    <Checkbox color="primary"
+                      checked={service.location?.elearning}
+                      value={service.location?.elearning} name="elearning"
+                      onChange={this.onChangeLocation}/>
+                  }
+                  label={<React.Fragment><p>en e-learning</p></React.Fragment>}
+                />
                 <Typography style={{fontSize: 20}}>Frais possibles</Typography>
                 <FormControlLabel
                   control={
