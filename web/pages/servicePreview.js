@@ -6,7 +6,6 @@ import {withStyles} from '@material-ui/core/styles'
 import styles from '../static/css/pages/userServicePreviewPage/userServicePreviewStyle'
 import {registerLocale} from 'react-datepicker'
 import fr from 'date-fns/locale/fr'
-import '../static/assets/css/custom.css'
 const moment = require('moment')
 
 moment.locale('fr')

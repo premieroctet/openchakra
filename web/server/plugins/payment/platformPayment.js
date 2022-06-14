@@ -24,7 +24,13 @@ class PlatformPayment extends PaymentBase {
         serviceUser.prestations
           .map(p => p.prestation.company_price*(prestations[p._id] || 0))) || 0
       const customer_fee=companyTotal-grandTotal
-      resolve([{amount: customer_fee, target:null}])
+      Commission.findOne({source: 'CUSTOMER'})
+        .then(commission => {
+          resolve([{amount: customer_fee, target: commission.target}])
+        })
+        .catch(err => {
+          reject(err)
+        })
     })
   }
 

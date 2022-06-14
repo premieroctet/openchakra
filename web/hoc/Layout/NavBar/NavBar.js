@@ -126,10 +126,13 @@ class NavBar extends Component {
 
   isLoggedUser = () => {
     const {user} = this.context
-    return !!user
+    const logged=!!user
+    console.log(`Logged:${logged}`)
+    return logged
   }
 
   componentDidMount() {
+    console.log(`Did mount`)
     let query = Router.query
     if (Router.pathname === '/') {
       this.setState({ifHomePage: true})
@@ -845,7 +848,7 @@ class NavBar extends Component {
 
   searchBarInput = classes => {
     const logged = this.isLoggedUser()
-    const {ifHomePage, user} = this.state
+    const {ifHomePage} = this.state
     const {excludeSearch} = this.props
 
     if (excludeSearch) {
@@ -1106,9 +1109,9 @@ class NavBar extends Component {
   };
 
   render() {
-    const {user, ifHomePage, setOpenLogin, modalMobileSearchBarInput, ifSearchPage, modalFilters, companyPage, setOpenRegister} = this.state
+    const {ifHomePage, setOpenLogin, modalMobileSearchBarInput, ifSearchPage, modalFilters, companyPage, setOpenRegister} = this.state
     const {classes} = this.props
-    const logged = user != null
+    const logged = this.isLoggedUser()
 
     const dialogLogin = () => {
       return(
