@@ -16,6 +16,12 @@ ServiceSchema.add({
     type: Number,
     required: true,
   },
+  video: {
+    type: String,
+  },
+  program: {
+    type: String,
+  },
   documents: [String],
   level: String,
   cpf: Boolean,
