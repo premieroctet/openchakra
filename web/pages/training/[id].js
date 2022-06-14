@@ -35,8 +35,9 @@ const Training = () => {
 
 
   const router = useRouter()
+  const [training, setTraining] = useState({})
   // const [trainingid, setTrainingid] = useState(router.query.id)
-  const [trainingid, setTrainingid] = useState('628392fe38657b67d6e5acc5')
+  const [trainingid, setTrainingid] = useState('62a8b03fdd7c9a7e4b17486d')
 
 
   // useEffect(() => {
@@ -48,9 +49,9 @@ const Training = () => {
   // }, [])
   
   useEffect(() => {
-    axios.get(`/myAlfred/api/serviceUser/cardPreview/${trainingid}`)
+    axios.get(`/myAlfred/api/service/${trainingid}`)
       .then(response => {
-        console.log(response)
+        setTraining(response.data)
       })
       .catch(error => { console.log(error) })
   }, [trainingid])
@@ -94,7 +95,7 @@ const Training = () => {
 
       <div className="container-lg">
         <RoundedBox3items>
-          <h2><span role={'img'} alt="">➟</span>Objectif de la formation</h2>
+          <h2><img width={20} height={16} src={`${AFTRAL_ICON_PATH}/arrow.svg`} alt=''/>Objectif de la formation</h2>
 
           <div>
 
@@ -121,12 +122,11 @@ const Training = () => {
         <BoxVideoAndDownload>
           <RoundedBox>
             <h2><span role={'img'} alt="">📹</span>Vidéo</h2>
-            {/* <video src='https://www.youtube.com/watch?v=dQw4w9WgXcQ'></video> */}
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+            <iframe width="560" height="315" src={training?.video} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
             </iframe>
           </RoundedBox>
           <RoundedBox>
-            <a href='#' className='download'>
+            <a href={training?.program} className='download'>
               <img width={100} height={100} src={`${AFTRAL_ICON_PATH}/download.svg`} alt=''/>
               <span>Télécharger</span>
               <span>le programme complet</span>
@@ -137,7 +137,7 @@ const Training = () => {
 
       <BookingButton>Réserver cette formation</BookingButton>
 
-      <Figures>
+      <Stats>
         <li>
           <span>14</span>
           <span>heures</span>
@@ -154,7 +154,15 @@ const Training = () => {
           <span>par le CPF</span>
         </li>
 
-      </Figures>
+      </Stats>
+
+      <div className='container-lg'>
+        <RoundedBox>
+          <h2><img width={16} height={16} src={`${AFTRAL_ICON_PATH}/valid.svg`} alt=''/>Validation du parcours</h2>
+
+        </RoundedBox>
+
+      </div>
     
     
     </StyledTraining>
@@ -175,7 +183,7 @@ const RoundedBox = styled.div`
   h2 {
     color: #111;
 
-    span {
+    img, span {
       color: var(--redaftral);
       font-size: 2rem;
       margin-inline: var(--spc-4) var(--spc-2);
@@ -256,10 +264,33 @@ const BookingButton = styled.button`
   padding: var(--spc-8) var(--spc-4);
 `
 
-const Figures = styled.ul`
+const Stats = styled.ul`
   background-color: white;
   display: grid;
   grid-template-columns: 1fr;
+  padding-block: var(--spc-8);
+  margin-bottom: var(--spc-8);
+
+  li {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  span:nth-child(1) {
+    color: var(--redaftral);
+    font-size: var(--text-4xl);
+    font-weight: var(--font-bold);
+  }
+  span:nth-child(2) {
+    font-size: var(--text-lg);
+    font-weight: var(--font-bold);
+    text-transform: uppercase;
+  }
+  span:nth-child(3) {
+    font-size: var(--text-lg);
+  }
 
   @media (${screen.md}) {
     grid-template-columns: 1fr 1fr 1fr;
@@ -276,10 +307,12 @@ const StyledTraining = styled.div`
    --spc-8: 2rem;
    --text-lg: 1.125rem;
    --text-xl: 1.25rem;
+   --text-4xl: 2.25rem;
    --redaftral: #a13849;
    --rounded-xl: 0.75rem;
    --rounded-2xl: 1rem;
    --rounded-3xl: 1.5rem;
+   --font-bold: 700;
    
   min-height: 100vh;
   background-color: var(--bg-color);
