@@ -53,6 +53,26 @@ const importFile = async fileName => {
         else {
           data.duration_days=parseInt(daysElt.text)
         }
+
+        const goalsInLi = soup
+          .findAll('section')
+          .find(e => e.attrs.class && e.attrs.class.includes('field-name-field-objectifs-de-la-formation'))
+          .findAll('li').map(e => e.text.trim())
+        const goalsInP = soup
+          .findAll('section')
+          .find(e => e.attrs.class && e.attrs.class.includes('field-name-field-objectifs-de-la-formation'))
+          .findAll('p').map(e => e.text.trim())
+        
+        data.goals= [...goalsInLi, ...goalsInP] || []
+
+        const moreInfo = soup.findAll('div').find(e => e.attrs.class && e.attrs.class.includes('group-ensavoirplus'))
+        if (moreInfo) {
+          moreInfo.findAll('div').find(e => e.attrs.class && e.attrs.class.includes('toggle-wrap')).extract()
+          const regexp = /<h3>[<>.\n\r\s\t\w\/]{1,}en.savoir.plus[<>.\n\r\s\t\w\/]{1,}<\/h3>/i
+          const sanitizedMoreInfo = moreInfo.prettify().replace(regexp, '')
+          data.more_info=sanitizedMoreInfo
+        }
+
         const docsTitle=soup.findAll('span').find(e => e.text=='Documents remis')
         if (docsTitle) {
           data.documents=docsTitle.nextSibling.find('ul').findAll().map(e => e.text)
@@ -61,11 +81,26 @@ const importFile = async fileName => {
           data.documents=[]
         }
 
+        const price = soup.findAll('div').find(p => p.attrs.class && p.attrs.class.includes('item-prix'))
+        if (price) {
+          const pattern = /[0-9]{1,}?,[0-9]{1,} /
+          // data.price= Number(price.text.match(pattern)[0].replace(',', '.'))
+        }
+
         const video = soup.findAll('iframe').find(v => v.attrs.id === 'youtube-field-player')
         data.video = video?.attrs.src || ''
       
         const program = soup.findAll('a').find(l => l.attrs.class === 'link-telecharger blank_link')
         data.program = program?.attrs.href || ''
+
+        const trainingValidation = soup
+          .findAll('section')
+          .find(p => p.attrs.class && p.attrs.class.includes('field-name-field-validation-commerciale'))
+          .findAll('span')
+          .find(p => p.attrs.class && p.attrs.class.includes('content-info'))
+        if (trainingValidation) {
+          data.validation = trainingValidation.text.trim()
+        }
 
         const cpfElt=soup.findAll('span').find(e => e.text=='CPF')
         data.cpf=cpfElt && cpfElt.nextSibling.text.trim()=='Éligible'

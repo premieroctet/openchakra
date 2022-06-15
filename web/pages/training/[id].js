@@ -3,8 +3,10 @@ import {useRouter} from 'next/router'
 import styled from 'styled-components'
 // import {client} from '../../utils/client'
 import axios from 'axios'
+import ReactHtmlParser from 'react-html-parser'
 import Layout from '../../hoc/Layout/Layout'
 import {screen} from '../../styles/screenWidths'
+import {getHostUrl} from '../../config/config'
 
 
 // const useIntersectionObserver = (ref, options) => {
@@ -31,64 +33,36 @@ import {screen} from '../../styles/screenWidths'
 const AFTRAL_ICON_PATH = '/static/assets/icon/aftral'
 
 
-const Training = () => {
-
-
-  const router = useRouter()
-  const [training, setTraining] = useState({})
-  // const [trainingid, setTrainingid] = useState(router.query.id)
-  const [trainingid, setTrainingid] = useState('62a8b03fdd7c9a7e4b17486d')
-
-
-  // useEffect(() => {
-  //   client({method: 'GET', path: `/training/${trainingid}`})
-  //     .then(response => {
-
-  //     })
-  //     .catch(error => { console.log(error) })
-  // }, [])
-  
-  useEffect(() => {
-    axios.get(`/myAlfred/api/service/${trainingid}`)
-      .then(response => {
-        setTraining(response.data)
-      })
-      .catch(error => { console.log(error) })
-  }, [trainingid])
+const Training = ({training}) => {
 
   return (<Layout>
     <StyledTraining>
-     
       
       <div className="container-xl">
         
         <div className='cover'>
 
           <img
-            src="https://source.unsplash.com/featured/600x100&q=30"
+            src={training.picture}
             alt='cover'
             width={600}
             height={200}
           />
 
-          {/* <div className='cover-desc'> */}
-
           <div className='cover-card'>
-            <h1>Formation AC transport Léger de marchandises</h1>
+            <h1>{training.label}</h1>
             <button type='button'>Acheter</button>
           </div>
-
             
           <dl className='training-ref'>
             <dt>Référence</dt>
-            <dd>{trainingid}</dd>
+            <dd>{training?.reference}</dd>
             <dt>Durée de la formation</dt>
-            <dd>2jours</dd>
-            <dt>Eligigle au <abbr title='compte personnel de formation'>CPF</abbr></dt>
+            <dd>{training?.duration_days} jours</dd>
+            <dt>&Eacute;ligigle au <abbr title='compte personnel de formation'>CPF</abbr></dt>
             <dd></dd>
           </dl>
             
-          {/* </div> */}
         </div>
 
       </div>
@@ -98,7 +72,7 @@ const Training = () => {
           <h2><img width={20} height={16} src={`${AFTRAL_ICON_PATH}/arrow.svg`} alt=''/>Objectif de la formation</h2>
 
           <div>
-
+            <p>{training?.goals}</p>
             <p>
               <img width={100} height={100} src={`${AFTRAL_ICON_PATH}/diplome.svg`} alt="diplôme" />
               Obtention de l’Attestation de capacité professionnelle en transport routier léger de marchandises.
@@ -121,7 +95,7 @@ const Training = () => {
 
         <BoxVideoAndDownload>
           <RoundedBox>
-            <h2><span role={'img'} alt="">📹</span>Vidéo</h2>
+            <h2><img width={25} height={14} src={`${AFTRAL_ICON_PATH}/video.svg`} alt=''/>Vidéo</h2>
             <iframe width="560" height="315" src={training?.video} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
             </iframe>
           </RoundedBox>
@@ -138,27 +112,35 @@ const Training = () => {
       <BookingButton>Réserver cette formation</BookingButton>
 
       <Stats>
-        <li>
-          <span>14</span>
-          <span>heures</span>
-          <span>de formation</span>
-        </li>
-        <li>
-          <span>790,80</span>
-          <span>euros</span>
-          <span>Tarif hors dispositif</span>
-        </li>
-        <li>
-          <span>100%</span>
-          <span>pris en charge</span>
-          <span>par le CPF</span>
-        </li>
-
+        <ul>
+          <li>
+            <span>{training?.duration_hours}</span>
+            <span>heures</span>
+            <span>de formation</span>
+          </li>
+          <li>
+            <span>{training?.price || 899}</span>
+            <span>euros</span>
+            <span>Tarif hors dispositif</span>
+          </li>
+          <li>
+            <span>100%</span>
+            <span>pris en charge</span>
+            <span>par le CPF</span>
+          </li>
+        </ul>
       </Stats>
 
       <div className='container-lg'>
         <RoundedBox>
-          <h2><img width={16} height={16} src={`${AFTRAL_ICON_PATH}/valid.svg`} alt=''/>Validation du parcours</h2>
+          <h2><img width={21} height={29} src={`${AFTRAL_ICON_PATH}/valid.svg`} alt=''/>Validation du parcours</h2>
+          <p>{ReactHtmlParser(training?.validation)}</p>
+
+        </RoundedBox>
+        <RoundedBox>
+          <h2><img width={25} height={25} src={`${AFTRAL_ICON_PATH}/more.svg`} alt=''/>En savoir plus</h2>
+
+          {ReactHtmlParser(training?.more_info)}
 
         </RoundedBox>
 
@@ -172,6 +154,18 @@ const Training = () => {
 }
 
 
+export async function getServerSideProps(context) {
+
+  const training = await axios.get(`${getHostUrl()}myAlfred/api/service/${context.query.id}`)
+    .then(response => {
+      return response.data
+    })
+    .catch(error => { console.log(error) })
+
+  return {props: {training}}
+}
+
+
 const RoundedBox = styled.div`
   padding: 1rem;
   min-height: 20rem;
@@ -182,6 +176,9 @@ const RoundedBox = styled.div`
 
   h2 {
     color: #111;
+    display: flex;
+    align-items: center;
+    margin-left: var(--spc-4);
 
     img, span {
       color: var(--redaftral);
@@ -189,6 +186,27 @@ const RoundedBox = styled.div`
       margin-inline: var(--spc-4) var(--spc-2);
     } 
   }
+
+
+  /* Format scrapped data from Astral */
+  h3, .field-label.title {
+    display: block;
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--redaftral);
+    margin-block: var(--spc-4);
+  }
+
+  .group-ensavoirplus {
+    padding: var(--spc-2) var(--spc-8) var(--spc-8);
+
+    ul {
+      padding: 0;
+      list-style: none;
+    }
+  }
+
+
 `
 
 const RoundedBox3items = styled(RoundedBox)`
@@ -225,6 +243,11 @@ const BoxVideoAndDownload = styled.div`
   grid-template-columns: 1fr;
   column-gap: var(--spc-8);
 
+  iframe {
+    width: 100%;
+    padding: var(--spc-2) var(--spc-8);
+  }
+
   .download {
     display: flex;
     height: 100%;
@@ -252,24 +275,43 @@ const BoxVideoAndDownload = styled.div`
 const BookingButton = styled.button`
   color: white;
   background-color: var(--redaftral);
-  font-size: 2rem;
+  font-size: 1.5rem;
   display: block;
   position: sticky;
   bottom: 1rem;
   cursor: pointer;
-  width: min(calc(100vw - 2rem), 75rem);
+  width: min(calc(100vw - 2rem), 40rem);
   margin-inline: auto;
   border-radius: 3rem;
   border: 0;
   padding: var(--spc-8) var(--spc-4);
 `
 
-const Stats = styled.ul`
+const Stats = styled.div`
   background-color: white;
-  display: grid;
-  grid-template-columns: 1fr;
-  padding-block: var(--spc-8);
+  
   margin-bottom: var(--spc-8);
+  
+  ul {
+    padding: var(--spc-8);
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: var(--spc-4);
+    width: min(calc(100vw - 2rem), 65rem);
+    margin-inline: auto;
+
+    @media (${screen.md}) {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    li:nth-of-type(1) {
+      justify-self: flex-start;
+    }
+    
+    li:nth-of-type(3) {
+      justify-self: flex-end;
+    }
+  }
 
   li {
     display: flex;
@@ -292,9 +334,7 @@ const Stats = styled.ul`
     font-size: var(--text-lg);
   }
 
-  @media (${screen.md}) {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
+  
 `
 
 const StyledTraining = styled.div`
@@ -336,12 +376,10 @@ const StyledTraining = styled.div`
     margin-bottom: var(--spc-8);
 
     img {
-      /* grid-area: img; */
       width: 100%;
       height: auto;
       object-position: 50% 30%;
       aspect-ratio: 9 / 3;
-      /* max-height: 300px; */
       object-fit: cover;
       grid-column: 1 / -1;
       grid-row: 1 / -1;
@@ -351,14 +389,12 @@ const StyledTraining = styled.div`
   
 
   .cover-card {
-    /* grid-area: card; */
     display: flex;
     flex-direction: column;
     justify-content: center;
     row-gap: var(--spc-4);
     margin-top: var(--spc-4);
     background-color: var(--bg-card-color);
-    /* width: min(calc(100% - 2rem), 20rem); */
     min-width: 20rem;
     aspect-ratio: 3/2;
     border: 1px solid #fff;
@@ -385,6 +421,7 @@ const StyledTraining = styled.div`
       padding-block: 0.5rem;
       padding-inline: 2.5rem;
       border-radius: var(--rounded-xl);
+      margin-bottom: var(--spc-2);
     }
   }
   
@@ -392,6 +429,7 @@ const StyledTraining = styled.div`
     display: flex;
     justify-content: space-between;
     column-gap: var(--spc-2);
+    row-gap: var(--spc-2);
     flex-wrap: wrap;
     background-color: #fff;
     height: min-content;

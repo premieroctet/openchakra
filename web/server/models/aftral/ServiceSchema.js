@@ -16,15 +16,18 @@ ServiceSchema.add({
     type: Number,
     required: true,
   },
-  video: {
-    type: String,
-  },
+  goals: [String],
   program: {
     type: String,
   },
+  more_info: String,
   documents: [String],
   level: String,
   cpf: Boolean,
+  validation: String,
+  video: {
+    type: String,
+  },
 })
 
 ServiceSchema.plugin(mongooseLeanVirtuals)
