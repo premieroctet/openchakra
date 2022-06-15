@@ -145,7 +145,7 @@ class DrawerBooking extends React.Component {
                 <CancelIcon classes={{root: classes.cancelButton}}/>
               </Grid>
               <Grid>
-                { warnings.map(w => <Typography>{w}</Typography>)}
+                { warnings.map(w => <Typography>{ReactHtmlParser(w)}</Typography>)}
               </Grid>
             </Grid>
         }
