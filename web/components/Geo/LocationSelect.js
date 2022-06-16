@@ -2,8 +2,9 @@ import {Grid} from '@material-ui/core'
 import {useDebouncedCallback} from 'use-debounce'
 import Autocomplete from 'react-autocomplete'
 import React, {useState} from 'react'
+import axios from 'axios'
 
-import {getLocationSuggestions} from '../../utils/functions'
+import {setAxiosAuthentication} from '../../utils/authentication'
 
 const LocationSelect = props => {
 
@@ -11,9 +12,11 @@ const LocationSelect = props => {
   const [items, setItems] = useState([])
 
   const getSuggestions = query => {
-    getLocationSuggestions(query, props.type)
+    setAxiosAuthentication()
+
+    axios.get('/myAlfred/api/users/locations', {params: {value: query, type: props.type}})
       .then(res => {
-        setItems(res)
+        setItems(res.data)
       })
       .catch(err => {
         console.error(err)
