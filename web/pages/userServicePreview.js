@@ -80,7 +80,6 @@ class UserServicesPreview extends React.Component {
       allAddresses: [],
       pending: false,
       avocotes: null,
-      all_avocotes: [],
     }
     this.checkBook = this.checkBook.bind(this)
     this.hasWarningPerimeter = this.hasWarningPerimeter.bind(this)
@@ -110,14 +109,6 @@ class UserServicesPreview extends React.Component {
       bookingObj = null
       localStorage.removeItem('bookingObj')
     }
-
-    axios.get('/myAlfred/api/booking/avocotes')
-      .then(res => {
-        this.setState({all_avocotes: res.data})
-      })
-      .catch(err => {
-        console.error(err)
-      })
 
     axios.get(`/myAlfred/api/serviceUser/${id}`)
       .then(res => {
@@ -355,24 +346,6 @@ class UserServicesPreview extends React.Component {
       return
     }
     this.onChange({target: {name: 'location', value: checked ? id : null}})
-  }
-
-  onQtyChanged = (state, id) => () => {
-    let value = this.state.count[id]
-    if (!value) {
-      value = null
-    }
-    value = parseInt(value)
-    value = !isNaN(value) && value >= 0 ? value : null
-    let count = this.state.count
-    if(state=== 'add') {
-      count[id] = value + 1
-
-    }
-    else{
-      count[id] = Math.max(0, value - 1)
-    }
-    this.setState({count: count}, () => this.computeTotal())
   }
 
   isServiceAtHome = () => {
@@ -734,11 +707,7 @@ class UserServicesPreview extends React.Component {
                           pricedPrestations={pricedPrestations}
                           toggleDrawer={this.toggleDrawer}
                           isInPerimeter={this.isInPerimeter}
-                          onQtyChanged={this.onQtyChanged}
-                          onLocationChanged={this.onLocationChanged}
                           travelTax={this.state.travel_tax}
-                          getLocationLabel={this.getLocationLabel}
-                          onAvocotesChanged={this.onAvocotesChanged}
                           warnings={warnings}
                           clientAddress={this.getClientAddressLabel()}
                           clientAddressId={this.get_prop_address()}
@@ -756,7 +725,6 @@ class UserServicesPreview extends React.Component {
                   <DrawerBooking
                     serviceUser={serviceUser._id}
                     errors={this.state.errors}
-                    count={this.state.count}
                     all_avocotes={this.state.all_avocotes}
                     filters={filters}
                     pricedPrestations={pricedPrestations}
@@ -765,8 +733,6 @@ class UserServicesPreview extends React.Component {
                     isInPerimeter={this.isInPerimeter}
                     onLocationChanged={this.onLocationChanged}
                     travelTax={this.state.travel_tax}
-                    getLocationLabel={this.getLocationLabel}
-                    onAvocotesChanged={this.onAvocotesChanged}
                     warnings={warnings}
                     clientAddress={this.getClientAddressLabel()}
                     clientAddressId={this.get_prop_address()}
@@ -826,7 +792,6 @@ class UserServicesPreview extends React.Component {
           <meta property="og:type" content="website"/>
           <meta property="og:url" content="https://my-alfred.io"/>
         </Head>
-        <DevLog>{JSON.stringify(this.state.serviceUser?.service?.location)}</DevLog>
         <Hidden only={['xs']} implementation={'css'} className={classes.hidden}>
           <Layout user={user} selectedAddress={address}>
             {this.content(classes)}

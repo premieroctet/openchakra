@@ -20,9 +20,10 @@ import AddIcon from '@material-ui/icons/Add'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import withStyles from '@material-ui/core/styles/withStyles'
+import {computeDistanceKm} from '../../../utils/functions'
+import {snackBarError} from '../../../utils/notifications'
 import {setAxiosAuthentication} from '../../../utils/authentication'
 import {is_development} from '../../../config/config'
-import DevLog from '../../DevLog'
 import styles from '../../../static/css/components/DrawerBooking/DrawerBooking'
 import BookingDetail from '../../BookingDetail/BookingDetail'
 import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch'
@@ -45,27 +46,148 @@ class DrawerBooking extends React.Component {
       count: {},
       booking_date: null,
       booking_location: null,
+      all_avocotes: [],
+      avocotes: null,
       expanded: false,
+      locations: {},
     }
   }
 
   componentDidMount = () => {
     const {serviceUser}=this.props
     setAxiosAuthentication()
+    axios.get('/myAlfred/api/users/current')
+      .then(res => {
+        this.setState({user: res.data})
+      })
     axios.get(`/myAlfred/api/serviceUser/${serviceUser}`)
       .then(res => {
         this.setState({serviceUser: res.data})
       })
-  }
-
-  onChangeTime = dt => {
-    this.setState({booking_date: dt})
+    axios.get('/myAlfred/api/booking/avocotes')
+      .then(res => {
+        this.setState({all_avocotes: res.data})
+      })
+      .catch(err => {
+        console.error(err)
+      })
+    setInterval(this.updateAvailableLocations, 500)
   }
 
   onChangeDate = dt => {
     this.setState({booking_date: dt})
   }
 
+  onQtyChanged = (prestation_id, delta) => () => {
+    const {count}=this.state
+    count[prestation_id] = Math.max(0, (count[prestation_id] || 0) + delta)
+    this.setState({count: count}, () => this.computeTotal())
+  }
+
+  onLocationChanged = (id, checked) => {
+    if (checked) {
+      this.setState({location: id})
+    }
+  }
+
+  onAvocotesChanged = event => {
+    const {name, value}=event.target
+    const {all_avocotes, serviceUser}=this.state
+    const avocotes_booking=all_avocotes.find(a => a._id==value)
+    if (!avocotes_booking) {
+      return snackBarError(ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.snackbar_no_booking')))
+    }
+    const suPrestaNames=serviceUser.prestations.map(p => p.prestation.label)
+    const avocotesPrestaNames=avocotes_booking.prestations.map(p => p.name)
+    const diff=lodash.difference(avocotesPrestaNames, suPrestaNames)
+    if (diff.length>0) {
+      return snackBarError(ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.snackbar_error_avc')) + diff.join(','))
+    }
+    let count={}
+    avocotes_booking.prestations.forEach(p => {
+      const presta = serviceUser.prestations.find(pr => pr.prestation.label == p.name)
+      count[presta._id]=p.value
+    })
+    const allAddresses={'main': avocotes_booking.address}
+    this.setState({[name]: value, count: count, allAddresses: allAddresses, location: 'main'}, () => this.computeTotal())
+  }
+
+  computeDistance = () => {
+    const {location, serviceUser, user}=this.state
+    if (location!='main') {
+      return 0
+    }
+    const serviceGps = serviceUser.service_address.gps
+    const avocotes_booking=this.getAvocotesBooking()
+    const clientGps=avocotes_booking && avocotes_booking.address.gps || user.billing_address.gps
+    const distance=computeDistanceKm(serviceGps, clientGps)
+    return distance
+  }
+
+  getAvocotesBooking = () => {
+    const {avocotes, all_avocotes}=this.state
+    const res=all_avocotes.find(a => a._id.toString()==avocotes) || null
+    return res
+  }
+
+  updateAvailableLocations = () => {
+    const {serviceUser, user}=this.state
+    if (!serviceUser || !user) { return }
+    const locations={}
+    if (serviceUser.location.client) {
+      const avocotes_booking=this.getAvocotesBooking()
+      if (avocotes_booking) {
+        locations.main=`Chez ${avocotes_booking.user.full_name}`
+      }
+      else {
+        locations.main=`A mon adresse principale`
+      }
+    }
+    if (serviceUser.location.alfred) {
+      locations.alfred=`Chez ${serviceUser.user.firstname}`
+    }
+    if (serviceUser.location.visio) {
+      locations.visio=`En visio`
+    }
+    if (serviceUser.location.elearning) {
+      locations.alfred=`En e-learning`
+    }
+    this.setState({locations: locations})
+  }
+
+  computeTotal = () => {
+
+    const {count, serviceUser, location}=this.state
+
+    const avocotes_amount = this.getAvocotesBooking()?.amount || null
+
+    setAxiosAuthentication()
+    axios.post('/myAlfred/api/booking/compute', {
+      prestations: count,
+      serviceUser: serviceUser._id,
+      distance: this.computeDistance(),
+      location: location,
+      avocotes_amount: avocotes_amount,
+    })
+      .then(res => {
+        this.setState({
+          total: res.data.total,
+          totalPrestations: res.data.total_prestations,
+          customer_fees: res.data.customer_fees,
+          provider_fees: res.data.provider_fees,
+          customer_fee: res.data.customer_fee,
+          provider_fee: res.data.provider_fee,
+          travel_tax: res.data.travel_tax,
+          pick_tax: res.data.pick_tax,
+          cesu_total: res.data.total_cesu,
+        },
+        this.checkBook)
+      })
+      .catch(err => {
+        console.error(err)
+        snackBarError(err.response)
+      })
+  }
 
   handleChange = panel => (event, isExpanded) => {
     this.setState({expanded: isExpanded ? panel : false})
@@ -105,15 +227,15 @@ class DrawerBooking extends React.Component {
         <Grid item xl={6} lg={6} md={6} sm={6} xs={6} style={{display: 'flex', flexDirection: 'row-reverse'}}>
           <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
             <Grid>
-              <IconButton onClick={this.props.onQtyChanged('remove', p._id)}>
+              <IconButton onClick={this.onQtyChanged(p._id, -1)}>
                 <RemoveIcon/>
               </IconButton>
             </Grid>
             <Grid style={{marginLeft: '4%', marginRight: '4%'}}>
-              <Typography>{this.props.count[p._id] ? this.props.count[p._id] : 0}</Typography>
+              <Typography>{this.state.count[p._id] || 0}</Typography>
             </Grid>
             <Grid>
-              <IconButton onClick={this.props.onQtyChanged('add', p._id)}>
+              <IconButton onClick={this.onQtyChanged(p._id, 1)}>
                 <AddIcon/>
               </IconButton>
             </Grid>
@@ -159,10 +281,10 @@ class DrawerBooking extends React.Component {
 
     const {expanded} = this.state
     const {warnings, side, classes, errors,
-      count, isChecked, location, pick_tax, total, customer_fee,
+      count, isChecked, pick_tax, total, customer_fee,
       cesu_total, filters, pricedPrestations, excludedDays, role, company_amount,
-      avocotes, all_avocotes, alfred_pro} = this.props
-    const {serviceUser, booking_date}=this.state
+      avocotes, alfred_pro} = this.props
+    const {serviceUser, all_avocotes, booking_date, locations, location}=this.state
 
     const excludedTimes = this.getExcludedTimes()
 
@@ -233,7 +355,7 @@ class DrawerBooking extends React.Component {
                           return (
                             <DatePicker
                               selected={booking_date}
-                              onChange={this.onChangeTime}
+                              onChange={this.onChangeDate}
                               showTimeSelect
                               showTimeSelectOnly
                               timeIntervals={30}
@@ -297,46 +419,20 @@ class DrawerBooking extends React.Component {
                   <Typography style={{color: '#505050'}}>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.presta_place'))}</Typography>
                 </AccordionSummary>
                 <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
-                  { serviceUser.service.location.client && this.props.isInPerimeter() &&
-                    <Grid>
-                      <ButtonSwitch
-                        key={moment()}
-                        id={this.props.clientAddressId}
-                        label={this.props.clientAddress}
-                        isEditable={false}
-                        isPrice={false}
-                        isOption={false}
-                        checked={['main', this.props.clientAddressId].includes(location)}
-                        onChange={this.props.onLocationChanged}/>
-                    </Grid>
-                  }
                   {
-                    serviceUser.service.location.alfred && serviceUser?.user.firstname &&
+                    Object.entries(locations).map(([key, label]) => (
                       <Grid>
                         <ButtonSwitch
                           key={moment()}
-                          id='alfred'
-                          label={`Chez ${ serviceUser.user.firstname}`}
+                          id={key}
+                          label={label}
                           isEditable={false}
                           isPrice={false}
                           isOption={false}
-                          checked={location === 'alfred'}
-                          onChange={this.props.onLocationChanged}/>
+                          checked={location==key}
+                          onChange={this.onLocationChanged}/>
                       </Grid>
-                  }
-                  {
-                    serviceUser.service.location.visio &&
-                      <Grid>
-                        <ButtonSwitch
-                          key={moment()}
-                          id='visio'
-                          label={'En visio'}
-                          isEditable={false}
-                          isPrice={false}
-                          isOption={false}
-                          checked={location === 'visio'}
-                          onChange={this.props.onLocationChanged}/>
-                      </Grid>
+                    ))
                   }
                   <Grid>
                     <em className={classes.cancelButton}>{errors.location}</em>
@@ -397,7 +493,7 @@ class DrawerBooking extends React.Component {
                 <AccordionDetails style={{display: 'flex', flexDirection: 'column'}}>
                   <Grid style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20}}>
                     <Grid >
-                      <Typography>{this.props.getLocationLabel()}</Typography>
+                      <Typography>{locations[location]}</Typography>
                     </Grid>
                     <Grid style={{display: 'flex', alignItems: 'center'}}>
                       <Typography>{booking_date ? `Le ${moment(booking_date).format('DD/MM/YYYY')} à ${moment(booking_date).format('HH:mm')}`: ''}</Typography>
@@ -424,7 +520,7 @@ class DrawerBooking extends React.Component {
               { all_avocotes.length>0 &&
               <Grid style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between', marginBottom: 20}}>
                 <Typography>{ReactHtmlParser(this.props.t('DRAWER_BOOKING.resa_avc'))}</Typography>
-                <Select value={avocotes} name='avocotes' multi={false} onChange={this.props.onAvocotesChanged}>
+                <Select value={avocotes} name='avocotes' multi={false} onChange={this.onAvocotesChanged}>
                   {all_avocotes.map(avocotes =>
                     <MenuItem value={avocotes._id}>{`${avocotes.user.full_name} pour ${avocotes.prestations.map(p => p.name).join(',')}`}</MenuItem>,
                   )}
