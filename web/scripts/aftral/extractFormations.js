@@ -58,13 +58,29 @@ const importFile = async fileName => {
           .findAll('section')
           .find(e => e.attrs.class && e.attrs.class.includes('field-name-field-objectifs-de-la-formation'))
           .findAll('li').map(e => e.text.trim())
-        const goalsInP = soup
+        const goalsInUL = soup
           .findAll('section')
           .find(e => e.attrs.class && e.attrs.class.includes('field-name-field-objectifs-de-la-formation'))
-          .findAll('p').map(e => e.text.trim())
-        
-        data.goals= [...goalsInLi, ...goalsInP] || []
+          .findAll('ul').map(e => e.text.trim())
 
+        data.goals= Array.from(new Set(goalsInUL, goalsInLi)) || []
+
+
+        // const primaryGoals = goalsInLi ? goalsInLi.filter(a => a.includes(goalsInUL)) : goalsInUL
+        // const secondaryGoals = goalsInLi.filter(a => !a.includes(goalsInUL))
+
+        // data.goals= [...primaryGoals, ...secondaryGoals] || []
+
+        // const goalsContainer = soup
+        //   .findAll('section')
+        //   .find(e => e.attrs.class && e.attrs.class.includes('field-name-field-objectifs-de-la-formation'))
+          
+        // if (goalsContainer) {
+        //   const regexp = /Objectifs de la formation/i
+        //   const sanitizedGoals = goalsContainer.prettify().replace(regexp, '')
+        //   data.goals=sanitizedGoals
+        // }
+        
         const moreInfo = soup.findAll('div').find(e => e.attrs.class && e.attrs.class.includes('group-ensavoirplus'))
         if (moreInfo) {
           moreInfo.findAll('div').find(e => e.attrs.class && e.attrs.class.includes('toggle-wrap')).extract()

@@ -72,10 +72,9 @@ const Training = ({training}) => {
           <h2><img width={20} height={16} src={`${AFTRAL_ICON_PATH}/arrow.svg`} alt=''/>Objectif de la formation</h2>
 
           <div>
-            <p>{training?.goals}</p>
             <p>
               <img width={100} height={100} src={`${AFTRAL_ICON_PATH}/diplome.svg`} alt="diplôme" />
-              Obtention de l’Attestation de capacité professionnelle en transport routier léger de marchandises.
+              {training?.goals[0]}
             </p>
            
             <p>
@@ -134,7 +133,7 @@ const Training = ({training}) => {
       <div className='container-lg'>
         <RoundedBox>
           <h2><img width={21} height={29} src={`${AFTRAL_ICON_PATH}/valid.svg`} alt=''/>Validation du parcours</h2>
-          <p>{ReactHtmlParser(training?.validation)}</p>
+          <p className='validation'>{ReactHtmlParser(training?.validation)}</p>
 
         </RoundedBox>
         <RoundedBox>
@@ -168,7 +167,6 @@ export async function getServerSideProps(context) {
 
 const RoundedBox = styled.div`
   padding: 1rem;
-  min-height: 20rem;
   background-color: white;
   border-radius: 2.5rem;
   border: 1px solid lightgray;
@@ -197,7 +195,7 @@ const RoundedBox = styled.div`
     margin-block: var(--spc-4);
   }
 
-  .group-ensavoirplus {
+  .group-ensavoirplus, .validation {
     padding: var(--spc-2) var(--spc-8) var(--spc-8);
 
     ul {
