@@ -93,13 +93,18 @@ const importFile = async fileName => {
         const program = soup.findAll('a').find(l => l.attrs.class === 'link-telecharger blank_link')
         data.program = program?.attrs.href || ''
 
-        const trainingValidation = soup
+        const trainingValidationZone = soup
           .findAll('section')
           .find(p => p.attrs.class && p.attrs.class.includes('field-name-field-validation-commerciale'))
-          .findAll('span')
-          .find(p => p.attrs.class && p.attrs.class.includes('content-info'))
-        if (trainingValidation) {
-          data.validation = trainingValidation.text.trim()
+
+        if (trainingValidationZone) {
+          const trainingValidation = trainingValidationZone
+            .findAll('span')
+            .find(p => p.attrs.class && p.attrs.class.includes('content-info'))
+          
+          if (trainingValidation) {
+            data.validation = trainingValidation.text.trim()
+          }
         }
 
         const cpfElt=soup.findAll('span').find(e => e.text=='CPF')
