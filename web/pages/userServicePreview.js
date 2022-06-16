@@ -66,8 +66,6 @@ class UserServicesPreview extends React.Component {
       cesu_total: 0,
       total: 0,
       location: null,
-      date: null,
-      time: null,
       skills: {
         careful: 0,
         punctual: 0,
