@@ -48,6 +48,7 @@ const router = express.Router()
 const Order = require('../../models/Order')
 const {validateOrder, validateOrderItem}=require('../../validation/order')
 const {ORDER, CREATE, UPDATE, VIEW, DELETE}=require('../../../utils/consts')
+const feurstfr=require('../../../translations/fr/feurst')
 moment.locale('fr')
 
 const DATA_TYPE=ORDER
@@ -75,7 +76,7 @@ router.get('/:order_id/addresses', passport.authenticate('jwt', {session: false}
 // @Access private
 router.get('/template', passport.authenticate('jwt', {session: false}), (req, res) => {
   const data = [
-    ['Référence', 'Quantité'],
+    ['Référence', 'Qté'],
     ['AAAXXXZ', 6],
   ]
   let buffer = xlsx.build([{data: data}])
@@ -170,7 +171,8 @@ router.put('/:id/handle', passport.authenticate('jwt', {session: false}), (req, 
   const order_id=req.params.id
   MODEL.findByIdAndUpdate(order_id, {handled_date: moment(), handle_status: total ? HANDLED: PARTIALLY_HANDLED}, {new: true})
     .then(result => {
-      const msg=`La commande a été ${total ? 'totalement' : 'partiellement'} traitée`
+      // const t=i18n.default.getFixedT(null, 'feurst')
+      const msg=feurstfr[total ? 'EDI.ORDER_HANDLED_2_CUSTOMER': 'EDI.ORDER_PARTIALLY_HANDLED_2_CUSTOMER']
       sendDataNotification(req.user, result, msg)
       return res.json(result)
     })
@@ -349,7 +351,9 @@ router.post('/:order_id/convert', passport.authenticate('jwt', {session: false})
       return Order.findByIdAndRemove(order_id)
     })
     .then(order => {
-      sendDataNotification(req.user, order, 'La commande a été convertie en devis')
+      // const t=i18n.default.getFixedT(null, 'feurst')
+      const msg=feurst['EDI.ORDER_CONVERTED_2_FEURST']
+      sendDataNotification(req.user, order, msg)
       return res.json(quotation)
     })
     .catch(err => {
@@ -476,7 +480,8 @@ router.post('/:order_id/validate', passport.authenticate('jwt', {session: false}
       return updateStock(data)
     })
     .then(() => {
-      const msg='La commande a été validée, vous pouvez la traiter'
+      // const t=i18n.default.getFixedT(null, 'feurst')
+      const msg=feurstfr['EDI.ORDER_VALID_2_FEURST']
       sendDataNotification(req.user, order, msg)
       return res.json()
     })

@@ -167,7 +167,7 @@ const lineItemsImport = (model, buffer, options) => {
   // db field => import field
   const mapping={
     'reference': 'Référence',
-    'quantity': 'Quantité',
+    'quantity': 'Qté',
   }
 
   return new Promise((resolve, reject) => {

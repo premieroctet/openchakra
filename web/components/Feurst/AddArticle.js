@@ -13,7 +13,7 @@ import CheckingProduct from './CheckingProduct'
 
 const AddArticle = ({endpoint, orderid, updateTable, addProduct, wordingSection}) => {
 
-  
+
   const [article, setArticle] = useState({
     item: null,
     info: null,
@@ -63,7 +63,7 @@ const AddArticle = ({endpoint, orderid, updateTable, addProduct, wordingSection}
   })
 
   useEffect(() => {
-    if (debouncedQuery && searchTerm.length > 0) {
+    if (debouncedQuery && searchTerm.replace(/\s/g, '').length >= 3) {
       run(client(`${API_PATH}/products?pattern=${searchTerm}`))
         .catch(e => {
           console.error(`Can't fetch data in autocomplete`, e)
@@ -111,7 +111,7 @@ const AddArticle = ({endpoint, orderid, updateTable, addProduct, wordingSection}
             >
               <span role="img">&#9661;</span>
             </button> : null}
-            
+
             <button
               type="button"
               disabled={disabled}
@@ -124,10 +124,10 @@ const AddArticle = ({endpoint, orderid, updateTable, addProduct, wordingSection}
               <span role="img">✕</span>
             </button>
 
-            
+
           </div>
 
-        
+
           <ul
             {...getMenuProps()}
           >
