@@ -111,6 +111,7 @@ const USER_ACTIONS={
     [VIEW, CREATE, UPDATE, DELETE].map(action => createUserAction(PRODUCT, action, {visibility: ALL})),
     [VIEW, CREATE, UPDATE, DELETE].map(action => createUserAction(PRICELIST, action, {visibility: ALL})),
     createUserAction(COMPANY, VIEW, {visibility: ALL}),
+    createUserAction(COMPANY, UPDATE, {visibility: ALL}),
   ]),
   [FEURST_ADV]: lodash.flattenDeep([
     createUserAction(ACCOUNT, UPDATE),
