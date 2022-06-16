@@ -76,7 +76,7 @@ router.get('/:order_id/addresses', passport.authenticate('jwt', {session: false}
 // @Access private
 router.get('/template', passport.authenticate('jwt', {session: false}), (req, res) => {
   const data = [
-    ['Référence', 'Quantité'],
+    ['Référence', 'Qté'],
     ['AAAXXXZ', 6],
   ]
   let buffer = xlsx.build([{data: data}])
