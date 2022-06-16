@@ -1,3 +1,4 @@
+import axios from 'axios'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -19,6 +20,8 @@ import AddIcon from '@material-ui/icons/Add'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import withStyles from '@material-ui/core/styles/withStyles'
+import {setAxiosAuthentication} from '../../../utils/authentication'
+import {is_development} from '../../../config/config'
 import DevLog from '../../DevLog'
 import styles from '../../../static/css/components/DrawerBooking/DrawerBooking'
 import BookingDetail from '../../BookingDetail/BookingDetail'
@@ -37,9 +40,32 @@ class DrawerBooking extends React.Component {
   constructor(props) {
     super(props)
     this.state={
+      user: null,
+      serviceUser: null,
+      count: {},
+      booking_date: null,
+      booking_location: null,
       expanded: false,
     }
   }
+
+  componentDidMount = () => {
+    const {serviceUser}=this.props
+    setAxiosAuthentication()
+    axios.get(`/myAlfred/api/serviceUser/${serviceUser}`)
+      .then(res => {
+        this.setState({serviceUser: res.data})
+      })
+  }
+
+  onChangeTime = dt => {
+    this.setState({booking_date: dt})
+  }
+
+  onChangeDate = dt => {
+    this.setState({booking_date: dt})
+  }
+
 
   handleChange = panel => (event, isExpanded) => {
     this.setState({expanded: isExpanded ? panel : false})
@@ -115,6 +141,9 @@ class DrawerBooking extends React.Component {
   }
 
   getExcludedTimes = () => {
+    if (is_development()) {
+      return []
+    }
     let currMoment=moment(this.props.date || new Date()).set({hour: 0, minute: 0})
     let exclude=[]
     while (currMoment.hour()!=23 || currMoment.minute()!=30) {
@@ -129,12 +158,17 @@ class DrawerBooking extends React.Component {
   render() {
 
     const {expanded} = this.state
-    const {warnings, side, classes, date, time, errors,
-      count, serviceUser, isChecked, location, pick_tax, total, customer_fee,
+    const {warnings, side, classes, errors,
+      count, isChecked, location, pick_tax, total, customer_fee,
       cesu_total, filters, pricedPrestations, excludedDays, role, company_amount,
       avocotes, all_avocotes, alfred_pro} = this.props
+    const {serviceUser, booking_date}=this.state
 
     const excludedTimes = this.getExcludedTimes()
+
+    if (!serviceUser) {
+      return null
+    }
 
     const res = (
       <Grid>
@@ -173,9 +207,9 @@ class DrawerBooking extends React.Component {
                         inputComponent: () => {
                           return (
                             <DatePicker
-                              selected={date}
+                              selected={booking_date}
                               dateFormat='dd/MM/yyyy'
-                              onChange={this.props.onChangeDate}
+                              onChange={this.onChangeDate}
                               placeholderText='Date'
                               locale='fr'
                               minDate={new Date()}
@@ -198,8 +232,8 @@ class DrawerBooking extends React.Component {
                         inputComponent: () => {
                           return (
                             <DatePicker
-                              selected={time}
-                              onChange={this.props.onChangeTime}
+                              selected={booking_date}
+                              onChange={this.onChangeTime}
                               showTimeSelect
                               showTimeSelectOnly
                               timeIntervals={30}
@@ -366,7 +400,7 @@ class DrawerBooking extends React.Component {
                       <Typography>{this.props.getLocationLabel()}</Typography>
                     </Grid>
                     <Grid style={{display: 'flex', alignItems: 'center'}}>
-                      <Typography>Le {date ? moment(date).format('DD/MM/YYYY') : ''} à {time ? moment(time).format('HH:mm') : ''}</Typography>
+                      <Typography>{booking_date ? `Le ${moment(booking_date).format('DD/MM/YYYY')} à ${moment(booking_date).format('HH:mm')}`: ''}</Typography>
                     </Grid>
                   </Grid>
                   <Grid style={{display: 'flex', flexDirection: 'column'}}>

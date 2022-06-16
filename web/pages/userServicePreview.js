@@ -341,14 +341,6 @@ class UserServicesPreview extends React.Component {
     this.setState({...this.state, [side]: open})
   }
 
-  onChangeTime = tm => {
-    this.onChange({target: {name: 'time', value: tm}})
-  }
-
-  onChangeDate = dt => {
-    this.onChange({target: {name: 'date', value: dt}})
-  }
-
   onChange = event => {
     const {name, value} = event.target
     let st={[name]: value}
@@ -737,12 +729,12 @@ class UserServicesPreview extends React.Component {
                     <Drawer anchor="bottom" open={this.state.bottom} onClose={this.toggleDrawer('bottom', false)} classes={{root: 'custompreviewdrawer'}}>
                       <Grid className={classes.drawerContent}>
                         <DrawerBooking
+                          serviceUser={serviceUser._id}
+                          errors={this.state.errors}
                           side={'bottom'}
                           filters={filters}
                           pricedPrestations={pricedPrestations}
                           toggleDrawer={this.toggleDrawer}
-                          onChangeDate={this.onChangeDate}
-                          onChangeTime={this.onChangeTime}
                           isInPerimeter={this.isInPerimeter}
                           onQtyChanged={this.onQtyChanged}
                           onLocationChanged={this.onLocationChanged}
@@ -764,11 +756,13 @@ class UserServicesPreview extends React.Component {
               <Grid className={classes.contentRightContainer} item xl={6} lg={6} md={12} sm={12} xs={12}>
                 <Grid className={classes.contentRight}>
                   <DrawerBooking
+                    serviceUser={serviceUser._id}
+                    errors={this.state.errors}
+                    count={this.state.count}
+                    all_avocotes={this.state.all_avocotes}
                     filters={filters}
                     pricedPrestations={pricedPrestations}
                     toggleDrawer={this.toggleDrawer}
-                    onChangeDate={this.onChangeDate}
-                    onChangeTime={this.onChangeTime}
                     onQtyChanged={this.onQtyChanged}
                     isInPerimeter={this.isInPerimeter}
                     onLocationChanged={this.onLocationChanged}
@@ -780,7 +774,6 @@ class UserServicesPreview extends React.Component {
                     clientAddressId={this.get_prop_address()}
                     book={this.book}
                     alfred_pro={shop.is_professional}
-                    {...this.state}
                   />
                 </Grid>
               </Grid>
