@@ -684,10 +684,8 @@ router.get('/roles/:email', (req, res) => {
   User.findOne({email: new RegExp(req.params.email, 'i')}, 'roles')
     .then(user => {
       if (!user) {
-        console.log(`Request roles for email ${req.params.email}:[]`)
         return res.json([])
       }
-      console.log(`Request roles for email ${req.params.email}:${user.roles}`)
       res.json(user.roles)
     })
     .catch(err => {
