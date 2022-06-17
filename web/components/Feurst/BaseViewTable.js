@@ -94,6 +94,7 @@ const BaseCreateTable = ({
   const [isOpenDialog, setIsOpenDialog] = useState(false)
   const [isOpenDialogConvert, setIsOpenDialogConvert] = useState(false)
   const [actionButtons, setActionButtons]=useState([])
+  const [addAddress, setAddAddress] = useState(false)
   
   const importURL=`${API_PATH}/${endpoint}/${orderid}/import`
   const templateURL=`${API_PATH}/${endpoint}/template`
@@ -330,6 +331,8 @@ const BaseCreateTable = ({
         accessRights={accessRights}
         state={state}
         requestUpdate={requestUpdate}
+        addAddress={addAddress}
+        setAddAddress={setAddAddress}
         validateAddress={validateAddress}
         wordingSection={wordingSection}
       />}

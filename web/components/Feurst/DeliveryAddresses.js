@@ -1,11 +1,9 @@
-import React, {useState, useEffect} from 'react'
-import {useCombobox} from 'downshift'
-import {StyledAutocomplete} from '../Autocomplete/Autocomplete.styles'
+import React, {useEffect, Fragment} from 'react'
+import {Listbox, Transition} from '@headlessui/react'
 import useAsync from '../../hooks/use-async.hook'
-import useDebounce from '../../hooks/use-debounce.hook'
 import {client} from '../../utils/client'
 import {API_PATH} from '../../utils/consts'
-import SpinnerEllipsis from '../Spinner/SpinnerEllipsis'
+import {StyledListbox} from '../../styles/feurst/StyledComponents'
 
 const DeliveryAddresses = ({state, requestUpdate, endpoint}) => {
 
@@ -17,44 +15,11 @@ const DeliveryAddresses = ({state, requestUpdate, endpoint}) => {
     run,
   } = useAsync({data: []})
 
-  const [searchTerm, setSearchTerm] = useState('')
-  const debouncedQuery = useDebounce(searchTerm, 1000)
-
-  const {
-    isOpen,
-    getToggleButtonProps,
-    selectItem,
-    getLabelProps,
-    getInputProps,
-    getComboboxProps,
-    getItemProps,
-    selectedItem,
-    getMenuProps,
-  } = useCombobox({
-    items: data,
-    onInputValueChange: ({inputValue, selectedItem}) => {
-      if (!selectedItem) {
-        requestUpdate({address: {...state.address, label: inputValue}})
-      }
-      setSearchTerm(inputValue)
-    },
-    itemToString: item => (item ? `${item.label}` : ''),
-    onSelectedItemChange: ({selectedItem}) => {
-      requestUpdate({address: {...state.address, ...selectedItem}})
-    },
-    inputValue: state?.address?.label || '',
-  })
-
-
-  useEffect(() => {
-    if (debouncedQuery && searchTerm.length > 0) {
-      run(client(`${API_PATH}/${endpoint}/${state.id}/addresses`))
-        .catch(e => {
-          console.error(`Can't fetch addresses in autocomplete ${e}`)
-        })
-    }
+  const setAddress = address => {
+    requestUpdate({address: {...state.address, ...address}})
   }
-  , [debouncedQuery, searchTerm, run, selectedItem, endpoint, state.id])
+
+  const addressPattern = address => `${address.label}: ${address.address} ${address.zip_code} ${address.city}`
 
   /* load addresses on start */
   useEffect(() => {
@@ -64,60 +29,33 @@ const DeliveryAddresses = ({state, requestUpdate, endpoint}) => {
       })
   }, [])
 
-  const labelAutocomplete = 'complete'
-
-  return (
-    <StyledAutocomplete noborder={true}>
-      {isError ? <p className='error'>{error}</p> : null }
-
-      <label {...getLabelProps} htmlFor={`auto${labelAutocomplete}`} className="sr-only">
-        Adresse
-      </label>
-      <div {...getComboboxProps()}>
-        <input
-          {...getInputProps()}
-          id={`auto${labelAutocomplete}`}
-          placeholder={`Nom de l'adresse`}
-        />
-        <span className='loading'>{isLoading ? <SpinnerEllipsis /> : null}</span>
-        <button
-          {...getToggleButtonProps()}
-          type="button"
-          aria-label="afficher la liste"
+  return (<>
+    <StyledListbox>
+      <Listbox as={'div'} value={state.address} onChange={setAddress}>
+        <Listbox.Button>
+          <span>{state?.address?.address ? addressPattern(state?.address) : 'Choisissez une adresse'}</span><span className='icon'>▲</span>
+        </Listbox.Button>
+        <Transition
+          as={Fragment}
+          enter="enter"
+          enterFrom="opacity-0 -translate-y-25"
+          enterTo="opacity-100 translate-y-0"
+          leave="leave"
+          leaveFrom="opacity-100 translate-y-0"
+          leaveTo="opacity-0 -translate-y-25"
         >
-          <span role="img">&#9661;</span>
-        </button>
-        <button
-          type="button"
-          className=""
-          onClick={() => {
-            selectItem(null)
-            setSearchTerm('')
-          }}
-          aria-label="effacer"
-        >
-          <span role="img">✕</span>
-        </button>
-
-
-      </div>
-
-
-      <ul
-        {...getMenuProps()}
-      >
-        {isOpen &&
-            data.map((item, index) => (
-              <li
-                key={`searchres-${index}`}
-                {...getItemProps({item, index})}
-              >
-                {`${item.label} : ${item.address}, ${item.zip_code} ${item.city}`}
-              </li>
-            ))
-        }
-      </ul>
-    </StyledAutocomplete>
+          <Listbox.Options>
+            {data.map(address => (
+              <Listbox.Option key={`${data._id}`} value={address} className={({active}) => (active ? 'active' : '')} >
+                {({selected}) => (selected ? <>{addressPattern(address)}<span>✓</span></> : <>{addressPattern(address)}</>)}
+              </Listbox.Option>
+            ))}
+          </Listbox.Options>
+        </Transition>
+      </Listbox>
+    </StyledListbox>
+    
+  </>
 
   )
 

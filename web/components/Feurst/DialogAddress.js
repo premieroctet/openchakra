@@ -21,6 +21,8 @@ const DialogAddress = ({
   endpoint,
   state,
   requestUpdate,
+  addAddress,
+  setAddAddress,
   validateAddress,
   wordingSection,
   t,
@@ -48,6 +50,12 @@ const DialogAddress = ({
 
     res_shippingfees && setShippingFees(res_shippingfees)
   }, [endpoint, orderid])
+
+  const addNewAddress = e => {
+    e.preventDefault()
+    setAddAddress(!addAddress)
+    requestUpdate({address: {}})
+  }
 
   const submitAddress = ev => {
     ev.preventDefault()
@@ -89,9 +97,23 @@ traitement de votre commande.</p>
 
         {/* order address */}
         <h3>Indiquer l'adresse de livraison</h3>
-        <DeliveryAddresses state={state} requestUpdate={requestUpdate} endpoint={endpoint}/>
-        <Address state={state} requestUpdate={requestUpdate} errors={errors} />
 
+        
+        {!addAddress &&
+        <DeliveryAddresses state={state} requestUpdate={requestUpdate} endpoint={endpoint} />
+        }
+
+        <div className='flex justify-center mt my-2'>
+          <ChangeAddressButton onClick={addNewAddress}>
+            {!addAddress ? <><span>⊕</span> Ajouter une nouvelle adresse</> : <><span>⇠</span> retour à mon carnet d'adresses</>}
+            
+            
+          </ChangeAddressButton>
+        </div>
+        
+        {addAddress &&
+        <Address state={state} requestUpdate={requestUpdate} errors={errors} addAddress={addAddress} />
+        }
 
         {/* order shipping fees */}
         {!isEmpty(shippingfees) ? (<>
@@ -155,8 +177,21 @@ const StyledDialog = styled(PureDialog)`
   [role="combobox"] {
     margin-bottom: var(--spc-2);
   }
+`
 
+const ChangeAddressButton = styled.button`
+  background: none;
+  border: 0;
+  padding: var(--spc-2);
+  color: var(--black);
+  font-size: var(--text-base);
+  font-weight: var(--font-bold);
+  border-radius: var(--rounded-2xl);
+  cursor: pointer;
   
+  span {
+    font-size: var(--text-xl);
+  }
 `
 
 export default withTranslation('feurst', {withRef: true})(DialogAddress)
