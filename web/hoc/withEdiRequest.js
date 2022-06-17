@@ -88,13 +88,13 @@ const withEdiRequest = (Component = null) => {
 
     deleteUser = async({endpoint, userid}) => {
       if (!userid) { return }
-
-      return await client(`${API_PATH}/users/${userid}/delete`, {method: 'DELETE'})
+      
+      return await client(`${API_PATH}/users/${userid}`, {method: 'DELETE'})
         .then(() => this.getList({endpoint}))
         .catch(error => {
           if (error.info) {
             if (error.info.status === 403) {
-              snackBarError(error?.message)
+              snackBarError(error?.info.message)
             }
           }
           console.error(`Can't delete user`, error)
