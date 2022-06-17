@@ -36,7 +36,8 @@ BookingItemSchema.virtual('discount').get(function() {
   if (!this.catalog_price || !this.net_price) {
     return 0
   }
-  return (this.catalog_price-this.net_price)/this.catalog_price
+  const discount=(this.catalog_price-this.net_price)/this.catalog_price
+  return Math.round(discount*100)/100
 })
 
 BookingItemSchema.virtual('total_weight').get(function() {
