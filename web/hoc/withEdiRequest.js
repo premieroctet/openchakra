@@ -81,14 +81,14 @@ const withEdiRequest = (Component = null) => {
             deleteIt()
           }
           else {
-            snackBarError('Suppression non authorisée.')
+            snackBarError('Suppression non autorisée.')
           }
         })
     }
 
     deleteUser = async({endpoint, userid}) => {
       if (!userid) { return }
-      
+
       return await client(`${API_PATH}/users/${userid}/delete`, {method: 'DELETE'})
         .then(() => this.getList({endpoint}))
         .catch(error => {
@@ -102,7 +102,7 @@ const withEdiRequest = (Component = null) => {
     }
 
     handleValidation = async({endpoint, orderid, status}) => {
-      
+
       return await client(`${API_PATH}/${endpoint}/${orderid}/handle`, {data: {total: status}, method: 'PUT'})
         .then(() => this.getContentFrom({endpoint, orderid}))
         .catch(e => console.error(`Can't update status validation`, e))
