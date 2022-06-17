@@ -352,7 +352,7 @@ router.post('/:order_id/convert', passport.authenticate('jwt', {session: false})
     })
     .then(order => {
       // const t=i18n.default.getFixedT(null, 'feurst')
-      const msg=feurst['EDI.ORDER_CONVERTED_2_FEURST']
+      const msg=feurstfr['EDI.ORDER_CONVERTED_2_FEURST']
       sendDataNotification(req.user, order, msg)
       return res.json(quotation)
     })
