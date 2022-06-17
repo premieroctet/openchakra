@@ -559,7 +559,9 @@ router.get('/:id/actions', passport.authenticate('jwt', {session: false}), (req,
       if (isActionAllowed(user.roles, DATA_TYPE, HANDLE) && model.status==PARTIALLY_HANDLED) {
         result.push(TOTALLY_HANDLE)
       }
-      if (isActionAllowed(user.roles, DATA_TYPE, DELETE) && [CREATED, COMPLETE].includes(model.status)) {
+      if (isActionAllowed(user.roles, DATA_TYPE, DELETE)
+        && [CREATED, COMPLETE].includes(model.status)
+        && req.user.company?._id.toString()==model.created_by_company?._id.toString()) {
         result.push(DELETE)
       }
       return res.json(result)
