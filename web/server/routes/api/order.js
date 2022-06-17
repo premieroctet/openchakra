@@ -1,9 +1,15 @@
+const lodash=require('lodash')
 const CronJob = require('cron').CronJob
+
 const express = require('express')
 const passport = require('passport')
 const moment = require('moment')
 const xlsx=require('node-xlsx')
-const lodash=require('lodash')
+const {
+  CUSTOMER_ADMIN,
+  FEURST_ADV,
+  FEURST_SALES,
+} = require('../../../utils/feurst/consts')
 const {sendDataNotification, sendOrderAlert} = require('../../utils/mailing')
 
 const {
@@ -173,7 +179,7 @@ router.put('/:id/handle', passport.authenticate('jwt', {session: false}), (req, 
     .then(result => {
       // const t=i18n.default.getFixedT(null, 'feurst')
       const msg=feurstfr[total ? 'EDI.ORDER_HANDLED_2_CUSTOMER': 'EDI.ORDER_PARTIALLY_HANDLED_2_CUSTOMER']
-      sendDataNotification(req.user, result, msg)
+      sendDataNotification(req.user, CUSTOMER_ADMIN, result, msg)
       return res.json(result)
     })
     .catch(err => {
@@ -324,7 +330,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 })
 
 // @Route GET /myAlfred/api/orders
-// View all orders
+// Convert order to quotation
 // @Access private
 router.post('/:order_id/convert', passport.authenticate('jwt', {session: false}), (req, res) => {
 
@@ -353,7 +359,7 @@ router.post('/:order_id/convert', passport.authenticate('jwt', {session: false})
     .then(order => {
       // const t=i18n.default.getFixedT(null, 'feurst')
       const msg=feurstfr['EDI.ORDER_CONVERTED_2_FEURST']
-      sendDataNotification(req.user, order, msg)
+      sendDataNotification(req.user, FEURST_SALES, order, msg)
       return res.json(quotation)
     })
     .catch(err => {
@@ -482,7 +488,7 @@ router.post('/:order_id/validate', passport.authenticate('jwt', {session: false}
     .then(() => {
       // const t=i18n.default.getFixedT(null, 'feurst')
       const msg=feurstfr['EDI.ORDER_VALID_2_FEURST']
-      sendDataNotification(req.user, order, msg)
+      sendDataNotification(req.user, FEURST_ADV, order, msg)
       return res.json()
     })
     .catch(err => {

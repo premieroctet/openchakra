@@ -4,6 +4,26 @@ const moment = require('moment')
 const xlsx=require('node-xlsx')
 const lodash=require('lodash')
 const {
+  COMPLETE,
+  CONVERT,
+  CREATE,
+  CREATED,
+  CUSTOMER_ADMIN,
+  DELETE,
+  EXPRESS_SHIPPING,
+  FEURST_ADV,
+  FEURST_SALES,
+  HANDLED,
+  QUOTATION,
+  REWRITE,
+  STANDARD_SHIPPING,
+  UPDATE,
+  UPDATE_ALL,
+  VALID,
+  VALIDATE,
+  VIEW,
+} = require('../../../utils/feurst/consts')
+const {
   sendDataNotification,
 } = require('../../utils/mailing')
 const {
@@ -12,23 +32,6 @@ const {
   isActionAllowed,
   isFeurstUser,
 } = require('../../utils/userAccess')
-const {
-  COMPLETE,
-  CONVERT,
-  CREATED,
-  EXPRESS_SHIPPING,
-  HANDLED,
-  QUOTATION,
-  REWRITE,
-  STANDARD_SHIPPING,
-  CREATE,
-  UPDATE_ALL,
-  UPDATE,
-  VIEW,
-  DELETE,
-  VALID,
-  VALIDATE,
-} = require('../../../utils/feurst/consts')
 const {
   addItem,
   computeShippingFee,
@@ -167,8 +170,10 @@ router.put('/:id/rewrite', passport.authenticate('jwt', {session: false}), (req,
       }
       // TODO Fix i18n import
       // const t=i18n.default.getFixedT(null, 'feurst')
-      const msg=feurstfr[isFeurstUser(req.user)? 'EDI.QUOTATION_REWRITE_2_CUSTOMER' : 'EDI.QUOTATION_REWRITE_2_FEURST']
-      sendDataNotification(req.user, result, msg)
+      const feurstActor=isFeurstUser(req.user)
+      const destinee= feurstActor ? CUSTOMER_ADMIN : FEURST_SALES
+      const msg=feurstfr[feurstActor ? 'EDI.QUOTATION_REWRITE_2_CUSTOMER' : 'EDI.QUOTATION_REWRITE_2_FEURST']
+      sendDataNotification(req.user, destinee, result, msg)
       return res.json(result)
     })
     .catch(err => {
@@ -347,7 +352,7 @@ router.post('/:quotation_id/convert', passport.authenticate('jwt', {session: fal
     .then(() => {
       // const t=i18n.default.getFixedT(null, 'feurst')
       const msg=feurstfr['EDI.QUOTATION_CONVERT_2_FEURST']
-      sendDataNotification(req.user, order, msg)
+      sendDataNotification(req.user, FEURST_ADV, order, msg)
       return res.json(order)
     })
     .catch(err => {
@@ -457,8 +462,10 @@ router.post('/:order_id/validate', passport.authenticate('jwt', {session: false}
         return res.status(404).json(`Order ${order_id} not found`)
       }
       // const t=i18n.default.getFixedT(null, 'feurst')
-      const msg=feurstfr[isFeurstUser(req.user) ?'EDI.QUOTATION_VALID_2_CUSTOMER':'EDI.QUOTATION_VALID_2_FEURST']
-      sendDataNotification(req.user, data, msg)
+      const feurstActor = isFeurstUser(req.user)
+      const destinee= feurstActor ? CUSTOMER_ADMIN : FEURST_SALES
+      const msg=feurstfr[feurstActor ?'EDI.QUOTATION_VALID_2_CUSTOMER':'EDI.QUOTATION_VALID_2_FEURST']
+      sendDataNotification(req.user, destinee, data, msg)
       return res.json()
     })
     .catch(err => {
@@ -542,10 +549,10 @@ router.get('/:id/actions', passport.authenticate('jwt', {session: false}), (req,
         return res.status(404).json()
       }
       if (isActionAllowed(req.user.roles, DATA_TYPE, UPDATE) && [CREATED, COMPLETE].includes(model.status)) {
-        result.push(UDPATE)
+        result.push(UPDATE)
       }
       if (isActionAllowed(req.user.roles, DATA_TYPE, UPDATE) && isFeurstUser(user) && [VALID].includes(model.status)) {
-        result.push(UDPATE)
+        result.push(UPDATE)
       }
       if (isActionAllowed(req.user.roles, DATA_TYPE, UPDATE) &&
       (model.status==COMPLETE || (model.status==VALID && isFeurstUser(user)))) {
@@ -557,7 +564,10 @@ router.get('/:id/actions', passport.authenticate('jwt', {session: false}), (req,
       if (isActionAllowed(req.user.roles, DATA_TYPE, CONVERT) && model.status==HANDLED) {
         result.push(CONVERT)
       }
-      if (isActionAllowed(req.user.roles, DATA_TYPE, DELETE) && [CREATED, COMPLETE].includes(model.status)) {
+      // delete mine only
+      if (isActionAllowed(req.user.roles, DATA_TYPE, DELETE)
+        && [CREATED, COMPLETE].includes(model.status)
+        && req.user.company?._id.toString()==model.created_by_company?._id.toString()) {
         result.push(DELETE)
       }
       return res.json(result)
