@@ -1,5 +1,13 @@
+const {
+  ForbiddenError,
+  NotFoundError,
+  StatusError,
+} = require('../../utils/errors')
+const Company = require('../../models/Company')
+
 const crypto = require('crypto')
 const express = require('express')
+
 const router = express.Router()
 const passport = require('passport')
 const bcrypt = require('bcryptjs')
@@ -80,7 +88,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     return res.sendStatus(301)
   }
 
-  User.find()
+  User.find({active: true})
     .populate('company')
     .populate('companies')
     .then(data => {
@@ -674,7 +682,10 @@ router.get('/users', (req, res) => {
       }
       res.json(user)
     })
-    .catch(err => res.status(404).json({users: 'No billing found'}))
+    .catch(err => {
+      console.error(err)
+      return res.status(500).json(err)
+    })
 })
 
 // @Route GET /myAlfred/api/users/roles/:email
@@ -705,7 +716,10 @@ router.get('/users/:id', (req, res) => {
       res.json(user)
 
     })
-    .catch(err => res.status(404).json({user: 'No user found'}))
+    .catch(err => {
+      console.error(err)
+      return res.status(500).json(err)
+    })
 })
 
 // @Route DELETE /myAlfred/api/users/:id/role/:role
@@ -1152,6 +1166,53 @@ router.delete('/profile/picture/delete', passport.authenticate('jwt', {session: 
     .catch(err => {
       console.error(err)
       return res.status(400).json(err)
+    })
+})
+
+// @Route PUT /myAlfred/api/users/current/delete
+// Delete the current user
+// @Access private
+router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+  const user_id=req.params.id
+  console.log(`Deleting user ${user_id}`)
+  if (!user_id) {
+    return res.status(400).json('Expected user id')
+  }
+
+  if (user_id==req.user._id.toString()) {
+    return res.status(403).json('Vous ne pouvez supprimer votre propre compte')
+  }
+
+  let user=null
+  User.findById(user_id)
+    .then(result => {
+      if (!result) {
+        throw new NotFoundError(`Compte ${user_id} introuvable`)
+      }
+      user=result
+      // Forbid sales representative deletion
+      return Company.findOne({sales_representative: user_id})
+    })
+    .then(company => {
+      if (company) {
+        throw new ForbiddenError(`Impossible de supprimer le commercial pour la société ${company.name}`)
+      }
+      // Forbid only Feurst admin deletion
+      return User.exists({roles: FEURST_ADMIN, email: {$ne: user.email}})
+    })
+    .then(otherAdminExists => {
+      if (!otherAdminExists) {
+        throw new ForbiddenError('Impossible de supprimer le seul administrateur FEURST')
+      }
+      return user.delete()
+    })
+    .then(() => {
+      // logEvent(req, 'Compte', 'Suppression', `Compte de ${user.full_name}(${user._id}) supprimé`)
+      return res.json()
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(err.status || 500).json(err.message || err)
     })
 })
 
