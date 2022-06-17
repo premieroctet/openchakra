@@ -102,21 +102,17 @@ const BaseCreateTable = ({
 
   // Possibles actions
   const justCreated = !(state?.items?.length && true)
-  const canAdd = [CREATED, FULFILLED].includes(state.status)
-  const canValidate = [COMPLETE].includes(state.status)
-  const canModify = [CREATED, COMPLETE].includes(state.status)
-  const isView = [VALID, PARTIALLY_HANDLED, HANDLED].includes(state.status)
-
-
+  
   const isValidButton = actionButtons.includes(VALIDATE)
   const isRevertToEdition = actionButtons.includes(REWRITE)
   const isConvertToOrder = actionButtons.includes(CONVERT)
   const isPartiallyHandled = actionButtons.includes(PARTIALLY_HANDLE)
   const isTotallyHandled = actionButtons.includes(TOTALLY_HANDLE)
-
+  const canModify = actionButtons.includes(UPDATE)
+  
   const isFeurstSales = accessRights.getFullAction()?.visibility==RELATED
-  const canUpdatePrice = accessRights.isActionAllowed(accessRights.getModel(), UPDATE_ALL) && !isView
-  const canUpdateQuantity = accessRights.isActionAllowed(accessRights.getModel(), UPDATE) && !isView
+  const canUpdatePrice = accessRights.isActionAllowed(accessRights.getModel(), UPDATE_ALL) && canModify
+  const canUpdateQuantity = accessRights.isActionAllowed(accessRights.getModel(), UPDATE) && canModify
 
   const canUpdateShipping = canUpdatePrice
 
@@ -202,7 +198,7 @@ const BaseCreateTable = ({
     orderid,
     canUpdatePrice,
     canUpdateQuantity,
-    deleteProduct: canAdd ? deleteProduct : null})
+    deleteProduct: canModify ? deleteProduct : null})
 
 
   return (<>
@@ -214,7 +210,7 @@ const BaseCreateTable = ({
 
     { orderid ? <>
 
-      {isFeurstSales && !isView && <div className='flex'>
+      {isFeurstSales && canModify && <div className='flex'>
         <H2confirm>
           <span>{state?.company?.name}</span>
         </H2confirm></div>}
@@ -226,9 +222,9 @@ const BaseCreateTable = ({
         <AddArticle endpoint={endpoint} orderid={orderid} addProduct={addProduct} wordingSection={wordingSection} />
       </div>}
 
-      {isView && <H2confirm>{t(`${wordingSection}.recap`)}</H2confirm>}
+      {!canModify && <H2confirm>{t(`${wordingSection}.recap`)}</H2confirm>}
 
-      {isView && <div>
+      {!canModify && <div>
         <dl className='dl-inline text-xl font-semibold'>
           <dt>{t(`${wordingSection}.name`)}</dt>
           <dd>{state.reference}</dd>
@@ -245,7 +241,7 @@ const BaseCreateTable = ({
         caption={t(`${wordingSection}.details`)}
         data={state.items}
         columns={cols}
-        footer={canValidate || isView}
+        footer={isValidButton || !canModify}
         filtered={filtered}
         updateMyData={updateMyOrderContent}
       />
@@ -256,7 +252,7 @@ const BaseCreateTable = ({
         orderid={orderid}
         address={state.address}
         setIsOpenDialog={setIsOpenDialog}
-        editable={isView}
+        editable={!canModify}
         requestUpdate={requestUpdate}
         shipping={{shipping_mode: state.shipping_mode, shipping_fee: state.shipping_fee, update: canUpdateShipping ? updateShippingFees : null}}
       />
