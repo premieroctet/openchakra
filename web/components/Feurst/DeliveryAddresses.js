@@ -33,7 +33,7 @@ const DeliveryAddresses = ({state, requestUpdate, endpoint}) => {
     <StyledListbox>
       <Listbox as={'div'} value={state.address} onChange={setAddress}>
         <Listbox.Button>
-          <span>{state?.address?.label || 'Choisissez une adresse'}</span><span className='icon'>▲</span>
+          <span>{state?.address?.address ? addressPattern(state?.address) : 'Choisissez une adresse'}</span><span className='icon'>▲</span>
         </Listbox.Button>
         <Transition
           as={Fragment}

@@ -54,6 +54,7 @@ const DialogAddress = ({
   const addNewAddress = e => {
     e.preventDefault()
     setAddAddress(!addAddress)
+    requestUpdate({address: {}})
   }
 
   const submitAddress = ev => {
@@ -96,24 +97,23 @@ traitement de votre commande.</p>
 
         {/* order address */}
         <h3>Indiquer l'adresse de livraison</h3>
+
         
-        <div className='flex justify-end my-2'>
+        {!addAddress &&
+        <DeliveryAddresses state={state} requestUpdate={requestUpdate} endpoint={endpoint} />
+        }
+
+        <div className='flex justify-center mt my-2'>
           <ChangeAddressButton onClick={addNewAddress}>
-            {addAddress ?
-              'Choisir une adresse dans la liste'
-              : 'Renseigner une adresse supplémentaire'
-            }
+            {!addAddress ? <><span>⊕</span> Ajouter une nouvelle adresse</> : <><span>⇠</span> retour à mon carnet d'adresses</>}
+            
+            
           </ChangeAddressButton>
         </div>
-
-        {
-          !addAddress &&
-          <DeliveryAddresses state={state} requestUpdate={requestUpdate} endpoint={endpoint} />
-        }
         
-        
+        {addAddress &&
         <Address state={state} requestUpdate={requestUpdate} errors={errors} addAddress={addAddress} />
-
+        }
 
         {/* order shipping fees */}
         {!isEmpty(shippingfees) ? (<>
@@ -180,13 +180,18 @@ const StyledDialog = styled(PureDialog)`
 `
 
 const ChangeAddressButton = styled.button`
-  background-color: var(--yellow-500);
+  background: none;
   border: 0;
-  width: 26ch;
   padding: var(--spc-2);
   color: var(--black);
+  font-size: var(--text-base);
+  font-weight: var(--font-bold);
   border-radius: var(--rounded-2xl);
   cursor: pointer;
+  
+  span {
+    font-size: var(--text-xl);
+  }
 `
 
 export default withTranslation('feurst', {withRef: true})(DialogAddress)
