@@ -25,6 +25,7 @@ const BaseListTable = ({
   filter,
   filtered,
   updateSeller,
+  deleteUser,
   sellers,
   wordingSection = null,
   ...props
@@ -46,7 +47,7 @@ const BaseListTable = ({
     getList({endpoint, filter})
   }, [endpoint, getList, filter, refresh])
 
-  const cols= columns({language, endpoint, deleteOrder: canDelete? deleteOrder:null, updateSeller: canUpdateSeller ? updateSeller : null, sellers})
+  const cols= columns({language, endpoint, deleteOrder: canDelete? deleteOrder:null, deleteUser, updateSeller: canUpdateSeller ? updateSeller : null, sellers})
   
 
   return (<>

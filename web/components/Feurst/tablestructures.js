@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react'
+import React, {useState, useMemo} from 'react'
 import Link from 'next/link'
 import {localeMoneyFormat} from '../../utils/converters'
 import {
@@ -6,6 +6,7 @@ import {
 } from '../../utils/feurst/consts'
 import {formatPercent} from '../../utils/text'
 import {DateRangeColumnFilter} from '../Table/TableFilter'
+import PureDialog from '../Dialog/PureDialog'
 import UpdateCellQuantity from './UpdateCellQuantity'
 import UpdateSeller from './updateSeller'
 import UpdateCellPrice from './UpdateCellPrice'
@@ -54,6 +55,21 @@ const ToTheBin = props => (
     <span role='image' alt="supprimer">🗑️</span>
   </button>
 )
+
+const ToTheBinWithAlert = ({deleteIt}) => {
+  const [isOpenDialog, setIsOpenDialog] = useState(false)
+  return(
+    <>
+      <button onClick={() => setIsOpenDialog(true)}>
+        <span role='image' alt="supprimer">🗑️</span>
+      </button>
+      <PureDialog open={isOpenDialog} onClose={() => setIsOpenDialog(false)} >
+        <p>Voulez-vous vraiment supprimer ?</p>
+        <button onClick={deleteIt}>Oui</button><button onClick={() => setIsOpenDialog(false)}>Non</button>
+      </PureDialog>
+    </>
+  )
+}
 
 const articleRef = {
   label: 'Réf. article',
@@ -174,20 +190,20 @@ const ordersColumns = ({endpoint, language, deleteOrder}) => {
     id: 'product_delete',
     attribute: 'product_delete',
     Cell: ({cell: {row}}) => (
-      <ToTheBin onClick={() => {
+      <ToTheBinWithAlert deleteIt={() => {
         deleteOrder({endpoint, orderid: row.original._id})
-      }}/>
+      }} />
     ),
   }
-
-
+  
+  
   return deleteOrder ? [...ordersColumnsBase, deleteItem] : ordersColumnsBase
-
+  
 }
 
 const quotationColumns = ({endpoint, orderid, language, deleteProduct, canUpdateQuantity, canUpdatePrice}) => {
-
-
+  
+  
   const quotationColumnsBase = [
     {...articleRef},
     {...articleName},
@@ -237,7 +253,7 @@ const quotationColumns = ({endpoint, orderid, language, deleteProduct, canUpdate
       }}/>
     ),
   }
-
+  
   return deleteProduct ? [...quotationColumnsBase, deleteItem] : quotationColumnsBase
 }
 
@@ -282,27 +298,27 @@ const quotationsColumns = ({endpoint, language, deleteOrder}) => {
       attribute: '_id',
       Cell: ({value}) => (<Link href={`/edi/quotations/view/${value}`}>voir</Link>),
     },
- 
+    
   ]
-
+  
   const deleteItem = {
     label: '',
     id: 'product_delete',
     attribute: 'product_delete',
     Cell: ({cell: {row}}) => (
-      <ToTheBin onClick={() => {
+      <ToTheBinWithAlert deleteIt={() => {
         deleteOrder({endpoint, orderid: row.original._id})
-      }}/>
+      }} />
     ),
   }
-  
+    
 
   return deleteOrder ? [...quotationsColumnsBase, deleteItem] : quotationsColumnsBase
-
+    
 }
-
-const accountsColumns = ({language, visibility}) => {
   
+const accountsColumns = ({language, visibility, deleteUser}) => {
+    
   return [
     {
       label: 'Prénom',
@@ -327,6 +343,15 @@ const accountsColumns = ({language, visibility}) => {
     {
       label: 'Rôles',
       attribute: u => u.roles.map(r => ROLES[r]).join(','),
+    },
+    {
+      label: 'Supprimer',
+      attribute: 'active',
+      Cell: ({cell: {row}}) => (
+        <ToTheBinWithAlert deleteIt={() => {
+          deleteUser({endpoint, userid: row.original._id})
+        }} />
+      ),
     },
   ]
 }

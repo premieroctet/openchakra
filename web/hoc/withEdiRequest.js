@@ -84,8 +84,21 @@ const withEdiRequest = (Component = null) => {
             snackBarError('Suppression non authorisée.')
           }
         })
+    }
 
+    deleteUser = async({endpoint, userid}) => {
+      if (!userid) { return }
       
+      return await client(`${API_PATH}/users/${userid}/delete`, {method: 'DELETE'})
+        .then(() => this.getList({endpoint}))
+        .catch(error => {
+          if (error.info) {
+            if (error.info.status === 403) {
+              snackBarError(error?.message)
+            }
+          }
+          console.error(`Can't delete user`, error)
+        })
     }
 
     handleValidation = async({endpoint, orderid, status}) => {
@@ -197,6 +210,7 @@ const withEdiRequest = (Component = null) => {
           updateShippingFees={this.updateShippingFees}
           validateAddress={this.validateAddress}
           revertToEdition={this.revertToEdition}
+          deleteUser={this.deleteUser}
           updateSeller={this.updateSeller}
           importFile={this.importFile}
           state={this.state}
