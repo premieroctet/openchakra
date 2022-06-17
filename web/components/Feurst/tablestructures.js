@@ -1,15 +1,17 @@
-import React, {useState, useMemo} from 'react'
+import React, {useMemo} from 'react'
 import Link from 'next/link'
+
 import {localeMoneyFormat} from '../../utils/converters'
 import {
   ROLES,
 } from '../../utils/feurst/consts'
 import {formatPercent} from '../../utils/text'
 import {DateRangeColumnFilter} from '../Table/TableFilter'
-import PureDialog from '../Dialog/PureDialog'
+
 import UpdateCellQuantity from './UpdateCellQuantity'
 import UpdateSeller from './updateSeller'
 import UpdateCellPrice from './UpdateCellPrice'
+import {ToTheBin, ToTheBinWithAlert} from './ToTheBin'
 import OrderStatus from './OrderStatus'
 
 // to order by datetime
@@ -50,26 +52,6 @@ const FooterTotalPrice = ({data, language = null}) => {
   return <>{localeMoneyFormat({lang: language, value: total})}</>
 }
 
-const ToTheBin = props => (
-  <button {...props}>
-    <span role='image' alt="supprimer">🗑️</span>
-  </button>
-)
-
-const ToTheBinWithAlert = ({deleteIt}) => {
-  const [isOpenDialog, setIsOpenDialog] = useState(false)
-  return(
-    <>
-      <button onClick={() => setIsOpenDialog(true)}>
-        <span role='image' alt="supprimer">🗑️</span>
-      </button>
-      <PureDialog open={isOpenDialog} onClose={() => setIsOpenDialog(false)} >
-        <p>Voulez-vous vraiment supprimer ?</p>
-        <button onClick={deleteIt}>Oui</button><button onClick={() => setIsOpenDialog(false)}>Non</button>
-      </PureDialog>
-    </>
-  )
-}
 
 const articleRef = {
   label: 'Réf. article',
@@ -190,7 +172,7 @@ const ordersColumns = ({endpoint, language, deleteOrder}) => {
     id: 'product_delete',
     attribute: 'product_delete',
     Cell: ({cell: {row}}) => (
-      <ToTheBinWithAlert deleteIt={() => {
+      <ToTheBinWithAlert row={row} deleteIt={() => {
         deleteOrder({endpoint, orderid: row.original._id})
       }} />
     ),
@@ -306,7 +288,7 @@ const quotationsColumns = ({endpoint, language, deleteOrder}) => {
     id: 'product_delete',
     attribute: 'product_delete',
     Cell: ({cell: {row}}) => (
-      <ToTheBinWithAlert deleteIt={() => {
+      <ToTheBinWithAlert row={row} deleteIt={() => {
         deleteOrder({endpoint, orderid: row.original._id})
       }} />
     ),
@@ -317,7 +299,7 @@ const quotationsColumns = ({endpoint, language, deleteOrder}) => {
     
 }
   
-const accountsColumns = ({language, visibility, deleteUser}) => {
+const accountsColumns = ({language, visibility, endpoint, deleteUser}) => {
     
   return [
     {
@@ -347,11 +329,13 @@ const accountsColumns = ({language, visibility, deleteUser}) => {
     {
       label: 'Supprimer',
       attribute: 'active',
-      Cell: ({cell: {row}}) => (
-        <ToTheBinWithAlert deleteIt={() => {
-          deleteUser({endpoint, userid: row.original._id})
-        }} />
-      ),
+      Cell: ({cell: {row}}) => {
+        return (
+          <ToTheBinWithAlert row={row} deleteIt={() => {
+            deleteUser({endpoint, userid: row.original._id})
+          }} />
+        )
+      },
     },
   ]
 }
