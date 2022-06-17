@@ -537,6 +537,9 @@ router.get('/:id/actions', passport.authenticate('jwt', {session: false}), (req,
       if (!model) {
         return res.status(404).json()
       }
+      if (isActionAllowed(user.roles, DATA_TYPE, UPDATE) && ![VALID, PARTIALLY_HANDLED, HANDLED].includes(model.status)) {
+        result.push(UPDATE)
+      }
       if (isActionAllowed(user.roles, DATA_TYPE, UPDATE) && model.status==COMPLETE) {
         result.push(VALIDATE)
       }

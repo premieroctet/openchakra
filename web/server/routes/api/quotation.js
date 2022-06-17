@@ -538,8 +538,14 @@ router.get('/:id/actions', passport.authenticate('jwt', {session: false}), (req,
       if (!model) {
         return res.status(404).json()
       }
+      if (isActionAllowed(req.user.roles, DATA_TYPE, UPDATE) && [CREATED, COMPLETE].includes(model.status)) {
+        result.push(UDPATE)
+      }
+      if (isActionAllowed(req.user.roles, DATA_TYPE, UPDATE) && isFeurstUser(user) && [VALID].includes(model.status)) {
+        result.push(UDPATE)
+      }
       if (isActionAllowed(req.user.roles, DATA_TYPE, UPDATE) &&
-      (model.status==COMPLETE || model.status==VALID && isFeurstUser(user))) {
+      (model.status==COMPLETE || (model.status==VALID && isFeurstUser(user)))) {
         result.push(VALIDATE)
       }
       if (isActionAllowed(req.user.roles, DATA_TYPE, REWRITE) && [VALID, HANDLED].includes(model.status)) {
