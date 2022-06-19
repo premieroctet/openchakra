@@ -39,7 +39,7 @@ const ServiceUserDescription = ({t, classes, serviceUser, insurance, alfred, fle
         </Grid>
         <Grid>
           <Typography style={{color: 'rgba(39,37,37,35%)'}}>
-            {serviceUser.description ? description : ReactHtmlParser(t('USERSERVICEPREVIEW.topic_description_summary'))}
+            {serviceUser.description || ReactHtmlParser(t('USERSERVICEPREVIEW.topic_description_summary'))}
           </Typography>
         </Grid>
         <Grid>
