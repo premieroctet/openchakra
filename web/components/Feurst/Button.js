@@ -67,6 +67,47 @@ Button.defaultProps = {
   },
 }
 
+const StyledLink = styled.a.attrs(props => ({
+  size: props.size || '',
+  rounded: props.rounded || 'var(--rounded-xl)',
+  bgColor: props.bgColor || props.theme.colors.blue,
+  textColor: props.textColor || props.theme.colors.white,
+  borderColor: props.borderColor || `1px solid transparent`,
+  bgColorDisabled: props.bgColorDisabled || props.theme.colors.metalGray,
+}))`
+  appearance: none;
+  background: none;
+  border:0;
+  cursor: pointer;
+  width: ${props => {
+  switch (props.size) {
+    case 'full-width':
+      return '100%'
+    default:
+      return 'fit-content'
+  }
+}};
+  border-radius: ${() => applyBorderRadius};
+  font-size: ${props => props.theme.fontSizes.lg};
+  background-color: ${props => props.bgColor};
+  color: ${props => props.textColor};
+  border: ${props => props.borderColor};
+  padding: 12px 42px;
+  will-change: transform;
+  height: max-content;
+
+  :disabled && {
+    background-color: ${props => darkerColor(props.bgColorDisabled)};
+  }
+`
+
+StyledLink.defaultProps = {
+  theme: {
+    colors: {blue: 'blue', white: '#FFF'},
+    fontSizes: {lg: '1rem'},
+  },
+}
+
 const StyledButton = styled(Button).attrs(props => ({
   size: props.size || '',
   bgColor: props.bgColor || props.theme.colors.blue,
@@ -239,16 +280,16 @@ const BaseLink = ({
 }) => {
 
   return (
-    <StyledButton
-      as={'a'}
+    <StyledLink
       size={size}
       rounded={rounded}
+      bgColor={bgColor}
+      textColor={textColor}
+      borderColor={borderColor}
       {...rest}
     >
-      <ButtonShadow rounded={rounded} />
-      <ButtonEdge bgColor={bgColor} rounded={rounded} borderColor={borderColor} />
-      <ButtonFront bgColor={bgColor} textColor={textColor} borderColor={borderColor} rounded={rounded} >{children}</ButtonFront>
-    </StyledButton>
+      {children}
+    </StyledLink>
   )
 }
 
