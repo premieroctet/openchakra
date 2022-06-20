@@ -69,16 +69,32 @@ const DrawerBooking = ({classes, t, serviceUserId, date, onAvocotesBookingChange
   const {user} = useUserContext()
 
   useEffect(() => {
-    setAxiosAuthentication()
-    axios.get(`/myAlfred/api/serviceUser/${serviceUserId}`)
-      .then(res => {
-        setServiceUser(res.data)
-      })
-    axios.get('/myAlfred/api/booking/avocotes')
-      .then(res => {
-        setAvocotesBookings(res.data)
-      })
-  }, [])
+    if (!serviceUser) {
+      console.log('db first')
+      setAxiosAuthentication()
+      axios.get(`/myAlfred/api/serviceUser/${serviceUserId}`)
+        .then(res => {
+          const su=res.data
+          setServiceUser(su)
+          axios.get(`/myAlfred/api/availability/userAvailabilities/${su.user._id}`)
+            .then(res => {
+              let avail = res.data
+              setAvailabilities(avail)
+              setExcludedDays(getExcludedDays(avail))
+            })
+          axios.get(`/myAlfred/api/shop/alfred/${su.user._id}`)
+            .then(res => {
+              let shop = res.data
+              setShop(shop)
+            })
+
+        })
+      axios.get('/myAlfred/api/booking/avocotes')
+        .then(res => {
+          setAvocotesBookings(res.data)
+        })
+    }
+  }, [serviceUserId])
 
   const getExcludedDays = availabilities => {
     const date=moment(new Date())
@@ -115,22 +131,6 @@ const DrawerBooking = ({classes, t, serviceUserId, date, onAvocotesBookingChange
       setWarnings(w)
     }
   }, [location, serviceUser, user, bookingDate])
-
-  useEffect(() => {
-    if (serviceUser) {
-      axios.get(`/myAlfred/api/availability/userAvailabilities/${serviceUser.user._id}`)
-        .then(res => {
-          let avail = res.data
-          setAvailabilities(avail)
-          setExcludedDays(getExcludedDays(avail))
-        })
-      axios.get(`/myAlfred/api/shop/alfred/${serviceUser.user._id}`)
-        .then(res => {
-          let shop = res.data
-          setShop(shop)
-        })
-    }
-  }, [serviceUser])
 
   useEffect(() => {
     if (lodash.sum(Object.values(count))>0 && location && serviceUser && bookingDate) {

@@ -1,7 +1,7 @@
 import {Link} from '@material-ui/core'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import {withStyles} from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Router from 'next/router'
@@ -12,8 +12,9 @@ import Hidden from '@material-ui/core/Hidden'
 import {registerLocale} from 'react-datepicker'
 import fr from 'date-fns/locale/fr'
 import Head from 'next/head'
-import lodash from 'lodash'
-import DevLog from '../components/DevLog'
+import moment from 'moment'
+import {useUserContext} from '../contextes/user.context'
+import {setAxiosAuthentication} from '../utils/authentication'
 import Place from '../components/Place'
 import ServiceUserDescription from '../components/ServiceUserDescription'
 import Planning from '../components/Planning'
@@ -22,7 +23,6 @@ import UserAvatar from '../components/Avatar/UserAvatar'
 import styles from '../static/css/pages/userServicePreviewPage/userServicePreviewStyle'
 import Layout from '../hoc/Layout/Layout'
 import CustomButton from '../components/CustomButton/CustomButton'
-import {snackBarError} from '../utils/notifications'
 import Album from '../components/Album/Album'
 import SummaryCommentary from '../components/SummaryCommentary/SummaryCommentary'
 import DrawerBooking from '../components/Drawer/DrawerBooking/DrawerBooking'
@@ -31,44 +31,52 @@ import LayoutMobile from '../hoc/Layout/LayoutMobile'
 import ListIconsSkills from '../components/ListIconsSkills/ListIconsSkills'
 import Equipments from '../components/Equipments'
 
-const moment = require('moment')
-const {computeBookingReference} = require('../utils/text')
-const {computeDistanceKm} = require('../utils/functions')
-const isEmpty = require('../server/validation/is-empty')
-const {BOOK_STATUS}=require('../utils/consts')
-const {
-  getDeadLine,
-  isDateAvailable,
+import {
   isMomentAvailable,
-} = require('../utils/dateutils')
-const {setAxiosAuthentication}=require('../utils/authentication')
-const withParams = require('../components/withParams')
-const {isLoggedUserAdmin}=require('../utils/context')
+} from '../utils/dateutils'
+import withParams from '../components/withParams'
 
 moment.locale('fr')
 registerLocale('fr', fr)
 
 // TODO : gérer affichage si utilisateur non connecté
-class UserServicesPreview extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      user: null,
-      booking_date: null,
-      shop: null,
-      reviews: [],
-      serviceUser: null,
-      availabilities: [],
-      bottom: false,
-      location: null,
-      errors: {},
-      albums: [],
-      pending: false,
-      avocotesBooking: null,
-    }
-  }
+const UserServicesPreview = ({classes, t, address, id}) => {
 
-  componentDidMount() {
+  const {user} = useUserContext()
+  const [bookingDate, setBookingDate]=useState(null)
+  const [shop, setShop]=useState(null)
+  const [reviews, setReviews]=useState([])
+  const [serviceUser, setServiceUser]=useState(null)
+  const [availabilities, setAvailabilities]=useState([])
+  const [bottom, setBottom]=useState(false)
+  const [location, setLocation]=useState(null)
+  const [errors, setErrors]=useState({})
+  const [albums, setAlbums]=useState([])
+  const [pending, setPending]=useState(false)
+  const [avocotesBooking, setAvocotesBooking]=useState(null)
+
+  useEffect(() => {
+    if (id && !serviceUser) {
+      console.log('sup first')
+      setAxiosAuthentication()
+      axios.get(`/myAlfred/api/serviceUser/${id}`)
+        .then(res => {
+          const su=res.data
+          setServiceUser(su)
+          axios.get(`/myAlfred/api/shop/alfred/${su.user._id}`)
+            .then(res => {
+              setShop(res.data)
+            })
+          axios.get(`/myAlfred/api/availability/userAvailabilities/${su.user._id}`)
+            .then(res => {
+              setAvailabilities(res.data)
+            })
+        })
+    }
+  }, [id])
+
+  /**
+  const componentDidMount = () => {
 
     const id = this.props.params.id
 
@@ -118,20 +126,14 @@ class UserServicesPreview extends React.Component {
       .catch(err => console.error(err))
 
 
-    axios.get('/myAlfred/api/users/current')
-      .then(res => {
-        let user = res.data
-        this.setState({user: user})
-      })
-      .catch(err => console.error(err))
-
     localStorage.removeItem('bookingObj')
   }
+  */
 
-  onAvocotesBookingChange = booking => {
+  const onAvocotesBookingChange = booking => {
     // Test to avoid recusivity vs DrawerBooking
-    if (this.state.avocotesBooking?._id!=booking?._id) {
-      this.setState({avocotesBooking: booking})
+    if (avocotesBooking?._id!=booking?._id) {
+      setAvocotesBooking(booking)
     }
   }
 
@@ -178,7 +180,7 @@ class UserServicesPreview extends React.Component {
   }
   */
 
-  toggleDrawer = (side, open) => event => {
+  const toggleDrawer = (side, open) => event => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return
     }
@@ -186,16 +188,14 @@ class UserServicesPreview extends React.Component {
   }
 
   // TODO : force computing disponibility
-  scheduleDateChanged = (dates, mmt, mode) => {
+  const onScheduleDateChange = (dates, mmt, mode) => {
     const dt = moment(mmt)
     if (dt.isValid() && isMomentAvailable(dt, this.state.availabilities)) {
-      this.setState({booking_date: dt.toDate()})
+      this.setState({bookingDate: dt.toDate()})
     }
   }
 
-  content = classes => {
-    const {shop, serviceUser, availabilities, avocotesBooking}=this.state
-
+  const content = classes => {
     const showProfileEnabled = !!serviceUser?.user?._id
 
     return(
@@ -239,13 +239,13 @@ class UserServicesPreview extends React.Component {
                       <Grid item sm={6} xs={12}>
                         <CustomButton variant={'outlined'} classes={{root: 'custompreviewshowprofil'}} className={classes.userServicePreviewButtonProfil}
                           disabled={!showProfileEnabled} onClick={() => Router.push(`/profile/about?user=${serviceUser.user._id}`)}>
-                          {ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.button_show_profil'))}
+                          {ReactHtmlParser(t('USERSERVICEPREVIEW.button_show_profil'))}
                         </CustomButton>
                       </Grid>
                       <Grid item sm={6} xs={12}>
                         <Link href="#availabilities">
                           <CustomButton variant={'outlined'} classes={{root: 'custompreviewshowprofil'}} className={classes.userServicePreviewButtonProfil}>
-                            {ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.button_show_availabilities'))}
+                            {ReactHtmlParser(t('USERSERVICEPREVIEW.button_show_availabilities'))}
                           </CustomButton>
                         </Link>
                       </Grid>
@@ -257,10 +257,10 @@ class UserServicesPreview extends React.Component {
                     flexible={shop.flexible_cancel} moderate={shop.moderate_cancel} strict={shop.strict_cancel}/>
                 </Grid>
                 <Grid className={`custompreviewschedulecont ${classes.scheduleContainer}`}>
-                  <Planning availabilities={availabilities} scheduleDateChanged={this.scheduleDateChanged}
+                  <Planning availabilities={availabilities} scheduleDateChanged={onScheduleDateChange}
                     alfred={serviceUser.user} classes={classes}/>
                 </Grid>
-                {this.state.serviceUser.service &&
+                {serviceUser &&
                   <Grid className={classes.equipmentsContainer}>
                     <Equipments classes={classes}
                       allEquipments={serviceUser.service.equipments}
@@ -271,8 +271,8 @@ class UserServicesPreview extends React.Component {
                 <Grid className={`custompreviewbookingmap ${classes.perimeterContent}`}>
                   {
                     serviceUser &&
-                      <Place title={ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_place'))}
-                        subTitle={serviceUser.user.firstname ? ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_zone_intervention')) + serviceUser.user.firstname + ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_zone_intervention_end')) : ''}
+                      <Place title={ReactHtmlParser(t('USERSERVICEPREVIEW.topic_place'))}
+                        subTitle={serviceUser.user.firstname ? ReactHtmlParser(t('USERSERVICEPREVIEW.topic_zone_intervention')) + serviceUser.user.firstname + ReactHtmlParser(t('USERSERVICEPREVIEW.topic_zone_intervention_end')) : ''}
                         location={[serviceUser.service_address.gps.lat, serviceUser.service_address.gps.lng]}
                         perimeter={serviceUser.perimeter * 1000}/>
                   }
@@ -287,20 +287,20 @@ class UserServicesPreview extends React.Component {
                       color="primary"
                       aria-label="add"
                       classes={{root: classes.buttonReservation}}
-                      onClick={this.toggleDrawer('bottom', true)}
+                      onClick={toggleDrawer('bottom', true)}
                     >
-                      {ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.button_show_services'))}
+                      {ReactHtmlParser(t('USERSERVICEPREVIEW.button_show_services'))}
                     </CustomButton>
                   </Grid>
                   <Hidden only={['xl', 'lg']} implementation={'css'} className={classes.hidden}>
-                    <Drawer anchor="bottom" open={this.state.bottom} onClose={this.toggleDrawer('bottom', false)} classes={{root: 'custompreviewdrawer'}}>
+                    <Drawer anchor="bottom" open={bottom} onClose={toggleDrawer('bottom', false)} classes={{root: 'custompreviewdrawer'}}>
                       <Grid className={classes.drawerContent}>
                         <DrawerBooking
                           serviceUserId={serviceUser._id}
-                          date={this.state.booking_date}
+                          date={bookingDate}
                           side={'bottom'}
-                          toggleDrawer={this.toggleDrawer}
-                          onAvocotesBookingChange={this.onAvocotesBookingChange}
+                          toggleDrawer={toggleDrawer}
+                          onAvocotesBookingChange={onAvocotesBookingChange}
                         />
                       </Grid>
                     </Drawer>
@@ -312,9 +312,8 @@ class UserServicesPreview extends React.Component {
                 <Grid className={classes.contentRight}>
                   <DrawerBooking
                     serviceUserId={serviceUser._id}
-                    date={this.state.booking_date}
-                    all_avocotes={this.state.all_avocotes}
-                    onAvocotesBookingChange={this.onAvocotesBookingChange}
+                    date={bookingDate}
+                    onAvocotesBookingChange={onAvocotesBookingChange}
                   />
                 </Grid>
               </Grid>
@@ -323,13 +322,13 @@ class UserServicesPreview extends React.Component {
           <Grid style={{display: 'flex', justifyContent: 'center'}}>
             <Grid style={{width: '80%', paddingLeft: '5%', paddingRight: '5%'}}>
               {
-                this.state.reviews.length === 0 ? null :
+                reviews.length>0 &&
                   <Grid style={{marginTop: '5%'}}>
                     <Topic
                       underline={true}
-                      titleTopic={ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_commentary'))}
+                      titleTopic={ReactHtmlParser(t('USERSERVICEPREVIEW.topic_commentary'))}
                       titleSummary={serviceUser.user.firstname ?
-                        ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.topic_commentary_summary', {firstname: serviceUser.user.firstname}))
+                        ReactHtmlParser(t('USERSERVICEPREVIEW.topic_commentary_summary', {firstname: serviceUser.user.firstname}))
                         :
                         ''}
                     >
@@ -344,53 +343,49 @@ class UserServicesPreview extends React.Component {
     )
   }
 
-  render() {
-    const {classes} = this.props
-    const {address} = this.props.params
-    const {serviceUser, user, shop} = this.state
+  if (!serviceUser || !shop) {
+    console.log('null')
+    return null
+  }
+  console.log('not null')
+  const description=`${serviceUser.service.label} par ${serviceUser.user.firstname}`
+  let picture=serviceUser.service.picture
+  if (!picture.startsWith('http') && !picture.startsWith('/')) {
+    picture = `/${picture}`
+  }
 
-    if (!serviceUser || !shop) {
-      return null
-    }
-    const description=`${serviceUser.service.label} par ${serviceUser.user.firstname}`
-    let picture=serviceUser.service.picture
-    if (!picture.startsWith('http') && !picture.startsWith('/')) {
-      picture = `/${picture}`
-    }
-
-    const SULayout = ({children}) => {
-      return (
-        <>
-          <Hidden only={['xs']} implementation={'css'} className={classes.hidden}>
-            <Layout user={user} selectedAddress={address}>
-              {children}
-            </Layout>
-          </Hidden>
-          <Hidden only={['lg', 'xl', 'sm', 'md']} implementation={'css'} className={classes.hidden}>
-            <LayoutMobile>
-              {children}
-            </LayoutMobile>
-          </Hidden>
-        </>
-      )
-    }
+  const SULayout = ({children}) => {
     return (
-      <React.Fragment>
-        <Head>
-          <title>{serviceUser.service.label} par {serviceUser.user.full_name}</title>
-          <meta property="og:image" content={picture}/>
-          <meta property="og:image:secure_url" content={picture}/>
-          <meta property="og:description" content={description}/>
-          <meta property="description" content={description}/>
-          <meta property="og:type" content="website"/>
-          <meta property="og:url" content="https://my-alfred.io"/>
-        </Head>
-        <SULayout>
-          {this.content(classes)}
-        </SULayout>
-      </React.Fragment>
+      <>
+        <Hidden only={['xs']} implementation={'css'} className={classes.hidden}>
+          <Layout user={user} selectedAddress={address}>
+            {children}
+          </Layout>
+        </Hidden>
+        <Hidden only={['lg', 'xl', 'sm', 'md']} implementation={'css'} className={classes.hidden}>
+          <LayoutMobile>
+            {children}
+          </LayoutMobile>
+        </Hidden>
+      </>
     )
   }
+  return (
+    <React.Fragment>
+      <Head>
+        <title>{serviceUser.service.label} par {serviceUser.user.full_name}</title>
+        <meta property="og:image" content={picture}/>
+        <meta property="og:image:secure_url" content={picture}/>
+        <meta property="og:description" content={description}/>
+        <meta property="description" content={description}/>
+        <meta property="og:type" content="website"/>
+        <meta property="og:url" content="https://my-alfred.io"/>
+      </Head>
+      <SULayout>
+        {content(classes)}
+      </SULayout>
+    </React.Fragment>
+  )
 }
 
 export default withTranslation('custom', {withRef: true})(withStyles(styles)(withParams(UserServicesPreview)))
