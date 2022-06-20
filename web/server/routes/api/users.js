@@ -89,6 +89,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   }
 
   User.find({active: true})
+    .sort({creation_date: -1})
     .populate('company')
     .populate('companies')
     .then(data => {
