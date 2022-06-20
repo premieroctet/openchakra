@@ -81,7 +81,7 @@
   "EDI.ORDER.recap": "Récapitulatif de la commande",
   "EDI.QUOTATION.recap": "Récapitulatif du devis",
   "EDI.ORDER.valid": "Valider ma commande",
-  "EDI.QUOTATION.valid": "Valider mon devis",
+  "EDI.QUOTATION.valid": "Soumettre mon devis",
   "EDI.ORDER.dialogAddressValid": "Pour valider votre commande, veuillez&nbsp;:",
   "EDI.QUOTATION.dialogAddressValid": "Pour valider votre devis, veuillez&nbsp;:",
   "EDI.ORDER.addTo": "Ajouter à la commande",
