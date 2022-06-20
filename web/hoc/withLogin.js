@@ -29,7 +29,7 @@ function withLogin(WrappedComponent) {
           .then(res => {
             const roles = res.data
             const selectedRole = roles.length == 1 ? roles[0] : null
-            console.log('here are the roles', roles)
+            // console.log('here are the roles', roles)
             this.setState({...this.state, roles, selectedRole})
           })
           .catch(err => {

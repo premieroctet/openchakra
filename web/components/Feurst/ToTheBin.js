@@ -15,7 +15,7 @@ const ToTheBinWithAlert = ({row, deleteIt}) => {
   return (
     <>
       <button onClick={() => setIsOpenDialog(true)}>
-        <span role='image' >🗑️</span><span class="sr-only">Supprimer la ligne numéro {row.index}</span>
+        <span role='img' >🗑️</span><span className="sr-only">Supprimer la ligne numéro {row.index}</span>
       </button>
       <DialogBinAlert open={isOpenDialog} onClose={() => setIsOpenDialog(false)} >
         <div>
