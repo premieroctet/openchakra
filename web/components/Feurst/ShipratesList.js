@@ -3,7 +3,7 @@ import {SHIPRATE, CREATE} from '../../utils/consts'
 
 import DataImport from '../DataImport/DataImport'
 import DialogBase from '../Dialog/DialogBase'
-import {PleasantButton} from './Button'
+import {NormalButton} from './Button'
 
 import {shipratesColumns} from './tablestructures'
 import BaseListTable from './BaseListTable'
@@ -23,7 +23,7 @@ const ShipratesList = ({accessRights}) => {
     <>
       <div>
         { accessRights.isActionAllowed(SHIPRATE, CREATE) && IMPORTS.map((imp, i) => (
-          <PleasantButton key={`action${i}`} onClick={() => setImportInfo(imp)}>{imp.title}</PleasantButton>
+          <NormalButton key={`action${i}`} onClick={() => setImportInfo(imp)}>{imp.title}</NormalButton>
         ))}
       </div>
       <BaseListTable caption='Frais de livraison' endpoint='shiprates' columns={shipratesColumns} accessRights={accessRights}/>

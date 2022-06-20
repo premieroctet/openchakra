@@ -7,7 +7,7 @@ const axios = require('axios')
 const {snackBarError, snackBarSuccess} = require('../../utils/notifications')
 const {API_PATH, FEURST_SALES} = require('../../utils/feurst/consts')
 const {setAxiosAuthentication} = require('../../utils/authentication')
-const {PleasantButton} = require('./Button')
+const {NormalButton} = require('./Button')
 
 const AccountLink = props => {
 
@@ -59,7 +59,7 @@ const AccountLink = props => {
           <MenuItem key={c._id} value={c._id}>{c.name}</MenuItem>,
         )}
       </Select>
-      <PleasantButton disabled={!enableLink} onClick={() => linkCompanies()}>Associer</PleasantButton>
+      <NormalButton disabled={!enableLink} onClick={() => linkCompanies()}>Associer</NormalButton>
     </Grid>
   )
 }

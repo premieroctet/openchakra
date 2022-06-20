@@ -18,7 +18,7 @@ import {setAxiosAuthentication} from '../../utils/authentication'
 import {client} from '../../utils/client'
 import {XL_EXTENSIONS} from '../../utils/consts'
 import {FEURST_IMG_PATH} from '../../utils/feurst/consts'
-import {PleasantButton} from './Button'
+import {NormalButton} from './Button'
 import ImportResult from './ImportResult'
 
 const PureDialog = dynamic(() => import('../Dialog//PureDialog'))
@@ -142,9 +142,9 @@ const ImportExcelFile = ({importURL, templateURL, caption, endpoint, orderid, im
   const cap = caption || 'Importer un fichier Excel'
 
   return (<>
-    <PleasantButton onClick={() => setIsOpenDialog(true)} rounded={'full'} className="mb-4" bgColor={'#141953'} textColor={'white'} size="full-width">
+    <NormalButton onClick={() => setIsOpenDialog(true)} rounded={'full'} className="mb-4" bgColor={'#141953'} textColor={'white'} size="full-width">
       {cap}
-    </PleasantButton>
+    </NormalButton>
     <ImportDialog open={isOpenDialog}
       onClose={() => setIsOpenDialog(false)} height='90%'>
       {/* {is_development() && <h1>{fileType},{delimiter},{tabs},{tab},{firstLine},</h1>} */}
@@ -205,7 +205,7 @@ const ImportExcelFile = ({importURL, templateURL, caption, endpoint, orderid, im
         </>}
       
       <div className='importbutton flex'>
-        <PleasantButton size={'full-width'} rounded={'full'} onClick={() => submitData({endpoint, orderid, importFile})}>Importer</PleasantButton>
+        <NormalButton size={'full-width'} rounded={'full'} onClick={() => submitData({endpoint, orderid, importFile})}>Importer</NormalButton>
       </div>
     </ImportDialog>
     {templateURL &&

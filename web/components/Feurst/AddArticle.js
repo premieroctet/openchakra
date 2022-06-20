@@ -6,7 +6,7 @@ import {client} from '../../utils/client'
 import {snackBarError} from '../../utils/notifications'
 import useAsync from '../../hooks/use-async.hook'
 import useDebounce from '../../hooks/use-debounce.hook'
-import {PleasantButton} from './Button'
+import {NormalButton} from './Button'
 import {FormAddArticle, Label, Input, Refquantity} from './components.styles'
 import CheckingProduct from './CheckingProduct'
 
@@ -155,7 +155,7 @@ const AddArticle = ({endpoint, orderid, updateTable, addProduct, wordingSection}
             onChange={ev => !isNaN(parseInt(ev.target.value)) && setArticle({...article, quantity: parseInt(ev.target.value)})}
           />
         </Refquantity>
-        <PleasantButton disabled={!checkProductEnabled} rounded={'full'} onClick={() => checkProduct(article)}>Vérifier</PleasantButton>
+        <NormalButton disabled={!checkProductEnabled} rounded={'full'} onClick={() => checkProduct(article)}>Vérifier</NormalButton>
 
 
       </FormAddArticle>

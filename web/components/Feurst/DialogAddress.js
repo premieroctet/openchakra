@@ -9,7 +9,8 @@ import PureDialog from '../Dialog/PureDialog'
 import {client} from '../../utils/client'
 import isEmpty from '../../server/validation/is-empty'
 import {API_PATH} from '../../utils/consts'
-import {PleasantButton} from './Button'
+import RequiredField from '../misc/RequiredField'
+import {NormalButton} from './Button'
 import {Input} from './components.styles'
 
 
@@ -89,14 +90,15 @@ traitement de votre commande.</p>
       <form ref={formData} onSubmit={submitAddress}>
 
         <h2>{ReactHtmlParser(t(`${wordingSection}.dialogAddressValid`))}</h2>
-        <h3>Indiquer une référence</h3>
+        <p className='alertrequired'><RequiredField /> champs requis</p>
+        <h3>Indiquer une référence <RequiredField /></h3>
 
         {/* order ref */}
         <label htmlFor='reforder' className='sr-only'>Référence</label>
         <Input noborder id="reforder" className='ref' value={reference || ''} onChange={ev => requestUpdate({reference: ev.target.value})} placeholder={'Ex : Equipements carrière X'} />
-
+        
         {/* order address */}
-        <h3>Indiquer l'adresse de livraison</h3>
+        <h3>Indiquer l'adresse de livraison <RequiredField /></h3>
 
         
         {!addAddress &&
@@ -106,8 +108,6 @@ traitement de votre commande.</p>
         <div className='flex justify-center mt my-2'>
           <ChangeAddressButton onClick={addNewAddress}>
             {!addAddress ? <><span>⊕</span> Ajouter une nouvelle adresse</> : <><span>⇠</span> retour à mon carnet d'adresses</>}
-            
-            
           </ChangeAddressButton>
         </div>
         
@@ -115,20 +115,19 @@ traitement de votre commande.</p>
         <Address state={state} requestUpdate={requestUpdate} errors={errors} addAddress={addAddress} />
         }
 
-        {/* order shipping fees */}
         {!isEmpty(shippingfees) ? (<>
-          <h3>Indiquez l'option de livraison</h3>
+          <h3>Indiquer l'option de livraison <RequiredField /></h3>
           <ShippingFees requestUpdate={requestUpdate} shippingoptions={shippingfees} shipping_mode={shipping_mode} />
         </>) : null
         }
 
-        <PleasantButton
+        <NormalButton
           disabled={!valid}
           type='submit'
           onSubmit={() => submitAddress}
         >
             Valider ces informations
-        </PleasantButton>
+        </NormalButton>
       </form>
 
     </StyledDialog>
@@ -137,6 +136,17 @@ traitement de votre commande.</p>
 
 
 const StyledDialog = styled(PureDialog)`
+
+  .asterixsm {
+    color: red;
+  }
+
+  .alertrequired {
+    margin: 0;
+    font-weight: bold;
+    text-align: right;
+  }
+
   .dialogcontent {
     background-color: var(--gray-200);
     padding: var(--spc-10);
