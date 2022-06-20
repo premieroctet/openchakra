@@ -29,6 +29,10 @@ function darkerColor(hexColor, percentLower=15) {
 const Button = styled.button.attrs(props => ({
   size: props.size || '',
   rounded: props.rounded || 'var(--rounded-xl)',
+  bgColor: props.bgColor || props.theme.colors.blue,
+  textColor: props.textColor || props.theme.colors.white,
+  borderColor: props.borderColor || `1px solid transparent`,
+  bgColorDisabled: props.bgColorDisabled || props.theme.colors.metalGray,
 }))`
   appearance: none;
   background: none;
@@ -44,6 +48,16 @@ const Button = styled.button.attrs(props => ({
 }};
   border-radius: ${() => applyBorderRadius};
   font-size: ${props => props.theme.fontSizes.lg};
+  background-color: ${props => props.bgColor};
+  color: ${props => props.textColor};
+  border: ${props => props.borderColor};
+  padding: 12px 42px;
+  will-change: transform;
+  height: max-content;
+
+  :disabled && {
+    background-color: ${props => darkerColor(props.bgColorDisabled)};
+  }
 `
 
 Button.defaultProps = {
@@ -60,6 +74,7 @@ const StyledButton = styled(Button).attrs(props => ({
   rounded: props.rounded || 'var(--rounded-xl)',
 }))`
   position: relative;
+  height: max-content;
   border: 0;
   padding: 0;
   transition: filter 250ms;
@@ -187,6 +202,32 @@ const PleasantButton = ({
   )
 }
 
+const NormalButton = ({
+  type = 'button',
+  size = null,
+  rounded = null,
+  bgColor = null,
+  borderColor = null,
+  textColor = null,
+  children,
+  ...rest
+}) => {
+  
+  return (
+    <Button
+      type={type}
+      size={size}
+      rounded={rounded}
+      bgColor={bgColor}
+      textColor={textColor}
+      borderColor={borderColor}
+      {...rest}
+    >
+      {children}
+    </Button>
+  )
+}
+
 const BaseLink = ({
   size = null,
   rounded = null,
@@ -219,4 +260,4 @@ const PleasantLink = styled(BaseLink)`
 `
   
 
-export {Button, PleasantButton, PleasantLink}
+export {Button, NormalButton, PleasantButton, PleasantLink}

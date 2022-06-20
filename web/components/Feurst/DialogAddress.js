@@ -10,7 +10,7 @@ import {client} from '../../utils/client'
 import isEmpty from '../../server/validation/is-empty'
 import {API_PATH} from '../../utils/consts'
 import RequiredField from '../misc/RequiredField'
-import {PleasantButton} from './Button'
+import {NormalButton} from './Button'
 import {Input} from './components.styles'
 
 
@@ -121,13 +121,13 @@ traitement de votre commande.</p>
         </>) : null
         }
 
-        <PleasantButton
+        <NormalButton
           disabled={!valid}
           type='submit'
           onSubmit={() => submitAddress}
         >
             Valider ces informations
-        </PleasantButton>
+        </NormalButton>
       </form>
 
     </StyledDialog>

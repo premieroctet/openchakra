@@ -9,7 +9,7 @@ import {
 import {StyledListbox} from '../../styles/feurst/StyledComponents'
 import {snackBarError, snackBarSuccess} from '../../utils/notifications'
 import {Input} from './components.styles'
-import {PleasantButton} from './Button'
+import {NormalButton} from './Button'
 
 const RegisterCompany = ({onSuccess, onClose}) => {
 
@@ -68,13 +68,13 @@ const RegisterCompany = ({onSuccess, onClose}) => {
       </Listbox>
     </StyledListbox>
 
-    <PleasantButton
+    <NormalButton
       disabled={!canRegisterCompany}
       type='submit'
       onSubmit={() => submitCompany({companyname: state.companyname, address: state.address})}
     >
       Enregistrer cette société
-    </PleasantButton>
+    </NormalButton>
   </StyledRegisterCompany>
   )
 }

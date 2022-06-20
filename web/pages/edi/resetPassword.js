@@ -8,7 +8,7 @@ import {client} from '../../utils/client'
 import withParams from '../../components/withParams'
 import {snackBarSuccess, snackBarError} from '../../utils/notifications'
 import RenewPassword from '../../components/Password/RenewPassword'
-import {PleasantButton} from '../../components/Feurst/Button'
+import {NormalButton} from '../../components/Feurst/Button'
 import EdiContainer from '../../components/Feurst/EdiContainer'
 
 const ResetPassword = ({t, params}) => {
@@ -50,14 +50,14 @@ const ResetPassword = ({t, params}) => {
           
           <RenewPassword passChanged={passChanged} setPassword={setPassword} />
         
-          <PleasantButton
+          <NormalButton
             rounded={'full'}
             disabled={!canSubmitPassword}
             type='submit'
             onClick={() => resetPassword}
           >
             Enregistrer le nouveau mot de passe
-          </PleasantButton>
+          </NormalButton>
         </form>
 
       </StyledReset>

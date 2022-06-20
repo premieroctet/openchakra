@@ -7,7 +7,7 @@ import AccountLink from './AccountLink'
 import FeurstRegister from './Register'
 import {accountsColumns} from './tablestructures'
 import BaseListTable from './BaseListTable'
-import {PleasantButton} from './Button'
+import {NormalButton} from './Button'
 
 const PureDialog = dynamic(() => import('../Dialog/PureDialog'))
 
@@ -31,7 +31,7 @@ const AccountsList = ({accessRights}) => {
 
       {canAddAccount &&
       <div className='container-md mb-8'>
-        <PleasantButton onClick={() => setIsOpenDialog(true)} rounded={'full'} size={'full-width'}><span>⊕</span> Ajouter un compte</PleasantButton>
+        <NormalButton onClick={() => setIsOpenDialog(true)} rounded={'full'} size={'full-width'}><span>⊕</span> Ajouter un compte</NormalButton>
       </div>
       }
 
