@@ -327,6 +327,14 @@ const accountsColumns = ({language, visibility, endpoint, deleteUser}) => {
       attribute: u => u.roles.map(r => ROLES[r]).join(','),
     },
     {
+      label: 'Date de création',
+      attribute: 'creation_date',
+      Cell: ({cell: {value}}) => formatDate(new Date(value), language),
+      sortType: datetime,
+      Filter: DateRangeColumnFilter,
+      filter: 'dateBetween', /* Custom Filter Type */
+    },
+    {
       label: 'Supprimer',
       attribute: 'active',
       Cell: ({cell: {row}}) => {
