@@ -5,7 +5,7 @@ const QueryParamsTest = props => {
 
   return (
     <>
-      <p>Params : {JSON.stringify(props.params)}</p>
+      <p>Params : {JSON.stringify(props)}</p>
     </>
   )
 }

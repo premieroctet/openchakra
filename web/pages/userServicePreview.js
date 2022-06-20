@@ -48,16 +48,15 @@ const UserServicesPreview = ({classes, t, address, id}) => {
   const [reviews, setReviews]=useState([])
   const [serviceUser, setServiceUser]=useState(null)
   const [availabilities, setAvailabilities]=useState([])
-  const [bottom, setBottom]=useState(false)
+  const [drawerVisible, setDrawerVisible]=useState(false)
   const [location, setLocation]=useState(null)
   const [errors, setErrors]=useState({})
   const [albums, setAlbums]=useState([])
   const [pending, setPending]=useState(false)
-  const [avocotesBooking, setAvocotesBooking]=useState(null)
+  const [avocotesUserName, setAvocotesUserName]=useState(null)
 
   useEffect(() => {
     if (id && !serviceUser) {
-      console.log('sup first')
       setAxiosAuthentication()
       axios.get(`/myAlfred/api/serviceUser/${id}`)
         .then(res => {
@@ -78,7 +77,7 @@ const UserServicesPreview = ({classes, t, address, id}) => {
   /**
   const componentDidMount = () => {
 
-    const id = this.props.params.id
+    const id = this.props.id
 
     if (!id) {
       return
@@ -130,13 +129,6 @@ const UserServicesPreview = ({classes, t, address, id}) => {
   }
   */
 
-  const onAvocotesBookingChange = booking => {
-    // Test to avoid recusivity vs DrawerBooking
-    if (avocotesBooking?._id!=booking?._id) {
-      setAvocotesBooking(booking)
-    }
-  }
-
   /**
   checkBook = () => {
     let errors = {}
@@ -180,179 +172,32 @@ const UserServicesPreview = ({classes, t, address, id}) => {
   }
   */
 
-  const toggleDrawer = (side, open) => event => {
+  const toggleDrawer = open => event => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return
     }
-    this.setState({...this.state, [side]: open})
+    setDrawerVisible(open)
   }
 
   // TODO : force computing disponibility
   const onScheduleDateChange = (dates, mmt, mode) => {
+    /**
     const dt = moment(mmt)
-    if (dt.isValid() && isMomentAvailable(dt, this.state.availabilities)) {
-      this.setState({bookingDate: dt.toDate()})
-    }
-  }
-
-  const content = classes => {
-    const showProfileEnabled = !!serviceUser?.user?._id
-
-    return(
-      <Grid style={{width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
-        <Grid>
-          <Grid className={`custompreviewmain ${classes.mainContainer}`}>
-            <Grid container className={classes.widthContainer}>
-              <Grid item lg={6} xs={12} className={classes.leftContainer}>
-                <Grid container className={classes.avatarAnDescription}>
-                  <Grid item sm={3} className={classes.avatarContainer}>
-                    <Grid item className={classes.itemAvatar}>
-                      <UserAvatar user={serviceUser.user} animateStartup={true}/>
-                    </Grid>
-                  </Grid>
-                  <Grid item sm={9} className={classes.flexContentAvatarAndDescription}>
-                    <Grid className={classes.marginAvatarAndDescriptionContent}>
-                      <Grid container spacing={1} style={{margin: 0, width: '100%'}}>
-                        <Grid item xl={10} lg={10} md={12} sm={12} xs={12}>
-                          <Typography variant="h6">{serviceUser.user.firstname} - {serviceUser.service.label}</Typography>
-                        </Grid>
-                        <Grid item xl={2} lg={2} md={12} sm={12} xs={12} className={classes.containerListSkills}>
-                          <ListIconsSkills data={{insurance_text: shop.insurance_text, grade_text: serviceUser.grade_text}}/>
-                        </Grid>
-                      </Grid>
-                      {
-                        serviceUser.service_address &&
-                          <Grid>
-                            <Typography style={{color: 'rgba(39,37,37,35%)'}} className={'custompreviewplace'}>
-                              {serviceUser.service_address.city}, {serviceUser.service_address.country} - {serviceUser.perimeter}km autour de {serviceUser.service_address.city}
-                            </Typography>
-                          </Grid>
-                      }
-                      {
-                        avocotesBooking &&
-                          <Grid>
-                            <Typography style={{color: 'rgba(39,37,37,35%)'}}>{`Réservation Avocotés pour ${avocotesBooking.user.full_name}`}</Typography>
-                          </Grid>
-                      }
-                    </Grid>
-                    <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
-                      <Grid item sm={6} xs={12}>
-                        <CustomButton variant={'outlined'} classes={{root: 'custompreviewshowprofil'}} className={classes.userServicePreviewButtonProfil}
-                          disabled={!showProfileEnabled} onClick={() => Router.push(`/profile/about?user=${serviceUser.user._id}`)}>
-                          {ReactHtmlParser(t('USERSERVICEPREVIEW.button_show_profil'))}
-                        </CustomButton>
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <Link href="#availabilities">
-                          <CustomButton variant={'outlined'} classes={{root: 'custompreviewshowprofil'}} className={classes.userServicePreviewButtonProfil}>
-                            {ReactHtmlParser(t('USERSERVICEPREVIEW.button_show_availabilities'))}
-                          </CustomButton>
-                        </Link>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid className={'custompreviewboxdescription'} style={{marginTop: '10%'}}>
-                  <ServiceUserDescription classes={classes} serviceUser={serviceUser} alfred={serviceUser.user}
-                    flexible={shop.flexible_cancel} moderate={shop.moderate_cancel} strict={shop.strict_cancel}/>
-                </Grid>
-                <Grid className={`custompreviewschedulecont ${classes.scheduleContainer}`}>
-                  <Planning availabilities={availabilities} scheduleDateChanged={onScheduleDateChange}
-                    alfred={serviceUser.user} classes={classes}/>
-                </Grid>
-                {serviceUser &&
-                  <Grid className={classes.equipmentsContainer}>
-                    <Equipments classes={classes}
-                      allEquipments={serviceUser.service.equipments}
-                      selectedEquipments={serviceUser.equipments}
-                      alfred={serviceUser.user}/>
-                  </Grid>
-                }
-                <Grid className={`custompreviewbookingmap ${classes.perimeterContent}`}>
-                  {
-                    serviceUser &&
-                      <Place title={ReactHtmlParser(t('USERSERVICEPREVIEW.topic_place'))}
-                        subTitle={serviceUser.user.firstname ? ReactHtmlParser(t('USERSERVICEPREVIEW.topic_zone_intervention')) + serviceUser.user.firstname + ReactHtmlParser(t('USERSERVICEPREVIEW.topic_zone_intervention_end')) : ''}
-                        location={[serviceUser.service_address.gps.lat, serviceUser.service_address.gps.lng]}
-                        perimeter={serviceUser.perimeter * 1000}/>
-                  }
-                </Grid>
-                <Grid style={{height: '300px'}}>
-                  <Album user={serviceUser.user._id} key={serviceUser} underline={true} readOnly={true}/>
-                </Grid>
-                <Hidden only={['xl', 'lg']} implementation={'css'} className={classes.hidden}>
-                  <Grid className={classes.showReservation}>
-                    <CustomButton
-                      variant="contained"
-                      color="primary"
-                      aria-label="add"
-                      classes={{root: classes.buttonReservation}}
-                      onClick={toggleDrawer('bottom', true)}
-                    >
-                      {ReactHtmlParser(t('USERSERVICEPREVIEW.button_show_services'))}
-                    </CustomButton>
-                  </Grid>
-                  <Hidden only={['xl', 'lg']} implementation={'css'} className={classes.hidden}>
-                    <Drawer anchor="bottom" open={bottom} onClose={toggleDrawer('bottom', false)} classes={{root: 'custompreviewdrawer'}}>
-                      <Grid className={classes.drawerContent}>
-                        <DrawerBooking
-                          serviceUserId={serviceUser._id}
-                          date={bookingDate}
-                          side={'bottom'}
-                          toggleDrawer={toggleDrawer}
-                          onAvocotesBookingChange={onAvocotesBookingChange}
-                        />
-                      </Grid>
-                    </Drawer>
-                  </Hidden>
-                </Hidden>
-              </Grid>
-              {/* ------------------------------------------------------- ici content right ---------------------------------------------------*/}
-              <Grid className={classes.contentRightContainer} item xl={6} lg={6} md={12} sm={12} xs={12}>
-                <Grid className={classes.contentRight}>
-                  <DrawerBooking
-                    serviceUserId={serviceUser._id}
-                    date={bookingDate}
-                    onAvocotesBookingChange={onAvocotesBookingChange}
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid style={{display: 'flex', justifyContent: 'center'}}>
-            <Grid style={{width: '80%', paddingLeft: '5%', paddingRight: '5%'}}>
-              {
-                reviews.length>0 &&
-                  <Grid style={{marginTop: '5%'}}>
-                    <Topic
-                      underline={true}
-                      titleTopic={ReactHtmlParser(t('USERSERVICEPREVIEW.topic_commentary'))}
-                      titleSummary={serviceUser.user.firstname ?
-                        ReactHtmlParser(t('USERSERVICEPREVIEW.topic_commentary_summary', {firstname: serviceUser.user.firstname}))
-                        :
-                        ''}
-                    >
-                      <SummaryCommentary user={serviceUser.user._id} serviceUser={this.props.params.id}/>
-                    </Topic>
-                  </Grid>
-              }
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-    )
+    if (dt.isValid() && isMomentAvailable(dt, availabilities)) {
+      setBookingDate(dt.toDate())
+    }*/
   }
 
   if (!serviceUser || !shop) {
-    console.log('null')
     return null
   }
-  console.log('not null')
   const description=`${serviceUser.service.label} par ${serviceUser.user.firstname}`
   let picture=serviceUser.service.picture
   if (!picture.startsWith('http') && !picture.startsWith('/')) {
     picture = `/${picture}`
   }
+
+  const showProfileEnabled = !!serviceUser?.user?._id
 
   const SULayout = ({children}) => {
     return (
@@ -370,6 +215,7 @@ const UserServicesPreview = ({classes, t, address, id}) => {
       </>
     )
   }
+
   return (
     <React.Fragment>
       <Head>
@@ -382,7 +228,142 @@ const UserServicesPreview = ({classes, t, address, id}) => {
         <meta property="og:url" content="https://my-alfred.io"/>
       </Head>
       <SULayout>
-        {content(classes)}
+        <Grid style={{width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+          <Grid>
+            <Grid className={`custompreviewmain ${classes.mainContainer}`}>
+              <Grid container className={classes.widthContainer}>
+                <Grid item lg={6} xs={12} className={classes.leftContainer}>
+                  <Grid container className={classes.avatarAnDescription}>
+                    <Grid item sm={3} className={classes.avatarContainer}>
+                      <Grid item className={classes.itemAvatar}>
+                        <UserAvatar user={serviceUser.user} animateStartup={true}/>
+                      </Grid>
+                    </Grid>
+                    <Grid item sm={9} className={classes.flexContentAvatarAndDescription}>
+                      <Grid className={classes.marginAvatarAndDescriptionContent}>
+                        <Grid container spacing={1} style={{margin: 0, width: '100%'}}>
+                          <Grid item xl={10} lg={10} md={12} sm={12} xs={12}>
+                            <Typography variant="h6">{serviceUser.user.firstname} - {serviceUser.service.label}</Typography>
+                          </Grid>
+                          <Grid item xl={2} lg={2} md={12} sm={12} xs={12} className={classes.containerListSkills}>
+                            <ListIconsSkills data={{insurance_text: shop.insurance_text, grade_text: serviceUser.grade_text}}/>
+                          </Grid>
+                        </Grid>
+                        {
+                          serviceUser.service_address &&
+                            <Grid>
+                              <Typography style={{color: 'rgba(39,37,37,35%)'}} className={'custompreviewplace'}>
+                                {serviceUser.service_address.city}, {serviceUser.service_address.country} - {serviceUser.perimeter}km autour de {serviceUser.service_address.city}
+                              </Typography>
+                            </Grid>
+                        }
+                        {
+                          avocotesUserName &&
+                            <Grid>
+                              <Typography style={{color: 'rgba(39,37,37,35%)'}}>{`Réservation Avocotés pour ${avocotesUserName}`}</Typography>
+                            </Grid>
+                        }
+                      </Grid>
+                      <Grid container spacing={2} style={{margin: 0, width: '100%'}}>
+                        <Grid item sm={6} xs={12}>
+                          <CustomButton variant={'outlined'} classes={{root: 'custompreviewshowprofil'}} className={classes.userServicePreviewButtonProfil}
+                            disabled={!showProfileEnabled} onClick={() => Router.push(`/profile/about?user=${serviceUser.user._id}`)}>
+                            {ReactHtmlParser(t('USERSERVICEPREVIEW.button_show_profil'))}
+                          </CustomButton>
+                        </Grid>
+                        <Grid item sm={6} xs={12}>
+                          <Link href="#availabilities">
+                            <CustomButton variant={'outlined'} classes={{root: 'custompreviewshowprofil'}} className={classes.userServicePreviewButtonProfil}>
+                              {ReactHtmlParser(t('USERSERVICEPREVIEW.button_show_availabilities'))}
+                            </CustomButton>
+                          </Link>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid className={'custompreviewboxdescription'} style={{marginTop: '10%'}}>
+                    <ServiceUserDescription classes={classes} serviceUser={serviceUser} alfred={serviceUser.user}
+                      flexible={shop.flexible_cancel} moderate={shop.moderate_cancel} strict={shop.strict_cancel}/>
+                  </Grid>
+                  <Grid className={`custompreviewschedulecont ${classes.scheduleContainer}`}>
+                    <Planning availabilities={availabilities} scheduleDateChanged={onScheduleDateChange}
+                      alfred={serviceUser.user} classes={classes}/>
+                  </Grid>
+                  {serviceUser &&
+                    <Grid className={classes.equipmentsContainer}>
+                      <Equipments classes={classes}
+                        allEquipments={serviceUser.service.equipments}
+                        selectedEquipments={serviceUser.equipments}
+                        alfred={serviceUser.user}/>
+                    </Grid>
+                  }
+                  <Grid className={`custompreviewbookingmap ${classes.perimeterContent}`}>
+                    {
+                      serviceUser &&
+                        <Place title={ReactHtmlParser(t('USERSERVICEPREVIEW.topic_place'))}
+                          subTitle={serviceUser.user.firstname ? ReactHtmlParser(t('USERSERVICEPREVIEW.topic_zone_intervention')) + serviceUser.user.firstname + ReactHtmlParser(t('USERSERVICEPREVIEW.topic_zone_intervention_end')) : ''}
+                          location={[serviceUser.service_address.gps.lat, serviceUser.service_address.gps.lng]}
+                          perimeter={serviceUser.perimeter * 1000}/>
+                    }
+                  </Grid>
+                  <Grid style={{height: '300px'}}>
+                    <Album user={serviceUser.user._id} key={serviceUser} underline={true} readOnly={true}/>
+                  </Grid>
+                  <Hidden only={['xl', 'lg']} implementation={'css'} className={classes.hidden}>
+                    <Grid className={classes.showReservation}>
+                      <CustomButton
+                        variant="contained"
+                        color="primary"
+                        aria-label="add"
+                        classes={{root: classes.buttonReservation}}
+                        onClick={toggleDrawer(true)}
+                      >
+                        {ReactHtmlParser(t('USERSERVICEPREVIEW.button_show_services'))}
+                      </CustomButton>
+                    </Grid>
+                    <Hidden only={['xl', 'lg']} implementation={'css'} className={classes.hidden}>
+                      <Drawer anchor="bottom" open={drawerVisible} onClose={() => toggleDrawer(false)} classes={{root: 'custompreviewdrawer'}}>
+                        <Grid className={classes.drawerContent}>
+                          <DrawerBooking
+                            serviceUserId={id}
+                            toggleDrawer={toggleDrawer}
+                          />
+                        </Grid>
+                      </Drawer>
+                    </Hidden>
+                  </Hidden>
+                </Grid>
+                {/* ------------------------------------------------------- ici content right ---------------------------------------------------*/}
+                <Grid className={classes.contentRightContainer} item xl={6} lg={6} md={12} sm={12} xs={12}>
+                  <Grid className={classes.contentRight}>
+                    <DrawerBooking
+                      serviceUserId={serviceUser._id}
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid style={{display: 'flex', justifyContent: 'center'}}>
+              <Grid style={{width: '80%', paddingLeft: '5%', paddingRight: '5%'}}>
+                {
+                  reviews.length>0 &&
+                    <Grid style={{marginTop: '5%'}}>
+                      <Topic
+                        underline={true}
+                        titleTopic={ReactHtmlParser(t('USERSERVICEPREVIEW.topic_commentary'))}
+                        titleSummary={serviceUser.user.firstname ?
+                          ReactHtmlParser(t('USERSERVICEPREVIEW.topic_commentary_summary', {firstname: serviceUser.user.firstname}))
+                          :
+                          ''}
+                      >
+                        <SummaryCommentary user={serviceUser.user._id} serviceUser={this.props.id}/>
+                      </Topic>
+                    </Grid>
+                }
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
       </SULayout>
     </React.Fragment>
   )

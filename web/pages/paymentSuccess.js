@@ -1,7 +1,3 @@
-const withParams = require('../components/withParams')
-const {skipFailedPayment} = require('../config/config')
-const {delayedPromise} = require('../utils/promise')
-const {snackBarError} = require('../utils/notifications')
 import ReactHtmlParser from 'react-html-parser'
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
@@ -15,6 +11,10 @@ import io from 'socket.io-client'
 
 import LayoutPayment from '../hoc/Layout/LayoutPayment'
 import styles from '../static/css/pages/paymentSuccess/paymentSuccess'
+const {snackBarError} = require('../utils/notifications')
+const {delayedPromise} = require('../utils/promise')
+const {skipFailedPayment} = require('../config/config')
+const withParams = require('../components/withParams')
 
 const {BOOK_STATUS}=require('../utils/consts')
 const {setAxiosAuthentication}=require('../utils/authentication')
@@ -40,7 +40,7 @@ class paymentSuccess extends React.Component {
       .catch(err => {
         console.error(err)
       })
-    const booking_id = this.props.params.booking_id
+    const booking_id = this.props.booking_id
     let transaction=null
     let booking=null
     axios.get(`/myAlfred/api/booking/${booking_id}`)

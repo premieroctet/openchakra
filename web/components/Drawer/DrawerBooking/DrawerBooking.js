@@ -1,4 +1,5 @@
 import axios from 'axios'
+import Router from 'next/router'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React, {useState, useEffect} from 'react'
@@ -20,6 +21,8 @@ import AddIcon from '@material-ui/icons/Add'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import withStyles from '@material-ui/core/styles/withStyles'
+import {BOOK_STATUS} from '../../../utils/others/consts'
+import {computeBookingReference} from '../../../utils/text'
 import {
   getDeadLine,
   isDateAvailable,
@@ -31,6 +34,7 @@ import {computeDistanceKm} from '../../../utils/functions'
 import {snackBarError} from '../../../utils/notifications'
 import {setAxiosAuthentication} from '../../../utils/authentication'
 import {is_development} from '../../../config/config'
+// const is_development = () => false
 import styles from '../../../static/css/components/DrawerBooking/DrawerBooking'
 import BookingDetail from '../../BookingDetail/BookingDetail'
 import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch'
@@ -41,13 +45,16 @@ const isEmpty = require('../../../server/validation/is-empty')
 
 moment.locale('fr')
 
-const DrawerBooking = ({classes, t, serviceUserId, date, onAvocotesBookingChange}) => {
+const DrawerBooking = ({classes, t, serviceUserId,
+  onAvocotesBookingChange: onAvocotesBookingChangeExternal,
+  toggleDrawer,
+}) => {
 
   const [serviceUser, setServiceUser]=useState(null)
   const [avocotesBooking, setAvocotesBooking]=useState(null)
   const [avocotesBookings, setAvocotesBookings]=useState([])
   const [count, setCount]=useState({})
-  const [bookingDate, setBookingDate]=useState(date)
+  const [bookingDate, setBookingDate]=useState(null)
   const [expanded, setExpanded]=useState(null)
   const [locations, setLocations]=useState({})
   const [location, setLocation]=useState(null)
@@ -58,19 +65,26 @@ const DrawerBooking = ({classes, t, serviceUserId, date, onAvocotesBookingChange
   const [travel_tax, setTravelTax]=useState(0)
   const [pick_tax, setPickTax]=useState(0)
   const [pricedPrestations, setPricedPrestations]=useState({})
-  const [total, setTotal]=useState(0)
-  const [customer_fee, setCustomerFee]=useState(0)
-  const [cesu_total, setCesuTotal]=useState(0)
   const [alfred_pro, setAlfredPro]=useState(false)
   const [shop, setShop]=useState(null)
   const [canBook, setCanBook]=useState(null)
   const [prices, setPrices]=useState({})
+  const [pending, setPending]=useState(false)
 
   const {user} = useUserContext()
 
   useEffect(() => {
-    if (!serviceUser) {
-      console.log('db first')
+    const pricedPrestas={}
+    serviceUser?.prestations.forEach(p => {
+      if (count[p._id]) {
+        pricedPrestas[p.prestation.label] = count[p._id] * p.price
+      }
+    })
+    setPricedPrestations(pricedPrestas)
+  }, [count])
+
+  useEffect(() => {
+    if (serviceUserId && !serviceUser) {
       setAxiosAuthentication()
       axios.get(`/myAlfred/api/serviceUser/${serviceUserId}`)
         .then(res => {
@@ -111,7 +125,7 @@ const DrawerBooking = ({classes, t, serviceUserId, date, onAvocotesBookingChange
   }
 
   useEffect(() => {
-    onAvocotesBookingChange && onAvocotesBookingChange(avocotesBooking)
+    onAvocotesBookingChangeExternal && onAvocotesBookingChangeExternal(avocotesBooking)
   }, [avocotesBooking])
 
 
@@ -147,9 +161,8 @@ const DrawerBooking = ({classes, t, serviceUserId, date, onAvocotesBookingChange
     if (!serviceUser || !user) { return }
     const locations={}
     if (serviceUser.location.client) {
-      const avocotes_booking=avocotesBookings.find(a => a._id==avocotes)
-      if (avocotes_booking) {
-        locations.main=`Chez ${avocotes_booking.user.full_name}`
+      if (avocotesBooking) {
+        locations.main=`Chez ${avocotesBooking.user.full_name}`
       }
       else {
         locations.main=`A mon adresse principale`
@@ -171,10 +184,6 @@ const DrawerBooking = ({classes, t, serviceUserId, date, onAvocotesBookingChange
     setBookingDate(dt)
   }
 
-  useEffect(() => {
-    setBookingDate(date)
-  }, [date])
-
   const onQuantityChange = (prestation_id, delta) => () => {
     const newCount = Math.max(0, (count[prestation_id] || 0) + delta)
     setCount({...count, [prestation_id]: newCount})
@@ -188,69 +197,61 @@ const DrawerBooking = ({classes, t, serviceUserId, date, onAvocotesBookingChange
 
   const book = actual => { // actual : true=> book, false=>infos request
 
-    const {count, user, pending} = this.state
-
     if (pending) {
       snackBarError(ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.snackbar_error_resa')))
       return
     }
 
     let prestations = []
-    this.state.prestations.forEach(p => {
-      if (this.state.count[p._id]) {
+    serviceUser.prestations.forEach(p => {
+      if (count[p._id]) {
         prestations.push({price: p.price, value: count[p._id], name: p.prestation.label})
       }
     })
 
-    let place
+    let place=null
     if (user) {
-      switch (this.state.location) {
+      switch (location) {
         case 'alfred':
-          place = this.state.serviceUser.service_address
+          place = serviceUser.service_address
           break
         case 'visio':
           break
         default:
-          place = this.getClientAddress()
+          place = avocotesBooking?.address || user.billing_address
       }
     }
 
-    const avocotesBooking = this.state.avocotesBooking
-
-    const date=moment(this.state.date)
-    const time=moment(this.state.time)
-    const prestation_date=date.set('hours', time.hours()).set('minutes', time.minutes()).set('seconds', 0)
-
     let bookingObj = {
-      reference: user ? computeBookingReference(user, this.state.serviceUser.user) : '',
-      service: this.state.serviceUser.service.label,
-      serviceId: this.state.serviceUser.service._id,
-      address: avocotesBooking?.address || place,
-      location: this.state.location,
-      equipments: this.state.serviceUser.equipments,
-      amount: this.state.total,
-      prestation_date: prestation_date,
-      alfred: this.state.serviceUser.user._id,
+      reference: user ? computeBookingReference(user, serviceUser.user) : '',
+      service: serviceUser.service.label,
+      serviceId: serviceUser.service._id,
+      address: place,
+      location: location,
+      equipments: serviceUser.equipments,
+      amount: prices.total,
+      prestation_date: bookingDate,
+      alfred: serviceUser.user._id,
       user: user ? user._id : null,
       prestations: prestations,
-      travel_tax: this.state.travel_tax,
-      pick_tax: this.state.pick_tax,
-      cesu_amount: this.state.cesu_total,
-      customer_fee: this.state.customer_fee,
-      provider_fee: this.state.provider_fee,
-      customer_fees: this.state.customer_fees,
-      provider_fees: this.state.provider_fees,
+      travel_tax: prices.travel_tax,
+      pick_tax: prices.pick_tax,
+      cesu_amount: prices.cesu_total,
+      customer_fee: prices.customer_fee,
+      provider_fee: prices.provider_fee,
+      customer_fees: prices.customer_fees,
+      provider_fees: prices.provider_fees,
       status: avocotesBooking ? BOOK_STATUS.TO_CONFIRM : actual ? BOOK_STATUS.TO_PAY : BOOK_STATUS.INFO,
-      serviceUserId: this.state.serviceUser._id,
-      customer_booking: avocotesBooking ? avocotesBooking._id : null,
+      serviceUserId: serviceUser._id,
+      customer_booking: avocotesBooking?._id || null,
     }
 
     let chatPromise = !user ?
       Promise.resolve({res: null})
       :
       axios.post('/myAlfred/api/chatRooms/addAndConnect', {
-        emitter: this.state.user._id,
-        recipient: this.state.serviceUser.user._id,
+        emitter: user._id,
+        recipient: serviceUser.user._id,
       })
 
     chatPromise.then(res => {
@@ -261,20 +262,20 @@ const DrawerBooking = ({classes, t, serviceUserId, date, onAvocotesBookingChange
 
       localStorage.setItem('bookingObj', JSON.stringify(bookingObj))
 
-      if (!this.state.user) {
+      if (!user) {
         localStorage.setItem('path', Router.asPath)
         Router.push('/?login=true')
         return
       }
 
-      this.setState({pending: true})
+      setPending(true)
       axios.post('/myAlfred/api/booking', bookingObj)
         .then(response => {
           const booking = response.data
           axios.put(`/myAlfred/api/chatRooms/addBookingId/${bookingObj.chatroom}`, {booking: booking._id})
             .then(() => {
               if (booking.customer_booking) {
-                Router.push({pathname: '/paymentSuccess', query: {booking_id: booking._id}})
+                Router.push({pathname: `/reservations/resvations?id=${booking._id}`, query: {booking_id: booking._id}})
               }
               else if (actual) {
                 Router.push({pathname: '/confirmPayment', query: {booking_id: booking._id}})
@@ -285,8 +286,10 @@ const DrawerBooking = ({classes, t, serviceUserId, date, onAvocotesBookingChange
             })
         })
         .catch(err => {
-          this.setState({pending: false})
           console.error(err)
+        })
+        .finally(() => {
+          setPending(false)
         })
     })
   }
@@ -313,29 +316,27 @@ const DrawerBooking = ({classes, t, serviceUserId, date, onAvocotesBookingChange
       })
   }
 
-  const onAvocotesChanged = event => {
-    const {name, value}=event.target
-    const {avocotesBookings, serviceUser}=this.state
+  const onAvocotesBookingChange = event => {
+    const {value}=event.target
     const avocotes_booking=avocotesBookings.find(a => a._id==value)
     if (!avocotes_booking) {
-      onAvocotesBookingChange(null)
       return snackBarError(ReactHtmlParser(t('USERSERVICEPREVIEW.snackbar_no_booking')))
     }
-    const suPrestaNames=serviceUser.prestations.map(p => p.prestation.label)
-    const avocotesPrestaNames=avocotes_booking.prestations.map(p => p.name)
-    const diff=lodash.difference(avocotesPrestaNames, suPrestaNames)
+    const suPrestationsLabels=serviceUser.prestations.map(p => p.prestation.label)
+    const avocotesPrestationsLabels=avocotes_booking.prestations.map(p => p.name)
+    const diff=lodash.difference(avocotesPrestationsLabels, suPrestationsLabels)
+
     if (diff.length>0) {
-      return snackBarError(ReactHtmlParser(t('USERSERVICEPREVIEW.snackbar_error_avc')) + diff.join(','))
+      return snackBarError(t('USERSERVICEPREVIEW.snackbar_error_avc')+diff.join(','))
     }
-    let count={}
+    let newCount={}
     avocotes_booking.prestations.forEach(p => {
       const presta = serviceUser.prestations.find(pr => pr.prestation.label == p.name)
-      count[presta._id]=p.value
+      newCount[presta._id]=p.value
     })
-    const allAddresses={'main': avocotes_booking.address}
-    setLocations(allAddresses)
+    setCount(newCount)
+    setLocation('main')
     setAvocotesBooking(avocotes_booking)
-    onAvocotesBookingChange && onAvocotesBookingChange(avocotes_booking)
   }
 
   const computeDistance = () => {
@@ -352,6 +353,7 @@ const DrawerBooking = ({classes, t, serviceUserId, date, onAvocotesBookingChange
     setExpanded(isExpanded ? panel : false)
   }
 
+  const canChangeQuantity = !avocotesBooking
   const selectedPresta = prestations => {
     const use_cesu=['Mandatory', 'Optional'].includes(shop?.cesu)
 
@@ -388,19 +390,19 @@ const DrawerBooking = ({classes, t, serviceUserId, date, onAvocotesBookingChange
           </Grid>
           <Grid item xl={6} lg={6} md={6} sm={6} xs={6} style={{display: 'flex', flexDirection: 'row-reverse'}}>
             <Grid style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-              <Grid>
+              {canChangeQuantity && <Grid>
                 <IconButton onClick={onQuantityChange(p._id, -1)}>
                   <RemoveIcon/>
                 </IconButton>
-              </Grid>
+              </Grid>}
               <Grid style={{marginLeft: '4%', marginRight: '4%'}}>
                 <Typography>{count[p._id.toString()] || 0}</Typography>
               </Grid>
-              <Grid>
+              {canChangeQuantity && <Grid>
                 <IconButton onClick={onQuantityChange(p._id, 1)}>
                   <AddIcon/>
                 </IconButton>
-              </Grid>
+              </Grid>}
             </Grid>
           </Grid>
         </Grid>
@@ -426,13 +428,10 @@ const DrawerBooking = ({classes, t, serviceUserId, date, onAvocotesBookingChange
   }
 
   const getExcludedTimes = () => {
-    if (is_development()) {
-      return []
-    }
-    let currMoment=moment(this.props.date || new Date()).set({hour: 0, minute: 0})
+    let currMoment=moment(bookingDate || new Date()).set({hour: 0, minute: 0})
     let exclude=[]
     while (currMoment.hour()!=23 || currMoment.minute()!=30) {
-      if (!isMomentAvailable(currMoment, this.props.availabilities)) {
+      if (!isMomentAvailable(currMoment, availabilities)) {
         exclude.push(currMoment.toDate())
       }
       currMoment.add(30, 'minutes')
@@ -449,12 +448,11 @@ const DrawerBooking = ({classes, t, serviceUserId, date, onAvocotesBookingChange
   const filters=lodash.groupBy(serviceUser.prestations, p => p.prestation.filter_presentation?.label ||'')
   const res = (
     <Grid>
-      <DevLog>{JSON.stringify(locations)}
+      {false &&<DevLog>{JSON.stringify(locations)}
       Perim: {serviceUser?.perimeter}
       Location:{location}
       BookingDate:{JSON.stringify(bookingDate)}
-      Date prop:{JSON.stringify(date)}
-      </DevLog>
+      </DevLog>}
       {
         warnings.length>0 &&
             <Grid className={classes.userServicePreviewWarningContainer}>
@@ -474,7 +472,7 @@ const DrawerBooking = ({classes, t, serviceUserId, date, onAvocotesBookingChange
                 <Typography variant='h6' style={{color: '#505050', fontWeight: 'bold'}}>{serviceUser.service.label} - {serviceUser.user.firstname}</Typography>
               </Grid>
               <Grid className={classes.hideOnBigSreen}>
-                <IconButton aria-label='Edit' className={classes.iconButtonStyle} /* onClick= TODO toggleDrawer(side, false)*/>
+                <IconButton aria-label='Edit' className={classes.iconButtonStyle} onClick={toggleDrawer && toggleDrawer(false)}>
                   <CloseIcon classes={{root: classes.cancelButton}} />
                 </IconButton>
               </Grid>
@@ -667,7 +665,6 @@ const DrawerBooking = ({classes, t, serviceUserId, date, onAvocotesBookingChange
                     count={count}
                     travel_tax={travel_tax}
                     pick_tax={pick_tax}
-                    cesu_total={cesu_total}
                     alfred_pro={alfred_pro}
                   />
                 </Grid>
@@ -678,7 +675,7 @@ const DrawerBooking = ({classes, t, serviceUserId, date, onAvocotesBookingChange
             { avocotesBookings.length>0 &&
               <Grid style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between', marginBottom: 20}}>
                 <Typography>{ReactHtmlParser(t('DRAWER_BOOKING.resa_avc'))}</Typography>
-                <Select value={avocotes} name='avocotes' multi={false} onChange={this.onAvocotesChanged}>
+                <Select value={avocotesBooking?._id} name='avocotes' multi={false} onChange={onAvocotesBookingChange}>
                   {avocotesBookings.map(avocotes =>
                     <MenuItem value={avocotes._id}>{`${avocotes.user.full_name} pour ${avocotes.prestations.map(p => p.name).join(',')}`}</MenuItem>,
                   )}
@@ -695,7 +692,7 @@ const DrawerBooking = ({classes, t, serviceUserId, date, onAvocotesBookingChange
                   color='primary'
                   aria-label='add'
                   disabled={!canBook}
-                  onClick={() => this.props.book(true)}
+                  onClick={() => book(true)}
                 >
                   <Typography>{ReactHtmlParser(t('DRAWER_BOOKING.resa_button'))}</Typography>
                 </CustomButton>
@@ -707,7 +704,7 @@ const DrawerBooking = ({classes, t, serviceUserId, date, onAvocotesBookingChange
                 <CustomButton
                   startIcon={<HelpOutlineIcon />}
                   disabled={!isEmpty(errors)}
-                  onClick={() => this.props.book(false)}
+                  onClick={() => book(false)}
                 >
                   <Typography style={{textDecoration: 'underline', textTransform: 'initial'}} className={'custombookingaskinfo'}>{ReactHtmlParser(t('DRAWER_BOOKING.button_info'))}</Typography>
                 </CustomButton>

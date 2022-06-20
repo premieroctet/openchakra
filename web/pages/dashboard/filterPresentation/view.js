@@ -55,7 +55,7 @@ class View extends React.Component {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname)
-    const id = this.props.params.id
+    const id = this.props.id
     setAxiosAuthentication()
     axios.get(`/myAlfred/api/admin/filterPresentation/all/${id}`)
       .then(response => {
@@ -83,7 +83,7 @@ class View extends React.Component {
     e.preventDefault()
 
     const {label} = this.state.filterPresentation
-    const id = this.props.params.id
+    const id = this.props.id
     axios.put(`/myAlfred/api/admin/filterPresentation/all/${id}`, {label})
       .then(() => {
         snackBarSuccess('Filtre modifié avec succès')
@@ -97,7 +97,7 @@ class View extends React.Component {
   };
 
   handleClick() {
-    const id = this.props.params.id
+    const id = this.props.id
     axios.delete(`/myAlfred/api/admin/filterPresentation/all/${id}`)
       .then(() => {
         snackBarSuccess('Filtre supprimé avec succès')

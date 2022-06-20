@@ -55,7 +55,7 @@ class View extends React.Component {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname)
-    const id = this.props.params.id
+    const id = this.props.id
     setAxiosAuthentication()
     axios.get(`/myAlfred/api/admin/billing/all/${id}`)
       .then(response => {
@@ -82,7 +82,7 @@ class View extends React.Component {
     e.preventDefault()
 
     const {label} = this.state.billing
-    const id = this.props.params.id
+    const id = this.props.id
     axios.put(`/myAlfred/api/admin/billing/all/${id}`, {label})
       .then(() => {
         snackBarSuccess('Méthode de facturation modifié avec succès')
@@ -94,7 +94,7 @@ class View extends React.Component {
   };
 
   handleClick() {
-    const id = this.props.params.id
+    const id = this.props.id
     axios.delete(`/myAlfred/api/admin/billing/all/${id}`)
       .then(() => {
         snackBarSuccess('Méthode de facturation supprimée avec succès')

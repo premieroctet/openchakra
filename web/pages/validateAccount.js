@@ -46,7 +46,7 @@ class validateAccount extends React.Component {
   onSubmit = e => {
     e.preventDefault()
 
-    const user_id = this.props.params.user
+    const user_id = this.props.user
     axios
       .post('/myAlfred/api/users/validateAccount', {user_id: user_id})
       .then(() => {

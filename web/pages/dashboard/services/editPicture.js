@@ -20,7 +20,7 @@ class EditServicePicture extends React.Component {
   render() {
     return (
       <DashboardLayout>
-        <EditPicture type={this.state.type} id={this.props.params.id}/>
+        <EditPicture type={this.state.type} id={this.props.id}/>
       </DashboardLayout>
     )
   }

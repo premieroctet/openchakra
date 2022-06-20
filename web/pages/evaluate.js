@@ -38,7 +38,7 @@ class Evaluate extends React.Component {
   }
 
   componentDidMount() {
-    const id = this.props.params.service_id
+    const id = this.props.service_id
     localStorage.setItem('path', Router.pathname)
     setAxiosAuthentication()
     axios
@@ -90,8 +90,8 @@ class Evaluate extends React.Component {
   }
 
   evaluate = () => {
-    const id = this.props.params.service_id
-    const booking = this.props.params.booking
+    const id = this.props.service_id
+    const booking = this.props.booking
     const service = this.state.service
     const alfred = service.user._id
     const content = this.state.content
