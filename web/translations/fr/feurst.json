@@ -86,6 +86,8 @@
   "EDI.QUOTATION.dialogAddressValid": "Pour valider votre devis, veuillez&nbsp;:",
   "EDI.ORDER.addTo": "Ajouter à la commande",
   "EDI.QUOTATION.addTo": "Ajouter au devis",
+  "EDI.ORDER.change": "Modifier la commande",
+  "EDI.QUOTATION.change": "Modifier le devis",
   "EDI.ORDER.total": "Total de votre commande",
   "EDI.QUOTATION.total": "Total de votre devis",
   "EDI.ORDER.name": "Nom de la commande :",

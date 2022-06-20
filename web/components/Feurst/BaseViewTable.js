@@ -7,12 +7,6 @@ import styled from 'styled-components'
 import {
   BASEPATH_EDI,
   API_PATH,
-  COMPLETE,
-  CREATED,
-  FULFILLED,
-  VALID,
-  PARTIALLY_HANDLED,
-  HANDLED,
   CONVERT,
   VALIDATE,
   ORDER,
@@ -38,7 +32,7 @@ import DevLog from '../DevLog'
 import {H2confirm} from './components.styles'
 import AddArticle from './AddArticle'
 import ImportExcelFile from './ImportExcelFile'
-import {PleasantButton} from './Button'
+import {NormalButton} from './Button'
 import Delivery from './Delivery'
 
 
@@ -46,17 +40,17 @@ const DialogAddress = dynamic(() => import('./DialogAddress'))
 const DialogConvertQuotation = dynamic(() => import('./DialogConvertQuotation'))
 
 const ConfirmHandledValidation = ({onClick, className, children}) => (
-  <PleasantButton
+  <NormalButton
     rounded={'full'}
     textColor={'#fff'}
     className={className}
     onClick={onClick}
-  >{children}</PleasantButton>
+  >{children}</NormalButton>
 )
 
 const ConfirmPartialHandledValidation = ({onClick, className, children}) => {
 
-  return (<PleasantButton
+  return (<NormalButton
     rounded={'full'}
     bgColor={'#fff'}
     textColor={'var(--black)'}
@@ -65,7 +59,7 @@ const ConfirmPartialHandledValidation = ({onClick, className, children}) => {
     className={className}
   >
     {children}
-  </PleasantButton>
+  </NormalButton>
   )
 }
 
@@ -95,6 +89,7 @@ const BaseCreateTable = ({
   const [isOpenDialogConvert, setIsOpenDialogConvert] = useState(false)
   const [actionButtons, setActionButtons]=useState([])
   const [addAddress, setAddAddress] = useState(false)
+  const [alertText, setAlertText] = useState(false)
   
   const importURL=`${API_PATH}/${endpoint}/${orderid}/import`
   const templateURL=`${API_PATH}/${endpoint}/template`
@@ -266,19 +261,27 @@ const BaseCreateTable = ({
 
       <div className={`grid grid-cols-2 justify-between gap-y-4 mb-8`}>
 
-        {isRevertToEdition ? <PleasantButton
-          rounded={'full'}
-          bgColor={'#fff'}
-          textColor={'#141953'}
-          borderColor={'1px solid #141953'}
-          className={'col-start-1'}
-          onClick={() => revertToEdition({endpoint, orderid})}
-        >
-        Revenir à la saisie
-        </PleasantButton> : null}
+        {isRevertToEdition ? <div>
+          <NormalButton
+            rounded={'full'}
+            bgColor={'#fff'}
+            textColor={'#141953'}
+            borderColor={'1px solid #141953'}
+            className={'col-start-1'}
+            onMouseEnter={() => setAlertText(true)}
+            onFocus={() => setAlertText(true)}
+            onMouseLeave={() => setAlertText(false)}
+            onBlur={() => setAlertText(false)}
+            onClick={() => revertToEdition({endpoint, orderid})}
+          >
+            {t(`${wordingSection}.change`)}
+          </NormalButton>
+          {isConvertToOrder ? <AlertCondition className={alertText ? 'visible' : null} aria-live="polite"><span role={'img'} aria-label="attention">⚠️</span> Une modification entrainera une nouvelle demande de validation commerciale.</AlertCondition> : null}
+        </div> : null
+        }
 
-
-        {isConvertToOrder && <PleasantButton
+     
+        {isConvertToOrder && <NormalButton
           rounded={'full'}
           disabled={justCreated}
           bgColor={'#fff'}
@@ -288,16 +291,16 @@ const BaseCreateTable = ({
           onClick={() => convert({endpoint, orderid})}
         >
         Convertir en commande
-        </PleasantButton>}
+        </NormalButton>}
 
 
-        {isValidButton && <PleasantButton
+        {isValidButton && <NormalButton
           rounded={'full'}
           className={'justify-self-end col-start-2'}
           onClick={() => (isAddressRequired ? setIsOpenDialog(true) : submitOrder({endpoint, orderid}))}
         >
           {t(`${wordingSection}.valid`)} {/* Valid order/quotation */}
-        </PleasantButton>}
+        </NormalButton>}
 
       </div>
 
@@ -364,5 +367,30 @@ const LineDivider = styled.p`
   }
 
 `
+
+const AlertCondition = styled.p`
+  
+  span {
+    font-size: 1.5rem;
+    align-self: center;
+  }
+
+  visibility: hidden;
+  display: flex;
+  column-gap: var(--spc-2);
+  padding: var(--spc-2);
+  width: min(calc(100% - 2rem), 40%);
+  border: 1px dashed var(--black);
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out, visibility 0.1s ease-out;
+  transform: translateY(100%);
+  opacity: 0;
+  
+  &.visible {
+    visibility: visible;
+    transform: translateY(0);
+    opacity: 1;
+  }
+`
+
 
 export default withTranslation('feurst', {withRef: true})(withEdiRequest(BaseCreateTable))
