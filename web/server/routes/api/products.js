@@ -1,19 +1,30 @@
+const {guessFileType} = require('../../../utils/import')
+const {XL_TYPE} = require('../../../utils/feurst/consts')
+const fs=require('fs')
+const path=require('path')
+const lodash=require('lodash')
 const express = require('express')
 const passport = require('passport')
 const moment = require('moment')
+
+const CronJob = require('cron').CronJob
+const storage = require('../../utils/storage')
+
+const {getExchangeDirectory} = require('../../../config/config')
 const {
-  fileImport,
   productsImport,
   stockImport,
 } = require('../../utils/import')
 const {isActionAllowed} = require('../../utils/userAccess')
 const {DELETE} = require('../../../utils/feurst/consts')
 const {XL_FILTER, createMemoryMulter} = require('../../utils/filesystem')
-const {PRODUCT, VIEW, CREATE} = require('../../../utils/consts')
+
+const {PRODUCT, CREATE} = require('../../../utils/consts')
 const Product = require('../../models/Product')
 
 const router = express.Router()
 const {validateProduct}=require('../../validation/product')
+
 moment.locale('fr')
 
 // PRODUCTS
@@ -166,5 +177,39 @@ router.post('/import-stock', passport.authenticate('jwt', {session: false}), (re
       })
   })
 })
+
+// Check new stock file
+new CronJob('*/3 * * * * *', () => {
+  const store=storage.namespace('exchange')
+  const folder=getExchangeDirectory()
+  const latest_date=new Date(JSON.parse(store.get('latest-products-import')))
+  console.log(`Checking for new stock file in ${folder} newer than ${latest_date}(${typeof latest_date})`)
+  try {
+    const files=fs.readdirSync(folder)
+    const latestFile=lodash(files)
+      .map(f => path.join(folder, f))
+      .filter(f => /\.xlsx$|\.json$/i.test(f) && fs.statSync(f).mtime > latest_date)
+      .maxBy(f => fs.statSync(f).mtime)
+    console.log(`Got latest file:${latestFile}`)
+    if (latestFile) {
+      store.set('latest-products-import', JSON.stringify(fs.statSync(latestFile).mtime))
+      const contents=fs.readFileSync(latestFile)
+      guessFileType(contents)
+        .then(type => {
+          console.log(`Stock format is ${type}`)
+          return stockImport(contents, {format: type, tab: 'Travail'})
+        })
+        .then(res => {
+          console.log(`Import result:${res}`)
+        })
+        .catch(err => {
+          console.error(err)
+        })
+    }
+  }
+  catch(err) {
+    console.error(err)
+  }
+}, null, true, 'Europe/Paris')
 
 module.exports = router

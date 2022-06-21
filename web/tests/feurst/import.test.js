@@ -1,3 +1,4 @@
+const {extractData} = require('../../utils/import')
 const {lineItemsImport} = require('../../server/utils/import')
 
 const fs = require('fs').promises
@@ -17,10 +18,10 @@ const {
 
 const {guessFileType} = require('../../utils/import')
 const {computeShippingFee} = require('../../server/utils/commands')
-const {TEXT_TYPE, XL_TYPE} = require('../../utils/feurst/consts')
+const {TEXT_TYPE, JSON_TYPE, XL_TYPE} = require('../../utils/feurst/consts')
 
 
-describe('XL & CSV imports', () => {
+describe('XL/CSV/JSON imports', () => {
 
   beforeAll(() => {
     return mongoose.connect('mongodb://localhost/test', MONGOOSE_OPTIONS)
@@ -134,7 +135,7 @@ describe('XL & CSV imports', () => {
       })
   }, 40000)
 
-  test.only('Import order items', () => {
+  test('Import order items', () => {
     const CONTENTS='Référence;Quantité\n001269NE00;10000\nABCD;15'
     return Product.updateMany({}, {stock: 100})
       .then(() => {
@@ -161,20 +162,23 @@ describe('XL & CSV imports', () => {
       })
   }, 40000)
 
-  describe('Compute rates', () => {
-    const cases=[[1, 50, false, 28], [28, 168, true, 115.92]]
-    test.each(cases)(
-      'Zipcode %p, weight %p, express %p expects ship fee %p€',
-      (zipcode, weight, express, expected) => {
-        return computeShippingFee({total_weight: weight, company: {carriage_paid: 1000000, addresses: []}}, {zip_code: zipcode*1000+123}, express)
-          .then(fee => {
-            expect(fee).toBe(expected)
-          })
+  test.only('Test JSON & CSV', () => {
+    const CSV='Col1;Col2\nA;B'
+    const JS=JSON.stringify([{Col1: 'A', Col2: 'B'}])
+    let csvData=null
+    let jsonData=null
+    const COLUMNS=true
+    extractData(CSV, {format: TEXT_TYPE, delimiter: ';', columns: COLUMNS})
+      .then(res => {
+        csvData=res
+        console.log(`CSV:${JSON.stringify(res)}`)
+        return extractData(JS, {format: JSON_TYPE, columns: COLUMNS})
       })
-
-    test('No ship rate for Corsica', () => {
-      return expect(computeShippingFee({company: {carriage_paid: 100000, addresses: []}}, {zip_code: 20125}, true)).rejects.toMatch('No rate found')
-    })
+      .then(res => {
+        console.log(`JSON:${JSON.stringify(res)}`)
+        jsonData=res
+        return expect(csvData).toEqual(jsonData)
+      })
   })
 
 })

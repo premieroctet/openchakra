@@ -209,6 +209,14 @@ if (is_development()) {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 }
 
+// FTP direcctory for incoming data
+const getExchangeDirectory = () => {
+  if (is_development()) {
+    return '/home/seb/test'
+  }
+  throw new Error('TO be defined')
+}
+
 // Public API
 module.exports = {
   databaseName: databaseName,
@@ -221,5 +229,5 @@ module.exports = {
   mustDisplayChat, getChatURL,
   canAlfredSelfRegister, canAlfredParticularRegister,
   getSibTemplates, checkConfig, getDatabaseUri, hideStoreDialog,
-  getDataModel, skipFailedPayment, getSibApiKey, getPort,
+  getDataModel, skipFailedPayment, getSibApiKey, getPort, getExchangeDirectory,
 }
