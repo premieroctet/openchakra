@@ -1,13 +1,13 @@
 const {
-  clearAuthenticationToken,
-  setAxiosAuthentication
-} = require('../../../utils/authentication');
-const {
   getLoggedUserId,
   getRole,
-  isLoggedUserAlfredPro,
-  isLoggedUserRegistered
-} = require('../../../utils/context');
+  isLoggedUserRegistered,
+} = require('../../../utils/context')
+import LocationSelect from '../../../components/Geo/LocationSelect'
+const {
+  clearAuthenticationToken,
+  setAxiosAuthentication,
+} = require('../../../utils/authentication')
 import CustomButton from '../../../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -40,9 +40,6 @@ import ClearIcon from '@material-ui/icons/Clear'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
-import AlgoliaPlaces from 'algolia-places-react'
-import {SEARCHBAR} from '../../../utils/i18n'
-import BusinessIcon from '@material-ui/icons/Business'
 const {EMPLOYEE}=require('../../../utils/consts')
 const {formatAddress} = require('../../../utils/text.js')
 
@@ -341,17 +338,10 @@ class MobileNavbar extends React.Component {
                       InputProps={{
                         inputComponent: inputref => {
                           return (
-                            <AlgoliaPlaces
+                            <LocationSelect
                               {...inputref}
                               placeholder={''}
                               className={classes.navbarAlgoliaPlace}
-                              options={{
-                                appId: 'plKATRG826CP',
-                                apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                                language: 'fr',
-                                countries: ['fr'],
-                                type: 'city',
-                              }}
                               onChange={suggestion => this.onChangeCity(suggestion)}
                               onClear={() => this.setState({city: '', gps: ''})}
 

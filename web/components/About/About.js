@@ -1,18 +1,16 @@
+const {snackBarSuccess} = require('../../utils/notifications')
+import {COMPANY_SIZE} from '../../utils/consts'
+import LocationSelect from '../Geo/LocationSelect'
 const BasePage = require('../../pages/basePage')
 import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
-import {TextField} from '@material-ui/core'
-import BusinessIcon from '@material-ui/icons/Business'
-const {snackBarSuccess, snackBarError} = require('../../utils/notifications')
-import LanguageIcon from '@material-ui/icons/Language'
 const {setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import axios from 'axios'
 import {withStyles} from '@material-ui/core/styles'
 import styles from '../../static/css/components/About/About'
-import WorkOutlineIcon from '@material-ui/icons/WorkOutline'
 import ListAlfredConditions from '../ListAlfredConditions/ListAlfredConditions'
 import RoomIcon from '@material-ui/icons/Room'
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline'
@@ -23,9 +21,6 @@ import Dialog from '@material-ui/core/Dialog'
 import DialogContent from '@material-ui/core/DialogContent'
 import Typography from '@material-ui/core/Typography'
 import Topic from '../../hoc/Topic/Topic'
-import AlgoliaPlaces from 'algolia-places-react'
-import MultipleSelect from 'react-select'
-import {COMPANY_ACTIVITY, COMPANY_SIZE, LANGUAGES} from '../../utils/consts'
 import CreateIcon from '@material-ui/icons/Create'
 import {isEditableUser} from '../../utils/context'
 import IconButton from '@material-ui/core/IconButton'
@@ -35,7 +30,6 @@ import InputLabel from '@material-ui/core/InputLabel'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
-import {PROFIL, ABOUT} from '../../utils/i18n'
 import HighlightOffIcon from '@material-ui/icons/HighlightOff'
 import CustomIcon from '../CustomIcon/CustomIcon'
 
@@ -232,17 +226,9 @@ class About extends BasePage {
                 </h3>
               </Grid>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                <AlgoliaPlaces
+                <LocationSelect
                   key={moment()}
                   placeholder={placeholder}
-                  options={{
-                    appId: 'plKATRG826CP',
-                    apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                    language: 'fr',
-                    countries: ['fr'],
-                    type: 'address',
-
-                  }}
                   onChange={this.onAddressChanged}
                   onClear={() => this.onAddressChanged(null)}
                 />

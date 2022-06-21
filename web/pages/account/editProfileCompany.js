@@ -1,8 +1,8 @@
+import LocationSelect from '../../components/Geo/LocationSelect'
 import {COMPANY_NAME, EDIT_PROFIL} from '../../utils/i18n'
 import CustomButton from '../../components/CustomButton/CustomButton'
 import Head from 'next/head'
 import {withTranslation} from 'react-i18next'
-import AlgoliaPlaces from 'algolia-places-react'
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline'
 import Checkbox from '@material-ui/core/Checkbox'
 import Divider from '@material-ui/core/Divider'
@@ -236,16 +236,9 @@ class editProfileCompany extends BasePage {
             />
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12} className={classes.containerAlgolia}>
-            <AlgoliaPlaces
+            <LocationSelect
               key={moment()}
               placeholder={billing_address ? `${billing_address.address}, ${billing_address.zip_code}, ${billing_address.country}` : ReactHtmlParser(this.props.t('EDIT_PROFIL.invoice_company'))}
-              options={{
-                appId: 'plKATRG826CP',
-                apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                language: 'fr',
-                countries: ['fr'],
-                type: 'address',
-              }}
               className={classes.editProfilCompanyAlgoliaPlace}
               onChange={this.onBillingAdressChange}
             />

@@ -1,8 +1,8 @@
+import LocationSelect from '../../../components/Geo/LocationSelect'
 import CustomButton from '../../../components/CustomButton/CustomButton'
 import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
-import AlgoliaPlaces from 'algolia-places-react'
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControl from '@material-ui/core/FormControl'
 import Grid from '@material-ui/core/Grid'
@@ -216,15 +216,8 @@ class View extends BasePage {
                 <Typography style={{fontSize: 20}}>Adresse siège social</Typography>
               </Grid>
               <form>
-                <AlgoliaPlaces
+                <LocationSelect
                   placeholder={placeholder}
-                  options={{
-                    appId: 'plKATRG826CP',
-                    apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                    language: 'fr',
-                    countries: ['fr'],
-                    type: 'address',
-                  }}
                   onChange={this.onAddressChange}
                   onClear={this.onAddressChange}
                 />

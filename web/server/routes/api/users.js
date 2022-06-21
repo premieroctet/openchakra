@@ -1,3 +1,5 @@
+const {getLocationSuggestions}=require('../../../utils/geo')
+
 const User = require('../../models/User')
 const ServiceUser = require('../../models/ServiceUser')
 require('../../models/ResetToken')
@@ -1246,6 +1248,18 @@ router.get('/hook', (req, res) => {
     })
 })
 
+router.get('/locations', (req, res) => {
+  const value=req.query.value
+  const type=req.query.type
+  getLocationSuggestions(value, type)
+    .then(result => {
+      return res.json(result)
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(500).json('Erreur')
+    })
+})
 
 // Create mango client account for all user with no id_mangopay
 // DISABLED because it operates on ALL DATABASES !!

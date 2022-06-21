@@ -1,3 +1,4 @@
+import LocationSelect from '../../components/Geo/LocationSelect'
 import {withTranslation} from 'react-i18next'
 const {setAxiosAuthentication}=require('../../utils/authentication')
 import React from 'react'
@@ -12,7 +13,6 @@ import MapComponent from '../../components/map'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 const {getLoggedUserId}=require('../../utils/context')
-import AlgoliaPlaces from 'algolia-places-react'
 
 const styles = theme => ({
   signupContainer: {
@@ -139,16 +139,9 @@ class ServicesMap extends React.Component {
     return (
       <DashboardLayout>
         <Grid style={{width: '100%'}}>
-          <Grid><AlgoliaPlaces
+          <Grid><LocationSelect
             placeholder='Centrer sur une ville'
             style={{color: '#505050'}}
-            options={{
-              appId: 'plKATRG826CP',
-              apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-              language: 'fr',
-              countries: ['fr'],
-              type: 'city',
-            }}
             onChange={suggestion => this.onChangeCity(suggestion)}
             onClear={() => this.setState({city: '', gps: null})}
           /></Grid>

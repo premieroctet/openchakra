@@ -1,3 +1,4 @@
+import LocationSelect from '../../../components/Geo/LocationSelect'
 import AutoCompleteTextField from
 '../../../components/Search/AutoCompleteTextField'
 import {canAlfredSelfRegister} from '../../../config/config'
@@ -26,7 +27,6 @@ import Paper from '@material-ui/core/Paper'
 import Divider from '@material-ui/core/Divider'
 import MenuIcon from '@material-ui/icons/Menu'
 import SearchIcon from '@material-ui/icons/Search'
-import AlgoliaPlaces from 'algolia-places-react'
 import {SEARCHBAR, NAVBAR_MENU} from '../../../utils/i18n'
 import DatePicker from 'react-datepicker'
 import TextField from '@material-ui/core/TextField'
@@ -495,15 +495,8 @@ class NavBar extends Component {
                   </Grid>
                   :
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12} classes={{root: classes.navbarRootTextFieldWhereP}}>
-                    <AlgoliaPlaces
+                    <LocationSelect
                       placeholder={ReactHtmlParser(this.props.t('SEARCHBAR.where'))}
-                      options={{
-                        appId: 'plKATRG826CP',
-                        apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                        language: 'fr',
-                        countries: ['fr'],
-                        type: 'city',
-                      }}
                       onChange={suggestion => this.onChangeCity(suggestion)}
                       onClear={() => this.setState({city: '', gps: null})}
                     />
@@ -921,15 +914,8 @@ class NavBar extends Component {
                         </Grid> : null
                     }
                     <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'customsearch'} classes={{root: `${classes.navbarRootTextFieldWhere}`}}>
-                      <AlgoliaPlaces
+                      <LocationSelect
                         placeholder={ReactHtmlParser(this.props.t('SEARCHBAR.where'))}
-                        options={{
-                          appId: 'plKATRG826CP',
-                          apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                          language: 'fr',
-                          countries: ['fr'],
-                          type: 'city',
-                        }}
                         onChange={suggestion => this.onChangeCity(suggestion)}
                         onClear={() => this.setState({city: '', gps: null})}
                       />

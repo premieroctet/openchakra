@@ -1,3 +1,4 @@
+import LocationSelect from '../Geo/LocationSelect'
 import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
@@ -7,7 +8,6 @@ import styles from '../../static/css/components/HandleAddresses/HandleAddresses'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import Divider from '@material-ui/core/Divider'
-import AlgoliaPlaces from 'algolia-places-react'
 import TextField from '@material-ui/core/TextField'
 import IconButton from '@material-ui/core/IconButton'
 import EditIcon from '@material-ui/icons/Edit'
@@ -23,7 +23,6 @@ import {clearAuthenticationToken, setAxiosAuthentication} from '../../utils/auth
 import {snackBarError, snackBarSuccess} from '../../utils/notifications'
 import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined'
 import '../../static/assets/css/custom.css'
-import {HANDLE_ADDRESSES} from '../../utils/i18n'
 
 class HandleAddresses extends React.Component {
   constructor(props) {
@@ -259,16 +258,8 @@ class HandleAddresses extends React.Component {
           <Grid style={{marginTop: '5vh'}}>
             <Grid container spacing={3}>
               <Grid item xs={12} xl={12} lg={12} md={12} sm={12}>
-                <AlgoliaPlaces
-                  className={'customhandleaddressesalgolia'}
+                <LocationSelect
                   placeholder={ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.placeholder_algo'))}
-                  options={{
-                    appId: 'plKATRG826CP',
-                    apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                    language: 'fr',
-                    countries: ['fr'],
-                    type: 'address',
-                  }}
                   onChange={suggestion => this.onMainAddressChange(suggestion)}
                 />
               </Grid>
@@ -341,17 +332,9 @@ class HandleAddresses extends React.Component {
                   {this.addressLabel(e)}
                 </Typography>
                 {selected_address && selected_address._id == e._id ?
-                  <AlgoliaPlaces
+                  <LocationSelect
                     className={'customhandleaddressesupdateaddresses'}
                     placeholder={ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.placeholder_algo'))}
-                    options={{
-                      appId: 'plKATRG826CP',
-                      apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                      language: 'fr',
-                      countries: ['fr'],
-                      type: 'address',
-
-                    }}
                     onChange={suggestion => this.onSecondaryAddressChange(suggestion)}
                   />
                   :
@@ -386,16 +369,9 @@ class HandleAddresses extends React.Component {
               />
             </Grid>
             <Grid item xs={12}>
-              <AlgoliaPlaces
+              <LocationSelect
                 className={'customhandleaddressesaddnewalgo'}
                 placeholder={ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.algo_find_your_addresses'))}
-                options={{
-                  appId: 'plKATRG826CP',
-                  apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                  language: 'fr',
-                  countries: ['fr'],
-                  type: 'address',
-                }}
                 onChange={suggestion => this.onNewAddressChange(suggestion)}
               />
             </Grid>

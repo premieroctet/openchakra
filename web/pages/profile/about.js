@@ -1,3 +1,4 @@
+import LocationSelect from '../../components/Geo/LocationSelect'
 const BasePage = require('../basePage')
 import Album from '../../components/Album/Album'
 import {isEditableUser} from '../../utils/context'
@@ -28,7 +29,6 @@ import CreateIcon from '@material-ui/icons/Create'
 import Dialog from '@material-ui/core/Dialog'
 import DialogContent from '@material-ui/core/DialogContent'
 import Topic from '../../hoc/Topic/Topic'
-import AlgoliaPlaces from 'algolia-places-react'
 import MultipleSelect from 'react-select'
 import {COMPANY_ACTIVITY, COMPANY_SIZE, LANGUAGES} from '../../utils/consts'
 import Divider from '@material-ui/core/Divider'
@@ -226,17 +226,9 @@ class ProfileAbout extends BasePage {
                 </h3>
               </Grid>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                <AlgoliaPlaces
+                <LocationSelect
                   key={moment()}
                   placeholder={placeholder}
-                  options={{
-                    appId: 'plKATRG826CP',
-                    apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                    language: 'fr',
-                    countries: ['fr'],
-                    type: 'address',
-
-                  }}
                   onChange={this.onAddressChanged}
                   onClear={() => this.onAddressChanged(null)}
                 />
