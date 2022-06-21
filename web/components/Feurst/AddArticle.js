@@ -121,7 +121,7 @@ const AddArticle = ({endpoint, orderid, updateTable, addProduct, wordingSection}
               }}
               aria-label="effacer"
             >
-              <span role="img">✕</span>
+              <span role="img" aria-label='effacer'>✕</span>
             </button>
 
 
