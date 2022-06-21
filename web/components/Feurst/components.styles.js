@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, {keyframes} from 'styled-components'
 import {screen} from '../../styles/screenWidths'
 
 const H2confirm = styled.h2`
@@ -76,4 +76,63 @@ const Refquantity = styled.div`
   }
 `
 
-export {H2confirm, FormAddArticle, Label, Input, Refquantity}
+
+const slidein = keyframes`
+  0% {
+    top: -100%;
+    left: -200%;
+  }
+  
+  100% {
+    top: -100%;
+    left: 200%;
+  }
+`
+
+
+const StyledCountdown = styled.div`
+  
+  display: inline-flex;
+  position: relative;
+  overflow: clip;
+  margin-inline-end: var(--spc-2);
+
+  [role=timer] {
+    display: inline-flex;
+    column-gap: 0.5rem;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    width: 0.5rem;
+    height: 5rem;
+    background-color: var(--white);
+    filter: blur(10px);
+    border-radius: 50%;
+    animation: 6s cubic-bezier(0.895, 0.03, 0.685, 0.22) 6s infinite alternate ${slidein};
+  }
+
+  span {
+    border-radius: 0.25rem;
+    color: var(--black);
+    background-color: var(--yellow-500) !important;
+    padding: var(--spc-2) var(--spc-1);
+    min-width: 5ch;
+  }
+
+  .hours::after {
+    content: ' h';
+  }
+  .minutes::after {
+    content: ' min';
+  }
+
+  .seconds::after {
+    content: ' s';
+  }
+`
+
+export {H2confirm, FormAddArticle, Label, Input, Refquantity, StyledCountdown}
