@@ -26,8 +26,6 @@ const ResetPassword = ({t, params}) => {
       token: params.token,
     }
 
-    console.log(data)
-    
     return await client(`${API_PATH}/users/resetPassword`, {data})
       .then(() => {
         snackBarSuccess(ReactHtmlParser(this.props.t('RESET_PASSWORD.password_update')))

@@ -2,12 +2,12 @@ import React from 'react'
 import Link from 'next/link'
 import styled from 'styled-components'
 import {screen} from '../../../web/styles/screenWidths'
-
+import {BASEPATH_EDI} from '../../utils/feurst/consts'
 
 const Footer = () => (
   <StyledFooter>
     <Link href={'#'}><a>Mentions légales</a></Link>
-    <Link href={'#'}><a>CGUs</a></Link>
+    <Link href={`${BASEPATH_EDI}/cgv`}><a>Conditions générales de vente</a></Link>
     <Link href={'#'}><a>Politique de confidentialité</a></Link>
   </StyledFooter>
 )
