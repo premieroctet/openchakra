@@ -28,10 +28,6 @@ async function client(
       return Promise.reject({message: 'Accès interdit.'})
     }
 
-    if (response.status === 403) {
-      return Promise.reject({message: 'Action non autorisée.'})
-    }
-
     if (response.ok) {
       const headers = [...response.headers].reduce((a, v) => ({...a, [v[0]]: v[1]}), {})
 
@@ -47,7 +43,7 @@ async function client(
 
       return data
     }
-
+    
     const error = new Error()
     error.info = {
       status: response.status,

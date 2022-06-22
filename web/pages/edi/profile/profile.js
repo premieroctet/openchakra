@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import {FEURST_ICON_PATH, BASEPATH_EDI, API_PATH} from '../../../utils/consts'
 import withEdiAuth from '../../../hoc/withEdiAuth'
 import RenewPassword from '../../../components/Password/RenewPassword'
-import {PleasantButton} from '../../../components/Feurst/Button'
+import {NormalButton} from '../../../components/Feurst/Button'
 import {client} from '../../../utils/client'
 import {screen} from '../../../styles/screenWidths'
 import {ACCOUNT, UPDATE} from '../../../utils/feurst/consts'
@@ -69,14 +69,14 @@ const Profile = () => {
 
       <form onSubmit={renewPassword}>
         <RenewPassword passChanged={passChanged} setPassword={setPassword} />
-        <PleasantButton
+        <NormalButton
           rounded={'full'}
           disabled={!canSubmitPassword}
           type='submit'
           onClick={() => renewPassword}
         >
             Enregistrer le mot de passe
-        </PleasantButton>
+        </NormalButton>
       </form>
 
     </div>

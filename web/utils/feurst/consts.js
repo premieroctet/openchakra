@@ -82,6 +82,7 @@ const ROLES = {
 }
 // Auto associated roles
 const [ORDER, QUOTATION, ACCOUNT, SHIPRATE, PRODUCT, PRICELIST]=['ORDER', 'QUOTATION', 'ACCOUNT', 'SHIPRATE', 'PRODUCT', 'PRICELIST'] // Plus COMPANY already defined
+// UPDATE_ALL allows to update item price in a quotation
 const [VIEW, CREATE, UPDATE, UPDATE_ALL, DELETE, VALIDATE, CONVERT, LINK, HANDLE]=['VIEW', 'CREATE', 'UPDATE', 'UPDATE_ALL', 'DELETE', 'VALIDATE', 'CONVERT', 'LINK', 'HANDLE']
 const [ALL, COMPANY, RELATED]=['ALL', 'COMPANY', 'RELATED']
 const MODELS=[ORDER, QUOTATION, ACCOUNT, SHIPRATE, PRODUCT, PRICELIST, COMPANY]
@@ -111,6 +112,7 @@ const USER_ACTIONS={
     [VIEW, CREATE, UPDATE, DELETE].map(action => createUserAction(PRODUCT, action, {visibility: ALL})),
     [VIEW, CREATE, UPDATE, DELETE].map(action => createUserAction(PRICELIST, action, {visibility: ALL})),
     createUserAction(COMPANY, VIEW, {visibility: ALL}),
+    createUserAction(COMPANY, UPDATE, {visibility: ALL}),
   ]),
   [FEURST_ADV]: lodash.flattenDeep([
     createUserAction(ACCOUNT, UPDATE),
@@ -120,7 +122,7 @@ const USER_ACTIONS={
   [FEURST_SALES]: lodash.flattenDeep([
     createUserAction(ACCOUNT, UPDATE),
     createUserAction(ACCOUNT, VIEW, {type: CUSTOMER_ADMIN, visibility: RELATED}),
-    [CREATE, VIEW, UPDATE, HANDLE, UPDATE_ALL, VALIDATE, REWRITE].map(action => createUserAction(QUOTATION, action, {visibility: RELATED})),
+    [CREATE, VIEW, DELETE, UPDATE, HANDLE, UPDATE_ALL, VALIDATE, REWRITE].map(action => createUserAction(QUOTATION, action, {visibility: RELATED})),
     [VIEW].map(action => createUserAction(ORDER, action, {visibility: RELATED})),
     createUserAction(COMPANY, VIEW, {visibility: RELATED}),
   ]),

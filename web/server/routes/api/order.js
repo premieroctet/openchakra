@@ -1,9 +1,15 @@
+const lodash=require('lodash')
 const CronJob = require('cron').CronJob
+
 const express = require('express')
 const passport = require('passport')
 const moment = require('moment')
 const xlsx=require('node-xlsx')
-const lodash=require('lodash')
+const {
+  CUSTOMER_ADMIN,
+  FEURST_ADV,
+  FEURST_SALES,
+} = require('../../../utils/feurst/consts')
 const {sendDataNotification, sendOrderAlert} = require('../../utils/mailing')
 
 const {
@@ -48,6 +54,7 @@ const router = express.Router()
 const Order = require('../../models/Order')
 const {validateOrder, validateOrderItem}=require('../../validation/order')
 const {ORDER, CREATE, UPDATE, VIEW, DELETE}=require('../../../utils/consts')
+const feurstfr=require('../../../translations/fr/feurst')
 moment.locale('fr')
 
 const DATA_TYPE=ORDER
@@ -75,7 +82,7 @@ router.get('/:order_id/addresses', passport.authenticate('jwt', {session: false}
 // @Access private
 router.get('/template', passport.authenticate('jwt', {session: false}), (req, res) => {
   const data = [
-    ['Référence', 'Quantité'],
+    ['Référence', 'Qté'],
     ['AAAXXXZ', 6],
   ]
   let buffer = xlsx.build([{data: data}])
@@ -170,8 +177,9 @@ router.put('/:id/handle', passport.authenticate('jwt', {session: false}), (req, 
   const order_id=req.params.id
   MODEL.findByIdAndUpdate(order_id, {handled_date: moment(), handle_status: total ? HANDLED: PARTIALLY_HANDLED}, {new: true})
     .then(result => {
-      const msg=`La commande a été ${total ? 'totalement' : 'partiellement'} traitée`
-      sendDataNotification(req.user, result, msg)
+      // const t=i18n.default.getFixedT(null, 'feurst')
+      const msg=feurstfr[total ? 'EDI.ORDER_HANDLED_2_CUSTOMER': 'EDI.ORDER_PARTIALLY_HANDLED_2_CUSTOMER']
+      sendDataNotification(req.user, CUSTOMER_ADMIN, result, msg)
       return res.json(result)
     })
     .catch(err => {
@@ -322,7 +330,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 })
 
 // @Route GET /myAlfred/api/orders
-// View all orders
+// Convert order to quotation
 // @Access private
 router.post('/:order_id/convert', passport.authenticate('jwt', {session: false}), (req, res) => {
 
@@ -349,7 +357,9 @@ router.post('/:order_id/convert', passport.authenticate('jwt', {session: false})
       return Order.findByIdAndRemove(order_id)
     })
     .then(order => {
-      sendDataNotification(req.user, order, 'La commande a été convertie en devis')
+      // const t=i18n.default.getFixedT(null, 'feurst')
+      const msg=feurstfr['EDI.ORDER_CONVERTED_2_FEURST']
+      sendDataNotification(req.user, FEURST_SALES, order, msg)
       return res.json(quotation)
     })
     .catch(err => {
@@ -476,8 +486,9 @@ router.post('/:order_id/validate', passport.authenticate('jwt', {session: false}
       return updateStock(data)
     })
     .then(() => {
-      const msg='La commande a été validée, vous pouvez la traiter'
-      sendDataNotification(req.user, order, msg)
+      // const t=i18n.default.getFixedT(null, 'feurst')
+      const msg=feurstfr['EDI.ORDER_VALID_2_FEURST']
+      sendDataNotification(req.user, FEURST_ADV, order, msg)
       return res.json()
     })
     .catch(err => {
@@ -532,6 +543,9 @@ router.get('/:id/actions', passport.authenticate('jwt', {session: false}), (req,
       if (!model) {
         return res.status(404).json()
       }
+      if (isActionAllowed(user.roles, DATA_TYPE, UPDATE) && ![VALID, PARTIALLY_HANDLED, HANDLED].includes(model.status)) {
+        result.push(UPDATE)
+      }
       if (isActionAllowed(user.roles, DATA_TYPE, UPDATE) && model.status==COMPLETE) {
         result.push(VALIDATE)
       }
@@ -545,7 +559,9 @@ router.get('/:id/actions', passport.authenticate('jwt', {session: false}), (req,
       if (isActionAllowed(user.roles, DATA_TYPE, HANDLE) && model.status==PARTIALLY_HANDLED) {
         result.push(TOTALLY_HANDLE)
       }
-      if (isActionAllowed(user.roles, DATA_TYPE, DELETE) && [CREATED, COMPLETE].includes(model.status)) {
+      if (isActionAllowed(user.roles, DATA_TYPE, DELETE)
+        && [CREATED, COMPLETE].includes(model.status)
+        && req.user.company?._id.toString()==model.created_by_company?._id.toString()) {
         result.push(DELETE)
       }
       return res.json(result)

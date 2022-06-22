@@ -30,15 +30,26 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   let andFilter= () => true
 
   if (req.query.pattern) {
+    // Create AND filter
     const elements=req.query.pattern.split(' ')
     const andPattern=new RegExp(elements.map(e => `(?=.*${e})`).join(''), 'i')
     andFilter=p => `${p.reference} ${p.description} ${p.description_2}`.match(andPattern)
+
+    // Create NOSPACE filter
+    const query=new RegExp(req.query.pattern.replace(/\s/g, ''), 'i')
+    noSpaceFilter=p => `${p.reference}${p.description}${p.description_2}`.replace(/\s/g, '').match(query)
   }
 
   Product.find({})
     .then(products => {
-      const andEdProducts=products.filter(p => andFilter(p))
-      res.json(andEdProducts)
+      const andEdProducts=products.filter(andFilter)
+      const noSpaceProducts=products.filter(noSpaceFilter)
+      if (andEdProducts.length>noSpaceProducts.length) {
+        res.json(andEdProducts)
+      }
+      else {
+        res.json(noSpaceProducts)
+      }
     })
     .catch(err => {
       console.error(err)

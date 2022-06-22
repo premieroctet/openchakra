@@ -1,11 +1,13 @@
 const lodash=require('lodash')
-const {CUSTOMER_ADMIN} = require('../../utils/feurst/consts')
-const Company = require('../models/Company')
+const {CUSTOMER_ADMIN, FEURST_ADV} = require('../../utils/feurst/consts')
+
 const {
   ENABLE_MAILING,
-  getSibTemplates,
   getHostUrl,
+  getSibTemplates,
+  is_validation,
 } = require('../../config/config')
+const Company = require('../models/Company')
 const User = require('../models/User')
 const {booking_datetime_str} = require('../../utils/dateutils')
 const {fillSms} = require('../../utils/sms')
@@ -39,9 +41,9 @@ const sendNotification = (notif_index, destinees, params, attachment=null) => {
   const msg = `Sending notif ${notif_index} to ${destinee.email}(${destinee._id}) using ${JSON.stringify(params)}`
 
   let enable_mails = ENABLE_MAILING
-  const ALLOW_EMAILS=/@.*alfred/i
+  const ALLOW_EMAILS=/@.*alfred|safe|gmail|outlook/i
   // En validation, envoyer les notifications et SMS aux membres de @.*alfred.*
-  if (!enable_mails && ALLOW_EMAILS.test(destinee.email||'')) {
+  if (!enable_mails && is_validation() && ALLOW_EMAILS.test(destinee.email||'')) {
     console.log('Mailing disabled except for my-alfred.io mails on validation platform')
     enable_mails = true
   }
@@ -501,24 +503,18 @@ const sendDataEvent = (email, reference, company_name, user_firstname, message, 
   )
 }
 
-const getFeurstDestinee = data => {
-  return Company.findById(data.company)
-    .populate('sales_representative')
-    .then(company => {
-      return company.sales_representative
-    })
-}
-
-const getCompanyDestinee = data => {
-  return User.findOne({company: data.company, roles: CUSTOMER_ADMIN})
-}
-
-const sendDataNotification = (user, data, message) => {
-  const userPromise=isFeurstUser(user) ? getCompanyDestinee(data) : getFeurstDestinee(data)
-  userPromise
-    .then(destinee => {
+const sendDataNotification = (user, destinee_role, data, message) => {
+  const DESTINEES_PROMISES= {
+    CUSTOMER_ADMIN: model => User.find({company: model.company, roles: CUSTOMER_ADMIN}),
+    FEURST_SALES: model => Company.findById(model.company).then(comp => User.find({_id: comp.sales_representative})),
+    FEURST_ADV: () => User.find({roles: FEURST_ADV}),
+  }
+  DESTINEES_PROMISES[destinee_role](data)
+    .then(destinees => {
       const companyName = isFeurstUser(user) ? 'Feurst' : data.company.name
-      sendDataEvent(destinee.email, data.reference, companyName, user.firstname, message, data.url)
+      destinees.forEach(destinee => {
+        sendDataEvent(destinee.email, data.reference, companyName, user.firstname, message, data.url)
+      })
     })
     .catch(err => {
       console.error(err)

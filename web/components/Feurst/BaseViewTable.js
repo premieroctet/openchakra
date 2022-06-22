@@ -7,12 +7,6 @@ import styled from 'styled-components'
 import {
   BASEPATH_EDI,
   API_PATH,
-  COMPLETE,
-  CREATED,
-  FULFILLED,
-  VALID,
-  PARTIALLY_HANDLED,
-  HANDLED,
   CONVERT,
   VALIDATE,
   ORDER,
@@ -38,7 +32,7 @@ import DevLog from '../DevLog'
 import {H2confirm} from './components.styles'
 import AddArticle from './AddArticle'
 import ImportExcelFile from './ImportExcelFile'
-import {PleasantButton} from './Button'
+import {NormalButton} from './Button'
 import Delivery from './Delivery'
 
 
@@ -46,17 +40,17 @@ const DialogAddress = dynamic(() => import('./DialogAddress'))
 const DialogConvertQuotation = dynamic(() => import('./DialogConvertQuotation'))
 
 const ConfirmHandledValidation = ({onClick, className, children}) => (
-  <PleasantButton
+  <NormalButton
     rounded={'full'}
     textColor={'#fff'}
     className={className}
     onClick={onClick}
-  >{children}</PleasantButton>
+  >{children}</NormalButton>
 )
 
 const ConfirmPartialHandledValidation = ({onClick, className, children}) => {
 
-  return (<PleasantButton
+  return (<NormalButton
     rounded={'full'}
     bgColor={'#fff'}
     textColor={'var(--black)'}
@@ -65,7 +59,7 @@ const ConfirmPartialHandledValidation = ({onClick, className, children}) => {
     className={className}
   >
     {children}
-  </PleasantButton>
+  </NormalButton>
   )
 }
 
@@ -94,6 +88,8 @@ const BaseCreateTable = ({
   const [isOpenDialog, setIsOpenDialog] = useState(false)
   const [isOpenDialogConvert, setIsOpenDialogConvert] = useState(false)
   const [actionButtons, setActionButtons]=useState([])
+  const [addAddress, setAddAddress] = useState(false)
+  const [alertText, setAlertText] = useState(false)
   
   const importURL=`${API_PATH}/${endpoint}/${orderid}/import`
   const templateURL=`${API_PATH}/${endpoint}/template`
@@ -101,21 +97,17 @@ const BaseCreateTable = ({
 
   // Possibles actions
   const justCreated = !(state?.items?.length && true)
-  const canAdd = [CREATED, FULFILLED].includes(state.status)
-  const canValidate = [COMPLETE].includes(state.status)
-  const canModify = [CREATED, COMPLETE].includes(state.status)
-  const isView = [VALID, PARTIALLY_HANDLED, HANDLED].includes(state.status)
-
-
+  
   const isValidButton = actionButtons.includes(VALIDATE)
   const isRevertToEdition = actionButtons.includes(REWRITE)
   const isConvertToOrder = actionButtons.includes(CONVERT)
   const isPartiallyHandled = actionButtons.includes(PARTIALLY_HANDLE)
   const isTotallyHandled = actionButtons.includes(TOTALLY_HANDLE)
-
+  const canModify = actionButtons.includes(UPDATE)
+  
   const isFeurstSales = accessRights.getFullAction()?.visibility==RELATED
-  const canUpdatePrice = accessRights.isActionAllowed(accessRights.getModel(), UPDATE_ALL) && !isView
-  const canUpdateQuantity = accessRights.isActionAllowed(accessRights.getModel(), UPDATE) && !isView
+  const canUpdatePrice = accessRights.isActionAllowed(accessRights.getModel(), UPDATE_ALL) && canModify
+  const canUpdateQuantity = accessRights.isActionAllowed(accessRights.getModel(), UPDATE) && canModify
 
   const canUpdateShipping = canUpdatePrice
 
@@ -201,7 +193,7 @@ const BaseCreateTable = ({
     orderid,
     canUpdatePrice,
     canUpdateQuantity,
-    deleteProduct: canAdd ? deleteProduct : null})
+    deleteProduct: canModify ? deleteProduct : null})
 
 
   return (<>
@@ -213,7 +205,7 @@ const BaseCreateTable = ({
 
     { orderid ? <>
 
-      {isFeurstSales && !isView && <div className='flex'>
+      {isFeurstSales && canModify && <div className='flex'>
         <H2confirm>
           <span>{state?.company?.name}</span>
         </H2confirm></div>}
@@ -225,9 +217,9 @@ const BaseCreateTable = ({
         <AddArticle endpoint={endpoint} orderid={orderid} addProduct={addProduct} wordingSection={wordingSection} />
       </div>}
 
-      {isView && <H2confirm>{t(`${wordingSection}.recap`)}</H2confirm>}
+      {!canModify && <H2confirm>{t(`${wordingSection}.recap`)}</H2confirm>}
 
-      {isView && <div>
+      {!canModify && <div>
         <dl className='dl-inline text-xl font-semibold'>
           <dt>{t(`${wordingSection}.name`)}</dt>
           <dd>{state.reference}</dd>
@@ -244,7 +236,7 @@ const BaseCreateTable = ({
         caption={t(`${wordingSection}.details`)}
         data={state.items}
         columns={cols}
-        footer={canValidate || isView}
+        footer={isValidButton || !canModify}
         filtered={filtered}
         updateMyData={updateMyOrderContent}
       />
@@ -255,7 +247,7 @@ const BaseCreateTable = ({
         orderid={orderid}
         address={state.address}
         setIsOpenDialog={setIsOpenDialog}
-        editable={isView}
+        editable={!canModify}
         requestUpdate={requestUpdate}
         shipping={{shipping_mode: state.shipping_mode, shipping_fee: state.shipping_fee, update: canUpdateShipping ? updateShippingFees : null}}
       />
@@ -269,19 +261,27 @@ const BaseCreateTable = ({
 
       <div className={`grid grid-cols-2 justify-between gap-y-4 mb-8`}>
 
-        {isRevertToEdition ? <PleasantButton
-          rounded={'full'}
-          bgColor={'#fff'}
-          textColor={'#141953'}
-          borderColor={'1px solid #141953'}
-          className={'col-start-1'}
-          onClick={() => revertToEdition({endpoint, orderid})}
-        >
-        Revenir à la saisie
-        </PleasantButton> : null}
+        {isRevertToEdition ? <div>
+          <NormalButton
+            rounded={'full'}
+            bgColor={'#fff'}
+            textColor={'#141953'}
+            borderColor={'1px solid #141953'}
+            className={'col-start-1'}
+            onMouseEnter={() => setAlertText(true)}
+            onFocus={() => setAlertText(true)}
+            onMouseLeave={() => setAlertText(false)}
+            onBlur={() => setAlertText(false)}
+            onClick={() => revertToEdition({endpoint, orderid})}
+          >
+            {t(`${wordingSection}.change`)}
+          </NormalButton>
+          {isConvertToOrder ? <AlertCondition className={alertText ? 'visible' : null} aria-live="polite"><span role={'img'} aria-label="attention">⚠️</span> Une modification entrainera une nouvelle demande de validation commerciale.</AlertCondition> : null}
+        </div> : null
+        }
 
-
-        {isConvertToOrder && <PleasantButton
+     
+        {isConvertToOrder && <NormalButton
           rounded={'full'}
           disabled={justCreated}
           bgColor={'#fff'}
@@ -291,16 +291,16 @@ const BaseCreateTable = ({
           onClick={() => convert({endpoint, orderid})}
         >
         Convertir en commande
-        </PleasantButton>}
+        </NormalButton>}
 
 
-        {isValidButton && <PleasantButton
+        {isValidButton && <NormalButton
           rounded={'full'}
           className={'justify-self-end col-start-2'}
           onClick={() => (isAddressRequired ? setIsOpenDialog(true) : submitOrder({endpoint, orderid}))}
         >
           {t(`${wordingSection}.valid`)} {/* Valid order/quotation */}
-        </PleasantButton>}
+        </NormalButton>}
 
       </div>
 
@@ -330,6 +330,8 @@ const BaseCreateTable = ({
         accessRights={accessRights}
         state={state}
         requestUpdate={requestUpdate}
+        addAddress={addAddress}
+        setAddAddress={setAddAddress}
         validateAddress={validateAddress}
         wordingSection={wordingSection}
       />}
@@ -365,5 +367,30 @@ const LineDivider = styled.p`
   }
 
 `
+
+const AlertCondition = styled.p`
+  
+  span {
+    font-size: 1.5rem;
+    align-self: center;
+  }
+
+  visibility: hidden;
+  display: flex;
+  column-gap: var(--spc-2);
+  padding: var(--spc-2);
+  width: min(calc(100% - 2rem), 40%);
+  border: 1px dashed var(--black);
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out, visibility 0.1s ease-out;
+  transform: translateY(100%);
+  opacity: 0;
+  
+  &.visible {
+    visibility: visible;
+    transform: translateY(0);
+    opacity: 1;
+  }
+`
+
 
 export default withTranslation('feurst', {withRef: true})(withEdiRequest(BaseCreateTable))

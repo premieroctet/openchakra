@@ -1,14 +1,17 @@
 import React, {useMemo} from 'react'
 import Link from 'next/link'
+
 import {localeMoneyFormat} from '../../utils/converters'
 import {
   ROLES,
 } from '../../utils/feurst/consts'
 import {formatPercent} from '../../utils/text'
 import {DateRangeColumnFilter} from '../Table/TableFilter'
+
 import UpdateCellQuantity from './UpdateCellQuantity'
 import UpdateSeller from './updateSeller'
 import UpdateCellPrice from './UpdateCellPrice'
+import {ToTheBin, ToTheBinWithAlert} from './ToTheBin'
 import OrderStatus from './OrderStatus'
 
 // to order by datetime
@@ -49,11 +52,6 @@ const FooterTotalPrice = ({data, language = null}) => {
   return <>{localeMoneyFormat({lang: language, value: total})}</>
 }
 
-const ToTheBin = props => (
-  <button {...props}>
-    <span role='image' alt="supprimer">🗑️</span>
-  </button>
-)
 
 const articleRef = {
   label: 'Réf. article',
@@ -174,20 +172,20 @@ const ordersColumns = ({endpoint, language, deleteOrder}) => {
     id: 'product_delete',
     attribute: 'product_delete',
     Cell: ({cell: {row}}) => (
-      <ToTheBin onClick={() => {
+      <ToTheBinWithAlert row={row} deleteIt={() => {
         deleteOrder({endpoint, orderid: row.original._id})
-      }}/>
+      }} />
     ),
   }
-
-
+  
+  
   return deleteOrder ? [...ordersColumnsBase, deleteItem] : ordersColumnsBase
-
+  
 }
 
 const quotationColumns = ({endpoint, orderid, language, deleteProduct, canUpdateQuantity, canUpdatePrice}) => {
-
-
+  
+  
   const quotationColumnsBase = [
     {...articleRef},
     {...articleName},
@@ -237,7 +235,7 @@ const quotationColumns = ({endpoint, orderid, language, deleteProduct, canUpdate
       }}/>
     ),
   }
-
+  
   return deleteProduct ? [...quotationColumnsBase, deleteItem] : quotationColumnsBase
 }
 
@@ -282,27 +280,27 @@ const quotationsColumns = ({endpoint, language, deleteOrder}) => {
       attribute: '_id',
       Cell: ({value}) => (<Link href={`/edi/quotations/view/${value}`}>voir</Link>),
     },
- 
+    
   ]
-
+  
   const deleteItem = {
     label: '',
     id: 'product_delete',
     attribute: 'product_delete',
     Cell: ({cell: {row}}) => (
-      <ToTheBin onClick={() => {
+      <ToTheBinWithAlert row={row} deleteIt={() => {
         deleteOrder({endpoint, orderid: row.original._id})
-      }}/>
+      }} />
     ),
   }
-  
+    
 
   return deleteOrder ? [...quotationsColumnsBase, deleteItem] : quotationsColumnsBase
-
+    
 }
-
-const accountsColumns = ({language, visibility}) => {
   
+const accountsColumns = ({language, visibility, endpoint, deleteUser}) => {
+    
   return [
     {
       label: 'Prénom',
@@ -327,6 +325,25 @@ const accountsColumns = ({language, visibility}) => {
     {
       label: 'Rôles',
       attribute: u => u.roles.map(r => ROLES[r]).join(','),
+    },
+    {
+      label: 'Date de création',
+      attribute: 'creation_date',
+      Cell: ({cell: {value}}) => formatDate(new Date(value), language),
+      sortType: datetime,
+      Filter: DateRangeColumnFilter,
+      filter: 'dateBetween', /* Custom Filter Type */
+    },
+    {
+      label: 'Supprimer',
+      attribute: 'active',
+      Cell: ({cell: {row}}) => {
+        return (
+          <ToTheBinWithAlert row={row} deleteIt={() => {
+            deleteUser({endpoint, userid: row.original._id})
+          }} />
+        )
+      },
     },
   ]
 }

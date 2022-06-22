@@ -81,15 +81,28 @@ const withEdiRequest = (Component = null) => {
             deleteIt()
           }
           else {
-            snackBarError('Suppression non authorisée.')
+            snackBarError('Suppression non autorisée.')
           }
         })
+    }
 
+    deleteUser = async({endpoint, userid}) => {
+      if (!userid) { return }
       
+      return await client(`${API_PATH}/users/${userid}`, {method: 'DELETE'})
+        .then(() => this.getList({endpoint}))
+        .catch(error => {
+          if (error.info) {
+            if (error.info.status === 403) {
+              snackBarError(error?.info.message)
+            }
+          }
+          console.error(`Can't delete user`, error)
+        })
     }
 
     handleValidation = async({endpoint, orderid, status}) => {
-      
+
       return await client(`${API_PATH}/${endpoint}/${orderid}/handle`, {data: {total: status}, method: 'PUT'})
         .then(() => this.getContentFrom({endpoint, orderid}))
         .catch(e => console.error(`Can't update status validation`, e))
@@ -197,6 +210,7 @@ const withEdiRequest = (Component = null) => {
           updateShippingFees={this.updateShippingFees}
           validateAddress={this.validateAddress}
           revertToEdition={this.revertToEdition}
+          deleteUser={this.deleteUser}
           updateSeller={this.updateSeller}
           importFile={this.importFile}
           state={this.state}
