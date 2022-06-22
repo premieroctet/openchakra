@@ -538,6 +538,9 @@ router.get('/:id/shipping-fee', passport.authenticate('jwt', {session: false}), 
 router.get('/:id/actions', passport.authenticate('jwt', {session: false}), (req, res) => {
   let result=[]
   const user=req.user
+  if (!req.user.cgv_valid) {
+    return res.json([])
+  }
   MODEL.findById(req.params.id)
     .then(model => {
       if (!model) {

@@ -214,6 +214,9 @@ router.post('/register', (req, res) => {
 
 
 router.get('/actions', passport.authenticate('jwt', {session: false}), (req, res) => {
+  if (!req.user.cgv_valid) {
+    return res.json([])
+  }
   let actions=getActionsForRoles(req.user.roles)
   if (req.query.model) {
     actions=actions.filter(a => a.model==req.query.model)
@@ -221,7 +224,7 @@ router.get('/actions', passport.authenticate('jwt', {session: false}), (req, res
   if (req.query.action) {
     actions=actions.filter(a => a.action==req.query.action)
   }
-  res.json(actions)
+  return res.json(actions)
 })
 
 // @Route GET /myAlfred/api/users/sendMailVerification
@@ -572,6 +575,16 @@ router.delete('/profile/registrationProof', passport.authenticate('jwt', {sessio
     })
 })
 
+router.put('/validate-cgv', passport.authenticate('jwt', {session: false}), (req, res) => {
+  User.findByIdAndUpdate(req.user.id, {cgv_validation_date: new Date()})
+    .then(user => {
+      return res.json(user)
+    })
+    .catch(err => {
+      console.error(err)
+    })
+})
+
 // @Route POST /myAlfred/api/users/login
 // Login
 // TODO 934169 Gérer si cookies non autorisés (pas de login)
@@ -822,7 +835,7 @@ router.get('/alfred', (req, res) => {
 // Get the current user
 // @Access private
 router.get('/current', passport.authenticate('jwt', {session: false}), (req, res) => {
-  User.findById(req.user.id)
+  User.findById(req.user.id, '-password')
     .populate('resetToken')
     .populate('company')
     .then(user => {
