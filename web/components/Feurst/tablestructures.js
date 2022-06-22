@@ -1,18 +1,18 @@
 import React, {useMemo} from 'react'
 import Link from 'next/link'
-
 import {localeMoneyFormat} from '../../utils/converters'
 import {
   ROLES,
 } from '../../utils/feurst/consts'
 import {formatPercent} from '../../utils/text'
 import {DateRangeColumnFilter} from '../Table/TableFilter'
-
+import {FEURST_IMG_PATH, API_PATH} from '../../utils/feurst/consts'
 import UpdateCellQuantity from './UpdateCellQuantity'
 import UpdateSeller from './updateSeller'
 import UpdateCellPrice from './UpdateCellPrice'
 import {ToTheBin, ToTheBinWithAlert} from './ToTheBin'
 import OrderStatus from './OrderStatus'
+
 
 // to order by datetime
 const datetime = (a, b) => {
@@ -417,12 +417,19 @@ const handledOrdersColumns = ({endpoint, language, handleValidation = null, filt
   {
     label: 'Détails',
     attribute: '_id',
-    Cell: ({value}) => (<Link href={`/edi/orders/view/${value}`}>voir</Link>),
+    Cell: ({value}) => (<Link href={`${API_PATH}/${endpoint}/view/${value}`}>voir</Link>),
   },
   {
     label: 'Statut',
     attribute: v => { return v },
     Cell: ({value}) => <OrderStatus status={value.status} label={value.status_label} />,
+  },
+  {
+    label: 'Exporter',
+    attribute: v => { return v._id },
+    Cell: ({value}) => <a className='flex justify-center items-center' href={`data:myAlfred/api/${endpoint}/${value}/download`} download={'doc.xls'} >
+      <img width={20} height={20} src={`${FEURST_IMG_PATH}/xls-icon.png`} /> Télécharger
+    </a>,
   },
   
 ]
