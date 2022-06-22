@@ -95,7 +95,7 @@ const StyledCountdown = styled.div`
   display: inline-flex;
   position: relative;
   overflow: clip;
-  margin-inline-end: var(--spc-2);
+  margin-inline: var(--spc-1);
 
   [role=timer] {
     display: inline-flex;
@@ -112,7 +112,7 @@ const StyledCountdown = styled.div`
     background-color: var(--white);
     filter: blur(10px);
     border-radius: 50%;
-    animation: 6s cubic-bezier(0.895, 0.03, 0.685, 0.22) 6s infinite alternate ${slidein};
+    animation: 20s cubic-bezier(0.99, 0.03, 0.99, 0.22) infinite alternate ${slidein};
   }
 
   span {
