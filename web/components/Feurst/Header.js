@@ -3,24 +3,35 @@ import Link from 'next/link'
 import styled from 'styled-components'
 import {screen} from '../../../web/styles/screenWidths'
 import {FEURST_PHONE_NUMBER, BASEPATH_EDI} from '../../utils/feurst/consts'
+import {isAnOrderDay} from '../../utils/feurst/utils'
 import QuickMenu from './QuickMenu'
-
 import Countdown from './Countdown'
 import {StyledCountdown} from './components.styles'
 
 
 const Header = ({accessRights}) => {
 
-  // Set time limit for countdown
+  /* Countdown display when :
+    - not on week end or public holidays
+    - from midnight to eleven
+  */
   const hourLimit = new Date()
   hourLimit.setHours(11)
   hourLimit.setMinutes(0)
   hourLimit.setSeconds(0)
 
+  const countDownToDisplay = isAnOrderDay(new Date())
+
   return (
     <>
       <InfoBox>
-        <p>Toute commande de moins de 30 articles passée avant {hourLimit.toLocaleTimeString([], {hour: 'numeric', minute: 'numeric'})} sera traitée dans la journée. <StyledCountdown> <Countdown limit={hourLimit} /> </StyledCountdown>Notre secrétariat est ouvert du lundi au vendredi de 9:00 à 17:00.</p>
+        <p>Toute commande de moins de 30 articles passée avant {hourLimit.toLocaleTimeString([], {hour: 'numeric', minute: 'numeric'})} sera traitée dans la journée.</p>
+        {countDownToDisplay &&
+          <StyledCountdown>
+            <Countdown limit={hourLimit} />
+          </StyledCountdown>
+        }
+        <p>Notre secrétariat est ouvert du lundi au vendredi de 9:00 à 17:00.</p>
       </InfoBox>
       <HeaderContainer role="banner">
 
