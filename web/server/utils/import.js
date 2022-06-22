@@ -71,7 +71,7 @@ const dataImport=(model, headers, records, mapping, options, postImport= () => P
 
     const promises=mappedRecords.map(record => {
       let promises=[]
-      promises.push(model.updateOne({[uniqueKey]: record.destination[uniqueKey]}, record.destination, {upsert: true, new: true}))
+      promises.push(model.updateOne({[uniqueKey]: record.destination[uniqueKey]}, record.destination, {upsert: !updateOnly, new: true}))
       return promises
     },
     )
