@@ -239,7 +239,7 @@ router.post('/loginAs', passport.authenticate('admin', {session: false}), (req, 
       }
 
       if (user.active) {
-        send_cookie(user, role, res, req.user._id)
+        send_cookie(user, res, req.user._id)
         logEvent(req, 'Administration', 'Connexion en tant que',
           `Connexion en tant que ${user.full_name}(${user._id})`,
         )

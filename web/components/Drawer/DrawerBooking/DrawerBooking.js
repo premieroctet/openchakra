@@ -1,4 +1,3 @@
-import CustomButton from '../../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -11,8 +10,6 @@ import TextField from '@material-ui/core/TextField'
 import DatePicker from 'react-datepicker'
 import Divider from '@material-ui/core/Divider'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch'
-import BookingDetail from '../../BookingDetail/BookingDetail'
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline'
 import Accordion from '@material-ui/core/Accordion'
 import AccordionSummary from '@material-ui/core/AccordionSummary'
@@ -21,13 +18,16 @@ import RemoveIcon from '@material-ui/icons/Remove'
 import AddIcon from '@material-ui/icons/Add'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
-import styles from '../../../static/css/components/DrawerBooking/DrawerBooking'
 import withStyles from '@material-ui/core/styles/withStyles'
+import styles from '../../../static/css/components/DrawerBooking/DrawerBooking'
+import BookingDetail from '../../BookingDetail/BookingDetail'
+import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch'
+import CustomButton from '../../CustomButton/CustomButton'
+const moment = require('moment')
+const lodash = require('lodash')
 const isEmpty = require('../../../server/validation/is-empty')
 const {getLoggedUserId} = require('../../../utils/context')
 const {isMomentAvailable} = require('../../../utils/dateutils')
-const moment = require('moment')
-const lodash = require('lodash')
 
 moment.locale('fr')
 
@@ -160,8 +160,8 @@ class DrawerBooking extends React.Component {
                   <Typography variant='h6' style={{color: '#505050', fontWeight: 'bold'}}>{service.label} - {alfred.firstname}</Typography>
                 </Grid>
                 <Grid className={classes.hideOnBigSreen}>
-                  <IconButton aria-label='Edit' className={classes.iconButtonStyle}>
-                    <CloseIcon classes={{root: classes.cancelButton}} onClick={this.props.toggleDrawer(side, false)}/>
+                  <IconButton aria-label='Edit' className={classes.iconButtonStyle} onClick={this.props.toggleDrawer(side, false)}>
+                    <CloseIcon classes={{root: classes.cancelButton}} />
                   </IconButton>
                 </Grid>
               </Grid>
