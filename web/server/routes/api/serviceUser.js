@@ -1,3 +1,4 @@
+const express = require('express')
 const Job = require('../../models/Job')
 const Group = require('../../models/Group')
 const Shop = require('../../models/Shop')
@@ -10,7 +11,6 @@ const Category = require('../../models/Category')
 const {logEvent}=require('../../utils/events')
 const {sendAdminsAlert} =require('../../utils/mailing')
 const {IMAGE_FILTER, createDiskMulter} = require('../../utils/filesystem')
-const express = require('express')
 
 const router = express.Router()
 const passport = require('passport')
@@ -849,8 +849,7 @@ router.get('/:id', (req, res) => {
     .populate({
       path: 'prestations.billing',
     })
-    .populate('equipments')
-    .populate('service.equipments')
+    .populate({path: 'service', populate: {path: 'equipments'}})
     .then(service => {
       if (!service) {
         return res.status(404).json({msg: 'No service found'})

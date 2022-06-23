@@ -28,7 +28,7 @@ class ProfileServices extends React.Component {
   }
 
   componentDidMount() {
-    axios.get(`/myAlfred/api/shop/alfred/${this.props.params.user}`)
+    axios.get(`/myAlfred/api/shop/alfred/${this.props.user}`)
       .then(response => {
         let shop = response.data
         this.setState({
@@ -81,7 +81,7 @@ class ProfileServices extends React.Component {
   render() {
     const {classes}=this.props
     const {shop}=this.state
-    const {user}=this.props.params
+    const {user}=this.props
 
     if (!user) {
       return null

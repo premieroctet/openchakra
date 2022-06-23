@@ -11,7 +11,7 @@ const withParams = WrappedComponent => props => {
   }, [])
 
 
-  return <WrappedComponent key={JSON.stringify(params)} {...props} params={params} />
+  return <WrappedComponent key={JSON.stringify(params)} {...props} {...params} />
 }
 
 module.exports=withParams

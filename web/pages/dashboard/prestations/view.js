@@ -89,7 +89,7 @@ class View extends React.Component {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname)
-    const id = this.props.params.id
+    const id = this.props.id
     setAxiosAuthentication()
     axios.get(`/myAlfred/api/admin/prestation/all/${id}`)
       .then(response => {
@@ -241,7 +241,7 @@ class View extends React.Component {
     const job = this.state.job
     const filter_presentation = this.state.filter_presentation
     const {label, price, description, professional_access, particular_access} = this.state.prestation
-    const id = this.props.params.id
+    const id = this.props.id
     const cesu_eligible = this.state.cesu_eligible
     const private_company = this.state.prestation.private_company
     const order = this.state.prestation.order
@@ -272,7 +272,7 @@ class View extends React.Component {
   };
 
   handleClick() {
-    const id = this.props.params.id
+    const id = this.props.id
     axios.delete(`/myAlfred/api/admin/prestation/all/${id}`)
       .then(() => {
         snackBarSuccess('Prestation supprimée avec succès')
@@ -522,7 +522,7 @@ class View extends React.Component {
                 </CustomButton>
               </Grid>
             </form>
-            <Link href={`editPicture?id=${this.props.params.id}`}>
+            <Link href={`editPicture?id=${this.props.id}`}>
               <CustomButton type="button" variant="contained" color="primary" style={{width: '100%'}}>
                 Modifier la photo
               </CustomButton>

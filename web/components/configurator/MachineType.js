@@ -1,5 +1,5 @@
-
 import React from 'react'
+import RequiredField from '../misc/RequiredField'
 import {feurstImgPath} from '../../pages/configurator'
 const {withTranslation} = require('react-i18next')
 
@@ -11,7 +11,6 @@ const {
   MACHINE_TYPES,
   PELLE_BUTTE,
 } = require('../../utils/feurst/consts')
-const RequiredField = require('../misc/RequiredField')
 const {normalize} = require('../../utils/text')
 
 

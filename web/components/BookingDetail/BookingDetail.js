@@ -1,13 +1,13 @@
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
-import styles from './BookingDetailStyle'
 import Grid from '@material-ui/core/Grid'
 import {withStyles} from '@material-ui/core/styles'
-const {EMPLOYEE}=require('../../utils/consts')
 import IconButton from '@material-ui/core/IconButton'
 import InfoIcon from '@material-ui/icons/Info'
 import Link from 'next/link'
+import styles from './BookingDetailStyle'
+const {EMPLOYEE}=require('../../utils/consts')
 
 class BookingDetail extends React.Component {
   constructor(props) {
@@ -17,7 +17,7 @@ class BookingDetail extends React.Component {
   render() {
     const {
       classes, prestations, count, travel_tax, pick_tax, total, provider_fee,
-      customer_fee, cesu_total, mode, role, company_amount, alfred_pro} = this.props
+      customer_fee, cesu_total, mode, alfred_pro} = this.props
 
     return (
       <Grid>
@@ -107,18 +107,6 @@ class BookingDetail extends React.Component {
               </Grid>
               <Grid>
                 <p>{cesu_total.toFixed(2)}€</p>
-              </Grid>
-            </Grid>
-            :
-            null
-          }
-          {role==EMPLOYEE ?
-            <Grid className={classes.flexContent} style={{marginleft: 20, fontWeight: 'bold'}}>
-              <Grid>
-                <p>{ReactHtmlParser(this.props.t('BOOKING_DETAIL.company'))}</p>
-              </Grid>
-              <Grid>
-                <p>{company_amount.toFixed(2)}€</p>
               </Grid>
             </Grid>
             :

@@ -1,4 +1,3 @@
-const withParams = require('../components/withParams')
 import ReactHtmlParser from 'react-html-parser'
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
@@ -13,6 +12,7 @@ import LayoutPayment from '../hoc/Layout/LayoutPayment'
 import PaymentChoice from '../components/Payment/PaymentChoice/PaymentChoice'
 import Stepper from '../components/Stepper/Stepper'
 import styles from '../static/css/pages/confirmPayment/confirmPayment'
+const withParams = require('../components/withParams')
 
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../utils/authentication')
 const {snackBarError}=require('../utils/notifications')
@@ -53,8 +53,11 @@ class ConfirmPayment extends React.Component {
 
   componentDidMount() {
 
+    if (!this.props.booking_id) {
+      return
+    }
     setAxiosAuthentication()
-    axios.get(`/myAlfred/api/booking/${this.props.params.booking_id}`)
+    axios.get(`/myAlfred/api/booking/${this.props.booking_id}`)
       .then(res => {
         const bookingObj = res.data
         this.setState({
@@ -118,7 +121,7 @@ class ConfirmPayment extends React.Component {
     if (pending) {
       return snackBarError(ReactHtmlParser(this.props.t('CONFIRM_PAYMENT.snackbar_error_payment')))
     }
-    const booking_id=this.props.params.booking_id
+    const booking_id=this.props.booking_id
     const total = parseFloat(this.state.grandTotal)
     const data = {
       booking_id: booking_id,
@@ -155,7 +158,7 @@ class ConfirmPayment extends React.Component {
   }
 
   pay = () => {
-    const booking_id=this.props.params.booking_id
+    const booking_id=this.props.booking_id
     const total = parseFloat(this.state.grandTotal)
     const data = {
       booking_id: booking_id,

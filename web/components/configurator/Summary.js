@@ -1,6 +1,8 @@
 import React, {useEffect, useState, useMemo, useRef} from 'react'
 import NoSSR from 'react-no-ssr'
 import countryList from 'react-select-country-list'
+import DevLog from '../DevLog'
+import RequiredField from '../misc/RequiredField'
 const axios = require('axios')
 const {PDFViewer} = require('@react-pdf/renderer')
 const lodash=require('lodash')
@@ -13,8 +15,6 @@ const {
   MenuItem,
 } = require('@material-ui/core')
 const Validator = require('validator')
-const DevLog = require('../DevLog')
-const RequiredField = require('../misc/RequiredField')
 const {is_development} = require('../../config/config')
 const {setAxiosAuthentication} = require('../../utils/authentication')
 const Quotation = require('../Feurst/Quotation')

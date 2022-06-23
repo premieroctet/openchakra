@@ -18,7 +18,7 @@ class EditPrestationPicture extends React.Component {
 
     return (
       <DashboardLayout>
-        <EditPicture type='prestation' id={this.props.params.id}/>
+        <EditPicture type='prestation' id={this.props.id}/>
       </DashboardLayout>
     )
   }

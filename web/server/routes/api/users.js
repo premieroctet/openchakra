@@ -6,6 +6,7 @@ const {
 const Company = require('../../models/Company')
 
 const crypto = require('crypto')
+const fs = require('fs').promises
 const express = require('express')
 
 const router = express.Router()
@@ -14,8 +15,7 @@ const bcrypt = require('bcryptjs')
 const moment = require('moment')
 const axios = require('axios')
 const gifFrames = require('gif-frames')
-const {fs} = require('file-system')
-const {getDataModel} = require('../../../config/config')
+
 const {getHostUrl, is_development} = require('../../../config/config')
 const Shop = require('../../models/Shop')
 const {
@@ -698,7 +698,7 @@ router.get('/roles/:email', (req, res) => {
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({user: 'No user found'})
+      res.status(500).json()
     })
 })
 
@@ -1322,7 +1322,8 @@ router.get('/still_profile/:filename', (req, res) => {
       const img=frameData[0].getImage().read()
       return res.send(img)
     })
-    .catch(() => {
+    .catch(err => {
+      console.log(err)
       fs.readFile(`static/profile/${req.params.filename}`)
         .then(data => {
           return res.send(data)

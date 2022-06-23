@@ -1,13 +1,6 @@
-const BladePicture = require('./BladePicture')
-const {
-  BLADE_SHAPES,
-  CHARGEUSE,
-  DELTA,
-  DROITE,
-  EXCAVATRICE,
-  SEMI_DELTA,
-} = require('../../utils/consts')
-const RequiredField = require('../misc/RequiredField')
+import React from 'react'
+import RequiredField from '../misc/RequiredField'
+import {feurstImgPath} from '../../pages/configurator'
 const {withTranslation} = require('react-i18next')
 const {
   FormControl,
@@ -18,9 +11,16 @@ const {
 } = require('@material-ui/core')
 const {Autocomplete} = require('@material-ui/lab')
 
-import React from 'react'
-import {feurstImgPath} from '../../pages/configurator'
 const lodash=require('lodash')
+const {
+  BLADE_SHAPES,
+  CHARGEUSE,
+  DELTA,
+  DROITE,
+  EXCAVATRICE,
+  SEMI_DELTA,
+} = require('../../utils/consts')
+const BladePicture = require('./BladePicture')
 
 function BladeDimension(props) {
 

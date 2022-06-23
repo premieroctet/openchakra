@@ -8,21 +8,21 @@ import axios from 'axios'
 import 'react-dates/initialize'
 import moment from 'moment'
 import 'react-dates/lib/css/_datepicker.css'
-import styles from '../static/css/pages/searchPage/searchStyle'
-import FilterMenu from '../components/FilterMenu/FilterMenu'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
-import CardService from '../components/Card/CardService/CardService'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import Layout from '../hoc/Layout/Layout'
-import withSlide from '../hoc/Slide/SlideShow'
-import withGrid from '../hoc/Grid/GridCard'
-import LayoutMobileSearch from '../hoc/Layout/LayoutMobileSearch'
 import Typography from '@material-ui/core/Typography'
 import withWidth from '@material-ui/core/withWidth'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import Hidden from '@material-ui/core/Hidden'
+import LayoutMobileSearch from '../hoc/Layout/LayoutMobileSearch'
+import withGrid from '../hoc/Grid/GridCard'
+import withSlide from '../hoc/Slide/SlideShow'
+import Layout from '../hoc/Layout/Layout'
+import CardService from '../components/Card/CardService/CardService'
+import FilterMenu from '../components/FilterMenu/FilterMenu'
+import styles from '../static/css/pages/searchPage/searchStyle'
 
 import {SEARCH} from '../utils/i18n'
 const {setAxiosAuthentication}=require('../utils/authentication')
@@ -30,9 +30,9 @@ const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel')
 const {computeDistanceKm}=require('../utils/functions')
 
 const SearchResults=withSlide(withGrid(CardService))
-const {getLoggedUserId} =require('../utils/context')
-const {PRO, PART}=require('../utils/consts')
 const lodash=require('lodash')
+const {PRO, PART}=require('../utils/consts')
+const {getLoggedUserId} =require('../utils/context')
 
 moment.locale('fr')
 
@@ -105,7 +105,7 @@ class SearchPage extends React.Component {
 
     // Mount components gets criterion from URL
     // If date in URL then force filter after search
-    const url_props=this.props.params
+    const url_props=this.props
 
     let st = {
       keyword: 'keyword' in url_props ? url_props.keyword : '',
@@ -272,7 +272,7 @@ class SearchPage extends React.Component {
   search = forceFilter => {
     this.setState({searching: true})
 
-    const url_props = this.props.params
+    const url_props = this.props
     let filters = {}
 
     // GPS

@@ -48,7 +48,7 @@ class ProfileReviews extends React.Component {
 
   render() {
     const {classes}=this.props
-    const {user}=this.props.params
+    const {user}=this.props
 
     if (!user) {
       return null

@@ -88,7 +88,7 @@ class Messages extends React.Component {
     axios.get('/myAlfred/api/chatRooms/userChatRooms')
       .then(res => {
         const chats=res.data.filter(c => c.booking && c.booking.alfred && c.messages)
-        const relative = this.props.params.relative
+        const relative = this.props.relative
         if (checkRelative && relative) {
           axios.get(`/myAlfred/api/users/users/${relative}`)
             .then(res => this.setState({chats: chats, relativeDetails: res.data}))
@@ -101,7 +101,7 @@ class Messages extends React.Component {
   }
 
   getChatsRelative = relativeId => {
-    const user=this.props.params.user
+    const user=this.props.user
     return this.state.chats.slice().filter(c =>
       (c.emitter._id===user && c.recipient._id===relativeId)
       ||
@@ -110,7 +110,7 @@ class Messages extends React.Component {
   }
 
   getRelatives = () => {
-    const user=this.props.params.user
+    const user=this.props.user
 
     let {chats, tabIndex} = this.state
     if (!chats || chats.length===0) {

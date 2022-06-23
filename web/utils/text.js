@@ -181,6 +181,13 @@ const formatPercent = value => {
   return `${parseInt(value*100)}%`
 }
 
+const formatDeadline = dl => {
+  if (!dl) {
+    return dl
+  }
+  return dl.replace('jours', 'jour(s)').replace('semaines', 'semaine(s)').replace('heures', 'heure(s)')
+}
+
 module.exports = {
   normalize,
   matches,
@@ -202,4 +209,5 @@ module.exports = {
   getWordAt,
   guessDelimiter,
   formatPercent,
+  formatDeadline,
 }
