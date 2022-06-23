@@ -1402,6 +1402,9 @@ router.post('/import', passport.authenticate('jwt', {session: false}), (req, res
  Returns landing page URL depending on role
  */
 router.get('/landing-page', passport.authenticate('jwt', {session: false}), (req, res) => {
+  if (!req.user.cgv_valid) {
+    return res.json(`${BASEPATH_EDI}/cgv`)
+  }
   const roles=req.user.roles
   if (roles.includes(FEURST_ADMIN)) {
     return res.json(`${BASEPATH_EDI}/orders/handle`)

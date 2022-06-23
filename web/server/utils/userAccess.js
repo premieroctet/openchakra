@@ -75,7 +75,7 @@ const getActionsForRoles = roles => {
   return actions
 }
 
-isFeurstUser = user => {
+const isFeurstUser = user => {
   return !user.company
 }
 
