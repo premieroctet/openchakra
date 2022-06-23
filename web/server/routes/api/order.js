@@ -1,4 +1,6 @@
+const {generateData} = require('../../utils/feurst/data_xl')
 const lodash=require('lodash')
+
 const CronJob = require('cron').CronJob
 
 const express = require('express')
@@ -532,6 +534,23 @@ router.get('/:id/shipping-fee', passport.authenticate('jwt', {session: false}), 
     .catch(err => {
       console.error(err)
       return res.status(500).json(err)
+    })
+})
+
+// @Route GET /myAlfred/api/orders/:id/export
+// Export order as XL file
+// @Access private
+// router.get('/:id/export', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/:id/export', (req, res) => {
+  MODEL.findById(req.params.id)
+    .populate({path: 'company', populate: {path: 'sales_representative'}})
+    .populate('items.product')
+    .then(model => {
+      const title=`Commande de ${model.company.name}-ref. ${model.reference}.xlsx`
+      const buffer=generateData(model)
+      res.setHeader('Content-Type', 'application/vnd.openxmlformats')
+      res.setHeader('Content-Disposition', `attachment; filename="${title}"`)
+      res.end(buffer, 'binary')
     })
 })
 
