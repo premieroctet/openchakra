@@ -3,7 +3,7 @@ const {formatPercent} = require('../../../utils/text')
 const {STANDARD_SHIPPING} = require('../../../utils/feurst/consts')
 
 // Generates Quotation or order
-const generateData = model => {
+const generateExcel = model => {
   let data=[[]]
   data.push(['Référence', model.reference || 'N/A'])
   data.push(['Date commande', model.creation_date || 'N/A'])
@@ -30,4 +30,4 @@ const generateData = model => {
   return buffer
 }
 
-module.exports={generateData}
+module.exports={generateExcel}

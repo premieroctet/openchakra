@@ -3,7 +3,7 @@ const passport = require('passport')
 const moment = require('moment')
 const xlsx=require('node-xlsx')
 const lodash=require('lodash')
-const {generateData} = require('../../utils/feurst/data_xl')
+const {generateExcel} = require('../../utils/feurst/generateExcel')
 const {
   COMPLETE,
   CONVERT,
@@ -551,7 +551,7 @@ router.get('/:id/export', passport.authenticate('jwt', {session: false}), (req, 
     .populate('items.product')
     .then(model => {
       const title=`Devis de ${model.company.name}-ref. ${model.reference}.xlsx`
-      const buffer=generateData(model)
+      const buffer=generateExcel(model)
       res.setHeader('Content-Type', 'application/vnd.openxmlformats')
       res.setHeader('Content-Disposition', `attachment; filename="${title}"`)
       res.end(buffer, 'binary')

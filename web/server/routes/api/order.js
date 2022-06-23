@@ -1,4 +1,4 @@
-const {generateData} = require('../../utils/feurst/data_xl')
+const {generateExcel} = require('../../utils/feurst/generateExcel')
 const lodash=require('lodash')
 
 const CronJob = require('cron').CronJob
@@ -547,7 +547,7 @@ router.get('/:id/export', passport.authenticate('jwt', {session: false}), (req, 
     .populate('items.product')
     .then(model => {
       const title=`Commande de ${model.company.name}-ref. ${model.reference}.xlsx`
-      const buffer=generateData(model)
+      const buffer=generateExcel(model)
       res.setHeader('Content-Type', 'application/vnd.openxmlformats')
       res.setHeader('Content-Disposition', `attachment; filename="${title}"`)
       res.end(buffer, 'binary')

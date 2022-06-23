@@ -1,16 +1,16 @@
 const lodash=require('lodash')
-const {CUSTOMER_ADMIN, FEURST_ADV} = require('../../utils/feurst/consts')
-
 const {
   ENABLE_MAILING,
   getHostUrl,
   getSibTemplates,
   is_validation,
 } = require('../../config/config')
+const {CUSTOMER_ADMIN, FEURST_ADV} = require('../../utils/feurst/consts')
 const Company = require('../models/Company')
 const User = require('../models/User')
 const {booking_datetime_str} = require('../../utils/dateutils')
 const {fillSms} = require('../../utils/sms')
+const {generateExcel} = require('./feurst/generateExcel')
 const {isFeurstUser} = require('./userAccess')
 const {SIB} = require('./sendInBlue')
 
@@ -489,7 +489,14 @@ const sendOrderAlert = (email, reference, company_name, data_link) => {
 }
 
 // Sends alert upon order/quotation status change
-const sendDataEvent = (email, reference, company_name, user_firstname, message, data_link) => {
+const sendDataEvent = (email, reference, company_name, user_firstname, message, data_link, model) => {
+  const title=`${model.company.name}-ref. ${model.reference}.xlsx`
+  const buffer=generateExcel(model)
+  const attachment={
+    name: title,
+    content: buffer.toString('base64'),
+  }
+
   sendNotification(
     SIB_IDS.DATA_STATUS_NOTIFICATION,
     {email: email},
@@ -500,6 +507,7 @@ const sendDataEvent = (email, reference, company_name, user_firstname, message, 
       message: message,
       data_link: data_link,
     },
+    attachment,
   )
 }
 
@@ -509,11 +517,19 @@ const sendDataNotification = (user, destinee_role, data, message) => {
     FEURST_SALES: model => Company.findById(model.company).then(comp => User.find({_id: comp.sales_representative})),
     FEURST_ADV: () => User.find({roles: FEURST_ADV}),
   }
-  DESTINEES_PROMISES[destinee_role](data)
+  let model=null
+  // Reload data to ensure sales_representative & items are loaded
+  data.constructor.findById(data._id)
+    .populate('items.product')
+    .populate({path: 'company', populate: 'sales_representative'})
+    .then(result => {
+      model=result
+      return DESTINEES_PROMISES[destinee_role](data)
+    })
     .then(destinees => {
       const companyName = isFeurstUser(user) ? 'Feurst' : data.company.name
       destinees.forEach(destinee => {
-        sendDataEvent(destinee.email, data.reference, companyName, user.firstname, message, data.url)
+        sendDataEvent(destinee.email, data.reference, companyName, user.firstname, message, data.url, model)
       })
     })
     .catch(err => {
