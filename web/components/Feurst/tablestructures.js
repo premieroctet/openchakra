@@ -7,12 +7,31 @@ import {
 import {formatPercent} from '../../utils/text'
 import {DateRangeColumnFilter} from '../Table/TableFilter'
 import {FEURST_IMG_PATH, API_PATH} from '../../utils/feurst/consts'
+import {client} from '../../utils/client'
 import UpdateCellQuantity from './UpdateCellQuantity'
 import UpdateSeller from './updateSeller'
 import UpdateCellPrice from './UpdateCellPrice'
 import {ToTheBin, ToTheBinWithAlert} from './ToTheBin'
 import OrderStatus from './OrderStatus'
 
+
+const fetchTemplate = async templateURL => {
+  const exampleFile = await client(templateURL)
+    .catch(e => {
+      console.error(e)
+      snackBarError('Téléchargement échoué')
+    })
+
+  if (exampleFile) {
+    let url = URL.createObjectURL(exampleFile)
+    let a = document.createElement('a')
+    a.href = url
+    a.download = 'order.xls'
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+  }
+}
 
 // to order by datetime
 const datetime = (a, b) => {
@@ -427,9 +446,9 @@ const handledOrdersColumns = ({endpoint, language, handleValidation = null, filt
   {
     label: 'Exporter',
     attribute: v => { return v._id },
-    Cell: ({value}) => <a className='flex justify-center items-center' href={`data:myAlfred/api/${endpoint}/${value}/download`} download={'doc.xls'} >
+    Cell: ({value}) => <button className='flex justify-center items-center' onClick={() => fetchTemplate(`${API_PATH}/${endpoint}/${value}/export`)} >
       <img width={20} height={20} src={`${FEURST_IMG_PATH}/xls-icon.png`} /> Télécharger
-    </a>,
+    </button>,
   },
   
 ]

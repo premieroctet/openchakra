@@ -66,7 +66,7 @@ const withEdiAuth = (Component = null, options = {}) => {
     async componentDidMount() {
       
       const isLoggedUser = getLoggedUser()
-      
+      const {user} = this.context
 
       if (isLoggedUser) {
         await this.getUserRoles()
