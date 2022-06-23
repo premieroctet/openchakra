@@ -214,7 +214,7 @@ const getExchangeDirectory = () => {
   if (is_development()) {
     return '/home/seb/test'
   }
-  throw new Error('TO be defined')
+  return '/home/feurst_ftp/www'
 }
 
 // Public API
