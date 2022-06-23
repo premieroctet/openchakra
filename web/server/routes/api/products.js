@@ -41,13 +41,14 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   let andFilter= () => true
 
   if (req.query.pattern) {
+    const pattern=req.query.pattern.replace(/[^A-Za-z0-9]/g, '')
     // Create AND filter
-    const elements=req.query.pattern.split(' ')
+    const elements=pattern.split(' ')
     const andPattern=new RegExp(elements.map(e => `(?=.*${e})`).join(''), 'i')
     andFilter=p => `${p.reference} ${p.description} ${p.description_2}`.match(andPattern)
 
     // Create NOSPACE filter
-    const query=new RegExp(req.query.pattern.replace(/\s/g, ''), 'i')
+    const query=new RegExp(pattern.replace(/\s/g, ''), 'i')
     noSpaceFilter=p => `${p.reference}${p.description}${p.description_2}`.replace(/\s/g, '').match(query)
   }
 
@@ -179,7 +180,7 @@ router.post('/import-stock', passport.authenticate('jwt', {session: false}), (re
 })
 
 // Check new stock file
-new CronJob('*/3 * * * * *', () => {
+new CronJob('0 0 */12 * * *', () => {
   const store=storage.namespace('exchange')
   const folder=getExchangeDirectory()
   const latest_date=new Date(JSON.parse(store.get('latest-products-import')))
