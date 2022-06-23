@@ -3,6 +3,7 @@ const passport = require('passport')
 const moment = require('moment')
 const xlsx=require('node-xlsx')
 const lodash=require('lodash')
+const {generateData} = require('../../utils/feurst/data_xl')
 const {
   COMPLETE,
   CONVERT,
@@ -537,6 +538,23 @@ router.put('/:id/shipping-fee', passport.authenticate('jwt', {session: false}), 
     .catch(err => {
       console.error(err)
       return res.status(500).json(err)
+    })
+})
+
+// @Route GET /myAlfred/api/quotations/:id/export
+// Export quotation as XL file
+// @Access private
+// router.get('/:id/export', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/:id/export', (req, res) => {
+  MODEL.findById(req.params.id)
+    .populate({path: 'company', populate: {path: 'sales_representative'}})
+    .populate('items.product')
+    .then(model => {
+      const title=`Devis de ${model.company.name}-ref. ${model.reference}.xlsx`
+      const buffer=generateData(model)
+      res.setHeader('Content-Type', 'application/vnd.openxmlformats')
+      res.setHeader('Content-Disposition', `attachment; filename="${title}"`)
+      res.end(buffer, 'binary')
     })
 })
 
