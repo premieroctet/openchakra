@@ -213,7 +213,7 @@ class Footer extends React.Component {
               <span>·</span>
             </Grid>
             <Grid item>
-              <Link href={'/static/cgu.pdf'}>
+              <Link href={'/static/cgu.pdf'} target="_blank">
                 <Typography>{ReactHtmlParser(this.props.t('FOOTER.cgu_bis'))}</Typography>
               </Link>
             </Grid>
