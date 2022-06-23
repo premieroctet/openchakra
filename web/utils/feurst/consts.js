@@ -83,7 +83,8 @@ const ROLES = {
 // Auto associated roles
 const [ORDER, QUOTATION, ACCOUNT, SHIPRATE, PRODUCT, PRICELIST]=['ORDER', 'QUOTATION', 'ACCOUNT', 'SHIPRATE', 'PRODUCT', 'PRICELIST'] // Plus COMPANY already defined
 // UPDATE_ALL allows to update item price in a quotation
-const [VIEW, CREATE, UPDATE, UPDATE_ALL, DELETE, VALIDATE, CONVERT, LINK, HANDLE]=['VIEW', 'CREATE', 'UPDATE', 'UPDATE_ALL', 'DELETE', 'VALIDATE', 'CONVERT', 'LINK', 'HANDLE']
+const [VIEW, CREATE, UPDATE, UPDATE_ALL, DELETE, VALIDATE, CONVERT, LINK, HANDLE, EXPORT]=
+  ['VIEW', 'CREATE', 'UPDATE', 'UPDATE_ALL', 'DELETE', 'VALIDATE', 'CONVERT', 'LINK', 'HANDLE', 'EXPORT']
 const [ALL, COMPANY, RELATED]=['ALL', 'COMPANY', 'RELATED']
 const MODELS=[ORDER, QUOTATION, ACCOUNT, SHIPRATE, PRODUCT, PRICELIST, COMPANY]
 const ACTIONS=[VIEW, CREATE, UPDATE, DELETE, VALIDATE, CONVERT]
@@ -107,7 +108,7 @@ const createUserAction= (model, action, extra={}) => {
 const USER_ACTIONS={
   [FEURST_ADMIN]: lodash.flattenDeep([
     [VIEW, CREATE, UPDATE, DELETE, LINK].map(action => [FEURST_ADMIN, FEURST_ADV, FEURST_SALES].map(tp => createUserAction(ACCOUNT, action, {type: tp, visibility: ALL}))),
-    [VIEW, HANDLE].map(action => createUserAction(ORDER, action, {visibility: ALL})),
+    [VIEW, HANDLE, EXPORT].map(action => createUserAction(ORDER, action, {visibility: ALL})),
     [VIEW, CREATE].map(action => createUserAction(SHIPRATE, action, {visibility: ALL})),
     [VIEW, CREATE, UPDATE, DELETE].map(action => createUserAction(PRODUCT, action, {visibility: ALL})),
     [VIEW, CREATE, UPDATE, DELETE].map(action => createUserAction(PRICELIST, action, {visibility: ALL})),
@@ -116,14 +117,14 @@ const USER_ACTIONS={
   ]),
   [FEURST_ADV]: lodash.flattenDeep([
     createUserAction(ACCOUNT, UPDATE),
-    [VIEW, HANDLE].map(action => createUserAction(ORDER, action, {visibility: ALL})),
+    [VIEW, HANDLE, EXPORT].map(action => createUserAction(ORDER, action, {visibility: ALL})),
     [VIEW].map(action => createUserAction(ACCOUNT, action, {visibility: ALL})),
   ]),
   [FEURST_SALES]: lodash.flattenDeep([
     createUserAction(ACCOUNT, UPDATE),
     createUserAction(ACCOUNT, VIEW, {type: CUSTOMER_ADMIN, visibility: RELATED}),
-    [CREATE, VIEW, DELETE, UPDATE, HANDLE, UPDATE_ALL, VALIDATE, REWRITE].map(action => createUserAction(QUOTATION, action, {visibility: RELATED})),
-    [VIEW].map(action => createUserAction(ORDER, action, {visibility: RELATED})),
+    [CREATE, VIEW, DELETE, UPDATE, HANDLE, UPDATE_ALL, VALIDATE, REWRITE, EXPORT].map(action => createUserAction(QUOTATION, action, {visibility: RELATED})),
+    [VIEW, EXPORT].map(action => createUserAction(ORDER, action, {visibility: RELATED})),
     createUserAction(COMPANY, VIEW, {visibility: RELATED}),
   ]),
   [CUSTOMER_ADMIN]: lodash.flattenDeep([
@@ -191,5 +192,5 @@ module.exports={
   COMPLETE, LINK, FEURST_SALES, HANDLE, XL_TYPE, TEXT_TYPE, PRICELIST,
   CONVERT, QUOTATION_VALIDITY, EXPIRED, UPDATE_ALL, MAIN_ADDRESS_LABEL, CONVERTED,
   BUTTONS, REWRITE, TOTALLY_HANDLE, PARTIALLY_HANDLE, ORDER_ALERT_CHECK_INTERVAL,
-  ORDER_ALERT_DELAY, JSON_TYPE,
+  ORDER_ALERT_DELAY, JSON_TYPE, EXPORT,
 }

@@ -18,6 +18,7 @@ const {
   COMPLETE,
   CONVERT,
   CREATED,
+  EXPORT,
   EXPRESS_SHIPPING,
   HANDLE,
   HANDLED,
@@ -540,8 +541,7 @@ router.get('/:id/shipping-fee', passport.authenticate('jwt', {session: false}), 
 // @Route GET /myAlfred/api/orders/:id/export
 // Export order as XL file
 // @Access private
-// router.get('/:id/export', passport.authenticate('jwt', {session: false}), (req, res) => {
-router.get('/:id/export', (req, res) => {
+router.get('/:id/export', passport.authenticate('jwt', {session: false}), (req, res) => {
   MODEL.findById(req.params.id)
     .populate({path: 'company', populate: {path: 'sales_representative'}})
     .populate('items.product')
@@ -585,6 +585,9 @@ router.get('/:id/actions', passport.authenticate('jwt', {session: false}), (req,
         && [CREATED, COMPLETE].includes(model.status)
         && req.user.company?._id.toString()==model.created_by_company?._id.toString()) {
         result.push(DELETE)
+      }
+      if (isActionAllowed(req.user.roles, DATA_TYPE, EXPORT)) {
+        result.push(EXPORT)
       }
       return res.json(result)
     })
