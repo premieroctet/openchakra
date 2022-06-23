@@ -48,6 +48,7 @@ const withEdiAuth = (Component = null, options = {}) => {
   
   class EdiAuth extends React.Component {
     state = {
+      user: null,
       loading: true,
       actions: [],
       account: null,
@@ -65,12 +66,7 @@ const withEdiAuth = (Component = null, options = {}) => {
     async componentDidMount() {
       
       const isLoggedUser = getLoggedUser()
-      const {user} = this.context
       
-      // User must accept cgv
-      if (user && !user?.cgv_valid) {
-        Router.push(`${BASEPATH_EDI}/cgv`)
-      }
 
       if (isLoggedUser) {
         await this.getUserRoles()
@@ -86,14 +82,23 @@ const withEdiAuth = (Component = null, options = {}) => {
       else {
         Router.push(options.pathAfterFailure || `${BASEPATH_EDI}/login`)
       }
-      
+
     }
+
+    componentDidUpdate() {
+      // Waiting for end loading
+      const {user} = this.context
+
+      if (user && !user?.cgv_valid) {
+        Router.push(`${BASEPATH_EDI}/cgv`)
+      }
+    }
+      
 
     render() {
       const {loading, actions, account} = this.state
 
       const accessRights=new AccessRights(options.model, options.action, actions)
-      console.log(accessRights, actions)
       const canAccess = [accessRights.getModel(), accessRights.getAction()].every(isUndefined) || accessRights.isActionAllowed(accessRights.getModel(), accessRights.getAction())
 
       return (<>

@@ -87,6 +87,7 @@ const InfoBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
   background-color: var(--brand-color);
   color: var(--white);
   font-weight: var(--font-bold);
