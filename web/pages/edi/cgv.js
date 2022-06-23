@@ -2,7 +2,7 @@ import React, {useState, useContext} from 'react'
 import {useRouter} from 'next/router'
 import styled from 'styled-components'
 import {screen} from '../../styles/screenWidths'
-import {BASEPATH_EDI, API_PATH, FEURST_IMG_PATH} from '../../utils/feurst/consts'
+import {BASEPATH_EDI, API_PATH, FEURST_DOC_PATH} from '../../utils/feurst/consts'
 import {client} from '../../utils/client'
 import EdiContainer from '../../components/Feurst/EdiContainer'
 import {UserContext} from '../../contextes/user.context'
@@ -39,7 +39,7 @@ const CGV = () => {
           <h1>Conditions générales de vente</h1>
 
           <div className='displaycgv'>
-            <embed src={`${FEURST_IMG_PATH}/configurateur.pdf`} type="application/pdf" width="100%" height="100%" />
+            <embed src={`${FEURST_DOC_PATH}/CGV.pdf`} type="application/pdf" width="100%" height="100%" />
           
             {user && !user?.cgv_valid ? <>
             
@@ -50,7 +50,7 @@ const CGV = () => {
                   J'ai pris connaissance des conditions générales de vente.
                 </label>
 
-                <button type="submit" onClick={acceptCGV}>J'accepte sans réserve les conditions générales de vente</button>
+                <button type="submit" onClick={acceptCGV} disabled={!cgvCheck}>J'accepte sans réserve les conditions générales de vente</button>
               </form>
             </>
               : null}
@@ -122,6 +122,10 @@ const StyledCGV = styled.div`
     border: 0;
     border-radius: var(--spc-2);
     width: 100%;
+  }
+
+  button:disabled {
+    background-color: var(--gray-800);
   }
 `
 
