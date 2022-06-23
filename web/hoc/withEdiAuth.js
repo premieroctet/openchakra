@@ -10,6 +10,7 @@ import {UserContext} from '../contextes/user.context'
 import EdiContainer from '../components/Feurst/EdiContainer'
 import {getLoggedUser} from '../utils/context'
 
+
 class AccessRights {
   constructor(model, action, actions) {
     this.actions=actions
@@ -64,6 +65,12 @@ const withEdiAuth = (Component = null, options = {}) => {
     async componentDidMount() {
       
       const isLoggedUser = getLoggedUser()
+      const {user} = this.context
+      
+      // User must accept cgv
+      if (user && !user?.cgv_valid) {
+        Router.push(`${BASEPATH_EDI}/cgv`)
+      }
 
       if (isLoggedUser) {
         await this.getUserRoles()
@@ -73,7 +80,6 @@ const withEdiAuth = (Component = null, options = {}) => {
           })
 
         if (is_development()) {
-          const {user} = this.context
           this.setState({account: `${user?.full_name} (${user?.email}), société ${user?.company?.name}, rôles ${user?.roles}`})
         }
       }
@@ -87,6 +93,7 @@ const withEdiAuth = (Component = null, options = {}) => {
       const {loading, actions, account} = this.state
 
       const accessRights=new AccessRights(options.model, options.action, actions)
+      console.log(accessRights, actions)
       const canAccess = [accessRights.getModel(), accessRights.getAction()].every(isUndefined) || accessRights.isActionAllowed(accessRights.getModel(), accessRights.getAction())
 
       return (<>
