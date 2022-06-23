@@ -28,6 +28,7 @@ const ProductSchema = new Schema({
   stock: {
     type: Number,
     min: 0,
+    set: v => parseInt(v),
     // required: true, TODO make mandatory then import
   },
   components: {

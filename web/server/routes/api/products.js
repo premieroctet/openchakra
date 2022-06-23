@@ -1,5 +1,3 @@
-const {guessFileType} = require('../../../utils/import')
-const {XL_TYPE} = require('../../../utils/feurst/consts')
 const fs=require('fs')
 const path=require('path')
 const lodash=require('lodash')
@@ -8,6 +6,7 @@ const passport = require('passport')
 const moment = require('moment')
 
 const CronJob = require('cron').CronJob
+const {JSON_TYPE} = require('../../../utils/feurst/consts')
 const storage = require('../../utils/storage')
 
 const {getExchangeDirectory} = require('../../../config/config')
@@ -39,6 +38,7 @@ const DATA_TYPE=PRODUCT
 router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   let andFilter= () => true
+  let noSpaceFilter= () => true
 
   if (req.query.pattern) {
     const pattern=req.query.pattern.replace(/[^A-Za-z0-9]/g, '')
@@ -195,13 +195,9 @@ new CronJob('0 0 */12 * * *', () => {
     if (latestFile) {
       store.set('latest-products-import', JSON.stringify(fs.statSync(latestFile).mtime))
       const contents=fs.readFileSync(latestFile)
-      guessFileType(contents)
-        .then(type => {
-          console.log(`Stock format is ${type}`)
-          return stockImport(contents, {format: type, tab: 'Travail'})
-        })
+      stockImport(contents, {format: JSON_TYPE})
         .then(res => {
-          console.log(`Import result:${res}`)
+          console.log(`Import result:${JSON.stringify(res)}`)
         })
         .catch(err => {
           console.error(err)
