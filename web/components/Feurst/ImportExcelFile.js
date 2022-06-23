@@ -8,16 +8,14 @@ import {
   Typography,
 } from '@material-ui/core'
 import isEmpty from 'lodash/isEmpty'
-import axios from 'axios'
 import {is_development} from '../../config/config'
 import {snackBarError} from '../../utils/notifications'
 import {guessDelimiter} from '../../utils/text'
 import {extractSample, getTabs, guessFileType} from '../../utils/import'
 import {TEXT_TYPE, XL_TYPE} from '../../utils/feurst/consts'
-import {setAxiosAuthentication} from '../../utils/authentication'
-import {client} from '../../utils/client'
 import {XL_EXTENSIONS} from '../../utils/consts'
 import {FEURST_IMG_PATH} from '../../utils/feurst/consts'
+import {simulateDownload} from '../utils/simulateDownload'
 import {NormalButton} from './Button'
 import ImportResult from './ImportResult'
 
@@ -37,27 +35,7 @@ const ImportExcelFile = ({importURL, templateURL, caption, endpoint, orderid, im
   const [importResult, setImportResult] = useState(null)
   // WARNING: first is 1, not 0
   const [firstLine, setFirstLine] = useState(1)
-  const uploadFile = () => {
-    // TODO
-  }
-
-  const fetchTemplate = async() => {
-    const exampleFile = await client(templateURL)
-      .catch(e => {
-        console.error(e)
-        snackBarError('Téléchargement échoué')
-      })
-
-    if (exampleFile) {
-      let url = URL.createObjectURL(exampleFile)
-      let a = document.createElement('a')
-      a.href = url
-      a.download = 'FeurstExample.xlsx'
-      document.body.appendChild(a)
-      a.click()
-      a.remove()
-    }
-  }
+  
 
   useEffect(() => {
     setFile(null)
@@ -160,7 +138,6 @@ const ImportExcelFile = ({importURL, templateURL, caption, endpoint, orderid, im
             className='sr-only'
             id={'importfile'}
             type={'file'}
-            onSubmit={() => uploadFile}
             onChange={onFileChange}
             accept={XL_EXTENSIONS.join(',')}
           />
@@ -209,7 +186,7 @@ const ImportExcelFile = ({importURL, templateURL, caption, endpoint, orderid, im
       </div>
     </ImportDialog>
     {templateURL &&
-      <DownloadExampleFile type='button' className='block text-lg no-underline text-center mb-6' href='#' onClick={fetchTemplate} >
+      <DownloadExampleFile type='button' className='block text-lg no-underline text-center mb-6' onClick={simulateDownload({url: templateURL, filename: 'FeurstExample.xlsx'})} >
         Télécharger le modèle de fichier
       </DownloadExampleFile>
     }

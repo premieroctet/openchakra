@@ -7,31 +7,13 @@ import {
 import {formatPercent} from '../../utils/text'
 import {DateRangeColumnFilter} from '../Table/TableFilter'
 import {FEURST_IMG_PATH, API_PATH} from '../../utils/feurst/consts'
-import {client} from '../../utils/client'
+import {simulateDownload} from '../utils/simulateDownload'
 import UpdateCellQuantity from './UpdateCellQuantity'
 import UpdateSeller from './updateSeller'
 import UpdateCellPrice from './UpdateCellPrice'
 import {ToTheBin, ToTheBinWithAlert} from './ToTheBin'
 import OrderStatus from './OrderStatus'
 
-
-const fetchTemplate = async templateURL => {
-  const exampleFile = await client(templateURL)
-    .catch(e => {
-      console.error(e)
-      snackBarError('Téléchargement échoué')
-    })
-
-  if (exampleFile) {
-    let url = URL.createObjectURL(exampleFile)
-    let a = document.createElement('a')
-    a.href = url
-    a.download = 'order.xls'
-    document.body.appendChild(a)
-    a.click()
-    a.remove()
-  }
-}
 
 // to order by datetime
 const datetime = (a, b) => {
@@ -143,7 +125,7 @@ const orderColumns = ({endpoint, orderid, language, canUpdateQuantity, deletePro
   return deleteProduct ? [...orderColumnsBase, deleteItem] : orderColumnsBase
 }
 
-const ordersColumns = ({endpoint, language, deleteOrder}) => {
+const ordersColumns = ({endpoint, language, deleteOrder, exportFile}) => {
   
   
   const ordersColumnsBase = [
@@ -186,7 +168,8 @@ const ordersColumns = ({endpoint, language, deleteOrder}) => {
     },
   ]
 
-  const deleteItem = {
+  
+  const deleteItem = deleteOrder ? {
     label: '',
     id: 'product_delete',
     attribute: 'product_delete',
@@ -195,15 +178,22 @@ const ordersColumns = ({endpoint, language, deleteOrder}) => {
         deleteOrder({endpoint, orderid: row.original._id})
       }} />
     ),
-  }
+  }: null
   
+  const exportCol = exportFile ? {
+    label: 'Exporter',
+    attribute: v => { return v._id },
+    Cell: ({value}) => <button className='flex justify-center items-center' onClick={() => simulateDownload({url: `${API_PATH}/${endpoint}/${value}/export`, filename: `${endpoint}.xls`})} >
+      <img width={20} height={20} src={`${FEURST_IMG_PATH}/xls-icon.png`} /> Télécharger
+    </button>,
+  } : null
   
-  return deleteOrder ? [...ordersColumnsBase, deleteItem] : ordersColumnsBase
+  const ordersColumnsFinal = [...ordersColumnsBase, exportCol, deleteItem].filter(elem => elem !== null)
   
+  return ordersColumnsFinal
 }
 
 const quotationColumns = ({endpoint, orderid, language, deleteProduct, canUpdateQuantity, canUpdatePrice}) => {
-  
   
   const quotationColumnsBase = [
     {...articleRef},
@@ -419,39 +409,44 @@ const pricesColumns = ({language}) => [
 ]
 
 
-const handledOrdersColumns = ({endpoint, language, handleValidation = null, filter = null}) => [
-  {
-    label: 'Date commande',
-    attribute: 'creation_date',
-    Cell: ({cell: {value}}) => formatDate(new Date(value), language),
-    sortType: datetime,
-    Filter: DateRangeColumnFilter,
-    filter: 'dateBetween', /* Custom Filter Type */
-  },
-  {...companyName},
-  {
-    label: 'Ref. commande',
-    attribute: 'reference',
-  },
-  {
-    label: 'Détails',
-    attribute: '_id',
-    Cell: ({value}) => (<Link href={`${API_PATH}/${endpoint}/view/${value}`}>voir</Link>),
-  },
-  {
-    label: 'Statut',
-    attribute: v => { return v },
-    Cell: ({value}) => <OrderStatus status={value.status} label={value.status_label} />,
-  },
-  {
+const handledOrdersColumns = ({endpoint, language, exportFile, filter = null}) => {
+  
+  const handledOrdersColumnsBase = [
+    {
+      label: 'Date commande',
+      attribute: 'creation_date',
+      Cell: ({cell: {value}}) => formatDate(new Date(value), language),
+      sortType: datetime,
+      Filter: DateRangeColumnFilter,
+      filter: 'dateBetween', /* Custom Filter Type */
+    },
+    {...companyName},
+    {
+      label: 'Ref. commande',
+      attribute: 'reference',
+    },
+    {
+      label: 'Détails',
+      attribute: '_id',
+      Cell: ({value}) => (<Link href={`${API_PATH}/${endpoint}/view/${value}`}>voir</Link>),
+    },
+    {
+      label: 'Statut',
+      attribute: v => { return v },
+      Cell: ({value}) => <OrderStatus status={value.status} label={value.status_label} />,
+    },
+  ]
+
+  const exportCol = {
     label: 'Exporter',
     attribute: v => { return v._id },
-    Cell: ({value}) => <button className='flex justify-center items-center' onClick={() => fetchTemplate(`${API_PATH}/${endpoint}/${value}/export`)} >
+    Cell: ({value}) => <button className='flex justify-center items-center' onClick={() => simulateDownload({url: `${API_PATH}/${endpoint}/${value}/export`, filename: `${endpoint}.xls`})} >
       <img width={20} height={20} src={`${FEURST_IMG_PATH}/xls-icon.png`} /> Télécharger
     </button>,
-  },
-  
-]
+  }
+
+  return exportFile ? [...handledOrdersColumnsBase, exportCol] : handledOrdersColumnsBase
+}
 const handledQuotationsColumns = ({language, endpoint, handleValidation = null, filter = null}) => [
   {
     label: 'Date',
