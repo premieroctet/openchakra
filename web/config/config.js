@@ -38,7 +38,7 @@ const getChatURL = () => {
 
 const getHostName= () => {
   if (is_development()) {
-    return 'localhost'
+    return HOSTNAME || 'localhost'
   }
   if(!HOSTNAME) {
     throw new Error(`HOSTNAME config missing`)
@@ -209,6 +209,8 @@ if (is_development()) {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 }
 
+const RANDOM_ID=new Date().getTime()
+
 // Public API
 module.exports = {
   databaseName: databaseName,
@@ -221,5 +223,5 @@ module.exports = {
   mustDisplayChat, getChatURL,
   canAlfredSelfRegister, canAlfredParticularRegister,
   getSibTemplates, checkConfig, getDatabaseUri, hideStoreDialog,
-  getDataModel, skipFailedPayment, getSibApiKey, getPort,
+  getDataModel, skipFailedPayment, getSibApiKey, getPort, RANDOM_ID,
 }
