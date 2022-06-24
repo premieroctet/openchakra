@@ -2,6 +2,7 @@ import React from 'react'
 import Router from 'next/router'
 import uniqBy from 'lodash/uniqBy'
 import isUndefined from 'lodash/isUndefined'
+import DevLog from '../components/DevLog'
 import {client} from '../utils/client'
 import {BASEPATH_EDI, API_PATH} from '../utils/feurst/consts'
 import {is_development} from '../config/config'
@@ -45,7 +46,7 @@ class AccessRights {
 
 
 const withEdiAuth = (Component = null, options = {}) => {
-  
+
   class EdiAuth extends React.Component {
     state = {
       user: null,
@@ -64,7 +65,7 @@ const withEdiAuth = (Component = null, options = {}) => {
     }
 
     async componentDidMount() {
-      
+
       const isLoggedUser = getLoggedUser()
       const {user} = this.context
 
@@ -76,7 +77,7 @@ const withEdiAuth = (Component = null, options = {}) => {
           })
 
         if (is_development()) {
-          this.setState({account: `${user?.full_name} (${user?.email}), société ${user?.company?.name}, rôles ${user?.roles}`})
+          this.setState({account: `${user?.full_name} (${user?.email}), société ${user?.company?.name || 'Feurst'}`})
         }
       }
       else if (options?.force !== true) {
@@ -93,9 +94,9 @@ const withEdiAuth = (Component = null, options = {}) => {
       const canAccess = [accessRights.getModel(), accessRights.getAction()].every(isUndefined) || accessRights.isActionAllowed(accessRights.getModel(), accessRights.getAction())
 
       return (<>
-        {is_development() &&
+        <DevLog>
           <h1>{`model:${accessRights.getModel()}, action:${accessRights.getAction()}, compte:${account}`}</h1>
-        }
+        </DevLog>
 
         <EdiContainer accessRights={accessRights}>
           <Tabs accessRights={accessRights} />

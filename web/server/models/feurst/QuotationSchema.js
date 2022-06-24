@@ -74,5 +74,8 @@ QuotationSchema.virtual('url').get(function() {
   return url.href
 })
 
+QuotationSchema.virtual('filename').get(function() {
+  return `Devis ${this.company?.name}-${this.reference}.xlsx`
+})
 
 module.exports = QuotationSchema
