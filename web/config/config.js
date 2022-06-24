@@ -38,7 +38,7 @@ const getChatURL = () => {
 
 const getHostName= () => {
   if (is_development()) {
-    return 'localhost'
+    return HOSTNAME || 'localhost'
   }
   if(!HOSTNAME) {
     throw new Error(`HOSTNAME config missing`)
@@ -216,6 +216,7 @@ const getExchangeDirectory = () => {
   }
   return '/home/feurst_ftp/www'
 }
+const RANDOM_ID=new Date().getTime()
 
 // Public API
 module.exports = {
@@ -230,4 +231,5 @@ module.exports = {
   canAlfredSelfRegister, canAlfredParticularRegister,
   getSibTemplates, checkConfig, getDatabaseUri, hideStoreDialog,
   getDataModel, skipFailedPayment, getSibApiKey, getPort, getExchangeDirectory,
+  RANDOM_ID,
 }
