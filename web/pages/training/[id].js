@@ -122,7 +122,7 @@ const Training = ({training}) => {
             <span>de formation</span>
           </li>
           <li>
-            <span>{training?.price || 899}</span>
+            <span>{training?.price.toLocaleString('fr-FR', {style: 'decimal', maximumFractionDigits: 2}) || 899}</span>
             <span>euros</span>
             <span>Tarif hors dispositif</span>
           </li>
@@ -141,16 +141,14 @@ const Training = ({training}) => {
 
         </RoundedBox>
         <RoundedBox>
-          <div className='viewmore'>
-            <h2><img width={25} height={25} src={`${AFTRAL_ICON_PATH}/more.svg`} alt=''/>En savoir plus</h2>
+          
+          <h2><img width={25} height={25} src={`${AFTRAL_ICON_PATH}/more.svg`} alt=''/>En savoir plus</h2>
 
-            <div className={`detailsmoreinfo ${viewMore ? 'liberate' : ''}`}>
-              {ReactHtmlParser(training?.more_info)}
-              <div className='moresection'>
-                <button onClick={() => setViewMore(!viewMore)}>⇳ en voir plus</button>
-              </div>
-            </div>
+          <div className={`detailsmoreinfo ${viewMore ? 'liberate' : ''}`}>
+            {ReactHtmlParser(training?.more_info)}
           </div>
+          <button onClick={() => setViewMore(!viewMore)}><span>{'>'}</span> {!viewMore ? 'en voir plus' : 'réduire'}</button>
+          
 
         </RoundedBox>
 
@@ -222,58 +220,61 @@ const RoundedBox = styled.div`
     overflow: hidden;
     max-height:40vh;
     overflow: hidden;
-    opacity: 0.9;
-    text-overflow: fade(10px);
     
     &.liberate {
       max-height: 2800px;
       transition: max-height 3s ease-out;
-      opacity: 1;
-      transform: none;
+
+      &::after {
+        background: none;
+      }
     }
     
-    .moresection {
-      width: 100%;
-      padding: 2rem;
-      position: absolute;
-      bottom: 0;
-      display: flex; 
-      justify-content: center;
-      
-    }
-
-    button {
-      display: grid;
-      font-size: var(--text-xl);
-      border: 1px solid var(--redaftral);
-      width: max-content;
-      background-color: transparent;
-      aspect-ratio: 2 / 1;
-      margin-inline: auto;
-      grid-column: 1 / -1;
-      grid-row: 1 / -1;
-    }
-
-    button::before {
-      grid-column: 1 / -1;
-      grid-row: 1 / -1;
+    &::after {
       content: '';
       width: 100%;
       height: 100%;
-      background-color: gray;
+      background: linear-gradient(0deg, white, transparent 100%);
+      display: block;
+      position: absolute;
+      top: 0;
+    }
+  }
+  
+  .detailsmoreinfo + button {
+
+    span {
+      font-size: 1.2rem;
+      padding-bottom: 0.2rem;
+      display: inline-flex;
+      transform: rotate(90deg);
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      border: 1px solid var(--redaftral);
+      width: 2rem;
+      aspect-ratio: 1 / 1;
     }
 
-  }
+    min-width: 30ch;
+    padding-block: var(--spc-4);
+    margin-block: var(--spc-4);
+    display: block;
+    grid-template-columns: 1fr;
+    font-size: var(--text-xl);
+    margin-inline: auto;
+    border: 0;
+    background: none;
+    }
 
-  .viewmore::after {
-    content: "";
-    width: 100%;
-    height: 5rem;
-    filter: blur(15px);
-    background-color: gray;
-  }
+    .detailsmoreinfo.liberate + button {
 
+      span {
+        transform: rotate(-90deg);
+      }
 
+    
+  
 `
 
 const RoundedBox3items = styled(RoundedBox)`
