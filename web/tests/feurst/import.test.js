@@ -1,3 +1,6 @@
+import Company from '../../server/models/Company'
+import {FEURST_ADV, FEURST_SALES} from '../../utils/feurst/consts'
+import User from '../../server/models/User'
 const {extractData} = require('../../utils/import')
 const {lineItemsImport} = require('../../server/utils/import')
 
@@ -17,7 +20,6 @@ const {
 } = require('../../server/utils/import')
 
 const {guessFileType} = require('../../utils/import')
-const {computeShippingFee} = require('../../server/utils/commands')
 const {TEXT_TYPE, JSON_TYPE, XL_TYPE} = require('../../utils/feurst/consts')
 
 
@@ -150,7 +152,14 @@ describe('XL/CSV/JSON imports', () => {
   }, 40000)
 
   test('Import clients/compagnies/tarifs', () => {
-    return fs.readFile(`tests/data/clients.xlsx`)
+    return User.insertMany([
+      {firstname: 'Fabrice', name: 'Clerc', email: 'fabrice.clerc@feurst.fr', roles: [FEURST_SALES]},
+      {firstname: 'Philippe', name: 'Jouannot', email: 'philippe.jouannot@feurst.fr', roles: [FEURST_SALES]},
+      {firstname: 'Florian', name: 'Benetiere', email: 'florian.benetiere@feurst.fr', roles: [FEURST_SALES]},
+    ])
+      .then(() => {
+        return fs.readFile(`tests/data/clients.xlsx`)
+      })
       .then(contents => {
         return accountsImport(contents, {format: XL_TYPE, tab: 'DONNEES CLIENT FEURST'})
       })
@@ -159,10 +168,14 @@ describe('XL/CSV/JSON imports', () => {
         expect(result.errors.length).toBe(0)
         expect(result.created).toBe(64)
         expect(result.updated).toBe(0)
+        return Company.count()
+      })
+      .then(count => {
+        return expect(count).toBe(64)
       })
   }, 40000)
 
-  test.only('Test JSON & CSV', () => {
+  test('Test JSON & CSV', () => {
     const CSV='Col1;Col2\nA;B'
     const JS=JSON.stringify([{Col1: 'A', Col2: 'B'}])
     let csvData=null

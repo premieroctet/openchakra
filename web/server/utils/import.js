@@ -1,12 +1,13 @@
 const Validator = require('validator')
 const lodash=require('lodash')
 const bcrypt = require('bcryptjs')
-const Product = require('../models/Product')
 const {
   CUSTOMER_ADMIN,
+  FEURST_SALES,
   MAIN_ADDRESS_LABEL,
   MAX_WEIGHT,
-} = require('../../utils/feurst/consts')
+}=require('../../utils/feurst/consts')
+const Product = require('../models/Product')
 const PriceList = require('../models/PriceList')
 const User = require('../models/User')
 const Company = require('../models/Company')
@@ -269,13 +270,25 @@ const accountsImport = (buffer, options) => {
           const catalogPrices=record.PVC
           const netPrices=record['Liste de prix net']
           if (!catalogPrices || !netPrices) { return Promise.reject(msg('Liste de prix inconnue')) }
-          return Company.findOneAndUpdate({name: companyName},
-            {addresses: [addr], catalog_prices: catalogPrices, net_prices: netPrices, franco: franco, delivery_zip_codes},
-            {upsert: true, new: true})
+          const salesman=(record['Nom Délégué']||'').trim()
+          if (!salesman) { return Promise.reject(msg('Nom du délégué manquant')) }
+          const [sm_name, sm_firstname]=salesman.split(' ')
+          return User.findOne({name: new RegExp(sm_name, 'i'), firstname: new RegExp(sm_firstname, 'i'), roles: FEURST_SALES})
+            .then(salesman => {
+              if (!salesman) {
+                return Promise.reject(msg(`Commercial ${sm_firstname} ${sm_name} non trouvé`))
+              }
+              return Company.findOneAndUpdate({name: companyName},
+                {addresses: [addr], catalog_prices: catalogPrices, net_prices: netPrices, franco: franco, delivery_zip_codes, sales_representative: salesman},
+                {runValidators: true, upsert: true, new: true})
+            })
             .then(company => {
               if (!company) {
                 return Promise.reject(msg('Compagnie inconnue'))
               }
+              return company.save()
+            })
+            .then(company => {
               const email=(record.Messagerie.text || record.Messagerie).trim()
               const [firstname, name]=record['Administrateur (Prénom et Nom)'].replace(/\s+/, '|').split('|')
               if (!(email && firstname && name && Validator.isEmail(email))) {
