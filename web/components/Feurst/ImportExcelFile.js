@@ -186,7 +186,7 @@ const ImportExcelFile = ({importURL, templateURL, caption, endpoint, orderid, im
       </div>
     </ImportDialog>
     {templateURL &&
-      <DownloadExampleFile type='button' className='block text-lg no-underline text-center mb-6' onClick={simulateDownload({url: templateURL, filename: 'FeurstExample.xlsx'})} >
+      <DownloadExampleFile type='button' className='block text-lg no-underline text-center mb-6' onClick={() => simulateDownload({url: templateURL, filename: 'FeurstExample.xlsx'})} >
         Télécharger le modèle de fichier
       </DownloadExampleFile>
     }
