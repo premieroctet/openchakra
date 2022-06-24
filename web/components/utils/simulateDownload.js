@@ -1,21 +1,7 @@
-import {client} from '../../utils/client'
+import Router from 'next/router'
 
-const simulateDownload = async({url: urlToTriggerDownload, filename}) => {
-  const exampleFile = await client(urlToTriggerDownload)
-    .catch(e => {
-      console.error(e)
-      snackBarError('Téléchargement échoué')
-    })
-
-  if (exampleFile) {
-    let url = URL.createObjectURL(exampleFile)
-    let a = document.createElement('a')
-    a.href = url
-    a.download = filename
-    document.body.appendChild(a)
-    a.click()
-    a.remove()
-  }
+const simulateDownload = ({url}) => {
+  Router.push(url)
 }
 
 export {simulateDownload}
