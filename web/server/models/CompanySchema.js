@@ -8,7 +8,7 @@ const Schema = mongoose.Schema
 const CompanySchema = new Schema({
   name: {
     type: String,
-    required: true,
+    required: [true, 'Le nom de la société est requis'],
   },
   website: {
     type: String,
@@ -64,7 +64,7 @@ const CompanySchema = new Schema({
   sales_representative: {
     type: Schema.Types.ObjectId,
     ref: 'user',
-    required: true,
+    required: [true, 'Le nom du délégué est requis'],
   },
 }, {toJSON: {virtuals: true, getters: true}})
 
