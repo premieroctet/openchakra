@@ -1,4 +1,5 @@
 import {client} from '../../utils/client'
+import {snackBarError} from '../../utils/notifications'
 
 const simulateDownload = async({url: urlToTriggerDownload, filename}) => {
   const exampleFile = await client(urlToTriggerDownload)

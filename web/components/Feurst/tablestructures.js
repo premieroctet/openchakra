@@ -2,6 +2,7 @@ import React, {useMemo} from 'react'
 import Link from 'next/link'
 import lodash from 'lodash'
 import {
+  API_PATH,
   BASEPATH_EDI,
   FEURST_IMG_PATH,
   ROLES,
@@ -16,6 +17,10 @@ import UpdateCellPrice from './UpdateCellPrice'
 import {ToTheBin, ToTheBinWithAlert} from './ToTheBin'
 import OrderStatus from './OrderStatus'
 
+
+const downloadAction = ({endpoint, orderid, filename}) => <button className='flex justify-center items-center' onClick={() => simulateDownload({url: `${API_PATH}/${endpoint}/${orderid}/export`, filename: `${filename}`})} >
+  <img width={20} height={20} src={`${FEURST_IMG_PATH}/xls-icon.png`} /> Télécharger
+</button>
 
 // to order by datetime
 const datetime = (a, b) => {
@@ -184,10 +189,8 @@ const ordersColumns = ({endpoint, language, deleteOrder, exportFile}) => {
 
   const exportCol = exportFile ? {
     label: 'Exporter',
-    attribute: v => { return v._id },
-    Cell: ({value}) => <button className='flex justify-center items-center' onClick={() => simulateDownload({url: `${BASEPATH_EDI}/${endpoint}/${value}/export`, filename: `${endpoint}.xls`})} >
-      <img width={20} height={20} src={`${FEURST_IMG_PATH}/xls-icon.png`} /> Télécharger
-    </button>,
+    attribute: v => { return v },
+    Cell: ({value}) => downloadAction({endpoint, orderid: value._id, filename: value.filename}),
   } : null
 
   const ordersColumnsFinal = [...ordersColumnsBase, exportCol, deleteItem].filter(elem => elem !== null)
@@ -451,12 +454,11 @@ const handledOrdersColumns = ({endpoint, language, exportFile, filter = null}) =
     },
   ]
 
+ 
   const exportCol = {
     label: 'Exporter',
-    attribute: v => { return v._id },
-    Cell: ({value}) => <button className='flex justify-center items-center' onClick={() => simulateDownload({url: `${BASEPATH_EDI}/${endpoint}/${value}/export`, filename: `${endpoint}.xls`})} >
-      <img width={20} height={20} src={`${FEURST_IMG_PATH}/xls-icon.png`} /> Télécharger
-    </button>,
+    attribute: v => { return v },
+    Cell: ({value}) => downloadAction({endpoint, orderid: value._id, filename: value.filename}),
   }
 
   return exportFile ? [...handledOrdersColumnsBase, exportCol] : handledOrdersColumnsBase
