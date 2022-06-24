@@ -35,6 +35,10 @@ const AFTRAL_ICON_PATH = '/static/assets/icon/aftral'
 
 const Training = ({training}) => {
 
+
+  const [viewMore, setViewMore] = useState(false)
+
+
   return (<Layout>
     <StyledTraining>
       
@@ -58,7 +62,7 @@ const Training = ({training}) => {
             <dt>Référence</dt>
             <dd>{training?.reference}</dd>
             <dt>Durée de la formation</dt>
-            <dd>{training?.duration_days} jours</dd>
+            <dd>{training?.duration_days} {training?.duration_days && training.duration_days > 1 ? 'jours' : 'jour'}</dd>
             <dt>&Eacute;ligigle au <abbr title='compte personnel de formation'>CPF</abbr></dt>
             <dd></dd>
           </dl>
@@ -74,12 +78,12 @@ const Training = ({training}) => {
           <div>
             <p>
               <img width={100} height={100} src={`${AFTRAL_ICON_PATH}/diplome.svg`} alt="diplôme" />
-              {training?.goals[0]}
+              {training?.goals[0] || 'Lorem ipsum dolor sit amet. Cum voluptas temporibus ea blanditiis aliquam ex libero pariatur est deserunt nostrum dolorem voluptate et laborum soluta. Et repellendus expedita ut dolor delectus aut placeat quia a ratione quia et corrupti molestias. ' }
             </p>
            
             <p>
               <img width={60} height={60} src={`${AFTRAL_ICON_PATH}/gestionnaireCompte.svg`} alt="Gestionnaire" />
-              Être le gestionnaire de transport d’une entreprise de transport routier de marchandises.
+              {training?.goals[1] || 'Être le gestionnaire de transport d’une entreprise de transport routier de marchandises.'}
             </p>
 
             <p>
@@ -137,9 +141,16 @@ const Training = ({training}) => {
 
         </RoundedBox>
         <RoundedBox>
-          <h2><img width={25} height={25} src={`${AFTRAL_ICON_PATH}/more.svg`} alt=''/>En savoir plus</h2>
+          <div className='viewmore'>
+            <h2><img width={25} height={25} src={`${AFTRAL_ICON_PATH}/more.svg`} alt=''/>En savoir plus</h2>
 
-          {ReactHtmlParser(training?.more_info)}
+            <div className={`detailsmoreinfo ${viewMore ? 'liberate' : ''}`}>
+              {ReactHtmlParser(training?.more_info)}
+              <div className='moresection'>
+                <button onClick={() => setViewMore(!viewMore)}>⇳ en voir plus</button>
+              </div>
+            </div>
+          </div>
 
         </RoundedBox>
 
@@ -157,7 +168,7 @@ export async function getServerSideProps(context) {
 
   const training = await axios.get(`${getHostUrl()}myAlfred/api/service/${context.query.id}`)
     .then(response => {
-      return response.data
+      return response?.data || null
     })
     .catch(error => { console.log(error) })
 
@@ -173,6 +184,7 @@ const RoundedBox = styled.div`
   margin-bottom: var(--spc-8);
 
   h2 {
+    font-size: var(--text-xl);
     color: #111;
     display: flex;
     align-items: center;
@@ -202,6 +214,63 @@ const RoundedBox = styled.div`
       padding: 0;
       list-style: none;
     }
+  }
+
+  .detailsmoreinfo {
+    position: relative;
+    transition: max-height 0.3s ease-out;
+    overflow: hidden;
+    max-height:40vh;
+    overflow: hidden;
+    opacity: 0.9;
+    text-overflow: fade(10px);
+    
+    &.liberate {
+      max-height: 2800px;
+      transition: max-height 3s ease-out;
+      opacity: 1;
+      transform: none;
+    }
+    
+    .moresection {
+      width: 100%;
+      padding: 2rem;
+      position: absolute;
+      bottom: 0;
+      display: flex; 
+      justify-content: center;
+      
+    }
+
+    button {
+      display: grid;
+      font-size: var(--text-xl);
+      border: 1px solid var(--redaftral);
+      width: max-content;
+      background-color: transparent;
+      aspect-ratio: 2 / 1;
+      margin-inline: auto;
+      grid-column: 1 / -1;
+      grid-row: 1 / -1;
+    }
+
+    button::before {
+      grid-column: 1 / -1;
+      grid-row: 1 / -1;
+      content: '';
+      width: 100%;
+      height: 100%;
+      background-color: gray;
+    }
+
+  }
+
+  .viewmore::after {
+    content: "";
+    width: 100%;
+    height: 5rem;
+    filter: blur(15px);
+    background-color: gray;
   }
 
 
@@ -260,7 +329,8 @@ const BoxVideoAndDownload = styled.div`
     }
 
     span:first-of-type {
-      font-size: 2rem;
+      font-size: var(--text-xl);
+      font-weight: var(--font-bold);
     }
 
   }
@@ -300,14 +370,14 @@ const Stats = styled.div`
 
     @media (${screen.md}) {
       grid-template-columns: 1fr 1fr 1fr;
-    }
-
-    li:nth-of-type(1) {
-      justify-self: flex-start;
-    }
-    
-    li:nth-of-type(3) {
-      justify-self: flex-end;
+      
+          li:nth-of-type(1) {
+            justify-self: flex-start;
+          }
+          
+          li:nth-of-type(3) {
+            justify-self: flex-end;
+          }
     }
   }
 
@@ -344,7 +414,8 @@ const StyledTraining = styled.div`
    --spc-4: 1rem;
    --spc-8: 2rem;
    --text-lg: 1.125rem;
-   --text-xl: 1.25rem;
+   --text-xl: 1.32rem;
+   --text-2xl: 1.5rem;
    --text-4xl: 2.25rem;
    --redaftral: #a13849;
    --rounded-xl: 0.75rem;
@@ -401,7 +472,8 @@ const StyledTraining = styled.div`
     
     
     h1 {
-      font-size: var(--text-xl);
+      /* font-size: clamp(var(--text-lg), var(--text-xl)) ; */
+      font-size: var(--text-lg) ;
       padding-inline: var(--spc-3);
       color: white;
       text-align: center;
