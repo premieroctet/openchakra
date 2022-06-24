@@ -1,7 +1,11 @@
 import React, {useMemo} from 'react'
 import Link from 'next/link'
 import lodash from 'lodash'
-import {API_PATH, FEURST_IMG_PATH, ROLES} from '../../utils/feurst/consts'
+import {
+  BASEPATH_EDI,
+  FEURST_IMG_PATH,
+  ROLES,
+} from '../../utils/feurst/consts'
 import {formatAddress, formatPercent} from '../../utils/text'
 import {localeMoneyFormat} from '../../utils/converters'
 import {DateRangeColumnFilter} from '../Table/TableFilter'
@@ -181,7 +185,7 @@ const ordersColumns = ({endpoint, language, deleteOrder, exportFile}) => {
   const exportCol = exportFile ? {
     label: 'Exporter',
     attribute: v => { return v._id },
-    Cell: ({value}) => <button className='flex justify-center items-center' onClick={() => simulateDownload({url: `${API_PATH}/${endpoint}/${value}/export`, filename: `${endpoint}.xls`})} >
+    Cell: ({value}) => <button className='flex justify-center items-center' onClick={() => simulateDownload({url: `${BASEPATH_EDI}/${endpoint}/${value}/export`, filename: `${endpoint}.xls`})} >
       <img width={20} height={20} src={`${FEURST_IMG_PATH}/xls-icon.png`} /> Télécharger
     </button>,
   } : null
@@ -438,7 +442,7 @@ const handledOrdersColumns = ({endpoint, language, exportFile, filter = null}) =
     {
       label: 'Détails',
       attribute: '_id',
-      Cell: ({value}) => (<Link href={`${API_PATH}/${endpoint}/view/${value}`}>voir</Link>),
+      Cell: ({value}) => (<Link href={`${BASEPATH_EDI}/${endpoint}/view/${value}`}>voir</Link>),
     },
     {
       label: 'Statut',
@@ -450,7 +454,7 @@ const handledOrdersColumns = ({endpoint, language, exportFile, filter = null}) =
   const exportCol = {
     label: 'Exporter',
     attribute: v => { return v._id },
-    Cell: ({value}) => <button className='flex justify-center items-center' onClick={() => simulateDownload({url: `${API_PATH}/${endpoint}/${value}/export`, filename: `${endpoint}.xls`})} >
+    Cell: ({value}) => <button className='flex justify-center items-center' onClick={() => simulateDownload({url: `${BASEPATH_EDI}/${endpoint}/${value}/export`, filename: `${endpoint}.xls`})} >
       <img width={20} height={20} src={`${FEURST_IMG_PATH}/xls-icon.png`} /> Télécharger
     </button>,
   }
