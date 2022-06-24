@@ -490,7 +490,7 @@ const sendOrderAlert = (email, reference, company_name, data_link) => {
 
 // Sends alert upon order/quotation status change
 const sendDataEvent = (email, reference, company_name, user_firstname, message, data_link, model) => {
-  const title=`${model.company.name}-ref. ${model.reference}.xlsx`
+  const title=model.filename
   const buffer=generateExcel(model)
   const attachment={
     name: title,

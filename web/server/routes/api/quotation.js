@@ -550,7 +550,7 @@ router.get('/:id/export', passport.authenticate('jwt', {session: false}), (req, 
     .populate({path: 'company', populate: {path: 'sales_representative'}})
     .populate('items.product')
     .then(model => {
-      const title=`Devis de ${model.company.name}-ref. ${model.reference}.xlsx`
+      const title=model.filename
       const buffer=generateExcel(model)
       res.setHeader('Content-Type', 'application/vnd.openxmlformats')
       res.setHeader('Content-Disposition', `attachment; filename="${title}"`)

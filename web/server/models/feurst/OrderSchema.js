@@ -57,7 +57,7 @@ OrderSchema.virtual('url').get(function() {
 })
 
 OrderSchema.virtual('filename').get(function() {
-  return `Commande ${this.company?.name}-${this.reference}.xlsx`
+  return `Commande ${this.company?.name}-${this.reference || 'pas de référence'}.xlsx`
 })
 
 
