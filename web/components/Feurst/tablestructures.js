@@ -1,12 +1,10 @@
 import React, {useMemo} from 'react'
 import Link from 'next/link'
+import lodash from 'lodash'
+import {API_PATH, FEURST_IMG_PATH, ROLES} from '../../utils/feurst/consts'
+import {formatAddress, formatPercent} from '../../utils/text'
 import {localeMoneyFormat} from '../../utils/converters'
-import {
-  ROLES,
-} from '../../utils/feurst/consts'
-import {formatPercent} from '../../utils/text'
 import {DateRangeColumnFilter} from '../Table/TableFilter'
-import {FEURST_IMG_PATH, API_PATH} from '../../utils/feurst/consts'
 import {simulateDownload} from '../utils/simulateDownload'
 import UpdateCellQuantity from './UpdateCellQuantity'
 import UpdateSeller from './updateSeller'
@@ -126,8 +124,8 @@ const orderColumns = ({endpoint, orderid, language, canUpdateQuantity, deletePro
 }
 
 const ordersColumns = ({endpoint, language, deleteOrder, exportFile}) => {
-  
-  
+
+
   const ordersColumnsBase = [
     {
       label: 'Date commande',
@@ -168,7 +166,7 @@ const ordersColumns = ({endpoint, language, deleteOrder, exportFile}) => {
     },
   ]
 
-  
+
   const deleteItem = deleteOrder ? {
     label: '',
     id: 'product_delete',
@@ -179,7 +177,7 @@ const ordersColumns = ({endpoint, language, deleteOrder, exportFile}) => {
       }} />
     ),
   }: null
-  
+
   const exportCol = exportFile ? {
     label: 'Exporter',
     attribute: v => { return v._id },
@@ -187,14 +185,14 @@ const ordersColumns = ({endpoint, language, deleteOrder, exportFile}) => {
       <img width={20} height={20} src={`${FEURST_IMG_PATH}/xls-icon.png`} /> Télécharger
     </button>,
   } : null
-  
+
   const ordersColumnsFinal = [...ordersColumnsBase, exportCol, deleteItem].filter(elem => elem !== null)
-  
+
   return ordersColumnsFinal
 }
 
 const quotationColumns = ({endpoint, orderid, language, deleteProduct, canUpdateQuantity, canUpdatePrice}) => {
-  
+
   const quotationColumnsBase = [
     {...articleRef},
     {...articleName},
@@ -244,12 +242,12 @@ const quotationColumns = ({endpoint, orderid, language, deleteProduct, canUpdate
       }}/>
     ),
   }
-  
+
   return deleteProduct ? [...quotationColumnsBase, deleteItem] : quotationColumnsBase
 }
 
 const quotationsColumns = ({endpoint, language, deleteOrder}) => {
-  
+
   const quotationsColumnsBase = [
     {
       label: 'Date commande',
@@ -289,9 +287,9 @@ const quotationsColumns = ({endpoint, language, deleteOrder}) => {
       attribute: '_id',
       Cell: ({value}) => (<Link href={`/edi/quotations/view/${value}`}>voir</Link>),
     },
-    
+
   ]
-  
+
   const deleteItem = {
     label: '',
     id: 'product_delete',
@@ -302,14 +300,14 @@ const quotationsColumns = ({endpoint, language, deleteOrder}) => {
       }} />
     ),
   }
-    
+
 
   return deleteOrder ? [...quotationsColumnsBase, deleteItem] : quotationsColumnsBase
-    
+
 }
-  
+
 const accountsColumns = ({language, visibility, endpoint, deleteUser}) => {
-    
+
   return [
     {
       label: 'Prénom',
@@ -328,8 +326,8 @@ const accountsColumns = ({language, visibility, endpoint, deleteUser}) => {
       attribute: 'company.name',
     },
     {
-      label: 'Client(s)',
-      attribute: u => u.companies?.map(u => u.name).join(','),
+      label: 'Délégué commercial',
+      attribute: u => u.company?.sales_representative?.full_name,
     },
     {
       label: 'Rôles',
@@ -363,6 +361,18 @@ const companiesColumns = ({language, updateSeller, sellers}) => {
     {
       label: 'Nom',
       attribute: 'name',
+    },
+    {
+      label: 'Adresse',
+      attribute: company => formatAddress(company?.addresses[0]), // formatAddress(company?.addresses[0]) || '',
+    },
+    {
+      label: 'Zone de chalandise',
+      attribute: company => (company?.delivery_zip_codes).join('/'), // formatAddress(company?.addresses[0]) || '',
+    },
+    {
+      label: 'Tarifs',
+      attribute: company => Object.values(lodash.pick(company, ['catalog_prices', 'net_prices'])).join('/'), // formatAddress(company?.addresses[0]) || '',
     },
   ]
 
@@ -410,7 +420,7 @@ const pricesColumns = ({language}) => [
 
 
 const handledOrdersColumns = ({endpoint, language, exportFile, filter = null}) => {
-  
+
   const handledOrdersColumnsBase = [
     {
       label: 'Date commande',
