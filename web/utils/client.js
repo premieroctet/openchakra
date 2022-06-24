@@ -33,9 +33,8 @@ async function client(
 
       /* if content-type is part of data considered as files... */
       if (blobContentTypes.includes(headers['content-type'])) {
-        const blob = await response.blob()
+        return await response.blob()
           .catch(e => console.log(`Error when fetching blob`, e))
-        return blob
       }
 
       const data = await response.json()

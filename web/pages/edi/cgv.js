@@ -1,10 +1,9 @@
 import React, {useState, useContext} from 'react'
 import {useRouter} from 'next/router'
 import styled from 'styled-components'
-import {screen} from '../../styles/screenWidths'
+import withEdiAuth from '../../hoc/withEdiAuth'
 import {BASEPATH_EDI, API_PATH, FEURST_DOC_PATH} from '../../utils/feurst/consts'
 import {client} from '../../utils/client'
-import EdiContainer from '../../components/Feurst/EdiContainer'
 import {UserContext} from '../../contextes/user.context'
 import {snackBarSuccess, snackBarError} from '../../utils/notifications'
 
@@ -32,34 +31,37 @@ const CGV = () => {
 
 
   return (
-    <EdiContainer>
-      <div />
-      <StyledCGV>
-        <div className='container-xl'>
-          <h1>Conditions générales de vente</h1>
+    
+    <StyledCGV>
+      <div className='container-xl'>
+        <h1>Conditions générales de vente</h1>
 
-          <div className='displaycgv'>
-            <embed src={`${FEURST_DOC_PATH}/CGV.pdf`} type="application/pdf" width="100%" height="100%" />
+        {user && !user?.cgv_valid &&
+          <p>Il est nécessaire de prendre connaissance des conditions générales de vente, et de les accepter pour utiliser ce service.</p>
+        }
+
+        <div className='displaycgv'>
+          <embed src={`${FEURST_DOC_PATH}/CGV.pdf`} type="application/pdf" width="100%" height="100%" />
           
-            {user && !user?.cgv_valid ? <>
+          {user && !user?.cgv_valid ? <>
             
-              <form onSubmit={acceptCGV}>
+            <form onSubmit={acceptCGV}>
               
-                <label htmlFor='cgvcheck'>
-                  <input id="cgvcheck" type={'checkbox'} value={cgvCheck} onChange={() => setCgvCheck(!cgvCheck)} />
+              <label htmlFor='cgvcheck'>
+                <input id="cgvcheck" type={'checkbox'} value={cgvCheck} onChange={() => setCgvCheck(!cgvCheck)} />
                   J'ai pris connaissance des conditions générales de vente.
-                </label>
+              </label>
 
-                <button type="submit" onClick={acceptCGV} disabled={!cgvCheck}>J'accepte sans réserve les conditions générales de vente</button>
-              </form>
-            </>
-              : null}
-
-          </div>
+              <button type="submit" onClick={() => acceptCGV} disabled={!cgvCheck}>J'accepte sans réserve les conditions générales de vente</button>
+            </form>
+          </>
+            : null}
 
         </div>
-      </StyledCGV>
-    </EdiContainer>
+
+      </div>
+    </StyledCGV>
+    
   )
 
 }
@@ -122,6 +124,7 @@ const StyledCGV = styled.div`
     border: 0;
     border-radius: var(--spc-2);
     width: 100%;
+    transition: background-color ease-in .3s;
   }
 
   button:disabled {
@@ -129,4 +132,4 @@ const StyledCGV = styled.div`
   }
 `
 
-export default CGV
+export default withEdiAuth(CGV, {force: true})

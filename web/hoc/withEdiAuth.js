@@ -79,21 +79,12 @@ const withEdiAuth = (Component = null, options = {}) => {
           this.setState({account: `${user?.full_name} (${user?.email}), société ${user?.company?.name}, rôles ${user?.roles}`})
         }
       }
-      else {
+      else if (options?.force !== true) {
         Router.push(options.pathAfterFailure || `${BASEPATH_EDI}/login`)
       }
 
     }
 
-    componentDidUpdate() {
-      // Waiting for end loading
-      const {user} = this.context
-
-      if (user && !user?.cgv_valid) {
-        Router.push(`${BASEPATH_EDI}/cgv`)
-      }
-    }
-      
 
     render() {
       const {loading, actions, account} = this.state
