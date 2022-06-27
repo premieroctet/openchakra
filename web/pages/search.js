@@ -1,3 +1,5 @@
+import CardTraining from '../components/Card/CardTraining'
+import {getDataModel, isMarketplace} from '../config/config'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -18,7 +20,6 @@ import Hidden from '@material-ui/core/Hidden'
 import lodash from 'lodash'
 import CardServiceUser from
 '../components/Card/CardServiceUser/CardServiceUser'
-import {isMarketplace} from '../config/config'
 import {setAxiosAuthentication} from '../utils/authentication'
 import styles from '../static/css/pages/searchPage/searchStyle'
 import FilterMenu from '../components/FilterMenu/FilterMenu'
@@ -355,7 +356,8 @@ componentDidMount() {
 
     const [cols, rows]={'xs': [100, 1], 'sm': [2, 3], 'md': [3, 3], 'lg': [4, 4], 'xl': [4, 3]}[width]
 
-    const SearchResults=withSlide(withGrid(this.isServiceSearch() ? CardService : CardServiceUser))
+    const cardCmp=this.isServiceSearch() ? CardService : getDataModel() == 'aftral' ? CardTraining : CardServiceUser
+    const SearchResults=withSlide(withGrid(cardCmp))
 
     return(
       <Grid>
