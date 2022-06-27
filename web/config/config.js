@@ -264,5 +264,5 @@ module.exports = {
   isPlatform, isMarketplace, getDataModel, skipFailedPayment, getSibApiKey,
   getPort, getExchangeDirectory,
   RANDOM_ID,
-
+  displayConfig,
 }

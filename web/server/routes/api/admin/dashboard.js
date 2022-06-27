@@ -211,7 +211,7 @@ ServiceUser && router.get('/serviceUsersMap', passport.authenticate('admin', {se
   ServiceUser.find({}, '_id service_address.gps')
     // .populate('user','-id_card')
     .populate('service', '_id label')
-    .populate('user', 'firstname')
+    .populate('user', 'firstname name')
     .then(services => {
       res.json(services)
     })

@@ -1,58 +1,62 @@
-import React, {Component} from 'react'
-import ReactHtmlParser from 'react-html-parser'
+import {Hidden, Typography} from '@material-ui/core'
 import {withTranslation} from 'react-i18next'
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
-import IconButton from '@material-ui/core/IconButton'
-import MenuItem from '@material-ui/core/MenuItem'
-import Menu from '@material-ui/core/Menu'
-import Router from 'next/router'
-import Grid from '@material-ui/core/Grid'
-import MultipleSelect from 'react-select'
-import moment from 'moment'
-import Dialog from '@material-ui/core/Dialog'
-import DialogContent from '@material-ui/core/DialogContent'
-import Slide from '@material-ui/core/Slide'
-import MuiDialogTitle from '@material-ui/core/DialogTitle'
-import CloseIcon from '@material-ui/icons/Close'
-import Paper from '@material-ui/core/Paper'
-import Divider from '@material-ui/core/Divider'
-import MenuIcon from '@material-ui/icons/Menu'
-import SearchIcon from '@material-ui/icons/Search'
-import AlgoliaPlaces from 'algolia-places-react'
-import DatePicker from 'react-datepicker'
-import TextField from '@material-ui/core/TextField'
-import Select from '@material-ui/core/Select'
-import FormControl from '@material-ui/core/FormControl'
-import axios from 'axios'
-import withStyles from '@material-ui/core/styles/withStyles'
-import {Typography} from '@material-ui/core'
-import TuneIcon from '@material-ui/icons/Tune'
-import InputLabel from '@material-ui/core/InputLabel'
-import DialogActions from '@material-ui/core/DialogActions'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Switch from '@material-ui/core/Switch'
+import ReactHtmlParser from 'react-html-parser'
 import {DateRangePicker} from 'react-dates'
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
+import AppBar from '@material-ui/core/AppBar'
 import ClearIcon from '@material-ui/icons/Clear'
+import CloseIcon from '@material-ui/icons/Close'
+import DatePicker from 'react-datepicker'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import Divider from '@material-ui/core/Divider'
+import FormControl from '@material-ui/core/FormControl'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Grid from '@material-ui/core/Grid'
+import IconButton from '@material-ui/core/IconButton'
+import InputLabel from '@material-ui/core/InputLabel'
+import Menu from '@material-ui/core/Menu'
+import MenuIcon from '@material-ui/icons/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
+import MuiDialogTitle from '@material-ui/core/DialogTitle'
+import MultipleSelect from 'react-select'
+import Paper from '@material-ui/core/Paper'
+import React, {Component} from 'react'
+import Router from 'next/router'
+import SearchIcon from '@material-ui/icons/Search'
+import Select from '@material-ui/core/Select'
+import Slide from '@material-ui/core/Slide'
 import Slider from '@material-ui/core/Slider'
-import Hidden from '@material-ui/core/Hidden'
-import lodash from 'lodash'
-import dynamic from 'next/dynamic'
-import CustomTabMenu from '../../../components/CustomTabMenu/CustomTabMenu'
-import Logo from '../../../components/Logo/Logo'
-import {removeAlfredRegistering, setAlfredRegistering} from '../../../utils/context'
-import styles from '../../../static/css/components/NavBar/NavBar'
-import CustomButton from '../../../components/CustomButton/CustomButton'
-import AutoCompleteTextField from '../../../components/Search/AutoCompleteTextField'
-import {PART} from '../../../utils/consts'
-import {formatAddress} from '../../../utils/text.js'
-import {clearAuthenticationToken, setAxiosAuthentication} from '../../../utils/authentication'
-import {UserContext} from '../../../contextes/user.context'
-const {
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
+import Switch from '@material-ui/core/Switch'
+import TextField from '@material-ui/core/TextField'
+import Toolbar from '@material-ui/core/Toolbar'
+import TuneIcon from '@material-ui/icons/Tune'
+import axios from 'axios'
+import moment from 'moment'
+import withStyles from '@material-ui/core/styles/withStyles'
+import {
+  removeAlfredRegistering,
+  setAlfredRegistering,
+} from '../../../utils/context'
+import {
   canAlfredParticularRegister,
   canAlfredSelfRegister,
-} = require('../../../config/config')
+} from '../../../config/config'
+import CustomTabMenu from '../../../components/CustomTabMenu/CustomTabMenu'
+import AutoCompleteTextField from
+'../../../components/Search/AutoCompleteTextField'
+import CustomButton from '../../../components/CustomButton/CustomButton'
+import {SEARCHBAR} from '../../../utils/i18n'
+import Logo from '../../../components/Logo/Logo'
+import {UserContext} from '../../../contextes/user.context'
+import LocationSelect from '../../../components/Geo/LocationSelect'
+import LogIn from '../../../components/LogIn/LogIn'
+import Register from '../../../components/Register/Register'
+import styles from '../../../static/css/components/NavBar/NavBar'
+const {PART} = require('../../../utils/consts')
+const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
+const {formatAddress} = require('../../../utils/text.js')
 
 const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />
@@ -72,20 +76,6 @@ const DialogTitle = withStyles(styles)(props => {
   )
 })
 
-
-const Register = dynamic(
-  () => import('../../../components/Register/Register'),
-  {
-    loading: () => <p>...</p>,
-  },
-)
-
-const LogIn = dynamic(
-  () => import('../../../components/LogIn/LogIn'),
-  {
-    loading: () => <p>...</p>,
-  },
-)
 
 class NavBar extends Component {
   constructor(props) {
@@ -509,15 +499,9 @@ class NavBar extends Component {
                   </Grid>
                   :
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12} classes={{root: classes.navbarRootTextFieldWhereP}}>
-                    <AlgoliaPlaces
-                      placeholder={ReactHtmlParser(this.props.t('SEARCHBAR.where'))}
-                      options={{
-                        appId: 'plKATRG826CP',
-                        apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                        language: 'fr',
-                        countries: ['fr'],
-                        type: 'city',
-                      }}
+                    <LocationSelect
+                      placeholder={SEARCHBAR.where}
+                      type='city'
                       onChange={suggestion => this.onChangeCity(suggestion)}
                       onClear={() => this.setState({city: '', gps: null})}
                     />
@@ -946,16 +930,10 @@ class NavBar extends Component {
                           <InputLabel shrink>{ReactHtmlParser(this.props.t('SEARCHBAR.labelWhere'))}</InputLabel>
                         </Grid> : null
                     }
-                    <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'customsearch'} classes={{root: `${classes.navbarRootTextFieldWhere}`}}>
-                      <AlgoliaPlaces
-                        placeholder={ReactHtmlParser(this.props.t('SEARCHBAR.where'))}
-                        options={{
-                          appId: 'plKATRG826CP',
-                          apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                          language: 'fr',
-                          countries: ['fr'],
-                          type: 'city',
-                        }}
+                    <Grid item xl={12} lg={12} md={12} sm={12} xs={12} classes={{root: classes.navbarRootTextFieldWhere}}>
+                      <LocationSelect
+                        placeholder={SEARCHBAR.where}
+                        type='city'
                         onChange={suggestion => this.onChangeCity(suggestion)}
                         onClear={() => this.setState({city: '', gps: null})}
                       />

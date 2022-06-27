@@ -14,7 +14,6 @@
 web/mode.js
 web/storage
 
-
 # misc
 .env
 npm-debug.log*

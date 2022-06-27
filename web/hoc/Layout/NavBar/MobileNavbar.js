@@ -1,53 +1,54 @@
-import React from 'react'
-import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
+import ReactHtmlParser from 'react-html-parser'
+import {Typography} from '@material-ui/core'
 import BottomNavigation from '@material-ui/core/BottomNavigation'
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction'
-import HomeIcon from '@material-ui/icons/Home'
-import SearchIcon from '@material-ui/icons/Search'
+import Button from '@material-ui/core/Button'
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday'
-import MailOutlineIcon from '@material-ui/icons/MailOutline'
-import PersonIcon from '@material-ui/icons/Person'
-import withStyles from '@material-ui/core/styles/withStyles'
-import Router from 'next/router'
-import DialogContent from '@material-ui/core/DialogContent'
-import Dialog from '@material-ui/core/Dialog'
-import Slide from '@material-ui/core/Slide'
-import MuiDialogTitle from '@material-ui/core/DialogTitle'
-import Grid from '@material-ui/core/Grid'
-import {Typography} from '@material-ui/core'
-import IconButton from '@material-ui/core/IconButton'
-import CloseIcon from '@material-ui/icons/Close'
-import GroupAddIcon from '@material-ui/icons/GroupAdd'
-import TextField from '@material-ui/core/TextField'
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
 import ClearIcon from '@material-ui/icons/Clear'
+import CloseIcon from '@material-ui/icons/Close'
+import Dialog from '@material-ui/core/Dialog'
+import DialogContent from '@material-ui/core/DialogContent'
 import FormControl from '@material-ui/core/FormControl'
-import Select from '@material-ui/core/Select'
+import Grid from '@material-ui/core/Grid'
+import GroupAddIcon from '@material-ui/icons/GroupAdd'
+import HomeIcon from '@material-ui/icons/Home'
+import IconButton from '@material-ui/core/IconButton'
+import MailOutlineIcon from '@material-ui/icons/MailOutline'
 import MenuItem from '@material-ui/core/MenuItem'
-import AlgoliaPlaces from 'algolia-places-react'
-import BusinessIcon from '@material-ui/icons/Business'
-import {SEARCHBAR} from '../../../utils/i18n'
-import Register from '../../../components/Register/Register'
+import MuiDialogTitle from '@material-ui/core/DialogTitle'
+import PersonIcon from '@material-ui/icons/Person'
+import React from 'react'
+import Router from 'next/router'
+import SearchIcon from '@material-ui/icons/Search'
+import Select from '@material-ui/core/Select'
+import Slide from '@material-ui/core/Slide'
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
+import TextField from '@material-ui/core/TextField'
+import axios from 'axios'
+import withStyles from '@material-ui/core/styles/withStyles'
+import {UserContext} from '../../../contextes/user.context'
+import LocationSelect from '../../../components/Geo/LocationSelect'
 import LogIn from '../../../components/LogIn/LogIn'
+import Register from '../../../components/Register/Register'
 import styles from '../../../static/css/components/MobileNavbar/MobileNavbar'
-import CustomButton from '../../../components/CustomButton/CustomButton'
-import {
+const {
   getLoggedUserId,
   getRole,
-  isLoggedUserAlfredPro,
   isLoggedUserRegistered,
-} from '../../../utils/context'
-import {
+} = require('../../../utils/context')
+
+const {EMPLOYEE}=require('../../../utils/consts')
+const {formatAddress} = require('../../../utils/text.js')
+
+const {
   clearAuthenticationToken,
-} from '../../../utils/authentication'
-import {EMPLOYEE} from '../../../utils/consts'
-import {formatAddress} from '../../../utils/text.js'
-import {UserContext} from '../../../contextes/user.context'
+  setAxiosAuthentication,
+} = require('../../../utils/authentication')
 
 
 const Transition = React.forwardRef((props, ref) => {
-  return <Slide direction='up' ref={ref} {...props} />
+  return <Slide direction="up" ref={ref} {...props} />
 })
 
 const DialogTitle = withStyles(styles)(props => {
@@ -95,23 +96,20 @@ class MobileNavbar extends React.Component {
       this.setState({logged: true, selectedAddress: 'main'})
     }
 
-    const {user} = this.context
-
-    if (user) {
-      let allAddresses = {'main': user?.billing_address}
-      if (user?.service_address) {
-        user?.service_address.forEach(addr => {
-          allAddresses[addr._id] = addr
-        })
-      }
-      
-      this.setState({
-        user,
-        allAddresses,
-        selectedAddress: this.props.selectedAddress || 'main', keyword: this.props.keyword || '',
-      })
-    }
-
+    setAxiosAuthentication()
+    axios.get('/myAlfred/api/users/current')
+      .then(res => {
+        const user=res.data
+        const promise = Promise.resolve({data: user})
+        promise
+          .then(res => {
+            let allAddresses = {'main': res.data.billing_address}
+            res.data.service_address.forEach(addr => {
+              allAddresses[addr._id] = addr
+            })
+            this.setState({user: user, allAddresses: allAddresses})
+          })
+      }).catch(err => console.error(err))
   }
 
   needRefresh = () => {
@@ -344,17 +342,11 @@ class MobileNavbar extends React.Component {
                       InputProps={{
                         inputComponent: inputref => {
                           return (
-                            <AlgoliaPlaces
+                            <LocationSelect
                               {...inputref}
                               placeholder={''}
                               className={classes.navbarAlgoliaPlace}
-                              options={{
-                                appId: 'plKATRG826CP',
-                                apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                                language: 'fr',
-                                countries: ['fr'],
-                                type: 'city',
-                              }}
+                              type='city'
                               onChange={suggestion => this.onChangeCity(suggestion)}
                               onClear={() => this.setState({city: '', gps: ''})}
 
@@ -368,11 +360,11 @@ class MobileNavbar extends React.Component {
           </Grid>
           <Grid item xs={12} style={{display: 'flex', justifyContent: 'center'}}>
             <Grid style={{width: '90%'}}>
-              <CustomButton
+              <Button
                 onClick={() => (this.state.mobileStepSearch === 0 ? this.setState({mobileStepSearch: this.state.mobileStepSearch + 1}) : this.findService())}
                 color={'primary'} classes={{root: classes.buttonNextRoot}}
                 variant={'contained'}>{this.state.mobileStepSearch === 0 ? ReactHtmlParser(this.props.t('SEARCHBAR.next_button')) : ReactHtmlParser(this.props.t('SEARCHBAR.find_button'))}
-              </CustomButton>
+              </Button>
             </Grid>
           </Grid>
         </Grid>
