@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import {withTranslation} from 'react-i18next'
 import {screen} from '../../styles/screenWidths'
 import PureDialog from '../Dialog/PureDialog'
-import {PleasantButton} from './Button'
+import {NormalButton} from './Button'
 
 
 const DialogConvertQuotation = ({
@@ -28,7 +28,7 @@ const DialogConvertQuotation = ({
       <ul>
         <li>
           Vous pouvez modifier votre adresse de livraison
-          <PleasantButton
+          <NormalButton
             rounded={'full'}
             bgColor={'#fff'}
             textColor={'#141953'}
@@ -39,10 +39,10 @@ const DialogConvertQuotation = ({
             }}
           >
         Revenir à la saisie
-          </PleasantButton></li>
+          </NormalButton></li>
         <li>
             Convertir votre commande en devis pour validation auprès de votre commercial
-          <PleasantButton
+          <NormalButton
             rounded={'full'}
             bgColor={'#fff'}
             textColor={'#141953'}
@@ -52,7 +52,7 @@ const DialogConvertQuotation = ({
               setIsOpenDialog(false)
             }}
           >Convertir en devis
-          </PleasantButton>
+          </NormalButton>
         </li>
       </ul>
 

@@ -4,7 +4,7 @@ import {withTranslation} from 'react-i18next'
 import {screen} from '../../styles/screenWidths'
 import {localeMoneyFormat} from '../../utils/converters'
 import {snackBarError} from '../../utils/notifications'
-import {PleasantButton} from './Button'
+import {NormalButton} from './Button'
 
 
 const CheckingProduct = ({endpoint, orderid, article, setArticle, selectItem, addProduct, wordingSection, t}) => {
@@ -40,13 +40,13 @@ const CheckingProduct = ({endpoint, orderid, article, setArticle, selectItem, ad
         <dd>{localeMoneyFormat({value: info?.net_price})}</dd>
       </dl>
 
-      <PleasantButton
+      <NormalButton
         bgColor={`#dabb42`}
         rounded={'full'}
         onClick={confirmAdd}
       >
         {t(`${wordingSection}.addTo`)}
-      </PleasantButton>
+      </NormalButton>
 
     </CheckingProductArea>
     : null

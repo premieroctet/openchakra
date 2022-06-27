@@ -2,13 +2,16 @@ import React from 'react'
 import Router from 'next/router'
 import uniqBy from 'lodash/uniqBy'
 import isUndefined from 'lodash/isUndefined'
+import DevLog from '../components/DevLog'
 import {client} from '../utils/client'
-import {BASEPATH_EDI, API_PATH} from '../utils/feurst/consts'
+import {API_PATH} from '../utils/consts'
+import {BASEPATH_EDI} from '../utils/feurst/consts'
 import {is_development} from '../config/config'
 import Tabs from '../components/Feurst/Tabs'
 import {UserContext} from '../contextes/user.context'
 import EdiContainer from '../components/Feurst/EdiContainer'
 import {getLoggedUser} from '../utils/context'
+
 
 class AccessRights {
   constructor(model, action, actions) {
@@ -44,9 +47,10 @@ class AccessRights {
 
 
 const withEdiAuth = (Component = null, options = {}) => {
-  
+
   class EdiAuth extends React.Component {
     state = {
+      user: null,
       loading: true,
       actions: [],
       account: null,
@@ -62,8 +66,9 @@ const withEdiAuth = (Component = null, options = {}) => {
     }
 
     async componentDidMount() {
-      
+
       const isLoggedUser = getLoggedUser()
+      const {user} = this.context
 
       if (isLoggedUser) {
         await this.getUserRoles()
@@ -73,15 +78,15 @@ const withEdiAuth = (Component = null, options = {}) => {
           })
 
         if (is_development()) {
-          const {user} = this.context
-          this.setState({account: `${user?.full_name} (${user?.email}), société ${user?.company?.name}, rôles ${user?.roles}`})
+          this.setState({account: `${user?.full_name} (${user?.email}), société ${user?.company?.name || 'Feurst'}`})
         }
       }
-      else {
+      else if (options?.force !== true) {
         Router.push(options.pathAfterFailure || `${BASEPATH_EDI}/login`)
       }
-      
+
     }
+
 
     render() {
       const {loading, actions, account} = this.state
@@ -90,9 +95,9 @@ const withEdiAuth = (Component = null, options = {}) => {
       const canAccess = [accessRights.getModel(), accessRights.getAction()].every(isUndefined) || accessRights.isActionAllowed(accessRights.getModel(), accessRights.getAction())
 
       return (<>
-        {is_development() &&
+        <DevLog>
           <h1>{`model:${accessRights.getModel()}, action:${accessRights.getAction()}, compte:${account}`}</h1>
-        }
+        </DevLog>
 
         <EdiContainer accessRights={accessRights}>
           <Tabs accessRights={accessRights} />

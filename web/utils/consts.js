@@ -1,6 +1,8 @@
 const crypto = require('crypto')
 const {getDataModel} = require('../config/config')
 
+const API_PATH = '/myAlfred/api'
+
 const ALL_SERVICES = ['Tous les services', null]
 
 const PLUGIN_CONSTS=require(`./${getDataModel()}/consts`)
@@ -204,4 +206,6 @@ module.exports = {
   REVIEW_STATUS, COMMISSION_SOURCE, TRANSACTION_CREATED, TRANSACTION_FAILED,
   TRANSACTION_SUCCEEDED, CESU_MANDATORY, CESU_OPTIONAL, CESU_DISABLED,
   CPF_RATE, ...PLUGIN_CONSTS, XL_EXTENSIONS,
+  ...PLUGIN_CONSTS, API_PATH,
+
 }

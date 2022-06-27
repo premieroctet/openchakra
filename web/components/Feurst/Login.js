@@ -10,7 +10,7 @@ import withLogin from '../../hoc/withLogin'
 import styles from '../LogIn/LogInStyle'
 import {screen} from '../../styles/screenWidths'
 import {BASEPATH_EDI} from '../../utils/consts'
-import {PleasantButton} from './Button'
+import {NormalButton} from './Button'
 
 
 const FeurstLogin = ({
@@ -81,9 +81,9 @@ const FeurstLogin = ({
         </a>
       </Link>
 
-      <PleasantButton type="submit" onClick={onSubmit} disabled={loginDisabled} size="full-width">
+      <NormalButton type="submit" onClick={onSubmit} disabled={loginDisabled} size="full-width">
         {ReactHtmlParser(t('LOGIN.button'))}
-      </PleasantButton>
+      </NormalButton>
 
     </LoginForm>
   </LoginStyles>

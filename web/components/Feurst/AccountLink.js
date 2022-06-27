@@ -1,13 +1,12 @@
+import {Grid, MenuItem, Select, Typography} from '@material-ui/core'
 import React, {useState, useEffect} from 'react'
-const {Typography} = require('@material-ui/core')
-
-const {Grid, MenuItem, Select} = require('@material-ui/core')
-const lodash=require('lodash')
-const axios = require('axios')
-const {snackBarError, snackBarSuccess} = require('../../utils/notifications')
-const {API_PATH, FEURST_SALES} = require('../../utils/feurst/consts')
-const {setAxiosAuthentication} = require('../../utils/authentication')
-const {PleasantButton} = require('./Button')
+import lodash from 'lodash'
+import axios from 'axios'
+import {snackBarError, snackBarSuccess} from '../../utils/notifications'
+import {FEURST_SALES} from '../../utils/feurst/consts'
+import {API_PATH} from '../../utils/consts'
+import {setAxiosAuthentication} from '../../utils/authentication'
+import {NormalButton} from './Button'
 
 const AccountLink = props => {
 
@@ -59,7 +58,7 @@ const AccountLink = props => {
           <MenuItem key={c._id} value={c._id}>{c.name}</MenuItem>,
         )}
       </Select>
-      <PleasantButton disabled={!enableLink} onClick={() => linkCompanies()}>Associer</PleasantButton>
+      <NormalButton disabled={!enableLink} onClick={() => linkCompanies()}>Associer</NormalButton>
     </Grid>
   )
 }

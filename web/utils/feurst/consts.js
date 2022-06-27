@@ -82,7 +82,9 @@ const ROLES = {
 }
 // Auto associated roles
 const [ORDER, QUOTATION, ACCOUNT, SHIPRATE, PRODUCT, PRICELIST]=['ORDER', 'QUOTATION', 'ACCOUNT', 'SHIPRATE', 'PRODUCT', 'PRICELIST'] // Plus COMPANY already defined
-const [VIEW, CREATE, UPDATE, UPDATE_ALL, DELETE, VALIDATE, CONVERT, LINK, HANDLE]=['VIEW', 'CREATE', 'UPDATE', 'UPDATE_ALL', 'DELETE', 'VALIDATE', 'CONVERT', 'LINK', 'HANDLE']
+// UPDATE_ALL allows to update item price in a quotation
+const [VIEW, CREATE, UPDATE, UPDATE_ALL, DELETE, VALIDATE, CONVERT, LINK, HANDLE, EXPORT]=
+  ['VIEW', 'CREATE', 'UPDATE', 'UPDATE_ALL', 'DELETE', 'VALIDATE', 'CONVERT', 'LINK', 'HANDLE', 'EXPORT']
 const [ALL, COMPANY, RELATED]=['ALL', 'COMPANY', 'RELATED']
 const MODELS=[ORDER, QUOTATION, ACCOUNT, SHIPRATE, PRODUCT, PRICELIST, COMPANY]
 const ACTIONS=[VIEW, CREATE, UPDATE, DELETE, VALIDATE, CONVERT]
@@ -106,22 +108,23 @@ const createUserAction= (model, action, extra={}) => {
 const USER_ACTIONS={
   [FEURST_ADMIN]: lodash.flattenDeep([
     [VIEW, CREATE, UPDATE, DELETE, LINK].map(action => [FEURST_ADMIN, FEURST_ADV, FEURST_SALES].map(tp => createUserAction(ACCOUNT, action, {type: tp, visibility: ALL}))),
-    [VIEW, HANDLE].map(action => createUserAction(ORDER, action, {visibility: ALL})),
+    [VIEW, HANDLE, EXPORT].map(action => createUserAction(ORDER, action, {visibility: ALL})),
     [VIEW, CREATE].map(action => createUserAction(SHIPRATE, action, {visibility: ALL})),
     [VIEW, CREATE, UPDATE, DELETE].map(action => createUserAction(PRODUCT, action, {visibility: ALL})),
     [VIEW, CREATE, UPDATE, DELETE].map(action => createUserAction(PRICELIST, action, {visibility: ALL})),
     createUserAction(COMPANY, VIEW, {visibility: ALL}),
+    createUserAction(COMPANY, UPDATE, {visibility: ALL}),
   ]),
   [FEURST_ADV]: lodash.flattenDeep([
     createUserAction(ACCOUNT, UPDATE),
-    [VIEW, HANDLE].map(action => createUserAction(ORDER, action, {visibility: ALL})),
+    [VIEW, HANDLE, EXPORT].map(action => createUserAction(ORDER, action, {visibility: ALL})),
     [VIEW].map(action => createUserAction(ACCOUNT, action, {visibility: ALL})),
   ]),
   [FEURST_SALES]: lodash.flattenDeep([
     createUserAction(ACCOUNT, UPDATE),
     createUserAction(ACCOUNT, VIEW, {type: CUSTOMER_ADMIN, visibility: RELATED}),
-    [CREATE, VIEW, UPDATE, HANDLE, UPDATE_ALL, VALIDATE, REWRITE].map(action => createUserAction(QUOTATION, action, {visibility: RELATED})),
-    [VIEW].map(action => createUserAction(ORDER, action, {visibility: RELATED})),
+    [CREATE, VIEW, DELETE, UPDATE, HANDLE, UPDATE_ALL, VALIDATE, REWRITE].map(action => createUserAction(QUOTATION, action, {visibility: RELATED})),
+    [VIEW, EXPORT].map(action => createUserAction(ORDER, action, {visibility: RELATED})),
     createUserAction(COMPANY, VIEW, {visibility: RELATED}),
   ]),
   [CUSTOMER_ADMIN]: lodash.flattenDeep([
@@ -154,14 +157,15 @@ const SHIPPING_MODES={
 }
 
 const BASEPATH_EDI = '/edi'
+const FEURST_DOC_PATH = '/static/assets/docs/feurst'
 const FEURST_IMG_PATH = '/static/assets/img/feurst'
 const FEURST_ICON_PATH = '/static/assets/icon/feurst'
-const API_PATH = '/myAlfred/api'
 const FEURST_PHONE_NUMBER = '+33 4 77 27 40 63'
 const FEURST_EMAIL = 'marketing@safe-feurst.fr'
 
 const XL_TYPE='XL'
 const TEXT_TYPE='TEXT'
+const JSON_TYPE='JSON'
 
 // Quotation validity in days
 const QUOTATION_VALIDITY=30
@@ -182,11 +186,11 @@ module.exports={
   ENDPOINTS,
   ORDER_STATUS, QUOTATION_STATUS, FEURST_ADMIN, FEURST_ADV, CUSTOMER_ADMIN, CUSTOMER_BUYER, CUSTOMER_TCI,
   ROLES, USER_ACTIONS, ORDER, QUOTATION, ACCOUNT, VIEW, CREATE, UPDATE, DELETE, VALIDATE,
-  SHIPRATE, MAX_WEIGHT, PRODUCT, STANDARD_SHIPPING, EXPRESS_SHIPPING, BASEPATH_EDI, ALL, FEURST_PHONE_NUMBER, FEURST_EMAIL, FEURST_IMG_PATH, FEURST_ICON_PATH, API_PATH,
+  SHIPRATE, MAX_WEIGHT, PRODUCT, STANDARD_SHIPPING, EXPRESS_SHIPPING, BASEPATH_EDI, ALL, FEURST_PHONE_NUMBER, FEURST_EMAIL, FEURST_DOC_PATH, FEURST_IMG_PATH, FEURST_ICON_PATH,
   COMPANY, RELATED,
   CREATED, VALID, PARTIALLY_HANDLED, HANDLED, SHIPPING_MODES,
   COMPLETE, LINK, FEURST_SALES, HANDLE, XL_TYPE, TEXT_TYPE, PRICELIST,
   CONVERT, QUOTATION_VALIDITY, EXPIRED, UPDATE_ALL, MAIN_ADDRESS_LABEL, CONVERTED,
   BUTTONS, REWRITE, TOTALLY_HANDLE, PARTIALLY_HANDLE, ORDER_ALERT_CHECK_INTERVAL,
-  ORDER_ALERT_DELAY,
+  ORDER_ALERT_DELAY, JSON_TYPE, EXPORT,
 }

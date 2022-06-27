@@ -56,6 +56,11 @@ OrderSchema.virtual('url').get(function() {
   return url.href
 })
 
+OrderSchema.virtual('filename').get(function() {
+  return `Commande ${this.company?.name}-${this.reference || 'pas de référence'}.xlsx`
+})
+
+
 OrderSchema.plugin(mongooseLeanVirtuals)
 
 module.exports = OrderSchema

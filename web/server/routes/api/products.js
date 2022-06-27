@@ -1,19 +1,29 @@
+const fs=require('fs')
+const path=require('path')
+const lodash=require('lodash')
 const express = require('express')
 const passport = require('passport')
 const moment = require('moment')
+
+const CronJob = require('cron').CronJob
+const {JSON_TYPE} = require('../../../utils/feurst/consts')
+const storage = require('../../utils/storage')
+
+const {getExchangeDirectory} = require('../../../config/config')
 const {
-  fileImport,
   productsImport,
   stockImport,
 } = require('../../utils/import')
 const {isActionAllowed} = require('../../utils/userAccess')
 const {DELETE} = require('../../../utils/feurst/consts')
 const {XL_FILTER, createMemoryMulter} = require('../../utils/filesystem')
-const {PRODUCT, VIEW, CREATE} = require('../../../utils/consts')
+
+const {PRODUCT, CREATE} = require('../../../utils/consts')
 const Product = require('../../models/Product')
 
 const router = express.Router()
 const {validateProduct}=require('../../validation/product')
+
 moment.locale('fr')
 
 // PRODUCTS
@@ -28,17 +38,30 @@ const DATA_TYPE=PRODUCT
 router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   let andFilter= () => true
+  let noSpaceFilter= () => true
 
   if (req.query.pattern) {
-    const elements=req.query.pattern.split(' ')
+    const pattern=req.query.pattern.replace(/[^A-Za-z0-9]/g, '')
+    // Create AND filter
+    const elements=pattern.split(' ')
     const andPattern=new RegExp(elements.map(e => `(?=.*${e})`).join(''), 'i')
     andFilter=p => `${p.reference} ${p.description} ${p.description_2}`.match(andPattern)
+
+    // Create NOSPACE filter
+    const query=new RegExp(pattern.replace(/\s/g, ''), 'i')
+    noSpaceFilter=p => `${p.reference}${p.description}${p.description_2}`.replace(/\s/g, '').match(query)
   }
 
   Product.find({})
     .then(products => {
-      const andEdProducts=products.filter(p => andFilter(p))
-      res.json(andEdProducts)
+      const andEdProducts=products.filter(andFilter)
+      const noSpaceProducts=products.filter(noSpaceFilter)
+      if (andEdProducts.length>noSpaceProducts.length) {
+        res.json(andEdProducts)
+      }
+      else {
+        res.json(noSpaceProducts)
+      }
     })
     .catch(err => {
       console.error(err)
@@ -155,5 +178,35 @@ router.post('/import-stock', passport.authenticate('jwt', {session: false}), (re
       })
   })
 })
+
+// Check new stock file
+new CronJob('0 0 */12 * * *', () => {
+  const store=storage.namespace('exchange')
+  const folder=getExchangeDirectory()
+  const latest_date=new Date(JSON.parse(store.get('latest-products-import')))
+  console.log(`Checking for new stock file in ${folder} newer than ${latest_date}(${typeof latest_date})`)
+  try {
+    const files=fs.readdirSync(folder)
+    const latestFile=lodash(files)
+      .map(f => path.join(folder, f))
+      .filter(f => /\.xlsx$|\.json$/i.test(f) && fs.statSync(f).mtime > latest_date)
+      .maxBy(f => fs.statSync(f).mtime)
+    console.log(`Got latest file:${latestFile}`)
+    if (latestFile) {
+      store.set('latest-products-import', JSON.stringify(fs.statSync(latestFile).mtime))
+      const contents=fs.readFileSync(latestFile)
+      stockImport(contents, {format: JSON_TYPE})
+        .then(res => {
+          console.log(`Import result:${JSON.stringify(res)}`)
+        })
+        .catch(err => {
+          console.error(err)
+        })
+    }
+  }
+  catch(err) {
+    console.error(err)
+  }
+}, null, true, 'Europe/Paris')
 
 module.exports = router

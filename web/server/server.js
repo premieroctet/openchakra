@@ -1,3 +1,4 @@
+const axios=require('axios')
 const mongoose=require('mongoose')
 const cookieParser=require('cookie-parser')
 const express = require('express')
@@ -8,11 +9,12 @@ const glob = require('glob')
 const cors = require('cors')
 const SocketIo = require('socket.io')
 const {
+  RANDOM_ID,
   checkConfig,
   getDatabaseUri,
   getHostUrl,
   getPort,
-} = require('../config/config')
+}=require('../config/config')
 const Shiprate = require('./models/ShipRate')
 
 const Product = require('./models/Product')
@@ -123,6 +125,8 @@ checkConfig()
     app.use(cors())
 
 
+    // Check hostname is valid
+    app.use('/testping', (req, res) => res.json(RANDOM_ID))
     app.use('/myAlfred/api/users', users)
     app.use('/myAlfred/api/companies', companies)
     category && app.use('/myAlfred/api/category', category)
@@ -184,7 +188,23 @@ checkConfig()
     app)
     const io = SocketIo(httpsServer)
 
-    httpsServer.listen(getPort(), () => console.log(`${config.appName} running on ${getHostUrl()}`))
+    httpsServer.listen(getPort(), () => {
+      console.log(`${config.appName} running on ${getHostUrl()}`)
+      console.log(`Checking correct hostname`)
+      axios.get(new URL('/testping', getHostUrl()).toString())
+        .then(res => {
+          const result=res.data
+          const expected=RANDOM_ID
+          console.log(`Result:${res.data}, expected:${RANDOM_ID}`)
+          if (result!=expected) {
+            throw new Error(`Got different test values`)
+          }
+        })
+        .catch(err => {
+          console.error(`Host ${getHostUrl()} seems incorrect:${err.message}`)
+          process.exit(1)
+        })
+    })
 
     let roomName = ''
     let bookingName = ''

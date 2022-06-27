@@ -6,14 +6,14 @@ import {client} from '../../utils/client'
 import {snackBarError} from '../../utils/notifications'
 import useAsync from '../../hooks/use-async.hook'
 import useDebounce from '../../hooks/use-debounce.hook'
-import {PleasantButton} from './Button'
+import {NormalButton} from './Button'
 import {FormAddArticle, Label, Input, Refquantity} from './components.styles'
 import CheckingProduct from './CheckingProduct'
 
 
 const AddArticle = ({endpoint, orderid, updateTable, addProduct, wordingSection}) => {
 
-  
+
   const [article, setArticle] = useState({
     item: null,
     info: null,
@@ -63,7 +63,7 @@ const AddArticle = ({endpoint, orderid, updateTable, addProduct, wordingSection}
   })
 
   useEffect(() => {
-    if (debouncedQuery && searchTerm.length > 0) {
+    if (debouncedQuery && searchTerm.replace(/\s/g, '').length >= 3) {
       run(client(`${API_PATH}/products?pattern=${searchTerm}`))
         .catch(e => {
           console.error(`Can't fetch data in autocomplete`, e)
@@ -111,7 +111,7 @@ const AddArticle = ({endpoint, orderid, updateTable, addProduct, wordingSection}
             >
               <span role="img">&#9661;</span>
             </button> : null}
-            
+
             <button
               type="button"
               disabled={disabled}
@@ -121,13 +121,13 @@ const AddArticle = ({endpoint, orderid, updateTable, addProduct, wordingSection}
               }}
               aria-label="effacer"
             >
-              <span role="img">✕</span>
+              <span role="img" aria-label='effacer'>✕</span>
             </button>
 
-            
+
           </div>
 
-        
+
           <ul
             {...getMenuProps()}
           >
@@ -155,7 +155,7 @@ const AddArticle = ({endpoint, orderid, updateTable, addProduct, wordingSection}
             onChange={ev => !isNaN(parseInt(ev.target.value)) && setArticle({...article, quantity: parseInt(ev.target.value)})}
           />
         </Refquantity>
-        <PleasantButton disabled={!checkProductEnabled} rounded={'full'} onClick={() => checkProduct(article)}>Vérifier</PleasantButton>
+        <NormalButton disabled={!checkProductEnabled} rounded={'full'} onClick={() => checkProduct(article)}>Vérifier</NormalButton>
 
 
       </FormAddArticle>

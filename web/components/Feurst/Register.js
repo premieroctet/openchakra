@@ -5,11 +5,10 @@ import {Listbox, Transition} from '@headlessui/react'
 import Validator from 'validator'
 import styled from 'styled-components'
 import {setAxiosAuthentication} from '../../utils/authentication'
-import {API_PATH} from '../../utils/feurst/consts'
-import {CUSTOMER_ADMIN, ROLES, ACCOUNT, CREATE} from '../../utils/consts'
+import {API_PATH, CUSTOMER_ADMIN, ROLES, ACCOUNT, CREATE} from '../../utils/consts'
 import {snackBarError, snackBarSuccess} from '../../utils/notifications'
 import {StyledListbox} from '../../styles/feurst/StyledComponents'
-import {PleasantButton} from './Button'
+import {NormalButton} from './Button'
 
 
 const FeurstRegister = ({className, style, onSuccess, onClose}) => {
@@ -136,14 +135,14 @@ const FeurstRegister = ({className, style, onSuccess, onClose}) => {
         </StyledListbox>
       }
 
-      <PleasantButton
+      <NormalButton
         size={'full-width'}
         rounded={'full'}
         disabled={!enableRegister()}
         onClick={() => sendInvitation({firstname, name, email, role, company})}
       >
         Ajouter
-      </PleasantButton>
+      </NormalButton>
 
     </HandleAccount>
   )

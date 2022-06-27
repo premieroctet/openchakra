@@ -409,6 +409,8 @@ input:focus:not(:focus-visible) {
 
 .mr-8 {margin-right: var(--spc-8);}
 
+.my-2 {margin-block: var(--spc-2) !important;}
+
 .mb-0 {margin-bottom: 0}
 .mb-4 {margin-bottom: var(--spc-4) !important;}
 .mb-6 {margin-bottom: var(--spc-6) !important;}
