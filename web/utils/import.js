@@ -1,14 +1,23 @@
 const csv_parse = require('csv-parse/lib/sync')
 const lodash=require('lodash')
 const ExcelJS = require('exceljs')
+const {JSON_TYPE, TEXT_TYPE, XL_TYPE} = require('./feurst/consts')
 const {bufferToString} = require('./text')
-const {TEXT_TYPE, XL_TYPE} = require('./feurst/consts')
 
 const guessFileType = buffer => {
   return new Promise((resolve, reject) => {
     return new ExcelJS.Workbook().xlsx.load(buffer)
       .then(() => {
         return resolve(XL_TYPE)
+      })
+      .catch(() => {
+        try {
+          JSON.parse(buffer)
+          return resolve(JSON_TYPE)
+        }
+        catch(err) {
+          return Promise.reject(err)
+        }
       })
       .catch(() => {
         return resolve(TEXT_TYPE)
@@ -21,6 +30,22 @@ const getTabs = buffer => {
     .then(wb => {
       return wb.worksheets.map(w => w.name)
     })
+}
+
+const extractJSON=(bufferData, options) => {
+  try {
+    const data=JSON.parse(bufferData)
+    if (options.columns) {
+      const columns=lodash.flattenDeep(data.map(d => Object.keys(d)))
+      return Promise.resolve({headers: columns, records: data})
+    }
+    const columns=lodash.flattenDeep(data.map(d => Object.keys(d)))
+    const records=data.map(d => columns.map(c => d[c]))
+    return Promise.resolve({headers: columns, records: records})
+  }
+  catch(err) {
+    return Promise.reject(err)
+  }
 }
 
 const extractCsv=(bufferData, options) => {
@@ -71,11 +96,16 @@ const extractXls=(bufferData, options) => {
 }
 
 const extractData = (bufferData, options) => {
-  options={columns: true, ...options}
-  if (![XL_TYPE, TEXT_TYPE].includes(options?.format)) {
+  const EXTRACTS={
+    [XL_TYPE]: extractXls,
+    [JSON_TYPE]: extractJSON,
+    [TEXT_TYPE]: extractCsv,
+  }
+  if (!Object.keys(EXTRACTS).includes(options?.format)) {
     return Promise.reject(`Null or invalid options.format:${options.format}`)
   }
-  return options.format==XL_TYPE ? extractXls(bufferData, options):extractCsv(bufferData, options)
+  options={columns: true, ...options}
+  return EXTRACTS[options.format](bufferData, options)
 }
 
 const extractSample = (rawData, options) => {

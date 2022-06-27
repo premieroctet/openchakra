@@ -45,6 +45,10 @@ const UserSchema = new Schema({
     type: String,
     enum: Object.keys(ROLES),
   }],
+  // User CGV validation date
+  cgv_validation_date: {
+    type: Date,
+  },
   // Comments for admins
   comment: String,
 }, {toJSON: {virtuals: true, getters: true}})
@@ -59,11 +63,6 @@ UserSchema.virtual('full_name').get(function() {
   return `${this.firstname} ${this.name}`
 })
 
-// Registered => has firstname, name, email, birthday, password, address
-UserSchema.virtual('is_registered').get(() => {
-  return true
-})
-
 // For Feurst ADV/sales
 UserSchema.virtual('companies', {
   ref: 'company', // The Model to use
@@ -71,5 +70,9 @@ UserSchema.virtual('companies', {
   foreignField: 'sales_representative', // is equal to foreignField
 })
 
+// TODO: later may be false after a timeout (i.e. 3 months)
+UserSchema.virtual('cgv_valid').get(function() {
+  return !!this.cgv_validation_date
+})
 
 module.exports = UserSchema

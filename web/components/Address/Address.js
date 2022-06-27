@@ -4,15 +4,28 @@ import {withTranslation} from 'react-i18next'
 import {Input} from '../Feurst/components.styles'
 
 
-const Address = ({t, state, requestUpdate, errors}) => {
+const Address = ({t, state, requestUpdate, errors, addAddress}) => {
 
   const changeAddress = e => requestUpdate({address: {...state.address, [e.target.name]: e.target.value}})
 
   const {address} = state
-  const isDisabled = false
+  const isDisabled = !addAddress
 
   return (
     <StyledAddress>
+      {
+        addAddress && <div className='labeladdress'>
+          <label className='sr-only'></label>
+          <Input
+            noborder
+            id={`labeladdress`}
+            name="label"
+            placeholder={`Nom de l'adresse`}
+            value={address?.label || ''}
+            onChange={changeAddress}
+          />
+        </div>
+      }
       <div className='address'>
         <em>{errors?.address}</em>
         <Input
@@ -84,13 +97,18 @@ const Address = ({t, state, requestUpdate, errors}) => {
 }
 
 const StyledAddress = styled.div`
+  margin-top: var(--spc-2);
     display: grid;
     row-gap: var(--spc-2);
     column-gap: var(--spc-2);
-    grid-template-areas: 'address address address'
+    grid-template-areas: 'labeladdress labeladdress labeladdress'
+                          'address address address'
                           'zipcode city country'
                           'phone phone phone';
 
+  .labeladdress {
+    grid-area: labeladdress;
+  }
   .address {
     grid-area: address;
   }
@@ -105,6 +123,10 @@ const StyledAddress = styled.div`
   }
   .phone {
     grid-area: phone;
+  }
+
+  input:disabled {
+    background-color: var(--gray-200);
   }
 
 `

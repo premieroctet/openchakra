@@ -46,7 +46,7 @@ const getChatURL = () => {
 
 const getHostName= () => {
   if (is_development()) {
-    return 'localhost'
+    return HOSTNAME || 'localhost'
   }
   if(!HOSTNAME) {
     throw new Error(`HOSTNAME config missing`)
@@ -240,6 +240,15 @@ if (is_development()) {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 }
 
+// FTP direcctory for incoming data
+const getExchangeDirectory = () => {
+  if (is_development()) {
+    return '/home/seb/test'
+  }
+  return '/home/feurst_ftp/www'
+}
+const RANDOM_ID=new Date().getTime()
+
 // Public API
 module.exports = {
   databaseName: databaseName,
@@ -253,5 +262,7 @@ module.exports = {
   canAlfredSelfRegister, canAlfredParticularRegister,
   getSibTemplates, checkConfig, getDatabaseUri, hideStoreDialog,
   isPlatform, isMarketplace, getDataModel, skipFailedPayment, getSibApiKey,
-  getPort,
+  getPort, getExchangeDirectory,
+  RANDOM_ID,
+
 }

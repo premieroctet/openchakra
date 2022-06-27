@@ -2,14 +2,11 @@ import React, {useState} from 'react'
 import styled from 'styled-components'
 import Address from '../Address/Address'
 import {client} from '../../utils/client'
-import {
-  BASEPATH_EDI,
-  API_PATH,
-} from '../../utils/consts'
+import {API_PATH} from '../../utils/consts'
 import {StyledListbox} from '../../styles/feurst/StyledComponents'
 import {snackBarError, snackBarSuccess} from '../../utils/notifications'
 import {Input} from './components.styles'
-import {PleasantButton} from './Button'
+import {NormalButton} from './Button'
 
 const RegisterCompany = ({onSuccess, onClose}) => {
 
@@ -32,7 +29,7 @@ const RegisterCompany = ({onSuccess, onClose}) => {
 
   const canRegisterCompany = state?.companyname && state?.address?.address
                     && state?.address?.zip_code && state?.address?.city && state?.address?.country
-  
+
   return (<StyledRegisterCompany onSubmit={submitCompany({companyname: state.companyname, address: state.address})}>
     <Input
       noborder
@@ -68,19 +65,19 @@ const RegisterCompany = ({onSuccess, onClose}) => {
       </Listbox>
     </StyledListbox>
 
-    <PleasantButton
+    <NormalButton
       disabled={!canRegisterCompany}
       type='submit'
       onSubmit={() => submitCompany({companyname: state.companyname, address: state.address})}
     >
       Enregistrer cette société
-    </PleasantButton>
+    </NormalButton>
   </StyledRegisterCompany>
   )
 }
 
 const StyledRegisterCompany = styled.form`
-  
+
   display: grid;
 
   input {

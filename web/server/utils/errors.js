@@ -6,7 +6,18 @@ class StatusError extends Error {
     this.name=this.constructor.name
     this.status=status
   }
-
 }
 
-module.exports={StatusError}
+class NotFoundError extends StatusError {
+  constructor(message) {
+    super(message, 404)
+  }
+}
+
+class ForbiddenError extends StatusError {
+  constructor(message) {
+    super(message, 403)
+  }
+}
+
+module.exports={StatusError, NotFoundError, ForbiddenError}

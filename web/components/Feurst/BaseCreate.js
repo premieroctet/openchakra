@@ -3,11 +3,7 @@ import {useRouter} from 'next/router'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import TextField from '@material-ui/core/TextField'
 import {withTranslation} from 'react-i18next'
-import {
-  BASEPATH_EDI,
-  API_PATH,
-  RELATED,
-} from '../../utils/consts'
+import {BASEPATH_EDI, API_PATH, RELATED} from '../../utils/consts'
 
 import {client} from '../../utils/client'
 import withEdiRequest from '../../hoc/withEdiRequest'
@@ -30,7 +26,7 @@ const BaseCreateTable = ({
 
 
   useEffect(() => {
-    
+
     if ((orderCompany !== null || !isFeurstSales)) {
       createOrderId({endpoint, company: orderCompany})
         .then(data => {
@@ -38,7 +34,7 @@ const BaseCreateTable = ({
         })
         .catch(e => console.error('cant create order', e))
     }
-    
+
   }, [createOrderId, endpoint, orderCompany, isFeurstSales, router])
 
   /* Feurst ? => Fetch companies */

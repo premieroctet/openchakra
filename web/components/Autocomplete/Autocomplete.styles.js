@@ -59,10 +59,6 @@ const StyledAutocomplete = styled.div.attrs(props => ({
     font-style: italic;
   }
 
-  [aria-expanded="true"] + [role="listbox"] {
-    border: '1px solid var(--gray-800)';
-    border-top: 0;
-  }
   
   [role="listbox"] {
     border-bottom-left-radius: var(--spc-2);
@@ -70,16 +66,17 @@ const StyledAutocomplete = styled.div.attrs(props => ({
     transition: all ease-in 1s;
     list-style-type: none;
     grid-area: downresults;
-    max-height: 300px;
+    max-height: 40vh;
     overflow-y: scroll;
     position: absolute;
-    top: 0;
+    top: 4px;
     left: 0;
     z-index: 1;
     background: var(--white);
     margin-top: 0;
-    width: 100%;
+    width: max(calc(100% - 2rem), 30rem);
     padding-inline: var(--spc-3);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 
     & li {
       font-size: var(--text-base);

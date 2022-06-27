@@ -1,13 +1,11 @@
 import React, {useState} from 'react'
 import styled from 'styled-components'
 import dynamic from 'next/dynamic'
-import {ACCOUNT, CREATE, API_PATH, LINK} from '../../utils/feurst/consts'
-import ImportExcelFile from './ImportExcelFile'
-import AccountLink from './AccountLink'
+import {ACCOUNT, CREATE} from '../../utils/feurst/consts'
 import FeurstRegister from './Register'
 import {accountsColumns} from './tablestructures'
 import BaseListTable from './BaseListTable'
-import {PleasantButton} from './Button'
+import {NormalButton} from './Button'
 
 const PureDialog = dynamic(() => import('../Dialog/PureDialog'))
 
@@ -19,19 +17,11 @@ const AccountsList = ({accessRights}) => {
 
   const canAddAccount = accessRights.isActionAllowed(ACCOUNT, CREATE)
 
-
-  // TODO: Import action for FEURST_AD%MIN only
-  // const IMPORTS=[{title: 'Import clients/compagnies/tarification', url: `${API_PATH}/users/import`}]
-  const IMPORTS=[]
   return (
     <>
-      <div>
-        {IMPORTS.map((imp, i) => (<ImportExcelFile key={`imp${i}`} caption={imp.title} importURL={imp.url} templateURL={null} onImport={toggleRefresh}/>))}
-      </div>
-
       {canAddAccount &&
       <div className='container-md mb-8'>
-        <PleasantButton onClick={() => setIsOpenDialog(true)} rounded={'full'} size={'full-width'}><span>⊕</span> Ajouter un compte</PleasantButton>
+        <NormalButton onClick={() => setIsOpenDialog(true)} rounded={'full'} size={'full-width'}><span>⊕</span> Ajouter un compte</NormalButton>
       </div>
       }
 

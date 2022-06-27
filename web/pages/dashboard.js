@@ -9,7 +9,7 @@ import {withStyles} from '@material-ui/core/styles'
 import Router from 'next/router'
 import {isLoggedUserAdmin, isLoggedUserSuperAdmin} from '../utils/context'
 import DashboardLayout from '../hoc/Layout/DashboardLayout'
-const {API_PATH} = require('../utils/feurst/consts')
+const {API_PATH} = require('../utils/consts')
 const {setAxiosAuthentication}=require('../utils/authentication')
 const {SHIPRATE, PRODUCT} = require('../utils/consts')
 

@@ -5,7 +5,7 @@ import axios from 'axios'
 const moment = require('moment')
 const models=require('../../components/BigList/models')
 const {DataPage, styles}=require('../../components/AlfredDashboard/DataPage')
-const {SHIPRATE, CREATE} = require('../../utils/consts')
+const {API_PATH, SHIPRATE, CREATE} = require('../../utils/consts')
 moment.locale('fr')
 const {setAxiosAuthentication} = require('../../utils/authentication')
 

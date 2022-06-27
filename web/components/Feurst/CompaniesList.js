@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react'
 import styled from 'styled-components'
 import dynamic from 'next/dynamic'
-import {COMPANY, CREATE, API_PATH} from '../../utils/feurst/consts'
+import {API_PATH} from '../../utils/consts'
+import {COMPANY, CREATE} from '../../utils/feurst/consts'
 import {client} from '../../utils/client'
 import {companiesColumns} from './tablestructures'
 import BaseListTable from './BaseListTable'
-import {PleasantButton} from './Button'
+import {NormalButton} from './Button'
 import RegisterCompany from './RegisterCompany'
 
 const PureDialog = dynamic(() => import('../Dialog/PureDialog'))
@@ -34,7 +35,7 @@ const CompaniesList = ({accessRights}) => {
 
       {canAddCompany &&
       <div className='container-md mb-8'>
-        <PleasantButton onClick={() => setIsOpenDialog(true)} rounded={'full'} size={'full-width'}><span>⊕</span> Ajouter une société</PleasantButton>
+        <NormalButton onClick={() => setIsOpenDialog(true)} rounded={'full'} size={'full-width'}><span>⊕</span> Ajouter une société</NormalButton>
       </div>
       }
       <BaseListTable

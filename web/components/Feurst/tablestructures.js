@@ -1,15 +1,26 @@
 import React, {useMemo} from 'react'
 import Link from 'next/link'
-import {localeMoneyFormat} from '../../utils/converters'
+import lodash from 'lodash'
+import {API_PATH} from '../../utils/consts'
 import {
+  BASEPATH_EDI,
+  FEURST_IMG_PATH,
   ROLES,
 } from '../../utils/feurst/consts'
-import {formatPercent} from '../../utils/text'
+import {formatAddress, formatPercent} from '../../utils/text'
+import {localeMoneyFormat} from '../../utils/converters'
 import {DateRangeColumnFilter} from '../Table/TableFilter'
+import {simulateDownload} from '../utils/simulateDownload'
 import UpdateCellQuantity from './UpdateCellQuantity'
 import UpdateSeller from './updateSeller'
 import UpdateCellPrice from './UpdateCellPrice'
+import {ToTheBin, ToTheBinWithAlert} from './ToTheBin'
 import OrderStatus from './OrderStatus'
+
+
+const downloadAction = ({endpoint, orderid, filename}) => <button className='flex justify-center items-center' onClick={() => simulateDownload({url: `${API_PATH}/${endpoint}/${orderid}/export`, filename: `${filename}`})} >
+  <img width={20} height={20} src={`${FEURST_IMG_PATH}/xls-icon.png`} /> Télécharger
+</button>
 
 // to order by datetime
 const datetime = (a, b) => {
@@ -49,11 +60,6 @@ const FooterTotalPrice = ({data, language = null}) => {
   return <>{localeMoneyFormat({lang: language, value: total})}</>
 }
 
-const ToTheBin = props => (
-  <button {...props}>
-    <span role='image' alt="supprimer">🗑️</span>
-  </button>
-)
 
 const articleRef = {
   label: 'Réf. article',
@@ -126,9 +132,9 @@ const orderColumns = ({endpoint, orderid, language, canUpdateQuantity, deletePro
   return deleteProduct ? [...orderColumnsBase, deleteItem] : orderColumnsBase
 }
 
-const ordersColumns = ({endpoint, language, deleteOrder}) => {
-  
-  
+const ordersColumns = ({endpoint, language, deleteOrder, exportFile}) => {
+
+
   const ordersColumnsBase = [
     {
       label: 'Date commande',
@@ -169,24 +175,30 @@ const ordersColumns = ({endpoint, language, deleteOrder}) => {
     },
   ]
 
-  const deleteItem = {
+
+  const deleteItem = deleteOrder ? {
     label: '',
     id: 'product_delete',
     attribute: 'product_delete',
     Cell: ({cell: {row}}) => (
-      <ToTheBin onClick={() => {
+      <ToTheBinWithAlert row={row} deleteIt={() => {
         deleteOrder({endpoint, orderid: row.original._id})
-      }}/>
+      }} />
     ),
-  }
+  }: null
 
+  const exportCol = exportFile ? {
+    label: 'Exporter',
+    attribute: v => { return v },
+    Cell: ({value}) => downloadAction({endpoint, orderid: value._id, filename: value.filename}),
+  } : null
 
-  return deleteOrder ? [...ordersColumnsBase, deleteItem] : ordersColumnsBase
+  const ordersColumnsFinal = [...ordersColumnsBase, exportCol, deleteItem].filter(elem => elem !== null)
 
+  return ordersColumnsFinal
 }
 
 const quotationColumns = ({endpoint, orderid, language, deleteProduct, canUpdateQuantity, canUpdatePrice}) => {
-
 
   const quotationColumnsBase = [
     {...articleRef},
@@ -242,7 +254,7 @@ const quotationColumns = ({endpoint, orderid, language, deleteProduct, canUpdate
 }
 
 const quotationsColumns = ({endpoint, language, deleteOrder}) => {
-  
+
   const quotationsColumnsBase = [
     {
       label: 'Date commande',
@@ -282,7 +294,7 @@ const quotationsColumns = ({endpoint, language, deleteOrder}) => {
       attribute: '_id',
       Cell: ({value}) => (<Link href={`/edi/quotations/view/${value}`}>voir</Link>),
     },
- 
+
   ]
 
   const deleteItem = {
@@ -290,19 +302,19 @@ const quotationsColumns = ({endpoint, language, deleteOrder}) => {
     id: 'product_delete',
     attribute: 'product_delete',
     Cell: ({cell: {row}}) => (
-      <ToTheBin onClick={() => {
+      <ToTheBinWithAlert row={row} deleteIt={() => {
         deleteOrder({endpoint, orderid: row.original._id})
-      }}/>
+      }} />
     ),
   }
-  
+
 
   return deleteOrder ? [...quotationsColumnsBase, deleteItem] : quotationsColumnsBase
 
 }
 
-const accountsColumns = ({language, visibility}) => {
-  
+const accountsColumns = ({language, visibility, endpoint, deleteUser}) => {
+
   return [
     {
       label: 'Prénom',
@@ -321,12 +333,31 @@ const accountsColumns = ({language, visibility}) => {
       attribute: 'company.name',
     },
     {
-      label: 'Client(s)',
-      attribute: u => u.companies?.map(u => u.name).join(','),
+      label: 'Délégué commercial',
+      attribute: u => u.company?.sales_representative?.full_name,
     },
     {
       label: 'Rôles',
       attribute: u => u.roles.map(r => ROLES[r]).join(','),
+    },
+    {
+      label: 'Date de création',
+      attribute: 'creation_date',
+      Cell: ({cell: {value}}) => formatDate(new Date(value), language),
+      sortType: datetime,
+      Filter: DateRangeColumnFilter,
+      filter: 'dateBetween', /* Custom Filter Type */
+    },
+    {
+      label: 'Supprimer',
+      attribute: 'active',
+      Cell: ({cell: {row}}) => {
+        return (
+          <ToTheBinWithAlert row={row} deleteIt={() => {
+            deleteUser({endpoint, userid: row.original._id})
+          }} />
+        )
+      },
     },
   ]
 }
@@ -337,6 +368,18 @@ const companiesColumns = ({language, updateSeller, sellers}) => {
     {
       label: 'Nom',
       attribute: 'name',
+    },
+    {
+      label: 'Adresse',
+      attribute: company => formatAddress(company?.addresses[0]), // formatAddress(company?.addresses[0]) || '',
+    },
+    {
+      label: 'Zone de chalandise',
+      attribute: company => (company?.delivery_zip_codes).join('/'), // formatAddress(company?.addresses[0]) || '',
+    },
+    {
+      label: 'Tarifs',
+      attribute: company => Object.values(lodash.pick(company, ['catalog_prices', 'net_prices'])).join('/'), // formatAddress(company?.addresses[0]) || '',
     },
   ]
 
@@ -383,32 +426,43 @@ const pricesColumns = ({language}) => [
 ]
 
 
-const handledOrdersColumns = ({endpoint, language, handleValidation = null, filter = null}) => [
-  {
-    label: 'Date commande',
-    attribute: 'creation_date',
-    Cell: ({cell: {value}}) => formatDate(new Date(value), language),
-    sortType: datetime,
-    Filter: DateRangeColumnFilter,
-    filter: 'dateBetween', /* Custom Filter Type */
-  },
-  {...companyName},
-  {
-    label: 'Ref. commande',
-    attribute: 'reference',
-  },
-  {
-    label: 'Détails',
-    attribute: '_id',
-    Cell: ({value}) => (<Link href={`/edi/orders/view/${value}`}>voir</Link>),
-  },
-  {
-    label: 'Statut',
+const handledOrdersColumns = ({endpoint, language, exportFile, filter = null}) => {
+
+  const handledOrdersColumnsBase = [
+    {
+      label: 'Date commande',
+      attribute: 'creation_date',
+      Cell: ({cell: {value}}) => formatDate(new Date(value), language),
+      sortType: datetime,
+      Filter: DateRangeColumnFilter,
+      filter: 'dateBetween', /* Custom Filter Type */
+    },
+    {...companyName},
+    {
+      label: 'Ref. commande',
+      attribute: 'reference',
+    },
+    {
+      label: 'Détails',
+      attribute: '_id',
+      Cell: ({value}) => (<Link href={`${BASEPATH_EDI}/${endpoint}/view/${value}`}>voir</Link>),
+    },
+    {
+      label: 'Statut',
+      attribute: v => { return v },
+      Cell: ({value}) => <OrderStatus status={value.status} label={value.status_label} />,
+    },
+  ]
+
+
+  const exportCol = {
+    label: 'Exporter',
     attribute: v => { return v },
-    Cell: ({value}) => <OrderStatus status={value.status} label={value.status_label} />,
-  },
-  
-]
+    Cell: ({value}) => downloadAction({endpoint, orderid: value._id, filename: value.filename}),
+  }
+
+  return exportFile ? [...handledOrdersColumnsBase, exportCol] : handledOrdersColumnsBase
+}
 const handledQuotationsColumns = ({language, endpoint, handleValidation = null, filter = null}) => [
   {
     label: 'Date',
