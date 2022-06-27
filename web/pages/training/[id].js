@@ -7,6 +7,7 @@ import ReactHtmlParser from 'react-html-parser'
 import Layout from '../../hoc/Layout/Layout'
 import {screen} from '../../styles/screenWidths'
 import {getHostUrl} from '../../config/config'
+import DrawerBooking from '../../components/Drawer/DrawerBooking/DrawerBooking'
 
 
 // const useIntersectionObserver = (ref, options) => {
@@ -30,12 +31,19 @@ import {getHostUrl} from '../../config/config'
 //   return isIntersecting
 // }
 
+const toggleDrawer = open => event => {
+  if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+    return
+  }
+  setDrawerVisible(open)
+}
+
 const AFTRAL_ICON_PATH = '/static/assets/icon/aftral'
 
 
 const Training = ({training}) => {
 
-
+  
   const [viewMore, setViewMore] = useState(false)
 
 
@@ -47,22 +55,22 @@ const Training = ({training}) => {
         <div className='cover'>
 
           <img
-            src={training.picture}
+            src={training.service?.picture}
             alt='cover'
             width={600}
             height={200}
           />
 
           <div className='cover-card'>
-            <h1>{training.label}</h1>
+            <h1>{training.service?.label}</h1>
             <button type='button'>Acheter</button>
           </div>
             
           <dl className='training-ref'>
             <dt>Référence</dt>
-            <dd>{training?.reference}</dd>
+            <dd>{training.service?.reference}</dd>
             <dt>Durée de la formation</dt>
-            <dd>{training?.duration_days} {training?.duration_days && training.duration_days > 1 ? 'jours' : 'jour'}</dd>
+            <dd>{training.service?.duration_days} {training?.duration_days && training.duration_days > 1 ? 'jours' : 'jour'}</dd>
             <dt>&Eacute;ligigle au <abbr title='compte personnel de formation'>CPF</abbr></dt>
             <dd></dd>
           </dl>
@@ -78,12 +86,12 @@ const Training = ({training}) => {
           <div>
             <p>
               <img width={100} height={100} src={`${AFTRAL_ICON_PATH}/diplome.svg`} alt="diplôme" />
-              {training?.goals[0] || 'Lorem ipsum dolor sit amet. Cum voluptas temporibus ea blanditiis aliquam ex libero pariatur est deserunt nostrum dolorem voluptate et laborum soluta. Et repellendus expedita ut dolor delectus aut placeat quia a ratione quia et corrupti molestias. ' }
+              {training.service?.goals[0] || 'Lorem ipsum dolor sit amet. Cum voluptas temporibus ea blanditiis aliquam ex libero pariatur est deserunt nostrum dolorem voluptate et laborum soluta. Et repellendus expedita ut dolor delectus aut placeat quia a ratione quia et corrupti molestias. ' }
             </p>
            
             <p>
               <img width={60} height={60} src={`${AFTRAL_ICON_PATH}/gestionnaireCompte.svg`} alt="Gestionnaire" />
-              {training?.goals[1] || 'Être le gestionnaire de transport d’une entreprise de transport routier de marchandises.'}
+              {training.service?.goals[1] || 'Être le gestionnaire de transport d’une entreprise de transport routier de marchandises.'}
             </p>
 
             <p>
@@ -99,11 +107,11 @@ const Training = ({training}) => {
         <BoxVideoAndDownload>
           <RoundedBox>
             <h2><img width={25} height={14} src={`${AFTRAL_ICON_PATH}/video.svg`} alt=''/>Vidéo</h2>
-            <iframe width="560" height="315" src={training?.video} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+            <iframe width="560" height="315" src={training.service?.video} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
             </iframe>
           </RoundedBox>
           <RoundedBox>
-            <a href={training?.program} className='download'>
+            <a href={training.service?.program} className='download'>
               <img width={100} height={100} src={`${AFTRAL_ICON_PATH}/download.svg`} alt=''/>
               <span>Télécharger</span>
               <span>le programme complet</span>
@@ -117,12 +125,12 @@ const Training = ({training}) => {
       <Stats>
         <ul>
           <li>
-            <span>{training?.duration_hours}</span>
+            <span>{training.service?.duration_hours}</span>
             <span>heures</span>
             <span>de formation</span>
           </li>
           <li>
-            <span>{training?.price.toLocaleString('fr-FR', {style: 'decimal', maximumFractionDigits: 2}) || 899}</span>
+            <span>{training?.service?.price.toLocaleString('fr-FR', {style: 'decimal', maximumFractionDigits: 2}) || 899}</span>
             <span>euros</span>
             <span>Tarif hors dispositif</span>
           </li>
@@ -137,20 +145,32 @@ const Training = ({training}) => {
       <div className='container-lg'>
         <RoundedBox>
           <h2><img width={21} height={29} src={`${AFTRAL_ICON_PATH}/valid.svg`} alt=''/>Validation du parcours</h2>
-          <p className='validation'>{ReactHtmlParser(training?.validation)}</p>
+          <p className='validation'>{ReactHtmlParser(training.service?.validation)}</p>
 
         </RoundedBox>
-        <RoundedBox>
-          
+        
+        <MoreInfo>
           <h2><img width={25} height={25} src={`${AFTRAL_ICON_PATH}/more.svg`} alt=''/>En savoir plus</h2>
 
           <div className={`detailsmoreinfo ${viewMore ? 'liberate' : ''}`}>
-            {ReactHtmlParser(training?.more_info)}
+            {ReactHtmlParser(training.service?.more_info)}
           </div>
           <button onClick={() => setViewMore(!viewMore)}><span>{'>'}</span> {!viewMore ? 'en voir plus' : 'réduire'}</button>
           
 
-        </RoundedBox>
+        </MoreInfo>
+
+        <Opinions>
+
+          <h2><img width={25} height={21} src={`${AFTRAL_ICON_PATH}/opinions.svg`} alt=''/>Avis</h2>
+
+
+        </Opinions>
+        
+        <DrawerBooking
+          serviceUserId={training._id}
+          toggleDrawer={toggleDrawer}
+        />
 
       </div>
     
@@ -164,7 +184,7 @@ const Training = ({training}) => {
 
 export async function getServerSideProps(context) {
 
-  const training = await axios.get(`${getHostUrl()}myAlfred/api/service/${context.query.id}`)
+  const training = await axios.get(`${getHostUrl()}myAlfred/api/serviceUser/${context.query.id}`)
     .then(response => {
       return response?.data || null
     })
@@ -195,85 +215,6 @@ const RoundedBox = styled.div`
     } 
   }
 
-
-  /* Format scrapped data from Astral */
-  h3, .field-label.title {
-    display: block;
-    font-size: 1rem;
-    font-weight: bold;
-    color: var(--redaftral);
-    margin-block: var(--spc-4);
-  }
-
-  .group-ensavoirplus, .validation {
-    padding: var(--spc-2) var(--spc-8) var(--spc-8);
-
-    ul {
-      padding: 0;
-      list-style: none;
-    }
-  }
-
-  .detailsmoreinfo {
-    position: relative;
-    transition: max-height 0.3s ease-out;
-    overflow: hidden;
-    max-height:40vh;
-    overflow: hidden;
-    
-    &.liberate {
-      max-height: 2800px;
-      transition: max-height 3s ease-out;
-
-      &::after {
-        background: none;
-      }
-    }
-    
-    &::after {
-      content: '';
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(0deg, white, transparent 100%);
-      display: block;
-      position: absolute;
-      top: 0;
-    }
-  }
-  
-  .detailsmoreinfo + button {
-
-    span {
-      font-size: 1.2rem;
-      padding-bottom: 0.2rem;
-      display: inline-flex;
-      transform: rotate(90deg);
-      justify-content: center;
-      align-items: center;
-      border-radius: 50%;
-      border: 1px solid var(--redaftral);
-      width: 2rem;
-      aspect-ratio: 1 / 1;
-    }
-
-    min-width: 30ch;
-    padding-block: var(--spc-4);
-    margin-block: var(--spc-4);
-    display: block;
-    grid-template-columns: 1fr;
-    font-size: var(--text-xl);
-    margin-inline: auto;
-    border: 0;
-    background: none;
-    }
-
-    .detailsmoreinfo.liberate + button {
-
-      span {
-        transform: rotate(-90deg);
-      }
-
-    
   
 `
 
@@ -404,6 +345,96 @@ const Stats = styled.div`
   }
 
   
+`
+
+const MoreInfo = styled(RoundedBox)`
+
+
+  /* Format scrapped data from Astral */
+  h3, .field-label.title {
+    display: block;
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--redaftral);
+    margin-block: var(--spc-4);
+  }
+
+  .group-ensavoirplus, .validation {
+    padding: var(--spc-2) var(--spc-8) var(--spc-8);
+
+    ul {
+      padding: 0;
+      list-style: none;
+    }
+  }
+
+  .detailsmoreinfo {
+    position: relative;
+    transition: max-height 0.3s ease-out;
+    overflow: hidden;
+    max-height:40vh;
+    overflow: hidden;
+    
+    &.liberate {
+      max-height: 2800px;
+      transition: max-height 3s ease-out;
+
+      &::after {
+        background: none;
+      }
+    }
+    
+    &::after {
+      content: '';
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(0deg, white, transparent 100%);
+      display: block;
+      position: absolute;
+      top: 0;
+    }
+  }
+  
+  .detailsmoreinfo + button {
+
+    span {
+      font-size: 1.2rem;
+      padding-bottom: 0.2rem;
+      display: inline-flex;
+      transform: rotate(90deg);
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      border: 1px solid var(--redaftral);
+      width: 2rem;
+      aspect-ratio: 1 / 1;
+    }
+
+    min-width: 30ch;
+    padding-block: var(--spc-4);
+    margin-block: var(--spc-4);
+    display: block;
+    grid-template-columns: 1fr;
+    font-size: var(--text-xl);
+    margin-inline: auto;
+    border: 0;
+    background: none;
+  }
+
+  .detailsmoreinfo.liberate + button {
+
+    span {
+      transform: rotate(-90deg);
+    }
+
+  }
+
+`
+
+
+const Opinions = styled(RoundedBox)`
+  
+
 `
 
 const StyledTraining = styled.div`

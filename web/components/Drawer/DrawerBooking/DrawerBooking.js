@@ -106,6 +106,7 @@ const DrawerBooking = ({classes, t, serviceUserId,
         .then(res => {
           setAvocotesBookings(res.data)
         })
+        .catch(e => console.error(e))
     }
   }, [serviceUserId])
 
