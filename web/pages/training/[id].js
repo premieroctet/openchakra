@@ -10,6 +10,14 @@ import {getHostUrl} from '../../config/config'
 import DrawerBooking from '../../components/Drawer/DrawerBooking/DrawerBooking'
 
 
+const Stars = ({rating, max}) => {
+  const ratingToDisplay = Math.round(rating)
+  return (<span className='stars'>
+    {`${'★'.repeat(ratingToDisplay)}${'☆'.repeat(max - Math.round(ratingToDisplay))}` }
+  </span>
+  )
+}
+
 // const useIntersectionObserver = (ref, options) => {
 //   const [isIntersecting, setIsIntersecting] = React.useState(false)
 
@@ -42,6 +50,31 @@ const AFTRAL_ICON_PATH = '/static/assets/icon/aftral'
 
 
 const Training = ({training}) => {
+
+
+  const globalNote = Number(4.4).toPrecision(2)
+  const maxNote = 5
+
+  const someComments = [
+    {
+      name: 'Wil',
+      date: '01/02/2022',
+      rating: 4.5,
+      comment: `Tout s'est parfaitement passé. Cette formation est complète et très enrichissante. Je recommande vivement.`,
+    },
+    {
+      name: 'Sole',
+      date: '01/01/2022',
+      rating: 4.7,
+      comment: `Magique. Du pur bonheur. Le formateur nous a enchanté 🦄`,
+    },
+    {
+      name: 'Marion',
+      date: '30/12/2021',
+      rating: 3.2,
+      comment: `Si j'avais su, j'aurais pas venu.`,
+    },
+  ]
 
   
   const [viewMore, setViewMore] = useState(false)
@@ -164,6 +197,36 @@ const Training = ({training}) => {
 
           <h2><img width={25} height={21} src={`${AFTRAL_ICON_PATH}/opinions.svg`} alt=''/>Avis</h2>
 
+          <div className='stateoftheart'>
+            
+            <div>
+              <h3>NOTE GENERALE</h3>
+              <p>
+                <span>{globalNote.toLocaleString()}</span>
+                <Stars rating={globalNote} max={maxNote} />
+              </p>
+            </div>
+
+            <div>
+              <h3>Commentaires</h3>
+              <p>{'10'}</p>
+            </div>
+          </div>
+
+          <hr />
+
+          <div className='somecomments'>
+
+            {someComments.map((el, i) => <div className='uniqcomment' key={`comment${i}`}>
+              <div className='whoen'><span>{el.name}</span> <span>{el.date}</span></div>
+              <div className='whaow'><Stars rating={el.rating} max={maxNote} /> {el.comment}</div>
+            </div>,
+            )}
+
+          </div>
+          
+          <hr />
+
 
         </Opinions>
         
@@ -267,7 +330,7 @@ const BoxVideoAndDownload = styled.div`
     row-gap: var(--spc-2);
 
     span {
-      color: black;
+      color: var(--black);
     }
 
     span:first-of-type {
@@ -433,6 +496,85 @@ const MoreInfo = styled(RoundedBox)`
 
 
 const Opinions = styled(RoundedBox)`
+
+  .stateoftheart {
+
+    display: flex;
+    column-gap: var(--spc-8);
+    row-gap: var(--spc-8);
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin-bottom: var(--spc-8);
+    
+    &>div {
+
+      h3 {
+        margin: 0;
+        font-size: var(--text-lg);
+        text-transform: uppercase;
+        color: silver;
+      }
+
+      p {
+        margin: 0;
+        font-weight: bold;
+        font-size: var(--text-xl);
+        display: flex;
+        align-items: baseline;
+        column-gap: var(--spc-4);
+      }
+
+      display: flex;
+      flex-direction: column-reverse;
+    }
+
+    
+  }
+  
+  .stars {
+    color:  #ffc107;
+    font-size: var(--text-2xl);
+  }
+
+  hr {
+    border:0; 
+    border-bottom: 1px solid silver;
+    width: calc(100% - 4rem);
+    margin-bottom: var(--spc-8);
+  }
+  
+  .somecomments {
+    
+    
+    .uniqcomment {
+      
+      width: calc(100% - 4rem);
+      margin-inline: auto;
+      display: flex;
+      justify-content: space-between;
+      column-gap: var(--spc-4);
+      flex-wrap: wrap;
+      margin-bottom: var(--spc-4);
+    }
+
+    
+    .whoen, .whaow {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .whoen {
+      font-size: var(--text-base);
+      font-weight: bold;
+    }
+    
+    .whaow {
+      flex-grow: 2;
+      max-width: 80%;
+    }
+
+  }
+
   
 
 `
@@ -441,10 +583,12 @@ const StyledTraining = styled.div`
 
    --bg-color: #f7f7f7;
    --bg-card-color: #39466b;
+   --black: #111;
    --spc-2: 0.5rem;
    --spc-3: 0.75rem;
    --spc-4: 1rem;
    --spc-8: 2rem;
+   --text-base: 1rem;
    --text-lg: 1.125rem;
    --text-xl: 1.32rem;
    --text-2xl: 1.5rem;
@@ -468,6 +612,14 @@ const StyledTraining = styled.div`
   width: min(calc(100vw - 2rem), 60rem);
   margin-inline: auto;
  }
+
+ .flex {
+  display: flex;
+ }
+
+ .flex-row-reverse {
+  flex-direction: row-reverse;
+}
 
 
   .cover {
@@ -536,7 +688,7 @@ const StyledTraining = styled.div`
     background-color: #fff;
     height: min-content;
     padding: var(--spc-4);
-    border: 1px solid black;
+    border: 1px solid var(--black);
     border-radius: var(--rounded-2xl);
 
     dt {
