@@ -1,4 +1,5 @@
 const crypto = require('crypto')
+const fs = require('fs').promises
 const express = require('express')
 const router = express.Router()
 const passport = require('passport')
@@ -6,8 +7,7 @@ const bcrypt = require('bcryptjs')
 const moment = require('moment')
 const axios = require('axios')
 const gifFrames = require('gif-frames')
-const {fs} = require('file-system')
-const {getDataModel} = require('../../../config/config')
+
 const {getHostUrl, is_development} = require('../../../config/config')
 const Shop = require('../../models/Shop')
 const {
@@ -657,7 +657,7 @@ router.get('/users', (req, res) => {
       }
       res.json(user)
     })
-    .catch(err => res.status(404).json({users: 'No billing found'}))
+    .catch(err => res.status(404).json({users: 'No user found'}))
 })
 
 // @Route GET /myAlfred/api/users/users/:id
@@ -1230,7 +1230,8 @@ router.get('/still_profile/:filename', (req, res) => {
       const img=frameData[0].getImage().read()
       return res.send(img)
     })
-    .catch(() => {
+    .catch(err => {
+      console.log(err)
       fs.readFile(`static/profile/${req.params.filename}`)
         .then(data => {
           return res.send(data)

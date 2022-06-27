@@ -1,3 +1,10 @@
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from '@material-ui/core'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -9,7 +16,6 @@ import Typography from '@material-ui/core/Typography'
 import {Skeleton} from '@material-ui/lab'
 import styles from '../../../static/css/components/Card/CardServiceUser/CardServiceUser'
 import CustomButton from '../../CustomButton/CustomButton'
-import {CARD_SERVICE} from '../../../utils/i18n'
 
 class RawCardServiceInfo extends React.Component {
   constructor(props) {
@@ -54,6 +60,61 @@ class CardService extends React.Component {
         })
         .catch(err => console.error(err))
     }
+  }
+
+  handleClickOpen =id => {
+    this.setState({id_service: id, open: true})
+  };
+
+  handleClose = () => {
+    this.setState({id_service: '', open: false})
+  };
+
+  deleteService(id) {
+    definCssVariable('brand', 'red')
+    axios.delete(`/myAlfred/api/serviceUser/${id}`)
+      .then(() => {
+        this.setState({open: false, id_service: ''}, () => {
+          if (this.props.onDelete) {
+            this.props.onDelete(id)
+          }
+        })
+      })
+      .catch(err => console.error(err))
+  }
+
+  modalDeleteServices = classes => {
+    return(
+      <Dialog
+        open={this.state.open}
+        onClose={() => this.handleClose()}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{ReactHtmlParser(this.props.t('CARD_SERVICE.dialog_delete_title'))}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {ReactHtmlParser(this.props.t('CARD_SERVICE.dialog_delete_content'))}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <CustomButton onClick={() => this.handleClose()} color="primary">
+            {ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}
+          </CustomButton>
+          <CustomButton onClick={() => this.deleteService(this.state.id_service)} className={classes.colorError}>
+            {ReactHtmlParser(this.props.t('COMMON.btn_delete'))}
+          </CustomButton>
+        </DialogActions>
+      </Dialog>
+    )
+  };
+
+  onMouseEnter = ev => {
+    this.setState({animated: true})
+  }
+
+  onMouseLeave = ev => {
+    this.setState({animated: false})
   }
 
   render() {

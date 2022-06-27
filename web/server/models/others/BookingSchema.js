@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
 const lodash=require('lodash')
+const AddressSchema =require('../AddressSchema')
 const {BOOK_STATUS, ROLES} = require('../../../utils/consts')
+
 const Schema = mongoose.Schema
 
 const BookingFee = new Schema({
@@ -25,22 +27,7 @@ const BookingSchema = new Schema({
     required: true,
   },
   address: {
-    address: {
-      type: String,
-    },
-    city: {
-      type: String,
-    },
-    zip_code: {
-      type: String,
-    },
-    country: {
-      type: String,
-    },
-    gps: {
-      lat: Number,
-      lng: Number,
-    },
+    type: AddressSchema,
   },
   service: {
     type: String,

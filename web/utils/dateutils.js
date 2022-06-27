@@ -1,12 +1,14 @@
-const {MONTH_PERIOD} = require('./consts.js')
-const isEmpty = require('../server/validation/is-empty')
 let moment = require('moment-timezone')
 const {extendMoment} = require('moment-range')
+const isEmpty = require('../server/validation/is-empty')
+const {MONTH_PERIOD} = require('./consts.js')
 moment = extendMoment(moment)
+const lodash=require('lodash')
 
 const DAYS = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
 
 const isMomentAvailable = (mom, avails) => {
+
   if (!moment.isMoment(mom)) {
     return false
   }
@@ -16,7 +18,8 @@ const isMomentAvailable = (mom, avails) => {
     return true
   }
   // Date is ok, check timelapses
-  return availability.timelapses.includes(mom.hour())
+  const res= availability.timelapses.includes(mom.hour())
+  return res
 }
 
 const isIntervalAvailable = (start, end, serviceId, avails) => {
@@ -32,7 +35,7 @@ const isIntervalAvailable = (start, end, serviceId, avails) => {
     if (isMomentAvailable(m, avails)) {
       return true
     }
-    
+
     m.add(30, 'minutes')
   }
   return false
@@ -90,29 +93,20 @@ const availIncludesDate = (avail, mmt) => {
   if (avail.is_punctual) {
     return moment(avail.punctual).isSame(mmt, 'day')
   }
-  
+
   let range=moment.range(avail.period.begin, avail.period.end)
   if (!range.snapTo('day').contains(mmt)) {
     return false
   }
   return avail.period.days.includes(mmt.isoWeekday() - 1)
-  
-}
 
-// Sort availabilities : punctuals before recurrent, then by reverse id ( same order as creation date)
-const availabilitiesComparator = (a1, a2) => {
-  // Punctual vs recurrent : punctual first
-  if (a1.is_punctual != a2.is_punctual) {
-    return a1.is_punctual ? -1 : 1
-  }
-  return a2._id.toString().localeCompare(a1._id.toString())
 }
 
 const getAvailabilityForDate = (mmt, availabilities) => {
   if (!availabilities || availabilities.length==0) {
     return null
   }
-  return availabilities.sort(availabilitiesComparator).find(avail => availIncludesDate(avail, mmt))
+  return availabilities.find(avail => availIncludesDate(avail, mmt))
 }
 /** Moment mmt's date is available for alfred_id => true/false */
 const isDateAvailable = (mmt, availabilities) => {

@@ -890,8 +890,7 @@ router.get('/:id', (req, res) => {
     .populate({
       path: 'prestations.billing',
     })
-    .populate('equipments')
-    .populate('service.equipments')
+    .populate({path: 'service', populate: {path: 'equipments'}})
     .then(service => {
       if (!service) {
         return res.status(404).json({msg: 'No service found'})

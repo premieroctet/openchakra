@@ -52,7 +52,7 @@ class Company extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      user: this.props.params.user,
+      user: this.props.user,
       company: null,
       showEdition: false,
       enabledEdition: true,
@@ -81,7 +81,7 @@ class Company extends React.Component {
   loadUser = () => {
     this.setState({showEdition: false})
     setAxiosAuthentication()
-    axios.get(`/myAlfred/api/users/${this.props.params.user}`)
+    axios.get(`/myAlfred/api/users/${this.props.user}`)
       .then(res => {
         const user = res.data
         this.setState({
@@ -292,8 +292,8 @@ class Company extends React.Component {
 
   render() {
     const {classes} = this.props
-    const user=this.props.params.user
-    const index=this.props.params.indexAccount
+    const user=this.props.user
+    const index=this.props.indexAccount
     const {company} = this.state
     if (!user && company) {
       return null

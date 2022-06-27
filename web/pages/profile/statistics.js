@@ -399,7 +399,7 @@ class ProfileStatistics extends React.Component {
 
   render() {
     const {classes, theme}=this.props
-    const {user}=this.props.params
+    const {user}=this.props
 
     if (!user) {
       return null

@@ -1,5 +1,5 @@
 import React from 'react'
-const {is_development} = require('../config/config')
+import {is_development} from '../config/config'
 
 const DevLog = ({children}) => {
 

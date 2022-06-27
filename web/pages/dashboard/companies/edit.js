@@ -73,7 +73,7 @@ class View extends React.Component {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname)
-    const id = this.props.params.id
+    const id = this.props.id
     if (!id) {
       this.setState({company: {}})
       return

@@ -35,7 +35,7 @@ class PaymentFailed extends React.Component {
       .catch(err => {
         console.error(err)
       })
-    axios.get(`/myAlfred/api/booking/${this.props.params.booking_id}`)
+    axios.get(`/myAlfred/api/booking/${this.props.booking_id}`)
       .then(res => {
         this.setState({booking: res.data})
       })

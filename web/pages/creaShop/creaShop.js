@@ -129,8 +129,8 @@ class creaShop extends React.Component {
             shop.is_certified=true
 
             // Si mode ajout de service, récupérer les services de la boutique pour les excludre des choix
-            if (this.props.params.serviceuser_id) {
-              axios.get(`/myAlfred/api/serviceUser/${this.props.params.serviceuser_id}`)
+            if (this.props.serviceuser_id) {
+              axios.get(`/myAlfred/api/serviceUser/${this.props.serviceuser_id}`)
                 .then(serviceUser => {
                   const su=serviceUser.data
                   shop.service = su.service._id
@@ -299,7 +299,7 @@ class creaShop extends React.Component {
       const noDiplomaShop = lodash.pickBy(cloned_shop, (v, k) => !k.match(/diploma|certification/i))
       axios.post('/myAlfred/api/shop/add', noDiplomaShop)
         .then(() => {
-          const su_url = `/myAlfred/api/serviceUser/addUpdate/${this.props.params.serviceuser_id || ''}`
+          const su_url = `/myAlfred/api/serviceUser/addUpdate/${this.props.serviceuser_id || ''}`
           axios.post(su_url, noDiplomaShop)
             .then(su_res => {
               const su = su_res.data

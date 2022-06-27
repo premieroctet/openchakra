@@ -74,7 +74,7 @@ class LogAsUser extends React.Component {
           }
         })
         this.setState({muUsers: muUsers})
-        const email=this.props.params.email
+        const email=this.props.email
         if (email) {
           this.setState({user: muUsers.find(m => m.key==email)})
         }

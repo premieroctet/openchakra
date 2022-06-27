@@ -54,7 +54,7 @@ class DefinePassword extends React.Component {
     e.preventDefault()
     const data = {
       password: this.state.password,
-      token: this.props.params.token,
+      token: this.props.token,
     }
     axios.post('/myAlfred/api/users/resetPassword', data)
       .then(res => {

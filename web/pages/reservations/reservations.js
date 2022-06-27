@@ -78,8 +78,8 @@ class AllReservations extends React.Component {
           reservationType: result.is_alfred ? 0 : 1,
         })
         this.loadBookings()
-        if (this.props.params.id) {
-          setTimeout(() => this.setState({bookingPreview: this.props.params.id}), 1000)
+        if (this.props.id) {
+          setTimeout(() => this.setState({bookingPreview: this.props.id}), 1000)
         }
       })
       .catch(err => {

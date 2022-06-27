@@ -58,7 +58,7 @@ class View extends React.Component {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname)
-    const id = this.props.params.id
+    const id = this.props.id
     setAxiosAuthentication()
     axios.get(`/myAlfred/api/admin/job/all/${id}`)
       .then(response => {
@@ -84,7 +84,7 @@ class View extends React.Component {
     e.preventDefault()
 
     const {label} = this.state.job
-    const id = this.props.params.id
+    const id = this.props.id
     const promise=id ? axios.put(`/myAlfred/api/admin/job/all/${id}`, {label}) : axios.post(`/myAlfred/api/admin/job/all`, {label})
     promise
       .then(() => {
@@ -104,7 +104,7 @@ class View extends React.Component {
   }
 
   handleClick() {
-    const id = this.props.params.id
+    const id = this.props.id
     axios.delete(`/myAlfred/api/admin/job/all/${id}`)
       .then(res => {
         snackBarSuccess('Métier supprimé avec succès')
@@ -127,7 +127,7 @@ class View extends React.Component {
     const {job} = this.state
 
 
-    const newJob=!this.props.params.id
+    const newJob=!this.props.id
     return (
       <DashboardLayout>
         <Grid container className={classes.loginContainer}>

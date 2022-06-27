@@ -40,7 +40,7 @@ class paymentSuccess extends React.Component {
       .catch(err => {
         console.error(err)
       })
-    const booking_id = this.props.params.booking_id
+    const booking_id = this.props.booking_id
     let transaction=null
     let booking=null
     axios.get(`/myAlfred/api/booking/${booking_id}`)

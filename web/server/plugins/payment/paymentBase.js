@@ -1,6 +1,8 @@
-const {CESU_DISABLED, CPF_RATE} = require('../../../utils/consts')
-const Commission = require('../../models/Commission')
 const lodash=require('lodash')
+const Shop = require('../../models/Shop')
+const ServiceUser = require('../../models/ServiceUser')
+const Commission = require('../../models/Commission')
+const {CESU_DISABLED, CPF_RATE}=require('../../../utils/consts')
 
 class PaymentBase {
 

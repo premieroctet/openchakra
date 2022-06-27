@@ -1,5 +1,3 @@
-const {isMarketplace} = require('../config/config')
-const withParams = require('../components/withParams')
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -17,24 +15,22 @@ import Typography from '@material-ui/core/Typography'
 import withWidth from '@material-ui/core/withWidth'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import Hidden from '@material-ui/core/Hidden'
-import LayoutMobileSearch from '../hoc/Layout/LayoutMobileSearch'
-import withGrid from '../hoc/Grid/GridCard'
-import withSlide from '../hoc/Slide/SlideShow'
-import Layout from '../hoc/Layout/Layout'
-import CardService from '../components/Card/CardService/CardService'
-import CardServiceUser from '../components/Card/CardServiceUser/CardServiceUser'
-import FilterMenu from '../components/FilterMenu/FilterMenu'
+import lodash from 'lodash'
+import CardServiceUser from
+'../components/Card/CardServiceUser/CardServiceUser'
+import {isMarketplace} from '../config/config'
+import {setAxiosAuthentication} from '../utils/authentication'
 import styles from '../static/css/pages/searchPage/searchStyle'
-
-import {SEARCH} from '../utils/i18n'
-const {setAxiosAuthentication}=require('../utils/authentication')
-const {SlideGridDataModel}=require('../utils/models/SlideGridDataModel')
-const {computeDistanceKm}=require('../utils/functions')
-
-const SearchResults=withSlide(withGrid(CardService))
-const lodash=require('lodash')
-const {PART}=require('../utils/consts')
-const {getLoggedUserId} =require('../utils/context')
+import FilterMenu from '../components/FilterMenu/FilterMenu'
+import CardService from '../components/Card/CardService/CardService'
+import Layout from '../hoc/Layout/Layout'
+import withSlide from '../hoc/Slide/SlideShow'
+import withGrid from '../hoc/Grid/GridCard'
+import LayoutMobileSearch from '../hoc/Layout/LayoutMobileSearch'
+import withParams from '../components/withParams'
+import {SlideGridDataModel} from '../utils/models/SlideGridDataModel'
+import {computeDistanceKm} from '../utils/functions'
+import {PART} from '../utils/consts'
 
 moment.locale('fr')
 
@@ -117,19 +113,17 @@ getFilters = () => {
 
 componentDidMount() {
 
-  if (getLoggedUserId()) {
-    this.setState({logged: true})
-  }
-
   // Mount components gets criterion from URL
   // If date in URL then force filter after search
-  const url_props=this.props.params
+
+  const {booking_id, keyword, gps, city, category, service, prestation, date,
+    selectedAddress}=this.props
 
   setAxiosAuthentication()
 
-  if (url_props.booking_id) {
+  if (booking_id) {
     setAxiosAuthentication()
-    axios.get(`/myAlfred/api/booking/${url_props.booking_id}`)
+    axios.get(`/myAlfred/api/booking/${booking_id}`)
       .then(res => {
         this.setState({gps: res.data.address.gps}, () => { this.search() })
       })
@@ -139,17 +133,17 @@ componentDidMount() {
   }
   else {
     this.setState({
-      keyword: url_props.keyword || '',
-      gps: 'gps' in url_props ? JSON.parse(url_props.gps) : null,
-      city: url_props.city || '',
-      category: url_props.category,
-      service: url_props.service,
-      prestation: url_props.prestation,
+      keyword: keyword || '',
+      gps: gps && JSON.parse(gps) || null,
+      city: city || '',
+      category: category,
+      service: service,
+      prestation: prestation,
     })
-    if ('date' in url_props && url_props.date) {
+    if (date) {
       this.setState({
-        startDate: moment(parseInt(url_props.date)).startOf('day'),
-        endDate: moment(parseInt(url_props.date)).endOf('day'),
+        startDate: moment(parseInt(date)).startOf('day'),
+        endDate: moment(parseInt(date)).endOf('day'),
       })
     }
     axios.get('/myAlfred/api/users/current')
@@ -165,10 +159,10 @@ componentDidMount() {
             })
 
             let gps=null
-            if ('selectedAddress' in url_props && url_props.selectedAddress !== 'all') {
-              gps=allAddresses[url_props.selectedAddress]
+            if (selectedAddress !== 'all') {
+              gps=allAddresses[selectedAddress]
             }
-            if (!url_props.selectedAddress && !url_props.gps) {
+            if (!selectedAddress && !gps) {
               gps=allAddresses.main
             }
             this.setState({gps: gps}, () => { this.search() })
@@ -283,11 +277,11 @@ componentDidMount() {
   search = forceFilter => {
     this.setState({searching: true})
 
-    const url_props = this.props.params
+    const {booking_id, category, service, prestation} = this.props
     let filters = {}
 
-    if (url_props.booking_id) {
-      filters.booking_id=this.url_props.booking_id
+    if (booking_id) {
+      filters.booking_id=booking_id
     }
 
     else {
@@ -308,16 +302,16 @@ componentDidMount() {
       }
       else {
       // Category
-        if (url_props.category) {
-          filters.category = url_props.category
+        if (category) {
+          filters.category = category
         }
         // Service
-        if (url_props.service) {
-          filters.service = url_props.service
+        if (service) {
+          filters.service = service
         }
         // Prestation
-        if (url_props.prestation) {
-          filters.prestation = url_props.prestation
+        if (prestation) {
+          filters.prestation = prestation
         }
       }
     }
@@ -353,7 +347,7 @@ componentDidMount() {
 
   content = classes => {
     let results = this.state.filteredResuls
-    const url_props=this.props.params
+    const {booking_id}=this.props
 
     const {gps, scroll_count} = this.state
 
@@ -448,7 +442,7 @@ componentDidMount() {
                         gps={gps}
                         user={this.state.user}
                         address={selectedAddress}
-                        booking_id={url_props.booking_id}
+                        booking_id={booking_id}
                       />
                     </Grid>
                     <Hidden only={['xl', 'lg', 'md', 'sm']} >
