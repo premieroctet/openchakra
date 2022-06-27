@@ -2,7 +2,8 @@ import React, {useState, useContext} from 'react'
 import {useRouter} from 'next/router'
 import styled from 'styled-components'
 import withEdiAuth from '../../hoc/withEdiAuth'
-import {BASEPATH_EDI, API_PATH, FEURST_DOC_PATH} from '../../utils/feurst/consts'
+import {API_PATH} from '../../utils/consts'
+import {BASEPATH_EDI, FEURST_DOC_PATH} from '../../utils/feurst/consts'
 import {client} from '../../utils/client'
 import {UserContext} from '../../contextes/user.context'
 import {snackBarSuccess, snackBarError} from '../../utils/notifications'
@@ -31,7 +32,7 @@ const CGV = () => {
 
 
   return (
-    
+
     <StyledCGV>
       <div className='container-xl'>
         <h1>Conditions générales de vente</h1>
@@ -42,11 +43,11 @@ const CGV = () => {
 
         <div className='displaycgv'>
           <embed src={`${FEURST_DOC_PATH}/CGV.pdf`} type="application/pdf" width="100%" height="100%" />
-          
+
           {user && !user?.cgv_valid ? <>
-            
+
             <form onSubmit={acceptCGV}>
-              
+
               <label htmlFor='cgvcheck'>
                 <input id="cgvcheck" type={'checkbox'} value={cgvCheck} onChange={() => setCgvCheck(!cgvCheck)} />
                   J'ai pris connaissance des conditions générales de vente.
@@ -61,13 +62,13 @@ const CGV = () => {
 
       </div>
     </StyledCGV>
-    
+
   )
 
 }
 
 const StyledCGV = styled.div`
-  
+
   h1 {
     color: var(--black);
     font-size: var(--text-3xl);
@@ -85,7 +86,7 @@ const StyledCGV = styled.div`
     grid-area: cgvdoc;
     min-height: 50vh;
   }
-  
+
   form {
     grid-area: cgvaccept;
     width: min(calc(100% - 2rem), 35rem);
@@ -98,7 +99,7 @@ const StyledCGV = styled.div`
     border-radius: var(--spc-3);
     margin-block-start: var(--spc-4);
     margin-block-end: var(--spc-18);
-    
+
   }
 
   label {
@@ -114,7 +115,7 @@ const StyledCGV = styled.div`
     aspect-ratio: 1 / 1;
     padding-inline: var(--spc-2);
   }
-    
+
   button {
     font-size: var(--text-lg);
     cursor: pointer;

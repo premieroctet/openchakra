@@ -1,8 +1,8 @@
 import React, {useMemo} from 'react'
 import Link from 'next/link'
 import lodash from 'lodash'
+import {API_PATH} from '../../utils/consts'
 import {
-  API_PATH,
   BASEPATH_EDI,
   FEURST_IMG_PATH,
   ROLES,
@@ -454,7 +454,7 @@ const handledOrdersColumns = ({endpoint, language, exportFile, filter = null}) =
     },
   ]
 
- 
+
   const exportCol = {
     label: 'Exporter',
     attribute: v => { return v },

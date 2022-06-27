@@ -2,8 +2,8 @@ import React from 'react'
 import axios from 'axios'
 import {client} from '../utils/client'
 import {setAxiosAuthentication} from '../utils/authentication'
+import {API_PATH} from '../utils/consts'
 import {
-  API_PATH,
   ORDER_CREATED,
   DELETE,
 } from '../utils/feurst/consts'
@@ -88,7 +88,7 @@ const withEdiRequest = (Component = null) => {
 
     deleteUser = async({endpoint, userid}) => {
       if (!userid) { return }
-      
+
       return await client(`${API_PATH}/users/${userid}`, {method: 'DELETE'})
         .then(() => this.getList({endpoint}))
         .catch(error => {
