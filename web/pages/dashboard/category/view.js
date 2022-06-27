@@ -68,7 +68,7 @@ class View extends React.Component {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname)
-    const id = this.props.params.id
+    const id = this.props.id
     this.setState({
       particular_id: null,
       particular_file: null,
@@ -137,7 +137,7 @@ class View extends React.Component {
       return
     }
 
-    const id = this.props.params.id
+    const id = this.props.id
     const data={
       'particular_label': particular_label,
       'professional_label': professional_label,
@@ -177,7 +177,7 @@ class View extends React.Component {
   }
 
   handleClick() {
-    const id = this.props.params.id
+    const id = this.props.id
     axios.delete(`/myAlfred/api/admin/category/all/${id}`)
       .then(() => {
         snackBarSuccess('Categorie supprimée avec succès')

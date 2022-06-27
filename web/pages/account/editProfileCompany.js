@@ -1,5 +1,3 @@
-const withParams = require('../../components/withParams')
-import CustomButton from '../../components/CustomButton/CustomButton'
 import Head from 'next/head'
 import {withTranslation} from 'react-i18next'
 import AlgoliaPlaces from 'algolia-places-react'
@@ -19,6 +17,7 @@ import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import axios from 'axios'
 import withStyles from '@material-ui/core/styles/withStyles'
+import ReactHtmlParser from 'react-html-parser'
 import {
   COMPANY_ACTIVITY,
   COMPANY_SIZE,
@@ -28,9 +27,10 @@ import DateField from '../../components/DateField/DateField'
 import LayoutAccount from '../../hoc/Layout/LayoutAccount'
 import LayoutMobile from '../../hoc/Layout/LayoutMobile'
 import styles from '../../static/css/pages/profile/editProfileCompany/editProfileCompany'
-import ReactHtmlParser from 'react-html-parser'
+import CustomButton from '../../components/CustomButton/CustomButton'
 
 const moment=require('moment')
+const withParams = require('../../components/withParams')
 
 const {setAxiosAuthentication} = require('../../utils/authentication')
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications')
@@ -469,7 +469,7 @@ class editProfileCompany extends React.Component {
   render() {
     const {classes, t} = this.props
     const {user} = this.state
-    const index=this.props.params.indexAccount
+    const index=this.props.indexAccount
 
     if (!user) {
       return null

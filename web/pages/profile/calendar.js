@@ -28,7 +28,7 @@ class ProfileCalendar extends React.Component {
   }
 
   loadAvailabilities = () => {
-    axios.get(`/myAlfred/api/availability/userAvailabilities/${this.props.params.user}`)
+    axios.get(`/myAlfred/api/availability/userAvailabilities/${this.props.user}`)
       .then(res => {
         this.setState({availabilities: res.data})
       })
@@ -44,7 +44,7 @@ class ProfileCalendar extends React.Component {
 
   componentDidMount() {
     alert('ça ne charge pas !!)')
-    if (this.props.params.user) {
+    if (this.props.user) {
       this.loadAvailabilities()
     }
   }
@@ -80,7 +80,7 @@ class ProfileCalendar extends React.Component {
 
   render() {
     const {classes, index}=this.props
-    const {user}=this.props.params
+    const {user}=this.props
     const {bookings}=this.state
     const readOnly = user!==getLoggedUserId()
 

@@ -22,7 +22,7 @@ class ProfilePictures extends React.Component {
   }
 
   getUserId() {
-    return this.props.params.user || getLoggedUserId()
+    return this.props.user || getLoggedUserId()
   }
 
   content = (classes, user) => {

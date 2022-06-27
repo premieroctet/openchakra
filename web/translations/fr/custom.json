@@ -510,7 +510,7 @@
 	"CARD_SERVICE.no_description": "<div>Cet All-entrepreneur.e.s est peut être trop timide pour parler de lui !</div>",
 	"CARD_SERVICE.button_show_profil": "Voir",
 	"USERSERVICEPREVIEW.snackbar_no_booking": "Pas de booking trouvé",
-	"USERSERVICEPREVIEW.snackbar_error_avc": "<div>Impossible de réserver cet All-entrepreneur.e.s pour avocôtés, prestations manquantes:</div>",
+	"USERSERVICEPREVIEW.snackbar_error_avc": "Impossible de réserver cet All-entrepreneur.e.s pour avocôtés, prestations manquantes:",
 	"USERSERVICEPREVIEW.error_presta": "Sélectionnez au moins une prestation",
 	"USERSERVICEPREVIEW.error_minimum_basket": "Commande minimum des prestation de {{minimum_basket}}€ requise",
 	"USERSERVICEPREVIEW.error_select_date": "Sélectionnez une date",

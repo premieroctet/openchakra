@@ -116,7 +116,7 @@ class ProfileAbout extends React.Component {
       })
     }).catch(err => console.error(err))
 
-    axios.get(`/myAlfred/api/users/users/${this.props.params.user}`)
+    axios.get(`/myAlfred/api/users/users/${this.props.user}`)
       .then(res => {
         const user = res.data
         if (user.company) {
@@ -448,7 +448,7 @@ class ProfileAbout extends React.Component {
         }
         <Grid className='customalbum' item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Box>
-            <Album user={this.props.params.user}/>
+            <Album user={this.props.user}/>
           </Box>
         </Grid>
       </Grid>
@@ -457,7 +457,7 @@ class ProfileAbout extends React.Component {
 
   render() {
     const {classes}=this.props
-    const {user}=this.props.params
+    const {user}=this.props
     const {showEdition, alfred, company}=this.state
 
     if(!user && alfred) {

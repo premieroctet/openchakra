@@ -56,11 +56,11 @@ class View extends React.Component {
   }
 
   isEdition = () => {
-    return Boolean(this.props.params.id)
+    return Boolean(this.props.id)
   }
 
   componentDidMount() {
-    const id=this.props.params.id
+    const id=this.props.id
     localStorage.setItem('path', Router.pathname)
     if (!id) {
       return
@@ -96,7 +96,7 @@ class View extends React.Component {
       },
     }
     setAxiosAuthentication()
-    const id=this.props.params.id
+    const id=this.props.id
     const action=this.isEdition() ?
       axios.put(`/myAlfred/api/admin/equipment/all/${id}`, formData, config)
       :
