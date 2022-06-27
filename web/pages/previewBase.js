@@ -1,57 +1,56 @@
-const i18n = require('../utils/i18n')
-const {BOOK_STATUS, CESU_DISABLED, MANAGER} = require('../utils/consts')
-import Album from '../components/Album/Album'
 import {Divider, Link} from '@material-ui/core'
-const {
-  getDeadLine,
-  isDateAvailable,
-  isMomentAvailable,
-} = require('../utils/dateutils')
-import {snackBarError} from '../utils/notifications'
-import CustomButton from '../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import React from 'react'
-import Layout from '../hoc/Layout/Layout'
 import Grid from '@material-ui/core/Grid'
 import Router from 'next/router'
 import axios from 'axios'
-import UserAvatar from '../components/Avatar/UserAvatar'
-import ServiceAvatar from '../components/Avatar/ServiceAvatar'
 import Typography from '@material-ui/core/Typography'
-import Schedule from '../components/Schedule/Schedule'
 import Drawer from '@material-ui/core/Drawer'
 import Hidden from '@material-ui/core/Hidden'
-import MapComponent from '../components/map'
 import {registerLocale} from 'react-datepicker'
 import fr from 'date-fns/locale/fr'
 import Head from 'next/head'
-import Topic from '../hoc/Topic/Topic'
-import ListAlfredConditions from '../components/ListAlfredConditions/ListAlfredConditions'
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon'
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
+import ListAlfredConditions from '../components/ListAlfredConditions/ListAlfredConditions'
+import Topic from '../hoc/Topic/Topic'
+import MapComponent from '../components/map'
+import Schedule from '../components/Schedule/Schedule'
+import ServiceAvatar from '../components/Avatar/ServiceAvatar'
+import UserAvatar from '../components/Avatar/UserAvatar'
+import Layout from '../hoc/Layout/Layout'
+import CustomButton from '../components/CustomButton/CustomButton'
+import {snackBarError} from '../utils/notifications'
+import Album from '../components/Album/Album'
 import SummaryCommentary from '../components/SummaryCommentary/SummaryCommentary'
 import DrawerBooking from '../components/Drawer/DrawerBooking/DrawerBooking'
 import LayoutMobile from '../hoc/Layout/LayoutMobile'
 import ListIconsSkills from '../components/ListIconsSkills/ListIconsSkills'
 import CustomListGrades from '../components/CustomListGrades/CustomListGrades'
 import CustomIcon from '../components/CustomIcon/CustomIcon'
-const {setAxiosAuthentication}=require('../utils/authentication')
-const BasePage = require('./basePage')
-const isEmpty = require('../server/validation/is-empty')
-const {computeDistanceKm} = require('../utils/functions')
-const {roundCurrency} = require('../utils/converters')
-const {computeBookingReference} = require('../utils/text')
 const lodash = require('lodash')
 
 const moment = require('moment')
+const {computeBookingReference} = require('../utils/text')
+const {roundCurrency} = require('../utils/converters')
+const {computeDistanceKm} = require('../utils/functions')
+const isEmpty = require('../server/validation/is-empty')
+const {
+  getDeadLine,
+  isDateAvailable,
+  isMomentAvailable,
+} = require('../utils/dateutils')
+const {setAxiosAuthentication}=require('../utils/authentication')
+const {BOOK_STATUS, CESU_DISABLED, MANAGER} = require('../utils/consts')
+const i18n = require('../utils/i18n')
 const {getRole, isLoggedUserAdmin}=require('../utils/context')
 
 moment.locale('fr')
 registerLocale('fr', fr)
 
 // TODO : gérer affichage si utilisateur non connecté
-class PreviewBase extends BasePage {
+class PreviewBase extends React.Component {
   constructor(props, serviceMode) {
     super(props)
     this.serviceMode=serviceMode
@@ -107,7 +106,8 @@ class PreviewBase extends BasePage {
 
   // Converts 'all' to 'main'
   get_prop_address = () => {
-    return (!this.getURLProps().address || this.getURLProps().address=='all') ? 'main' : this.getURLProps().address
+    const {address}=this.props
+    return (!address || address=='all') ? 'main' : address
   }
 
   postLoadData = () => {
@@ -115,7 +115,7 @@ class PreviewBase extends BasePage {
   }
 
   componentDidMount() {
-    const id = this.getURLProps().id
+    const {id} = this.props
 
     setAxiosAuthentication()
 
@@ -1003,8 +1003,7 @@ class PreviewBase extends BasePage {
   }
 
   render() {
-    const {classes} = this.props
-    const {address} = this.getURLProps()
+    const {classes, address} = this.props
     const {user} = this.state
 
     if (!this.state.serviceUser) {

@@ -7,7 +7,7 @@ const PricesList = ({accessRights}) => {
 
   return (
     <>
-      <BaseListTable key={refresh} caption='Liste des prix' endpoint='prices' columns={pricesColumns} accessRights={accessRights}/>
+      <BaseListTable caption='Liste des prix' endpoint='prices' columns={pricesColumns} accessRights={accessRights}/>
     </>
   )
 }
