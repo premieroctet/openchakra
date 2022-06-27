@@ -1,18 +1,18 @@
 import {withTranslation} from 'react-i18next'
-const {setAxiosAuthentication}=require('../../utils/authentication')
-import React from 'react'
-import Checkbox from '@material-ui/core/Checkbox'
-import Grid from '@material-ui/core/Grid'
 import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
-import Router from 'next/router'
-import DashboardLayout from '../../hoc/Layout/DashboardLayout'
-import axios from 'axios'
-import MapComponent from '../../components/map'
-import Select from '@material-ui/core/Select'
+import Checkbox from '@material-ui/core/Checkbox'
+import Grid from '@material-ui/core/Grid'
 import MenuItem from '@material-ui/core/MenuItem'
+import React from 'react'
+import Router from 'next/router'
+import Select from '@material-ui/core/Select'
+import axios from 'axios'
+import DashboardLayout from '../../hoc/Layout/DashboardLayout'
+import LocationSelect from '../../components/Geo/LocationSelect'
+
 const {getLoggedUserId}=require('../../utils/context')
-import AlgoliaPlaces from 'algolia-places-react'
+const {setAxiosAuthentication}=require('../../utils/authentication')
 
 const styles = theme => ({
   signupContainer: {
@@ -84,7 +84,7 @@ class ServicesMap extends React.Component {
         .then(response => {
           const serviceCircles = response.data.map(s => ({
             coordinates: s.service_address.gps,
-            label: `${s.user.firstname}-${s.service.label}`,
+            label: <>{s.user.full_name}<br/>{s.service.label}<br/>{s.service_address.city}</>,
             link: `/userServicePreview?id=${s._id}`,
             service: s.service._id,
           }))
@@ -100,7 +100,7 @@ class ServicesMap extends React.Component {
         .then(response => {
           const userCircles = response.data.map(user => ({
             coordinates: user.billing_address.gps,
-            label: `${user.firstname}`,
+            label: <>{user.full_name}<br/>{user.billing_address.city}</>,
             link: `/viewProfile?id=${user._id}`,
           }))
           this.setState({
@@ -132,27 +132,24 @@ class ServicesMap extends React.Component {
   };
 
   render() {
-    const {classes, t} = this.props
+    const {classes} = this.props
     const {displayedServiceCircles, userCircles, allServices, selectedService, displayUsers, centerLat, centerLon} = this.state
 
     const allCircles = displayUsers ? userCircles.concat(displayedServiceCircles) : displayedServiceCircles
     return (
       <DashboardLayout>
         <Grid style={{width: '100%'}}>
-          <Grid><AlgoliaPlaces
-            placeholder='Centrer sur une ville'
-            style={{color: '#505050'}}
-            options={{
-              appId: 'plKATRG826CP',
-              apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-              language: 'fr',
-              countries: ['fr'],
-              type: 'city',
-            }}
-            onChange={suggestion => this.onChangeCity(suggestion)}
-            onClear={() => this.setState({city: '', gps: null})}
-          /></Grid>
           <Grid style={{display: 'flex', 'align-items': 'center'}}>
+            <h2>Centrer sur une ville</h2>&nbsp;
+            <LocationSelect
+              placeholder='Centrer sur une ville'
+              style={{color: '#505050'}}
+              type='city'
+              onChange={suggestion => this.onChangeCity(suggestion)}
+              onClear={() => this.setState({city: '', gps: null})}
+            /></Grid>
+          <Grid style={{display: 'flex', 'align-items': 'center'}}>
+            <h2>Sélectionner les services</h2>&nbsp;
             <Select
               renderValue={selected => (selected == 'all' ? 'Tous' : selected == 'none' ? 'Aucun' : allServices.filter(s => s._id === selected)[0].label)}
               name={'selectedService'}
@@ -170,11 +167,8 @@ class ServicesMap extends React.Component {
           </Grid>
           <Grid style={{display: 'flex', 'align-items': 'center'}}>
             <Checkbox name={'displayUsers'} checked={this.state.displayUsers} onChange={this.onChange}/>
-            <Typography>Afficher les non-{t('DASHBOARD.alfred')}</Typography>
+            <Typography>Afficher les non-Alfred</Typography>
           </Grid>
-        </Grid>
-        <Grid style={{width: '100%', height: 900}}>
-          <MapComponent position={[centerLat, centerLon]} zoom={6} circles={allCircles}/>
         </Grid>
       </DashboardLayout>
     )

@@ -1,51 +1,47 @@
-const withParams = require('../../components/withParams')
-import Album from '../../components/Album/Album'
-import {isEditableUser} from '../../utils/context'
-import CustomButton from '../../components/CustomButton/CustomButton'
-import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
-import SummaryCommentary from '../../components/SummaryCommentary/SummaryCommentary'
-const {snackBarSuccess} = require('../../utils/notifications')
-const {setAxiosAuthentication}=require('../../utils/authentication')
-import React from 'react'
-import Grid from '@material-ui/core/Grid'
-import ProfileLayout from '../../hoc/Layout/ProfileLayout'
-import About from '../../components/About/About'
-import Presentation from '../../components/Presentation/Presentation'
-import Skills from '../../components/Skills/Skills'
-import Badges from '../../components/Badges/Badges'
-import Hashtags from '../../components/Hashtags/Hashtags'
+import ReactHtmlParser from 'react-html-parser'
 import {withStyles} from '@material-ui/core/styles'
-import styles from '../../static/css/pages/profile/about/about'
-import AskQuestion from '../../components/AskQuestion/AskQuestion'
-import Box from '../../components/Box/Box'
-import LayoutMobileProfile from '../../hoc/Layout/LayoutMobileProfile'
-import axios from 'axios'
-import Typography from '@material-ui/core/Typography'
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline'
-import IconButton from '@material-ui/core/IconButton'
+import CloseIcon from '@material-ui/icons/Close'
 import CreateIcon from '@material-ui/icons/Create'
 import Dialog from '@material-ui/core/Dialog'
 import DialogContent from '@material-ui/core/DialogContent'
-import Topic from '../../hoc/Topic/Topic'
-import AlgoliaPlaces from 'algolia-places-react'
-import MultipleSelect from 'react-select'
-import {COMPANY_ACTIVITY, COMPANY_SIZE, LANGUAGES} from '../../utils/consts'
 import Divider from '@material-ui/core/Divider'
+import Grid from '@material-ui/core/Grid'
+import IconButton from '@material-ui/core/IconButton'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
-import CloseIcon from '@material-ui/icons/Close'
-import {TextField} from '@material-ui/core'
-import FormControl from '@material-ui/core/FormControl'
-import InputLabel from '@material-ui/core/InputLabel'
-import Select from '@material-ui/core/Select'
-import MenuItem from '@material-ui/core/MenuItem'
-import ShowExperience from '../../components/ShowEperience/ShowExperience'
-import ShowDiploma from '../../components/ShowDiploma/ShowDiploma'
-import ShowCertification from '../../components/ShowCertification/ShowCertification'
-import {ABOUT} from '../../utils/i18n'
+import MultipleSelect from 'react-select'
+import React from 'react'
+import Typography from '@material-ui/core/Typography'
+import axios from 'axios'
 import Head from 'next/head'
+import {ABOUT} from '../../utils/i18n'
+import CustomButton from '../../components/CustomButton/CustomButton'
+import withParams from '../../components/withParams'
+import {LANGUAGES} from '../../utils/consts'
+import Album from '../../components/Album/Album'
+import {isEditableUser} from '../../utils/context'
+import About from '../../components/About/About'
+import AskQuestion from '../../components/AskQuestion/AskQuestion'
+import Badges from '../../components/Badges/Badges'
+import Box from '../../components/Box/Box'
+import Hashtags from '../../components/Hashtags/Hashtags'
+import LayoutMobileProfile from '../../hoc/Layout/LayoutMobileProfile'
+import LocationSelect from '../../components/Geo/LocationSelect'
+import Presentation from '../../components/Presentation/Presentation'
+import ProfileLayout from '../../hoc/Layout/ProfileLayout'
+import ShowCertification from '../../components/ShowCertification/ShowCertification'
+import ShowDiploma from '../../components/ShowDiploma/ShowDiploma'
+import ShowExperience from '../../components/ShowEperience/ShowExperience'
+import Skills from '../../components/Skills/Skills'
+import SummaryCommentary from '../../components/SummaryCommentary/SummaryCommentary'
+import Topic from '../../hoc/Topic/Topic'
+import styles from '../../static/css/pages/profile/about/about'
 
 const moment=require('moment')
+
+const {setAxiosAuthentication}=require('../../utils/authentication')
+const {snackBarSuccess} = require('../../utils/notifications')
 
 moment.locale('fr')
 
@@ -225,17 +221,8 @@ class ProfileAbout extends React.Component {
                 </h3>
               </Grid>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
-                <AlgoliaPlaces
-                  key={moment()}
+                <LocationSelect
                   placeholder={placeholder}
-                  options={{
-                    appId: 'plKATRG826CP',
-                    apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                    language: 'fr',
-                    countries: ['fr'],
-                    type: 'address',
-
-                  }}
                   onChange={this.onAddressChanged}
                   onClear={() => this.onAddressChanged(null)}
                 />
