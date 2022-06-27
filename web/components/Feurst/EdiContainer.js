@@ -1,6 +1,7 @@
 import React from 'react'
 import styled, {ThemeProvider} from 'styled-components'
 import {theme, GlobalStyleEdi} from '../../styles/feurst/feurst.theme'
+import {MinGlobalStyles} from '../../styles/MinglobalStyles'
 import {screen} from '../../styles/screenWidths'
 import Header from './Header'
 import Footer from './Footer'
@@ -15,6 +16,7 @@ const EdiContainer = ({accessRights, children}) => {
         <Footer />
       </Skeleton>
       <GlobalStyleEdi />
+      <MinGlobalStyles />
     </ThemeProvider>
   )
 }

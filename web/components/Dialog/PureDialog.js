@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react'
+import React, {useRef} from 'react'
 import {Dialog} from '@headlessui/react'
 import styled from 'styled-components'
 import CloseButton from '../Buttons/CloseButton'
@@ -6,6 +6,7 @@ import CloseButton from '../Buttons/CloseButton'
 const BaseDialog = styled(Dialog)`
   position: fixed;
   inset: 0;
+  z-index: 1101;
   display: flex;
   align-items: center;
   background: rgba(50,50,50,0.8);
