@@ -130,7 +130,7 @@ const Training = ({training}) => {
             <span>de formation</span>
           </li>
           <li>
-            <span>{training?.service?.price.toLocaleString('fr-FR', {style: 'decimal', maximumFractionDigits: 2}) || 899}</span>
+            <span>{training?.prestations[0].price.toLocaleString('fr-FR', {style: 'decimal', maximumFractionDigits: 2}) || 899}</span>
             <span>euros</span>
             <span>Tarif hors dispositif</span>
           </li>
