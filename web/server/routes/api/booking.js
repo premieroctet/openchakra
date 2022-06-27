@@ -430,7 +430,7 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
 
       booking.save()
         .then(booking => {
-          if (booking.user.company_customer && status==BOOK_STATUS.CUSTOMER_PAID) {
+          if (booking.user.company_customer && booking.status==BOOK_STATUS.CUSTOMER_PAID) {
             // Prévenir les admins d'une nouvelle résa
             User.find({is_admin: true}, 'firstname email phone')
               .then(admins => {

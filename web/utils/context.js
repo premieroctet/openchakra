@@ -1,9 +1,9 @@
-const {FEURST_ADMIN} = require('./consts')
 const {isAndroid, isIOS, getUA}=require('react-device-detect')
 const isWebview = require('is-webview')
-const {getAuthToken} = require('./authentication')
 const jwt = require('jsonwebtoken')
 const {HIDE_EMPTY_EVALUATIONS}=require('../mode')
+const {getAuthToken} = require('./authentication')
+const {FEURST_ADMIN} = require('./consts')
 
 const getLoggedUser = () => {
   if (typeof localStorage=='undefined') {

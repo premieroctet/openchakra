@@ -7,6 +7,7 @@ const Company = require('../../models/Company')
 
 const crypto = require('crypto')
 const fs = require('fs').promises
+
 const express = require('express')
 
 const router = express.Router()
@@ -15,6 +16,7 @@ const bcrypt = require('bcryptjs')
 const moment = require('moment')
 const axios = require('axios')
 const gifFrames = require('gif-frames')
+const {getLocationSuggestions}=require('../../../utils/geo')
 
 const {getHostUrl, is_development} = require('../../../config/config')
 const Shop = require('../../models/Shop')
@@ -370,6 +372,8 @@ router.put('/profile/serviceAddress', passport.authenticate('jwt', {session: fal
         note: req.body.note,
         phone_address: req.body.phone,
       }
+      user.service_address.push(address)
+
 
       if (user?.service_address) {
         Object.assign(user.service_address, [...user.service_address, address])
@@ -667,6 +671,7 @@ router.get('/all', (req, res) => {
       console.error(err)
       res.status(404).json({user: 'No users found'})
     })
+    .catch(err => res.status(404).json({user: 'No users found'}))
 })
 
 // @Route GET /myAlfred/api/users/users
@@ -1466,6 +1471,20 @@ if (is_development()) {
   })
 
 }
+
+router.get('/locations', (req, res) => {
+  const value=req.query.value
+  const type=req.query.type
+  getLocationSuggestions(value, type)
+    .then(result => {
+      return res.json(result)
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(500).json('Erreur')
+    })
+})
+
 
 // Create mango client account for all user with no id_mangopay
 // DISABLED because it operates on ALL DATABASES !!

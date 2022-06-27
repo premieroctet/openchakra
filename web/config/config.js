@@ -232,4 +232,5 @@ module.exports = {
   getSibTemplates, checkConfig, getDatabaseUri, hideStoreDialog,
   getDataModel, skipFailedPayment, getSibApiKey, getPort, getExchangeDirectory,
   RANDOM_ID,
+  displayConfig,
 }
