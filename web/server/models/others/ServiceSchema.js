@@ -32,6 +32,8 @@ const ServiceSchema = new Schema({
     alfred: Boolean,
     // Visioconférence
     visio: Boolean,
+    // Visioconférence
+    elearning: Boolean,
   },
   // Frais livraison
   pick_tax: {
