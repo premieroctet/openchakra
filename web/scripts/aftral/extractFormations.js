@@ -27,7 +27,7 @@ const importFile = async fileName => {
     return
   }
 
-  
+
   try {
 
     await fsPromises.readFile(fileName, {encoding: 'utf8'})
@@ -74,13 +74,13 @@ const importFile = async fileName => {
         // const goalsContainer = soup
         //   .findAll('section')
         //   .find(e => e.attrs.class && e.attrs.class.includes('field-name-field-objectifs-de-la-formation'))
-          
+
         // if (goalsContainer) {
         //   const regexp = /Objectifs de la formation/i
         //   const sanitizedGoals = goalsContainer.prettify().replace(regexp, '')
         //   data.goals=sanitizedGoals
         // }
-        
+
         const moreInfo = soup.findAll('div').find(e => e.attrs.class && e.attrs.class.includes('group-ensavoirplus'))
         if (moreInfo) {
           moreInfo.findAll('div').find(e => e.attrs.class && e.attrs.class.includes('toggle-wrap')).extract()
@@ -105,7 +105,7 @@ const importFile = async fileName => {
 
         const video = soup.findAll('iframe').find(v => v.attrs.id === 'youtube-field-player')
         data.video = video?.attrs.src || ''
-      
+
         const program = soup.findAll('a').find(l => l.attrs.class === 'link-telecharger blank_link')
         data.program = program?.attrs.href || ''
 
@@ -117,7 +117,7 @@ const importFile = async fileName => {
           const trainingValidation = trainingValidationZone
             .findAll('span')
             .find(p => p.attrs.class && p.attrs.class.includes('content-info'))
-          
+
           if (trainingValidation) {
             data.validation = trainingValidation.text.trim()
           }
@@ -149,6 +149,7 @@ const importFile = async fileName => {
               {upsert: true, new: true, runValidators: true})
           })
           .then(result => {
+            console.log(`Service ${result.label} créé`)
             service=result
             return Billing.findOne({label: /forfait/i})
               .then(billing => {
@@ -172,6 +173,9 @@ const importFile = async fileName => {
             },
             {upsert: true, runValidators: true})
           })
+          .then(() => {
+            console.log(`ServiceUser associé créé`)
+          })
       })
 
   }
@@ -183,11 +187,12 @@ const importFile = async fileName => {
 
 async function feedDb() {
   const files = fs.readdirSync(folderPath)
-  
+
   for (const file of files) {
     const filenamePath = path.join(folderPath, file)
     await importFile(filenamePath)
   }
+  process.exit(0)
 }
 
 
