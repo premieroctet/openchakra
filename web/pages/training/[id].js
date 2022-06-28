@@ -611,6 +611,10 @@ const StyledTraining = styled.div`
   --bg-color: #f7f7f7;
   --bg-card-color: #39466b;
   --redaftral: #a13849;
+
+  * {
+    font-family: Poppins, 'sans-serif';
+  }
    
   min-height: 100vh;
   background-color: var(--bg-color);
