@@ -77,7 +77,7 @@ const Training = ({training}) => {
     },
   ]
 
-  
+
   const [viewMore, setViewMore] = useState(false)
   const [isOpenDialog, setIsOpenDialog] = useState(false)
 
@@ -86,9 +86,9 @@ const Training = ({training}) => {
     <>
       <Layout>
         <StyledTraining>
-      
+
           <div className="container-xl">
-        
+
             <div className='cover'>
 
               <img
@@ -102,7 +102,7 @@ const Training = ({training}) => {
                 <h1>{training.service?.label}</h1>
                 <button type='button'>Acheter</button>
               </div>
-            
+
               <dl className='training-ref'>
                 <dt>Référence</dt>
                 <dd>{training.service?.reference}</dd>
@@ -111,7 +111,7 @@ const Training = ({training}) => {
                 <dt>&Eacute;ligigle au <abbr title='compte personnel de formation'>CPF</abbr></dt>
                 <dd></dd>
               </dl>
-            
+
             </div>
 
           </div>
@@ -125,7 +125,7 @@ const Training = ({training}) => {
                   <img width={100} height={100} src={`${AFTRAL_ICON_PATH}/diplome.svg`} alt="diplôme" />
                   {training.service?.goals[0] || 'Lorem ipsum dolor sit amet. Cum voluptas temporibus ea blanditiis aliquam ex libero pariatur est deserunt nostrum dolorem voluptate et laborum soluta. Et repellendus expedita ut dolor delectus aut placeat quia a ratione quia et corrupti molestias. ' }
                 </p>
-           
+
                 <p>
                   <img width={60} height={60} src={`${AFTRAL_ICON_PATH}/gestionnaireCompte.svg`} alt="Gestionnaire" />
                   {training.service?.goals[1] || 'Être le gestionnaire de transport d’une entreprise de transport routier de marchandises.'}
@@ -137,8 +137,8 @@ const Training = ({training}) => {
                 </p>
 
               </div>
-          
- 
+
+
             </RoundedBox3items>
 
             <BoxVideoAndDownload>
@@ -185,7 +185,7 @@ const Training = ({training}) => {
               <p className='validation'>{ReactHtmlParser(training.service?.validation)}</p>
 
             </RoundedBox>
-        
+
             <MoreInfo>
               <h2><img width={25} height={25} src={`${AFTRAL_ICON_PATH}/more.svg`} alt=''/>En savoir plus</h2>
 
@@ -193,7 +193,7 @@ const Training = ({training}) => {
                 {ReactHtmlParser(training.service?.more_info)}
               </div>
               <button onClick={() => setViewMore(!viewMore)}><span>{'>'}</span> {!viewMore ? 'en voir plus' : 'réduire'}</button>
-          
+
 
             </MoreInfo>
 
@@ -202,7 +202,7 @@ const Training = ({training}) => {
               <h2><img width={25} height={21} src={`${AFTRAL_ICON_PATH}/opinions.svg`} alt=''/>Avis</h2>
 
               <div className='stateoftheart'>
-            
+
                 <div>
                   <h3>NOTE GENERALE</h3>
                   <p>
@@ -228,24 +228,25 @@ const Training = ({training}) => {
                 )}
 
               </div>
-          
+
               <hr />
 
 
             </Opinions>
-      
+
 
           </div>
-    
-    
+
+
         </StyledTraining>
-    
+
       </Layout>
 
       <BookingDialog title={'Réservation - formation'} open={isOpenDialog}
         onClose={() => setIsOpenDialog(false)} >
 
         <DrawerBooking
+          trainingMode={true}
           serviceUserId={training._id}
           toggleDrawer={toggleDrawer}
         />
@@ -302,10 +303,10 @@ const RoundedBox = styled.div`
       color: var(--redaftral);
       font-size: 2rem;
       margin-inline: var(--spc-4) var(--spc-2);
-    } 
+    }
   }
 
-  
+
 `
 
 const RoundedBox3items = styled(RoundedBox)`
@@ -316,7 +317,7 @@ const RoundedBox3items = styled(RoundedBox)`
     grid-template-columns: 1fr;
     align-items: center;
     text-align: center;
-    
+
     @media (${screen.md}) {
       grid-template-columns: 1fr 1fr 1fr;
     }
@@ -366,7 +367,7 @@ const BoxVideoAndDownload = styled.div`
     }
 
   }
-  
+
   @media (${screen.md}) {
     grid-template-columns: 2fr 1fr;
   }
@@ -389,9 +390,9 @@ const BookingButton = styled.button`
 
 const Stats = styled.div`
   background-color: white;
-  
+
   margin-bottom: var(--spc-8);
-  
+
   ul {
     padding: var(--spc-8);
     display: grid;
@@ -402,11 +403,11 @@ const Stats = styled.div`
 
     @media (${screen.md}) {
       grid-template-columns: 1fr 1fr 1fr;
-      
+
           li:nth-of-type(1) {
             justify-self: flex-start;
           }
-          
+
           li:nth-of-type(3) {
             justify-self: flex-end;
           }
@@ -434,7 +435,7 @@ const Stats = styled.div`
     font-size: var(--text-lg);
   }
 
-  
+
 `
 
 const MoreInfo = styled(RoundedBox)`
@@ -464,7 +465,7 @@ const MoreInfo = styled(RoundedBox)`
     overflow: hidden;
     max-height:40vh;
     overflow: hidden;
-    
+
     &.liberate {
       max-height: 2800px;
       transition: max-height 3s ease-out;
@@ -473,7 +474,7 @@ const MoreInfo = styled(RoundedBox)`
         background: none;
       }
     }
-    
+
     &::after {
       content: '';
       width: 100%;
@@ -484,7 +485,7 @@ const MoreInfo = styled(RoundedBox)`
       top: 0;
     }
   }
-  
+
   .detailsmoreinfo + button {
 
     span {
@@ -532,7 +533,7 @@ const Opinions = styled(RoundedBox)`
     flex-wrap: wrap;
     justify-content: space-around;
     margin-bottom: var(--spc-8);
-    
+
     &>div {
 
       h3 {
@@ -555,26 +556,26 @@ const Opinions = styled(RoundedBox)`
       flex-direction: column-reverse;
     }
 
-    
+
   }
-  
+
   .stars {
     color:  #ffc107;
     font-size: var(--text-2xl);
   }
 
   hr {
-    border:0; 
+    border:0;
     border-bottom: 1px solid silver;
     width: calc(100% - 4rem);
     margin-bottom: var(--spc-8);
   }
-  
+
   .somecomments {
-    
-    
+
+
     .uniqcomment {
-      
+
       width: calc(100% - 4rem);
       margin-inline: auto;
       display: flex;
@@ -584,17 +585,17 @@ const Opinions = styled(RoundedBox)`
       margin-bottom: var(--spc-4);
     }
 
-    
+
     .whoen, .whaow {
       display: flex;
       flex-direction: column;
     }
-    
+
     .whoen {
       font-size: var(--text-base);
       font-weight: bold;
     }
-    
+
     .whaow {
       flex-grow: 2;
       max-width: 80%;
@@ -602,7 +603,7 @@ const Opinions = styled(RoundedBox)`
 
   }
 
-  
+
 
 `
 
@@ -619,12 +620,12 @@ const StyledTraining = styled.div`
   min-height: 100vh;
   background-color: var(--bg-color);
   position: relative;
- 
+
  .container-xl {
   width: min(calc(100vw - 2rem), 70rem);
   margin-inline: auto;
  }
- 
+
  .container-lg {
   width: min(calc(100vw - 2rem), 60rem);
   margin-inline: auto;
@@ -656,7 +657,7 @@ const StyledTraining = styled.div`
     }
   }
 
-  
+
 
   .cover-card {
     display: flex;
@@ -670,8 +671,8 @@ const StyledTraining = styled.div`
     border: 1px solid #fff;
     box-shadow: 0.7rem 1rem 1rem rgba(0,0,0,0.2);
     margin-bottom: var(--spc-4);
-    
-    
+
+
     h1 {
       /* font-size: clamp(var(--text-lg), var(--text-xl)) ; */
       font-size: var(--text-lg) ;
@@ -680,7 +681,7 @@ const StyledTraining = styled.div`
       text-align: center;
       text-transform: uppercase;
     }
-    
+
     button {
       cursor: pointer;
       color: white;
@@ -695,7 +696,7 @@ const StyledTraining = styled.div`
       margin-bottom: var(--spc-2);
     }
   }
-  
+
   .training-ref {
     display: flex;
     justify-content: space-between;
@@ -718,10 +719,10 @@ const StyledTraining = styled.div`
       margin-right: var(--spc-4);
     }
   }
-  
+
 
   @media (${screen.md}) {
-    .cover { 
+    .cover {
       grid-template-columns: 2rem 1fr 1fr 1fr 2rem;
       grid-template-rows: repeat(3, 1fr);
       column-gap: var(--spc-4);
@@ -739,7 +740,7 @@ const StyledTraining = styled.div`
   }
 
   @media (${screen.lg}) {
-    .cover { 
+    .cover {
       grid-template-columns: 2rem 1fr 1fr 1fr 2rem;
       grid-template-rows: repeat(4, 1fr);
       column-gap: var(--spc-4);
@@ -756,7 +757,7 @@ const StyledTraining = styled.div`
       grid-column: 3 / span 2;
     }
   }
- 
+
 
 `
 

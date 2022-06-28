@@ -28,7 +28,6 @@ import {
   isDateAvailable,
   isMomentAvailable,
 } from '../../../utils/dateutils'
-import DevLog from '../../DevLog'
 import {useUserContext} from '../../../contextes/user.context'
 import {computeDistanceKm} from '../../../utils/functions'
 import {snackBarError} from '../../../utils/notifications'
@@ -47,6 +46,7 @@ moment.locale('fr')
 const DrawerBooking = ({classes, t, serviceUserId,
   onAvocotesBookingChange: onAvocotesBookingChangeExternal,
   toggleDrawer,
+  trainingMode,
 }) => {
 
   const [serviceUser, setServiceUser]=useState(null)
@@ -81,6 +81,13 @@ const DrawerBooking = ({classes, t, serviceUserId,
     })
     setPricedPrestations(pricedPrestas)
   }, [count])
+
+  // Select the only prestation in case of training
+  useEffect(() => {
+    if (trainingMode && serviceUser) {
+      setCount({[serviceUser.prestations[0]._id]: 1})
+    }
+  }, [trainingMode, serviceUser])
 
   useEffect(() => {
     if (serviceUserId && !serviceUser) {
@@ -175,10 +182,15 @@ const DrawerBooking = ({classes, t, serviceUserId,
       locations.visio=`En visio`
     }
     if (serviceUser.location.elearning) {
-      locations.alfred=`En e-learning`
+      locations.elearning=`En e-learning`
     }
     setLocations(locations)
-  }, [serviceUser, avocotesBooking])
+    // Force location if only one possibility
+    const locationsKeys=Object.keys(locations)
+    if (locationsKeys.length==1) {
+      setLocation(locationsKeys[0])
+    }
+  }, [serviceUser, avocotesBooking, user])
 
   const onBookingDateChange = dt => {
     setBookingDate(dt)
@@ -353,7 +365,9 @@ const DrawerBooking = ({classes, t, serviceUserId,
     setExpanded(isExpanded ? panel : false)
   }
 
-  const canChangeQuantity = !avocotesBooking
+  // Training can not change prestation quantity
+  const canChangeQuantity = !avocotesBooking && !trainingMode
+
   const selectedPresta = prestations => {
     const use_cesu=['Mandatory', 'Optional'].includes(shop?.cesu)
 
@@ -448,11 +462,6 @@ const DrawerBooking = ({classes, t, serviceUserId,
   const filters=lodash.groupBy(serviceUser.prestations, p => p.prestation.filter_presentation?.label ||'')
   const res = (
     <Grid>
-      {false &&<DevLog>{JSON.stringify(locations)}
-      Perim: {serviceUser?.perimeter}
-      Location:{location}
-      BookingDate:{JSON.stringify(bookingDate)}
-      </DevLog>}
       {
         warnings.length>0 &&
             <Grid className={classes.userServicePreviewWarningContainer}>
@@ -477,6 +486,7 @@ const DrawerBooking = ({classes, t, serviceUserId,
                 </IconButton>
               </Grid>
             </Grid>
+            {/** TODO RPA expand date component in training mode */}
             <Grid style={{marginTop: '5%'}}>
               <Grid style={{padding: '10px 16px', display: 'flex', alignItems: 'center', border: '1px solid rgba(112,112,112,0.5)', borderRadius: 14, width: '100%'}}>
                 <Grid style={{width: '50%'}}>
@@ -503,40 +513,43 @@ const DrawerBooking = ({classes, t, serviceUserId,
                     }}
                   />
                 </Grid>
-                <Divider style={{height: 28, margin: 4}} orientation='vertical' />
-                <Grid style={{width: '50%', marginLeft: '3%'}}>
-                  <TextField
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    InputProps={{
-                      inputComponent: () => {
-                        return (
-                          <DatePicker
-                            selected={bookingDate}
-                            onChange={onBookingDateChange}
-                            showTimeSelect
-                            showTimeSelectOnly
-                            timeIntervals={30}
-                            timeCaption='Heure'
-                            placeholderText={ReactHtmlParser(t('DRAWER_BOOKING.hours'))}
-                            dateFormat='HH:mm'
-                            locale='fr'
-                            className={classes.datePickerStyle}
-                            excludeTimes={excludedTimes}
-                          />
-                        )
-                      },
-                      disableUnderline: true,
-                    }}
-                  />
-                </Grid>
+                {/** Hide time in training mode */}
+                {!trainingMode && <><Divider style={{height: 28, margin: 4}} orientation='vertical' />
+                  <Grid style={{width: '50%', marginLeft: '3%'}}>
+                    <TextField
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      InputProps={{
+                        inputComponent: () => {
+                          return (
+                            <DatePicker
+                              selected={bookingDate}
+                              onChange={onBookingDateChange}
+                              showTimeSelect
+                              showTimeSelectOnly
+                              timeIntervals={30}
+                              timeCaption='Heure'
+                              placeholderText={ReactHtmlParser(t('DRAWER_BOOKING.hours'))}
+                              dateFormat='HH:mm'
+                              locale='fr'
+                              className={classes.datePickerStyle}
+                              excludeTimes={excludedTimes}
+                            />
+                          )
+                        },
+                        disableUnderline: true,
+                      }}
+                    />
+                  </Grid>
+                </>}
               </Grid>
             </Grid>
             <Grid>
               <em className={classes.cancelButton}>{errors.datetime}</em>
             </Grid>
           </Grid>
+          {!trainingMode && // Hide prestation slection in training mode
           <Grid style={{marginBottom: 30}}>
             <Accordion classes={{root: `customdrawerbookaccordion ${classes.rootAccordion}`}} expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
               <AccordionSummary
@@ -568,6 +581,7 @@ const DrawerBooking = ({classes, t, serviceUserId,
               <em className={classes.cancelButton}>{errors.prestations}</em>
             </Grid>
           </Grid>
+          }
           <Grid style={{marginBottom: 30}}>
             <Accordion classes={{root: `customdrawerbookaccordion ${classes.rootAccordion}`}} expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
               <AccordionSummary
