@@ -56,6 +56,10 @@ const Training = ({training}) => {
   const globalNote = Number(4.4).toPrecision(2)
   const maxNote = 5
 
+  const [viewMore, setViewMore] = useState(false)
+  const [isOpenDialog, setIsOpenDialog] = useState(false)
+  const [allComments, setAllComments] = useState(false)
+
   const someComments = [
     {
       name: 'Wil',
@@ -70,16 +74,26 @@ const Training = ({training}) => {
       comment: `Magique. Du pur bonheur. Le formateur nous a enchanté 🦄`,
     },
     {
-      name: 'Marion',
+      name: 'Seb',
       date: '30/12/2021',
+      rating: 5,
+      comment: `Clair, concis, au top !`,
+    },
+    {
+      name: 'Rick',
+      date: '28/11/2021',
+      rating: 4,
+      comment: `M'a permis de progresser rapidement par la suite !`,
+    },
+    {
+      name: 'Marion',
+      date: '26/11/2021',
       rating: 3.2,
-      comment: `Si j'avais su, j'aurais pas venu.`,
+      comment: `Je ne m'attendais à rien, mais je suis quand même déçue.`,
     },
   ]
 
-
-  const [viewMore, setViewMore] = useState(false)
-  const [isOpenDialog, setIsOpenDialog] = useState(false)
+  const commentsToDisplay = allComments ? someComments : someComments.slice(0, 3)
 
 
   return (
@@ -144,7 +158,15 @@ const Training = ({training}) => {
             <BoxVideoAndDownload>
               <RoundedBox>
                 <h2><img width={25} height={14} src={`${AFTRAL_ICON_PATH}/video.svg`} alt=''/>Vidéo</h2>
-                <iframe width="560" height="315" src={training.service?.video} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+                <iframe
+                  width="560"
+                  height="315"
+                  src={training.service?.video}
+                  title="YouTube video player"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                >
                 </iframe>
               </RoundedBox>
               <RoundedBox>
@@ -159,7 +181,7 @@ const Training = ({training}) => {
 
           <BookingButton onClick={() => setIsOpenDialog(true)}>Réserver cette formation</BookingButton>
 
-          <Stats>
+          <Figures>
             <ul>
               <li>
                 <span>{training.service?.duration_hours}</span>
@@ -177,7 +199,7 @@ const Training = ({training}) => {
                 <span>par le CPF</span>
               </li>
             </ul>
-          </Stats>
+          </Figures>
 
           <div className='container-lg'>
             <RoundedBox>
@@ -219,9 +241,9 @@ const Training = ({training}) => {
 
               <hr />
 
-              <div className='somecomments'>
+              <div className={`somecomments ${allComments ? 'liberate' : ''}`} >
 
-                {someComments.map((el, i) => <div className='uniqcomment' key={`comment${i}`}>
+                {commentsToDisplay.map((el, i) => <div className='uniqcomment' key={`comment${i}`}>
                   <div className='whoen'><span>{el.name}</span> <span>{el.date}</span></div>
                   <div className='whaow'><Stars rating={el.rating} max={maxNote} /> {el.comment}</div>
                 </div>,
@@ -230,6 +252,15 @@ const Training = ({training}) => {
               </div>
 
               <hr />
+              
+              <button
+                onClick={() => setAllComments(!allComments)}
+              >{
+                  allComments
+                    ? 'Cacher tous les commentaires '
+                    : 'Afficher tous les commentaires >'
+                }
+              </button>
 
 
             </Opinions>
@@ -388,7 +419,7 @@ const BookingButton = styled.button`
   padding: var(--spc-8) var(--spc-4);
 `
 
-const Stats = styled.div`
+const Figures = styled.div`
   background-color: white;
 
   margin-bottom: var(--spc-8);
@@ -464,7 +495,6 @@ const MoreInfo = styled(RoundedBox)`
     transition: max-height 0.3s ease-out;
     overflow: hidden;
     max-height:40vh;
-    overflow: hidden;
 
     &.liberate {
       max-height: 2800px;
@@ -556,7 +586,6 @@ const Opinions = styled(RoundedBox)`
       flex-direction: column-reverse;
     }
 
-
   }
 
   .stars {
@@ -573,6 +602,13 @@ const Opinions = styled(RoundedBox)`
 
   .somecomments {
 
+    overflow: hidden;
+    max-height:300px;
+    transition: all 1s ease-in-out;
+    
+    &.liberate {
+      max-height: 2800px;
+    }
 
     .uniqcomment {
 
@@ -599,11 +635,19 @@ const Opinions = styled(RoundedBox)`
     .whaow {
       flex-grow: 2;
       max-width: 80%;
+      hyphens: auto;
     }
 
   }
 
-
+  button {
+    margin-left: var(--spc-8);
+    font-size: var(--text-base);
+    font-weight: bold;
+    background: none;
+    cursor: pointer;
+    border: 0;
+  }
 
 `
 
@@ -613,6 +657,10 @@ const StyledTraining = styled.div`
   --bg-card-color: #39466b;
   --redaftral: #a13849;
 
+  * {
+    font-family: Poppins, 'sans-serif';
+  }
+   
   min-height: 100vh;
   background-color: var(--bg-color);
   position: relative;
@@ -652,8 +700,6 @@ const StyledTraining = styled.div`
       grid-row: 1 / -1;
     }
   }
-
-
 
   .cover-card {
     display: flex;
