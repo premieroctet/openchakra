@@ -13,11 +13,12 @@ import Typography from '@material-ui/core/Typography'
 import CloseIcon from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
 import {isAndroid} from 'react-device-detect'
+import {PART} from '../utils/consts'
+import ServiceTopic from '../components/HomePage/Service/ServiceTopic'
 import ResaService from '../components/HomePage/ResaService/ResaService'
 import TrustAndSecurity from '../hoc/Layout/TrustAndSecurity/TrustAndSecurity'
 import MobileNavbar from '../hoc/Layout/NavBar/MobileNavbar'
 import NewsLetter from '../components/HomePage/NewsLetter/NewsLetter'
-import {PRO, PART} from '../utils/consts'
 import OurAlfred from '../components/HomePage/OurAlfred/OurAlfred'
 import CategoryTopic from '../components/HomePage/Category/CategoryTopic'
 import BannerPresentation from '../components/HomePage/BannerPresentation/BannerPresentation'
@@ -33,7 +34,6 @@ import {
 } from '../utils/context'
 import {hideStoreDialog} from '../config/config'
 import RandomBanner from '../components/RandomBanner/RandomBanner'
-import {INDEX} from '../utils/i18n'
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props

@@ -12,6 +12,7 @@ const ServiceUserSchema = new Schema({
   service: {
     type: Schema.Types.ObjectId,
     ref: 'service',
+    required: true,
   },
   prestations: [{
     prestation: {

@@ -145,7 +145,9 @@ const importFile = async fileName => {
           .then(category => {
 
             return Service.findOneAndUpdate({label: data.label, category: category._id},
-              {...data, category: category._id, picture: imgUrl},
+              {...data, category: category._id, picture: imgUrl,
+                particular_access: true, professional_access: true,
+              },
               {upsert: true, new: true, runValidators: true})
           })
           .then(result => {
@@ -155,15 +157,17 @@ const importFile = async fileName => {
               .then(billing => {
                 return Prestation.findOneAndUpdate(
                   {service: service._id},
-                  {label: 'Session de formation', billing: [billing]},
+                  {label: 'Session de formation', billing: [billing],
+                    particular_access: true, professional_access: true},
                   {upsert: true, new: true, runValidators: true},
                 )
               })
           })
           .then(prestation => {
             const price=lodash.random(600, 1000)
-            return ServiceUser.findOneAndUpdate({service: prestation.service._id}, {
+            return ServiceUser.findOneAndUpdate({service: service._id}, {
               user: user,
+              service: service,
               particular_access: true,
               professional_access: true,
               service_address: user.billing_address,
