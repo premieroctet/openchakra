@@ -7,6 +7,7 @@ import Layout from '../../hoc/Layout/Layout'
 import {screen} from '../../styles/screenWidths'
 import {getHostUrl} from '../../config/config'
 import DrawerBooking from '../../components/Drawer/DrawerBooking/DrawerBooking'
+import PureDialog from '../../components/Dialog/PureDialog'
 
 
 const Stars = ({rating, max}) => {
@@ -77,6 +78,7 @@ const Training = ({training}) => {
 
 
   const [viewMore, setViewMore] = useState(false)
+  const [isOpenDialog, setIsOpenDialog] = useState(false)
 
 
   return (<Layout>
@@ -109,11 +111,11 @@ const Training = ({training}) => {
 
         </div>
 
-      </div>
+          </div>
 
-      <div className="container-lg">
-        <RoundedBox3items>
-          <h2><img width={20} height={16} src={`${AFTRAL_ICON_PATH}/arrow.svg`} alt=''/>Objectif de la formation</h2>
+          <div className="container-lg">
+            <RoundedBox3items>
+              <h2><img width={20} height={16} src={`${AFTRAL_ICON_PATH}/arrow.svg`} alt=''/>Objectif de la formation</h2>
 
           <div>
             <p>
@@ -126,108 +128,119 @@ const Training = ({training}) => {
               {training.service?.goals[1] || 'Être le gestionnaire de transport d’une entreprise de transport routier de marchandises.'}
             </p>
 
-            <p>
-              <img width={60} height={60} src={`${AFTRAL_ICON_PATH}/camion.svg`} alt="véhicule léger" />
+                <p>
+                  <img width={60} height={60} src={`${AFTRAL_ICON_PATH}/camion.svg`} alt="véhicule léger" />
               Utiliser exclusivement des véhicules n’excédant pas un poids maximum autorisé de 3,5 tonnes.
-            </p>
+                </p>
+
+              </div>
+
+
+            </RoundedBox3items>
+
+            <BoxVideoAndDownload>
+              <RoundedBox>
+                <h2><img width={25} height={14} src={`${AFTRAL_ICON_PATH}/video.svg`} alt=''/>Vidéo</h2>
+                <iframe width="560" height="315" src={training.service?.video} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+                </iframe>
+              </RoundedBox>
+              <RoundedBox>
+                <a href={training.service?.program} className='download'>
+                  <img width={100} height={100} src={`${AFTRAL_ICON_PATH}/download.svg`} alt=''/>
+                  <span>Télécharger</span>
+                  <span>le programme complet</span>
+                </a>
+              </RoundedBox>
+            </BoxVideoAndDownload>
+          </div>
+
+          <BookingButton onClick={() => setIsOpenDialog(true)}>Réserver cette formation</BookingButton>
+
+          <Stats>
+            <ul>
+              <li>
+                <span>{training.service?.duration_hours}</span>
+                <span>heures</span>
+                <span>de formation</span>
+              </li>
+              <li>
+                <span>{training?.prestations[0].price.toLocaleString('fr-FR', {style: 'decimal', maximumFractionDigits: 2}) || 899}</span>
+                <span>euros</span>
+                <span>Tarif hors dispositif</span>
+              </li>
+              <li>
+                <span>100%</span>
+                <span>pris en charge</span>
+                <span>par le CPF</span>
+              </li>
+            </ul>
+          </Stats>
+
+          <div className='container-lg'>
+            <RoundedBox>
+              <h2><img width={21} height={29} src={`${AFTRAL_ICON_PATH}/valid.svg`} alt=''/>Validation du parcours</h2>
+              <p className='validation'>{ReactHtmlParser(training.service?.validation)}</p>
+
+            </RoundedBox>
+
+            <MoreInfo>
+              <h2><img width={25} height={25} src={`${AFTRAL_ICON_PATH}/more.svg`} alt=''/>En savoir plus</h2>
+
+              <div className={`detailsmoreinfo ${viewMore ? 'liberate' : ''}`}>
+                {ReactHtmlParser(training.service?.more_info)}
+              </div>
+              <button onClick={() => setViewMore(!viewMore)}><span>{'>'}</span> {!viewMore ? 'en voir plus' : 'réduire'}</button>
+
+
+            </MoreInfo>
+
+            <Opinions>
+
+              <h2><img width={25} height={21} src={`${AFTRAL_ICON_PATH}/opinions.svg`} alt=''/>Avis</h2>
+
+              <div className='stateoftheart'>
+
+                <div>
+                  <h3>NOTE GENERALE</h3>
+                  <p>
+                    <span>{globalNote.toLocaleString()}</span>
+                    <Stars rating={globalNote} max={maxNote} />
+                  </p>
+                </div>
+
+                <div>
+                  <h3>Commentaires</h3>
+                  <p>{'10'}</p>
+                </div>
+              </div>
+
+              <hr />
+
+              <div className='somecomments'>
+
+                {someComments.map((el, i) => <div className='uniqcomment' key={`comment${i}`}>
+                  <div className='whoen'><span>{el.name}</span> <span>{el.date}</span></div>
+                  <div className='whaow'><Stars rating={el.rating} max={maxNote} /> {el.comment}</div>
+                </div>,
+                )}
+
+              </div>
+
+              <hr />
+
+
+            </Opinions>
+
 
           </div>
 
 
-        </RoundedBox3items>
+        </StyledTraining>
 
-        <BoxVideoAndDownload>
-          <RoundedBox>
-            <h2><img width={25} height={14} src={`${AFTRAL_ICON_PATH}/video.svg`} alt=''/>Vidéo</h2>
-            <iframe width="560" height="315" src={training.service?.video} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-            </iframe>
-          </RoundedBox>
-          <RoundedBox>
-            <a href={training.service?.program} className='download'>
-              <img width={100} height={100} src={`${AFTRAL_ICON_PATH}/download.svg`} alt=''/>
-              <span>Télécharger</span>
-              <span>le programme complet</span>
-            </a>
-          </RoundedBox>
-        </BoxVideoAndDownload>
-      </div>
+      </Layout>
 
-      <BookingButton>Réserver cette formation</BookingButton>
-
-      <Stats>
-        <ul>
-          <li>
-            <span>{training.service?.duration_hours}</span>
-            <span>heures</span>
-            <span>de formation</span>
-          </li>
-          <li>
-            <span>{training?.prestations[0].price.toLocaleString('fr-FR', {style: 'decimal', maximumFractionDigits: 2}) || 899}</span>
-            <span>euros</span>
-            <span>Tarif hors dispositif</span>
-          </li>
-          <li>
-            <span>100%</span>
-            <span>pris en charge</span>
-            <span>par le CPF</span>
-          </li>
-        </ul>
-      </Stats>
-
-      <div className='container-lg'>
-        <RoundedBox>
-          <h2><img width={21} height={29} src={`${AFTRAL_ICON_PATH}/valid.svg`} alt=''/>Validation du parcours</h2>
-          <p className='validation'>{ReactHtmlParser(training.service?.validation)}</p>
-
-        </RoundedBox>
-
-        <MoreInfo>
-          <h2><img width={25} height={25} src={`${AFTRAL_ICON_PATH}/more.svg`} alt=''/>En savoir plus</h2>
-
-          <div className={`detailsmoreinfo ${viewMore ? 'liberate' : ''}`}>
-            {ReactHtmlParser(training.service?.more_info)}
-          </div>
-          <button onClick={() => setViewMore(!viewMore)}><span>{'>'}</span> {!viewMore ? 'en voir plus' : 'réduire'}</button>
-
-
-        </MoreInfo>
-
-        <Opinions>
-
-          <h2><img width={25} height={21} src={`${AFTRAL_ICON_PATH}/opinions.svg`} alt=''/>Avis</h2>
-
-          <div className='stateoftheart'>
-
-            <div>
-              <h3>NOTE GENERALE</h3>
-              <p>
-                <span>{globalNote.toLocaleString()}</span>
-                <Stars rating={globalNote} max={maxNote} />
-              </p>
-            </div>
-
-            <div>
-              <h3>Commentaires</h3>
-              <p>{'10'}</p>
-            </div>
-          </div>
-
-          <hr />
-
-          <div className='somecomments'>
-
-            {someComments.map((el, i) => <div className='uniqcomment' key={`comment${i}`}>
-              <div className='whoen'><span>{el.name}</span> <span>{el.date}</span></div>
-              <div className='whaow'><Stars rating={el.rating} max={maxNote} /> {el.comment}</div>
-            </div>,
-            )}
-
-          </div>
-
-          <hr />
-
-
-        </Opinions>
+      <BookingDialog title={'Réservation - formation'} open={isOpenDialog}
+        onClose={() => setIsOpenDialog(false)} >
 
         <DrawerBooking
           trainingMode={true}
@@ -235,12 +248,8 @@ const Training = ({training}) => {
           toggleDrawer={toggleDrawer}
         />
 
-      </div>
-
-
-    </StyledTraining>
-
-  </Layout>
+      </BookingDialog>
+    </>
   )
 }
 
@@ -255,6 +264,22 @@ export async function getServerSideProps(context) {
 
   return {props: {training}}
 }
+
+const BookingDialog = styled(PureDialog)`
+
+h2 {
+  text-align: center;
+  color: var(--black);
+  margin-bottom: var(--spc-8);
+}
+
+.dialogcontent {
+  width: min(calc(100% - 2rem), 45rem);
+  background-color: #fff;
+  padding: var(--spc-10);
+  border-radius: var(--rounded-2xl)
+}
+`
 
 
 const RoundedBox = styled.div`
@@ -298,7 +323,7 @@ const RoundedBox3items = styled(RoundedBox)`
   p {
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: 100px 1fr;
     justify-items: center;
     row-gap: var(--spc-2);
     height: 100%;
@@ -581,23 +606,9 @@ const Opinions = styled(RoundedBox)`
 
 const StyledTraining = styled.div`
 
-   --bg-color: #f7f7f7;
-   --bg-card-color: #39466b;
-   --black: #111;
-   --spc-2: 0.5rem;
-   --spc-3: 0.75rem;
-   --spc-4: 1rem;
-   --spc-8: 2rem;
-   --text-base: 1rem;
-   --text-lg: 1.125rem;
-   --text-xl: 1.32rem;
-   --text-2xl: 1.5rem;
-   --text-4xl: 2.25rem;
-   --redaftral: #a13849;
-   --rounded-xl: 0.75rem;
-   --rounded-2xl: 1rem;
-   --rounded-3xl: 1.5rem;
-   --font-bold: 700;
+  --bg-color: #f7f7f7;
+  --bg-card-color: #39466b;
+  --redaftral: #a13849;
 
   min-height: 100vh;
   background-color: var(--bg-color);

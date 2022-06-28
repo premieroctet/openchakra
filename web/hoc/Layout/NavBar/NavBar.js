@@ -117,12 +117,10 @@ class NavBar extends Component {
   isLoggedUser = () => {
     const {user} = this.context
     const logged=!!user
-    console.log(`Logged:${logged}`)
     return logged
   }
 
   componentDidMount() {
-    console.log(`Did mount`)
     let query = Router.query
     if (Router.pathname === '/') {
       this.setState({ifHomePage: true})
