@@ -1,3 +1,4 @@
+
 import axios from 'axios'
 import Router from 'next/router'
 import ReactHtmlParser from 'react-html-parser'
@@ -21,7 +22,8 @@ import AddIcon from '@material-ui/icons/Add'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import withStyles from '@material-ui/core/styles/withStyles'
-import {BOOK_STATUS} from '../../../utils/others/consts'
+import DevLog from '../../DevLog'
+import {BOOK_STATUS} from '../../../utils/consts'
 import {computeBookingReference} from '../../../utils/text'
 import {
   getDeadLine,
@@ -248,6 +250,7 @@ const DrawerBooking = ({classes, t, serviceUserId,
       prestations: prestations,
       travel_tax: prices.travel_tax,
       pick_tax: prices.pick_tax,
+      cpf_amount: prices.cpf_amount,
       cesu_amount: prices.cesu_total,
       customer_fee: prices.customer_fee,
       provider_fee: prices.provider_fee,
@@ -460,7 +463,7 @@ const DrawerBooking = ({classes, t, serviceUserId,
   }
 
   const filters=lodash.groupBy(serviceUser.prestations, p => p.prestation.filter_presentation?.label ||'')
-  const res = (
+  return (
     <Grid>
       {
         warnings.length>0 &&
@@ -729,8 +732,6 @@ const DrawerBooking = ({classes, t, serviceUserId,
       </Grid>
     </Grid>
   )
-  return res
-
 }
 
 export default withTranslation('custom', {withRef: true})(withStyles(styles)(DrawerBooking))

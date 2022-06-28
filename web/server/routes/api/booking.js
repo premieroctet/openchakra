@@ -311,7 +311,6 @@ router.get('/:id', (req, res) => {
     .populate('user', '-id_card')
     .populate('prestation')
     .populate('equipments')
-    .populate('service')
     .populate({path: 'customer_booking', populate: {path: 'user'}})
     .lean({virtuals: true})
     .then(booking => {

@@ -231,9 +231,9 @@ class ConfirmPayment extends React.Component {
 
   render() {
     const {classes} = this.props
-    const {currentUser, activeStep} = this.state
+    const {currentUser, activeStep, bookingObj} = this.state
 
-    if (!currentUser) {
+    if (!currentUser || !bookingObj) {
       return null
     }
     return (

@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
 const lodash=require('lodash')
+const {ROLES}=require('../../../utils/others/consts')
+const {BOOK_STATUS}=require('../../../utils/consts')
 const AddressSchema =require('../AddressSchema')
-const {BOOK_STATUS, ROLES} = require('../../../utils/consts')
 
 const Schema = mongoose.Schema
 
@@ -127,6 +128,10 @@ const BookingSchema = new Schema({
   },
   date_payment: {
     type: Date,
+  },
+  cpf_amount: {
+    type: Number,
+    required: false,
   },
   travel_tax: {
     type: Number,

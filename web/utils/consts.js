@@ -1,11 +1,8 @@
 const crypto = require('crypto')
-const {getDataModel} = require('../config/config')
 
 const API_PATH = '/myAlfred/api'
 
 const ALL_SERVICES = ['Tous les services', null]
-
-const PLUGIN_CONSTS=require(`./${getDataModel()}/consts`)
 
 const ALF_CONDS = { // my alfred condiitons
   BASIC: '0',
@@ -22,6 +19,19 @@ const CANCEL_MODE = {
 
 const CUSTOM_PRESTATIONS_FLTR = 'Prestations personnalisées'
 const COMPANY_PRIVATE_FLTR = 'Prestations entreprise'
+
+const BOOK_STATUS= {
+  CONFIRMED: 'Confirmée',
+  REFUSED: 'Refusée',
+  CANCELLED: 'Annulée',
+  FINISHED: 'Terminée',
+  EXPIRED: 'Expirée',
+  TO_CONFIRM: 'En attente de confirmation',
+  TO_PAY: 'En attente de paiement',
+  INFO: "Demande d'infos",
+  PREAPPROVED: 'Pré-approuvée',
+  CUSTOMER_PAID: 'Payée par le client',
+}
 
 const generate_id = () => {
   return crypto.randomBytes(20).toString('hex')
@@ -205,7 +215,5 @@ module.exports = {
   IMAGE_EXTENSIONS, TEXT_EXTENSIONS, INSURANCE_TYPES,
   REVIEW_STATUS, COMMISSION_SOURCE, TRANSACTION_CREATED, TRANSACTION_FAILED,
   TRANSACTION_SUCCEEDED, CESU_MANDATORY, CESU_OPTIONAL, CESU_DISABLED,
-  CPF_RATE, ...PLUGIN_CONSTS, XL_EXTENSIONS,
-  ...PLUGIN_CONSTS, API_PATH,
-
+  CPF_RATE, XL_EXTENSIONS, API_PATH, BOOK_STATUS,
 }

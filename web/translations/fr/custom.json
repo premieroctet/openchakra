@@ -561,6 +561,7 @@
 	"DRAWER_BOOKING.delivery": "Retrait & livraison",
 	"DRAWER_BOOKING.display_details": "Afficher les détails",
 	"DRAWER_BOOKING.resa_avc": "Réservation AvoCotés pour ",
+	"BOOKING_DETAIL.cpf_amount": "Prise en charge CPF",
 	"DRAWER_BOOKING.resa_button": "Réserver",
 	"DRAWER_BOOKING.next_step_paiment": "Choix du paiement à l'étape suivante",
 	"DRAWER_BOOKING.button_info": "Demande d'informations",

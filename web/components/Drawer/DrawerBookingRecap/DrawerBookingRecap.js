@@ -1,4 +1,3 @@
-import CustomButton from '../../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -7,12 +6,13 @@ import Typography from '@material-ui/core/Typography'
 import AccordionSummary from '@material-ui/core/AccordionSummary'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import AccordionDetails from '@material-ui/core/AccordionDetails'
-import BookingDetail from '../../BookingDetail/BookingDetail'
 import Accordion from '@material-ui/core/Accordion'
-import styles from '../../../static/css/components/DrawerBookingRecap/DrawerBookingRecap'
 import withStyles from '@material-ui/core/styles/withStyles'
 import moment from 'moment'
 import Divider from '@material-ui/core/Divider'
+import styles from '../../../static/css/components/DrawerBookingRecap/DrawerBookingRecap'
+import BookingDetail from '../../BookingDetail/BookingDetail'
+import CustomButton from '../../CustomButton/CustomButton'
 import {DRAWER_BOOKING_RECAP} from '../../../utils/i18n'
 
 moment.locale('fr')
@@ -41,7 +41,7 @@ class DrawerBookingRecap extends React.Component {
           </Grid>
           <Grid>
             <Grid>
-              <Typography>{bookingObj.service.label}
+              <Typography>{bookingObj.service}
                 {!bookingObj.is_service && `par ${alfred?.firstname}}`}
               </Typography>
             </Grid>
@@ -70,7 +70,7 @@ class DrawerBookingRecap extends React.Component {
                     id="panel1a-header"
                     style={{padding: 0}}
                   >
-                    <Typography>{bookingObj.service.label}</Typography>
+                    <Typography>{bookingObj.service}</Typography>
                   </AccordionSummary>
                   <AccordionDetails style={{display: 'flex', flexDirection: 'column', paddingRight: 0, paddingLeft: 0}}>
                     <Grid style={{
