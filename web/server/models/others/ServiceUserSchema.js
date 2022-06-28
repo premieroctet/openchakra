@@ -52,7 +52,7 @@ const ServiceUserSchema = new Schema({
         lng: Number,
       },
     },
-    required: true,
+    required: false,
   },
   perimeter: {
     type: Number,
