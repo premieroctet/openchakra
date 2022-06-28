@@ -170,7 +170,7 @@ const importFile = async fileName => {
               service: service,
               particular_access: true,
               professional_access: true,
-              service_address: user.billing_address,
+              service_address: null,
               location: {elearning: true},
               prestations: [{prestation: prestation._id, price: price, billing: prestation.billing[0]}],
               perimeter: 1000,
