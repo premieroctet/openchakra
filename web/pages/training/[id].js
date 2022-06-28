@@ -1,4 +1,5 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
+import {useRouter} from 'next/router'
 import styled from 'styled-components'
 // import {client} from '../../utils/client'
 import axios from 'axios'
@@ -81,35 +82,37 @@ const Training = ({training}) => {
   const [isOpenDialog, setIsOpenDialog] = useState(false)
 
 
-  return (<Layout>
-    <StyledTraining>
+  return (
+    <>
+      <Layout>
+        <StyledTraining>
 
-      <div className="container-xl">
+          <div className="container-xl">
 
-        <div className='cover'>
+            <div className='cover'>
 
-          <img
-            src={training.service?.picture}
-            alt='cover'
-            width={600}
-            height={200}
-          />
+              <img
+                src={training.service?.picture}
+                alt='cover'
+                width={600}
+                height={200}
+              />
 
-          <div className='cover-card'>
-            <h1>{training.service?.label}</h1>
-            <button type='button'>Acheter</button>
-          </div>
+              <div className='cover-card'>
+                <h1>{training.service?.label}</h1>
+                <button type='button'>Acheter</button>
+              </div>
 
-          <dl className='training-ref'>
-            <dt>Référence</dt>
-            <dd>{training.service?.reference}</dd>
-            <dt>Durée de la formation</dt>
-            <dd>{training.service?.duration_days} {training?.duration_days && training.duration_days > 1 ? 'jours' : 'jour'}</dd>
-            <dt>&Eacute;ligigle au <abbr title='compte personnel de formation'>CPF</abbr></dt>
-            <dd></dd>
-          </dl>
+              <dl className='training-ref'>
+                <dt>Référence</dt>
+                <dd>{training.service?.reference}</dd>
+                <dt>Durée de la formation</dt>
+                <dd>{training.service?.duration_days} {training.service?.duration_days && training.service.duration_days > 1 ? 'jours' : 'jour'}</dd>
+                <dt>&Eacute;ligigle au <abbr title='compte personnel de formation'>CPF</abbr></dt>
+                <dd></dd>
+              </dl>
 
-        </div>
+            </div>
 
           </div>
 
@@ -117,16 +120,16 @@ const Training = ({training}) => {
             <RoundedBox3items>
               <h2><img width={20} height={16} src={`${AFTRAL_ICON_PATH}/arrow.svg`} alt=''/>Objectif de la formation</h2>
 
-          <div>
-            <p>
-              <img width={100} height={100} src={`${AFTRAL_ICON_PATH}/diplome.svg`} alt="diplôme" />
-              {training.service?.goals[0] || 'Lorem ipsum dolor sit amet. Cum voluptas temporibus ea blanditiis aliquam ex libero pariatur est deserunt nostrum dolorem voluptate et laborum soluta. Et repellendus expedita ut dolor delectus aut placeat quia a ratione quia et corrupti molestias. ' }
-            </p>
+              <div>
+                <p>
+                  <img width={100} height={100} src={`${AFTRAL_ICON_PATH}/diplome.svg`} alt="diplôme" />
+                  {training.service?.goals[0] || 'Lorem ipsum dolor sit amet. Cum voluptas temporibus ea blanditiis aliquam ex libero pariatur est deserunt nostrum dolorem voluptate et laborum soluta. Et repellendus expedita ut dolor delectus aut placeat quia a ratione quia et corrupti molestias. ' }
+                </p>
 
-            <p>
-              <img width={60} height={60} src={`${AFTRAL_ICON_PATH}/gestionnaireCompte.svg`} alt="Gestionnaire" />
-              {training.service?.goals[1] || 'Être le gestionnaire de transport d’une entreprise de transport routier de marchandises.'}
-            </p>
+                <p>
+                  <img width={60} height={60} src={`${AFTRAL_ICON_PATH}/gestionnaireCompte.svg`} alt="Gestionnaire" />
+                  {training.service?.goals[1] || 'Être le gestionnaire de transport d’une entreprise de transport routier de marchandises.'}
+                </p>
 
                 <p>
                   <img width={60} height={60} src={`${AFTRAL_ICON_PATH}/camion.svg`} alt="véhicule léger" />
