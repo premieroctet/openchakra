@@ -4,6 +4,7 @@ import useAsync from '../../hooks/use-async.hook'
 import {client} from '../../utils/client'
 import {API_PATH} from '../../utils/consts'
 import {StyledListbox} from '../../styles/feurst/StyledComponents'
+import isEmpty from '../../server/validation/is-empty'
 
 const DeliveryAddresses = ({state, requestUpdate, endpoint}) => {
 
@@ -31,7 +32,7 @@ const DeliveryAddresses = ({state, requestUpdate, endpoint}) => {
 
   useEffect(() => {
     const [mainAddress] = data.filter(address => address.label === 'Principale')
-    if (mainAddress) { setAddress(mainAddress) }
+    if (state?.address && isEmpty(state.address) && mainAddress) { setAddress(mainAddress) }
   }, [data, setAddress])
 
   return (<>
