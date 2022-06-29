@@ -1,17 +1,14 @@
-const {Button, Link} = require('@material-ui/core')
-const {valueBetween} = require('../../utils/functions')
 import {withTranslation} from 'react-i18next'
-import {REVIEW_STATUS} from '../../utils/consts'
 import React from 'react'
 import Checkbox from '@material-ui/core/Checkbox'
+import LockIcon from '@material-ui/icons/Lock'
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
+import {REVIEW_STATUS} from '../../utils/consts'
+const {Button, Link} = require('@material-ui/core')
 const moment = require('moment')
-const {inspect} = require('util')
-
+const {valueBetween} = require('../../utils/functions')
 
 moment.locale('fr')
-import LockIcon from '@material-ui/icons/Lock'
-import CheckIcon from '@material-ui/icons/Check'
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
 const {insensitiveComparator, normalize} = require('../../utils/text')
 
 class _StatusRenderer extends React.Component {
@@ -175,7 +172,7 @@ class PictureRenderer extends React.Component {
     const rowHeight = this.props.node.rowHeight
     let pictureUrl = this.props.value
     if (pictureUrl) {
-      if (!pictureUrl.startsWith('/')) {
+      if (!pictureUrl.startsWith('http') && !pictureUrl.startsWith('/')) {
         pictureUrl = `/${pictureUrl}`
       }
       return (

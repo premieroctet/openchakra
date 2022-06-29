@@ -12,6 +12,7 @@ const ServiceUserSchema = new Schema({
   service: {
     type: Schema.Types.ObjectId,
     ref: 'service',
+    required: true,
   },
   prestations: [{
     prestation: {
@@ -51,7 +52,7 @@ const ServiceUserSchema = new Schema({
         lng: Number,
       },
     },
-    required: true,
+    required: false,
   },
   perimeter: {
     type: Number,
