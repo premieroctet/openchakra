@@ -1,3 +1,4 @@
+const {BadRequestError}=require('../../utils/errors')
 const {generateExcel} = require('../../utils/feurst/generateExcel')
 const lodash=require('lodash')
 
@@ -56,6 +57,7 @@ const {XL_FILTER, createMemoryMulter} = require('../../utils/filesystem')
 const router = express.Router()
 const Order = require('../../models/Order')
 const {validateOrder, validateOrderItem}=require('../../validation/order')
+const validateAddress=require('../../validation/address')
 const {ORDER, CREATE, UPDATE, VIEW, DELETE}=require('../../../utils/consts')
 const feurstfr=require('../../../translations/fr/feurst')
 moment.locale('fr')
@@ -209,6 +211,20 @@ router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
       if (!result) {
         return res.status(404).json(`${DATA_TYPE} #${order_id} not found`)
       }
+      if (req.body.address) {
+        const {isValid, errors}=validateAddress(req.body.address)
+        if (!isValid) {
+          throw new BadRequestError(Object.values(errors).join(','))
+        }
+        if (!req.body.address._id && result.company?.addresses?.some(a => a.match(req.body.address))) {
+          throw new BadRequestError('Cette adresse existe déjà')
+        }
+      }
+      return MODEL.findByIdAndUpdate(order_id, req.body, {new: true})
+        .populate('items.product')
+        .populate('company')
+    })
+    .then(result => {
       return updateShipFee(result)
     })
     .then(result => {

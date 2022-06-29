@@ -20,4 +20,10 @@ class ForbiddenError extends StatusError {
   }
 }
 
-module.exports={StatusError, NotFoundError, ForbiddenError}
+class BadRequestError extends StatusError {
+  constructor(message) {
+    super(message, 400)
+  }
+}
+
+module.exports={StatusError, NotFoundError, ForbiddenError, BadRequestError}
