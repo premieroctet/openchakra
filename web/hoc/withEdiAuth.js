@@ -1,5 +1,6 @@
 import React from 'react'
 import Router from 'next/router'
+import Link from 'next/link'
 import uniqBy from 'lodash/uniqBy'
 import isUndefined from 'lodash/isUndefined'
 import DevLog from '../components/DevLog'
@@ -104,7 +105,7 @@ const withEdiAuth = (Component = null, options = {}) => {
           <div className='container-lg'>
             {canAccess ?
               <Component accessRights={accessRights} />
-              : loading ? '' : <div>Vous n'avez pas accès à cette rubrique</div>}
+              : loading ? '' : <div className='flex justify-center gap-x-2'>Vous n'avez pas accès à cette rubrique <Link href={`${BASEPATH_EDI}/login?out=true`}>Se déconnecter</Link> </div>}
           </div>
         </EdiContainer>
       </>
