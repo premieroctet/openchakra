@@ -181,6 +181,8 @@ export const GlobalStyleEdi = createGlobalStyle`
   text-align: right;
 }
 
+.italic {font-style: italic;}
+
 /* font-weight */
 
 .font-semibold {
