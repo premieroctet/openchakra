@@ -22,13 +22,17 @@ const getProductPrices = (product_ref, company) => {
   const result={catalog_price: 0, net_price: 0}
   return PriceList.findOne({reference: product_ref, name: company.catalog_prices})
     .then(price => {
-      if (!price) { return Promise.reject(`Prix catalogue introuvable pour ${product_ref}`) }
-      result.catalog_price=price.price
+      if (!price) { console.error(`Prix catalogue introuvable pour ${product_ref}`) }
+      else {
+        result.catalog_price=price.price
+      }
       return PriceList.findOne({reference: product_ref, name: company.net_prices})
     })
     .then(price => {
       if (!price) { return Promise.reject(`Prix remisé introuvable pour ${product_ref}`) }
       result.net_price=price.price
+      // Use net price if catalog price was not found
+      result.catalog_price=result.catalog_price || result.net_price
       return Promise.resolve(result)
     })
 }

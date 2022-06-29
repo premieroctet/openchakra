@@ -295,6 +295,7 @@ router.delete('/:order_id/items/:item_id', passport.authenticate('jwt', {session
 
   MODEL.findOneAndUpdate({_id: order_id}, {$pull: {items: {_id: item_id}}}, {new: true})
     .populate('items.product')
+    .populate('company')
     .then(result => {
       if (!result) {
         return res.status(404).json(`${DATA_TYPE} #${order_id} not found`)
