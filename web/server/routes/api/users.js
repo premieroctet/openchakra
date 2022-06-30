@@ -835,21 +835,27 @@ router.get('/current', passport.authenticate('jwt', {session: false}), (req, res
 router.post('/forgotPassword', (req, res) => {
   const email = (req.body.email || '').toLowerCase().trim()
 
-  User.findOne({email: new RegExp(`^${email}$`, 'i')})
-    .populate('company')
-    .then(user => {
-      if (user === null) {
+  let token=null
+  User.exists({email: email})
+    .then(exists => {
+      if (!exists) {
         console.error(`email ${email} not in database`)
-        return res.status(404).json({error: 'Aucun compte avec cet email'})
+        throw new NotFoundError(`Aucun compte avec cet email:${email}`)
       }
-      const token = crypto.randomBytes(20).toString('hex')
-      ResetToken.create({token: token})
-        .then(token => {
-          user.update({resetToken: token._id})
-            .catch(err => console.error(err))
-        })
-      sendResetPassword(user, token, req)
+      token = crypto.randomBytes(20).toString('hex')
+      console.log(`Created token:${token}`)
+      return ResetToken.create({token: token})
+    })
+    .then(result => {
+      return User.findOneAndUpdate({email: email}, {resetToken: result._id})
+    })
+    .then(user => {
+      sendResetPassword(user, token)
       return res.json(user)
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(err.status || err).json(err)
     })
 })
 
