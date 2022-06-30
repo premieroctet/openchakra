@@ -1,20 +1,24 @@
-const {
-  ForbiddenError,
-  NotFoundError,
-  StatusError,
-} = require('../../utils/errors')
-const Company = require('../../models/Company')
-
+const {CGV_EXPIRATION_DELAY} = require('../../../config/config')
 const crypto = require('crypto')
-const fs = require('fs').promises
-const express = require('express')
 
+const fs = require('fs').promises
+const path=require('path')
+const express = require('express')
 const router = express.Router()
 const passport = require('passport')
 const bcrypt = require('bcryptjs')
 const moment = require('moment')
 const axios = require('axios')
 const gifFrames = require('gif-frames')
+const CronJob = require('cron').CronJob
+const {CGV_PATH} = require('../../../config/config')
+const {getDataModel} = require('../../../config/config')
+const {UPDATE_CGV} = require('../../../utils/feurst/consts')
+const {
+  ForbiddenError,
+  NotFoundError,
+} = require('../../utils/errors')
+const Company = require('../../models/Company')
 
 const {getHostUrl, is_development} = require('../../../config/config')
 const Shop = require('../../models/Shop')
@@ -32,6 +36,7 @@ const {
 } = require('../../../utils/feurst/consts')
 const {
   IMAGE_FILTER,
+  PDF_FILTER,
   XL_FILTER,
   createDiskMulter,
   createMemoryMulter,
@@ -68,6 +73,9 @@ const uploadIdCard = createDiskMulter('static/profile/idCard/', IMAGE_FILTER)
 const uploadRegProof = createDiskMulter('static/profile/registrationProof/', IMAGE_FILTER)
 // Album picture storage
 const uploadAlbumPicture =createDiskMulter('static/profile/album/', IMAGE_FILTER)
+// CGV storage
+const uploadCGV =createDiskMulter(`static/assets/docs/${getDataModel()}/`, PDF_FILTER, path.basename(CGV_PATH))
+
 
 router.get('/check_register_code/:code', (req, res) => {
   checkRegisterCodeValidity(req, req.params.code)
@@ -572,6 +580,15 @@ router.delete('/profile/registrationProof', passport.authenticate('jwt', {sessio
     .catch(err => {
       console.error(err)
     })
+})
+
+router.post('/update-cgv', uploadCGV.single('buffer'), passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  // TODO set in passport
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, UPDATE_CGV)) {
+    return res.sendStatus(301)
+  }
+
 })
 
 router.put('/validate-cgv', passport.authenticate('jwt', {session: false}), (req, res) => {
@@ -1504,5 +1521,23 @@ if (false) {
       .catch(err => console.error(err))
   }, null, true, 'Europe/Paris')
 }
+
+// Each hour, check CGV consent validity
+new CronJob('0 0 * * * *', () => {
+  fs.stat(CGV_PATH.slice(1))
+    .then(res => {
+      const cgvLimit=Math.max(moment(res.mtime), moment().add(-CGV_EXPIRATION_DELAY, 'days'))
+      return Promise.all([cgvLimit, User.update({cgv_validation_date: {$lt: cgvLimit}}, {cgv_validation_date: null})])
+    })
+    .then(([cgvLimit, result]) => {
+      if (result.nModified) {
+        console.log(`CGV consent limit ${new Date(cgvLimit)}: invalidated ${result.nModified} accounts`)
+      }
+    })
+    .catch(err => {
+      console.error(err)
+    })
+}, null, true, 'Europe/Paris')
+
 
 module.exports = router

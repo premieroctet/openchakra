@@ -2,7 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const crypto = require('crypto')
 const multer = require('multer')
-const {IMAGE_EXTENSIONS, TEXT_EXTENSIONS, XL_EXTENSIONS} = require('../../utils/consts')
+const {IMAGE_EXTENSIONS, TEXT_EXTENSIONS, XL_EXTENSIONS, PDF_EXTENSIONS} = require('../../utils/consts')
 
 const ensureDirectoryExists = dirName => {
   const rootDir = path.join(path.dirname(require.main.filename), '..')
@@ -37,16 +37,29 @@ const XL_FILTER = {
   message: `Fichier Excel attendu (${XL_EXTENSIONS.join(',')})`,
 }
 
-const createDiskMulter = (directory, fileFilter) => {
+const PDF_FILTER = {
+  filter: filename => {
+    const ext = path.extname(filename).toLowerCase()
+    return PDF_EXTENSIONS.includes(ext)
+  },
+  message: `Fichier PDF attendu (${PDF_EXTENSIONS.join(',')})`,
+}
+
+const createDiskMulter = (directory, fileFilter, absoluteName) => {
   ensureDirectoryExists(directory)
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
       cb(null, directory)
     },
     filename: (req, file, cb) => {
-      let datetimestamp = Date.now()
-      let key = crypto.randomBytes(5).toString('hex')
-      cb(null, `${datetimestamp}_${key}_${file.originalname}`)
+      if (absoluteName) {
+        cb(null, absoluteName)
+      }
+      else {
+        let datetimestamp = Date.now()
+        let key = crypto.randomBytes(5).toString('hex')
+        cb(null, `${datetimestamp}_${key}_${file.originalname}`)
+      }
     },
   })
   const upload = multer({
@@ -83,4 +96,5 @@ module.exports = {
   IMAGE_FILTER,
   TEXT_FILTER,
   XL_FILTER,
+  PDF_FILTER,
 }
