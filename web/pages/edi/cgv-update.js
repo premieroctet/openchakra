@@ -8,7 +8,7 @@ import {setAxiosAuthentication} from '../../utils/authentication'
 const CGVupdate = () => {
 
   const [filename, setFilename] = useState('')
-  const importURL = `${API_PATH}/seb/will/release/soon`
+  const importURL = `${API_PATH}/users/update-cgv`
 
   const submitFile = async e => {
     e.preventDefault()
@@ -37,9 +37,9 @@ const CGVupdate = () => {
           <label htmlFor='updatecgv'>
             <span className='button'>Ajouter</span> les nouvelles CGV <span className='italic'>(format .pdf)</span>
             <input className='sr-only' id='updatecgv' type={'file'} accept={'.pdf'} onChange={e => setFilename(e.target.files[0])} />
-            
+
             <span className='data'>{filename?.name || 'non renseigné'}</span>
-        
+
           </label>
         </li>
 
@@ -75,7 +75,7 @@ const UpdateFile = styled.form`
     margin-block: var(--spc-4);
     border-radius: var(--rounded-2xl);
   }
-  
+
   .data {
     margin-inline-start: var(--spc-2);
     border-bottom: 1px solid var(--brand-color);
@@ -84,4 +84,3 @@ const UpdateFile = styled.form`
 `
 
 export default withEdiAuth(CGVupdate, {model: ACCOUNT, action: UPDATE_CGV, pathAfterFailure: `${BASEPATH_EDI}/login`})
-
