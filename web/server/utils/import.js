@@ -1,6 +1,7 @@
 const Validator = require('validator')
 const lodash=require('lodash')
 const bcrypt = require('bcryptjs')
+const {capitalize}=require('../../utils/text')
 const {
   CUSTOMER_ADMIN,
   FEURST_SALES,
@@ -290,12 +291,12 @@ const accountsImport = (buffer, options) => {
             })
             .then(company => {
               const email=(record.Messagerie.text || record.Messagerie).trim()
-              const [firstname, name]=record['Administrateur (Prénom et Nom)'].replace(/\s+/, '|').split('|')
+              const [firstname, name]=record['Administrateur (Prénom et Nom)'].replace(/\s+/, '|').split('|').map(v => capitalize(v))
               if (!(email && firstname && name && Validator.isEmail(email))) {
-                return Promise.reject(msg(`Erreur nom, prénom ou email`))
+                return Promise.reject(msg(`Erreur nom, prénom ou email:${record['Administrateur (Prénom et Nom)']}`))
               }
               return User.updateOne({email},
-                {$set: {firstname, name, company: company, email, roles: [CUSTOMER_ADMIN]},
+                {$set: {firstname, name, company: company, email, roles: [CUSTOMER_ADMIN], active: true},
                   $setOnInsert: {password: bcrypt.hashSync('Alfred123;', 10)}},
                 {upsert: true, new: true},
               )
