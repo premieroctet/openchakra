@@ -1522,19 +1522,17 @@ if (false) {
   }, null, true, 'Europe/Paris')
 }
 
-new CronJob('*/5 * * * * *', () => {
-  console.log('Check users CGV validation')
+// Each hour, check CGV consent validity
+new CronJob('0 0 * * * *', () => {
   fs.stat(CGV_PATH.slice(1))
     .then(res => {
       const cgvLimit=Math.max(moment(res.mtime), moment().add(-CGV_EXPIRATION_DELAY, 'days'))
-      console.log(`Invalidate CGV before ${moment(cgvLimit)}`)
-      User.update({cgv_validation_date: {$lt: cgvLimit}}, {cgv_validation_date: null})
-        .then(result => {
-          console.log(result.nModified)
-        })
-        .catch(err => {
-          console.error(err)
-        })
+      return Promise.all([cgvLimit, User.update({cgv_validation_date: {$lt: cgvLimit}}, {cgv_validation_date: null})])
+    })
+    .then(([cgvLimit, result]) => {
+      if (result.nModified) {
+        console.log(`CGV consent limit ${new Date(cgvLimit)}: invalidated ${result.nModified} accounts`)
+      }
     })
     .catch(err => {
       console.error(err)
