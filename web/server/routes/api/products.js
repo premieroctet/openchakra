@@ -6,9 +6,9 @@ const passport = require('passport')
 const moment = require('moment')
 
 const CronJob = require('cron').CronJob
+const PriceList = require('../../models/PriceList')
 const {JSON_TYPE} = require('../../../utils/feurst/consts')
 const storage = require('../../utils/storage')
-
 const {getExchangeDirectory} = require('../../../config/config')
 const {
   productsImport,
@@ -17,12 +17,11 @@ const {
 const {isActionAllowed} = require('../../utils/userAccess')
 const {DELETE} = require('../../../utils/feurst/consts')
 const {XL_FILTER, createMemoryMulter} = require('../../utils/filesystem')
-
 const {PRODUCT, CREATE} = require('../../../utils/consts')
 const Product = require('../../models/Product')
+const {validateProduct}=require('../../validation/product')
 
 const router = express.Router()
-const {validateProduct}=require('../../validation/product')
 
 moment.locale('fr')
 
@@ -53,15 +52,23 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   }
 
   Product.find({})
+    .sort('reference')
     .then(products => {
       const andEdProducts=products.filter(andFilter)
       const noSpaceProducts=products.filter(noSpaceFilter)
-      if (andEdProducts.length>noSpaceProducts.length) {
-        res.json(andEdProducts)
+      const filteredProducts= andEdProducts.length>noSpaceProducts.length ?andEdProducts : noSpaceProducts
+      // For customer, only allow products having net price
+      if (req.user.company) {
+        return PriceList.find({name: {$in: [req.user.company.catalog_prices, req.user.company.net_prices]}})
+          .then(prices => {
+            const pricedReferences=prices.map(p => p.reference)
+            return filteredProducts.filter(p => pricedReferences.includes(p.reference))
+          })
       }
-      else {
-        res.json(noSpaceProducts)
-      }
+      return filteredProducts
+    })
+    .then(products => {
+      return res.json(products)
     })
     .catch(err => {
       console.error(err)

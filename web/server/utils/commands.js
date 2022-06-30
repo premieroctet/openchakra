@@ -13,23 +13,18 @@ const extractDepartment = zipCode => {
 }
 
 const getProductPrices = (product_ref, company) => {
-  if (!product_ref) {
-    return Promise.reject(`Mandatory product_ref`)
-  }
-  if (!company) {
-    return Promise.reject(`Mandatory company`)
-  }
-  const result={catalog_price: 0, net_price: 0}
-  return PriceList.findOne({reference: product_ref, name: company.catalog_prices})
-    .then(price => {
-      if (!price) { return Promise.reject(`Prix catalogue introuvable pour ${product_ref}`) }
-      result.catalog_price=price.price
-      return PriceList.findOne({reference: product_ref, name: company.net_prices})
-    })
-    .then(price => {
-      if (!price) { return Promise.reject(`Prix remisé introuvable pour ${product_ref}`) }
-      result.net_price=price.price
-      return Promise.resolve(result)
+  if (!product_ref) { return Promise.reject(`Mandatory product_ref`) }
+  if (!company) { return Promise.reject(`Mandatory company`) }
+
+  return Promise.all([company.catalog_prices, company.net_prices].map(priceList =>
+    PriceList.findOne({reference: product_ref, name: priceList}),
+  ))
+    .then(([catPrice, netPrice]) => {
+      if (!catPrice && !netPrice) { return Promise.reject(`Ni prix catalogue ni prix remisé pour ${product_ref}`) }
+      return Promise.resolve({
+        catalog_price: catPrice?.price || netPrice?.price,
+        net_price: netPrice?.price || catPrice?.price,
+      })
     })
 }
 /** Adds product to the order :

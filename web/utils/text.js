@@ -168,7 +168,7 @@ const computeBookingReference = (user, alfred) => {
 }
 
 const capitalize = text => {
-  return text ? text[0].toUpperCase()+text.slice(1) : text
+  return text ? text[0].toUpperCase()+text.slice(1).toLowerCase() : text
 }
 
 const guessDelimiter = text => {

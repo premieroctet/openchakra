@@ -74,14 +74,14 @@ const tabsContent = [
     url: `${BASEPATH_EDI}/profile`,
     model: ACCOUNT,
     action: UPDATE,
-    visible: [ACCOUNT],
+    visible: [ACCOUNT, PRODUCT, SHIPRATE, PRICELIST],
   },
   {
     title: 'CGV',
     url: `${BASEPATH_EDI}/cgv-update`,
     model: ACCOUNT,
     action: UPDATE_CGV,
-    visible: [ACCOUNT],
+    visible: [ACCOUNT, PRODUCT, SHIPRATE, PRICELIST],
   },
 ]
 
