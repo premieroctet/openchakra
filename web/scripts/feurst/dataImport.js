@@ -1,12 +1,13 @@
 const fs=require('fs/promises')
 const mongooose=require('mongoose')
-const {TEXT_TYPE, XL_TYPE} = require('../../utils/feurst/consts')
+const {JSON_TYPE, TEXT_TYPE, XL_TYPE} = require('../../utils/feurst/consts')
 const {
   accountsImport,
   priceListImport,
   productsImport,
   shipRatesImport,
-}=require('../../server/utils/import')
+  stockImport,
+} = require('../../server/utils/import')
 const {MONGOOSE_OPTIONS}=require('../../server/utils/database')
 const {getDatabaseUri}=require('../../config/config')
 
@@ -32,6 +33,10 @@ const ACTIONS={
     fn: shipRatesImport,
     format: TEXT_TYPE,
     delimiter: ';',
+  },
+  stock: {
+    fn: stockImport,
+    format: JSON_TYPE,
   },
 }
 
