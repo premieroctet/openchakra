@@ -1,6 +1,7 @@
 const express = require('express')
 const passport = require('passport')
 const moment = require('moment')
+const {HTTP_CODES} = require('../../utils/errors')
 const {priceListImport} = require('../../utils/import')
 const {isActionAllowed} = require('../../utils/userAccess')
 const {VIEW, CREATE} = require('../../../utils/consts')
@@ -23,7 +24,7 @@ const DATA_TYPE=PRICELIST
 router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, VIEW)) {
-    return res.sendStatus(301)
+    return res.sendStatus(HTTP_CODES.FORBIDDEN)
   }
 
   PriceList.find()
@@ -42,13 +43,13 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 router.post('/import', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, CREATE)) {
-    return res.sendStatus(301)
+    return res.sendStatus(HTTP_CODES.FORBIDDEN)
   }
 
   uploadProducts.single('buffer')(req, res, err => {
     if (err) {
       console.error(err)
-      return res.status(404).json({errors: err.message})
+      return res.status(HTTP_CODES.NOT_FOUND).json({errors: err.message})
     }
 
     const options=JSON.parse(req.body.options)

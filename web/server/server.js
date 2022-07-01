@@ -15,6 +15,7 @@ const {
   getHostUrl,
   getPort,
 }=require('../config/config')
+const {HTTP_CODES} = require('./utils/errors')
 const Shiprate = require('./models/ShipRate')
 
 const Product = require('./models/Product')
@@ -117,7 +118,7 @@ checkConfig()
     // Hide test pages
     app.use((req, res, next) => {
       if (is_production() && req.url.match(/^\/test\//)) {
-        return res.sendStatus(404)
+        return res.sendStatus(HTTP_CODES.NOT_FOUND)
       }
       return next()
     })
