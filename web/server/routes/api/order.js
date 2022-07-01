@@ -238,7 +238,7 @@ router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
     })
     .catch(err => {
       console.error(err)
-      return res.status(500).json(err)
+      return res.status(err.status || 500).json(err.message || err)
     })
 })
 

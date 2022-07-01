@@ -230,7 +230,7 @@ router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
     })
     .catch(err => {
       console.error(err)
-      return res.status(500).json(err)
+      return res.status(err.status || 500).json(err.message || err)
     })
 })
 
@@ -588,9 +588,6 @@ router.get('/:id/actions', passport.authenticate('jwt', {session: false}), (req,
         return res.status(404).json()
       }
       if (isActionAllowed(req.user.roles, DATA_TYPE, UPDATE) && [CREATED, COMPLETE].includes(model.status)) {
-        result.push(UPDATE)
-      }
-      if (isActionAllowed(req.user.roles, DATA_TYPE, UPDATE) && isFeurstUser(user) && [VALID].includes(model.status)) {
         result.push(UPDATE)
       }
       if (isActionAllowed(req.user.roles, DATA_TYPE, UPDATE) &&
