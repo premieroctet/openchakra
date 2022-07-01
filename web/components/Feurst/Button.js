@@ -55,8 +55,8 @@ const Button = styled.button.attrs(props => ({
   will-change: transform;
   height: max-content;
 
-  :disabled && {
-    background-color: ${props => darkerColor(props.bgColorDisabled)};
+  &:disabled {
+    background-color: ${props => props.bgColorDisabled};
   }
 `
 

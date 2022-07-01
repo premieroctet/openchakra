@@ -12,6 +12,7 @@ import {
   ORDER,
   QUOTATION,
   RELATED,
+  ALL,
   UPDATE,
   UPDATE_ALL,
   ENDPOINTS,
@@ -105,7 +106,7 @@ const BaseCreateTable = ({
   const isTotallyHandled = actionButtons.includes(TOTALLY_HANDLE)
   const canModify = actionButtons.includes(UPDATE)
   
-  const isFeurstSales = accessRights.getFullAction()?.visibility==RELATED
+  const isFeurstSales = accessRights.getFullAction()?.visibility==RELATED || accessRights.getFullAction()?.visibility==ALL
   const canUpdatePrice = accessRights.isActionAllowed(accessRights.getModel(), UPDATE_ALL) && canModify
   const canUpdateQuantity = accessRights.isActionAllowed(accessRights.getModel(), UPDATE) && canModify
 

@@ -10,6 +10,7 @@ import {client} from '../../utils/client'
 import isEmpty from '../../server/validation/is-empty'
 import {API_PATH} from '../../utils/consts'
 import RequiredField from '../misc/RequiredField'
+import {snackBarError} from '../../utils/notifications'
 import {NormalButton} from './Button'
 import {Input} from './components.styles'
 
@@ -58,10 +59,16 @@ const DialogAddress = ({
     requestUpdate({address: {}})
   }
 
-  const submitAddress = ev => {
+  const submitAddress = async ev => {
     ev.preventDefault()
-    setIsOpenDialog(false)
-    validateAddress({endpoint, orderid, shipping: {reference: reference, address, shipping_mode}})
+    
+    return await validateAddress({endpoint, orderid, shipping: {reference: reference, address, shipping_mode}})
+      .then(() => setIsOpenDialog(false))
+      .catch(error => {
+        if (error?.info) {
+          snackBarError(error.info.message)
+        }
+      })
   }
 
 
@@ -122,6 +129,7 @@ traitement de votre commande.</p>
         }
 
         <NormalButton
+          bgColorDisabled={'gray'}
           disabled={!valid}
           type='submit'
           onSubmit={() => submitAddress}

@@ -1,21 +1,19 @@
+const crypto = require('crypto')
 const express = require('express')
 const ics=require('ics')
 const {googleCalendarEventUrl} = require('google-calendar-url')
 const mongoose = require('mongoose')
 const passport = require('passport')
 const moment = require('moment')
-const {getHostUrl} = require('../../../config/config')
 
 const CronJob = require('cron').CronJob
 const uuidv4 = require('uuid/v4')
-const {is_development} = require('../../../config/config')
+const {HTTP_CODES} = require('../../utils/errors')
+const {getHostUrl} = require('../../../config/config')
 const Booking = require('../../models/Booking')
 const Company = require('../../models/Company')
 const User = require('../../models/User')
 const ChatRoom = require('../../models/ChatRoom')
-
-const router = express.Router()
-const crypto = require('crypto')
 const {BOOK_STATUS, EXPIRATION_DELAY, AVOCOTES_COMPANY_NAME} = require('../../../utils/consts')
 const {payBooking} = require('../../utils/mangopay')
 const {
@@ -30,6 +28,7 @@ const {computeBookingReference, formatAddress}=require('../../../utils/text')
 const {createMangoClient}=require('../../utils/mangopay')
 const {stateMachineFactory} = require('../../utils/BookingStateMachine')
 
+const router = express.Router()
 moment.locale('fr')
 
 router.get('/test', (req, res) => res.json({msg: 'Booking Works!'}))
@@ -43,7 +42,7 @@ router.get('/alfredBooking', passport.authenticate('jwt', {session: false}), (re
     .populate('chatroom')
     .then(alfred => {
       if (!alfred) {
-        res.status(404).json({msg: 'No booking found'})
+        res.status(HTTP_CODES.NOT_FOUND).json({msg: 'No booking found'})
       }
 
       if (alfred) {
@@ -67,7 +66,7 @@ router.get('/userBooking', passport.authenticate('jwt', {session: false}), (req,
     })
     .then(alfred => {
       if (!alfred) {
-        res.status(404).json({msg: 'No booking found'})
+        res.status(HTTP_CODES.NOT_FOUND).json({msg: 'No booking found'})
       }
 
       if (alfred) {
@@ -176,7 +175,7 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     })
     .catch(err => {
       console.error(err)
-      res.status(404)
+      res.status(HTTP_CODES.NOT_FOUND)
     })
 })
 
@@ -239,7 +238,7 @@ router.get('/all', passport.authenticate('jwt', {session: false}), (req, res) =>
       }
     })
     .catch(() => {
-      res.status(404).json({booking: 'No booking found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({booking: 'No booking found'})
     })
 })
 
@@ -401,7 +400,7 @@ router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res)
       message.remove().then(() => res.json({success: true}))
     })
     .catch(() => {
-      res.status(404).json({bookingnotfound: 'No booking found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({bookingnotfound: 'No booking found'})
     })
 })
 
@@ -418,7 +417,7 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
     .populate({path: 'customer_booking', populate: {path: 'user'}})
     .then(booking => {
       if (!booking) {
-        return res.status(404).json('No booking #${req.params.id}')
+        return res.status(HTTP_CODES.NOT_FOUND).json('No booking #${req.params.id}')
       }
       if (obj.status) {
         const machine=stateMachineFactory(booking.status)

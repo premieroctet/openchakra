@@ -170,6 +170,7 @@ const PENDING_REASONS= {
 const IMAGE_EXTENSIONS='.png .jpg .gif .jpeg .pdf .svg'.toLowerCase().split(' ')
 const TEXT_EXTENSIONS='.csv .txt'.toLowerCase().split(' ')
 const XL_EXTENSIONS='.xlsx .csv .txt'.toLowerCase().split(' ')
+const PDF_EXTENSIONS='.pdf'.toLowerCase().split(' ')
 
 const INSURANCE_TYPES={
   RC: 'RC professionnelle',
@@ -199,4 +200,5 @@ module.exports = {
   IMAGE_EXTENSIONS, TEXT_EXTENSIONS, INSURANCE_TYPES,
   REVIEW_STATUS, COMMISSION_SOURCE, TRANSACTION_CREATED, TRANSACTION_FAILED,
   TRANSACTION_SUCCEEDED, ...PLUGIN_CONSTS, XL_EXTENSIONS, API_PATH,
+  PDF_EXTENSIONS,
 }

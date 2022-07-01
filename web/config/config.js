@@ -218,6 +218,10 @@ const getExchangeDirectory = () => {
 }
 const RANDOM_ID=new Date().getTime()
 
+const DOC_PATH = `/static/assets/docs/${getDataModel()}`
+const CGV_PATH=`${DOC_PATH}/cgv.pdf`
+// CGV expires afeter. If null, does never expire
+const CGV_EXPIRATION_DELAY=365
 // Public API
 module.exports = {
   databaseName: databaseName,
@@ -231,6 +235,5 @@ module.exports = {
   canAlfredSelfRegister, canAlfredParticularRegister,
   getSibTemplates, checkConfig, getDatabaseUri, hideStoreDialog,
   getDataModel, skipFailedPayment, getSibApiKey, getPort, getExchangeDirectory,
-  RANDOM_ID,
-  displayConfig,
+  RANDOM_ID, DOC_PATH, CGV_PATH, CGV_EXPIRATION_DELAY,
 }

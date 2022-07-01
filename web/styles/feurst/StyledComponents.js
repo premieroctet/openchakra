@@ -13,7 +13,7 @@ align-items: center;
 align-content: center;
 
 @media (${screen.md}) {
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 }
 
 a, a::after {

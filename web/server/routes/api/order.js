@@ -1,19 +1,18 @@
-const {generateExcel} = require('../../utils/feurst/generateExcel')
 const lodash=require('lodash')
-
 const CronJob = require('cron').CronJob
-
 const express = require('express')
 const passport = require('passport')
 const moment = require('moment')
 const xlsx=require('node-xlsx')
+const {NotFoundError} = require('../../utils/errors')
+const {generateExcel} = require('../../utils/feurst/generateExcel')
+const {BadRequestError, HTTP_CODES} = require('../../utils/errors')
 const {
   CUSTOMER_ADMIN,
   FEURST_ADV,
   FEURST_SALES,
 } = require('../../../utils/feurst/consts')
 const {sendDataNotification, sendOrderAlert} = require('../../utils/mailing')
-
 const {
   COMPLETE,
   CONVERT,
@@ -56,6 +55,7 @@ const {XL_FILTER, createMemoryMulter} = require('../../utils/filesystem')
 const router = express.Router()
 const Order = require('../../models/Order')
 const {validateOrder, validateOrderItem}=require('../../validation/order')
+const validateAddress=require('../../validation/address')
 const {ORDER, CREATE, UPDATE, VIEW, DELETE}=require('../../../utils/consts')
 const feurstfr=require('../../../translations/fr/feurst')
 moment.locale('fr')
@@ -73,7 +73,7 @@ router.get('/:order_id/addresses', passport.authenticate('jwt', {session: false}
     .populate('company')
     .then(order => {
       if (!order) {
-        return res.status(404).json()
+        return res.status(HTTP_CODES.NOT_FOUND).json()
       }
       return res.json(order.company.addresses)
     })
@@ -105,7 +105,7 @@ router.post('/:order_id/import', passport.authenticate('jwt', {session: false}),
   uploadItems.single('buffer')(req, res, err => {
     if (err) {
       console.error(err)
-      return res.status(404).json({errors: err.message})
+      return res.status(HTTP_CODES.NOT_FOUND).json({errors: err.message})
     }
 
     const order_id=req.params.order_id
@@ -117,7 +117,7 @@ router.post('/:order_id/import', passport.authenticate('jwt', {session: false}),
       .then(data => {
         if (!data) {
           console.error(`${DATA_TYPE} #${order_id} not found`)
-          return res.status(404).json()
+          return res.status(HTTP_CODES.NOT_FOUND).json()
         }
         return lineItemsImport(data, req.file.buffer, options)
       })
@@ -207,8 +207,22 @@ router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
     .populate('company')
     .then(result => {
       if (!result) {
-        return res.status(404).json(`${DATA_TYPE} #${order_id} not found`)
+        return res.status(HTTP_CODES.NOT_FOUND).json(`${DATA_TYPE} #${order_id} not found`)
       }
+      if (req.body.address) {
+        const {isValid, errors}=validateAddress(req.body.address)
+        if (!isValid) {
+          throw new BadRequestError(Object.values(errors).join(','))
+        }
+        if (!req.body.address._id && result.company?.addresses?.some(a => a.match(req.body.address))) {
+          throw new BadRequestError('Cette adresse existe déjà')
+        }
+      }
+      return MODEL.findByIdAndUpdate(order_id, req.body, {new: true})
+        .populate('items.product')
+        .populate('company')
+    })
+    .then(result => {
       return updateShipFee(result)
     })
     .then(result => {
@@ -222,7 +236,7 @@ router.put('/:id', passport.authenticate('jwt', {session: false}), (req, res) =>
     })
     .catch(err => {
       console.error(err)
-      return res.status(500).json(err)
+      return res.status(err.status || 500).json(err.message || err)
     })
 })
 
@@ -254,7 +268,7 @@ router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, r
     .then(data => {
       if (!data) {
         console.error(`No order #${order_id}`)
-        return res.status(404).json()
+        return res.status(HTTP_CODES.NOT_FOUND).json()
       }
       return addItem(data, product, null, quantity, net_price, replace)
     })
@@ -287,9 +301,10 @@ router.delete('/:order_id/items/:item_id', passport.authenticate('jwt', {session
 
   MODEL.findOneAndUpdate({_id: order_id}, {$pull: {items: {_id: item_id}}}, {new: true})
     .populate('items.product')
+    .populate('company')
     .then(result => {
       if (!result) {
-        return res.status(404).json(`${DATA_TYPE} #${order_id} not found`)
+        return res.status(HTTP_CODES.NOT_FOUND).json(`${DATA_TYPE} #${order_id} not found`)
       }
       return updateShipFee(result)
     })
@@ -349,7 +364,7 @@ router.post('/:order_id/convert', passport.authenticate('jwt', {session: false})
     .populate('company')
     .then(order => {
       if (!result) {
-        return res.status(404).json(`${DATA_TYPE} #${order_id} not found`)
+        return res.status(HTTP_CODES.NOT_FOUND).json(`${DATA_TYPE} #${order_id} not found`)
       }
       console.log(`Got order:${JSON.stringify(order)}`)
       const quotation={...lodash.omit(order, '_id'), items: order.items.map(item => lodash.omit(item, '_id')), validation_date: moment(), handled_date: null}
@@ -389,7 +404,7 @@ router.get('/:order_id', passport.authenticate('jwt', {session: false}), (req, r
       if (order) {
         return res.json(order)
       }
-      return res.status(404).json({msg: 'No order found'})
+      return res.status(HTTP_CODES.NOT_FOUND).json({msg: 'No order found'})
     })
     .catch(err => {
       console.error(err)
@@ -434,7 +449,7 @@ router.get('/:order_id/products/:product_id', passport.authenticate('jwt', {sess
     })
     .then(result => {
       if (!result) {
-        return res.status(404).json()
+        return res.status(HTTP_CODES.NOT_FOUND).json()
       }
       product=result
       return getProductPrices(product.reference, data.company)
@@ -474,7 +489,7 @@ router.post('/:order_id/validate', passport.authenticate('jwt', {session: false}
     .then(data => {
       order=data
       if (!data) {
-        throw new StatusError(`Order ${order_id} not found`, 404)
+        throw new NotFoundError(`Order ${order_id} not found`, 404)
       }
       if (lodash.isEmpty(data.address) || lodash.isEmpty(data.shipping_mode)) {
         throw new StatusError(`Address and shipping mode are required to validate`, 412)
@@ -518,7 +533,7 @@ router.get('/:id/shipping-fee', passport.authenticate('jwt', {session: false}), 
     .populate('company')
     .then(result => {
       if (!result) {
-        return res.status(404).json()
+        return res.status(HTTP_CODES.NOT_FOUND).json()
       }
       order=result
       // Simulate address
@@ -563,7 +578,7 @@ router.get('/:id/actions', passport.authenticate('jwt', {session: false}), (req,
   MODEL.findById(req.params.id)
     .then(model => {
       if (!model) {
-        return res.status(404).json()
+        return res.status(HTTP_CODES.NOT_FOUND).json()
       }
       if (isActionAllowed(user.roles, DATA_TYPE, UPDATE) && ![VALID, PARTIALLY_HANDLED, HANDLED].includes(model.status)) {
         result.push(UPDATE)

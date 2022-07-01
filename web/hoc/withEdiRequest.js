@@ -143,10 +143,11 @@ const withEdiRequest = (Component = null) => {
       return await client(`${API_PATH}/${endpoint}/${orderid}`, {data: {address: shipping.address, reference: shipping.reference, shipping_mode: shipping.shipping_mode}, method: 'PUT'})
         .then(() => {
           this.getContentFrom({endpoint, orderid})
+          return true
         })
-        .catch(e => {
-          console.error(`Can't bind address to order/quotation`, e)
-          return {errors: e}
+        .catch(error => {
+          console.error(`Can't bind address to order/quotation`, error)
+          throw error
         })
     }
 

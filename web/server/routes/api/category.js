@@ -1,12 +1,12 @@
-const mongoose = require('mongoose')
+const express = require('express')
+const passport = require('passport')
+const lodash = require('lodash')
+const {HTTP_CODES} = require('../../utils/errors')
 const Category = require('../../models/Category')
 const Service = require('../../models/Service')
 const ServiceUser = require('../../models/ServiceUser')
-const express = require('express')
 
 const router = express.Router()
-const passport = require('passport')
-const lodash = require('lodash')
 
 router.get('/test', (req, res) => res.json({msg: 'Category Works!'}))
 
@@ -31,7 +31,7 @@ router.get('/currentAlfred', passport.authenticate('jwt', {session: false}), asy
       return res.status(400).json({msg: 'No category found'})
     })
     .catch(err => {
-      return res.status(404).json({category: `No category found error:${err}`})
+      return res.status(HTTP_CODES.NOT_FOUND).json({category: `No category found error:${err}`})
     })
 })
 

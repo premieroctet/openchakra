@@ -1,5 +1,6 @@
-const Job = require('../../models/Job')
 const express = require('express')
+const {HTTP_CODES} = require('../../utils/errors')
+const Job = require('../../models/Job')
 
 const router = express.Router()
 
@@ -19,7 +20,7 @@ router.get('/all', (req, res) => {
       }
 
     })
-    .catch(err => res.status(404).json({job: 'No job found'}))
+    .catch(err => res.status(HTTP_CODES.NOT_FOUND).json({job: 'No job found'}))
 })
 
 // @Route GET /myAlfred/api/job/:id
@@ -35,7 +36,7 @@ router.get('/:id', (req, res) => {
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({job: `No job found:${err}`})
+      res.status(HTTP_CODES.NOT_FOUND).json({job: `No job found:${err}`})
     })
 })
 
