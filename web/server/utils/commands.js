@@ -85,11 +85,11 @@ Computes Ship rate depending on zipcode, weight and express (true||false)
 const computeShippingFee = (model, address, express) => {
   return new Promise((resolve, reject) => {
     if (!address) {
-      return reject(`Can not compute shipping fee: no address`)
+      return reject(`Calcul frais de livraison impossible: adresse manquante`)
     }
     const orderDepartment=extractDepartment(address?.zip_code)
     if (!orderDepartment) {
-      return reject(`Can not compute shipping fee: no zip code`)
+      return reject(`Calcul frais de livraison impossible: code postal incorrect`)
     }
     const orderAddress=address
     const companyMainAddress=model.company?.addresses[0]
