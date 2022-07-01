@@ -593,7 +593,7 @@ router.post('/update-cgv', passport.authenticate('jwt', {session: false}), (req,
     if (err) {
       return res.status(err.status || 500).json(err.message || err)
     }
-    User.update({}, {cgv_validation_date: null})
+    User.updateMany({}, {cgv_validation_date: null})
       .then(() => {
         return res.json()
       })
