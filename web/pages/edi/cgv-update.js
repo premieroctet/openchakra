@@ -41,8 +41,8 @@ const CGVupdate = () => {
       
       <label htmlFor='updatecgv'>
 
-        <span role={'img'} alt=''>⬇️</span>
-        <span>Importer vos CGV actuelles</span>
+        <span role={'img'} alt=''>⬇</span>
+        <span>Importer les nouvelles CGV</span>
         <span className='italic'>(format .pdf)</span>
         <input className='sr-only' id='updatecgv' type={'file'} accept={'.pdf'} onChange={e => setFilename(e.target.files[0])} />
 
@@ -67,7 +67,7 @@ const UpdateFile = styled.form`
 
   .success {
     padding: var(--spc-4);
-    background-color: green;
+    background-color: var(--brand-color);
     color: white;
   }
 
@@ -77,7 +77,7 @@ const UpdateFile = styled.form`
     row-gap: var(--spc-2);
     justify-content: center;
     align-items: center;
-    width: 100%;
+    width: 80%;
     margin-inline: auto;
     padding: var(--spc-8);
     aspect-ratio: 2 / 1;
@@ -86,7 +86,8 @@ const UpdateFile = styled.form`
     margin-bottom: var(--spc-8);
     
     span:first-of-type {
-      font-size: var(--text-4xl);
+      color: var(--brand-color);
+      font-size: var(--text-5xl);
       background-color: var(--stone-100);
       padding: var(--spc-8);
       border-radius: var(--rounded-full);

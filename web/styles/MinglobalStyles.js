@@ -17,6 +17,7 @@ export const MinGlobalStyles = createGlobalStyle`
       --text-2xl: 1.5rem;
       --text-3xl: 1.875rem;
       --text-4xl: 2.25rem;
+      --text-5xl: 2.5rem;
       --font-normal: 400;
       --font-medium : 500;
       --font-semibold : 600;
