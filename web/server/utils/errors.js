@@ -1,3 +1,10 @@
+const HTTP_CODES={
+  BAD_REQUEST: 400,
+  NOT_LOGGED: 401,
+  FORBIDDEN: 403,
+  NOT_FOUND: 404,
+}
+
 class StatusError extends Error {
 
   constructor(message, status) {
@@ -10,20 +17,28 @@ class StatusError extends Error {
 
 class NotFoundError extends StatusError {
   constructor(message) {
-    super(message, 404)
+    super(message, HTTP_CODES.NOT_FOUND)
+  }
+}
+
+class NotLoggedError extends StatusError {
+  constructor(message) {
+    super(message, HTTP_CODES.NOT_LOGGED)
   }
 }
 
 class ForbiddenError extends StatusError {
   constructor(message) {
-    super(message, 403)
+    super(message, HTTP_CODES.FORBIDDEN)
   }
 }
 
 class BadRequestError extends StatusError {
   constructor(message) {
-    super(message, 400)
+    super(message, HTTP_CODES.BAD_REQUEST)
   }
 }
 
-module.exports={StatusError, NotFoundError, ForbiddenError, BadRequestError}
+module.exports={StatusError, NotFoundError, ForbiddenError, BadRequestError,
+  NotLoggedError,
+  HTTP_CODES}

@@ -1,3 +1,4 @@
+const {HTTP_CODES} = require('../../utils/errors')
 const fs=require('fs')
 const path=require('path')
 const lodash=require('lodash')
@@ -101,7 +102,7 @@ router.put('/:product_id', passport.authenticate('jwt', {session: false}), (req,
   Product.findByIdAndUpdate(req.params.product_id, req.body, {runValidators: true, new: true})
     .then(product => {
       if (!product) {
-        return res.status(404).json()
+        return res.status(HTTP_CODES.NOT_FOUND).json()
       }
       return res.json()
     })
@@ -117,13 +118,13 @@ router.put('/:product_id', passport.authenticate('jwt', {session: false}), (req,
 router.delete('/:product_id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, DELETE)) {
-    return res.sendStatus(301)
+    return res.sendStatus(HTTP_CODES.FORBIDDEN)
   }
 
   Product.findByIdAndDelete(req.params.product_id, {runValidators: true, new: true})
     .then(product => {
       if (!product) {
-        return res.status(404).json()
+        return res.status(HTTP_CODES.NOT_FOUND).json()
       }
       return res.json()
     })
@@ -138,13 +139,13 @@ router.delete('/:product_id', passport.authenticate('jwt', {session: false}), (r
 router.post('/import', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, CREATE)) {
-    return res.sendStatus(301)
+    return res.sendStatus(HTTP_CODES.FORBIDDEN)
   }
 
   uploadProducts.single('buffer')(req, res, err => {
     if (err) {
       console.error(err)
-      return res.status(404).json({errors: err.message})
+      return res.status(HTTP_CODES.NOT_FOUND).json({errors: err.message})
     }
 
     const options=JSON.parse(req.body.options)
@@ -171,7 +172,7 @@ router.post('/import-stock', passport.authenticate('jwt', {session: false}), (re
   uploadProducts.single('buffer')(req, res, err => {
     if (err) {
       console.error(err)
-      return res.status(404).json({errors: err.message})
+      return res.status(HTTP_CODES.NOT_FOUND).json({errors: err.message})
     }
 
     const options=JSON.parse(req.body.options)

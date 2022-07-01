@@ -1,5 +1,6 @@
-const Equipment = require('../../models/Equipment')
 const express = require('express')
+const {HTTP_CODES} = require('../../utils/errors')
+const Equipment = require('../../models/Equipment')
 
 const router = express.Router()
 
@@ -20,7 +21,7 @@ router.get('/all', (req, res) => {
       }
 
     })
-    .catch(err => res.status(404).json({equipment: 'No equipment found'}))
+    .catch(err => res.status(HTTP_CODES.NOT_FOUND).json({equipment: 'No equipment found'}))
 
 
 })
@@ -38,7 +39,7 @@ router.get('/:id', (req, res) => {
     })
     .catch(err => {
       console.error(err)
-      return res.status(404).json({equipment: 'No equipment found'})
+      return res.status(HTTP_CODES.NOT_FOUND).json({equipment: 'No equipment found'})
     })
 })
 

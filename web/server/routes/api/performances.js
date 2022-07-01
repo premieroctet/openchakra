@@ -1,14 +1,15 @@
+const express = require('express')
+const passport = require('passport')
+const moment = require('moment')
+const lodash=require('lodash')
+const {HTTP_CODES} = require('../../utils/errors')
 const ServiceUser = require('../../models/ServiceUser')
 const Booking = require('../../models/Booking')
 const Review = require('../../models/Review')
-const express = require('express')
-
-const router = express.Router()
-const passport = require('passport')
-const moment = require('moment')
 const {BOOK_STATUS}=require('../../../utils/consts')
-const lodash=require('lodash')
+
 moment.locale('fr')
+const router = express.Router()
 
 router.get('/test', (req, res) => res.json({msg: 'Performances Works!'}))
 
@@ -29,7 +30,7 @@ router.get('/incomes/totalComing/:year', passport.authenticate('jwt', {session: 
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json(err)
+      res.status(HTTP_CODES.NOT_FOUND).json(err)
     })
 })
 
@@ -53,7 +54,7 @@ router.get('/incomes/:year', passport.authenticate('jwt', {session: false}), (re
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json(err)
+      res.status(HTTP_CODES.NOT_FOUND).json(err)
     })
 })
 
@@ -100,7 +101,7 @@ router.get('/statistics/:year/:month?', passport.authenticate('jwt', {session: f
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json(err)
+      res.status(HTTP_CODES.NOT_FOUND).json(err)
     })
 })
 

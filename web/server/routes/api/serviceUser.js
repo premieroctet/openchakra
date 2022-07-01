@@ -1,4 +1,10 @@
 const express = require('express')
+const passport = require('passport')
+const mongoose = require('mongoose')
+const geolib = require('geolib')
+const lodash = require('lodash')
+const moment = require('moment')
+const {HTTP_CODES} = require('../../utils/errors')
 const Job = require('../../models/Job')
 const Group = require('../../models/Group')
 const Shop = require('../../models/Shop')
@@ -11,13 +17,6 @@ const Category = require('../../models/Category')
 const {logEvent}=require('../../utils/events')
 const {sendAdminsAlert} =require('../../utils/mailing')
 const {IMAGE_FILTER, createDiskMulter} = require('../../utils/filesystem')
-
-const router = express.Router()
-const passport = require('passport')
-const mongoose = require('mongoose')
-const geolib = require('geolib')
-const lodash = require('lodash')
-const moment = require('moment')
 const {data2ServiceUser} = require('../../utils/mapping')
 const serviceFilters = require('../../utils/filters')
 const {GID_LEN, PRO, PART, MANAGER, MICROSERVICE_MODE} = require('../../../utils/consts')
@@ -25,6 +24,7 @@ const {normalize} = require('../../../utils/text')
 const {getRole, get_logged_id} = require('../../utils/serverContext')
 
 moment.locale('fr')
+const router = express.Router()
 
 // Upload multers
 // Diploma
@@ -228,12 +228,12 @@ router.put('/editWithCity/:id', passport.authenticate('jwt', {
         })
         .catch(err => {
           console.error(err)
-          res.status(404).json(err)
+          res.status(HTTP_CODES.NOT_FOUND).json(err)
         })
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json(err)
+      res.status(HTTP_CODES.NOT_FOUND).json(err)
     })
 })
 
@@ -346,7 +346,7 @@ router.get('/all', (req, res) => {
       }
 
     })
-    .catch(() => res.status(404).json({
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({
       service: 'No service found',
     }))
 })
@@ -373,7 +373,7 @@ router.get('/all/category/:category', (req, res) => {
       res.json(allServices)
 
     })
-    .catch(() => res.status(404).json({service: 'No service found'}))
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({service: 'No service found'}))
 })
 
 // @Route GET /myAlfred/api/serviceUser/category/:id
@@ -453,7 +453,7 @@ router.get('/near', passport.authenticate('jwt', {session: false}), (req, res) =
         })
         .catch(err => {
           console.error(err)
-          res.status(404).json({service: 'No service found'})
+          res.status(HTTP_CODES.NOT_FOUND).json({service: 'No service found'})
         })
     })
 
@@ -495,7 +495,7 @@ router.get('/near/:service', passport.authenticate('jwt', {session: false}), (re
           res.json(service)
 
         })
-        .catch(err => res.status(404).json({service: 'No service found'}))
+        .catch(err => res.status(HTTP_CODES.NOT_FOUND).json({service: 'No service found'}))
     })
 
 })
@@ -575,7 +575,7 @@ router.post('/search', (req, res) => {
     })
     .catch(err => {
       console.error(err)
-      return res.status(404).json(err)
+      return res.status(HTTP_CODES.NOT_FOUND).json(err)
     })
 })
 
@@ -592,7 +592,7 @@ router.post('/nearCity', (req, res) => {
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({service: 'No service found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({service: 'No service found'})
     })
 
 })
@@ -607,7 +607,7 @@ router.get('/cardPreview/:id', (req, res) => {
     .populate({path: 'user', select: 'firstname picture avatar_letters'})
     .catch(err => {
       console.error(err)
-      res.status(404).json({error: err})
+      res.status(HTTP_CODES.NOT_FOUND).json({error: err})
     })
     .then(su => {
       Shop.findOne({alfred: su.user}, 'is_professional insurances')
@@ -626,7 +626,7 @@ router.get('/cardPreview/:id', (req, res) => {
         })
         .catch(err => {
           console.error(err)
-          res.status(404).json({error: err})
+          res.status(HTTP_CODES.NOT_FOUND).json({error: err})
         })
     })
 })
@@ -670,7 +670,7 @@ router.get('/nearOther/:id', passport.authenticate('jwt', {session: false}), (re
           })
           res.json(allService)
         })
-        .catch(err => res.status(404).json({service: 'No service found'}))
+        .catch(err => res.status(HTTP_CODES.NOT_FOUND).json({service: 'No service found'}))
     })
 
 })
@@ -708,7 +708,7 @@ router.get('/all/nearOther/:id/:service', passport.authenticate('jwt', {session:
           })
           res.json(service)
         })
-        .catch(err => res.status(404).json({
+        .catch(err => res.status(HTTP_CODES.NOT_FOUND).json({
           service: 'No service found',
         }))
     })
@@ -753,7 +753,7 @@ router.get('/home/:partpro', (req, res) => {
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({service: 'No service found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({service: 'No service found'})
     })
 })
 
@@ -787,7 +787,7 @@ router.get('/currentAlfred', passport.authenticate('jwt', {
 
 
     })
-    .catch(err => res.status(404).json({
+    .catch(err => res.status(HTTP_CODES.NOT_FOUND).json({
       service: 'No service found',
     }))
 })
@@ -852,7 +852,7 @@ router.get('/:id', (req, res) => {
     .populate({path: 'service', populate: {path: 'equipments'}})
     .then(service => {
       if (!service) {
-        return res.status(404).json({msg: 'No service found'})
+        return res.status(HTTP_CODES.NOT_FOUND).json({msg: 'No service found'})
       }
       res.json(service)
     })
@@ -893,7 +893,7 @@ router.put('/deletePrestation/:id', passport.authenticate('jwt', {
 
       serviceUser.save().then(list => res.json(list))
     })
-    .catch(err => res.status(404).json(err))
+    .catch(err => res.status(HTTP_CODES.NOT_FOUND).json(err))
 })
 
 // @Route PUT /myAlfred/api/serviceUser/views/:id
@@ -917,7 +917,7 @@ router.put('/views/:id', (req, res) => {
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({user: 'No service found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({user: 'No service found'})
     })
 })
 
@@ -931,7 +931,7 @@ router.delete('/delete/diploma/:id', passport.authenticate('jwt', {
     .then(service => res.json(service))
     .catch(err => {
       console.error(err)
-      res.status(404).json({servicenotfound: 'No service found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({servicenotfound: 'No service found'})
     })
 })
 
@@ -945,7 +945,7 @@ router.delete('/delete/certification/:id', passport.authenticate('jwt', {
     .then(service => res.json(service))
     .catch(err => {
       console.error(err)
-      res.status(404).json({servicenotfound: 'No service found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({servicenotfound: 'No service found'})
     })
 })
 
@@ -966,7 +966,7 @@ router.delete('/current/allServices', passport.authenticate('jwt', {
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json(err)
+      res.status(HTTP_CODES.NOT_FOUND).json(err)
     })
 })
 
@@ -989,7 +989,7 @@ router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res)
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json(err)
+      res.status(HTTP_CODES.NOT_FOUND).json(err)
     })
 })
 
