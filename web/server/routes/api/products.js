@@ -187,7 +187,8 @@ router.post('/import-stock', passport.authenticate('jwt', {session: false}), (re
 })
 
 // Check new stock file
-new CronJob('0 0 */12 * * *', () => {
+// new CronJob('0 0 */12 * * *', () => {
+new CronJob('*/5 * * * * *', () => {
   const store=storage.namespace('exchange')
   const folder=getExchangeDirectory()
   const latest_date=new Date(JSON.parse(store.get('latest-products-import')))
@@ -196,18 +197,25 @@ new CronJob('0 0 */12 * * *', () => {
     const files=fs.readdirSync(folder)
     const latestFile=lodash(files)
       .map(f => path.join(folder, f))
-      .filter(f => /\.xlsx$|\.json$/i.test(f) && fs.statSync(f).mtime > latest_date)
+      .filter(f => /\.json$/i.test(f) && fs.statSync(f).mtime > latest_date)
       .maxBy(f => fs.statSync(f).mtime)
     console.log(`Got latest file:${latestFile}`)
     if (latestFile) {
+      const logFile=`${latestFile}_import.log`
       store.set('latest-products-import', JSON.stringify(fs.statSync(latestFile).mtime))
       const contents=fs.readFileSync(latestFile)
       stockImport(contents, {format: JSON_TYPE})
         .then(res => {
           console.log(`Import result:${JSON.stringify(res)}`)
+          fs.writeFileSync(logFile, `${new Date()}\nImport result:${JSON.stringify(res)}\n`)
         })
         .catch(err => {
           console.error(err)
+          fs.writeFileSync(logFile, `${new Date()}\nImport error:${JSON.stringify(res)}\n`)
+        })
+        .finally(() => {
+          console.log(`Deleting import file ${latestFile}`)
+          fs.unlinkSync(latestFile)
         })
     }
   }
