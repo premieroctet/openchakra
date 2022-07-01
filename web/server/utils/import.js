@@ -73,7 +73,13 @@ const dataImport=(model, headers, records, mapping, options, postImport= () => P
 
     const promises=mappedRecords.map(record => {
       let promises=[]
-      promises.push(model.updateOne({[uniqueKey]: record.destination[uniqueKey]}, record.destination, {upsert: !updateOnly, new: true}))
+      promises.push(model.updateOne({[uniqueKey]: record.destination[uniqueKey]}, record.destination, {upsert: !updateOnly, new: true})
+        .then(res => {
+          return res.n==0 && updateOnly ?
+            Promise.reject({message: `Clé ${record.destination[uniqueKey]} inconnue lors de la mise à jour`})
+            :
+            res
+        }))
       return promises
     },
     )
