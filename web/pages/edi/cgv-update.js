@@ -35,7 +35,7 @@ const CGVupdate = () => {
   return (<div className='container-md mb-8'>
     <h1>Mise à jour des CGV</h1>
 
-    <UpdateFile onSubmit={submitFile}>
+    <UpdateFile onSubmit={() => submitFile}>
       
       {cgvUploaded && <p className='success'>Les nouvelles conditions générales ont été mises en place.</p>}
       
@@ -77,13 +77,13 @@ const UpdateFile = styled.form`
     row-gap: var(--spc-2);
     justify-content: center;
     align-items: center;
-    width: 80%;
+    width: min(calc(100% - 2rem), 30rem);
     margin-inline: auto;
     padding: var(--spc-8);
-    aspect-ratio: 2 / 1;
     border: 1px solid var(--stone-400);
     cursor: pointer;
     margin-bottom: var(--spc-8);
+    text-align: center;
     
     span:first-of-type {
       color: var(--brand-color);
@@ -91,7 +91,7 @@ const UpdateFile = styled.form`
       background-color: var(--stone-100);
       padding: var(--spc-8);
       border-radius: var(--rounded-full);
-      width: var(--spc-32);
+      width: min(calc(100% - 2rem), var(--spc-24));
       aspect-ratio: 1 / 1;
       display: flex;
       align-items: center;
