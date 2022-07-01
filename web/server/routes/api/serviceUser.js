@@ -642,8 +642,8 @@ router.post('/nearCity', (req, res) => {
 // @Access private
 router.get('/cardPreview/:id', (req, res) => {
   const suId = mongoose.Types.ObjectId(req.params.id)
-  ServiceUser.findOne(suId, 'label picture alfred service service_address.city service_address.gps diploma certification level description location')
-    .populate({path: 'service', select: 'picture label cpf'})
+  ServiceUser.findOne(suId, 'label picture alfred cpf_eligible service service_address.city service_address.gps diploma certification level description location')
+    .populate({path: 'service', select: 'picture label'})
     .populate({path: 'user', select: 'firstname picture avatar_letters'})
     .catch(err => {
       console.error(err)
@@ -659,7 +659,7 @@ router.get('/cardPreview/:id', (req, res) => {
                 alfred: su.user, city: su.service_address ? su.service_address.city : '',
                 grade_text: su.grade_text, level: su.level, is_professional: shop.is_professional,
                 gps: su.service_address ? su.service_address.gps : null, reviews: reviews, description: su.description,
-                insurance_text: shop.insurance_text, location: su.location, cpf: su.service.cpf,
+                insurance_text: shop.insurance_text, location: su.location, cpf: su.cpf_eligible,
               }
               res.json(result)
             })

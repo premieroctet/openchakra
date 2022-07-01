@@ -129,10 +129,6 @@ const BookingSchema = new Schema({
   date_payment: {
     type: Date,
   },
-  cpf_amount: {
-    type: Number,
-    required: false,
-  },
   travel_tax: {
     type: Number,
     required: true,
@@ -200,6 +196,12 @@ const BookingSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'booking',
   },
+  // Booked using CPF account
+  cpf_booked: {
+    type: Boolean,
+    default: false,
+    required: false,
+  },
 }, {toJSON: {virtuals: true, getters: true}})
 
 BookingSchema.virtual('alfred_amount').get(function() {
@@ -222,6 +224,10 @@ BookingSchema.virtual('customer_fee').get(function() {
 
 BookingSchema.virtual('provider_fee').get(function() {
   return lodash.sum((this.provider_fees||[]).map(c => c.amount))
+})
+
+BookingSchema.virtual('cpf_amount').get(function() {
+  return this.cpf_booked ? this.amount : 0
 })
 
 

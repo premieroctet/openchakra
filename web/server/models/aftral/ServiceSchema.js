@@ -23,7 +23,6 @@ ServiceSchema.add({
   more_info: String,
   documents: [String],
   level: String,
-  cpf: Boolean,
   validation: String,
   video: {
     type: String,

@@ -1,8 +1,8 @@
 const lodash=require('lodash')
+const {CESU_DISABLED} = require('../../../utils/consts')
 const Shop = require('../../models/Shop')
 const ServiceUser = require('../../models/ServiceUser')
 const Commission = require('../../models/Commission')
-const {CESU_DISABLED, CPF_RATE}=require('../../../utils/consts')
 
 class PaymentBase {
 
@@ -89,8 +89,7 @@ class PaymentBase {
   compute = data => {
 
     const serviceUserId=data.serviceUser
-    const prestations=data.prestations
-    const location=data.location
+    const {prestations, location, cpf_booked}=data
     const distance=data.distance || 0
     const avocotes_amount = data.avocotes_amount || 0
 
@@ -139,7 +138,7 @@ class PaymentBase {
           res.customer_fees=customer_fees
           res.customer_fee = lodash.sum(customer_fees.map(f => f.amount))
           const grandTotal=res.total_prestations+res.travel_tax+res.pick_tax+res.customer_fee
-          res.cpf_amount=grandTotal*CPF_RATE
+          res.cpf_amount=cpf_booked ? grandTotal: 0
           res.total=grandTotal-res.cpf_amount
           resolve(res)
         })

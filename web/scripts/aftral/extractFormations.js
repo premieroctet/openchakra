@@ -29,7 +29,7 @@ const importFile = async fileName => {
 
 
   try {
-
+    console.log(`\n\nReading ${fileName}`)
     await fsPromises.readFile(fileName, {encoding: 'utf8'})
       .then(contents => {
         const soup=new JSSoup(contents)
@@ -64,23 +64,6 @@ const importFile = async fileName => {
           .findAll('ul').map(e => e.text.trim())
 
         data.goals= Array.from(new Set(goalsInUL, goalsInLi)) || []
-
-
-        // const primaryGoals = goalsInLi ? goalsInLi.filter(a => a.includes(goalsInUL)) : goalsInUL
-        // const secondaryGoals = goalsInLi.filter(a => !a.includes(goalsInUL))
-
-        // data.goals= [...primaryGoals, ...secondaryGoals] || []
-
-        // const goalsContainer = soup
-        //   .findAll('section')
-        //   .find(e => e.attrs.class && e.attrs.class.includes('field-name-field-objectifs-de-la-formation'))
-
-        // if (goalsContainer) {
-        //   const regexp = /Objectifs de la formation/i
-        //   const sanitizedGoals = goalsContainer.prettify().replace(regexp, '')
-        //   data.goals=sanitizedGoals
-        // }
-
         const moreInfo = soup.findAll('div').find(e => e.attrs.class && e.attrs.class.includes('group-ensavoirplus'))
         if (moreInfo) {
           moreInfo.findAll('div').find(e => e.attrs.class && e.attrs.class.includes('toggle-wrap')).extract()
@@ -124,13 +107,18 @@ const importFile = async fileName => {
         }
 
         const cpfElt=soup.findAll('span').find(e => e.text=='CPF')
-        data.cpf=cpfElt && cpfElt.nextSibling.text.trim()=='Éligible'
+        const cpf_eligible=cpfElt && cpfElt.nextSibling.text.trim()=='Éligible'
+        console.log(`Eligible CPF:${cpf_eligible}`)
         const levelTitle=soup.findAll('span').find(e => e.text=='Niveau de la formation')
         if (levelTitle) {
           data.level=levelTitle.nextSibling.text.trim()
         }
         const illuElt=soup.find('div', 'title-img')
         const imgUrl=illuElt.attrs.style.split('(')[1].split(')')[0]
+
+        // const cpf_link=soup.findAll('a').find(t => t.attrs.id=='link-formation-cpf')
+        const cpf_link=soup.findAll('a').filter(t => t.attrs?.id=='link-formation-cpf').map(t => t.attrs?.href).pop()
+
         return User.findOne({email: /aftral/})
           .then(result => {
             if(!result) {
@@ -172,6 +160,8 @@ const importFile = async fileName => {
               professional_access: true,
               service_address: null,
               location: {elearning: true},
+              cpf_eligible: cpf_eligible,
+              cpf_link: cpf_link,
               prestations: [{prestation: prestation._id, price: price, billing: prestation.billing[0]}],
               perimeter: 1000,
             },

@@ -4,6 +4,7 @@ import styled from 'styled-components'
 // import {client} from '../../utils/client'
 import axios from 'axios'
 import ReactHtmlParser from 'react-html-parser'
+import DevLog from '../../components/DevLog'
 import Layout from '../../hoc/Layout/Layout'
 import {screen} from '../../styles/screenWidths'
 import {getHostUrl} from '../../config/config'
@@ -98,6 +99,7 @@ const Training = ({training}) => {
 
   return (
     <>
+      <DevLog>Service {String(training.cpf_eligible)}</DevLog>
       <Layout>
         <StyledTraining>
 
@@ -122,7 +124,7 @@ const Training = ({training}) => {
                 <dd>{training.service?.reference}</dd>
                 <dt>Durée de la formation</dt>
                 <dd>{training.service?.duration_days} {training.service?.duration_days && training.service.duration_days > 1 ? 'jours' : 'jour'}</dd>
-                <dt>&Eacute;ligigle au <abbr title='compte personnel de formation'>CPF</abbr></dt>
+                <dt>&Eacute;ligible au <abbr title='compte personnel de formation'>CPF</abbr></dt>
                 <dd></dd>
               </dl>
 
@@ -252,7 +254,7 @@ const Training = ({training}) => {
               </div>
 
               <hr />
-              
+
               <button
                 onClick={() => setAllComments(!allComments)}
               >{
@@ -605,7 +607,7 @@ const Opinions = styled(RoundedBox)`
     overflow: hidden;
     max-height:300px;
     transition: all 1s ease-in-out;
-    
+
     &.liberate {
       max-height: 2800px;
     }
@@ -660,7 +662,7 @@ const StyledTraining = styled.div`
   * {
     font-family: Poppins, 'sans-serif';
   }
-   
+
   min-height: 100vh;
   background-color: var(--bg-color);
   position: relative;

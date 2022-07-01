@@ -179,6 +179,14 @@ const ServiceUserSchema = new Schema({
     required: true,
     sparse: true,
   },
+  // CPF eligible
+  cpf_eligible: {
+    type: Boolean,
+    default: false,
+  },
+  cpf_link: {
+    type: String,
+  },
 }, {toJSON: {virtuals: true, getters: true}})
 
 ServiceUserSchema.virtual('is_graduated').get(function() {
