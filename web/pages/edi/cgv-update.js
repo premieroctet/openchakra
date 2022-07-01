@@ -35,7 +35,7 @@ const CGVupdate = () => {
   return (<div className='container-md mb-8'>
     <h1>Mise à jour des CGV</h1>
 
-    <UpdateFile onSubmit={() => submitFile}>
+    <UpdateFile onSubmit={submitFile}>
       
       {cgvUploaded && <p className='success'>Les nouvelles conditions générales ont été mises en place.</p>}
       
@@ -50,7 +50,7 @@ const CGVupdate = () => {
           
       {filename && <p className='data'>{filename?.name || ''}</p>}
       
-      <NormalButton disabled={!filename} size={'full-width'} rounded={'full'} type='submit' onSubmit={() => submitFile}>Mettre à jour les CGV</NormalButton>
+      <NormalButton disabled={!filename} size={'full-width'} rounded={'full'} type='submit' onSubmit={submitFile}>Mettre à jour les CGV</NormalButton>
 
       <p className='text-center'>La mise à jour des CGV impliquera une nouvelle acceptation des CGV pour l'ensemble des comptes.</p>
   
@@ -97,6 +97,11 @@ const UpdateFile = styled.form`
       align-items: center;
       justify-content: center;
     }
+
+    &:hover, &:focus-within {
+      border-style: dashed;
+    }
+
   }
 
   .data {
