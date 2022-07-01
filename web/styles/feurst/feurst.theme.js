@@ -205,6 +205,16 @@ input:focus:not(:focus-visible) {
   outline: none;
 }
 
+.msgerror {
+  --red-alert: #993333;
+  display: inline-block;
+  padding: var(--spc-2);
+  background-color: white;
+  color: var(--red-alert);
+  border: 1px solid var(--red-alert);
+  margin-bottom: var(--spc-2);
+}
+
 
 /* Disposition */
 

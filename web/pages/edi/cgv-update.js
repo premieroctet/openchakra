@@ -39,20 +39,20 @@ const CGVupdate = () => {
       
       {cgvUploaded && <p className='success'>Les nouvelles conditions générales ont été mises en place.</p>}
       
-          <label htmlFor='updatecgv'>
+      <label htmlFor='updatecgv'>
 
-           <span role={'img'} alt=''>⬇️</span>
-            <span>Importer vos CGV actuelles</span> 
-            <span className='italic'>(format .pdf)</span>
-            <input className='sr-only' id='updatecgv' type={'file'} accept={'.pdf'} onChange={e => setFilename(e.target.files[0])} />
+        <span role={'img'} alt=''>⬇️</span>
+        <span>Importer vos CGV actuelles</span>
+        <span className='italic'>(format .pdf)</span>
+        <input className='sr-only' id='updatecgv' type={'file'} accept={'.pdf'} onChange={e => setFilename(e.target.files[0])} />
 
-          </label>
+      </label>
           
-          {filename && <p className='data'>{filename?.name || ''}</p>}
+      {filename && <p className='data'>{filename?.name || ''}</p>}
       
-          <NormalButton disabled={!filename} size={'full-width'} rounded={'full'} type='submit' onSubmit={() => submitFile}>Mettre à jour les CGV</NormalButton>
+      <NormalButton disabled={!filename} size={'full-width'} rounded={'full'} type='submit' onSubmit={() => submitFile}>Mettre à jour les CGV</NormalButton>
 
-          <p className='text-center'>La mise à jour des CGV impliquera une nouvelle acceptation des CGV pour l'ensemble des comptes.</p>
+      <p className='text-center'>La mise à jour des CGV impliquera une nouvelle acceptation des CGV pour l'ensemble des comptes.</p>
   
     </UpdateFile>
   </div>
