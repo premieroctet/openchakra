@@ -43,7 +43,13 @@ const CGV = () => {
         }
 
         <div className='displaycgv'>
-          <embed src={CGV_PATH} type="application/pdf" width="100%" height="100%" />
+          <object
+            type="application/pdf"
+            data={CGV_PATH}
+            role={'document'}
+            width="300"
+            height="200"
+          ></object>
 
           {user && !user?.cgv_valid ? <>
 
@@ -83,9 +89,10 @@ const StyledCGV = styled.div`
     grid-template-columns: 1fr;
   }
 
-  embed {
+  object {
     grid-area: cgvdoc;
     min-height: 50vh;
+    width: 100%;
   }
 
   form {
