@@ -582,13 +582,25 @@ router.delete('/profile/registrationProof', passport.authenticate('jwt', {sessio
     })
 })
 
-router.post('/update-cgv', uploadCGV.single('buffer'), passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/update-cgv', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   // TODO set in passport
   if (!isActionAllowed(req.user.roles, DATA_TYPE, UPDATE_CGV)) {
-    return res.sendStatus(301)
+    return res.sendStatus(403)
   }
 
+  uploadCGV.single('buffer')(req, res, err => {
+    if (err) {
+      return res.status(err.status || 500).json(err.message || err)
+    }
+    User.update({}, {cgv_validation_date: null})
+      .then(() => {
+        return res.json()
+      })
+      .catch(err => {
+        return res.status(err.status || 500).json(err.message || err)
+      })
+  })
 })
 
 router.put('/validate-cgv', passport.authenticate('jwt', {session: false}), (req, res) => {
