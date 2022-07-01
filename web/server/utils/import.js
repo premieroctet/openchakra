@@ -354,7 +354,7 @@ const stockImport = (bufferData, options) => {
   // db field => import field
   const DB_MAPPING={
     'reference': 'in_part',
-    'stock': 'ld_qty_oh',
+    'stock': 'in_qty_oh',
   }
 
   return fileImport(Product, bufferData, DB_MAPPING, {...options, key: 'reference', update: true})
