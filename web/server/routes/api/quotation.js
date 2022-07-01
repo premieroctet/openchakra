@@ -590,9 +590,6 @@ router.get('/:id/actions', passport.authenticate('jwt', {session: false}), (req,
       if (isActionAllowed(req.user.roles, DATA_TYPE, UPDATE) && [CREATED, COMPLETE].includes(model.status)) {
         result.push(UPDATE)
       }
-      if (isActionAllowed(req.user.roles, DATA_TYPE, UPDATE) && isFeurstUser(user) && [VALID].includes(model.status)) {
-        result.push(UPDATE)
-      }
       if (isActionAllowed(req.user.roles, DATA_TYPE, UPDATE) &&
       (model.status==COMPLETE || (model.status==VALID && isFeurstUser(user)))) {
         result.push(VALIDATE)
