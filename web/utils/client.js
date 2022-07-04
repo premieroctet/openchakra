@@ -1,4 +1,5 @@
 import {getPureAuthToken, clearAuthenticationToken} from './authentication'
+const {HTTP_CODES} = require('../server/utils/errors')
 
 const blobContentTypes = [
   'application/vnd.openxmlformats',
@@ -22,7 +23,7 @@ async function client(
   }
 
   return window.fetch(endpoint, config).then(async response => {
-    if (response.status === 401) {
+    if (response.status === HTTP_CODES.NOT_LOGGED) {
       clearAuthenticationToken()
       // refresh the page for them
       return Promise.reject({message: 'Accès interdit.'})
@@ -42,7 +43,7 @@ async function client(
 
       return data
     }
-    
+
     const error = new Error()
     error.info = {
       status: response.status,

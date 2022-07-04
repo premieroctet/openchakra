@@ -2,7 +2,7 @@ import React from 'react'
 import {useRouter} from 'next/router'
 import Link from 'next/link'
 import {StyledTabs} from '../../styles/feurst/StyledComponents'
-import {ORDER, QUOTATION, VIEW, PRODUCT, COMPANY, HANDLE, SHIPRATE, ACCOUNT, UPDATE, BASEPATH_EDI, PRICELIST} from '../../utils/consts'
+import {ORDER, QUOTATION, VIEW, PRODUCT, COMPANY, HANDLE, SHIPRATE, ACCOUNT, UPDATE, BASEPATH_EDI, UPDATE_CGV, PRICELIST} from '../../utils/consts'
 
 
 const tabsContent = [
@@ -74,7 +74,14 @@ const tabsContent = [
     url: `${BASEPATH_EDI}/profile`,
     model: ACCOUNT,
     action: UPDATE,
-    visible: [ACCOUNT],
+    visible: [ACCOUNT, PRODUCT, SHIPRATE, PRICELIST],
+  },
+  {
+    title: 'CGV',
+    url: `${BASEPATH_EDI}/cgv-update`,
+    model: ACCOUNT,
+    action: UPDATE_CGV,
+    visible: [ACCOUNT, PRODUCT, SHIPRATE, PRICELIST],
   },
 ]
 

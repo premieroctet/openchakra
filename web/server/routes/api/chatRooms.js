@@ -1,14 +1,13 @@
-const Booking = require('../../models/Booking')
-const ChatRoom = require('../../models/ChatRoom')
 const express = require('express')
-
-const router = express.Router()
 const uuidv4 = require('uuid/v4')
 const mongoose = require('mongoose')
 const passport = require('passport')
+const ChatRoom = require('../../models/ChatRoom')
+const Booking = require('../../models/Booking')
+const {HTTP_CODES} = require('../../utils/errors')
 const {sendNewMessageToAlfred, sendNewMessageToClient} = require('../../utils/mailing')
 
-// FIX : sendNewMessage de client vers Alfred en double
+const router = express.Router()
 
 router.get('/test', (req, res) => res.json({msg: 'ChatRooms Works!'}))
 
@@ -21,7 +20,7 @@ router.get('/userChatRooms', passport.authenticate('jwt', {session: false}), (re
     .populate('booking', 'alfred user')
     .then(chatrooms => {
       if (!chatrooms) {
-        res.status(404).json({msg: 'Aucun chat trouvé'})
+        res.status(HTTP_CODES.NOT_FOUND).json({msg: 'Aucun chat trouvé'})
       }
 
       if (chatrooms) {
@@ -40,7 +39,7 @@ router.get('/userChatRoom/:id', passport.authenticate('jwt', {session: false}), 
     .populate('attendees')
     .then(chatroom => {
       if (!chatroom) {
-        res.status(404).json({msg: 'Aucun chat trouvé'})
+        res.status(HTTP_CODES.NOT_FOUND).json({msg: 'Aucun chat trouvé'})
       }
       if (chatroom) {
         res.json(chatroom)
@@ -83,7 +82,7 @@ router.post('/addAndConnect', (req, res) => {
     })
     .catch(err => {
       console.error(err)
-      res.status(404)
+      res.status(HTTP_CODES.NOT_FOUND)
     })
 })
 
@@ -95,7 +94,7 @@ router.put('/saveMessages/:id', (req, res) => {
   }, {new: true})
     .then(chatroom => {
       if (!chatroom) {
-        return res.status(404).json({msg: 'no chatroom found'})
+        return res.status(HTTP_CODES.NOT_FOUND).json({msg: 'no chatroom found'})
       }
       if (chatroom) {
         Booking.findById(req.body.booking_id)
@@ -122,7 +121,7 @@ router.put('/addMessage/:id', (req, res) => {
   ChatRoom.findById(req.params.id)
     .then(chatroom => {
       if (!chatroom) {
-        return res.status(404).json({msg: 'no chatroom found'})
+        return res.status(HTTP_CODES.NOT_FOUND).json({msg: 'no chatroom found'})
       }
       chatroom.messages.push(req.body.message)
       chatroom.save()
@@ -152,7 +151,7 @@ router.put('/viewMessages/:id', passport.authenticate('jwt', {session: false}), 
   ChatRoom.findById(req.params.id)
     .then(chatroom => {
       if (!chatroom) {
-        res.status(404).json({msg: 'Aucun chat trouvé'})
+        res.status(HTTP_CODES.NOT_FOUND).json({msg: 'Aucun chat trouvé'})
         return
       }
       chatroom.messages.forEach(message => {
@@ -233,7 +232,7 @@ router.put('/addBookingId/:id', (req, res) => {
   ChatRoom.findByIdAndUpdate(req.params.id, {booking: mongoose.Types.ObjectId(req.body.booking)})
     .then(chatroom => {
       if (!chatroom) {
-        return res.status(404).json({msg: 'error'})
+        return res.status(HTTP_CODES.NOT_FOUND).json({msg: 'error'})
       }
       if (chatroom) {
         return res.json(chatroom)

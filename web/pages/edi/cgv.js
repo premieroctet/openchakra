@@ -3,10 +3,11 @@ import {useRouter} from 'next/router'
 import styled from 'styled-components'
 import withEdiAuth from '../../hoc/withEdiAuth'
 import {API_PATH} from '../../utils/consts'
-import {BASEPATH_EDI, FEURST_DOC_PATH} from '../../utils/feurst/consts'
+import {BASEPATH_EDI} from '../../utils/feurst/consts'
 import {client} from '../../utils/client'
 import {UserContext} from '../../contextes/user.context'
 import {snackBarSuccess, snackBarError} from '../../utils/notifications'
+const {CGV_PATH} = require('../../config/config')
 
 const CGV = () => {
 
@@ -42,7 +43,13 @@ const CGV = () => {
         }
 
         <div className='displaycgv'>
-          <embed src={`${FEURST_DOC_PATH}/CGV.pdf`} type="application/pdf" width="100%" height="100%" />
+          <object
+            type="application/pdf"
+            data={CGV_PATH}
+            role={'document'}
+            width="300"
+            height="200"
+          ></object>
 
           {user && !user?.cgv_valid ? <>
 
@@ -82,9 +89,10 @@ const StyledCGV = styled.div`
     grid-template-columns: 1fr;
   }
 
-  embed {
+  object {
     grid-area: cgvdoc;
     min-height: 50vh;
+    width: 100%;
   }
 
   form {

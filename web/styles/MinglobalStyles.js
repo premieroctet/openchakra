@@ -1,7 +1,7 @@
 import {createGlobalStyle} from 'styled-components'
 
 export const MinGlobalStyles = createGlobalStyle`
-  
+
   :root {
 
     --black: #111;
@@ -17,15 +17,16 @@ export const MinGlobalStyles = createGlobalStyle`
       --text-2xl: 1.5rem;
       --text-3xl: 1.875rem;
       --text-4xl: 2.25rem;
+      --text-5xl: 2.5rem;
       --font-normal: 400;
       --font-medium : 500;
       --font-semibold : 600;
       --font-bold	: 700;
-    
+
       /* Animation delays */
       --delayIn: .2s;
       --delayOut: .5s;
-    
+
       /* Spacing */
       --spc-0-5: 0.125rem;
       --spc-1: 0.25rem;
@@ -47,12 +48,12 @@ export const MinGlobalStyles = createGlobalStyle`
       --spc-24: 6rem;
       --spc-32: 8rem;
       --spc-96: 24rem;
-    
+
       /* Grid */
       --grid-cols-1: repeat(1, minmax(0, 1fr));
       --grid-cols-2: repeat(2, minmax(0, 1fr));
       --grid-cols-3: repeat(3, minmax(0, 1fr));
-    
+
       /* BorderRadius */
       --rounded: 0.25rem;
       --rounded-md: 0.375rem;
@@ -61,14 +62,14 @@ export const MinGlobalStyles = createGlobalStyle`
       --rounded-3xl: 1.5rem;
       --rounded-7xl: 3.5rem;
       --rounded-full: 9999px;
-    
+
       /* containers */
-      --container-sm: ${props => (props.theme?.containerSize?.sm ? props.theme.containerSize.sm : 'min(100% - 2rem, 30rem)')}; 
-      --container-md: ${props => (props.theme?.containerSize?.md ? props.theme.containerSize.md : 'min(100% - 2rem, 40rem)')}; 
-      --container-base: ${props => (props.theme?.containerSize?.base ? props.theme.containerSize.base : 'min(100% - 2rem, 50rem)')}; 
-      --container-lg: ${props => (props.theme?.containerSize?.lg ? props.theme.containerSize.lg : 'min(100% - 2rem, 60rem)')}; 
-      --container-xl: ${props => (props.theme?.containerSize?.xl ? props.theme.containerSize.xl : 'min(100% - 2rem, 70rem)')}; 
-    
+      --container-sm: ${props => (props.theme?.containerSize?.sm ? props.theme.containerSize.sm : 'min(100% - 2rem, 30rem)')};
+      --container-md: ${props => (props.theme?.containerSize?.md ? props.theme.containerSize.md : 'min(100% - 2rem, 40rem)')};
+      --container-base: ${props => (props.theme?.containerSize?.base ? props.theme.containerSize.base : 'min(100% - 2rem, 50rem)')};
+      --container-lg: ${props => (props.theme?.containerSize?.lg ? props.theme.containerSize.lg : 'min(100% - 2rem, 60rem)')};
+      --container-xl: ${props => (props.theme?.containerSize?.xl ? props.theme.containerSize.xl : 'min(100% - 2rem, 70rem)')};
+
       /* Miscellaneous */
       --minTapSize: 44px;
 

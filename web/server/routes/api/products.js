@@ -1,3 +1,4 @@
+const {HTTP_CODES} = require('../../utils/errors')
 const fs=require('fs')
 const path=require('path')
 const lodash=require('lodash')
@@ -6,9 +7,9 @@ const passport = require('passport')
 const moment = require('moment')
 
 const CronJob = require('cron').CronJob
+const PriceList = require('../../models/PriceList')
 const {JSON_TYPE} = require('../../../utils/feurst/consts')
 const storage = require('../../utils/storage')
-
 const {getExchangeDirectory} = require('../../../config/config')
 const {
   productsImport,
@@ -17,12 +18,11 @@ const {
 const {isActionAllowed} = require('../../utils/userAccess')
 const {DELETE} = require('../../../utils/feurst/consts')
 const {XL_FILTER, createMemoryMulter} = require('../../utils/filesystem')
-
 const {PRODUCT, CREATE} = require('../../../utils/consts')
 const Product = require('../../models/Product')
+const {validateProduct}=require('../../validation/product')
 
 const router = express.Router()
-const {validateProduct}=require('../../validation/product')
 
 moment.locale('fr')
 
@@ -53,15 +53,23 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   }
 
   Product.find({})
+    .sort('reference')
     .then(products => {
       const andEdProducts=products.filter(andFilter)
       const noSpaceProducts=products.filter(noSpaceFilter)
-      if (andEdProducts.length>noSpaceProducts.length) {
-        res.json(andEdProducts)
+      const filteredProducts= andEdProducts.length>noSpaceProducts.length ?andEdProducts : noSpaceProducts
+      // For customer, only allow products having net price
+      if (req.user.company) {
+        return PriceList.find({name: {$in: [req.user.company.catalog_prices, req.user.company.net_prices]}})
+          .then(prices => {
+            const pricedReferences=prices.map(p => p.reference)
+            return filteredProducts.filter(p => pricedReferences.includes(p.reference))
+          })
       }
-      else {
-        res.json(noSpaceProducts)
-      }
+      return filteredProducts
+    })
+    .then(products => {
+      return res.json(products)
     })
     .catch(err => {
       console.error(err)
@@ -94,7 +102,7 @@ router.put('/:product_id', passport.authenticate('jwt', {session: false}), (req,
   Product.findByIdAndUpdate(req.params.product_id, req.body, {runValidators: true, new: true})
     .then(product => {
       if (!product) {
-        return res.status(404).json()
+        return res.status(HTTP_CODES.NOT_FOUND).json()
       }
       return res.json()
     })
@@ -110,13 +118,13 @@ router.put('/:product_id', passport.authenticate('jwt', {session: false}), (req,
 router.delete('/:product_id', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, DELETE)) {
-    return res.sendStatus(301)
+    return res.sendStatus(HTTP_CODES.FORBIDDEN)
   }
 
   Product.findByIdAndDelete(req.params.product_id, {runValidators: true, new: true})
     .then(product => {
       if (!product) {
-        return res.status(404).json()
+        return res.status(HTTP_CODES.NOT_FOUND).json()
       }
       return res.json()
     })
@@ -131,13 +139,13 @@ router.delete('/:product_id', passport.authenticate('jwt', {session: false}), (r
 router.post('/import', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, CREATE)) {
-    return res.sendStatus(301)
+    return res.sendStatus(HTTP_CODES.FORBIDDEN)
   }
 
   uploadProducts.single('buffer')(req, res, err => {
     if (err) {
       console.error(err)
-      return res.status(404).json({errors: err.message})
+      return res.status(HTTP_CODES.NOT_FOUND).json({errors: err.message})
     }
 
     const options=JSON.parse(req.body.options)
@@ -164,7 +172,7 @@ router.post('/import-stock', passport.authenticate('jwt', {session: false}), (re
   uploadProducts.single('buffer')(req, res, err => {
     if (err) {
       console.error(err)
-      return res.status(404).json({errors: err.message})
+      return res.status(HTTP_CODES.NOT_FOUND).json({errors: err.message})
     }
 
     const options=JSON.parse(req.body.options)
@@ -189,18 +197,25 @@ new CronJob('0 0 */12 * * *', () => {
     const files=fs.readdirSync(folder)
     const latestFile=lodash(files)
       .map(f => path.join(folder, f))
-      .filter(f => /\.xlsx$|\.json$/i.test(f) && fs.statSync(f).mtime > latest_date)
+      .filter(f => /\.json$/i.test(f) && fs.statSync(f).mtime > latest_date)
       .maxBy(f => fs.statSync(f).mtime)
     console.log(`Got latest file:${latestFile}`)
     if (latestFile) {
+      const logFile=`${latestFile}_import.log`
       store.set('latest-products-import', JSON.stringify(fs.statSync(latestFile).mtime))
       const contents=fs.readFileSync(latestFile)
       stockImport(contents, {format: JSON_TYPE})
         .then(res => {
           console.log(`Import result:${JSON.stringify(res)}`)
+          fs.writeFileSync(logFile, `${new Date()}\nImport result:${JSON.stringify(res)}\n`)
         })
         .catch(err => {
           console.error(err)
+          fs.writeFileSync(logFile, `${new Date()}\nImport error:${JSON.stringify(res)}\n`)
+        })
+        .finally(() => {
+          console.log(`Deleting import file ${latestFile}`)
+          fs.unlinkSync(latestFile)
         })
     }
   }

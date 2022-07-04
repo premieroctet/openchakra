@@ -1,22 +1,24 @@
-const {
-  ForbiddenError,
-  NotFoundError,
-  StatusError,
-} = require('../../utils/errors')
-const Company = require('../../models/Company')
-
 const crypto = require('crypto')
 const fs = require('fs').promises
-
+const path=require('path')
 const express = require('express')
-
 const router = express.Router()
 const passport = require('passport')
 const bcrypt = require('bcryptjs')
 const moment = require('moment')
 const axios = require('axios')
 const gifFrames = require('gif-frames')
-const {getLocationSuggestions}=require('../../../utils/geo')
+const CronJob = require('cron').CronJob
+const {HTTP_CODES} = require('../../utils/errors')
+const {CGV_EXPIRATION_DELAY} = require('../../../config/config')
+const {CGV_PATH} = require('../../../config/config')
+const {getDataModel} = require('../../../config/config')
+const {UPDATE_CGV} = require('../../../utils/feurst/consts')
+const {
+  ForbiddenError,
+  NotFoundError,
+} = require('../../utils/errors')
+const Company = require('../../models/Company')
 
 const {getHostUrl, is_development} = require('../../../config/config')
 const Shop = require('../../models/Shop')
@@ -34,6 +36,7 @@ const {
 } = require('../../../utils/feurst/consts')
 const {
   IMAGE_FILTER,
+  PDF_FILTER,
   XL_FILTER,
   createDiskMulter,
   createMemoryMulter,
@@ -51,12 +54,12 @@ const {is_production}=require('../../../config/config')
 const {validateSimpleRegisterInput, validateEditProfile, validateEditProProfile, validateBirthday} = require('../../validation/simpleRegister')
 const validateLoginInput = require('../../validation/login')
 const {sendResetPassword, sendVerificationMail, sendVerificationSMS, sendAlert} = require('../../utils/mailing')
-moment.locale('fr')
 const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, createMangoProvider, install_hooks} = require('../../utils/mangopay')
 const {send_cookie}=require('../../utils/serverContext')
 const {isActionAllowed} = require('../../utils/userAccess')
 const ResetToken = require('../../../server/models/ResetToken')
 
+moment.locale('fr')
 axios.defaults.withCredentials = true
 
 const HOOK_TYPES = 'KYC_SUCCEEDED KYC_FAILED KYC_VALIDATION_ASKED'.split(' ')
@@ -70,6 +73,9 @@ const uploadIdCard = createDiskMulter('static/profile/idCard/', IMAGE_FILTER)
 const uploadRegProof = createDiskMulter('static/profile/registrationProof/', IMAGE_FILTER)
 // Album picture storage
 const uploadAlbumPicture =createDiskMulter('static/profile/album/', IMAGE_FILTER)
+// CGV storage
+const uploadCGV =createDiskMulter(`static/assets/docs/${getDataModel()}/`, PDF_FILTER, path.basename(CGV_PATH))
+
 
 router.get('/check_register_code/:code', (req, res) => {
   checkRegisterCodeValidity(req, req.params.code)
@@ -86,7 +92,7 @@ const DATA_TYPE=ACCOUNT
 // @Access private
 router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   if (!isActionAllowed(req.user.roles, DATA_TYPE, VIEW)) {
-    return res.sendStatus(301)
+    return res.sendStatus(HTTP_CODES.FORBIDDEN)
   }
 
   User.find({active: true})
@@ -109,7 +115,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 // @Access private
 router.get('/sales-representatives', passport.authenticate('jwt', {session: false}), (req, res) => {
   if (!isActionAllowed(req.user.roles, DATA_TYPE, VIEW)) {
-    return res.sendStatus(301)
+    return res.sendStatus(HTTP_CODES.FORBIDDEN)
   }
 
   User.find({roles: FEURST_SALES})
@@ -578,6 +584,27 @@ router.delete('/profile/registrationProof', passport.authenticate('jwt', {sessio
     })
 })
 
+router.post('/update-cgv', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  // TODO set in passport
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, UPDATE_CGV)) {
+    return res.sendStatus(403)
+  }
+
+  uploadCGV.single('buffer')(req, res, err => {
+    if (err) {
+      return res.status(err.status || 500).json(err.message || err)
+    }
+    User.updateMany({}, {cgv_validation_date: null})
+      .then(() => {
+        return res.json()
+      })
+      .catch(err => {
+        return res.status(err.status || 500).json(err.message || err)
+      })
+  })
+})
+
 router.put('/validate-cgv', passport.authenticate('jwt', {session: false}), (req, res) => {
   User.findByIdAndUpdate(req.user.id, {cgv_validation_date: new Date()})
     .then(user => {
@@ -646,7 +673,7 @@ router.get('/token', passport.authenticate('jwt', {session: false}), (req, res) 
     })
     .catch(err => {
       console.error(err)
-      res.status('404')
+      res.status(HTTP_CODES.NOT_FOUND)
     })
 })
 
@@ -669,7 +696,7 @@ router.get('/all', (req, res) => {
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({user: 'No users found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({user: 'No users found'})
     })
     .catch(err => res.status(404).json({user: 'No users found'}))
 })
@@ -680,7 +707,7 @@ router.get('/users', (req, res) => {
   User.find({is_admin: false, is_alfred: false})
     .then(user => {
       if (!user) {
-        res.status(400).json({msg: 'No users found'})
+        res.status(HTTP_CODES.NOT_FOUND).json({msg: 'No users found'})
       }
       res.json(user)
     })
@@ -741,10 +768,10 @@ router.delete('/:id/role/:role', passport.authenticate('jwt', {session: false}),
         .then(() => res.json(user))
         .catch(err => {
           console.error(err)
-          res.status(404).json({user: 'Erreur à la suppression du rôle'})
+          res.status(HTTP_CODES.NOT_FOUND).json({user: 'Erreur à la suppression du rôle'})
         })
     })
-    .catch(err => res.status(404).json({user: 'No user found'}))
+    .catch(err => res.status(HTTP_CODES.NOT_FOUND).json({user: 'No user found'}))
 })
 
 // @Route PUT /myAlfred/api/users/users/becomeAlfred
@@ -758,7 +785,7 @@ router.put('/users/becomeAlfred', passport.authenticate('jwt', {session: false})
       res.json(user)
 
     })
-    .catch(err => res.status(404).json({user: 'No user found'}))
+    .catch(err => res.status(HTTP_CODES.NOT_FOUND).json({user: 'No user found'}))
 })
 
 // @Route PUT /myAlfred/api/users/users/deleteAlfred
@@ -772,7 +799,7 @@ router.put('/users/deleteAlfred', passport.authenticate('jwt', {session: false})
       res.json(user)
 
     })
-    .catch(err => res.status(404).json({user: 'No user found'}))
+    .catch(err => res.status(HTTP_CODES.NOT_FOUND).json({user: 'No user found'}))
 })
 
 // @Route PUT /myAlfred/api/users/alfredViews/:id
@@ -786,7 +813,7 @@ router.put('/alfredViews/:id', (req, res) => {
       res.json(user)
 
     })
-    .catch(err => res.status(404).json({user: 'No user found'}))
+    .catch(err => res.status(HTTP_CODES.NOT_FOUND).json({user: 'No user found'}))
 })
 
 // @Route GET /myAlfred/api/users/home/alfred
@@ -801,7 +828,7 @@ router.get('/home/alfred', (req, res) => {
       }
       res.json(user)
     })
-    .catch(err => res.status(404).json({alfred: 'No alfred found'}))
+    .catch(err => res.status(HTTP_CODES.NOT_FOUND).json({alfred: 'No alfred found'}))
 })
 
 // @Route GET /myAlfred/api/users/alfred
@@ -815,7 +842,7 @@ router.get('/alfred', (req, res) => {
       return res.json(user)
     })
     .catch(err => {
-      return res.status(404).json({alfred: `No alfred found:${err}`})
+      return res.status(HTTP_CODES.NOT_FOUND).json({alfred: `No alfred found:${err}`})
     })
 })
 
@@ -831,7 +858,7 @@ router.get('/current', passport.authenticate('jwt', {session: false}), (req, res
     })
     .catch(err => {
       console.error(`During User.findById:${err}`)
-      res.status(404).json({alfred: 'No alfred found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({alfred: 'No alfred found'})
     })
 })
 
@@ -840,21 +867,27 @@ router.get('/current', passport.authenticate('jwt', {session: false}), (req, res
 router.post('/forgotPassword', (req, res) => {
   const email = (req.body.email || '').toLowerCase().trim()
 
-  User.findOne({email: new RegExp(`^${email}$`, 'i')})
-    .populate('company')
-    .then(user => {
-      if (user === null) {
+  let token=null
+  User.exists({email: email})
+    .then(exists => {
+      if (!exists) {
         console.error(`email ${email} not in database`)
-        return res.status(404).json({error: 'Aucun compte avec cet email'})
+        throw new NotFoundError(`Aucun compte avec cet email:${email}`)
       }
-      const token = crypto.randomBytes(20).toString('hex')
-      ResetToken.create({token: token})
-        .then(token => {
-          user.update({resetToken: token._id})
-            .catch(err => console.error(err))
-        })
-      sendResetPassword(user, token, req)
+      token = crypto.randomBytes(20).toString('hex')
+      console.log(`Created token:${token}`)
+      return ResetToken.create({token: token})
+    })
+    .then(result => {
+      return User.findOneAndUpdate({email: email}, {resetToken: result._id})
+    })
+    .then(user => {
+      sendResetPassword(user, token)
       return res.json(user)
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(err.status || err).json(err)
     })
 })
 
@@ -910,7 +943,7 @@ router.put('/profile/email', passport.authenticate('jwt', {session: false}), (re
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json(err)
+      res.status(HTTP_CODES.NOT_FOUND).json(err)
     })
 })
 
@@ -1067,7 +1100,7 @@ router.put('/account/notifications', passport.authenticate('jwt', {session: fals
   User.findById(req.user.id)
     .then(user => {
       if (!user) {
-        return res.status(404).json(`Unknown user ${req.user}`)
+        return res.status(HTTP_CODES.NOT_FOUND).json(`Unknown user ${req.user}`)
       }
       user.notifications_message = {
         email: req.body.messages_email,
@@ -1364,12 +1397,12 @@ router.get('/hook', (req, res) => {
       }
       else {
         console.error(`Could not find user with identity_proof_id or registration_proof_id ${doc_id}`)
-        res.status(200).json()
+        res.json()
       }
     })
     .catch(err => {
       console.error(err)
-      res.status(200).json()
+      res.json()
     })
 })
 
@@ -1381,13 +1414,13 @@ const uploadAccounts = createMemoryMulter(XL_FILTER)
 router.post('/import', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, CREATE)) {
-    return res.sendStatus(301)
+    return res.sendStatus(HTTP_CODES.FORBIDDEN)
   }
 
   uploadAccounts.single('buffer')(req, res, err => {
     if (err) {
       console.error(err)
-      return res.status(404).json({errors: err.message})
+      return res.status(HTTP_CODES.NOT_FOUND).json({errors: err.message})
     }
 
     const options=JSON.parse(req.body.options)
@@ -1430,7 +1463,7 @@ router.get('/landing-page', passport.authenticate('jwt', {session: false}), (req
   if (roles.includes(CUSTOMER_TCI)) {
     return res.json(`${BASEPATH_EDI}/quotations`)
   }
-  return res.status(404).json(`Unknown loading page for ${roles}`)
+  return res.status(HTTP_CODES.NOT_FOUND).json(`Unknown loading page for ${roles}`)
 })
 
 // DEV tricks : set any atribute, log without password
@@ -1517,5 +1550,23 @@ if (false) {
       .catch(err => console.error(err))
   }, null, true, 'Europe/Paris')
 }
+
+// Each hour, check CGV consent validity
+new CronJob('0 0 * * * *', () => {
+  fs.stat(CGV_PATH.slice(1))
+    .then(res => {
+      const cgvLimit=Math.max(moment(res.mtime), moment().add(-CGV_EXPIRATION_DELAY, 'days'))
+      return Promise.all([cgvLimit, User.update({cgv_validation_date: {$lt: cgvLimit}}, {cgv_validation_date: null})])
+    })
+    .then(([cgvLimit, result]) => {
+      if (result.nModified) {
+        console.log(`CGV consent limit ${new Date(cgvLimit)}: invalidated ${result.nModified} accounts`)
+      }
+    })
+    .catch(err => {
+      console.error(err)
+    })
+}, null, true, 'Europe/Paris')
+
 
 module.exports = router

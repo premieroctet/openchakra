@@ -8,9 +8,9 @@ const bcrypt = require('bcryptjs')
 const axios = require('axios')
 const Validator = require('validator')
 const lodash=require('lodash')
-const {getHostUrl, isPlatform} = require('../../../../config/config')
+const {getHostUrl} = require('../../../../config/config')
 const errors = require('../../../utils/errors')
-const {StatusError} = require('../../../utils/errors')
+const {HTTP_CODES, StatusError} = require('../../../utils/errors')
 const Prestation = require('../../../models/Prestation')
 const Service = require('../../../models/Service')
 const Equipment = require('../../../models/Equipment')
@@ -99,7 +99,7 @@ router.get('/billing/all', passport.authenticate('admin', {session: false}), (re
     .then(billings => {
       res.json(billings)
     })
-    .catch(() => res.status(404).json({billing: 'No billing found'}))
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({billing: 'No billing found'}))
 })
 
 // @Route GET /myAlfred/api/admin/billing/all/:id
@@ -114,7 +114,7 @@ router.get('/billing/all/:id', passport.authenticate('admin', {session: false}),
       res.json(billing)
 
     })
-    .catch(() => res.status(404).json({billing: 'No billing found'}))
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({billing: 'No billing found'}))
 })
 
 // @Route DELETE /myAlfred/api/admin/billing/:id
@@ -128,7 +128,7 @@ router.delete('/billing/:id', passport.authenticate('admin', {session: false}), 
       }
       Billing.findByIdAndRemove(req.params.id)
         .then(() => res.json({success: true}))
-        .catch(() => res.status(404).json({billingnotfound: 'No billing found'}))
+        .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({billingnotfound: 'No billing found'}))
     })
 })
 
@@ -140,7 +140,7 @@ router.put('/billing/all/:id', passport.authenticate('admin', {session: false}),
     .then(billing => {
       res.json(billing)
     })
-    .catch(() => res.status(404).json({billingnotfound: 'No billing found'}))
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({billingnotfound: 'No billing found'}))
 })
 
 // USERS
@@ -157,7 +157,7 @@ router.get('/users/all', passport.authenticate('admin', {session: false}), (req,
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({user: 'No users found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({user: 'No users found'})
     })
 })
 
@@ -170,7 +170,7 @@ router.put('/users/:user_id', passport.authenticate('admin', {session: false}), 
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({user: 'No users found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({user: 'No users found'})
     })
 })
 
@@ -185,7 +185,7 @@ ServiceUser && router.get('/serviceusers/all', passport.authenticate('jwt', {ses
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({user: 'No services found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({user: 'No services found'})
     })
 })
 
@@ -200,7 +200,7 @@ router.get('/users/all_light', passport.authenticate('admin', {session: false}),
       }
       res.json(user)
     })
-    .catch(() => res.status(404).json({user: 'No users found'}))
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({user: 'No users found'}))
 })
 
 // @Route GET /myAlfred/api/admin/serviceUsersMap
@@ -217,7 +217,7 @@ ServiceUser && router.get('/serviceUsersMap', passport.authenticate('admin', {se
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({service: 'No service found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({service: 'No service found'})
     })
 })
 
@@ -265,7 +265,7 @@ router.get('/users/users', passport.authenticate('admin', {session: false}), (re
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({users: 'No billing found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({users: 'No billing found'})
     })
 })
 
@@ -282,7 +282,7 @@ router.get('/users/users/:id', passport.authenticate('admin', {session: false}),
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({user: 'No user found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({user: 'No user found'})
     })
 })
 
@@ -296,7 +296,7 @@ router.put('/users/users/:id', passport.authenticate('admin', {session: false}),
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({usernotfound: 'No user found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({usernotfound: 'No user found'})
     })
 })
 
@@ -310,7 +310,7 @@ router.put('/users/users/idCard/:id', passport.authenticate('admin', {session: f
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({usernotfound: 'No user found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({usernotfound: 'No user found'})
     })
 })
 
@@ -322,7 +322,7 @@ router.put('/users/users/idCard/delete/:id', passport.authenticate('admin', {ses
     .then(user => {
       res.json(user)
     })
-    .catch(() => res.status(404).json({usernotfound: 'No user found'}))
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({usernotfound: 'No user found'}))
 })
 
 // @Route DELETE /myAlfred/api/admin/users/users/:id
@@ -335,7 +335,7 @@ router.delete('/users/users/:id', passport.authenticate('admin', {session: false
     .then(user => {
       user.remove().then(() => res.json({success: true}))
     })
-    .catch(() => res.status(404).json({user: 'No user found'}))
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({user: 'No user found'}))
   */
 })
 
@@ -351,7 +351,7 @@ router.get('/users/alfred', passport.authenticate('admin', {session: false}), (r
 
       res.json(user)
     })
-    .catch(() => res.status(404).json({alfred: 'No alfred found'}))
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({alfred: 'No alfred found'}))
 })
 
 // @Route GET /myAlfred/api/admin/users/alfred/:id
@@ -365,7 +365,7 @@ router.get('/users/alfred/:id', passport.authenticate('admin', {session: false})
       res.json(user)
 
     })
-    .catch(() => res.status(404).json({user: 'No user found'}))
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({user: 'No user found'}))
 })
 
 // @Route PUT /myAlfred/api/admin/users/alfred/:id
@@ -382,7 +382,7 @@ router.put('/users/alfred/:id', passport.authenticate('admin', {session: false})
     .then(user => {
       res.json(user)
     })
-    .catch(() => res.status(404).json({usernotfound: 'No user found'}))
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({usernotfound: 'No user found'}))
 })
 
 // @Route PUT /myAlfred/api/admin/users/alfred/idCard/:id
@@ -393,7 +393,7 @@ router.put('/users/alfred/idCard/:id', passport.authenticate('admin', {session: 
     .then(user => {
       res.json(user)
     })
-    .catch(() => res.status(404).json({usernotfound: 'No user found'}))
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({usernotfound: 'No user found'}))
 })
 
 // @Route PUT /myAlfred/api/admin/users/alfred/idCard/delete:id
@@ -404,7 +404,7 @@ router.put('/users/alfred/idCard/delete/:id', passport.authenticate('admin', {se
     .then(user => {
       res.json(user)
     })
-    .catch(() => res.status(404).json({usernotfound: 'No user found'}))
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({usernotfound: 'No user found'}))
 })
 
 // @Route DELETE /myAlfred/api/admin/users/alfred/:id
@@ -415,7 +415,7 @@ router.delete('/users/alfred/:id', passport.authenticate('admin', {session: fals
     .then(user => {
       user.remove().then(() => res.json({success: true}))
     })
-    .catch(() => res.status(404).json({user: 'No user found'}))
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({user: 'No user found'}))
 })
 
 // @Route GET /myAlfred/api/admin/users/admin
@@ -431,7 +431,7 @@ router.get('/users/admin', passport.authenticate('admin', {session: false}), (re
 
       res.json(user)
     })
-    .catch(() => res.status(404).json({admin: 'No admin found'}))
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({admin: 'No admin found'}))
 })
 
 // @Route GET /myAlfred/api/admin/users/admin/:id
@@ -446,7 +446,7 @@ router.get('/users/admin/:id', passport.authenticate('admin', {session: false}),
       res.json(user)
 
     })
-    .catch(() => res.status(404).json({user: 'No user found'}))
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({user: 'No user found'}))
 })
 
 // @Route POST /myAlfred/api/admin/users/admin
@@ -503,15 +503,15 @@ router.put('/users/admin/:id', passport.authenticate('admin', {session: false}),
     .then(user => {
       res.json(user)
     })
-    .catch(() => res.status(404).json({usernotfound: 'No user found'}))
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({usernotfound: 'No user found'}))
 })
 
 router.put('/users/:user_id/admin/:admin_status', passport.authenticate('admin', {session: false}), (req, res) => {
   if (!['true', 'false'].includes(req.params.admin_status)) {
-    return res.status(404).json('Statut admin true/false attendu')
+    return res.status(HTTP_CODES.NOT_FOUND).json('Statut admin true/false attendu')
   }
   if (req.params.user_id==get_logged_id(req)) {
-    return res.status(404).json('Vous ne pouvez pas vous retirer le statut d\'administrateur')
+    return res.status(HTTP_CODES.NOT_FOUND).json('Vous ne pouvez pas vous retirer le statut d\'administrateur')
   }
   const set_admin = req.params.admin_status=='true'
   User.findOneAndUpdate({_id: req.params.user_id}, {is_admin: set_admin})
@@ -525,7 +525,7 @@ router.put('/users/:user_id/admin/:admin_status', passport.authenticate('admin',
 
 router.put('/users/:user_id/hidden/:hidden_status', passport.authenticate('admin', {session: false}), (req, res) => {
   if (!['true', 'false'].includes(req.params.hidden_status)) {
-    return res.status(404).json('Statut hidden true/false attendu')
+    return res.status(HTTP_CODES.NOT_FOUND).json('Statut hidden true/false attendu')
   }
   const set_hidden = req.params.hidden_status=='true'
   User.findByIdAndUpdate(req.params.user_id, {hidden: set_hidden})
@@ -547,7 +547,7 @@ router.delete('/users/admin/:id', passport.authenticate('admin', {session: false
     .then(user => {
       user.remove().then(() => res.json({success: true}))
     })
-    .catch(() => res.status(404).json({user: 'No user found'}))
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({user: 'No user found'}))
   */
 })
 // FILTER PRESENTATION
@@ -592,7 +592,7 @@ router.get('/filterPresentation/all', passport.authenticate('admin', {session: f
       res.json(filterPresentation)
 
     })
-    .catch(() => res.status(404).json({filterPresentation: 'No billing found'}))
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({filterPresentation: 'No billing found'}))
 })
 
 // @Route GET /myAlfred/api/admin/filterPresentation/all/:id
@@ -607,7 +607,7 @@ router.get('/filterPresentation/all/:id', passport.authenticate('admin', {sessio
       res.json(filterPresentation)
 
     })
-    .catch(() => res.status(404).json({billing: 'No filterPresentation found'}))
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({billing: 'No filterPresentation found'}))
 })
 
 // @Route DELETE /myAlfred/api/admin/filterPresentation/all/:id
@@ -621,7 +621,7 @@ router.delete('/filterPresentation/:id', passport.authenticate('admin', {session
       }
       FilterPresentation.findByIdAndRemove(req.params.id)
         .then(() => res.json({success: true}))
-        .catch(() => res.status(404).json({filterPresentation: 'No filterPresentation found'}))
+        .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({filterPresentation: 'No filterPresentation found'}))
     })
 })
 
@@ -633,7 +633,7 @@ router.put('/filterPresentation/all/:id', passport.authenticate('admin', {sessio
     .then(filterPresentation => {
       res.json(filterPresentation)
     })
-    .catch(() => res.status(404).json({filterPresentationnotfound: 'No filterPresentation found'}))
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({filterPresentationnotfound: 'No filterPresentation found'}))
 })
 
 // JOB
@@ -670,7 +670,7 @@ router.get('/job/all', passport.authenticate('admin', {session: false}), (req, r
       res.json(job)
 
     })
-    .catch(() => res.status(404).json({job: 'No billing found'}))
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({job: 'No billing found'}))
 })
 
 // @Route GET /myAlfred/api/admin/job/all/:id
@@ -685,7 +685,7 @@ router.get('/job/all/:id', passport.authenticate('admin', {session: false}), (re
       res.json(job)
 
     })
-    .catch(() => res.status(404).json({billing: 'No job found'}))
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({billing: 'No job found'}))
 })
 
 // @Route DELETE /myAlfred/api/admin/job/all/:id
@@ -699,7 +699,7 @@ router.delete('/job/:id', passport.authenticate('admin', {session: false}), (req
       }
       Job.findByIdAndRemove(req.params.id)
         .then(() => res.json({success: true}))
-        .catch(() => res.status(404).json({job: 'No job found'}))
+        .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({job: 'No job found'}))
     })
 })
 
@@ -717,7 +717,7 @@ router.put('/job/all/:id', passport.authenticate('admin', {session: false}), (re
         .then(job => {
           res.json(job)
         })
-        .catch(() => res.status(404).json({jobnotfound: 'No job found'}))
+        .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({jobnotfound: 'No job found'}))
     })
 })
 
@@ -788,7 +788,7 @@ Category && router.get('/category/all', passport.authenticate('admin', {session:
     })
     .catch(err => {
       console.error(err)
-      return res.status(404).json({category: 'No billing found'})
+      return res.status(HTTP_CODES.NOT_FOUND).json({category: 'No billing found'})
     })
 })
 
@@ -804,7 +804,7 @@ Category && router.get('/category/all/:id', passport.authenticate('admin', {sess
       res.json(category)
 
     })
-    .catch(() => res.status(404).json({billing: 'No category found'}))
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({billing: 'No category found'}))
 })
 
 // @Route DELETE /myAlfred/api/admin/category/all/:id
@@ -818,7 +818,7 @@ Category && router.delete('/category/:id', passport.authenticate('admin', {sessi
       }
       Category.findByIdAndRemove(req.params.id)
         .then(() => res.json())
-        .catch(() => res.status(404).json({category: 'No category found'}))
+        .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({category: 'No category found'}))
     })
 })
 
@@ -844,7 +844,7 @@ Category && router.put('/category/all/:id?', passport.authenticate('admin', {ses
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({categorynotfound: 'No category found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({categorynotfound: 'No category found'})
     })
 })
 
@@ -889,7 +889,7 @@ router.put('/equipment/all/:id', uploadEquipment.single('logo'), passport.authen
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({equipmentnotfound: 'No equipment found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({equipmentnotfound: 'No equipment found'})
     })
 })
 
@@ -910,7 +910,7 @@ router.get('/equipment/all', passport.authenticate('admin', {session: false}), (
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({equipment: 'No equipment found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({equipment: 'No equipment found'})
     })
 })
 
@@ -928,7 +928,7 @@ router.get('/equipment/all/:id', passport.authenticate('admin', {session: false}
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({equipment: 'No equipment found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({equipment: 'No equipment found'})
     })
 })
 
@@ -945,7 +945,7 @@ router.delete('/equipment/:id', passport.authenticate('admin', {session: false})
         .then(() => res.json({success: true}))
         .catch(err => {
           console.error(err)
-          res.status(404).json({equipmentnotfound: 'No equipment found'})
+          res.status(HTTP_CODES.NOT_FOUND).json({equipmentnotfound: 'No equipment found'})
         })
     })
 })
@@ -1035,7 +1035,7 @@ router.get('/service/all', passport.authenticate('admin', {session: false}), (re
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({service: 'No service found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({service: 'No service found'})
     })
 })
 
@@ -1055,7 +1055,7 @@ router.get('/service/all/:id', passport.authenticate('admin', {session: false}),
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({billing: 'No service found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({billing: 'No service found'})
     })
 })
 
@@ -1070,7 +1070,7 @@ router.delete('/service/:id', passport.authenticate('admin', {session: false}), 
       }
       Service.findByIdAndRemove(req.params.id)
         .then(() => res.json({success: true}))
-        .catch(() => res.status(404).json({service: 'No service found'}))
+        .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({service: 'No service found'}))
     })
 })
 
@@ -1112,7 +1112,7 @@ router.put('/service/all/:id', passport.authenticate('admin', {session: false}),
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({servicenotfound: 'No service found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({servicenotfound: 'No service found'})
     })
 })
 
@@ -1192,7 +1192,7 @@ router.get('/prestation/all', passport.authenticate('admin', {session: false}), 
       res.json(prestation)
 
     })
-    .catch(() => res.status(404).json({billing: 'No prestation found'}))
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({billing: 'No prestation found'}))
 })
 
 // @Route GET /myAlfred/api/admin/prestation/all/:id
@@ -1212,7 +1212,7 @@ router.get('/prestation/all/:id', passport.authenticate('admin', {session: false
       res.json(prestation)
 
     })
-    .catch(() => res.status(404).json({prestation: 'No prestation found'}))
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({prestation: 'No prestation found'}))
 })
 
 // @Route DELETE /myAlfred/api/admin/prestation/all/:id
@@ -1226,7 +1226,7 @@ router.delete('/prestation/:id', passport.authenticate('admin', {session: false}
       }
       Prestation.findByIdAndRemove(req.params.id)
         .then(() => res.json({success: true}))
-        .catch(() => res.status(404).json({prestationnotfound: 'No prestation found'}))
+        .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({prestationnotfound: 'No prestation found'}))
     })
 })
 
@@ -1264,7 +1264,7 @@ router.put('/prestation/all/:id', passport.authenticate('admin', {session: false
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({error: err})
+      res.status(HTTP_CODES.NOT_FOUND).json({error: err})
     })
 })
 
@@ -1317,22 +1317,21 @@ router.get('/statistics', passport.authenticate('admin', {session: false}), (req
   User.count()
     .then(nb_users => {
       stats.users = nb_users
-      return User.find({is_alfred: true}).count()
+      User.find({is_alfred: true}).count()
+        .then(nb_alfred => {
+          stats.alfred = nb_alfred
+          ServiceUser.find()
+            .then(services => {
+              stats.services = services.length
+              stats.prestations = services.map(s => s.prestations.length).reduce((acc, value) => acc + value)
+              res.json(stats)
+            })
+            .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({statistics: 'Error on alfred'}))
+        })
+        .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({statistics: 'Error on alfred'}))
     })
-    .then(nb_alfred => {
-      stats.alfred = nb_alfred
-      return ServiceUser.find({}, {'prestations._id': 1})
-    })
-    .then(services => {
-      console.timeEnd('services')
-      stats.services = services.length
-      stats.prestations = lodash.sumBy(services, s => s.prestations.length)
-      res.json(stats)
-    })
-    .catch(err => {
-      console.error(err)
-      res.status(404).json(err)
-    })
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({statistics: 'Error on users'}))
+
 })
 
 // @Route GET /myAlfred/api/admin/booking/all
@@ -1352,7 +1351,7 @@ router.get('/bookings', passport.authenticate('admin', {session: false}), (req, 
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json(err)
+      res.status(HTTP_CODES.NOT_FOUND).json({bookings: 'Error'})
     })
 })
 
@@ -1378,7 +1377,7 @@ router.get('/companies', passport.authenticate('admin', {session: false}), (req,
           res.json(companies)
         })
     })
-    .catch(() => res.status(404).json({company: 'No company found'}))
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({company: 'No company found'}))
 })
 
 // @Route GET /myAlfred/api/admin/companies/:id
@@ -1497,7 +1496,7 @@ router.post('/kyc_validate/:alfred_id', passport.authenticate('admin', {session:
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({err})
+      res.status(HTTP_CODES.NOT_FOUND).json({err})
     })
 
 })
@@ -1681,7 +1680,7 @@ router.post('/register_invitation', passport.authenticate('admin', {session: fal
   const email=req.body.email
   console.log(`Register invitation for ${email}`)
   if (!(email && Validator.isEmail(email))) {
-    return res.status(404).json("L'adresse email est invalide")
+    return res.status(HTTP_CODES.NOT_FOUND).json("L'adresse email est invalide")
   }
   getRegisterCode(req, email)
     .then(code => {
