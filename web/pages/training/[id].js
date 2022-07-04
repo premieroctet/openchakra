@@ -333,9 +333,18 @@ const RoundedBox = styled.div`
     margin-left: var(--spc-4);
 
     img, span {
-      color: var(--redaftral);
+      color: var(--brand-color);
       font-size: 2rem;
       margin-inline: var(--spc-4) var(--spc-2);
+    }
+  }
+
+  .group-ensavoirplus, .validation {
+    padding: var(--spc-2) var(--spc-8) var(--spc-8);
+
+    ul {
+      padding: 0;
+      list-style: none;
     }
   }
 
@@ -408,7 +417,7 @@ const BoxVideoAndDownload = styled.div`
 
 const BookingButton = styled.button`
   color: white;
-  background-color: var(--redaftral);
+  background-color: var(--brand-color);
   font-size: 1.5rem;
   display: block;
   position: sticky;
@@ -455,7 +464,7 @@ const Figures = styled.div`
   }
 
   span:nth-child(1) {
-    color: var(--redaftral);
+    color: var(--brand-color);
     font-size: var(--text-4xl);
     font-weight: var(--font-bold);
   }
@@ -479,18 +488,10 @@ const MoreInfo = styled(RoundedBox)`
     display: block;
     font-size: 1rem;
     font-weight: bold;
-    color: var(--redaftral);
+    color: var(--brand-color);
     margin-block: var(--spc-4);
   }
 
-  .group-ensavoirplus, .validation {
-    padding: var(--spc-2) var(--spc-8) var(--spc-8);
-
-    ul {
-      padding: 0;
-      list-style: none;
-    }
-  }
 
   .detailsmoreinfo {
     position: relative;
@@ -528,7 +529,7 @@ const MoreInfo = styled(RoundedBox)`
       justify-content: center;
       align-items: center;
       border-radius: 50%;
-      border: 1px solid var(--redaftral);
+      border: 1px solid var(--brand-color);
       width: 2rem;
       aspect-ratio: 1 / 1;
     }
@@ -654,28 +655,11 @@ const Opinions = styled(RoundedBox)`
 `
 
 const StyledTraining = styled.div`
-
-  --bg-color: #f7f7f7;
-  --bg-card-color: #39466b;
-  --redaftral: #a13849;
-
-  * {
-    font-family: Poppins, 'sans-serif';
-  }
-
+   
   min-height: 100vh;
   background-color: var(--bg-color);
   position: relative;
 
- .container-xl {
-  width: min(calc(100vw - 2rem), 70rem);
-  margin-inline: auto;
- }
-
- .container-lg {
-  width: min(calc(100vw - 2rem), 60rem);
-  margin-inline: auto;
- }
 
  .flex {
   display: flex;
@@ -732,7 +716,7 @@ const StyledTraining = styled.div`
       display: block;
       margin-inline: auto;
       text-transform: uppercase;
-      background-color: var(--redaftral);
+      background-color: var(--brand-color);
       border: 1px solid gray;
       padding-block: 0.5rem;
       padding-inline: 2.5rem;
@@ -754,7 +738,7 @@ const StyledTraining = styled.div`
     border-radius: var(--rounded-2xl);
 
     dt {
-      color: var(--redaftral);
+      color: var(--brand-color);
       font-weight: bold;
     }
     dd {margin: 0}
