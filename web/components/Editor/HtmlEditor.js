@@ -48,11 +48,11 @@ class HtmlEditor extends React.Component {
       <Grid>
         <span>{this.props.title}</span>
         <SunEditor
-          key={this.props.value}
           lang='fr'
           setOptions={this.options}
           onChange={this.onChange}
           defaultValue={this.props.value}
+          value={this.props.value}
         />
         <TextField style={{width: '100%'}}
           multiline

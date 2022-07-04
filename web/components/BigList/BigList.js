@@ -100,6 +100,7 @@ class BigList extends React.Component {
       'fontRenderer': models.FontRenderer,
       'deleteRenderer': models.DeleteRenderer,
       'percentRenderer': models.PercentRenderer,
+      'actionRenderer': models.ActionRenderer,
     }
 
     const defaultColDef={

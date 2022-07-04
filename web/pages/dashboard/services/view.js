@@ -179,11 +179,11 @@ class View extends React.Component {
     const id = this.props.id
     const service = this.state.service
     const {label, description, location} = service
-    const {travel_tax, pick_tax, professional_access, particular_access} = service
+    const {travel_tax, pick_tax, professional_access, particular_access, tag} = service
 
     axios.put(`/myAlfred/api/admin/service/all/${id}`,
       {label, description, category, equipments, location, travel_tax, pick_tax,
-        professional_access, particular_access})
+        professional_access, particular_access, tag})
       .then(() => {
         snackBarSuccess('Service modifié avec succès')
       })
@@ -310,6 +310,15 @@ class View extends React.Component {
                   }
                   label={<React.Fragment><p>en visioconférence</p></React.Fragment>}
                 />
+                <FormControlLabel
+                  control={
+                    <Checkbox color="primary"
+                      checked={service.location?.elearning}
+                      value={service.location?.elearning} name="elearning"
+                      onChange={this.onChangeLocation}/>
+                  }
+                  label={<React.Fragment><p>en e-learning</p></React.Fragment>}
+                />
                 <Typography style={{fontSize: 20}}>Frais possibles</Typography>
                 <FormControlLabel
                   control={
@@ -329,9 +338,7 @@ class View extends React.Component {
                   label={<React.Fragment><p>frais de retrait&livraison</p>
                   </React.Fragment>}
                 />
-                <Typography style={{fontSize: 20}}>
-                    Service proposé
-                </Typography>
+                <Typography style={{fontSize: 20}}>Service proposé</Typography>
                 <em style={{color: 'red'}}>{this.state.errors.access}</em><br/>
                 <FormControlLabel
                   control={
@@ -355,6 +362,19 @@ class View extends React.Component {
                 />
               </Grid>
 
+              <Grid item style={{width: '100%', marginTop: 20}}>
+                <Typography style={{fontSize: 20}}>Tag</Typography>
+                <TextField
+                  id="standard-with-placeholder"
+                  margin="normal"
+                  style={{width: '100%'}}
+                  type="text"
+                  name="tag"
+                  value={service.tag}
+                  onChange={this.onChange}
+                />
+              </Grid>
+
               <Grid item style={{marginTop: 20}}>
                 <Typography style={{fontSize: 20}}>Description</Typography>
                 <TextField
@@ -367,7 +387,6 @@ class View extends React.Component {
                   onChange={this.onChange}
                   multiline
                   rows={4}
-
                 />
               </Grid>
               <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>

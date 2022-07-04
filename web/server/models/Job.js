@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
+const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 const {normalize} = require('../../utils/text')
+
 
 const JobSchema = new Schema({
   label: {
@@ -15,5 +17,7 @@ const JobSchema = new Schema({
     sparse: true,
   },
 })
+
+JobSchema.plugin(mongooseLeanVirtuals)
 
 module.exports = mongoose.model('job', JobSchema)

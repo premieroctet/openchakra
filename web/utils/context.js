@@ -92,8 +92,9 @@ const isLoggedUserAdmin = () => {
   return logged && (logged.is_admin || (getRoles() && getRoles().includes(FEURST_ADMIN)))
 }
 
-const isUserSuperAdmin = user => {
-  return user && (user.is_admin && user.email.match(/@my-alfred\.io$/) || (getRoles() && getRoles().includes(FEURST_ADMIN)))
+const isLoggedUserSuperAdmin = () => {
+  const logged=getLoggedUser()
+  return logged && logged.is_super_admin
 }
 
 const isLoggedUserAlfred = () => {
@@ -121,7 +122,7 @@ module.exports = {
   isApplication, isMobile,
   getRole, setAlfredRegistering, removeAlfredRegistering, isAlfredRegistering,
   getLoggedUserId, getLoggedUser,
-  isLoggedUserAdmin, isUserSuperAdmin, isEditableUser, isLoggedUserAlfred, isLoggedUserAlfredPro,
+  isLoggedUserAdmin, isLoggedUserSuperAdmin, isEditableUser, isLoggedUserAlfred, isLoggedUserAlfredPro,
   isLoggedUserRegistered, isIOS, isAndroid, hideEmptyEvaluations,
   getLoggedAs, REGISTER_WITHOUT_CODE,
 }

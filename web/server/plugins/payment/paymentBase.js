@@ -1,8 +1,8 @@
 const lodash=require('lodash')
+const {CESU_DISABLED} = require('../../../utils/consts')
 const Shop = require('../../models/Shop')
 const ServiceUser = require('../../models/ServiceUser')
 const Commission = require('../../models/Commission')
-const {CESU_DISABLED}=require('../../../utils/consts')
 
 class PaymentBase {
 
@@ -40,7 +40,7 @@ class PaymentBase {
 
   // Return toal prestations & CESU subtotal
   computeTravelTax = (serviceUser, location, totalPrestations, distance) => {
-    if (!distance || ['alfred', 'visio'].includes(location) || !totalPrestations || !serviceUser.travel_tax) {
+    if (!distance || ['alfred', 'visio', 'elearning'].includes(location) || !totalPrestations || !serviceUser.travel_tax) {
       return Promise.resolve(0)
     }
     const tt = serviceUser.travel_tax
@@ -89,8 +89,7 @@ class PaymentBase {
   compute = data => {
 
     const serviceUserId=data.serviceUser
-    const prestations=data.prestations
-    const location=data.location
+    const {prestations, location, cpf_booked}=data
     const distance=data.distance || 0
     const avocotes_amount = data.avocotes_amount || 0
 
@@ -138,7 +137,9 @@ class PaymentBase {
         .then(customer_fees => {
           res.customer_fees=customer_fees
           res.customer_fee = lodash.sum(customer_fees.map(f => f.amount))
-          res.total=res.total_prestations+res.travel_tax+res.pick_tax+res.customer_fee
+          const grandTotal=res.total_prestations+res.travel_tax+res.pick_tax+res.customer_fee
+          res.cpf_amount=cpf_booked ? grandTotal: 0
+          res.total=grandTotal-res.cpf_amount
           resolve(res)
         })
         .catch(err => {

@@ -153,6 +153,16 @@ class SettingService extends React.Component {
               />
             </Grid> : null
           }
+          {'elearning' in location ?
+            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <ButtonSwitch
+                checked={location.elearning === true}
+                label={ReactHtmlParser(this.props.t('SHOP.settingService.service_withElearning'))}
+                id='elearning'
+                onChange={this.onLocationChange}
+              />
+            </Grid> : null
+          }
         </Grid>
         <Grid container spacing={1} style={{width: '100%', margin: 0}} item xl={12} lg={12} md={12} sm={12} xs={12} className={'customsettingserviceoptioncontainer'}>
           {(service && service.travel_tax || service && service.pick_tax) ?

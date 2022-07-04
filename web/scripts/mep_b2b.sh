@@ -6,6 +6,8 @@ then
   exit 1
 fi
 
+current_dir=`dirname $0`
+
 # Bookings : fees => customer_fee & provider_fee
 mongo $database --eval 'db.bookings.find({fees: {$exists: true}}).forEach(function(b){ b.customer_fee=b.fees; b.provider_fee=0; db.bookings.save(b)})'
 mongo $database --eval 'db.bookings.update({fees: {$exists: true}}, {$unset: {fees:1}}, {multi:1})'
@@ -51,3 +53,6 @@ mongo $database --eval 'db.bookings.update({time_prestation: {$exists: true}}, {
 
 #936286 Remove date_prestation, time_prestation && end_time
 mongo $database --eval 'db.bookings.update({}, {$unset: {date_prestation:1, end_time: 1}}, {multi:1})'
+
+#939670 Set booking service attribute from string to ref
+mongo $database < "${current_dir}/939670-bookingservice-to-ref.sql"

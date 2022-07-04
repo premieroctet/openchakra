@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
+const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
+
 const moment = require('moment')
 
 const AvailabilitySchema = new Schema({
@@ -38,5 +40,7 @@ AvailabilitySchema.virtual('as_text').get(function() {
   }
   return `Du ${moment(this.period.begin).format('L')} au ${moment(this.period.end).format('L')}`
 })
+
+AvailabilitySchema.plugin(mongooseLeanVirtuals)
 
 module.exports = mongoose.model('availability', AvailabilitySchema)

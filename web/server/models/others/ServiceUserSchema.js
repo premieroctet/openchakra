@@ -1,8 +1,7 @@
 const mongoose = require('mongoose')
+const {hideIllegal} = require('../../../utils/text')
 
 const Schema = mongoose.Schema
-
-const {hideIllegal} = require('../../../utils/text')
 
 const ServiceUserSchema = new Schema({
   user: {
@@ -13,6 +12,7 @@ const ServiceUserSchema = new Schema({
   service: {
     type: Schema.Types.ObjectId,
     ref: 'service',
+    required: true,
   },
   prestations: [{
     prestation: {
@@ -52,7 +52,7 @@ const ServiceUserSchema = new Schema({
         lng: Number,
       },
     },
-    required: true,
+    required: false,
   },
   perimeter: {
     type: Number,
@@ -141,6 +141,7 @@ const ServiceUserSchema = new Schema({
     client: Boolean,
     alfred: Boolean,
     visio: Boolean,
+    elearning: Boolean,
   },
   // Frais livraison
   pick_tax: {
@@ -177,6 +178,14 @@ const ServiceUserSchema = new Schema({
     type: Boolean,
     required: true,
     sparse: true,
+  },
+  // CPF eligible
+  cpf_eligible: {
+    type: Boolean,
+    default: false,
+  },
+  cpf_link: {
+    type: String,
   },
 }, {toJSON: {virtuals: true, getters: true}})
 

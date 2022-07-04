@@ -5,6 +5,8 @@ const Schema = mongoose.Schema
 const {CESU, INSURANCE_TYPES} = require('../../utils/consts')
 const {hideIllegal} = require('../../utils/text')
 
+const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
+
 const ShopSchema = new Schema({
   booking_request: {
     type: Boolean,
@@ -126,5 +128,6 @@ ShopSchema.virtual('insurance_text').get(function() {
   }).join(', ')
 })
 
+ShopSchema.plugin(mongooseLeanVirtuals)
 
 module.exports = mongoose.model('shop', ShopSchema)

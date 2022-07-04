@@ -1,5 +1,5 @@
-import {getDistance} from 'geolib'
-import {convertDistance} from 'geolib'
+const {getDistance} = require('geolib')
+const {convertDistance} = require('geolib')
 
 const isEmpty = require('../server/validation/is-empty')
 

@@ -1,7 +1,15 @@
 const isEmpty = require('../server/validation/is-empty')
 const {MODE, TAWKTO_URL, DISABLE_ALFRED_SELF_REGISTER, DISABLE_ALFRED_PARTICULAR_REGISTER,
-  SIB_TEMPLATES, DATABASE_NAME, HIDE_STORE_DIALOG, MANGOPAY_CLIENTID, MANGOPAY_APIKEY, DATA_MODEL, SKIP_FAILED_PAYMENT,
-  SIB_APIKEY, HOSTNAME, PORT}=require('../mode')
+  SIB_TEMPLATES, DATABASE_NAME, HIDE_STORE_DIALOG, MANGOPAY_CLIENTID, MANGOPAY_APIKEY,
+  SITE_MODE, IGNORE_FAILED_PAYMENT, SIB_APIKEY,
+  DATA_MODEL, SKIP_FAILED_PAYMENT,
+  HOSTNAME, PORT,
+}=require('../mode')
+
+const SITE_MODES={
+  MARKETPLACE: 'marketplace',
+  PLATFORM: 'platform',
+}
 
 const MODES={
   PRODUCTION: 'production',
@@ -61,6 +69,14 @@ const is_development_nossl = () => {
   return get_mode()==MODES.DEVELOPMENT_NOSSL
 }
 
+const isPlatform = () => {
+  return SITE_MODE==SITE_MODES.PLATFORM
+}
+
+const isMarketplace = () => {
+  return SITE_MODE==SITE_MODES.MARKETPLACE
+}
+
 const appName = 'myalfred'
 
 const databaseName = DATABASE_NAME
@@ -77,6 +93,17 @@ const getHostUrl = () => {
   const includePort=(protocol=='https' && port!=443) || (protocol=='http' && port!=80)
   const host_url=`${protocol}://${hostname}${includePort ? `:${port}` : ''}/`
   return host_url
+}
+
+/**
+ONLY DEV & VALIDATION MODES
+Consider failed payment succeeded
+*/
+const ignoreFailedPayment = () => {
+  if (is_production()) {
+    return false
+  }
+  return !!IGNORE_FAILED_PAYMENT
 }
 
 const MANGOPAY_CONFIG = {
@@ -134,6 +161,7 @@ const displayConfig = () => {
 
   console.log(`Configuration is:\n\
 \tMode:${get_mode()}\n\
+\tSite mode:${isPlatform() ? 'plateforme' : isMarketplace() ? 'marketplace' : 'inconnu'}\n\
 \tDatabase:${databaseName}\n\
 \tServer prod:${SERVER_PROD}\n\
 \tServer port:${getPort()}\n\
@@ -148,7 +176,10 @@ const displayConfig = () => {
 const checkConfig = () => {
   return new Promise((resolve, reject) => {
     if (!Object.values(MODES).includes(MODE)) {
-      reject(`MODE: ${MODE} inconnu, attendu dans ${Object.values(MODES)}`)
+      reject(`MODE: ${MODE} inconnu, attendu ${JSON.stringiffy(Object.values(MODES))}`)
+    }
+    if (!Object.values(SITE_MODES).includes(SITE_MODE)) {
+      reject(`SITE_MODE: ${SITE_MODE} inconnu, attendu ${JSON.stringify(Object.values(SITE_MODES))}`)
     }
 
     if (!is_development() && !HOSTNAME) {
@@ -236,4 +267,5 @@ module.exports = {
   getSibTemplates, checkConfig, getDatabaseUri, hideStoreDialog,
   getDataModel, skipFailedPayment, getSibApiKey, getPort, getExchangeDirectory,
   RANDOM_ID, DOC_PATH, CGV_PATH, CGV_EXPIRATION_DELAY,
+  isPlatform, isMarketplace,
 }

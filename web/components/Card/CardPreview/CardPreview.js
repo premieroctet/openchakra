@@ -1,13 +1,13 @@
-import UserAvatar from '../../Avatar/UserAvatar';
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Box from '@material-ui/core/Box'
 import Rating from '@material-ui/lab/Rating'
 import Avatar from '@material-ui/core/Avatar'
-import styles from '../../../static/css/components/Card/CardPreview/CardPreview'
 import withStyles from '@material-ui/core/styles/withStyles'
 import Typography from '@material-ui/core/Typography'
+import styles from '../../../static/css/components/Card/CardPreview/CardPreview'
+import UserAvatar from '../../Avatar/UserAvatar'
 
 
 class CardPreview extends React.Component {
@@ -17,7 +17,7 @@ class CardPreview extends React.Component {
   }
 
   openService = () => {
-    const url=`/userServicePreview?id=${this.props.item._id}&address=main`
+    const url=`/userServicePreview?id=${this.props.item._id}`
     window.open(url, '_blank')
   }
 

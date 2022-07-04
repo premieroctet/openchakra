@@ -40,6 +40,7 @@ router.get('/alfredBooking', passport.authenticate('jwt', {session: false}), (re
     .sort([['date', -1]])
     .populate('user', ['name', 'firstname', 'picture', 'company'])
     .populate('chatroom')
+    .populate('service')
     .then(alfred => {
       if (!alfred) {
         res.status(HTTP_CODES.NOT_FOUND).json({msg: 'No booking found'})
@@ -56,6 +57,7 @@ router.get('/userBooking', passport.authenticate('jwt', {session: false}), (req,
   Booking.find({user: userId})
     .sort([['date', -1]])
     .populate('alfred', '-id_card')
+    .populate('service')
     .populate({
       path: 'chatroom',
       populate: {path: 'emitter'},
@@ -296,7 +298,6 @@ router.post('/compute', (req, res) => {
     })
 })
 
-
 // @Route GET /myAlfred/booking/:id
 // View one booking
 // @Access public
@@ -310,6 +311,7 @@ router.get('/:id', (req, res) => {
     .populate('prestation')
     .populate('equipments')
     .populate({path: 'customer_booking', populate: {path: 'user'}})
+    .lean({virtuals: true})
     .then(booking => {
       if (booking) {
         res.json(booking)
@@ -329,17 +331,18 @@ router.get('/:id/ics', (req, res) => {
   Booking.findById(req.params.id)
     .populate({path: 'user', select: 'firstname'})
     .populate({path: 'alfred', select: 'firstname'})
+    .populate({path: 'service', select: 'label'})
     .then(booking => {
-      title=`${booking.service} par ${booking.alfred.firstname} pour ${booking.user.firstname}`
-      const start=booking.prestation_date
-      const end=booking.end_date
+      title=`${booking.service.label} ${booking.alfred ? `par ${booking.alfred.firstname}`:''} pour ${booking.user.firstname}`
+      const start=moment(booking.prestation_date)
+      const end= booking.end_date ? moment(booking.end_date) : null
       return ics.createEvent({
         uid: booking._id.toString(),
         title: title,
         start: [start.year(), start.month()+1, start.date(), start.hour(), start.minute(), start.second()],
         end: end && [end.year(), end.month()+1, end.date(), end.hour(), end.minute(), end.second()],
         location: formatAddress(booking.address),
-        geo: {lat: booking.address.gps.lat, lon: booking.address.gps.lng},
+        // geo: {lat: booking.address.gps.lat, lon: booking.address.gps.lng},
         status: booking.status==BOOK_STATUS.CANCELLED ? 'CANCELLED' : booking.status==BOOK_STATUS.TO_CONFIRM ? 'TENTATIVE' : 'CONFIRMED',
         busyStatus: 'BUSY',
         url: new URL(`/reservations/reservations?id=${booking._id}`, getHostUrl()).href,
@@ -366,9 +369,9 @@ router.get('/:id/google_calendar', (req, res) => {
   Booking.findById(req.params.id)
     .populate({path: 'user', select: 'firstname'})
     .populate({path: 'alfred', select: 'firstname'})
+    .populate({path: 'service', select: 'label'})
     .then(booking => {
-      console.log(`Type date:${typeof booking.prestation_date}`)
-      title=`${booking.service} par ${booking.alfred.firstname} pour ${booking.user.firstname}`
+      title=`${booking.service.label} ${booking.alfred ? `par ${booking.alfred.firstname}`:''} pour ${booking.user.firstname}`
       const start=booking.prestation_date.toISOString().replace(/[-:]/g, '').replace(/\.\d\d\dZ/, 'Z')
       const end=booking.end_date ? booking.end_date.toISOString().replace(/[-:]/g, '').replace(/\.\d\d\dZ/, 'Z') : start
       console.log(start)
@@ -378,7 +381,7 @@ router.get('/:id/google_calendar', (req, res) => {
         start: start,
         end: end,
         location: formatAddress(booking.address),
-        geo: {lat: booking.address.gps.lat, lon: booking.address.gps.lng},
+        // geo: {lat: booking.address.gps.lat, lon: booking.address.gps.lng},
         status: booking.status==BOOK_STATUS.CANCELLED ? 'CANCELLED' : booking.status==BOOK_STATUS.TO_CONFIRM ? 'TENTATIVE' : 'CONFIRMED',
         busyStatus: 'BUSY',
         details: `<a href="${new URL(`/reservations/reservations?id=${booking._id}`, getHostUrl()).href}">Accéder à ma réservation</a>`,

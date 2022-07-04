@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
 const lodash=require('lodash')
+const {ROLES}=require('../../../utils/others/consts')
+const {BOOK_STATUS}=require('../../../utils/consts')
 const AddressSchema =require('../AddressSchema')
-const {BOOK_STATUS, ROLES} = require('../../../utils/consts')
 
 const Schema = mongoose.Schema
 
@@ -195,6 +196,12 @@ const BookingSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'booking',
   },
+  // Booked using CPF account
+  cpf_booked: {
+    type: Boolean,
+    default: false,
+    required: false,
+  },
 }, {toJSON: {virtuals: true, getters: true}})
 
 BookingSchema.virtual('alfred_amount').get(function() {
@@ -217,6 +224,10 @@ BookingSchema.virtual('customer_fee').get(function() {
 
 BookingSchema.virtual('provider_fee').get(function() {
   return lodash.sum((this.provider_fees||[]).map(c => c.amount))
+})
+
+BookingSchema.virtual('cpf_amount').get(function() {
+  return this.cpf_booked ? this.amount : 0
 })
 
 

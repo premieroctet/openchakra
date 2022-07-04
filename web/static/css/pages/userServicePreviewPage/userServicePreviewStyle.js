@@ -1,6 +1,6 @@
 const style=theme => ({
   mainContainer: {
-    marginTop: 100,
+    marginTop: 50,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
@@ -97,7 +97,7 @@ const style=theme => ({
     },
   },
   equipmentsContainer: {
-    marginTop: '15%',
+    marginTop: '5%',
     [theme.breakpoints.down('xs')]: {
       display: 'flex',
       justifyContent: 'center',

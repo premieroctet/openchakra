@@ -5,7 +5,6 @@ import React, {useState, useEffect} from 'react'
 import {withStyles} from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Router from 'next/router'
-import axios from 'axios'
 import Typography from '@material-ui/core/Typography'
 import Drawer from '@material-ui/core/Drawer'
 import Hidden from '@material-ui/core/Hidden'
@@ -13,6 +12,7 @@ import {registerLocale} from 'react-datepicker'
 import fr from 'date-fns/locale/fr'
 import Head from 'next/head'
 import moment from 'moment'
+import {getDataModel} from '../config/config'
 import {useUserContext} from '../contextes/user.context'
 import {setAxiosAuthentication} from '../utils/authentication'
 import Place from '../components/Place'
@@ -27,14 +27,10 @@ import Album from '../components/Album/Album'
 import SummaryCommentary from '../components/SummaryCommentary/SummaryCommentary'
 import DrawerBooking from '../components/Drawer/DrawerBooking/DrawerBooking'
 import LayoutMobile from '../hoc/Layout/LayoutMobile'
-
 import ListIconsSkills from '../components/ListIconsSkills/ListIconsSkills'
 import Equipments from '../components/Equipments'
-
-import {
-  isMomentAvailable,
-} from '../utils/dateutils'
 import withParams from '../components/withParams'
+const axios = require('axios')
 
 moment.locale('fr')
 registerLocale('fr', fr)
@@ -56,7 +52,14 @@ const UserServicesPreview = ({classes, t, address, id}) => {
   const [avocotesUserName, setAvocotesUserName]=useState(null)
 
   useEffect(() => {
-    if (id && !serviceUser) {
+    if (getDataModel()=='aftral') {
+      const newUrl=window.location.href.replace('userServicePreview?id=', 'training/')
+      Router.push(newUrl)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (id && !serviceUser && getDataModel()!='aftral') {
       setAxiosAuthentication()
       axios.get(`/myAlfred/api/serviceUser/${id}`)
         .then(res => {

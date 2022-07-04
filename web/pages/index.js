@@ -13,11 +13,12 @@ import Typography from '@material-ui/core/Typography'
 import CloseIcon from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
 import {isAndroid} from 'react-device-detect'
+import {PART} from '../utils/consts'
+import ServiceTopic from '../components/HomePage/Service/ServiceTopic'
 import ResaService from '../components/HomePage/ResaService/ResaService'
 import TrustAndSecurity from '../hoc/Layout/TrustAndSecurity/TrustAndSecurity'
 import MobileNavbar from '../hoc/Layout/NavBar/MobileNavbar'
 import NewsLetter from '../components/HomePage/NewsLetter/NewsLetter'
-import {PRO, PART} from '../utils/consts'
 import OurAlfred from '../components/HomePage/OurAlfred/OurAlfred'
 import CategoryTopic from '../components/HomePage/Category/CategoryTopic'
 import BannerPresentation from '../components/HomePage/BannerPresentation/BannerPresentation'
@@ -33,7 +34,6 @@ import {
 } from '../utils/context'
 import {hideStoreDialog} from '../config/config'
 import RandomBanner from '../components/RandomBanner/RandomBanner'
-import {INDEX} from '../utils/i18n'
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props
@@ -54,7 +54,8 @@ class Home extends React.Component {
     super(props)
     this.child = React.createRef()
     this.state = {
-      category: {},
+      categories: [],
+      services: {},
       alfred: {},
       user: {},
       open: false,
@@ -68,7 +69,7 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
-    
+
     if (isMobile()) {
       this.setState({open: true})
     }
@@ -77,6 +78,13 @@ class Home extends React.Component {
       .then(res => {
         let categories = lodash.shuffle(res.data)
         this.setState({categories: categories})
+      }).catch(err => console.error(err))
+
+    axios.get(`/myAlfred/api/service/all`)
+      .then(res => {
+        let services=res.data.filter(s => !!s.tag)
+        let groupedServices = lodash.groupBy(services, 'tag')
+        this.setState({services: groupedServices})
       }).catch(err => console.error(err))
 
     axios.get(`/myAlfred/api/serviceUser/home/${PART}`)
@@ -134,7 +142,7 @@ class Home extends React.Component {
 
   render() {
     const {classes, t} = this.props
-    const {mounted, categories, alfred, open} = this.state
+    const {mounted, categories, alfred, open, services} = this.state
 
     if (!mounted) {
       return null
@@ -191,6 +199,17 @@ class Home extends React.Component {
               <OurAlfred alfred={alfred}/>
             </Grid>
           </Grid>
+          {Object.entries(services).map(entry => {
+            const [tag, taggedServices]=entry
+            return (
+              <Grid container className={`customslideservices ${classes.mainContainerStyle}`}>
+                <Grid className={classes.generalWidthContainer}>
+                  <ServiceTopic label={tag} services={taggedServices.map(s => s._id)}/>
+                </Grid>
+              </Grid>
+            )
+          })
+          }
           <Grid container className={`customresaservice ${classes.becomeAlfredComponent}`}>
             <Grid className={classes.generalWidthContainer}>
               <ResaService triggerLogin={this.callLogin}/>

@@ -1,32 +1,21 @@
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from '@material-ui/core'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
 import axios from 'axios'
-import Box from '@material-ui/core/Box'
-import Rating from '@material-ui/lab/Rating'
-import RoomIcon from '@material-ui/icons/Room'
-import Chip from '@material-ui/core/Chip'
 import {withStyles} from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
-import EditIcon from '@material-ui/icons/Edit'
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
-import IconButton from '@material-ui/core/IconButton'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContentText from '@material-ui/core/DialogContentText'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import DialogContent from '@material-ui/core/DialogContent'
-import Dialog from '@material-ui/core/Dialog'
-import Router from 'next/router'
 import {Skeleton} from '@material-ui/lab'
-import styles from '../../../static/css/components/Card/CardService/CardService'
-import {computeAverageNotes, computeDistanceKm} from '../../../utils/functions'
+import styles from '../../../static/css/components/Card/CardServiceUser/CardServiceUser'
 import CustomButton from '../../CustomButton/CustomButton'
-import {CARD_SERVICE} from '../../../utils/i18n'
-
-import ListIconsSkills from '../../ListIconsSkills/ListIconsSkills'
-const {isEditableUser, hideEmptyEvaluations}=require('../../../utils/context')
 
 class RawCardServiceInfo extends React.Component {
   constructor(props) {
@@ -38,12 +27,12 @@ class RawCardServiceInfo extends React.Component {
     return (
       <Grid>
         <Paper elevation={1} className={`customcardinfopaper ${classes.cardServiceInfoPaper}`}>
-          <Grid className={classes.cardServiceInfoContent}>
+          <Grid className={classes.cardServiceUserInfoContent}>
             <Grid>
-              <h2 className={`customcardinfotitle ${classes.cardServiceInfoTitle}`}>{ReactHtmlParser(this.props.t('CARD_SERVICE.card_help_title'))}</h2>
+              <h2 className={`customcardinfotitle ${classes.cardServiceUserInfoTitle}`}>{ReactHtmlParser(this.props.t('CARD_SERVICE.card_help_title'))}</h2>
             </Grid>
             <Grid>
-              <p className={`customcardinfosubtitle ${classes.cardServiceInfoText}`}>{ReactHtmlParser(this.props.t('CARD_SERVICE.card_help_chat'))}</p>
+              <p className={`customcardinfosubtitle ${classes.cardServiceUserInfoText}`}>{ReactHtmlParser(this.props.t('CARD_SERVICE.card_help_chat'))}</p>
             </Grid>
           </Grid>
         </Paper>
@@ -60,22 +49,14 @@ class CardService extends React.Component {
     this.state={
       cpData: {},
       dense: true,
-      score: null,
-      service: null,
-      shop: null,
-      open: false,
-      id_service: '',
-      reviews: [],
-      alfred: {},
-      animated: false,
     }
   }
 
   componentDidMount() {
     if (this.props.item) {
-      axios.get(`/myAlfred/api/serviceUser/cardPreview/${this.props.item}`)
+      axios.get(`/myAlfred/api/service/cardPreview/${this.props.item}`)
         .then(res => {
-          this.setState({cpData: res.data, alfred: res.data.alfred})
+          this.setState({cpData: res.data})
         })
         .catch(err => console.error(err))
     }
@@ -137,15 +118,10 @@ class CardService extends React.Component {
   }
 
   render() {
-    const {classes, gps, profileMode, address, loading} = this.props
-    const {cpData, alfred, open, animated} = this.state
+    const {classes, loading, address} = this.props
+    const {cpData} = this.state
 
-    let distance = gps ? computeDistanceKm(gps, cpData.gps) : null
-    distance = distance ? distance.toFixed(0) : ''
-
-    const notes = cpData.reviews ? computeAverageNotes(cpData.reviews.map(r => r.note_alfred)) : {}
-
-    let resa_link = `/userServicePreview?id=${cpData._id}`
+    let resa_link = `/servicePreview?id=${cpData._id}`
     if (address) {
       resa_link+=`&address=${address}`
     }
@@ -159,7 +135,7 @@ class CardService extends React.Component {
 
     const cardServiceLoading = () => {
       return(
-        <Grid className={classes.mainCardServiceContainer}>
+        <Grid className={classes.mainCardServiceUserContainer}>
           <Paper elevation={1} className={classes.paperloadingCard}>
             <Grid className={classes.cardLoadingImgCont}>
               <Grid className={classes.cardLoadingCard}>
@@ -186,133 +162,43 @@ class CardService extends React.Component {
       )
     }
 
-    let picture = profileMode ? cpData.picture : alfred.picture || cpData.picture
+    let picture = cpData.picture
 
-    if (picture && !animated && picture.toLowerCase().endsWith('.gif')) {
-      const filename = picture.split('/').slice(-1).pop()
-      picture=`myAlfred/api/users/still_profile/${filename}`
+    if (picture && !picture.startsWith('http') && !picture.startsWith('/')) {
+      picture=`/${picture}`
     }
-
-    const editable = isEditableUser(alfred)
-
     return(
       loading ?
         cardServiceLoading() :
-        <Grid onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} className={profileMode ? classes.mainCardServiceContainerProfil : classes.mainCardServiceContainer}>
-          <Paper elevation={1} className={profileMode ? classes.profileModecardServicePaper : `customcardpaper ${classes.cardServicePaper}`}>
-            <Grid container spacing={1} className={profileMode ? classes.profileModeCardService : classes.cardServiceMainStyle} onClick={() => { profileMode && editable ? null : window.open(resa_link, '_blank') }}>
-              <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={profileMode ? classes.profileModecardServiceFlexContainer : classes.cardServiceFlexContainer}>
-                <Grid className={profileMode ? classes.profileModecardServicePicsContainer : classes.cardServicePicsContainer}>
-                  <Grid style={{backgroundImage: `url("/${picture}")`}} className={profileMode ? classes.cardServiceBackgroundPicsProfil : classes.cardServiceBackgroundPics}>
-                    {
-                      profileMode && editable ?
-                        <Grid style={{position: 'absolute', top: '5px', right: '5px', display: 'flex'}}>
-                          <Grid>
-                            <IconButton aria-label="delete" style={{backgroundColor: 'rgba(0,0,0,0.7)'}} size={'small'} onClick={() => Router.push(`/creaShop/creaShop?serviceuser_id=${cpData._id}`)}>
-                              <EditIcon style={{color: 'white'}} />
-                            </IconButton>
-                          </Grid>
-                          <Grid style={{marginLeft: '10px'}}>
-                            <IconButton aria-label="delete" size={'small'} style={{backgroundColor: 'rgba(0,0,0,0.7)'}} onClick={() => this.handleClickOpen(cpData._id)}>
-                              <DeleteForeverIcon style={{color: 'white'}} />
-                            </IconButton>
-                          </Grid>
-                        </Grid>
-                        :
-                        <>
-                          <Grid className={profileMode ? classes.cardServiceCHipNameP : classes.cardServiceChipName}>
-                            <Chip label={alfred.firstname} avatar={<ListIconsSkills data={cpData} />} classes={{root: `customcardchipname ${classes.cardServiceChip}`}} />
-                          </Grid>
-                          {
-                            cpData.is_professional ?
-                              <Grid className={classes.cardServiceChipPro}>
-                                <Chip label={'Pro'} classes={{root: `customcardchippro ${classes.cardServiceChipBckg}`}}/>
-                              </Grid> : null
-                          }
-                        </>
-                    }
+        <Grid className={classes.mainCardServiceContainer}>
+          <Paper elevation={1} className={`customcardpaper ${classes.cardServicePaper}`}>
+            <Grid container spacing={1} className={classes.cardServiceUserMainStyle} onClick={() => { window.open(resa_link, '_blank') }}>
+              <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.cardServiceUserFlexContainer}>
+                <Grid className={classes.cardServiceUserPicsContainer}>
+                  <Grid style={{backgroundImage: `url("${picture}")`}} className={classes.cardServiceUserBackgroundPics}>
                   </Grid>
                 </Grid>
 
               </Grid>
-              <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0}} className={profileMode ? classes.profileModeDataContainer : classes.dataContainer}>
-                <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={profileMode ? classes.labelServiceProfil : classes.labelService}>
+              <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0}} className={classes.dataContainer}>
+                <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.labelService}>
                   <Typography className={classes.labelDataContainer}><strong>{cpData.label}</strong></Typography>
                 </Grid>
-                { profileMode ? null :
-                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.cardServicePlaceContainer}>
-                    <Grid className={classes.cardServicePlaceLogo}>
-                      <RoomIcon/>
-                    </Grid>
-                    <Grid className={classes.cardKmContainer}>
-                      { distance &&
-                        <>
-                          <Grid style={{whiteSpace: 'nowrap'}}>
-                            <Typography>{`À ${distance} km`}</Typography>
-                          </Grid>
-                          <Grid>
-                            <Typography>-</Typography>
-                          </Grid>
-                        </>
-                      }
-                      <Grid style={{overflow: 'hidden'}}>
-                        <Typography className={classes.stylecardServiceDistance}>{cpData.city}</Typography>
-                      </Grid>
+                <>
+                  <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.cardServiceUserScoreAndButtonContainer}>
+                    <Grid item xl={9} lg={9} md={9} sm={9} xs={9} className={classes.buttonShowProfilContainer}>
+                      <CustomButton
+                        variant={'contained'}
+                        classes={{root: `customshoprofil ${classes.buttonShowProfil}`}}
+                      >
+                        {ReactHtmlParser(this.props.t('CARD_SERVICE.button_show_profil'))}
+                      </CustomButton>
                     </Grid>
                   </Grid>
-                }
-                {
-                  profileMode ? null :
-                    <>
-                      <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.containerDescription}>
-                        <Typography className={classes.descriptionStyle}>{cpData.description ? cpData.description : ReactHtmlParser(this.props.t('CARD_SERVICE.no_description'))}</Typography>
-                      </Grid>
-                      <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.cardServiceScoreAndButtonContainer}>
-                        <Grid item xl={3} lg={3} md={3} sm={3} xs={3} className={classes.cardServiceRatingContainer}>
-                          <Box component="fieldset" mb={3} borderColor="transparent" classes={{root: classes.cardPreviewRatingBox}}>
-                            { !hideEmptyEvaluations() || cpData.reviews && cpData.reviews.length>0 ?
-                              <Rating
-                                name="simple-controlled"
-                                value={cpData.reviews && cpData.reviews.length>0 ? 1:0}
-                                max={1}
-                                readOnly
-                              />
-                              :
-                              null
-                            }
-                            <Grid className={classes.cardServiceBoxRatingDisplay}>
-                              <Grid className={classes.cardServiceRating}>
-                                { !hideEmptyEvaluations() || notes.global && notes.global >0 ?
-                                  <Typography className={classes.cardServiceLabelService}>{notes.global ? notes.global.toFixed(2) : 0}</Typography>
-                                  :
-                                  null
-                                }
-                              </Grid>
-                              <Grid>
-                                {!hideEmptyEvaluations() || cpData.reviews && cpData.reviews.length >0 ?
-                                  <Typography className={classes.cardServiceLabelService}>({cpData.reviews ? cpData.reviews.length : 0})</Typography>
-                                  :
-                                  null
-                                }
-                              </Grid>
-                            </Grid>
-                          </Box>
-                        </Grid>
-                        <Grid item xl={9} lg={9} md={9} sm={9} xs={9} className={classes.buttonShowProfilContainer}>
-                          <CustomButton
-                            variant={'contained'}
-                            classes={{root: `customshoprofil ${classes.buttonShowProfil}`}}
-                          >
-                            {ReactHtmlParser(this.props.t('CARD_SERVICE.button_show_profil'))}
-                          </CustomButton>
-                        </Grid>
-                      </Grid>
-                    </>
-                }
+                </>
               </Grid>
             </Grid>
           </Paper>
-          {open ? this.modalDeleteServices(classes) : null}
         </Grid>
     )
   }

@@ -433,7 +433,7 @@ class ProfileAbout extends React.Component {
             </Grid>
             : null
         }
-        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+        <Grid className='customalbum' item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Box>
             <Album user={this.props.user}/>
           </Box>

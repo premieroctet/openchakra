@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+const {isPlatform} = require('../../config/config')
 const MarketplacePayment = require('../plugins/payment/marketplacePayment')
 // const PlatformPayment = require('../plugins/payment/platformPayment')
 const User=require('../models/User')
@@ -48,6 +49,7 @@ const send_cookie = (user, res, logged_as=null) => {
     is_alfred: user.is_alfred,
     is_alfred_pro: user.shop && user.shop.length==1 && !user.shop[0].is_particular,
     is_registered: user.is_registered,
+    is_super_admin: user.is_admin && user.email.match(/@my-alfred\.io$/),
     logged_as: logged_as,
   } // Create JWT payload
 
@@ -71,6 +73,7 @@ class RequestServerContext {
   }
 
   init = () => {
+    this.payment=isPlatform() ? new PlatformPayment() : new MarketplacePayment()
     return new Promise((resolve, reject) => {
       const user_id=get_logged_id(this.request)
       if (!user_id) {
@@ -98,7 +101,6 @@ class RequestServerContext {
   }
 
 }
-
 
 const serverContextFromRequest = req => {
   return new Promise((resolve, reject) => {

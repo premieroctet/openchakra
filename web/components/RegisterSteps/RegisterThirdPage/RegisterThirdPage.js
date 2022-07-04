@@ -1,21 +1,41 @@
-import { canAlfredSelfRegister } from '../../../config/config';
-import CustomButton from '../../CustomButton/CustomButton'
+import {Link, Typography} from '@material-ui/core'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 import Grid from '@material-ui/core/Grid'
-import {Typography} from '@material-ui/core'
-import {Link} from '@material-ui/core'
+import CustomButton from '../../CustomButton/CustomButton'
 import styles from '../../../static/css/components/RegisterSteps/RegisterThirdPage/RegisterThirdPage'
-
-import {REGISTER_THIRD_PAGE} from '../../../utils/i18n'
+const axios = require('axios')
+const {setAxiosAuthentication} = require('../../../utils/authentication')
+const {
+  canAlfredParticularRegister,
+  canAlfredSelfRegister,
+} = require('../../../config/config')
 
 class RegisterThirdPage extends React.Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      user: null,
+    }
+  }
+
+  componentDidMount() {
+    setAxiosAuthentication()
+    axios.get('/myAlfred/api/users/current')
+      .then(res => {
+        this.setState({user: res.data})
+      })
+      .catch(() => {})
+  }
+
   render() {
     const{classes} = this.props
+    const {user}=this.state
 
-    const displayCreaShop = canAlfredSelfRegister()
+    const displayCreaShop = canAlfredSelfRegister() && ((user && user.professional) || canAlfredParticularRegister())
 
     return(
       <Grid container>

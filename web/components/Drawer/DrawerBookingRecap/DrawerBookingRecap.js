@@ -1,4 +1,3 @@
-import CustomButton from '../../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -7,12 +6,13 @@ import Typography from '@material-ui/core/Typography'
 import AccordionSummary from '@material-ui/core/AccordionSummary'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import AccordionDetails from '@material-ui/core/AccordionDetails'
-import BookingDetail from '../../BookingDetail/BookingDetail'
 import Accordion from '@material-ui/core/Accordion'
-import styles from '../../../static/css/components/DrawerBookingRecap/DrawerBookingRecap'
 import withStyles from '@material-ui/core/styles/withStyles'
 import moment from 'moment'
 import Divider from '@material-ui/core/Divider'
+import styles from '../../../static/css/components/DrawerBookingRecap/DrawerBookingRecap'
+import BookingDetail from '../../BookingDetail/BookingDetail'
+import CustomButton from '../../CustomButton/CustomButton'
 import {DRAWER_BOOKING_RECAP} from '../../../utils/i18n'
 
 moment.locale('fr')
@@ -31,7 +31,7 @@ class DrawerBookingRecap extends React.Component {
 
     const{pricedPrestations, countPrestations, grandTotal, customer_fee, travel_tax,
       classes, pick_tax, cesu_total, mode, prestations, bookingObj,
-      user, id_card, activeStep, pending, alfred_pro} = this.props
+      alfred, id_card, activeStep, pending, alfred_pro, cpf_amount} = this.props
 
     return(
       <Grid>
@@ -41,7 +41,9 @@ class DrawerBookingRecap extends React.Component {
           </Grid>
           <Grid>
             <Grid>
-              <Typography>{bookingObj.service} par {user.firstname}</Typography>
+              <Typography>{bookingObj.service}
+                {!bookingObj.is_service && `par ${alfred?.firstname}}`}
+              </Typography>
             </Grid>
             <Grid>
               <Typography><strong>{booking_datetime_str(bookingObj)}</strong></Typography>
@@ -130,6 +132,7 @@ class DrawerBookingRecap extends React.Component {
               cesu_total={cesu_total}
               mode={mode}
               alfred_pro={alfred_pro}
+              cpf_amount={cpf_amount}
             />
           </Grid>
         </Grid>

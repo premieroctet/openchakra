@@ -21,7 +21,7 @@ class SIB_V3 {
     let emailData = new SibApiV3Sdk.SendSmtpEmail()
 
     emailData.to = [{email: email}]
-    if (ccs && ccs.length>0) {
+    if (ccs?.length>0) {
       emailData.cc=ccs.map(cc => ({email: cc}))
     }
     emailData.templateId = parseInt(index)
