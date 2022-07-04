@@ -97,7 +97,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   User.find({active: true})
     .sort({creation_date: -1})
-    .populate('company')
+    .populate({path: 'company', populate: {path: 'sales_representative'}})
     .populate('companies')
     .then(data => {
       data=filterUsers(data, DATA_TYPE, req.user, VIEW)

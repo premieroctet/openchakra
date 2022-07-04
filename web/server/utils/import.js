@@ -263,7 +263,8 @@ const accountsImport = (buffer, options) => {
           const zip_code=record['Code postal'].match(/\d+/)[0]
           const city=record.Ville
           if (!address|| !zip_code || !city) { return Promise.reject(msg('Adresse incorrecte')) }
-          const addr={label: MAIN_ADDRESS_LABEL, address, zip_code, city, country: 'France'}
+          const phone=record['Téléphone'] || ''
+          const addr={label: MAIN_ADDRESS_LABEL, address, zip_code, city, country: 'France', phone: phone}
           const companyName=record.Adresse
           const deliverZipCodesValues=record['Zone de chalandise']
           if (!deliverZipCodesValues) { return Promise.reject(msg(`Zone de chalandise incorrecte:${deliverZipCodesValues}`)) }

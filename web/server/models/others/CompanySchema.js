@@ -1,9 +1,8 @@
 const mongoose = require('mongoose')
-const {hideIllegal} = require('../../utils/text')
-const AddressSchema = require('./AddressSchema')
+const AddressSchema = require('../AddressSchema')
+const {hideIllegal} = require('../../../utils/text')
 
 const Schema = mongoose.Schema
-
 
 const CompanySchema = new Schema({
   name: {

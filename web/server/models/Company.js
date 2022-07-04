@@ -1,9 +1,10 @@
 const mongoose = require('mongoose')
+const {getDataModel}=require('../../config/config')
 
 let CompanySchema=null
 
 try {
-  CompanySchema=require(`./CompanySchema`)
+  CompanySchema=require(`./${getDataModel()}/CompanySchema`)
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {

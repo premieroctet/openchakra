@@ -313,7 +313,7 @@ const quotationsColumns = ({endpoint, language, deleteOrder}) => {
 
 }
 
-const accountsColumns = ({language, visibility, endpoint, deleteUser}) => {
+const accountsColumns = ({language, endpoint, deleteUser}) => {
 
   return [
     {
@@ -337,7 +337,7 @@ const accountsColumns = ({language, visibility, endpoint, deleteUser}) => {
       attribute: u => u.company?.sales_representative?.full_name,
     },
     {
-      label: 'Rôles',
+      label: 'Rôle',
       attribute: u => u.roles.map(r => ROLES[r]).join(','),
     },
     {
@@ -362,7 +362,7 @@ const accountsColumns = ({language, visibility, endpoint, deleteUser}) => {
   ]
 }
 
-const companiesColumns = ({language, updateSeller, sellers}) => {
+const companiesColumns = ({/** language,*/ updateSeller, sellers}) => {
 
   const baseCompaniesCols = [
     {
@@ -370,12 +370,13 @@ const companiesColumns = ({language, updateSeller, sellers}) => {
       attribute: 'name',
     },
     {
-      label: 'Adresse',
-      attribute: company => formatAddress(company?.addresses[0]), // formatAddress(company?.addresses[0]) || '',
+      label: 'Administrateur',
+      attribute: company => [company.administrator?.full_name, company.addresses[0]?.phone],
+      Cell: ({value}) => <>{value.map(v => (<div>{v}</div>))}</>,
     },
     {
-      label: 'Zone de chalandise',
-      attribute: company => (company?.delivery_zip_codes).join('/'), // formatAddress(company?.addresses[0]) || '',
+      label: 'Adresse',
+      attribute: company => formatAddress(company?.addresses[0]), // formatAddress(company?.addresses[0]) || '',
     },
     {
       label: 'Tarifs',
@@ -399,7 +400,7 @@ const companiesColumns = ({language, updateSeller, sellers}) => {
 
 }
 
-const productsColumns = ({language}) => [
+const productsColumns = ({/** language*/}) => [
   {label: 'Code article', attribute: 'reference'},
   {label: 'Description', attribute: 'description'},
   {label: 'Description 2', attribute: 'description_2'},
@@ -409,7 +410,7 @@ const productsColumns = ({language}) => [
   {label: 'Poids', attribute: 'weight'},
 ]
 
-const shipratesColumns = ({language}) => [
+const shipratesColumns = ({/** language */}) => [
   {label: 'Code postal', attribute: 'zipcode'},
   {label: 'Département', attribute: 'province'},
   {label: 'Express', attribute: 'express', Cell: ({cell: {value}}) => (value ? 'Oui' : 'Non')},
@@ -419,14 +420,14 @@ const shipratesColumns = ({language}) => [
   {label: 'Par kg', attribute: 'per_kg_price'},
 ]
 
-const pricesColumns = ({language}) => [
+const pricesColumns = ({/** language */}) => [
   {label: 'Liste', attribute: 'name'},
   {label: 'Réference', attribute: 'reference'},
   {label: 'Tarif', attribute: 'price'},
 ]
 
 
-const handledOrdersColumns = ({endpoint, language, exportFile, filter = null}) => {
+const handledOrdersColumns = ({endpoint, language, exportFile /** , filter = null */}) => {
 
   const handledOrdersColumnsBase = [
     {
@@ -463,7 +464,7 @@ const handledOrdersColumns = ({endpoint, language, exportFile, filter = null}) =
 
   return exportFile ? [...handledOrdersColumnsBase, exportCol] : handledOrdersColumnsBase
 }
-const handledQuotationsColumns = ({language, endpoint, handleValidation = null, filter = null}) => [
+const handledQuotationsColumns = ({language /** , endpoint, handleValidation = null, filter = null*/}) => [
   {
     label: 'Date',
     attribute: 'creation_date',
