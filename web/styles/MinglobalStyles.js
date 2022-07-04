@@ -101,6 +101,31 @@ export const MinGlobalStyles = createGlobalStyle`
   }
 
 
+
+  .container-sm {
+    width: var(--container-sm);
+    margin-inline: auto;
+  }
+  .container-md {
+    width: var(--container-md);
+    margin-inline: auto;
+  }
+  .container-base {
+    width: var(--container-base);
+    margin-inline: auto;
+  }
+
+  .container-lg {
+    width: var(--container-lg); 
+    margin-inline: auto;
+  }
+
+  .container-xl {
+    width: var(--container-xl); 
+    margin-inline: auto;
+  }
+
+
   /* A11Y */
 
   .sr-only {	

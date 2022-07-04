@@ -29,8 +29,8 @@ export const feurst = createGlobalStyle`
 }
 
 * {
-  font-family: inherit !important;
-}
+  font-family: var(--font-family) !important;
+} 
 
 :root {
   /* Colors */
@@ -59,32 +59,6 @@ export const feurst = createGlobalStyle`
   --stone-700: #1C1917;
 
 }
-
-
-.container-sm {
-  width: var(--container-sm);
-  margin-inline: auto;
-}
-.container-md {
-  width: var(--container-md);
-  margin-inline: auto;
-}
-.container-base {
-  width: var(--container-base);
-  margin-inline: auto;
-}
-
-.container-lg {
-  width: var(--container-lg); 
-  margin-inline: auto;
-}
-
-.container-xl {
-  width: var(--container-xl); 
-  margin-inline: auto;
-}
-
-
 
 .img-responsive {
   min-width: 50px;
@@ -400,6 +374,23 @@ transform: translateY(-25%);
 
 export const aftral = createGlobalStyle`
 
+
+/* poppins-regular - latin */
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  src: local(Poppins),
+       url('../static/assets/fonts/Poppins/poppins-v20-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+       url('../static/assets/fonts/Poppins/poppins-v20-latin-regular.woff') format('woff'), /* Modern Browsers */
+       url('../static/assets/fonts/Poppins/poppins-v20-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('../static/assets/fonts/Poppins/poppins-v20-latin-regular.svg#Poppins') format('svg'); /* Legacy iOS */
+  font-display: swap;
+}
+
+* {
+  font-family: var(--font-family) !important;
+} 
 
 :root {
     /* Colors */

@@ -337,6 +337,15 @@ const RoundedBox = styled.div`
     }
   }
 
+  .group-ensavoirplus, .validation {
+    padding: var(--spc-2) var(--spc-8) var(--spc-8);
+
+    ul {
+      padding: 0;
+      list-style: none;
+    }
+  }
+
 
 `
 
@@ -481,14 +490,6 @@ const MoreInfo = styled(RoundedBox)`
     margin-block: var(--spc-4);
   }
 
-  .group-ensavoirplus, .validation {
-    padding: var(--spc-2) var(--spc-8) var(--spc-8);
-
-    ul {
-      padding: 0;
-      list-style: none;
-    }
-  }
 
   .detailsmoreinfo {
     position: relative;
@@ -652,24 +653,11 @@ const Opinions = styled(RoundedBox)`
 `
 
 const StyledTraining = styled.div`
-
-  * {
-    font-family: var(--font-family);
-  }
    
   min-height: 100vh;
   background-color: var(--bg-color);
   position: relative;
 
- .container-xl {
-  width: min(calc(100vw - 2rem), 70rem);
-  margin-inline: auto;
- }
-
- .container-lg {
-  width: min(calc(100vw - 2rem), 60rem);
-  margin-inline: auto;
- }
 
  .flex {
   display: flex;
