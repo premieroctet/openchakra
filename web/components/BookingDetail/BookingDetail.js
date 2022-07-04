@@ -99,7 +99,7 @@ class BookingDetail extends React.Component {
               <p>{ReactHtmlParser(this.props.t('BOOKING_DETAIL.total'))}</p>
             </Grid>
             <Grid>
-              <p>{total.toFixed(2)}€</p>
+              <p>{total?.toFixed(2)}€</p>
             </Grid>
           </Grid>
 

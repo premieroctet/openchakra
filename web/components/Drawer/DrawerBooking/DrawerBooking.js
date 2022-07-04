@@ -156,10 +156,10 @@ const DrawerBooking = ({classes, t, serviceUserId,
   }, [location, serviceUser, user, bookingDate])
 
   useEffect(() => {
-    if (lodash.sum(Object.values(count))>0 && location && serviceUser && bookingDate) {
+    if (lodash.sum(Object.values(count))>0 && location && serviceUser) {
       computeTotal()
     }
-  }, [count, location, bookingDate, serviceUser])
+  }, [count, location, serviceUser])
 
   useEffect(() => {
     const bookingEnabled=!!serviceUser && location && lodash.sum(Object.values(count)) && bookingDate && warnings.length==0
