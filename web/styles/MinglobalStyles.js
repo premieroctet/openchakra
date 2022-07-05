@@ -4,8 +4,10 @@ export const MinGlobalStyles = createGlobalStyle`
 
   :root {
 
-    --black: #111;
+    --black: ${props => props.theme?.colors?.black || '#111'};
     --white: ${props => props.theme?.colors?.white || '#FFF'};
+    --brand-color: ${props => props.theme?.colors?.brand || 'black'};
+    --font-family: ${props => props.theme?.fontFamily || 'arial'};
 
       /* text */
       --text-xxs: 0.6rem;
@@ -73,7 +75,52 @@ export const MinGlobalStyles = createGlobalStyle`
       /* Miscellaneous */
       --minTapSize: 44px;
 
+  /* Avoid Chrome to see Safari hack */
+  @supports (-webkit-touch-callout: none) {
+    body {
+      /* The hack for Safari */
+      min-height: -webkit-fill-available;
+    }
   }
 
 
-    `
+
+  .container-sm {
+    width: var(--container-sm);
+    margin-inline: auto;
+  }
+  .container-md {
+    width: var(--container-md);
+    margin-inline: auto;
+  }
+  .container-base {
+    width: var(--container-base);
+    margin-inline: auto;
+  }
+
+  .container-lg {
+    width: var(--container-lg);
+    margin-inline: auto;
+  }
+
+  .container-xl {
+    width: var(--container-xl);
+    margin-inline: auto;
+  }
+
+
+  /* A11Y */
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+`

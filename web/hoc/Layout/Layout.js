@@ -13,9 +13,16 @@ import LoggedAsBanner from '../../components/LoggedAsBanner'
 import {setAxiosAuthentication} from '../../utils/authentication'
 import {getLoggedUserId} from '../../utils/context'
 import {PRO, PART} from '../../utils/consts'
+import {getDataModel} from '../../config/config'
+import * as themes from '../../styles/themes'
+import * as globalStyles from '../../styles/globalStyles'
 import TrustAndSecurity from './TrustAndSecurity/TrustAndSecurity'
 import Footer from './Footer/Footer'
 import NavBar from './NavBar/NavBar'
+
+
+const themeToUse = themes[getDataModel()] || themes.orig
+const ProjectGlobalStyles = globalStyles[getDataModel()] || themes.orig
 
 
 class Layout extends React.Component {
@@ -69,7 +76,7 @@ class Layout extends React.Component {
     const {categories} = this.state
 
     return (
-      <ThemeProvider theme={{}}>
+      <ThemeProvider theme={themeToUse || {}}>
         <Grid>
           <LoggedAsBanner />
           <Grid className={classes.hiddenOnMobile}>
@@ -100,6 +107,7 @@ class Layout extends React.Component {
           </Grid>
         </Grid>
         <MinGlobalStyles />
+        {ProjectGlobalStyles && <ProjectGlobalStyles />}
       </ThemeProvider>
     )
   }
