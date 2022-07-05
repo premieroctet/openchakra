@@ -1,4 +1,3 @@
-
 import axios from 'axios'
 import Router from 'next/router'
 import ReactHtmlParser from 'react-html-parser'
@@ -22,6 +21,7 @@ import AddIcon from '@material-ui/icons/Add'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import withStyles from '@material-ui/core/styles/withStyles'
+import {isLoggedUserAdmin} from '../../../utils/context'
 import DevLog from '../../DevLog'
 import {BOOK_STATUS} from '../../../utils/consts'
 import {computeBookingReference} from '../../../utils/text'
@@ -111,7 +111,7 @@ const DrawerBooking = ({classes, t, serviceUserId,
             })
 
         })
-      axios.get('/myAlfred/api/booking/avocotes')
+      isLoggedUserAdmin() && axios.get('/myAlfred/api/booking/avocotes')
         .then(res => {
           setAvocotesBookings(res.data)
         })
@@ -167,7 +167,7 @@ const DrawerBooking = ({classes, t, serviceUserId,
   }, [serviceUser, count, location, warnings, bookingDate])
 
   useEffect(() => {
-    if (!serviceUser || !user) { return }
+    if (!serviceUser) { return }
     const locations={}
     if (serviceUser.location.client) {
       if (avocotesBooking) {
@@ -192,7 +192,7 @@ const DrawerBooking = ({classes, t, serviceUserId,
     if (locationsKeys.length==1) {
       setLocation(locationsKeys[0])
     }
-  }, [serviceUser, avocotesBooking, user])
+  }, [serviceUser, avocotesBooking])
 
   const onBookingDateChange = dt => {
     setBookingDate(dt)
