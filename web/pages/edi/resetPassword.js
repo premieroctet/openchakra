@@ -11,7 +11,7 @@ import RenewPassword from '../../components/Password/RenewPassword'
 import {NormalButton} from '../../components/Feurst/Button'
 import EdiContainer from '../../components/Feurst/EdiContainer'
 
-const ResetPassword = ({t, params}) => {
+const ResetPassword = ({t, token}) => {
 
   const [password, setPassword] = useState('')
   const [passChanged, setPassChanged] = useState(false)
@@ -20,34 +20,34 @@ const ResetPassword = ({t, params}) => {
 
   const resetPassword = async e => {
     e.preventDefault()
-    
+
     const data = {
       password: password.newPassword,
-      token: params.token,
+      token: token,
     }
 
     return await client(`${API_PATH}/users/resetPassword`, {data})
       .then(() => {
-        snackBarSuccess(ReactHtmlParser(this.props.t('RESET_PASSWORD.password_update')))
+        snackBarSuccess(ReactHtmlParser(t('RESET_PASSWORD.password_update')))
         router.push({pathname: '/'})
       })
       .catch(err => {
         console.error(err)
-        snackBarError(err?.info.message)
+        snackBarError(err?.response?.data)
       })
   }
-  
+
 
   return (
     <EdiContainer>
       <div />
       <StyledReset>
         <h2>{ReactHtmlParser(t('RESET_PASSWORD.title'))}</h2>
-      
+
         <form onSubmit={resetPassword}>
-          
+
           <RenewPassword passChanged={passChanged} setPassword={setPassword} />
-        
+
           <NormalButton
             rounded={'full'}
             disabled={!canSubmitPassword}
@@ -59,7 +59,7 @@ const ResetPassword = ({t, params}) => {
         </form>
 
       </StyledReset>
-    
+
     </EdiContainer>
   )
 }
@@ -72,14 +72,14 @@ const StyledReset = styled.div`
   flex-direction: column;
   align-items: center;
   grid-template-columns: 1fr;
-  
+
   h2 {
     color: var(--black);
     font-size: var(--text-2xl);
   }
 
   form {
-    display: flex; 
+    display: flex;
     flex-direction: column;
     width: min(calc(100% - 2rem), 30rem);
     margin-bottom: var(--spc-10);
@@ -88,7 +88,7 @@ const StyledReset = styled.div`
       margin-bottom: var(--spc-4);
     }
   }
-  
+
   button[type="submit"] {
     align-self: flex-end;
     margin-block: var(--spc-4);

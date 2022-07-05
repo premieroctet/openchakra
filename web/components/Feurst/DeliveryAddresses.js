@@ -1,9 +1,10 @@
-import React, {useEffect, Fragment} from 'react'
+import React, {useEffect, Fragment, useCallback} from 'react'
 import {Listbox, Transition} from '@headlessui/react'
 import useAsync from '../../hooks/use-async.hook'
 import {client} from '../../utils/client'
 import {API_PATH} from '../../utils/consts'
 import {StyledListbox} from '../../styles/feurst/StyledComponents'
+import isEmpty from '../../server/validation/is-empty'
 
 const DeliveryAddresses = ({state, requestUpdate, endpoint}) => {
 
@@ -15,9 +16,9 @@ const DeliveryAddresses = ({state, requestUpdate, endpoint}) => {
     run,
   } = useAsync({data: []})
 
-  const setAddress = address => {
+  const setAddress = useCallback(address => {
     requestUpdate({address: {...state.address, ...address}})
-  }
+  }, [])
 
   const addressPattern = address => `${address.label}: ${address.address} ${address.zip_code} ${address.city}`
 
@@ -28,6 +29,11 @@ const DeliveryAddresses = ({state, requestUpdate, endpoint}) => {
         console.error(`Can't fetch addresses in autocomplete ${e}`)
       })
   }, [])
+
+  useEffect(() => {
+    const [mainAddress] = data.filter(address => address.label === 'Principale')
+    if (state?.address && isEmpty(state.address) && mainAddress) { setAddress(mainAddress) }
+  }, [data, setAddress])
 
   return (<>
     <StyledListbox>

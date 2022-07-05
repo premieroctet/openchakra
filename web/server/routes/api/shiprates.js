@@ -1,7 +1,9 @@
+
 const express = require('express')
 const passport = require('passport')
 const moment = require('moment')
 const xlsx=require('node-xlsx')
+const {HTTP_CODES} = require('../../utils/errors')
 const {shipRatesImport} = require('../../utils/import')
 const {TEXT_FILTER, createMemoryMulter} = require('../../utils/filesystem')
 const {SHIPRATE} = require('../../../utils/feurst/consts')
@@ -39,7 +41,7 @@ router.get('/template', passport.authenticate('jwt', {session: false}), (req, re
 router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   if (!isActionAllowed(req.user.roles, DATA_TYPE, VIEW)) {
-    return res.sendStatus(301)
+    return res.sendStatus(HTTP_CODES.FORBIDDEN)
   }
 
   MODEL.find()
@@ -58,7 +60,7 @@ router.post('/import', passport.authenticate('admin', {session: false}), (req, r
   uploadShipRates.single('buffer')(req, res, err => {
     if (err) {
       console.error(err)
-      return res.status(404).json({errors: err.message})
+      return res.status(HTTP_CODES.NOT_FOUND).json({errors: err.message})
     }
 
     const options=JSON.parse(req.body.options)

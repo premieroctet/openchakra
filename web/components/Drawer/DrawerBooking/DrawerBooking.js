@@ -230,7 +230,7 @@ const DrawerBooking = ({
     if (locationsKeys.length==1) {
       setLocation(locationsKeys[0])
     }
-  }, [serviceUser, avocotesBooking, user])
+  }, [serviceUser, avocotesBooking])
 
   const onBookingDateChange = dt => {
     setBookingDate(dt)

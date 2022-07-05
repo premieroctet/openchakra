@@ -1,19 +1,18 @@
 const express = require('express')
 const passport = require('passport')
 const moment = require('moment')
+const {HTTP_CODES} = require('../../utils/errors')
+const errors = require('../../utils/errors')
 const {getHostUrl} = require('../../../config/config')
 const {checkPaid} = require('../../utils/booking')
-const Group = require('../../models/Group')
 const Booking = require('../../models/Booking')
-const Company = require('../../models/Company')
 const User = require('../../models/User')
-
-const router = express.Router()
+const Company = require('../../models/Company')
 const {mangoApi, install_hooks, createCard} = require('../../utils/mangopay')
 const {maskIban} = require('../../../utils/text')
-moment.locale('fr')
-const {MICROSERVICE_MODE, CARETAKER_MODE}=require('../../../utils/consts')
 
+moment.locale('fr')
+const router = express.Router()
 // TODO: PROBLEME : Le pay in id d'une résa client avcocotés n'est pas sauvegardé
 
 router.get('/test', (req, res) => res.json({msg: 'Payment Works!'}))
@@ -104,7 +103,7 @@ router.post('/cards', passport.authenticate('jwt', {session: false}), (req, res)
     })
     .catch(error => {
       console.error(error)
-      res.status(404).json({error: error})
+      res.status(HTTP_CODES.NOT_FOUND).json({error: error})
     })
 })
 
@@ -193,17 +192,17 @@ router.post('/avocotesPayIn', (req, res) => {
             })
             .catch(error => {
               console.error(`Error at Avocotes payin:${error}`)
-              return res.status(404).json({error: error})
+              return res.status(HTTP_CODES.NOT_FOUND).json({error: error})
             })
         })
         .catch(error => {
           console.error(`Error at Avocotes payIn get Wallets:${error}`)
-          return res.status(404).json({error: error})
+          return res.status(HTTP_CODES.NOT_FOUND).json({error: error})
         })
     })
     .catch(error => {
       console.error(`Error at Avocotes payIn get booking:${error}`)
-      return res.status(404).json({error: error})
+      return res.status(HTTP_CODES.NOT_FOUND).json({error: error})
     })
 })
 
@@ -334,7 +333,7 @@ router.post('/bank-accounts', passport.authenticate('jwt', {session: false}), (r
     })
     .catch(err => {
       console.error(`Error:${err}`)
-      res.status(404).json({errors: 'Utilisateur non reconnu'})
+      res.status(HTTP_CODES.NOT_FOUND).json({errors: 'Utilisateur non reconnu'})
     })
 })
 

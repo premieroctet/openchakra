@@ -42,6 +42,7 @@ const Delivery = ({endpoint, orderid, address, shipping: {shipping_fee, shipping
               <img width={20} height={20} src={`${FEURST_IMG_PATH}/edit.webp`} alt='' />
             </button>}
           </div>
+          {address?.phone && <p><abbr title='téléphone'>Tél.</abbr> : {address.phone}</p>}
           <p>Livraison estimée pour les quantités disponibles&nbsp;: J+{shipping_mode == 'EXPRESS' ? '2' : '3'}</p>
         </div>
         {isEmpty(address) ?

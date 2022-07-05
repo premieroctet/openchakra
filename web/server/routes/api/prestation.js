@@ -1,6 +1,7 @@
-const Prestation = require('../../models/Prestation')
 const passport = require('passport')
 const express = require('express')
+const {HTTP_CODES} = require('../../utils/errors')
+const Prestation = require('../../models/Prestation')
 
 const router = express.Router()
 
@@ -26,7 +27,7 @@ router.get('/all', (req, res) => {
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({prestation: `No prestation found:${err}`})
+      res.status(HTTP_CODES.NOT_FOUND).json({prestation: `No prestation found:${err}`})
     })
 })
 
@@ -51,7 +52,7 @@ router.get('/home', (req, res) => {
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({prestation: `No prestation found:${err}`})
+      res.status(HTTP_CODES.NOT_FOUND).json({prestation: `No prestation found:${err}`})
     })
 })
 
@@ -74,7 +75,7 @@ router.get('/:service', (req, res) => {
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({prestation: `No prestation found:${err}`})
+      res.status(HTTP_CODES.NOT_FOUND).json({prestation: `No prestation found:${err}`})
     })
 })
 
@@ -94,7 +95,7 @@ router.get('/:service/:filter', passport.authenticate('jwt', {session: false}), 
       return res.status(400).json({msg: 'No prestation found'})
     })
     .catch(err => {
-      return res.status(404).json({prestation: `No prestation found:${err}`})
+      return res.status(HTTP_CODES.NOT_FOUND).json({prestation: `No prestation found:${err}`})
     })
 })
 
@@ -114,7 +115,7 @@ router.get('/:id', (req, res) => {
       res.json(prestation)
     })
     .catch(err => {
-      res.status(404).json({prestation: `No prestation found:${err}`})
+      res.status(HTTP_CODES.NOT_FOUND).json({prestation: `No prestation found:${err}`})
     })
 })
 

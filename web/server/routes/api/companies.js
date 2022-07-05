@@ -5,8 +5,12 @@ const moment = require('moment')
 const lodash = require('lodash')
 const axios = require('axios')
 const csv_parse = require('csv-parse/lib/sync')
+const {
+  HTTP_CODES,
+  NotFoundError,
+  StatusError,
+} = require('../../utils/errors')
 const {getHostUrl} = require('../../../config/config')
-const {StatusError} = require('../../utils/errors')
 const {
   ACCOUNT,
   COMPANY,
@@ -54,7 +58,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   && !isActionAllowed(req.user.roles, ORDER, CREATE)
   && !isActionAllowed(req.user.roles, QUOTATION, CREATE)
   ) {
-    return res.sendStatus(301)
+    return res.sendStatus(HTTP_CODES.FORBIDDEN)
   }
 
   Company.find()
@@ -247,12 +251,12 @@ router.get('/current', passport.authenticate('jwt', {session: false}), (req, res
         })
         .catch(err => {
           console.error(err)
-          res.status(404).json({company: 'No company found'})
+          res.status(HTTP_CODES.NOT_FOUND).json({company: 'No company found'})
         })
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({company: 'No company found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({company: 'No company found'})
     })
 })
 
@@ -267,7 +271,7 @@ router.get('/companies/:id', (req, res) => {
       res.json(company)
 
     })
-    .catch(err => res.status(404).json({company: 'No company found'}))
+    .catch(err => res.status(HTTP_CODES.NOT_FOUND).json({company: 'No company found'}))
 })
 
 // @Route PUT /myAlfred/api/companies/alfredViews/:id
@@ -281,7 +285,7 @@ router.put('/alfredViews/:id', (req, res) => {
       res.json(company)
 
     })
-    .catch(err => res.status(404).json({company: 'No company found'}))
+    .catch(err => res.status(HTTP_CODES.NOT_FOUND).json({company: 'No company found'}))
 })
 
 // @Route PUT /myAlfred/api/companies/profile/editProfile
@@ -419,7 +423,7 @@ router.post('/employees', passport.authenticate('b2badmin', {session: false}), (
   uploadEmployees.single('employees')(req, res, err => {
     if (err) {
       console.error(err)
-      res.status(404).json(err)
+      res.status(HTTP_CODES.NOT_FOUND).json(err)
     }
     else {
       const EXPECTED=['nom', 'prénom', 'email']
@@ -507,7 +511,7 @@ router.delete('/members/:member_id', passport.authenticate('b2badmin', {session:
       User.findByIdAndUpdate(member_id, {roles: [], company: null})
         .then(user => {
           if (!user) {
-            return res.status(404).json({error: 'Utilisateur inconnu'})
+            return res.status(HTTP_CODES.NOT_FOUND).json({error: 'Utilisateur inconnu'})
           }
           return res.json(user)
         })
@@ -602,7 +606,7 @@ router.delete('/admin/:admin_id', passport.authenticate('b2badmin', {session: fa
       User.findByIdAndUpdate(admin_id, {$pull: {roles: ADMIN}}, {new: true})
         .then(user => {
           if (!user) {
-            return res.status(404).json({error: 'Utilisateur inconnu'})
+            return res.status(HTTP_CODES.NOT_FOUND).json({error: 'Utilisateur inconnu'})
           }
           return res.json(user)
         })
@@ -753,7 +757,7 @@ router.put('/:company_id/sales_representative/:user_id', passport.authenticate('
     })
     .then(company => {
       if (!company) {
-        throw new StatusError('Company not found', 404)
+        throw new NotFoundError('Company not found')
       }
       return res.json(company)
     })

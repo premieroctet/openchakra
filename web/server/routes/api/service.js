@@ -1,20 +1,17 @@
-const {isPlatform} = require('../../../config/config')
+const express=require('express')
 const mongoose = require('mongoose')
-const {MANAGER, MICROSERVICE_MODE} = require('../../../utils/consts')
-const {get_logged_id} = require('../../utils/serverContext')
+const {PART, PRO}=require('../../../utils/consts')
+const {HTTP_CODES}=require('../../utils/errors')
+const passport=require('../../config/passport')
 const Company = require('../../models/Company')
 const Prestation = require('../../models/Prestation')
 const Service = require('../../models/Service')
 const ServiceUser = require('../../models/ServiceUser')
-const express = require('express')
+const {isPlatform} = require('../../../config/config')
+const serviceFilters = require('../../utils/filters')
 
 const router = express.Router()
-const passport = require('passport')
-const lodash = require('lodash')
 
-const {PART, PRO}=require('../../../utils/consts')
-
-const serviceFilters = require('../../utils/filters')
 
 // @Route GET /myAlfred/api/service/all
 // View all service
@@ -33,7 +30,7 @@ router.get('/all', (req, res) => {
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({service: 'No service found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({service: 'No service found'})
     })
 })
 
@@ -49,7 +46,7 @@ router.get('/professional', (req, res) => {
       res.json(services)
 
     })
-    .catch(err => res.status(404).json({service: 'No service found'}))
+    .catch(err => res.status(HTTP_CODES.NOT_FOUND).json({service: 'No service found'}))
 })
 
 // @Route GET /myAlfred/api/service/particular
@@ -64,7 +61,7 @@ router.get('/particular', (req, res) => {
       res.json(services)
 
     })
-    .catch(err => res.status(404).json({service: 'No service found'}))
+    .catch(err => res.status(HTTP_CODES.NOT_FOUND).json({service: 'No service found'}))
 })
 
 // @Route GET /myAlfred/api/service/allCount
@@ -84,7 +81,7 @@ router.get('/allCount', (req, res) => {
         })
         .catch(err => {
           console.error(err)
-          return res.status(404).json({service: 'No service found'})
+          return res.status(HTTP_CODES.NOT_FOUND).json({service: 'No service found'})
         })
     })
     .catch(err => {
@@ -129,7 +126,7 @@ router.get('/all/:category', (req, res) => {
       }
 
     })
-    .catch(err => res.status(404).json({service: 'No service found'}))
+    .catch(err => res.status(HTTP_CODES.NOT_FOUND).json({service: 'No service found'}))
 
 })
 
@@ -153,7 +150,7 @@ router.get('/currentAlfred/:category', passport.authenticate('jwt', {session: fa
       }
 
     })
-    .catch(err => res.status(404).json({service: 'No service found:error'}))
+    .catch(err => res.status(HTTP_CODES.NOT_FOUND).json({service: 'No service found:error'}))
 })
 
 // @Route GET /myAlfred/api/service/keyword/:kw
@@ -197,13 +194,13 @@ router.get('/partner/:partner_name', (req, res) => {
   Company.findOne({name: company_name}, '_id')
     .then(company => {
       if (!company) {
-        return res.status(404).json(`No company ${company_name} found`)
+        return res.status(HTTP_CODES.NOT_FOUND).json(`No company ${company_name} found`)
       }
       return Prestation.find({private_company: company}, '_id')
         .populate('service', '_id')
     })
     .then(prestations => {
-      const count=Object.keys(_(prestations).countBy(p => p.service._id.toString()).value()).length
+      const count=Object.keys(lodash(prestations).countBy(p => p.service._id.toString()).value()).length
       if (count!=1) {
         return res.status(500).json(`${count} services différents trouvés pour ${company_name}`)
       }
