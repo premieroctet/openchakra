@@ -116,7 +116,7 @@ const Training = ({training}) => {
 
               <div className='cover-card'>
                 <h1>{training.service?.label}</h1>
-                <button type='button'>Acheter</button>
+                <button type='button' onClick={() => setIsOpenDialog(true)}>Acheter</button>
               </div>
 
               <dl className='training-ref'>
@@ -124,8 +124,10 @@ const Training = ({training}) => {
                 <dd>{training.service?.reference}</dd>
                 <dt>Durée de la formation</dt>
                 <dd>{training.service?.duration_days} {training.service?.duration_days && training.service.duration_days > 1 ? 'jours' : 'jour'}</dd>
-                <dt>&Eacute;ligible au <abbr title='compte personnel de formation'>CPF</abbr></dt>
-                <dd></dd>
+                {training?.cpf_eligible && <>
+                  <dt>&Eacute;ligible au <abbr title='compte personnel de formation'>CPF</abbr></dt>
+                  <dd></dd>
+                </>}
               </dl>
 
             </div>
@@ -149,7 +151,7 @@ const Training = ({training}) => {
 
                 <p>
                   <img width={60} height={60} src={`${AFTRAL_ICON_PATH}/camion.svg`} alt="véhicule léger" />
-              Utiliser exclusivement des véhicules n’excédant pas un poids maximum autorisé de 3,5 tonnes.
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. In pharetra risus sed semper luctus. Vivamus at risus nulla.
                 </p>
 
               </div>
@@ -167,12 +169,12 @@ const Training = ({training}) => {
                   title="YouTube video player"
                   frameborder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowfullscreen
+                  allowFullScreen
                 >
                 </iframe>
               </RoundedBox>
               <RoundedBox>
-                <a href={training.service?.program} className='download'>
+                <a href={training.service?.program} download className='download' >
                   <img width={100} height={100} src={`${AFTRAL_ICON_PATH}/download.svg`} alt=''/>
                   <span>Télécharger</span>
                   <span>le programme complet</span>
@@ -310,7 +312,7 @@ h2 {
 }
 
 .dialogcontent {
-  width: min(calc(100% - 2rem), 45rem);
+  width: min(calc(100% - 2rem), 40rem);
   background-color: #fff;
   padding: var(--spc-10);
   border-radius: var(--rounded-2xl)
@@ -420,8 +422,6 @@ const BookingButton = styled.button`
   background-color: var(--brand-color);
   font-size: 1.5rem;
   display: block;
-  position: sticky;
-  bottom: 1rem;
   cursor: pointer;
   width: min(calc(100vw - 2rem), 40rem);
   margin-inline: auto;
@@ -523,7 +523,6 @@ const MoreInfo = styled(RoundedBox)`
 
     span {
       font-size: 1.2rem;
-      padding-bottom: 0.2rem;
       display: inline-flex;
       transform: rotate(90deg);
       justify-content: center;
@@ -727,7 +726,7 @@ const StyledTraining = styled.div`
 
   .training-ref {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     column-gap: var(--spc-2);
     row-gap: var(--spc-2);
     flex-wrap: wrap;

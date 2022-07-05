@@ -1,9 +1,8 @@
-
+import React, {useState, useEffect} from 'react'
 import axios from 'axios'
 import Router from 'next/router'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
-import React, {useState, useEffect} from 'react'
 import Grid from '@material-ui/core/Grid'
 import CancelIcon from '@material-ui/icons/Cancel'
 import Typography from '@material-ui/core/Typography'
@@ -22,6 +21,8 @@ import AddIcon from '@material-ui/icons/Add'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import withStyles from '@material-ui/core/styles/withStyles'
+import moment from 'moment'
+import lodash from 'lodash'
 import DevLog from '../../DevLog'
 import {BOOK_STATUS} from '../../../utils/consts'
 import {computeBookingReference} from '../../../utils/text'
@@ -39,13 +40,15 @@ import styles from '../../../static/css/components/DrawerBooking/DrawerBooking'
 import BookingDetail from '../../BookingDetail/BookingDetail'
 import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch'
 import CustomButton from '../../CustomButton/CustomButton'
-const moment = require('moment')
-const lodash = require('lodash')
-const isEmpty = require('../../../server/validation/is-empty')
+import isEmpty from '../../../server/validation/is-empty'
+import {isLoggedUserAdmin} from '../../../utils/context'
 
 moment.locale('fr')
 
-const DrawerBooking = ({classes, t, serviceUserId,
+const DrawerBooking = ({
+  classes,
+  t,
+  serviceUserId,
   onAvocotesBookingChange: onAvocotesBookingChangeExternal,
   toggleDrawer,
   trainingMode,
@@ -73,6 +76,50 @@ const DrawerBooking = ({classes, t, serviceUserId,
   const [pending, setPending]=useState(false)
 
   const {user} = useUserContext()
+
+  const computeDistance = () => {
+    if (location!='main') {
+      return 0
+    }
+    const serviceGps = serviceUser.service_address.gps
+    const clientGps=avocotesBooking && avocotesBooking.address.gps || user.billing_address.gps
+    return computeDistanceKm(serviceGps, clientGps)
+  }
+
+  const computeTotal = () => {
+
+    const avocotes_amount = avocotesBooking?.amount || null
+
+    setAxiosAuthentication()
+    axios.post('/myAlfred/api/booking/compute', {
+      prestations: count,
+      serviceUser: serviceUserId,
+      distance: computeDistance(),
+      location: location,
+      avocotes_amount: avocotes_amount,
+    })
+      .then(res => {
+        setPrices(res.data)
+      })
+      .catch(err => {
+        console.error(err)
+        snackBarError(err.response)
+      })
+  }
+
+  const getExcludedDays = availabilities => {
+    const date=moment(new Date())
+    let currMoment=moment(date).set('date', 1)
+    const endMoment=moment(date).add(1, 'year')
+    let exclude=[]
+    while (currMoment<endMoment) {
+      if (!isDateAvailable(currMoment, availabilities)) {
+        exclude.push(currMoment.toDate())
+      }
+      currMoment.add(1, 'd')
+    }
+    return exclude
+  }
 
   useEffect(() => {
     const pricedPrestas={}
@@ -111,27 +158,18 @@ const DrawerBooking = ({classes, t, serviceUserId,
             })
 
         })
-      axios.get('/myAlfred/api/booking/avocotes')
-        .then(res => {
-          setAvocotesBookings(res.data)
-        })
-        .catch(e => console.error(e))
+
+      if (isLoggedUserAdmin()) {
+        axios.get('/myAlfred/api/booking/avocotes')
+          .then(res => {
+            setAvocotesBookings(res.data)
+          })
+          .catch(e => console.error(e))
+
+      }
     }
   }, [serviceUserId])
 
-  const getExcludedDays = availabilities => {
-    const date=moment(new Date())
-    let currMoment=moment(date).set('date', 1)
-    const endMoment=moment(date).add(1, 'year')
-    let exclude=[]
-    while (currMoment<endMoment) {
-      if (!isDateAvailable(currMoment, availabilities)) {
-        exclude.push(currMoment.toDate())
-      }
-      currMoment.add(1, 'd')
-    }
-    return exclude
-  }
 
   useEffect(() => {
     onAvocotesBookingChangeExternal && onAvocotesBookingChangeExternal(avocotesBooking)
@@ -167,7 +205,7 @@ const DrawerBooking = ({classes, t, serviceUserId,
   }, [serviceUser, count, location, warnings, bookingDate])
 
   useEffect(() => {
-    if (!serviceUser || !user) { return }
+    if (!serviceUser) { return }
     const locations={}
     if (serviceUser.location.client) {
       if (avocotesBooking) {
@@ -310,27 +348,6 @@ const DrawerBooking = ({classes, t, serviceUserId,
   }
 
 
-  const computeTotal = () => {
-
-    const avocotes_amount = avocotesBooking?.amount || null
-
-    setAxiosAuthentication()
-    axios.post('/myAlfred/api/booking/compute', {
-      prestations: count,
-      serviceUser: serviceUserId,
-      distance: computeDistance(),
-      location: location,
-      avocotes_amount: avocotes_amount,
-    })
-      .then(res => {
-        setPrices(res.data)
-      })
-      .catch(err => {
-        console.error(err)
-        snackBarError(err.response)
-      })
-  }
-
   const onAvocotesBookingChange = event => {
     const {value}=event.target
     const avocotes_booking=avocotesBookings.find(a => a._id==value)
@@ -354,15 +371,6 @@ const DrawerBooking = ({classes, t, serviceUserId,
     setAvocotesBooking(avocotes_booking)
   }
 
-  const computeDistance = () => {
-    if (location!='main') {
-      return 0
-    }
-    const serviceGps = serviceUser.service_address.gps
-    const clientGps=avocotesBooking && avocotesBooking.address.gps || user.billing_address.gps
-    const distance=computeDistanceKm(serviceGps, clientGps)
-    return distance
-  }
 
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false)

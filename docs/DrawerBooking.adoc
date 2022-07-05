@@ -1,0 +1,31 @@
+# DrawerBooking
+
+## Object
+
+Permet de valider une réservation
+
+## Chargement 
+
+
+### admin
+
+En tant qu'admin, la réservation Avocotés est affichée. Délégation de réservation.
+
+
+## Paiement
+
+### Service
+
+serviceUser et 
+
+
+### Formation
+
+#### CPF
+
+Si l'objet de la réservation est une formation payable via CPF, le lien réserver :
+1. Renvoie vers MonCompteFormation.gouv.fr 
+2. Enregistre tout de même la demande de formation ?
+
+
+#### Paiement classique
