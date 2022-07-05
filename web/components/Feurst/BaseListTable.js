@@ -22,6 +22,7 @@ const BaseListTable = ({
   caption,
   getList,
   deleteOrder,
+  updateEmail,
   state,
   filter,
   filtered,
@@ -57,9 +58,9 @@ const BaseListTable = ({
       deleteUser,
       updateSeller: canUpdateSeller ? updateSeller : null,
       exportFile: canExportXls,
+      updateEmail,
       sellers,
     })
-  
 
   return (<>
     {canCreate &&

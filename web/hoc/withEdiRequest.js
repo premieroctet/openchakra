@@ -7,7 +7,7 @@ import {
   ORDER_CREATED,
   DELETE,
 } from '../utils/feurst/consts'
-import {snackBarError} from '../utils/notifications'
+import {snackBarError, snackBarSuccess} from '../utils/notifications'
 
 
 const withEdiRequest = (Component = null) => {
@@ -195,6 +195,18 @@ const withEdiRequest = (Component = null) => {
         .catch(err => err)
     }
 
+    updateEmail = async({endpoint, userId, email}) => {
+      return await client(`${API_PATH}/${endpoint}/${userId}/email`, {data: {email: email}, method: 'PUT'})
+        .then(() => {
+          snackBarSuccess('Email modifié')
+          this.getList({endpoint})
+        })
+        .catch(e => {
+          console.error(`Can't set email`, e)
+          snackBarError(`Adresse email non mise à jour: ${e.info?.message}`)
+        })
+    }
+
 
     render() {
 
@@ -214,6 +226,7 @@ const withEdiRequest = (Component = null) => {
           deleteUser={this.deleteUser}
           updateSeller={this.updateSeller}
           importFile={this.importFile}
+          updateEmail={this.updateEmail}
           state={this.state}
           {...this.props}
         />

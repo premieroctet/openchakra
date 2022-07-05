@@ -1,6 +1,8 @@
+
 import React, {useMemo} from 'react'
 import Link from 'next/link'
 import lodash from 'lodash'
+import {isFeurstUser} from '../../server/utils/userAccess'
 import {API_PATH} from '../../utils/consts'
 import {
   BASEPATH_EDI,
@@ -11,6 +13,7 @@ import {formatAddress, formatPercent} from '../../utils/text'
 import {localeMoneyFormat} from '../../utils/converters'
 import {DateRangeColumnFilter} from '../Table/TableFilter'
 import {simulateDownload} from '../utils/simulateDownload'
+import EMail from './Email'
 import UpdateCellQuantity from './UpdateCellQuantity'
 import UpdateSeller from './updateSeller'
 import UpdateCellPrice from './UpdateCellPrice'
@@ -313,7 +316,7 @@ const quotationsColumns = ({endpoint, language, deleteOrder}) => {
 
 }
 
-const accountsColumns = ({language, endpoint, deleteUser}) => {
+const accountsColumns = ({language, endpoint, deleteUser, updateEmail}) => {
 
   return [
     {
@@ -326,7 +329,11 @@ const accountsColumns = ({language, endpoint, deleteUser}) => {
     },
     {
       label: 'Email',
-      attribute: 'email',
+      attribute: user => user,
+      Cell: ({value}) => (isFeurstUser(value) ?
+        <EMail value={value.email} onChange={email => updateEmail({endpoint, userId: value._id, email})} />
+        :
+        <>{value.email}</>),
     },
     {
       label: 'Société',
