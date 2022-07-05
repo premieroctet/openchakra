@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const {getDeadLine}=require('../../../utils/dateutils')
 const {hideIllegal} = require('../../../utils/text')
 
 const Schema = mongoose.Schema
@@ -207,6 +208,10 @@ ServiceUserSchema.virtual('grade_text').get(function() {
     return str
   }).join(', ')
   return result
+})
+
+ServiceUserSchema.virtual('deadline').get(function() {
+  return getDeadLine(this.deadline_before_booking)
 })
 
 module.exports=ServiceUserSchema

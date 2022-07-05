@@ -1,5 +1,5 @@
-const {TRANSACTION_SUCCEEDED} = require('../../utils/consts')
 const moment = require('moment')
+const {TRANSACTION_SUCCEEDED} = require('../../utils/consts')
 
 moment.locale('fr')
 
@@ -24,6 +24,10 @@ const checkPaid = booking => {
   }
 }
 
+const createBooking = ({customer, serviceUserId, prestations, date, cpf, location}) => {
+  return Promise.reject('Nope')
+}
+
 module.exports = {
-  getNextNumber, getKeyDate, checkPaid,
+  getNextNumber, getKeyDate, checkPaid, createBooking,
 }
