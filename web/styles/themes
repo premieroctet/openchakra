@@ -46,7 +46,7 @@ export const feurst = {
 const redaftral = '#a13849'
 
 export const aftral = {
-  accentColor: 'red' /* Default color for inputs */,
+  accentColor: redaftral,
   colors: {
     brand: redaftral,
   },

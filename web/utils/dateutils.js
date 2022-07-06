@@ -3,7 +3,7 @@ const {extendMoment} = require('moment-range')
 const isEmpty = require('../server/validation/is-empty')
 const {MONTH_PERIOD} = require('./consts.js')
 moment = extendMoment(moment)
-const lodash=require('lodash')
+
 
 const DAYS = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
 
@@ -158,9 +158,35 @@ const getPeriodStart = period => {
   return moment().startOf(period == MONTH_PERIOD ? 'month' : 'year')
 }
 
+const getExcludedDays = availabilities => {
+  const date=moment(new Date())
+  let currMoment=moment(date).set('date', 1)
+  const endMoment=moment(date).add(1, 'year')
+  let exclude=[]
+  while (currMoment<endMoment) {
+    if (!isDateAvailable(currMoment, availabilities)) {
+      exclude.push(currMoment.toDate())
+    }
+    currMoment.add(1, 'd')
+  }
+  return exclude
+}
+
+const getExcludedTimes = (bookingDate, availabilities) => {
+  let currMoment=moment(bookingDate || new Date()).set({hour: 0, minute: 0})
+  let exclude=[]
+  while (currMoment.hour()!=23 || currMoment.minute()!=30) {
+    if (!isMomentAvailable(currMoment, availabilities)) {
+      exclude.push(currMoment.toDate())
+    }
+    currMoment.add(30, 'minutes')
+  }
+  return exclude
+}
+
 module.exports = {
   isMomentAvailable, isIntervalAvailable, getDeadLine, booking_datetime_str,
   getDefaultAvailability, isDateAvailable, hasAlfredDateBooking, DAYS,
   getAvailabilityForDate, combineTimelapses, timelapsesSetToArray,
-  getPeriodStart,
+  getPeriodStart, getExcludedDays, getExcludedTimes,
 }

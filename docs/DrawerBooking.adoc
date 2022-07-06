@@ -1,8 +1,19 @@
 # DrawerBooking
 
-## Object
+## Objet
 
-Permet de valider une réservation
+Composant permettant de valider une réservation
+
+## Informations nécessaires 
+
+* userService (services proposés d'un utilisateur)
+* Titre de la prestation
+* Date ou date/heure
+* prestations (shampooing, heure de cours, nettoyage)
+* Lieu de la prestation (distance, chez le prestataire, chez le client) 
+* Types de paiement possibles (carte bancaire, cpf)
+* message information (ex: tip aftral)
+
 
 ## Chargement 
 
@@ -29,3 +40,8 @@ Si l'objet de la réservation est une formation payable via CPF, le lien réserv
 
 
 #### Paiement classique
+
+
+## Validation 
+
+La fonction `book` peut permettre de réserver, ou de faire une demande d'informations

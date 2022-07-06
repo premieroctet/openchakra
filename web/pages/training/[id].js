@@ -9,13 +9,14 @@ import Layout from '../../hoc/Layout/Layout'
 import {screen} from '../../styles/screenWidths'
 import {getHostUrl} from '../../config/config'
 import DrawerBooking from '../../components/Drawer/DrawerBooking/DrawerBooking'
+import PureDrawerBooking from '../../components/Drawer/DrawerBooking/PureDrawerBooking'
 import PureDialog from '../../components/Dialog/PureDialog'
 
 
 const Stars = ({rating, max}) => {
   const ratingToDisplay = Math.round(rating)
   return (<span className='stars'>
-    {`${'★'.repeat(ratingToDisplay)}${'☆'.repeat(max - Math.round(ratingToDisplay))}` }
+    {`${'★'.repeat(ratingToDisplay)}${'☆'.repeat(max - Math.round(ratingToDisplay))}`}
   </span>
   )
 }
@@ -136,12 +137,12 @@ const Training = ({training}) => {
 
           <div className="container-lg">
             <RoundedBox3items>
-              <h2><img width={20} height={16} src={`${AFTRAL_ICON_PATH}/arrow.svg`} alt=''/>Objectif de la formation</h2>
+              <h2><img width={20} height={16} src={`${AFTRAL_ICON_PATH}/arrow.svg`} alt='' />Objectif de la formation</h2>
 
               <div>
                 <p>
                   <img width={100} height={100} src={`${AFTRAL_ICON_PATH}/diplome.svg`} alt="diplôme" />
-                  {training.service?.goals[0] || 'Lorem ipsum dolor sit amet. Cum voluptas temporibus ea blanditiis aliquam ex libero pariatur est deserunt nostrum dolorem voluptate et laborum soluta. Et repellendus expedita ut dolor delectus aut placeat quia a ratione quia et corrupti molestias. ' }
+                  {training.service?.goals[0] || 'Lorem ipsum dolor sit amet. Cum voluptas temporibus ea blanditiis aliquam ex libero pariatur est deserunt nostrum dolorem voluptate et laborum soluta. Et repellendus expedita ut dolor delectus aut placeat quia a ratione quia et corrupti molestias. '}
                 </p>
 
                 <p>
@@ -161,13 +162,13 @@ const Training = ({training}) => {
 
             <BoxVideoAndDownload>
               <RoundedBox>
-                <h2><img width={25} height={14} src={`${AFTRAL_ICON_PATH}/video.svg`} alt=''/>Vidéo</h2>
+                <h2><img width={25} height={14} src={`${AFTRAL_ICON_PATH}/video.svg`} alt='' />Vidéo</h2>
                 <iframe
                   width="560"
                   height="315"
                   src={training.service?.video}
                   title="YouTube video player"
-                  frameborder="0"
+                  frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 >
@@ -175,7 +176,7 @@ const Training = ({training}) => {
               </RoundedBox>
               <RoundedBox>
                 <a href={training.service?.program} download className='download' >
-                  <img width={100} height={100} src={`${AFTRAL_ICON_PATH}/download.svg`} alt=''/>
+                  <img width={100} height={100} src={`${AFTRAL_ICON_PATH}/download.svg`} alt='' />
                   <span>Télécharger</span>
                   <span>le programme complet</span>
                 </a>
@@ -207,13 +208,13 @@ const Training = ({training}) => {
 
           <div className='container-lg'>
             <RoundedBox>
-              <h2><img width={21} height={29} src={`${AFTRAL_ICON_PATH}/valid.svg`} alt=''/>Validation du parcours</h2>
+              <h2><img width={21} height={29} src={`${AFTRAL_ICON_PATH}/valid.svg`} alt='' />Validation du parcours</h2>
               <p className='validation'>{ReactHtmlParser(training.service?.validation)}</p>
 
             </RoundedBox>
 
             <MoreInfo>
-              <h2><img width={25} height={25} src={`${AFTRAL_ICON_PATH}/more.svg`} alt=''/>En savoir plus</h2>
+              <h2><img width={25} height={25} src={`${AFTRAL_ICON_PATH}/more.svg`} alt='' />En savoir plus</h2>
 
               <div className={`detailsmoreinfo ${viewMore ? 'liberate' : ''}`}>
                 {ReactHtmlParser(training.service?.more_info)}
@@ -225,7 +226,7 @@ const Training = ({training}) => {
 
             <Opinions>
 
-              <h2><img width={25} height={21} src={`${AFTRAL_ICON_PATH}/opinions.svg`} alt=''/>Avis</h2>
+              <h2><img width={25} height={21} src={`${AFTRAL_ICON_PATH}/opinions.svg`} alt='' />Avis</h2>
 
               <div className='stateoftheart'>
 
@@ -280,10 +281,13 @@ const Training = ({training}) => {
       <BookingDialog title={'Réservation - formation'} open={isOpenDialog}
         onClose={() => setIsOpenDialog(false)} >
 
-        <DrawerBooking
+        {/* <DrawerBooking
           trainingMode={true}
           serviceUserId={training._id}
           toggleDrawer={toggleDrawer}
+        /> */}
+        <PureDrawerBooking
+          serviceUserId={training._id}
         />
 
       </BookingDialog>
@@ -303,12 +307,12 @@ export async function getServerSideProps(context) {
   return {props: {training}}
 }
 
+
 const BookingDialog = styled(PureDialog)`
 
 h2 {
-  text-align: center;
   color: var(--black);
-  margin-bottom: var(--spc-8);
+  margin-block: 0;
 }
 
 .dialogcontent {
