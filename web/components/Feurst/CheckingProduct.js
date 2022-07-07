@@ -42,7 +42,7 @@ const CheckingProduct = ({endpoint, orderid, article, setArticle, selectItem, ad
         </dl>
 
         // TODO RPA: Afficher sur une ligne en-dessous
-        {info.components.length>0 && !info.is_assembly && <div>
+        {info.has_linked && <div>
         Les articles suivants sont liés à la réference {info.reference}, ils seront ajoutés à la commande
         Vous aurez la possibilité de les retirer si nécessaire.
           <ul>

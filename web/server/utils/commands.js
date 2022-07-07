@@ -67,8 +67,7 @@ const addItem = (data, product_id, reference, quantity, net_price, replace=false
         data.items.push(item)
       }
       // If linked articles, append them to the order/quotation
-      console.log(product.components.length, product.is_assembly)
-      if (product.components.length>0 && !product.is_assembly && !replace) {
+      if (product.has_linked && !replace) {
         return Promise.allSettled(product.components.map(c => {
           return addItem(data, c._id, reference, quantity, null, replace)
         }))
@@ -156,7 +155,7 @@ const updateStock = orderQuot => {
       .then(product => {
         let promises
         const components=product.components
-        if (components.length>0) {
+        if (product.is_assembly) {
           components.forEach(p => (p.stock=p.stock-it.quantity))
           product.stock=lodash.min(components.map(v => v.stock))
         }
