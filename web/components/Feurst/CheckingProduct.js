@@ -41,17 +41,6 @@ const CheckingProduct = ({endpoint, orderid, article, setArticle, selectItem, ad
           <dd>{localeMoneyFormat({value: info?.net_price})}</dd>
         </dl>
 
-        // TODO RPA: Afficher sur une ligne en-dessous
-        {info.has_linked && <div>
-        Les articles suivants sont liés à la réference {info.reference}, ils seront ajoutés à la commande
-        Vous aurez la possibilité de les retirer si nécessaire.
-          <ul>
-            {info.components.map(c =>
-              <li>{c.reference} {c.description} {c.description_2}</li>,
-            )}
-          </ul>
-        </div>
-        }
         <NormalButton
           bgColor={`#dabb42`}
           rounded={'full'}
@@ -60,6 +49,17 @@ const CheckingProduct = ({endpoint, orderid, article, setArticle, selectItem, ad
           {t(`${wordingSection}.addTo`)}
         </NormalButton>
 
+        {info.has_linked && <div role={'alert'} aria-live='polite'>
+          <p>
+        Les articles suivants sont liés à la réference {info.reference} ; ils seront ajoutés à la commande.
+        Vous aurez la possibilité de les retirer si nécessaire.</p>
+          <ul>
+            {info.components.map((c, i) =>
+              <li key={`ic${i}`}>{c.reference} {c.description} {c.description_2}</li>,
+            )}
+          </ul>
+        </div>
+        }
       </CheckingProductArea>
     </>
     : null
@@ -83,19 +83,20 @@ const CheckingProductArea = styled.div`
     grid-template-columns: auto auto min-content;
   }
 
+
+  dl {
+    display: grid;
+    grid-template-columns: max-content auto;
+    align-content: center;
+    column-gap: var(--spc-2);
+    row-gap: var(--spc-2);
+    padding: var(--spc-2);
+  }
+
   dl:first-of-type {
       border-right: 1px solid var(--black);
       padding-right: var(--spc-8);
       justify-self: end;
-  }
-
-  dl {
-      display: grid;
-      grid-template-columns: max-content auto;
-      align-content: center;
-      column-gap: var(--spc-2);
-      row-gap: var(--spc-2);
-      padding: var(--spc-2);
   }
 
   dd {
@@ -114,6 +115,14 @@ const CheckingProductArea = styled.div`
         border: 1px solid var(--gray-500);
         min-width: 15ch;
       }
+  }
+
+  [role="alert"] {
+    grid-column: span 3 / span 3;
+  }
+
+  p {
+    margin-bottom: 0;
   }
 `
 
