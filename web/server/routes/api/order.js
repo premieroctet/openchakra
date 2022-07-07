@@ -445,7 +445,9 @@ router.get('/:order_id/products/:product_id', passport.authenticate('jwt', {sess
     .populate('company')
     .then(result => {
       data=result
-      return Product.findById(product_id).lean()
+      return Product.findById(product_id)
+        .populate('components')
+        .lean()
     })
     .then(result => {
       if (!result) {
