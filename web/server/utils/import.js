@@ -32,7 +32,7 @@ const mapRecord=(record, mapping) => {
   return {source: record, destination: newRecord}
 }
 
-const dataImport=(model, headers, records, mapping, options, postImport= () => Promise.resolve()) => {
+const dataImport=(model, headers, records, mapping, options, postImport) => {
   const updateOnly=!!options.update
   const uniqueKey=options.key
   const result={created: 0, updated: 0, warnings: [], errors: []}
@@ -99,7 +99,6 @@ const dataImport=(model, headers, records, mapping, options, postImport= () => P
         return resolve(result)
       })
       .catch(err => {
-        console.log(err)
         result.errors.push(err)
         return resolve(result)
       })
@@ -339,7 +338,6 @@ const productsImport = (bufferData, options) => {
           if (result.includes(null)) {
             const ref=refs[result.findIndex(r => r==null)]
             const msg=`Erreur sur l'article ${record.destination.reference}, sous-référence ${ref} introuvable`
-            console.log(msg)
             return Product.remove({reference: record.destination.reference})
               .then(() => {
                 return Promise.reject({message: msg})
@@ -370,7 +368,22 @@ const stockImport = (bufferData, options) => {
     'stock': 'in_qty_oh',
   }
 
+  let result=null
   return fileImport(Product, bufferData, DB_MAPPING, {...options, key: 'reference', update: true})
+    .then(res => {
+      result=res
+      // Update stock for assemblies
+      return Product.find({description: 'ENSEMBLE', 'components.0': {$exists: true}}).populate('components')
+    })
+    .then(assemblies => {
+      return Promise.all(assemblies.map(a => {
+        const stock=lodash.min(a.components.map(c => c.stock))
+        return Product.findByIdAndUpdate(a._id, {stock: stock})
+      }))
+    })
+    .then(() => {
+      return result
+    })
 }
 
 module.exports={fileImport, shipRatesImport, lineItemsImport,

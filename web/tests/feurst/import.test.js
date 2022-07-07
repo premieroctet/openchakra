@@ -1,5 +1,6 @@
 const fs = require('fs').promises
 const mongoose = require('mongoose')
+const {stockImport}=require('../../server/utils/import')
 const Company=require('../../server/models/Company')
 const User=require('../../server/models/User')
 const {FEURST_SALES}=require('../../utils/feurst/consts')
@@ -76,7 +77,7 @@ describe('XL/CSV/JSON imports', () => {
       })
   })
 
-  test.only('Import products xlsx', () => {
+  test('Import products xlsx', () => {
     return Product.deleteMany()
       .then(() => {
         return fs.readFile(`tests/data/products.xlsx`)
@@ -115,16 +116,20 @@ describe('XL/CSV/JSON imports', () => {
       .then(contents => {
         return productsImport(contents, {format: XL_TYPE, tab: 'Travail'})
       })
-      .then(result => {
-        expect(result.warnings.length).toBe(0)
-        expect(result.errors.length).toBe(0)
-        expect(result.created).toBe(1014)
-        expect(result.updated).toBe(0)
-        return Product.findOne({reference: '001130NE00'})
+      .then(() => {
+        return fs.readFile('tests/data/stock.json')
       })
-      .then(product => {
-        expect(product).not.toBeNull()
-        expect(product.components).toHaveLength(4)
+      .then(contents => {
+        return stockImport(contents, {format: JSON_TYPE})
+      })
+      .then(result => {
+        expect(result.warnings).toHaveLength(0)
+        expect(result.errors).toHaveLength(177)
+        expect(result.updated).toBe(865)
+        return Product.find({description: 'ENSEMBLE', 'components.0': {$exists: true}}).populate('components')
+      })
+      .then(assemblies => {
+        return expect(assemblies.filter(a => a.stock>0)).not.toHaveLength(0)
       })
   })
 

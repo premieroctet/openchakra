@@ -188,8 +188,8 @@ router.post('/import-stock', passport.authenticate('jwt', {session: false}), (re
   })
 })
 
-// Check new stock file
-new CronJob('0 0 */12 * * *', () => {
+// Check new stock file every hour
+new CronJob('0 0 * * * *', () => {
   const store=storage.namespace('exchange')
   const folder=getExchangeDirectory()
   const latest_date=new Date(JSON.parse(store.get('latest-products-import')))
