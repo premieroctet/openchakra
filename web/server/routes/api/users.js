@@ -1,6 +1,7 @@
 const crypto = require('crypto')
 const fs = require('fs').promises
 const path=require('path')
+const Validator = require('validator')
 const express = require('express')
 const router = express.Router()
 const passport = require('passport')
@@ -9,6 +10,7 @@ const moment = require('moment')
 const axios = require('axios')
 const gifFrames = require('gif-frames')
 const CronJob = require('cron').CronJob
+const {BadRequestError} = require('../../utils/errors')
 const {HTTP_CODES} = require('../../utils/errors')
 const {CGV_EXPIRATION_DELAY} = require('../../../config/config')
 const {CGV_PATH} = require('../../../config/config')
@@ -97,7 +99,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   User.find({active: true})
     .sort({creation_date: -1})
-    .populate('company')
+    .populate({path: 'company', populate: {path: 'sales_representative'}})
     .populate('companies')
     .then(data => {
       data=filterUsers(data, DATA_TYPE, req.user, VIEW)
@@ -219,6 +221,34 @@ router.post('/register', (req, res) => {
     })
 })
 
+// router.put('/:id/email', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.put('/:id/email', (req, res) => {
+  const user_id=req.params.id
+  const email=req.body.email
+  if (!email || !Validator.isEmail(email)) {
+    return res.status(HTTP_CODES.BAD_REQUEST).json(`L'email ${email} est invalide`)
+  }
+  User.findOne({email: email, _id: {$ne: user_id}})
+    .then(user => {
+      if (user) {
+        throw new BadRequestError(`Un compte avec l'email ${email} existe déjà`)
+      }
+      return User.findByIdAndUpdate({_id: user_id}, {email: email}, {new: true})
+    })
+    .then(user => {
+      return Promise.all([
+        user,
+        axios.post(new URL('/myAlfred/api/users/forgotPassword', getHostUrl()).href, {email: user.email}),
+      ])
+    })
+    .then(([user]) => {
+      res.json(user)
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(err.status||HTTP_CODES.SYSTEM_ERROR).json(err.message|| err)
+    })
+})
 
 router.get('/actions', passport.authenticate('jwt', {session: false}), (req, res) => {
   if (!req.user.cgv_valid) {

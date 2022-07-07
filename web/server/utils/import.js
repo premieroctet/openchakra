@@ -93,7 +93,9 @@ const dataImport=(model, headers, records, mapping, options, postImport= () => P
         result.errors.push(...rejected.map(r => r.message))
         return postImport(mappedRecords)
       })
-      .then(() => {
+      .then(res => {
+        const rejected=res.filter(r => r.status=='rejected').map(r => r.reason)
+        result.errors=[...result.errors, ...rejected.map(r => r.message)]
         return resolve(result)
       })
       .catch(err => {
@@ -114,6 +116,7 @@ const fileImport= (model, bufferData, mapping, options, postImport) => {
       return dataImport(model, headers, records, mapping, options, postImport)
     })
     .catch(err => {
+      console.error(err)
       return ({created: 0, updated: 0, errors: [String(err)], warnings: []})
     })
 }
@@ -263,7 +266,8 @@ const accountsImport = (buffer, options) => {
           const zip_code=record['Code postal'].match(/\d+/)[0]
           const city=record.Ville
           if (!address|| !zip_code || !city) { return Promise.reject(msg('Adresse incorrecte')) }
-          const addr={label: MAIN_ADDRESS_LABEL, address, zip_code, city, country: 'France'}
+          const phone=record['Téléphone'] || ''
+          const addr={label: MAIN_ADDRESS_LABEL, address, zip_code, city, country: 'France', phone: phone}
           const companyName=record.Adresse
           const deliverZipCodesValues=record['Zone de chalandise']
           if (!deliverZipCodesValues) { return Promise.reject(msg(`Zone de chalandise incorrecte:${deliverZipCodesValues}`)) }
@@ -328,10 +332,19 @@ const productsImport = (bufferData, options) => {
     if (subCompsRecords.length==0) {
       return Promise.resolve()
     }
-    return Promise.all(records.map(record => {
+    return Promise.allSettled(subCompsRecords.map(record => {
       const refs=FIELDS.map(f => record.source[f]).filter(v => (v||'').trim().length>0)
-      return Promise.all(refs.map(r => Product.findOne({reference: new RegExp(r, 'i')})))
+      return Promise.all(refs.map(r => Product.findOne({reference: new RegExp(r, 'i')}, {_id: true})))
         .then(result => {
+          if (result.includes(null)) {
+            const ref=refs[result.findIndex(r => r==null)]
+            const msg=`Erreur sur l'article ${record.destination.reference}, sous-référence ${ref} introuvable`
+            console.log(msg)
+            return Product.remove({reference: record.destination.reference})
+              .then(() => {
+                return Promise.reject({message: msg})
+              })
+          }
           return Product.updateOne({reference: record.destination.reference}, {components: result.map(s => s._id)})
         })
     }))

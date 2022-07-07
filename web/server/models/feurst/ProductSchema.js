@@ -38,6 +38,10 @@ const ProductSchema = new Schema({
     }],
     'default': [],
   },
+}, {toJSON: {virtuals: true, getters: true}})
+
+ProductSchema.virtual('is_assembly').get(function() {
+  return this.description=='ENSEMBLE'
 })
 
 module.exports=ProductSchema

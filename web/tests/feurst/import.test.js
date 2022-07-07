@@ -1,24 +1,19 @@
-import Company from '../../server/models/Company'
-import {FEURST_ADV, FEURST_SALES} from '../../utils/feurst/consts'
-import User from '../../server/models/User'
-const {extractData} = require('../../utils/import')
-const {lineItemsImport} = require('../../server/utils/import')
-
 const fs = require('fs').promises
 const mongoose = require('mongoose')
-
+const Company=require('../../server/models/Company')
+const User=require('../../server/models/User')
+const {FEURST_SALES}=require('../../utils/feurst/consts')
+const {extractData} = require('../../utils/import')
+const {lineItemsImport} = require('../../server/utils/import')
 const {MONGOOSE_OPTIONS} = require('../../server/utils/database')
-
 const Product = require('../../server/models/Product')
 const PriceList = require('../../server/models/PriceList')
-
 const {
   accountsImport,
   priceListImport,
   productsImport,
   shipRatesImport,
 } = require('../../server/utils/import')
-
 const {guessFileType} = require('../../utils/import')
 const {TEXT_TYPE, JSON_TYPE, XL_TYPE} = require('../../utils/feurst/consts')
 
@@ -81,7 +76,7 @@ describe('XL/CSV/JSON imports', () => {
       })
   })
 
-  test('Import products xlsx', () => {
+  test.only('Import products xlsx', () => {
     return Product.deleteMany()
       .then(() => {
         return fs.readFile(`tests/data/products.xlsx`)
@@ -91,18 +86,25 @@ describe('XL/CSV/JSON imports', () => {
       })
       .then(result => {
         expect(result.warnings.length).toBe(0)
-        expect(result.errors.length).toBe(0)
-        expect(result.created).toBe(1014)
-        expect(result.updated).toBe(0)
-        return Product.findOne({reference: '001130NE00'})
+        expect(result.errors).toHaveLength(7)
+        expect(result.created).toBe(994)
+        expect(result.updated).toBe(3)
+        return Product.find()
       })
-      .then(product => {
-        expect(product).not.toBeNull()
-        expect(product.components).toHaveLength(4)
+      .then(products => {
+        expect(products).toHaveLength(987)
+        const productAssembly=products.find(p => p.reference=='001130NE00')
+        expect(productAssembly).not.toBeNull()
+        expect(productAssembly.components).toHaveLength(4)
+        expect(productAssembly.is_assembly).toBeTruthy()
+        const productLinked=products.find(p => p.reference=='000322NE00')
+        expect(productLinked).not.toBeNull()
+        expect(productLinked.components).toHaveLength(1)
+        expect(productLinked.is_assembly).toBeFalsy()
       })
   })
 
-  test.skip('Import stock xlsx', () => {
+  test('Import stock xlsx', () => {
     return fs.readFile(`tests/data/products.xlsx`)
       .then(contents => {
         return productsImport(contents, {format: XL_TYPE, tab: 'Travail'})

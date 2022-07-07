@@ -22,33 +22,46 @@ const CheckingProduct = ({endpoint, orderid, article, setArticle, selectItem, ad
   }
 
   return (info ?
-    <CheckingProductArea role={'status'} aria-live='polite'>
-      <dl>
-        <dt>Désignation du produit :</dt>
-        <dd>{info.description} {info.description_2}</dd>
-        <dt>Référence :</dt>
-        <dd>{info.reference}</dd>
-        <dt>Quantité disponible :</dt>
-        <dd>{quantity > info.stock ? `${info.stock || 0} sur ${quantity} ⚠️ stock partiel` : `${quantity} sur ${quantity}`} </dd>
-      </dl>
-      <dl>
-        <dt>Prix catalogue :</dt>
-        <dd>{localeMoneyFormat({value: info?.catalog_price})}</dd>
-        <dt>Poids unitaire :</dt>
-        <dd>{info?.weight?.toLocaleString()} kg</dd>
-        <dt>Votre prix :</dt>
-        <dd>{localeMoneyFormat({value: info?.net_price})}</dd>
-      </dl>
+    <>
+      <CheckingProductArea role={'status'} aria-live='polite'>
+        <dl>
+          <dt>Désignation du produit :</dt>
+          <dd>{info.description} {info.description_2}</dd>
+          <dt>Référence :</dt>
+          <dd>{info.reference}</dd>
+          <dt>Quantité disponible :</dt>
+          <dd>{quantity > info.stock ? `${info.stock || 0} sur ${quantity} ⚠️ stock partiel` : `${quantity} sur ${quantity}`} </dd>
+        </dl>
+        <dl>
+          <dt>Prix catalogue :</dt>
+          <dd>{localeMoneyFormat({value: info?.catalog_price})}</dd>
+          <dt>Poids unitaire :</dt>
+          <dd>{info?.weight?.toLocaleString()} kg</dd>
+          <dt>Votre prix :</dt>
+          <dd>{localeMoneyFormat({value: info?.net_price})}</dd>
+        </dl>
 
-      <NormalButton
-        bgColor={`#dabb42`}
-        rounded={'full'}
-        onClick={confirmAdd}
-      >
-        {t(`${wordingSection}.addTo`)}
-      </NormalButton>
+        // TODO RPA: Afficher sur une ligne en-dessous
+        {info.components.length>0 && !info.is_assembly && <div>
+        Les articles suivants sont liés à la réference {info.reference}, ils seront ajoutés à la commande
+        Vous aurez la possibilité de les retirer si nécessaire.
+          <ul>
+            {info.components.map(c =>
+              <li>{c.reference} {c.description} {c.description_2}</li>,
+            )}
+          </ul>
+        </div>
+        }
+        <NormalButton
+          bgColor={`#dabb42`}
+          rounded={'full'}
+          onClick={confirmAdd}
+        >
+          {t(`${wordingSection}.addTo`)}
+        </NormalButton>
 
-    </CheckingProductArea>
+      </CheckingProductArea>
+    </>
     : null
   )
 }

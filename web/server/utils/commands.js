@@ -37,6 +37,7 @@ const addItem = (data, product_id, reference, quantity, net_price, replace=false
   }
   let product=null
   return Product.findOne({$or: [{_id: product_id}, {reference: reference}]})
+    .populate('components')
     .then(result => {
       if (!result) {
         return Promise.reject(`Article ${reference} inconnu`)
@@ -64,6 +65,16 @@ const addItem = (data, product_id, reference, quantity, net_price, replace=false
         }
         item = {product: product, quantity: parseInt(quantity), catalog_price: prices.catalog_price, net_price: net_price || prices.net_price}
         data.items.push(item)
+      }
+      // If linked articles, append them to the order/quotation
+      console.log(product.components.length, product.is_assembly)
+      if (product.components.length>0 && !product.is_assembly && !replace) {
+        return Promise.allSettled(product.components.map(c => {
+          return addItem(data, c._id, reference, quantity, null, replace)
+        }))
+          .then(() => {
+            return Promise.resolve(data)
+          })
       }
       return Promise.resolve(data)
     })

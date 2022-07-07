@@ -62,6 +62,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   }
 
   Company.find()
+    .populate('administrator')
     .populate('sales_representative')
     .sort('name')
     .then(companies => {
