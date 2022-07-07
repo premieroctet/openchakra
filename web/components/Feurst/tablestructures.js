@@ -414,6 +414,7 @@ const productsColumns = ({/** language*/}) => [
   {label: 'Groupe', attribute: 'group'},
   {label: 'Famille', attribute: 'family'},
   {label: 'Stock', attribute: 'stock'},
+  {label: 'Art. liés', attribute: v => v.components.length && v.components.map(c => c.reference).join(',') || ''},
   {label: 'Poids', attribute: 'weight'},
 ]
 
@@ -497,4 +498,5 @@ const handledQuotationsColumns = ({language /** , endpoint, handleValidation = n
   },
 ]
 module.exports={orderColumns, ordersColumns, quotationColumns, quotationsColumns,
-  accountsColumns, companiesColumns, productsColumns, shipratesColumns, handledOrdersColumns, handledQuotationsColumns, pricesColumns}
+  accountsColumns, companiesColumns, productsColumns, shipratesColumns,
+  handledOrdersColumns, handledQuotationsColumns, pricesColumns}

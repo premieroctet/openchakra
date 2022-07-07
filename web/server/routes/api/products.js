@@ -53,6 +53,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   }
 
   Product.find({})
+    .populate('components')
     .sort('reference')
     .then(products => {
       const andEdProducts=products.filter(andFilter)
