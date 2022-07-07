@@ -288,6 +288,7 @@ const Training = ({training}) => {
         /> */}
         <PureDrawerBooking
           serviceUserId={training._id}
+          onlyOneService
         />
 
       </BookingDialog>

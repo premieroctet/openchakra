@@ -1,11 +1,14 @@
-import React, {useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 // import DateField from '@internationalized/date'
 import DatePicker from 'react-datepicker'
 import TextField from '@material-ui/core/TextField'
+import {useUserContext} from '../../../contextes/user.context'
 import {getDataModel} from '../../../config/config'
 import {client} from '../../../utils/client'
 import {API_PATH} from '../../../utils/consts'
 import {getExcludedTimes, getExcludedDays} from '../../../utils/dateutils'
+import {computeDistanceKm} from '../../../utils/functions'
+import CPF from '../Payments/CPF'
 import StyledDrawerBooking from './StyledDrawerBooking'
 
 const PureDrawerBooking = ({
@@ -13,6 +16,8 @@ const PureDrawerBooking = ({
   onlyOneService,
 }) => {
 
+  const {user} = useUserContext()
+  
   const [bookingParams, setBookingParams] = useState({
     locations: [],
   })
@@ -22,35 +27,54 @@ const PureDrawerBooking = ({
     prestations: {},
   })
 
+  const [prices, setPrices]=useState({})
+  
+  const computeDistance = useCallback(({location, servicePosition, clientPosition}) => {
+    if (location!='main') {
+      return 0
+    }
 
-  const computeTotal = () => {
+    return computeDistanceKm(servicePosition, clientPosition)
+  }, [])
 
-    setAxiosAuthentication()
-    axios.post('/myAlfred/api/booking/compute', {
-      prestations: count,
-      serviceUser: serviceUserId,
-      distance: computeDistance(),
-      location: location,
-    })
-      .then(res => {
-        setPrices(res.data)
-      })
+  const computeTotal = useCallback(async({location, serviceUser, prestations, servicePosition, clientPosition}) => {
+    
+    const compute = await client('/myAlfred/api/booking/compute', {data: {
+      prestations,
+      serviceUser,
+      location,
+      distance: computeDistance({location, servicePosition, clientPosition}),
+    }})
       .catch(err => {
         console.error(err)
         snackBarError(err.response)
       })
-  }
+    
+    setPrices(compute)
+    console.log(prices)
+      
+  }, [location, booking.services, booking.prestations, computeDistance, prices])
 
   const onBookingDateChange = selecteddate => {
     setBooking({...booking, date: selecteddate})
   }
 
   useEffect(() => {
+    computeTotal({
+      location: booking.location,
+      serviceUser: serviceUserId,
+      prestations: booking.prestations,
+      servicePosition: bookingParams?.services?.service_address.gps,
+      clientPosition: user?.billing_address.gps,
+    })
+  }, [booking.location, booking.prestations, serviceUserId])
+
+  useEffect(() => {
 
     const settle = async id => {
       if (id) {
         const services = await client(`${API_PATH}/serviceUser/${id}`)
-          .catch(err => console.log(err))
+          .catch(err => console.log(`cant fetch serviceUser`, err))
 
         /* locations */
         const locations = {}
@@ -73,9 +97,8 @@ const PureDrawerBooking = ({
         }
 
         const setUpBooking = {...booking}
-        /* Si formation eligible cpf, on part du principe qu'il n'y a qu'un seul service */
-        // NON. Doit être un param qui rend cette presta unique
-        if (services?.cpf_eligible) {
+        
+        if (onlyOneService) {
           Object.assign(setUpBooking, {prestations: {[services.prestations[0]._id]: 1}})
         }
         
@@ -114,30 +137,36 @@ const PureDrawerBooking = ({
       <h3>{bookingParams?.services?.service.label} - {bookingParams?.services?.user.firstname}</h3>
       
       {/* CPF compatible */}
-      {bookingParams?.services?.cpf_eligible && <p>CPF !</p>}
+      {bookingParams?.services?.cpf_eligible && <CPF />}
 
       {/* Date - Date/heure */}
-      <TextField
-        InputLabelProps={{
-          shrink: true,
-        }}
-        InputProps={{
-          inputComponent: () => {
-            return (
-              <DatePicker
-                selected={booking.date}
-                dateFormat='dd/MM/yyyy'
-                onChange={onBookingDateChange}
-                placeholderText='Date'
-                locale='fr'
-                minDate={new Date()}
-                excludeDates={bookingParams?.excludeddates}
-              />
-            )
-          },
-          disableUnderline: true,
-        }}
-      />
+      <section className='date'>
+        <label htmlFor='booking_date'>Date</label>
+        <TextField
+          id={'booking_date'}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          InputProps={{
+            inputComponent: () => {
+              return (
+                <DatePicker
+                  id={'booking_date'}
+                  selected={booking.date}
+                  dateFormat='dd/MM/yyyy'
+                  onChange={onBookingDateChange}
+                  placeholderText='Date'
+                  locale='fr'
+                  minDate={new Date()}
+                  excludeDates={bookingParams?.excludeddates}
+                />
+              )
+            },
+            disableUnderline: true,
+          }}
+        />
+
+      </section>
       
       {/* Prestations */}
       

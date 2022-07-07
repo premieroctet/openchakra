@@ -4,6 +4,16 @@
 
 Composant permettant de valider une réservation
 
+## Attributs
+
+### serviceUserId
+
+*requis* nécessaire pour aller récupérer les données d'un serviceUser.
+
+### onlyOneService 
+
+Si l'objet du service ne fait l'objet que d'une prestation, elle sera automatiquement sélectionnée (définie à 1).
+
 ## Informations nécessaires 
 
 * userService (services proposés d'un utilisateur)
