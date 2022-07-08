@@ -27,7 +27,7 @@ const CPF = () => {
 
 const StyledCPF = styled.div`
 
-  margin-block: var(--spc-8);
+  margin-bottom: var(--spc-8);
 
   p {
     margin-bottom: var(--spc-2);
