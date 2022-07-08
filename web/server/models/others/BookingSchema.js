@@ -55,6 +55,7 @@ const BookingSchema = new Schema({
   },
   prestation_date: {
     type: Date,
+    required: true,
   },
   end_date: {
     type: Date,
@@ -67,20 +68,26 @@ const BookingSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'user',
   },
-  prestations: [{
-    name: {
-      type: String,
-      required: true,
-    },
-    price: {
-      type: Number,
-      required: true,
-    },
-    value: {
-      type: Number,
-      required: true,
-    },
-  }],
+  prestations: {
+    type: [{
+      name: {
+        type: String,
+        required: true,
+      },
+      // Unitary price
+      price: {
+        type: Number,
+        required: true,
+      },
+      // Prestation count
+      value: {
+        type: Number,
+        required: true,
+      },
+    }],
+    required: true,
+    validate: v => Array.isArray(v) && v.length > 0,
+  },
   option: {
     label: {
       type: String,
