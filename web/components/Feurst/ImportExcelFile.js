@@ -34,7 +34,7 @@ const ImportExcelFile = ({importURL, templateURL, caption, endpoint, orderid, im
   const [importResult, setImportResult] = useState(null)
   // WARNING: first is 1, not 0
   const [firstLine, setFirstLine] = useState(1)
-  
+
 
   useEffect(() => {
     setFile(null)
@@ -118,8 +118,7 @@ const ImportExcelFile = ({importURL, templateURL, caption, endpoint, orderid, im
 
   const cap = caption || 'Importer un fichier Excel'
 
-  return is_development() && // Import for dev mode only
-  (<>
+  return (<>
     <NormalButton onClick={() => setIsOpenDialog(true)} rounded={'full'} className="mb-4" bgColor={'#141953'} textColor={'white'} size="full-width">
       {cap}
     </NormalButton>
