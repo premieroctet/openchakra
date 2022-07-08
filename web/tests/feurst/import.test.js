@@ -1,5 +1,6 @@
 const fs = require('fs').promises
 const mongoose = require('mongoose')
+const lodash=require('lodash')
 const {stockImport}=require('../../server/utils/import')
 const Company=require('../../server/models/Company')
 const User=require('../../server/models/User')
@@ -31,6 +32,16 @@ describe('XL/CSV/JSON imports', () => {
 
   afterEach(() => {
   })
+
+  const importProducts = () => {
+    return Product.deleteMany({})
+      .then(() => {
+        return fs.readFile(`tests/data/products.xlsx`)
+      })
+      .then(contents => {
+        return productsImport(contents, {format: XL_TYPE, tab: 'Travail'})
+      })
+  }
 
   describe('Guess files types', () => {
     const cases=[['shiprates.csv', TEXT_TYPE], ['products.xlsx', XL_TYPE]]
@@ -66,8 +77,8 @@ describe('XL/CSV/JSON imports', () => {
         return productsImport(contents, {delimiter: ';', format: TEXT_TYPE})
       })
       .then(result => {
-        expect(result.warnings.length).toBe(0)
-        expect(result.errors.length).toBe(0)
+        expect(result.warnings).toHaveLength(0)
+        expect(result.errors).toHaveLength(0)
         expect(result.updated).toBe(0)
         expect(result.created).toBe(1014)
         return Product.countDocuments()
@@ -78,15 +89,9 @@ describe('XL/CSV/JSON imports', () => {
   })
 
   test('Import products xlsx', () => {
-    return Product.deleteMany()
-      .then(() => {
-        return fs.readFile(`tests/data/products.xlsx`)
-      })
-      .then(contents => {
-        return productsImport(contents, {format: XL_TYPE, tab: 'Travail'})
-      })
+    return importProducts()
       .then(result => {
-        expect(result.warnings.length).toBe(0)
+        expect(result.warnings).toHaveLength(0)
         expect(result.errors).toHaveLength(7)
         expect(result.created).toBe(994)
         expect(result.updated).toBe(3)
@@ -112,12 +117,9 @@ describe('XL/CSV/JSON imports', () => {
   })
 
   test('Import stock xlsx', () => {
-    return fs.readFile(`tests/data/products.xlsx`)
-      .then(contents => {
-        return productsImport(contents, {format: XL_TYPE, tab: 'Travail'})
-      })
+    return importProducts()
       .then(() => {
-        return fs.readFile('tests/data/stock.json')
+        return fs.readFile(`tests/data/stock.json`)
       })
       .then(contents => {
         return stockImport(contents, {format: JSON_TYPE})
@@ -129,36 +131,43 @@ describe('XL/CSV/JSON imports', () => {
         return Product.find({description: 'ENSEMBLE', 'components.0': {$exists: true}}).populate('components')
       })
       .then(assemblies => {
-        return expect(assemblies.filter(a => a.stock>0)).not.toHaveLength(0)
+        // Check stock for assemblies
+        assemblies.forEach(assembly => {
+          const minStock=lodash.min(assembly.components.map(c => c.stock))
+          expect(assembly.stock).toBe(minStock)
+        })
       })
   })
 
   test('Import price list xlsx', () => {
-    return fs.readFile(`tests/data/products.xlsx`)
+    return importProducts()
+      .then(() => {
+        return fs.readFile(`tests/data/products.xlsx`)
+      })
       .then(contents => {
         return priceListImport(contents, {key: 'reference', format: XL_TYPE, tab: 'Travail'})
       })
       .then(result => {
-        expect(result.warnings.length).toBe(0)
-        expect(result.errors.length).toBe(0)
-        expect(result.created).toBe(7516)
+        expect(result.warnings).toHaveLength(0)
+        expect(result.errors).toHaveLength(0)
+        expect(result.created).toBe(7575)
         expect(result.updated).toBe(0)
         return PriceList.countDocuments()
       })
       .then(count => {
-        return expect(count).toBe(7516)
+        return expect(count).toBe(7548)
       })
   }, 40000)
 
   test('Import order items', () => {
-    const CONTENTS='Référence;Quantité\n001269NE00;10000\nABCD;15'
+    const CONTENTS='Référence;Qté\n001269NE00;10000\nABCD;15'
     return Product.updateMany({}, {stock: 100})
       .then(() => {
         return lineItemsImport({items: [], company: {catalog_prices: 'DISTFR', net_prices: 'PVCDIS'}, save: () => {}}, CONTENTS, {format: TEXT_TYPE, delimiter: ';'})
       })
       .then(result => {
-        expect(result.warnings.length).toBe(1)
-        expect(result.errors.length).toBe(1)
+        expect(result.warnings).toHaveLength(1)
+        expect(result.errors).toHaveLength(1)
         expect(result.created).toBe(1)
         expect(result.total).toBe(2)
       })
@@ -177,8 +186,8 @@ describe('XL/CSV/JSON imports', () => {
         return accountsImport(contents, {format: XL_TYPE, tab: 'DONNEES CLIENT FEURST'})
       })
       .then(result => {
-        expect(result.warnings.length).toBe(0)
-        expect(result.errors.length).toBe(0)
+        expect(result.warnings).toHaveLength(0)
+        expect(result.errors).toHaveLength(0)
         expect(result.created).toBe(64)
         expect(result.updated).toBe(0)
         return Company.count()
@@ -197,11 +206,9 @@ describe('XL/CSV/JSON imports', () => {
     extractData(CSV, {format: TEXT_TYPE, delimiter: ';', columns: COLUMNS})
       .then(res => {
         csvData=res
-        console.log(`CSV:${JSON.stringify(res)}`)
         return extractData(JS, {format: JSON_TYPE, columns: COLUMNS})
       })
       .then(res => {
-        console.log(`JSON:${JSON.stringify(res)}`)
         jsonData=res
         return expect(csvData).toEqual(jsonData)
       })

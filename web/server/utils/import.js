@@ -94,8 +94,10 @@ const dataImport=(model, headers, records, mapping, options, postImport) => {
         return postImport(mappedRecords)
       })
       .then(res => {
-        const rejected=res.filter(r => r.status=='rejected').map(r => r.reason)
-        result.errors=[...result.errors, ...rejected.map(r => r.message)]
+        if (res) {
+          const rejected=res.filter(r => r.status=='rejected').map(r => r.reason)
+          result.errors=[...result.errors, ...rejected.map(r => r.message)]
+        }
         return resolve(result)
       })
       .catch(err => {
