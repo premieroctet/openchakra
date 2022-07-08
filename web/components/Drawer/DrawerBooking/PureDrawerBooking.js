@@ -1,23 +1,26 @@
 import React, {useCallback, useEffect, useState} from 'react'
+import Router from 'next/router'
 // import DateField from '@internationalized/date'
 import ReactHtmlParser from 'react-html-parser'
+import sum from 'lodash/sum'
 import {withTranslation} from 'react-i18next'
 import DatePicker from 'react-datepicker'
 import TextField from '@material-ui/core/TextField'
 import {useUserContext} from '../../../contextes/user.context'
 import {getDataModel} from '../../../config/config'
 import {client} from '../../../utils/client'
-import {API_PATH} from '../../../utils/consts'
+import {API_PATH, BOOK_STATUS} from '../../../utils/consts'
 import {getExcludedTimes, getExcludedDays} from '../../../utils/dateutils'
 import {computeDistanceKm} from '../../../utils/functions'
+import {computeBookingReference} from '../../../utils/text'
 import CPF from '../Payments/CPF'
 import StyledDrawerBooking from './StyledDrawerBooking'
 
 const labelLocations = {
   main: `à mon adresse principale`,
-  alfred: (name) => `chez ${name}`,
+  alfred: name => `chez ${name}`,
   visio: `en visio`,
-  elearning: `en e-learning`, 
+  elearning: `en e-learning`,
 }
 
 const PureDrawerBooking = ({
@@ -29,7 +32,7 @@ const PureDrawerBooking = ({
   const {user} = useUserContext()
   
   const [bookingParams, setBookingParams] = useState({
-    locations: [],
+    serviceUser: {},
   })
   const [booking, setBooking] = useState({
     date: null,
@@ -38,6 +41,7 @@ const PureDrawerBooking = ({
   })
 
   const [prices, setPrices]=useState({})
+  const [pending, setPending]=useState(false)
   
   const computeDistance = useCallback(({location, servicePosition, clientPosition}) => {
     if (location!='main') {
@@ -63,7 +67,112 @@ const PureDrawerBooking = ({
     setPrices(compute)
     console.log(prices)
       
-  }, [location, booking.services, booking.prestations, computeDistance, prices])
+  }, [location, booking.prestations, computeDistance, prices])
+
+  
+  const book = async actual => { // actual : true=> book, false=>infos request
+
+    if (pending) {
+      snackBarError(ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.snackbar_error_resa')))
+      return
+    }
+
+    let prestations = []
+    Object.entries(booking.prestations).forEach(([bookedPrestaKey, bookedPrestaNum]) => {
+      const [currentPresta] = bookingParams.serviceUser.prestations.filter(p => p._id === bookedPrestaKey)
+      prestations.push({
+        name: currentPresta.prestation.label,
+        price: currentPresta.price,
+        value: bookedPrestaNum,
+      })
+    })
+
+    let place=null
+    if (user) {
+      switch (location) {
+        case 'alfred':
+          place = bookingParams.serviceUser?.service_address
+          break
+        case 'visio':
+          break
+        default:
+          place = user.billing_address
+      }
+    }
+
+    let bookingObj = {
+      reference: user ? computeBookingReference(user, bookingParams.serviceUser.user) : '',
+      service: bookingParams.serviceUser.service.label,
+      serviceId: bookingParams.serviceUser.service._id,
+      address: place,
+      location: location,
+      equipments: bookingParams.serviceUser.equipments,
+      amount: prices.total,
+      prestation_date: booking.date,
+      alfred: bookingParams.serviceUser.user._id,
+      user: user ? user._id : null,
+      prestations: prestations,
+      travel_tax: prices.travel_tax,
+      pick_tax: prices.pick_tax,
+      cpf_amount: prices.cpf_amount,
+      cesu_amount: prices.cesu_total,
+      customer_fee: prices.customer_fee,
+      provider_fee: prices.provider_fee,
+      customer_fees: prices.customer_fees,
+      provider_fees: prices.provider_fees,
+      status: actual ? BOOK_STATUS.TO_PAY : BOOK_STATUS.INFO,
+      serviceUserId: bookingParams.serviceUser._id,
+      customer_booking: null,
+    }
+
+    let chatPromise = !user ?
+      Promise.resolve({res: null})
+      :
+      client(`${API_PATH}/chatRooms/addAndConnect`, {data: {
+        emitter: user._id,
+        recipient: bookingParams.serviceUser.user._id,
+      }})
+
+    chatPromise.then(res => {
+
+      if (user) {
+        bookingObj.chatroom = res._id
+      }
+
+      localStorage.setItem('bookingObj', JSON.stringify(bookingObj))
+    
+      if (!user) {
+        localStorage.setItem('path', Router.asPath)
+        Router.push('/?login=true')
+        return
+      }
+    
+      // setPending(true)
+      client(`${API_PATH}/booking`, {data: bookingObj})
+        .then(response => {
+          const booking = response
+          client(`${API_PATH}/chatRooms/addBookingId/${bookingObj.chatroom}`, {data: {booking: booking._id}, method: 'PUT'})
+            .then(() => {
+              if (booking.customer_booking) {
+                Router.push({pathname: `/reservations/resvations?id=${booking._id}`, query: {booking_id: booking._id}})
+              }
+              else if (actual) {
+                Router.push({pathname: '/confirmPayment', query: {booking_id: booking._id}})
+              }
+              else {
+                Router.push(`/profile/messages?user=${booking.user}&relative=${booking.alfred}`)
+              }
+            })
+        })
+        .catch(err => {
+          console.error(err)
+        })
+        .finally(() => {
+          setPending(false)
+        })
+    })
+      .catch(err => console.error(err))
+  }
 
   const onBookingDateChange = selecteddate => {
     setBooking({...booking, date: selecteddate})
@@ -74,7 +183,7 @@ const PureDrawerBooking = ({
       location: booking.location,
       serviceUser: serviceUserId,
       prestations: booking.prestations,
-      servicePosition: bookingParams?.serviceUser?.service_address.gps,
+      servicePosition: bookingParams?.serviceUser?.service_address?.gps,
       clientPosition: user?.billing_address.gps,
     })
   }, [booking.location, booking.prestations, serviceUserId])
@@ -108,7 +217,7 @@ const PureDrawerBooking = ({
           serviceUser,
           availabilities,
           excludeddates: getExcludedDays(availabilities),
-          onePlace: places.length === 1
+          onePlace: places.length === 1,
         })
       }
     }
@@ -117,22 +226,19 @@ const PureDrawerBooking = ({
       
   }, [])
 
-  console.log('Current theme: ', getDataModel(), bookingParams)
   const theme = getDataModel()
   
-  const serviceToDisplay = bookingParams?.serviceUser && bookingParams?.serviceUser.service
-  const prestaToDisplay = onlyOneService && bookingParams?.serviceUser?.prestations[0]
+  const serviceToDisplay = bookingParams?.serviceUser && bookingParams?.serviceUser?.service
+  const prestaToDisplay = onlyOneService && bookingParams?.serviceUser?.prestations && onlyOneService && bookingParams?.serviceUser?.prestations[0] || null
 
-  console.log(prestaToDisplay)
-
-  // const canBook = !!serviceUser && location && lodash.sum(Object.values(count)) && bookingDate && warnings.length==0
+  const canBook = bookingParams?.serviceUser && booking?.location && booking?.prestations && sum(Object.values(booking.prestations)) > 0 && booking?.date
 
   return (
     <StyledDrawerBooking theme={theme} >
       
       
       {/* Titre */}
-      <h3>{bookingParams?.serviceUser?.service.label} - {bookingParams?.serviceUser?.user.firstname}</h3>
+      <h3>{bookingParams?.serviceUser?.service?.label} - {bookingParams?.serviceUser?.user?.firstname}</h3>
       
       <form className='container-sm'>
 
@@ -173,40 +279,40 @@ const PureDrawerBooking = ({
           <h4>Détails</h4>
           {onlyOneService ? <div className='training'>
             <dl>
-            <dt>{prestaToDisplay?.prestation.label}</dt>
-            <dd>{prestaToDisplay?.prestation && prestaToDisplay.price} €</dd>
-            <dt>Durée</dt>
-            <dd>{serviceToDisplay?.duration_days} jours</dd>
+              <dt>{prestaToDisplay?.prestation?.label}</dt>
+              <dd>{prestaToDisplay?.prestation && prestaToDisplay.price} €</dd>
+              <dt>Durée</dt>
+              <dd>{serviceToDisplay?.duration_days} jours</dd>
             </dl>
           </div> : null}
         </section>
         
         {/* Lieu de la prestation */}
-        {bookingParams.onePlace ? 
-        <section>
-          <p>formation {labelLocations[booking.location]}</p>
-        </section>
-        : <div>Choix d'endroits</div>
+        {bookingParams.onePlace ?
+          <section>
+            <p>formation {labelLocations[booking.location]}</p>
+          </section>
+          : <div>Choix d'endroits</div>
         }
         
         {/* Détails */}
 
 
-
         {/* Types de paiements  */}
         <h2>Total à payer</h2>
         
-        {/* Message d'information */}
+        {/* Message d'information (todo in children ?)*/}
 
         <p className='tip'>
           <span className='img'>💡</span>
-        Votre demande de réservation doit être approuvée par lʼAftral. Vous recevrez vos accès au contenu de la formation dès lors que votre réservation sera confirmée
+        Votre demande de réservation doit être approuvée par l'Aftral. Vous recevrez vos accès au contenu de la formation dès lors que votre réservation sera confirmée
         </p>
 
-        <button 
+        <button
           type='submit'
+          disabled={!canBook}
           onClick={() => book(true)}
-          >
+        >
           {ReactHtmlParser(t('DRAWER_BOOKING.resa_button'))}
         </button>
 
