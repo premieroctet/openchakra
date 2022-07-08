@@ -13,6 +13,11 @@ const StyledDrawerBooking = styled.div`
         margin-inline: auto;
       }
 
+      /* Accordions */
+      .MuiAccordion-root {
+        box-shadow: none;
+      }
+
       h3 {
         margin-block: 0 var(--spc-8);
         color: var(--black);
@@ -86,6 +91,7 @@ const StyledDrawerBooking = styled.div`
         width: 100%;
         padding-block: var(--spc-4);
         border-radius: var(--rounded-md);
+        cursor: pointer;
 
       }
     `

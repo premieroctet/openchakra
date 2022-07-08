@@ -3,9 +3,14 @@ import Router from 'next/router'
 // import DateField from '@internationalized/date'
 import ReactHtmlParser from 'react-html-parser'
 import sum from 'lodash/sum'
+import Accordion from '@material-ui/core/Accordion'
+import AccordionSummary from '@material-ui/core/AccordionSummary'
+import AccordionDetails from '@material-ui/core/AccordionDetails'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import {withTranslation} from 'react-i18next'
 import DatePicker from 'react-datepicker'
 import TextField from '@material-ui/core/TextField'
+import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch'
 import {useUserContext} from '../../../contextes/user.context'
 import {getDataModel} from '../../../config/config'
 import {client} from '../../../utils/client'
@@ -40,6 +45,7 @@ const PureDrawerBooking = ({
     prestations: {},
   })
 
+  const [locations, setLocations] = useState([])
   const [prices, setPrices]=useState({})
   const [pending, setPending]=useState(false)
   
@@ -65,7 +71,6 @@ const PureDrawerBooking = ({
       })
     
     setPrices(compute)
-    console.log(prices)
       
   }, [location, booking.prestations, computeDistance, prices])
 
@@ -178,6 +183,10 @@ const PureDrawerBooking = ({
     setBooking({...booking, date: selecteddate})
   }
 
+  const onLocationChange = place => {
+    setBooking({...booking, location: place})
+  }
+
   useEffect(() => {
     computeTotal({
       location: booking.location,
@@ -203,6 +212,7 @@ const PureDrawerBooking = ({
 
         // Force location if only one option
         const places = Object.entries(serviceUser?.location).filter(([place, proposed]) => proposed)
+        setLocations(places)
         if (places.length === 1) {
           const [justOnePlace] = places
           Object.assign(setUpBooking, {location: justOnePlace[0]})
@@ -235,7 +245,6 @@ const PureDrawerBooking = ({
 
   return (
     <StyledDrawerBooking theme={theme} >
-      
       
       {/* Titre */}
       <h3>{bookingParams?.serviceUser?.service?.label} - {bookingParams?.serviceUser?.user?.firstname}</h3>
@@ -285,15 +294,37 @@ const PureDrawerBooking = ({
               <dd>{serviceToDisplay?.duration_days} jours</dd>
             </dl>
           </div> : null}
+          
         </section>
         
         {/* Lieu de la prestation */}
-        {bookingParams.onePlace ?
-          <section>
+        <section>
+          {!bookingParams.onePlace ?
             <p>formation {labelLocations[booking.location]}</p>
-          </section>
-          : <div>Choix d'endroits</div>
-        }
+            : <Accordion >
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon/>}
+              >
+                {ReactHtmlParser(t('DRAWER_BOOKING.presta_place'))}
+              </AccordionSummary>
+              <AccordionDetails >
+                {
+                  Object.entries(locations).map(([key, label]) => (
+                    <ButtonSwitch
+                      key={key}
+                      id={key}
+                      label={label}
+                      isEditable={false}
+                      isPrice={false}
+                      isOption={false}
+                      checked={location==key}
+                      onChange={onLocationChange}/>
+                  ))
+                }
+              </AccordionDetails>
+            </Accordion>
+          }
+        </section>
         
         {/* Détails */}
 
@@ -301,7 +332,7 @@ const PureDrawerBooking = ({
         {/* Types de paiements  */}
         <h2>Total à payer</h2>
         
-        {/* Message d'information (todo in children ?)*/}
+        {/* Message d'information (TODO in children ?)*/}
 
         <p className='tip'>
           <span className='img'>💡</span>
@@ -315,6 +346,9 @@ const PureDrawerBooking = ({
         >
           {ReactHtmlParser(t('DRAWER_BOOKING.resa_button'))}
         </button>
+
+        {/* TODO : conditionner selon le montant total à 0 */}
+        <p>{ReactHtmlParser(t('DRAWER_BOOKING.next_step_paiment'))}</p>
 
       </form>
 
