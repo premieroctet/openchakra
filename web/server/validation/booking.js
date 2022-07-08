@@ -6,7 +6,7 @@ const ServiceUser=require('../models/ServiceUser')
 require('../models/Prestation')
 const {computeDistanceKm}=require('../../utils/functions')
 
-const validateBooking = ({userId, serviceUserId, prestations, location, date, customerBooking}) => {
+const validateBooking = ({userId, serviceUserId, prestations, location, date, customerBookingId}) => {
 
   let su=null
   return ServiceUser.findById(serviceUserId)
@@ -21,8 +21,11 @@ const validateBooking = ({userId, serviceUserId, prestations, location, date, cu
         throw new NotFoundError('Prestations inconnues dans le service')
       }
       // Service booking => check every prestation in service booking is in ServiceUser
-      const prestaLabels=customerBooking ?
-        Booking.findById(customerBooking).then(b => b.prestations.map(p => p.name))
+      const prestaLabels=customerBookingId ?
+        Booking.findById(customerBookingId).then(b => {
+          if (!b) { throw new NotFoundError(`Service booking ${customerBookingId} introuvable`) }
+          b.prestations.map(p => p.name)
+        })
         :
         Promise.resolve(null)
       return prestaLabels

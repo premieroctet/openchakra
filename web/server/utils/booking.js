@@ -1,23 +1,15 @@
 const moment = require('moment')
+const MarketplacePayment=require('../plugins/payment/marketplacePayment')
+const PlatformPayment=require('../plugins/payment/platformPayment')
+const {computeDistanceKm}=require('../../utils/functions')
 const ServiceUser=require('../models/ServiceUser')
 require('../models/Service')
 const {computeBookingReference}=require('../../utils/text')
 const Booking=require('../models/Booking')
 const {TRANSACTION_SUCCEEDED} = require('../../utils/consts')
+const {NotFoundError}=require('./errors')
 
 moment.locale('fr')
-
-const getNextNumber = value => {
-  if (value == undefined || null) {
-    return value = 1
-  }
-  return value += 1
-
-}
-
-const getKeyDate = () => {
-  return moment().format('YMM')
-}
 
 // Check wether mango
 const checkPaid = booking => {
@@ -28,42 +20,38 @@ const checkPaid = booking => {
   }
 }
 
-const computeServiceDistance = ({location, serviceUserId, userId}) => {
+const computeServiceDistance = ({location, serviceUser, customer}) => {
   if (location!='main') {
     return null
   }
   // Check distance
-  const addr=customerBooking ?
-    Booking.findById(customerBookingId, 'address').then(booking => booking.address)
-    :
-    User.findById(userId, 'billing_address').then(user => user.billing_address)
-  Promise.all([serviceUser.user.billing_address, addr])
-    .then(res => {
-      if (res!=null) {
-        const [custAddress, alfAddress]=res
-        return computeDistanceKm(custAddress.gps, alfAddress.gps)
-      }
-    })
+  const addr=serviceUser.customer_booking?.address || customer.billing_address
+  const distance=computeDistanceKm(addr.gps, serviceUser.user.billing_address.gps)
+  return distance
 }
 
-const createBooking = ({customer, serviceUserId, prestations, date, cpf, location, payment, customerBooking}) => {
+const createBooking = ({customer, serviceUserId, prestations, date, cpf, location, customerBooking}) => {
   let bookData={prestation_date: date, cpf_booked: cpf, customer_booking: customerBooking}
   return ServiceUser.findById(serviceUserId)
     .populate('user')
     .populate('service')
     .populate({path: 'prestations', populate: 'prestation'})
-    .then(su => {
-      if (!su) {
+    .populate('customer_booking')
+    .then(serviceUser => {
+      if (!serviceUser) {
         throw new NotFoundError(`ServiceUser ${serviceUserId} introuvable`)
       }
       const prestas=Object.entries(prestations).map(([key, count]) => {
-        const prestation=su.prestations.find(p => p._id.toString()==key)
+        const prestation=serviceUser.prestations.find(p => p._id.toString()==key)
         return {name: prestation.prestation.label, price: prestation.price, value: count}
       })
-      bookData={...bookData, service: su.service.label,
-        reference: computeBookingReference(customer, su.user), equipments: su.equipments,
+      bookData={...bookData, service: serviceUser.service.label,
+        reference: computeBookingReference(customer, serviceUser.user),
+        equipments: serviceUser.equipments,
         prestations: prestas}
-      return payment.compute({serviceUser: serviceUserId, prestations, location, cpf_booked: cpf})
+      const distance=computeServiceDistance({location, serviceUser, customer})
+      const payment=serviceUser.customer_booking ? new PlatformPayment() : new MarketplacePayment()
+      return payment.compute({serviceUser, prestations, location, cpf_booked: cpf, distance})
     })
     .then(prices => {
       bookData={...bookData, ...prices, amount: prices.total}
@@ -78,5 +66,5 @@ const createBooking = ({customer, serviceUserId, prestations, date, cpf, locatio
 }
 
 module.exports = {
-  getNextNumber, getKeyDate, checkPaid, createBooking,
+  checkPaid, createBooking,
 }

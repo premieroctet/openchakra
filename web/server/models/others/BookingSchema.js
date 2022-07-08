@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const lodash=require('lodash')
+const {roundCurrency}=require('../../../utils/converters')
 const {ROLES}=require('../../../utils/others/consts')
 const {BOOK_STATUS}=require('../../../utils/consts')
 const AddressSchema =require('../AddressSchema')
@@ -179,6 +180,10 @@ const BookingSchema = new Schema({
     type: Number,
     default: 0,
   },
+  cpf_amount: {
+    type: Number,
+    default: 0,
+  },
   // User role when booking
   user_role: {
     type: String,
@@ -226,16 +231,11 @@ BookingSchema.virtual('calendar_display').get(function() {
 })
 
 BookingSchema.virtual('customer_fee').get(function() {
-  return lodash.sum((this.customer_fees || []).map(c => c.amount))
+  return roundCurrency(lodash.sum((this.customer_fees || []).map(c => c.amount)))
 })
 
 BookingSchema.virtual('provider_fee').get(function() {
-  return lodash.sum((this.provider_fees||[]).map(c => c.amount))
+  return roundCurrency(lodash.sum((this.provider_fees||[]).map(c => c.amount)))
 })
-
-BookingSchema.virtual('cpf_amount').get(function() {
-  return this.cpf_booked ? this.amount : 0
-})
-
 
 module.exports = BookingSchema

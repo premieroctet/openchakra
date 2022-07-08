@@ -11,9 +11,9 @@ describe('Booking creation', () => {
 
   const BOOKING_DATA={
     // customerBooking: '6230ea891bc383400b84ab38',
-    serviceUserId: '5e652c271bee64541cfc08a0',
-    prestations: {'5fa28a8b5a565501f403cea1': 1},
-    location: 'main',
+    serviceUserId: '6177cf600558b674edb68ea7',
+    prestations: {'6177cf600558b674edb68ea8': 1},
+    location: 'alfred',
     date: '2022-07-13T22:00:00.000Z',
     userId: '5e16f578b9a2462bc340c64e',
   }
@@ -37,7 +37,7 @@ describe('Booking creation', () => {
     const badLocation={...BOOKING_DATA, location: 'elearning'}
     expect(validateBooking(badLocation)).rejects.toThrow(BadRequestError)
     // Bad customerBooking prestations
-    const badCustomerBooking={...BOOKING_DATA, customerBooking: '6230ea891bc383400b84ab38'}
+    const badCustomerBooking={...BOOKING_DATA, customerBookingId: '6230ea891bc383400b84ab38'}
     expect(validateBooking(badCustomerBooking)).rejects.toThrow(NotFoundError)
     // Bad prestations
     const badPrestations={...BOOKING_DATA, prestations: {'616fc555b74e117a496eca519': 1}}
@@ -47,13 +47,13 @@ describe('Booking creation', () => {
   test('Create basic booking', () => {
     return User.findById(BOOKING_DATA.userId)
       .then(user => {
-        return createBooking({...BOOKING_DATA, customer: user, payment: new PaymentBase()})
+        return createBooking({...BOOKING_DATA, customer: user})
           .then(book => {
             expect(book.amount).toBeGreaterThan(0)
             expect(book.prestations).toHaveLength(1)
-            expect(book.customer_fee).toBe(132.5)
+            expect(book.customer_fee).toBe(5.75)
             expect(book.provider_fee).toBe(0)
-            expect(book.travel_tax).toBe(49.95)
+            expect(book.travel_tax).toBe(0)
           })
       })
   })
