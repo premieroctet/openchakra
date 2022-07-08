@@ -118,9 +118,11 @@ const withEdiRequest = (Component = null) => {
 
       await client(`${API_PATH}/${endpoint}/${orderid}/items`, {data: {product: _id, quantity, replace, ...rest}, method: 'PUT'})
         .then(() => this.getContentFrom({endpoint, orderid}))
-        .catch(errorMsg => {
+        .catch(error => {
           console.error(`Can't add product`)
-          snackBarError(errorMsg?.message)
+          if (error.info) {
+            snackBarError(error?.info.message)
+          }
           return false
         })
     }

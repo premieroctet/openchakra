@@ -8,7 +8,7 @@ import {BASEPATH_EDI, API_PATH, RELATED} from '../../utils/consts'
 import {client} from '../../utils/client'
 import withEdiRequest from '../../hoc/withEdiRequest'
 
-const BaseCreateTable = ({
+const BaseCreate = ({
   endpoint,
   accessRights,
   wordingSection,
@@ -68,4 +68,4 @@ const BaseCreateTable = ({
   )
 }
 
-export default withTranslation('feurst', {withRef: true})(withEdiRequest(BaseCreateTable))
+export default withTranslation('feurst', {withRef: true})(withEdiRequest(BaseCreate))
