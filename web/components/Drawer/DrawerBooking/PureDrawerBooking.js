@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react'
-import Router from 'next/router'
+import Router, {useRouter} from 'next/router'
 // import DateField from '@internationalized/date'
 import ReactHtmlParser from 'react-html-parser'
 import sum from 'lodash/sum'
@@ -37,6 +37,7 @@ const PureDrawerBooking = ({
 }) => {
 
   const {user} = useUserContext()
+  const router = useRouter()
 
   const [bookingParams, setBookingParams] = useState({
     serviceUser: {},
@@ -105,23 +106,25 @@ const PureDrawerBooking = ({
     
     if (!user) {
       localStorage.setItem('path', Router.asPath)
-      Router.push('/?login=true')
+      router.push('/?login=true')
       return
     }
 
     setPending(true)
     client(`${API_PATH}/booking`, {data: bookingObj})
       .then(response => {
-        const booking = response
-        if (booking.customer_booking) {
-          Router.push({pathname: `/reservations/resvations?id=${booking._id}`, query: {booking_id: booking._id}})
-        }
-        else if (actual) {
-          Router.push({pathname: '/confirmPayment', query: {booking_id: booking._id}})
-        }
-        else {
-          Router.push(`/profile/messages?user=${booking.user}&relative=${booking.alfred}`)
-        }
+        const {redirectURL} = response
+
+        router.push(redirectURL)
+        // if (booking.customer_booking) {
+        //   Router.push({pathname: `/reservations/resvations?id=${booking._id}`, query: {booking_id: booking._id}})
+        // }
+        // else if (actual) {
+        //   Router.push({pathname: '/confirmPayment', query: {booking_id: booking._id}})
+        // }
+        // else {
+        //   Router.push(`/profile/messages?user=${booking.user}&relative=${booking.alfred}`)
+        // }
       })
       .catch(error => {
         if (error.info) {
@@ -333,9 +336,8 @@ const PureDrawerBooking = ({
           {ReactHtmlParser(t('DRAWER_BOOKING.resa_button'))}
         </button>
 
-        {/* TODO : conditionner selon le montant total à 0 */}
-        {prices.total !== 0 && <p className={'custombookinginfoprice'}>{ReactHtmlParser(t('DRAWER_BOOKING.next_step_paiment'))}</p>}
-        
+        {prices.total !== 0
+          && <p className={'custombookinginfoprice'}>{ReactHtmlParser(t('DRAWER_BOOKING.next_step_paiment'))}</p>}
 
         <button
           type='button'
