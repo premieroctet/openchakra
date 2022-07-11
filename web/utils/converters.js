@@ -212,9 +212,9 @@ const roundCurrency = amount => {
   if (!amount) {
     return amount
   }
-  return Math.round(amount*100)/100
+  const rounded=Math.round(amount*100)/100
+  return rounded
 }
-
 
 module.exports = {
   availabilities2events, eventUI2availability, availability2eventUI,

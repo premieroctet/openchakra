@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const lodash=require('lodash')
+const {roundCurrency}=require('../../../utils/converters')
 const {ROLES}=require('../../../utils/others/consts')
 const {BOOK_STATUS}=require('../../../utils/consts')
 const AddressSchema =require('../AddressSchema')
@@ -55,6 +56,7 @@ const BookingSchema = new Schema({
   },
   prestation_date: {
     type: Date,
+    required: true,
   },
   end_date: {
     type: Date,
@@ -67,20 +69,26 @@ const BookingSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'user',
   },
-  prestations: [{
-    name: {
-      type: String,
-      required: true,
-    },
-    price: {
-      type: Number,
-      required: true,
-    },
-    value: {
-      type: Number,
-      required: true,
-    },
-  }],
+  prestations: {
+    type: [{
+      name: {
+        type: String,
+        required: true,
+      },
+      // Unitary price
+      price: {
+        type: Number,
+        required: true,
+      },
+      // Prestation count
+      value: {
+        type: Number,
+        required: true,
+      },
+    }],
+    required: true,
+    validate: v => Array.isArray(v) && v.length > 0,
+  },
   option: {
     label: {
       type: String,
@@ -172,6 +180,10 @@ const BookingSchema = new Schema({
     type: Number,
     default: 0,
   },
+  cpf_amount: {
+    type: Number,
+    default: 0,
+  },
   // User role when booking
   user_role: {
     type: String,
@@ -202,6 +214,10 @@ const BookingSchema = new Schema({
     default: false,
     required: false,
   },
+  // URL to traning on CPF website
+  cpf_link: {
+    type: String,
+  },
 }, {toJSON: {virtuals: true, getters: true}})
 
 BookingSchema.virtual('alfred_amount').get(function() {
@@ -219,16 +235,11 @@ BookingSchema.virtual('calendar_display').get(function() {
 })
 
 BookingSchema.virtual('customer_fee').get(function() {
-  return lodash.sum((this.customer_fees || []).map(c => c.amount))
+  return roundCurrency(lodash.sum((this.customer_fees || []).map(c => c.amount)))
 })
 
 BookingSchema.virtual('provider_fee').get(function() {
-  return lodash.sum((this.provider_fees||[]).map(c => c.amount))
+  return roundCurrency(lodash.sum((this.provider_fees||[]).map(c => c.amount)))
 })
-
-BookingSchema.virtual('cpf_amount').get(function() {
-  return this.cpf_booked ? this.amount : 0
-})
-
 
 module.exports = BookingSchema

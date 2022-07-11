@@ -1,6 +1,6 @@
-const mongoose = require('mongoose')
-const PaymentBase = require('./paymentBase')
 const lodash=require('lodash')
+const Commission=require('../../models/Commission')
+const PaymentBase = require('./paymentBase')
 
 /**
 Payment class for platform mode

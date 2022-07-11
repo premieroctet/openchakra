@@ -11,6 +11,7 @@ const uuidv4 = require('uuid/v4')
 const {HTTP_CODES} = require('../../utils/errors')
 const {getHostUrl} = require('../../../config/config')
 const Booking = require('../../models/Booking')
+const ServiceUser = require('../../models/ServiceUser')
 const Company = require('../../models/Company')
 const User = require('../../models/User')
 const ChatRoom = require('../../models/ChatRoom')
@@ -22,13 +23,14 @@ const {
   sendBookingCancelledByAlfred, sendAskInfoPreapproved, sendAskingInfo, sendNewBookingManual,
   sendLeaveCommentForClient, sendLeaveCommentForAlfred, sendAlert, sendBillingToAlfred,
 } = require('../../utils/mailing')
-const {getRole, get_logged_id} = require('../../utils/serverContext')
+const {get_logged_id} = require('../../utils/serverContext')
 const {validateAvocotesCustomer}=require('../../validation/simpleRegister')
+const validateBooking=require('../../validation/booking')
 const {computeBookingReference, formatAddress}=require('../../../utils/text')
 const {createMangoClient}=require('../../utils/mangopay')
 const {stateMachineFactory} = require('../../utils/BookingStateMachine')
-
 const router = express.Router()
+
 moment.locale('fr')
 
 router.get('/test', (req, res) => res.json({msg: 'Booking Works!'}))
@@ -109,27 +111,32 @@ router.get('/confirmPendingBookings', passport.authenticate('jwt', {session: fal
     .catch(err => console.error(err))
 })
 
-// @Route POST /myAlfred/api/booking/
-// Add a new booking
-// @Access private
+/**
+ @Route POST /myAlfred/api/booking/
+ Add a new booking
+ Body:
+   serviceUserId: serviceUser
+   location: ['main', 'alfred', 'visio', 'elearning']
+   prestations: {prestation_id: count} //
+   cpf: true or false
+   date: booking date
+   customerBooking: linked service booking
+Returns: {
+  redirectURL: url to redirect to,
+  extraURLs: [], supplemntary URLs to open in new tabs
+}
+ @Access private
+ */
 router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  const random = crypto.randomBytes(Math.ceil(5 / 2)).toString('hex').slice(0, 5)
-
-  const bookingFields = {
-    ...req.body,
-    reference: `${req.body.reference}_${random}`,
-    status: req.body.customer_booking ? BOOK_STATUS.TO_CONFIRM : req.body.status,
-    user_role: getRole(req) || null,
-  }
-
-  console.log(JSON.stringify(bookingFields))
-
-  Booking.create(bookingFields)
+  validateBooking(req.body)
+    .then(() => {
+      return createBooking({customer: req.user, ...req.body})
+    })
     .then(booking => {
       if (booking.status === BOOK_STATUS.INFO || booking.status === BOOK_STATUS.TO_CONFIRM) {
         // Reload to get user,alfred,service
-        Booking.findById(booking._id)
+        return Booking.findById(booking._id)
           .populate('alfred')
           .populate('user')
           .then(book => {
@@ -168,16 +175,23 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
                 .catch(err => console.error(err))
             }
           })
-          .catch(err => {
-            console.error(err)
-          })
       }
-      console.log(`New booking:${JSON.stringify(booking)}`)
-      res.json(booking)
+    })
+    .then(booking => {
+      const returnURLs={
+        redirectURL: booking.amount==0 ?
+          '/reservations/reservations'
+          :
+          `/confirmPayment?booking_id=${booking._id}`,
+      }
+      if (booking.cfp_link) {
+        returnURLs.extraURLs=[booking.cpf_link]
+      }
+      return res.json(returnURLs)
     })
     .catch(err => {
       console.error(err)
-      res.status(HTTP_CODES.NOT_FOUND)
+      res.status(err.status || HTTP_CODES.SYSTEM_ERROR).send(err.message || err)
     })
 })
 
@@ -286,9 +300,25 @@ router.get('/avocotes', passport.authenticate('admin', {session: false}), (req, 
     })
 })
 
-router.post('/compute', (req, res) => {
-
-  req.context.payment.compute(req.body)
+/**
+ @Route POST /myAlfred/api/bookings/compute
+ Compute prices for booking
+ Body:
+   serviceUserId: serviceUser
+   location: ['main', 'alfred', 'visio', 'elearning']
+   prestations: {prestation_id: count}
+   cpf: true or false
+   date: booking date
+ @Access private
+ */
+router.post('/compute', passport.authenticate('jwt', {session: false}), (req, res) => {
+  return ServiceUser.findById(req.body.serviceUser)
+    .populate('alfred')
+    .populate('user')
+    .populate({path: 'prestations', populate: 'prestation'})
+    .then(serviceUser => {
+      return req.context.payment.compute({...req.body, serviceUser: serviceUser})
+    })
     .then(result => {
       res.json(result)
     })
