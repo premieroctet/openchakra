@@ -289,6 +289,7 @@ const Training = ({training}) => {
         <PureDrawerBooking
           serviceUserId={training._id}
           onlyOneService
+          onClose={() => setIsOpenDialog(false)}
         />
 
       </BookingDialog>
