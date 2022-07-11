@@ -48,7 +48,7 @@ const createBooking = ({customer, serviceUserId, prestations, date, cpf, locatio
       bookData={...bookData, service: serviceUser.service.label,
         reference: computeBookingReference(customer, serviceUser.user),
         equipments: serviceUser.equipments,
-        prestations: prestas}
+        prestations: prestas, cpf_link: serviceUser.cpf_link}
       const distance=computeServiceDistance({location, serviceUser, customer})
       const payment=serviceUser.customer_booking ? new PlatformPayment() : new MarketplacePayment()
       return payment.compute({serviceUser, prestations, location, cpf_booked: cpf, distance})

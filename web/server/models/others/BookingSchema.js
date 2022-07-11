@@ -214,6 +214,10 @@ const BookingSchema = new Schema({
     default: false,
     required: false,
   },
+  // URL to traning on CPF website
+  cpf_link: {
+    type: String,
+  },
 }, {toJSON: {virtuals: true, getters: true}})
 
 BookingSchema.virtual('alfred_amount').get(function() {

@@ -121,6 +121,10 @@ router.get('/confirmPendingBookings', passport.authenticate('jwt', {session: fal
    cpf: true or false
    date: booking date
    customerBooking: linked service booking
+Returns: {
+  redirectURL: url to redirect to,
+  extraURLs: [], supplemntary URLs to open in new tabs
+}
  @Access private
  */
 router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
@@ -173,8 +177,17 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
           })
       }
     })
-    .then(() => {
-      return res.json(booking)
+    .then(booking => {
+      const returnURLs={
+        redirectURL: booking.amount==0 ?
+          '/reservations/reservations'
+          :
+          `/confirmPayment?booking_id=${booking._id}`,
+      }
+      if (booking.cfp_link) {
+        returnURLs.extraURLs=[booking.cpf_link]
+      }
+      return res.json(returnURLs)
     })
     .catch(err => {
       console.error(err)
@@ -287,8 +300,22 @@ router.get('/avocotes', passport.authenticate('admin', {session: false}), (req, 
     })
 })
 
+/**
+ @Route POST /myAlfred/api/bookings/compute
+ Compute prices for booking
+ Body:
+   serviceUserId: serviceUser
+   location: ['main', 'alfred', 'visio', 'elearning']
+   prestations: {prestation_id: count}
+   cpf: true or false
+   date: booking date
+ @Access private
+ */
 router.post('/compute', passport.authenticate('jwt', {session: false}), (req, res) => {
-  return ServiceUser.findById(req.body.serviceUser).populate('alfred').populate('user').populate({path: 'prestations', populate: 'prestation'})
+  return ServiceUser.findById(req.body.serviceUser)
+    .populate('alfred')
+    .populate('user')
+    .populate({path: 'prestations', populate: 'prestation'})
     .then(serviceUser => {
       return req.context.payment.compute({...req.body, serviceUser: serviceUser})
     })

@@ -185,6 +185,7 @@ const ServiceUserSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  // URL to traning on CPF website
   cpf_link: {
     type: String,
   },
