@@ -7,6 +7,7 @@ import Accordion from '@material-ui/core/Accordion'
 import AccordionSummary from '@material-ui/core/AccordionSummary'
 import AccordionDetails from '@material-ui/core/AccordionDetails'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline'
 import {withTranslation} from 'react-i18next'
 import DatePicker from 'react-datepicker'
 import TextField from '@material-ui/core/TextField'
@@ -32,6 +33,7 @@ const PureDrawerBooking = ({
   t,
   serviceUserId,
   onlyOneService,
+  onClose,
 }) => {
 
   const {user} = useUserContext()
@@ -80,35 +82,24 @@ const PureDrawerBooking = ({
   }, [location, booking.prestations, booking.date])
 
 
-  const book = async actual => { // actual : true=> book, false=>infos request
+  const book = async(e, actual) => { // actual : true=> book, false=>infos request
+
+    e.preventDefault()
 
     if (pending) {
-      snackBarError(ReactHtmlParser(this.props.t('USERSERVICEPREVIEW.snackbar_error_resa')))
+      snackBarError(ReactHtmlParser(t('USERSERVICEPREVIEW.snackbar_error_resa')))
       return
     }
 
     let bookingObj = {
       serviceUserId,
-      location,
+      location: booking.location,
       prestations: booking.prestations,
       cpf: booking.extrapayment,
       date: booking.date,
       customer_booking: null,
     }
 
-    // let chatPromise = !user ?
-    //   Promise.resolve({res: null})
-    //   :
-    //   client(`${API_PATH}/chatRooms/addAndConnect`, {data: {
-    //     emitter: user._id,
-    //     recipient: bookingParams.serviceUser.user._id,
-    //   }})
-
-    // chatPromise.then(res => {
-
-    // if (user) {
-    // bookingObj.chatroom = res._id
-    // }
 
     localStorage.setItem('bookingObj', JSON.stringify(bookingObj))
     
@@ -122,28 +113,23 @@ const PureDrawerBooking = ({
     client(`${API_PATH}/booking`, {data: bookingObj})
       .then(response => {
         const booking = response
-        client(`${API_PATH}/chatRooms/addBookingId/${bookingObj.chatroom}`, {data: {booking: booking._id}, method: 'PUT'})
-          .then(() => {
-            if (booking.customer_booking) {
-              Router.push({pathname: `/reservations/resvations?id=${booking._id}`, query: {booking_id: booking._id}})
-            }
-            else if (actual) {
-              Router.push({pathname: '/confirmPayment', query: {booking_id: booking._id}})
-            }
-            else {
-              Router.push(`/profile/messages?user=${booking.user}&relative=${booking.alfred}`)
-            }
-          })
+        if (booking.customer_booking) {
+          Router.push({pathname: `/reservations/resvations?id=${booking._id}`, query: {booking_id: booking._id}})
+        }
+        else if (actual) {
+          Router.push({pathname: '/confirmPayment', query: {booking_id: booking._id}})
+        }
+        else {
+          Router.push(`/profile/messages?user=${booking.user}&relative=${booking.alfred}`)
+        }
       })
       .catch(error => {
-        console.error(error)
         if (error.info) {
           snackBarError(error?.info.message)
         }
-        
       })
       .finally(() => {
-        // setPending(false)
+        setPending(false)
       })
     
   }
@@ -295,6 +281,8 @@ const PureDrawerBooking = ({
             : <Accordion >
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon/>}
+                id="bookinglocations_content"
+                aria-controls="bookinglocations_header"
               >
                 {ReactHtmlParser(t('DRAWER_BOOKING.presta_place'))}
               </AccordionSummary>
@@ -329,9 +317,6 @@ const PureDrawerBooking = ({
         />
 
 
-        {/* Types de paiements  */}
-        <h2>Total à payer</h2>
-
         {/* Message d'information (TODO in children ?)*/}
 
         <p className='tip'>
@@ -342,22 +327,23 @@ const PureDrawerBooking = ({
         <button
           type='submit'
           disabled={!canBook}
-          onClick={() => book(true)}
+          onClick={e => book(e, true)}
           className={'custombookinresabutton'}
         >
           {ReactHtmlParser(t('DRAWER_BOOKING.resa_button'))}
         </button>
 
         {/* TODO : conditionner selon le montant total à 0 */}
-        <p className={'custombookinginfoprice'}>{ReactHtmlParser(t('DRAWER_BOOKING.next_step_paiment'))}</p>
+        {prices.total !== 0 && <p className={'custombookinginfoprice'}>{ReactHtmlParser(t('DRAWER_BOOKING.next_step_paiment'))}</p>}
+        
 
         <button
           type='button'
           disabled={!canBook}
-          onClick={() => book(false)}
-          className={'custombookingaskinfo'}
+          onClick={e => book(e, false)}
+          className={'custombookingaskinfo button_info'}
         >
-          {ReactHtmlParser(t('DRAWER_BOOKING.button_info'))}
+          <HelpOutlineIcon /> {ReactHtmlParser(t('DRAWER_BOOKING.button_info'))}
         </button>
 
       </form>

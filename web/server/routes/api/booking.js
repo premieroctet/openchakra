@@ -121,6 +121,8 @@ router.get('/confirmPendingBookings', passport.authenticate('jwt', {session: fal
    cpf: true or false
    date: booking date
    customerBooking: linked service booking
+   customerBooking: linked service booking,
+   informationRequest: [true|false] info request or actual booking
 Returns: {
   redirectURL: url to redirect to,
   extraURLs: [], supplemntary URLs to open in new tabs
