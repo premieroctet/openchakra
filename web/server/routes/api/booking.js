@@ -181,7 +181,7 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     })
     .catch(err => {
       console.error(err)
-      res.status(err.status || HTTP_CODES.SYSTEM_ERROR).send(err.message || err)
+      res.status(err.status || HTTP_CODES.SYSTEM_ERROR).json(err.message || err)
     })
 })
 
