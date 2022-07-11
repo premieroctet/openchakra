@@ -2,22 +2,21 @@ import React, {useState} from 'react'
 import {Switch} from '@headlessui/react'
 import styled from 'styled-components'
 
-const CPF = () => {
-  const [enabled, setEnabled] = useState(false)
+const CPF = ({payWithCPF, setPayWithCPF}) => {
 
   return (
     <StyledCPF>
       <p>Cette formation est éligible au CPF.</p>
       <Switch.Group>
         <Switch
-          checked={enabled}
-          onChange={setEnabled}
+          checked={payWithCPF}
+          onChange={setPayWithCPF}
           className={`${
-    enabled ? 'bg-blue-600' : 'bg-gray-200'
+            payWithCPF ? 'bg-blue-600' : 'bg-gray-200'
   } relative inline-flex h-6 w-11 items-center rounded-full`}>
           <span id="infocpf"
             className={`${
-      enabled ? 'translate-x-6' : 'translate-x-1'
+              payWithCPF ? 'translate-x-6' : 'translate-x-1'
     } inline-block h-4 w-4 transform rounded-full bg-white`}
           />
         </Switch> <Switch.Label>Je souhaite réserver et payer avec mon CPF </Switch.Label>

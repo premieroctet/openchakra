@@ -92,7 +92,13 @@ const StyledDrawerBooking = styled.div`
         padding-block: var(--spc-4);
         border-radius: var(--rounded-md);
         cursor: pointer;
-
+        border: 0;
+        
+      }
+      
+      button[type="submit"]:disabled {
+        background-color: lightgray;
+        cursor: not-allowed;
       }
     `
   }

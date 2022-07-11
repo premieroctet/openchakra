@@ -42,6 +42,7 @@ const PureDrawerBooking = ({
   const [booking, setBooking] = useState({
     date: null,
     location: null,
+    extrapayment: false, // example: CPF
     prestations: {},
   })
 
@@ -183,8 +184,12 @@ const PureDrawerBooking = ({
     setBooking({...booking, date: selecteddate})
   }
 
-  const onLocationChange = place => {
+  const onBookingLocationChange = place => {
     setBooking({...booking, location: place})
+  }
+  
+  const onBookingPaymentChange = () => {
+    setBooking({...booking, extrapayment: !booking.extrapayment})
   }
 
   useEffect(() => {
@@ -252,7 +257,10 @@ const PureDrawerBooking = ({
       <form className='container-sm'>
 
         {/* CPF compatible */}
-        {bookingParams?.serviceUser?.cpf_eligible && <CPF />}
+        {bookingParams?.serviceUser?.cpf_eligible && <CPF
+          payWithCPF={booking.extrapayment}
+          setPayWithCPF={onBookingPaymentChange}
+        />}
 
         {/* Date - Date/heure */}
         <section className='date'>
@@ -318,7 +326,7 @@ const PureDrawerBooking = ({
                       isPrice={false}
                       isOption={false}
                       checked={location==key}
-                      onChange={onLocationChange}/>
+                      onChange={onBookingLocationChange}/>
                   ))
                 }
               </AccordionDetails>
@@ -343,12 +351,22 @@ const PureDrawerBooking = ({
           type='submit'
           disabled={!canBook}
           onClick={() => book(true)}
+          className={'custombookinresabutton'}
         >
           {ReactHtmlParser(t('DRAWER_BOOKING.resa_button'))}
         </button>
 
         {/* TODO : conditionner selon le montant total à 0 */}
-        <p>{ReactHtmlParser(t('DRAWER_BOOKING.next_step_paiment'))}</p>
+        <p className={'custombookinginfoprice'}>{ReactHtmlParser(t('DRAWER_BOOKING.next_step_paiment'))}</p>
+
+        <button
+          type='button'
+          disabled={!canBook}
+          onClick={() => book(false)}
+          className={'custombookingaskinfo'}
+        >
+          {ReactHtmlParser(t('DRAWER_BOOKING.button_info'))}
+        </button>
 
       </form>
 
