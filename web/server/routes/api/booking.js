@@ -1,4 +1,3 @@
-const crypto = require('crypto')
 const express = require('express')
 const ics=require('ics')
 const {googleCalendarEventUrl} = require('google-calendar-url')
@@ -7,14 +6,15 @@ const passport = require('passport')
 const moment = require('moment')
 
 const CronJob = require('cron').CronJob
-const uuidv4 = require('uuid/v4')
+const {addMessage}=require('../../utils/chatroom')
+const {NotFoundError}=require('../../utils/errors')
+const {createBooking}=require('../../utils/booking')
 const {HTTP_CODES} = require('../../utils/errors')
 const {getHostUrl} = require('../../../config/config')
 const Booking = require('../../models/Booking')
 const ServiceUser = require('../../models/ServiceUser')
 const Company = require('../../models/Company')
 const User = require('../../models/User')
-const ChatRoom = require('../../models/ChatRoom')
 const {BOOK_STATUS, EXPIRATION_DELAY, AVOCOTES_COMPANY_NAME} = require('../../../utils/consts')
 const {payBooking} = require('../../utils/mangopay')
 const {
@@ -136,48 +136,36 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
       return createBooking({customer: req.user, ...req.body})
     })
     .then(booking => {
-      if (booking.status === BOOK_STATUS.INFO || booking.status === BOOK_STATUS.TO_CONFIRM) {
-        // Reload to get user,alfred,service
-        return Booking.findById(booking._id)
-          .populate('alfred')
-          .populate('user')
-          .then(book => {
-            if (booking.status === BOOK_STATUS.INFO) {
-              sendBookingInfosRecap(book)
-              sendAskingInfo(book, req)
+      // Reload to get user,alfred,service
+      return Booking.findById(booking._id)
+        .populate('alfred')
+        .populate('user')
+        .then(book => {
+          if (booking.status === BOOK_STATUS.INFO) {
+            sendBookingInfosRecap(book)
+            sendAskingInfo(book, req)
+          }
+          if (booking.status === BOOK_STATUS.TO_CONFIRM) {
+            sendBookingDetails(book)
+            sendNewBookingManual(book, req)
+          }
+          if (booking.status === BOOK_STATUS.CONFIRMED) {
+            sendNewBooking(book, req)
+          }
+          // Si user et alfred définis, ajouter un message dans le chatroom
+          if (book.user && book.alfred) {
+            const message={
+              user: book.user.firstname,
+              content: `Service ${book.service} de ${book.alfred.firstname} pour ${book.user.firstname}`,
+              date: moment(),
+              idsender: book.user._id,
             }
-            if (booking.status === BOOK_STATUS.TO_CONFIRM) {
-              sendBookingDetails(book)
-              sendNewBookingManual(book, req)
-            }
-            if (booking.status === BOOK_STATUS.CONFIRMED) {
-              sendNewBooking(book, req)
-            }
-            // Si user et alfred définis, ajouter un message dans le chatroom
-            if (book.user && book.alfred) {
-              const filter={
-                $and: [
-                  {emitter: {$in: [book.alfred._id, book.user._id]}},
-                  {recipient: {$in: [book.alfred._id, book.user._id]}},
-                ],
-              }
-              const message={
-                user: book.user.firstname,
-                content: `Service ${book.service} de ${book.alfred.firstname} pour ${book.user.firstname}`,
-                date: moment(),
-                idsender: book.user._id,
-              }
-              const update={
-                $setOnInsert: {name: `room-${uuidv4()}`},
-                $set: {booking: book._id, emitter: book.user._id, recipient: book.alfred._id},
-                $addToSet: {messages: message},
-              }
-              ChatRoom.findOneAndUpdate(filter, update, {new: true, upsert: true})
-                .then(() => console.log('Chatroom maj'))
-                .catch(err => console.error(err))
-            }
-          })
-      }
+            addMessage(book.user._id, book.alfred._id, message)
+              .then(() => console.log(`Chatroom message added`))
+              .catch(err => console.error(err))
+          }
+          return book
+        })
     })
     .then(booking => {
       const returnURLs={

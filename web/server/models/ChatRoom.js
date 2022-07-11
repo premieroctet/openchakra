@@ -9,10 +9,12 @@ const ChatRoomsSchema = new Schema({
   emitter: {
     type: Schema.Types.ObjectId,
     ref: 'user',
+    required: true,
   },
   recipient: {
     type: Schema.Types.ObjectId,
     ref: 'user',
+    required: true,
   },
   messages: [{
     user: String,

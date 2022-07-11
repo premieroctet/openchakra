@@ -1,7 +1,4 @@
-const withParams = require('../../components/withParams')
-import {booking_datetime_str} from '../../utils/dateutils'
 import {Tooltip} from '@material-ui/core'
-import CustomButton from '../../components/CustomButton/CustomButton'
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
 import CloseIcon from '@material-ui/icons/Close'
@@ -19,6 +16,8 @@ import Typography from '@material-ui/core/Typography'
 import axios from 'axios'
 import moment from 'moment'
 
+import ReactHtmlParser from 'react-html-parser'
+import Link from 'next/link'
 import BookingPreApprouve from '../../components/BookingDetail/BookingPreApprouve'
 import BookingPreview from '../../components/BookingDetail/BookingPreview'
 import LayoutMobileReservations from '../../hoc/Layout/LayoutMobileReservations'
@@ -27,10 +26,11 @@ import UserAvatar from '../../components/Avatar/UserAvatar'
 import ServiceAvatar from '../../components/Avatar/ServiceAvatar'
 import styles from '../../static/css/pages/reservations/reservations'
 import {BOOKING} from '../../utils/i18n'
-import ReactHtmlParser from 'react-html-parser'
+import CustomButton from '../../components/CustomButton/CustomButton'
+import {booking_datetime_str} from '../../utils/dateutils'
 const {BOOK_STATUS}=require('../../utils/consts')
 const {setAxiosAuthentication}=require('../../utils/authentication')
-import Link from 'next/link'
+const withParams = require('../../components/withParams')
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props
@@ -196,7 +196,7 @@ class AllReservations extends React.Component {
     let newBooking = booking
     newBooking.prestation_date = null
     localStorage.setItem('bookingObj', JSON.stringify(newBooking))
-    Router.push(`/userServicePreview?id=${ newBooking.serviceUserId}&address=main`)
+    Router.push(`/userServicePreview?id=${ newBooking.serviceUserId}`)
 
   }
 

@@ -1,4 +1,5 @@
 const moment = require('moment')
+const {BOOK_STATUS, TRANSACTION_SUCCEEDED}=require('../../utils/consts')
 const MarketplacePayment=require('../plugins/payment/marketplacePayment')
 const PlatformPayment=require('../plugins/payment/platformPayment')
 const {computeDistanceKm}=require('../../utils/functions')
@@ -6,7 +7,7 @@ const ServiceUser=require('../models/ServiceUser')
 require('../models/Service')
 const {computeBookingReference}=require('../../utils/text')
 const Booking=require('../models/Booking')
-const {TRANSACTION_SUCCEEDED} = require('../../utils/consts')
+const {upsertChatroom}=require('./chatroom')
 const {NotFoundError}=require('./errors')
 
 moment.locale('fr')
@@ -32,15 +33,17 @@ const computeServiceDistance = ({location, serviceUser, customer}) => {
 
 const createBooking = ({customer, serviceUserId, prestations, date, cpf, location, customerBooking, informationRequest}) => {
   let bookData={prestation_date: date, cpf_booked: cpf, customer_booking: customerBooking}
+  let serviceUser=null
   return ServiceUser.findById(serviceUserId)
     .populate('user')
     .populate('service')
     .populate({path: 'prestations', populate: 'prestation'})
     .populate('customer_booking')
-    .then(serviceUser => {
-      if (!serviceUser) {
+    .then(result => {
+      if (!result) {
         throw new NotFoundError(`ServiceUser ${serviceUserId} introuvable`)
       }
+      serviceUser=result
       const prestas=Object.entries(prestations).map(([key, count]) => {
         const prestation=serviceUser.prestations.find(p => p._id.toString()==key)
         return {name: prestation.prestation.label, price: prestation.price, value: count}
@@ -56,6 +59,10 @@ const createBooking = ({customer, serviceUserId, prestations, date, cpf, locatio
     .then(prices => {
       const status=customerBooking? BOOK_STATUS.TO_CONFIRM : informationRequest ? BOOK_STATUS.INFO: BOOK_STATUS.TO_PAY
       bookData={...bookData, ...prices, amount: prices.total, status: status}
+      return upsertChatroom(customer._id, serviceUser.user._id)
+    })
+    .then(chatroom => {
+      bookData.chatroom=chatroom._id
       return Booking.create(bookData)
     })
     .then(book => {
