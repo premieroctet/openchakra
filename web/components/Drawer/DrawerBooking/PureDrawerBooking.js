@@ -203,7 +203,7 @@ const PureDrawerBooking = ({
       date: booking.date,
       extrapayment: booking.extrapayment,
     })
-  }, [serviceUserId, booking, computeTotal])
+  }, [serviceUserId, booking.date, computeTotal, booking.location, booking.prestations, booking.extrapayment])
 
   useEffect(() => {
 
