@@ -146,9 +146,6 @@ class CardServiceUser extends React.Component {
     if (booking_id) {
       resa_link+=`&booking_id=${booking_id}`
     }
-    if (address) {
-      resa_link+=`&address=${address}`
-    }
     if (this.props.item===null) {
       return (
         <Grid className={`customcardinfocont ${classes.carServiceInfoContainer}`}>

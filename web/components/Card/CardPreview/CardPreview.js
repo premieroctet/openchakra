@@ -15,20 +15,20 @@ const CardPreview = ({item}) => {
   if (!item) {
     return null
   }
-  
+
   const city = item.service_address?.city
-  
+
 
   return(
-    <Link href={`/userServicePreview?id=${item._id}&address=main`} >
+    <Link href={`/userServicePreview?id=${item._id}`} >
       <StyledCardPreview>
-        
+
         <div className='badge'>
           <UserAvatar user={item.user} />
         </div>
-        
+
         <Grid className={`customcardpreviewbox`}>
-            
+
           <Typography className={`customcardpreviewname`}>{item.user.firstname}</Typography>
           <Typography className={`customcardpreviewlabel`}>{item.service.label}</Typography>
           {city && <Typography className={'customcardpreviewplace'} >{city}</Typography>}
@@ -51,7 +51,7 @@ const CardPreview = ({item}) => {
 }
 
 const StyledCardPreview = styled.a`
-  
+
   display: grid;
   grid-template-areas: 'badge badge badge'
                         'service service service';
@@ -59,14 +59,14 @@ const StyledCardPreview = styled.a`
   width: min(calc(100% - 2rem), 300px);
   grid-template-rows: 40px 150px;
   height: 100%;
-  justify-items: center; 
+  justify-items: center;
   cursor: pointer;
-  
+
   .badge {
     grid-area: badge;
     text-align: center;
   }
-  
+
   .badge + div {
     padding: 40px 1rem 1rem 1rem;
     grid-area: service;
@@ -75,14 +75,14 @@ const StyledCardPreview = styled.a`
     border-radius: 1rem;
     border: 1px solid #111;
   }
-  
+
   p {
     width: 200px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  
+
 `
 
 export default withTranslation('custom', {withRef: true})(CardPreview)
