@@ -11,14 +11,13 @@ import {withTranslation} from 'react-i18next'
 import DatePicker from 'react-datepicker'
 import TextField from '@material-ui/core/TextField'
 import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch'
+import BookingDetail from '../../BookingDetail/BookingDetail'
 import {useUserContext} from '../../../contextes/user.context'
 import {snackBarError} from '../../../utils/notifications'
 import {getDataModel} from '../../../config/config'
 import {client} from '../../../utils/client'
 import {API_PATH, BOOK_STATUS} from '../../../utils/consts'
 import {getExcludedTimes, getExcludedDays} from '../../../utils/dateutils'
-import {computeDistanceKm} from '../../../utils/functions'
-import {computeBookingReference} from '../../../utils/text'
 import CPF from '../Payments/CPF'
 import StyledDrawerBooking from './StyledDrawerBooking'
 
@@ -49,7 +48,9 @@ const PureDrawerBooking = ({
 
   const [locations, setLocations] = useState([])
   const [prices, setPrices]=useState({})
+  const [pricedPrestations, setPricedPrestations]=useState({})
   const [pending, setPending]=useState(false)
+  const [shop, setShop] = useState(null)
 
 
   const computeTotal = useCallback(async({
@@ -86,101 +87,65 @@ const PureDrawerBooking = ({
       return
     }
 
-    let prestations = []
-    Object.entries(booking.prestations).forEach(([bookedPrestaKey, bookedPrestaNum]) => {
-      const [currentPresta] = bookingParams.serviceUser.prestations.filter(p => p._id === bookedPrestaKey)
-      prestations.push({
-        name: currentPresta.prestation.label,
-        price: currentPresta.price,
-        value: bookedPrestaNum,
-      })
-    })
-
-    let place=null
-    if (user) {
-      switch (location) {
-        case 'alfred':
-          place = bookingParams.serviceUser?.service_address
-          break
-        case 'visio':
-          break
-        default:
-          place = user.billing_address
-      }
-    }
-
     let bookingObj = {
-      reference: user ? computeBookingReference(user, bookingParams.serviceUser.user) : '',
-      service: bookingParams.serviceUser.service.label,
-      serviceId: bookingParams.serviceUser.service._id,
-      address: place,
-      location: location,
-      equipments: bookingParams.serviceUser.equipments,
-      amount: prices.total,
-      prestation_date: booking.date,
-      alfred: bookingParams.serviceUser.user._id,
-      user: user ? user._id : null,
-      prestations: prestations,
-      travel_tax: prices.travel_tax,
-      pick_tax: prices.pick_tax,
-      cpf_amount: prices.cpf_amount,
-      cesu_amount: prices.cesu_total,
-      customer_fee: prices.customer_fee,
-      provider_fee: prices.provider_fee,
-      customer_fees: prices.customer_fees,
-      provider_fees: prices.provider_fees,
-      status: actual ? BOOK_STATUS.TO_PAY : BOOK_STATUS.INFO,
-      serviceUserId: bookingParams.serviceUser._id,
+      serviceUserId,
+      location,
+      prestations: booking.prestations,
+      cpf: booking.extrapayment,
+      date: booking.date,
       customer_booking: null,
     }
 
-    let chatPromise = !user ?
-      Promise.resolve({res: null})
-      :
-      client(`${API_PATH}/chatRooms/addAndConnect`, {data: {
-        emitter: user._id,
-        recipient: bookingParams.serviceUser.user._id,
-      }})
+    // let chatPromise = !user ?
+    //   Promise.resolve({res: null})
+    //   :
+    //   client(`${API_PATH}/chatRooms/addAndConnect`, {data: {
+    //     emitter: user._id,
+    //     recipient: bookingParams.serviceUser.user._id,
+    //   }})
 
-    chatPromise.then(res => {
+    // chatPromise.then(res => {
 
-      if (user) {
-        bookingObj.chatroom = res._id
-      }
+    // if (user) {
+    // bookingObj.chatroom = res._id
+    // }
 
-      localStorage.setItem('bookingObj', JSON.stringify(bookingObj))
+    localStorage.setItem('bookingObj', JSON.stringify(bookingObj))
+    
+    if (!user) {
+      localStorage.setItem('path', Router.asPath)
+      Router.push('/?login=true')
+      return
+    }
 
-      if (!user) {
-        localStorage.setItem('path', Router.asPath)
-        Router.push('/?login=true')
-        return
-      }
-
-      setPending(true)
-      client(`${API_PATH}/booking`, {data: bookingObj})
-        .then(response => {
-          const booking = response
-          client(`${API_PATH}/chatRooms/addBookingId/${bookingObj.chatroom}`, {data: {booking: booking._id}, method: 'PUT'})
-            .then(() => {
-              if (booking.customer_booking) {
-                Router.push({pathname: `/reservations/resvations?id=${booking._id}`, query: {booking_id: booking._id}})
-              }
-              else if (actual) {
-                Router.push({pathname: '/confirmPayment', query: {booking_id: booking._id}})
-              }
-              else {
-                Router.push(`/profile/messages?user=${booking.user}&relative=${booking.alfred}`)
-              }
-            })
-        })
-        .catch(err => {
-          console.error(err)
-        })
-        .finally(() => {
-          setPending(false)
-        })
-    })
-      .catch(err => console.error(err))
+    setPending(true)
+    client(`${API_PATH}/booking`, {data: bookingObj})
+      .then(response => {
+        const booking = response
+        client(`${API_PATH}/chatRooms/addBookingId/${bookingObj.chatroom}`, {data: {booking: booking._id}, method: 'PUT'})
+          .then(() => {
+            if (booking.customer_booking) {
+              Router.push({pathname: `/reservations/resvations?id=${booking._id}`, query: {booking_id: booking._id}})
+            }
+            else if (actual) {
+              Router.push({pathname: '/confirmPayment', query: {booking_id: booking._id}})
+            }
+            else {
+              Router.push(`/profile/messages?user=${booking.user}&relative=${booking.alfred}`)
+            }
+          })
+      })
+      .catch(error => {
+        console.error(error)
+        if (error.info) {
+          snackBarError(error?.info.message)
+        }
+        
+      })
+      .finally(() => {
+        // setPending(false)
+      })
+    
   }
 
   const onBookingDateChange = selecteddate => {
@@ -194,6 +159,16 @@ const PureDrawerBooking = ({
   const onBookingPaymentChange = () => {
     setBooking({...booking, extrapayment: !booking.extrapayment})
   }
+
+  useEffect(() => {
+    const pricedPrestas={}
+    bookingParams?.prestations && bookingParams?.prestations.forEach(p => {
+      if (booking.prestations[p._id]) {
+        pricedPrestas[p.prestation.label] = booking.prestations[p._id] * p.price
+      }
+    })
+    setPricedPrestations(pricedPrestas)
+  }, [booking.prestations])
 
   useEffect(() => {
     computeTotal({
@@ -210,7 +185,7 @@ const PureDrawerBooking = ({
     const settle = async id => {
       if (id) {
         const serviceUser = await client(`${API_PATH}/serviceUser/${id}`)
-          .catch(err => console.log(`cant fetch serviceUser`, err))
+          .catch(err => console.error(`cant fetch serviceUser`, err))
 
         const setUpBooking = {...booking}
 
@@ -229,14 +204,19 @@ const PureDrawerBooking = ({
         setBooking(setUpBooking)
 
         const availabilities = serviceUser && await client(`${API_PATH}/availability/userAvailabilities/${serviceUser.user._id}`)
-          .catch(err => console.log(err))
-
-        setBookingParams({
+          .catch(err => console.error(err))
+          
+        availabilities && setBookingParams({
           serviceUser,
           availabilities,
           excludeddates: getExcludedDays(availabilities),
           onePlace: places.length === 1,
         })
+          
+        const shop = serviceUser && await client(`${API_PATH}/shop/alfred/${serviceUser.user._id}`)
+          .catch(err => console.error(err))
+        shop && setShop(shop)
+
       }
     }
 
@@ -338,6 +318,15 @@ const PureDrawerBooking = ({
         </section>
 
         {/* Détails */}
+
+        <BookingDetail
+          {...prices}
+          prestations={pricedPrestations}
+          count={booking.prestations}
+          travel_tax={0}
+          pick_tax={0}
+          alfred_pro={shop?.is_professional}
+        />
 
 
         {/* Types de paiements  */}
