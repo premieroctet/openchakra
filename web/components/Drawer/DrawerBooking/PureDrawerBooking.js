@@ -36,7 +36,7 @@ const PureDrawerBooking = ({
 }) => {
 
   const {user} = useUserContext()
-  
+
   const [bookingParams, setBookingParams] = useState({
     serviceUser: {},
   })
@@ -50,7 +50,7 @@ const PureDrawerBooking = ({
   const [locations, setLocations] = useState([])
   const [prices, setPrices]=useState({})
   const [pending, setPending]=useState(false)
-  
+
 
   const computeTotal = useCallback(async({
     serviceUserId,
@@ -59,7 +59,7 @@ const PureDrawerBooking = ({
     location,
     extrapayment,
   }) => {
-    
+
     const compute = await client('/myAlfred/api/booking/compute', {data: {
       serviceUserId,
       date,
@@ -73,12 +73,12 @@ const PureDrawerBooking = ({
           snackBarError(error?.info.message)
         }
       })
-    
-    setPrices(compute)
-      
-  }, [location, booking.prestations, prices])
 
-  
+    setPrices(compute)
+
+  }, [location, booking.prestations, booking.date])
+
+
   const book = async actual => { // actual : true=> book, false=>infos request
 
     if (pending) {
@@ -149,13 +149,13 @@ const PureDrawerBooking = ({
       }
 
       localStorage.setItem('bookingObj', JSON.stringify(bookingObj))
-    
+
       if (!user) {
         localStorage.setItem('path', Router.asPath)
         Router.push('/?login=true')
         return
       }
-    
+
       setPending(true)
       client(`${API_PATH}/booking`, {data: bookingObj})
         .then(response => {
@@ -190,7 +190,7 @@ const PureDrawerBooking = ({
   const onBookingLocationChange = place => {
     setBooking({...booking, location: place})
   }
-  
+
   const onBookingPaymentChange = () => {
     setBooking({...booking, extrapayment: !booking.extrapayment})
   }
@@ -213,7 +213,7 @@ const PureDrawerBooking = ({
           .catch(err => console.log(`cant fetch serviceUser`, err))
 
         const setUpBooking = {...booking}
-        
+
         if (onlyOneService) {
           Object.assign(setUpBooking, {prestations: {[serviceUser.prestations[0]._id]: 1}})
         }
@@ -227,7 +227,7 @@ const PureDrawerBooking = ({
         }
 
         setBooking(setUpBooking)
-        
+
         const availabilities = serviceUser && await client(`${API_PATH}/availability/userAvailabilities/${serviceUser.user._id}`)
           .catch(err => console.log(err))
 
@@ -241,11 +241,11 @@ const PureDrawerBooking = ({
     }
 
     settle(serviceUserId)
-      
+
   }, [])
 
   const theme = getDataModel()
-  
+
   const serviceToDisplay = bookingParams?.serviceUser && bookingParams?.serviceUser?.service
   const prestaToDisplay = onlyOneService && bookingParams?.serviceUser?.prestations && onlyOneService && bookingParams?.serviceUser?.prestations[0] || null
 
@@ -253,10 +253,10 @@ const PureDrawerBooking = ({
 
   return (
     <StyledDrawerBooking theme={theme} >
-      
+
       {/* Titre */}
       <h3>{bookingParams?.serviceUser?.service?.label} - {bookingParams?.serviceUser?.user?.firstname}</h3>
-      
+
       <form className='container-sm'>
 
         {/* CPF compatible */}
@@ -293,7 +293,7 @@ const PureDrawerBooking = ({
           />
 
         </section>
-        
+
         {/* Prestations */}
         <section className='prestations'>
           <h4>Détails</h4>
@@ -305,9 +305,9 @@ const PureDrawerBooking = ({
               <dd>{serviceToDisplay?.duration_days} jours</dd>
             </dl>
           </div> : null}
-          
+
         </section>
-        
+
         {/* Lieu de la prestation */}
         <section>
           {bookingParams.onePlace ?
@@ -336,13 +336,13 @@ const PureDrawerBooking = ({
             </Accordion>
           }
         </section>
-        
+
         {/* Détails */}
 
 
         {/* Types de paiements  */}
         <h2>Total à payer</h2>
-        
+
         {/* Message d'information (TODO in children ?)*/}
 
         <p className='tip'>
@@ -378,4 +378,3 @@ const PureDrawerBooking = ({
 }
 
 export default withTranslation('custom', {withRef: true})(PureDrawerBooking)
-

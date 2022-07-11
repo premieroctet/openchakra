@@ -312,11 +312,12 @@ router.get('/avocotes', passport.authenticate('admin', {session: false}), (req, 
  @Access private
  */
 router.post('/compute', passport.authenticate('jwt', {session: false}), (req, res) => {
-  return ServiceUser.findById(req.body.serviceUser)
+  return ServiceUser.findById(req.body.serviceUserId)
     .populate('alfred')
     .populate('user')
     .populate({path: 'prestations', populate: 'prestation'})
     .then(serviceUser => {
+      if (!serviceUser) { throw new NotFoundError(`ServiceUser introuvable`) }
       return req.context.payment.compute({...req.body, serviceUser: serviceUser})
     })
     .then(result => {
