@@ -12,6 +12,7 @@ import DatePicker from 'react-datepicker'
 import TextField from '@material-ui/core/TextField'
 import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch'
 import {useUserContext} from '../../../contextes/user.context'
+import {snackBarError} from '../../../utils/notifications'
 import {getDataModel} from '../../../config/config'
 import {client} from '../../../utils/client'
 import {API_PATH, BOOK_STATUS} from '../../../utils/consts'
@@ -40,7 +41,7 @@ const PureDrawerBooking = ({
     serviceUser: {},
   })
   const [booking, setBooking] = useState({
-    date: null,
+    date: new Date(),
     location: null,
     extrapayment: false, // example: CPF
     prestations: {},
@@ -50,30 +51,32 @@ const PureDrawerBooking = ({
   const [prices, setPrices]=useState({})
   const [pending, setPending]=useState(false)
   
-  const computeDistance = useCallback(({location, servicePosition, clientPosition}) => {
-    if (location!='main') {
-      return 0
-    }
 
-    return computeDistanceKm(servicePosition, clientPosition)
-  }, [])
-
-  const computeTotal = useCallback(async({location, serviceUser, prestations, servicePosition, clientPosition}) => {
+  const computeTotal = useCallback(async({
+    serviceUserId,
+    date,
+    prestations,
+    location,
+    extrapayment,
+  }) => {
     
     const compute = await client('/myAlfred/api/booking/compute', {data: {
+      serviceUserId,
+      date,
       prestations,
-      serviceUser,
       location,
-      distance: computeDistance({location, servicePosition, clientPosition}),
+      cpf: extrapayment,
     }})
-      .catch(err => {
-        console.error(err)
-        snackBarError(err.response)
+      .catch(error => {
+        console.error(error)
+        if (error.info) {
+          snackBarError(error?.info.message)
+        }
       })
     
     setPrices(compute)
       
-  }, [location, booking.prestations, computeDistance, prices])
+  }, [location, booking.prestations, prices])
 
   
   const book = async actual => { // actual : true=> book, false=>infos request
@@ -153,7 +156,7 @@ const PureDrawerBooking = ({
         return
       }
     
-      // setPending(true)
+      setPending(true)
       client(`${API_PATH}/booking`, {data: bookingObj})
         .then(response => {
           const booking = response
@@ -195,12 +198,12 @@ const PureDrawerBooking = ({
   useEffect(() => {
     computeTotal({
       location: booking.location,
-      serviceUser: serviceUserId,
+      serviceUserId,
       prestations: booking.prestations,
-      servicePosition: bookingParams?.serviceUser?.service_address?.gps,
-      clientPosition: user?.billing_address.gps,
+      date: booking.date,
+      extrapayment: booking.extrapayment,
     })
-  }, [booking.location, booking.prestations, serviceUserId])
+  }, [serviceUserId, booking, computeTotal])
 
   useEffect(() => {
 
@@ -307,7 +310,7 @@ const PureDrawerBooking = ({
         
         {/* Lieu de la prestation */}
         <section>
-          {!bookingParams.onePlace ?
+          {bookingParams.onePlace ?
             <p>formation {labelLocations[booking.location]}</p>
             : <Accordion >
               <AccordionSummary
