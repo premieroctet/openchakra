@@ -30,7 +30,7 @@ const computeServiceDistance = ({location, serviceUser, customer}) => {
   return distance
 }
 
-const createBooking = ({customer, serviceUserId, prestations, date, cpf, location, customerBooking}) => {
+const createBooking = ({customer, serviceUserId, prestations, date, cpf, location, customerBooking, informationRequest}) => {
   let bookData={prestation_date: date, cpf_booked: cpf, customer_booking: customerBooking}
   return ServiceUser.findById(serviceUserId)
     .populate('user')
@@ -54,7 +54,8 @@ const createBooking = ({customer, serviceUserId, prestations, date, cpf, locatio
       return payment.compute({serviceUser, prestations, location, cpf_booked: cpf, distance})
     })
     .then(prices => {
-      bookData={...bookData, ...prices, amount: prices.total}
+      const status=customerBooking? BOOK_STATUS.TO_CONFIRM : informationRequest ? BOOK_STATUS.INFO: BOOK_STATUS.TO_PAY
+      bookData={...bookData, ...prices, amount: prices.total, status: status}
       return Booking.create(bookData)
     })
     .then(book => {
