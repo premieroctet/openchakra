@@ -15,9 +15,9 @@ import Tabs from '@material-ui/core/Tabs'
 import Typography from '@material-ui/core/Typography'
 import axios from 'axios'
 import moment from 'moment'
-
 import ReactHtmlParser from 'react-html-parser'
 import Link from 'next/link'
+import {getDataModel} from '../../config/config'
 import {bookingUrl} from '../../config/config'
 import BookingPreApprouve from '../../components/BookingDetail/BookingPreApprouve'
 import BookingPreview from '../../components/BookingDetail/BookingPreview'
@@ -29,6 +29,7 @@ import styles from '../../static/css/pages/reservations/reservations'
 import {BOOKING} from '../../utils/i18n'
 import CustomButton from '../../components/CustomButton/CustomButton'
 import {booking_datetime_str} from '../../utils/dateutils'
+import StyledReservations from './StyledReservations'
 const {BOOK_STATUS}=require('../../utils/consts')
 const {setAxiosAuthentication}=require('../../utils/authentication')
 const withParams = require('../../components/withParams')
@@ -94,6 +95,7 @@ class AllReservations extends React.Component {
   loadBookings = () => {
     axios.get('/myAlfred/api/booking/alfredBooking')
       .then(res => {
+        console.log(res.data, BOOK_STATUS.TO_PAY)
         // On n'affiche pas les résas en attente de paiement
         const alfredBookings=res.data.filter(r => r.status !== BOOK_STATUS.TO_PAY)
         this.setState({alfredReservations: alfredBookings})
@@ -244,7 +246,7 @@ class AllReservations extends React.Component {
                         <Typography><strong> {booking.status==BOOK_STATUS.CUSTOMER_PAID ? 'Payée' : booking.status} - {booking.is_service ? booking.service.label : alfredMode ? booking.user.firstname : booking.alfred.firstname}</strong></Typography>
                       </Grid>
                       <Grid>
-                        <Typography>
+                        <Typography className='booking_date'>
                           {booking_datetime_str(booking)}
                         </Typography>
                       </Grid>
@@ -270,7 +272,7 @@ class AllReservations extends React.Component {
                           {ReactHtmlParser(this.props.t('RESERVATION.detailbutton'))}
                         </CustomButton>
                       </Grid>
-                      <Grid item>
+                      <Grid className="calendar_google" item>
                         <Link target="_blank" href={this.getGoogleCalendarURL(booking._id)}>
                           <Tooltip title={BOOKING.ADD_GOOGLE_AGENDA}>
                             <img src='/static/assets/icon/google_calendar.svg' width="50px"/>
@@ -314,25 +316,27 @@ class AllReservations extends React.Component {
 
 
   render() {
+    const theme = getDataModel()
     const {classes} = this.props
     const {reservationType, userInfo, bookingPreview, bookingPreApprouved} = this.state
 
     return (
-      <Grid>
-        <Grid className={classes.hiddenMobile}>
-          <LayoutReservations reservationType={reservationType} onReservationTypeChanged={this.onReservationTypeChanged} userInfo={userInfo}>
-            {this.content(classes)}
-          </LayoutReservations>
+      <StyledReservations theme={theme}>
+        <Grid>
+          <Grid className={classes.hiddenMobile}>
+            <LayoutReservations reservationType={reservationType} onReservationTypeChanged={this.onReservationTypeChanged} userInfo={userInfo}>
+              {this.content(classes)}
+            </LayoutReservations>
+          </Grid>
+          <Grid className={classes.hidden}>
+            <LayoutMobileReservations reservationType={reservationType} currentIndex={2} onReservationTypeChanged={this.onReservationTypeChanged} userInfo={userInfo}>
+              {this.content(classes)}
+            </LayoutMobileReservations>
+          </Grid>
+          { bookingPreview ? this.bookingPreviewModal(classes) : null}
+          { bookingPreApprouved ? this.bookingPreApprouved(classes) : null}
         </Grid>
-        <Grid className={classes.hidden}>
-          <LayoutMobileReservations reservationType={reservationType} currentIndex={2} onReservationTypeChanged={this.onReservationTypeChanged} userInfo={userInfo}>
-            {this.content(classes)}
-          </LayoutMobileReservations>
-        </Grid>
-        { bookingPreview ? this.bookingPreviewModal(classes) : null}
-        { bookingPreApprouved ? this.bookingPreApprouved(classes) : null}
-      </Grid>
-
+      </StyledReservations>
     )
   }
 }
