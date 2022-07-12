@@ -64,7 +64,8 @@ const BookingSchema = new Schema({
   alfred: {
     type: Schema.Types.ObjectId,
     ref: 'user',
-    required: true,
+    // TODO: required for serviceUser, forbidden for service
+    required: false,
   },
   user: {
     type: Schema.Types.ObjectId,
@@ -124,7 +125,8 @@ const BookingSchema = new Schema({
   },
   serviceUserId: {
     type: String,
-    required: true,
+    // TODO: required for serviceUser, forbidden for service
+    required: false,
   },
   alfred_evaluated: {
     type: Boolean,
@@ -244,6 +246,10 @@ BookingSchema.virtual('customer_fee').get(function() {
 
 BookingSchema.virtual('provider_fee').get(function() {
   return roundCurrency(lodash.sum((this.provider_fees||[]).map(c => c.amount)))
+})
+
+BookingSchema.virtual('is_service').get(function() {
+  return !this.alfred
 })
 
 module.exports = BookingSchema

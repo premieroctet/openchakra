@@ -1,10 +1,5 @@
-import {is_development} from '../../config/config'
-import DialogCancel from './DialogCancel'
-import DialogReject from './DialogReject'
-import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
-const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react'
 import {Link} from '@material-ui/core'
 import Grid from '@material-ui/core/Grid'
@@ -12,16 +7,21 @@ import {withStyles} from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import axios from 'axios'
 import moment from 'moment'
-import UserAvatar from '../../components/Avatar/UserAvatar'
-import ServiceAvatar from '../../components/Avatar/ServiceAvatar'
 import io from 'socket.io-client'
-import styles from '../../static/css/components/BookingDetail/BookingPreview/BookingPreview'
-import BookingDetail from '../../components/BookingDetail/BookingDetail'
 import Router from 'next/router'
 import DatePicker, {registerLocale} from 'react-datepicker'
 import fr from 'date-fns/locale/fr'
 import Hidden from '@material-ui/core/Hidden'
+import BookingDetail from '../../components/BookingDetail/BookingDetail'
+import styles from '../../static/css/components/BookingDetail/BookingPreview/BookingPreview'
+import ServiceAvatar from '../../components/Avatar/ServiceAvatar'
+import UserAvatar from '../../components/Avatar/UserAvatar'
+import CustomButton from '../CustomButton/CustomButton'
+import {is_development} from '../../config/config'
 import {booking_datetime_str} from '../../utils/dateutils'
+import DialogReject from './DialogReject'
+import DialogCancel from './DialogCancel'
+const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
 
 const {BOOK_STATUS} = require('../../utils/consts')
 
@@ -305,7 +305,7 @@ class BookingPreview extends React.Component {
                     </Grid>
                     <Grid style={{marginTop: '2%'}}>
                       <Typography>
-                        {`${booking.service.label } ${booking_datetime_str(booking)}`}
+                        {booking.service }<br/>{booking_datetime_str(booking)}
                       </Typography>
                     </Grid>
                     <Grid>
