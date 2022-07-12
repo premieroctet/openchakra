@@ -78,7 +78,7 @@ const PureDrawerBooking = ({
         }
       })
 
-    setPrices(compute)
+    compute && setPrices(compute)
 
   }, [location, booking.prestations, booking.date])
 
