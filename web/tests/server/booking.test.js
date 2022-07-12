@@ -11,9 +11,10 @@ describe('Booking creation', () => {
 
   const BOOKING_DATA={
     // customerBooking: '6230ea891bc383400b84ab38',
-    serviceUserId: '6177cf600558b674edb68ea7',
-    prestations: {'6177cf600558b674edb68ea8': 1},
-    location: 'alfred',
+    serviceUserId: '62bb1f3b19a2abc3093f18c8',
+    prestations: {'62cbeaec4771c308a50139c7': 1},
+    location: 'elearning',
+    cpf: true,
     date: '2022-07-13T22:00:00.000Z',
     userId: '5e16f578b9a2462bc340c64e',
   }
@@ -34,7 +35,7 @@ describe('Booking creation', () => {
     const badDate={...BOOKING_DATA, date: '2022-07-05T22:00:00.000Z'}
     expect(validateBooking(badDate)).rejects.toThrow(BadRequestError)
     // Bad location
-    const badLocation={...BOOKING_DATA, location: 'elearning'}
+    const badLocation={...BOOKING_DATA, location: 'visio'}
     expect(validateBooking(badLocation)).rejects.toThrow(BadRequestError)
     // Bad customerBooking prestations
     const badCustomerBooking={...BOOKING_DATA, customerBookingId: '6230ea891bc383400b84ab38'}
@@ -49,9 +50,9 @@ describe('Booking creation', () => {
       .then(user => {
         return createBooking({...BOOKING_DATA, customer: user})
           .then(book => {
-            expect(book.amount).toBeGreaterThan(0)
+            expect(book.amount).toBe(0)
             expect(book.prestations).toHaveLength(1)
-            expect(book.customer_fee).toBe(5.75)
+            expect(book.customer_fee).toBe(0)
             expect(book.provider_fee).toBe(0)
             expect(book.travel_tax).toBe(0)
           })

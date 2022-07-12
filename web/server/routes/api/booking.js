@@ -41,6 +41,7 @@ router.get('/alfredBooking', passport.authenticate('jwt', {session: false}), (re
   Booking.find({alfred: userId})
     .sort([['date', -1]])
     .populate('user', ['name', 'firstname', 'picture', 'company'])
+    .populate('alfred', '-id_card')
     .populate('chatroom')
     .populate('service')
     .then(alfred => {
@@ -59,7 +60,7 @@ router.get('/userBooking', passport.authenticate('jwt', {session: false}), (req,
   Booking.find({user: userId})
     .sort([['date', -1]])
     .populate('alfred', '-id_card')
-    .populate('service')
+    .populate('user', '-id_card')
     .populate({
       path: 'chatroom',
       populate: {path: 'emitter'},
@@ -174,7 +175,7 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
           :
           `/confirmPayment?booking_id=${booking._id}`,
       }
-      if (booking.cfp_link) {
+      if (booking.cpf_link) {
         returnURLs.extraURLs=[booking.cpf_link]
       }
       return res.json(returnURLs)

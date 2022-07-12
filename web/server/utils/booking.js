@@ -32,7 +32,7 @@ const computeServiceDistance = ({location, serviceUser, customer}) => {
 }
 
 const createBooking = ({customer, serviceUserId, prestations, date, cpf, location, customerBooking, informationRequest}) => {
-  let bookData={prestation_date: date, cpf_booked: cpf, customer_booking: customerBooking}
+  let bookData={user: customer, serviceUserId: serviceUserId, prestation_date: date, cpf_booked: cpf, customer_booking: customerBooking}
   let serviceUser=null
   return ServiceUser.findById(serviceUserId)
     .populate('user')
@@ -48,16 +48,23 @@ const createBooking = ({customer, serviceUserId, prestations, date, cpf, locatio
         const prestation=serviceUser.prestations.find(p => p._id.toString()==key)
         return {name: prestation.prestation.label, price: prestation.price, value: count}
       })
-      bookData={...bookData, service: serviceUser.service.label,
+      bookData={...bookData,
+        alfred: serviceUser.user,
+        service: serviceUser.service.label,
         reference: computeBookingReference(customer, serviceUser.user),
         equipments: serviceUser.equipments,
-        prestations: prestas, cpf_link: serviceUser.cpf_link}
+        prestations: prestas,
+        cpf_link: cpf && serviceUser.cpf_link}
       const distance=computeServiceDistance({location, serviceUser, customer})
       const payment=serviceUser.customer_booking ? new PlatformPayment() : new MarketplacePayment()
-      return payment.compute({serviceUser, prestations, location, cpf_booked: cpf, distance})
+      return payment.compute({serviceUser, prestations, location, cpf, distance})
     })
     .then(prices => {
-      const status=customerBooking? BOOK_STATUS.TO_CONFIRM : informationRequest ? BOOK_STATUS.INFO: BOOK_STATUS.TO_PAY
+      const status=
+      customerBooking? BOOK_STATUS.TO_CONFIRM
+        : informationRequest ? BOOK_STATUS.INFO
+          : cpf ? BOOK_STATUS.TO_CONFIRM
+            : BOOK_STATUS.TO_PAY
       bookData={...bookData, ...prices, amount: prices.total, status: status}
       return upsertChatroom(customer._id, serviceUser.user._id)
     })

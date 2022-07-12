@@ -1,7 +1,7 @@
 const isEmpty = require('../server/validation/is-empty')
 const {MODE, TAWKTO_URL, DISABLE_ALFRED_SELF_REGISTER, DISABLE_ALFRED_PARTICULAR_REGISTER,
   SIB_TEMPLATES, DATABASE_NAME, HIDE_STORE_DIALOG, MANGOPAY_CLIENTID, MANGOPAY_APIKEY,
-  SITE_MODE, IGNORE_FAILED_PAYMENT, SIB_APIKEY,
+  SITE_MODE, SIB_APIKEY,
   DATA_MODEL, SKIP_FAILED_PAYMENT,
   HOSTNAME, PORT,
 }=require('../mode')
@@ -93,17 +93,6 @@ const getHostUrl = () => {
   const includePort=(protocol=='https' && port!=443) || (protocol=='http' && port!=80)
   const host_url=`${protocol}://${hostname}${includePort ? `:${port}` : ''}/`
   return host_url
-}
-
-/**
-ONLY DEV & VALIDATION MODES
-Consider failed payment succeeded
-*/
-const ignoreFailedPayment = () => {
-  if (is_production()) {
-    return false
-  }
-  return !!IGNORE_FAILED_PAYMENT
 }
 
 const MANGOPAY_CONFIG = {
@@ -231,6 +220,10 @@ const hideStoreDialog = () => {
   return !!HIDE_STORE_DIALOG
 }
 
+/**
+ONLY DEV & VALIDATION MODES
+Consider failed payment succeeded
+*/
 const skipFailedPayment = () => {
   return !is_production() && !!SKIP_FAILED_PAYMENT
 }

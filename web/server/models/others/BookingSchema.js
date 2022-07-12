@@ -64,10 +64,12 @@ const BookingSchema = new Schema({
   alfred: {
     type: Schema.Types.ObjectId,
     ref: 'user',
+    required: true,
   },
   user: {
     type: Schema.Types.ObjectId,
     ref: 'user',
+    required: true,
   },
   prestations: {
     type: [{
@@ -113,6 +115,7 @@ const BookingSchema = new Schema({
   status: {
     type: String,
     enum: Object.values(BOOK_STATUS),
+    required: true,
   },
   // Cancel/refuse reason
   reason: {
@@ -121,6 +124,7 @@ const BookingSchema = new Schema({
   },
   serviceUserId: {
     type: String,
+    required: true,
   },
   alfred_evaluated: {
     type: Boolean,
