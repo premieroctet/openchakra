@@ -333,7 +333,8 @@ const PureDrawerBooking = ({
           onClick={e => book(e, true)}
           className={'custombookinresabutton'}
         >
-          {ReactHtmlParser(t('DRAWER_BOOKING.resa_button'))}
+          
+          {booking.extrapayment ? ReactHtmlParser(t('DRAWER_BOOKING.resa_button')) : ReactHtmlParser(t('DRAWER_BOOKING.buy_button'))}
         </button>
 
         {prices.total !== 0
