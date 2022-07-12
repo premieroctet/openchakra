@@ -312,16 +312,22 @@ export async function getServerSideProps(context) {
 
 const BookingDialog = styled(PureDialog)`
 
+
+
 h2 {
   color: var(--black);
   margin-block: 0;
 }
 
 .dialogcontent {
+  max-height: 95vh;
   width: min(calc(100% - 2rem), 40rem);
   background-color: #fff;
   padding: var(--spc-10);
-  border-radius: var(--rounded-2xl)
+  border-radius: var(--rounded-2xl);
+  overflow: scroll;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
 }
 `
 
