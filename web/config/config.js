@@ -246,6 +246,26 @@ const DOC_PATH = `/static/assets/docs/${getDataModel()}`
 const CGV_PATH=`${DOC_PATH}/cgv.pdf`
 // CGV expires afeter. If null, does never expire
 const CGV_EXPIRATION_DELAY=365
+
+const bookingUrl = (serviceUserId, extraParams={}) => {
+  let params=new URLSearchParams()
+  let url=null
+  if (getDataModel()=='aftral') {
+    url=`/training/${serviceUserId}`
+  }
+  else {
+    url='/userServicePreview'
+    params.append('id', serviceUserId)
+  }
+  Object.entries(extraParams).forEach(([key, value]) => {
+    params.append(key, value)
+  })
+  if ([...params].length>0) {
+    url=`${url}?${params.toString()}`
+  }
+  return url
+}
+
 // Public API
 module.exports = {
   databaseName: databaseName,
@@ -263,4 +283,5 @@ module.exports = {
   RANDOM_ID,
   displayConfig,
   DOC_PATH, CGV_PATH, CGV_EXPIRATION_DELAY,
+  bookingUrl,
 }

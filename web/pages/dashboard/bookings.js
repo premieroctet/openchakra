@@ -1,9 +1,11 @@
 import {withTranslation} from 'react-i18next'
-const {DataPage, styles}=require('../../components/AlfredDashboard/DataPage')
 import {withStyles} from '@material-ui/core/styles'
-const models=require('../../components/BigList/models')
 import axios from 'axios'
+import {bookingUrl} from '../../config/config'
 const moment = require('moment')
+const models=require('../../components/BigList/models')
+const {DataPage, styles}=require('../../components/AlfredDashboard/DataPage')
+
 moment.locale('fr')
 
 class all extends DataPage {
@@ -57,7 +59,7 @@ class all extends DataPage {
       window.open(`/profile/about?user=${data.alfred._id}`, '_blank')
     }
     if (field=='service') {
-      window.open(`/userServicePreview?id=${data.serviceUserId}`, '_blank')
+      window.open(bookingUrl(data.serviceUserId), '_blank')
     }
     if (field=='bookable') {
       window.open(`/search?booking_id=${data._id}`, '_blank')

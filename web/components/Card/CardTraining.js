@@ -20,6 +20,7 @@ import DialogContent from '@material-ui/core/DialogContent'
 import Dialog from '@material-ui/core/Dialog'
 import Router from 'next/router'
 import {Skeleton} from '@material-ui/lab'
+import {bookingUrl} from '../../config/config'
 import styles from '../../static/css/components/Card/CardTraining'
 import {computeAverageNotes, computeDistanceKm} from '../../utils/functions'
 import CustomButton from '../CustomButton/CustomButton'
@@ -142,10 +143,8 @@ class CardServiceUser extends React.Component {
 
     const notes = cpData.reviews ? computeAverageNotes(cpData.reviews.map(r => r.note_alfred)) : {}
 
-    let resa_link = `/userServicePreview?id=${cpData._id}`
-    if (booking_id) {
-      resa_link+=`&booking_id=${booking_id}`
-    }
+    let resa_link=bookingUrl(cpData._id, booking_id ? {booking_id}: {})
+
     if (this.props.item===null) {
       return (
         <Grid className={`customcardinfocont ${classes.carServiceInfoContainer}`}>

@@ -8,13 +8,14 @@ import React from 'react'
 import Router from 'next/router'
 import Select from '@material-ui/core/Select'
 import axios from 'axios'
+import {bookingUrl} from '../../config/config'
 import DashboardLayout from '../../hoc/Layout/DashboardLayout'
 import LocationSelect from '../../components/Geo/LocationSelect'
 
 const {getLoggedUserId}=require('../../utils/context')
 const {setAxiosAuthentication}=require('../../utils/authentication')
 
-const styles = theme => ({
+const styles = () => ({
   signupContainer: {
     alignItems: 'center',
     justifyContent: 'top',
@@ -85,7 +86,7 @@ class ServicesMap extends React.Component {
           const serviceCircles = response.data.map(s => ({
             coordinates: s.service_address.gps,
             label: <>{s.user.full_name}<br/>{s.service.label}<br/>{s.service_address.city}</>,
-            link: `/userServicePreview?id=${s._id}`,
+            link: bookingUrl(s._id),
             service: s.service._id,
           }))
           this.setState({

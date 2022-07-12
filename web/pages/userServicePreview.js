@@ -52,14 +52,7 @@ const UserServicesPreview = ({classes, t, address, id}) => {
   const [avocotesUserName, setAvocotesUserName]=useState(null)
 
   useEffect(() => {
-    if (getDataModel()=='aftral') {
-      const newUrl=window.location.href.replace('userServicePreview?id=', 'training/')
-      Router.push(newUrl)
-    }
-  }, [])
-
-  useEffect(() => {
-    if (id && !serviceUser && getDataModel()!='aftral') {
+    if (id && !serviceUser) {
       setAxiosAuthentication()
       axios.get(`/myAlfred/api/serviceUser/${id}`)
         .then(res => {
@@ -75,7 +68,7 @@ const UserServicesPreview = ({classes, t, address, id}) => {
             })
         })
     }
-  }, [id])
+  }, [id, serviceUser])
 
   /**
   const componentDidMount = () => {

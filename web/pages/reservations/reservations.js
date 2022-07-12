@@ -18,6 +18,7 @@ import moment from 'moment'
 
 import ReactHtmlParser from 'react-html-parser'
 import Link from 'next/link'
+import {bookingUrl} from '../../config/config'
 import BookingPreApprouve from '../../components/BookingDetail/BookingPreApprouve'
 import BookingPreview from '../../components/BookingDetail/BookingPreview'
 import LayoutMobileReservations from '../../hoc/Layout/LayoutMobileReservations'
@@ -196,8 +197,7 @@ class AllReservations extends React.Component {
     let newBooking = booking
     newBooking.prestation_date = null
     localStorage.setItem('bookingObj', JSON.stringify(newBooking))
-    Router.push(`/userServicePreview?id=${ newBooking.serviceUserId}`)
-
+    Router.push(bookingUrl(newBooking.serviceUserId))
   }
 
   content = classes => {

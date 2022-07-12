@@ -142,10 +142,8 @@ class CardServiceUser extends React.Component {
 
     const notes = cpData.reviews ? computeAverageNotes(cpData.reviews.map(r => r.note_alfred)) : {}
 
-    let resa_link = `/userServicePreview?id=${cpData._id}`
-    if (booking_id) {
-      resa_link+=`&booking_id=${booking_id}`
-    }
+    let resa_link=bookingUrl(cpData._id, booking_id ? {booking_id}: {})
+    
     if (this.props.item===null) {
       return (
         <Grid className={`customcardinfocont ${classes.carServiceInfoContainer}`}>

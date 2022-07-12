@@ -4,9 +4,9 @@ import {withTranslation} from 'react-i18next'
 import Grid from '@material-ui/core/Grid'
 import Box from '@material-ui/core/Box'
 import Rating from '@material-ui/lab/Rating'
-import Avatar from '@material-ui/core/Avatar'
 import styled from 'styled-components'
 import Typography from '@material-ui/core/Typography'
+import {bookingUrl} from '../../../config/config'
 import UserAvatar from '../../Avatar/UserAvatar'
 
 
@@ -20,7 +20,7 @@ const CardPreview = ({item}) => {
 
 
   return(
-    <Link href={`/userServicePreview?id=${item._id}`} >
+    <Link href={bookingUrl(item._id)} >
       <StyledCardPreview>
 
         <div className='badge'>
