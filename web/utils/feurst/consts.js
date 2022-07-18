@@ -83,8 +83,8 @@ const ROLES = {
 // Auto associated roles
 const [ORDER, QUOTATION, ACCOUNT, SHIPRATE, PRODUCT, PRICELIST]=['ORDER', 'QUOTATION', 'ACCOUNT', 'SHIPRATE', 'PRODUCT', 'PRICELIST'] // Plus COMPANY already defined
 // UPDATE_ALL allows to update item price in a quotation
-const [VIEW, CREATE, UPDATE, UPDATE_ALL, DELETE, VALIDATE, CONVERT, LINK, UPDATE_CGV, HANDLE, EXPORT]=
-  ['VIEW', 'CREATE', 'UPDATE', 'UPDATE_ALL', 'DELETE', 'VALIDATE', 'CONVERT', 'LINK', 'UPDATE_CGV', 'HANDLE', 'EXPORT']
+const [VIEW, CREATE, UPDATE, UPDATE_ALL, DELETE, VALIDATE, CONVERT, LINK, UPDATE_CGV, HANDLE, EXPORT, IMPORT]=
+  ['VIEW', 'CREATE', 'UPDATE', 'UPDATE_ALL', 'DELETE', 'VALIDATE', 'CONVERT', 'LINK', 'UPDATE_CGV', 'HANDLE', 'EXPORT', 'IMPORT']
 const [ALL, COMPANY, RELATED]=['ALL', 'COMPANY', 'RELATED']
 const MODELS=[ORDER, QUOTATION, ACCOUNT, SHIPRATE, PRODUCT, PRICELIST, COMPANY]
 const ACTIONS=[VIEW, CREATE, UPDATE, DELETE, VALIDATE, CONVERT]
@@ -110,10 +110,9 @@ const USER_ACTIONS={
     [VIEW, CREATE, UPDATE, DELETE, LINK, UPDATE_CGV].map(action => [FEURST_ADMIN, FEURST_ADV, FEURST_SALES].map(tp => createUserAction(ACCOUNT, action, {type: tp, visibility: ALL}))),
     [VIEW, HANDLE, EXPORT].map(action => createUserAction(ORDER, action, {visibility: ALL})),
     [VIEW, CREATE].map(action => createUserAction(SHIPRATE, action, {visibility: ALL})),
-    [VIEW, CREATE, UPDATE, DELETE].map(action => createUserAction(PRODUCT, action, {visibility: ALL})),
+    [VIEW, CREATE, UPDATE, DELETE, IMPORT].map(action => createUserAction(PRODUCT, action, {visibility: ALL})),
     [VIEW, CREATE, UPDATE, DELETE].map(action => createUserAction(PRICELIST, action, {visibility: ALL})),
-    createUserAction(COMPANY, VIEW, {visibility: ALL}),
-    createUserAction(COMPANY, UPDATE, {visibility: ALL}),
+    [VIEW, UPDATE, IMPORT].map(action => createUserAction(COMPANY, action, {visibility: ALL})),
   ]),
   [FEURST_ADV]: lodash.flattenDeep([
     createUserAction(ACCOUNT, UPDATE),
@@ -191,5 +190,5 @@ module.exports={
   COMPLETE, LINK, UPDATE_CGV, FEURST_SALES, HANDLE, XL_TYPE, TEXT_TYPE, PRICELIST,
   CONVERT, QUOTATION_VALIDITY, EXPIRED, UPDATE_ALL, MAIN_ADDRESS_LABEL, CONVERTED,
   BUTTONS, REWRITE, TOTALLY_HANDLE, PARTIALLY_HANDLE, ORDER_ALERT_CHECK_INTERVAL,
-  ORDER_ALERT_DELAY, JSON_TYPE, EXPORT,
+  ORDER_ALERT_DELAY, JSON_TYPE, EXPORT, IMPORT,
 }

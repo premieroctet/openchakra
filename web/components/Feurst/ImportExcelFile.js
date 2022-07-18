@@ -8,7 +8,6 @@ import {
   Typography,
 } from '@material-ui/core'
 import isEmpty from 'lodash/isEmpty'
-import {is_development} from '../../config/config'
 import {snackBarError} from '../../utils/notifications'
 import {guessDelimiter} from '../../utils/text'
 import {extractSample, getTabs, guessFileType} from '../../utils/import'
@@ -21,7 +20,7 @@ import ImportResult from './ImportResult'
 const PureDialog = dynamic(() => import('../Dialog//PureDialog'))
 
 
-const ImportExcelFile = ({importURL, templateURL, caption, endpoint, orderid, importFile}) => {
+const ImportExcelFile = ({importURL, templateURL, caption, endpoint, orderid, importFile, hideButton, openDialog, onDialogClose}) => {
 
   const [isOpenDialog, setIsOpenDialog] = useState(false)
   const [file, setFile]=useState(null)
@@ -34,7 +33,7 @@ const ImportExcelFile = ({importURL, templateURL, caption, endpoint, orderid, im
   const [importResult, setImportResult] = useState(null)
   // WARNING: first is 1, not 0
   const [firstLine, setFirstLine] = useState(1)
-
+  const [pending, setPending] = useState(false)
 
   useEffect(() => {
     setFile(null)
@@ -95,35 +94,52 @@ const ImportExcelFile = ({importURL, templateURL, caption, endpoint, orderid, im
       })
   }, [file])
 
+  useEffect(() => {
+    !isOpenDialog && !!onDialogClose && onDialogClose()
+  }, [isOpenDialog, onDialogClose])
+
   const onFileChange = event => {
     const f=event.target.files[0]
     setFile(f)
   }
 
+  if (openDialog && !isOpenDialog) {
+    setIsOpenDialog(true)
+  }
+
   const submitData = async({endpoint, orderid, importFile}) => {
 
     setImportResult(null)
+    setPending(true)
     const data = new FormData()
     data.append('buffer', file)
     data.append('options', JSON.stringify(getOptions()))
     await importFile({endpoint, orderid, importURL, data})
       .then(result => {
         setIsOpenDialog(false)
+        if (onDialogClose) {
+          onDialogClose()
+        }
         setImportResult(result)
       })
       .catch(err => {
         snackBarError(err)
+      })
+      .finally(() => {
+        setPending(false)
       })
   }
 
   const cap = caption || 'Importer un fichier Excel'
 
   return (<>
+    {!hideButton &&
     <NormalButton onClick={() => setIsOpenDialog(true)} rounded={'full'} className="mb-4" bgColor={'#141953'} textColor={'white'} size="full-width">
       {cap}
     </NormalButton>
+    }
     <ImportDialog open={isOpenDialog}
-      onClose={() => setIsOpenDialog(false)} height='90%'>
+      onClose={() => { setIsOpenDialog(false); !!onDialogClose && onDialogClose() }} height='90%'>
       {/* {is_development() && <h1>{fileType},{delimiter},{tabs},{tab},{firstLine},</h1>} */}
 
       {/* Design modal */}
@@ -181,7 +197,7 @@ const ImportExcelFile = ({importURL, templateURL, caption, endpoint, orderid, im
         </>}
 
       <div className='importbutton flex'>
-        <NormalButton size={'full-width'} rounded={'full'} onClick={() => submitData({endpoint, orderid, importFile})}>Importer</NormalButton>
+        <NormalButton disabled={!sample || pending} size={'full-width'} rounded={'full'} onClick={() => submitData({endpoint, orderid, importFile})}>Importer</NormalButton>
       </div>
     </ImportDialog>
     {templateURL &&

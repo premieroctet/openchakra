@@ -389,6 +389,10 @@ const companiesColumns = ({/** language,*/ updateSeller, sellers}) => {
       label: 'Tarifs',
       attribute: company => Object.values(lodash.pick(company, ['catalog_prices', 'net_prices'])).join('/'), // formatAddress(company?.addresses[0]) || '',
     },
+    {
+      label: 'Franco',
+      attribute: 'carriage_paid',
+    },
   ]
 
   const columnSeller = [{

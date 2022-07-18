@@ -3,11 +3,11 @@ import styled from 'styled-components'
 
 
 const ImportWithWarnings = ({created, warnings, errors, total}) => {
-  
+
   const sentence = created
-    ? `Import partiel : ${created} sur ${total} ${total > 1 ? 'produits ajoutés' : 'produit ajouté'}.`
+    ? `Import partiel : ${created} sur ${total} ${created > 1 ? 'éléments ajoutés' : 'élément ajouté'}.`
     : `Import non effectué.`
-  
+
   return (<>
     <p>{sentence}</p>
     <div>
@@ -22,7 +22,7 @@ const ImportWithWarnings = ({created, warnings, errors, total}) => {
 }
 
 const ImportOK = ({created, total}) => (
-  <p>Import réussi&nbsp;: {created} {total > 1 ? 'produits ajoutés' : 'produit ajouté'}.</p>
+  <p>Import réussi&nbsp;: {created} {created > 1 ? 'éléments importés' : 'élément importé'}.</p>
 )
 
 const ImportResult = ({result}) => {
@@ -40,14 +40,14 @@ const ImportResult = ({result}) => {
 }
 
 const StyledImportResult = styled.div`
-  
+
   padding-block: var(--spc-1);
   padding-inline: var(--spc-12);
   color: var(--white);
   font-size: var(--text-xl);
   font-weight: var(--font-bold);
   border-radius: var(--rounded-7xl);
-  
+
   &.notok {
     background-color: #b15d31;
 
@@ -71,7 +71,7 @@ const StyledImportResult = styled.div`
       padding: 0;
     }
   }
-  
+
 `
 
 export default ImportResult

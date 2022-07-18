@@ -40,7 +40,7 @@ const CompaniesList = ({accessRights}) => {
       }
       <BaseListTable
         accessRights={accessRights}
-        caption='Liste des comptes'
+        caption='Liste des sociétés'
         endpoint='companies'
         columns={companiesColumns}
         sellers={sellers}

@@ -18,7 +18,7 @@ const {
 const {isActionAllowed} = require('../../utils/userAccess')
 const {DELETE} = require('../../../utils/feurst/consts')
 const {XL_FILTER, createMemoryMulter} = require('../../utils/filesystem')
-const {PRODUCT, CREATE} = require('../../../utils/consts')
+const {PRODUCT, CREATE, IMPORT} = require('../../../utils/consts')
 const Product = require('../../models/Product')
 const {validateProduct}=require('../../validation/product')
 
@@ -139,7 +139,7 @@ router.delete('/:product_id', passport.authenticate('jwt', {session: false}), (r
 // Imports products from csv
 router.post('/import', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  if (!isActionAllowed(req.user.roles, DATA_TYPE, CREATE)) {
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, IMPORT)) {
     return res.sendStatus(HTTP_CODES.FORBIDDEN)
   }
 

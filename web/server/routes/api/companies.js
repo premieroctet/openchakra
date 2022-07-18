@@ -6,11 +6,12 @@ const lodash = require('lodash')
 const axios = require('axios')
 const csv_parse = require('csv-parse/lib/sync')
 const {
-  HTTP_CODES,
-  NotFoundError,
-  StatusError,
-} = require('../../utils/errors')
-const {getHostUrl} = require('../../../config/config')
+  IMAGE_FILTER,
+  TEXT_FILTER,
+  XL_FILTER,
+  createDiskMulter,
+  createMemoryMulter,
+}=require('../../utils/filesystem')
 const {
   ACCOUNT,
   COMPANY,
@@ -19,16 +20,23 @@ const {
   QUOTATION,
   VIEW,
   CREATE,
+  IMPORT,
   UPDATE,
   FEURST_SALES,
-} = require('../../../utils/feurst/consts')
+}=require('../../../utils/feurst/consts')
+const {accountsImport}=require('../../utils/import')
+const {
+  HTTP_CODES,
+  NotFoundError,
+  StatusError,
+} = require('../../utils/errors')
+const {getHostUrl} = require('../../../config/config')
 const {filterCompanies, isActionAllowed} = require('../../utils/userAccess')
 const Group = require('../../models/Group')
 const Company = require('../../models/Company')
 const Booking = require('../../models/Booking')
 const User = require('../../models/User')
 const {EDIT_PROFIL}=require('../../../utils/i18n')
-const {IMAGE_FILTER, TEXT_FILTER, createDiskMulter, createMemoryMulter} = require('../../utils/filesystem')
 
 const router = express.Router()
 const {validateCompanyProfile, validateCompanyMember} = require('../../validation/simpleRegister')
@@ -49,7 +57,10 @@ const uploadRegProof = createDiskMulter('static/profile/registrationProof/', IMA
 // B2B Employees
 const uploadEmployees = createMemoryMulter(TEXT_FILTER)
 
+// Companies
+const uploadAccounts = createMemoryMulter(XL_FILTER)
 
+const DATA_TYPE=COMPANY
 // @Route GET /myAlfred/api/companies
 // Get companies list
 // @Access private
@@ -766,6 +777,33 @@ router.put('/:company_id/sales_representative/:user_id', passport.authenticate('
       console.error(err)
       res.status(err.status||500).json(err.message)
     })
+})
+
+// @Route POST /myAlfred/api/companies/import
+// Imports companies/accounts from csv
+router.post('/import', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, IMPORT)) {
+    return res.sendStatus(HTTP_CODES.FORBIDDEN)
+  }
+
+  uploadAccounts.single('buffer')(req, res, err => {
+    if (err) {
+      console.error(err)
+      return res.status(HTTP_CODES.NOT_FOUND).json({errors: err.message})
+    }
+
+    const options=JSON.parse(req.body.options)
+
+    accountsImport(req.file.buffer, options)
+      .then(result => {
+        return res.json(result)
+      })
+      .catch(err => {
+        console.error(err)
+        return res.status(500).json(err)
+      })
+  })
 })
 
 module.exports = router
