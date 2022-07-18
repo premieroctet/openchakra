@@ -192,6 +192,7 @@ const withEdiRequest = (Component = null) => {
       return await axios.post(importURL, data)
         .then(res => {
           this.getContentFrom({endpoint, orderid})
+          this.getList({endpoint})
           return res?.data
         })
         .catch(err => err)
