@@ -277,8 +277,8 @@ const accountsImport = (buffer, options) => {
           if (!companyName) { return Promise.reject(msg('Société incorrecte')) }
           const francoKey=Object.keys(record).find(k => k.match(/franco/i))
           if (!francoKey) { return Promise.reject('Colonne franco introuvable') }
-          const franco=record[francoKey]
-          if (lodash.isNil(franco)) { return Promise.reject(msg(`Valeur franco incorrect:${franco}`)) }
+          const carriage_paid=record[francoKey]
+          if (lodash.isNil(carriage_paid)) { return Promise.reject(msg(`Valeur franco incorrect:${carriage_paid}`)) }
           const catalogPrices=record.PVC
           const netPrices=record['Liste de prix net']
           if (!catalogPrices || !netPrices) { return Promise.reject(msg('Liste de prix inconnue')) }
@@ -291,7 +291,7 @@ const accountsImport = (buffer, options) => {
                 return Promise.reject(msg(`Commercial ${sm_firstname} ${sm_name} non trouvé`))
               }
               return Company.findOneAndUpdate({name: companyName},
-                {addresses: [addr], catalog_prices: catalogPrices, net_prices: netPrices, franco: franco, delivery_zip_codes, sales_representative: salesman},
+                {addresses: [addr], catalog_prices: catalogPrices, net_prices: netPrices, carriage_paid: carriage_paid, delivery_zip_codes, sales_representative: salesman},
                 {runValidators: true, upsert: true, new: true})
             })
             .then(company => {
