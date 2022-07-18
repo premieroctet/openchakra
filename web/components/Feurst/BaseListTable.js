@@ -1,7 +1,6 @@
 import React, {useCallback, useState, useEffect} from 'react'
 import {withTranslation} from 'react-i18next'
 import UploadIcon from '@icons/material/UploadIcon'
-import DevLog from '../DevLog'
 import withEdiRequest from '../../hoc/withEdiRequest'
 import {API_PATH} from '../../utils/consts'
 import {
@@ -82,7 +81,6 @@ const BaseListTable = ({
     : caption
 
   return (<>
-    <DevLog>{accessRights.getModel()}</DevLog>
     {canCreate &&
     <div className='container-md mb-8'>
       <PleasantLink rounded={'full'} href={`${BASEPATH_EDI}/${endpoint}/create`}>
