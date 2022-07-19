@@ -144,7 +144,7 @@ router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) =
           .populate('user')
           .then(book => {
             if (booking.status === BOOK_STATUS.INFO) {
-              sendBookingInfosRecap(book)
+              sendBookingInfosRecap(book, req)
               sendAskingInfo(book, req)
             }
             if (booking.status === BOOK_STATUS.TO_CONFIRM) {
