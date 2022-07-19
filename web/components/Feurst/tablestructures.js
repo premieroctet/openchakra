@@ -378,7 +378,7 @@ const companiesColumns = ({/** language,*/ updateSeller, sellers}) => {
     },
     {
       label: 'Administrateur',
-      attribute: company => [company.administrator?.full_name, company.addresses[0]?.phone],
+      attribute: company => [company.administrator?.full_name, company.administrator?.email, company.addresses[0]?.phone],
       Cell: ({value}) => <>{value.map(v => (<div>{v}</div>))}</>,
     },
     {
