@@ -413,12 +413,15 @@ router.post('/profile/idCard', uploadIdCard.fields([{name: 'myCardR', maxCount: 
   name: 'myCardV',
   maxCount: 1,
 }]), passport.authenticate('jwt', {session: false}), (req, res) => {
+  if (!req.files.myCardR && !req.files.myCardV) {
+    return res.status(200).json('Aucun photo à sauvegarder')
+  }
   User.findById(req.user.id)
     .then(user => {
-      user.id_card = {}
-      user.id_card.recto = req.files.myCardR[0].path
-      let verso = 'myCardV'
-      if (verso in req.files) {
+      if (req.files.myCardR) {
+        user.id_card.recto = req.files.myCardR[0].path
+      }
+      if (req.files.myCardV) {
         user.id_card.verso = req.files.myCardV[0].path
       }
 
@@ -433,22 +436,6 @@ router.post('/profile/idCard', uploadIdCard.fields([{name: 'myCardR', maxCount: 
     .catch(err => {
       console.error(err)
       res.statut(400, err)
-    })
-})
-
-// @Route PUT /myAlfred/api/users/profile/idCard/addVerso
-// Add an identity card
-// @Access private
-router.post('/profile/idCard/addVerso', uploadIdCard.single('myCardV'), passport.authenticate('jwt', {session: false}), (req, res) => {
-  User.findById(req.user.id)
-    .then(user => {
-      user.id_card.verso = req.file.path
-
-
-      user.save().then(user => res.json(user)).catch(err => console.error(err))
-    })
-    .catch(err => {
-      console.error(err)
     })
 })
 
