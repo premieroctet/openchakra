@@ -71,10 +71,9 @@ class trustAndVerification extends React.Component {
       insurances: null,
     }
     this.saveStatus = this.saveStatus.bind(this)
-    this.callDrawer = this.callDrawer.bind(this)
     this.onSiretChange = this.onSiretChange.bind(this)
     this.statusSaveEnabled = this.statusSaveEnabled.bind(this)
-    this.deleteRecto = this.deleteRecto.bind(this)
+    this.deleteIdCard = this.deleteIdCard.bind(this)
     this.deleteRegistrationProof = this.deleteRegistrationProof.bind(this)
     this.handleDelete = this.handleDelete.bind(this)
     this.handleClose = this.handleClose.bind(this)
@@ -87,24 +86,13 @@ class trustAndVerification extends React.Component {
       .get('/myAlfred/api/users/current')
       .then(res => {
         let user = res.data
-        let st = {'user': user,
+        this.setState({'user': user,
           id_recto: null, id_verso: null, id_registrationproof: null,
           recto_file: null, verso_file: null, registration_proof_file: null,
-        }
-        if (user.id_card) {
-          st.card = user.id_card
-          if (user.id_card.recto) {
-            this.setState({type: user.id_card.verso ? 'identite' : 'passeport'})
-          }
-        }
-        if (user.registration_proof) {
-          st.registration_proof = user.registration_proof
-        }
-        st.id_card_status = user.id_card_status_text
-        if (user.id_card_error) {
-          st.id_card_error = user.id_card_error_text
-        }
-        this.setState(st)
+          card: user.id_card, type: user.id_card?.verso ? 'identite' : 'passeport',
+          registration_proof: user.registration_proof, id_card_status: user.id_card_status_text,
+          id_card_error: user.id_card_error_text,
+        })
         if (user.is_alfred) {
           axios.get('/myAlfred/api/shop/currentAlfred')
             .then(response => {
@@ -141,7 +129,7 @@ class trustAndVerification extends React.Component {
   }
 
   handleDelete() {
-    this.deleteCb()
+    this.state.deleteCb()
     this.handleClose()
   }
 
@@ -266,16 +254,17 @@ class trustAndVerification extends React.Component {
       })
       .catch(err => console.error(err))
   }
-  deleteRecto(force = false) {
+
+  deleteIdCard(side, force = false) {
     if (!force) {
       this.setState({
         open: true,
-        deleteCb: () => this.deleteRecto(true),
+        deleteCb: () => this.deleteIdCard(side, true),
         deleteConfirmMessage: ReactHtmlParser(this.props.t('TRUST_VERIFICATION.id_card_confirm_deletion')),
       })
     }
     else {
-      axios.delete('/myAlfred/api/users/profile/idCard/recto')
+      axios.delete(`/myAlfred/api/users/profile/idCard/${side}`)
         .then(() => {
           snackBarSuccess(ReactHtmlParser(this.props.t('TRUST_VERIFICATION.snackbar_id_delete')))
           this.componentDidMount()
@@ -304,10 +293,6 @@ class trustAndVerification extends React.Component {
           console.error(err)
         })
     }
-  }
-
-  callDrawer() {
-    this.child.current.handleDrawerToggle()
   }
 
   statusSaveEnabled = () => {
@@ -421,12 +406,10 @@ class trustAndVerification extends React.Component {
             {this.state.type ?
               <DocumentEditor
                 confirmed={this.state.user.id_confirmed}
-                ext={this.state.ext}
-                ext_upload={this.state.ext_upload}
                 db_document={this.state.card.recto}
                 uploaded_file={this.state.recto_file}
                 onChange={this.onRectoChange}
-                onDelete={() => this.deleteRecto(false)}
+                onDelete={() => this.deleteIdCard('recto', false)}
                 disabled={!this.state.type}
                 title={ReactHtmlParser(this.props.t('TRUST_VERIFICATION.download_recto'))}
               />
@@ -437,12 +420,10 @@ class trustAndVerification extends React.Component {
               this.state.type === 'identite' ?
                 <DocumentEditor
                   confirmed={this.state.user.id_confirmed}
-                  ext={this.state.extVerso}
-                  ext_upload={this.state.extVerso_upload}
                   db_document={this.state.card.verso}
                   uploaded_file={this.state.verso_file}
                   onChange={this.onVersoChange}
-                  onDelete={() => this.deleteRecto(false)}
+                  onDelete={() => this.deleteIdCard('verso', false)}
                   disabled={this.state.type !== 'identite'}
                   title={ReactHtmlParser(this.props.t('TRUST_VERIFICATION.download_verso'))}
                 />
@@ -567,8 +548,6 @@ class trustAndVerification extends React.Component {
                     </Typography>
                   </Grid>
                   <DocumentEditor
-                    ext={this.state.extRegistrationProof}
-                    ext_upload={this.state.extRegistrationProof_upload}
                     db_document={this.state.registration_proof}
                     uploaded_file={this.state.registration_proof_file}
                     onChange={this.onRegistrationProofChanged}

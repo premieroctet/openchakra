@@ -15,7 +15,7 @@ function DocumentEditor(props) {
   const [mimeType, setMimeType]=useState(null)
   const [doc, setDoc]=useState(null)
 
-  const {db_document, uploaded_file, onChange, onDelete, classes, disabled, confirmed, title, display_title} = props
+  const {db_document, uploaded_file, onChange, onDelete, classes, disabled, confirmed, title} = props
 
   useEffect(() => {
     setDoc(uploaded_file || (db_document && `/${db_document}`) || null)
@@ -89,7 +89,7 @@ function DocumentEditor(props) {
       :
       <Grid item xs={12} className={classes.containerRecto}>
         <label style={{display: 'inline-block', marginTop: 15, textAlign: 'center', width: '100%'}} className="forminputs">
-          {display_title && <p style={{cursor: 'pointer', color: 'darkgrey', fontSize: '0.9rem'}}>{title}</p>}
+          {title && <p style={{cursor: 'pointer', color: 'darkgrey', fontSize: '0.9rem'}}>{title}</p>}
           <input disabled={disabled} style={{width: 0.1, height: 0.1, opacity: 0, overflow: 'hidden'}}
             name="myCardR" type="file"
             onChange={onChange}

@@ -1086,10 +1086,14 @@ router.put('/current/delete', passport.authenticate('jwt', {session: false}), (r
 // @Route DELETE /myAlfred/api/users/profile/idCard/recto
 // Delete recto identity card
 // @Access private
-router.delete('/profile/idCard/recto', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.delete('/profile/idCard/:side', passport.authenticate('jwt', {session: false}), (req, res) => {
+  const side=req.params.side
+  if (!['recto', 'verso'].includes(side)) {
+    return res.status(400).json(`Unkown idcard side during removal:${side}, expected 'recto' or 'verso'`)
+  }
   User.findById(req.user.id)
     .then(user => {
-      user.id_card = null
+      user.id_card[side]=null
       user.id_card_status = null
       user.id_card_error = null
       user.save()
