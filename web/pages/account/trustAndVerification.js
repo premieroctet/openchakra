@@ -89,7 +89,7 @@ class trustAndVerification extends React.Component {
         this.setState({'user': user,
           id_recto: null, id_verso: null, id_registrationproof: null,
           recto_file: null, verso_file: null, registration_proof_file: null,
-          card: user.id_card, type: user.id_card?.verso ? 'identite' : 'passeport',
+          card: user.id_card, type: user.id_card?.verso ? 'identite' : iuser.id_card ? 'passeport' : null,
           registration_proof: user.registration_proof, id_card_status: user.id_card_status_text,
           id_card_error: user.id_card_error_text,
         })
