@@ -13,8 +13,8 @@ const ImportWithWarnings = ({created, warnings, errors, total}) => {
     <div>
   Erreurs&nbsp;:
       <ul>
-        {errors.map((error, i) => <li key={`error${i}`}>{error}</li>)}
-        {warnings.map((warn, i) => <li key={`warn${i}`}>{warn}</li>)}
+        {errors.map((error, i) => <li key={`error${i}`}>{JSON.stringify(error)}</li>)}
+        {warnings.map((warn, i) => <li key={`warn${i}`}>{JSON.stringify(warn)}</li>)}
       </ul>
     </div>
   </>

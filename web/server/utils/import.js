@@ -35,7 +35,7 @@ const mapRecord=(record, mapping) => {
 const dataImport=(model, headers, records, mapping, options, postImport) => {
   const updateOnly=!!options.update
   const uniqueKey=options.key
-  const result={created: 0, updated: 0, warnings: [], errors: []}
+  const result={total: records.length, created: 0, updated: 0, warnings: [], errors: []}
   return new Promise((resolve, reject) => {
     const modelObj = model.schema.obj
     const modelFields=Object.keys(modelObj)
@@ -259,6 +259,7 @@ const accountsImport = (buffer, options) => {
     const firstLine=options.from_line || 1
     extractData(buffer, {...options, columns: true})
       .then(({headers, records}) => {
+        importResult.total=records.length
         const promises=records.map((record, row) => {
           const msg=label => {
             return `Ligne:${row+firstLine+1}:${label}`
@@ -301,16 +302,26 @@ const accountsImport = (buffer, options) => {
               return company.save()
             })
             .then(company => {
-              const email=(record.Messagerie.text || record.Messagerie).trim()
+              const email=(record.Messagerie.result || record.Messagerie.text || record.Messagerie).trim()
               const [firstname, name]=record['Administrateur (Prénom et Nom)'].replace(/\s+/, '|').split('|').map(v => capitalize(v))
               if (!(email && firstname && name && Validator.isEmail(email))) {
                 return Promise.reject(msg(`Erreur nom, prénom ou email:${record['Administrateur (Prénom et Nom)']}`))
               }
+              // Set new admin
               return User.updateOne({email},
                 {$set: {firstname, name, company: company, email, roles: [CUSTOMER_ADMIN], active: true},
                   $setOnInsert: {password: bcrypt.hashSync('Alfred123;', 10)}},
                 {upsert: true, new: true},
               )
+                // Remove old admins with different email
+                .then(newAdmin => {
+                  console.log(`Created/updated ${company.name} admin ${firstname} ${name} ${email}:${JSON.stringify(newAdmin)}`)
+                  return User.deleteMany({email: {$ne: email}, company: company, roles: [CUSTOMER_ADMIN]})
+                    .then(res => {
+                      console.log(`Removed old admin(s) for company ${company.name} email!=${email}:${JSON.stringify(res)}`)
+                      return newAdmin
+                    })
+                })
             })
         })
         Promise.allSettled(promises)
