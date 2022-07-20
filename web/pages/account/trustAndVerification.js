@@ -89,7 +89,7 @@ class trustAndVerification extends React.Component {
         this.setState({'user': user,
           id_recto: null, id_verso: null, id_registrationproof: null,
           recto_file: null, verso_file: null, registration_proof_file: null,
-          card: user.id_card, type: user.id_card?.verso ? 'identite' : iuser.id_card ? 'passeport' : null,
+          card: user.id_card, type: user.id_card?.verso ? 'identite' : user.id_card ? 'passeport' : null,
           registration_proof: user.registration_proof, id_card_status: user.id_card_status_text,
           id_card_error: user.id_card_error_text,
         })
@@ -406,7 +406,7 @@ class trustAndVerification extends React.Component {
             {this.state.type ?
               <DocumentEditor
                 confirmed={this.state.user.id_confirmed}
-                db_document={this.state.card.recto}
+                db_document={this.state.card?.recto}
                 uploaded_file={this.state.recto_file}
                 onChange={this.onRectoChange}
                 onDelete={() => this.deleteIdCard('recto', false)}
@@ -420,7 +420,7 @@ class trustAndVerification extends React.Component {
               this.state.type === 'identite' ?
                 <DocumentEditor
                   confirmed={this.state.user.id_confirmed}
-                  db_document={this.state.card.verso}
+                  db_document={this.state.card?.verso}
                   uploaded_file={this.state.verso_file}
                   onChange={this.onVersoChange}
                   onDelete={() => this.deleteIdCard('verso', false)}
