@@ -43,7 +43,6 @@ router.get('/alfredBooking', passport.authenticate('jwt', {session: false}), (re
     .populate('user', ['name', 'firstname', 'picture', 'company'])
     .populate('alfred', '-id_card')
     .populate('chatroom')
-    .populate('service')
     .then(alfred => {
       if (!alfred) {
         res.status(HTTP_CODES.NOT_FOUND).json({msg: 'No booking found'})
