@@ -113,12 +113,10 @@ class NavBar extends Component {
     }
     this.radius_marks=[1, 5, 10, 15, 20, 30, 50, 100, 200, 300].map(v => ({value: v, label: v>1 && v<50? '' : `${v}km`}))
 
-    this.user = null
   }
 
 
   componentDidMount() {
-    this.user = this.context.user
 
     let query = Router.query
     if (Router.pathname === '/') {
@@ -138,11 +136,11 @@ class NavBar extends Component {
     }
 
 
-    if (this.user) {
+    if (this.context.user) {
 
-      let allAddresses = {'main': this.user?.billing_address}
-      if (this.user?.service_address) {
-        this.user?.service_address.forEach(addr => {
+      let allAddresses = {'main': this.context.user?.billing_address}
+      if (this.context.user?.service_address) {
+        this.context.user?.service_address.forEach(addr => {
           allAddresses[addr._id] = addr
         })
       }
@@ -182,10 +180,12 @@ class NavBar extends Component {
 
 
   isLoggedUser = () => {
-    if (this.user) {
-      const logged=!!this.user
+    if (this.context.user) {
+      const logged=!!this.context.user
+      console.log(`isLoggedUser:${logged}`)
       return logged
     }
+    console.log(`isLoggedUser:false`)
     return false
   }
 
@@ -472,7 +472,7 @@ class NavBar extends Component {
                   />
                 </Grid>
                 :
-                this.user ?
+                this.context.user ?
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                     <FormControl variant="outlined">
                       <Select
@@ -764,22 +764,22 @@ class NavBar extends Component {
           transformOrigin={{vertical: 'top', horizontal: 'center'}}
           classes={{paper: 'customburger'}}
         >
-          {this.user ?
+          {this.context.user ?
             <Grid>
-              <MenuItem disabled={true} style={{opacity: 1}}>{`${ReactHtmlParser(this.props.t('SEARCHBAR.hello')) } ${ this.user.firstname}`} !</MenuItem>
-              <MenuItem onClick={() => Router.push(`/profile/about?user=${this.user._id}`)}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_profil'))}</MenuItem>
+              <MenuItem disabled={true} style={{opacity: 1}}>{`${ReactHtmlParser(this.props.t('SEARCHBAR.hello')) } ${ this.context.user.firstname}`} !</MenuItem>
+              <MenuItem onClick={() => Router.push(`/profile/about?user=${this.context.user._id}`)}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_profil'))}</MenuItem>
               <MenuItem onClick={() => Router.push('/account/editProfile')}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_settings'))}</MenuItem>
               {
-                !this.user.is_employee ?
-                  this.user.is_alfred ?
-                    <MenuItem onClick={() => Router.push(`/profile/services?user=${this.user._id}`)}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_services'))}</MenuItem>
+                !this.context.user.is_employee ?
+                  this.context.user.is_alfred ?
+                    <MenuItem onClick={() => Router.push(`/profile/services?user=${this.context.user._id}`)}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_services'))}</MenuItem>
                     :
-                    canAlfredSelfRegister() && (!!this.user.professional || canAlfredParticularRegister()) && <MenuItem onClick={() => Router.push('/creaShop/creaShop')}>{ReactHtmlParser(this.props.t('SEARCHBAR.create_shop'))}</MenuItem>
+                    canAlfredSelfRegister() && (!!this.context.user.professional || canAlfredParticularRegister()) && <MenuItem onClick={() => Router.push('/creaShop/creaShop')}>{ReactHtmlParser(this.props.t('SEARCHBAR.create_shop'))}</MenuItem>
                   : null
               }
-              <MenuItem onClick={() => Router.push(`/profile/messages?user=${this.user._id}`)}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_messages'))}</MenuItem>
+              <MenuItem onClick={() => Router.push(`/profile/messages?user=${this.context.user._id}`)}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_messages'))}</MenuItem>
               <MenuItem onClick={() => Router.push('/reservations/reservations')}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_resa'))}</MenuItem>
-              {this.user.is_admin ?
+              {this.context.user.is_admin ?
                 <MenuItem onClick={() => Router.push('/dashboard')}>{ReactHtmlParser(this.props.t('SEARCHBAR.dashboard_alfred'))}</MenuItem>
                 : null
               }
@@ -796,7 +796,7 @@ class NavBar extends Component {
   notLoggedButtonSection = classes => {
     const{ifHomePage} = this.state
 
-    const logged = this.user != null
+    const logged = !!this.context.user
 
     return(
       <Grid
