@@ -5,7 +5,7 @@ import React from 'react'
 import Checkbox from '@material-ui/core/Checkbox'
 import {Link} from '@material-ui/core'
 const moment = require('moment')
-const { inspect } = require('util');
+const {inspect} = require('util')
 
 
 moment.locale('fr')
@@ -304,6 +304,7 @@ class DeleteRenderer extends React.Component {
 const textColumn = obj => {
   let base={
     comparator: insensitiveComparator,
+    filter: 'agTextColumnFilter',
     filterParams: {
       textFormatter: normalize,
     },
