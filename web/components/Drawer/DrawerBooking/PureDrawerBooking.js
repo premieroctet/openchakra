@@ -78,7 +78,7 @@ const PureDrawerBooking = ({
         }
       })
 
-    setPrices(compute)
+    compute && setPrices(compute)
 
   }, [location, booking.prestations, booking.date])
 
@@ -113,18 +113,16 @@ const PureDrawerBooking = ({
     setPending(true)
     client(`${API_PATH}/booking`, {data: bookingObj})
       .then(response => {
-        const {redirectURL} = response
+
+        const {redirectURL, extraURLs} = response
+        
+        if (extraURLs) {
+          window && extraURLs.forEach(url => {
+            window.open(url, '_blank')
+          })
+        }
 
         router.push(redirectURL)
-        // if (booking.customer_booking) {
-        //   Router.push({pathname: `/reservations/resvations?id=${booking._id}`, query: {booking_id: booking._id}})
-        // }
-        // else if (actual) {
-        //   Router.push({pathname: '/confirmPayment', query: {booking_id: booking._id}})
-        // }
-        // else {
-        //   Router.push(`/profile/messages?user=${booking.user}&relative=${booking.alfred}`)
-        // }
       })
       .catch(error => {
         if (error.info) {
@@ -333,7 +331,8 @@ const PureDrawerBooking = ({
           onClick={e => book(e, true)}
           className={'custombookinresabutton'}
         >
-          {ReactHtmlParser(t('DRAWER_BOOKING.resa_button'))}
+          
+          {booking.extrapayment ? ReactHtmlParser(t('DRAWER_BOOKING.resa_button')) : ReactHtmlParser(t('DRAWER_BOOKING.buy_button'))}
         </button>
 
         {prices.total !== 0
