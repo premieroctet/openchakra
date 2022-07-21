@@ -121,7 +121,6 @@ router.get('/confirmPendingBookings', passport.authenticate('jwt', {session: fal
    cpf: true or false
    date: booking date
    customerBooking: linked service booking
-   customerBooking: linked service booking,
    informationRequest: [true|false] info request or actual booking
 Returns: {
   redirectURL: url to redirect to,
@@ -169,10 +168,11 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     })
     .then(booking => {
       const returnURLs={
-        redirectURL: booking.amount==0 ?
-          '/reservations/reservations'
-          :
-          `/confirmPayment?booking_id=${booking._id}`,
+        redirectURL:
+        booking.status==BOOK_STATUS.INFO ? '/profile/messages'
+          :booking.amount==0 ?
+            '/reservations/reservations'
+            : `/confirmPayment?booking_id=${booking._id}`,
       }
       if (booking.cpf_link) {
         returnURLs.extraURLs=[booking.cpf_link]

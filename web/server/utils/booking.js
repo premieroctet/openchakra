@@ -62,10 +62,11 @@ const createBooking = ({customer, serviceUserId, prestations, date, cpf, locatio
     })
     .then(prices => {
       const status=
-      customerBooking? BOOK_STATUS.TO_CONFIRM
-        : informationRequest ? BOOK_STATUS.INFO
-          : cpf ? BOOK_STATUS.TO_CONFIRM
-            : BOOK_STATUS.TO_PAY
+      informationRequest ? BOOK_STATUS.INFO:
+        customerBooking? BOOK_STATUS.TO_CONFIRM
+          : informationRequest ? BOOK_STATUS.INFO
+            : cpf ? BOOK_STATUS.TO_CONFIRM
+              : BOOK_STATUS.TO_PAY
       bookData={...bookData, ...prices, amount: prices.total, status: status}
       return upsertChatroom(customer._id, serviceUser.user._id)
     })

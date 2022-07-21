@@ -99,11 +99,12 @@ const PureDrawerBooking = ({
       cpf: booking.extrapayment,
       date: booking.date,
       customer_booking: null,
+      informationRequest: !actual,
     }
 
 
     localStorage.setItem('bookingObj', JSON.stringify(bookingObj))
-    
+
     if (!user) {
       localStorage.setItem('path', Router.asPath)
       router.push('/?login=true')
@@ -115,7 +116,7 @@ const PureDrawerBooking = ({
       .then(response => {
 
         const {redirectURL, extraURLs} = response
-        
+
         if (extraURLs) {
           window && extraURLs.forEach(url => {
             window.open(url, '_blank')
@@ -132,7 +133,7 @@ const PureDrawerBooking = ({
       .finally(() => {
         setPending(false)
       })
-    
+
   }
 
   const onBookingDateChange = selecteddate => {
@@ -192,14 +193,14 @@ const PureDrawerBooking = ({
 
         const availabilities = serviceUser && await client(`${API_PATH}/availability/userAvailabilities/${serviceUser.user._id}`)
           .catch(err => console.error(err))
-          
+
         availabilities && setBookingParams({
           serviceUser,
           availabilities,
           excludeddates: getExcludedDays(availabilities),
           onePlace: places.length === 1,
         })
-          
+
         const shop = serviceUser && await client(`${API_PATH}/shop/alfred/${serviceUser.user._id}`)
           .catch(err => console.error(err))
         shop && setShop(shop)
@@ -331,7 +332,7 @@ const PureDrawerBooking = ({
           onClick={e => book(e, true)}
           className={'custombookinresabutton'}
         >
-          
+
           {booking.extrapayment ? ReactHtmlParser(t('DRAWER_BOOKING.resa_button')) : ReactHtmlParser(t('DRAWER_BOOKING.buy_button'))}
         </button>
 

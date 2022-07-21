@@ -1,4 +1,5 @@
 const moment=require('moment')
+const lodash=require('lodash')
 const {BadRequestError, NotFoundError}=require('../utils/errors')
 const Booking = require('../models/Booking')
 const User=require('../models/User')
@@ -6,9 +7,13 @@ const ServiceUser=require('../models/ServiceUser')
 require('../models/Prestation')
 const {computeDistanceKm}=require('../../utils/functions')
 
-const validateBooking = ({userId, serviceUserId, prestations, location, date, customerBookingId}) => {
+const validateBooking = ({userId, serviceUserId, prestations, location, date, customerBookingId, informationRequest}) => {
 
   let su=null
+
+  if (!lodash.isBoolean(informationRequest)) {
+    return Promise.reject(new BadRequestError(`Expected boolean informationRequest, got ${JSON.stringify(informationRequest)}`))
+  }
   return ServiceUser.findById(serviceUserId)
     .populate('alfred')
     .populate({path: 'prestations', populate: 'prestation'})
