@@ -1255,33 +1255,31 @@ router.get('/locations', (req, res) => {
 // Create mango client account for all user with no id_mangopay
 // DISABLED because it operates on ALL DATABASES !!
 // if (is_production() || is_validation()) {
-if (false) {
-  new CronJob('0 */15 * * * *', () => {
-    console.log('Customers who need mango account')
-    User.find({id_mangopay: null, active: true})
-      .limit(100)
-      .then(usrs => {
-        usrs.forEach(user => {
-          if (user.age<18) {
-            console.warn(`User ${user._id} ${user.full_name} skipped, age ${user.age}<18`)
-          }
-          else if (user.age>120) {
-            console.warn(`User ${user._id} ${user.full_name} skipped, age ${user.age}>120`)
-          }
-          else {
-            createMangoClient(user)
-              .then(user => {
-                console.log(`Created mango for ${user._id} ${user.full_name}`)
-                user.save()
-              })
-              .catch(err => {
-                console.error(err)
-              })
-          }
-        })
+new CronJob('0 */15 * * * *', () => {
+  console.log('Customers who need mango account')
+  User.find({id_mangopay: null, active: true})
+    .limit(100)
+    .then(usrs => {
+      usrs.forEach(user => {
+        if (user.age<18) {
+          console.warn(`User ${user._id} ${user.full_name} skipped, age ${user.age}<18`)
+        }
+        else if (user.age>120) {
+          console.warn(`User ${user._id} ${user.full_name} skipped, age ${user.age}>120`)
+        }
+        else {
+          createMangoClient(user)
+            .then(user => {
+              console.log(`Created mango for ${user._id} ${user.full_name}`)
+              user.save()
+            })
+            .catch(err => {
+              console.error(err)
+            })
+        }
       })
-      .catch(err => console.error(err))
-  }, null, true, 'Europe/Paris')
-}
+    })
+    .catch(err => console.error(err))
+}, null, true, 'Europe/Paris')
 
 module.exports = router
