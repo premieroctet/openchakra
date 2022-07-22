@@ -182,10 +182,8 @@ class NavBar extends Component {
   isLoggedUser = () => {
     if (this.context.user) {
       const logged=!!this.context.user
-      console.log(`isLoggedUser:${logged}`)
       return logged
     }
-    console.log(`isLoggedUser:false`)
     return false
   }
 

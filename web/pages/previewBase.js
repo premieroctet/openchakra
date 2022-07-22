@@ -659,22 +659,15 @@ class PreviewBase extends React.Component {
       axios.post('/myAlfred/api/booking/add', bookingObj)
         .then(response => {
           const booking = response.data
-          const promise=booking.chatroom ?
-            axios.put(`/myAlfred/api/chatRooms/addBookingId/${bookingObj.chatroom}`, {booking: booking._id})
-            :
-            Promise.resolve(null)
-          promise
-            .then(() => {
-              if (booking.customer_booking) {
-                Router.push({pathname: '/paymentSuccess', query: {booking_id: booking._id}})
-              }
-              else if (actual) {
-                Router.push({pathname: '/confirmPayment', query: {booking_id: booking._id}})
-              }
-              else {
-                Router.push(`/profile/messages?user=${booking.user}&relative=${booking.alfred}`)
-              }
-            })
+          if (booking.customer_booking) {
+            Router.push({pathname: '/paymentSuccess', query: {booking_id: booking._id}})
+          }
+          else if (actual) {
+            Router.push({pathname: '/confirmPayment', query: {booking_id: booking._id}})
+          }
+          else {
+            Router.push(`/profile/messages?user=${booking.user}&relative=${booking.alfred}`)
+          }
         })
         .catch(err => {
           this.setState({pending: false})

@@ -68,17 +68,14 @@ const createBooking = ({customer, serviceUserId, prestations, date, cpf, locatio
             : cpf ? BOOK_STATUS.TO_CONFIRM
               : BOOK_STATUS.TO_PAY
       bookData={...bookData, ...prices, amount: prices.total, status: status}
-      return upsertChatroom(customer._id, serviceUser.user._id)
-    })
-    .then(chatroom => {
-      bookData.chatroom=chatroom._id
       return Booking.create(bookData)
     })
     .then(book => {
-      return Booking.findById(book._id)
+      return upsertChatroom(customer._id, serviceUser.user._id, book)
+        .then(() => book)
     })
     .then(book => {
-      return book
+      return Booking.findById(book._id)
     })
 }
 

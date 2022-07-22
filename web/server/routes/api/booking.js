@@ -153,13 +153,14 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
           }
           // Si user et alfred définis, ajouter un message dans le chatroom
           if (book.user && book.alfred) {
+            const msg=`${booking.status==BOOK_STATUS.INFO ? "Demande d'informations:" : 'Réservation:'} service ${book.service} de ${book.alfred.firstname} pour ${book.user.firstname}`
             const message={
               user: book.user.firstname,
-              content: `Service ${book.service} de ${book.alfred.firstname} pour ${book.user.firstname}`,
+              content: msg,
               date: moment(),
               idsender: book.user._id,
             }
-            addMessage(book.user._id, book.alfred._id, message)
+            addMessage(book.user._id, book.alfred._id, message, booking)
               .then(() => console.log(`Chatroom message added`))
               .catch(err => console.error(err))
           }
@@ -169,7 +170,7 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     .then(booking => {
       const returnURLs={
         redirectURL:
-        booking.status==BOOK_STATUS.INFO ? '/profile/messages'
+        booking.status==BOOK_STATUS.INFO ? `/profile/messages?user=${booking.user._id}&relative=${booking.alfred._id}`
           :booking.amount==0 ?
             '/reservations/reservations'
             : `/confirmPayment?booking_id=${booking._id}`,

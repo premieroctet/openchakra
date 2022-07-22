@@ -307,11 +307,7 @@ const DrawerBooking = ({
         recipient: serviceUser.user._id,
       })
 
-    chatPromise.then(res => {
-
-      if (user) {
-        bookingObj.chatroom = res.data._id
-      }
+    chatPromise.then(() => {
 
       localStorage.setItem('bookingObj', JSON.stringify(bookingObj))
 
@@ -325,18 +321,15 @@ const DrawerBooking = ({
       axios.post('/myAlfred/api/booking', bookingObj)
         .then(response => {
           const booking = response.data
-          axios.put(`/myAlfred/api/chatRooms/addBookingId/${bookingObj.chatroom}`, {booking: booking._id})
-            .then(() => {
-              if (booking.customer_booking) {
-                Router.push({pathname: `/reservations/resvations?id=${booking._id}`, query: {booking_id: booking._id}})
-              }
-              else if (actual) {
-                Router.push({pathname: '/confirmPayment', query: {booking_id: booking._id}})
-              }
-              else {
-                Router.push(`/profile/messages?user=${booking.user}&relative=${booking.alfred}`)
-              }
-            })
+          if (booking.customer_booking) {
+            Router.push({pathname: `/reservations/resvations?id=${booking._id}`, query: {booking_id: booking._id}})
+          }
+          else if (actual) {
+            Router.push({pathname: '/confirmPayment', query: {booking_id: booking._id}})
+          }
+          else {
+            Router.push(`/profile/messages?user=${booking.user}&relative=${booking.alfred}`)
+          }
         })
         .catch(err => {
           console.error(err)
