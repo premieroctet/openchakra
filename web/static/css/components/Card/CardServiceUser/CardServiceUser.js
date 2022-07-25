@@ -6,17 +6,7 @@ const Style = theme => ({
     justifyContent: 'center',
     height: 350,
   },
-  cardServiceUserInfoContent: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-  },
   cardServiceUserInfoTitle: {
-    color: theme.palette.white.main,
-    fontFamily: theme.typography.fontFamily,
-  },
-
-  cardServiceUserInfoText: {
     color: theme.palette.white.main,
     fontFamily: theme.typography.fontFamily,
   },
@@ -81,7 +71,7 @@ const Style = theme => ({
     height: 200,
     backgroundPosition: 'center',
     backgroundSize: 'cover',
-    borderRadius: 20,
+    borderRadius: 6,
   },
   cardServiceUserBackgroundPicsProfil: {
     height: '100%',
@@ -102,8 +92,8 @@ const Style = theme => ({
   },
   cardServiceUserChipPro: {
     position: 'absolute',
-    top: 5,
-    right: 5,
+    top: 15,
+    right: 15,
   },
   cardServiceUserChip: {
     backgroundColor: theme.palette.white.main,

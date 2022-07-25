@@ -1,6 +1,6 @@
+import React from 'react'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
-import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import {withStyles} from '@material-ui/core/styles'
 import axios from 'axios'
@@ -17,7 +17,6 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import Hidden from '@material-ui/core/Hidden'
 import lodash from 'lodash'
 import {getDataModel, isMarketplace} from '../config/config'
-import CardTraining from '../components/Card/CardTraining'
 import CardServiceUser from
 '../components/Card/CardServiceUser/CardServiceUser'
 import {setAxiosAuthentication} from '../utils/authentication'
@@ -318,12 +317,11 @@ componentDidMount() {
     }
 
     filters.status = PART
-    console.log(`Filter:${JSON.stringify(filters)}`)
     const search_url=this.isServiceSearch() ? '/myAlfred/api/service/search' : '/myAlfred/api/serviceUser/search'
     axios.post(search_url, filters)
       .then(res => {
         let results = res.data
-        this.setState({results: results})
+        this.setState({results})
         this.setFilteredServiceUsers(results)
         const categories = this.state.categories
         let proAlfred = this.state.shops.filter(s => s.is_professional).map(s => s.alfred._id)
@@ -356,7 +354,7 @@ componentDidMount() {
 
     const [cols, rows]={'xs': [100, 1], 'sm': [2, 3], 'md': [3, 3], 'lg': [4, 4], 'xl': [4, 3]}[width]
 
-    const cardCmp=this.isServiceSearch() ? CardService : getDataModel() == 'aftral' ? CardTraining : CardServiceUser
+    const cardCmp=this.isServiceSearch() ? CardService : CardServiceUser
     const SearchResults=withSlide(withGrid(cardCmp))
 
     return(

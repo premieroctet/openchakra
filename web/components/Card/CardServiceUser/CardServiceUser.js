@@ -20,37 +20,14 @@ import DialogContent from '@material-ui/core/DialogContent'
 import Dialog from '@material-ui/core/Dialog'
 import Router from 'next/router'
 import {Skeleton} from '@material-ui/lab'
+import {bookingUrl} from '../../../config/config'
 import styles from '../../../static/css/components/Card/CardServiceUser/CardServiceUser'
 import {computeAverageNotes, computeDistanceKm} from '../../../utils/functions'
 import CustomButton from '../../CustomButton/CustomButton'
 import ListIconsSkills from '../../ListIconsSkills/ListIconsSkills'
-const {isEditableUser, hideEmptyEvaluations}=require('../../../utils/context')
+import {isEditableUser, hideEmptyEvaluations} from '../../../utils/context'
+import Helpcard from '../Helpcard'
 
-class RawCardServiceUserInfo extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-  render() {
-    const{classes} = this.props
-
-    return (
-      <Grid>
-        <Paper elevation={1} className={`customcardinfopaper ${classes.cardServiceUserInfoPaper}`}>
-          <Grid className={classes.cardServiceUserInfoContent}>
-            <Grid>
-              <h2 className={`customcardinfotitle ${classes.cardServiceUserInfoTitle}`}>{ReactHtmlParser(this.props.t('CARD_SERVICE.card_help_title'))}</h2>
-            </Grid>
-            <Grid>
-              <p className={`customcardinfosubtitle ${classes.cardServiceUserInfoText}`}>{ReactHtmlParser(this.props.t('CARD_SERVICE.card_help_chat'))}</p>
-            </Grid>
-          </Grid>
-        </Paper>
-      </Grid>
-    )
-  }
-}
-
-const CardServiceUserInfo=withTranslation('custom', {withRef: true})(withStyles(styles)(RawCardServiceUserInfo))
 
 class CardServiceUser extends React.Component {
   constructor(props) {
@@ -146,9 +123,7 @@ class CardServiceUser extends React.Component {
     
     if (this.props.item===null) {
       return (
-        <Grid className={`customcardinfocont ${classes.carServiceInfoContainer}`}>
-          <CardServiceUserInfo classes={classes} />
-        </Grid>
+        <Helpcard />
       )
     }
 
@@ -193,7 +168,8 @@ class CardServiceUser extends React.Component {
     }
 
     const editable = isEditableUser(alfred)
-
+    const description=cpData.description || (this.props.t('CARD_SERVICE.no_description').trim() ? ReactHtmlParser(this.props.t('CARD_SERVICE.no_description')) : null)
+    
     return(
       loading ?
         cardServiceLoading() :
@@ -271,9 +247,9 @@ class CardServiceUser extends React.Component {
                 {
                   profileMode ? null :
                     <>
-                      <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.containerDescription}>
-                        <Typography className={classes.descriptionStyle}>{cpData.description ? cpData.description : ReactHtmlParser(this.props.t('CARD_SERVICE.no_description'))}</Typography>
-                      </Grid>
+                      {description && <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.containerDescription}>
+                        <Typography className={classes.descriptionStyle}>{description}</Typography>
+                      </Grid>}
                       <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.cardServiceUserScoreAndButtonContainer}>
                         <Grid item xl={3} lg={3} md={3} sm={3} xs={3} className={classes.cardServiceUserRatingContainer}>
                           <Box component="fieldset" mb={3} borderColor="transparent" classes={{root: classes.cardPreviewRatingBox}}>
