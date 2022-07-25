@@ -28,6 +28,7 @@ const {is_production}=require('../../config/config')
 const {isPhoneOk} = require('../../utils/sms')
 const moment = require('moment')
 import '../../static/assets/css/custom.css'
+import io from 'socket.io-client'
 
 moment.locale('fr')
 
@@ -51,6 +52,13 @@ class editProfile extends React.Component {
       checkEmailState: false,
       checkEmailMessage: '',
     }
+    this.socket=io()
+    this.socket.on('connect', () => {
+      this.socket.emit('joinProfile')
+      this.socket.on('onProfileChange', () => {
+        this.loadUser()
+      })
+    })
   }
 
   componentDidMount() {

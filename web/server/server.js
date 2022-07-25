@@ -48,7 +48,7 @@ const blog = require('./routes/api/blog')
 const feurst = require('./routes/api/feurst/feurst')
 const path = require('path')
 const app = express()
-const SocketIo = require('socket.io')
+const {initIO} = require('./utils/socketIO')
 const {serverContextFromRequest}=require('./utils/serverContext')
 
 // checkConfig
@@ -144,7 +144,7 @@ checkConfig()
       ca: fs.readFileSync(`${process.env.HOME}/.ssh/Intermediate.txt`),
     },
     app)
-    const io = SocketIo(httpsServer)
+    const io = initIO(httpsServer)
 
     if (SERVER_PROD) {
       httpsServer.listen(443, () => console.log(`${config.appName} running on http://localhost:80/ and https://localhost:443/`))
@@ -168,12 +168,21 @@ checkConfig()
         socket.join(booking)
         bookingName = booking
       })
+      socket.on('joinProfile', () => {
+        console.log(`Socket ${socket.id} joined profile room`)
+        socket.join('profile')
+      })
       socket.on('message', msg => {
         io.to(roomName).emit('displayMessage', msg)
       })
       socket.on('changeStatus', booking => {
         io.to(bookingName).emit('displayStatus', booking)
       })
+      socket.on('onProfileChange', user_id => {
+        console.log('server received onProfileChange')
+        io.to('profile').emit('onProfileChange', user_id)
+      })
+
     })
   })
   .catch(err => {

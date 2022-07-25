@@ -1,3 +1,4 @@
+const {getIO} = require('../../utils/socketIO')
 const {getLocationSuggestions}=require('../../../utils/geo')
 
 const User = require('../../models/User')
@@ -28,7 +29,6 @@ const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, creat
 const {send_cookie}=require('../../utils/serverContext')
 const gifFrames = require('gif-frames')
 const fs = require('fs').promises
-
 axios.defaults.withCredentials = true
 
 const HOOK_TYPES = 'KYC_SUCCEEDED KYC_FAILED KYC_VALIDATION_ASKED'.split(' ')
@@ -206,7 +206,12 @@ router.post('/sendSMSVerification', passport.authenticate('jwt', {session: false
 // Validate account after register
 router.post('/validateAccount', (req, res) => {
   User.findByIdAndUpdate(req.body.user_id, {is_confirmed: true})
-    .then(() => res.json())
+    .then(() => {
+      const io=getIO()
+      io.emit('joinProfile')
+      io.emit('onProfileChange', req.body.user_id)
+      return res.json()
+    })
     .catch(err => {
       console.error(err)
       res.status(400).json(err)
