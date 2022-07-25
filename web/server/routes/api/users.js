@@ -1,6 +1,5 @@
 const {getIO} = require('../../utils/socketIO')
 const {getLocationSuggestions}=require('../../../utils/geo')
-
 const User = require('../../models/User')
 const ServiceUser = require('../../models/ServiceUser')
 require('../../models/ResetToken')
@@ -11,7 +10,6 @@ const {EDIT_PROFIL}=require('../../../utils/i18n')
 const {logEvent}=require('../../utils/events')
 const {IMAGE_FILTER, createDiskMulter} = require('../../utils/filesystem')
 const express = require('express')
-
 const router = express.Router()
 const passport = require('passport')
 const bcrypt = require('bcryptjs')
@@ -21,7 +19,6 @@ const {validateSimpleRegisterInput, validateEditProfile, validateEditProProfile,
 const validateLoginInput = require('../../validation/login')
 const {sendResetPassword, sendVerificationMail, sendVerificationSMS, sendB2BAccount, sendAlert} = require('../../utils/mailing')
 const moment = require('moment')
-moment.locale('fr')
 const crypto = require('crypto')
 const axios = require('axios')
 const {ROLES}=require('../../../utils/consts')
@@ -29,6 +26,10 @@ const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, creat
 const {send_cookie}=require('../../utils/serverContext')
 const gifFrames = require('gif-frames')
 const fs = require('fs').promises
+const lodash=require('lodash')
+
+moment.locale('fr')
+
 axios.defaults.withCredentials = true
 
 const HOOK_TYPES = 'KYC_SUCCEEDED KYC_FAILED KYC_VALIDATION_ASKED'.split(' ')
@@ -496,7 +497,7 @@ router.post('/login', (req, res) => {
   let role = req.body.role
 
   // Find user by email
-  User.findOne({email: new RegExp(`^${email}$`, 'i')})
+  User.findOne({email: new RegExp(`^${lodash.escapeRegExp(email)}$`, 'i')})
     .populate('shop', 'is_particular')
     .then(user => {
       // Check for user
@@ -736,7 +737,7 @@ router.post('/forgotPassword', (req, res) => {
   const email = (req.body.email || '').toLowerCase().trim()
   const role = req.body.role
 
-  User.findOne({email: new RegExp(`^${email}$`, 'i')})
+  User.findOne({email: new RegExp(`^${lodash.escapeRegExp(email)}$`, 'i')})
     .populate('company')
     .then(user => {
       if (user === null) {
@@ -1259,32 +1260,33 @@ router.get('/locations', (req, res) => {
 
 // Create mango client account for all user with no id_mangopay
 // DISABLED because it operates on ALL DATABASES !!
-// if (is_production() || is_validation()) {
-new CronJob('0 */15 * * * *', () => {
-  console.log('Customers who need mango account')
-  User.find({id_mangopay: null, active: true})
-    .limit(100)
-    .then(usrs => {
-      usrs.forEach(user => {
-        if (user.age<18) {
-          console.warn(`User ${user._id} ${user.full_name} skipped, age ${user.age}<18`)
-        }
-        else if (user.age>120) {
-          console.warn(`User ${user._id} ${user.full_name} skipped, age ${user.age}>120`)
-        }
-        else {
-          createMangoClient(user)
-            .then(user => {
-              console.log(`Created mango for ${user._id} ${user.full_name}`)
-              user.save()
-            })
-            .catch(err => {
-              console.error(err)
-            })
-        }
+if (is_production() || is_validation()) {
+  new CronJob('0 */15 * * * *', () => {
+    console.log('Customers who need mango account')
+    User.find({id_mangopay: null, active: true})
+      .limit(100)
+      .then(usrs => {
+        usrs.forEach(user => {
+          if (user.age<18) {
+            console.warn(`User ${user._id} ${user.full_name} skipped, age ${user.age}<18`)
+          }
+          else if (user.age>120) {
+            console.warn(`User ${user._id} ${user.full_name} skipped, age ${user.age}>120`)
+          }
+          else {
+            createMangoClient(user)
+              .then(user => {
+                console.log(`Created mango for ${user._id} ${user.full_name}`)
+                user.save()
+              })
+              .catch(err => {
+                console.error(err)
+              })
+          }
+        })
       })
-    })
-    .catch(err => console.error(err))
-}, null, true, 'Europe/Paris')
+      .catch(err => console.error(err))
+  }, null, true, 'Europe/Paris')
+}
 
 module.exports = router
