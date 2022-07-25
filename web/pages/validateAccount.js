@@ -67,7 +67,7 @@ class validateAccount extends BasePage {
           <Card className={classes.card}>
             <Grid>
               <Grid item style={{display: 'flex', justifyContent: 'center'}}>
-                <Typography style={{fontSize: 30}}>Valider votre inscription</Typography>
+                <Typography style={{fontSize: 30}}>Validez votre inscription</Typography>
               </Grid>
               <form onSubmit={this.onSubmit}>
                 <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
