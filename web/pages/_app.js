@@ -17,12 +17,22 @@ import JssProvider from 'react-jss/lib/JssProvider'
 import React from 'react'
 import Router from 'next/router'
 import {I18nextProvider, withTranslation} from 'react-i18next'
+import {ThemeProvider} from 'styled-components'
 import {getLoggedUser} from '../utils/context'
 import {snackBarError} from '../utils/notifications'
 import getPageContext from '../lib/getPageContext'
 import {getChatURL, mustDisplayChat} from '../config/config'
 import i18n from '../server/utils/i18n_init'
 import {UserWrapper} from '../contextes/user.context'
+import * as globalStyles from '../styles/globalStyles'
+import * as themes from '../styles/themes'
+import {getDataModel} from '../config/config'
+import {MinGlobalStyles} from '../styles/MinglobalStyles'
+
+
+const themeToUse = themes[getDataModel()] || themes.orig
+const ProjectGlobalStyles = globalStyles[getDataModel()] || globalStyles.orig
+
 
 class MyApp extends App {
   constructor() {
@@ -85,25 +95,28 @@ class MyApp extends App {
         </Head>
         {/* Wrap every page in Jss and Theme providers */}
 
-        <JssProvider
-          registry={this.pageContext.sheetsRegistry}
-          generateClassName={this.pageContext.generateClassName}
-        >
-          {/* MuiThemeProvider makes the theme available down the React
-                tree thanks to React context. */}
-          <MuiThemeProvider
-            theme={this.pageContext.theme}
+        <ThemeProvider theme={themeToUse || {}}>
+          <JssProvider
+            registry={this.pageContext.sheetsRegistry}
+            generateClassName={this.pageContext.generateClassName}
           >
-            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-            <CssBaseline/>
-            {/* Pass pageContext to the _document though the renderPage enhancer
+            {/* MuiThemeProvider makes the theme available down the React
+                tree thanks to React context. */}
+            <MuiThemeProvider
+              theme={this.pageContext.theme}
+            >
+              {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+              <CssBaseline/>
+              {/* Pass pageContext to the _document though the renderPage enhancer
                   to render collected styles on server-side. */}
-            <UserWrapper>
-              <Component pageContext={this.pageContext} {...pageProps} />
-            </UserWrapper>
-          </MuiThemeProvider>
-        </JssProvider>
-
+              <UserWrapper>
+                <Component pageContext={this.pageContext} {...pageProps} />
+              </UserWrapper>
+            </MuiThemeProvider>
+          </JssProvider>
+          <MinGlobalStyles />
+          {ProjectGlobalStyles && <ProjectGlobalStyles />}
+        </ThemeProvider>
       </I18nextProvider>
     )
   }
