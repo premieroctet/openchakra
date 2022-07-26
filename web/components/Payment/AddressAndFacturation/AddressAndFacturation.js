@@ -2,6 +2,9 @@ import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Divider from '@material-ui/core/Divider'
+import withStyles from '@material-ui/core/styles/withStyles'
+import ReactHtmlParser from 'react-html-parser'
+import isEmpty from 'lodash/isEmpty'
 import DrawerBookingRecap from '../../Drawer/DrawerBookingRecap/DrawerBookingRecap'
 import PaymentPics from '../../PaymentPics/PaymentPics'
 import Topic from '../../../hoc/Topic/Topic'
@@ -9,9 +12,7 @@ import AddressService from '../../AddressService/AddressService'
 import Profile from '../../Profile/Profile'
 import ListAlfredConditions from '../../ListAlfredConditions/ListAlfredConditions'
 import styles from '../../../static/css/components/AddressAndFacturation/AddressAndFacturation'
-import withStyles from '@material-ui/core/styles/withStyles'
-import ReactHtmlParser from 'react-html-parser'
-import lodash from 'lodash'
+import {isMonoProvider} from '../../../config/config'
 
 class AddressAndFacturation extends React.Component {
 
@@ -41,6 +42,8 @@ class AddressAndFacturation extends React.Component {
                 />
               </Topic>
             </Grid>
+
+            {!isMonoProvider() &&
             <Grid className={`customadandfaccontainer ${classes.adandfaccontainer}`} style={{marginTop: '2vh'}}>
               { /** TODO Afficher ServiceAvatar si booking.is_service */ }
               {alfred &&
@@ -54,7 +57,7 @@ class AddressAndFacturation extends React.Component {
                   />
                 </Topic>
               }
-              {!lodash.isEmpty(equipments) &&
+              {!isEmpty(equipments) &&
                 <>
                   <Grid style={{marginTop: 30, marginBottom: 30}}>
                     <Divider className={`customadreandfacdivider ${classes.divider}`}/>
@@ -76,6 +79,7 @@ class AddressAndFacturation extends React.Component {
                 </>
               }
             </Grid>
+            }
           </Grid>
         </Grid>
         <Grid item xl={6} lg={6} md={6} xs={12} sm={12} className={classes.mainContainerAdressFactu}>

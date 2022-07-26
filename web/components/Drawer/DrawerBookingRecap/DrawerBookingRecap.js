@@ -14,6 +14,7 @@ import styles from '../../../static/css/components/DrawerBookingRecap/DrawerBook
 import BookingDetail from '../../BookingDetail/BookingDetail'
 import CustomButton from '../../CustomButton/CustomButton'
 import {DRAWER_BOOKING_RECAP} from '../../../utils/i18n'
+import {isMonoProvider} from '../../../config/config'
 
 moment.locale('fr')
 
@@ -41,8 +42,9 @@ class DrawerBookingRecap extends React.Component {
           </Grid>
           <Grid>
             <Grid>
-              <Typography>{bookingObj.service}
-                {!bookingObj.is_service && `par ${alfred?.firstname}}`}
+              <Typography>
+                {bookingObj.service}
+                {(!bookingObj.is_service && !isMonoProvider()) && `par ${alfred?.firstname}`}
               </Typography>
             </Grid>
             <Grid>
