@@ -8,6 +8,7 @@ import styled from 'styled-components'
 import Typography from '@material-ui/core/Typography'
 import {bookingUrl} from '../../../config/config'
 import UserAvatar from '../../Avatar/UserAvatar'
+import {getDataModel, isMonoProvider} from '../../../config/config'
 
 
 const CardPreview = ({item}) => {
@@ -16,20 +17,23 @@ const CardPreview = ({item}) => {
     return null
   }
 
-  const city = item.service_address?.city
+  const city = item.service_address?.city || ''
+  const image = item?.service?.picture
 
 
   return(
     <Link href={bookingUrl(item._id)} >
-      <StyledCardPreview>
+      <StyledCardPreview theme={getDataModel()}>
 
-        <div className='badge'>
+        <div className='customcardpreviewavatar'>
           <UserAvatar user={item.user} />
         </div>
 
         <Grid className={`customcardpreviewbox`}>
 
-          <Typography className={`customcardpreviewname`}>{item.user.firstname}</Typography>
+          {image && <img src={image} alt="" />}
+
+          {isMonoProvider && <Typography className={`customcardpreviewname`}>{item.user.firstname}</Typography>}
           <Typography className={`customcardpreviewlabel`}>{item.service.label}</Typography>
           {city && <Typography className={'customcardpreviewplace'} >{city}</Typography>}
 
@@ -52,36 +56,58 @@ const CardPreview = ({item}) => {
 
 const StyledCardPreview = styled.a`
 
-  display: grid;
-  grid-template-areas: 'badge badge badge'
-                        'service service service';
-  row-gap: var(--spc-2);
-  width: min(calc(100% - 2rem), 300px);
-  grid-template-rows: 40px 150px;
-  height: 100%;
-  justify-items: center;
-  cursor: pointer;
+  position: relative;
+  display: flex;
+  flex-direction: column;
 
-  .badge {
-    grid-area: badge;
-    text-align: center;
+  row-gap: var(--spc-4);
+  height: 100%;
+  /* justify-content: center; */
+  align-items: center;
+  cursor: pointer;
+  
+  img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+  }
+  
+  & > div {
+    margin-top: 40px;
+    min-height: 300px;
   }
 
-  .badge + div {
-    padding: 40px 1rem 1rem 1rem;
-    grid-area: service;
-    overflow: clip;
-    text-overflow: ellipsis;
+  .customcardpreviewavatar {
+    top: -40px;
+    position: absolute;
+  }
+
+  .customcardpreviewavatar + div {
+    padding: 50px 1rem 1rem 1rem;
     border-radius: 1rem;
     border: 1px solid #111;
   }
 
-  p {
-    width: 200px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  ${props => {
+  if (props.theme === 'aftral') {
+    return `
+
+      p {
+        font-weight: bold;
+      }
+
+      img {
+        margin-bottom: var(--spc-4);
+      }
+  
+      `
   }
+
+  return `
+    
+  `
+}
+ }
 
 `
 

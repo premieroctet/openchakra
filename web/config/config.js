@@ -3,7 +3,7 @@ const {MODE, TAWKTO_URL, DISABLE_ALFRED_SELF_REGISTER, DISABLE_ALFRED_PARTICULAR
   SIB_TEMPLATES, DATABASE_NAME, HIDE_STORE_DIALOG, MANGOPAY_CLIENTID, MANGOPAY_APIKEY,
   SITE_MODE, SIB_APIKEY,
   DATA_MODEL, SKIP_FAILED_PAYMENT,
-  HOSTNAME, PORT,
+  HOSTNAME, PORT, MONO_PROVIDER,
 }=require('../mode')
 
 const SITE_MODES={
@@ -75,6 +75,10 @@ const isPlatform = () => {
 
 const isMarketplace = () => {
   return SITE_MODE==SITE_MODES.MARKETPLACE
+}
+
+const isMonoProvider = () => {
+  return MONO_PROVIDER
 }
 
 const appName = 'myalfred'
@@ -278,7 +282,7 @@ module.exports = {
   mustDisplayChat, getChatURL,
   canAlfredSelfRegister, canAlfredParticularRegister,
   getSibTemplates, checkConfig, getDatabaseUri, hideStoreDialog,
-  isPlatform, isMarketplace, getDataModel, skipFailedPayment, getSibApiKey,
+  isPlatform, isMarketplace, isMonoProvider, getDataModel, skipFailedPayment, getSibApiKey,
   getPort, getExchangeDirectory,
   RANDOM_ID,
   displayConfig,
