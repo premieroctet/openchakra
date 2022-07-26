@@ -770,7 +770,7 @@ router.get('/home/:partpro', (req, res) => {
   ServiceUser.find(filter, 'user service service_address.city')
     // {e.service.picture} title={e.service.label} alfred={e.user.firstname} user={e.user} score={e.user.score} /
     .populate('user', 'picture firstname score hidden')
-    .populate('service', 'label')
+    .populate('service', 'label picture')
     .then(result => {
       let services=result.filter(su => !su.user.hidden)
       if (typeof services !== 'undefined' && services.length > 0) {
