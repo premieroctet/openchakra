@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic'
 import Grid from '@material-ui/core/Grid'
 import 'suneditor/src/assets/css/suneditor.css'
 import JSSoup from 'jssoup'
+import lodash from 'lodash'
 import '../../static/css/components/Editors/HtmlEditor.module.css'
 
 const SunEditor = dynamic(() => import('suneditor-react'), {
@@ -28,7 +29,7 @@ class HtmlEditor extends React.Component {
         ['link'],
         ['fullScreen'],
       ],
-      fontSize: Array(32).fill(0).map((i, index) => (index+4)*2),
+      fontSize: lodash.range(6, 71, 2),
     }
   }
 
