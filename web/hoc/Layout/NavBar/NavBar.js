@@ -1,3 +1,5 @@
+import React, {Component} from 'react'
+import Link from 'next/link'
 import {Hidden, Typography} from '@material-ui/core'
 import {withTranslation} from 'react-i18next'
 import ReactHtmlParser from 'react-html-parser'
@@ -21,7 +23,6 @@ import MenuItem from '@material-ui/core/MenuItem'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import MultipleSelect from 'react-select'
 import Paper from '@material-ui/core/Paper'
-import React, {Component} from 'react'
 import Router from 'next/router'
 import SearchIcon from '@material-ui/icons/Search'
 import Select from '@material-ui/core/Select'
@@ -735,6 +736,7 @@ class NavBar extends Component {
     const{ifHomePage, companyPage, anchorEl} = this.state
 
     const logged = this.isLoggedUser()
+    const MenuRef = React.createRef()
 
     return(
       <Grid
@@ -763,7 +765,8 @@ class NavBar extends Component {
           classes={{paper: 'customburger'}}
         >
           {this.context.user ?
-            <Grid>
+            <>
+              <MenuItem ref={MenuRef}><Link href={'/'}><a style={{textDecoration: 'none'}}>Maison</a></Link></MenuItem>
               <MenuItem disabled={true} style={{opacity: 1}}>{`${ReactHtmlParser(this.props.t('SEARCHBAR.hello')) } ${ this.context.user.firstname}`} !</MenuItem>
               <MenuItem onClick={() => Router.push(`/profile/about?user=${this.context.user._id}`)}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_profil'))}</MenuItem>
               <MenuItem onClick={() => Router.push('/account/editProfile')}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_settings'))}</MenuItem>
@@ -782,7 +785,7 @@ class NavBar extends Component {
                 : null
               }
               <MenuItem onClick={this.logout}>{ReactHtmlParser(this.props.t('SEARCHBAR.log_out'))}</MenuItem>
-            </Grid>
+            </>
             :
             null
           }
