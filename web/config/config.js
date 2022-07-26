@@ -134,11 +134,11 @@ const getSibApiKey = () => {
 }
 
 const canAlfredSelfRegister = () => {
-  return !DISABLE_ALFRED_SELF_REGISTER
+  return !isMonoProvider() && !DISABLE_ALFRED_SELF_REGISTER
 }
 
 const canAlfredParticularRegister = () => {
-  return !DISABLE_ALFRED_PARTICULAR_REGISTER
+  return !isMonoProvider() && !DISABLE_ALFRED_PARTICULAR_REGISTER
 }
 
 const getSibTemplates = () => {
