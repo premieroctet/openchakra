@@ -20,7 +20,7 @@ import DialogContent from '@material-ui/core/DialogContent'
 import Dialog from '@material-ui/core/Dialog'
 import Router from 'next/router'
 import {Skeleton} from '@material-ui/lab'
-import {bookingUrl} from '../../../config/config'
+import {bookingUrl, isMonoProvider} from '../../../config/config'
 import styles from '../../../static/css/components/Card/CardServiceUser/CardServiceUser'
 import {computeAverageNotes, computeDistanceKm} from '../../../utils/functions'
 import CustomButton from '../../CustomButton/CustomButton'
@@ -168,7 +168,7 @@ class CardServiceUser extends React.Component {
     }
 
     const editable = isEditableUser(alfred)
-    const description=cpData.description || (this.props.t('CARD_SERVICE.no_description').trim() ? ReactHtmlParser(this.props.t('CARD_SERVICE.no_description')) : null)
+    const description = cpData.description || (this.props.t('CARD_SERVICE.no_description').trim() ? ReactHtmlParser(this.props.t('CARD_SERVICE.no_description')) : null)
     
     return(
       loading ?
@@ -195,8 +195,8 @@ class CardServiceUser extends React.Component {
                         </Grid>
                         :
                         <>
-                          { // AFTRAL :hide name
-                            false && <Grid className={profileMode ? classes.cardServiceUserChipNamePro : classes.cardServiceUserChipName}>
+                          {
+                            !isMonoProvider() && <Grid className={profileMode ? classes.cardServiceUserChipNamePro : classes.cardServiceUserChipName}>
                               <Chip label={alfred.firstname} avatar={<ListIconsSkills data={cpData} />} classes={{root: `customcardchipname ${classes.cardServiceUserChip}`}} />
                             </Grid>
                           }
