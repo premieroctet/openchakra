@@ -1,11 +1,10 @@
-const {TextField} = require('@material-ui/core')
+import {TextField} from '@material-ui/core'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import dynamic from 'next/dynamic'
-// TODO : fix loading SunEditor dist css
-// import 'suneditor/dist/css/suneditor.min.css'
-import 'suneditor/src/assets/css/suneditor.css'
 import Grid from '@material-ui/core/Grid'
+import 'suneditor/src/assets/css/suneditor.css'
+import JSSoup from 'jssoup'
 import '../../static/css/components/Editors/HtmlEditor.module.css'
 
 const SunEditor = dynamic(() => import('suneditor-react'), {
@@ -35,11 +34,13 @@ class HtmlEditor extends React.Component {
 
   onChange = html => {
     if (this.props.onChange) {
-      // Replace absolute https://my-alfred.io:3122/ => /
-      html=html.replace(/https:\/\/my-alfred.io:3122\//g, '/')
-      // Remove surrounding DIVs
-      html=html.replace(/^<div>(.*)<\/div>$/, '$1')
-      this.props.onChange(html)
+      const soup=new JSSoup(html)
+      const tags=soup.findAll().filter(t => /div|p/.test(t.name))
+      console.log(tags)
+      // Replace all div and p tags with span to avoid styling
+      tags.forEach(t => { t.name='span' })
+      const noDivsPHtml=soup.toString()
+      this.props.onChange(noDivsPHtml)
     }
   }
 
@@ -56,6 +57,7 @@ class HtmlEditor extends React.Component {
         />
         <TextField style={{width: '100%'}}
           multiline
+          disabled
           variant={'outlined'}
           value={this.props.value}
           onChange={ev => this.onChange(ev.target.value)}
