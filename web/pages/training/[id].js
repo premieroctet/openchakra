@@ -670,16 +670,7 @@ const StyledTraining = styled.div`
   min-height: 100vh;
   background-color: var(--bg-color);
   position: relative;
-
-
- .flex {
-  display: flex;
- }
-
- .flex-row-reverse {
-  flex-direction: row-reverse;
-}
-
+  padding-bottom: var(--spc-4);
 
   .cover {
     position: relative;

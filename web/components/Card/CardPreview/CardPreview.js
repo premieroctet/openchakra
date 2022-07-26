@@ -33,7 +33,7 @@ const CardPreview = ({item}) => {
 
           {image && <img src={image} alt="" />}
 
-          {isMonoProvider && <Typography className={`customcardpreviewname`}>{item.user.firstname}</Typography>}
+          {!isMonoProvider() && <Typography className={`customcardpreviewname`}>{item.user.firstname}</Typography>}
           <Typography className={`customcardpreviewlabel`}>{item.service.label}</Typography>
           {city && <Typography className={'customcardpreviewplace'} >{city}</Typography>}
 

@@ -157,18 +157,22 @@ grid-template-columns: 1fr 2fr;
 .col-start-1 {grid-column-start: 1;}
 
 .col-span-2 {
-grid-column: span 2 / span 2;
+  grid-column: span 2 / span 2;
 }
 
 .content-start {
-align-content: flex-start;
+  align-content: flex-start;
 }
 .content-between {
-align-content: space-between;
+  align-content: space-between;
 }
 
 .flex {
-display: flex !important;
+  display: flex !important;
+}
+
+.flex-row-reverse {
+  flex-direction: row-reverse;
 }
 
 .flex-col {
