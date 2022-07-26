@@ -21,7 +21,7 @@ import Footer from './Footer/Footer'
 import NavBar from './NavBar/NavBar'
 
 const themeToUse = themes[getDataModel()] || themes.orig
-const ProjectGlobalStyles = globalStyles[getDataModel()] || themes.orig
+const ProjectGlobalStyles = globalStyles[getDataModel()] || globalStyles.orig
 
 const Layout = ({children, selectedAddress, classes, keyword}) => {
 
