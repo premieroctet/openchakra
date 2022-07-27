@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const lodash=require('lodash')
 const {roundCurrency}=require('../../../utils/converters')
 const {ROLES}=require('../../../utils/others/consts')
-const {BOOK_STATUS}=require('../../../utils/consts')
+const {BOOK_STATUS, ALL_LOCATIONS}=require('../../../utils/consts')
 const AddressSchema =require('../AddressSchema')
 
 const Schema = mongoose.Schema
@@ -30,6 +30,11 @@ const BookingSchema = new Schema({
   },
   address: {
     type: AddressSchema,
+  },
+  location: {
+    type: String,
+    enum: ALL_LOCATIONS,
+    required: true,
   },
   service: {
     type: String,

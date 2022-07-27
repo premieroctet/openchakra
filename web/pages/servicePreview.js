@@ -7,6 +7,7 @@ import withParams from '../components/withParams'
 import styles from '../static/css/pages/userServicePreviewPage/userServicePreviewStyle'
 const axios = require('axios')
 const moment = require('moment')
+const {LOCATION_CLIENT}=require('../utils/consts')
 const PreviewBase = require('./previewBase')
 
 moment.locale('fr')
@@ -55,7 +56,7 @@ class ServicePreview extends PreviewBase {
 
   setDefaultLocation = () => {
     const {serviceUser} = this.state
-    let location = serviceUser.location.client ? this.get_prop_address() || 'main' :
+    let location = serviceUser.location.client ? this.get_prop_address() || LOCATION_CLIENT :
       serviceUser.location.alfred ? 'alfred' : serviceUser.location.visio ? 'visio' : serviceUser.location.elearning ? 'elearning': null
     this.setState({location: location})
   }

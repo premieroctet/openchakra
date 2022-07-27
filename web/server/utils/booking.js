@@ -1,5 +1,5 @@
 const moment = require('moment')
-const {BOOK_STATUS, TRANSACTION_SUCCEEDED}=require('../../utils/consts')
+const {BOOK_STATUS, TRANSACTION_SUCCEEDED, LOCATION_CLIENT}=require('../../utils/consts')
 const MarketplacePayment=require('../plugins/payment/marketplacePayment')
 const PlatformPayment=require('../plugins/payment/platformPayment')
 const {computeDistanceKm}=require('../../utils/functions')
@@ -22,7 +22,7 @@ const checkPaid = booking => {
 }
 
 const computeServiceDistance = ({location, serviceUser, customer}) => {
-  if (location!='main') {
+  if (location!=LOCATION_CLIENT) {
     return null
   }
   // Check distance
@@ -33,7 +33,7 @@ const computeServiceDistance = ({location, serviceUser, customer}) => {
 
 const createBooking = ({customer, serviceUserId, prestations, date, cpf, location, customerBooking, informationRequest}) => {
   let modifiedDate=cpf ? moment(date).set({hour: 0, minute: 0, second: 0, millisecond: 0}) : date
-  let bookData={user: customer, serviceUserId: serviceUserId, prestation_date: modifiedDate, cpf_booked: cpf, customer_booking: customerBooking}
+  let bookData={location, user: customer, serviceUserId: serviceUserId, prestation_date: modifiedDate, cpf_booked: cpf, customer_booking: customerBooking}
   let serviceUser=null
   return ServiceUser.findById(serviceUserId)
     .populate('user')
