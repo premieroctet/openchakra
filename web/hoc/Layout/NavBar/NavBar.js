@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import Link from 'next/link'
 import {Hidden, Typography} from '@material-ui/core'
 import {withTranslation} from 'react-i18next'
 import ReactHtmlParser from 'react-html-parser'
@@ -17,8 +16,6 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Grid from '@material-ui/core/Grid'
 import IconButton from '@material-ui/core/IconButton'
 import InputLabel from '@material-ui/core/InputLabel'
-import Menu from '@material-ui/core/Menu'
-import MenuIcon from '@material-ui/icons/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import MultipleSelect from 'react-select'
@@ -36,14 +33,11 @@ import TuneIcon from '@material-ui/icons/Tune'
 import axios from 'axios'
 import moment from 'moment'
 import withStyles from '@material-ui/core/styles/withStyles'
+import BurgerMenu from '../../../components/Menu/BurgerMenu'
 import {
   removeAlfredRegistering,
   setAlfredRegistering,
 } from '../../../utils/context'
-import {
-  canAlfredParticularRegister,
-  canAlfredSelfRegister,
-} from '../../../config/config'
 import CustomTabMenu from '../../../components/CustomTabMenu/CustomTabMenu'
 import AutoCompleteTextField from
 '../../../components/Search/AutoCompleteTextField'
@@ -55,9 +49,9 @@ import LocationSelect from '../../../components/Geo/LocationSelect'
 import LogIn from '../../../components/LogIn/LogIn'
 import Register from '../../../components/Register/Register'
 import styles from '../../../static/css/components/NavBar/NavBar'
-const {PART} = require('../../../utils/consts')
-const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
-const {formatAddress} = require('../../../utils/text.js')
+import {PART} from '../../../utils/consts'
+import {setAxiosAuthentication} from '../../../utils/authentication'
+import {formatAddress} from '../../../utils/text.js'
 
 const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />
@@ -188,24 +182,7 @@ class NavBar extends Component {
     return false
   }
 
-  logout = () => {
-    clearAuthenticationToken()
-    localStorage.removeItem('path')
-    removeAlfredRegistering()
-    if (this.state.ifHomePage) {
-      window.location.reload(false)
-    }
-    else {
-      Router.push('/')
-    }
-  };
-
-  handleMenuClose = () => {
-    this.setState({anchorEl: null, anchorElB2b: null})
-  };
-
   handleOpenLogin = () => {
-    this.handleMenuClose()
     removeAlfredRegistering()
     this.setState({setOpenLogin: true, setOpenRegister: null})
   };
@@ -216,7 +193,6 @@ class NavBar extends Component {
   };
 
   handleOpenRegister = user_id => {
-    this.handleMenuClose()
     this.setState({setOpenRegister: user_id, setOpenLogin: false})
   };
 
@@ -285,16 +261,8 @@ class NavBar extends Component {
     this.setState({services: services || []})
   };
 
-  handleOpenMenuItem = event => {
-    this.setState({anchorEl: event.currentTarget})
-  };
-
   handleOpenMenuItemB2b = event => {
     this.setState({anchorElB2b: event.currentTarget})
-  };
-
-  handleClosenMenuItem = () => {
-    this.setState({anchorEl: false})
   };
 
   handleClosenMenuItemB2b = () => {
@@ -733,10 +701,8 @@ class NavBar extends Component {
   }
 
   burgerMenuLogged = classes => {
-    const{ifHomePage, companyPage, anchorEl} = this.state
-
-    const logged = this.isLoggedUser()
-    const MenuRef = React.createRef()
+    const{ifHomePage, companyPage} = this.state
+    const logged = !!this.context.user
 
     return(
       <Grid
@@ -747,49 +713,7 @@ class NavBar extends Component {
         md={ifHomePage && !logged ? 10 : ifHomePage && logged ? 2 : 1}
         sm={1}
       >
-        <IconButton
-          aria-label="open drawer"
-          onClick={this.handleOpenMenuItem}
-          classes={{root: 'custombgburger'}}
-        >
-          <MenuIcon classes={{root: `customburgerlogo ${companyPage ? classes.menuIconB2b : classes.menuIcon}`}}/>
-        </IconButton>
-        <Menu
-          anchorEl={anchorEl}
-          keepMounted
-          open={Boolean(anchorEl)}
-          onClose={this.handleClosenMenuItem}
-          getContentAnchorEl={null}
-          anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
-          transformOrigin={{vertical: 'top', horizontal: 'center'}}
-          classes={{paper: 'customburger'}}
-        >
-          {this.context.user ?
-            <>
-              <MenuItem ref={MenuRef}><Link href={'/'}><a style={{textDecoration: 'none'}}>Maison</a></Link></MenuItem>
-              <MenuItem disabled={true} style={{opacity: 1}}>{`${ReactHtmlParser(this.props.t('SEARCHBAR.hello')) } ${ this.context.user.firstname}`} !</MenuItem>
-              <MenuItem onClick={() => Router.push(`/profile/about?user=${this.context.user._id}`)}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_profil'))}</MenuItem>
-              <MenuItem onClick={() => Router.push('/account/editProfile')}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_settings'))}</MenuItem>
-              {
-                !this.context.user.is_employee ?
-                  this.context.user.is_alfred ?
-                    <MenuItem onClick={() => Router.push(`/profile/services?user=${this.context.user._id}`)}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_services'))}</MenuItem>
-                    :
-                    canAlfredSelfRegister() && (!!this.context.user.professional || canAlfredParticularRegister()) && <MenuItem onClick={() => Router.push('/creaShop/creaShop')}>{ReactHtmlParser(this.props.t('SEARCHBAR.create_shop'))}</MenuItem>
-                  : null
-              }
-              <MenuItem onClick={() => Router.push(`/profile/messages?user=${this.context.user._id}`)}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_messages'))}</MenuItem>
-              <MenuItem onClick={() => Router.push('/reservations/reservations')}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_resa'))}</MenuItem>
-              {this.context.user.is_admin ?
-                <MenuItem onClick={() => Router.push('/dashboard')}>{ReactHtmlParser(this.props.t('SEARCHBAR.dashboard_alfred'))}</MenuItem>
-                : null
-              }
-              <MenuItem onClick={this.logout}>{ReactHtmlParser(this.props.t('SEARCHBAR.log_out'))}</MenuItem>
-            </>
-            :
-            null
-          }
-        </Menu>
+        <BurgerMenu companyPage={companyPage} ifHomePage={ifHomePage} classes={classes} />
       </Grid>
     )
   }

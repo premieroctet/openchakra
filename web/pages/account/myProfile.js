@@ -1,12 +1,8 @@
-import CustomButton from '../../components/CustomButton/CustomButton'
+import React from 'react'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
-const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
-import React from 'react'
 import Grid from '@material-ui/core/Grid'
-import LayoutMobile from '../../hoc/Layout/LayoutMobile'
 import withStyles from '@material-ui/core/styles/withStyles'
-import styles from '../../static/css/pages/account/myProfile/myProfile'
 import Router from 'next/router'
 import axios from 'axios'
 import Typography from '@material-ui/core/Typography'
@@ -16,8 +12,13 @@ import SettingsIcon from '@material-ui/icons/Settings'
 import Divider from '@material-ui/core/Divider'
 import InfoIcon from '@material-ui/icons/Info'
 import ViewComfyIcon from '@material-ui/icons/ViewComfy'
+import styles from '../../static/css/pages/account/myProfile/myProfile'
+import LayoutMobile from '../../hoc/Layout/LayoutMobile'
+import {clearAuthenticationToken, setAxiosAuthentication} from '../../utils/authentication'
+import CustomButton from '../../components/CustomButton/CustomButton'
 import UserAvatar from '../../components/Avatar/UserAvatar'
-const {getRole}=require('../../utils/context')
+import {getRole} from '../../utils/context'
+import {isMonoProvider, getDataModel} from '../../config/config'
 
 
 class myProfile extends React.Component {
@@ -75,6 +76,7 @@ class myProfile extends React.Component {
             </Grid>
           </Grid>
           <Grid style={{marginTop: '5vh'}}>
+            {getDataModel() !== 'aftral' &&
             <Grid>
               <CustomButton
                 className={classes.button}
@@ -84,7 +86,8 @@ class myProfile extends React.Component {
                 {ReactHtmlParser(this.props.t('MY_PROFIL.show_my_profil'))}
               </CustomButton>
             </Grid>
-            { user && !getRole() ?
+            }
+            { user && !getRole() && !isMonoProvider() ?
               <Grid style={{marginTop: '2vh', marginBottom: '2vh'}}>
                 <CustomButton
                   className={classes.button}

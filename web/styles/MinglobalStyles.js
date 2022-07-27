@@ -109,6 +109,10 @@ export const MinGlobalStyles = createGlobalStyle`
   }
 
 
+  ul[role="menu"] a {
+    text-decoration: none;
+  }
+
   /* A11Y */
 
   .sr-only {
