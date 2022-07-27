@@ -1,4 +1,5 @@
 const crypto = require('crypto')
+
 const fs = require('fs').promises
 const path=require('path')
 const express = require('express')
@@ -58,6 +59,7 @@ const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, creat
 const {send_cookie}=require('../../utils/serverContext')
 const {isActionAllowed} = require('../../utils/userAccess')
 const ResetToken = require('../../../server/models/ResetToken')
+const {getLocationSuggestions}=require('../../../utils/geo')
 
 moment.locale('fr')
 axios.defaults.withCredentials = true

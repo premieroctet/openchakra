@@ -1,5 +1,3 @@
-import {canAlfredParticularRegister} from '../../config/config'
-import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -9,14 +7,16 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Switch from '@material-ui/core/Switch'
 import moment from 'moment'
 import {DateRangePicker} from 'react-dates'
-import styles from '../../static/css/components/FilterMenu/FilterMenu'
 import withStyles from '@material-ui/core/styles/withStyles'
 import Slider from '@material-ui/core/Slider'
 import MultipleSelect from 'react-select'
-const {setAxiosAuthentication}=require('../../utils/authentication')
-const {PRO, PART}=require('../../utils/consts')
 import axios from 'axios'
 import lodash from 'lodash'
+import styles from '../../static/css/components/FilterMenu/FilterMenu'
+import CustomButton from '../CustomButton/CustomButton'
+import {canAlfredParticularRegister} from '../../config/config'
+const {PRO, PART}=require('../../utils/consts')
+const {setAxiosAuthentication}=require('../../utils/authentication')
 
 
 class FilterMenu extends React.Component {
@@ -56,7 +56,7 @@ class FilterMenu extends React.Component {
     axios.get(`/myAlfred/api/category/${PART}`)
       .then(res => {
         let categories = res.data
-        this.setState({allCategories: categories.map(c => ({value: c._id, label: c.label}))})
+        this.setState({allCategories: categories.map(c => ({value: c._id, label: c.particular_labeel || c.professional_label}))})
       })
       .catch(err => {
         console.error(err)
@@ -263,6 +263,9 @@ class FilterMenu extends React.Component {
     }
     else if (results.length === 0) {
       resultMessage = ReactHtmlParser(this.props.t('SEARCHBAR.no_results'))
+    }
+    else {
+      resultMessage=null
     }
 
 
