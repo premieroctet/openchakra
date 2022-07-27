@@ -351,7 +351,7 @@ class NavBar extends Component {
   };
 
   onChangeCity({suggestion}) {
-    this.setState({gps: suggestion.latlng, city: suggestion.name})
+    this.setState({gps: suggestion.latlng, city: suggestion.city})
   }
 
   statusFilterChanged = event => {

@@ -56,7 +56,7 @@ class FilterMenu extends React.Component {
     axios.get(`/myAlfred/api/category/${PART}`)
       .then(res => {
         let categories = res.data
-        this.setState({allCategories: categories.map(c => ({value: c._id, label: c.label}))})
+        this.setState({allCategories: categories.map(c => ({value: c._id, label: c.particular_labeel || c.professional_label}))})
       })
       .catch(err => {
         console.error(err)

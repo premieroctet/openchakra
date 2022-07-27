@@ -30,6 +30,7 @@ import withParams from '../components/withParams'
 import {SlideGridDataModel} from '../utils/models/SlideGridDataModel'
 import {computeDistanceKm} from '../utils/functions'
 import {PART} from '../utils/consts'
+import {useUserContext} from '../contextes/user.context'
 
 moment.locale('fr')
 
@@ -68,7 +69,7 @@ const SearchPage = ({classes, width, t}) => {
   const {booking_id, keyword, gps, city, category, service, prestation, date,
     selectedAddress}=useRouter().query
 
-  const [user, setUser]=useState(null)
+  // const [user, setUser]=useState(null)
   const [address, setAddress]=useState({})
   const [categories, setCategories]=useState([])
   const [results, setResults]=useState([])
@@ -85,6 +86,9 @@ const SearchPage = ({classes, width, t}) => {
   const [scroll_count, setScroll_count]=useState(0)
   const [criterion, setCriterion]=useState({})
   const [searching, setSearching]=useState(false)
+
+  const {user}=useUserContext()
+
   const SCROLL_DELTA=3023
 
   const launchSearch = useDebouncedCallback(
@@ -93,6 +97,21 @@ const SearchPage = ({classes, width, t}) => {
     }
     , 500)
 
+  useEffect(() => {
+    if (!user) { return }
+    let allAddresses = {'main': user.billing_address.gps}
+    user.service_address.forEach(addr => {
+      allAddresses[addr._id] = {lat: addr.lat, lng: addr.lng}
+    })
+
+    if (selectedAddress !== 'all') {
+      setGps(allAddresses[selectedAddress])
+    }
+    if (!selectedAddress && !gps) {
+      setGps(allAddresses.main)
+    }
+
+  }, [user])
 
   const isServiceSearch = () => {
     if (isMarketplace()) {
@@ -147,29 +166,6 @@ const SearchPage = ({classes, width, t}) => {
       setStartDate(moment(parseInt(date)).startOf('day'))
       setEndDate(moment(parseInt(date)).endOf('day'))
     }
-    axios.get('/myAlfred/api/users/current')
-      .then(res => {
-        setUser(res.data)
-        Promise.resolve({data: res.data})
-          .then(res => {
-            let allAddresses = {'main': res.data.billing_address.gps}
-            res.data.service_address.forEach(addr => {
-              allAddresses[addr._id] = {lat: addr.lat, lng: addr.lng}
-            })
-
-            let gps=null
-            if (selectedAddress !== 'all') {
-              setGps(allAddresses[selectedAddress])
-            }
-            if (!selectedAddress && !gps) {
-              setGps(allAddresses.main)
-            }
-          })
-      })
-      .catch(err => {
-        console.error(err)
-      })
-
     axios.get(`/myAlfred/api/category/${PART}`)
       .then(res => {
         setCategories(res.data)
