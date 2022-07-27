@@ -459,6 +459,14 @@ router.get('/:order_id/products/:product_id', passport.authenticate('jwt', {sess
     .then(prices => {
       product.catalog_price=prices.catalog_price
       product.net_price=prices.net_price
+      return product.components?.length>0 ?
+        Promise.allSettled(product.components.map(comp => getProductPrices(comp.reference, data.company)))
+        :Promise.resolve([])
+    })
+    .then(results => {
+      if (product.components) {
+        product.components=product.components.filter((_, idx) => results[idx].status=='fulfilled')
+      }
       return res.json(product)
     })
     .catch(err => {

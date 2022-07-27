@@ -49,7 +49,7 @@ const CheckingProduct = ({endpoint, orderid, article, setArticle, selectItem, ad
           {t(`${wordingSection}.addTo`)}
         </NormalButton>
 
-        {info.has_linked && <div role={'alert'} aria-live='polite'>
+        {info.has_linked && info.components?.length>0 && <div role={'alert'} aria-live='polite'>
           <p>
         Les articles suivants sont liés à la réference {info.reference} ; ils seront ajoutés à la commande.
         Vous aurez la possibilité de les retirer si nécessaire.</p>
