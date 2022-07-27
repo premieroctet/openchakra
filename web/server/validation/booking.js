@@ -6,11 +6,16 @@ const User=require('../models/User')
 const ServiceUser=require('../models/ServiceUser')
 require('../models/Prestation')
 const {computeDistanceKm}=require('../../utils/functions')
+const {ALL_LOCATIONS, LOCATION_CLIENT, LOCATION_ALFRED, LOCATION_VISIO, LOCATION_ELEARNING}=require('../../utils/consts')
 
 const validateBooking = ({userId, serviceUserId, prestations, location, date, customerBookingId, informationRequest}) => {
 
   let su=null
 
+  // test location
+  if (!ALL_LOCATIONS.includes(location)) {
+    return Promise.reject(new BadRequestError(`Expected location in ${ALL_LOCATIONS}, got ${JSON.stringify(location)}`))
+  }
   if (!lodash.isBoolean(informationRequest)) {
     return Promise.reject(new BadRequestError(`Expected boolean informationRequest, got ${JSON.stringify(informationRequest)}`))
   }
@@ -40,7 +45,7 @@ const validateBooking = ({userId, serviceUserId, prestations, location, date, cu
         throw new NotFoundError('Prestations de la réservation de service inconnues dans le service')
       }
       // Check distance
-      if (location=='main') {
+      if (location==LOCATION_CLIENT) {
         const addr=customerBooking ?
           Booking.findById(customerBooking, 'address').then(booking => booking.address)
           :
@@ -62,8 +67,11 @@ const validateBooking = ({userId, serviceUserId, prestations, location, date, cu
       }
       // Check location
       const LOCS=
-      [['main', 'client', 'à domicile'], ['alfred', 'alfred', 'chez le prestataire'],
-        ['visio', 'visio', 'en visio'], ['elearning', 'elearning', 'en e-learning']]
+      [
+        [LOCATION_CLIENT, 'client', 'à domicile'],
+        [LOCATION_ALFRED, 'alfred', 'chez le prestataire'],
+        [LOCATION_VISIO, 'visio', 'en visio'],
+        [LOCATION_ELEARNING, 'elearning', 'en e-learning']]
       LOCS.forEach(([loc, attr, msg]) => {
         if (location==loc && !su.location[attr]) {
           throw new BadRequestError(`Cette prestation ne peut être effectuée ${msg}`)

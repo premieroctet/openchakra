@@ -116,7 +116,7 @@ router.get('/confirmPendingBookings', passport.authenticate('jwt', {session: fal
  Add a new booking
  Body:
    serviceUserId: serviceUser
-   location: ['main', 'alfred', 'visio', 'elearning']
+   location: in ALL_LOCATIONS
    prestations: {prestation_id: count} //
    cpf: true or false
    date: booking date
@@ -296,7 +296,7 @@ router.get('/avocotes', passport.authenticate('admin', {session: false}), (req, 
  Compute prices for booking
  Body:
    serviceUserId: serviceUser
-   location: ['main', 'alfred', 'visio', 'elearning']
+   location: in ALL_LOCATIONS
    prestations: {prestation_id: count}
    cpf: true or false
    date: booking date

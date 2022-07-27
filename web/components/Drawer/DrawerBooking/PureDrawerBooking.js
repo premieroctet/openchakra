@@ -17,16 +17,16 @@ import {useUserContext} from '../../../contextes/user.context'
 import {snackBarError} from '../../../utils/notifications'
 import {getDataModel} from '../../../config/config'
 import {client} from '../../../utils/client'
-import {API_PATH, BOOK_STATUS} from '../../../utils/consts'
-import {getExcludedTimes, getExcludedDays} from '../../../utils/dateutils'
+import {API_PATH, LOCATION_CLIENT, LOCATION_ALFRED, LOCATION_VISIO, LOCATION_ELEARNING} from '../../../utils/consts'
+import {getExcludedDays} from '../../../utils/dateutils'
 import CPF from '../Payments/CPF'
 import StyledDrawerBooking from './StyledDrawerBooking'
 
 const labelLocations = {
-  main: `à mon adresse principale`,
-  alfred: name => `chez ${name}`,
-  visio: `en visio`,
-  elearning: `en e-learning`,
+  [LOCATION_CLIENT]: `à mon adresse principale`,
+  [LOCATION_ALFRED]: name => `chez ${name}`,
+  [LOCATION_VISIO]: `en visio`,
+  [LOCATION_ELEARNING]: `en e-learning`,
 }
 
 const PureDrawerBooking = ({

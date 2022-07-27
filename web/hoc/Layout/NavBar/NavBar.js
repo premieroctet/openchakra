@@ -55,7 +55,7 @@ import LocationSelect from '../../../components/Geo/LocationSelect'
 import LogIn from '../../../components/LogIn/LogIn'
 import Register from '../../../components/Register/Register'
 import styles from '../../../static/css/components/NavBar/NavBar'
-const {PART} = require('../../../utils/consts')
+const {PART, LOCATION_CLIENT} = require('../../../utils/consts')
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
 const {formatAddress} = require('../../../utils/text.js')
 
@@ -139,7 +139,7 @@ class NavBar extends Component {
 
     if (this.context.user) {
 
-      let allAddresses = {'main': this.context.user?.billing_address}
+      let allAddresses = {LOCATION_CLIENT: this.context.user?.billing_address}
       if (this.context.user?.service_address) {
         this.context.user?.service_address.forEach(addr => {
           allAddresses[addr._id] = addr
@@ -147,7 +147,7 @@ class NavBar extends Component {
       }
       this.setState({
         allAddresses,
-        selectedAddress: this.props.selectedAddress || 'main', keyword: this.props.keyword || '',
+        selectedAddress: this.props.selectedAddress || LOCATION_CLIENT, keyword: this.props.keyword || '',
       })
     }
 
@@ -260,7 +260,7 @@ class NavBar extends Component {
       }
       else {
         this.setState({
-          gps: value === 'all' ? null : value === 'main' ? this.state.allAddresses.main.gps : {
+          gps: value === 'all' ? null : value === LOCATION_CLIENT ? this.state.allAddresses.main.gps : {
             lat: this.state.allAddresses[value].lat,
             lng: this.state.allAddresses[value].lng,
           },
@@ -476,7 +476,7 @@ class NavBar extends Component {
                     <FormControl variant="outlined">
                       <Select
                         id="outlined-select-currency"
-                        value={this.state.selectedAddress || 'main'}
+                        value={this.state.selectedAddress || LOCATION_CLIENT}
                         name={'selectedAddress'}
                         onChange={e => {
                           this.onChange(e)
@@ -485,7 +485,7 @@ class NavBar extends Component {
                       >
                         {Object.entries(this.state.allAddresses).map(([_id, value], index) => (
                           <MenuItem value={_id} key={index}>
-                            { _id=='main' ? ReactHtmlParser(this.props.t('SEARCHBAR.main_adress')) : `${value.label }, `} {formatAddress(value)}
+                            { _id==LOCATION_CLIENT ? ReactHtmlParser(this.props.t('SEARCHBAR.main_adress')) : `${value.label }, `} {formatAddress(value)}
                           </MenuItem>
                         ))}
                         <MenuItem value={'all'}>
@@ -892,7 +892,7 @@ class NavBar extends Component {
                     <Select
                       disableUnderline
                       id="outlined-select-currency"
-                      value={this.state.selectedAddress || 'main'}
+                      value={this.state.selectedAddress || LOCATION_CLIENT}
                       name={'selectedAddress'}
                       onChange={e => {
                         this.onChange(e)
@@ -901,7 +901,7 @@ class NavBar extends Component {
                     >
                       {Object.entries(this.state.allAddresses).map(([_id, value], index) => (
                         <MenuItem value={_id} key={index}>
-                          { _id=='main' ? ReactHtmlParser(this.props.t('SEARCHBAR.main_adress')) : `${value.label }, `} {formatAddress(value)}
+                          { _id==LOCATION_CLIENT ? ReactHtmlParser(this.props.t('SEARCHBAR.main_adress')) : `${value.label }, `} {formatAddress(value)}
                         </MenuItem>
                       ))}
                       <MenuItem value={'all'}>
