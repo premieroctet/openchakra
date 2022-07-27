@@ -38,7 +38,7 @@ const {
   isLoggedUserRegistered,
 } = require('../../../utils/context')
 
-const {EMPLOYEE}=require('../../../utils/consts')
+const {EMPLOYEE, LOCATION_CLIENT}=require('../../../utils/consts')
 const {formatAddress} = require('../../../utils/text.js')
 
 const {
@@ -93,7 +93,7 @@ class MobileNavbar extends React.Component {
       this.handleOpenLogin()
     }
     if (getLoggedUserId()) {
-      this.setState({logged: true, selectedAddress: 'main'})
+      this.setState({logged: true, selectedAddress: LOCATION_CLIENT})
     }
 
     setAxiosAuthentication()
@@ -103,7 +103,7 @@ class MobileNavbar extends React.Component {
         const promise = Promise.resolve({data: user})
         promise
           .then(res => {
-            let allAddresses = {'main': res.data.billing_address}
+            let allAddresses = {LOCATION_CLIENT: res.data.billing_address}
             res.data.service_address.forEach(addr => {
               allAddresses[addr._id] = addr
             })
@@ -220,7 +220,7 @@ class MobileNavbar extends React.Component {
       }
       else {
         this.setState({
-          gps: value === 'all' ? null : value === 'main' ? this.state.allAddresses.main.gps : {
+          gps: value === 'all' ? null : value === LOCATION_CLIENT ? this.state.allAddresses.main.gps : {
             lat: this.state.allAddresses[value].lat,
             lng: this.state.allAddresses[value].lng,
           },
@@ -308,7 +308,7 @@ class MobileNavbar extends React.Component {
                       <FormControl variant="outlined">
                         <Select
                           id="outlined-select-currency"
-                          value={this.state.selectedAddress || 'main'}
+                          value={this.state.selectedAddress || LOCATION_CLIENT}
                           name={'selectedAddress'}
                           onChange={e => {
                             this.onChange(e)
@@ -317,7 +317,7 @@ class MobileNavbar extends React.Component {
                         >
                           {Object.entries(this.state.allAddresses).map(([_id, value], index) => (
                             <MenuItem value={_id} key={index}>
-                              { _id=='main' ? ReactHtmlParser(this.props.t('SEARCHBAR.main_adress')) : `${value.label},${formatAddress(value)}`}
+                              { _id==LOCATION_CLIENT ? ReactHtmlParser(this.props.t('SEARCHBAR.main_adress')) : `${value.label},${formatAddress(value)}`}
                             </MenuItem>
                           ))}                          ))}
                           <MenuItem value={'all'}>
