@@ -1,15 +1,14 @@
+import React from 'react'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
-const {setAxiosAuthentication}=require('../../utils/authentication')
-import React from 'react'
-import styles from '../../static/css/components/Layout/LayoutReserations/LayoutReservations'
 import withStyles from '@material-ui/core/styles/withStyles'
 import Grid from '@material-ui/core/Grid'
-import Layout from './Layout'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
-
+import styles from '../../static/css/components/Layout/LayoutReserations/LayoutReservations'
+import {setAxiosAuthentication} from '../../utils/authentication'
 import {LAYOUT_RESA} from '../../utils/i18n'
+import Layout from './Layout'
 
 class LayoutReservations extends React.Component {
 
