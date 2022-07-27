@@ -197,7 +197,7 @@ const lineItemsImport = (model, buffer, options) => {
         }
         const mappedRecords=data.records.map(r => mapRecord(r, mapping))
         references=mappedRecords.map(r => r.destination)
-        const promises=mappedRecords.map(r => r.destination).map(r => addItem(model, null, r.reference, parseInt(r.quantity)))
+        const promises=mappedRecords.map(r => r.destination).map(r => addItem({data: model, reference: r.reference, quantity: parseInt(r.quantity)}))
         return Promise.allSettled(promises)
       })
       .then(res => {

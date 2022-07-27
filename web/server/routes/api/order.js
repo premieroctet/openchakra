@@ -270,7 +270,7 @@ router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, r
         console.error(`No order #${order_id}`)
         return res.status(HTTP_CODES.NOT_FOUND).json()
       }
-      return addItem(data, product, null, quantity, net_price, replace)
+      return addItem({data, product_id: product, quantity, net_price, replace})
     })
     .then(data => {
       return updateShipFee(data)

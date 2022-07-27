@@ -31,7 +31,7 @@ const getProductPrices = (product_ref, company) => {
 If product is present, adds quantity if replace is false else sets quantity
 If product is not present, adds the item to the order
 */
-const addItem = (data, product_id, reference, quantity, net_price, replace=false) => {
+const addItem = ({data, product_id, reference, quantity, net_price, replace=false, recurse=true}) => {
   if (isNaN(parseInt(quantity))) {
     return Promise.reject(`Article ${reference}: quantité ${quantity} incorrecte`)
   }
@@ -67,9 +67,9 @@ const addItem = (data, product_id, reference, quantity, net_price, replace=false
         data.items.push(item)
       }
       // If linked articles, append them to the order/quotation
-      if (product.has_linked && !replace) {
+      if (product.has_linked && !replace && recurse) {
         return Promise.allSettled(product.components.map(c => {
-          return addItem(data, c._id, reference, quantity, null, replace)
+          return addItem({data, product_id: c._id, reference, quantity, replace, recurse: false})
         }))
           .then(() => {
             return Promise.resolve(data)
