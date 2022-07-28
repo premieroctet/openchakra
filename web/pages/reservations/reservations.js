@@ -1,5 +1,6 @@
 import {Tooltip} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
+import styled from 'styled-components'
 import {withTranslation} from 'react-i18next'
 import CloseIcon from '@material-ui/icons/Close'
 import Dialog from '@material-ui/core/Dialog'
@@ -29,10 +30,11 @@ import styles from '../../static/css/pages/reservations/reservations'
 import {BOOKING} from '../../utils/i18n'
 import CustomButton from '../../components/CustomButton/CustomButton'
 import {booking_datetime_str} from '../../utils/dateutils'
+import {BOOK_STATUS} from '../../utils/consts'
+import {setAxiosAuthentication} from '../../utils/authentication'
+import withParams from '../../components/withParams'
+import {LOCATION_ELEARNING} from '../../utils/consts'
 import StyledReservations from './StyledReservations'
-const {BOOK_STATUS}=require('../../utils/consts')
-const {setAxiosAuthentication}=require('../../utils/authentication')
-const withParams = require('../../components/withParams')
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props
@@ -95,7 +97,6 @@ class AllReservations extends React.Component {
   loadBookings = () => {
     axios.get('/myAlfred/api/booking/alfredBooking')
       .then(res => {
-        console.log(res.data, BOOK_STATUS.TO_PAY)
         // On n'affiche pas les résas en attente de paiement
         const alfredBookings=res.data.filter(r => r.status !== BOOK_STATUS.TO_PAY)
         this.setState({alfredReservations: alfredBookings})
@@ -231,80 +232,70 @@ class AllReservations extends React.Component {
           {reservations.length ? (
             reservations.map((booking, index) => {
               return (
-                <Grid key={index} className={classes.reservationsMainContainer}>
-                  <Grid container spacing={2} style={{display: 'flex', alignItems: 'center', margin: 0, width: '100%'}}>
-                    <Grid item xl={2} lg={2} md={6} sm={6} xs={4}>
-                      {booking.is_service ?
-                        // TODO Display service picture
-                        <ServiceAvatar service={booking.service}/>
-                        :
-                        <UserAvatar user={alfredMode ? booking.user : booking.alfred}/>
-                      }
-                    </Grid>
-                    <Grid item xl={5} lg={5} md={6} sm={6} xs={8} className={classes.descriptionContainer}>
-                      <Grid className={classes.bookingNameContainer}>
-                        <Typography><strong> {booking.status==BOOK_STATUS.CUSTOMER_PAID ? 'Payée' : booking.status} - {booking.is_service ? booking.service.label : alfredMode ? booking.user.firstname : booking.alfred.firstname}</strong></Typography>
-                      </Grid>
-                      <Grid>
-                        <Typography className='booking_date'>
-                          {booking_datetime_str(booking)}
-                        </Typography>
-                      </Grid>
-                      <Grid>
-                        <Typography className={classes.serviceName} style={{color: 'rgba(39,37,37,35%)'}}>{booking.service.label}</Typography>
-                      </Grid>
-                      { booking.customer_booking &&
-                        <Grid>
-                          <Typography className={classes.serviceName} style={{color: 'rgba(39,37,37,35%)'}}><strong>Réservation AvoCotés</strong></Typography>
-                        </Grid>
-                      }
-                    </Grid>
-                    <Grid item xl={1} lg={1} md={6} sm={3} xs={4} className={classes.priceContainer}>
-                      <Typography className={classes.alfredAmount}><strong>{(alfredMode ? booking.alfred_amount : booking.amount).toFixed(2)}€</strong></Typography>
-                    </Grid>
-                    <Grid item spacing={1} container xl={4} lg={4} md={6} sm={9} xs={8} className={classes.detailButtonContainer} style={{alignItems: 'center'}}>
-                      <Grid item>
-                        <CustomButton
-                          color={'primary'}
-                          variant={'outlined'}
-                          classes={{root: `customreservationdetailbutton ${classes.buttonDetail}`}}
-                          onClick={() => this.openBookingPreview(booking._id)}>
-                          {ReactHtmlParser(this.props.t('RESERVATION.detailbutton'))}
-                        </CustomButton>
-                      </Grid>
-                      <Grid className="calendar_google" item>
-                        <Link target="_blank" href={this.getGoogleCalendarURL(booking._id)}>
-                          <Tooltip title={BOOKING.ADD_GOOGLE_AGENDA}>
-                            <img src='/static/assets/icon/google_calendar.svg' width="50px"/>
-                          </Tooltip>
-                        </Link>
-                      </Grid>
-                      <Grid item>
-                        <Link href={this.getIcsURL(booking._id)}>
-                          <Tooltip title={BOOKING.ADD_OTHER_AGENDA}>
-                            <img src='/static/assets/icon/calendar.svg' width="50px"/>
-                          </Tooltip>
-                        </Link>
-                      </Grid>
-                      {
-                        reservationType === 1 && !booking.customer_booking ?
-                          <Grid item>
-                            <CustomButton
-                              variant={'contained'}
-                              color={'primary'}
-                              classes={{root: `customresasaveagain ${classes.buttonResa}`}}
-                              onClick={() => this.newAppointment(booking)}>
-                              {ReactHtmlParser(this.props.t('RESERVATION.saveagain'))}
-                            </CustomButton>
-                          </Grid> : null
-                      }
+                <BookingItem key={index}>
+                  <div className="booking_avatar">
+                    {booking.is_service ?
+                    // TODO Display service picture
+                      <ServiceAvatar service={booking.service}/>
+                      :
+                      <UserAvatar user={alfredMode ? booking.user : booking.alfred}/>
+                    }
+                  </div>
 
-                    </Grid>
-                  </Grid>
-                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{marginTop: '5vh', marginBottom: '5vh'}}>
-                    <Divider/>
-                  </Grid>
-                </Grid>
+                  <div className='booking_desc'>
+                    <Typography>
+                      <strong> {booking.status==BOOK_STATUS.CUSTOMER_PAID ? 'Payée' : booking.status} - {booking.is_service ? booking.service.label : alfredMode ? booking.user.firstname : booking.alfred.firstname}</strong>
+                    </Typography>
+                    <Typography className='booking_date'>
+                      {booking_datetime_str(booking)}
+                    </Typography>
+                    <Typography style={{color: 'rgba(39,37,37,35%)'}}>{booking.service.label}</Typography>
+                    
+                    { booking.customer_booking &&
+                      <Typography style={{color: 'rgba(39,37,37,35%)'}}><strong>Réservation AvoCotés</strong></Typography>
+                    }
+                  
+                  </div>
+                  <p className='booking_price'>
+                    <strong>{(alfredMode ? booking.alfred_amount : booking.amount).toFixed(2)}€</strong>
+                  </p>
+
+                  <div className='booking_actions'>
+                    <CustomButton
+                      color={'primary'}
+                      variant={'outlined'}
+                      classes={{root: `customreservationdetailbutton ${classes.buttonDetail}`}}
+                      onClick={() => this.openBookingPreview(booking._id)}>
+                      {ReactHtmlParser(this.props.t('RESERVATION.detailbutton'))}
+                    </CustomButton>
+                  
+                    {
+                      reservationType === 1 && !booking.customer_booking && booking.location !== LOCATION_ELEARNING ?
+                        <CustomButton
+                          variant={'contained'}
+                          color={'primary'}
+                          classes={{root: `customresasaveagain ${classes.buttonResa}`}}
+                          onClick={() => this.newAppointment(booking)}>
+                          {ReactHtmlParser(this.props.t('RESERVATION.saveagain'))}
+                        </CustomButton>
+                        : null
+                    }
+
+                    <div className='booking_actions_calendar'>
+                      <Link target="_blank" href={this.getGoogleCalendarURL(booking._id)}>
+                        <Tooltip title={BOOKING.ADD_GOOGLE_AGENDA}>
+                          <img src='/static/assets/icon/google_calendar.svg' width="50px" alt=''/>
+                        </Tooltip>
+                      </Link>
+                      <Link href={this.getIcsURL(booking._id)}>
+                        <Tooltip title={BOOKING.ADD_OTHER_AGENDA}>
+                          <img src='/static/assets/icon/calendar.svg' width="50px" alt=''/>
+                        </Tooltip>
+                      </Link>
+                    </div>
+                  </div>
+                  
+                </BookingItem>
               )
             })) :
             <Typography className={'customresanoresamessage'}>{alfredMode ? ReactHtmlParser(this.props.t('RESERVATION.infomessageAlfred')) : ReactHtmlParser(this.props.t('RESERVATION.infomessageUser')) }</Typography>
@@ -340,5 +331,40 @@ class AllReservations extends React.Component {
     )
   }
 }
+
+const BookingItem = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--spc-4);
+
+  .booking_avatar {
+    flex: 1;
+  }
+
+  .booking_desc {
+    flex: 3;
+  }
+
+  .booking_price {
+    font-size: var(--text-lg);
+    font-weight: var(--font-bold);
+  }
+  
+  .booking_actions {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    row-gap: var(--spc-2);
+
+    button {
+      width: 100%;
+      word-break: keep-all;
+    }
+  }
+  
+  .booking_actions_calendar {
+    display: flex;
+  }
+`
 
 export default withTranslation('custom', {withRef: true})(withStyles(styles)(withParams(AllReservations)))
