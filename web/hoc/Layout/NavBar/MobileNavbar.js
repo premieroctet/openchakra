@@ -32,19 +32,17 @@ import LocationSelect from '../../../components/Geo/LocationSelect'
 import LogIn from '../../../components/LogIn/LogIn'
 import Register from '../../../components/Register/Register'
 import styles from '../../../static/css/components/MobileNavbar/MobileNavbar'
-const {
+import {
   getLoggedUserId,
   getRole,
   isLoggedUserRegistered,
-} = require('../../../utils/context')
-
-const {EMPLOYEE, LOCATION_CLIENT}=require('../../../utils/consts')
-const {formatAddress} = require('../../../utils/text.js')
-
-const {
+} from '../../../utils/context'
+import {EMPLOYEE, LOCATION_CLIENT} from '../../../utils/consts'
+import {formatAddress} from '../../../utils/text.js'
+import {
   clearAuthenticationToken,
   setAxiosAuthentication,
-} = require('../../../utils/authentication')
+} from '../../../utils/authentication'
 
 
 const Transition = React.forwardRef((props, ref) => {
@@ -88,6 +86,7 @@ class MobileNavbar extends React.Component {
 
   componentDidMount() {
     let query = Router.query
+    const {user} = this.context
 
     if(query.login === 'true') {
       this.handleOpenLogin()
@@ -96,20 +95,12 @@ class MobileNavbar extends React.Component {
       this.setState({logged: true, selectedAddress: LOCATION_CLIENT})
     }
 
-    setAxiosAuthentication()
-    axios.get('/myAlfred/api/users/current')
-      .then(res => {
-        const user=res.data
-        const promise = Promise.resolve({data: user})
-        promise
-          .then(res => {
-            let allAddresses = {LOCATION_CLIENT: res.data.billing_address}
-            res.data.service_address.forEach(addr => {
-              allAddresses[addr._id] = addr
-            })
-            this.setState({user: user, allAddresses: allAddresses})
-          })
-      }).catch(err => console.error(err))
+    let allAddresses = {LOCATION_CLIENT: user?.billing_address}
+    user?.service_address.forEach(addr => {
+      allAddresses[addr._id] = addr
+    })
+    
+    this.setState({user, allAddresses})
   }
 
   needRefresh = () => {

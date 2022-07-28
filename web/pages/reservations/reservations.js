@@ -34,6 +34,7 @@ import {BOOK_STATUS} from '../../utils/consts'
 import {setAxiosAuthentication} from '../../utils/authentication'
 import withParams from '../../components/withParams'
 import {LOCATION_ELEARNING} from '../../utils/consts'
+import {UserContext} from '../../contextes/user.context'
 import StyledReservations from './StyledReservations'
 
 const DialogTitle = withStyles(styles)(props => {
@@ -71,27 +72,23 @@ class AllReservations extends React.Component {
   }
 
   componentDidMount() {
-    setAxiosAuthentication()
-    axios.get('/myAlfred/api/users/current')
-      .then(res => {
-        let result = res.data
-        this.setState({
-          userInfo: result,
-          user: result._id,
-          isAlfred: result.is_alfred,
-          reservationType: result.is_alfred ? 0 : 1,
-        })
-        this.loadBookings()
-        if (this.props.id) {
-          setTimeout(() => this.setState({bookingPreview: this.props.id}), 1000)
-        }
-      })
-      .catch(err => {
-        if (err.response && [401, 403].includes(err.response.status)) {
-          localStorage.setItem('path', Router.asPath)
-          Router.push('/')
-        }
-      })
+
+
+    const {user} = this.context
+
+    
+    this.setState({
+      userInfo: user,
+      user: user?._id,
+      isAlfred: user?.is_alfred,
+      reservationType: user?.is_alfred ? 0 : 1,
+    })
+    this.loadBookings()
+    if (this.props.id) {
+      setTimeout(() => this.setState({bookingPreview: this.props.id}), 1000)
+    }
+      
+      
   }
 
   loadBookings = () => {
@@ -228,7 +225,7 @@ class AllReservations extends React.Component {
         <Grid style={{width: '100%'}}>
           <Divider/>
         </Grid>
-        <Grid container style={{marginTop: '10vh', display: 'flex', flexDirection: 'column'}}>
+        <Bookings>
           {reservations.length ? (
             reservations.map((booking, index) => {
               return (
@@ -281,6 +278,14 @@ class AllReservations extends React.Component {
                         : null
                     }
 
+                    {booking?.cpf_booked &&
+                    <Link href={booking.cpf_link || 'https://example.com'}>
+                      <a>
+                        {ReactHtmlParser(this.props.t('RESERVATION.cpfbutton'))}
+                      </a>
+                    </Link>
+                    }
+
                     <div className='booking_actions_calendar'>
                       <Link target="_blank" href={this.getGoogleCalendarURL(booking._id)}>
                         <Tooltip title={BOOKING.ADD_GOOGLE_AGENDA}>
@@ -300,7 +305,7 @@ class AllReservations extends React.Component {
             })) :
             <Typography className={'customresanoresamessage'}>{alfredMode ? ReactHtmlParser(this.props.t('RESERVATION.infomessageAlfred')) : ReactHtmlParser(this.props.t('RESERVATION.infomessageUser')) }</Typography>
           }
-        </Grid>
+        </Bookings>
       </Grid>
     )
   }
@@ -332,20 +337,32 @@ class AllReservations extends React.Component {
   }
 }
 
-const BookingItem = styled.div`
+AllReservations.contextType = UserContext
+
+const Bookings = styled.ul`
+  display: 'flex';
+  flex-direction: column;
+  margin-top: 10vh;
+`
+
+const BookingItem = styled.li`
   display: flex;
   flex-wrap: wrap;
-  column-gap: var(--spc-4);
+  column-gap: var(--spc-6);
+  margin-bottom: var(--spc-4);
+  padding-block: var(--spc-4);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 
   .booking_avatar {
     flex: 1;
   }
-
+  
   .booking_desc {
     flex: 3;
   }
-
+  
   .booking_price {
+    flex: 1;
     font-size: var(--text-lg);
     font-weight: var(--font-bold);
   }
@@ -359,6 +376,17 @@ const BookingItem = styled.div`
     button {
       width: 100%;
       word-break: keep-all;
+    }
+
+    a {
+      border-radius: var(--rounded-md);
+      font-weight: var(--font-bold);
+      text-align: center;
+      color: var(--white) !important;
+      text-decoration: none;
+      background-color: var(--secondary-color);
+      padding-block: var(--spc-2);
+      padding-inline: var(--spc-4);
     }
   }
   
