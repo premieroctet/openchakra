@@ -2,13 +2,13 @@ const nominatim=require('nominatim-client')
 const lodash=require('lodash')
 
 const getLocationSuggestions = (value, type) => {
-  const citySearch=type=='city'
+  const cityOnly=type=='city'
   const client = nominatim.createClient({
     useragent: 'My Alfred',
     referer: 'https://my-alfred.io',
   })
   const query={q: value, addressdetails: 1, dedupe: 1, countrycodes: 'fr'}
-  if (citySearch) {
+  if (cityOnly) {
     query.city=value
   }
   else {
@@ -16,9 +16,10 @@ const getLocationSuggestions = (value, type) => {
   }
   return client.search(query)
     .then(res => {
+      console.log(JSON.stringify(res, null, 2))
       let suggestions=res
-      if (citySearch) {
-        suggestions=res.filter(r => r.address && r.lat && r.lon && (r.address.postcode && r.address.city || r.address.village || r.address.town || r.address.county))
+      if (cityOnly) {
+        suggestions=res.filter(r => r.address && r.lat && r.lon && (r.address.postcode && (r.address.city || r.address.village || r.address.town || r.address.county)))
       }
       else {
         suggestions=res.filter(r => r.address && r.lat && r.lon && (r.address.postcode && r.address.road && (r.address.city || r.address.village || r.address.town || r.address.county)))
@@ -29,7 +30,7 @@ const getLocationSuggestions = (value, type) => {
         postcode: r.address.postcode,
         country: r.country,
         latlng: {lat: r.lat, lng: r.lon}}))
-      suggestions=lodash.uniqBy(suggestions, r => (citySearch ? `${r.city},${r.postcode},${r.country}`: `${r.name},${r.city},${r.postcode},${r.country}`))
+      suggestions=lodash.uniqBy(suggestions, r => (cityOnly ? `${r.city},${r.postcode},${r.country}`: `${r.name},${r.city},${r.postcode},${r.country}`))
       const number=parseInt(value)
       if (!isNaN(number)) {
         suggestions=suggestions.map(r => ({...r, name: `${number} ${r.name}`}))
