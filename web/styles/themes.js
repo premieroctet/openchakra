@@ -44,11 +44,14 @@ export const feurst = {
 }
 
 const redaftral = '#a13849'
+const blueaftral = '#35476e'
 
 export const aftral = {
   accentColor: redaftral,
   colors: {
     brand: redaftral,
+    primary: redaftral,
+    secondary: blueaftral,
   },
   fontFamily: `Poppins, 'sans-serif'`,
 }
