@@ -1,11 +1,4 @@
 const Style = theme => ({
-  bigContainer: {
-    marginTop: 0,
-    flexGrow: 1,
-    [theme.breakpoints.down('xs')]: {
-      marginBottom: 100,
-    },
-  },
   hidesm: {
     minWidth: '271px',
     [theme.breakpoints.down('sm')]: {
@@ -19,13 +12,6 @@ const Style = theme => ({
     [theme.breakpoints.down('sm')]: {
       marginTop: '15%',
       marginBottom: 30,
-    },
-  },
-  Rightcontent: {
-    marginLeft: '4%',
-    marginTop: '2%',
-    [theme.breakpoints.down('xs')]: {
-      margin: 0,
     },
   },
   hrSeparator: {
@@ -74,14 +60,6 @@ const Style = theme => ({
       display: 'flex',
     },
   },
-  mainContainerAboutResa: {
-    borderBottom: '1.5px #8281813b solid',
-    marginTop: '5%',
-    paddingBottom: '7%',
-    [theme.breakpoints.down('xs')]: {
-      marginTop: 30,
-    },
-  },
   mainContainerAbout: {
     alignItems: 'center',
     [theme.breakpoints.down('xs')]: {
@@ -113,12 +91,6 @@ const Style = theme => ({
     width: '100%',
 
   },
-  equipmentContainer: {
-    [theme.breakpoints.down('xs')]: {
-      display: 'flex',
-    },
-  },
-
   detailsReservationContainer: {
     display: 'flex',
     width: '100%',

@@ -24,16 +24,14 @@ import BookingPreApprouve from '../../components/BookingDetail/BookingPreApprouv
 import BookingPreview from '../../components/BookingDetail/BookingPreview'
 import LayoutMobileReservations from '../../hoc/Layout/LayoutMobileReservations'
 import LayoutReservations from '../../hoc/Layout/LayoutReservations'
-import UserAvatar from '../../components/Avatar/UserAvatar'
-import ServiceAvatar from '../../components/Avatar/ServiceAvatar'
 import styles from '../../static/css/pages/reservations/reservations'
 import {BOOKING} from '../../utils/i18n'
 import CustomButton from '../../components/CustomButton/CustomButton'
-import {booking_datetime_str} from '../../utils/dateutils'
 import {BOOK_STATUS} from '../../utils/consts'
 import withParams from '../../components/withParams'
 import {LOCATION_ELEARNING} from '../../utils/consts'
 import {UserContext} from '../../contextes/user.context'
+import BookingMinInfos from '../../components/Booking/BookingMinInfos'
 import StyledReservations from './StyledReservations'
 
 const DialogTitle = withStyles(styles)(props => {
@@ -202,7 +200,7 @@ class AllReservations extends React.Component {
   content = classes => {
     const {reservationType} = this.state
     const reservations = this.filterReservations()
-    const alfredMode = this.state.reservationType===0
+    const alfredMode = reservationType === 0
 
     return(
       <Grid style={{width: '100%'}}>
@@ -229,29 +227,9 @@ class AllReservations extends React.Component {
             reservations.map((booking, index) => {
               return (
                 <BookingItem key={index}>
-                  <div className="booking_avatar">
-                    {booking.is_service ?
-                    // TODO Display service picture
-                      <ServiceAvatar service={booking.service}/>
-                      :
-                      <UserAvatar user={alfredMode ? booking.user : booking.alfred}/>
-                    }
-                  </div>
-
-                  <div className='booking_desc'>
-                    <Typography>
-                      <strong> {booking.status==BOOK_STATUS.CUSTOMER_PAID ? 'Payée' : booking.status} - {booking.is_service ? booking.service.label : alfredMode ? booking.user.firstname : booking.alfred.firstname}</strong>
-                    </Typography>
-                    <Typography className='booking_date'>
-                      {booking_datetime_str(booking)}
-                    </Typography>
-                    <Typography style={{color: 'rgba(39,37,37,35%)'}}>{booking.service.label}</Typography>
-                    
-                    { booking.customer_booking &&
-                      <Typography style={{color: 'rgba(39,37,37,35%)'}}><strong>Réservation AvoCotés</strong></Typography>
-                    }
                   
-                  </div>
+                  <BookingMinInfos booking={booking} alfredMode={alfredMode} />
+                  
                   <p className='booking_price'>
                     <strong>{(alfredMode ? booking.alfred_amount : booking.amount).toFixed(2)}€</strong>
                   </p>
@@ -344,7 +322,7 @@ const Bookings = styled.ul`
   margin-top: 10vh;
 `
 
-const BookingItem = styled.li`
+export const BookingItem = styled.li`
   display: flex;
   flex-wrap: wrap;
   column-gap: var(--spc-6);
@@ -358,6 +336,14 @@ const BookingItem = styled.li`
   
   .booking_desc {
     flex: 3;
+  }
+
+  .booking_title {
+    font-size: var(--text-lg);
+  }
+
+  .booking_desc p {
+    margin-block: 0 var(--spc-4);
   }
   
   .booking_price {
