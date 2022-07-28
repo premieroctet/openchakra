@@ -19,13 +19,11 @@ import UserAvatar from '../../components/Avatar/UserAvatar'
 import CustomButton from '../CustomButton/CustomButton'
 import {is_development} from '../../config/config'
 import {booking_datetime_str} from '../../utils/dateutils'
-import DialogReject from './DialogReject'
+import {BOOK_STATUS, API_PATH} from '../../utils/consts'
+import {BOOKING} from '../../utils/i18n'
+import {UserContext} from '../../contextes/user.context'
 import DialogCancel from './DialogCancel'
-const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
-
-const {BOOK_STATUS} = require('../../utils/consts')
-
-const {BOOKING} = require('../../utils/i18n')
+import DialogReject from './DialogReject'
 
 registerLocale('fr', fr)
 moment.locale('fr')
@@ -47,7 +45,6 @@ class BookingPreview extends React.Component {
       currentUser: null,
       is_alfred: null,
       end_datetime: null,
-      loading: false,
       alfred_pro: false,
       rejectOpen: false,
       cancelOpen: false,
@@ -70,72 +67,59 @@ class BookingPreview extends React.Component {
     return moment(booking.prestation_date).add(1, 'hours')
   }
 
-  setLoading = () => {
-    this.setState({loading: true})
-  }
-
   componentDidMount() {
 
     const booking_id = this.props.booking_id
+    const {user: currentUser} = this.context
 
-    setAxiosAuthentication()
-    axios.get('/myAlfred/api/users/current').then(res => {
-      let result = res.data
-      this.setState({currentUser: result})
+    this.setState({currentUser})
 
-      axios.get(`/myAlfred/api/booking/${booking_id}`).then(res => {
-        const booking = res.data
-        const end_datetime = moment(booking.prestation_date).add(1, 'hours')
-        this.setState(
-          {
-            booking: booking,
-            is_alfred: booking.alfred && booking.alfred._id === result._id,
-            end_datetime: end_datetime,
-          },
-        )
+    axios.get(`${API_PATH}/booking/${booking_id}`).then(res => {
+      const booking = res.data
+      const end_datetime = moment(booking.prestation_date).add(1, 'hours')
+      this.setState(
+        {
+          booking: booking,
+          is_alfred: booking?.alfred._id === currentUser?._id,
+          end_datetime: end_datetime,
+        },
+      )
 
-        // Alfred part/pto
-        axios.get(`/myAlfred/api/shop/alfred/${booking.alfred._id}`)
-          .then(res => {
-            this.setState({alfred_pro: res.data.is_professional})
-          })
-          .catch(err => {
-            console.error(err)
-          })
-
-        if (res.data.serviceUserId) {
-          axios.get(`/myAlfred/api/serviceUser/${this.state.booking.serviceUserId}`).then(res => {
-            let resultat = res.data
-            this.setState({category: resultat.service.category})
-          }).catch(error => {
-            console.error(error)
-          })
-        }
-
-        this.socket = io()
-        this.socket.on('connect', () => {
-          this.socket.emit('booking', this.state.booking._id)
+      // Alfred part/pto
+      axios.get(`${API_PATH}/shop/alfred/${booking.alfred._id}`)
+        .then(res => {
+          this.setState({alfred_pro: res.data.is_professional})
         })
-        this.socket.on('displayStatus', data => {
-          this.setState({booking: data})
+        .catch(err => {
+          console.error(err)
         })
-      })
-        .catch(error => {
+
+      if (res.data.serviceUserId) {
+        axios.get(`${API_PATH}/serviceUser/${this.state.booking.serviceUserId}`).then(res => {
+          let resultat = res.data
+          this.setState({category: resultat.service.category})
+        }).catch(error => {
           console.error(error)
         })
+      }
+
+      this.socket = io()
+      this.socket.on('connect', () => {
+        this.socket.emit('booking', this.state.booking._id)
+      })
+      this.socket.on('displayStatus', data => {
+        this.setState({booking: data})
+      })
     })
       .catch(error => {
         console.error(error)
-        if (error.response && error.response.status === 401 || error.response.status === 403) {
-          clearAuthenticationToken()
-          Router.push({pathname: '/'})
-        }
       })
+    
   }
 
   changeStatus(status, reason=null) {
     console.trace(`change status:${reason}`)
-    axios.put(`/myAlfred/api/booking/modifyBooking/${this.props.booking_id}`, {status: status, reason: reason})
+    axios.put(`${API_PATH}/booking/modifyBooking/${this.props.booking_id}`, {status: status, reason: reason})
       .then(() => {
         this.componentDidMount()
         this.socket.emit('changeStatus', this.state.booking)
@@ -208,7 +192,7 @@ class BookingPreview extends React.Component {
     const endDate = moment(end_datetime)
     const modifyObj = {end_date: endDate, status: BOOK_STATUS.CONFIRMED}
 
-    axios.put(`/myAlfred/api/booking/modifyBooking/${this.props.booking_id}`, modifyObj)
+    axios.put(`${API_PATH}/booking/modifyBooking/${this.props.booking_id}`, modifyObj)
       .then(res => {
         this.componentDidMount()
         setTimeout(() => this.socket.emit('changeStatus', res.data), 100)
@@ -714,5 +698,7 @@ class BookingPreview extends React.Component {
     )
   }
 }
+
+BookingPreview.contextType = UserContext
 
 export default withTranslation('custom', {withRef: true})(withStyles(styles)(BookingPreview))
