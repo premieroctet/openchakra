@@ -400,7 +400,6 @@ export const aftral = createGlobalStyle`
     /* Colors */
     accent-color: ${props => props.theme?.accentColor || 'auto'};
     caret-color: ${props => props.theme?.accentColor || 'auto'};
-    --brand-color: ${props => props.theme?.colors?.brand || 'inherit'};
     --bg-selectedZone: #bcc0cd;
     --text-selectedZone: #fff;
     

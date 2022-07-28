@@ -7,6 +7,8 @@ export const MinGlobalStyles = createGlobalStyle`
     --black: ${props => props.theme?.colors?.black || '#111'};
     --white: ${props => props.theme?.colors?.white || '#FFF'};
     --brand-color: ${props => props.theme?.colors?.brand || 'black'};
+    --primary-color: ${props => props.theme?.colors?.primary || 'black'};
+    --secondary-color: ${props => props.theme?.colors?.secondary || 'black'};
     --font-family: ${props => props.theme?.fontFamily || 'arial'};
 
       /* text */
