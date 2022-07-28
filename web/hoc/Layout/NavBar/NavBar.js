@@ -133,7 +133,7 @@ class NavBar extends Component {
 
     if (this.context.user) {
 
-      let allAddresses = {LOCATION_CLIENT: this.context.user?.billing_address}
+      let allAddresses = {[LOCATION_CLIENT]: this.context.user?.billing_address}
       if (this.context.user?.service_address) {
         this.context.user?.service_address.forEach(addr => {
           allAddresses[addr._id] = addr
