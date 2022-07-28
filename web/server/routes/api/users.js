@@ -1508,8 +1508,7 @@ if (is_development()) {
 }
 
 router.get('/locations', (req, res) => {
-  const value=req.query.value
-  const type=req.query.type
+  const {value, type}=req.query
   getLocationSuggestions(value, type)
     .then(result => {
       return res.json(result)

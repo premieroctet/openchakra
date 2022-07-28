@@ -66,7 +66,7 @@ class SearchDataModel extends SlideGridDataModel {
 
 const SearchPage = ({classes, width, t}) => {
 
-  const {booking_id, keyword, gps, city, category, service, prestation, date,
+  const {booking_id, keyword, gps: gpsStr, city, category, service, prestation, date,
     selectedAddress}=useRouter().query
 
   // const [user, setUser]=useState(null)
@@ -75,6 +75,7 @@ const SearchPage = ({classes, width, t}) => {
   const [results, setResults]=useState([])
   const [filteredResults, setFilteredResults]=useState([])
   const [filter, setFilter]=useState([])
+  const [gps, setGps]=useState(null)
   const [shops, setShops]=useState([])
   const [proAlfred, setProAlfred]=useState([])
   const [startDate, setStartDate]=useState(null)
@@ -97,6 +98,11 @@ const SearchPage = ({classes, width, t}) => {
     }
     , 500)
 
+  useEffect(() => {
+    if (gpsStr) {
+      setGps(JSON.parse(gpsStr))
+    }
+  }, [gpsStr])
   useEffect(() => {
     if (!user) { return }
     let allAddresses = {'main': user.billing_address.gps}
@@ -130,11 +136,6 @@ const SearchPage = ({classes, width, t}) => {
       return {category: true, service: true}
     }
     return {date: true, perimeter: true, location: true, category: true, service: true}
-  }
-
-  const setGps = value => {
-    // TODO: implement
-    console.error('Not implemented')
   }
 
   useEffect(() => {
@@ -196,8 +197,8 @@ const SearchPage = ({classes, width, t}) => {
       )
     }
 
-    if (criterion.radius && this.state.gps) {
-      filters.push(su => computeDistanceKm(this.state.gps, su.service_address.gps) <= radius)
+    if (criterion.radius && gps) {
+      filters.push(su => computeDistanceKm(gps, su.service_address?.gps) <= criterion.radius)
     }
 
     if (criterion.locations) {
@@ -376,7 +377,7 @@ const SearchPage = ({classes, width, t}) => {
                     <Hidden only={['xl', 'lg', 'md', 'sm']} >
                       <InfiniteScroll
                         dataLength={scroll_count}
-                        next={() => setScroll_count(this.state.scroll_count+this.SCROLL_DELTA)}
+                        next={() => setScroll_count(scroll_count+this.SCROLL_DELTA)}
                         hasMore={scroll_count<results.length}
                         loader={<CircularProgress/>}
                       >
