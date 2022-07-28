@@ -10,6 +10,7 @@ import AddressService from '../../AddressService/AddressService'
 import PaymentMode from '../PaymentMode/PaymentMode'
 import styles from '../../../static/css/components/PaymentChoice/PaymentChoice'
 import {PAYMENT_CHOICE, PAYMENT_MODE} from '../../../utils/i18n'
+import {LOCATION_ELEARNING, LOCATION_VISIO} from '../../../utils/consts'
 
 class PaymentChoice extends React.Component {
   constructor(props) {
@@ -50,7 +51,7 @@ class PaymentChoice extends React.Component {
                 <a href={'#'}>{ReactHtmlParser(this.props.t('PAYMENT_MODE.link_paid_another_card'))}</a>
               </Grid>
             </Grid>
-            {(!bookingObj?.location?.elearning || !bookingObj?.location?.visio) ? null : <Grid style={{backgroundColor: 'white', borderRadius: 27, border: '1px solid rgba(210, 210, 210, 0.5)', paddingLeft: '10%', paddingTop: '5%', paddingBottom: '5%', marginTop: '2vh'}}>
+            {(bookingObj?.location === LOCATION_ELEARNING || bookingObj?.location === LOCATION_VISIO) ? null : <Grid style={{backgroundColor: 'white', borderRadius: 27, border: '1px solid rgba(210, 210, 210, 0.5)', paddingLeft: '10%', paddingTop: '5%', paddingBottom: '5%', marginTop: '2vh'}}>
               <Topic
                 titleTopic={ReactHtmlParser(this.props.t('PAYMENT_MODE.topic_postal_service'))}
                 underline={false}
