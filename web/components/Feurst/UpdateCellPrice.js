@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react'
-import styled from 'styled-components'
 
 
 const UpdateCellPrice = ({
@@ -34,9 +33,9 @@ const UpdateCellPrice = ({
   }, [initialValue])
 
   return <div className='flex items-center'>
-    <input className='grow' type={'number'} value={value} onChange={onChange} onBlur={onBlur} />
+    <input className='grow' type={'number'} value={value?.toFixed(2)} onChange={onChange} onBlur={onBlur} />
   </div>
-  
+
 }
 
 export default UpdateCellPrice
