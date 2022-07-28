@@ -1,8 +1,12 @@
 const mongoose = require('mongoose')
 const lodash=require('lodash')
+const {
+  ALL_LOCATIONS,
+  BOOK_STATUS,
+  LOCATION_ELEARNING,
+}=require('../../../utils/consts')
 const {roundCurrency}=require('../../../utils/converters')
 const {ROLES}=require('../../../utils/others/consts')
-const {BOOK_STATUS, ALL_LOCATIONS}=require('../../../utils/consts')
 const AddressSchema =require('../AddressSchema')
 
 const Schema = mongoose.Schema
@@ -221,9 +225,28 @@ const BookingSchema = new Schema({
     default: false,
     required: false,
   },
-  // URL to traning on CPF website
+  // URL to training on CPF website
   cpf_link: {
     type: String,
+  },
+  // Ling to training; required during booking confirmation
+  elearning_link: {
+    type: String,
+    required: function() { return this.location==LOCATION_ELEARNING && this.status==BOOK_STATUS.CONFIRMED },
+  },
+  // ELearning access provided by provider during confirmation
+  elearning_access: {
+    type: {
+      id: {
+        type: String,
+        required: true,
+      },
+      pass: {
+        type: String,
+        required: true,
+      },
+    },
+    required: function() { return this.location==LOCATION_ELEARNING && this.status==BOOK_STATUS.CONFIRMED },
   },
 }, {toJSON: {virtuals: true, getters: true}})
 
