@@ -330,6 +330,10 @@ export const BookingItem = styled.li`
   padding-block: var(--spc-4);
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 
+  .status_toconfirm {
+    color: orange;
+  }
+
   .booking_avatar {
     flex: 1;
   }
@@ -380,4 +384,4 @@ export const BookingItem = styled.li`
   }
 `
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(withParams(AllReservations)))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(withParams(AllReservations)))

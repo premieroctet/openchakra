@@ -694,4 +694,4 @@ const StyledBookingPreviewRow = styled.div`
   }
 `
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(BookingPreview))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(BookingPreview))

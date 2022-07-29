@@ -11,6 +11,8 @@ import {BOOKING} from '../../utils/i18n'
 const displayBookStatus = (status, amIAlfred, t) => {
   
   switch(status) {
+    case BOOK_STATUS.TO_CONFIRM:
+      return <span className='status_toconfirm'>{status}</span>
     case BOOK_STATUS.CUSTOMER_PAID:
       return 'Payée'
     case BOOK_STATUS.PREAPPROVED:
