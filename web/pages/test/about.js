@@ -73,4 +73,4 @@ class AboutTest extends React.Component {
 
 }
 
-export default withTranslation('custom', {withRef: true})(AboutTest)
+export default withTranslation(null, {withRef: true})(AboutTest)

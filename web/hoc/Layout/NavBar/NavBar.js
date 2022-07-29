@@ -1179,4 +1179,4 @@ class NavBar extends Component {
 
 NavBar.contextType = UserContext
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(NavBar))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(NavBar))

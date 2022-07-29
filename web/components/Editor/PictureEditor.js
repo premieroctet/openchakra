@@ -44,4 +44,4 @@ class PictureEditor extends React.Component {
 
 }
 
-export default withTranslation('custom', {withRef: true})(PictureEditor)
+export default withTranslation(null, {withRef: true})(PictureEditor)

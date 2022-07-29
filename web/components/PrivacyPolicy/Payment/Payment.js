@@ -12,4 +12,4 @@ function Payment() {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(Payment))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(Payment))

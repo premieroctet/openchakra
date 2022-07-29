@@ -121,5 +121,5 @@ const validator = state => {
   return !!state.ground
 }
 
-const TransUseCase=withTranslation('feurst', {withRef: true})(UseCase)
+const TransUseCase=withTranslation(null, {withRef: true})(UseCase)
 module.exports={UseCase: TransUseCase, useCaseValidator: validator}

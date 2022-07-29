@@ -41,7 +41,7 @@ class RawCardServiceInfo extends React.Component {
   }
 }
 
-const CardServiceInfo=withTranslation('custom', {withRef: true})(withStyles(styles)(RawCardServiceInfo))
+const CardServiceInfo=withTranslation(null, {withRef: true})(withStyles(styles)(RawCardServiceInfo))
 
 class CardService extends React.Component {
   constructor(props) {
@@ -201,4 +201,4 @@ class CardService extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(CardService))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(CardService))

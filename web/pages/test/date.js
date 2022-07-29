@@ -28,4 +28,4 @@ class DateTest extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(DateTest)
+export default withTranslation(null, {withRef: true})(DateTest)

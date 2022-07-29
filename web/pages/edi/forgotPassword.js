@@ -116,4 +116,4 @@ const Container = styled.div`
 
 `
 
-export default withTranslation('custom', {withRef: true})(ForgotPassword)
+export default withTranslation(null, {withRef: true})(ForgotPassword)

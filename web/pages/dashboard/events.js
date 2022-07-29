@@ -38,4 +38,4 @@ class EventLogs extends DataPage {
 
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(EventLogs))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(EventLogs))

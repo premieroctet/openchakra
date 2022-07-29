@@ -111,4 +111,4 @@ const StyledCardPreview = styled.a`
 
 `
 
-export default withTranslation('custom', {withRef: true})(CardPreview)
+export default withTranslation(null, {withRef: true})(CardPreview)

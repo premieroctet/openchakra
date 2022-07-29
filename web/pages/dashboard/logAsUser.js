@@ -152,4 +152,4 @@ class LogAsUser extends React.Component {
 }
 
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(withParams(LogAsUser)))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(withParams(LogAsUser)))

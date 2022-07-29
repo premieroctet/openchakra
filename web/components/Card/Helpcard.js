@@ -19,7 +19,7 @@ const RawCardServiceUserInfo = ({t}) => {
   
 }
 
-const CardServiceUserInfo=withTranslation('custom', {withRef: true})(RawCardServiceUserInfo)
+const CardServiceUserInfo=withTranslation(null, {withRef: true})(RawCardServiceUserInfo)
 
 
 const Helpcard = () => {

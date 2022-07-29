@@ -31,4 +31,4 @@ class SiretTest extends React.Component {
 
 }
 
-export default withTranslation('custom', {withRef: true})(SiretTest)
+export default withTranslation(null, {withRef: true})(SiretTest)

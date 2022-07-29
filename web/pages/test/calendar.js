@@ -75,4 +75,4 @@ class calendarTest extends React.Component {
 
 }
 
-export default withTranslation('custom', {withRef: true})(calendarTest)
+export default withTranslation(null, {withRef: true})(calendarTest)

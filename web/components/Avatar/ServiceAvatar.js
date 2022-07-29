@@ -98,4 +98,4 @@ function ServiceAvatar(props) {
   )
 }
 
-export default withTranslation('custom')(ServiceAvatar)
+export default withTranslation(null)(ServiceAvatar)

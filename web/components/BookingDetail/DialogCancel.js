@@ -58,4 +58,4 @@ class DialogCancel extends React.Component {
 
 }
 
-export default withTranslation('custom', {withRef: true})(DialogCancel)
+export default withTranslation(null, {withRef: true})(DialogCancel)

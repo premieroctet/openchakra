@@ -144,4 +144,4 @@ function BannerPresentation(props) {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(BannerPresentation)
+export default withTranslation(null, {withRef: true})(BannerPresentation)

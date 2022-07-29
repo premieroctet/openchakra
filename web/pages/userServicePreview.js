@@ -365,4 +365,4 @@ const UserServicesPreview = ({classes, t, address, id}) => {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(withParams(UserServicesPreview)))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(withParams(UserServicesPreview)))

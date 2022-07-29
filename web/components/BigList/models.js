@@ -34,7 +34,7 @@ class _StatusRenderer extends React.Component {
   }
 }
 
-const StatusRenderer=withTranslation('custom', {withRef: true})(_StatusRenderer)
+const StatusRenderer=withTranslation(null, {withRef: true})(_StatusRenderer)
 
 class LocationRenderer extends React.Component {
 
@@ -96,7 +96,7 @@ class _StatusFilter extends React.Component {
   }
 }
 
-const StatusFilter=withTranslation('custom', {withRef: true})(_StatusFilter)
+const StatusFilter=withTranslation(null, {withRef: true})(_StatusFilter)
 
 class ReviewStatusFilter extends React.Component {
 

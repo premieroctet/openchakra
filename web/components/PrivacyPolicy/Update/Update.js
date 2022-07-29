@@ -11,4 +11,4 @@ function Update() {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(Update))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(Update))

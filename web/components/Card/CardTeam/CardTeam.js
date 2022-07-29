@@ -69,4 +69,4 @@ function CardTeam(props) {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(CardTeam)
+export default withTranslation(null, {withRef: true})(CardTeam)

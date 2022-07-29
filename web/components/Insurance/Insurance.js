@@ -78,4 +78,4 @@ class Insurance extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(Insurance)
+export default withTranslation(null, {withRef: true})(Insurance)

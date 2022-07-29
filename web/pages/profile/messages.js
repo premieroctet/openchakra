@@ -302,4 +302,4 @@ class Messages extends React.Component {
   }
 
 }
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(withParams(Messages)))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(withParams(Messages)))

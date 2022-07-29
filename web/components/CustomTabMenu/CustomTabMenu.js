@@ -48,4 +48,4 @@ function CustomTabMenu(props) {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(CustomTabMenu)
+export default withTranslation(null, {withRef: true})(CustomTabMenu)

@@ -201,4 +201,4 @@ const HandleAccount = styled.div`
 
 `
 
-export default withTranslation('custom', {withRef: true})(FeurstRegister)
+export default withTranslation(null, {withRef: true})(FeurstRegister)

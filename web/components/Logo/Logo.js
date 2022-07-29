@@ -9,4 +9,4 @@ function Logo({className, style}) {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(Logo)
+export default withTranslation(null, {withRef: true})(Logo)

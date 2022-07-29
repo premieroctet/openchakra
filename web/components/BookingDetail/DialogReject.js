@@ -43,4 +43,4 @@ class DialogReject extends React.Component {
 
 }
 
-export default withTranslation('custom', {withRef: true})(DialogReject)
+export default withTranslation(null, {withRef: true})(DialogReject)

@@ -146,4 +146,4 @@ const LoginInputs = styled.div`
 `
 
 
-export default withLogin(withTranslation('feurst', {withRef: true})(withStyles(styles)(FeurstLogin)))
+export default withLogin(withTranslation(null, {withRef: true})(withStyles(styles)(FeurstLogin)))

@@ -33,4 +33,4 @@ class IntegerEditor extends React.Component {
 
 }
 
-export default withTranslation('custom', {withRef: true})(IntegerEditor)
+export default withTranslation(null, {withRef: true})(IntegerEditor)

@@ -23,4 +23,4 @@ class AlbumTest extends React.Component {
 
 }
 
-export default withTranslation('custom', {withRef: true})(AlbumTest)
+export default withTranslation(null, {withRef: true})(AlbumTest)

@@ -74,4 +74,4 @@ function AddService(props) {
   
 }
 
-export default withTranslation('custom')(AddService)
+export default withTranslation(null)(AddService)

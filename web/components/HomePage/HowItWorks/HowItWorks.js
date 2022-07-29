@@ -35,4 +35,4 @@ class HowItWorks extends React.Component {
 
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(HowItWorks))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(HowItWorks))

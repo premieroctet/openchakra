@@ -72,4 +72,4 @@ class ServicePreview extends PreviewBase {
 
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(withParams(ServicePreview)))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(withParams(ServicePreview)))

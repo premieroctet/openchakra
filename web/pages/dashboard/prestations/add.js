@@ -486,4 +486,4 @@ class add extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(add))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(add))

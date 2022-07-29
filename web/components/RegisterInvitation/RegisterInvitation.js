@@ -40,4 +40,4 @@ function RegisterInvitation({className, style}) {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(RegisterInvitation)
+export default withTranslation(null, {withRef: true})(RegisterInvitation)
