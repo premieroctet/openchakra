@@ -63,4 +63,4 @@ class LayoutReservations extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(LayoutReservations))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(LayoutReservations))

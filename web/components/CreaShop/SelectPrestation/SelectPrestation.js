@@ -236,4 +236,4 @@ class SelectPrestation extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(SelectPrestation))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(SelectPrestation))

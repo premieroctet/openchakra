@@ -59,4 +59,4 @@ function Topic(props) {
   )
 }
 
-export default withTranslation('custom')(Topic)
+export default withTranslation(null)(Topic)

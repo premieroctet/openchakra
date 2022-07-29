@@ -11,4 +11,4 @@ function Communication() {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(Communication))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(Communication))

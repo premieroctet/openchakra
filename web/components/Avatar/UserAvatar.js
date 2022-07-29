@@ -174,4 +174,4 @@ function UserAvatar(props) {
   )
 }
 
-export default withTranslation('custom')(UserAvatar)
+export default withTranslation(null)(UserAvatar)

@@ -88,4 +88,4 @@ scheduleTest.propTypes = {
   theme: PropTypes.object.isRequired,
 }
 
-export default withTranslation('custom', {withRef: true})(scheduleTest)
+export default withTranslation(null, {withRef: true})(scheduleTest)

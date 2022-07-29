@@ -16,4 +16,4 @@ class LoggedAsBanner extends React.Component {
   }
 }
 
-module.exports = withTranslation('custom', {withRef: true})(LoggedAsBanner)
+module.exports = withTranslation(null, {withRef: true})(LoggedAsBanner)

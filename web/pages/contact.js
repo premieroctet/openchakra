@@ -69,4 +69,4 @@ function Contact(props) {
   
 }
 
-export default withTranslation('custom')(Contact)
+export default withTranslation(null)(Contact)

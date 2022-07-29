@@ -12,5 +12,5 @@ function Data() {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(Data))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(Data))
 

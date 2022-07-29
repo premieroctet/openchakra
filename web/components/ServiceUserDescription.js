@@ -63,4 +63,4 @@ const ServiceUserDescription = ({t, classes, serviceUser, insurance, alfred, fle
   )
 }
 
-export default withTranslation('custom', {withRef: true})(ServiceUserDescription)
+export default withTranslation(null, {withRef: true})(ServiceUserDescription)

@@ -187,4 +187,4 @@ class myProfile extends React.Component {
 
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(myProfile))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(myProfile))

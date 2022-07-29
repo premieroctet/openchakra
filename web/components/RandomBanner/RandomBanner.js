@@ -132,4 +132,4 @@ function RandomBanner(props) {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(RandomBanner)
+export default withTranslation(null, {withRef: true})(RandomBanner)

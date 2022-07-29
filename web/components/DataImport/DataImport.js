@@ -80,4 +80,4 @@ class DataImport extends React.Component {
   }
 }
 
-module.exports=withTranslation('custom', {withRef: true})(DataImport)
+module.exports=withTranslation(null, {withRef: true})(DataImport)

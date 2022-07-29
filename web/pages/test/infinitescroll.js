@@ -60,4 +60,4 @@ class InfiniteTest extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(InfiniteTest)
+export default withTranslation(null, {withRef: true})(InfiniteTest)

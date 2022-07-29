@@ -72,4 +72,4 @@ const Layout = ({children, selectedAddress, classes, keyword}) => {
 }
 
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(Layout))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(Layout))

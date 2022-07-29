@@ -401,4 +401,4 @@ class MobileNavbar extends React.Component {
 
 MobileNavbar.contextType = UserContext
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(MobileNavbar))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(MobileNavbar))

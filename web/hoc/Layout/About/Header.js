@@ -161,4 +161,4 @@ class Header extends React.Component {
 }
 
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(Header))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(Header))

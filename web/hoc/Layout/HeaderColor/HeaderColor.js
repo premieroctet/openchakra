@@ -28,4 +28,4 @@ class HeaderColor extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(HeaderColor))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(HeaderColor))

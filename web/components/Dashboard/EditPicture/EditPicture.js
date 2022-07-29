@@ -104,4 +104,4 @@ EditPicture.propTypes = {
 }
 
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles, {withTheme: true})(EditPicture))
+export default withTranslation(null, {withRef: true})(withStyles(styles, {withTheme: true})(EditPicture))

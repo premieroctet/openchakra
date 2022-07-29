@@ -422,4 +422,4 @@ const SearchPage = ({classes, width, t}) => {
 }
 
 
-export default withTranslation('custom', {withRef: true})(withWidth()(withStyles(styles)(withParams(SearchPage))))
+export default withTranslation(null, {withRef: true})(withWidth()(withStyles(styles)(withParams(SearchPage))))

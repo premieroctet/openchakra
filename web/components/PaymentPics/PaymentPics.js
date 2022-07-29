@@ -49,4 +49,4 @@ class PaymentPics extends React.Component {
 
 }
 
-export default withTranslation('custom', {withRef: true})(PaymentPics)
+export default withTranslation(null, {withRef: true})(PaymentPics)

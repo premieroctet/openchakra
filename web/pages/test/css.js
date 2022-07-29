@@ -20,4 +20,4 @@ class CSSTest extends React.Component{
 
 }
 
-export default withTranslation('custom', {withRef: true})(CSSTest)
+export default withTranslation(null, {withRef: true})(CSSTest)

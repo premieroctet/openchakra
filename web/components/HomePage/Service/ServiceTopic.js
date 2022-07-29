@@ -68,4 +68,4 @@ class ServiceTopic extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(ServiceTopic))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(ServiceTopic))

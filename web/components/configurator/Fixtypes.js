@@ -100,5 +100,5 @@ const validator = state => {
   return !!state.teethShieldFixType && !!state.borderShieldFixType
 }
 
-const TransFixTypes=withTranslation('feurst', {withRef: true})(FixTypes)
+const TransFixTypes=withTranslation(null, {withRef: true})(FixTypes)
 module.exports={FixTypes: TransFixTypes, fixtypesValidator: validator}

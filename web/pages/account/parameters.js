@@ -55,4 +55,4 @@ class parameters extends React.Component{
   }
 }
 
-export default withTranslation('custom', {withRef: true})(parameters)
+export default withTranslation(null, {withRef: true})(parameters)

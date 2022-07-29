@@ -212,4 +212,4 @@ const ChangeAddressButton = styled.button`
   }
 `
 
-export default withTranslation('feurst', {withRef: true})(DialogAddress)
+export default withTranslation(null, {withRef: true})(DialogAddress)

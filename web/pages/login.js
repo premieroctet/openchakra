@@ -15,4 +15,4 @@ class login extends Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(login)
+export default withTranslation(null, {withRef: true})(login)

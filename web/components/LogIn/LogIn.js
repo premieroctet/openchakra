@@ -108,4 +108,4 @@ const Login = ({callRegister,
 }
 
 
-export default withLogin(withTranslation('custom', {withRef: true})(withStyles(styles)(Login)))
+export default withLogin(withTranslation(null, {withRef: true})(withStyles(styles)(Login)))

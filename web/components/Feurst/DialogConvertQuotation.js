@@ -119,4 +119,4 @@ const StyledDialog = styled(PureDialog)`
  
 `
 
-export default withTranslation('feurst', {withRef: true})(DialogConvertQuotation)
+export default withTranslation(null, {withRef: true})(DialogConvertQuotation)

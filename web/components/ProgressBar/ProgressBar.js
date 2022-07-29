@@ -18,4 +18,4 @@ class ProgressBar extends React.Component {
   }
 }
 
-module.exports=withTranslation('custom', {withRef: true})(ProgressBar)
+module.exports=withTranslation(null, {withRef: true})(ProgressBar)

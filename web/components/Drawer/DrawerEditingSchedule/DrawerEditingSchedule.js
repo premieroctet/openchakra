@@ -207,4 +207,4 @@ class DrawerEditingSchedule extends React.Component {
 
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles, {withTheme: true})(DrawerEditingSchedule))
+export default withTranslation(null, {withRef: true})(withStyles(styles, {withTheme: true})(DrawerEditingSchedule))

@@ -735,4 +735,4 @@ const DrawerBooking = ({
   )
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(DrawerBooking))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(DrawerBooking))

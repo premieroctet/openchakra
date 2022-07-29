@@ -131,4 +131,4 @@ const StyledAddress = styled.div`
 
 `
 
-export default withTranslation('feurst', {withRef: true})(Address)
+export default withTranslation(null, {withRef: true})(Address)

@@ -122,4 +122,4 @@ class MyApp extends App {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(MyApp)
+export default withTranslation(null, {withRef: true})(MyApp)

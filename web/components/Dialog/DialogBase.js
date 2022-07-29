@@ -67,4 +67,4 @@ render = () => {
 
 }
 
-module.exports=withTranslation('custom', {withRef: true})(withStyles(styles)(DialogBase))
+module.exports=withTranslation(null, {withRef: true})(withStyles(styles)(DialogBase))

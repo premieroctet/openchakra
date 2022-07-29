@@ -104,4 +104,4 @@ class AddressAndFacturation extends React.Component {
 
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(AddressAndFacturation))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(AddressAndFacturation))

@@ -20,4 +20,4 @@ function Policy() {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(Policy))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(Policy))

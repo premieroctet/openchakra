@@ -53,4 +53,4 @@ function TrustAndSecurity({t, classes}) {
   
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(TrustAndSecurity))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(TrustAndSecurity))

@@ -68,4 +68,4 @@ const BaseCreateTable = ({
   )
 }
 
-export default withTranslation('feurst', {withRef: true})(withEdiRequest(BaseCreateTable))
+export default withTranslation(null, {withRef: true})(withEdiRequest(BaseCreateTable))

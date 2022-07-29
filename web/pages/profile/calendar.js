@@ -113,4 +113,4 @@ class ProfileCalendar extends React.Component {
 
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(withParams(ProfileCalendar)))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(withParams(ProfileCalendar)))

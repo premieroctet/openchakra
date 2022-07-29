@@ -27,4 +27,4 @@ const Equipments = ({classes, t, allEquipments, selectedEquipments, alfred}) => 
   )
 }
 
-export default withTranslation('custom', {withRef: true})(Equipments)
+export default withTranslation(null, {withRef: true})(Equipments)

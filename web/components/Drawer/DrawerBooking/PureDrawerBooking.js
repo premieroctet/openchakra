@@ -354,4 +354,4 @@ const PureDrawerBooking = ({
   )
 }
 
-export default withTranslation('custom', {withRef: true})(PureDrawerBooking)
+export default withTranslation(null, {withRef: true})(PureDrawerBooking)

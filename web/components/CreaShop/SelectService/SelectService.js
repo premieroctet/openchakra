@@ -262,4 +262,4 @@ class SelectService extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles, {withTheme: true})(SelectService))
+export default withTranslation(null, {withRef: true})(withStyles(styles, {withTheme: true})(SelectService))
