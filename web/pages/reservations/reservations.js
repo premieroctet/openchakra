@@ -1,4 +1,4 @@
-import {Tooltip} from '@material-ui/core'
+import React from 'react'
 import {withStyles} from '@material-ui/core/styles'
 import styled from 'styled-components'
 import {withTranslation} from 'react-i18next'
@@ -9,7 +9,6 @@ import Divider from '@material-ui/core/Divider'
 import Grid from '@material-ui/core/Grid'
 import IconButton from '@material-ui/core/IconButton'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
-import React from 'react'
 import Router from 'next/router'
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
@@ -18,20 +17,19 @@ import axios from 'axios'
 import moment from 'moment'
 import ReactHtmlParser from 'react-html-parser'
 import Link from 'next/link'
-import {getDataModel} from '../../config/config'
-import {bookingUrl} from '../../config/config'
+import {getDataModel, is_development, bookingUrl} from '../../config/config'
 import BookingPreApprouve from '../../components/BookingDetail/BookingPreApprouve'
 import BookingPreview from '../../components/BookingDetail/BookingPreview'
 import LayoutMobileReservations from '../../hoc/Layout/LayoutMobileReservations'
 import LayoutReservations from '../../hoc/Layout/LayoutReservations'
 import styles from '../../static/css/pages/reservations/reservations'
-import {BOOKING} from '../../utils/i18n'
 import CustomButton from '../../components/CustomButton/CustomButton'
 import {BOOK_STATUS} from '../../utils/consts'
 import withParams from '../../components/withParams'
 import {LOCATION_ELEARNING} from '../../utils/consts'
 import {UserContext} from '../../contextes/user.context'
 import BookingMinInfos from '../../components/Booking/BookingMinInfos'
+import CalendarActions from '../../components/Calendar/AddToCalendar'
 import StyledReservations from './StyledReservations'
 
 const DialogTitle = withStyles(styles)(props => {
@@ -136,14 +134,6 @@ class AllReservations extends React.Component {
     this.setState({bookingPreview: bookingId, bookingPreApprouved: null})
   }
 
-  getIcsURL = bookingId => {
-    return `/myAlfred/api/booking/${bookingId}/ics`
-  }
-
-  getGoogleCalendarURL = bookingId => {
-    return `/myAlfred/api/booking/${bookingId}/google_calendar`
-  }
-
   openBookingPreAprouved = bookingId => {
     this.loadBookings()
     this.setState({bookingPreview: null, bookingPreApprouved: bookingId})
@@ -228,11 +218,7 @@ class AllReservations extends React.Component {
               return (
                 <BookingItem key={index}>
                   
-                  <BookingMinInfos booking={booking} amIAlfred={alfredMode} />
-                  
-                  <p className='booking_price'>
-                    <strong>{(alfredMode ? booking.alfred_amount : booking.amount).toFixed(2)}€</strong>
-                  </p>
+                  <BookingMinInfos booking={booking} amIAlfred={alfredMode} withPrice />
 
                   <div className='booking_actions'>
                     <CustomButton
@@ -263,18 +249,10 @@ class AllReservations extends React.Component {
                     </Link>
                     }
 
-                    <div className='booking_actions_calendar'>
-                      <Link target="_blank" href={this.getGoogleCalendarURL(booking._id)}>
-                        <Tooltip title={BOOKING.ADD_GOOGLE_AGENDA}>
-                          <img src='/static/assets/icon/google_calendar.svg' width="50px" alt=''/>
-                        </Tooltip>
-                      </Link>
-                      <Link href={this.getIcsURL(booking._id)}>
-                        <Tooltip title={BOOKING.ADD_OTHER_AGENDA}>
-                          <img src='/static/assets/icon/calendar.svg' width="50px" alt=''/>
-                        </Tooltip>
-                      </Link>
-                    </div>
+                    <CalendarActions bookingId={booking._id} />
+
+                    {is_development() && <p>Dev only:${booking._id}</p>}
+                    
                   </div>
                   
                 </BookingItem>
@@ -294,22 +272,20 @@ class AllReservations extends React.Component {
     const {reservationType, userInfo, bookingPreview, bookingPreApprouved} = this.state
 
     return (
-      <StyledReservations theme={theme}>
-        <Grid>
-          <Grid className={classes.hiddenMobile}>
-            <LayoutReservations reservationType={reservationType} onReservationTypeChanged={this.onReservationTypeChanged} userInfo={userInfo}>
-              {this.content(classes)}
-            </LayoutReservations>
-          </Grid>
-          <Grid className={classes.hidden}>
-            <LayoutMobileReservations reservationType={reservationType} currentIndex={2} onReservationTypeChanged={this.onReservationTypeChanged} userInfo={userInfo}>
-              {this.content(classes)}
-            </LayoutMobileReservations>
-          </Grid>
-          { bookingPreview ? this.bookingPreviewModal(classes) : null}
-          { bookingPreApprouved ? this.bookingPreApprouved(classes) : null}
+      <Grid>
+        <Grid className={classes.hiddenMobile}>
+          <LayoutReservations reservationType={reservationType} onReservationTypeChanged={this.onReservationTypeChanged} userInfo={userInfo}>
+            {this.content(classes)}
+          </LayoutReservations>
         </Grid>
-      </StyledReservations>
+        <Grid className={classes.hidden}>
+          <LayoutMobileReservations reservationType={reservationType} currentIndex={2} onReservationTypeChanged={this.onReservationTypeChanged} userInfo={userInfo}>
+            {this.content(classes)}
+          </LayoutMobileReservations>
+        </Grid>
+        { bookingPreview ? this.bookingPreviewModal(classes) : null}
+        { bookingPreApprouved ? this.bookingPreApprouved(classes) : null}
+      </Grid>
     )
   }
 }
@@ -319,42 +295,18 @@ AllReservations.contextType = UserContext
 const Bookings = styled.ul`
   display: 'flex';
   flex-direction: column;
+  padding: 0;
   margin-top: 10vh;
 `
 
 export const BookingItem = styled.li`
   display: flex;
   flex-wrap: wrap;
-  column-gap: var(--spc-6);
+  column-gap: var(--spc-8);
   margin-bottom: var(--spc-4);
   padding-block: var(--spc-4);
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-
-  .status_toconfirm {
-    color: orange;
-  }
-
-  .booking_avatar {
-    flex: 1;
-  }
-  
-  .booking_desc {
-    flex: 3;
-  }
-
-  .booking_title {
-    font-size: var(--text-lg);
-  }
-
-  .booking_desc p {
-    margin-block: 0 var(--spc-4);
-  }
-  
-  .booking_price {
-    flex: 1;
-    font-size: var(--text-lg);
-    font-weight: var(--font-bold);
-  }
+ 
   
   .booking_actions {
     flex: 1;
@@ -379,8 +331,9 @@ export const BookingItem = styled.li`
     }
   }
   
-  .booking_actions_calendar {
+  .calendar_actions {
     display: flex;
+    justify-content: space-evenly;
   }
 `
 

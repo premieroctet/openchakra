@@ -270,11 +270,8 @@ class BookingPreview extends React.Component {
     }
     return (
       <>
-        <BookingPreviewRow>
           
-          <BookingMinInfos booking={booking} amIAlfred={amIAlfred}/>
-          
-        </BookingPreviewRow>
+        <BookingMinInfos booking={booking} amIAlfred={amIAlfred}/>
         
         {booking === null ||
                   currentUser === null ? null : booking.status ===
@@ -685,13 +682,6 @@ const StyledBookingPreviewRow = styled.div`
   column-gap: var(--spc-6);
   padding-block: var(--spc-4);
 
-  .booking_avatar {
-    flex: 1;
-  }
-  
-  .booking_desc {
-    flex: 3;
-  }
 `
 
 export default withTranslation(null, {withRef: true})(withStyles(styles)(BookingPreview))
