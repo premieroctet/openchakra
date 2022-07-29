@@ -715,4 +715,4 @@ class BookingPreview extends React.Component {
   }
 }
 
-export default withTranslation(null, {withRef: true})(withStyles(styles)(BookingPreview))
+export default withTranslation('custom', {withRef: true})(withStyles(styles)(BookingPreview))
