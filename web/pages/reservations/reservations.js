@@ -70,7 +70,7 @@ class AllReservations extends React.Component {
 
     const {user} = this.context
 
-    
+
     this.setState({
       userInfo: user,
       user: user?._id,
@@ -81,8 +81,8 @@ class AllReservations extends React.Component {
     if (this.props.id) {
       setTimeout(() => this.setState({bookingPreview: this.props.id}), 1000)
     }
-      
-      
+
+
   }
 
   loadBookings = () => {
@@ -216,7 +216,7 @@ class AllReservations extends React.Component {
             reservations.map((booking, index) => {
               return (
                 <BookingItem key={index}>
-                  
+
                   <BookingMinInfos booking={booking} amIAlfred={alfredMode} withPrice />
 
                   <div className='booking_actions'>
@@ -227,7 +227,7 @@ class AllReservations extends React.Component {
                       onClick={() => this.openBookingPreview(booking._id)}>
                       {ReactHtmlParser(this.props.t('RESERVATION.detailbutton'))}
                     </CustomButton>
-                  
+
                     {
                       reservationType === 1 && !booking.customer_booking && booking.location !== LOCATION_ELEARNING ?
                         <CustomButton
@@ -242,7 +242,7 @@ class AllReservations extends React.Component {
 
                     {booking?.cpf_booked &&
                     <Link href={booking.cpf_link || 'https://example.com'}>
-                      <a>
+                      <a target='_blank'>
                         {ReactHtmlParser(this.props.t('RESERVATION.cpfbutton'))}
                       </a>
                     </Link>
@@ -250,10 +250,8 @@ class AllReservations extends React.Component {
 
                     <CalendarActions bookingId={booking._id} />
 
-                    {is_development() && <p>Dev only:${booking._id}</p>}
-                    
                   </div>
-                  
+
                 </BookingItem>
               )
             })) :
@@ -305,8 +303,8 @@ export const BookingItem = styled.li`
   margin-bottom: var(--spc-4);
   padding-block: var(--spc-4);
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
- 
-  
+
+
   .booking_actions {
     flex: 1;
     display: flex;
@@ -329,7 +327,7 @@ export const BookingItem = styled.li`
       padding-inline: var(--spc-4);
     }
   }
-  
+
   .calendar_actions {
     display: flex;
     justify-content: space-evenly;
