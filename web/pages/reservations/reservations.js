@@ -228,7 +228,7 @@ class AllReservations extends React.Component {
               return (
                 <BookingItem key={index}>
                   
-                  <BookingMinInfos booking={booking} alfredMode={alfredMode} />
+                  <BookingMinInfos booking={booking} amIAlfred={alfredMode} />
                   
                   <p className='booking_price'>
                     <strong>{(alfredMode ? booking.alfred_amount : booking.amount).toFixed(2)}€</strong>

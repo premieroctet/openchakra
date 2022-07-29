@@ -17,7 +17,6 @@ import Hidden from '@material-ui/core/Hidden'
 import BookingDetail from '../../components/BookingDetail/BookingDetail'
 import styles from '../../static/css/components/BookingDetail/BookingPreview/BookingPreview'
 import CustomButton from '../CustomButton/CustomButton'
-import {is_development, isMonoProvider} from '../../config/config'
 import {booking_datetime_str} from '../../utils/dateutils'
 import {BOOK_STATUS, API_PATH} from '../../utils/consts'
 import {BOOKING} from '../../utils/i18n'
@@ -236,7 +235,7 @@ class BookingPreview extends React.Component {
     const customer_fee = is_alfred ? 0 : booking.customer_fee
 
     // Am i the service provider ?
-    const amIAlfred = !booking.is_service && (currentUser._id == booking.alfred._id)
+    const amIAlfred = currentUser._id == booking.alfred._id
     const displayUser = amIAlfred ? booking.user : booking.alfred
 
     const status = booking.status
@@ -262,8 +261,7 @@ class BookingPreview extends React.Component {
       :
       booking_datetime_str(booking)
 
-    const phone = booking.is_service ? '' : amIAlfred ? booking.user.phone : booking.alfred.phone
-    const customer_booking_title = booking.customer_booking && ReactHtmlParser(this.props.t('BOOKING.avocotes_resa')) + booking.customer_booking.user.full_name
+    const phone = amIAlfred ? booking.user.phone : booking.alfred.phone
 
     if ((currentUser._id != booking.user._id) && (booking.alfred && booking.alfred._id != currentUser._id)) {
       return (
@@ -273,33 +271,9 @@ class BookingPreview extends React.Component {
     return (
       <>
         <BookingPreviewRow>
-          {/* Avatar */}
-          <BookingMinInfos booking={booking} alfredMode={amIAlfred}/>
-          <div className='booking_desc'>
-            <h2>
-              {status === BOOK_STATUS.PREAPPROVED ?
-                amIAlfred ? ReactHtmlParser(this.props.t('BOOKING.pre_approved')) : BOOKING.invit_checking
-                :
-                status
-              }
-            </h2>
-
-            {!isMonoProvider &&
-              <Typography>
-                {displayUser && displayUser.full_name}
-              </Typography>
-            }
-            <Typography>
-              {booking.service }<br/>{booking_datetime_str(booking)}
-            </Typography>
-              
-            {is_development() && <p>Dev only:${booking._id}</p>}
-            { customer_booking_title &&
-                        <Typography>
-                          {customer_booking_title}
-                        </Typography>
-            }
-          </div>
+          
+          <BookingMinInfos booking={booking} amIAlfred={amIAlfred}/>
+          
         </BookingPreviewRow>
         
         {booking === null ||
