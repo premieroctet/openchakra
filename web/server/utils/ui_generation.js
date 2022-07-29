@@ -115,6 +115,7 @@ const createCSSConfiguration = items => {
 const createI18NConfiguration = items => {
   console.log(`Generating ${items.length} I18N items`)
   items = items.filter(i => i.attributes?.length>0)
+  items=lodash.sortBy(items, i => i.classname.toLowerCase())
   const formattedItems=items.map(it => `\t"${it.classname}": "${it.attributes[0].value.replace(/"/g, '\\"')}"`).join(',\n')
   const output=`{\n${formattedItems}\n}`
   Promise.resolve(output)
