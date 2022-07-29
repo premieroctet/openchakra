@@ -37,7 +37,7 @@ const BookingMinInfos = ({t, booking, amIAlfred, withPrice}) => {
   const displayDate = new Date(booking.date).toLocaleDateString('fr-FR', {weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric'})
   const customer_booking_title = booking.customer_booking && ReactHtmlParser(t('BOOKING.avocotes_resa')) + booking.customer_booking.user.full_name
   const isElearning = booking.location === LOCATION_ELEARNING
-  const isCPF = !!booking.cpf_booked
+  const isCPF = !!booking?.cpf_booked
 
 
   return (
@@ -106,6 +106,7 @@ const StyledBookingMinInfos = styled.div`
                         'title'
                         'misc'
                         'price';
+  margin-bottom: var(--spc-4);
       
   
   @media (${screen.sm}) {
