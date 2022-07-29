@@ -55,11 +55,7 @@ const Style = theme => ({
       justifyContent: 'center',
     },
   },
-  containerTitleSectionAbout: {
-    [theme.breakpoints.down('xs')]: {
-      display: 'flex',
-    },
-  },
+  
   mainContainerAbout: {
     alignItems: 'center',
     [theme.breakpoints.down('xs')]: {
