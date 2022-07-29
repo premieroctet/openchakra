@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react'
-import {useRouter} from 'next/router'
+import React, {useState} from 'react'
+import {withTranslation} from 'react-i18next'
 import styled from 'styled-components'
 // import {client} from '../../utils/client'
 import axios from 'axios'
@@ -8,7 +8,6 @@ import DevLog from '../../components/DevLog'
 import Layout from '../../hoc/Layout/Layout'
 import {screen} from '../../styles/screenWidths'
 import {getHostUrl} from '../../config/config'
-import DrawerBooking from '../../components/Drawer/DrawerBooking/DrawerBooking'
 import PureDrawerBooking from '../../components/Drawer/DrawerBooking/PureDrawerBooking'
 import PureDialog from '../../components/Dialog/PureDialog'
 
@@ -21,38 +20,9 @@ const Stars = ({rating, max}) => {
   )
 }
 
-// const useIntersectionObserver = (ref, options) => {
-//   const [isIntersecting, setIsIntersecting] = React.useState(false)
-
-//   React.useEffect(() => {
-//     const observer = new IntersectionObserver(([entry]) => {
-//       console.log(entry)
-//       setIsIntersecting(entry.isIntersecting)
-//     }, options)
-
-//     if (ref.current) {
-//       observer.observe(ref.current)
-//     }
-
-//     return () => {
-//       observer.unobserve(ref.current)
-//     }
-//   }, [])
-
-//   return isIntersecting
-// }
-
-const toggleDrawer = open => event => {
-  if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-    return
-  }
-  setDrawerVisible(open)
-}
-
 const AFTRAL_ICON_PATH = '/static/assets/icon/aftral'
 
-
-const Training = ({training}) => {
+const Training = ({training, t}) => {
 
 
   const globalNote = Number(4.4).toPrecision(2)
@@ -184,7 +154,7 @@ const Training = ({training}) => {
             </BoxVideoAndDownload>
           </div>
 
-          <BookingButton onClick={() => setIsOpenDialog(true)}>Réserver cette formation</BookingButton>
+          <BookingButton onClick={() => setIsOpenDialog(true)}>{t('RESERVATION.book_button')}</BookingButton>
 
           <Figures>
             <ul>
@@ -666,7 +636,7 @@ const Opinions = styled(RoundedBox)`
 `
 
 const StyledTraining = styled.div`
-   
+
   min-height: 100vh;
   background-color: var(--bg-color);
   position: relative;
@@ -792,4 +762,4 @@ const StyledTraining = styled.div`
 `
 
 
-export default Training
+export default withTranslation(null, {withRef: true})(Training)
