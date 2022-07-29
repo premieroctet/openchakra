@@ -30,7 +30,6 @@ import {LOCATION_ELEARNING} from '../../utils/consts'
 import {UserContext} from '../../contextes/user.context'
 import BookingMinInfos from '../../components/Booking/BookingMinInfos'
 import CalendarActions from '../../components/Calendar/AddToCalendar'
-import StyledReservations from './StyledReservations'
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props
