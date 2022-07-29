@@ -25,7 +25,6 @@ import Select from '@material-ui/core/Select'
 import Slide from '@material-ui/core/Slide'
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
 import TextField from '@material-ui/core/TextField'
-import axios from 'axios'
 import withStyles from '@material-ui/core/styles/withStyles'
 import {UserContext} from '../../../contextes/user.context'
 import LocationSelect from '../../../components/Geo/LocationSelect'
@@ -41,7 +40,6 @@ import {EMPLOYEE, LOCATION_CLIENT} from '../../../utils/consts'
 import {formatAddress} from '../../../utils/text.js'
 import {
   clearAuthenticationToken,
-  setAxiosAuthentication,
 } from '../../../utils/authentication'
 
 
