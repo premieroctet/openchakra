@@ -549,6 +549,8 @@
 	"DRAWER_BOOKING.resa_button": "<strong><span style=\"color: rgb(255, 255, 255);\">Acheter</span></strong>",
 	"DRAWER_BOOKING.next_step_paiment": "Choix du paiement à l'étape suivante",
 	"DRAWER_BOOKING.button_info": "Demande d'informations",
+	"DRAWER_BOOKING.resa_button": "Réserver",
+	"DRAWER_BOOKING.buy_button": "Acheter",
 	"BOOKING_DETAIL.move_cost": "Frais de déplacement",
 	"BOOKING_DETAIL.delivery_cost": "Frais de livraison/enlèvement",
 	"BOOKING_DETAIL.service_cost": "Marge",
