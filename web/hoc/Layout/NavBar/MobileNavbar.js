@@ -94,10 +94,10 @@ class MobileNavbar extends React.Component {
     }
 
     let allAddresses = {LOCATION_CLIENT: user?.billing_address}
-    user?.service_address.forEach(addr => {
+    user && user.service_address.forEach(addr => {
       allAddresses[addr._id] = addr
     })
-    
+
     this.setState({user, allAddresses})
   }
 
