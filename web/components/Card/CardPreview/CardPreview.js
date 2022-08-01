@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography'
 import {bookingUrl} from '../../../config/config'
 import UserAvatar from '../../Avatar/UserAvatar'
 import {getDataModel, isMonoProvider} from '../../../config/config'
+import AllInclusiveCardPreview from './ALLInclusiveCardPreview'
 
 
 const CardPreview = ({item}) => {
@@ -20,6 +21,12 @@ const CardPreview = ({item}) => {
   const city = item.service_address?.city || ''
   const image = item?.service?.picture
 
+  // TODO rustine all-E
+  if (getDataModel()=='all-inclusive') {
+    return (
+      <AllInclusiveCardPreview item={item}/>
+    )
+  }
 
   return(
     <Link href={bookingUrl(item._id)} >
@@ -65,13 +72,13 @@ const StyledCardPreview = styled.a`
   /* justify-content: center; */
   align-items: center;
   cursor: pointer;
-  
+
   img {
     width: 100%;
     height: auto;
     border-radius: 5px;
   }
-  
+
   & > div {
     margin-top: 40px;
     min-height: 300px;
@@ -99,12 +106,12 @@ const StyledCardPreview = styled.a`
       img {
         margin-bottom: var(--spc-4);
       }
-  
+
       `
   }
 
   return `
-    
+
   `
 }
  }
