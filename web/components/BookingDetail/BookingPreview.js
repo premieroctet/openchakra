@@ -17,11 +17,12 @@ import BookingDetail from '../../components/BookingDetail/BookingDetail'
 import styles from '../../static/css/components/BookingDetail/BookingPreview/BookingPreview'
 import CustomButton from '../CustomButton/CustomButton'
 import {booking_datetime_str} from '../../utils/dateutils'
-import {BOOK_STATUS, API_PATH} from '../../utils/consts'
+import {BOOK_STATUS, API_PATH, LOCATION_ELEARNING} from '../../utils/consts'
 import {BOOKING} from '../../utils/i18n'
 import {UserContext} from '../../contextes/user.context'
 import BookingMinInfos from '../Booking/BookingMinInfos'
 import AskForCPF from '../Training/CPF/AskForCPF'
+import BookingElearningAccess from '../Booking/BookingElearningAccess'
 import DialogCancel from './DialogCancel'
 import DialogReject from './DialogReject'
 
@@ -231,6 +232,7 @@ class BookingPreview extends React.Component {
     const countPrestations = this.computeCountPrestations()
 
     const isCPF = !!booking?.cpf_booked
+    const isElearning = booking.location === LOCATION_ELEARNING
 
     const amount = is_alfred ? parseFloat(booking.alfred_amount) : parseFloat(booking.amount)
     const provider_fee = 0
@@ -435,7 +437,17 @@ class BookingPreview extends React.Component {
         }
 
         {!amIAlfred && isCPF && booking.status !== BOOK_STATUS.CONFIRMED
-          && <><AskForCPF link={booking?.cpf_link} /><hr className={classes.hrSeparator}/></>}
+          && <>
+            <AskForCPF link={booking?.cpf_link} />
+            <hr className={classes.hrSeparator}/>
+          </>}
+
+
+        {!amIAlfred && isElearning &&
+          <>
+            <BookingElearningAccess booking={booking} />
+            <hr className={classes.hrSeparator}/>
+          </>}
 
         <Grid container className={classes.mainContainerAboutResa}>
           <Grid item xs={12} className={classes.containerTitleSectionAbout}>
@@ -693,7 +705,16 @@ const BookingPreviewRow = ({hr=true, children, ...props}) => {
 }
 
 const StyledBookingPreview = styled.div`
-  padding: var(--spc-4);
+  --booking-max-width: 80%;
+  --booking-padding: var(--spc-4);
+  --booking-left-margin: var(--spc-4);
+  --booking-background: var(--stone-100);
+  
+  & > div {
+    padding: var(--spc-4);
+    margin: var(--spc-2);
+  }
+
 `
 
 const StyledBookingPreviewRow = styled.div`
