@@ -276,7 +276,7 @@ class BookingPreview extends React.Component {
       <StyledBookingPreview>
           
         <BookingMinInfos booking={booking} amIAlfred={amIAlfred}/>
-        <hr className={classes.hrSeparator}/>
+        <hr />
         
         {booking === null ||
                   currentUser === null ? null : booking.status ===
@@ -312,7 +312,7 @@ class BookingPreview extends React.Component {
                         </Grid>}
                     </div>
                   </Grid>
-                  <hr className={classes.hrSeparator}/>
+                  <hr />
                 </>
               ) : (
                 <>
@@ -365,7 +365,7 @@ class BookingPreview extends React.Component {
                         </Grid>}
                     </div>
                   </Grid>
-                  <hr className={classes.hrSeparator}/>
+                  <hr />
                 </>
               )
             ) : null}
@@ -432,21 +432,21 @@ class BookingPreview extends React.Component {
                 }
               </Grid>
             </Grid>
-            <hr className={classes.hrSeparator}/>
+            <hr />
           </>
         }
 
         {!amIAlfred && isCPF && booking.status !== BOOK_STATUS.CONFIRMED
           && <>
             <AskForCPF link={booking?.cpf_link} />
-            <hr className={classes.hrSeparator}/>
+            <hr />
           </>}
 
 
         {!amIAlfred && isElearning &&
           <>
             <BookingElearningAccess booking={booking} />
-            <hr className={classes.hrSeparator}/>
+            <hr />
           </>}
 
         <Grid container className={classes.mainContainerAboutResa}>
@@ -580,7 +580,7 @@ class BookingPreview extends React.Component {
             </Grid>
           </Grid>
         </Grid>
-        <hr className={classes.hrSeparator}/>
+        <hr />
 
         {/* Stuff */}
         <BookingPreviewRow>
@@ -608,8 +608,7 @@ class BookingPreview extends React.Component {
         </BookingPreviewRow>
                 
         {/* Potential earnings */}
-        <Grid container
-          style={{borderBottom: '1.5px #8281813b solid', marginTop: '5%', paddingBottom: '7%'}}>
+        <Grid container>
           <Grid item>
             <Typography variant={'h3'} className={classes.fontSizeTitleSectionAbout}>
               {paymentTitle}
@@ -633,6 +632,7 @@ class BookingPreview extends React.Component {
             </Grid>
           </Grid>
         </Grid>
+        <hr />
                 
         {/* Cancel booking */}
         {([BOOK_STATUS.TO_CONFIRM, BOOK_STATUS.INFO].includes(status) && !amIAlfred) ||
@@ -710,6 +710,12 @@ const StyledBookingPreview = styled.div`
   --booking-left-margin: var(--spc-4);
   --booking-background: var(--stone-100);
   
+  hr {
+    color: var(--black) !important;
+    border: 0;
+    border-bottom: 1px solid;
+  }
+
   & > div {
     padding: var(--spc-4);
     margin: var(--spc-2);
@@ -719,9 +725,11 @@ const StyledBookingPreview = styled.div`
 
 const StyledBookingPreviewRow = styled.div`
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
   column-gap: var(--spc-6);
   padding-block: var(--spc-4);
+
 
 `
 

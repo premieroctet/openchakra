@@ -14,10 +14,6 @@ const Style = theme => ({
       marginBottom: 30,
     },
   },
-  hrSeparator: {
-    width: '100%',
-    color: 'rgb(80, 80, 80, 0.2)',
-  },
   buttonConfirm: {
     color: 'white',
   },
