@@ -93,7 +93,7 @@ const DrawerBooking = ({
     setAxiosAuthentication()
     axios.post('/myAlfred/api/booking/compute', {
       prestations: count,
-      serviceUser: serviceUserId,
+      serviceUserId: serviceUserId,
       distance: computeDistance(),
       location: location,
       avocotes_amount: avocotes_amount,
@@ -282,10 +282,10 @@ const DrawerBooking = ({
       location: location,
       equipments: serviceUser.equipments,
       amount: prices.total,
-      prestation_date: bookingDate,
+      date: bookingDate,
       alfred: serviceUser.user._id,
       user: user ? user._id : null,
-      prestations: prestations,
+      prestations: count,
       travel_tax: prices.travel_tax,
       pick_tax: prices.pick_tax,
       cpf_amount: prices.cpf_amount,
@@ -297,6 +297,7 @@ const DrawerBooking = ({
       status: avocotesBooking ? BOOK_STATUS.TO_CONFIRM : actual ? BOOK_STATUS.TO_PAY : BOOK_STATUS.INFO,
       serviceUserId: serviceUser._id,
       customer_booking: avocotesBooking?._id || null,
+      informationRequest: !actual,
     }
 
     let chatPromise = !user ?
@@ -320,19 +321,18 @@ const DrawerBooking = ({
       setPending(true)
       axios.post('/myAlfred/api/booking', bookingObj)
         .then(response => {
-          const booking = response.data
-          if (booking.customer_booking) {
-            Router.push({pathname: `/reservations/resvations?id=${booking._id}`, query: {booking_id: booking._id}})
+          const {redirectURL, extraURLs} = response.data
+
+          if (extraURLs) {
+            window && extraURLs.forEach(url => {
+              window.open(url, '_blank')
+            })
           }
-          else if (actual) {
-            Router.push({pathname: '/confirmPayment', query: {booking_id: booking._id}})
-          }
-          else {
-            Router.push(`/profile/messages?user=${booking.user}&relative=${booking.alfred}`)
-          }
+          Router.push(redirectURL)
         })
         .catch(err => {
           console.error(err)
+          snackBarError(err.response.data)
         })
         .finally(() => {
           setPending(false)
