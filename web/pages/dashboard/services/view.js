@@ -1,5 +1,6 @@
+import {Link, Typography} from '@material-ui/core'
+const withParams = require('../../../components/withParams')
 import CustomButton from '../../../components/CustomButton/CustomButton'
-import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
 import Checkbox from '@material-ui/core/Checkbox'
@@ -7,7 +8,6 @@ import FormControl from '@material-ui/core/FormControl'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Grid from '@material-ui/core/Grid'
 import Input from '@material-ui/core/Input'
-import {Link} from '@material-ui/core'
 import MenuItem from '@material-ui/core/MenuItem'
 import React from 'react'
 import Router from 'next/router'
@@ -17,7 +17,7 @@ import TextField from '@material-ui/core/TextField'
 import axios from 'axios'
 
 import {snackBarSuccess} from '../../../utils/notifications'
-import BasePage from '../../basePage'
+
 import DashboardLayout from '../../../hoc/Layout/DashboardLayout'
 
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
@@ -54,7 +54,7 @@ const styles = theme => ({
   },
 })
 
-class View extends BasePage {
+class View extends React.Component {
 
   constructor(props) {
     super(props)
@@ -81,7 +81,7 @@ class View extends BasePage {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname)
-    const id = this.getURLProps().id
+    const id = this.props.id
     setAxiosAuthentication()
     axios.get(`/myAlfred/api/admin/service/all/${id}`)
       .then(response => {
@@ -176,14 +176,14 @@ class View extends BasePage {
 
     const category = this.state.category
     const equipments = arrayEquipments
-    const id = this.getURLProps().id
+    const id = this.props.id
     const service = this.state.service
     const {label, description, location} = service
-    const {travel_tax, pick_tax, professional_access, particular_access} = service
+    const {travel_tax, pick_tax, professional_access, particular_access, tag} = service
 
     axios.put(`/myAlfred/api/admin/service/all/${id}`,
       {label, description, category, equipments, location, travel_tax, pick_tax,
-        professional_access, particular_access})
+        professional_access, particular_access, tag})
       .then(() => {
         snackBarSuccess('Service modifié avec succès')
       })
@@ -200,7 +200,7 @@ class View extends BasePage {
   };
 
   handleClick() {
-    const id = this.getURLProps().id
+    const id = this.props.id
     axios.delete(`/myAlfred/api/admin/service/all/${id}`)
       .then(() => {
         snackBarSuccess('Service supprimé avec succès')
@@ -310,6 +310,15 @@ class View extends BasePage {
                   }
                   label={<React.Fragment><p>en visioconférence</p></React.Fragment>}
                 />
+                <FormControlLabel
+                  control={
+                    <Checkbox color="primary"
+                      checked={service.location?.elearning}
+                      value={service.location?.elearning} name="elearning"
+                      onChange={this.onChangeLocation}/>
+                  }
+                  label={<React.Fragment><p>en e-learning</p></React.Fragment>}
+                />
                 <Typography style={{fontSize: 20}}>Frais possibles</Typography>
                 <FormControlLabel
                   control={
@@ -329,9 +338,7 @@ class View extends BasePage {
                   label={<React.Fragment><p>frais de retrait&livraison</p>
                   </React.Fragment>}
                 />
-                <Typography style={{fontSize: 20}}>
-                    Service proposé
-                </Typography>
+                <Typography style={{fontSize: 20}}>Service proposé</Typography>
                 <em style={{color: 'red'}}>{this.state.errors.access}</em><br/>
                 <FormControlLabel
                   control={
@@ -355,6 +362,19 @@ class View extends BasePage {
                 />
               </Grid>
 
+              <Grid item style={{width: '100%', marginTop: 20}}>
+                <Typography style={{fontSize: 20}}>Tag</Typography>
+                <TextField
+                  id="standard-with-placeholder"
+                  margin="normal"
+                  style={{width: '100%'}}
+                  type="text"
+                  name="tag"
+                  value={service.tag}
+                  onChange={this.onChange}
+                />
+              </Grid>
+
               <Grid item style={{marginTop: 20}}>
                 <Typography style={{fontSize: 20}}>Description</Typography>
                 <TextField
@@ -367,7 +387,6 @@ class View extends BasePage {
                   onChange={this.onChange}
                   multiline
                   rows={4}
-
                 />
               </Grid>
               <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
@@ -380,7 +399,7 @@ class View extends BasePage {
                 </CustomButton>
               </Grid>
             </form>
-            <Link href={`editPicture?id=${this.getURLProps().id}`}>
+            <Link href={`editPicture?id=${this.props.id}`}>
               <CustomButton type="button" variant="contained" color="primary" style={{width: '100%'}}>
                   Modifier la photo
               </CustomButton>
@@ -393,4 +412,4 @@ class View extends BasePage {
 }
 
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(View))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(withParams(View)))

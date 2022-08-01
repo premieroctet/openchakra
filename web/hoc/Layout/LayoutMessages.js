@@ -5,7 +5,7 @@ import React from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 import styles from '../../static/css/components/Layout/LayoutMessages/LayoutMessages'
 import Grid from '@material-ui/core/Grid'
-import '../../static/assets/css/custom.css'
+
 import Layout from './Layout'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
@@ -66,4 +66,4 @@ class LayoutMessages extends React.Component {
 
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(LayoutMessages))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(LayoutMessages))

@@ -1,33 +1,35 @@
-const {is_development} = require('../../../config/config')
-const Booking = require('../../models/Booking')
-const Company = require('../../models/Company')
-const User = require('../../models/User')
-const ChatRoom = require('../../models/ChatRoom')
 const express = require('express')
 const ics=require('ics')
 const {googleCalendarEventUrl} = require('google-calendar-url')
-
-const router = express.Router()
-const passport = require('passport')
 const mongoose = require('mongoose')
-const crypto = require('crypto')
+const passport = require('passport')
 const moment = require('moment')
+
+const CronJob = require('cron').CronJob
+const {addMessage}=require('../../utils/chatroom')
+const {NotFoundError}=require('../../utils/errors')
+const {createBooking}=require('../../utils/booking')
+const {HTTP_CODES} = require('../../utils/errors')
+const {getHostUrl} = require('../../../config/config')
+const Booking = require('../../models/Booking')
+const ServiceUser = require('../../models/ServiceUser')
+const Company = require('../../models/Company')
+const User = require('../../models/User')
 const {BOOK_STATUS, EXPIRATION_DELAY, AVOCOTES_COMPANY_NAME} = require('../../../utils/consts')
 const {payBooking} = require('../../utils/mangopay')
-const CronJob = require('cron').CronJob
 const {
   sendBookingConfirmed, sendBookingExpiredToAlfred, sendBookingExpiredToClient, sendBookingInfosRecap,
   sendBookingDetails, sendNewBooking, sendBookingRefusedToClient, sendBookingRefusedToAlfred, sendBookingCancelledByClient,
   sendBookingCancelledByAlfred, sendAskInfoPreapproved, sendAskingInfo, sendNewBookingManual,
-  sendLeaveCommentForClient, sendLeaveCommentForAlfred, sendAlert,
+  sendLeaveCommentForClient, sendLeaveCommentForAlfred, sendAlert, sendBillingToAlfred,
 } = require('../../utils/mailing')
-const {getRole, get_logged_id} = require('../../utils/serverContext')
+const {get_logged_id} = require('../../utils/serverContext')
 const {validateAvocotesCustomer}=require('../../validation/simpleRegister')
+const validateBooking=require('../../validation/booking')
 const {computeBookingReference, formatAddress}=require('../../../utils/text')
 const {createMangoClient}=require('../../utils/mangopay')
-const {computeUrl}=require('../../../config/config')
-const uuidv4 = require('uuid/v4')
 const {stateMachineFactory} = require('../../utils/BookingStateMachine')
+const router = express.Router()
 
 moment.locale('fr')
 
@@ -39,10 +41,11 @@ router.get('/alfredBooking', passport.authenticate('jwt', {session: false}), (re
   Booking.find({alfred: userId})
     .sort([['date', -1]])
     .populate('user', ['name', 'firstname', 'picture', 'company'])
+    .populate('alfred', '-id_card')
     .populate('chatroom')
     .then(alfred => {
       if (!alfred) {
-        res.status(404).json({msg: 'No booking found'})
+        res.status(HTTP_CODES.NOT_FOUND).json({msg: 'No booking found'})
       }
 
       if (alfred) {
@@ -56,6 +59,7 @@ router.get('/userBooking', passport.authenticate('jwt', {session: false}), (req,
   Booking.find({user: userId})
     .sort([['date', -1]])
     .populate('alfred', '-id_card')
+    .populate('user', '-id_card')
     .populate({
       path: 'chatroom',
       populate: {path: 'emitter'},
@@ -66,7 +70,7 @@ router.get('/userBooking', passport.authenticate('jwt', {session: false}), (req,
     })
     .then(alfred => {
       if (!alfred) {
-        res.status(404).json({msg: 'No booking found'})
+        res.status(HTTP_CODES.NOT_FOUND).json({msg: 'No booking found'})
       }
 
       if (alfred) {
@@ -107,87 +111,118 @@ router.get('/confirmPendingBookings', passport.authenticate('jwt', {session: fal
     .catch(err => console.error(err))
 })
 
-router.post('/add', passport.authenticate('jwt', {session: false}), (req, res) => {
+/**
+ @Route POST /myAlfred/api/booking/
+ Add a new booking
+ Body:
+   serviceUserId: serviceUser
+   location: in ALL_LOCATIONS
+   prestations: {prestation_id: count} //
+   cpf: true or false
+   date: booking date
+   customerBooking: linked service booking
+   informationRequest: [true|false] info request or actual booking
+Returns: {
+  redirectURL: url to redirect to,
+  extraURLs: [], supplemntary URLs to open in new tabs
+}
+ @Access private
+ */
+router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  const random = crypto.randomBytes(Math.ceil(5 / 2)).toString('hex').slice(0, 5)
-
-  const bookingFields = {}
-  bookingFields.reference = `${req.body.reference}_${random}`
-  bookingFields.service = req.body.service
-  bookingFields.address = req.body.address
-  bookingFields.equipments = req.body.equipments
-  bookingFields.amount = req.body.amount
-  bookingFields.company_amount = req.body.company_amount
-  bookingFields.alfred = mongoose.Types.ObjectId(req.body.alfred)
-  bookingFields.user = mongoose.Types.ObjectId(req.body.user)
-  bookingFields.chatroom = mongoose.Types.ObjectId(req.body.chatroom)
-  bookingFields.prestation_date = moment(req.body.prestation_date)
-  bookingFields.prestations = req.body.prestations
-  bookingFields.customer_fees = req.body.customer_fees
-  bookingFields.provider_fees = req.body.provider_fees
-  bookingFields.travel_tax = req.body.travel_tax
-  bookingFields.pick_tax = req.body.pick_tax
-  bookingFields.status = req.body.customer_booking ? BOOK_STATUS.TO_CONFIRM : req.body.status
-  bookingFields.serviceUserId = req.body.serviceUserId
-  bookingFields.cesu_amount = req.body.cesu_amount
-  bookingFields.user_role = getRole(req) || null
-  bookingFields.customer_booking = req.body.customer_booking
-
-  console.log(JSON.stringify(bookingFields))
-
-  Booking.create(bookingFields)
+  validateBooking(req.body)
+    .then(() => {
+      return createBooking({customer: req.user, ...req.body})
+    })
     .then(booking => {
-      if (booking.status === BOOK_STATUS.INFO || booking.status === BOOK_STATUS.TO_CONFIRM) {
-        // Reload to get user,alfred,service
-        Booking.findById(booking._id)
-          .populate('alfred')
-          .populate('user')
-          .then(book => {
-            if (booking.status === BOOK_STATUS.INFO) {
-              sendBookingInfosRecap(book, req)
-              sendAskingInfo(book, req)
+      // Reload to get user,alfred,service
+      return Booking.findById(booking._id)
+        .populate('alfred')
+        .populate('user')
+        .then(book => {
+          if (booking.status === BOOK_STATUS.INFO) {
+            sendBookingInfosRecap(book, req)
+            sendAskingInfo(book, req)
+          }
+          if (booking.status === BOOK_STATUS.TO_CONFIRM) {
+            sendBookingDetails(book)
+            sendNewBookingManual(book, req)
+          }
+          if (booking.status === BOOK_STATUS.CONFIRMED) {
+            sendNewBooking(book, req)
+          }
+          // Si user et alfred définis, ajouter un message dans le chatroom
+          if (book.user && book.alfred) {
+            const msg=`${booking.status==BOOK_STATUS.INFO ? "Demande d'informations:" : 'Réservation:'} service ${book.service} de ${book.alfred.firstname} pour ${book.user.firstname}`
+            const message={
+              user: book.user.firstname,
+              content: msg,
+              date: moment(),
+              idsender: book.user._id,
             }
-            if (booking.status === BOOK_STATUS.TO_CONFIRM) {
-              sendBookingDetails(book)
-              sendNewBookingManual(book, req)
-            }
-            if (booking.status === BOOK_STATUS.CONFIRMED) {
-              sendNewBooking(book, req)
-            }
-            // Si user et alfred définis, ajouter un message dans le chatroom
-            if (book.user && book.alfred) {
-              const filter={
-                $and: [
-                  {emitter: {$in: [book.alfred._id, book.user._id]}},
-                  {recipient: {$in: [book.alfred._id, book.user._id]}},
-                ],
-              }
-              const message={
-                user: book.user.firstname,
-                content: `Service ${book.service} de ${book.alfred.firstname} pour ${book.user.firstname}`,
-                date: moment(),
-                idsender: book.user._id,
-              }
-              const update={
-                $setOnInsert: {name: `room-${uuidv4()}`},
-                $set: {booking: book._id, emitter: book.user._id, recipient: book.alfred._id},
-                $addToSet: {messages: message},
-              }
-              ChatRoom.findOneAndUpdate(filter, update, {new: true, upsert: true})
-                .then(() => console.log('Chatroom maj'))
-                .catch(err => console.error(err))
-            }
-          })
-          .catch(err => {
-            console.error(err)
-          })
+            addMessage(book.user._id, book.alfred._id, message, booking)
+              .then(() => console.log(`Chatroom message added`))
+              .catch(err => console.error(err))
+          }
+          return book
+        })
+    })
+    .then(booking => {
+      const returnURLs={
+        redirectURL:
+        booking.status==BOOK_STATUS.INFO ? `/profile/messages?user=${booking.user._id}&relative=${booking.alfred._id}`
+          :booking.amount==0 ?
+            '/reservations/reservations'
+            : `/confirmPayment?booking_id=${booking._id}`,
       }
-      console.log(`New booking:${JSON.stringify(booking)}`)
-      res.json(booking)
+      if (booking.cpf_link) {
+        returnURLs.extraURLs=[booking.cpf_link]
+      }
+      return res.json(returnURLs)
     })
     .catch(err => {
       console.error(err)
-      res.status(404)
+      res.status(err.status || HTTP_CODES.SYSTEM_ERROR).json(err.message || err)
+    })
+})
+
+// @Route PUT /myAlfred/api/booking/:id/item
+// Add item to a booking
+// @Access private
+router.put('/:id/item', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  const booking_id=req.params.id
+  const item=req.body
+
+  Booking.findByIdAndUpdate(booking_id, {$push: {items: item}}, {runValidators: true})
+    .then(result => {
+      if (!result) {
+        console.error(`No booking #${booking_id}`)
+        return Promise.reject(`No booking #${booking_id}`)
+      }
+      return res.json()
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(500).json(err)
+    })
+})
+
+// @Route PUT /myAlfred/api/booking/:id/item
+// Removes item from a booking
+// @Access private
+router.delete('/:booking_id/item/:item_id', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  const booking_id=req.params.booking_id
+  const item_id=req.params.item_id
+
+  Booking.findByIdAndUpdate(booking_id, {$pull: {items: {_id: item_id}}}, {runValidators: true})
+    .then(() => {
+      res.json()
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(500).json(err)
     })
 })
 
@@ -210,7 +245,7 @@ router.get('/all', passport.authenticate('jwt', {session: false}), (req, res) =>
       }
     })
     .catch(() => {
-      res.status(404).json({booking: 'No booking found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({booking: 'No booking found'})
     })
 })
 
@@ -240,7 +275,7 @@ router.get('/currentAlfred', passport.authenticate('jwt', {session: false}), (re
 router.get('/avocotes', passport.authenticate('admin', {session: false}), (req, res) => {
   Booking.find({
     company_customer: {$exists: true, $ne: null},
-    status: {$nin: [BOOK_STATUS.TO_PAY, BOOK_STATUS.FINISHED, BOOK_STATUS.CANCELLED]},
+    status: {$nin: [BOOK_STATUS.TO_PAY, BOOK_STATUS.FINISHED, BOOK_STATUS.CANCELLED, BOOK_STATUS.EXPIRED]},
   })
     .populate('user')
     .then(customer_bookings => {
@@ -256,9 +291,26 @@ router.get('/avocotes', passport.authenticate('admin', {session: false}), (req, 
     })
 })
 
-router.post('/compute', (req, res) => {
-
-  req.context.payment.compute(req.body)
+/**
+ @Route POST /myAlfred/api/bookings/compute
+ Compute prices for booking
+ Body:
+   serviceUserId: serviceUser
+   location: in ALL_LOCATIONS
+   prestations: {prestation_id: count}
+   cpf: true or false
+   date: booking date
+ @Access private
+ */
+router.post('/compute', passport.authenticate('jwt', {session: false}), (req, res) => {
+  return ServiceUser.findById(req.body.serviceUserId)
+    .populate('alfred')
+    .populate('user')
+    .populate({path: 'prestations', populate: 'prestation'})
+    .then(serviceUser => {
+      if (!serviceUser) { throw new NotFoundError(`ServiceUser introuvable`) }
+      return req.context.payment.compute({...req.body, serviceUser: serviceUser})
+    })
     .then(result => {
       res.json(result)
     })
@@ -267,7 +319,6 @@ router.post('/compute', (req, res) => {
       res.status(500).json(err)
     })
 })
-
 
 // @Route GET /myAlfred/booking/:id
 // View one booking
@@ -282,6 +333,7 @@ router.get('/:id', (req, res) => {
     .populate('prestation')
     .populate('equipments')
     .populate({path: 'customer_booking', populate: {path: 'user'}})
+    .lean({virtuals: true})
     .then(booking => {
       if (booking) {
         res.json(booking)
@@ -302,20 +354,20 @@ router.get('/:id/ics', (req, res) => {
     .populate({path: 'user', select: 'firstname'})
     .populate({path: 'alfred', select: 'firstname'})
     .then(booking => {
-      title=`${booking.service} par ${booking.alfred.firstname} pour ${booking.user.firstname}`
-      const start=booking.prestation_date
-      const end=booking.end_date
+      title=`${booking.service} ${booking.alfred ? `par ${booking.alfred.firstname}`:''} pour ${booking.user.firstname}`
+      const start=moment(booking.prestation_date)
+      const end= booking.end_date ? moment(booking.end_date) : null
       return ics.createEvent({
         uid: booking._id.toString(),
         title: title,
         start: [start.year(), start.month()+1, start.date(), start.hour(), start.minute(), start.second()],
         end: end && [end.year(), end.month()+1, end.date(), end.hour(), end.minute(), end.second()],
         location: formatAddress(booking.address),
-        geo: {lat: booking.address.gps.lat, lon: booking.address.gps.lng},
+        // geo: {lat: booking.address.gps.lat, lon: booking.address.gps.lng},
         status: booking.status==BOOK_STATUS.CANCELLED ? 'CANCELLED' : booking.status==BOOK_STATUS.TO_CONFIRM ? 'TENTATIVE' : 'CONFIRMED',
         busyStatus: 'BUSY',
-        url: new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)).toString(),
-        description: `<a href="${new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)).toString()}">Accéder à ma réservation</a>`,
+        url: new URL(`/reservations/reservations?id=${booking._id}`, getHostUrl()).href,
+        description: `<a href="${new URL(`/reservations/reservations?id=${booking._id}`, getHostUrl()).href}">Accéder à ma réservation</a>`,
       })
     })
     .then(result => {
@@ -339,8 +391,7 @@ router.get('/:id/google_calendar', (req, res) => {
     .populate({path: 'user', select: 'firstname'})
     .populate({path: 'alfred', select: 'firstname'})
     .then(booking => {
-      console.log(`Type date:${typeof booking.prestation_date}`)
-      title=`${booking.service} par ${booking.alfred.firstname} pour ${booking.user.firstname}`
+      title=`${booking.service} ${booking.alfred ? `par ${booking.alfred.firstname}`:''} pour ${booking.user.firstname}`
       const start=booking.prestation_date.toISOString().replace(/[-:]/g, '').replace(/\.\d\d\dZ/, 'Z')
       const end=booking.end_date ? booking.end_date.toISOString().replace(/[-:]/g, '').replace(/\.\d\d\dZ/, 'Z') : start
       console.log(start)
@@ -350,10 +401,10 @@ router.get('/:id/google_calendar', (req, res) => {
         start: start,
         end: end,
         location: formatAddress(booking.address),
-        geo: {lat: booking.address.gps.lat, lon: booking.address.gps.lng},
+        // geo: {lat: booking.address.gps.lat, lon: booking.address.gps.lng},
         status: booking.status==BOOK_STATUS.CANCELLED ? 'CANCELLED' : booking.status==BOOK_STATUS.TO_CONFIRM ? 'TENTATIVE' : 'CONFIRMED',
         busyStatus: 'BUSY',
-        details: `<a href="${new URL(`/reservations/reservations?id=${booking._id}`, computeUrl(req)).toString()}">Accéder à ma réservation</a>`,
+        details: `<a href="${new URL(`/reservations/reservations?id=${booking._id}`, getHostUrl()).href}">Accéder à ma réservation</a>`,
       })
       res.redirect(url)
     })
@@ -372,13 +423,13 @@ router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res)
       message.remove().then(() => res.json({success: true}))
     })
     .catch(() => {
-      res.status(404).json({bookingnotfound: 'No booking found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({bookingnotfound: 'No booking found'})
     })
 })
 
 router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
   const obj = req.body
-  const canceller_id = req.context.user._id
+  const canceller_id = req.user._id
 
   console.log(`Booking ${req.params.id}: setting booking:${JSON.stringify(obj)}`)
   Booking.findById(req.params.id)
@@ -389,7 +440,7 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
     .populate({path: 'customer_booking', populate: {path: 'user'}})
     .then(booking => {
       if (!booking) {
-        return res.status(404).json('No booking #${req.params.id}')
+        return res.status(HTTP_CODES.NOT_FOUND).json('No booking #${req.params.id}')
       }
       if (obj.status) {
         const machine=stateMachineFactory(booking.status)
@@ -401,11 +452,11 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
 
       booking.save()
         .then(booking => {
-          if (booking.user.company_customer && status==BOOK_STATUS.CUSTOMER_PAID) {
+          if (booking.user.company_customer && booking.status==BOOK_STATUS.CUSTOMER_PAID) {
             // Prévenir les admins d'une nouvelle résa
             User.find({is_admin: true}, 'firstname email phone')
               .then(admins => {
-                const search_link = new URL('/search', computeUrl(req))
+                const search_link = new URL('/search', getHostUrl())
                 const prestations=booking.prestations.map(p => p.name).join(',')
                 const msg=`Chercher les prestations '${prestations}' pour le compte ${booking.user.email} via ${search_link}`
                 const subject=`Nouvelle réservation Avocotés pour ${booking.user.email}`
@@ -510,7 +561,8 @@ router.post('/avocotes', (req, res) => {
     })
 })
 
-new CronJob('0 */35 * * * *', (() => {
+// Check bookings to set to FINISHED
+Booking && new CronJob('0 */35 * * * *', (() => {
   console.log('Checking terminated bookings')
   const date = moment().startOf('day')
 
@@ -528,6 +580,10 @@ new CronJob('0 */35 * * * *', (() => {
             .then(bo => {
               sendLeaveCommentForAlfred(bo)
               sendLeaveCommentForClient(bo)
+              // Avocotes : send billing mail to provider
+              if (bo.customer_booking) {
+                sendBillingToAlfred(bo)
+              }
             })
             .catch(err => console.error(err))
         }
@@ -535,11 +591,10 @@ new CronJob('0 */35 * * * *', (() => {
       )
     })
     .catch(err => console.error(err))
-
 }), null, true, 'Europe/Paris')
 
-// Handle terminated but not paid bookings
-new CronJob('0 0 * * * *', (() => {
+// Check bookings to pay
+Booking && new CronJob('0 0 * * * *', (() => {
   console.log('Checking bookings to pay')
   Booking.find({status: BOOK_STATUS.FINISHED, paid: false})
     .populate('user')
@@ -561,7 +616,7 @@ new CronJob('0 0 * * * *', (() => {
 // Expiration réervation en attente de confirmation :
 // - soit EXPIRATION_DELAY jours après la date de création de la réservation
 // - soit après la date de prestation
-new CronJob('0 */15 * * * *', (() => {
+Booking && new CronJob('0 */15 * * * *', (() => {
   console.log('Checking expired bookings')
   const currentDate = moment().startOf('day')
   Booking.find({$or: [{status: BOOK_STATUS.TO_CONFIRM}, {status: BOOK_STATUS.TO_PAY}]})

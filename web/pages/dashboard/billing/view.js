@@ -1,3 +1,4 @@
+const withParams = require('../../../components/withParams')
 import CustomButton from '../../../components/CustomButton/CustomButton'
 import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
@@ -10,7 +11,7 @@ import TextField from '@material-ui/core/TextField'
 import axios from 'axios'
 
 import {snackBarSuccess} from '../../../utils/notifications'
-import BasePage from '../../basePage'
+
 import DashboardLayout from '../../../hoc/Layout/DashboardLayout'
 
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../../../utils/authentication')
@@ -41,7 +42,7 @@ const styles = theme => ({
   },
 })
 
-class View extends BasePage {
+class View extends React.Component {
 
   constructor(props) {
     super(props)
@@ -54,7 +55,7 @@ class View extends BasePage {
 
   componentDidMount() {
     localStorage.setItem('path', Router.pathname)
-    const id = this.getURLProps().id
+    const id = this.props.id
     setAxiosAuthentication()
     axios.get(`/myAlfred/api/admin/billing/all/${id}`)
       .then(response => {
@@ -81,7 +82,7 @@ class View extends BasePage {
     e.preventDefault()
 
     const {label} = this.state.billing
-    const id = this.getURLProps().id
+    const id = this.props.id
     axios.put(`/myAlfred/api/admin/billing/all/${id}`, {label})
       .then(() => {
         snackBarSuccess('Méthode de facturation modifié avec succès')
@@ -93,7 +94,7 @@ class View extends BasePage {
   };
 
   handleClick() {
-    const id = this.getURLProps().id
+    const id = this.props.id
     axios.delete(`/myAlfred/api/admin/billing/all/${id}`)
       .then(() => {
         snackBarSuccess('Méthode de facturation supprimée avec succès')
@@ -152,4 +153,4 @@ class View extends BasePage {
 }
 
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(View))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(withParams(View)))

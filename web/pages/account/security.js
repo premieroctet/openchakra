@@ -28,7 +28,7 @@ import Visibility from '@material-ui/icons/Visibility'
 import VisibilityOff from '@material-ui/icons/VisibilityOff'
 import Input from '@material-ui/core/Input'
 const {snackBarSuccess} = require('../../utils/notifications')
-import '../../static/assets/css/custom.css'
+
 
 moment.locale('fr')
 
@@ -495,4 +495,4 @@ class security extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(security))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(security))

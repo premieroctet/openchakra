@@ -163,4 +163,4 @@ function AlfredConditions({classes, shop, t}) {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles, {withTheme: true})(AlfredConditions))
+export default withTranslation(null, {withRef: true})(withStyles(styles, {withTheme: true})(AlfredConditions))

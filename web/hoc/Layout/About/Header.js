@@ -1,17 +1,17 @@
-import CustomButton from '../../../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import {withStyles} from '@material-ui/core/styles'
-import styles from '../../../static/css/components/Layout/About/Header/Header'
-import ScrollMenu from '../../../components/ScrollMenu/ScrollMenu'
 import Router from 'next/router'
 import Paper from '@material-ui/core/Paper'
 import IconButton from '@material-ui/core/IconButton'
 import InputBase from '@material-ui/core/InputBase'
 import CloseIcon from '@material-ui/icons/Close'
+import ScrollMenu from '../../../components/ScrollMenu/ScrollMenu'
+import styles from '../../../static/css/components/Layout/About/Header/Header'
+import CustomButton from '../../../components/CustomButton/CustomButton'
 import {HEADER} from '../../../utils/i18n'
 
 
@@ -161,4 +161,4 @@ class Header extends React.Component {
 }
 
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(Header))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(Header))

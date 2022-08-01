@@ -6,9 +6,9 @@ import {makeStyles} from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Router from 'next/router'
 import axios from 'axios'
-const {isEditableUser, getLoggedUserId} = require('../../utils/context')
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
 import Badge from '@material-ui/core/Badge'
+import {isEditableUser, getLoggedUserId} from '../../utils/context'
 
 const useStyles = makeStyles(theme => ({
   avatarLetterProfil: {
@@ -144,40 +144,34 @@ function UserAvatar(props) {
   }
 
   return (
-    <Grid style={{width: '100%', height: '100%'}}>
-      <Grid style={{
-        height: '100%',
-        width: '100%',
-      }}>
-        <Badge
-          overlap="circular"
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right',
-          }}
-          classes={{root: classes.badge}}
-          badgeContent={ owner && <Grid>
-            <input
-              accept="image/*"
-              className={classes.input}
-              id="input-button-file"
-              type="file"
-              onChange={onChange}
-            />
-            <label htmlFor="icon-button-file">
-              <IconButton onClick={selectPicture} className={classes.buttonCamera} aria-label="upload picture" component="span">
-                <PhotoCameraIcon/>
-              </IconButton>
-            </label>
-          </Grid>}
-        >
-          {
-            user.picture ? avatarWithPics(user, classes) : avatarWithoutPics(user, classes)
-          }
-        </Badge>
-      </Grid>
-    </Grid>
+    
+    <Badge
+      overlap="circular"
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'right',
+      }}
+      classes={{root: classes.badge}}
+      badgeContent={ owner && <Grid>
+        <input
+          accept="image/*"
+          className={classes.input}
+          id="input-button-file"
+          type="file"
+          onChange={onChange}
+        />
+        <label htmlFor="icon-button-file">
+          <IconButton onClick={selectPicture} className={classes.buttonCamera} aria-label="upload picture" component="span">
+            <PhotoCameraIcon/>
+          </IconButton>
+        </label>
+      </Grid>}
+    >
+      {
+        user.picture ? avatarWithPics(user, classes) : avatarWithoutPics(user, classes)
+      }
+    </Badge>
   )
 }
 
-export default withTranslation('custom')(UserAvatar)
+export default withTranslation(null)(UserAvatar)

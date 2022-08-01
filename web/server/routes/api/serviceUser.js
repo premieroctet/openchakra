@@ -1,5 +1,13 @@
+const express = require('express')
+const passport = require('passport')
+const mongoose = require('mongoose')
+const geolib = require('geolib')
+const lodash = require('lodash')
+const moment = require('moment')
+const {HTTP_CODES} = require('../../utils/errors')
+const Booking = require('../../models/Booking')
+const {GID_LEN, PRO, PART} = require('../../../utils/consts')
 const Job = require('../../models/Job')
-const Group = require('../../models/Group')
 const Shop = require('../../models/Shop')
 const Prestation = require('../../models/Prestation')
 const Service = require('../../models/Service')
@@ -10,21 +18,12 @@ const Category = require('../../models/Category')
 const {logEvent}=require('../../utils/events')
 const {sendAdminsAlert} =require('../../utils/mailing')
 const {IMAGE_FILTER, createDiskMulter} = require('../../utils/filesystem')
-const express = require('express')
-
-const router = express.Router()
-const passport = require('passport')
-const mongoose = require('mongoose')
-const geolib = require('geolib')
-const lodash = require('lodash')
-const moment = require('moment')
 const {data2ServiceUser} = require('../../utils/mapping')
 const serviceFilters = require('../../utils/filters')
-const {GID_LEN, PRO, PART, MANAGER, MICROSERVICE_MODE} = require('../../../utils/consts')
 const {normalize} = require('../../../utils/text')
-const {getRole, get_logged_id} = require('../../utils/serverContext')
 
 moment.locale('fr')
+const router = express.Router()
 
 // Upload multers
 // Diploma
@@ -93,6 +92,7 @@ router.post('/add', upload.fields([{name: 'diploma', maxCount: 1}, {
         home: req.body.home === 'true',
         alfred: req.body.alfred === 'true',
         visio: req.body.visio === 'true',
+        elearning: req.body.elearning === 'true',
       }
 
       fields.travel_tax = JSON.parse(req.body.travel_tax)
@@ -228,12 +228,12 @@ router.put('/editWithCity/:id', passport.authenticate('jwt', {
         })
         .catch(err => {
           console.error(err)
-          res.status(404).json(err)
+          res.status(HTTP_CODES.NOT_FOUND).json(err)
         })
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json(err)
+      res.status(HTTP_CODES.NOT_FOUND).json(err)
     })
 })
 
@@ -346,7 +346,7 @@ router.get('/all', (req, res) => {
       }
 
     })
-    .catch(() => res.status(404).json({
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({
       service: 'No service found',
     }))
 })
@@ -373,7 +373,7 @@ router.get('/all/category/:category', (req, res) => {
       res.json(allServices)
 
     })
-    .catch(() => res.status(404).json({service: 'No service found'}))
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({service: 'No service found'}))
 })
 
 // @Route GET /myAlfred/api/serviceUser/category/:id
@@ -453,7 +453,7 @@ router.get('/near', passport.authenticate('jwt', {session: false}), (req, res) =
         })
         .catch(err => {
           console.error(err)
-          res.status(404).json({service: 'No service found'})
+          res.status(HTTP_CODES.NOT_FOUND).json({service: 'No service found'})
         })
     })
 
@@ -495,7 +495,7 @@ router.get('/near/:service', passport.authenticate('jwt', {session: false}), (re
           res.json(service)
 
         })
-        .catch(err => res.status(404).json({service: 'No service found'}))
+        .catch(err => res.status(HTTP_CODES.NOT_FOUND).json({service: 'No service found'}))
     })
 
 })
@@ -503,18 +503,24 @@ router.get('/near/:service', passport.authenticate('jwt', {session: false}), (re
 // @Route POST /myAlfred/api/serviceUser/search
 // Search serviceUser according to optional coordinates, keyword, cat/service/prestation
 router.post('/search', (req, res) => {
+  console.log(`Searching`)
   const start2 = process.hrtime()
   const kw = req.body.keyword
-  const gps = req.body.gps
+  let gps = req.body.gps
   const category = req.body.category
-  const service = req.body.service
+  let service = req.body.service
   const prestation = req.body.prestation
-  const restrictPerimeter = req.body.perimeter
+  let restrictPerimeter = req.body.perimeter
   const status = req.body.status // PRO or PART
 
-  console.log(`Searching ${JSON.stringify(req.body)}`)
+  const dataFn = su => {
+    return {...su.service, prestations: su.prestations.map(p => p.prestation)}
+  }
 
-  const filter = status==PRO ? {'professional_access': true} : {'particular_access': true}
+  console.log(`Searching serviceUser ${JSON.stringify(req.body)}`)
+
+  const filter = status==PRO ? {professional_access: true} : {particular_access: true}
+  let serviceUsers=[]
   ServiceUser.find(filter, 'prestations.prestation service_address location perimeter description')
     .populate({path: 'user', select: 'firstname hidden'})
     .populate({
@@ -522,60 +528,95 @@ router.post('/search', (req, res) => {
       populate: {path: 'category', select: status==PRO ? 's_professional_label':'s_particular_label'},
     })
     .populate({
-      path: 'prestations.prestation', match: filter,
+      path: 'prestations.prestation', // match: filter,
       populate: {path: 'job', select: 's_label'},
     })
+    .lean({virtuals: true})
     .then(result => {
-      let sus=result
-      console.log(`Found ${sus.length} before filtering`)
+      serviceUsers=result
+      console.log(`Found ${serviceUsers.length} before filtering`)
       // Filter hidden
-      sus = sus.filter(su => !su.user.hidden)
+      serviceUsers = serviceUsers.filter(su => !su.user.hidden)
+      const promise=req.body.booking_id ? Booking.findById(req.body.booking_id).populate('user') : Promise.resolve(null)
+      return promise
+    })
+    .then(booking => {
+      if (booking) {
+        console.log(`GPS was:${JSON.stringify(gps)}`)
+        gps = booking.address && booking.address.gps
+        console.log(`GPS becomes:${JSON.stringify(gps)}`)
+        service=booking.service
+        const prestaLabels=booking.prestations.map(p => p.name)
+        serviceUsers = serviceUsers.filter(su => {
+          const suLabels=su.prestations.map(p => p.prestation && p.prestation.label)
+          return lodash.intersection(suLabels, prestaLabels).length==prestaLabels.length
+        })
+        console.log(`After prestations filter:${serviceUsers.length}`)
+      }
+      else if(req.body.booking_id) {
+        return res.status(404).json(`Could not find booking ${req.body.booking_id}`)
+      }
       if (category) {
-        sus = sus.filter(su => su.service.category._id.toString() == category)
+        console.log(`Still got ${serviceUsers.length}`)
+        console.log(serviceUsers.map(su => su.service.category._id))
+        serviceUsers = serviceUsers.filter(su => su.service.category._id.toString() == category)
       }
+      console.log(`Remaining ${serviceUsers.length} after category filtering`)
       if (service) {
-        sus = sus.filter(su => su.service._id.toString() == service)
+        serviceUsers = serviceUsers.filter(su => su.service._id.toString() == service)
       }
+      console.log(`Remaining ${serviceUsers.length} after service filtering`)
       if (prestation) {
-        sus = sus.filter(su => su.prestations.some(p => p.prestation && p.prestation._id.toString() == prestation))
+        serviceUsers = serviceUsers.filter(su => su.prestations.some(p => p.prestation && p.prestation._id.toString() == prestation))
       }
+      console.log(`Remaining ${serviceUsers.length} after prestation filtering`)
       if (kw) {
-        sus = serviceFilters.filterServicesKeyword(sus, kw, status)
+        serviceUsers = serviceFilters.filterServicesKeyword(serviceUsers, kw, status, dataFn)
       }
-      sus = serviceFilters.filterPartnerServices(sus, req.context.isAdmin())
-      console.log(`Remaining ${sus.length} after keyword filtering`)
+      console.log(`Remaining ${serviceUsers.length} after keyword filtering`)
+      if (!booking) {
+        serviceUsers = serviceFilters.filterPartnerServices(serviceUsers, req.context.isAdmin())
+      }
+      console.log(`Remaining ${serviceUsers.length} after partner filtering (admin:${req.context.isAdmin()})`)
 
       if (gps) {
         try {
-          sus = serviceFilters.filterServicesGPS(sus, JSON.parse(req.body.gps), restrictPerimeter)
+          serviceUsers = serviceFilters.filterServiceUsersGPS(serviceUsers, JSON.parse(gps), restrictPerimeter)
         }
         catch (err) {
-          sus = serviceFilters.filterServicesGPS(sus, req.body.gps, restrictPerimeter)
+          serviceUsers = serviceFilters.filterServiceUsersGPS(serviceUsers, gps, restrictPerimeter)
         }
-      }
-      console.log(`Remaining ${sus.length} after gps filtering`)
+        // if booking : keep only if alfred && same GPS || client
+        if (booking) {
+          // TODO lodash.isEqual({lat:1, lng:1},{'lat':1, 'lng':2})=>false,lodash.isEqual(Object.entries({lat:1, lng:1}),Object.entries({'lat':1, 'lng':2}))
+          let location=''
+          if (!booking.address.gps) {
+            location='visio'
+          }
+          else if (lodash.isEqual(Object.entries(booking.address.gps), Object.entries(booking.user.billing_address.gps))) {
+            location='client'
+          }
+          else {
+            location='alfred'
+          }
+          serviceUsers = serviceUsers.filter(su => !!su.location[location])
+        }
 
-      // Manager : filtrer les services autorisés
-      if (getRole(req)==MANAGER) {
-        Group.findOne({members: get_logged_id(req), type: MICROSERVICE_MODE}, 'allowed_services')
-          .then(group => {
-            const manager_sus = serviceFilters.filterServicesIds(sus, group.allowed_services.map(s => s.service._id))
-            return res.json(manager_sus)
-          })
-          .catch(err => {
-            console.error(err)
-            return res.status(400).json(err)
-          })
       }
-      else {
-        const elapsed = process.hrtime(start2)
-        console.log(`Fast Search found ${sus.length} services in ${elapsed[0]}s ${elapsed[1] / 1e6}ms`)
-        return res.json(sus)
+      // Search corresponding booking : visio if gps is null
+      else if (!gps && booking) {
+        // Retain visio only
+        serviceUsers = serviceUsers.filter(su => (!!su.location.visio || !!su.location.elearning))
       }
+      console.log(`Remaining ${serviceUsers.length} after gps filtering`)
+
+      const elapsed = process.hrtime(start2)
+      console.log(`Fast Search found ${serviceUsers.length} services in ${elapsed[0]}s ${elapsed[1] / 1e6}ms`)
+      return res.json(serviceUsers)
     })
     .catch(err => {
       console.error(err)
-      return res.status(404).json(err)
+      return res.status(HTTP_CODES.NOT_FOUND).json(err)
     })
 })
 
@@ -592,7 +633,7 @@ router.post('/nearCity', (req, res) => {
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({service: 'No service found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({service: 'No service found'})
     })
 
 })
@@ -602,12 +643,12 @@ router.post('/nearCity', (req, res) => {
 // @Access private
 router.get('/cardPreview/:id', (req, res) => {
   const suId = mongoose.Types.ObjectId(req.params.id)
-  ServiceUser.findOne(suId, 'label picture alfred service service_address.city service_address.gps diploma certification level description')
+  ServiceUser.findOne(suId, 'label picture alfred cpf_eligible service service_address.city service_address.gps diploma certification level description location')
     .populate({path: 'service', select: 'picture label'})
     .populate({path: 'user', select: 'firstname picture avatar_letters'})
     .catch(err => {
       console.error(err)
-      res.status(404).json({error: err})
+      res.status(HTTP_CODES.NOT_FOUND).json({error: err})
     })
     .then(su => {
       Shop.findOne({alfred: su.user}, 'is_professional insurances')
@@ -619,17 +660,18 @@ router.get('/cardPreview/:id', (req, res) => {
                 alfred: su.user, city: su.service_address ? su.service_address.city : '',
                 grade_text: su.grade_text, level: su.level, is_professional: shop.is_professional,
                 gps: su.service_address ? su.service_address.gps : null, reviews: reviews, description: su.description,
-                insurance_text: shop.insurance_text,
+                insurance_text: shop.insurance_text, location: su.location, cpf: su.cpf_eligible,
               }
               res.json(result)
             })
         })
         .catch(err => {
           console.error(err)
-          res.status(404).json({error: err})
+          res.status(HTTP_CODES.NOT_FOUND).json({error: err})
         })
     })
 })
+
 // @Route GET /myAlfred/api/serviceUser/nearOther
 // View all service around other address
 // @Access private
@@ -670,7 +712,7 @@ router.get('/nearOther/:id', passport.authenticate('jwt', {session: false}), (re
           })
           res.json(allService)
         })
-        .catch(err => res.status(404).json({service: 'No service found'}))
+        .catch(err => res.status(HTTP_CODES.NOT_FOUND).json({service: 'No service found'}))
     })
 
 })
@@ -708,7 +750,7 @@ router.get('/all/nearOther/:id/:service', passport.authenticate('jwt', {session:
           })
           res.json(service)
         })
-        .catch(err => res.status(404).json({
+        .catch(err => res.status(HTTP_CODES.NOT_FOUND).json({
           service: 'No service found',
         }))
     })
@@ -731,7 +773,7 @@ router.get('/home/:partpro', (req, res) => {
   ServiceUser.find(filter, 'user service service_address.city')
     // {e.service.picture} title={e.service.label} alfred={e.user.firstname} user={e.user} score={e.user.score} /
     .populate('user', 'picture firstname score hidden')
-    .populate('service', 'label')
+    .populate('service', 'label picture')
     .then(result => {
       let services=result.filter(su => !su.user.hidden)
       if (typeof services !== 'undefined' && services.length > 0) {
@@ -753,7 +795,7 @@ router.get('/home/:partpro', (req, res) => {
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({service: 'No service found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({service: 'No service found'})
     })
 })
 
@@ -787,7 +829,7 @@ router.get('/currentAlfred', passport.authenticate('jwt', {
 
 
     })
-    .catch(err => res.status(404).json({
+    .catch(err => res.status(HTTP_CODES.NOT_FOUND).json({
       service: 'No service found',
     }))
 })
@@ -812,7 +854,7 @@ router.get('/keywords/:mode', (req, res) => {
     ServiceUser.find(filter, 'description'),
     Job.find({}, 's_label'),
   ]
-  Promise.all(promises.map(p => p.lean()))
+  Promise.all(promises.map(p => p.lean({virtuals: true})))
     .then(result => {
       // One array only
       result = [].concat(...result)
@@ -849,11 +891,10 @@ router.get('/:id', (req, res) => {
     .populate({
       path: 'prestations.billing',
     })
-    .populate('equipments')
-    .populate('service.equipments')
+    .populate({path: 'service', populate: {path: 'equipments'}})
     .then(service => {
       if (!service) {
-        return res.status(404).json({msg: 'No service found'})
+        return res.status(HTTP_CODES.NOT_FOUND).json({msg: 'No service found'})
       }
       res.json(service)
     })
@@ -894,7 +935,7 @@ router.put('/deletePrestation/:id', passport.authenticate('jwt', {
 
       serviceUser.save().then(list => res.json(list))
     })
-    .catch(err => res.status(404).json(err))
+    .catch(err => res.status(HTTP_CODES.NOT_FOUND).json(err))
 })
 
 // @Route PUT /myAlfred/api/serviceUser/views/:id
@@ -918,7 +959,7 @@ router.put('/views/:id', (req, res) => {
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({user: 'No service found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({user: 'No service found'})
     })
 })
 
@@ -932,7 +973,7 @@ router.delete('/delete/diploma/:id', passport.authenticate('jwt', {
     .then(service => res.json(service))
     .catch(err => {
       console.error(err)
-      res.status(404).json({servicenotfound: 'No service found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({servicenotfound: 'No service found'})
     })
 })
 
@@ -946,7 +987,7 @@ router.delete('/delete/certification/:id', passport.authenticate('jwt', {
     .then(service => res.json(service))
     .catch(err => {
       console.error(err)
-      res.status(404).json({servicenotfound: 'No service found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({servicenotfound: 'No service found'})
     })
 })
 
@@ -967,7 +1008,7 @@ router.delete('/current/allServices', passport.authenticate('jwt', {
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json(err)
+      res.status(HTTP_CODES.NOT_FOUND).json(err)
     })
 })
 
@@ -990,9 +1031,23 @@ router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res)
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json(err)
+      res.status(HTTP_CODES.NOT_FOUND).json(err)
     })
 })
 
+// @Route POST /myAlfred/api/serviceUser/compute
+// Computes total price and fees for serviceUser booking
+// @Access public
+router.post('/compute', (req, res) => {
+
+  req.context.payment.compute(req.body)
+    .then(result => {
+      res.json(result)
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json(JSON.stringify(err))
+    })
+})
 
 module.exports = router

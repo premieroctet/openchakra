@@ -1,20 +1,19 @@
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
-import React from "react";
-import Grid from "@material-ui/core/Grid";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import LayoutMobile from "../../hoc/Layout/LayoutMobile";
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
-import Router from "next/router";
-import {PAYMENT_RESPONSIVE} from '../../utils/i18n'
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import LayoutMobile from '../../hoc/Layout/LayoutMobile'
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos'
+import Router from 'next/router'
 
-class PaymentResponsive extends React.Component{
+class PaymentResponsive extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props)
   }
 
   render() {
@@ -23,7 +22,7 @@ class PaymentResponsive extends React.Component{
         <LayoutMobile>
           <Grid>
             <Grid>
-              <h2>{PAYMENT_RESPONSIVE}</h2>
+              <h2>{ReactHtmlParser(this.props.t('PAYMENT_RESPONSIVE.title'))}</h2>
             </Grid>
           </Grid>
           <Grid style={{marginTop: '5vh'}}>
@@ -38,9 +37,9 @@ class PaymentResponsive extends React.Component{
           </Grid>
         </LayoutMobile>
       </Grid>
-    );
+    )
   }
 }
 
 
-export default withTranslation('custom', {withRef: true})(PaymentResponsive)
+export default withTranslation(null, {withRef: true})(PaymentResponsive)

@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   statContainer: {
     display: 'flex',
     justifyContent: 'flex-end',
@@ -63,3 +63,4 @@ export default theme => ({
     },
   },
 })
+module.exports=Style

@@ -2,7 +2,7 @@
 const MONGOOSE_OPTIONS={
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  poolSize: 10,
+  // poolSize: 10,
   useCreateIndex: true,
   useFindAndModify: false,
 }

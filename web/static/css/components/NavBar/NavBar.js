@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   navbarSearchContainer: {
     width: '50%',
     marginTop: '5vh',
@@ -337,3 +337,4 @@ export default theme => ({
     color: 'white',
   },
 })
+module.exports=Style

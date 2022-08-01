@@ -1,12 +1,13 @@
+import React from 'react'
 import {CLOSE_NOTIFICATION_DELAY} from '../utils/consts'
 import {snackBarError} from '../utils/notifications'
 import {setAxiosAuthentication} from '../utils/authentication'
 import axios from 'axios'
-import BasePage from './basePage'
+
 import {setAlfredRegistering} from '../utils/context'
 import Router from 'next/router'
 
-class RegisterServices extends BasePage {
+class RegisterServices extends React.Component {
 
   componentDidMount() {
     const registerCode=this.getURLProp('id')

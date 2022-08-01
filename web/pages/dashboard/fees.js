@@ -2,15 +2,14 @@ import {withStyles} from '@material-ui/core/styles'
 import React from 'react'
 import axios from 'axios'
 import {Grid} from '@material-ui/core'
+import DatePicker from 'react-datepicker'
+import {bookingUrl} from '../../config/config'
 import 'react-datepicker/dist/react-datepicker.css'
-
 const moment = require('moment')
-
-const {DataPage, styles}=require('../../components/AlfredDashboard/DataPage')
 const models=require('../../components/BigList/models')
+const {DataPage, styles}=require('../../components/AlfredDashboard/DataPage')
 
 moment.locale('fr')
-import DatePicker from 'react-datepicker'
 
 class Incomes extends DataPage {
 
@@ -99,7 +98,7 @@ class Incomes extends DataPage {
       window.open(`/profile/about?user=${data.alfred._id}`, '_blank')
     }
     if (field=='service') {
-      window.open(`/userServicePreview?id=${data.serviceUserId}`, '_blank')
+      window.open(bookingUrl(data.serviceUserId), '_blank')
     }
   }
 

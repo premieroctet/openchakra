@@ -1,20 +1,20 @@
+const express = require('express')
+const passport = require('passport')
+const moment = require('moment')
+const axios = require('axios')
+const lodash = require('lodash')
+const {HTTP_CODES} = require('../../utils/errors')
+const {getHostUrl} = require('../../../config/config')
 const Service = require('../../models/Service')
 const Booking = require('../../models/Booking')
 const Group = require('../../models/Group')
 const User = require('../../models/User')
-const express = require('express')
-
-const router = express.Router()
-const passport = require('passport')
-const mongoose = require('mongoose')
-const moment = require('moment')
-moment.locale('fr')
-const axios = require('axios')
 const {validateCompanyGroup} = require('../../validation/simpleRegister')
-const {MANAGER, ROLES, MONTH_PERIOD, YEAR_PERIOD, BOOK_STATUS, DASHBOARD_MODE, MICROSERVICE_MODE, CARETAKER_MODE} = require('../../../utils/consts')
-const {computeUrl}=require('../../../config/config')
-const lodash = require('lodash')
+const {MANAGER, BOOK_STATUS, DASHBOARD_MODE, MICROSERVICE_MODE, CARETAKER_MODE} = require('../../../utils/consts')
 const {getPeriodStart} = require('../../../utils/dateutils')
+
+moment.locale('fr')
+const router = express.Router()
 axios.defaults.withCredentials = true
 
 // @Route PUT /myAlfred/api/groups/:group_id/allowedServices
@@ -29,7 +29,7 @@ router.put('/:group_id/allowedServices', passport.authenticate('b2badmin', {sess
   Service.findById(service_id, 'label professional_access particular_access')
     .then(service => {
       if (!service) {
-        return res.status(404).json({error: `Service ${service._id} introuvable`})
+        return res.status(HTTP_CODES.NOT_FOUND).json({error: `Service ${service._id} introuvable`})
       }
       Group.findById(group_id)
         .then(group => {
@@ -55,17 +55,17 @@ router.put('/:group_id/allowedServices', passport.authenticate('b2badmin', {sess
             })
             .catch(err => {
               console.error(err)
-              return res.status(404).json({company: 'No group found'})
+              return res.status(HTTP_CODES.NOT_FOUND).json({company: 'No group found'})
             })
         })
         .catch(err => {
           console.error(err)
-          return res.status(404).json({company: 'No group found'})
+          return res.status(HTTP_CODES.NOT_FOUND).json({company: 'No group found'})
         })
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({company: 'No group found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({company: 'No group found'})
     })
 })
 
@@ -85,7 +85,7 @@ router.delete('/:group_id/allowedServices/:service_id', passport.authenticate('b
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({company: 'No group found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({company: 'No group found'})
     })
 })
 
@@ -169,7 +169,7 @@ router.put('/:group_id', passport.authenticate('b2badmin', {session: false}), (r
   Group.findOneAndUpdate({_id: group_id}, req.body, {new: true})
     .then(group => {
       if (!group) {
-        return res.status(404).json({error: 'Groupe introuvable'})
+        return res.status(HTTP_CODES.NOT_FOUND).json({error: 'Groupe introuvable'})
       }
       res.json(group)
     })
@@ -189,7 +189,7 @@ router.delete('/:group_id', passport.authenticate('b2badmin', {session: false}),
   Group.deleteOne({_id: req.params.group_id})
     .then(result => {
       if (result.deletedCount == 0) {
-        res.status(404).json({error: `Le groupe ${req.params.group_id} n'existe pas`})
+        res.status(HTTP_CODES.NOT_FOUND).json({error: `Le groupe ${req.params.group_id} n'existe pas`})
       }
       else {
         res.json(`Groupe ${req.params.group_id} supprimé`)
@@ -213,11 +213,11 @@ router.put('/:group_id/members', passport.authenticate('b2badmin', {session: fal
   User.findById(member_id)
     .then(user => {
       if (!user) {
-        res.status(404).json({error: `User ${user_id} introuvable`})
+        res.status(HTTP_CODES.NOT_FOUND).json({error: `User ${user_id} introuvable`})
         return
       }
       if (user.company && (user.company.toString() != company_id.toString())) {
-        res.status(404).json({error: `User ${user_id} ne fait pas partie de cette compagnie`})
+        res.status(HTTP_CODES.NOT_FOUND).json({error: `User ${user_id} ne fait pas partie de cette compagnie`})
         return
       }
       Group.findByIdAndUpdate(group_id, {$addToSet: {members: member_id}})
@@ -276,11 +276,11 @@ router.put('/:group_id/managers', passport.authenticate('b2badmin', {session: fa
   User.findByIdAndUpdate(manager_id, {$addToSet: {roles: MANAGER}})
     .then(user => {
       if (!user) {
-        res.status(404).json({error: `User ${user_id} introuvable`})
+        res.status(HTTP_CODES.NOT_FOUND).json({error: `User ${user_id} introuvable`})
         return
       }
       if (user.company && (user.company.toString() != company_id.toString())) {
-        res.status(404).json({error: `User ${user_id} ne fait pas partie de cette compagnie`})
+        res.status(HTTP_CODES.NOT_FOUND).json({error: `User ${user_id} ne fait pas partie de cette compagnie`})
         return
       }
       Group.findByIdAndUpdate(group_id, {$addToSet: {members: manager_id}})
@@ -288,7 +288,7 @@ router.put('/:group_id/managers', passport.authenticate('b2badmin', {session: fa
           Group.updateMany({_id: {$ne: group_id}}, {$pull: {members: manager_id}})
             .then(() => {
               if (new_account) {
-                axios.post(new URL(`/myAlfred/api/users/forgotPassword`, computeUrl(req)).toString(), {email: user.email, role: MANAGER})
+                axios.post(new URL(`/myAlfred/api/users/forgotPassword`, getHostUrl()).href, {email: user.email, role: MANAGER})
                   .then(() => {})
                   .catch(err => {
                     console.error(err)
@@ -325,12 +325,12 @@ router.delete('/:group_id/managers/:manager_id', passport.authenticate('b2badmin
   User.findByIdAndUpdate(manager_id, {$pull: {roles: MANAGER}}, {new: true})
     .then(user => {
       if (!user) {
-        res.status(404).json({error: `User ${user_id} introuvable`})
+        res.status(HTTP_CODES.NOT_FOUND).json({error: `User ${user_id} introuvable`})
         return
       }
       return res.json(user)
       if (user.company && (user.company.toString() != company_id.toString())) {
-        res.status(404).json({error: `User ${user_id} ne fait pas partie de cette compagnie`})
+        res.status(HTTP_CODES.NOT_FOUND).json({error: `User ${user_id} ne fait pas partie de cette compagnie`})
         return
       }
     })

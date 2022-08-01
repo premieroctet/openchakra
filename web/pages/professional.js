@@ -20,4 +20,4 @@ class Professional extends React.Component {
 
 }
 
-export default withTranslation('custom', {withRef: true})(Professional)
+export default withTranslation(null, {withRef: true})(Professional)

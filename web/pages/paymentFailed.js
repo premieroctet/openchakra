@@ -1,3 +1,4 @@
+const withParams = require('../components/withParams')
 import CustomButton from '../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withStyles} from '@material-ui/core/styles'
@@ -8,13 +9,13 @@ import Router from 'next/router'
 import Typography from '@material-ui/core/Typography'
 import axios from 'axios'
 import {PAYMENT_FAILED} from '../utils/i18n'
-import BasePage from './basePage'
+
 import LayoutPayment from '../hoc/Layout/LayoutPayment'
 import styles from '../static/css/pages/paymentSuccess/paymentSuccess'
 
 const {setAxiosAuthentication}=require('../utils/authentication')
 
-class PaymentFailed extends BasePage {
+class PaymentFailed extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -34,7 +35,7 @@ class PaymentFailed extends BasePage {
       .catch(err => {
         console.error(err)
       })
-    axios.get(`/myAlfred/api/booking/${this.getURLProps().booking_id}`)
+    axios.get(`/myAlfred/api/booking/${this.props.booking_id}`)
       .then(res => {
         this.setState({booking: res.data})
       })
@@ -90,4 +91,4 @@ class PaymentFailed extends BasePage {
 }
 
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(PaymentFailed))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(withParams(PaymentFailed)))

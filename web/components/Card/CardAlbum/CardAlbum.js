@@ -33,4 +33,4 @@ class CardAlbum extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(CardAlbum)
+export default withTranslation(null, {withRef: true})(CardAlbum)

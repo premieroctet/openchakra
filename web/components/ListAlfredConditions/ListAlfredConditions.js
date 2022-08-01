@@ -1,3 +1,4 @@
+
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
@@ -25,4 +26,4 @@ class ListAlfredConditions extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(ListAlfredConditions)
+export default withTranslation(null, {withRef: true})(ListAlfredConditions)

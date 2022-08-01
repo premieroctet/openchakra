@@ -1,7 +1,8 @@
 const {REVIEW_STATUS} = require('../../utils/consts')
 const mongoose = require('mongoose')
-
 const Schema = mongoose.Schema
+
+const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 
 const ReviewSchema = new Schema({
   content: {
@@ -88,4 +89,6 @@ const ReviewSchema = new Schema({
   },
 })
 
-module.exports = Review = mongoose.model('review', ReviewSchema)
+ReviewSchema.plugin(mongooseLeanVirtuals)
+
+module.exports = mongoose.model('review', ReviewSchema)

@@ -2,7 +2,7 @@ import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import SchoolIcon from '@material-ui/icons/School'
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser'
-import styles from '../../static/css/components/Card/CardService/CardService'
+import styles from '../../static/css/components/Card/CardServiceUser/CardServiceUser'
 import {withStyles} from '@material-ui/core/styles'
 
 function ListIconsSkills(props) {

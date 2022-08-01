@@ -1,5 +1,5 @@
 {
-  "plugins": ["react"],
+  "plugins": ["react", "react-hooks", "import"],
   "parser": "babel-eslint",
   "parserOptions": {
     "ecmaVersion": 2018
@@ -88,7 +88,6 @@
     "no-unused-vars": 2,
     "no-use-before-define": 2,
 
-    "global-require": 2,
     "handle-callback-err": 1,
     "no-new-require": 2,
 
@@ -145,6 +144,9 @@
     "prefer-arrow-callback": 1,
     "prefer-spread": 1,
     "prefer-template": 1,
-    "require-yield": 2
+    "require-yield": 2,
+    "react-hooks/rules-of-hooks": "error", // Vérifie les règles des Hooks
+    "react-hooks/exhaustive-deps": "warn",  // Vérifie les tableaux de dépendances
+    "import/order": 1
   }
 }

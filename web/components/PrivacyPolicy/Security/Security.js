@@ -11,5 +11,5 @@ function Security() {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(Security))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(Security))
 

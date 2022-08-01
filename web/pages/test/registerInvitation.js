@@ -9,4 +9,4 @@ function RegisterInvitationTest() {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(RegisterInvitationTest)
+export default withTranslation(null, {withRef: true})(RegisterInvitationTest)

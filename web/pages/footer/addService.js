@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid'
 import {makeStyles} from '@material-ui/core/styles'
 import LayoutFaq from '../../hoc/Layout/LayoutFaq'
 import NeedMoreFaq from '../../hoc/Layout/Faq/NeedMoreFaq'
-import '../../static/assets/css/custom.css'
+
 import DisplayInformation from '../../components/DisplayInformation/DisplayInformation'
 const lodash = require('lodash')
 
@@ -52,4 +52,4 @@ function AddService({t, i18n}) {
   )
 }
 
-export default withTranslation('custom')(AddService)
+export default withTranslation(null)(AddService)

@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
+const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
+
 const EventLogSchema = new Schema({
   // Event date
   date: {
@@ -72,5 +74,6 @@ const EventLogSchema = new Schema({
   },
 }, {toJSON: {virtuals: true, getters: true}})
 
+EventLogSchema.plugin(mongooseLeanVirtuals)
 
-module.exports = EventLog = mongoose.model('eventLog', EventLogSchema)
+module.exports = mongoose.model('eventLog', EventLogSchema)

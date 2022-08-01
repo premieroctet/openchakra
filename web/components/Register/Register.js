@@ -33,7 +33,7 @@ import DialogActions from '@material-ui/core/DialogActions'
 let parse = require('url-parse')
 const moment=require('moment')
 const {STEPS}=require('../../utils/registerSteps')
-import '../../static/assets/css/custom.css'
+
 
 registerLocale('fr', fr)
 
@@ -572,4 +572,4 @@ class Register extends React.Component {
 
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(Register))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(Register))

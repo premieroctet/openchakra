@@ -1,3 +1,4 @@
+const withParams = require('../components/withParams')
 import CustomButton from '../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withStyles} from '@material-ui/core/styles'
@@ -9,15 +10,14 @@ import StarRatings from 'react-star-ratings'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import axios from 'axios'
-import {EVALUATE_CLIENT} from '../utils/i18n'
-import BasePage from './basePage'
+
 import LayoutEvaluate from '../hoc/Layout/LayoutEvaluate'
 import LayoutMobile from '../hoc/Layout/LayoutMobile'
 import styles from '../static/css/pages/evaluateClient/evaluateClient'
 
 const {clearAuthenticationToken, setAxiosAuthentication}=require('../utils/authentication')
 
-class EvaluateClient extends BasePage {
+class EvaluateClient extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -31,7 +31,7 @@ class EvaluateClient extends BasePage {
   }
 
   componentDidMount() {
-    const id = this.getURLProps().id
+    const id = this.props.id
     localStorage.setItem('path', Router.pathname)
     setAxiosAuthentication()
     axios
@@ -84,7 +84,7 @@ class EvaluateClient extends BasePage {
   }
 
   evaluate =() => {
-    const {id, booking, client} = this.getURLProps()
+    const {id, booking, client} = this.props
     const content = this.state.content
     const accueil = this.state.accueil
     const accuracy = this.state.accuracy
@@ -240,4 +240,4 @@ class EvaluateClient extends BasePage {
 }
 
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(EvaluateClient))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(withParams(EvaluateClient)))

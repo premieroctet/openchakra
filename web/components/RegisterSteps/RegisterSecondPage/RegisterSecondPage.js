@@ -1,21 +1,20 @@
-import LocationSelect from '../../Geo/LocationSelect'
-import {formatAddress} from '../../../utils/text'
-import CustomButton from '../../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
-import React from 'react'
-import withStyles from '@material-ui/core/styles/withStyles'
-import Grid from '@material-ui/core/Grid'
 import {Typography} from '@material-ui/core'
 import TextField from '@material-ui/core/TextField'
 import PhoneIphoneOutlinedIcon from '@material-ui/icons/PhoneIphoneOutlined'
 import Checkbox from '@material-ui/core/Checkbox'
 import NumberFormat from 'react-number-format'
 import PropTypes from 'prop-types'
+import Grid from '@material-ui/core/Grid'
+import React from 'react'
+import withStyles from '@material-ui/core/styles/withStyles'
 import styles from '../../../static/css/components/RegisterSteps/RegisterSecondPage/RegisterSecondPage'
-const {ACCOUNT_MIN_AGE} = require('../../../utils/consts')
-import '../../../static/assets/css/custom.css'
+import CustomButton from '../../CustomButton/CustomButton'
+import {formatAddress} from '../../../utils/text'
+import LocationSelect from '../../Geo/LocationSelect'
 import CustomIcon from '../../CustomIcon/CustomIcon'
+const {ACCOUNT_MIN_AGE} = require('../../../utils/consts')
 
 
 function NumberFormatCustom(props) {
@@ -207,4 +206,4 @@ class RegisterSecondPage extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(RegisterSecondPage))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(RegisterSecondPage))

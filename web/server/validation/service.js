@@ -20,7 +20,7 @@ module.exports = function validateServiceInput(data) {
     errors.category = 'Veuillez sélectionner une catégorie'
   }
 
-  if (!data.location.alfred && !data.location.client && !data.location.visio) {
+  if (!data.location.alfred && !data.location.client && !data.location.visio && !data.location.elearning) {
     errors.location = 'Sélectionnez au moins un lieu de réalisation'
   }
 

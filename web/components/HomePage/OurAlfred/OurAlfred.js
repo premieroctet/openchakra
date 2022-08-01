@@ -1,17 +1,17 @@
-import CustomButton from '../../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Router from 'next/router'
-import {CATEGORY, OUR_ALFRED} from '../../../utils/i18n'
 import withStyles from '@material-ui/core/styles/withStyles'
+import Typography from '@material-ui/core/Typography'
+import {CATEGORY, OUR_ALFRED} from '../../../utils/i18n'
 import styles from '../../../static/css/components/OurAlfred/OurAlfred'
 import withSlide from '../../../hoc/Slide/SlideShow'
 import withGrid from '../../../hoc/Grid/GridCard'
 import CardPreview from '../../Card/CardPreview/CardPreview'
-import Typography from '@material-ui/core/Typography'
-const {SlideGridDataModel}=require('../../../utils/models/SlideGridDataModel')
+import CustomButton from '../../CustomButton/CustomButton'
+import {SlideGridDataModel} from '../../../utils/models/SlideGridDataModel'
 
 const AlfredSlide=withSlide(withGrid(CardPreview))
 
@@ -67,4 +67,4 @@ class OurAlfred extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(OurAlfred))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(OurAlfred))

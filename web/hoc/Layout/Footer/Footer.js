@@ -255,4 +255,4 @@ class Footer extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(Footer))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(Footer))

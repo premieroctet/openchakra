@@ -30,4 +30,4 @@ function avocotesLandingPage() {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(avocotesLandingPage)
+export default withTranslation(null, {withRef: true})(avocotesLandingPage)

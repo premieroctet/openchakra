@@ -13,4 +13,4 @@ class signup extends Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(signup)
+export default withTranslation(null, {withRef: true})(signup)

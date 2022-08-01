@@ -39,4 +39,4 @@ function BannerContact({classes, t}) {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(BannerContact))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(BannerContact))

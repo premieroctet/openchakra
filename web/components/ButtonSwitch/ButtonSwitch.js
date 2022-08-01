@@ -10,7 +10,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
 import styles from './ButtonSwitchStyle'
 import Typography from '@material-ui/core/Typography'
-import '../../static/assets/css/custom.css'
+
 import {BUTTON_SWITCH} from '../../utils/i18n'
 
 const CssTextField = withStyles({
@@ -167,4 +167,4 @@ class ButtonSwitch extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(ButtonSwitch))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(ButtonSwitch))

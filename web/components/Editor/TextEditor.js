@@ -33,4 +33,4 @@ class TextEditor extends React.Component {
 
 }
 
-export default withTranslation('custom', {withRef: true})(TextEditor)
+export default withTranslation(null, {withRef: true})(TextEditor)

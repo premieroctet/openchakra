@@ -1,4 +1,3 @@
-import CustomButton from '../../components/CustomButton/CustomButton'
 import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
@@ -9,11 +8,12 @@ import React from 'react'
 import Router from 'next/router'
 import Select from 'react-dropdown-select'
 import axios from 'axios'
+import CustomButton from '../../components/CustomButton/CustomButton'
 
-import BasePage from '../basePage'
+
 import DashboardLayout from '../../hoc/Layout/DashboardLayout'
+const withParams = require('../../components/withParams')
 
-const {ROLES} = require('../../utils/consts')
 const {clearAuthenticationToken, setAxiosAuthentication, setAuthToken}=require('../../utils/authentication')
 
 const styles = {
@@ -46,15 +46,13 @@ const styles = {
   },
 }
 
-class LogAsUser extends BasePage {
+class LogAsUser extends React.Component {
 
   constructor(props) {
     super(props)
 
     this.state = {
       user: null,
-      roles: [],
-      role: null,
       errors: null,
       muUsers: [],
     }
@@ -73,11 +71,10 @@ class LogAsUser extends BasePage {
             label: `${u.name} ${u.firstname} ${u.email} (${u._id})`,
             value: u._id,
             key: u.email,
-            roles: u.roles,
           }
         })
         this.setState({muUsers: muUsers})
-        const email=this.getURLProps().email
+        const email=this.props.email
         if (email) {
           this.setState({user: muUsers.find(m => m.key==email)})
         }
@@ -92,15 +89,7 @@ class LogAsUser extends BasePage {
   }
 
   onUserChanged = e => {
-    this.setState({
-      user: e[0],
-      roles: e[0].roles.map(r => { return {label: ROLES[r], value: r} }),
-      role: e[0].roles.length==1 ? e[0].roles[0] : null})
-  }
-
-  onRoleChanged = e => {
-    console.log(JSON.stringify(e))
-    this.setState({role: e[0].value})
+    this.setState({user: e[0]})
   }
 
   onSubmit = e => {
@@ -108,7 +97,7 @@ class LogAsUser extends BasePage {
 
     setAxiosAuthentication()
     axios.post('/myAlfred/api/admin/loginAs', {
-      username: this.state.user.key, role: this.state.role,
+      username: this.state.user.key,
     })
       .then(() => {
         setAuthToken()
@@ -124,10 +113,9 @@ class LogAsUser extends BasePage {
 
   render() {
     const {classes} = this.props
-    const {muUsers, user, roles, role} = this.state
+    const {muUsers, user} = this.state
 
-    console.log(`User ${user}, roles:${roles}, role:${role}`)
-    const logEnabled = user && (roles.length==0 || role)
+    const logEnabled = user
 
     return (
       <DashboardLayout title={this.props.t('DASHBOARD.logAs')}>
@@ -146,23 +134,6 @@ class LogAsUser extends BasePage {
                     multi={false}
                   >
                   </Select>
-                  { roles && roles.length>0 ?
-                    <>
-                      <Typography style={{fontSize: 15, marginTop: '10px'}}>avec le rôle</Typography>
-                      <Select
-                        input={<Input name="user" id="genre-label-placeholder"/>}
-                        displayEmpty
-                        name="user"
-                        onChange={this.onRoleChanged}
-                        options={roles}
-                        values={roles.filter(r => r.value==role)}
-                        multi={false}
-                      >
-                      </Select>
-                    </>
-                    :
-                    null
-                  }
                 </Grid>
                 <em style={{color: 'red'}}>{this.state.errors}</em>
                 <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
@@ -181,4 +152,4 @@ class LogAsUser extends BasePage {
 }
 
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(LogAsUser))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(withParams(LogAsUser)))

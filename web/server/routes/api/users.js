@@ -1,35 +1,68 @@
+const crypto = require('crypto')
 const {getIO} = require('../../utils/socketIO')
 const {getLocationSuggestions}=require('../../../utils/geo')
+const fs = require('fs').promises
+const path=require('path')
+const express = require('express')
+const router = express.Router()
+const passport = require('passport')
+const bcrypt = require('bcryptjs')
+const moment = require('moment')
+const axios = require('axios')
+const gifFrames = require('gif-frames')
+const CronJob = require('cron').CronJob
+const {HTTP_CODES} = require('../../utils/errors')
+const {CGV_EXPIRATION_DELAY} = require('../../../config/config')
+const {CGV_PATH} = require('../../../config/config')
+const {getDataModel} = require('../../../config/config')
+const {UPDATE_CGV} = require('../../../utils/feurst/consts')
+const {
+  ForbiddenError,
+  NotFoundError,
+} = require('../../utils/errors')
+const Company = require('../../models/Company')
+const {getHostUrl, is_development} = require('../../../config/config')
+const Shop = require('../../models/Shop')
+const {
+  ACCOUNT,
+  BASEPATH_EDI,
+  CREATE,
+  CUSTOMER_ADMIN,
+  CUSTOMER_BUYER,
+  CUSTOMER_TCI,
+  FEURST_ADMIN,
+  FEURST_ADV,
+  FEURST_SALES,
+  VIEW,
+} = require('../../../utils/feurst/consts')
+const {
+  IMAGE_FILTER,
+  PDF_FILTER,
+  XL_FILTER,
+  createDiskMulter,
+  createMemoryMulter,
+} = require('../../utils/filesystem')
+const {filterUsers, getActionsForRoles} = require('../../utils/userAccess')
+const {accountsImport} = require('../../utils/import')
 const User = require('../../models/User')
 const ServiceUser = require('../../models/ServiceUser')
-require('../../models/ResetToken')
 const Album = require('../../models/Album')
 const {REGISTER_WITHOUT_CODE}=require('../../../utils/context')
 const {checkRegisterCodeValidity, setRegisterCodeUsed}=require('../../utils/register')
 const {EDIT_PROFIL}=require('../../../utils/i18n')
 const {logEvent}=require('../../utils/events')
-const {IMAGE_FILTER, createDiskMulter} = require('../../utils/filesystem')
-const express = require('express')
-const router = express.Router()
-const passport = require('passport')
-const bcrypt = require('bcryptjs')
 const {is_production, is_validation, computeUrl}=require('../../../config/config')
-const CronJob = require('cron').CronJob
 const {validateSimpleRegisterInput, validateEditProfile, validateEditProProfile, validateBirthday} = require('../../validation/simpleRegister')
 const validateLoginInput = require('../../validation/login')
 const {sendResetPassword, sendVerificationMail, sendVerificationSMS, sendB2BAccount, sendAlert} = require('../../utils/mailing')
-const moment = require('moment')
-const crypto = require('crypto')
-const axios = require('axios')
 const {ROLES}=require('../../../utils/consts')
 const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, createMangoProvider, install_hooks} = require('../../utils/mangopay')
 const {send_cookie}=require('../../utils/serverContext')
-const gifFrames = require('gif-frames')
-const fs = require('fs').promises
 const lodash=require('lodash')
+const {isActionAllowed} = require('../../utils/userAccess')
+const ResetToken = require('../../../server/models/ResetToken')
 
 moment.locale('fr')
-
 axios.defaults.withCredentials = true
 
 const HOOK_TYPES = 'KYC_SUCCEEDED KYC_FAILED KYC_VALIDATION_ASKED'.split(' ')
@@ -43,6 +76,9 @@ const uploadIdCard = createDiskMulter('static/profile/idCard/', IMAGE_FILTER)
 const uploadRegProof = createDiskMulter('static/profile/registrationProof/', IMAGE_FILTER)
 // Album picture storage
 const uploadAlbumPicture =createDiskMulter('static/profile/album/', IMAGE_FILTER)
+// CGV storage
+const uploadCGV =createDiskMulter(`static/assets/docs/${getDataModel()}/`, PDF_FILTER, path.basename(CGV_PATH))
+
 
 router.get('/check_register_code/:code', (req, res) => {
   checkRegisterCodeValidity(req, req.params.code)
@@ -50,6 +86,51 @@ router.get('/check_register_code/:code', (req, res) => {
     .catch(err => {
       console.error(err)
       res.status(400).json(err)
+    })
+})
+
+const DATA_TYPE=ACCOUNT
+// @Route GET /myAlfred/api/users
+// Returns all users
+// @Access private
+router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, VIEW)) {
+    return res.sendStatus(HTTP_CODES.FORBIDDEN)
+  }
+
+  User.find({active: true})
+    .sort({creation_date: -1})
+    .populate('company')
+    .populate('companies')
+    .then(data => {
+      data=filterUsers(data, DATA_TYPE, req.user, VIEW)
+      res.json(data)
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json(err)
+    })
+})
+
+
+// @Route GET /myAlfred/api/users/sales-representatives
+// Returns all FEURST_SALES users
+// @Access private
+router.get('/sales-representatives', passport.authenticate('jwt', {session: false}), (req, res) => {
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, VIEW)) {
+    return res.sendStatus(HTTP_CODES.FORBIDDEN)
+  }
+
+  User.find({roles: FEURST_SALES})
+    .populate('company')
+    .populate('companies')
+    .then(data => {
+      data=filterUsers(data, DATA_TYPE, req.user, VIEW)
+      res.json(data)
+    })
+    .catch(err => {
+      console.error(err)
+      res.status(500).json(err)
     })
 })
 
@@ -118,7 +199,7 @@ router.post('/register', (req, res) => {
       if (!user.billing_address.gps.lat) {
         User.find({is_admin: true}, 'firstname email phone')
           .then(admins => {
-            let log_link = new URL(`/dashboard/logAsUser?email=${user.email}`, computeUrl(req))
+            let log_link = new URL(`/dashboard/logAsUser?email=${user.email}`, getHostUrl())
             const msg=`Compléter l'adresse pour le compte ${user.email}, connexion via ${log_link}`
             const subject=`Alerte adresse incorrecte pour ${user.email}`
             admins.forEach(admin => {
@@ -139,6 +220,21 @@ router.post('/register', (req, res) => {
     .catch(err => {
       console.error(err)
     })
+})
+
+
+router.get('/actions', passport.authenticate('jwt', {session: false}), (req, res) => {
+  if (!req.user.cgv_valid) {
+    return res.json([])
+  }
+  let actions=getActionsForRoles(req.user.roles)
+  if (req.query.model) {
+    actions=actions.filter(a => a.model==req.query.model)
+  }
+  if (req.query.action) {
+    actions=actions.filter(a => a.action==req.query.action)
+  }
+  return res.json(actions)
 })
 
 // @Route GET /myAlfred/api/users/sendMailVerification
@@ -233,7 +329,7 @@ router.put('/profile/billingAddress', passport.authenticate('jwt', {session: fal
             ServiceUser.updateMany({user: user.id}, {service_address: user.billing_address})
             createMangoClient(user)
             if (user.mangopay_provider_id) {
-              req.context.getModel('Shop').findOne({alfred: user._id})
+              Shop.findOne({alfred: user._id})
                 .then(shop => {
                   createMangoProvider(user, shop)
                 })
@@ -293,8 +389,11 @@ router.put('/profile/serviceAddress', passport.authenticate('jwt', {session: fal
       user.service_address.push(address)
 
 
-      user.save().then(user => res.json(user)).catch(err => console.error(err))
+      if (user?.service_address) {
+        Object.assign(user.service_address, [...user.service_address, address])
+      }
 
+      user.save().then(user => res.json(user)).catch(err => console.error(err))
 
     })
 })
@@ -480,6 +579,37 @@ router.delete('/profile/registrationProof', passport.authenticate('jwt', {sessio
     })
 })
 
+router.post('/update-cgv', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  // TODO set in passport
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, UPDATE_CGV)) {
+    return res.sendStatus(403)
+  }
+
+  uploadCGV.single('buffer')(req, res, err => {
+    if (err) {
+      return res.status(err.status || 500).json(err.message || err)
+    }
+    User.updateMany({}, {cgv_validation_date: null})
+      .then(() => {
+        return res.json()
+      })
+      .catch(err => {
+        return res.status(err.status || 500).json(err.message || err)
+      })
+  })
+})
+
+router.put('/validate-cgv', passport.authenticate('jwt', {session: false}), (req, res) => {
+  User.findByIdAndUpdate(req.user.id, {cgv_validation_date: new Date()})
+    .then(user => {
+      return res.json(user)
+    })
+    .catch(err => {
+      console.error(err)
+    })
+})
+
 // @Route POST /myAlfred/api/users/login
 // Login
 // TODO 934169 Gérer si cookies non autorisés (pas de login)
@@ -494,31 +624,15 @@ router.post('/login', (req, res) => {
 
   const email = req.body.username.toLowerCase().trim()
   const password = req.body.password
-  let role = req.body.role
 
   // Find user by email
   User.findOne({email: new RegExp(`^${lodash.escapeRegExp(email)}$`, 'i')})
-    .populate('shop', 'is_particular')
+    .populate({path: 'shop', select: 'is_particular', strictPopulate: false})
     .then(user => {
       // Check for user
       if (!user) {
         console.warn(`Invalid login : no user for ${email}`)
         errors.username = 'Mot de passe ou email incorrect'
-        return res.status(400).json(errors)
-      }
-
-      // Si roles et pas de rôle indiqué, prendre le seul possible
-      if (!role && user.roles.length==1) {
-        role=user.roles[0]
-      }
-
-      if (user.is_employee && !role) {
-        errors.role = 'Vous devez sélectioner un rôle'
-        return res.status(400).json(errors)
-      }
-
-      if (user.is_employee && !ROLES[role]) {
-        errors.role = `Rôle ${role} inconnu`
         return res.status(400).json(errors)
       }
 
@@ -535,7 +649,7 @@ router.post('/login', (req, res) => {
               .then(() => {})
               .catch(err => console.error(err))
             // Sign token
-            send_cookie(user, role, res)
+            send_cookie(user, res)
           }
           else {
             console.warn(`Invalid login : bad password ${password} for ${email}`)
@@ -548,13 +662,13 @@ router.post('/login', (req, res) => {
 
 router.get('/token', passport.authenticate('jwt', {session: false}), (req, res) => {
   User.findById(req.user.id)
-    .populate('shop', 'is_particular')
+    .populate({path: 'shop', select: 'is_particular', strictPopulate: false})
     .then(user => {
-      send_cookie(user, null, res, req.context.getLoggedAs())
+      send_cookie(user, res, req.context.getLoggedAs())
     })
     .catch(err => {
       console.error(err)
-      res.status('404')
+      res.status(HTTP_CODES.NOT_FOUND)
     })
 })
 
@@ -575,6 +689,10 @@ router.get('/all', (req, res) => {
       }
       res.json(user)
     })
+    .catch(err => {
+      console.error(err)
+      res.status(HTTP_CODES.NOT_FOUND).json({user: 'No users found'})
+    })
     .catch(err => res.status(404).json({user: 'No users found'}))
 })
 
@@ -584,27 +702,31 @@ router.get('/users', (req, res) => {
   User.find({is_admin: false, is_alfred: false})
     .then(user => {
       if (!user) {
-        res.status(400).json({msg: 'No users found'})
+        res.status(HTTP_CODES.NOT_FOUND).json({msg: 'No users found'})
       }
       res.json(user)
     })
-    .catch(err => res.status(404).json({users: 'No billing found'}))
+    .catch(err => {
+      console.error(err)
+      return res.status(500).json(err)
+    })
 })
 
 // @Route GET /myAlfred/api/users/roles/:email
 // Get roles for an email's user
 router.get('/roles/:email', (req, res) => {
 
-  User.findOne({email: req.params.email}, 'roles')
+  User.findOne({email: new RegExp(req.params.email, 'i')}, 'roles')
     .then(user => {
       if (!user) {
-        console.log(`Request roles for email ${req.params.email}:[]`)
         return res.json([])
       }
-      console.log(`Request roles for email ${req.params.email}:${user.roles}`)
       res.json(user.roles)
     })
-    .catch(err => res.status(404).json({user: 'No user found'}))
+    .catch(err => {
+      console.error(err)
+      res.status(500).json()
+    })
 })
 
 // @Route GET /myAlfred/api/users/users/:id
@@ -618,7 +740,10 @@ router.get('/users/:id', (req, res) => {
       res.json(user)
 
     })
-    .catch(err => res.status(404).json({user: 'No user found'}))
+    .catch(err => {
+      console.error(err)
+      return res.status(500).json(err)
+    })
 })
 
 // @Route DELETE /myAlfred/api/users/:id/role/:role
@@ -638,10 +763,10 @@ router.delete('/:id/role/:role', passport.authenticate('jwt', {session: false}),
         .then(() => res.json(user))
         .catch(err => {
           console.error(err)
-          res.status(404).json({user: 'Erreur à la suppression du rôle'})
+          res.status(HTTP_CODES.NOT_FOUND).json({user: 'Erreur à la suppression du rôle'})
         })
     })
-    .catch(err => res.status(404).json({user: 'No user found'}))
+    .catch(err => res.status(HTTP_CODES.NOT_FOUND).json({user: 'No user found'}))
 })
 
 // @Route PUT /myAlfred/api/users/users/becomeAlfred
@@ -655,7 +780,7 @@ router.put('/users/becomeAlfred', passport.authenticate('jwt', {session: false})
       res.json(user)
 
     })
-    .catch(err => res.status(404).json({user: 'No user found'}))
+    .catch(err => res.status(HTTP_CODES.NOT_FOUND).json({user: 'No user found'}))
 })
 
 // @Route PUT /myAlfred/api/users/users/deleteAlfred
@@ -669,7 +794,7 @@ router.put('/users/deleteAlfred', passport.authenticate('jwt', {session: false})
       res.json(user)
 
     })
-    .catch(err => res.status(404).json({user: 'No user found'}))
+    .catch(err => res.status(HTTP_CODES.NOT_FOUND).json({user: 'No user found'}))
 })
 
 // @Route PUT /myAlfred/api/users/alfredViews/:id
@@ -683,7 +808,7 @@ router.put('/alfredViews/:id', (req, res) => {
       res.json(user)
 
     })
-    .catch(err => res.status(404).json({user: 'No user found'}))
+    .catch(err => res.status(HTTP_CODES.NOT_FOUND).json({user: 'No user found'}))
 })
 
 // @Route GET /myAlfred/api/users/home/alfred
@@ -698,7 +823,7 @@ router.get('/home/alfred', (req, res) => {
       }
       res.json(user)
     })
-    .catch(err => res.status(404).json({alfred: 'No alfred found'}))
+    .catch(err => res.status(HTTP_CODES.NOT_FOUND).json({alfred: 'No alfred found'}))
 })
 
 // @Route GET /myAlfred/api/users/alfred
@@ -712,7 +837,7 @@ router.get('/alfred', (req, res) => {
       return res.json(user)
     })
     .catch(err => {
-      return res.status(404).json({alfred: `No alfred found:${err}`})
+      return res.status(HTTP_CODES.NOT_FOUND).json({alfred: `No alfred found:${err}`})
     })
 })
 
@@ -720,14 +845,15 @@ router.get('/alfred', (req, res) => {
 // Get the current user
 // @Access private
 router.get('/current', passport.authenticate('jwt', {session: false}), (req, res) => {
-  User.findById(req.user.id)
+  User.findById(req.user.id, '-password')
     .populate('resetToken')
+    .populate('company')
     .then(user => {
       res.json(user)
     })
     .catch(err => {
       console.error(`During User.findById:${err}`)
-      res.status(404).json({alfred: 'No alfred found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({alfred: 'No alfred found'})
     })
 })
 
@@ -735,29 +861,28 @@ router.get('/current', passport.authenticate('jwt', {session: false}), (req, res
 // Send email with link for reset password
 router.post('/forgotPassword', (req, res) => {
   const email = (req.body.email || '').toLowerCase().trim()
-  const role = req.body.role
 
-  User.findOne({email: new RegExp(`^${lodash.escapeRegExp(email)}$`, 'i')})
-    .populate('company')
-    .then(user => {
-      if (user === null) {
+  let token=null
+  User.exists({email: new RegExp(`^${lodash.escapeRegExp(email)}$`, 'i')})
+    .then(exists => {
+      if (!exists) {
         console.error(`email ${email} not in database`)
-        return res.status(404).json({error: 'Aucun compte avec cet email'})
+        throw new NotFoundError(`Aucun compte avec cet email:${email}`)
       }
-      const token = crypto.randomBytes(20).toString('hex')
-      ResetToken.create({token: token})
-        .then(token => {
-          user.update({resetToken: token._id})
-            .catch(err => console.error(err))
-        })
-      // Role ? création d'un compte B2B
-      if (req.body.role) {
-        sendB2BAccount(user, user.email, ROLES[role], user.company.name, token, req)
-      }
-      else {
-        sendResetPassword(user, token, req)
-      }
-      res.json(user)
+      token = crypto.randomBytes(20).toString('hex')
+      console.log(`Created token:${token}`)
+      return ResetToken.create({token: token})
+    })
+    .then(result => {
+      return User.findOneAndUpdate({email: email}, {resetToken: result._id})
+    })
+    .then(user => {
+      sendResetPassword(user, token)
+      return res.json(user)
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(err.status || err).json(err)
     })
 })
 
@@ -766,32 +891,30 @@ router.post('/forgotPassword', (req, res) => {
 router.post('/resetPassword', (req, res) => {
   const password = req.body.password
   const token = req.body.token
+  let resetToken=null
   ResetToken.findOne({token: token})
-    .then(resetToken => {
-      User.findOne({resetToken: resetToken._id})
-        .then(user => {
-          if (!user) {
-            throw 'No user'
-          }
-          bcrypt.genSalt(10, (err, salt) => {
-            bcrypt.hash(password, salt, (err, hash) => {
-              if (err) {
-                throw err
-              }
-              user.updateOne({password: hash, resetToken: undefined})
-                .then(result => res.json(user))
-                .catch(err => console.error(err))
-            })
-          })
-        })
-        .catch(err => {
-          console.error(err)
-          res.status(400).json({msg: 'Token expiré'})
-        })
+    .then(result => {
+      if (!result) {
+        return Promise.reject('Token expiré')
+      }
+      resetToken=result
+      return bcrypt.hash(password, 10)
+    })
+    .then(hash => {
+      return User.findOneAndUpdate({resetToken: resetToken._id}, {$set: {password: hash, resetToken: null}})
+    })
+    .then(result => {
+      if (!result) {
+        return Promise.reject('Token invalide')
+      }
+      return ResetToken.findOneAndRemove({token: token})
+    })
+    .then(() => {
+      return res.json()
     })
     .catch(err => {
       console.error(err)
-      res.status(400).json({msg: 'Token invalide'})
+      res.status(400).json(err)
     })
 })
 
@@ -815,7 +938,7 @@ router.put('/profile/email', passport.authenticate('jwt', {session: false}), (re
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json(err)
+      res.status(HTTP_CODES.NOT_FOUND).json(err)
     })
 })
 
@@ -942,35 +1065,24 @@ router.put('/profile/editProProfile', passport.authenticate('jwt', {session: fal
 // Edit password
 // @Access private
 router.put('/profile/editPassword', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const password = req.body.password
   const newPassword = req.body.newPassword
-  const admin = req.user.is_admin
 
   if (!newPassword.match('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})')) {
     return res.status(400).json({error: 'Le nouveau mot de passe doit contenir au moins :\n\t- 8 caractères\n\t- 1 minuscule\n\t- 1 majuscule\n\t- 1 chiffre'})
   }
   User.findById(req.user.id)
     .then(user => {
-      const promise = admin ? Promise.resolve(true) : Promise.resolve(bcrypt.compare(password, user.password))
-      promise
-        .then(isMatch => {
-          if (isMatch) {
-            bcrypt.genSalt(10, (err, salt) => {
-              bcrypt.hash(newPassword, salt, (err, hash) => {
-                if (err) {
-                  throw err
-                }
-                user.password = hash
-                user.save()
-                  .then(user => res.json({success: 'Mot de passe mis à jour'}))
-                  .catch(err => console.error(err))
-              })
-            })
+      bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(newPassword, salt, (err, hash) => {
+          if (err) {
+            throw err
           }
-          else {
-            return res.status(400).json({error: 'Mot de passe incorrect', wrongPassword: true})
-          }
+          user.password = hash
+          user.save()
+            .then(user => res.json({success: 'Mot de passe mis à jour'}))
+            .catch(err => console.error(err))
         })
+      })
     })
 
 })
@@ -983,7 +1095,7 @@ router.put('/account/notifications', passport.authenticate('jwt', {session: fals
   User.findById(req.user.id)
     .then(user => {
       if (!user) {
-        return res.status(404).json(`Unknown user ${req.user}`)
+        return res.status(HTTP_CODES.NOT_FOUND).json(`Unknown user ${req.user}`)
       }
       user.notifications_message = {
         email: req.body.messages_email,
@@ -1073,6 +1185,53 @@ router.delete('/profile/picture/delete', passport.authenticate('jwt', {session: 
     .catch(err => {
       console.error(err)
       return res.status(400).json(err)
+    })
+})
+
+// @Route PUT /myAlfred/api/users/current/delete
+// Delete the current user
+// @Access private
+router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+  const user_id=req.params.id
+  console.log(`Deleting user ${user_id}`)
+  if (!user_id) {
+    return res.status(400).json('Expected user id')
+  }
+
+  if (user_id==req.user._id.toString()) {
+    return res.status(403).json('Vous ne pouvez supprimer votre propre compte')
+  }
+
+  let user=null
+  User.findById(user_id)
+    .then(result => {
+      if (!result) {
+        throw new NotFoundError(`Compte ${user_id} introuvable`)
+      }
+      user=result
+      // Forbid sales representative deletion
+      return Company.findOne({sales_representative: user_id})
+    })
+    .then(company => {
+      if (company) {
+        throw new ForbiddenError(`Impossible de supprimer le commercial pour la société ${company.name}`)
+      }
+      // Forbid only Feurst admin deletion
+      return User.exists({roles: FEURST_ADMIN, email: {$ne: user.email}})
+    })
+    .then(otherAdminExists => {
+      if (!otherAdminExists) {
+        throw new ForbiddenError('Impossible de supprimer le seul administrateur FEURST')
+      }
+      return user.delete()
+    })
+    .then(() => {
+      // logEvent(req, 'Compte', 'Suppression', `Compte de ${user.full_name}(${user._id}) supprimé`)
+      return res.json()
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(err.status || 500).json(err.message || err)
     })
 })
 
@@ -1200,7 +1359,8 @@ router.get('/still_profile/:filename', (req, res) => {
       const img=frameData[0].getImage().read()
       return res.send(img)
     })
-    .catch(() => {
+    .catch(err => {
+      console.log(err)
       fs.readFile(`static/profile/${req.params.filename}`)
         .then(data => {
           return res.send(data)
@@ -1236,12 +1396,123 @@ router.get('/hook', (req, res) => {
       }
       else {
         console.error(`Could not find user with identity_proof_id or registration_proof_id ${doc_id}`)
-        res.status(200).json()
+        res.json()
       }
     })
     .catch(err => {
       console.error(err)
-      res.status(200).json()
+      res.json()
+    })
+})
+
+// PRODUCTS
+const uploadAccounts = createMemoryMulter(XL_FILTER)
+
+// @Route POST /myAlfred/api/products/import
+// Imports products from csv
+router.post('/import', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, CREATE)) {
+    return res.sendStatus(HTTP_CODES.FORBIDDEN)
+  }
+
+  uploadAccounts.single('buffer')(req, res, err => {
+    if (err) {
+      console.error(err)
+      return res.status(HTTP_CODES.NOT_FOUND).json({errors: err.message})
+    }
+
+    const options=JSON.parse(req.body.options)
+
+    accountsImport(req.file.buffer, options)
+      .then(result => {
+        res.json(result)
+      })
+      .catch(err => {
+        console.error(err)
+        res.status(500).error(err)
+      })
+  })
+})
+
+/**
+ @Route GET /myAlfred/api/users/landing-page
+ Returns landing page URL depending on role
+ */
+router.get('/landing-page', passport.authenticate('jwt', {session: false}), (req, res) => {
+  if (!req.user.cgv_valid) {
+    return res.json(`${BASEPATH_EDI}/cgv`)
+  }
+  const roles=req.user.roles
+  if (roles.includes(FEURST_ADMIN)) {
+    return res.json(`${BASEPATH_EDI}/orders/handle`)
+  }
+  if (roles.includes(FEURST_ADV)) {
+    return res.json(`${BASEPATH_EDI}/orders/handle`)
+  }
+  if (roles.includes(FEURST_SALES)) {
+    return res.json(`${BASEPATH_EDI}/quotations/handle`)
+  }
+  if (roles.includes(CUSTOMER_ADMIN)) {
+    return res.json(`${BASEPATH_EDI}/orders`)
+  }
+  if (roles.includes(CUSTOMER_BUYER)) {
+    return res.json(`${BASEPATH_EDI}/orders`)
+  }
+  if (roles.includes(CUSTOMER_TCI)) {
+    return res.json(`${BASEPATH_EDI}/quotations`)
+  }
+  return res.status(HTTP_CODES.NOT_FOUND).json(`Unknown loading page for ${roles}`)
+})
+
+// DEV tricks : set any atribute, log without password
+if (is_development()) {
+  router.put('/current', passport.authenticate('jwt', {session: false}), (req, res) => {
+    User.findByIdAndUpdate(req.user, req.body)
+      .then(() => {
+        return res.json()
+      })
+      .catch(err => {
+        return res.status(500).json(err)
+      })
+
+  })
+
+  router.post('/force-login', (req, res) => {
+    const email = req.body.username.toLowerCase().trim()
+    // Find user by email
+    User.findOne({email: new RegExp(`^${email}$`, 'i')})
+      .populate({path: 'shop', select: 'is_particular', strictPopulate: false})
+      .then(user => {
+        if (!user) {
+          return res.status(400).json({username: `Email '${email}' incorrect`})
+        }
+        user.last_login.unshift(Date.now())
+        while (user.last_login.length>10) {
+          user.last_login.pop()
+        }
+        return user.save()
+      })
+      .then(user => {
+        send_cookie(user, res)
+      })
+      .catch(err => {
+        console.error(err)
+        res.status(500).json(err)
+      })
+  })
+
+}
+
+router.get('/locations', (req, res) => {
+  const {value, type}=req.query
+  getLocationSuggestions(value, type)
+    .then(result => {
+      return res.json(result)
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(500).json('Erreur')
     })
 })
 
@@ -1288,5 +1559,23 @@ if (is_production() || is_validation()) {
       .catch(err => console.error(err))
   }, null, true, 'Europe/Paris')
 }
+
+// Each hour, check CGV consent validity
+new CronJob('0 0 * * * *', () => {
+  fs.stat(CGV_PATH.slice(1))
+    .then(res => {
+      const cgvLimit=Math.max(moment(res.mtime), moment().add(-CGV_EXPIRATION_DELAY, 'days'))
+      return Promise.all([cgvLimit, User.update({cgv_validation_date: {$lt: cgvLimit}}, {cgv_validation_date: null})])
+    })
+    .then(([cgvLimit, result]) => {
+      if (result.nModified) {
+        console.log(`CGV consent limit ${new Date(cgvLimit)}: invalidated ${result.nModified} accounts`)
+      }
+    })
+    .catch(err => {
+      console.error(err)
+    })
+}, null, true, 'Europe/Paris')
+
 
 module.exports = router

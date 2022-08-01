@@ -12,7 +12,7 @@ import Rating from '@material-ui/lab/Rating'
 import Typography from '@material-ui/core/Typography'
 import Divider from '@material-ui/core/Divider'
 import Router from 'next/router'
-import '../../static/assets/css/custom.css'
+
 import {SUMMARY_COMMENTARY} from '../../utils/i18n'
 
 
@@ -136,4 +136,4 @@ class SummaryCommentary extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(WithStyles(styles)(SummaryCommentary))
+export default withTranslation(null, {withRef: true})(WithStyles(styles)(SummaryCommentary))

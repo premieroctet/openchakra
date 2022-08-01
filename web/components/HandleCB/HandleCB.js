@@ -21,7 +21,7 @@ import MuiDialogTitle from '@material-ui/core/DialogTitle'
 import CloseIcon from '@material-ui/icons/Close'
 import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined'
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications')
-import '../../static/assets/css/custom.css'
+
 import {HANDLE_CB} from '../../utils/i18n'
 
 const DialogTitle = withStyles(styles)(props => {
@@ -270,4 +270,4 @@ class HandleCB extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(HandleCB))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(HandleCB))

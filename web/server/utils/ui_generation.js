@@ -1,17 +1,18 @@
 const fs=require('fs').promises
 const {validate: validateCss} = require('csstree-validator')
 const lodash = require('lodash')
+const {getDataModel}=require('../../config/config')
 
 const CSS_PATH='static/assets/css/custom.css'
 const CSS_PATH_ERR='/tmp/custom.css'
 
-const I18N_PATH='translations/fr/custom.json'
+const I18N_PATH=`static/locales/fr/${getDataModel()}_custom.json`
 const I18N_PATH_ERR='/tmp/custom.json'
 
 const THEME_PATH='lib/theme.json'
 const THEME_PATH_ERR='/tmp/theme.json'
 
-CONST_CSS = {
+const CONST_CSS = {
   'a': {
     color: 'inherit',
   },
@@ -20,7 +21,7 @@ CONST_CSS = {
   Creates CSS from configurations
   config : {classname, attributes:{name,value}}
 */
-createCSSConfiguration = items => {
+const createCSSConfiguration = items => {
   console.log(`Generating ${items.length} CSS items`)
   // Couleur trait de lien <a>
   let cssClasses={}
@@ -104,35 +105,35 @@ createCSSConfiguration = items => {
   }
   fs.writeFile(error ? CSS_PATH_ERR : CSS_PATH, output)
     .then(() => {
-      console.log('CSS saved')
+      console.log(`CSS saved in ${CSS_PATH}`)
     })
     .catch(err => {
       console.error(`CSS write error:${err}`)
     })
 }
 
-createI18NConfiguration = items => {
+const createI18NConfiguration = items => {
   console.log(`Generating ${items.length} I18N items`)
-  items = items.filter(i => i.attributes && i.attributes.length)
+  items = items.filter(i => i.attributes?.length>0)
+  items=lodash.sortBy(items, i => i.classname.toLowerCase())
   const formattedItems=items.map(it => `\t"${it.classname}": "${it.attributes[0].value.replace(/"/g, '\\"')}"`).join(',\n')
   const output=`{\n${formattedItems}\n}`
   Promise.resolve(output)
     .then(JSON.parse)
     .then(() => {
       console.log('JSON I18N is ok, saving')
-      fs.writeFile(I18N_PATH, output)
-        .then(() => console.log('I18N saved'))
-        .catch(err => (`I18N save error:${err}`))
+      return fs.writeFile(I18N_PATH, output)
+        .then(() => console.log(`I18N saved to ${I18N_PATH}`))
     })
     .catch(err => {
-      console.error(`JSON error:${err}\nSaving to ${I18N_PATH_ERR}`)
-      fs.writeFile(I18N_PATH_ERR, output)
-        .then(() => console.log('I18N saved'))
+      console.error(`I18N error:${err}\nSaving to ${I18N_PATH_ERR}`)
+      return fs.writeFile(I18N_PATH_ERR, output)
+        .then(() => console.log(`I18N saved to ${I18N_PATH_ERR}`))
         .catch(err => (`I18N save error:${err}`))
     })
 }
 
-createThemeConfiguration = items => {
+const createThemeConfiguration = items => {
   console.log(`Generating ${items.length} THEME items`)
   items = items.filter(i => i.attributes && i.attributes.length)
   items = Object.fromEntries(items.map(i => [i.classname, i.attributes[0].value]))
@@ -141,7 +142,7 @@ createThemeConfiguration = items => {
     .catch(err => (`I18N save error:${err}`))
 }
 
-createUIConfiguration = items => {
+const createUIConfiguration = items => {
   console.log(`Generating ${items.length} custom items`)
   const i18n_grouped=lodash.groupBy(items, it => (['text', 'sample'].includes(it.type) ? 'I18N': it.type=='palette' ? 'THEME' : 'CSS'))
   createCSSConfiguration(i18n_grouped.CSS || [])

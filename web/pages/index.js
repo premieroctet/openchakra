@@ -1,41 +1,39 @@
-const {hideStoreDialog} = require('../config/config')
-const {
-  getLoggedUserId,
-  isApplication,
-  isMobile,
-} = require('../utils/context')
-import LoggedAsBanner from '../components/LoggedAsBanner'
-import CustomButton from '../components/CustomButton/CustomButton'
+import React from 'react'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
+import Router from 'next/router'
 import axios from 'axios'
-import React from 'react'
-import Footer from '../hoc/Layout/Footer/Footer'
 import Head from 'next/head'
 import Grid from '@material-ui/core/Grid'
-import InfoBar from '../components/InfoBar/InfoBar'
 import {withStyles} from '@material-ui/core/styles'
-import styles from '../static/css/pages/homePage/index'
-import NavBar from '../hoc/Layout/NavBar/NavBar'
-import BannerPresentation from '../components/HomePage/BannerPresentation/BannerPresentation'
-import CategoryTopic from '../components/HomePage/Category/CategoryTopic'
-import OurAlfred from '../components/HomePage/OurAlfred/OurAlfred'
-import NewsLetter from '../components/HomePage/NewsLetter/NewsLetter'
-import MobileNavbar from '../hoc/Layout/NavBar/MobileNavbar'
-import TrustAndSecurity from '../hoc/Layout/TrustAndSecurity/TrustAndSecurity'
+import lodash from 'lodash'
 import {Dialog, DialogActions, DialogContent, Divider} from '@material-ui/core'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
-import ResaService from '../components/HomePage/ResaService/ResaService'
 import Typography from '@material-ui/core/Typography'
 import CloseIcon from '@material-ui/icons/Close'
 import IconButton from '@material-ui/core/IconButton'
 import {isAndroid} from 'react-device-detect'
-const {PRO, PART} = require('../utils/consts')
-import Router from 'next/router'
-import '../static/assets/css/custom.css'
-import lodash from 'lodash'
+import {PART} from '../utils/consts'
+import ServiceTopic from '../components/HomePage/Service/ServiceTopic'
+import ResaService from '../components/HomePage/ResaService/ResaService'
+import TrustAndSecurity from '../hoc/Layout/TrustAndSecurity/TrustAndSecurity'
+import MobileNavbar from '../hoc/Layout/NavBar/MobileNavbar'
+import NewsLetter from '../components/HomePage/NewsLetter/NewsLetter'
+import OurAlfred from '../components/HomePage/OurAlfred/OurAlfred'
+import CategoryTopic from '../components/HomePage/Category/CategoryTopic'
+import BannerPresentation from '../components/HomePage/BannerPresentation/BannerPresentation'
+import NavBar from '../hoc/Layout/NavBar/NavBar'
+import styles from '../static/css/pages/homePage/index'
+import InfoBar from '../components/InfoBar/InfoBar'
+import Footer from '../hoc/Layout/Footer/Footer'
+import CustomButton from '../components/CustomButton/CustomButton'
+import LoggedAsBanner from '../components/LoggedAsBanner'
+import {
+  isApplication,
+  isMobile,
+} from '../utils/context'
+import {hideStoreDialog} from '../config/config'
 import RandomBanner from '../components/RandomBanner/RandomBanner'
-import {INDEX} from '../utils/i18n'
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props
@@ -56,9 +54,9 @@ class Home extends React.Component {
     super(props)
     this.child = React.createRef()
     this.state = {
-      category: {},
+      categories: [],
+      services: {},
       alfred: {},
-      logged: false,
       user: {},
       open: false,
       mounted: false,
@@ -71,26 +69,10 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
-    if (getLoggedUserId()) {
-      this.setState({logged: true})
-    }
+
     if (isMobile()) {
       this.setState({open: true})
     }
-
-
-    axios.get('/myAlfred/api/users/current')
-      .then(res => {
-        let data = res.data
-        this.setState({
-          user: data,
-          gps: data.billing_address ? data.billing_address.gps : null,
-        },
-        )
-      })
-      .catch(err => {
-        console.error((err))
-      })
 
     axios.get(`/myAlfred/api/category/${PART}`)
       .then(res => {
@@ -98,11 +80,19 @@ class Home extends React.Component {
         this.setState({categories: categories})
       }).catch(err => console.error(err))
 
+    axios.get(`/myAlfred/api/service/all`)
+      .then(res => {
+        let services=res.data.filter(s => !!s.tag)
+        let groupedServices = lodash.groupBy(services, 'tag')
+        this.setState({services: groupedServices})
+      }).catch(err => console.error(err))
+
     axios.get(`/myAlfred/api/serviceUser/home/${PART}`)
       .then(response => {
         let alfred = response.data
         this.setState({alfred: alfred})
       }).catch(err => console.error(err))
+
 
     this.setState({mounted: true})
   }
@@ -152,7 +142,7 @@ class Home extends React.Component {
 
   render() {
     const {classes, t} = this.props
-    const {mounted, categories, alfred, open, user} = this.state
+    const {mounted, categories, alfred, open, services} = this.state
 
     if (!mounted) {
       return null
@@ -209,6 +199,17 @@ class Home extends React.Component {
               <OurAlfred alfred={alfred}/>
             </Grid>
           </Grid>
+          {Object.entries(services).map(entry => {
+            const [tag, taggedServices]=entry
+            return (
+              <Grid container className={`customslideservices ${classes.mainContainerStyle}`}>
+                <Grid className={classes.generalWidthContainer}>
+                  <ServiceTopic label={tag} services={taggedServices.map(s => s._id)}/>
+                </Grid>
+              </Grid>
+            )
+          })
+          }
           <Grid container className={`customresaservice ${classes.becomeAlfredComponent}`}>
             <Grid className={classes.generalWidthContainer}>
               <ResaService triggerLogin={this.callLogin}/>
@@ -248,4 +249,4 @@ class Home extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(Home))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(Home))

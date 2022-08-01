@@ -72,4 +72,4 @@ class ColorPicker extends React.Component {
 
 }
 
-export default withTranslation('custom', {withRef: true})(ColorPicker)
+export default withTranslation(null, {withRef: true})(ColorPicker)

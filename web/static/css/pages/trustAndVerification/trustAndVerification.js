@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   searchFilterRightContainer: {
     display: 'flex',
     alignItems: 'center',
@@ -46,3 +46,4 @@ export default theme => ({
     color: theme.palette.error.main,
   },
 })
+export default style

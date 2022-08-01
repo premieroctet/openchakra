@@ -1,26 +1,23 @@
+import React from 'react'
+import parsePhoneNumber from 'libphonenumber-js'
+import {Styles, MyGlobalStyle} from '../components/configurator/Styles'
+import i18n from '../server/utils/i18n_init'
+const {Button} = require('@material-ui/core')
+const axios = require('axios')
+const {withTranslation} = require('react-i18next')
+const lodash = require('lodash')
+const {STEPS} = require('../components/Feurst/configuratorSteps')
 const {
   BLADE_SHAPES,
-  DROITE,
-  EXCAVATRICE,
   FIX_TYPES,
-  NONE,
   PELLE_BUTTE,
-} = require('../utils/feurst_consts')
-import React from 'react'
+} = require('../utils/feurst/consts')
 
 const {is_development} = require('../config/config')
-const axios = require('axios')
 const {setAxiosAuthentication} = require('../utils/authentication')
-const {Button, Grid} = require('@material-ui/core')
-const {withTranslation} = require('react-i18next')
-const {STEPS} = require('./configurator/configuratorSteps')
 const ProgressBar = require('../components/ProgressBar/ProgressBar')
-const lodash = require('lodash')
 const {snackBarError, snackBarSuccess} = require('../utils/notifications')
-import {Styles, MyGlobalStyle} from '../components/configurator/Styles'
 const validateFeurstProspect=require('../server/validation/feurstProspect')
-import parsePhoneNumber from 'libphonenumber-js'
-import i18n from '../server/utils/i18n_init'
 
 export const feurstImgPath = './static/assets/img/feurst'
 
@@ -393,7 +390,7 @@ class Configurator extends React.Component {
           </div>
           <div className={`flex gap-y-4 justify-between flex-wrap w-full bg-white p-4 mb-6 ${STEPS.length - 1 === step ?'flex-column-reverse md-flex-row' : ''}`}>
 
-            
+
             {step !== 0 ?
               <Button className='previous w-fit' disabled={step == 0} onClick={this.previousPage}>
                 {t('NAVIGATION.previous')}
@@ -402,7 +399,6 @@ class Configurator extends React.Component {
               {t('NAVIGATION.next')}
             </Button> : null}
 
-            
 
             {STEPS.length - 1 === step &&
           <div className='flex flex-wrap gap-x-4 gap-y-4'>
@@ -418,9 +414,9 @@ class Configurator extends React.Component {
         </div>
       </Styles>)
 
-      
+
   }
 }
 
 
-module.exports = withTranslation('feurst', {withRef: true})(Configurator)
+module.exports = withTranslation(null, {withRef: true})(Configurator)

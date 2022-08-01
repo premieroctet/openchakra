@@ -1,42 +1,65 @@
-const {checkConfig, getDatabaseUri} = require('../config/config')
-const {MONGOOSE_OPTIONS} = require('./utils/database')
+const axios=require('axios')
 const mongoose=require('mongoose')
-
 const cookieParser=require('cookie-parser')
+const express = require('express')
+const next = require('next')
+const bodyParser = require('body-parser')
+const passport = require('passport')
+const glob = require('glob')
+const cors = require('cors')
+const {
+  RANDOM_ID,
+  checkConfig,
+  getDatabaseUri,
+  getHostUrl,
+  getPort,
+}=require('../config/config')
+const {HTTP_CODES} = require('./utils/errors')
+const Shiprate = require('./models/ShipRate')
+
+const Product = require('./models/Product')
+
+const Order = require('./models/Order')
+const Quotation = require('./models/Quotation')
+const Service = require('./models/Service')
+const Booking = require('./models/Booking')
+const ServiceUser = require('./models/ServiceUser')
+const Category = require('./models/Category')
+const PriceList = require('./models/PriceList')
+const {MONGOOSE_OPTIONS} = require('./utils/database')
+
 
 require('console-stamp')(console, '[dd/mm/yy HH:MM:ss.l]')
 
 const {is_production, is_validation, is_development, is_development_nossl} = require('../config/config')
-const express = require('express')
-const next = require('next')
-const bodyParser = require('body-parser')
 const dev = process.env.NODE_DEV !== 'production' // true false
 const prod = process.env.NODE_DEV === 'production' // true false
 const nextApp = is_production() || is_validation() ? next({prod}) : next({dev})
 const routes = require('./routes')
 const routerHandler = routes.getRequestHandler(nextApp)
-const passport = require('passport')
-const glob = require('glob')
-const cors = require('cors')
-const {config, SERVER_PROD} = require('../config/config')
-const http = require('http')
+const {config} = require('../config/config')
 const https = require('https')
 const fs = require('fs')
 const authRoutes = require('./routes/api/authentication')
 const users = require('./routes/api/users')
 const companies = require('./routes/api/companies')
 const groups = require('./routes/api/groups')
-const category = require('./routes/api/category')
+const category = Category && require('./routes/api/category')
 const billing = require('./routes/api/billing')
-const booking = require('./routes/api/booking')
+const booking = Booking && require('./routes/api/booking')
+const quotation = Quotation && require('./routes/api/quotation')
+const order = Order && require('./routes/api/order')
+const products = Product && require('./routes/api/products')
+const prices = PriceList && require('./routes/api/prices')
+const shiprates = Shiprate && require('./routes/api/shiprates')
 const equipment = require('./routes/api/equipment')
 const filterPresentation = require('./routes/api/filterPresentation')
 const job = require('./routes/api/job')
 const message = require('./routes/api/message')
 const newsletter = require('./routes/api/newsletter')
-const service = require('./routes/api/service')
+const service = Service && require('./routes/api/service')
 const prestation = require('./routes/api/prestation')
-const serviceUser = require('./routes/api/serviceUser')
+const serviceUser = ServiceUser && require('./routes/api/serviceUser')
 const shop = require('./routes/api/shop')
 const reviews = require('./routes/api/reviews')
 const availability = require('./routes/api/availability')
@@ -51,6 +74,8 @@ const app = express()
 const {initIO} = require('./utils/socketIO')
 const {serverContextFromRequest}=require('./utils/serverContext')
 
+// TODO Terminer les notifications
+// throw new Error(`\n${'*'.repeat(30)}\n  TERMINER LES NOTIFICATIONS\n${'*'.repeat(30)}`)
 // checkConfig
 checkConfig()
   .then(() => {
@@ -78,27 +103,50 @@ checkConfig()
 
     // Context handling
     app.use((req, res, next) => {
-      req.context=serverContextFromRequest(req)
-      next()
+      // console.log(`REQUEST:${req.method}, ${req.originalUrl}, ${JSON.stringify(req.body)}`)
+      serverContextFromRequest(req)
+        .then(context => {
+          req.context=context
+          return next()
+        })
+        .catch(err => {
+          console.error(err)
+          return res.status(500).json(err)
+        })
+    })
+
+    // Hide test pages
+    app.use((req, res, next) => {
+      if (is_production() && req.url.match(/^\/test\//)) {
+        return res.sendStatus(HTTP_CODES.NOT_FOUND)
+      }
+      return next()
     })
 
     app.use(cors())
 
 
+    // Check hostname is valid
+    app.use('/testping', (req, res) => res.json(RANDOM_ID))
     app.use('/myAlfred/api/users', users)
     app.use('/myAlfred/api/companies', companies)
-    app.use('/myAlfred/api/category', category)
+    category && app.use('/myAlfred/api/category', category)
     app.use('/myAlfred/api/groups', groups)
     app.use('/myAlfred/api/billing', billing)
-    app.use('/myAlfred/api/booking', booking)
+    booking && app.use('/myAlfred/api/booking', booking)
+    quotation && app.use('/myAlfred/api/quotations', quotation)
+    order && app.use('/myAlfred/api/orders', order)
+    products && app.use('/myAlfred/api/products', products)
+    shiprates && app.use('/myAlfred/api/shiprates', shiprates)
     app.use('/myAlfred/api/equipment', equipment)
     app.use('/myAlfred/api/filterPresentation', filterPresentation)
     app.use('/myAlfred/api/job', job)
     app.use('/myAlfred/api/message', message)
     app.use('/myAlfred/api/newsletter', newsletter)
-    app.use('/myAlfred/api/service', service)
+    service && app.use('/myAlfred/api/service', service)
     app.use('/myAlfred/api/prestation', prestation)
-    app.use('/myAlfred/api/serviceUser', serviceUser)
+    prices && app.use('/myAlfred/api/prices', prices)
+    serviceUser && app.use('/myAlfred/api/serviceUser', serviceUser)
     app.use('/myAlfred/api/shop', shop)
     app.use('/myAlfred/api/admin', admin)
     app.use('/myAlfred/api/reviews', reviews)
@@ -132,11 +180,6 @@ checkConfig()
     }
     app.get('*', routerHandler)
 
-    if (SERVER_PROD || is_development()) {
-      // HTTP only handling redirect to HTTPS
-      http.createServer(app).listen(80)
-      console.log('Created server on port 80')
-    }
     // HTTPS server using certificates
     const httpsServer = https.createServer({
       cert: fs.readFileSync(`${process.env.HOME}/.ssh/Main.txt`),
@@ -146,12 +189,23 @@ checkConfig()
     app)
     const io = initIO(httpsServer)
 
-    if (SERVER_PROD) {
-      httpsServer.listen(443, () => console.log(`${config.appName} running on http://localhost:80/ and https://localhost:443/`))
-    }
-    else {
-      httpsServer.listen(3122, () => console.log(`${config.appName} running on https://localhost:3122/`))
-    }
+    httpsServer.listen(getPort(), () => {
+      console.log(`${config.appName} running on ${getHostUrl()}`)
+      console.log(`Checking correct hostname`)
+      axios.get(new URL('/testping', getHostUrl()).toString())
+        .then(res => {
+          const result=res.data
+          const expected=RANDOM_ID
+          console.log(`Result:${res.data}, expected:${RANDOM_ID}`)
+          if (result!=expected) {
+            throw new Error(`Got different test values`)
+          }
+        })
+        .catch(err => {
+          console.error(`Host ${getHostUrl()} seems incorrect:${err.message}`)
+          process.exit(1)
+        })
+    })
 
     let roomName = ''
     let bookingName = ''
@@ -184,6 +238,7 @@ checkConfig()
       })
 
     })
+
   })
   .catch(err => {
     console.error(`**** Démarrage impossible:${err}`)

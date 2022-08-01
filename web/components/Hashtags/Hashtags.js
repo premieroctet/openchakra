@@ -57,4 +57,4 @@ class Hashtags extends React.Component {
 
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles, {withTheme: true})(Hashtags))
+export default withTranslation(null, {withRef: true})(withStyles(styles, {withTheme: true})(Hashtags))

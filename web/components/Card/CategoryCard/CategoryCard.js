@@ -6,7 +6,7 @@ import styles from '../../../static/css/components/Card/CategoryCard/CategoryCar
 import withStyles from '@material-ui/core/styles/withStyles'
 import {Link} from '@material-ui/core'
 import axios from 'axios'
-import '../../../static/assets/css/custom.css'
+
 import Typography from '@material-ui/core/Typography'
 
 class CategoryCard extends React.Component {
@@ -63,4 +63,4 @@ class CategoryCard extends React.Component {
 
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(CategoryCard))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(CategoryCard))

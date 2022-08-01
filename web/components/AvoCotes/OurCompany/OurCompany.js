@@ -28,4 +28,4 @@ function OurCompany({classes, t}) {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(OurCompany))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(OurCompany))

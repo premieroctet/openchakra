@@ -19,7 +19,7 @@ import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import Chip from '@material-ui/core/Chip'
 import Divider from '@material-ui/core/Divider'
 import lodash from 'lodash'
-import '../../../static/assets/css/custom.css'
+
 import {YEARS_RANGE} from '../../../utils/consts'
 
 // TODO: gérer les images des diplômes et crtifications en cas de modification de service
@@ -417,4 +417,4 @@ class AssetsService extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(AssetsService))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(AssetsService))

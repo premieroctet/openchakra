@@ -5,11 +5,11 @@ import Select from 'react-dropdown-select'
 import axios from 'axios'
 
 import About from '../../components/About/About'
-import BasePage from '../basePage'
+
 
 const {setAxiosAuthentication}=require('../../utils/authentication')
 
-class AboutTest extends BasePage {
+class AboutTest extends React.Component {
 
   constructor(props) {
     super(props)
@@ -73,4 +73,4 @@ class AboutTest extends BasePage {
 
 }
 
-export default withTranslation('custom', {withRef: true})(AboutTest)
+export default withTranslation(null, {withRef: true})(AboutTest)

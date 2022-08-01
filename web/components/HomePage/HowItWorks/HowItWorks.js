@@ -6,7 +6,7 @@ import {HOW_IT_WORKS} from '../../../utils/i18n'
 import Typography from '@material-ui/core/Typography'
 import withStyles from '@material-ui/core/styles/withStyles'
 import styles from '../../../static/css/components/HowItWorks/HowItWorks'
-import '../../../static/assets/css/custom.css'
+
 
 class HowItWorks extends React.Component {
   constructor(props) {
@@ -35,4 +35,4 @@ class HowItWorks extends React.Component {
 
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(HowItWorks))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(HowItWorks))

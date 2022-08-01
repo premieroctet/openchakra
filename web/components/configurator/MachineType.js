@@ -1,17 +1,16 @@
-const RequiredField = require('../misc/RequiredField')
+import React from 'react'
+import RequiredField from '../misc/RequiredField'
+import {feurstImgPath} from '../../pages/configurator'
 const {withTranslation} = require('react-i18next')
 
+const {TextField} = require('@material-ui/core')
+const {Autocomplete} = require('@material-ui/lab')
 const {
   CHARGEUSE,
   EXCAVATRICE,
   MACHINE_TYPES,
   PELLE_BUTTE,
-} = require('../../utils/feurst_consts')
-import React from 'react'
-import {feurstImgPath} from '../../pages/configurator'
-
-const {TextField} = require('@material-ui/core')
-const {Autocomplete} = require('@material-ui/lab')
+} = require('../../utils/feurst/consts')
 const {normalize} = require('../../utils/text')
 
 
@@ -122,5 +121,5 @@ const validator= state => {
   return res
 }
 
-const TransMachineType=withTranslation('feurst', {withRef: true})(MachineType)
+const TransMachineType=withTranslation(null, {withRef: true})(MachineType)
 module.exports={MachineType: TransMachineType, machineTypeValidator: validator}

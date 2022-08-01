@@ -1,13 +1,14 @@
-import {snackBarError, snackBarSuccess} from '../../../utils/notifications'
-import {setAxiosAuthentication} from '../../../utils/authentication'
 import {withTranslation} from 'react-i18next'
-const {DataPage, styles}=require('../../../components/AlfredDashboard/DataPage')
 import {withStyles} from '@material-ui/core/styles'
 import axios from 'axios'
+import {snackBarError, snackBarSuccess} from '../../../utils/notifications'
+import {setAxiosAuthentication} from '../../../utils/authentication'
+const moment = require('moment')
+const {ROLES} = require('../../../utils/feurst/consts')
+const {DataPage, styles}=require('../../../components/AlfredDashboard/DataPage')
 const models=require('../../../components/BigList/models')
 const {MANGOPAY_CONFIG}=require('../../../config/config')
 const regions=require('../../../static/assets/data/regions')
-const moment = require('moment')
 
 class all extends DataPage {
 
@@ -17,6 +18,7 @@ class all extends DataPage {
       {headerName: 'Statut', field: 'status', cellRenderer: 'statusRenderer', filter: 'statusFilter'},
       models.textColumn({headerName: 'Prénom', field: 'firstname'}),
       models.textColumn({headerName: 'Nom', field: 'name'}),
+      models.textColumn({headerName: 'Rôles', field: 'roles'}),
       models.textColumn({headerName: 'Email', field: 'email'}),
       models.textColumn({headerName: 'Ville', field: 'billing_address.city'}),
       {headerName: 'CP', field: 'billing_address.zip_code'},
@@ -45,7 +47,7 @@ class all extends DataPage {
         users=users.map(u => {
           u.status={'alfred': u.is_alfred, 'admin': u.is_admin}
           u.birthday_moment = moment(u.birthday)
-          u.shop = u.shop.pop()
+          u.shop = u.shop && u.shop.pop() || null
           if (!(u.billing_address && u.billing_address.gps && u.billing_address.gps.lat)) {
             u.warning='Adresse incorrecte'
           }
@@ -55,6 +57,7 @@ class all extends DataPage {
           if (!u.is_alfred) {
             u.hidden=undefined
           }
+          u.roles=(u.roles || []).map(r => ROLES[r])
           return u
         })
         this.setState({data: users})
@@ -118,4 +121,4 @@ class all extends DataPage {
 
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(all))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(all))

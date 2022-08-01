@@ -1,28 +1,28 @@
-import LocationSelect from '../Geo/LocationSelect'
-import CustomButton from '../CustomButton/CustomButton'
-import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
-import React from 'react'
-import withStyles from '@material-ui/core/styles/withStyles'
-import styles from '../../static/css/components/HandleAddresses/HandleAddresses'
-import Grid from '@material-ui/core/Grid'
-import Typography from '@material-ui/core/Typography'
-import Divider from '@material-ui/core/Divider'
-import TextField from '@material-ui/core/TextField'
-import IconButton from '@material-ui/core/IconButton'
-import EditIcon from '@material-ui/icons/Edit'
+import ReactHtmlParser from 'react-html-parser'
+import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined'
+import Button from '@material-ui/core/Button'
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
-import axios from 'axios'
 import Dialog from '@material-ui/core/Dialog'
-import DialogTitle from '@material-ui/core/DialogTitle'
+import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
-import DialogActions from '@material-ui/core/DialogActions'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import Divider from '@material-ui/core/Divider'
+import EditIcon from '@material-ui/icons/Edit'
+import Grid from '@material-ui/core/Grid'
+import IconButton from '@material-ui/core/IconButton'
+import React from 'react'
 import Router from 'next/router'
+import TextField from '@material-ui/core/TextField'
+import Typography from '@material-ui/core/Typography'
+import axios from 'axios'
+import withStyles from '@material-ui/core/styles/withStyles'
+import CustomButton from '../CustomButton/CustomButton'
 import {clearAuthenticationToken, setAxiosAuthentication} from '../../utils/authentication'
 import {snackBarError, snackBarSuccess} from '../../utils/notifications'
-import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined'
-import '../../static/assets/css/custom.css'
+import LocationSelect from '../Geo/LocationSelect'
+import styles from '../../static/css/components/HandleAddresses/HandleAddresses'
 
 class HandleAddresses extends React.Component {
   constructor(props) {
@@ -53,7 +53,7 @@ class HandleAddresses extends React.Component {
         this.setState({
           user: user,
           billing_address: user.billing_address,
-          service_address: user.service_address,
+          service_address: user?.service_address,
           new_label: '',
           edit_label: '',
           selected_address: null,
@@ -259,15 +259,18 @@ class HandleAddresses extends React.Component {
             <Grid container spacing={3}>
               <Grid item xs={12} xl={12} lg={12} md={12} sm={12}>
                 <LocationSelect
+                  className={'customhandleaddressesalgolia'}
                   placeholder={ReactHtmlParser(this.props.t('HANDLE_ADDRESSES.placeholder_algo'))}
                   onChange={suggestion => this.onMainAddressChange(suggestion)}
                 />
               </Grid>
-              <Grid item xs={12} lg={12} xl={12} sm={12} md={12} style={{marginTop: '5vh'}}>
-                <CustomButton disabled={!this.state.suggestion_current} size={'large'} type={'submit'} variant="contained"
-                  classes={{root: `customhandleaddressessavebutton ${classes.buttonSave}`}} onClick={this.onSubmitMain}>
-                  {ReactHtmlParser(this.props.t('COMMON.btn_validate'))}
-                </CustomButton>
+              <Grid style={{marginTop: '5vh'}}>
+                <Grid item xs={12} lg={12} xl={12} sm={12} md={12} style={{marginTop: '5vh'}}>
+                  <Button disabled={!this.state.suggestion_current} size={'large'} type={'submit'} variant="contained"
+                    className={classes.buttonSave} onClick={this.onSubmitMain}>
+                      Valider
+                  </Button>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
@@ -293,7 +296,7 @@ class HandleAddresses extends React.Component {
           </Grid>
         </Grid>
         <Grid container style={{marginTop: '5vh'}}>
-          {this.state.service_address.map((e, index) => (
+          {this.state?.service_address && this.state.service_address.map((e, index) => (
             <Grid key={index} style={{width: '100%'}}>
               <Grid>
                 <Grid container style={{display: 'flex', alignItems: 'center'}}>
@@ -392,4 +395,4 @@ class HandleAddresses extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(HandleAddresses))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(HandleAddresses))

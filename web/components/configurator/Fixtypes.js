@@ -1,8 +1,8 @@
-const RequiredField = require('../misc/RequiredField')
-const {withTranslation} = require('react-i18next')
 import React from 'react'
+import RequiredField from '../misc/RequiredField'
 import {feurstImgPath} from '../../pages/configurator'
-const {PIN, SOLD, NONE} = require('../../utils/feurst_consts')
+const {withTranslation} = require('react-i18next')
+const {PIN, SOLD, NONE} = require('../../utils/consts')
 
 
 function FixTypes(props) {
@@ -100,5 +100,5 @@ const validator = state => {
   return !!state.teethShieldFixType && !!state.borderShieldFixType
 }
 
-const TransFixTypes=withTranslation('feurst', {withRef: true})(FixTypes)
+const TransFixTypes=withTranslation(null, {withRef: true})(FixTypes)
 module.exports={FixTypes: TransFixTypes, fixtypesValidator: validator}

@@ -1,17 +1,18 @@
+const express = require('express')
+const passport = require('passport')
+
+const CronJob = require('cron').CronJob
+const {HTTP_CODES} = require('../../utils/errors')
 const ServiceUser = require('../../models/ServiceUser')
 const Shop = require('../../models/Shop')
 const User = require('../../models/User')
 const {logEvent} =require('../../utils/events')
-const express = require('express')
-
-const router = express.Router()
-const passport = require('passport')
-const CronJob = require('cron').CronJob
 const {sendShopDeleted, sendShopOnline} = require('../../utils/mailing')
 const {createMangoProvider} = require('../../utils/mangopay')
 const {is_production, is_validation}=require('../../../config/config')
 const validateShopInput = require('../../validation/shop')
 
+const router = express.Router()
 // FIX import or require
 const ALF_CONDS = { // my alfred condiitons
   BASIC: '0',
@@ -95,17 +96,17 @@ router.post('/add', passport.authenticate('jwt', {session: false}), async(req, r
             })
             .catch(err => {
               console.error(err)
-              res.status(404).json(err)
+              res.status(HTTP_CODES.NOT_FOUND).json(err)
             })
         })
         .catch(err => {
           console.error(err)
-          res.status(404).json(err)
+          res.status(HTTP_CODES.NOT_FOUND).json(err)
         })
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json(err)
+      res.status(HTTP_CODES.NOT_FOUND).json(err)
     })
 })
 
@@ -134,7 +135,7 @@ router.get('/all', (req, res) => {
         })
       }
     })
-    .catch(() => res.status(404).json({
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({
       shop: 'No shop found',
     }))
 })
@@ -149,7 +150,7 @@ router.get('/allStatus', (req, res) => {
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({shop: 'No shop found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({shop: 'No shop found'})
     })
 })
 
@@ -177,7 +178,7 @@ router.get('/all/:id', (req, res) => {
       res.json(shop)
 
     })
-    .catch(() => res.status(404).json({
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({
       shop: 'No shop found',
     }))
 
@@ -213,7 +214,7 @@ router.get('/alfred/:id_alfred', (req, res) => {
       },
     })
     .then(shop => {
-      if (Object.keys(shop).length === 0 && shop.constructor === Object) {
+      if (!shop || Object.keys(shop).length === 0 && shop.constructor === Object) {
         return res.status(400).json({
           msg: 'No shop found',
         })
@@ -223,7 +224,7 @@ router.get('/alfred/:id_alfred', (req, res) => {
     })
     .catch(err => {
       console.error(err)
-      res.status(404).json({shop: 'No shop found'})
+      res.status(HTTP_CODES.NOT_FOUND).json({shop: 'No shop found'})
     })
 
 })
@@ -253,7 +254,7 @@ router.get('/currentAlfred', passport.authenticate('jwt', {
       res.json(shop)
 
     })
-    .catch(() => res.status(404).json({
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({
       shop: 'No shop found',
     }))
 
@@ -274,7 +275,7 @@ router.delete('/current/delete', passport.authenticate('jwt', {session: false}),
         res.json({success: true})
       })
     })
-    .catch(() => res.status(404).json({
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({
       shopnotfound: 'No shop found',
     }))
 })
@@ -291,7 +292,7 @@ router.delete('/:id', passport.authenticate('jwt', {
         success: true,
       }))
     })
-    .catch(() => res.status(404).json({
+    .catch(() => res.status(HTTP_CODES.NOT_FOUND).json({
       shopnotfound: 'No shop found',
     }))
 })

@@ -1,4 +1,4 @@
-export default theme => ({
+const Style = theme => ({
   generalWidthContainer: {
     width: '60%',
     [theme.breakpoints.down('xs')]: {
@@ -176,3 +176,4 @@ export default theme => ({
     fontFamily: theme.typography.text.fontFamily,
   },
 })
+module.exports=Style

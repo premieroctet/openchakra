@@ -1,3 +1,4 @@
+const withParams = require('../../../components/withParams')
 import CustomButton from '../../../components/CustomButton/CustomButton'
 import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
@@ -9,7 +10,7 @@ import Router from 'next/router'
 import TextField from '@material-ui/core/TextField'
 import axios from 'axios'
 
-import BasePage from '../../basePage'
+
 import DocumentEditor from '../../../components/DocumentEditor/DocumentEditor'
 import DashboardLayout from '../../../hoc/Layout/DashboardLayout'
 
@@ -40,7 +41,7 @@ const styles = () => ({
   },
 })
 
-class View extends BasePage {
+class View extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -55,11 +56,11 @@ class View extends BasePage {
   }
 
   isEdition = () => {
-    return Boolean(this.getURLProps().id)
+    return Boolean(this.props.id)
   }
 
   componentDidMount() {
-    const id=this.getURLProps().id
+    const id=this.props.id
     localStorage.setItem('path', Router.pathname)
     if (!id) {
       return
@@ -95,7 +96,7 @@ class View extends BasePage {
       },
     }
     setAxiosAuthentication()
-    const id=this.getURLProps().id
+    const id=this.props.id
     const action=this.isEdition() ?
       axios.put(`/myAlfred/api/admin/equipment/all/${id}`, formData, config)
       :
@@ -179,4 +180,4 @@ class View extends BasePage {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(View))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(withParams(View)))

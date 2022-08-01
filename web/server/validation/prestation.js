@@ -24,10 +24,6 @@ module.exports = function validatePrestationInput(data) {
     errors.billing = 'Veuillez sélectionner au moins une méthode de facturation'
   }
 
-  if (Validator.isEmpty(data.job)) {
-    errors.job = 'Veuillez sélectionner un métier'
-  }
-
   if (!data.professional_access && !data.particular_access) {
     errors.access = 'Le service ne peut être accessible à personne'
   }

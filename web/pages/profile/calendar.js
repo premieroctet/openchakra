@@ -1,3 +1,4 @@
+const withParams = require('../../components/withParams')
 import {withStyles} from '@material-ui/core/styles'
 import {withTranslation} from 'react-i18next'
 import Grid from '@material-ui/core/Grid'
@@ -5,7 +6,7 @@ import React from 'react'
 import axios from 'axios'
 import {CALENDAR} from '../../utils/i18n'
 import {getLoggedUserId} from '../../utils/context'
-import BasePage from '../basePage'
+
 import Box from '../../components/Box/Box'
 import DrawerAndSchedule from '../../components/Drawer/DrawerAndSchedule/DrawerAndSchedule'
 import LayoutMobileProfile from '../../hoc/Layout/LayoutMobileProfile'
@@ -16,7 +17,7 @@ import Head from 'next/head'
 
 const {setAxiosAuthentication} = require('../../utils/authentication')
 
-class ProfileCalendar extends BasePage {
+class ProfileCalendar extends React.Component {
 
   constructor(props) {
     super(props)
@@ -27,7 +28,7 @@ class ProfileCalendar extends BasePage {
   }
 
   loadAvailabilities = () => {
-    axios.get(`/myAlfred/api/availability/userAvailabilities/${this.getURLProps().user}`)
+    axios.get(`/myAlfred/api/availability/userAvailabilities/${this.props.user}`)
       .then(res => {
         this.setState({availabilities: res.data})
       })
@@ -42,7 +43,10 @@ class ProfileCalendar extends BasePage {
   };
 
   componentDidMount() {
-    this.loadAvailabilities()
+    alert('ça ne charge pas !!)')
+    if (this.props.user) {
+      this.loadAvailabilities()
+    }
   }
 
   content = (classes, bookings, user, readOnly) => {
@@ -76,7 +80,7 @@ class ProfileCalendar extends BasePage {
 
   render() {
     const {classes, index}=this.props
-    const {user}=this.getURLProps()
+    const {user}=this.props
     const {bookings}=this.state
     const readOnly = user!==getLoggedUserId()
 
@@ -109,4 +113,4 @@ class ProfileCalendar extends BasePage {
 
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(ProfileCalendar))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(withParams(ProfileCalendar)))

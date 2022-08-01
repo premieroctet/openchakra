@@ -52,4 +52,4 @@ function OurTeam(props) {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(OurTeam))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(OurTeam))

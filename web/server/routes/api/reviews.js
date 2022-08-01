@@ -1,14 +1,14 @@
+const express = require('express')
+const passport = require('passport')
+const mongoose = require('mongoose')
+const {HTTP_CODES} = require('../../utils/errors')
 const Booking = require('../../models/Booking')
 const Review = require('../../models/Review')
 const User = require('../../models/User')
 const {get_logged_id} =require('../../utils/serverContext')
-
 const {REVIEW_STATUS} = require('../../../utils/consts')
-const express = require('express')
 
 const router = express.Router()
-const passport = require('passport')
-const mongoose = require('mongoose')
 
 router.get('/test', (req, res) => res.json({msg: 'Reviews Works!'}))
 
@@ -156,7 +156,7 @@ router.get('/:user_id', (req, res) => {
         res.json(result)
       }
     })
-    .catch(err => console.error(err) && res.status(404).json(result))
+    .catch(err => console.error(err) && res.status(HTTP_CODES.NOT_FOUND).json(result))
 })
 
 router.get('/profile/customerReviewsCurrent/:id', (req, res) => {
@@ -170,7 +170,7 @@ router.get('/profile/customerReviewsCurrent/:id', (req, res) => {
     .then(review => {
       res.status(200).json(review)
     })
-    .catch(err => res.status(404).json(err))
+    .catch(err => res.status(HTTP_CODES.NOT_FOUND).json(err))
 })
 
 router.get('/profile/alfredReviewsCurrent/:id', (req, res) => {
@@ -184,7 +184,7 @@ router.get('/profile/alfredReviewsCurrent/:id', (req, res) => {
     .then(review => {
       res.status(200).json(review)
     })
-    .catch(err => res.status(404).json(err))
+    .catch(err => res.status(HTTP_CODES.NOT_FOUND).json(err))
 })
 
 // @Route GET /myAlfred/api/reviews/alfred/:id
@@ -198,7 +198,7 @@ router.get('/alfred/:id', (req, res) => {
     .then(review => {
       return res.json(review)
     })
-    .catch(err => res.status(404).json({reviews: 'No reviews found'}))
+    .catch(err => res.status(HTTP_CODES.NOT_FOUND).json({reviews: 'No reviews found'}))
 })
 
 // @Route GET /myAlfred/api/reviews/:id
@@ -212,7 +212,7 @@ router.get('/review/:id', (req, res) => {
     .then(review => {
       return res.json(review)
     })
-    .catch(err => res.status(404).json({reviews: 'No reviews found'}))
+    .catch(err => res.status(HTTP_CODES.NOT_FOUND).json({reviews: 'No reviews found'}))
 })
 
 
@@ -224,7 +224,7 @@ router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res)
     .then(reviews => {
       reviews.remove().then(() => res.json({success: true}))
     })
-    .catch(err => res.status(404).json({reviewsnotfound: 'No reviews found'}))
+    .catch(err => res.status(HTTP_CODES.NOT_FOUND).json({reviewsnotfound: 'No reviews found'}))
 })
 
 

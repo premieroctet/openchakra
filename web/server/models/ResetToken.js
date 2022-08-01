@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
+const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
+
 const ResetTokenSchema = new Schema({
   date: {
     type: Date,
@@ -10,4 +12,6 @@ const ResetTokenSchema = new Schema({
   token: String,
 })
 
-module.exports = ResetToken = mongoose.model('resetToken', ResetTokenSchema)
+ResetTokenSchema.plugin(mongooseLeanVirtuals)
+
+module.exports = mongoose.model('resetToken', ResetTokenSchema)

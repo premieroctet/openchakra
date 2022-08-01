@@ -6,7 +6,7 @@ import Grid from '@material-ui/core/Grid'
 import {withStyles} from '@material-ui/core/styles'
 import styles from '../../../static/css/components/Layout/About/Footer/Footer'
 import Typography from '@material-ui/core/Typography'
-import '../../../static/assets/css/custom.css'
+
 import {FOOTER} from '../../../utils/i18n'
 
 class Footer extends React.Component {
@@ -36,4 +36,4 @@ class Footer extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(Footer))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(Footer))

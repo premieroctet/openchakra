@@ -18,4 +18,4 @@ class Badges extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles, {withTheme: true})(Badges))
+export default withTranslation(null, {withRef: true})(withStyles(styles, {withTheme: true})(Badges))

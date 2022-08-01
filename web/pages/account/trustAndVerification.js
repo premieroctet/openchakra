@@ -32,7 +32,7 @@ import Divider from '@material-ui/core/Divider'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import LayoutMobile from '../../hoc/Layout/LayoutMobile'
-import '../../static/assets/css/custom.css'
+
 const {CESU} = require('../../utils/consts')
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
@@ -603,4 +603,4 @@ class trustAndVerification extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(trustAndVerification))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(trustAndVerification))

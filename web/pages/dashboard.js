@@ -1,16 +1,17 @@
+import {Link, Typography} from '@material-ui/core'
 import axios from 'axios'
-import {isLoggedUserAdmin, isUserSuperAdmin} from '../utils/context'
 import {withTranslation} from 'react-i18next'
-const {setAxiosAuthentication}=require('../utils/authentication')
 import React from 'react'
 
 import Card from '@material-ui/core/Card'
 import Grid from '@material-ui/core/Grid'
-import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
 import Router from 'next/router'
+import {isLoggedUserAdmin, isLoggedUserSuperAdmin} from '../utils/context'
 import DashboardLayout from '../hoc/Layout/DashboardLayout'
-import {Link} from '@material-ui/core'
+const {API_PATH} = require('../utils/consts')
+const {setAxiosAuthentication}=require('../utils/authentication')
+const {SHIPRATE, PRODUCT} = require('../utils/consts')
 
 const styles = () => ({
   signupContainer: {
@@ -40,6 +41,7 @@ class home extends React.Component {
     super(props)
     this.state={
       user: null,
+      actions: [],
     }
   }
 
@@ -53,13 +55,21 @@ class home extends React.Component {
       .then(response => {
         this.setState({user: response.data})
       })
+    axios.get(`${API_PATH}/users/actions`)
+      .then(response => {
+        this.setState({actions: response.data})
+      })
+  }
+
+  hasModelAccess = model => {
+    return !!this.state.actions.find(a => a.model==model)
   }
 
   render() {
     const {classes} = this.props
     const {user}=this.state
 
-    const superAdmin = isUserSuperAdmin(user)
+    const superAdmin = isLoggedUserSuperAdmin(user)
 
     return (
       <DashboardLayout home={true}>
@@ -77,6 +87,8 @@ class home extends React.Component {
                 <Link href="/dashboard/equipments/all"><a>Equipements</a></Link><br/>
                 <Link href="/dashboard/services/all"><a>Services</a></Link><br/>
                 <Link href="/dashboard/prestations/all"><a>Prestations</a></Link><br/>
+                {this.hasModelAccess(PRODUCT) && <><Link href="/dashboard/products"><a>Produits</a></Link><br/></>}
+                {this.hasModelAccess(SHIPRATE) && <Link href="/dashboard/shiprates"><a>Frais de livraison</a></Link>}
               </Grid>
               <Grid item xs={6}>
                 <Typography style={{fontSize: 30}}>Maintenance</Typography>
@@ -107,4 +119,4 @@ class home extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(home))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(home))

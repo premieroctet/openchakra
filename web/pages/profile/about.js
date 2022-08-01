@@ -1,51 +1,45 @@
-import LocationSelect from '../../components/Geo/LocationSelect'
-const BasePage = require('../basePage')
-import Album from '../../components/Album/Album'
-import {isEditableUser} from '../../utils/context'
-import CustomButton from '../../components/CustomButton/CustomButton'
-import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
-import SummaryCommentary from '../../components/SummaryCommentary/SummaryCommentary'
-const {snackBarSuccess} = require('../../utils/notifications')
-const {setAxiosAuthentication}=require('../../utils/authentication')
-import React from 'react'
-import Grid from '@material-ui/core/Grid'
-import ProfileLayout from '../../hoc/Layout/ProfileLayout'
-import About from '../../components/About/About'
-import Presentation from '../../components/Presentation/Presentation'
-import Skills from '../../components/Skills/Skills'
-import Badges from '../../components/Badges/Badges'
-import Hashtags from '../../components/Hashtags/Hashtags'
+import ReactHtmlParser from 'react-html-parser'
 import {withStyles} from '@material-ui/core/styles'
-import styles from '../../static/css/pages/profile/about/about'
-import AskQuestion from '../../components/AskQuestion/AskQuestion'
-import Box from '../../components/Box/Box'
-import LayoutMobileProfile from '../../hoc/Layout/LayoutMobileProfile'
-import axios from 'axios'
-import Typography from '@material-ui/core/Typography'
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline'
-import IconButton from '@material-ui/core/IconButton'
+import CloseIcon from '@material-ui/icons/Close'
 import CreateIcon from '@material-ui/icons/Create'
 import Dialog from '@material-ui/core/Dialog'
 import DialogContent from '@material-ui/core/DialogContent'
-import Topic from '../../hoc/Topic/Topic'
-import MultipleSelect from 'react-select'
-import {COMPANY_ACTIVITY, COMPANY_SIZE, LANGUAGES} from '../../utils/consts'
 import Divider from '@material-ui/core/Divider'
+import Grid from '@material-ui/core/Grid'
+import IconButton from '@material-ui/core/IconButton'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
-import CloseIcon from '@material-ui/icons/Close'
-import {TextField} from '@material-ui/core'
-import FormControl from '@material-ui/core/FormControl'
-import InputLabel from '@material-ui/core/InputLabel'
-import Select from '@material-ui/core/Select'
-import MenuItem from '@material-ui/core/MenuItem'
-import ShowExperience from '../../components/ShowEperience/ShowExperience'
-import ShowDiploma from '../../components/ShowDiploma/ShowDiploma'
-import ShowCertification from '../../components/ShowCertification/ShowCertification'
-import {ABOUT} from '../../utils/i18n'
+import MultipleSelect from 'react-select'
+import React from 'react'
+import Typography from '@material-ui/core/Typography'
+import axios from 'axios'
 import Head from 'next/head'
-
-const moment=require('moment')
+import moment from 'moment'
+import {ABOUT} from '../../utils/i18n'
+import CustomButton from '../../components/CustomButton/CustomButton'
+import withParams from '../../components/withParams'
+import {LANGUAGES} from '../../utils/consts'
+import Album from '../../components/Album/Album'
+import {isEditableUser} from '../../utils/context'
+import About from '../../components/About/About'
+import AskQuestion from '../../components/AskQuestion/AskQuestion'
+import Badges from '../../components/Badges/Badges'
+import Box from '../../components/Box/Box'
+import Hashtags from '../../components/Hashtags/Hashtags'
+import LayoutMobileProfile from '../../hoc/Layout/LayoutMobileProfile'
+import LocationSelect from '../../components/Geo/LocationSelect'
+import Presentation from '../../components/Presentation/Presentation'
+import ProfileLayout from '../../hoc/Layout/ProfileLayout'
+import ShowCertification from '../../components/ShowCertification/ShowCertification'
+import ShowDiploma from '../../components/ShowDiploma/ShowDiploma'
+import ShowExperience from '../../components/ShowEperience/ShowExperience'
+import Skills from '../../components/Skills/Skills'
+import SummaryCommentary from '../../components/SummaryCommentary/SummaryCommentary'
+import Topic from '../../hoc/Topic/Topic'
+import styles from '../../static/css/pages/profile/about/about'
+import {setAxiosAuthentication} from '../../utils/authentication'
+import {snackBarSuccess}from '../../utils/notifications'
 
 moment.locale('fr')
 
@@ -64,7 +58,7 @@ const DialogTitle = withStyles(styles)(props => {
 })
 
 
-class ProfileAbout extends BasePage {
+class ProfileAbout extends React.Component {
 
   constructor(props) {
     super(props)
@@ -116,8 +110,7 @@ class ProfileAbout extends BasePage {
       })
     }).catch(err => console.error(err))
 
-    console.log(this.getURLProps())
-    axios.get(`/myAlfred/api/users/users/${this.getURLProps().user}`)
+    axios.get(`/myAlfred/api/users/users/${this.props.user}`)
       .then(res => {
         const user = res.data
         if (user.company) {
@@ -227,7 +220,6 @@ class ProfileAbout extends BasePage {
               </Grid>
               <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                 <LocationSelect
-                  key={moment()}
                   placeholder={placeholder}
                   onChange={this.onAddressChanged}
                   onClear={() => this.onAddressChanged(null)}
@@ -439,9 +431,9 @@ class ProfileAbout extends BasePage {
             </Grid>
             : null
         }
-        <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+        <Grid className='customalbum' item xl={12} lg={12} md={12} sm={12} xs={12}>
           <Box>
-            <Album user={this.getURLProps().user}/>
+            <Album user={this.props.user}/>
           </Box>
         </Grid>
       </Grid>
@@ -450,7 +442,7 @@ class ProfileAbout extends BasePage {
 
   render() {
     const {classes}=this.props
-    const {user}=this.getURLProps()
+    const {user}=this.props
     const {showEdition, alfred, company}=this.state
 
     if(!user && alfred) {
@@ -482,4 +474,4 @@ class ProfileAbout extends BasePage {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(ProfileAbout))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(withParams(ProfileAbout)))

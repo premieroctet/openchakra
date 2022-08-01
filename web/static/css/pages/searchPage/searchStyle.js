@@ -1,4 +1,4 @@
-export default theme => ({
+const style=theme => ({
   bigContainer: {
     overflowX: 'hidden',
     overflowY: 'hidden',
@@ -118,7 +118,7 @@ export default theme => ({
 
     },
   },
-  cardServiceButton: {
+  cardServiceUserButton: {
     color: theme.palette.white.main,
     fontWeight: theme.typography.blackButton.fontWeight,
     fontFamily: theme.typography.blackButton.fontFamily,
@@ -126,7 +126,7 @@ export default theme => ({
     borderRadius: theme.border.blackButton.borderRadius,
     width: '100%',
   },
-  cardServiceButtonContainer: {
+  cardServiceUserButtonContainer: {
     width: '50%',
   },
   searchFilterRightContainer: {
@@ -235,3 +235,4 @@ export default theme => ({
   },
 
 })
+export default style

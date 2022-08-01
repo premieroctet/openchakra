@@ -1,9 +1,11 @@
-const { canAlfredParticularRegister } = require('../../config/config');
+const {canAlfredParticularRegister} = require('../../config/config')
 const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
 const {CESU, INSURANCE_TYPES} = require('../../utils/consts')
 const {hideIllegal} = require('../../utils/text')
+
+const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 
 const ShopSchema = new Schema({
   booking_request: {
@@ -126,5 +128,6 @@ ShopSchema.virtual('insurance_text').get(function() {
   }).join(', ')
 })
 
+ShopSchema.plugin(mongooseLeanVirtuals)
 
-module.exports = Shop = mongoose.model('shop', ShopSchema)
+module.exports = mongoose.model('shop', ShopSchema)

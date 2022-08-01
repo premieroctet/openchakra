@@ -1,11 +1,10 @@
-const RequiredField = require('../misc/RequiredField')
-const {withTranslation} = require('react-i18next')
-const {Switch, Accordion, AccordionSummary, AccordionDetails} = require('@material-ui/core')
-
 import React from 'react'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import {withStyles} from '@material-ui/core/styles'
+import RequiredField from '../misc/RequiredField'
 import {feurstImgPath} from '../../pages/configurator'
+const {Switch, Accordion, AccordionSummary, AccordionDetails} = require('@material-ui/core')
+const {withTranslation} = require('react-i18next')
 
 const IOSSwitch = withStyles(theme => ({
   root: {
@@ -122,5 +121,5 @@ const validator = state => {
   return !!state.ground
 }
 
-const TransUseCase=withTranslation('feurst', {withRef: true})(UseCase)
+const TransUseCase=withTranslation(null, {withRef: true})(UseCase)
 module.exports={UseCase: TransUseCase, useCaseValidator: validator}

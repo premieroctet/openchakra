@@ -16,7 +16,7 @@ import LayoutAccount from '../../hoc/Layout/LayoutAccount'
 import Typography from '@material-ui/core/Typography'
 import Divider from '@material-ui/core/Divider'
 import LayoutMobile from '../../hoc/Layout/LayoutMobile'
-import '../../static/assets/css/custom.css'
+
 
 
 moment.locale('fr')
@@ -601,4 +601,4 @@ class notifications extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(notifications))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(notifications))

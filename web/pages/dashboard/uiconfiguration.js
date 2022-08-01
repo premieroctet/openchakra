@@ -7,35 +7,34 @@ import {
   ListItemText,
   Tooltip,
 } from '@material-ui/core'
-import isEmpty from '../../server/validation/is-empty'
-import CustomButton from '../../components/CustomButton/CustomButton'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
 import {withStyles} from '@material-ui/core/styles'
-import DashboardLayout from '../../hoc/Layout/DashboardLayout'
 import Grid from '@material-ui/core/Grid'
-const {setAxiosAuthentication} = require('../../utils/authentication')
 import axios from 'axios'
 import lodash from 'lodash'
-import UIParameter from '../../components/Editor/UIParameter'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import Accordion from '@material-ui/core/Accordion'
 import AccordionSummary from '@material-ui/core/AccordionSummary'
 import AccordionDetails from '@material-ui/core/AccordionDetails'
 import TextField from '@material-ui/core/TextField'
 
-const {snackBarSuccess, snackBarError}=require('../../utils/notifications')
 import SaveIcon from '@material-ui/icons/Save'
 import Fab from '@material-ui/core/Fab'
 
-import dashboardstyles from '../../static/css/components/CompanyDashboard/CompanyDashboard'
-import custom from '../../static/assets/css/custom.css'
-
 import InfoIcon from '@material-ui/icons/Info'
+import dashboardstyles from '../../static/css/components/CompanyDashboard/CompanyDashboard'
+
+
+import UIParameter from '../../components/Editor/UIParameter'
+import DashboardLayout from '../../hoc/Layout/DashboardLayout'
+import CustomButton from '../../components/CustomButton/CustomButton'
+import isEmpty from '../../server/validation/is-empty'
+const {snackBarSuccess, snackBarError}=require('../../utils/notifications')
+const {setAxiosAuthentication} = require('../../utils/authentication')
 
 const styles = theme => ({
   ...dashboardstyles(theme),
-  ...custom,
   signupContainer: {
     alignItems: 'center',
     justifyContent: 'top',
@@ -211,7 +210,7 @@ class UIConfiguration extends React.Component {
     }
     return (
       <Accordion defaultExpanded={false} TransitionProps={{unmountOnExit: true}} key={prefixName} style={{boxShadow: 'none'}}>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />} >
           <h2 style={{margin: '5px'}}>{prefixName || 'Composants'}</h2>
         </AccordionSummary>
         <AccordionDetails style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
@@ -275,7 +274,7 @@ class UIConfiguration extends React.Component {
                 ))
               }
             </List>
-            <Grid style={{width: '80%'}}>
+            <Grid style={{flexGrow: 2}}>
               {this.componentsAccordion(pageParameters)}
             </Grid>
           </Grid>
@@ -292,4 +291,4 @@ class UIConfiguration extends React.Component {
 
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(UIConfiguration))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(UIConfiguration))

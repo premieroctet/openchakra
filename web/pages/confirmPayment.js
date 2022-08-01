@@ -6,23 +6,25 @@ import React from 'react'
 import Router from 'next/router'
 import axios from 'axios'
 import moment from 'moment'
+import Head from 'next/head'
 import AddressAndFacturation from '../components/Payment/AddressAndFacturation/AddressAndFacturation'
-import BasePage from './basePage'
+
 import LayoutPayment from '../hoc/Layout/LayoutPayment'
 import PaymentChoice from '../components/Payment/PaymentChoice/PaymentChoice'
 import Stepper from '../components/Stepper/Stepper'
 import styles from '../static/css/pages/confirmPayment/confirmPayment'
+const withParams = require('../components/withParams')
 
 const {clearAuthenticationToken, setAxiosAuthentication} = require('../utils/authentication')
 const {snackBarError}=require('../utils/notifications')
 
 moment.locale('fr')
 
-class ConfirmPayment extends BasePage {
+class ConfirmPayment extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      user: null,
+      alfred: null,
       currentUser: null,
       bookingObj: null,
       city: null,
@@ -39,7 +41,6 @@ class ConfirmPayment extends BasePage {
       optionPrice: null,
       date: null,
       hour: null,
-      alfredId: '',
       activeStep: 0,
       equipments: [],
       cards: [],
@@ -52,8 +53,11 @@ class ConfirmPayment extends BasePage {
 
   componentDidMount() {
 
+    if (!this.props.booking_id) {
+      return
+    }
     setAxiosAuthentication()
-    axios.get(`/myAlfred/api/booking/${this.getURLProps().booking_id}`)
+    axios.get(`/myAlfred/api/booking/${this.props.booking_id}`)
       .then(res => {
         const bookingObj = res.data
         this.setState({
@@ -66,15 +70,17 @@ class ConfirmPayment extends BasePage {
           customer_fee: bookingObj.customer_fee,
           grandTotal: bookingObj.amount,
           cesu_total: bookingObj.cesu_amount,
-          alfredId: bookingObj.alfred._id,
+          cpf_amount: bookingObj.cpf_amount,
           equipments: bookingObj.equipments,
         })
 
+        !bookingObj.is_service &&
         axios.get(`/myAlfred/api/serviceUser/${bookingObj.serviceUserId}`).then(res => {
-          this.setState({user: res.data.user})
+          this.setState({alfred: res.data.user})
         })
 
-        // Alfred part/pto
+        // Alfred part/pro
+        !bookingObj.is_service &&
         axios.get(`/myAlfred/api/shop/alfred/${bookingObj.alfred._id}`)
           .then(res => {
             this.setState({alfred_pro: res.data.is_professional})
@@ -117,7 +123,7 @@ class ConfirmPayment extends BasePage {
     if (pending) {
       return snackBarError(ReactHtmlParser(this.props.t('CONFIRM_PAYMENT.snackbar_error_payment')))
     }
-    const booking_id=this.getURLProps().booking_id
+    const booking_id=this.props.booking_id
     const total = parseFloat(this.state.grandTotal)
     const data = {
       booking_id: booking_id,
@@ -154,7 +160,7 @@ class ConfirmPayment extends BasePage {
   }
 
   pay = () => {
-    const booking_id=this.getURLProps().booking_id
+    const booking_id=this.props.booking_id
     const total = parseFloat(this.state.grandTotal)
     const data = {
       booking_id: booking_id,
@@ -225,28 +231,32 @@ class ConfirmPayment extends BasePage {
 
   render() {
     const {classes} = this.props
-    const {currentUser, user, activeStep} = this.state
+    const {currentUser, activeStep, bookingObj} = this.state
 
+    if (!currentUser || !bookingObj) {
+      return null
+    }
     return (
       <React.Fragment>
-        {user === null || currentUser === null ? null : (
-          <Grid style={{position: 'relative'}}>
-            <LayoutPayment>
-              <Grid className={classes.contentStepper}>
-                <Stepper
-                  activeStep={activeStep}
-                  steps={[ReactHtmlParser(this.props.t('ADDRESS_FACTURATION.address_billing_title')), ReactHtmlParser(this.props.t('ADDRESS_FACTURATION.payment_title'))]}
-                  orientation={'horizontal'}/>
-              </Grid>
-              <Grid className={classes.mainContainer}>
-                {this.renderSwitch(activeStep)}
-              </Grid>
-            </LayoutPayment>
-          </Grid>
-        )}
+        <Head>
+          <title>Paiement</title>
+        </Head>
+        <Grid style={{position: 'relative'}}>
+          <LayoutPayment>
+            <Grid className={classes.contentStepper}>
+              <Stepper
+                activeStep={activeStep}
+                steps={[ReactHtmlParser(this.props.t('ADDRESS_FACTURATION.address_billing_title')), ReactHtmlParser(this.props.t('ADDRESS_FACTURATION.payment_title'))]}
+                orientation={'horizontal'}/>
+            </Grid>
+            <Grid className={classes.mainContainer}>
+              {this.renderSwitch(activeStep)}
+            </Grid>
+          </LayoutPayment>
+        </Grid>
       </React.Fragment>
     )
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(ConfirmPayment))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(withParams(ConfirmPayment)))

@@ -1,25 +1,24 @@
-const {checkPaid} = require('../../utils/booking')
-const Group = require('../../models/Group')
-const Booking = require('../../models/Booking')
-const Company = require('../../models/Company')
-const User = require('../../models/User')
 const express = require('express')
-
-const router = express.Router()
 const passport = require('passport')
 const moment = require('moment')
+const {HTTP_CODES} = require('../../utils/errors')
+const errors = require('../../utils/errors')
+const {getHostUrl} = require('../../../config/config')
+const {checkPaid} = require('../../utils/booking')
+const Booking = require('../../models/Booking')
+const User = require('../../models/User')
+const Company = require('../../models/Company')
 const {mangoApi, install_hooks, createCard} = require('../../utils/mangopay')
 const {maskIban} = require('../../../utils/text')
-moment.locale('fr')
-const {computeUrl} = require('../../../config/config')
-const {MICROSERVICE_MODE, CARETAKER_MODE}=require('../../../utils/consts')
 
+moment.locale('fr')
+const router = express.Router()
 // TODO: PROBLEME : Le pay in id d'une résa client avcocotés n'est pas sauvegardé
 
 router.get('/test', (req, res) => res.json({msg: 'Payment Works!'}))
 
 /* eslint-disable no-multi-str */
-HOOK_TYPES = 'PAYIN_NORMAL_CREATED PAYIN_NORMAL_SUCCEEDED PAYIN_NORMAL_FAILED \
+const HOOK_TYPES = 'PAYIN_NORMAL_CREATED PAYIN_NORMAL_SUCCEEDED PAYIN_NORMAL_FAILED \
 PAYOUT_NORMAL_CREATED PAYOUT_NORMAL_SUCCEEDED PAYOUT_NORMAL_FAILED \
 TRANSFER_NORMAL_CREATED TRANSFER_NORMAL_SUCCEEDED TRANSFER_NORMAL_FAILED \
 PAYIN_REFUND_CREATED PAYIN_REFUND_SUCCEEDED PAYIN_REFUND_FAILED \
@@ -104,7 +103,7 @@ router.post('/cards', passport.authenticate('jwt', {session: false}), (req, res)
     })
     .catch(error => {
       console.error(error)
-      res.status(404).json({error: error})
+      res.status(HTTP_CODES.NOT_FOUND).json({error: error})
     })
 })
 
@@ -112,7 +111,7 @@ router.post('/cards', passport.authenticate('jwt', {session: false}), (req, res)
 // @access private
 router.post('/payIn', passport.authenticate('jwt', {session: false}), (req, res) => {
   const amount = req.body.amount * 100
-  const returnUrl= `/paymentSuccess?booking_id=${req.body.booking_id}`
+  const returnUrl= new URL(`/paymentSuccess?booking_id=${req.body.booking_id}`, getHostUrl())
 
   let mangopay_id=0
   User.findById(req.user.id)
@@ -128,25 +127,25 @@ router.post('/payIn', passport.authenticate('jwt', {session: false}), (req, res)
         AuthorId: mangopay_id,
         DebitedFunds: {Currency: 'EUR', Amount: amount},
         Fees: {Currency: 'EUR', Amount: 0},
-        ReturnURL: `${computeUrl(req)}${returnUrl}`,
+        ReturnURL: returnUrl,
         CardType: 'CB_VISA_MASTERCARD',
         PaymentType: 'CARD',
         ExecutionType: 'WEB',
         Culture: 'FR',
         CreditedWalletId: wallet_id,
-        SecureModeReturnURL: `${computeUrl(req)}${returnUrl}`,
+        SecureModeReturnURL: returnUrl,
       })
     })
     .then(payin => {
-      Booking.findByIdAndUpdate(req.body.booking_id,
+      return Booking.findByIdAndUpdate(req.body.booking_id,
         {mangopay_payin_id: payin.Id, mangopay_payin_status: payin.Status})
-        .then(() => console.log('booking update ok'))
-        .catch(err => console.error(`booking update error:${err}`))
-      res.json(payin)
+        .then(() => {
+          return res.json(payin)
+        })
     })
     .catch(error => {
       console.error(error)
-      return res.status(404).json({error: error})
+      return res.status(500).json({error: error})
     })
 })
 
@@ -154,7 +153,7 @@ router.post('/payIn', passport.authenticate('jwt', {session: false}), (req, res)
 // @access private
 router.post('/avocotesPayIn', (req, res) => {
   const bookingId= req.body.bookingId
-  const returnUrl= `/paymentSuccess?booking_id=${bookingId}`
+  const returnUrl= new URL(`/paymentSuccess?booking_id=${bookingId}`, getHostUrl())
 
   Booking.findById(bookingId)
     .populate('user')
@@ -175,13 +174,13 @@ router.post('/avocotesPayIn', (req, res) => {
               Currency: 'EUR',
               Amount: fees,
             },
-            ReturnURL: `${computeUrl(req)}${returnUrl}`,
+            ReturnURL: returnUrl,
             CardType: 'CB_VISA_MASTERCARD',
             PaymentType: 'CARD',
             ExecutionType: 'WEB',
             Culture: 'FR',
             CreditedWalletId: wallet_id,
-            SecureModeReturnURL: `${computeUrl(req)}${returnUrl}`,
+            SecureModeReturnURL: returnUrl,
             Tag: `Booking ${booking.reference}`,
           })
             .then(payin => {
@@ -193,17 +192,17 @@ router.post('/avocotesPayIn', (req, res) => {
             })
             .catch(error => {
               console.error(`Error at Avocotes payin:${error}`)
-              return res.status(404).json({error: error})
+              return res.status(HTTP_CODES.NOT_FOUND).json({error: error})
             })
         })
         .catch(error => {
           console.error(`Error at Avocotes payIn get Wallets:${error}`)
-          return res.status(404).json({error: error})
+          return res.status(HTTP_CODES.NOT_FOUND).json({error: error})
         })
     })
     .catch(error => {
       console.error(`Error at Avocotes payIn get booking:${error}`)
-      return res.status(404).json({error: error})
+      return res.status(HTTP_CODES.NOT_FOUND).json({error: error})
     })
 })
 
@@ -242,6 +241,8 @@ router.post('/payInDirect', passport.authenticate('jwt', {session: false}), (req
   browserInfo.AcceptHeader=req.headers.accept
   const ipAddress=req.connection.remoteAddress
 
+  const returnUrl=new URL(`/paymentSuccess?booking_id=${req.body.booking_id}`, getHostUrl())
+
   User.findById(req.user.id)
     .then(entity => {
       const id_mangopay = entity.id_mangopay
@@ -258,20 +259,19 @@ router.post('/payInDirect', passport.authenticate('jwt', {session: false}), (req
               Currency: 'EUR',
               Amount: 0,
             },
-            ReturnURL: `${computeUrl(req)}/paymentSuccess?booking_id=${req.body.booking_id}`,
+            ReturnURL: returnUrl,
             CardType: 'CB_VISA_MASTERCARD',
             PaymentType: 'CARD',
             ExecutionType: 'DIRECT',
             CreditedWalletId: wallet_id,
             CardId: id_card,
             Culture: 'FR',
-            SecureModeReturnURL: `${computeUrl(req)}/paymentSuccess?booking_id=${req.body.booking_id}`,
+            SecureModeReturnURL: returnUrl,
             BrowserInfo: browserInfo,
             IpAddress: ipAddress,
           })
             .then(payin => {
               console.log(`Created Payin ${JSON.stringify(payin)}`)
-              console.log(`Sttaus ${JSON.stringify(payin.Sttaus)}`)
               Booking.findByIdAndUpdate(req.body.booking_id,
                 {mangopay_payin_id: payin.Id, mangopay_payin_status: payin.Status})
                 .then(() => console.log('booking update ok'))
@@ -333,7 +333,7 @@ router.post('/bank-accounts', passport.authenticate('jwt', {session: false}), (r
     })
     .catch(err => {
       console.error(`Error:${err}`)
-      res.status(404).json({errors: 'Utilisateur non reconnu'})
+      res.status(HTTP_CODES.NOT_FOUND).json({errors: 'Utilisateur non reconnu'})
     })
 })
 

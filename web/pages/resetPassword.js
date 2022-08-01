@@ -1,3 +1,4 @@
+const withParams = require('../components/withParams')
 import CustomButton from '../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withStyles} from '@material-ui/core/styles'
@@ -10,7 +11,7 @@ import TextField from '@material-ui/core/TextField'
 import axios from 'axios'
 import {RESET_PASSWORD} from '../utils/i18n'
 import {checkPass1, checkPass2} from '../utils/passwords'
-import BasePage from './basePage'
+
 import Layout from '../hoc/Layout/Layout'
 import styles from '../static/css/pages/resetPassword/resetPassword'
 
@@ -20,7 +21,7 @@ const {ADMIN, MANAGER}=require('../utils/consts')
 const {snackBarSuccess, snackBarError}=require('../utils/notifications')
 
 
-class resetPassword extends BasePage {
+class resetPassword extends React.Component {
 
   constructor(props) {
     super(props)
@@ -62,7 +63,7 @@ class resetPassword extends BasePage {
     e.preventDefault()
     const data = {
       password: this.state.password,
-      token: this.getURLProps().token,
+      token: this.props.token,
     }
     axios.post('/myAlfred/api/users/resetPassword', data)
       .then(res => {
@@ -152,4 +153,4 @@ class resetPassword extends BasePage {
 }
 
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(resetPassword))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(withParams(resetPassword)))

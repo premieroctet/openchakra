@@ -1,4 +1,4 @@
-import '../../../static/assets/css/custom.css'
+
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
@@ -169,4 +169,4 @@ class RegisterFirstPage extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(RegisterFirstPage))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(RegisterFirstPage))

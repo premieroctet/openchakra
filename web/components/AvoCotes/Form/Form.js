@@ -1,24 +1,24 @@
-import LocationSelect from '../../Geo/LocationSelect'
-const {snackBarError} = require('../../../utils/notifications')
-import CustomButton from '../../CustomButton/CustomButton'
-import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
-import React, {useState, useEffect} from 'react'
-import withStyles from '@material-ui/core/styles/withStyles'
-import styles from '../../../static/css/components/FormAvocotes/FormAvocotes'
+import ReactHtmlParser from 'react-html-parser'
+import AddIcon from '@material-ui/icons/Add'
+import Divider from '@material-ui/core/Divider'
+import FormHelperText from '@material-ui/core/FormHelperText'
 import Grid from '@material-ui/core/Grid'
+import IconButton from '@material-ui/core/IconButton'
+import React, {useState, useEffect} from 'react'
+import RemoveIcon from '@material-ui/icons/Remove'
+import Router from 'next/router'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
-import IconButton from '@material-ui/core/IconButton'
-import AddIcon from '@material-ui/icons/Add'
-import RemoveIcon from '@material-ui/icons/Remove'
-import Divider from '@material-ui/core/Divider'
-const {AVOCOTES_COMPANY_NAME}=require('../../../utils/consts')
-import Router from 'next/router'
 import axios from 'axios'
-import FormHelperText from '@material-ui/core/FormHelperText'
+import withStyles from '@material-ui/core/styles/withStyles'
+import moment from 'moment'
+import CustomButton from '../../CustomButton/CustomButton'
 import {isEmailOk, isPhoneOk} from '../../../utils/sms'
-const moment = require('moment')
+import LocationSelect from '../../Geo/LocationSelect'
+import styles from '../../../static/css/components/FormAvocotes/FormAvocotes'
+import {snackBarError} from '../../../utils/notifications'
+import {AVOCOTES_COMPANY_NAME} from '../../../utils/consts'
 
 moment.locale('fr')
 
@@ -249,4 +249,4 @@ function Form({classes, booking_id, t}) {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(Form))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(Form))

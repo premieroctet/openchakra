@@ -1,7 +1,8 @@
 const {COMMISSION_SOURCE} = require('../../utils/consts')
 const mongoose = require('mongoose')
-
 const Schema=mongoose.Schema
+
+const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 
 const CommissionSchema = new Schema({
   // Commission rate
@@ -31,4 +32,6 @@ const CommissionSchema = new Schema({
   },
 })
 
-module.exports = Commission = mongoose.model('commission', CommissionSchema)
+CommissionSchema.plugin(mongooseLeanVirtuals)
+
+module.exports = mongoose.model('commission', CommissionSchema)

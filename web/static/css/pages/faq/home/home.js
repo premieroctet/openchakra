@@ -25,3 +25,4 @@ export default theme =>({
     display: 'flex'
   }
 })
+module.exports=Style

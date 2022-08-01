@@ -12,7 +12,7 @@ import axios from 'axios'
 import isEmpty from '../../../server/validation/is-empty'
 import TextField from '@material-ui/core/TextField'
 import {SHOP} from '../../../utils/i18n'
-import '../../../static/assets/css/custom.css'
+
 
 // TODO : régler le pb du ButtonSwitch frais de déplacements
 class SettingService extends React.Component {
@@ -153,6 +153,16 @@ class SettingService extends React.Component {
               />
             </Grid> : null
           }
+          {'elearning' in location ?
+            <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
+              <ButtonSwitch
+                checked={location.elearning === true}
+                label={ReactHtmlParser(this.props.t('SHOP.settingService.service_withElearning'))}
+                id='elearning'
+                onChange={this.onLocationChange}
+              />
+            </Grid> : null
+          }
         </Grid>
         <Grid container spacing={1} style={{width: '100%', margin: 0}} item xl={12} lg={12} md={12} sm={12} xs={12} className={'customsettingserviceoptioncontainer'}>
           {(service && service.travel_tax || service && service.pick_tax) ?
@@ -184,4 +194,4 @@ class SettingService extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(SettingService))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(SettingService))

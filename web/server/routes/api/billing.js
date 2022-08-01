@@ -1,5 +1,6 @@
-const Billing = require('../../models/Billing')
 const express = require('express')
+const {HTTP_CODES} = require('../../utils/errors')
+const Billing = require('../../models/Billing')
 
 const router = express.Router()
 
@@ -20,7 +21,7 @@ router.get('/all', (req, res) => {
       }
 
     })
-    .catch(err => res.status(404).json({billing: 'No billing found'}))
+    .catch(err => res.status(HTTP_CODES.NOT_FOUND).json({billing: 'No billing found'}))
 
 
 })
@@ -36,7 +37,7 @@ router.get('/:id', (req, res) => {
       res.json(billing)
     })
     .catch(err => {
-      return res.status(404).json({billing: `No billing found:${err}`})
+      return res.status(HTTP_CODES.NOT_FOUND).json({billing: `No billing found:${err}`})
     })
 })
 

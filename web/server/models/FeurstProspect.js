@@ -1,4 +1,6 @@
+const mongooseLeanVirtuals=require('mongoose-lean-virtuals')
 const mongoose = require('mongoose')
+
 const Schema = mongoose.Schema
 
 const FeurstProspectSchema = new Schema({
@@ -33,4 +35,5 @@ const FeurstProspectSchema = new Schema({
   },
 }, {toJSON: {virtuals: true, getters: true}})
 
+FeurstProspectSchema.plugin(mongooseLeanVirtuals)
 module.exports = mongoose.model('feurstProspect', FeurstProspectSchema)

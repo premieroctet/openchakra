@@ -30,4 +30,4 @@ function AskQuestion(props) {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(AskQuestion)
+export default withTranslation(null, {withRef: true})(AskQuestion)

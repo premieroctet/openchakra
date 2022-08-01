@@ -12,7 +12,7 @@
 /dist
 **/.next
 web/mode.js
-
+web/storage
 
 # misc
 .env

@@ -1,5 +1,6 @@
-const FilterPresentation = require('../../models/FilterPresentation')
 const express = require('express')
+const {HTTP_CODES} = require('../../utils/errors')
+const FilterPresentation = require('../../models/FilterPresentation')
 
 const router = express.Router()
 
@@ -20,7 +21,7 @@ router.get('/all', (req, res) => {
       }
 
     })
-    .catch(err => res.status(404).json({filterPresentation: 'No filterPresentation found'}))
+    .catch(err => res.status(HTTP_CODES.NOT_FOUND).json({filterPresentation: 'No filterPresentation found'}))
 })
 
 // @Route GET /myAlfred/api/filterPresentation/:id
@@ -35,7 +36,7 @@ router.get('/:id', (req, res) => {
       res.json(filterPresentation)
     })
     .catch(err => {
-      res.status(404).json({billing: `No filterPresentation found:${err}`})
+      res.status(HTTP_CODES.NOT_FOUND).json({billing: `No filterPresentation found:${err}`})
     })
 })
 

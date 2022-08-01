@@ -1,2 +1,3 @@
-export default theme => ({
+const Style = theme => ({
 })
+module.exports=Style

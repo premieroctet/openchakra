@@ -1,8 +1,5 @@
-import CustomButton from '../../components/CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
-const {snackBarSuccess, snackBarError} = require('../../utils/notifications')
-const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react'
 import axios from 'axios'
 import Grid from '@material-ui/core/Grid'
@@ -11,9 +8,6 @@ import {withStyles} from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import MenuItem from '@material-ui/core/MenuItem'
 import Head from 'next/head'
-import styles from '../../static/css/pages/profile/editProfile/editProfile'
-import LayoutAccount from '../../hoc/Layout/LayoutAccount'
-import LayoutMobile from '../../hoc/Layout/LayoutMobile'
 import Divider from '@material-ui/core/Divider'
 import Typography from '@material-ui/core/Typography'
 import Dialog from '@material-ui/core/Dialog'
@@ -21,14 +15,19 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogActions from '@material-ui/core/DialogActions'
-const {MAX_DESCRIPTION_LENGTH} = require('../../utils/consts')
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline'
-import DateField from '../../components/DateField/DateField'
-const {is_production}=require('../../config/config')
-const {isPhoneOk} = require('../../utils/sms')
-const moment = require('moment')
-import '../../static/assets/css/custom.css'
+import moment from 'moment'
 import io from 'socket.io-client'
+import {MAX_DESCRIPTION_LENGTH} from '../../utils/consts'
+import DateField from '../../components/DateField/DateField'
+import {is_production} from '../../config/config'
+import {isPhoneOk} from '../../utils/sms'
+import LayoutMobile from '../../hoc/Layout/LayoutMobile'
+import LayoutAccount from '../../hoc/Layout/LayoutAccount'
+import {clearAuthenticationToken, setAxiosAuthentication} from '../../utils/authentication'
+import {snackBarSuccess, snackBarError} from '../../utils/notifications'
+import styles from '../../static/css/pages/profile/editProfile/editProfile'
+import CustomButton from '../../components/CustomButton/CustomButton'
 
 moment.locale('fr')
 
@@ -504,4 +503,4 @@ class editProfile extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(editProfile))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(editProfile))

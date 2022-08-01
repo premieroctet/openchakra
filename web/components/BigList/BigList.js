@@ -1,3 +1,7 @@
+const DialogBase = require('../Dialog/DialogBase')
+
+const DataImport = require('../DataImport/DataImport')
+const CustomButton = require('../CustomButton/CustomButton')
 import React from 'react'
 import {AgGridReact} from 'ag-grid-react'
 import {Typography} from '@material-ui/core'
@@ -18,8 +22,12 @@ class BigList extends React.Component {
 
   constructor(props) {
     super(props)
+    this.state={
+      importInfo: null,
+    }
     this.gridRef=React.createRef()
     this.fitColumns=this.fitColumns.bind(this)
+    this.fileRef=React.createRef()
   }
 
   fitColumns = () => {
@@ -70,7 +78,8 @@ class BigList extends React.Component {
 
   render = () => {
 
-    const {data, columnDefs, classes, title, header} = this.props
+    const {data, columnDefs, classes, title, header, importURLS} = this.props
+    const {importInfo}=this.state
 
     const frameworkComponents={
       'statusRenderer': models.StatusRenderer,
@@ -91,6 +100,7 @@ class BigList extends React.Component {
       'fontRenderer': models.FontRenderer,
       'deleteRenderer': models.DeleteRenderer,
       'percentRenderer': models.PercentRenderer,
+      'actionRenderer': models.ActionRenderer,
     }
 
     const defaultColDef={
@@ -116,6 +126,13 @@ class BigList extends React.Component {
               null
             }
             <IconButton onClick={this.onDownloadClick}><GetAppIcon/></IconButton>
+            <>
+              { importURLS && importURLS.map(importInfo => {
+                return (
+                  <CustomButton onClick={() => this.setState({importInfo: importInfo})}>{importInfo.title}</CustomButton>
+                )
+              })}
+            </>
           </Grid>
           {header && <Grid>{header}</Grid>}
           <Paper style={{height: '600px', width: '100%'}} className={'ag-theme-balham'}>
@@ -134,7 +151,7 @@ class BigList extends React.Component {
                 greaterThan: '>',
                 lessThanOrEqual: '<=',
                 greaterThanOrEqual: '>=',
-                inRange: "Dans l'intervalle",
+                inRange: 'Intervalle',
                 inRangeStart: 'Entre',
                 inRangeEnd: 'et',
                 contains: 'Contient',
@@ -153,6 +170,11 @@ class BigList extends React.Component {
             />
           </Paper>
         </Grid>
+        {importInfo &&
+          <DialogBase open={true}>
+            <DataImport title={importInfo.title} subTitle={importInfo.subTitle} importURL={importInfo.url}/>
+          </DialogBase>
+        }
       </>
     )
   }

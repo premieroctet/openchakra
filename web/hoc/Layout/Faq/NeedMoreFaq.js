@@ -4,7 +4,7 @@ import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import {makeStyles} from '@material-ui/core/styles'
-import '../../../static/assets/css/custom.css'
+
 
 const useStyles = makeStyles(theme => ({
   link: {
@@ -41,4 +41,4 @@ function NeedMoreFaq(props) {
   )
 }
 
-export default withTranslation('custom')(NeedMoreFaq)
+export default withTranslation(null)(NeedMoreFaq)

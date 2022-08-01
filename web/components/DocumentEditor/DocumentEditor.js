@@ -101,4 +101,4 @@ function DocumentEditor(props) {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(DocumentEditor))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(DocumentEditor))
