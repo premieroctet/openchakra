@@ -6,13 +6,18 @@ import {BOOK_STATUS} from '../../utils/consts'
 
 const BookingElearningAccess = ({booking}) => {
   
-  const isConfirmedBooking = booking.status ===
-  BOOK_STATUS.CONFIRMED
+  const isConfirmedBooking = booking.status === BOOK_STATUS.CONFIRMED
+
+  const receiveAccessByMail = () => {
+    // WIP
+  }
+
+  console.log(booking.elearning_link)
 
   return (<ElearningAccess locked={isConfirmedBooking}>
     <h3>Vos accès au contenu e-learning</h3>
-    <BookingPreviewActionButton>Recevoir mes accès par mail</BookingPreviewActionButton>
-    <BookingPreviewActionLink href={'/there'} >
+    <BookingPreviewActionButton onClick={receiveAccessByMail}>Recevoir mes accès par mail</BookingPreviewActionButton>
+    <BookingPreviewActionLink href={booking.elearning_link} >
       Accéder à mon parcours de formation
     </BookingPreviewActionLink>
   
