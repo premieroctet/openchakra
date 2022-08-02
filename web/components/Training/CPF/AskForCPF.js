@@ -1,8 +1,7 @@
 import React from 'react'
-import Link from 'next/link'
 import styled from 'styled-components'
 import BulbTip from '../../Tip/BulbTip'
-import {BookingPreviewActionLink} from '../../BookingDetail/BookingPreviewActions'
+import {BookingPreviewActionLink} from '../../Actions/Actions'
 import {screen} from '../../../styles/screenWidths'
 
 const AskForCPF = ({link}) => {
