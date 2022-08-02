@@ -560,7 +560,7 @@ class BookingPreview extends React.Component {
                       </Grid>
                       <Grid className={classes.buttonConfirmResa}>
                         <CustomButton color={'primary'} variant={'contained'} className={classes.buttonConfirm}
-                          onClick={this.onConfirm({elearning: isElearning})}>{ReactHtmlParser(this.props.t('COMMON.btn_confirm'))}</CustomButton>
+                          onClick={() => this.onConfirm({elearning: isElearning})}>{ReactHtmlParser(this.props.t('COMMON.btn_confirm'))}</CustomButton>
                       </Grid>
                       <Grid>
                         <CustomButton variant={'outlined'} classes={{root: classes.buttonCancel}}
