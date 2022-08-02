@@ -229,23 +229,18 @@ const BookingSchema = new Schema({
   cpf_link: {
     type: String,
   },
-  // Ling to training; required during booking confirmation
+  // Link to training; copied from ServiceUser
   elearning_link: {
     type: String,
     required: function() { return this.location==LOCATION_ELEARNING && this.status==BOOK_STATUS.CONFIRMED },
   },
   // ELearning access provided by provider during confirmation
-  elearning_access: {
-    type: {
-      id: {
-        type: String,
-        required: true,
-      },
-      pass: {
-        type: String,
-        required: true,
-      },
-    },
+  elearning_login: {
+    type: String,
+    required: function() { return this.location==LOCATION_ELEARNING && this.status==BOOK_STATUS.CONFIRMED },
+  },
+  elearning_password: {
+    type: String,
     required: function() { return this.location==LOCATION_ELEARNING && this.status==BOOK_STATUS.CONFIRMED },
   },
 }, {toJSON: {virtuals: true, getters: true}})

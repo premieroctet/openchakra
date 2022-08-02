@@ -4,7 +4,6 @@ const {googleCalendarEventUrl} = require('google-calendar-url')
 const mongoose = require('mongoose')
 const passport = require('passport')
 const moment = require('moment')
-
 const CronJob = require('cron').CronJob
 const {addMessage}=require('../../utils/chatroom')
 const {NotFoundError}=require('../../utils/errors')
@@ -15,7 +14,7 @@ const Booking = require('../../models/Booking')
 const ServiceUser = require('../../models/ServiceUser')
 const Company = require('../../models/Company')
 const User = require('../../models/User')
-const {BOOK_STATUS, EXPIRATION_DELAY, AVOCOTES_COMPANY_NAME} = require('../../../utils/consts')
+const {BOOK_STATUS, EXPIRATION_DELAY, AVOCOTES_COMPANY_NAME, LOCATION_ELEARNING} = require('../../../utils/consts')
 const {payBooking} = require('../../utils/mangopay')
 const {
   sendBookingConfirmed, sendBookingExpiredToAlfred, sendBookingExpiredToClient, sendBookingInfosRecap,
@@ -29,6 +28,7 @@ const validateBooking=require('../../validation/booking')
 const {computeBookingReference, formatAddress}=require('../../../utils/text')
 const {createMangoClient}=require('../../utils/mangopay')
 const {stateMachineFactory} = require('../../utils/BookingStateMachine')
+
 const router = express.Router()
 
 moment.locale('fr')
@@ -445,6 +445,11 @@ router.put('/modifyBooking/:id', passport.authenticate('jwt', {session: false}),
       if (obj.status) {
         const machine=stateMachineFactory(booking.status)
         machine.checkAllowed(obj.status)
+      }
+      if (obj.status==BOOK_STATUS.CONFIRMED && booking.location==LOCATION_ELEARNING) {
+        if (!(obj.elearning_login?.trim() && obj.elearning_password?.trim())) {
+          return res.status(HTTP_CODES.BAD_REQUEST).json(`Le login et mot de passe de la formation elearning sont requis pour confirmer la réservation`)
+        }
       }
       Object.keys(obj).forEach(key => {
         booking[key]=obj[key]
