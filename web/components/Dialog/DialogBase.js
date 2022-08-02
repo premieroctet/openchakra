@@ -54,8 +54,8 @@ render = () => {
           {this.props.children}
         </Grid>
         <Grid style={{textAlign: 'center', marginLeft: 15, marginRight: 15, marginTop: '3vh', marginBottom: '3vh'}}>
-          {buttons && buttons.map(b => (
-            <CustomButton onClick={b.onClick} color="primary" variant="contained" classes={{root: `${classes.buttonSave}`}}>
+          {buttons && buttons.map((b, i) => (
+            <CustomButton key={`dialogbase-${i}`} onClick={b.onClick} color="primary" variant="contained" classes={{root: `${classes.buttonSave}`}}>
               {b.label}
             </CustomButton>
           ))}
