@@ -2,14 +2,24 @@ import React from 'react'
 import styled from 'styled-components'
 import {screen} from '../../styles/screenWidths'
 import {ActionButton, ActionLink} from '../Actions/Actions'
-import {BOOK_STATUS} from '../../utils/consts'
+import {API_PATH, BOOK_STATUS} from '../../utils/consts'
+import {client} from '../../utils/client'
+import {snackBarSuccess, snackBarError} from '../../utils/notifications'
 
 const BookingElearningAccess = ({booking}) => {
   
   const isConfirmedBooking = booking.status === BOOK_STATUS.CONFIRMED
 
-  const receiveAccessByMail = () => {
+  const receiveAccessByMail = async() => {
     // WIP
+    await client(`${API_PATH}/booking/${booking.id}/sendcourseaccess`, {method: 'POST'})
+      .then(() => snackBarSuccess('Envoyé'))
+      .catch(error => {
+        if (error.info) {
+          snackBarError(error?.info.message || 'Erreur envoi')
+        }
+      })
+     
   }
 
   console.log(booking.elearning_link)
