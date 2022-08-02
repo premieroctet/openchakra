@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import {withStyles} from '@material-ui/core/styles'
 import styled from 'styled-components'
 import {withTranslation} from 'react-i18next'
@@ -17,6 +17,7 @@ import axios from 'axios'
 import moment from 'moment'
 import ReactHtmlParser from 'react-html-parser'
 import Link from 'next/link'
+import {UserContext, useUserContext} from '../../contextes/user.context'
 import {BOOK_STATUS, LOCATION_ELEARNING} from '../../utils/consts'
 import {getDataModel, bookingUrl} from '../../config/config'
 import BookingPreApprouve from '../../components/BookingDetail/BookingPreApprouve'
@@ -26,7 +27,6 @@ import LayoutReservations from '../../hoc/Layout/LayoutReservations'
 import styles from '../../static/css/pages/reservations/reservations'
 import CustomButton from '../../components/CustomButton/CustomButton'
 import withParams from '../../components/withParams'
-import {UserContext} from '../../contextes/user.context'
 import BookingMinInfos from '../../components/Booking/BookingMinInfos'
 import AddToCalendar from '../../components/Calendar/AddToCalendar'
 
@@ -48,146 +48,129 @@ moment.locale('fr')
 
 // TODO RASSEMBLER ALLRESERVATIONS + COMINGRESERVATIONS + FINISHEDRESERVATIONS
 
-class AllReservations extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      user: null,
-      alfredReservations: [],
-      userReservations: [],
-      isAlfred: false,
-      userInfo: {},
-      reservationType: 1,
-      reservationStatus: 0,
-      bookingPreview: null,
-      bookingPreApprouved: null,
+const AllReservations = ({classes, t, id}) => {
+
+  const [alfredReservations, setAlfredReservations] = useState([])
+  const [userReservations, setUserReservations] = useState([])
+  const [reservationType, setReservationType] = useState(1)
+  const [reservationStatus, setReservationStatus] = useState(0)
+  const [bookingPreview, setBookingPreview] = useState(null)
+  const [bookingPreApprouved, setBookingPreApprouved] = useState(null)
+
+  const {user} = useUserContext()
+
+  useEffect(() => {
+    setReservationType(user?.is_alfred ? 0 : 1)
+    loadBookings()
+    if (id) {
+      setTimeout(() => setBookingPreview(id), 1000)
     }
-  }
+  }, [user])
 
-  componentDidMount() {
-
-
-    const {user} = this.context
-
-
-    this.setState({
-      userInfo: user,
-      user: user?._id,
-      isAlfred: user?.is_alfred,
-      reservationType: user?.is_alfred ? 0 : 1,
-    })
-    this.loadBookings()
-    if (this.props.id) {
-      setTimeout(() => this.setState({bookingPreview: this.props.id}), 1000)
-    }
-
-
-  }
-
-  loadBookings = () => {
+  const loadBookings = () => {
     axios.get('/myAlfred/api/booking/alfredBooking')
       .then(res => {
         // On n'affiche pas les résas en attente de paiement
         const alfredBookings=res.data.filter(r => r.status !== BOOK_STATUS.TO_PAY)
-        this.setState({alfredReservations: alfredBookings})
+        setAlfredReservations(alfredBookings)
         return axios.get('/myAlfred/api/booking/userBooking')
       })
       .then(res => {
         const userBookings=res.data
-        this.setState({userReservations: userBookings})
+        setUserReservations(userBookings)
       })
       .catch(err => {
         console.error(err)
       })
   }
 
-  onReservationTypeChanged = (event, newValue) => {
-    this.setState({reservationType: newValue, reservationStatus: 0})
+  const onReservationTypeChanged = (event, newValue) => {
+    setReservationType(newValue)
+    setReservationStatus(0)
   }
 
-  handleReservationStatusChanged = (event, newValue) => {
-    this.setState({reservationStatus: newValue})
+  const handleReservationStatusChanged = (event, newValue) => {
+    setReservationStatus(newValue)
   }
 
-  isFinished = reservation => {
+  const isFinished = reservation => {
     return [BOOK_STATUS.REFUSED, BOOK_STATUS.CANCELLED, BOOK_STATUS.FINISHED, BOOK_STATUS.EXPIRED].includes(reservation.status)
   }
 
-  isComing = reservation => {
+  const isComing = reservation => {
     return [BOOK_STATUS.INFO, BOOK_STATUS.TO_CONFIRM, BOOK_STATUS.CONFIRMED, BOOK_STATUS.PREAPPROVED].includes(reservation.status)
   }
 
-  filterReservations = () => {
-    const {reservationType, reservationStatus, alfredReservations, userReservations}=this.state
+  const filterReservations = () => {
     // Alfred/customer reservatioons
     let reservations = reservationType===0 ? alfredReservations : userReservations
     // All/ coming/finished reservations
-    if (reservationStatus===1) { reservations = reservations.filter(this.isComing) }
-    if (reservationStatus===2) { reservations = reservations.filter(this.isFinished) }
+    if (reservationStatus===1) { reservations = reservations.filter(b => isComing(b)) }
+    if (reservationStatus===2) { reservations = reservations.filter(b => isFinished(b)) }
     return reservations
   }
 
-  openBookingPreview = bookingId => {
-    this.loadBookings()
-    this.setState({bookingPreview: bookingId, bookingPreApprouved: null})
+  const openBookingPreview = bookingId => {
+    loadBookings()
+    setBookingPreview(bookingId)
+    setBookingPreApprouved(null)
   }
 
-  openBookingPreAprouved = bookingId => {
-    this.loadBookings()
-    this.setState({bookingPreview: null, bookingPreApprouved: bookingId})
+  const openBookingPreAprouved = bookingId => {
+    loadBookings()
+    setBookingPreview(null)
+    setBookingPreApprouved(bookingId)
   }
 
-  onClosePreview = () => {
-    this.setState({bookingPreview: null}, () => this.loadBookings())
+  const onClosePreview = () => {
+    setBookingPreview(null)
+    loadBookings()
   }
 
-  bookingPreviewModal = classes => {
-    const {bookingPreview}=this.state
+  const dialogPreviewModal = classes => {
 
     return (
-      <Dialog
+      bookingPreview && <Dialog
         style={{width: '100%'}}
         open={Boolean(bookingPreview)}
-        onClose={this.onClosePreview}
+        onClose={onClosePreview}
         classes={{paper: classes.dialogPreviewPaper}}
 
       >
-        <DialogTitle id="customized-dialog-title" onClose={this.onClosePreview}/>
+        <DialogTitle id="customized-dialog-title" onClose={onClosePreview}/>
         <DialogContent>
-          <BookingPreview booking_id={bookingPreview} onConfirmPreapproved={this.openBookingPreAprouved}/>
+          <BookingPreview booking_id={bookingPreview} onConfirmPreapproved={openBookingPreAprouved}/>
         </DialogContent>
       </Dialog>
     )
   }
 
-  bookingPreApprouved = classes => {
-    const {bookingPreApprouved}=this.state
+  const dialogPreApprouved = classes => {
 
     return (
-      <Dialog
+      bookingPreApprouved && <Dialog
         style={{width: '100%'}}
         open={Boolean(bookingPreApprouved)}
-        onClose={() => this.setState({bookingPreApprouved: null})}
+        onClose={() => setBookingPreApprouved(null)}
         classes={{paper: classes.dialogPreviewPaper}}
       >
-        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({bookingPreApprouved: null})}/>
+        <DialogTitle id="customized-dialog-title" onClose={() => setBookingPreApprouved(null)}/>
         <DialogContent>
-          <BookingPreApprouve booking_id={bookingPreApprouved} onConfirm={() => this.setState({bookingPreApprouved: false})}/>
+          <BookingPreApprouve booking_id={bookingPreApprouved} onConfirm={() => setBookingPreApprouved(false)}/>
         </DialogContent>
       </Dialog>
     )
   }
 
-  newAppointment = booking => {
+  const newAppointment = booking => {
     let newBooking = booking
     newBooking.prestation_date = null
     localStorage.setItem('bookingObj', JSON.stringify(newBooking))
     Router.push(bookingUrl(newBooking.serviceUserId))
   }
 
-  content = classes => {
-    const {reservationType} = this.state
-    const reservations = this.filterReservations()
+  const content = classes => {
+    const reservations = filterReservations()
     const alfredMode = reservationType === 0
 
     return(
@@ -196,15 +179,15 @@ class AllReservations extends React.Component {
           <Tabs
             orientation="horizontal"
             variant="scrollable"
-            value={this.state.reservationStatus}
-            onChange={this.handleReservationStatusChanged}
+            value={reservationStatus}
+            onChange={handleReservationStatusChanged}
             aria-label="scrollable force tabs"
             scrollButtons="on"
             classes={{indicator: `customscrollmenu ${classes.scrollMenuIndicator}`}}
           >
-            <Tab label={ReactHtmlParser(this.props.t('RESERVATION.allresa'))} className={classes.scrollMenuTab} />
-            <Tab label={ReactHtmlParser(this.props.t('RESERVATION.commingresa'))} className={classes.scrollMenuTab} />
-            <Tab label={ReactHtmlParser(this.props.t('RESERVATION.endingresa'))} className={classes.scrollMenuTab} />
+            <Tab label={ReactHtmlParser(t('RESERVATION.allresa'))} className={classes.scrollMenuTab} />
+            <Tab label={ReactHtmlParser(t('RESERVATION.commingresa'))} className={classes.scrollMenuTab} />
+            <Tab label={ReactHtmlParser(t('RESERVATION.endingresa'))} className={classes.scrollMenuTab} />
           </Tabs>
         </Grid>
         <Grid style={{width: '100%'}}>
@@ -223,8 +206,8 @@ class AllReservations extends React.Component {
                       color={'primary'}
                       variant={'outlined'}
                       classes={{root: `customreservationdetailbutton ${classes.buttonDetail}`}}
-                      onClick={() => this.openBookingPreview(booking._id)}>
-                      {ReactHtmlParser(this.props.t('RESERVATION.detailbutton'))}
+                      onClick={() => openBookingPreview(booking._id)}>
+                      {ReactHtmlParser(t('RESERVATION.detailbutton'))}
                     </CustomButton>
 
                     {
@@ -233,8 +216,8 @@ class AllReservations extends React.Component {
                           variant={'contained'}
                           color={'primary'}
                           classes={{root: `customresasaveagain ${classes.buttonResa}`}}
-                          onClick={() => this.newAppointment(booking)}>
-                          {ReactHtmlParser(this.props.t('RESERVATION.saveagain'))}
+                          onClick={() => newAppointment(booking)}>
+                          {ReactHtmlParser(t('RESERVATION.saveagain'))}
                         </CustomButton>
                         : null
                     }
@@ -242,7 +225,7 @@ class AllReservations extends React.Component {
                     {booking?.cpf_booked && !alfredMode &&
                     <Link href={booking.cpf_link || 'https://example.com'}>
                       <a target='_blank'>
-                        {ReactHtmlParser(this.props.t('RESERVATION.cpfbutton'))}
+                        {ReactHtmlParser(t('RESERVATION.cpfbutton'))}
                       </a>
                     </Link>
                     }
@@ -254,7 +237,7 @@ class AllReservations extends React.Component {
                 </BookingItem>
               )
             })) :
-            <Typography className={'customresanoresamessage'}>{alfredMode ? ReactHtmlParser(this.props.t('RESERVATION.infomessageAlfred')) : ReactHtmlParser(this.props.t('RESERVATION.infomessageUser')) }</Typography>
+            <Typography className={'customresanoresamessage'}>{alfredMode ? ReactHtmlParser(t('RESERVATION.infomessageAlfred')) : ReactHtmlParser(t('RESERVATION.infomessageUser')) }</Typography>
           }
         </Bookings>
       </Grid>
@@ -262,31 +245,25 @@ class AllReservations extends React.Component {
   }
 
 
-  render() {
-    const theme = getDataModel()
-    const {classes} = this.props
-    const {reservationType, userInfo, bookingPreview, bookingPreApprouved} = this.state
+  const theme = getDataModel()
 
-    return (
-      <Grid>
-        <Grid className={classes.hiddenMobile}>
-          <LayoutReservations reservationType={reservationType} onReservationTypeChanged={this.onReservationTypeChanged} userInfo={userInfo}>
-            {this.content(classes)}
-          </LayoutReservations>
-        </Grid>
-        <Grid className={classes.hidden}>
-          <LayoutMobileReservations reservationType={reservationType} currentIndex={2} onReservationTypeChanged={this.onReservationTypeChanged} userInfo={userInfo}>
-            {this.content(classes)}
-          </LayoutMobileReservations>
-        </Grid>
-        { bookingPreview ? this.bookingPreviewModal(classes) : null}
-        { bookingPreApprouved ? this.bookingPreApprouved(classes) : null}
+  return (
+    <Grid>
+      <Grid className={classes.hiddenMobile}>
+        <LayoutReservations reservationType={reservationType} onReservationTypeChanged={onReservationTypeChanged} user={user}>
+          {content(classes)}
+        </LayoutReservations>
       </Grid>
-    )
-  }
+      <Grid className={classes.hidden}>
+        <LayoutMobileReservations reservationType={reservationType} currentIndex={2} onReservationTypeChanged={onReservationTypeChanged} user={user}>
+          {content(classes)}
+        </LayoutMobileReservations>
+      </Grid>
+      { bookingPreview ? dialogPreviewModal(classes) : null}
+      { bookingPreApprouved ? dialogPreApprouved(classes) : null}
+    </Grid>
+  )
 }
-
-AllReservations.contextType = UserContext
 
 const Bookings = styled.ul`
   display: 'flex';
