@@ -4,12 +4,28 @@ export const MinGlobalStyles = createGlobalStyle`
 
   :root {
 
+    /**
+    * Colors
+    */
     --black: ${props => props.theme?.colors?.black || '#111'};
     --white: ${props => props.theme?.colors?.white || '#FFF'};
     --brand-color: ${props => props.theme?.colors?.brand || 'black'};
     --primary-color: ${props => props.theme?.colors?.primary || 'black'};
     --secondary-color: ${props => props.theme?.colors?.secondary || 'black'};
+    --stone-50: #FAFAF9;
+    --stone-100: #F5F5F4;
+    --stone-200: #E7E5E4;
+    --stone-300: #D6D3D1;
+    --stone-400: #A8A29E;
+    --stone-500: #78716C;
+    --stone-600: #57534E;
+    --stone-700: #44403C;
+    --stone-800: #292524;
+    --stone-700: #1C1917;
+
+
     --font-family: ${props => props.theme?.fontFamily || 'arial'};
+
 
       /* text */
       --text-xxs: 0.6rem;

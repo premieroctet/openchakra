@@ -14,11 +14,6 @@ const Style = theme => ({
       marginBottom: 30,
     },
   },
-  hrSeparator: {
-    width: '100%',
-    marginTop: 30,
-    color: 'rgb(80, 80, 80, 0.2)',
-  },
   buttonConfirm: {
     color: 'white',
   },
@@ -55,11 +50,7 @@ const Style = theme => ({
       justifyContent: 'center',
     },
   },
-  containerTitleSectionAbout: {
-    [theme.breakpoints.down('xs')]: {
-      display: 'flex',
-    },
-  },
+  
   mainContainerAbout: {
     alignItems: 'center',
     [theme.breakpoints.down('xs')]: {

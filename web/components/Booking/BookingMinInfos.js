@@ -37,12 +37,12 @@ const BookingMinInfos = ({t, booking, amIAlfred, withPrice}) => {
   const displayDate = new Date(booking.date).toLocaleDateString('fr-FR', {weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric'})
   const customer_booking_title = booking.customer_booking && ReactHtmlParser(t('BOOKING.avocotes_resa')) + booking.customer_booking.user.full_name
   const isElearning = booking.location === LOCATION_ELEARNING
-  const isCPF = !!booking.cpf_booked
+  const isCPF = !!booking?.cpf_booked
 
 
   return (
     <>
-      <StyledBookingMinInfos theme={theme}>
+      <StyledBookingMinInfos className='booking_infos' theme={theme}>
         <div className="booking_avatar">
           {booking.is_service ?
           // TODO Display service picture
@@ -98,7 +98,6 @@ const StyledBookingMinInfos = styled.div`
   display: grid;
   row-gap: var(--spc-1);
   column-gap: var(--spc-2);
-  flex:5;
   align-content: baseline;
   grid-template-columns: auto;
   grid-template-areas:  'avatar'
@@ -106,6 +105,7 @@ const StyledBookingMinInfos = styled.div`
                         'title'
                         'misc'
                         'price';
+  margin-bottom: var(--spc-4);
       
   
   @media (${screen.sm}) {
@@ -153,6 +153,7 @@ const StyledBookingMinInfos = styled.div`
     font-size: var(--text-lg);
     font-weight: var(--font-bold);
     align-self: center;
+    margin-left: var(--spc-2);
   }
 
   /* Status */

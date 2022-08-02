@@ -16,15 +16,19 @@ const AddToCalendar = ({bookingId}) => {
 
   return (
     <div className='calendar_actions'>
-      <Link target="_blank" href={getGoogleCalendarURL(bookingId)}>
-        <Tooltip title={BOOKING.ADD_GOOGLE_AGENDA}>
-          <img src='/static/assets/icon/google_calendar.svg' width="50px" alt=''/>
-        </Tooltip>
+      <Link href={getGoogleCalendarURL(bookingId)}>
+        <a target="_blank" >
+          <Tooltip title={BOOKING.ADD_GOOGLE_AGENDA}>
+            <img src='/static/assets/icon/google_calendar.svg' width="50px" alt={BOOKING.ADD_GOOGLE_AGENDA}/>
+          </Tooltip>
+        </a>
       </Link>
       <Link href={getIcsURL(bookingId)}>
-        <Tooltip title={BOOKING.ADD_OTHER_AGENDA}>
-          <img src='/static/assets/icon/calendar.svg' width="50px" alt=''/>
-        </Tooltip>
+        <a download >
+          <Tooltip title={BOOKING.ADD_OTHER_AGENDA}>
+            <img src='/static/assets/icon/calendar.svg' width="50px" alt={BOOKING.ADD_OTHER_AGENDA}/>
+          </Tooltip>
+        </a>
       </Link>
     </div>
   )

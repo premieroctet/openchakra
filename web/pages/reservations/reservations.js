@@ -29,7 +29,7 @@ import withParams from '../../components/withParams'
 import {LOCATION_ELEARNING} from '../../utils/consts'
 import {UserContext} from '../../contextes/user.context'
 import BookingMinInfos from '../../components/Booking/BookingMinInfos'
-import CalendarActions from '../../components/Calendar/AddToCalendar'
+import AddToCalendar from '../../components/Calendar/AddToCalendar'
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props
@@ -248,7 +248,7 @@ class AllReservations extends React.Component {
                     </Link>
                     }
 
-                    <CalendarActions bookingId={booking._id} />
+                    <AddToCalendar bookingId={booking._id} />
 
                   </div>
 
@@ -304,10 +304,15 @@ export const BookingItem = styled.li`
   padding-block: var(--spc-4);
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 
+  .booking_infos {
+    flex:5;
+    flex-basis: 400px;
+  }
 
   .booking_actions {
     flex: 1;
     display: flex;
+    flex-basis: 100px;
     flex-direction: column;
     row-gap: var(--spc-2);
 
@@ -316,7 +321,7 @@ export const BookingItem = styled.li`
       word-break: keep-all;
     }
 
-    a {
+    a:not(.calendar_actions a) {
       border-radius: var(--rounded-md);
       font-weight: var(--font-bold);
       text-align: center;
