@@ -1,4 +1,5 @@
 import ReactHtmlParser from 'react-html-parser'
+import Link from 'next/link'
 import {withTranslation} from 'react-i18next'
 import React, {Component} from 'react'
 import {Hidden, Typography} from '@material-ui/core'
@@ -937,9 +938,11 @@ class NavBar extends Component {
         lg={ifHomePage ? 1 : 3}
         md={ifHomePage ? 10 : 3}
         sm={11}
-        onClick={() => Router.push('/')}
-      >
-        <Logo className={`customnavbarlogo ${classes.logoMyAlfred}`} style={{backgroundRepeat: 'no-repeat', height: 90, width: 200}}/>
+      ><Link href={'/'}>
+          <a>
+            <Logo className={`customnavbarlogo ${classes.logoMyAlfred}`} style={{backgroundRepeat: 'no-repeat', height: 90, width: 200}}/>
+          </a>
+        </Link>
       </Grid>
     )
   };
