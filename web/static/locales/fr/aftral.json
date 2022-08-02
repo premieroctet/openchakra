@@ -1,5 +1,4 @@
 {
-	"RESERVATION.book_button": "Réserver cette formation",
 	"ADD_SERVICE.begin_your_research_content": "Indiquez le type de formation que vous recherchez puis parcourez les différentes catégories de formations",
 	"ADD_SERVICES.title": "Mes formations",
 	"BANNER_B2B_PRESENTATION.text": "Trouvez la formation idéale pour répondre aux besoins ponctuels de votre entreprise & de vos collaborateurs. Des milliers de profils vérifiés et qualifiés au service de vos projets, votre stratégie, vos collaborateurs et vos locaux ! Un service simple et sécurisant !",
@@ -13,6 +12,7 @@
 	"BOOKING.already_evaluate_alfred": "<div>Vous avez déjà évalué votre formateur</div>",
 	"BOOKING.button_evaluate_client": "Evaluer mon élève",
 	"BOOKING.cancel_resa": "Annuler la formation",
+	"BOOKING.cpf_booking_notice": "Votre demande de réservation doit être approuvée par l'Aftral. Vous recevrez vos accès au contenu de la formation dès lors que votre réservation sera confirmée",
 	"BOOKING.evaluate_alfred_button": "<div>Evaluer mon formateur</div>",
 	"BOOKING.info_commentary": "<div>Vous avez 15 jours pour évaluer votre formateur. Une fois que votre formateur aura rédigé son commentaire, il pourra consulter votre évaluation et vous pourrez consulter la sienne !</div>",
 	"BOOKING.info_end_resa": "Votre formation doit être confirmée avant le ",
@@ -86,6 +86,7 @@
 	"REGISTER_THIRD_PAGE.subtitle": "<span style=\"font-size: 14px; color: rgb(12, 1, 1);\">Inscription réussie ! Trouvez la formation dont vous avez besoin dés maintenant !</span>",
 	"RESA_SERVICE.title": "<span style=\"font-size: 42px;\"><strong style=\"color: rgb(255, 255, 255);\">Des questions sur nos formations ?</strong>",
 	"RESERVATION.allresa": "Toutes mes formations",
+	"RESERVATION.book_button": "Réserver cette formation",
 	"RESERVATION.commingresa": "Mes formations à venir<br>",
 	"RESERVATION.endingresa": "Mes formations terminées",
 	"RESERVATION.infomessageAlfred": "​Vous n'avez acheté aucune formation pour le moment",

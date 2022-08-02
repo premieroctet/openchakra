@@ -100,6 +100,7 @@
 	"BOOKING.button_send_message": "<span style=\"color: rgb(255, 255, 255);\">Envoyer un message</span>",
 	"BOOKING.cancel_resa": "Annuler la réservation",
 	"BOOKING.commentary": "Commentaires",
+	"BOOKING.cpf_booking_notice": "Votre demande de réservation doit être approuvée; vous recevrez ensuite vos accès au contenu de la formation",
 	"BOOKING.created_date": "créée le ",
 	"BOOKING.disabled_user_access": "Vous n'avez pas l'autorisation d'accéder à cette page",
 	"BOOKING.end_date": "Date de fin: ",

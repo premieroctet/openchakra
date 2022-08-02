@@ -323,7 +323,7 @@ const PureDrawerBooking = ({
 
         <p className='tip'>
           <span className='img'>💡</span>
-        Votre demande de réservation doit être approuvée par l'Aftral. Vous recevrez vos accès au contenu de la formation dès lors que votre réservation sera confirmée
+          {t('BOOKING.cpf_booking_notice')}
         </p>
 
         <button
