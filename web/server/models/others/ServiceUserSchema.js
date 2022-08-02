@@ -144,6 +144,11 @@ const ServiceUserSchema = new Schema({
     visio: Boolean,
     elearning: Boolean,
   },
+  // Link to training if elearning
+  elearning_link: {
+    type: String,
+    required: function() { return !!this.location.elearning },
+  },
   // Frais livraison
   pick_tax: {
     type: Number,

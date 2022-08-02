@@ -164,6 +164,7 @@ const importFile = async fileName => {
               cpf_link: cpf_link,
               prestations: [{prestation: prestation._id, price: price, billing: prestation.billing[0]}],
               perimeter: 1000,
+              elearning_link: 'https://www.youtube.com/watch?v=Lo2vG4r3hMs',
             },
             {upsert: true, runValidators: true})
           })
