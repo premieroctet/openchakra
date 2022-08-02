@@ -18,6 +18,7 @@ import styles from '../../static/css/components/BookingDetail/BookingPreview/Boo
 import CustomButton from '../CustomButton/CustomButton'
 import {booking_datetime_str} from '../../utils/dateutils'
 import {BOOK_STATUS, API_PATH, LOCATION_ELEARNING, LOCATION_VISIO} from '../../utils/consts'
+import {getDataModel} from '../../config/config'
 import {BOOKING} from '../../utils/i18n'
 import {UserContext} from '../../contextes/user.context'
 import BookingMinInfos from '../Booking/BookingMinInfos'
@@ -244,6 +245,7 @@ class BookingPreview extends React.Component {
   }
 
   render() {
+    const theme = getDataModel()
     const {classes, booking_id} = this.props
     const {booking, currentUser, end_datetime, alfred_pro, rejectOpen, cancelOpen} = this.state
 
@@ -296,7 +298,7 @@ class BookingPreview extends React.Component {
       )
     }
     return (
-      <StyledBookingPreview>
+      <StyledBookingPreview theme={theme}>
           
         <BookingMinInfos booking={booking} amIAlfred={amIAlfred}/>
         <hr />
@@ -531,84 +533,89 @@ class BookingPreview extends React.Component {
                   }
                   {/* Access granted by training organization */}
                   {booking.status === BOOK_STATUS.TO_CONFIRM && amIAlfred && isElearning ?
-                    <>
+                    <div className='elearning_access'>
+                      <p>Eléments connexion élève</p>
                       <label htmlFor='elearning_login'>Identifiant</label>
                       <input id={'elearning_login'} name={'elearning_login'} value={this.state.elearningAccess.login} onChange={this.setELearningAccess}/>
                     
                       <label htmlFor='elearning_pass'>Mot de passe</label>
                       <input id={'elearning_pass'} name={'elearning_pass'} value={this.state.elearningAccess.pass} onChange={this.setELearningAccess} />
-                    </> :
+                    </div> :
                     null}
                 </Grid>
               </Grid>
 
               {/* booking details (location, service date, creation date) */}
               <Grid container className={classes.mainContainerStateResa}>
-                <Grid>
-                  {status === BOOK_STATUS.TO_CONFIRM ? (
-                    amIAlfred ? (
-                      <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                        <Grid className={classes.labelReservation}>
-                          <Typography>
-                            {ReactHtmlParser(this.props.t('BOOKING.info_end_resa')) + moment(booking.date)
-                              .add(1, 'd')
-                              .format('DD/MM/YYYY') + ReactHtmlParser(this.props.t('BOOKING.a')) + moment(booking.date).format('HH:mm')}
-                          </Typography>
-                        </Grid>
-                        <Grid className={classes.buttonConfirmResa}>
-                          <CustomButton color={'primary'} variant={'contained'} className={classes.buttonConfirm}
-                            onClick={() => this.onConfirm({elearning: isElearning})}>{ReactHtmlParser(this.props.t('COMMON.btn_confirm'))}</CustomButton>
-                        </Grid>
-                        <Grid>
-                          <CustomButton variant={'outlined'} classes={{root: classes.buttonCancel}}
-                            onClick={this.openRejectReason}>{ReactHtmlParser(this.props.t('BOOKING.button_cancel'))}</CustomButton>
-                        </Grid>
-                      </Grid>
-                    )
-                      :
-                      null
+                {status === BOOK_STATUS.TO_CONFIRM ? (
+                  amIAlfred ? (
+                    <div className='booking_confirm'>
+                      <p>
+                        {ReactHtmlParser(this.props.t('BOOKING.info_end_resa')) + moment(booking.date)
+                          .add(1, 'd')
+                          .format('DD/MM/YYYY') + ReactHtmlParser(this.props.t('BOOKING.a')) + moment(booking.date).format('HH:mm')}
+                      </p>
+
+                      
+                      <CustomButton
+                        className={'confirm'}
+                        variant={'contained'}
+                        onClick={() => this.onConfirm({elearning: isElearning})}>
+                        {ReactHtmlParser(this.props.t('COMMON.btn_confirm'))}
+                      </CustomButton>
+                        
+                      <CustomButton
+                        variant={'outlined'}
+                        className={'reject'}
+                        onClick={this.openRejectReason}>
+                        {ReactHtmlParser(this.props.t('BOOKING.button_cancel'))}
+                      </CustomButton>
+                        
+                    </div>
                   )
                     :
-                    booking.status === BOOK_STATUS.INFO && currentUser._id === booking.alfred._id ? (
-                      <Grid container className={classes.groupButtonsContainer} spacing={1}>
-                        <Grid item xs={12} xl={12} lg={12} sm={12} md={12}>
-                          <CustomButton onClick={() => this.props.onConfirmPreapproved(booking_id)} color={'primary'}
-                            variant={'contained'}
-                            style={{color: 'white', textTransform: 'initial'}}>{ReactHtmlParser(this.props.t('BOOKING.pre_approved_button'))}</CustomButton>
-                        </Grid>
-                        <Grid item xs={12} xl={12} lg={12} sm={12} md={12}>
-                          <CustomButton
-                            onClick={this.openRejectReason}
-                            variant={'outlined'}
-                            style={{textTransform: 'initial'}}
-                            color={'primary'}>
-                            {ReactHtmlParser(this.props.t('BOOKING.button_cancel'))}
-                          </CustomButton>
-                        </Grid>
+                    null
+                )
+                  :
+                  booking.status === BOOK_STATUS.INFO && currentUser._id === booking.alfred._id ? (
+                    <Grid container className={classes.groupButtonsContainer} spacing={1}>
+                      <Grid item xs={12} xl={12} lg={12} sm={12} md={12}>
+                        <CustomButton onClick={() => this.props.onConfirmPreapproved(booking_id)} color={'primary'}
+                          variant={'contained'}
+                          style={{color: 'white', textTransform: 'initial'}}>{ReactHtmlParser(this.props.t('BOOKING.pre_approved_button'))}</CustomButton>
+                      </Grid>
+                      <Grid item xs={12} xl={12} lg={12} sm={12} md={12}>
+                        <CustomButton
+                          onClick={this.openRejectReason}
+                          variant={'outlined'}
+                          style={{textTransform: 'initial'}}
+                          color={'primary'}>
+                          {ReactHtmlParser(this.props.t('BOOKING.button_cancel'))}
+                        </CustomButton>
+                      </Grid>
+                    </Grid>
+                  )
+                    :
+                    booking.status === BOOK_STATUS.TO_PAY && currentUser._id === booking.user._id ? (
+                      <Grid className={classes.groupButtonsContainer}>
+                        <CustomButton onClick={() => Router.push(`/confirmPayment?booking_id=${booking_id}`)}
+                          color={'primary'} variant={'contained'}
+                          style={{color: 'white', textTransform: 'initial'}}>{ReactHtmlParser(this.props.t('BOOKING.paid_button'))}</CustomButton>
                       </Grid>
                     )
                       :
-                      booking.status === BOOK_STATUS.TO_PAY && currentUser._id === booking.user._id ? (
-                        <Grid className={classes.groupButtonsContainer}>
-                          <CustomButton onClick={() => Router.push(`/confirmPayment?booking_id=${booking_id}`)}
-                            color={'primary'} variant={'contained'}
-                            style={{color: 'white', textTransform: 'initial'}}>{ReactHtmlParser(this.props.t('BOOKING.paid_button'))}</CustomButton>
-                        </Grid>
-                      )
+                      booking.status === BOOK_STATUS.INFO && currentUser._id === booking.user._id ?
+                        null
                         :
-                        booking.status === BOOK_STATUS.INFO && currentUser._id === booking.user._id ?
-                          null
+                        booking.status === BOOK_STATUS.PREAPPROVED && currentUser._id === booking.user._id ? (
+                          <Grid className={classes.groupButtonsContainer}>
+                            <CustomButton onClick={() => Router.push(`/confirmPayment?booking_id=${booking_id}`)}
+                              color={'primary'} variant={'contained'}
+                              style={{color: 'white', textTransform: 'initial'}}>{ReactHtmlParser(this.props.t('BOOKING.paid_button'))}</CustomButton>
+                          </Grid>
+                        )
                           :
-                          booking.status === BOOK_STATUS.PREAPPROVED && currentUser._id === booking.user._id ? (
-                            <Grid className={classes.groupButtonsContainer}>
-                              <CustomButton onClick={() => Router.push(`/confirmPayment?booking_id=${booking_id}`)}
-                                color={'primary'} variant={'contained'}
-                                style={{color: 'white', textTransform: 'initial'}}>{ReactHtmlParser(this.props.t('BOOKING.paid_button'))}</CustomButton>
-                            </Grid>
-                          )
-                            :
-                            null}
-                </Grid>
+                          null}
               </Grid>
             </Grid>
           </Grid>
@@ -761,10 +768,56 @@ const StyledBookingPreview = styled.div`
     display: block;
   }
 
+  .booking_confirm {
+
+    p {
+      font-size: var(--text-base);
+    }
+
+    button {
+      display: block;
+      width: 100%;
+      margin-bottom: var(--spc-2);
+
+     &.confirm {
+        background-color: var(--secondary-color);
+        color: var(--white) !important;
+      }
+    }
+  }
+
+  .elearning_access {
+    border-radius: var(--rounded-md);
+    margin-top: var(--spc-2);
+    background-color: var(--secondary-color);
+    padding: var(--spc-3);
+    color: var(--white);
+
+    p {
+      margin-top: 0;
+      border-bottom: 1px solid currentColor;
+    }
+  }
+
   & > div {
     padding: var(--spc-4);
     margin: var(--spc-2);
   }
+
+
+  ${props => {
+
+  switch (props.theme) {
+    case 'aftral':
+      return `
+         .custombookingtotal {
+          font-size: var(--text-xl);
+         }
+       `
+
+  }
+
+}}
 
 `
 

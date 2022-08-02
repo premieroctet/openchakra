@@ -19,7 +19,7 @@ import ReactHtmlParser from 'react-html-parser'
 import Link from 'next/link'
 import {UserContext, useUserContext} from '../../contextes/user.context'
 import {BOOK_STATUS, LOCATION_ELEARNING} from '../../utils/consts'
-import {getDataModel, bookingUrl} from '../../config/config'
+import {bookingUrl} from '../../config/config'
 import BookingPreApprouve from '../../components/BookingDetail/BookingPreApprouve'
 import BookingPreview from '../../components/BookingDetail/BookingPreview'
 import LayoutMobileReservations from '../../hoc/Layout/LayoutMobileReservations'
@@ -245,7 +245,9 @@ const AllReservations = ({classes, t, id}) => {
   }
 
 
-  const theme = getDataModel()
+  render() {
+    const {classes} = this.props
+    const {reservationType, userInfo, bookingPreview, bookingPreApprouved} = this.state
 
   return (
     <Grid>
