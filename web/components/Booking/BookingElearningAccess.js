@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import {screen} from '../../styles/screenWidths'
-import {BookingPreviewActionButton, BookingPreviewActionLink} from '../BookingDetail/BookingPreviewActions'
+import {BookingPreviewActionButton, BookingPreviewActionLink} from '../Actions/Actions'
 import {BOOK_STATUS} from '../../utils/consts'
 
 const BookingElearningAccess = ({booking}) => {
