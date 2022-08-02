@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import BulbTip from '../../Tip/BulbTip'
-import {BookingPreviewActionLink} from '../../Actions/Actions'
+import {ActionLink} from '../../Actions/Actions'
 import {screen} from '../../../styles/screenWidths'
 
 const AskForCPF = ({link}) => {
@@ -15,9 +15,9 @@ recevrez vos accès au contenu de la formation dès
 lors que votre réservation
 sera confirmée
       </BulbTip>
-      <BookingPreviewActionLink href={link || '/'} >
+      <ActionLink href={link || '/'} >
         Faire ma demande de prise en charge CPF
-      </BookingPreviewActionLink>
+      </ActionLink>
     </StyledAskForCPF>
   )
 }

@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import {screen} from '../../styles/screenWidths'
 
 
-const BookingPreviewActionLink = ({href, children}) => {
+const ActionLink = ({href, children}) => {
 
   return (
     <BookingPreviewAction as={'a'} href={href}>
@@ -12,7 +12,7 @@ const BookingPreviewActionLink = ({href, children}) => {
   )
 }
 
-const BookingPreviewActionButton = ({onClick, children}) => {
+const ActionButton = ({onClick, children}) => {
 
   return (
     <BookingPreviewAction as={'button'} onClick={onClick}>
@@ -45,4 +45,4 @@ const BookingPreviewAction = styled.div`
   
 `
 
-export {BookingPreviewActionLink, BookingPreviewActionButton}
+export {ActionLink, ActionButton}
