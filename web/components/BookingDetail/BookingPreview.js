@@ -46,6 +46,7 @@ class BookingPreview extends React.Component {
       currentUser: null,
       is_alfred: null,
       end_datetime: null,
+      elearningAccess: {id: null, pass: null},
       alfred_pro: false,
       rejectOpen: false,
       cancelOpen: false,
@@ -167,6 +168,19 @@ class BookingPreview extends React.Component {
     }
   }
 
+  setELearningAccess = ev => {
+    switch(ev.target.id) {
+      case 'elearning_login':
+        this.setState({elearningAccess: {...this.state.elearningAccess, login: ev.target.value}})
+        break
+      case 'elearning_pass':
+        this.setState({elearningAccess: {...this.state.elearningAccess, pass: ev.target.value}})
+        break
+      default:
+        break
+    }
+  }
+
   computePricedPrestations() {
     let result = {}
     if (this.state.booking) {
@@ -187,12 +201,22 @@ class BookingPreview extends React.Component {
     return result
   }
 
-  onConfirm = () => {
+  onConfirm = ({elearning}) => {
+
     const {end_datetime} = this.state
     const endDate = moment(end_datetime)
-    const modifyObj = {end_date: endDate, status: BOOK_STATUS.CONFIRMED}
+    const submitconfirm = elearning
+      ? {
+        elearning_login: this.state.elearningAccess.login,
+        elearning_password: this.state.elearningAccess.pass,
+        status: BOOK_STATUS.CONFIRMED,
+      }
+      : {
+        end_date: endDate,
+        status: BOOK_STATUS.CONFIRMED,
+      }
 
-    axios.put(`${API_PATH}/booking/modifyBooking/${this.props.booking_id}`, modifyObj)
+    axios.put(`${API_PATH}/booking/modifyBooking/${this.props.booking_id}`, submitconfirm)
       .then(res => {
         this.componentDidMount()
         setTimeout(() => this.socket.emit('changeStatus', res.data), 100)
@@ -317,7 +341,7 @@ class BookingPreview extends React.Component {
               ) : (
                 <>
                   <Grid container
-                    style={{borderBottom: '1.5px #8281813b solid', marginTop: '5%', paddingBottom: '7%'}}>
+                    style={{marginTop: '5%', paddingBottom: '7%'}}>
                     <Grid container>
                       <Typography style={{marginTop: '-3%', fontSize: '1.7rem', marginBottom: '5%'}}>
                         {ReactHtmlParser(this.props.t('BOOKING.commentary'))}
@@ -374,9 +398,9 @@ class BookingPreview extends React.Component {
           <>
             <Grid container className={classes.mainContainerAboutResa}>
                     
-              <Typography className={classes.fontSizeTitleSectionAbout}>
+              <h3 className={classes.fontSizeTitleSectionAbout}>
                 {ReactHtmlParser(this.props.t('PROFIL.about', {firstname: displayUser && displayUser.firstname}))}
-              </Typography>
+              </h3>
                     
               <Grid container className={classes.reservationContainer}>
                 { displayUser &&
@@ -451,7 +475,7 @@ class BookingPreview extends React.Component {
 
         <Grid container className={classes.mainContainerAboutResa}>
           <Grid item xs={12} className={classes.containerTitleSectionAbout}>
-            <Typography className={classes.fontSizeTitleSectionAbout}>{ReactHtmlParser(this.props.t('BOOKING.about_resa'))}</Typography>
+            <h3 className={classes.fontSizeTitleSectionAbout}>{ReactHtmlParser(this.props.t('BOOKING.about_resa'))}</h3>
           </Grid>
           <Grid className={classes.reservationContainer}>
             <Grid item>
@@ -479,7 +503,8 @@ class BookingPreview extends React.Component {
                     </Typography>
                   </Grid>
                 </Grid>
-                {booking.status === BOOK_STATUS.TO_CONFIRM && amIAlfred ?
+                {/* End of service settled by service provider */}
+                {booking.status === BOOK_STATUS.TO_CONFIRM && amIAlfred && !isElearning ?
                   <Grid className={classes.detailsReservationContainer} style={{alignItems: 'center'}}>
                     <Grid item>
                       <Typography>{ReactHtmlParser(this.props.t('BOOKING.end_date'))}</Typography>
@@ -509,6 +534,16 @@ class BookingPreview extends React.Component {
                   :
                   null
                 }
+                {/* Access granted by training organization */}
+                {booking.status === BOOK_STATUS.TO_CONFIRM && amIAlfred && isElearning ?
+                  <>
+                    <label htmlFor='elearning_login'>Identifiant</label>
+                    <input id={'elearning_login'} name={'elearning_login'} value={this.state.elearningAccess.login} onChange={this.setELearningAccess}/>
+                    
+                    <label htmlFor='elearning_pass'>Mot de passe</label>
+                    <input id={'elearning_pass'} name={'elearning_pass'} value={this.state.elearningAccess.pass} onChange={this.setELearningAccess} />
+                  </> :
+                  null}
               </Grid>
             </Grid>
             <Grid container className={classes.mainContainerStateResa}>
@@ -525,7 +560,7 @@ class BookingPreview extends React.Component {
                       </Grid>
                       <Grid className={classes.buttonConfirmResa}>
                         <CustomButton color={'primary'} variant={'contained'} className={classes.buttonConfirm}
-                          onClick={this.onConfirm}>{ReactHtmlParser(this.props.t('COMMON.btn_confirm'))}</CustomButton>
+                          onClick={this.onConfirm({elearning: isElearning})}>{ReactHtmlParser(this.props.t('COMMON.btn_confirm'))}</CustomButton>
                       </Grid>
                       <Grid>
                         <CustomButton variant={'outlined'} classes={{root: classes.buttonCancel}}
@@ -610,9 +645,9 @@ class BookingPreview extends React.Component {
         {/* Potential earnings */}
         <Grid container>
           <Grid item>
-            <Typography variant={'h3'} className={classes.fontSizeTitleSectionAbout}>
+            <h3 className={classes.fontSizeTitleSectionAbout}>
               {paymentTitle}
-            </Typography>
+            </h3>
           </Grid>
           <Grid container style={{display: 'flex', flexDirection: 'column'}}>
             <Grid className={classes.bookingDetailContainer}>
@@ -714,6 +749,14 @@ const StyledBookingPreview = styled.div`
     color: var(--black) !important;
     border: 0;
     border-bottom: 1px solid;
+  }
+
+  h3 {
+    margin-block: 0 var(--spc-4);
+  }
+
+  label {
+    display: block;
   }
 
   & > div {
