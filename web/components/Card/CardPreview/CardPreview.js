@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography'
 import {bookingUrl} from '../../../config/config'
 import UserAvatar from '../../Avatar/UserAvatar'
 import {getDataModel, isMonoProvider} from '../../../config/config'
-import AllInclusiveCardPreview from './ALLInclusiveCardPreview'
+import AllInclusiveCardPreview from './AllInclusiveCardPreview'
 
 
 const CardPreview = ({item}) => {
