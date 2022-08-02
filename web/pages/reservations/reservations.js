@@ -18,7 +18,7 @@ import moment from 'moment'
 import ReactHtmlParser from 'react-html-parser'
 import Link from 'next/link'
 import {BOOK_STATUS, LOCATION_ELEARNING} from '../../utils/consts'
-import {getDataModel, is_development, bookingUrl} from '../../config/config'
+import {bookingUrl} from '../../config/config'
 import BookingPreApprouve from '../../components/BookingDetail/BookingPreApprouve'
 import BookingPreview from '../../components/BookingDetail/BookingPreview'
 import LayoutMobileReservations from '../../hoc/Layout/LayoutMobileReservations'
@@ -263,7 +263,6 @@ class AllReservations extends React.Component {
 
 
   render() {
-    const theme = getDataModel()
     const {classes} = this.props
     const {reservationType, userInfo, bookingPreview, bookingPreApprouved} = this.state
 
