@@ -147,7 +147,7 @@ const ServiceUserSchema = new Schema({
   // Link to training if elearning
   elearning_link: {
     type: String,
-    required: function() { return !!this.location.elearning },
+    required: function() { return !!this.location?.elearning },
   },
   // Frais livraison
   pick_tax: {
