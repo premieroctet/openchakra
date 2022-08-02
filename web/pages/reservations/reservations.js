@@ -18,7 +18,7 @@ import moment from 'moment'
 import ReactHtmlParser from 'react-html-parser'
 import Link from 'next/link'
 import {BOOK_STATUS, LOCATION_ELEARNING} from '../../utils/consts'
-import {getDataModel, is_development, bookingUrl} from '../../config/config'
+import {getDataModel, bookingUrl} from '../../config/config'
 import BookingPreApprouve from '../../components/BookingDetail/BookingPreApprouve'
 import BookingPreview from '../../components/BookingDetail/BookingPreview'
 import LayoutMobileReservations from '../../hoc/Layout/LayoutMobileReservations'
@@ -239,7 +239,7 @@ class AllReservations extends React.Component {
                         : null
                     }
 
-                    {booking?.cpf_booked &&
+                    {booking?.cpf_booked && !alfredMode &&
                     <Link href={booking.cpf_link || 'https://example.com'}>
                       <a target='_blank'>
                         {ReactHtmlParser(this.props.t('RESERVATION.cpfbutton'))}
