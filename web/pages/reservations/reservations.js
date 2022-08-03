@@ -17,7 +17,7 @@ import axios from 'axios'
 import moment from 'moment'
 import ReactHtmlParser from 'react-html-parser'
 import Link from 'next/link'
-import {UserContext, useUserContext} from '../../contextes/user.context'
+import {useUserContext} from '../../contextes/user.context'
 import {BOOK_STATUS, LOCATION_ELEARNING} from '../../utils/consts'
 import {bookingUrl} from '../../config/config'
 import BookingPreApprouve from '../../components/BookingDetail/BookingPreApprouve'
@@ -244,10 +244,6 @@ const AllReservations = ({classes, t, id}) => {
     )
   }
 
-
-  render() {
-    const {classes} = this.props
-    const {reservationType, userInfo, bookingPreview, bookingPreApprouved} = this.state
 
   return (
     <Grid>
