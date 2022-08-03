@@ -12,7 +12,7 @@ const BookingElearningAccess = ({booking}) => {
 
   const receiveAccessByMail = async() => {
     // WIP
-    await client(`${API_PATH}/booking/${booking.id}/sendcourseaccess`, {method: 'POST'})
+    await client(`${API_PATH}/booking/${booking.id}/send-course-access`, {method: 'POST'})
       .then(() => snackBarSuccess('Envoyé'))
       .catch(error => {
         if (error.info) {
