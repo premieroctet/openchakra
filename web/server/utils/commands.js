@@ -206,5 +206,21 @@ const updateCompanyAddresses= model => {
     })
 }
 
+const computeCarriagePaidDelta = (schema, id) => {
+  return schema.findById(id)
+    .populate('items.product')
+    .populate('company')
+    .then(res => {
+      if (!res) {
+        throw new NotFoundError(`order/quotation ${id} not found`)
+      }
+      console.log(`Net amount:${res.net_amount}`)
+      console.log(`Franco:${res.company.carriage_paid}`)
+      return roundCurrency(res.company?.carriage_paid-res.net_amount) || 0
+    })
+}
+
 module.exports = {addItem, computeShippingFee, updateShipFee, getProductPrices,
-  updateStock, isInDeliveryZone, updateCompanyAddresses, extractDepartment}
+  updateStock, isInDeliveryZone, updateCompanyAddresses, extractDepartment,
+  computeCarriagePaidDelta,
+}
