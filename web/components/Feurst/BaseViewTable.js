@@ -234,12 +234,30 @@ const BaseCreateTable = ({
       {!canModify && <div>
         <dl className='dl-inline text-xl font-semibold'>
           <dt>{t(`${wordingSection}.name`)}</dt>
+<<<<<<< HEAD
           <dd>{state.reference}&nbsp;</dd>
+||||||| 671dfbd6e
+          <dd>{state.reference}</dd>
+=======
+          <dd>{state.reference || ''}</dd>
+>>>>>>> ca66184a372a4051e09741b2bee56e2f8bd927ce
           <dt>{t(`${wordingSection}.date`)}</dt>
+<<<<<<< HEAD
           <dd>{new Date(state.creation_date).toLocaleDateString()}&nbsp;</dd>
+||||||| 671dfbd6e
+          <dd>{new Date(state.creation_date).toLocaleDateString()}</dd>
+=======
+          <dd>{new Date(state.creation_date).toLocaleDateString() || ''}&nbsp;</dd>
+>>>>>>> ca66184a372a4051e09741b2bee56e2f8bd927ce
           {state.sales_representative?.firstname && (<>
             <dt>Suivi par</dt>
+<<<<<<< HEAD
             <dd>{state.company.sales_representative.firstname}&nbsp;</dd>
+||||||| 671dfbd6e
+            <dd>{state.company.sales_representative.firstname}</dd>
+=======
+            <dd>{state.company.sales_representative.firstname || ''}</dd>
+>>>>>>> ca66184a372a4051e09741b2bee56e2f8bd927ce
           </>)}
         </dl>
       </div>}
