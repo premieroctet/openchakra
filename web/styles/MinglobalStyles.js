@@ -101,7 +101,25 @@ export const MinGlobalStyles = createGlobalStyle`
     }
   }
 
+  @keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -100%, 0);
+  }
 
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+  .error {
+    background-color: crimson;
+    color: var(--white);
+    padding: var(--spc-4) var(--spc-2);
+    box-shadow: 0px 1px 3px gray;
+    animation: fadeInDown var(--delayIn);
+  }
 
   .container-sm {
     width: var(--container-sm);
