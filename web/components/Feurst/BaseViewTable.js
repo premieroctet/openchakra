@@ -91,21 +91,22 @@ const BaseCreateTable = ({
   const [actionButtons, setActionButtons]=useState([])
   const [addAddress, setAddAddress] = useState(false)
   const [alertText, setAlertText] = useState(false)
-  
+  const [carriagePaidDelta, setCarriagePaidDelta] = useState(0)
+
   const importURL=`${API_PATH}/${endpoint}/${orderid}/import`
   const templateURL=`${API_PATH}/${endpoint}/template`
   const router = useRouter()
 
   // Possibles actions
   const justCreated = !(state?.items?.length && true)
-  
+
   const isValidButton = actionButtons.includes(VALIDATE)
   const isRevertToEdition = actionButtons.includes(REWRITE)
   const isConvertToOrder = actionButtons.includes(CONVERT)
   const isPartiallyHandled = actionButtons.includes(PARTIALLY_HANDLE)
   const isTotallyHandled = actionButtons.includes(TOTALLY_HANDLE)
   const canModify = actionButtons.includes(UPDATE)
-  
+
   const isFeurstSales = accessRights.getFullAction()?.visibility==RELATED || accessRights.getFullAction()?.visibility==ALL
   const canUpdatePrice = accessRights.isActionAllowed(accessRights.getModel(), UPDATE_ALL) && canModify
   const canUpdateQuantity = accessRights.isActionAllowed(accessRights.getModel(), UPDATE) && canModify
@@ -114,6 +115,16 @@ const BaseCreateTable = ({
 
   const isAddressRequired = isEmpty(state.address)
 
+  // Get remaining amount for carriage paid
+  useEffect(() => {
+    orderid && endpoint && client(`${API_PATH}/${endpoint}/${orderid}/carriage-paid-delta`)
+      .then(res => {
+        setCarriagePaidDelta(res)
+      })
+      .catch(error => {
+        console.error(error)
+      })
+  }, [orderid, endpoint])
 
   /* Update product quantities or price */
   const updateMyOrderContent = data => {
@@ -233,6 +244,7 @@ const BaseCreateTable = ({
         </dl>
       </div>}
 
+      {carriagePaidDelta && <h1>Carriage paid: {localeMoneyFormat({value: carriagePaidDelta})}</h1>}
       <FeurstTable
         caption={t(`${wordingSection}.details`)}
         data={state.items}
@@ -281,7 +293,7 @@ const BaseCreateTable = ({
         </div> : null
         }
 
-     
+
         {isConvertToOrder && <NormalButton
           rounded={'full'}
           disabled={justCreated}
@@ -370,7 +382,7 @@ const LineDivider = styled.p`
 `
 
 const AlertCondition = styled.p`
-  
+
   span {
     font-size: 1.5rem;
     align-self: center;
@@ -385,7 +397,7 @@ const AlertCondition = styled.p`
   transition: transform 0.3s ease-out, opacity 0.3s ease-out, visibility 0.1s ease-out;
   transform: translateY(100%);
   opacity: 0;
-  
+
   &.visible {
     visibility: visible;
     transform: translateY(0);

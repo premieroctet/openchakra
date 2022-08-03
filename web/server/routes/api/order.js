@@ -35,6 +35,7 @@ const {
 const Quotation = require('../../models/Quotation')
 const {
   addItem,
+  computeCarriagePaidDelta,
   computeShippingFee,
   getProductPrices,
   isInDeliveryZone,
@@ -615,6 +616,16 @@ router.get('/:id/actions', passport.authenticate('jwt', {session: false}), (req,
         result.push(EXPORT)
       }
       return res.json(result)
+    })
+    .catch(err => {
+      return res.status(err.status||500).json(err.message)
+    })
+})
+
+router.get('/:id/carriage-paid-delta', passport.authenticate('jwt', {session: false}), (req, res) => {
+  return computeCarriagePaidDelta(MODEL, req.params.id)
+    .then(value => {
+      res.json(value)
     })
     .catch(err => {
       return res.status(err.status||500).json(err.message)

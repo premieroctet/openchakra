@@ -37,6 +37,7 @@ const {
 } = require('../../utils/userAccess')
 const {
   addItem,
+  computeCarriagePaidDelta,
   computeShippingFee,
   getProductPrices,
   updateCompanyAddresses,
@@ -622,6 +623,14 @@ router.get('/:id/actions', passport.authenticate('jwt', {session: false}), (req,
       return res.json(result)
     })
 })
-
+router.get('/:id/carriage-paid-delta', passport.authenticate('jwt', {session: false}), (req, res) => {
+  return computeCarriagePaidDelta(MODEL, req.params.id)
+    .then(value => {
+      res.json(value)
+    })
+    .catch(err => {
+      return res.status(err.status||500).json(err.message)
+    })
+})
 
 module.exports = router

@@ -94,6 +94,14 @@ const QuotationBookingBaseSchema=new Schema({
   },
 }, {toJSON: {virtuals: true, getters: true}})
 
+QuotationBookingBaseSchema.virtual('net_amount').get(function() {
+  if (lodash.isEmpty(this.items)) {
+    return 0
+  }
+  const items_amount=lodash.sumBy(this.items, i => i.net_price*i.quantity)
+  return items_amount
+})
+
 QuotationBookingBaseSchema.virtual('total_amount').get(function() {
   if (lodash.isEmpty(this.items)) {
     return 0
