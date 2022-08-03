@@ -216,7 +216,8 @@ const computeCarriagePaidDelta = (schema, id) => {
       }
       console.log(`Net amount:${res.net_amount}`)
       console.log(`Franco:${res.company.carriage_paid}`)
-      return roundCurrency(res.company?.carriage_paid-res.net_amount) || 0
+      const delta=Math.max(0, res.company?.carriage_paid-res.net_amount)
+      return roundCurrency(delta) || 0
     })
 }
 

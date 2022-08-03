@@ -124,7 +124,7 @@ const BaseCreateTable = ({
       .catch(error => {
         console.error(error)
       })
-  }, [orderid, endpoint])
+  }, [orderid, endpoint, state])
 
   /* Update product quantities or price */
   const updateMyOrderContent = data => {
@@ -244,7 +244,11 @@ const BaseCreateTable = ({
         </dl>
       </div>}
 
-      {carriagePaidDelta && <h1>Carriage paid: {localeMoneyFormat({value: carriagePaidDelta})}</h1>}
+      {carriagePaidDelta>0 &&
+        <H2confirm>
+          Plus que {localeMoneyFormat({value: carriagePaidDelta})} avant la livraison gratuite<br/>
+          Valable pour une livraison standard à l'adresse principale
+        </H2confirm>}
       <FeurstTable
         caption={t(`${wordingSection}.details`)}
         data={state.items}
