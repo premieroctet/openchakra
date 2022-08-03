@@ -234,12 +234,12 @@ const BaseCreateTable = ({
       {!canModify && <div>
         <dl className='dl-inline text-xl font-semibold'>
           <dt>{t(`${wordingSection}.name`)}</dt>
-          <dd>{state.reference}</dd>
+          <dd>{state.reference}&nbsp;</dd>
           <dt>{t(`${wordingSection}.date`)}</dt>
-          <dd>{new Date(state.creation_date).toLocaleDateString()}</dd>
+          <dd>{new Date(state.creation_date).toLocaleDateString()}&nbsp;</dd>
           {state.sales_representative?.firstname && (<>
             <dt>Suivi par</dt>
-            <dd>{state.company.sales_representative.firstname}</dd>
+            <dd>{state.company.sales_representative.firstname}&nbsp;</dd>
           </>)}
         </dl>
       </div>}
