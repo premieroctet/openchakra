@@ -160,7 +160,7 @@
 	"CMP_PRESENTATION.snackbar_update_profil": "Profil modifié avec succès",
 	"CMP_PRESENTATION.update_button": "Modifier",
 	"COMMON.btn_cancel": "Annuler",
-	"COMMON.btn_confirm": "<span style=\"color: rgb(12, 1, 1);\">Confirmer</span>",
+	"COMMON.btn_confirm": "Confirmer",
 	"COMMON.btn_delete": "Supprimer",
 	"COMMON.btn_modify": "Modifier",
 	"COMMON.btn_save": "<span style=\"color: rgb(255, 255, 255);\">Enregistrer</span>",
