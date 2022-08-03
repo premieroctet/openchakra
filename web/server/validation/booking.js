@@ -8,7 +8,7 @@ require('../models/Prestation')
 const {computeDistanceKm}=require('../../utils/functions')
 const {ALL_LOCATIONS, LOCATION_CLIENT, LOCATION_ALFRED, LOCATION_VISIO, LOCATION_ELEARNING}=require('../../utils/consts')
 
-const validateBooking = ({userId, serviceUserId, prestations, location, date, customerBookingId, informationRequest}) => {
+const validateBooking = ({customer, serviceUserId, prestations, location, date, customerBookingId, informationRequest}) => {
 
   let su=null
 
@@ -46,10 +46,10 @@ const validateBooking = ({userId, serviceUserId, prestations, location, date, cu
       }
       // Check distance
       if (location==LOCATION_CLIENT) {
-        const addr=customerBooking ?
-          Booking.findById(customerBooking, 'address').then(booking => booking.address)
+        const addr=customerBookingId ?
+          Booking.findById(customerBookingId, 'address').then(booking => booking.address)
           :
-          User.findById(userId, 'billing_address').then(user => user.billing_address)
+          Promise.resolve(customer.billing_address)
         return Promise.all([su.user.billing_address, addr, su.perimeter])
       }
       return null

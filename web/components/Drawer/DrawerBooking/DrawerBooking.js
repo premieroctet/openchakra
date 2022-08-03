@@ -274,28 +274,11 @@ const DrawerBooking = ({
     }
 
     let bookingObj = {
-      reference: user ? computeBookingReference(user, serviceUser.user) : '',
-      service: serviceUser.service.label,
-      serviceId: serviceUser.service._id,
-      address: place,
       location: location,
-      equipments: serviceUser.equipments,
-      amount: prices.total,
       date: bookingDate,
-      alfred: serviceUser.user._id,
-      user: user ? user._id : null,
       prestations: count,
-      travel_tax: prices.travel_tax,
-      pick_tax: prices.pick_tax,
-      cpf_amount: prices.cpf_amount,
-      cesu_amount: prices.cesu_total,
-      customer_fee: prices.customer_fee,
-      provider_fee: prices.provider_fee,
-      customer_fees: prices.customer_fees,
-      provider_fees: prices.provider_fees,
-      status: avocotesBooking ? BOOK_STATUS.TO_CONFIRM : actual ? BOOK_STATUS.TO_PAY : BOOK_STATUS.INFO,
       serviceUserId: serviceUser._id,
-      customer_booking: avocotesBooking?._id || null,
+      customerBookingId: avocotesBooking?._id,
       informationRequest: !actual,
     }
 

@@ -98,7 +98,6 @@ const PureDrawerBooking = ({
       prestations: booking.prestations,
       cpf: booking.extrapayment,
       date: booking.date,
-      customer_booking: null,
       informationRequest: !actual,
     }
 
