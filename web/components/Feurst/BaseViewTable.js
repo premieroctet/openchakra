@@ -30,6 +30,7 @@ import {
 } from '../../utils/authentication'
 import {snackBarError, snackBarSuccess} from '../../utils/notifications'
 import DevLog from '../DevLog'
+import Notice from '../Notice/Notice'
 import {H2confirm} from './components.styles'
 import AddArticle from './AddArticle'
 import ImportExcelFile from './ImportExcelFile'
@@ -244,11 +245,12 @@ const BaseCreateTable = ({
         </dl>
       </div>}
 
-      {carriagePaidDelta>0 &&
-        <H2confirm>
-          Plus que {localeMoneyFormat({value: carriagePaidDelta})} avant la livraison gratuite<br/>
+      {carriagePaidDelta>0 && <>
+        <Notice>
+          Plus que <strong>{localeMoneyFormat({value: carriagePaidDelta})} avant la livraison gratuite</strong><br/>
           Valable pour une livraison standard à l'adresse principale
-        </H2confirm>}
+        </Notice>
+      </>}
       <FeurstTable
         caption={t(`${wordingSection}.details`)}
         data={state.items}

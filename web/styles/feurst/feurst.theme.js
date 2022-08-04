@@ -77,6 +77,13 @@ export const GlobalStyleEdi = createGlobalStyle`
     --stone-800: #292524;
     --stone-700: #1C1917;
 
+    --success-color: var(--white);
+    --success-bgcolor: #496f1c;
+    --danger-color: var(--white);
+    --danger-bgcolor: crimson;
+    --warning-color: var(--white);
+    --warning-bgcolor: darkorange;
+
   }
 
   html {
