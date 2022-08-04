@@ -245,12 +245,7 @@ const BaseCreateTable = ({
         </dl>
       </div>}
 
-      {carriagePaidDelta>0 && <>
-        <Notice>
-          Plus que <strong>{localeMoneyFormat({value: carriagePaidDelta})} avant la livraison gratuite</strong><br/>
-          Valable pour une livraison standard à l'adresse principale
-        </Notice>
-      </>}
+      
       <FeurstTable
         caption={t(`${wordingSection}.details`)}
         data={state.items}
@@ -260,16 +255,25 @@ const BaseCreateTable = ({
         updateMyData={updateMyOrderContent}
       />
 
+      <div className='grid grid-cols-1-2 gap-x-4'>
 
-      <Delivery
-        endpoint={endpoint}
-        orderid={orderid}
-        address={state.address}
-        setIsOpenDialog={setIsOpenDialog}
-        editable={!canModify}
-        requestUpdate={requestUpdate}
-        shipping={{shipping_mode: state.shipping_mode, shipping_fee: state.shipping_fee, update: canUpdateShipping ? updateShippingFees : null}}
-      />
+        <Delivery
+          endpoint={endpoint}
+          orderid={orderid}
+          address={state.address}
+          setIsOpenDialog={setIsOpenDialog}
+          editable={!canModify}
+          requestUpdate={requestUpdate}
+          shipping={{shipping_mode: state.shipping_mode, shipping_fee: state.shipping_fee, update: canUpdateShipping ? updateShippingFees : null}}
+        />
+        {carriagePaidDelta>0 && <>
+          <Notice className={'justify-self-center'}>
+            <p>Plus que <strong>{localeMoneyFormat({value: carriagePaidDelta})} avant la livraison gratuite</strong>.<br/>
+          Valable pour une livraison standard à l'adresse principale</p>
+          </Notice>
+        </>}
+      </div>
+      
 
       {!justCreated &&
       <div className='flex items-center bg-brand text-xl text-white font-semibold justify-between p-2 pl-6 pr-6 mb-8'>

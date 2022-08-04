@@ -40,5 +40,6 @@ const BeautifulNotice = styled.div`
   padding: var(--spc-4);
   margin-bottom: var(--spc-4);
   box-shadow: 0 2px 3px lightgray;
+  height: min-content;
 
 `

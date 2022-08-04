@@ -284,6 +284,7 @@ input:focus:not(:focus-visible) {
 .justify-between {justify-content: space-between;}
 .justify-self-start {justify-self: start;}
 .justify-self-end {justify-self: end;}
+.justify-self-center {justify-self: center;}
 
 .items-baseline	{align-items: baseline;}
 .items-center {align-items: center;}
