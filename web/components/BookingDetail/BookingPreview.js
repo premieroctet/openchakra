@@ -471,9 +471,9 @@ class BookingPreview extends React.Component {
                 <dd>{momentTitle}</dd>
                 <dt className='sr-only'>Lieu</dt>
                 <dd>
+                  {ReactHtmlParser(this.props.t(`BOOKING.${booking.location}`))}
                   {booking.address
-                    ? `au ${booking.address.address}, ${booking.address.zip_code} ${booking.address.city}`
-                    : ReactHtmlParser(this.props.t('BOOKING.visio'))
+                    && `au ${booking.address.address}, ${booking.address.zip_code} ${booking.address.city}`
                   }
                 </dd>
                 <dt className='sr-only'>Date de création</dt>
