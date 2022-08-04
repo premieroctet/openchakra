@@ -12,6 +12,13 @@ export const MinGlobalStyles = createGlobalStyle`
     --brand-color: ${props => props.theme?.colors?.brand || 'black'};
     --primary-color: ${props => props.theme?.colors?.primary || 'black'};
     --secondary-color: ${props => props.theme?.colors?.secondary || 'black'};
+    --success-color: ${props => props.theme?.colors?.successColor || 'var(--white)'};
+    --success-bgcolor: ${props => props.theme?.colors?.successBgcolor || '#496f1c'};
+    --danger-color: ${props => props.theme?.colors?.dangerColor || 'var(--white)'};
+    --danger-bgcolor: ${props => props.theme?.colors?.dangerBgcolor || 'crimson'};
+    --warning-color: ${props => props.theme?.colors?.warningColor || 'var(--white)'};
+    --warning-bgcolor: ${props => props.theme?.colors?.warningBgcolor || 'darkorange'};
+    
     --stone-50: #FAFAF9;
     --stone-100: #F5F5F4;
     --stone-200: #E7E5E4;
