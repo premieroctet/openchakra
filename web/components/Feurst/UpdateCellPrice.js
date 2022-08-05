@@ -33,7 +33,7 @@ const UpdateCellPrice = ({
   }, [initialValue])
 
   return <div className='flex items-center'>
-    <input className='grow' type={'number'} value={value?.toFixed(2)} onChange={onChange} onBlur={onBlur} />
+    <input className='grow' type={'number'} value={value?.toFixed ? value.toFixed(2) : value} onChange={onChange} onBlur={onBlur} />
   </div>
 
 }
