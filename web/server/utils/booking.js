@@ -31,9 +31,9 @@ const computeServiceDistance = ({location, serviceUser, customer}) => {
   return distance
 }
 
-const createBooking = ({customer, serviceUserId, prestations, date, cpf, location, customerBooking, informationRequest}) => {
+const createBooking = ({customer, serviceUserId, prestations, date, cpf, location, customerBookingId, informationRequest}) => {
   let modifiedDate=cpf ? moment(date).set({hour: 0, minute: 0, second: 0, millisecond: 0}) : date
-  let bookData={location, user: customer, serviceUserId: serviceUserId, prestation_date: modifiedDate, cpf_booked: cpf, customer_booking: customerBooking}
+  let bookData={location, user: customer._id, serviceUserId: serviceUserId, prestation_date: modifiedDate, cpf_booked: cpf, customer_booking: customerBookingId}
   let serviceUser=null
   return ServiceUser.findById(serviceUserId)
     .populate('user')
@@ -65,7 +65,7 @@ const createBooking = ({customer, serviceUserId, prestations, date, cpf, locatio
     .then(prices => {
       const status=
       informationRequest ? BOOK_STATUS.INFO:
-        customerBooking? BOOK_STATUS.TO_CONFIRM
+        customerBookingId ? BOOK_STATUS.TO_CONFIRM
           : informationRequest ? BOOK_STATUS.INFO
             : cpf ? BOOK_STATUS.TO_CONFIRM
               : BOOK_STATUS.TO_PAY

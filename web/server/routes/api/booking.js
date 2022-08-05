@@ -120,7 +120,7 @@ router.get('/confirmPendingBookings', passport.authenticate('jwt', {session: fal
    prestations: {prestation_id: count} //
    cpf: true or false
    date: booking date
-   customerBooking: linked service booking
+   customerBookingId: linked service booking id
    informationRequest: [true|false] info request or actual booking
 Returns: {
   redirectURL: url to redirect to,
@@ -130,9 +130,10 @@ Returns: {
  */
 router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  validateBooking(req.body)
+  const bookData={customer: req.user, ...req.body}
+  validateBooking(bookData)
     .then(() => {
-      return createBooking({customer: req.user, ...req.body})
+      return createBooking(bookData)
     })
     .then(booking => {
       // Reload to get user,alfred,service
