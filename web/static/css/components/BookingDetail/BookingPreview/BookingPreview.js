@@ -14,9 +14,6 @@ const Style = theme => ({
       marginBottom: 30,
     },
   },
-  buttonConfirm: {
-    color: 'white',
-  },
   reservationContainer: {
     display: 'flex',
     width: '100%',
@@ -25,32 +22,6 @@ const Style = theme => ({
       flexDirection: 'column',
     },
   },
-  buttonConfirmResa: {
-    marginBottom: 10,
-    [theme.breakpoints.down('xs')]: {
-      marginTop: 30,
-      marginBottom: 30,
-    },
-  },
-  labelReservation: {
-    marginBottom: 10,
-    [theme.breakpoints.down('xs')]: {
-      marginTop: 30,
-    },
-  },
-  fontSizeTitleSectionAbout: {
-    fontSize: '1rem',
-    color: 'rgba(84,89,95,0.95)',
-    letterSpacing: -1,
-    fontWeight: 'bold',
-    marginBottom: '5%',
-    [theme.breakpoints.down('xs')]: {
-      fontSize: '1.5rem',
-      display: 'flex',
-      justifyContent: 'center',
-    },
-  },
-  
   mainContainerAbout: {
     alignItems: 'center',
     [theme.breakpoints.down('xs')]: {
@@ -116,8 +87,6 @@ const Style = theme => ({
     textAlign: 'center',
     width: '100%',
   },
-  buttonCancel: {
-    color: theme.palette.error.main,
-  },
+  
 })
 module.exports=Style

@@ -1,29 +1,23 @@
 import React from 'react'
-import Link from 'next/link'
 import styled from 'styled-components'
 import {screen} from '../../styles/screenWidths'
 
 
-const BookingPreviewActionLink = ({href, children}) => {
+const ActionLink = ({href, children}) => {
 
   return (
-    <>
-      <Link href={href}>
-        <BookingPreviewAction as={'a'}>
-          {children}
-        </BookingPreviewAction>
-      </Link></>
+    <BookingPreviewAction as={'a'} href={href}>
+      {children}
+    </BookingPreviewAction>
   )
 }
 
-const BookingPreviewActionButton = ({onClick, children}) => {
+const ActionButton = ({onClick, children}) => {
 
   return (
-    
     <BookingPreviewAction as={'button'} onClick={onClick}>
       {children}
     </BookingPreviewAction>
-    
   )
 
 }
@@ -51,4 +45,4 @@ const BookingPreviewAction = styled.div`
   
 `
 
-export {BookingPreviewActionLink, BookingPreviewActionButton}
+export {ActionLink, ActionButton}

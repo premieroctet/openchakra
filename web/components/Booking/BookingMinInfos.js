@@ -57,7 +57,7 @@ const BookingMinInfos = ({t, booking, amIAlfred, withPrice}) => {
           {displayStatus}
           {!isMonoProvider() &&
           <span>
-            {' - '}{displayUser && displayUser.full_name}
+            {' - '}{displayUser?.full_name}
           </span>
           }
         </p>
