@@ -4,7 +4,7 @@ const lodash=require('lodash')
 const {stockImport}=require('../../server/utils/import')
 const Company=require('../../server/models/Company')
 const User=require('../../server/models/User')
-const {FEURST_SALES}=require('../../utils/feurst/consts')
+const {FEURST_SALES}=require('../../utils/consts')
 const {extractData} = require('../../utils/import')
 const {lineItemsImport} = require('../../server/utils/import')
 const {MONGOOSE_OPTIONS} = require('../../server/utils/database')
@@ -17,7 +17,7 @@ const {
   shipRatesImport,
 } = require('../../server/utils/import')
 const {guessFileType} = require('../../utils/import')
-const {TEXT_TYPE, JSON_TYPE, XL_TYPE} = require('../../utils/feurst/consts')
+const {TEXT_TYPE, JSON_TYPE, XL_TYPE} = require('../../utils/consts')
 
 
 describe('XL/CSV/JSON imports', () => {

@@ -1,7 +1,7 @@
 const express = require('express')
 const passport = require('passport')
 const moment = require('moment')
-const {VIEW, CREATE, IMPORT, PRICELIST}=require('../../../utils/feurst/consts')
+const {VIEW, CREATE, IMPORT, PRICELIST}=require('../../../utils/consts')
 const {HTTP_CODES} = require('../../utils/errors')
 const {priceListImport} = require('../../utils/import')
 const {isActionAllowed} = require('../../utils/userAccess')

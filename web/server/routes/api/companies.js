@@ -23,7 +23,7 @@ const {
   IMPORT,
   UPDATE,
   FEURST_SALES,
-}=require('../../../utils/feurst/consts')
+}=require('../../../utils/consts')
 const {accountsImport}=require('../../utils/import')
 const {
   HTTP_CODES,

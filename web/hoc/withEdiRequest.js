@@ -6,7 +6,7 @@ import {API_PATH} from '../utils/consts'
 import {
   ORDER_CREATED,
   DELETE,
-} from '../utils/feurst/consts'
+} from '../utils/consts'
 import {snackBarError, snackBarSuccess} from '../utils/notifications'
 
 

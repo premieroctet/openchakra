@@ -2,7 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 import styled from 'styled-components'
 import {screen} from '../../../web/styles/screenWidths'
-import {BASEPATH_EDI} from '../../utils/feurst/consts'
+import {BASEPATH_EDI} from '../../utils/consts'
 
 const Footer = () => (
   <StyledFooter>

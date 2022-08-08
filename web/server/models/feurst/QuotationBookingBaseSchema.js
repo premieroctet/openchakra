@@ -1,7 +1,7 @@
 const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 const {Schema}=require('mongoose')
 const lodash=require('lodash')
-const {SHIPPING_MODES} = require('../../../utils/feurst/consts')
+const {SHIPPING_MODES} = require('../../../utils/consts')
 const {roundCurrency} = require('../../../utils/converters')
 const AddressSchema = require('../AddressSchema')
 

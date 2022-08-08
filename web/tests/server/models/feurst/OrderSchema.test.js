@@ -3,7 +3,7 @@ const {
   COMPLETE,
   CREATED,
   VALID,
-} = require('../../../../utils/feurst/consts')
+} = require('../../../../utils/consts')
 const {MONGOOSE_OPTIONS} = require('../../../../server/utils/database')
 
 const ProductSchema = require('../../../../server/models/feurst/ProductSchema')

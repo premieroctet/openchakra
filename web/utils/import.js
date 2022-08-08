@@ -1,7 +1,7 @@
 const csv_parse = require('csv-parse/lib/sync')
 const lodash=require('lodash')
 const ExcelJS = require('exceljs')
-const {JSON_TYPE, TEXT_TYPE, XL_TYPE} = require('./feurst/consts')
+const {JSON_TYPE, TEXT_TYPE, XL_TYPE} = require('./consts')
 const {bufferToString} = require('./text')
 
 const guessFileType = buffer => {

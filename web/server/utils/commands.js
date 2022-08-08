@@ -2,7 +2,7 @@ const lodash=require('lodash')
 const Company = require('../models/Company')
 const Product = require('../models/Product')
 const PriceList = require('../models/PriceList')
-const {EXPRESS_SHIPPING} = require('../../utils/feurst/consts')
+const {EXPRESS_SHIPPING} = require('../../utils/consts')
 const {roundCurrency} = require('../../utils/converters')
 const ShipRate = require('../models/ShipRate')
 

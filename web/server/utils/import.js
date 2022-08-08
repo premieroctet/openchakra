@@ -7,7 +7,7 @@ const {
   FEURST_SALES,
   MAIN_ADDRESS_LABEL,
   MAX_WEIGHT,
-}=require('../../utils/feurst/consts')
+}=require('../../utils/consts')
 const Product = require('../models/Product')
 const PriceList = require('../models/PriceList')
 const User = require('../models/User')

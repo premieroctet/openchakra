@@ -11,7 +11,7 @@ const {
   CUSTOMER_ADMIN,
   FEURST_ADV,
   FEURST_SALES,
-} = require('../../../utils/feurst/consts')
+} = require('../../../utils/consts')
 const {sendDataNotification, sendOrderAlert} = require('../../utils/mailing')
 const {
   COMPLETE,
@@ -31,7 +31,7 @@ const {
   VALIDATE,
   ORDER_ALERT_CHECK_INTERVAL,
   ORDER_ALERT_DELAY,
-} = require('../../../utils/feurst/consts')
+} = require('../../../utils/consts')
 const Quotation = require('../../models/Quotation')
 const {
   addItem,

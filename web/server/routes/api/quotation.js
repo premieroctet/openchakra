@@ -25,7 +25,7 @@ const {
   VALID,
   VALIDATE,
   VIEW,
-} = require('../../../utils/feurst/consts')
+} = require('../../../utils/consts')
 const {
   sendDataNotification,
 } = require('../../utils/mailing')

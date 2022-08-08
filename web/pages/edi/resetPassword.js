@@ -9,7 +9,7 @@ import {snackBarSuccess, snackBarError} from '../../utils/notifications'
 import RenewPassword from '../../components/Password/RenewPassword'
 import {NormalButton} from '../../components/Feurst/Button'
 import EdiContainer from '../../components/Feurst/EdiContainer'
-import {BASEPATH_EDI} from '../../utils/feurst/consts'
+import {BASEPATH_EDI} from '../../utils/consts'
 
 const ResetPassword = ({t}) => {
 

@@ -10,7 +10,7 @@ import {
   DELETE,
   EXPORT,
   BASEPATH_EDI,
-} from '../../utils/feurst/consts'
+} from '../../utils/consts'
 import FeurstTable from '../../styles/feurst/FeurstTable'
 import ImportExcelFile from './ImportExcelFile'
 import {PleasantLink} from './Button'

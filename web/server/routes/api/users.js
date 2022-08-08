@@ -17,7 +17,7 @@ const {HTTP_CODES} = require('../../utils/errors')
 const {CGV_EXPIRATION_DELAY} = require('../../../config/config')
 const {CGV_PATH} = require('../../../config/config')
 const {getDataModel} = require('../../../config/config')
-const {UPDATE_CGV} = require('../../../utils/feurst/consts')
+const {UPDATE_CGV} = require('../../../utils/consts')
 const {
   ForbiddenError,
   NotFoundError,
@@ -36,7 +36,7 @@ const {
   FEURST_ADV,
   FEURST_SALES,
   VIEW,
-} = require('../../../utils/feurst/consts')
+} = require('../../../utils/consts')
 const {
   IMAGE_FILTER,
   PDF_FILTER,

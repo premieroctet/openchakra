@@ -8,7 +8,7 @@ const moment = require('moment')
 
 const CronJob = require('cron').CronJob
 const PriceList = require('../../models/PriceList')
-const {JSON_TYPE} = require('../../../utils/feurst/consts')
+const {JSON_TYPE} = require('../../../utils/consts')
 const storage = require('../../utils/storage')
 const {getExchangeDirectory} = require('../../../config/config')
 const {
@@ -16,7 +16,7 @@ const {
   stockImport,
 } = require('../../utils/import')
 const {isActionAllowed} = require('../../utils/userAccess')
-const {DELETE} = require('../../../utils/feurst/consts')
+const {DELETE} = require('../../../utils/consts')
 const {XL_FILTER, createMemoryMulter} = require('../../utils/filesystem')
 const {PRODUCT, CREATE, IMPORT} = require('../../../utils/consts')
 const Product = require('../../models/Product')

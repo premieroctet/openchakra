@@ -8,7 +8,7 @@ import {
   BASEPATH_EDI,
   FEURST_IMG_PATH,
   ROLES,
-} from '../../utils/feurst/consts'
+} from '../../utils/consts'
 import {formatAddress, formatPercent} from '../../utils/text'
 import {localeMoneyFormat} from '../../utils/converters'
 import {DateRangeColumnFilter} from '../Table/TableFilter'

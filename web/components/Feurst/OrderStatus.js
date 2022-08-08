@@ -9,7 +9,7 @@ import {
   HANDLED,
   EXPIRED,
 } from '../../utils/consts'
-const {CONVERTED} = require('../../utils/feurst/consts')
+const {CONVERTED} = require('../../utils/consts')
 
 
 const statusColors = {
