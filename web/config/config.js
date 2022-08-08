@@ -141,27 +141,19 @@ const canAlfredParticularRegister = () => {
   return !isMonoProvider() && !DISABLE_ALFRED_PARTICULAR_REGISTER
 }
 
-const getSibTemplates = () => {
-  return SIB_TEMPLATES || null
-}
-
 const displayConfig = () => {
-
-  if (!getSibTemplates()) {
-    console.error('Undefined SIB_TEMPLATES in mode.js, stopping')
-    process.exit(1)
-  }
 
   console.log(`Configuration is:\n\
 \tMode:${get_mode()}\n\
 \tSite mode:${isPlatform() ? 'plateforme' : isMarketplace() ? 'marketplace' : 'inconnu'}\n\
 \tDatabase:${databaseName}\n\
+\tData model:${DATA_MODEL}\n\
 \tServer prod:${SERVER_PROD}\n\
 \tServer port:${getPort()}\n\
 \tHost URL:${getHostUrl()}\n\
-\tDisplay chat:${mustDisplayChat()} ${getChatURL()}\n\
+\tDisplay chat:${mustDisplayChat()} ${mustDisplayChat()? getChatURL(): ''}\n\
 \tSendInBlue actif:${ENABLE_MAILING}\n\
-\tSendInBlue templates:${SIB_TEMPLATES}\n\
+\tSendInBlue templates:${DATA_MODEL}\n\
 \tMangopay clientId:${MANGOPAY_CONFIG.clientId}\
 `)
 }
@@ -186,9 +178,9 @@ const checkConfig = () => {
     if (isEmpty(DATABASE_NAME)) {
       reject(`DATABASE_NAME non renseigné`)
     }
-    // TODO check database name correctness
-    if (isEmpty(SIB_TEMPLATES)) {
-      reject(`SIB_TEMPLATES non renseigné`)
+    // Deprecated
+    if (SIB_TEMPLATES) {
+      reject(`** deprecated SIB_TEMPLATE, using DATA_MODEL instead:remove it in configuration file`)
     }
     // TODO check database name correctness
     if (isEmpty(SIB_APIKEY)) {
@@ -281,7 +273,7 @@ module.exports = {
   ENABLE_MAILING,
   mustDisplayChat, getChatURL,
   canAlfredSelfRegister, canAlfredParticularRegister,
-  getSibTemplates, checkConfig, getDatabaseUri, hideStoreDialog,
+  checkConfig, getDatabaseUri, hideStoreDialog,
   isPlatform, isMarketplace, isMonoProvider, getDataModel, skipFailedPayment, getSibApiKey,
   getPort, getExchangeDirectory,
   RANDOM_ID,
