@@ -1,7 +1,17 @@
 const crypto = require('crypto')
 const {getDataModel}=require('../config/config')
 
-const DATA_MODEL_CONSTS=require(`./${getDataModel()}/consts`)
+let DATA_MODEL_CONSTS={}
+try {
+  DATA_MODEL_CONSTS=require(`./${getDataModel()}/consts`)
+}
+catch(err) {
+  if (err.code !== 'MODULE_NOT_FOUND') {
+    throw err
+  }
+  console.log(`No specific consts for ${getDataModel()}`)
+}
+
 const API_PATH = '/myAlfred/api'
 
 const ALL_SERVICES = ['Tous les services', null]
