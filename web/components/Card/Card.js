@@ -7,17 +7,21 @@ import Rating from '@material-ui/lab/Rating'
 import {getDataModel} from '../../config/config'
 import UserAvatar from '../Avatar/UserAvatar'
 
+const Wrapper = ({link, children}) => (
+  link ?
+    <Link href={link}>{children}</Link>
+    : <div>{children}</div>
+)
 
-const Card = ({link = '/', user, name, picture, title, description, city, rating}) => {
+
+const Card = ({link, user, name, picture, title, description, city, rating}) => {
 
   if (!title) {
     return null
   }
 
-  const score = rating !==undefined && user?.score || null
-
   return(
-    <Link href={link} >
+    <Wrapper link={link}>
       <StyledCard theme={getDataModel()}>
 
         <div className='card_avatar customcardpreviewavatar'>
@@ -38,17 +42,17 @@ const Card = ({link = '/', user, name, picture, title, description, city, rating
             {rating !==undefined && <div className={'card_content_rating customcardpreviewrating'}>
               <Rating
                 name="simple-controlled"
-                value={score}
+                value={rating}
                 max={1}
                 readOnly
               />
-              <p>({score})</p>
+              <p>({rating})</p>
             </div>
             }
           </div>
         </div>
       </StyledCard>
-    </Link>
+    </Wrapper>
   )
 }
 
@@ -60,7 +64,7 @@ Card.propTypes = {
   title: PropTypes.string,
   description: PropTypes.string,
   city: PropTypes.string,
-  rating: PropTypes.bool,
+  rating: PropTypes.number,
 }
 
 
