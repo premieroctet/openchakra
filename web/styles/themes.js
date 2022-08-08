@@ -13,7 +13,7 @@ const blueFeurst = 'hsl(210.6, 50.9%, 41.6%)'
 export const feurst = {
   accentColor: blueFeurst /* Default color for inputs */,
   colors: {
-    brand: blueFeurst,
+    brand: blue, // blueFeurst,
     blue: blue,
     blueFeurst: blueFeurst, // Logo
     white: '#FFF', // pure white
