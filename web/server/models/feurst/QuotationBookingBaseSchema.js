@@ -1,7 +1,7 @@
 const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 const {Schema}=require('mongoose')
 const lodash=require('lodash')
-const {SHIPPING_MODES} = require('../../../utils/feurst/consts')
+const {SHIPPING_MODES} = require('../../../utils/consts')
 const {roundCurrency} = require('../../../utils/converters')
 const AddressSchema = require('../AddressSchema')
 
@@ -93,6 +93,14 @@ const QuotationBookingBaseSchema=new Schema({
     required: false,
   },
 }, {toJSON: {virtuals: true, getters: true}})
+
+QuotationBookingBaseSchema.virtual('net_amount').get(function() {
+  if (lodash.isEmpty(this.items)) {
+    return 0
+  }
+  const items_amount=lodash.sumBy(this.items, i => i.net_price*i.quantity)
+  return items_amount
+})
 
 QuotationBookingBaseSchema.virtual('total_amount').get(function() {
   if (lodash.isEmpty(this.items)) {

@@ -7,7 +7,7 @@ const {
   FEURST_SALES,
   MAIN_ADDRESS_LABEL,
   MAX_WEIGHT,
-}=require('../../utils/feurst/consts')
+}=require('../../utils/consts')
 const Product = require('../models/Product')
 const PriceList = require('../models/PriceList')
 const User = require('../models/User')
@@ -32,10 +32,10 @@ const mapRecord=(record, mapping) => {
   return {source: record, destination: newRecord}
 }
 
-const dataImport=(model, headers, records, mapping, options, postImport= () => Promise.resolve()) => {
+const dataImport=(model, headers, records, mapping, options, postImport) => {
   const updateOnly=!!options.update
   const uniqueKey=options.key
-  const result={created: 0, updated: 0, warnings: [], errors: []}
+  const result={total: records.length, created: 0, updated: 0, warnings: [], errors: []}
   return new Promise((resolve, reject) => {
     const modelObj = model.schema.obj
     const modelFields=Object.keys(modelObj)
@@ -93,11 +93,14 @@ const dataImport=(model, headers, records, mapping, options, postImport= () => P
         result.errors.push(...rejected.map(r => r.message))
         return postImport(mappedRecords)
       })
-      .then(() => {
+      .then(res => {
+        if (res) {
+          const rejected=res.filter(r => r.status=='rejected').map(r => r.reason)
+          result.errors=[...result.errors, ...rejected.map(r => r.message)]
+        }
         return resolve(result)
       })
       .catch(err => {
-        console.log(err)
         result.errors.push(err)
         return resolve(result)
       })
@@ -114,6 +117,7 @@ const fileImport= (model, bufferData, mapping, options, postImport) => {
       return dataImport(model, headers, records, mapping, options, postImport)
     })
     .catch(err => {
+      console.error(err)
       return ({created: 0, updated: 0, errors: [String(err)], warnings: []})
     })
 }
@@ -193,7 +197,7 @@ const lineItemsImport = (model, buffer, options) => {
         }
         const mappedRecords=data.records.map(r => mapRecord(r, mapping))
         references=mappedRecords.map(r => r.destination)
-        const promises=mappedRecords.map(r => r.destination).map(r => addItem(model, null, r.reference, parseInt(r.quantity)))
+        const promises=mappedRecords.map(r => r.destination).map(r => addItem({data: model, reference: r.reference, quantity: parseInt(r.quantity)}))
         return Promise.allSettled(promises)
       })
       .then(res => {
@@ -255,6 +259,7 @@ const accountsImport = (buffer, options) => {
     const firstLine=options.from_line || 1
     extractData(buffer, {...options, columns: true})
       .then(({headers, records}) => {
+        importResult.total=records.length
         const promises=records.map((record, row) => {
           const msg=label => {
             return `Ligne:${row+firstLine+1}:${label}`
@@ -263,7 +268,8 @@ const accountsImport = (buffer, options) => {
           const zip_code=record['Code postal'].match(/\d+/)[0]
           const city=record.Ville
           if (!address|| !zip_code || !city) { return Promise.reject(msg('Adresse incorrecte')) }
-          const addr={label: MAIN_ADDRESS_LABEL, address, zip_code, city, country: 'France'}
+          const phone=record['Téléphone'] || ''
+          const addr={label: MAIN_ADDRESS_LABEL, address, zip_code, city, country: 'France', phone: phone}
           const companyName=record.Adresse
           const deliverZipCodesValues=record['Zone de chalandise']
           if (!deliverZipCodesValues) { return Promise.reject(msg(`Zone de chalandise incorrecte:${deliverZipCodesValues}`)) }
@@ -272,8 +278,8 @@ const accountsImport = (buffer, options) => {
           if (!companyName) { return Promise.reject(msg('Société incorrecte')) }
           const francoKey=Object.keys(record).find(k => k.match(/franco/i))
           if (!francoKey) { return Promise.reject('Colonne franco introuvable') }
-          const franco=record[francoKey]
-          if (lodash.isNil(franco)) { return Promise.reject(msg(`Valeur franco incorrect:${franco}`)) }
+          const carriage_paid=record[francoKey]
+          if (lodash.isNil(carriage_paid)) { return Promise.reject(msg(`Valeur franco incorrect:${carriage_paid}`)) }
           const catalogPrices=record.PVC
           const netPrices=record['Liste de prix net']
           if (!catalogPrices || !netPrices) { return Promise.reject(msg('Liste de prix inconnue')) }
@@ -286,7 +292,7 @@ const accountsImport = (buffer, options) => {
                 return Promise.reject(msg(`Commercial ${sm_firstname} ${sm_name} non trouvé`))
               }
               return Company.findOneAndUpdate({name: companyName},
-                {addresses: [addr], catalog_prices: catalogPrices, net_prices: netPrices, franco: franco, delivery_zip_codes, sales_representative: salesman},
+                {addresses: [addr], catalog_prices: catalogPrices, net_prices: netPrices, carriage_paid: carriage_paid, delivery_zip_codes, sales_representative: salesman},
                 {runValidators: true, upsert: true, new: true})
             })
             .then(company => {
@@ -296,16 +302,26 @@ const accountsImport = (buffer, options) => {
               return company.save()
             })
             .then(company => {
-              const email=(record.Messagerie.text || record.Messagerie).trim()
+              const email=(record.Messagerie.result || record.Messagerie.text || record.Messagerie).trim()
               const [firstname, name]=record['Administrateur (Prénom et Nom)'].replace(/\s+/, '|').split('|').map(v => capitalize(v))
               if (!(email && firstname && name && Validator.isEmail(email))) {
                 return Promise.reject(msg(`Erreur nom, prénom ou email:${record['Administrateur (Prénom et Nom)']}`))
               }
+              // Set new admin
               return User.updateOne({email},
                 {$set: {firstname, name, company: company, email, roles: [CUSTOMER_ADMIN], active: true},
                   $setOnInsert: {password: bcrypt.hashSync('Alfred123;', 10)}},
                 {upsert: true, new: true},
               )
+                // Remove old admins with different email
+                .then(newAdmin => {
+                  console.log(`Created/updated ${company.name} admin ${firstname} ${name} ${email}:${JSON.stringify(newAdmin)}`)
+                  return User.deleteMany({email: {$ne: email}, company: company, roles: [CUSTOMER_ADMIN]})
+                    .then(res => {
+                      console.log(`Removed old admin(s) for company ${company.name} email!=${email}:${JSON.stringify(res)}`)
+                      return newAdmin
+                    })
+                })
             })
         })
         Promise.allSettled(promises)
@@ -328,10 +344,18 @@ const productsImport = (bufferData, options) => {
     if (subCompsRecords.length==0) {
       return Promise.resolve()
     }
-    return Promise.all(records.map(record => {
+    return Promise.allSettled(subCompsRecords.map(record => {
       const refs=FIELDS.map(f => record.source[f]).filter(v => (v||'').trim().length>0)
-      return Promise.all(refs.map(r => Product.findOne({reference: new RegExp(r, 'i')})))
+      return Promise.all(refs.map(r => Product.findOne({reference: new RegExp(r, 'i')}, {_id: true})))
         .then(result => {
+          if (result.includes(null)) {
+            const ref=refs[result.findIndex(r => r==null)]
+            const msg=`Erreur sur l'article ${record.destination.reference}, sous-référence ${ref} introuvable`
+            return Product.remove({reference: record.destination.reference})
+              .then(() => {
+                return Promise.reject({message: msg})
+              })
+          }
           return Product.updateOne({reference: record.destination.reference}, {components: result.map(s => s._id)})
         })
     }))
@@ -357,7 +381,22 @@ const stockImport = (bufferData, options) => {
     'stock': 'in_qty_oh',
   }
 
+  let result=null
   return fileImport(Product, bufferData, DB_MAPPING, {...options, key: 'reference', update: true})
+    .then(res => {
+      result=res
+      // Update stock for assemblies
+      return Product.find({description: 'ENSEMBLE', 'components.0': {$exists: true}}).populate('components')
+    })
+    .then(assemblies => {
+      return Promise.all(assemblies.map(a => {
+        const stock=lodash.min(a.components.map(c => c.stock))
+        return Product.findByIdAndUpdate(a._id, {stock: stock})
+      }))
+    })
+    .then(() => {
+      return result
+    })
 }
 
 module.exports={fileImport, shipRatesImport, lineItemsImport,

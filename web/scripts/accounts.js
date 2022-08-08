@@ -5,7 +5,7 @@ const {
   FEURST_ADMIN,
   FEURST_ADV,
   FEURST_SALES,
-} = require('../utils/feurst/consts')
+} = require('../utils/consts')
 const Company = require('../server/models/Company')
 const {getDatabaseUri} = require('../config/config')
 const {MONGOOSE_OPTIONS} = require('../server/utils/database')

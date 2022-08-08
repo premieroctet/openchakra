@@ -5,7 +5,7 @@ import {
   HANDLED,
   PARTIALLY_HANDLED,
   VALID,
-} from '../../utils/feurst/consts'
+} from '../../utils/consts'
 import {handledOrdersColumns} from './tablestructures'
 import BaseListTable from './BaseListTable'
 

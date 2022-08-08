@@ -1,4 +1,16 @@
 const crypto = require('crypto')
+const {getDataModel}=require('../config/config')
+
+let DATA_MODEL_CONSTS={}
+try {
+  DATA_MODEL_CONSTS=require(`./${getDataModel()}/consts`)
+}
+catch(err) {
+  if (err.code !== 'MODULE_NOT_FOUND') {
+    throw err
+  }
+  console.log(`No specific consts for ${getDataModel()}`)
+}
 
 const API_PATH = '/myAlfred/api'
 
@@ -225,4 +237,5 @@ module.exports = {
   CESU_MANDATORY, CESU_OPTIONAL, CESU_DISABLED,
   BOOK_STATUS,
   LOCATION_CLIENT, LOCATION_ALFRED, LOCATION_VISIO, LOCATION_ELEARNING, ALL_LOCATIONS,
+  ...DATA_MODEL_CONSTS,
 }

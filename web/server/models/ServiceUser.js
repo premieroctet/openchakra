@@ -9,7 +9,6 @@ try {
   ServiceUserSchema.plugin(mongooseLeanVirtuals)
 }
 catch(err) {
-  console.error(err)
   if (err.code !== 'MODULE_NOT_FOUND') {
     throw err
   }

@@ -1,4 +1,4 @@
-const {CUSTOMER_ADMIN} = require('../../utils/feurst/consts')
+const {CUSTOMER_ADMIN} = require('../../utils/consts')
 const {ROLES} = require('../../utils/consts')
 const Validator = require('validator')
 const isEmpty = require('./is-empty')

@@ -6,7 +6,7 @@ const xlsx=require('node-xlsx')
 const {HTTP_CODES} = require('../../utils/errors')
 const {shipRatesImport} = require('../../utils/import')
 const {TEXT_FILTER, createMemoryMulter} = require('../../utils/filesystem')
-const {SHIPRATE} = require('../../../utils/feurst/consts')
+const {SHIPRATE} = require('../../../utils/consts')
 const ShipRate = require('../../models/ShipRate')
 const {isActionAllowed} = require('../../utils/userAccess')
 

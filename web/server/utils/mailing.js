@@ -3,21 +3,17 @@ const {
   ENABLE_MAILING,
   getDataModel,
   getHostUrl,
-  getSibTemplates,
   is_validation,
 }=require('../../config/config')
-const {CUSTOMER_ADMIN, FEURST_ADV} = require('../../utils/feurst/consts')
+const {CUSTOMER_ADMIN, FEURST_ADV} = require('../../utils/consts')
 const Company = require('../models/Company')
 const User = require('../models/User')
 const {booking_datetime_str} = require('../../utils/dateutils')
 const {fillSms} = require('../../utils/sms')
+const SIB_IDS=require('./sib_templates')
 const {generateExcel} = require('./feurst/generateExcel')
 const {isFeurstUser} = require('./userAccess')
 const {SIB} = require('./sendInBlue')
-
-// Templates
-const SIB_IDS=require(`./sib_templates/${getSibTemplates()}.js`)
-
 
 const SMS_CONTENTS = {
   [SIB_IDS.NEW_BOOKING_MANUAL]: '{{ params.client_firstname }} a effectué une demande de réservation de votre service {{ params.service_label }}',

@@ -8,7 +8,7 @@ const moment = require('moment')
 
 const CronJob = require('cron').CronJob
 const PriceList = require('../../models/PriceList')
-const {JSON_TYPE} = require('../../../utils/feurst/consts')
+const {JSON_TYPE} = require('../../../utils/consts')
 const storage = require('../../utils/storage')
 const {getExchangeDirectory} = require('../../../config/config')
 const {
@@ -16,9 +16,9 @@ const {
   stockImport,
 } = require('../../utils/import')
 const {isActionAllowed} = require('../../utils/userAccess')
-const {DELETE} = require('../../../utils/feurst/consts')
+const {DELETE} = require('../../../utils/consts')
 const {XL_FILTER, createMemoryMulter} = require('../../utils/filesystem')
-const {PRODUCT, CREATE} = require('../../../utils/consts')
+const {PRODUCT, CREATE, IMPORT} = require('../../../utils/consts')
 const Product = require('../../models/Product')
 const {validateProduct}=require('../../validation/product')
 
@@ -53,6 +53,7 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   }
 
   Product.find({})
+    .populate('components')
     .sort('reference')
     .then(products => {
       const andEdProducts=products.filter(andFilter)
@@ -138,7 +139,7 @@ router.delete('/:product_id', passport.authenticate('jwt', {session: false}), (r
 // Imports products from csv
 router.post('/import', passport.authenticate('jwt', {session: false}), (req, res) => {
 
-  if (!isActionAllowed(req.user.roles, DATA_TYPE, CREATE)) {
+  if (!isActionAllowed(req.user.roles, DATA_TYPE, IMPORT)) {
     return res.sendStatus(HTTP_CODES.FORBIDDEN)
   }
 
@@ -187,8 +188,8 @@ router.post('/import-stock', passport.authenticate('jwt', {session: false}), (re
   })
 })
 
-// Check new stock file
-new CronJob('0 0 */12 * * *', () => {
+// Check new stock file every hour
+new CronJob('0 0 * * * *', () => {
   const store=storage.namespace('exchange')
   const folder=getExchangeDirectory()
   const latest_date=new Date(JSON.parse(store.get('latest-products-import')))

@@ -2,7 +2,7 @@ const lodash=require('lodash')
 const Company = require('../models/Company')
 const Product = require('../models/Product')
 const PriceList = require('../models/PriceList')
-const {EXPRESS_SHIPPING} = require('../../utils/feurst/consts')
+const {EXPRESS_SHIPPING} = require('../../utils/consts')
 const {roundCurrency} = require('../../utils/converters')
 const ShipRate = require('../models/ShipRate')
 
@@ -31,12 +31,13 @@ const getProductPrices = (product_ref, company) => {
 If product is present, adds quantity if replace is false else sets quantity
 If product is not present, adds the item to the order
 */
-const addItem = (data, product_id, reference, quantity, net_price, replace=false) => {
+const addItem = ({data, product_id, reference, quantity, net_price, replace=false, recurse=true}) => {
   if (isNaN(parseInt(quantity))) {
     return Promise.reject(`Article ${reference}: quantité ${quantity} incorrecte`)
   }
   let product=null
   return Product.findOne({$or: [{_id: product_id}, {reference: reference}]})
+    .populate('components')
     .then(result => {
       if (!result) {
         return Promise.reject(`Article ${reference} inconnu`)
@@ -64,6 +65,15 @@ const addItem = (data, product_id, reference, quantity, net_price, replace=false
         }
         item = {product: product, quantity: parseInt(quantity), catalog_price: prices.catalog_price, net_price: net_price || prices.net_price}
         data.items.push(item)
+      }
+      // If linked articles, append them to the order/quotation
+      if (product.has_linked && !replace && recurse) {
+        return Promise.allSettled(product.components.map(c => {
+          return addItem({data, product_id: c._id, reference, quantity, replace, recurse: false})
+        }))
+          .then(() => {
+            return Promise.resolve(data)
+          })
       }
       return Promise.resolve(data)
     })
@@ -145,7 +155,7 @@ const updateStock = orderQuot => {
       .then(product => {
         let promises
         const components=product.components
-        if (components.length>0) {
+        if (product.is_assembly) {
           components.forEach(p => (p.stock=p.stock-it.quantity))
           product.stock=lodash.min(components.map(v => v.stock))
         }
@@ -196,5 +206,22 @@ const updateCompanyAddresses= model => {
     })
 }
 
+const computeCarriagePaidDelta = (schema, id) => {
+  return schema.findById(id)
+    .populate('items.product')
+    .populate('company')
+    .then(res => {
+      if (!res) {
+        throw new NotFoundError(`order/quotation ${id} not found`)
+      }
+      console.log(`Net amount:${res.net_amount}`)
+      console.log(`Franco:${res.company.carriage_paid}`)
+      const delta=Math.max(0, res.company?.carriage_paid-res.net_amount)
+      return roundCurrency(delta) || 0
+    })
+}
+
 module.exports = {addItem, computeShippingFee, updateShipFee, getProductPrices,
-  updateStock, isInDeliveryZone, updateCompanyAddresses, extractDepartment}
+  updateStock, isInDeliveryZone, updateCompanyAddresses, extractDepartment,
+  computeCarriagePaidDelta,
+}

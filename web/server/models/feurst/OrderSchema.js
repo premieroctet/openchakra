@@ -10,7 +10,7 @@ const {
   PARTIALLY_HANDLED,
   ROLES,
   VALID,
-} = require('../../../utils/feurst/consts')
+} = require('../../../utils/consts')
 const BaseSchema = require('./QuotationBookingBaseSchema')
 
 const OrderSchema = BaseSchema.clone()

@@ -1,6 +1,6 @@
 import React from 'react'
 import withEdiAuth from '../../hoc/withEdiAuth'
-import {BASEPATH_EDI} from '../../utils/feurst/consts'
+import {BASEPATH_EDI} from '../../utils/consts'
 import {SHIPRATE, VIEW} from '../../utils/consts'
 import ShipratesList from '../../components/Feurst/ShipratesList'
 

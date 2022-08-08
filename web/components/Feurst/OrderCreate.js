@@ -1,5 +1,5 @@
 import React from 'react'
-import {ENDPOINTS, ORDER} from '../../utils/feurst/consts'
+import {ENDPOINTS, ORDER} from '../../utils/consts'
 import BaseCreate from'./BaseCreate'
 import {orderColumns} from './tablestructures'
 
