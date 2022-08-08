@@ -57,6 +57,7 @@ class OurAlfred extends React.Component {
                     picture={alfred[res]?.service?.picture}
                     title={alfred[res]?.service?.label}
                     city={alfred[res]?.service_address?.city || ''}
+                    item={alfred[res]}
                   />
                 </Grid>
               ))

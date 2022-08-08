@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import Link from 'next/link'
 import {withTranslation} from 'react-i18next'
 import Rating from '@material-ui/lab/Rating'
+import Chip from '@material-ui/core/Chip'
 import {getDataModel} from '../../config/config'
 import UserAvatar from '../Avatar/UserAvatar'
 
@@ -14,7 +15,18 @@ const Wrapper = ({link, children}) => (
 )
 
 
-const Card = ({link, user, name, picture, title, description, city, rating}) => {
+const Card = ({
+  link,
+  user,
+  name,
+  picture,
+  title,
+  description,
+  city,
+  rating,
+  tag,
+  Cta,
+}) => {
 
   if (!title) {
     return null
@@ -30,7 +42,10 @@ const Card = ({link, user, name, picture, title, description, city, rating}) => 
 
         <div className={`card_content customcardpreviewbox`}>
           
-          {picture && <div className='card_content-image'><img src={picture} alt="" /></div>}
+          <div className='card_content-image'>
+            {picture && <img src={picture} alt="" />}
+            {tag && <Chip label={tag} className={'card_content-tag customcardchippro'} />}
+          </div>
 
           <div className='card_content-text'>
           
@@ -38,6 +53,8 @@ const Card = ({link, user, name, picture, title, description, city, rating}) => 
             <p className={`customcardpreviewlabel`}>{title}</p>
             {description !==undefined && <p>{description}</p>}
             {city !==undefined && <p className={'customcardpreviewplace'} >{city}</p>}
+
+            {Cta && <Cta />}
 
             {rating !==undefined && <div className={'card_content_rating customcardpreviewrating'}>
               <Rating
@@ -65,6 +82,8 @@ Card.propTypes = {
   description: PropTypes.string,
   city: PropTypes.string,
   rating: PropTypes.number,
+  tag: PropTypes.string,
+  Cta: PropTypes.component,
 }
 
 
@@ -78,7 +97,8 @@ const StyledCard = styled.a`
   grid-template-areas:  'card_avatar'
                         'card_content';
   
-  max-height: 400px;
+  min-height: 400px;
+  max-height: 500px;
   aspect-ratio: 4 / 5;
   cursor: pointer;
   transition: transform var(--delayIn) ease-out;
@@ -128,6 +148,15 @@ const StyledCard = styled.a`
     &> * {
       transition: var(--delayIn) ease-in;
     }
+  }
+
+  .card_content-tag {
+    position: absolute;
+    top: var(--spc-3);
+    right: var(--spc-3);
+    background-color: var(--secondary-bgcolor);
+    color: var(--secondary-color);
+    z-index: 1;
   }
 
   .card_content-image {
