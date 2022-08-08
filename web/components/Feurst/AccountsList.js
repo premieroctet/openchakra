@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import styled from 'styled-components'
 import dynamic from 'next/dynamic'
-import {ACCOUNT, CREATE} from '../../utils/feurst/consts'
+import {ACCOUNT, CREATE} from '../../utils/consts'
 import FeurstRegister from './Register'
 import {accountsColumns} from './tablestructures'
 import BaseListTable from './BaseListTable'

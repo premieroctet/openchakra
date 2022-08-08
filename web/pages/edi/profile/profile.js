@@ -6,7 +6,7 @@ import RenewPassword from '../../../components/Password/RenewPassword'
 import {NormalButton} from '../../../components/Feurst/Button'
 import {client} from '../../../utils/client'
 import {screen} from '../../../styles/screenWidths'
-import {ACCOUNT, UPDATE} from '../../../utils/feurst/consts'
+import {ACCOUNT, UPDATE} from '../../../utils/consts'
 import {useUserContext} from '../../../contextes/user.context'
 
 
@@ -36,13 +36,13 @@ const Profile = () => {
       <h2><img width={30} height={30} src={`${FEURST_ICON_PATH }/user.icon.svg`} alt="" />A propos de vous</h2>
 
       <div className='leftborder-blue'>
-        
+
         <div className='flex gap-x-2'>
           <div>
             <h3>Prénom&nbsp;:</h3>
             <p>{user?.firstname}</p>
           </div>
-   
+
           <div>
             <h3>Nom&nbsp;:</h3>
             <p>{user?.name}</p>
@@ -60,9 +60,9 @@ const Profile = () => {
           <p>{user?.company?.full_name}</p>
         </div>
       </div>
-  
+
     </div>
-    
+
 
     <div>
       <h2>Modification du mot de passe</h2>
@@ -81,7 +81,7 @@ const Profile = () => {
 
     </div>
 
-    
+
   </StyledProfile>)
 }
 
@@ -91,7 +91,7 @@ const StyledProfile = styled.div`
   border-top: 1px solid var(--black);
   display: grid;
   grid-template-columns: 1fr;
-  
+
   @media (${screen.lg}) {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -106,7 +106,7 @@ const StyledProfile = styled.div`
       font-size: var(--text-lg);
     }
   }
-  
+
   h2, h3, p {
     color: var(--black);
   }
@@ -116,10 +116,10 @@ const StyledProfile = styled.div`
     column-gap: var(--spc-2);
     font-size: var(--text-2xl);
   }
-  
+
 
   form {
-    display: flex; 
+    display: flex;
     flex-direction: column;
     width: min(calc(100% - 2rem), 40rem);
     margin-bottom: var(--spc-10);
@@ -128,7 +128,7 @@ const StyledProfile = styled.div`
       margin-bottom: var(--spc-4);
     }
   }
-  
+
   button[type="submit"] {
     align-self: flex-end;
     margin-block: var(--spc-4);

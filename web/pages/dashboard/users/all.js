@@ -4,7 +4,7 @@ import axios from 'axios'
 import {snackBarError, snackBarSuccess} from '../../../utils/notifications'
 import {setAxiosAuthentication} from '../../../utils/authentication'
 const moment = require('moment')
-const {ROLES} = require('../../../utils/feurst/consts')
+const {ROLES} = require('../../../utils/consts')
 const {DataPage, styles}=require('../../../components/AlfredDashboard/DataPage')
 const models=require('../../../components/BigList/models')
 const {MANGOPAY_CONFIG}=require('../../../config/config')

@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import styled from 'styled-components'
 import {isEmpty} from 'lodash'
 import {localeMoneyFormat} from '../../utils/converters'
-import {FEURST_IMG_PATH} from '../../utils/feurst/consts'
+import {FEURST_IMG_PATH} from '../../utils/consts'
 
 
 const UpdateShippingFees = ({endpoint, orderid, shipping_fee, requestUpdate, update}) => {

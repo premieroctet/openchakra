@@ -25,7 +25,7 @@ const {
   VALID,
   VALIDATE,
   VIEW,
-} = require('../../../utils/feurst/consts')
+} = require('../../../utils/consts')
 const {
   sendDataNotification,
 } = require('../../utils/mailing')
@@ -37,6 +37,7 @@ const {
 } = require('../../utils/userAccess')
 const {
   addItem,
+  computeCarriagePaidDelta,
   computeShippingFee,
   getProductPrices,
   updateCompanyAddresses,
@@ -264,7 +265,7 @@ router.put('/:id/items', passport.authenticate('jwt', {session: false}), (req, r
         console.error(`No order #${order_id}`)
         return res.status(HTTP_CODES.NOT_FOUND).json()
       }
-      return addItem(data, product, null, quantity, net_price, replace)
+      return addItem({data, product_id: product, quantity, net_price, replace})
     })
     .then(data => {
       return updateShipFee(data)
@@ -439,7 +440,9 @@ router.get('/:order_id/products/:product_id', passport.authenticate('jwt', {sess
     .populate('company')
     .then(result => {
       data=result
-      return Product.findById(product_id).lean()
+      return Product.findById(product_id)
+        .populate('components')
+        .lean({virtuals: true})
     })
     .then(result => {
       if (!result) {
@@ -451,6 +454,14 @@ router.get('/:order_id/products/:product_id', passport.authenticate('jwt', {sess
     .then(prices => {
       product.catalog_price=prices.catalog_price
       product.net_price=prices.net_price
+      return product.components?.length>0 ?
+        Promise.allSettled(product.components.map(comp => getProductPrices(comp.reference, data.company)))
+        :Promise.resolve([])
+    })
+    .then(results => {
+      if (product.components) {
+        product.components=product.components.filter((_, idx) => results[idx].status=='fulfilled')
+      }
       return res.json(product)
     })
     .catch(err => {
@@ -612,6 +623,14 @@ router.get('/:id/actions', passport.authenticate('jwt', {session: false}), (req,
       return res.json(result)
     })
 })
-
+router.get('/:id/carriage-paid-delta', passport.authenticate('jwt', {session: false}), (req, res) => {
+  return computeCarriagePaidDelta(MODEL, req.params.id)
+    .then(value => {
+      res.json(value)
+    })
+    .catch(err => {
+      return res.status(err.status||500).json(err.message)
+    })
+})
 
 module.exports = router

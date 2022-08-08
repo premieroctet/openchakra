@@ -4,7 +4,7 @@ import {
   HANDLED,
   PARTIALLY_HANDLED,
   VALID,
-} from '../../utils/feurst/consts'
+} from '../../utils/consts'
 import {StyledTabs} from '../../styles/feurst/StyledComponents'
 import {handledQuotationsColumns} from './tablestructures'
 import BaseListTable from './BaseListTable'

@@ -4,7 +4,7 @@ const {
   CUSTOMER_BUYER,
   FEURST_ADMIN,
   FEURST_ADV,
-} = require('../../../utils/feurst/consts')
+} = require('../../../utils/consts')
 
 https.globalAgent.options.rejectUnauthorized = false
 

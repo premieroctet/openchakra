@@ -5,13 +5,13 @@ import {withTranslation} from 'react-i18next'
 import {useRouter} from 'next/router'
 import {API_PATH} from '../../utils/consts'
 import {client} from '../../utils/client'
-import withParams from '../../components/withParams'
 import {snackBarSuccess, snackBarError} from '../../utils/notifications'
 import RenewPassword from '../../components/Password/RenewPassword'
 import {NormalButton} from '../../components/Feurst/Button'
 import EdiContainer from '../../components/Feurst/EdiContainer'
+import {BASEPATH_EDI} from '../../utils/consts'
 
-const ResetPassword = ({t, token}) => {
+const ResetPassword = ({t}) => {
 
   const [password, setPassword] = useState('')
   const [passChanged, setPassChanged] = useState(false)
@@ -23,13 +23,13 @@ const ResetPassword = ({t, token}) => {
 
     const data = {
       password: password.newPassword,
-      token: token,
+      token: router.query?.token,
     }
 
     return await client(`${API_PATH}/users/resetPassword`, {data})
       .then(() => {
         snackBarSuccess(ReactHtmlParser(t('RESET_PASSWORD.password_update')))
-        router.push({pathname: '/'})
+        router.push(BASEPATH_EDI)
       })
       .catch(err => {
         console.error(err)
@@ -99,4 +99,4 @@ const StyledReset = styled.div`
   }
 `
 
-export default withTranslation(null, {withRef: true})(withParams(ResetPassword))
+export default withTranslation(null, {withRef: true})(ResetPassword)

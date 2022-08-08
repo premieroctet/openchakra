@@ -1,6 +1,6 @@
 const fs=require('fs/promises')
 const mongooose=require('mongoose')
-const {XL_TYPE}=require('../../utils/feurst/consts')
+const {XL_TYPE}=require('../../utils/consts')
 const {accountsImport}=require('../../server/utils/import')
 const {MONGOOSE_OPTIONS}=require('../../server/utils/database')
 const {getDatabaseUri}=require('../../config/config')

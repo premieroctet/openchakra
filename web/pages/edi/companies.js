@@ -1,7 +1,7 @@
 import React from 'react'
 import CompaniesList from '../../components/Feurst/CompaniesList'
 import withEdiAuth from '../../hoc/withEdiAuth'
-import {BASEPATH_EDI, ACCOUNT, VIEW} from '../../utils/consts'
+import {BASEPATH_EDI, COMPANY, VIEW} from '../../utils/consts'
 
 const Companies = ({accessRights}) => {
 
@@ -10,4 +10,4 @@ const Companies = ({accessRights}) => {
   </>)
 }
 
-export default withEdiAuth(Companies, {model: ACCOUNT, action: VIEW, pathAfterFailure: `${BASEPATH_EDI}/login`})
+export default withEdiAuth(Companies, {model: COMPANY, action: VIEW, pathAfterFailure: `${BASEPATH_EDI}/login`})
