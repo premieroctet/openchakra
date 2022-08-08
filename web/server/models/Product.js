@@ -13,5 +13,4 @@ catch(err) {
     throw err
   }
 }
-
 module.exports = ProductSchema ? mongoose.model('product', ProductSchema) : null

@@ -1,6 +1,6 @@
 const xlsx=require('node-xlsx')
 const {formatPercent} = require('../../../utils/text')
-const {STANDARD_SHIPPING} = require('../../../utils/feurst/consts')
+const {STANDARD_SHIPPING} = require('../../../utils/consts')
 
 // Generates Quotation or order
 const generateExcel = model => {

@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import {FEURST_EMAIL} from '../../utils/feurst/consts'
+import {FEURST_EMAIL} from '../../utils/consts'
 
 const ContactUs = () => {
   return (

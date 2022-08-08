@@ -8,7 +8,7 @@ const {
   HANDLED,
   QUOTATION_VALIDITY,
   VALID,
-} = require('../../../../utils/feurst/consts')
+} = require('../../../../utils/consts')
 const OrderSchema = require('../../../../server/models/feurst/OrderSchema')
 const {MONGOOSE_OPTIONS} = require('../../../../server/utils/database')
 

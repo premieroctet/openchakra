@@ -1,6 +1,6 @@
 import React from 'react'
 import withEdiAuth from '../../../hoc/withEdiAuth'
-import {BASEPATH_EDI} from '../../../utils/feurst/consts'
+import {BASEPATH_EDI} from '../../../utils/consts'
 import {VIEW, QUOTATION} from '../../../utils/consts'
 import MyQuotations from '../../../components/Feurst/MyQuotations'
 

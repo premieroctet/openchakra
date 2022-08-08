@@ -30,6 +30,7 @@ import {
 } from '../../utils/authentication'
 import {snackBarError, snackBarSuccess} from '../../utils/notifications'
 import DevLog from '../DevLog'
+import Notice from '../Notice/Notice'
 import {H2confirm} from './components.styles'
 import AddArticle from './AddArticle'
 import ImportExcelFile from './ImportExcelFile'
@@ -91,21 +92,22 @@ const BaseCreateTable = ({
   const [actionButtons, setActionButtons]=useState([])
   const [addAddress, setAddAddress] = useState(false)
   const [alertText, setAlertText] = useState(false)
-  
+  const [carriagePaidDelta, setCarriagePaidDelta] = useState(0)
+
   const importURL=`${API_PATH}/${endpoint}/${orderid}/import`
   const templateURL=`${API_PATH}/${endpoint}/template`
   const router = useRouter()
 
   // Possibles actions
   const justCreated = !(state?.items?.length && true)
-  
+
   const isValidButton = actionButtons.includes(VALIDATE)
   const isRevertToEdition = actionButtons.includes(REWRITE)
   const isConvertToOrder = actionButtons.includes(CONVERT)
   const isPartiallyHandled = actionButtons.includes(PARTIALLY_HANDLE)
   const isTotallyHandled = actionButtons.includes(TOTALLY_HANDLE)
   const canModify = actionButtons.includes(UPDATE)
-  
+
   const isFeurstSales = accessRights.getFullAction()?.visibility==RELATED || accessRights.getFullAction()?.visibility==ALL
   const canUpdatePrice = accessRights.isActionAllowed(accessRights.getModel(), UPDATE_ALL) && canModify
   const canUpdateQuantity = accessRights.isActionAllowed(accessRights.getModel(), UPDATE) && canModify
@@ -114,6 +116,16 @@ const BaseCreateTable = ({
 
   const isAddressRequired = isEmpty(state.address)
 
+  // Get remaining amount for carriage paid
+  useEffect(() => {
+    orderid && endpoint && client(`${API_PATH}/${endpoint}/${orderid}/carriage-paid-delta`)
+      .then(res => {
+        setCarriagePaidDelta(res)
+      })
+      .catch(error => {
+        console.error(error)
+      })
+  }, [orderid, endpoint, state])
 
   /* Update product quantities or price */
   const updateMyOrderContent = data => {
@@ -223,16 +235,17 @@ const BaseCreateTable = ({
       {!canModify && <div>
         <dl className='dl-inline text-xl font-semibold'>
           <dt>{t(`${wordingSection}.name`)}</dt>
-          <dd>{state.reference}</dd>
+          <dd>{state.reference}&nbsp;</dd>
           <dt>{t(`${wordingSection}.date`)}</dt>
-          <dd>{new Date(state.creation_date).toLocaleDateString()}</dd>
+          <dd>{new Date(state.creation_date).toLocaleDateString()}&nbsp;</dd>
           {state.sales_representative?.firstname && (<>
             <dt>Suivi par</dt>
-            <dd>{state.company.sales_representative.firstname}</dd>
+            <dd>{state.company.sales_representative.firstname}&nbsp;</dd>
           </>)}
         </dl>
       </div>}
 
+      
       <FeurstTable
         caption={t(`${wordingSection}.details`)}
         data={state.items}
@@ -242,16 +255,25 @@ const BaseCreateTable = ({
         updateMyData={updateMyOrderContent}
       />
 
+      <div className='grid grid-cols-1-2 gap-x-4'>
 
-      <Delivery
-        endpoint={endpoint}
-        orderid={orderid}
-        address={state.address}
-        setIsOpenDialog={setIsOpenDialog}
-        editable={!canModify}
-        requestUpdate={requestUpdate}
-        shipping={{shipping_mode: state.shipping_mode, shipping_fee: state.shipping_fee, update: canUpdateShipping ? updateShippingFees : null}}
-      />
+        <Delivery
+          endpoint={endpoint}
+          orderid={orderid}
+          address={state.address}
+          setIsOpenDialog={setIsOpenDialog}
+          editable={!canModify}
+          requestUpdate={requestUpdate}
+          shipping={{shipping_mode: state.shipping_mode, shipping_fee: state.shipping_fee, update: canUpdateShipping ? updateShippingFees : null}}
+        />
+        {carriagePaidDelta>0 && <>
+          <Notice className={'justify-self-center'}>
+            <p>Plus que <strong>{localeMoneyFormat({value: carriagePaidDelta})} avant la livraison gratuite</strong>.<br/>
+          Valable pour une livraison standard à l'adresse principale</p>
+          </Notice>
+        </>}
+      </div>
+      
 
       {!justCreated &&
       <div className='flex items-center bg-brand text-xl text-white font-semibold justify-between p-2 pl-6 pr-6 mb-8'>
@@ -281,7 +303,7 @@ const BaseCreateTable = ({
         </div> : null
         }
 
-     
+
         {isConvertToOrder && <NormalButton
           rounded={'full'}
           disabled={justCreated}
@@ -370,7 +392,7 @@ const LineDivider = styled.p`
 `
 
 const AlertCondition = styled.p`
-  
+
   span {
     font-size: 1.5rem;
     align-self: center;
@@ -385,7 +407,7 @@ const AlertCondition = styled.p`
   transition: transform 0.3s ease-out, opacity 0.3s ease-out, visibility 0.1s ease-out;
   transform: translateY(100%);
   opacity: 0;
-  
+
   &.visible {
     visibility: visible;
     transform: translateY(0);

@@ -13,7 +13,7 @@ const {
   QUOTATION_VALIDITY,
   ROLES,
   VALID,
-} = require('../../../utils/feurst/consts')
+} = require('../../../utils/consts')
 const BaseSchema = require('./QuotationBookingBaseSchema')
 
 const QuotationSchema = BaseSchema.clone()

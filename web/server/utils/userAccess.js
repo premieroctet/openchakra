@@ -6,7 +6,7 @@ const {
   HANDLE,
   QUOTATION,
   RELATED,
-} = require('../../utils/feurst/consts')
+} = require('../../utils/consts')
 
 const {USER_ACTIONS, ALL, COMPANY} = require('../../utils/consts')
 

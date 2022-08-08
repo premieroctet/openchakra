@@ -10,7 +10,7 @@ const {
   EXCAVATRICE,
   MACHINE_TYPES,
   PELLE_BUTTE,
-} = require('../../utils/feurst/consts')
+} = require('../../utils/consts')
 const {normalize} = require('../../utils/text')
 
 

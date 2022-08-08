@@ -10,7 +10,7 @@ const {
   FEURST_ADMIN,
   FEURST_ADV,
   FEURST_SALES,
-} = require('../../utils/feurst/consts')
+} = require('../../utils/consts')
 
 const PASSWORD='$2a$10$I.JGpEq3ZI8d.wqjJjnSY.cRgyI.FRasGtryVnO5GpO7yh9pqfpSi'
 
