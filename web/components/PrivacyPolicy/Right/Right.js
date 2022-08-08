@@ -12,4 +12,4 @@ function Right() {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(Right))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(Right))

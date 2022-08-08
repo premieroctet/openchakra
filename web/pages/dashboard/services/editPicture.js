@@ -26,4 +26,4 @@ class EditServicePicture extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withParams(EditServicePicture))
+export default withTranslation(null, {withRef: true})(withParams(EditServicePicture))

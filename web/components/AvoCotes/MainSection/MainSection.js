@@ -73,4 +73,4 @@ function MainSection({classes, t}) {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(MainSection))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(MainSection))

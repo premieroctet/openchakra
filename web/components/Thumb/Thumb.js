@@ -43,4 +43,4 @@ class Thumb extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(Thumb)
+export default withTranslation(null, {withRef: true})(Thumb)

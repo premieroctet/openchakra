@@ -126,4 +126,4 @@ const CheckingProductArea = styled.div`
   }
 `
 
-export default withTranslation('feurst', {withRef: true})(CheckingProduct)
+export default withTranslation(null, {withRef: true})(CheckingProduct)

@@ -1,11 +1,4 @@
 const Style = theme => ({
-  bigContainer: {
-    marginTop: 0,
-    flexGrow: 1,
-    [theme.breakpoints.down('xs')]: {
-      marginBottom: 100,
-    },
-  },
   hidesm: {
     minWidth: '271px',
     [theme.breakpoints.down('sm')]: {
@@ -21,65 +14,12 @@ const Style = theme => ({
       marginBottom: 30,
     },
   },
-  Rightcontent: {
-    marginLeft: '4%',
-    marginTop: '2%',
-    [theme.breakpoints.down('xs')]: {
-      margin: 0,
-    },
-  },
-  hrSeparator: {
-    width: '100%',
-    marginTop: 30,
-    color: 'rgb(80, 80, 80, 0.2)',
-  },
-  buttonConfirm: {
-    color: 'white',
-  },
   reservationContainer: {
     display: 'flex',
     width: '100%',
     justifyContent: 'space-between',
     [theme.breakpoints.down('xs')]: {
       flexDirection: 'column',
-    },
-  },
-  buttonConfirmResa: {
-    marginBottom: 10,
-    [theme.breakpoints.down('xs')]: {
-      marginTop: 30,
-      marginBottom: 30,
-    },
-  },
-  labelReservation: {
-    marginBottom: 10,
-    [theme.breakpoints.down('xs')]: {
-      marginTop: 30,
-    },
-  },
-  fontSizeTitleSectionAbout: {
-    fontSize: '1rem',
-    color: 'rgba(84,89,95,0.95)',
-    letterSpacing: -1,
-    fontWeight: 'bold',
-    marginBottom: '5%',
-    [theme.breakpoints.down('xs')]: {
-      fontSize: '1.5rem',
-      display: 'flex',
-      justifyContent: 'center',
-    },
-  },
-  containerTitleSectionAbout: {
-    [theme.breakpoints.down('xs')]: {
-      display: 'flex',
-    },
-  },
-  mainContainerAboutResa: {
-    borderBottom: '1.5px #8281813b solid',
-    marginTop: '5%',
-    paddingBottom: '7%',
-    [theme.breakpoints.down('xs')]: {
-      marginTop: 30,
     },
   },
   mainContainerAbout: {
@@ -113,12 +53,6 @@ const Style = theme => ({
     width: '100%',
 
   },
-  equipmentContainer: {
-    [theme.breakpoints.down('xs')]: {
-      display: 'flex',
-    },
-  },
-
   detailsReservationContainer: {
     display: 'flex',
     width: '100%',
@@ -153,8 +87,6 @@ const Style = theme => ({
     textAlign: 'center',
     width: '100%',
   },
-  buttonCancel: {
-    color: theme.palette.error.main,
-  },
+  
 })
 module.exports=Style

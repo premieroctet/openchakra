@@ -19,4 +19,4 @@ class TravelTaxTest extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(TravelTaxTest)
+export default withTranslation(null, {withRef: true})(TravelTaxTest)

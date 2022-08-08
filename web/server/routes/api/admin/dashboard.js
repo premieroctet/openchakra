@@ -1,3 +1,4 @@
+const crypto = require('crypto')
 const moment = require('moment')
 const {isValid} = require('date-fns')
 const express = require('express')
@@ -7,9 +8,11 @@ const bcrypt = require('bcryptjs')
 const axios = require('axios')
 const Validator = require('validator')
 const lodash=require('lodash')
-const {getHostUrl} = require('../../../../config/config')
-const errors = require('../../../utils/errors')
+const {getHostUrl, isPlatform}=require('../../../../config/config')
 const {HTTP_CODES, StatusError} = require('../../../utils/errors')
+const errors = require('../../../utils/errors')
+const {addIdIfRequired, mangoApi} = require('../../../utils/mangopay')
+const {ADMIN, BOOK_STATUS} = require('../../../../utils/consts')
 const Prestation = require('../../../models/Prestation')
 const Service = require('../../../models/Service')
 const Equipment = require('../../../models/Equipment')
@@ -17,8 +20,6 @@ const Category = require('../../../models/Category')
 const Job = require('../../../models/Job')
 const FilterPresentation = require('../../../models/FilterPresentation')
 const ServiceUser = require('../../../models/ServiceUser')
-const {BOOK_STATUS} = require('../../../../utils/consts')
-const {mangoApi} = require('../../../utils/mangopay')
 const Review = require('../../../models/Review')
 const EventLog = require('../../../models/EventLog')
 const Commission = require('../../../models/Commission')
@@ -33,10 +34,6 @@ const {sendRegisterInvitation}=require('../../../utils/mailing')
 const {EDIT_PROFIL}=require('../../../../utils/i18n')
 const {hasRefs}=require('../../../utils/database')
 const {getIdentifiers, getKeys, getQueries}=require('../../../utils/i18n_extraction')
-
-const router = express.Router()
-const crypto = require('crypto')
-
 const validateBillingInput = require('../../../validation/billing')
 const validateFeurstRegister = require('../../../validation/feurstRegister')
 const {validateCompanyProfile} = require('../../../validation/simpleRegister')
@@ -44,13 +41,13 @@ const validatePrestationInput = require('../../../validation/prestation')
 const validateRegisterAdminInput = require('../../../validation/registerAdmin')
 const validateCategoryInput = require('../../../validation/category')
 const validateServiceInput = require('../../../validation/service')
-const {addIdIfRequired} = require('../../../utils/mangopay')
 const {normalize} = require('../../../../utils/text')
 const {counterArray} = require('../../../../utils/converters')
-const {ADMIN} = require('../../../../utils/consts')
 const {get_token, send_cookie, get_logged_id}=require('../../../utils/serverContext')
 const {createUIConfiguration} = require('../../../utils/ui_generation')
 const {logEvent}=require('../../../utils/events')
+
+const router = express.Router()
 
 // Upload multers
 // CATEGORY
@@ -152,6 +149,7 @@ router.get('/users/all', passport.authenticate('admin', {session: false}), (req,
   User.find({}, 'firstname name email is_alfred is_admin id_mangopay mangopay_provider_id creation_date birthday billing_address phone comment hidden roles')
     .populate({path: 'shop', select: 'creation_date', strictPopulate: false})
     .sort({creation_date: -1})
+    .lean({virtuals: true})
     .then(users => {
       res.json(users)
     })
@@ -211,7 +209,7 @@ ServiceUser && router.get('/serviceUsersMap', passport.authenticate('admin', {se
   ServiceUser.find({}, '_id service_address.gps')
     // .populate('user','-id_card')
     .populate('service', '_id label')
-    .populate('user', 'firstname')
+    .populate('user', 'firstname name')
     .then(services => {
       res.json(services)
     })
@@ -966,6 +964,7 @@ router.post('/service/all', uploadService.single('picture'), passport.authentica
       }
       const newService={
         label: req.body.label,
+        tag: req.body.tag,
         s_label: normalize(req.body.label),
         category: mongoose.Types.ObjectId(req.body.category),
         equipments: JSON.parse(req.body.equipments),
@@ -976,6 +975,7 @@ router.post('/service/all', uploadService.single('picture'), passport.authentica
           alfred: req.body['location.alfred'] == 'true',
           client: req.body['location.client'] == 'true',
           visio: req.body['location.visio'] == 'true',
+          elearning: req.body['location.elearning'] == 'true',
         },
         pick_tax: req.body.pick_tax,
         travel_tax: req.body.travel_tax,
@@ -1008,14 +1008,27 @@ router.get('/service/all', passport.authenticate('admin', {session: false}), (re
     .sort({'label': 1})
     .populate('equipments', 'label')
     .populate('category', 'particular_label professional_label')
-    .populate('prestations', 'particular_access professional_access')
-    .then(service => {
-      if (!service) {
-        return res.status(400).json({msg: 'No service found'})
-      }
-      res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count')
-      res.setHeader('X-Total-Count', service.length)
-      res.json(service)
+    .populate('prestations', 'particular_access professional_access company_price')
+    .lean({virtuals: true})
+    .then(services => {
+      services.forEach(s => {
+        s.category_label = [s.category.particular_label, s.category.professional_label].join('/')
+        warnings=[]
+        if (s.professional_access && !s.prestations.find(p => p.professional_access)) {
+          warnings.push('aucune prestation pro')
+        }
+        if (s.particular_access && !s.prestations.find(p => p.particular_access)) {
+          warnings.push('aucune prestation particuliers')
+        }
+        if (isPlatform()) {
+          const no_price_count = s.prestations.filter(p => !p.company_price).length
+          if (no_price_count>0) {
+            warnings.push(`${no_price_count}/${s.prestations.length} prestations à 0€`)
+          }
+        }
+        s.warning=warnings.join(',')
+      })
+      res.json(services)
 
     })
     .catch(err => {
@@ -1072,7 +1085,7 @@ router.put('/service/all/:id', passport.authenticate('admin', {session: false}),
     {
       $set: {
         label: req.body.label, equipments: req.body.equipments, category: mongoose.Types.ObjectId(req.body.category),
-        s_label: normalize(req.body.label),
+        s_label: normalize(req.body.label), tag: req.body.tag,
         description: req.body.description, majoration: req.body.majoration, location: req.body.location,
         travel_tax: req.body.travel_tax, pick_tax: req.body.pick_tax,
         professional_access: req.body.professional_access, particular_access: req.body.particular_access,
@@ -1231,9 +1244,9 @@ router.put('/prestation/all/:id', passport.authenticate('admin', {session: false
       price: req.body.price,
       service: mongoose.Types.ObjectId(req.body.service),
       billing: req.body.billing,
-      filter_presentation: mongoose.Types.ObjectId(req.body.filter_presentation),
+      filter_presentation: req.body.filter_presentation || null,
       category: mongoose.Types.ObjectId(req.body.service.category),
-      job: req.body.job ? mongoose.Types.ObjectId(req.body.job) : null,
+      job: req.body.job || null,
       description: req.body.description,
       cesu_eligible: req.body.cesu_eligible,
       professional_access: req.body.professional_access,
@@ -1323,13 +1336,14 @@ router.get('/statistics', passport.authenticate('admin', {session: false}), (req
 // Get all bookings
 // @Access private
 router.get('/bookings', passport.authenticate('admin', {session: false}), (req, res) => {
-  Booking.find()
+  Booking.find({}, 'service prestation_date date amount status reason paid address.city address.zip_code')
     .populate('alfred', 'firstname name')
     .populate('user', 'firstname name email phone')
-    .populate({path: 'customer_booking', populate: {path: 'user'}})
+    .populate({path: 'customer_booking', select: 'user', populate: {path: 'user', select: 'firstname name'}})
+    .populate({path: 'actual_booking', select: '_id'})
+    .lean({virtuals: true})
     .sort({date: -1})
     .then(bookings => {
-      console.log(`Typeof booking.prestation_date:${typeof bookings[0].prestation_date}`)
       res.json(bookings)
     })
     .catch(err => {
@@ -1347,7 +1361,7 @@ router.get('/companies', passport.authenticate('admin', {session: false}), (req,
 
   Company.find()
     .sort({'name': 1})
-    .lean()
+    .lean({virtuals: true})
     .then(companies => {
       if (!companies) {
         return res.status(400).json({msg: 'No company found'})

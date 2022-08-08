@@ -92,4 +92,4 @@ const RenewPassword = ({t, setPassword, passChanged}) => {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(RenewPassword)
+export default withTranslation(null, {withRef: true})(RenewPassword)

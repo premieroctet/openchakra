@@ -61,4 +61,4 @@ Commentary.propTypes = {
   theme: PropTypes.object.isRequired,
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles, {withTheme: true})(Commentary))
+export default withTranslation(null, {withRef: true})(withStyles(styles, {withTheme: true})(Commentary))

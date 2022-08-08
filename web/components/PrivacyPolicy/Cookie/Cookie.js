@@ -11,4 +11,4 @@ function Cookie() {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(Cookie))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(Cookie))

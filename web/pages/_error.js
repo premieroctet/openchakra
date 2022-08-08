@@ -30,4 +30,4 @@ function Custom404({classes, t}) {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(Custom404))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(Custom404))

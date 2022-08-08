@@ -1,8 +1,8 @@
 const lodash=require('lodash')
+const {roundCurrency}=require('../../../utils/converters')
+const {CESU_DISABLED} = require('../../../utils/consts')
 const Shop = require('../../models/Shop')
-const ServiceUser = require('../../models/ServiceUser')
 const Commission = require('../../models/Commission')
-const {CESU_DISABLED}=require('../../../utils/consts')
 
 class PaymentBase {
 
@@ -39,8 +39,8 @@ class PaymentBase {
   }
 
   // Return toal prestations & CESU subtotal
-  computeTravelTax = (serviceUser, location, totalPrestations, distance) => {
-    if (!distance || ['alfred', 'visio'].includes(location) || !totalPrestations || !serviceUser.travel_tax) {
+  computeTravelTax = ({serviceUser, location, distance}) => {
+    if (!distance || ['alfred', 'visio', 'elearning'].includes(location) || !serviceUser.travel_tax) {
       return Promise.resolve(0)
     }
     const tt = serviceUser.travel_tax
@@ -86,13 +86,9 @@ class PaymentBase {
     })
   }
 
-  compute = data => {
+  compute = ({user, serviceUser, prestations, location, cpf, distance}) => {
 
-    const serviceUserId=data.serviceUser
-    const prestations=data.prestations
-    const location=data.location
-    const distance=data.distance || 0
-    const avocotes_amount = data.avocotes_amount || 0
+    // const avocotes_amount = data.avocotes_amount || 0
 
     return new Promise((resolve, reject) => {
       const res={
@@ -110,35 +106,29 @@ class PaymentBase {
         total_cesu: 0,
         total: 0,
       }
-      let serviceUser
-      ServiceUser.findById(serviceUserId)
-        .populate('prestations.prestation')
-        .then(su => {
-          serviceUser=su
-          return this.computeTotalPrestations(serviceUser, prestations)
-        })
+      return this.computeTotalPrestations(serviceUser, prestations)
         .then(amounts => {
           res.total_prestations = amounts[0]
-          res.total_cesu = amounts[1]
+          res.total_cesu = roundCurrency(amounts[1])
           return this.computePickTax(serviceUser, location, res.total_prestations)
         })
         .then(pick_tax => {
-          res.pick_tax = pick_tax
-          return this.computeTravelTax(serviceUser, location, res.total_prestations, distance)
+          res.pick_tax = roundCurrency(pick_tax)
+          return this.computeTravelTax({serviceUser, location, distance})
         })
         .then(travel_tax => {
-          res.travel_tax=travel_tax
-          return this.computeProviderFees(serviceUser, prestations, res.total_prestations, res.travel_tax, res.pick_tax)
+          res.travel_tax=roundCurrency(travel_tax)
+          return this.computeProviderFees(user, serviceUser, prestations, res.total_prestations, res.travel_tax, res.pick_tax)
         })
         .then(provider_fees => {
           res.provider_fees=provider_fees
-          res.provider_fee = lodash.sum(provider_fees.map(f => f.amount))
           return this.computeCustomerFees(serviceUser, prestations, res.total_prestations, res.travel_tax, res.pick_tax)
         })
         .then(customer_fees => {
           res.customer_fees=customer_fees
-          res.customer_fee = lodash.sum(customer_fees.map(f => f.amount))
-          res.total=res.total_prestations+res.travel_tax+res.pick_tax+res.customer_fee
+          const grandTotal=res.total_prestations+res.travel_tax+res.pick_tax+res.customer_fee
+          res.cpf_amount=roundCurrency(cpf ? grandTotal: 0)
+          res.total=roundCurrency(grandTotal-res.cpf_amount)
           resolve(res)
         })
         .catch(err => {

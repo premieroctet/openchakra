@@ -111,4 +111,4 @@ class ProfileServices extends React.Component {
   }
 
 }
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(withParams(ProfileServices)))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(withParams(ProfileServices)))

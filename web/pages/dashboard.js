@@ -7,7 +7,7 @@ import Card from '@material-ui/core/Card'
 import Grid from '@material-ui/core/Grid'
 import {withStyles} from '@material-ui/core/styles'
 import Router from 'next/router'
-import {isLoggedUserAdmin, isUserSuperAdmin} from '../utils/context'
+import {isLoggedUserAdmin, isLoggedUserSuperAdmin} from '../utils/context'
 import DashboardLayout from '../hoc/Layout/DashboardLayout'
 const {API_PATH} = require('../utils/consts')
 const {setAxiosAuthentication}=require('../utils/authentication')
@@ -69,7 +69,7 @@ class home extends React.Component {
     const {classes} = this.props
     const {user}=this.state
 
-    const superAdmin = isUserSuperAdmin(user)
+    const superAdmin = isLoggedUserSuperAdmin(user)
 
     return (
       <DashboardLayout home={true}>
@@ -119,4 +119,4 @@ class home extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(home))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(home))

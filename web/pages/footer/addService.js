@@ -52,4 +52,4 @@ function AddService({t, i18n}) {
   )
 }
 
-export default withTranslation('custom')(AddService)
+export default withTranslation(null)(AddService)

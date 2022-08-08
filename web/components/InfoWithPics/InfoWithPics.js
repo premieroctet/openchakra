@@ -19,7 +19,7 @@ class InfoWithPics extends React.Component {
     return (
       <Grid>
         {
-          data ?
+          data &&
             <Grid className={classes.infoWithPicsMainContainer}>
               {
                 data.IconName ?
@@ -64,7 +64,7 @@ class InfoWithPics extends React.Component {
                     }
                   </Grid> : null
               }
-            </Grid> : null
+            </Grid>
         }
 
       </Grid>
@@ -72,4 +72,4 @@ class InfoWithPics extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(InfoWithPics))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(InfoWithPics))

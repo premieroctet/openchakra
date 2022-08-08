@@ -41,4 +41,4 @@ function NeedMoreFaq(props) {
   )
 }
 
-export default withTranslation('custom')(NeedMoreFaq)
+export default withTranslation(null)(NeedMoreFaq)

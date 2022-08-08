@@ -1,9 +1,7 @@
-const withParams = require('../../../components/withParams')
-import CustomButton from '../../../components/CustomButton/CustomButton'
+import {withTranslation} from 'react-i18next'
 import {Typography} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
-import {withTranslation} from 'react-i18next'
-import AlgoliaPlaces from 'algolia-places-react'
+import Button from '@material-ui/core/Button'
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControl from '@material-ui/core/FormControl'
 import Grid from '@material-ui/core/Grid'
@@ -13,15 +11,14 @@ import Router from 'next/router'
 import Select from '@material-ui/core/Select'
 import TextField from '@material-ui/core/TextField'
 import axios from 'axios'
-
-
 import DashboardLayout from '../../../hoc/Layout/DashboardLayout'
-
-const {COMPANY_SIZE, COMPANY_ACTIVITY}=require('../../../utils/consts')
-const {SIRET}=require('../../../config/config')
-const {clearAuthenticationToken, setAxiosAuthentication}=require('../../../utils/authentication')
-const {formatAddress}=require('../../../utils/text')
-const {snackBarSuccess, snackBarError}=require('../../../utils/notifications')
+import withParams from '../../../components/withParams'
+import LocationSelect from '../../../components/Geo/LocationSelect'
+import {COMPANY_SIZE, COMPANY_ACTIVITY} from '../../../utils/consts'
+import {SIRET} from '../../../config/config'
+import {clearAuthenticationToken, setAxiosAuthentication} from '../../../utils/authentication'
+import {formatAddress} from '../../../utils/text'
+import {snackBarSuccess, snackBarError} from '../../../utils/notifications'
 
 const styles = () => ({
   signupContainer: {
@@ -173,7 +170,7 @@ class View extends React.Component {
 
   render() {
     const {classes} = this.props
-    const {company, errors} = this.state
+    const {company, errors, suggestion_address} = this.state
 
     const placeholder = formatAddress(company ? company.billing_address : null) || 'Modifiez votre adresse'
     if (!company) {
@@ -217,15 +214,8 @@ class View extends React.Component {
                 <Typography style={{fontSize: 20}}>Adresse siège social</Typography>
               </Grid>
               <form>
-                <AlgoliaPlaces
+                <LocationSelect
                   placeholder={placeholder}
-                  options={{
-                    appId: 'plKATRG826CP',
-                    apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                    language: 'fr',
-                    countries: ['fr'],
-                    type: 'address',
-                  }}
                   onChange={this.onAddressChange}
                   onClear={this.onAddressChange}
                 />
@@ -335,9 +325,9 @@ class View extends React.Component {
                 />
               </Grid>
               <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
-                <CustomButton type="submit" variant="contained" color="primary" style={{width: '100%'}}>
-                  Enregistrer
-                </CustomButton>
+                <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}>
+                    Enregistrer
+                </Button>
               </Grid>
             </form>
           </Grid>
@@ -348,4 +338,4 @@ class View extends React.Component {
 }
 
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(withParams(View)))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(withParams(View)))

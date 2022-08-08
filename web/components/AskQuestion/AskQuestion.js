@@ -8,14 +8,14 @@ import axios from 'axios'
 function AskQuestion(props) {
   const {t, user} = props
   const [alfred, setAlfred] = useState({})
-    
+
   useEffect(() => {
     axios.get(`/myAlfred/api/shop/alfred/${user}`)
       .then(response => {
         let user = response.data
         setAlfred(user.alfred)
       }).catch(err => console.error(err))
-  })
+  }, [])
 
   return(
     <Grid style={{textAlign: 'center'}}>
@@ -30,4 +30,4 @@ function AskQuestion(props) {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(AskQuestion)
+export default withTranslation(null, {withRef: true})(AskQuestion)

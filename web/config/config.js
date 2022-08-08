@@ -1,7 +1,15 @@
 const isEmpty = require('../server/validation/is-empty')
 const {MODE, TAWKTO_URL, DISABLE_ALFRED_SELF_REGISTER, DISABLE_ALFRED_PARTICULAR_REGISTER,
-  SIB_TEMPLATES, DATABASE_NAME, HIDE_STORE_DIALOG, MANGOPAY_CLIENTID, MANGOPAY_APIKEY, DATA_MODEL, SKIP_FAILED_PAYMENT,
-  SIB_APIKEY, HOSTNAME, PORT}=require('../mode')
+  SIB_TEMPLATES, DATABASE_NAME, HIDE_STORE_DIALOG, MANGOPAY_CLIENTID, MANGOPAY_APIKEY,
+  SITE_MODE, SIB_APIKEY,
+  DATA_MODEL, SKIP_FAILED_PAYMENT,
+  HOSTNAME, PORT, MONO_PROVIDER,
+}=require('../mode')
+
+const SITE_MODES={
+  MARKETPLACE: 'marketplace',
+  PLATFORM: 'platform',
+}
 
 const MODES={
   PRODUCTION: 'production',
@@ -61,6 +69,18 @@ const is_development_nossl = () => {
   return get_mode()==MODES.DEVELOPMENT_NOSSL
 }
 
+const isPlatform = () => {
+  return SITE_MODE==SITE_MODES.PLATFORM
+}
+
+const isMarketplace = () => {
+  return SITE_MODE==SITE_MODES.MARKETPLACE
+}
+
+const isMonoProvider = () => {
+  return MONO_PROVIDER
+}
+
 const appName = 'myalfred'
 
 const databaseName = DATABASE_NAME
@@ -114,11 +134,11 @@ const getSibApiKey = () => {
 }
 
 const canAlfredSelfRegister = () => {
-  return !DISABLE_ALFRED_SELF_REGISTER
+  return !isMonoProvider() && !DISABLE_ALFRED_SELF_REGISTER
 }
 
 const canAlfredParticularRegister = () => {
-  return !DISABLE_ALFRED_PARTICULAR_REGISTER
+  return !isMonoProvider() && !DISABLE_ALFRED_PARTICULAR_REGISTER
 }
 
 const getSibTemplates = () => {
@@ -134,6 +154,7 @@ const displayConfig = () => {
 
   console.log(`Configuration is:\n\
 \tMode:${get_mode()}\n\
+\tSite mode:${isPlatform() ? 'plateforme' : isMarketplace() ? 'marketplace' : 'inconnu'}\n\
 \tDatabase:${databaseName}\n\
 \tServer prod:${SERVER_PROD}\n\
 \tServer port:${getPort()}\n\
@@ -148,7 +169,10 @@ const displayConfig = () => {
 const checkConfig = () => {
   return new Promise((resolve, reject) => {
     if (!Object.values(MODES).includes(MODE)) {
-      reject(`MODE: ${MODE} inconnu, attendu dans ${Object.values(MODES)}`)
+      reject(`MODE: ${MODE} inconnu, attendu ${JSON.stringiffy(Object.values(MODES))}`)
+    }
+    if (!Object.values(SITE_MODES).includes(SITE_MODE)) {
+      reject(`SITE_MODE: ${SITE_MODE} inconnu, attendu ${JSON.stringify(Object.values(SITE_MODES))}`)
     }
 
     if (!is_development() && !HOSTNAME) {
@@ -200,6 +224,10 @@ const hideStoreDialog = () => {
   return !!HIDE_STORE_DIALOG
 }
 
+/**
+ONLY DEV & VALIDATION MODES
+Consider failed payment succeeded
+*/
 const skipFailedPayment = () => {
   return !is_production() && !!SKIP_FAILED_PAYMENT
 }
@@ -222,6 +250,26 @@ const DOC_PATH = `/static/assets/docs/${getDataModel()}`
 const CGV_PATH=`${DOC_PATH}/cgv.pdf`
 // CGV expires afeter. If null, does never expire
 const CGV_EXPIRATION_DELAY=365
+
+const bookingUrl = (serviceUserId, extraParams={}) => {
+  let params=new URLSearchParams()
+  let url=null
+  if (getDataModel()=='aftral') {
+    url=`/training/${serviceUserId}`
+  }
+  else {
+    url='/userServicePreview'
+    params.append('id', serviceUserId)
+  }
+  Object.entries(extraParams).forEach(([key, value]) => {
+    params.append(key, value)
+  })
+  if ([...params].length>0) {
+    url=`${url}?${params.toString()}`
+  }
+  return url
+}
+
 // Public API
 module.exports = {
   databaseName: databaseName,
@@ -234,6 +282,10 @@ module.exports = {
   mustDisplayChat, getChatURL,
   canAlfredSelfRegister, canAlfredParticularRegister,
   getSibTemplates, checkConfig, getDatabaseUri, hideStoreDialog,
-  getDataModel, skipFailedPayment, getSibApiKey, getPort, getExchangeDirectory,
-  RANDOM_ID, DOC_PATH, CGV_PATH, CGV_EXPIRATION_DELAY,
+  isPlatform, isMarketplace, isMonoProvider, getDataModel, skipFailedPayment, getSibApiKey,
+  getPort, getExchangeDirectory,
+  RANDOM_ID,
+  displayConfig,
+  DOC_PATH, CGV_PATH, CGV_EXPIRATION_DELAY,
+  bookingUrl,
 }

@@ -629,4 +629,4 @@ creaShop.propTypes = {
   window: PropTypes.func,
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(withParams(creaShop)))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(withParams(creaShop)))

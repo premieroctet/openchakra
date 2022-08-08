@@ -228,19 +228,6 @@ router.get('/nonViewedMessagesCount', passport.authenticate('jwt', {session: fal
     .catch(err => console.error(err))
 })
 
-router.put('/addBookingId/:id', (req, res) => {
-  ChatRoom.findByIdAndUpdate(req.params.id, {booking: mongoose.Types.ObjectId(req.body.booking)})
-    .then(chatroom => {
-      if (!chatroom) {
-        return res.status(HTTP_CODES.NOT_FOUND).json({msg: 'error'})
-      }
-      if (chatroom) {
-        return res.json(chatroom)
-      }
-    })
-    .catch(err => console.error(err))
-})
-
 router.delete('/chatRoom/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
   ChatRoom.deleteOne(req.params.id)
     .then(() => {

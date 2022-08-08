@@ -2,6 +2,9 @@ import {withTranslation} from 'react-i18next'
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Divider from '@material-ui/core/Divider'
+import withStyles from '@material-ui/core/styles/withStyles'
+import ReactHtmlParser from 'react-html-parser'
+import isEmpty from 'lodash/isEmpty'
 import DrawerBookingRecap from '../../Drawer/DrawerBookingRecap/DrawerBookingRecap'
 import PaymentPics from '../../PaymentPics/PaymentPics'
 import Topic from '../../../hoc/Topic/Topic'
@@ -9,9 +12,7 @@ import AddressService from '../../AddressService/AddressService'
 import Profile from '../../Profile/Profile'
 import ListAlfredConditions from '../../ListAlfredConditions/ListAlfredConditions'
 import styles from '../../../static/css/components/AddressAndFacturation/AddressAndFacturation'
-import withStyles from '@material-ui/core/styles/withStyles'
-import {ADDRESS_FACTURATION} from '../../../utils/i18n'
-import ReactHtmlParser from 'react-html-parser'
+import {isMonoProvider} from '../../../config/config'
 
 class AddressAndFacturation extends React.Component {
 
@@ -24,7 +25,7 @@ class AddressAndFacturation extends React.Component {
   };
 
   render() {
-    const{equipments, pricedPrestations, countPrestations, user, classes, alfred_pro} = this.props
+    const{equipments, pricedPrestations, countPrestations, alfred, classes, alfred_pro} = this.props
 
     return(
       <Grid container className={classes.addressAndFactContainer}>
@@ -41,34 +42,44 @@ class AddressAndFacturation extends React.Component {
                 />
               </Topic>
             </Grid>
+
+            {!isMonoProvider() &&
             <Grid className={`customadandfaccontainer ${classes.adandfaccontainer}`} style={{marginTop: '2vh'}}>
-              <Topic
-                titleTopic={ReactHtmlParser(this.props.t('PROFIL.about', {firstname: user.firstname}))}
-                titleSummary={false}
-                underline={false}
-              >
-                <Profile
-                  {...this.props}
-                />
-              </Topic>
-              <Grid style={{marginTop: 30, marginBottom: 30}}>
-                <Divider className={`customadreandfacdivider ${classes.divider}`}/>
-              </Grid>
-              <Topic
-                titleTopic={ReactHtmlParser(this.props.t('BOOKING.stuff'))}
-                titleSummary={equipments.length === 0 ? ReactHtmlParser(this.props.t('BOOKING.no_stuff')) : false}
-                underline={false}
-              >
-                <ListAlfredConditions
-                  wrapperComponentProps={equipments}
-                  columnsXl={6}
-                  columnsLG={6}
-                  columnsMD={6}
-                  columnsSM={6}
-                  columnsXS={6}
-                />
-              </Topic>
+              { /** TODO Afficher ServiceAvatar si booking.is_service */ }
+              {alfred &&
+                <Topic
+                  titleTopic={ReactHtmlParser(this.props.t('PROFIL.about', {firstname: alfred.firstname}))}
+                  titleSummary={false}
+                  underline={false}
+                >
+                  <Profile
+                    user={alfred}
+                  />
+                </Topic>
+              }
+              {!isEmpty(equipments) &&
+                <>
+                  <Grid style={{marginTop: 30, marginBottom: 30}}>
+                    <Divider className={`customadreandfacdivider ${classes.divider}`}/>
+                  </Grid>
+                  <Topic
+                    titleTopic={ReactHtmlParser(this.props.t('BOOKING.stuff'))}
+                    titleSummary={equipments.length === 0 ? ReactHtmlParser(this.props.t('BOOKING.no_stuff')) : false}
+                    underline={false}
+                  >
+                    <ListAlfredConditions
+                      wrapperComponentProps={equipments}
+                      columnsXl={6}
+                      columnsLG={6}
+                      columnsMD={6}
+                      columnsSM={6}
+                      columnsXS={6}
+                    />
+                  </Topic>
+                </>
+              }
             </Grid>
+            }
           </Grid>
         </Grid>
         <Grid item xl={6} lg={6} md={6} xs={12} sm={12} className={classes.mainContainerAdressFactu}>
@@ -93,4 +104,4 @@ class AddressAndFacturation extends React.Component {
 
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(AddressAndFacturation))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(AddressAndFacturation))

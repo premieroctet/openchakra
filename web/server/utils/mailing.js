@@ -233,7 +233,7 @@ const sendBookingDetails = booking => {
   )
 }
 
-const sendBookingInfosRecap = booking => {
+const sendBookingInfosRecap = (booking, req) => {
   sendNotification(
     SIB_IDS.BOOKING_INFOS_RECAP,
     booking.user,

@@ -297,5 +297,5 @@ const validator = state => {
     && isInternationalPhoneOK(state.phone, state.langIsoCode)
 }
 
-const TransSummary=withTranslation('feurst', {withRef: true})(Summary)
+const TransSummary=withTranslation(null, {withRef: true})(Summary)
 module.exports={Summary: TransSummary, summaryValidator: validator}

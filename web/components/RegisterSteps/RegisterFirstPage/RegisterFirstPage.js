@@ -169,4 +169,4 @@ class RegisterFirstPage extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(RegisterFirstPage))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(RegisterFirstPage))

@@ -125,5 +125,5 @@ const validator = state => {
   return !!state.bladeShape && !!state.bladeThickness
 }
 
-const TransBladeDimension=withTranslation('feurst', {withRef: true})(BladeDimension)
+const TransBladeDimension=withTranslation(null, {withRef: true})(BladeDimension)
 module.exports={BladeDimension: TransBladeDimension, bladeDimensionValidator: validator}

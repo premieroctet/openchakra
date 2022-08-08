@@ -50,4 +50,4 @@ class LayoutEvaluate extends React.Component {
 
 }
 
-export default withTranslation('custom', {withRef: true})(LayoutEvaluate)
+export default withTranslation(null, {withRef: true})(LayoutEvaluate)

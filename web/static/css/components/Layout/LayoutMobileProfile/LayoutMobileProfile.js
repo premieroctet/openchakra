@@ -1,4 +1,4 @@
-export default () => ({
+const Style= () => ({
   layoutMobileProfilHeader: {
     backgroundImage: 'url(/assets/img/banner/bannerProfile.svg)',
     height: '30vh',
@@ -46,3 +46,5 @@ export default () => ({
     alignItems: 'flex-end',
   },
 })
+
+export default Style

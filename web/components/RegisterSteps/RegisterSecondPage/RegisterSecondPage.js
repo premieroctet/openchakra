@@ -1,27 +1,20 @@
-import { formatAddress } from '../../../utils/text';
-import CustomButton from '../../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
-import React from 'react'
-import withStyles from '@material-ui/core/styles/withStyles'
-import Grid from '@material-ui/core/Grid'
 import {Typography} from '@material-ui/core'
-import AlgoliaPlaces from 'algolia-places-react'
 import TextField from '@material-ui/core/TextField'
 import PhoneIphoneOutlinedIcon from '@material-ui/icons/PhoneIphoneOutlined'
 import Checkbox from '@material-ui/core/Checkbox'
 import NumberFormat from 'react-number-format'
 import PropTypes from 'prop-types'
+import Grid from '@material-ui/core/Grid'
+import React from 'react'
+import withStyles from '@material-ui/core/styles/withStyles'
 import styles from '../../../static/css/components/RegisterSteps/RegisterSecondPage/RegisterSecondPage'
-import Dialog from '@material-ui/core/Dialog'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import DialogContent from '@material-ui/core/DialogContent'
-import CguContent from '../../CguContent/CguContent'
-import DialogActions from '@material-ui/core/DialogActions'
-const {ACCOUNT_MIN_AGE} = require('../../../utils/consts')
-
-import {REGISTER_SECOND_PAGE} from '../../../utils/i18n'
+import CustomButton from '../../CustomButton/CustomButton'
+import {formatAddress} from '../../../utils/text'
+import LocationSelect from '../../Geo/LocationSelect'
 import CustomIcon from '../../CustomIcon/CustomIcon'
+const {ACCOUNT_MIN_AGE} = require('../../../utils/consts')
 
 
 function NumberFormatCustom(props) {
@@ -54,32 +47,11 @@ class RegisterSecondPage extends React.Component {
   constructor(props) {
     super(props)
     this.state={
-      open: false,
     }
-  }
-
-  dialogCgu = classes => {
-    const {open} = this.state
-
-    const handleClose = () => {
-      this.setState({open: false})
-    }
-
-    return (
-      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
-        <DialogTitle onClose={() => this.setState({open: false})}/>
-        <DialogContent>
-          <CguContent/>
-        </DialogContent>
-        <DialogActions>
-          <CustomButton onClick={handleClose} classes={{root: classes.cancelButton}}>{ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.dialog_cgu_close'))}</CustomButton>
-        </DialogActions>
-      </Dialog>
-    )
   }
 
   handleOpenCgu = () => {
-    this.setState({open: true})
+    window.open('/static/cgu.pdf', '_blank')
   }
 
   render() {
@@ -103,17 +75,9 @@ class RegisterSecondPage extends React.Component {
           <Grid container spacing={1} alignItems="flex-end" className={classes.genericContainer}>
             <Grid item style={{width: '100%'}}>
               <form>
-                <AlgoliaPlaces
+                <LocationSelect
                   className={classes.textFieldAlgo}
                   placeholder={address_placeholder}
-                  options={{
-                    appId: 'plKATRG826CP',
-                    apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                    language: 'fr',
-                    countries: ['fr'],
-                    type: 'address',
-
-                  }}
                   onChange={suggestion => this.props.onChangeAddress(suggestion)}
                   onClear={() => this.props.onChangeAddress(null)}
                 />
@@ -232,7 +196,6 @@ class RegisterSecondPage extends React.Component {
                   <CustomButton onClick={this.handleOpenCgu} classes={{root: `customregigisterbuttoncgu ${classes.buttonCGU}`}} error={state.errors.checked}>
                     {ReactHtmlParser(this.props.t('REGISTER_SECOND_PAGE.button_cgu'))}
                   </CustomButton>
-                  {this.dialogCgu(classes)}
                 </Grid>
               </Grid>
             </Grid>
@@ -243,4 +206,4 @@ class RegisterSecondPage extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(RegisterSecondPage))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(RegisterSecondPage))

@@ -55,4 +55,4 @@ class personalInformation extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(personalInformation)
+export default withTranslation(null, {withRef: true})(personalInformation)

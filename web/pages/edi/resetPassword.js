@@ -99,4 +99,4 @@ const StyledReset = styled.div`
   }
 `
 
-export default withTranslation('custom', {withRef: true})(ResetPassword)
+export default withTranslation(null, {withRef: true})(ResetPassword)

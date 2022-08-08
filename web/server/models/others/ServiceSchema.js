@@ -1,4 +1,6 @@
+const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 const mongoose = require('mongoose')
+
 const Schema = mongoose.Schema
 
 const ServiceSchema = new Schema({
@@ -30,6 +32,8 @@ const ServiceSchema = new Schema({
     alfred: Boolean,
     // Visioconférence
     visio: Boolean,
+    // Visioconférence
+    elearning: Boolean,
   },
   // Frais livraison
   pick_tax: {
@@ -69,5 +73,7 @@ ServiceSchema.virtual('prestations', {
 })
 
 ServiceSchema.index({label: 'text'})
+
+ServiceSchema.plugin(mongooseLeanVirtuals)
 
 module.exports=ServiceSchema

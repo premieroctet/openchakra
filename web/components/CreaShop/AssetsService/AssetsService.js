@@ -417,4 +417,4 @@ class AssetsService extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(AssetsService))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(AssetsService))

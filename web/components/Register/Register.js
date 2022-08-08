@@ -11,7 +11,6 @@ import {EMPLOYEE, REGISTER_MODE} from '../../utils/consts'
 import CustomButton from '../CustomButton/CustomButton'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
-import CguContent from '../CguContent/CguContent'
 const {snackBarSuccess, snackBarError} = require('../../utils/notifications')
 const {setAuthToken, setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react'
@@ -157,22 +156,6 @@ class Register extends React.Component {
     if (this.state.activeStep !== prevState.activeStep) {
       this.props.sendParentData(this.state.activeStep)
     }
-  }
-
-  dialogCgu = () => {
-    const {open} = this.state
-    const handleClose = () => {
-      this.setState({open: false})
-    }
-    return (
-      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
-        <DialogTitle onClose={() => this.setState({open: false})}/>
-        <DialogContent>
-          <CguContent/>
-          <CustomButton style={{float: 'right'}} onClick={handleClose}>{ReactHtmlParser(this.props.t('REGISTER.dialog_cgu_close'))}</CustomButton>
-        </DialogContent>
-      </Dialog>
-    )
   }
 
   validate = () => {
@@ -589,4 +572,4 @@ class Register extends React.Component {
 
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(Register))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(Register))

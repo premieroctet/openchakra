@@ -84,4 +84,4 @@ class ScrollMenu extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(ScrollMenu))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(ScrollMenu))

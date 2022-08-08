@@ -25,7 +25,7 @@ class Footer extends React.Component {
           </Grid>
           <Grid item className={classes.rightMainContainerFooter}>
             <Grid item className={classes.marginLink}>
-              <Link href={'/static/cgu.pdf'}>
+              <Link href={'/static/cgu.pdf'} target="_blank">
                 <Typography>{ReactHtmlParser(this.props.t('FOOTER.cgu'))}</Typography>
               </Link>
             </Grid>
@@ -36,4 +36,4 @@ class Footer extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(Footer))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(Footer))

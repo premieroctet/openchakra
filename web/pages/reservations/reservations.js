@@ -1,8 +1,6 @@
-const withParams = require('../../components/withParams')
-import {booking_datetime_str} from '../../utils/dateutils'
-import {Tooltip} from '@material-ui/core'
-import CustomButton from '../../components/CustomButton/CustomButton'
+import React, {useState, useEffect} from 'react'
 import {withStyles} from '@material-ui/core/styles'
+import styled from 'styled-components'
 import {withTranslation} from 'react-i18next'
 import CloseIcon from '@material-ui/icons/Close'
 import Dialog from '@material-ui/core/Dialog'
@@ -11,25 +9,26 @@ import Divider from '@material-ui/core/Divider'
 import Grid from '@material-ui/core/Grid'
 import IconButton from '@material-ui/core/IconButton'
 import MuiDialogTitle from '@material-ui/core/DialogTitle'
-import React from 'react'
 import Router from 'next/router'
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
 import Typography from '@material-ui/core/Typography'
 import axios from 'axios'
 import moment from 'moment'
-
+import ReactHtmlParser from 'react-html-parser'
+import Link from 'next/link'
+import {useUserContext} from '../../contextes/user.context'
+import {BOOK_STATUS, LOCATION_ELEARNING} from '../../utils/consts'
+import {bookingUrl} from '../../config/config'
 import BookingPreApprouve from '../../components/BookingDetail/BookingPreApprouve'
 import BookingPreview from '../../components/BookingDetail/BookingPreview'
 import LayoutMobileReservations from '../../hoc/Layout/LayoutMobileReservations'
 import LayoutReservations from '../../hoc/Layout/LayoutReservations'
-import UserAvatar from '../../components/Avatar/UserAvatar'
 import styles from '../../static/css/pages/reservations/reservations'
-import {RESERVATION, BOOKING} from '../../utils/i18n'
-import ReactHtmlParser from 'react-html-parser'
-const {BOOK_STATUS}=require('../../utils/consts')
-const {setAxiosAuthentication}=require('../../utils/authentication')
-import Link from 'next/link'
+import CustomButton from '../../components/CustomButton/CustomButton'
+import withParams from '../../components/withParams'
+import BookingMinInfos from '../../components/Booking/BookingMinInfos'
+import AddToCalendar from '../../components/Calendar/AddToCalendar'
 
 const DialogTitle = withStyles(styles)(props => {
   const {children, classes, onClose, ...other} = props
@@ -49,157 +48,130 @@ moment.locale('fr')
 
 // TODO RASSEMBLER ALLRESERVATIONS + COMINGRESERVATIONS + FINISHEDRESERVATIONS
 
-class AllReservations extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      user: null,
-      alfredReservations: [],
-      userReservations: [],
-      isAlfred: false,
-      userInfo: {},
-      reservationType: 1,
-      reservationStatus: 0,
-      bookingPreview: null,
-      bookingPreApprouved: null,
+const AllReservations = ({classes, t, id}) => {
+
+  const [alfredReservations, setAlfredReservations] = useState([])
+  const [userReservations, setUserReservations] = useState([])
+  const [reservationType, setReservationType] = useState(1)
+  const [reservationStatus, setReservationStatus] = useState(0)
+  const [bookingPreview, setBookingPreview] = useState(null)
+  const [bookingPreApprouved, setBookingPreApprouved] = useState(null)
+
+  const {user} = useUserContext()
+
+  useEffect(() => {
+    setReservationType(user?.is_alfred ? 0 : 1)
+    loadBookings()
+    if (id) {
+      setTimeout(() => setBookingPreview(id), 1000)
     }
-  }
+  }, [user])
 
-  componentDidMount() {
-    setAxiosAuthentication()
-    axios.get('/myAlfred/api/users/current')
-      .then(res => {
-        let result = res.data
-        this.setState({
-          userInfo: result,
-          user: result._id,
-          isAlfred: result.is_alfred,
-          reservationType: result.is_alfred ? 0 : 1,
-        })
-        this.loadBookings()
-        if (this.props.id) {
-          setTimeout(() => this.setState({bookingPreview: this.props.id}), 1000)
-        }
-      })
-      .catch(err => {
-        if (err.response && [401, 403].includes(err.response.status)) {
-          localStorage.setItem('path', Router.asPath)
-          Router.push('/')
-        }
-      })
-  }
-
-  loadBookings = () => {
+  const loadBookings = () => {
     axios.get('/myAlfred/api/booking/alfredBooking')
       .then(res => {
         // On n'affiche pas les résas en attente de paiement
         const alfredBookings=res.data.filter(r => r.status !== BOOK_STATUS.TO_PAY)
-        this.setState({alfredReservations: alfredBookings})
-        axios.get('/myAlfred/api/booking/userBooking')
-          .then(res => {
-            const userBookings=res.data
-            this.setState({userReservations: userBookings})
-          })
+        setAlfredReservations(alfredBookings)
+        return axios.get('/myAlfred/api/booking/userBooking')
+      })
+      .then(res => {
+        const userBookings=res.data
+        setUserReservations(userBookings)
+      })
+      .catch(err => {
+        console.error(err)
       })
   }
 
-  onReservationTypeChanged = (event, newValue) => {
-    this.setState({reservationType: newValue, reservationStatus: 0})
+  const onReservationTypeChanged = (event, newValue) => {
+    setReservationType(newValue)
+    setReservationStatus(0)
   }
 
-  handleReservationStatusChanged = (event, newValue) => {
-    this.setState({reservationStatus: newValue})
+  const handleReservationStatusChanged = (event, newValue) => {
+    setReservationStatus(newValue)
   }
 
-  isFinished = reservation => {
+  const isFinished = reservation => {
     return [BOOK_STATUS.REFUSED, BOOK_STATUS.CANCELLED, BOOK_STATUS.FINISHED, BOOK_STATUS.EXPIRED].includes(reservation.status)
   }
 
-  isComing = reservation => {
+  const isComing = reservation => {
     return [BOOK_STATUS.INFO, BOOK_STATUS.TO_CONFIRM, BOOK_STATUS.CONFIRMED, BOOK_STATUS.PREAPPROVED].includes(reservation.status)
   }
 
-  filterReservations = () => {
-    const {reservationType, reservationStatus, alfredReservations, userReservations}=this.state
+  const filterReservations = () => {
     // Alfred/customer reservatioons
     let reservations = reservationType===0 ? alfredReservations : userReservations
     // All/ coming/finished reservations
-    if (reservationStatus===1) { reservations = reservations.filter(this.isComing) }
-    if (reservationStatus===2) { reservations = reservations.filter(this.isFinished) }
+    if (reservationStatus===1) { reservations = reservations.filter(b => isComing(b)) }
+    if (reservationStatus===2) { reservations = reservations.filter(b => isFinished(b)) }
     return reservations
   }
 
-  openBookingPreview = bookingId => {
-    this.loadBookings()
-    this.setState({bookingPreview: bookingId, bookingPreApprouved: null})
+  const openBookingPreview = bookingId => {
+    loadBookings()
+    setBookingPreview(bookingId)
+    setBookingPreApprouved(null)
   }
 
-  getIcsURL = bookingId => {
-    return `/myAlfred/api/booking/${bookingId}/ics`
+  const openBookingPreAprouved = bookingId => {
+    loadBookings()
+    setBookingPreview(null)
+    setBookingPreApprouved(bookingId)
   }
 
-  getGoogleCalendarURL = bookingId => {
-    return `/myAlfred/api/booking/${bookingId}/google_calendar`
+  const onClosePreview = () => {
+    setBookingPreview(null)
+    loadBookings()
   }
 
-  openBookingPreAprouved = bookingId => {
-    this.loadBookings()
-    this.setState({bookingPreview: null, bookingPreApprouved: bookingId})
-  }
-
-  onClosePreview = () => {
-    this.setState({bookingPreview: null}, () => this.loadBookings())
-  }
-
-  bookingPreviewModal = classes => {
-    const {bookingPreview}=this.state
+  const dialogPreviewModal = classes => {
 
     return (
-      <Dialog
+      bookingPreview && <Dialog
         style={{width: '100%'}}
         open={Boolean(bookingPreview)}
-        onClose={this.onClosePreview}
+        onClose={onClosePreview}
         classes={{paper: classes.dialogPreviewPaper}}
 
       >
-        <DialogTitle id="customized-dialog-title" onClose={this.onClosePreview}/>
+        <DialogTitle id="customized-dialog-title" onClose={onClosePreview}/>
         <DialogContent>
-          <BookingPreview booking_id={bookingPreview} onConfirmPreapproved={this.openBookingPreAprouved}/>
+          <BookingPreview booking_id={bookingPreview} onConfirmPreapproved={openBookingPreAprouved}/>
         </DialogContent>
       </Dialog>
     )
   }
 
-  bookingPreApprouved = classes => {
-    const {bookingPreApprouved}=this.state
+  const dialogPreApprouved = classes => {
 
     return (
-      <Dialog
+      bookingPreApprouved && <Dialog
         style={{width: '100%'}}
         open={Boolean(bookingPreApprouved)}
-        onClose={() => this.setState({bookingPreApprouved: null})}
+        onClose={() => setBookingPreApprouved(null)}
         classes={{paper: classes.dialogPreviewPaper}}
       >
-        <DialogTitle id="customized-dialog-title" onClose={() => this.setState({bookingPreApprouved: null})}/>
+        <DialogTitle id="customized-dialog-title" onClose={() => setBookingPreApprouved(null)}/>
         <DialogContent>
-          <BookingPreApprouve booking_id={bookingPreApprouved} onConfirm={() => this.setState({bookingPreApprouved: false})}/>
+          <BookingPreApprouve booking_id={bookingPreApprouved} onConfirm={() => setBookingPreApprouved(false)}/>
         </DialogContent>
       </Dialog>
     )
   }
 
-  newAppointment = booking => {
+  const newAppointment = booking => {
     let newBooking = booking
     newBooking.prestation_date = null
     localStorage.setItem('bookingObj', JSON.stringify(newBooking))
-    Router.push(`/userServicePreview?id=${ newBooking.serviceUserId}&address=main`)
-
+    Router.push(bookingUrl(newBooking.serviceUserId))
   }
 
-  content = classes => {
-    const {reservationType} = this.state
-    const reservations = this.filterReservations()
-    const alfredMode = this.state.reservationType===0
+  const content = classes => {
+    const reservations = filterReservations()
+    const alfredMode = reservationType === 0
 
     return(
       <Grid style={{width: '100%'}}>
@@ -207,125 +179,138 @@ class AllReservations extends React.Component {
           <Tabs
             orientation="horizontal"
             variant="scrollable"
-            value={this.state.reservationStatus}
-            onChange={this.handleReservationStatusChanged}
+            value={reservationStatus}
+            onChange={handleReservationStatusChanged}
             aria-label="scrollable force tabs"
             scrollButtons="on"
             classes={{indicator: `customscrollmenu ${classes.scrollMenuIndicator}`}}
           >
-            <Tab label={ReactHtmlParser(this.props.t('RESERVATION.allresa'))} className={classes.scrollMenuTab} />
-            <Tab label={ReactHtmlParser(this.props.t('RESERVATION.commingresa'))} className={classes.scrollMenuTab} />
-            <Tab label={ReactHtmlParser(this.props.t('RESERVATION.endingresa'))} className={classes.scrollMenuTab} />
+            <Tab label={ReactHtmlParser(t('RESERVATION.allresa'))} className={classes.scrollMenuTab} />
+            <Tab label={ReactHtmlParser(t('RESERVATION.commingresa'))} className={classes.scrollMenuTab} />
+            <Tab label={ReactHtmlParser(t('RESERVATION.endingresa'))} className={classes.scrollMenuTab} />
           </Tabs>
         </Grid>
         <Grid style={{width: '100%'}}>
           <Divider/>
         </Grid>
-        <Grid container style={{marginTop: '10vh', display: 'flex', flexDirection: 'column'}}>
+        <Bookings>
           {reservations.length ? (
             reservations.map((booking, index) => {
               return (
-                <Grid key={index} className={classes.reservationsMainContainer}>
-                  <Grid container spacing={2} style={{display: 'flex', alignItems: 'center', margin: 0, width: '100%'}}>
-                    <Grid item xl={2} lg={2} md={6} sm={6} xs={4}>
-                      <UserAvatar user={alfredMode ? booking.user : booking.alfred}/>
-                    </Grid>
-                    <Grid item xl={5} lg={5} md={6} sm={6} xs={8} className={classes.descriptionContainer}>
-                      <Grid className={classes.bookingNameContainer}>
-                        <Typography><strong> {booking.status} - {alfredMode ? booking.user.firstname : booking.alfred.firstname}</strong></Typography>
-                      </Grid>
-                      <Grid>
-                        <Typography>
-                          {booking_datetime_str(booking)}
-                        </Typography>
-                      </Grid>
-                      <Grid>
-                        <Typography className={classes.serviceName} style={{color: 'rgba(39,37,37,35%)'}}>{booking.service}</Typography>
-                      </Grid>
-                      { booking.customer_booking &&
-                        <Grid>
-                          <Typography className={classes.serviceName} style={{color: 'rgba(39,37,37,35%)'}}><strong>Réservation AvoCotés</strong></Typography>
-                        </Grid>
-                      }
-                    </Grid>
-                    <Grid item xl={1} lg={1} md={6} sm={3} xs={4} className={classes.priceContainer}>
-                      <Typography className={classes.alfredAmount}><strong>{(alfredMode ? booking.alfred_amount : booking.amount).toFixed(2)}€</strong></Typography>
-                    </Grid>
-                    <Grid item spacing={1} container xl={4} lg={4} md={6} sm={9} xs={8} className={classes.detailButtonContainer} style={{alignItems: 'center'}}>
-                      <Grid item>
-                        <CustomButton
-                          color={'primary'}
-                          variant={'outlined'}
-                          classes={{root: `customreservationdetailbutton ${classes.buttonDetail}`}}
-                          onClick={() => this.openBookingPreview(booking._id)}>
-                          {ReactHtmlParser(this.props.t('RESERVATION.detailbutton'))}
-                        </CustomButton>
-                      </Grid>
-                      <Grid item>
-                        <Link target="_blank" href={this.getGoogleCalendarURL(booking._id)}>
-                          <Tooltip title={BOOKING.ADD_GOOGLE_AGENDA}>
-                            <img src='/static/assets/icon/google_calendar.svg' width="50px"/>
-                          </Tooltip>
-                        </Link>
-                      </Grid>
-                      <Grid item>
-                        <Link href={this.getIcsURL(booking._id)}>
-                          <Tooltip title={BOOKING.ADD_OTHER_AGENDA}>
-                            <img src='/static/assets/icon/calendar.svg' width="50px"/>
-                          </Tooltip>
-                        </Link>
-                      </Grid>
-                      {
-                        reservationType === 1 && !booking.customer_booking ?
-                          <Grid item>
-                            <CustomButton
-                              variant={'contained'}
-                              color={'primary'}
-                              classes={{root: `customresasaveagain ${classes.buttonResa}`}}
-                              onClick={() => this.newAppointment(booking)}>
-                              {ReactHtmlParser(this.props.t('RESERVATION.saveagain'))}
-                            </CustomButton>
-                          </Grid> : null
-                      }
+                <BookingItem key={index}>
 
-                    </Grid>
-                  </Grid>
-                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12} style={{marginTop: '5vh', marginBottom: '5vh'}}>
-                    <Divider/>
-                  </Grid>
-                </Grid>
+                  <BookingMinInfos booking={booking} amIAlfred={alfredMode} withPrice />
+
+                  <div className='booking_actions'>
+                    <CustomButton
+                      color={'primary'}
+                      variant={'outlined'}
+                      classes={{root: `customreservationdetailbutton ${classes.buttonDetail}`}}
+                      onClick={() => openBookingPreview(booking._id)}>
+                      {ReactHtmlParser(t('RESERVATION.detailbutton'))}
+                    </CustomButton>
+
+                    {
+                      reservationType === 1 && !booking.customer_booking && booking.location !== LOCATION_ELEARNING ?
+                        <CustomButton
+                          variant={'contained'}
+                          color={'primary'}
+                          classes={{root: `customresasaveagain ${classes.buttonResa}`}}
+                          onClick={() => newAppointment(booking)}>
+                          {ReactHtmlParser(t('RESERVATION.saveagain'))}
+                        </CustomButton>
+                        : null
+                    }
+
+                    {booking?.cpf_booked && !alfredMode &&
+                    <Link href={booking.cpf_link || 'https://example.com'}>
+                      <a target='_blank'>
+                        {ReactHtmlParser(t('RESERVATION.cpfbutton'))}
+                      </a>
+                    </Link>
+                    }
+
+                    <AddToCalendar bookingId={booking._id} />
+
+                  </div>
+
+                </BookingItem>
               )
             })) :
-            <Typography className={'customresanoresamessage'}>{alfredMode ? ReactHtmlParser(this.props.t('RESERVATION.infomessageAlfred')) : ReactHtmlParser(this.props.t('RESERVATION.infomessageUser')) }</Typography>
+            <Typography className={'customresanoresamessage'}>{alfredMode ? ReactHtmlParser(t('RESERVATION.infomessageAlfred')) : ReactHtmlParser(t('RESERVATION.infomessageUser')) }</Typography>
           }
-        </Grid>
+        </Bookings>
       </Grid>
     )
   }
 
 
-  render() {
-    const {classes} = this.props
-    const {reservationType, userInfo, bookingPreview, bookingPreApprouved} = this.state
-
-    return (
-      <Grid>
-        <Grid className={classes.hiddenMobile}>
-          <LayoutReservations reservationType={reservationType} onReservationTypeChanged={this.onReservationTypeChanged} userInfo={userInfo}>
-            {this.content(classes)}
-          </LayoutReservations>
-        </Grid>
-        <Grid className={classes.hidden}>
-          <LayoutMobileReservations reservationType={reservationType} currentIndex={2} onReservationTypeChanged={this.onReservationTypeChanged} userInfo={userInfo}>
-            {this.content(classes)}
-          </LayoutMobileReservations>
-        </Grid>
-        { bookingPreview ? this.bookingPreviewModal(classes) : null}
-        { bookingPreApprouved ? this.bookingPreApprouved(classes) : null}
+  return (
+    <Grid>
+      <Grid className={classes.hiddenMobile}>
+        <LayoutReservations reservationType={reservationType} onReservationTypeChanged={onReservationTypeChanged} user={user}>
+          {content(classes)}
+        </LayoutReservations>
       </Grid>
-
-    )
-  }
+      <Grid className={classes.hidden}>
+        <LayoutMobileReservations reservationType={reservationType} currentIndex={2} onReservationTypeChanged={onReservationTypeChanged} user={user}>
+          {content(classes)}
+        </LayoutMobileReservations>
+      </Grid>
+      { bookingPreview ? dialogPreviewModal(classes) : null}
+      { bookingPreApprouved ? dialogPreApprouved(classes) : null}
+    </Grid>
+  )
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(withParams(AllReservations)))
+const Bookings = styled.ul`
+  display: 'flex';
+  flex-direction: column;
+  padding: 0;
+  margin-top: 10vh;
+`
+
+export const BookingItem = styled.li`
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--spc-8);
+  margin-bottom: var(--spc-4);
+  padding-block: var(--spc-4);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+
+  .booking_infos {
+    flex:5;
+    flex-basis: 400px;
+  }
+
+  .booking_actions {
+    flex: 1;
+    display: flex;
+    flex-basis: 100px;
+    flex-direction: column;
+    row-gap: var(--spc-2);
+
+    button {
+      width: 100%;
+      word-break: keep-all;
+    }
+
+    a:not(.calendar_actions a) {
+      border-radius: var(--rounded-md);
+      font-weight: var(--font-bold);
+      text-align: center;
+      color: var(--white) !important;
+      text-decoration: none;
+      background-color: var(--secondary-color);
+      padding-block: var(--spc-2);
+      padding-inline: var(--spc-4);
+    }
+  }
+
+  .calendar_actions {
+    display: flex;
+    justify-content: space-evenly;
+  }
+`
+
+export default withTranslation(null, {withRef: true})(withStyles(styles)(withParams(AllReservations)))

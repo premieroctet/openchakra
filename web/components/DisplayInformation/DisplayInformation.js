@@ -36,4 +36,4 @@ function DisplayInformation({pics, title, text, right}) {
   )
 }
 
-export default withTranslation('custom')(DisplayInformation)
+export default withTranslation(null)(DisplayInformation)

@@ -1,3 +1,4 @@
+const mongooseLeanVirtuals=require('mongoose-lean-virtuals')
 const mongoose = require('mongoose')
 const {getDataModel}=require('../../config/config')
 
@@ -5,6 +6,7 @@ let CategorySchema=null
 
 try {
   CategorySchema=require(`./${getDataModel()}/CategorySchema`)
+  CategorySchema.plugin(mongooseLeanVirtuals)
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {

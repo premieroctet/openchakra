@@ -42,4 +42,4 @@ class PaymentResponsive extends React.Component {
 }
 
 
-export default withTranslation('custom', {withRef: true})(PaymentResponsive)
+export default withTranslation(null, {withRef: true})(PaymentResponsive)

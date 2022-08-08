@@ -17,7 +17,7 @@ const {
   MACHINE_TYPES,
   PIN,
   SOLD,
-} = require('../../../utils/consts')
+} = require('../../../utils/feurst/consts')
 
 const UNKNOWN_TEETH='nb de dents'
 

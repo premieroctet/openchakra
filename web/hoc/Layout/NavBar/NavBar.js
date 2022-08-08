@@ -1,55 +1,57 @@
-import React, {Component} from 'react'
 import ReactHtmlParser from 'react-html-parser'
+import Link from 'next/link'
 import {withTranslation} from 'react-i18next'
+import React, {Component} from 'react'
+import {Hidden, Typography} from '@material-ui/core'
+import {DateRangePicker} from 'react-dates'
 import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
-import IconButton from '@material-ui/core/IconButton'
-import MenuItem from '@material-ui/core/MenuItem'
-import Menu from '@material-ui/core/Menu'
-import Router from 'next/router'
-import Grid from '@material-ui/core/Grid'
-import MultipleSelect from 'react-select'
-import moment from 'moment'
-import Dialog from '@material-ui/core/Dialog'
-import DialogContent from '@material-ui/core/DialogContent'
-import Slide from '@material-ui/core/Slide'
-import MuiDialogTitle from '@material-ui/core/DialogTitle'
+import ClearIcon from '@material-ui/icons/Clear'
 import CloseIcon from '@material-ui/icons/Close'
-import Paper from '@material-ui/core/Paper'
-import Divider from '@material-ui/core/Divider'
-import MenuIcon from '@material-ui/icons/Menu'
-import SearchIcon from '@material-ui/icons/Search'
-import AlgoliaPlaces from 'algolia-places-react'
 import DatePicker from 'react-datepicker'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import Divider from '@material-ui/core/Divider'
+import FormControl from '@material-ui/core/FormControl'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Grid from '@material-ui/core/Grid'
+import IconButton from '@material-ui/core/IconButton'
+import InputLabel from '@material-ui/core/InputLabel'
+import MenuItem from '@material-ui/core/MenuItem'
+import MuiDialogTitle from '@material-ui/core/DialogTitle'
+import MultipleSelect from 'react-select'
+import Paper from '@material-ui/core/Paper'
+import Router from 'next/router'
+import SearchIcon from '@material-ui/icons/Search'
 import TextField from '@material-ui/core/TextField'
 import Select from '@material-ui/core/Select'
-import FormControl from '@material-ui/core/FormControl'
-import axios from 'axios'
-import withStyles from '@material-ui/core/styles/withStyles'
-import {Typography} from '@material-ui/core'
-import TuneIcon from '@material-ui/icons/Tune'
-import InputLabel from '@material-ui/core/InputLabel'
-import DialogActions from '@material-ui/core/DialogActions'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Switch from '@material-ui/core/Switch'
-import {DateRangePicker} from 'react-dates'
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
-import ClearIcon from '@material-ui/icons/Clear'
+import Slide from '@material-ui/core/Slide'
 import Slider from '@material-ui/core/Slider'
-import Hidden from '@material-ui/core/Hidden'
-import lodash from 'lodash'
-import dynamic from 'next/dynamic'
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
+import Switch from '@material-ui/core/Switch'
+import Toolbar from '@material-ui/core/Toolbar'
+import TuneIcon from '@material-ui/icons/Tune'
+import axios from 'axios'
+import moment from 'moment'
+import withStyles from '@material-ui/core/styles/withStyles'
+import CustomButton from '../../../components/CustomButton/CustomButton'
+import AutoCompleteTextField from
+'../../../components/Search/AutoCompleteTextField'
+import LocationSelect from '../../../components/Geo/LocationSelect'
+import {setAxiosAuthentication} from '../../../utils/authentication'
+import BurgerMenu from '../../../components/Menu/BurgerMenu'
+import {
+  removeAlfredRegistering,
+  setAlfredRegistering,
+} from '../../../utils/context'
 import CustomTabMenu from '../../../components/CustomTabMenu/CustomTabMenu'
 import Logo from '../../../components/Logo/Logo'
-import {getLoggedUserId, isLoggedUserRegistered, removeAlfredRegistering, setAlfredRegistering, getRole} from '../../../utils/context'
-import styles from '../../../static/css/components/NavBar/NavBar'
-import CustomButton from '../../../components/CustomButton/CustomButton'
-import {canAlfredSelfRegister} from '../../../config/config'
-import AutoCompleteTextField from '../../../components/Search/AutoCompleteTextField'
-import {PART, EMPLOYEE} from '../../../utils/consts'
-import {formatAddress} from '../../../utils/text.js'
-import {clearAuthenticationToken, setAxiosAuthentication} from '../../../utils/authentication'
 import {UserContext} from '../../../contextes/user.context'
+import LogIn from '../../../components/LogIn/LogIn'
+import Register from '../../../components/Register/Register'
+import styles from '../../../static/css/components/NavBar/NavBar'
+import {PART, LOCATION_CLIENT} from '../../../utils/consts'
+import {formatAddress} from '../../../utils/text.js'
 
 const Transition = React.forwardRef((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />
@@ -70,20 +72,6 @@ const DialogTitle = withStyles(styles)(props => {
 })
 
 
-const Register = dynamic(
-  () => import('../../../components/Register/Register'),
-  {
-    loading: () => <p>...</p>,
-  },
-)
-
-const LogIn = dynamic(
-  () => import('../../../components/LogIn/LogIn'),
-  {
-    loading: () => <p>...</p>,
-  },
-)
-
 class NavBar extends Component {
   constructor(props) {
     super(props)
@@ -92,7 +80,6 @@ class NavBar extends Component {
       anchorElB2b: null,
       setOpenLogin: false,
       setOpenRegister: null,
-      user: null,
       activeStep: 0,
       keyword: '',
       city: undefined,
@@ -120,14 +107,12 @@ class NavBar extends Component {
       keywords: [],
     }
     this.radius_marks=[1, 5, 10, 15, 20, 30, 50, 100, 200, 300].map(v => ({value: v, label: v>1 && v<50? '' : `${v}km`}))
+
   }
 
-  isLoggedUser = () => {
-    const {user} = this.context
-    return !!user
-  }
 
   componentDidMount() {
+
     let query = Router.query
     if (Router.pathname === '/') {
       this.setState({ifHomePage: true})
@@ -146,20 +131,17 @@ class NavBar extends Component {
     }
 
 
-    const {user} = this.context
+    if (this.context.user) {
 
-    if (user) {
-
-      let allAddresses = {'main': user?.billing_address}
-      if (user?.service_address) {
-        user?.service_address.forEach(addr => {
+      let allAddresses = {[LOCATION_CLIENT]: this.context.user?.billing_address}
+      if (this.context.user?.service_address) {
+        this.context.user?.service_address.forEach(addr => {
           allAddresses[addr._id] = addr
         })
       }
       this.setState({
-        user,
         allAddresses,
-        selectedAddress: this.props.selectedAddress || 'main', keyword: this.props.keyword || '',
+        selectedAddress: this.props.selectedAddress || LOCATION_CLIENT, keyword: this.props.keyword || '',
       })
     }
 
@@ -191,24 +173,16 @@ class NavBar extends Component {
       })
   }
 
-  logout = () => {
-    clearAuthenticationToken()
-    localStorage.removeItem('path')
-    removeAlfredRegistering()
-    if (this.state.ifHomePage) {
-      window.location.reload(false)
-    }
-    else {
-      Router.push('/')
-    }
-  };
 
-  handleMenuClose = () => {
-    this.setState({anchorEl: null, anchorElB2b: null})
-  };
+  isLoggedUser = () => {
+    if (this.context.user) {
+      const logged=!!this.context.user
+      return logged
+    }
+    return false
+  }
 
   handleOpenLogin = () => {
-    this.handleMenuClose()
     removeAlfredRegistering()
     this.setState({setOpenLogin: true, setOpenRegister: null})
   };
@@ -219,7 +193,6 @@ class NavBar extends Component {
   };
 
   handleOpenRegister = user_id => {
-    this.handleMenuClose()
     this.setState({setOpenRegister: user_id, setOpenLogin: false})
   };
 
@@ -242,14 +215,8 @@ class NavBar extends Component {
       localStorage.removeItem('path')
       Router.push(path)
     }
-    else if (!isLoggedUserRegistered() && getRole()==EMPLOYEE) {
-      const user_id=getLoggedUserId()
-      clearAuthenticationToken()
-      this.handleOpenRegister(user_id)
-    }
-    else {
-      Router.push('/search')
-    }
+    // TODO finish partial registration for all-E
+    Router.push('/search')
   };
 
   getData = e => {
@@ -269,7 +236,7 @@ class NavBar extends Component {
       }
       else {
         this.setState({
-          gps: value === 'all' ? null : value === 'main' ? this.state.allAddresses.main.gps : {
+          gps: value === 'all' ? null : value === LOCATION_CLIENT ? this.state.allAddresses.main.gps : {
             lat: this.state.allAddresses[value].lat,
             lng: this.state.allAddresses[value].lng,
           },
@@ -294,16 +261,8 @@ class NavBar extends Component {
     this.setState({services: services || []})
   };
 
-  handleOpenMenuItem = event => {
-    this.setState({anchorEl: event.currentTarget})
-  };
-
   handleOpenMenuItemB2b = event => {
     this.setState({anchorElB2b: event.currentTarget})
-  };
-
-  handleClosenMenuItem = () => {
-    this.setState({anchorEl: false})
   };
 
   handleClosenMenuItemB2b = () => {
@@ -361,7 +320,7 @@ class NavBar extends Component {
   };
 
   onChangeCity({suggestion}) {
-    this.setState({gps: suggestion.latlng, city: suggestion.name})
+    this.setState({gps: suggestion.latlng, city: suggestion.city})
   }
 
   statusFilterChanged = event => {
@@ -480,12 +439,12 @@ class NavBar extends Component {
                   />
                 </Grid>
                 :
-                this.state.user ?
+                this.context.user ?
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12}>
                     <FormControl variant="outlined">
                       <Select
                         id="outlined-select-currency"
-                        value={this.state.selectedAddress || 'main'}
+                        value={this.state.selectedAddress || LOCATION_CLIENT}
                         name={'selectedAddress'}
                         onChange={e => {
                           this.onChange(e)
@@ -494,7 +453,7 @@ class NavBar extends Component {
                       >
                         {Object.entries(this.state.allAddresses).map(([_id, value], index) => (
                           <MenuItem value={_id} key={index}>
-                            { _id=='main' ? ReactHtmlParser(this.props.t('SEARCHBAR.main_adress')) : `${value.label }, `} {formatAddress(value)}
+                            { _id==LOCATION_CLIENT ? ReactHtmlParser(this.props.t('SEARCHBAR.main_adress')) : `${value.label }, `} {formatAddress(value)}
                           </MenuItem>
                         ))}
                         <MenuItem value={'all'}>
@@ -510,15 +469,9 @@ class NavBar extends Component {
                   </Grid>
                   :
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12} classes={{root: classes.navbarRootTextFieldWhereP}}>
-                    <AlgoliaPlaces
+                    <LocationSelect
                       placeholder={ReactHtmlParser(this.props.t('SEARCHBAR.where'))}
-                      options={{
-                        appId: 'plKATRG826CP',
-                        apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                        language: 'fr',
-                        countries: ['fr'],
-                        type: 'city',
-                      }}
+                      type='city'
                       onChange={suggestion => this.onChangeCity(suggestion)}
                       onClear={() => this.setState({city: '', gps: null})}
                     />
@@ -686,6 +639,18 @@ class NavBar extends Component {
                   }
                   label={ReactHtmlParser(this.props.t('SEARCHBAR.remote'))}
                 />
+                <FormControlLabel
+                  classes={{root: classes.filterMenuControlLabel}}
+                  control={
+                    <Switch
+                      checked={locations.includes('elearning')}
+                      onChange={this.onLocationFilterChanged}
+                      color="primary"
+                      name={'visio'}
+                    />
+                  }
+                  label={ReactHtmlParser(this.props.t('SEARCHBAR.elearning'))}
+                />
               </Grid>
             </Grid>
             <Grid className={classes.filterMenuContentMainStyleDateFilter}>
@@ -736,9 +701,8 @@ class NavBar extends Component {
   }
 
   burgerMenuLogged = classes => {
-    const{ifHomePage, companyPage, anchorEl, user} = this.state
-
-    const logged = user != null
+    const{ifHomePage, companyPage} = this.state
+    const logged = !!this.context.user
 
     return(
       <Grid
@@ -749,56 +713,15 @@ class NavBar extends Component {
         md={ifHomePage && !logged ? 10 : ifHomePage && logged ? 2 : 1}
         sm={1}
       >
-        <IconButton
-          aria-label="open drawer"
-          onClick={this.handleOpenMenuItem}
-          classes={{root: 'custombgburger'}}
-        >
-          <MenuIcon classes={{root: `customburgerlogo ${companyPage ? classes.menuIconB2b : classes.menuIcon}`}}/>
-        </IconButton>
-        <Menu
-          anchorEl={anchorEl}
-          keepMounted
-          open={Boolean(anchorEl)}
-          onClose={this.handleClosenMenuItem}
-          getContentAnchorEl={null}
-          anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
-          transformOrigin={{vertical: 'top', horizontal: 'center'}}
-          classes={{paper: 'customburger'}}
-        >
-          {user ?
-            <Grid>
-              <MenuItem disabled={true} style={{opacity: 1}}>{`${ReactHtmlParser(this.props.t('SEARCHBAR.hello')) } ${ user.firstname}`} !</MenuItem>
-              <MenuItem onClick={() => Router.push(`/profile/about?user=${user._id}`)}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_profil'))}</MenuItem>
-              <MenuItem onClick={() => Router.push('/account/editProfile')}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_settings'))}</MenuItem>
-              {
-                !user.is_employee ?
-                  user.is_alfred ?
-                    <MenuItem onClick={() => Router.push(`/profile/services?user=${user._id}`)}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_services'))}</MenuItem>
-                    :
-                    canAlfredSelfRegister() && <MenuItem onClick={() => Router.push('/creaShop/creaShop')}>{ReactHtmlParser(this.props.t('SEARCHBAR.create_shop'))}</MenuItem>
-                  : null
-              }
-              <MenuItem onClick={() => Router.push(`/profile/messages?user=${user._id}`)}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_messages'))}</MenuItem>
-              <MenuItem onClick={() => Router.push('/reservations/reservations')}>{ReactHtmlParser(this.props.t('SEARCHBAR.my_resa'))}</MenuItem>
-              {user.is_admin ?
-                <MenuItem onClick={() => Router.push('/dashboard')}>{ReactHtmlParser(this.props.t('SEARCHBAR.dashboard_alfred'))}</MenuItem>
-                : null
-              }
-              <MenuItem onClick={this.logout}>{ReactHtmlParser(this.props.t('SEARCHBAR.log_out'))}</MenuItem>
-            </Grid>
-            :
-            null
-          }
-        </Menu>
+        <BurgerMenu companyPage={companyPage} ifHomePage={ifHomePage} classes={classes} />
       </Grid>
     )
   }
 
   notLoggedButtonSection = classes => {
-    const{ifHomePage, user} = this.state
+    const{ifHomePage} = this.state
 
-    const logged = user != null
+    const logged = !!this.context.user
 
     return(
       <Grid
@@ -836,8 +759,8 @@ class NavBar extends Component {
   };
 
   searchBarInput = classes => {
-    const logged = this.state.user != null
-    const {ifHomePage, user} = this.state
+    const logged = this.isLoggedUser()
+    const {ifHomePage} = this.state
     const {excludeSearch} = this.props
 
     if (excludeSearch) {
@@ -882,7 +805,7 @@ class NavBar extends Component {
               </Grid>
             </Grid>
             {
-              this.state.user ?
+              logged ?
                 <Grid item xl={6} lg={6} md={6} sm={6} xs={6}>
                   <FormControl className={classes.navbarFormControlAddress}>
                     {this.state.ifHomePage ?
@@ -893,7 +816,7 @@ class NavBar extends Component {
                     <Select
                       disableUnderline
                       id="outlined-select-currency"
-                      value={this.state.selectedAddress || 'main'}
+                      value={this.state.selectedAddress || LOCATION_CLIENT}
                       name={'selectedAddress'}
                       onChange={e => {
                         this.onChange(e)
@@ -902,7 +825,7 @@ class NavBar extends Component {
                     >
                       {Object.entries(this.state.allAddresses).map(([_id, value], index) => (
                         <MenuItem value={_id} key={index}>
-                          { _id=='main' ? ReactHtmlParser(this.props.t('SEARCHBAR.main_adress')) : `${value.label }, `} {formatAddress(value)}
+                          { _id==LOCATION_CLIENT ? ReactHtmlParser(this.props.t('SEARCHBAR.main_adress')) : `${value.label }, `} {formatAddress(value)}
                         </MenuItem>
                       ))}
                       <MenuItem value={'all'}>
@@ -935,16 +858,10 @@ class NavBar extends Component {
                           <InputLabel shrink>{ReactHtmlParser(this.props.t('SEARCHBAR.labelWhere'))}</InputLabel>
                         </Grid> : null
                     }
-                    <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={'customsearch'} classes={{root: `${classes.navbarRootTextFieldWhere}`}}>
-                      <AlgoliaPlaces
+                    <Grid item xl={12} lg={12} md={12} sm={12} xs={12} classes={{root: classes.navbarRootTextFieldWhere}}>
+                      <LocationSelect
                         placeholder={ReactHtmlParser(this.props.t('SEARCHBAR.where'))}
-                        options={{
-                          appId: 'plKATRG826CP',
-                          apiKey: 'dc50194119e4c4736a7c57350e9f32ec',
-                          language: 'fr',
-                          countries: ['fr'],
-                          type: 'city',
-                        }}
+                        type='city'
                         onChange={suggestion => this.onChangeCity(suggestion)}
                         onClear={() => this.setState({city: '', gps: null})}
                       />
@@ -1021,9 +938,11 @@ class NavBar extends Component {
         lg={ifHomePage ? 1 : 3}
         md={ifHomePage ? 10 : 3}
         sm={11}
-        onClick={() => Router.push('/')}
-      >
-        <Logo className={`customnavbarlogo ${classes.logoMyAlfred}`} style={{backgroundRepeat: 'no-repeat', height: 90, width: 200}}/>
+      ><Link href={'/'}>
+          <a>
+            <Logo className={`customnavbarlogo ${classes.logoMyAlfred}`} style={{backgroundRepeat: 'no-repeat', height: 90, width: 200}}/>
+          </a>
+        </Link>
       </Grid>
     )
   };
@@ -1058,22 +977,27 @@ class NavBar extends Component {
       {
         label: ReactHtmlParser(this.props.t('NAVBAR_MENU.allEPrestation')),
         url: '/search',
+        classname: 'NAVBAR_MENU_allEPrestation',
       },
       {
         label: ReactHtmlParser(this.props.t('NAVBAR_MENU.allEWork')),
         url: '/footer/addService',
+        classname: 'NAVBAR_MENU_allEWork',
       },
       {
         label: ReactHtmlParser(this.props.t('NAVBAR_MENU.allEntrepreneur')),
         url: '/footer/ourCommunity',
+        classname: 'NAVBAR_MENU_allEntrepreneur',
       },
       {
         label: ReactHtmlParser(this.props.t('NAVBAR_MENU.allEBecome')),
         url: '/footer/becomeAlfred',
+        classname: 'NAVBAR_MENU_allEBecome',
       },
       {
         label: ReactHtmlParser(this.props.t('NAVBAR_MENU.allEContact')),
         url: '/contact',
+        classname: 'NAVBAR_MENU_allEContact',
       },
     ]
 
@@ -1093,9 +1017,9 @@ class NavBar extends Component {
   };
 
   render() {
-    const {user, ifHomePage, setOpenLogin, modalMobileSearchBarInput, ifSearchPage, modalFilters, companyPage, setOpenRegister} = this.state
+    const {ifHomePage, setOpenLogin, modalMobileSearchBarInput, ifSearchPage, modalFilters, companyPage, setOpenRegister} = this.state
     const {classes} = this.props
-    const logged = user != null
+    const logged = this.isLoggedUser()
 
     const dialogLogin = () => {
       return(
@@ -1184,4 +1108,4 @@ class NavBar extends Component {
 
 NavBar.contextType = UserContext
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(NavBar))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(NavBar))

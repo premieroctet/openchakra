@@ -51,19 +51,6 @@ class all extends DataPage {
     ]
   }
 
-  onCellClicked = (data, field) => {
-
-    if (field=='user.full_name') {
-      window.open(`/profile/about?user=${data.user._id}`, '_blank')
-    }
-    if (field=='alfred.full_name') {
-      window.open(`/profile/about?user=${data.alfred._id}`, '_blank')
-    }
-    if (field=='service') {
-      window.open(`/userServicePreview?id=${data.serviceUserId}`, '_blank')
-    }
-  }
-
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(all))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(all))

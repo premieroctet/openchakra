@@ -7,11 +7,11 @@ const {
   FEURST_ADV,
   FEURST_SALES,
   ROLES,
-} = require('../../utils/feurst/consts')
-const User = require('../../server/models/User')
-const Company = require('../../server/models/Company')
-const {getDatabaseUri} = require('../../config/config')
-const {MONGOOSE_OPTIONS} = require('../../server/utils/database')
+} = require('../utils/feurst/consts')
+const User = require('../server/models/User')
+const Company = require('../server/models/Company')
+const {getDatabaseUri} = require('../config/config')
+const {MONGOOSE_OPTIONS} = require('../server/utils/database')
 
 
 const ACCOUNTS={

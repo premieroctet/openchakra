@@ -1,8 +1,8 @@
+import React, {useState, useEffect} from 'react'
 import axios from 'axios'
 import Router from 'next/router'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
-import React, {useState, useEffect} from 'react'
 import Grid from '@material-ui/core/Grid'
 import CancelIcon from '@material-ui/icons/Cancel'
 import Typography from '@material-ui/core/Typography'
@@ -21,33 +21,36 @@ import AddIcon from '@material-ui/icons/Add'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import withStyles from '@material-ui/core/styles/withStyles'
-import {BOOK_STATUS} from '../../../utils/others/consts'
+import moment from 'moment'
+import lodash from 'lodash'
+import {BOOK_STATUS} from '../../../utils/consts'
 import {computeBookingReference} from '../../../utils/text'
 import {
   getDeadLine,
   isDateAvailable,
   isMomentAvailable,
 } from '../../../utils/dateutils'
-import DevLog from '../../DevLog'
 import {useUserContext} from '../../../contextes/user.context'
 import {computeDistanceKm} from '../../../utils/functions'
 import {snackBarError} from '../../../utils/notifications'
 import {setAxiosAuthentication} from '../../../utils/authentication'
-import {is_development} from '../../../config/config'
 // const is_development = () => false
 import styles from '../../../static/css/components/DrawerBooking/DrawerBooking'
 import BookingDetail from '../../BookingDetail/BookingDetail'
 import ButtonSwitch from '../../ButtonSwitch/ButtonSwitch'
 import CustomButton from '../../CustomButton/CustomButton'
-const moment = require('moment')
-const lodash = require('lodash')
-const isEmpty = require('../../../server/validation/is-empty')
+import isEmpty from '../../../server/validation/is-empty'
+import {isLoggedUserAdmin} from '../../../utils/context'
 
 moment.locale('fr')
 
-const DrawerBooking = ({classes, t, serviceUserId,
+const DrawerBooking = ({
+  classes,
+  t,
+  serviceUserId,
   onAvocotesBookingChange: onAvocotesBookingChangeExternal,
   toggleDrawer,
+  trainingMode,
 }) => {
 
   const [serviceUser, setServiceUser]=useState(null)
@@ -73,6 +76,50 @@ const DrawerBooking = ({classes, t, serviceUserId,
 
   const {user} = useUserContext()
 
+  const computeDistance = () => {
+    if (location!='main') {
+      return 0
+    }
+    const serviceGps = serviceUser.service_address.gps
+    const clientGps=avocotesBooking && avocotesBooking.address.gps || user.billing_address.gps
+    return computeDistanceKm(serviceGps, clientGps)
+  }
+
+  const computeTotal = () => {
+
+    const avocotes_amount = avocotesBooking?.amount || null
+
+    setAxiosAuthentication()
+    axios.post('/myAlfred/api/booking/compute', {
+      prestations: count,
+      serviceUserId: serviceUserId,
+      distance: computeDistance(),
+      location: location,
+      avocotes_amount: avocotes_amount,
+    })
+      .then(res => {
+        setPrices(res.data)
+      })
+      .catch(err => {
+        console.error(err)
+        snackBarError(err.response)
+      })
+  }
+
+  const getExcludedDays = availabilities => {
+    const date=moment(new Date())
+    let currMoment=moment(date).set('date', 1)
+    const endMoment=moment(date).add(1, 'year')
+    let exclude=[]
+    while (currMoment<endMoment) {
+      if (!isDateAvailable(currMoment, availabilities)) {
+        exclude.push(currMoment.toDate())
+      }
+      currMoment.add(1, 'd')
+    }
+    return exclude
+  }
+
   useEffect(() => {
     const pricedPrestas={}
     serviceUser?.prestations.forEach(p => {
@@ -82,6 +129,13 @@ const DrawerBooking = ({classes, t, serviceUserId,
     })
     setPricedPrestations(pricedPrestas)
   }, [count])
+
+  // Select the only prestation in case of training
+  useEffect(() => {
+    if (trainingMode && serviceUser) {
+      setCount({[serviceUser.prestations[0]._id]: 1})
+    }
+  }, [trainingMode, serviceUser])
 
   useEffect(() => {
     if (serviceUserId && !serviceUser) {
@@ -103,26 +157,18 @@ const DrawerBooking = ({classes, t, serviceUserId,
             })
 
         })
-      axios.get('/myAlfred/api/booking/avocotes')
-        .then(res => {
-          setAvocotesBookings(res.data)
-        })
+
+      if (isLoggedUserAdmin()) {
+        axios.get('/myAlfred/api/booking/avocotes')
+          .then(res => {
+            setAvocotesBookings(res.data)
+          })
+          .catch(e => console.error(e))
+
+      }
     }
   }, [serviceUserId])
 
-  const getExcludedDays = availabilities => {
-    const date=moment(new Date())
-    let currMoment=moment(date).set('date', 1)
-    const endMoment=moment(date).add(1, 'year')
-    let exclude=[]
-    while (currMoment<endMoment) {
-      if (!isDateAvailable(currMoment, availabilities)) {
-        exclude.push(currMoment.toDate())
-      }
-      currMoment.add(1, 'd')
-    }
-    return exclude
-  }
 
   useEffect(() => {
     onAvocotesBookingChangeExternal && onAvocotesBookingChangeExternal(avocotesBooking)
@@ -147,10 +193,10 @@ const DrawerBooking = ({classes, t, serviceUserId,
   }, [location, serviceUser, user, bookingDate])
 
   useEffect(() => {
-    if (lodash.sum(Object.values(count))>0 && location && serviceUser && bookingDate) {
+    if (lodash.sum(Object.values(count))>0 && location && serviceUser) {
       computeTotal()
     }
-  }, [count, location, bookingDate, serviceUser])
+  }, [count, location, serviceUser])
 
   useEffect(() => {
     const bookingEnabled=!!serviceUser && location && lodash.sum(Object.values(count)) && bookingDate && warnings.length==0
@@ -158,7 +204,7 @@ const DrawerBooking = ({classes, t, serviceUserId,
   }, [serviceUser, count, location, warnings, bookingDate])
 
   useEffect(() => {
-    if (!serviceUser || !user) { return }
+    if (!serviceUser) { return }
     const locations={}
     if (serviceUser.location.client) {
       if (avocotesBooking) {
@@ -175,9 +221,14 @@ const DrawerBooking = ({classes, t, serviceUserId,
       locations.visio=`En visio`
     }
     if (serviceUser.location.elearning) {
-      locations.alfred=`En e-learning`
+      locations.elearning=`En e-learning`
     }
     setLocations(locations)
+    // Force location if only one possibility
+    const locationsKeys=Object.keys(locations)
+    if (locationsKeys.length==1) {
+      setLocation(locationsKeys[0])
+    }
   }, [serviceUser, avocotesBooking])
 
   const onBookingDateChange = dt => {
@@ -223,27 +274,12 @@ const DrawerBooking = ({classes, t, serviceUserId,
     }
 
     let bookingObj = {
-      reference: user ? computeBookingReference(user, serviceUser.user) : '',
-      service: serviceUser.service.label,
-      serviceId: serviceUser.service._id,
-      address: place,
       location: location,
-      equipments: serviceUser.equipments,
-      amount: prices.total,
-      prestation_date: bookingDate,
-      alfred: serviceUser.user._id,
-      user: user ? user._id : null,
-      prestations: prestations,
-      travel_tax: prices.travel_tax,
-      pick_tax: prices.pick_tax,
-      cesu_amount: prices.cesu_total,
-      customer_fee: prices.customer_fee,
-      provider_fee: prices.provider_fee,
-      customer_fees: prices.customer_fees,
-      provider_fees: prices.provider_fees,
-      status: avocotesBooking ? BOOK_STATUS.TO_CONFIRM : actual ? BOOK_STATUS.TO_PAY : BOOK_STATUS.INFO,
+      date: bookingDate,
+      prestations: count,
       serviceUserId: serviceUser._id,
-      customer_booking: avocotesBooking?._id || null,
+      customerBookingId: avocotesBooking?._id,
+      informationRequest: !actual,
     }
 
     let chatPromise = !user ?
@@ -254,11 +290,7 @@ const DrawerBooking = ({classes, t, serviceUserId,
         recipient: serviceUser.user._id,
       })
 
-    chatPromise.then(res => {
-
-      if (user) {
-        bookingObj.chatroom = res.data._id
-      }
+    chatPromise.then(() => {
 
       localStorage.setItem('bookingObj', JSON.stringify(bookingObj))
 
@@ -271,22 +303,18 @@ const DrawerBooking = ({classes, t, serviceUserId,
       setPending(true)
       axios.post('/myAlfred/api/booking', bookingObj)
         .then(response => {
-          const booking = response.data
-          axios.put(`/myAlfred/api/chatRooms/addBookingId/${bookingObj.chatroom}`, {booking: booking._id})
-            .then(() => {
-              if (booking.customer_booking) {
-                Router.push({pathname: `/reservations/resvations?id=${booking._id}`, query: {booking_id: booking._id}})
-              }
-              else if (actual) {
-                Router.push({pathname: '/confirmPayment', query: {booking_id: booking._id}})
-              }
-              else {
-                Router.push(`/profile/messages?user=${booking.user}&relative=${booking.alfred}`)
-              }
+          const {redirectURL, extraURLs} = response.data
+
+          if (extraURLs) {
+            window && extraURLs.forEach(url => {
+              window.open(url, '_blank')
             })
+          }
+          Router.push(redirectURL)
         })
         .catch(err => {
           console.error(err)
+          snackBarError(err.response.data)
         })
         .finally(() => {
           setPending(false)
@@ -294,27 +322,6 @@ const DrawerBooking = ({classes, t, serviceUserId,
     })
   }
 
-
-  const computeTotal = () => {
-
-    const avocotes_amount = avocotesBooking?.amount || null
-
-    setAxiosAuthentication()
-    axios.post('/myAlfred/api/booking/compute', {
-      prestations: count,
-      serviceUser: serviceUserId,
-      distance: computeDistance(),
-      location: location,
-      avocotes_amount: avocotes_amount,
-    })
-      .then(res => {
-        setPrices(res.data)
-      })
-      .catch(err => {
-        console.error(err)
-        snackBarError(err.response)
-      })
-  }
 
   const onAvocotesBookingChange = event => {
     const {value}=event.target
@@ -339,21 +346,14 @@ const DrawerBooking = ({classes, t, serviceUserId,
     setAvocotesBooking(avocotes_booking)
   }
 
-  const computeDistance = () => {
-    if (location!='main') {
-      return 0
-    }
-    const serviceGps = serviceUser.service_address.gps
-    const clientGps=avocotesBooking && avocotesBooking.address.gps || user.billing_address.gps
-    const distance=computeDistanceKm(serviceGps, clientGps)
-    return distance
-  }
 
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false)
   }
 
-  const canChangeQuantity = !avocotesBooking
+  // Training can not change prestation quantity
+  const canChangeQuantity = !avocotesBooking && !trainingMode
+
   const selectedPresta = prestations => {
     const use_cesu=['Mandatory', 'Optional'].includes(shop?.cesu)
 
@@ -446,13 +446,8 @@ const DrawerBooking = ({classes, t, serviceUserId,
   }
 
   const filters=lodash.groupBy(serviceUser.prestations, p => p.prestation.filter_presentation?.label ||'')
-  const res = (
+  return (
     <Grid>
-      {false &&<DevLog>{JSON.stringify(locations)}
-      Perim: {serviceUser?.perimeter}
-      Location:{location}
-      BookingDate:{JSON.stringify(bookingDate)}
-      </DevLog>}
       {
         warnings.length>0 &&
             <Grid className={classes.userServicePreviewWarningContainer}>
@@ -477,6 +472,7 @@ const DrawerBooking = ({classes, t, serviceUserId,
                 </IconButton>
               </Grid>
             </Grid>
+            {/** TODO RPA expand date component in training mode */}
             <Grid style={{marginTop: '5%'}}>
               <Grid style={{padding: '10px 16px', display: 'flex', alignItems: 'center', border: '1px solid rgba(112,112,112,0.5)', borderRadius: 14, width: '100%'}}>
                 <Grid style={{width: '50%'}}>
@@ -503,40 +499,43 @@ const DrawerBooking = ({classes, t, serviceUserId,
                     }}
                   />
                 </Grid>
-                <Divider style={{height: 28, margin: 4}} orientation='vertical' />
-                <Grid style={{width: '50%', marginLeft: '3%'}}>
-                  <TextField
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    InputProps={{
-                      inputComponent: () => {
-                        return (
-                          <DatePicker
-                            selected={bookingDate}
-                            onChange={onBookingDateChange}
-                            showTimeSelect
-                            showTimeSelectOnly
-                            timeIntervals={30}
-                            timeCaption='Heure'
-                            placeholderText={ReactHtmlParser(t('DRAWER_BOOKING.hours'))}
-                            dateFormat='HH:mm'
-                            locale='fr'
-                            className={classes.datePickerStyle}
-                            excludeTimes={excludedTimes}
-                          />
-                        )
-                      },
-                      disableUnderline: true,
-                    }}
-                  />
-                </Grid>
+                {/** Hide time in training mode */}
+                {!trainingMode && <><Divider style={{height: 28, margin: 4}} orientation='vertical' />
+                  <Grid style={{width: '50%', marginLeft: '3%'}}>
+                    <TextField
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      InputProps={{
+                        inputComponent: () => {
+                          return (
+                            <DatePicker
+                              selected={bookingDate}
+                              onChange={onBookingDateChange}
+                              showTimeSelect
+                              showTimeSelectOnly
+                              timeIntervals={30}
+                              timeCaption='Heure'
+                              placeholderText={ReactHtmlParser(t('DRAWER_BOOKING.hours'))}
+                              dateFormat='HH:mm'
+                              locale='fr'
+                              className={classes.datePickerStyle}
+                              excludeTimes={excludedTimes}
+                            />
+                          )
+                        },
+                        disableUnderline: true,
+                      }}
+                    />
+                  </Grid>
+                </>}
               </Grid>
             </Grid>
             <Grid>
               <em className={classes.cancelButton}>{errors.datetime}</em>
             </Grid>
           </Grid>
+          {!trainingMode && // Hide prestation slection in training mode
           <Grid style={{marginBottom: 30}}>
             <Accordion classes={{root: `customdrawerbookaccordion ${classes.rootAccordion}`}} expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
               <AccordionSummary
@@ -568,6 +567,7 @@ const DrawerBooking = ({classes, t, serviceUserId,
               <em className={classes.cancelButton}>{errors.prestations}</em>
             </Grid>
           </Grid>
+          }
           <Grid style={{marginBottom: 30}}>
             <Accordion classes={{root: `customdrawerbookaccordion ${classes.rootAccordion}`}} expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
               <AccordionSummary
@@ -626,7 +626,7 @@ const DrawerBooking = ({classes, t, serviceUserId,
                           </Grid>
                         </Grid>
                         {
-                          isChecked ?
+                          serviceUser?.pick_tax ?
                             <Grid>
                               {serviceUser.pick_tax.toFixed(2)}€
                             </Grid> : null
@@ -715,8 +715,6 @@ const DrawerBooking = ({classes, t, serviceUserId,
       </Grid>
     </Grid>
   )
-  return res
-
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(DrawerBooking))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(DrawerBooking))

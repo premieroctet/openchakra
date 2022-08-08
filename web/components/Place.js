@@ -20,4 +20,4 @@ const Place = ({title, subTitle, location, perimeter}) => {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(Place)
+export default withTranslation(null, {withRef: true})(Place)

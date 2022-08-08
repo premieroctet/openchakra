@@ -1,17 +1,14 @@
-const {valueBetween} = require('../../utils/functions')
 import {withTranslation} from 'react-i18next'
-import {REVIEW_STATUS} from '../../utils/consts'
 import React from 'react'
 import Checkbox from '@material-ui/core/Checkbox'
-import {Link} from '@material-ui/core'
-const moment = require('moment')
-const { inspect } = require('util');
-
+import LockIcon from '@material-ui/icons/Lock'
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
+import moment from 'moment'
+import {Button, Link} from '@material-ui/core'
+import {REVIEW_STATUS} from '../../utils/consts'
+import {valueBetween}from '../../utils/functions'
 
 moment.locale('fr')
-import LockIcon from '@material-ui/icons/Lock'
-import CheckIcon from '@material-ui/icons/Check'
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
 const {insensitiveComparator, normalize} = require('../../utils/text')
 
 class _StatusRenderer extends React.Component {
@@ -37,7 +34,7 @@ class _StatusRenderer extends React.Component {
   }
 }
 
-const StatusRenderer=withTranslation('custom', {withRef: true})(_StatusRenderer)
+const StatusRenderer=withTranslation(null, {withRef: true})(_StatusRenderer)
 
 class LocationRenderer extends React.Component {
 
@@ -99,7 +96,7 @@ class _StatusFilter extends React.Component {
   }
 }
 
-const StatusFilter=withTranslation('custom', {withRef: true})(_StatusFilter)
+const StatusFilter=withTranslation(null, {withRef: true})(_StatusFilter)
 
 class ReviewStatusFilter extends React.Component {
 
@@ -175,7 +172,7 @@ class PictureRenderer extends React.Component {
     const rowHeight = this.props.node.rowHeight
     let pictureUrl = this.props.value
     if (pictureUrl) {
-      if (!pictureUrl.startsWith('/')) {
+      if (!pictureUrl.startsWith('http') && !pictureUrl.startsWith('/')) {
         pictureUrl = `/${pictureUrl}`
       }
       return (
@@ -215,9 +212,22 @@ class BooleanRenderer extends React.Component {
   }
 
   render() {
-    if (this.props.value===undefined) {
+    const {value, editable}=this.props
+
+    if (!value) {
       return null
     }
+    if (editable) {
+      return (
+        <input
+          type="checkbox"
+          onClick={this.checkedHandler}
+          checked={this.props.value}
+          disabled={!this.props.editable}
+        />
+      )
+    }
+
     return (
       <input
         type="checkbox"
@@ -227,7 +237,6 @@ class BooleanRenderer extends React.Component {
       />
     )
   }
-
 }
 
 class EnumRenderer extends React.Component {
@@ -298,6 +307,29 @@ class DeleteRenderer extends React.Component {
     return (
       <DeleteForeverIcon />
     )
+  }
+}
+
+class ActionRenderer extends React.Component {
+
+  constructor(props) {
+    super(props)
+    this.clickedHandler = this.clickedHandler.bind(this)
+  }
+
+  clickedHandler() {
+    const {onClick, value}=this.props
+    onClick && onClick(value)
+  }
+
+  render() {
+    const {value, label}=this.props
+    if (value) {
+      return (
+        <Button>{label}</Button>
+      )
+    }
+    return null
   }
 }
 
@@ -409,14 +441,22 @@ const refColumn = obj => {
   return Object.assign(base, obj)
 }
 
+const actionColumn = obj => {
+  let base={
+    cellRenderer: 'actionRenderer',
+    cellRendererParams: obj,
+  }
+  return Object.assign(base, obj)
+}
+
 module.exports= {
   // Renderers
   StatusRenderer, DateRenderer, DateTimeRenderer, CurrencyRenderer,
   StatusFilter, PictureRenderer, PrivateRenderer, BooleanRenderer, LocationRenderer, WarningRenderer,
   EnumRenderer, LinkRenderer, ColorRenderer, FontRenderer, DeleteRenderer,
-  PercentRenderer,
+  PercentRenderer, ActionRenderer,
   // Columns
   textColumn, booleanColumn, dateColumn, dateTimeColumn, currencyColumn, pictureColumn,
   colorColumn, fontColumn, deleteColumn, warningColumn, ReviewStatusFilter,
-  refColumn, percentColumn,
+  refColumn, percentColumn, actionColumn,
 }

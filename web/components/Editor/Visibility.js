@@ -40,4 +40,4 @@ class VisibilityEditor extends React.Component {
 }
 
 
-export default withTranslation('custom', {withRef: true})(VisibilityEditor)
+export default withTranslation(null, {withRef: true})(VisibilityEditor)

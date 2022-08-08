@@ -1,7 +1,7 @@
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
 import React from 'react'
-import CardService from '../Card/CardService/CardService'
+import CardServiceUser from '../Card/CardServiceUser/CardServiceUser'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import {SERVICES} from '../../utils/i18n'
@@ -34,7 +34,7 @@ class Services extends React.Component {
               {
                 part_services.map((s, index) => (
                   <Grid item xl={3} lg={4} md={6} sm={12} xs={12} key={index}>
-                    <CardService item={s._id} page={0} profileMode={true} onDelete={onDelete}/>
+                    <CardServiceUser item={s._id} page={0} profileMode={true} onDelete={onDelete}/>
                   </Grid>
                 ))
               }
@@ -50,7 +50,7 @@ class Services extends React.Component {
               {
                 pro_services.map((s, index) => (
                   <Grid item xl={3} xs={12} sm={6} md={3} lg={3} key={index}>
-                    <CardService item={s._id} page={0} profileMode={true} onDelete={onDelete}/>
+                    <CardServiceUser item={s._id} page={0} profileMode={true} onDelete={onDelete}/>
                   </Grid>
                 ))
               }
@@ -62,4 +62,4 @@ class Services extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(Services)
+export default withTranslation(null, {withRef: true})(Services)

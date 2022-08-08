@@ -4,30 +4,27 @@ const Style = theme => ({
     borderRadius: 20,
     display: 'flex',
     justifyContent: 'center',
-    height: 450,
+    height: 350,
   },
-  cardServiceInfoContent: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-  },
-  cardServiceInfoTitle: {
+  cardServiceUserInfoTitle: {
     color: theme.palette.white.main,
     fontFamily: theme.typography.fontFamily,
   },
-
-  cardServiceInfoText: {
-    color: theme.palette.white.main,
-    fontFamily: theme.typography.fontFamily,
-  },
-  cardServicePaper: {
+  cardServiceUserPaper: {
     borderRadius: 20,
     height: 450,
     cursor: 'pointer',
     display: 'flex',
     justifyContent: 'center',
   },
-  profileModecardServicePaper: {
+  cardServicePaper: {
+    borderRadius: 20,
+    height: 350,
+    cursor: 'pointer',
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  profileModeCardServiceUserPaper: {
     height: 300,
     borderRadius: 20,
     display: 'flex',
@@ -43,7 +40,7 @@ const Style = theme => ({
       height: 300,
     },
   },
-  cardServiceMainStyle: {
+  cardServiceUserMainStyle: {
     width: '80%',
     height: '100%',
     paddingTop: 15,
@@ -52,7 +49,7 @@ const Style = theme => ({
       width: '90%',
     },
   },
-  cardServiceFlexContainer: {
+  cardServiceUserFlexContainer: {
     display: 'flex',
     justifyContent: 'center',
     position: 'relative',
@@ -60,78 +57,78 @@ const Style = theme => ({
       width: '100%',
     },
   },
-  cardServicePicsContainer: {
+  cardServiceUserPicsContainer: {
     height: 200,
     width: '100%',
   },
 
-  profileModecardServicePicsContainer: {
+  profileModeCardServiceUserPicsContainer: {
     width: '100%',
     height: '100%',
   },
 
-  cardServiceBackgroundPics: {
+  cardServiceUserBackgroundPics: {
     height: 200,
     backgroundPosition: 'center',
     backgroundSize: 'cover',
-    borderRadius: 20,
+    borderRadius: 6,
   },
-  cardServiceBackgroundPicsProfil: {
+  cardServiceUserBackgroundPicsProfil: {
     height: '100%',
     width: '100%',
     backgroundPosition: 'center',
     backgroundSize: 'cover',
     borderRadius: 20,
   },
-  cardServiceChipName: {
+  cardServiceUserChipName: {
     position: 'absolute',
     bottom: 15,
     left: 0,
   },
-  cardServiceCHipNameP: {
+  cardServiceUserCHipNameP: {
     position: 'absolute',
     bottom: 0,
     left: 0,
   },
-  cardServiceChipPro: {
+  cardServiceUserChipPro: {
     position: 'absolute',
-    top: 5,
-    right: 5,
+    top: 15,
+    right: 15,
   },
-  cardServiceChip: {
+  cardServiceUserChip: {
     backgroundColor: theme.palette.white.main,
     display: 'flex',
     flexDirection: 'row-reverse',
   },
-  cardServiceChipBckg: {
+  cardServiceUserChipBckg: {
     backgroundColor: theme.palette.secondary.main,
     fontWeight: 'bold',
     color: 'white',
 
   },
-  cardServicePlaceContainer: {
+  cardServiceUserPlaceContainer: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
   },
-  cardServicePlaceLogo: {
+  cardServiceUserPlaceLogo: {
     marginRight: '3%',
   },
 
-  stylecardServiceDistance: {
+  cardServiceUserDistance: {
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
   },
 
-  cardServiceScoreAndButtonContainer: {
+  cardServiceUserScoreAndButtonContainer: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
 
-  cardServiceRatingContainer: {
+  cardServiceUserRatingContainer: {
     display: 'flex',
     flexDirection: 'row',
     width: '50%',
@@ -142,17 +139,17 @@ const Style = theme => ({
     margin: 0,
     padding: 0,
   },
-  cardServiceBoxRatingDisplay: {
+  cardServiceUserBoxRatingDisplay: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
   },
-  cardServiceRating: {
+  cardServiceUserRating: {
     marginRight: '20%',
     marginLeft: '20%',
   },
 
-  cardServiceLabelService: {
+  cardServiceUserLabelService: {
     fontFamily: theme.typography.textLabel.fontFamily,
     fontWeight: theme.typography.textLabel.fontWeight,
     fontSize: theme.typography.textLabel.fontSize,
@@ -169,8 +166,9 @@ const Style = theme => ({
       whiteSpace: 'nowrap',
       overflow: 'hidden',
     },
+    fontSize: '0.75rem',
   },
-  profileModeCardService: {
+  profileModeCardServiceUser: {
     width: '90%',
     padding: '5%',
   },
@@ -200,18 +198,18 @@ const Style = theme => ({
     },
   },
 
-  profileModecardServiceFlexContainer: {
+  profileModeCardServiceUserFlexContainer: {
     width: '100%',
     height: '60%',
     position: 'relative',
   },
-  mainCardServiceContainer: {
+  mainCardServiceUserContainer: {
     width: '100%',
     [theme.breakpoints.down('xs')]: {
       padding: 10,
     },
   },
-  mainCardServiceContainerProfil: {
+  mainCardServiceUserContainerProfil: {
     display: 'flex',
     justifyContent: 'center',
     flexDirection: 'column',

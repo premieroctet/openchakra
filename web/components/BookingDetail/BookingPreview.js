@@ -1,30 +1,31 @@
-import {is_development} from '../../config/config'
-import DialogCancel from './DialogCancel'
-import DialogReject from './DialogReject'
-import CustomButton from '../CustomButton/CustomButton'
-import ReactHtmlParser from 'react-html-parser'
-import {withTranslation} from 'react-i18next'
-const {clearAuthenticationToken, setAxiosAuthentication} = require('../../utils/authentication')
 import React from 'react'
+import ReactHtmlParser from 'react-html-parser'
+import styled from 'styled-components'
+import {withTranslation} from 'react-i18next'
 import {Link} from '@material-ui/core'
 import Grid from '@material-ui/core/Grid'
 import {withStyles} from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import axios from 'axios'
 import moment from 'moment'
-import UserAvatar from '../../components/Avatar/UserAvatar'
 import io from 'socket.io-client'
-import styles from '../../static/css/components/BookingDetail/BookingPreview/BookingPreview'
-import BookingDetail from '../../components/BookingDetail/BookingDetail'
 import Router from 'next/router'
 import DatePicker, {registerLocale} from 'react-datepicker'
 import fr from 'date-fns/locale/fr'
 import Hidden from '@material-ui/core/Hidden'
+import BookingDetail from '../../components/BookingDetail/BookingDetail'
+import styles from '../../static/css/components/BookingDetail/BookingPreview/BookingPreview'
+import CustomButton from '../CustomButton/CustomButton'
 import {booking_datetime_str} from '../../utils/dateutils'
-
-const {BOOK_STATUS} = require('../../utils/consts')
-
-const {BOOKING} = require('../../utils/i18n')
+import {BOOK_STATUS, API_PATH, LOCATION_ELEARNING, LOCATION_VISIO} from '../../utils/consts'
+import {getDataModel} from '../../config/config'
+import {BOOKING} from '../../utils/i18n'
+import {UserContext} from '../../contextes/user.context'
+import BookingMinInfos from '../Booking/BookingMinInfos'
+import AskForCPF from '../Training/CPF/AskForCPF'
+import BookingElearningAccess from '../Booking/BookingElearningAccess'
+import DialogCancel from './DialogCancel'
+import DialogReject from './DialogReject'
 
 registerLocale('fr', fr)
 moment.locale('fr')
@@ -40,16 +41,15 @@ const Input2 = ({value, onClick}) => (
 class BookingPreview extends React.Component {
   constructor(props) {
     super(props)
-    this.child = React.createRef()
     this.state = {
       booking: null,
       currentUser: null,
-      is_alfred: null,
       end_datetime: null,
-      loading: false,
+      elearningAccess: {id: null, pass: null},
       alfred_pro: false,
       rejectOpen: false,
       cancelOpen: false,
+      errors: {},
     }
     this.routingDetailsMessage = this.routingDetailsMessage.bind(this)
     this.getPrestationMinMoment = this.getPrestationMinMoment.bind(this)
@@ -69,72 +69,57 @@ class BookingPreview extends React.Component {
     return moment(booking.prestation_date).add(1, 'hours')
   }
 
-  setLoading = () => {
-    this.setState({loading: true})
-  }
-
   componentDidMount() {
 
     const booking_id = this.props.booking_id
+    const {user: currentUser} = this.context
 
-    setAxiosAuthentication()
-    axios.get('/myAlfred/api/users/current').then(res => {
-      let result = res.data
-      this.setState({currentUser: result})
+    axios.get(`${API_PATH}/booking/${booking_id}`).then(res => {
+      const booking = res.data
+      const end_datetime = moment(booking.prestation_date).add(1, 'hours')
+      this.setState(
+        {
+          currentUser,
+          booking,
+          end_datetime,
+        },
+      )
 
-      axios.get(`/myAlfred/api/booking/${booking_id}`).then(res => {
-        const booking = res.data
-        const end_datetime = moment(booking.prestation_date).add(1, 'hours')
-        this.setState(
-          {
-            booking: booking,
-            is_alfred: booking.alfred._id === result._id,
-            end_datetime: end_datetime,
-          },
-        )
-
-        // Alfred part/pto
-        axios.get(`/myAlfred/api/shop/alfred/${booking.alfred._id}`)
-          .then(res => {
-            this.setState({alfred_pro: res.data.is_professional})
-          })
-          .catch(err => {
-            console.error(err)
-          })
-
-        if (res.data.serviceUserId) {
-          axios.get(`/myAlfred/api/serviceUser/${this.state.booking.serviceUserId}`).then(res => {
-            let resultat = res.data
-            this.setState({category: resultat.service.category})
-          }).catch(error => {
-            console.error(error)
-          })
-        }
-
-        this.socket = io()
-        this.socket.on('connect', () => {
-          this.socket.emit('booking', this.state.booking._id)
+      // Alfred part/pto
+      axios.get(`${API_PATH}/shop/alfred/${booking.alfred._id}`)
+        .then(res => {
+          this.setState({alfred_pro: res.data.is_professional})
         })
-        this.socket.on('displayStatus', data => {
-          this.setState({booking: data})
+        .catch(err => {
+          console.error(err)
         })
-      })
-        .catch(error => {
+
+      if (booking?.serviceUserId) {
+        axios.get(`${API_PATH}/serviceUser/${this.state.booking.serviceUserId}`).then(res => {
+          let resultat = res.data
+          this.setState({category: resultat.service.category})
+        }).catch(error => {
           console.error(error)
         })
+      }
+
+      this.socket = io()
+      this.socket.on('connect', () => {
+        this.socket.emit('booking', this.state.booking._id)
+      })
+      this.socket.on('displayStatus', data => {
+        this.setState({booking: data})
+      })
     })
       .catch(error => {
         console.error(error)
-        if (error.response && error.response.status === 401 || error.response.status === 403) {
-          clearAuthenticationToken()
-          Router.push({pathname: '/'})
-        }
       })
+    
   }
 
   changeStatus(status, reason=null) {
     console.trace(`change status:${reason}`)
-    axios.put(`/myAlfred/api/booking/modifyBooking/${this.props.booking_id}`, {status: status, reason: reason})
+    axios.put(`${API_PATH}/booking/modifyBooking/${this.props.booking_id}`, {status: status, reason: reason})
       .then(() => {
         this.componentDidMount()
         this.socket.emit('changeStatus', this.state.booking)
@@ -182,6 +167,19 @@ class BookingPreview extends React.Component {
     }
   }
 
+  setELearningAccess = ev => {
+    switch(ev.target.id) {
+      case 'elearning_login':
+        this.setState({elearningAccess: {...this.state.elearningAccess, login: ev.target.value}})
+        break
+      case 'elearning_pass':
+        this.setState({elearningAccess: {...this.state.elearningAccess, pass: ev.target.value}})
+        break
+      default:
+        break
+    }
+  }
+
   computePricedPrestations() {
     let result = {}
     if (this.state.booking) {
@@ -202,22 +200,36 @@ class BookingPreview extends React.Component {
     return result
   }
 
-  onConfirm = () => {
+  onConfirm = ({isElearning}) => {
+
     const {end_datetime} = this.state
     const endDate = moment(end_datetime)
-    const modifyObj = {end_date: endDate, status: BOOK_STATUS.CONFIRMED}
+    const submitconfirm = isElearning
+      ? {
+        elearning_login: this.state.elearningAccess.login,
+        elearning_password: this.state.elearningAccess.pass,
+        status: BOOK_STATUS.CONFIRMED,
+      }
+      : {
+        end_date: endDate,
+        status: BOOK_STATUS.CONFIRMED,
+      }
 
-    axios.put(`/myAlfred/api/booking/modifyBooking/${this.props.booking_id}`, modifyObj)
+    axios.put(`${API_PATH}/booking/modifyBooking/${this.props.booking_id}`, submitconfirm)
       .then(res => {
-        this.componentDidMount()
+        this.setState({errors: {...this.state.errors, confirm: null}})
         setTimeout(() => this.socket.emit('changeStatus', res.data), 100)
+        this.componentDidMount()
       })
-      .catch(err => console.error(err))
+      .catch(err => {
+        this.setState({errors: {...this.state.errors, confirm: err.response.data}})
+        console.error(err)
+      })
   }
 
   routingDetailsMessage() {
     const {currentUser, booking} = this.state
-    const displayUser = currentUser._id === booking.alfred._id ? booking.user : booking.alfred
+    const displayUser = currentUser._id === booking.user._id ? (booking.alfred || null) : booking.user
     Router.push({
       pathname: '/profile/messages',
       query: {
@@ -227,18 +239,15 @@ class BookingPreview extends React.Component {
     })
   }
 
-  callDrawer = () => {
-    this.child.current.handleDrawerToggle()
-  }
-
   phoneDigit(str, index, chr) {
     if (index > str.length - 1) { return str }
     return str.substring(0, index) + chr + str.substring(index + 1)
   }
 
   render() {
+    const theme = getDataModel()
     const {classes, booking_id} = this.props
-    const {booking, currentUser, is_alfred, end_datetime, alfred_pro, rejectOpen, cancelOpen} = this.state
+    const {booking, currentUser, end_datetime, alfred_pro, rejectOpen, cancelOpen} = this.state
 
     if (!booking || !currentUser) {
       return null
@@ -246,12 +255,16 @@ class BookingPreview extends React.Component {
     const pricedPrestations = this.computePricedPrestations()
     const countPrestations = this.computeCountPrestations()
 
-    const amount = is_alfred ? parseFloat(booking.alfred_amount) : parseFloat(booking.amount)
+    const amIAlfred = currentUser._id === booking.alfred._id
+    const isCPF = !!booking?.cpf_booked
+    const isElearning = booking.location === LOCATION_ELEARNING
+    const isVisio = booking.location === LOCATION_VISIO
+
+    const amount = amIAlfred ? parseFloat(booking.alfred_amount) : parseFloat(booking.amount)
     const provider_fee = 0
-    const customer_fee = is_alfred ? 0 : booking.customer_fee
+    const customer_fee = amIAlfred ? 0 : booking.customer_fee
 
     // Am i the service provider ?
-    const amIAlfred = currentUser._id === booking.alfred._id
     const displayUser = amIAlfred ? booking.user : booking.alfred
 
     const status = booking.status
@@ -278,442 +291,561 @@ class BookingPreview extends React.Component {
       booking_datetime_str(booking)
 
     const phone = amIAlfred ? booking.user.phone : booking.alfred.phone
-    const customer_booking_title = booking.customer_booking && ReactHtmlParser(this.props.t('BOOKING.avocotes_resa')) + booking.customer_booking.user.full_name
 
+    if ((currentUser._id != booking.user._id) && (booking.alfred && booking.alfred._id != currentUser._id)) {
+      return (
+        <Typography>{ReactHtmlParser(this.props.t('BOOKING.disabled_user_access'))}</Typography>
+      )
+    }
     return (
-      <Grid>
-        {currentUser._id !==
-        booking.alfred._id && currentUser._id !== booking.user._id ? (
-            <Typography>{ReactHtmlParser(this.props.t('BOOKING.disabled_user_access'))}</Typography>
-          ) : (
-            <Grid>
-              <Grid container className={classes.bigContainer}>
-                <Grid container>
-                  <Grid className={classes.Rightcontent} item xs={12} sm={12} md={12} xl={12} lg={12}>
-                    <Grid container className={classes.mobilerow}>
-                      <Grid item xs={2} sm={3} md={3} xl={3} lg={3}>
-                        <UserAvatar user={displayUser}/>
-                      </Grid>
-                      <Grid item xs={9} sm={9} md={9} xl={9} lg={9}>
-                        <Grid>
-                          <Typography>
-                            {displayUser.full_name}
-                          </Typography>
-                        </Grid>
-                        <Grid style={{marginTop: '2%'}}>
-                          <Typography>
-                            {`${booking.service } ${booking_datetime_str(booking)}`}
-                          </Typography>
-                        </Grid>
-                        <Grid>
-                          <h2>
-                            {status === BOOK_STATUS.PREAPPROVED ?
-                              amIAlfred ? ReactHtmlParser(this.props.t('BOOKING.pre_approved')) : BOOKING.invit_checking
-                              :
-                              status
-                            }
-                          </h2>
-                          {is_development() && booking._id}
-                        </Grid>
-                        { customer_booking_title &&
-                        <Typography>
-                          {customer_booking_title}
-                        </Typography>
-                        }
-                      </Grid>
-                    </Grid>
-                    <hr className={classes.hrSeparator}/>
-                    {booking === null ||
+      <StyledBookingPreview theme={theme}>
+          
+        <BookingMinInfos booking={booking} amIAlfred={amIAlfred}/>
+        <hr />
+        
+        {booking === null ||
                   currentUser === null ? null : booking.status ===
                   BOOK_STATUS.FINISHED ? (
-                          currentUser._id === booking.alfred._id ? (
-                            <Grid container
-                              style={{borderBottom: '1.5px #8281813b solid', marginTop: '5%', paddingBottom: '7%'}}>
-                              <Grid container>
-                                <Typography style={{marginBottom: '5%'}}>{ReactHtmlParser(this.props.t('BOOKING.commentary'))}</Typography>
-                              </Grid>
-                              <div style={{display: 'flex', flexFlow: 'row'}}>
-                                {booking.user_evaluated ?
-                                  <Grid container>
-                                    <Grid item md={12} xs={12} style={{marginBottom: '35px'}}>
-                                      <Typography>{ReactHtmlParser(this.props.t('BOOKING.already_evaluate'))}</Typography>
-                                    </Grid>
-                                  </Grid>
-                                  :
-                                  <Grid container>
-                                    <Grid item md={6} xs={12}>
-                                      <Typography>
-                                        {ReactHtmlParser(this.props.t('BOOKING.MSG_EVALUATE'))}
-                                      </Typography>
-                                    </Grid>
-                                    <Grid item xs={2}/>
-                                    <Grid item md={4} xs={12}>
-                                      <Link
-                                        href={`/evaluateClient?booking=${booking._id}&id=${booking.serviceUserId}&client=${booking.user._id}`}>
-                                        <CustomButton color={'primary'} variant={'contained'} style={{color: 'white'}}>{ReactHtmlParser(this.props.t('BOOKING.button_evaluate_client'))}</CustomButton>
-                                      </Link>
-                                    </Grid>
-                                  </Grid>}
-                              </div>
-                            </Grid>
-                          ) : (
-                            <Grid container
-                              style={{borderBottom: '1.5px #8281813b solid', marginTop: '5%', paddingBottom: '7%'}}>
-                              <Grid container>
-                                <Typography style={{marginTop: '-3%', fontSize: '1.7rem', marginBottom: '5%'}}>
-                                  {ReactHtmlParser(this.props.t('BOOKING.commentary'))}
-                                </Typography>
-                              </Grid>
-                              <div style={{display: 'flex', flexFlow: 'row'}}>
-                                {booking.alfred_evaluated ?
-                                  <Grid container>
-                                    <Grid item md={12} xs={12} style={{marginBottom: '35px'}}>
-                                      <Typography>{ReactHtmlParser(this.props.t('BOOKING.already_evaluate_alfred'))}</Typography>
-                                    </Grid>
-                                  </Grid>
-                                  :
-                                  <Grid container>
-                                    <Grid item md={6} xs={12} style={{marginBottom: '35px'}}>
-                                      <Typography>{ReactHtmlParser(this.props.t('BOOKING.info_commentary'))}</Typography>
-                                    </Grid>
-                                    <Grid item xs={2}/>
-                                    <Grid item md={4} xs={12}>
-                                      <Link
-                                        href={`/evaluate?booking=${booking._id}&id=${booking.serviceUserId}`}
-                                      >
-                                        <Grid
-                                          style={{
-                                            textAlign: 'center',
-                                            width: '200px',
-                                            height: '40px',
-                                            backgroundColor: '#F8727F',
-                                            lineHeight: 2.5,
-                                            borderRadius: '50px',
-                                            cursor: 'pointer',
-                                          }}
-                                        >
-                                          <a
-                                            style={{
-                                              textDecoration: 'none',
-                                              color: 'white',
-                                            }}
-                                          >
-                                            {ReactHtmlParser(this.props.t('BOOKING.evaluate_alfred_button'))}
-                                          </a>
-                                        </Grid>
-                                      </Link>
-                                    </Grid>
-                                  </Grid>}
-                              </div>
-                            </Grid>
-                          )
-                        ) : null}
-                    <Grid container className={classes.mainContainerAboutResa}>
-                      <Grid item xs={12} className={classes.containerTitleSectionAbout}>
-                        <Typography className={classes.fontSizeTitleSectionAbout}>{ReactHtmlParser(this.props.t('PROFIL.about', {firstname: displayUser.firstname}))}</Typography>
-                      </Grid>
-                      <Grid container className={classes.reservationContainer}>
-                        <Grid item xl={6}>
-                          <Grid container>
-                            <Grid className={classes.detailsReservationContainer} style={{alignItems: 'center'}}>
-                              <Grid item>
-                                {displayUser.id_confirmed ?
-                                  <Typography>{ReactHtmlParser(this.props.t('BOOKING.id_checked'))}</Typography>
-                                  :
-                                  null
-                                }
-                                <Typography>
-                                  {ReactHtmlParser(this.props.t('BOOKING.member_since')) + moment(displayUser.creation_date).format('MMMM YYYY')}
-                                </Typography>
-                              </Grid>
-                            </Grid>
+              currentUser._id === booking.alfred._id ? (
+                <>
+                  <Grid container>
+                    <h3>{ReactHtmlParser(this.props.t('BOOKING.commentary'))}</h3>
+                    <div style={{display: 'flex', flexFlow: 'row'}}>
+                      {booking.user_evaluated ?
+                        <Grid container>
+                          <Grid item md={12} xs={12} style={{marginBottom: '35px'}}>
+                            <Typography>{ReactHtmlParser(this.props.t('BOOKING.already_evaluate'))}</Typography>
                           </Grid>
                         </Grid>
-                        <Grid item xl={6} className={classes.mainContainerAbout}>
-                          <Grid item container className={classes.containerButtonGroup}>
-                            <Grid item>
-                              <CustomButton variant={'contained'} color={'primary'} onClick={this.routingDetailsMessage}
-                                style={{textTransform: 'initial', color: 'white'}}>{ReactHtmlParser(this.props.t('BOOKING.button_send_message'))}</CustomButton>
-                            </Grid>
-                            {booking.status === BOOK_STATUS.CONFIRMED && phone?
-                              <Grid item className={classes.containerPhone}>
-                                <Hidden only={['xl', 'lg', 'md', 'sm']}>
-                                  <CustomButton>
-                                    <a
-                                      href={`tel:${phone}`}
-                                      style={{textDecoration: 'none', color: 'rgba(178,204,251,1)', cursor: 'pointer'}}
-                                    >
-                                      {ReactHtmlParser(this.props.t('BOOKING.button_call'))}
-                                    </a>
-                                  </CustomButton>
-                                </Hidden>
-                              </Grid> : null
-                            }
+                        :
+                        <Grid container>
+                          <Grid item md={6} xs={12}>
+                            <Typography>
+                              {ReactHtmlParser(this.props.t('BOOKING.MSG_EVALUATE'))}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={2}/>
+                          <Grid item md={4} xs={12}>
+                            <Link
+                              href={`/evaluateClient?booking=${booking._id}&id=${booking.serviceUserId}&client=${booking.user._id}`}>
+                              <CustomButton color={'primary'} variant={'contained'} style={{color: 'white'}}>{ReactHtmlParser(this.props.t('BOOKING.button_evaluate_client'))}</CustomButton>
+                            </Link>
+                          </Grid>
+                        </Grid>}
+                    </div>
+                  </Grid>
+                  <hr />
+                </>
+              ) : (
+                <>
+                  <Grid container>
+                    <h3>{ReactHtmlParser(this.props.t('BOOKING.commentary'))}</h3>
+                    <div style={{display: 'flex', flexFlow: 'row'}}>
+                      {booking.alfred_evaluated ?
+                        <Grid container>
+                          <Grid item md={12} xs={12} style={{marginBottom: '35px'}}>
+                            <Typography>{ReactHtmlParser(this.props.t('BOOKING.already_evaluate_alfred'))}</Typography>
                           </Grid>
                         </Grid>
-                        {
-                          booking.status === BOOK_STATUS.CONFIRMED && phone?
-                            <Hidden only={['xs']}>
-                              <Grid item xl={6}>
-                                <Grid>
-                                  <Typography>{ReactHtmlParser(this.props.t('BOOKING.phone_number'))}</Typography>
-                                </Grid>
-                              </Grid>
-                              <Grid item xl={6}>
-                                <Grid>
-                                  <Typography
-                                    style={{textAlign: 'center'}}> {this.phoneDigit(phone.substring(1), 0, '0')}</Typography>
-                                </Grid>
-                              </Grid>
-                            </Hidden> : null
-                        }
-                      </Grid>
-                    </Grid>
-                    <Grid container className={classes.mainContainerAboutResa}>
-                      <Grid item xs={12} className={classes.containerTitleSectionAbout}>
-                        <Typography className={classes.fontSizeTitleSectionAbout}>{ReactHtmlParser(this.props.t('BOOKING.about_resa'))}</Typography>
-                      </Grid>
-                      <Grid className={classes.reservationContainer}>
-                        <Grid item>
-                          <Grid container>
-                            <Grid className={classes.detailsReservationContainer} style={{alignItems: 'center'}}>
-                              <Grid item>
-                                <Typography>
-                                  {booking.service}
-                                </Typography>
-                                <Typography>
-                                  {momentTitle}
-                                </Typography>
-                              </Grid>
-                            </Grid>
-                            <Grid className={classes.detailsReservationContainer} style={{alignItems: 'center'}}>
-                              <Grid item>
-                                <Typography>
-                                  {booking.address ?
-                                    `au ${booking.address.address}, ${booking.address.zip_code} ${booking.address.city}` : ReactHtmlParser(this.props.t('BOOKING.visio'))}
-                                </Typography>
-                                <Typography>
-                                  {ReactHtmlParser(this.props.t('BOOKING.created_date')) + moment(booking.date).format('DD/MM/YYYY')} à {moment(booking.date).format('HH:mm')}
-                                </Typography>
-                              </Grid>
-                            </Grid>
-                            {booking.status === BOOK_STATUS.TO_CONFIRM && amIAlfred ?
-                              <Grid className={classes.detailsReservationContainer} style={{alignItems: 'center'}}>
-                                <Grid item>
-                                  <Typography>{ReactHtmlParser(this.props.t('BOOKING.end_date'))}</Typography>
-                                  <DatePicker
-                                    selected={moment(end_datetime).toDate()}
-                                    onChange={this.onChangeEndDate}
-                                    locale='fr'
-                                    showMonthDropdown
-                                    dateFormat="dd/MM/yyyy"
-                                    customInput={<Input2/>}
-                                  />
-                                -
-                                  <DatePicker
-                                    selected={moment(end_datetime).toDate()}
-                                    onChange={this.onChangeEndTime}
-                                    customInput={<Input2/>}
-                                    showTimeSelect
-                                    showTimeSelectOnly
-                                    timeIntervals={15}
-                                    timeCaption="Heure"
-                                    dateFormat="HH:mm"
-                                    locale='fr'
-                                    minDate={new Date()}
-                                  />
-                                </Grid>
-                              </Grid>
-                              :
-                              null
-                            }
+                        :
+                        <Grid container>
+                          <Grid item md={6} xs={12} style={{marginBottom: '35px'}}>
+                            <Typography>{ReactHtmlParser(this.props.t('BOOKING.info_commentary'))}</Typography>
                           </Grid>
-                        </Grid>
-                        <Grid container className={classes.mainContainerStateResa}>
-                          <Grid>
-                            {status === BOOK_STATUS.TO_CONFIRM ? (
-                              amIAlfred ? (
-                                <Grid style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                                  <Grid className={classes.labelReservation}>
-                                    <Typography>
-                                      {ReactHtmlParser(this.props.t('BOOKING.info_end_resa')) + moment(booking.date)
-                                        .add(1, 'd')
-                                        .format('DD/MM/YYYY') + ReactHtmlParser(this.props.t('BOOKING.a')) + moment(booking.date).format('HH:mm')}
-                                    </Typography>
-                                  </Grid>
-                                  <Grid className={classes.buttonConfirmResa}>
-                                    <CustomButton color={'primary'} variant={'contained'} className={classes.buttonConfirm}
-                                      onClick={this.onConfirm}>{ReactHtmlParser(this.props.t('COMMON.btn_confirm'))}</CustomButton>
-                                  </Grid>
-                                  <Grid>
-                                    <CustomButton variant={'outlined'} classes={{root: classes.buttonCancel}}
-                                      onClick={this.openRejectReason}>{ReactHtmlParser(this.props.t('BOOKING.button_cancel'))}</CustomButton>
-                                  </Grid>
-                                </Grid>
-                              )
-                                :
-                                null
-                            )
-                              :
-                              booking.status === BOOK_STATUS.INFO && currentUser._id === booking.alfred._id ? (
-                                <Grid container className={classes.groupButtonsContainer} spacing={1}>
-                                  <Grid item xs={12} xl={12} lg={12} sm={12} md={12}>
-                                    <CustomButton onClick={() => this.props.onConfirmPreapproved(booking_id)} color={'primary'}
-                                      variant={'contained'}
-                                      style={{color: 'white', textTransform: 'initial'}}>{ReactHtmlParser(this.props.t('BOOKING.pre_approved_button'))}</CustomButton>
-                                  </Grid>
-                                  <Grid item xs={12} xl={12} lg={12} sm={12} md={12}>
-                                    <CustomButton
-                                      onClick={this.openRejectReason}
-                                      variant={'outlined'}
-                                      style={{textTransform: 'initial'}}
-                                      color={'primary'}>
-                                      {ReactHtmlParser(this.props.t('BOOKING.button_cancel'))}
-                                    </CustomButton>
-                                  </Grid>
-                                </Grid>
-                              )
-                                :
-                                booking.status === BOOK_STATUS.TO_PAY && currentUser._id === booking.user._id ? (
-                                  <Grid className={classes.groupButtonsContainer}>
-                                    <CustomButton onClick={() => Router.push(`/confirmPayment?booking_id=${booking_id}`)}
-                                      color={'primary'} variant={'contained'}
-                                      style={{color: 'white', textTransform: 'initial'}}>{ReactHtmlParser(this.props.t('BOOKING.paid_button'))}</CustomButton>
-                                  </Grid>
-                                )
-                                  :
-                                  booking.status === BOOK_STATUS.INFO && currentUser._id === booking.user._id ?
-                                    null
-                                    :
-                                    booking.status === BOOK_STATUS.PREAPPROVED && currentUser._id === booking.user._id ? (
-                                      <Grid className={classes.groupButtonsContainer}>
-                                        <CustomButton onClick={() => Router.push(`/confirmPayment?booking_id=${booking_id}`)}
-                                          color={'primary'} variant={'contained'}
-                                          style={{color: 'white', textTransform: 'initial'}}>{ReactHtmlParser(this.props.t('BOOKING.paid_button'))}</CustomButton>
-                                      </Grid>
-                                    )
-                                      :
-                                      null}
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                    <Grid container style={{
-                      borderBottom: '1.5px #8281813b solid',
-                      marginTop: '5%',
-                      paddingBottom: '7%',
-                      display: 'flex',
-                      flexDirection: 'column',
-                    }}>
-                      <Grid item className={classes.equipmentContainer}>
-                        <Typography variant={'h3'} className={classes.fontSizeTitleSectionAbout}>
-                          {ReactHtmlParser(this.props.t('BOOKING.stuff'))}
-                        </Typography>
-                      </Grid>
-                      {booking === null ? null : booking.equipments
-                        .length ? (
-                          booking.equipments.map(equipment => {
-                            return (
-                              <Grid item xs={1} style={{textAlign: 'center'}}>
-                                <img
-                                  alt={equipment.logo}
-                                  title={equipment.logo}
-                                  style={{width: '98%'}}
-                                  src={`/static/equipments/${equipment.logo}`}
-                                />
+                          <Grid item xs={2}/>
+                          <Grid item md={4} xs={12}>
+                            <Link
+                              href={`/evaluate?booking=${booking._id}&id=${booking.serviceUserId}`}
+                            >
+                              <Grid
+                                style={{
+                                  textAlign: 'center',
+                                  width: '200px',
+                                  height: '40px',
+                                  backgroundColor: '#F8727F',
+                                  lineHeight: 2.5,
+                                  borderRadius: '50px',
+                                  cursor: 'pointer',
+                                }}
+                              >
+                                <a
+                                  style={{
+                                    textDecoration: 'none',
+                                    color: 'white',
+                                  }}
+                                >
+                                  {ReactHtmlParser(this.props.t('BOOKING.evaluate_alfred_button'))}
+                                </a>
                               </Grid>
-                            )
-                          })
-                        ) : (
-                          <Grid style={{marginTop: '2%'}}>
-                            <Typography>{ReactHtmlParser(this.props.t('BOOKING.no_stuff'))}</Typography>
+                            </Link>
                           </Grid>
-                        )}
-                    </Grid>
-                    <Grid container
-                      style={{borderBottom: '1.5px #8281813b solid', marginTop: '5%', paddingBottom: '7%'}}>
+                        </Grid>}
+                    </div>
+                  </Grid>
+                  <hr />
+                </>
+              )
+            ) : null}
+        
+        {amIAlfred &&
+          <>
+            <Grid container>
+              <h3>
+                {ReactHtmlParser(this.props.t('PROFIL.about', {firstname: displayUser && displayUser.firstname}))}
+              </h3>
+              <Grid container className={classes.reservationContainer}>
+                { displayUser &&
+                <Grid item xl={6}>
+                  <Grid container>
+                    <Grid className={classes.detailsReservationContainer} style={{alignItems: 'center'}}>
                       <Grid item>
-                        <Typography variant={'h3'} className={classes.fontSizeTitleSectionAbout}>
-                          {paymentTitle}
+                        {displayUser.id_confirmed && <Typography>{ReactHtmlParser(this.props.t('BOOKING.id_checked'))}</Typography>}
+                        <Typography>
+                          {ReactHtmlParser(this.props.t('BOOKING.member_since')) + moment(displayUser.creation_date).format('MMMM YYYY')}
                         </Typography>
                       </Grid>
-                      <Grid container style={{display: 'flex', flexDirection: 'column'}}>
-                        <Grid className={classes.bookingDetailContainer}>
-                          <Grid item>
-                            <BookingDetail
-                              prestations={pricedPrestations}
-                              count={countPrestations}
-                              provider_fee={provider_fee}
-                              customer_fee={customer_fee}
-                              travel_tax={booking.travel_tax}
-                              pick_tax={booking.pick_tax}
-                              total={amount}
-                              cesu_total={booking.cesu_amount}
-                              alfred_pro={alfred_pro}
-                            />
-                          </Grid>
-                        </Grid>
-                      </Grid>
                     </Grid>
-                    {([BOOK_STATUS.TO_CONFIRM, BOOK_STATUS.INFO].includes(status) && !amIAlfred) ||
-                  status === BOOK_STATUS.CONFIRMED || status === BOOK_STATUS.PREAPPROVED ? (
-                        <Grid
-                          container
-                          style={{
-                            borderBottom: '1.5px #8281813b solid',
-                            paddingBottom: '3%',
-                            paddingTop: '3%',
-                          }}
-                        >
-                          <a style={{textDecoration: 'none', color: 'rgba(178,204,251,1)', cursor: 'pointer'}}
-                            onClick={this.openCancelReason}>
-                            {ReactHtmlParser(this.props.t('BOOKING.cancel_resa'))}
-                          </a>
-                        </Grid>
-                      ) : null}
-                    <Grid
-                      container
-                      style={{
-                        borderBottom: '1.5px #8281813b solid',
-                        marginTop: '2%',
-                        paddingBottom: '3%',
-                      }}
-                    >
-                      <a
-                        href="mailto:contact@myalfred.io"
-                        style={{
-                          textDecoration: 'none',
-                          color: 'rgba(178,204,251,1)',
-                        }}
-                      >
-                        {ReactHtmlParser(this.props.t('BOOKING.warning_behavior'))}
-                      </a>
+                  </Grid>
+                </Grid>}
+                <Grid item xl={6} className={classes.mainContainerAbout}>
+                  <Grid item container className={classes.containerButtonGroup}>
+                    <Grid item>
+                      <CustomButton variant={'contained'} color={'primary'} onClick={this.routingDetailsMessage}
+                        style={{textTransform: 'initial', color: 'white'}}>{ReactHtmlParser(this.props.t('BOOKING.button_send_message'))}</CustomButton>
                     </Grid>
-                    {booking === null ||
-                  currentUser === null ? null : booking.status ===
-                  BOOK_STATUS.FINISHED && (
-                        <Grid
-                          container
-                          style={{borderBottom: '1.5px #8281813b solid', marginTop: '2%', paddingBottom: '3%'}}
-                        >
-                          <a
-                            href="mailto:contact@myalfred.io"
-                            style={{textDecoration: 'none',
-                              color: 'rgb(47, 188, 211)',
-                            }}
-                          >{ReactHtmlParser(this.props.t('BOOKING.reclamation'))}</a>
-                        </Grid>
-                      )}
+                    {booking.status === BOOK_STATUS.CONFIRMED && phone?
+                      <Grid item className={classes.containerPhone}>
+                        <Hidden only={['xl', 'lg', 'md', 'sm']}>
+                          <CustomButton as={'a'} href={`tel:${phone}`} style={{textDecoration: 'none', color: 'rgba(178,204,251,1)', cursor: 'pointer'}}>
+                            {ReactHtmlParser(this.props.t('BOOKING.button_call'))}
+                          </CustomButton>
+                        </Hidden>
+                      </Grid> : null
+                    }
                   </Grid>
                 </Grid>
+                {
+                  booking.status === BOOK_STATUS.CONFIRMED && phone?
+                    <Hidden only={['xs']}>
+                      <Grid item xl={6}>
+                        <Grid>
+                          <Typography>{ReactHtmlParser(this.props.t('BOOKING.phone_number'))}</Typography>
+                        </Grid>
+                      </Grid>
+                      <Grid item xl={6}>
+                        <Grid>
+                          <Typography
+                            style={{textAlign: 'center'}}> {this.phoneDigit(phone.substring(1), 0, '0')}</Typography>
+                        </Grid>
+                      </Grid>
+                    </Hidden> : null
+                }
               </Grid>
+            </Grid>
+            <hr />
+          </>
+        }
+
+        {!amIAlfred && isCPF && booking.status !== BOOK_STATUS.CONFIRMED
+          && <>
+            <AskForCPF link={booking?.cpf_link} />
+            <hr />
+          </>}
+
+
+        {!amIAlfred && isElearning &&
+          <>
+            <BookingElearningAccess booking={booking} />
+            <hr />
+          </>}
+
+        {amIAlfred && <>
+          <div>
+            <h3>{ReactHtmlParser(this.props.t('BOOKING.about_resa'))}</h3>
+            <div className='booking_about'>
+              <div>
+                <dl>
+                  {booking.service.label && <>
+                    <dt>Label</dt><dd>{booking.service.label}</dd>
+                  </>}
+                  <dt className='sr-only'>Date</dt>
+                  <dd>{momentTitle}</dd>
+                  <dt className='sr-only'>Lieu</dt>
+                  <dd>
+                    {booking.address
+                      ? `au ${booking.address.address}, ${booking.address.zip_code} ${booking.address.city}`
+                      : ReactHtmlParser(this.props.t('BOOKING.visio'))
+                    }
+                  </dd>
+                  <dt className='sr-only'>Date de création</dt>
+                  <dd>
+                    {ReactHtmlParser(this.props.t('BOOKING.created_date')) + moment(booking.date).format('DD/MM/YYYY')} à {moment(booking.date).format('HH:mm')}
+                  </dd>
+                </dl>
+                  
+                {/* End of service settled by service provider */}
+                {booking.status === BOOK_STATUS.TO_CONFIRM && amIAlfred && !isElearning ?
+                  <Grid className={classes.detailsReservationContainer}>
+                    <Grid item>
+                      <Typography>{ReactHtmlParser(this.props.t('BOOKING.end_date'))}</Typography>
+                      <DatePicker
+                        selected={moment(end_datetime).toDate()}
+                        onChange={this.onChangeEndDate}
+                        locale='fr'
+                        showMonthDropdown
+                        dateFormat="dd/MM/yyyy"
+                        customInput={<Input2/>}
+                      />
+                                -
+                      <DatePicker
+                        selected={moment(end_datetime).toDate()}
+                        onChange={this.onChangeEndTime}
+                        customInput={<Input2/>}
+                        showTimeSelect
+                        showTimeSelectOnly
+                        timeIntervals={15}
+                        timeCaption="Heure"
+                        dateFormat="HH:mm"
+                        locale='fr'
+                        minDate={new Date()}
+                      />
+                    </Grid>
+                  </Grid>
+                  :
+                  null
+                }
+                {/* Provide access to students by training organization */}
+                {booking.status === BOOK_STATUS.TO_CONFIRM && amIAlfred && isElearning ?
+                  <>
+                    {this.state?.errors?.confirm && <p className='error'>{this.state.errors.confirm}</p>}
+                    <div className='elearning_access'>
+                      <h4>Eléments connexion apprenant</h4>
+                      <label htmlFor='elearning_login'>Identifiant</label>
+                      <input
+                        id={'elearning_login'}
+                        name={'elearning_login'}
+                        value={this.state.elearningAccess.login}
+                        onChange={this.setELearningAccess}
+                        autoComplete={'off'}
+                      />
+                    
+                      <label htmlFor='elearning_pass'>Mot de passe</label>
+                      <input
+                        id={'elearning_pass'}
+                        name={'elearning_pass'}
+                        value={this.state.elearningAccess.pass}
+                        onChange={this.setELearningAccess}
+                        autoComplete={'off'}
+                      />
+                    </div>
+                  </> :
+                  null}
+              </div>
+
+              {/* booking details (location, service date, creation date) */}
+              <Grid container className={classes.mainContainerStateResa}>
+                {status === BOOK_STATUS.TO_CONFIRM ? (
+                  amIAlfred ? (
+                    <div className='booking_confirm'>
+                      <p>
+                        {ReactHtmlParser(this.props.t('BOOKING.info_end_resa')) + moment(booking.date)
+                          .add(1, 'd')
+                          .format('DD/MM/YYYY') + ReactHtmlParser(this.props.t('BOOKING.a')) + moment(booking.date).format('HH:mm')}
+                      </p>
+                      <CustomButton
+                        className={'confirm'}
+                        variant={'contained'}
+                        onClick={() => this.onConfirm({isElearning})}>
+                        {ReactHtmlParser(this.props.t('COMMON.btn_confirm'))}
+                      </CustomButton>
+                      <CustomButton
+                        variant={'outlined'}
+                        className={'reject'}
+                        onClick={this.openRejectReason}>
+                        {ReactHtmlParser(this.props.t('BOOKING.button_cancel'))}
+                      </CustomButton>
+                    </div>
+                  )
+                    :
+                    null
+                )
+                  :
+                  booking.status === BOOK_STATUS.INFO && currentUser._id === booking.alfred._id ? (
+                    <Grid container className={classes.groupButtonsContainer} spacing={1}>
+                      <Grid item xs={12} xl={12} lg={12} sm={12} md={12}>
+                        <CustomButton onClick={() => this.props.onConfirmPreapproved(booking_id)} color={'primary'}
+                          variant={'contained'}
+                          style={{color: 'white', textTransform: 'initial'}}>{ReactHtmlParser(this.props.t('BOOKING.pre_approved_button'))}</CustomButton>
+                      </Grid>
+                      <Grid item xs={12} xl={12} lg={12} sm={12} md={12}>
+                        <CustomButton
+                          onClick={this.openRejectReason}
+                          variant={'outlined'}
+                          style={{textTransform: 'initial'}}
+                          color={'primary'}>
+                          {ReactHtmlParser(this.props.t('BOOKING.button_cancel'))}
+                        </CustomButton>
+                      </Grid>
+                    </Grid>
+                  )
+                    :
+                    booking.status === BOOK_STATUS.TO_PAY && currentUser._id === booking.user._id ? (
+                      <Grid className={classes.groupButtonsContainer}>
+                        <CustomButton onClick={() => Router.push(`/confirmPayment?booking_id=${booking_id}`)}
+                          color={'primary'} variant={'contained'}
+                          style={{color: 'white', textTransform: 'initial'}}>{ReactHtmlParser(this.props.t('BOOKING.paid_button'))}</CustomButton>
+                      </Grid>
+                    )
+                      :
+                      booking.status === BOOK_STATUS.INFO && currentUser._id === booking.user._id ?
+                        null
+                        :
+                        booking.status === BOOK_STATUS.PREAPPROVED && currentUser._id === booking.user._id ? (
+                          <Grid className={classes.groupButtonsContainer}>
+                            <CustomButton onClick={() => Router.push(`/confirmPayment?booking_id=${booking_id}`)}
+                              color={'primary'} variant={'contained'}
+                              style={{color: 'white', textTransform: 'initial'}}>{ReactHtmlParser(this.props.t('BOOKING.paid_button'))}</CustomButton>
+                          </Grid>
+                        )
+                          :
+                          null}
+              </Grid>
+            </div>
+          </div>
+          <hr /></>
+        }
+
+        {/* Stuff */}
+        {(isElearning || isVisio) ? null :
+          <BookingPreviewRow>
+            <h3>{ReactHtmlParser(this.props.t('BOOKING.stuff'))}</h3>
+            
+            {booking === null ? null : booking.equipments
+              .length ? (
+                booking.equipments.map(equipment => {
+                  return (
+                    <Grid item xs={1} style={{textAlign: 'center'}}>
+                      <img
+                        alt={equipment.logo}
+                        title={equipment.logo}
+                        style={{width: '98%'}}
+                        src={`/static/equipments/${equipment.logo}`}
+                      />
+                    </Grid>
+                  )
+                })
+              ) : (
+                <Typography>{ReactHtmlParser(this.props.t('BOOKING.no_stuff'))}</Typography>
+              )}
+          </BookingPreviewRow>
+        }
+                
+        {/* Payment / Potential earnings */}
+        <Grid container>
+          <h3>{paymentTitle}</h3>
+          <Grid container style={{display: 'flex', flexDirection: 'column'}}>
+            <Grid className={classes.bookingDetailContainer}>
+              <Grid item>
+                <BookingDetail
+                  prestations={pricedPrestations}
+                  count={countPrestations}
+                  provider_fee={provider_fee}
+                  customer_fee={customer_fee}
+                  travel_tax={booking.travel_tax}
+                  pick_tax={booking.pick_tax}
+                  total={amount}
+                  cesu_total={booking.cesu_amount}
+                  alfred_pro={alfred_pro}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+        <hr />
+                
+        {/* Cancel booking */}
+        {([BOOK_STATUS.TO_CONFIRM, BOOK_STATUS.INFO].includes(status) && !amIAlfred) ||
+                  status === BOOK_STATUS.CONFIRMED || status === BOOK_STATUS.PREAPPROVED ? (
+            <Grid
+              container
+              style={{
+                borderBottom: '1.5px #8281813b solid',
+                paddingBottom: '3%',
+                paddingTop: '3%',
+              }}
+            >
+              <a style={{textDecoration: 'none', color: 'rgba(178,204,251,1)', cursor: 'pointer'}}
+                onClick={this.openCancelReason}>
+                {ReactHtmlParser(this.props.t('BOOKING.cancel_resa'))}
+              </a>
+            </Grid>
+          ) : null}
+
+        {/* Report user */}
+        <Grid
+          container
+          style={{
+            borderBottom: '1.5px #8281813b solid',
+            marginTop: '2%',
+            paddingBottom: '3%',
+          }}
+        >
+          <a
+            href="mailto:contact@myalfred.io"
+            style={{
+              textDecoration: 'none',
+              color: 'rgba(178,204,251,1)',
+            }}
+          >
+            {ReactHtmlParser(this.props.t('BOOKING.warning_behavior'))}
+          </a>
+        </Grid>
+        {booking === null ||
+                  currentUser === null ? null : booking.status ===
+                  BOOK_STATUS.FINISHED && (
+            <Grid
+              container
+              style={{borderBottom: '1.5px #8281813b solid', marginTop: '2%', paddingBottom: '3%'}}
+            >
+              <a
+                href="mailto:contact@myalfred.io"
+                style={{textDecoration: 'none',
+                  color: 'rgb(47, 188, 211)',
+                }}
+              >{ReactHtmlParser(this.props.t('BOOKING.reclamation'))}</a>
             </Grid>
           )}
         <DialogReject open={rejectOpen} onRefuse={this.onReject} onClose={this.onRejectClose}/>
         <DialogCancel open={cancelOpen} onCancel={this.onCancel} onClose={this.onCancelClose}/>
-      </Grid>
+      </StyledBookingPreview>
     )
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(BookingPreview))
+BookingPreview.contextType = UserContext
+
+const BookingPreviewRow = ({hr=true, children, ...props}) => {
+
+  return <><StyledBookingPreviewRow {...props}>
+    {children}
+  </StyledBookingPreviewRow>
+  {hr && <hr />}
+  </>
+}
+
+const StyledBookingPreview = styled.div`
+  --booking-max-width: 80%;
+  --booking-padding: var(--spc-4);
+  --booking-left-margin: var(--spc-4);
+  --booking-background: var(--stone-100);
+  
+  p, dl {
+    font-size: var(--text-base);
+  }
+  
+  dl {
+    margin: 0;
+    margin-bottom: var(--spc-4);
+  }
+
+  dd {
+    margin-left: 0;
+  }
+
+  hr {
+    color: rgba(178,204,251,1) !important;
+    border: 0;
+    border-bottom: 1px solid;
+  }
+  
+  h3 {
+    color: rgba(84,89,95,0.95) !important;
+    margin-block: 0 var(--spc-4);
+    font-size: large;
+  }
+
+  label {
+    display: block;
+  }
+
+  .booking_about {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: var(--spc-4);
+    & > div {
+      flex: 1;
+    }
+  }
+
+  .booking_confirm {
+
+    button {
+      display: block;
+      width: 100%;
+      margin-bottom: var(--spc-2);
+
+     &.confirm {
+        background-color: var(--secondary-color);
+        color: var(--white) !important;
+      }
+    }
+  }
+
+  .elearning_access {
+    border-radius: var(--rounded-md);
+    margin-top: var(--spc-2);
+    background-color: var(--secondary-color);
+    padding: var(--spc-3);
+    color: var(--white);
+
+    h4 {
+      margin-top: 0;
+      color: currentColor;
+      border-bottom: 1px solid currentColor;
+    }
+  }
+
+  & > div {
+    padding: var(--spc-4);
+    margin: var(--spc-2);
+  }
+
+
+  ${props => {
+
+  switch (props.theme) {
+    case 'aftral':
+      return `
+        
+      h3 {
+        color: var(--black) !important;
+        margin-block: 0 var(--spc-4);
+        font-size: large;
+      }
+
+      hr {
+        color: var(--black) !important;
+      }
+
+      .custombookingtotal {
+        font-size: var(--text-xl);
+      }
+       `
+
+  }
+
+}}
+
+`
+
+const StyledBookingPreviewRow = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  column-gap: var(--spc-6);
+  padding-block: var(--spc-4);
+
+
+`
+
+export default withTranslation(null, {withRef: true})(withStyles(styles)(BookingPreview))

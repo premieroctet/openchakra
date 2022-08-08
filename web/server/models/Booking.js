@@ -1,3 +1,4 @@
+const mongooseLeanVirtuals=require('mongoose-lean-virtuals')
 const mongoose = require('mongoose')
 const {getDataModel} = require('../../config/config')
 
@@ -10,6 +11,8 @@ catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {
     throw err
   }
+  BookingSchema=require(`./others/BookingSchema`)
 }
 
+BookingSchema?.plugin(mongooseLeanVirtuals)
 module.exports = BookingSchema ? mongoose.model('booking', BookingSchema) : null

@@ -111,4 +111,4 @@ class UIParameter extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(UIParameter)
+export default withTranslation(null, {withRef: true})(UIParameter)

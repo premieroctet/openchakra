@@ -27,4 +27,4 @@ function AddressService(props) {
   )
 }
 
-export default withTranslation('custom')(AddressService)
+export default withTranslation(null)(AddressService)

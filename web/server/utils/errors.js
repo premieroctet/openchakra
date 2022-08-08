@@ -3,6 +3,7 @@ const HTTP_CODES={
   NOT_LOGGED: 401,
   FORBIDDEN: 403,
   NOT_FOUND: 404,
+  SYSTEM_ERROR: 500,
 }
 
 class StatusError extends Error {
@@ -39,6 +40,12 @@ class BadRequestError extends StatusError {
   }
 }
 
+class SystemError extends StatusError {
+  constructor(message) {
+    super(message, HTTP_CODES.SYSTEM_ERROR)
+  }
+}
+
 module.exports={StatusError, NotFoundError, ForbiddenError, BadRequestError,
-  NotLoggedError,
+  NotLoggedError, SystemError,
   HTTP_CODES}

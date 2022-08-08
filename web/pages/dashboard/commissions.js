@@ -75,4 +75,4 @@ class Commissions extends DataPage {
 
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(Commissions))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(Commissions))

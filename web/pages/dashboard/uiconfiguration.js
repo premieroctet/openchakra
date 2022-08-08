@@ -26,7 +26,6 @@ import InfoIcon from '@material-ui/icons/Info'
 import dashboardstyles from '../../static/css/components/CompanyDashboard/CompanyDashboard'
 
 
-
 import UIParameter from '../../components/Editor/UIParameter'
 import DashboardLayout from '../../hoc/Layout/DashboardLayout'
 import CustomButton from '../../components/CustomButton/CustomButton'
@@ -211,7 +210,7 @@ class UIConfiguration extends React.Component {
     }
     return (
       <Accordion defaultExpanded={false} TransitionProps={{unmountOnExit: true}} key={prefixName} style={{boxShadow: 'none'}}>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />} >
           <h2 style={{margin: '5px'}}>{prefixName || 'Composants'}</h2>
         </AccordionSummary>
         <AccordionDetails style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
@@ -275,7 +274,7 @@ class UIConfiguration extends React.Component {
                 ))
               }
             </List>
-            <Grid style={{width: '80%'}}>
+            <Grid style={{flexGrow: 2}}>
               {this.componentsAccordion(pageParameters)}
             </Grid>
           </Grid>
@@ -292,4 +291,4 @@ class UIConfiguration extends React.Component {
 
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(UIConfiguration))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(UIConfiguration))

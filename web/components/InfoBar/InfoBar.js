@@ -23,4 +23,4 @@ function InfoBar({classes, t}) {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(InfoBar))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(InfoBar))

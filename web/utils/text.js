@@ -163,7 +163,7 @@ const getWordAt = (text, position) => {
 }
 
 const computeBookingReference = (user, alfred) => {
-  let reference = `${user.avatar_letters + alfred.avatar_letters }_${ moment().format('DDMMYYYY')}`
+  let reference = `${user.avatar_letters}${alfred.avatar_letters }_${ moment().format('DDMMYYYY')}`
   return reference
 }
 

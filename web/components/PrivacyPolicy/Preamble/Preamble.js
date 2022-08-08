@@ -11,4 +11,4 @@ function Preamble() {
   )
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(Preamble))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(Preamble))

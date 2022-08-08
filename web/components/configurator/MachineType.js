@@ -121,5 +121,5 @@ const validator= state => {
   return res
 }
 
-const TransMachineType=withTranslation('feurst', {withRef: true})(MachineType)
+const TransMachineType=withTranslation(null, {withRef: true})(MachineType)
 module.exports={MachineType: TransMachineType, machineTypeValidator: validator}

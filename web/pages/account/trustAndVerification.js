@@ -59,12 +59,6 @@ class trustAndVerification extends React.Component {
       verso_file: null,
       registration_proof_file: null,
       registration_proof: null,
-      ext: '',
-      ext_upload: '',
-      extVerso: '',
-      extVerso_upload: '',
-      extRegistrationProof: '',
-      extRegistrationProof_upload: '',
       professional: false,
       company: {},
       open: false,
@@ -77,10 +71,9 @@ class trustAndVerification extends React.Component {
       insurances: null,
     }
     this.saveStatus = this.saveStatus.bind(this)
-    this.callDrawer = this.callDrawer.bind(this)
     this.onSiretChange = this.onSiretChange.bind(this)
     this.statusSaveEnabled = this.statusSaveEnabled.bind(this)
-    this.deleteRecto = this.deleteRecto.bind(this)
+    this.deleteIdCard = this.deleteIdCard.bind(this)
     this.deleteRegistrationProof = this.deleteRegistrationProof.bind(this)
     this.handleDelete = this.handleDelete.bind(this)
     this.handleClose = this.handleClose.bind(this)
@@ -93,28 +86,13 @@ class trustAndVerification extends React.Component {
       .get('/myAlfred/api/users/current')
       .then(res => {
         let user = res.data
-        let st = {'user': user}
-        if (user.id_card) {
-          st.card = user.id_card
-          if (user.id_card.recto) {
-            st.ext = user.id_card.recto.split('.').pop()
-          }
-          if (user.id_card.verso) {
-            st.extVerso = user.id_card.verso.split('.').pop()
-          }
-          if (user.id_card.recto) {
-            this.setState({type: user.id_card.verso ? 'identite' : 'passeport'})
-          }
-        }
-        if (user.registration_proof) {
-          st.registration_proof = user.registration_proof
-          st.extRegistrationProof = user.registration_proof.split('.').pop()
-        }
-        st.id_card_status = user.id_card_status_text
-        if (user.id_card_error) {
-          st.id_card_error = user.id_card_error_text
-        }
-        this.setState(st)
+        this.setState({'user': user,
+          id_recto: null, id_verso: null, id_registrationproof: null,
+          recto_file: null, verso_file: null, registration_proof_file: null,
+          card: user.id_card, type: user.id_card?.verso ? 'identite' : user.id_card ? 'passeport' : null,
+          registration_proof: user.registration_proof, id_card_status: user.id_card_status_text,
+          id_card_error: user.id_card_error_text,
+        })
         if (user.is_alfred) {
           axios.get('/myAlfred/api/shop/currentAlfred')
             .then(response => {
@@ -151,7 +129,7 @@ class trustAndVerification extends React.Component {
   }
 
   handleDelete() {
-    this.deleteCb()
+    this.state.deleteCb()
     this.handleClose()
   }
 
@@ -189,7 +167,6 @@ class trustAndVerification extends React.Component {
     this.setState({
       id_recto: e.target.files[0],
       recto_file: URL.createObjectURL(e.target.files[0]),
-      ext_upload: e.target.files[0].name.split('.').pop(),
     })
   }
 
@@ -197,7 +174,6 @@ class trustAndVerification extends React.Component {
     this.setState({
       id_verso: e.target.files[0],
       verso_file: URL.createObjectURL(e.target.files[0]),
-      extVerso_upload: e.target.files[0].name.split('.').pop(),
     })
   }
 
@@ -205,7 +181,6 @@ class trustAndVerification extends React.Component {
     this.setState({
       id_registrationproof: e.target.files[0],
       registration_proof_file: URL.createObjectURL(e.target.files[0]),
-      extRegistrationProof_upload: e.target.files[0].name.split('.').pop(),
     })
   }
 
@@ -248,21 +223,6 @@ class trustAndVerification extends React.Component {
       })
   };
 
-  addVerso() {
-    const formData = new FormData()
-    formData.append('myCardV', this.state.id_verso)
-    const config = {
-      headers: {
-        'content-type': 'multipart/form-data',
-      },
-    }
-    axios.post('/myAlfred/api/users/profile/idCard/addVerso', formData, config)
-      .then(() => {
-        snackBarSuccess(ReactHtmlParser(this.props.t('TRUST_VERIFICATION.snackbar_card_add')))
-        this.componentDidMount()
-      }).catch()
-  }
-
   onDocumentLoadSuccess = ({numPages}) => {
     this.setState({numPages})
   };
@@ -294,16 +254,17 @@ class trustAndVerification extends React.Component {
       })
       .catch(err => console.error(err))
   }
-  deleteRecto(force = false) {
+
+  deleteIdCard(side, force = false) {
     if (!force) {
       this.setState({
         open: true,
-        deleteCb: () => this.deleteRecto(true),
+        deleteCb: () => this.deleteIdCard(side, true),
         deleteConfirmMessage: ReactHtmlParser(this.props.t('TRUST_VERIFICATION.id_card_confirm_deletion')),
       })
     }
     else {
-      axios.delete('/myAlfred/api/users/profile/idCard/recto')
+      axios.delete(`/myAlfred/api/users/profile/idCard/${side}`)
         .then(() => {
           snackBarSuccess(ReactHtmlParser(this.props.t('TRUST_VERIFICATION.snackbar_id_delete')))
           this.componentDidMount()
@@ -332,10 +293,6 @@ class trustAndVerification extends React.Component {
           console.error(err)
         })
     }
-  }
-
-  callDrawer() {
-    this.child.current.handleDrawerToggle()
   }
 
   statusSaveEnabled = () => {
@@ -449,12 +406,10 @@ class trustAndVerification extends React.Component {
             {this.state.type ?
               <DocumentEditor
                 confirmed={this.state.user.id_confirmed}
-                ext={this.state.ext}
-                ext_upload={this.state.ext_upload}
-                db_document={this.state.card.recto}
+                db_document={this.state.card?.recto}
                 uploaded_file={this.state.recto_file}
                 onChange={this.onRectoChange}
-                onDelete={() => this.deleteRecto(false)}
+                onDelete={() => this.deleteIdCard('recto', false)}
                 disabled={!this.state.type}
                 title={ReactHtmlParser(this.props.t('TRUST_VERIFICATION.download_recto'))}
               />
@@ -465,31 +420,25 @@ class trustAndVerification extends React.Component {
               this.state.type === 'identite' ?
                 <DocumentEditor
                   confirmed={this.state.user.id_confirmed}
-                  ext={this.state.extVerso}
-                  ext_upload={this.state.extVerso_upload}
-                  db_document={this.state.card.verso}
+                  db_document={this.state.card?.verso}
                   uploaded_file={this.state.verso_file}
                   onChange={this.onVersoChange}
-                  onDelete={() => this.deleteRecto(false)}
+                  onDelete={() => this.deleteIdCard('verso', false)}
                   disabled={this.state.type !== 'identite'}
                   title={ReactHtmlParser(this.props.t('TRUST_VERIFICATION.download_verso'))}
                 />
                 :
                 null
             }
-            {this.state.id_recto === null && this.state.id_verso !== null ?
-              <Grid style={{marginTop: '3vh', marginBottom: '5vh'}}>
-                <CustomButton onClick={() => this.addVerso()} variant="contained" className={`customtrustandverifsaveverso ${classes.buttonSave}`}>
-                  {ReactHtmlParser(this.props.t('TRUST_VERIFICATION.save_verso'))}
-                </CustomButton>
-              </Grid>
-              :
-              <Grid style={{marginTop: '3vh', marginBottom: '5vh'}}>
-                <CustomButton onClick={this.onSubmit} variant="contained" className={`customtrustandverifsavedoc ${classes.buttonSave}`}>
-                  {ReactHtmlParser(this.props.t('COMMON.btn_save'))}
-                </CustomButton>
-              </Grid>
-            }
+            <Grid style={{marginTop: '3vh', marginBottom: '5vh'}}>
+              <CustomButton
+                disabled={!(this.state.id_recto || this.state.id_verso)}
+                onClick={this.onSubmit}
+                variant="contained"
+                className={`customtrustandverifsavedoc ${classes.buttonSave}`}>
+                {ReactHtmlParser(this.props.t('COMMON.btn_save'))}
+              </CustomButton>
+            </Grid>
           </Grid>
         </Grid>
         { /** Status part/pro ***/ }
@@ -599,8 +548,6 @@ class trustAndVerification extends React.Component {
                     </Typography>
                   </Grid>
                   <DocumentEditor
-                    ext={this.state.extRegistrationProof}
-                    ext_upload={this.state.extRegistrationProof_upload}
                     db_document={this.state.registration_proof}
                     uploaded_file={this.state.registration_proof_file}
                     onChange={this.onRegistrationProofChanged}
@@ -656,4 +603,4 @@ class trustAndVerification extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(trustAndVerification))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(trustAndVerification))

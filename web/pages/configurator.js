@@ -419,4 +419,4 @@ class Configurator extends React.Component {
 }
 
 
-module.exports = withTranslation('feurst', {withRef: true})(Configurator)
+module.exports = withTranslation(null, {withRef: true})(Configurator)

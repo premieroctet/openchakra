@@ -1,15 +1,15 @@
 import React from 'react'
 import styled, {ThemeProvider} from 'styled-components'
-import {theme, GlobalStyleEdi} from '../../styles/feurst/feurst.theme'
+import {feurst as GlobalStyleEdi} from '../../styles/globalStyles'
+import {feurst} from '../../styles/themes'
 import {MinGlobalStyles} from '../../styles/MinglobalStyles'
-import {screen} from '../../styles/screenWidths'
 import Header from './Header'
 import Footer from './Footer'
 
 const EdiContainer = ({accessRights, children}) => {
   
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={feurst}>
       <Skeleton>
         <Header accessRights={accessRights} />
         {children}

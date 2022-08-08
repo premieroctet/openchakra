@@ -14,7 +14,6 @@
 web/mode.js
 web/storage
 
-
 # misc
 .env
 npm-debug.log*
@@ -27,6 +26,7 @@ web/package-lock.json
 web/static/assets/css/custom.css
 web/static/custom
 web/static/spitz
+web/static/cgu.pdf
 
 # Created by https://www.gitignore.io/api/linux,macos,windows,webstorm+all,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=linux,macos,windows,webstorm+all,visualstudiocode

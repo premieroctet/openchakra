@@ -61,4 +61,4 @@ class SnackBar extends React.Component {
   }
 }
 
-export default withTranslation('custom', {withRef: true})(SnackBar)
+export default withTranslation(null, {withRef: true})(SnackBar)

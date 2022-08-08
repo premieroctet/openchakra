@@ -1,3 +1,5 @@
+const { isPlatform } = require('../../../config/config');
+
 import {withTranslation} from 'react-i18next'
 const {DataPage, styles}=require('../../../components/AlfredDashboard/DataPage')
 import {withStyles} from '@material-ui/core/styles'
@@ -15,6 +17,7 @@ class all extends DataPage {
       {headerName: '_id', field: '_id', width: 0},
       models.textColumn({headerName: 'Label', field: 'label'}),
       models.textColumn({headerName: 'Catégorie', field: 'category_label'}),
+      models.textColumn({headerName: 'Tag', field: 'tag'}),
       models.booleanColumn({headerName: 'Pros', field: 'professional_access'}),
       models.booleanColumn({headerName: 'Particuliers', field: 'particular_access'}),
       models.booleanColumn({headerName: 'Frais dep.', field: 'travel_tax'}),
@@ -33,19 +36,10 @@ class all extends DataPage {
   loadData = () => {
     axios.get('/myAlfred/api/admin/service/all')
       .then(response => {
-        let service = response.data
+        let services = response.data
 
         this.setState({
-          data: service.map(s => {
-            s.warning=[]
-            s.category_label = [s.category.particular_label, s.category.professional_label].join('/')
-            if (s.professional_access && !s.prestations.find(p => p.professional_access)) {
-              s.warning.push('aucune prestation pro')
-            }
-            if (s.particular_access && !s.prestations.find(p => p.particular_access)) {
-              s.warning.push('aucune prestation particuliers')
-            }
-            s.warning=s.warning.join(',')
+          data: services.map(s => {
             s.location_label = Object.entries(s.location).filter(e => Boolean(e[1])).map(e => e[0].slice(0, 3).toUpperCase()).sort().join('/')
             return s
           }),
@@ -63,4 +57,4 @@ class all extends DataPage {
 
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(all))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(all))

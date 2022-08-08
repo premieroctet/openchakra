@@ -1,3 +1,4 @@
+
 import React from 'react'
 import Carousel from 'react-material-ui-carousel'
 import Grid from '@material-ui/core/Grid'
@@ -15,7 +16,7 @@ function withSlide(WrappedComponent) {
     }
 
     onPageChange = (event, pageIndex) => {
-      this.setState({pageIndex: pageIndex-1})
+      this.setState({pageIndex: Math.max(0, pageIndex-1)})
       document.getElementById('wrappedComponent').scrollIntoView()
     };
 
@@ -33,7 +34,7 @@ function withSlide(WrappedComponent) {
           <Carousel
             autoPlay={false}
             next={ () => { this.setState({pageIndex: this.state.pageIndex + 1}) }}
-            prev={ () => { this.setState({pageIndex: this.state.pageIndex - 1}) }}
+            prev={ () => { this.setState({pageIndex: Math.max(0, this.state.pageIndex - 1)}) }}
             animation={'slide'}
             navButtonsAlwaysVisible={false} // && this.props.infinite || pageCount>1}
             navButtonsAlwaysInvisible={false && !model.isInfinite()}

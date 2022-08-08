@@ -24,10 +24,10 @@ const MANGOPAY_MESSAGES = {
   'DOCUMENT_FALSIFIED': "Pièce d'identité falsifiée",
   'DOCUMENT_MISSING': "Pièce d'identité vide",
   'UNDERAGE_PERSON': 'Vous devez avoir au minimum 18 ans',
-  [ KycDocumentStatus.Created ]: "Pièce d'identité enregistrée, en attente de validation",
-  [ KycDocumentStatus.ValidationAsked ]: "Pièce d'identité en cours de validation",
-  [ KycDocumentStatus.Validated ]: "Pièce d'identité valide",
-  [ KycDocumentStatus.Refused ]: "Pièce d'identité refusée, merci d'en fournir une valide",
+  [KycDocumentStatus.Created]: "Pièce d'identité enregistrée, en attente de validation",
+  [KycDocumentStatus.ValidationAsked]: "Pièce d'identité en cours de validation",
+  [KycDocumentStatus.Validated]: "Pièce d'identité valide",
+  [KycDocumentStatus.Refused]: "Pièce d'identité refusée, merci d'en fournir une valide",
 }
 
 const INFOBAR = {
@@ -124,6 +124,7 @@ const USERSERVICEPREVIEW = {
   button_show_profil: 'Voir le profil',
   topic_description: 'Description',
   topic_description_summary: "Cet utilisateur n'a pas encore de description.",
+  service_no_description: "Ce service n'a pas encore de description.",
   topic_list_label: 'Délai de prévenance',
   topic_list_summary: ' a besoin de ',
   topic_list_summary_end: ' pour préparer son service',
@@ -968,7 +969,7 @@ const getMangopayMessage = msg_id => {
   if (!msg_id) {
     return null
   }
-  return MANGOPAY_MESSAGES[ msg_id ] || MANGOPAY_ERRORS[ parseInt(msg_id) ] || `Erreur inconnue:${msg_id}`
+  return MANGOPAY_MESSAGES[msg_id] || MANGOPAY_ERRORS[parseInt(msg_id)] || `Erreur inconnue:${msg_id}`
 }
 
 const OUR_ALFRED ={
@@ -1087,7 +1088,8 @@ const SHOP = {
     title_place_service: 'Où acceptez-vous de réaliser votre prestation ?',
     service_at_userHome: "A l'adresse de mon client",
     service_at_myHome: 'A mon adresse',
-    service_withVisio: 'En visioconférence(la visioconférence ne tient pas compte de votre rayon d’intervention)',
+    service_withVisio: 'En visioconférence(ne tient pas compte de votre rayon d’intervention)',
+    service_withElearning: 'En e-learning(ne tient pas compte de votre rayon d’intervention)',
     service_outside: 'En extérieur',
     apply_moving_price: 'Appliquer un forfait déplacement de',
     propose_delivery: 'Proposer un forfait retrait & livraison de',
@@ -1450,6 +1452,7 @@ const BOOKING = {
   phone_number: 'Numéro de téléphone :',
   about_resa: 'À propos de votre réservation',
   visio: 'en visio',
+  elearning: 'en e-learning',
   created_date: 'créée le ',
   end_date: 'Date de fin: ',
   info_end_resa: 'Votre réservation doit être confirmée avant le ',

@@ -4,6 +4,7 @@ import {client} from '../utils/client'
 
 export const UserContext = createContext()
 
+/* Prevent fetching user on these urls */
 const pathnamesToAvoid = route => {
   return [
     '/edi/login',
@@ -24,7 +25,11 @@ export function UserWrapper({children}) {
       .then(data => {
         updateUser(data)
       })
-      .catch(error => console.error('Cant fetch current user', error))
+      .catch(error => {
+        setUser(false)
+        console.error('Cant fetch current user', error)
+      },
+      )
   }
 
   useEffect(() => {

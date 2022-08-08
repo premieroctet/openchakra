@@ -1,7 +1,8 @@
 import {withTranslation} from 'react-i18next'
-const {DataPage, styles}=require('../../../components/AlfredDashboard/DataPage')
 import {withStyles} from '@material-ui/core/styles'
 import axios from 'axios'
+import {bookingUrl} from '../../../config/config'
+const {DataPage, styles}=require('../../../components/AlfredDashboard/DataPage')
 const models=require('../../../components/BigList/models')
 
 
@@ -47,7 +48,7 @@ class all extends DataPage {
 
   onCellClicked = (data, field) => {
     if (field=='service.label') {
-      window.open(`/userServicePreview?id=${data._id}`, '_blank')
+      window.open(bookingUrl(data._id), '_blank')
     }
     else {
       window.open(`/profile/about?user=${data.user._id}`, '_blank')
@@ -56,4 +57,4 @@ class all extends DataPage {
 
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(all))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(all))

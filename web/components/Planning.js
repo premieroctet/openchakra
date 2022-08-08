@@ -31,4 +31,4 @@ const Planning = ({t, availabilities, scheduleDateChanged, alfred, classes}) => 
   )
 }
 
-export default withTranslation('custom', {withRef: true})(Planning)
+export default withTranslation(null, {withRef: true})(Planning)

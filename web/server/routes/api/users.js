@@ -1,4 +1,6 @@
 const crypto = require('crypto')
+const {getIO} = require('../../utils/socketIO')
+const {getLocationSuggestions}=require('../../../utils/geo')
 const fs = require('fs').promises
 const path=require('path')
 const Validator = require('validator')
@@ -21,7 +23,6 @@ const {
   NotFoundError,
 } = require('../../utils/errors')
 const Company = require('../../models/Company')
-
 const {getHostUrl, is_development} = require('../../../config/config')
 const Shop = require('../../models/Shop')
 const {
@@ -52,12 +53,14 @@ const {REGISTER_WITHOUT_CODE}=require('../../../utils/context')
 const {checkRegisterCodeValidity, setRegisterCodeUsed}=require('../../utils/register')
 const {EDIT_PROFIL}=require('../../../utils/i18n')
 const {logEvent}=require('../../utils/events')
-const {is_production}=require('../../../config/config')
+const {is_production, is_validation, computeUrl}=require('../../../config/config')
 const {validateSimpleRegisterInput, validateEditProfile, validateEditProProfile, validateBirthday} = require('../../validation/simpleRegister')
 const validateLoginInput = require('../../validation/login')
-const {sendResetPassword, sendVerificationMail, sendVerificationSMS, sendAlert} = require('../../utils/mailing')
+const {sendResetPassword, sendVerificationMail, sendVerificationSMS, sendB2BAccount, sendAlert} = require('../../utils/mailing')
+const {ROLES}=require('../../../utils/consts')
 const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, createMangoProvider, install_hooks} = require('../../utils/mangopay')
 const {send_cookie}=require('../../utils/serverContext')
+const lodash=require('lodash')
 const {isActionAllowed} = require('../../utils/userAccess')
 const ResetToken = require('../../../server/models/ResetToken')
 
@@ -330,7 +333,12 @@ router.post('/sendSMSVerification', passport.authenticate('jwt', {session: false
 // Validate account after register
 router.post('/validateAccount', (req, res) => {
   User.findByIdAndUpdate(req.body.user_id, {is_confirmed: true})
-    .then(() => res.json())
+    .then(() => {
+      const io=getIO()
+      io.emit('joinProfile')
+      io.emit('onProfileChange', req.body.user_id)
+      return res.json()
+    })
     .catch(err => {
       console.error(err)
       res.status(400).json(err)
@@ -408,6 +416,8 @@ router.put('/profile/serviceAddress', passport.authenticate('jwt', {session: fal
         note: req.body.note,
         phone_address: req.body.phone,
       }
+      user.service_address.push(address)
+
 
       if (user?.service_address) {
         Object.assign(user.service_address, [...user.service_address, address])
@@ -538,12 +548,15 @@ router.post('/profile/idCard', uploadIdCard.fields([{name: 'myCardR', maxCount: 
   name: 'myCardV',
   maxCount: 1,
 }]), passport.authenticate('jwt', {session: false}), (req, res) => {
+  if (!req.files.myCardR && !req.files.myCardV) {
+    return res.status(200).json('Aucun photo à sauvegarder')
+  }
   User.findById(req.user.id)
     .then(user => {
-      user.id_card = {}
-      user.id_card.recto = req.files.myCardR[0].path
-      let verso = 'myCardV'
-      if (verso in req.files) {
+      if (req.files.myCardR) {
+        user.id_card.recto = req.files.myCardR[0].path
+      }
+      if (req.files.myCardV) {
         user.id_card.verso = req.files.myCardV[0].path
       }
 
@@ -558,22 +571,6 @@ router.post('/profile/idCard', uploadIdCard.fields([{name: 'myCardR', maxCount: 
     .catch(err => {
       console.error(err)
       res.statut(400, err)
-    })
-})
-
-// @Route PUT /myAlfred/api/users/profile/idCard/addVerso
-// Add an identity card
-// @Access private
-router.post('/profile/idCard/addVerso', uploadIdCard.single('myCardV'), passport.authenticate('jwt', {session: false}), (req, res) => {
-  User.findById(req.user.id)
-    .then(user => {
-      user.id_card.verso = req.file.path
-
-
-      user.save().then(user => res.json(user)).catch(err => console.error(err))
-    })
-    .catch(err => {
-      console.error(err)
     })
 })
 
@@ -659,7 +656,7 @@ router.post('/login', (req, res) => {
   const password = req.body.password
 
   // Find user by email
-  User.findOne({email: new RegExp(`^${email}$`, 'i')})
+  User.findOne({email: new RegExp(`^${lodash.escapeRegExp(email)}$`, 'i')})
     .populate({path: 'shop', select: 'is_particular', strictPopulate: false})
     .then(user => {
       // Check for user
@@ -726,6 +723,7 @@ router.get('/all', (req, res) => {
       console.error(err)
       res.status(HTTP_CODES.NOT_FOUND).json({user: 'No users found'})
     })
+    .catch(err => res.status(404).json({user: 'No users found'}))
 })
 
 // @Route GET /myAlfred/api/users/users
@@ -895,7 +893,7 @@ router.post('/forgotPassword', (req, res) => {
   const email = (req.body.email || '').toLowerCase().trim()
 
   let token=null
-  User.exists({email: email})
+  User.exists({email: new RegExp(`^${lodash.escapeRegExp(email)}$`, 'i')})
     .then(exists => {
       if (!exists) {
         console.error(`email ${email} not in database`)
@@ -1283,10 +1281,14 @@ router.put('/current/delete', passport.authenticate('jwt', {session: false}), (r
 // @Route DELETE /myAlfred/api/users/profile/idCard/recto
 // Delete recto identity card
 // @Access private
-router.delete('/profile/idCard/recto', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.delete('/profile/idCard/:side', passport.authenticate('jwt', {session: false}), (req, res) => {
+  const side=req.params.side
+  if (!['recto', 'verso'].includes(side)) {
+    return res.status(400).json(`Unkown idcard side during removal:${side}, expected 'recto' or 'verso'`)
+  }
   User.findById(req.user.id)
     .then(user => {
-      user.id_card = null
+      user.id_card[side]=null
       user.id_card_status = null
       user.id_card_error = null
       user.save()
@@ -1532,10 +1534,34 @@ if (is_development()) {
 
 }
 
+router.get('/locations', (req, res) => {
+  const {value, type}=req.query
+  getLocationSuggestions(value, type)
+    .then(result => {
+      return res.json(result)
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(500).json('Erreur')
+    })
+})
+
+router.get('/locations', (req, res) => {
+  const value=req.query.value
+  const type=req.query.type
+  getLocationSuggestions(value, type)
+    .then(result => {
+      return res.json(result)
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(500).json('Erreur')
+    })
+})
+
 // Create mango client account for all user with no id_mangopay
 // DISABLED because it operates on ALL DATABASES !!
-// if (is_production() || is_validation()) {
-if (false) {
+if (is_production() || is_validation()) {
   new CronJob('0 */15 * * * *', () => {
     console.log('Customers who need mango account')
     User.find({id_mangopay: null, active: true})

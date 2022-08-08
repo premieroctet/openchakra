@@ -106,4 +106,4 @@ const BaseListTable = ({
   )
 }
 
-export default withTranslation('feurst', {withRef: true})(withEdiRequest(BaseListTable))
+export default withTranslation(null, {withRef: true})(withEdiRequest(BaseListTable))

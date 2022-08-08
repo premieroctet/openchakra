@@ -62,7 +62,7 @@ class paymentSuccess extends React.Component {
         this.socket = io()
         this.socket.on('connect', () => {
           this.socket.emit('booking', booking_id)
-          const newStatus = booking.user.company_customer ? BOOK_STATUS.CUSTOMER_PAID : booking.status==BOOK_STATUS.PREAPPROVED ? BOOK_STATUS.CONFIRMED : BOOK_STATUS.TO_CONFIRM
+          const newStatus = booking.is_service ? BOOK_STATUS.CUSTOMER_PAID : booking.status==BOOK_STATUS.PREAPPROVED ? BOOK_STATUS.CONFIRMED : BOOK_STATUS.TO_CONFIRM
           axios.put(`/myAlfred/api/booking/modifyBooking/${booking_id}`, {status: newStatus})
             .then(res => {
               setTimeout(() => this.socket.emit('changeStatus', res.data), 100)
@@ -129,4 +129,4 @@ class paymentSuccess extends React.Component {
 }
 
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(withParams(paymentSuccess)))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(withParams(paymentSuccess)))

@@ -1101,4 +1101,4 @@ class CguContent extends React.Component {
 
 }
 
-export default withTranslation('custom', {withRef: true})(withStyles(styles)(CguContent))
+export default withTranslation(null, {withRef: true})(withStyles(styles)(CguContent))
