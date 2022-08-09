@@ -3,13 +3,13 @@ import ReactHtmlParser from 'react-html-parser'
 import styled from 'styled-components'
 import {withTranslation} from 'react-i18next'
 import {useRouter} from 'next/router'
+import {BASEPATH_EDI} from '../../utils/feurst/consts'
 import {API_PATH} from '../../utils/consts'
 import {client} from '../../utils/client'
 import {snackBarSuccess, snackBarError} from '../../utils/notifications'
 import RenewPassword from '../../components/Password/RenewPassword'
 import {NormalButton} from '../../components/Feurst/Button'
 import EdiContainer from '../../components/Feurst/EdiContainer'
-import {BASEPATH_EDI} from '../../utils/consts'
 
 const ResetPassword = ({t}) => {
 

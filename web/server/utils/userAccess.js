@@ -1,14 +1,15 @@
 const lodash=require('lodash')
 const {
+  ALL,
+  COMPANY,
   COMPLETE,
   CREATED,
   CUSTOMER_ADMIN,
   HANDLE,
   QUOTATION,
   RELATED,
-} = require('../../utils/consts')
-
-const {USER_ACTIONS, ALL, COMPANY} = require('../../utils/consts')
+  USER_ACTIONS,
+} = require('../../utils/feurst/consts')
 
 const getActions = (roles, model, action) => {
   const actions=lodash.flattenDeep(roles.map(role => USER_ACTIONS[role]))

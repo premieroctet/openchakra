@@ -1,6 +1,4 @@
-const {QUOTATION} = require('../../../utils/consts')
-
-const {CREATED, HANDLED} = require('../../../utils/consts')
+const {QUOTATION, CREATED, HANDLED, COMPLETE, VALID, CONVERTED, EXPIRED} = require('../../../utils/feurst/consts')
 
 const QUOTATIONS_STATES=[CREATED, COMPLETE, VALID, HANDLED, CONVERTED, EXPIRED]
 

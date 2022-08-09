@@ -1,4 +1,4 @@
-const {DROITE, EXCAVATRICE} = require('../../../utils/consts')
+const {DROITE, EXCAVATRICE} = require('../../../utils/feurst/consts')
 const {computePrecos} = require('../../../server/utils/feurst/xl_db')
 
 // excavatrice FKM 15

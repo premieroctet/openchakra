@@ -2,7 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 import styled from 'styled-components'
 import {screen} from '../../../web/styles/screenWidths'
-import {BASEPATH_EDI} from '../../utils/consts'
+import {BASEPATH_EDI} from '../../utils/feurst/consts'
 
 const Footer = () => (
   <StyledFooter>
@@ -20,12 +20,12 @@ const StyledFooter = styled.footer`
   display: grid;
   grid-template-columns: 1fr;
   justify-items: center;
-  
+
   a {
     color: var(--white) !important;
     font-weight: var(--font-bold);
   }
-  
+
   @media (${screen.md}) {
     grid-template-columns: repeat(3, 1fr);
   }

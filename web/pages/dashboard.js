@@ -11,7 +11,6 @@ import {isLoggedUserAdmin, isLoggedUserSuperAdmin} from '../utils/context'
 import DashboardLayout from '../hoc/Layout/DashboardLayout'
 const {API_PATH} = require('../utils/consts')
 const {setAxiosAuthentication}=require('../utils/authentication')
-const {SHIPRATE, PRODUCT} = require('../utils/consts')
 
 const styles = () => ({
   signupContainer: {
@@ -87,8 +86,6 @@ class home extends React.Component {
                 <Link href="/dashboard/equipments/all"><a>Equipements</a></Link><br/>
                 <Link href="/dashboard/services/all"><a>Services</a></Link><br/>
                 <Link href="/dashboard/prestations/all"><a>Prestations</a></Link><br/>
-                {this.hasModelAccess(PRODUCT) && <><Link href="/dashboard/products"><a>Produits</a></Link><br/></>}
-                {this.hasModelAccess(SHIPRATE) && <Link href="/dashboard/shiprates"><a>Frais de livraison</a></Link>}
               </Grid>
               <Grid item xs={6}>
                 <Typography style={{fontSize: 30}}>Maintenance</Typography>

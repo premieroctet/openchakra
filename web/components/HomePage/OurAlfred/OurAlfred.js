@@ -12,6 +12,7 @@ import withGrid from '../../../hoc/Grid/GridCard'
 import CardPreview from '../../Card/CardPreview/CardPreview'
 import CustomButton from '../../CustomButton/CustomButton'
 import {SlideGridDataModel} from '../../../utils/models/SlideGridDataModel'
+import {bookingUrl, isMonoProvider} from '../../../config/config'
 
 const AlfredSlide=withSlide(withGrid(CardPreview))
 
@@ -49,8 +50,15 @@ class OurAlfred extends React.Component {
           <Grid item container spacing={3} className={classes.containerCardPreviewMobile}>
             {
               Object.keys(alfred).map((res, index) => (
-                <Grid item key={index}>
-                  <CardPreview item={alfred[res]}/>
+                <Grid item key={index} style={{scrollSnapAlign: 'center'}}>
+                  <CardPreview
+                    name={!isMonoProvider() && alfred[res]?.user?.firstname}
+                    link={bookingUrl(alfred[res].id)}
+                    picture={alfred[res]?.service?.picture}
+                    title={alfred[res]?.service?.label}
+                    city={alfred[res]?.service_address?.city || ''}
+                    item={alfred[res]}
+                  />
                 </Grid>
               ))
             }

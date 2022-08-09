@@ -2,7 +2,6 @@ import React from 'react'
 import RequiredField from '../misc/RequiredField'
 import {feurstImgPath} from '../../pages/configurator'
 const {withTranslation} = require('react-i18next')
-
 const {TextField} = require('@material-ui/core')
 const {Autocomplete} = require('@material-ui/lab')
 const {
@@ -10,7 +9,7 @@ const {
   EXCAVATRICE,
   MACHINE_TYPES,
   PELLE_BUTTE,
-} = require('../../utils/consts')
+} = require('../../utils/feurst/consts')
 const {normalize} = require('../../utils/text')
 
 

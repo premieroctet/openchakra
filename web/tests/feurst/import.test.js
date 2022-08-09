@@ -1,23 +1,22 @@
-const fs = require('fs').promises
+const {promises: fs} = require('fs')
 const mongoose = require('mongoose')
 const lodash=require('lodash')
-const {stockImport}=require('../../server/utils/import')
-const Company=require('../../server/models/Company')
-const User=require('../../server/models/User')
-const {FEURST_SALES}=require('../../utils/consts')
-const {extractData} = require('../../utils/import')
-const {lineItemsImport} = require('../../server/utils/import')
-const {MONGOOSE_OPTIONS} = require('../../server/utils/database')
+const Company = require('../../server/models/Company')
 const Product = require('../../server/models/Product')
-const PriceList = require('../../server/models/PriceList')
+const {MONGOOSE_OPTIONS} = require('../../server/utils/database')
+const {JSON_TYPE, TEXT_TYPE, XL_TYPE} = require('../../utils/consts')
+const User = require('../../server/models/User')
+const {FEURST_SALES} = require('../../utils/feurst/consts')
+const {extractData, guessFileType} = require('../../utils/import')
 const {
   accountsImport,
+  lineItemsImport,
   priceListImport,
   productsImport,
   shipRatesImport,
+  stockImport,
 } = require('../../server/utils/import')
-const {guessFileType} = require('../../utils/import')
-const {TEXT_TYPE, JSON_TYPE, XL_TYPE} = require('../../utils/consts')
+const PriceList = require('../../server/models/PriceList')
 
 
 describe('XL/CSV/JSON imports', () => {

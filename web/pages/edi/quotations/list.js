@@ -1,7 +1,6 @@
 import React from 'react'
+import {BASEPATH_EDI, QUOTATION, VIEW} from '../../../utils/feurst/consts'
 import withEdiAuth from '../../../hoc/withEdiAuth'
-import {BASEPATH_EDI} from '../../../utils/consts'
-import {VIEW, QUOTATION} from '../../../utils/consts'
 import MyQuotations from '../../../components/Feurst/MyQuotations'
 
 const QuotationsList = ({accessRights}) => {

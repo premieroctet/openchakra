@@ -1,14 +1,13 @@
-
 import React, {useMemo} from 'react'
 import Link from 'next/link'
 import lodash from 'lodash'
-import {isFeurstUser} from '../../server/utils/userAccess'
 import {API_PATH} from '../../utils/consts'
 import {
   BASEPATH_EDI,
   FEURST_IMG_PATH,
   ROLES,
-} from '../../utils/consts'
+} from '../../utils/feurst/consts'
+import {isFeurstUser} from '../../server/utils/userAccess'
 import {formatAddress, formatPercent} from '../../utils/text'
 import {localeMoneyFormat} from '../../utils/converters'
 import {DateRangeColumnFilter} from '../Table/TableFilter'

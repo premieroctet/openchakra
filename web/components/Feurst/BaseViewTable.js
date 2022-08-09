@@ -4,22 +4,22 @@ import {useRouter} from 'next/router'
 import axios from 'axios'
 import {withTranslation} from 'react-i18next'
 import styled from 'styled-components'
+import {API_PATH} from '../../utils/consts'
 import {
+  ALL,
   BASEPATH_EDI,
-  API_PATH,
   CONVERT,
-  VALIDATE,
+  ENDPOINTS,
   ORDER,
+  PARTIALLY_HANDLE,
   QUOTATION,
   RELATED,
-  ALL,
+  REWRITE,
+  TOTALLY_HANDLE,
   UPDATE,
   UPDATE_ALL,
-  ENDPOINTS,
-  REWRITE,
-  PARTIALLY_HANDLE,
-  TOTALLY_HANDLE,
-} from '../../utils/consts'
+  VALIDATE,
+} from '../../utils/feurst/consts'
 import FeurstTable from '../../styles/feurst/FeurstTable'
 import {client} from '../../utils/client'
 import {localeMoneyFormat} from '../../utils/converters'
@@ -245,7 +245,7 @@ const BaseCreateTable = ({
         </dl>
       </div>}
 
-      
+
       <FeurstTable
         caption={t(`${wordingSection}.details`)}
         data={state.items}
@@ -273,7 +273,7 @@ const BaseCreateTable = ({
           </Notice>
         </>}
       </div>
-      
+
 
       {!justCreated &&
       <div className='flex items-center bg-brand text-xl text-white font-semibold justify-between p-2 pl-6 pr-6 mb-8'>

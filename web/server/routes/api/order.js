@@ -7,18 +7,16 @@ const xlsx=require('node-xlsx')
 const {NotFoundError} = require('../../utils/errors')
 const {generateExcel} = require('../../utils/feurst/generateExcel')
 const {BadRequestError, HTTP_CODES} = require('../../utils/errors')
-const {
-  CUSTOMER_ADMIN,
-  FEURST_ADV,
-  FEURST_SALES,
-} = require('../../../utils/consts')
 const {sendDataNotification, sendOrderAlert} = require('../../utils/mailing')
 const {
   COMPLETE,
   CONVERT,
   CREATED,
+  CUSTOMER_ADMIN,
   EXPORT,
   EXPRESS_SHIPPING,
+  FEURST_ADV,
+  FEURST_SALES,
   HANDLE,
   HANDLED,
   PARTIALLY_HANDLE,
@@ -31,7 +29,12 @@ const {
   VALIDATE,
   ORDER_ALERT_CHECK_INTERVAL,
   ORDER_ALERT_DELAY,
-} = require('../../../utils/consts')
+  ORDER,
+  CREATE,
+  UPDATE,
+  VIEW,
+  DELETE,
+} = require('../../../utils/feurst/consts')
 const Quotation = require('../../models/Quotation')
 const {
   addItem,
@@ -57,7 +60,6 @@ const router = express.Router()
 const Order = require('../../models/Order')
 const {validateOrder, validateOrderItem}=require('../../validation/order')
 const validateAddress=require('../../validation/address')
-const {ORDER, CREATE, UPDATE, VIEW, DELETE}=require('../../../utils/consts')
 const feurstfr=require('../../../translations/fr/feurst')
 moment.locale('fr')
 

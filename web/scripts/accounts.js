@@ -1,11 +1,11 @@
 const mongoose = require('mongoose')
-const User = require('../server/models/User')
 const {
   CUSTOMER_ADMIN,
   FEURST_ADMIN,
   FEURST_ADV,
   FEURST_SALES,
-} = require('../utils/consts')
+} = require('../utils/feurst/consts')
+const User = require('../server/models/User')
 const Company = require('../server/models/Company')
 const {getDatabaseUri} = require('../config/config')
 const {MONGOOSE_OPTIONS} = require('../server/utils/database')

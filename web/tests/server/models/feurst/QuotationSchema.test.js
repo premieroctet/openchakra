@@ -4,14 +4,12 @@ const {
   COMPLETE,
   CREATED,
   EXPIRED,
-  EXPRESS_SHIPPING,
   HANDLED,
   QUOTATION_VALIDITY,
   VALID,
-} = require('../../../../utils/consts')
+} = require('../../../../utils/feurst/consts')
 const OrderSchema = require('../../../../server/models/feurst/OrderSchema')
 const {MONGOOSE_OPTIONS} = require('../../../../server/utils/database')
-
 const ProductSchema = require('../../../../server/models/feurst/ProductSchema')
 const QuotationSchema = require('../../../../server/models/feurst/QuotationSchema')
 const UserSchema = require('../../../../server/models/feurst/UserSchema')

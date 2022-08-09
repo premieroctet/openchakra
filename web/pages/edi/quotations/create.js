@@ -1,6 +1,6 @@
 import React from 'react'
+import {BASEPATH_EDI, CREATE, QUOTATION} from '../../../utils/feurst/consts'
 import withEdiAuth from '../../../hoc/withEdiAuth'
-import {BASEPATH_EDI, CREATE, QUOTATION} from '../../../utils/consts'
 import Quotationcreate from '../../../components/Feurst/QuotationCreate'
 
 const Orders = ({accessRights}) => {

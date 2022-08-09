@@ -5,7 +5,7 @@ const {
   getHostUrl,
   is_validation,
 }=require('../../config/config')
-const {CUSTOMER_ADMIN, FEURST_ADV} = require('../../utils/consts')
+const {CUSTOMER_ADMIN, FEURST_ADV} = require('../../utils/feurst/consts')
 const Company = require('../models/Company')
 const User = require('../models/User')
 const {booking_datetime_str} = require('../../utils/dateutils')

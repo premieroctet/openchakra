@@ -1,8 +1,6 @@
 import mongoose from 'mongoose'
-import PaymentBase from '../../server/plugins/payment/paymentBase'
 import {BadRequestError, NotFoundError} from '../../server/utils/errors'
 import User from '../../server/models/User'
-import {getDatabaseUri} from '../../config/config'
 import {MONGOOSE_OPTIONS} from '../../server/utils/database'
 import {createBooking} from '../../server/utils/booking'
 import validateBooking from '../../server/validation/booking'
@@ -17,10 +15,11 @@ describe('Booking creation', () => {
     cpf: true,
     date: '2022-07-13T22:00:00.000Z',
     userId: '5e16f578b9a2462bc340c64e',
+    informationRequest: false,
   }
 
   beforeAll(() => {
-    return mongoose.connect(getDatabaseUri(), MONGOOSE_OPTIONS)
+    return mongoose.connect('mongodb://localhost/test', MONGOOSE_OPTIONS)
   })
 
   afterAll(() => {

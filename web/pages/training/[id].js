@@ -107,21 +107,21 @@ const Training = ({training, t}) => {
 
           <div className="container-lg">
             <RoundedBox3items>
-              <h2><img width={20} height={16} src={`${AFTRAL_ICON_PATH}/arrow.svg`} alt='' />Objectif de la formation</h2>
+              <h2><img loading='lazy' width={20} height={16} src={`${AFTRAL_ICON_PATH}/arrow.svg`} alt='' />Objectif de la formation</h2>
 
               <div>
                 <p>
-                  <img width={100} height={100} src={`${AFTRAL_ICON_PATH}/diplome.svg`} alt="diplôme" />
+                  <img loading='lazy' width={100} height={100} src={`${AFTRAL_ICON_PATH}/diplome.svg`} alt="diplôme" />
                   {training.service?.goals[0] || 'Lorem ipsum dolor sit amet. Cum voluptas temporibus ea blanditiis aliquam ex libero pariatur est deserunt nostrum dolorem voluptate et laborum soluta. Et repellendus expedita ut dolor delectus aut placeat quia a ratione quia et corrupti molestias. '}
                 </p>
 
                 <p>
-                  <img width={60} height={60} src={`${AFTRAL_ICON_PATH}/gestionnaireCompte.svg`} alt="Gestionnaire" />
+                  <img loading='lazy' width={60} height={60} src={`${AFTRAL_ICON_PATH}/gestionnaireCompte.svg`} alt="Gestionnaire" />
                   {training.service?.goals[1] || 'Être le gestionnaire de transport d’une entreprise de transport routier de marchandises.'}
                 </p>
 
                 <p>
-                  <img width={60} height={60} src={`${AFTRAL_ICON_PATH}/camion.svg`} alt="véhicule léger" />
+                  <img loading='lazy' width={60} height={60} src={`${AFTRAL_ICON_PATH}/camion.svg`} alt="véhicule léger" />
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. In pharetra risus sed semper luctus. Vivamus at risus nulla.
                 </p>
 
@@ -132,8 +132,9 @@ const Training = ({training, t}) => {
 
             <BoxVideoAndDownload>
               <RoundedBox>
-                <h2><img width={25} height={14} src={`${AFTRAL_ICON_PATH}/video.svg`} alt='' />Vidéo</h2>
+                <h2><img loading='lazy' width={25} height={14} src={`${AFTRAL_ICON_PATH}/video.svg`} alt='' />Vidéo</h2>
                 <iframe
+                  loading='lazy'
                   width="560"
                   height="315"
                   src={training.service?.video}
@@ -146,7 +147,7 @@ const Training = ({training, t}) => {
               </RoundedBox>
               <RoundedBox>
                 <a href={training.service?.program} download className='download' >
-                  <img width={100} height={100} src={`${AFTRAL_ICON_PATH}/download.svg`} alt='' />
+                  <img loading='lazy' width={100} height={100} src={`${AFTRAL_ICON_PATH}/download.svg`} alt='' />
                   <span>Télécharger</span>
                   <span>le programme complet</span>
                 </a>
@@ -178,13 +179,13 @@ const Training = ({training, t}) => {
 
           <div className='container-lg'>
             <RoundedBox>
-              <h2><img width={21} height={29} src={`${AFTRAL_ICON_PATH}/valid.svg`} alt='' />Validation du parcours</h2>
+              <h2><img loading='lazy' width={21} height={29} src={`${AFTRAL_ICON_PATH}/valid.svg`} alt='' />Validation du parcours</h2>
               <p className='validation'>{ReactHtmlParser(training.service?.validation)}</p>
 
             </RoundedBox>
 
             <MoreInfo>
-              <h2><img width={25} height={25} src={`${AFTRAL_ICON_PATH}/more.svg`} alt='' />En savoir plus</h2>
+              <h2><img loading='lazy' width={25} height={25} src={`${AFTRAL_ICON_PATH}/more.svg`} alt='' />En savoir plus</h2>
 
               <div className={`detailsmoreinfo ${viewMore ? 'liberate' : ''}`}>
                 {ReactHtmlParser(training.service?.more_info)}
@@ -196,7 +197,7 @@ const Training = ({training, t}) => {
 
             <Opinions>
 
-              <h2><img width={25} height={21} src={`${AFTRAL_ICON_PATH}/opinions.svg`} alt='' />Avis</h2>
+              <h2><img loading='lazy' width={25} height={21} src={`${AFTRAL_ICON_PATH}/opinions.svg`} alt='' />Avis</h2>
 
               <div className='stateoftheart'>
 

@@ -6,12 +6,11 @@ const xlsx=require('node-xlsx')
 const {HTTP_CODES} = require('../../utils/errors')
 const {shipRatesImport} = require('../../utils/import')
 const {TEXT_FILTER, createMemoryMulter} = require('../../utils/filesystem')
-const {SHIPRATE} = require('../../../utils/consts')
+const {SHIPRATE, VIEW} = require('../../../utils/feurst/consts')
 const ShipRate = require('../../models/ShipRate')
 const {isActionAllowed} = require('../../utils/userAccess')
 
 const router = express.Router()
-const {VIEW}=require('../../../utils/consts')
 
 moment.locale('fr')
 

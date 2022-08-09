@@ -1,16 +1,16 @@
 import React, {useCallback, useState, useEffect} from 'react'
 import {withTranslation} from 'react-i18next'
 import UploadIcon from '@icons/material/UploadIcon'
-import withEdiRequest from '../../hoc/withEdiRequest'
 import {API_PATH} from '../../utils/consts'
 import {
+  BASEPATH_EDI,
   CREATE,
-  IMPORT,
-  UPDATE,
   DELETE,
   EXPORT,
-  BASEPATH_EDI,
-} from '../../utils/consts'
+  IMPORT,
+  UPDATE,
+} from '../../utils/feurst/consts'
+import withEdiRequest from '../../hoc/withEdiRequest'
 import FeurstTable from '../../styles/feurst/FeurstTable'
 import ImportExcelFile from './ImportExcelFile'
 import {PleasantLink} from './Button'

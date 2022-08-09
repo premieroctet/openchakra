@@ -1,6 +1,6 @@
 import React from 'react'
 import withEdiAuth from '../../../hoc/withEdiAuth'
-import {CREATE, ORDER, BASEPATH_EDI} from '../../../utils/consts'
+import {CREATE, ORDER, BASEPATH_EDI} from '../../../utils/feurst/consts'
 import OrderCreate from '../../../components/Feurst/OrderCreate'
 
 const Orders = ({accessRights}) => {
