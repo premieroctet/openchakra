@@ -50,13 +50,14 @@ class OurAlfred extends React.Component {
           <Grid item container spacing={3} className={classes.containerCardPreviewMobile}>
             {
               Object.keys(alfred).map((res, index) => (
-                <Grid item key={index}>
+                <Grid item key={index} style={{scrollSnapAlign: 'center'}}>
                   <CardPreview
                     name={!isMonoProvider() && alfred[res]?.user?.firstname}
                     link={bookingUrl(alfred[res].id)}
                     picture={alfred[res]?.service?.picture}
                     title={alfred[res]?.service?.label}
                     city={alfred[res]?.service_address?.city || ''}
+                    item={alfred[res]}
                   />
                 </Grid>
               ))

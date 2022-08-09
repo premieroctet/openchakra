@@ -6,7 +6,7 @@ import Card from '../Card'
 import AllInclusiveCardPreview from './AllInclusiveCardPreview'
 
 
-const CardPreview = ({item}) => {
+const CardPreview = ({item, ...props}) => {
 
   if (!item) {
     return null
@@ -34,6 +34,7 @@ const CardPreview = ({item}) => {
       picture={image}
       title={title}
       city={city}
+      {...props}
     />
   )
 }

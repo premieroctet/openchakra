@@ -77,6 +77,7 @@ const Style = theme => ({
     },
   },
   containerCardPreviewMobile: {
+    scrollSnapType: 'x mandatory',
     width: '100%',
     margin: 0,
     [theme.breakpoints.only('lg')]: {

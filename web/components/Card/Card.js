@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import Link from 'next/link'
 import {withTranslation} from 'react-i18next'
 import Rating from '@material-ui/lab/Rating'
+import Chip from '@material-ui/core/Chip'
 import {getDataModel} from '../../config/config'
 import UserAvatar from '../Avatar/UserAvatar'
 
@@ -14,7 +15,20 @@ const Wrapper = ({link, children}) => (
 )
 
 
-const Card = ({link, user, name, picture, title, description, city, rating}) => {
+const Card = ({
+  link,
+  user,
+  name,
+  picture,
+  title,
+  description,
+  city,
+  rating,
+  isCpf,
+  isPro,
+  tags,
+  Cta,
+}) => {
 
   if (!title) {
     return null
@@ -30,7 +44,14 @@ const Card = ({link, user, name, picture, title, description, city, rating}) => 
 
         <div className={`card_content customcardpreviewbox`}>
           
-          {picture && <div className='card_content-image'><img src={picture} alt="" /></div>}
+          <div className='card_content-image'>
+            {picture && <img src={picture} alt="" />}
+            <div className='card_content-tags'>
+              {isCpf && <Chip label={'CPF'} className={'customcardchipcpf'} />}
+              {isPro && <Chip label={'PRO'} className={'customcardchippro'} />}
+              {tags && tags.map(tag => <Chip label={tag} className={'customcardchip'} />)}
+            </div>
+          </div>
 
           <div className='card_content-text'>
           
@@ -38,6 +59,8 @@ const Card = ({link, user, name, picture, title, description, city, rating}) => 
             <p className={`customcardpreviewlabel`}>{title}</p>
             {description !==undefined && <p>{description}</p>}
             {city !==undefined && <p className={'customcardpreviewplace'} >{city}</p>}
+
+            {Cta && <Cta />}
 
             {rating !==undefined && <div className={'card_content_rating customcardpreviewrating'}>
               <Rating
@@ -65,6 +88,10 @@ Card.propTypes = {
   description: PropTypes.string,
   city: PropTypes.string,
   rating: PropTypes.number,
+  tags: PropTypes.array,
+  isCpf: PropTypes.bool,
+  isPro: PropTypes.bool,
+  Cta: PropTypes.component,
 }
 
 
@@ -77,8 +104,7 @@ const StyledCard = styled.a`
   grid-template-rows: 80px auto;
   grid-template-areas:  'card_avatar'
                         'card_content';
-  
-  max-height: 400px;
+  min-width: 250px;
   aspect-ratio: 4 / 5;
   cursor: pointer;
   transition: transform var(--delayIn) ease-out;
@@ -103,7 +129,7 @@ const StyledCard = styled.a`
     grid-area: card_content;
     display: grid;
     grid-template-areas: 'card_content-image' 'card_content-text';
-    grid-template-rows: auto 1fr;
+    grid-template-rows: minmax(0,1fr) minmax(0,1fr);
     overflow: hidden;
     border-radius: 1rem;
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.3);
@@ -130,6 +156,20 @@ const StyledCard = styled.a`
     }
   }
 
+  .card_content-tags {
+    position: absolute;
+    top: var(--spc-3);
+    right: var(--spc-3);
+    z-index: 1;
+    display: flex;
+    column-gap: var(--spc-1);
+
+    &> * {
+      background-color: var(--secondary-bgcolor);
+      color: var(--secondary-color);
+    }
+  }
+
   .card_content-image {
     grid-area: card_content-image;
     position: relative;
@@ -137,7 +177,6 @@ const StyledCard = styled.a`
     img {
       width: 100%;
       height: 100%;
-      min-height: 150px;
       object-fit: cover;
       object-position: center;
     }
@@ -163,7 +202,7 @@ const StyledCard = styled.a`
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: space-evenly;
   }
 
   .card_content_rating {
