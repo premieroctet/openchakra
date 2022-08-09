@@ -33,8 +33,7 @@ const Helpcard = () => {
 
 const StyledCardServiceUserInfo = styled.div`
 
-  display: flex;  
-  height: 100%;
+  width: 100%;
 
   h2, p {
     color: var(--white);
@@ -43,7 +42,6 @@ const StyledCardServiceUserInfo = styled.div`
   .customcardinfopaper {
     border-radius: 20px;
     height: 100%;
-    flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;

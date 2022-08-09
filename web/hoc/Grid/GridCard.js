@@ -34,6 +34,7 @@ function withGrid(WrappedComponent) {
 const AdaptiveGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(${props => props.columns}, 1fr);
+  row-gap: var(--spc-4);
   column-gap: var(--spc-8);
   justify-items: center;
   margin-inline: var(--spc-12);

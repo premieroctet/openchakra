@@ -1,6 +1,6 @@
+import React from 'react'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
-import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
 import axios from 'axios'
@@ -27,6 +27,20 @@ import CustomButton from '../../CustomButton/CustomButton'
 import ListIconsSkills from '../../ListIconsSkills/ListIconsSkills'
 import {isEditableUser, hideEmptyEvaluations} from '../../../utils/context'
 import Helpcard from '../Helpcard'
+import Card from '../Card'
+
+
+const CTA = ({t}) => (
+  <CustomButton
+    variant={'contained'}
+    classes={{root: `customshoprofil`}}
+  >
+    {ReactHtmlParser(t('CARD_SERVICE.button_show_profil'))}
+  </CustomButton>
+)
+
+
+const CTAServiceUser = withTranslation(null, {withRef: true})(CTA)
 
 
 class CardServiceUser extends React.Component {
@@ -74,6 +88,10 @@ class CardServiceUser extends React.Component {
         })
       })
       .catch(err => console.error(err))
+  }
+
+  editAction = id => {
+    Router.push(`/creaShop/creaShop?serviceuser_id=${id}`)
   }
 
   modalDeleteServices = classes => {
@@ -172,57 +190,24 @@ class CardServiceUser extends React.Component {
     
     return(
       loading ?
-        cardServiceLoading() :
-        <Grid onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} className={profileMode ? classes.mainCardServiceUserContainerProfil : classes.mainCardServiceUserContainer}>
-          <Paper elevation={1} className={profileMode ? classes.profileModeCardServiceUserPaper : `customcardpaper ${classes.cardServiceUserPaper}`}>
-            <Grid container spacing={1} className={profileMode ? classes.profileModeCardServiceUser : classes.cardServiceUserMainStyle} onClick={() => { profileMode && editable ? null : window.open(resa_link, '_blank') }}>
-              <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={profileMode ? classes.profileModeCardServiceUserFlexContainer : classes.cardServiceUserFlexContainer}>
-                <Grid className={profileMode ? classes.profileModeCardServiceUserPicsContainer : classes.cardServiceUserPicsContainer}>
-                  <Grid style={{backgroundImage: `url("${picture}")`}} className={profileMode ? classes.cardServiceUserBackgroundPicsProfil : classes.cardServiceUserBackgroundPics}>
-                    {
-                      profileMode && editable ?
-                        <Grid style={{position: 'absolute', top: '5px', right: '5px', display: 'flex'}}>
-                          <Grid>
-                            <IconButton aria-label="delete" style={{backgroundColor: 'rgba(0,0,0,0.7)'}} size={'small'} onClick={() => Router.push(`/creaShop/creaShop?serviceuser_id=${cpData._id}`)}>
-                              <EditIcon style={{color: 'white'}} />
-                            </IconButton>
-                          </Grid>
-                          <Grid style={{marginLeft: '10px'}}>
-                            <IconButton aria-label="delete" size={'small'} style={{backgroundColor: 'rgba(0,0,0,0.7)'}} onClick={() => this.handleClickOpen(cpData._id)}>
-                              <DeleteForeverIcon style={{color: 'white'}} />
-                            </IconButton>
-                          </Grid>
-                        </Grid>
-                        :
-                        <>
-                          {
-                            !isMonoProvider() && <Grid className={profileMode ? classes.cardServiceUserChipNamePro : classes.cardServiceUserChipName}>
-                              <Chip label={alfred.firstname} avatar={<ListIconsSkills data={cpData} />} classes={{root: `customcardchipname ${classes.cardServiceUserChip}`}} />
-                            </Grid>
-                          }
-                          {
-                            cpData.is_professional ?
-                              <Grid className={classes.cardServiceUserChipPro}>
-                                <Chip label={'Pro'} classes={{root: `customcardchippro ${classes.cardServiceUserChipBckg}`}}/>
-                              </Grid> : null
-                          }
-                          {
-                            cpData.cpf ?
-                              <Grid className={classes.cardServiceUserChipPro}>
-                                <Chip label={'CPF'} classes={{root: `customcardchippro ${classes.cardServiceUserChipBckg}`}}/>
-                              </Grid> : null
-                          }
-                        </>
-                    }
-                  </Grid>
-                </Grid>
-
-              </Grid>
-              <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0}} className={profileMode ? classes.profileModeDataContainer : classes.dataContainer}>
-                <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={profileMode ? classes.labelServiceProfil : classes.labelService}>
-                  <Typography className={classes.labelDataContainer}><strong>{cpData.label}</strong></Typography>
-                </Grid>
-                { !profileMode && (cpData.location?.client || cpData.location?.alfred) && // Hide location if service is visio only
+        cardServiceLoading() : <>
+          <Grid
+            onMouseEnter={this.onMouseEnter}
+            onMouseLeave={this.onMouseLeave}
+            className={profileMode ? classes.mainCardServiceUserContainerProfil : classes.mainCardServiceUserContainer}
+          >
+            <Paper
+              elevation={1}
+              className={profileMode ? classes.profileModeCardServiceUserPaper : `customcardpaper ${classes.cardServiceUserPaper}`}
+            >
+              <Grid container spacing={1}
+                className={profileMode ? classes.profileModeCardServiceUser : classes.cardServiceUserMainStyle}
+                onClick={() => { profileMode && editable && window.open(resa_link, '_blank') }}
+              >
+                
+                <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0}} className={profileMode ? classes.profileModeDataContainer : classes.dataContainer}>
+                  
+                  { !profileMode && (cpData.location?.client || cpData.location?.alfred) && // Hide location if service is visio only
                   <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.cardServiceUserPlaceContainer}>
                     <Grid className={classes.cardServiceUserPlaceLogo}>
                       <RoomIcon/>
@@ -243,60 +228,63 @@ class CardServiceUser extends React.Component {
                       </Grid>
                     </Grid>
                   </Grid>
-                }
-                {
-                  profileMode ? null :
-                    <>
-                      {description && <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.containerDescription}>
-                        <Typography className={classes.descriptionStyle}>{description}</Typography>
-                      </Grid>}
-                      <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.cardServiceUserScoreAndButtonContainer}>
-                        <Grid item xl={3} lg={3} md={3} sm={3} xs={3} className={classes.cardServiceUserRatingContainer}>
-                          <Box component="fieldset" mb={3} borderColor="transparent" classes={{root: classes.cardPreviewRatingBox}}>
-                            { !hideEmptyEvaluations() || cpData.reviews && cpData.reviews.length>0 ?
-                              <Rating
-                                name="simple-controlled"
-                                value={cpData.reviews && cpData.reviews.length>0 ? 1:0}
-                                max={1}
-                                readOnly
-                              />
-                              :
-                              null
-                            }
-                            <Grid className={classes.cardServiceUserBoxRatingDisplay}>
-                              <Grid className={classes.cardServiceUserRating}>
-                                { !hideEmptyEvaluations() || notes.global && notes.global >0 ?
-                                  <Typography className={classes.cardServiceUserLabelService}>{notes.global ? notes.global.toFixed(2) : 0}</Typography>
-                                  :
-                                  null
-                                }
+                  }
+                  {
+                    profileMode ? null :
+                      <>
+                        {description && <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.containerDescription}>
+                          <Typography className={classes.descriptionStyle}>{description}</Typography>
+                        </Grid>}
+                        <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.cardServiceUserScoreAndButtonContainer}>
+                          <Grid item xl={3} lg={3} md={3} sm={3} xs={3} className={classes.cardServiceUserRatingContainer}>
+                            <Box component="fieldset" mb={3} borderColor="transparent" classes={{root: classes.cardPreviewRatingBox}}>
+                              { !hideEmptyEvaluations() || cpData.reviews && cpData.reviews.length>0 ?
+                                <Rating
+                                  name="simple-controlled"
+                                  value={cpData.reviews && cpData.reviews.length>0 ? 1:0}
+                                  max={1}
+                                  readOnly
+                                />
+                                :
+                                null
+                              }
+                              <Grid className={classes.cardServiceUserBoxRatingDisplay}>
+                                <Grid className={classes.cardServiceUserRating}>
+                                  { !hideEmptyEvaluations() || notes.global && notes.global >0 ?
+                                    <Typography className={classes.cardServiceUserLabelService}>{notes.global ? notes.global.toFixed(2) : 0}</Typography>
+                                    :
+                                    null
+                                  }
+                                </Grid>
+                                <Grid>
+                                  {!hideEmptyEvaluations() || cpData.reviews && cpData.reviews.length >0 ?
+                                    <Typography className={classes.cardServiceUserLabelService}>({cpData.reviews ? cpData.reviews.length : 0})</Typography>
+                                    :
+                                    null
+                                  }
+                                </Grid>
                               </Grid>
-                              <Grid>
-                                {!hideEmptyEvaluations() || cpData.reviews && cpData.reviews.length >0 ?
-                                  <Typography className={classes.cardServiceUserLabelService}>({cpData.reviews ? cpData.reviews.length : 0})</Typography>
-                                  :
-                                  null
-                                }
-                              </Grid>
-                            </Grid>
-                          </Box>
+                            </Box>
+                          </Grid>
                         </Grid>
-                        <Grid item xl={9} lg={9} md={9} sm={9} xs={9} className={classes.buttonShowProfilContainer}>
-                          <CustomButton
-                            variant={'contained'}
-                            classes={{root: `customshoprofil ${classes.buttonShowProfil}`}}
-                          >
-                            {ReactHtmlParser(this.props.t('CARD_SERVICE.button_show_profil'))}
-                          </CustomButton>
-                        </Grid>
-                      </Grid>
-                    </>
-                }
+                      </>
+                  }
+                </Grid>
               </Grid>
-            </Grid>
-          </Paper>
-          {open ? this.modalDeleteServices(classes) : null}
-        </Grid>
+            </Paper>
+            {open ? this.modalDeleteServices(classes) : null}
+          </Grid>
+          <Card
+            link={resa_link}
+            picture={picture}
+            title={cpData.label}
+            isCpf={cpData.cpf}
+            isPro={cpData.is_professional}
+            edit={profileMode && editable && this.editAction.bind(this, cpData._id)}
+            // remove=
+            Cta={!profileMode && CTAServiceUser}
+          />
+        </>
     )
   }
 }
