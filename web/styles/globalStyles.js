@@ -185,6 +185,7 @@ place-items: center;
 .justify-evenly {justify-content: space-evenly;}
 .justify-between {justify-content: space-between;}
 .justify-self-start {justify-self: start;}
+.justify-self-center {justify-self: center;}
 .justify-self-end {justify-self: end;}
 
 .items-baseline	{align-items: baseline;}
