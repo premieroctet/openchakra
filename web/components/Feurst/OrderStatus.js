@@ -2,15 +2,13 @@ import React from 'react'
 import styled from 'styled-components'
 import {
   CREATED,
+  CONVERTED,
   FULFILLED,
   COMPLETE,
   VALID,
   PARTIALLY_HANDLED,
   HANDLED,
-  EXPIRED,
-} from '../../utils/consts'
-const {CONVERTED} = require('../../utils/consts')
-
+} from '../../utils/feurst/consts'
 
 const statusColors = {
   '#bbd5a2': [HANDLED], // Green

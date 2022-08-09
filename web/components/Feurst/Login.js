@@ -9,7 +9,7 @@ import styled from 'styled-components'
 import withLogin from '../../hoc/withLogin'
 import styles from '../LogIn/LogInStyle'
 import {screen} from '../../styles/screenWidths'
-import {BASEPATH_EDI} from '../../utils/consts'
+import {BASEPATH_EDI} from '../../utils/feurst/consts'
 import {NormalButton} from './Button'
 
 

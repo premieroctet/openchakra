@@ -3,7 +3,7 @@ import {useRouter} from 'next/router'
 import Link from 'next/link'
 import styled from 'styled-components'
 import {screen} from '../../../web/styles/screenWidths'
-import {CREATE, ORDER, QUOTATION, BASEPATH_EDI, PRODUCT, SHIPRATE, ACCOUNT, FEURST_IMG_PATH, FEURST_ICON_PATH} from '../../utils/consts'
+import {CREATE, ORDER, QUOTATION, BASEPATH_EDI, PRODUCT, SHIPRATE, ACCOUNT, FEURST_IMG_PATH, FEURST_ICON_PATH} from '../../utils/feurst/consts'
 import {useUserContext} from '../../contextes/user.context'
 import ContactUs from './ContactUs'
 
@@ -27,18 +27,18 @@ const MENUS=[
 
 
 const LoggedUser = ({user}) => {
-  
+
   return user ?
     <Link href={`${BASEPATH_EDI}/profile`} >
       <a>
         <div className='flex gap-x-1'>
-          <img 
-            width={20} 
-            height={20} 
-            src={FEURST_ICON_PATH + '/user.icon.svg'} 
-            alt="" /> 
-            Bienvenue {user?.firstname} 
-          
+          <img
+            width={20}
+            height={20}
+            src={`${FEURST_ICON_PATH }/user.icon.svg`}
+            alt="" />
+            Bienvenue {user?.firstname}
+
         </div>
       </a>
     </Link> : null

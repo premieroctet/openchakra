@@ -1,8 +1,7 @@
 import React from 'react'
+import {BASEPATH_EDI, HANDLE, ORDER} from '../../../utils/feurst/consts'
 import withEdiAuth from '../../../hoc/withEdiAuth'
-import {ORDER, BASEPATH_EDI} from '../../../utils/consts'
 import HandledOrders from '../../../components/Feurst/HandledOrders'
-import {HANDLE} from '../../../utils/consts'
 
 const Orders = ({accessRights}) => {
 

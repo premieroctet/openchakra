@@ -1,8 +1,9 @@
-import React, {useState, useContext} from 'react'
+import React, {useState} from 'react'
 import axios from 'axios'
 import styled from 'styled-components'
+import {API_PATH} from '../../utils/consts'
+import {ACCOUNT, BASEPATH_EDI, UPDATE_CGV} from '../../utils/feurst/consts'
 import withEdiAuth from '../../hoc/withEdiAuth'
-import {API_PATH, BASEPATH_EDI, ACCOUNT, UPDATE_CGV} from '../../utils/consts'
 import {setAxiosAuthentication} from '../../utils/authentication'
 import {NormalButton} from '../../components/Feurst/Button'
 
@@ -36,9 +37,9 @@ const CGVupdate = () => {
     <h1>Mise à jour des CGV</h1>
 
     <UpdateFile onSubmit={submitFile}>
-      
+
       {cgvUploaded && <p className='success'>Les nouvelles conditions générales ont été mises en place.</p>}
-      
+
       <label htmlFor='updatecgv'>
 
         <span role={'img'} alt=''>⬇</span>
@@ -47,13 +48,13 @@ const CGVupdate = () => {
         <input className='sr-only' id='updatecgv' type={'file'} accept={'.pdf'} onChange={e => setFilename(e.target.files[0])} />
 
       </label>
-          
+
       {filename && <p className='data'>{filename?.name || ''}</p>}
-      
+
       <NormalButton disabled={!filename} size={'full-width'} rounded={'full'} type='submit' onSubmit={submitFile}>Mettre à jour les CGV</NormalButton>
 
       <p className='text-center'>La mise à jour des CGV impliquera une nouvelle acceptation des CGV pour l'ensemble des comptes.</p>
-  
+
     </UpdateFile>
   </div>
   )
@@ -84,7 +85,7 @@ const UpdateFile = styled.form`
     cursor: pointer;
     margin-bottom: var(--spc-8);
     text-align: center;
-    
+
     span:first-of-type {
       color: var(--brand-color);
       font-size: var(--text-5xl);

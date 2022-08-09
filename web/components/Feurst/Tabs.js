@@ -2,7 +2,7 @@ import React from 'react'
 import {useRouter} from 'next/router'
 import Link from 'next/link'
 import {StyledTabs} from '../../styles/feurst/StyledComponents'
-import {ORDER, QUOTATION, VIEW, PRODUCT, COMPANY, HANDLE, SHIPRATE, ACCOUNT, UPDATE, BASEPATH_EDI, UPDATE_CGV, PRICELIST} from '../../utils/consts'
+import {ORDER, QUOTATION, VIEW, PRODUCT, COMPANY, HANDLE, SHIPRATE, ACCOUNT, UPDATE, BASEPATH_EDI, UPDATE_CGV, PRICELIST} from '../../utils/feurst/consts'
 
 
 const tabsContent = [

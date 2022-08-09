@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
-const {ROLES}=require('../../../utils/consts')
+const {ROLES}=require('../../../utils/feurst/consts')
 
 const UserSchema = new Schema({
   firstname: {

@@ -1,6 +1,5 @@
-const {CUSTOMER_ADMIN} = require('../../utils/consts')
-const {ROLES} = require('../../utils/consts')
 const Validator = require('validator')
+const {CUSTOMER_ADMIN, ROLES} = require('../../utils/feurst/consts')
 const isEmpty = require('./is-empty')
 
 module.exports = function validateFeurstRegister(data) {

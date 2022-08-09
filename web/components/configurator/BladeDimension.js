@@ -19,7 +19,7 @@ const {
   DROITE,
   EXCAVATRICE,
   SEMI_DELTA,
-} = require('../../utils/consts')
+} = require('../../utils/feurst/consts')
 const BladePicture = require('./BladePicture')
 
 function BladeDimension(props) {

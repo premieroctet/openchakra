@@ -1,11 +1,4 @@
-const express = require('express')
-const passport = require('passport')
-const moment = require('moment')
-const xlsx=require('node-xlsx')
-const lodash=require('lodash')
-const {BadRequestError, HTTP_CODES} = require('../../utils/errors')
-const {generateExcel} = require('../../utils/feurst/generateExcel')
-const {
+import {
   COMPLETE,
   CONVERT,
   CREATE,
@@ -25,7 +18,14 @@ const {
   VALID,
   VALIDATE,
   VIEW,
-} = require('../../../utils/consts')
+} from '../../../utils/feurst/consts'
+const express = require('express')
+const passport = require('passport')
+const moment = require('moment')
+const xlsx=require('node-xlsx')
+const lodash=require('lodash')
+const {BadRequestError, HTTP_CODES} = require('../../utils/errors')
+const {generateExcel} = require('../../utils/feurst/generateExcel')
 const {
   sendDataNotification,
 } = require('../../utils/mailing')

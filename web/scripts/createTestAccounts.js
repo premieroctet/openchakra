@@ -7,7 +7,7 @@ const {
   FEURST_ADV,
   FEURST_SALES,
   ROLES,
-} = require('../utils/consts')
+} = require('../utils/feurst/consts')
 const User = require('../server/models/User')
 const Company = require('../server/models/Company')
 const {getDatabaseUri} = require('../config/config')

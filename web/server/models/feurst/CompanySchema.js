@@ -1,5 +1,5 @@
 const mongooseLeanVirtuals=require('mongoose-lean-virtuals')
-const {CUSTOMER_ADMIN}=require('../../../utils/consts')
+const {CUSTOMER_ADMIN}=require('../../../utils/feurst/consts')
 const BaseSchema = require('../others/CompanySchema')
 
 const CompanySchema = BaseSchema.clone()

@@ -1,8 +1,8 @@
-import React, {useState} from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import {isEmpty} from 'lodash'
+import {FEURST_IMG_PATH} from '../../utils/feurst/consts'
 import {localeMoneyFormat} from '../../utils/converters'
-import {FEURST_IMG_PATH} from '../../utils/consts'
 
 
 const UpdateShippingFees = ({endpoint, orderid, shipping_fee, requestUpdate, update}) => {
@@ -10,7 +10,7 @@ const UpdateShippingFees = ({endpoint, orderid, shipping_fee, requestUpdate, upd
   const updateShipFee = () => {
     update({endpoint, orderid, shipping_fee})
   }
-  
+
   return (
     <input
       value={shipping_fee}
@@ -32,7 +32,7 @@ const Delivery = ({endpoint, orderid, address, shipping: {shipping_fee, shipping
       <div className='deliverybox'>
         <div className='content'>
           <p>Livraison {shipping_mode?.toLowerCase()} {update ? <UpdateShippingFees endpoint={endpoint} orderid={orderid} update={update} requestUpdate={requestUpdate} shipping_fee={shipping_fee}/> : shippingFeesMsg}</p>
-            
+
           <div className='address'>
             <address>
               {address.address}<br />
@@ -57,7 +57,7 @@ const Delivery = ({endpoint, orderid, address, shipping: {shipping_fee, shipping
 }
 
 const DeliveryStyles = styled.div`
-  
+
   margin-bottom: var(--spc-4);
   max-width: var(--spc-96);
 
@@ -68,7 +68,7 @@ const DeliveryStyles = styled.div`
       padding-left: var(--spc-6);
       margin:0;
   }
-  
+
   .deliverybox {
     display: grid;
 
@@ -77,7 +77,7 @@ const DeliveryStyles = styled.div`
       grid-row: 1/-1;
     }
   }
-  
+
   .overlay {
     display: flex;
     align-items: center;
@@ -111,20 +111,20 @@ const DeliveryStyles = styled.div`
     }
   }
 
-  
+
   .content {
     border: 1px solid var(--stone-300);
-    display: flex; 
+    display: flex;
     flex-direction: column;
     flex-grow: 1;
     padding-inline: var(--spc-8);
-    margin-bottom: var(--spc-4);  
+    margin-bottom: var(--spc-4);
 
     &>address {
       font-style: italic;
       color: var(--stone-600);
     }
-    
+
     &>p:last-of-type {
       font-style: unset;
       font-weight: var(--font-bold);

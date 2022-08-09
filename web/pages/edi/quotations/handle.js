@@ -1,7 +1,7 @@
 import React from 'react'
+import {BASEPATH_EDI, HANDLE, QUOTATION} from '../../../utils/feurst/consts'
 import withEdiAuth from '../../../hoc/withEdiAuth'
 import HandledQuotations from '../../../components/Feurst/HandledQuotations'
-import {BASEPATH_EDI, HANDLE, QUOTATION} from '../../../utils/consts'
 
 const HandleQuotations = ({accessRights}) => {
 

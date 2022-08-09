@@ -1,29 +1,25 @@
 const crypto = require('crypto')
+const path=require('path')
+const {promises: fs} = require('fs')
+const moment = require('moment')
+const bcrypt = require('bcryptjs')
+const passport = require('passport')
+const axios = require('axios')
+const express = require('express')
+const Validator = require('validator')
+const gifFrames = require('gif-frames')
+const cron = require('cron')
+const lodash=require('lodash')
 const {getIO} = require('../../utils/socketIO')
 const {getLocationSuggestions}=require('../../../utils/geo')
-const fs = require('fs').promises
-const path=require('path')
-const Validator = require('validator')
-const express = require('express')
-const router = express.Router()
-const passport = require('passport')
-const bcrypt = require('bcryptjs')
-const moment = require('moment')
-const axios = require('axios')
-const gifFrames = require('gif-frames')
-const CronJob = require('cron').CronJob
 const {BadRequestError} = require('../../utils/errors')
 const {HTTP_CODES} = require('../../utils/errors')
-const {CGV_EXPIRATION_DELAY} = require('../../../config/config')
-const {CGV_PATH} = require('../../../config/config')
-const {getDataModel} = require('../../../config/config')
-const {UPDATE_CGV} = require('../../../utils/consts')
+const {getHostUrl, is_development, CGV_EXPIRATION_DELAY, CGV_PATH, getDataModel} = require('../../../config/config')
 const {
   ForbiddenError,
   NotFoundError,
 } = require('../../utils/errors')
 const Company = require('../../models/Company')
-const {getHostUrl, is_development} = require('../../../config/config')
 const Shop = require('../../models/Shop')
 const {
   ACCOUNT,
@@ -35,8 +31,9 @@ const {
   FEURST_ADMIN,
   FEURST_ADV,
   FEURST_SALES,
+  UPDATE_CGV,
   VIEW,
-} = require('../../../utils/consts')
+} = require('../../../utils/feurst/consts')
 const {
   IMAGE_FILTER,
   PDF_FILTER,
@@ -53,16 +50,16 @@ const {REGISTER_WITHOUT_CODE}=require('../../../utils/context')
 const {checkRegisterCodeValidity, setRegisterCodeUsed}=require('../../utils/register')
 const {EDIT_PROFIL}=require('../../../utils/i18n')
 const {logEvent}=require('../../utils/events')
-const {is_production, is_validation, computeUrl}=require('../../../config/config')
+const {is_production, is_validation}=require('../../../config/config')
 const {validateSimpleRegisterInput, validateEditProfile, validateEditProProfile, validateBirthday} = require('../../validation/simpleRegister')
 const validateLoginInput = require('../../validation/login')
-const {sendResetPassword, sendVerificationMail, sendVerificationSMS, sendB2BAccount, sendAlert} = require('../../utils/mailing')
-const {ROLES}=require('../../../utils/consts')
+const {sendResetPassword, sendVerificationMail, sendVerificationSMS, sendAlert} = require('../../utils/mailing')
 const {mangoApi, addIdIfRequired, addRegistrationProof, createMangoClient, createMangoProvider, install_hooks} = require('../../utils/mangopay')
 const {send_cookie}=require('../../utils/serverContext')
-const lodash=require('lodash')
 const {isActionAllowed} = require('../../utils/userAccess')
 const ResetToken = require('../../../server/models/ResetToken')
+
+const router = express.Router()
 
 moment.locale('fr')
 axios.defaults.withCredentials = true
@@ -1562,7 +1559,7 @@ router.get('/locations', (req, res) => {
 // Create mango client account for all user with no id_mangopay
 // DISABLED because it operates on ALL DATABASES !!
 if (is_production() || is_validation()) {
-  new CronJob('0 */15 * * * *', () => {
+  new cron.CronJob('0 */15 * * * *', () => {
     console.log('Customers who need mango account')
     User.find({id_mangopay: null, active: true})
       .limit(100)
@@ -1591,7 +1588,7 @@ if (is_production() || is_validation()) {
 }
 
 // Each hour, check CGV consent validity
-new CronJob('0 0 * * * *', () => {
+new cron.CronJob('0 0 * * * *', () => {
   fs.stat(CGV_PATH.slice(1))
     .then(res => {
       const cgvLimit=Math.max(moment(res.mtime), moment().add(-CGV_EXPIRATION_DELAY, 'days'))

@@ -2,8 +2,7 @@ import React from 'react'
 import RequiredField from '../misc/RequiredField'
 import {feurstImgPath} from '../../pages/configurator'
 const {withTranslation} = require('react-i18next')
-const {PIN, SOLD, NONE} = require('../../utils/consts')
-
+const {PIN, SOLD, NONE} = require('../../utils/feurst/consts')
 
 function FixTypes(props) {
 

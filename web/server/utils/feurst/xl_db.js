@@ -11,13 +11,7 @@ SUPPOSITIONS:
 */
 const ExcelJS = require('exceljs')
 const lodash=require('lodash')
-const {
-  BLADE_SHAPES,
-  FIX_TYPES,
-  MACHINE_TYPES,
-  PIN,
-  SOLD,
-} = require('../../../utils/consts')
+const {MACHINE_TYPES, PIN, SOLD} = require('../../../utils/feurst/consts')
 
 const UNKNOWN_TEETH='nb de dents'
 

@@ -1,12 +1,17 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
 import styled from 'styled-components'
-import {FEURST_ICON_PATH, BASEPATH_EDI, API_PATH} from '../../../utils/consts'
+import {
+  ACCOUNT,
+  BASEPATH_EDI,
+  FEURST_ICON_PATH,
+  UPDATE,
+} from '../../../utils/feurst/consts'
+import {API_PATH} from '../../../utils/consts'
 import withEdiAuth from '../../../hoc/withEdiAuth'
 import RenewPassword from '../../../components/Password/RenewPassword'
 import {NormalButton} from '../../../components/Feurst/Button'
 import {client} from '../../../utils/client'
 import {screen} from '../../../styles/screenWidths'
-import {ACCOUNT, UPDATE} from '../../../utils/consts'
 import {useUserContext} from '../../../contextes/user.context'
 
 

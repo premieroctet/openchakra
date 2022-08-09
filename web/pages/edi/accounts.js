@@ -1,6 +1,6 @@
 import React from 'react'
 import withEdiAuth from '../../hoc/withEdiAuth'
-import {BASEPATH_EDI, ACCOUNT, VIEW} from '../../utils/consts'
+import {BASEPATH_EDI, ACCOUNT, VIEW} from '../../utils/feurst/consts'
 import AccountsList from '../../components/Feurst/AccountsList'
 
 const Accounts = ({accessRights}) => {

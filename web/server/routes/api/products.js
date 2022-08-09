@@ -1,12 +1,11 @@
-const {HTTP_CODES} = require('../../utils/errors')
 const fs=require('fs')
 const path=require('path')
 const lodash=require('lodash')
 const express = require('express')
 const passport = require('passport')
 const moment = require('moment')
-
-const CronJob = require('cron').CronJob
+const cron = require('cron')
+const {HTTP_CODES} = require('../../utils/errors')
 const PriceList = require('../../models/PriceList')
 const {JSON_TYPE} = require('../../../utils/consts')
 const storage = require('../../utils/storage')
@@ -16,9 +15,8 @@ const {
   stockImport,
 } = require('../../utils/import')
 const {isActionAllowed} = require('../../utils/userAccess')
-const {DELETE} = require('../../../utils/consts')
+const {DELETE, PRODUCT, CREATE, IMPORT} = require('../../../utils/feurst/consts')
 const {XL_FILTER, createMemoryMulter} = require('../../utils/filesystem')
-const {PRODUCT, CREATE, IMPORT} = require('../../../utils/consts')
 const Product = require('../../models/Product')
 const {validateProduct}=require('../../validation/product')
 
@@ -189,7 +187,7 @@ router.post('/import-stock', passport.authenticate('jwt', {session: false}), (re
 })
 
 // Check new stock file every hour
-new CronJob('0 0 * * * *', () => {
+new cron.CronJob('0 0 * * * *', () => {
   const store=storage.namespace('exchange')
   const folder=getExchangeDirectory()
   const latest_date=new Date(JSON.parse(store.get('latest-products-import')))

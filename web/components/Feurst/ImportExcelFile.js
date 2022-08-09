@@ -8,11 +8,11 @@ import {
   Typography,
 } from '@material-ui/core'
 import isEmpty from 'lodash/isEmpty'
+import {TEXT_TYPE, XL_EXTENSIONS, XL_TYPE} from '../../utils/consts'
+import {FEURST_IMG_PATH} from '../../utils/feurst/consts'
 import {snackBarError} from '../../utils/notifications'
 import {guessDelimiter} from '../../utils/text'
 import {extractSample, getTabs, guessFileType} from '../../utils/import'
-import {FEURST_IMG_PATH, TEXT_TYPE, XL_TYPE} from '../../utils/consts'
-import {XL_EXTENSIONS} from '../../utils/consts'
 import {simulateDownload} from '../utils/simulateDownload'
 import {NormalButton} from './Button'
 import ImportResult from './ImportResult'

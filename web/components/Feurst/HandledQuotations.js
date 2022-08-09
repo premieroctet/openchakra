@@ -1,10 +1,6 @@
 import React, {useState} from 'react'
 import Link from 'next/link'
-import {
-  HANDLED,
-  PARTIALLY_HANDLED,
-  VALID,
-} from '../../utils/consts'
+import {HANDLED, PARTIALLY_HANDLED, VALID} from '../../utils/feurst/consts'
 import {StyledTabs} from '../../styles/feurst/StyledComponents'
 import {handledQuotationsColumns} from './tablestructures'
 import BaseListTable from './BaseListTable'
