@@ -36,6 +36,7 @@ const AdaptiveGrid = styled.div`
   grid-template-columns: repeat(${props => props.columns}, 1fr);
   column-gap: var(--spc-8);
   justify-items: center;
+  margin-inline: var(--spc-12);
 `
 
 export default withGrid
