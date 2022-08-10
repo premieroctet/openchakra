@@ -4,7 +4,8 @@ import {useRouter} from 'next/router'
 import Login from '../../components/Feurst/Login'
 import {screen} from '../../styles/screenWidths'
 import {client} from '../../utils/client'
-import {API_PATH, BASEPATH_EDI, FEURST_IMG_PATH} from '../../utils/consts'
+import {API_PATH} from '../../utils/consts'
+import {BASEPATH_EDI, FEURST_IMG_PATH} from '../../utils/feurst/consts'
 import {
   removeAlfredRegistering,
 } from '../../utils/context'

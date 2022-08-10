@@ -5,11 +5,11 @@ import {Listbox, Transition} from '@headlessui/react'
 import Validator from 'validator'
 import styled from 'styled-components'
 import {setAxiosAuthentication} from '../../utils/authentication'
-import {API_PATH, CUSTOMER_ADMIN, ROLES, ACCOUNT, CREATE} from '../../utils/consts'
+import {API_PATH} from '../../utils/consts'
+import {CUSTOMER_ADMIN, ROLES, ACCOUNT, CREATE} from '../../utils/feurst/consts'
 import {snackBarError, snackBarSuccess} from '../../utils/notifications'
 import {StyledListbox} from '../../styles/feurst/StyledComponents'
 import {NormalButton} from './Button'
-
 
 const FeurstRegister = ({className, style, onSuccess, onClose}) => {
 

@@ -18,8 +18,7 @@ const Validator = require('validator')
 const {is_development} = require('../../config/config')
 const {setAxiosAuthentication} = require('../../utils/authentication')
 const Quotation = require('../Feurst/Quotation')
-
-const {BLADE_SHAPES, FIX_TYPES} = require('../../utils/consts')
+const {BLADE_SHAPES, FIX_TYPES} = require('../../utils/feurst/consts')
 const {isInternationalPhoneOK} = require('../../utils/sms')
 const BladePicture=require('./BladePicture.js')
 

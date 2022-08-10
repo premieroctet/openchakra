@@ -180,7 +180,7 @@ const checkConfig = () => {
     }
     // Deprecated
     if (SIB_TEMPLATES) {
-      reject(`** deprecated SIB_TEMPLATE, using DATA_MODEL instead:remove it in configuration file`)
+      console.warn(`** deprecated SIB_TEMPLATE, using DATA_MODEL instead:remove it in configuration file`)
     }
     // TODO check database name correctness
     if (isEmpty(SIB_APIKEY)) {

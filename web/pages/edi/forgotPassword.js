@@ -6,8 +6,7 @@ import TextField from '@material-ui/core/TextField'
 import axios from 'axios'
 import {useRouter} from 'next/router'
 import {snackBarSuccess, snackBarError} from '../../utils/notifications'
-import {ADMIN, MANAGER, BASEPATH_EDI} from '../../utils/consts'
-import CustomButton from '../../components/CustomButton/CustomButton'
+import {BASEPATH_EDI} from '../../utils/feurst/consts'
 import EdiContainer from '../../components/Feurst/EdiContainer'
 import {NormalButton} from '../../components/Feurst/Button'
 
@@ -46,7 +45,7 @@ const ForgotPassword = ({t}) => {
       <Container>
         <div className='box'>
           <h2>{ReactHtmlParser(t('FORGOT_PASSWORD.title'))}</h2>
-        
+
           <p>Indiquez ci-dessous l'e-mail associé à votre compte&nbsp;;
           vous recevrez un e‑mail contenant un lien vous permettant de renseigner votre nouveau mot de passe.
           </p>
@@ -62,7 +61,7 @@ const ForgotPassword = ({t}) => {
               onChange={onChange}
               variant={'outlined'}
             />
-          
+
             <NormalButton
               rounded={'full'}
               size={'full-width'}
@@ -74,14 +73,14 @@ const ForgotPassword = ({t}) => {
           </form>
         </div>
       </Container>
-      
+
     </EdiContainer>
   )
 }
 
 const Container = styled.div`
-  
- 
+
+
 
   .box {
     margin-top: var(--spc-4);

@@ -1,4 +1,4 @@
-const fs=require('fs').promises
+const {promises: fs}=require('fs')
 const {validate: validateCss} = require('csstree-validator')
 const lodash = require('lodash')
 const {getDataModel}=require('../../config/config')

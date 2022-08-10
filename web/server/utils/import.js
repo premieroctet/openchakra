@@ -1,13 +1,13 @@
 const Validator = require('validator')
 const lodash=require('lodash')
 const bcrypt = require('bcryptjs')
-const {capitalize}=require('../../utils/text')
 const {
   CUSTOMER_ADMIN,
   FEURST_SALES,
   MAIN_ADDRESS_LABEL,
   MAX_WEIGHT,
-}=require('../../utils/consts')
+} = require('../../utils/feurst/consts')
+const {capitalize}=require('../../utils/text')
 const Product = require('../models/Product')
 const PriceList = require('../models/PriceList')
 const User = require('../models/User')

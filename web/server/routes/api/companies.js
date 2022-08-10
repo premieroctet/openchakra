@@ -6,24 +6,31 @@ const lodash = require('lodash')
 const axios = require('axios')
 const csv_parse = require('csv-parse/lib/sync')
 const {
+  BOOK_STATUS,
+  CARETAKER_MODE,
+  MICROSERVICE_MODE,
+}=require('../../../utils/consts')
+const {ADMIN, EMPLOYEE, MANAGER}=require('../../../utils/others/consts')
+const {
+  ACCOUNT,
+  COMPANY,
+  CREATE,
+  FEURST_SALES,
+  IMPORT,
+  LINK,
+  ORDER,
+  QUOTATION,
+  ROLES,
+  UPDATE,
+  VIEW,
+}=require('../../../utils/feurst/consts')
+const {
   IMAGE_FILTER,
   TEXT_FILTER,
   XL_FILTER,
   createDiskMulter,
   createMemoryMulter,
 }=require('../../utils/filesystem')
-const {
-  ACCOUNT,
-  COMPANY,
-  LINK,
-  ORDER,
-  QUOTATION,
-  VIEW,
-  CREATE,
-  IMPORT,
-  UPDATE,
-  FEURST_SALES,
-}=require('../../../utils/consts')
 const {accountsImport}=require('../../utils/import')
 const {
   HTTP_CODES,
@@ -37,15 +44,14 @@ const Company = require('../../models/Company')
 const Booking = require('../../models/Booking')
 const User = require('../../models/User')
 const {EDIT_PROFIL}=require('../../../utils/i18n')
-
-const router = express.Router()
 const {validateCompanyProfile, validateCompanyMember} = require('../../validation/simpleRegister')
-moment.locale('fr')
-const {ADMIN, MANAGER, EMPLOYEE, ROLES, MICROSERVICE_MODE, CARETAKER_MODE, BOOK_STATUS} = require('../../../utils/consts')
 const {addRegistrationProof, createOrUpdateMangoCompany} = require('../../utils/mangopay')
 const {getPeriodStart}=require('../../../utils/dateutils')
 const {bufferToString, normalize} = require('../../../utils/text')
 const {sendB2BRegistration}=require('../../utils/mailing')
+
+moment.locale('fr')
+const router = express.Router()
 
 axios.defaults.withCredentials = true
 

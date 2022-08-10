@@ -1,14 +1,15 @@
 import React, {useEffect} from 'react'
 import {useRouter} from 'next/router'
 import {client} from '../../utils/client'
-import {BASEPATH_EDI, API_PATH} from '../../utils/consts'
+import {API_PATH} from '../../utils/consts'
+import {BASEPATH_EDI} from '../../utils/feurst/consts'
 import withEdiAuth from '../../hoc/withEdiAuth'
 
 
 const HomeEdi = () => {
-  
+
   const router = useRouter()
-  
+
   useEffect(() => {
     const landing = async() => {
       await client(`${API_PATH}/users/landing-page`)

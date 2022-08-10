@@ -1,11 +1,6 @@
-const {
-  DELTA,
-  DROITE,
-  SEMI_DELTA,
-} = require('../../utils/consts')
-
 import React from 'react'
 import {feurstImgPath} from '../../pages/configurator'
+const {DELTA, DROITE, SEMI_DELTA} = require('../../utils/feurst/consts')
 
 function BladePicture({shape, teeth_count, width, height}) {
 

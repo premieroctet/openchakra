@@ -1,7 +1,10 @@
+const lodash=require('lodash')
+const countryList=require('react-select-country-list')
+const router = require('express').Router()
 const {
   BLADE_SHAPES,
   FIX_TYPES,
-} = require('../../../../utils/consts')
+} = require('../../../../utils/feurst/consts')
 const {is_development} = require('../../../../config/config')
 const {
   computeDescription,
@@ -14,13 +17,9 @@ const {
 const FeurstProspect = require('../../../models/FeurstProspect')
 const generatePdf = require('../../../utils/generatePdf')
 const {sendAutoQuotation, sendCustomQuotation} = require('../../../utils/mailing')
-
-const router = require('express').Router()
 const {getDatabase}=require('../../../utils/feurst/xl_db')
-const lodash=require('lodash')
 const validateFeurstProspect=require('../../../validation/feurstProspect')
 const i18n=require('../../../utils/i18n_init')
-const countryList=require('react-select-country-list')
 
 // @Route GET /feurst/api/database
 // Google callback

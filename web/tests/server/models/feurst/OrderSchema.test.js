@@ -1,9 +1,5 @@
 const mongoose = require('mongoose')
-const {
-  COMPLETE,
-  CREATED,
-  VALID,
-} = require('../../../../utils/consts')
+const {COMPLETE, CREATED, VALID} = require('../../../../utils/feurst/consts')
 const {MONGOOSE_OPTIONS} = require('../../../../server/utils/database')
 
 const ProductSchema = require('../../../../server/models/feurst/ProductSchema')

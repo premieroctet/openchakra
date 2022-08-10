@@ -1,5 +1,5 @@
 import React from 'react'
-import {ENDPOINTS, QUOTATION} from '../../utils/consts'
+import {ENDPOINTS} from '../../utils/feurst/consts'
 import BaseCreate from'./BaseCreate'
 import {quotationColumns} from './tablestructures'
 

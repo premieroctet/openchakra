@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import styled from 'styled-components'
 import dynamic from 'next/dynamic'
-import {ACCOUNT, CREATE} from '../../utils/consts'
+import {ACCOUNT, CREATE} from '../../utils/feurst/consts'
 import FeurstRegister from './Register'
 import {accountsColumns} from './tablestructures'
 import BaseListTable from './BaseListTable'
@@ -25,7 +25,6 @@ const AccountsList = ({accessRights}) => {
       </div>
       }
 
-      {/* {accessRights.isActionAllowed(ACCOUNT, LINK) && <AccountLink />} */}
       <BaseListTable caption='Liste des comptes' endpoint='users' columns={accountsColumns} refresh={refresh} accessRights={accessRights}/>
 
       <AddAccountDialog title={'Ajouter un compte'} open={isOpenDialog}

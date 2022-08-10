@@ -1,10 +1,9 @@
+const {promises: fs} = require('fs')
 const mongoose = require('mongoose')
 const lodash=require('lodash')
 const Prestation = require('../../server/models/Prestation')
 const Service = require('../../server/models/Service')
 const Category = require('../../server/models/Category')
-
-const fs = require('fs').promises
 
 const filename=process.argv[2]
 
