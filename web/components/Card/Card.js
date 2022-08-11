@@ -1,5 +1,4 @@
-import React, {useState} from 'react'
-import ReactHtmlParser from 'react-html-parser'
+import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import Link from 'next/link'
@@ -9,13 +8,7 @@ import {withTranslation} from 'react-i18next'
 import Rating from '@material-ui/lab/Rating'
 import Chip from '@material-ui/core/Chip'
 import RoomIcon from '@material-ui/icons/Room'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContentText from '@material-ui/core/DialogContentText'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import DialogContent from '@material-ui/core/DialogContent'
-import Dialog from '@material-ui/core/Dialog'
 import UserAvatar from '../Avatar/UserAvatar'
-import CustomButton from '../CustomButton/CustomButton'
 import {getDataModel} from '../../config/config'
 import isEmpty from '../../server/validation/is-empty'
 
@@ -37,7 +30,7 @@ const Card = ({
   tags,
   Cta,
   editAction,
-  removeAction,
+  deleteAction,
   ...props
 }) => {
 
@@ -64,7 +57,7 @@ const Card = ({
               
               <div className='card_content-actions'>
                 {editAction && <Edit editAction={editAction} />}
-                {removeAction && <Delete removeAction={removeAction} />}
+                {deleteAction && <DeleteButton deleteAction={deleteAction} />}
               </div>
               
               <div className='card_content-tags'>
@@ -110,7 +103,7 @@ Card.propTypes = {
   isPro: PropTypes.bool,
   Cta: PropTypes.component,
   editAction: PropTypes.function,
-  removeAction: PropTypes.function,
+  deleteAction: PropTypes.function,
 }
 
 const Wrapper = ({link, children}) => (
@@ -123,7 +116,6 @@ const AdaptiveWrapper = styled(Wrapper)`
   height: 100%;
 `
 
-
 const Edit = ({editAction}) => (
   <button aria-label='éditer' onClick={e => {
     e.preventDefault()
@@ -133,43 +125,15 @@ const Edit = ({editAction}) => (
   </button>
 )
 
-const DeleteWithConfirm = ({removeAction, t}) => {
+const DeleteButton = ({deleteAction}) => (
+  <button aria-label="supprimer" onClick={e => {
+    e.preventDefault()
+    deleteAction()
+  }}>
+    <DeleteForeverIcon />
+  </button>
+)
 
-  const [showDialog, setShowDialog] = useState(false)
-
-  return (<>
-    <button aria-label="supprimer" onClick={e => {
-      e.preventDefault()
-      setShowDialog(true)
-    }}>
-      <DeleteForeverIcon />
-    </button>
-    {showDialog && <Dialog
-      open={showDialog}
-      onClose={() => setShowDialog(false)}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
-    >
-      <DialogTitle id="alert-dialog-title">{ReactHtmlParser(t('CARD_SERVICE.dialog_delete_title'))}</DialogTitle>
-      <DialogContent>
-        <DialogContentText id="alert-dialog-description">
-          {ReactHtmlParser(t('CARD_SERVICE.dialog_delete_content'))}
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <CustomButton onClick={() => setShowDialog(false)} color="primary">
-          {ReactHtmlParser(t('COMMON.btn_cancel'))}
-        </CustomButton>
-        <CustomButton onClick={() => removeAction()} >
-          {ReactHtmlParser(t('COMMON.btn_delete'))}
-        </CustomButton>
-      </DialogActions>
-    </Dialog>}
-  </>
-  )
-}
-
-const Delete = withTranslation(null, {withRef: true})(DeleteWithConfirm)
 
 const Place = ({city, distance}) => {
 
@@ -393,9 +357,6 @@ const StyledCard = styled.a`
       `
   }
 
-  return `
-
-  `
 }
  }
 

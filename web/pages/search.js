@@ -381,17 +381,19 @@ const SearchPage = ({classes, width, t}) => {
                         hasMore={scroll_count<results.length}
                         loader={<CircularProgress/>}
                       >
-                        {
-                          filteredResults.slice(0, scroll_count).map(su => (
-                            <CardService
-                              key={su._id}
-                              item={su._id}
-                              gps={gps}
-                              user={user}
-                              address={selectedAddress} />
-                          ),
-                          )
-                        }
+                        <div style={{display: 'grid', rowGap: '1rem', marginInline: '1rem', marginBottom: '1rem'}}>
+                          {
+                            filteredResults.slice(0, scroll_count).map(su => (
+                              <CardServiceUser
+                                key={su._id}
+                                item={su._id}
+                                gps={gps}
+                                user={user}
+                                address={selectedAddress} />
+                            ),
+                            )
+                          }
+                        </div>
                       </InfiniteScroll>
                     </Hidden>
                   </Grid>
