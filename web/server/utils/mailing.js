@@ -3,12 +3,12 @@ const {
   ENABLE_MAILING,
   getDataModel,
   getHostUrl,
-  is_validation,
+  is_production,
 }=require('../../config/config')
 const {CUSTOMER_ADMIN, FEURST_ADV} = require('../../utils/feurst/consts')
 const Company = require('../models/Company')
 const User = require('../models/User')
-const {booking_datetime_str} = require('../../utils/dateutils')
+const {booking_datetime_str, booking_date_str} = require('../../utils/dateutils')
 const {fillSms} = require('../../utils/sms')
 const SIB_IDS=require('./sib_templates')
 const {generateExcel} = require('./feurst/generateExcel')
@@ -40,7 +40,7 @@ const sendNotification = (notif_index, destinees, params, attachment=null) => {
   let enable_mails = ENABLE_MAILING
   const ALLOW_EMAILS=/@.*(alfred|safe|feurst)/i
   // En validation, envoyer les notifications et SMS aux membres de @.*alfred.*
-  if (!enable_mails && is_validation() && ALLOW_EMAILS.test(destinee.email||'')) {
+  if (!enable_mails && !is_production() && ALLOW_EMAILS.test(destinee.email||'')) {
     console.log('Mailing disabled except for my-alfred.io mails on validation platform')
     enable_mails = true
   }
@@ -535,6 +535,22 @@ const sendDataNotification = (user, destinee_role, data, message) => {
     })
 }
 
+const sendELearningAccess = ({email, firstname, date, label, login, password, elearning_link}) => {
+
+  sendNotification(
+    SIB_IDS.ELEARNING_ACCESS,
+    {email},
+    {
+      firstname,
+      login,
+      password,
+      date,
+      label,
+      elearning_link,
+    },
+  )
+}
+
 module.exports = {
   sendVerificationMail,
   sendShopDeleted,
@@ -568,4 +584,5 @@ module.exports = {
   sendBillingToAlfred,
   sendOrderAlert,
   sendDataNotification,
+  sendELearningAccess,
 }

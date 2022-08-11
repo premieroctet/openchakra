@@ -1,4 +1,9 @@
-import {
+const express = require('express')
+const passport = require('passport')
+const moment = require('moment')
+const xlsx=require('node-xlsx')
+const lodash=require('lodash')
+const {
   COMPLETE,
   CONVERT,
   CREATE,
@@ -18,12 +23,7 @@ import {
   VALID,
   VALIDATE,
   VIEW,
-} from '../../../utils/feurst/consts'
-const express = require('express')
-const passport = require('passport')
-const moment = require('moment')
-const xlsx=require('node-xlsx')
-const lodash=require('lodash')
+}=require('../../../utils/feurst/consts')
 const {BadRequestError, HTTP_CODES} = require('../../utils/errors')
 const {generateExcel} = require('../../utils/feurst/generateExcel')
 const {

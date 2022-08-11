@@ -5,24 +5,9 @@ const {
   FEURST_ADMIN,
   FEURST_ADV,
 } = require('../../../utils/feurst/consts')
+const {login}=require('../../utils')
 
 https.globalAgent.options.rejectUnauthorized = false
-
-
-const storeAuth = res => {
-  return new Promise(resolve => {
-    const token=res.headers['set-cookie'][0].split('=')[1].split(';')[0].replace('%20', ' ')
-    axios.defaults.headers.common.Authorization = token
-    resolve()
-  })
-}
-
-const login = username => {
-  return axios.post('https://localhost/myAlfred/api/users/force-login', {username: username})
-    .then(res => {
-      return storeAuth(res)
-    })
-}
 
 const setRole = role => {
   return axios.put('https://localhost/myAlfred/api/users/current', {roles: [role]})
@@ -36,6 +21,8 @@ const createUser = (firstname, name, company) => {
         name: name,
         company: company,
         email: `${firstname}.${name}@${company}.com`,
+        role: FEURST_ADMIN,
+        password: 'tagada',
       })
         .then(() => Promise.resolve())
         .catch(err => { console.error(err); return Promise.reject(err) })

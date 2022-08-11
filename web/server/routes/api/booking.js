@@ -21,12 +21,14 @@ const {
   sendBookingDetails, sendNewBooking, sendBookingRefusedToClient, sendBookingRefusedToAlfred, sendBookingCancelledByClient,
   sendBookingCancelledByAlfred, sendAskInfoPreapproved, sendAskingInfo, sendNewBookingManual,
   sendLeaveCommentForClient, sendLeaveCommentForAlfred, sendAlert, sendBillingToAlfred,
+  sendELearningAccess,
 } = require('../../utils/mailing')
 const {get_logged_id} = require('../../utils/serverContext')
 const {validateAvocotesCustomer}=require('../../validation/simpleRegister')
 const validateBooking=require('../../validation/booking')
 const {computeBookingReference, formatAddress}=require('../../../utils/text')
 const {createMangoClient}=require('../../utils/mangopay')
+const {booking_date_str}=require('../../../utils/dateutils')
 const {stateMachineFactory} = require('../../utils/BookingStateMachine')
 
 const router = express.Router()
@@ -564,6 +566,45 @@ router.post('/avocotes', (req, res) => {
     .catch(err => {
       console.error(err)
       res.json(err)
+    })
+})
+
+/**
+ @Route POST /myAlfred/api/booking/avocotes/:id/send-course-access
+Send cours access mail to booking user
+Returns
+- 200 if ok
+- 403 if logged user if not booking's user
+- 404 if booking not found
+@Access private
+*/
+router.post('/:id/send-course-access', passport.authenticate('jwt', {session: false}), (req, res) => {
+  const bookingId=req.params.id
+  console.log(`bookingId:${bookingId}`)
+  Booking.findById(bookingId)
+    .populate('user', 'firstname email')
+    .then(booking => {
+      if (!booking) {
+        throw new NotFoundError(`Can not find booking`)
+      }
+      if (booking.user._id.toString()!=req.user._id.toString()) {
+        throw new ForbiddenError(`Logged user is not the booking's user`)
+      }
+      console.log(JSON.stringify(booking, null, 2))
+      sendELearningAccess({
+        email: booking.user.email,
+        firstname: booking.user.firstname,
+        date: booking_date_str(booking),
+        label: booking.service,
+        login: booking.elearning_login,
+        password: booking.elearning_password,
+        elearning_link: booking.elearning_link,
+      })
+      return res.status(200).json()
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(err.status || 500).json(err.message || err)
     })
 })
 

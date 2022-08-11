@@ -70,6 +70,10 @@ const booking_datetime_str = booking => {
   return `Le ${moment(booking.prestation_date).format('LLLL')}`
 }
 
+const booking_date_str = booking => {
+  return `Le ${moment(booking.prestation_date).format('L')}`
+}
+
 const getDefaultAvailability = () => {
 
   let start = moment().set({hour: 1, minute: 0, second: 0})
@@ -189,4 +193,5 @@ module.exports = {
   getDefaultAvailability, isDateAvailable, hasAlfredDateBooking, DAYS,
   getAvailabilityForDate, combineTimelapses, timelapsesSetToArray,
   getPeriodStart, getExcludedDays, getExcludedTimes,
+  booking_date_str,
 }
