@@ -38,6 +38,7 @@ const AdaptiveGrid = styled.div`
   column-gap: var(--spc-8);
   justify-items: center;
   margin-inline: var(--spc-12);
+  margin-block: var(--spc-2);
 `
 
 export default withGrid

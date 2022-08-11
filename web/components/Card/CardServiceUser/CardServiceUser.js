@@ -28,6 +28,7 @@ import ListIconsSkills from '../../ListIconsSkills/ListIconsSkills'
 import {isEditableUser, hideEmptyEvaluations} from '../../../utils/context'
 import Helpcard from '../Helpcard'
 import Card from '../Card'
+import {API_PATH} from '../../../utils/consts'
 
 
 const CTA = ({t}) => (
@@ -48,12 +49,9 @@ class CardServiceUser extends React.Component {
     super(props)
     this.state={
       cpData: {},
-      dense: true,
       score: null,
       service: null,
       shop: null,
-      open: false,
-      id_service: '',
       reviews: [],
       alfred: {},
       animated: false,
@@ -70,74 +68,57 @@ class CardServiceUser extends React.Component {
     }
   }
 
-  handleClickOpen =id => {
-    this.setState({id_service: id, open: true})
-  };
-
-  handleClose = () => {
-    this.setState({id_service: '', open: false})
-  };
-
-  deleteService(id) {
-    axios.delete(`/myAlfred/api/serviceUser/${id}`)
+  
+  editAction = id => {
+    Router.push(`/creaShop/creaShop?serviceuser_id=${id}`)
+  }
+  
+  deleteAction(id) {
+    axios.delete(`${API_PATH}/serviceUser/${id}`)
       .then(() => {
-        this.setState({open: false, id_service: ''}, () => {
-          if (this.props.onDelete) {
-            this.props.onDelete(id)
-          }
-        })
+        if (this.props.onDelete) {
+          this.props.onDelete(id)
+        }
       })
       .catch(err => console.error(err))
   }
 
-  editAction = id => {
-    Router.push(`/creaShop/creaShop?serviceuser_id=${id}`)
-  }
-
-  modalDeleteServices = classes => {
-    return(
-      <Dialog
-        open={this.state.open}
-        onClose={() => this.handleClose()}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{ReactHtmlParser(this.props.t('CARD_SERVICE.dialog_delete_title'))}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            {ReactHtmlParser(this.props.t('CARD_SERVICE.dialog_delete_content'))}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <CustomButton onClick={() => this.handleClose()} color="primary">
-            {ReactHtmlParser(this.props.t('COMMON.btn_cancel'))}
-          </CustomButton>
-          <CustomButton onClick={() => this.deleteService(this.state.id_service)} className={classes.colorError}>
-            {ReactHtmlParser(this.props.t('COMMON.btn_delete'))}
-          </CustomButton>
-        </DialogActions>
-      </Dialog>
-    )
-  };
-
-  onMouseEnter = ev => {
+  onMouseEnter = () => {
     this.setState({animated: true})
   }
 
-  onMouseLeave = ev => {
+  onMouseLeave = () => {
     this.setState({animated: false})
   }
 
   render() {
     const {classes, gps, profileMode, address, loading, booking_id} = this.props
-    const {cpData, alfred, open, animated} = this.state
+    const {cpData, alfred, animated} = this.state
 
+    const resa_link=bookingUrl(cpData._id, booking_id ? {booking_id}: {})
+    const city = cpData?.city
     let distance = gps ? computeDistanceKm(gps, cpData.gps) : null
     distance = distance ? distance.toFixed(0) : ''
-
+    
     const notes = cpData.reviews ? computeAverageNotes(cpData.reviews.map(r => r.note_alfred)) : {}
+    const reviews = cpData.reviews ? cpData.reviews.length : 0
 
-    let resa_link=bookingUrl(cpData._id, booking_id ? {booking_id}: {})
+
+    let picture = profileMode ? cpData.picture : alfred.picture || cpData.picture
+
+    if (picture && !animated && picture.toLowerCase().endsWith('.gif')) {
+      const filename = picture.split('/').slice(-1).pop()
+      picture=`myAlfred/api/users/still_profile/${filename}`
+    }
+
+    if (picture && !picture.startsWith('http') && !picture.startsWith('/')) {
+      picture=`/${picture}`
+    }
+
+
+    const editable = isEditableUser(alfred)
+    const description = cpData.description || (this.props.t('CARD_SERVICE.no_description').trim() ? ReactHtmlParser(this.props.t('CARD_SERVICE.no_description')) : null)
+    
     
     if (this.props.item===null) {
       return (
@@ -174,117 +155,28 @@ class CardServiceUser extends React.Component {
       )
     }
 
-    let picture = profileMode ? cpData.picture : alfred.picture || cpData.picture
 
-    if (picture && !animated && picture.toLowerCase().endsWith('.gif')) {
-      const filename = picture.split('/').slice(-1).pop()
-      picture=`myAlfred/api/users/still_profile/${filename}`
-    }
-
-    if (picture && !picture.startsWith('http') && !picture.startsWith('/')) {
-      picture=`/${picture}`
-    }
-
-    const editable = isEditableUser(alfred)
-    const description = cpData.description || (this.props.t('CARD_SERVICE.no_description').trim() ? ReactHtmlParser(this.props.t('CARD_SERVICE.no_description')) : null)
-    
     return(
       loading ?
-        cardServiceLoading() : <>
-          <Grid
-            onMouseEnter={this.onMouseEnter}
-            onMouseLeave={this.onMouseLeave}
-            className={profileMode ? classes.mainCardServiceUserContainerProfil : classes.mainCardServiceUserContainer}
-          >
-            <Paper
-              elevation={1}
-              className={profileMode ? classes.profileModeCardServiceUserPaper : `customcardpaper ${classes.cardServiceUserPaper}`}
-            >
-              <Grid container spacing={1}
-                className={profileMode ? classes.profileModeCardServiceUser : classes.cardServiceUserMainStyle}
-                onClick={() => { profileMode && editable && window.open(resa_link, '_blank') }}
-              >
-                
-                <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} spacing={1} style={{margin: 0}} className={profileMode ? classes.profileModeDataContainer : classes.dataContainer}>
-                  
-                  { !profileMode && (cpData.location?.client || cpData.location?.alfred) && // Hide location if service is visio only
-                  <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.cardServiceUserPlaceContainer}>
-                    <Grid className={classes.cardServiceUserPlaceLogo}>
-                      <RoomIcon/>
-                    </Grid>
-                    <Grid className={classes.cardKmContainer}>
-                      { distance &&
-                        <>
-                          <Grid style={{whiteSpace: 'nowrap'}}>
-                            <Typography>{`À ${distance} km`}</Typography>
-                          </Grid>
-                          <Grid>
-                            <Typography>-</Typography>
-                          </Grid>
-                        </>
-                      }
-                      <Grid style={{overflow: 'hidden'}}>
-                        <Typography className={classes.cardServiceUserDistance}>{cpData.city}</Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  }
-                  {
-                    profileMode ? null :
-                      <>
-                        {description && <Grid item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.containerDescription}>
-                          <Typography className={classes.descriptionStyle}>{description}</Typography>
-                        </Grid>}
-                        <Grid container item xl={12} lg={12} md={12} sm={12} xs={12} className={classes.cardServiceUserScoreAndButtonContainer}>
-                          <Grid item xl={3} lg={3} md={3} sm={3} xs={3} className={classes.cardServiceUserRatingContainer}>
-                            <Box component="fieldset" mb={3} borderColor="transparent" classes={{root: classes.cardPreviewRatingBox}}>
-                              { !hideEmptyEvaluations() || cpData.reviews && cpData.reviews.length>0 ?
-                                <Rating
-                                  name="simple-controlled"
-                                  value={cpData.reviews && cpData.reviews.length>0 ? 1:0}
-                                  max={1}
-                                  readOnly
-                                />
-                                :
-                                null
-                              }
-                              <Grid className={classes.cardServiceUserBoxRatingDisplay}>
-                                <Grid className={classes.cardServiceUserRating}>
-                                  { !hideEmptyEvaluations() || notes.global && notes.global >0 ?
-                                    <Typography className={classes.cardServiceUserLabelService}>{notes.global ? notes.global.toFixed(2) : 0}</Typography>
-                                    :
-                                    null
-                                  }
-                                </Grid>
-                                <Grid>
-                                  {!hideEmptyEvaluations() || cpData.reviews && cpData.reviews.length >0 ?
-                                    <Typography className={classes.cardServiceUserLabelService}>({cpData.reviews ? cpData.reviews.length : 0})</Typography>
-                                    :
-                                    null
-                                  }
-                                </Grid>
-                              </Grid>
-                            </Box>
-                          </Grid>
-                        </Grid>
-                      </>
-                  }
-                </Grid>
-              </Grid>
-            </Paper>
-            {open ? this.modalDeleteServices(classes) : null}
-          </Grid>
-          <Card
-            link={resa_link}
-            picture={picture}
-            title={cpData.label}
-            isCpf={cpData.cpf}
-            isPro={cpData.is_professional}
-            edit={profileMode && editable && this.editAction.bind(this, cpData._id)}
-            // remove=
-            Cta={!profileMode && CTAServiceUser}
-          />
-        </>
+        cardServiceLoading() :
+        <Card
+          onMouseEnter={this.onMouseEnter}
+          onMouseLeave={this.onMouseLeave}
+          ratio={'5/8'}
+          link={resa_link}
+          picture={picture}
+          title={cpData.label}
+          description={!profileMode && description}
+          city={!profileMode && (cpData.location?.client || cpData.location?.alfred) && city}
+          distance={!profileMode && (cpData.location?.client || cpData.location?.alfred) && distance}
+          isCpf={cpData?.cpf}
+          isPro={cpData.is_professional}
+          rating={!profileMode && (!hideEmptyEvaluations() || notes.global && notes.global >0) && notes.global.toFixed(2)}
+          reviews={!profileMode && (!hideEmptyEvaluations() || cpData.reviews && cpData.reviews.length >0) && reviews}
+          editAction={profileMode && editable && this.editAction.bind(this, cpData._id)}
+          removeAction={profileMode && editable && this.deleteAction.bind(this, cpData._id)}
+          Cta={!profileMode && CTAServiceUser}
+        />
     )
   }
 }

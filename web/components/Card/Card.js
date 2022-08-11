@@ -8,6 +8,7 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
 import {withTranslation} from 'react-i18next'
 import Rating from '@material-ui/lab/Rating'
 import Chip from '@material-ui/core/Chip'
+import RoomIcon from '@material-ui/icons/Room'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
@@ -16,24 +17,28 @@ import Dialog from '@material-ui/core/Dialog'
 import UserAvatar from '../Avatar/UserAvatar'
 import CustomButton from '../CustomButton/CustomButton'
 import {getDataModel} from '../../config/config'
-import {API_PATH} from '../../utils/consts'
+import isEmpty from '../../server/validation/is-empty'
 
 
 const Card = ({
   link,
+  ratio,
   user,
   name,
   picture,
   title,
   description,
+  distance,
   city,
   rating,
+  reviews,
   isCpf,
   isPro,
   tags,
   Cta,
-  edit,
-  remove,
+  editAction,
+  removeAction,
+  ...props
 }) => {
 
   if (!title) {
@@ -41,8 +46,8 @@ const Card = ({
   }
 
   return(
-    <Wrapper link={link}>
-      <StyledCard theme={getDataModel()}>
+    <AdaptiveWrapper link={link} {...props}>
+      <StyledCard theme={getDataModel()} ratio={ratio} picture={picture}>
 
         {user!==undefined &&
         <div className='card_avatar customcardpreviewavatar'>
@@ -52,17 +57,21 @@ const Card = ({
 
         <div className={`card_content customcardpreviewbox`}>
           
-          <div className='card_content-image'>
-            {picture && <img src={picture} alt="" />}
-            {(edit || remove) && <CardContentActions>
-              {edit && <EditServiceUser editAction={edit} />}
-              {remove}
-            </CardContentActions>
-            }
-            <div className='card_content-tags'>
-              {isCpf && <Chip label={'CPF'} className={'customcardchipcpf'} />}
-              {isPro && <Chip label={'PRO'} className={'customcardchippro'} />}
-              {tags && tags.map(tag => <Chip label={tag} className={'customcardchip'} />)}
+          <div className='card_content-imageactions'>
+            {picture && <div className='card_content-image'><img src={picture} alt="" /></div>}
+
+            <div className='card_content_imageoverlay'>
+              
+              <div className='card_content-actions'>
+                {editAction && <Edit editAction={editAction} />}
+                {removeAction && <Delete removeAction={removeAction} />}
+              </div>
+              
+              <div className='card_content-tags'>
+                {isCpf && <Chip label={'CPF'} className={'customcardchipcpf'} />}
+                {isPro && <Chip label={'PRO'} className={'customcardchippro'} />}
+                {tags && tags.map(tag => <Chip label={tag} className={'customcardchip'} />)}
+              </div>
             </div>
           </div>
 
@@ -70,44 +79,38 @@ const Card = ({
           
             {name !== undefined && <p className={`customcardpreviewname`}>{name}</p>}
             <p className={`customcardpreviewlabel`}>{title}</p>
-            {description !==undefined && <p>{description}</p>}
-            {city !==undefined && <p className={'customcardpreviewplace'} >{city}</p>}
+            <Place city={city} distance={distance} />
+            {!isEmpty(description) && <p>{description}</p>}
 
-            {rating !==undefined && <div className={'card_content_rating customcardpreviewrating'}>
-              <Rating
-                name="simple-controlled"
-                value={rating}
-                max={1}
-                readOnly
-              />
-              <p>({rating})</p>
-            </div>
-            }
+            <Opinions rating={rating} reviews={reviews} />
 
             {Cta && <Cta />}
 
           </div>
         </div>
       </StyledCard>
-    </Wrapper>
+    </AdaptiveWrapper>
   )
 }
 
 Card.propTypes = {
   link: PropTypes.string,
+  ratio: PropTypes.string,
   user: PropTypes.object,
   name: PropTypes.string,
   picture: PropTypes.string,
   title: PropTypes.string,
   description: PropTypes.string,
+  distance: PropTypes.number,
   city: PropTypes.string,
   rating: PropTypes.number,
+  reviews: PropTypes.number,
   tags: PropTypes.array,
-  edit: PropTypes.function,
-  remove: PropTypes.function,
   isCpf: PropTypes.bool,
   isPro: PropTypes.bool,
   Cta: PropTypes.component,
+  editAction: PropTypes.function,
+  removeAction: PropTypes.function,
 }
 
 const Wrapper = ({link, children}) => (
@@ -116,8 +119,12 @@ const Wrapper = ({link, children}) => (
     : <div>{children}</div>
 )
 
+const AdaptiveWrapper = styled(Wrapper)`
+  height: 100%;
+`
 
-const EditServiceUser = ({editAction}) => (
+
+const Edit = ({editAction}) => (
   <button aria-label='éditer' onClick={e => {
     e.preventDefault()
     editAction()
@@ -126,21 +133,15 @@ const EditServiceUser = ({editAction}) => (
   </button>
 )
 
-const EditDeleteService = ({id_service, t}) => {
+const DeleteWithConfirm = ({removeAction, t}) => {
 
   const [showDialog, setShowDialog] = useState(false)
-  
-  const deleteService = id_service => {
-    axios.delete(`${API_PATH}/serviceUser/${id_service}`)
-      .then(() => {
-        setShowDialog(false)
-      })
-      .catch(err => console.error(err))
-  }
 
   return (<>
-    
-    <button aria-label="supprimer" onClick={() => setShowDialog(true)}>
+    <button aria-label="supprimer" onClick={e => {
+      e.preventDefault()
+      setShowDialog(true)
+    }}>
       <DeleteForeverIcon />
     </button>
     {showDialog && <Dialog
@@ -159,7 +160,7 @@ const EditDeleteService = ({id_service, t}) => {
         <CustomButton onClick={() => setShowDialog(false)} color="primary">
           {ReactHtmlParser(t('COMMON.btn_cancel'))}
         </CustomButton>
-        <CustomButton onClick={() => deleteService(id_service)} >
+        <CustomButton onClick={() => removeAction()} >
           {ReactHtmlParser(t('COMMON.btn_delete'))}
         </CustomButton>
       </DialogActions>
@@ -168,35 +169,35 @@ const EditDeleteService = ({id_service, t}) => {
   )
 }
 
-const CardContentActions = styled.div`
-  position: absolute;
-  top: var(--spc-3);
-  z-index: 1;
-  display: flex;
-  column-gap: var(--spc-1);
-  row-gap: var(--spc-2);
-  flex-direction: column;
-  left: var(--spc-3);
+const Delete = withTranslation(null, {withRef: true})(DeleteWithConfirm)
 
-  a, button {
-    border: 0;
-    cursor: pointer;
-    padding: var(--spc-1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(0,0,0,0.7);
-    color: var(--white);
-    border-radius: var(--rounded-full);
-  }
-  
-  a svg {
-    color: var(--white);
-  }
+const Place = ({city, distance}) => {
 
-`
+  return city ? <div className='card_content-place'>
+    <p><RoomIcon/>
+      { distance &&
+      `À ${distance} km - `
+      }
+      <span className='customcardpreviewplace'>{city}</span>
+    </p>
+  </div> : null
 
-const EditDelete = withTranslation(null, {withRef: true})(EditDeleteService)
+}
+
+
+const Opinions = ({rating, reviews}) => {
+
+  return rating ? <div className='card_content-rating customcardpreviewrating'>
+    <Rating
+      name="simple-controlled"
+      value={rating}
+      max={1}
+      readOnly
+    />
+    <p>{rating} {reviews ? ({reviews}) : null}</p>
+  </div> : null
+
+}
 
 
 const StyledCard = styled.a`
@@ -209,7 +210,7 @@ const StyledCard = styled.a`
   grid-template-areas:  'card_avatar'
                         'card_content';
   min-width: 250px;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: ${props => (props?.ratio ? props.ratio : '4 / 5')} ;
   cursor: pointer;
   transition: transform var(--delayIn) ease-out;
 
@@ -232,16 +233,20 @@ const StyledCard = styled.a`
   .card_content {
     grid-area: card_content;
     display: grid;
-    grid-template-areas: 'card_content-image' 'card_content-text';
-    grid-template-rows: minmax(0,1fr) minmax(0,1fr);
+    grid-template-areas: 'card_content-imageactions' 'card_content-text';
+    grid-template-rows: ${props => {
+  if (!props.picture) {
+    return 'auto minmax(0,1fr)'
+  }
+  return 'minmax(0,1fr) minmax(0,1fr)'
+}} ;
     overflow: hidden;
     border-radius: 1rem;
-    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.3);
+    box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
     grid-row: 1 / -1;
     grid-column: 1 / -1;
-    margin-bottom: var(--spc-4);
 
-    &> :is(p, div, ):not(.card_content-image) {
+    &> :is(p, div, ):not(.card_content-imageactions) {
       padding: var(--card-padding);
     }
 
@@ -260,25 +265,50 @@ const StyledCard = styled.a`
     }
   }
 
+  .card_content_imageoverlay {
+    ${props => {
+  if (!props.picture) {
+    return `
+        padding: var(--spc-3);
+      `
+  }
+  return `
+        position: absolute;
+        inset: var(--spc-3);
+        z-index: 1;`
+}}
+    
+    display: flex;
+    column-gap: var(--spc-2);
+    justify-content: space-between;
+  }
+
   .card_content-actions, .card_content-tags {
-    position: absolute;
-    top: var(--spc-3);
-    z-index: 1;
     display: flex;
     column-gap: var(--spc-1);
     row-gap: var(--spc-2);
   }
 
   .card_content-actions {
+    row-gap: var(--spc-2);
     flex-direction: column;
-    left: var(--spc-3);
+
+    a, button {
+      border: 0;
+      cursor: pointer;
+      padding: var(--spc-1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0,0,0,0.7);
+      color: var(--white);
+      border-radius: var(--rounded-full);
+    }
+    
   }
 
   .card_content-tags {
-    right: var(--spc-3);
-    justify-content: end;
     flex-wrap: wrap;
-    margin-inline-start: var(--spc-12);
 
     &> * {
       background-color: var(--primary-color);
@@ -287,9 +317,13 @@ const StyledCard = styled.a`
     }
   }
 
-  .card_content-image {
-    grid-area: card_content-image;
+  .card_content-imageactions {
+    grid-area: card_content-imageactions;
     position: relative;
+  }
+
+  .card_content-image {
+    height: 100%;
 
     img {
       width: 100%;
@@ -298,7 +332,6 @@ const StyledCard = styled.a`
       object-position: center;
     }
   }
-
   .card_content-image::after {
     transition: background-color var(--delayIn) ease-in-out;
     content: '';
@@ -316,7 +349,7 @@ const StyledCard = styled.a`
     align-self: flex-start;
     color: var(--black);
     z-index: 1;
-    height: 100%;
+    min-height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -334,7 +367,15 @@ const StyledCard = styled.a`
     }
   }
 
-  .card_content_rating {
+  .card_content-place {
+
+    p {
+      -webkit-line-clamp: 1
+    }
+    
+  }
+
+  .card_content-rating {
     display: flex;
     align-items: last baseline;
     justify-content: end;
