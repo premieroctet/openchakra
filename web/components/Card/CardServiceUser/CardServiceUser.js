@@ -1,30 +1,12 @@
 import React from 'react'
 import ReactHtmlParser from 'react-html-parser'
 import {withTranslation} from 'react-i18next'
-import Grid from '@material-ui/core/Grid'
-import Paper from '@material-ui/core/Paper'
 import axios from 'axios'
-import Box from '@material-ui/core/Box'
-import Rating from '@material-ui/lab/Rating'
-import RoomIcon from '@material-ui/icons/Room'
-import Chip from '@material-ui/core/Chip'
-import {withStyles} from '@material-ui/core/styles'
-import Typography from '@material-ui/core/Typography'
-import EditIcon from '@material-ui/icons/Edit'
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
-import IconButton from '@material-ui/core/IconButton'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContentText from '@material-ui/core/DialogContentText'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import DialogContent from '@material-ui/core/DialogContent'
-import Dialog from '@material-ui/core/Dialog'
 import Router from 'next/router'
-import {Skeleton} from '@material-ui/lab'
-import {bookingUrl, isMonoProvider} from '../../../config/config'
-import styles from '../../../static/css/components/Card/CardServiceUser/CardServiceUser'
+import CardSkeleton from '../CardSkeleton'
+import {bookingUrl} from '../../../config/config'
 import {computeAverageNotes, computeDistanceKm} from '../../../utils/functions'
 import CustomButton from '../../CustomButton/CustomButton'
-import ListIconsSkills from '../../ListIconsSkills/ListIconsSkills'
 import {isEditableUser, hideEmptyEvaluations} from '../../../utils/context'
 import Helpcard from '../Helpcard'
 import Card from '../Card'
@@ -92,7 +74,7 @@ class CardServiceUser extends React.Component {
   }
 
   render() {
-    const {classes, gps, profileMode, address, loading, booking_id} = this.props
+    const {gps, profileMode, address, loading, booking_id} = this.props
     const {cpData, alfred, animated} = this.state
 
     const resa_link=bookingUrl(cpData._id, booking_id ? {booking_id}: {})
@@ -115,7 +97,6 @@ class CardServiceUser extends React.Component {
       picture=`/${picture}`
     }
 
-
     const editable = isEditableUser(alfred)
     const description = cpData.description || (this.props.t('CARD_SERVICE.no_description').trim() ? ReactHtmlParser(this.props.t('CARD_SERVICE.no_description')) : null)
     
@@ -126,39 +107,9 @@ class CardServiceUser extends React.Component {
       )
     }
 
-    const cardServiceLoading = () => {
-      return(
-        <Grid className={classes.mainCardServiceUserContainer}>
-          <Paper elevation={1} className={classes.paperloadingCard}>
-            <Grid className={classes.cardLoadingImgCont}>
-              <Grid className={classes.cardLoadingCard}>
-                <Skeleton animation="wave" variant="rect" className={classes.media} />
-              </Grid>
-              <Grid>
-                <Skeleton animation="wave" height={10} width="50%" style={{margin: 5, marginTop: 20}}/>
-              </Grid>
-              <Grid>
-                <Skeleton animation="wave" height={10} width="80%" style={{margin: 5}}/>
-              </Grid>
-              <Grid>
-                <Skeleton animation="wave" height={10} width="70%" style={{margin: 5}}/>
-              </Grid>
-              <Grid>
-                <Skeleton animation="wave" height={10} width="50%" style={{margin: 5}}/>
-              </Grid>
-              <Grid style={{position: 'absolute', bottom: 0, right: 0}}>
-                <Skeleton animation="wave" width={80} height={50} style={{borderRadius: 24, padding: '5px 30px'}}/>
-              </Grid>
-            </Grid>
-          </Paper>
-        </Grid>
-      )
-    }
-
-
     return(
       loading ?
-        cardServiceLoading() :
+        <CardSkeleton /> :
         <Card
           onMouseEnter={this.onMouseEnter}
           onMouseLeave={this.onMouseLeave}
@@ -181,4 +132,4 @@ class CardServiceUser extends React.Component {
   }
 }
 
-export default withTranslation(null, {withRef: true})(withStyles(styles)(CardServiceUser))
+export default withTranslation(null, {withRef: true})(CardServiceUser)
