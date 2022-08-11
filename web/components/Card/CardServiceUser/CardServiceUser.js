@@ -11,6 +11,7 @@ import {isEditableUser, hideEmptyEvaluations} from '../../../utils/context'
 import Helpcard from '../Helpcard'
 import Card from '../Card'
 import {API_PATH} from '../../../utils/consts'
+import ConfirmDialog from '../../Dialog/ConfirmDialog'
 
 
 const CTA = ({t}) => (
@@ -22,7 +23,6 @@ const CTA = ({t}) => (
   </CustomButton>
 )
 
-
 const CTAServiceUser = withTranslation(null, {withRef: true})(CTA)
 
 
@@ -30,6 +30,7 @@ const CardServiceUser = ({t, item, gps, profileMode, loading, booking_id, onDele
 
   const [animated, setAnimated] = useState(false)
   const [cpData, setCpData] = useState({})
+  const [showDialog, setShowDialog] = useState(false)
 
   const alfred = cpData?.alfred
 
@@ -39,7 +40,7 @@ const CardServiceUser = ({t, item, gps, profileMode, loading, booking_id, onDele
   distance = distance ? distance.toFixed(0) : ''
     
   const notes = cpData.reviews ? computeAverageNotes(cpData.reviews.map(r => r.note_alfred)) : {}
-  const reviews = cpData.reviews ? cpData.reviews.length : 0
+  const reviews = cpData.reviews ? cpData.reviews.length : +0
 
   let picture = profileMode ? cpData.picture : alfred?.picture || cpData.picture
 
@@ -54,6 +55,10 @@ const CardServiceUser = ({t, item, gps, profileMode, loading, booking_id, onDele
 
   const editable = alfred ? isEditableUser(alfred) : false
   const description = cpData.description || (t('CARD_SERVICE.no_description').trim() ? ReactHtmlParser(t('CARD_SERVICE.no_description')) : null)
+
+  const showDeleteDialog = () => {
+    setShowDialog(true)
+  }
 
   const editAction = id => {
     Router.push(`/creaShop/creaShop?serviceuser_id=${id}`)
@@ -96,25 +101,32 @@ const CardServiceUser = ({t, item, gps, profileMode, loading, booking_id, onDele
   return(
     loading ?
       <CardSkeleton /> :
-      <Card
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-        ratio={'5/8'}
-        link={resa_link}
-        picture={picture}
-        title={cpData.label}
-        description={!profileMode && description}
-        city={!profileMode && (cpData.location?.client || cpData.location?.alfred) && city}
-        distance={!profileMode && (cpData.location?.client || cpData.location?.alfred) && distance}
-        isCpf={cpData?.cpf}
-        isPro={cpData.is_professional}
-        rating={!profileMode && (!hideEmptyEvaluations() || notes.global && notes.global >0) && notes.global.toFixed(2)}
-        reviews={!profileMode && (!hideEmptyEvaluations() || cpData.reviews && cpData.reviews.length >0) && reviews}
-        editAction={profileMode && editable && editAction.bind(this, cpData._id)}
-        removeAction={profileMode && editable && deleteAction.bind(this, cpData._id)}
-        Cta={!profileMode && CTAServiceUser}
-        {...props}
-      />
+      <>
+        <Card
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave}
+          ratio={'5/8'}
+          link={resa_link}
+          picture={picture}
+          title={cpData.label}
+          description={!profileMode && description}
+          city={!profileMode && (cpData.location?.client || cpData.location?.alfred) && city}
+          distance={!profileMode && (cpData.location?.client || cpData.location?.alfred) && distance}
+          isCpf={cpData?.cpf}
+          isPro={cpData.is_professional}
+          rating={!profileMode && (!hideEmptyEvaluations() || notes.global && notes.global >0) && notes.global.toFixed(2)}
+          reviews={!profileMode && (!hideEmptyEvaluations() || cpData.reviews && cpData.reviews.length >0) && reviews}
+          editAction={profileMode && editable && editAction.bind(this, cpData._id)}
+          deleteAction={profileMode && editable && showDeleteDialog.bind(this)}
+          Cta={!profileMode && CTAServiceUser}
+          {...props}
+        />
+        <ConfirmDialog
+          removeAction={() => deleteAction(cpData._id)}
+          showDialog={showDialog}
+          setShowDialog={setShowDialog}
+        />
+      </>
   )
   
 }
