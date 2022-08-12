@@ -83,7 +83,6 @@ const SearchPage = ({classes, width, t}) => {
   const [focusedInput, setFocusedInput]=useState(null)
   const [statusFilterVisible, setStatusFilterVisible]=useState(false)
   const [dateFilterVisible, setDateFilterVisible]=useState(false)
-  const [logged, setLogged]=useState(false)
   const [scroll_count, setScroll_count]=useState(0)
   const [criterion, setCriterion]=useState({})
   const [searching, setSearching]=useState(false)
@@ -369,7 +368,6 @@ const SearchPage = ({classes, width, t}) => {
                         model={new SearchDataModel(filteredResults.map(su => su._id), cols, rows, false)}
                         style={classes}
                         gps={gps}
-                        user={user}
                         address={selectedAddress}
                         booking_id={booking_id}
                       />
@@ -388,7 +386,6 @@ const SearchPage = ({classes, width, t}) => {
                                 key={su._id}
                                 item={su._id}
                                 gps={gps}
-                                user={user}
                                 address={selectedAddress} />
                             ),
                             )
