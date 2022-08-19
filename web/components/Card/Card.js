@@ -11,12 +11,14 @@ import RoomIcon from '@material-ui/icons/Room'
 import UserAvatar from '../Avatar/UserAvatar'
 import {getDataModel} from '../../config/config'
 import isEmpty from '../../server/validation/is-empty'
+import ListIconsSkills from '../ListIconsSkills/ListIconsSkills'
 
 
 const Card = ({
   link,
-  ratio,
+  pictureratio,
   user,
+  tagname,
   name,
   picture,
   title,
@@ -34,13 +36,16 @@ const Card = ({
   ...props
 }) => {
 
+  
+  const isDescription = !isEmpty(description) && !Array.isArray(description) && description
+
   if (!title) {
     return null
   }
 
   return(
     <AdaptiveWrapper link={link} {...props}>
-      <StyledCard theme={getDataModel()} ratio={ratio} picture={picture}>
+      <StyledCard theme={getDataModel()} pictureratio={pictureratio} picture={picture}>
 
         {user!==undefined &&
         <div className='card_avatar customcardpreviewavatar'>
@@ -53,7 +58,7 @@ const Card = ({
           <div className='card_content-imageactions'>
             {picture && <div className='card_content-image'><img src={picture} alt="" /></div>}
 
-            <div className='card_content_imageoverlay'>
+            <div className='card_content-imageoverlay'>
               
               <div className='card_content-actions'>
                 {editAction && <Edit editAction={editAction} />}
@@ -62,18 +67,23 @@ const Card = ({
               
               <div className='card_content-tags'>
                 {isCpf && <Chip label={'CPF'} className={'customcardchipcpf'} />}
-                {isPro && <Chip label={'PRO'} className={'customcardchippro'} />}
+                {isPro && <Chip label={'Pro'} className={'customcardchippro'} />}
                 {tags && tags.map(tag => <Chip label={tag} className={'customcardchip'} />)}
               </div>
+
+              <div className='card_content-saymyname'>
+                {tagname && <Chip label={tagname.firstname} avatar={<ListIconsSkills data={tagname.data} />} className={`customcardchipname`} />}
+              </div>
+
             </div>
           </div>
 
           <div className='card_content-text'>
-          
             {name !== undefined && <p className={`customcardpreviewname`}>{name}</p>}
-            <p className={`customcardpreviewlabel`}>{title}</p>
+            <h2 className={`card_content-title customcardpreviewlabel`}>{title}</h2>
+
             <Place city={city} distance={distance} />
-            {!isEmpty(description) && <p>{description}</p>}
+            {isDescription && <p className='card_content-description'>{description}</p>}
 
             <Opinions rating={rating} reviews={reviews} />
 
@@ -88,7 +98,7 @@ const Card = ({
 
 Card.propTypes = {
   link: PropTypes.string,
-  ratio: PropTypes.string,
+  pictureratio: PropTypes.string,
   user: PropTypes.object,
   name: PropTypes.string,
   picture: PropTypes.string,
@@ -106,14 +116,23 @@ Card.propTypes = {
   deleteAction: PropTypes.function,
 }
 
-const Wrapper = ({link, children}) => (
+const AdaptiveWrapper = ({link, children}) => (
   link ?
-    <Link href={link}>{children}</Link>
+    <Link href={link} passHref><LinkCard>{children}</LinkCard></Link>
     : <div>{children}</div>
 )
 
-const AdaptiveWrapper = styled(Wrapper)`
-  height: 100%;
+const LinkCard = styled.a`
+
+  width: 100%; /* Needed even if it's a grid element. Weird */
+  height: 100%;  
+
+  &:hover, &:focus {
+    .card_content-image::after {
+      background-color: transparent;
+    }
+  }
+  text-decoration: none;
 `
 
 const Edit = ({editAction}) => (
@@ -138,7 +157,8 @@ const DeleteButton = ({deleteAction}) => (
 const Place = ({city, distance}) => {
 
   return city ? <div className='card_content-place'>
-    <p><RoomIcon/>
+    <RoomIcon/>
+    <p>
       { distance &&
       `À ${distance} km - `
       }
@@ -164,7 +184,7 @@ const Opinions = ({rating, reviews}) => {
 }
 
 
-const StyledCard = styled.a`
+const StyledCard = styled.div`
 
   --card-padding: var(--spc-4);
 
@@ -173,16 +193,8 @@ const StyledCard = styled.a`
   grid-template-rows: 80px auto;
   grid-template-areas:  'card_avatar'
                         'card_content';
-  min-width: 250px;
-  aspect-ratio: ${props => (props?.ratio ? props.ratio : '4 / 5')} ;
   cursor: pointer;
   transition: transform var(--delayIn) ease-out;
-
-  &:hover {
-    .card_content-image::after {
-      background-color: transparent;
-    }
-  }
 
   .card_avatar {
     justify-self: center;
@@ -215,13 +227,12 @@ const StyledCard = styled.a`
     }
 
     p {
+      font-size: var(--text-base);
       display: -webkit-box;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 3;
       overflow: hidden;
       text-overflow: ellipsis;
-      margin: 0;
-      margin-bottom: var(--spc-1);
     }
 
     &> * {
@@ -229,7 +240,7 @@ const StyledCard = styled.a`
     }
   }
 
-  .card_content_imageoverlay {
+  .card_content-imageoverlay {
     ${props => {
   if (!props.picture) {
     return `
@@ -238,11 +249,14 @@ const StyledCard = styled.a`
   }
   return `
         position: absolute;
-        inset: var(--spc-3);
+        inset: 0;
         z-index: 1;`
 }}
     
-    display: flex;
+    display: grid;
+    grid-template-areas: 'actionsarea tagsarea' 'namearea .';
+    grid-template-columns: auto auto;
+    grid-template-rows: repeat(2, 1fr);
     column-gap: var(--spc-2);
     justify-content: space-between;
   }
@@ -251,9 +265,11 @@ const StyledCard = styled.a`
     display: flex;
     column-gap: var(--spc-1);
     row-gap: var(--spc-2);
+    margin: var(--spc-2);
   }
 
   .card_content-actions {
+    grid-area: actionsarea;
     row-gap: var(--spc-2);
     flex-direction: column;
 
@@ -272,12 +288,28 @@ const StyledCard = styled.a`
   }
 
   .card_content-tags {
+    grid-area: tagsarea;
     flex-wrap: wrap;
-
+    justify-content: end;
+    
     &> * {
       background-color: var(--primary-color);
+      font-weight: bold;
       color: var(--white);
       width: min-content;
+    }
+  }
+  
+  .card_content-saymyname {
+    grid-area: namearea;
+    display: flex;
+    align-items: end;
+
+    &> * {
+      flex-direction: row-reverse;
+      margin-block-end: -5px;
+      margin-inline-start: -5px;
+      background-color: var(--secondary-bgcolor);
     }
   }
 
@@ -290,6 +322,7 @@ const StyledCard = styled.a`
     height: 100%;
 
     img {
+      aspect-ratio: ${props => (props?.pictureratio ? props.pictureratio : '16 / 10')} ;
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -303,8 +336,7 @@ const StyledCard = styled.a`
     height: 100%;
     display: block;
     inset: 0;
-    background-color: var(--secondary-color);
-    filter: opacity(0.4);
+    background-color: #11111144;
     position: absolute;
   }
 
@@ -314,16 +346,23 @@ const StyledCard = styled.a`
     color: var(--black);
     z-index: 1;
     min-height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
+    display: grid;
+    grid-template-rows: minmax(2rem, max-content);
+    row-gap: var(--spc-3);
+    
+    h2, div, p {
+      margin: 0;
+    } 
+    
 
     button {
       color: var(--white);
       background-color: var(--secondary-color);
       padding-inline: var(--spc-8);
-      align-self: center;
+      justify-self: end;
+      align-self: end;
       width: min-content;
+      height: min-content;
       margin-block-start: var(--spc-2);
       margin-inline-end: var(--spc-1);
       border-radius: var(--rounded-3xl);
@@ -331,12 +370,27 @@ const StyledCard = styled.a`
     }
   }
 
-  .card_content-place {
+  .card_content-title {
+    font-size: var(--text-base);
+    color: var(--black);
+  }
 
+  .card_content-place {
+    font-size: var(--text-base);
+    display: flex;
+    column-gap: var(--spc-1);
+    align-items: center;
+    
     p {
       -webkit-line-clamp: 1
     }
     
+  }
+  
+  .card_content-description {
+    flex: 2;
+    color: rgb(128, 128, 128);
+    min-height: 4rem;
   }
 
   .card_content-rating {
@@ -352,6 +406,10 @@ const StyledCard = styled.a`
 
       p {
         font-weight: bold;
+      }
+
+      .card_content-saymyname {
+        display: none;
       }
 
       `
