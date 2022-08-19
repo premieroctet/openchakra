@@ -36,8 +36,7 @@ const Card = ({
   ...props
 }) => {
 
-  
-  const isDescription = !isEmpty(description) && !Array.isArray(description) && description
+  const retainedDescription = !isEmpty(description) && Array.isArray(description) ? description.filter(el => typeof el === 'object') : description
 
   if (!title) {
     return null
@@ -83,7 +82,7 @@ const Card = ({
             <h2 className={`card_content-title customcardpreviewlabel`}>{title}</h2>
 
             <Place city={city} distance={distance} />
-            {isDescription && <p className='card_content-description'>{description}</p>}
+            {retainedDescription.length ? <p className='card_content-description'>{retainedDescription}</p> : null}
 
             <Opinions rating={rating} reviews={reviews} />
 
