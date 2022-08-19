@@ -189,6 +189,8 @@ const StyledCard = styled.div`
   --card-padding: var(--spc-4);
 
   display: grid;
+  width: 100%;
+  height: 100%;  
   grid-template-columns: 1fr;
   grid-template-rows: 80px auto;
   grid-template-areas:  'card_avatar'
