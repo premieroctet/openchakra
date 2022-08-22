@@ -26,7 +26,16 @@ const CTA = ({t}) => (
 const CTAServiceUser = withTranslation(null, {withRef: true})(CTA)
 
 
-const CardServiceUser = ({t, item, gps, profileMode, loading, booking_id, onDelete, ...props}) => {
+const CardServiceUser = ({
+  t,
+  item,
+  gps,
+  profileMode,
+  loading,
+  booking_id,
+  onDelete,
+  ...props},
+) => {
 
   const [animated, setAnimated] = useState(false)
   const [cpData, setCpData] = useState({})
@@ -105,9 +114,10 @@ const CardServiceUser = ({t, item, gps, profileMode, loading, booking_id, onDele
         <Card
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
-          ratio={'5/8'}
           link={resa_link}
           picture={picture}
+          pictureratio={'4/3'}
+          tagname={!(profileMode && editable) && {firstname: alfred?.firstname, data: cpData}}
           title={cpData.label}
           description={!profileMode && description}
           city={!profileMode && (cpData.location?.client || cpData.location?.alfred) && city}

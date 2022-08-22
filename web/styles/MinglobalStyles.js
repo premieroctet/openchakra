@@ -6,11 +6,12 @@ export const MinGlobalStyles = createGlobalStyle`
 
     /**
     * Colors
+    * By default, for all-inclusive
     */
     --black: ${props => props.theme?.colors?.black || '#111'};
     --white: ${props => props.theme?.colors?.white || '#FFF'};
     --brand-color: ${props => props.theme?.colors?.brand || 'black'};
-    --primary-color: ${props => props.theme?.colors?.primary || 'black'};
+    --primary-color: ${props => props.theme?.colors?.primary || '#d9881bff'};
     --primary-bgcolor: ${props => props.theme?.colors?.primaryBg || 'white'};
     --secondary-color: ${props => props.theme?.colors?.secondary || 'black'};
     --secondary-bgcolor: ${props => props.theme?.colors?.secondaryBg || 'white'};
