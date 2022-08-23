@@ -131,9 +131,13 @@ type PreviewDefaultProps = {
   ListItem?: PropsWithForm<any>
   Center?: PropsWithForm<CenterProps>
   Container?: PropsWithForm<ContainerProps>
+  Card?: PropsWithForm<any>
 }
 
 export const DEFAULT_PROPS: PreviewDefaultProps = {
+  Alert: {
+    status: 'error',
+  },
   AlertDescription: {
     children: 'Alert description',
   },
@@ -171,6 +175,9 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     children: 'Button text',
     variant: 'solid',
     size: 'md',
+  },
+  Card: {
+    bg: 'green.500',
   },
   Checkbox: {
     children: 'Label checkbox',
@@ -280,7 +287,7 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
 
 export const getDefaultFormProps = (type: ComponentType) => {
   //@ts-ignore
-  const chakraDefaultProps = Chakra[type].defaultProps
+  const chakraDefaultProps = (Chakra[type] && Chakra[type].defaultProps) || {}
   // @ts-ignore
   return { ...chakraDefaultProps, ...DEFAULT_PROPS[type]?.form }
 }
