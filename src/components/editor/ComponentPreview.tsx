@@ -25,6 +25,7 @@ import SelectPreview from '~components/editor/previews/SelectPreview'
 import NumberInputPreview from '~components/editor/previews/NumberInputPreview'
 import BreadcrumbPreview from './previews/BreadcrumbPreview'
 import BreadcrumbItemPreview from './previews/BreadcrumbItemPreview'
+import CardPreview from '~components/editor/previews/CardPreview'
 
 const ComponentPreview: React.FC<{
   componentName: string
@@ -146,6 +147,8 @@ const ComponentPreview: React.FC<{
       return <BreadcrumbPreview component={component} />
     case 'BreadcrumbItem':
       return <BreadcrumbItemPreview component={component} />
+    case 'Card':
+      return <CardPreview component={component} />
     case 'Icon':
       return <IconPreview component={component} />
     case 'IconButton':

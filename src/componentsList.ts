@@ -45,6 +45,7 @@ export const menuItems: MenuItems = {
     },
   },
   Button: {},
+  Card: {},
   Center: {},
   Container: {},
   Checkbox: {},
@@ -78,6 +79,7 @@ export const menuItems: MenuItems = {
       InputLeftElement: {},
     },
   },
+  Kbd: {},
   Link: {},
   List: {
     children: {
@@ -126,6 +128,7 @@ export const componentsList: ComponentType[] = [
   'BreadcrumbItem',
   'BreadcrumbLink',
   'Button',
+  'Card',
   'Center',
   'Checkbox',
   'CircularProgress',
@@ -150,6 +153,7 @@ export const componentsList: ComponentType[] = [
   'InputLeftElement',
   'InputRightAddon',
   'InputRightElement',
+  'Kbd',
   'Link',
   'List',
   'ListIcon',
