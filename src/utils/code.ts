@@ -2,6 +2,7 @@ import isBoolean from 'lodash/isBoolean'
 import filter from 'lodash/filter'
 import icons from '~iconsList'
 import { propNames } from '@chakra-ui/react'
+import lodash from 'lodash'
 
 const capitalize = (value: string) => {
   return value.charAt(0).toUpperCase() + value.slice(1)
@@ -173,16 +174,28 @@ export const generateCode = async (components: IComponents) => {
     ),
   ]
 
+  // Distinguish between chakra/non-chakra components
+  const module = await import('@chakra-ui/react')
+  const groupedComponents = lodash.groupBy(imports, c =>
+    module[c] ? '@chakra-ui/react' : 'components',
+  )
+
   code = `import React from 'react';
-import {
-  ChakraProvider,
-  ${imports.join(',')}
-} from "@chakra-ui/react";${
-    iconImports.length
-      ? `
+  import {ChakraProvider} from "@chakra-ui/react";
+  ${Object.entries(groupedComponents)
+    .map(([modName, components]) => {
+      return `import {
+      ${components.join(',')}
+    } from "${modName}";
+    `
+    })
+    .join('\n')}
+${
+  iconImports.length
+    ? `
 import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
-      : ''
-  }
+    : ''
+}
 
 ${componentsCodes}
 
