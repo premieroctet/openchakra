@@ -1,0 +1,56 @@
+# Open Chakra
+
+## Aperçu
+
+Open chakra est un outil d'agencement de composants tirés de la librairie chakra-ui.
+On peut y construire une page statique et générer son code.
+
+NOTE: Chakra-ui dispose d'éléments personalisables, accessibles.
+
+## State 
+
+L'état de l'application est géré avec Redux, aidé de la surcouche Rematch
+
+Pour une action/reducer, moveComponent par exemple, le comportement est défini dans les *models* 
+
+Ex: src/core/models/components.ts 
+
+
+
+usePropsSelector
+
+useForm
+
+
+
+## Création de composant
+
+### Définition de son type
+
+Définir son type dans src/utils/defaultProps.tsx
+
+### Inscription du composant 
+
+Inscrire son nom dans 
+* src/react-app-env.d.ts (ComponentType ou MetaComponentType)
+* src/componentsList.ts dans les constantes menuItems, et componentsList 
+* src/utils/editor.ts
+
+### Rendu initial (preview)
+
+La preview est le rendu du composant lorsqu'il est déposé dans la zone d'édition.
+* Créer sa structure dans src/components/editor/previews. Convention de nommage : CardPreview.tsx
+* Importer ce composant dans le fichier src/components/editor/ComponentPreview.tsx, et définir son appel dans le switch 
+
+### Edition du composant
+
+Par défaut, un composant peut se voir appliquer différents styles. Mais pour modifier le comportement d'un composant, on crée un panneau spécifique. 
+
+Pour une Card, l'option d'afficher ou pas l'avatar par exemple.
+
+Créer un CardPanel.tsx dans src/components/inspector/panels/components et l'importer dans src/components/inspector/panels/Panels.tsx
+
+### Composant imbriqués 
+
+Une liste, un fil d'ariane, un accordéon par exemple sont des composants Meta/imbriqués.
+Lorsqu'un composant de ce type est déposé, on appelle ses composants enfants (dispatch addComponent lors du drop).
