@@ -6,6 +6,28 @@ type ComposedComponent = {
   parent: string
 }
 
+export const buildCard = (parent: string): ComposedComponent => {
+  const composer = new Composer()
+
+  const nodeId = composer.addNode({
+    type: 'Card',
+    parent,
+  })
+
+  const cardContainer = composer.addNode({ type: 'Grid', parent: nodeId })
+  const avatar = composer.addNode({ type: 'Avatar', parent: cardContainer })
+  composer.addNode({ type: 'Text', parent: nodeId })
+  composer.addNode({ type: 'Text', parent: nodeId })
+
+  const components = composer.getComponents()
+
+  return {
+    components,
+    root: nodeId,
+    parent,
+  }
+}
+
 export const buildAlert = (parent: string): ComposedComponent => {
   const composer = new Composer()
 
@@ -142,6 +164,7 @@ type ComposerBuilders = {
 
 const builders: ComposerBuilders = {
   AlertMeta: buildAlert,
+  CardMeta: buildCard,
   FormControlMeta: buildFormControl,
   AccordionMeta: buildAccordion,
   ListMeta: buildList,

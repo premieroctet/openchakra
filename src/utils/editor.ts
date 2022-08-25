@@ -66,6 +66,7 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'InputLeftElement',
   // Allow meta components
   'AlertMeta',
+  'CardMeta',
   'FormControlMeta',
   'AccordionMeta',
   'ListMeta',

@@ -76,6 +76,7 @@ type MetaComponentType =
   | 'AccordionMeta'
   | 'ListMeta'
   | 'AlertMeta'
+  | 'CardMeta'
   | 'InputGroupMeta'
   | 'BreadcrumbMeta'
 

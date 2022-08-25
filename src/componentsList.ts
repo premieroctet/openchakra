@@ -45,7 +45,14 @@ export const menuItems: MenuItems = {
     },
   },
   Button: {},
-  Card: {},
+  Card: {
+    children: {
+      Alert: {},
+      AlertDescription: {},
+      AlertIcon: {},
+      AlertTitle: {},
+    },
+  },
   Center: {},
   Container: {},
   Checkbox: {},
@@ -79,7 +86,6 @@ export const menuItems: MenuItems = {
       InputLeftElement: {},
     },
   },
-  Kbd: {},
   Link: {},
   List: {
     children: {
@@ -153,7 +159,6 @@ export const componentsList: ComponentType[] = [
   'InputLeftElement',
   'InputRightAddon',
   'InputRightElement',
-  'Kbd',
   'Link',
   'List',
   'ListIcon',
