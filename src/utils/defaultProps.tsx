@@ -62,6 +62,10 @@ import {
 
 import iconsList from '~iconsList'
 
+type DataProviderProps = {
+  model: string
+}
+
 type PropsWithForm<T> = T & { form?: T }
 
 type PreviewDefaultProps = {
