@@ -1,5 +1,5 @@
-import React from 'react'
 import { Grid, Center, Avatar, Text, Button } from '@chakra-ui/react'
+import React from 'react'
 
 const Card = () => (
   <Grid gap={6} maxWidth={300} backgroundColor="whatsapp.100">

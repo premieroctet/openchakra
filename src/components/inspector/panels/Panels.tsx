@@ -48,7 +48,8 @@ import NumberInputPanel from '~components/inspector/panels/components/NumberInpu
 import AspectRatioPanel from '~components/inspector/panels/components/AspectRatioPanel'
 import BreadcrumbPanel from '~components/inspector/panels/components/BreadcrumbPanel'
 import BreadcrumbItemPanel from '~components/inspector/panels/components/BreadcrumbItemPanel'
-import CardPanel from '~components/inspector/panels/components/CardPanel'
+
+let extraPanels = {}
 
 const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
   component,
@@ -60,10 +61,14 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
     return null
   }
 
+  const compPanel = extraPanels[type]
+  if (compPanel) {
+    return React.createElement(compPanel)
+  }
+
   return (
     <>
       {type === 'Button' && <ButtonPanel />}
-      {type === 'Card' && <CardPanel />}
       {type === 'Checkbox' && <CheckboxPanel />}
       {type === 'Box' && <BoxPanel />}
       {type === 'Badge' && <BadgePanel />}
@@ -116,6 +121,10 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
       {type === 'BreadcrumbLink' && <LinkPanel />}
     </>
   )
+}
+
+export const registerPanel = ({ componentType, componentPanel }) => {
+  extraPanels[componentType] = componentPanel
 }
 
 export default memo(Panels)
