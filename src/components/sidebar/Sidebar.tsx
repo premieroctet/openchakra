@@ -58,7 +58,7 @@ const Menu = () => {
           </InputRightElement>
         </InputGroup>
 
-        {(Object.keys(menuItems) as ComponentType[])
+        {(Object.keys(menuItems).sort() as ComponentType[])
           .filter(c => c.toLowerCase().includes(searchTerm.toLowerCase()))
           .map(name => {
             const { children, soon } = menuItems[name] as MenuItem

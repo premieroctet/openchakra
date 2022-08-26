@@ -25,7 +25,14 @@ import SelectPreview from '~components/editor/previews/SelectPreview'
 import NumberInputPreview from '~components/editor/previews/NumberInputPreview'
 import BreadcrumbPreview from './previews/BreadcrumbPreview'
 import BreadcrumbItemPreview from './previews/BreadcrumbItemPreview'
-import CardPreview from '~components/editor/previews/CardPreview'
+
+type previews = {
+  [index: string]: {
+    previewComponent?: React.ComponentType
+    isBoxWrapped?: boolean
+  }
+}
+let extraPreviews: previews = {}
 
 const ComponentPreview: React.FC<{
   componentName: string
@@ -36,6 +43,15 @@ const ComponentPreview: React.FC<{
   }
 
   const type = (component && component.type) || null
+
+  const extraPreview = extraPreviews[type]
+  if (extraPreview) {
+    const { previewComponent /**isBoxWrapped*/ } = extraPreview
+    if (previewComponent) {
+      return React.createElement(previewComponent, { component: component })
+    }
+    throw new Error('Extra component without previewComponent')
+  }
 
   switch (type) {
     // Simple components
@@ -147,8 +163,6 @@ const ComponentPreview: React.FC<{
       return <BreadcrumbPreview component={component} />
     case 'BreadcrumbItem':
       return <BreadcrumbItemPreview component={component} />
-    case 'Card':
-      return <CardPreview component={component} />
     case 'Icon':
       return <IconPreview component={component} />
     case 'IconButton':
@@ -160,6 +174,20 @@ const ComponentPreview: React.FC<{
     default:
       return null
   }
+}
+
+type previewParams = {
+  componentType: string
+  previewComponent?: React.FC
+  isBoxWrapped?: boolean
+}
+
+export const registerPreview = ({
+  componentType,
+  previewComponent,
+  isBoxWrapped,
+}: previewParams) => {
+  extraPreviews[componentType] = { previewComponent, isBoxWrapped }
 }
 
 export default memo(ComponentPreview)

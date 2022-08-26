@@ -177,7 +177,7 @@ export const generateCode = async (components: IComponents) => {
   // Distinguish between chakra/non-chakra components
   const module = await import('@chakra-ui/react')
   const groupedComponents = lodash.groupBy(imports, c =>
-    module[c] ? '@chakra-ui/react' : 'components',
+    module[c] ? '@chakra-ui/react' : 'custom-components',
   )
 
   code = `import React from 'react';

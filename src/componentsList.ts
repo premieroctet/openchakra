@@ -10,7 +10,7 @@ type MenuItems = Partial<
   }
 >
 
-export const menuItems: MenuItems = {
+let menuItems: MenuItems = {
   Accordion: {
     children: {
       Accordion: {},
@@ -45,14 +45,6 @@ export const menuItems: MenuItems = {
     },
   },
   Button: {},
-  Card: {
-    children: {
-      Alert: {},
-      AlertDescription: {},
-      AlertIcon: {},
-      AlertTitle: {},
-    },
-  },
   Center: {},
   Container: {},
   Checkbox: {},
@@ -115,7 +107,7 @@ export const menuItems: MenuItems = {
   "TabPanels"*/
 }
 
-export const componentsList: ComponentType[] = [
+const componentsList: ComponentType[] = [
   'Accordion',
   'AccordionIcon',
   'AccordionItem',
@@ -134,7 +126,6 @@ export const componentsList: ComponentType[] = [
   'BreadcrumbItem',
   'BreadcrumbLink',
   'Button',
-  'Card',
   'Center',
   'Checkbox',
   'CircularProgress',
@@ -182,3 +173,27 @@ export const componentsList: ComponentType[] = [
   'Text',
   'Textarea',
 ]
+
+export const registerComponentType = (componentType: ComponentType) => {
+  if (componentsList.includes(componentType)) {
+    throw new Error(`${componentType} is already registered`)
+  }
+  componentsList.push(componentType)
+}
+
+type menuParams = {
+  componentType: ComponentType
+  menuChildren: object
+}
+
+export const registerComponentMenu = ({
+  componentType,
+  menuChildren,
+}: menuParams) => {
+  if (componentType in menuItems) {
+    throw new Error(`${componentType} is already registered in menus`)
+  }
+  menuItems[componentType] = menuChildren
+}
+
+export { menuItems, componentsList }

@@ -60,7 +60,6 @@ import {
   ListProps,
 } from '@chakra-ui/react'
 
-import { ChevronDownIcon } from '@chakra-ui/icons'
 import iconsList from '~iconsList'
 
 type PropsWithForm<T> = T & { form?: T }
@@ -134,7 +133,7 @@ type PreviewDefaultProps = {
   Card?: PropsWithForm<any>
 }
 
-export const DEFAULT_PROPS: PreviewDefaultProps = {
+let DEFAULT_PROPS: PreviewDefaultProps = {
   Alert: {
     status: 'error',
   },
@@ -175,9 +174,6 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     children: 'Button text',
     variant: 'solid',
     size: 'md',
-  },
-  Card: {
-    bg: 'green.500',
   },
   Checkbox: {
     children: 'Label checkbox',
@@ -285,9 +281,18 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   Text: { children: 'Text value' },
 }
 
-export const getDefaultFormProps = (type: ComponentType) => {
+export const registerDefaultProps = ({ componentType, defaultProps }) => {
+  if (componentType in DEFAULT_PROPS) {
+    throw new Error(`${componentType} is already registered in default props`)
+  }
+  DEFAULT_PROPS[componentType] = defaultProps
+}
+
+const getDefaultFormProps = (type: ComponentType) => {
   //@ts-ignore
   const chakraDefaultProps = (Chakra[type] && Chakra[type].defaultProps) || {}
   // @ts-ignore
   return { ...chakraDefaultProps, ...DEFAULT_PROPS[type]?.form }
 }
+
+export { DEFAULT_PROPS, getDefaultFormProps }

@@ -6,28 +6,6 @@ type ComposedComponent = {
   parent: string
 }
 
-export const buildCard = (parent: string): ComposedComponent => {
-  const composer = new Composer()
-
-  const nodeId = composer.addNode({
-    type: 'Card',
-    parent,
-  })
-
-  const cardContainer = composer.addNode({ type: 'Grid', parent: nodeId })
-  const avatar = composer.addNode({ type: 'Avatar', parent: cardContainer })
-  composer.addNode({ type: 'Text', parent: nodeId })
-  composer.addNode({ type: 'Text', parent: nodeId })
-
-  const components = composer.getComponents()
-
-  return {
-    components,
-    root: nodeId,
-    parent,
-  }
-}
-
 export const buildAlert = (parent: string): ComposedComponent => {
   const composer = new Composer()
 
@@ -156,20 +134,31 @@ export const buildInputGroup = (parent: string): ComposedComponent => {
   }
 }
 
-type BuilderFn = (parent: string) => ComposedComponent
+export type BuilderFn = (parent: string) => ComposedComponent
 
 type ComposerBuilders = {
   [k: string]: BuilderFn
 }
 
-const builders: ComposerBuilders = {
+let builders: ComposerBuilders = {
   AlertMeta: buildAlert,
-  CardMeta: buildCard,
   FormControlMeta: buildFormControl,
   AccordionMeta: buildAccordion,
   ListMeta: buildList,
   InputGroupMeta: buildInputGroup,
   BreadcrumbMeta: buildBreadcrumb,
+}
+
+type registerParams = {
+  componentType: ComponentType
+  builderFunction: BuilderFn
+}
+
+export const registerBuilder = ({
+  componentType,
+  builderFunction,
+}: registerParams) => {
+  builders[`${componentType}Meta`] = builderFunction
 }
 
 export default builders
