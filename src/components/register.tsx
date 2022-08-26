@@ -1,3 +1,7 @@
+/**
+Entry point to register custom components
+ComponentType must still be explicitely added in react-app-env.d.ts and utils/editor.ts
+*/
 import { registerBuilder } from '~core/models/composer/builder'
 import { registerComponentMenu, registerComponentType } from '~componentsList'
 import { registerDefaultProps } from '~utils/defaultProps'
