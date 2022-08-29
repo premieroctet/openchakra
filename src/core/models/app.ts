@@ -3,6 +3,7 @@ import { createModel } from '@rematch/core'
 type Overlay = undefined | { rect: DOMRect; id: string; type: ComponentType }
 
 export type AppState = {
+  device: string
   showLayout: boolean
   showCode: boolean
   inputTextFocused: boolean
@@ -11,12 +12,19 @@ export type AppState = {
 
 const app = createModel({
   state: {
+    device: 'desktop',
     showLayout: true,
     showCode: false,
     inputTextFocused: false,
     overlay: undefined,
   } as AppState,
   reducers: {
+    selectDevice(state: AppState, selectedDevice: string): AppState {
+      return {
+        ...state,
+        device: selectedDevice,
+      }
+    },
     toggleBuilderMode(state: AppState): AppState {
       return {
         ...state,

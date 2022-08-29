@@ -20,6 +20,7 @@ import {
   PopoverFooter,
   Tooltip,
   HStack,
+  Select,
 } from '@chakra-ui/react'
 import { ExternalLinkIcon, SmallCloseIcon, CheckIcon } from '@chakra-ui/icons'
 import { DiGithubBadge } from 'react-icons/di'
@@ -29,7 +30,7 @@ import { generateCode } from '~utils/code'
 import useDispatch from '~hooks/useDispatch'
 import { useSelector } from 'react-redux'
 import { getComponents } from '~core/selectors/components'
-import { getShowLayout, getShowCode } from '~core/selectors/app'
+import { getDevice, getShowLayout, getShowCode } from '~core/selectors/app'
 import HeaderMenu from '~components/headerMenu/HeaderMenu'
 
 const CodeSandboxButton = () => {
@@ -69,6 +70,7 @@ const CodeSandboxButton = () => {
 
 const Header = () => {
   const showLayout = useSelector(getShowLayout)
+  const device = useSelector(getDevice)
   const showCode = useSelector(getShowCode)
   const dispatch = useDispatch()
 
@@ -153,6 +155,36 @@ const Header = () => {
                   onChange={() => dispatch.app.toggleCodePanel()}
                   size="sm"
                 />
+              </LightMode>
+            </FormControl>
+
+            <FormControl display="flex" flexDirection="row" alignItems="center">
+              <FormLabel
+                color="gray.200"
+                fontSize="xs"
+                mr={2}
+                mb={0}
+                htmlFor="device"
+                pb={0}
+                whiteSpace="nowrap"
+              >
+                Device
+              </FormLabel>
+              <LightMode>
+                <Select
+                  id="device"
+                  onChange={e => dispatch.app.selectDevice(e.target.value)}
+                >
+                  <option value={'iphone'} selected={device === 'iphone'}>
+                    iPhone 13
+                  </option>
+                  <option value={'ipad'} selected={device === 'ipad'}>
+                    iPad
+                  </option>
+                  <option value={'desktop'} selected={device === 'desktop'}>
+                    Desktop
+                  </option>
+                </Select>
               </LightMode>
             </FormControl>
           </HStack>

@@ -6,7 +6,7 @@ import CodePanel from '~components/CodePanel'
 import { useSelector } from 'react-redux'
 import useDispatch from '~hooks/useDispatch'
 import { getComponents } from '~core/selectors/components'
-import { getShowLayout, getShowCode } from '~core/selectors/app'
+import { getShowLayout, getShowCode, getDevice } from '~core/selectors/app'
 import ComponentPreview from '~components/editor/ComponentPreview'
 
 export const gridStyles = {
@@ -19,6 +19,7 @@ export const gridStyles = {
 
 const Editor: React.FC = () => {
   const showCode = useSelector(getShowCode)
+  const device = useSelector(getDevice)
   const showLayout = useSelector(getShowLayout)
   const components = useSelector(getComponents)
   const dispatch = useDispatch()
@@ -42,13 +43,32 @@ const Editor: React.FC = () => {
     ...rootProps,
   }
 
+  const adaptDevice = (device: string) => {
+    switch (device) {
+      case 'iphone':
+        return {
+          width: '360px',
+          height: '200px',
+        }
+      case 'ipad':
+        return {
+          width: '810px',
+          height: '1080px',
+        }
+      default:
+        return {
+          width: '100%',
+          height: '100%',
+        }
+    }
+  }
+
   const Playground = (
     <Box
       p={2}
       {...editorBackgroundProps}
-      height="100%"
       minWidth="10rem"
-      width="100%"
+      margin="0 auto"
       display={isEmpty ? 'flex' : 'block'}
       justifyContent="center"
       alignItems="center"
@@ -57,6 +77,7 @@ const Editor: React.FC = () => {
       position="relative"
       flexDirection="column"
       onClick={onSelectBackground}
+      {...adaptDevice(device)}
     >
       {isEmpty && (
         <Text maxWidth="md" color="gray.400" fontSize="xl" textAlign="center">
