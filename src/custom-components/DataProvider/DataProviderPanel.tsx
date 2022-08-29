@@ -1,9 +1,16 @@
 import { Select } from '@chakra-ui/react'
 import React, { memo, useState, useEffect } from 'react'
+
 import axios from 'axios'
+
 import { useForm } from '../../hooks/useForm'
 import FormControl from '../../components/inspector/controls/FormControl'
+import useDispatch from '../../hooks/useDispatch'
 import usePropsSelector from '../../hooks/usePropsSelector'
+
+const capitalize = (word: string) => {
+  return word.replace(/\w\S*/g, w => w.replace(/^\w/, c => c.toUpperCase()))
+}
 
 const DataProviderPanel = () => {
   const { setValueFromEvent } = useForm()
@@ -31,8 +38,9 @@ const DataProviderPanel = () => {
           size="sm"
           value={model || ''}
         >
+          <option value={null}></option>
           {models.map(mdl => (
-            <option>{mdl}</option>
+            <option value={mdl}>{capitalize(mdl)}</option>
           ))}
         </Select>
       </FormControl>

@@ -1,5 +1,6 @@
 import isBoolean from 'lodash/isBoolean'
 import filter from 'lodash/filter'
+import pickBy from 'lodash/pickBy'
 import icons from '~iconsList'
 import { propNames } from '@chakra-ui/react'
 import lodash from 'lodash'
@@ -38,12 +39,15 @@ const buildBlock = ({
   forceBuildBlock = false,
 }: BuildBlockParams) => {
   let content = ''
-
   component.children.forEach((key: string) => {
     let childComponent = components[key]
+    if (childComponent.type == 'DataProvider') {
+      return
+    }
     if (!childComponent) {
       console.error(`invalid component ${key}`)
     } else if (forceBuildBlock || !childComponent.componentName) {
+      const dataProvider = childComponent.props.dataProvider
       const componentName = capitalize(childComponent.type)
       let propsContent = ''
 
@@ -80,7 +84,7 @@ const buildBlock = ({
             operand = `={${propsValue}}`
           }
 
-          propsContent += `${propName}${operand} `
+          propsContent += `${propName}${operand}`
         }
       })
 
@@ -88,7 +92,9 @@ const buildBlock = ({
         typeof childComponent.props.children === 'string' &&
         childComponent.children.length === 0
       ) {
-        content += `<${componentName} ${propsContent}>${childComponent.props.children}</${componentName}>`
+        content += `<${componentName} ${propsContent}>${
+          dataProvider ? `{${dataProvider}}` : childComponent.props.children
+        }</${componentName}>`
       } else if (childComponent.type === 'Icon') {
         content += `<${childComponent.props.icon} ${propsContent} />`
       } else if (childComponent.children.length) {
@@ -161,7 +167,38 @@ const getIconsImports = (components: IComponents) => {
   })
 }
 
+const buildHooks = components => {
+  if (components.length == 0) {
+    return
+  }
+  let code = `const {get, post}=useFetch('https://localhost')`
+  code +=
+    '\n' +
+    components
+      .map(dp => {
+        const dataId = dp.id.replace(/comp-/, '')
+        return `const [${dataId}, set${capitalize(dataId)}]=useState([])`
+      })
+      .join(`\n`)
+  code += `\n
+  useEffect(() => {
+    ${components
+      .map(dp => {
+        const dataId = dp.id.replace(/comp-/, '')
+        return `get('/myAlfred/api/${
+          dp.props.model
+        }').then(res => set${capitalize(dataId)}(res))`
+      })
+      .join('\n')}
+  }, [])\n`
+  return code
+}
+
 export const generateCode = async (components: IComponents) => {
+  const dataProviders = Object.values(components).filter(
+    c => c.type == 'DataProvider',
+  )
+  let hooksCode = buildHooks(dataProviders)
   let code = buildBlock({ component: components.root, components })
   let componentsCodes = buildComponents(components)
   const iconImports = [...new Set(getIconsImports(components))]
@@ -170,6 +207,7 @@ export const generateCode = async (components: IComponents) => {
     ...new Set(
       Object.keys(components)
         .filter(name => name !== 'root')
+        .filter(name => components[name].type != 'DataProvider')
         .map(name => components[name].type),
     ),
   ]
@@ -180,7 +218,8 @@ export const generateCode = async (components: IComponents) => {
     module[c] ? '@chakra-ui/react' : 'custom-components',
   )
 
-  code = `import React from 'react';
+  code = `import React, {useState, useEffect} from 'react';
+  ${dataProviders.length > 0 && `import useFetch from 'use-http'`}
   import {ChakraProvider} from "@chakra-ui/react";
   ${Object.entries(groupedComponents)
     .map(([modName, components]) => {
@@ -199,11 +238,13 @@ import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
 
 ${componentsCodes}
 
-const App = () => (
+const App = () => {
+  ${hooksCode}
+  return (
   <ChakraProvider resetCSS>
     ${code}
   </ChakraProvider>
-);
+)};
 
 export default App;`
 

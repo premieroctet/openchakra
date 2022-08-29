@@ -30,6 +30,7 @@ type ComponentType =
   | 'CloseButton'
   | 'Code'
   | 'Container'
+  | 'DataProvider'
   | 'Divider'
   | 'Editable'
   | 'Flex'

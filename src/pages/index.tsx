@@ -12,6 +12,7 @@ import Editor from '~components/editor/Editor'
 import { InspectorProvider } from '~contexts/inspector-context'
 import Inspector from '~components/inspector/Inspector'
 import '~custom-components/Card/CardInit'
+import '~custom-components/DataProvider/DataProviderInit'
 
 const App = () => {
   useShortcuts()

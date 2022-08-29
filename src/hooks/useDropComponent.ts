@@ -7,6 +7,7 @@ export const useDropComponent = (
   componentId: string,
   accept: (ComponentType | MetaComponentType)[] = rootComponents,
   canDrop: boolean = true,
+  onDrop = null,
 ) => {
   const dispatch = useDispatch()
 
@@ -28,6 +29,9 @@ export const useDropComponent = (
       } else if (item.isMeta) {
         dispatch.components.addMetaComponent(builder[item.type](componentId))
       } else {
+        console.log(
+          `Dropped, compId is ${componentId}, item is ${JSON.stringify(item)}`,
+        )
         dispatch.components.addComponent({
           parentName: componentId,
           type: item.type,

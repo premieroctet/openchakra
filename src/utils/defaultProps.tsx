@@ -63,10 +63,12 @@ import {
 import iconsList from '~iconsList'
 
 type DataProviderProps = {
-  model: string
+  model?: string
 }
-
-type PropsWithForm<T> = T & { form?: T }
+type PropsWithForm<T> = T & {
+  dataProvider?: string
+  form?: T
+}
 
 type PreviewDefaultProps = {
   Badge?: PropsWithForm<BadgeProps>
@@ -135,6 +137,7 @@ type PreviewDefaultProps = {
   Center?: PropsWithForm<CenterProps>
   Container?: PropsWithForm<ContainerProps>
   Card?: PropsWithForm<any>
+  DataProvider?: PropsWithForm<DataProviderProps>
 }
 
 let DEFAULT_PROPS: PreviewDefaultProps = {

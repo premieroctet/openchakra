@@ -9,11 +9,10 @@ const CardPreview: React.FC<IPreviewProps> = ({ component }) => {
     'AlertTitle',
     'AlertIcon',
     'AlertDescription',
+    'DataProvider',
   ] as ComponentType[]
   const { drop, isOver } = useDropComponent(component.id, acceptedTypes)
   const { props, ref } = useInteractive(component, true)
-
-  console.log(component)
 
   if (isOver) {
     props.bg = 'teal.50'
