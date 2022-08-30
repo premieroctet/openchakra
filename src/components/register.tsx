@@ -30,7 +30,6 @@ export const registerComponent = ({
   componentPanel,
   builderFunction,
 }: registerParams) => {
-  console.log(`type:${typeof previewComponent}`)
   console.log(`Registering custom component ${componentType}`)
   registerComponentType(componentType)
   registerComponentMenu({ componentType, menuChildren })

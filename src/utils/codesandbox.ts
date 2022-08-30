@@ -57,6 +57,7 @@ ReactDOM.render(<App />, rootElement);
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3"
+    "use-http": "^1.0.26",
   },
   "devDependencies": {
     "typescript": "3.3.3"

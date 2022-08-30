@@ -1,55 +1,98 @@
-import React, { memo } from 'react'
+import { Select } from '@chakra-ui/react'
+import { useSelector } from 'react-redux'
+import React, { useEffect, useState, memo } from 'react'
 
-import ButtonPanel from '~components/inspector/panels/components/ButtonPanel'
-import BadgePanel from '~components/inspector/panels/components/BadgePanel'
-import IconPanel from '~components/inspector/panels/components/IconPanel'
-import ImagePanel from '~components/inspector/panels/components/ImagePanel'
-import BoxPanel from '~components/inspector/panels/components/BoxPanel'
-import ChildrenControl from '~components/inspector/controls/ChildrenControl'
-import AvatarPanel from '~components/inspector/panels/components/AvatarPanel'
-import AvatarGroupPanel from '~components/inspector/panels/components/AvatarGroupPanel'
-import AvatarBadgePanel from '~components/inspector/panels/components/AvatarBadgePanel'
-import CheckboxPanel from '~components/inspector/panels/components/CheckboxPanel'
-import IconButtonPanel from '~components/inspector/panels/components/IconButtonPanel'
-import ProgressPanel from '~components/inspector/panels/components/ProgressPanel'
-import LinkPanel from '~components/inspector/panels/components/LinkPanel'
-import SpinnerPanel from '~components/inspector/panels/components/SpinnerPanel'
-import CloseButtonPanel from '~components/inspector/panels/components/CloseButtonPanel'
-import DividerPanel from '~components/inspector/panels/components/DividerPanel'
-import CodePanel from '~components/inspector/panels/components/CodePanel'
-import TextareaPanel from '~components/inspector/panels/components/TextareaPanel'
-import CircularProgressPanel from '~components/inspector/panels/components/CircularProgressPanel'
-import HeadingPanel from '~components/inspector/panels/components/HeadingPanel'
-import TagPanel from '~components/inspector/panels/components/TagPanel'
-import SimpleGridPanel from '~components/inspector/panels/components/SimpleGridPanel'
-import SwitchPanel from '~components/inspector/panels/components/SwitchPanel'
-import AlertPanel from '~components/inspector/panels/components/AlertPanel'
-import AlertIconPanel from '~components/inspector/panels/components/AlertIconPanel'
-import AlertTitlePanel from '~components/inspector/panels/components/AlertTitlePanel'
-import AlertDescriptionPanel from '~components/inspector/panels/components/AlertDescriptionPanel'
-import FlexPanel from '~components/inspector/panels/styles/FlexPanel'
-import StackPanel from '~components/inspector/panels/components/StackPanel'
-import FormControlPanel from '~components/inspector/panels/components/FormControlPanel'
-import TabsPanel from '~components/inspector/panels/components/TabsPanel'
-import InputPanel from '~components/inspector/panels/components/InputPanel'
-import RadioPanel from '~components/inspector/panels/components/RadioPanel'
-import RadioGroupPanel from '~components/inspector/panels/components/RadioGroupPanel'
-import SelectPanel from '~components/inspector/panels/components/SelectPanel'
-import ListPanel from '~components/inspector/panels/components/ListPanel'
-import ListItemPanel from '~components/inspector/panels/components/ListItemPanel'
-import ListIconPanel from '~components/inspector/panels/components/ListIconPanel'
 import AccordionItemPanel from '~components/inspector/panels/components/AccordionItemPanel'
 import AccordionPanel from '~components/inspector/panels/components/AccordionPanel'
-import FormLabelPanel from '~components/inspector/panels/components/FormLabelPanel'
-import FormHelperTextPanel from '~components/inspector/panels/components/FormHelperTextPanel'
-import FormErrorMessagePanel from '~components/inspector/panels/components/FormErrorMessagePanel'
-import GridPanel from '~components/inspector/panels/components/GridPanel'
-import NumberInputPanel from '~components/inspector/panels/components/NumberInputPanel'
+import AlertDescriptionPanel from '~components/inspector/panels/components/AlertDescriptionPanel'
+import AlertIconPanel from '~components/inspector/panels/components/AlertIconPanel'
+import AlertPanel from '~components/inspector/panels/components/AlertPanel'
+import AlertTitlePanel from '~components/inspector/panels/components/AlertTitlePanel'
 import AspectRatioPanel from '~components/inspector/panels/components/AspectRatioPanel'
-import BreadcrumbPanel from '~components/inspector/panels/components/BreadcrumbPanel'
+import AvatarBadgePanel from '~components/inspector/panels/components/AvatarBadgePanel'
+import AvatarGroupPanel from '~components/inspector/panels/components/AvatarGroupPanel'
+import AvatarPanel from '~components/inspector/panels/components/AvatarPanel'
+import BadgePanel from '~components/inspector/panels/components/BadgePanel'
+import BoxPanel from '~components/inspector/panels/components/BoxPanel'
 import BreadcrumbItemPanel from '~components/inspector/panels/components/BreadcrumbItemPanel'
+import BreadcrumbPanel from '~components/inspector/panels/components/BreadcrumbPanel'
+import ButtonPanel from '~components/inspector/panels/components/ButtonPanel'
+import CheckboxPanel from '~components/inspector/panels/components/CheckboxPanel'
+import ChildrenControl from '~components/inspector/controls/ChildrenControl'
+import CircularProgressPanel from '~components/inspector/panels/components/CircularProgressPanel'
+import CloseButtonPanel from '~components/inspector/panels/components/CloseButtonPanel'
+import CodePanel from '~components/inspector/panels/components/CodePanel'
+import DividerPanel from '~components/inspector/panels/components/DividerPanel'
+import FlexPanel from '~components/inspector/panels/styles/FlexPanel'
+import FormControlPanel from '~components/inspector/panels/components/FormControlPanel'
+import FormErrorMessagePanel from '~components/inspector/panels/components/FormErrorMessagePanel'
+import FormHelperTextPanel from '~components/inspector/panels/components/FormHelperTextPanel'
+import FormLabelPanel from '~components/inspector/panels/components/FormLabelPanel'
+import GridPanel from '~components/inspector/panels/components/GridPanel'
+import HeadingPanel from '~components/inspector/panels/components/HeadingPanel'
+import IconButtonPanel from '~components/inspector/panels/components/IconButtonPanel'
+import IconPanel from '~components/inspector/panels/components/IconPanel'
+import ImagePanel from '~components/inspector/panels/components/ImagePanel'
+import InputPanel from '~components/inspector/panels/components/InputPanel'
+import LinkPanel from '~components/inspector/panels/components/LinkPanel'
+import ListIconPanel from '~components/inspector/panels/components/ListIconPanel'
+import ListItemPanel from '~components/inspector/panels/components/ListItemPanel'
+import ListPanel from '~components/inspector/panels/components/ListPanel'
+import NumberInputPanel from '~components/inspector/panels/components/NumberInputPanel'
+import ProgressPanel from '~components/inspector/panels/components/ProgressPanel'
+import RadioGroupPanel from '~components/inspector/panels/components/RadioGroupPanel'
+import RadioPanel from '~components/inspector/panels/components/RadioPanel'
+import SelectPanel from '~components/inspector/panels/components/SelectPanel'
+import SimpleGridPanel from '~components/inspector/panels/components/SimpleGridPanel'
+import SpinnerPanel from '~components/inspector/panels/components/SpinnerPanel'
+import StackPanel from '~components/inspector/panels/components/StackPanel'
+import SwitchPanel from '~components/inspector/panels/components/SwitchPanel'
+import TabsPanel from '~components/inspector/panels/components/TabsPanel'
+import TagPanel from '~components/inspector/panels/components/TagPanel'
+import TextareaPanel from '~components/inspector/panels/components/TextareaPanel'
+
+import { getComponents } from '../../../core/selectors/components'
+import { useForm } from '../../../hooks/useForm'
+import DataProviderPanel from '../../../custom-components/DataProvider/DataProviderPanel'
+import FormControl from '../controls/FormControl'
+import useDispatch from '../../../hooks/useDispatch'
+import usePropsSelector from '../../../hooks/usePropsSelector'
 
 let extraPanels = {}
+
+const DataSourcePanel = () => {
+  const components = useSelector(getComponents)
+  const { setValueFromEvent } = useForm()
+  const dataProvider = usePropsSelector('dataProvider')
+  const [providers, setProviders] = useState([])
+
+  useEffect(() => {
+    const dataProviders = Object.values(components).filter(
+      c => c.type == 'DataProvider',
+    )
+    console.log(dataProviders)
+    setProviders(dataProviders.map(c => c.id.replace(/comp-/, '')))
+  }, [components])
+
+  return (
+    <>
+      <FormControl htmlFor="dataProvider" label="Source de données">
+        <Select
+          id="dataProvider"
+          onChange={setValueFromEvent}
+          name="dataProvider"
+          size="sm"
+          value={dataProvider || ''}
+        >
+          <option value={null}></option>
+          {providers.map(provider => (
+            <option value={provider}>{provider}</option>
+          ))}
+        </Select>
+      </FormControl>
+    </>
+  )
+}
 
 const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
   component,
@@ -119,6 +162,7 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
       {type === 'Breadcrumb' && <BreadcrumbPanel />}
       {type === 'BreadcrumbItem' && <BreadcrumbItemPanel />}
       {type === 'BreadcrumbLink' && <LinkPanel />}
+      <DataSourcePanel />
     </>
   )
 }
