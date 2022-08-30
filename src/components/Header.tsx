@@ -175,6 +175,7 @@ const Header = () => {
                 <Select
                   id="device"
                   onChange={e => dispatch.app.selectDevice(e.target.value)}
+                  style={{ color: 'white', width: 'max-content' }}
                 >
                   {Object.keys(devices).map(devicekey => (
                     <option
