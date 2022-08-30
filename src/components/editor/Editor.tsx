@@ -8,6 +8,7 @@ import useDispatch from '~hooks/useDispatch'
 import { getComponents } from '~core/selectors/components'
 import { getShowLayout, getShowCode, getDevice } from '~core/selectors/app'
 import ComponentPreview from '~components/editor/ComponentPreview'
+import devices from '~config/devices'
 
 export const gridStyles = {
   backgroundImage:
@@ -44,23 +45,7 @@ const Editor: React.FC = () => {
   }
 
   const adaptDevice = (device: string) => {
-    switch (device) {
-      case 'iphone':
-        return {
-          width: '360px',
-          height: '200px',
-        }
-      case 'ipad':
-        return {
-          width: '810px',
-          height: '1080px',
-        }
-      default:
-        return {
-          width: '100%',
-          height: '100%',
-        }
-    }
+    return devices[device]
   }
 
   const Playground = (

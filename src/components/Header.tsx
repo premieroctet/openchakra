@@ -32,6 +32,7 @@ import { useSelector } from 'react-redux'
 import { getComponents } from '~core/selectors/components'
 import { getDevice, getShowLayout, getShowCode } from '~core/selectors/app'
 import HeaderMenu from '~components/headerMenu/HeaderMenu'
+import devices from '~config/devices'
 
 const CodeSandboxButton = () => {
   const components = useSelector(getComponents)
@@ -175,15 +176,15 @@ const Header = () => {
                   id="device"
                   onChange={e => dispatch.app.selectDevice(e.target.value)}
                 >
-                  <option value={'iphone'} selected={device === 'iphone'}>
-                    iPhone 13
-                  </option>
-                  <option value={'ipad'} selected={device === 'ipad'}>
-                    iPad
-                  </option>
-                  <option value={'desktop'} selected={device === 'desktop'}>
-                    Desktop
-                  </option>
+                  {Object.keys(devices).map(devicekey => (
+                    <option
+                      key={devicekey}
+                      value={devicekey}
+                      selected={devicekey === device}
+                    >
+                      {devicekey}
+                    </option>
+                  ))}
                 </Select>
               </LightMode>
             </FormControl>
