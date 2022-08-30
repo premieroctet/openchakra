@@ -2,6 +2,7 @@ export type MenuItem = {
   children?: MenuItems
   soon?: boolean
   rootParentType?: ComponentType
+  group?: 'positionnement' | 'formulaire' | 'typographie'
 }
 
 type MenuItems = Partial<
@@ -47,12 +48,16 @@ let menuItems: MenuItems = {
   Button: {},
   Center: {},
   Container: {},
-  Checkbox: {},
+  Checkbox: {
+    group: 'formulaire',
+  },
   CircularProgress: {},
   CloseButton: {},
   Code: {},
   Divider: {},
-  Flex: {},
+  Flex: {
+    group: 'positionnement',
+  },
   FormControl: {
     children: {
       FormControl: {},
@@ -61,13 +66,20 @@ let menuItems: MenuItems = {
       FormErrorMessage: {},
     },
   },
-  Grid: {},
-  Heading: {},
+  Grid: {
+    group: 'positionnement',
+  },
+  Heading: {
+    group: 'typographie',
+  },
   Icon: {},
   IconButton: {},
   Image: {},
-  Input: {},
+  Input: {
+    group: 'formulaire',
+  },
   InputGroup: {
+    group: 'formulaire',
     rootParentType: 'Input',
     children: {
       InputGroup: {},
@@ -85,20 +97,35 @@ let menuItems: MenuItems = {
       ListItem: {},
     },
   },
-  NumberInput: {},
+  NumberInput: {
+    group: 'formulaire',
+  },
   Progress: {},
-  Radio: {},
+  Radio: {
+    group: 'formulaire',
+  },
   RadioGroup: {
+    group: 'formulaire',
     rootParentType: 'Radio',
   },
-  SimpleGrid: {},
+  SimpleGrid: {
+    group: 'positionnement',
+  },
   Spinner: {},
-  Select: {},
+  Select: {
+    group: 'formulaire',
+  },
   Stack: {},
-  Switch: {},
+  Switch: {
+    group: 'formulaire',
+  },
   Tag: {},
-  Text: {},
-  Textarea: {},
+  Text: {
+    group: 'typographie',
+  },
+  Textarea: {
+    group: 'formulaire',
+  },
   Menu: { soon: true },
   Tab: { soon: true },
   /*"Tabs",
