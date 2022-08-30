@@ -1,10 +1,13 @@
+import { Box } from '@chakra-ui/react'
 import React from 'react'
+
 import { useDropComponent } from '~hooks/useDropComponent'
 import { useInteractive } from '~hooks/useInteractive'
 import ComponentPreview from '~components/editor/ComponentPreview'
-import { Box } from '@chakra-ui/react'
 
-const CardPreview: React.FC<IPreviewProps> = ({ component }) => {
+import Table from './Table'
+
+const TablePreview: React.FC<IPreviewProps> = ({ component }) => {
   const acceptedTypes = [] as ComponentType[]
   const { drop, isOver } = useDropComponent(component.id, acceptedTypes)
   const { props, ref } = useInteractive(component, true)
@@ -15,7 +18,12 @@ const CardPreview: React.FC<IPreviewProps> = ({ component }) => {
 
   return (
     <Box pos="relative" ref={drop(ref)} {...props}>
-    <h1>Table</h1>
+      <Table
+        dataSource={[
+          { name: 'seb', age: 50 },
+          { name: 'Jeff', age: 32 },
+        ]}
+      />
       {component.children.map((key: string) => (
         <ComponentPreview key={key} componentName={key} />
       ))}
@@ -23,4 +31,4 @@ const CardPreview: React.FC<IPreviewProps> = ({ component }) => {
   )
 }
 
-export default CardPreview
+export default TablePreview

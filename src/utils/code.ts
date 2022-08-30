@@ -5,6 +5,9 @@ import icons from '~iconsList'
 import { propNames } from '@chakra-ui/react'
 import lodash from 'lodash'
 
+//const HIDDEN_ATTRIBUTES=['dataSource', 'attribute']
+const HIDDEN_ATTRIBUTES = ['attribute']
+
 const capitalize = (value: string) => {
   return value.charAt(0).toUpperCase() + value.slice(1)
 }
@@ -47,7 +50,8 @@ const buildBlock = ({
     if (!childComponent) {
       console.error(`invalid component ${key}`)
     } else if (forceBuildBlock || !childComponent.componentName) {
-      const dataProvider = childComponent.props.dataProvider
+      const dataProvider = components[childComponent.props.dataSource]
+      const paramProvider = dataProvider?.id.replace(/comp-/, '')
       const componentName = capitalize(childComponent.type)
       let propsContent = ''
 
@@ -59,41 +63,50 @@ const buildBlock = ({
         return true
       })
 
-      propsNames.forEach((propName: string) => {
-        const propsValue = childComponent.props[propName]
+      propsNames
+        .filter(p => !HIDDEN_ATTRIBUTES.includes(p))
+        .forEach((propName: string) => {
+          const propsValue = childComponent.props[propName]
 
-        if (
-          propName.toLowerCase().includes('icon') &&
-          childComponent.type !== 'Icon'
-        ) {
-          if (Object.keys(icons).includes(propsValue)) {
-            let operand = `={<${propsValue} />}`
-
-            propsContent += `${propName}${operand} `
-          }
-        } else if (propName !== 'children' && propsValue) {
-          let operand = `='${propsValue}'`
-
-          if (propsValue === true || propsValue === 'true') {
-            operand = ``
-          } else if (
-            propsValue === 'false' ||
-            isBoolean(propsValue) ||
-            !isNaN(propsValue)
+          if (
+            propName.toLowerCase().includes('icon') &&
+            childComponent.type !== 'Icon'
           ) {
-            operand = `={${propsValue}}`
-          }
+            if (Object.keys(icons).includes(propsValue)) {
+              let operand = `={<${propsValue} />}`
 
-          propsContent += `${propName}${operand}`
-        }
-      })
+              propsContent += `${propName}${operand} `
+            }
+          } else if (propName !== 'children' && propsValue) {
+            let operand =
+              propName == 'dataSource' && paramProvider
+                ? `={${paramProvider}}`
+                : `='${propsValue}'`
+
+            if (propsValue === true || propsValue === 'true') {
+              operand = ``
+            } else if (
+              propsValue === 'false' ||
+              isBoolean(propsValue) ||
+              !isNaN(propsValue)
+            ) {
+              operand = `={${propsValue}}`
+            }
+
+            propsContent += `${propName}${operand}`
+          }
+        })
 
       if (
         typeof childComponent.props.children === 'string' &&
         childComponent.children.length === 0
       ) {
         content += `<${componentName} ${propsContent}>${
-          dataProvider ? `{${dataProvider}}` : childComponent.props.children
+          dataProvider
+            ? `{${dataProvider.id.replace(/comp-/, '')}[0]?.${
+                childComponent.props.attribute
+              }}`
+            : childComponent.props.children
         }</${componentName}>`
       } else if (childComponent.type === 'Icon') {
         content += `<${childComponent.props.icon} ${propsContent} />`
@@ -215,7 +228,7 @@ export const generateCode = async (components: IComponents) => {
   // Distinguish between chakra/non-chakra components
   const module = await import('@chakra-ui/react')
   const groupedComponents = lodash.groupBy(imports, c =>
-    module[c] ? '@chakra-ui/react' : 'custom-components',
+    module[c] ? '@chakra-ui/react' : `custom-components/${c}/${c}`,
   )
 
   code = `import React, {useState, useEffect} from 'react';

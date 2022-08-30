@@ -1,13 +1,16 @@
-import React, { memo } from 'react'
+import React, { memo, useEffect } from 'react'
 import { Box, Text, Link } from '@chakra-ui/react'
 import { useDropComponent } from '~hooks/useDropComponent'
 import SplitPane from 'react-split-pane'
 import CodePanel from '~components/CodePanel'
 import { useSelector } from 'react-redux'
 import useDispatch from '~hooks/useDispatch'
+import useFetch from 'use-http'
 import { getComponents } from '~core/selectors/components'
 import { getShowLayout, getShowCode } from '~core/selectors/app'
 import ComponentPreview from '~components/editor/ComponentPreview'
+import Xarrow from 'react-xarrows'
+import moment from 'moment'
 
 export const gridStyles = {
   backgroundImage:
@@ -22,6 +25,7 @@ const Editor: React.FC = () => {
   const showLayout = useSelector(getShowLayout)
   const components = useSelector(getComponents)
   const dispatch = useDispatch()
+  const { get } = useFetch('https://localhost')
 
   const { drop } = useDropComponent('root')
   const isEmpty = !components.root.children.length
@@ -41,6 +45,12 @@ const Editor: React.FC = () => {
     ...editorBackgroundProps,
     ...rootProps,
   }
+
+  useEffect(() => {
+    get('/myAlfred/api/studio/models').then(res => {
+      dispatch.datasources.setModels(res)
+    })
+  }, [dispatch.datasources, get])
 
   const Playground = (
     <Box
@@ -76,8 +86,17 @@ const Editor: React.FC = () => {
       )}
 
       {components.root.children.map((name: string) => (
-        <ComponentPreview key={name} componentName={name} />
+        <ComponentPreview id={name} key={name} componentName={name} />
       ))}
+      {Object.values(components)
+        .filter(c => c.props.dataSource)
+        .map(c => (
+          <Xarrow
+            id={moment()}
+            start={`comp-${c.props.dataSource}`}
+            end={c.id}
+          />
+        ))}
     </Box>
   )
 
