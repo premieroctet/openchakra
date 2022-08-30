@@ -13,6 +13,7 @@ import { InspectorProvider } from '~contexts/inspector-context'
 import Inspector from '~components/inspector/Inspector'
 import '~custom-components/Card/CardInit'
 import '~custom-components/DataProvider/DataProviderInit'
+import '~custom-components/Table/TableInit'
 
 const App = () => {
   useShortcuts()

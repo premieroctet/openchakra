@@ -70,6 +70,10 @@ type PropsWithForm<T> = T & {
   form?: T
 }
 
+interface DynamicTextProps extends TextProps {
+  attribte?: string,
+}
+
 type PreviewDefaultProps = {
   Badge?: PropsWithForm<BadgeProps>
   Box?: PropsWithForm<BoxProps>
@@ -77,7 +81,7 @@ type PreviewDefaultProps = {
   Icon?: PropsWithForm<IconProps> & { icon: keyof typeof iconsList }
   IconButton?: PropsWithForm<IconButtonProps>
   Image?: PropsWithForm<ImageProps>
-  Text?: PropsWithForm<TextProps>
+  Text?: PropsWithForm<DynamicTextProps>
   Progress?: PropsWithForm<ProgressProps>
   AvatarBadge?: PropsWithForm<AvatarBadgeProps>
   AvatarGroup?: PropsWithForm<Omit<AvatarGroupProps, 'children'>>
@@ -137,6 +141,7 @@ type PreviewDefaultProps = {
   Center?: PropsWithForm<CenterProps>
   Container?: PropsWithForm<ContainerProps>
   Card?: PropsWithForm<any>
+  Table?: PropsWithForm<DataProviderProps>
   DataProvider?: PropsWithForm<DataProviderProps>
 }
 
