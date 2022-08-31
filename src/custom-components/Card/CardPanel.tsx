@@ -1,11 +1,15 @@
 import React, { memo } from 'react'
+
+import ChildrenControl from '~components/inspector/controls/ChildrenControl'
 import SwitchControl from '~components/inspector/controls/SwitchControl'
 import TextControl from '~components/inspector/controls/TextControl'
-import ChildrenControl from '~components/inspector/controls/ChildrenControl'
+
+import DataProviderPanel from '../DataProvider/DataProviderPanel'
 
 const CardPanel = () => {
   return (
     <>
+      <DataProviderPanel />
       <ChildrenControl />
     </>
   )

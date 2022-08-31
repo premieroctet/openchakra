@@ -1,5 +1,7 @@
 import { Select } from '@chakra-ui/react'
+import { useSelector } from 'react-redux'
 import React, { memo, useState, useEffect } from 'react'
+import { getModelNames } from '~core/selectors/datasources'
 
 import axios from 'axios'
 
@@ -15,18 +17,7 @@ const capitalize = (word: string) => {
 const DataProviderPanel = () => {
   const { setValueFromEvent } = useForm()
   const model = usePropsSelector('model')
-  const [models, setModels] = useState([])
-
-  useEffect(() => {
-    axios
-      .get('https://localhost/myAlfred/api/studio/models')
-      .then(res => {
-        setModels(res.data)
-      })
-      .catch(err => {
-        console.error(err)
-      })
-  }, [])
+  const modelNames = useSelector(getModelNames)
 
   return (
     <>
@@ -39,7 +30,7 @@ const DataProviderPanel = () => {
           value={model || ''}
         >
           <option value={null}></option>
-          {models.map(mdl => (
+          {modelNames.map(mdl => (
             <option value={mdl}>{capitalize(mdl)}</option>
           ))}
         </Select>

@@ -7,12 +7,14 @@ import { createWrapper, MakeStore } from 'next-redux-wrapper'
 
 import { ComponentsStateWithUndo } from './models/components'
 import { AppState } from './models/app'
+import { DataSourcesState } from './models/datasources'
 import models from './models'
 import filterUndoableActions from '~utils/undo'
 
 export type RootState = {
   app: AppState
   components: ComponentsStateWithUndo
+  datasources: DataSourcesState
 }
 
 const version = parseInt(process.env.NEXT_PUBLIC_VERSION || '1', 10)

@@ -10,8 +10,7 @@ const DataProviderPreview: React.FC<IPreviewProps> = ({ component }) => {
   return (
     <Box ref={drop(ref)} id={component.id} {...props}>
       <h1>
-        Data provider {props?.model ? `pour ${props?.model}` : 'non paramétré'}{' '}
-        (id ${component.id})
+        Data provider{props?.model ? `/${props?.model}` : ' non paramétré'}
       </h1>
     </Box>
   )

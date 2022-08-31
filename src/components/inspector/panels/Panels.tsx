@@ -1,4 +1,3 @@
-import { Select } from '@chakra-ui/react'
 import { useSelector } from 'react-redux'
 import React, { useEffect, useState, memo } from 'react'
 
@@ -54,45 +53,12 @@ import TextareaPanel from '~components/inspector/panels/components/TextareaPanel
 import { getComponents } from '../../../core/selectors/components'
 import { useForm } from '../../../hooks/useForm'
 import DataProviderPanel from '../../../custom-components/DataProvider/DataProviderPanel'
+import DataSourcePanel from './DataSourcePanel'
 import FormControl from '../controls/FormControl'
 import useDispatch from '../../../hooks/useDispatch'
 import usePropsSelector from '../../../hooks/usePropsSelector'
 
 let extraPanels = {}
-
-const DataSourcePanel = () => {
-  const components = useSelector(getComponents)
-  const { setValueFromEvent } = useForm()
-  const dataProvider = usePropsSelector('dataProvider')
-  const [providers, setProviders] = useState([])
-
-  useEffect(() => {
-    const dataProviders = Object.values(components).filter(
-      c => c.type == 'DataProvider',
-    )
-    console.log(dataProviders)
-    setProviders(dataProviders.map(c => c.id.replace(/comp-/, '')))
-  }, [components])
-
-  return (
-    <>
-      <FormControl htmlFor="dataProvider" label="Source de données">
-        <Select
-          id="dataProvider"
-          onChange={setValueFromEvent}
-          name="dataProvider"
-          size="sm"
-          value={dataProvider || ''}
-        >
-          <option value={null}></option>
-          {providers.map(provider => (
-            <option value={provider}>{provider}</option>
-          ))}
-        </Select>
-      </FormControl>
-    </>
-  )
-}
 
 const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
   component,
