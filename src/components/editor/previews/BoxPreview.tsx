@@ -8,6 +8,8 @@ const BoxPreview: React.FC<{ component: IComponent }> = ({ component }) => {
   const { drop, isOver } = useDropComponent(component.id)
   const { props, ref } = useInteractive(component, true)
 
+  console.log('boxprops', props)
+
   if (isOver) {
     props.bg = 'teal.50'
   }

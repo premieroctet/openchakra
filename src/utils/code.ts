@@ -66,34 +66,38 @@ const buildBlock = ({
       propsNames
         .filter(p => !HIDDEN_ATTRIBUTES.includes(p))
         .forEach((propName: string) => {
-          const propsValue = childComponent.props[propName]
+          if (typeof propName === 'string') {
+            const propsValue = childComponent.props[propName]
 
-          if (
-            propName.toLowerCase().includes('icon') &&
-            childComponent.type !== 'Icon'
-          ) {
-            if (Object.keys(icons).includes(propsValue)) {
-              let operand = `={<${propsValue} />}`
-
-              propsContent += `${propName}${operand} `
-            }
-          } else if (propName !== 'children' && propsValue) {
-            let operand =
-              propName == 'dataSource' && paramProvider
-                ? `={${paramProvider}}`
-                : `='${propsValue}'`
-
-            if (propsValue === true || propsValue === 'true') {
-              operand = ``
-            } else if (
-              propsValue === 'false' ||
-              isBoolean(propsValue) ||
-              !isNaN(propsValue)
+            if (
+              propName.toLowerCase().includes('icon') &&
+              childComponent.type !== 'Icon'
             ) {
-              operand = `={${propsValue}}`
-            }
+              if (Object.keys(icons).includes(propsValue)) {
+                let operand = `={<${propsValue} />}`
 
-            propsContent += `${propName}${operand}`
+                propsContent += `${propName}${operand} `
+              }
+            } else if (propName !== 'children' && propsValue) {
+              let operand =
+                propName == 'dataSource' && paramProvider
+                  ? `={${paramProvider}}`
+                  : `='${propsValue}'`
+
+              if (propsValue === true || propsValue === 'true') {
+                operand = ``
+              } else if (
+                propsValue === 'false' ||
+                isBoolean(propsValue) ||
+                !isNaN(propsValue)
+              ) {
+                operand = `={${propsValue}}`
+              }
+
+              propsContent += `${propName}${operand}`
+            }
+          } else if (typeof propName === 'object') {
+            console.log(`Félicitations, c'est un bel object`, propName)
           }
         })
 
@@ -232,7 +236,6 @@ export const generateCode = async (components: IComponents) => {
   )
 
   code = `import React, {useState, useEffect} from 'react';
-  ${dataProviders.length > 0 && `import useFetch from 'use-http'`}
   import {ChakraProvider} from "@chakra-ui/react";
   ${Object.entries(groupedComponents)
     .map(([modName, components]) => {
