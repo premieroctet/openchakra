@@ -1,12 +1,12 @@
-import {TextField} from '@material-ui/core'
 import React, {createRef} from 'react'
+import styled from 'styled-components'
+import {TextField} from '@material-ui/core'
 import PropTypes from 'prop-types'
 import getCaretCoordinates from 'textarea-caret'
 import getInputSelection, {setCaretPosition} from 'get-input-selection'
-import './AutoCompleteTextField.module.css'
-let levenshtein = require('fast-levenshtein')
-const lodash=require('lodash')
-const {getWordAt} = require('../../utils/text')
+import levenshtein from 'fast-levenshtein'
+import {groupBy, sortBy} from 'lodash'
+import {getWordAt} from '../../utils/text'
 const KEY_UP = 38
 const KEY_DOWN = 40
 const KEY_RETURN = 13
@@ -133,9 +133,9 @@ class AutocompleteTextField extends React.Component {
     }
     const w=getWordAt(str, caret)
     let matching=providedOptions.filter(o => o.includes(w.word))
-    const groups=lodash.groupBy(matching, m => m.startsWith(w.word))
+    const groups = groupBy(matching, m => m.startsWith(w.word))
     // First words are the prefix ones, then others depending on levenshtein's distance
-    matching = [...lodash.sortBy(groups.true || []), ...(lodash.sortBy(groups.false || [], m => levenshtein.get(m, w.word)))]
+    matching = [...sortBy(groups.true || []), ...(sortBy(groups.false || [], m => levenshtein.get(m, w.word)))]
     if (matching.length>0) {
       return {
         trigger: '',
@@ -399,9 +399,9 @@ class AutocompleteTextField extends React.Component {
 
     return (
       <div style={{left: 0, top: 10, position: 'absolute', transform: 'translate3d(0px, 30px, 0px)', willChange: 'transform'}}>
-        <ul className="react-autocomplete-input">
+        <ListItems>
           {helperOptions}
-        </ul>
+        </ListItems>
       </div>
 
     )
@@ -453,5 +453,34 @@ class AutocompleteTextField extends React.Component {
 
 AutocompleteTextField.propTypes = propTypes
 AutocompleteTextField.defaultProps = defaultProps
+
+const ListItems = styled.ul`
+  background-clip: padding-box;
+  background-color: #fff;
+  border: 1px solid rgba(0,0,0,0.15);
+  bottom: auto;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+  display: block;
+  font-size: 14px;
+  list-style: none;
+  padding: 1px;
+  text-align: left;
+  z-index: 20000;
+
+  & > li {
+    background-color: #fff;
+    cursor: pointer;
+    padding: 10px;
+    min-width: 100px;
+    z-index: 20000;
+  }
+
+  & > li.active {
+    background-color: #337ab7;
+    color: #fff;
+  }
+
+`
+
 
 export default AutocompleteTextField
