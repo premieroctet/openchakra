@@ -1,5 +1,5 @@
 const moment = require('moment')
-const {BOOK_STATUS, TRANSACTION_SUCCEEDED, LOCATION_CLIENT}=require('../../utils/consts')
+const {BOOK_STATUS, TRANSACTION_SUCCEEDED, LOCATION_CLIENT, LOCATION_ALFRED}=require('../../utils/consts')
 const MarketplacePayment=require('../plugins/payment/marketplacePayment')
 const PlatformPayment=require('../plugins/payment/platformPayment')
 const {computeDistanceKm}=require('../../utils/functions')
@@ -49,6 +49,9 @@ const createBooking = ({customer, serviceUserId, prestations, date, cpf, locatio
         const prestation=serviceUser.prestations.find(p => p._id.toString()==key)
         return {name: prestation.prestation.label, price: prestation.price, value: count}
       })
+      const address=location==LOCATION_CLIENT ? customer.billing_address
+        : location==LOCATION_ALFRED ? serviceUser.user.billing_address
+          :null
       bookData={...bookData,
         alfred: serviceUser.user,
         service: serviceUser.service.label,
@@ -57,6 +60,7 @@ const createBooking = ({customer, serviceUserId, prestations, date, cpf, locatio
         prestations: prestas,
         cpf_link: cpf && serviceUser.cpf_link || null,
         elearning_link: serviceUser.elearning_link,
+        address: address,
       }
       const distance=computeServiceDistance({location, serviceUser, customer})
       const payment=serviceUser.customer_booking ? new PlatformPayment() : new MarketplacePayment()

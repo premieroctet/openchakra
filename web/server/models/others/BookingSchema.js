@@ -3,6 +3,8 @@ const lodash=require('lodash')
 const {
   ALL_LOCATIONS,
   BOOK_STATUS,
+  LOCATION_ALFRED,
+  LOCATION_CLIENT,
   LOCATION_ELEARNING,
 }=require('../../../utils/consts')
 const {roundCurrency}=require('../../../utils/converters')
@@ -34,6 +36,7 @@ const BookingSchema = new Schema({
   },
   address: {
     type: AddressSchema,
+    required: function() { return [LOCATION_CLIENT, LOCATION_ALFRED].includes(this.location) },
   },
   location: {
     type: String,
