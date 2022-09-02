@@ -66,38 +66,45 @@ const buildBlock = ({
       propsNames
         .filter(p => !HIDDEN_ATTRIBUTES.includes(p))
         .forEach((propName: string) => {
-          if (typeof propName === 'string') {
-            const propsValue = childComponent.props[propName]
+          const propsValue = childComponent.props[propName]
+          const propsValueAsObject = typeof propsValue === 'object'
 
-            if (
-              propName.toLowerCase().includes('icon') &&
-              childComponent.type !== 'Icon'
-            ) {
-              if (Object.keys(icons).includes(propsValue)) {
-                let operand = `={<${propsValue} />}`
+          if (propsValueAsObject) {
+            const gatheredProperties = Object.entries(propsValue)
+              .map(([prop, value]) => {
+                console.log('valuesProp', value)
+                return `${prop}: '${value}'`
+              })
+              .join(', ')
 
-                propsContent += `${propName}${operand} `
-              }
-            } else if (propName !== 'children' && propsValue) {
-              let operand =
-                propName == 'dataSource' && paramProvider
-                  ? `={${paramProvider}}`
-                  : `='${propsValue}'`
+            propsContent += `${propName}={{${gatheredProperties}}}`
+            console.log(propsContent)
+          } else if (
+            propName.toLowerCase().includes('icon') &&
+            childComponent.type !== 'Icon'
+          ) {
+            if (Object.keys(icons).includes(propsValue)) {
+              let operand = `={<${propsValue} />}`
 
-              if (propsValue === true || propsValue === 'true') {
-                operand = ``
-              } else if (
-                propsValue === 'false' ||
-                isBoolean(propsValue) ||
-                !isNaN(propsValue)
-              ) {
-                operand = `={${propsValue}}`
-              }
-
-              propsContent += `${propName}${operand}`
+              propsContent += `${propName}${operand} `
             }
-          } else if (typeof propName === 'object') {
-            console.log(`Félicitations, c'est un bel object`, propName)
+          } else if (propName !== 'children' && propsValue) {
+            let operand =
+              propName == 'dataSource' && paramProvider
+                ? `={${paramProvider}}`
+                : `='${propsValue}'`
+
+            if (propsValue === true || propsValue === 'true') {
+              operand = ``
+            } else if (
+              propsValue === 'false' ||
+              isBoolean(propsValue) ||
+              !isNaN(propsValue)
+            ) {
+              operand = `={${propsValue}}`
+            }
+
+            propsContent += `${propName}${operand}`
           }
         })
 

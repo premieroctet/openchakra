@@ -42,6 +42,8 @@ const CustomPropsPanel = () => {
     propsName => !activeProps.includes(propsName),
   )
 
+  console.log(props)
+
   return (
     <>
       <form
@@ -75,43 +77,53 @@ const CustomPropsPanel = () => {
         </InputGroup>
       </form>
 
-      {customProps.map((propsName, i) => (
-        <Flex
-          key={propsName}
-          alignItems="center"
-          px={2}
-          bg={i % 2 === 0 ? 'white' : 'gray.50'}
-          fontSize="xs"
-          justifyContent="space-between"
-        >
-          <SimpleGrid width="100%" columns={2} spacing={1}>
-            <Box fontWeight="bold">{propsName}</Box>
-            <Box>{props[propsName]}</Box>
-          </SimpleGrid>
+      {customProps.map((propsName, i) => {
+        let displayProps = props[propsName]
+        const propObject = typeof props[propsName] === 'object'
 
-          <ButtonGroup display="flex" size="xs" isAttached>
-            <IconButton
-              onClick={() => {
-                setQuickProps(`${propsName}=`)
-                if (inputRef.current) {
-                  inputRef.current.focus()
-                }
-              }}
-              variant="ghost"
-              size="xs"
-              aria-label="edit"
-              icon={<EditIcon path="" />}
-            />
-            <IconButton
-              onClick={() => onDelete(propsName)}
-              variant="ghost"
-              size="xs"
-              aria-label="delete"
-              icon={<SmallCloseIcon path="" />}
-            />
-          </ButtonGroup>
-        </Flex>
-      ))}
+        if (propObject) {
+          displayProps = JSON.stringify(displayProps)
+          console.log(displayProps)
+        }
+
+        return (
+          <Flex
+            key={propsName}
+            alignItems="center"
+            px={2}
+            bg={i % 2 === 0 ? 'white' : 'gray.50'}
+            fontSize="xs"
+            justifyContent="space-between"
+          >
+            <SimpleGrid width="100%" columns={2} spacing={1}>
+              <Box fontWeight="bold">{propsName}</Box>
+              <Box>{displayProps}</Box>
+            </SimpleGrid>
+
+            <ButtonGroup display="flex" size="xs" isAttached>
+              <IconButton
+                onClick={() => {
+                  setQuickProps(`${propsName}=`)
+                  if (inputRef.current) {
+                    inputRef.current.focus()
+                  }
+                }}
+                variant="ghost"
+                size="xs"
+                aria-label="edit"
+                icon={<EditIcon path="" />}
+              />
+              <IconButton
+                onClick={() => onDelete(propsName)}
+                variant="ghost"
+                size="xs"
+                aria-label="delete"
+                icon={<SmallCloseIcon path="" />}
+              />
+            </ButtonGroup>
+          </Flex>
+        )
+      })}
     </>
   )
 }
