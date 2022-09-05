@@ -67,7 +67,6 @@ export default class AppErrorBoundary extends Component<
         </Flex>
       )
     }
-
     return this.props.children
   }
 }

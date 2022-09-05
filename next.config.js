@@ -4,4 +4,15 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.BUNDLE_VISUALIZE == 1,
 })
 
-module.exports = withPlugins([[withBundleAnalyzer, {}], [withTM]])
+module.exports = async phase => {
+  /** @type {import('next').NextConfig} */
+  const nextConfig = {
+    reactStrictMode: true,
+    swcMinify: true,
+  }
+
+  const defaultConfig = {}
+  return withPlugins([[withBundleAnalyzer], [withTM]], nextConfig)(phase, {
+    defaultConfig,
+  })
+}

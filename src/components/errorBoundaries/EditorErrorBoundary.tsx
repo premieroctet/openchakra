@@ -71,7 +71,6 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
         </Flex>
       )
     }
-
     return this.props.children
   }
 }
