@@ -1,6 +1,9 @@
 import { getParameters } from 'codesandbox/lib/api/define'
 
-export const buildParameters = (code: string): string => {
+export const buildParameters = (
+  code: string,
+  isTypeScript: boolean,
+): string => {
   return getParameters({
     files: {
       'public/index.html': {
@@ -37,7 +40,7 @@ ReactDOM.render(<App />, rootElement);
 `,
         isBinary: false,
       },
-      'App.js': {
+      [isTypeScript ? 'App.tsx' : 'App.jsx']: {
         content: code,
         isBinary: false,
       },
