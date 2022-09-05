@@ -29,7 +29,7 @@ export const buildParameters = (
 </html>`,
         isBinary: false,
       },
-      'index.js': {
+      [isTypeScript ? 'index.tsx' : 'index.js']: {
         content: `import React from "react";
 import ReactDOM from "react-dom";
 
@@ -50,7 +50,7 @@ ReactDOM.render(<App />, rootElement);
   "version": "1.0.0",
   "description": "",
   "keywords": [],
-  "main": "src/index.js",
+  "main": "src/${isTypeScript ? 'index.tsx' : 'index.js'}",
   "dependencies": {
     "@chakra-ui/react": "^1.5.0",
     "@chakra-ui/icons": "^1.0.9",
