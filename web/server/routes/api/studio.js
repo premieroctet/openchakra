@@ -15,7 +15,7 @@ router.get('/models', (req, res) => {
     })
   })
   // console.log(modelNames.map(m => mongoose.model(m).schema.paths))
-  res.json(result)
+  return res.json(result)
 })
 
 module.exports=router
