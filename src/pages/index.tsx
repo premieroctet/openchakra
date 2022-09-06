@@ -24,7 +24,6 @@ const App = () => {
       />
       <Metadata />
       <Header />
-      {/* @ts-ignore */}
       <DndProvider backend={HTML5Backend}>
         <Flex h="calc(100vh - 3rem)">
           <Sidebar />
