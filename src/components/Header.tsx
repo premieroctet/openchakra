@@ -24,6 +24,7 @@ import {
 import { ExternalLinkIcon, SmallCloseIcon, CheckIcon } from '@chakra-ui/icons'
 import { DiGithubBadge } from 'react-icons/di'
 import { AiFillThunderbolt } from 'react-icons/ai'
+import { SiTypescript } from 'react-icons/si'
 import { buildParameters } from '~utils/codesandbox'
 import { generateCode } from '~utils/code'
 import useDispatch from '~hooks/useDispatch'
@@ -31,39 +32,83 @@ import { useSelector } from 'react-redux'
 import { getComponents } from '~core/selectors/components'
 import { getShowLayout, getShowCode } from '~core/selectors/app'
 import HeaderMenu from '~components/headerMenu/HeaderMenu'
+import { FaReact } from 'react-icons/fa'
 
 const CodeSandboxButton = () => {
   const components = useSelector(getComponents)
   const [isLoading, setIsLoading] = useState(false)
 
-  return (
-    <Tooltip
-      zIndex={100}
-      hasArrow
-      bg="yellow.100"
-      aria-label="Builder mode help"
-      label="Export in CodeSandbox"
-    >
-      <Button
-        onClick={async () => {
-          setIsLoading(true)
-          const code = await generateCode(components)
-          setIsLoading(false)
-          const parameters = buildParameters(code)
+  const exportToCodeSandbox = async (isTypeScript: boolean) => {
+    setIsLoading(true)
+    const code = await generateCode(components)
+    setIsLoading(false)
+    const parameters = buildParameters(code, isTypeScript)
 
-          window.open(
-            `https://codesandbox.io/api/v1/sandboxes/define?parameters=${parameters}`,
-            '_blank',
-          )
-        }}
-        isLoading={isLoading}
-        rightIcon={<ExternalLinkIcon path="" />}
-        variant="ghost"
-        size="xs"
-      >
-        Export code
-      </Button>
-    </Tooltip>
+    window.open(
+      `https://codesandbox.io/api/v1/sandboxes/define?parameters=${parameters}`,
+      '_blank',
+    )
+  }
+
+  return (
+    <Popover>
+      {({ onClose }) => (
+        <>
+          <PopoverTrigger>
+            <Button
+              isLoading={isLoading}
+              rightIcon={<ExternalLinkIcon path="" />}
+              variant="ghost"
+              size="xs"
+            >
+              Export code
+            </Button>
+          </PopoverTrigger>
+
+          <LightMode>
+            <PopoverContent zIndex={100} bg="white">
+              <PopoverArrow />
+              <PopoverCloseButton />
+              <PopoverHeader>Export format</PopoverHeader>
+              <PopoverBody fontSize="sm">
+                Export the code in CodeSandbox in which format ?
+              </PopoverBody>
+              <PopoverFooter display="flex" justifyContent="flex-end">
+                <Button
+                  size="sm"
+                  mr={2}
+                  variant="ghost"
+                  colorScheme="orange"
+                  rightIcon={<FaReact />}
+                  onClick={async () => {
+                    await exportToCodeSandbox(false)
+                    if (onClose) {
+                      onClose()
+                    }
+                  }}
+                >
+                  JSX
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  colorScheme="blue"
+                  rightIcon={<SiTypescript />}
+                  onClick={async () => {
+                    await exportToCodeSandbox(true)
+                    if (onClose) {
+                      onClose()
+                    }
+                  }}
+                >
+                  TSX
+                </Button>
+              </PopoverFooter>
+            </PopoverContent>
+          </LightMode>
+        </>
+      )}
+    </Popover>
   )
 }
 
