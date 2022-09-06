@@ -60,7 +60,6 @@ import {
   ListProps,
 } from '@chakra-ui/react'
 
-import { ChevronDownIcon } from '@chakra-ui/icons'
 import iconsList from '~iconsList'
 
 type PropsWithForm<T> = T & { form?: T }
