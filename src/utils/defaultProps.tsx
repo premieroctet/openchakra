@@ -71,7 +71,7 @@ type PropsWithForm<T> = T & {
 }
 
 interface DynamicTextProps extends TextProps {
-  attribte?: string,
+  attribte?: string
 }
 
 type PreviewDefaultProps = {
@@ -218,7 +218,7 @@ let DEFAULT_PROPS: PreviewDefaultProps = {
     children: 'Error message',
   },
   Grid: {
-    templateColumns: 'repeat(5, 1fr)',
+    templateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
     gap: 6,
     form: {
       display: 'grid',

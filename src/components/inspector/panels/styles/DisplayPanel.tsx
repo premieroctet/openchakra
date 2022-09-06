@@ -4,6 +4,7 @@ import FormControl from '~components/inspector/controls/FormControl'
 import { ComboboxOption } from '@reach/combobox'
 import InputSuggestion from '~components/inspector/inputs/InputSuggestion'
 import { useForm } from '~hooks/useForm'
+import uniq from 'lodash/uniq'
 import usePropsSelector from '~hooks/usePropsSelector'
 import FlexPanel from './FlexPanel'
 
@@ -14,32 +15,29 @@ function responsiveOptions(data: object) {
 const DisplayPanel = () => {
   const { setValueFromEvent, setValue } = useForm()
   const display = usePropsSelector('display')
-
-  const theme = useTheme()
-
-  const availableBreakpoints = theme.breakpoints
-  const [breakpointToAdd, setBreakpointToAdd] = useState('base')
-
   const displayString = typeof display === 'string'
+  const theme = useTheme()
+  const initialBreakpoint: string = 'base'
+  const [customResponsiveProps, setCustomResponsiveProps] = useState(
+    displayString ? { [initialBreakpoint]: display } : display,
+  )
+  const themeBreakpoints: { string: string } = theme.breakpoints
+  const [settledBreakpoints, setSettledBreakpoints] = useState(
+    !displayString ? Object.keys(display) : [initialBreakpoint],
+  )
+  const availableBreakpoints = Object.keys(themeBreakpoints)
+    .filter(bkpt => !Object.keys(customResponsiveProps).includes(bkpt))
+    .filter(bkpt => !settledBreakpoints.includes(bkpt))
+  const [breakpointToAdd, setBreakpointToAdd] = useState(
+    () => availableBreakpoints.filter(bkpt => bkpt !== initialBreakpoint)[0],
+  )
+
+  // console.log('breakpointToAdd', breakpointToAdd, availableBreakpoints)
+
   const valueToDisplay =
     typeof display === 'string'
       ? responsiveOptions({ base: display })
       : responsiveOptions(display)
-  const [settledBreakpoints, setSettledBreakpoints] = useState(
-    !displayString ? JSON.parse(valueToDisplay) : new Set(),
-  )
-
-  Array.from(settledBreakpoints).map(e => console.log('ahh', e))
-
-  console.log('Object.keys(display)', Object.keys(display), display)
-
-  console.log('display', display, displayString, valueToDisplay)
-  console.log('settledBreakpoints', settledBreakpoints)
-  /**
-   * On parse la valeur display s'il y en a
-   * Si c'est une chaine non vide, passer en valeur de base,
-   * Si c'est un object, parse de l'objet, et pour chaque breakpoint, afficher un Select associé
-   */
 
   const AddABreakpoint = () => {
     return (
@@ -52,7 +50,7 @@ const DisplayPanel = () => {
             id="breakpoint"
             onChange={e => setBreakpointToAdd(e.target.value)}
           >
-            {Object.keys(availableBreakpoints).map(bkpt => (
+            {availableBreakpoints.map(bkpt => (
               <option key={bkpt} value={bkpt}>
                 {bkpt}
               </option>
@@ -66,40 +64,38 @@ const DisplayPanel = () => {
     )
   }
 
-  const breakpointsToDisplay = Object.entries(availableBreakpoints)
-    .sort((a, b) => {
-      const [bka, msa] = a
-      const [bkb, msb] = b
+  // const breakpointsToDisplay = Object.entries(themeBreakpoints)
+  //   .sort((a, b) => {
+  //     const [bka, msa] = a
+  //     const [bkb, msb] = b
 
-      if (parseInt(msa) < parseInt(msb)) {
-        return -1
-      }
-      return 1
-    })
-    .map(([bk, val]) => bk)
+  //     if (parseInt(msa) < parseInt(msb)) {
+  //       return -1
+  //     }
+  //     return 1
+  //   })
+  //   .map(([bk, val]) => bk)
 
-  const handleBreakpoints = (e: Event) => {
-    console.log('e.target.name', e?.target?.name)
-
+  const handleBreakpoints = e => {
     const [breakpoint] = e?.target?.name.split('-')
-    console.log('breakpoint', breakpoint)
     const { value } = e.target
 
-    const data = display
-    console.log('data', data)
-
-    data[breakpoint] = value
-
-    setValue('display', data)
+    setCustomResponsiveProps({ ...customResponsiveProps, [breakpoint]: value })
+    setValue('display', customResponsiveProps)
   }
 
   const addBreakpoint = () => {
-    setSettledBreakpoints(new Set([...settledBreakpoints, breakpointToAdd]))
+    setSettledBreakpoints(uniq([...settledBreakpoints, breakpointToAdd]))
+    setBreakpointToAdd(
+      availableBreakpoints.filter(
+        bkpt => bkpt !== initialBreakpoint && bkpt !== breakpointToAdd,
+      )[0],
+    )
   }
 
   /* Au départ, pas de valeur, pas de breakpoint */
 
-  if (displayString && settledBreakpoints.length) {
+  if (displayString && !settledBreakpoints.length) {
     return (
       <>
         <FormControl label="Display">
@@ -109,6 +105,7 @@ const DisplayPanel = () => {
             onChange={setValueFromEvent}
             name="display"
           >
+            <option></option>
             <option>block</option>
             <option>flex</option>
             <option>inline</option>
@@ -124,36 +121,30 @@ const DisplayPanel = () => {
 
   return (
     <>
-      {Array.from(settledBreakpoints).map((breakpoint, i) => (
-        <>
-          {' '}
-          {breakpoint}
-          <FormControl key={i} label="Display">
-            <Select
-              size="sm"
-              value={valueToDisplay || ''}
-              onChange={handleBreakpoints}
-              name={`${breakpoint}-display`}
-            >
-              <option value={JSON.stringify({ breakpoint: 'block' })}>
-                block
-              </option>
-              <option value={JSON.stringify({ breakpoint: 'flex' })}>
-                flex
-              </option>
-              <option value={JSON.stringify({ breakpoint: 'inline' })}>
-                inline
-              </option>
-              <option value={JSON.stringify({ breakpoint: 'grid' })}>
-                grid
-              </option>
-              <option value={JSON.stringify({ breakpoint: 'inline-block' })}>
-                inline-block
-              </option>
-            </Select>
-          </FormControl>
-        </>
-      ))}
+      {settledBreakpoints.map((breakpoint: string, i: number) => {
+        // console.log('alors', customResponsiveProps?.[breakpoint], breakpoint)
+
+        return (
+          <div key={i}>
+            {breakpoint}
+            <FormControl label="Display">
+              <Select
+                size="sm"
+                value={customResponsiveProps?.[breakpoint] || ''}
+                onChange={e => handleBreakpoints(e)}
+                name={`${breakpoint}-display`}
+              >
+                <option value={''}></option>
+                <option value={'block'}>block</option>
+                <option value={'flex'}>flex</option>
+                <option value={'inline'}>inline</option>
+                <option value={'grid'}>grid</option>
+                <option value={'inline-block'}>inline-block</option>
+              </Select>
+            </FormControl>
+          </div>
+        )
+      })}
 
       <AddABreakpoint />
 

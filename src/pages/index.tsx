@@ -38,7 +38,7 @@ const App = () => {
 
           <Box
             maxH="calc(100vh - 3rem)"
-            flex="0 0 15rem"
+            flex="0 0 20rem"
             bg="#f7fafc"
             overflowY="auto"
             overflowX="visible"
