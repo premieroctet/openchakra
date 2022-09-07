@@ -98,7 +98,6 @@ const HuesPickerControl = (props: HuesPickerPropType) => {
               justify="center"
               borderRadius="full"
               fontSize="xs"
-              pt={1.5}
             >
               {hue}
             </Flex>
