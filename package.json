@@ -18,7 +18,7 @@
     "codesandbox": "^2.1.11",
     "coloreact": "^0.3.1",
     "copy-to-clipboard": "^3.2.1",
-    "framer-motion": "4.1.17",
+    "framer-motion": "7.3.0",
     "immer": "^9.0.15",
     "lodash": "^4.17.15",
     "lodash-es": "^4.17.15",
