@@ -6,6 +6,7 @@ import {
   SliderThumb,
   Box,
   Slider,
+  Flex,
 } from '@chakra-ui/react'
 
 type HuesPickerPropType = {
@@ -19,7 +20,20 @@ type HuesPickerPropType = {
 }
 
 const HuesPickerControl = (props: HuesPickerPropType) => {
-  const [hue, setHue] = useState(500)
+  const [hue, setHue] = useState<number>(500)
+  const [key, setKey] = useState(0)
+
+  React.useEffect(() => {
+    function handleMouseUp() {
+      setKey(Math.random())
+    }
+
+    document.addEventListener('mouseup', handleMouseUp)
+
+    return () => {
+      document.removeEventListener('mouseup', handleMouseUp)
+    }
+  })
 
   return (
     <>
@@ -63,29 +77,33 @@ const HuesPickerControl = (props: HuesPickerPropType) => {
           ),
         )}
       </Grid>
-
       {props.enableHues && (
-        <>
-          <Slider
-            onChange={value => {
-              value = value === 0 ? 50 : value
-              setHue(value)
-            }}
-            min={0}
-            max={900}
-            step={100}
-            value={hue}
-          >
-            <SliderTrack>
-              <SliderFilledTrack />
-            </SliderTrack>
-            <SliderThumb boxSize={8}>
-              <Box borderRadius="full" fontSize="xs">
-                {hue}
-              </Box>
-            </SliderThumb>
-          </Slider>
-        </>
+        <Slider
+          onChange={value => {
+            value = value === 0 ? 50 : value
+            setHue(value)
+          }}
+          min={0}
+          max={900}
+          step={100}
+          value={hue}
+          key={key}
+        >
+          <SliderTrack>
+            <SliderFilledTrack />
+          </SliderTrack>
+          <SliderThumb boxSize={8}>
+            <Flex
+              align="center"
+              justify="center"
+              borderRadius="full"
+              fontSize="xs"
+              pt={1.5}
+            >
+              {hue}
+            </Flex>
+          </SliderThumb>
+        </Slider>
       )}
     </>
   )
