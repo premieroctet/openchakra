@@ -7,8 +7,9 @@ import { useSelector } from 'react-redux'
 import useDispatch from '~hooks/useDispatch'
 import useFetch from 'use-http'
 import { getComponents } from '~core/selectors/components'
-import { getShowLayout, getShowCode } from '~core/selectors/app'
+import { getShowLayout, getShowCode, getDevice } from '~core/selectors/app'
 import ComponentPreview from '~components/editor/ComponentPreview'
+import devices from '~config/devices'
 import Xarrow from 'react-xarrows'
 import moment from 'moment'
 
@@ -22,6 +23,7 @@ export const gridStyles = {
 
 const Editor: React.FC = () => {
   const showCode = useSelector(getShowCode)
+  const device = useSelector(getDevice)
   const showLayout = useSelector(getShowLayout)
   const components = useSelector(getComponents)
   const dispatch = useDispatch()
@@ -46,6 +48,10 @@ const Editor: React.FC = () => {
     ...rootProps,
   }
 
+  const adaptDevice = (device: string) => {
+    return devices[device]
+  }
+
   useEffect(() => {
     get('/myAlfred/api/studio/models')
       .then(res => {
@@ -60,9 +66,8 @@ const Editor: React.FC = () => {
     <Box
       p={2}
       {...editorBackgroundProps}
-      height="100%"
       minWidth="10rem"
-      width="100%"
+      margin="0 auto"
       display={isEmpty ? 'flex' : 'block'}
       justifyContent="center"
       alignItems="center"
@@ -71,6 +76,7 @@ const Editor: React.FC = () => {
       position="relative"
       flexDirection="column"
       onClick={onSelectBackground}
+      {...adaptDevice(device)}
     >
       {isEmpty && (
         <Text maxWidth="md" color="gray.400" fontSize="xl" textAlign="center">

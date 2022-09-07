@@ -2,6 +2,8 @@ import { RootState } from '~core/store'
 
 export const getShowLayout = (state: RootState) => state.app.showLayout
 
+export const getDevice = (state: RootState) => state.app.device
+
 export const getShowCode = (state: RootState) => state.app.showCode
 
 export const getFocusedComponent = (id: IComponent['id']) => (

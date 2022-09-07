@@ -6,13 +6,42 @@ import {
   InputRightElement,
   DarkMode,
   IconButton,
+  List,
+  ListItem,
 } from '@chakra-ui/react'
 import { CloseIcon, SearchIcon } from '@chakra-ui/icons'
 import DragItem from './DragItem'
 import { menuItems, MenuItem } from '~componentsList'
 
+type categoryItems = {
+  [name: string]: string[]
+}
+
 const Menu = () => {
   const [searchTerm, setSearchTerm] = useState('')
+
+  const groupItems: categoryItems = Object.entries(menuItems).reduce(
+    (acc: categoryItems, items) => {
+      const [elemName, props] = items
+
+      if (props?.group) {
+        if (acc[props.group]) {
+          acc[props.group].push(elemName)
+        } else {
+          acc[props.group] = [elemName]
+        }
+      } else {
+        if (acc['divers']) {
+          acc['divers'].push(elemName)
+        } else {
+          acc['divers'] = [elemName]
+        }
+      }
+
+      return acc
+    },
+    {},
+  )
 
   return (
     <DarkMode>
@@ -57,6 +86,17 @@ const Menu = () => {
             )}
           </InputRightElement>
         </InputGroup>
+
+        {Object.entries(groupItems).map(([catego, items]) => (
+          <>
+            <Box>{catego}</Box>
+            <List>
+              {items.map(T => (
+                <ListItem>{T}</ListItem>
+              ))}
+            </List>
+          </>
+        ))}
 
         {(Object.keys(menuItems).sort() as ComponentType[])
           .filter(c => c.toLowerCase().includes(searchTerm.toLowerCase()))
