@@ -52,7 +52,7 @@ ReactDOM.render(<App />, rootElement);
   "keywords": [],
   "main": "src/${isTypeScript ? 'index.tsx' : 'index.js'}",
   "dependencies": {
-  "@chakra-ui/icons": "^2.0.9",
+    "@chakra-ui/icons": "^2.0.9",
     "@chakra-ui/react": "^2.3.2",
     "@chakra-ui/theme": "^2.1.11",
     "@emotion/react": "^11.10.4",
