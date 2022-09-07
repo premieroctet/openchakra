@@ -1,0 +1,9 @@
+on: [pull_request]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Check dependencies and build
+        run: yarn && yarn build
