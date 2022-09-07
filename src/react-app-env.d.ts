@@ -38,6 +38,7 @@ type ComponentType =
   | 'FormErrorMessage'
   | 'Grid'
   | 'Heading'
+  | 'Highlight'
   | 'Icon'
   | 'IconButton'
   | 'Image'
