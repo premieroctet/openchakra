@@ -29,7 +29,9 @@ let menuItems: MenuItems = {
       AlertTitle: {},
     },
   },
-  AspectRatio: {},
+  AspectRatio: {
+    group: 'positionnement',
+  },
   AvatarGroup: {
     rootParentType: 'Avatar',
   },
@@ -38,7 +40,9 @@ let menuItems: MenuItems = {
     rootParentType: 'Avatar',
   },
   Badge: {},
-  Box: {},
+  Box: {
+    group: 'positionnement',
+  },
   Breadcrumb: {
     children: {
       BreadcrumbItem: {},
@@ -46,8 +50,12 @@ let menuItems: MenuItems = {
     },
   },
   Button: {},
-  Center: {},
-  Container: {},
+  Center: {
+    group: 'positionnement',
+  },
+  Container: {
+    group: 'positionnement',
+  },
   Checkbox: {
     group: 'formulaire',
   },
@@ -115,7 +123,9 @@ let menuItems: MenuItems = {
   Select: {
     group: 'formulaire',
   },
-  Stack: {},
+  Stack: {
+    group: 'positionnement',
+  },
   Switch: {
     group: 'formulaire',
   },
