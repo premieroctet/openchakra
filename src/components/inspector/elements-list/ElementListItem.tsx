@@ -59,4 +59,6 @@ const ElementListItem = forwardRef(
   },
 )
 
+ElementListItem.displayName = 'ElementListItem'
+
 export default ElementListItem

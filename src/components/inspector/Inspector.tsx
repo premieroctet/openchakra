@@ -72,6 +72,8 @@ const CodeActionButton = memo(() => {
   )
 })
 
+CodeActionButton.displayName = 'CodeActionButton'
+
 const Inspector = () => {
   const dispatch = useDispatch()
   const component = useSelector(getSelectedComponent)

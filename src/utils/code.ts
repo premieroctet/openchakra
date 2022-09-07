@@ -162,7 +162,7 @@ const getIconsImports = (components: IComponents) => {
 export const generateCode = async (components: IComponents) => {
   let code = buildBlock({ component: components.root, components })
   let componentsCodes = buildComponents(components)
-  const iconImports = [...new Set(getIconsImports(components))]
+  const iconImports = Array.from(new Set(getIconsImports(components)))
 
   const imports = [
     ...new Set(
