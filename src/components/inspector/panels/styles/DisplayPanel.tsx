@@ -28,9 +28,6 @@ const DisplayPanel = () => {
   const availableBreakpoints = Object.keys(themeBreakpoints)
     .filter(bkpt => !Object.keys(customResponsiveProps).includes(bkpt))
     .filter(bkpt => !settledBreakpoints.includes(bkpt))
-  const [breakpointToAdd, setBreakpointToAdd] = useState(
-    () => availableBreakpoints.filter(bkpt => bkpt !== initialBreakpoint)[0],
-  )
 
   // console.log('breakpointToAdd', breakpointToAdd, availableBreakpoints)
 
@@ -41,15 +38,9 @@ const DisplayPanel = () => {
 
   const AddABreakpoint = () => {
     return (
-      <Flex>
+      <form onSubmit={addBreakpoint}>
         <FormControl label="breakpoint" htmlFor="breakpoint">
-          <Select
-            size="sm"
-            value={breakpointToAdd || ''}
-            name="addBreakpoint"
-            id="breakpoint"
-            onChange={e => setBreakpointToAdd(e.target.value)}
-          >
+          <Select size="sm" name="addBreakpoint" id="breakpoint">
             {availableBreakpoints.map(bkpt => (
               <option key={bkpt} value={bkpt}>
                 {bkpt}
@@ -60,23 +51,11 @@ const DisplayPanel = () => {
         <Button size="xs" onClick={addBreakpoint}>
           Add breakpoint
         </Button>
-      </Flex>
+      </form>
     )
   }
 
-  // const breakpointsToDisplay = Object.entries(themeBreakpoints)
-  //   .sort((a, b) => {
-  //     const [bka, msa] = a
-  //     const [bkb, msb] = b
-
-  //     if (parseInt(msa) < parseInt(msb)) {
-  //       return -1
-  //     }
-  //     return 1
-  //   })
-  //   .map(([bk, val]) => bk)
-
-  const handleBreakpoints = e => {
+  const handleBreakpoints = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const [breakpoint] = e?.target?.name.split('-')
     const { value } = e.target
 
@@ -84,17 +63,15 @@ const DisplayPanel = () => {
     setValue('display', customResponsiveProps)
   }
 
-  const addBreakpoint = () => {
-    setSettledBreakpoints(uniq([...settledBreakpoints, breakpointToAdd]))
-    setBreakpointToAdd(
-      availableBreakpoints.filter(
-        bkpt => bkpt !== initialBreakpoint && bkpt !== breakpointToAdd,
-      )[0],
+  const addBreakpoint = (e: {
+    target: { form: { [x: string]: { value: string } } }
+  }) => {
+    setSettledBreakpoints(
+      uniq([...settledBreakpoints, e.target.form['addBreakpoint'].value]),
     )
   }
 
-  /* Au départ, pas de valeur, pas de breakpoint */
-
+  /* De base pas de breakpoint */
   if (displayString && !settledBreakpoints.length) {
     return (
       <>
@@ -147,16 +124,6 @@ const DisplayPanel = () => {
       })}
 
       <AddABreakpoint />
-
-      {/*<InputSuggestion
-        value={fontSize}
-        handleChange={setValueFromEvent}
-        name="fontSize"
-      > */}
-      {/* {Object.keys(theme.breakpoints).map(option => (
-          <ComboboxOption key={option} value={option} />
-        ))} */}
-      {/* </InputSuggestion> */}
 
       {display === 'flex' && <FlexPanel />}
     </>
