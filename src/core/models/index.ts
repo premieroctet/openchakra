@@ -1,4 +1,6 @@
-import app from "./app";
-import components from "./components";
+import app from './app'
+import components from './components'
 
-export default { app, components };
+const index = { app, components }
+
+export default index

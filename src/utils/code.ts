@@ -1,7 +1,6 @@
 import isBoolean from 'lodash/isBoolean'
 import filter from 'lodash/filter'
 import icons from '~iconsList'
-import { propNames } from '@chakra-ui/react'
 
 const capitalize = (value: string) => {
   return value.charAt(0).toUpperCase() + value.slice(1)
@@ -163,7 +162,7 @@ const getIconsImports = (components: IComponents) => {
 export const generateCode = async (components: IComponents) => {
   let code = buildBlock({ component: components.root, components })
   let componentsCodes = buildComponents(components)
-  const iconImports = [...new Set(getIconsImports(components))]
+  const iconImports = Array.from(new Set(getIconsImports(components)))
 
   const imports = [
     ...new Set(

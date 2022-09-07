@@ -68,11 +68,9 @@ const PaddingPanel = ({ type }: PaddingPanelPropsType) => {
 
         <SimpleGrid columns={2} spacing={1}>
           <InputGroup size="sm">
-            <InputLeftElement
-              children={
-                <ArrowBackIcon path="" fontSize="md" color="gray.300" />
-              }
-            />
+            <InputLeftElement>
+              <ArrowBackIcon path="" fontSize="md" color="gray.300" />
+            </InputLeftElement>
             <Input
               placeholder="left"
               size="sm"
@@ -85,11 +83,9 @@ const PaddingPanel = ({ type }: PaddingPanelPropsType) => {
           </InputGroup>
 
           <InputGroup size="sm">
-            <InputLeftElement
-              children={
-                <ArrowForwardIcon path="" fontSize="md" color="gray.300" />
-              }
-            />
+            <InputLeftElement>
+              <ArrowForwardIcon path="" fontSize="md" color="gray.300" />
+            </InputLeftElement>
             <Input
               placeholder="right"
               size="sm"
@@ -102,9 +98,9 @@ const PaddingPanel = ({ type }: PaddingPanelPropsType) => {
           </InputGroup>
 
           <InputGroup size="sm">
-            <InputLeftElement
-              children={<ArrowUpIcon path="" fontSize="md" color="gray.300" />}
-            />
+            <InputLeftElement>
+              <ArrowUpIcon path="" fontSize="md" color="gray.300" />
+            </InputLeftElement>
             <Input
               placeholder="top"
               size="sm"
@@ -117,11 +113,9 @@ const PaddingPanel = ({ type }: PaddingPanelPropsType) => {
           </InputGroup>
 
           <InputGroup size="sm">
-            <InputLeftElement
-              children={
-                <ChevronDownIcon path="" fontSize="md" color="gray.300" />
-              }
-            />
+            <InputLeftElement>
+              <ChevronDownIcon path="" fontSize="md" color="gray.300" />
+            </InputLeftElement>
             <Input
               placeholder="bottom"
               size="sm"

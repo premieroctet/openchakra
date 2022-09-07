@@ -30,6 +30,8 @@ const MenuItemLink: React.FC<MenuItemLinkProps> = React.forwardRef(
   },
 )
 
+MenuItemLink.displayName = 'MenuItemLink'
+
 // @ts-ignore
 const CustomMenuButton: React.FC<
   MenuButtonProps | ButtonProps
@@ -37,6 +39,8 @@ const CustomMenuButton: React.FC<
   // @ts-ignore
   return <MenuButton as={Button} {...props} />
 })
+
+CustomMenuButton.displayName = 'CustomMenuButton'
 
 const ExportMenuItem = dynamic(() => import('./ExportMenuItem'), { ssr: false })
 const ImportMenuItem = dynamic(() => import('./ImportMenuItem'), { ssr: false })
@@ -55,12 +59,6 @@ const HeaderMenu = () => {
       <Portal>
         <LightMode>
           <MenuList bg="white" zIndex={999}>
-            {process.env.NEXT_PUBLIC_IS_V1 && (
-              <MenuItemLink isExternal href="https://v0.openchakra.app">
-                <Box mr={2} as={GoArchive} />
-                Chakra v0 Editor
-              </MenuItemLink>
-            )}
             <ExportMenuItem />
             <ImportMenuItem />
 
@@ -76,6 +74,16 @@ const HeaderMenu = () => {
             <MenuItemLink href="https://github.com/premieroctet/openchakra/issues">
               <Box mr={2} as={FaBomb} />
               Report issue
+            </MenuItemLink>
+
+            <MenuDivider />
+            <MenuItemLink isExternal href="https://v0.openchakra.app">
+              <Box mr={2} as={GoArchive} />
+              Chakra v0 Editor
+            </MenuItemLink>
+            <MenuItemLink isExternal href="https://v1.openchakra.app">
+              <Box mr={2} as={GoArchive} />
+              Chakra v1 Editor
             </MenuItemLink>
           </MenuList>
         </LightMode>

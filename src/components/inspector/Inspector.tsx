@@ -72,6 +72,8 @@ const CodeActionButton = memo(() => {
   )
 })
 
+CodeActionButton.displayName = 'CodeActionButton'
+
 const Inspector = () => {
   const dispatch = useDispatch()
   const component = useSelector(getSelectedComponent)
@@ -205,7 +207,7 @@ const Inspector = () => {
                     size="md"
                     autoFocus
                     variant="outline"
-                    isFullWidth
+                    width="100%"
                     focusBorderColor="blue.500"
                     errorBorderColor="red.500"
                     value={componentName}

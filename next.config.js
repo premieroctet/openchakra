@@ -1,7 +1,8 @@
-const withPlugins = require('next-compose-plugins')
-const withTM = require('next-transpile-modules')(['browser-nativefs'])
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.BUNDLE_VISUALIZE == 1,
-})
+/**
+ * @type {import('next').NextConfig}
+ */
+const nextConfig = {
+  /* config options here */
+}
 
-module.exports = withPlugins([[withBundleAnalyzer, {}], [withTM]])
+module.exports = nextConfig

@@ -16,8 +16,8 @@ export const InputLeftElementPreview: React.FC<{ component: IComponent }> = ({
 
   return (
     <InputLeftElement top="10px" right="10px" {...props} ref={drop(ref)}>
-      {component.children.map((key: string) => (
-        <ComponentPreview componentName={key} />
+      {component.children.map((key: string, i: number) => (
+        <ComponentPreview key={i} componentName={key} />
       ))}
     </InputLeftElement>
   )

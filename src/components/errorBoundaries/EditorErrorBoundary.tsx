@@ -13,6 +13,7 @@ type ErrorBoundaryState = {
 
 type ErrorBoundaryProps = {
   undo: () => void
+  children?: React.ReactNode
 }
 
 class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
@@ -71,7 +72,6 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
         </Flex>
       )
     }
-
     return this.props.children
   }
 }

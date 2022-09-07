@@ -105,4 +105,5 @@ interface ComponentItemProps {
   isMeta?: boolean
   soon?: boolean
   rootParentType?: ComponentType
+  children?: React.ReactNode
 }
