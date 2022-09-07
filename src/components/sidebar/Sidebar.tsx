@@ -18,7 +18,7 @@ type categoryItems = {
   [name: string]: string[]
 }
 
-const Menu = () => {
+const Sidebar = () => {
   const [searchTerm, setSearchTerm] = useState('')
 
   const groupItems: categoryItems = Object.entries(menuItems).reduce(
@@ -159,4 +159,4 @@ const Menu = () => {
   )
 }
 
-export default memo(Menu)
+export default memo(Sidebar)
