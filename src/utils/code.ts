@@ -30,6 +30,15 @@ export const formatCode = async (code: string) => {
   return formattedCode
 }
 
+export const getComponentPath = componentName => {
+  // Distinguish between chakra/non-chakra components
+  return import('@chakra-ui/react').then(module => {
+    return module[componentName]
+      ? null
+      : `custom-components/${componentName}/${componentName}`
+  })
+}
+
 type BuildBlockParams = {
   component: IComponent
   components: IComponents

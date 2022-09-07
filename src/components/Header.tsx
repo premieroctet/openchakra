@@ -26,6 +26,7 @@ import { DiGithubBadge } from 'react-icons/di'
 import { AiFillThunderbolt } from 'react-icons/ai'
 import { buildParameters } from '~utils/codesandbox'
 import { generateCode } from '~utils/code'
+import { deploy } from '~utils/deploy'
 import useDispatch from '~hooks/useDispatch'
 import { useSelector } from 'react-redux'
 import { getComponents } from '~core/selectors/components'
@@ -62,6 +63,42 @@ const CodeSandboxButton = () => {
         size="xs"
       >
         Export code
+      </Button>
+    </Tooltip>
+  )
+}
+
+const DeployButton = () => {
+  const components = useSelector(getComponents)
+  const [isDeploying, setIsDeploying] = useState(false)
+
+  return (
+    <Tooltip
+      zIndex={100}
+      hasArrow
+      bg="yellow.100"
+      aria-label="Builder mode help"
+      label="Deploy in production"
+    >
+      <Button
+        onClick={() => {
+          setIsDeploying(true)
+          deploy(components)
+            .then(() => {
+              alert('Deployment ok')
+            })
+            .catch(err => {
+              alert('Deployment error:' + err)
+            })
+            .finally(() => {
+              setIsDeploying(false)
+            })
+        }}
+        isLoading={isDeploying}
+        variant="ghost"
+        size="xs"
+      >
+        Deploy to production
       </Button>
     </Tooltip>
   )
@@ -159,6 +196,7 @@ const Header = () => {
 
           <Stack direction="row">
             <CodeSandboxButton />
+            <DeployButton />
             <Popover>
               {({ onClose }) => (
                 <>

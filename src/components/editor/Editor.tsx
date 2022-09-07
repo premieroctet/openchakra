@@ -25,7 +25,7 @@ const Editor: React.FC = () => {
   const showLayout = useSelector(getShowLayout)
   const components = useSelector(getComponents)
   const dispatch = useDispatch()
-  const { get } = useFetch('https://localhost')
+  const { get, error } = useFetch('https://localhost')
 
   const { drop } = useDropComponent('root')
   const isEmpty = !components.root.children.length
@@ -47,9 +47,13 @@ const Editor: React.FC = () => {
   }
 
   useEffect(() => {
-    get('/myAlfred/api/studio/models').then(res => {
-      dispatch.datasources.setModels(res)
-    })
+    get('/myAlfred/api/studio/models')
+      .then(res => {
+        dispatch.datasources.setModels(res)
+      })
+      .catch(err => {
+        alert(err)
+      })
   }, [dispatch.datasources, get])
 
   const Playground = (
@@ -104,6 +108,7 @@ const Editor: React.FC = () => {
     return Playground
   }
 
+  alert(`Error:${error}`)
   return (
     <SplitPane
       style={{ overflow: 'auto' }}

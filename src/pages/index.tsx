@@ -15,6 +15,8 @@ import '~custom-components/Card/CardInit'
 import '~custom-components/DataProvider/DataProviderInit'
 import '~custom-components/Table/TableInit'
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
+
 const App = () => {
   useShortcuts()
 
