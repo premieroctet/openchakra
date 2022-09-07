@@ -112,6 +112,7 @@ const ComponentPreview: React.FC<{
     case 'TabList':
     case 'TabPanels':
     case 'Grid':
+    case 'GridItem':
     case 'Center':
     case 'Container':
       return (

@@ -77,6 +77,9 @@ let menuItems: MenuItems = {
   Grid: {
     group: 'positionnement',
   },
+  GridItem: {
+    group: 'positionnement',
+  },
   Heading: {
     group: 'typographie',
   },
