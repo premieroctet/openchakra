@@ -54,3 +54,155 @@ Créer un CardPanel.tsx dans src/components/inspector/panels/components et l'imp
 
 Une liste, un fil d'ariane, un accordéon par exemple sont des composants Meta/imbriqués.
 Lorsqu'un composant de ce type est déposé, on appelle ses composants enfants (dispatch addComponent lors du drop).
+
+
+## Définition des composants
+
+### Aspect ratio
+
+Inclusion de vidéo, iframe (ou image) en passant une largeur maximale et un ratio
+
+#### props
+
+[horizontal]
+maxWidth:: ex: 100%, 15rem
+ratio:: ex: 1, 16/9
+
+### Box
+
+La base du jeu de construction.
+
+#### props
+
+[horizontal]
+bg:: background-color
+w:: largeur
+p:: padding
+color:: ex: #753145
+borderRadius::
+overflow::
+display::
+noOfLines:: {1}
+lineHeight:: 'tight'
+
+### Center
+
+Center est un composant de layout qui centre ses enfants (horizontalement et verticalement).
+
+### Container
+
+Les conteneurs sont utilisés pour limiter la largeur d'un contenu au breakpoint courant.
+Par défaut, un conteneur a une largeur maximale de 60ch. Peut être défini dans `theme.sizes.container`
+
+#### props
+
+[horizontal]
+centerContent:: si `true`, centre ses enfants
+colorsScheme:: Non implémenté par défaut ; il faut étendre le theme pour les implémenter
+size:: Non implémenté par défaut ; il faut étendre le theme pour les implémenter
+
+
+### Flex
+
+Conteneur flex. En ajoutant un `Spacer` entre ses enfants (propriété flex: 1 1 0%), cela crée une disposition responsive. 
+Contrairement à une `Stack` qui gardera le même espace entre ses enfants, mais ne prendra pas l'ensemble de la largeur du conteneur.
+
+#### props
+
+[horizontal]
+align:: alignItems
+basis:: flexBasis
+direction:: flexDirection
+grow:: flexGrow
+shrink:: flexShrink
+justify:: justifyContent
+wrap:: flexWrap
+
+### Grid
+
+Conteneur grid. Ses enfants doivent être des GridItem
+
+#### props
+
+[horizontal]
+gap:: 
+templateColumns:: 
+templateAreas::
+
+
+### GridItem 
+
+#### props
+
+[horizontal]
+colSpan:: 
+rowSpan:: 
+colStart::
+colEnd::
+area::
+
+### SimpleGrid
+
+Conteneur grid. On simplifie l'usage de la grille à un nombre de colonnes et un espacement entre les enfants de la grille.
+Techniquement, utilisation de auto-fit et de minmax().
+
+#### props
+
+[horizontal]
+autoColumns:: 
+autoFlow:: 
+autoRows::
+column::
+columns::
+minChildWidth::
+row::
+spacing:: gap
+spacingX:: gap
+spacingY:: gap
+
+.usage de SimpleGrid
+[source, jsx]
+----
+<SimpleGrid columns={2} spacing={10}>
+  <Box bg='tomato' height='80px'></Box>
+  <Box bg='tomato' height='80px'></Box>
+  <Box bg='tomato' height='80px'></Box>
+  <Box bg='tomato' height='80px'></Box>
+  <Box bg='tomato' height='80px'></Box>
+</SimpleGrid>
+----
+
+### Stack
+
+Conteneur grid. On simplifie l'usage de la grille à un nombre de colonnes et un espacement entre les enfants de la grille.
+Techniquement, utilisation de auto-fit et de minmax().
+
+#### props
+
+[horizontal]
+divider:: si `true`, chaque stack affiche un séparateur
+shouldWrapChildren:: si `true`, les enfants sont en enrobés d'une `Box` avec display: inline-block et la Box prend en compte la propriété spacing
+direction:: column | row
+align:: raccourci pour alignItems
+justify:: raccourci pour justifyContent
+wrap:: raccourci pour flexWrap
+spacing:: applique une marge
+
+
+### Wrap, WrapItem
+
+Element de layout utilisé pour ajouter de l'espace entre les éléments, et les passe à la ligne s'il n'y a pas assez d'espace. 
+Wrap rend une balise liste `<ul>`. WrapItem, en toute logique... `<li>`
+
+#### props
+
+[horizontal]
+divider:: si `true`, chaque stack affiche un séparateur
+shouldWrapChildren:: si `true`, les enfants sont en enrobés d'une `Box` avec display: inline-block et la Box prend en compte la propriété spacing
+direction:: column | row
+align:: raccourci pour alignItems
+justify:: raccourci pour justifyContent
+wrap:: raccourci pour flexWrap
+spacing:: applique une marge
+
+
