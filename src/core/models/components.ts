@@ -19,6 +19,15 @@ export type ComponentsStateWithUndo = {
 
 const DEFAULT_ID = 'root'
 
+function isJsonString(str) {
+  try {
+    JSON.parse(str)
+  } catch (e) {
+    return false
+  }
+  return true
+}
+
 export const INITIAL_COMPONENTS: IComponents = {
   root: {
     id: DEFAULT_ID,
@@ -62,7 +71,10 @@ const components = createModel({
       payload: { id: string; name: string; value: string },
     ) {
       return produce(state, (draftState: ComponentsState) => {
-        draftState.components[payload.id].props[payload.name] = payload.value
+        const parseValue =
+          isJsonString(payload.value) && JSON.parse(payload.value)
+        draftState.components[payload.id].props[payload.name] =
+          parseValue || payload.value
       })
     },
     deleteProps(state: ComponentsState, payload: { id: string; name: string }) {

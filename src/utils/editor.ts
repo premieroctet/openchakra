@@ -28,6 +28,7 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'FormHelperText',
   'FormErrorMessage',
   'Grid',
+  'GridItem',
   'Heading',
   'Icon',
   'IconButton',

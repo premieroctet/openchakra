@@ -213,13 +213,10 @@ const Header = () => {
                   id="device"
                   onChange={e => dispatch.app.selectDevice(e.target.value)}
                   style={{ color: 'white', width: 'max-content' }}
+                  defaultValue={device}
                 >
                   {Object.keys(devices).map(devicekey => (
-                    <option
-                      key={devicekey}
-                      value={devicekey}
-                      selected={devicekey === device}
-                    >
+                    <option key={devicekey} value={devicekey}>
                       {devicekey}
                     </option>
                   ))}

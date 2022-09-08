@@ -76,8 +76,19 @@ const buildBlock = ({
         .filter(p => !HIDDEN_ATTRIBUTES.includes(p))
         .forEach((propName: string) => {
           const propsValue = childComponent.props[propName]
+          const propsValueAsObject = typeof propsValue === 'object'
 
-          if (
+          if (propsValueAsObject) {
+            const gatheredProperties = Object.entries(propsValue)
+              .map(([prop, value]) => {
+                console.log('valuesProp', value)
+                return `${prop}: '${value}'`
+              })
+              .join(', ')
+
+            propsContent += `${propName}={{${gatheredProperties}}}`
+            console.log(propsContent)
+          } else if (
             propName.toLowerCase().includes('icon') &&
             childComponent.type !== 'Icon'
           ) {
@@ -241,7 +252,6 @@ export const generateCode = async (components: IComponents) => {
   )
 
   code = `import React, {useState, useEffect} from 'react';
-  ${dataProviders.length > 0 && `import useFetch from 'use-http'`}
   import {ChakraProvider} from "@chakra-ui/react";
   ${Object.entries(groupedComponents)
     .map(([modName, components]) => {
