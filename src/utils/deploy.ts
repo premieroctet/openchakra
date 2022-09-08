@@ -1,20 +1,16 @@
 import lodash from 'lodash'
-import { generateCode, getComponentPath } from './code'
 
-const copyComponents = (components, path) => {
-  return Promise.all(
-    Object.values(components).map(comp => getComponentPath(comp.type)),
-  ).then(res => {
-    //const paths=res.filter(p => !!p).map(p => ([p, fs.readFileSync(p)]))
-    const paths = res.filter(p => !!p)
-    console.log(paths)
-    return Promise.resolve()
-  })
-}
+import { build, copyFile, install } from './http'
+import { generateCode, getComponentPath } from './code'
+import config from '../../env.json'
 
 const copyApp = contents => {
   console.log(`Code:${contents}`)
-  return Promise.resolve()
+  return copyFile({
+    contents: contents,
+    projectName: 'studio-test',
+    filePath: 'App.js',
+  })
 }
 
 export const deploy = (components: IComponents) => {
@@ -24,7 +20,10 @@ export const deploy = (components: IComponents) => {
     .then(res => {
       return copyApp(res)
     })
-    .then(() => {
-      return copyComponents(components)
+    .then(res => {
+      return install({ projectName: 'studio-test' })
+    })
+    .then(res => {
+      return build({ projectName: 'studio-test' })
     })
 }
