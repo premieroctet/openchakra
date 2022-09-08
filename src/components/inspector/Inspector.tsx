@@ -120,8 +120,6 @@ const Inspector = () => {
     clearActiveProps()
   }, [clearActiveProps])
 
-  console.log(component)
-
   return (
     <>
       <Box bg="white">
