@@ -12,6 +12,7 @@ import ComponentPreview from '~components/editor/ComponentPreview'
 import devices from '~config/devices'
 import Xarrow from 'react-xarrows'
 import moment from 'moment'
+import config from '../../../env.json'
 
 export const gridStyles = {
   backgroundImage:
@@ -27,7 +28,7 @@ const Editor: React.FC = () => {
   const showLayout = useSelector(getShowLayout)
   const components = useSelector(getComponents)
   const dispatch = useDispatch()
-  const { get, error } = useFetch('https://localhost')
+  const { get, error } = useFetch(config.targetDomain)
 
   const { drop } = useDropComponent('root')
   const isEmpty = !components.root.children.length

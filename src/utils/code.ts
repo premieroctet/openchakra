@@ -202,7 +202,7 @@ const getIconsImports = (components: IComponents) => {
 
 const buildHooks = components => {
   if (components.length == 0) {
-    return
+    return ''
   }
   let code = `const {get, post}=useFetch('https://localhost')`
   code +=
@@ -252,6 +252,7 @@ export const generateCode = async (components: IComponents) => {
   )
 
   code = `import React, {useState, useEffect} from 'react';
+  ${dataProviders.length > 0 ? `import useFetch from 'use-http'` : ''}
   import {ChakraProvider} from "@chakra-ui/react";
   ${Object.entries(groupedComponents)
     .map(([modName, components]) => {
