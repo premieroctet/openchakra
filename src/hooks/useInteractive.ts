@@ -10,7 +10,8 @@ import { getShowLayout, getFocusedComponent } from '../core/selectors/app'
 
 export const useInteractive = (
   component: IComponent,
-  enableVisualHelper: boolean = false,
+  enableVisualHelper = false,
+  withoutComponentProps = false,
 ) => {
   const dispatch = useDispatch()
   const showLayout = useSelector(getShowLayout)
@@ -24,7 +25,7 @@ export const useInteractive = (
 
   const ref = useRef<HTMLDivElement>(null)
   let props = {
-    ...component.props,
+    ...(withoutComponentProps ? {} : component.props),
     onMouseOver: (event: MouseEvent) => {
       event.stopPropagation()
       dispatch.components.hover(component.id)

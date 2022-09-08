@@ -18,11 +18,6 @@ import {
   Button,
   useDisclosure,
   Text,
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
 } from '@chakra-ui/react'
 import { CopyIcon, CheckIcon, EditIcon } from '@chakra-ui/icons'
 import Panels from '~components/inspector/panels/Panels'
@@ -114,8 +109,6 @@ const Inspector = () => {
   const docType = rootParentType || type
   const componentHasChildren = children.length > 0
 
-  const isHighLight = component.type === 'Highlight'
-
   useEffect(() => {
     clearActiveProps()
   }, [clearActiveProps])
@@ -196,44 +189,11 @@ const Inspector = () => {
         <Panels component={component} isRoot={isRoot} />
       </Box>
 
-      {isHighLight ? (
-        <>
-          <Tabs w="100%">
-            <TabList>
-              <Tab fontSize={15} w="100%">
-                Base Style
-              </Tab>
-              <Tab fontSize={15} w="100%">
-                Highlight Styled
-              </Tab>
-            </TabList>
-
-            <TabPanels>
-              <TabPanel p={0}>
-                <StylesPanel
-                  isRoot={isRoot}
-                  showChildren={componentHasChildren}
-                  parentIsRoot={parentIsRoot}
-                />
-              </TabPanel>
-              <TabPanel p={0}>
-                <StylesPanel
-                  isRoot={isRoot}
-                  showChildren={componentHasChildren}
-                  parentIsRoot={parentIsRoot}
-                />
-              </TabPanel>
-            </TabPanels>
-          </Tabs>
-        </>
-      ) : (
-        <StylesPanel
-          isRoot={isRoot}
-          showChildren={componentHasChildren}
-          parentIsRoot={parentIsRoot}
-        />
-      )}
-
+      <StylesPanel
+        isRoot={isRoot}
+        showChildren={componentHasChildren}
+        parentIsRoot={parentIsRoot}
+      />
       <Modal onClose={onClose} isOpen={isOpen} isCentered>
         <ModalOverlay>
           <ModalContent>
