@@ -4,7 +4,11 @@ import ElementListItem from './ElementListItem'
 
 interface Props extends Pick<IComponent, 'type' | 'id'> {
   index: number
-  moveItem?: (dragIndex: number, hoverIndex: number) => void
+  moveItem?: (
+    componentId: string,
+    dragIndex: number,
+    hoverIndex: number,
+  ) => void
   onSelect: (id: IComponent['id']) => void
   onHover: (id: IComponent['id']) => void
   onUnhover: () => void
@@ -39,6 +43,7 @@ const ElementListItemDraggable: React.FC<Props> = ({
       const hoverBoundingRect = ref.current.getBoundingClientRect()
       const hoverMiddleY =
         (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2
+
       const clientOffset = monitor.getClientOffset()
       const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top
       if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
@@ -48,7 +53,7 @@ const ElementListItemDraggable: React.FC<Props> = ({
         return
       }
       if (moveItem) {
-        moveItem(dragIndex, hoverIndex)
+        moveItem(id, dragIndex, hoverIndex)
       }
       // @ts-ignore
       item.index = hoverIndex

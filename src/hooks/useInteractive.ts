@@ -5,21 +5,31 @@ import { useDrag } from 'react-dnd'
 import {
   getIsSelectedComponent,
   getIsHovered,
+  getIsSortHovered,
+  getSortPosition,
 } from '../core/selectors/components'
 import { getShowLayout, getFocusedComponent } from '../core/selectors/app'
 
 export const useInteractive = (
   component: IComponent,
+  index: number,
   enableVisualHelper: boolean = false,
 ) => {
   const dispatch = useDispatch()
   const showLayout = useSelector(getShowLayout)
   const isComponentSelected = useSelector(getIsSelectedComponent(component.id))
   const isHovered = useSelector(getIsHovered(component.id))
+  const isSortHovered = useSelector(getIsSortHovered(component.id))
+  const sortPosition = useSelector(getSortPosition())
   const focusInput = useSelector(getFocusedComponent(component.id))
 
   const [, drag] = useDrag({
-    item: { id: component.id, type: component.type, isMoved: true },
+    item: {
+      id: component.id,
+      type: component.type,
+      isMoved: true,
+      index,
+    },
   })
 
   const ref = useRef<HTMLDivElement>(null)
@@ -61,5 +71,14 @@ export const useInteractive = (
     }
   }
 
-  return { props, ref: drag(ref), drag }
+  if (isSortHovered) {
+    props = {
+      ...props,
+      ...(sortPosition === 'top'
+        ? { borderTop: '4px solid blue' }
+        : { borderBottom: '4px solid blue' }),
+    }
+  }
+
+  return { props, ref: drag(ref), drag, isHovered }
 }

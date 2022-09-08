@@ -28,8 +28,10 @@ import BreadcrumbItemPreview from './previews/BreadcrumbItemPreview'
 
 const ComponentPreview: React.FC<{
   componentName: string
-}> = ({ componentName, ...forwardedProps }) => {
+  index: number
+}> = ({ componentName, index, ...forwardedProps }) => {
   const component = useSelector(getComponentBy(componentName))
+
   if (!component) {
     console.error(`ComponentPreview unavailable for component ${componentName}`)
   }
@@ -59,6 +61,7 @@ const ComponentPreview: React.FC<{
     case 'BreadcrumbLink':
       return (
         <PreviewContainer
+          index={index}
           component={component}
           type={Chakra[type]}
           {...forwardedProps}
@@ -79,6 +82,7 @@ const ComponentPreview: React.FC<{
     case 'Tag':
       return (
         <PreviewContainer
+          index={index}
           component={component}
           type={Chakra[type]}
           {...forwardedProps}
@@ -100,6 +104,7 @@ const ComponentPreview: React.FC<{
       return (
         <WithChildrenPreviewContainer
           enableVisualHelper
+          index={index}
           component={component}
           type={Chakra[type]}
           {...forwardedProps}
@@ -111,6 +116,7 @@ const ComponentPreview: React.FC<{
       return (
         <WithChildrenPreviewContainer
           enableVisualHelper
+          index={index}
           component={component}
           type={Chakra[type]}
           {...forwardedProps}
@@ -119,41 +125,41 @@ const ComponentPreview: React.FC<{
       )
     // More complex components
     case 'InputRightElement':
-      return <InputRightElementPreview component={component} />
+      return <InputRightElementPreview component={component} index={index} />
     case 'InputLeftElement':
-      return <InputLeftElementPreview component={component} />
+      return <InputLeftElementPreview component={component} index={index} />
     case 'Avatar':
-      return <AvatarPreview component={component} />
+      return <AvatarPreview component={component} index={index} />
     case 'AvatarBadge':
-      return <AvatarBadgePreview component={component} />
+      return <AvatarBadgePreview component={component} index={index} />
     case 'AvatarGroup':
-      return <AvatarGroupPreview component={component} />
+      return <AvatarGroupPreview component={component} index={index} />
     case 'Alert':
-      return <AlertPreview component={component} />
+      return <AlertPreview component={component} index={index} />
     case 'Accordion':
-      return <AccordionPreview component={component} />
+      return <AccordionPreview component={component} index={index} />
     case 'AccordionButton':
-      return <AccordionButtonPreview component={component} />
+      return <AccordionButtonPreview component={component} index={index} />
     case 'AccordionItem':
-      return <AccordionItemPreview component={component} />
+      return <AccordionItemPreview component={component} index={index} />
     case 'AccordionPanel':
-      return <AccordionPanelPreview component={component} />
+      return <AccordionPanelPreview component={component} index={index} />
     case 'AspectRatio':
-      return <AspectRatioPreview component={component} />
+      return <AspectRatioPreview component={component} index={index} />
     case 'Button':
-      return <ButtonPreview component={component} />
+      return <ButtonPreview component={component} index={index} />
     case 'Breadcrumb':
-      return <BreadcrumbPreview component={component} />
+      return <BreadcrumbPreview component={component} index={index} />
     case 'BreadcrumbItem':
-      return <BreadcrumbItemPreview component={component} />
+      return <BreadcrumbItemPreview component={component} index={index} />
     case 'Icon':
-      return <IconPreview component={component} />
+      return <IconPreview component={component} index={index} />
     case 'IconButton':
-      return <IconButtonPreview component={component} />
+      return <IconButtonPreview component={component} index={index} />
     case 'Select':
-      return <SelectPreview component={component} />
+      return <SelectPreview component={component} index={index} />
     case 'NumberInput':
-      return <NumberInputPreview component={component} />
+      return <NumberInputPreview component={component} index={index} />
     default:
       return null
   }

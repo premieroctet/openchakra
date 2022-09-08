@@ -3,36 +3,41 @@ import { useInteractive } from '~hooks/useInteractive'
 import { useDropComponent } from '~hooks/useDropComponent'
 import ComponentPreview from '~components/editor/ComponentPreview'
 import { Box } from '@chakra-ui/react'
+import { useSelector } from 'react-redux'
+import { getIsSortHovered } from '~core/selectors/components'
 
 const WithChildrenPreviewContainer: React.FC<{
   component: IComponent
   type: string | FunctionComponent<any> | ComponentClass<any, any>
   enableVisualHelper?: boolean
   isBoxWrapped?: boolean
+  index: number
 }> = ({
   component,
   type,
   enableVisualHelper = false,
   isBoxWrapped,
+  index,
   ...forwardedProps
 }) => {
-  const { drop, isOver } = useDropComponent(component.id)
-  const { props, ref } = useInteractive(component, enableVisualHelper)
+  const { props, ref } = useInteractive(component, index, enableVisualHelper)
+  const { drop, isOver } = useDropComponent(component.id, index, ref)
   const propsElement = { ...props, ...forwardedProps, pos: 'relative' }
+  const isSortHovered = useSelector(getIsSortHovered(component.id))
 
   if (!isBoxWrapped) {
     propsElement.ref = drop(ref)
   }
 
-  if (isOver) {
+  if (isOver && !isSortHovered) {
     propsElement.bg = 'teal.50'
   }
 
   const children = React.createElement(
     type,
     propsElement,
-    component.children.map((key: string) => (
-      <ComponentPreview key={key} componentName={key} />
+    component.children.map((key, childIndex) => (
+      <ComponentPreview key={key} index={childIndex} componentName={key} />
     )),
   )
 
@@ -42,7 +47,7 @@ const WithChildrenPreviewContainer: React.FC<{
     }
 
     return (
-      <Box {...boxProps} ref={drop(ref)}>
+      <Box {...boxProps} key={index} index={index} ref={drop(ref)}>
         {children}
       </Box>
     )

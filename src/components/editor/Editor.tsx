@@ -23,7 +23,7 @@ const Editor: React.FC = () => {
   const components = useSelector(getComponents)
   const dispatch = useDispatch()
 
-  const { drop } = useDropComponent('root')
+  const { drop } = useDropComponent('root', 0)
   const isEmpty = !components.root.children.length
   const rootProps = components.root.props
 
@@ -75,8 +75,8 @@ const Editor: React.FC = () => {
         </Text>
       )}
 
-      {components.root.children.map((name: string) => (
-        <ComponentPreview key={name} componentName={name} />
+      {components.root.children.map((name, i) => (
+        <ComponentPreview key={name} index={i} componentName={name} />
       ))}
     </Box>
   )

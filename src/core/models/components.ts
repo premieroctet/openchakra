@@ -5,11 +5,14 @@ import templates, { TemplateType } from '~templates'
 import { generateId } from '~utils/generateId'
 import { duplicateComponent, deleteComponent } from '~utils/recursive'
 import omit from 'lodash/omit'
+import { position } from '@chakra-ui/react'
 
 export type ComponentsState = {
   components: IComponents
   selectedId: IComponent['id']
   hoveredId?: IComponent['id']
+  sortHoveredId?: IComponent['id']
+  sortPosition?: 'top' | 'bottom'
 }
 export type ComponentsStateWithUndo = {
   past: ComponentsState[]
@@ -134,16 +137,32 @@ const components = createModel({
     },
     moveSelectedComponentChildren(
       state: ComponentsState,
-      payload: { fromIndex: number; toIndex: number },
+      payload: { droppedId: string; targetId: string; position: string },
     ): ComponentsState {
       return produce(state, (draftState: ComponentsState) => {
-        const selectedComponent = draftState.components[draftState.selectedId]
+        const targetParentId = draftState.components[payload.targetId].parent
+        const droppedParentId = draftState.components[payload.droppedId].parent
 
-        selectedComponent.children.splice(
-          payload.toIndex,
-          0,
-          selectedComponent.children.splice(payload.fromIndex, 1)[0],
+        draftState.components[droppedParentId].children.splice(
+          draftState.components[droppedParentId].children.indexOf(
+            payload.droppedId,
+          ),
+          1,
         )
+
+        const index = draftState.components[targetParentId].children.indexOf(
+          payload.targetId,
+        )
+
+        draftState.components[targetParentId].children.splice(
+          index + (payload.position === 'bottom' ? 1 : 0),
+          0,
+          payload.droppedId,
+        )
+
+        if (targetParentId !== droppedParentId) {
+          draftState.components[payload.droppedId].parent = targetParentId
+        }
       })
     },
     addComponent(
@@ -250,6 +269,23 @@ const components = createModel({
       return {
         ...state,
         hoveredId: undefined,
+      }
+    },
+    sortHover(
+      state: ComponentsState,
+      payload: { componentId: IComponent['id']; position: 'top' | 'bottom' },
+    ): ComponentsState {
+      return {
+        ...state,
+        sortHoveredId: payload.componentId,
+        sortPosition: payload.position,
+      }
+    },
+    sortUnhover(state: ComponentsState): ComponentsState {
+      return {
+        ...state,
+        sortHoveredId: undefined,
+        sortPosition: undefined,
       }
     },
   },

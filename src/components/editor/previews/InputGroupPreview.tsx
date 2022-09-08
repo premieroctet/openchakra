@@ -4,11 +4,9 @@ import ComponentPreview from '~components/editor/ComponentPreview'
 import { useDropComponent } from '~hooks/useDropComponent'
 import { useInteractive } from '~hooks/useInteractive'
 
-const InputGroupPreview: React.FC<{ component: IComponent }> = ({
-  component,
-}) => {
-  const { drop, isOver } = useDropComponent(component.id)
-  const { props, ref } = useInteractive(component, true)
+const InputGroupPreview: React.FC<IPreviewProps> = ({ component, index }) => {
+  const { props, ref } = useInteractive(component, index, true)
+  const { drop, isOver } = useDropComponent(component.id, index, ref)
 
   const boxProps: any = {}
 
@@ -19,8 +17,8 @@ const InputGroupPreview: React.FC<{ component: IComponent }> = ({
   return (
     <Box {...boxProps} ref={drop(ref)}>
       <InputGroup {...props}>
-        {component.children.map((key: string) => (
-          <ComponentPreview key={key} componentName={key} />
+        {component.children.map((key, i) => (
+          <ComponentPreview key={key} componentName={key} index={i} />
         ))}
       </InputGroup>
     </Box>

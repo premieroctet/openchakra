@@ -4,10 +4,18 @@ import { useDropComponent } from '~hooks/useDropComponent'
 import ComponentPreview from '~components/editor/ComponentPreview'
 import { BreadcrumbItem } from '@chakra-ui/react'
 
-const BreadcrumbItemPreview: React.FC<IPreviewProps> = ({ component }) => {
+const BreadcrumbItemPreview: React.FC<IPreviewProps> = ({
+  component,
+  index,
+}) => {
   const acceptedTypes = ['BreadcrumbLink'] as ComponentType[]
-  const { props, ref } = useInteractive(component, true)
-  const { drop, isOver } = useDropComponent(component.id, acceptedTypes)
+  const { props, ref } = useInteractive(component, index, true)
+  const { drop, isOver } = useDropComponent(
+    component.id,
+    index,
+    ref,
+    acceptedTypes,
+  )
 
   if (isOver) {
     props.bg = 'teal.50'
@@ -15,8 +23,8 @@ const BreadcrumbItemPreview: React.FC<IPreviewProps> = ({ component }) => {
 
   return (
     <BreadcrumbItem {...props} ref={drop(ref)}>
-      {component.children.map((key: string) => (
-        <ComponentPreview key={key} componentName={key} />
+      {component.children.map((key, i) => (
+        <ComponentPreview key={key} componentName={key} index={i} />
       ))}
     </BreadcrumbItem>
   )

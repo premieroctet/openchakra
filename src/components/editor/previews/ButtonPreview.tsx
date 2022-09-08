@@ -1,20 +1,15 @@
 import React from 'react'
-import { useDropComponent } from '~hooks/useDropComponent'
 import { useInteractive } from '~hooks/useInteractive'
 import { Button } from '@chakra-ui/react'
 import icons from '~iconsList'
 
 interface Props {
   component: IComponent
+  index: number
 }
 
-const ButtonPreview = ({ component }: Props) => {
-  const { isOver } = useDropComponent(component.id)
-  const { props, ref } = useInteractive(component, true)
-
-  if (isOver) {
-    props.bg = 'teal.50'
-  }
+const ButtonPreview = ({ component, index }: Props) => {
+  const { props, ref } = useInteractive(component, index, true)
 
   if (props.leftIcon) {
     if (Object.keys(icons).includes(props.leftIcon)) {
@@ -34,7 +29,7 @@ const ButtonPreview = ({ component }: Props) => {
     }
   }
 
-  return <Button ref={ref} {...props} />
+  return <Button ref={ref} index={index} {...props} />
 }
 
 export default ButtonPreview

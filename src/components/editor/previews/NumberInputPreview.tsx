@@ -10,13 +10,14 @@ import {
 
 interface IProps {
   component: IComponent
+  index: number
 }
 
-const NumberInputPreview = ({ component }: IProps) => {
-  const { props } = useInteractive(component)
+const NumberInputPreview = ({ component, index }: IProps) => {
+  const { props } = useInteractive(component, index)
 
   return (
-    <NumberInput {...props}>
+    <NumberInput {...props} index={index}>
       <NumberInputField />
       <NumberInputStepper>
         <NumberIncrementStepper />

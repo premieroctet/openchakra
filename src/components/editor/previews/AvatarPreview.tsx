@@ -14,10 +14,12 @@ import { getComponents } from '~core/selectors/components'
 
 const AvatarPreview: React.FC<IPreviewProps & {
   spacing?: BoxProps['marginLeft']
-  index?: number
+  index: number
 }> = ({ component, spacing, index }) => {
-  const { drop, isOver } = useDropComponent(component.id, ['AvatarBadge'])
-  const { props, ref } = useInteractive(component)
+  const { drop, isOver } = useDropComponent(component.id, index, [
+    'AvatarBadge',
+  ])
+  const { props, ref } = useInteractive(component, index)
 
   let boxProps: any = {
     display: 'inline-block',
@@ -31,19 +33,21 @@ const AvatarPreview: React.FC<IPreviewProps & {
   }
 
   return (
-    <Box ref={drop(ref)} {...boxProps}>
+    <Box ref={drop(ref)} index={index} {...boxProps}>
       <Avatar ml={index === 0 ? 0 : spacing} {...props}>
-        {component.children.map((key: string) => (
-          <ComponentPreview key={key} componentName={key} />
+        {component.children.map((key, i) => (
+          <ComponentPreview key={key} index={i} componentName={key} />
         ))}
       </Avatar>
     </Box>
   )
 }
 
-export const AvatarGroupPreview = ({ component }: IPreviewProps) => {
-  const { props, ref } = useInteractive(component, true)
-  const { drop, isOver } = useDropComponent(component.id, ['Avatar'])
+export const AvatarGroupPreview = ({ component, index }: IPreviewProps) => {
+  const { props, ref } = useInteractive(component, index, true)
+  const { drop, isOver } = useDropComponent(component.id, index, ref, [
+    'Avatar',
+  ])
   const components = useSelector(getComponents)
   let boxProps: any = { display: 'inline' }
 
@@ -52,9 +56,9 @@ export const AvatarGroupPreview = ({ component }: IPreviewProps) => {
   }
 
   return (
-    <Box ref={drop(ref)} {...boxProps}>
+    <Box ref={drop(ref)} index={index} {...boxProps}>
       <AvatarGroup {...props}>
-        {component.children.map((key: string, i: number) => (
+        {component.children.map((key, i) => (
           <AvatarPreview
             key={key}
             index={i + 1}
@@ -67,12 +71,12 @@ export const AvatarGroupPreview = ({ component }: IPreviewProps) => {
   )
 }
 
-export const AvatarBadgePreview = ({ component }: IPreviewProps) => {
-  const { props, ref } = useInteractive(component)
+export const AvatarBadgePreview = ({ component, index }: IPreviewProps) => {
+  const { props, ref } = useInteractive(component, index)
   let boxProps: any = {}
 
   return (
-    <Box {...boxProps} ref={ref}>
+    <Box {...boxProps} index={index} ref={ref}>
       <AvatarBadge {...props} />
     </Box>
   )

@@ -4,7 +4,7 @@ import ElementListItem from './ElementListItemDraggable'
 
 interface Props {
   elements: IComponent[]
-  moveItem: (fromIndex: number, toIndex: number) => void
+  moveItem: (componentId: string, fromIndex: number, toIndex: number) => void
   onSelect: (id: IComponent['id']) => void
   onHover: (id: IComponent['id']) => void
   onUnhover: () => void

@@ -94,6 +94,7 @@ interface IComponents {
 
 interface IPreviewProps {
   component: IComponent
+  index: number
 }
 
 interface ComponentItemProps {

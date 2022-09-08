@@ -4,12 +4,12 @@ import { useInteractive } from '~hooks/useInteractive'
 import { useDropComponent } from '~hooks/useDropComponent'
 import ComponentPreview from '~components/editor/ComponentPreview'
 
-const AspectRatioPreview: React.FC<{ component: IComponent }> = ({
-  component,
-}) => {
-  const { props, ref } = useInteractive(component, true)
+const AspectRatioPreview: React.FC<IPreviewProps> = ({ component, index }) => {
+  const { props, ref } = useInteractive(component, index, true)
   const { drop, isOver } = useDropComponent(
     component.id,
+    index,
+    ref,
     undefined,
     component.children.length === 0,
   )
@@ -22,7 +22,7 @@ const AspectRatioPreview: React.FC<{ component: IComponent }> = ({
   }
 
   return (
-    <Box {...boxProps} ref={drop(ref)}>
+    <Box {...boxProps} index={index} ref={drop(ref)}>
       <AspectRatio {...props}>
         {!children.length ? (
           /*
@@ -32,7 +32,7 @@ const AspectRatioPreview: React.FC<{ component: IComponent }> = ({
           <Box />
         ) : (
           <Box>
-            <ComponentPreview componentName={children[0]} />
+            <ComponentPreview index={0} componentName={children[0]} />
           </Box>
         )}
       </AspectRatio>

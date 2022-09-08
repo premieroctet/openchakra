@@ -8,8 +8,13 @@ const ChildrenInspector = () => {
   const childrenComponent = useSelector(getSelectedComponentChildren)
   const dispatch = useDispatch()
 
-  const moveChildren = (fromIndex: number, toIndex: number) => {
+  const moveChildren = (
+    componentId: string,
+    fromIndex: number,
+    toIndex: number,
+  ) => {
     dispatch.components.moveSelectedComponentChildren({
+      componentId,
       fromIndex,
       toIndex,
     })

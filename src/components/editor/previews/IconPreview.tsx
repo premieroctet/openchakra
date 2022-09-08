@@ -4,15 +4,12 @@ import { useInteractive } from '~hooks/useInteractive'
 import icons from '~iconsList'
 import { Box } from '@chakra-ui/react'
 
-interface Props {
-  component: IComponent
-}
-
-const IconPreview = ({ component }: Props) => {
-  const { isOver } = useDropComponent(component.id)
+const IconPreview = ({ component, index }: IPreviewProps) => {
   const {
     props: { color, boxSize, icon, ...props },
-  } = useInteractive(component, true)
+    ref,
+  } = useInteractive(component, index, true)
+  const { isOver } = useDropComponent(component.id, index, ref)
 
   if (isOver) {
     props.bg = 'teal.50'
@@ -21,12 +18,14 @@ const IconPreview = ({ component }: Props) => {
   if (icon) {
     if (Object.keys(icons).includes(icon)) {
       const Icon = icons[icon as keyof typeof icons]
+
       return (
-        <Box {...props} display="inline">
+        <Box {...props} index={index} display="inline">
           <Icon path="" color={color} boxSize={boxSize} />
         </Box>
       )
     }
+
     return null
   }
 

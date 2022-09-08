@@ -4,14 +4,19 @@ import { useDropComponent } from '~hooks/useDropComponent'
 import ComponentPreview from '~components/editor/ComponentPreview'
 import { Alert, Box } from '@chakra-ui/react'
 
-const AlertPreview: React.FC<IPreviewProps> = ({ component }) => {
+const AlertPreview: React.FC<IPreviewProps> = ({ component, index }) => {
   const acceptedTypes = [
     'AlertIcon',
     'AlertTitle',
     'AlertDescription',
   ] as ComponentType[]
-  const { props, ref } = useInteractive(component, false)
-  const { drop, isOver } = useDropComponent(component.id, acceptedTypes)
+  const { props, ref } = useInteractive(component, index, false)
+  const { drop, isOver } = useDropComponent(
+    component.id,
+    index,
+    ref,
+    acceptedTypes,
+  )
 
   let boxProps: any = {}
 
@@ -22,8 +27,8 @@ const AlertPreview: React.FC<IPreviewProps> = ({ component }) => {
   return (
     <Box ref={drop(ref)} {...boxProps}>
       <Alert {...props}>
-        {component.children.map((key: string) => (
-          <ComponentPreview key={key} componentName={key} />
+        {component.children.map((key, i) => (
+          <ComponentPreview key={key} componentName={key} index={i} />
         ))}
       </Alert>
     </Box>

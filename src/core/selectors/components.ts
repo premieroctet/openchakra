@@ -40,6 +40,12 @@ export const getHoveredId = (state: RootState) =>
 export const getIsHovered = (id: IComponent['id']) => (state: RootState) =>
   getHoveredId(state) === id
 
+export const getIsSortHovered = (id: IComponent['id']) => (state: RootState) =>
+  state.components.present.sortHoveredId === id
+
+export const getSortPosition = () => (state: RootState) =>
+  state.components.present.sortPosition
+
 export const getComponentNames = (state: RootState) => {
   const names = map(
     state.components.present.components,
