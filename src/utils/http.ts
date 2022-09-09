@@ -15,3 +15,8 @@ export const build = () => {
   const body = { projectName: config.projectName }
   return axios.post(`${config.targetDomain}/myAlfred/api/studio/build`, body)
 }
+
+export const start = () => {
+  const body = { projectName: config.projectName }
+  return axios.post(`${config.targetDomain}/myAlfred/api/studio/start`, body)
+}

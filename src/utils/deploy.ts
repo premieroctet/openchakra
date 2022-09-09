@@ -1,8 +1,6 @@
-import lodash from 'lodash'
-import { build, copyFile, install } from './http'
+import { build, copyFile, install, start } from './http'
 import { generateCode } from './code'
 import { validate } from './validation'
-import config from '../../env.json'
 
 const copyApp = (contents: Buffer) => {
   console.log(`Code:${contents}`)
@@ -23,5 +21,8 @@ export const deploy = (components: IComponents) => {
     })
     .then(() => {
       return build()
+    })
+    .then(() => {
+      return start()
     })
 }
