@@ -13,7 +13,6 @@ import { InspectorProvider } from '~contexts/inspector-context'
 import Inspector from '~components/inspector/Inspector'
 import '~custom-components/Card/CardInit'
 import '~custom-components/DataProvider/DataProviderInit'
-import '~custom-components/Table/TableInit'
 import Menu from '~components/sidebar/Menu'
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
