@@ -41,7 +41,7 @@ const menuSections: {
 }
 
 const Menu = () => {
-  const [activeSection, setActiveSection] = useState('pages')
+  const [activeSection, setActiveSection] = useState('components')
   const showLayout = useSelector(getShowLayout)
   const dispatch = useDispatch()
 
