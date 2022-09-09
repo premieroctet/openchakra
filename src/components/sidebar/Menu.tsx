@@ -96,31 +96,24 @@ const Menu = () => {
             {Object.keys(menuSections).map(category => {
               return (
                 <li>
-                  <Button
-                    bg={category === activeSection ? 'teal.400' : 'none'}
-                    borderRadius={'none'}
-                    height="100%"
-                    width="100%"
+                  <button
+                    className={category === activeSection ? 'highlight' : ''}
                     onClick={() => {
                       setActiveSection(category)
                       menuSections[category].function &&
                         menuSections[category].function(components, toast)
                     }}
-                    _hover={{
-                      background: 'teal.400',
-                      color: 'white',
-                    }}
                   >
                     <img
                       src={menuSections[category]['icon']}
                       alt=""
-                      width={60}
+                      width={30}
                       style={
                         category === 'deploy' ? { marginRight: '10px' } : {}
                       }
                     />
                     <span>{menuSections[category]['title']}</span>
-                  </Button>
+                  </button>
                 </li>
               )
             })}
@@ -150,8 +143,10 @@ const Menu = () => {
 
 const StyledMenu = styled.div`
   position: relative;
+  --panel-width: 300px;
 
   .leftpanel {
+    height: 100%;
     position: relative;
     z-index: 2;
     display: grid;
@@ -161,11 +156,12 @@ const StyledMenu = styled.div`
       'actions sidebar'
       'responsive sidebar';
     grid-template-rows: auto 1fr 1fr 1fr;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: 80px auto;
     background-color: rgb(20, 19, 37);
-    width: ${props => (props.show ? '415px' : 0)};
+    width: ${props => (props.show ? 'var(--panel-width)' : 0)};
     transition: all 0.2s ease-in-out;
-    transform: ${props => (props.show ? 'none' : 'translateX(-415px)')};
+    transform: ${props =>
+      props.show ? 'none' : 'translateX(calc(var(--panel-width) * -1))'};
   }
 
   .menu {
@@ -173,10 +169,13 @@ const StyledMenu = styled.div`
     list-style-type: none;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
-    li {
-      width: 100%;
-    }
+    width: min-content;
+  }
+
+  li img {
+    aspect-ratio: 1/1;
   }
 
   .menuactions {
@@ -187,24 +186,9 @@ const StyledMenu = styled.div`
     grid-area: responsive;
   }
 
-  .buildermode {
-    margin-left: -2rem;
-    z-index: 1;
-    color: #665;
-    position: absolute;
-    top: 45%;
-    width: 55px;
-    height: 45px;
-    left: ${props => (props.show ? '415px' : '0')};
-    background-color: rgb(236, 236, 236);
-    padding: 0.5rem;
-    border-radius: 50%;
-    transition: all 0.2s ease-in-out;
-    box-shadow: 0px 2px 5px #aaa;
-
-    span {
-      padding-left: 1.5rem;
-    }
+  .menu button span {
+    font-size: 12px;
+    word-wrap: break-word;
   }
 
   .menu button,
@@ -213,7 +197,6 @@ const StyledMenu = styled.div`
     flex-direction: column;
     align-items: center;
     color: white;
-    padding: 0.5rem;
   }
 
   .logo {
@@ -229,8 +212,24 @@ const StyledMenu = styled.div`
     color: white;
   }
 
-  li img {
-    aspect-ratio: 1/1;
+  .buildermode {
+    margin-left: -2rem;
+    z-index: 1;
+    color: #665;
+    position: absolute;
+    top: 45%;
+    width: 55px;
+    height: 45px;
+    left: ${props => (props.show ? 'var(--panel-width)' : '0')};
+    background-color: rgb(236, 236, 236);
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0px 2px 5px #aaa;
+
+    span {
+      padding-left: 1.5rem;
+    }
   }
 `
 

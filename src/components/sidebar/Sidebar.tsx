@@ -53,7 +53,7 @@ const Sidebar = () => {
         overflowX="visible"
         boxShadow="xl"
         flex="0 0 14rem"
-        p={5}
+        p={2}
         m={0}
         as="menu"
         bg="rgb(236, 236, 236)"
