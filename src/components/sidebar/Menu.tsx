@@ -152,13 +152,14 @@ const StyledMenu = styled.div`
     color: #665;
     position: absolute;
     top: 45%;
-    width: 60px;
-    height: 50px;
+    width: 55px;
+    height: 45px;
     left: ${props => (props.show ? '415px' : '0')};
     background-color: rgb(236, 236, 236);
     padding: 0.5rem;
     border-radius: 50%;
     transition: all 0.2s ease-in-out;
+    box-shadow: 0px 2px 5px #aaa;
 
     span {
       padding-left: 1.5rem;

@@ -33,6 +33,8 @@ const DragItem: React.FC<ComponentItemProps> = ({
 
   const filenameImg = `${type.replace('Meta', '').toUpperCase()}.svg`
 
+  console.log(filenameImg)
+
   if (isChild) {
     boxProps = { ...boxProps }
   }
