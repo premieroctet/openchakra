@@ -10,7 +10,6 @@ import { getComponents } from '~core/selectors/components'
 import { getShowLayout, getShowCode, getDevice } from '~core/selectors/app'
 import ComponentPreview from '~components/editor/ComponentPreview'
 import devices from '~config/devices'
-import Xarrow from 'react-xarrows'
 import moment from 'moment'
 import config from '../../../env.json'
 
@@ -99,15 +98,6 @@ const Editor: React.FC = () => {
       {components.root.children.map((name: string) => (
         <ComponentPreview id={name} key={name} componentName={name} />
       ))}
-      {Object.values(components)
-        .filter(c => c.props.dataSource)
-        .map(c => (
-          <Xarrow
-            id={moment()}
-            start={`comp-${c.props.dataSource}`}
-            end={c.id}
-          />
-        ))}
     </Box>
   )
 
