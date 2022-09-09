@@ -86,4 +86,27 @@ router.post('/build', (req, res) => {
   return res.json(result)
 })
 
+router.post('/start', (req, res) => {
+  const {projectName}=req.body
+  if (!projectName) {
+    return res.status(HTTP_CODES.BAD_REQUEST).json()
+  }
+
+  const destpath=path.join(PRODUCTION_ROOT, projectName)
+  const result=child_process.execSync('serve -p 4001 build/',
+    {
+      cwd: destpath,
+    }, (error, stdout, stderr) => {
+      console.log(`Error:${error}`)
+      console.log(`Stdout:${stdout}`)
+      console.log(`stderr:${stderr}`)
+      if (error) {
+        return res.status(HTTP_CODES.SYSTEM_ERROR).json(error)
+      }
+      return res.json()
+    })
+  console.log(`Start result:${result}`)
+  return res.json(result)
+})
+
 module.exports=router
