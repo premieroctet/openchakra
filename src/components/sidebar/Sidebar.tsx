@@ -8,8 +8,8 @@ import {
   InputRightElement,
   DarkMode,
   IconButton,
-  List,
-  ListItem,
+  GridItem,
+  AspectRatio,
 } from '@chakra-ui/react'
 import { CloseIcon, SearchIcon } from '@chakra-ui/icons'
 import DragItem from './DragItem'
@@ -33,10 +33,10 @@ const Sidebar = () => {
           acc[props.group] = [elemName]
         }
       } else {
-        if (acc['divers']) {
-          acc['divers'].push(elemName)
+        if (acc['Basics']) {
+          acc['Basics'].push(elemName)
         } else {
-          acc['divers'] = [elemName]
+          acc['Basics'] = [elemName]
         }
       }
 
@@ -57,7 +57,7 @@ const Sidebar = () => {
         m={0}
         as="menu"
         bg="rgb(236, 236, 236)"
-        width="15rem"
+        w={'100%'}
       >
         <InputGroup size="sm" mb={4}>
           <Input
@@ -95,18 +95,19 @@ const Sidebar = () => {
             <Text
               key={`${catego}text`}
               fontWeight="bold"
-              fontSize="lg"
-              color="whiteAlpha.600"
+              fontSize="sm"
+              color="black"
+              mb={'3'}
             >
               {catego}
             </Text>
-
             <Grid
               as={'ul'}
-              templateColumns={'repeat(2, 6rem)'}
-              templateRows={'repeat(2, 6rem)'}
+              templateColumns={'repeat(2, 1fr)'}
+              templateRows={'repeat(2, 1fr)'}
               alignItems={'center'}
               gap={'0.5rem'}
+              key={`${catego}list`}
             >
               {items
                 .filter(c => c.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -114,32 +115,61 @@ const Sidebar = () => {
                   const { children, soon } = menuItems[name] as MenuItem
 
                   if (children) {
+                    const elements = Object.keys(children).map(childName => (
+                      <GridItem as={'li'} key={childName}>
+                        <AspectRatio ratio={4 / 3}>
+                          <DragItem
+                            isChild
+                            label={childName}
+                            type={childName as any}
+                            id={childName as any}
+                            rootParentType={
+                              menuItems[name]?.rootParentType || name
+                            }
+                          >
+                            {childName}
+                          </DragItem>
+                        </AspectRatio>
+                      </GridItem>
+                    ))
+
                     return [
-                      <DragItem
-                        key={`${name}Meta`}
-                        isMeta
-                        soon={soon}
-                        label={name}
-                        type={`${name}` as any}
-                        id={`${name}Meta` as any}
-                        rootParentType={menuItems[name]?.rootParentType || name}
-                      >
-                        {name}
-                      </DragItem>,
+                      <GridItem as={'li'} key={`${name}Meta`}>
+                        <AspectRatio ratio={4 / 3}>
+                          <DragItem
+                            isMeta
+                            soon={soon}
+                            label={name}
+                            type={`${name}Meta` as any}
+                            id={`${name}Meta` as any}
+                            rootParentType={
+                              menuItems[name]?.rootParentType || name
+                            }
+                          >
+                            {name}
+                          </DragItem>
+                        </AspectRatio>
+                      </GridItem>,
+                      ...elements,
                     ]
                   }
 
                   return (
-                    <DragItem
-                      key={name}
-                      soon={soon}
-                      label={name}
-                      type={name as any}
-                      id={name as any}
-                      rootParentType={menuItems[name]?.rootParentType || name}
-                    >
-                      {name}
-                    </DragItem>
+                    <GridItem as={'li'} key={name}>
+                      <AspectRatio ratio={4 / 3}>
+                        <DragItem
+                          soon={soon}
+                          label={name}
+                          type={name as any}
+                          id={name as any}
+                          rootParentType={
+                            menuItems[name]?.rootParentType || name
+                          }
+                        >
+                          {name}
+                        </DragItem>
+                      </AspectRatio>
+                    </GridItem>
                   )
                 })}
             </Grid>

@@ -31,17 +31,19 @@ const DragItem: React.FC<ComponentItemProps> = ({
     }
   }
 
+  const filenameImg = `${type.replace('Meta', '').toUpperCase()}.svg`
+
   if (isChild) {
-    boxProps = { ...boxProps, ml: 4 }
+    boxProps = { ...boxProps }
   }
 
   return (
     <Box
       boxSizing="border-box"
-      transition="margin 200ms"
-      my={1}
+      position={'relative'}
+      transition="all 200ms"
       bg="whiteAlpha.900"
-      p={1}
+      p={3}
       display="flex"
       flexDirection="column"
       boxShadow="md"
@@ -50,35 +52,34 @@ const DragItem: React.FC<ComponentItemProps> = ({
       height={'100%'}
       {...boxProps}
     >
-      <img
-        src={`/icons/components/${[type.toUpperCase()]}.svg`}
-        width={45}
-        alt=""
-      />
+      <img src={`/icons/components/${filenameImg}`} width={70} alt="" />
       <Text
         color="gray.900"
         letterSpacing="wide"
-        fontSize="sm"
+        fontSize="xs"
+        mt={'-8px'}
+        textAlign={'center'}
         wordBreak={'break-all'}
         textTransform="capitalize"
       >
         {label}
       </Text>
-      {/* {isMeta && (
+      {isMeta && (
         <Box
-          ml={2}
+          position={'absolute'}
+          top="3px"
+          right="3px"
           borderWidth="1px"
           color="teal.300"
-          borderColor="teal.600"
-          fontSize="xs"
-          borderRadius={4}
+          borderColor="teal.300"
+          fontSize="10px"
+          borderRadius="xl"
           px={1}
         >
           preset
-          
         </Box>
       )}
-      {soon && (
+      {/*{soon && (
         <Box
           ml={2}
           borderWidth="1px"
