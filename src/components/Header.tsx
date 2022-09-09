@@ -95,6 +95,7 @@ const DeployButton = () => {
                 status: 'success',
                 position: 'top',
                 duration: 2000,
+                isClosable: true,
               })
             })
             .catch(err => {
@@ -105,6 +106,7 @@ const DeployButton = () => {
                 status: 'error',
                 position: 'top',
                 duration: 2000,
+                isClosable: true,
               })
             })
             .finally(() => {

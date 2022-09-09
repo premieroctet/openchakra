@@ -1,7 +1,7 @@
 import lodash from 'lodash'
-
 import { build, copyFile, install } from './http'
 import { generateCode } from './code'
+import { validate } from './validation'
 import config from '../../env.json'
 
 const copyApp = (contents: Buffer) => {
@@ -11,7 +11,10 @@ const copyApp = (contents: Buffer) => {
 
 export const deploy = (components: IComponents) => {
   console.log(`deployingCode for components:${Object.keys(components)}`)
-  return generateCode(components)
+  return validate(components)
+    .then(() => {
+      return generateCode(components)
+    })
     .then(code => {
       return copyApp(code)
     })

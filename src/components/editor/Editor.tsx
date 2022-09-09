@@ -105,7 +105,6 @@ const Editor: React.FC = () => {
     return Playground
   }
 
-  alert(`Error:${error}`)
   return (
     <SplitPane
       style={{ overflow: 'auto' }}

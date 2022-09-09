@@ -24,10 +24,9 @@ const DataSourcePanel = () => {
     setProviders(dataProviders)
   }, [components])
 
-  console.log(`Attrs:` + attributes)
   return (
     <>
-      <FormControl htmlFor="dataSource" label="Source de données">
+      <FormControl htmlFor="dataSource" label="Datasource">
         <Select
           id="dataSource"
           onChange={setValueFromEvent}
@@ -37,7 +36,9 @@ const DataSourcePanel = () => {
         >
           <option value={null}></option>
           {providers.map(provider => (
-            <option value={provider.props.id}>{provider.id}</option>
+            <option value={provider.id}>
+              {provider.props?.model || provider.id}
+            </option>
           ))}
         </Select>
       </FormControl>

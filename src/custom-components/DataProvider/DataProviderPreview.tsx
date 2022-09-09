@@ -7,11 +7,12 @@ const DataProviderPreview: React.FC<IPreviewProps> = ({ component }) => {
   const { drop, isOver } = useDropComponent(component.id, ['Avatar'])
   const { props, ref } = useInteractive(component, true)
 
+  const label = props?.model
+    ? `Data provider/${props?.model}`
+    : `Unlinked data provider (${component.id})`
   return (
     <Box ref={drop(ref)} id={component.id} {...props}>
-      <h1>
-        Data provider{props?.model ? `/${props?.model}` : ' non paramétré'}
-      </h1>
+      <h1>{label}</h1>
     </Box>
   )
 }
