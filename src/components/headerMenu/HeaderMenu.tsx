@@ -48,7 +48,7 @@ const HeaderMenu = () => {
         rightIcon={<ChevronDownIcon path="" />}
         size="xs"
         variant="ghost"
-        colorScheme="gray"
+        color={'white'}
       >
         Editor
       </CustomMenuButton>
