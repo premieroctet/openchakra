@@ -1,13 +1,48 @@
+import { useSelector } from 'react-redux'
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import Sidebar from './Sidebar'
+import { useToast } from '@chakra-ui/react'
+import { deploy } from '../../utils/deploy'
+import { getComponents } from '../../core/selectors/components'
 import Pages from './Pages'
+import Sidebar from './Sidebar'
+
+const deployComponents = (components: IComponents, toast: any) => {
+  toast({
+    title: 'Starting publishing',
+    status: 'success',
+    position: 'top',
+    duration: 2000,
+    isClosable: true,
+  })
+  deploy(components)
+    .then(() => {
+      toast({
+        title: 'Published on production',
+        status: 'success',
+        position: 'top',
+        duration: 2000,
+        isClosable: true,
+      })
+    })
+    .catch(err => {
+      toast({
+        title: 'Error while publishing',
+        description: String(err),
+        status: 'error',
+        position: 'top',
+        duration: 2000,
+        isClosable: true,
+      })
+    })
+}
 
 const menuSections: {
   [section: string]: {
     title: string
     icon: string
     component?: React.ReactNode
+    function?: (comp: IComponents, toast: any) => any
   }
 } = {
   pages: {
@@ -31,10 +66,13 @@ const menuSections: {
   deploy: {
     title: 'Deploy',
     icon: '/icons/deploy.svg',
+    function: deployComponents,
   },
 }
 
 const Menu = () => {
+  const components = useSelector(getComponents)
+  const toast = useToast()
   const [activeSection, setActiveSection] = useState(
     menuSections.pages.component,
   )
@@ -49,15 +87,17 @@ const Menu = () => {
       />
       <ul className="menu">
         {Object.keys(menuSections).map(category => {
+          const menu = menuSections[category]
           return (
             <li>
               <button
-                onClick={() =>
-                  setActiveSection(menuSections[category]['component'])
-                }
+                onClick={() => {
+                  menu.component && setActiveSection(menu.component)
+                  menu.function && menu.function(components, toast)
+                }}
               >
-                <img src={menuSections[category]['icon']} alt="" width={70} />
-                <span>{menuSections[category]['title']}</span>
+                <img src={menu.icon} alt="" width={70} />
+                <span>{menu.title}</span>
               </button>
             </li>
           )

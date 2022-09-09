@@ -85,7 +85,7 @@ const buildBlock = ({
           const propsValue = childComponent.props[propName]
           const propsValueAsObject = typeof propsValue === 'object'
 
-          if (propsValueAsObject) {
+          if (propsValueAsObject && propsValue) {
             const gatheredProperties = Object.entries(propsValue)
               .map(([prop, value]) => {
                 console.log('valuesProp', value)
