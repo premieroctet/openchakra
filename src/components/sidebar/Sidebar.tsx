@@ -4,6 +4,7 @@ import {
   Text,
   Input,
   InputGroup,
+  Grid,
   InputRightElement,
   DarkMode,
   IconButton,
@@ -18,7 +19,7 @@ type categoryItems = {
   [name: string]: string[]
 }
 
-const Menu = () => {
+const Sidebar = () => {
   const [searchTerm, setSearchTerm] = useState('')
 
   const groupItems: categoryItems = Object.entries(menuItems).reduce(
@@ -47,7 +48,7 @@ const Menu = () => {
   return (
     <DarkMode>
       <Box
-        maxH="calc(100vh - 3rem)"
+        maxH="calc(100vh - 10rem)"
         overflowY="auto"
         overflowX="visible"
         boxShadow="xl"
@@ -55,7 +56,7 @@ const Menu = () => {
         p={5}
         m={0}
         as="menu"
-        backgroundColor="#2e3748"
+        bg="rgb(236, 236, 236)"
         width="15rem"
       >
         <InputGroup size="sm" mb={4}>
@@ -67,7 +68,8 @@ const Menu = () => {
               setSearchTerm(event.target.value)
             }
             borderColor="rgba(255, 255, 255, 0.04)"
-            bg="rgba(255, 255, 255, 0.06)"
+            borderRadius={'15px'}
+            bg="rgba(255, 255, 255, 1)"
             _hover={{
               borderColor: 'rgba(255, 255, 255, 0.08)',
             }}
@@ -83,7 +85,7 @@ const Menu = () => {
                 onClick={() => setSearchTerm('')}
               />
             ) : (
-              <SearchIcon path="" color="gray.300" />
+              <SearchIcon path="" color="gray.900" />
             )}
           </InputRightElement>
         </InputGroup>
@@ -98,6 +100,8 @@ const Menu = () => {
             >
               {catego}
             </Text>
+
+            <Grid></Grid>
             <List key={`${catego}list`}>
               {items
                 .filter(c => c.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -133,7 +137,6 @@ const Menu = () => {
                           {name}
                         </DragItem>
                       </ListItem>,
-                      ...elements,
                     ]
                   }
 
@@ -159,4 +162,4 @@ const Menu = () => {
   )
 }
 
-export default memo(Menu)
+export default memo(Sidebar)

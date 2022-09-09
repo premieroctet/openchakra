@@ -14,6 +14,7 @@ import Inspector from '~components/inspector/Inspector'
 import '~custom-components/Card/CardInit'
 import '~custom-components/DataProvider/DataProviderInit'
 import '~custom-components/Table/TableInit'
+import Menu from '~components/sidebar/Menu'
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
@@ -28,10 +29,11 @@ const App = () => {
         })}
       />
       <Metadata />
-      <Header />
+      {/* <Header /> */}
       <DndProvider backend={Backend}>
         <Flex h="calc(100vh - 3rem)">
-          <Sidebar />
+          <Menu />
+          {/* <Sidebar /> */}
           <EditorErrorBoundary>
             <Box bg="white" flex={1} position="relative">
               <Editor />

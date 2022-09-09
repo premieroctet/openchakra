@@ -1,7 +1,6 @@
 import React from 'react'
 import { useDrag } from 'react-dnd'
 import { Text, Box } from '@chakra-ui/react'
-import { DragHandleIcon } from '@chakra-ui/icons'
 
 const DragItem: React.FC<ComponentItemProps> = ({
   type,
@@ -44,17 +43,27 @@ const DragItem: React.FC<ComponentItemProps> = ({
       boxSizing="border-box"
       transition="margin 200ms"
       my={1}
-      borderRadius="md"
+      bg="whiteAlpha.900"
       p={1}
       display="flex"
+      flexDirection="column"
       alignItems="center"
       {...boxProps}
     >
-      <DragHandleIcon path="" fontSize="xs" mr={2} />
-      <Text letterSpacing="wide" fontSize="sm" textTransform="capitalize">
+      <img
+        src={`/icons/components/${[type.toUpperCase()]}.svg`}
+        width={45}
+        alt=""
+      />
+      <Text
+        color="gray.900"
+        letterSpacing="wide"
+        fontSize="sm"
+        textTransform="capitalize"
+      >
         {label}
       </Text>
-      {isMeta && (
+      {/* {isMeta && (
         <Box
           ml={2}
           borderWidth="1px"
@@ -65,6 +74,7 @@ const DragItem: React.FC<ComponentItemProps> = ({
           px={1}
         >
           preset
+          
         </Box>
       )}
       {soon && (
@@ -79,7 +89,7 @@ const DragItem: React.FC<ComponentItemProps> = ({
         >
           soon
         </Box>
-      )}
+      )}*/}
     </Box>
   )
 }
