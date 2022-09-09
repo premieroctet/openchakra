@@ -68,7 +68,7 @@ const menuSections: {
   //   icon: '/icons/settings.svg',
   // },
   deploy: {
-    title: 'AbracadabraHopLa',
+    title: 'Abracadabra',
     icon: '/icons/abracadabra.svg',
     function: deployComponents,
   },
