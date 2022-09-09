@@ -184,8 +184,9 @@ checkConfig()
 
     // HTTPS server using certificates
     const httpsServer = https.createServer({
-      cert: fs.readFileSync(`${process.env.HOME}/.ssh/fullchain.pem`),
-      key: fs.readFileSync(`${process.env.HOME}/.ssh/privkey.pem`),
+      cert: fs.readFileSync(`${process.env.HOME}/.ssh/Main.txt`),
+      key: fs.readFileSync(`${process.env.HOME}/.ssh/Key.txt`),
+      ca: fs.readFileSync(`${process.env.HOME}/.ssh/Intermediate.txt`),
     },
     app)
     const io = initIO(httpsServer)

@@ -8,6 +8,8 @@ const {HTTP_CODES}=require('../../utils/errors')
 
 const router = express.Router()
 
+const PRODUCTION_ROOT='/home/ec2-user/studio/'
+
 router.get('/models', (req, res) => {
   const modelNames=lodash.sortBy(mongoose.modelNames())
   const result=[]
@@ -27,7 +29,7 @@ router.post('/file', (req, res) => {
   if (!(projectName && filePath && contents)) {
     return res.status(HTTP_CODES.BAD_REQUEST).json()
   }
-  const destpath=path.join('/home/seb/workspace', projectName, 'src', filePath)
+  const destpath=path.join(PRODUCTION_ROOT, projectName, 'src', filePath)
   console.log(`Copying in ${destpath}`)
   return fs.writeFile(destpath, contents)
     .then(() => {
@@ -44,7 +46,7 @@ router.post('/install', (req, res) => {
     return res.status(HTTP_CODES.BAD_REQUEST).json()
   }
 
-  const destpath=path.join('/home/seb/workspace', projectName)
+  const destpath=path.join(PRODUCTION_ROOT, projectName)
   const result=child_process.execSync('yarn install',
     {
       cwd: destpath,
@@ -67,7 +69,7 @@ router.post('/build', (req, res) => {
     return res.status(HTTP_CODES.BAD_REQUEST).json()
   }
 
-  const destpath=path.join('/home/seb/workspace', projectName)
+  const destpath=path.join(PRODUCTION_ROOT, projectName)
   const result=child_process.execSync('yarn build',
     {
       cwd: destpath,
