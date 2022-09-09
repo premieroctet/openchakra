@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import Sidebar from './Sidebar'
 import Pages from './Pages'
+import { Button } from '@chakra-ui/react'
 
 const menuSections: {
   [section: string]: {
@@ -29,15 +30,13 @@ const menuSections: {
     icon: '/icons/settings.svg',
   },
   deploy: {
-    title: 'Deploy',
-    icon: '/icons/deploy.svg',
+    title: 'Abracadabra',
+    icon: '/icons/abracadabra.svg',
   },
 }
 
 const Menu = () => {
-  const [activeSection, setActiveSection] = useState(
-    menuSections.pages.component,
-  )
+  const [activeSection, setActiveSection] = useState('pages')
 
   return (
     <StyledMenu>
@@ -51,19 +50,30 @@ const Menu = () => {
         {Object.keys(menuSections).map(category => {
           return (
             <li>
-              <button
-                onClick={() =>
-                  setActiveSection(menuSections[category]['component'])
-                }
+              <Button
+                bg={'none'}
+                borderRadius={'none'}
+                height="100%"
+                width="100%"
+                onClick={() => setActiveSection(category)}
+                _hover={{
+                  background: 'teal.400',
+                  color: 'white',
+                }}
               >
-                <img src={menuSections[category]['icon']} alt="" width={70} />
+                <img
+                  src={menuSections[category]['icon']}
+                  alt=""
+                  width={70}
+                  style={category === 'deploy' ? { marginRight: '10px' } : {}}
+                />
                 <span>{menuSections[category]['title']}</span>
-              </button>
+              </Button>
             </li>
           )
         })}
       </ul>
-      <div className="sidebar">{activeSection}</div>
+      <div className="sidebar">{menuSections[activeSection]['component']}</div>
     </StyledMenu>
   )
 }
@@ -76,15 +86,18 @@ const StyledMenu = styled.div`
   grid-template-rows: auto 1fr;
   background-color: rgb(20, 19, 37);
   width: max-content;
-  padding-block: 1rem;
-  padding-inline: 1rem 0;
+  min-width: 20vw;
 
   .menu {
     grid-area: menu;
     list-style-type: none;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    align-items: center;
+  }
+
+  li {
+    width: 100%;
   }
 
   button {
@@ -92,12 +105,15 @@ const StyledMenu = styled.div`
     flex-direction: column;
     align-items: center;
     color: white;
+    padding: 0.5rem;
   }
 
   .logo {
+    height: auto;
     grid-area: logo;
     justify-self: end;
-    padding: 0.5rem;
+    padding: 1rem;
+    padding-inline-end: 2rem;
   }
 
   .sidebar {

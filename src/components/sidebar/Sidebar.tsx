@@ -48,7 +48,7 @@ const Sidebar = () => {
   return (
     <DarkMode>
       <Box
-        maxH="calc(100vh - 10rem)"
+        maxH="calc(100vh - 8rem)"
         overflowY="auto"
         overflowX="visible"
         boxShadow="xl"
@@ -101,60 +101,48 @@ const Sidebar = () => {
               {catego}
             </Text>
 
-            <Grid></Grid>
-            <List key={`${catego}list`}>
+            <Grid
+              as={'ul'}
+              templateColumns={'repeat(2, 6rem)'}
+              templateRows={'repeat(2, 6rem)'}
+              alignItems={'center'}
+              gap={'0.5rem'}
+            >
               {items
                 .filter(c => c.toLowerCase().includes(searchTerm.toLowerCase()))
                 .map(name => {
                   const { children, soon } = menuItems[name] as MenuItem
 
                   if (children) {
-                    const elements = Object.keys(children).map(childName => (
+                    return [
                       <DragItem
-                        isChild
-                        key={childName}
-                        label={childName}
-                        type={childName as any}
-                        id={childName as any}
+                        key={`${name}Meta`}
+                        isMeta
+                        soon={soon}
+                        label={name}
+                        type={`${name}` as any}
+                        id={`${name}Meta` as any}
                         rootParentType={menuItems[name]?.rootParentType || name}
                       >
-                        {childName}
-                      </DragItem>
-                    ))
-
-                    return [
-                      <ListItem key={`${name}Meta`}>
-                        <DragItem
-                          isMeta
-                          soon={soon}
-                          label={name}
-                          type={`${name}Meta` as any}
-                          id={`${name}Meta` as any}
-                          rootParentType={
-                            menuItems[name]?.rootParentType || name
-                          }
-                        >
-                          {name}
-                        </DragItem>
-                      </ListItem>,
+                        {name}
+                      </DragItem>,
                     ]
                   }
 
                   return (
-                    <ListItem key={name}>
-                      <DragItem
-                        soon={soon}
-                        label={name}
-                        type={name as any}
-                        id={name as any}
-                        rootParentType={menuItems[name]?.rootParentType || name}
-                      >
-                        {name}
-                      </DragItem>
-                    </ListItem>
+                    <DragItem
+                      key={name}
+                      soon={soon}
+                      label={name}
+                      type={name as any}
+                      id={name as any}
+                      rootParentType={menuItems[name]?.rootParentType || name}
+                    >
+                      {name}
+                    </DragItem>
                   )
                 })}
-            </List>
+            </Grid>
           </div>
         ))}
       </Box>

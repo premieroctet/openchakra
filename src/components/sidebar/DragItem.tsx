@@ -25,10 +25,7 @@ const DragItem: React.FC<ComponentItemProps> = ({
       color: 'whiteAlpha.800',
       cursor: 'move',
       _hover: {
-        ml: -1,
-        mr: 1,
         bg: 'teal.100',
-        boxShadow: 'sm',
         color: 'teal.800',
       },
     }
@@ -47,7 +44,10 @@ const DragItem: React.FC<ComponentItemProps> = ({
       p={1}
       display="flex"
       flexDirection="column"
+      boxShadow="md"
       alignItems="center"
+      justifyContent={'center'}
+      height={'100%'}
       {...boxProps}
     >
       <img
@@ -59,6 +59,7 @@ const DragItem: React.FC<ComponentItemProps> = ({
         color="gray.900"
         letterSpacing="wide"
         fontSize="sm"
+        wordBreak={'break-all'}
         textTransform="capitalize"
       >
         {label}
