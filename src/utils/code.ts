@@ -30,6 +30,41 @@ type BuildBlockParams = {
   forceBuildBlock?: boolean
 }
 
+const buildStyledProps = (propsNames: string[], childComponent: IComponent) => {
+  let propsContent = ``
+
+  propsNames.forEach((propName: string) => {
+    const propsValue = childComponent.props[propName]
+
+    if (
+      propName.toLowerCase().includes('icon') &&
+      childComponent.type !== 'Icon'
+    ) {
+      if (Object.keys(icons).includes(propsValue)) {
+        let operand = `={<${propsValue} />}`
+
+        propsContent += `${propName}${operand} `
+      }
+    } else if (propName !== 'children' && propsValue) {
+      let operand = `='${propsValue}'`
+
+      if (propsValue === true || propsValue === 'true') {
+        operand = ``
+      } else if (
+        propsValue === 'false' ||
+        isBoolean(propsValue) ||
+        !isNaN(propsValue)
+      ) {
+        operand = `={${propsValue}}`
+      }
+
+      propsContent += `${propName}${operand} `
+    }
+  })
+
+  return propsContent
+}
+
 const buildBlock = ({
   component,
   components,
@@ -53,34 +88,19 @@ const buildBlock = ({
         return true
       })
 
-      propsNames.forEach((propName: string) => {
-        const propsValue = childComponent.props[propName]
+      // Special case for Highlight component
+      if (componentName === 'Highlight') {
+        const [query, children, ...restProps] = propsNames
+        propsContent += buildStyledProps([query, children], childComponent)
 
-        if (
-          propName.toLowerCase().includes('icon') &&
-          childComponent.type !== 'Icon'
-        ) {
-          if (Object.keys(icons).includes(propsValue)) {
-            let operand = `={<${propsValue} />}`
-
-            propsContent += `${propName}${operand} `
-          }
-        } else if (propName !== 'children' && propsValue) {
-          let operand = `='${propsValue}'`
-
-          if (propsValue === true || propsValue === 'true') {
-            operand = ``
-          } else if (
-            propsValue === 'false' ||
-            isBoolean(propsValue) ||
-            !isNaN(propsValue)
-          ) {
-            operand = `={${propsValue}}`
-          }
-
-          propsContent += `${propName}${operand} `
-        }
-      })
+        propsContent += `styles={{${restProps
+          .filter(propName => childComponent.props[propName])
+          .map(
+            propName => `${propName}:'${childComponent.props[propName]}'`,
+          )}}}`
+      } else {
+        propsContent += buildStyledProps(propsNames, childComponent)
+      }
 
       if (
         typeof childComponent.props.children === 'string' &&

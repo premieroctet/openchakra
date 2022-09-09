@@ -48,6 +48,7 @@ import NumberInputPanel from '~components/inspector/panels/components/NumberInpu
 import AspectRatioPanel from '~components/inspector/panels/components/AspectRatioPanel'
 import BreadcrumbPanel from '~components/inspector/panels/components/BreadcrumbPanel'
 import BreadcrumbItemPanel from '~components/inspector/panels/components/BreadcrumbItemPanel'
+import HighlightPanel from '~components/inspector/panels/components/HighlightPanel'
 
 const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
   component,
@@ -81,6 +82,7 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
       {type === 'Textarea' && <TextareaPanel />}
       {type === 'CircularProgress' && <CircularProgressPanel />}
       {type === 'Heading' && <HeadingPanel />}
+      {type === 'Highlight' && <HighlightPanel />}
       {type === 'SimpleGrid' && <SimpleGridPanel />}
       {type === 'Switch' && <SwitchPanel />}
       {type === 'Alert' && <AlertPanel />}

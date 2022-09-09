@@ -51,6 +51,7 @@ const componentsToTest = [
   'Textarea',
   'CircularProgress',
   'Heading',
+  'Highlight',
   'Tag',
   'Switch',
   'FormLabel',

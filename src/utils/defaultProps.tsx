@@ -58,6 +58,7 @@ import {
   TabProps,
   BreadcrumbLinkProps,
   ListProps,
+  HighlightProps,
 } from '@chakra-ui/react'
 
 import iconsList from '~iconsList'
@@ -85,6 +86,7 @@ type PreviewDefaultProps = {
   Textarea?: PropsWithForm<TextareaProps>
   CircularProgress?: PropsWithForm<CircularProgressProps>
   Heading?: PropsWithForm<HeadingProps>
+  Highlight?: PropsWithForm<HighlightProps>
   Tag?: PropsWithForm<TagProps>
   SimpleGrid?: PropsWithForm<SimpleGridProps>
   Switch?: PropsWithForm<SwitchProps>
@@ -210,6 +212,10 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   },
   Heading: {
     children: 'Heading title',
+  },
+  Highlight: {
+    children: 'Heading title',
+    query: 'title',
   },
   Icon: { icon: 'CopyIcon' },
   IconButton: {

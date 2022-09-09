@@ -1,6 +1,5 @@
 import React, { memo } from 'react'
 import { Accordion } from '@chakra-ui/react'
-
 import PaddingPanel from '~components/inspector/panels/styles/PaddingPanel'
 import DimensionPanel from '~components/inspector/panels/styles/DimensionPanel'
 import BorderPanel from '~components/inspector/panels/styles/BorderPanel'
