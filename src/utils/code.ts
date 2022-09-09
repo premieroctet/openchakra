@@ -30,13 +30,20 @@ export const formatCode = async (code: string) => {
   return formattedCode
 }
 
-export const getComponentPath = componentName => {
+const getComponentPath = componentName => {
   // Distinguish between chakra/non-chakra components
-  return import('@chakra-ui/react').then(module => {
-    return module[componentName]
-      ? null
-      : `custom-components/${componentName}/${componentName}`
-  })
+  const chakra = '@chakra-ui/react'
+  const custom = `./custom-components/${componentName}/${componentName}`
+  return import(custom)
+    .then(() => {
+      return custom
+    })
+    .catch(() => {
+      return import(chakra)
+    })
+    .then(() => {
+      return null
+    })
 }
 
 type BuildBlockParams = {
@@ -247,8 +254,13 @@ export const generateCode = async (components: IComponents) => {
 
   // Distinguish between chakra/non-chakra components
   const module = await import('@chakra-ui/react')
+  /**
   const groupedComponents = lodash.groupBy(imports, c =>
-    module[c] ? '@chakra-ui/react' : `custom-components/${c}/${c}`,
+    module[c] ? '@chakra-ui/react' : `./custom-components/${c}/${c}`,
+  )
+  */
+  const groupedComponents = lodash.groupBy(imports, c =>
+    module[c] ? '@chakra-ui/react' : `./custom-components/${c}/${c}`,
   )
 
   code = `import React, {useState, useEffect} from 'react';
@@ -256,9 +268,10 @@ export const generateCode = async (components: IComponents) => {
   import {ChakraProvider} from "@chakra-ui/react";
   ${Object.entries(groupedComponents)
     .map(([modName, components]) => {
-      return `import {
+      const multiple = modName.includes('chakra-ui')
+      return `import ${multiple ? '{' : ''}
       ${components.join(',')}
-    } from "${modName}";
+    ${multiple ? '}' : ''} from "${modName}";
     `
     })
     .join('\n')}

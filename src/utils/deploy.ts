@@ -1,7 +1,7 @@
 import lodash from 'lodash'
 
 import { build, copyFile, install } from './http'
-import { generateCode, getComponentPath } from './code'
+import { generateCode } from './code'
 import config from '../../env.json'
 
 const copyApp = (contents: Buffer) => {

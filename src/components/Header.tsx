@@ -21,6 +21,7 @@ import {
   Tooltip,
   HStack,
   Select,
+  useToast,
 } from '@chakra-ui/react'
 import { ExternalLinkIcon, SmallCloseIcon, CheckIcon } from '@chakra-ui/icons'
 import { DiGithubBadge } from 'react-icons/di'
@@ -73,6 +74,7 @@ const CodeSandboxButton = () => {
 const DeployButton = () => {
   const components = useSelector(getComponents)
   const [isDeploying, setIsDeploying] = useState(false)
+  const toast = useToast()
 
   return (
     <Tooltip
@@ -87,20 +89,34 @@ const DeployButton = () => {
           setIsDeploying(true)
           deploy(components)
             .then(() => {
-              alert('Deployment ok')
+              //alert('Deployment ok')
+              toast({
+                title: 'Published on production',
+                status: 'success',
+                position: 'top',
+                duration: 2000,
+              })
             })
             .catch(err => {
-              alert('Deployment error:' + err)
+              //alert('Deployment error:' + err)
+              toast({
+                title: 'Error while publishing',
+                description: String(err),
+                status: 'error',
+                position: 'top',
+                duration: 2000,
+              })
             })
             .finally(() => {
               setIsDeploying(false)
             })
         }}
         isLoading={isDeploying}
+        loadingText={'Publishing...'}
         variant="ghost"
         size="xs"
       >
-        Deploy to production
+        Publish
       </Button>
     </Tooltip>
   )
