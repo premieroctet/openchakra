@@ -1,5 +1,5 @@
 import React, { ReactNode, useState, memo, useEffect } from 'react'
-import { Box, Select, Button, IconButton } from '@chakra-ui/react'
+import { Box, Select, Button, IconButton, Checkbox } from '@chakra-ui/react'
 import { SmallCloseIcon } from '@chakra-ui/icons'
 import FormControl from './FormControl'
 import { useForm } from '~hooks/useForm'
@@ -28,6 +28,7 @@ const GradientControl = (props: GradientControlPropsType) => {
   const [gradientColor, setGradientColor] = useState(['green.200'])
   const [directionValue, setDirectionValue] = useState('to right')
   const gradient = usePropsSelector(props.name)
+  const textGradient = usePropsSelector('bgClip')
 
   const choices = props.options
 
@@ -108,6 +109,16 @@ const GradientControl = (props: GradientControlPropsType) => {
           ))}
         </Select>
       </FormControl>
+      <FormControl label="Clip to Text">
+        <Checkbox
+          defaultChecked={textGradient}
+          onChange={e =>
+            e.target.checked
+              ? setValue('bgClip', `text`)
+              : setValue('bgClip', null)
+          }
+        />
+      </FormControl>
 
       {gradientColor.map((e, i) => (
         <Box textAlign="right" mt={3} key={i}>
@@ -125,7 +136,7 @@ const GradientControl = (props: GradientControlPropsType) => {
           <ColorPickerControl
             withFullColor={props.withFullColor}
             name={props.name}
-            gradient={true}
+            gradient
             index={i}
             gradientColor={e}
             updateGradient={updateGradient}
