@@ -66,6 +66,7 @@ import {
   StatLabelProps,
   StatNumberProps,
   StatArrowProps,
+  SkeletonProps,
 } from '@chakra-ui/react'
 
 import iconsList from '~iconsList'
@@ -146,6 +147,9 @@ type PreviewDefaultProps = {
   Center?: PropsWithForm<CenterProps>
   Container?: PropsWithForm<ContainerProps>
   Kbd?: PropsWithForm<KbdProps>
+  Skeleton?: PropsWithForm<SkeletonProps>
+  SkeletonCircle?: PropsWithForm<SkeletonProps>
+  SkeletonText?: PropsWithForm<SkeletonProps>
 }
 
 export const DEFAULT_PROPS: PreviewDefaultProps = {
@@ -296,6 +300,9 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     alignItems: 'center',
   },
   StatGroup: {},
+  Skeleton: {},
+  SkeletonCircle: {},
+  SkeletonText: {},
   Switch: {
     isChecked: false,
   },
