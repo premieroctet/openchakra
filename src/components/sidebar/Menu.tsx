@@ -77,7 +77,9 @@ const Menu = () => {
           <div className="menuactions">
             <MenuActions />
           </div>
-          <div className="responsive">{/* <ResponsiveActions /> */}</div>
+          <div className="responsive">
+            <ResponsiveActions />
+          </div>
           <div className="sidebar">
             {menuSections[activeSection]['component']}
           </div>
@@ -109,7 +111,7 @@ const StyledMenu = styled.div`
     grid-template-areas:
       'logo logo'
       'menu sidebar'
-      'menu sidebar'
+      'responsive sidebar'
       'actions actions';
     grid-template-rows: auto 1fr 1fr auto;
     grid-template-columns: 1fr 3fr;
@@ -174,6 +176,8 @@ const StyledMenu = styled.div`
 
   .responsive {
     grid-area: responsive;
+    align-self: flex-end;
+    margin-bottom: 1rem;
   }
 
   .logo {
