@@ -23,12 +23,15 @@ const Clear = () => {
         <>
           <PopoverTrigger>
             <Button
-              rightIcon={<SmallCloseIcon path="" />}
+              // rightIcon={<SmallCloseIcon path="" />}
               size="xs"
               variant="ghost"
               color={'white'}
+              _hover={{
+                backgroundColor: 'teal.500',
+              }}
             >
-              Clear
+              <img src="/icons/clear.svg" height={30} alt="" />
             </Button>
           </PopoverTrigger>
           <LightMode>

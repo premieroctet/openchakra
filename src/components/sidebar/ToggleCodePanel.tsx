@@ -9,14 +9,18 @@ const TogglePanelCode = () => {
   const dispatch = useDispatch()
 
   return (
-    <FormControl display="flex" flexDirection="column" alignItems="flex-start">
+    <FormControl
+      display="flex"
+      flexDirection="row"
+      alignItems="center"
+      width={'auto'}
+    >
       <FormLabel
-        color="gray.200"
+        color="white"
         fontSize="sm"
         mr={2}
-        mb={1}
+        mt={2}
         htmlFor="code"
-        pb={0}
         whiteSpace="nowrap"
       >
         Code panel

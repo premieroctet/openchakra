@@ -33,8 +33,6 @@ const DragItem: React.FC<ComponentItemProps> = ({
 
   const filenameImg = `${type.replace('Meta', '').toUpperCase()}.svg`
 
-  console.log(filenameImg)
-
   if (isChild) {
     boxProps = { ...boxProps }
   }
@@ -54,7 +52,7 @@ const DragItem: React.FC<ComponentItemProps> = ({
       height={'100%'}
       {...boxProps}
     >
-      <img src={`/icons/components/${filenameImg}`} width={70} alt="" />
+      <img src={`/icons/components/${filenameImg}`} width={45} alt="" />
       <Text
         color="gray.900"
         letterSpacing="wide"
