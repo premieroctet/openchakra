@@ -275,6 +275,7 @@ let DEFAULT_PROPS: PreviewDefaultProps = {
     columns: 2,
     spacingX: 1,
     spacingY: 1,
+    minChildWidth: 300,
   },
   Stack: {
     spacing: 2,
