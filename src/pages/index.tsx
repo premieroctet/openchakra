@@ -34,14 +34,14 @@ const App = () => {
           <Menu />
           {/* <Sidebar /> */}
           <EditorErrorBoundary>
-            <Box bg="white" flex={1} position="relative">
+            <Box bg="white" flex={1} position="relative" overflow={'hidden'}>
               <Editor />
             </Box>
           </EditorErrorBoundary>
 
           <Box
             maxH="calc(100vh - 3rem)"
-            w={300}
+            w={240}
             bg="#f7fafc"
             overflowY="auto"
             overflowX="visible"

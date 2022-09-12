@@ -1,49 +1,63 @@
 import React, { memo, useState } from 'react'
-import styled from 'styled-components'
 import {
   Box,
-  Switch,
-  Button,
-  Flex,
-  Link,
-  Stack,
-  FormLabel,
-  DarkMode,
-  FormControl,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverArrow,
-  PopoverCloseButton,
-  PopoverHeader,
-  PopoverBody,
-  LightMode,
-  PopoverFooter,
-  Tooltip,
-  HStack,
-  Select,
+  VStack,
+  useRadioGroup,
+  useRadio,
+  Image,
+  Text,
 } from '@chakra-ui/react'
-import { ExternalLinkIcon, SmallCloseIcon, CheckIcon } from '@chakra-ui/icons'
-import { DiGithubBadge } from 'react-icons/di'
-import { AiFillThunderbolt } from 'react-icons/ai'
-import { buildParameters } from '~utils/codesandbox'
-import { generateCode } from '~utils/code'
 import useDispatch from '~hooks/useDispatch'
 import { useSelector } from 'react-redux'
-import { getComponents } from '~core/selectors/components'
-import { getDevice, getShowLayout, getShowCode } from '~core/selectors/app'
-import HeaderMenu from '~components/headerMenu/HeaderMenu'
+import { getDevice } from '~core/selectors/app'
 import devices from '~config/devices'
+
+function CustomRadio(props) {
+  const { getInputProps, getCheckboxProps } = useRadio(props)
+  const input = getInputProps()
+  const checkbox = getCheckboxProps()
+
+  return (
+    <Box as="label">
+      <input {...input} />
+      <Box {...checkbox} display="flex" cursor="pointer" columnGap="0.5rem">
+        {props.children}
+      </Box>
+    </Box>
+  )
+}
 
 const ResponsiveActions = () => {
   const device = useSelector(getDevice)
   const dispatch = useDispatch()
+  const { getRootProps, getRadioProps } = useRadioGroup({
+    name: 'device',
+    defaultValue: device,
+    onChange: dispatch.app.selectDevice,
+  })
+  const deviceGroup = getRootProps()
 
-  return <Actions>Soon, on mobile</Actions>
+  return (
+    <VStack {...deviceGroup}>
+      {Object.keys(devices).map(devicekey => {
+        const { isChecked } = getRadioProps({ value: devicekey })
+        return (
+          <CustomRadio key={devicekey} {...getRadioProps({ value: devicekey })}>
+            <Image
+              borderRadius="full"
+              p={1}
+              bg={isChecked ? '#fccb85' : 'gray.200'}
+              src={devices[devicekey].img}
+              width={'40px'}
+              alt={devices[devicekey].category}
+              title={devices[devicekey].category}
+            />
+            {/* <Text>{devices[devicekey].category}</Text> */}
+          </CustomRadio>
+        )
+      })}
+    </VStack>
+  )
 }
-
-const Actions = styled.div`
-  color: white;
-`
 
 export default ResponsiveActions

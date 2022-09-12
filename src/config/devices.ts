@@ -8,6 +8,8 @@ type Device = {
   p?: string
   border?: string
   borderRadius?: string
+  img?: string
+  category: string
 }
 
 const devices: Devices = {
@@ -17,15 +19,22 @@ const devices: Devices = {
     p: '6',
     border: '1px solid',
     borderRadius: '3xl',
+    img: 'icons/mobile.svg',
+    category: 'mobile',
   },
   ipad: {
     width: '810px',
     height: '1080px',
+    overflowY: 'scroll',
     border: '1px solid',
+    img: 'icons/tablet.svg',
+    category: 'tablet',
   },
   desktop: {
     width: '100%',
     height: '100%',
+    img: 'icons/desktop.svg',
+    category: 'desktop',
   },
 }
 
