@@ -96,6 +96,9 @@ export const menuItems: MenuItems = {
   SimpleGrid: {},
   Spinner: {},
   Select: {},
+  Skeleton: {},
+  SkeletonCircle: {},
+  SkeletonText: {},
   Stack: {},
   Stat: {
     children: {
@@ -180,6 +183,9 @@ export const componentsList: ComponentType[] = [
   'Select',
   'SimpleGrid',
   'Spinner',
+  'Skeleton',
+  'SkeletonCircle',
+  'SkeletonText',
   'Stack',
   'Stat',
   'StatArrow',

@@ -53,6 +53,7 @@ import KbdPanel from './components/KbdPanel'
 import TabPanel from './components/TabPanel'
 import StatArrowPanel from './components/StatArrowPanel'
 import StatLabelPanel from './components/StatLabelPanel'
+import SkeletonPanel from './components/SkeletonPanel'
 
 const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
   component,
@@ -103,6 +104,9 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
       {type === 'Radio' && <RadioPanel />}
       {type === 'RadioGroup' && <RadioGroupPanel />}
       {type === 'Select' && <SelectPanel />}
+      {type === 'Skeleton' && <SkeletonPanel />}
+      {type === 'SkeletonCircle' && <SkeletonPanel />}
+      {type === 'SkeletonText' && <SkeletonPanel />}
       {type === 'List' && <ListPanel />}
       {type === 'ListItem' && <ListItemPanel />}
       {type === 'ListIcon' && <ListIconPanel />}

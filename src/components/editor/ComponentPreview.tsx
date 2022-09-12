@@ -30,6 +30,9 @@ import StatGroupPreview, {
   StatHelpTextPreview,
   StatPreview,
 } from './previews/StatPreview'
+import SkeletonPreview from './previews/SkeletonPreview'
+import SkeletonCirclePreview from './previews/SkeletonCirclePreview'
+import SkeletonTextPreview from './previews/SkeletonTextPreview'
 
 const ComponentPreview: React.FC<{
   componentName: string
@@ -39,7 +42,7 @@ const ComponentPreview: React.FC<{
     console.error(`ComponentPreview unavailable for component ${componentName}`)
   }
 
-  const type = (component && component.type) || null
+  const type: string = (component && component.type) || null
 
   switch (type) {
     // Simple components
@@ -165,12 +168,12 @@ const ComponentPreview: React.FC<{
       return <NumberInputPreview component={component} />
     case 'Highlight':
       return <HighlightPreview component={component} />
-    case 'StatGroup':
-      return <StatGroupPreview component={component} />
-    case 'Stat':
-      return <StatPreview component={component} />
-    case 'StatHelpText':
-      return <StatHelpTextPreview component={component} />
+    case 'Skeleton':
+      return <SkeletonPreview component={component} />
+    case 'SkeletonCircle':
+      return <SkeletonCirclePreview component={component} />
+    case 'SkeletonText':
+      return <SkeletonTextPreview component={component} />
     default:
       return null
   }
