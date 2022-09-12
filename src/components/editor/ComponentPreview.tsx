@@ -42,7 +42,7 @@ const ComponentPreview: React.FC<{
     console.error(`ComponentPreview unavailable for component ${componentName}`)
   }
 
-  const type: string = (component && component.type) || null
+  const type = (component && component.type) || null
 
   switch (type) {
     // Simple components
