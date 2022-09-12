@@ -58,6 +58,7 @@ const Sidebar = () => {
         as="menu"
         bg="rgb(236, 236, 236)"
         w={'100%'}
+        h={'100%'}
       >
         <InputGroup size="sm" mb={4}>
           <Input

@@ -1,26 +1,18 @@
 import React from 'react'
-import styled from 'styled-components'
 import TogglePanelCode from './ToggleCodePanel'
 import Clear from './Clear'
+import Deploy from './Deploy'
 import HeaderMenu from '~components/headerMenu/HeaderMenu'
 
 const MenuActions = () => {
   return (
-    <Actions>
+    <>
+      <TogglePanelCode />
       <HeaderMenu />
       <Clear />
-      <TogglePanelCode />
-    </Actions>
+      <Deploy />
+    </>
   )
 }
-
-const Actions = styled.div`
-  margin-block-start: 1rem;
-  margin-inline: 0.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  row-gap: 0.5rem;
-`
 
 export default MenuActions

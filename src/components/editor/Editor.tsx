@@ -19,6 +19,7 @@ export const gridStyles = {
   backgroundSize: '20px 20px',
   bgColor: '#edf2f6',
   p: 10,
+  overflowX: 'scroll',
 }
 
 const Editor: React.FC = () => {

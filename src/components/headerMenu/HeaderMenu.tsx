@@ -45,12 +45,15 @@ const HeaderMenu = () => {
   return (
     <Menu placement="bottom">
       <CustomMenuButton
-        rightIcon={<ChevronDownIcon path="" />}
+        // rightIcon={<ChevronDownIcon path="" />}
         size="xs"
         variant="ghost"
         color={'white'}
+        _hover={{
+          backgroundColor: 'teal.500',
+        }}
       >
-        Editor
+        <img src="/icons/editor.svg" height={30} alt="" />
       </CustomMenuButton>
       <Portal>
         <LightMode>
