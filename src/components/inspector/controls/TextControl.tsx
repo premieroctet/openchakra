@@ -31,6 +31,7 @@ const TextControl: React.FC<TextControlPropsType> = ({
         name={name}
         autoFocus={autoFocus}
         size="sm"
+        fontSize="xs"
         value={value || ''}
         type="text"
         width={hasColumn ? '3rem' : '100%'}
