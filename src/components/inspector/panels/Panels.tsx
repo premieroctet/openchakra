@@ -105,8 +105,8 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
       {type === 'RadioGroup' && <RadioGroupPanel />}
       {type === 'Select' && <SelectPanel />}
       {type === 'Skeleton' && <SkeletonPanel />}
-      {type === 'SkeletonCircle' && <SkeletonPanel />}
-      {type === 'SkeletonText' && <SkeletonPanel />}
+      {type === 'SkeletonCircle' && <SkeletonPanel isSkeletonCircle />}
+      {type === 'SkeletonText' && <SkeletonPanel isSkeletonText />}
       {type === 'List' && <ListPanel />}
       {type === 'ListItem' && <ListItemPanel />}
       {type === 'ListIcon' && <ListIconPanel />}

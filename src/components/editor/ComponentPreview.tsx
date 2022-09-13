@@ -31,8 +31,6 @@ import StatGroupPreview, {
   StatPreview,
 } from './previews/StatPreview'
 import SkeletonPreview from './previews/SkeletonPreview'
-import SkeletonCirclePreview from './previews/SkeletonCirclePreview'
-import SkeletonTextPreview from './previews/SkeletonTextPreview'
 
 const ComponentPreview: React.FC<{
   componentName: string
@@ -109,6 +107,8 @@ const ComponentPreview: React.FC<{
     case 'Grid':
     case 'Center':
     case 'Container':
+    case 'SkeletonText':
+    case 'SkeletonCircle':
       return (
         <WithChildrenPreviewContainer
           enableVisualHelper
@@ -170,10 +170,6 @@ const ComponentPreview: React.FC<{
       return <HighlightPreview component={component} />
     case 'Skeleton':
       return <SkeletonPreview component={component} />
-    case 'SkeletonCircle':
-      return <SkeletonCirclePreview component={component} />
-    case 'SkeletonText':
-      return <SkeletonTextPreview component={component} />
     default:
       return null
   }
