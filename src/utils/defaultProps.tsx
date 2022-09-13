@@ -60,6 +60,12 @@ import {
   ListProps,
   HighlightProps,
   KbdProps,
+  StatProps,
+  StatGroupProps,
+  StatHelpTextProps,
+  StatLabelProps,
+  StatNumberProps,
+  StatArrowProps,
 } from '@chakra-ui/react'
 
 import iconsList from '~iconsList'
@@ -100,6 +106,12 @@ type PreviewDefaultProps = {
   Accordion?: PropsWithForm<Omit<AccordionProps, 'children'>>
   AccordionButton?: PropsWithForm<AccordionButtonProps>
   AccordionItem?: PropsWithForm<Omit<AccordionItemProps, 'children'>>
+  Stat?: PropsWithForm<Omit<StatProps, 'children'>>
+  StatGroup?: PropsWithForm<Omit<StatGroupProps, 'children'>>
+  StatLabel?: PropsWithForm<StatLabelProps>
+  StatNumber?: PropsWithForm<StatNumberProps>
+  StatHelpText?: PropsWithForm<Omit<StatHelpTextProps, 'children'>>
+  StatArrow?: PropsWithForm<StatArrowProps>
   AccordionPanel?: PropsWithForm<AccordionPanelProps>
   AccordionIcon?: PropsWithForm<IconProps>
   FormControl?: PropsWithForm<FormControlProps>
@@ -275,6 +287,11 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
       display: 'flex',
     },
   },
+  Stat: {},
+  StatLabel: { children: 'Stat label' },
+  StatNumber: { children: '45' },
+  StatArrow: { type: 'increase' },
+  StatGroup: {},
   Switch: {
     isChecked: false,
   },

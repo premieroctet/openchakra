@@ -97,6 +97,16 @@ export const menuItems: MenuItems = {
   Spinner: {},
   Select: {},
   Stack: {},
+  StatGroup: {
+    children: {
+      StatGroup: {},
+      Stat: {},
+      StatLabel: {},
+      StatNumber: {},
+      StatHelpText: {},
+      StatArrow: {},
+    },
+  },
   Switch: {},
   Tabs: {
     children: {
@@ -171,6 +181,12 @@ export const componentsList: ComponentType[] = [
   'SimpleGrid',
   'Spinner',
   'Stack',
+  'Stat',
+  'StatArrow',
+  'StatGroup',
+  'StatHelpText',
+  'StatLabel',
+  'StatNumber',
   'Switch',
   'Tab',
   'TabList',

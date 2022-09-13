@@ -26,6 +26,10 @@ import NumberInputPreview from '~components/editor/previews/NumberInputPreview'
 import BreadcrumbPreview from './previews/BreadcrumbPreview'
 import BreadcrumbItemPreview from './previews/BreadcrumbItemPreview'
 import HighlightPreview from './previews/HighlightPreview'
+import StatGroupPreview, {
+  StatHelpTextPreview,
+  StatPreview,
+} from './previews/StatPreview'
 
 const ComponentPreview: React.FC<{
   componentName: string
@@ -59,6 +63,9 @@ const ComponentPreview: React.FC<{
     case 'ListItem':
     case 'BreadcrumbLink':
     case 'Kbd':
+    case 'StatLabel':
+    case 'StatNumber':
+    case 'StatArrow':
       return (
         <PreviewContainer
           component={component}
@@ -158,7 +165,12 @@ const ComponentPreview: React.FC<{
       return <NumberInputPreview component={component} />
     case 'Highlight':
       return <HighlightPreview component={component} />
-
+    case 'StatGroup':
+      return <StatGroupPreview component={component} />
+    case 'Stat':
+      return <StatPreview component={component} />
+    case 'StatHelpText':
+      return <StatHelpTextPreview component={component} />
     default:
       return null
   }

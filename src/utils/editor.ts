@@ -70,6 +70,12 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'TabPanel',
   'TabPanels',
   'Tabs',
+  'Stat',
+  'StatLabel',
+  'StatNumber',
+  'StatHelpText',
+  'StatArrow',
+  'StatGroup',
   // Allow meta components
   'AlertMeta',
   'FormControlMeta',
@@ -78,6 +84,7 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'InputGroupMeta',
   'BreadcrumbMeta',
   'TabsMeta',
+  'StatMeta',
 ]
 
 export const AccordionWhitelist: (

@@ -127,6 +127,38 @@ export const buildTabs = (parent: string): ComposedComponent => {
   }
 }
 
+export const buildStats = (parent: string): ComposedComponent => {
+  const composer = new Composer('StatGroup')
+
+  const nodeId = composer.addNode({ type: 'StatGroup', parent })
+  const itemId = composer.addNode({ type: 'Stat', parent: nodeId })
+
+  composer.addNode({
+    type: 'StatLabel',
+    parent: itemId,
+    props: { children: 'Stat label' },
+  })
+  composer.addNode({
+    type: 'StatNumber',
+    parent: itemId,
+    props: { children: '45' },
+  })
+  const helpTextId = composer.addNode({ type: 'StatHelpText', parent: itemId })
+  composer.addNode({
+    type: 'StatArrow',
+    parent: helpTextId,
+    props: { type: 'increase' },
+  })
+
+  const components = composer.getComponents()
+
+  return {
+    components,
+    root: nodeId,
+    parent,
+  }
+}
+
 export const buildList = (parent: string): ComposedComponent => {
   const composer = new Composer('List')
 
@@ -186,6 +218,7 @@ const builders: ComposerBuilders = {
   InputGroupMeta: buildInputGroup,
   BreadcrumbMeta: buildBreadcrumb,
   TabsMeta: buildTabs,
+  StatMeta: buildStats,
 }
 
 export default builders
