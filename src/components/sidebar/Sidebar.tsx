@@ -48,7 +48,6 @@ const Sidebar = () => {
   return (
     <DarkMode>
       <Box
-        maxH="calc(100vh - 8rem)"
         overflowY="auto"
         overflowX="visible"
         boxShadow="xl"

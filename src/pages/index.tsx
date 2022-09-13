@@ -30,7 +30,7 @@ const App = () => {
       <Metadata />
       {/* <Header /> */}
       <DndProvider backend={Backend}>
-        <Flex h="calc(100vh - 3rem)">
+        <Flex h="100vh">
           <Menu />
           {/* <Sidebar /> */}
           <EditorErrorBoundary>
@@ -40,8 +40,6 @@ const App = () => {
           </EditorErrorBoundary>
 
           <Box
-            maxH="calc(100vh - 3rem)"
-            w={240}
             bg="#f7fafc"
             overflowY="auto"
             overflowX="visible"

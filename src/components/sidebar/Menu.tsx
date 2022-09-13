@@ -113,7 +113,7 @@ const StyledMenu = styled.div`
       'menu sidebar'
       'responsive sidebar'
       'actions actions';
-    grid-template-rows: auto 1fr 1fr auto;
+    grid-template-rows: auto 1fr 1fr 3rem;
     grid-template-columns: 1fr 3fr;
     background-color: var(--secondary-color);
     width: ${props => (props.show ? 'var(--panel-width)' : 0)};
@@ -132,7 +132,6 @@ const StyledMenu = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    row-gap: 1rem;
     align-items: center;
     width: 100%;
 
