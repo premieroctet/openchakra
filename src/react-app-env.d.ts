@@ -37,6 +37,7 @@ type ComponentType =
   | 'FormHelperText'
   | 'FormErrorMessage'
   | 'Grid'
+  | 'GridItem'
   | 'Heading'
   | 'Highlight'
   | 'Icon'
