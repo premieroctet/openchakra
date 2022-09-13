@@ -52,34 +52,22 @@ const HeaderMenu = () => {
         _hover={{
           backgroundColor: 'teal.500',
         }}
+        _focus={{
+          backgroundColor: 'teal.500',
+        }}
       >
         <img src="/icons/editor.svg" height={30} alt="" />
       </CustomMenuButton>
       <Portal>
         <LightMode>
           <MenuList bg="white" zIndex={999}>
-            {process.env.NEXT_PUBLIC_IS_V1 && (
-              <MenuItemLink isExternal href="https://v0.openchakra.app">
-                <Box mr={2} as={GoArchive} />
-                Chakra v0 Editor
-              </MenuItemLink>
-            )}
+            {/* <MenuItemLink isExternal href="https://v0.openchakra.app">
+              <Box mr={2} as={GoArchive} />
+              Chakra v0 Editor
+            </MenuItemLink> */}
+
             <ExportMenuItem />
             <ImportMenuItem />
-
-            <MenuDivider />
-
-            <MenuItemLink
-              isExternal
-              href="https://chakra-ui.com/getting-started"
-            >
-              <Box mr={2} as={GoRepo} />
-              Chakra UI Docs
-            </MenuItemLink>
-            <MenuItemLink href="https://github.com/premieroctet/openchakra/issues">
-              <Box mr={2} as={FaBomb} />
-              Report issue
-            </MenuItemLink>
           </MenuList>
         </LightMode>
       </Portal>
