@@ -30,7 +30,10 @@ import StatGroupPreview, {
   StatHelpTextPreview,
   StatPreview,
 } from './previews/StatPreview'
-import SkeletonPreview from './previews/SkeletonPreview'
+import SkeletonPreview, {
+  SkeletonCirclePreview,
+  SkeletonTextPreview,
+} from './previews/SkeletonPreview'
 
 const ComponentPreview: React.FC<{
   componentName: string
@@ -87,8 +90,6 @@ const ComponentPreview: React.FC<{
     case 'InputRightAddon':
     case 'InputLeftAddon':
     case 'Tag':
-    case 'SkeletonText':
-    case 'SkeletonCircle':
       return (
         <PreviewContainer
           component={component}
@@ -170,6 +171,11 @@ const ComponentPreview: React.FC<{
       return <HighlightPreview component={component} />
     case 'Skeleton':
       return <SkeletonPreview component={component} />
+    case 'SkeletonText':
+      return <SkeletonTextPreview component={component} />
+    case 'SkeletonCircle':
+      return <SkeletonCirclePreview component={component} />
+
     default:
       return null
   }
