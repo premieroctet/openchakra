@@ -171,6 +171,7 @@ const StyledMenu = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    column-gap: 0.2rem;
   }
 
   .responsive {

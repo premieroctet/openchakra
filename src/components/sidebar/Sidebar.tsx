@@ -51,6 +51,7 @@ const Sidebar = () => {
         overflowY="auto"
         overflowX="visible"
         boxShadow="xl"
+        position="relative"
         flex="0 0 14rem"
         p={2}
         m={0}
@@ -59,7 +60,7 @@ const Sidebar = () => {
         w={'100%'}
         h={'100%'}
       >
-        <InputGroup size="sm" mb={4}>
+        <InputGroup position="sticky" top="5px" zIndex={1} size="sm" mb={4}>
           <Input
             value={searchTerm}
             color="gray.300"
@@ -69,6 +70,7 @@ const Sidebar = () => {
             }
             borderColor="rgba(255, 255, 255, 0.04)"
             borderRadius={'15px'}
+            boxShadow="md"
             bg="rgba(255, 255, 255, 1)"
             _hover={{
               borderColor: 'rgba(255, 255, 255, 0.08)',
