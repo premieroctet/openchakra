@@ -87,6 +87,8 @@ const ComponentPreview: React.FC<{
     case 'InputRightAddon':
     case 'InputLeftAddon':
     case 'Tag':
+    case 'SkeletonText':
+    case 'SkeletonCircle':
       return (
         <PreviewContainer
           component={component}
@@ -107,8 +109,6 @@ const ComponentPreview: React.FC<{
     case 'Grid':
     case 'Center':
     case 'Container':
-    case 'SkeletonText':
-    case 'SkeletonCircle':
       return (
         <WithChildrenPreviewContainer
           enableVisualHelper

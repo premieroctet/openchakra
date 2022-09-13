@@ -37,7 +37,7 @@ const SkeletonPanel = ({
 
       {isSkeletonText && (
         <>
-          <TextControl name="nbOfLines" label="Nb of lines" />
+          <TextControl name="noOfLines" label="No of lines" />
           <TextControl name="spacing" label="Spacing" />
         </>
       )}
