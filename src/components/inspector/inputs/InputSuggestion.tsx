@@ -15,8 +15,9 @@ type FormControlPropType = {
   children: ReactNode
 }
 
-const ltrim = (value: string) => {
+const ltrim = (value: string | number) => {
   if (!value) return value
+  if (typeof value === 'number') return `${value}`
   return value.replace(/^\s+/g, '')
 }
 
@@ -33,6 +34,7 @@ const InputSuggestion: React.FC<FormControlPropType> = ({
     <Combobox
       openOnFocus
       onSelect={item => {
+        console.log('onSelect', name, item)
         setValue(name, item)
       }}
     >
