@@ -52,6 +52,7 @@ type ComponentType =
   | 'List'
   | 'ListItem'
   | 'ListIcon'
+  | 'Kbd'
   | 'Menu'
   | 'NumberInput'
   | 'Progress'

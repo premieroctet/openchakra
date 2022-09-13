@@ -49,6 +49,7 @@ import AspectRatioPanel from '~components/inspector/panels/components/AspectRati
 import BreadcrumbPanel from '~components/inspector/panels/components/BreadcrumbPanel'
 import BreadcrumbItemPanel from '~components/inspector/panels/components/BreadcrumbItemPanel'
 import HighlightPanel from '~components/inspector/panels/components/HighlightPanel'
+import KbdPanel from './components/KbdPanel'
 
 const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
   component,
@@ -114,6 +115,7 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
       {type === 'Breadcrumb' && <BreadcrumbPanel />}
       {type === 'BreadcrumbItem' && <BreadcrumbItemPanel />}
       {type === 'BreadcrumbLink' && <LinkPanel />}
+      {type === 'Kbd' && <KbdPanel />}
     </>
   )
 }
