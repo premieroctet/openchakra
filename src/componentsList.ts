@@ -3,6 +3,7 @@ export type MenuItem = {
   soon?: boolean
   rootParentType?: ComponentType
   group?: 'positionnement' | 'formulaire' | 'typographie'
+  title?: string
 }
 
 type MenuItems = Partial<
@@ -15,28 +16,41 @@ let menuItems: MenuItems = {
   Accordion: {
     children: {
       Accordion: {},
-      AccordionItem: {},
-      AccordionButton: {},
-      AccordionPanel: {},
-      AccordionIcon: {},
+      AccordionItem: {
+        title: 'Accordion item',
+      },
+      AccordionButton: {
+        title: 'Accordion button',
+      },
+      AccordionPanel: {
+        title: 'Accordion panel',
+      },
+      AccordionIcon: {
+        title: 'Accordion icon',
+      },
     },
   },
   Alert: {
     children: {
       Alert: {},
-      AlertDescription: {},
+      AlertDescription: {
+        title: 'Alert description',
+      },
       AlertIcon: {},
       AlertTitle: {},
     },
   },
   AspectRatio: {
+    title: 'Aspect Ratio',
     group: 'positionnement',
   },
   AvatarGroup: {
+    title: 'Avatar group',
     rootParentType: 'Avatar',
   },
   Avatar: {},
   AvatarBadge: {
+    title: 'Avatar badge',
     rootParentType: 'Avatar',
   },
   Badge: {},
@@ -45,8 +59,12 @@ let menuItems: MenuItems = {
   },
   Breadcrumb: {
     children: {
-      BreadcrumbItem: {},
-      BreadcrumbLink: {},
+      BreadcrumbItem: {
+        title: 'Breadcrumb item',
+      },
+      BreadcrumbLink: {
+        title: 'Breadcrumb link',
+      },
     },
   },
   Button: {},
@@ -67,11 +85,18 @@ let menuItems: MenuItems = {
     group: 'positionnement',
   },
   FormControl: {
+    title: 'Form Control',
     children: {
       FormControl: {},
-      FormLabel: {},
-      FormHelperText: {},
-      FormErrorMessage: {},
+      FormLabel: {
+        title: 'Form label',
+      },
+      FormHelperText: {
+        title: 'Form helper text',
+      },
+      FormErrorMessage: {
+        title: 'Form error message',
+      },
     },
   },
   Grid: {
@@ -79,36 +104,53 @@ let menuItems: MenuItems = {
   },
   GridItem: {
     group: 'positionnement',
+    title: 'Grid Item',
   },
   Heading: {
     group: 'typographie',
   },
   Icon: {},
-  IconButton: {},
+  IconButton: {
+    title: 'Icon Button',
+  },
   Image: {},
   Input: {
     group: 'formulaire',
   },
   InputGroup: {
     group: 'formulaire',
+    title: 'Input group',
     rootParentType: 'Input',
     children: {
-      InputGroup: {},
+      InputGroup: {
+        title: 'Input group',
+      },
       Input: {},
-      InputLeftAddon: {},
-      InputRightAddon: {},
-      InputRightElement: {},
-      InputLeftElement: {},
+      InputLeftAddon: {
+        title: 'Input left addon',
+      },
+      InputRightAddon: {
+        title: 'Input right addon',
+      },
+      InputRightElement: {
+        title: 'Input right element',
+      },
+      InputLeftElement: {
+        title: 'Input left element',
+      },
     },
   },
   Link: {},
   List: {
     children: {
       List: {},
-      ListItem: {},
+      ListItem: {
+        title: 'List item',
+      },
     },
   },
   NumberInput: {
+    title: 'Number input',
     group: 'formulaire',
   },
   Progress: {},
@@ -116,6 +158,7 @@ let menuItems: MenuItems = {
     group: 'formulaire',
   },
   RadioGroup: {
+    title: 'Radio group',
     group: 'formulaire',
     rootParentType: 'Radio',
   },

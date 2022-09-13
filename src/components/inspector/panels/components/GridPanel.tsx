@@ -1,5 +1,6 @@
 import React, { memo } from 'react'
 import TextControl from '~components/inspector/controls/TextControl'
+import JustifyItems from '~components/inspector/inputs/JustifyItems'
 
 const GridPanel = () => {
   return (
@@ -16,6 +17,7 @@ const GridPanel = () => {
       <TextControl label="Auto Rows" name="autoRows" />
       <TextControl label="Area" name="area" />
       <TextControl label="Template Areas" name="templateAreas" />
+      <JustifyItems />
     </>
   )
 }

@@ -114,26 +114,32 @@ const Sidebar = () => {
               {items
                 .filter(c => c.toLowerCase().includes(searchTerm.toLowerCase()))
                 .map(name => {
-                  const { children, soon } = menuItems[name] as MenuItem
+                  const { children, soon, title } = menuItems[name] as MenuItem
 
                   if (children) {
-                    const elements = Object.keys(children).map(childName => (
-                      <GridItem as={'li'} key={childName}>
-                        <AspectRatio ratio={4 / 3}>
-                          <DragItem
-                            isChild
-                            label={childName}
-                            type={childName as any}
-                            id={childName as any}
-                            rootParentType={
-                              menuItems[name]?.rootParentType || name
-                            }
-                          >
-                            {childName}
-                          </DragItem>
-                        </AspectRatio>
-                      </GridItem>
-                    ))
+                    const elements = Object.keys(children).map(childName => {
+                      const { title: titleChildName } = menuItems[name][
+                        'children'
+                      ][childName]
+
+                      return (
+                        <GridItem as={'li'} key={childName}>
+                          <AspectRatio ratio={4 / 3}>
+                            <DragItem
+                              isChild
+                              label={titleChildName || childName}
+                              type={childName as any}
+                              id={childName as any}
+                              rootParentType={
+                                menuItems[name]?.rootParentType || name
+                              }
+                            >
+                              {childName}
+                            </DragItem>
+                          </AspectRatio>
+                        </GridItem>
+                      )
+                    })
 
                     return [
                       <GridItem as={'li'} key={`${name}Meta`}>
@@ -141,7 +147,7 @@ const Sidebar = () => {
                           <DragItem
                             isMeta
                             soon={soon}
-                            label={name}
+                            label={title || name}
                             type={`${name}Meta` as any}
                             id={`${name}Meta` as any}
                             rootParentType={
@@ -161,7 +167,7 @@ const Sidebar = () => {
                       <AspectRatio ratio={4 / 3}>
                         <DragItem
                           soon={soon}
-                          label={name}
+                          label={title || name}
                           type={name as any}
                           id={name as any}
                           rootParentType={
