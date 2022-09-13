@@ -59,7 +59,6 @@ const DragItem: React.FC<ComponentItemProps> = ({
         fontSize="xs"
         mt={'-8px'}
         textAlign={'center'}
-        wordBreak={'break-all'}
         textTransform="capitalize"
       >
         {label}
