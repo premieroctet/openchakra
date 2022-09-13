@@ -241,7 +241,7 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     },
   },
   ListItem: { children: 'list' },
-  Kbd: {},
+  Kbd: { children: 'shift' },
   Progress: {
     value: 60,
     min: 0,
