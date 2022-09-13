@@ -1,4 +1,5 @@
 import React, { useState, memo, useEffect, useMemo } from 'react'
+import styled from 'styled-components'
 import {
   Link,
   Box,
@@ -33,6 +34,7 @@ import {
   getSelectedComponentId,
   getComponentNames,
 } from '~core/selectors/components'
+import { getShowLayout } from '~core/selectors/app'
 import ActionButton from './ActionButton'
 import { generateComponentCode, formatCode } from '~utils/code'
 import useClipboard from '~hooks/useClipboard'
@@ -75,6 +77,7 @@ const CodeActionButton = memo(() => {
 const Inspector = () => {
   const dispatch = useDispatch()
   const component = useSelector(getSelectedComponent)
+  const showLayout = useSelector(getShowLayout)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [componentName, onChangeComponentName] = useState('')
   const componentsNames = useSelector(getComponentNames)
@@ -112,7 +115,7 @@ const Inspector = () => {
   }, [clearActiveProps])
 
   return (
-    <>
+    <RightPanel show={showLayout}>
       <Box bg="white">
         <Box
           fontWeight="semibold"
@@ -242,8 +245,17 @@ const Inspector = () => {
           </ModalContent>
         </ModalOverlay>
       </Modal>
-    </>
+    </RightPanel>
   )
 }
+
+const RightPanel = styled.div`
+  --inspector-width: 240px;
+  width: ${props => (props.show ? 'var(--inspector-width)' : 0)};
+  transition: all 0.2s ease-in-out;
+  transform: ${props =>
+    props.show ? 'none' : 'translateX(calc(var(--inspector-width)))'};
+  transition: all 0.2s ease-in-out;
+`
 
 export default Inspector
