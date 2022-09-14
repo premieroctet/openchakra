@@ -58,6 +58,7 @@ const ComponentPreview: React.FC<{
     case 'Radio':
     case 'ListItem':
     case 'BreadcrumbLink':
+    case 'Kbd':
       return (
         <PreviewContainer
           component={component}

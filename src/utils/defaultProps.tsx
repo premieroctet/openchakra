@@ -59,6 +59,7 @@ import {
   BreadcrumbLinkProps,
   ListProps,
   HighlightProps,
+  KbdProps,
 } from '@chakra-ui/react'
 
 import iconsList from '~iconsList'
@@ -132,6 +133,7 @@ type PreviewDefaultProps = {
   ListItem?: PropsWithForm<any>
   Center?: PropsWithForm<CenterProps>
   Container?: PropsWithForm<ContainerProps>
+  Kbd?: PropsWithForm<KbdProps>
 }
 
 export const DEFAULT_PROPS: PreviewDefaultProps = {
@@ -239,6 +241,7 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     },
   },
   ListItem: { children: 'list' },
+  Kbd: { children: 'shift' },
   Progress: {
     value: 60,
     min: 0,

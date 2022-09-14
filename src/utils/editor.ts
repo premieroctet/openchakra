@@ -48,6 +48,7 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'Switch',
   'Tag',
   'Text',
+  'Kbd',
   'Textarea',
   'Tab',
   'Accordion',
