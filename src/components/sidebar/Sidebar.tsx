@@ -114,10 +114,12 @@ const Sidebar = () => {
               {items
                 .filter(c => c.toLowerCase().includes(searchTerm.toLowerCase()))
                 .map(name => {
+                  //@ts-ignore
                   const { children, soon, title } = menuItems[name] as MenuItem
 
                   if (children) {
                     const elements = Object.keys(children).map(childName => {
+                      //@ts-ignore
                       const { title: titleChildName } = menuItems[name][
                         'children'
                       ][childName]
@@ -131,6 +133,7 @@ const Sidebar = () => {
                               type={childName as any}
                               id={childName as any}
                               rootParentType={
+                                //@ts-ignore
                                 menuItems[name]?.rootParentType || name
                               }
                             >
@@ -151,6 +154,7 @@ const Sidebar = () => {
                             type={`${name}Meta` as any}
                             id={`${name}Meta` as any}
                             rootParentType={
+                              //@ts-ignore
                               menuItems[name]?.rootParentType || name
                             }
                           >
@@ -171,6 +175,7 @@ const Sidebar = () => {
                           type={name as any}
                           id={name as any}
                           rootParentType={
+                            //@ts-ignore
                             menuItems[name]?.rootParentType || name
                           }
                         >

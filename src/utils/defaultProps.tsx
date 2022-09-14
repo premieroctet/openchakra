@@ -294,10 +294,12 @@ let DEFAULT_PROPS: PreviewDefaultProps = {
   Text: { children: 'Text value' },
 }
 
+//@ts-ignore
 export const registerDefaultProps = ({ componentType, defaultProps }) => {
   if (componentType in DEFAULT_PROPS) {
     throw new Error(`${componentType} is already registered in default props`)
   }
+  //@ts-ignore
   DEFAULT_PROPS[componentType] = defaultProps
 }
 

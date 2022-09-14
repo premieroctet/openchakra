@@ -115,6 +115,7 @@ const Inspector = () => {
   }, [clearActiveProps])
 
   return (
+    //@ts-ignore
     <RightPanel show={showLayout}>
       <Box bg="white">
         <Box
@@ -251,9 +252,12 @@ const Inspector = () => {
 
 const RightPanel = styled.div`
   --inspector-width: 240px;
-  width: ${props => (props.show ? 'var(--inspector-width)' : 0)};
+  width: ${props =>
+    //@ts-ignore
+    props.show ? 'var(--inspector-width)' : 0};
   transition: all 0.2s ease-in-out;
   transform: ${props =>
+    //@ts-ignore
     props.show ? 'none' : 'translateX(calc(var(--inspector-width)))'};
   transition: all 0.2s ease-in-out;
 `
