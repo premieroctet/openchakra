@@ -50,6 +50,7 @@ import BreadcrumbPanel from '~components/inspector/panels/components/BreadcrumbP
 import BreadcrumbItemPanel from '~components/inspector/panels/components/BreadcrumbItemPanel'
 import HighlightPanel from '~components/inspector/panels/components/HighlightPanel'
 import KbdPanel from './components/KbdPanel'
+import TabPanel from './components/TabPanel'
 
 const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
   component,
@@ -95,6 +96,7 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
       {type === 'Stack' && <StackPanel />}
       {type === 'FormControl' && <FormControlPanel />}
       {type === 'Tabs' && <TabsPanel />}
+      {type === 'Tab' && <TabPanel />}
       {type === 'Input' && <InputPanel />}
       {type === 'Radio' && <RadioPanel />}
       {type === 'RadioGroup' && <RadioGroupPanel />}
