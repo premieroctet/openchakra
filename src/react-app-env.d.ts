@@ -80,6 +80,15 @@ type ComponentType =
   | 'Tag'
   | 'Text'
   | 'Textarea'
+  | 'Table'
+  | 'Thead'
+  | 'Tbody'
+  | 'Tfoot'
+  | 'Tr'
+  | 'Th'
+  | 'Td'
+  | 'TableCaption'
+  | 'TableContainer'
 
 type MetaComponentType =
   | 'FormControlMeta'
@@ -90,6 +99,7 @@ type MetaComponentType =
   | 'BreadcrumbMeta'
   | 'TabsMeta'
   | 'StatMeta'
+  | 'TableMeta'
 
 interface IComponent {
   children: string[]

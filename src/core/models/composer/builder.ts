@@ -182,6 +182,80 @@ export const buildList = (parent: string): ComposedComponent => {
   }
 }
 
+export const buildTable = (parent: string): ComposedComponent => {
+  const composer = new Composer('TableContainer')
+
+  const nodeId = composer.addNode({ type: 'TableContainer', parent })
+  const tableId = composer.addNode({ type: 'Table', parent: nodeId })
+
+  composer.addNode({
+    type: 'TableCaption',
+    parent: tableId,
+    props: { children: 'Lorem ipsum' },
+  })
+
+  const tableHead = composer.addNode({ type: 'Thead', parent: tableId })
+  const tableHeadTr = composer.addNode({
+    type: 'Tr',
+    parent: tableHead,
+  })
+
+  composer.addNode({
+    type: 'Th',
+    parent: tableHeadTr,
+    props: { children: 'Lorem ipsum' },
+  })
+  composer.addNode({
+    type: 'Th',
+    parent: tableHeadTr,
+    props: { children: 'Lorem ipsum' },
+  })
+
+  const tableBody = composer.addNode({ type: 'Tbody', parent: tableId })
+
+  const tableBodyTr = composer.addNode({
+    type: 'Tr',
+    parent: tableBody,
+  })
+
+  composer.addNode({
+    type: 'Td',
+    parent: tableBodyTr,
+    props: { children: 'Lorem ipsum' },
+  })
+  composer.addNode({
+    type: 'Td',
+    parent: tableBodyTr,
+    props: { children: 'Lorem ipsum' },
+  })
+
+  const tableFoot = composer.addNode({ type: 'Tfoot', parent: tableId })
+
+  const tableFootTr = composer.addNode({
+    type: 'Tr',
+    parent: tableFoot,
+  })
+
+  composer.addNode({
+    type: 'Th',
+    parent: tableFootTr,
+    props: { children: 'Lorem ipsum' },
+  })
+  composer.addNode({
+    type: 'Th',
+    parent: tableFootTr,
+    props: { children: 'Lorem ipsum' },
+  })
+
+  const components = composer.getComponents()
+
+  return {
+    components,
+    root: nodeId,
+    parent,
+  }
+}
+
 export const buildInputGroup = (parent: string): ComposedComponent => {
   const composer = new Composer('Input')
 
@@ -227,6 +301,7 @@ const builders: ComposerBuilders = {
   BreadcrumbMeta: buildBreadcrumb,
   TabsMeta: buildTabs,
   StatMeta: buildStats,
+  TableMeta: buildTable,
 }
 
 export default builders

@@ -67,6 +67,14 @@ import {
   StatNumberProps,
   StatArrowProps,
   SkeletonProps,
+  TableProps,
+  TableHeadProps,
+  TableBodyProps,
+  TableFooterProps,
+  TableRowProps,
+  TableColumnHeaderProps,
+  TableCaptionProps,
+  TableContainerProps,
 } from '@chakra-ui/react'
 
 import iconsList from '~iconsList'
@@ -150,6 +158,15 @@ type PreviewDefaultProps = {
   Skeleton?: PropsWithForm<SkeletonProps>
   SkeletonCircle?: PropsWithForm<SkeletonProps>
   SkeletonText?: PropsWithForm<SkeletonProps>
+  Table?: PropsWithForm<TableProps>
+  Thead?: PropsWithForm<TableHeadProps>
+  Tbody?: PropsWithForm<TableBodyProps>
+  Tfoot?: PropsWithForm<TableFooterProps>
+  Tr?: PropsWithForm<TableRowProps>
+  Th?: PropsWithForm<TableColumnHeaderProps>
+  Td?: PropsWithForm<TableBodyProps>
+  TableCaption?: PropsWithForm<TableCaptionProps>
+  TableContainer?: PropsWithForm<TableContainerProps>
 }
 
 export const DEFAULT_PROPS: PreviewDefaultProps = {
@@ -330,6 +347,15 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     children: 'Tag name',
   },
   Text: { children: 'Text value' },
+  Table: {},
+  Thead: {},
+  Tbody: {},
+  Tfoot: {},
+  Tr: {},
+  Th: { children: 'Lorem' },
+  Td: { children: 'Lorem' },
+  TableCaption: { children: 'Table Caption' },
+  TableContainer: {},
 }
 
 export const getDefaultFormProps = (type: ComponentType) => {
