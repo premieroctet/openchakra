@@ -1,23 +1,18 @@
 import React, { memo } from 'react'
 import dynamic from 'next/dynamic'
 import {
-  Box,
   Button,
   LightMode,
   Menu,
   MenuButton,
   MenuList,
   MenuItem,
-  MenuDivider,
   LinkProps,
   MenuItemProps,
   MenuButtonProps,
   ButtonProps,
   Portal,
 } from '@chakra-ui/react'
-import { ChevronDownIcon } from '@chakra-ui/icons'
-import { FaBomb } from 'react-icons/fa'
-import { GoRepo, GoArchive } from 'react-icons/go'
 
 type MenuItemLinkProps = MenuItemProps | LinkProps
 

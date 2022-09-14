@@ -15,8 +15,8 @@ type FormControlPropType = {
   children: ReactNode
 }
 
-const ltrim = (value: string | number) => {
-  if (!value) return value
+const ltrim = (value: string | number): string | undefined => {
+  if (!value) return
   if (typeof value === 'number') return `${value}`
   return value.replace(/^\s+/g, '')
 }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
-import Pages from './Pages'
+import Pages from './pages/Pages'
 import Sidebar from './Sidebar'
 import { getShowLayout } from '~core/selectors/app'
 import useDispatch from '~hooks/useDispatch'

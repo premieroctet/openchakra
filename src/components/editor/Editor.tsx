@@ -10,7 +10,6 @@ import { getComponents } from '~core/selectors/components'
 import { getShowLayout, getShowCode, getDevice } from '~core/selectors/app'
 import ComponentPreview from '~components/editor/ComponentPreview'
 import devices from '~config/devices'
-import moment from 'moment'
 import config from '../../../env.json'
 
 export const gridStyles = {
@@ -19,7 +18,6 @@ export const gridStyles = {
   backgroundSize: '20px 20px',
   bgColor: '#edf2f6',
   p: 10,
-  overflowX: 'scroll',
 }
 
 const Editor: React.FC = () => {

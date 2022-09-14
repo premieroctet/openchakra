@@ -36,8 +36,9 @@ let extraPreviews: previews = {}
 
 const ComponentPreview: React.FC<{
   componentName: string
+  id?: string
 }> = ({ componentName, ...forwardedProps }) => {
-  const component = useSelector(getComponentBy(componentName))
+  const component: IComponent = useSelector(getComponentBy(componentName))
   if (!component) {
     console.error(`ComponentPreview unavailable for component ${componentName}`)
   }
@@ -48,7 +49,8 @@ const ComponentPreview: React.FC<{
   if (extraPreview) {
     const { previewComponent /**isBoxWrapped*/ } = extraPreview
     if (previewComponent) {
-      return React.createElement(previewComponent, { component: component })
+      //@ts-ignore
+      return React.createElement(previewComponent, { component })
     }
     throw new Error('Extra component without previewComponent')
   }

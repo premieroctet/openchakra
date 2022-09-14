@@ -19,7 +19,7 @@ export type ComponentsStateWithUndo = {
 
 const DEFAULT_ID = 'root'
 
-function isJsonString(str) {
+function isJsonString(str: string) {
   try {
     JSON.parse(str)
   } catch (e) {
@@ -61,6 +61,7 @@ const components = createModel({
     resetProps(state: ComponentsState, componentId: string): ComponentsState {
       return produce(state, (draftState: ComponentsState) => {
         const component = draftState.components[componentId]
+        //@ts-ignore
         const { form, ...defaultProps } = DEFAULT_PROPS[component.type] || {}
 
         draftState.components[componentId].props = defaultProps || {}
@@ -169,6 +170,7 @@ const components = createModel({
     ): ComponentsState {
       return produce(state, (draftState: ComponentsState) => {
         const id = payload.testId || generateId()
+        //@ts-ignore
         const { form, ...defaultProps } = DEFAULT_PROPS[payload.type] || {}
         draftState.selectedId = id
         draftState.components[payload.parentName].children.push(id)
