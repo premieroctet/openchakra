@@ -6,8 +6,11 @@ import {
   InputRightElement,
   DarkMode,
   IconButton,
+  Image,
 } from '@chakra-ui/react'
 import { CloseIcon, SearchIcon } from '@chakra-ui/icons'
+import PageList from './PageList'
+import CreatePage from './CreatePage'
 
 type categoryItems = {
   [name: string]: string[]
@@ -23,7 +26,8 @@ const Pages = () => {
         overflowX="visible"
         boxShadow="xl"
         position="relative"
-        flex="0 0 14rem"
+        display="grid"
+        gridTemplateRows={'auto 1fr auto'}
         p={2}
         m={0}
         as="menu"
@@ -62,6 +66,12 @@ const Pages = () => {
             )}
           </InputRightElement>
         </InputGroup>
+        <PageList />
+        <Box alignSelf={'end'} display="flex" flexDirection="column" mb={'2'}>
+          <Image src="/images/createPage_woman.svg" />
+
+          <CreatePage />
+        </Box>
       </Box>
     </DarkMode>
   )
