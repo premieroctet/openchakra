@@ -60,6 +60,7 @@ import {
   ListProps,
   HighlightProps,
   KbdProps,
+  SkeletonProps,
 } from '@chakra-ui/react'
 
 import iconsList from '~iconsList'
@@ -88,6 +89,7 @@ type PreviewDefaultProps = {
   CircularProgress?: PropsWithForm<CircularProgressProps>
   Heading?: PropsWithForm<HeadingProps>
   Highlight?: PropsWithForm<HighlightProps>
+  Skeleton?: PropsWithForm<SkeletonProps>
   Tag?: PropsWithForm<TagProps>
   SimpleGrid?: PropsWithForm<SimpleGridProps>
   Switch?: PropsWithForm<SwitchProps>
@@ -268,6 +270,9 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     columns: 2,
     spacingX: 1,
     spacingY: 1,
+  },
+  Skeleton: {
+    children: 'default children',
   },
   Stack: {
     spacing: 2,

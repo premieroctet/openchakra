@@ -26,6 +26,7 @@ import NumberInputPreview from '~components/editor/previews/NumberInputPreview'
 import BreadcrumbPreview from './previews/BreadcrumbPreview'
 import BreadcrumbItemPreview from './previews/BreadcrumbItemPreview'
 import HighlightPreview from './previews/HighlightPreview'
+import SkeletonPreview from './previews/SkeletonPreview'
 
 const ComponentPreview: React.FC<{
   componentName: string
@@ -158,6 +159,8 @@ const ComponentPreview: React.FC<{
       return <NumberInputPreview component={component} />
     case 'Highlight':
       return <HighlightPreview component={component} />
+    case 'Skeleton':
+      return <SkeletonPreview component={component} />
 
     default:
       return null

@@ -50,6 +50,7 @@ import BreadcrumbPanel from '~components/inspector/panels/components/BreadcrumbP
 import BreadcrumbItemPanel from '~components/inspector/panels/components/BreadcrumbItemPanel'
 import HighlightPanel from '~components/inspector/panels/components/HighlightPanel'
 import KbdPanel from './components/KbdPanel'
+import SkeletonPanel from './components/SkeletonPanel'
 
 const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
   component,
@@ -116,6 +117,7 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
       {type === 'BreadcrumbItem' && <BreadcrumbItemPanel />}
       {type === 'BreadcrumbLink' && <LinkPanel />}
       {type === 'Kbd' && <KbdPanel />}
+      {type === 'Skeleton' && <SkeletonPanel />}
     </>
   )
 }

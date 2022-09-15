@@ -60,6 +60,7 @@ type ComponentType =
   | 'RadioGroup'
   | 'Select'
   | 'SimpleGrid'
+  | 'Skeleton'
   | 'Spinner'
   | 'Stack'
   | 'Switch'
