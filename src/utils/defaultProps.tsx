@@ -347,7 +347,7 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     children: 'Tag name',
   },
   Text: { children: 'Text value' },
-  Table: {},
+  Table: { size: 'md' },
   Thead: {},
   Tbody: {},
   Tfoot: {},
