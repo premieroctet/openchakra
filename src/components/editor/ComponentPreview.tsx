@@ -35,7 +35,6 @@ import SkeletonPreview, {
   SkeletonTextPreview,
 } from './previews/SkeletonPreview'
 import TableContainerPreview, {
-  TableCaptionPreview,
   TablePreview,
   TbodyPreview,
   TfootPreview,
@@ -80,6 +79,7 @@ const ComponentPreview: React.FC<{
     case 'StatArrow':
     case 'Th':
     case 'Td':
+    case 'TableCaption':
       return (
         <PreviewContainer
           component={component}
@@ -191,8 +191,6 @@ const ComponentPreview: React.FC<{
       return <TrPreview component={component} />
     case 'TableContainer':
       return <TableContainerPreview component={component} />
-    case 'TableCaption':
-      return <TableCaptionPreview component={component} />
     case 'Tr':
       return <TrPreview component={component} />
     case 'Skeleton':

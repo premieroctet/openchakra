@@ -139,21 +139,4 @@ export const TfootPreview = ({ component }: IPreviewProps) => {
   )
 }
 
-export const TableCaptionPreview = ({ component }: IPreviewProps) => {
-  const { props, ref } = useInteractive(component, true)
-  const { drop, isOver } = useDropComponent(component.id)
-
-  if (isOver) {
-    props.bg = 'teal.50'
-  }
-
-  return (
-    <TableCaption ref={drop(ref)} {...props}>
-      {component.children.map((key: string) => (
-        <ComponentPreview key={key} componentName={key} />
-      ))}
-    </TableCaption>
-  )
-}
-
 export default TableContainerPreview

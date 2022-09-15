@@ -352,9 +352,9 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   Tbody: {},
   Tfoot: {},
   Tr: {},
-  Th: { children: 'Lorem' },
-  Td: { children: 'Lorem' },
-  TableCaption: { children: 'Table Caption' },
+  Th: { children: 'Th title' },
+  Td: { children: 'Td title' },
+  TableCaption: { children: 'Table Caption', placement: 'top' },
   TableContainer: {},
 }
 

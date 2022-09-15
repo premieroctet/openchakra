@@ -121,7 +121,7 @@ export const menuItems: MenuItems = {
     },
   },
   Tag: {},
-  TableContainer: {
+  Table: {
     children: {
       TableContainer: {},
       Table: {},

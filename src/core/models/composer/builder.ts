@@ -191,7 +191,7 @@ export const buildTable = (parent: string): ComposedComponent => {
   composer.addNode({
     type: 'TableCaption',
     parent: tableId,
-    props: { children: 'Lorem ipsum' },
+    props: { children: 'Table Caption Text' },
   })
 
   const tableHead = composer.addNode({ type: 'Thead', parent: tableId })
@@ -203,12 +203,12 @@ export const buildTable = (parent: string): ComposedComponent => {
   composer.addNode({
     type: 'Th',
     parent: tableHeadTr,
-    props: { children: 'Lorem ipsum' },
+    props: { children: 'Th Text' },
   })
   composer.addNode({
     type: 'Th',
     parent: tableHeadTr,
-    props: { children: 'Lorem ipsum' },
+    props: { children: 'Th Text' },
   })
 
   const tableBody = composer.addNode({ type: 'Tbody', parent: tableId })
@@ -221,12 +221,12 @@ export const buildTable = (parent: string): ComposedComponent => {
   composer.addNode({
     type: 'Td',
     parent: tableBodyTr,
-    props: { children: 'Lorem ipsum' },
+    props: { children: 'Td Textm' },
   })
   composer.addNode({
     type: 'Td',
     parent: tableBodyTr,
-    props: { children: 'Lorem ipsum' },
+    props: { children: 'Td Text' },
   })
 
   const tableFoot = composer.addNode({ type: 'Tfoot', parent: tableId })
@@ -239,12 +239,12 @@ export const buildTable = (parent: string): ComposedComponent => {
   composer.addNode({
     type: 'Th',
     parent: tableFootTr,
-    props: { children: 'Lorem ipsum' },
+    props: { children: 'Th Text' },
   })
   composer.addNode({
     type: 'Th',
     parent: tableFootTr,
-    props: { children: 'Lorem ipsum' },
+    props: { children: 'Th Text' },
   })
 
   const components = composer.getComponents()
