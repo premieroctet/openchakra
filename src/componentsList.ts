@@ -97,7 +97,7 @@ export const menuItems: MenuItems = {
   Spinner: {},
   Select: {},
   Stack: {},
-  StatGroup: {
+  Stat: {
     children: {
       StatGroup: {},
       Stat: {},

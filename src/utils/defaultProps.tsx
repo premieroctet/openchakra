@@ -110,7 +110,7 @@ type PreviewDefaultProps = {
   StatGroup?: PropsWithForm<Omit<StatGroupProps, 'children'>>
   StatLabel?: PropsWithForm<StatLabelProps>
   StatNumber?: PropsWithForm<StatNumberProps>
-  StatHelpText?: PropsWithForm<Omit<StatHelpTextProps, 'children'>>
+  StatHelpText?: PropsWithForm<StatHelpTextProps>
   StatArrow?: PropsWithForm<StatArrowProps>
   AccordionPanel?: PropsWithForm<AccordionPanelProps>
   AccordionIcon?: PropsWithForm<IconProps>
@@ -291,6 +291,10 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
   StatLabel: { children: 'Stat label' },
   StatNumber: { children: '45' },
   StatArrow: { type: 'increase' },
+  StatHelpText: {
+    display: 'flex',
+    alignItems: 'center',
+  },
   StatGroup: {},
   Switch: {
     isChecked: false,

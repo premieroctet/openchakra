@@ -128,26 +128,34 @@ export const buildTabs = (parent: string): ComposedComponent => {
 }
 
 export const buildStats = (parent: string): ComposedComponent => {
-  const composer = new Composer('StatGroup')
+  const composer = new Composer('Stat')
 
-  const nodeId = composer.addNode({ type: 'StatGroup', parent })
-  const itemId = composer.addNode({ type: 'Stat', parent: nodeId })
+  const nodeId = composer.addNode({ type: 'Stat', parent })
 
   composer.addNode({
     type: 'StatLabel',
-    parent: itemId,
+    parent: nodeId,
     props: { children: 'Stat label' },
   })
   composer.addNode({
     type: 'StatNumber',
-    parent: itemId,
+    parent: nodeId,
     props: { children: '45' },
   })
-  const helpTextId = composer.addNode({ type: 'StatHelpText', parent: itemId })
+  const helpTextId = composer.addNode({
+    type: 'StatHelpText',
+    parent: nodeId,
+  })
   composer.addNode({
     type: 'StatArrow',
     parent: helpTextId,
     props: { type: 'increase' },
+  })
+
+  composer.addNode({
+    type: 'Text',
+    parent: helpTextId,
+    props: { children: '23.36%' },
   })
 
   const components = composer.getComponents()
