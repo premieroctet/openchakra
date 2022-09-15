@@ -6,6 +6,7 @@ export type AppState = {
   showLayout: boolean
   showCode: boolean
   inputTextFocused: boolean
+  editorWidth: string
   overlay: undefined | Overlay
 }
 
@@ -14,6 +15,7 @@ const app = createModel({
     showLayout: true,
     showCode: false,
     inputTextFocused: false,
+    editorWidth: '100%',
     overlay: undefined,
   } as AppState,
   reducers: {
@@ -39,6 +41,12 @@ const app = createModel({
       return {
         ...state,
         overlay,
+      }
+    },
+    updateEditorWidth(state: AppState, payload: { width: string }): AppState {
+      return {
+        ...state,
+        editorWidth: payload.width,
       }
     },
     'components/deleteComponent': (state: AppState): AppState => {
