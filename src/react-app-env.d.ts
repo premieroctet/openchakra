@@ -62,6 +62,12 @@ type ComponentType =
   | 'SimpleGrid'
   | 'Spinner'
   | 'Stack'
+  | 'Stat'
+  | 'StatLabel'
+  | 'StatNumber'
+  | 'StatHelpText'
+  | 'StatArrow'
+  | 'StatGroup'
   | 'Switch'
   | 'Tab'
   | 'Tabs'
@@ -80,6 +86,7 @@ type MetaComponentType =
   | 'InputGroupMeta'
   | 'BreadcrumbMeta'
   | 'TabsMeta'
+  | 'StatMeta'
 
 interface IComponent {
   children: string[]

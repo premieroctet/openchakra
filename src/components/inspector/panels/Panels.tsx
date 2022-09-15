@@ -51,6 +51,8 @@ import BreadcrumbItemPanel from '~components/inspector/panels/components/Breadcr
 import HighlightPanel from '~components/inspector/panels/components/HighlightPanel'
 import KbdPanel from './components/KbdPanel'
 import TabPanel from './components/TabPanel'
+import StatArrowPanel from './components/StatArrowPanel'
+import StatLabelPanel from './components/StatLabelPanel'
 
 const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
   component,
@@ -118,6 +120,9 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
       {type === 'BreadcrumbItem' && <BreadcrumbItemPanel />}
       {type === 'BreadcrumbLink' && <LinkPanel />}
       {type === 'Kbd' && <KbdPanel />}
+      {type === 'StatArrow' && <StatArrowPanel />}
+      {type === 'StatLabel' && <StatLabelPanel />}
+      {type === 'StatNumber' && <StatLabelPanel />}
     </>
   )
 }
