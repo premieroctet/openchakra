@@ -57,11 +57,15 @@ const components = createModel({
     activePage: DEFAULT_PAGE,
   } as ComponentsState,
   reducers: {
-    reset(state: ComponentsState, components?: IComponents): ComponentsState {
+    reset(state: ComponentsState, newState: ComponentsState): ComponentsState {
+      const pages = newState?.pages || { [DEFAULT_PAGE]: INITIAL_COMPONENTS }
+      const activePage = newState
+        ? Object.keys(newState.pages)[0]
+        : DEFAULT_PAGE
       return {
         ...state,
-        pages: { DEFAULT_PAGE: components || INITIAL_COMPONENTS },
-        activePage: DEFAULT_PAGE,
+        pages: pages,
+        activePage: activePage,
         selectedId: DEFAULT_ID,
       }
     },
@@ -251,10 +255,12 @@ const components = createModel({
           )
 
           draftState.pages[draftState.activePage] = {
-            components,
+            ...components,
             ...clonedComponents,
           }
-          components[parentElement.id].children.push(newId)
+          draftState.pages[draftState.activePage][
+            parentElement.id
+          ].children.push(newId)
         }
       })
     },

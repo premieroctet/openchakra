@@ -8,7 +8,8 @@ const getPresentState = (state: RootState) => {
 
 const getActiveComponents = (state: RootState) => {
   const presentState = getPresentState(state)
-  return presentState.pages[presentState.activePage]
+  const components = presentState.pages[presentState.activePage]
+  return components
 }
 
 export const getComponents = (state: RootState) => getActiveComponents(state)
