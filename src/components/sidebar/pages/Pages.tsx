@@ -67,9 +67,20 @@ const Pages = () => {
           </InputRightElement>
         </InputGroup>
         <PageList />
-        <Box alignSelf={'end'} display="flex" flexDirection="column" mb={'2'}>
-          <Image src="/images/createPage_woman.svg" />
-
+        <Box
+          alignSelf={'end'}
+          display="flex"
+          flexDirection="column"
+          alignItems={'start'}
+          mb={'2'}
+        >
+          <Image
+            position={'absolute'}
+            bottom="0"
+            src="/images/createPage_woman.svg"
+            w={'50%'}
+            mb={2}
+          />
           <CreatePage />
         </Box>
       </Box>
