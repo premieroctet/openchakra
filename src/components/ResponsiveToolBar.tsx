@@ -36,7 +36,7 @@ const ResponsiveToolBar = () => {
       <IconButton
         icon={<MdOutlineTabletMac />}
         size="lg"
-        color={editorWidth === '48em' ? 'teal.500' : 'black.500'}
+        color={editorWidth === theme.breakpoints.md ? 'teal.500' : 'black.500'}
         fontSize="30px"
         aria-label="Tablet version"
         mx={12}
@@ -48,7 +48,7 @@ const ResponsiveToolBar = () => {
       <IconButton
         icon={<ImMobile />}
         size="lg"
-        color={editorWidth === '30em' ? 'teal.500' : 'black.500'}
+        color={editorWidth === theme.breakpoints.sm ? 'teal.500' : 'black.500'}
         fontSize="30px"
         aria-label="Mobile version"
         onClick={() =>
