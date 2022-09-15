@@ -21,6 +21,14 @@ export type ComponentsStateWithUndo = {
   future: ComponentsState[]
 }
 
+export type PageSettings = {
+  name: string
+  meta_title: string
+  meta_description: string
+  meta_image_url: string
+  main: boolean
+}
+
 const DEFAULT_ID = 'root'
 
 function isJsonString(str: string) {
@@ -288,16 +296,7 @@ const components = createModel({
         hoveredId: undefined,
       }
     },
-    addPage(
-      state: ComponentsState,
-      payload: {
-        name: string
-        meta_title: string
-        meta_description: string
-        meta_image_url: string
-        main: boolean
-      },
-    ): ComponentsState {
+    addPage(state: ComponentsState, payload: PageSettings): ComponentsState {
       if (state.pages[payload.name]) {
         throw new Error(`La page ${payload.name} existe déjà`)
       }

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactEventHandler, useState } from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -15,9 +15,17 @@ import {
   Textarea,
   Checkbox,
 } from '@chakra-ui/react'
+import useDispatch from '~hooks/useDispatch'
 
 const CreatePage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const [pageSettings, setPageSettings] = useState({})
+  const dispatch = useDispatch()
+
+  const updatePageSettings = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setPageSettings({ ...pageSettings, [name]: value })
+  }
 
   return (
     <>
@@ -26,6 +34,7 @@ const CreatePage = () => {
         ml={8}
         paddingInline={'6'}
         bgColor="#5bbdc5"
+        color={'white'}
         w={'min-content'}
         alignSelf="center"
         onClick={onOpen}
@@ -56,23 +65,44 @@ const CreatePage = () => {
           >
             <FormControl mb={2}>
               <FormLabel ml={2}>Name</FormLabel>
-              <Input bgColor={'#eee'} borderRadius={'3xl'} />
+              <Input
+                name="name"
+                bgColor={'#eee'}
+                borderRadius={'3xl'}
+                onChange={updatePageSettings}
+              />
             </FormControl>
             <FormControl mb={2}>
               <FormLabel ml={2}>Meta Title</FormLabel>
-              <Input bgColor={'#eee'} borderRadius={'3xl'} />
+              <Input
+                name="meta_title"
+                bgColor={'#eee'}
+                borderRadius={'3xl'}
+                onChange={updatePageSettings}
+              />
             </FormControl>
             <FormControl mb={2}>
               <FormLabel ml={2}>Meta Description</FormLabel>
-              <Textarea bgColor={'#eee'} borderRadius={'3xl'} resize="none" />
+              <Textarea
+                name="meta_description"
+                bgColor={'#eee'}
+                borderRadius={'3xl'}
+                resize="none"
+                onChange={updatePageSettings}
+              />
             </FormControl>
             <FormControl mb={2}>
               <FormLabel ml={2}>Top Image</FormLabel>
-              <Input bgColor={'#eee'} borderRadius={'3xl'} />
+              <Input
+                name="meta_image_url"
+                bgColor={'#eee'}
+                borderRadius={'3xl'}
+                onChange={updatePageSettings}
+              />
             </FormControl>
             <FormControl>
               <FormLabel ml={2}>Principale</FormLabel>
-              <Checkbox />
+              <Checkbox name="main" onChange={updatePageSettings} />
             </FormControl>
           </ModalBody>
 
@@ -89,6 +119,7 @@ const CreatePage = () => {
               _focus={{
                 bgColor: 'orange.300',
               }}
+              onClick={() => dispatch.components.addPage(pageSettings)}
             >
               Create
             </Button>
