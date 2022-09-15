@@ -30,6 +30,10 @@ import StatGroupPreview, {
   StatHelpTextPreview,
   StatPreview,
 } from './previews/StatPreview'
+import SkeletonPreview, {
+  SkeletonCirclePreview,
+  SkeletonTextPreview,
+} from './previews/SkeletonPreview'
 
 const ComponentPreview: React.FC<{
   componentName: string
@@ -165,12 +169,13 @@ const ComponentPreview: React.FC<{
       return <NumberInputPreview component={component} />
     case 'Highlight':
       return <HighlightPreview component={component} />
-    case 'StatGroup':
-      return <StatGroupPreview component={component} />
-    case 'Stat':
-      return <StatPreview component={component} />
-    case 'StatHelpText':
-      return <StatHelpTextPreview component={component} />
+    case 'Skeleton':
+      return <SkeletonPreview component={component} />
+    case 'SkeletonText':
+      return <SkeletonTextPreview component={component} />
+    case 'SkeletonCircle':
+      return <SkeletonCirclePreview component={component} />
+
     default:
       return null
   }
