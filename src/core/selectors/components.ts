@@ -16,7 +16,7 @@ export const getComponents = (state: RootState) => getActiveComponents(state)
 export const getFullComponents = (state: RootState) => getPresentState(state)
 
 export const getPages = (state: RootState) =>
-  Object.keys(getPresentState(state).pages)
+  Object.keys(getPresentState(state).pages).map(pg => ({ name: pg }))
 
 export const getComponentBy = (nameOrId: string | IComponent['id']) => (
   state: RootState,
