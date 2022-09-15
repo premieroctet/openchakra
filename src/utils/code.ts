@@ -4,6 +4,7 @@ import pickBy from 'lodash/pickBy'
 import icons from '~iconsList'
 import { propNames } from '@chakra-ui/react'
 import lodash from 'lodash'
+import config from '../../env.json'
 
 //const HIDDEN_ATTRIBUTES=['dataSource', 'attribute']
 const HIDDEN_ATTRIBUTES = ['attribute']
@@ -132,7 +133,7 @@ const buildBlock = ({
           dataProvider
             ? `{${dataProvider.id.replace(/comp-/, '')}[0]?.${
                 childComponent.props.attribute
-              }}`
+              }|| 'Loading...'}`
             : childComponent.props.children
         }</${componentName}>`
       } else if (childComponent.type === 'Icon') {
@@ -211,7 +212,7 @@ const buildHooks = components => {
   if (components.length == 0) {
     return ''
   }
-  let code = `const {get, post}=useFetch('https://localhost')`
+  let code = `const {get, post}=useFetch('${config.targetDomain}')`
   code +=
     '\n' +
     components
