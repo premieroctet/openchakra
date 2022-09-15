@@ -47,6 +47,9 @@ const Editor: React.FC = () => {
       p={2}
       {...editorBackgroundProps}
       height="100%"
+      sx={{
+        scrollbarColor: 'rgba(49, 151, 149, .7) transparent',
+      }}
       minWidth="10rem"
       width="100%"
       display={isEmpty ? 'flex' : 'block'}
