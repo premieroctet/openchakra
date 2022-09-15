@@ -6,15 +6,18 @@ import { generateId } from '~utils/generateId'
 import { duplicateComponent, deleteComponent } from '~utils/recursive'
 import lodash from 'lodash'
 
-export type ComponentsState = {
-  pages: {
-    [key: string]: IComponents
-  }
-  activePage: string
+export type PageState = {
+  components: IComponents
   selectedId: IComponent['id']
   hoveredId?: IComponent['id']
 }
 
+export type ComponentsState = {
+  pages: {
+    [key: string]: PageState
+  }
+  activePage: string
+}
 export type ComponentsStateWithUndo = {
   past: ComponentsState[]
   present: ComponentsState
@@ -53,20 +56,27 @@ export const INITIAL_COMPONENTS: IComponents = {
 }
 
 const getActiveComponents = (state: ComponentsState) => {
-  return state.pages[state.activePage]
+  return state.pages[state.activePage].components
 }
 
 const components = createModel({
   state: {
     pages: {
-      [DEFAULT_PAGE]: INITIAL_COMPONENTS,
+      [DEFAULT_PAGE]: {
+        components: INITIAL_COMPONENTS,
+        selectedId: DEFAULT_ID,
+      },
     },
-    selectedId: DEFAULT_ID,
     activePage: DEFAULT_PAGE,
   } as ComponentsState,
   reducers: {
     reset(state: ComponentsState, newState: ComponentsState): ComponentsState {
-      const pages = newState?.pages || { [DEFAULT_PAGE]: INITIAL_COMPONENTS }
+      const pages = newState?.pages || {
+        [DEFAULT_PAGE]: {
+          components: INITIAL_COMPONENTS,
+          selectedId: DEFAULT_ID,
+        },
+      }
       const activePage = newState
         ? Object.keys(newState.pages)[0]
         : DEFAULT_PAGE
@@ -74,7 +84,6 @@ const components = createModel({
         ...state,
         pages: pages,
         activePage: activePage,
-        selectedId: DEFAULT_ID,
       }
     },
     loadDemo(state: ComponentsState, type: TemplateType): ComponentsState {
@@ -90,7 +99,7 @@ const components = createModel({
         //@ts-ignore
         const { form, ...defaultProps } = DEFAULT_PROPS[component.type] || {}
 
-        draftState.pages[draftState.activePage][componentId].props =
+        draftState.pages[draftState.activePage].components[componentId].props =
           defaultProps || {}
       })
     },
@@ -101,7 +110,7 @@ const components = createModel({
       return produce(state, (draftState: ComponentsState) => {
         const parseValue =
           isJsonString(payload.value) && JSON.parse(payload.value)
-        draftState.pages[draftState.activePage][payload.id].props[
+        draftState.pages[draftState.activePage].components[payload.id].props[
           payload.name
         ] = parseValue || payload.value
       })
@@ -132,8 +141,8 @@ const components = createModel({
           components[component.parent].children = children
         }
 
-        draftState.selectedId = DEFAULT_ID
-        draftState.pages[draftState.activePage] = deleteComponent(
+        draftState.pages[draftState.activePage].selectedId = DEFAULT_ID
+        draftState.pages[draftState.activePage].components = deleteComponent(
           component,
           components,
         )
@@ -197,7 +206,7 @@ const components = createModel({
         const id = payload.testId || generateId()
         //@ts-ignore
         const { form, ...defaultProps } = DEFAULT_PROPS[payload.type] || {}
-        draftState.selectedId = id
+        draftState.pages[draftState.activePage].selectedId = id
         const components = getActiveComponents(draftState)
         components[payload.parentName].children.push(id)
         components[id] = {
@@ -215,11 +224,11 @@ const components = createModel({
       payload: { components: IComponents; root: string; parent: string },
     ): ComponentsState {
       return produce(state, (draftState: ComponentsState) => {
-        draftState.selectedId = payload.root
+        draftState.pages[draftState.activePage].selectedId = payload.root
         const components = getActiveComponents(draftState)
         components[payload.parent].children.push(payload.root)
 
-        draftState.pages[draftState.activePage] = {
+        draftState.pages[draftState.activePage].components = {
           ...components,
           ...payload.components,
         }
@@ -231,7 +240,13 @@ const components = createModel({
     ): ComponentsState {
       return {
         ...state,
-        selectedId,
+        pages: {
+          ...state.pages,
+          [state.activePage]: {
+            ...state.pages[state.activePage],
+            selectedId: selectedId,
+          },
+        },
       }
     },
     unselect(state: ComponentsState): ComponentsState {
@@ -304,16 +319,19 @@ const components = createModel({
         ...state,
         pages: {
           ...state.pages,
-          [payload.name]: INITIAL_COMPONENTS,
+          [payload.name]: {
+            components: INITIAL_COMPONENTS,
+            selectedId: DEFAULT_ID,
+          },
         },
       }
     },
     deletePage(state: ComponentsState, page_name: string): ComponentsState {
       if (!state.pages[page_name]) {
-        throw new Error(`La page ${page_name} n'existe pas`)
+        return state
       }
       if (Object.keys(state.pages).length == 1) {
-        throw new Error(`On ne peut supprimer la dernière page`)
+        return state
       }
       return {
         ...state,
