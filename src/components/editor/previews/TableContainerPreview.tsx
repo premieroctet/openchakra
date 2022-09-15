@@ -4,7 +4,6 @@ import { useDropComponent } from '~hooks/useDropComponent'
 import {
   Box,
   Table,
-  TableCaption,
   TableContainer,
   Tbody,
   Tfoot,
@@ -47,18 +46,18 @@ const acceptedTypesTable: ComponentType[] = [
 ]
 
 export const TablePreview = ({ component }: IPreviewProps) => {
-  const { props, ref } = useInteractive(component, true)
+  const { props, ref } = useInteractive(component, true, true)
   const { drop, isOver } = useDropComponent(component.id, acceptedTypesTable)
 
-  let boxProps: any = {}
+  let boxProps: any = { border: '1px solid red' }
 
   if (isOver) {
     props.bg = 'teal.50'
   }
 
   return (
-    <Box ref={drop(ref)} {...boxProps}>
-      <Table {...props}>
+    <Box ref={drop(ref)} {...props} border="1px solid green">
+      <Table {...component.props}>
         {component.children.map((key: string) => (
           <ComponentPreview key={key} componentName={key} />
         ))}
@@ -89,7 +88,7 @@ export const TheadPreview = ({ component }: IPreviewProps) => {
 const acceptedTypesTr: ComponentType[] = ['Th', 'Td']
 
 export const TrPreview = ({ component }: IPreviewProps) => {
-  const { props, ref } = useInteractive(component, true)
+  const { props, ref } = useInteractive(component, true, true)
   const { drop, isOver } = useDropComponent(component.id, acceptedTypesTr)
 
   if (isOver) {
@@ -97,11 +96,13 @@ export const TrPreview = ({ component }: IPreviewProps) => {
   }
 
   return (
-    <Tr ref={drop(ref)} {...props}>
-      {component.children.map((key: string) => (
-        <ComponentPreview key={key} componentName={key} />
-      ))}
-    </Tr>
+    <Box ref={drop(ref)} {...props} border="1px solid green">
+      <Tr {...component.props}>
+        {component.children.map((key: string) => (
+          <ComponentPreview key={key} componentName={key} />
+        ))}
+      </Tr>
+    </Box>
   )
 }
 

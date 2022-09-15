@@ -1,5 +1,6 @@
 import { Select } from '@chakra-ui/react'
 import { memo } from 'react'
+import ChildrenControl from '~components/inspector/controls/ChildrenControl'
 import FormControl from '~components/inspector/controls/FormControl'
 import SwitchControl from '~components/inspector/controls/SwitchControl'
 import { useForm } from '~hooks/useForm'
@@ -12,6 +13,8 @@ const TableCaptionPanel = () => {
 
   return (
     <>
+      <ChildrenControl />
+
       <FormControl label="Placement" htmlFor="placement">
         <Select
           name="placement"
