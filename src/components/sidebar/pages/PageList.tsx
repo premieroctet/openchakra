@@ -1,5 +1,8 @@
 import React from 'react'
 import { Box, Button, Image, List, ListItem } from '@chakra-ui/react'
+import { useSelector } from 'react-redux'
+import { getPages } from '~core/selectors/components'
+import useDispatch from '~hooks/useDispatch'
 
 const PageActions = () => {
   const actions = [
@@ -37,12 +40,14 @@ const PageActions = () => {
 }
 
 const PageList = () => {
-  const pages = [{ name: 'index' }, { name: 'search' }]
+  const pages = useSelector(getPages)
+  const dispatch = useDispatch()
 
   return (
     <List>
-      {pages.map(page => (
+      {pages.map((page, i) => (
         <ListItem
+          key={i}
           display={'flex'}
           justifyContent={'space-between'}
           alignItems="center"
@@ -50,7 +55,15 @@ const PageList = () => {
           paddingBlock={2}
           borderBottom={'1px solid black'}
         >
-          <Box>{page.name}</Box>
+          {/* <Box>{page.name}</Box> */}
+          <Button
+            p={0}
+            bg={'transparent'}
+            color="black"
+            onClick={() => dispatch.components.setActivePage(page.name)}
+          >
+            {page.name}
+          </Button>
           <Box display={'flex'} alignItems="center">
             <PageActions />
           </Box>

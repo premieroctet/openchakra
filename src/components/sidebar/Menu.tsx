@@ -151,8 +151,7 @@ const StyledMenu = styled.div`
     }
   }
 
-  .menu button,
-  .sidebar button {
+  .menu button {
     display: flex;
     flex-direction: column;
     align-items: center;
