@@ -279,6 +279,7 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     isChecked: false,
   },
   Tab: { children: 'Tab' },
+  Tabs: { children: '', size: 'md' },
   TabPanel: { children: 'Tab' },
   Tag: {
     children: 'Tag name',

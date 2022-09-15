@@ -65,6 +65,11 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'AccordionIcon',
   'InputRightElement',
   'InputLeftElement',
+  'Tab',
+  'TabList',
+  'TabPanel',
+  'TabPanels',
+  'Tabs',
   // Allow meta components
   'AlertMeta',
   'FormControlMeta',
@@ -72,6 +77,7 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'ListMeta',
   'InputGroupMeta',
   'BreadcrumbMeta',
+  'TabsMeta',
 ]
 
 export const AccordionWhitelist: (
