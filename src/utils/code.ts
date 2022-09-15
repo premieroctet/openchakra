@@ -235,7 +235,7 @@ const buildHooks = components => {
   return code
 }
 
-export const generateCode = async (components: IComponents) => {
+export const generateCode = async (pageName:string, components: IComponents) => {
   const dataProviders = Object.values(components).filter(
     c => c.type == 'DataProvider',
   )
@@ -285,7 +285,7 @@ import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
 
 ${componentsCodes}
 
-const App = () => {
+const ${pageName} = () => {
   ${hooksCode}
   return (
   <ChakraProvider resetCSS>
@@ -293,7 +293,36 @@ const App = () => {
   </ChakraProvider>
 )};
 
-export default App;`
+export default ${pageName};`
 
   return await formatCode(code)
+}
+
+export const generateApp = async (pageNames:[string]) => {
+  /**
+  <ul>
+${pageNames.map(name => `<li><a href='/${name}'>${name}</a></li>`).join('\n')}
+</ul>
+*/
+  let code=`import {BrowserRouter, Routes, Route} from 'react-router-dom'
+  ${pageNames.map(name => `import ${name} from './${name}'`).join('\n')}
+
+  const App = () => (
+    <>
+    <ul>
+  ${pageNames.map(name => `<li><a href='/${name}'>Ouvrir la page <b>${name}</b></a></li>`).join('\n')}
+  </ul>
+    <BrowserRouter>
+    <Routes>
+      ${pageNames.slice(0, 1).map(name => `<Route path='/' element={<${name}/>} />`).join('\n')}
+      ${pageNames.map(name => `<Route path='/${name}' element={<${name}/>} />`).join('\n')}
+    </Routes>
+    </BrowserRouter>
+    </>
+  )
+
+  export default App
+  `
+  code= await formatCode(code)
+  return code
 }
