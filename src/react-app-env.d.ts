@@ -61,6 +61,8 @@ type ComponentType =
   | 'Select'
   | 'SimpleGrid'
   | 'Skeleton'
+  | 'SkeletonCircle'
+  | 'SkeletonText'
   | 'Spinner'
   | 'Stack'
   | 'Switch'

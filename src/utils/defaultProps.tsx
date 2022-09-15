@@ -90,6 +90,8 @@ type PreviewDefaultProps = {
   Heading?: PropsWithForm<HeadingProps>
   Highlight?: PropsWithForm<HighlightProps>
   Skeleton?: PropsWithForm<SkeletonProps>
+  SkeletonCircle?: PropsWithForm<SkeletonProps>
+  SkeletonText?: PropsWithForm<SkeletonProps>
   Tag?: PropsWithForm<TagProps>
   SimpleGrid?: PropsWithForm<SimpleGridProps>
   Switch?: PropsWithForm<SwitchProps>
@@ -271,9 +273,9 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     spacingX: 1,
     spacingY: 1,
   },
-  Skeleton: {
-    children: 'default children',
-  },
+  Skeleton: {},
+  SkeletonCircle: {},
+  SkeletonText: {},
   Stack: {
     spacing: 2,
     form: {

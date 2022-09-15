@@ -118,6 +118,8 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
       {type === 'BreadcrumbLink' && <LinkPanel />}
       {type === 'Kbd' && <KbdPanel />}
       {type === 'Skeleton' && <SkeletonPanel />}
+      {type === 'SkeletonCircle' && <SkeletonPanel isSkeletonCircle />}
+      {type === 'SkeletonText' && <SkeletonPanel isSkeletonText />}
     </>
   )
 }
