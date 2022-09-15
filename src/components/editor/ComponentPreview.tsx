@@ -34,6 +34,13 @@ import SkeletonPreview, {
   SkeletonCirclePreview,
   SkeletonTextPreview,
 } from './previews/SkeletonPreview'
+import TableContainerPreview, {
+  TablePreview,
+  TbodyPreview,
+  TfootPreview,
+  TheadPreview,
+  TrPreview,
+} from './previews/TableContainerPreview'
 
 const ComponentPreview: React.FC<{
   componentName: string
@@ -70,6 +77,9 @@ const ComponentPreview: React.FC<{
     case 'StatLabel':
     case 'StatNumber':
     case 'StatArrow':
+    case 'Th':
+    case 'Td':
+    case 'TableCaption':
       return (
         <PreviewContainer
           component={component}
@@ -169,6 +179,20 @@ const ComponentPreview: React.FC<{
       return <NumberInputPreview component={component} />
     case 'Highlight':
       return <HighlightPreview component={component} />
+    case 'Table':
+      return <TablePreview component={component} />
+    case 'Thead':
+      return <TheadPreview component={component} />
+    case 'Tbody':
+      return <TbodyPreview component={component} />
+    case 'Tfoot':
+      return <TfootPreview component={component} />
+    case 'Tr':
+      return <TrPreview component={component} />
+    case 'TableContainer':
+      return <TableContainerPreview component={component} />
+    case 'Tr':
+      return <TrPreview component={component} />
     case 'Skeleton':
       return <SkeletonPreview component={component} />
     case 'SkeletonText':

@@ -79,6 +79,15 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'StatHelpText',
   'StatArrow',
   'StatGroup',
+  'Table',
+  'Thead',
+  'Tbody',
+  'Tfoot',
+  'Tr',
+  'Th',
+  'Td',
+  'TableCaption',
+  'TableContainer',
   // Allow meta components
   'AlertMeta',
   'FormControlMeta',
@@ -88,6 +97,7 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'BreadcrumbMeta',
   'TabsMeta',
   'StatMeta',
+  'TableMeta',
 ]
 
 export const AccordionWhitelist: (
