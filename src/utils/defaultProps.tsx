@@ -300,9 +300,26 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     alignItems: 'center',
   },
   StatGroup: {},
-  Skeleton: {},
-  SkeletonCircle: {},
-  SkeletonText: {},
+  Skeleton: {
+    height: 50,
+
+    form: {
+      fadeDuration: 0.4,
+      speed: 0.8,
+    },
+  },
+  SkeletonCircle: {
+    form: {
+      fadeDuration: 0.4,
+      speed: 0.8,
+    },
+  },
+  SkeletonText: {
+    form: {
+      fadeDuration: 0.4,
+      speed: 0.8,
+    },
+  },
   Switch: {
     isChecked: false,
   },
