@@ -119,7 +119,10 @@ const CreatePage = () => {
               _focus={{
                 bgColor: 'orange.300',
               }}
-              onClick={() => dispatch.components.addPage(pageSettings)}
+              onClick={() => {
+                dispatch.components.addPage(pageSettings)
+                onClose()
+              }}
             >
               Create
             </Button>

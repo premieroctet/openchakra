@@ -4,21 +4,20 @@ import { useSelector } from 'react-redux'
 import { getPages } from '~core/selectors/components'
 import useDispatch from '~hooks/useDispatch'
 
-const PageActions = () => {
-  const actions = [
-    {
-      title: 'Edit',
-      src: '/icons/edit.svg',
-    },
-    {
-      title: 'Delete',
-      src: '/icons/delete.svg',
-    },
-    {
-      title: 'Save',
-      src: '/icons/save.svg',
-    },
-  ]
+const PageActions = ({ page }) => {
+  const dispatch = useDispatch()
+
+  const deleteP = async elem => {
+    await new Promise(() => dispatch.components.deletePage(elem)).then(a =>
+      console.log(a),
+    )
+  }
+
+  const edit = async elem => {
+    await new Promise(() => dispatch.components.deletePage(elem)).then(a =>
+      console.log(a),
+    )
+  }
 
   const buttonProps = {
     p: 0,
@@ -30,11 +29,12 @@ const PageActions = () => {
 
   return (
     <>
-      {actions.map((action, i) => (
-        <Button key={i} {...buttonProps}>
-          <Image w={'30px'} {...action} />
-        </Button>
-      ))}
+      {/* <Button {...buttonProps} onClick={() => edit(page)}>
+        <Image w={'30px'} title='Edit' src='/icons/edit.svg' />
+      </Button> */}
+      <Button {...buttonProps} onClick={() => deleteP(page)}>
+        <Image w={'30px'} title="Edit" src="/icons/delete.svg" />
+      </Button>
     </>
   )
 }
@@ -65,7 +65,7 @@ const PageList = () => {
             {page.name}
           </Button>
           <Box display={'flex'} alignItems="center">
-            <PageActions />
+            <PageActions page={page.name} />
           </Box>
         </ListItem>
       ))}
