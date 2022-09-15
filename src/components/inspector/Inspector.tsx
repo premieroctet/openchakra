@@ -121,11 +121,11 @@ const Inspector = () => {
         <Box
           fontWeight="semibold"
           fontSize="md"
-          color="yellow.900"
+          color={'white'}
           py={2}
           px={2}
           boxShadow="sm"
-          bg="yellow.100"
+          bg="#5bbdc5"
           display="flex"
           justifyContent="space-between"
           flexDir="column"
