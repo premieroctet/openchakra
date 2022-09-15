@@ -1,29 +1,41 @@
 import map from 'lodash/map'
 import { RootState } from '~core/store'
+import { ComponentsState } from '~core/models/components'
 
-export const getComponents = (state: RootState) =>
-  state.components.present.components
+const getPresentState = (state: RootState) => {
+  return state.components.present
+}
+
+const getActiveComponents = (state: RootState) => {
+  const presentState = getPresentState(state)
+  return presentState.pages[presentState.activePage]
+}
+
+export const getComponents = (state: RootState) => getActiveComponents(state)
+
+export const getFullComponents = (state: RootState) => getPresentState(state)
+
+export const getPages = (state: RootState) =>
+  Object.keys(getPresentState(state).pages)
 
 export const getComponentBy = (nameOrId: string | IComponent['id']) => (
   state: RootState,
-) => state.components.present.components[nameOrId]
+) => getActiveComponents(state)[nameOrId]
 
 export const getSelectedComponent = (state: RootState) =>
-  state.components.present.components[state.components.present.selectedId]
+  getActiveComponents(state)[getPresentState(state).selectedId]
 
 export const getPropsForSelectedComponent = (
   state: RootState,
   propsName: string,
-) =>
-  state.components.present.components[state.components.present.selectedId]
-    .props[propsName]
+) => getSelectedComponent(state).props[propsName]
 
 export const getSelectedComponentId = (state: RootState) =>
-  state.components.present.selectedId
+  getPresentState(state).selectedId
 
 export const getIsSelectedComponent = (componentId: IComponent['id']) => (
   state: RootState,
-) => state.components.present.selectedId === componentId
+) => getPresentState(state).selectedId === componentId
 
 export const getSelectedComponentChildren = (state: RootState) => {
   return getSelectedComponent(state).children.map(child =>
@@ -32,17 +44,17 @@ export const getSelectedComponentChildren = (state: RootState) => {
 }
 
 export const getSelectedComponentParent = (state: RootState) =>
-  state.components.present.components[getSelectedComponent(state).parent]
+  getActiveComponents(state)[getSelectedComponent(state).parent]
 
 export const getHoveredId = (state: RootState) =>
-  state.components.present.hoveredId
+  getPresentState(state).hoveredId
 
 export const getIsHovered = (id: IComponent['id']) => (state: RootState) =>
   getHoveredId(state) === id
 
 export const getComponentNames = (state: RootState) => {
   const names = map(
-    state.components.present.components,
+    getActiveComponents(state),
     comp => comp.componentName,
   ).filter(comp => !!comp)
 

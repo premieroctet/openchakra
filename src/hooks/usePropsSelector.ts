@@ -13,8 +13,9 @@ const usePropsSelector = (propsName: string) => {
   }, [addActiveProps, propsName])
 
   const value = useSelector((state: RootState) => {
+    const currentState = state.components.present
     const component =
-      state.components.present.components[state.components.present.selectedId]
+      currentState.pages[currentState.activePage][currentState.selectedId]
     const propsValue = component.props[propsName]
 
     if (propsValue !== undefined) {

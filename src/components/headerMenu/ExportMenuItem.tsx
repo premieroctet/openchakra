@@ -3,10 +3,10 @@ import { useSelector } from 'react-redux'
 import { MenuItem, Box } from '@chakra-ui/react'
 import { FaSave } from 'react-icons/fa'
 import { saveAsJSON } from '~utils/import'
-import { getComponents } from '~core/selectors/components'
+import { getFullComponents } from '~core/selectors/components'
 
 const ExportMenuItem = () => {
-  const components = useSelector(getComponents)
+  const components = useSelector(getFullComponents)
 
   return (
     <MenuItem onClick={() => saveAsJSON(components)}>
