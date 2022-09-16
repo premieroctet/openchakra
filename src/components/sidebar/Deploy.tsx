@@ -49,7 +49,7 @@ const Deploy = () => {
       alt="Deploy"
       disabled={deploying}
     >
-      {deploying ? 'Deploying...' : 'Deploy'}
+      Deploy
     </DeployButton>
   )
 }
