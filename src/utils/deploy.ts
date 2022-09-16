@@ -24,6 +24,8 @@ export const deploy = (state: ComponentsState) => {
     })
     .then(code => {
       return copyCode('App', code)
+    })
+    .then(() => {
       return install()
     })
     .then(() => {
