@@ -212,6 +212,21 @@ export const buildInputGroup = (parent: string): ComposedComponent => {
   }
 }
 
+export const buildSlider = (parent: string): ComposedComponent => {
+  const composer = new Composer()
+  const nodeId = composer.addNode({ type: 'Slider' })
+  const track = composer.addNode({ type: 'SliderTrack', parent: nodeId })
+  composer.addNode({ type: 'SliderFilledTrack', parent: track })
+  composer.addNode({ type: 'SliderThumb', parent: nodeId })
+  const components = composer.getComponents()
+
+  return {
+    components,
+    root: nodeId,
+    parent,
+  }
+}
+
 type BuilderFn = (parent: string) => ComposedComponent
 
 type ComposerBuilders = {
@@ -227,6 +242,7 @@ const builders: ComposerBuilders = {
   BreadcrumbMeta: buildBreadcrumb,
   TabsMeta: buildTabs,
   StatMeta: buildStats,
+  SliderMeta: buildSlider,
 }
 
 export default builders
