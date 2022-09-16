@@ -14,9 +14,9 @@ const PageActions = ({ page }) => {
   }
 
   const edit = async elem => {
-    await new Promise(() => dispatch.components.deletePage(elem)).then(a =>
-      console.log(a),
-    )
+    // await new Promise(() => dispatch.components.editPage(elem)).then(a =>
+    //   console.log(a),
+    // )
   }
 
   const buttonProps = {
@@ -29,11 +29,14 @@ const PageActions = ({ page }) => {
 
   return (
     <>
-      {/* <Button {...buttonProps} onClick={() => edit(page)}>
+      <Button {...buttonProps} onClick={() => edit(page)}>
         <Image w={'30px'} title='Edit' src='/icons/edit.svg' />
-      </Button> */}
+      </Button>
       <Button {...buttonProps} onClick={() => deleteP(page)}>
         <Image w={'30px'} title="Edit" src="/icons/delete.svg" />
+      </Button>
+      <Button {...buttonProps} onClick={() => console.log('Nothing yet')}>
+        <Image w={'30px'} title="Save" src="/icons/save.svg" />
       </Button>
     </>
   )

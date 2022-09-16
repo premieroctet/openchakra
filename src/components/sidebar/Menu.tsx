@@ -7,6 +7,7 @@ import { getShowLayout } from '~core/selectors/app'
 import useDispatch from '~hooks/useDispatch'
 import MenuActions from './MenuActions'
 import ResponsiveActions from './ResponsiveActions'
+import Media from './Media'
 
 const menuSections: {
   [section: string]: {
@@ -28,6 +29,7 @@ const menuSections: {
   medias: {
     title: 'Medias',
     icon: '/icons/medias.svg',
+    component: <Media />,
   },
   // settings: {
   //   title: 'Settings',
