@@ -1,4 +1,4 @@
-import React, { ReactEventHandler, useState } from 'react'
+import React, { useState } from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -45,7 +45,7 @@ const CreatePage = () => {
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent bg={'white'} minHeight={'70vh'} borderRadius={'3xl'}>
+        <ModalContent bg={'white'} borderRadius={'3xl'}>
           <ModalHeader
             marginBlockStart={'12'}
             marginBlockEnd={'6'}
@@ -91,7 +91,7 @@ const CreatePage = () => {
                 onChange={updatePageSettings}
               />
             </FormControl>
-            <FormControl mb={2}>
+            <FormControl mb={3}>
               <FormLabel ml={2}>Top Image</FormLabel>
               <Input
                 name="meta_image_url"
@@ -100,7 +100,7 @@ const CreatePage = () => {
                 onChange={updatePageSettings}
               />
             </FormControl>
-            <FormControl>
+            <FormControl display={'flex'} alignItems="baseline" >
               <FormLabel ml={2}>Principale</FormLabel>
               <Checkbox name="main" onChange={updatePageSettings} />
             </FormControl>
