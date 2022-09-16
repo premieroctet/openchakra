@@ -67,6 +67,9 @@ import {
   StatNumberProps,
   StatArrowProps,
   SkeletonProps,
+  SliderProps,
+  SliderTrackProps,
+  SliderThumbProps,
 } from '@chakra-ui/react'
 
 import iconsList from '~iconsList'
@@ -150,6 +153,10 @@ type PreviewDefaultProps = {
   Skeleton?: PropsWithForm<SkeletonProps>
   SkeletonCircle?: PropsWithForm<SkeletonProps>
   SkeletonText?: PropsWithForm<SkeletonProps>
+  Slider?: PropsWithForm<SliderProps>
+  SliderTrack?: PropsWithForm<SliderTrackProps>
+  SliderFilledTrack?: PropsWithForm<any>
+  SliderThumb?: PropsWithForm<SliderThumbProps>
 }
 
 export const DEFAULT_PROPS: PreviewDefaultProps = {
@@ -285,6 +292,17 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     spacingX: 1,
     spacingY: 1,
   },
+  Slider: {
+    step: 1,
+    size: 'md',
+    value: 50,
+    min: 1,
+    max: 100,
+    'aria-label': 'slider',
+  },
+  SliderFilledTrack: {},
+  SliderThumb: {},
+  SliderTrack: {},
   Stack: {
     spacing: 2,
     form: {

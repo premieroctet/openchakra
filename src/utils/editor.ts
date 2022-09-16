@@ -47,6 +47,10 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'Skeleton',
   'SkeletonCircle',
   'SkeletonText',
+  'Slider',
+  'SliderTrack',
+  'SliderFilledTrack',
+  'SliderThumb',
   'Stack',
   'Switch',
   'Tag',
@@ -88,6 +92,7 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'BreadcrumbMeta',
   'TabsMeta',
   'StatMeta',
+  'SliderMeta',
 ]
 
 export const AccordionWhitelist: (

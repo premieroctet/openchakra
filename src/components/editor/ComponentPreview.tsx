@@ -34,6 +34,10 @@ import SkeletonPreview, {
   SkeletonCirclePreview,
   SkeletonTextPreview,
 } from './previews/SkeletonPreview'
+import SliderPreview from './previews/SliderPreview'
+import SliderTrackPreview from './previews/SliderTrackPreview'
+import SliderThumbPreview from './previews/SliderThumbPreview'
+import SliderFilledTrackPreview from './previews/SliderFilledTrackPreview'
 
 const ComponentPreview: React.FC<{
   componentName: string
@@ -70,6 +74,7 @@ const ComponentPreview: React.FC<{
     case 'StatLabel':
     case 'StatNumber':
     case 'StatArrow':
+    case 'SliderFilledTrack':
       return (
         <PreviewContainer
           component={component}
@@ -169,13 +174,24 @@ const ComponentPreview: React.FC<{
       return <NumberInputPreview component={component} />
     case 'Highlight':
       return <HighlightPreview component={component} />
+    case 'StatGroup':
+      return <StatGroupPreview component={component} />
+    case 'Stat':
+      return <StatPreview component={component} />
+    case 'StatHelpText':
+      return <StatHelpTextPreview component={component} />
     case 'Skeleton':
       return <SkeletonPreview component={component} />
     case 'SkeletonText':
       return <SkeletonTextPreview component={component} />
     case 'SkeletonCircle':
       return <SkeletonCirclePreview component={component} />
-
+    case 'SliderTrack':
+      return <SliderTrackPreview component={component} />
+    case 'Slider':
+      return <SliderPreview component={component} />
+    case 'SliderThumb':
+      return <SliderThumbPreview component={component} />
     default:
       return null
   }
