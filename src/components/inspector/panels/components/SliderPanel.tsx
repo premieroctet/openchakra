@@ -1,12 +1,5 @@
 import React, { memo } from 'react'
-import {
-  SliderTrack,
-  SliderFilledTrack,
-  Slider,
-  SliderThumb,
-  Select,
-  Input,
-} from '@chakra-ui/react'
+import { Select, Input } from '@chakra-ui/react'
 import FormControl from '~components/inspector/controls/FormControl'
 import { useForm } from '~hooks/useForm'
 import usePropsSelector from '~hooks/usePropsSelector'
@@ -19,7 +12,6 @@ const SliderPanel = () => {
   const { setValueFromEvent } = useForm()
   const size = usePropsSelector('size')
   const orientation = usePropsSelector('orientation')
-  const direction = usePropsSelector('direction')
   const label = usePropsSelector('aria-label')
 
   return (
