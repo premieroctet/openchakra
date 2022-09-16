@@ -1,7 +1,11 @@
+import { getPages } from '../../../../core/selectors/components';
+
+import { Input, Select } from '@chakra-ui/react';
+import { useSelector } from 'react-redux';
 import React from 'react'
-import { Input } from '@chakra-ui/react'
-import FormControl from '~components/inspector/controls/FormControl'
+
 import { useForm } from '~hooks/useForm'
+import FormControl from '~components/inspector/controls/FormControl'
 import usePropsSelector from '~hooks/usePropsSelector'
 
 const ImagePanel = () => {
@@ -9,6 +13,8 @@ const ImagePanel = () => {
 
   const src = usePropsSelector('src')
   const fallbackSrc = usePropsSelector('fallbackSrc')
+  const pages = useSelector(getPages)
+  const page = usePropsSelector('page')
   const alt = usePropsSelector('alt')
   const htmlHeight = usePropsSelector('htmlHeight')
   const htmlWidth = usePropsSelector('htmlWidth')
@@ -24,6 +30,20 @@ const ImagePanel = () => {
           onChange={setValueFromEvent}
         />
       </FormControl>
+
+      <FormControl htmlFor="page" label="Ouvrir page">
+        <Select
+          id="page"
+          onChange={setValueFromEvent}
+          name="page"
+          size="sm"
+          value={page || ''}
+        >
+          <option value=''></option>
+          {(pages || []).map(p => (<option>{p.name}</option>))}
+        </Select>
+      </FormControl>
+
 
       <FormControl label="Fallback Src" htmlFor="fallbackSrc">
         <Input

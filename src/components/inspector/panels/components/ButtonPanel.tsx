@@ -1,17 +1,23 @@
-import React, { memo } from 'react'
-import ColorsControl from '~components/inspector/controls/ColorsControl'
-import SizeControl from '~components/inspector/controls/SizeControl'
 import { Select } from '@chakra-ui/react'
-import ChildrenControl from '~components/inspector/controls/ChildrenControl'
-import FormControl from '~components/inspector/controls/FormControl'
+import { useSelector } from 'react-redux';
+import React, { memo } from 'react'
+
 import { useForm } from '~hooks/useForm'
-import usePropsSelector from '~hooks/usePropsSelector'
+import ChildrenControl from '~components/inspector/controls/ChildrenControl'
+import ColorsControl from '~components/inspector/controls/ColorsControl'
+import FormControl from '~components/inspector/controls/FormControl'
 import IconControl from '~components/inspector/controls/IconControl'
+import SizeControl from '~components/inspector/controls/SizeControl'
+import usePropsSelector from '~hooks/usePropsSelector'
+
+import { getPages } from '../../../../core/selectors/components';
 
 const ButtonPanel = () => {
   const { setValueFromEvent } = useForm()
 
+  const pages = useSelector(getPages)
   const size = usePropsSelector('size')
+  const page = usePropsSelector('page')
   const variant = usePropsSelector('variant')
 
   return (
@@ -19,6 +25,19 @@ const ButtonPanel = () => {
       <ChildrenControl />
 
       <SizeControl name="size" label="Size" value={size} />
+
+      <FormControl htmlFor="page" label="Ouvrir page">
+        <Select
+          id="page"
+          onChange={setValueFromEvent}
+          name="page"
+          size="sm"
+          value={page || ''}
+        >
+	  <option value=''></option>
+          {(pages || []).map(p => (<option>{p.name}</option>))}
+        </Select>
+      </FormControl>
 
       <FormControl htmlFor="variant" label="Variant">
         <Select

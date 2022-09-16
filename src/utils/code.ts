@@ -125,6 +125,10 @@ const buildBlock = ({
           }
         })
 
+      if (childComponent.props.page) {
+        propsContent += `onClick={() => window.location='/${childComponent.props.page}'}`
+      }
+
       if (
         typeof childComponent.props.children === 'string' &&
         childComponent.children.length === 0
