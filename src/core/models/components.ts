@@ -10,6 +10,10 @@ export type PageState = {
   components: IComponents
   selectedId: IComponent['id']
   hoveredId?: IComponent['id']
+  meta_title?: string
+  meta_description?: string
+  meta_image_url?: string
+  main?: boolean
 }
 
 export type ComponentsState = {
@@ -252,38 +256,49 @@ const components = createModel({
     unselect(state: ComponentsState): ComponentsState {
       return {
         ...state,
-        selectedId: DEFAULT_ID,
+        pages: {
+          ...state.pages,
+          [state.activePage]: {
+            ...state.pages[state.activePage],
+            selectedId: DEFAULT_ID,
+          },
+        },
       }
     },
     selectParent(state: ComponentsState): ComponentsState {
       const components = getActiveComponents(state)
-      const selectedComponent = components[state.selectedId]
-
+      const selectedComponent = state.pages[state.activePage].selectedId
+      
       return {
         ...state,
-        selectedId: components[selectedComponent.parent].id,
+        pages: {
+          ...state.pages,
+          [state.activePage]: {
+            ...state.pages[state.activePage],
+            selectedId: components[selectedComponent].parent,
+          },
+        },
       }
     },
     duplicate(state: ComponentsState): ComponentsState {
       return produce(state, (draftState: ComponentsState) => {
         const components = getActiveComponents(draftState)
-        const selectedComponent = components[draftState.selectedId]
+        const selectedComponent = components[draftState.pages[draftState.activePage].selectedId]
 
         if (selectedComponent.id !== DEFAULT_ID) {
-          const parentElement = components[selectedComponent.parent]
+          const parentElement = draftState.pages[draftState.activePage].components[selectedComponent.parent]
 
           const { newId, clonedComponents } = duplicateComponent(
             selectedComponent,
             components,
           )
 
-          draftState.pages[draftState.activePage] = {
-            ...components,
+          draftState.pages[draftState.activePage].components = {
+            ...draftState.pages[draftState.activePage].components,
             ...clonedComponents,
           }
-          draftState.pages[draftState.activePage][
-            parentElement.id
-          ].children.push(newId)
+
+          draftState.pages[draftState.activePage].components[parentElement.id].children.push(newId)
         }
       })
     },
@@ -322,6 +337,10 @@ const components = createModel({
           [payload.name]: {
             components: INITIAL_COMPONENTS,
             selectedId: DEFAULT_ID,
+            meta_title: payload.meta_title,
+            meta_description: payload.meta_description,
+            meta_image_url: payload.meta_image_url,
+            main: payload.main,
           },
         },
       }

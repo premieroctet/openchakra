@@ -51,9 +51,9 @@ const Menu = () => {
             alt="Logo"
           />
           <ul className="menu">
-            {Object.keys(menuSections).map(category => {
+            {Object.keys(menuSections).map((category, i) => {
               return (
-                <li>
+                <li key={`${category}${i}`}>
                   <button
                     className={category === activeSection ? 'highlight' : ''}
                     onClick={() => {
