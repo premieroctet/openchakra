@@ -309,9 +309,6 @@ ${pageNames.map(name => `<li><a href='/${name}'>${name}</a></li>`).join('\n')}
 
   const App = () => (
     <>
-    <ul>
-  ${pageNames.map(name => `<li><a href='/${name}'>Ouvrir la page <b>${name}</b></a></li>`).join('\n')}
-  </ul>
     <BrowserRouter>
     <Routes>
       ${pageNames.slice(0, 1).map(name => `<Route path='/' element={<${name}/>} />`).join('\n')}
