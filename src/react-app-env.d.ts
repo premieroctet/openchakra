@@ -64,7 +64,16 @@ type ComponentType =
   | 'SkeletonCircle'
   | 'SkeletonText'
   | 'Spinner'
+  | 'Skeleton'
+  | 'SkeletonCircle'
+  | 'SkeletonText'
   | 'Stack'
+  | 'Stat'
+  | 'StatLabel'
+  | 'StatNumber'
+  | 'StatHelpText'
+  | 'StatArrow'
+  | 'StatGroup'
   | 'Switch'
   | 'Tab'
   | 'Tabs'
@@ -82,6 +91,8 @@ type MetaComponentType =
   | 'AlertMeta'
   | 'InputGroupMeta'
   | 'BreadcrumbMeta'
+  | 'TabsMeta'
+  | 'StatMeta'
 
 interface IComponent {
   children: string[]

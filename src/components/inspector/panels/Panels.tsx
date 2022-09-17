@@ -50,6 +50,9 @@ import BreadcrumbPanel from '~components/inspector/panels/components/BreadcrumbP
 import BreadcrumbItemPanel from '~components/inspector/panels/components/BreadcrumbItemPanel'
 import HighlightPanel from '~components/inspector/panels/components/HighlightPanel'
 import KbdPanel from './components/KbdPanel'
+import TabPanel from './components/TabPanel'
+import StatArrowPanel from './components/StatArrowPanel'
+import StatLabelPanel from './components/StatLabelPanel'
 import SkeletonPanel from './components/SkeletonPanel'
 
 const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
@@ -96,10 +99,14 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
       {type === 'Stack' && <StackPanel />}
       {type === 'FormControl' && <FormControlPanel />}
       {type === 'Tabs' && <TabsPanel />}
+      {type === 'Tab' && <TabPanel />}
       {type === 'Input' && <InputPanel />}
       {type === 'Radio' && <RadioPanel />}
       {type === 'RadioGroup' && <RadioGroupPanel />}
       {type === 'Select' && <SelectPanel />}
+      {type === 'Skeleton' && <SkeletonPanel />}
+      {type === 'SkeletonCircle' && <SkeletonPanel isSkeletonCircle />}
+      {type === 'SkeletonText' && <SkeletonPanel isSkeletonText />}
       {type === 'List' && <ListPanel />}
       {type === 'ListItem' && <ListItemPanel />}
       {type === 'ListIcon' && <ListIconPanel />}
@@ -117,9 +124,9 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
       {type === 'BreadcrumbItem' && <BreadcrumbItemPanel />}
       {type === 'BreadcrumbLink' && <LinkPanel />}
       {type === 'Kbd' && <KbdPanel />}
-      {type === 'Skeleton' && <SkeletonPanel />}
-      {type === 'SkeletonCircle' && <SkeletonPanel isSkeletonCircle />}
-      {type === 'SkeletonText' && <SkeletonPanel isSkeletonText />}
+      {type === 'StatArrow' && <StatArrowPanel />}
+      {type === 'StatLabel' && <StatLabelPanel />}
+      {type === 'StatNumber' && <StatLabelPanel />}
     </>
   )
 }

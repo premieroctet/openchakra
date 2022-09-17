@@ -8,17 +8,15 @@ const SkeletonPreview: React.FC<{ component: IComponent }> = ({
   component,
 }) => {
   const { drop, isOver } = useDropComponent(component.id)
-  const { props, ref } = useInteractive(component, true)
-
-  let boxProps: any = {}
+  const { props, ref } = useInteractive(component, true, true)
 
   if (isOver) {
     props.bg = 'teal.50'
   }
 
   return (
-    <Box ref={drop(ref)} {...boxProps}>
-      <Skeleton {...props}>
+    <Box ref={drop(ref)} {...props} m={0}>
+      <Skeleton {...component.props}>
         {component.children.map((key: string) => (
           <ComponentPreview key={key} componentName={key} />
         ))}
@@ -49,18 +47,16 @@ export const SkeletonTextPreview = ({ component }: IPreviewProps) => {
 }
 
 export const SkeletonCirclePreview = ({ component }: IPreviewProps) => {
-  const { props, ref } = useInteractive(component, true)
+  const { props, ref } = useInteractive(component, true, true)
   const { drop, isOver } = useDropComponent(component.id)
-
-  let boxProps: any = {}
 
   if (isOver) {
     props.bg = 'teal.50'
   }
 
   return (
-    <Box ref={drop(ref)} {...boxProps}>
-      <SkeletonCircle {...props}>
+    <Box display="inline-block" ref={drop(ref)} {...props}>
+      <SkeletonCircle {...component.props}>
         {component.children.map((key: string) => (
           <ComponentPreview key={key} componentName={key} />
         ))}

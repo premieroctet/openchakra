@@ -49,6 +49,9 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
 
   'Spinner',
   'Select',
+  'Skeleton',
+  'SkeletonCircle',
+  'SkeletonText',
   'Stack',
   'Switch',
   'Tag',
@@ -70,6 +73,17 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'AccordionIcon',
   'InputRightElement',
   'InputLeftElement',
+  'Tab',
+  'TabList',
+  'TabPanel',
+  'TabPanels',
+  'Tabs',
+  'Stat',
+  'StatLabel',
+  'StatNumber',
+  'StatHelpText',
+  'StatArrow',
+  'StatGroup',
   // Allow meta components
   'AlertMeta',
   'FormControlMeta',
@@ -77,6 +91,8 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'ListMeta',
   'InputGroupMeta',
   'BreadcrumbMeta',
+  'TabsMeta',
+  'StatMeta',
 ]
 
 export const AccordionWhitelist: (

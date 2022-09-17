@@ -60,6 +60,12 @@ import {
   ListProps,
   HighlightProps,
   KbdProps,
+  StatProps,
+  StatGroupProps,
+  StatHelpTextProps,
+  StatLabelProps,
+  StatNumberProps,
+  StatArrowProps,
   SkeletonProps,
 } from '@chakra-ui/react'
 
@@ -89,9 +95,6 @@ type PreviewDefaultProps = {
   CircularProgress?: PropsWithForm<CircularProgressProps>
   Heading?: PropsWithForm<HeadingProps>
   Highlight?: PropsWithForm<HighlightProps>
-  Skeleton?: PropsWithForm<SkeletonProps>
-  SkeletonCircle?: PropsWithForm<SkeletonProps>
-  SkeletonText?: PropsWithForm<SkeletonProps>
   Tag?: PropsWithForm<TagProps>
   SimpleGrid?: PropsWithForm<SimpleGridProps>
   Switch?: PropsWithForm<SwitchProps>
@@ -104,6 +107,12 @@ type PreviewDefaultProps = {
   Accordion?: PropsWithForm<Omit<AccordionProps, 'children'>>
   AccordionButton?: PropsWithForm<AccordionButtonProps>
   AccordionItem?: PropsWithForm<Omit<AccordionItemProps, 'children'>>
+  Stat?: PropsWithForm<Omit<StatProps, 'children'>>
+  StatGroup?: PropsWithForm<Omit<StatGroupProps, 'children'>>
+  StatLabel?: PropsWithForm<StatLabelProps>
+  StatNumber?: PropsWithForm<StatNumberProps>
+  StatHelpText?: PropsWithForm<StatHelpTextProps>
+  StatArrow?: PropsWithForm<StatArrowProps>
   AccordionPanel?: PropsWithForm<AccordionPanelProps>
   AccordionIcon?: PropsWithForm<IconProps>
   FormControl?: PropsWithForm<FormControlProps>
@@ -138,6 +147,9 @@ type PreviewDefaultProps = {
   Center?: PropsWithForm<CenterProps>
   Container?: PropsWithForm<ContainerProps>
   Kbd?: PropsWithForm<KbdProps>
+  Skeleton?: PropsWithForm<SkeletonProps>
+  SkeletonCircle?: PropsWithForm<SkeletonProps>
+  SkeletonText?: PropsWithForm<SkeletonProps>
 }
 
 export const DEFAULT_PROPS: PreviewDefaultProps = {
@@ -273,19 +285,46 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     spacingX: 1,
     spacingY: 1,
   },
-  Skeleton: {},
-  SkeletonCircle: {},
-  SkeletonText: {},
   Stack: {
     spacing: 2,
     form: {
       display: 'flex',
     },
   },
+  Stat: {},
+  StatLabel: { children: 'Stat label' },
+  StatNumber: { children: '45' },
+  StatArrow: { type: 'increase' },
+  StatHelpText: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  StatGroup: {},
+  Skeleton: {
+    height: 50,
+
+    form: {
+      fadeDuration: 0.4,
+      speed: 0.8,
+    },
+  },
+  SkeletonCircle: {
+    form: {
+      fadeDuration: 0.4,
+      speed: 0.8,
+    },
+  },
+  SkeletonText: {
+    form: {
+      fadeDuration: 0.4,
+      speed: 0.8,
+    },
+  },
   Switch: {
     isChecked: false,
   },
   Tab: { children: 'Tab' },
+  Tabs: { children: '', size: 'md' },
   TabPanel: { children: 'Tab' },
   Tag: {
     children: 'Tag name',

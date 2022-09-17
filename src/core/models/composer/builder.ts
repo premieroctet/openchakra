@@ -89,6 +89,84 @@ export const buildAccordion = (parent: string): ComposedComponent => {
   }
 }
 
+export const buildTabs = (parent: string): ComposedComponent => {
+  const composer = new Composer('Tabs')
+
+  const nodeId = composer.addNode({ type: 'Tabs', parent })
+  const tabListId = composer.addNode({ type: 'TabList', parent: nodeId })
+  const tabPanelsId = composer.addNode({ type: 'TabPanels', parent: nodeId })
+
+  composer.addNode({
+    type: 'Tab',
+    parent: tabListId,
+    props: { children: 'One' },
+  })
+  composer.addNode({
+    type: 'Tab',
+    parent: tabListId,
+    props: { children: 'Two' },
+  })
+
+  composer.addNode({
+    type: 'TabPanel',
+    parent: tabPanelsId,
+    props: { children: 'One !' },
+  })
+  composer.addNode({
+    type: 'TabPanel',
+    parent: tabPanelsId,
+    props: { children: 'Two !' },
+  })
+
+  const components = composer.getComponents()
+
+  return {
+    components,
+    root: nodeId,
+    parent,
+  }
+}
+
+export const buildStats = (parent: string): ComposedComponent => {
+  const composer = new Composer('Stat')
+
+  const nodeId = composer.addNode({ type: 'Stat', parent })
+
+  composer.addNode({
+    type: 'StatLabel',
+    parent: nodeId,
+    props: { children: 'Stat label' },
+  })
+  composer.addNode({
+    type: 'StatNumber',
+    parent: nodeId,
+    props: { children: '45' },
+  })
+  const helpTextId = composer.addNode({
+    type: 'StatHelpText',
+    parent: nodeId,
+  })
+  composer.addNode({
+    type: 'StatArrow',
+    parent: helpTextId,
+    props: { type: 'increase' },
+  })
+
+  composer.addNode({
+    type: 'Text',
+    parent: helpTextId,
+    props: { children: '23.36%' },
+  })
+
+  const components = composer.getComponents()
+
+  return {
+    components,
+    root: nodeId,
+    parent,
+  }
+}
+
 export const buildList = (parent: string): ComposedComponent => {
   const composer = new Composer('List')
 
@@ -147,6 +225,8 @@ const builders: ComposerBuilders = {
   ListMeta: buildList,
   InputGroupMeta: buildInputGroup,
   BreadcrumbMeta: buildBreadcrumb,
+  TabsMeta: buildTabs,
+  StatMeta: buildStats,
 }
 
 export default builders
