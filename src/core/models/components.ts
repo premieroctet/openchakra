@@ -268,7 +268,7 @@ const components = createModel({
     selectParent(state: ComponentsState): ComponentsState {
       const components = getActiveComponents(state)
       const selectedComponent = state.pages[state.activePage].selectedId
-      
+
       return {
         ...state,
         pages: {
@@ -352,9 +352,12 @@ const components = createModel({
       if (Object.keys(state.pages).length == 1) {
         return state
       }
+      const newPages=lodash.omit(state.pages, [page_name])
+      const newActivePage=Object.keys(newPages)[0]
       return {
         ...state,
-        pages: lodash.omit(state.pages, [page_name]),
+        pages: newPages,
+        activePage: newActivePage
       }
     },
     setActivePage(state: ComponentsState, page_name: string): ComponentsState {
