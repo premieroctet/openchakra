@@ -9,7 +9,7 @@ import config from '../../env.json'
 
 //const HIDDEN_ATTRIBUTES=['dataSource', 'attribute']
 const HIDDEN_ATTRIBUTES:string[] = []
-const CONTAINER_TYPE:ComponentType[]=['Box', 'Grid', 'SimpleGrid']
+const CONTAINER_TYPE:ComponentType[]=['Box', 'Grid', 'SimpleGrid', 'Flex']
 const TEXT_TYPE:ComponentType[]=['Text']
 const IMAGE_TYPE:ComponentType[]=['Image']
 
