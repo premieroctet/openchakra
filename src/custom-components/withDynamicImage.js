@@ -4,9 +4,13 @@ import lodash from 'lodash'
 const withDynamicImage = Component => {
 
   const internal = (props) => {
-    const src=`https://my-alfred.io:4002/${props.dataSource?.[props.attribute]}`
+    const src=props.dataSource?.[props.attribute]
+    if (!src) {
+      return null
+    }
+    const url = src.startsWith('http') ? src : `https://my-alfred.io:4002/${src}`
     return (
-      <Component {...lodash.omit(props, ['children'])} src={src} />
+      <Component {...lodash.omit(props, ['children'])} src={url} />
     )
   }
 

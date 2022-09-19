@@ -10,7 +10,7 @@ import config from '../../env.json'
 //const HIDDEN_ATTRIBUTES=['dataSource', 'attribute']
 const HIDDEN_ATTRIBUTES:string[] = []
 const CONTAINER_TYPE:ComponentType[]=['Box', 'Grid', 'SimpleGrid', 'Flex']
-const TEXT_TYPE:ComponentType[]=['Text']
+const TEXT_TYPE:ComponentType[]=['Text', 'Heading']
 const IMAGE_TYPE:ComponentType[]=['Image']
 
 export const normalizePageName = (pageName:string) => {
@@ -238,7 +238,7 @@ const buildHooks = components => {
     ${components
       .map(dp => {
         const dataId = dp.id.replace(/comp-/, '')
-        return `get('/myAlfred/api/${
+        return `get('/myAlfred/api/studio/${
           dp.props.model
         }').then(res => set${capitalize(dataId)}(res))`
       })
@@ -259,7 +259,7 @@ const buildDynamics = (components: IComponents) => {
   let code=`${Object.keys(groups).map(g => `import withDynamic${g} from './custom-components/withDynamic${g}'`).join('\n')}
 
   ${Object.keys(groups).map(g => {
-    return groups[g].map(comp => `const Dynamic${comp.type}=withDynamic${g}(${comp.type})`)
+    return groups[g].map(comp => `const Dynamic${comp.type}=withDynamic${g}(${comp.type})`).join('\n')
   }).join('\n')}
   `
   return code

@@ -12,7 +12,7 @@ const setRecurseDataSource = (element, dataSource) => {
       } else if (React.Children.count(child.props.children) === 0) {
         return React.cloneElement(child, {dataSource})
       } else {
-        return React.cloneElement(child, {dataSource}, setRecurseDataSource(child))
+        return React.cloneElement(child, {dataSource}, setRecurseDataSource(child, dataSource))
       }
     })
   }
