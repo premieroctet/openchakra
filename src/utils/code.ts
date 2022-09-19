@@ -13,6 +13,10 @@ const CONTAINER_TYPE:ComponentType[]=['Box', 'Grid', 'SimpleGrid']
 const TEXT_TYPE:ComponentType[]=['Text']
 const IMAGE_TYPE:ComponentType[]=['Image']
 
+export const normalizePageName = (pageName:string) => {
+  return capitalize(camelCase(pageName))
+}
+
 const isDynamicComponent = (comp:IComponent) => {
   return !!comp.props.dataSource
 }
@@ -135,7 +139,7 @@ const buildBlock = ({
         })
 
       if (childComponent.props.page) {
-        propsContent += `onClick={() => window.location='/${camelCase(childComponent.props.page)}'}`
+        propsContent += `onClick={() => window.location='/${normalizePageName(childComponent.props.page)}'}`
       }
 
       if (
@@ -280,7 +284,7 @@ export const generateCode = async (pageName:string, components: IComponents) => 
     ),
   ]
 
-  const pageNameCamel = camelCase(pageName)
+  const pageNameCamel = normalizePageName(pageName)
 
   // Distinguish between chakra/non-chakra components
   const module = await import('@chakra-ui/react')
@@ -336,7 +340,7 @@ ${pageNames.map(name => `<li><a href='/${name}'>${name}</a></li>`).join('\n')}
 */
   let code=`import {BrowserRouter, Routes, Route} from 'react-router-dom'
   ${pageNames
-    .map(nameToConv => camelCase(nameToConv))
+    .map(nameToConv => normalizePageName(nameToConv))
     .map(name => `import ${name} from './${name}'`).join('\n')}
 
   const App = () => (
@@ -344,7 +348,7 @@ ${pageNames.map(name => `<li><a href='/${name}'>${name}</a></li>`).join('\n')}
     <BrowserRouter>
     <Routes>
       ${pageNames.slice(0, 1).map(name => `<Route path='/' element={<${name}/>} />`).join('\n')}
-      ${pageNames.map(name => `<Route path='/${name}' element={<${name}/>} />`).join('\n')}
+      ${pageNames.map(normalizePageName).map(name => `<Route path='/${name}' element={<${name}/>} />`).join('\n')}
     </Routes>
     </BrowserRouter>
     </>

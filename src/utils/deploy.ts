@@ -1,11 +1,11 @@
 import {ComponentsState} from '~/core/models/components'
 import lodash from 'lodash'
 import { build, copyFile, install, start } from './http'
-import { generateCode, generateApp } from './code'
+import { generateCode, generateApp, normalizePageName } from './code';
 import { validate } from './validation'
 
 const copyCode = (pageName: string, contents: Buffer) => {
-  return copyFile({ contents: contents, filePath: `${pageName}.js`})
+  return copyFile({ contents: contents, filePath: `${normalizePageName(pageName)}.js`})
 }
 
 export const deploy = (state: ComponentsState) => {
