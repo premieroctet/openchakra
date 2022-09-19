@@ -8,7 +8,26 @@ import lodash from 'lodash'
 import config from '../../env.json'
 
 //const HIDDEN_ATTRIBUTES=['dataSource', 'attribute']
-const HIDDEN_ATTRIBUTES = ['attribute']
+const HIDDEN_ATTRIBUTES:string[] = []
+const CONTAINER_TYPE:ComponentType[]=['Box', 'Grid', 'SimpleGrid']
+const TEXT_TYPE:ComponentType[]=['Text']
+const IMAGE_TYPE:ComponentType[]=['Image']
+
+const isDynamicComponent = (comp:IComponent) => {
+  return !!comp.props.dataSource
+}
+
+const getDynamicType = (comp:IComponent) => {
+  if (CONTAINER_TYPE.includes(comp.type)) {
+    return 'Container'
+  }
+  if (TEXT_TYPE.includes(comp.type)) {
+    return 'Text'
+  }
+  if (IMAGE_TYPE.includes(comp.type)) {
+    return 'Image'
+  }
+}
 
 const capitalize = (value: string) => {
   return value.charAt(0).toUpperCase() + value.slice(1)
@@ -27,25 +46,11 @@ export const formatCode = async (code: string) => {
       semi: false,
       singleQuote: true,
     })
-  } catch (e) {}
+  } catch (e) {
+    console.error(e)
+  }
 
   return formattedCode
-}
-
-const getComponentPath = componentName => {
-  // Distinguish between chakra/non-chakra components
-  const chakra = '@chakra-ui/react'
-  const custom = `./custom-components/${componentName}/${componentName}`
-  return import(custom)
-    .then(() => {
-      return custom
-    })
-    .catch(() => {
-      return import(chakra)
-    })
-    .then(() => {
-      return null
-    })
 }
 
 type BuildBlockParams = {
@@ -67,10 +72,13 @@ const buildBlock = ({
     }
     if (!childComponent) {
       console.error(`invalid component ${key}`)
-    } else if (forceBuildBlock || !childComponent.componentName) {
+    }
+    else if (forceBuildBlock || !childComponent.componentName) {
       const dataProvider = components[childComponent.props.dataSource]
       const paramProvider = dataProvider?.id.replace(/comp-/, '')
-      const componentName = capitalize(childComponent.type)
+      const componentName = isDynamicComponent(childComponent) ?
+      `Dynamic${capitalize(childComponent.type)}`
+       :capitalize(childComponent.type)
       let propsContent = ''
 
       const propsNames = Object.keys(childComponent.props).filter(propName => {
@@ -134,12 +142,7 @@ const buildBlock = ({
         typeof childComponent.props.children === 'string' &&
         childComponent.children.length === 0
       ) {
-        content += `<${componentName} ${propsContent}>${
-          dataProvider
-            ? `{${dataProvider.id.replace(/comp-/, '')}[0]?.${
-                childComponent.props.attribute
-              }|| 'Loading...'}`
-            : childComponent.props.children
+        content += `<${componentName} ${propsContent}>${childComponent.props.children
         }</${componentName}>`
       } else if (childComponent.type === 'Icon') {
         content += `<${childComponent.props.icon} ${propsContent} />`
@@ -217,7 +220,7 @@ const buildHooks = components => {
   if (components.length == 0) {
     return ''
   }
-  let code = `const {get, post}=useFetch('${config.targetDomain}')`
+  let code = `const {get}=useFetch('${config.targetDomain}')`
   code +=
     '\n' +
     components
@@ -236,7 +239,25 @@ const buildHooks = components => {
         }').then(res => set${capitalize(dataId)}(res))`
       })
       .join('\n')}
-  }, [])\n`
+  }, [get])\n`
+  return code
+}
+
+const buildDynamics = (components: IComponents) => {
+  const dynamicComps=lodash.uniqBy(
+    Object.values(components).filter(c => isDynamicComponent(c)),
+    c => c.type
+  )
+  if (dynamicComps.length==0) {
+    return null
+  }
+  const groups=lodash.groupBy(dynamicComps, c => getDynamicType(c))
+  let code=`${Object.keys(groups).map(g => `import withDynamic${g} from './custom-components/withDynamic${g}'`).join('\n')}
+
+  ${Object.keys(groups).map(g => {
+    return groups[g].map(comp => `const Dynamic${comp.type}=withDynamic${g}(${comp.type})`)
+  }).join('\n')}
+  `
   return code
 }
 
@@ -245,6 +266,7 @@ export const generateCode = async (pageName:string, components: IComponents) => 
     c => c.type == 'DataProvider',
   )
   let hooksCode = buildHooks(dataProviders)
+  let dynamics = buildDynamics(components)
   let code = buildBlock({ component: components.root, components })
   let componentsCodes = buildComponents(components)
   const iconImports = [...new Set(getIconsImports(components))]
@@ -290,6 +312,7 @@ import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
     : ''
 }
 
+${dynamics}
 ${componentsCodes}
 
 const ${pageNameCamel} = () => {
