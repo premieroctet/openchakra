@@ -6,14 +6,10 @@ import { generateId } from '~utils/generateId'
 import { duplicateComponent, deleteComponent } from '~utils/recursive'
 import lodash from 'lodash'
 
-export type PageState = {
+export interface PageState extends PageSettings {
   components: IComponents
   selectedId: IComponent['id']
   hoveredId?: IComponent['id']
-  meta_title?: string
-  meta_description?: string
-  meta_image_url?: string
-  main?: boolean
 }
 
 export type ComponentsState = {
@@ -33,7 +29,7 @@ export type PageSettings = {
   meta_title: string
   meta_description: string
   meta_image_url: string
-  main: boolean
+  indexpage: boolean
 }
 
 const DEFAULT_ID = 'root'
@@ -47,7 +43,7 @@ function isJsonString(str: string) {
   return true
 }
 
-const DEFAULT_PAGE = 'Page 1'
+const DEFAULT_PAGE = generateId('page')
 
 export const INITIAL_COMPONENTS: IComponents = {
   root: {
@@ -69,6 +65,11 @@ const components = createModel({
       [DEFAULT_PAGE]: {
         components: INITIAL_COMPONENTS,
         selectedId: DEFAULT_ID,
+        name: 'index',
+        meta_title: '',
+        meta_description: '',
+        meta_image_url: '',
+        indexpage: true
       },
     },
     activePage: DEFAULT_PAGE,
@@ -77,6 +78,7 @@ const components = createModel({
     reset(state: ComponentsState, newState: ComponentsState): ComponentsState {
       const pages = newState?.pages || {
         [DEFAULT_PAGE]: {
+          name: 'index',
           components: INITIAL_COMPONENTS,
           selectedId: DEFAULT_ID,
         },
@@ -327,29 +329,52 @@ const components = createModel({
       }
     },
     addPage(state: ComponentsState, payload: PageSettings): ComponentsState {
-      if (state.pages[payload.name]) {
-        throw new Error(`La page ${payload.name} existe déjà`)
-      }
+
+      const pageId = generateId('page')
+      const {name, meta_title, meta_description, meta_image_url, indexpage} = payload
+
       return {
         ...state,
         pages: {
           ...state.pages,
-          [payload.name]: {
+          [pageId]: {
             components: INITIAL_COMPONENTS,
             selectedId: DEFAULT_ID,
-            meta_title: payload.meta_title,
-            meta_description: payload.meta_description,
-            meta_image_url: payload.meta_image_url,
-            main: payload.main,
+            name,
+            meta_title,
+            meta_description,
+            meta_image_url,
+            indexpage,
           },
         },
       }
     },
-    deletePage(state: ComponentsState, page_name: string): ComponentsState {
+    editPageSettings(state: ComponentsState, page_id: string, payload: PageSettings): ComponentsState {
+
+      const {name, meta_title, meta_description, meta_image_url, indexpage} = payload
+
+      return {
+        ...state,
+        pages: {
+          ...state.pages,
+          [page_id]: {
+            components: INITIAL_COMPONENTS,
+            selectedId: DEFAULT_ID,
+            name,
+            meta_title,
+            meta_description,
+            meta_image_url,
+            indexpage,
+          },
+        },
+      }
+
+    },
+    deletePage(state: ComponentsState, payload: PageSettings): ComponentsState {
       if (!state.pages[page_name]) {
         return state
       }
-      if (Object.keys(state.pages).length == 1) {
+      if (Object.keys(state.pages).length === 1) {
         return state
       }
       const newPages=lodash.omit(state.pages, [page_name])

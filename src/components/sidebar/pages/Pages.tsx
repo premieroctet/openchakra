@@ -8,10 +8,9 @@ import {
   IconButton,
   Image,
 } from '@chakra-ui/react'
-import useDispatch from '~hooks/useDispatch'
 import { CloseIcon, SearchIcon } from '@chakra-ui/icons'
 import PageList from './PageList'
-import CreatePage from './CreatePage'
+import CreatePageAction from './CreatePageAction'
 
 type categoryItems = {
   [name: string]: string[]
@@ -19,7 +18,6 @@ type categoryItems = {
 
 const Pages = () => {
   const [searchTerm, setSearchTerm] = useState('')
-  const dispatch = useDispatch()
 
   return (
     <DarkMode>
@@ -83,7 +81,7 @@ const Pages = () => {
             w={'50%'}
             mb={2}
           />
-          <CreatePage />
+          <CreatePageAction />
         </Box>
       </Box>
     </DarkMode>
