@@ -7,7 +7,6 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  useDisclosure,
   FormControl,
   FormLabel,
   Input,
@@ -16,33 +15,27 @@ import {
   Checkbox,
 } from '@chakra-ui/react'
 import useDispatch from '~hooks/useDispatch'
+import { useSelector } from 'react-redux'
+import { getPages } from '~core/selectors/components'
 
-const CreatePage = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const [pageSettings, setPageSettings] = useState({})
+const PageSettings = ({create, page, isOpen, onClose}: {create?: boolean, page?: string,  isOpen: boolean, onClose: () => void}) => {
+  
+  const pages = useSelector(getPages)
+  const {name, indexpage, meta_description, meta_image_url, meta_title} = page !== undefined  ? pages[page] : {name: '', indexpage: false, meta_description: 'bla ', meta_image_url: '', meta_title: ''}
+  const [pageSettings, setPageSettings] = useState({name, indexpage, meta_description, meta_image_url, meta_title })
   const dispatch = useDispatch()
 
-  const updatePageSettings = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const updatePageSettings = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> ) => {
     const { name, value } = e.target
     setPageSettings({ ...pageSettings, [name]: value })
   }
 
-  return (
-    <>
-      <Button
-        borderRadius={'full'}
-        ml={8}
-        paddingInline={'6'}
-        bgColor="#5bbdc5"
-        color={'white'}
-        w={'min-content'}
-        alignSelf="center"
-        onClick={onOpen}
-        colorScheme="teal"
-      >
-        Create page
-      </Button>
+  const formCommonStyles = {
+    bgColor: '#eee', 
+    borderRadius: '3xl'
+  }
 
+  return (
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent bg={'white'} borderRadius={'3xl'}>
@@ -54,7 +47,7 @@ const CreatePage = () => {
             textAlign="center"
             textTransform={'uppercase'}
           >
-            Create page
+            {create ? 'create page' : 'edit page'}
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody
@@ -67,42 +60,46 @@ const CreatePage = () => {
               <FormLabel ml={2}>Name</FormLabel>
               <Input
                 name="name"
-                bgColor={'#eee'}
-                borderRadius={'3xl'}
+                value={pageSettings.name}
+                {...formCommonStyles}
                 onChange={updatePageSettings}
               />
             </FormControl>
             <FormControl mb={2}>
               <FormLabel ml={2}>Meta Title</FormLabel>
               <Input
+                value={pageSettings.meta_title}
                 name="meta_title"
-                bgColor={'#eee'}
-                borderRadius={'3xl'}
                 onChange={updatePageSettings}
+                {...formCommonStyles}
               />
             </FormControl>
             <FormControl mb={2}>
               <FormLabel ml={2}>Meta Description</FormLabel>
               <Textarea
+                value={pageSettings.meta_description}
                 name="meta_description"
-                bgColor={'#eee'}
-                borderRadius={'3xl'}
                 resize="none"
                 onChange={updatePageSettings}
-              />
+                {...formCommonStyles}
+                />
             </FormControl>
             <FormControl mb={3}>
               <FormLabel ml={2}>Top Image</FormLabel>
               <Input
+                value={pageSettings.meta_image_url}
                 name="meta_image_url"
-                bgColor={'#eee'}
-                borderRadius={'3xl'}
                 onChange={updatePageSettings}
+                {...formCommonStyles}
               />
             </FormControl>
             <FormControl display={'flex'} alignItems="baseline" >
               <FormLabel ml={2}>Principale</FormLabel>
-              <Checkbox name="main" onChange={updatePageSettings} />
+              <Checkbox 
+                name="indexpage" 
+                isChecked={pageSettings.indexpage} 
+                onChange={updatePageSettings} 
+              />
             </FormControl>
           </ModalBody>
 
@@ -129,8 +126,8 @@ const CreatePage = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </>
+    
   )
 }
 
-export default CreatePage
+export default PageSettings
