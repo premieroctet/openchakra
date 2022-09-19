@@ -1,4 +1,5 @@
 import isBoolean from 'lodash/isBoolean'
+import camelCase from 'lodash/camelCase'
 import filter from 'lodash/filter'
 import pickBy from 'lodash/pickBy'
 import icons from '~iconsList'
@@ -126,7 +127,7 @@ const buildBlock = ({
         })
 
       if (childComponent.props.page) {
-        propsContent += `onClick={() => window.location='/${childComponent.props.page}'}`
+        propsContent += `onClick={() => window.location='/${camelCase(childComponent.props.page)}'}`
       }
 
       if (
@@ -257,6 +258,8 @@ export const generateCode = async (pageName:string, components: IComponents) => 
     ),
   ]
 
+  const pageNameCamel = camelCase(pageName)
+
   // Distinguish between chakra/non-chakra components
   const module = await import('@chakra-ui/react')
   /**
@@ -289,7 +292,7 @@ import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
 
 ${componentsCodes}
 
-const ${pageName} = () => {
+const ${pageNameCamel} = () => {
   ${hooksCode}
   return (
   <ChakraProvider resetCSS>
@@ -297,7 +300,7 @@ const ${pageName} = () => {
   </ChakraProvider>
 )};
 
-export default ${pageName};`
+export default ${pageNameCamel};`
 
   return await formatCode(code)
 }
@@ -309,7 +312,9 @@ ${pageNames.map(name => `<li><a href='/${name}'>${name}</a></li>`).join('\n')}
 </ul>
 */
   let code=`import {BrowserRouter, Routes, Route} from 'react-router-dom'
-  ${pageNames.map(name => `import ${name} from './${name}'`).join('\n')}
+  ${pageNames
+    .map(nameToConv => camelCase(nameToConv))
+    .map(name => `import ${name} from './${name}'`).join('\n')}
 
   const App = () => (
     <>

@@ -90,11 +90,6 @@
     "ts-jest": "^26.1.4",
     "typedoc": "^0.16.9"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged && pretty-quick --staged"
-    }
-  },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx,json,md}": [
       "eslint src/**/*.{ts,tsx} --fix",
