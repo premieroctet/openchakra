@@ -391,10 +391,12 @@ const components = createModel({
       }
       const newPages=lodash.omit(state.pages, [pageId])
       const newActivePage=Object.keys(newPages)[0]
+      const rootPage = pageId === state.rootPage ? newActivePage : state.rootPage
       return {
         ...state,
         pages: newPages,
-        activePage: newActivePage
+        activePage: newActivePage,
+        rootPage
       }
     },
     setActivePage(state: ComponentsState, pageId: string): ComponentsState {
