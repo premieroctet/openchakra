@@ -349,7 +349,7 @@ const components = createModel({
         },
       }
     },
-    editPageSettings(state: ComponentsState, page_id: string, payload: PageSettings): ComponentsState {
+    editPageSettings(state: ComponentsState, {page_id, payload}: {page_id: string, payload: PageSettings}): ComponentsState {
 
       const {name, meta_title, meta_description, meta_image_url, indexpage} = payload
 
@@ -358,7 +358,7 @@ const components = createModel({
         pages: {
           ...state.pages,
           [page_id]: {
-            components: INITIAL_COMPONENTS,
+            ...state.pages[page_id],
             selectedId: DEFAULT_ID,
             name,
             meta_title,
@@ -370,14 +370,14 @@ const components = createModel({
       }
 
     },
-    deletePage(state: ComponentsState, payload: PageSettings): ComponentsState {
-      if (!state.pages[page_name]) {
+    deletePage(state: ComponentsState, page_id: string): ComponentsState {
+      if (!state.pages[page_id]) {
         return state
       }
       if (Object.keys(state.pages).length === 1) {
         return state
       }
-      const newPages=lodash.omit(state.pages, [page_name])
+      const newPages=lodash.omit(state.pages, [page_id])
       const newActivePage=Object.keys(newPages)[0]
       return {
         ...state,
