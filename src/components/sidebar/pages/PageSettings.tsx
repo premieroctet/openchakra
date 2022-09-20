@@ -21,18 +21,13 @@ import { getPages } from '~core/selectors/components'
 const PageSettings = ({create, page, isOpen, onClose}: {create?: boolean, page?: string,  isOpen: boolean, onClose: () => void}) => {
   
   const pages = useSelector(getPages)
-  const {pageName, rootPage, metaDescription, metaImageUrl, metaTitle} = page !== undefined  ? pages[page] : {pageName: '', rootPage: false, metaDescription: '', metaImageUrl: '', metaTitle: ''}
-  const [pageSettings, setPageSettings] = useState({pageName, rootPage, metaDescription, metaImageUrl, metaTitle })
+  const {pageName, metaDescription, metaImageUrl, metaTitle} = page !== undefined  ? pages[page] : {pageName: '', metaDescription: '', metaImageUrl: '', metaTitle: ''}
+  const [pageSettings, setPageSettings] = useState({pageName, metaDescription, metaImageUrl, metaTitle })
   const dispatch = useDispatch()
 
   const updatePageSettings = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> ) => {
-    const { name, value }: {name: string, value: string | boolean} = e.target
-    let valueToKeep = value
-    if (name === 'rootPage') {
-      //@ts-ignore
-      valueToKeep = !pageSettings.rootPage
-    }
-    setPageSettings({ ...pageSettings, [name]: valueToKeep })
+    const { name, value }: {name: string, value: string} = e.target
+    setPageSettings({ ...pageSettings, [name]: value })
   }
 
   const formCommonStyles = {
@@ -102,8 +97,7 @@ const PageSettings = ({create, page, isOpen, onClose}: {create?: boolean, page?:
               <FormLabel ml={2}>Principale</FormLabel>
               <Checkbox 
                 name="rootPage" 
-                isChecked={pageSettings.rootPage} 
-                onChange={updatePageSettings} 
+                isChecked={true} 
               />
             </FormControl>
           </ModalBody>
@@ -125,8 +119,7 @@ const PageSettings = ({create, page, isOpen, onClose}: {create?: boolean, page?:
                 if (create) {
                   dispatch.components.addPage(pageSettings)
                 } else {
-                  //@ts-ignore
-                  dispatch.components.editPageSettings({page_id: page, payload: pageSettings})
+                  dispatch.components.editPageSettings({pageId: page, ...pageSettings})
                 }
                 onClose()
               }}

@@ -17,6 +17,7 @@ export type ComponentsState = {
     [key: string]: PageState
   }
   activePage: string
+  rootPage: string
 }
 export type ComponentsStateWithUndo = {
   past: ComponentsState[]
@@ -25,12 +26,11 @@ export type ComponentsStateWithUndo = {
 }
 
 export type PageSettings = {
-  pageId: string,
+  pageId?: string,
   pageName: string
   metaTitle: string
   metaDescription: string
   metaImageUrl: string
-  rootPage: boolean
 }
 
 const DEFAULT_ID = 'root'
@@ -71,10 +71,10 @@ const components = createModel({
         metaTitle: '',
         metaDescription: '',
         metaImageUrl: '',
-        rootPage: true
       },
     },
     activePage: DEFAULT_PAGE,
+    rootPage: DEFAULT_PAGE,
   } as ComponentsState,
   reducers: {
     reset(state: ComponentsState, newState: ComponentsState): ComponentsState {
@@ -88,16 +88,19 @@ const components = createModel({
           metaImageUrl: '',
           components: INITIAL_COMPONENTS,
           selectedId: DEFAULT_ID,
-          rootPage: true
         },
       }
       const activePage = newState
         ? Object.keys(newState.pages)[0]
         : resetPageId
+
+      const rootPage = activePage
+
       return {
         ...state,
         pages,
         activePage,
+        rootPage,
       }
     },
     loadDemo(state: ComponentsState, type: TemplateType): ComponentsState {
@@ -339,7 +342,7 @@ const components = createModel({
     addPage(state: ComponentsState, payload: PageSettings): ComponentsState {
 
       const pageId = generateId('page')
-      const {pageName, metaTitle, metaDescription, metaImageUrl, rootPage} = payload
+      const {pageName, metaTitle, metaDescription, metaImageUrl} = payload
 
       return {
         ...state,
@@ -353,31 +356,31 @@ const components = createModel({
             metaTitle,
             metaDescription,
             metaImageUrl,
-            rootPage,
           },
         },
       }
     },
-    editPageSettings(state: ComponentsState, {pageId, payload}: {pageId: string, payload: PageSettings}): ComponentsState {
+    editPageSettings(state: ComponentsState, payload: PageSettings): ComponentsState {
 
-      const {pageName, metaTitle, metaDescription, metaImageUrl, rootPage} = payload
+      const {pageId, pageName, metaTitle, metaDescription, metaImageUrl} = payload
 
-      return {
-        ...state,
-        pages: {
-          ...state.pages,
-          [pageId]: {
-            ...state.pages[pageId],
-            selectedId: DEFAULT_ID,
-            pageName,
-            metaTitle,
-            metaDescription,
-            metaImageUrl,
-            rootPage,
+      if (pageId) {
+        return {
+          ...state,
+          pages: {
+            ...state.pages,
+            [pageId]: {
+              ...state.pages[pageId],
+              selectedId: DEFAULT_ID,
+              pageName,
+              metaTitle,
+              metaDescription,
+              metaImageUrl,
+            },
           },
-        },
+        }
       }
-
+      return state
     },
     deletePage(state: ComponentsState, pageId: string): ComponentsState {
       if (!state.pages[pageId]) {

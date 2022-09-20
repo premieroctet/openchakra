@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Button, Image, List, ListItem, useDisclosure } from '@chakra-ui/react'
 import { useSelector } from 'react-redux'
-import { getPages, getActivePageName } from '~core/selectors/components'
+import { getPages, getActivePageName, getRootPageId } from '~core/selectors/components'
 import useDispatch from '~hooks/useDispatch'
 import PageSettings from './PageSettings'
 
@@ -49,15 +49,16 @@ const PageActions = ({ page }: {page: string}) => {
 
 const PageList = () => {
   const pages = useSelector(getPages)
-  const activePageName = useSelector(getActivePageName)
+  const activePage = useSelector(getActivePageName)
+  const rootPage = useSelector(getRootPageId)
   const dispatch = useDispatch()
 
   return (
     <List>
       {Object.entries(pages).map(([page, params], i) =>  {
 
-        const isIndexPage = params.rootPage
-        const isSelectedPage = params.pageId === activePageName
+        const isIndexPage = params.pageId === rootPage
+        const isSelectedPage = params.pageId === activePage
       
        return (
         <ListItem

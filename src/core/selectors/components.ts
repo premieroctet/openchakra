@@ -30,6 +30,9 @@ export const getActivePageId = (state: RootState) =>
 export const getActivePageName = (state: RootState) =>
   getActivePage(state)?.pageName
 
+export const getRootPageId = (state: RootState) =>
+  getPresentState(state).rootPage
+
 export const getComponentBy = (nameOrId: string | IComponent['id']) => (
   state: RootState,
 ) => getActiveComponents(state)[nameOrId]
