@@ -24,9 +24,10 @@ const withDynamicContainer = Component => {
       return null
     }
     const firstChild=React.Children.toArray(props.children)[0]
+    const data=props.dataSource.slice(0, parseInt(props?.limit) || undefined)
     return (
       <Component {...lodash.omit(props, ['children'])}>
-    {props.dataSource.map(d => (
+    {data.map(d => (
         <>{React.cloneElement(firstChild, {dataSource: d}, setRecurseDataSource(firstChild, d))}</>
       ))}
       </Component>

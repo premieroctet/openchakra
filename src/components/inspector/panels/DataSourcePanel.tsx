@@ -1,6 +1,9 @@
 import { Select } from '@chakra-ui/react'
 import { useSelector } from 'react-redux'
 import React, { useState, useEffect, memo } from 'react'
+import { Input } from '@chakra-ui/react'
+import { Accordion } from '@chakra-ui/react'
+import AccordionContainer from '~components/inspector/AccordionContainer'
 
 import { CONTAINER_TYPE } from '../../../utils/code';
 import {
@@ -12,12 +15,13 @@ import { useForm } from '../../../hooks/useForm'
 import FormControl from '../controls/FormControl'
 import usePropsSelector from '../../../hooks/usePropsSelector'
 
-const DataSourcePanel = () => {
+const DataSourcePanel:React.FC = () => {
   const components = useSelector(getComponents)
   const activeComponent = useSelector(getSelectedComponent)
   const { setValueFromEvent } = useForm()
   const dataSource = usePropsSelector('dataSource')
   const attribute = usePropsSelector('attribute')
+  const limit = usePropsSelector('limit')
   const [providers, setProviders] = useState<IComponent[]>([])
   const provider = providers.find(p => p.id == dataSource)
   const attributes = useSelector(getModelAttributes(provider?.props.model))
@@ -30,7 +34,8 @@ const DataSourcePanel = () => {
   }, [components])
 
   return (
-    <>
+    <Accordion >
+        <AccordionContainer title="Data source">
       <FormControl htmlFor="dataSource" label="Datasource">
         <Select
           id="dataSource"
@@ -63,7 +68,21 @@ const DataSourcePanel = () => {
           </Select>
         </FormControl>
       )}
-    </>
+      {CONTAINER_TYPE.includes(activeComponent?.type) && (
+        <FormControl htmlFor="limit" label="Limit">
+          <Input
+            id="limit"
+            name="limit"
+            size="sm"
+            value={limit}
+            type="number"
+            onChange={setValueFromEvent}
+          />
+        </FormControl>
+      )}
+
+    </AccordionContainer>
+    </Accordion>
   )
 }
 
