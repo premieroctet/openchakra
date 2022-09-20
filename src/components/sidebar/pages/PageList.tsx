@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Button, Image, List, ListItem, useDisclosure } from '@chakra-ui/react'
 import { useSelector } from 'react-redux'
-import { getPages } from '~core/selectors/components'
+import { getPages, getActivePageName } from '~core/selectors/components'
 import useDispatch from '~hooks/useDispatch'
 import PageSettings from './PageSettings'
 
@@ -49,13 +49,15 @@ const PageActions = ({ page }: {page: string}) => {
 
 const PageList = () => {
   const pages = useSelector(getPages)
+  const activePageName = useSelector(getActivePageName)
   const dispatch = useDispatch()
 
   return (
     <List>
       {Object.entries(pages).map(([page, params], i) =>  {
 
-        const isIndex = params.indexpage
+        const isIndexPage = params.rootPage
+        const isSelectedPage = params.pageId === activePageName
       
        return (
         <ListItem
@@ -76,9 +78,10 @@ const PageList = () => {
             overflow={'hidden'}
             textAlign={'left'}
             onClick={() => dispatch.components.setActivePage(page)}
-            fontWeight={isIndex ? 'bold': 'normal'}
+            fontWeight={isSelectedPage ? 'bold': 'normal'}
           >
-            {params.name}
+            {params.pageName}
+            {isIndexPage && '*'}
           </Button>
           <Box display={'flex'} alignItems="center">
             <PageActions page={page} />

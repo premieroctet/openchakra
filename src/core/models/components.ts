@@ -25,11 +25,12 @@ export type ComponentsStateWithUndo = {
 }
 
 export type PageSettings = {
-  name: string
-  meta_title: string
-  meta_description: string
-  meta_image_url: string
-  indexpage: boolean
+  pageId: string,
+  pageName: string
+  metaTitle: string
+  metaDescription: string
+  metaImageUrl: string
+  rootPage: boolean
 }
 
 const DEFAULT_ID = 'root'
@@ -63,33 +64,40 @@ const components = createModel({
   state: {
     pages: {
       [DEFAULT_PAGE]: {
+        pageId: DEFAULT_PAGE,
         components: INITIAL_COMPONENTS,
         selectedId: DEFAULT_ID,
-        name: 'index',
-        meta_title: '',
-        meta_description: '',
-        meta_image_url: '',
-        indexpage: true
+        pageName: 'index',
+        metaTitle: '',
+        metaDescription: '',
+        metaImageUrl: '',
+        rootPage: true
       },
     },
     activePage: DEFAULT_PAGE,
   } as ComponentsState,
   reducers: {
     reset(state: ComponentsState, newState: ComponentsState): ComponentsState {
+      const resetPageId = generateId('page')
       const pages = newState?.pages || {
-        [DEFAULT_PAGE]: {
-          name: 'index',
+        [resetPageId]: {
+          pageId: resetPageId,
+          pageName: 'index',
+          metaTitle: '',
+          metaDescription: '',
+          metaImageUrl: '',
           components: INITIAL_COMPONENTS,
           selectedId: DEFAULT_ID,
+          rootPage: true
         },
       }
       const activePage = newState
         ? Object.keys(newState.pages)[0]
-        : DEFAULT_PAGE
+        : resetPageId
       return {
         ...state,
-        pages: pages,
-        activePage: activePage,
+        pages,
+        activePage,
       }
     },
     loadDemo(state: ComponentsState, type: TemplateType): ComponentsState {
@@ -331,53 +339,54 @@ const components = createModel({
     addPage(state: ComponentsState, payload: PageSettings): ComponentsState {
 
       const pageId = generateId('page')
-      const {name, meta_title, meta_description, meta_image_url, indexpage} = payload
+      const {pageName, metaTitle, metaDescription, metaImageUrl, rootPage} = payload
 
       return {
         ...state,
         pages: {
           ...state.pages,
           [pageId]: {
+            pageId: pageId,
             components: INITIAL_COMPONENTS,
             selectedId: DEFAULT_ID,
-            name,
-            meta_title,
-            meta_description,
-            meta_image_url,
-            indexpage,
+            pageName,
+            metaTitle,
+            metaDescription,
+            metaImageUrl,
+            rootPage,
           },
         },
       }
     },
-    editPageSettings(state: ComponentsState, {page_id, payload}: {page_id: string, payload: PageSettings}): ComponentsState {
+    editPageSettings(state: ComponentsState, {pageId, payload}: {pageId: string, payload: PageSettings}): ComponentsState {
 
-      const {name, meta_title, meta_description, meta_image_url, indexpage} = payload
+      const {pageName, metaTitle, metaDescription, metaImageUrl, rootPage} = payload
 
       return {
         ...state,
         pages: {
           ...state.pages,
-          [page_id]: {
-            ...state.pages[page_id],
+          [pageId]: {
+            ...state.pages[pageId],
             selectedId: DEFAULT_ID,
-            name,
-            meta_title,
-            meta_description,
-            meta_image_url,
-            indexpage,
+            pageName,
+            metaTitle,
+            metaDescription,
+            metaImageUrl,
+            rootPage,
           },
         },
       }
 
     },
-    deletePage(state: ComponentsState, page_id: string): ComponentsState {
-      if (!state.pages[page_id]) {
+    deletePage(state: ComponentsState, pageId: string): ComponentsState {
+      if (!state.pages[pageId]) {
         return state
       }
       if (Object.keys(state.pages).length === 1) {
         return state
       }
-      const newPages=lodash.omit(state.pages, [page_id])
+      const newPages=lodash.omit(state.pages, [pageId])
       const newActivePage=Object.keys(newPages)[0]
       return {
         ...state,
@@ -385,13 +394,13 @@ const components = createModel({
         activePage: newActivePage
       }
     },
-    setActivePage(state: ComponentsState, page_name: string): ComponentsState {
-      if (!state.pages[page_name]) {
-        throw new Error(`La page ${page_name} n'existe pas`)
+    setActivePage(state: ComponentsState, pageId: string): ComponentsState {
+      if (!state.pages[pageId]) {
+        throw new Error(`La page ${pageId} n'existe pas`)
       }
       return {
         ...state,
-        activePage: page_name,
+        activePage: pageId,
       }
     },
   },
