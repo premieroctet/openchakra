@@ -314,6 +314,7 @@ export const generateCode = async (pageName:string, components: IComponents) => 
   )
 
   code = `import React, {useState, useEffect} from 'react';
+  import Metadata from '../components/Metadata';
   ${hooksCode ? `import useFetch from 'use-http'` : ''}
   import {ChakraProvider} from "@chakra-ui/react";
   ${Object.entries(groupedComponents)
@@ -339,6 +340,7 @@ const ${componentName} = () => {
   ${hooksCode}
   return (
   <ChakraProvider resetCSS>
+    <Metadata />
     ${code}
   </ChakraProvider>
 )};

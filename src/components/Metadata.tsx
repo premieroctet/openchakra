@@ -1,12 +1,20 @@
 import React from 'react'
 import Head from 'next/head'
 
-const Metadata = () => {
+const Metadata = ({
+  metaTitle = 'Wappizy', 
+  metaDescription = 'Visual editor for Chakra UI', 
+  metaImageUrl = 'https://openchakra.app/images/og-graph-color.png'
+}: {
+  metaTitle?: string,
+  metaDescription?: string
+  metaImageUrl?: string
+}) => {
   return (
     <Head>
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta name="theme-color" content="#000000" />
-      <meta name="description" content="Visual editor for Chakra UI " />
+      <meta name="description" content={metaDescription} />
       <link
         rel="apple-touch-icon"
         sizes="180x180"
@@ -18,11 +26,7 @@ const Metadata = () => {
       <meta name="msapplication-TileColor" content="#da532c" />
       <meta name="theme-color" content="#ffffff" />
 
-      <title>Wappizy</title>
-      <meta
-        name="description"
-        content="React JSX visual editor for Chakra UI"
-      />
+      <title>{metaTitle}</title>
       <meta
         name="image"
         content="https://openchakra.app/images/og-graph-color.png"
