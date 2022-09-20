@@ -406,6 +406,12 @@ const components = createModel({
         activePage: pageId,
       }
     },
+    setRootPage(state: ComponentsState, pageId: string): ComponentsState {
+      return {
+        ...state,
+        rootPage: pageId,
+      }
+    },
   },
 })
 

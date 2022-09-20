@@ -16,11 +16,13 @@ import {
 } from '@chakra-ui/react'
 import useDispatch from '~hooks/useDispatch'
 import { useSelector } from 'react-redux'
-import { getPages } from '~core/selectors/components'
+import { getPages, getRootPageId } from '~core/selectors/components'
 
 const PageSettings = ({create, page, isOpen, onClose}: {create?: boolean, page?: string,  isOpen: boolean, onClose: () => void}) => {
   
   const pages = useSelector(getPages)
+  const rootPageId = useSelector(getRootPageId)
+  const [asRootPage, setAsRootPage] = useState(false)
   const {pageName, metaDescription, metaImageUrl, metaTitle} = page !== undefined  ? pages[page] : {pageName: '', metaDescription: '', metaImageUrl: '', metaTitle: ''}
   const [pageSettings, setPageSettings] = useState({pageName, metaDescription, metaImageUrl, metaTitle })
   const dispatch = useDispatch()
@@ -93,13 +95,20 @@ const PageSettings = ({create, page, isOpen, onClose}: {create?: boolean, page?:
                 {...formCommonStyles}
               />
             </FormControl>
-            <FormControl display={'flex'} alignItems="baseline" >
-              <FormLabel ml={2}>Principale</FormLabel>
+
+            {rootPageId === page 
+              ? <p>Définie en tant que racine</p>
+              : <FormControl display={'flex'} alignItems="baseline" >
+              <FormLabel ml={2}>Définir en tant que racine</FormLabel>
               <Checkbox 
+                isChecked={asRootPage}
                 name="rootPage" 
-                isChecked={true} 
+                onChange={() => setAsRootPage(!asRootPage)}
               />
             </FormControl>
+            }  
+
+            
           </ModalBody>
 
           <ModalFooter justifyContent={'center'}>
@@ -116,6 +125,11 @@ const PageSettings = ({create, page, isOpen, onClose}: {create?: boolean, page?:
                 bgColor: 'orange.300',
               }}
               onClick={() => {
+
+                if (asRootPage) {
+                  page && dispatch.components.setRootPage(page)
+                }
+
                 if (create) {
                   dispatch.components.addPage(pageSettings)
                 } else {
