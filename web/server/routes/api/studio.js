@@ -111,20 +111,26 @@ router.post('/start', (req, res) => {
   }
 
   const destpath=path.join(PRODUCTION_ROOT, projectName)
-  const result=child_process.execSync('serve -p 4001 build/',
+  const result=child_process.exec('serve -p 4001 build/',
     {
       cwd: destpath,
     }, (error, stdout, stderr) => {
       console.log(`Error:${error}`)
       console.log(`Stdout:${stdout}`)
       console.log(`stderr:${stderr}`)
-      if (error) {
-        return res.status(HTTP_CODES.SYSTEM_ERROR).json(error)
-      }
-      return res.json()
     })
   console.log(`Start result:${result}`)
   return res.json(result)
+})
+
+router.get('/:model', (req, res) => {
+  const model=req.params.model
+  mongoose.connection.models[model].find()
+    .then(data => res.json(data))
+    .catch(err => {
+      console.error(err)
+      res.status(HTTP_CODES.SYSTEM_ERROR).json(err)
+    })
 })
 
 module.exports=router
