@@ -10,17 +10,35 @@ const router = express.Router()
 
 const PRODUCTION_ROOT='/home/ec2-user/studio/'
 
+const getModelAttributes = modelName => {
+  const schema=mongoose.model(modelName).schema
+  return Object.values(schema.paths)
+    .filter(att => !att.path.startsWith('_'))
+}
+
+const getSimpleModelAttributes = modelName => {
+  return getModelAttributes(modelName)
+    .filter(att => att.instance != 'ObjectID')
+    .map(att => [att.path, att.instance])
+}
+
+const getReferencedModelAttributes = modelName => {
+  return getModelAttributes(modelName)
+    .filter(att => att.instance == 'ObjectID')
+    .map(att => getSimpleModelAttributes(att.options.ref)
+      .map(([attName, instance]) => [`${att.path}.${attName}`, instance]))
+}
+
 router.get('/models', (req, res) => {
   const modelNames=lodash.sortBy(mongoose.modelNames())
   const result=[]
   modelNames.forEach(name => {
-    result.push({
-      name: name,
-      attributes: Object.keys(mongoose.model(name).schema.paths)
-        .filter(attName => !attName.startsWith('_')),
+    result.push({name,
+      attributes:Object.fromEntries(
+        [...getSimpleModelAttributes(name), ...lodash.flatten(getReferencedModelAttributes(name))]
+      )
     })
   })
-  // console.log(modelNames.map(m => mongoose.model(m).schema.paths))
   return res.json(result)
 })
 
