@@ -21,16 +21,16 @@ import { getPages } from '~core/selectors/components'
 const PageSettings = ({create, page, isOpen, onClose}: {create?: boolean, page?: string,  isOpen: boolean, onClose: () => void}) => {
   
   const pages = useSelector(getPages)
-  const {name, indexpage, meta_description, meta_image_url, meta_title} = page !== undefined  ? pages[page] : {name: '', indexpage: false, meta_description: '', meta_image_url: '', meta_title: ''}
-  const [pageSettings, setPageSettings] = useState({name, indexpage, meta_description, meta_image_url, meta_title })
+  const {pageName, rootPage, metaDescription, metaImageUrl, metaTitle} = page !== undefined  ? pages[page] : {pageName: '', rootPage: false, metaDescription: '', metaImageUrl: '', metaTitle: ''}
+  const [pageSettings, setPageSettings] = useState({pageName, rootPage, metaDescription, metaImageUrl, metaTitle })
   const dispatch = useDispatch()
 
   const updatePageSettings = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> ) => {
     const { name, value }: {name: string, value: string | boolean} = e.target
     let valueToKeep = value
-    if (name === 'indexpage') {
+    if (name === 'rootPage') {
       //@ts-ignore
-      valueToKeep = !pageSettings.indexpage
+      valueToKeep = !pageSettings.rootPage
     }
     setPageSettings({ ...pageSettings, [name]: valueToKeep })
   }
@@ -64,8 +64,8 @@ const PageSettings = ({create, page, isOpen, onClose}: {create?: boolean, page?:
             <FormControl mb={2}>
               <FormLabel ml={2}>Name</FormLabel>
               <Input
-                name="name"
-                value={pageSettings.name}
+                name="pageName"
+                value={pageSettings.pageName}
                 {...formCommonStyles}
                 onChange={updatePageSettings}
               />
@@ -73,8 +73,8 @@ const PageSettings = ({create, page, isOpen, onClose}: {create?: boolean, page?:
             <FormControl mb={2}>
               <FormLabel ml={2}>Meta Title</FormLabel>
               <Input
-                value={pageSettings.meta_title}
-                name="meta_title"
+                value={pageSettings.metaTitle}
+                name="metaTitle"
                 onChange={updatePageSettings}
                 {...formCommonStyles}
               />
@@ -82,8 +82,8 @@ const PageSettings = ({create, page, isOpen, onClose}: {create?: boolean, page?:
             <FormControl mb={2}>
               <FormLabel ml={2}>Meta Description</FormLabel>
               <Textarea
-                value={pageSettings.meta_description}
-                name="meta_description"
+                value={pageSettings.metaDescription}
+                name="metaDescription"
                 resize="none"
                 onChange={updatePageSettings}
                 {...formCommonStyles}
@@ -92,8 +92,8 @@ const PageSettings = ({create, page, isOpen, onClose}: {create?: boolean, page?:
             <FormControl mb={3}>
               <FormLabel ml={2}>Top Image</FormLabel>
               <Input
-                value={pageSettings.meta_image_url}
-                name="meta_image_url"
+                value={pageSettings.metaImageUrl}
+                name="metaImageUrl"
                 onChange={updatePageSettings}
                 {...formCommonStyles}
               />
@@ -101,8 +101,8 @@ const PageSettings = ({create, page, isOpen, onClose}: {create?: boolean, page?:
             <FormControl display={'flex'} alignItems="baseline" >
               <FormLabel ml={2}>Principale</FormLabel>
               <Checkbox 
-                name="indexpage" 
-                isChecked={pageSettings.indexpage} 
+                name="rootPage" 
+                isChecked={pageSettings.rootPage} 
                 onChange={updatePageSettings} 
               />
             </FormControl>
