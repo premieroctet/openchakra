@@ -21,13 +21,18 @@ import { getPages } from '~core/selectors/components'
 const PageSettings = ({create, page, isOpen, onClose}: {create?: boolean, page?: string,  isOpen: boolean, onClose: () => void}) => {
   
   const pages = useSelector(getPages)
-  const {name, indexpage, meta_description, meta_image_url, meta_title} = page !== undefined  ? pages[page] : {name: '', indexpage: false, meta_description: 'bla ', meta_image_url: '', meta_title: ''}
+  const {name, indexpage, meta_description, meta_image_url, meta_title} = page !== undefined  ? pages[page] : {name: '', indexpage: false, meta_description: '', meta_image_url: '', meta_title: ''}
   const [pageSettings, setPageSettings] = useState({name, indexpage, meta_description, meta_image_url, meta_title })
   const dispatch = useDispatch()
 
   const updatePageSettings = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> ) => {
-    const { name, value } = e.target
-    setPageSettings({ ...pageSettings, [name]: value })
+    const { name, value }: {name: string, value: string | boolean} = e.target
+    let valueToKeep = value
+    if (name === 'indexpage') {
+      //@ts-ignore
+      valueToKeep = !pageSettings.indexpage
+    }
+    setPageSettings({ ...pageSettings, [name]: valueToKeep })
   }
 
   const formCommonStyles = {
@@ -117,11 +122,16 @@ const PageSettings = ({create, page, isOpen, onClose}: {create?: boolean, page?:
                 bgColor: 'orange.300',
               }}
               onClick={() => {
-                dispatch.components.addPage(pageSettings)
+                if (create) {
+                  dispatch.components.addPage(pageSettings)
+                } else {
+                  //@ts-ignore
+                  dispatch.components.editPageSettings({page_id: page, payload: pageSettings})
+                }
                 onClose()
               }}
             >
-              Create
+              {create ? 'create' : 'edit'}
             </Button>
           </ModalFooter>
         </ModalContent>
