@@ -125,8 +125,11 @@ router.post('/start', (req, res) => {
 
 router.get('/:model', (req, res) => {
   const model=req.params.model
-  mongoose.connection.models[model].find()
-    .then(data => res.json(data))
+  const populate=JSON.parse(req.query.populate || JSON.stringify([]))
+  let query=mongoose.connection.models[model].find()
+  query=populate.reduce((q, attribute) => q.populate(attribute), query)
+  query
+    .then(data => res.json(data.slice(0, 2)))
     .catch(err => {
       console.error(err)
       res.status(HTTP_CODES.SYSTEM_ERROR).json(err)
