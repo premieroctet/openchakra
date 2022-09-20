@@ -105,4 +105,14 @@ router.post('/start', (req, res) => {
   return res.json(result)
 })
 
+router.get('/:model', (req, res) => {
+  const model=req.params.model
+  mongoose.connection.models[model].find()
+    .then(data => res.json(data))
+    .catch(err => {
+      console.error(err)
+      res.status(HTTP_CODES.SYSTEM_ERROR).json(err)
+    })
+})
+
 module.exports=router
