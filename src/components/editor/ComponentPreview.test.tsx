@@ -81,7 +81,6 @@ const componentsToTest = [
   'RadioGroup',
   'Select',
   'InputGroup',
-  'Skeleton',
 ]
 
 test.each(componentsToTest)('Component Preview for %s', componentName => {

@@ -42,11 +42,6 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'Radio',
   'RadioGroup',
   'SimpleGrid',
-
-  'Skeleton',
-  'SkeletonCircle',
-  'SkeletonText',
-
   'Spinner',
   'Select',
   'Skeleton',

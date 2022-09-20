@@ -99,9 +99,6 @@ export const menuItems: MenuItems = {
   SkeletonText: {},
   Spinner: {},
   Select: {},
-  Skeleton: {},
-  SkeletonCircle: {},
-  SkeletonText: {},
   Stack: {},
   Stat: {
     children: {
@@ -185,9 +182,6 @@ export const componentsList: ComponentType[] = [
   'RadioGroup',
   'Select',
   'SimpleGrid',
-  'Skeleton',
-  'SkeletonCircle',
-  'SkeletonText',
   'Spinner',
   'Skeleton',
   'SkeletonCircle',
