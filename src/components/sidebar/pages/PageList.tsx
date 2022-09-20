@@ -1,11 +1,14 @@
 import React from 'react'
-import { Box, Button, Image, List, ListItem } from '@chakra-ui/react'
+import { Box, Button, Image, List, ListItem, useDisclosure } from '@chakra-ui/react'
 import { useSelector } from 'react-redux'
 import { getPages } from '~core/selectors/components'
 import useDispatch from '~hooks/useDispatch'
+import PageSettings from './PageSettings'
 
-const PageActions = ({ page }) => {
+const PageActions = ({ page }: {page: string}) => {
   const dispatch = useDispatch()
+
+  const {  onOpen, isOpen, onClose } = useDisclosure()
 
   const deleteP = async elem => {
     await new Promise(() => dispatch.components.deletePage(elem)).then(a =>
@@ -29,9 +32,11 @@ const PageActions = ({ page }) => {
 
   return (
     <>
-      <Button {...buttonProps} onClick={() => edit(page)}>
+      <Button {...buttonProps} onClick={onOpen}>
         <Image w={'30px'} title='Edit' src='/icons/edit.svg' />
       </Button>
+      <PageSettings isOpen={isOpen} onClose={onClose} page={page} />
+      
       <Button {...buttonProps} onClick={() => deleteP(page)}>
         <Image w={'30px'} title="Edit" src="/icons/delete.svg" />
       </Button>
@@ -48,7 +53,11 @@ const PageList = () => {
 
   return (
     <List>
-      {pages.map((page, i) => (
+      {Object.entries(pages).map(([page, params], i) =>  {
+
+        const isIndex = params.indexpage
+      
+       return (
         <ListItem
           key={i}
           display={'flex'}
@@ -58,20 +67,24 @@ const PageList = () => {
           paddingBlock={2}
           borderBottom={'1px solid black'}
         >
-          {/* <Box>{page.name}</Box> */}
           <Button
             p={0}
             bg={'transparent'}
             color="black"
-            onClick={() => dispatch.components.setActivePage(page.name)}
+            whiteSpace={'normal'}
+            wordBreak={'break-all'}
+            overflow={'hidden'}
+            textAlign={'left'}
+            onClick={() => dispatch.components.setActivePage(page)}
+            fontWeight={isIndex ? 'bold': 'normal'}
           >
-            {page.name}
+            {params.name}
           </Button>
           <Box display={'flex'} alignItems="center">
-            <PageActions page={page.name} />
+            <PageActions page={page} />
           </Box>
         </ListItem>
-      ))}
+      )})}
     </List>
   )
 }

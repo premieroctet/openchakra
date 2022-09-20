@@ -40,7 +40,7 @@ const ImagePanel = () => {
           value={page || ''}
         >
           <option value=''></option>
-          {(pages || []).map(p => (<option>{p.name}</option>))}
+          {Object.keys(pages).map((p, i) => (<option key={i} >{p}</option>))}
         </Select>
       </FormControl>
 

@@ -22,7 +22,7 @@ export const getFullComponents = (state: RootState): ComponentsState =>
   getPresentState(state)
 
 export const getPages = (state: RootState) =>
-  Object.keys(getPresentState(state).pages).map(pg => ({ name: pg }))
+  getPresentState(state).pages
 
 export const getActivePageName = (state: RootState) =>
   getPresentState(state).activePage
