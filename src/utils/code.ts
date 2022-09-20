@@ -316,7 +316,7 @@ import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
     : ''
 }
 
-${dynamics}
+${dynamics || ''}
 ${componentsCodes}
 
 const ${pageNameCamel} = () => {
@@ -347,7 +347,7 @@ ${pageNames.map(name => `<li><a href='/${name}'>${name}</a></li>`).join('\n')}
     <>
     <BrowserRouter>
     <Routes>
-      ${pageNames.slice(0, 1).map(name => `<Route path='/' element={<${name}/>} />`).join('\n')}
+      ${pageNames.slice(0, 1).map(name => `<Route path='/' element={<${normalizePageName(name)}/>} />`).join('\n')}
       ${pageNames.map(normalizePageName).map(name => `<Route path='/${name}' element={<${name}/>} />`).join('\n')}
     </Routes>
     </BrowserRouter>

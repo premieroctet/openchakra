@@ -1,13 +1,16 @@
 const checkEmptyDataProvider = (comp, icomponents) => {
   if (comp.type == 'DataProvider') {
-    if (!comp.props?.model) {
+    if (!comp.props ?.model) {
       return Promise.reject(`DataProvider ${comp.id} is unlinked`)
     }
   }
 }
 
-const checkAvailabelDataProvider = (comp, icomponents) => {
-  if (!!comp.props.dataSource && !(comp.props.dataSource in Object.keys(icomponents))) {
+const checkAvailableDataProvider = (comp, icomponents) => {
+  if (!comp.props ?.dataSource) {
+    return
+  }
+  if (!Object.keys(icomponents).includes(comp.props.dataSource)) {
     return Promise.reject(`DataProvider ${comp.props.dataSource} not found`)
   }
 }
@@ -15,5 +18,5 @@ const checkAvailabelDataProvider = (comp, icomponents) => {
 export const validate = (icomponents: IComponents) => {
   const components = Object.values(icomponents)
   return Promise.all(components.map(c => checkEmptyDataProvider(c, icomponents)))
-    .then(() => Promise.all(components.map(c => checkAvailabelDataProvider(c, icomponents))))
+    .then(() => Promise.all(components.map(c => checkAvailableDataProvider(c, icomponents))))
 }

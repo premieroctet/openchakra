@@ -52,7 +52,7 @@ const DataSourcePanel = () => {
             value={attribute || ''}
           >
             <option value={null}></option>
-            {attributes.map(attribute => (
+            {Object.keys(attributes).map(attribute => (
               <option value={attribute}>{attribute}</option>
             ))}
           </Select>
