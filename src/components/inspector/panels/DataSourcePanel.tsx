@@ -2,7 +2,11 @@ import { Select } from '@chakra-ui/react'
 import { useSelector } from 'react-redux'
 import React, { useState, useEffect, memo } from 'react'
 
-import { getComponents } from '../../../core/selectors/components'
+import { CONTAINER_TYPE } from '../../../utils/code';
+import {
+  getComponents,
+  getSelectedComponent
+} from '../../../core/selectors/components';
 import { getModelAttributes } from '../../../core/selectors/datasources'
 import { useForm } from '../../../hooks/useForm'
 import FormControl from '../controls/FormControl'
@@ -10,10 +14,11 @@ import usePropsSelector from '../../../hooks/usePropsSelector'
 
 const DataSourcePanel = () => {
   const components = useSelector(getComponents)
+  const activeComponent = useSelector(getSelectedComponent)
   const { setValueFromEvent } = useForm()
   const dataSource = usePropsSelector('dataSource')
   const attribute = usePropsSelector('attribute')
-  const [providers, setProviders] = useState([])
+  const [providers, setProviders] = useState<IComponent[]>([])
   const provider = providers.find(p => p.id == dataSource)
   const attributes = useSelector(getModelAttributes(provider?.props.model))
 
@@ -42,7 +47,7 @@ const DataSourcePanel = () => {
           ))}
         </Select>
       </FormControl>
-      {attributes && (
+      {attributes && !CONTAINER_TYPE.includes(activeComponent?.type) && (
         <FormControl htmlFor="attribute" label="Champ">
           <Select
             id="attribute"
