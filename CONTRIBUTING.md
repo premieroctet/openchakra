@@ -1,9 +1,32 @@
 # Contributing
 
+
 When contributing to this repository, please first discuss the change you wish to make via issue,
 email, or any other method with the owners of this repository before making a change.
 
 Please note we have a code of conduct, please follow it in all your interactions with the project.
+
+## Adding a new component
+
+1. [src/react-app-env.d.ts](src/react-app-env.d.ts): Define the componentType here. Define once again with Meta suffix if it is a preset.
+2. [src/componentsList.ts](src/componentsList.ts): Define the component in the component list and in the menuItems. Define children if it is a preset.
+3. [src/utils/editor.ts](src/utils/editor.ts): Define the created component(s) including Meta Component here.
+4. [src/utils/defaultProps.tsx](src/utils/defaultProps.tsx): Add defaultPropsType and defaultProps for your component.
+5. [src/components/inspector/panels/components](src/components/inspector/panels/components): Create a file named `<ComponentPanel>` in this directory and add properties required by that component.
+6. [src/components/inspector/controls](src/components/inspector/controls): Add control for additional properties, if required for the componentPanel.
+7. [src/components/inspector/panels/Panels.tsx](src/components/inspector/panels/Panels.tsx): Import and add the componentPanel to the list.
+8. [src/components/editor/previews](src/components/editor/previews): Create your componentPreview in this directory if it is a complex component.
+9. [src/components/editor/ComponentPreview.tsx](src/components/editor/ComponentPreview.tsx): Import and add the created componentPreview here.
+10. [src/core/models/composer/builder.ts](src/core/models/composer/builder.ts): In case of Meta Components, add how the component shoud be built here.
+
+## Extending capabilities
+
+- [src/utils/code.ts](src/utils/code.ts): Modify how code is generated.
+- [src/components/CodePanel.tsx](src/components/CodePanel.tsx): Modify options available in CodePanel.
+- [src/hooks](src/hooks): Modify hooks here.
+- [src/components/Header.tsx](src/components/Header.tsx): Modify the header/AppBar.
+- [src/components/Metadata.tsx](src/components/Metadata.tsx): Modify website metadata.
+- [src/components/sidebar/Sidebar.tsx](src/components/sidebar/Sidebar.tsx): Modify Sidebar.
 
 ## Pull Request Process
 
