@@ -228,14 +228,24 @@ const getIconsImports = (components: IComponents) => {
   })
 }
 
-const buildHooks = components => {
-  if (components.length == 0) {
+const buildHooks = (components:IComponent[]) => {
+
+  // Returns attributes to poppulate for 'dataProvider'
+  const getPopulate = (dataProvider: IComponent) => {
+    return lodash(components)
+      .filter(c => c.props?.dataSource==dataProvider.id && !!c.props?.attribute)
+      .filter(c => c.props.attribute.includes('.'))
+      .map(c => c.props.attribute.split('.')[0])
+      .uniq()
+  }
+  const dataProviders:IComponent[] =components.filter(c => c.type == 'DataProvider')
+  if (dataProviders.length == 0) {
     return ''
   }
   let code = `const {get}=useFetch('${config.targetDomain}')`
   code +=
     '\n' +
-    components
+    dataProviders
       .map(dp => {
         const dataId = dp.id.replace(/comp-/, '')
         return `const [${dataId}, set${capitalize(dataId)}]=useState([])`
@@ -243,12 +253,12 @@ const buildHooks = components => {
       .join(`\n`)
   code += `\n
   useEffect(() => {
-    ${components
+    ${dataProviders
       .map(dp => {
         const dataId = dp.id.replace(/comp-/, '')
-        return `get('/myAlfred/api/studio/${
-          dp.props.model
-        }').then(res => set${capitalize(dataId)}(res))`
+        const populate=getPopulate(dp)
+        const apiUrl=`/myAlfred/api/studio/${dp.props.model}${populate? `?populate=${JSON.stringify(populate)}`: ''}`
+        return `get('${apiUrl}').then(res => set${capitalize(dataId)}(res))`
       })
       .join('\n')}
   }, [get])\n`
@@ -275,10 +285,7 @@ const buildDynamics = (components: IComponents) => {
 
 export const generateCode = async (pageName:string, components: IComponents) => {
 
-  const dataProviders = Object.values(components).filter(
-    c => c.type == 'DataProvider',
-  )
-  let hooksCode = buildHooks(dataProviders)
+  let hooksCode = buildHooks(Object.values(components))
   let dynamics = buildDynamics(components)
   let code = buildBlock({ component: components.root, components })
   let componentsCodes = buildComponents(components)
@@ -307,7 +314,7 @@ export const generateCode = async (pageName:string, components: IComponents) => 
   )
 
   code = `import React, {useState, useEffect} from 'react';
-  ${dataProviders.length > 0 ? `import useFetch from 'use-http'` : ''}
+  ${hooksCode ? `import useFetch from 'use-http'` : ''}
   import {ChakraProvider} from "@chakra-ui/react";
   ${Object.entries(groupedComponents)
     .map(([modName, components]) => {
