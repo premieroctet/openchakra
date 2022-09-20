@@ -6,10 +6,6 @@ const getPresentState = (state: RootState): ComponentsState => {
   return state.components.present
 }
 
-const getActivePage = (state: RootState): PageState => {
-  return getPresentState(state).pages[getPresentState(state).activePage]
-}
-
 const getActiveComponents = (state: RootState): IComponents => {
   const components = getActivePage(state).components
   return components
@@ -24,8 +20,15 @@ export const getFullComponents = (state: RootState): ComponentsState =>
 export const getPages = (state: RootState) =>
   getPresentState(state).pages
 
+const getActivePage = (state: RootState): PageState => {
+  return getPresentState(state).pages[getPresentState(state).activePage]
+}
+
+export const getActivePageId = (state: RootState) =>
+  getActivePage(state)?.pageId
+
 export const getActivePageName = (state: RootState) =>
-  getPresentState(state).activePage
+  getActivePage(state)?.pageName
 
 export const getComponentBy = (nameOrId: string | IComponent['id']) => (
   state: RootState,

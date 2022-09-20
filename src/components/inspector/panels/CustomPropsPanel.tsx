@@ -42,8 +42,6 @@ const CustomPropsPanel = () => {
     propsName => !activeProps.includes(propsName),
   )
 
-  console.log(props)
-
   return (
     <>
       <form

@@ -6,7 +6,7 @@ const withDynamicText = Component => {
   const internal = (props) => {
     return (
       <Component {...lodash.omit(props, ['children'])}>
-        <span {...props}>{props.dataSource?.[props.attribute]}</span>
+        <span {...props}>{lodash.get(props.dataSource, props.attribute)}</span>
       </Component>
     )
   }

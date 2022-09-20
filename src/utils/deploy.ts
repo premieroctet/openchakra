@@ -9,18 +9,17 @@ const copyCode = (pageName: string, contents: Buffer) => {
 }
 
 export const deploy = (state: ComponentsState) => {
-  const namedComponents:[{name: string, components: IComponents}]=
-    Object.entries(state.pages).map(([pageName, page]) => ({pageName: pageName, components: page.components}))
-  return Promise.all(namedComponents.map(({pageName, components}) =>validate(components)))
+  const pages=Object.values(state.pages)
+  return Promise.all(pages.map(({pageName, components}) =>validate(components)))
     .then(() => {
-      return Promise.all(namedComponents.map(({pageName, components}) => generateCode(pageName, components)))
+      return Promise.all(pages.map(({pageName, components}) => generateCode(pageName, components)))
     })
     .then(codes => {
-      const namedCodes=lodash.zip(namedComponents.map(nc => nc.pageName), codes)
+      const namedCodes=lodash.zip(pages.map(nc => nc.pageName), codes)
       return Promise.all(namedCodes.map(([pageName, code]) => copyCode(pageName, code)))
     })
     .then(() => {
-      return generateApp(Object.keys(state.pages))
+      return generateApp(Object.values(state.pages).map(p => p.pageName))
     })
     .then(code => {
       return copyCode('App', code)

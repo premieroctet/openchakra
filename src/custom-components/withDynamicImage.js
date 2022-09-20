@@ -4,7 +4,7 @@ import lodash from 'lodash'
 const withDynamicImage = Component => {
 
   const internal = (props) => {
-    const src=props.dataSource?.[props.attribute]
+    const src=lodash.get(props.dataSource, props.attribute)
     if (!src) {
       return null
     }

@@ -1,9 +1,7 @@
 import isBoolean from 'lodash/isBoolean'
 import camelCase from 'lodash/camelCase'
 import filter from 'lodash/filter'
-import pickBy from 'lodash/pickBy'
 import icons from '~iconsList'
-import { propNames } from '@chakra-ui/react'
 import lodash from 'lodash'
 import config from '../../env.json'
 
@@ -15,6 +13,18 @@ const IMAGE_TYPE:ComponentType[]=['Image']
 
 export const normalizePageName = (pageName:string) => {
   return capitalize(camelCase(pageName))
+}
+
+export const getPageFileName = (page: string) => {
+  return normalizePageName(page)
+}
+
+export const getPageUrl = (page: string) => {
+  return page.toLowerCase().replace(/ /i, '-')
+}
+
+export const getPageComponentName = (page: string) => {
+  return normalizePageName(page)
 }
 
 const isDynamicComponent = (comp:IComponent) => {
@@ -102,13 +112,11 @@ const buildBlock = ({
           if (propsValueAsObject && propsValue) {
             const gatheredProperties = Object.entries(propsValue)
               .map(([prop, value]) => {
-                console.log('valuesProp', value)
                 return `${prop}: '${value}'`
               })
               .join(', ')
 
             propsContent += `${propName}={{${gatheredProperties}}}`
-            console.log(propsContent)
           } else if (
             propName.toLowerCase().includes('icon') &&
             childComponent.type !== 'Icon'
@@ -139,7 +147,7 @@ const buildBlock = ({
         })
 
       if (childComponent.props.page) {
-        propsContent += `onClick={() => window.location='/${normalizePageName(childComponent.props.page)}'}`
+        propsContent += `onClick={() => window.location='/${getPageUrl(childComponent.props.page)}'}`
       }
 
       if (
@@ -266,6 +274,7 @@ const buildDynamics = (components: IComponents) => {
 }
 
 export const generateCode = async (pageName:string, components: IComponents) => {
+
   const dataProviders = Object.values(components).filter(
     c => c.type == 'DataProvider',
   )
@@ -284,8 +293,8 @@ export const generateCode = async (pageName:string, components: IComponents) => 
     ),
   ]
 
-  const pageNameCamel = normalizePageName(pageName)
-
+  const componentName = getPageComponentName(pageName)
+  const urlName = getPageUrl(pageName)
   // Distinguish between chakra/non-chakra components
   const module = await import('@chakra-ui/react')
   /**
@@ -319,7 +328,7 @@ import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
 ${dynamics || ''}
 ${componentsCodes}
 
-const ${pageNameCamel} = () => {
+const ${componentName} = () => {
   ${hooksCode}
   return (
   <ChakraProvider resetCSS>
@@ -327,7 +336,7 @@ const ${pageNameCamel} = () => {
   </ChakraProvider>
 )};
 
-export default ${pageNameCamel};`
+export default ${componentName};`
 
   return await formatCode(code)
 }
@@ -340,15 +349,14 @@ ${pageNames.map(name => `<li><a href='/${name}'>${name}</a></li>`).join('\n')}
 */
   let code=`import {BrowserRouter, Routes, Route} from 'react-router-dom'
   ${pageNames
-    .map(nameToConv => normalizePageName(nameToConv))
-    .map(name => `import ${name} from './${name}'`).join('\n')}
+    .map(name => `import ${getPageComponentName(name)} from './${getPageFileName(name)}'`).join('\n')}
 
   const App = () => (
     <>
     <BrowserRouter>
     <Routes>
-      ${pageNames.slice(0, 1).map(name => `<Route path='/' element={<${normalizePageName(name)}/>} />`).join('\n')}
-      ${pageNames.map(normalizePageName).map(name => `<Route path='/${name}' element={<${name}/>} />`).join('\n')}
+      ${pageNames.slice(0, 1).map(name => `<Route path='/' element={<${getPageComponentName(name)}/>} />`).join('\n')}
+      ${pageNames.map(name => `<Route path='/${getPageUrl(name)}' element={<${getPageComponentName(name)}/>} />`).join('\n')}
     </Routes>
     </BrowserRouter>
     </>
