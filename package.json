@@ -10,7 +10,6 @@
   "publishConfig": {
     "@trilogy-group:registry": "https://npm.pkg.github.com"
   },
-  "private": true,
   "dependencies": {
     "@bugsnag/js": "^6.5.2",
     "@bugsnag/plugin-react": "^6.5.0",
