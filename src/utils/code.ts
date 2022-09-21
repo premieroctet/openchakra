@@ -7,9 +7,9 @@ import config from '../../env.json'
 
 //const HIDDEN_ATTRIBUTES=['dataSource', 'attribute']
 const HIDDEN_ATTRIBUTES:string[] = []
-const CONTAINER_TYPE:ComponentType[]=['Box', 'Grid', 'SimpleGrid', 'Flex']
+export const CONTAINER_TYPE:ComponentType[]=['Box', 'Grid', 'SimpleGrid', 'Flex']
 const TEXT_TYPE:ComponentType[]=['Text', 'Heading', 'Badge']
-const IMAGE_TYPE:ComponentType[]=['Image']
+const IMAGE_TYPE:ComponentType[]=['Image', 'Avatar']
 
 export const normalizePageName = (pageName:string) => {
   return capitalize(camelCase(pageName))
@@ -230,12 +230,11 @@ const getIconsImports = (components: IComponents) => {
 
 const buildHooks = (components:IComponent[]) => {
 
-  // Returns attributes to poppulate for 'dataProvider'
-  const getPopulate = (dataProvider: IComponent) => {
+  // Returns attributes names used in this dataProvider for 'dataProvider'
+  const getDataProviderFields = (dataProvider: IComponent) => {
     return lodash(components)
       .filter(c => c.props?.dataSource==dataProvider.id && !!c.props?.attribute)
-      .filter(c => c.props.attribute.includes('.'))
-      .map(c => c.props.attribute.split('.')[0])
+      .map(c => c.props.attribute)
       .uniq()
   }
   const dataProviders:IComponent[] =components.filter(c => c.type == 'DataProvider')
@@ -256,8 +255,8 @@ const buildHooks = (components:IComponent[]) => {
     ${dataProviders
       .map(dp => {
         const dataId = dp.id.replace(/comp-/, '')
-        const populate=getPopulate(dp)
-        const apiUrl=`/myAlfred/api/studio/${dp.props.model}${populate? `?populate=${JSON.stringify(populate)}`: ''}`
+        const dpFields=getDataProviderFields(dp)
+        const apiUrl=`/myAlfred/api/studio/${dp.props.model}${dpFields? `?fields=${dpFields.join(',')}`: ''}`
         return `get('${apiUrl}').then(res => set${capitalize(dataId)}(res))`
       })
       .join('\n')}
