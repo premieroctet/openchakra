@@ -20,6 +20,7 @@ export const useInteractive = (
   const focusInput = useSelector(getFocusedComponent(component.id))
 
   const [, drag] = useDrag({
+    type: component.type,
     item: { id: component.id, type: component.type, isMoved: true },
   })
 
