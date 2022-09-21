@@ -26,7 +26,7 @@ export type ComponentsStateWithUndo = {
 }
 
 export type PageSettings = {
-  pageId?: string,
+  pageId: string,
   pageName: string
   metaTitle: string
   metaDescription: string

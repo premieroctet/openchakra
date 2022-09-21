@@ -4,6 +4,7 @@ import filter from 'lodash/filter'
 import icons from '~iconsList'
 import lodash from 'lodash'
 import config from '../../env.json'
+import { PageState } from '~core/models/components'
 
 //const HIDDEN_ATTRIBUTES=['dataSource', 'attribute']
 const HIDDEN_ATTRIBUTES:string[] = []
@@ -282,7 +283,11 @@ const buildDynamics = (components: IComponents) => {
   return code
 }
 
-export const generateCode = async (pageName:string, components: IComponents) => {
+export const generateCode = async (pageId: string, pages: {
+  [key: string]: PageState
+}) => {
+
+  const {pageName, components, metaTitle, metaDescription, metaImageUrl} = pages[pageId]
 
   let hooksCode = buildHooks(Object.values(components))
   let dynamics = buildDynamics(components)
@@ -339,7 +344,11 @@ const ${componentName} = () => {
   ${hooksCode}
   return (
   <ChakraProvider resetCSS>
-    <Metadata />
+    <Metadata 
+      metaTitle={'${metaTitle}'} 
+      metaDescription={'${metaDescription}'} 
+      metaImageUrl={'${metaImageUrl}'} 
+    />
     ${code}
   </ChakraProvider>
 )};

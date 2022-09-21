@@ -25,7 +25,7 @@ const getActivePage = (state: RootState): PageState => {
 }
 
 export const getActivePageId = (state: RootState) =>
-  getActivePage(state)?.pageId
+  getActivePage(state).pageId
 
 export const getActivePageName = (state: RootState) =>
   getActivePage(state)?.pageName

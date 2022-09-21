@@ -12,7 +12,7 @@ export const deploy = (state: ComponentsState) => {
   const pages=Object.values(state.pages)
   return Promise.all(pages.map(({pageName, components}) =>validate(components)))
     .then(() => {
-      return Promise.all(pages.map(({pageName, components}) => generateCode(pageName, components)))
+      return Promise.all(pages.map((page) => generateCode(page.pageId, state.pages)))
     })
     .then(codes => {
       const namedCodes=lodash.zip(pages.map(nc => nc.pageName), codes)
