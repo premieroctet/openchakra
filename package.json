@@ -1,6 +1,12 @@
 {
-  "name": "open-chakra",
-  "version": "0.1.0",
+  "name": "tu2k22-open-chakra",
+  "version": "1.0.0",
+  "description": "github npm package of open-chakra for tu2k22-ui-made-easy project.",
+  "author": "Rishabh Raizada <rishabh.raizada@trilogy.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/trilogy-group/tu2k22-openchakra.git"
+  },
   "private": true,
   "dependencies": {
     "@bugsnag/js": "^6.5.2",

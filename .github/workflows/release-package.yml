@@ -1,0 +1,52 @@
+name: Publish package to GitHub Packages on new release
+on:
+  release:
+    types: [created]
+jobs:
+  build:
+    runs-on: ubuntu-latest 
+    permissions: 
+      contents: read
+      packages: write 
+    steps:
+      - uses: actions/checkout@v3
+      # Setup .npmrc file to publish to GitHub Packages
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+          registry-url: 'https://npm.pkg.github.com'
+          # Defaults to the user or organization that owns the workflow file
+          # scope: '@rishabh-ti'
+      - run: npm ci --legacy-peer-deps
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+# Using npm test: 
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v3
+#       - uses: actions/setup-node@v3
+#         with:
+#           node-version: 18
+#       - run: npm ci
+#       - run: npm test
+
+#   publish-gpr:
+#     needs: build
+#     runs-on: ubuntu-latest
+#     permissions:
+#       packages: write
+#       contents: read
+#     steps:
+#       - uses: actions/checkout@v3
+#       - uses: actions/setup-node@v3
+#         with:
+#           node-version: 18
+#           registry-url: https://npm.pkg.github.com/
+#       - run: npm ci
+#       - run: npm publish
+#         env:
+#           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
