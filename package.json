@@ -11,7 +11,7 @@
     "@trilogy-group:registry": "https://npm.pkg.github.com"
   },
   "bin": {
-    "oc": "./cli.js"
+    "uiez": "./cli.js"
   },
   "dependencies": {
     "@bugsnag/js": "^6.5.2",
