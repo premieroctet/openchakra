@@ -2,4 +2,4 @@
 var shell = require("shelljs");
 
 shell.exec("echo Starting OpenChakra server..")
-shell.exec("pnpm run dev")
+shell.exec("pnpm run export")

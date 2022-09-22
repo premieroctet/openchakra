@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[584],{2584:function(e,t,c){c.r(t),t.default=async(e,t={})=>{const c=document.createElement("a");c.download=t.fileName||"Untitled",c.href=URL.createObjectURL(e),c.addEventListener("click",(e=>{c.remove(),setTimeout((()=>URL.revokeObjectURL(c.href)),3e4)})),setTimeout((()=>c.click()),0)}}}]);
