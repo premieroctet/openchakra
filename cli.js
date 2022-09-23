@@ -1,5 +1,5 @@
 #! /usr/bin/env node
-var shell = require("shelljs");
+var shell = require('shelljs')
 
-shell.exec("echo Starting OpenChakra server..")
-shell.exec("pnpm run export")
+shell.exec('echo Starting OpenChakra server..')
+shell.exec('pnpm start')
