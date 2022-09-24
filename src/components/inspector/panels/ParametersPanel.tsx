@@ -23,23 +23,23 @@ const ParametersPanel = () => {
   const dispatch = useDispatch()
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const activePropsRef = useInspectorState()
-  const { props, id } = useSelector(getSelectedComponent)
+  const activeParamsRef = useInspectorState()
+  const { params, id } = useSelector(getSelectedComponent)
   const { setValue } = useForm()
 
-  const [quickProps, setQuickProps] = useState('')
+  const [quickParams, setQuickParams] = useState('')
   const [hasError, setError] = useState(false)
 
-  const onDelete = (propsName: string) => {
-    dispatch.components.deleteProps({
+  const onDelete = (paramsName: string) => {
+    dispatch.components.deleteParams({
       id,
-      name: propsName,
+      name: paramsName,
     })
   }
 
-  const activeProps = activePropsRef || []
-  const customProps = Object.keys(props).filter(
-    propsName => !activeProps.includes(propsName),
+  const activeParams = activeParamsRef || []
+  const customParams = Object.keys(params).filter(
+    paramsName => !activeParams.includes(paramsName),
   )
 
   return (
@@ -48,11 +48,11 @@ const ParametersPanel = () => {
         onSubmit={(event: FormEvent) => {
           event.preventDefault()
 
-          const [name, value] = quickProps.split(SEPARATOR)
+          const [name, value] = quickParams.split(SEPARATOR)
 
           if (name && value) {
             setValue(name, value)
-            setQuickProps('')
+            setQuickParams('')
             setError(false)
           } else {
             setError(true)
@@ -66,18 +66,18 @@ const ParametersPanel = () => {
           <Input
             ref={inputRef}
             isInvalid={hasError}
-            value={quickProps}
-            placeholder={`props${SEPARATOR}value`}
+            value={quickParams}
+            placeholder={`params${SEPARATOR}value`}
             onChange={(event: ChangeEvent<HTMLInputElement>) =>
-              setQuickProps(event.target.value)
+              setQuickParams(event.target.value)
             }
           />
         </InputGroup>
       </form>
 
-      {customProps.map((propsName, i) => (
+      {customParams.map((paramsName, i) => (
         <Flex
-          key={propsName}
+          key={paramsName}
           alignItems="center"
           px={2}
           bg={i % 2 === 0 ? 'white' : 'gray.50'}
@@ -85,14 +85,14 @@ const ParametersPanel = () => {
           justifyContent="space-between"
         >
           <SimpleGrid width="100%" columns={2} spacing={1}>
-            <Box fontWeight="bold">{propsName}</Box>
-            <Box>{props[propsName]}</Box>
+            <Box fontWeight="bold">{paramsName}</Box>
+            <Box>{params[paramsName]}</Box>
           </SimpleGrid>
 
           <ButtonGroup display="flex" size="xs" isAttached>
             <IconButton
               onClick={() => {
-                setQuickProps(`${propsName}=`)
+                setQuickParams(`${paramsName}=`)
                 if (inputRef.current) {
                   inputRef.current.focus()
                 }
@@ -103,7 +103,7 @@ const ParametersPanel = () => {
               icon={<EditIcon path="" />}
             />
             <IconButton
-              onClick={() => onDelete(propsName)}
+              onClick={() => onDelete(paramsName)}
               variant="ghost"
               size="xs"
               aria-label="delete"
