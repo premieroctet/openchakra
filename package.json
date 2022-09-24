@@ -1,6 +1,6 @@
 {
   "name": "@trilogy-group/tu2k22-openchakra",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "github npm package of open-chakra for tu2k22-ui-made-easy project.",
   "author": "Rishabh Raizada <rishabh.raizada@trilogy.com>",
   "repository": {
@@ -56,8 +56,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "export": "next export",
+    "start": "next start -p 3003",
     "test": "jest --watch",
     "test:ci": "jest --ci",
     "analyze": "BUNDLE_VISUALIZE=1 react-app-rewired build",

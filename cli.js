@@ -2,4 +2,4 @@
 var shell = require('shelljs')
 
 shell.exec('echo Starting OpenChakra server..')
-shell.exec('pnpm start')
+shell.exec('cd node_modules/@trilogy-group/tu2k22-openchakra && pnpm start')
