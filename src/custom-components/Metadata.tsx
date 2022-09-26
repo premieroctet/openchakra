@@ -2,11 +2,11 @@ import React from 'react'
 import Head from 'next/head'
 
 const Metadata = ({
-  metaTitle = 'Wappizy', 
-  metaDescription = 'Visual editor for Chakra UI', 
-  metaImageUrl = 'https://openchakra.app/images/og-graph-color.png'
+  metaTitle = 'Wappizy',
+  metaDescription = 'Visual editor for Chakra UI',
+  metaImageUrl = 'https://openchakra.app/images/og-graph-color.png',
 }: {
-  metaTitle?: string,
+  metaTitle?: string
   metaDescription?: string
   metaImageUrl?: string
 }) => {

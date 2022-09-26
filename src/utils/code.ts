@@ -370,8 +370,10 @@ export const generateCode = async (
     module[c] ? '@chakra-ui/react' : `./custom-components/${c}/${c}`,
   )
 
-  code = `import React, {useState, useEffect} from 'react';
-  import Metadata from '../components/Metadata';
+  code = `import React ${
+    dynamics ? ', {useState, useEffect} ' : ''
+  }from 'react';
+  import Metadata from './custom-components/Metadata';
   ${hooksCode ? `import useFetch from 'use-http'` : ''}
   import {ChakraProvider} from "@chakra-ui/react";
   ${Object.entries(groupedComponents)
