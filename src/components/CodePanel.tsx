@@ -5,15 +5,23 @@ import { generateCode } from '~utils/code'
 import theme from 'prism-react-renderer/themes/nightOwl'
 import { useSelector } from 'react-redux'
 import { getComponents } from '~core/selectors/components'
+import axios from 'axios'
 
 const CodePanel = () => {
   const components = useSelector(getComponents)
   const [code, setCode] = useState<string | undefined>(undefined)
+  const API_ENDPOINT = axios.create({
+    baseURL: `${window.location.href}api`,
+    timeout: 30000,
+  });
 
   useEffect(() => {
     const getCode = async () => {
       const code = await generateCode(components)
       setCode(code)
+      const response = await API_ENDPOINT.post('/save-file', {
+        codeBody: code,
+      });
     }
 
     getCode()
