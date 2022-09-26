@@ -3,7 +3,7 @@ import fs from 'fs'
 export default function handler(req, res) {
     console.log(req.body);
     try {
-        fs.writeFileSync('../../../test.oc.tsx', req.body.codeBody, (err) => {
+        fs.writeFileSync('../../components/comp.oc.tsx', req.body.codeBody, (err) => {
           if (err) throw err;
           else{
              console.log("The file is updated with the given data")
