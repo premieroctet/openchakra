@@ -2,11 +2,11 @@ import React from 'react'
 import lodash from 'lodash'
 
 const withDynamicText = Component => {
-
-  const internal = (props) => {
+  const internal = props => {
+    const value = lodash.get(props.dataSource, props.attribute)
     return (
       <Component {...lodash.omit(props, ['children'])}>
-        <span {...props}>{lodash.get(props.dataSource, props.attribute)}</span>
+        <span {...props}>{value}</span>
       </Component>
     )
   }
