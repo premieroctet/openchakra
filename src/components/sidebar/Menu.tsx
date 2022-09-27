@@ -3,48 +3,56 @@ import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import Pages from './pages/Pages'
 import Sidebar from './Sidebar'
-import { getShowLayout } from '~core/selectors/app'
+import { getShowLeftPanel } from '~core/selectors/app'
 import useDispatch from '~hooks/useDispatch'
 import MenuActions from './MenuActions'
 import ResponsiveActions from './ResponsiveActions'
 import Media from './Media'
 
-const menuSections: {
-  [section: string]: {
-    title: string
-    icon: string
-    component?: React.ReactNode
-  }
-} = {
-  pages: {
-    title: 'Pages',
-    icon: '/icons/pages.svg',
-    component: <Pages />,
-  },
-  components: {
-    title: 'Components',
-    icon: '/icons/components.svg',
-    component: <Sidebar />,
-  },
-  medias: {
-    title: 'Medias',
-    icon: '/icons/medias.svg',
-    component: <Media />,
-  },
-  // settings: {
-  //   title: 'Settings',
-  //   icon: '/icons/settings.svg',
-  // },
+interface activemenu {
+  show: boolean
 }
 
 const Menu = () => {
   const [activeSection, setActiveSection] = useState('components')
-  const showLayout = useSelector(getShowLayout)
+  const showMenu = useSelector(getShowLeftPanel)
   const dispatch = useDispatch()
+
+  const menuSections: {
+    [section: string]: {
+      title: string
+      icon: string
+      component?: React.ReactNode
+      payload?: string
+    }
+  } = {
+    pages: {
+      title: 'Pages',
+      icon: '/icons/pages.svg',
+      component: <Pages />,
+      payload: 'pages',
+    },
+    components: {
+      title: 'Components',
+      icon: '/icons/components.svg',
+      component: <Sidebar />,
+      payload: 'components',
+    },
+    medias: {
+      title: 'Medias',
+      icon: '/icons/medias.svg',
+      component: <Media />,
+      payload: 'medias',
+    },
+    // settings: {
+    //   title: 'Settings',
+    //   icon: '/icons/settings.svg',
+    // },
+  }
 
   return (
     <>
-      <StyledMenu show={showLayout}>
+      <StyledMenu show={showMenu}>
         <div className="leftpanel">
           <img
             className="logo"
@@ -60,15 +68,15 @@ const Menu = () => {
                     className={category === activeSection ? 'highlight' : ''}
                     onClick={() => {
                       setActiveSection(category)
+                      dispatch.app.setCurrentSection(
+                        menuSections[category]['payload'],
+                      )
                     }}
                   >
                     <img
                       src={menuSections[category]['icon']}
                       alt=""
                       width={30}
-                      style={
-                        category === 'deploy' ? { marginRight: '10px' } : {}
-                      }
                     />
                     <span>{menuSections[category]['title']}</span>
                   </button>
@@ -99,7 +107,7 @@ const Menu = () => {
   )
 }
 
-const StyledMenu = styled.div`
+const StyledMenu = styled.div<activemenu>`
   position: relative;
   --panel-width: 300px;
   --primary-color: #5bbdc5;

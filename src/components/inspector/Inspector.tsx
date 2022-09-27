@@ -34,7 +34,7 @@ import {
   getSelectedComponentId,
   getComponentNames,
 } from '~core/selectors/components'
-import { getShowLayout } from '~core/selectors/app'
+import { getShowRightPanel } from '~core/selectors/app'
 import ActionButton from './ActionButton'
 import { generateComponentCode, formatCode } from '~utils/code'
 import useClipboard from '~hooks/useClipboard'
@@ -77,7 +77,7 @@ const CodeActionButton = memo(() => {
 const Inspector = () => {
   const dispatch = useDispatch()
   const component = useSelector(getSelectedComponent)
-  const showLayout = useSelector(getShowLayout)
+  const showRightPanel = useSelector(getShowRightPanel)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [componentName, onChangeComponentName] = useState('')
   const componentsNames = useSelector(getComponentNames)
@@ -116,7 +116,7 @@ const Inspector = () => {
 
   return (
     //@ts-ignore
-    <RightPanel show={showLayout}>
+    <RightPanel show={showRightPanel}>
       <Box bg="white">
         <Box
           fontWeight="semibold"
