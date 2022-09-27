@@ -4,10 +4,8 @@ const child_process = require('child_process')
 const mongoose=require('mongoose')
 const express = require('express')
 const lodash=require('lodash')
-const {HTTP_CODES}=require('../../utils/errors')
-
+const {HTTP_CODES, NotFoundError}=require('../../utils/errors')
 const router = express.Router()
-
 const PRODUCTION_ROOT='/home/ec2-user/studio/'
 
 const getModelAttributes = modelName => {
@@ -125,10 +123,12 @@ router.post('/start', (req, res) => {
   return res.json(result)
 })
 
-router.get('/:model', (req, res) => {
+router.get('/:model/:id?', (req, res) => {
   const model=req.params.model
   const attributes=req.query.fields?.split(',') || []
+  const id=req.params.id
 
+  console.log(`Requesting model ${model}, id ${id || 'none'} attributes:${attributes}`)
   /** Simple fields */
   const modelSimpleFields=getSimpleModelAttributes(model).map(attDef => attDef[0])
   const modelRefFields=lodash.uniq(lodash.flatten(getReferencedModelAttributes(model)).map(attDef => attDef[0].split('.')[0]))
@@ -140,13 +140,19 @@ router.get('/:model', (req, res) => {
 
   const populates=groupedAttributes.omit(['SIMPLE'])
 
-  let query=mongoose.connection.models[model].find({}, {...fieldsFilter})
+  const idFilter=id ? {_id: id} : {}
+  let query=mongoose.connection.models[model].find(idFilter, fieldsFilter)
   query=populates.reduce((q, values, key) => q.populate({path: key, select: values.map(v => v.split('.')[1])}), query)
   query
-    .then(data => res.json(data.slice(0, 2)))
+    .then(data => {
+      if (id && data.length==0) {
+        throw new NotFoundError(`Can't find ${model}:${id}`)
+      }
+      res.json(id ? data[0]: data)
+    })
     .catch(err => {
       console.error(err)
-      res.status(HTTP_CODES.SYSTEM_ERROR).json(err)
+      res.status(err.status || HTTP_CODES.SYSTEM_ERROR).json(err.message || err)
     })
 })
 
