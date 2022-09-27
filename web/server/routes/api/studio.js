@@ -12,7 +12,8 @@ const PRODUCTION_ROOT='/home/ec2-user/studio/'
 
 const getModelAttributes = modelName => {
   const schema=mongoose.model(modelName).schema
-  return Object.values(schema.paths)
+  return lodash(schema.paths)
+    .values()
     .filter(att => !att.path.startsWith('_'))
 }
 
@@ -27,6 +28,7 @@ const getReferencedModelAttributes = modelName => {
     .filter(att => att.instance == 'ObjectID')
     .map(att => getSimpleModelAttributes(att.options.ref)
       .map(([attName, instance]) => [`${att.path}.${attName}`, instance]))
+    .flatten()
 }
 
 router.get('/models', (req, res) => {
@@ -34,9 +36,9 @@ router.get('/models', (req, res) => {
   const result=[]
   modelNames.forEach(name => {
     result.push({name,
-      attributes:Object.fromEntries(
-        [...getSimpleModelAttributes(name), ...lodash.flatten(getReferencedModelAttributes(name))]
-      )
+      attributes: Object.fromEntries(
+        [...getSimpleModelAttributes(name), ...lodash.flatten(getReferencedModelAttributes(name))],
+      ),
     })
   })
   return res.json(result)
@@ -125,9 +127,21 @@ router.post('/start', (req, res) => {
 
 router.get('/:model', (req, res) => {
   const model=req.params.model
-  const populate=JSON.parse(req.query.populate || JSON.stringify([]))
-  let query=mongoose.connection.models[model].find()
-  query=populate.reduce((q, attribute) => q.populate(attribute), query)
+  const attributes=req.query.fields?.split(',') || []
+
+  /** Simple fields */
+  const modelSimpleFields=getSimpleModelAttributes(model).map(attDef => attDef[0])
+  const modelRefFields=lodash.uniq(lodash.flatten(getReferencedModelAttributes(model)).map(attDef => attDef[0].split('.')[0]))
+
+  const groupedAttributes=lodash(attributes).groupBy(
+    att => (modelSimpleFields.includes(att.split('.')[0]) ? 'SIMPLE' : att.split('.')[0]))
+
+  const fieldsFilter={'_id': true, ...lodash.fromPairs(groupedAttributes.get('SIMPLE', []).map(s => ([s, true])))}
+
+  const populates=groupedAttributes.omit(['SIMPLE'])
+
+  let query=mongoose.connection.models[model].find({}, {...fieldsFilter})
+  query=populates.reduce((q, values, key) => q.populate({path: key, select: values.map(v => v.split('.')[1])}), query)
   query
     .then(data => res.json(data.slice(0, 2)))
     .catch(err => {
