@@ -273,7 +273,7 @@ const buildHooks = (components: IComponent[]) => {
       .uniq()
   }
   const dataProviders: IComponent[] = components.filter(
-    c => c.type == 'DataProvider',
+    c => c.type == 'DataProvider' || !!c.props?.model,
   )
   if (dataProviders.length == 0) {
     return ''
@@ -292,11 +292,14 @@ const buildHooks = (components: IComponent[]) => {
     ${dataProviders
       .map(dp => {
         const dataId = dp.id.replace(/comp-/, '')
-        const dpFields = getDataProviderFields(dp)
-        const apiUrl = `/myAlfred/api/studio/${dp.props.model}${
-          dpFields ? `?fields=${dpFields.join(',')}` : ''
+        const dpFields = getDataProviderFields(dp).join(',')
+        const idPart = dp.id == 'root' ? `\${id ? \`\${id}/\`: \`\`}` : ''
+        const apiUrl = `/myAlfred/api/studio/${dp.props.model}/${idPart}${
+          dpFields ? `?fields=${dpFields}` : ''
         }`
-        return `get('${apiUrl}').then(res => set${capitalize(dataId)}(res))`
+        return `get(\`${apiUrl}\`)
+        .then(res => set${capitalize(dataId)}(res))
+        .catch(err => alert(err))`
       })
       .join('\n')}
   }, [get])\n`
@@ -391,12 +394,16 @@ ${
 import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
     : ''
 }
+import {useLocation} from "react-router-dom"
 
 ${dynamics || ''}
 ${componentsCodes}
 
 const ${componentName} = () => {
   ${hooksCode}
+  const query = new URLSearchParams(useLocation().search)
+  const id=query.get('id')
+
   return (
   <ChakraProvider resetCSS>
     <Metadata
