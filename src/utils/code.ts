@@ -182,6 +182,8 @@ const getIconsImports = (components: IComponents) => {
 export const generateCode = async (components: IComponents) => {
   let code = buildBlock({ component: components.root, components })
   let componentsCodes = buildComponents(components)
+  let paramTypes = `type AppPropsTypes = {title: string, name: string}`
+  let params = `{title="TITLE",name="NAME"}: AppPropsTypes`
   const iconImports = Array.from(new Set(getIconsImports(components)))
 
   const imports = [
@@ -203,9 +205,11 @@ import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
       : ''
   }
 
+${paramTypes}
+
 ${componentsCodes}
 
-const App = () => (
+const App = (${params}) => (
   <ChakraProvider resetCSS>
     ${code}
   </ChakraProvider>
