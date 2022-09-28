@@ -21,6 +21,7 @@ const CodePanel = () => {
       setCode(code)
       const response = await API_ENDPOINT.post('/save-file', {
         codeBody: code,
+        jsonBody: components,
       });
     }
 
