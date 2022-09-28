@@ -7,7 +7,9 @@ export type AppState = {
   currentSection: string
   showLeftPanel: boolean
   showRightPanel: boolean
-  showLayout: boolean
+  pageLayout: boolean
+  showOverview: boolean
+  mediasLayout: boolean
   showCode: boolean
   inputTextFocused: boolean
   overlay: undefined | Overlay
@@ -18,21 +20,25 @@ const appSections: {
     showLeftPanel: boolean
     showRightPanel: boolean
     mediasLayout: boolean
+    pageLayout: boolean
   }
 } = {
   pages: {
     showLeftPanel: true,
     showRightPanel: true,
+    pageLayout: true,
     mediasLayout: false,
   },
   components: {
     showLeftPanel: true,
     showRightPanel: true,
+    pageLayout: true,
     mediasLayout: false,
   },
   medias: {
     showLeftPanel: true,
     showRightPanel: false,
+    pageLayout: false,
     mediasLayout: true,
   },
 }
@@ -43,7 +49,8 @@ const app = createModel({
     currentSection: 'components',
     showLeftPanel: true,
     showRightPanel: true,
-    showLayout: true,
+    pageLayout: true,
+    showOverview: true,
     mediasLayout: false,
     showCode: false,
     inputTextFocused: false,
@@ -59,9 +66,9 @@ const app = createModel({
     toggleBuilderMode(state: AppState): AppState {
       return {
         ...state,
-        showLayout: !state.showLayout,
-        showLeftPanel: !state.showLayout,
-        showRightPanel: !state.showLayout,
+        showOverview: !state.showOverview,
+        showLeftPanel: !state.showOverview,
+        showRightPanel: !state.showOverview,
       }
     },
     toggleCodePanel(state: AppState): AppState {
@@ -81,30 +88,6 @@ const app = createModel({
         ...state,
         currentSection: selectedSection,
         ...appSections[selectedSection],
-      }
-    },
-    setPagesSection(state: AppState): AppState {
-      return {
-        ...state,
-        showLayout: true,
-        showLeftPanel: true,
-        showRightPanel: true,
-      }
-    },
-    setComponentsSection(state: AppState): AppState {
-      return {
-        ...state,
-        showLayout: true,
-        showLeftPanel: true,
-        showRightPanel: true,
-      }
-    },
-    setMediasSection(state: AppState): AppState {
-      return {
-        ...state,
-        showLayout: true,
-        showLeftPanel: true,
-        showRightPanel: false,
       }
     },
     setOverlay(state: AppState, overlay: Overlay | undefined): AppState {

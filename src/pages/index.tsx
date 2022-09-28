@@ -3,6 +3,7 @@ import { Flex, Box } from '@chakra-ui/react'
 import { DndProvider } from 'react-dnd'
 import Backend from 'react-dnd-html5-backend'
 import { Global } from '@emotion/react'
+import { useSelector } from 'react-redux'
 import Metadata from '~components/Metadata'
 import useShortcuts from '~hooks/useShortcuts'
 // import Header from '~components/Header'
@@ -14,11 +15,15 @@ import Inspector from '~components/inspector/Inspector'
 import '~custom-components/Card/CardInit'
 import '~custom-components/DataProvider/DataProviderInit'
 import Menu from '~components/sidebar/Menu'
+import Medias from '~components/medias/Medias'
+import { getMediasLayout } from '../core/selectors/app'
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
 const App = () => {
   useShortcuts()
+
+  const mediasLayout = useSelector(getMediasLayout)
 
   return (
     <>
@@ -35,7 +40,7 @@ const App = () => {
           {/* <Sidebar /> */}
           <EditorErrorBoundary>
             <Box bg="white" flex={1} position="relative" overflow={'hidden'}>
-              <Editor />
+              {mediasLayout ? <Medias /> : <Editor />}
             </Box>
           </EditorErrorBoundary>
 

@@ -1,6 +1,8 @@
 import { RootState } from '~core/store'
 
-export const getShowLayout = (state: RootState) => state.app.showLayout
+export const getPageLayout = (state: RootState) => state.app.pageLayout
+export const getShowOverview = (state: RootState) => state.app.showOverview
+export const getMediasLayout = (state: RootState) => state.app.mediasLayout
 export const getCurrentSection = (state: RootState) => state.app.currentSection
 export const getShowLeftPanel = (state: RootState) => state.app.showLeftPanel
 export const getShowRightPanel = (state: RootState) => state.app.showRightPanel

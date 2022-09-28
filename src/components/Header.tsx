@@ -32,7 +32,7 @@ import { deploy } from '~utils/deploy'
 import useDispatch from '~hooks/useDispatch'
 import { useSelector } from 'react-redux'
 import { getComponents } from '~core/selectors/components'
-import { getDevice, getShowLayout, getShowCode } from '~core/selectors/app'
+import { getDevice, getShowOverview, getShowCode } from '~core/selectors/app'
 import HeaderMenu from '~components/headerMenu/HeaderMenu'
 import devices from '~config/devices'
 
@@ -125,7 +125,7 @@ const DeployButton = () => {
 }
 
 const Header = () => {
-  const showLayout = useSelector(getShowLayout)
+  const showOverview = useSelector(getShowOverview)
   const device = useSelector(getDevice)
   const showCode = useSelector(getShowCode)
   const dispatch = useDispatch()
@@ -182,7 +182,7 @@ const Header = () => {
               </Tooltip>
               <LightMode>
                 <Switch
-                  isChecked={showLayout}
+                  isChecked={showOverview}
                   colorScheme="teal"
                   size="sm"
                   onChange={() => dispatch.app.toggleBuilderMode()}

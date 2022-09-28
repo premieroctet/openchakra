@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Button, Text } from '@chakra-ui/react'
-const Media = () => {
-  return(
+const MediaDetails = () => {
+  return (
     <Box
       bg="rgb(236, 236, 236)"
       w={'100%'}
@@ -10,13 +10,12 @@ const Media = () => {
       display="flex"
       flexDirection={'column'}
     >
-      <Text 
-        color={'black'}
-        mb="2"
-        >Please, connect to your database</Text>
+      <Text color={'black'} mb="2">
+        Please, connect to your database
+      </Text>
       <Button colorScheme={'teal'}>Plug your database</Button>
-      </Box>
+    </Box>
   )
 }
 
-export default Media
+export default MediaDetails

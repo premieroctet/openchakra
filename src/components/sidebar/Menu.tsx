@@ -7,7 +7,7 @@ import { getShowLeftPanel } from '~core/selectors/app'
 import useDispatch from '~hooks/useDispatch'
 import MenuActions from './MenuActions'
 import ResponsiveActions from './ResponsiveActions'
-import Media from './Media'
+import MediaDetails from './MediaDetails'
 
 interface activemenu {
   show: boolean
@@ -41,7 +41,7 @@ const Menu = () => {
     medias: {
       title: 'Medias',
       icon: '/icons/medias.svg',
-      component: <Media />,
+      component: <MediaDetails />,
       payload: 'medias',
     },
     // settings: {

@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux'
 import useDispatch from '~hooks/useDispatch'
 import useFetch from 'use-http'
 import { getComponents } from '~core/selectors/components'
-import { getShowLayout, getShowCode, getDevice } from '~core/selectors/app'
+import { getShowOverview, getShowCode, getDevice } from '~core/selectors/app'
 import ComponentPreview from '~components/editor/ComponentPreview'
 import devices from '~config/devices'
 import config from '../../../env.json'
@@ -23,7 +23,7 @@ export const gridStyles = {
 const Editor: React.FC = () => {
   const showCode = useSelector(getShowCode)
   const device = useSelector(getDevice)
-  const showLayout = useSelector(getShowLayout)
+  const showOverview = useSelector(getShowOverview)
   const components = useSelector(getComponents)
   const dispatch = useDispatch()
   const { get, error } = useFetch(config.targetDomain)
@@ -38,7 +38,7 @@ const Editor: React.FC = () => {
     dispatch.components.unselect()
   }
 
-  if (showLayout) {
+  if (showOverview) {
     editorBackgroundProps = gridStyles
   }
 
