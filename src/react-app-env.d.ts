@@ -64,6 +64,7 @@ type ComponentType =
   | 'Skeleton'
   | 'SkeletonCircle'
   | 'SkeletonText'
+  | 'Slider'
   | 'Stack'
   | 'Stat'
   | 'StatLabel'

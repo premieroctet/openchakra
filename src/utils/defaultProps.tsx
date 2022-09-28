@@ -69,6 +69,7 @@ import {
   SkeletonProps,
 } from '@chakra-ui/react'
 
+import { SliderProps } from '@mui/material'
 import iconsList from '~iconsList'
 
 type PropsWithForm<T> = T & { form?: T }
@@ -77,6 +78,7 @@ type PreviewDefaultProps = {
   Badge?: PropsWithForm<BadgeProps>
   Box?: PropsWithForm<BoxProps>
   Button?: PropsWithForm<ButtonProps>
+  Slider?: PropsWithForm<SliderProps>
   Icon?: PropsWithForm<IconProps> & { icon: keyof typeof iconsList }
   IconButton?: PropsWithForm<IconButtonProps>
   Image?: PropsWithForm<ImageProps>
@@ -320,6 +322,7 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
       speed: 0.8,
     },
   },
+  Slider: { value: 30, },
   Switch: {
     isChecked: false,
   },

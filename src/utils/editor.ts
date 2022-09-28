@@ -47,6 +47,7 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'Skeleton',
   'SkeletonCircle',
   'SkeletonText',
+  'Slider',
   'Stack',
   'Switch',
   'Tag',

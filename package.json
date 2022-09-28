@@ -22,6 +22,7 @@
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@mdx-js/react": "^1.5.5",
+    "@mui/material": "^5.10.7",
     "@reach/combobox": "^0.7.3",
     "@rehooks/local-storage": "^2.1.1",
     "@rematch/core": "^1.3.0",
