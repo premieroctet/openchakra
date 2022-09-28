@@ -30,6 +30,22 @@ type BuildBlockParams = {
   forceBuildBlock?: boolean
 }
 
+const buildParams = (paramsName: any) => {
+  let paramTypes = ``
+  let params = ``
+
+  paramTypes += `{`
+  params += `{`
+  paramsName.forEach((param: any) => {
+    paramTypes += `${param.name}: ${param.type}, `
+    params += `${param.name}=${param.value}, `
+  })
+  paramTypes += `}`
+  params += `}`
+
+  return { paramTypes, params }
+}
+
 const buildStyledProps = (propsNames: string[], childComponent: IComponent) => {
   let propsContent = ``
 
@@ -182,8 +198,9 @@ const getIconsImports = (components: IComponents) => {
 export const generateCode = async (components: IComponents) => {
   let code = buildBlock({ component: components.root, components })
   let componentsCodes = buildComponents(components)
-  let paramTypes = `type AppPropsTypes = {title: string, name: string}`
-  let params = `{title="TITLE",name="NAME"}: AppPropsTypes`
+  // let paramTypes = `{title: string, name: string}`
+  // let params = `{title="TITLE",name="NAME"}`
+  const { paramTypes, params } = buildParams(components.root.params)
   const iconImports = Array.from(new Set(getIconsImports(components)))
 
   const imports = [
@@ -205,11 +222,11 @@ import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
       : ''
   }
 
-${paramTypes}
+type AppPropsTypes = ${paramTypes}
 
 ${componentsCodes}
 
-const App = (${params}) => (
+const App = (${params}: AppPropsTypes) => (
   <ChakraProvider resetCSS>
     ${code}
   </ChakraProvider>
