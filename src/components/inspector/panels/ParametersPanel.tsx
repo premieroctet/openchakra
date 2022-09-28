@@ -15,9 +15,10 @@ import {
 } from '@chakra-ui/react'
 import { EditIcon, SmallCloseIcon } from '@chakra-ui/icons'
 import useDispatch from '~hooks/useDispatch'
-import { useForm } from '~hooks/useForm'
+import { useParamsForm } from '~hooks/useParamsForm'
 
 const SEPARATOR = '='
+const SEPARATOR2 = ':'
 
 const ParametersPanel = () => {
   const dispatch = useDispatch()
@@ -25,7 +26,7 @@ const ParametersPanel = () => {
 
   const activeParamsRef = useInspectorState()
   const { params, id } = useSelector(getSelectedComponent)
-  const { setValue } = useForm()
+  const { setValue } = useParamsForm()
 
   const [quickParams, setQuickParams] = useState('')
   const [hasError, setError] = useState(false)
@@ -38,8 +39,8 @@ const ParametersPanel = () => {
   }
 
   const activeParams = activeParamsRef || []
-  const customParams = Object.keys(params).filter(
-    paramsName => !activeParams.includes(paramsName),
+  const customParams = params.filter(
+    (paramsName: any) => !activeParams.includes(paramsName),
   )
 
   return (
@@ -48,10 +49,11 @@ const ParametersPanel = () => {
         onSubmit={(event: FormEvent) => {
           event.preventDefault()
 
-          const [name, value] = quickParams.split(SEPARATOR)
+          const [name, valueType] = quickParams.split(SEPARATOR)
+          const [value, type] = valueType.split(SEPARATOR2)
 
-          if (name && value) {
-            setValue(name, value)
+          if (name && value && type) {
+            setValue(name, value, type)
             setQuickParams('')
             setError(false)
           } else {
@@ -67,7 +69,7 @@ const ParametersPanel = () => {
             ref={inputRef}
             isInvalid={hasError}
             value={quickParams}
-            placeholder={`params${SEPARATOR}value`}
+            placeholder={`params${SEPARATOR}value${SEPARATOR2}type`}
             onChange={(event: ChangeEvent<HTMLInputElement>) =>
               setQuickParams(event.target.value)
             }
@@ -75,24 +77,25 @@ const ParametersPanel = () => {
         </InputGroup>
       </form>
 
-      {customParams.map((paramsName, i) => (
+      {customParams.map((paramsName: any, i: any) => (
         <Flex
-          key={paramsName}
+          key={paramsName.name}
           alignItems="center"
           px={2}
           bg={i % 2 === 0 ? 'white' : 'gray.50'}
           fontSize="xs"
           justifyContent="space-between"
         >
-          <SimpleGrid width="100%" columns={2} spacing={1}>
-            <Box fontWeight="bold">{paramsName}</Box>
-            <Box>{params[paramsName]}</Box>
+          <SimpleGrid width="100%" columns={3} spacing={1}>
+            <Box fontWeight="bold">{paramsName.name}</Box>
+            <Box>{paramsName.value}</Box>
+            <Box fontStyle="italic">{paramsName.type}</Box>
           </SimpleGrid>
 
           <ButtonGroup display="flex" size="xs" isAttached>
             <IconButton
               onClick={() => {
-                setQuickParams(`${paramsName}=`)
+                setQuickParams(`${paramsName.name}=`)
                 if (inputRef.current) {
                   inputRef.current.focus()
                 }
@@ -103,7 +106,7 @@ const ParametersPanel = () => {
               icon={<EditIcon path="" />}
             />
             <IconButton
-              onClick={() => onDelete(paramsName)}
+              onClick={() => onDelete(paramsName.name)}
               variant="ghost"
               size="xs"
               aria-label="delete"
