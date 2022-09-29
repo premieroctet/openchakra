@@ -31,7 +31,7 @@ const CustomPropsPanel = () => {
   const [hasError, setError] = useState(false)
 
   const onDelete = (propsName: string) => {
-    dispatch.components.deleteProps({
+    dispatch.project.deleteProps({
       id,
       name: propsName,
     })

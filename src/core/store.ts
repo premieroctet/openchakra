@@ -5,7 +5,7 @@ import { persistReducer, persistStore } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import { createWrapper, MakeStore } from 'next-redux-wrapper'
 
-import { ComponentsStateWithUndo } from './models/components'
+import { ProjectStateWithUndo } from './models/project'
 import { AppState } from './models/app'
 import { DataSourcesState } from './models/datasources'
 import models from './models'
@@ -13,7 +13,7 @@ import filterUndoableActions from '~utils/undo'
 
 export type RootState = {
   app: AppState
-  components: ComponentsStateWithUndo
+  project: ProjectStateWithUndo
   datasources: DataSourcesState
 }
 
@@ -40,11 +40,13 @@ export const storeConfig = {
   redux: {
     // @ts-ignore
     combineReducers: reducers => {
+
+      console.log(reducers)
       return combineReducers({
         ...reducers,
-        components: persistReducer(
+        project: persistReducer(
           persistConfig,
-          undoable(reducers.components, {
+          undoable(reducers.project, {
             limit: 10,
             filter: filterUndoableActions,
           }),

@@ -35,7 +35,7 @@ const Editor: React.FC = () => {
   let editorBackgroundProps = {}
 
   const onSelectBackground = () => {
-    dispatch.components.unselect()
+    dispatch.project.unselect()
   }
 
   if (showLayout) {
@@ -84,7 +84,7 @@ const Editor: React.FC = () => {
             color="gray.500"
             onClick={(e: React.MouseEvent) => {
               e.stopPropagation()
-              dispatch.components.loadDemo('onboarding')
+              dispatch.project.loadDemo('onboarding')
             }}
             textDecoration="underline"
           >

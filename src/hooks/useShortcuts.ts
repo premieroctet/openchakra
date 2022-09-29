@@ -28,7 +28,7 @@ const useShortcuts = () => {
     if (event) {
       event.preventDefault()
     }
-    dispatch.components.deleteComponent(selected.id)
+    dispatch.project.deleteComponent(selected.id)
   }
 
   const toggleBuilderMode = (event: KeyboardEvent | undefined) => {
@@ -62,13 +62,13 @@ const useShortcuts = () => {
   }
 
   const onUnselect = () => {
-    dispatch.components.unselect()
+    dispatch.project.unselect()
   }
 
   const onSelectParent = (event: KeyboardEvent | undefined) => {
     if (event && hasNoSpecialKeyPressed(event)) {
       event.preventDefault()
-      dispatch.components.selectParent()
+      dispatch.project.selectParent()
     }
   }
 
@@ -77,11 +77,11 @@ const useShortcuts = () => {
       event.preventDefault()
     }
 
-    dispatch.components.duplicate()
+    dispatch.project.duplicate()
   }
 
   const onKonamiCode = () => {
-    dispatch.components.loadDemo('secretchakra')
+    dispatch.project.loadDemo('secretchakra')
   }
 
   useHotkeys(keyMap.DELETE_NODE, deleteNode, {}, [selected.id])

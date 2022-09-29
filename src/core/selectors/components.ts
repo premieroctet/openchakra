@@ -1,9 +1,9 @@
 import map from 'lodash/map'
 import { RootState } from '~core/store'
-import { ProjectState, PageState } from '~core/models/components'
+import { ProjectState, PageState } from '~core/models/project'
 
 const getPresentState = (state: RootState): ProjectState => {
-  return state.components.present
+  return state.project.present
 }
 
 const getActiveComponents = (state: RootState): IComponents => {

@@ -22,17 +22,17 @@ export const useDropComponent = (
       }
 
       if (item.isMoved) {
-        dispatch.components.moveComponent({
+        dispatch.project.moveComponent({
           parentId: componentId,
           componentId: item.id,
         })
       } else if (item.isMeta) {
-        dispatch.components.addMetaComponent(builder[item.type](componentId))
+        dispatch.project.addMetaComponent(builder[item.type](componentId))
       } else {
         console.log(
           `Dropped, compId is ${componentId}, item is ${JSON.stringify(item)}`,
         )
-        dispatch.components.addComponent({
+        dispatch.project.addComponent({
           parentName: componentId,
           type: item.type,
           rootParentType: item.rootParentType,
