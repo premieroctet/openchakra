@@ -1,4 +1,5 @@
 const path=require('path')
+const { attributesComparator } =require('../../utils/database')
 const fs=require('fs').promises
 const child_process = require('child_process')
 const mongoose=require('mongoose')
@@ -31,11 +32,10 @@ router.get('/models', (req, res) => {
   const modelNames=lodash.sortBy(mongoose.modelNames())
   const result=[]
   modelNames.forEach(name => {
-    result.push({name,
-      attributes:Object.fromEntries(
-        [...getSimpleModelAttributes(name), ...lodash.flatten(getReferencedModelAttributes(name))]
-      )
-     })
+    const attrs=[...getSimpleModelAttributes(name), ...lodash.flatten(getReferencedModelAttributes(name))]
+    attrs.sort((att1, att2) => attributesComparator(att1[0], att2[0]))
+    if (name=='serviceUser') { console.log(attrs.map(a => a[0]))}
+    result.push({name, attributes:Object.fromEntries(attrs)})
   })
   return res.json(result)
 })
