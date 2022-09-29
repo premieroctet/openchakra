@@ -40,8 +40,6 @@ export const storeConfig = {
   redux: {
     // @ts-ignore
     combineReducers: reducers => {
-
-      console.log(reducers)
       return combineReducers({
         ...reducers,
         project: persistReducer(
