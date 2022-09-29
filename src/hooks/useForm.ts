@@ -15,13 +15,13 @@ export const useForm = () => {
 
   const setValue = useCallback(
     (name: string, value: any) => {
-      dispatch.components.updateProps({
+      dispatch.project.updateProps({
         id: componentId,
         name,
         value,
       })
     },
-    [componentId, dispatch.components],
+    [componentId, dispatch.project],
   )
 
   return { setValue, setValueFromEvent }

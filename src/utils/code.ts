@@ -4,7 +4,7 @@ import isBoolean from 'lodash/isBoolean'
 import lodash from 'lodash'
 import icons from '~iconsList'
 
-import { ProjectState, PageState } from '../core/models/components'
+import { ProjectState, PageState } from '../core/models/project'
 import config from '../../env.json'
 
 //const HIDDEN_ATTRIBUTES=['dataSource', 'attribute']

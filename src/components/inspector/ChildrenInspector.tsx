@@ -9,22 +9,22 @@ const ChildrenInspector = () => {
   const dispatch = useDispatch()
 
   const moveChildren = (fromIndex: number, toIndex: number) => {
-    dispatch.components.moveSelectedComponentChildren({
+    dispatch.project.moveSelectedComponentChildren({
       fromIndex,
       toIndex,
     })
   }
 
   const onSelectChild = (id: IComponent['id']) => {
-    dispatch.components.select(id)
+    dispatch.project.select(id)
   }
 
   const onHoverChild = (id: IComponent['id']) => {
-    dispatch.components.hover(id)
+    dispatch.project.hover(id)
   }
 
   const onUnhoverChild = () => {
-    dispatch.components.unhover()
+    dispatch.project.unhover()
   }
 
   return (

@@ -4,7 +4,7 @@ import { DEFAULT_PROPS } from '~utils/defaultProps'
 import templates, { TemplateType } from '~templates'
 import { generateId } from '~utils/generateId'
 import { duplicateComponent, deleteComponent } from '~utils/recursive'
-import lodash from 'lodash'
+import omit from 'lodash/omit'
 
 export interface PageState extends PageSettings {
   components: IComponents
@@ -19,7 +19,7 @@ export type ProjectState = {
   activePage: string
   rootPage: string
 }
-export type ComponentsStateWithUndo = {
+export type ProjectStateWithUndo = {
   past: ProjectState[]
   present: ProjectState
   future: ProjectState[]
@@ -60,7 +60,7 @@ const getActiveComponents = (state: ProjectState) => {
   return state.pages[state.activePage].components
 }
 
-const components = createModel({
+const project = createModel({
   state: {
     pages: {
       [DEFAULT_PAGE]: {
@@ -133,12 +133,21 @@ const components = createModel({
       })
     },
     deleteProps(state: ProjectState, payload: { id: string; name: string }) {
-      const copy = lodash.cloneDeep(state)
-      lodash.unset(
-        copy,
-        `pages["${state.activePage}"]["${payload.id}"].props["${payload.name}"]`,
-      )
-      return copy
+      return {
+        ...state,
+        pages: {
+          ...state.pages,
+          [state.activePage]: {
+            components: {
+              ...state.pages[state.activePage].components,
+              [payload.id]:{
+                ...state.pages[state.activePage].components[payload.id],
+                props: omit(state.pages[state.activePage].components[payload.id].props, payload.name),
+              }
+            }
+          },
+        },
+      }
     },
     deleteComponent(state: ProjectState, componentId: string) {
       if (componentId === 'root') {
@@ -389,7 +398,7 @@ const components = createModel({
       if (Object.keys(state.pages).length === 1) {
         return state
       }
-      const newPages=lodash.omit(state.pages, [pageId])
+      const newPages= omit(state.pages, [pageId])
       const newActivePage=Object.keys(newPages)[0]
       const rootPage = pageId === state.rootPage ? newActivePage : state.rootPage
       return {
@@ -417,4 +426,4 @@ const components = createModel({
   },
 })
 
-export default components
+export default project
