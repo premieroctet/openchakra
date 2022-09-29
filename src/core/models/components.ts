@@ -12,7 +12,7 @@ export interface PageState extends PageSettings {
   hoveredId?: IComponent['id']
 }
 
-export type ComponentsState = {
+export type ProjectState = {
   pages: {
     [key: string]: PageState
   }
@@ -20,9 +20,9 @@ export type ComponentsState = {
   rootPage: string
 }
 export type ComponentsStateWithUndo = {
-  past: ComponentsState[]
-  present: ComponentsState
-  future: ComponentsState[]
+  past: ProjectState[]
+  present: ProjectState
+  future: ProjectState[]
 }
 
 export type PageSettings = {
@@ -56,7 +56,7 @@ export const INITIAL_COMPONENTS: IComponents = {
   },
 }
 
-const getActiveComponents = (state: ComponentsState) => {
+const getActiveComponents = (state: ProjectState) => {
   return state.pages[state.activePage].components
 }
 
@@ -75,9 +75,9 @@ const components = createModel({
     },
     activePage: DEFAULT_PAGE,
     rootPage: DEFAULT_PAGE,
-  } as ComponentsState,
+  } as ProjectState,
   reducers: {
-    reset(state: ComponentsState, newState: ComponentsState): ComponentsState {
+    reset(state: ProjectState, newState: ProjectState): ProjectState {
       const resetPageId = generateId('page')
       const pages = newState?.pages || {
         [resetPageId]: {
@@ -103,15 +103,15 @@ const components = createModel({
         rootPage,
       }
     },
-    loadDemo(state: ComponentsState, type: TemplateType): ComponentsState {
+    loadDemo(state: ProjectState, type: TemplateType): ProjectState {
       return {
         ...state,
         selectedId: 'comp-root',
         components: templates[type],
       }
     },
-    resetProps(state: ComponentsState, componentId: string): ComponentsState {
-      return produce(state, (draftState: ComponentsState) => {
+    resetProps(state: ProjectState, componentId: string): ProjectState {
+      return produce(state, (draftState: ProjectState) => {
         const component = getActiveComponents(draftState)[componentId]
         //@ts-ignore
         const { form, ...defaultProps } = DEFAULT_PROPS[component.type] || {}
@@ -121,10 +121,10 @@ const components = createModel({
       })
     },
     updateProps(
-      state: ComponentsState,
+      state: ProjectState,
       payload: { id: string; name: string; value: string },
     ) {
-      return produce(state, (draftState: ComponentsState) => {
+      return produce(state, (draftState: ProjectState) => {
         const parseValue =
           isJsonString(payload.value) && JSON.parse(payload.value)
         draftState.pages[draftState.activePage].components[payload.id].props[
@@ -132,7 +132,7 @@ const components = createModel({
         ] = parseValue || payload.value
       })
     },
-    deleteProps(state: ComponentsState, payload: { id: string; name: string }) {
+    deleteProps(state: ProjectState, payload: { id: string; name: string }) {
       const copy = lodash.cloneDeep(state)
       lodash.unset(
         copy,
@@ -140,12 +140,12 @@ const components = createModel({
       )
       return copy
     },
-    deleteComponent(state: ComponentsState, componentId: string) {
+    deleteComponent(state: ProjectState, componentId: string) {
       if (componentId === 'root') {
         return state
       }
 
-      return produce(state, (draftState: ComponentsState) => {
+      return produce(state, (draftState: ProjectState) => {
         const components = getActiveComponents(draftState)
         let component = components[componentId]
 
@@ -166,9 +166,9 @@ const components = createModel({
       })
     },
     moveComponent(
-      state: ComponentsState,
+      state: ProjectState,
       payload: { parentId: string; componentId: string },
-    ): ComponentsState {
+    ): ProjectState {
       const components = getActiveComponents(state)
       if (
         components[payload.componentId].parent === payload.parentId ||
@@ -177,7 +177,7 @@ const components = createModel({
         return state
       }
 
-      return produce(state, (draftState: ComponentsState) => {
+      return produce(state, (draftState: ProjectState) => {
         const components = getActiveComponents(draftState)
         const previousParentId = components[payload.componentId].parent
 
@@ -196,13 +196,13 @@ const components = createModel({
       })
     },
     moveSelectedComponentChildren(
-      state: ComponentsState,
+      state: ProjectState,
       payload: { fromIndex: number; toIndex: number },
-    ): ComponentsState {
-      return produce(state, (draftState: ComponentsState) => {
+    ): ProjectState {
+      return produce(state, (draftState: ProjectState) => {
         const components = getActiveComponents(draftState)
-        const selectedComponent = components[draftState.selectedId]
-
+        const selectedComponent = components[draftState.pages[draftState.activePage].selectedId]
+        
         selectedComponent.children.splice(
           payload.toIndex,
           0,
@@ -211,15 +211,15 @@ const components = createModel({
       })
     },
     addComponent(
-      state: ComponentsState,
+      state: ProjectState,
       payload: {
         parentName: string
         type: ComponentType
         rootParentType?: ComponentType
         testId?: string
       },
-    ): ComponentsState {
-      return produce(state, (draftState: ComponentsState) => {
+    ): ProjectState {
+      return produce(state, (draftState: ProjectState) => {
         const id = payload.testId || generateId()
         //@ts-ignore
         const { form, ...defaultProps } = DEFAULT_PROPS[payload.type] || {}
@@ -237,10 +237,10 @@ const components = createModel({
       })
     },
     addMetaComponent(
-      state: ComponentsState,
+      state: ProjectState,
       payload: { components: IComponents; root: string; parent: string },
-    ): ComponentsState {
-      return produce(state, (draftState: ComponentsState) => {
+    ): ProjectState {
+      return produce(state, (draftState: ProjectState) => {
         draftState.pages[draftState.activePage].selectedId = payload.root
         const components = getActiveComponents(draftState)
         components[payload.parent].children.push(payload.root)
@@ -252,9 +252,9 @@ const components = createModel({
       })
     },
     select(
-      state: ComponentsState,
+      state: ProjectState,
       selectedId: IComponent['id'],
-    ): ComponentsState {
+    ): ProjectState {
       return {
         ...state,
         pages: {
@@ -266,7 +266,7 @@ const components = createModel({
         },
       }
     },
-    unselect(state: ComponentsState): ComponentsState {
+    unselect(state: ProjectState): ProjectState {
       return {
         ...state,
         pages: {
@@ -278,7 +278,7 @@ const components = createModel({
         },
       }
     },
-    selectParent(state: ComponentsState): ComponentsState {
+    selectParent(state: ProjectState): ProjectState {
       const components = getActiveComponents(state)
       const selectedComponent = state.pages[state.activePage].selectedId
 
@@ -293,8 +293,8 @@ const components = createModel({
         },
       }
     },
-    duplicate(state: ComponentsState): ComponentsState {
-      return produce(state, (draftState: ComponentsState) => {
+    duplicate(state: ProjectState): ProjectState {
+      return produce(state, (draftState: ProjectState) => {
         const components = getActiveComponents(draftState)
         const selectedComponent = components[draftState.pages[draftState.activePage].selectedId]
 
@@ -316,30 +316,30 @@ const components = createModel({
       })
     },
     setComponentName(
-      state: ComponentsState,
+      state: ProjectState,
       payload: { componentId: string; name: string },
-    ): ComponentsState {
+    ): ProjectState {
       return produce(state, draftState => {
         getActiveComponents(draftState)[payload.componentId].componentName =
           payload.name
       })
     },
     hover(
-      state: ComponentsState,
+      state: ProjectState,
       componentId: IComponent['id'],
-    ): ComponentsState {
+    ): ProjectState {
       return {
         ...state,
         hoveredId: componentId,
       }
     },
-    unhover(state: ComponentsState): ComponentsState {
+    unhover(state: ProjectState): ProjectState {
       return {
         ...state,
         hoveredId: undefined,
       }
     },
-    addPage(state: ComponentsState, payload: PageSettings): ComponentsState {
+    addPage(state: ProjectState, payload: PageSettings): ProjectState {
 
       const pageId = generateId('page')
       const {pageName, metaTitle, metaDescription, metaImageUrl} = payload
@@ -360,7 +360,7 @@ const components = createModel({
         },
       }
     },
-    editPageSettings(state: ComponentsState, payload: PageSettings): ComponentsState {
+    editPageSettings(state: ProjectState, payload: PageSettings): ProjectState {
 
       const {pageId, pageName, metaTitle, metaDescription, metaImageUrl} = payload
 
@@ -382,7 +382,7 @@ const components = createModel({
       }
       return state
     },
-    deletePage(state: ComponentsState, pageId: string): ComponentsState {
+    deletePage(state: ProjectState, pageId: string): ProjectState {
       if (!state.pages[pageId]) {
         return state
       }
@@ -399,7 +399,7 @@ const components = createModel({
         rootPage
       }
     },
-    setActivePage(state: ComponentsState, pageId: string): ComponentsState {
+    setActivePage(state: ProjectState, pageId: string): ProjectState {
       if (!state.pages[pageId]) {
         throw new Error(`La page ${pageId} n'existe pas`)
       }
@@ -408,7 +408,7 @@ const components = createModel({
         activePage: pageId,
       }
     },
-    setRootPage(state: ComponentsState, pageId: string): ComponentsState {
+    setRootPage(state: ProjectState, pageId: string): ProjectState {
       return {
         ...state,
         rootPage: pageId,

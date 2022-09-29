@@ -1,8 +1,8 @@
-import components, { ComponentsState, INITIAL_COMPONENTS } from './components'
+import components, { ProjectState, INITIAL_COMPONENTS } from './components'
 import { onboarding } from '~templates/onboarding'
 import produce from 'immer'
 
-const STATE: ComponentsState = {
+const STATE: ProjectState = {
   components: {
     'button-testid': {
       children: [],
@@ -25,7 +25,7 @@ const STATE: ComponentsState = {
 
 describe('Components model', () => {
   it('should reset the state', async () => {
-    const state: ComponentsState = {
+    const state: ProjectState = {
       components: INITIAL_COMPONENTS,
       selectedId: 'root',
     }
@@ -35,7 +35,7 @@ describe('Components model', () => {
   })
 
   it('should load a demo', async () => {
-    const state: ComponentsState = {
+    const state: ProjectState = {
       components: INITIAL_COMPONENTS,
       selectedId: 'root',
     }
@@ -48,7 +48,7 @@ describe('Components model', () => {
   })
 
   it('should reset props', async () => {
-    return produce(STATE, (draftState: ComponentsState) => {
+    return produce(STATE, (draftState: ProjectState) => {
       draftState.components['button-testid'].props = {
         children: 'Button text',
         variant: 'ghost',
@@ -83,7 +83,7 @@ describe('Components model', () => {
   })
 
   it('should add a new component', async () => {
-    const state: ComponentsState = {
+    const state: ProjectState = {
       components: INITIAL_COMPONENTS,
       selectedId: 'root',
     }
@@ -110,7 +110,7 @@ describe('Components model', () => {
   })
 
   it('should move a component', async () => {
-    return produce(STATE, (draftState: ComponentsState) => {
+    return produce(STATE, (draftState: ProjectState) => {
       draftState.components['box-testid'] = {
         children: [],
         id: 'box-testid',
@@ -138,7 +138,7 @@ describe('Components model', () => {
   })
 
   it('should move a selected component', async () => {
-    return produce(STATE, (draftState: ComponentsState) => {
+    return produce(STATE, (draftState: ProjectState) => {
       draftState.components['box-testid'] = {
         children: [],
         id: 'box-testid',

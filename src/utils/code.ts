@@ -2,11 +2,9 @@ import camelCase from 'lodash/camelCase'
 import filter from 'lodash/filter'
 import isBoolean from 'lodash/isBoolean'
 import lodash from 'lodash'
-
-import { PageState } from '~core/models/components'
 import icons from '~iconsList'
 
-import { ComponentsState } from '../core/models/components'
+import { ProjectState, PageState } from '../core/models/components'
 import config from '../../env.json'
 
 //const HIDDEN_ATTRIBUTES=['dataSource', 'attribute']
@@ -202,7 +200,7 @@ const buildBlock = ({
 
 const buildComponents = (
   components: IComponents,
-  pages: { [key: string]: pageState },
+  pages: { [key: string]: PageState },
 ) => {
   const codes = filter(components, comp => !!comp.componentName).map(comp => {
     return generateComponentCode({
@@ -420,7 +418,7 @@ export default ${componentName};`
   return await formatCode(code)
 }
 
-export const generateApp = async (state: ComponentsState) => {
+export const generateApp = async (state: ProjectState) => {
   /**
   <ul>
 ${pageNames.map(name => `<li><a href='/${name}'>${name}</a></li>`).join('\n')}
