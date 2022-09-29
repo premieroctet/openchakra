@@ -10,8 +10,7 @@ const PRODUCTION_ROOT='/home/ec2-user/studio/'
 
 const getModelAttributes = modelName => {
   const schema=mongoose.model(modelName).schema
-  return lodash(schema.paths)
-    .values()
+  return Object.values(schema.paths)
     .filter(att => !att.path.startsWith('_'))
 }
 
@@ -26,7 +25,6 @@ const getReferencedModelAttributes = modelName => {
     .filter(att => att.instance == 'ObjectID')
     .map(att => getSimpleModelAttributes(att.options.ref)
       .map(([attName, instance]) => [`${att.path}.${attName}`, instance]))
-    .flatten()
 }
 
 router.get('/models', (req, res) => {
@@ -34,10 +32,10 @@ router.get('/models', (req, res) => {
   const result=[]
   modelNames.forEach(name => {
     result.push({name,
-      attributes: Object.fromEntries(
-        [...getSimpleModelAttributes(name), ...lodash.flatten(getReferencedModelAttributes(name))],
-      ),
-    })
+      attributes:Object.fromEntries(
+        [...getSimpleModelAttributes(name), ...lodash.flatten(getReferencedModelAttributes(name))]
+      )
+     })
   })
   return res.json(result)
 })
