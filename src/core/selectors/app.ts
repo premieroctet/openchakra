@@ -13,7 +13,7 @@ export const getShowCode = (state: RootState) => state.app.showCode
 
 export const getFocusedComponent = (id: IComponent['id']) => (
   state: RootState,
-) => state.app.inputTextFocused && state.components.present.selectedId === id
+) => state.app.inputTextFocused && state.project.present.pages[state.project.present.activePage].selectedId === id
 
 export const getInputTextFocused = (state: RootState) =>
   state.app.inputTextFocused

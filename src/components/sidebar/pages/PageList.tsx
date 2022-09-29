@@ -11,13 +11,13 @@ const PageActions = ({ page }: {page: string}) => {
   const {  onOpen, isOpen, onClose } = useDisclosure()
 
   const deleteP = async elem => {
-    await new Promise(() => dispatch.components.deletePage(elem)).then(a =>
+    await new Promise(() => dispatch.project.deletePage(elem)).then(a =>
       console.log(a),
     )
   }
 
   const edit = async elem => {
-    // await new Promise(() => dispatch.components.editPage(elem)).then(a =>
+    // await new Promise(() => dispatch.project.editPage(elem)).then(a =>
     //   console.log(a),
     // )
   }
@@ -78,7 +78,7 @@ const PageList = () => {
             wordBreak={'break-all'}
             overflow={'hidden'}
             textAlign={'left'}
-            onClick={() => dispatch.components.setActivePage(page)}
+            onClick={() => dispatch.project.setActivePage(page)}
             fontWeight={isSelectedPage ? 'bold': 'normal'}
           >
             {params.pageName}

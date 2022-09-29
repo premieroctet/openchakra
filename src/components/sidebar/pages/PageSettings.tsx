@@ -128,13 +128,13 @@ const PageSettings = ({create, page, isOpen, onClose}: {create?: boolean, page?:
 
                 
                 if (create) {
-                  dispatch.components.addPage(pageSettings)
+                  dispatch.project.addPage(pageSettings)
                 } else {
-                  dispatch.components.editPageSettings({pageId: page, ...pageSettings})
+                  dispatch.project.editPageSettings({pageId: page, ...pageSettings})
                 }
                 
                 if (asRootPage) {
-                  page && dispatch.components.setRootPage(page)
+                  page && dispatch.project.setRootPage(page)
                 }
 
                 onClose()

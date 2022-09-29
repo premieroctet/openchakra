@@ -9,15 +9,15 @@ const ParentInspector = () => {
   const dispatch = useDispatch()
 
   const onSelect = () => {
-    dispatch.components.select(parentComponent.id)
+    dispatch.project.select(parentComponent.id)
   }
 
   const onHover = () => {
-    dispatch.components.hover(parentComponent.id)
+    dispatch.project.hover(parentComponent.id)
   }
 
   const onUnhover = () => {
-    dispatch.components.unhover()
+    dispatch.project.unhover()
   }
 
   return (

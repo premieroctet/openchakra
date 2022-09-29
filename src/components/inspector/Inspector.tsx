@@ -86,7 +86,7 @@ const Inspector = () => {
 
   const saveComponent = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    dispatch.components.setComponentName({
+    dispatch.project.setComponentName({
       componentId: component.id,
       name: componentName,
     })
@@ -158,13 +158,13 @@ const Inspector = () => {
             )}
             <ActionButton
               label="Duplicate"
-              onClick={() => dispatch.components.duplicate()}
+              onClick={() => dispatch.project.duplicate()}
               icon={<CopyIcon path="" />}
             />
             <ActionButton
               label="Reset props"
               icon={<IoMdRefresh />}
-              onClick={() => dispatch.components.resetProps(component.id)}
+              onClick={() => dispatch.project.resetProps(component.id)}
             />
             <ActionButton
               label="Chakra UI Doc"
@@ -180,7 +180,7 @@ const Inspector = () => {
             <ActionButton
               bg="red.500"
               label="Remove"
-              onClick={() => dispatch.components.deleteComponent(component.id)}
+              onClick={() => dispatch.project.deleteComponent(component.id)}
               icon={<FiTrash2 />}
             />
           </Stack>

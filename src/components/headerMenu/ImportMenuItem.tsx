@@ -11,7 +11,7 @@ const ImportMenuItem = () => {
     <MenuItem
       onClick={async () => {
         const components = await loadFromJSON()
-        dispatch.components.reset(components)
+        dispatch.project.reset(components)
       }}
     >
       <Box mr={2} as={FiUpload} />

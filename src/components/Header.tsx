@@ -275,7 +275,7 @@ const Header = () => {
                           colorScheme="red"
                           rightIcon={<CheckIcon path="" />}
                           onClick={() => {
-                            dispatch.components.reset()
+                            dispatch.project.reset()
                             if (onClose) {
                               onClose()
                             }

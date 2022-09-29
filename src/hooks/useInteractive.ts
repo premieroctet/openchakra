@@ -27,15 +27,15 @@ export const useInteractive = (
     ...component.props,
     onMouseOver: (event: MouseEvent) => {
       event.stopPropagation()
-      dispatch.components.hover(component.id)
+      dispatch.project.hover(component.id)
     },
     onMouseOut: () => {
-      dispatch.components.unhover()
+      dispatch.project.unhover()
     },
     onClick: (event: MouseEvent) => {
       event.preventDefault()
       event.stopPropagation()
-      dispatch.components.select(component.id)
+      dispatch.project.select(component.id)
     },
     onDoubleClick: (event: MouseEvent) => {
       event.preventDefault()

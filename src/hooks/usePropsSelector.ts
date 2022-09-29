@@ -13,7 +13,7 @@ const usePropsSelector = (propsName: string) => {
   }, [addActiveProps, propsName])
 
   const value = useSelector((state: RootState) => {
-    const currentState = state.components.present
+    const currentState = state.project.present
     const currentPage = currentState.pages[currentState.activePage]
     const component = currentPage.components[currentPage.selectedId]
     const propsValue = component.props[propsName]

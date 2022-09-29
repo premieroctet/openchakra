@@ -86,7 +86,7 @@ test.each(componentsToTest)('Component Preview for %s', componentName => {
   // const spy = jest.spyOn(global.console, 'error')
   // @ts-ignore
   const store = init(storeConfig)
-  store.dispatch.components.addComponent({
+  store.dispatch.project.addComponent({
     // @ts-ignore
     parentName: 'root',
     type: componentName,

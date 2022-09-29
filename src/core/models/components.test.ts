@@ -1,8 +1,8 @@
-import components, { ComponentsState, INITIAL_COMPONENTS } from './components'
+import project, { ProjectState, INITIAL_COMPONENTS } from './components'
 import { onboarding } from '~templates/onboarding'
 import produce from 'immer'
 
-const STATE: ComponentsState = {
+const STATE: ProjectState = {
   components: {
     'button-testid': {
       children: [],
@@ -25,22 +25,22 @@ const STATE: ComponentsState = {
 
 describe('Components model', () => {
   it('should reset the state', async () => {
-    const state: ComponentsState = {
+    const state: ProjectState = {
       components: INITIAL_COMPONENTS,
       selectedId: 'root',
     }
 
-    const nextState = components.reducers.reset(state)
+    const nextState = project.reducers.reset(state)
     expect(nextState).toEqual(state)
   })
 
   it('should load a demo', async () => {
-    const state: ComponentsState = {
+    const state: ProjectState = {
       components: INITIAL_COMPONENTS,
       selectedId: 'root',
     }
 
-    const nextState = components.reducers.loadDemo(state, 'onboarding')
+    const nextState = project.reducers.loadDemo(state, 'onboarding')
     expect(nextState).toEqual({
       components: onboarding,
       selectedId: 'comp-root',
@@ -48,13 +48,13 @@ describe('Components model', () => {
   })
 
   it('should reset props', async () => {
-    return produce(STATE, (draftState: ComponentsState) => {
+    return produce(STATE, (draftState: ProjectState) => {
       draftState.components['button-testid'].props = {
         children: 'Button text',
         variant: 'ghost',
       }
 
-      const nextState = components.reducers.resetProps(
+      const nextState = project.reducers.resetProps(
         draftState,
         'button-testid',
       )
@@ -68,7 +68,7 @@ describe('Components model', () => {
   })
 
   it('should update props', async () => {
-    const nextState = components.reducers.updateProps(STATE, {
+    const nextState = project.reducers.updateProps(STATE, {
       id: 'button-testid',
       name: 'colorScheme',
       value: 'teal.300',
@@ -83,12 +83,12 @@ describe('Components model', () => {
   })
 
   it('should add a new component', async () => {
-    const state: ComponentsState = {
+    const state: ProjectState = {
       components: INITIAL_COMPONENTS,
       selectedId: 'root',
     }
 
-    const nextState = components.reducers.addComponent(state, {
+    const nextState = project.reducers.addComponent(state, {
       parentName: 'root',
       type: 'Button',
       testId: 'button-testid',
@@ -98,7 +98,7 @@ describe('Components model', () => {
   })
 
   it('should delete a simple component', async () => {
-    const nextState = components.reducers.deleteComponent(
+    const nextState = project.reducers.deleteComponent(
       STATE,
       'button-testid',
     )
@@ -110,7 +110,7 @@ describe('Components model', () => {
   })
 
   it('should move a component', async () => {
-    return produce(STATE, (draftState: ComponentsState) => {
+    return produce(STATE, (draftState: ProjectState) => {
       draftState.components['box-testid'] = {
         children: [],
         id: 'box-testid',
@@ -122,7 +122,7 @@ describe('Components model', () => {
 
       expect(draftState.components['root'].children).toContain('button-testid')
 
-      const nextState = components.reducers.moveComponent(draftState, {
+      const nextState = project.reducers.moveComponent(draftState, {
         parentId: 'box-testid',
         componentId: 'button-testid',
       })
@@ -138,7 +138,7 @@ describe('Components model', () => {
   })
 
   it('should move a selected component', async () => {
-    return produce(STATE, (draftState: ComponentsState) => {
+    return produce(STATE, (draftState: ProjectState) => {
       draftState.components['box-testid'] = {
         children: [],
         id: 'box-testid',
@@ -156,7 +156,7 @@ describe('Components model', () => {
         'box-testid',
       ])
 
-      const nextState = components.reducers.moveSelectedComponentChildren(
+      const nextState = project.reducers.moveSelectedComponentChildren(
         draftState,
         {
           fromIndex: 0,
@@ -173,13 +173,13 @@ describe('Components model', () => {
 
   it('should select a component', async () => {
     expect(STATE.selectedId).toEqual('button-testid')
-    const nextState = components.reducers.select(STATE, 'root')
+    const nextState = project.reducers.select(STATE, 'root')
     expect(nextState.selectedId).toEqual('root')
   })
 
   it('should unselect a component', async () => {
     expect(STATE.selectedId).toEqual('button-testid')
-    const nextState = components.reducers.unselect(STATE)
+    const nextState = project.reducers.unselect(STATE)
     expect(nextState.selectedId).toEqual('root')
   })
 })
