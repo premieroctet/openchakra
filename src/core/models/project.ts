@@ -138,6 +138,7 @@ const project = createModel({
         pages: {
           ...state.pages,
           [state.activePage]: {
+            ...state.pages[state.activePage],
             components: {
               ...state.pages[state.activePage].components,
               [payload.id]:{
