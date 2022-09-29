@@ -16,6 +16,7 @@ export const CONTAINER_TYPE: ComponentType[] = [
   'Flex',
 ]
 const TEXT_TYPE: ComponentType[] = ['Text', 'Heading', 'Badge']
+const ACTION_TYPE: ComponentType[] = ['Button']
 const IMAGE_TYPE: ComponentType[] = ['Image', 'Avatar']
 
 export const normalizePageName = (pageName: string) => {
@@ -57,6 +58,9 @@ const getDynamicType = (comp: IComponent) => {
   }
   if (IMAGE_TYPE.includes(comp.type)) {
     return 'Image'
+  }
+  if (ACTION_TYPE.includes(comp.type)) {
+    return 'Button'
   }
 }
 
@@ -165,10 +169,9 @@ const buildBlock = ({
         })
 
       if (childComponent.props.page) {
-        propsContent += `onClick={() => window.location='/${getPageUrl(
-          childComponent.props.page,
-          pages,
-        )}'}`
+        const destPageUrl = getPageUrl(childComponent.props.page, pages)
+        propsContent += ` pageName={'${destPageUrl}'} `
+        propsContent += `onClick={() => window.location='/${destPageUrl}'}`
       }
 
       if (
