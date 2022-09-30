@@ -3,8 +3,6 @@ import * as Chakra from '@chakra-ui/react'
 
 import { ButtonProps } from '@chakra-ui/react'
 
-import iconsList from '~iconsList'
-
 type PropsWithForm<T> = T & { form?: T }
 
 type PreviewDefaultProps = {

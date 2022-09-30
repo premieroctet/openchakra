@@ -54,6 +54,7 @@ import TabPanel from './components/TabPanel'
 import StatArrowPanel from './components/StatArrowPanel'
 import StatLabelPanel from './components/StatLabelPanel'
 import SkeletonPanel from './components/SkeletonPanel'
+import CCPanel from '~custom-components/inspector/panels/components/CCPanel'
 
 const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
   component,
@@ -127,6 +128,7 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
       {type === 'StatArrow' && <StatArrowPanel />}
       {type === 'StatLabel' && <StatLabelPanel />}
       {type === 'StatNumber' && <StatLabelPanel />}
+      {type === 'CC' && <CCPanel />}
     </>
   )
 }

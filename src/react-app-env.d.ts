@@ -80,6 +80,7 @@ type ComponentType =
   | 'Tag'
   | 'Text'
   | 'Textarea'
+  | string
 
 type MetaComponentType =
   | 'FormControlMeta'

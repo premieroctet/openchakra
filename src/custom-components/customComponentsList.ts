@@ -1,15 +1,17 @@
-export type MenuItem = {
-  rootParentType?: any
+export type CMenuItem = {
+  children?: CMenuItems
+  soon?: boolean
+  rootParentType?: ComponentType
 }
 
-type MenuItems = Partial<
+type CMenuItems = Partial<
   {
-    [k in any]: MenuItem
+    [k in ComponentType]: CMenuItem
   }
 >
 
-export const menuItems: MenuItems = {
+export const cmenuItems: CMenuItems = {
   CC: {},
 }
 
-export const componentsList: any[] = ['CC']
+export const componentsList: ComponentType[] = ['CC']
