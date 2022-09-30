@@ -26,7 +26,7 @@ export type ProjectStateWithUndo = {
 }
 
 export type PageSettings = {
-  pageId: string,
+  pageId: string
   pageName: string
   metaTitle: string
   metaDescription: string
@@ -90,9 +90,8 @@ const project = createModel({
           selectedId: DEFAULT_ID,
         },
       }
-      const activePage = newState
-        ? Object.keys(newState.pages)[0]
-        : resetPageId
+
+      const activePage = newState?.activePage || resetPageId
 
       const rootPage = activePage
 
@@ -103,6 +102,7 @@ const project = createModel({
         rootPage,
       }
     },
+
     loadDemo(state: ProjectState, type: TemplateType): ProjectState {
       return {
         ...state,
@@ -141,11 +141,14 @@ const project = createModel({
             ...state.pages[state.activePage],
             components: {
               ...state.pages[state.activePage].components,
-              [payload.id]:{
+              [payload.id]: {
                 ...state.pages[state.activePage].components[payload.id],
-                props: omit(state.pages[state.activePage].components[payload.id].props, payload.name),
-              }
-            }
+                props: omit(
+                  state.pages[state.activePage].components[payload.id].props,
+                  payload.name,
+                ),
+              },
+            },
           },
         },
       }
@@ -211,8 +214,9 @@ const project = createModel({
     ): ProjectState {
       return produce(state, (draftState: ProjectState) => {
         const components = getActiveComponents(draftState)
-        const selectedComponent = components[draftState.pages[draftState.activePage].selectedId]
-        
+        const selectedComponent =
+          components[draftState.pages[draftState.activePage].selectedId]
+
         selectedComponent.children.splice(
           payload.toIndex,
           0,
@@ -261,10 +265,7 @@ const project = createModel({
         }
       })
     },
-    select(
-      state: ProjectState,
-      selectedId: IComponent['id'],
-    ): ProjectState {
+    select(state: ProjectState, selectedId: IComponent['id']): ProjectState {
       return {
         ...state,
         pages: {
@@ -306,10 +307,14 @@ const project = createModel({
     duplicate(state: ProjectState): ProjectState {
       return produce(state, (draftState: ProjectState) => {
         const components = getActiveComponents(draftState)
-        const selectedComponent = components[draftState.pages[draftState.activePage].selectedId]
+        const selectedComponent =
+          components[draftState.pages[draftState.activePage].selectedId]
 
         if (selectedComponent.id !== DEFAULT_ID) {
-          const parentElement = draftState.pages[draftState.activePage].components[selectedComponent.parent]
+          const parentElement =
+            draftState.pages[draftState.activePage].components[
+              selectedComponent.parent
+            ]
 
           const { newId, clonedComponents } = duplicateComponent(
             selectedComponent,
@@ -321,7 +326,9 @@ const project = createModel({
             ...clonedComponents,
           }
 
-          draftState.pages[draftState.activePage].components[parentElement.id].children.push(newId)
+          draftState.pages[draftState.activePage].components[
+            parentElement.id
+          ].children.push(newId)
         }
       })
     },
@@ -334,10 +341,7 @@ const project = createModel({
           payload.name
       })
     },
-    hover(
-      state: ProjectState,
-      componentId: IComponent['id'],
-    ): ProjectState {
+    hover(state: ProjectState, componentId: IComponent['id']): ProjectState {
       return {
         ...state,
         hoveredId: componentId,
@@ -350,9 +354,8 @@ const project = createModel({
       }
     },
     addPage(state: ProjectState, payload: PageSettings): ProjectState {
-
       const pageId = generateId('page')
-      const {pageName, metaTitle, metaDescription, metaImageUrl} = payload
+      const { pageName, metaTitle, metaDescription, metaImageUrl } = payload
 
       return {
         ...state,
@@ -371,8 +374,13 @@ const project = createModel({
       }
     },
     editPageSettings(state: ProjectState, payload: PageSettings): ProjectState {
-
-      const {pageId, pageName, metaTitle, metaDescription, metaImageUrl} = payload
+      const {
+        pageId,
+        pageName,
+        metaTitle,
+        metaDescription,
+        metaImageUrl,
+      } = payload
 
       if (pageId) {
         return {
@@ -399,14 +407,15 @@ const project = createModel({
       if (Object.keys(state.pages).length === 1) {
         return state
       }
-      const newPages= omit(state.pages, [pageId])
-      const newActivePage=Object.keys(newPages)[0]
-      const rootPage = pageId === state.rootPage ? newActivePage : state.rootPage
+      const newPages = omit(state.pages, [pageId])
+      const newActivePage = Object.keys(newPages)[0]
+      const rootPage =
+        pageId === state.rootPage ? newActivePage : state.rootPage
       return {
         ...state,
         pages: newPages,
         activePage: newActivePage,
-        rootPage
+        rootPage,
       }
     },
     setActivePage(state: ProjectState, pageId: string): ProjectState {
