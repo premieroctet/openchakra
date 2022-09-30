@@ -91,7 +91,7 @@ type MetaComponentType =
   | 'TabsMeta'
   | 'StatMeta'
 
-type CustomComponentType = 'CC' | 'CC2'
+type CustomComponentType = string
 
 interface IComponent {
   children: string[]

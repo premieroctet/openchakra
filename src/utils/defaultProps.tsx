@@ -150,11 +150,9 @@ type PreviewDefaultProps = {
   Skeleton?: PropsWithForm<SkeletonProps>
   SkeletonCircle?: PropsWithForm<SkeletonProps>
   SkeletonText?: PropsWithForm<SkeletonProps>
-  CC?: PropsWithForm<ButtonProps>
-  CC2?: PropsWithForm<ButtonProps>
 }
 
-export const DEFAULT_PROPS: PreviewDefaultProps = {
+export const DEFAULT_PROPS: PreviewDefaultProps | any = {
   AlertDescription: {
     children: 'Alert description',
   },
