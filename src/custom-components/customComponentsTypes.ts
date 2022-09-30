@@ -1,6 +1,6 @@
 export type CustomComponentType =
   | 'CC'
-  | 'CC'
+  | 'CC2'
   | 'CCItem'
   | 'CCButton'
   | 'CCPanel'

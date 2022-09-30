@@ -13,7 +13,7 @@ import {
   TabPanels,
   TabPanel,
 } from '@chakra-ui/react'
-import { CloseIcon, SearchIcon } from '@chakra-ui/icons'
+import { CloseIcon, EditIcon, SearchIcon } from '@chakra-ui/icons'
 import DragItem from './DragItem'
 import { menuItems, MenuItem } from '~componentsList'
 import {
@@ -69,7 +69,7 @@ const Menu = () => {
             </InputRightElement>
           </InputGroup>
         </Box>
-        <Tabs size="sm" variant="enclosed-colored" isFitted>
+        <Tabs size="sm" variant="enclosed-colored" isFitted defaultIndex={1}>
           <TabList>
             <Tab>Built-in</Tab>
             <Tab>Custom</Tab>
@@ -140,55 +140,36 @@ const Menu = () => {
                     c.toLowerCase().includes(searchTerm.toLowerCase()),
                   )
                   .map(name => {
-                    const { children, soon } = cmenuItems[name] as CMenuItem
-
-                    if (children) {
-                      const elements = Object.keys(children).map(childName => (
-                        <DragItem
-                          isChild
-                          key={childName}
-                          label={childName}
-                          type={childName as any}
-                          id={childName as any}
-                          rootParentType={
-                            cmenuItems[name]?.rootParentType || name
-                          }
-                        >
-                          {childName}
-                        </DragItem>
-                      ))
-
-                      return [
-                        <DragItem
-                          isMeta
-                          soon={soon}
-                          key={`${name}Meta`}
-                          label={name}
-                          type={`${name}Meta` as any}
-                          id={`${name}Meta` as any}
-                          rootParentType={
-                            cmenuItems[name]?.rootParentType || name
-                          }
-                        >
-                          {name}
-                        </DragItem>,
-                        ...elements,
-                      ]
-                    }
-
                     return (
-                      <DragItem
-                        soon={soon}
+                      <Flex
+                        alignItems={'center'}
+                        justifyContent="space-between"
                         key={name}
-                        label={name}
-                        type={name as any}
-                        id={name as any}
-                        rootParentType={
-                          cmenuItems[name]?.rootParentType || name
-                        }
                       >
-                        {name}
-                      </DragItem>
+                        <Box flex={1}>
+                          <DragItem
+                            key={name}
+                            label={name}
+                            type={name as any}
+                            id={name as any}
+                            rootParentType={
+                              cmenuItems[name]?.rootParentType || name
+                            }
+                          >
+                            {name}
+                          </DragItem>
+                        </Box>
+                        <IconButton aria-label="Edit" size="sm">
+                          <EditIcon
+                            color="white"
+                            onClick={() => {
+                              console.log(
+                                'Disable this component and load json in editor.',
+                              )
+                            }}
+                          />
+                        </IconButton>
+                      </Flex>
                     )
                   })}
               </Box>

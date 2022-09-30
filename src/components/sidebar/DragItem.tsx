@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDrag } from 'react-dnd'
-import { Text, Box } from '@chakra-ui/react'
-import { DragHandleIcon } from '@chakra-ui/icons'
+import { Text, Box, IconButton } from '@chakra-ui/react'
+import { DragHandleIcon, EditIcon } from '@chakra-ui/icons'
 
 const DragItem: React.FC<ComponentItemProps> = ({
   type,

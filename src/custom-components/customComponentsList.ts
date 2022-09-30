@@ -1,6 +1,5 @@
 export type CMenuItem = {
   children?: CMenuItems
-  soon?: boolean
   rootParentType?: ComponentType
 }
 
@@ -12,6 +11,7 @@ type CMenuItems = Partial<
 
 export const cmenuItems: CMenuItems = {
   CC: {},
+  CC2: {},
 }
 
-export const componentsList: ComponentType[] = ['CC']
+export const componentsList: ComponentType[] = ['CC', 'CC2']
