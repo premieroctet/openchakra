@@ -231,9 +231,12 @@ export const generatePreview = async ( components: IComponents ) => {
   code = `import React from 'react'
   import { useDropComponent } from '~hooks/useDropComponent'
   import { useInteractive } from '~hooks/useInteractive'
-  import {
-    ${imports.join(',')}
-  } from "@chakra-ui/react";${
+  ${imports.length? 
+    `import {
+      ${imports.join(',')}
+    } from "@chakra-ui/react";` : ''
+  }
+  ${
     iconImports.length
       ? `
 import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
