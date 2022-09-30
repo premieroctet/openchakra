@@ -16,7 +16,7 @@ const SamplePreview = ({ component }: Props) => {
   }
 
   return (
-    <Box {...props}>
+    <Box {...props} ref={ref}>
       <Center
         display="flex"
         flexDirection="column"

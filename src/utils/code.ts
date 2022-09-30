@@ -252,7 +252,7 @@ import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
       props.bg = 'teal.50'
     }
   
-    return (<Box {...props}>${code}</Box>)
+    return (<Box {...props} ref={ref}>${code}</Box>)
   }
   
   export default SamplePreview`
@@ -260,5 +260,40 @@ import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
   code = await formatCode(code)
 
   console.log(code);
+
+  return code;
+
+}
+
+export const generatePanel = async ( components: IComponents ) => {
+  let code = buildBlock({ component: components.root, components })
+  let componentsCodes = buildComponents(components)
+  const iconImports = Array.from(new Set(getIconsImports(components)))
+
+  let panelCode = `import React, { memo } from 'react'
+  ${components.root.params?.some(param => param.type === "string" || param.type === "number") ?
+   `import TextControl from '~components/inspector/controls/TextControl'` : ''}
+  ${components.root.params?.some(param => param.type === "boolean") ? 
+  `import SwitchControl from '~components/inspector/controls/SwitchControl'` : ''}
+  
+  const SamplePanel = () => {
+    return (
+    <>
+    ${components.root.params?.some(param => param.type === "string" || param.type === "number") ? 
+    `${components.root.params.filter(param => param.type === "string" || param.type === "number")
+    .map(param => `<TextControl label="${param.name}" name="${param.name}" />`)}` : ''}
+    ${components.root.params?.some(param => param.type === "boolean") ? 
+    `${components.root.params.filter(param => param.type === "boolean")
+    .map(param => `<SwitchControl label="${param.name}" name="${param.name}" />`)}` : ''}
+    </>
+    )
+  }
+
+  export default memo(SamplePanel)
+  `
+
+  panelCode = await formatCode(panelCode)
+
+  console.log(panelCode);
 
 }
