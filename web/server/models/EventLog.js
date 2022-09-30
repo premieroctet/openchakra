@@ -1,79 +1,18 @@
+const mongooseLeanVirtuals=require('mongoose-lean-virtuals')
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+const {getDataModel} = require('../../config/config')
 
-const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
+let EventLogSchema=null
 
-const EventLogSchema = new Schema({
-  // Event date
-  date: {
-    type: Date,
-    default: Date.now,
-    required: true,
-  },
-  // Super account (i.e logged as)
-  super_account: {
-    type: {
-      // Keep track if not deleted
-      user: {
-        type: Schema.Types.ObjectId,
-        ref: 'user',
-        required: false,
-      },
-      full_name: {
-        type: String,
-        required: true,
-      },
-      email: {
-        type: String,
-        required: true,
-      },
-    },
-    required: false,
-  },
-  // Logged account
-  account: {
-    type: {
-      // Keep track if not deleted
-      user: {
-        type: Schema.Types.ObjectId,
-        ref: 'user',
-        required: false,
-      },
-      full_name: {
-        type: String,
-        required: true,
-      },
-      email: {
-        type: String,
-        required: true,
-      },
-    },
-    // Events can be logged even if no user connected
-    required: false,
-  },
-  // Category
-  category: {
-    type: String,
-    required: true,
-  },
-  // Title
-  title: {
-    type: String,
-    default: Date.now,
-    required: true,
-  },
-  // Description
-  description: {
-    type: String,
-    default: Date.now,
-  },
-  // Custom data if required
-  data: {
-    type: Schema.Types.Mixed,
-    required: false,
-  },
-}, {toJSON: {virtuals: true, getters: true}})
+try {
+  EventLogSchema=require(`./${getDataModel()}/EventLogSchema`)
+}
+catch(err) {
+  if (err.code !== 'MODULE_NOT_FOUND') {
+    throw err
+  }
+  EventLogSchema=require(`./others/EventLogSchema`)
+}
 
-EventLogSchema.plugin(mongooseLeanVirtuals)
-
-module.exports = mongoose.model('eventLog', EventLogSchema)
+EventLogSchema?.plugin(mongooseLeanVirtuals)
+module.exports = EventLogSchema ? mongoose.model('eventLog', EventLogSchema) : null

@@ -1,36 +1,18 @@
+const mongooseLeanVirtuals=require('mongoose-lean-virtuals')
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+const {getDataModel} = require('../../config/config')
 
-const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
+let MessageSchema=null
 
-const MessageSchema = new Schema({
-  subject: {
-    type: String,
-    required: true,
-  },
-  content: {
-    type: String,
-    required: true,
-  },
-  date: {
-    type: Date,
-    default: Date.now,
-    required: true,
-  },
-  is_read: {
-    type: Boolean,
-    default: false,
-  },
-  receiver: {
-    type: Schema.Types.ObjectId,
-    ref: 'user',
-  },
-  sender: {
-    type: Schema.Types.ObjectId,
-    ref: 'user',
-  },
-})
+try {
+  MessageSchema=require(`./${getDataModel()}/MessageSchema`)
+}
+catch(err) {
+  if (err.code !== 'MODULE_NOT_FOUND') {
+    throw err
+  }
+  MessageSchema=require(`./others/MessageSchema`)
+}
 
-MessageSchema.plugin(mongooseLeanVirtuals)
-
-module.exports = mongoose.model('message', MessageSchema)
+MessageSchema?.plugin(mongooseLeanVirtuals)
+module.exports = MessageSchema ? mongoose.model('message', MessageSchema) : null

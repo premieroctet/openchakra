@@ -14,6 +14,11 @@ const ModuleSchema = new Schema({
     type: Date,
     required: true,
   },
+  program: {
+    type: Schema.Types.ObjectId,
+    ref: 'program',
+    required: true,
+  },
   location: {
     type: Schema.Types.ObjectId,
     ref: 'trainingCenter',

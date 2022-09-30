@@ -1,17 +1,18 @@
+const mongooseLeanVirtuals=require('mongoose-lean-virtuals')
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+const {getDataModel} = require('../../config/config')
 
-const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
+let ResetTokenSchema=null
 
-const ResetTokenSchema = new Schema({
-  date: {
-    type: Date,
-    default: Date.now,
-    expires: 36000,
-  },
-  token: String,
-})
+try {
+  ResetTokenSchema=require(`./${getDataModel()}/ResetTokenSchema`)
+}
+catch(err) {
+  if (err.code !== 'MODULE_NOT_FOUND') {
+    throw err
+  }
+  ResetTokenSchema=require(`./others/ResetTokenSchema`)
+}
 
-ResetTokenSchema.plugin(mongooseLeanVirtuals)
-
-module.exports = mongoose.model('resetToken', ResetTokenSchema)
+ResetTokenSchema?.plugin(mongooseLeanVirtuals)
+module.exports = ResetTokenSchema ? mongoose.model('resetToken', ResetTokenSchema) : null
