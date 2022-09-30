@@ -212,6 +212,21 @@ export const buildInputGroup = (parent: string): ComposedComponent => {
   }
 }
 
+export const buildCC = (parent: string): ComposedComponent => {
+  const composer = new Composer('Box')
+
+  const nodeId = composer.addNode({ type: 'Button', parent })
+  // composer.addNode({ type: 'Button', parent: nodeId })
+
+  const components = composer.getComponents()
+
+  return {
+    components,
+    root: nodeId,
+    parent,
+  }
+}
+
 type BuilderFn = (parent: string) => ComposedComponent
 
 type ComposerBuilders = {
@@ -227,6 +242,7 @@ const builders: ComposerBuilders = {
   BreadcrumbMeta: buildBreadcrumb,
   TabsMeta: buildTabs,
   StatMeta: buildStats,
+  CC: buildCC,
 }
 
 export default builders

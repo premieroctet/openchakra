@@ -30,8 +30,6 @@ export interface CustomComponentItemProps {
   type: CustomComponentType
   isMoved?: boolean
   isChild?: boolean
-  isMeta?: boolean
-  soon?: boolean
   rootParentType?: CustomComponentType
   children?: React.ReactNode
 }

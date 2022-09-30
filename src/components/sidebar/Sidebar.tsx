@@ -149,6 +149,7 @@ const Menu = () => {
                         <Box flex={1}>
                           <DragItem
                             key={name}
+                            custom={true}
                             label={name}
                             type={name as any}
                             id={name as any}

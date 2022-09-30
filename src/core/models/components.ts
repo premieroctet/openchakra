@@ -184,6 +184,20 @@ const components = createModel({
         }
       })
     },
+    addCustomComponent(
+      state: ComponentsState,
+      payload: { components: IComponents; root: string; parent: string },
+    ): ComponentsState {
+      return produce(state, (draftState: ComponentsState) => {
+        draftState.selectedId = payload.root
+        draftState.components[payload.parent].children.push(payload.root)
+
+        draftState.components = {
+          ...draftState.components,
+          ...payload.components,
+        }
+      })
+    },
     select(
       state: ComponentsState,
       selectedId: IComponent['id'],

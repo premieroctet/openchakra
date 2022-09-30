@@ -80,7 +80,6 @@ type ComponentType =
   | 'Tag'
   | 'Text'
   | 'Textarea'
-  | string
 
 type MetaComponentType =
   | 'FormControlMeta'
@@ -91,6 +90,8 @@ type MetaComponentType =
   | 'BreadcrumbMeta'
   | 'TabsMeta'
   | 'StatMeta'
+
+type CustomComponentType = 'CC' | 'CC2'
 
 interface IComponent {
   children: string[]

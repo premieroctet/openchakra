@@ -152,7 +152,7 @@ type PreviewDefaultProps = {
   SkeletonText?: PropsWithForm<SkeletonProps>
 }
 
-export const DEFAULT_PROPS: any = {
+export const DEFAULT_PROPS: PreviewDefaultProps = {
   AlertDescription: {
     children: 'Alert description',
   },

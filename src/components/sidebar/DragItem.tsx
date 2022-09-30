@@ -8,12 +8,13 @@ const DragItem: React.FC<ComponentItemProps> = ({
   soon,
   label,
   isMeta,
+  custom,
   isChild,
   rootParentType,
 }) => {
   const [, drag] = useDrag({
     type,
-    item: { id: type, type, isMeta, rootParentType },
+    item: { id: type, type, isMeta, custom, rootParentType },
   })
 
   let boxProps: any = {

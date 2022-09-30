@@ -5,7 +5,11 @@ import builder from '~core/models/composer/builder'
 
 export const useDropComponent = (
   componentId: string,
-  accept: (ComponentType | MetaComponentType)[] = rootComponents,
+  accept: (
+    | ComponentType
+    | MetaComponentType
+    | CustomComponentType
+  )[] = rootComponents,
   canDrop: boolean = true,
 ) => {
   const dispatch = useDispatch()
@@ -26,7 +30,11 @@ export const useDropComponent = (
           componentId: item.id,
         })
       } else if (item.isMeta) {
+        console.log(item)
         dispatch.components.addMetaComponent(builder[item.type](componentId))
+      } else if (item.custom) {
+        console.log(item)
+        dispatch.components.addCustomComponent(builder[item.type](componentId))
       } else {
         dispatch.components.addComponent({
           parentName: componentId,
