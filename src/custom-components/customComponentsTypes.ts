@@ -1,10 +1,4 @@
-export type CustomComponentType =
-  | 'CC'
-  | 'CC2'
-  | 'CCItem'
-  | 'CCButton'
-  | 'CCPanel'
-  | 'CCIcon'
+export type CustomComponentType = 'CC' | 'CC2'
 
 export interface CComponent {
   children: string[]

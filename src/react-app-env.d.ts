@@ -95,11 +95,11 @@ type CustomComponentType = 'CC' | 'CC2'
 
 interface IComponent {
   children: string[]
-  type: ComponentType
+  type: ComponentType | CustomComponentType
   parent: string
   id: string
   props: any
-  rootParentType?: ComponentType
+  rootParentType?: ComponentType | CustomComponentType
   componentName?: string
 }
 
