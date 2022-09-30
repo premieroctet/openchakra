@@ -55,6 +55,8 @@ import StatArrowPanel from './components/StatArrowPanel'
 import StatLabelPanel from './components/StatLabelPanel'
 import SkeletonPanel from './components/SkeletonPanel'
 import SliderPanel from './components/SliderPanel'
+import SamplePanel from './components/SamplePanel'
+import ButonPanel from './components/ButonPanel'
 
 const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
   component,
@@ -69,6 +71,7 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
   return (
     <>
       {type === 'Button' && <ButtonPanel />}
+      {type === 'Buton' && <ButonPanel />}
       {type === 'Checkbox' && <CheckboxPanel />}
       {type === 'Box' && <BoxPanel />}
       {type === 'Badge' && <BadgePanel />}
@@ -129,6 +132,7 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
       {type === 'StatLabel' && <StatLabelPanel />}
       {type === 'StatNumber' && <StatLabelPanel />}
       {type === 'Slider' && <SliderPanel />}
+      {type === 'Sample' && <SamplePanel />}
     </>
   )
 }

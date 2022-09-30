@@ -1,7 +1,7 @@
 import React, { memo, useState, useEffect } from 'react'
 import Highlight, { defaultProps } from 'prism-react-renderer'
 import { Box, Button, useClipboard } from '@chakra-ui/react'
-import { generateCode } from '~utils/code'
+import { generateCode, generatePreview } from '~utils/code'
 import theme from 'prism-react-renderer/themes/nightOwl'
 import { useSelector } from 'react-redux'
 import { getComponents } from '~core/selectors/components'
@@ -19,6 +19,7 @@ const CodePanel = () => {
     const getCode = async () => {
       const code = await generateCode(components)
       setCode(code)
+      generatePreview(components)
       const response = await API_ENDPOINT.post('/save-file', {
         codeBody: code,
         jsonBody: components,

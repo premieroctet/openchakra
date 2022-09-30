@@ -215,3 +215,50 @@ export default App;`
 
   return await formatCode(code)
 }
+
+export const generatePreview = async ( components: IComponents ) => {
+  let code = buildBlock({ component: components.root, components })
+  let componentsCodes = buildComponents(components)
+  const iconImports = Array.from(new Set(getIconsImports(components)))
+
+  const imports = [
+    ...new Set(
+      Object.keys(components)
+        .map(name => components[name].type),
+    ),
+  ]
+
+  code = `import React from 'react'
+  import { useDropComponent } from '~hooks/useDropComponent'
+  import { useInteractive } from '~hooks/useInteractive'
+  import {
+    ${imports.join(',')}
+  } from "@chakra-ui/react";${
+    iconImports.length
+      ? `
+import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
+      : ''
+  }  
+  
+  interface Props { 
+    component: IComponent
+  }
+  
+  const SamplePreview = ({ component }: Props) => {
+  const { isOver } = useDropComponent(component.id)
+  const { props, ref } = useInteractive(component, true)
+  
+  if (isOver) {
+      props.bg = 'teal.50'
+    }
+  
+    return (<Box {...props}>${code}</Box>)
+  }
+  
+  export default SamplePreview`
+
+  code = await formatCode(code)
+
+  console.log(code);
+
+}
