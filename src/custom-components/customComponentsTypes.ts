@@ -20,11 +20,11 @@ export interface CComponents {
   [name: string]: CComponent
 }
 
-interface CPreviewProps {
+export interface CPreviewProps {
   component: CComponent
 }
 
-interface CustomComponentItemProps {
+export interface CustomComponentItemProps {
   id: string
   label: string
   type: CustomComponentType
