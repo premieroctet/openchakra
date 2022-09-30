@@ -182,9 +182,6 @@ const ComponentPreview: React.FC<{
       return <StatHelpTextPreview component={component} />
     case 'StatGroup':
       return <StatGroupPreview component={component} />
-    case 'CC':
-      return <CCPreview component={component} />
-
     default:
       return null
   }

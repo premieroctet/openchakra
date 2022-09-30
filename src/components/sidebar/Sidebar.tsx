@@ -23,7 +23,6 @@ import {
 
 const Menu = () => {
   const [searchTerm, setSearchTerm] = useState('')
-
   return (
     <DarkMode>
       <Box
@@ -153,9 +152,7 @@ const Menu = () => {
                             label={name}
                             type={name as any}
                             id={name as any}
-                            rootParentType={
-                              cmenuItems[name]?.rootParentType || name
-                            }
+                            rootParentType={name}
                           >
                             {name}
                           </DragItem>

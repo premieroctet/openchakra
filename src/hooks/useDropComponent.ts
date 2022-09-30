@@ -30,10 +30,8 @@ export const useDropComponent = (
           componentId: item.id,
         })
       } else if (item.isMeta) {
-        console.log(item)
         dispatch.components.addMetaComponent(builder[item.type](componentId))
       } else if (item.custom) {
-        console.log(item)
         dispatch.components.addCustomComponent(builder[item.type](componentId))
       } else {
         dispatch.components.addComponent({
