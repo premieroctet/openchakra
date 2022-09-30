@@ -5,9 +5,9 @@ describe('S3 test', () => {
   it('should send a file', () => {
     console.log(`Before call`)
     return fs.promises
-      .readFile('/Users/seb/Downloads/IMG_46701002.jpg')
+      .readFile('/home/myalfred/Téléchargements/print.svg')
       .then(contents => {
-        return uploadFile('image.jpg', contents)
+        return uploadFile('print.svg', contents)
       })
       .then(res => {
         console.log(res)

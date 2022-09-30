@@ -1,14 +1,20 @@
 import AWS from 'aws-sdk'
-import { s3Id, s3Secret } from '../../env.json'
+import { s3Config } from './s3Config'
+
+export type ListFileResponse = {
+  message: string
+  data: AWS.S3.ListObjectsOutput
+}
+
+export type ListFileErrorResponse = {
+  err: string
+  errMessage: string
+  data: any
+}
 
 AWS.config.update({ region: 'eu-west-3' })
 
-const S3 = new AWS.S3({
-  accessKeyId: s3Id,
-  secretAccessKey: s3Secret,
-})
-
-console.log(`S3 is ${JSON.stringify(S3, null, 2)}`)
+const S3 = new AWS.S3(s3Config)
 
 export const uploadFile = (filename: string, contents: any) => {
   console.log(`Will uplodad ${filename}`)
@@ -30,4 +36,63 @@ export const uploadFile = (filename: string, contents: any) => {
       console.error(`Error during uploading ${err}`)
       return Promise.reject(err)
     })
+}
+
+export const listFiles = async () => {
+  const awsConfig = (({ region, accessKeyId, secretAccessKey }) => ({
+    region,
+    accessKeyId,
+    secretAccessKey,
+  }))(s3Config)
+  AWS.config.update(awsConfig)
+
+  const s3 = new AWS.S3({
+    apiVersion: '2006-03-01',
+    params: {
+      Bucket: s3Config.bucketName,
+    },
+  })
+
+  const url: string = `https://${s3Config.bucketName}.s3-${s3Config.region}.amazonaws.com`
+
+  try {
+    const req = await s3
+      .listObjectsV2({
+        Bucket: s3Config.bucketName,
+      })
+      .promise()
+
+    if (req.$response.error) {
+      return Promise.reject<ListFileErrorResponse>({
+        err: req.$response.error.name,
+        errMessage: req.$response.error.message,
+        data: req.$response.error,
+      })
+    }
+
+    if (!req.$response.data) {
+      return Promise.reject<ListFileErrorResponse>({
+        err: 'Something went wrong!',
+        errMessage: 'Unknown error occured. Please try again',
+        data: null,
+      })
+    }
+
+    return Promise.resolve<ListFileResponse>({
+      message: 'Objects listed succesfully',
+      data: {
+        ...req.$response.data,
+        Contents: req.$response.data.Contents?.map(e => ({
+          ...e,
+          publicUrl: `${url}/${e.Key}`,
+        })),
+      },
+    })
+  } catch (err) {
+    return Promise.reject<ListFileErrorResponse>({
+      err: 'Something went wrong!',
+      errMessage: 'Unknown error occured. Please try again',
+      data: err,
+    })
+  }
 }
