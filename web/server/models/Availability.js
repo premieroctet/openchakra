@@ -1,46 +1,18 @@
+const mongooseLeanVirtuals=require('mongoose-lean-virtuals')
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+const {getDataModel} = require('../../config/config')
 
-const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
+let AvailabilitySchema=null
 
-const moment = require('moment')
-
-const AvailabilitySchema = new Schema({
-  // Récurrence si period définie
-  period: {
-    begin: {type: Date}, // Date début récurrence, heure forcée à 0h00
-    end: {type: Date}, // Date fin récurrence, heure forcée à 23h59
-    days: [{type: Number}], // set(0...6) => 0 = lundi
-  },
-  // Si non récurrence, date ponctuelle
-  punctual: {
-    type: Date,
-  }, // Si dispo ponctuelle, date ou dates
-  // Disponibilite: True ou False
-  available: {
-    type: Boolean,
-    required: true,
-  },
-  // Alfred
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: 'user',
-    required: true,
-  },
-  timelapses: [{type: Number}], // array containing indexes of available timelapses
-}, {toJSON: {virtuals: true, getters: true}})
-
-AvailabilitySchema.virtual('is_punctual').get(function() {
-  return ![undefined, null].includes(this.punctual)
-})
-
-AvailabilitySchema.virtual('as_text').get(function() {
-  if (this.is_punctual) {
-    return moment(this.punctual).format('L')
+try {
+  AvailabilitySchema=require(`./${getDataModel()}/AvailabilitySchema`)
+}
+catch(err) {
+  if (err.code !== 'MODULE_NOT_FOUND') {
+    throw err
   }
-  return `Du ${moment(this.period.begin).format('L')} au ${moment(this.period.end).format('L')}`
-})
+  AvailabilitySchema=require(`./others/AvailabilitySchema`)
+}
 
-AvailabilitySchema.plugin(mongooseLeanVirtuals)
-
-module.exports = mongoose.model('availability', AvailabilitySchema)
+AvailabilitySchema?.plugin(mongooseLeanVirtuals)
+module.exports = AvailabilitySchema ? mongoose.model('availability', AvailabilitySchema) : null

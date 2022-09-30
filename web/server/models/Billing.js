@@ -1,15 +1,18 @@
+const mongooseLeanVirtuals=require('mongoose-lean-virtuals')
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+const {getDataModel} = require('../../config/config')
 
-const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
+let BillingSchema=null
 
-const BillingSchema = new Schema({
-  label: {
-    type: String,
-    required: true,
-  },
-})
+try {
+  BillingSchema=require(`./${getDataModel()}/BillingSchema`)
+}
+catch(err) {
+  if (err.code !== 'MODULE_NOT_FOUND') {
+    throw err
+  }
+  BillingSchema=require(`./others/BillingSchema`)
+}
 
-BillingSchema.plugin(mongooseLeanVirtuals)
-
-module.exports = mongoose.model('billing', BillingSchema)
+BillingSchema?.plugin(mongooseLeanVirtuals)
+module.exports = BillingSchema ? mongoose.model('billing', BillingSchema) : null

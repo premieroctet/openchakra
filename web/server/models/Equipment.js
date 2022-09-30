@@ -1,17 +1,18 @@
+const mongooseLeanVirtuals=require('mongoose-lean-virtuals')
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+const {getDataModel} = require('../../config/config')
 
-const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
+let EquipmentSchema=null
 
-const EquipmentSchema = new Schema({
-  label: {
-    type: String,
-  },
-  logo: {
-    type: String,
-  },
-})
+try {
+  EquipmentSchema=require(`./${getDataModel()}/EquipmentSchema`)
+}
+catch(err) {
+  if (err.code !== 'MODULE_NOT_FOUND') {
+    throw err
+  }
+  EquipmentSchema=require(`./others/EquipmentSchema`)
+}
 
-EquipmentSchema.plugin(mongooseLeanVirtuals)
-
-module.exports = mongoose.model('equipment', EquipmentSchema)
+EquipmentSchema?.plugin(mongooseLeanVirtuals)
+module.exports = EquipmentSchema ? mongoose.model('equipment', EquipmentSchema) : null

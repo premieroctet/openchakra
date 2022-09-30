@@ -1,35 +1,18 @@
+const mongooseLeanVirtuals=require('mongoose-lean-virtuals')
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+const {getDataModel} = require('../../config/config')
 
-const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
+let AlbumSchema=null
 
-const AlbumSchema = new Schema({
-  /*
-  // Album name
-  label: {
-    type: String,
-    required: true,
-  },
-  // Album main picture
-  picture: {
-    type: String,
-    required: true,
-  },
-  */
-  creation_date: {
-    type: Date,
-    required: true,
-    default: Date.now(),
-  },
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: 'user',
-    required: true,
-  },
-  pictures: {
-    type: [String],
-  },
-})
+try {
+  AlbumSchema=require(`./${getDataModel()}/AlbumSchema`)
+}
+catch(err) {
+  if (err.code !== 'MODULE_NOT_FOUND') {
+    throw err
+  }
+  AlbumSchema=require(`./others/AlbumSchema`)
+}
 
-AlbumSchema.plugin(mongooseLeanVirtuals)
-module.exports = mongoose.model('album', AlbumSchema)
+AlbumSchema?.plugin(mongooseLeanVirtuals)
+module.exports = AlbumSchema ? mongoose.model('album', AlbumSchema) : null

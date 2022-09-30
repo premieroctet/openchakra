@@ -26,6 +26,13 @@ const Booking = require('./models/Booking')
 const ServiceUser = require('./models/ServiceUser')
 const Category = require('./models/Category')
 const PriceList = require('./models/PriceList')
+require('./models/Program')
+require('./models/Module')
+require('./models/Resource')
+require('./models/Session')
+require('./models/TrainingCenter')
+require('./models/TraineeSession')
+
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 
 

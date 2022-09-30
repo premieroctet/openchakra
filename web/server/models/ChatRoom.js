@@ -1,53 +1,18 @@
+const mongooseLeanVirtuals=require('mongoose-lean-virtuals')
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema
-const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
-const {hideIllegal} = require('../../utils/text')
+const {getDataModel} = require('../../config/config')
 
+let ChatRoomSchema=null
 
-const ChatRoomsSchema = new Schema({
-  name: String,
-  emitter: {
-    type: Schema.Types.ObjectId,
-    ref: 'user',
-    required: true,
-  },
-  recipient: {
-    type: Schema.Types.ObjectId,
-    ref: 'user',
-    required: true,
-  },
-  messages: [{
-    user: String,
-    content: {
-      type: String,
-      set: text => hideIllegal(text),
-    },
-    date: Date,
-    thepicture: String,
-    idsender: {
-      type: Schema.Types.ObjectId,
-      ref: 'user',
-    },
-    viewed: {
-      type: Boolean,
-      default: false,
-    },
-  }],
-  booking: {
-    type: Schema.Types.ObjectId,
-    ref: 'booking',
-    required: false,
-  },
-}, {toJSON: {virtuals: true, getters: true}})
-
-/** Return latest message date */
-ChatRoomsSchema.virtual('latest').get(function() {
-  if (!this.messages || this.messages.length==0) {
-    return null
+try {
+  ChatRoomSchema=require(`./${getDataModel()}/ChatRoomSchema`)
+}
+catch(err) {
+  if (err.code !== 'MODULE_NOT_FOUND') {
+    throw err
   }
-  return Math.max(...this.messages.map(m => m.date))
-})
+  ChatRoomSchema=require(`./others/ChatRoomSchema`)
+}
 
-ChatRoomsSchema.plugin(mongooseLeanVirtuals)
-
-module.exports = mongoose.model('chatRoom', ChatRoomsSchema)
+ChatRoomSchema?.plugin(mongooseLeanVirtuals)
+module.exports = ChatRoomSchema ? mongoose.model('chatRoom', ChatRoomSchema) : null

@@ -32,6 +32,7 @@ router.get('/models', (req, res) => {
   const modelNames=lodash.sortBy(mongoose.modelNames())
   const result=[]
   modelNames.forEach(name => {
+    console.log(name)
     const attrs=[...getSimpleModelAttributes(name), ...lodash.flatten(getReferencedModelAttributes(name))]
     attrs.sort((att1, att2) => attributesComparator(att1[0], att2[0]))
     if (name=='serviceUser') { console.log(attrs.map(a => a[0]))}
