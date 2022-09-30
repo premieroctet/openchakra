@@ -278,8 +278,21 @@ export const generatePanel = async ( components: IComponents ) => {
    `import TextControl from '~components/inspector/controls/TextControl'` : ''}
   ${components.root.params?.some(param => param.type === "boolean") ? 
   `import SwitchControl from '~components/inspector/controls/SwitchControl'` : ''}
+  ${components.root.params?.some(param => param.type === "color") ? 
+  `import ColorsControl from '~components/inspector/controls/ColorsControl'` : ''}
+  ${components.root.params?.some(param => param.type === "enum") ? 
+  `import FormControl from '~components/inspector/controls/FormControl'
+  import { useForm } from '~hooks/useForm'
+  import usePropsSelector from '~hooks/usePropsSelector'
+  import { Select } from '@chakra-ui/react'` : ''}
+  ${components.root.params?.some(param => param.type === "icon") ? 
+  `import IconControl from '~components/inspector/controls/IconControl'` : ''}
   
   const SamplePanel = () => {
+    ${components.root.params?.some(param => param.type === "enum") ? 
+  `const { setValueFromEvent } = useForm()
+  ${components.root.params.filter(param => param.type === "enum")
+    .map(param => `const ${param.name} = usePropsSelector('${param.name}')`)}` : ''}
     return (
     <>
     ${components.root.params?.some(param => param.type === "string" || param.type === "number") ? 
@@ -288,6 +301,29 @@ export const generatePanel = async ( components: IComponents ) => {
     ${components.root.params?.some(param => param.type === "boolean") ? 
     `${components.root.params.filter(param => param.type === "boolean")
     .map(param => `<SwitchControl label="${param.name}" name="${param.name}" />`)}` : ''}
+    ${components.root.params?.some(param => param.type === "color") ? 
+    `${components.root.params.filter(param => param.type === "color")
+    .map(param => `<ColorsControl label="${param.name}" name="${param.name}" />`)}` : ''}
+    ${components.root.params?.some(param => param.type === "icon") ? 
+    `${components.root.params.filter(param => param.type === "icon")
+    .map(param => `<IconControl label="${param.name}" name="${param.name}" />`)}` : ''}
+    ${components.root.params?.some(param => param.type === "enum") ? 
+    `${components.root.params.filter(param => param.type === "enum")
+    .map(param => `<FormControl htmlFor="${param.name}" label="${param.name}">
+    <Select
+      id="${param.name}"
+      onChange={setValueFromEvent}
+      name="${param.name}"
+      size="sm"
+      value={${param.name} || ''}
+    >
+      <option>outline</option>
+      <option>ghost</option>
+      <option>unstyled</option>
+      <option>link</option>
+      <option>solid</option>
+    </Select>
+  </FormControl>`)}` : ''}
     </>
     )
   }
