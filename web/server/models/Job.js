@@ -1,23 +1,18 @@
+const mongooseLeanVirtuals=require('mongoose-lean-virtuals')
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema
-const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
-const {normalize} = require('../../utils/text')
+const {getDataModel} = require('../../config/config')
 
+let JobSchema=null
 
-const JobSchema = new Schema({
-  label: {
-    type: String,
-    required: true,
-  },
-  s_label: {
-    type: String,
-    default: function() {
-      return normalize(this.label)
-    },
-    sparse: true,
-  },
-})
+try {
+  JobSchema=require(`./${getDataModel()}/JobSchema`)
+}
+catch(err) {
+  if (err.code !== 'MODULE_NOT_FOUND') {
+    throw err
+  }
+  JobSchema=require(`./others/JobSchema`)
+}
 
-JobSchema.plugin(mongooseLeanVirtuals)
-
-module.exports = mongoose.model('job', JobSchema)
+JobSchema?.plugin(mongooseLeanVirtuals)
+module.exports = JobSchema ? mongoose.model('job', JobSchema) : null
