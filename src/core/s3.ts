@@ -15,7 +15,6 @@ export const uploadFile = (filename: string, contents: any) => {
   // Setting up S3 upload parameters
   const params = {
     Bucket: 'my-alfred-data-test', // getDataModel(),
-    Folder: 'test',
     Key: `pictures/${filename}`, // File name you want to save as in S3
     Body: contents,
   }
