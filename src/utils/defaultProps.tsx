@@ -69,8 +69,6 @@ import {
   SkeletonProps,
 } from '@chakra-ui/react'
 
-import { SliderProps } from '@mui/material'
-import * as MUI from '@mui/material'
 import iconsList from '~iconsList'
 
 type PropsWithForm<T> = T & { form?: T }
@@ -79,8 +77,6 @@ type PreviewDefaultProps = {
   Badge?: PropsWithForm<BadgeProps>
   Box?: PropsWithForm<BoxProps>
   Button?: PropsWithForm<ButtonProps>
-  Buton?: PropsWithForm<ButtonProps>
-  Slider?: PropsWithForm<SliderProps>
   Icon?: PropsWithForm<IconProps> & { icon: keyof typeof iconsList }
   IconButton?: PropsWithForm<IconButtonProps>
   Image?: PropsWithForm<ImageProps>
@@ -154,7 +150,6 @@ type PreviewDefaultProps = {
   Skeleton?: PropsWithForm<SkeletonProps>
   SkeletonCircle?: PropsWithForm<SkeletonProps>
   SkeletonText?: PropsWithForm<SkeletonProps>
-  Sample?: PropsWithForm<ButtonProps>
 }
 
 export const DEFAULT_PROPS: PreviewDefaultProps = {
@@ -192,11 +187,6 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     children: 'Lorem Ipsum',
   },
   Button: {
-    children: 'Button text',
-    variant: 'solid',
-    size: 'md',
-  },
-  Buton: {
     children: 'Button text',
     variant: 'solid',
     size: 'md',
@@ -295,7 +285,6 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     spacingX: 1,
     spacingY: 1,
   },
-  Sample: {},
   Stack: {
     spacing: 2,
     form: {
@@ -331,7 +320,6 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
       speed: 0.8,
     },
   },
-  Slider: { value: 30, },
   Switch: {
     isChecked: false,
   },

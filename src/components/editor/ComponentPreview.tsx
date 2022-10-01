@@ -70,7 +70,6 @@ const ComponentPreview: React.FC<{
     case 'StatLabel':
     case 'StatNumber':
     case 'StatArrow':
-    case 'Slider':
       return (
         <PreviewContainer
           component={component}
