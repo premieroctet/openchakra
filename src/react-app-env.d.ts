@@ -97,6 +97,7 @@ interface IComponent {
   parent: string
   id: string
   props: any
+  params?: any
   rootParentType?: ComponentType
   componentName?: string
 }
