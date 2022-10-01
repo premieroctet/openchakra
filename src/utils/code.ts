@@ -280,7 +280,7 @@ export const generatePanel = async ( components: IComponents ) => {
   `import SwitchControl from '~components/inspector/controls/SwitchControl'` : ''}
   ${components.root.params?.some(param => param.type === "color") ? 
   `import ColorsControl from '~components/inspector/controls/ColorsControl'` : ''}
-  ${components.root.params?.some(param => param.type === "enum") ? 
+  ${components.root.params?.some(param => param.type === "display") ? 
   `import FormControl from '~components/inspector/controls/FormControl'
   import { useForm } from '~hooks/useForm'
   import usePropsSelector from '~hooks/usePropsSelector'
@@ -289,10 +289,13 @@ export const generatePanel = async ( components: IComponents ) => {
   `import IconControl from '~components/inspector/controls/IconControl'` : ''}
   
   const SamplePanel = () => {
-    ${components.root.params?.some(param => param.type === "enum") ? 
+    ${components.root.params?.some(param => param.type === "display") ? 
   `const { setValueFromEvent } = useForm()
-  ${components.root.params.filter(param => param.type === "enum")
-    .map(param => `const ${param.name} = usePropsSelector('${param.name}')`)}` : ''}
+  ${components.root.params.filter(param => param.type === "display")
+    .map(param => {return (`const ${param.name} = usePropsSelector('${param.name}')
+      const alignItems = usePropsSelector('alignItems')
+      const flexDirection = usePropsSelector('flexDirection')
+      const justifyContent = usePropsSelector('justifyContent')`)})}` : ''}
     return (
     <>
     ${components.root.params?.some(param => param.type === "string" || param.type === "number") ? 
@@ -307,9 +310,9 @@ export const generatePanel = async ( components: IComponents ) => {
     ${components.root.params?.some(param => param.type === "icon") ? 
     `${components.root.params.filter(param => param.type === "icon")
     .map(param => `<IconControl label="${param.name}" name="${param.name}" />`)}` : ''}
-    ${components.root.params?.some(param => param.type === "enum") ? 
-    `${components.root.params.filter(param => param.type === "enum")
-    .map(param => `<FormControl htmlFor="${param.name}" label="${param.name}">
+    ${components.root.params?.some(param => param.type === "display") ? 
+    `${components.root.params.filter(param => param.type === "display")
+    .map(param =>{ return ( `<FormControl htmlFor="${param.name}" label="${param.name}">
     <Select
       id="${param.name}"
       onChange={setValueFromEvent}
@@ -317,13 +320,58 @@ export const generatePanel = async ( components: IComponents ) => {
       size="sm"
       value={${param.name} || ''}
     >
-      <option>outline</option>
-      <option>ghost</option>
-      <option>unstyled</option>
-      <option>link</option>
-      <option>solid</option>
+      <option>block</option>
+      <option>flex</option>
+      <option>inline</option>
+      <option>grid</option>
     </Select>
-  </FormControl>`)}` : ''}
+  </FormControl>
+  {${param.name} === 'flex' ? (<><FormControl label="flexDirection">
+  <Select
+    name="flexDirection"
+    size="sm"
+    value={flexDirection || ''}
+    onChange={setValueFromEvent}
+  >
+    <option>row</option>
+    <option>row-reverse</option>
+    <option>column</option>
+    <option>column-reverse</option>
+  </Select>
+</FormControl>
+
+<FormControl label="justifyContent">
+  <Select
+    name="justifyContent"
+    size="sm"
+    value={justifyContent || ''}
+    onChange={setValueFromEvent}
+  >
+    <option>flex-start</option>
+    <option>center</option>
+    <option>flex-end</option>
+    <option>space-between</option>
+    <option>space-around</option>
+  </Select>
+</FormControl>
+
+<FormControl label="alignItems">
+  <Select
+    name="alignItems"
+    size="sm"
+    value={alignItems || ''}
+    onChange={setValueFromEvent}
+  >
+    <option>stretch</option>
+    <option>flex-start</option>
+    <option>center</option>
+    <option>flex-end</option>
+    <option>space-between</option>
+    <option>space-around</option>
+  </Select>
+</FormControl></>) : null}
+  `)})}
+  ` : ''}
     </>
     )
   }
@@ -334,5 +382,7 @@ export const generatePanel = async ( components: IComponents ) => {
   panelCode = await formatCode(panelCode)
 
   console.log(panelCode);
+
+  return panelCode;
 
 }

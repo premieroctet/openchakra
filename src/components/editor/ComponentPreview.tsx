@@ -34,9 +34,6 @@ import SkeletonPreview, {
   SkeletonCirclePreview,
   SkeletonTextPreview,
 } from './previews/SkeletonPreview'
-import SliderPreview from './previews/SliderPreview'
-import SamplePreview from './previews/SamplePreview'
-import ButonPreview from './previews/ButonPreview'
 
 const ComponentPreview: React.FC<{
   componentName: string
@@ -158,9 +155,7 @@ const ComponentPreview: React.FC<{
     case 'AspectRatio':
       return <AspectRatioPreview component={component} />
     case 'Button':
-      return <SamplePreview component={component} />
-    case 'Buton':
-      return <ButonPreview component={component} />
+      return <ButtonPreview component={component} />
     case 'Breadcrumb':
       return <BreadcrumbPreview component={component} />
     case 'BreadcrumbItem':
@@ -181,10 +176,6 @@ const ComponentPreview: React.FC<{
       return <SkeletonTextPreview component={component} />
     case 'SkeletonCircle':
       return <SkeletonCirclePreview component={component} />
-    //case 'Sample':
-    //return <SamplePreview component={component} />
-    //case 'Slider':
-      //return <SliderPreview component={component} />
     default:
       return null
   }
