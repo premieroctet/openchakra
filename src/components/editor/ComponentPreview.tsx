@@ -34,7 +34,6 @@ import SkeletonPreview, {
   SkeletonCirclePreview,
   SkeletonTextPreview,
 } from './previews/SkeletonPreview'
-import CCPreview from '../../custom-components/editor/previews/CCPreview'
 
 const ComponentPreview: React.FC<{
   componentName: string

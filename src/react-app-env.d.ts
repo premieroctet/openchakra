@@ -80,6 +80,7 @@ type ComponentType =
   | 'Tag'
   | 'Text'
   | 'Textarea'
+  | string
 
 type MetaComponentType =
   | 'FormControlMeta'
@@ -91,15 +92,13 @@ type MetaComponentType =
   | 'TabsMeta'
   | 'StatMeta'
 
-type CustomComponentType = string
-
 interface IComponent {
   children: string[]
-  type: ComponentType | CustomComponentType
+  type: ComponentType
   parent: string
   id: string
   props: any
-  rootParentType?: ComponentType | CustomComponentType
+  rootParentType?: ComponentType
   componentName?: string
 }
 

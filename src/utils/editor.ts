@@ -1,14 +1,11 @@
-const ALERT_COMPONENTS: (
-  | ComponentType
-  | MetaComponentType
-  | CustomComponentType
-)[] = ['Alert', 'AlertDescription', 'AlertIcon', 'AlertTitle']
+const ALERT_COMPONENTS: (ComponentType | MetaComponentType)[] = [
+  'Alert',
+  'AlertDescription',
+  'AlertIcon',
+  'AlertTitle',
+]
 
-export const COMPONENTS: (
-  | ComponentType
-  | MetaComponentType
-  | CustomComponentType
-)[] = [
+export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   ...ALERT_COMPONENTS,
   'Avatar',
   'AvatarBadge',
@@ -98,7 +95,6 @@ export const COMPONENTS: (
 export const AccordionWhitelist: (
   | ComponentType
   | MetaComponentType
-  | CustomComponentType
 )[] = COMPONENTS.filter(name => !ALERT_COMPONENTS.includes(name))
 
 export const rootComponents = COMPONENTS

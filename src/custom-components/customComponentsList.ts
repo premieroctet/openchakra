@@ -5,7 +5,7 @@ export type CMenuItem = {
 
 type CMenuItems = Partial<
   {
-    [k in CustomComponentType]: CMenuItem
+    [k in ComponentType]: CMenuItem
   }
 >
 
@@ -14,4 +14,4 @@ export const cmenuItems: CMenuItems = {
   CC2: {},
 }
 
-export const componentsList: CustomComponentType[] = ['CC', 'CC2']
+export const componentsList: ComponentType[] = ['CC', 'CC2']
