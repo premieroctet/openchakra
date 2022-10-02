@@ -49,11 +49,3 @@ export const validateJSON = (jsonObject: object) => {
     throw new Error(validationResult.errors)
   }
 }
-
-export const validateJSON = jsonObject => {
-  const validator = new Validator()
-  const validationResult= validator.validate(jsonObject, schema)
-  f (!validationResult.valid) {
-    throw new Error(validationResult.errors)
-  }
-}

@@ -9,7 +9,6 @@ import omit from 'lodash/omit'
 export interface PageState extends PageSettings {
   components: IComponents
   selectedId: IComponent['id']
-  hoveredId?: IComponent['id']
 }
 
 export type ProjectState = {
@@ -18,6 +17,7 @@ export type ProjectState = {
   }
   activePage: string
   rootPage: string
+  hoveredId?: IComponent['id']
 }
 export type ProjectStateWithUndo = {
   past: ProjectState[]
@@ -31,6 +31,7 @@ export type PageSettings = {
   metaTitle: string
   metaDescription: string
   metaImageUrl: string
+  rootPage: boolean
 }
 
 const DEFAULT_ID = 'root'
@@ -71,6 +72,7 @@ const project = createModel({
         metaTitle: '',
         metaDescription: '',
         metaImageUrl: '',
+        rootPage: true,
       },
     },
     activePage: DEFAULT_PAGE,
@@ -88,6 +90,7 @@ const project = createModel({
           metaImageUrl: '',
           components: INITIAL_COMPONENTS,
           selectedId: DEFAULT_ID,
+          rootPage: true
         },
       }
 
@@ -369,6 +372,7 @@ const project = createModel({
             metaTitle,
             metaDescription,
             metaImageUrl,
+            rootPage: false,
           },
         },
       }

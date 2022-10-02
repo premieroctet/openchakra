@@ -52,6 +52,9 @@
     "rootPage": {
       "type": "string"
     },
+    "hoveredId": {
+      "type": "string"
+    },
     "pages": {
       "description": "A page description",
       "type": "object",
