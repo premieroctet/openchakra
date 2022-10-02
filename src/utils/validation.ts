@@ -1,4 +1,6 @@
 import lodash from 'lodash'
+const projectSchema=require('./projectSchema.json')
+var Validator = require('jsonschema').Validator
 
 const checkEmptyDataProvider = (comp: IComponent, icomponents: IComponents) => {
   if (comp.type == 'DataProvider') {
@@ -38,4 +40,20 @@ export const validate = (icomponents: IComponents) => {
       components.map(c => checkAvailableDataProvider(c, icomponents)),
     ),
   )
+}
+
+export const validateJSON = (jsonObject: object) => {
+  const validator = new Validator()
+  const validationResult= validator.validate(jsonObject, projectSchema)
+  if (!validationResult.valid) {
+    throw new Error(validationResult.errors)
+  }
+}
+
+export const validateJSON = jsonObject => {
+  const validator = new Validator()
+  const validationResult= validator.validate(jsonObject, schema)
+  f (!validationResult.valid) {
+    throw new Error(validationResult.errors)
+  }
 }
