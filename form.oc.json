@@ -1,1 +1,0 @@
-{"root":{"id":"root","parent":"root","type":"Box","children":["comp-L8O4K3BJKCA40"],"props":{}},"comp-L8O4K3BJKCA40":{"id":"comp-L8O4K3BJKCA40","props":{"children":"Button text","variant":"solid","size":"md"},"children":[],"type":"Button","parent":"root","rootParentType":"Button"}}

@@ -273,6 +273,109 @@ export const generatePanel = async ( components: IComponents ) => {
   let componentsCodes = buildComponents(components)
   const iconImports = Array.from(new Set(getIconsImports(components)))
 
+  const textControls = [
+    ...new Set(
+      components.root.params?.filter(param => param.type === "string" || param.type === "number")
+    .map(param => `<TextControl label="${param.name}" name="${param.name}" />`),
+    ),
+  ]
+
+  const switchControls = [
+    ...new Set(
+      components.root.params?.filter(param => param.type === "boolean")
+    .map(param => `<SwitchControl label="${param.name}" name="${param.name}" />`)
+    ),
+  ]
+
+  const colorsControls = [
+    ...new Set(
+      components.root.params?.filter(param => param.type === "color")
+    .map(param => `<ColorsControl label="${param.name}" name="${param.name}" />`)
+    ),
+  ]
+
+  const iconControls = [
+    ...new Set(
+      components.root.params?.filter(param => param.type === "icon")
+    .map(param => `<IconControl label="${param.name}" name="${param.name}" />`)
+    ),
+  ]
+
+  const displayProps = [
+    ...new Set(
+      components.root.params?.filter(param => param.type === "display")
+    .map(param => {return (`const ${param.name} = usePropsSelector('${param.name}')
+      const alignItems${param.name} = usePropsSelector('alignItems')
+      const flexDirection${param.name} = usePropsSelector('flexDirection')
+      const justifyContent${param.name} = usePropsSelector('justifyContent')`)})
+    ),
+  ]
+
+  const displayControls = [
+    ...new Set(
+      components.root.params?.filter(param => param.type === "display")
+    .map(param =>{ return ( `<FormControl htmlFor="${param.name}" label="${param.name}">
+    <Select
+      id="${param.name}"
+      onChange={setValueFromEvent}
+      name="${param.name}"
+      size="sm"
+      value={${param.name} || ''}
+    >
+      <option>block</option>
+      <option>flex</option>
+      <option>inline</option>
+      <option>grid</option>
+    </Select>
+  </FormControl>
+  {${param.name} === 'flex' ? (<><FormControl label="flexDirection">
+  <Select
+    name="flexDirection${param.name}"
+    size="sm"
+    value={flexDirection${param.name} || ''}
+    onChange={setValueFromEvent}
+  >
+    <option>row</option>
+    <option>row-reverse</option>
+    <option>column</option>
+    <option>column-reverse</option>
+  </Select>
+</FormControl>
+
+<FormControl label="justifyContent">
+  <Select
+    name="justifyContent${param.name}"
+    size="sm"
+    value={justifyContent${param.name} || ''}
+    onChange={setValueFromEvent}
+  >
+    <option>flex-start</option>
+    <option>center</option>
+    <option>flex-end</option>
+    <option>space-between</option>
+    <option>space-around</option>
+  </Select>
+</FormControl>
+
+<FormControl label="alignItems">
+  <Select
+    name="alignItems${param.name}"
+    size="sm"
+    value={alignItems${param.name} || ''}
+    onChange={setValueFromEvent}
+  >
+    <option>stretch</option>
+    <option>flex-start</option>
+    <option>center</option>
+    <option>flex-end</option>
+    <option>space-between</option>
+    <option>space-around</option>
+  </Select>
+</FormControl></>) : null}
+  `)})
+    ),
+  ]
+
   let panelCode = `import React, { memo } from 'react'
   ${components.root.params?.some(param => param.type === "string" || param.type === "number") ?
    `import TextControl from '~components/inspector/controls/TextControl'` : ''}
@@ -291,87 +394,19 @@ export const generatePanel = async ( components: IComponents ) => {
   const SamplePanel = () => {
     ${components.root.params?.some(param => param.type === "display") ? 
   `const { setValueFromEvent } = useForm()
-  ${components.root.params.filter(param => param.type === "display")
-    .map(param => {return (`const ${param.name} = usePropsSelector('${param.name}')
-      const alignItems = usePropsSelector('alignItems')
-      const flexDirection = usePropsSelector('flexDirection')
-      const justifyContent = usePropsSelector('justifyContent')`)})}` : ''}
+  ${displayProps.join('\n')}` : ''}
     return (
     <>
     ${components.root.params?.some(param => param.type === "string" || param.type === "number") ? 
-    `${components.root.params.filter(param => param.type === "string" || param.type === "number")
-    .map(param => `<TextControl label="${param.name}" name="${param.name}" />`)}` : ''}
+    `${textControls.join('')}` : ''}
     ${components.root.params?.some(param => param.type === "boolean") ? 
-    `${components.root.params.filter(param => param.type === "boolean")
-    .map(param => `<SwitchControl label="${param.name}" name="${param.name}" />`)}` : ''}
+    `${switchControls.join('')}` : ''}
     ${components.root.params?.some(param => param.type === "color") ? 
-    `${components.root.params.filter(param => param.type === "color")
-    .map(param => `<ColorsControl label="${param.name}" name="${param.name}" />`)}` : ''}
+    `${colorsControls.join('')}` : ''}
     ${components.root.params?.some(param => param.type === "icon") ? 
-    `${components.root.params.filter(param => param.type === "icon")
-    .map(param => `<IconControl label="${param.name}" name="${param.name}" />`)}` : ''}
+    `${iconControls.join('')}` : ''}
     ${components.root.params?.some(param => param.type === "display") ? 
-    `${components.root.params.filter(param => param.type === "display")
-    .map(param =>{ return ( `<FormControl htmlFor="${param.name}" label="${param.name}">
-    <Select
-      id="${param.name}"
-      onChange={setValueFromEvent}
-      name="${param.name}"
-      size="sm"
-      value={${param.name} || ''}
-    >
-      <option>block</option>
-      <option>flex</option>
-      <option>inline</option>
-      <option>grid</option>
-    </Select>
-  </FormControl>
-  {${param.name} === 'flex' ? (<><FormControl label="flexDirection">
-  <Select
-    name="flexDirection"
-    size="sm"
-    value={flexDirection || ''}
-    onChange={setValueFromEvent}
-  >
-    <option>row</option>
-    <option>row-reverse</option>
-    <option>column</option>
-    <option>column-reverse</option>
-  </Select>
-</FormControl>
-
-<FormControl label="justifyContent">
-  <Select
-    name="justifyContent"
-    size="sm"
-    value={justifyContent || ''}
-    onChange={setValueFromEvent}
-  >
-    <option>flex-start</option>
-    <option>center</option>
-    <option>flex-end</option>
-    <option>space-between</option>
-    <option>space-around</option>
-  </Select>
-</FormControl>
-
-<FormControl label="alignItems">
-  <Select
-    name="alignItems"
-    size="sm"
-    value={alignItems || ''}
-    onChange={setValueFromEvent}
-  >
-    <option>stretch</option>
-    <option>flex-start</option>
-    <option>center</option>
-    <option>flex-end</option>
-    <option>space-between</option>
-    <option>space-around</option>
-  </Select>
-</FormControl></>) : null}
-  `)})}
-  ` : ''}
+    `${displayControls.join('\n')}` : ''}
     </>
     )
   }
