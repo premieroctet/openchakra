@@ -1,7 +1,7 @@
-import { getPages } from '../../../../core/selectors/components';
+import { getPages } from '../../../../core/selectors/components'
 
-import { Input, Select } from '@chakra-ui/react';
-import { useSelector } from 'react-redux';
+import { Input, Select } from '@chakra-ui/react'
+import { useSelector } from 'react-redux'
 import React from 'react'
 
 import { useForm } from '~hooks/useForm'
@@ -39,11 +39,14 @@ const ImagePanel = () => {
           size="sm"
           value={page || ''}
         >
-          <option value=''></option>
-          {Object.keys(pages).map((p, i) => (<option key={i} >{p}</option>))}
+          <option value=""></option>
+          {Object.values(pages).map((p, i) => (
+            <option key={i} value={p.pageId}>
+              {p.pageName}
+            </option>
+          ))}
         </Select>
       </FormControl>
-
 
       <FormControl label="Fallback Src" htmlFor="fallbackSrc">
         <Input
