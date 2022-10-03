@@ -4,8 +4,9 @@ import { useToast } from '@chakra-ui/react'
 import { useSelector } from 'react-redux'
 import { getFullComponents } from '~core/selectors/components'
 import { deploy } from '../../utils/deploy'
+import { ProjectState } from '~core/models/project'
 
-const deployComponents = (state: ComponentsState, toast: any) => {
+const deployComponents = (state: ProjectState, toast: any) => {
   toast({
     title: 'Starting publishing',
     status: 'success',
@@ -46,7 +47,6 @@ const Deploy = () => {
         deployComponents(state, toast)
           .finally(() => setIsDeploying(false))
       }}
-      alt="Deploy"
       disabled={deploying}
     >
       {deploying ? 'Deploying...' : 'Deploy'}
