@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const SessionSchema = new Schema({
+const ThemeSchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -13,4 +13,4 @@ const SessionSchema = new Schema({
   }],
 }, {toJSON: {virtuals: true, getters: true}})
 
-module.exports = SessionSchema
+module.exports = ThemeSchema
