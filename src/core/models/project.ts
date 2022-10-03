@@ -205,14 +205,11 @@ const project = createModel({
     },
 
     deleteComponent(state: ProjectState, componentId: string) {
-      alert(componentId)
       const comp = getComponentById(state, componentId)
       if (!comp) {
-        alert('erreur')
-      } else {
-        if (comp.id === 'root' || comp.type == 'DataProvider') {
-          state.pages = unlinkDataSource(state, componentId).pages
-        }
+        alert(`Can(t find component with id ${componentId})`)
+      } else if (comp.id === 'root' || comp.type == 'DataProvider') {
+        state = unlinkDataSource(state, componentId)
       }
 
       if (componentId === 'root') {

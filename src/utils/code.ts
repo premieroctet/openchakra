@@ -14,10 +14,14 @@ export const CONTAINER_TYPE: ComponentType[] = [
   'Grid',
   'SimpleGrid',
   'Flex',
+  'List',
+  'Accordion',
+  'Container',
 ]
-const TEXT_TYPE: ComponentType[] = ['Text', 'Heading', 'Badge']
+const TEXT_TYPE: ComponentType[] = ['Text', 'Heading', 'Badge', 'ListItem']
 const ACTION_TYPE: ComponentType[] = ['Button']
 const IMAGE_TYPE: ComponentType[] = ['Image', 'Avatar']
+const PROGRESS_TYPE: ComponentType[] = ['Progress', 'CircularProgress']
 
 export const normalizePageName = (pageName: string) => {
   return capitalize(camelCase(pageName))
@@ -61,6 +65,9 @@ const getDynamicType = (comp: IComponent) => {
   }
   if (ACTION_TYPE.includes(comp.type)) {
     return 'Button'
+  }
+  if (PROGRESS_TYPE.includes(comp.type)) {
+    return 'Value'
   }
 }
 
