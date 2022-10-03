@@ -5,6 +5,9 @@ import templates, { TemplateType } from '~templates'
 import { generateId } from '~utils/generateId'
 import { duplicateComponent, deleteComponent } from '~utils/recursive'
 import omit from 'lodash/omit'
+import mapValues from 'lodash/mapValues'
+import flatten from 'lodash/flatten'
+import jpath from 'jsonpath'
 
 export interface PageState extends PageSettings {
   components: IComponents
@@ -28,9 +31,9 @@ export type ProjectStateWithUndo = {
 export type PageSettings = {
   pageId: string
   pageName: string
-  metaTitle: string
-  metaDescription: string
-  metaImageUrl: string
+  metaTitle?: string
+  metaDescription?: string
+  metaImageUrl?: string
   rootPage: boolean
 }
 
@@ -59,6 +62,38 @@ export const INITIAL_COMPONENTS: IComponents = {
 
 const getActiveComponents = (state: ProjectState) => {
   return state.pages[state.activePage].components
+}
+
+export const unlinkDataSource = (state: ProjectState, dataSourceId: string) => {
+  return {
+    ...state,
+    pages: mapValues(state.pages, p => {
+      return {
+        ...p,
+        components: mapValues(p.components, comp => ({
+          ...comp,
+          props: {
+            ...comp.props,
+            dataSource:
+              comp.props.dataSource == dataSourceId
+                ? undefined
+                : comp.props.dataSource,
+            attribute:
+              comp.props.dataSource == dataSourceId
+                ? undefined
+                : comp.props.attribute,
+          },
+        })),
+      }
+    }),
+  }
+}
+
+export const getComponentById = (state: ProjectState, componentId: string) => {
+  const allComps = flatten(
+    Object.values(state.pages).map(p => Object.values(p.components)),
+  )
+  return allComps.find(c => c.id == componentId)
 }
 
 const project = createModel({
@@ -90,7 +125,7 @@ const project = createModel({
           metaImageUrl: '',
           components: INITIAL_COMPONENTS,
           selectedId: DEFAULT_ID,
-          rootPage: true
+          rootPage: true,
         },
       }
 
@@ -121,6 +156,9 @@ const project = createModel({
 
         draftState.pages[draftState.activePage].components[componentId].props =
           defaultProps || {}
+
+        // Props reset => if model, it is removed => unlink all
+        draftState.pages = unlinkDataSource(draftState, componentId).pages
       })
     },
     updateProps(
@@ -133,10 +171,14 @@ const project = createModel({
         draftState.pages[draftState.activePage].components[payload.id].props[
           payload.name
         ] = parseValue || payload.value
+        // Change source model => unlink all components linked to this datasource
+        if (payload.name == 'model') {
+          draftState.pages = unlinkDataSource(draftState, payload.id).pages
+        }
       })
     },
     deleteProps(state: ProjectState, payload: { id: string; name: string }) {
-      return {
+      let resState = {
         ...state,
         pages: {
           ...state.pages,
@@ -155,8 +197,24 @@ const project = createModel({
           },
         },
       }
+      // Change source model => unlink all components linked to this datasource
+      if (payload.name == 'model') {
+        resState = unlinkDataSource(resState, payload.id)
+      }
+      return resState
     },
+
     deleteComponent(state: ProjectState, componentId: string) {
+      alert(componentId)
+      const comp = getComponentById(state, componentId)
+      if (!comp) {
+        alert('erreur')
+      } else {
+        if (comp.id === 'root' || comp.type == 'DataProvider') {
+          state.pages = unlinkDataSource(state, componentId).pages
+        }
+      }
+
       if (componentId === 'root') {
         return state
       }
