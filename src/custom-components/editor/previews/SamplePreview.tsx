@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDropComponent } from '~hooks/useDropComponent'
 import { useInteractive } from '~hooks/useInteractive'
-import { Button } from '@chakra-ui/react'
+import { Box, Center, Button, Text } from '@chakra-ui/react'
 import icons from '~iconsList'
 
 interface Props {
@@ -34,7 +34,38 @@ const SamplePreview = ({ component }: Props) => {
     }
   }
 
-  return <Button ref={ref} {...props} />
+  return (
+    <Box {...props} ref={ref}>
+      <Center
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="flex-start"
+        m={16}
+        p={8}
+        backgroundColor="cyan.100"
+        bgGradient="linear(to right, green.200,blue.500)"
+      >
+        <Text
+          opacity={1}
+          fontWeight="bold"
+          fontSize="lg"
+          letterSpacing="widest"
+        >
+          Some text blah blah blah
+        </Text>
+        <Button
+          variant="ghost"
+          size="md"
+          bgGradient="linear(to right, messenger.500,green.500)"
+          borderRadius={100}
+          border={20}
+        >
+          Test button
+        </Button>
+      </Center>
+    </Box>
+  )
 }
 
 export default SamplePreview

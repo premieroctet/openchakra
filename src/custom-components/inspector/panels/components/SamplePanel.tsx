@@ -8,7 +8,7 @@ import { useForm } from '~hooks/useForm'
 import usePropsSelector from '~hooks/usePropsSelector'
 import IconControl from '~components/inspector/controls/IconControl'
 
-const CCPanel = () => {
+const SamplePanel = () => {
   const { setValueFromEvent } = useForm()
 
   const size = usePropsSelector('size')
@@ -43,4 +43,4 @@ const CCPanel = () => {
   )
 }
 
-export default memo(CCPanel)
+export default memo(SamplePanel)
