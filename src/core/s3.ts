@@ -38,6 +38,23 @@ export const uploadFile = (filename: string, contents: any) => {
       return Promise.reject(err)
     })
 }
+export const deleteFile = (url: string) => {
+  // Setting up S3 upload parameters
+  const params = {
+    Bucket: 'my-alfred-data-test',
+    Key: url, // File name you want to delete as in S3
+  }
+
+  // Uploading files to the bucket
+  return S3.deleteObject(params)
+    .promise()
+    .then(res => {
+      return Promise.resolve(res)
+    })
+    .catch(err => {
+      return Promise.reject(err)
+    })
+}
 
 export const listFiles = async () => {
   const awsConfig = (({ region, accessKeyId, secretAccessKey }) => ({
