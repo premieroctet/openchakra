@@ -80,6 +80,7 @@ type ComponentType =
   | 'Tag'
   | 'Text'
   | 'Textarea'
+  | string
 
 type MetaComponentType =
   | 'FormControlMeta'
@@ -118,6 +119,7 @@ interface ComponentItemProps {
   isChild?: boolean
   isMeta?: boolean
   soon?: boolean
+  custom?: boolean
   rootParentType?: ComponentType
   children?: React.ReactNode
 }

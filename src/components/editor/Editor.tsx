@@ -69,12 +69,11 @@ const Editor: React.FC = () => {
             }}
             textDecoration="underline"
           >
-            the onboarding components
+            the custom components
           </Link>
           .
         </Text>
       )}
-
       {components.root.children.map((name: string) => (
         <ComponentPreview key={name} componentName={name} />
       ))}
