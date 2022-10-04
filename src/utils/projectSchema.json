@@ -1,0 +1,69 @@
+{
+  "$id": "https://example.com/person.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Studio project",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "component": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string"},
+        "parent": {"type": "string"},
+        "type": {"type": "string"},
+        "children": {
+          "type": "array",
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "rootParentType": {"type": "string"},
+        "componentName": {"type": "string"},
+        "props": {"type": "object"}
+      },
+      "required": ["id", "parent", "type", "children", "props"]
+    },
+    "page": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "pageId": {"type": "string"},
+        "pageName": {"type": "string"},
+        "metaTitle": {"type": "string"},
+        "metaDescription": {"type": "string"},
+        "metaImageUrl": {"type": "string"},
+        "rootPage": {"type": "boolean"},
+        "selectedId": {"type": "string"},
+        "components": {
+          "type": "object",
+          "additionalProperties": false,
+          "patternProperties": {
+            "^comp-.*$|root": {"$ref": "#/$defs/component"}
+          }
+        }
+      },
+      "required": ["pageId", "pageName", "rootPage", "selectedId", "components"]
+    }
+  },
+  "properties": {
+    "activePage": {
+      "type": "string"
+    },
+    "rootPage": {
+      "type": "string"
+    },
+    "hoveredId": {
+      "type": "string"
+    },
+    "pages": {
+      "description": "A page description",
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^page-.*$": {
+          "$ref": "#/$defs/page"
+        }
+      }
+    }
+  }
+}

@@ -25,7 +25,7 @@ export async function loadFromJSON() {
 }
 
 export async function saveAsJSON(components: IComponents) {
-  const serialized = JSON.stringify(components)
+  const serialized = JSON.stringify(components, null, 2)
   const name = `components.json`
 
   await fileSave(

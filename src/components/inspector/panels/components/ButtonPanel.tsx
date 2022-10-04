@@ -15,8 +15,8 @@ import { getPages } from '../../../../core/selectors/components'
 const ButtonPanel = () => {
   const { setValueFromEvent } = useForm()
 
-  const pages = useSelector(getPages)
   const size = usePropsSelector('size')
+  const pages = useSelector(getPages)
   const page = usePropsSelector('page')
   const variant = usePropsSelector('variant')
 

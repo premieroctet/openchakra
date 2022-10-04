@@ -1,4 +1,4 @@
-import { uploadFile } from './s3'
+import { uploadFile } from '../../src/core/s3'
 import fs from 'fs'
 
 describe('S3 test', () => {

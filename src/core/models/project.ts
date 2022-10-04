@@ -5,11 +5,13 @@ import templates, { TemplateType } from '~templates'
 import { generateId } from '~utils/generateId'
 import { duplicateComponent, deleteComponent } from '~utils/recursive'
 import omit from 'lodash/omit'
+import mapValues from 'lodash/mapValues'
+import flatten from 'lodash/flatten'
+import jpath from 'jsonpath'
 
 export interface PageState extends PageSettings {
   components: IComponents
   selectedId: IComponent['id']
-  hoveredId?: IComponent['id']
 }
 
 export type ProjectState = {
@@ -18,6 +20,7 @@ export type ProjectState = {
   }
   activePage: string
   rootPage: string
+  hoveredId?: IComponent['id']
 }
 export type ProjectStateWithUndo = {
   past: ProjectState[]
@@ -26,11 +29,12 @@ export type ProjectStateWithUndo = {
 }
 
 export type PageSettings = {
-  pageId: string,
+  pageId: string
   pageName: string
-  metaTitle: string
-  metaDescription: string
-  metaImageUrl: string
+  metaTitle?: string
+  metaDescription?: string
+  metaImageUrl?: string
+  rootPage: boolean
 }
 
 const DEFAULT_ID = 'root'
@@ -60,6 +64,38 @@ const getActiveComponents = (state: ProjectState) => {
   return state.pages[state.activePage].components
 }
 
+export const unlinkDataSource = (state: ProjectState, dataSourceId: string) => {
+  return {
+    ...state,
+    pages: mapValues(state.pages, p => {
+      return {
+        ...p,
+        components: mapValues(p.components, comp => ({
+          ...comp,
+          props: {
+            ...comp.props,
+            dataSource:
+              comp.props.dataSource == dataSourceId
+                ? undefined
+                : comp.props.dataSource,
+            attribute:
+              comp.props.dataSource == dataSourceId
+                ? undefined
+                : comp.props.attribute,
+          },
+        })),
+      }
+    }),
+  }
+}
+
+export const getComponentById = (state: ProjectState, componentId: string) => {
+  const allComps = flatten(
+    Object.values(state.pages).map(p => Object.values(p.components)),
+  )
+  return allComps.find(c => c.id == componentId)
+}
+
 const project = createModel({
   state: {
     pages: {
@@ -71,6 +107,7 @@ const project = createModel({
         metaTitle: '',
         metaDescription: '',
         metaImageUrl: '',
+        rootPage: true,
       },
     },
     activePage: DEFAULT_PAGE,
@@ -88,11 +125,11 @@ const project = createModel({
           metaImageUrl: '',
           components: INITIAL_COMPONENTS,
           selectedId: DEFAULT_ID,
+          rootPage: true,
         },
       }
-      const activePage = newState
-        ? Object.keys(newState.pages)[0]
-        : resetPageId
+
+      const activePage = newState?.activePage || resetPageId
 
       const rootPage = activePage
 
@@ -103,6 +140,7 @@ const project = createModel({
         rootPage,
       }
     },
+
     loadDemo(state: ProjectState, type: TemplateType): ProjectState {
       return {
         ...state,
@@ -118,6 +156,9 @@ const project = createModel({
 
         draftState.pages[draftState.activePage].components[componentId].props =
           defaultProps || {}
+
+        // Props reset => if model, it is removed => unlink all
+        draftState.pages = unlinkDataSource(draftState, componentId).pages
       })
     },
     updateProps(
@@ -130,10 +171,14 @@ const project = createModel({
         draftState.pages[draftState.activePage].components[payload.id].props[
           payload.name
         ] = parseValue || payload.value
+        // Change source model => unlink all components linked to this datasource
+        if (payload.name == 'model') {
+          draftState.pages = unlinkDataSource(draftState, payload.id).pages
+        }
       })
     },
     deleteProps(state: ProjectState, payload: { id: string; name: string }) {
-      return {
+      let resState = {
         ...state,
         pages: {
           ...state.pages,
@@ -141,16 +186,32 @@ const project = createModel({
             ...state.pages[state.activePage],
             components: {
               ...state.pages[state.activePage].components,
-              [payload.id]:{
+              [payload.id]: {
                 ...state.pages[state.activePage].components[payload.id],
-                props: omit(state.pages[state.activePage].components[payload.id].props, payload.name),
-              }
-            }
+                props: omit(
+                  state.pages[state.activePage].components[payload.id].props,
+                  payload.name,
+                ),
+              },
+            },
           },
         },
       }
+      // Change source model => unlink all components linked to this datasource
+      if (payload.name == 'model') {
+        resState = unlinkDataSource(resState, payload.id)
+      }
+      return resState
     },
+
     deleteComponent(state: ProjectState, componentId: string) {
+      const comp = getComponentById(state, componentId)
+      if (!comp) {
+        alert(`Can(t find component with id ${componentId})`)
+      } else if (comp.id === 'root' || comp.type == 'DataProvider') {
+        state = unlinkDataSource(state, componentId)
+      }
+
       if (componentId === 'root') {
         return state
       }
@@ -211,8 +272,9 @@ const project = createModel({
     ): ProjectState {
       return produce(state, (draftState: ProjectState) => {
         const components = getActiveComponents(draftState)
-        const selectedComponent = components[draftState.pages[draftState.activePage].selectedId]
-        
+        const selectedComponent =
+          components[draftState.pages[draftState.activePage].selectedId]
+
         selectedComponent.children.splice(
           payload.toIndex,
           0,
@@ -261,10 +323,7 @@ const project = createModel({
         }
       })
     },
-    select(
-      state: ProjectState,
-      selectedId: IComponent['id'],
-    ): ProjectState {
+    select(state: ProjectState, selectedId: IComponent['id']): ProjectState {
       return {
         ...state,
         pages: {
@@ -306,10 +365,14 @@ const project = createModel({
     duplicate(state: ProjectState): ProjectState {
       return produce(state, (draftState: ProjectState) => {
         const components = getActiveComponents(draftState)
-        const selectedComponent = components[draftState.pages[draftState.activePage].selectedId]
+        const selectedComponent =
+          components[draftState.pages[draftState.activePage].selectedId]
 
         if (selectedComponent.id !== DEFAULT_ID) {
-          const parentElement = draftState.pages[draftState.activePage].components[selectedComponent.parent]
+          const parentElement =
+            draftState.pages[draftState.activePage].components[
+              selectedComponent.parent
+            ]
 
           const { newId, clonedComponents } = duplicateComponent(
             selectedComponent,
@@ -321,7 +384,9 @@ const project = createModel({
             ...clonedComponents,
           }
 
-          draftState.pages[draftState.activePage].components[parentElement.id].children.push(newId)
+          draftState.pages[draftState.activePage].components[
+            parentElement.id
+          ].children.push(newId)
         }
       })
     },
@@ -334,10 +399,7 @@ const project = createModel({
           payload.name
       })
     },
-    hover(
-      state: ProjectState,
-      componentId: IComponent['id'],
-    ): ProjectState {
+    hover(state: ProjectState, componentId: IComponent['id']): ProjectState {
       return {
         ...state,
         hoveredId: componentId,
@@ -350,9 +412,8 @@ const project = createModel({
       }
     },
     addPage(state: ProjectState, payload: PageSettings): ProjectState {
-
       const pageId = generateId('page')
-      const {pageName, metaTitle, metaDescription, metaImageUrl} = payload
+      const { pageName, metaTitle, metaDescription, metaImageUrl } = payload
 
       return {
         ...state,
@@ -366,13 +427,19 @@ const project = createModel({
             metaTitle,
             metaDescription,
             metaImageUrl,
+            rootPage: false,
           },
         },
       }
     },
     editPageSettings(state: ProjectState, payload: PageSettings): ProjectState {
-
-      const {pageId, pageName, metaTitle, metaDescription, metaImageUrl} = payload
+      const {
+        pageId,
+        pageName,
+        metaTitle,
+        metaDescription,
+        metaImageUrl,
+      } = payload
 
       if (pageId) {
         return {
@@ -399,14 +466,15 @@ const project = createModel({
       if (Object.keys(state.pages).length === 1) {
         return state
       }
-      const newPages= omit(state.pages, [pageId])
-      const newActivePage=Object.keys(newPages)[0]
-      const rootPage = pageId === state.rootPage ? newActivePage : state.rootPage
+      const newPages = omit(state.pages, [pageId])
+      const newActivePage = Object.keys(newPages)[0]
+      const rootPage =
+        pageId === state.rootPage ? newActivePage : state.rootPage
       return {
         ...state,
         pages: newPages,
         activePage: newActivePage,
-        rootPage
+        rootPage,
       }
     },
     setActivePage(state: ProjectState, pageId: string): ProjectState {

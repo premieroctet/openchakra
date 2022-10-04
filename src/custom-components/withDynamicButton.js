@@ -8,7 +8,7 @@ const withDynamicButton = Component => {
     console.log(`onClick:${JSON.stringify(onClick)}`)
     if (value?._id && pageUrl) {
       onClick = () =>
-        (window.location = `/${pageUrl}?id=${value._id.toString()}`)
+        window.open(`/${pageUrl}?id=${value._id.toString()}`, '_blank')
     }
     console.log(`onClick:${onClick}`)
     return <Component {...props} onClick={onClick}></Component>
