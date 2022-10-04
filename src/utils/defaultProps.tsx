@@ -335,11 +335,18 @@ export const DEFAULT_PROPS: PreviewDefaultProps | any = {
     variant: 'outline',
     size: 'sm',
   },
+  Sample: {
+    children: 'Custom Button text',
+    variant: 'outline',
+    size: 'sm',
+  },
 }
 
 export const getDefaultFormProps = (type: ComponentType) => {
   //@ts-ignore
-  const chakraDefaultProps = Chakra[type].defaultProps
+  let chakraDefaultProps = []
+  //@ts-ignore
+  if (!!Chakra[type]) chakraDefaultProps = Chakra[type].defaultProps
   // @ts-ignore
   return { ...chakraDefaultProps, ...DEFAULT_PROPS[type]?.form }
 }

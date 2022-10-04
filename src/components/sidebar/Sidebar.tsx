@@ -139,6 +139,7 @@ const Menu = () => {
                     c.toLowerCase().includes(searchTerm.toLowerCase()),
                   )
                   .map(name => {
+                    const { custom } = cmenuItems[name] as CMenuItem
                     return (
                       <Flex
                         alignItems={'center'}
@@ -148,10 +149,10 @@ const Menu = () => {
                         <Box flex={1}>
                           <DragItem
                             key={name}
-                            custom={true}
+                            custom={!!custom}
                             label={name}
-                            type={name as any}
-                            id={name as any}
+                            type={name}
+                            id={name}
                             rootParentType={name}
                           >
                             {name}
