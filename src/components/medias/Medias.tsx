@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import styled from 'styled-components'
 import { uploadFile, listFiles } from '../../core/s3'
 
 interface s3media {
@@ -11,13 +12,39 @@ interface s3media {
   publicUrl: string
 }
 
+const getExtension = filename => filename.substring(filename.lastIndexOf('.') + 1, filename.length) ||
+filename
+
+const displayDocument = (ext: string, src: string) => {
+
+  const document = {
+    width: 200,
+    height: 200
+  }
+
+  switch (ext) {
+    case 'pdf':
+      return  <object
+      type="application/pdf"
+      data={src}
+      role={'document'}
+      width={document.width}
+      height={document.height}
+    ></object>  
+    default:
+      return <img src={src} width={document.width}
+      height={document.height} alt="" />
+  }
+}
+
 const Medias = () => {
   const [fileToUpload, setFileToUpload] = useState()
   const [images, setImages] = useState([])
 
-  const handleUpload = (event: React.ChangeEvent) => {
+  const handleUpload = async (event: React.ChangeEvent) => {
     event.preventDefault()
-    fileToUpload && uploadFile(fileToUpload?.name, fileToUpload)
+    fileToUpload && await uploadFile(fileToUpload?.name, fileToUpload)
+      .then(() => fetchFiles())
   }
 
   const fetchFiles = async () => {
@@ -30,21 +57,12 @@ const Medias = () => {
     fetchFiles()
   }, [])
 
-  const autorizedImagesExtensions = ['jpg', 'jpeg', 'svg', 'gif']
+  const autorizedImagesExtensions = ['jpg', 'jpeg', 'png', 'svg', 'gif']
   const imagesToDisplay = images.filter(img => {
-    const ext =
-      img?.publicUrl.substring(img.publicUrl.lastIndexOf('.') + 1, img?.publicUrl.length) ||
-      img?.publicUrl
+    const ext = getExtension(img?.publicUrl)
     return autorizedImagesExtensions.includes(ext)
   })
 
-  console.log(images, imagesToDisplay)
-
-  // const href = "https://s3." + REGION + ".amazonaws.com/";
-  //   const bucketUrl = href + albumBucketName + "/";
-  //   const photos = data.Contents.map(function (photo) {
-  //     const photoKey = photo.Key;
-  //     const photoUrl = bucketUrl + encodeURIComponent(photoKey);
 
   return (
     <div>
@@ -57,23 +75,49 @@ const Medias = () => {
         />
         <input type="submit" onClick={handleUpload} />
       </form>
+      <MediaGrid>
       {imagesToDisplay.map((imgObj: s3media, i) => {
         
-        // console.log(imgObj.publicUrl)
-        // var params = {Bucket: 'xxx-xx-xxx', Key: '1.jpg'};
-        // var promise = s3.getSignedUrlPromise('getObject', params);
-        // promise.then(function(url) {
-        //   res.send(url)
-        // }, function(err) { console.log(err) });
+        const extension = getExtension(imgObj?.publicUrl)
 
         return (
-        <div key={`img${i}`}>
-          <img width={150} height={150} src={decodeURI(imgObj.publicUrl)} alt={''} />
-        </div>
-      )
-        })}
+          <MediaCard key={`img${i}`}> 
+          {displayDocument(extension, imgObj.publicUrl)}
+          <p>{imgObj.Key}</p>
+          <small>{imgObj.publicUrl}</small>
+          </MediaCard>
+        )
+        }
+      )}
+      </MediaGrid>
     </div>
   )
 }
+
+const MediaGrid = styled.div`
+  --grid-space: 2rem;
+  display: grid;
+  grid-template-columns: repeat( auto-fit, minmax(250px, 1fr) );
+  column-gap: var(--grid-space);
+  row-gap: var(--grid-space);
+  padding: 2rem;
+`
+
+const MediaCard = styled.div`
+  display: grid;
+  justify-items: center;
+  background-color: rgb(243, 243, 243);
+  padding: 1rem;
+  row-gap: 1rem;
+  border-radius: 2rem;
+  box-shadow: 0px 10px  5px rgba(199, 199, 199,0.9);
+  
+  img {
+    width: 100%;
+    height: auto;
+    border-radius: 1rem;
+  }
+
+`
 
 export default Medias
