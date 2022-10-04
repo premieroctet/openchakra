@@ -17,7 +17,7 @@ type categoryItems = {
 }
 
 const Pages = () => {
-  const [searchTerm, setSearchTerm] = useState('')
+  const [searchTerm, setSearchTerm] = useState<string>('')
 
   return (
     <DarkMode>
@@ -66,21 +66,24 @@ const Pages = () => {
             )}
           </InputRightElement>
         </InputGroup>
-        <PageList />
+        <PageList searchTerm={searchTerm} />
         <Box
           alignSelf={'end'}
           display="flex"
           flexDirection="column"
           alignItems={'start'}
-          mb={'2'}
+          mb={3}
+          mt={19}
+          position={'relative'}
         >
           <Image
             position={'absolute'}
-            bottom="0"
+            bottom={-6}
             src="/images/createPage_woman.svg"
-            w={'50%'}
+            w={'120px'}
             mb={2}
           />
+
           <CreatePageAction />
         </Box>
       </Box>
