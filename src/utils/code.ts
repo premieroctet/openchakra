@@ -236,3 +236,209 @@ export default App;`
 
   return await formatCode(code)
 }
+
+export const generatePreview = async ( components: IComponents, fileName: string ) => {
+  let code = buildBlock({ component: components.root, components })
+  let componentsCodes = buildComponents(components)
+  const iconImports = Array.from(new Set(getIconsImports(components)))
+
+  const imports = [
+    ...new Set(
+      Object.keys(components)
+        .map(name => components[name].type),
+    ),
+  ]
+
+  code = `import React from 'react'
+  import { useDropComponent } from '~hooks/useDropComponent'
+  import { useInteractive } from '~hooks/useInteractive'
+  ${imports.length? 
+    `import {
+      ${imports.join(',')}
+    } from "@chakra-ui/react";` : ''
+  }
+  ${
+    iconImports.length
+      ? `
+import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
+      : ''
+  }  
+  
+  interface Props { 
+    component: IComponent
+  }
+  
+  const ${fileName}Preview = ({ component }: Props) => {
+  const { isOver } = useDropComponent(component.id)
+  const { props, ref } = useInteractive(component, true)
+  
+  if (isOver) {
+      props.bg = 'teal.50'
+    }
+  
+    return (<Box {...props} ref={ref}>${code}</Box>)
+  }
+  
+  export default ${fileName}Preview`
+
+  code = await formatCode(code)
+
+  console.log(code);
+
+  return code;
+
+}
+
+export const generatePanel = async ( components: IComponents, fileName: string ) => {
+  let code = buildBlock({ component: components.root, components })
+  let componentsCodes = buildComponents(components)
+  const iconImports = Array.from(new Set(getIconsImports(components)))
+
+  const textControls = [
+    ...new Set(
+      components.root.params?.filter(param => param.type === "string" || param.type === "number")
+    .map(param => `<TextControl label="${param.name}" name="${param.name}" />`),
+    ),
+  ]
+
+  const switchControls = [
+    ...new Set(
+      components.root.params?.filter(param => param.type === "boolean")
+    .map(param => `<SwitchControl label="${param.name}" name="${param.name}" />`)
+    ),
+  ]
+
+  const colorsControls = [
+    ...new Set(
+      components.root.params?.filter(param => param.type === "color")
+    .map(param => `<ColorsControl label="${param.name}" name="${param.name}" />`)
+    ),
+  ]
+
+  const iconControls = [
+    ...new Set(
+      components.root.params?.filter(param => param.type === "icon")
+    .map(param => `<IconControl label="${param.name}" name="${param.name}" />`)
+    ),
+  ]
+
+  const displayProps = [
+    ...new Set(
+      components.root.params?.filter(param => param.type === "display")
+    .map(param => {return (`const ${param.name} = usePropsSelector('${param.name}')
+      const alignItems${param.name} = usePropsSelector('alignItems')
+      const flexDirection${param.name} = usePropsSelector('flexDirection')
+      const justifyContent${param.name} = usePropsSelector('justifyContent')`)})
+    ),
+  ]
+
+  const displayControls = [
+    ...new Set(
+      components.root.params?.filter(param => param.type === "display")
+    .map(param =>{ return ( `<FormControl htmlFor="${param.name}" label="${param.name}">
+    <Select
+      id="${param.name}"
+      onChange={setValueFromEvent}
+      name="${param.name}"
+      size="sm"
+      value={${param.name} || ''}
+    >
+      <option>block</option>
+      <option>flex</option>
+      <option>inline</option>
+      <option>grid</option>
+    </Select>
+  </FormControl>
+  {${param.name} === 'flex' ? (<><FormControl label="flexDirection">
+  <Select
+    name="flexDirection${param.name}"
+    size="sm"
+    value={flexDirection${param.name} || ''}
+    onChange={setValueFromEvent}
+  >
+    <option>row</option>
+    <option>row-reverse</option>
+    <option>column</option>
+    <option>column-reverse</option>
+  </Select>
+</FormControl>
+
+<FormControl label="justifyContent">
+  <Select
+    name="justifyContent${param.name}"
+    size="sm"
+    value={justifyContent${param.name} || ''}
+    onChange={setValueFromEvent}
+  >
+    <option>flex-start</option>
+    <option>center</option>
+    <option>flex-end</option>
+    <option>space-between</option>
+    <option>space-around</option>
+  </Select>
+</FormControl>
+
+<FormControl label="alignItems">
+  <Select
+    name="alignItems${param.name}"
+    size="sm"
+    value={alignItems${param.name} || ''}
+    onChange={setValueFromEvent}
+  >
+    <option>stretch</option>
+    <option>flex-start</option>
+    <option>center</option>
+    <option>flex-end</option>
+    <option>space-between</option>
+    <option>space-around</option>
+  </Select>
+</FormControl></>) : null}
+  `)})
+    ),
+  ]
+
+  let panelCode = `import React, { memo } from 'react'
+  ${components.root.params?.some(param => param.type === "string" || param.type === "number") ?
+   `import TextControl from '~components/inspector/controls/TextControl'` : ''}
+  ${components.root.params?.some(param => param.type === "boolean") ? 
+  `import SwitchControl from '~components/inspector/controls/SwitchControl'` : ''}
+  ${components.root.params?.some(param => param.type === "color") ? 
+  `import ColorsControl from '~components/inspector/controls/ColorsControl'` : ''}
+  ${components.root.params?.some(param => param.type === "display") ? 
+  `import FormControl from '~components/inspector/controls/FormControl'
+  import { useForm } from '~hooks/useForm'
+  import usePropsSelector from '~hooks/usePropsSelector'
+  import { Select } from '@chakra-ui/react'` : ''}
+  ${components.root.params?.some(param => param.type === "icon") ? 
+  `import IconControl from '~components/inspector/controls/IconControl'` : ''}
+  
+  const ${fileName}Panel = () => {
+    ${components.root.params?.some(param => param.type === "display") ? 
+  `const { setValueFromEvent } = useForm()
+  ${displayProps.join('\n')}` : ''}
+    return (
+    <>
+    ${components.root.params?.some(param => param.type === "string" || param.type === "number") ? 
+    `${textControls.join('')}` : ''}
+    ${components.root.params?.some(param => param.type === "boolean") ? 
+    `${switchControls.join('')}` : ''}
+    ${components.root.params?.some(param => param.type === "color") ? 
+    `${colorsControls.join('')}` : ''}
+    ${components.root.params?.some(param => param.type === "icon") ? 
+    `${iconControls.join('')}` : ''}
+    ${components.root.params?.some(param => param.type === "display") ? 
+    `${displayControls.join('\n')}` : ''}
+    </>
+    )
+  }
+
+  export default memo(${fileName}Panel)
+  `
+
+  panelCode = await formatCode(panelCode)
+
+  console.log(panelCode);
+
+  return panelCode;
+
+}

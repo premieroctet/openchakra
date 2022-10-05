@@ -1,7 +1,7 @@
 import React, { memo, useState, useEffect } from 'react'
 import Highlight, { defaultProps } from 'prism-react-renderer'
 import { Box, Button, useClipboard } from '@chakra-ui/react'
-import { generateCode } from '~utils/code'
+import { generateCode, generatePreview, generatePanel } from '~utils/code'
 import theme from 'prism-react-renderer/themes/nightOwl'
 import { useSelector } from 'react-redux'
 import { getComponents } from '~core/selectors/components'
@@ -15,13 +15,26 @@ const CodePanel = () => {
     timeout: 30000,
   });
 
+  const convertToPascal = (filePath: string) => {
+    const fileName = filePath.split('/').slice(-1)[0]
+    let fileArray = fileName.split('-')
+    fileArray.forEach((word) => {word = `${word.slice(0, 1).toUpperCase()}${word.slice(1)}`})
+    return fileArray.join('').slice(0, -8)
+  }
+
   useEffect(() => {
     const getCode = async () => {
+      let fileName = convertToPascal('src/my-modal.oc.json')
       const code = await generateCode(components)
       setCode(code)
+      let previewCode = generatePreview(components, fileName)
+      let panelCode = generatePanel(components, fileName);
       const response = await API_ENDPOINT.post('/save-file', {
         codeBody: code,
         jsonBody: components,
+        previewBody: previewCode,
+        panelBody: panelCode,
+        path: 'src/my-modal.oc.json'
       });
     }
 
