@@ -18,7 +18,7 @@ const CodePanel = () => {
   const convertToPascal = (filePath: string) => {
     const fileName = filePath.split('/').slice(-1)[0]
     let fileArray = fileName.split('-')
-    fileArray.forEach((word) => {word = `${word.slice(0, 1).toUpperCase()}${word.slice(1)}`})
+    fileArray = fileArray.map((word) => {return `${word.slice(0, 1).toUpperCase()}${word.slice(1)}`})
     return fileArray.join('').slice(0, -8)
   }
 

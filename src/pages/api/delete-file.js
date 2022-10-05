@@ -5,7 +5,7 @@ export default function handler(req, res) {
     console.log(process.cwd())
     const fileName = req.body.path.split('/').slice(-1)[0]
     let fileArray = fileName.split('-')
-    fileArray.forEach((word) => {word = `${word.slice(0, 1).toUpperCase()}${word.slice(1)}`})
+    fileArray = fileArray.map((word) => {return `${word.slice(0, 1).toUpperCase()}${word.slice(1)}`})
     const pascalName = fileArray.join('').slice(0, -8)
     try {
         fs.rm(`../../../../../../.oc/previews/${pascalName}Preview.oc.tsx`, { recursive:true },
