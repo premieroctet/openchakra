@@ -1,9 +1,5 @@
-import {
-  getReferencedModelAttributes,
-  getSimpleModelAttributes
-} from '../../utils/database';
+const { getModelAttributes } = require('../../utils/database');
 const path=require('path')
-
 const fs=require('fs').promises
 const child_process = require('child_process')
 const mongoose=require('mongoose')
@@ -107,20 +103,17 @@ router.get('/:model/:id?', (req, res) => {
   const id=req.params.id
 
   console.log(`Requesting model ${model}, id ${id || 'none'} attributes:${attributes}`)
-  /** Simple fields */
-  const modelSimpleFields=getSimpleModelAttributes(model).map(attDef => attDef[0])
-  const modelRefFields=lodash.uniq(lodash.flatten(getReferencedModelAttributes(model)).map(attDef => attDef[0].split('.')[0]))
 
-  const groupedAttributes=lodash(attributes).groupBy(
-    att => (modelSimpleFields.includes(att.split('.')[0]) ? 'SIMPLE' : att.split('.')[0]))
+  const modelAttributes=Object.fromEntries(getModelAttributes(model))
 
-  const fieldsFilter={'_id': true, ...lodash.fromPairs(groupedAttributes.get('SIMPLE', []).map(s => ([s, true])))}
+  const populates=lodash(attributes)
+    .map(att => att.split('.')[0])
+    .uniq()
+    .filter(att => modelAttributes[att].ref==true)
 
-  const populates=groupedAttributes.omit(['SIMPLE'])
+  let query=mongoose.connection.models[model].find()
+  query=populates.reduce((q, key) => q.populate(key), query)
 
-  const idFilter=id ? {_id: id} : {}
-  let query=mongoose.connection.models[model].find(idFilter, fieldsFilter)
-  query=populates.reduce((q, values, key) => q.populate({path: key, select: values.map(v => v.split('.')[1])}), query)
   query
     .then(data => {
       if (id && data.length==0) {
