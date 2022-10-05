@@ -15,15 +15,26 @@ const CodePanel = () => {
     timeout: 30000,
   });
 
+  const convertToPascal = (filePath: string) => {
+    const fileName = filePath.split('/').slice(-1)[0]
+    let fileArray = fileName.split('-')
+    fileArray.forEach((word) => {word = `${word.slice(0, 1).toUpperCase()}${word.slice(1)}`})
+    return fileArray.join('').slice(0, -8)
+  }
+
   useEffect(() => {
     const getCode = async () => {
+      let fileName = convertToPascal('src/my-modal.oc.json')
       const code = await generateCode(components)
       setCode(code)
-      generatePreview(components)
-      generatePanel(components)
+      let previewCode = generatePreview(components, fileName)
+      let panelCode = generatePanel(components, fileName);
       const response = await API_ENDPOINT.post('/save-file', {
         codeBody: code,
         jsonBody: components,
+        previewBody: previewCode,
+        panelBody: panelCode,
+        path: 'src/my-modal.oc.json'
       });
     }
 

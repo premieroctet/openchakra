@@ -237,7 +237,7 @@ export default App;`
   return await formatCode(code)
 }
 
-export const generatePreview = async ( components: IComponents ) => {
+export const generatePreview = async ( components: IComponents, fileName: string ) => {
   let code = buildBlock({ component: components.root, components })
   let componentsCodes = buildComponents(components)
   const iconImports = Array.from(new Set(getIconsImports(components)))
@@ -268,7 +268,7 @@ import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
     component: IComponent
   }
   
-  const SamplePreview = ({ component }: Props) => {
+  const ${fileName}Preview = ({ component }: Props) => {
   const { isOver } = useDropComponent(component.id)
   const { props, ref } = useInteractive(component, true)
   
@@ -279,7 +279,7 @@ import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
     return (<Box {...props} ref={ref}>${code}</Box>)
   }
   
-  export default SamplePreview`
+  export default ${fileName}Preview`
 
   code = await formatCode(code)
 
@@ -289,7 +289,7 @@ import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
 
 }
 
-export const generatePanel = async ( components: IComponents ) => {
+export const generatePanel = async ( components: IComponents, fileName: string ) => {
   let code = buildBlock({ component: components.root, components })
   let componentsCodes = buildComponents(components)
   const iconImports = Array.from(new Set(getIconsImports(components)))
@@ -412,7 +412,7 @@ export const generatePanel = async ( components: IComponents ) => {
   ${components.root.params?.some(param => param.type === "icon") ? 
   `import IconControl from '~components/inspector/controls/IconControl'` : ''}
   
-  const SamplePanel = () => {
+  const ${fileName}Panel = () => {
     ${components.root.params?.some(param => param.type === "display") ? 
   `const { setValueFromEvent } = useForm()
   ${displayProps.join('\n')}` : ''}
@@ -432,7 +432,7 @@ export const generatePanel = async ( components: IComponents ) => {
     )
   }
 
-  export default memo(SamplePanel)
+  export default memo(${fileName}Panel)
   `
 
   panelCode = await formatCode(panelCode)
