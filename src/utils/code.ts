@@ -281,7 +281,7 @@ const buildHooks = (components: IComponent[]) => {
       .uniq()
   }
   const dataProviders: IComponent[] = components.filter(
-    c => c.type == 'DataProvider',
+    c => c.props?.model,
   )
   if (dataProviders.length == 0) {
     return ''
