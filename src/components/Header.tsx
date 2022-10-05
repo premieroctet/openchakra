@@ -257,13 +257,20 @@ const Header = () => {
           direction="row"
           spacing="2"
         >
-          <Link isExternal href="https://github.com/premieroctet/openchakra">
+          <Link
+            isExternal
+            href="https://github.com/trilogy-group/tu2k22-openchakra"
+          >
             <Box as={DiGithubBadge} size={32} color="gray.200" />
           </Link>
           <Box lineHeight="shorter" color="white" fontSize="xs">
             by{' '}
-            <Link isExternal href="https://premieroctet.com" color="teal.100">
-              Premier Octet
+            <Link
+              isExternal
+              href="https://sites.google.com/devfactory.com/tu-2022-projects/ui-made-easy"
+              color="teal.100"
+            >
+              TU2k22~UI Made Easy
             </Link>
           </Box>
         </Stack>

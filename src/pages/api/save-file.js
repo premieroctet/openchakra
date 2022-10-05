@@ -4,13 +4,13 @@ export default function handler(req, res) {
     console.log(req.body);
     console.log(process.cwd())
     try {
-        fs.writeFileSync('./form.oc.tsx', req.body.codeBody, (err) => {
+        fs.writeFileSync('../../../../../../remote/tu2k22-chakra/chakra-samples/dummy-login-form/dummy-login-form.oc.tsx', req.body.codeBody, (err) => {
           if (err) throw err;
           else{
              console.log("The file is updated with the given data")
           }
        });
-        fs.writeFileSync('./form.oc.json', JSON.stringify(req.body.jsonBody), (err) => {
+        fs.writeFileSync('../../../../../../remote/tu2k22-chakra/chakra-samples/dummy-login-form/dummy-login-form.oc.json', JSON.stringify(req.body.jsonBody), (err) => {
           if (err) throw err;
           else{
             console.log("The file is updated with the given data")

@@ -26,6 +26,7 @@ export const INITIAL_COMPONENTS: IComponents = {
     type: 'Box' as ComponentType,
     children: [],
     props: {},
+    params: [],
   },
 }
 
@@ -49,11 +50,47 @@ const components = createModel({
         components: templates[type],
       }
     },
+    updateParams(
+      state: ComponentsState,
+      payload: { id: string; name: string; value: string; type: any },
+    ) {
+      return produce(state, (draftState: ComponentsState) => {
+        const index = draftState.components[payload.id].params.findIndex(
+          (item: any) => item.name === payload.name,
+        )
+        if (index !== -1) {
+          draftState.components[payload.id].params[index].value = payload.value
+          draftState.components[payload.id].params[index].type = payload.type
+        } else {
+          draftState.components[payload.id].params.push({
+            name: payload.name,
+            value: payload.value,
+            type: payload.type,
+          })
+        }
+      })
+    },
+    deleteParams(
+      state: ComponentsState,
+      payload: { id: string; name: string },
+    ) {
+      return {
+        ...state,
+        components: {
+          ...state.components,
+          [payload.id]: {
+            ...state.components[payload.id],
+            params: state.components[payload.id].params.filter(
+              (item: any) => item.name !== payload.name,
+            ),
+          },
+        },
+      }
+    },
     resetProps(state: ComponentsState, componentId: string): ComponentsState {
       return produce(state, (draftState: ComponentsState) => {
         const component = draftState.components[componentId]
         const { form, ...defaultProps } = DEFAULT_PROPS[component.type] || {}
-
         draftState.components[componentId].props = defaultProps || {}
       })
     },
@@ -171,6 +208,20 @@ const components = createModel({
       })
     },
     addMetaComponent(
+      state: ComponentsState,
+      payload: { components: IComponents; root: string; parent: string },
+    ): ComponentsState {
+      return produce(state, (draftState: ComponentsState) => {
+        draftState.selectedId = payload.root
+        draftState.components[payload.parent].children.push(payload.root)
+
+        draftState.components = {
+          ...draftState.components,
+          ...payload.components,
+        }
+      })
+    },
+    addCustomComponent(
       state: ComponentsState,
       payload: { components: IComponents; root: string; parent: string },
     ): ComponentsState {

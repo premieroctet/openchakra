@@ -152,7 +152,7 @@ type PreviewDefaultProps = {
   SkeletonText?: PropsWithForm<SkeletonProps>
 }
 
-export const DEFAULT_PROPS: PreviewDefaultProps = {
+export const DEFAULT_PROPS: PreviewDefaultProps | any = {
   AlertDescription: {
     children: 'Alert description',
   },
@@ -330,11 +330,23 @@ export const DEFAULT_PROPS: PreviewDefaultProps = {
     children: 'Tag name',
   },
   Text: { children: 'Text value' },
+  CC: {
+    children: 'Custom Button text',
+    variant: 'outline',
+    size: 'sm',
+  },
+  Sample: {
+    children: 'Custom Button text',
+    variant: 'outline',
+    size: 'sm',
+  },
 }
 
 export const getDefaultFormProps = (type: ComponentType) => {
   //@ts-ignore
-  const chakraDefaultProps = Chakra[type].defaultProps
+  let chakraDefaultProps = []
+  //@ts-ignore
+  if (!!Chakra[type]) chakraDefaultProps = Chakra[type].defaultProps
   // @ts-ignore
   return { ...chakraDefaultProps, ...DEFAULT_PROPS[type]?.form }
 }
