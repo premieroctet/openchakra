@@ -1,6 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { uploadFile, listFiles, deleteFile } from '../../core/s3'
+import {
+  Button,
+  Portal,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverBody,
+  PopoverFooter,
+  PopoverArrow,
+  PopoverCloseButton,
+  Input,
+  Checkbox,
+} from '@chakra-ui/react'
 
 interface s3media {
   ChecksumAlgorithm: []
@@ -52,8 +66,19 @@ const displayDocument = (ext: string, src: string) => {
 }
 
 const Medias = () => {
+
+  const autorizedImagesExtensions = ['jpg', 'jpeg', 'png', 'svg', 'gif']
+  const autorizedVideosExtensions = ['webm', 'mp4']
+  const autorizedFilesExtensions = ['pdf']
+
+
   const [fileToUpload, setFileToUpload] = useState()
-  const [images, setImages] = useState([])
+  const [images, setImages] = useState<s3media[]>([])
+  const [extfilters, setExtfilters] = useState<string[]>([])
+  
+  const handledExtensions = new Set(images
+      .map((el: s3media) => getExtension(el.Key))
+      .filter(ext => [...autorizedImagesExtensions, ...autorizedVideosExtensions, ...autorizedFilesExtensions].includes(ext)))
 
   const handleUpload = async (event: React.ChangeEvent) => {
     event.preventDefault()
@@ -61,9 +86,19 @@ const Medias = () => {
       .then(() => fetchFiles())
   }
 
-  const handleDelete = async (url) => {
-    await deleteFile(url)
-      .then(() => fetchFiles())
+  const handleFilters = (val: string) => {
+    if (extfilters.includes(val)) {
+      setExtfilters(extfilters.filter(ext => ext !== val))
+    } else {
+      setExtfilters([...extfilters, val])
+    }
+  }
+
+  const handleDelete = async (key: string) => {
+    await deleteFile(key)
+      .then(() => {
+        setImages(images.filter((img: s3media) => img.Key !== key))
+      })
   }
 
   const fetchFiles = async () => {
@@ -72,13 +107,16 @@ const Medias = () => {
         setImages(nimages?.data?.Contents)
       })
   }
+
   useEffect(() => {
     fetchFiles()
   }, [])
 
-  const autorizedImagesExtensions = ['jpg', 'jpeg', 'png', 'svg', 'gif']
-  const autorizedVideosExtensions = ['webm', 'mp4']
-  const imagesToDisplay = images.filter(img => {
+  
+  const imagesToDisplay = extfilters.length > 0 ? images.filter(img => {
+    const ext = getExtension(img?.publicUrl)
+    return extfilters.includes(ext)
+  }) :  images.filter(img => {
     const ext = getExtension(img?.publicUrl)
     return autorizedImagesExtensions.includes(ext) || autorizedVideosExtensions.includes(ext)
   })
@@ -96,7 +134,30 @@ const Medias = () => {
         <input type="submit" onClick={handleUpload} />
       </form>
       <DisplayFilterMedias>
-        {imagesToDisplay.length} au total
+        <small>{imagesToDisplay.length} au total</small>
+        <Popover>
+  <PopoverTrigger>
+    <Button>Filter</Button>
+  </PopoverTrigger>
+  <Portal>
+    <PopoverContent>
+      <PopoverArrow />
+      <PopoverHeader>Filter extensions</PopoverHeader>
+      <PopoverCloseButton />
+      <PopoverBody>
+        {[...handledExtensions].map((ext: string) => 
+          <Checkbox 
+            name='filters' 
+            value={ext} 
+            isChecked={extfilters.length > 0 ? extfilters.includes(ext) : false}
+            onChange={() => handleFilters(ext)}
+            >{`.${ext}`}</Checkbox>
+        )}
+      </PopoverBody>
+      <PopoverFooter><Button onClick={() => setExtfilters([])}>Reset filters</Button></PopoverFooter>
+    </PopoverContent>
+  </Portal>
+</Popover>
       </DisplayFilterMedias>
       <MediaGrid>
       {imagesToDisplay.map((imgObj: s3media, i) => {
