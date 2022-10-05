@@ -15,7 +15,7 @@ import Inspector from '~components/inspector/Inspector'
 import '~custom-components/Card/CardInit'
 import '~custom-components/DataProvider/DataProviderInit'
 import Menu from '~components/sidebar/Menu'
-import Medias from '~components/medias/Medias'
+import MediasContainer from '~components/MediasContainer'
 import { getMediasLayout } from '../core/selectors/app'
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
@@ -40,7 +40,7 @@ const App = () => {
           {/* <Sidebar /> */}
           <EditorErrorBoundary>
             <Box bg="white" flex={1} position="relative" overflow={'hidden'}>
-              {mediasLayout ? <Medias /> : <Editor />}
+              {mediasLayout ? <MediasContainer /> : <Editor />}
             </Box>
           </EditorErrorBoundary>
 
