@@ -24,18 +24,14 @@ const displayDocument = (ext: string, src: string) => {
 
   switch (ext) {
     case 'mp4': 
-    return  <video 
-      width={document.width} 
-      controls
-      >
-      <source src={src} type="video/mp4"/>
-        </video>  
     case 'webm': 
     return  <video 
       width={document.width} 
       controls
+      preload='none'
+      poster="images/videocover.png"
       >
-      <source src={src} type="video/webm"/>
+      <source src={src} type={`video/${ext}`} />
         </video>  
     case 'pdf':
       return  <object
@@ -158,9 +154,10 @@ const MediaCard = styled.div`
     padding: 0.5rem 1rem;
   }
 
-  img {
+  video, img {
     width: 100%;
-    height: auto;
+    aspect-ratio: 16/9;
+    object-fit: contain;
     border-radius: 1rem;
   }
 
