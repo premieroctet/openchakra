@@ -23,6 +23,20 @@ const displayDocument = (ext: string, src: string) => {
   }
 
   switch (ext) {
+    case 'mp4': 
+    return  <video 
+      width={document.width} 
+      controls
+      >
+      <source src={src} type="video/mp4"/>
+        </video>  
+    case 'webm': 
+    return  <video 
+      width={document.width} 
+      controls
+      >
+      <source src={src} type="video/webm"/>
+        </video>  
     case 'pdf':
       return  <object
       type="application/pdf"
@@ -32,8 +46,12 @@ const displayDocument = (ext: string, src: string) => {
       height={document.height}
     ></object>  
     default:
-      return <img src={src} width={document.width}
-      height={document.height} alt="" />
+      return <img 
+        src={src} 
+        width={document.width}
+        height={document.height} 
+        alt="" 
+        />
   }
 }
 
@@ -63,9 +81,10 @@ const Medias = () => {
   }, [])
 
   const autorizedImagesExtensions = ['jpg', 'jpeg', 'png', 'svg', 'gif']
+  const autorizedVideosExtensions = ['webm', 'mp4']
   const imagesToDisplay = images.filter(img => {
     const ext = getExtension(img?.publicUrl)
-    return autorizedImagesExtensions.includes(ext)
+    return autorizedImagesExtensions.includes(ext) || autorizedVideosExtensions.includes(ext)
   })
 
 
@@ -80,6 +99,9 @@ const Medias = () => {
         />
         <input type="submit" onClick={handleUpload} />
       </form>
+      <DisplayFilterMedias>
+        {imagesToDisplay.length} au total
+      </DisplayFilterMedias>
       <MediaGrid>
       {imagesToDisplay.map((imgObj: s3media, i) => {
         
@@ -99,6 +121,11 @@ const Medias = () => {
     </div>
   )
 }
+
+const DisplayFilterMedias = styled.div`
+  display: flex;
+`
+
 
 const MediaGrid = styled.div`
   --grid-space: 2rem;
