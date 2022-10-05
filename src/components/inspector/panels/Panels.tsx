@@ -67,7 +67,7 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
   const { type } = component
 
   if (isRoot) {
-    return null
+    return <DataProviderPanel />
   }
 
   const compPanel = extraPanels[type]
