@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { uploadFile, listFiles, deleteFile } from '../../core/s3'
 import {
   Button,
+  Input,
   Portal,
   Popover,
   PopoverTrigger,
@@ -12,9 +13,17 @@ import {
   PopoverFooter,
   PopoverArrow,
   PopoverCloseButton,
-  Input,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
   Checkbox,
+  useDisclosure,
 } from '@chakra-ui/react'
+
 
 interface s3media {
   ChecksumAlgorithm: []
@@ -57,6 +66,7 @@ const displayDocument = (ext: string, src: string) => {
     ></object>  
     default:
       return <img 
+        loading="lazy"
         src={src} 
         width={document.width}
         height={document.height} 
@@ -72,10 +82,10 @@ const Medias = () => {
   const autorizedFilesExtensions = ['pdf']
   const autorizedExtensions = [...autorizedImagesExtensions, ...autorizedVideosExtensions, ...autorizedFilesExtensions]
 
-
   const [fileToUpload, setFileToUpload] = useState()
   const [mediaSearch, setMediaSearch] = useState<string>('')
   const [images, setImages] = useState<s3media[]>([])
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const [extfilters, setExtfilters] = useState<string[]>([])
   
@@ -86,6 +96,8 @@ const Medias = () => {
   const handleUpload = async (event: React.ChangeEvent) => {
     event.preventDefault()
     fileToUpload && await uploadFile(fileToUpload?.name, fileToUpload)
+      .then(() => onClose())
+      .then(() => setFileToUpload(undefined))
       .then(() => fetchFiles())
   }
 
@@ -133,15 +145,40 @@ const Medias = () => {
 
   return (
     <div>
-      <form>
-        <input
-          type="file"
-          onChange={e => {
-            setFileToUpload(e.target?.files[0])
-          }}
-        />
-        <input type="submit" onClick={handleUpload} />
-      </form>
+      {/* NOW interface on "Upload a Media"  */}
+      <Button colorScheme={'teal'} onClick={onOpen}>Upload your media</Button>
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent w={'50vw'}>
+          <ModalHeader>Choose your media</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody display={'flex'} flexDirection={'column'}>
+          <UploadForm>
+            <label htmlFor='uploadfile'>
+              <div>
+                <img src='/images/backgroundMedias.svg' />
+                <p>Click to choose a file</p>
+            <input
+              id='uploadfile'
+              type="file"
+              onChange={e => {
+                setFileToUpload(e.target?.files[0])
+              }}
+            />
+            </div>
+            </label>
+            {fileToUpload?.name}
+          </UploadForm>
+            <input type="submit" onClick={handleUpload} value="Upload" />
+          </ModalBody>
+
+          <ModalFooter>
+            
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      
       <DisplayFilterMedias>
         <small>{imagesToDisplay.length} au total</small>
         <Popover>
@@ -154,8 +191,9 @@ const Medias = () => {
               <PopoverHeader>Filter extensions</PopoverHeader>
               <PopoverCloseButton />
               <PopoverBody>
-                {[...handledExtensions].map((ext: string) => 
+                {[...handledExtensions].map((ext: string, i: number) => 
                   <Checkbox 
+                    key={`filt${i}`}
                     name='filters' 
                     value={ext} 
                     isChecked={extfilters.length > 0 ? extfilters.includes(ext) : false}
@@ -184,6 +222,41 @@ const Medias = () => {
     </div>
   )
 }
+
+
+const UploadForm = styled.form`
+  row-gap: 0.5rem;
+
+  #uploadfile {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+  
+  label {
+    cursor: pointer;
+
+    &> div {
+      display: grid;
+      min-height: 50vh;
+      align-items: center;
+      justify-items: center;
+      font-size: 2rem;
+    }
+
+    &> div > * {
+    grid-column: 1/-1;
+    grid-row: 1/-1;
+  }
+  }
+`
+
 
 const DisplayFilterMedias = styled.div`
   display: flex;
