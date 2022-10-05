@@ -1,44 +1,18 @@
 const path=require('path')
-const { attributesComparator } =require('../../utils/database')
 const fs=require('fs').promises
 const child_process = require('child_process')
 const mongoose=require('mongoose')
 const express = require('express')
 const lodash=require('lodash')
+const {getModels} =require('../../utils/database')
 const {HTTP_CODES, NotFoundError}=require('../../utils/errors')
-const router = express.Router()
 const PRODUCTION_ROOT='/home/ec2-user/studio/'
 
-const getModelAttributes = modelName => {
-  const schema=mongoose.model(modelName).schema
-  return Object.values(schema.paths)
-    .filter(att => !att.path.startsWith('_'))
-}
-
-const getSimpleModelAttributes = modelName => {
-  return getModelAttributes(modelName)
-    .filter(att => att.instance != 'ObjectID')
-    .map(att => [att.path, att.instance])
-}
-
-const getReferencedModelAttributes = modelName => {
-  return getModelAttributes(modelName)
-    .filter(att => att.instance == 'ObjectID')
-    .map(att => getSimpleModelAttributes(att.options.ref)
-      .map(([attName, instance]) => [`${att.path}.${attName}`, instance]))
-}
+const router = express.Router()
 
 router.get('/models', (req, res) => {
-  const modelNames=lodash.sortBy(mongoose.modelNames())
-  const result=[]
-  modelNames.forEach(name => {
-    console.log(name)
-    const attrs=[...getSimpleModelAttributes(name), ...lodash.flatten(getReferencedModelAttributes(name))]
-    attrs.sort((att1, att2) => attributesComparator(att1[0], att2[0]))
-    if (name=='serviceUser') { console.log(attrs.map(a => a[0]))}
-    result.push({name, attributes:Object.fromEntries(attrs)})
-  })
-  return res.json(result)
+  const allModels=getModels()
+  return res.json(allModels)
 })
 
 router.post('/file', (req, res) => {

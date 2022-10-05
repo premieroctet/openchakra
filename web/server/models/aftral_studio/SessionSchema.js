@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const ModuleSchema = new Schema({
+const SessionSchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -34,6 +34,16 @@ const ModuleSchema = new Schema({
     ref: 'user',
     required: true,
   }],
-}, {toJSON: {virtuals: true, getters: true}})
+},
+{toJSON: {virtuals: true, getters: true},
+})
 
-module.exports = ModuleSchema
+SessionSchema.virtual('trainees_count').get(function() {
+  return this.trainees?.length || 0
+})
+
+SessionSchema.virtual('trainers_count').get(function() {
+  return this.trainers?.length || 0
+})
+
+module.exports = SessionSchema

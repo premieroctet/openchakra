@@ -1,9 +1,5 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
-const moment = require('moment')
-const {getMangopayMessage} = require('../../../utils/i18n')
-const {hideIllegal} = require('../../../utils/text')
-const {ACCOUNT_MIN_AGE}=require('../../../utils/consts')
 
 const ProgramSchema = new Schema({
   name: {
@@ -14,15 +10,19 @@ const ProgramSchema = new Schema({
     type: String,
     required: true,
   },
+  description: {
+    type: String,
+    required: false,
+  },
   // duration in hours
   duration: {
     type: Number,
     required: true,
-    set: v => v ? parseInt(v) : v
+    set: v => (v ? parseInt(v) : v),
   },
-  modules: [{
+  themes: [{
     type: Schema.Types.ObjectId,
-    ref: 'module',
+    ref: 'theme',
     required: false,
   }],
 }, {toJSON: {virtuals: true, getters: true}})

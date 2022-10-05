@@ -6,6 +6,14 @@ const ThemeSchema = new Schema({
     type: String,
     required: true,
   },
+  code: {
+    type: String,
+    required: true,
+  },
+  picture: {
+    type: String,
+    required: false,
+  },
   resources: [{
     type: Schema.Types.ObjectId,
     ref: 'resource',

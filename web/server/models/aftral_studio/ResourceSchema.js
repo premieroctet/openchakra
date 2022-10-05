@@ -6,6 +6,14 @@ const ResourceSchema = new Schema({
     type: String,
     required: true,
   },
+  code: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: false,
+  },
   type: {
     type: String,
     required: true,
@@ -13,7 +21,7 @@ const ResourceSchema = new Schema({
   url: {
     type: String,
     required: true,
-  }
+  },
 }, {toJSON: {virtuals: true, getters: true}})
 
 module.exports = ResourceSchema

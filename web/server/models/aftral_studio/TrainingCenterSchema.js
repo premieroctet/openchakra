@@ -12,7 +12,7 @@ const TrainingCenterSchema = new Schema({
     type: String,
     required: true,
   },
-  adress: {
+  address: {
     type: AddressSchema,
     required: true,
   },
