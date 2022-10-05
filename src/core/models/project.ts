@@ -64,31 +64,6 @@ const getActiveComponents = (state: ProjectState) => {
   return state.pages[state.activePage].components
 }
 
-export const unlinkDataSource = (state: ProjectState, dataSourceId: string) => {
-  return {
-    ...state,
-    pages: mapValues(state.pages, p => {
-      return {
-        ...p,
-        components: mapValues(p.components, comp => ({
-          ...comp,
-          props: {
-            ...comp.props,
-            dataSource:
-              comp.props.dataSource == dataSourceId
-                ? undefined
-                : comp.props.dataSource,
-            attribute:
-              comp.props.dataSource == dataSourceId
-                ? undefined
-                : comp.props.attribute,
-          },
-        })),
-      }
-    }),
-  }
-}
-
 export const getComponentById = (state: ProjectState, componentId: string) => {
   const allComps = flatten(
     Object.values(state.pages).map(p => Object.values(p.components)),
@@ -157,8 +132,6 @@ const project = createModel({
         draftState.pages[draftState.activePage].components[componentId].props =
           defaultProps || {}
 
-        // Props reset => if model, it is removed => unlink all
-        draftState.pages = unlinkDataSource(draftState, componentId).pages
       })
     },
     updateProps(
@@ -171,10 +144,6 @@ const project = createModel({
         draftState.pages[draftState.activePage].components[payload.id].props[
           payload.name
         ] = parseValue || payload.value
-        // Change source model => unlink all components linked to this datasource
-        if (payload.name == 'model') {
-          draftState.pages = unlinkDataSource(draftState, payload.id).pages
-        }
       })
     },
     deleteProps(state: ProjectState, payload: { id: string; name: string }) {
@@ -197,21 +166,10 @@ const project = createModel({
           },
         },
       }
-      // Change source model => unlink all components linked to this datasource
-      if (payload.name == 'model') {
-        resState = unlinkDataSource(resState, payload.id)
-      }
       return resState
     },
 
     deleteComponent(state: ProjectState, componentId: string) {
-      const comp = getComponentById(state, componentId)
-      if (!comp) {
-        alert(`Can(t find component with id ${componentId})`)
-      } else if (comp.id === 'root' || comp.type == 'DataProvider') {
-        state = unlinkDataSource(state, componentId)
-      }
-
       if (componentId === 'root') {
         return state
       }
