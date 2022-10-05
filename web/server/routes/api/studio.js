@@ -1,4 +1,9 @@
+import {
+  getReferencedModelAttributes,
+  getSimpleModelAttributes
+} from '../../utils/database';
 const path=require('path')
+
 const fs=require('fs').promises
 const child_process = require('child_process')
 const mongoose=require('mongoose')
