@@ -70,15 +70,18 @@ const Medias = () => {
   const autorizedImagesExtensions = ['jpg', 'jpeg', 'png', 'svg', 'gif']
   const autorizedVideosExtensions = ['webm', 'mp4']
   const autorizedFilesExtensions = ['pdf']
+  const autorizedExtensions = [...autorizedImagesExtensions, ...autorizedVideosExtensions, ...autorizedFilesExtensions]
 
 
   const [fileToUpload, setFileToUpload] = useState()
+  const [mediaSearch, setMediaSearch] = useState<string>('')
   const [images, setImages] = useState<s3media[]>([])
+
   const [extfilters, setExtfilters] = useState<string[]>([])
   
   const handledExtensions = new Set(images
       .map((el: s3media) => getExtension(el.Key))
-      .filter(ext => [...autorizedImagesExtensions, ...autorizedVideosExtensions, ...autorizedFilesExtensions].includes(ext)))
+      .filter(ext => autorizedExtensions.includes(ext)))
 
   const handleUpload = async (event: React.ChangeEvent) => {
     event.preventDefault()
@@ -113,13 +116,19 @@ const Medias = () => {
   }, [])
 
   
-  const imagesToDisplay = extfilters.length > 0 ? images.filter(img => {
+  // Images filtered by extension
+  const filteredImages = extfilters.length > 0 ? images.filter(img => {
     const ext = getExtension(img?.publicUrl)
     return extfilters.includes(ext)
   }) :  images.filter(img => {
     const ext = getExtension(img?.publicUrl)
-    return autorizedImagesExtensions.includes(ext) || autorizedVideosExtensions.includes(ext)
+    return autorizedExtensions.includes(ext)
   })
+
+  // Images filtered by search input => TODO improve search
+  const imagesToDisplay = mediaSearch 
+    ? filteredImages.filter((img: s3media) => img.Key.includes(mediaSearch)) 
+    : filteredImages
 
 
   return (
@@ -136,44 +145,41 @@ const Medias = () => {
       <DisplayFilterMedias>
         <small>{imagesToDisplay.length} au total</small>
         <Popover>
-  <PopoverTrigger>
-    <Button>Filter</Button>
-  </PopoverTrigger>
-  <Portal>
-    <PopoverContent>
-      <PopoverArrow />
-      <PopoverHeader>Filter extensions</PopoverHeader>
-      <PopoverCloseButton />
-      <PopoverBody>
-        {[...handledExtensions].map((ext: string) => 
-          <Checkbox 
-            name='filters' 
-            value={ext} 
-            isChecked={extfilters.length > 0 ? extfilters.includes(ext) : false}
-            onChange={() => handleFilters(ext)}
-            >{`.${ext}`}</Checkbox>
-        )}
-      </PopoverBody>
-      <PopoverFooter><Button onClick={() => setExtfilters([])}>Reset filters</Button></PopoverFooter>
-    </PopoverContent>
-  </Portal>
-</Popover>
+          <PopoverTrigger>
+            <Button>Filter</Button>
+          </PopoverTrigger>
+          <Portal>
+            <PopoverContent>
+              <PopoverArrow />
+              <PopoverHeader>Filter extensions</PopoverHeader>
+              <PopoverCloseButton />
+              <PopoverBody>
+                {[...handledExtensions].map((ext: string) => 
+                  <Checkbox 
+                    name='filters' 
+                    value={ext} 
+                    isChecked={extfilters.length > 0 ? extfilters.includes(ext) : false}
+                    onChange={() => handleFilters(ext)}
+                    >{`.${ext}`}</Checkbox>
+                )}
+              </PopoverBody>
+              <PopoverFooter><Button onClick={() => setExtfilters([])}>Reset filters</Button></PopoverFooter>
+            </PopoverContent>
+          </Portal>
+        </Popover>
+        <MediaSearch value={mediaSearch} placeholder={'Search on title'} onChange={(e) => setMediaSearch(e.target.value)} />
       </DisplayFilterMedias>
       <MediaGrid>
       {imagesToDisplay.map((imgObj: s3media, i) => {
-        
-        const extension = getExtension(imgObj?.publicUrl)
-
         return (
           <MediaCard key={`img${i}`}> 
           <button onClick={() => handleDelete(imgObj.Key)}>X</button>
-          {displayDocument(extension, imgObj.publicUrl)}
+          {displayDocument(getExtension(imgObj?.publicUrl), imgObj.publicUrl)}
           <p>{imgObj.Key}</p>
           <small>{imgObj.publicUrl}</small>
           </MediaCard>
         )
-        }
-      )}
+      })}
       </MediaGrid>
     </div>
   )
@@ -181,7 +187,19 @@ const Medias = () => {
 
 const DisplayFilterMedias = styled.div`
   display: flex;
+  align-items: center;
+  gap: 1rem;
 `
+
+const MediaSearch = styled.input`
+  min-width: 50%;
+  border: 1px solid black;
+  border-radius: 1rem;
+  padding-block: 0.3rem;
+  padding-inline: 1rem;
+  
+`
+
 
 
 const MediaGrid = styled.div`
@@ -204,6 +222,9 @@ const MediaCard = styled.div`
   box-shadow: 0px 10px  5px rgba(199, 199, 199,0.9);
   
   button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border-radius: 50%;
     height: 44px;
     width: 44px;
@@ -212,7 +233,6 @@ const MediaCard = styled.div`
     position: absolute;
     top: 1rem;
     right: 1rem;
-    padding: 0.5rem 1rem;
   }
 
   video, img {
