@@ -6,6 +6,10 @@ const SessionSchema = new Schema({
     type: String,
     required: true,
   },
+  code: {
+    type: String,
+    required: true,
+  },
   start: {
     type: Date,
     required: true,
