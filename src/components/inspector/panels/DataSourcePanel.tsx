@@ -6,6 +6,7 @@ import { Accordion } from '@chakra-ui/react'
 import AccordionContainer from '~components/inspector/AccordionContainer'
 
 import { CONTAINER_TYPE } from '../../../utils/code';
+import { getDataProviders } from '../../../utils/dataSources'
 import {
   getComponents,
   getSelectedComponent
@@ -27,11 +28,9 @@ const DataSourcePanel:React.FC = () => {
   const attributes = useSelector(getModelAttributes(provider?.props.model))
 
   useEffect(() => {
-    const dataProviders = Object.values(components).filter(
-      c => c.type == 'DataProvider',
-    )
+    const dataProviders = getDataProviders(activeComponent, components)
     setProviders(dataProviders)
-  }, [components])
+  }, [activeComponent, components])
 
   return (
     <Accordion >
@@ -47,7 +46,7 @@ const DataSourcePanel:React.FC = () => {
           <option value={null}></option>
           {providers.map(provider => (
             <option value={provider.id}>
-              {provider.props?.model || provider.id}
+              {`${provider.id} (${provider.props?.model})`}
             </option>
           ))}
         </Select>

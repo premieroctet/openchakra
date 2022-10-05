@@ -130,7 +130,7 @@ const Inspector = () => {
           justifyContent="space-between"
           flexDir="column"
         >
-          {isRoot ? 'Document' : type}
+          {isRoot ? 'Document' : type}<br/>{component.id}
           {!!component.componentName && (
             <Text fontSize="xs" fontWeight="light">
               {component.componentName}
