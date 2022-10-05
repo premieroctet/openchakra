@@ -1,4 +1,6 @@
+const moment = require('moment');
 const mongoose = require('mongoose')
+
 const Schema = mongoose.Schema
 
 const SessionSchema = new Schema({
@@ -48,6 +50,14 @@ SessionSchema.virtual('trainees_count').get(function() {
 
 SessionSchema.virtual('trainers_count').get(function() {
   return this.trainers?.length || 0
+})
+
+SessionSchema.virtual('start_str').get(function() {
+  return this.start ? moment(this.start).format('L') : ''
+})
+
+SessionSchema.virtual('end_str').get(function() {
+  return this.end ? moment(this.end).format('L') : ''
 })
 
 module.exports = SessionSchema

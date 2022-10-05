@@ -41,6 +41,8 @@ const DECLARED_VIRTUALS={
   session: {
     trainees_count: {path: 'trainees_count', instance: 'Number'},
     trainers_count: {path: 'trainees_count', instance: 'Number'},
+    start_str: {path: 'start_str', instance: 'String'},
+    end_str: {path: 'end_str', instance: 'String'},
   },
   /**
   Array ref virtual example
