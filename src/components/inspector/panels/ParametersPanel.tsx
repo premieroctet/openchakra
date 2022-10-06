@@ -39,7 +39,7 @@ const ParametersPanel = () => {
   }
 
   const activeParams = activeParamsRef || []
-  const customParams = params.filter(
+  const customParams = params?.filter(
     (paramsName: any) => !activeParams.includes(paramsName),
   )
 
@@ -77,7 +77,7 @@ const ParametersPanel = () => {
         </InputGroup>
       </form>
 
-      {customParams.map((paramsName: any, i: any) => (
+      {customParams?.map((paramsName: any, i: any) => (
         <Flex
           key={paramsName.name}
           alignItems="center"

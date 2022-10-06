@@ -1,8 +1,6 @@
 import fs from 'fs'
 
 export default function handler(req, res) {
-  console.log(req.body)
-  console.log(process.cwd())
   const fileName = req.body.path.split('/').slice(-1)[0]
   let fileArray = fileName.split('-')
   fileArray = fileArray.map(word => {
