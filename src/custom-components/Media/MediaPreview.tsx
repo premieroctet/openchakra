@@ -3,15 +3,11 @@ import { useDropComponent } from '~hooks/useDropComponent'
 import { useInteractive } from '~hooks/useInteractive'
 import ComponentPreview from '~components/editor/ComponentPreview'
 import { Box } from '@chakra-ui/react'
+import { getExtension, mediaAccordingToExt } from '~utils/mediaAccordingToExt'
 
 const MediaPreview: React.FC<IPreviewProps> = ({ component }) => {
-  const acceptedTypes = [
-    'AlertTitle',
-    'AlertIcon',
-    'AlertDescription',
-    'DataProvider',
-  ] as ComponentType[]
-  const { drop, isOver } = useDropComponent(component.id, acceptedTypes)
+  
+  const { drop, isOver } = useDropComponent(component.id)
   const { props, ref } = useInteractive(component, true)
 
   if (isOver) {
@@ -20,9 +16,7 @@ const MediaPreview: React.FC<IPreviewProps> = ({ component }) => {
 
   return (
     <Box pos="relative" ref={drop(ref)} {...props}>
-      {component.children.map((key: string) => (
-        <ComponentPreview key={key} componentName={key} />
-      ))}
+      {props.src ? mediaAccordingToExt({ext: getExtension(props.src), src: props.src, ...props}) : <div>Source needed</div>}
     </Box>
   )
 }

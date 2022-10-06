@@ -1,9 +1,7 @@
 import React, { memo } from 'react'
-import { Input, Select, Modal,
+import { Input, Modal,
   ModalOverlay,
   ModalContent,
-  ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton, 
   useDisclosure,

@@ -3,11 +3,11 @@ import React from 'react'
 export const getExtension = (filename: string) => filename.substring(filename.lastIndexOf('.') + 1, filename.length) ||
 filename
 
-export const mediaAccordingToExt = (ext: string, src: string, props = {}) => {
+export const mediaAccordingToExt = ({ext, src, ...props}:{ext: string, src: string}) => {
 
   const document = {
-    width: "100%",
-    height: "100%"
+    width: props?.htmlWidth || "100%",
+    height: props?.htmlHeight || "100%"
   }
 
   const PreparedMedia = () => {
