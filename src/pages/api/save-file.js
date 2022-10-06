@@ -6,10 +6,12 @@ export default function handler(req, res) {
   fileArray = fileArray.map(word => {
     return `${word.slice(0, 1).toUpperCase()}${word.slice(1)}`
   })
-  const pascalName = fileArray.join('').slice(0, -8)
+  const pascalName = fileArray.join('')
+  const repoRoot = process.env.GITPOD_REPO_ROOT
+  const repoName = repoRoot.split('/').slice(-1)[0]
   try {
     fs.writeFileSync(
-      `../../../../../../${req.body.path.slice(0, -4)}tsx`,
+      `${req.body.path}/${fileName}.oc.tsx`,
       req.body.codeBody,
       err => {
         if (err) throw err
@@ -19,7 +21,7 @@ export default function handler(req, res) {
       },
     )
     fs.writeFileSync(
-      `../../../../../../${req.body.path}`,
+      `${req.body.path}/${fileName}.oc.json`,
       JSON.stringify(req.body.jsonBody),
       err => {
         if (err) throw err
@@ -29,7 +31,7 @@ export default function handler(req, res) {
       },
     )
     fs.writeFileSync(
-      `../../../../../../.oc/previews/${pascalName}Preview.oc.tsx`,
+      `src/custom-components/editor/previews/${pascalName}Preview.oc.tsx`,
       req.body.previewBody,
       err => {
         if (err) throw err
@@ -39,7 +41,7 @@ export default function handler(req, res) {
       },
     )
     fs.writeFileSync(
-      `../../../../../../.oc/panels/${pascalName}Panel.oc.tsx`,
+      `src/custom-components/inspector/panels/components/${pascalName}Panel.oc.tsx`,
       req.body.panelBody,
       err => {
         if (err) throw err
