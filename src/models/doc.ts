@@ -13,7 +13,9 @@ const docs: IDoc = {
   Icon:
     "Use the Icon component to easily render svg icons. Chakra UI provides basic interface icons, to add your icons, read the guide.",
   Text:
-    "Text is the used to render text and paragraphs within an interface. It renders a p tag by default."
+    "Text is the used to render text and paragraphs within an interface. It renders a p tag by default.",
+  Media: 
+  "Media returns a tag based on its extension"  
 };
 
 export default docs;

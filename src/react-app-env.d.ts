@@ -54,6 +54,7 @@ type ComponentType =
   | 'List'
   | 'ListItem'
   | 'ListIcon'
+  | 'Media'
   | 'Menu'
   | 'NumberInput'
   | 'Progress'

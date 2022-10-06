@@ -23,6 +23,7 @@ import {
   Checkbox,
   useDisclosure,
 } from '@chakra-ui/react'
+import {getExtension, mediaAccordingToExt} from '../../utils/mediaAccordingToExt'
 
 
 interface s3media {
@@ -34,9 +35,6 @@ interface s3media {
   StorageClass: string
   publicUrl: string
 }
-
-const getExtension = (filename: string) => filename.substring(filename.lastIndexOf('.') + 1, filename.length) ||
-filename
 
 const displayDocument = (ext: string, src: string) => {
 
@@ -150,7 +148,7 @@ const Medias = () => {
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent w={'50vw'}>
+        <ModalContent minW={'50vw'}>
           <ModalHeader>Choose your media</ModalHeader>
           <ModalCloseButton />
           <ModalBody display={'flex'} flexDirection={'column'}>
@@ -212,7 +210,7 @@ const Medias = () => {
         return (
           <MediaCard key={`img${i}`}> 
           <button onClick={() => handleDelete(imgObj.Key)}>X</button>
-          {displayDocument(getExtension(imgObj?.publicUrl), imgObj.publicUrl)}
+          {mediaAccordingToExt(getExtension(imgObj?.publicUrl), imgObj.publicUrl)}
           <p>{imgObj.Key}</p>
           <small>{imgObj.publicUrl}</small>
           </MediaCard>

@@ -2,7 +2,7 @@ export type MenuItem = {
   children?: MenuItems
   soon?: boolean
   rootParentType?: ComponentType
-  group?: 'positionnement' | 'formulaire' | 'typographie'
+  group?: 'position' | 'form' | 'typography'
   title?: string
 }
 
@@ -42,7 +42,7 @@ let menuItems: MenuItems = {
   },
   AspectRatio: {
     title: 'Aspect Ratio',
-    group: 'positionnement',
+    group: 'position',
   },
   AvatarGroup: {
     title: 'Avatar group',
@@ -55,7 +55,7 @@ let menuItems: MenuItems = {
   },
   Badge: {},
   Box: {
-    group: 'positionnement',
+    group: 'position',
   },
   Breadcrumb: {
     children: {
@@ -69,20 +69,20 @@ let menuItems: MenuItems = {
   },
   Button: {},
   Center: {
-    group: 'positionnement',
+    group: 'position',
   },
   Container: {
-    group: 'positionnement',
+    group: 'position',
   },
   Checkbox: {
-    group: 'formulaire',
+    group: 'form',
   },
   CircularProgress: {},
   CloseButton: {},
   Code: {},
   Divider: {},
   Flex: {
-    group: 'positionnement',
+    group: 'position',
   },
   FormControl: {
     title: 'Form Control',
@@ -100,14 +100,14 @@ let menuItems: MenuItems = {
     },
   },
   Grid: {
-    group: 'positionnement',
+    group: 'position',
   },
   GridItem: {
-    group: 'positionnement',
+    group: 'position',
     title: 'Grid Item',
   },
   Heading: {
-    group: 'typographie',
+    group: 'typography',
   },
   Icon: {},
   IconButton: {
@@ -115,10 +115,10 @@ let menuItems: MenuItems = {
   },
   Image: {},
   Input: {
-    group: 'formulaire',
+    group: 'form',
   },
   InputGroup: {
-    group: 'formulaire',
+    group: 'form',
     title: 'Input group',
     rootParentType: 'Input',
     children: {
@@ -151,36 +151,36 @@ let menuItems: MenuItems = {
   },
   NumberInput: {
     title: 'Number input',
-    group: 'formulaire',
+    group: 'form',
   },
   Progress: {},
   Radio: {
-    group: 'formulaire',
+    group: 'form',
   },
   RadioGroup: {
     title: 'Radio group',
-    group: 'formulaire',
+    group: 'form',
     rootParentType: 'Radio',
   },
   SimpleGrid: {
-    group: 'positionnement',
+    group: 'position',
   },
   Spinner: {},
   Select: {
-    group: 'formulaire',
+    group: 'form',
   },
   Stack: {
-    group: 'positionnement',
+    group: 'position',
   },
   Switch: {
-    group: 'formulaire',
+    group: 'form',
   },
   Tag: {},
   Text: {
-    group: 'typographie',
+    group: 'typography',
   },
   Textarea: {
-    group: 'formulaire',
+    group: 'form',
   },
   Menu: { soon: true },
   Tab: { soon: true },
