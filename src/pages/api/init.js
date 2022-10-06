@@ -6,7 +6,7 @@ export default function handler(req, res) {
   fileArray = fileArray.map(word => {
     return `${word.slice(0, 1).toUpperCase()}${word.slice(1)}`
   })
-  const pascalName = fileArray.join('').slice(0, -8)
+  const pascalName = fileArray.join('')
   try {
     fs.writeFileSync(
       `src/custom-components/editor/previews/${pascalName}Preview.oc.tsx`,

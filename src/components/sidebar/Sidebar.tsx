@@ -23,7 +23,6 @@ import {
 import { useSelector } from 'react-redux'
 import { getCustomComponents } from '~core/selectors/customComponents'
 import useDispatch from '~hooks/useDispatch'
-import axios from 'axios'
 import API from '~custom-components/api'
 
 const Menu = () => {
