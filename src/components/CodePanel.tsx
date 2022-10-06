@@ -5,10 +5,15 @@ import { generateCode, generatePreview, generatePanel } from '~utils/code'
 import theme from 'prism-react-renderer/themes/nightOwl'
 import { useSelector } from 'react-redux'
 import { getComponents } from '~core/selectors/components'
-import axios from 'axios'
 import API from '~custom-components/api'
+import {
+  getCustomComponents,
+  getSelectedCustomComponentId,
+} from '~core/selectors/customComponents'
 const CodePanel = () => {
   const components = useSelector(getComponents)
+  const componentsList = useSelector(getCustomComponents)
+  const selectedComponent = useSelector(getSelectedCustomComponentId)
   const [code, setCode] = useState<string | undefined>(undefined)
 
   const convertToPascal = (filePath: string) => {
@@ -17,7 +22,7 @@ const CodePanel = () => {
     fileArray = fileArray.map(word => {
       return `${word.slice(0, 1).toUpperCase()}${word.slice(1)}`
     })
-    return fileArray.join('').slice(0, -8)
+    return fileArray.join('')
   }
 
   useEffect(() => {

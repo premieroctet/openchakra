@@ -21,7 +21,10 @@ import {
   CMenuItem,
 } from '../../custom-components/customComponentsList'
 import { useSelector } from 'react-redux'
-import { getCustomComponents } from '~core/selectors/customComponents'
+import {
+  getCustomComponentBy,
+  getCustomComponents,
+} from '~core/selectors/customComponents'
 import useDispatch from '~hooks/useDispatch'
 import API from '~custom-components/api'
 
@@ -208,6 +211,7 @@ const Menu = () => {
                           <EditIcon
                             color="white"
                             onClick={() => {
+                              dispatch.customComponents.select(name)
                               console.log(
                                 'Disable this component and load json in editor.',
                               )
