@@ -9,7 +9,7 @@ export default function handler(req, res) {
   const pascalName = fileArray.join('').slice(0, -8)
   try {
     fs.writeFileSync(
-      `../../../../../../.oc/previews/${pascalName}Preview.oc.tsx`,
+      `src/custom-components/editor/previews/${pascalName}Preview.oc.tsx`,
       `import React from 'react'
         import { useDropComponent } from '~hooks/useDropComponent'
         import { useInteractive } from '~hooks/useInteractive'
@@ -70,7 +70,7 @@ export default function handler(req, res) {
       },
     )
     fs.writeFileSync(
-      `../../../../../../.oc/panels/${pascalName}Panel.oc.tsx`,
+      `src/custom-components/inspector/panels/components/${pascalName}Panel.oc.tsx`,
       `import React, { memo } from 'react'
 
 const ${pascalName}Panel = () => {

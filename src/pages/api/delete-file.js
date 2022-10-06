@@ -9,7 +9,7 @@ export default function handler(req, res) {
   const pascalName = fileArray.join('').slice(0, -8)
   try {
     fs.rm(
-      `../../../../../../.oc/previews/${pascalName}Preview.oc.tsx`,
+      `src/custom-components/editor/previews/${pascalName}Preview.oc.tsx`,
       { recursive: true },
       err => {
         if (err) throw err
@@ -19,7 +19,7 @@ export default function handler(req, res) {
       },
     )
     fs.rm(
-      `../../../../../../.oc/panels/${pascalName}Panel.oc.tsx`,
+      `src/custom-components/inspector/panels/components/${pascalName}Panel.oc.tsx`,
       { recursive: true },
       err => {
         if (err) throw err

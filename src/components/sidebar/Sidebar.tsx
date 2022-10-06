@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, memo } from 'react'
+import React, { useState, ChangeEvent, memo, useEffect } from 'react'
 import {
   Box,
   Input,
@@ -20,9 +20,56 @@ import {
   cmenuItems,
   CMenuItem,
 } from '../../custom-components/customComponentsList'
+import { useSelector } from 'react-redux'
+import { getCustomComponents } from '~core/selectors/customComponents'
+import useDispatch from '~hooks/useDispatch'
+import axios from 'axios'
+import API from '~custom-components/api'
 
 const Menu = () => {
   const [searchTerm, setSearchTerm] = useState('')
+  const dispatch = useDispatch()
+  const currentComponents = useSelector(getCustomComponents)
+
+  const getObjectDiff = (updatedList: Record<string, unknown>) => {
+    let deletedComponents = Object.keys(currentComponents).filter(
+      component => !Object.keys(updatedList).includes(component),
+    )
+    let newComponents = Object.keys(updatedList).filter(
+      component => !Object.keys(currentComponents).includes(component),
+    )
+    return {
+      deletedComponents: deletedComponents,
+      newComponents: newComponents,
+    }
+  }
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      const newComponentsList = await API.get('/refresh').then(res => res.data)
+      dispatch.customComponents.updateCustomComponents(newComponentsList)
+      const componentDiffs = getObjectDiff(newComponentsList)
+      if (componentDiffs.deletedComponents.length) {
+        componentDiffs.deletedComponents.map(async component => {
+          const response = await API.post('/delete-file', {
+            path: currentComponents[component],
+          })
+        })
+      }
+      if (componentDiffs.newComponents.length) {
+        componentDiffs.deletedComponents.map(async component => {
+          const response = await API.post('/init', {
+            path: newComponentsList[component],
+          })
+        })
+      }
+    }, 3000)
+
+    return () => {
+      clearInterval(interval)
+    }
+  }, [currentComponents])
+
   return (
     <DarkMode>
       <Box

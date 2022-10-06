@@ -6,19 +6,17 @@ import theme from 'prism-react-renderer/themes/nightOwl'
 import { useSelector } from 'react-redux'
 import { getComponents } from '~core/selectors/components'
 import axios from 'axios'
-
+import API from '~custom-components/api'
 const CodePanel = () => {
   const components = useSelector(getComponents)
   const [code, setCode] = useState<string | undefined>(undefined)
-  const API_ENDPOINT = axios.create({
-    baseURL: `${window.location.href}api`,
-    timeout: 30000,
-  });
 
   const convertToPascal = (filePath: string) => {
     const fileName = filePath.split('/').slice(-1)[0]
     let fileArray = fileName.split('-')
-    fileArray = fileArray.map((word) => {return `${word.slice(0, 1).toUpperCase()}${word.slice(1)}`})
+    fileArray = fileArray.map(word => {
+      return `${word.slice(0, 1).toUpperCase()}${word.slice(1)}`
+    })
     return fileArray.join('').slice(0, -8)
   }
 
@@ -28,14 +26,14 @@ const CodePanel = () => {
       const code = await generateCode(components)
       setCode(code)
       let previewCode = generatePreview(components, fileName)
-      let panelCode = generatePanel(components, fileName);
-      const response = await API_ENDPOINT.post('/save-file', {
+      let panelCode = generatePanel(components, fileName)
+      const response = await API.post('/save-file', {
         codeBody: code,
         jsonBody: components,
         previewBody: previewCode,
         panelBody: panelCode,
-        path: 'src/my-modal.oc.json'
-      });
+        path: 'src/my-modal.oc.json',
+      })
     }
 
     getCode()

@@ -10,10 +10,7 @@ function getPair(path) {
 
 async function getJsons() {
   let jsons = {}
-  const files = glob.sync(
-    'src/custom-components/inspector/panels/components/**/*.tsx',
-    {},
-  )
+  const files = glob.sync('../remote/tu2k22-chakra/**/*.oc.json', {})
   files.forEach(element => {
     const { comp, dir } = getPair(element)
     jsons[comp] = dir
