@@ -62,7 +62,7 @@ const getVirtualCharacteristics = (modelName, attName) => {
 const getAttributeCaracteristics = att => {
   const multiple=att.instance=='Array'
   const type=multiple ? att.caster.path.replace(/s$/, '') : att.instance=='ObjectID' ? att.options.ref : att.instance
-  const ref=att.instance=='ObjectID'
+  const ref=multiple && att.caster.instance=='ObjectID' || att.instance=='ObjectID'
   return ({
     type,
     multiple,

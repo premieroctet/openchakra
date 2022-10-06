@@ -15,13 +15,13 @@ describe('Studio models API', () => {
     expect(new Set(names)).toEqual(EXPECTED)
   })
 
-  test.only('Should return the attributes for program', () => {
+  test('Should return the attributes for program', () => {
     const EXPECTED={
-      name: {type: 'String', multiple: false},
-      code: {type: 'String', multiple: false},
-      description: {type: 'String', multiple: false},
-      duration: {type: 'Number', multiple: false},
-      themes: {type: 'theme', multiple: true},
+      name: {type: 'String', multiple: false, ref: false},
+      code: {type: 'String', multiple: false, ref: false},
+      description: {type: 'String', multiple: false, ref: false},
+      duration: {type: 'Number', multiple: false, ref: false},
+      themes: {type: 'theme', multiple: true, ref: true},
     }
     const program=getModels().find(d => d.name=='program')
     return expect(program.attributes).toEqual(expect.objectContaining(EXPECTED))
@@ -29,8 +29,8 @@ describe('Studio models API', () => {
 
   test('Should return the attributes for session', () => {
     const EXPECTED={
-      program: {type: 'program', multiple: false},
-      trainees_count: {type: 'Number', multiple: false},
+      program: {type: 'program', multiple: false, ref: true},
+      trainees_count: {type: 'Number', multiple: false, ref: false},
     }
     const session=getModels().find(d => d.name=='session')
     expect(session.attributes).toEqual(expect.objectContaining(EXPECTED))
