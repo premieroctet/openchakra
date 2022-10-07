@@ -13,11 +13,10 @@ export const mediaWrapper = ({src, ...props}:{src: string}) => {
   const isVideoProvider = (src: string) => {
     /* Detect YouTube and Vimeo url videos */
     const regex = /(http:|https:|)\/\/(player.|www.)?(vimeo\.com|youtu(be\.com|\.be|be\.googleapis\.com))\/(video\/|embed\/|watch\?v=|v\/)?([A-Za-z0-9._%-]*)(\&\S+)?/g
-    return src.match(regex)
+    return regex.test(src)
   }
 
-  isVideoProvider(src)
-  const ext = !isVideoProvider ? getExtension(src) : 'html'
+  const ext = !isVideoProvider(src) ? getExtension(src) : 'html'
 
   const PreparedMedia = () => {
 
