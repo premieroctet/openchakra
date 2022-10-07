@@ -14,10 +14,10 @@ const PASSWD="$2a$10$JMS3UfmkpDVM98R2CGRMU.KaxJh1LZs.PQdwkizTXrtZ3txAW0kiq"
 const STORY_FILE= name => `https://my-alfred-data-test.s3.eu-west-3.amazonaws.com/pictures/${name}/story.html`
 
 const generateProgramQuery = program => {
-  let [p_code, p_name, designer_email, p_descr, t_name,  r_url]=program
+  let [p_code, p_name, designer_email, p_descr, t_name,  r_name]=program
   p_desc=p_descr.slice(0, 10)
-  r_url=STORY_FILE(r_url)
-  return Resource.findOneAndUpdate({url: r_url}, {$set:{url: r_url}}, {upsert: true, new: true})
+  r_url=STORY_FILE(r_name)
+  return Resource.findOneAndUpdate({url: r_url, name: r_name}, {$set:{url: r_url}}, {upsert: true, new: true})
     .then(res => {
       return Theme.findOneAndUpdate({name: t_name}, {$set:{name: t_name}, $addToSet:{resources: res}}, {upsert: true, new: true})
     })
