@@ -1,0 +1,77 @@
+{
+  "pages": {
+    "page-L8WXJJMA0UDTX": {
+      "pageId": "page-L8WXJJMA0UDTX",
+      "pageName": "index",
+      "metaTitle": "",
+      "metaDescription": "",
+      "metaImageUrl": "",
+      "components": {
+        "root": {
+          "id": "root",
+          "parent": "root",
+          "type": "Box",
+          "children": [
+            "comp-ProgramsBox"
+          ],
+          "props": {
+            "model": "program"
+          }
+        },
+        "comp-ProgramName": {
+          "id": "comp-ProgramName",
+          "props": {
+            "children": "Nom programme",
+            "dataSource": "root"
+          },
+          "children": [],
+          "type": "Text",
+          "parent": "comp-ProgramsBox",
+          "rootParentType": "Text"
+        },
+        "comp-ProgramsBox": {
+          "id": "comp-ProgramsBox",
+          "props": {
+            "dataSource": "root"
+          },
+          "children": [
+            "comp-ProgramName",
+            "comp-ThemesBox"
+          ],
+          "type": "Box",
+          "parent": "root",
+          "rootParentType": "Box"
+        },
+        "comp-ThemesBox": {
+          "id": "comp-ThemesBox",
+          "props": {
+            "dataSource": "root",
+            "attribute": "themes"
+          },
+          "children": [
+            "comp-ThemeName"
+          ],
+          "type": "Box",
+          "parent": "comp-ProgramsBox",
+          "rootParentType": "Box"
+        },
+        "comp-ThemeName": {
+          "id": "comp-ThemeName",
+          "props": {
+            "children": "Nom theme",
+            "dataSource": "root",
+            "attribute": "name"
+          },
+          "children": [],
+          "type": "Text",
+          "parent": "comp-ThemesBox",
+          "rootParentType": "Text"
+        }
+      },
+      "selectedId": "comp-ThemeName",
+      "rootPage": true
+    }
+  },
+  "activePage": "page-L8WXJJMA0UDTX",
+  "rootPage": "page-L8WXJJMA0UDTX"
+}

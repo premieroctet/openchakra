@@ -102,6 +102,12 @@ interface IPreviewProps {
   component: IComponent
 }
 
+interface IDataType {
+  type: String,
+  multiple: boolean,
+  ref: boolean,
+}
+
 interface ComponentItemProps {
   id: string
   label: string

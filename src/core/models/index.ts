@@ -1,5 +1,5 @@
 import app from './app'
 import project from './project'
-import datasources from './datasources'
+import dataSources from './dataSources'
 
-export default { app, project, datasources }
+export default { app, project, dataSources }

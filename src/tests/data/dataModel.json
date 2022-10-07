@@ -1,0 +1,334 @@
+[{
+  "name": "program",
+  "attributes": {
+    "code": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "description": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "duration": {
+      "type": "Number",
+      "multiple": false,
+      "ref": false
+    },
+    "name": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "themes": {
+      "type": "theme",
+      "multiple": true,
+      "ref": true
+    }
+  }
+}, {
+  "name": "resource",
+  "attributes": {
+    "res_code": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "res_description": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "res_name": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "res_type": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "res_url": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    }
+  }
+}, {
+  "name": "session",
+  "attributes": {
+    "code": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "end": {
+      "type": "Date",
+      "multiple": false,
+      "ref": false
+    },
+    "end_str": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "location": {
+      "type": "trainingCenter",
+      "multiple": false,
+      "ref": true
+    },
+    "name": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "program": {
+      "type": "program",
+      "multiple": false,
+      "ref": true
+    },
+    "start": {
+      "type": "Date",
+      "multiple": false,
+      "ref": false
+    },
+    "start_str": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "trainees": {
+      "type": "user",
+      "multiple": true,
+      "ref": true
+    },
+    "trainees_count": {
+      "type": "Number",
+      "multiple": false,
+      "ref": false
+    },
+    "trainers": {
+      "type": "user",
+      "multiple": true,
+      "ref": true
+    },
+    "location.address": {
+      "type": "Embedded",
+      "multiple": false,
+      "ref": false
+    },
+    "location.code": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "location.name": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "program.code": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "program.description": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "program.duration": {
+      "type": "Number",
+      "multiple": false,
+      "ref": false
+    },
+    "program.name": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "program.themes": {
+      "type": "theme",
+      "multiple": true,
+      "ref": true
+    }
+  }
+}, {
+  "name": "theme",
+  "attributes": {
+    "code": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "name": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "picture": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "resources": {
+      "type": "resource",
+      "multiple": true,
+      "ref": true
+    }
+  }
+}, {
+  "name": "traineeSession",
+  "attributes": {
+    "score": {
+      "type": "Number",
+      "multiple": false,
+      "ref": false
+    },
+    "session": {
+      "type": "session",
+      "multiple": false,
+      "ref": true
+    },
+    "spent_time": {
+      "type": "Number",
+      "multiple": false,
+      "ref": false
+    },
+    "trainee": {
+      "type": "user",
+      "multiple": false,
+      "ref": true
+    },
+    "session.code": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "session.end": {
+      "type": "Date",
+      "multiple": false,
+      "ref": false
+    },
+    "session.end_str": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "session.location": {
+      "type": "trainingCenter",
+      "multiple": false,
+      "ref": true
+    },
+    "session.name": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "session.program": {
+      "type": "program",
+      "multiple": false,
+      "ref": true
+    },
+    "session.start": {
+      "type": "Date",
+      "multiple": false,
+      "ref": false
+    },
+    "session.start_str": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "session.trainees": {
+      "type": "user",
+      "multiple": true,
+      "ref": true
+    },
+    "session.trainees_count": {
+      "type": "Number",
+      "multiple": false,
+      "ref": false
+    },
+    "session.trainers": {
+      "type": "user",
+      "multiple": true,
+      "ref": true
+    },
+    "trainee.email": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "trainee.firstname": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "trainee.name": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "trainee.password": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "trainee.role": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    }
+  }
+}, {
+  "name": "trainingCenter",
+  "attributes": {
+    "address": {
+      "type": "Embedded",
+      "multiple": false,
+      "ref": false
+    },
+    "code": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "name": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    }
+  }
+}, {
+  "name": "user",
+  "attributes": {
+    "email": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "firstname": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "name": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "password": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "role": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    }
+  }
+}]
