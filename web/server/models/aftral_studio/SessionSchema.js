@@ -60,4 +60,8 @@ SessionSchema.virtual('end_str').get(function() {
   return this.end ? moment(this.end).format('L') : ''
 })
 
+SessionSchema.virtual('status').get(function() {
+  return moment()>this.end_date ? 'Terminée': 'En cours'
+})
+
 module.exports = SessionSchema

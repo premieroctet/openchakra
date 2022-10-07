@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const AddressSchema=require('../AddressSchema')
+const AddressSchema = require('../AddressSchema')
 
 const Schema = mongoose.Schema
 
@@ -22,6 +22,26 @@ const TraineeSessionSchema = new Schema({
     type: Number,
     required: false,
   },
-}, {toJSON: {virtuals: true, getters: true}})
+  progress: {
+    type: Number,
+    min: 0,
+    max: 100,
+  },
+  resource_status: [{
+      resource: {
+        type: Schema.Types.ObjectId,
+        ref: 'session',
+        required: true,
+      },
+      progress: {
+        Type:Number,
+      }}
+    ],
+}, {
+  toJSON: {
+    virtuals: true,
+    getters: true
+  }
+})
 
 module.exports = TraineeSessionSchema

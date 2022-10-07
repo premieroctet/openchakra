@@ -28,7 +28,12 @@ const UserSchema = new Schema({
   role: {
     type: String,
     required: true,
-  }
+  },
+  sessions: [{
+    type: Schema.Types.ObjectId,
+    ref: 'traineeSession',
+    required: true,
+  }]
 }, {toJSON: {virtuals: true, getters: true}})
 
 module.exports = UserSchema

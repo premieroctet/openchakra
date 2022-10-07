@@ -2,17 +2,17 @@ const mongooseLeanVirtuals=require('mongoose-lean-virtuals')
 const mongoose = require('mongoose')
 const {getDataModel} = require('../../config/config')
 
-let TrainingCenterSchema=null
+let TraineeSessionSchema=null
 
 try {
-  TrainingCenterSchema=require(`./${getDataModel()}/TrainingCenterSchema`)
+  TraineeSessionSchema=require(`./${getDataModel()}/TraineeSessionSchema`)
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {
     throw err
   }
-  TrainingCenterSchema=require(`./others/TrainingCenterSchema`)
+  TraineeSessionSchema=require(`./others/TraineeSessionSchema`)
 }
 
-TrainingCenterSchema?.plugin(mongooseLeanVirtuals)
-module.exports = TrainingCenterSchema ? mongoose.model('trainingCenter', TrainingCenterSchema) : null
+TraineeSessionSchema?.plugin(mongooseLeanVirtuals)
+module.exports = TraineeSessionSchema ? mongoose.model('traineeSession', TraineeSessionSchema) : null
