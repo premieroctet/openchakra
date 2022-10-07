@@ -27,22 +27,24 @@ const CodePanel = () => {
 
   useEffect(() => {
     const getCode = async () => {
-      let fileName = convertToPascal('src/my-modal.oc.json')
       const code = await generateCode(components)
       setCode(code)
-      let previewCode = generatePreview(components, fileName)
-      let panelCode = generatePanel(components, fileName)
-      const response = await API.post('/save-file', {
-        codeBody: code,
-        jsonBody: components,
-        previewBody: previewCode,
-        panelBody: panelCode,
-        path: 'src/my-modal.oc.json',
-      })
+      if (selectedComponent !== undefined) {
+        let fileName = convertToPascal(componentsList[selectedComponent])
+        let previewCode = generatePreview(components, fileName)
+        let panelCode = generatePanel(components, fileName)
+        const response = await API.post('/save-file', {
+          codeBody: code,
+          jsonBody: components,
+          previewBody: previewCode,
+          panelBody: panelCode,
+          path: componentsList[selectedComponent],
+        })
+      }
     }
 
     getCode()
-  }, [components])
+  }, [components, selectedComponent])
 
   const { onCopy, hasCopied } = useClipboard(code!)
 
