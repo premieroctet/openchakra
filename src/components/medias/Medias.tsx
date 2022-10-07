@@ -23,7 +23,7 @@ import {
   Checkbox,
   useDisclosure,
 } from '@chakra-ui/react'
-import {getExtension, mediaAccordingToExt} from '../../utils/mediaAccordingToExt'
+import {getExtension, mediaWrapper} from '../../utils/mediaWrapper'
 
 
 interface s3media {
@@ -177,7 +177,7 @@ const Medias = ({setMediaSrc}:{setMediaSrc: any}) => {
         return (
           <MediaCard key={`img${i}`}> 
           <button className='closeButton' onClick={() => handleDelete(imgObj.Key)}>X</button>
-          {mediaAccordingToExt({ext: getExtension(imgObj?.publicUrl), src: imgObj.publicUrl})}
+          {mediaWrapper({src: imgObj.publicUrl})}
           <p>{imgObj.Key}</p>
           {setMediaSrc && <Button colorScheme={'teal'} onClick={() => {setMediaSrc(imgObj.publicUrl); onClose();}}>Select</Button>}
           <small>{imgObj.publicUrl}</small>

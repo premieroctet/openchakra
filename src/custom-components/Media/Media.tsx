@@ -1,9 +1,9 @@
 import React from 'react'
-import { getExtension, mediaAccordingToExt } from '~utils/mediaAccordingToExt'
+import { mediaWrapper } from '~utils/mediaWrapper'
 
 const Media = ({src, ...props}:{src: string}) => (
   <>
-  {src ? mediaAccordingToExt({ext: getExtension(src), src, props}) : <div>Source needed</div>}
+  {src ? mediaWrapper({src, props}) : <div>Source needed</div>}
   </>
 )
 
