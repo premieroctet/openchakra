@@ -36,7 +36,7 @@ interface s3media {
   publicUrl: string
 }
 
-const Medias = ({setMediaSrc}:{setMediaSrc: any}) => {
+const Medias = ({setMediaSrc, mediaPanelClose}:{setMediaSrc: any, mediaPanelClose: any}) => {
 
   const autorizedImagesExtensions = ['jpg', 'jpeg', 'png', 'svg', 'gif']
   const autorizedVideosExtensions = ['webm', 'mp4']
@@ -110,7 +110,6 @@ const Medias = ({setMediaSrc}:{setMediaSrc: any}) => {
 
   return (
     <div>
-      {/* NOW interface on "Upload a Media"  */}
       <Button colorScheme={'teal'} onClick={onOpen}>Upload your media</Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -179,7 +178,10 @@ const Medias = ({setMediaSrc}:{setMediaSrc: any}) => {
           <button className='closeButton' onClick={() => handleDelete(imgObj.Key)}>X</button>
           {mediaWrapper({src: imgObj.publicUrl})}
           <p>{imgObj.Key}</p>
-          {setMediaSrc && <Button colorScheme={'teal'} onClick={() => {setMediaSrc(imgObj.publicUrl); onClose();}}>Select</Button>}
+          {setMediaSrc && <Button colorScheme={'teal'} onClick={() => {
+            mediaPanelClose && mediaPanelClose()
+            setMediaSrc(imgObj.publicUrl)
+          }}>Select</Button>}
           <small>{imgObj.publicUrl}</small>
           </MediaCard>
         )
@@ -238,8 +240,6 @@ const MediaSearch = styled.input`
   padding-inline: 1rem;
   
 `
-
-
 
 const MediaGrid = styled.div`
   --grid-space: 2rem;

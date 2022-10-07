@@ -68,7 +68,7 @@ const MediaPanel = () => {
         <ModalContent minW={'60vw'}>
           <ModalCloseButton />
           <ModalBody display={'flex'} flexDirection={'column'}>
-          <Medias setMediaSrc={setMediaSrc}/>
+          <Medias setMediaSrc={setMediaSrc} mediaPanelClose={onClose}/>
           </ModalBody>
         </ModalContent>
       </Modal>
