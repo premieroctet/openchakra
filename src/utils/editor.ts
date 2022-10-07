@@ -1,9 +1,17 @@
+import { useSelector } from 'react-redux'
+import { getCustomComponentNames } from '~core/selectors/customComponents'
+
 const ALERT_COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'Alert',
   'AlertDescription',
   'AlertIcon',
   'AlertTitle',
 ]
+
+const CustomComponents = () => {
+  const customComponents = useSelector(getCustomComponentNames)
+  return customComponents
+}
 
 export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   ...ALERT_COMPONENTS,
@@ -91,6 +99,7 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   // Allow custom components
   'CC',
   'Sample',
+  ...CustomComponents(),
 ]
 
 export const AccordionWhitelist: (

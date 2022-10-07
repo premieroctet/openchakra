@@ -21,10 +21,7 @@ import {
   CMenuItem,
 } from '../../custom-components/customComponentsList'
 import { useSelector } from 'react-redux'
-import {
-  getCustomComponentBy,
-  getCustomComponents,
-} from '~core/selectors/customComponents'
+import { getCustomComponents } from '~core/selectors/customComponents'
 import useDispatch from '~hooks/useDispatch'
 import API from '~custom-components/api'
 
