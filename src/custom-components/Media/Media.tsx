@@ -1,9 +1,9 @@
 import React from 'react'
-import { mediaWrapper } from '~utils/mediaWrapper'
+import { mediaWrapper } from './mediaWrapper'
 
 const Media = ({src, ...props}:{src: string}) => (
   <>
-  {src ? mediaWrapper({src, props}) : <div>Source needed</div>}
+  {src ? mediaWrapper({src, ...props}) : <div>Source needed</div>}
   </>
 )
 
