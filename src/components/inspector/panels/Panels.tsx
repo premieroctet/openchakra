@@ -72,7 +72,10 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
 
   const compPanel = extraPanels[type]
   if (compPanel) {
-    return React.createElement(compPanel)
+    return <>
+    {React.createElement(compPanel)}
+    <DataProviderPanel />
+    </>
   }
 
   return (
