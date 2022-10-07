@@ -5,9 +5,11 @@ filename
 
 export const mediaWrapper = ({src, ...props}:{src: string}) => {
 
+  const {htmlWidth, htmlHeight} = props
+
   const document = {
-    width: props?.htmlWidth || "100%",
-    height: props?.htmlHeight || "100%"
+    width: htmlWidth || "100%",
+    height: htmlHeight || "100%"
   }
 
   const isVideoProvider = (src: string) => {
