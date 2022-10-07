@@ -24,7 +24,11 @@ const withDynamicContainer = Component => {
       return null
     }
     const firstChild=React.Children.toArray(props.children)[0]
-    const data=props.dataSource.slice(0, parseInt(props?.limit) || undefined)
+    let orgData=props.dataSource
+    if (props.attribute) {
+      orgData=lodash.get(orgData, props.attribute)
+    }
+    const data=orgData.slice(0, parseInt(props?.limit) || undefined)
     return (
       <Component {...lodash.omit(props, ['children'])}>
     {data.map(d => (

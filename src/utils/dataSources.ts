@@ -11,7 +11,7 @@ export const CONTAINER_TYPE: ComponentType[] = [
 ]
 export const TEXT_TYPE: ComponentType[] = ['Text', 'Heading', 'Badge', 'ListItem']
 export const ACTION_TYPE: ComponentType[] = ['Button']
-export const IMAGE_TYPE: ComponentType[] = ['Image', 'Avatar']
+export const IMAGE_TYPE: ComponentType[] = ['Image', 'Avatar', 'Media']
 export const PROGRESS_TYPE: ComponentType[] = ['Progress', 'CircularProgress']
 
 export const isMultipleDispatcher = (component: IComponent):boolean => {
