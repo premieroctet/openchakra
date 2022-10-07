@@ -10,7 +10,6 @@ const keyMap = {
   TOGGLE_CODE_PANEL: 'c',
   UNDO: 'ctrl+z, command+z',
   REDO: 'ctrl+y, cmd+y',
-  UNSELECT: 'esc',
   PARENT: 'p',
   DUPLICATE: 'ctrl+d, command+d',
   KONAMI_CODE:

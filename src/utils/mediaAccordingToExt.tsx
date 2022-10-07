@@ -32,8 +32,8 @@ export const mediaAccordingToExt = ({ext, src, ...props}:{ext: string, src: stri
           height={document.height}
           ></object> 
       case 'html': 
-      <iframe
-        title={src}
+        return <iframe
+        title={'AHAHAHHA'}
         src={src}
         width={document.width}
         height={document.height}
