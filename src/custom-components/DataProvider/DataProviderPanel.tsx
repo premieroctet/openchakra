@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import React, { memo, useState, useEffect } from 'react'
 
 import { getComponents } from '~core/selectors/components'
-import { getModelNames } from '~core/selectors/datasources'
+import { getModelNames } from '~core/selectors/dataSources'
 import axios from 'axios'
 
 import { useForm } from '../../hooks/useForm'

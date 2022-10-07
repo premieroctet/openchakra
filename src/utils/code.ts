@@ -2,26 +2,22 @@ import camelCase from 'lodash/camelCase'
 import filter from 'lodash/filter'
 import isBoolean from 'lodash/isBoolean'
 import lodash from 'lodash'
+
 import icons from '~iconsList'
 
+import {
+  ACTION_TYPE,
+  CONTAINER_TYPE,
+  IMAGE_TYPE,
+  PROGRESS_TYPE,
+  TEXT_TYPE,
+  getFieldsForDataProvider
+} from './dataSources';
 import { ProjectState, PageState } from '../core/models/project'
 import config from '../../env.json'
 
 //const HIDDEN_ATTRIBUTES=['dataSource', 'attribute']
 const HIDDEN_ATTRIBUTES: string[] = []
-export const CONTAINER_TYPE: ComponentType[] = [
-  'Box',
-  'Grid',
-  'SimpleGrid',
-  'Flex',
-  'List',
-  'Accordion',
-  'Container',
-]
-const TEXT_TYPE: ComponentType[] = ['Text', 'Heading', 'Badge', 'ListItem']
-const ACTION_TYPE: ComponentType[] = ['Button']
-const IMAGE_TYPE: ComponentType[] = ['Image', 'Avatar']
-const PROGRESS_TYPE: ComponentType[] = ['Progress', 'CircularProgress']
 
 export const normalizePageName = (pageName: string) => {
   return capitalize(camelCase(pageName))
@@ -270,9 +266,10 @@ const getIconsImports = (components: IComponents) => {
   })
 }
 
-const buildHooks = (components: IComponent[]) => {
+const buildHooks = (components: IComponents, models) => {
   // Returns attributes names used in this dataProvider for 'dataProvider'
   const getDataProviderFields = (dataProvider: IComponent) => {
+    return getFieldsForDataProvider(dataProvider.id, components)
     return lodash(components)
       .filter(
         c => c.props?.dataSource == dataProvider.id && !!c.props?.attribute,
@@ -280,9 +277,8 @@ const buildHooks = (components: IComponent[]) => {
       .map(c => c.props.attribute)
       .uniq()
   }
-  const dataProviders: IComponent[] = components.filter(
-    c => c.props?.model,
-  )
+
+  const dataProviders: IComponent[] = lodash(components).pickBy(c => c.props?.model).values()
   if (dataProviders.length == 0) {
     return ''
   }
@@ -345,6 +341,7 @@ export const generateCode = async (
   pages: {
     [key: string]: PageState
   },
+  models: any,
 ) => {
   const {
     pageName,
@@ -354,7 +351,7 @@ export const generateCode = async (
     metaImageUrl,
   } = pages[pageId]
 
-  let hooksCode = buildHooks(Object.values(components))
+  let hooksCode = buildHooks(components, models)
   let dynamics = buildDynamics(components)
   let code = buildBlock({ component: components.root, components, pages })
   let componentsCodes = buildComponents(components, pages)

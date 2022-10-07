@@ -9,7 +9,7 @@ export type DataSourcesState = {
   models: Array<Model>
 }
 
-const datasources = createModel({
+const dataSources = createModel({
   state: {
     models: [],
   } as DataSourcesState,
@@ -23,4 +23,4 @@ const datasources = createModel({
   },
 })
 
-export default datasources
+export default dataSources

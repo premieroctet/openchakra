@@ -5,32 +5,37 @@ import { Input } from '@chakra-ui/react'
 import { Accordion } from '@chakra-ui/react'
 import AccordionContainer from '~components/inspector/AccordionContainer'
 
-import { CONTAINER_TYPE } from '../../../utils/code';
-import { getDataProviders } from '../../../utils/dataSources'
+import { getDataProviders, getAvailableAttributes, CONTAINER_TYPE } from '~utils/dataSources'
 import {
   getComponents,
   getSelectedComponent
 } from '../../../core/selectors/components';
-import { getModelAttributes } from '../../../core/selectors/datasources'
 import { useForm } from '../../../hooks/useForm'
 import FormControl from '../controls/FormControl'
 import usePropsSelector from '../../../hooks/usePropsSelector'
+import {getModels, getModelAttributes} from '~core/selectors/dataSources'
+
 
 const DataSourcePanel:React.FC = () => {
-  const components = useSelector(getComponents)
-  const activeComponent = useSelector(getSelectedComponent)
+  const components:IComponents = useSelector<IComponents>(getComponents)
+  const activeComponent:IComponent = useSelector<IComponent>(getSelectedComponent)
   const { setValueFromEvent } = useForm()
   const dataSource = usePropsSelector('dataSource')
   const attribute = usePropsSelector('attribute')
   const limit = usePropsSelector('limit')
   const [providers, setProviders] = useState<IComponent[]>([])
   const provider = providers.find(p => p.id == dataSource)
-  const attributes = useSelector(getModelAttributes(provider?.props.model))
+  const [attributes, setAttributes] = useState([])
+  const models = useSelector(getModels)
 
   useEffect(() => {
     const dataProviders = getDataProviders(activeComponent, components)
     setProviders(dataProviders)
-  }, [activeComponent, components])
+    if (models.length>0) {
+      const attrs=getAvailableAttributes(activeComponent, components, models)
+      setAttributes(attrs)
+    }
+  }, [activeComponent, components, dataSource, models])
 
   return (
     <Accordion >
@@ -51,7 +56,7 @@ const DataSourcePanel:React.FC = () => {
           ))}
         </Select>
       </FormControl>
-      {attributes && !CONTAINER_TYPE.includes(activeComponent?.type) && (
+      {attributes && (
         <FormControl htmlFor="attribute" label="Champ">
           <Select
             id="attribute"

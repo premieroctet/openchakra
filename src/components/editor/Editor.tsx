@@ -54,12 +54,12 @@ const Editor: React.FC = () => {
   useEffect(() => {
     get('/myAlfred/api/studio/models')
       .then(res => {
-        dispatch.datasources.setModels(res)
+        dispatch.dataSources.setModels(res)
       })
       .catch(err => {
         alert(err)
       })
-  }, [dispatch.datasources, get])
+  }, [dispatch.dataSources, get])
 
   const Playground = (
     <Box
