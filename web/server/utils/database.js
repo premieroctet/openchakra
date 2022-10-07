@@ -61,8 +61,9 @@ const getVirtualCharacteristics = (modelName, attName) => {
 
 const getAttributeCaracteristics = att => {
   const multiple=att.instance=='Array'
-  const type=multiple ? att.caster.path.replace(/s$/, '') : att.instance=='ObjectID' ? att.options.ref : att.instance
-  const ref=multiple && att.caster.instance=='ObjectID' || att.instance=='ObjectID'
+  const baseData = multiple ? att.caster : att
+  const type= baseData.instance=='ObjectID' ? baseData.options.ref : baseData.instance
+  const ref=baseData.instance=='ObjectID'
   return ({
     type,
     multiple,
@@ -110,8 +111,75 @@ const getModels = () => {
   return result
 }
 
+const buildPopulate = (field, model) => {
+  const fields=field.split('.')
+  const attributes=getModels().find(m => m.name==model).attributes
+  if (fields.length==0) {
+    return null
+  }
+  const currentField=fields[0]
+  const currentAttribute=attributes[currentField]
+  if (!currentAttribute.ref) {
+    return null
+  }
+  let result={path: currentField}
+  if (fields.length>1) {
+    const nextPop=buildPopulate(fields.slice(1).join('.'), currentAttribute.type)
+    if (nextPop) {
+      result.populate=nextPop
+    }
+  }
+  return result
+}
+
+const buildPopulates = (fields, model) => {
+
+  // TODO Bug: in ['program.themes', 'program.otherref']
+  // should return {path: 'program', populate: [{path: 'themes'}, {path: 'otherref'}]}
+  // but today return {path: 'program', populate: {path: 'themes'}]}
+  // tofix: cf. lodash.mergeWith
+  const modelAttributes=Object.fromEntries(getModelAttributes(model))
+  const populates=lodash(fields)
+  // Retain only ObjectId fields
+    .filter(att => modelAttributes[att.split('.')[0]].ref==true)
+    .groupBy(att => att.split('.')[0])
+    // Build populates for each 1st level attribute
+    .mapValues(fields => fields.map(f => buildPopulate(f, model)))
+    // Merge populates for each 1st level attribute
+    .mapValues(
+      pops => pops.reduce(
+        (acc, pop) => lodash.mergeWith(acc, pop),
+      ), {})
+    .values()
+    .value()
+  return populates
+}
+
+const buildQuery = (model, id, fields) => {
+
+  console.log(`Requesting model ${model}, id ${id || 'none'} fields:${fields}`)
+
+  const modelAttributes=Object.fromEntries(getModelAttributes(model))
+
+  const populates=buildPopulates(fields, model)
+
+  const select=lodash(fields)
+    .map(att => att.split('.')[0])
+    .uniq()
+    .filter(att => modelAttributes[att].ref==false)
+    .map(att => ([att, true]))
+    .fromPairs()
+    .value()
+
+  const criterion=id ? {_id: id}: {}
+  let query=mongoose.connection.models[model].find(criterion, select)
+  query=populates.reduce((q, key) => q.populate(key), query)
+  return query
+}
+
 module.exports={
   hasRefs, MONGOOSE_OPTIONS, attributesComparator,
   getSimpleModelAttributes, getReferencedModelAttributes,
-  getModelAttributes, getModels,
+  getModelAttributes, getModels, buildQuery, buildPopulate,
+  buildPopulates,
 }

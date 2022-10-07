@@ -1,4 +1,4 @@
-const { getModelAttributes } = require('../../utils/database');
+const {buildQuery} = require('../../utils/database')
 const path=require('path')
 const fs=require('fs').promises
 const child_process = require('child_process')
@@ -99,21 +99,10 @@ router.post('/start', (req, res) => {
 
 router.get('/:model/:id?', (req, res) => {
   const model=req.params.model
-  const attributes=req.query.fields?.split(',') || []
+  const fields=req.query.fields?.split(',') || []
   const id=req.params.id
 
-  console.log(`Requesting model ${model}, id ${id || 'none'} attributes:${attributes}`)
-
-  const modelAttributes=Object.fromEntries(getModelAttributes(model))
-
-  const populates=lodash(attributes)
-    .map(att => att.split('.')[0])
-    .uniq()
-    .filter(att => modelAttributes[att].ref==true)
-
-  let query=mongoose.connection.models[model].find()
-  query=populates.reduce((q, key) => q.populate(key), query)
-
+  const query=buildQuery(model, id, fields)
   query
     .then(data => {
       if (id && data.length==0) {
