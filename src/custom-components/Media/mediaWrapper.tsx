@@ -46,8 +46,8 @@ export const mediaWrapper = ({src, ...props}:{src: string}) => {
         return <iframe
         title={src}
         src={src}
-        width={document.width}
-        height={document.height}
+        width={'980px'}
+        height={'980px'}
         allowFullScreen
       >
       </iframe>  
