@@ -1,6 +1,5 @@
-import React, { memo } from 'react'
+import React, { memo, Suspense, lazy, useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-
 import AlertPreview from '~components/editor/previews/AlertPreview'
 import AvatarPreview, {
   AvatarBadgePreview,
@@ -35,6 +34,14 @@ import SkeletonPreview, {
   SkeletonTextPreview,
 } from './previews/SkeletonPreview'
 import SamplePreview from '~custom-components/editor/previews/SamplePreview'
+import { getCustomComponentNames } from '~core/selectors/customComponents'
+
+const importView = (component: any) =>
+  lazy(() =>
+    import(
+      `src/custom-components/editor/previews/${component}Preview.oc.tsx`
+    ).catch(() => import('src/custom-components/fallback')),
+  )
 
 const ComponentPreview: React.FC<{
   componentName: string
@@ -45,6 +52,29 @@ const ComponentPreview: React.FC<{
   }
 
   const type = (component && component.type) || null
+
+  const [views, setViews] = useState<any>([])
+  const customComponents = useSelector(getCustomComponentNames)
+
+  useEffect(() => {
+    async function loadViews() {
+      const componentPromises = await customComponents.map(
+        async (component: any) => {
+          const View = await importView(component)
+          return <View key={component} />
+        },
+      )
+      Promise.all(componentPromises).then(setViews)
+    }
+    loadViews()
+  }, [customComponents])
+
+  if (type && customComponents.includes(type)) {
+    const ind = customComponents.findIndex(type as any)
+    if (ind !== -1)
+      return <Suspense fallback={'Loading...'}>{views[ind]}</Suspense>
+    return <>Loading...</>
+  }
 
   switch (type) {
     // Simple components
