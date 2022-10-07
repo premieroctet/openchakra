@@ -1,9 +1,7 @@
-import React, { memo } from 'react'
-import { Input, Select, Modal,
+import React, { memo, useState } from 'react'
+import { Input, Modal,
   ModalOverlay,
   ModalContent,
-  ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton, 
   useDisclosure,
@@ -23,6 +21,7 @@ const MediaPanel = () => {
   const alt = usePropsSelector('alt')
   const htmlHeight = usePropsSelector('htmlHeight')
   const htmlWidth = usePropsSelector('htmlWidth')
+  const [mediaSrc, setMediaSrc] = useState(null)
 
   return (
     <>
@@ -30,10 +29,11 @@ const MediaPanel = () => {
         <Input
           onClick={onOpen}
           placeholder="Media URL"
-          value={src || ''}
+          value={mediaSrc || src || ''}
           size="sm"
           name="src"
           onChange={setValueFromEvent}
+          onBlur={setValueFromEvent}
         />
       </FormControl>
       <FormControl label="Alt" htmlFor="alt">
@@ -68,7 +68,7 @@ const MediaPanel = () => {
         <ModalContent minW={'60vw'}>
           <ModalCloseButton />
           <ModalBody display={'flex'} flexDirection={'column'}>
-          <Medias />
+          <Medias setMediaSrc={setMediaSrc}/>
           </ModalBody>
         </ModalContent>
       </Modal>

@@ -23,7 +23,7 @@ import {
   Checkbox,
   useDisclosure,
 } from '@chakra-ui/react'
-import {getExtension, mediaAccordingToExt} from '../../utils/mediaAccordingToExt'
+import {getExtension, mediaWrapper} from '../../utils/mediaWrapper'
 
 
 interface s3media {
@@ -36,49 +36,16 @@ interface s3media {
   publicUrl: string
 }
 
-const displayDocument = (ext: string, src: string) => {
-
-  const document = {
-    width: 200,
-    height: 200
-  }
-
-  switch (ext) {
-    case 'mp4': 
-    case 'webm': 
-    return  <video 
-      width={document.width} 
-      controls
-      preload='none'
-      poster="images/videocover.png"
-      >
-      <source src={src} type={`video/${ext}`} />
-        </video>  
-    case 'pdf':
-      return  <object
-      type="application/pdf"
-      data={src}
-      role={'document'}
-      width={document.width}
-      height={document.height}
-    ></object>  
-    default:
-      return <img 
-        loading="lazy"
-        src={src} 
-        width={document.width}
-        height={document.height} 
-        alt="" 
-        />
-  }
-}
-
-const Medias = () => {
+const Medias = ({setMediaSrc}:{setMediaSrc: any}) => {
 
   const autorizedImagesExtensions = ['jpg', 'jpeg', 'png', 'svg', 'gif']
   const autorizedVideosExtensions = ['webm', 'mp4']
   const autorizedFilesExtensions = ['pdf']
-  const autorizedExtensions = [...autorizedImagesExtensions, ...autorizedVideosExtensions, ...autorizedFilesExtensions]
+  const autorizedExtensions = [
+    ...autorizedImagesExtensions, 
+    ...autorizedVideosExtensions, 
+    ...autorizedFilesExtensions
+  ]
 
   const [fileToUpload, setFileToUpload] = useState()
   const [mediaSearch, setMediaSearch] = useState<string>('')
@@ -209,9 +176,10 @@ const Medias = () => {
       {imagesToDisplay.map((imgObj: s3media, i) => {
         return (
           <MediaCard key={`img${i}`}> 
-          <button onClick={() => handleDelete(imgObj.Key)}>X</button>
-          {mediaAccordingToExt(getExtension(imgObj?.publicUrl), imgObj.publicUrl)}
+          <button className='closeButton' onClick={() => handleDelete(imgObj.Key)}>X</button>
+          {mediaWrapper({src: imgObj.publicUrl})}
           <p>{imgObj.Key}</p>
+          {setMediaSrc && <Button colorScheme={'teal'} onClick={() => {setMediaSrc(imgObj.publicUrl); onClose();}}>Select</Button>}
           <small>{imgObj.publicUrl}</small>
           </MediaCard>
         )
@@ -292,7 +260,7 @@ const MediaCard = styled.div`
   border-radius: 2rem;
   box-shadow: 0px 10px  5px rgba(199, 199, 199,0.9);
   
-  button {
+  .closeButton {
     display: flex;
     align-items: center;
     justify-content: center;

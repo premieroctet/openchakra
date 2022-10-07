@@ -3,12 +3,21 @@ import React from 'react'
 export const getExtension = (filename: string) => filename.substring(filename.lastIndexOf('.') + 1, filename.length) ||
 filename
 
-export const mediaAccordingToExt = (ext: string, src: string, props = {}) => {
+export const mediaWrapper = ({src, ...props}:{src: string}) => {
 
   const document = {
-    width: "100%",
-    height: "100%"
+    width: props?.htmlWidth || "100%",
+    height: props?.htmlHeight || "100%"
   }
+
+  const isVideoProvider = (src: string) => {
+    /* Detect YouTube and Vimeo url videos */
+    const regex = /(http:|https:|)\/\/(player.|www.)?(vimeo\.com|youtu(be\.com|\.be|be\.googleapis\.com))\/(video\/|embed\/|watch\?v=|v\/)?([A-Za-z0-9._%-]*)(\&\S+)?/g
+    return src.match(regex)
+  }
+
+  isVideoProvider(src)
+  const ext = !isVideoProvider ? getExtension(src) : 'html'
 
   const PreparedMedia = () => {
 
@@ -32,11 +41,12 @@ export const mediaAccordingToExt = (ext: string, src: string, props = {}) => {
           height={document.height}
           ></object> 
       case 'html': 
-      <iframe
+        return <iframe
         title={src}
         src={src}
         width={document.width}
         height={document.height}
+        allowFullScreen
       >
       </iframe>  
       default:
