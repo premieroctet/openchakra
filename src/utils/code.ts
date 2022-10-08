@@ -95,7 +95,7 @@ const buildBlock = ({
     if (!childComponent) {
       console.error(`invalid component ${key}`)
     } else if (forceBuildBlock || !childComponent.componentName) {
-      const componentName = capitalize(childComponent.type)
+      const componentName = convertToPascal(childComponent.type)
       let propsContent = ''
 
       const propsNames = Object.keys(childComponent.props).filter(propName => {
