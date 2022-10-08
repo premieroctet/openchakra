@@ -70,11 +70,11 @@ const Menu = () => {
   }, [currentComponents])
 
   const handleEditClick = async (name: string) => {
-    dispatch.customComponents.select(name)
     const response = await API.post('/read-json', {
-      path: currentComponents[selectedComponent],
+      path: currentComponents[name],
     })
     console.log(response)
+    dispatch.customComponents.select(name)
     dispatch.components.reset(JSON.parse(response.data.content))
   }
 
@@ -216,13 +216,13 @@ const Menu = () => {
                         <IconButton
                           aria-label="Edit"
                           size="sm"
+                          onClick={() => {
+                            handleEditClick(name)
+                          }}
                           disabled={name === selectedComponent}
                         >
                           <EditIcon
                             color="white"
-                            onClick={() => {
-                              handleEditClick(name)
-                            }}
                           />
                         </IconButton>
                       </Flex>
