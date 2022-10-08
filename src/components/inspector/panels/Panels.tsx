@@ -57,13 +57,16 @@ import SamplePanel from '~custom-components/inspector/panels/components/SamplePa
 import { useSelector } from 'react-redux'
 import { getCustomComponentNames } from '~core/selectors/customComponents'
 import { onboarding } from '~templates/onboarding'
+import { convertToPascal } from '~components/CodePanel'
 
-const importView = (component: any) =>
-  lazy(() =>
+const importView = (component: any) => {
+  component = convertToPascal(component)
+  return lazy(() =>
     import(
       `src/custom-components/inspector/panels/components/${component}Panel.oc.tsx`
     ).catch(() => import('src/custom-components/fallback')),
   )
+}
 
 const Panels: React.FC<{
   component: IComponent

@@ -35,13 +35,16 @@ import SkeletonPreview, {
 } from './previews/SkeletonPreview'
 import SamplePreview from '~custom-components/editor/previews/SamplePreview'
 import { getCustomComponentNames } from '~core/selectors/customComponents'
+import { convertToPascal } from '~components/CodePanel'
 
-const importView = (component: any) =>
-  lazy(() =>
+const importView = (component: any) => {
+  component = convertToPascal(component)
+  return lazy(() =>
     import(
       `src/custom-components/editor/previews/${component}Preview.oc.tsx`
     ).catch(() => import('src/custom-components/fallback')),
   )
+}
 
 const ComponentPreview: React.FC<{
   componentName: string
@@ -50,7 +53,6 @@ const ComponentPreview: React.FC<{
   if (!component) {
     console.error(`ComponentPreview unavailable for component ${componentName}`)
   }
-
   const type = (component && component.type) || null
 
   const [views, setViews] = useState<any>([])
@@ -59,9 +61,9 @@ const ComponentPreview: React.FC<{
   useEffect(() => {
     async function loadViews() {
       const componentPromises = await customComponents.map(
-        async (component: any) => {
-          const View = await importView(component)
-          return <View key={component} />
+        async (customComponent: string) => {
+          const View = await importView(customComponent)
+          return <View key={customComponent} component={component} />
         },
       )
       Promise.all(componentPromises).then(setViews)
