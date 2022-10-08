@@ -117,6 +117,7 @@ interface ComponentItemProps {
   type: ComponentType
   isMoved?: boolean
   isChild?: boolean
+  isSelected?: boolean
   isMeta?: boolean
   soon?: boolean
   custom?: boolean

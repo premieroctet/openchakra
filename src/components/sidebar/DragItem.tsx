@@ -8,13 +8,14 @@ const DragItem: React.FC<ComponentItemProps> = ({
   soon,
   label,
   isMeta,
+  isSelected,
   custom,
   isChild,
   rootParentType,
 }) => {
   const [, drag] = useDrag({
     type,
-    item: { id: type, type, isMeta, custom, rootParentType },
+    item: { id: type, type, isMeta, custom, rootParentType, isSelected },
   })
 
   let boxProps: any = {
@@ -22,7 +23,7 @@ const DragItem: React.FC<ComponentItemProps> = ({
     color: 'whiteAlpha.600',
   }
 
-  if (!soon) {
+  if (!soon && !isSelected) {
     boxProps = {
       ref: drag,
       color: 'whiteAlpha.800',
