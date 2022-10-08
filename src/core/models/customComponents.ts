@@ -7,17 +7,17 @@ export interface Dictionary {
 
 export type CustomComponentsState = {
   components: Dictionary
-  selectedId?: IComponent['type']
+  selectedId: IComponent['type']
 }
 
-const DEFAULT_ID = undefined
+const DEFAULT_ID = 'example'
 
 export const INITIAL_COMPONENTS: Dictionary = {}
 
 const customComponents = createModel({
   state: {
     components: INITIAL_COMPONENTS,
-    selectedId: undefined,
+    selectedId: DEFAULT_ID,
   } as CustomComponentsState,
   reducers: {
     updateCustomComponents(

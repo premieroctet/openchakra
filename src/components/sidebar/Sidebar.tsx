@@ -17,7 +17,7 @@ import { CloseIcon, EditIcon, SearchIcon } from '@chakra-ui/icons'
 import DragItem from './DragItem'
 import { menuItems, MenuItem } from '~componentsList'
 import { useSelector } from 'react-redux'
-import { getCustomComponents } from '~core/selectors/customComponents'
+import { getCustomComponents, getSelectedCustomComponentId } from '~core/selectors/customComponents'
 import useDispatch from '~hooks/useDispatch'
 import API from '~custom-components/api'
 
@@ -25,6 +25,7 @@ const Menu = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const dispatch = useDispatch()
   const currentComponents = useSelector(getCustomComponents)
+  const selectedComponent = useSelector(getSelectedCustomComponentId)
 
   const getObjectDiff = (updatedList: Record<string, unknown>) => {
     let deletedComponents = Object.keys(currentComponents).filter(
@@ -63,7 +64,7 @@ const Menu = () => {
     return () => {
       clearInterval(interval)
     }
-  }, [currentComponents])
+  }, [currentComponents, selectedComponent])
 
   return (
     <DarkMode>
@@ -186,7 +187,7 @@ const Menu = () => {
                         alignItems={'center'}
                         justifyContent="space-between"
                         key={name}
-                      >
+                      > 
                         <Box flex={1}>
                           <DragItem
                             key={name}
@@ -195,18 +196,16 @@ const Menu = () => {
                             type={name}
                             id={name}
                             rootParentType={name}
+                            isSelected={name===selectedComponent}
                           >
                             {name}
                           </DragItem>
                         </Box>
-                        <IconButton aria-label="Edit" size="sm">
+                        <IconButton aria-label="Edit" size="sm" disabled={name===selectedComponent}>
                           <EditIcon
                             color="white"
                             onClick={() => {
                               dispatch.customComponents.select(name)
-                              console.log(
-                                'TODO: Disable this component and load json in editor.',
-                              )
                             }}
                           />
                         </IconButton>

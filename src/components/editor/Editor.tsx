@@ -60,7 +60,8 @@ const Editor: React.FC = () => {
     >
       {isEmpty && (
         <Text maxWidth="md" color="gray.400" fontSize="xl" textAlign="center">
-          Drag some component to start coding without code! Or load{' '}
+          Create new components using the terminal to see them here. Click the edit button beside any component to load it!
+          {/* Or load{' '}
           <Link
             color="gray.500"
             onClick={(e: React.MouseEvent) => {
@@ -70,8 +71,7 @@ const Editor: React.FC = () => {
             textDecoration="underline"
           >
             the custom components
-          </Link>
-          .
+          </Link> */}
         </Text>
       )}
       {components.root.children.map((name: string) => (
