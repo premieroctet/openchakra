@@ -2,6 +2,7 @@ import isBoolean from 'lodash/isBoolean'
 import filter from 'lodash/filter'
 import icons from '~iconsList'
 import { Dictionary } from '~core/models/customComponents'
+import { convertToPascal } from '~components/CodePanel'
 
 const capitalize = (value: string) => {
   return value.charAt(0).toUpperCase() + value.slice(1)
@@ -196,16 +197,10 @@ const getIconsImports = (components: IComponents) => {
   })
 }
 
-const convertToPascal = (filePath: string) => {
-  const fileName = filePath.split('/').slice(-1)[0]
-  let fileArray = fileName.split('-')
-  fileArray = fileArray.map(word => {
-    return `${word.slice(0, 1).toUpperCase()}${word.slice(1)}`
-  })
-  return fileArray.join('')
-}
-
-export const generateCode = async (components: IComponents, currentComponents: Dictionary) => {
+export const generateCode = async (
+  components: IComponents,
+  currentComponents: Dictionary,
+) => {
   let code = buildBlock({ component: components.root, components })
   let componentsCodes = buildComponents(components)
   // let paramTypes = `{title: string, name: string}`
@@ -237,9 +232,9 @@ export const generateCode = async (components: IComponents, currentComponents: D
           name =>
             `import { ${convertToPascal(
               currentComponents[components[name].type],
-            )} } from @tiui/${currentComponents[components[name].type]
+            )} } from '@tiui/${currentComponents[components[name].type]
               .slice(3)
-              .replaceAll('/', '.')}`,
+              .replaceAll('/', '.')}';`,
         ),
     ),
   ]
