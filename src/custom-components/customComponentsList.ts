@@ -7,18 +7,6 @@ export type CMenuItem = {
   rootParentType?: ComponentType
 }
 
-const CustomComponents = (item = false) => {
-  const customComponents = useSelector(getCustomComponentNames)
-  let itemizedCustomComponents: any = {}
-  if (item) {
-    customComponents.forEach((element: string) => {
-      itemizedCustomComponents[element] = {}
-    })
-    return itemizedCustomComponents
-  }
-  return customComponents
-}
-
 type CMenuItems = Partial<
   {
     [k in ComponentType]: CMenuItem
@@ -26,13 +14,8 @@ type CMenuItems = Partial<
 >
 
 export const cmenuItems: CMenuItems = {
-  CC: { custom: true },
   Sample: {},
-  ...CustomComponents(true),
 }
 
-export const componentsList: ComponentType[] = [
-  'CC',
-  'Sample',
-  ...CustomComponents(),
-]
+// Not required as it is only used for checking unique componentName when clicking on 'Name Component' button.
+export const componentsList: ComponentType[] = ['Sample']

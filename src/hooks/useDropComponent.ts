@@ -2,6 +2,8 @@ import { useDrop, DropTargetMonitor } from 'react-dnd'
 import { rootComponents } from '~utils/editor'
 import useDispatch from './useDispatch'
 import builder from '~core/models/composer/builder'
+import { getCustomComponentNames } from '~core/selectors/customComponents'
+import { useSelector } from 'react-redux'
 
 export const useDropComponent = (
   componentId: string,
@@ -9,9 +11,10 @@ export const useDropComponent = (
   canDrop: boolean = true,
 ) => {
   const dispatch = useDispatch()
+  const customComponents = useSelector(getCustomComponentNames)
 
   const [{ isOver }, drop] = useDrop({
-    accept,
+    accept: [...accept, ...customComponents],
     collect: monitor => ({
       isOver: monitor.isOver({ shallow: true }) && monitor.canDrop(),
     }),
@@ -27,8 +30,6 @@ export const useDropComponent = (
         })
       } else if (item.isMeta) {
         dispatch.components.addMetaComponent(builder[item.type](componentId))
-      } else if (item.custom) {
-        dispatch.components.addCustomComponent(builder[item.type](componentId))
       } else {
         dispatch.components.addComponent({
           parentName: componentId,

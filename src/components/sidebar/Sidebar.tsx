@@ -16,10 +16,6 @@ import {
 import { CloseIcon, EditIcon, SearchIcon } from '@chakra-ui/icons'
 import DragItem from './DragItem'
 import { menuItems, MenuItem } from '~componentsList'
-import {
-  cmenuItems,
-  CMenuItem,
-} from '../../custom-components/customComponentsList'
 import { useSelector } from 'react-redux'
 import { getCustomComponents } from '~core/selectors/customComponents'
 import useDispatch from '~hooks/useDispatch'
@@ -180,12 +176,11 @@ const Menu = () => {
             </TabPanel>
             <TabPanel>
               <Box p={0} pt={0}>
-                {(Object.keys(cmenuItems) as ComponentType[])
+                {(Object.keys(currentComponents) as ComponentType[])
                   .filter(c =>
                     c.toLowerCase().includes(searchTerm.toLowerCase()),
                   )
                   .map(name => {
-                    const { custom } = cmenuItems[name] as CMenuItem
                     return (
                       <Flex
                         alignItems={'center'}
@@ -195,7 +190,7 @@ const Menu = () => {
                         <Box flex={1}>
                           <DragItem
                             key={name}
-                            custom={!!custom}
+                            custom={true}
                             label={name}
                             type={name}
                             id={name}
@@ -210,7 +205,7 @@ const Menu = () => {
                             onClick={() => {
                               dispatch.customComponents.select(name)
                               console.log(
-                                'Disable this component and load json in editor.',
+                                'TODO: Disable this component and load json in editor.',
                               )
                             }}
                           />
