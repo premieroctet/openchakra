@@ -1,7 +1,7 @@
 import { createModel } from '@rematch/core'
 import produce from 'immer'
 
-interface Dictionary {
+export interface Dictionary {
   [Key: string]: string
 }
 

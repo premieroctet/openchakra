@@ -27,7 +27,7 @@ const CodePanel = () => {
 
   useEffect(() => {
     const getCode = async () => {
-      const code = await generateCode(components)
+      const code = await generateCode(components, componentsList)
       setCode(code)
       if (selectedComponent !== undefined) {
         let fileName = convertToPascal(componentsList[selectedComponent])

@@ -1,8 +1,7 @@
 import isBoolean from 'lodash/isBoolean'
 import filter from 'lodash/filter'
 import icons from '~iconsList'
-import { useSelector } from 'react-redux'
-import { getCustomComponents } from '~core/selectors/customComponents'
+import { Dictionary } from '~core/models/customComponents'
 
 const capitalize = (value: string) => {
   return value.charAt(0).toUpperCase() + value.slice(1)
@@ -206,12 +205,11 @@ const convertToPascal = (filePath: string) => {
   return fileArray.join('')
 }
 
-export const generateCode = async (components: IComponents) => {
+export const generateCode = async (components: IComponents, currentComponents: Dictionary) => {
   let code = buildBlock({ component: components.root, components })
   let componentsCodes = buildComponents(components)
   // let paramTypes = `{title: string, name: string}`
   // let params = `{title="TITLE",name="NAME"}`
-  const currentComponents = useSelector(getCustomComponents)
   const { paramTypes, params } = buildParams(components.root.params)
   const iconImports = Array.from(new Set(getIconsImports(components)))
 
