@@ -66,6 +66,15 @@ const Menu = () => {
     }
   }, [currentComponents, selectedComponent])
 
+  const handleEditClick = async (name: string) => {
+    dispatch.customComponents.select(name)
+    const response = await API.post('/read-json', {
+      path: currentComponents[selectedComponent]
+    })
+    console.log(response)
+    dispatch.components.reset(JSON.parse(response.data.content))
+  }
+
   return (
     <DarkMode>
       <Box
@@ -187,7 +196,7 @@ const Menu = () => {
                         alignItems={'center'}
                         justifyContent="space-between"
                         key={name}
-                      > 
+                      >
                         <Box flex={1}>
                           <DragItem
                             key={name}
@@ -196,16 +205,16 @@ const Menu = () => {
                             type={name}
                             id={name}
                             rootParentType={name}
-                            isSelected={name===selectedComponent}
+                            isSelected={name === selectedComponent}
                           >
                             {name}
                           </DragItem>
                         </Box>
-                        <IconButton aria-label="Edit" size="sm" disabled={name===selectedComponent}>
+                        <IconButton aria-label="Edit" size="sm" disabled={name === selectedComponent}>
                           <EditIcon
                             color="white"
                             onClick={() => {
-                              dispatch.customComponents.select(name)
+                              handleEditClick(name)
                             }}
                           />
                         </IconButton>
