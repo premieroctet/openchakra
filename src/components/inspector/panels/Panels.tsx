@@ -92,7 +92,7 @@ const Panels: React.FC<{
   }
 
   if (isCustom) {
-    const ind = customComponents.findIndex(type as any)
+    const ind = customComponents.indexOf(type)
     if (ind !== -1)
       return <Suspense fallback={'Loading...'}>{views[ind]}</Suspense>
     return <>Loading...</>

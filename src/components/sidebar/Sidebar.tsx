@@ -42,7 +42,6 @@ const Menu = () => {
   useEffect(() => {
     const interval = setInterval(async () => {
       const newComponentsList = await API.get('/refresh').then(res => res.data)
-      dispatch.customComponents.updateCustomComponents(newComponentsList)
       const componentDiffs = getObjectDiff(newComponentsList)
       if (componentDiffs.deletedComponents.length) {
         componentDiffs.deletedComponents.map(async component => {
@@ -52,12 +51,13 @@ const Menu = () => {
         })
       }
       if (componentDiffs.newComponents.length) {
-        componentDiffs.deletedComponents.map(async component => {
+        componentDiffs.newComponents.map(async component => {
           const response = await API.post('/init', {
             path: newComponentsList[component],
           })
         })
       }
+      dispatch.customComponents.updateCustomComponents(newComponentsList)
     }, 3000)
 
     return () => {
