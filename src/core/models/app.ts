@@ -49,6 +49,7 @@ const app = createModel({
     currentSection: 'components',
     showLeftPanel: true,
     showRightPanel: true,
+    showWarnings: true,
     pageLayout: true,
     showOverview: true,
     mediasLayout: false,
@@ -69,6 +70,7 @@ const app = createModel({
         showOverview: !state.showOverview,
         showLeftPanel: !state.showOverview,
         showRightPanel: !state.showOverview,
+        showWarnings: false,
       }
     },
     toggleCodePanel(state: AppState): AppState {

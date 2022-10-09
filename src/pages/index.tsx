@@ -12,6 +12,7 @@ import EditorErrorBoundary from '~components/errorBoundaries/EditorErrorBoundary
 import Editor from '~components/editor/Editor'
 import { InspectorProvider } from '~contexts/inspector-context'
 import Inspector from '~components/inspector/Inspector'
+import Warnings from '~components/warnings/Warnings'
 import '~custom-components/Card/CardInit'
 import '~custom-components/Media/MediaInit'
 import '~custom-components/DataProvider/DataProviderInit'
@@ -54,6 +55,14 @@ const App = () => {
             <InspectorProvider>
               <Inspector />
             </InspectorProvider>
+          </Box>
+          <Box
+            bg="#f7fafc"
+            overflowY="auto"
+            overflowX="visible"
+            borderLeft="1px solid #cad5de"
+          >
+            <Warnings/>
           </Box>
         </Flex>
       </DndProvider>
