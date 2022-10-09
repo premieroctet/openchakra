@@ -35,7 +35,7 @@ import SkeletonPreview, {
 } from './previews/SkeletonPreview'
 import SamplePreview from '~custom-components/editor/previews/SamplePreview'
 import { getCustomComponentNames } from '~core/selectors/customComponents'
-import { convertToPascal } from '~components/CodePanel'
+import { convertToPascal } from './Editor'
 
 const importView = (component: any) => {
   component = convertToPascal(component)

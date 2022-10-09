@@ -2,7 +2,7 @@ import isBoolean from 'lodash/isBoolean'
 import filter from 'lodash/filter'
 import icons from '~iconsList'
 import { Dictionary } from '~core/models/customComponents'
-import { convertToPascal } from '~components/CodePanel'
+import { convertToPascal } from '~components/editor/Editor'
 
 const capitalize = (value: string) => {
   return value.charAt(0).toUpperCase() + value.slice(1)

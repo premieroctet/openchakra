@@ -7,10 +7,10 @@ export interface Dictionary {
 
 export type CustomComponentsState = {
   components: Dictionary
-  selectedId: IComponent['type']
+  selectedId?: IComponent['type']
 }
 
-const DEFAULT_ID = 'example'
+const DEFAULT_ID = undefined
 
 export const INITIAL_COMPONENTS: Dictionary = {}
 

@@ -57,7 +57,7 @@ import SamplePanel from '~custom-components/inspector/panels/components/SamplePa
 import { useSelector } from 'react-redux'
 import { getCustomComponentNames } from '~core/selectors/customComponents'
 import { onboarding } from '~templates/onboarding'
-import { convertToPascal } from '~components/CodePanel'
+import { convertToPascal } from '~components/editor/Editor'
 
 const importView = (component: any) => {
   component = convertToPascal(component)

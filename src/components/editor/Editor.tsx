@@ -1,11 +1,17 @@
-import React, { memo } from 'react'
+import React, { memo, useState, useEffect } from 'react'
 import { Box, Text, Link } from '@chakra-ui/react'
 import { useDropComponent } from '~hooks/useDropComponent'
 import SplitPane from 'react-split-pane'
 import CodePanel from '~components/CodePanel'
 import { useSelector } from 'react-redux'
 import useDispatch from '~hooks/useDispatch'
+import { generateCode, generatePreview, generatePanel } from '~utils/code'
+import API from '~custom-components/api'
 import { getComponents } from '~core/selectors/components'
+import {
+  getCustomComponents,
+  getSelectedCustomComponentId,
+} from '~core/selectors/customComponents'
 import { getShowLayout, getShowCode } from '~core/selectors/app'
 import ComponentPreview from '~components/editor/ComponentPreview'
 
@@ -17,6 +23,15 @@ export const gridStyles = {
   p: 10,
 }
 
+export const convertToPascal = (filePath: string) => {
+  const fileName = filePath.split('/').slice(-1)[0]
+  let fileArray = fileName.split('-')
+  fileArray = fileArray.map(word => {
+    return `${word.slice(0, 1).toUpperCase()}${word.slice(1)}`
+  })
+  return fileArray.join('')
+}
+
 const Editor: React.FC = () => {
   const showCode = useSelector(getShowCode)
   const showLayout = useSelector(getShowLayout)
@@ -26,6 +41,31 @@ const Editor: React.FC = () => {
   const { drop } = useDropComponent('root')
   const isEmpty = !components.root.children.length
   const rootProps = components.root.props
+
+  const componentsList = useSelector(getCustomComponents)
+  const selectedComponent = useSelector(getSelectedCustomComponentId)
+  const [code, setCode] = useState<string | undefined>(undefined)
+
+  useEffect(() => {
+    const getCode = async () => {
+      const code = await generateCode(components, componentsList)
+      setCode(code)
+      if (selectedComponent !== undefined) {
+        let fileName = convertToPascal(componentsList[selectedComponent])
+        let previewCode = generatePreview(components, fileName)
+        let panelCode = generatePanel(components, fileName)
+        const response = await API.post('/save-file', {
+          codeBody: code,
+          jsonBody: components,
+          previewBody: previewCode,
+          panelBody: panelCode,
+          path: componentsList[selectedComponent],
+        })
+      }
+    }
+
+    getCode()
+  }, [components, selectedComponent])
 
   let editorBackgroundProps = {}
 

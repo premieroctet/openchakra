@@ -1,51 +1,27 @@
 import React, { memo, useState, useEffect } from 'react'
 import Highlight, { defaultProps } from 'prism-react-renderer'
 import { Box, Button, useClipboard } from '@chakra-ui/react'
-import { generateCode, generatePreview, generatePanel } from '~utils/code'
+import { generateCode } from '~utils/code'
 import theme from 'prism-react-renderer/themes/nightOwl'
 import { useSelector } from 'react-redux'
 import { getComponents } from '~core/selectors/components'
-import API from '~custom-components/api'
 import {
   getCustomComponents,
-  getSelectedCustomComponentId,
 } from '~core/selectors/customComponents'
 
-export const convertToPascal = (filePath: string) => {
-  const fileName = filePath.split('/').slice(-1)[0]
-  let fileArray = fileName.split('-')
-  fileArray = fileArray.map(word => {
-    return `${word.slice(0, 1).toUpperCase()}${word.slice(1)}`
-  })
-  return fileArray.join('')
-}
 
 const CodePanel = () => {
   const components = useSelector(getComponents)
   const componentsList = useSelector(getCustomComponents)
-  const selectedComponent = useSelector(getSelectedCustomComponentId)
   const [code, setCode] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     const getCode = async () => {
       const code = await generateCode(components, componentsList)
       setCode(code)
-      if (selectedComponent !== undefined) {
-        let fileName = convertToPascal(componentsList[selectedComponent])
-        let previewCode = generatePreview(components, fileName)
-        let panelCode = generatePanel(components, fileName)
-        const response = await API.post('/save-file', {
-          codeBody: code,
-          jsonBody: components,
-          previewBody: previewCode,
-          panelBody: panelCode,
-          path: componentsList[selectedComponent],
-        })
-      }
     }
-
     getCode()
-  }, [components, selectedComponent])
+  }, [components])
 
   const { onCopy, hasCopied } = useClipboard(code!)
 
