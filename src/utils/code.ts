@@ -8,6 +8,7 @@ import icons from '~iconsList'
 import {
   ACTION_TYPE,
   CONTAINER_TYPE,
+  DATE_TYPE,
   IMAGE_TYPE,
   PROGRESS_TYPE,
   TEXT_TYPE,
@@ -64,6 +65,9 @@ const getDynamicType = (comp: IComponent) => {
   }
   if (PROGRESS_TYPE.includes(comp.type)) {
     return 'Value'
+  }
+  if (DATE_TYPE.includes(comp.type)) {
+    return 'Date'
   }
 }
 
@@ -429,6 +433,7 @@ ${pageNames.map(name => `<li><a href='/${name}'>${name}</a></li>`).join('\n')}
 </ul>
 */
   const { pages, rootPage } = state
+  console.log(state)
   let code = `import {BrowserRouter, Routes, Route} from 'react-router-dom'
   ${Object.values(pages)
     .map(
