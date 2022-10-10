@@ -7,8 +7,6 @@ export default function handler(req, res) {
     return `${word.slice(0, 1).toUpperCase()}${word.slice(1)}`
   })
   const pascalName = fileArray.join('')
-  const repoRoot = process.env.GITPOD_REPO_ROOT
-  const repoName = repoRoot.split('/').slice(-1)[0]
   try {
     fs.writeFileSync(
       `${req.body.path}/${fileName}.oc.tsx`,

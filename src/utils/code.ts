@@ -1,7 +1,7 @@
 import isBoolean from 'lodash/isBoolean'
 import filter from 'lodash/filter'
 import icons from '~iconsList'
-import { Dictionary } from '~core/models/customComponents'
+import { CustomDictionary } from '~core/models/customComponents'
 import { convertToPascal } from '~components/editor/Editor'
 
 const capitalize = (value: string) => {
@@ -199,7 +199,7 @@ const getIconsImports = (components: IComponents) => {
 
 export const generateCode = async (
   components: IComponents,
-  currentComponents: Dictionary,
+  currentComponents: CustomDictionary,
 ) => {
   let code = buildBlock({ component: components.root, components })
   let componentsCodes = buildComponents(components)
@@ -250,7 +250,7 @@ import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
       : ''
   }
 
-  ${customImports.length ? `${customImports.join(';')}` : ''}
+  ${customImports.join(';')}
 
 type AppPropsTypes = ${paramTypes}
 

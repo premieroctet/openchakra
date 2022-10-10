@@ -1,18 +1,18 @@
 import { createModel } from '@rematch/core'
 import produce from 'immer'
 
-export interface Dictionary {
+export interface CustomDictionary {
   [Key: string]: string
 }
 
 export type CustomComponentsState = {
-  components: Dictionary
+  components: CustomDictionary
   selectedId?: IComponent['type']
 }
 
 const DEFAULT_ID = undefined
 
-export const INITIAL_COMPONENTS: Dictionary = {}
+export const INITIAL_COMPONENTS: CustomDictionary = {}
 
 const customComponents = createModel({
   state: {
@@ -22,7 +22,7 @@ const customComponents = createModel({
   reducers: {
     updateCustomComponents(
       state: CustomComponentsState,
-      components: Dictionary,
+      components: CustomDictionary,
     ): CustomComponentsState {
       return produce(state, (draftState: CustomComponentsState) => {
         draftState.components = components
@@ -30,7 +30,7 @@ const customComponents = createModel({
     },
     reset(
       state: CustomComponentsState,
-      components?: Dictionary,
+      components?: CustomDictionary,
     ): CustomComponentsState {
       return {
         ...state,

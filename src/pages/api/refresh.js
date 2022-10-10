@@ -1,6 +1,6 @@
 import glob from 'glob'
 
-function getPair(path) {
+function getComponentWithLocation(path) {
   let arr = path.split('/')
   let comp = arr.pop()
   comp = comp.split('.')[0]
@@ -10,9 +10,10 @@ function getPair(path) {
 
 async function getJsons() {
   let jsons = {}
-  const files = glob.sync('../remote/tu2k22-chakra/**/*.oc.json', {})
+  const repoName = process.env.GITPOD_REPO_ROOT.split('/').slice(-1)[0]
+  const files = glob.sync(`../remote/${repoName}/**/*.oc.json`, {})
   files.forEach(element => {
-    const { comp, dir } = getPair(element)
+    const { comp, dir } = getComponentWithLocation(element)
     jsons[comp] = dir
   })
   return jsons
