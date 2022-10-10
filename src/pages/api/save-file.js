@@ -15,9 +15,6 @@ export default function handler(req, res) {
       req.body.codeBody,
       err => {
         if (err) throw err
-        else {
-          console.log('The file is updated with the given data')
-        }
       },
     )
     fs.writeFileSync(
@@ -25,9 +22,6 @@ export default function handler(req, res) {
       JSON.stringify(req.body.jsonBody),
       err => {
         if (err) throw err
-        else {
-          console.log('The file is updated with the given data')
-        }
       },
     )
     fs.writeFileSync(
@@ -35,9 +29,6 @@ export default function handler(req, res) {
       req.body.previewBody,
       err => {
         if (err) throw err
-        else {
-          console.log('The file is updated with the given data')
-        }
       },
     )
     fs.writeFileSync(
@@ -45,9 +36,6 @@ export default function handler(req, res) {
       req.body.panelBody,
       err => {
         if (err) throw err
-        else {
-          console.log('The file is updated with the given data')
-        }
       },
     )
   } catch (err) {

@@ -13,9 +13,6 @@ export default function handler(req, res) {
       { recursive: true },
       err => {
         if (err) throw err
-        else {
-          console.log('The preview file has been deleted')
-        }
       },
     )
     fs.rm(
@@ -23,9 +20,6 @@ export default function handler(req, res) {
       { recursive: true },
       err => {
         if (err) throw err
-        else {
-          console.log('The panel file has been deleted')
-        }
       },
     )
   } catch (err) {

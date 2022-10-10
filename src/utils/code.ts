@@ -314,9 +314,6 @@ import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
   export default ${fileName}Preview`
 
   code = await formatCode(code)
-
-  console.log(code)
-
   return code
 }
 
@@ -527,8 +524,5 @@ export const generatePanel = async (
   `
 
   panelCode = await formatCode(panelCode)
-
-  console.log(panelCode)
-
   return panelCode
 }

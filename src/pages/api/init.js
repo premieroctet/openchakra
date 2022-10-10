@@ -64,9 +64,6 @@ export default function handler(req, res) {
         export default ${pascalName}Preview`,
       err => {
         if (err) throw err
-        else {
-          console.log('The file is updated with the given data')
-        }
       },
     )
     fs.writeFileSync(
@@ -80,9 +77,6 @@ const ${pascalName}Panel = () => {
 export default memo(${pascalName}Panel)`,
       err => {
         if (err) throw err
-        else {
-          console.log('The file is updated with the given data')
-        }
       },
     )
   } catch (err) {

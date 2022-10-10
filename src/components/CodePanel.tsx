@@ -12,12 +12,12 @@ import {
 
 const CodePanel = () => {
   const components = useSelector(getComponents)
-  const componentsList = useSelector(getCustomComponents)
+  const customComponents = useSelector(getCustomComponents)
   const [code, setCode] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     const getCode = async () => {
-      const code = await generateCode(components, componentsList)
+      const code = await generateCode(components, customComponents)
       setCode(code)
     }
     getCode()

@@ -42,16 +42,16 @@ const Editor: React.FC = () => {
   const isEmpty = !components.root.children.length
   const rootProps = components.root.props
 
-  const componentsList = useSelector(getCustomComponents)
+  const customComponents = useSelector(getCustomComponents)
   const selectedComponent = useSelector(getSelectedCustomComponentId)
   const [code, setCode] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     const getCode = async () => {
-      const code = await generateCode(components, componentsList)
+      const code = await generateCode(components, customComponents)
       setCode(code)
       if (selectedComponent !== undefined) {
-        let fileName = convertToPascal(componentsList[selectedComponent])
+        let fileName = convertToPascal(customComponents[selectedComponent])
         let previewCode = await generatePreview(components, fileName)
         let panelCode = await generatePanel(components, fileName)
         const response = await API.post('/save-file', {
@@ -59,7 +59,7 @@ const Editor: React.FC = () => {
           jsonBody: components,
           previewBody: previewCode,
           panelBody: panelCode,
-          path: componentsList[selectedComponent],
+          path: customComponents[selectedComponent],
         })
       }
     }

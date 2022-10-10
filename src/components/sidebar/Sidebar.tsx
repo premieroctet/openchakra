@@ -27,15 +27,15 @@ import API from '~custom-components/api'
 const Menu = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const dispatch = useDispatch()
-  const currentComponents = useSelector(getCustomComponents)
+  const customComponents = useSelector(getCustomComponents)
   const selectedComponent = useSelector(getSelectedCustomComponentId)
 
   const getObjectDiff = (updatedList: Record<string, unknown>) => {
-    let deletedComponents = Object.keys(currentComponents).filter(
+    let deletedComponents = Object.keys(customComponents).filter(
       component => !Object.keys(updatedList).includes(component),
     )
     let newComponents = Object.keys(updatedList).filter(
-      component => !Object.keys(currentComponents).includes(component),
+      component => !Object.keys(customComponents).includes(component),
     )
     return {
       deletedComponents: deletedComponents,
@@ -50,7 +50,7 @@ const Menu = () => {
       if (componentDiffs.deletedComponents.length) {
         componentDiffs.deletedComponents.map(async component => {
           const response = await API.post('/delete-file', {
-            path: currentComponents[component],
+            path: customComponents[component],
           })
         })
       }
@@ -67,13 +67,12 @@ const Menu = () => {
     return () => {
       clearInterval(interval)
     }
-  }, [currentComponents])
+  }, [customComponents])
 
   const handleEditClick = async (name: string) => {
     const response = await API.post('/read-json', {
-      path: currentComponents[name],
+      path: customComponents[name],
     })
-    console.log(response)
     dispatch.customComponents.select(name)
     dispatch.components.reset(JSON.parse(response.data.content))
   }
@@ -189,7 +188,7 @@ const Menu = () => {
             </TabPanel>
             <TabPanel>
               <Box p={0} pt={0}>
-                {(Object.keys(currentComponents) as ComponentType[])
+                {(Object.keys(customComponents) as ComponentType[])
                   .filter(c =>
                     c.toLowerCase().includes(searchTerm.toLowerCase()),
                   )
