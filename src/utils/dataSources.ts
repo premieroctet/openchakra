@@ -21,7 +21,8 @@ export const isMultipleDispatcher = (component: IComponent):boolean => {
 export const getDataProviders = (component: IComponent, components: IComponents):IComponent[]|null => {
   return Object.values(components)
     //.filter(c => !!c.props?.model || !!c.props.dataSource)
-    .filter(c => !!c.props?.model)
+    //.filter(c => !!c.props?.model)
+    .filter(c => c.type=='DataProvider' || c.id=='root')
     .filter(c => c.id != component.id)
 }
 
@@ -34,7 +35,8 @@ const getDataProviderDataType = (component: IComponent, components: IComponents,
     }
   }
   if (component.id=='root') {
-    throw new Error('Root component has no model defined')
+    console.error('Root component has no model defined')
+    return {}
   }
 
   const parent=components[component.parent]
@@ -51,7 +53,6 @@ const getDataProviderDataType = (component: IComponent, components: IComponents,
 
 export const getAvailableAttributes = (component: IComponent, components: IComponents, models:any):any => {
   if (!component.props?.dataSource) {
-    console.log(`No available attributes: dataSource is empty`)
     return null
   }
   const dataType=getDataProviderDataType(components[component.parent], components, models)

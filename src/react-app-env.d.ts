@@ -108,6 +108,13 @@ interface IDataType {
   ref: boolean,
 }
 
+interface IWarning {
+  pageId: String,
+  pageName: String,
+  component: IComponent,
+  message: strring,
+}
+
 interface ComponentItemProps {
   id: string
   label: string
