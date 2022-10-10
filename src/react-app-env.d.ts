@@ -108,7 +108,7 @@ interface IDataType {
   ref: boolean,
 }
 
-interface Warning: {
+interface IWarning {
   pageId: String,
   pageName: String,
   component: IComponent,

@@ -62,7 +62,7 @@ const App = () => {
             overflowX="visible"
             borderLeft="1px solid #cad5de"
           >
-            <Warnings/>
+          {false && <Warnings />}
           </Box>
         </Flex>
       </DndProvider>

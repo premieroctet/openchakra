@@ -19,15 +19,16 @@ import {
   Button,
   useDisclosure,
   Text,
-} from '@chakra-ui/react'
-import { CopyIcon, CheckIcon, EditIcon } from '@chakra-ui/icons'
-import Panels from '~components/inspector/panels/Panels'
-import { GoRepo, GoCode } from 'react-icons/go'
+  Tooltip,
+  Flex,
+} from '@chakra-ui/react';
+import { CheckIcon, CopyIcon, EditIcon, WarningIcon } from '@chakra-ui/icons';
 import { FiTrash2 } from 'react-icons/fi'
+import { GoRepo, GoCode } from 'react-icons/go'
 import { IoMdRefresh } from 'react-icons/io'
 import { useSelector } from 'react-redux'
-import useDispatch from '~hooks/useDispatch'
-import StylesPanel from '~components/inspector/panels/StylesPanel'
+import { componentsList } from '~componentsList'
+import { generateComponentCode, formatCode } from '~utils/code'
 import {
   getSelectedComponent,
   getComponents,
@@ -35,11 +36,17 @@ import {
   getComponentNames,
 } from '~core/selectors/components'
 import { getShowRightPanel } from '~core/selectors/app'
-import ActionButton from './ActionButton'
-import { generateComponentCode, formatCode } from '~utils/code'
-import useClipboard from '~hooks/useClipboard'
 import { useInspectorUpdate } from '~contexts/inspector-context'
-import { componentsList } from '~componentsList'
+import Panels from '~components/inspector/panels/Panels'
+import StylesPanel from '~components/inspector/panels/StylesPanel'
+import useClipboard from '~hooks/useClipboard'
+import useDispatch from '~hooks/useDispatch'
+
+import {
+  getComponentWarnings,
+  getWarnings
+} from '../../core/selectors/components';
+import ActionButton from './ActionButton'
 
 const CodeActionButton = memo(() => {
   const [isLoading, setIsLoading] = useState(false)
@@ -81,6 +88,8 @@ const Inspector = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [componentName, onChangeComponentName] = useState('')
   const componentsNames = useSelector(getComponentNames)
+  const warnings = useSelector(getComponentWarnings(component))
+  const [warningMessages, setWarningMessages] = useState([])
 
   const { clearActiveProps } = useInspectorUpdate()
 
@@ -114,6 +123,14 @@ const Inspector = () => {
     clearActiveProps()
   }, [clearActiveProps])
 
+  useEffect(() => {
+    console.log(warnings)
+    const msg=warnings
+      .map(w => w.message)
+    setWarningMessages(msg)
+  }, [component])
+
+  console.log(`Warning message:${warningMessages}`)
   return (
     //@ts-ignore
     <RightPanel show={showRightPanel}>
@@ -130,7 +147,14 @@ const Inspector = () => {
           justifyContent="space-between"
           flexDir="column"
         >
+          <Flex justifyContent="space-between">
           {isRoot ? 'Document' : type}<br/>{component.id}
+          {warningMessages.length>0 ?
+            <Tooltip label={<Box>{warningMessages.map(m => <p>{m}</p>)}</Box>}>
+              <WarningIcon color='red.500' />
+            </Tooltip>:null
+          }
+          </Flex>
           {!!component.componentName && (
             <Text fontSize="xs" fontWeight="light">
               {component.componentName}

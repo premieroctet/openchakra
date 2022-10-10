@@ -3,7 +3,7 @@ import map from 'lodash/map'
 import { ProjectState, PageState } from '~core/models/project'
 import { RootState } from '~core/store'
 
-import { validate } from '../../utils/validation';
+import { validate, validateComponent } from '../../utils/validation';
 
 const getPresentState = (state: RootState): ProjectState => {
   return state.project.present
@@ -77,6 +77,19 @@ export const getComponentNames = (state: RootState) => {
   ).filter(comp => !!comp)
 
   return Array.from(new Set(names))
+}
+
+export const getComponentWarnings = (component: IComponent) => (state: RootState):IWarning[] => {
+  if (!component) {
+    return []
+  }
+  const pageId=getActivePageId(state)
+  const pageName=getActivePageName(state)
+  const components=getActiveComponents(state)
+  const warnings=validateComponent(component, components)
+  .map(warn => ({...warn, pageId, pageName}))
+  console.log(`Warnings:${JSON.stringify(warnings)}`)
+  return warnings
 }
 
 export const getWarnings = (state: RootState):IWarning[] => {

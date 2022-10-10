@@ -57,7 +57,7 @@ const DataSourcePanel:React.FC = () => {
         </Select>
       </FormControl>
       {attributes && (
-        <FormControl htmlFor="attribute" label="Champ">
+        <FormControl htmlFor="attribute" label="Attribute">
           <Select
             id="attribute"
             onChange={setValueFromEvent}

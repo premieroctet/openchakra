@@ -53,8 +53,27 @@ const checkUnlinkedDataProvider = (comp: IComponent, icomponents: IComponents) =
   }
   const dp=icomponents[comp.props.dataSource]
   if (!dp.props.model) {
-    throw new Error(`DataSource ${comp.props.dataSource} has not model`)
+    throw new Error(`DataSource '${comp.props.dataSource}' has no model`)
   }
+}
+
+export const validateComponent= (component: IComponent, components: IComponents):IWarning[] => {
+  const warnings=lodash([checkEmptyDataProvider, checkAvailableDataProvider,
+    checkEmptyIcons, checkDispatcherManyChildren, checkEmptyDataAttribute,
+    checkUnlinkedDataProvider])
+      .map(v => {
+        try {
+          v(component, components)
+        }
+        catch(err) {
+          return ({component, message: err.message})
+        }
+      }
+    )
+    .flatten()
+    .filter(w => !!w)
+    .value()
+  return warnings
 }
 
 export const validate = (icomponents: IComponents):IWarning[] => {

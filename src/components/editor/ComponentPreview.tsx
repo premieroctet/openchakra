@@ -25,6 +25,7 @@ import SelectPreview from '~components/editor/previews/SelectPreview'
 import NumberInputPreview from '~components/editor/previews/NumberInputPreview'
 import BreadcrumbPreview from './previews/BreadcrumbPreview'
 import BreadcrumbItemPreview from './previews/BreadcrumbItemPreview'
+import { getComponentWarnings } from '../../core/selectors/components';
 
 type previews = {
   [index: string]: {
@@ -43,6 +44,11 @@ const ComponentPreview: React.FC<{
     console.error(`ComponentPreview unavailable for component ${componentName}`)
   }
 
+  // Light red background in case of warnings
+  const warnings=useSelector(getComponentWarnings(component))
+  if (warnings.length>0) {
+    forwardedProps.bgColor='red.100'
+  }
   const type = (component && component.type) || null
 
   const extraPreview = extraPreviews[type]
