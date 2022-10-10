@@ -55,10 +55,7 @@ import StatLabelPanel from './components/StatLabelPanel'
 import SkeletonPanel from './components/SkeletonPanel'
 import { useSelector } from 'react-redux'
 import { getCustomComponentNames } from '~core/selectors/customComponents'
-import { onboarding } from '~templates/onboarding'
-import { importView } from '~components/editor/ComponentPreview'
-
-
+import loadViews from '~custom-components/lazyLoad'
 
 const Panels: React.FC<{
   component: IComponent
@@ -70,16 +67,7 @@ const Panels: React.FC<{
   const customComponents = useSelector(getCustomComponentNames)
 
   useEffect(() => {
-    async function loadViews() {
-      const componentPromises = await customComponents.map(
-        async (component: any) => {
-          const View = await importView(component, false)
-          return <View key={component} />
-        },
-      )
-      Promise.all(componentPromises).then(setViews)
-    }
-    loadViews()
+    loadViews(customComponents, component, false)
   }, [customComponents])
 
   if (isRoot) {
