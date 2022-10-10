@@ -110,7 +110,7 @@ const Medias = ({setMediaSrc, mediaPanelClose}:{setMediaSrc: any, mediaPanelClos
 
   return (
     <div>
-      <Button colorScheme={'teal'} onClick={onOpen}>Upload your media</Button>
+      <Button colorScheme={'teal'} onClick={onOpen} mb={2}>Upload your media</Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -182,7 +182,6 @@ const Medias = ({setMediaSrc, mediaPanelClose}:{setMediaSrc: any, mediaPanelClos
             mediaPanelClose && mediaPanelClose()
             setMediaSrc(imgObj.publicUrl)
           }}>Select</Button>}
-          <small>{imgObj.publicUrl}</small>
           </MediaCard>
         )
       })}
