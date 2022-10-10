@@ -101,7 +101,7 @@ interface IComponent {
   params?: [
     {
       name: string
-      value: string
+      value: any
       type: string
       optional: boolean
     },

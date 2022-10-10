@@ -55,8 +55,8 @@ const components = createModel({
       payload: {
         id: string
         name: string
-        value: string
-        type: any
+        value: any
+        type: string
         optional: boolean
       },
     ) {

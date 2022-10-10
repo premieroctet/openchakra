@@ -8,7 +8,7 @@ export const useParamsForm = () => {
   const componentId = useSelector(getSelectedComponentId)
 
   const setValue = useCallback(
-    (name: string, value: any, type: any, optional: boolean) => {
+    (name: string, value: any, type: string, optional: boolean) => {
       dispatch.components.updateParams({
         id: componentId,
         name,
