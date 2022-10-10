@@ -1,31 +1,33 @@
-import React, { memo } from 'react'
 import { useSelector } from 'react-redux'
+import * as Chakra from '@chakra-ui/react'
+import React, { memo } from 'react'
 
-import AlertPreview from '~components/editor/previews/AlertPreview'
-import AvatarPreview, {
-  AvatarBadgePreview,
-  AvatarGroupPreview,
-} from '~components/editor/previews/AvatarPreview'
+import { InputLeftElementPreview } from '~components/editor/previews/InputLeftElement'
+import { InputRightElementPreview } from '~components/editor/previews/InputRightElement'
+import { getComponentBy } from '~core/selectors/components'
 import AccordionPreview, {
   AccordionButtonPreview,
   AccordionItemPreview,
   AccordionPanelPreview,
 } from '~components/editor/previews/AccordionPreview'
-import * as Chakra from '@chakra-ui/react'
-import { getComponentBy } from '~core/selectors/components'
-import { InputRightElementPreview } from '~components/editor/previews/InputRightElement'
-import { InputLeftElementPreview } from '~components/editor/previews/InputLeftElement'
+import AlertPreview from '~components/editor/previews/AlertPreview'
 import AspectRatioPreview from '~components/editor/previews/AspectRatioBoxPreview'
+import AvatarPreview, {
+  AvatarBadgePreview,
+  AvatarGroupPreview,
+} from '~components/editor/previews/AvatarPreview'
 import ButtonPreview from '~components/editor/previews/ButtonPreview'
-import PreviewContainer from '~components/editor/PreviewContainer'
-import WithChildrenPreviewContainer from '~components/editor/WithChildrenPreviewContainer'
-import IconPreview from './previews/IconPreview'
-import IconButtonPreview from './previews/IconButtonPreview'
-import SelectPreview from '~components/editor/previews/SelectPreview'
 import NumberInputPreview from '~components/editor/previews/NumberInputPreview'
-import BreadcrumbPreview from './previews/BreadcrumbPreview'
-import BreadcrumbItemPreview from './previews/BreadcrumbItemPreview'
+import PreviewContainer from '~components/editor/PreviewContainer'
+import SelectPreview from '~components/editor/previews/SelectPreview'
+import WithChildrenPreviewContainer from '~components/editor/WithChildrenPreviewContainer'
+
 import { getComponentWarnings } from '../../core/selectors/components';
+import { getShowOverview } from '../../core/selectors/app';
+import BreadcrumbItemPreview from './previews/BreadcrumbItemPreview'
+import BreadcrumbPreview from './previews/BreadcrumbPreview'
+import IconButtonPreview from './previews/IconButtonPreview'
+import IconPreview from './previews/IconPreview'
 
 type previews = {
   [index: string]: {
@@ -39,15 +41,19 @@ const ComponentPreview: React.FC<{
   componentName: string
   id?: string
 }> = ({ componentName, ...forwardedProps }) => {
+  const showOverview = useSelector(getShowOverview)
+
   const component: IComponent = useSelector(getComponentBy(componentName))
   if (!component) {
     console.error(`ComponentPreview unavailable for component ${componentName}`)
   }
+  const warnings=useSelector(getComponentWarnings(component))
 
   // Light red background in case of warnings
-  const warnings=useSelector(getComponentWarnings(component))
-  if (warnings.length>0) {
-    forwardedProps.bgColor='red.100'
+  if (showOverview) {
+    if (warnings.length>0) {
+      forwardedProps.bgColor='red.100'
+    }
   }
   const type = (component && component.type) || null
 
