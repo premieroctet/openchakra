@@ -88,8 +88,6 @@ const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'BreadcrumbMeta',
   'TabsMeta',
   'StatMeta',
-  // Allow custom components
-  'Sample',
 ]
 
 export const AccordionWhitelist: (

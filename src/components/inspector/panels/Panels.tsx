@@ -53,7 +53,6 @@ import TabPanel from './components/TabPanel'
 import StatArrowPanel from './components/StatArrowPanel'
 import StatLabelPanel from './components/StatLabelPanel'
 import SkeletonPanel from './components/SkeletonPanel'
-import SamplePanel from '~custom-components/inspector/panels/components/SamplePanel'
 import { useSelector } from 'react-redux'
 import { getCustomComponentNames } from '~core/selectors/customComponents'
 import { onboarding } from '~templates/onboarding'
@@ -163,7 +162,6 @@ const Panels: React.FC<{
       {type === 'StatArrow' && <StatArrowPanel />}
       {type === 'StatLabel' && <StatLabelPanel />}
       {type === 'StatNumber' && <StatLabelPanel />}
-      {type === 'Sample' && <SamplePanel />}
     </>
   )
 }

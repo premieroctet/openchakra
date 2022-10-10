@@ -55,14 +55,16 @@ const components = createModel({
       payload: { id: string; name: string; value: string; type: any },
     ) {
       return produce(state, (draftState: ComponentsState) => {
-        const index = draftState.components[payload.id].params.findIndex(
+        const index = draftState.components[payload.id].params?.findIndex(
           (item: any) => item.name === payload.name,
         )
-        if (index !== -1) {
+        if (index != undefined && index !== -1) {
+          // @ts-ignore
           draftState.components[payload.id].params[index].value = payload.value
+          // @ts-ignore
           draftState.components[payload.id].params[index].type = payload.type
         } else {
-          draftState.components[payload.id].params.push({
+          draftState.components[payload.id].params?.push({
             name: payload.name,
             value: payload.value,
             type: payload.type,
@@ -80,7 +82,7 @@ const components = createModel({
           ...state.components,
           [payload.id]: {
             ...state.components[payload.id],
-            params: state.components[payload.id].params.filter(
+            params: state.components[payload.id].params?.filter(
               (item: any) => item.name !== payload.name,
             ),
           },

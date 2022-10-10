@@ -344,11 +344,6 @@ export const DEFAULT_PROPS: PreviewDefaultProps | any = {
   },
   Text: { children: 'Text value' },
   // TODO: Construct Custom components with params and add here
-  Sample: {
-    children: 'Custom Button text',
-    variant: 'outline',
-    size: 'sm',
-  },
 }
 
 export const getDefaultFormProps = (type: ComponentType) => {
