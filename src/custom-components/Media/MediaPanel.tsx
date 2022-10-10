@@ -1,5 +1,8 @@
 import React, { memo, useState } from 'react'
-import { Input, Modal,
+import { 
+  Button,
+  Input, 
+  Modal,
   ModalOverlay,
   ModalContent,
   ModalBody,
@@ -27,7 +30,6 @@ const MediaPanel = () => {
     <>
        <FormControl label="Source" htmlFor="src">
         <Input
-          onClick={onOpen}
           placeholder="Media URL"
           value={mediaSrc || src || ''}
           size="sm"
@@ -35,6 +37,7 @@ const MediaPanel = () => {
           onChange={setValueFromEvent}
           onBlur={setValueFromEvent}
         />
+        <Button size={'xs'} onClick={onOpen}>...</Button>
       </FormControl>
       <FormControl label="Alt" htmlFor="alt">
         <Input
@@ -65,7 +68,7 @@ const MediaPanel = () => {
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent minW={'60vw'}>
+        <ModalContent minW={'60vw'} maxH={'90vh'} overflowY={'scroll'}>
           <ModalCloseButton />
           <ModalBody display={'flex'} flexDirection={'column'}>
           <Medias setMediaSrc={setMediaSrc} mediaPanelClose={onClose}/>
