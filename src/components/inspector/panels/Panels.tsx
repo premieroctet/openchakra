@@ -56,22 +56,15 @@ import SkeletonPanel from './components/SkeletonPanel'
 import { useSelector } from 'react-redux'
 import { getCustomComponentNames } from '~core/selectors/customComponents'
 import { onboarding } from '~templates/onboarding'
-import { convertToPascal } from '~components/editor/Editor'
+import { importView } from '~components/editor/ComponentPreview'
 
-const importView = (component: any) => {
-  component = convertToPascal(component)
-  return lazy(() =>
-    import(
-      `src/custom-components/inspector/panels/components/${component}Panel.oc.tsx`
-    ).catch(() => import('src/custom-components/fallback')),
-  )
-}
+
 
 const Panels: React.FC<{
   component: IComponent
   isRoot: boolean
-  isCustom: boolean
-}> = ({ component, isRoot, isCustom }) => {
+  isCustom?: boolean
+}> = ({ component, isRoot, isCustom = false }) => {
   const { type } = component
   const [views, setViews] = useState<any>([])
   const customComponents = useSelector(getCustomComponentNames)
@@ -80,7 +73,7 @@ const Panels: React.FC<{
     async function loadViews() {
       const componentPromises = await customComponents.map(
         async (component: any) => {
-          const View = await importView(component)
+          const View = await importView(component, false)
           return <View key={component} />
         },
       )

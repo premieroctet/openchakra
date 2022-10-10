@@ -36,11 +36,12 @@ import SkeletonPreview, {
 import { getCustomComponentNames } from '~core/selectors/customComponents'
 import { convertToPascal } from './Editor'
 
-const importView = (component: any) => {
+export const importView = (component: any, isPreview: boolean) => {
   component = convertToPascal(component)
   return lazy(() =>
     import(
-      `src/custom-components/editor/previews/${component}Preview.oc.tsx`
+      `${isPreview ? `src/custom-components/editor/previews/${component}Preview.oc.tsx` :
+        `src/custom-components/inspector/panels/components/${component}Panel.oc.tsx`}`
     ).catch(() => import('src/custom-components/fallback')),
   )
 }
@@ -61,7 +62,7 @@ const ComponentPreview: React.FC<{
     async function loadViews() {
       const componentPromises = await customComponents.map(
         async (customComponent: string) => {
-          const View = await importView(customComponent)
+          const View = await importView(customComponent, true)
           return <View key={customComponent} component={component} />
         },
       )
