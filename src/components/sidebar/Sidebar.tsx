@@ -69,7 +69,7 @@ const Menu = () => {
           </InputGroup>
         </Box>
         <Tabs size="sm" variant="enclosed-colored" isFitted defaultIndex={1}>
-          <TabList>
+          <TabList position="sticky" top={8} boxShadow="dark-lg">
             <Tab>Built-in</Tab>
             <Tab>Custom</Tab>
           </TabList>
