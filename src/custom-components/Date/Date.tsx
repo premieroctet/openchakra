@@ -5,6 +5,8 @@ const DateComp = ({"data-value": dataValue, "data-format": dataFormat, ...props}
     const date = dataValue && new Date(dataValue)
     const dateOptionsToConsider = dataFormat || {}
 
+    console.log('DateComp', dataValue, dataFormat, props)
+
     // TODO fr-FR locale dynamic
     const dateTimeFormat = new Intl.DateTimeFormat('fr-FR', dateOptionsToConsider);
     const dateToDisplay = date && dateTimeFormat.format(date)

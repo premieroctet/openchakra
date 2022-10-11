@@ -3,6 +3,7 @@ import lodash from 'lodash'
 
 const withDynamicDate = Component => {
   const internal = props => {
+    console.log(props)
     const value = lodash.get(props.dataSource, props.attribute)
     const spreaded = {...lodash.omit(props, ['children']), 'data-value': value}
 
