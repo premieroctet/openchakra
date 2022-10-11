@@ -69,6 +69,7 @@ const components = createModel({
           draftState.components[payload.id].params[index].value = payload.value
           // @ts-ignore
           draftState.components[payload.id].params[index].type = payload.type
+          // @ts-ignore
           draftState.components[payload.id].params[index].optional =
             payload.optional
         } else {
