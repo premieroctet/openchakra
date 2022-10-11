@@ -433,7 +433,6 @@ ${pageNames.map(name => `<li><a href='/${name}'>${name}</a></li>`).join('\n')}
 </ul>
 */
   const { pages, rootPage } = state
-  console.log(state)
   let code = `import {BrowserRouter, Routes, Route} from 'react-router-dom'
   ${Object.values(pages)
     .map(
