@@ -32,6 +32,13 @@ type BuildBlockParams = {
   forceBuildBlock?: boolean
 }
 
+type BuildBlockPreviewParams = {
+  component: IComponent
+  components: IComponents
+  currentComponents: CustomDictionary
+  forceBuildBlock?: boolean 
+}
+
 const buildParams = (paramsName: any) => {
   let paramTypes = ``
   let params = ``
@@ -133,6 +140,68 @@ const buildBlock = ({
         childComponent.children.length === 0
       ) {
         content += `<${componentName} ${propsContent}>${childComponent.props.children}</${componentName}>`
+      } else if (childComponent.type === 'Icon') {
+        content += `<${childComponent.props.icon} ${propsContent} />`
+      } else if (childComponent.children.length) {
+        content += `<${componentName} ${propsContent}>
+      ${buildBlock({ component: childComponent, components, forceBuildBlock })}
+      </${componentName}>`
+      } else {
+        content += `<${componentName} ${propsContent} />`
+      }
+    } else {
+      content += `<${childComponent.componentName} />`
+    }
+  })
+
+  return content
+}
+
+const buildPreviewBlock = ({
+  component,
+  components,
+  currentComponents,
+  forceBuildBlock = false,
+}: BuildBlockPreviewParams) => {
+  let content = ''
+
+  component.children.forEach((key: string) => {
+    let childComponent = components[key]
+    if (!childComponent) {
+      console.error(`invalid component ${key}`)
+    } else if (forceBuildBlock || !childComponent.componentName) {
+      const componentName = convertToPascal(childComponent.type)
+      let propsContent = ''
+
+      const propsNames = Object.keys(childComponent.props).filter(propName => {
+        if (childComponent.type === 'Icon') {
+          return propName !== 'icon'
+        }
+
+        return true
+      })
+
+      // Special case for Highlight component
+      if (componentName === 'Highlight') {
+        const [query, children, ...restProps] = propsNames
+        propsContent += buildStyledProps([query, children], childComponent)
+
+        propsContent += `styles={{${restProps
+          .filter(propName => childComponent.props[propName])
+          .map(
+            propName => `${propName}:'${childComponent.props[propName]}'`,
+          )}}}`
+      } else {
+        propsContent += buildStyledProps(propsNames, childComponent)
+      }
+
+      if (
+        typeof childComponent.props.children === 'string' &&
+        childComponent.children.length === 0 && !Object.keys(currentComponents).includes(childComponent.type)
+      ) {
+        content += `<${componentName} ${propsContent}>${childComponent.props.children}</${componentName}>`
+      } else if (Object.keys(currentComponents).includes(childComponent.type)) {
+        content += `<${componentName}Preview />`
       } else if (childComponent.type === 'Icon') {
         content += `<${childComponent.props.icon} ${propsContent} />`
       } else if (childComponent.children.length) {
@@ -278,14 +347,41 @@ export default App;`
 export const generatePreview = async (
   components: IComponents,
   fileName: string,
+  currentComponents: CustomDictionary,
 ) => {
-  let code = buildBlock({ component: components.root, components })
+  let code = buildPreviewBlock({ component: components.root, components, currentComponents })
   let componentsCodes = buildComponents(components)
   const iconImports = Array.from(new Set(getIconsImports(components)))
   const paramsContent = destructureParams(components.root.params)
 
   const imports = [
-    ...new Set(Object.keys(components).map(name => components[name].type)),
+    ...new Set(
+      Object.keys(components)
+        .filter(
+          name =>
+            !Object.keys(currentComponents).includes(components[name].type),
+        )
+        .map(name => components[name].type),
+    ),
+  ]
+
+  const customImports = [
+    ...new Set(
+      Object.keys(components)
+        .filter(
+          name =>
+            name !== 'root' &&
+            Object.keys(currentComponents).includes(components[name].type),
+        )
+        .map(
+          name =>
+            `import ${convertToPascal(
+              currentComponents[components[name].type],
+            )}Preview from './${convertToPascal(
+              currentComponents[components[name].type],
+            )}Preview.oc';`,
+        ),
+    ),
   ]
 
   code = `import React from 'react'
@@ -304,6 +400,7 @@ export const generatePreview = async (
 import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
       : ''
   }  
+  ${customImports.join(';')}
   
   interface Props { 
     component: IComponent
