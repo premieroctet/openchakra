@@ -5,7 +5,7 @@ const ALERT_COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'AlertTitle',
 ]
 
-export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
+const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   ...ALERT_COMPONENTS,
   'Avatar',
   'AvatarBadge',
@@ -88,9 +88,6 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'BreadcrumbMeta',
   'TabsMeta',
   'StatMeta',
-  // Allow custom components
-  'CC',
-  'Sample',
 ]
 
 export const AccordionWhitelist: (

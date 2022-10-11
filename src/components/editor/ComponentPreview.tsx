@@ -1,6 +1,5 @@
-import React, { memo } from 'react'
+import React, { memo, Suspense, lazy, useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-
 import AlertPreview from '~components/editor/previews/AlertPreview'
 import AvatarPreview, {
   AvatarBadgePreview,
@@ -34,7 +33,8 @@ import SkeletonPreview, {
   SkeletonCirclePreview,
   SkeletonTextPreview,
 } from './previews/SkeletonPreview'
-import SamplePreview from '~custom-components/editor/previews/SamplePreview'
+import { getCustomComponentNames } from '~core/selectors/customComponents'
+import loadViews from '~custom-components/lazyLoad'
 
 const ComponentPreview: React.FC<{
   componentName: string
@@ -43,8 +43,21 @@ const ComponentPreview: React.FC<{
   if (!component) {
     console.error(`ComponentPreview unavailable for component ${componentName}`)
   }
-
   const type = (component && component.type) || null
+
+  const [views, setViews] = useState<any>([])
+  const customComponents = useSelector(getCustomComponentNames)
+
+  useEffect(() => {
+    loadViews(customComponents, component, true)
+  }, [customComponents])
+
+  if (type && customComponents.includes(type)) {
+    const ind = customComponents.indexOf(type)
+    if (ind !== -1)
+      return <Suspense fallback={'Loading...'}>{views[ind]}</Suspense>
+    return <>Loading...</>
+  }
 
   switch (type) {
     // Simple components
@@ -182,8 +195,6 @@ const ComponentPreview: React.FC<{
       return <StatHelpTextPreview component={component} />
     case 'StatGroup':
       return <StatGroupPreview component={component} />
-    case 'Sample':
-      return <SamplePreview component={component} />
     default:
       return null
   }

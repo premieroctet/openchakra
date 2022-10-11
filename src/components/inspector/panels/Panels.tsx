@@ -1,5 +1,4 @@
-import React, { memo } from 'react'
-
+import React, { memo, lazy, Suspense, useState, useEffect } from 'react'
 import ButtonPanel from '~components/inspector/panels/components/ButtonPanel'
 import BadgePanel from '~components/inspector/panels/components/BadgePanel'
 import IconPanel from '~components/inspector/panels/components/IconPanel'
@@ -54,17 +53,32 @@ import TabPanel from './components/TabPanel'
 import StatArrowPanel from './components/StatArrowPanel'
 import StatLabelPanel from './components/StatLabelPanel'
 import SkeletonPanel from './components/SkeletonPanel'
-import CCPanel from '~custom-components/inspector/panels/components/CCPanel'
-import SamplePanel from '~custom-components/inspector/panels/components/SamplePanel'
+import { useSelector } from 'react-redux'
+import { getCustomComponentNames } from '~core/selectors/customComponents'
+import loadViews from '~custom-components/lazyLoad'
 
-const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
-  component,
-  isRoot,
-}) => {
+const Panels: React.FC<{
+  component: IComponent
+  isRoot: boolean
+  isCustom?: boolean
+}> = ({ component, isRoot, isCustom = false }) => {
   const { type } = component
+  const [views, setViews] = useState<any>([])
+  const customComponents = useSelector(getCustomComponentNames)
+
+  useEffect(() => {
+    loadViews(customComponents, component, false)
+  }, [customComponents])
 
   if (isRoot) {
     return null
+  }
+
+  if (isCustom) {
+    const ind = customComponents.indexOf(type)
+    if (ind !== -1)
+      return <Suspense fallback={'Loading...'}>{views[ind]}</Suspense>
+    return <>Loading...</>
   }
 
   return (
@@ -129,8 +143,6 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
       {type === 'StatArrow' && <StatArrowPanel />}
       {type === 'StatLabel' && <StatLabelPanel />}
       {type === 'StatNumber' && <StatLabelPanel />}
-      {type === 'CC' && <CCPanel />}
-      {type === 'Sample' && <SamplePanel />}
     </>
   )
 }

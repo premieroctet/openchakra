@@ -98,14 +98,7 @@ interface IComponent {
   parent: string
   id: string
   props: any
-  params?: [
-    {
-      name: string
-      value: any
-      type: string
-      optional: boolean
-    },
-  ]
+  params?: Array<any>
   rootParentType?: ComponentType
   componentName?: string
 }
@@ -124,6 +117,7 @@ interface ComponentItemProps {
   type: ComponentType
   isMoved?: boolean
   isChild?: boolean
+  isSelected?: boolean
   isMeta?: boolean
   soon?: boolean
   custom?: boolean
