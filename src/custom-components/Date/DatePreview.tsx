@@ -13,7 +13,11 @@ const DatePreview: React.FC<IPreviewProps> = ({ component }) => {
   }
 
   const dateToConsider = props?.['data-value'] ? new Date(props?.['data-value']) : new Date()
-  const dateToDisplay = dateToConsider.toLocaleDateString()
+  const dateOptionsToConsider = props?.['data-format'] ? props?.['data-format'] : {}
+
+  // TODO fr-FR locale dynamic
+  const dateTimeFormat = new Intl.DateTimeFormat('fr-FR', dateOptionsToConsider);
+  const dateToDisplay = dateTimeFormat.format(dateToConsider)
 
   return (
     <Box pos="relative" ref={drop(ref)} {...props}>

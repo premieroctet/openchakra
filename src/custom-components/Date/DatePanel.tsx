@@ -15,42 +15,51 @@ const DatePanel = () => {
   const format = usePropsSelector('data-format')
   const value = usePropsSelector('data-value')
 
-  const possibleDateOptions = {
+  const minDateOptions = {
     year: 'numeric',
     month: 'numeric',
     day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-    second: 'numeric'
   }
 
-  const [dateoptions, setDateoptions] = useState(format || {})
+  const availableDateOptions = {
+    weekday: [ 'short', 'long'], // 'narrow',
+    year: ['numeric', '2-digit'],  
+    month: ['numeric'  , 'short' , 'long'], // 'narrow', '2-digit'
+    day: ['numeric' ], // '2-digit'
+    hour: ['numeric' ], // '2-digit'
+    minute: ['numeric' ], // '2-digit'
+    second: ['numeric' ], // '2-digit'
+  }
 
-  const changeFormatDate = (e, ef) => {
-    console.log(e, ef)
+  const dateoptions = format || minDateOptions
+
+  const changeFormatDate = (typedate: string, valdate: string) => {
+
+    let prepareDateFormat = dateoptions
+    if (valdate === '') {
+      delete prepareDateFormat[typedate]
+    } else {
+      prepareDateFormat[typedate] = valdate
+    }
+
+    setValue('data-format', prepareDateFormat)
   }
 
   return (
     <>
-      {Object.entries(possibleDateOptions).map(([typeDate, typeValue]) => (
-        <>
+      {Object.entries(availableDateOptions).map(([typeDate, possibleDateFormatters]) => {
+      return (
+        <div key={typeDate}>
         <FormLabel>{typeDate}</FormLabel>
-        <RadioGroup onChange={(e) => changeFormatDate(typeDate, e)} size={'sm'} defaultValue={typeValue} >
-          <Radio value={''} >None</Radio>
-          <Radio value={'numeric'} >numeric</Radio>
-          <Radio value={'long'} >long</Radio>
+        <RadioGroup onChange={(e) => changeFormatDate(typeDate, e)} size={'sm'} defaultValue={dateoptions[typeDate] || ''} >
+          <Radio value={''} >&empty;</Radio>
+          {possibleDateFormatters.map((possVal, i) => (
+            <Radio key={i} value={possVal} >{possVal}</Radio>
+          ))}
       </RadioGroup>
-      </>
-      ))}
-      <FormControl label="Format" htmlFor="dataformat">
-        <Input
-          id='dataformat'
-          value={JSON.stringify(dateoptions) || ''}
-          size="sm"
-          name="data-format"
-          onChange={setValueFromEvent}
-        />
-      </FormControl>
+      </div>
+      )}
+      )}
 
       <FormControl label="Example" htmlFor="datavalue">
         <Input
