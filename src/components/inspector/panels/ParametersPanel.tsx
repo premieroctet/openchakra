@@ -182,7 +182,7 @@ const ParametersPanel = () => {
         >
           <SimpleGrid width="100%" columns={3} spacing={1}>
             <Box fontWeight="bold">
-              {paramsName.optional ? '*' : ''}
+              {!paramsName.optional && '*'}
               {paramsName.name}
             </Box>
             <Box>{paramsName.value}</Box>
