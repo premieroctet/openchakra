@@ -120,6 +120,14 @@ const buildBlock = ({
         : capitalize(childComponent.type)
       let propsContent = ''
 
+      // Set component id
+      propsContent += ` id='${childComponent.id}' `
+
+      // Set if dynamic container
+      if (CONTAINER_TYPE.includes(childComponent.type) && !!dataProvider) {
+        propsContent += ` dynamicContainer `
+      }
+
       const propsNames = Object.keys(childComponent.props).filter(propName => {
         if (childComponent.type === 'Icon') {
           return propName !== 'icon'
@@ -134,6 +142,9 @@ const buildBlock = ({
           const propsValue = childComponent.props[propName]
           const propsValueAsObject = typeof propsValue === 'object'
 
+          if (propName=='dataSource') {
+            propsContent += ` dataSourceId='${propsValue}'`
+          }
           if (propsValueAsObject && propsValue) {
             const gatheredProperties = Object.entries(propsValue)
               .map(([prop, value]) => {
@@ -269,13 +280,8 @@ const getIconsImports = (components: IComponents) => {
 const buildHooks = (components: IComponents, models) => {
   // Returns attributes names used in this dataProvider for 'dataProvider'
   const getDataProviderFields = (dataProvider: IComponent) => {
-    return getFieldsForDataProvider(dataProvider.id, components)
-    return lodash(components)
-      .filter(
-        c => c.props?.dataSource == dataProvider.id && !!c.props?.attribute,
-      )
-      .map(c => c.props.attribute)
-      .uniq()
+    const fields=getFieldsForDataProvider(dataProvider.id, components)
+    return fields
   }
 
   const dataProviders: IComponent[] = lodash(components).pickBy(c => c.props?.model).values()

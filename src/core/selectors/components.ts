@@ -88,7 +88,6 @@ export const getComponentWarnings = (component: IComponent) => (state: RootState
   const components=getActiveComponents(state)
   const warnings=validateComponent(component, components)
   .map(warn => ({...warn, pageId, pageName}))
-  console.log(`Warnings:${JSON.stringify(warnings)}`)
   return warnings
 }
 
