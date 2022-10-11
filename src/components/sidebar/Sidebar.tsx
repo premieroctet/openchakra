@@ -47,20 +47,16 @@ const Menu = () => {
     const interval = setInterval(async () => {
       const newComponentsList = await API.get('/refresh').then(res => res.data)
       const componentDiffs = getObjectDiff(newComponentsList)
-      if (componentDiffs.deletedComponents.length) {
         componentDiffs.deletedComponents.map(async component => {
           const response = await API.post('/delete-file', {
             path: customComponents[component],
           })
         })
-      }
-      if (componentDiffs.newComponents.length) {
         componentDiffs.newComponents.map(async component => {
           const response = await API.post('/init', {
             path: newComponentsList[component],
           })
         })
-      }
       dispatch.customComponents.updateCustomComponents(newComponentsList)
     }, 3000)
 
