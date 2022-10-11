@@ -1,7 +1,14 @@
 import React from 'react'
 import lodash from 'lodash'
 
-const setRecurseDataSource = (element, dataSource, dataSourceId) => {
+const isOtherSource = (element, dataSourceId) => {
+  console.log(`Element:${element}`)
+  if (element.props.dynamicContainer && element.props.dataSourceId && element.props.dataSourceId!=dataSourceId) {
+    return true
+  }
+}
+const setRecurseDataSource = (element, dataSource, dataSourceId, level=0) => {
+  console.log(`${'*'.repeat(level*2)}Generating children for ${element?.props?.id}/${element?.props?.dataSourceId} for ${dataSourceId}`)
   if (React.Children.count(element.props.children) === 0) {
     return []
   } else {
@@ -10,9 +17,15 @@ const setRecurseDataSource = (element, dataSource, dataSourceId) => {
       if (child.props === undefined) {
         return child
       } else if (React.Children.count(child.props.children) === 0) {
+        if (isOtherSource(child, dataSourceId))  {
+          return React.cloneElement(child, {})
+        }
         return React.cloneElement(child, {dataSource})
       } else {
-        return React.cloneElement(child, {dataSource}, setRecurseDataSource(child, dataSource))
+        if (isOtherSource(child, dataSourceId))  {
+          return React.cloneElement(child, {}, setRecurseDataSource(child, dataSource, dataSourceId, level+1))
+        }
+        return React.cloneElement(child, {dataSource}, setRecurseDataSource(child, dataSource, dataSourceId, level+1))
       }
     })
   }
@@ -23,7 +36,9 @@ const withDynamicContainer = Component => {
     if (!props.dataSource) {
       return null
     }
+    console.log(`Handling ${props.id}/${props.dataSourceId}`)
     const firstChild=React.Children.toArray(props.children)[0]
+    console.log(`First child is ${firstChild?.props?.id}/${firstChild?.props?.dataSourceId}`)
     let orgData=props.dataSource
     if (props.attribute) {
       orgData=lodash.get(orgData, props.attribute)
