@@ -34,7 +34,16 @@ import SkeletonPreview, {
   SkeletonTextPreview,
 } from './previews/SkeletonPreview'
 import { getCustomComponentNames } from '~core/selectors/customComponents'
-import loadViews from '~custom-components/lazyLoad'
+import { convertToPascal } from './Editor'
+
+const importView = (component: any) => {
+  component = convertToPascal(component)
+  return lazy(() =>
+    import(
+      `src/custom-components/editor/previews/${component}Preview.oc.tsx`
+    ).catch(() => import('src/custom-components/fallback')),
+  )
+}
 
 const ComponentPreview: React.FC<{
   componentName: string
@@ -49,7 +58,16 @@ const ComponentPreview: React.FC<{
   const customComponents = useSelector(getCustomComponentNames)
 
   useEffect(() => {
-    loadViews(customComponents, component, true)
+    async function loadViews() {
+      const componentPromises = await customComponents.map(
+        async (customComponent: string) => {
+          const View = await importView(customComponent)
+          return <View key={customComponent} component={component} />
+        },
+      )
+      Promise.all(componentPromises).then(setViews)
+    }
+    loadViews()
   }, [customComponents])
 
   if (type && customComponents.includes(type)) {
