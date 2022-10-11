@@ -18,6 +18,7 @@ import {
   Button,
   useDisclosure,
   Text,
+  Collapse,
 } from '@chakra-ui/react'
 import { CopyIcon, CheckIcon, EditIcon } from '@chakra-ui/icons'
 import Panels from '~components/inspector/panels/Panels'
@@ -38,6 +39,29 @@ import { generateComponentCode, formatCode } from '~utils/code'
 import useClipboard from '~hooks/useClipboard'
 import { useInspectorUpdate } from '~contexts/inspector-context'
 import { componentsList } from '~componentsList'
+import ParametersPanel from './panels/ParametersPanel'
+
+function CollapsableParameters() {
+  const { isOpen, onToggle } = useDisclosure()
+
+  return (
+    <Box
+      position="sticky"
+      bottom={0}
+      p={1}
+      bgColor="white"
+      borderWidth={1}
+      borderTopColor="black"
+    >
+      <Collapse in={isOpen} animateOpacity>
+        <ParametersPanel />
+      </Collapse>
+      <Button onClick={onToggle} size="sm" bgColor="yellow.100" width="100%">
+        Parameters
+      </Button>
+    </Box>
+  )
+}
 
 const CodeActionButton = memo(() => {
   const [isLoading, setIsLoading] = useState(false)
@@ -194,6 +218,9 @@ const Inspector = () => {
         showChildren={componentHasChildren}
         parentIsRoot={parentIsRoot}
       />
+
+      <CollapsableParameters />
+
       <Modal onClose={onClose} isOpen={isOpen} isCentered>
         <ModalOverlay>
           <ModalContent>
