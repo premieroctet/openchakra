@@ -78,23 +78,6 @@ const ParametersPanel = () => {
         <InputGroup mb={3} size="sm">
           <Flex direction="column">
             <Flex direction="row">
-              <Checkbox
-                isChecked={quickParams.optional}
-                onChange={event => {
-                  setQuickParams({
-                    ...quickParams,
-                    optional: event.target.checked,
-                  })
-                }}
-              >
-                Optional
-              </Checkbox>
-              <Spacer />
-              <Button type="submit" size="sm" variant="ghost">
-                Add
-              </Button>
-            </Flex>
-            <Flex direction="row">
               <Input
                 mb={1}
                 isInvalid={hasError}
@@ -167,6 +150,31 @@ const ParametersPanel = () => {
                 }
               />
             </Flex>
+            <Flex direction="row">
+              <Checkbox
+                size="md"
+                isChecked={quickParams.optional}
+                onChange={event => {
+                  setQuickParams({
+                    ...quickParams,
+                    optional: event.target.checked,
+                  })
+                }}
+              >
+                optional?
+              </Checkbox>
+              <Spacer />
+              <Button
+                type="submit"
+                size="sm"
+                variant="outline"
+                mt={0.5}
+                bgColor="lightblue"
+                // color="blue"
+              >
+                Add
+              </Button>
+            </Flex>
           </Flex>
         </InputGroup>
       </form>
@@ -182,8 +190,8 @@ const ParametersPanel = () => {
         >
           <SimpleGrid width="100%" columns={3} spacing={1}>
             <Box fontWeight="bold">
-              {!paramsName.optional && '*'}
               {paramsName.name}
+              {paramsName.optional && '?'}
             </Box>
             <Box>{paramsName.value}</Box>
             <Box fontStyle="italic">{paramsName.type}</Box>
