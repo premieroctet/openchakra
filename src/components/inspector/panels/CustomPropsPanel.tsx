@@ -1,6 +1,9 @@
 import React, { memo, useState, FormEvent, ChangeEvent, useRef } from 'react'
 import { useInspectorState } from '~contexts/inspector-context'
-import { getSelectedComponent } from '~core/selectors/components'
+import {
+  getComponentParamNames,
+  getSelectedComponent,
+} from '~core/selectors/components'
 import { useSelector } from 'react-redux'
 import { IoIosFlash } from 'react-icons/io'
 import {
@@ -12,12 +15,11 @@ import {
   InputRightElement,
   Input,
   ButtonGroup,
+  Button,
 } from '@chakra-ui/react'
 import { EditIcon, SmallCloseIcon } from '@chakra-ui/icons'
 import useDispatch from '~hooks/useDispatch'
 import { useForm } from '~hooks/useForm'
-
-const SEPARATOR = '='
 
 const CustomPropsPanel = () => {
   const dispatch = useDispatch()
@@ -25,9 +27,17 @@ const CustomPropsPanel = () => {
 
   const activePropsRef = useInspectorState()
   const { props, id } = useSelector(getSelectedComponent)
+  const params = useSelector(getComponentParamNames)
   const { setValue } = useForm()
 
-  const [quickProps, setQuickProps] = useState('')
+  const DEFAULT_PROPS: {
+    name: string
+    value: any
+  } = {
+    name: '',
+    value: '',
+  }
+  const [quickProps, setQuickProps] = useState(DEFAULT_PROPS)
   const [hasError, setError] = useState(false)
 
   const onDelete = (propsName: string) => {
@@ -47,12 +57,18 @@ const CustomPropsPanel = () => {
       <form
         onSubmit={(event: FormEvent) => {
           event.preventDefault()
-
-          const [name, value] = quickProps.split(SEPARATOR)
-
-          if (name && value) {
-            setValue(name, value)
-            setQuickProps('')
+          if (quickProps.name && quickProps.value) {
+            let propVal = quickProps.value.trim()
+            if (propVal[0] === '{' && propVal[propVal.length - 1] === '}') {
+              propVal = propVal.substring(1, propVal.length - 1).trim()
+              console.log(propVal)
+              if (!params?.includes(propVal)) {
+                setError(true)
+                return
+              }
+            }
+            setValue(quickProps.name, quickProps.value)
+            setQuickProps(DEFAULT_PROPS)
             setError(false)
           } else {
             setError(true)
@@ -60,19 +76,37 @@ const CustomPropsPanel = () => {
         }}
       >
         <InputGroup mb={3} size="sm">
-          <InputRightElement>
-            <Box as={IoIosFlash} color="gray.300" />
-          </InputRightElement>
           <Input
             ref={inputRef}
             isInvalid={hasError}
-            value={quickProps}
-            placeholder={`props${SEPARATOR}value`}
+            value={quickProps.name}
+            placeholder={`prop`}
             onChange={(event: ChangeEvent<HTMLInputElement>) =>
-              setQuickProps(event.target.value)
+              setQuickProps({ ...quickProps, name: event.target.value })
             }
           />
+          <Input
+            isInvalid={hasError}
+            value={quickProps.value}
+            placeholder={`value`}
+            onChange={(event: ChangeEvent<HTMLInputElement>) =>
+              setQuickProps({ ...quickProps, value: event.target.value })
+            }
+            ml={1}
+          />
         </InputGroup>
+        <Box display="flex" justifyContent="flex-end">
+          <Button
+            mr={0}
+            type="submit"
+            size="xs"
+            variant="outline"
+            mt={0.5}
+            bgColor="lightblue"
+          >
+            Add
+          </Button>
+        </Box>
       </form>
 
       {customProps.map((propsName, i) => (
@@ -92,7 +126,7 @@ const CustomPropsPanel = () => {
           <ButtonGroup display="flex" size="xs" isAttached>
             <IconButton
               onClick={() => {
-                setQuickProps(`${propsName}=`)
+                setQuickProps({ ...quickProps, name: propsName })
                 if (inputRef.current) {
                   inputRef.current.focus()
                 }

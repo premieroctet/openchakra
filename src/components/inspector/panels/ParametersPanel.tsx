@@ -1,6 +1,6 @@
 import React, { memo, useState, FormEvent, ChangeEvent, useRef } from 'react'
 import { useInspectorState } from '~contexts/inspector-context'
-import { getSelectedComponent } from '~core/selectors/components'
+import { getComponentParams } from '~core/selectors/components'
 import { useSelector } from 'react-redux'
 import {
   IconButton,
@@ -27,7 +27,7 @@ const ParametersPanel = () => {
   const inputRef = useRef<HTMLInputElement>(null)
 
   const activeParamsRef = useInspectorState()
-  const { params, id } = useSelector(getSelectedComponent)
+  const params = useSelector(getComponentParams)
   const { setValue } = useParamsForm()
 
   const DEFAULT_PARAMS: {
@@ -46,7 +46,7 @@ const ParametersPanel = () => {
 
   const onDelete = (paramsName: string) => {
     dispatch.components.deleteParams({
-      id,
+      id: 'root',
       name: paramsName,
     })
   }
@@ -170,7 +170,6 @@ const ParametersPanel = () => {
                 variant="outline"
                 mt={0.5}
                 bgColor="lightblue"
-                // color="blue"
               >
                 Add
               </Button>

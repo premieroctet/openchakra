@@ -50,6 +50,11 @@ const PaddingPanel = ({ type }: PaddingPanelPropsType) => {
   return (
     <Box mb={4}>
       <FormControl>
+        {/* <style>{`
+      .chakra-select  {
+        background-color: red
+      }
+    `}</style> */}
         <FormLabel fontSize="xs" htmlFor="width" textTransform="capitalize">
           {type}
         </FormLabel>

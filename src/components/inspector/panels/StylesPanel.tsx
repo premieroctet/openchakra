@@ -26,11 +26,11 @@ const StylesPanel: React.FC<Props> = ({
   parentIsRoot,
 }) => (
   <Accordion defaultIndex={[0]} allowMultiple>
-    {isRoot && (
+    {/* {isRoot && (
       <AccordionContainer title="Parameters">
         <ParametersPanel />
       </AccordionContainer>
-    )}
+    )} */}
 
     {!isRoot && (
       <AccordionContainer title="Custom props">
