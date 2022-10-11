@@ -1,4 +1,5 @@
 import React from 'react'
+import { Text } from '@chakra-ui/react';
 
 const DateComp = ({"data-value": dataValue, "data-format": dataFormat, ...props}:{'data-value': string, 'data-format': string}) => {
 
@@ -10,7 +11,7 @@ const DateComp = ({"data-value": dataValue, "data-format": dataFormat, ...props}
     const dateToDisplay = date && dateTimeFormat.format(date)
 
     return (
-    <span {...props}>{dateToDisplay}</span>
+    <Text as={'span'} {...props}>{dateToDisplay}</Text>
 )}
 
 export default DateComp

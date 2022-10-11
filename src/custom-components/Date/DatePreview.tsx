@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDropComponent } from '~hooks/useDropComponent'
 import { useInteractive } from '~hooks/useInteractive'
-import { Box } from '@chakra-ui/react'
+import { Text } from '@chakra-ui/react'
 
 const DatePreview: React.FC<IPreviewProps> = ({ component }) => {
   
@@ -20,9 +20,7 @@ const DatePreview: React.FC<IPreviewProps> = ({ component }) => {
   const dateToDisplay = dateTimeFormat.format(dateToConsider)
 
   return (
-    <Box pos="relative" ref={drop(ref)} {...props}>
-      <div>{dateToDisplay}</div>
-    </Box>
+    <Text as={'span'} {...props}>{dateToDisplay}</Text>
   )
 }
 
