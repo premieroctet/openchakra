@@ -124,13 +124,11 @@ const Inspector = () => {
   }, [clearActiveProps])
 
   useEffect(() => {
-    console.log(warnings)
     const msg=warnings
       .map(w => w.message)
     setWarningMessages(msg)
   }, [component])
 
-  console.log(`Warning message:${warningMessages}`)
   return (
     //@ts-ignore
     <RightPanel show={showRightPanel}>
