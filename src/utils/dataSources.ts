@@ -6,7 +6,6 @@ export const CONTAINER_TYPE: ComponentType[] = [
   'SimpleGrid',
   'Flex',
   'List',
-  'Accordion',
   'Container',
 ]
 export const TEXT_TYPE: ComponentType[] = ['Text', 'Heading', 'Badge', 'ListItem']
@@ -15,6 +14,15 @@ export const IMAGE_TYPE: ComponentType[] = ['Image', 'Avatar', 'Media']
 export const PROGRESS_TYPE: ComponentType[] = ['Progress', 'CircularProgress']
 export const DATE_TYPE: ComponentType[] = ['Date']
 export const SELECT_TYPE: ComponentType[] = ['Select']
+
+const ALL_DYNAMICS=lodash.flatten([
+  CONTAINER_TYPE, TEXT_TYPE, ACTION_TYPE, IMAGE_TYPE, PROGRESS_TYPE,
+  DATE_TYPE, SELECT_TYPE
+])
+
+export const allowsDataSource = (component: IComponent): boolean => {
+  return ALL_DYNAMICS.includes(component.type)
+}
 
 export const isMultipleDispatcher = (component: IComponent):boolean => {
     return CONTAINER_TYPE.includes(component.type)
