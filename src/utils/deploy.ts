@@ -1,4 +1,4 @@
-import { ProjectState } from '~/core/models/components'
+import { ProjectState } from '~/core/models/project'
 import lodash from 'lodash'
 import { build, copyFile, install, start } from './http'
 import { generateCode, generateApp, normalizePageName } from './code'
