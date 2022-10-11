@@ -2,23 +2,25 @@ import React, { memo, useState, FormEvent, ChangeEvent, useRef } from 'react'
 import { useInspectorState } from '~contexts/inspector-context'
 import { getSelectedComponent } from '~core/selectors/components'
 import { useSelector } from 'react-redux'
-import { IoIosFlash } from 'react-icons/io'
 import {
   IconButton,
   Flex,
   Box,
   SimpleGrid,
   InputGroup,
-  InputRightElement,
   Input,
   ButtonGroup,
+  Checkbox,
+  Button,
+  Spacer,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
 } from '@chakra-ui/react'
-import { EditIcon, SmallCloseIcon } from '@chakra-ui/icons'
+import { ChevronDownIcon, EditIcon, SmallCloseIcon } from '@chakra-ui/icons'
 import useDispatch from '~hooks/useDispatch'
 import { useParamsForm } from '~hooks/useParamsForm'
-
-const SEPARATOR = '='
-const SEPARATOR2 = ':'
 
 const ParametersPanel = () => {
   const dispatch = useDispatch()
@@ -28,7 +30,18 @@ const ParametersPanel = () => {
   const { params, id } = useSelector(getSelectedComponent)
   const { setValue } = useParamsForm()
 
-  const [quickParams, setQuickParams] = useState('')
+  const DEFAULT_PARAMS: {
+    name: string
+    value: any
+    type: string
+    optional: boolean
+  } = {
+    name: '',
+    value: '',
+    type: '',
+    optional: false,
+  }
+  const [quickParams, setQuickParams] = useState(DEFAULT_PARAMS)
   const [hasError, setError] = useState(false)
 
   const onDelete = (paramsName: string) => {
@@ -48,13 +61,14 @@ const ParametersPanel = () => {
       <form
         onSubmit={(event: FormEvent) => {
           event.preventDefault()
-
-          const [name, valueType] = quickParams.split(SEPARATOR)
-          const [value, type] = valueType.split(SEPARATOR2)
-
-          if (name && value && type) {
-            setValue(name, value, type)
-            setQuickParams('')
+          if (quickParams.name && quickParams.value && quickParams.type) {
+            setValue(
+              quickParams.name,
+              quickParams.value,
+              quickParams.type,
+              quickParams.optional,
+            )
+            setQuickParams(DEFAULT_PARAMS)
             setError(false)
           } else {
             setError(true)
@@ -62,18 +76,98 @@ const ParametersPanel = () => {
         }}
       >
         <InputGroup mb={3} size="sm">
-          <InputRightElement>
-            <Box as={IoIosFlash} color="gray.300" />
-          </InputRightElement>
-          <Input
-            ref={inputRef}
-            isInvalid={hasError}
-            value={quickParams}
-            placeholder={`params${SEPARATOR}value${SEPARATOR2}type`}
-            onChange={(event: ChangeEvent<HTMLInputElement>) =>
-              setQuickParams(event.target.value)
-            }
-          />
+          <Flex direction="column">
+            <Flex direction="row">
+              <Checkbox
+                isChecked={quickParams.optional}
+                onChange={event => {
+                  setQuickParams({
+                    ...quickParams,
+                    optional: event.target.checked,
+                  })
+                }}
+              >
+                Optional
+              </Checkbox>
+              <Spacer />
+              <Button type="submit" size="sm" variant="ghost">
+                Add
+              </Button>
+            </Flex>
+            <Flex direction="row">
+              <Input
+                mb={1}
+                isInvalid={hasError}
+                value={quickParams.type}
+                placeholder={`type`}
+                onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                  setQuickParams({ ...quickParams, type: event.target.value })
+                }
+              />
+              <Menu>
+                <MenuButton
+                  p={1}
+                  m={1}
+                  borderRadius="md"
+                  borderWidth="1px"
+                  type="button"
+                >
+                  <ChevronDownIcon />
+                </MenuButton>
+                <MenuList>
+                  <MenuItem
+                    onClick={() =>
+                      setQuickParams({ ...quickParams, type: 'string' })
+                    }
+                  >
+                    string
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() =>
+                      setQuickParams({ ...quickParams, type: 'number' })
+                    }
+                  >
+                    number
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() =>
+                      setQuickParams({ ...quickParams, type: 'boolean' })
+                    }
+                  >
+                    boolean
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() =>
+                      setQuickParams({ ...quickParams, type: 'any' })
+                    }
+                  >
+                    any
+                  </MenuItem>
+                </MenuList>
+              </Menu>
+            </Flex>
+            <Flex direction="row">
+              <Input
+                ref={inputRef}
+                mr={0.5}
+                isInvalid={hasError}
+                value={quickParams.name}
+                placeholder={`name`}
+                onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                  setQuickParams({ ...quickParams, name: event.target.value })
+                }
+              />
+              <Input
+                ml={0.5}
+                isInvalid={hasError}
+                value={quickParams.value}
+                placeholder={`value`}
+                onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                  setQuickParams({ ...quickParams, value: event.target.value })
+                }
+              />
+            </Flex>
+          </Flex>
         </InputGroup>
       </form>
 
@@ -87,7 +181,10 @@ const ParametersPanel = () => {
           justifyContent="space-between"
         >
           <SimpleGrid width="100%" columns={3} spacing={1}>
-            <Box fontWeight="bold">{paramsName.name}</Box>
+            <Box fontWeight="bold">
+              {paramsName.optional ? '*' : ''}
+              {paramsName.name}
+            </Box>
             <Box>{paramsName.value}</Box>
             <Box fontStyle="italic">{paramsName.type}</Box>
           </SimpleGrid>
@@ -95,7 +192,7 @@ const ParametersPanel = () => {
           <ButtonGroup display="flex" size="xs" isAttached>
             <IconButton
               onClick={() => {
-                setQuickParams(`${paramsName.name}=`)
+                setQuickParams(paramsName)
                 if (inputRef.current) {
                   inputRef.current.focus()
                 }

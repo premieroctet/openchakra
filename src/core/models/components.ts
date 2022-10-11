@@ -52,7 +52,13 @@ const components = createModel({
     },
     updateParams(
       state: ComponentsState,
-      payload: { id: string; name: string; value: string; type: any },
+      payload: {
+        id: string
+        name: string
+        value: any
+        type: string
+        optional: boolean
+      },
     ) {
       return produce(state, (draftState: ComponentsState) => {
         const index = draftState.components[payload.id].params?.findIndex(
@@ -63,11 +69,14 @@ const components = createModel({
           draftState.components[payload.id].params[index].value = payload.value
           // @ts-ignore
           draftState.components[payload.id].params[index].type = payload.type
+          draftState.components[payload.id].params[index].optional =
+            payload.optional
         } else {
           draftState.components[payload.id].params?.push({
             name: payload.name,
             value: payload.value,
             type: payload.type,
+            optional: payload.optional,
           })
         }
       })
