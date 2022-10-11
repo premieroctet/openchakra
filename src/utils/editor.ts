@@ -20,6 +20,7 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'CloseButton',
   'Code',
   'Container',
+  'Date',
   'DataProvider',
   'Divider',
   'Flex',
