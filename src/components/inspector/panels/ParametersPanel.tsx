@@ -178,7 +178,7 @@ const ParametersPanel = () => {
         </InputGroup>
       </form>
       <SimpleGrid width="100%" columns={4} spacing={1} bgColor="yellow.100">
-        <Box fontSize="sm" fontWeight="bold" pl={1} ml={1}>
+        <Box fontSize="sm" fontWeight="bold" pl={1}>
           Name
         </Box>
         <Box fontSize="sm" fontStyle="italic">

@@ -61,7 +61,6 @@ const CustomPropsPanel = () => {
             let propVal = quickProps.value.trim()
             if (propVal[0] === '{' && propVal[propVal.length - 1] === '}') {
               propVal = propVal.substring(1, propVal.length - 1).trim()
-              console.log(propVal)
               if (!params?.includes(propVal)) {
                 setError(true)
                 return
@@ -126,7 +125,10 @@ const CustomPropsPanel = () => {
           <ButtonGroup display="flex" size="xs" isAttached>
             <IconButton
               onClick={() => {
-                setQuickProps({ ...quickProps, name: propsName })
+                setQuickProps({
+                  name: propsName,
+                  value: props[propsName],
+                })
                 if (inputRef.current) {
                   inputRef.current.focus()
                 }
