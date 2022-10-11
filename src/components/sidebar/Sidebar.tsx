@@ -23,6 +23,8 @@ import {
 } from '~core/selectors/customComponents'
 import useDispatch from '~hooks/useDispatch'
 import API from '~custom-components/api'
+import { convertToPascal } from '~components/editor/Editor'
+import { generateCode, generatePreview, generatePanel } from '~utils/code'
 
 const Menu = () => {
   const [searchTerm, setSearchTerm] = useState('')
@@ -53,8 +55,17 @@ const Menu = () => {
           })
         })
         componentDiffs.newComponents.map(async component => {
+          const jsonResponse = await API.post('/read-json', {
+            path: newComponentsList[component],
+          })
+          let components = JSON.parse(jsonResponse.data.content)
+          let fileName = convertToPascal(newComponentsList[component])
+          let previewCode = await generatePreview(components, fileName, customComponents)
+          let panelCode = await generatePanel(components, fileName)
           const response = await API.post('/init', {
             path: newComponentsList[component],
+            previewBody: previewCode,
+            panelBody: panelCode,
           })
         })
       dispatch.customComponents.updateCustomComponents(newComponentsList)

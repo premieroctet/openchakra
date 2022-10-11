@@ -36,7 +36,9 @@ export default function handler(req, res) {
         if (err) throw err
       },
     )
+    res.status(200)
   } catch (err) {
     console.log(err)
+    res.status(400)
   }
 }
