@@ -177,7 +177,15 @@ const ParametersPanel = () => {
           </Flex>
         </InputGroup>
       </form>
-
+      <SimpleGrid width="100%" columns={4} spacing={1} bgColor="yellow.100">
+        <Box fontSize="sm" fontWeight="bold" pl={1} ml={1}>
+          Name
+        </Box>
+        <Box fontSize="sm" fontStyle="italic">
+          Type
+        </Box>
+        <Box fontSize="sm">Value</Box>
+      </SimpleGrid>
       {customParams?.map((paramsName: any, i: any) => (
         <Flex
           key={paramsName.name}
@@ -192,8 +200,8 @@ const ParametersPanel = () => {
               {paramsName.name}
               {paramsName.optional && '?'}
             </Box>
-            <Box>{paramsName.value}</Box>
             <Box fontStyle="italic">{paramsName.type}</Box>
+            <Box>{paramsName.value}</Box>
           </SimpleGrid>
 
           <ButtonGroup display="flex" size="xs" isAttached>
