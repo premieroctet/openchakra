@@ -11,6 +11,12 @@ export const getComponentBy = (nameOrId: string | IComponent['id']) => (
 export const getSelectedComponent = (state: RootState) =>
   state.components.present.components[state.components.present.selectedId]
 
+export const getComponentParams = (state: RootState) =>
+  state.components.present.components['root'].params
+
+export const getComponentParamNames = (state: RootState) =>
+  state.components.present.components['root'].params?.map(param => param.name)
+
 export const getPropsForSelectedComponent = (
   state: RootState,
   propsName: string,

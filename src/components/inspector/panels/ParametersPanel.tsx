@@ -1,6 +1,6 @@
 import React, { memo, useState, FormEvent, ChangeEvent, useRef } from 'react'
 import { useInspectorState } from '~contexts/inspector-context'
-import { getSelectedComponent } from '~core/selectors/components'
+import { getComponentParams } from '~core/selectors/components'
 import { useSelector } from 'react-redux'
 import {
   IconButton,
@@ -27,7 +27,7 @@ const ParametersPanel = () => {
   const inputRef = useRef<HTMLInputElement>(null)
 
   const activeParamsRef = useInspectorState()
-  const { params, id } = useSelector(getSelectedComponent)
+  const params = useSelector(getComponentParams)
   const { setValue } = useParamsForm()
 
   const DEFAULT_PARAMS: {
@@ -46,7 +46,7 @@ const ParametersPanel = () => {
 
   const onDelete = (paramsName: string) => {
     dispatch.components.deleteParams({
-      id,
+      id: 'root',
       name: paramsName,
     })
   }
@@ -77,23 +77,6 @@ const ParametersPanel = () => {
       >
         <InputGroup mb={3} size="sm">
           <Flex direction="column">
-            <Flex direction="row">
-              <Checkbox
-                isChecked={quickParams.optional}
-                onChange={event => {
-                  setQuickParams({
-                    ...quickParams,
-                    optional: event.target.checked,
-                  })
-                }}
-              >
-                Optional
-              </Checkbox>
-              <Spacer />
-              <Button type="submit" size="sm" variant="ghost">
-                Add
-              </Button>
-            </Flex>
             <Flex direction="row">
               <Input
                 mb={1}
@@ -167,10 +150,42 @@ const ParametersPanel = () => {
                 }
               />
             </Flex>
+            <Flex direction="row">
+              <Checkbox
+                size="md"
+                isChecked={quickParams.optional}
+                onChange={event => {
+                  setQuickParams({
+                    ...quickParams,
+                    optional: event.target.checked,
+                  })
+                }}
+              >
+                optional?
+              </Checkbox>
+              <Spacer />
+              <Button
+                type="submit"
+                size="sm"
+                variant="outline"
+                mt={0.5}
+                bgColor="lightblue"
+              >
+                Add
+              </Button>
+            </Flex>
           </Flex>
         </InputGroup>
       </form>
-
+      <SimpleGrid width="100%" columns={4} spacing={1} bgColor="yellow.100">
+        <Box fontSize="sm" fontWeight="bold" pl={1}>
+          Name
+        </Box>
+        <Box fontSize="sm" fontStyle="italic">
+          Type
+        </Box>
+        <Box fontSize="sm">Value</Box>
+      </SimpleGrid>
       {customParams?.map((paramsName: any, i: any) => (
         <Flex
           key={paramsName.name}
@@ -182,11 +197,11 @@ const ParametersPanel = () => {
         >
           <SimpleGrid width="100%" columns={3} spacing={1}>
             <Box fontWeight="bold">
-              {paramsName.optional ? '*' : ''}
               {paramsName.name}
+              {paramsName.optional && '?'}
             </Box>
-            <Box>{paramsName.value}</Box>
             <Box fontStyle="italic">{paramsName.type}</Box>
+            <Box>{paramsName.value}</Box>
           </SimpleGrid>
 
           <ButtonGroup display="flex" size="xs" isAttached>

@@ -197,6 +197,7 @@ const Inspector = () => {
         showChildren={componentHasChildren}
         parentIsRoot={parentIsRoot}
       />
+
       <Modal onClose={onClose} isOpen={isOpen} isCentered>
         <ModalOverlay>
           <ModalContent>

@@ -39,13 +39,20 @@ const buildParams = (paramsName: any) => {
   paramTypes += `{`
   params += `{`
   paramsName.forEach((param: any) => {
-    paramTypes += `${param.name}: ${param.type}, `
+    const optional = param.optional ? '?' : ''
+    paramTypes += `${param.name}${optional}: ${param.type}, `
     params += `${param.name}=${param.value}, `
   })
   paramTypes += `}`
   params += `}`
 
   return { paramTypes, params }
+}
+
+const destructureParams = (params: any) => {
+  return `const { ${params
+    .map((param: any) => param.name)
+    .toString()} } = props`
 }
 
 const buildStyledProps = (propsNames: string[], childComponent: IComponent) => {
@@ -65,8 +72,9 @@ const buildStyledProps = (propsNames: string[], childComponent: IComponent) => {
       }
     } else if (propName !== 'children' && propsValue) {
       let operand = `='${propsValue}'`
-
-      if (propsValue === true || propsValue === 'true') {
+      if (propsValue[0] === '{' && propsValue[propsValue.length - 1] === '}') {
+        operand = `=${propsValue}`
+      } else if (propsValue === true || propsValue === 'true') {
         operand = ``
       } else if (
         propsValue === 'false' ||
@@ -274,6 +282,7 @@ export const generatePreview = async (
   let code = buildBlock({ component: components.root, components })
   let componentsCodes = buildComponents(components)
   const iconImports = Array.from(new Set(getIconsImports(components)))
+  const paramsContent = destructureParams(components.root.params)
 
   const imports = [
     ...new Set(Object.keys(components).map(name => components[name].type)),
@@ -307,6 +316,8 @@ import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
   if (isOver) {
       props.bg = 'teal.50'
     }
+
+    ${paramsContent}
   
     return (<Box {...props} ref={ref}>${code}</Box>)
   }

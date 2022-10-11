@@ -5,7 +5,7 @@ import { getSelectedComponentId } from '~core/selectors/components'
 
 export const useParamsForm = () => {
   const dispatch = useDispatch()
-  const componentId = useSelector(getSelectedComponentId)
+  const componentId = 'root'
 
   const setValue = useCallback(
     (name: string, value: any, type: string, optional: boolean) => {
