@@ -53,6 +53,7 @@ import TextareaPanel from '~components/inspector/panels/components/TextareaPanel
 import { allowsDataSource } from '../../../utils/dataSources';
 import { getComponents } from '../../../core/selectors/components'
 import { useForm } from '../../../hooks/useForm'
+import ActionsPanel from './ActionsPanel';
 import DataProviderPanel from '../../../custom-components/DataProvider/DataProviderPanel'
 import DataSourcePanel from './DataSourcePanel'
 import FormControl from '../controls/FormControl'
@@ -133,6 +134,7 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
       {type === 'BreadcrumbItem' && <BreadcrumbItemPanel />}
       {type === 'BreadcrumbLink' && <LinkPanel />}
       {allowsDataSource(component) && <DataSourcePanel />}
+      <ActionsPanel/>
     </>
   )
 }
