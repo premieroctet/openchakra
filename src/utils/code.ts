@@ -11,6 +11,7 @@ import {
   DATE_TYPE,
   IMAGE_TYPE,
   PROGRESS_TYPE,
+  SELECT_TYPE,
   TEXT_TYPE,
   getFieldsForDataProvider
 } from './dataSources';
@@ -69,6 +70,10 @@ const getDynamicType = (comp: IComponent) => {
   if (DATE_TYPE.includes(comp.type)) {
     return 'Date'
   }
+  if (SELECT_TYPE.includes(comp.type)) {
+    return 'Select'
+  }
+  throw new Error(`No dynamic found for ${comp.type}`)
 }
 
 const capitalize = (value: string) => {
@@ -128,7 +133,7 @@ const buildBlock = ({
       propsContent += ` id='${childComponent.id}' `
 
       // Set if dynamic container
-      if (CONTAINER_TYPE.includes(childComponent.type) && !!dataProvider) {
+      if ((CONTAINER_TYPE.includes(childComponent.type) || SELECT_TYPE.includes(childComponent.type)) && !!dataProvider) {
         propsContent += ` dynamicContainer `
       }
 
