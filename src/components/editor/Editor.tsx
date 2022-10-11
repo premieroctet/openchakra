@@ -1,11 +1,17 @@
-import React, { memo } from 'react'
+import React, { memo, useState, useEffect } from 'react'
 import { Box, Text, Link } from '@chakra-ui/react'
 import { useDropComponent } from '~hooks/useDropComponent'
 import SplitPane from 'react-split-pane'
 import CodePanel from '~components/CodePanel'
 import { useSelector } from 'react-redux'
 import useDispatch from '~hooks/useDispatch'
+import { generateCode, generatePreview, generatePanel } from '~utils/code'
+import API from '~custom-components/api'
 import { getComponents } from '~core/selectors/components'
+import {
+  getCustomComponents,
+  getSelectedCustomComponentId,
+} from '~core/selectors/customComponents'
 import { getShowLayout, getShowCode } from '~core/selectors/app'
 import ComponentPreview from '~components/editor/ComponentPreview'
 
@@ -17,6 +23,15 @@ export const gridStyles = {
   p: 10,
 }
 
+export const convertToPascal = (filePath: string) => {
+  const fileName = filePath.split('/').slice(-1)[0]
+  let fileArray = fileName.split('-')
+  fileArray = fileArray.map(word => {
+    return `${word.slice(0, 1).toUpperCase()}${word.slice(1)}`
+  })
+  return fileArray.join('')
+}
+
 const Editor: React.FC = () => {
   const showCode = useSelector(getShowCode)
   const showLayout = useSelector(getShowLayout)
@@ -26,6 +41,31 @@ const Editor: React.FC = () => {
   const { drop } = useDropComponent('root')
   const isEmpty = !components.root.children.length
   const rootProps = components.root.props
+
+  const customComponents = useSelector(getCustomComponents)
+  const selectedComponent = useSelector(getSelectedCustomComponentId)
+  const [code, setCode] = useState<string | undefined>(undefined)
+
+  useEffect(() => {
+    const getCode = async () => {
+      const code = await generateCode(components, customComponents)
+      setCode(code)
+      if (selectedComponent !== undefined) {
+        let fileName = convertToPascal(customComponents[selectedComponent])
+        let previewCode = await generatePreview(components, fileName)
+        let panelCode = await generatePanel(components, fileName)
+        const response = await API.post('/save-file', {
+          codeBody: code,
+          jsonBody: components,
+          previewBody: previewCode,
+          panelBody: panelCode,
+          path: customComponents[selectedComponent],
+        })
+      }
+    }
+
+    getCode()
+  }, [components, selectedComponent])
 
   let editorBackgroundProps = {}
 
@@ -60,7 +100,8 @@ const Editor: React.FC = () => {
     >
       {isEmpty && (
         <Text maxWidth="md" color="gray.400" fontSize="xl" textAlign="center">
-          Drag some component to start coding without code! Or load{' '}
+          Create new components using the terminal to see them here. Click the edit button beside any component to load it!
+          {/* Or load{' '}
           <Link
             color="gray.500"
             onClick={(e: React.MouseEvent) => {
@@ -70,8 +111,7 @@ const Editor: React.FC = () => {
             textDecoration="underline"
           >
             the custom components
-          </Link>
-          .
+          </Link> */}
         </Text>
       )}
       {components.root.children.map((name: string) => (

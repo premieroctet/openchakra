@@ -38,6 +38,7 @@ import { generateComponentCode, formatCode } from '~utils/code'
 import useClipboard from '~hooks/useClipboard'
 import { useInspectorUpdate } from '~contexts/inspector-context'
 import { componentsList } from '~componentsList'
+import { getCustomComponentNames } from '~core/selectors/customComponents'
 
 const CodeActionButton = memo(() => {
   const [isLoading, setIsLoading] = useState(false)
@@ -80,6 +81,7 @@ const Inspector = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [componentName, onChangeComponentName] = useState('')
   const componentsNames = useSelector(getComponentNames)
+  const customComponentsNames = useSelector(getCustomComponentNames)
 
   const { clearActiveProps } = useInspectorUpdate()
 
@@ -105,6 +107,7 @@ const Inspector = () => {
 
   const isRoot = id === 'root'
   const parentIsRoot = component.parent === 'root'
+  const isCustom = customComponentsNames.includes(type)
 
   const docType = rootParentType || type
   const componentHasChildren = children.length > 0
@@ -186,7 +189,7 @@ const Inspector = () => {
       </Box>
 
       <Box pb={1} bg="white" px={3}>
-        <Panels component={component} isRoot={isRoot} />
+        <Panels component={component} isRoot={isRoot} isCustom={isCustom} />
       </Box>
 
       <StylesPanel

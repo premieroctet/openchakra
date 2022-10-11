@@ -70,6 +70,8 @@ import {
 } from '@chakra-ui/react'
 
 import iconsList from '~iconsList'
+import { useSelector } from 'react-redux'
+import { getCustomComponentNames } from '~core/selectors/customComponents'
 
 type PropsWithForm<T> = T & { form?: T }
 
@@ -150,6 +152,17 @@ type PreviewDefaultProps = {
   Skeleton?: PropsWithForm<SkeletonProps>
   SkeletonCircle?: PropsWithForm<SkeletonProps>
   SkeletonText?: PropsWithForm<SkeletonProps>
+}
+
+const CustomComponents = () => {
+  const customComponents = useSelector(getCustomComponentNames)
+  let customComponentsProps: any = {}
+  customComponents.forEach((element: string) => {
+    customComponentsProps[element] = {
+      // spread parameters here
+    }
+  })
+  return customComponents
 }
 
 export const DEFAULT_PROPS: PreviewDefaultProps | any = {
@@ -330,16 +343,7 @@ export const DEFAULT_PROPS: PreviewDefaultProps | any = {
     children: 'Tag name',
   },
   Text: { children: 'Text value' },
-  CC: {
-    children: 'Custom Button text',
-    variant: 'outline',
-    size: 'sm',
-  },
-  Sample: {
-    children: 'Custom Button text',
-    variant: 'outline',
-    size: 'sm',
-  },
+  // TODO: Construct Custom components with params and add here
 }
 
 export const getDefaultFormProps = (type: ComponentType) => {

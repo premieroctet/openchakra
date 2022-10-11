@@ -11,7 +11,6 @@ export default function filterActions(action: Action) {
       'components/deleteComponent',
       'components/moveComponent',
       'components/addMetaComponent',
-      'components/addCustomComponent',
       'components/moveSelectedComponentChildren',
       'components/duplicate',
     ].includes(action.type)

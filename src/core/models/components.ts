@@ -61,16 +61,19 @@ const components = createModel({
       },
     ) {
       return produce(state, (draftState: ComponentsState) => {
-        const index = draftState.components[payload.id].params.findIndex(
+        const index = draftState.components[payload.id].params?.findIndex(
           (item: any) => item.name === payload.name,
         )
-        if (index !== -1) {
+        if (index != undefined && index !== -1) {
+          // @ts-ignore
           draftState.components[payload.id].params[index].value = payload.value
+          // @ts-ignore
           draftState.components[payload.id].params[index].type = payload.type
+          // @ts-ignore
           draftState.components[payload.id].params[index].optional =
             payload.optional
         } else {
-          draftState.components[payload.id].params.push({
+          draftState.components[payload.id].params?.push({
             name: payload.name,
             value: payload.value,
             type: payload.type,
@@ -89,7 +92,7 @@ const components = createModel({
           ...state.components,
           [payload.id]: {
             ...state.components[payload.id],
-            params: state.components[payload.id].params.filter(
+            params: state.components[payload.id].params?.filter(
               (item: any) => item.name !== payload.name,
             ),
           },
@@ -217,20 +220,6 @@ const components = createModel({
       })
     },
     addMetaComponent(
-      state: ComponentsState,
-      payload: { components: IComponents; root: string; parent: string },
-    ): ComponentsState {
-      return produce(state, (draftState: ComponentsState) => {
-        draftState.selectedId = payload.root
-        draftState.components[payload.parent].children.push(payload.root)
-
-        draftState.components = {
-          ...draftState.components,
-          ...payload.components,
-        }
-      })
-    },
-    addCustomComponent(
       state: ComponentsState,
       payload: { components: IComponents; root: string; parent: string },
     ): ComponentsState {

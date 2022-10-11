@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, memo } from 'react'
+import React, { useState, ChangeEvent, memo, useEffect } from 'react'
 import {
   Box,
   Input,
@@ -16,13 +16,63 @@ import {
 import { CloseIcon, EditIcon, SearchIcon } from '@chakra-ui/icons'
 import DragItem from './DragItem'
 import { menuItems, MenuItem } from '~componentsList'
+import { useSelector } from 'react-redux'
 import {
-  cmenuItems,
-  CMenuItem,
-} from '../../custom-components/customComponentsList'
+  getCustomComponents,
+  getSelectedCustomComponentId,
+} from '~core/selectors/customComponents'
+import useDispatch from '~hooks/useDispatch'
+import API from '~custom-components/api'
 
 const Menu = () => {
   const [searchTerm, setSearchTerm] = useState('')
+  const dispatch = useDispatch()
+  const customComponents = useSelector(getCustomComponents)
+  const selectedComponent = useSelector(getSelectedCustomComponentId)
+
+  const getObjectDiff = (updatedList: Record<string, unknown>) => {
+    let deletedComponents = Object.keys(customComponents).filter(
+      component => !Object.keys(updatedList).includes(component),
+    )
+    let newComponents = Object.keys(updatedList).filter(
+      component => !Object.keys(customComponents).includes(component),
+    )
+    return {
+      deletedComponents: deletedComponents,
+      newComponents: newComponents,
+    }
+  }
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      const newComponentsList = await API.get('/refresh').then(res => res.data)
+      const componentDiffs = getObjectDiff(newComponentsList)
+        componentDiffs.deletedComponents.map(async component => {
+          const response = await API.post('/delete-file', {
+            path: customComponents[component],
+          })
+        })
+        componentDiffs.newComponents.map(async component => {
+          const response = await API.post('/init', {
+            path: newComponentsList[component],
+          })
+        })
+      dispatch.customComponents.updateCustomComponents(newComponentsList)
+    }, 3000)
+
+    return () => {
+      clearInterval(interval)
+    }
+  }, [customComponents])
+
+  const handleEditClick = async (name: string) => {
+    const response = await API.post('/read-json', {
+      path: customComponents[name],
+    })
+    dispatch.customComponents.select(name)
+    dispatch.components.reset(JSON.parse(response.data.content))
+  }
+
   return (
     <DarkMode>
       <Box
@@ -140,12 +190,11 @@ const Menu = () => {
             </TabPanel>
             <TabPanel>
               <Box p={0} pt={0}>
-                {(Object.keys(cmenuItems) as ComponentType[])
+                {(Object.keys(customComponents) as ComponentType[])
                   .filter(c =>
                     c.toLowerCase().includes(searchTerm.toLowerCase()),
                   )
                   .map(name => {
-                    const { custom } = cmenuItems[name] as CMenuItem
                     return (
                       <Flex
                         alignItems={'center'}
@@ -155,23 +204,26 @@ const Menu = () => {
                         <Box flex={1}>
                           <DragItem
                             key={name}
-                            custom={!!custom}
+                            custom={true}
                             label={name}
                             type={name}
                             id={name}
                             rootParentType={name}
+                            isSelected={name === selectedComponent}
                           >
                             {name}
                           </DragItem>
                         </Box>
-                        <IconButton aria-label="Edit" size="sm">
+                        <IconButton
+                          aria-label="Edit"
+                          size="sm"
+                          onClick={() => {
+                            handleEditClick(name)
+                          }}
+                          disabled={name === selectedComponent}
+                        >
                           <EditIcon
                             color="white"
-                            onClick={() => {
-                              console.log(
-                                'Disable this component and load json in editor.',
-                              )
-                            }}
                           />
                         </IconButton>
                       </Flex>

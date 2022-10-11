@@ -1,14 +1,16 @@
 import fs from 'fs'
 
 export default function handler(req, res) {
-    console.log(req.body);
-    console.log(process.cwd())
-    const fileName = req.body.path.split('/').slice(-1)[0]
-    let fileArray = fileName.split('-')
-    fileArray = fileArray.map((word) => {return `${word.slice(0, 1).toUpperCase()}${word.slice(1)}`})
-    const pascalName = fileArray.join('').slice(0, -8)
-    try {
-        fs.writeFileSync(`../../../../../../.oc/previews/${pascalName}Preview.oc.tsx`, `import React from 'react'
+  const fileName = req.body.path.split('/').slice(-1)[0]
+  let fileArray = fileName.split('-')
+  fileArray = fileArray.map(word => {
+    return `${word.slice(0, 1).toUpperCase()}${word.slice(1)}`
+  })
+  const pascalName = fileArray.join('')
+  try {
+    fs.writeFileSync(
+      `src/custom-components/editor/previews/${pascalName}Preview.oc.tsx`,
+      `import React from 'react'
         import { useDropComponent } from '~hooks/useDropComponent'
         import { useInteractive } from '~hooks/useInteractive'
         import { Box, Center, Button, Text } from '@chakra-ui/react'
@@ -59,25 +61,25 @@ export default function handler(req, res) {
           )
         }
         
-        export default ${pascalName}Preview`, (err) => {
-          if (err) throw err;
-          else{
-             console.log("The file is updated with the given data")
-          }
-       });
-        fs.writeFileSync(`../../../../../../.oc/panels/${pascalName}Panel.oc.tsx`, `import React, { memo } from 'react'
+        export default ${pascalName}Preview`,
+      err => {
+        if (err) throw err
+      },
+    )
+    fs.writeFileSync(
+      `src/custom-components/inspector/panels/components/${pascalName}Panel.oc.tsx`,
+      `import React, { memo } from 'react'
 
 const ${pascalName}Panel = () => {
   return <></>
 }
 
-export default memo(${pascalName}Panel)`, (err) => {
-          if (err) throw err;
-          else{
-            console.log("The file is updated with the given data")
-          }
-      });
-      } catch (err) {
-        console.log(err);
-      }
+export default memo(${pascalName}Panel)`,
+      err => {
+        if (err) throw err
+      },
+    )
+  } catch (err) {
+    console.log(err)
   }
+}
