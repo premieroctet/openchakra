@@ -64,7 +64,7 @@ export default async function handler(req, res) {
         
         export default ${pascalName}Preview`,
     )
-    const writePascal = fs.writeFile(
+    const writePanel = fs.writeFile(
       `src/custom-components/inspector/panels/components/${pascalName}Panel.oc.tsx`,
       `import React, { memo } from 'react'
 
