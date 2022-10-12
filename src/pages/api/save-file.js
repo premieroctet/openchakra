@@ -27,7 +27,7 @@ export default async function handler(req, res) {
       req.body.panelBody,
     )
     await Promise.all([writeCode, writeJson, writePreview, writePanel])
-    console.log('Wrote all files')
+    console.log('Files updated')
     res.status(200).json({})
   } catch (err) {
     console.log(err)

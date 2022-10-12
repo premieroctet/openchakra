@@ -75,7 +75,7 @@ const ${pascalName}Panel = () => {
 export default memo(${pascalName}Panel)`,
     )
     await Promise.all([writePreview, writePascal])
-    console.log('Wrote initial files')
+    console.log('Initial files written')
     res.status(200).json({})
   } catch (err) {
     console.log(err)
