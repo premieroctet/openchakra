@@ -8,76 +8,20 @@ export default async function handler(req, res) {
   })
   const pascalName = fileArray.join('')
   try {
-    console.log('Writing initial files...')
     const writePreview = fs.writeFile(
       `src/custom-components/editor/previews/${pascalName}Preview.oc.tsx`,
-      `import React from 'react'
-        import { useDropComponent } from '~hooks/useDropComponent'
-        import { useInteractive } from '~hooks/useInteractive'
-        import { Box, Center, Button, Text } from '@chakra-ui/react'
-        
-        interface Props {
-          component: IComponent;
-        }
-        
-        const ${pascalName}Preview = ({ component }: Props) => {
-          const { isOver } = useDropComponent(component.id)
-          const { props, ref } = useInteractive(component, true)
-        
-          if (isOver) {
-            props.bg = 'teal.50'
-          }
-        
-          return (
-            <Box {...props} ref={ref}>
-              <Center
-                display="flex"
-                flexDirection="column"
-                alignItems="center"
-                justifyContent="flex-start"
-                m={16}
-                p={8}
-                backgroundColor="cyan.100"
-                bgGradient="linear(to right, green.200,blue.500)"
-              >
-                <Text
-                  opacity={1}
-                  fontWeight="bold"
-                  fontSize="lg"
-                  letterSpacing="widest"
-                >
-                  Some text blah blah blah
-                </Text>
-                <Button
-                  variant="ghost"
-                  size="md"
-                  bgGradient="linear(to right, messenger.500,green.500)"
-                  borderRadius={100}
-                  border={20}
-                >
-                  Test button
-                </Button>
-              </Center>
-            </Box>
-          )
-        }
-        
-        export default ${pascalName}Preview`,
+      req.body.previewBody,
     )
     const writePanel = fs.writeFile(
       `src/custom-components/inspector/panels/components/${pascalName}Panel.oc.tsx`,
-      `import React, { memo } from 'react'
-
-const ${pascalName}Panel = () => {
-  return <></>
-}
-
-export default memo(${pascalName}Panel)`,
+      req.body.panelBody,
     )
-    await Promise.all([writePreview, writePascal])
-    console.log('Initial files written')
-    res.status(200).json({})
+    await Promise.all([writePreview, writePanel])
+    res.statusCode = 200
+    res.json({ message: 'success' })
   } catch (err) {
     console.log(err)
+    res.statusCode = 400
+    res.json({ message: 'bad request' })
   }
 }

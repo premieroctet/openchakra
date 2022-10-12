@@ -23,9 +23,11 @@ export default function handler(req, res) {
         if (err) throw err
       },
     )
-    console.log('Files deleted')
-    res.status(200).json({})
+    res.statusCode = 200
+    res.json({ message: 'success' })
   } catch (err) {
     console.log(err)
+    res.statusCode = 400
+    res.json({ message: 'bad request' })
   }
 }
