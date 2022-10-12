@@ -55,6 +55,7 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'Textarea',
   'Tab',
   'Table',
+  'Timer',
   'Accordion',
   'Editable',
   'AspectRatio',
