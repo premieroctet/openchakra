@@ -52,7 +52,7 @@ const ActionsPanel:React.FC = () => {
           ))}
         </Select>
       </FormControl>
-      {Object.keys(ACTIONS[action].options).map(k => {
+      {action && Object.keys(ACTIONS[action].options).map(k => {
         const optionValues=ACTIONS[action].options[k](optionsParams)
         return (
         <FormControl htmlFor={k} label={k}>
