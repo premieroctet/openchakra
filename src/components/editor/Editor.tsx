@@ -5,7 +5,12 @@ import SplitPane from 'react-split-pane'
 import CodePanel from '~components/CodePanel'
 import { useSelector } from 'react-redux'
 import useDispatch from '~hooks/useDispatch'
-import { generateCode, generatePreview, generatePanel } from '~utils/code'
+import {
+  generateCode,
+  generatePreview,
+  generatePanel,
+  generateOcTsxCode,
+} from '~utils/code'
 import API from '~custom-components/api'
 import { getComponents } from '~core/selectors/components'
 import {
@@ -49,13 +54,19 @@ const Editor: React.FC = () => {
   useEffect(() => {
     const getCode = async () => {
       const code = await generateCode(components, customComponents)
+      const ocTsxCode = await generateOcTsxCode(components, customComponents)
       setCode(code)
       if (selectedComponent !== undefined) {
         let fileName = convertToPascal(customComponents[selectedComponent])
-        let previewCode = await generatePreview(components, fileName, selectedComponent)
+        let previewCode = await generatePreview(
+          components,
+          fileName,
+          selectedComponent,
+        )
         let panelCode = await generatePanel(components, fileName)
         const response = await API.post('/save-file', {
           codeBody: code,
+          ocTsxBody: ocTsxCode,
           jsonBody: components,
           previewBody: previewCode,
           panelBody: panelCode,
@@ -100,7 +111,8 @@ const Editor: React.FC = () => {
     >
       {isEmpty && (
         <Text maxWidth="md" color="gray.400" fontSize="xl" textAlign="center">
-          Create new components using the terminal to see them here. Click the edit button beside any component to load it!
+          Create new components using the terminal to see them here. Click the
+          edit button beside any component to load it!
           {/* Or load{' '}
           <Link
             color="gray.500"

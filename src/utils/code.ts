@@ -274,10 +274,76 @@ export default App;`
   return await formatCode(code)
 }
 
+export const generateOcTsxCode = async (
+  components: IComponents,
+  currentComponents: CustomDictionary,
+) => {
+  let code = buildBlock({ component: components.root, components })
+  let componentsCodes = buildComponents(components)
+  const { paramTypes, params } = buildParams(components.root.params)
+  const iconImports = Array.from(new Set(getIconsImports(components)))
+
+  const imports = [
+    ...new Set(
+      Object.keys(components)
+        .filter(
+          name =>
+            name !== 'root' &&
+            !Object.keys(currentComponents).includes(components[name].type),
+        )
+        .map(name => components[name].type),
+    ),
+  ]
+
+  const customImports = [
+    ...new Set(
+      Object.keys(components)
+        .filter(
+          name =>
+            name !== 'root' &&
+            Object.keys(currentComponents).includes(components[name].type),
+        )
+        .map(
+          name =>
+            `import { ${convertToPascal(
+              currentComponents[components[name].type],
+            )} } from 'src/custom-components/test/${components[name].type};`,
+        ),
+    ),
+  ]
+
+  code = `import React from 'react';
+import {
+  ChakraProvider,
+  ${imports.join(',')}
+} from "@chakra-ui/react";${
+    iconImports.length
+      ? `
+import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
+      : ''
+  }
+
+  ${customImports.join(';')}
+
+type AppPropsTypes = ${paramTypes}
+
+${componentsCodes}
+
+const App = (${params}: AppPropsTypes) => (
+  <ChakraProvider resetCSS>
+    ${code}
+  </ChakraProvider>
+);
+
+export default App;`
+
+  return await formatCode(code)
+}
+
 export const generatePreview = async (
   components: IComponents,
   fileName: string,
-  selectedComponent?: string
+  selectedComponent?: string,
 ) => {
   let code = buildBlock({ component: components.root, components })
   let componentsCodes = buildComponents(components)
@@ -290,16 +356,16 @@ export const generatePreview = async (
   import { Box } from "@chakra-ui/react";
 
   ${
-    selectedComponent?
-    `import { ${fileName} } from 'src/custom-components/test/${selectedComponent}';`
-    :''
+    selectedComponent
+      ? `import { ${fileName} } from 'src/custom-components/test/${selectedComponent}';`
+      : ''
   }
   
   ${
-    iconImports.length ?
-    `
+    iconImports.length
+      ? `
   import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
-  : ''
+      : ''
   }  
 
   interface Props { 
@@ -317,7 +383,7 @@ export const generatePreview = async (
     ${paramsContent}
   
     return (<Box {...props} ref={ref}>
-      ${selectedComponent?`<${fileName} />`:''}
+      ${selectedComponent ? `<${fileName} />` : ''}
     </Box>)
   }
   

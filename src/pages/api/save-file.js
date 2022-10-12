@@ -28,7 +28,7 @@ export default async function handler(req, res) {
     )
     const writeOcTsx = fs.writeFile(
       `src/custom-components/test/${fileName}.oc.tsx`,
-      req.body.codeBody,
+      req.body.ocTsxBody,
     )
     await Promise.all([
       writeCode,
