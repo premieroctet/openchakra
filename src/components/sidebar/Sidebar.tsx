@@ -23,6 +23,7 @@ import {
 } from '~core/selectors/customComponents'
 import useDispatch from '~hooks/useDispatch'
 import API from '~custom-components/api'
+import components from '~core/models/components'
 
 const Menu = () => {
   const [searchTerm, setSearchTerm] = useState('')
@@ -59,6 +60,7 @@ const Menu = () => {
           path: newComponentsList[component],
         })
       })
+      const response = await API.post('/copy-file', customComponents)
       dispatch.customComponents.updateCustomComponents(newComponentsList)
     }, 3000)
 

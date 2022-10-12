@@ -26,7 +26,17 @@ export default async function handler(req, res) {
       `src/custom-components/inspector/panels/components/${pascalName}Panel.oc.tsx`,
       req.body.panelBody,
     )
-    await Promise.all([writeCode, writeJson, writePreview, writePanel])
+    const writeOcTsx = fs.writeFile(
+      `src/custom-components/test/${fileName}.oc.tsx`,
+      req.body.codeBody,
+    )
+    await Promise.all([
+      writeCode,
+      writeJson,
+      writePreview,
+      writePanel,
+      writeOcTsx,
+    ])
     console.log('Files updated')
     res.status(200).json({})
   } catch (err) {
