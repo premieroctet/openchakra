@@ -8,6 +8,7 @@ export default function handler(req, res) {
   })
   const pascalName = fileArray.join('')
   try {
+    console.log('Deleting files...')
     fs.rm(
       `src/custom-components/editor/previews/${pascalName}Preview.oc.tsx`,
       { recursive: true },
@@ -22,6 +23,8 @@ export default function handler(req, res) {
         if (err) throw err
       },
     )
+    console.log('Files deleted')
+    res.status(200).json({})
   } catch (err) {
     console.log(err)
   }
