@@ -23,7 +23,7 @@ import {
   Checkbox,
   useDisclosure,
 } from '@chakra-ui/react'
-import {getExtension, mediaWrapper} from '../../custom-components/Media/mediaWrapper'
+import {getExtension, mediaWrapper} from '~custom-components/Media/mediaWrapper'
 
 
 interface s3media {
@@ -179,8 +179,8 @@ const Medias = ({setMediaSrc, mediaPanelClose}:{setMediaSrc: any, mediaPanelClos
           {mediaWrapper({src: imgObj.publicUrl})}
           <p>{imgObj.Key}</p>
           {setMediaSrc && <Button colorScheme={'teal'} onClick={() => {
+            setMediaSrc('src', imgObj.publicUrl)
             mediaPanelClose && mediaPanelClose()
-            setMediaSrc(imgObj.publicUrl)
           }}>Select</Button>}
           </MediaCard>
         )
