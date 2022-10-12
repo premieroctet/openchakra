@@ -1,5 +1,6 @@
 import isBoolean from 'lodash/isBoolean'
 import filter from 'lodash/filter'
+import { partition } from 'lodash'
 import icons from '~iconsList'
 import { CustomDictionary } from '~core/models/customComponents'
 import { convertToPascal } from '~components/editor/Editor'
@@ -211,8 +212,6 @@ export const generateCode = async (
 ) => {
   let code = buildBlock({ component: components.root, components })
   let componentsCodes = buildComponents(components)
-  // let paramTypes = `{title: string, name: string}`
-  // let params = `{title="TITLE",name="NAME"}`
   const { paramTypes, params } = buildParams(components.root.params)
   const iconImports = Array.from(new Set(getIconsImports(components)))
 
@@ -278,33 +277,31 @@ export default App;`
 export const generatePreview = async (
   components: IComponents,
   fileName: string,
+  selectedComponent?: string
 ) => {
   let code = buildBlock({ component: components.root, components })
   let componentsCodes = buildComponents(components)
   const iconImports = Array.from(new Set(getIconsImports(components)))
   const paramsContent = destructureParams(components.root.params)
 
-  const imports = [
-    ...new Set(Object.keys(components).map(name => components[name].type)),
-  ]
-
   code = `import React from 'react'
   import { useDropComponent } from '~hooks/useDropComponent'
   import { useInteractive } from '~hooks/useInteractive'
+  import { Box } from "@chakra-ui/react";
+
   ${
-    imports.length
-      ? `import {
-      ${imports.join(',')}
-    } from "@chakra-ui/react";`
-      : ''
+    selectedComponent?
+    `import { ${fileName} } from 'src/custom-components/test/${selectedComponent}';`
+    :''
   }
-  ${
-    iconImports.length
-      ? `
-import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
-      : ''
-  }  
   
+  ${
+    iconImports.length ?
+    `
+  import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
+  : ''
+  }  
+
   interface Props { 
     component: IComponent
   }
@@ -319,11 +316,14 @@ import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
 
     ${paramsContent}
   
-    return (<Box {...props} ref={ref}>${code}</Box>)
+    return (<Box {...props} ref={ref}>
+      ${selectedComponent?`<${fileName} />`:''}
+    </Box>)
   }
   
   export default ${fileName}Preview`
 
+  console.log(code)
   code = await formatCode(code)
   return code
 }

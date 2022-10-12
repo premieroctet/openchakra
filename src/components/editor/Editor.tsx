@@ -52,7 +52,7 @@ const Editor: React.FC = () => {
       setCode(code)
       if (selectedComponent !== undefined) {
         let fileName = convertToPascal(customComponents[selectedComponent])
-        let previewCode = await generatePreview(components, fileName)
+        let previewCode = await generatePreview(components, fileName, selectedComponent)
         let panelCode = await generatePanel(components, fileName)
         const response = await API.post('/save-file', {
           codeBody: code,

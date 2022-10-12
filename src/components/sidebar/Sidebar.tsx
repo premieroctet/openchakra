@@ -60,7 +60,7 @@ const Menu = () => {
         })
         let components = JSON.parse(jsonResponse.data.content)
         let fileName = convertToPascal(newComponentsList[component])
-        let previewCode = await generatePreview(components, fileName)
+        let previewCode = await generatePreview(components, fileName, selectedComponent)
         let panelCode = await generatePanel(components, fileName)
         const response = await API.post('/init', {
           path: newComponentsList[component],
