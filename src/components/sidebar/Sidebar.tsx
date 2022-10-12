@@ -47,16 +47,18 @@ const Menu = () => {
     const interval = setInterval(async () => {
       const newComponentsList = await API.get('/refresh').then(res => res.data)
       const componentDiffs = getObjectDiff(newComponentsList)
-        componentDiffs.deletedComponents.map(async component => {
-          const response = await API.post('/delete-file', {
-            path: customComponents[component],
-          })
+      componentDiffs.deletedComponents.map(async component => {
+        // TODO: Enhancement - call delete api once only and pass all paths.
+        const response = await API.post('/delete-file', {
+          path: customComponents[component],
         })
-        componentDiffs.newComponents.map(async component => {
-          const response = await API.post('/init', {
-            path: newComponentsList[component],
-          })
+      })
+      componentDiffs.newComponents.map(async component => {
+        // TODO: Enhancement - call init api once only and pass all paths.
+        const response = await API.post('/init', {
+          path: newComponentsList[component],
         })
+      })
       dispatch.customComponents.updateCustomComponents(newComponentsList)
     }, 3000)
 
@@ -222,9 +224,7 @@ const Menu = () => {
                           }}
                           disabled={name === selectedComponent}
                         >
-                          <EditIcon
-                            color="white"
-                          />
+                          <EditIcon color="white" />
                         </IconButton>
                       </Flex>
                     )
