@@ -3,14 +3,14 @@ import React from 'react'
 export const getExtension = (filename: string) => filename.substring(filename.lastIndexOf('.') + 1, filename.length) ||
 filename
 
-export const mediaWrapper = ({src, ...props}:{src: string}) => {
+export const mediaWrapper = ({src, htmlHeight, htmlWidth, ...props}:{src: string, htmlHeight?: string, htmlWidth?: string}) => {
 
   // const {htmlWidth, htmlHeight} = props
   
   /* TODO assign type to htmlWidth, htmlHeight */
   const document = {
-    width: "100%",
-    height: "100%"
+    width: htmlWidth || "100%",
+    height: htmlHeight || "100%",
   }
 
   const isVideoProvider = (src: string) => {
@@ -46,8 +46,8 @@ export const mediaWrapper = ({src, ...props}:{src: string}) => {
         return <iframe
         title={src}
         src={src}
-        width={'980px'}
-        height={'980px'}
+        width={htmlWidth}
+        height={htmlHeight}
         allowFullScreen
       >
       </iframe>  

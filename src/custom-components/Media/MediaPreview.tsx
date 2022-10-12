@@ -2,7 +2,7 @@ import React from 'react'
 import { useDropComponent } from '~hooks/useDropComponent'
 import { useInteractive } from '~hooks/useInteractive'
 import { Box } from '@chakra-ui/react'
-import { mediaWrapper } from './mediaWrapper'
+import Media from './Media'
 
 const MediaPreview: React.FC<IPreviewProps> = ({ component }) => {
   
@@ -14,8 +14,8 @@ const MediaPreview: React.FC<IPreviewProps> = ({ component }) => {
   }
 
   return (
-    <Box pos="relative" ref={drop(ref)} {...props}>
-      {props.src ? mediaWrapper({src: props.src, ...props}) : <div>Source needed</div>}
+    <Box pos="relative"  {...props}>
+      <Media ref={drop(ref)} src={props.src} {...props} />
     </Box>
   )
 }
