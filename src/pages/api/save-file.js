@@ -28,8 +28,11 @@ export default async function handler(req, res) {
     )
     await Promise.all([writeCode, writeJson, writePreview, writePanel])
     console.log('Files updated')
-    res.status(200).json({})
+    res.statusCode = 200
+    res.json({ message: 'success' })
   } catch (err) {
     console.log(err)
+    res.statusCode = 400
+    res.json({ message: 'bad request' })
   }
 }
