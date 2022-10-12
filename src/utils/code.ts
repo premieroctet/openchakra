@@ -307,7 +307,7 @@ export const generateOcTsxCode = async (
           name =>
             `import { ${convertToPascal(
               currentComponents[components[name].type],
-            )} } from 'src/custom-components/test/${components[name].type};`,
+            )} } from 'src/custom-components/test/${components[name].type}';`,
         ),
     ),
   ]
