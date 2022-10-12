@@ -49,24 +49,23 @@ const Menu = () => {
     const interval = setInterval(async () => {
       const newComponentsList = await API.get('/refresh').then(res => res.data)
       const componentDiffs = getObjectDiff(newComponentsList)
-        componentDiffs.deletedComponents.map(async component => {
-          const response = await API.post('/delete-file', {
-            path: customComponents[component],
-          })
+      componentDiffs.deletedComponents.map(async component => {
+        const response = await API.post('/delete-file', {
+          path: customComponents[component],
         })
-        componentDiffs.newComponents.map(async component => {
-          const jsonResponse = await API.post('/read-json', {
-            path: newComponentsList[component],
-          })
-          let components = JSON.parse(jsonResponse.data.content)
-          let fileName = convertToPascal(newComponentsList[component])
-          let previewCode = await generatePreview(components, fileName)
-          let panelCode = await generatePanel(components, fileName)
-          const response = await API.post('/init', {
-            path: newComponentsList[component],
-            previewBody: previewCode,
-            panelBody: panelCode,
-          })
+      })
+      componentDiffs.newComponents.map(async component => {
+        const jsonResponse = await API.post('/read-json', {
+          path: newComponentsList[component],
+        })
+        let components = JSON.parse(jsonResponse.data.content)
+        let fileName = convertToPascal(newComponentsList[component])
+        let previewCode = await generatePreview(components, fileName)
+        let panelCode = await generatePanel(components, fileName)
+        const response = await API.post('/init', {
+          path: newComponentsList[component],
+          previewBody: previewCode,
+          panelBody: panelCode,
         })
       })
       const response = await API.post('/copy-file', newComponentsList)
