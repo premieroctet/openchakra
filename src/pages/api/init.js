@@ -1,6 +1,6 @@
-import fs from 'fs'
+import { promises as fs } from 'fs'
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   const fileName = req.body.path.split('/').slice(-1)[0]
   let fileArray = fileName.split('-')
   fileArray = fileArray.map(word => {
@@ -8,7 +8,8 @@ export default function handler(req, res) {
   })
   const pascalName = fileArray.join('')
   try {
-    fs.writeFileSync(
+    console.log('Writing initial files...')
+    const writePreview = fs.writeFile(
       `src/custom-components/editor/previews/${pascalName}Preview.oc.tsx`,
       `import React from 'react'
         import { useDropComponent } from '~hooks/useDropComponent'
@@ -62,11 +63,8 @@ export default function handler(req, res) {
         }
         
         export default ${pascalName}Preview`,
-      err => {
-        if (err) throw err
-      },
     )
-    fs.writeFileSync(
+    const writePascal = fs.writeFile(
       `src/custom-components/inspector/panels/components/${pascalName}Panel.oc.tsx`,
       `import React, { memo } from 'react'
 
@@ -75,10 +73,10 @@ const ${pascalName}Panel = () => {
 }
 
 export default memo(${pascalName}Panel)`,
-      err => {
-        if (err) throw err
-      },
     )
+    await Promise.all([writePreview, writePascal])
+    console.log('Wrote initial files')
+    res.status(200).json({})
   } catch (err) {
     console.log(err)
   }
