@@ -140,6 +140,9 @@ const buildBlock = ({
         if (childComponent.type === 'Icon') {
           return propName !== 'icon'
         }
+        if (propName === 'actionProps') {
+          return false
+        }
 
         return true
       })

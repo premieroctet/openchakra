@@ -1,11 +1,9 @@
 import { Accordion, Input, Select } from '@chakra-ui/react';
 import { useSelector } from 'react-redux'
 import React, { useState, useEffect, memo } from 'react'
-
 import { getDataProviders, getAvailableAttributes, CONTAINER_TYPE } from '~utils/dataSources'
 import {getModels, getModelAttributes} from '~core/selectors/dataSources'
 import AccordionContainer from '~components/inspector/AccordionContainer'
-
 import { ACTIONS } from '../../../utils/actions';
 import {
   getComponents,
@@ -18,10 +16,22 @@ import usePropsSelector from '../../../hooks/usePropsSelector'
 
 
 const ActionsPanel:React.FC = () => {
-  const { setValueFromEvent } = useForm()
+  const { setValueFromEvent, setValue } = useForm()
   const action = usePropsSelector('action')
+  const actionProps = usePropsSelector('actionProps')
   const redirectTo = usePropsSelector('redirectTo')
   const pages = useSelector(getPages)
+  const models=useSelector(getModels)
+  const components=useSelector(getComponents)
+
+  const optionsParams={pages, models, components: Object.values(components)}
+
+  const onActionPropChange = ev => {
+    const {name, value}=ev.target
+    console.log(`Before:${JSON.stringify(actionProps)}`)
+    setValue('actionProps', {...actionProps, [name]: value})
+    console.log(`After:${JSON.stringify(actionProps)}`)
+  }
 
   return (
     <Accordion >
@@ -41,9 +51,29 @@ const ActionsPanel:React.FC = () => {
             </option>
           ))}
         </Select>
+      </FormControl>
+      {Object.keys(ACTIONS[action].options).map(k => {
+        const optionValues=ACTIONS[action].options[k](optionsParams)
+        return (
+        <FormControl htmlFor={k} label={k}>
+          <Select
+            id={k}
+            onChange={onActionPropChange}
+            name={k}
+            size="sm"
+            value={actionProps[k] || ''}
+          >
+            <option value={null}></option>
+            {optionValues.map(optionValue => (
+              <option value={optionValue.key}>
+                {optionValue.label}
+              </option>
+            ))}
+          </Select>
         </FormControl>
-        {false &&
-        <FormControl htmlFor="redirectTo" label="Redirect if success">
+      )})}
+      {false &&
+      <FormControl htmlFor="redirectTo" label="Redirect if success">
         <Select
           id="redirectTo"
           onChange={setValueFromEvent}

@@ -1,64 +1,62 @@
 export const ACTIONS={
   'create': {
-    label: 'Créer nouvelle donnée',
+    label: 'Create new data',
     options:{
-      model: ({models}) => models.map(m => ({key:m, value: m})),
+      model: ({models}) => models.map(m => ({key:m.name, label: m.name})),
     }
   },
   'login': {
-    label: 'Connexion',
+    label: 'Login',
     options:{
-      source: ({components}) => components.map(c => ({key: c.id, value: c.id})),
+      source: ({components}) => components.map(c => ({key: c.id, label: c.id})),
     }
   },
   'openPage': {
-    label: 'Ouvrir une page',
+    label: 'Open page',
     options: {
-      page: ({pages}) => pages.map(p => ({key: p.pageId, value: p.pageName})),
+      page: ({pages}) => Object.values(pages).map(p => ({key: p.pageId, label: p.pageName})),
     }
   },
   'levelUp': {
-    label: "Monter",
+    label: "One level up",
     options: {
-      data: ({components}) => components.map(p => ({key: p.pageId, value: p.pageName})),
-      parent: ({components}) => components.map(p => ({key: p.pageId, value: p.pageName})),
+      data: ({components}) => components.map(p => ({key: p.id, label: p.id})),
     }
   },
   'levelDown': {
-    label: "Descendre",
+    label: "One level down",
     options: {
-      data: ({components}) => components.map(p => ({key: p.pageId, value: p.pageName})),
-      parent: ({components}) => components.map(p => ({key: p.pageId, value: p.pageName})),
+      data: ({components}) => components.map(p => ({key: p.id, label: p.id})),
     }
   },
   'previous': {
-    label: "Précédent",
+    label: "Previous",
     options: {
-      data: ({components}) => components.map(p => ({key: p.pageId, value: p.pageName})),
+      data: ({components}) => components.map(p => ({key: p.id, label: p.id})),
     }
   },
   'next': {
-    label: "Suivant",
+    label: "Next",
     options: {
-      data: ({components}) => components.map(p => ({key: p.pageId, value: p.pageName})),
+      data: ({components}) => components.map(p => ({key: p.id, label: p.id})),
     }
   },
   'publishProgram': {
-    label: "Rendre programme disponible",
+    label: "Publish",
     options: {
-      data: ({components}) => components.map(p => ({key: p.pageId, value: p.pageName})),
+      data: ({components}) => components.map(p => ({key: p.id, label: p.id})),
     }
   },
   'delete': {
-    label: 'Supprimer',
+    label: 'Delete',
     options: {
-      data: ({components}) => components.map(p => ({key: p.pageId, value: p.pageName})),
+      data: ({components}) => components.map(p => ({key: p.id, label: p.id})),
     }
   },
   'gotoSession': {
-    label: 'Retour à la session',
+    label: 'Back to session',
     options: {
-      data: ({components}) => components.map(p => ({key: p.pageId, value: p.pageName})),
+      data: ({components}) => components.map(p => ({key: p.id, label: p.id})),
     }
   }
 }
