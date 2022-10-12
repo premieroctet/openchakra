@@ -25,6 +25,7 @@ const deployComponents = (state: ProjectState, toast: any) => {
       })
     })
     .catch(err => {
+      console.error(err)
       toast({
         title: 'Error while publishing',
         description: String(err),

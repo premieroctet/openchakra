@@ -36,7 +36,6 @@ export const getPageUrl = (
   pageId: string,
   pages: { [key: string]: PageState },
 ) => {
-  console.log(`PageId:${pageId}, pages:${Object.keys(pages)}`)
   return pages[pageId].pageName.toLowerCase().replace(/ /i, '-')
 }
 

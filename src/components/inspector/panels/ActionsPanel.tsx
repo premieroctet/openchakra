@@ -37,11 +37,12 @@ const ActionsPanel:React.FC = () => {
           <option value={null}></option>
           {Object.keys(ACTIONS).map(action => (
             <option value={action}>
-              {action}
+              {ACTIONS[action].label}
             </option>
           ))}
         </Select>
         </FormControl>
+        {false &&
         <FormControl htmlFor="redirectTo" label="Redirect if success">
         <Select
           id="redirectTo"
@@ -58,6 +59,7 @@ const ActionsPanel:React.FC = () => {
           ))}
         </Select>
       </FormControl>
+    }
     </AccordionContainer>
     </Accordion>
   )
