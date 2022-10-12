@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react'
+import React, { memo } from 'react'
 import { 
   Button,
   Input, 
@@ -15,23 +15,21 @@ import usePropsSelector from '~hooks/usePropsSelector'
 import Medias from '~components/medias/Medias'
 
 
-
 const MediaPanel = () => {
 
-  const { setValueFromEvent } = useForm()
+  const { setValueFromEvent, setValue } = useForm()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const src = usePropsSelector('src')
   const alt = usePropsSelector('alt')
   const htmlHeight = usePropsSelector('htmlHeight')
   const htmlWidth = usePropsSelector('htmlWidth')
-  const [mediaSrc, setMediaSrc] = useState(null)
 
   return (
     <>
        <FormControl label="Source" htmlFor="src">
         <Input
           placeholder="Media URL"
-          value={mediaSrc || src || ''}
+          value={src || ''}
           size="sm"
           name="src"
           onChange={setValueFromEvent}
@@ -71,7 +69,7 @@ const MediaPanel = () => {
         <ModalContent minW={'60vw'} maxH={'90vh'} overflowY={'scroll'}>
           <ModalCloseButton />
           <ModalBody display={'flex'} flexDirection={'column'}>
-          <Medias setMediaSrc={setMediaSrc} mediaPanelClose={onClose}/>
+          <Medias setMediaSrc={setValue} mediaPanelClose={onClose}/>
           </ModalBody>
         </ModalContent>
       </Modal>
