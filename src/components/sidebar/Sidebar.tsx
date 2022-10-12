@@ -68,6 +68,8 @@ const Menu = () => {
             panelBody: panelCode,
           })
         })
+      })
+      const response = await API.post('/copy-file', newComponentsList)
       dispatch.customComponents.updateCustomComponents(newComponentsList)
     }, 3000)
     return () => {
