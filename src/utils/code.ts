@@ -36,7 +36,13 @@ export const getPageUrl = (
   pageId: string,
   pages: { [key: string]: PageState },
 ) => {
-  return pages[pageId].pageName.toLowerCase().replace(/ /i, '-')
+  try {
+    return pages[pageId].pageName.toLowerCase().replace(/ /i, '-')
+  }
+  catch(err) {
+    console.error(`getPageUrl ${pageId}:${err}`)
+    throw err
+  }
 }
 
 export const getPageComponentName = (
@@ -150,8 +156,14 @@ const buildBlock = ({
           const propsValueAsObject = typeof propsValue === 'object'
 
           if (propName=='actionProps') {
-            propsValue.page = propsValue.page && getPageUrl(propsValue.page, pages) || undefined
-            propsContent += ` actionProps='${JSON.stringify(propsValue)}'`
+            if (propsValue.page) {
+              console.log(`Page:${propsValue.page}`)
+            }
+            const valuesCopy={
+              ...propsValue,
+              page: propsValue.page ? getPageUrl(propsValue.page, pages) : undefined
+            }
+            propsContent += ` actionProps='${JSON.stringify(valuesCopy)}'`
             propsContent += ` backend='${config.targetDomain}'`
             return
           }
