@@ -35,7 +35,6 @@ export const useDropComponent = (
           parentName: componentId,
           type: item.type,
           rootParentType: item.rootParentType,
-          custom: !!item.custom,
         })
       }
     },

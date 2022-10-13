@@ -207,7 +207,6 @@ const components = createModel({
         type: ComponentType
         rootParentType?: ComponentType
         testId?: string
-        custom: boolean
       },
     ): ComponentsState {
       return produce(state, (draftState: ComponentsState) => {

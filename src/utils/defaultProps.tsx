@@ -71,7 +71,6 @@ import {
 
 import iconsList from '~iconsList'
 import { useSelector } from 'react-redux'
-import { getCustomComponentNames } from '~core/selectors/customComponents'
 
 type PropsWithForm<T> = T & { form?: T }
 
