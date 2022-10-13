@@ -523,27 +523,28 @@ export const generatePanel = async (
         }),
     ),
   ]
+  let eligibleParams = components.root.params?.filter(param => param.exposed)
 
   let panelCode = `import React, { memo } from 'react'
   ${
-    components.root.params?.some(
+    eligibleParams?.some(
       param => param.type === 'string' || param.type === 'number',
     )
       ? `import TextControl from '~components/inspector/controls/TextControl'`
       : ''
   }
   ${
-    components.root.params?.some(param => param.type === 'boolean')
+    eligibleParams?.some(param => param.type === 'boolean')
       ? `import SwitchControl from '~components/inspector/controls/SwitchControl'`
       : ''
   }
   ${
-    components.root.params?.some(param => param.type === 'color')
+    eligibleParams?.some(param => param.type === 'color')
       ? `import ColorsControl from '~components/inspector/controls/ColorsControl'`
       : ''
   }
   ${
-    components.root.params?.some(param => param.type === 'display')
+    eligibleParams?.some(param => param.type === 'display')
       ? `import FormControl from '~components/inspector/controls/FormControl'
   import { useForm } from '~hooks/useForm'
   import usePropsSelector from '~hooks/usePropsSelector'
@@ -551,14 +552,14 @@ export const generatePanel = async (
       : ''
   }
   ${
-    components.root.params?.some(param => param.type === 'icon')
+    eligibleParams?.some(param => param.type === 'icon')
       ? `import IconControl from '~components/inspector/controls/IconControl'`
       : ''
   }
   
   const ${fileName}Panel = () => {
     ${
-      components.root.params?.some(param => param.type === 'display')
+      eligibleParams?.some(param => param.type === 'display')
         ? `const { setValueFromEvent } = useForm()
   ${displayProps.join('\n')}`
         : ''
@@ -566,29 +567,29 @@ export const generatePanel = async (
     return (
     <>
     ${
-      components.root.params?.some(
+      eligibleParams?.some(
         param => param.type === 'string' || param.type === 'number',
       )
         ? `${textControls.join('')}`
         : ''
     }
     ${
-      components.root.params?.some(param => param.type === 'boolean')
+      eligibleParams?.some(param => param.type === 'boolean')
         ? `${switchControls.join('')}`
         : ''
     }
     ${
-      components.root.params?.some(param => param.type === 'color')
+      eligibleParams?.some(param => param.type === 'color')
         ? `${colorsControls.join('')}`
         : ''
     }
     ${
-      components.root.params?.some(param => param.type === 'icon')
+      eligibleParams?.some(param => param.type === 'icon')
         ? `${iconControls.join('')}`
         : ''
     }
     ${
-      components.root.params?.some(param => param.type === 'display')
+      eligibleParams?.some(param => param.type === 'display')
         ? `${displayControls.join('\n')}`
         : ''
     }

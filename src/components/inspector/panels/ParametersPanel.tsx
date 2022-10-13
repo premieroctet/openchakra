@@ -18,7 +18,6 @@ import {
   MenuList,
   MenuItem,
   Tooltip,
-  InputRightElement,
   InputRightAddon,
 } from '@chakra-ui/react'
 import {
@@ -173,8 +172,8 @@ const ParametersPanel = () => {
             >
               optional
               <Tooltip
-                label="Is this parameter optional?"
-                fontSize="md"
+                label="Make parameter optional (?)"
+                fontSize="sm"
                 hasArrow
               >
                 <InfoOutlineIcon color="teal.300" w={3} h={3} ml={1} />
@@ -193,11 +192,7 @@ const ParametersPanel = () => {
               }}
             >
               expose
-              <Tooltip
-                label="Is this parameter exposed?"
-                fontSize="md"
-                hasArrow
-              >
+              <Tooltip label="Expose this parameter(*)" fontSize="sm" hasArrow>
                 <InfoOutlineIcon color="teal.300" w={3} h={3} ml={1} />
               </Tooltip>
             </Checkbox>
@@ -215,7 +210,7 @@ const ParametersPanel = () => {
       </form>
 
       {customParams &&
-        customParams?.map((paramsName: any, i: any) => (
+        customParams?.map((paramsName: ParametersType, i: any) => (
           <>
             <SimpleGrid
               width="100%"
@@ -243,6 +238,7 @@ const ParametersPanel = () => {
                 <Box fontWeight="bold">
                   {paramsName.name}
                   {paramsName.optional && '?'}
+                  {paramsName.exposed && '*'}
                 </Box>
                 <Box fontStyle="italic">{paramsName.type}</Box>
                 <Box>{paramsName.value}</Box>
