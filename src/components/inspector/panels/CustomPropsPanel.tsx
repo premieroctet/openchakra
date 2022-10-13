@@ -92,18 +92,19 @@ const CustomPropsPanel = () => {
             ml={1}
           />
         </InputGroup>
-        <Box display="flex" justifyContent="flex-end">
+        <Flex>
           <Button
             mr={0}
             type="submit"
             size="xs"
             variant="outline"
             mt={0.5}
+            width="100%"
             bgColor="lightblue"
           >
             Add
           </Button>
-        </Box>
+        </Flex>
       </form>
 
       {customProps.map((propsName, i) => (

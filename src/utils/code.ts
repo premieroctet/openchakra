@@ -383,7 +383,7 @@ export const generatePreview = async (
     ${paramsContent}
   
     return (<Box {...props} ref={ref}>
-      ${selectedComponent ? `<${fileName} />` : ''}
+      ${selectedComponent ? `<${fileName}  {...props}/>` : ''}
     </Box>)
   }
   

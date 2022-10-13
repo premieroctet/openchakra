@@ -201,7 +201,7 @@ const ParametersPanel = () => {
             type="submit"
             size="xs"
             variant="outline"
-            mt={0.5}
+            my={0.5}
             bgColor="lightblue"
           >
             Add
@@ -209,65 +209,59 @@ const ParametersPanel = () => {
         </Flex>
       </form>
 
-      {customParams &&
-        customParams?.map((paramsName: ParametersType, i: any) => (
-          <>
-            <SimpleGrid
-              width="100%"
-              columns={4}
-              spacing={1}
-              bgColor="yellow.100"
-            >
-              <Box fontSize="sm" fontWeight="bold" pl={1}>
-                Name
-              </Box>
-              <Box fontSize="sm" fontStyle="italic">
-                Type
-              </Box>
-              <Box fontSize="sm">Value</Box>
-            </SimpleGrid>
-            <Flex
-              key={paramsName.name}
-              alignItems="center"
-              px={2}
-              bg={i % 2 === 0 ? 'white' : 'gray.50'}
-              fontSize="xs"
-              justifyContent="space-between"
-            >
-              <SimpleGrid width="100%" columns={3} spacing={1}>
-                <Box fontWeight="bold">
-                  {paramsName.name}
-                  {paramsName.optional && '?'}
-                  {paramsName.exposed && '*'}
-                </Box>
-                <Box fontStyle="italic">{paramsName.type}</Box>
-                <Box>{paramsName.value}</Box>
-              </SimpleGrid>
+      {customParams && (
+        <SimpleGrid width="100%" columns={4} spacing={1} bgColor="yellow.100">
+          <Box fontSize="sm" fontWeight="bold" pl={1}>
+            Name
+          </Box>
+          <Box fontSize="sm" fontStyle="italic">
+            Type
+          </Box>
+          <Box fontSize="sm">Value</Box>
+        </SimpleGrid>
+      )}
+      {customParams?.map((paramsName: ParametersType, i: any) => (
+        <Flex
+          key={paramsName.name}
+          alignItems="center"
+          px={2}
+          bg={i % 2 === 0 ? 'white' : 'gray.50'}
+          fontSize="xs"
+          justifyContent="space-between"
+        >
+          <SimpleGrid width="100%" columns={3} spacing={1}>
+            <Box fontWeight="bold">
+              {paramsName.name}
+              {paramsName.optional && '?'}
+              {paramsName.exposed && '*'}
+            </Box>
+            <Box fontStyle="italic">{paramsName.type}</Box>
+            <Box>{paramsName.value}</Box>
+          </SimpleGrid>
 
-              <ButtonGroup display="flex" size="xs" isAttached>
-                <IconButton
-                  onClick={() => {
-                    setQuickParams(paramsName)
-                    if (inputRef.current) {
-                      inputRef.current.focus()
-                    }
-                  }}
-                  variant="ghost"
-                  size="xs"
-                  aria-label="edit"
-                  icon={<EditIcon path="" />}
-                />
-                <IconButton
-                  onClick={() => onDelete(paramsName.name)}
-                  variant="ghost"
-                  size="xs"
-                  aria-label="delete"
-                  icon={<SmallCloseIcon path="" />}
-                />
-              </ButtonGroup>
-            </Flex>
-          </>
-        ))}
+          <ButtonGroup display="flex" size="xs" isAttached>
+            <IconButton
+              onClick={() => {
+                setQuickParams(paramsName)
+                if (inputRef.current) {
+                  inputRef.current.focus()
+                }
+              }}
+              variant="ghost"
+              size="xs"
+              aria-label="edit"
+              icon={<EditIcon path="" />}
+            />
+            <IconButton
+              onClick={() => onDelete(paramsName.name)}
+              variant="ghost"
+              size="xs"
+              aria-label="delete"
+              icon={<SmallCloseIcon path="" />}
+            />
+          </ButtonGroup>
+        </Flex>
+      ))}
     </>
   )
 }
