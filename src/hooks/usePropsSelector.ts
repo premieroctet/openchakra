@@ -3,12 +3,14 @@ import { RootState } from '~core/store'
 import { getDefaultFormProps } from '~utils/defaultProps'
 import { useInspectorUpdate } from '~contexts/inspector-context'
 import { useEffect } from 'react'
+import { getCustomComponentParameters } from '~core/selectors/customComponents'
 
 const usePropsSelector = (propsName: string) => {
   const { addActiveProps } = useInspectorUpdate()
+  const params = useSelector(getCustomComponentParameters)
 
   useEffect(() => {
-    // Register form props name for custom props panel
+    // TODO: Register form props name for custom props panel
     addActiveProps(propsName)
   }, [addActiveProps, propsName])
 
@@ -24,6 +26,11 @@ const usePropsSelector = (propsName: string) => {
     if (getDefaultFormProps(component.type)[propsName] !== undefined) {
       return getDefaultFormProps(component.type)[propsName]
     }
+
+    const defaultCustomValue = params[component.type]?.filter(
+      param => param.name === propsName,
+    )[0].value
+    if (defaultCustomValue) return defaultCustomValue
 
     return ''
   })

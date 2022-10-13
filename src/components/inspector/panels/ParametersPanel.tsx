@@ -17,10 +17,18 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  Tooltip,
+  InputRightAddon,
 } from '@chakra-ui/react'
-import { ChevronDownIcon, EditIcon, SmallCloseIcon } from '@chakra-ui/icons'
+import {
+  ChevronDownIcon,
+  EditIcon,
+  InfoOutlineIcon,
+  SmallCloseIcon,
+} from '@chakra-ui/icons'
 import useDispatch from '~hooks/useDispatch'
 import { useParamsForm } from '~hooks/useParamsForm'
+import { getSelectedCustomComponentId } from '~core/selectors/customComponents'
 
 const ParametersPanel = () => {
   const dispatch = useDispatch()
@@ -28,18 +36,15 @@ const ParametersPanel = () => {
 
   const activeParamsRef = useInspectorState()
   const params = useSelector(getComponentParams)
+  const customComponentName = useSelector(getSelectedCustomComponentId)
   const { setValue } = useParamsForm()
 
-  const DEFAULT_PARAMS: {
-    name: string
-    value: any
-    type: string
-    optional: boolean
-  } = {
+  const DEFAULT_PARAMS: ParametersType = {
     name: '',
     value: '',
     type: '',
     optional: false,
+    exposed: false,
   }
   const [quickParams, setQuickParams] = useState(DEFAULT_PARAMS)
   const [hasError, setError] = useState(false)
@@ -49,6 +54,11 @@ const ParametersPanel = () => {
       id: 'root',
       name: paramsName,
     })
+    if (customComponentName)
+      dispatch.customComponents.deleteParams({
+        id: customComponentName,
+        name: paramsName,
+      })
   }
 
   const activeParams = activeParamsRef || []
@@ -67,6 +77,7 @@ const ParametersPanel = () => {
               quickParams.value,
               quickParams.type,
               quickParams.optional,
+              quickParams.exposed,
             )
             setQuickParams(DEFAULT_PARAMS)
             setError(false)
@@ -75,26 +86,21 @@ const ParametersPanel = () => {
           }
         }}
       >
-        <InputGroup mb={3} size="sm">
-          <Flex direction="column">
-            <Flex direction="row">
-              <Input
-                mb={1}
-                isInvalid={hasError}
-                value={quickParams.type}
-                placeholder={`type`}
-                onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                  setQuickParams({ ...quickParams, type: event.target.value })
-                }
-              />
+        <Flex direction="column">
+          <InputGroup size="sm">
+            <Input
+              mb={1}
+              isInvalid={hasError}
+              value={quickParams.type}
+              placeholder={`type`}
+              onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                setQuickParams({ ...quickParams, type: event.target.value })
+              }
+            />
+
+            <InputRightAddon>
               <Menu>
-                <MenuButton
-                  p={1}
-                  m={1}
-                  borderRadius="md"
-                  borderWidth="1px"
-                  type="button"
-                >
+                <MenuButton type="button">
                   <ChevronDownIcon />
                 </MenuButton>
                 <MenuList>
@@ -128,65 +134,93 @@ const ParametersPanel = () => {
                   </MenuItem>
                 </MenuList>
               </Menu>
-            </Flex>
-            <Flex direction="row">
-              <Input
-                ref={inputRef}
-                mr={0.5}
-                isInvalid={hasError}
-                value={quickParams.name}
-                placeholder={`name`}
-                onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                  setQuickParams({ ...quickParams, name: event.target.value })
-                }
-              />
-              <Input
-                ml={0.5}
-                isInvalid={hasError}
-                value={quickParams.value}
-                placeholder={`value`}
-                onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                  setQuickParams({ ...quickParams, value: event.target.value })
-                }
-              />
-            </Flex>
-            <Flex direction="row">
-              <Checkbox
-                size="md"
-                isChecked={quickParams.optional}
-                onChange={event => {
-                  setQuickParams({
-                    ...quickParams,
-                    optional: event.target.checked,
-                  })
-                }}
-              >
-                optional?
-              </Checkbox>
-              <Spacer />
-              <Button
-                type="submit"
-                size="sm"
-                variant="outline"
-                mt={0.5}
-                bgColor="lightblue"
-              >
-                Add
-              </Button>
-            </Flex>
+            </InputRightAddon>
+          </InputGroup>
+          <Flex direction="row">
+            <Input
+              ref={inputRef}
+              mr={0.5}
+              size="sm"
+              isInvalid={hasError}
+              value={quickParams.name}
+              placeholder={`name`}
+              onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                setQuickParams({ ...quickParams, name: event.target.value })
+              }
+            />
+            <Input
+              ml={0.5}
+              size="sm"
+              isInvalid={hasError}
+              value={quickParams.value}
+              placeholder={`value`}
+              onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                setQuickParams({ ...quickParams, value: event.target.value })
+              }
+            />
           </Flex>
-        </InputGroup>
+          <Flex direction="row" alignItems="center">
+            <Checkbox
+              size="sm"
+              isChecked={quickParams.optional}
+              onChange={event => {
+                setQuickParams({
+                  ...quickParams,
+                  optional: event.target.checked,
+                })
+              }}
+            >
+              optional
+              <Tooltip
+                label="Make parameter optional (?)"
+                fontSize="sm"
+                hasArrow
+              >
+                <InfoOutlineIcon color="teal.300" w={3} h={3} ml={1} />
+              </Tooltip>
+            </Checkbox>
+            <Spacer />
+
+            <Checkbox
+              size="sm"
+              isChecked={quickParams.exposed}
+              onChange={event => {
+                setQuickParams({
+                  ...quickParams,
+                  exposed: event.target.checked,
+                })
+              }}
+            >
+              expose
+              <Tooltip label="Expose this parameter(*)" fontSize="sm" hasArrow>
+                <InfoOutlineIcon color="teal.300" w={3} h={3} ml={1} />
+              </Tooltip>
+            </Checkbox>
+          </Flex>
+          <Button
+            type="submit"
+            size="xs"
+            variant="outline"
+            my={0.5}
+            bgColor="lightblue"
+          >
+            Add
+          </Button>
+        </Flex>
       </form>
-      <SimpleGrid width="100%" columns={4} spacing={1} bgColor="yellow.100">
-        <Box fontSize="sm" fontWeight="bold" pl={1}>
-          Name
-        </Box>
-        <Box fontSize="sm" fontStyle="italic">
-          Type
-        </Box>
-        <Box fontSize="sm">Value</Box>
-      </SimpleGrid>
-      {customParams?.map((paramsName: any, i: any) => (
+
+      {customParams && (
+        <SimpleGrid width="100%" columns={4} spacing={1} bgColor="yellow.100">
+          <Box fontSize="sm" fontWeight="bold" pl={1}>
+            Name
+          </Box>
+          <Box fontSize="sm" fontStyle="italic">
+            Type
+          </Box>
+          <Box fontSize="sm">Value</Box>
+        </SimpleGrid>
+      )}
+      {customParams?.map((paramsName: ParametersType, i: any) => (
         <Flex
           key={paramsName.name}
           alignItems="center"
@@ -199,6 +233,7 @@ const ParametersPanel = () => {
             <Box fontWeight="bold">
               {paramsName.name}
               {paramsName.optional && '?'}
+              {paramsName.exposed && '*'}
             </Box>
             <Box fontStyle="italic">{paramsName.type}</Box>
             <Box>{paramsName.value}</Box>

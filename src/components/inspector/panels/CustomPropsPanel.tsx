@@ -5,14 +5,12 @@ import {
   getSelectedComponent,
 } from '~core/selectors/components'
 import { useSelector } from 'react-redux'
-import { IoIosFlash } from 'react-icons/io'
 import {
   IconButton,
   Flex,
   Box,
   SimpleGrid,
   InputGroup,
-  InputRightElement,
   Input,
   ButtonGroup,
   Button,
@@ -30,14 +28,14 @@ const CustomPropsPanel = () => {
   const params = useSelector(getComponentParamNames)
   const { setValue } = useForm()
 
-  const DEFAULT_PROPS: {
+  const DEFAULT_CUSTOM_PROPS: {
     name: string
     value: any
   } = {
     name: '',
     value: '',
   }
-  const [quickProps, setQuickProps] = useState(DEFAULT_PROPS)
+  const [quickProps, setQuickProps] = useState(DEFAULT_CUSTOM_PROPS)
   const [hasError, setError] = useState(false)
 
   const onDelete = (propsName: string) => {
@@ -67,14 +65,14 @@ const CustomPropsPanel = () => {
               }
             }
             setValue(quickProps.name, quickProps.value)
-            setQuickProps(DEFAULT_PROPS)
+            setQuickProps(DEFAULT_CUSTOM_PROPS)
             setError(false)
           } else {
             setError(true)
           }
         }}
       >
-        <InputGroup mb={3} size="sm">
+        <InputGroup size="sm">
           <Input
             ref={inputRef}
             isInvalid={hasError}
@@ -94,18 +92,19 @@ const CustomPropsPanel = () => {
             ml={1}
           />
         </InputGroup>
-        <Box display="flex" justifyContent="flex-end">
+        <Flex>
           <Button
             mr={0}
             type="submit"
             size="xs"
             variant="outline"
             mt={0.5}
+            width="100%"
             bgColor="lightblue"
           >
             Add
           </Button>
-        </Box>
+        </Flex>
       </form>
 
       {customProps.map((propsName, i) => (

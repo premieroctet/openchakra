@@ -1,5 +1,6 @@
 import isBoolean from 'lodash/isBoolean'
 import filter from 'lodash/filter'
+import { partition } from 'lodash'
 import icons from '~iconsList'
 import { CustomDictionary } from '~core/models/customComponents'
 import { convertToPascal } from '~components/editor/Editor'
@@ -211,8 +212,6 @@ export const generateCode = async (
 ) => {
   let code = buildBlock({ component: components.root, components })
   let componentsCodes = buildComponents(components)
-  // let paramTypes = `{title: string, name: string}`
-  // let params = `{title="TITLE",name="NAME"}`
   const { paramTypes, params } = buildParams(components.root.params)
   const iconImports = Array.from(new Set(getIconsImports(components)))
 
@@ -275,36 +274,100 @@ export default App;`
   return await formatCode(code)
 }
 
+export const generateOcTsxCode = async (
+  components: IComponents,
+  currentComponents: CustomDictionary,
+) => {
+  let code = buildBlock({ component: components.root, components })
+  let componentsCodes = buildComponents(components)
+  const { paramTypes, params } = buildParams(components.root.params)
+  const iconImports = Array.from(new Set(getIconsImports(components)))
+
+  const imports = [
+    ...new Set(
+      Object.keys(components)
+        .filter(
+          name =>
+            name !== 'root' &&
+            !Object.keys(currentComponents).includes(components[name].type),
+        )
+        .map(name => components[name].type),
+    ),
+  ]
+
+  const customImports = [
+    ...new Set(
+      Object.keys(components)
+        .filter(
+          name =>
+            name !== 'root' &&
+            Object.keys(currentComponents).includes(components[name].type),
+        )
+        .map(
+          name =>
+            `import { ${convertToPascal(
+              currentComponents[components[name].type],
+            )} } from 'src/custom-components/test/${components[name].type}';`,
+        ),
+    ),
+  ]
+
+  code = `import React from 'react';
+import {
+  ChakraProvider,
+  ${imports.join(',')}
+} from "@chakra-ui/react";${
+    iconImports.length
+      ? `
+import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
+      : ''
+  }
+
+  ${customImports.join(';')}
+
+type AppPropsTypes = ${paramTypes}
+
+${componentsCodes}
+
+const App = (${params}: AppPropsTypes) => (
+  <ChakraProvider resetCSS>
+    ${code}
+  </ChakraProvider>
+);
+
+export default App;`
+
+  return await formatCode(code)
+}
+
 export const generatePreview = async (
   components: IComponents,
   fileName: string,
+  selectedComponent?: string,
 ) => {
   let code = buildBlock({ component: components.root, components })
   let componentsCodes = buildComponents(components)
   const iconImports = Array.from(new Set(getIconsImports(components)))
   const paramsContent = destructureParams(components.root.params)
 
-  const imports = [
-    ...new Set(Object.keys(components).map(name => components[name].type)),
-  ]
-
   code = `import React from 'react'
   import { useDropComponent } from '~hooks/useDropComponent'
   import { useInteractive } from '~hooks/useInteractive'
+  import { Box } from "@chakra-ui/react";
+
   ${
-    imports.length
-      ? `import {
-      ${imports.join(',')}
-    } from "@chakra-ui/react";`
+    selectedComponent
+      ? `import { ${fileName} } from 'src/custom-components/test/${selectedComponent}';`
       : ''
   }
+  
   ${
     iconImports.length
       ? `
-import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
+  import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
       : ''
   }  
-  
+
   interface Props { 
     component: IComponent
   }
@@ -319,7 +382,9 @@ import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
 
     ${paramsContent}
   
-    return (<Box {...props} ref={ref}>${code}</Box>)
+    return (<Box {...props} ref={ref}>
+      ${selectedComponent ? `<${fileName}  {...props}/>` : ''}
+    </Box>)
   }
   
   export default ${fileName}Preview`
@@ -332,13 +397,11 @@ export const generatePanel = async (
   components: IComponents,
   fileName: string,
 ) => {
-  let code = buildBlock({ component: components.root, components })
-  let componentsCodes = buildComponents(components)
-  const iconImports = Array.from(new Set(getIconsImports(components)))
+  let eligibleParams = components.root.params?.filter(param => param.exposed)
 
   const textControls = [
     ...new Set(
-      components.root.params
+      eligibleParams
         ?.filter(param => param.type === 'string' || param.type === 'number')
         .map(
           param => `<TextControl label="${param.name}" name="${param.name}" />`,
@@ -348,7 +411,7 @@ export const generatePanel = async (
 
   const switchControls = [
     ...new Set(
-      components.root.params
+      eligibleParams
         ?.filter(param => param.type === 'boolean')
         .map(
           param =>
@@ -359,7 +422,7 @@ export const generatePanel = async (
 
   const colorsControls = [
     ...new Set(
-      components.root.params
+      eligibleParams
         ?.filter(param => param.type === 'color')
         .map(
           param =>
@@ -370,7 +433,7 @@ export const generatePanel = async (
 
   const iconControls = [
     ...new Set(
-      components.root.params
+      eligibleParams
         ?.filter(param => param.type === 'icon')
         .map(
           param => `<IconControl label="${param.name}" name="${param.name}" />`,
@@ -380,7 +443,7 @@ export const generatePanel = async (
 
   const displayProps = [
     ...new Set(
-      components.root.params
+      eligibleParams
         ?.filter(param => param.type === 'display')
         .map(param => {
           return `const ${param.name} = usePropsSelector('${param.name}')
@@ -393,7 +456,7 @@ export const generatePanel = async (
 
   const displayControls = [
     ...new Set(
-      components.root.params
+      eligibleParams
         ?.filter(param => param.type === 'display')
         .map(param => {
           return `<FormControl htmlFor="${param.name}" label="${param.name}">
@@ -461,24 +524,24 @@ export const generatePanel = async (
 
   let panelCode = `import React, { memo } from 'react'
   ${
-    components.root.params?.some(
+    eligibleParams?.some(
       param => param.type === 'string' || param.type === 'number',
     )
       ? `import TextControl from '~components/inspector/controls/TextControl'`
       : ''
   }
   ${
-    components.root.params?.some(param => param.type === 'boolean')
+    eligibleParams?.some(param => param.type === 'boolean')
       ? `import SwitchControl from '~components/inspector/controls/SwitchControl'`
       : ''
   }
   ${
-    components.root.params?.some(param => param.type === 'color')
+    eligibleParams?.some(param => param.type === 'color')
       ? `import ColorsControl from '~components/inspector/controls/ColorsControl'`
       : ''
   }
   ${
-    components.root.params?.some(param => param.type === 'display')
+    eligibleParams?.some(param => param.type === 'display')
       ? `import FormControl from '~components/inspector/controls/FormControl'
   import { useForm } from '~hooks/useForm'
   import usePropsSelector from '~hooks/usePropsSelector'
@@ -486,14 +549,14 @@ export const generatePanel = async (
       : ''
   }
   ${
-    components.root.params?.some(param => param.type === 'icon')
+    eligibleParams?.some(param => param.type === 'icon')
       ? `import IconControl from '~components/inspector/controls/IconControl'`
       : ''
   }
   
   const ${fileName}Panel = () => {
     ${
-      components.root.params?.some(param => param.type === 'display')
+      eligibleParams?.some(param => param.type === 'display')
         ? `const { setValueFromEvent } = useForm()
   ${displayProps.join('\n')}`
         : ''
@@ -501,29 +564,29 @@ export const generatePanel = async (
     return (
     <>
     ${
-      components.root.params?.some(
+      eligibleParams?.some(
         param => param.type === 'string' || param.type === 'number',
       )
         ? `${textControls.join('')}`
         : ''
     }
     ${
-      components.root.params?.some(param => param.type === 'boolean')
+      eligibleParams?.some(param => param.type === 'boolean')
         ? `${switchControls.join('')}`
         : ''
     }
     ${
-      components.root.params?.some(param => param.type === 'color')
+      eligibleParams?.some(param => param.type === 'color')
         ? `${colorsControls.join('')}`
         : ''
     }
     ${
-      components.root.params?.some(param => param.type === 'icon')
+      eligibleParams?.some(param => param.type === 'icon')
         ? `${iconControls.join('')}`
         : ''
     }
     ${
-      components.root.params?.some(param => param.type === 'display')
+      eligibleParams?.some(param => param.type === 'display')
         ? `${displayControls.join('\n')}`
         : ''
     }

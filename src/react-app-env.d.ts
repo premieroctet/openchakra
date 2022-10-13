@@ -92,13 +92,21 @@ type MetaComponentType =
   | 'TabsMeta'
   | 'StatMeta'
 
+interface ParametersType {
+  name: string
+  value: any
+  type: string
+  optional: boolean
+  exposed: boolean
+}
+
 interface IComponent {
   children: string[]
   type: ComponentType
   parent: string
   id: string
   props: any
-  params?: Array<any>
+  params?: Array<ParametersType>
   rootParentType?: ComponentType
   componentName?: string
 }

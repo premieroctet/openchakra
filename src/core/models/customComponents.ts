@@ -5,18 +5,26 @@ export interface CustomDictionary {
   [Key: string]: string
 }
 
+export interface ComponentParametersType {
+  [Key: string]: Array<ParametersType>
+}
+
 export type CustomComponentsState = {
   components: CustomDictionary
   selectedId?: IComponent['type']
+  parameters: ComponentParametersType
 }
 
+// TODO: Add option to automatically add the first component's id
 const DEFAULT_ID = undefined
 
-export const INITIAL_COMPONENTS: CustomDictionary = {}
+const INITIAL_COMPONENTS: CustomDictionary = {}
+const INITIAL_PARAMETERS: ComponentParametersType = {}
 
 const customComponents = createModel({
   state: {
     components: INITIAL_COMPONENTS,
+    parameters: INITIAL_PARAMETERS,
     selectedId: DEFAULT_ID,
   } as CustomComponentsState,
   reducers: {
@@ -27,6 +35,53 @@ const customComponents = createModel({
       return produce(state, (draftState: CustomComponentsState) => {
         draftState.components = components
       })
+    },
+    updateParams(
+      state: CustomComponentsState,
+      payload: {
+        id: string
+        name: string
+        value: any
+        type: string
+        optional: boolean
+        exposed: boolean
+      },
+    ) {
+      return produce(state, (draftState: CustomComponentsState) => {
+        const index = draftState.parameters[payload.id]?.findIndex(
+          (item: any) => item.name === payload.name,
+        )
+        if (index !== undefined && index !== -1) {
+          draftState.parameters[payload.id][index].value = payload.value
+          draftState.parameters[payload.id][index].type = payload.type
+          draftState.parameters[payload.id][index].optional = payload.optional
+          draftState.parameters[payload.id][index].exposed = payload.exposed
+        } else {
+          draftState.parameters[payload.id]?.push({
+            name: payload.name,
+            value: payload.value,
+            type: payload.type,
+            optional: payload.optional,
+            exposed: payload.exposed,
+          })
+        }
+      })
+    },
+    deleteParams(
+      state: CustomComponentsState,
+      payload: { id: string; name: string },
+    ) {
+      return {
+        ...state,
+        parameters: {
+          ...state.parameters,
+          [payload.id]: [
+            ...state.parameters[payload.id]?.filter(
+              (item: any) => item.name !== payload.name,
+            ),
+          ],
+        },
+      }
     },
     reset(
       state: CustomComponentsState,
