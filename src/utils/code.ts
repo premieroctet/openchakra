@@ -389,7 +389,6 @@ export const generatePreview = async (
   
   export default ${fileName}Preview`
 
-  console.log(code)
   code = await formatCode(code)
   return code
 }

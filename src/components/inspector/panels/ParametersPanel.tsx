@@ -21,6 +21,8 @@ import {
 import { ChevronDownIcon, EditIcon, SmallCloseIcon } from '@chakra-ui/icons'
 import useDispatch from '~hooks/useDispatch'
 import { useParamsForm } from '~hooks/useParamsForm'
+import { DEFAULT_PARAMS } from '~core/models/customComponents'
+import { getSelectedCustomComponentId } from '~core/selectors/customComponents'
 
 const ParametersPanel = () => {
   const dispatch = useDispatch()
@@ -28,14 +30,10 @@ const ParametersPanel = () => {
 
   const activeParamsRef = useInspectorState()
   const params = useSelector(getComponentParams)
+  const customComponentName = useSelector(getSelectedCustomComponentId)
   const { setValue } = useParamsForm()
 
-  const DEFAULT_PARAMS: {
-    name: string
-    value: any
-    type: string
-    optional: boolean
-  } = {
+  const DEFAULT_PARAMS: DEFAULT_PARAMS = {
     name: '',
     value: '',
     type: '',
@@ -49,6 +47,11 @@ const ParametersPanel = () => {
       id: 'root',
       name: paramsName,
     })
+    if (customComponentName)
+      dispatch.customComponents.deleteParams({
+        id: customComponentName,
+        name: paramsName,
+      })
   }
 
   const activeParams = activeParamsRef || []

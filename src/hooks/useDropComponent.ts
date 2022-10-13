@@ -19,7 +19,6 @@ export const useDropComponent = (
       isOver: monitor.isOver({ shallow: true }) && monitor.canDrop(),
     }),
     drop: (item: ComponentItemProps, monitor: DropTargetMonitor) => {
-      console.log('item', item)
       if (!monitor.isOver()) {
         return
       }
@@ -36,6 +35,7 @@ export const useDropComponent = (
           parentName: componentId,
           type: item.type,
           rootParentType: item.rootParentType,
+          custom: !!item.custom,
         })
       }
     },

@@ -202,10 +202,12 @@ const components = createModel({
         type: ComponentType
         rootParentType?: ComponentType
         testId?: string
+        custom: boolean
       },
     ): ComponentsState {
       return produce(state, (draftState: ComponentsState) => {
         const id = payload.testId || generateId()
+        // TODO: Custom params which are exposed as default props
         const { form, ...defaultProps } = DEFAULT_PROPS[payload.type] || {}
         draftState.selectedId = id
         draftState.components[payload.parentName].children.push(id)

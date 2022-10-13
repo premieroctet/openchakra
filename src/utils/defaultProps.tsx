@@ -154,17 +154,6 @@ type PreviewDefaultProps = {
   SkeletonText?: PropsWithForm<SkeletonProps>
 }
 
-const CustomComponents = () => {
-  const customComponents = useSelector(getCustomComponentNames)
-  let customComponentsProps: any = {}
-  customComponents.forEach((element: string) => {
-    customComponentsProps[element] = {
-      // spread parameters here
-    }
-  })
-  return customComponents
-}
-
 export const DEFAULT_PROPS: PreviewDefaultProps | any = {
   AlertDescription: {
     children: 'Alert description',
@@ -343,7 +332,6 @@ export const DEFAULT_PROPS: PreviewDefaultProps | any = {
     children: 'Tag name',
   },
   Text: { children: 'Text value' },
-  // TODO: Construct Custom components with params and add here
 }
 
 export const getDefaultFormProps = (type: ComponentType) => {
