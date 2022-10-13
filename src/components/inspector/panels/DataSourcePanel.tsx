@@ -49,8 +49,8 @@ const DataSourcePanel:React.FC = () => {
           value={dataSource || ''}
         >
           <option value={null}></option>
-          {providers.map(provider => (
-            <option value={provider.id}>
+          {providers.map((provider, i) => (
+            <option key={`prov${i}`} value={provider.id}>
               {`${provider.id} (${provider.props?.model})`}
             </option>
           ))}
@@ -66,8 +66,8 @@ const DataSourcePanel:React.FC = () => {
             value={attribute || ''}
           >
             <option value={null}></option>
-            {Object.keys(attributes).map(attribute => (
-              <option value={attribute}>{attribute}</option>
+            {Object.keys(attributes).map((attribute, i) => (
+              <option key={`attr${i}`} value={attribute}>{attribute}</option>
             ))}
           </Select>
         </FormControl>

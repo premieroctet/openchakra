@@ -75,6 +75,7 @@ type ComponentType =
   | 'Tag'
   | 'Text'
   | 'Textarea'
+  | 'Timer'
 
 type MetaComponentType =
   | 'FormControlMeta'
