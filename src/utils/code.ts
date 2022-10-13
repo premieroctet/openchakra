@@ -12,6 +12,7 @@ import {
   IMAGE_TYPE,
   PROGRESS_TYPE,
   SELECT_TYPE,
+  SOURCE_TYPE,
   TEXT_TYPE,
   getFieldsForDataProvider
 } from './dataSources';
@@ -77,6 +78,9 @@ const getDynamicType = (comp: IComponent) => {
   }
   if (SELECT_TYPE.includes(comp.type)) {
     return 'Select'
+  }
+  if (SOURCE_TYPE.includes(comp.type)) {
+    return 'Source'
   }
   throw new Error(`No dynamic found for ${comp.type}`)
 }

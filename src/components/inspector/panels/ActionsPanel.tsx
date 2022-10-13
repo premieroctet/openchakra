@@ -33,8 +33,8 @@ const ActionsPanel:React.FC = () => {
 
   const onActionChange = ev => {
     // Reset action props on action change
-    setValue('actionProps', {})
-      setValueFromEvent(ev)
+    //setValue('actionProps', {})
+    setValueFromEvent(ev)
   }
 
   return (

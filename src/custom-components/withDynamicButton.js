@@ -18,7 +18,7 @@ const withDynamicButton = Component => {
           return alert(`Undefined action ${action}`)
         }
         return ACTIONS[action]({value:value, props:actionProps, backend})
-          .then(() => alert.log('ok'))
+          .then(() => console.log('ok'))
           .catch(err => alert(`Erreur:${err}`))
       }
     }
