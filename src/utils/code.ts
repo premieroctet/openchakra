@@ -397,13 +397,11 @@ export const generatePanel = async (
   components: IComponents,
   fileName: string,
 ) => {
-  let code = buildBlock({ component: components.root, components })
-  let componentsCodes = buildComponents(components)
-  const iconImports = Array.from(new Set(getIconsImports(components)))
+  let eligibleParams = components.root.params?.filter(param => param.exposed)
 
   const textControls = [
     ...new Set(
-      components.root.params
+      eligibleParams
         ?.filter(param => param.type === 'string' || param.type === 'number')
         .map(
           param => `<TextControl label="${param.name}" name="${param.name}" />`,
@@ -413,7 +411,7 @@ export const generatePanel = async (
 
   const switchControls = [
     ...new Set(
-      components.root.params
+      eligibleParams
         ?.filter(param => param.type === 'boolean')
         .map(
           param =>
@@ -424,7 +422,7 @@ export const generatePanel = async (
 
   const colorsControls = [
     ...new Set(
-      components.root.params
+      eligibleParams
         ?.filter(param => param.type === 'color')
         .map(
           param =>
@@ -435,7 +433,7 @@ export const generatePanel = async (
 
   const iconControls = [
     ...new Set(
-      components.root.params
+      eligibleParams
         ?.filter(param => param.type === 'icon')
         .map(
           param => `<IconControl label="${param.name}" name="${param.name}" />`,
@@ -445,7 +443,7 @@ export const generatePanel = async (
 
   const displayProps = [
     ...new Set(
-      components.root.params
+      eligibleParams
         ?.filter(param => param.type === 'display')
         .map(param => {
           return `const ${param.name} = usePropsSelector('${param.name}')
@@ -458,7 +456,7 @@ export const generatePanel = async (
 
   const displayControls = [
     ...new Set(
-      components.root.params
+      eligibleParams
         ?.filter(param => param.type === 'display')
         .map(param => {
           return `<FormControl htmlFor="${param.name}" label="${param.name}">
@@ -523,7 +521,6 @@ export const generatePanel = async (
         }),
     ),
   ]
-  let eligibleParams = components.root.params?.filter(param => param.exposed)
 
   let panelCode = `import React, { memo } from 'react'
   ${
