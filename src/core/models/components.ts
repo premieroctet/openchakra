@@ -58,6 +58,7 @@ const components = createModel({
         value: any
         type: string
         optional: boolean
+        exposed: boolean
       },
     ) {
       return produce(state, (draftState: ComponentsState) => {
@@ -72,12 +73,16 @@ const components = createModel({
           // @ts-ignore
           draftState.components[payload.id].params[index].optional =
             payload.optional
+          // @ts-ignore
+          draftState.components[payload.id].params[index].exposed =
+            payload.exposed
         } else {
           draftState.components[payload.id].params?.push({
             name: payload.name,
             value: payload.value,
             type: payload.type,
             optional: payload.optional,
+            exposed: payload.exposed,
           })
         }
       })

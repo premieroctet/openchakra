@@ -72,7 +72,7 @@ const CustomPropsPanel = () => {
           }
         }}
       >
-        <InputGroup mb={3} size="sm">
+        <InputGroup size="sm">
           <Input
             ref={inputRef}
             isInvalid={hasError}

@@ -8,13 +8,20 @@ export const useParamsForm = () => {
   const componentId = useSelector(getSelectedComponentId)
 
   const setValue = useCallback(
-    (name: string, value: any, type: string, optional: boolean) => {
+    (
+      name: string,
+      value: any,
+      type: string,
+      optional: boolean,
+      exposed: boolean,
+    ) => {
       dispatch.components.updateParams({
         id: 'root',
         name,
         value,
         type,
         optional,
+        exposed,
       })
       dispatch.customComponents.updateParams({
         id: componentId,
@@ -22,6 +29,7 @@ export const useParamsForm = () => {
         value,
         type,
         optional,
+        exposed,
       })
     },
     [componentId, dispatch.components, dispatch.customComponents],

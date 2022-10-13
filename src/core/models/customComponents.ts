@@ -5,27 +5,21 @@ export interface CustomDictionary {
   [Key: string]: string
 }
 
-export interface DEFAULT_PARAMS {
-  name: string
-  value: any
-  type: string
-  optional: boolean
-}
-export interface ParametersType {
-  [Key: string]: Array<DEFAULT_PARAMS>
+export interface ComponentParametersType {
+  [Key: string]: Array<ParametersType>
 }
 
 export type CustomComponentsState = {
   components: CustomDictionary
   selectedId?: IComponent['type']
-  parameters: ParametersType
+  parameters: ComponentParametersType
 }
 
 // TODO: Add option to automatically add the first component's id
 const DEFAULT_ID = undefined
 
 const INITIAL_COMPONENTS: CustomDictionary = {}
-const INITIAL_PARAMETERS: ParametersType = {}
+const INITIAL_PARAMETERS: ComponentParametersType = {}
 
 const customComponents = createModel({
   state: {
@@ -50,6 +44,7 @@ const customComponents = createModel({
         value: any
         type: string
         optional: boolean
+        exposed: boolean
       },
     ) {
       return produce(state, (draftState: CustomComponentsState) => {
@@ -60,12 +55,14 @@ const customComponents = createModel({
           draftState.parameters[payload.id][index].value = payload.value
           draftState.parameters[payload.id][index].type = payload.type
           draftState.parameters[payload.id][index].optional = payload.optional
+          draftState.parameters[payload.id][index].exposed = payload.exposed
         } else {
           draftState.parameters[payload.id]?.push({
             name: payload.name,
             value: payload.value,
             type: payload.type,
             optional: payload.optional,
+            exposed: payload.exposed,
           })
         }
       })

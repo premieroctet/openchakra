@@ -17,11 +17,18 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  Tooltip,
+  InputRightElement,
+  InputRightAddon,
 } from '@chakra-ui/react'
-import { ChevronDownIcon, EditIcon, SmallCloseIcon } from '@chakra-ui/icons'
+import {
+  ChevronDownIcon,
+  EditIcon,
+  InfoOutlineIcon,
+  SmallCloseIcon,
+} from '@chakra-ui/icons'
 import useDispatch from '~hooks/useDispatch'
 import { useParamsForm } from '~hooks/useParamsForm'
-import { DEFAULT_PARAMS } from '~core/models/customComponents'
 import { getSelectedCustomComponentId } from '~core/selectors/customComponents'
 
 const ParametersPanel = () => {
@@ -33,11 +40,12 @@ const ParametersPanel = () => {
   const customComponentName = useSelector(getSelectedCustomComponentId)
   const { setValue } = useParamsForm()
 
-  const DEFAULT_PARAMS: DEFAULT_PARAMS = {
+  const DEFAULT_PARAMS: ParametersType = {
     name: '',
     value: '',
     type: '',
     optional: false,
+    exposed: false,
   }
   const [quickParams, setQuickParams] = useState(DEFAULT_PARAMS)
   const [hasError, setError] = useState(false)
@@ -70,6 +78,7 @@ const ParametersPanel = () => {
               quickParams.value,
               quickParams.type,
               quickParams.optional,
+              quickParams.exposed,
             )
             setQuickParams(DEFAULT_PARAMS)
             setError(false)
@@ -78,26 +87,21 @@ const ParametersPanel = () => {
           }
         }}
       >
-        <InputGroup mb={3} size="sm">
-          <Flex direction="column">
-            <Flex direction="row">
-              <Input
-                mb={1}
-                isInvalid={hasError}
-                value={quickParams.type}
-                placeholder={`type`}
-                onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                  setQuickParams({ ...quickParams, type: event.target.value })
-                }
-              />
+        <Flex direction="column">
+          <InputGroup size="sm">
+            <Input
+              mb={1}
+              isInvalid={hasError}
+              value={quickParams.type}
+              placeholder={`type`}
+              onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                setQuickParams({ ...quickParams, type: event.target.value })
+              }
+            />
+
+            <InputRightAddon>
               <Menu>
-                <MenuButton
-                  p={1}
-                  m={1}
-                  borderRadius="md"
-                  borderWidth="1px"
-                  type="button"
-                >
+                <MenuButton type="button">
                   <ChevronDownIcon />
                 </MenuButton>
                 <MenuList>
@@ -131,105 +135,143 @@ const ParametersPanel = () => {
                   </MenuItem>
                 </MenuList>
               </Menu>
-            </Flex>
-            <Flex direction="row">
-              <Input
-                ref={inputRef}
-                mr={0.5}
-                isInvalid={hasError}
-                value={quickParams.name}
-                placeholder={`name`}
-                onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                  setQuickParams({ ...quickParams, name: event.target.value })
-                }
-              />
-              <Input
-                ml={0.5}
-                isInvalid={hasError}
-                value={quickParams.value}
-                placeholder={`value`}
-                onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                  setQuickParams({ ...quickParams, value: event.target.value })
-                }
-              />
-            </Flex>
-            <Flex direction="row">
-              <Checkbox
-                size="md"
-                isChecked={quickParams.optional}
-                onChange={event => {
-                  setQuickParams({
-                    ...quickParams,
-                    optional: event.target.checked,
-                  })
-                }}
-              >
-                optional?
-              </Checkbox>
-              <Spacer />
-              <Button
-                type="submit"
-                size="sm"
-                variant="outline"
-                mt={0.5}
-                bgColor="lightblue"
-              >
-                Add
-              </Button>
-            </Flex>
+            </InputRightAddon>
+          </InputGroup>
+          <Flex direction="row">
+            <Input
+              ref={inputRef}
+              mr={0.5}
+              size="sm"
+              isInvalid={hasError}
+              value={quickParams.name}
+              placeholder={`name`}
+              onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                setQuickParams({ ...quickParams, name: event.target.value })
+              }
+            />
+            <Input
+              ml={0.5}
+              size="sm"
+              isInvalid={hasError}
+              value={quickParams.value}
+              placeholder={`value`}
+              onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                setQuickParams({ ...quickParams, value: event.target.value })
+              }
+            />
           </Flex>
-        </InputGroup>
-      </form>
-      <SimpleGrid width="100%" columns={4} spacing={1} bgColor="yellow.100">
-        <Box fontSize="sm" fontWeight="bold" pl={1}>
-          Name
-        </Box>
-        <Box fontSize="sm" fontStyle="italic">
-          Type
-        </Box>
-        <Box fontSize="sm">Value</Box>
-      </SimpleGrid>
-      {customParams?.map((paramsName: any, i: any) => (
-        <Flex
-          key={paramsName.name}
-          alignItems="center"
-          px={2}
-          bg={i % 2 === 0 ? 'white' : 'gray.50'}
-          fontSize="xs"
-          justifyContent="space-between"
-        >
-          <SimpleGrid width="100%" columns={3} spacing={1}>
-            <Box fontWeight="bold">
-              {paramsName.name}
-              {paramsName.optional && '?'}
-            </Box>
-            <Box fontStyle="italic">{paramsName.type}</Box>
-            <Box>{paramsName.value}</Box>
-          </SimpleGrid>
-
-          <ButtonGroup display="flex" size="xs" isAttached>
-            <IconButton
-              onClick={() => {
-                setQuickParams(paramsName)
-                if (inputRef.current) {
-                  inputRef.current.focus()
-                }
+          <Flex direction="row" alignItems="center">
+            <Checkbox
+              size="sm"
+              isChecked={quickParams.optional}
+              onChange={event => {
+                setQuickParams({
+                  ...quickParams,
+                  optional: event.target.checked,
+                })
               }}
-              variant="ghost"
-              size="xs"
-              aria-label="edit"
-              icon={<EditIcon path="" />}
-            />
-            <IconButton
-              onClick={() => onDelete(paramsName.name)}
-              variant="ghost"
-              size="xs"
-              aria-label="delete"
-              icon={<SmallCloseIcon path="" />}
-            />
-          </ButtonGroup>
+            >
+              optional
+              <Tooltip
+                label="Is this parameter optional?"
+                fontSize="md"
+                hasArrow
+              >
+                <InfoOutlineIcon color="teal.300" w={3} h={3} ml={1} />
+              </Tooltip>
+            </Checkbox>
+            <Spacer />
+
+            <Checkbox
+              size="sm"
+              isChecked={quickParams.exposed}
+              onChange={event => {
+                setQuickParams({
+                  ...quickParams,
+                  exposed: event.target.checked,
+                })
+              }}
+            >
+              expose
+              <Tooltip
+                label="Is this parameter exposed?"
+                fontSize="md"
+                hasArrow
+              >
+                <InfoOutlineIcon color="teal.300" w={3} h={3} ml={1} />
+              </Tooltip>
+            </Checkbox>
+          </Flex>
+          <Button
+            type="submit"
+            size="xs"
+            variant="outline"
+            mt={0.5}
+            bgColor="lightblue"
+          >
+            Add
+          </Button>
         </Flex>
-      ))}
+      </form>
+
+      {customParams &&
+        customParams?.map((paramsName: any, i: any) => (
+          <>
+            <SimpleGrid
+              width="100%"
+              columns={4}
+              spacing={1}
+              bgColor="yellow.100"
+            >
+              <Box fontSize="sm" fontWeight="bold" pl={1}>
+                Name
+              </Box>
+              <Box fontSize="sm" fontStyle="italic">
+                Type
+              </Box>
+              <Box fontSize="sm">Value</Box>
+            </SimpleGrid>
+            <Flex
+              key={paramsName.name}
+              alignItems="center"
+              px={2}
+              bg={i % 2 === 0 ? 'white' : 'gray.50'}
+              fontSize="xs"
+              justifyContent="space-between"
+            >
+              <SimpleGrid width="100%" columns={3} spacing={1}>
+                <Box fontWeight="bold">
+                  {paramsName.name}
+                  {paramsName.optional && '?'}
+                </Box>
+                <Box fontStyle="italic">{paramsName.type}</Box>
+                <Box>{paramsName.value}</Box>
+              </SimpleGrid>
+
+              <ButtonGroup display="flex" size="xs" isAttached>
+                <IconButton
+                  onClick={() => {
+                    setQuickParams(paramsName)
+                    if (inputRef.current) {
+                      inputRef.current.focus()
+                    }
+                  }}
+                  variant="ghost"
+                  size="xs"
+                  aria-label="edit"
+                  icon={<EditIcon path="" />}
+                />
+                <IconButton
+                  onClick={() => onDelete(paramsName.name)}
+                  variant="ghost"
+                  size="xs"
+                  aria-label="delete"
+                  icon={<SmallCloseIcon path="" />}
+                />
+              </ButtonGroup>
+            </Flex>
+          </>
+        ))}
     </>
   )
 }
