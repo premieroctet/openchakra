@@ -40,8 +40,9 @@ export const getPageUrl = (
   try {
     return pages[pageId].pageName.toLowerCase().replace(/ /i, '-')
   }
-  catch (err) {
-    console.log(`getPageUrl ${pageId}:${err}`)
+  catch(err) {
+    console.error(`getPageUrl ${pageId}:${err}`)
+    throw err
   }
 }
 
@@ -159,8 +160,14 @@ const buildBlock = ({
           const propsValueAsObject = typeof propsValue === 'object'
 
           if (propName=='actionProps') {
-            propsValue.page = propsValue.page && getPageUrl(propsValue.page, pages) || undefined
-            propsContent += ` actionProps='${JSON.stringify(propsValue)}'`
+            if (propsValue.page) {
+              console.log(`Page:${propsValue.page}`)
+            }
+            const valuesCopy={
+              ...propsValue,
+              page: propsValue.page ? getPageUrl(propsValue.page, pages) : undefined
+            }
+            propsContent += ` actionProps='${JSON.stringify(valuesCopy)}'`
             propsContent += ` backend='${config.targetDomain}'`
             return
           }
@@ -299,7 +306,7 @@ const getIconsImports = (components: IComponents) => {
   })
 }
 
-const buildHooks = (components: IComponents, models) => {
+const buildHooks = (components: IComponents) => {
   // Returns attributes names used in this dataProvider for 'dataProvider'
   const getDataProviderFields = (dataProvider: IComponent) => {
     const fields=getFieldsForDataProvider(dataProvider.id, components)
@@ -369,7 +376,6 @@ export const generateCode = async (
   pages: {
     [key: string]: PageState
   },
-  models: any,
 ) => {
   const {
     pageName,
@@ -379,7 +385,7 @@ export const generateCode = async (
     metaImageUrl,
   } = pages[pageId]
 
-  let hooksCode = buildHooks(components, models)
+  let hooksCode = buildHooks(components)
   let dynamics = buildDynamics(components)
   let code = buildBlock({ component: components.root, components, pages })
   let componentsCodes = buildComponents(components, pages)
