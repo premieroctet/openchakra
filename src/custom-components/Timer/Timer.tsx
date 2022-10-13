@@ -1,10 +1,9 @@
 import React, {useState, useCallback, useEffect} from 'react'
 import { Text } from '@chakra-ui/react'
-import useEventListener from '~hooks/useEventListener'
+import useEventListener from '~utils/hooks/useEventListener'
 import { useStopwatch } from 'react-timer-hook'
 import useFetch from 'use-http'
-import useInterval from '~hooks/useInterval'
-import config from '../../../env.json'
+import useInterval from '~utils/hooks/useInterval'
 
 /**
  * Timer autostarts on ressource loaded
@@ -13,7 +12,8 @@ import config from '../../../env.json'
 
 const Timer = ({"data-source": dataSource = null, ...props}: {'data-source': string | null}) => {
 
-  const { post, response, error } = useFetch(config.targetDomain)
+  // const { post, response, error } = useFetch(config.targetDomain)
+  const { post, response, error } = useFetch('https://my-alfred.io:4002') // Ugly, but will fixed later
   const RESSOURCE_SENDING_PERIOD = 10000
   // const TIME_BEFORE_LOGOUT = 10000
   // const [coords, setCoords] = useState({ x: 0, y: 0 });
@@ -45,7 +45,7 @@ const Timer = ({"data-source": dataSource = null, ...props}: {'data-source': str
   //   [setLastTyping]
   // ); 
 
-  const handleVisibility = useCallback((e) => {
+  const handleVisibility = useCallback((e: EventListenerOrEventListenerObject) => {
     if (document.visibilityState === "hidden") {
       setIsVisible(false)
     } else {
