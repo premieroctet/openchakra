@@ -1,3 +1,4 @@
+const {ACTIONS} = require('../../utils/studio/actions')
 const {buildQuery} = require('../../utils/database')
 const path=require('path')
 const fs=require('fs').promises
@@ -114,6 +115,23 @@ router.get('/:model/:id?', (req, res) => {
       console.error(err)
       res.status(err.status || HTTP_CODES.SYSTEM_ERROR).json(err.message || err)
     })
+})
+
+router.post('/action', (req, res) => {
+  const action=req.body.action
+
+  const actionFn=ACTIONS[action]
+  if (!actionFn) {
+    return res.status(500).json(`Unkown action:${action}`)
+  }
+
+  return actionFn(req.body)
+  .then(result => {
+    return res.json(result)
+  })
+   .catch(err => {
+     return res.status(err.status || HTTP_CODES.SYSTEM_ERROR).json(err.message || err)
+   })
 })
 
 module.exports=router

@@ -34,7 +34,10 @@ const ProgramSchema = new Schema({
     ref: 'theme',
     required: false,
   }],
-
+  published: {
+    type: Boolean,
+    default: false,
+  },
 }, {toJSON: {virtuals: true, getters: true}})
 
 module.exports = ProgramSchema
