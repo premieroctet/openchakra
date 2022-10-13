@@ -18,13 +18,13 @@ export const ACTIONS={
     }
   },
   'levelUp': {
-    label: "One level up",
+    label: "Move item up",
     options: {
-      data: ({components}) => components.map(p => ({key: p.id, label: p.id})),
+      //data: ({components}) => components.map(p => ({key: p.id, label: p.id})),
     }
   },
   'levelDown': {
-    label: "One level down",
+    label: "Move item down",
     options: {
       data: ({components}) => components.map(p => ({key: p.id, label: p.id})),
     }
@@ -32,31 +32,31 @@ export const ACTIONS={
   'previous': {
     label: "Previous",
     options: {
-      data: ({components}) => components.map(p => ({key: p.id, label: p.id})),
+      //data: ({components}) => components.map(p => ({key: p.id, label: p.id})),
     }
   },
   'next': {
     label: "Next",
     options: {
-      data: ({components}) => components.map(p => ({key: p.id, label: p.id})),
+      //data: ({components}) => components.map(p => ({key: p.id, label: p.id})),
     }
   },
   'publishProgram': {
     label: "Publish",
     options: {
-      data: ({components}) => components.map(p => ({key: p.id, label: p.id})),
+      //data: ({components}) => components.map(p => ({key: p.id, label: p.id})),
     }
   },
   'delete': {
     label: 'Delete',
     options: {
-      data: ({components}) => components.map(p => ({key: p.id, label: p.id})),
+      //data: ({components}) => components.map(p => ({key: p.id, label: p.id})),
     }
   },
   'gotoSession': {
     label: 'Back to session',
     options: {
-      data: ({components}) => components.map(p => ({key: p.id, label: p.id})),
+      //data: ({components}) => components.map(p => ({key: p.id, label: p.id})),
     }
   }
 }

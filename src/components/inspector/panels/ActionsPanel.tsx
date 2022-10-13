@@ -28,9 +28,13 @@ const ActionsPanel:React.FC = () => {
 
   const onActionPropChange = ev => {
     const {name, value}=ev.target
-    console.log(`Before:${JSON.stringify(actionProps)}`)
     setValue('actionProps', {...actionProps, [name]: value})
-    console.log(`After:${JSON.stringify(actionProps)}`)
+  }
+
+  const onActionChange = ev => {
+    // Reset action props on action change
+    setValue('actionProps', {})
+      setValueFromEvent(ev)
   }
 
   return (
@@ -39,7 +43,7 @@ const ActionsPanel:React.FC = () => {
       <FormControl htmlFor="action" label="Action">
         <Select
           id="action"
-          onChange={setValueFromEvent}
+          onChange={onActionChange}
           name="action"
           size="sm"
           value={action || ''}

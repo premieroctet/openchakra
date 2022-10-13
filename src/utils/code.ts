@@ -140,10 +140,6 @@ const buildBlock = ({
         if (childComponent.type === 'Icon') {
           return propName !== 'icon'
         }
-        if (propName === 'actionProps') {
-          return false
-        }
-
         return true
       })
 
@@ -153,6 +149,12 @@ const buildBlock = ({
           const propsValue = childComponent.props[propName]
           const propsValueAsObject = typeof propsValue === 'object'
 
+          if (propName=='actionProps') {
+            propsValue.page = propsValue.page && getPageUrl(propsValue.page, pages) || undefined
+            propsContent += ` actionProps='${JSON.stringify(propsValue)}'`
+            propsContent += ` backend='${config.targetDomain}'`
+            return
+          }
           if (propName=='dataSource') {
             propsContent += ` dataSourceId='${propsValue}'`
           }
