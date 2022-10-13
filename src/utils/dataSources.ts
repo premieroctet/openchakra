@@ -14,6 +14,7 @@ export const IMAGE_TYPE: ComponentType[] = ['Image', 'Avatar', 'Media']
 export const PROGRESS_TYPE: ComponentType[] = ['Progress', 'CircularProgress']
 export const DATE_TYPE: ComponentType[] = ['Date']
 export const SELECT_TYPE: ComponentType[] = ['Select']
+export const SOURCE_TYPE: ComponentType[] = ['Timer']
 
 const ALL_DYNAMICS=lodash.flatten([
   CONTAINER_TYPE, TEXT_TYPE, ACTION_TYPE, IMAGE_TYPE, PROGRESS_TYPE,

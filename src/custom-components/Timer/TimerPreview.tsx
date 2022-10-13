@@ -7,16 +7,18 @@ import Timer from './Timer'
 
 const TimerPreview: React.FC<IPreviewProps> = ({ component }) => {
   
-  const { drop, isOver } = useDropComponent(component.id)
+  const { drop, isOver } = useDropComponent(component.id, [])
   const { props, ref } = useInteractive(component, true)
+
+  let boxProps: any = {}
 
   if (isOver) {
     props.bg = 'teal.50'
   }
 
   return (
-    <Box pos="relative" ref={drop(ref)} {...props}>
-      <Timer {...props}/>
+    <Box as={'span'} pos="relative" ref={drop(ref)} {...boxProps}>
+      <Timer ref={drop(ref)} {...props}/>
     </Box>
   )
 }
