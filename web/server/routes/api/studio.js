@@ -109,7 +109,7 @@ router.get('/:model/:id?', (req, res) => {
       if (id && data.length==0) {
         throw new NotFoundError(`Can't find ${model}:${id}`)
       }
-      res.json(id ? data[0]: data)
+      res.json(data)
     })
     .catch(err => {
       console.error(err)
