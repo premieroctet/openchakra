@@ -306,7 +306,7 @@ const getIconsImports = (components: IComponents) => {
   })
 }
 
-const buildHooks = (components: IComponents, models) => {
+const buildHooks = (components: IComponents) => {
   // Returns attributes names used in this dataProvider for 'dataProvider'
   const getDataProviderFields = (dataProvider: IComponent) => {
     const fields=getFieldsForDataProvider(dataProvider.id, components)
@@ -376,7 +376,6 @@ export const generateCode = async (
   pages: {
     [key: string]: PageState
   },
-  models: any,
 ) => {
   const {
     pageName,
@@ -386,7 +385,7 @@ export const generateCode = async (
     metaImageUrl,
   } = pages[pageId]
 
-  let hooksCode = buildHooks(components, models)
+  let hooksCode = buildHooks(components)
   let dynamics = buildDynamics(components)
   let code = buildBlock({ component: components.root, components, pages })
   let componentsCodes = buildComponents(components, pages)
