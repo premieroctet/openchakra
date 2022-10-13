@@ -8,7 +8,7 @@ const usePropsSelector = (propsName: string) => {
   const { addActiveProps } = useInspectorUpdate()
 
   useEffect(() => {
-    // Register form props name for custom props panel
+    // TODO: Register form props name for custom props panel
     addActiveProps(propsName)
   }, [addActiveProps, propsName])
 
