@@ -25,6 +25,11 @@ const SessionSchema = new Schema({
     ref: 'program',
     required: true,
   },
+  themes: [{
+    type: Schema.Types.ObjectId,
+    ref: 'theme',
+    required: true,
+  }],
   location: {
     type: Schema.Types.ObjectId,
     ref: 'trainingCenter',

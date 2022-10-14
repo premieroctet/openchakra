@@ -14,29 +14,21 @@ const TraineeSessionSchema = new Schema({
     ref: 'session',
     required: true,
   },
-  spent_time: {
-    type: Number,
-    required: false,
-  },
-  score: {
-    type: Number,
-    required: false,
-  },
-  progress: {
-    type: Number,
-    min: 0,
-    max: 100,
-  },
-  resource_status: [{
-      resource: {
-        type: Schema.Types.ObjectId,
-        ref: 'session',
-        required: true,
-      },
-      progress: {
-        Type:Number,
-      }}
-    ],
+  resources_status: [{
+    resource: {
+      type: Schema.Types.ObjectId,
+      ref: 'session',
+      required: true,
+    },
+    progress: {
+      Type: Number,
+      default: 0,
+    },
+    time_spent: {
+      Type: Number,
+      default: 0,
+    }
+  }],
 }, {
   toJSON: {
     virtuals: true,
