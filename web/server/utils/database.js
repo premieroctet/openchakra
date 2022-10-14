@@ -45,6 +45,9 @@ const DECLARED_VIRTUALS={
     end_str: {path: 'end_str', instance: 'String'},
     status: {path: 'end_str', instance: 'String'},
   },
+  traineeSession: {
+    description: {path: 'description', instance: 'String'},
+  }
   /**
   Array ref virtual example
   program: {

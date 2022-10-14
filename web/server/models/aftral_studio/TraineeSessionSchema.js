@@ -36,4 +36,8 @@ const TraineeSessionSchema = new Schema({
   }
 })
 
+TraineeSessionSchema.virtual('description').get(function() {
+  return this.session?.program?.description
+})
+
 module.exports = TraineeSessionSchema
