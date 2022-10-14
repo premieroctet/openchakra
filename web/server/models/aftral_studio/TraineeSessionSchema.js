@@ -4,6 +4,14 @@ const AddressSchema = require('../AddressSchema')
 const Schema = mongoose.Schema
 
 const TraineeSessionSchema = new Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
   trainee: {
     type: Schema.Types.ObjectId,
     ref: 'user',
@@ -14,20 +22,10 @@ const TraineeSessionSchema = new Schema({
     ref: 'session',
     required: true,
   },
-  resources_status: [{
-    resource: {
-      type: Schema.Types.ObjectId,
-      ref: 'session',
-      required: true,
-    },
-    progress: {
-      Type: Number,
-      default: 0,
-    },
-    time_spent: {
-      Type: Number,
-      default: 0,
-    }
+  themes: [{
+    type: Schema.Types.ObjectId,
+    ref: 'traineeTheme',
+    required: true,
   }],
 }, {
   toJSON: {
@@ -35,9 +33,4 @@ const TraineeSessionSchema = new Schema({
     getters: true
   }
 })
-
-TraineeSessionSchema.virtual('description').get(function() {
-  return this.session?.program?.description
-})
-
 module.exports = TraineeSessionSchema
