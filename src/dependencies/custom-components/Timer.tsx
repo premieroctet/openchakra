@@ -1,20 +1,17 @@
 import React, {useState, useCallback, useEffect} from 'react'
 import { Text } from '@chakra-ui/react'
 import { useStopwatch } from 'react-timer-hook'
-import useFetch from 'use-http'
 import useEventListener from '../hooks/useEventListener'
 import useInterval from '../hooks/useInterval'
-
+import axios from 'axios'
 /**
  * Timer autostarts on ressource loaded
  * Time sent every X seconds
  */
 
-const Timer = ({"data-source": dataSource = null, ...props}: {'data-source': string | null}) => {
+const Timer = ({dataSource, backend, ...props}: {dataSource: {_id: null} | null, backend: string}) => {
 
-  // const { post, response, error } = useFetch(config.targetDomain)
-  const { post, response, error } = useFetch('https://my-alfred.io:4002') // Ugly, but will fixed later
-  const RESSOURCE_SENDING_PERIOD = 10000
+  const RESSOURCE_SENDING_PERIOD = 2000
   // const TIME_BEFORE_LOGOUT = 10000
   // const [coords, setCoords] = useState({ x: 0, y: 0 });
   // const [lastCoords, setLastCoords] = useState({ x: 0, y: 0 });
@@ -43,27 +40,32 @@ const Timer = ({"data-source": dataSource = null, ...props}: {'data-source': str
   //     setLastTyping(new Date());
   //   },
   //   [setLastTyping]
-  // ); 
+  // );
 
   const handleVisibility = useCallback((e: EventListenerOrEventListenerObject) => {
     if (document.visibilityState === "hidden") {
       setIsVisible(false)
     } else {
       setIsVisible(true)
-    } 
+    }
   }, [setIsVisible])
 
-  
+
   // useEventListener("mousemove", handleMoves);
   // useEventListener("keyup", handleTyping);
   useEventListener("visibilitychange", handleVisibility);
 
   /* If counter is running, no more ping sent */
-  useInterval(async () => {
+  useInterval(() => {
+    console.log(`Interval, dataSource:${JSON.stringify(dataSource)}`)
     if (dataSource) {
-      await post('/duration', {ressource: dataSource})
-      if (response.ok) {
-        console.log(`send data time for ${dataSource}`)
+      try {
+      axios.post(`${backend}/myAlfred/api/studio/action`, {action: 'addSpentTime', id: dataSource._id, duration: RESSOURCE_SENDING_PERIOD})
+        .then(() => console.log(`sent data time for ${dataSource}`))
+        .catch(err => console.error(`erreur send data time for ${dataSource}:${err}`))
+      }
+      catch(err) {
+        console.error(err)
       }
     }
   }, isRunning ? RESSOURCE_SENDING_PERIOD : null)
@@ -80,7 +82,10 @@ const Timer = ({"data-source": dataSource = null, ...props}: {'data-source': str
 
 
   return (
+    <><p>{JSON.stringify(dataSource)}</p>
+    <p>Running:{isRunning?"OUI":"NON"}</p>
     <Text as={'span'} {...props}>{hours}:{minutes}:{seconds}</Text>
+    </>
   )
 
 }

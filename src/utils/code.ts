@@ -211,6 +211,9 @@ const buildBlock = ({
           }
         })
 
+      if (childComponent.type=='Timer') {
+        propsContent += ` backend='${config.targetDomain}'`
+      }
       if (childComponent.props.page) {
         const destPageUrl = getPageUrl(childComponent.props.page, pages)
         propsContent += ` pageName={'${destPageUrl}'} `
