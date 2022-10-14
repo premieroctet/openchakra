@@ -82,10 +82,7 @@ const Timer = ({dataSource, backend, ...props}: {dataSource: {_id: null} | null,
 
 
   return (
-    <><p>{JSON.stringify(dataSource)}</p>
-    <p>Running:{isRunning?"OUI":"NON"}</p>
     <Text as={'span'} {...props}>{hours}:{minutes}:{seconds}</Text>
-    </>
   )
 
 }
