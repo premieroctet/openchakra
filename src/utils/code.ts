@@ -409,7 +409,7 @@ export const generateCode = async (
   )
   */
   const groupedComponents = lodash.groupBy(imports, c =>
-    module[c] ? '@chakra-ui/react' : `./dependencies/custom-components/${c}/${c}`,
+    module[c] ? '@chakra-ui/react' : `./dependencies/custom-components/${c}`,
   )
 
   code = `import React, {useState, useEffect} from 'react';
