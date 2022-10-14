@@ -204,7 +204,7 @@ const ParametersPanel = () => {
             my={0.5}
             bgColor="lightblue"
           >
-            Add
+            Save
           </Button>
         </Flex>
       </form>
