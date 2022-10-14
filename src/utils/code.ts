@@ -356,7 +356,7 @@ const buildDynamics = (components: IComponents) => {
   const groups = lodash.groupBy(dynamicComps, c => getDynamicType(c))
   let code = `${Object.keys(groups)
     .map(
-      g => `import withDynamic${g} from './custom-components/withDynamic${g}'`,
+      g => `import withDynamic${g} from './dependencies/hoc/withDynamic${g}'`,
     )
     .join('\n')}
 
@@ -409,11 +409,11 @@ export const generateCode = async (
   )
   */
   const groupedComponents = lodash.groupBy(imports, c =>
-    module[c] ? '@chakra-ui/react' : `./custom-components/${c}/${c}`,
+    module[c] ? '@chakra-ui/react' : `./dependencies/custom-components/${c}/${c}`,
   )
 
   code = `import React, {useState, useEffect} from 'react';
-  import Metadata from './custom-components/Metadata';
+  import Metadata from './dependencies/Metadata';
   ${hooksCode ? `import useFetch from 'use-http'` : ''}
   import {ChakraProvider} from "@chakra-ui/react";
   ${Object.entries(groupedComponents)

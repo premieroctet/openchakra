@@ -23,7 +23,7 @@ import {
   Checkbox,
   useDisclosure,
 } from '@chakra-ui/react'
-import {getExtension, mediaWrapper} from '~sourcesToBuild/custom-components/MediaWrapper'
+import {getExtension, mediaWrapper} from '~dependencies/custom-components/MediaWrapper'
 
 interface s3media {
   ChecksumAlgorithm: []

@@ -2,8 +2,8 @@ import React, {useState, useCallback, useEffect} from 'react'
 import { Text } from '@chakra-ui/react'
 import { useStopwatch } from 'react-timer-hook'
 import useFetch from 'use-http'
-import useEventListener from '~sourcesToBuild/hooks/useEventListener'
-import useInterval from '~sourcesToBuild/hooks/useInterval'
+import useEventListener from '~dependencies/hooks/useEventListener'
+import useInterval from '~dependencies/hooks/useInterval'
 
 /**
  * Timer autostarts on ressource loaded
