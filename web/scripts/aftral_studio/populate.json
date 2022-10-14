@@ -13,16 +13,10 @@
   ],
   "users": [
     ["Concepteur", "Pierre", "CHIMENTI", "concepteur@my-alfred.io"],
-    ["Apprenant", "Juliette", "BAINVILLE", "apprenant@my-alfred.io"],
-    ["Apprenant", "Eliot", "BLIN", "eliot@my-alfred.io"],
-    ["Apprenant", "Marion", "Deschamps", "marion@my-alfred.io"],
-    ["Apprenant", "Emma", "Bois", "emma.bois@my-alfred.io"],
-    ["Apprenant", "Sebastien", "Auvray", "sebastien.auvray@my-alfred.io"],
-    ["Apprenant", "Oscar", "Doux", "oscar@my-alfred.io"]
-
+    ["Apprenant", "Juliette", "BAINVILLE", "apprenant@my-alfred.io"]
   ],
   "sessions": [
-    ["ACWW230E0000", "CFCP5", "apprenant@my-alfred.io,eliot@my-alfred.io,marion@my-alfred.io,emma.bois@my-alfred.io", "22/09/2022", "30/10/2022"],
-    ["ACWW230E0001", "CFCP6", "apprenant@my-alfred.io,eliot@my-alfred.io,marion@my-alfred.io,emma.bois@my-alfred.io,sebastien.auvray@my-alfred.io,oscar@my-alfred.io", "24/09/2022", "17/10/2022"]
+    ["ACWW230E0000", "CFCP5", "apprenant@my-alfred.io", "22/09/2022", "30/10/2022"],
+    ["ACWW230E0001", "CFCP6", "apprenant@my-alfred.io", "24/09/2022", "17/10/2022"]
   ]
 }
