@@ -39,21 +39,22 @@ const attributesComparator = (att1, att2) => {
 
 const DECLARED_VIRTUALS={
   session: {
-    trainees_count: {path: 'trainees_count', instance: 'Number'},
-    trainers_count: {path: 'trainees_count', instance: 'Number'},
-    start_str: {path: 'start_str', instance: 'String'},
-    end_str: {path: 'end_str', instance: 'String'},
-    status: {path: 'end_str', instance: 'String'},
+    trainees_count: {path: 'trainees_count', instance: 'Number', requires: 'trainees'},
+    trainers_count: {path: 'trainees_count', instance: 'Number', requires: 'trainers'},
+    status: {path: 'status', instance: 'String', requires: 'start'},
   },
   traineeSession: {
-    description: {path: 'description', instance: 'String'},
-  }
-  /**
-  Array ref virtual example
-  program: {
-    themes: {path: 'themes', instance: 'Array', caster: {path: 'themes', instance: 'ObjectID'}},
+    description: {path: 'description', instance: 'String', requires: 'session.program.description'},
+    spent_time: {path: 'spent_time', instance: 'Number', requires: 'themes.resources'},
+    spent_time_str: {path: 'spent_time_str', instance: 'String', requires: 'themes.resources'},
   },
-  */
+  traineeTheme: {
+    spent_time: {path: 'spent_time', instance: 'Number', requires: 'resources'},
+    spent_time_str: {path: 'spent_time_str', instance: 'String', requires: 'resources'},
+  },
+  traineeResource: {
+    spent_time_str: {path: 'spent_time_str', instance: 'String', requires: 'spent_time'},
+  }
 }
 
 const getVirtualCharacteristics = (modelName, attName) => {
@@ -143,6 +144,7 @@ const buildPopulates = (fields, model) => {
   // but today return {path: 'program', populate: {path: 'themes'}]}
   // tofix: cf. lodash.mergeWith
   const modelAttributes=Object.fromEntries(getModelAttributes(model))
+
   const populates=lodash(fields)
   // Retain only ObjectId fields
     .filter(att => modelAttributes[att.split('.')[0]].ref==true)
@@ -162,12 +164,19 @@ const buildPopulates = (fields, model) => {
 const buildQuery = (model, id, fields) => {
 
   console.log(`Requesting model ${model}, id ${id || 'none'} fields:${fields}`)
-
   const modelAttributes=Object.fromEntries(getModelAttributes(model))
 
-  const populates=buildPopulates(fields, model)
+  const virtuals=lodash(fields.map(f=>f.split('.')[0]))
+    .uniq()
+    .map(f=>DECLARED_VIRTUALS[model]?.[f]?.requires)
+    .filter(f => !!f)
+    .value()
 
-  const select=lodash(fields)
+  const allFields=[...fields, ...virtuals]
+
+  const populates=buildPopulates(allFields, model)
+
+  const select=lodash(allFields)
     .map(att => att.split('.')[0])
     .uniq()
     .filter(att => modelAttributes[att].ref==false)

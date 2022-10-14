@@ -1,3 +1,4 @@
+const TraineeResource = require('../../models/TraineeResource');
 const { NotFoundError } = require('../errors');
 const lodash=require('lodash')
 const Program = require('../../models/Program');
@@ -28,7 +29,13 @@ const ACTIONS={
         const p=result.find(p => p.themes.find(t => t.resources.find(r => r._id.toString()==id)))
         return p
       })
+  },
+
+  addSpentTime: ({id, duration}) => {
+    console.log(`Duration ${duration} for ${id}`)
+    return TraineeResource.findByIdAndUpdate(id, {$inc: {spent_time: duration}})
   }
+
 }
 
 module.exports={ACTIONS}

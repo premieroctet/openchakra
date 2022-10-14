@@ -1,10 +1,11 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
+const lodash=require('lodash')
 
 const TraineeThemeSchema = new Schema({
   name: {
     type: String,
-    required: true,
+    required: false,
   },
   code: {
     type: String,
@@ -20,5 +21,9 @@ const TraineeThemeSchema = new Schema({
     required: false,
   }],
 }, {toJSON: {virtuals: true, getters: true}})
+
+TraineeThemeSchema.virtual('spent_time').get(function() {
+  return lodash.sum(this.resources.map(r => r.spent_time))
+})
 
 module.exports = TraineeThemeSchema

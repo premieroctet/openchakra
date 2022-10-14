@@ -32,6 +32,8 @@ require('./models/Resource')
 require('./models/Session')
 require('./models/TrainingCenter')
 require('./models/TraineeSession')
+require('./models/TraineeTheme')
+require('./models/TraineeResource')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 

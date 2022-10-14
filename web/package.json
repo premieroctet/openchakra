@@ -43,6 +43,7 @@
     "express": "^4.16.4",
     "fast-levenshtein": "^3.0.0",
     "file-system": "^2.2.2",
+    "format-duration": "^2.0.0",
     "get-input-selection": "^1.1.4",
     "gif-frames": "^1.0.1",
     "glob": "^7.1.4",

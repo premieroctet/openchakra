@@ -57,14 +57,6 @@ SessionSchema.virtual('trainers_count').get(function() {
   return this.trainers?.length || 0
 })
 
-SessionSchema.virtual('start_str').get(function() {
-  return this.start ? moment(this.start).format('L') : ''
-})
-
-SessionSchema.virtual('end_str').get(function() {
-  return this.end ? moment(this.end).format('L') : ''
-})
-
 SessionSchema.virtual('status').get(function() {
   return moment()>this.end_date ? 'Terminée': 'En cours'
 })

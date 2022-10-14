@@ -34,18 +34,20 @@ const generateCenter = () => {
     )
 }
 
-let i=0
+let resssourceIdx=0
+let themeIdx=0
 
 const generateProgramQuery = program => {
   let [p_code, p_name, designer_email, p_descr, t_name,  r_name]=program
   p_desc=p_descr.slice(0, 10)
   r_url=STORY_FILE(r_name)
-  return Resource.findOneAndUpdate({url: r_url, name: r_name}, {$set:{url: r_url, code: `RES_${i}`, type: 'TP'}}, {upsert: true, new: true})
+  return Resource.findOneAndUpdate({url: r_url, name: r_name}, {$set:{url: r_url, code: `RES_${resssourceIdx}`, type: 'TP'}}, {upsert: true, new: true})
     .then(res => {
-      i = i +1
-      return Theme.findOneAndUpdate({name: t_name}, {$set:{name: t_name}, $addToSet:{resources: res}}, {upsert: true, new: true})
+      resssourceIdx = resssourceIdx +1
+      return Theme.findOneAndUpdate({name: t_name}, {$set:{name: t_name, code: `TH_${themeIdx}`}, $addToSet:{resources: res}}, {upsert: true, new: true})
     })
     .then(res => {
+      themeIdx = themeIdx+1
       return User.findOne({email: designer_email})
        .then( designer => {
          return Program.findOneAndUpdate(
@@ -116,7 +118,7 @@ const generateTraineeSessions = () => {
           return Promise.all(session.program.themes.map(t => createTraineeTheme(t)))
             .then(themes => {
               return TraineeSession.create({
-                name: t.name, descritpion: t.description,
+                name: session.name, description: session.program.description,
                 trainee: trainee, session: session,
                 themes: themes,
               })
@@ -161,10 +163,4 @@ mongoose.connect(getDatabaseUri(), MONGOOSE_OPTIONS)
   })
   .then(res => {
     console.log(res)
-  })
-  .catch(err => {
-    console.error(`NOK:${err}`)
-  })
-  .finally(() => {
-    process.exit(0)
   })

@@ -4,7 +4,9 @@ import '../server/models/Theme'
 import '../server/models/Resource'
 import '../server/models/Session'
 import '../server/models/TrainingCenter'
+import '../server/models/TraineeTheme'
 import '../server/models/TraineeSession'
+import '../server/models/TraineeResource'
 import '../server/models/User'
 
 const mongoose=require('mongoose')
@@ -55,14 +57,11 @@ describe('Studio models API', () => {
     const pops=buildPopulates(fields, 'program')
     expect(pops).toEqual(EXPECTED_MULTI)
     const fields2=['session.trainers', 'session.trainees']
-    const EXPECTED_MULTI_2=[{path: 'session', populate: [{path: 'trainers'}, {path: 'trainees'}]}]
-    const pops2=buildPopulates(fields2, 'user')
-    expect(pops2).toEqual(EXPECTED_MULTI_2)
   })
 
   test('Should build a query', () => {
     const model='program'
-    const id='633c2050d83d5987c972308f'
+    const id='63402792b7999c87ac1b7073'
     const fields='name,themes,themes.name,themes.resources,themes.resources.url'.split(',')
     const query=buildQuery(model, id, fields)
     return mongoose.connect('mongodb://localhost/aftral_studio', MONGOOSE_OPTIONS)
@@ -71,6 +70,28 @@ describe('Studio models API', () => {
       })
       .then(data => {
         expect(data[0].themes[0].resources[0].url).toBeTruthy()
+      })
+  })
+
+  test('Shoud populate virtuals level 1', () => {
+    const model='traineeTheme'
+    const fields='spent_time'.split(',')
+    const query=buildQuery(model, null, fields)
+    return mongoose.connect('mongodb://localhost/aftral_studio', MONGOOSE_OPTIONS)
+      .then(() => {
+        return expect(query._mongooseOptions.populate?.resources).toBeTruthy()
+        return query
+      })
+  })
+
+  test('Shoud populate virtuals level 2', () => {
+    const model='traineeSession'
+    const fields='spent_time,themes'.split(',')
+    const query=buildQuery(model, null, fields)
+    return mongoose.connect('mongodb://localhost/aftral_studio', MONGOOSE_OPTIONS)
+      .then(() => {
+        return expect(query._mongooseOptions?.populate?.themes?.populate?.[0]?.path).toEqual('resources')
+        return query
       })
   })
 

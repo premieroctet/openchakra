@@ -119,10 +119,10 @@ router.get('/:model/:id?', (req, res) => {
 
 router.post('/action', (req, res) => {
   const action=req.body.action
-
   const actionFn=ACTIONS[action]
   if (!actionFn) {
-    return res.status(500).json(`Unkown action:${action}`)
+    console.error(`Unkown action:${action}`)
+    return res.status(200).json(`Unkown action:${action}`)
   }
 
   return actionFn(req.body)
@@ -130,6 +130,7 @@ router.post('/action', (req, res) => {
     return res.json(result)
   })
    .catch(err => {
+     console.log(err)
      return res.status(err.status || HTTP_CODES.SYSTEM_ERROR).json(err.message || err)
    })
 })
