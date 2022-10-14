@@ -31,7 +31,7 @@ import IconPreview from './previews/IconPreview'
 
 type previews = {
   [index: string]: {
-    previewComponent?: React.ComponentType
+    previewComponent?: React.FC<IPreviewProps>
     isBoxWrapped?: boolean
   }
 }
@@ -193,7 +193,7 @@ const ComponentPreview: React.FC<{
 
 type previewParams = {
   componentType: string
-  previewComponent?: React.FC
+  previewComponent?: React.FC<IPreviewProps>
   isBoxWrapped?: boolean
 }
 

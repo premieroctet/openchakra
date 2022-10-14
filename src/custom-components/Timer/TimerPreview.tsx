@@ -2,7 +2,7 @@ import React from 'react'
 import { useDropComponent } from '~hooks/useDropComponent'
 import { useInteractive } from '~hooks/useInteractive'
 import { Box } from '@chakra-ui/react'
-import Timer from './Timer'
+import Timer from '../../sourcesToBuild/custom-components/Timer'
 
 
 const TimerPreview: React.FC<IPreviewProps> = ({ component }) => {
