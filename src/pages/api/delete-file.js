@@ -1,6 +1,6 @@
-import fs from 'fs'
+import { promises as fs } from 'fs'
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   const fileName = req.body.path.split('/').slice(-1)[0]
   let fileArray = fileName.split('-')
   fileArray = fileArray.map(word => {
@@ -9,20 +9,18 @@ export default function handler(req, res) {
   const pascalName = fileArray.join('')
   try {
     console.log('Deleting files...')
-    fs.rm(
+    const deletePreview = fs.unlink(
       `src/custom-components/editor/previews/${pascalName}Preview.oc.tsx`,
-      { recursive: true },
-      err => {
-        if (err) throw err
-      },
     )
-    fs.rm(
+    const deletePanel = fs.unlink(
       `src/custom-components/inspector/panels/components/${pascalName}Panel.oc.tsx`,
-      { recursive: true },
-      err => {
-        if (err) throw err
-      },
     )
+    const deleteTsx = fs.unlink(`src/custom-components/test/${fileName}.tsx`)
+    const deleteOcTsx = fs.unlink(
+      `src/custom-components/test/${fileName}.oc.tsx`,
+    )
+
+    await Promise.all([deletePreview, deletePanel, deleteTsx, deleteOcTsx])
     res.statusCode = 200
     res.json({ message: 'success' })
   } catch (err) {

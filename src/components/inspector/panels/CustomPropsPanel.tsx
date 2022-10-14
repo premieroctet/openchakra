@@ -102,7 +102,7 @@ const CustomPropsPanel = () => {
             width="100%"
             bgColor="lightblue"
           >
-            Add
+            Save
           </Button>
         </Flex>
       </form>

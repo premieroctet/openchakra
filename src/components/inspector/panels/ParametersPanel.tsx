@@ -173,8 +173,9 @@ const ParametersPanel = () => {
               optional
               <Tooltip
                 label="Make parameter optional (?)"
-                fontSize="sm"
+                fontSize="xs"
                 hasArrow
+                placement="left"
               >
                 <InfoOutlineIcon color="teal.300" w={3} h={3} ml={1} />
               </Tooltip>
@@ -192,7 +193,12 @@ const ParametersPanel = () => {
               }}
             >
               expose
-              <Tooltip label="Expose this parameter(*)" fontSize="sm" hasArrow>
+              <Tooltip
+                label="Expose this parameter(*)"
+                fontSize="xs"
+                hasArrow
+                placement="left"
+              >
                 <InfoOutlineIcon color="teal.300" w={3} h={3} ml={1} />
               </Tooltip>
             </Checkbox>
@@ -204,7 +210,7 @@ const ParametersPanel = () => {
             my={0.5}
             bgColor="lightblue"
           >
-            Add
+            Save
           </Button>
         </Flex>
       </form>
