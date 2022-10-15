@@ -16,7 +16,11 @@ export default async function handler(req, res) {
       `src/custom-components/inspector/panels/components/${pascalName}Panel.oc.tsx`,
       req.body.panelBody,
     )
-    await Promise.all([writePreview, writePanel])
+    const writeOcTsx = fs.writeFile(
+      `src/custom-components/test/${fileName}.oc.tsx`,
+      req.body.ocTsxBody,
+    )
+    await Promise.all([writePreview, writePanel, writeOcTsx])
     res.statusCode = 200
     res.json({ message: 'success' })
   } catch (err) {

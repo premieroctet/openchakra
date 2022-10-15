@@ -1,6 +1,5 @@
 import isBoolean from 'lodash/isBoolean'
 import filter from 'lodash/filter'
-import { partition } from 'lodash'
 import icons from '~iconsList'
 import { CustomDictionary } from '~core/models/customComponents'
 import { convertToPascal } from '~components/editor/Editor'
@@ -522,7 +521,6 @@ export const generatePreview = async (
   selectedComponent?: string,
 ) => {
   let code = buildBlock({ component: components.root, components })
-  let componentsCodes = buildComponents(components)
   const iconImports = Array.from(new Set(getIconsImports(components)))
   const paramsContent = destructureParams(components.root.params)
 
@@ -531,11 +529,7 @@ export const generatePreview = async (
   import { useInteractive } from '~hooks/useInteractive'
   import { Box } from "@chakra-ui/react";
 
-  ${
-    selectedComponent
-      ? `import { ${fileName} } from 'src/custom-components/test/${selectedComponent}';`
-      : ''
-  }
+  ${`import { ${fileName} } from 'src/custom-components/test/${selectedComponent}';`}
   
   ${
     iconImports.length
@@ -559,7 +553,7 @@ export const generatePreview = async (
     ${paramsContent}
   
     return (<Box {...props} ref={ref}>
-      ${selectedComponent ? `<${fileName}  {...props}/>` : ''}
+      ${`<${fileName}  {...props}/>`}
     </Box>)
   }
   

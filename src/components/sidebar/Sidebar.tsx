@@ -24,13 +24,30 @@ import {
 import useDispatch from '~hooks/useDispatch'
 import API from '~custom-components/api'
 import { convertToPascal } from '~components/editor/Editor'
-import { generateCode, generatePreview, generatePanel } from '~utils/code'
+import { generatePreview, generatePanel, generateOcTsxCode } from '~utils/code'
 
 const Menu = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const dispatch = useDispatch()
   const customComponents = useSelector(getCustomComponents)
   const selectedComponent = useSelector(getSelectedCustomComponentId)
+
+  const handleEditClick = async (name: string) => {
+    const response = await API.post('/read-json', {
+      path: customComponents[name],
+    })
+    dispatch.customComponents.select(name)
+    dispatch.components.reset(JSON.parse(response.data.content))
+  }
+
+  const autoselectComponent = () => {
+    if (selectedComponent === undefined && Object.keys(customComponents).length)
+      handleEditClick(Object.keys(customComponents)[0])
+    else if (!Object.keys(customComponents).includes(String(selectedComponent)))
+      handleEditClick(Object.keys(customComponents)[0])
+    else if (!Object.keys(customComponents).length)
+      dispatch.customComponents.unselect()
+  }
 
   const getObjectDiff = (updatedList: Record<string, unknown>) => {
     let deletedComponents = Object.keys(customComponents).filter(
@@ -48,9 +65,11 @@ const Menu = () => {
   useEffect(() => {
     const interval = setInterval(async () => {
       const newComponentsList = await API.get('/refresh').then(res => res.data)
+      dispatch.customComponents.updateCustomComponents(newComponentsList)
+
       const componentDiffs = getObjectDiff(newComponentsList)
       componentDiffs.deletedComponents.map(async component => {
-        const response = await API.post('/delete-file', {
+        await API.post('/delete-file', {
           path: customComponents[component],
         })
       })
@@ -60,33 +79,23 @@ const Menu = () => {
         })
         let components = JSON.parse(jsonResponse.data.content)
         let fileName = convertToPascal(newComponentsList[component])
-        let previewCode = await generatePreview(
-          components,
-          fileName,
-          selectedComponent,
-        )
+        let previewCode = await generatePreview(components, fileName, component)
         let panelCode = await generatePanel(components, fileName)
-        const response = await API.post('/init', {
+        const ocTsxCode = await generateOcTsxCode(components, customComponents)
+        await API.post('/init', {
           path: newComponentsList[component],
           previewBody: previewCode,
           panelBody: panelCode,
+          ocTsxBody: ocTsxCode,
         })
       })
-      const response = await API.post('/copy-file', newComponentsList)
-      dispatch.customComponents.updateCustomComponents(newComponentsList)
+      if (customComponents !== newComponentsList) autoselectComponent()
+      await API.post('/copy-file', newComponentsList)
     }, 3000)
     return () => {
       clearInterval(interval)
     }
   }, [customComponents])
-
-  const handleEditClick = async (name: string) => {
-    const response = await API.post('/read-json', {
-      path: customComponents[name],
-    })
-    dispatch.customComponents.select(name)
-    dispatch.components.reset(JSON.parse(response.data.content))
-  }
 
   return (
     <DarkMode>
