@@ -73,7 +73,6 @@ const Menu = () => {
           path: customComponents[component],
         })
       })
-      if (componentDiffs.deletedComponents.length) autoselectComponent()
       componentDiffs.newComponents.map(async component => {
         const jsonResponse = await API.post('/read-json', {
           path: newComponentsList[component],
@@ -90,9 +89,9 @@ const Menu = () => {
           ocTsxBody: ocTsxCode,
         })
       })
+      if (customComponents !== newComponentsList) autoselectComponent()
       await API.post('/copy-file', newComponentsList)
     }, 3000)
-    autoselectComponent()
     return () => {
       clearInterval(interval)
     }
