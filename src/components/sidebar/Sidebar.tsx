@@ -40,6 +40,15 @@ const Menu = () => {
     dispatch.components.reset(JSON.parse(response.data.content))
   }
 
+  const autoselectId = () => {
+    if (selectedComponent === undefined && Object.keys(customComponents).length)
+      handleEditClick(Object.keys(customComponents)[0])
+    else if (!Object.keys(customComponents).includes(String(selectedComponent)))
+      handleEditClick(Object.keys(customComponents)[0])
+    else if (!Object.keys(customComponents).length)
+      dispatch.customComponents.unselect()
+  }
+
   const getObjectDiff = (updatedList: Record<string, unknown>) => {
     let deletedComponents = Object.keys(customComponents).filter(
       component => !Object.keys(updatedList).includes(component),
@@ -63,6 +72,7 @@ const Menu = () => {
         const _ = await API.post('/delete-file', {
           path: customComponents[component],
         })
+        autoselectId()
       })
       componentDiffs.newComponents.map(async component => {
         const jsonResponse = await API.post('/read-json', {
@@ -80,8 +90,7 @@ const Menu = () => {
       })
       const _ = await API.post('/copy-file', newComponentsList)
     }, 3000)
-    // if (selectedComponent === undefined && Object.keys(customComponents).length)
-    //   dispatch.customComponents.select(Object.keys(customComponents)[0])
+    autoselectId()
     return () => {
       clearInterval(interval)
     }
