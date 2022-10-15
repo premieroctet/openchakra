@@ -24,13 +24,21 @@ import {
 import useDispatch from '~hooks/useDispatch'
 import API from '~custom-components/api'
 import { convertToPascal } from '~components/editor/Editor'
-import { generateCode, generatePreview, generatePanel } from '~utils/code'
+import { generatePreview, generatePanel } from '~utils/code'
 
 const Menu = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const dispatch = useDispatch()
   const customComponents = useSelector(getCustomComponents)
   const selectedComponent = useSelector(getSelectedCustomComponentId)
+
+  const handleEditClick = async (name: string) => {
+    const response = await API.post('/read-json', {
+      path: customComponents[name],
+    })
+    dispatch.customComponents.select(name)
+    dispatch.components.reset(JSON.parse(response.data.content))
+  }
 
   const getObjectDiff = (updatedList: Record<string, unknown>) => {
     let deletedComponents = Object.keys(customComponents).filter(
@@ -50,7 +58,7 @@ const Menu = () => {
       const newComponentsList = await API.get('/refresh').then(res => res.data)
       const componentDiffs = getObjectDiff(newComponentsList)
       componentDiffs.deletedComponents.map(async component => {
-        const response = await API.post('/delete-file', {
+        const _ = await API.post('/delete-file', {
           path: customComponents[component],
         })
       })
@@ -66,27 +74,19 @@ const Menu = () => {
           selectedComponent,
         )
         let panelCode = await generatePanel(components, fileName)
-        const response = await API.post('/init', {
+        const _ = await API.post('/init', {
           path: newComponentsList[component],
           previewBody: previewCode,
           panelBody: panelCode,
         })
       })
-      const response = await API.post('/copy-file', newComponentsList)
+      const _ = await API.post('/copy-file', newComponentsList)
       dispatch.customComponents.updateCustomComponents(newComponentsList)
     }, 3000)
     return () => {
       clearInterval(interval)
     }
   }, [customComponents])
-
-  const handleEditClick = async (name: string) => {
-    const response = await API.post('/read-json', {
-      path: customComponents[name],
-    })
-    dispatch.customComponents.select(name)
-    dispatch.components.reset(JSON.parse(response.data.content))
-  }
 
   return (
     <DarkMode>
