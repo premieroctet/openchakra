@@ -181,27 +181,6 @@ const ParametersPanel = () => {
               </Tooltip>
             </Checkbox>
             <Spacer />
-
-            <Checkbox
-              size="sm"
-              isChecked={quickParams.exposed}
-              onChange={event => {
-                setQuickParams({
-                  ...quickParams,
-                  exposed: event.target.checked,
-                })
-              }}
-            >
-              expose
-              <Tooltip
-                label="Expose this parameter(*)"
-                fontSize="xs"
-                hasArrow
-                placement="left"
-              >
-                <InfoOutlineIcon color="teal.300" w={3} h={3} ml={1} />
-              </Tooltip>
-            </Checkbox>
           </Flex>
           <Button
             type="submit"
