@@ -40,7 +40,7 @@ const Menu = () => {
     dispatch.components.reset(JSON.parse(response.data.content))
   }
 
-  const autoselectId = () => {
+  const autoselectComponent = () => {
     if (selectedComponent === undefined && Object.keys(customComponents).length)
       handleEditClick(Object.keys(customComponents)[0])
     else if (!Object.keys(customComponents).includes(String(selectedComponent)))
@@ -69,11 +69,11 @@ const Menu = () => {
 
       const componentDiffs = getObjectDiff(newComponentsList)
       componentDiffs.deletedComponents.map(async component => {
-        const _ = await API.post('/delete-file', {
+        await API.post('/delete-file', {
           path: customComponents[component],
         })
-        autoselectId()
       })
+      if (componentDiffs.deletedComponents.length) autoselectComponent()
       componentDiffs.newComponents.map(async component => {
         const jsonResponse = await API.post('/read-json', {
           path: newComponentsList[component],
@@ -82,15 +82,15 @@ const Menu = () => {
         let fileName = convertToPascal(newComponentsList[component])
         let previewCode = await generatePreview(components, fileName, component)
         let panelCode = await generatePanel(components, fileName)
-        const _ = await API.post('/init', {
+        await API.post('/init', {
           path: newComponentsList[component],
           previewBody: previewCode,
           panelBody: panelCode,
         })
       })
-      const _ = await API.post('/copy-file', newComponentsList)
+      await API.post('/copy-file', newComponentsList)
     }, 3000)
-    autoselectId()
+    autoselectComponent()
     return () => {
       clearInterval(interval)
     }
