@@ -24,7 +24,7 @@ import {
 import useDispatch from '~hooks/useDispatch'
 import API from '~custom-components/api'
 import { convertToPascal } from '~components/editor/Editor'
-import { generatePreview, generatePanel } from '~utils/code'
+import { generatePreview, generatePanel, generateOcTsxCode } from '~utils/code'
 
 const Menu = () => {
   const [searchTerm, setSearchTerm] = useState('')
@@ -82,10 +82,12 @@ const Menu = () => {
         let fileName = convertToPascal(newComponentsList[component])
         let previewCode = await generatePreview(components, fileName, component)
         let panelCode = await generatePanel(components, fileName)
+        const ocTsxCode = await generateOcTsxCode(components, customComponents)
         await API.post('/init', {
           path: newComponentsList[component],
           previewBody: previewCode,
           panelBody: panelCode,
+          ocTsxBody: ocTsxCode,
         })
       })
       await API.post('/copy-file', newComponentsList)
