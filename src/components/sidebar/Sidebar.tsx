@@ -56,6 +56,8 @@ const Menu = () => {
   useEffect(() => {
     const interval = setInterval(async () => {
       const newComponentsList = await API.get('/refresh').then(res => res.data)
+      dispatch.customComponents.updateCustomComponents(newComponentsList)
+
       const componentDiffs = getObjectDiff(newComponentsList)
       componentDiffs.deletedComponents.map(async component => {
         const _ = await API.post('/delete-file', {
@@ -68,11 +70,7 @@ const Menu = () => {
         })
         let components = JSON.parse(jsonResponse.data.content)
         let fileName = convertToPascal(newComponentsList[component])
-        let previewCode = await generatePreview(
-          components,
-          fileName,
-          selectedComponent,
-        )
+        let previewCode = await generatePreview(components, fileName, component)
         let panelCode = await generatePanel(components, fileName)
         const _ = await API.post('/init', {
           path: newComponentsList[component],
@@ -81,8 +79,9 @@ const Menu = () => {
         })
       })
       const _ = await API.post('/copy-file', newComponentsList)
-      dispatch.customComponents.updateCustomComponents(newComponentsList)
     }, 3000)
+    // if (selectedComponent === undefined && Object.keys(customComponents).length)
+    //   dispatch.customComponents.select(Object.keys(customComponents)[0])
     return () => {
       clearInterval(interval)
     }
