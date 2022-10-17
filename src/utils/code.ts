@@ -78,7 +78,7 @@ const buildStyledProps = (propsNames: string[], childComponent: IComponent) => {
         propsContent += `${propName}${operand} `
       }
     } else if (propName !== 'children' && propsValue) {
-      let operand = `='${propsValue}'`
+      let operand = `={${propsValue}}`
       if (propsValue[0] === '{' && propsValue[propsValue.length - 1] === '}') {
         operand = `=${propsValue}`
       } else if (propsValue === true || propsValue === 'true') {
@@ -90,7 +90,6 @@ const buildStyledProps = (propsNames: string[], childComponent: IComponent) => {
       ) {
         operand = `={${propsValue}}`
       }
-
       propsContent += `${propName}${operand} `
     }
   })
