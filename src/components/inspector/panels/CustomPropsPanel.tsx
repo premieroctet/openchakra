@@ -19,6 +19,7 @@ import {
   MenuList,
   MenuItem,
   InputRightAddon,
+  Portal,
 } from '@chakra-ui/react'
 import { ChevronDownIcon, EditIcon, SmallCloseIcon } from '@chakra-ui/icons'
 import useDispatch from '~hooks/useDispatch'
@@ -101,18 +102,20 @@ const CustomPropsPanel = () => {
               <MenuButton type="button">
                 <ChevronDownIcon />
               </MenuButton>
-              <MenuList>
-                {params?.map((param: string) => (
-                  <MenuItem
-                    key={param}
-                    onClick={() =>
-                      setQuickProps({ ...quickProps, value: param })
-                    }
-                  >
-                    {param}
-                  </MenuItem>
-                ))}
-              </MenuList>
+              <Portal>
+                <MenuList>
+                  {params?.map((param: string) => (
+                    <MenuItem
+                      key={param}
+                      onClick={() =>
+                        setQuickProps({ ...quickProps, value: param })
+                      }
+                    >
+                      {param}
+                    </MenuItem>
+                  ))}
+                </MenuList>
+              </Portal>
             </Menu>
           </InputRightAddon>
         </InputGroup>
