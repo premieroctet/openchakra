@@ -64,7 +64,7 @@ const Editor: React.FC = () => {
           selectedComponent,
         )
         let panelCode = await generatePanel(components, fileName)
-        const response = await API.post('/save-file', {
+        await API.post('/save-file', {
           codeBody: code,
           ocTsxBody: ocTsxCode,
           jsonBody: components,
