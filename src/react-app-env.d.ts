@@ -46,6 +46,7 @@ type ComponentType =
   | 'IconButton'
   | 'Image'
   | 'Input'
+  | 'UploadFile'
   | 'InputGroup'
   | 'InputLeftAddon'
   | 'InputRightAddon'
@@ -84,6 +85,7 @@ type MetaComponentType =
   | 'AlertMeta'
   | 'CardMeta'
   | 'InputGroupMeta'
+  | 'UploadFileMeta'
   | 'BreadcrumbMeta'
 
 interface IComponent {

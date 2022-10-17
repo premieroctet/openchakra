@@ -1,4 +1,4 @@
-import { buildCard } from './CardBuilder'
+import { buildCard } from '../ComponentBuilder'
 import { registerComponent } from '~components/register'
 import Card from './Card'
 import CardPanel from './CardPanel'
