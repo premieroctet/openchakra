@@ -39,7 +39,8 @@ let extraPreviews: previews = {}
 
 const ComponentPreview: React.FC<{
   componentName: string
-  id?: string
+  id?: string,
+  bgColor?: string|null,
 }> = ({ componentName, ...forwardedProps }) => {
   const showOverview = useSelector(getShowOverview)
 

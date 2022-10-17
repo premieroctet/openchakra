@@ -26,12 +26,12 @@ const ActionsPanel:React.FC = () => {
 
   const optionsParams={pages, models, components: Object.values(components)}
 
-  const onActionPropChange = ev => {
+  const onActionPropChange = (ev: React.ChangeEvent<HTMLSelectElement>) => {
     const {name, value}=ev.target
     setValue('actionProps', {...actionProps, [name]: value})
   }
 
-  const onActionChange = ev => {
+  const onActionChange = (ev: React.ChangeEvent<HTMLSelectElement>) => {
     // Reset action props on action change
     //setValue('actionProps', {})
     setValueFromEvent(ev)
@@ -48,7 +48,7 @@ const ActionsPanel:React.FC = () => {
           size="sm"
           value={action || ''}
         >
-          <option value={null}></option>
+          <option value={undefined}></option>
           {Object.keys(ACTIONS).map(action => (
             <option value={action}>
               {ACTIONS[action].label}
@@ -57,7 +57,7 @@ const ActionsPanel:React.FC = () => {
         </Select>
       </FormControl>
       {action && Object.keys(ACTIONS[action].options).map(k => {
-        const optionValues=ACTIONS[action].options[k](optionsParams)
+        const optionValues:any[]=ACTIONS[action].options[k](optionsParams)
         return (
         <FormControl htmlFor={k} label={k}>
           <Select
@@ -67,7 +67,7 @@ const ActionsPanel:React.FC = () => {
             size="sm"
             value={actionProps[k] || ''}
           >
-            <option value={null}></option>
+            <option value={undefined}></option>
             {optionValues.map(optionValue => (
               <option value={optionValue.key}>
                 {optionValue.label}
@@ -85,9 +85,9 @@ const ActionsPanel:React.FC = () => {
           size="sm"
           value={redirectTo || ''}
         >
-          <option value={null}></option>
+          <option value={undefined}></option>
           {Object.values(pages).map(page => (
-            <option value={page.id}>
+            <option value={page.pageId}>
               {page.pageName}
             </option>
           ))}

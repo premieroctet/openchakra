@@ -6,8 +6,6 @@ import { Global } from '@emotion/react'
 import { useSelector } from 'react-redux'
 import Metadata from '~dependencies/Metadata'
 import useShortcuts from '~hooks/useShortcuts'
-// import Header from '~components/Header'
-// import Sidebar from '~components/sidebar/Sidebar'
 import EditorErrorBoundary from '~components/errorBoundaries/EditorErrorBoundary'
 import Editor from '~components/editor/Editor'
 import { InspectorProvider } from '~contexts/inspector-context'
@@ -37,7 +35,6 @@ const App = () => {
         })}
       />
       <Metadata />
-      {/* <Header /> */}
       <DndProvider backend={Backend}>
         <Flex h="100vh">
           <Menu />

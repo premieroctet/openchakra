@@ -61,7 +61,7 @@ import FormControl from '../controls/FormControl'
 import useDispatch from '../../../hooks/useDispatch'
 import usePropsSelector from '../../../hooks/usePropsSelector'
 
-let extraPanels = {}
+let extraPanels:{[key:string]:  React.FC<React.Component>} = {}
 
 const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
   component,

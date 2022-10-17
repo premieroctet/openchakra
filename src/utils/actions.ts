@@ -1,4 +1,12 @@
-export const ACTIONS={
+type IActions={
+  [key:string]: {
+    label:string,
+    options:{
+      [key: string]: any
+    }
+  }
+}
+export const ACTIONS:IActions={
   'create': {
     label: 'Create new data',
     options:{

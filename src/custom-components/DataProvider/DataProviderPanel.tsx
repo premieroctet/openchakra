@@ -38,7 +38,7 @@ const DataProviderPanel = () => {
           size="sm"
           value={model || ''}
         >
-          <option value={null}></option>
+          <option value={undefined}></option>
           {modelNames.map((mdl, i) => (
             <option key={`datm${i}`} value={mdl}>{capitalize(mdl)}</option>
           ))}
