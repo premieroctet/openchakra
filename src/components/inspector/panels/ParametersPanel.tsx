@@ -19,6 +19,7 @@ import {
   MenuItem,
   Tooltip,
   InputRightAddon,
+  Portal,
 } from '@chakra-ui/react'
 import {
   ChevronDownIcon,
@@ -104,18 +105,20 @@ const ParametersPanel = () => {
                 <MenuButton type="button">
                   <ChevronDownIcon />
                 </MenuButton>
-                <MenuList>
-                  {paramTypes.map((type: string) => (
-                    <MenuItem
-                      key={type}
-                      onClick={() =>
-                        setQuickParams({ ...quickParams, type: type })
-                      }
-                    >
-                      {type}
-                    </MenuItem>
-                  ))}
-                </MenuList>
+                <Portal>
+                  <MenuList>
+                    {paramTypes.map((type: string) => (
+                      <MenuItem
+                        key={type}
+                        onClick={() =>
+                          setQuickParams({ ...quickParams, type: type })
+                        }
+                      >
+                        {type}
+                      </MenuItem>
+                    ))}
+                  </MenuList>
+                </Portal>
               </Menu>
             </InputRightAddon>
           </InputGroup>

@@ -39,7 +39,6 @@ import useClipboard from '~hooks/useClipboard'
 import { useInspectorUpdate } from '~contexts/inspector-context'
 import { componentsList } from '~componentsList'
 import { getCustomComponentNames } from '~core/selectors/customComponents'
-import ParamSelector from '~custom-components/paramSelector'
 
 const CodeActionButton = memo(() => {
   const [isLoading, setIsLoading] = useState(false)

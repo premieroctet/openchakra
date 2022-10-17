@@ -3,6 +3,7 @@ import { Input } from '@chakra-ui/react'
 import FormControl from './FormControl'
 import { useForm } from '~hooks/useForm'
 import usePropsSelector from '~hooks/usePropsSelector'
+import ParamSelector from '~custom-components/paramSelector'
 
 type TextControlPropsType = {
   name: string
@@ -21,11 +22,10 @@ const TextControl: React.FC<TextControlPropsType> = ({
 }) => {
   const { setValueFromEvent } = useForm()
   const value = usePropsSelector(name)
-
   return (
     <FormControl hasColumn={hasColumn} htmlFor={name} label={label}>
+      <ParamSelector prop={name} />
       <Input
-        borderRadius="md"
         autoComplete="off"
         id={name}
         name={name}

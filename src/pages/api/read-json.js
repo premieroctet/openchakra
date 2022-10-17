@@ -1,7 +1,7 @@
 import fs from 'fs'
 
 export default function handler(req, res) {
-  const fileName = req.body.path.split('/').slice(-1)[0]
+  const fileName = req.body.path?.split('/').slice(-1)[0]
   try {
     const fileContent = fs.readFileSync(
       `${req.body.path}/${fileName}.oc.json`,
