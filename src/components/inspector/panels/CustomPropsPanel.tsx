@@ -14,8 +14,13 @@ import {
   Input,
   ButtonGroup,
   Button,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  InputRightAddon,
 } from '@chakra-ui/react'
-import { EditIcon, SmallCloseIcon } from '@chakra-ui/icons'
+import { ChevronDownIcon, EditIcon, SmallCloseIcon } from '@chakra-ui/icons'
 import useDispatch from '~hooks/useDispatch'
 import { useForm } from '~hooks/useForm'
 
@@ -72,16 +77,17 @@ const CustomPropsPanel = () => {
           }
         }}
       >
-        <InputGroup size="sm">
-          <Input
-            ref={inputRef}
-            isInvalid={hasError}
-            value={quickProps.name}
-            placeholder={`prop`}
-            onChange={(event: ChangeEvent<HTMLInputElement>) =>
-              setQuickProps({ ...quickProps, name: event.target.value })
-            }
-          />
+        <Input
+          size="sm"
+          ref={inputRef}
+          isInvalid={hasError}
+          value={quickProps.name}
+          placeholder={`prop`}
+          onChange={(event: ChangeEvent<HTMLInputElement>) =>
+            setQuickProps({ ...quickProps, name: event.target.value })
+          }
+        />
+        <InputGroup size="sm" my={1}>
           <Input
             isInvalid={hasError}
             value={quickProps.value}
@@ -89,8 +95,26 @@ const CustomPropsPanel = () => {
             onChange={(event: ChangeEvent<HTMLInputElement>) =>
               setQuickProps({ ...quickProps, value: event.target.value })
             }
-            ml={1}
           />
+          <InputRightAddon>
+            <Menu>
+              <MenuButton type="button">
+                <ChevronDownIcon />
+              </MenuButton>
+              <MenuList>
+                {params?.map((param: string) => (
+                  <MenuItem
+                    key={param}
+                    onClick={() =>
+                      setQuickProps({ ...quickProps, value: param })
+                    }
+                  >
+                    {param}
+                  </MenuItem>
+                ))}
+              </MenuList>
+            </Menu>
+          </InputRightAddon>
         </InputGroup>
         <Flex>
           <Button
@@ -98,7 +122,6 @@ const CustomPropsPanel = () => {
             type="submit"
             size="xs"
             variant="outline"
-            mt={0.5}
             width="100%"
             bgColor="lightblue"
           >
