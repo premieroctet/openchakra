@@ -26,7 +26,6 @@ const ParamSelector = ({ prop }: any) => {
   const params = useSelector(getComponentParamNames)
   const { setValue } = useForm()
   const value = usePropsSelector(prop)
-  console.log(prop, value)
   return (
     <span>
       <Popover placement="left" trigger="hover">

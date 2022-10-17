@@ -81,6 +81,11 @@ const buildStyledProps = (propsNames: string[], childComponent: IComponent) => {
       let operand = `={${propsValue}}`
       if (propsValue[0] === '{' && propsValue[propsValue.length - 1] === '}') {
         operand = `=${propsValue}`
+      } else if (
+        propsValue.toString().match(/^[0-9]/) &&
+        !propsValue.toString().match(/[0-9]+$/)
+      ) {
+        operand = `='${propsValue}'`
       } else if (propsValue === true || propsValue === 'true') {
         operand = ``
       } else if (
