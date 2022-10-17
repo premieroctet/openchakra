@@ -25,18 +25,6 @@ const DataProviderPanel = () => {
 
   const setDataModel = event => {
     const model_id = event.target.value
-    if (
-      model_id &&
-      Object.values(components).find(c => c?.props?.model == model_id)
-    ) {
-      return toast({
-        title: `A datasource for ${capitalize(model_id)} already exists`,
-        status: 'warning',
-        position: 'top',
-        duration: 2000,
-        isClosable: true,
-      })
-    }
     setValueFromEvent(event)
   }
 
@@ -50,7 +38,7 @@ const DataProviderPanel = () => {
           size="sm"
           value={model || ''}
         >
-          <option value={null}></option>
+          <option value={undefined}></option>
           {modelNames.map((mdl, i) => (
             <option key={`datm${i}`} value={mdl}>{capitalize(mdl)}</option>
           ))}

@@ -4,16 +4,17 @@ import { DndProvider } from 'react-dnd'
 import Backend from 'react-dnd-html5-backend'
 import { Global } from '@emotion/react'
 import { useSelector } from 'react-redux'
-import Metadata from '~components/Metadata'
+import Metadata from '~dependencies/Metadata'
 import useShortcuts from '~hooks/useShortcuts'
-// import Header from '~components/Header'
-// import Sidebar from '~components/sidebar/Sidebar'
 import EditorErrorBoundary from '~components/errorBoundaries/EditorErrorBoundary'
 import Editor from '~components/editor/Editor'
 import { InspectorProvider } from '~contexts/inspector-context'
 import Inspector from '~components/inspector/Inspector'
+import Warnings from '~components/warnings/Warnings'
 import '~custom-components/Card/CardInit'
+import '~custom-components/Date/DateInit'
 import '~custom-components/Media/MediaInit'
+import '~custom-components/Timer/TimerInit'
 import '~custom-components/DataProvider/DataProviderInit'
 import Menu from '~components/sidebar/Menu'
 import MediasContainer from '~components/MediasContainer'
@@ -34,7 +35,6 @@ const App = () => {
         })}
       />
       <Metadata />
-      {/* <Header /> */}
       <DndProvider backend={Backend}>
         <Flex h="100vh">
           <Menu />
@@ -54,6 +54,14 @@ const App = () => {
             <InspectorProvider>
               <Inspector />
             </InspectorProvider>
+          </Box>
+          <Box
+            bg="#f7fafc"
+            overflowY="auto"
+            overflowX="visible"
+            borderLeft="1px solid #cad5de"
+          >
+          {false && <Warnings />}
           </Box>
         </Flex>
       </DndProvider>

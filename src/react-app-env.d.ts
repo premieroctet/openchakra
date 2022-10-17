@@ -30,6 +30,7 @@ type ComponentType =
   | 'CloseButton'
   | 'Code'
   | 'Container'
+  | 'Date'
   | 'DataProvider'
   | 'Divider'
   | 'Editable'
@@ -74,6 +75,7 @@ type ComponentType =
   | 'Tag'
   | 'Text'
   | 'Textarea'
+  | 'Timer'
 
 type MetaComponentType =
   | 'FormControlMeta'
@@ -106,6 +108,13 @@ interface IDataType {
   type: String,
   multiple: boolean,
   ref: boolean,
+}
+
+interface IWarning {
+  pageId: String,
+  pageName: String,
+  component: IComponent,
+  message: strring,
 }
 
 interface ComponentItemProps {

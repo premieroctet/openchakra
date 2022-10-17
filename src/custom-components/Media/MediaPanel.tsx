@@ -1,5 +1,8 @@
-import React, { memo, useState } from 'react'
-import { Input, Modal,
+import React, { memo } from 'react'
+import { 
+  Button,
+  Input, 
+  Modal,
   ModalOverlay,
   ModalContent,
   ModalBody,
@@ -12,29 +15,27 @@ import usePropsSelector from '~hooks/usePropsSelector'
 import Medias from '~components/medias/Medias'
 
 
-
 const MediaPanel = () => {
 
-  const { setValueFromEvent } = useForm()
+  const { setValueFromEvent, setValue } = useForm()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const src = usePropsSelector('src')
   const alt = usePropsSelector('alt')
   const htmlHeight = usePropsSelector('htmlHeight')
   const htmlWidth = usePropsSelector('htmlWidth')
-  const [mediaSrc, setMediaSrc] = useState(null)
 
   return (
     <>
        <FormControl label="Source" htmlFor="src">
         <Input
-          onClick={onOpen}
           placeholder="Media URL"
-          value={mediaSrc || src || ''}
+          value={src || ''}
           size="sm"
           name="src"
           onChange={setValueFromEvent}
           onBlur={setValueFromEvent}
         />
+        <Button size={'xs'} onClick={onOpen}>...</Button>
       </FormControl>
       <FormControl label="Alt" htmlFor="alt">
         <Input
@@ -65,10 +66,10 @@ const MediaPanel = () => {
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent minW={'60vw'}>
+        <ModalContent minW={'60vw'} maxH={'90vh'} overflowY={'scroll'}>
           <ModalCloseButton />
           <ModalBody display={'flex'} flexDirection={'column'}>
-          <Medias setMediaSrc={setMediaSrc} mediaPanelClose={onClose}/>
+          <Medias setMediaSrc={setValue} mediaPanelClose={onClose}/>
           </ModalBody>
         </ModalContent>
       </Modal>

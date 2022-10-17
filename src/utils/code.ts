@@ -8,8 +8,11 @@ import icons from '~iconsList'
 import {
   ACTION_TYPE,
   CONTAINER_TYPE,
+  DATE_TYPE,
   IMAGE_TYPE,
   PROGRESS_TYPE,
+  SELECT_TYPE,
+  SOURCE_TYPE,
   TEXT_TYPE,
   getFieldsForDataProvider
 } from './dataSources';
@@ -34,8 +37,13 @@ export const getPageUrl = (
   pageId: string,
   pages: { [key: string]: PageState },
 ) => {
-  console.log(`PageId:${pageId}, pages:${Object.keys(pages)}`)
-  return pages[pageId].pageName.toLowerCase().replace(/ /i, '-')
+  try {
+    return pages[pageId].pageName.toLowerCase().replace(/ /i, '-')
+  }
+  catch(err) {
+    console.error(`getPageUrl ${pageId}:${err}`)
+    throw err
+  }
 }
 
 export const getPageComponentName = (
@@ -65,6 +73,16 @@ const getDynamicType = (comp: IComponent) => {
   if (PROGRESS_TYPE.includes(comp.type)) {
     return 'Value'
   }
+  if (DATE_TYPE.includes(comp.type)) {
+    return 'Date'
+  }
+  if (SELECT_TYPE.includes(comp.type)) {
+    return 'Select'
+  }
+  if (SOURCE_TYPE.includes(comp.type)) {
+    return 'Source'
+  }
+  throw new Error(`No dynamic found for ${comp.type}`)
 }
 
 const capitalize = (value: string) => {
@@ -120,11 +138,18 @@ const buildBlock = ({
         : capitalize(childComponent.type)
       let propsContent = ''
 
+      // Set component id
+      propsContent += ` id='${childComponent.id}' `
+
+      // Set if dynamic container
+      if ((CONTAINER_TYPE.includes(childComponent.type) || SELECT_TYPE.includes(childComponent.type)) && !!dataProvider) {
+        propsContent += ` dynamicContainer `
+      }
+
       const propsNames = Object.keys(childComponent.props).filter(propName => {
         if (childComponent.type === 'Icon') {
           return propName !== 'icon'
         }
-
         return true
       })
 
@@ -134,6 +159,21 @@ const buildBlock = ({
           const propsValue = childComponent.props[propName]
           const propsValueAsObject = typeof propsValue === 'object'
 
+          if (propName=='actionProps') {
+            if (propsValue.page) {
+              console.log(`Page:${propsValue.page}`)
+            }
+            const valuesCopy={
+              ...propsValue,
+              page: propsValue.page ? getPageUrl(propsValue.page, pages) : undefined
+            }
+            propsContent += ` actionProps='${JSON.stringify(valuesCopy)}'`
+            propsContent += ` backend='${config.targetDomain}'`
+            return
+          }
+          if (propName=='dataSource') {
+            propsContent += ` dataSourceId='${propsValue}'`
+          }
           if (propsValueAsObject && propsValue) {
             const gatheredProperties = Object.entries(propsValue)
               .map(([prop, value]) => {
@@ -171,6 +211,9 @@ const buildBlock = ({
           }
         })
 
+      if (childComponent.type=='Timer') {
+        propsContent += ` backend='${config.targetDomain}'`
+      }
       if (childComponent.props.page) {
         const destPageUrl = getPageUrl(childComponent.props.page, pages)
         propsContent += ` pageName={'${destPageUrl}'} `
@@ -266,16 +309,11 @@ const getIconsImports = (components: IComponents) => {
   })
 }
 
-const buildHooks = (components: IComponents, models) => {
+const buildHooks = (components: IComponents) => {
   // Returns attributes names used in this dataProvider for 'dataProvider'
   const getDataProviderFields = (dataProvider: IComponent) => {
-    return getFieldsForDataProvider(dataProvider.id, components)
-    return lodash(components)
-      .filter(
-        c => c.props?.dataSource == dataProvider.id && !!c.props?.attribute,
-      )
-      .map(c => c.props.attribute)
-      .uniq()
+    const fields=getFieldsForDataProvider(dataProvider.id, components)
+    return fields
   }
 
   const dataProviders: IComponent[] = lodash(components).pickBy(c => c.props?.model).values()
@@ -321,7 +359,7 @@ const buildDynamics = (components: IComponents) => {
   const groups = lodash.groupBy(dynamicComps, c => getDynamicType(c))
   let code = `${Object.keys(groups)
     .map(
-      g => `import withDynamic${g} from './custom-components/withDynamic${g}'`,
+      g => `import withDynamic${g} from './dependencies/hoc/withDynamic${g}'`,
     )
     .join('\n')}
 
@@ -341,7 +379,6 @@ export const generateCode = async (
   pages: {
     [key: string]: PageState
   },
-  models: any,
 ) => {
   const {
     pageName,
@@ -351,7 +388,7 @@ export const generateCode = async (
     metaImageUrl,
   } = pages[pageId]
 
-  let hooksCode = buildHooks(components, models)
+  let hooksCode = buildHooks(components)
   let dynamics = buildDynamics(components)
   let code = buildBlock({ component: components.root, components, pages })
   let componentsCodes = buildComponents(components, pages)
@@ -375,11 +412,11 @@ export const generateCode = async (
   )
   */
   const groupedComponents = lodash.groupBy(imports, c =>
-    module[c] ? '@chakra-ui/react' : `./custom-components/${c}/${c}`,
+    module[c] ? '@chakra-ui/react' : `./dependencies/custom-components/${c}`,
   )
 
   code = `import React, {useState, useEffect} from 'react';
-  import Metadata from './custom-components/Metadata';
+  import Metadata from './dependencies/Metadata';
   ${hooksCode ? `import useFetch from 'use-http'` : ''}
   import {ChakraProvider} from "@chakra-ui/react";
   ${Object.entries(groupedComponents)

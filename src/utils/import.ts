@@ -24,7 +24,7 @@ export async function loadFromJSON() {
   return INITIAL_COMPONENTS
 }
 
-export async function saveAsJSON(components: IComponents) {
+export async function saveAsJSON(components: ProjectState) {
   const serialized = JSON.stringify(components, null, 2)
   const name = `components.json`
 

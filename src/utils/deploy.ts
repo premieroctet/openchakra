@@ -1,4 +1,4 @@
-import { ProjectState } from '~/core/models/components'
+import { ProjectState } from '~/core/models/project'
 import lodash from 'lodash'
 import { build, copyFile, install, start } from './http'
 import { generateCode, generateApp, normalizePageName } from './code'
@@ -39,12 +39,15 @@ export const deploy = (state: ProjectState) => {
     .then(() => {
       return install()
     })
+    /**
+    NO BUILD and RESTART for demo
     .then(() => {
       return build()
     })
     .then(() => {
       return start()
     })
+    */
     .catch(err => {
       console.error(err)
       throw err

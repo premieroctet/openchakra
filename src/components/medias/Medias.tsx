@@ -23,8 +23,7 @@ import {
   Checkbox,
   useDisclosure,
 } from '@chakra-ui/react'
-import {getExtension, mediaWrapper} from '../../custom-components/Media/mediaWrapper'
-
+import {getExtension, mediaWrapper} from '~dependencies/custom-components/MediaWrapper'
 
 interface s3media {
   ChecksumAlgorithm: []
@@ -110,7 +109,7 @@ const Medias = ({setMediaSrc, mediaPanelClose}:{setMediaSrc: any, mediaPanelClos
 
   return (
     <div>
-      <Button colorScheme={'teal'} onClick={onOpen}>Upload your media</Button>
+      <Button colorScheme={'teal'} onClick={onOpen} mb={2}>Upload your media</Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -179,10 +178,9 @@ const Medias = ({setMediaSrc, mediaPanelClose}:{setMediaSrc: any, mediaPanelClos
           {mediaWrapper({src: imgObj.publicUrl})}
           <p>{imgObj.Key}</p>
           {setMediaSrc && <Button colorScheme={'teal'} onClick={() => {
+            setMediaSrc('src', imgObj.publicUrl)
             mediaPanelClose && mediaPanelClose()
-            setMediaSrc(imgObj.publicUrl)
           }}>Select</Button>}
-          <small>{imgObj.publicUrl}</small>
           </MediaCard>
         )
       })}

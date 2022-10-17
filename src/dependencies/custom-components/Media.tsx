@@ -1,5 +1,5 @@
 import React from 'react'
-import { mediaWrapper } from './mediaWrapper'
+import { mediaWrapper } from './MediaWrapper'
 
 const Media = ({src, ...props}:{src: string}) => (
   <>

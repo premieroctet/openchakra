@@ -1,15 +1,18 @@
-import React, { memo, useEffect } from 'react'
 import { Box, Text, Link } from '@chakra-ui/react'
-import { useDropComponent } from '~hooks/useDropComponent'
-import SplitPane from 'react-split-pane'
-import CodePanel from '~components/CodePanel'
 import { useSelector } from 'react-redux'
-import useDispatch from '~hooks/useDispatch'
+import React, { memo, useEffect } from 'react'
+import SplitPane from 'react-split-pane'
 import useFetch from 'use-http'
+
 import { getComponents } from '~core/selectors/components'
 import { getShowOverview, getShowCode, getDevice } from '~core/selectors/app'
+import { useDropComponent } from '~hooks/useDropComponent'
+import CodePanel from '~components/CodePanel'
 import ComponentPreview from '~components/editor/ComponentPreview'
 import devices from '~config/devices'
+import useDispatch from '~hooks/useDispatch'
+
+import { getWarnings } from '../../core/selectors/components';
 import config from '../../../env.json'
 
 export const gridStyles = {
@@ -23,6 +26,7 @@ export const gridStyles = {
 const Editor: React.FC = () => {
   const showCode = useSelector(getShowCode)
   const device = useSelector(getDevice)
+  const warnings = useSelector(getWarnings)
   const showOverview = useSelector(getShowOverview)
   const components = useSelector(getComponents)
   const dispatch = useDispatch()

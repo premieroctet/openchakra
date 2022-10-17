@@ -50,15 +50,18 @@ import TabsPanel from '~components/inspector/panels/components/TabsPanel'
 import TagPanel from '~components/inspector/panels/components/TagPanel'
 import TextareaPanel from '~components/inspector/panels/components/TextareaPanel'
 
+import { allowsDataSource } from '../../../utils/dataSources';
+import { allowsActions } from '../../../utils/actions';
 import { getComponents } from '../../../core/selectors/components'
 import { useForm } from '../../../hooks/useForm'
+import ActionsPanel from './ActionsPanel';
 import DataProviderPanel from '../../../custom-components/DataProvider/DataProviderPanel'
 import DataSourcePanel from './DataSourcePanel'
 import FormControl from '../controls/FormControl'
 import useDispatch from '../../../hooks/useDispatch'
 import usePropsSelector from '../../../hooks/usePropsSelector'
 
-let extraPanels = {}
+let extraPanels:{[key:string]:  React.FC<React.Component>} = {}
 
 const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
   component,
@@ -131,7 +134,8 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
       {type === 'Breadcrumb' && <BreadcrumbPanel />}
       {type === 'BreadcrumbItem' && <BreadcrumbItemPanel />}
       {type === 'BreadcrumbLink' && <LinkPanel />}
-      <DataSourcePanel />
+      {allowsDataSource(component) && <DataSourcePanel />}
+      {allowsActions(component) && <ActionsPanel/>}
     </>
   )
 }

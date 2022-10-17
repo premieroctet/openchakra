@@ -5,10 +5,14 @@ import SizeControl from '~components/inspector/controls/SizeControl'
 import usePropsSelector from '~hooks/usePropsSelector'
 import SwitchControl from '~components/inspector/controls/SwitchControl'
 import IconControl from '~components/inspector/controls/IconControl'
+import FormControl from '~components/inspector/controls/FormControl'
+import { Select } from '@chakra-ui/react'
+import { useForm } from '~hooks/useForm'
 
 const IconButtonPanel = () => {
   const size = usePropsSelector('size')
   const variant = usePropsSelector('variant')
+  const { setValueFromEvent } = useForm()
 
   return (
     <>
