@@ -20,7 +20,7 @@ const EffectsPanel = () => {
 
   return (
     <>
-      <FormControl label="Opacity">
+      <FormControl label="Opacity" htmlFor="opacity">
         <Slider
           min={1}
           onChange={(value: any) => setValue('opacity', value / 100)}

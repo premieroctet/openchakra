@@ -13,7 +13,7 @@ const FlexPanel = () => {
 
   return (
     <>
-      <FormControl label="Direction">
+      <FormControl label="Direction" htmlFor="flexDirection">
         <Select
           name="flexDirection"
           size="sm"
@@ -27,7 +27,7 @@ const FlexPanel = () => {
         </Select>
       </FormControl>
 
-      <FormControl label="Justify content">
+      <FormControl label="Justify content" htmlFor="justifyContent">
         <Select
           name="justifyContent"
           size="sm"
@@ -42,7 +42,7 @@ const FlexPanel = () => {
         </Select>
       </FormControl>
 
-      <FormControl label="Align items">
+      <FormControl label="Align items" htmlFor="alignItems">
         <Select
           name="alignItems"
           size="sm"

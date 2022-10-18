@@ -5,6 +5,7 @@ import {
   Grid,
   Box,
 } from '@chakra-ui/react'
+import ParamSelector from '~custom-components/paramSelector'
 
 type FormControlPropType = {
   label: ReactNode
@@ -37,6 +38,8 @@ const FormControl: React.FC<FormControlPropType> = ({
     >
       {label}
     </FormLabel>
+    <ParamSelector prop={htmlFor} />
+
     <Box
       display="flex"
       alignItems="center"

@@ -11,7 +11,7 @@ const DisplayPanel = () => {
 
   return (
     <>
-      <FormControl label="Display">
+      <FormControl label="Display" htmlFor="display">
         <Select
           size="sm"
           value={display || ''}
