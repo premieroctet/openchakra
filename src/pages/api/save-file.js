@@ -9,7 +9,6 @@ export default async function handler(req, res) {
   const pascalName = fileArray.join('')
 
   try {
-    console.log('Updating files...')
     const writeCode = fs.writeFile(
       `${req.body.path}/${fileName}.oc.tsx`,
       req.body.codeBody,
@@ -37,7 +36,6 @@ export default async function handler(req, res) {
       writePanel,
       writeOcTsx,
     ])
-    console.log('Files updated')
     res.statusCode = 200
     res.json({ message: 'success' })
   } catch (err) {
