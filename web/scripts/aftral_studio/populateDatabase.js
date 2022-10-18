@@ -162,5 +162,6 @@ mongoose.connect(getDatabaseUri(), MONGOOSE_OPTIONS)
     return TraineeSession.find().populate('themes')
   })
   .then(res => {
-    console.log(res)
+    console.log('OK')
+    process.exit(0)
   })

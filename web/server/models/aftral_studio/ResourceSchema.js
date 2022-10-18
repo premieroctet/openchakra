@@ -20,11 +20,11 @@ const ResourceSchema = new Schema({
   },
   type: {
     type: String,
-    required: true,
+    required: false,
   },
   url: {
     type: String,
-    required: true,
+    required: false,
   },
 }, {toJSON: {virtuals: true, getters: true}})
 

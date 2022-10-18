@@ -103,8 +103,28 @@ const moveResourceFromTheme=(theme, childResource,  up) => {
 
 }
 
+const removeResourceFromProgram = (program, childResource) => {
+  return Program.findById(program._id)
+    .populate('themes')
+    .then(program => {
+      console.log(program.themes.map(t => t._id))
+      return Promise.all(program.themes.map(t =>
+        Theme.findByIdAndUpdate(t._id, {$pull: {resources: childResource._id}}, {new: true})
+      ))
+    })
+    .then(themes => {
+      const emptyThemes=themes.filter(t => t.resources.length==0)
+      console.log(`Themes to remove${themes}`)
+      return Program.findByIdAndUpdate(program._id, {$pull: {themes: {$in: emptyThemes.map(t => t._id)}}}, {new: true})
+    })
+    .then(res => {
+      console.log(`Res:${res.themes}`)
+    })
+}
+
 module.exports={addThemeToProgram, addThemeToSession, addResourceToSession,
   addResourceToProgram, addResourceToTheme,
   removeResourceFromTheme,
   moveResourceFromTheme,
+  removeResourceFromProgram
 }

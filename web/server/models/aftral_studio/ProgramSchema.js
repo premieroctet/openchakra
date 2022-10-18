@@ -24,6 +24,11 @@ const ProgramSchema = new Schema({
     required: true,
     set: v => (v ? parseInt(v) : v),
   },
+  ordered: {
+    type: Boolean,
+    default: true,
+    required: true,
+  },
   designer: {
     type: Schema.Types.ObjectId,
     ref: 'user',

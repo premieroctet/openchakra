@@ -1,9 +1,10 @@
 const {
   addResourceToProgram,
   addResourceToSession,
+  addResourceToTheme,
   addThemeToProgram,
   addThemeToSession,
-  addResourceToTheme,
+  removeResourceFromProgram,
 } = require('../server/utils/studio/aftral/functions');
 const Session = require('../server/models/Session');
 const Resource = require('../server/models/Resource');
@@ -120,6 +121,31 @@ describe.only('Studio data function', () => {
     return Promise.all([Program.findOne(), Theme.findOne(), Resource.findOne(), Session.findOne()])
     .then(([program, theme, resource, session]) => {
         return addResourceToTheme(theme, resource)
+      })
+  })
+
+  test.only('Shoud remove resource from program', () => {
+    let program=null
+    let theme=null
+    return Theme.find({'resources': {$size: 1}})
+      .then(themes =>{
+        return Program.findOne({themes: {$in: themes}}).populate('themes')
+      })
+      .then(prgm => {
+        program=prgm
+        theme=program.themes.find(t => t.resources.length==1)
+        const resourceId=theme.resources[0]
+        return removeResourceFromProgram(program._id, resourceId._id)
+      })
+      .then(() => {
+        return Theme.findById(theme._id)
+      })
+      .then(theme => {
+        console.log(theme)
+        return Program.findById(program._id).populate('themes')
+      })
+      .then(program => {
+        return expect(program.themes.map(t => t._id.toString()).includes(theme._id.toString())).toBeFalsy()
       })
   })
 

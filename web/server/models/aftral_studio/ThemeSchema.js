@@ -10,6 +10,11 @@ const ThemeSchema = new Schema({
     type: String,
     required: false,
   },
+  ordered: {
+    type: Boolean,
+    default: true,
+    required: true,
+  },
   picture: {
     type: String,
     required: false,
@@ -20,5 +25,10 @@ const ThemeSchema = new Schema({
     required: false,
   }],
 }, {toJSON: {virtuals: true, getters: true}})
+
+
+ThemeSchema.virtual('hidden').get(function() {
+  return (!this.name && !this.code && !this.picture)
+})
 
 module.exports = ThemeSchema

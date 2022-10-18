@@ -26,7 +26,7 @@ const TraineeSessionSchema = new Schema({
   themes: [{
     type: Schema.Types.ObjectId,
     ref: 'traineeTheme',
-    required: true,
+    required: false,
   }],
 }, {
   toJSON: {

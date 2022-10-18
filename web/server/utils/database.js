@@ -54,6 +54,9 @@ const DECLARED_VIRTUALS={
   },
   traineeResource: {
     spent_time_str: {path: 'spent_time_str', instance: 'String', requires: 'spent_time'},
+  },
+  theme: {
+    hidden: {path: 'hidden', instance: 'Boolean', requires:'name,code,picture'},
   }
 }
 
@@ -168,7 +171,8 @@ const buildQuery = (model, id, fields) => {
 
   const virtuals=lodash(fields.map(f=>f.split('.')[0]))
     .uniq()
-    .map(f=>DECLARED_VIRTUALS[model]?.[f]?.requires)
+    .map(f=>DECLARED_VIRTUALS[model]?.[f]?.requires?.split(','))
+    .flatten()
     .filter(f => !!f)
     .value()
 

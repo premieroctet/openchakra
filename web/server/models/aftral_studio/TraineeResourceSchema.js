@@ -5,15 +5,15 @@ const formatDuration = require('format-duration')
 const TraineeResourceSchema = new Schema({
   name: {
     type: String,
-    required: true,
+    required: false,
   },
   short_name: {
     type: String,
-    required: true,
+    required: false,
   },
   code: {
     type: String,
-    required: true,
+    required: false,
   },
   description: {
     type: String,
@@ -21,11 +21,11 @@ const TraineeResourceSchema = new Schema({
   },
   type: {
     type: String,
-    required: true,
+    required: false,
   },
   url: {
     type: String,
-    required: true,
+    required: false,
   },
   spent_time: {
     type: Number,
