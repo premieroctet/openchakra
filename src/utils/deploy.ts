@@ -11,14 +11,14 @@ const copyCode = (pageName: string, contents: Buffer) => {
   })
 }
 
-export const deploy = (state: ProjectState) => {
+export const deploy = (state: ProjectState, models:any) => {
   const pages = Object.values(state.pages)
   return Promise.all(
     pages.map(({ pageName, components }) => validate(components)),
   )
     .then(() => {
       return Promise.all(
-        pages.map(page => generateCode(page.pageId, state.pages)),
+        pages.map(page => generateCode(page.pageId, state.pages, models)),
       )
     })
     .then(codes => {

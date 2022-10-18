@@ -48,5 +48,10 @@ export const ACTIONS={
     let url=`${backend}${API_ROOT}/action`
     const body={action: 'addChild', parent: context, child: childId}
     return axios.post(url, body)
+  },
+  putValue: ({value, props, backend, context}) => {
+    let url=`${backend}${API_ROOT}/action`
+    const body={action: 'put', model: props.dataModel, parent: context, attribute: props.attribute, value: value}
+    return axios.post(url, body)
   }
 }

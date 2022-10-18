@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/helper-builder-react-jsx-experimental": "^7.12.11",
+    "@babel/helper-regex": "^7.10.5",
     "@bugsnag/js": "^6.5.2",
     "@bugsnag/plugin-react": "^6.5.0",
     "@chakra-ui/icons": "^1.0.10",

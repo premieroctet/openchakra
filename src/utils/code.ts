@@ -7,13 +7,16 @@ import icons from '~iconsList'
 
 import {
   ACTION_TYPE,
+  CHECKBOX_TYPE,
   CONTAINER_TYPE,
   DATE_TYPE,
   IMAGE_TYPE,
+  INPUT_TYPE,
   PROGRESS_TYPE,
   SELECT_TYPE,
   SOURCE_TYPE,
   TEXT_TYPE,
+  getDataProviderDataType,
   getFieldsForDataProvider
 } from './dataSources';
 import { ProjectState, PageState } from '../core/models/project'
@@ -82,6 +85,12 @@ const getDynamicType = (comp: IComponent) => {
   if (SOURCE_TYPE.includes(comp.type)) {
     return 'Source'
   }
+  if (CHECKBOX_TYPE.includes(comp.type)) {
+    return 'Checkbox'
+  }
+  if (INPUT_TYPE.includes(comp.type)) {
+    return 'Input'
+  }
   throw new Error(`No dynamic found for ${comp.type}`)
 }
 
@@ -114,6 +123,7 @@ type BuildBlockParams = {
   components: IComponents
   forceBuildBlock?: boolean
   pages: { [key: string]: PageState }
+  models: any,
 }
 
 const buildBlock = ({
@@ -121,6 +131,7 @@ const buildBlock = ({
   components,
   forceBuildBlock = false,
   pages,
+  models
 }: BuildBlockParams) => {
   let content = ''
   component.children.forEach((key: string) => {
@@ -143,6 +154,21 @@ const buildBlock = ({
       // Set reload function
       propsContent += ` reload={reload} `
 
+      if (isDynamicComponent(childComponent)) {
+        propsContent += ` backend='${config.targetDomain}'`
+        try {
+          const tp = getDataProviderDataType(components[childComponent.parent], components, childComponent.props.dataSource, models)
+          if (tp.type) {
+            propsContent += ` dataModel='${tp.type}' `
+          }
+          else {
+            console.error(`No data provider data type found for ${childComponent.parent}`)
+          }
+        }
+        catch(err) {
+          console.error(err)
+        }
+      }
       // Set if dynamic container
       if ((CONTAINER_TYPE.includes(childComponent.type) || SELECT_TYPE.includes(childComponent.type)) && !!dataProvider) {
         propsContent += ` dynamicContainer `
@@ -162,15 +188,11 @@ const buildBlock = ({
           const propsValueAsObject = typeof propsValue === 'object'
 
           if (propName=='actionProps') {
-            if (propsValue.page) {
-              console.log(`Page:${propsValue.page}`)
-            }
             const valuesCopy={
               ...propsValue,
               page: propsValue.page ? getPageUrl(propsValue.page, pages) : undefined
             }
             propsContent += ` actionProps='${JSON.stringify(valuesCopy)}'`
-            propsContent += ` backend='${config.targetDomain}'`
             return
           }
           if (propName=='dataSource') {
@@ -388,6 +410,7 @@ export const generateCode = async (
   pages: {
     [key: string]: PageState
   },
+  models: any,
 ) => {
   const {
     pageName,
@@ -399,7 +422,7 @@ export const generateCode = async (
 
   let hooksCode = buildHooks(components)
   let dynamics = buildDynamics(components)
-  let code = buildBlock({ component: components.root, components, pages })
+  let code = buildBlock({ component: components.root, components, pages, models })
   let componentsCodes = buildComponents(components, pages)
   const iconImports = [...new Set(getIconsImports(components))]
 
