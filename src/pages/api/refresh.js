@@ -10,7 +10,6 @@ function getComponentWithLocation(path) {
 
 async function getJsons() {
   let jsons = {}
-  // TODO: Change this later to the root without any dependecy on gitpod.yml, BIT or tiui-react-oc
   const files = glob.sync(`../remote/**/*.oc.json`, {})
   files.forEach(element => {
     const { comp, dir } = getComponentWithLocation(element)

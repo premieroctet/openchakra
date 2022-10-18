@@ -24,7 +24,7 @@ const DimensionPanel = () => {
         <TextControl label="Max H" name="maxHeight" />
       </SimpleGrid>
 
-      <FormControl label="Overflow">
+      <FormControl label="Overflow" htmlFor="overflow">
         <Select
           size="sm"
           value={overflow || ''}

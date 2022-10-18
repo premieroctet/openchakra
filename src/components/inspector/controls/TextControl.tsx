@@ -21,11 +21,9 @@ const TextControl: React.FC<TextControlPropsType> = ({
 }) => {
   const { setValueFromEvent } = useForm()
   const value = usePropsSelector(name)
-
   return (
     <FormControl hasColumn={hasColumn} htmlFor={name} label={label}>
       <Input
-        borderRadius="md"
         autoComplete="off"
         id={name}
         name={name}

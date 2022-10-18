@@ -19,6 +19,7 @@ import {
   MenuItem,
   Tooltip,
   InputRightAddon,
+  Portal,
 } from '@chakra-ui/react'
 import {
   ChevronDownIcon,
@@ -29,6 +30,8 @@ import {
 import useDispatch from '~hooks/useDispatch'
 import { useParamsForm } from '~hooks/useParamsForm'
 import { getSelectedCustomComponentId } from '~core/selectors/customComponents'
+
+const paramTypes = ['string', 'number', 'boolean', 'Function', 'any']
 
 const ParametersPanel = () => {
   const dispatch = useDispatch()
@@ -89,7 +92,6 @@ const ParametersPanel = () => {
         <Flex direction="column">
           <InputGroup size="sm">
             <Input
-              mb={1}
               isInvalid={hasError}
               value={quickParams.type}
               placeholder={`type`}
@@ -103,43 +105,26 @@ const ParametersPanel = () => {
                 <MenuButton type="button">
                   <ChevronDownIcon />
                 </MenuButton>
-                <MenuList>
-                  <MenuItem
-                    onClick={() =>
-                      setQuickParams({ ...quickParams, type: 'string' })
-                    }
-                  >
-                    string
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() =>
-                      setQuickParams({ ...quickParams, type: 'number' })
-                    }
-                  >
-                    number
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() =>
-                      setQuickParams({ ...quickParams, type: 'boolean' })
-                    }
-                  >
-                    boolean
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() =>
-                      setQuickParams({ ...quickParams, type: 'any' })
-                    }
-                  >
-                    any
-                  </MenuItem>
-                </MenuList>
+                <Portal>
+                  <MenuList>
+                    {paramTypes.map((type: string) => (
+                      <MenuItem
+                        key={type}
+                        onClick={() =>
+                          setQuickParams({ ...quickParams, type: type })
+                        }
+                      >
+                        {type}
+                      </MenuItem>
+                    ))}
+                  </MenuList>
+                </Portal>
               </Menu>
             </InputRightAddon>
           </InputGroup>
-          <Flex direction="row">
+          <Flex direction="row" mt={1}>
             <Input
               ref={inputRef}
-              mr={0.5}
               size="sm"
               isInvalid={hasError}
               value={quickParams.name}
@@ -149,7 +134,7 @@ const ParametersPanel = () => {
               }
             />
             <Input
-              ml={0.5}
+              ml={1}
               size="sm"
               isInvalid={hasError}
               value={quickParams.value}
@@ -182,19 +167,13 @@ const ParametersPanel = () => {
             </Checkbox>
             <Spacer />
           </Flex>
-          <Button
-            type="submit"
-            size="xs"
-            variant="outline"
-            my={0.5}
-            bgColor="lightblue"
-          >
+          <Button type="submit" size="xs" variant="outline" bgColor="lightblue">
             Save
           </Button>
         </Flex>
       </form>
 
-      {customParams && (
+      {customParams?.length ? (
         <SimpleGrid width="100%" columns={4} spacing={1} bgColor="yellow.100">
           <Box fontSize="sm" fontWeight="bold" pl={1}>
             Name
@@ -204,6 +183,8 @@ const ParametersPanel = () => {
           </Box>
           <Box fontSize="sm">Value</Box>
         </SimpleGrid>
+      ) : (
+        <></>
       )}
       {customParams?.map((paramsName: ParametersType, i: any) => (
         <Flex
