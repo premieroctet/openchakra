@@ -1,9 +1,6 @@
-
-
 import AWS from 'aws-sdk'
 
 const S3_API_VERSION = '2006-03-01';
-
 
 
 class FileManager {
@@ -18,8 +15,9 @@ class FileManager {
    * @param {string} bucketName AWS S3 bucket name
    * @param {string} [rootFolderName] AWS S3 root folder name without trailing forward slash
    */
-  static initialize(region: string, bucketName: string, rootFolderName = "") {
-    AWS.config.update({ region: region });
+  static initialize(region: string, bucketName: string, accessKeyId: string, secretAccessKey: string, rootFolderName = "") {
+    
+    AWS.config.update({ region, accessKeyId, secretAccessKey });
     FileManager.s3 = new AWS.S3({ apiVersion: S3_API_VERSION });
     FileManager.bucketName = bucketName;
     FileManager.rootFolderName = rootFolderName;
