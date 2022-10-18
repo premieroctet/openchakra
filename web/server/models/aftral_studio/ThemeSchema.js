@@ -4,11 +4,11 @@ const Schema = mongoose.Schema
 const ThemeSchema = new Schema({
   name: {
     type: String,
-    required: true,
+    required: false,
   },
   code: {
     type: String,
-    required: true,
+    required: false,
   },
   picture: {
     type: String,

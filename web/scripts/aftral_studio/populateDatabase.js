@@ -41,7 +41,7 @@ const generateProgramQuery = program => {
   let [p_code, p_name, designer_email, p_descr, t_name,  r_name]=program
   p_desc=p_descr.slice(0, 10)
   r_url=STORY_FILE(r_name)
-  return Resource.findOneAndUpdate({url: r_url, name: r_name}, {$set:{url: r_url, code: `RES_${resssourceIdx}`, type: 'TP'}}, {upsert: true, new: true})
+  return Resource.findOneAndUpdate({url: r_url, name: r_name}, {$set:{url: r_url, code: `RES_${resssourceIdx}`, type: 'TP', short_name: r_name}}, {upsert: true, new: true})
     .then(res => {
       resssourceIdx = resssourceIdx +1
       return Theme.findOneAndUpdate({name: t_name}, {$set:{name: t_name, code: `TH_${themeIdx}`}, $addToSet:{resources: res}}, {upsert: true, new: true})

@@ -1,13 +1,15 @@
+const {
+  addResourceToProgram,
+  addResourceToSession,
+  addThemeToProgram,
+  addThemeToSession,
+  addResourceToTheme,
+} = require('../server/utils/studio/aftral/functions');
+const Session = require('../server/models/Session');
+const Resource = require('../server/models/Resource');
+const Theme = require('../server/models/Theme');
+const Program = require('../server/models/Program');
 import {getModels, buildQuery, buildPopulate, buildPopulates, MONGOOSE_OPTIONS} from '../server/utils/database'
-import '../server/models/Program'
-import '../server/models/Theme'
-import '../server/models/Resource'
-import '../server/models/Session'
-import '../server/models/TrainingCenter'
-import '../server/models/TraineeTheme'
-import '../server/models/TraineeSession'
-import '../server/models/TraineeResource'
-import '../server/models/User'
 
 const mongoose=require('mongoose')
 
@@ -59,39 +61,65 @@ describe('Studio models API', () => {
     const fields2=['session.trainers', 'session.trainees']
   })
 
-  test('Should build a query', () => {
-    const model='program'
-    const id='63402792b7999c87ac1b7073'
-    const fields='name,themes,themes.name,themes.resources,themes.resources.url'.split(',')
-    const query=buildQuery(model, id, fields)
-    return mongoose.connect('mongodb://localhost/aftral_studio', MONGOOSE_OPTIONS)
-      .then(() => {
-        return query
-      })
-      .then(data => {
-        expect(data[0].themes[0].resources[0].url).toBeTruthy()
-      })
-  })
-
   test('Shoud populate virtuals level 1', () => {
     const model='traineeTheme'
     const fields='spent_time'.split(',')
     const query=buildQuery(model, null, fields)
-    return mongoose.connect('mongodb://localhost/aftral_studio', MONGOOSE_OPTIONS)
-      .then(() => {
-        return expect(query._mongooseOptions.populate?.resources).toBeTruthy()
-        return query
-      })
+    return expect(query._mongooseOptions.populate?.resources).toBeTruthy()
   })
 
   test('Shoud populate virtuals level 2', () => {
     const model='traineeSession'
     const fields='spent_time,themes'.split(',')
     const query=buildQuery(model, null, fields)
+    return expect(query._mongooseOptions?.populate?.themes?.populate?.[0]?.path).toEqual('resources')
+  })
+})
+
+describe.only('Studio data function', () => {
+
+  beforeAll(()=> {
     return mongoose.connect('mongodb://localhost/aftral_studio', MONGOOSE_OPTIONS)
-      .then(() => {
-        return expect(query._mongooseOptions?.populate?.themes?.populate?.[0]?.path).toEqual('resources')
-        return query
+  })
+
+  test('Shoud addThemeToProgram', () => {
+    return Promise.all([Program.findOne(), Theme.findOne(), Resource.findOne(), Session.findOne()])
+      .then(([program, theme, resource, session]) => {
+        return addThemeToProgram(program, theme)
+      })
+      .then(program => {
+        return Program.findById(program._id)
+      })
+      .then(program => {
+        console.log(program.themes)
+      })
+  })
+
+  test('Shoud addResourceToProgram', () => {
+    return Promise.all([Program.findOne(), Theme.findOne(), Resource.findOne(), Session.findOne()])
+    .then(([program, theme, resource, session]) => {
+        return addResourceToProgram(program, resource)
+      })
+  })
+
+  test('Shoud addThemeToSession', () => {
+    return Promise.all([Program.findOne(), Theme.findOne().populate('resources'), Resource.findOne(), Session.findOne()])
+    .then(([program, theme, resource, session]) => {
+        return addThemeToSession(session, theme)
+      })
+  })
+
+  test('Shoud addResourceToSession', () => {
+    return Promise.all([Program.findOne(), Theme.findOne(), Resource.findOne(), Session.findOne()])
+    .then(([program, theme, resource, session]) => {
+        return addResourceToSession(session, resource)
+      })
+  })
+
+  test('Shoud addResourceToTheme', () => {
+    return Promise.all([Program.findOne(), Theme.findOne(), Resource.findOne(), Session.findOne()])
+    .then(([program, theme, resource, session]) => {
+        return addResourceToTheme(theme, resource)
       })
   })
 

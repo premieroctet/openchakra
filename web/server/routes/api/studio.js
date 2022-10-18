@@ -122,7 +122,7 @@ router.post('/action', (req, res) => {
   const actionFn=ACTIONS[action]
   if (!actionFn) {
     console.error(`Unkown action:${action}`)
-    return res.status(200).json(`Unkown action:${action}`)
+    return res.status(404).json(`Unkown action:${action}`)
   }
 
   return actionFn(req.body)

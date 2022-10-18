@@ -9,7 +9,7 @@ const TraineeThemeSchema = new Schema({
   },
   code: {
     type: String,
-    required: true,
+    required: false,
   },
   picture: {
     type: String,
