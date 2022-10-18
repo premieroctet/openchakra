@@ -17,7 +17,7 @@ const CodePanel = () => {
 
   useEffect(() => {
     const getCode = async () => {
-      const code = await generateCode(pageId, pages)
+      const code = await generateCode(pageId, pages, models)
       setCode(code)
     }
 
