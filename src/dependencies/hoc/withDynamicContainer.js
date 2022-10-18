@@ -2,7 +2,6 @@ import React from 'react'
 import lodash from 'lodash'
 
 const isOtherSource = (element, dataSourceId) => {
-  console.log(`Element:${element}`)
   if (element.props.dynamicContainer && element.props.dataSourceId && element.props.dataSourceId!=dataSourceId) {
     return true
   }

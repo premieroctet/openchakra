@@ -28,13 +28,11 @@ export const ACTIONS:IActions={
   'levelUp': {
     label: "Move item up",
     options: {
-      //data: ({components}) => components.map(p => ({key: p.id, label: p.id})),
     }
   },
   'levelDown': {
     label: "Move item down",
     options: {
-      data: ({components}) => components.map(p => ({key: p.id, label: p.id})),
     }
   },
   'previous': {
@@ -65,6 +63,12 @@ export const ACTIONS:IActions={
     label: 'Back to session',
     options: {
       //data: ({components}) => components.map(p => ({key: p.id, label: p.id})),
+    }
+  },
+  addChild :{
+    label: 'Add child',
+    options: {
+      child: ({components}) => components.map(p => ({key: p.id, label: `${p.type}/${p.id}`})),
     }
   }
 }

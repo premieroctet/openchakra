@@ -140,6 +140,8 @@ const buildBlock = ({
 
       // Set component id
       propsContent += ` id='${childComponent.id}' `
+      // Set reload function
+      propsContent += ` reload={reload} `
 
       // Set if dynamic container
       if ((CONTAINER_TYPE.includes(childComponent.type) || SELECT_TYPE.includes(childComponent.type)) && !!dataProvider) {
@@ -214,6 +216,7 @@ const buildBlock = ({
       if (childComponent.type=='Timer') {
         propsContent += ` backend='${config.targetDomain}'`
       }
+      propsContent += ` context={root?.[0]?._id}`
       if (childComponent.props.page) {
         const destPageUrl = getPageUrl(childComponent.props.page, pages)
         propsContent += ` pageName={'${destPageUrl}'} `
@@ -320,7 +323,7 @@ const buildHooks = (components: IComponents) => {
   if (dataProviders.length == 0) {
     return ''
   }
-  let code = `const {get}=useFetch('${config.targetDomain}')`
+  let code = `const {get}=useFetch('${config.targetDomain}', {cachePolicy: 'no-cache'})`
   code +=
     '\n' +
     dataProviders
@@ -330,6 +333,12 @@ const buildHooks = (components: IComponents) => {
       })
       .join(`\n`)
   code += `\n
+  const [refresh, setRefresh]=useState(false)
+
+  const reload = () => {
+    setRefresh(!refresh)
+  }
+
   useEffect(() => {
     ${dataProviders
       .map(dp => {
@@ -344,7 +353,7 @@ const buildHooks = (components: IComponents) => {
         .catch(err => alert(err))`
       })
       .join('\n')}
-  }, [get])\n`
+  }, [get, refresh])\n`
   return code
 }
 
