@@ -16,6 +16,7 @@ import {
   SELECT_TYPE,
   SOURCE_TYPE,
   TEXT_TYPE,
+  UPLOAD_TYPE,
   getDataProviderDataType,
   getFieldsForDataProvider,
   getComponentsHierarchy,
@@ -91,6 +92,9 @@ const getDynamicType = (comp: IComponent) => {
   }
   if (INPUT_TYPE.includes(comp.type)) {
     return 'Input'
+  }
+  if (UPLOAD_TYPE.includes(comp.type)) {
+    return 'UploadFile'
   }
   throw new Error(`No dynamic found for ${comp.type}`)
 }
