@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { ACTIONS } from '../utils/actions';
+import { ACTIONS } from '../utils/actions'
 
 const withDynamicButton = Component => {
   const internal = props => {
@@ -15,7 +15,7 @@ const withDynamicButton = Component => {
         if (!ACTIONS[action]) {
           return alert(`Undefined action ${action}`)
         }
-        return ACTIONS[action]({value:value, props:actionProps, backend, context})
+        return ACTIONS[action]({value:value, props:actionProps, backend, context, model:props.dataModel})
           .then(() => {console.log('ok'); props.reload()})
           .catch(err => alert(`Erreur:${err}`))
       }

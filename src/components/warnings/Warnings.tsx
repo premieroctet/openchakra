@@ -29,7 +29,6 @@ import React, { useState, memo, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { componentsList } from '~componentsList'
-import { generateComponentCode, formatCode } from '~utils/code'
 import {
   getSelectedComponent,
   getComponents,

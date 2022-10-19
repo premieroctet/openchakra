@@ -17,7 +17,8 @@ import {
   SOURCE_TYPE,
   TEXT_TYPE,
   getDataProviderDataType,
-  getFieldsForDataProvider
+  getFieldsForDataProvider,
+  getComponentsHierarchy,
 } from './dataSources';
 import { ProjectState, PageState } from '../core/models/project'
 import config from '../../env.json'
@@ -140,7 +141,7 @@ const buildBlock = ({
       return
     }
     if (!childComponent) {
-      console.error(`invalid component ${key}`)
+      throw new Error(`invalid component ${key}`)
     } else if (forceBuildBlock || !childComponent.componentName) {
       const dataProvider = components[childComponent.props.dataSource]
       const paramProvider = dataProvider?.id.replace(/comp-/, '')
@@ -153,6 +154,9 @@ const buildBlock = ({
       propsContent += ` id='${childComponent.id}' `
       // Set reload function
       propsContent += ` reload={reload} `
+      // Provide page data context
+      propsContent += ` context={root?.[0]?._id}`
+
 
       if (isDynamicComponent(childComponent)) {
         propsContent += ` backend='${config.targetDomain}'`
@@ -238,7 +242,7 @@ const buildBlock = ({
       if (childComponent.type=='Timer') {
         propsContent += ` backend='${config.targetDomain}'`
       }
-      propsContent += ` context={root?.[0]?._id}`
+
       if (childComponent.props.page) {
         const destPageUrl = getPageUrl(childComponent.props.page, pages)
         propsContent += ` pageName={'${destPageUrl}'} `
@@ -259,6 +263,7 @@ const buildBlock = ({
         components,
         forceBuildBlock,
         pages,
+        models
       })}
       </${componentName}>`
       } else {
@@ -301,6 +306,7 @@ type GenerateComponentCode = {
   componentName?: string
   forceBuildBlock?: boolean
   pages: { [key: string]: PageState }
+  models: any[]
 }
 
 export const generateComponentCode = ({
@@ -309,12 +315,14 @@ export const generateComponentCode = ({
   componentName,
   forceBuildBlock,
   pages,
+  models,
 }: GenerateComponentCode) => {
   let code = buildBlock({
     component,
     components,
     forceBuildBlock,
     pages,
+    models,
   })
 
   code = `

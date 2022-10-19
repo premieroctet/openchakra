@@ -31,6 +31,13 @@ export const isMultipleDispatcher = (component: IComponent):boolean => {
     return CONTAINER_TYPE.includes(component.type)
 }
 
+export const getComponentsHierarchy = (component: IComponent, components: IComponents): IComponent[] => {
+  if (component.parent==component.id) {
+    return [component]
+  }
+  return [component, ...getComponentsHierarchy(components[component.parent], components)]
+}
+
 export const getDataProviders = (component: IComponent, components: IComponents):IComponent[] => {
   return Object.values(components)
     //.filter(c => !!c.props?.model || !!c.props.dataSource)
