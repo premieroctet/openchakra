@@ -42,6 +42,20 @@ export const mediaWrapper = ({src, htmlHeight, htmlWidth, ...props}:{src: string
           width={document.width}
           height={document.height}
           ></object> 
+      case 'doc': 
+      case 'docx': 
+      case 'xls': 
+      case 'xlsx': 
+      return <iframe
+        title={src}
+        src={`https://view.officeapps.live.com/op/embed.aspx?src=${src}`}
+        width={htmlWidth}
+        height={htmlHeight}
+        frameBorder="0"
+        allowFullScreen
+      >
+      </iframe>  
+      case 'txt': 
       case 'html': 
         return <iframe
         title={src}
