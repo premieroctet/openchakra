@@ -4,15 +4,15 @@ const Schema = mongoose.Schema
 const ProgramSchema = new Schema({
   name: {
     type: String,
-    required: true,
+    required: false,
   },
   code: {
     type: String,
-    required: true,
+    required: false,
   },
   picture: {
     type: String,
-    required: true,
+    required: false,
   },
   description: {
     type: String,
@@ -22,6 +22,7 @@ const ProgramSchema = new Schema({
   duration: {
     type: Number,
     required: true,
+    default: 0,
     set: v => (v ? parseInt(v) : v),
   },
   ordered: {
@@ -32,7 +33,7 @@ const ProgramSchema = new Schema({
   designer: {
     type: Schema.Types.ObjectId,
     ref: 'user',
-    required: true,
+    required: false,
   },
   themes: [{
     type: Schema.Types.ObjectId,

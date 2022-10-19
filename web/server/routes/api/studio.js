@@ -98,6 +98,36 @@ router.post('/start', (req, res) => {
   return res.json(result)
 })
 
+router.post('/action', (req, res) => {
+  const action=req.body.action
+  const actionFn=ACTIONS[action]
+  if (!actionFn) {
+    console.error(`Unkown action:${action}`)
+    return res.status(404).json(`Unkown action:${action}`)
+  }
+
+  return actionFn(req.body)
+    .then(result => {
+      return res.json(result)
+    })
+    .catch(err => {
+      console.log(err)
+      return res.status(err.status || HTTP_CODES.SYSTEM_ERROR).json(err.message || err)
+    })
+})
+
+router.post('/:model', (req, res) => {
+  const model=req.params.model
+  return mongoose.connection.models[model].create({})
+    .then(data => {
+      console.log(`CReated ata ${data}`)
+      return res.json(data)
+    })
+    .catch(err => {
+      return res.status(500).json(err)
+    })
+})
+
 router.get('/:model/:id?', (req, res) => {
   const model=req.params.model
   const fields=req.query.fields?.split(',') || []
@@ -117,24 +147,6 @@ router.get('/:model/:id?', (req, res) => {
     .catch(err => {
       console.error(err)
       res.status(err.status || HTTP_CODES.SYSTEM_ERROR).json(err.message || err)
-    })
-})
-
-router.post('/action', (req, res) => {
-  const action=req.body.action
-  const actionFn=ACTIONS[action]
-  if (!actionFn) {
-    console.error(`Unkown action:${action}`)
-    return res.status(404).json(`Unkown action:${action}`)
-  }
-
-  return actionFn(req.body)
-    .then(result => {
-      return res.json(result)
-    })
-    .catch(err => {
-      console.log(err)
-      return res.status(err.status || HTTP_CODES.SYSTEM_ERROR).json(err.message || err)
     })
 })
 
