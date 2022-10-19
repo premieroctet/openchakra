@@ -65,10 +65,10 @@ const CustomPropsPanel = () => {
             let propVal = quickProps.value.trim()
             if (propVal[0] === '{' && propVal[propVal.length - 1] === '}') {
               propVal = propVal.substring(1, propVal.length - 1).trim()
-              if (!params?.includes(propVal)) {
-                setError(true)
-                return
-              }
+              // if (!params?.includes(propVal)) {
+              //   setError(true)
+              //   return
+              // }
             }
             setValue(quickProps.name, quickProps.value)
             setQuickProps(DEFAULT_CUSTOM_PROPS)
@@ -108,7 +108,7 @@ const CustomPropsPanel = () => {
                     <MenuItem
                       key={param}
                       onClick={() =>
-                        setQuickProps({ ...quickProps, value: param })
+                        setQuickProps({ ...quickProps, value: `{${param}}` })
                       }
                     >
                       {param}

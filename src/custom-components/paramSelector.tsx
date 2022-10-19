@@ -41,7 +41,7 @@ const ParamSelector = ({ prop }: any) => {
               <List>
                 {params?.map((param: string) => (
                   <ListItem
-                    onClick={() => setValue(prop, param)}
+                    onClick={() => setValue(prop, `{${param}}`)}
                     key={param}
                     px={1}
                     _hover={{ bg: 'teal.100' }}

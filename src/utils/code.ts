@@ -48,7 +48,13 @@ const buildParams = (paramsName: any) => {
   paramsName.forEach((param: any) => {
     const optional = param.optional ? '?' : ''
     paramTypes += `${param.name}${optional}: ${param.type}, `
-    params += `${param.name}=${param.value}, `
+    let operand =
+      param.type == 'string'
+        ? `'${param.value}'`
+        : param.type == 'Function'
+        ? `${param.value.slice(1, param.value.length - 1)}`
+        : `${param.value}`
+    params += `${param.name}=${operand}, `
   })
   paramTypes += `}`
   params += `}`
@@ -78,14 +84,9 @@ const buildStyledProps = (propsNames: string[], childComponent: IComponent) => {
         propsContent += `${propName}${operand} `
       }
     } else if (propName !== 'children' && propsValue) {
-      let operand = `={${propsValue}}`
+      let operand = `='${propsValue}'`
       if (propsValue[0] === '{' && propsValue[propsValue.length - 1] === '}') {
         operand = `=${propsValue}`
-      } else if (
-        propsValue.toString().match(/^[0-9]/) &&
-        !propsValue.toString().match(/[0-9]+$/)
-      ) {
-        operand = `='${propsValue}'`
       } else if (propsValue === true || propsValue === 'true') {
         operand = ``
       } else if (
@@ -439,6 +440,7 @@ const App = (${params}: AppPropsTypes) => (
 );
 
 export default App;`
+  console.log(code)
 
   return await formatCode(code)
 }
