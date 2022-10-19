@@ -299,7 +299,6 @@ const buildBlock = ({
           components,
           forceBuildBlock,
         })}</Box>))}`
-        console.log(returnLoopValue(propsNames, childComponent))
       } else {
         content += `<${componentName} ${propsContent} />`
       }
@@ -440,8 +439,6 @@ const App = (${params}: AppPropsTypes) => (
 );
 
 export default App;`
-  console.log(code)
-
   return await formatCode(code)
 }
 
