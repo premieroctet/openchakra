@@ -13,6 +13,8 @@ const {
   addThemeToSession,
   moveChildInParent,
   removeChildFromParent,
+  getNext, getPrevious,
+  getSession,
 } = require('./aftral/functions')
 
 const ACTIONS={
@@ -74,6 +76,18 @@ const ACTIONS={
         return Promise.reject(`Unkown case ${result.map(r => !!r)}`)
 
       })
+  },
+
+  next: ({id}) => {
+    return getNext(id)
+  },
+
+  previous: ({id}) => {
+    return getPrevious(id)
+  },
+
+  session: ({id}) => {
+    return getSession(id)
   },
 
 }

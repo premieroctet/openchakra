@@ -6,9 +6,10 @@ const {
   addResourceToTheme,
   addThemeToProgram,
   addThemeToSession,
-  removeResourceFromProgram,
   getModel,
   moveChildInParent,
+  getNext,
+  getPrevious,
 } = require('../server/utils/studio/aftral/functions')
 const Session = require('../server/models/Session')
 const Resource = require('../server/models/Resource')
@@ -124,30 +125,6 @@ describe.only('Studio data function', () => {
       })
   })
 
-  test('Shoud remove resource from program', () => {
-    let program=null
-    let theme=null
-    return Theme.find({'resources': {$size: 1}})
-      .then(themes => {
-        return Program.findOne({themes: {$in: themes}}).populate('themes')
-      })
-      .then(prgm => {
-        program=prgm
-        theme=program.themes.find(t => t.resources.length==1)
-        const resourceId=theme.resources[0]
-        return removeResourceFromProgram(program._id, resourceId._id)
-      })
-      .then(() => {
-        return Theme.findById(theme._id)
-      })
-      .then(theme => {
-        return Program.findById(program._id).populate('themes')
-      })
-      .then(program => {
-        return expect(program.themes.map(t => t._id.toString()).includes(theme._id.toString())).toBeFalsy()
-      })
-  })
-
   test('Shoud levelUp/leveDown theme from program', async() => {
     let oldData=await Program.findOne({'themes.1': {$exists: true}}).populate('themes')
     await moveChildInParent(oldData._id, oldData.themes[0]._id, false)
@@ -195,5 +172,47 @@ describe.only('Studio data function', () => {
     const theme=await Theme.findOne({}, {_id: 1})
     expect(getModel(theme)).resolves.toEqual('theme')
   })
+
+  test('Should return next resource', async() => {
+    const res_id='634fc49e775b89a58df3ec87'
+    const next_id='634fc49e775b89a58df3ec88'
+    const res=await getNext(res_id)
+    return expect(res?._id?.toString()).toEqual(next_id)
+  })
+
+  test('Should return next theme', async() => {
+    const res_id='634fc49f775b89a58df3eca1'
+    const next_id='634fc49f775b89a58df3eca3'
+    const res=await getNext(res_id)
+    return expect(res?._id?.toString()).toEqual(next_id)
+  })
+
+  test('Should return same last theme', async() => {
+    const res_id='634fc49f775b89a58df3eca5'
+    const next_id='634fc49f775b89a58df3eca5'
+    const res=await getNext(res_id)
+    return expect(res?._id?.toString()).toEqual(next_id)
+  })
+
+  test('Should return prev resource', async() => {
+    const prev_id='634fc49e775b89a58df3ec87'
+    const res_id='634fc49e775b89a58df3ec88'
+    const res=await getPrevious(res_id)
+    return expect(res?._id?.toString()).toEqual(prev_id)
+  })
+
+  test('Should return prev theme', async() => {
+    const prev_id='634fc49f775b89a58df3eca1'
+    const res_id='634fc49f775b89a58df3eca3'
+    const res=await getPrevious(res_id)
+    return expect(res?._id?.toString()).toEqual(prev_id)
+  })
+
+  test('Should return same first theme', async() => {
+    const res_id='634fc49f775b89a58df3eca1'
+    const res=await getPrevious(res_id)
+    return expect(res?._id?.toString()).toEqual(res_id)
+  })
+
 
 })

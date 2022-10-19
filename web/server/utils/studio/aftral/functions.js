@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import lodash from 'lodash'
 import Program from '../../../models/Program'
 import Theme from '../../../models/Theme'
 import Session from '../../../models/Session'
@@ -109,9 +110,70 @@ const moveChildInParent = (parent_id, child_id, up) => {
     })
 }
 
+const getTraineeSession = theme_or_resource_id => {
+  return getModel(theme_or_resource_id)
+    .then(model => {
+      if (model=='traineeTheme') {
+        return TraineeSession.findOne({themes: theme_or_resource_id})
+      }
+      if (model=='traineeResource') {
+        return TraineeTheme.findOne({resources: theme_or_resource_id})
+          .then(theme => {
+            return TraineeSession.findOne({themes: theme})
+          })
+      }
+    })
+}
+
+const getThemesOrResources = id => {
+  return getModel(id)
+    .then(model => {
+      return getTraineeSession(id)
+        .then(session => {
+          if (model=='traineeTheme') {
+            return TraineeSession.findById(session._id)
+              .populate('themes')
+              .then(session => session.themes)
+          }
+          if (model=='traineeResource') {
+            return TraineeSession.findById(session._id)
+              .populate({path: 'themes', populate: 'resources'})
+              .then(session => {
+                return lodash.flatten(session.themes.map(t => t.resources))
+              })
+          }
+        })
+    })
+}
+
+const getNext = id => {
+  return getThemesOrResources(id)
+    .then(datalist => {
+      const idx=datalist.findIndex(v => v._id.toString()==id)
+      const nextIdx=idx==datalist.length-1 ?idx : idx+1
+      return datalist[nextIdx]
+    })
+}
+
+const getPrevious = id => {
+  return getThemesOrResources(id)
+    .then(datalist => {
+      const idx=datalist.findIndex(v => v._id.toString()==id)
+      const prevIdx=idx==0 ?idx : idx-1
+      return datalist[prevIdx]
+    })
+}
+
+const getSession = id => {
+  return getTraineeSession(id)
+}
+
 module.exports={addThemeToProgram, addThemeToSession, addResourceToSession,
   addResourceToProgram, addResourceToTheme,
   removeChildFromParent,
   getModel,
   moveChildInParent,
+  getNext,
+  getPrevious,
+  getSession,
 }

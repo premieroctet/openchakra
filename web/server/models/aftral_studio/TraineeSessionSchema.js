@@ -31,8 +31,8 @@ const TraineeSessionSchema = new Schema({
 }, {
   toJSON: {
     virtuals: true,
-    getters: true
-  }
+    getters: true,
+  },
 })
 
 TraineeSessionSchema.virtual('spent_time').get(function() {
@@ -40,7 +40,7 @@ TraineeSessionSchema.virtual('spent_time').get(function() {
 })
 
 TraineeSessionSchema.virtual('spent_time_str').get(function() {
-  const timeMillis=lodash.sum(this.themes.map(t => t.spent_time))
+  const timeMillis=lodash.sum(this.themes.map(t => t.spent_time || 0))
   return formatDuration(timeMillis, {leading: true})
 })
 
