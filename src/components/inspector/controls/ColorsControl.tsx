@@ -11,7 +11,7 @@ type ColorControlPropsType = {
 
 const ColorsControl = (props: ColorControlPropsType) => {
   return (
-    <FormControl label={props.label}>
+    <FormControl label={props.label} htmlFor={props.name}>
       <ColorPickerControl
         withFullColor={props.withFullColor}
         name={props.name}

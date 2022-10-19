@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import { IconButton, ButtonGroup, useTheme } from '@chakra-ui/react'
+import { IconButton, ButtonGroup, useTheme, Select } from '@chakra-ui/react'
 import ColorsControl from '~components/inspector/controls/ColorsControl'
 import { GoBold, GoItalic } from 'react-icons/go'
 import {
@@ -27,7 +27,41 @@ const TextPanel = () => {
 
   return (
     <>
-      <FormControl label="Style">
+      <FormControl label="Font Weight" htmlFor="fontWeight">
+        <Select
+          name="fontWeight"
+          size="sm"
+          value={fontWeight || 'normal'}
+          onChange={setValueFromEvent}
+        >
+          <option>hairline</option>
+          <option>thin</option>
+          <option>light</option>
+          <option>normal</option>
+          <option>medium</option>
+          <option>semibold</option>
+          <option>bold</option>
+          <option>extrabold</option>
+          <option>black</option>
+          <option></option>
+        </Select>
+      </FormControl>
+      <FormControl label="Font Weight" htmlFor="fontStyle">
+        <Select
+          name="fontStyle"
+          size="sm"
+          value={fontStyle || 'normal'}
+          onChange={setValueFromEvent}
+        >
+          <option>italic</option>
+          <option>normal</option>
+          <option>inherit</option>
+          <option>initial</option>
+          <option></option>
+        </Select>
+      </FormControl>
+      {/* Added more options in drop down and removed only Bold & Italic options */}
+      {/* <FormControl label="Style">
         <IconButton
           mr={1}
           aria-label="bold"
@@ -53,9 +87,9 @@ const TextPanel = () => {
         >
           Italic
         </IconButton>
-      </FormControl>
+      </FormControl> */}
 
-      <FormControl label="Text align">
+      <FormControl label="Text align" htmlFor="textAlign">
         <ButtonGroup size="xs" isAttached>
           <IconButton
             aria-label="bold"

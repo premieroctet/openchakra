@@ -89,7 +89,7 @@ const GradientControl = (props: GradientControlPropsType) => {
 
   return (
     <>
-      <FormControl label={props.label}>
+      <FormControl label={props.label} htmlFor={directionValue || 'direction'}>
         <Select
           size="sm"
           id={directionValue || 'direction'}
@@ -109,7 +109,7 @@ const GradientControl = (props: GradientControlPropsType) => {
           ))}
         </Select>
       </FormControl>
-      <FormControl label="Clip to Text">
+      <FormControl label="Clip to Text" htmlFor="bgClip">
         <Checkbox
           defaultChecked={textGradient}
           onChange={e =>
