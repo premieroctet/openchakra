@@ -17,10 +17,11 @@ export const SELECT_TYPE: ComponentType[] = ['Select']
 export const SOURCE_TYPE: ComponentType[] = ['Timer']
 export const CHECKBOX_TYPE: ComponentType[] = ['Checkbox']
 export const INPUT_TYPE: ComponentType[] = ['Input']
+export const UPLOAD_TYPE: ComponentType[] = ['UploadFile']
 
 const ALL_DYNAMICS=lodash.flatten([
   CONTAINER_TYPE, TEXT_TYPE, ACTION_TYPE, IMAGE_TYPE, PROGRESS_TYPE,
-  DATE_TYPE, SELECT_TYPE, CHECKBOX_TYPE, INPUT_TYPE,
+  DATE_TYPE, SELECT_TYPE, CHECKBOX_TYPE, INPUT_TYPE, UPLOAD_TYPE
 ])
 
 export const allowsDataSource = (component: IComponent): boolean => {
