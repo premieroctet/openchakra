@@ -1,5 +1,5 @@
 import { Box, Text } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import FileManager from '../utils/S3filemanager'
 import { s3Config } from '../utils/s3Config'
 import useFetch from 'use-http'
@@ -48,11 +48,11 @@ const UploadFile = (
       }
     }
     
-    useEffect(() => {
-      const form = document.querySelector('#uploadressource') as HTMLFormElement
-      const inputFile = form.querySelector('[type="file"]') as HTMLInputElement
-      inputFile.value = value
-  }, [value])
+  //   useEffect(() => {
+  //     const form = document.querySelector('#uploadressource') as HTMLFormElement
+  //     const inputFile = form.querySelector('[type="file"]') as HTMLInputElement
+  //     inputFile.value = value
+  // }, [value])
   
   return (
     <Box {...props} >
