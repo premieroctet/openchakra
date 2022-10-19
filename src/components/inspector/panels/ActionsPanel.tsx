@@ -2,7 +2,7 @@ import { Accordion, Input, Select } from '@chakra-ui/react';
 import { useSelector } from 'react-redux'
 import React, { useState, useEffect, memo } from 'react'
 import { getDataProviders, getAvailableAttributes, CONTAINER_TYPE } from '~utils/dataSources'
-import {getModels, getModelAttributes} from '~core/selectors/dataSources'
+import { getModels, getModelAttributes } from '~core/selectors/dataSources'
 import AccordionContainer from '~components/inspector/AccordionContainer'
 import { ACTIONS } from '../../../utils/actions';
 import {
@@ -14,51 +14,27 @@ import { useForm } from '../../../hooks/useForm'
 import FormControl from '../controls/FormControl'
 import usePropsSelector from '../../../hooks/usePropsSelector'
 
-
-const ActionsPanel:React.FC = () => {
-  const { setValueFromEvent, setValue } = useForm()
-  const action = usePropsSelector('action')
-  const actionProps = usePropsSelector('actionProps')
-  const redirectTo = usePropsSelector('redirectTo')
-  const pages = useSelector(getPages)
-  const models=useSelector(getModels)
-  const components=useSelector(getComponents)
-
-  const optionsParams={pages, models, components: Object.values(components)}
-
-  const onActionPropChange = (ev: React.ChangeEvent<HTMLSelectElement>) => {
-    const {name, value}=ev.target
-    setValue('actionProps', {...actionProps, [name]: value})
-  }
-
-  const onActionChange = (ev: React.ChangeEvent<HTMLSelectElement>) => {
-    // Reset action props on action change
-    //setValue('actionProps', {})
-    setValueFromEvent(ev)
-  }
-
+const ActionPanel = ({ id, actionLabel, actions, action, actionProps, optionsParams, onActionChange, onActionPropChange }) => {
   return (
-    <Accordion >
-      <AccordionContainer title="Actions">
-      <FormControl htmlFor="action" label="Action">
-        <Select
-          id="action"
-          onChange={onActionChange}
-          name="action"
-          size="sm"
-          value={action || ''}
-        >
-          <option value={undefined}></option>
-          {Object.keys(ACTIONS).map(action => (
-            <option value={action}>
-              {ACTIONS[action].label}
-            </option>
-          ))}
-        </Select>
-      </FormControl>
-      {action && Object.keys(ACTIONS[action].options).map(k => {
-        const optionValues:any[]=ACTIONS[action].options[k](optionsParams)
-        return (
+    <><FormControl htmlFor={id} label={actionLabel}>
+    <Select
+      id={id}
+      onChange={onActionChange}
+      name={id}
+      size="sm"
+      value={action || ''}
+    >
+      <option value={undefined}></option>
+      {actions.map(action => (
+        <option value={action}>
+          {ACTIONS[action].label}
+        </option>
+      ))}
+    </Select>
+  </FormControl>
+    {action && Object.keys(ACTIONS[action].options).map(k => {
+      const optionValues: any[] = ACTIONS[action].options[k](optionsParams)
+      return (
         <FormControl htmlFor={k} label={k}>
           <Select
             id={k}
@@ -75,26 +51,52 @@ const ActionsPanel:React.FC = () => {
             ))}
           </Select>
         </FormControl>
-      )})}
-      {false &&
-      <FormControl htmlFor="redirectTo" label="Redirect if success">
-        <Select
-          id="redirectTo"
-          onChange={setValueFromEvent}
-          name="redirectTo"
-          size="sm"
-          value={redirectTo || ''}
-        >
-          <option value={undefined}></option>
-          {Object.values(pages).map(page => (
-            <option value={page.pageId}>
-              {page.pageName}
-            </option>
-          ))}
-        </Select>
-      </FormControl>
-    }
-    </AccordionContainer>
+      )
+    })}
+  </>
+  )
+}
+
+const ActionsPanel: React.FC = () => {
+  const { setValueFromEvent, setValue } = useForm()
+  const action = usePropsSelector('action')
+  const nextAction = usePropsSelector('nextAction')
+  const actionProps = usePropsSelector('actionProps')
+  const nextActionProps = usePropsSelector('nextActionProps')
+  const redirectTo = usePropsSelector('redirectTo')
+  const pages = useSelector(getPages)
+  const models = useSelector(getModels)
+  const components = useSelector(getComponents)
+
+  const optionsParams = { pages, models, components: Object.values(components) }
+
+  const onActionPropChange = (ev: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = ev.target
+    setValue('actionProps', { ...actionProps, [name]: value })
+  }
+
+  const onNextActionPropChange = (ev: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = ev.target
+    setValue('nextActionProps', { ...nextActionProps, [name]: value })
+  }
+
+  const onActionChange = (ev: React.ChangeEvent<HTMLSelectElement>) => {
+    console.log(ev.target)
+    // Reset action props on action change
+    //setValue('actionProps', {})
+    setValueFromEvent(ev)
+  }
+
+  return (
+    <Accordion >
+      <AccordionContainer title="Actions">
+        <ActionPanel id='action' actionLabel='Action' actions={Object.keys(ACTIONS)} action={action} actionProps={actionProps} optionsParams={optionsParams}
+        onActionChange={onActionChange} onActionPropChange={onActionPropChange}/>
+        {ACTIONS[action]?.next?.length>0 ?
+          <ActionPanel id='nextAction' actionLabel='If success' actions={ACTIONS[action].next} action={nextAction} actionProps={actionProps} optionsParams={optionsParams}
+          onActionChange={onActionChange} onActionPropChange={onNextActionPropChange}/>
+        : null}
+      </AccordionContainer>
     </Accordion>
   )
 }

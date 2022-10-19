@@ -191,14 +191,15 @@ const buildBlock = ({
           const propsValue = childComponent.props[propName]
           const propsValueAsObject = typeof propsValue === 'object'
 
-          if (propName=='actionProps') {
+          if (propName=='actionProps' || propName=='nextActionProps') {
             const valuesCopy={
               ...propsValue,
               page: propsValue.page ? getPageUrl(propsValue.page, pages) : undefined
             }
-            propsContent += ` actionProps='${JSON.stringify(valuesCopy)}'`
+            propsContent += ` ${propName}='${JSON.stringify(valuesCopy)}'`
             return
           }
+
           if (propName=='dataSource') {
             propsContent += ` dataSourceId='${propsValue}'`
           }

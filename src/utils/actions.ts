@@ -11,7 +11,8 @@ export const ACTIONS:IActions={
     label: 'Create new data',
     options:{
       model: ({models}) => models.map(m => ({key:m.name, label: m.name})),
-    }
+    },
+    next: ['openPage'],
   },
   'login': {
     label: 'Login',
