@@ -43,7 +43,6 @@ const TextPanel = () => {
           <option>bold</option>
           <option>extrabold</option>
           <option>black</option>
-          <option></option>
         </Select>
       </FormControl>
       <FormControl label="Font Weight" htmlFor="fontStyle">
@@ -57,7 +56,6 @@ const TextPanel = () => {
           <option>normal</option>
           <option>inherit</option>
           <option>initial</option>
-          <option></option>
         </Select>
       </FormControl>
       {/* Added more options in drop down and removed only Bold & Italic options */}
