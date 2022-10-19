@@ -109,6 +109,9 @@ router.get('/:model/:id?', (req, res) => {
       if (id && data.length==0) {
         throw new NotFoundError(`Can't find ${model}:${id}`)
       }
+      if (model=='theme') {
+        data=data.filter(t => t.name)
+      }
       res.json(data)
     })
     .catch(err => {
@@ -126,13 +129,13 @@ router.post('/action', (req, res) => {
   }
 
   return actionFn(req.body)
-  .then(result => {
-    return res.json(result)
-  })
-   .catch(err => {
-     console.log(err)
-     return res.status(err.status || HTTP_CODES.SYSTEM_ERROR).json(err.message || err)
-   })
+    .then(result => {
+      return res.json(result)
+    })
+    .catch(err => {
+      console.log(err)
+      return res.status(err.status || HTTP_CODES.SYSTEM_ERROR).json(err.message || err)
+    })
 })
 
 module.exports=router

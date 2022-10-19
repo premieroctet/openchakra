@@ -1,22 +1,39 @@
-const TraineeTheme = require('../../../models/TraineeTheme');
-const TraineeResource = require('../../../models/TraineeResource');
-const TraineeSession = require('../../../models/TraineeSession');
+import mongoose from 'mongoose'
 import Program from '../../../models/Program'
 import Theme from '../../../models/Theme'
 import Session from '../../../models/Session'
+const TraineeTheme = require('../../../models/TraineeTheme')
+const TraineeResource = require('../../../models/TraineeResource')
+const TraineeSession = require('../../../models/TraineeSession')
 
-const addThemeToProgram = (program, theme)  => {
+const getModel = id => {
+  const conn=mongoose.connection
+  return Promise.all(conn.modelNames().map(model =>
+    conn.models[model].exists({_id: id}).then(exists => (exists ? model : false)),
+  ))
+    .then(res => {
+      return res.find(v => !!v)
+    })
+}
+
+const getChildAttribute = model => {
+  return {
+    program: 'themes', session: 'themes', theme: 'resources', traineeTheme: 'resources',
+  }[model]
+}
+
+const addThemeToProgram = (program, theme) => {
   return Program.findByIdAndUpdate(program._id, {$push: {themes: theme}})
 }
 
 const addResourceToProgram = (program, resource) => {
-  return Theme.create({resources:[resource]})
+  return Theme.create({resources: [resource]})
     .then(th => {
       return addThemeToProgram(program, th)
     })
 }
 
-const createTraineeTheme = (theme) => {
+const createTraineeTheme = theme => {
   return Promise.all(theme.resources.map(r => {
     return TraineeResource.create({...r.toObject(), _id: undefined})
   }))
@@ -32,7 +49,7 @@ const addThemeToTraineeSession = (traineeSession, theme) => {
     })
 }
 
-const addThemeToSession = (session, theme)  => {
+const addThemeToSession = (session, theme) => {
   return Session.findByIdAndUpdate(session._id, {$push: {themes: theme}})
     .then(session => {
       return TraineeSession.find({session: session})
@@ -44,25 +61,31 @@ const addThemeToSession = (session, theme)  => {
     })
 }
 
-const addResourceToSession = (session, resource)  => {
-  return Theme.create({resources:[resource]})
+const addResourceToSession = (session, resource) => {
+  return Theme.create({resources: [resource]})
     .then(th => {
       return addThemeToSession(session, th)
     })
 }
 
-const addResourceToTheme = (theme, resource)  => {
+const addResourceToTheme = (theme, resource) => {
   return Theme.findByIdAndUpdate(theme._id, {$push: {resources: resource}})
 }
 
-const removeResourceFromTheme = (theme, resource) => {
-  return Theme.findByIdAndUpdate(theme._id, {$pull: {resources: resource._id}})
+const removeChildFromParent = (parent_id, child_id) => {
+  return getModel(parent_id)
+    .then(parentModel => {
+      const model=mongoose.connection.models[parentModel]
+      const subAttr=getChildAttribute(parentModel)
+      return model.findByIdAndUpdate(parent_id, {$pull: {[subAttr]: child_id}})
+    })
 }
 
-
 const moveItem = (itemId, items, up) => {
-  const index=items.findIndex(i => i.toString()==itemId.toString())
-  console.log(`Index:${index}`)
+  const index=items.findIndex(i => i._id.toString()==itemId.toString())
+  if (index==-1) {
+    throw new Error(`${itemId}not found in ${items}`)
+  }
   if ((up && index==0) || (!up && index==items.length-1)) {
     return items
   }
@@ -73,58 +96,22 @@ const moveItem = (itemId, items, up) => {
   return items
 }
 
-const moveThemeFromProgram=(program, childTheme, up) => {
-  return Program.find(program._id)
-    .then(res => {
-      res.themes=moveItem(childTheme._id, res.themes, up)
-      return Program.findByIdAndUpdate(program._id, {themes:res.themes})
-    })
-}
-
-const moveResourceFromProgram=(program, childResource,  up) => {
-
-}
-
-const moveThemeFromSession=(session, childTheme,  up) => {
-
-}
-
-const moveResourceFromSession=(session, childResource,  up) => {
-
-}
-
-const moveResourceFromTheme=(theme, childResource,  up) => {
-  return Theme.findById(theme._id)
-    .then(th => {
-      const modified=moveItem(childResource._id, th.resources, up)
-      console.log(`Id:${childResource._id}, Before:${th.resources.map(i=>i)}, after:${modified.map(i=>i)}`)
-      return Theme.findByIdAndUpdate(theme._id, {resources:modified})
-    })
-
-}
-
-const removeResourceFromProgram = (program, childResource) => {
-  return Program.findById(program._id)
-    .populate('themes')
-    .then(program => {
-      console.log(program.themes.map(t => t._id))
-      return Promise.all(program.themes.map(t =>
-        Theme.findByIdAndUpdate(t._id, {$pull: {resources: childResource._id}}, {new: true})
-      ))
-    })
-    .then(themes => {
-      const emptyThemes=themes.filter(t => t.resources.length==0)
-      console.log(`Themes to remove${themes}`)
-      return Program.findByIdAndUpdate(program._id, {$pull: {themes: {$in: emptyThemes.map(t => t._id)}}}, {new: true})
-    })
-    .then(res => {
-      console.log(`Res:${res.themes}`)
+const moveChildInParent = (parent_id, child_id, up) => {
+  return getModel(parent_id)
+    .then(parentModel => {
+      const model=mongoose.connection.models[parentModel]
+      const subAttr=getChildAttribute(parentModel)
+      return model.findById(parent_id).populate(subAttr)
+        .then(parent => {
+          const newChildren=moveItem(child_id, parent[subAttr], up)
+          return model.findByIdAndUpdate(parent_id, {[subAttr]: newChildren})
+        })
     })
 }
 
 module.exports={addThemeToProgram, addThemeToSession, addResourceToSession,
   addResourceToProgram, addResourceToTheme,
-  removeResourceFromTheme,
-  moveResourceFromTheme,
-  removeResourceFromProgram
+  removeChildFromParent,
+  getModel,
+  moveChildInParent,
 }

@@ -1,3 +1,5 @@
+import {getModels, buildQuery, buildPopulate, buildPopulates, MONGOOSE_OPTIONS} from '../server/utils/database'
+const mongoose=require('mongoose')
 const {
   addResourceToProgram,
   addResourceToSession,
@@ -5,14 +7,15 @@ const {
   addThemeToProgram,
   addThemeToSession,
   removeResourceFromProgram,
-} = require('../server/utils/studio/aftral/functions');
-const Session = require('../server/models/Session');
-const Resource = require('../server/models/Resource');
-const Theme = require('../server/models/Theme');
-const Program = require('../server/models/Program');
-import {getModels, buildQuery, buildPopulate, buildPopulates, MONGOOSE_OPTIONS} from '../server/utils/database'
+  getModel,
+  moveChildInParent,
+} = require('../server/utils/studio/aftral/functions')
+const Session = require('../server/models/Session')
+const Resource = require('../server/models/Resource')
+const Theme = require('../server/models/Theme')
+const Program = require('../server/models/Program')
+const TraineeTheme = require('../server/models/TraineeTheme')
 
-const mongoose=require('mongoose')
 
 describe('Studio models API', () => {
 
@@ -79,7 +82,7 @@ describe('Studio models API', () => {
 
 describe.only('Studio data function', () => {
 
-  beforeAll(()=> {
+  beforeAll(() => {
     return mongoose.connect('mongodb://localhost/aftral_studio', MONGOOSE_OPTIONS)
   })
 
@@ -91,44 +94,41 @@ describe.only('Studio data function', () => {
       .then(program => {
         return Program.findById(program._id)
       })
-      .then(program => {
-        console.log(program.themes)
-      })
   })
 
   test('Shoud addResourceToProgram', () => {
     return Promise.all([Program.findOne(), Theme.findOne(), Resource.findOne(), Session.findOne()])
-    .then(([program, theme, resource, session]) => {
+      .then(([program, , resource]) => {
         return addResourceToProgram(program, resource)
       })
   })
 
   test('Shoud addThemeToSession', () => {
     return Promise.all([Program.findOne(), Theme.findOne().populate('resources'), Resource.findOne(), Session.findOne()])
-    .then(([program, theme, resource, session]) => {
+      .then(([, theme, , session]) => {
         return addThemeToSession(session, theme)
       })
   })
 
   test('Shoud addResourceToSession', () => {
     return Promise.all([Program.findOne(), Theme.findOne(), Resource.findOne(), Session.findOne()])
-    .then(([program, theme, resource, session]) => {
+      .then(([,, resource, session]) => {
         return addResourceToSession(session, resource)
       })
   })
 
   test('Shoud addResourceToTheme', () => {
     return Promise.all([Program.findOne(), Theme.findOne(), Resource.findOne(), Session.findOne()])
-    .then(([program, theme, resource, session]) => {
+      .then(([, theme, resource]) => {
         return addResourceToTheme(theme, resource)
       })
   })
 
-  test.only('Shoud remove resource from program', () => {
+  test('Shoud remove resource from program', () => {
     let program=null
     let theme=null
     return Theme.find({'resources': {$size: 1}})
-      .then(themes =>{
+      .then(themes => {
         return Program.findOne({themes: {$in: themes}}).populate('themes')
       })
       .then(prgm => {
@@ -141,12 +141,59 @@ describe.only('Studio data function', () => {
         return Theme.findById(theme._id)
       })
       .then(theme => {
-        console.log(theme)
         return Program.findById(program._id).populate('themes')
       })
       .then(program => {
         return expect(program.themes.map(t => t._id.toString()).includes(theme._id.toString())).toBeFalsy()
       })
+  })
+
+  test('Shoud levelUp/leveDown theme from program', async() => {
+    let oldData=await Program.findOne({'themes.1': {$exists: true}}).populate('themes')
+    await moveChildInParent(oldData._id, oldData.themes[0]._id, false)
+    let newData=await Program.findById(oldData._id).populate('themes')
+    expect(oldData.themes.slice(0, 2).map(t => t._id)).toEqual(newData.themes.slice(0, 2).reverse().map(t => t._id))
+
+    await moveChildInParent(newData._id, newData.themes[1]._id, true)
+    newData=await Program.findById(oldData._id).populate('themes')
+    expect(oldData.themes.slice(0, 2).map(t => t._id)).toEqual(newData.themes.slice(0, 2).map(t => t._id))
+  })
+
+  test('Shoud levelUp/leveDown resource from theme', async() => {
+    let oldData=await Theme.findOne({'resources.1': {$exists: true}}).populate('resources')
+    await moveChildInParent(oldData._id, oldData.resources[0]._id, false)
+    let newData=await Theme.findById(oldData._id).populate('resources')
+    expect(oldData.resources.slice(0, 2).map(t => t._id)).toEqual(newData.resources.slice(0, 2).reverse().map(t => t._id))
+    await moveChildInParent(newData._id, newData.resources[1]._id, true)
+    newData=await Theme.findById(oldData._id).populate('resources')
+    expect(oldData.resources.slice(0, 2).map(t => t._id)).toEqual(newData.resources.slice(0, 2).map(t => t._id))
+  })
+
+  test('Shoud levelUp/leveDown theme from session', async() => {
+    let oldData=await Session.findOne({'themes.1': {$exists: true}}).populate('themes')
+    await moveChildInParent(oldData._id, oldData.themes[0]._id, false)
+    let newData=await Session.findById(oldData._id).populate('themes')
+    expect(oldData.themes.slice(0, 2).map(t => t._id)).toEqual(newData.themes.slice(0, 2).reverse().map(t => t._id))
+    await moveChildInParent(newData._id, newData.themes[1]._id, true)
+    newData=await Session.findById(oldData._id).populate('themes')
+    expect(oldData.themes.slice(0, 2).map(t => t._id)).toEqual(newData.themes.slice(0, 2).map(t => t._id))
+  })
+
+  test('Shoud levelUp/leveDown resource from theme session', async() => {
+    let oldData=await TraineeTheme.findOne({'resources.1': {$exists: true}}).populate('resources')
+    await moveChildInParent(oldData._id, oldData.resources[0]._id, false)
+    let newData=await TraineeTheme.findById(oldData._id).populate('resources')
+    expect(oldData.resources.slice(0, 2).map(t => t._id)).toEqual(newData.resources.slice(0, 2).reverse().map(t => t._id))
+    await moveChildInParent(newData._id, newData.resources[1]._id, true)
+    newData=await TraineeTheme.findById(oldData._id).populate('resources')
+    expect(oldData.resources.slice(0, 2).map(t => t._id)).toEqual(newData.resources.slice(0, 2).map(t => t._id))
+  })
+
+  test('Test model retrieval', async() => {
+    const prgm=await Program.findOne({}, {_id: 1})
+    expect(getModel(prgm)).resolves.toEqual('program')
+    const theme=await Theme.findOne({}, {_id: 1})
+    expect(getModel(theme)).resolves.toEqual('theme')
   })
 
 })
