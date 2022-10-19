@@ -15,13 +15,17 @@ const {
   removeChildFromParent,
   getNext, getPrevious,
   getSession,
+  getModel,
 } = require('./aftral/functions')
 
 const ACTIONS={
 
-  put: ({model, parent, attribute, value}) => {
+  put: ({parent, attribute, value}) => {
     console.log(`Putting ${model}/${parent} ${attribute} to ${value}`)
-    return mongoose.connection.models[model].findByIdAndUpdate(parent, {[attribute]: value})
+    getModel(parent)
+      .then(model => {
+        return mongoose.connection.models[model].findByIdAndUpdate(parent, {[attribute]: value})
+      })
       .then(res => {
         console.log(res)
         return res
