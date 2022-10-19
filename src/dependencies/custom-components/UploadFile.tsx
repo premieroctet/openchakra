@@ -8,15 +8,17 @@ import mime from 'mime'
 const UploadFile = (
   {
     dataSource, 
+    value,
     backend, 
     ressource_id, 
     children, 
     ...props
   }
   : {
-      dataSource: {_id: null} | null, 
-      backend: string, 
-      ressource_id: string, 
+      dataSource: {_id: null} | null
+      value: string
+      backend: string
+      ressource_id: string
       children: React.ReactNode
     }
   ) => {
@@ -35,20 +37,26 @@ const UploadFile = (
     if (fileToUpload) {
       // upload file to S3
       await FileManager.createFile(fileToUpload?.name, fileToUpload, '', mime.getExtension(fileToUpload?.name) || '', [])
-        .then(res => {
-          // Send ressource url 
-          backend && post(`myAlfred/api/studio/action`, {action: 'put', model: 'resource', parent: ressource_id, attribute:'url', value: res?.Location})
+      .then(res => {
+        // Send ressource url 
+          backend && post(`myAlfred/api/studio/action`, {action: 'put', parent: ressource_id, attribute:'url', value: res?.Location})
         })
         .catch((err) => console.error(err))
-      
-      if (response.ok) setUploadInfo('Ressource ajoutée')
-      if (error) setUploadInfo('Echec ajout ressource')
+        
+        if (response.ok) setUploadInfo('Ressource ajoutée')
+        if (error) setUploadInfo('Echec ajout ressource')
+      }
     }
-  }
+    
+  //   useEffect(() => {
+  //     const form = document.querySelector('#uploadressource') as HTMLFormElement
+  //     const inputFile = form.querySelector('[type="file"]') as HTMLInputElement
+  //     inputFile.value = value
+  // }, [value])
   
   return (
     <Box {...props} >
-      <form onSubmit={(ev) => handleUpload(ev)}>
+      <form id='uploadressource' onSubmit={(ev) => handleUpload(ev)}>
         {children}
       </form>
       {uploadInfo && <Text>{uploadInfo}</Text>} {/*Component status */}
