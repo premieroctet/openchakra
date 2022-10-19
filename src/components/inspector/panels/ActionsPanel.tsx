@@ -93,7 +93,7 @@ const ActionsPanel: React.FC = () => {
         <ActionPanel id='action' actionLabel='Action' actions={Object.keys(ACTIONS)} action={action} actionProps={actionProps} optionsParams={optionsParams}
         onActionChange={onActionChange} onActionPropChange={onActionPropChange}/>
         {ACTIONS[action]?.next?.length>0 ?
-          <ActionPanel id='nextAction' actionLabel='If success' actions={ACTIONS[action].next} action={nextAction} actionProps={actionProps} optionsParams={optionsParams}
+          <ActionPanel id='nextAction' actionLabel='If success' actions={ACTIONS[action].next} action={nextAction} actionProps={nextActionProps} optionsParams={optionsParams}
           onActionChange={onActionChange} onActionPropChange={onNextActionPropChange}/>
         : null}
       </AccordionContainer>

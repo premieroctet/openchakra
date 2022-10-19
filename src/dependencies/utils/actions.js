@@ -9,11 +9,18 @@ export const ACTIONS={
     if (value && value._id) {
       url=`${url}?id=${value._id}`
     }
-    return Promise.resolve(window.open(url))
+    // new page
+    if (props.open && !(props.open=='false') ) {
+      return Promise.resolve(window.open(url, 'blank'))
+    }
+    else {
+      return Promise.resolve(window.location=url)
+    }
   },
   create: ({value, props, backend}) => {
     let url=`${backend}${API_ROOT}/${props.model}`
     return axios.post(url)
+      .then(res => res.data)
   },
   levelUp: ({value, props, backend, context}) => {
     let url=`${backend}${API_ROOT}/action`
@@ -26,10 +33,14 @@ export const ACTIONS={
   next: ({value, props, backend}) => {
     let url=`${backend}${API_ROOT}/action`
     return axios.post(url, {action: 'next', id: value._id})
+    .then(res => res.data)
+
   },
   previous: ({value, props, backend}) => {
     let url=`${backend}${API_ROOT}/action`
     return axios.post(url, {action: 'previous', id: value._id})
+    .then(res => res.data)
+
   },
   publish: ({value, props, backend}) => {
     let url=`${backend}${API_ROOT}/action`
@@ -39,9 +50,10 @@ export const ACTIONS={
     let url=`${backend}${API_ROOT}/action`
     return axios.post(url, {action: 'delete', parent: context, child: value._id})
   },
-  backToSession: ({value, props, backend}) => {
+  gotoSession: ({value, props, backend}) => {
     let url=`${backend}${API_ROOT}/action`
     return axios.post(url, {action: 'session', id: value._id})
+    .then(res => res.data)
   },
   addChild: ({value, props, backend, context}) => {
     const childId=getComponentDataValue(props.child)
