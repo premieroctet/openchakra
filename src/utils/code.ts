@@ -195,6 +195,8 @@ const buildBlock = ({
           const propsValue = childComponent.props[propName]
           const propsValueAsObject = typeof propsValue === 'object'
 
+          console.log(propsContent)
+
           if (propName=='actionProps' || propName=='nextActionProps') {
             const valuesCopy={
               ...propsValue,
@@ -221,7 +223,6 @@ const buildBlock = ({
           ) {
             if (Object.keys(icons).includes(propsValue)) {
               let operand = `={<${propsValue} />}`
-
               propsContent += `${propName}${operand} `
             }
           } else if (propName !== 'children' && propsValue) {
@@ -231,7 +232,7 @@ const buildBlock = ({
                 : `='${propsValue}'`
 
             if (propsValue === true || propsValue === 'true') {
-              operand = ``
+              operand = ` `
             } else if (
               propsValue === 'false' ||
               isBoolean(propsValue) ||
@@ -240,7 +241,7 @@ const buildBlock = ({
               operand = `={${propsValue}}`
             }
 
-            propsContent += `${propName}${operand}`
+            propsContent += ` ${propName}${operand}`
           }
         })
 
