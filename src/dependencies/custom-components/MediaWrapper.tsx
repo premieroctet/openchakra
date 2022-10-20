@@ -58,6 +58,7 @@ export const mediaWrapper = ({src, htmlHeight, htmlWidth, ...props}:{src: string
       case 'txt': 
       case 'html': 
         return <iframe
+        loading='lazy'
         title={src}
         src={src}
         width={htmlWidth}
