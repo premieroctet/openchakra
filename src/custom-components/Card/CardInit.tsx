@@ -1,6 +1,6 @@
-import { buildCard } from './CardBuilder'
+import { buildCard } from '../ComponentBuilder'
 import { registerComponent } from '~components/register'
-import Card from './Card'
+import Card from '~dependencies/custom-components/Card'
 import CardPanel from './CardPanel'
 import CardPreview from './CardPreview'
 

@@ -47,6 +47,9 @@ import {
   getComponentWarnings,
   getPages,
 } from '../../core/selectors/components';
+import {
+  getModels,
+} from '../../core/selectors/dataSources';
 import ActionButton from './ActionButton'
 
 const CodeActionButton = memo(() => {
@@ -56,6 +59,7 @@ const CodeActionButton = memo(() => {
   const selectedId = useSelector(getSelectedComponentId)
   const components = useSelector(getComponents)
   const pages = useSelector(getPages)
+  const models = useSelector(getModels)
 
   const parentId = components[selectedId].parent
   const parent = { ...components[parentId] }
@@ -74,7 +78,8 @@ const CodeActionButton = memo(() => {
           components,
           componentName: components[selectedId].componentName,
           forceBuildBlock: true,
-          pages
+          pages,
+          models
         })
         onCopy(await formatCode(code))
         setIsLoading(false)

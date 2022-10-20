@@ -1,46 +1,69 @@
 import axios from 'axios';
 
-const BACKEND_SERVER='my-alfred.io:4002'
+import { getComponentDataValue } from './values';
 
+const API_ROOT='/myAlfred/api/studio'
 export const ACTIONS={
-  openPage: ({value, props}) => {
+  openPage: ({value, props, backend}) => {
     let url=`/${props.page}`
     if (value && value._id) {
       url=`${url}?id=${value._id}`
     }
-    return Promise.resolve(window.open(url))
+    // new page
+    if (props.open && !(props.open=='false') ) {
+      return Promise.resolve(window.open(url, 'blank'))
+    }
+    else {
+      return Promise.resolve(window.location=url)
+    }
   },
-  create: ({value, props}) => {
-    let url=`${props.domain}/${props.model}`
+  create: ({value, props, backend}) => {
+    let url=`${backend}${API_ROOT}/${props.model}`
     return axios.post(url)
+      .then(res => res.data)
   },
-  levelUp: ({value, props}) => {
-    let url=`${props.domain}/action`
-      return axios.post(url, {action: 'levelUp', id: value._id})
+  levelUp: ({value, props, backend, context}) => {
+    let url=`${backend}${API_ROOT}/action`
+      return axios.post(url, {action: 'levelUp', parent:context , child:value._id})
   },
-  levelDown: ({value, props}) => {
-    let url=`${props.domain}/action`
-    return axios.post(url, {action: 'levelDown', id: value._id})
+  levelDown: ({value, props, backend, context}) => {
+    let url=`${backend}${API_ROOT}/action`
+    return axios.post(url, {action: 'levelDown', parent:context , child:value._id})
   },
-  next: ({value, props}) => {
-    let url=`${props.domain}/action`
+  next: ({value, props, backend}) => {
+    let url=`${backend}${API_ROOT}/action`
     return axios.post(url, {action: 'next', id: value._id})
+    .then(res => res.data)
+
   },
-  previous: ({value, props}) => {
-    let url=`${props.domain}/action`
+  previous: ({value, props, backend}) => {
+    let url=`${backend}${API_ROOT}/action`
     return axios.post(url, {action: 'previous', id: value._id})
+    .then(res => res.data)
+
   },
-  publish: ({value, props}) => {
-    let url=`${props.domain}/action`
+  publish: ({value, props, backend}) => {
+    let url=`${backend}${API_ROOT}/action`
     return axios.post(url, {action: 'publish', id: value._id})
   },
-  delete: ({value, props}) => {
-    let url=`${props.domain}/action`
-    return axios.post(url, {action: 'delete', id: value._id})
+  delete: ({value, props, backend, context}) => {
+    let url=`${backend}${API_ROOT}/action`
+    return axios.post(url, {action: 'delete', parent: context, child: value._id})
   },
-  backToSession: ({value, props}) => {
-    let url=`${props.domain}/action`
+  gotoSession: ({value, props, backend}) => {
+    let url=`${backend}${API_ROOT}/action`
     return axios.post(url, {action: 'session', id: value._id})
+    .then(res => res.data)
+  },
+  addChild: ({value, props, backend, context}) => {
+    const childId=getComponentDataValue(props.child)
+    let url=`${backend}${API_ROOT}/action`
+    const body={action: 'addChild', parent: context, child: childId}
+    return axios.post(url, body)
+  },
+  putValue: ({value, props, backend, context}) => {
+    let url=`${backend}${API_ROOT}/action`
+    const body={action: 'put', model: props.dataModel, parent: context, attribute: props.attribute, value: value}
+    return axios.post(url, body)
   }
 }
-

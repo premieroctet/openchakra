@@ -7,14 +7,19 @@ import icons from '~iconsList'
 
 import {
   ACTION_TYPE,
+  CHECKBOX_TYPE,
   CONTAINER_TYPE,
   DATE_TYPE,
   IMAGE_TYPE,
+  INPUT_TYPE,
   PROGRESS_TYPE,
   SELECT_TYPE,
   SOURCE_TYPE,
   TEXT_TYPE,
-  getFieldsForDataProvider
+  UPLOAD_TYPE,
+  getDataProviderDataType,
+  getFieldsForDataProvider,
+  getComponentsHierarchy,
 } from './dataSources';
 import { ProjectState, PageState } from '../core/models/project'
 import config from '../../env.json'
@@ -82,6 +87,15 @@ const getDynamicType = (comp: IComponent) => {
   if (SOURCE_TYPE.includes(comp.type)) {
     return 'Source'
   }
+  if (CHECKBOX_TYPE.includes(comp.type)) {
+    return 'Checkbox'
+  }
+  if (INPUT_TYPE.includes(comp.type)) {
+    return 'Input'
+  }
+  if (UPLOAD_TYPE.includes(comp.type)) {
+    return 'UploadFile'
+  }
   throw new Error(`No dynamic found for ${comp.type}`)
 }
 
@@ -114,6 +128,7 @@ type BuildBlockParams = {
   components: IComponents
   forceBuildBlock?: boolean
   pages: { [key: string]: PageState }
+  models: any,
 }
 
 const buildBlock = ({
@@ -121,6 +136,7 @@ const buildBlock = ({
   components,
   forceBuildBlock = false,
   pages,
+  models
 }: BuildBlockParams) => {
   let content = ''
   component.children.forEach((key: string) => {
@@ -129,7 +145,7 @@ const buildBlock = ({
       return
     }
     if (!childComponent) {
-      console.error(`invalid component ${key}`)
+      throw new Error(`invalid component ${key}`)
     } else if (forceBuildBlock || !childComponent.componentName) {
       const dataProvider = components[childComponent.props.dataSource]
       const paramProvider = dataProvider?.id.replace(/comp-/, '')
@@ -140,7 +156,27 @@ const buildBlock = ({
 
       // Set component id
       propsContent += ` id='${childComponent.id}' `
+      // Set reload function
+      propsContent += ` reload={reload} `
+      // Provide page data context
+      propsContent += ` context={root?.[0]?._id}`
 
+
+      if (isDynamicComponent(childComponent)) {
+        propsContent += ` backend='${config.targetDomain}'`
+        try {
+          const tp = getDataProviderDataType(components[childComponent.parent], components, childComponent.props.dataSource, models)
+          if (tp.type) {
+            propsContent += ` dataModel='${tp.type}' `
+          }
+          else {
+            console.error(`No data provider data type found for ${childComponent.parent}`)
+          }
+        }
+        catch(err) {
+          console.error(err)
+        }
+      }
       // Set if dynamic container
       if ((CONTAINER_TYPE.includes(childComponent.type) || SELECT_TYPE.includes(childComponent.type)) && !!dataProvider) {
         propsContent += ` dynamicContainer `
@@ -159,18 +195,17 @@ const buildBlock = ({
           const propsValue = childComponent.props[propName]
           const propsValueAsObject = typeof propsValue === 'object'
 
-          if (propName=='actionProps') {
-            if (propsValue.page) {
-              console.log(`Page:${propsValue.page}`)
-            }
+          console.log(propsContent)
+
+          if (propName=='actionProps' || propName=='nextActionProps') {
             const valuesCopy={
               ...propsValue,
               page: propsValue.page ? getPageUrl(propsValue.page, pages) : undefined
             }
-            propsContent += ` actionProps='${JSON.stringify(valuesCopy)}'`
-            propsContent += ` backend='${config.targetDomain}'`
+            propsContent += ` ${propName}='${JSON.stringify(valuesCopy)}'`
             return
           }
+
           if (propName=='dataSource') {
             propsContent += ` dataSourceId='${propsValue}'`
           }
@@ -188,7 +223,6 @@ const buildBlock = ({
           ) {
             if (Object.keys(icons).includes(propsValue)) {
               let operand = `={<${propsValue} />}`
-
               propsContent += `${propName}${operand} `
             }
           } else if (propName !== 'children' && propsValue) {
@@ -198,7 +232,7 @@ const buildBlock = ({
                 : `='${propsValue}'`
 
             if (propsValue === true || propsValue === 'true') {
-              operand = ``
+              operand = ` `
             } else if (
               propsValue === 'false' ||
               isBoolean(propsValue) ||
@@ -207,13 +241,14 @@ const buildBlock = ({
               operand = `={${propsValue}}`
             }
 
-            propsContent += `${propName}${operand}`
+            propsContent += ` ${propName}${operand}`
           }
         })
 
       if (childComponent.type=='Timer') {
         propsContent += ` backend='${config.targetDomain}'`
       }
+
       if (childComponent.props.page) {
         const destPageUrl = getPageUrl(childComponent.props.page, pages)
         propsContent += ` pageName={'${destPageUrl}'} `
@@ -234,6 +269,7 @@ const buildBlock = ({
         components,
         forceBuildBlock,
         pages,
+        models
       })}
       </${componentName}>`
       } else {
@@ -276,6 +312,7 @@ type GenerateComponentCode = {
   componentName?: string
   forceBuildBlock?: boolean
   pages: { [key: string]: PageState }
+  models: any[]
 }
 
 export const generateComponentCode = ({
@@ -284,12 +321,14 @@ export const generateComponentCode = ({
   componentName,
   forceBuildBlock,
   pages,
+  models,
 }: GenerateComponentCode) => {
   let code = buildBlock({
     component,
     components,
     forceBuildBlock,
     pages,
+    models,
   })
 
   code = `
@@ -320,7 +359,7 @@ const buildHooks = (components: IComponents) => {
   if (dataProviders.length == 0) {
     return ''
   }
-  let code = `const {get}=useFetch('${config.targetDomain}')`
+  let code = `const {get}=useFetch('${config.targetDomain}', {cachePolicy: 'no-cache'})`
   code +=
     '\n' +
     dataProviders
@@ -330,6 +369,12 @@ const buildHooks = (components: IComponents) => {
       })
       .join(`\n`)
   code += `\n
+  const [refresh, setRefresh]=useState(false)
+
+  const reload = () => {
+    setRefresh(!refresh)
+  }
+
   useEffect(() => {
     ${dataProviders
       .map(dp => {
@@ -344,7 +389,7 @@ const buildHooks = (components: IComponents) => {
         .catch(err => alert(err))`
       })
       .join('\n')}
-  }, [get])\n`
+  }, [get, refresh])\n`
   return code
 }
 
@@ -379,6 +424,7 @@ export const generateCode = async (
   pages: {
     [key: string]: PageState
   },
+  models: any,
 ) => {
   const {
     pageName,
@@ -390,7 +436,7 @@ export const generateCode = async (
 
   let hooksCode = buildHooks(components)
   let dynamics = buildDynamics(components)
-  let code = buildBlock({ component: components.root, components, pages })
+  let code = buildBlock({ component: components.root, components, pages, models })
   let componentsCodes = buildComponents(components, pages)
   const iconImports = [...new Set(getIconsImports(components))]
 

@@ -1,5 +1,5 @@
 import AWS from 'aws-sdk'
-import { s3Config } from './s3Config'
+import { s3Config } from '~dependencies/utils/s3Config'
 import mime from 'mime-types'
 
 export type ListFileResponse = {
@@ -62,6 +62,8 @@ export const listFiles = async () => {
     accessKeyId,
     secretAccessKey,
   }))(s3Config)
+
+  console.log(awsConfig)
   AWS.config.update(awsConfig)
 
   const s3 = new AWS.S3({

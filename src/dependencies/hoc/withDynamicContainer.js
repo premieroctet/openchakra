@@ -2,13 +2,11 @@ import React from 'react'
 import lodash from 'lodash'
 
 const isOtherSource = (element, dataSourceId) => {
-  console.log(`Element:${element}`)
   if (element.props.dynamicContainer && element.props.dataSourceId && element.props.dataSourceId!=dataSourceId) {
     return true
   }
 }
 const setRecurseDataSource = (element, dataSource, dataSourceId, level=0) => {
-  console.log(`${'*'.repeat(level*2)}Generating children for ${element?.props?.id}/${element?.props?.dataSourceId} for ${dataSourceId}`)
   if (React.Children.count(element.props.children) === 0) {
     return []
   } else {
@@ -36,9 +34,7 @@ const withDynamicContainer = Component => {
     if (!props.dataSource) {
       return null
     }
-    console.log(`Handling ${props.id}/${props.dataSourceId}`)
     const firstChild=React.Children.toArray(props.children)[0]
-    console.log(`First child is ${firstChild?.props?.id}/${firstChild?.props?.dataSourceId}`)
     let orgData=props.dataSource
     if (props.attribute) {
       orgData=lodash.get(orgData, props.attribute)

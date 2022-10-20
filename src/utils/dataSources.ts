@@ -15,10 +15,13 @@ export const PROGRESS_TYPE: ComponentType[] = ['Progress', 'CircularProgress']
 export const DATE_TYPE: ComponentType[] = ['Date']
 export const SELECT_TYPE: ComponentType[] = ['Select']
 export const SOURCE_TYPE: ComponentType[] = ['Timer']
+export const CHECKBOX_TYPE: ComponentType[] = ['Checkbox']
+export const INPUT_TYPE: ComponentType[] = ['Input', 'Textarea']
+export const UPLOAD_TYPE: ComponentType[] = ['UploadFile']
 
 const ALL_DYNAMICS=lodash.flatten([
   CONTAINER_TYPE, TEXT_TYPE, ACTION_TYPE, IMAGE_TYPE, PROGRESS_TYPE,
-  DATE_TYPE, SELECT_TYPE
+  DATE_TYPE, SELECT_TYPE, CHECKBOX_TYPE, INPUT_TYPE, UPLOAD_TYPE
 ])
 
 export const allowsDataSource = (component: IComponent): boolean => {
@@ -29,6 +32,13 @@ export const isMultipleDispatcher = (component: IComponent):boolean => {
     return CONTAINER_TYPE.includes(component.type)
 }
 
+export const getComponentsHierarchy = (component: IComponent, components: IComponents): IComponent[] => {
+  if (component.parent==component.id) {
+    return [component]
+  }
+  return [component, ...getComponentsHierarchy(components[component.parent], components)]
+}
+
 export const getDataProviders = (component: IComponent, components: IComponents):IComponent[] => {
   return Object.values(components)
     //.filter(c => !!c.props?.model || !!c.props.dataSource)
@@ -37,7 +47,7 @@ export const getDataProviders = (component: IComponent, components: IComponents)
     .filter(c => c.id != component.id)
 }
 
-const getDataProviderDataType = (component: IComponent, components: IComponents, dataSource:string, models: any): IDataType => {
+export const getDataProviderDataType = (component: IComponent, components: IComponents, dataSource:string, models: any): IDataType => {
   if (component.props.model && component.props.dataSource==dataSource) {
     return {
       type: component.props.model,

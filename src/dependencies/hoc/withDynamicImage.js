@@ -8,9 +8,8 @@ const withDynamicImage = Component => {
     if (!src) {
       return null
     }
-    const url = src.startsWith('http') ? src : `https://my-alfred.io:4002/${src}`
     return (
-      <Component {...lodash.omit(props, ['children'])} src={url} />
+      <Component {...lodash.omit(props, ['children'])} src={src} />
     )
   }
 
