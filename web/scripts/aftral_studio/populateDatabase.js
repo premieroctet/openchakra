@@ -15,7 +15,8 @@ const {getDatabaseUri} = require('../../config/config')
 const data=require('./populate.json')
 
 const PASSWD="$2a$10$JMS3UfmkpDVM98R2CGRMU.KaxJh1LZs.PQdwkizTXrtZ3txAW0kiq"
-const STORY_FILE= name => `https://my-alfred-data-test.s3.eu-west-3.amazonaws.com/pictures/${name}/story.html`
+const STORY_FILE= name => `https://my-alfred-data-test.s3.eu-west-3.amazonaws.com/pictures/${name.replace(/ /g, '+')}/story.html`
+const STD_FILE= name => `https://my-alfred-data-test.s3.eu-west-3.amazonaws.com/pictures/${name.replace(/ /g, '+')}`
 
 const generateCenter = () => {
     return Trainingcenter.findOneAndUpdate(
@@ -38,10 +39,13 @@ let resssourceIdx=0
 let themeIdx=0
 
 const generateProgramQuery = program => {
-  let [p_code, p_name, designer_email, p_descr, t_name,  r_name]=program
+  let [p_code, p_name, designer_email, p_descr, t_name,  r_name, r_url]=program
   p_desc=p_descr.slice(0, 10)
-  r_url=STORY_FILE(r_name)
-  return Resource.findOneAndUpdate({url: r_url, name: r_name}, {$set:{url: r_url, code: `RES_${resssourceIdx}`, type: 'TP', short_name: r_name}}, {upsert: true, new: true})
+  console.log(`URL:${r_url}`)
+  return Resource.findOneAndUpdate(
+    {url: r_url, name: r_name},
+    {$set:{url: r_url, code: `RES_${resssourceIdx}`, type: 'TP', short_name: r_name}},
+    {upsert: true, new: true})
     .then(res => {
       resssourceIdx = resssourceIdx +1
       return Theme.findOneAndUpdate({name: t_name}, {$set:{name: t_name, code: `TH_${themeIdx}`}, $addToSet:{resources: res}}, {upsert: true, new: true})
