@@ -11,6 +11,10 @@ const TraineeThemeSchema = new Schema({
     type: String,
     required: false,
   },
+  description: {
+    type: String,
+    required: false,
+  },
   picture: {
     type: String,
     required: false,

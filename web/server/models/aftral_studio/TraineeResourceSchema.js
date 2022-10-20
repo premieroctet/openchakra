@@ -34,7 +34,7 @@ const TraineeResourceSchema = new Schema({
 }, {toJSON: {virtuals: true, getters: true}})
 
 TraineeResourceSchema.virtual('spent_time_str').get(function() {
-  const timeMillis=this.spent_time
+  const timeMillis=this.spent_time||0
   return formatDuration(timeMillis, {leading: true})
 })
 
