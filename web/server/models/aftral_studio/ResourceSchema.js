@@ -26,6 +26,10 @@ const ResourceSchema = new Schema({
     type: String,
     required: false,
   },
+  duration: {
+    type: Number,
+    required: false,
+  },
 }, {toJSON: {virtuals: true, getters: true}})
 
 module.exports = ResourceSchema

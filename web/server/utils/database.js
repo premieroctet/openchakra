@@ -47,6 +47,7 @@ const DECLARED_VIRTUALS={
     description: {path: 'description', instance: 'String', requires: 'session.program.description'},
     spent_time: {path: 'spent_time', instance: 'Number', requires: 'themes.resources'},
     spent_time_str: {path: 'spent_time_str', instance: 'String', requires: 'themes.resources'},
+    duration: {path: 'duration', instance: 'Number', requires: 'session.program.duration'}
   },
   traineeTheme: {
     spent_time: {path: 'spent_time', instance: 'Number', requires: 'resources'},

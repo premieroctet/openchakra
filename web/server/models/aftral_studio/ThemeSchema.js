@@ -10,6 +10,10 @@ const ThemeSchema = new Schema({
     type: String,
     required: false,
   },
+  description: {
+    type: String,
+    required: false,
+  },
   ordered: {
     type: Boolean,
     default: true,

@@ -21,7 +21,7 @@ const TraineeSessionSchema = new Schema({
   session: {
     type: Schema.Types.ObjectId,
     ref: 'session',
-    required: true,
+    required: false,
   },
   themes: [{
     type: Schema.Types.ObjectId,
@@ -43,5 +43,10 @@ TraineeSessionSchema.virtual('spent_time_str').get(function() {
   const timeMillis=lodash.sum(this.themes.map(t => t.spent_time || 0))
   return formatDuration(timeMillis, {leading: true})
 })
+
+TraineeSessionSchema.virtual('duration').get(function() {
+  return this.session?.program?.duration || 0
+})
+
 
 module.exports = TraineeSessionSchema
