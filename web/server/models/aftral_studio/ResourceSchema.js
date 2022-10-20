@@ -4,15 +4,15 @@ const Schema = mongoose.Schema
 const ResourceSchema = new Schema({
   name: {
     type: String,
-    required: true,
+    required: false,
   },
   short_name: {
     type: String,
-    required: true,
+    required: false,
   },
   code: {
     type: String,
-    required: true,
+    required: false,
   },
   description: {
     type: String,

@@ -21,8 +21,8 @@ const {
 const ACTIONS={
 
   put: ({parent, attribute, value}) => {
-    console.log(`Putting ${model}/${parent} ${attribute} to ${value}`)
-    getModel(parent)
+    console.log(`Putting ${parent} ${attribute} to ${value}`)
+    return getModel(parent)
       .then(model => {
         return mongoose.connection.models[model].findByIdAndUpdate(parent, {[attribute]: value})
       })

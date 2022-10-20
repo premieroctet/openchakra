@@ -139,7 +139,7 @@ router.get('/:model/:id?', (req, res) => {
       if (id && data.length==0) {
         throw new NotFoundError(`Can't find ${model}:${id}`)
       }
-      if (model=='theme') {
+      if (['theme', 'resource'].includes(model) && !id) {
         data=data.filter(t => t.name)
       }
       res.json(data)
