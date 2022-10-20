@@ -3,9 +3,9 @@ import React from 'react'
 
 const withDynamicUploadFile = Component => {
 
-  const Internal = ({dataSource, context, backend, ...props}) => {
+  const Internal = ({dataSource, context, backend, attribute, ...props}) => {
     // const value = get(dataSource, props.attribute)
-    return <Component {...props} backend={backend} ressource_id={context} />
+    return <Component {...props} backend={backend} attribute={attribute} ressource_id={context} />
   }
 
   return Internal
