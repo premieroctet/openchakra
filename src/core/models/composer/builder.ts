@@ -27,6 +27,58 @@ export const buildAlert = (parent: string): ComposedComponent => {
   }
 }
 
+export const buildTable = (parent: string): ComposedComponent => {
+  const composer = new Composer()
+
+  const nodeId = composer.addNode({
+    type: 'TableContainer',
+    parent,
+  })
+
+  const tableId = composer.addNode({ type: 'Table', parent: nodeId })
+  const headId = composer.addNode({ type: 'Thead', parent: tableId })
+  const headRowId = composer.addNode({ type: 'Tr', parent: headId })
+  composer.addNode({ type: 'Th', parent: headRowId })
+  composer.addNode({ type: 'Th', parent: headRowId })
+  const bodyId = composer.addNode({ type: 'Tbody', parent: tableId })
+  const bodyRowId = composer.addNode({ type: 'Tr', parent: bodyId })
+  composer.addNode({ type: 'Td', parent: bodyRowId })
+  composer.addNode({ type: 'Td', parent: bodyRowId })
+  const footId = composer.addNode({ type: 'Tfoot', parent: tableId })
+  const footRowId = composer.addNode({ type: 'Tr', parent: footId })
+  composer.addNode({ type: 'Th', parent: footRowId })
+  composer.addNode({ type: 'Th', parent: footRowId })
+  composer.addNode({ type: 'TableCaption', parent: tableId })
+
+  const components = composer.getComponents()
+
+  return {
+    components,
+    root: nodeId,
+    parent,
+  }
+}
+
+export const buildTableRow = (parent: string): ComposedComponent => {
+  const composer = new Composer()
+
+  const nodeId = composer.addNode({
+    type: 'Tr',
+    parent,
+  })
+
+  composer.addNode({ type: 'Td', parent: nodeId })
+  composer.addNode({ type: 'Td', parent: nodeId })
+
+  const components = composer.getComponents()
+
+  return {
+    components,
+    root: nodeId,
+    parent,
+  }
+}
+
 export const buildBreadcrumb = (parent: string): ComposedComponent => {
   const composer = new Composer()
 
@@ -227,6 +279,8 @@ const builders: ComposerBuilders = {
   BreadcrumbMeta: buildBreadcrumb,
   TabsMeta: buildTabs,
   StatMeta: buildStats,
+  TableMeta: buildTable,
+  TableRowMeta: buildTableRow,
 }
 
 export default builders

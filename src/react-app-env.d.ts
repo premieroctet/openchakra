@@ -80,6 +80,15 @@ type ComponentType =
   | 'Tag'
   | 'Text'
   | 'Textarea'
+  | 'Table'
+  | 'Thead'
+  | 'Tbody'
+  | 'Tfoot'
+  | 'Tr'
+  | 'Th'
+  | 'Td'
+  | 'TableCaption'
+  | 'TableContainer'
   | string
 
 type MetaComponentType =
@@ -91,6 +100,8 @@ type MetaComponentType =
   | 'BreadcrumbMeta'
   | 'TabsMeta'
   | 'StatMeta'
+  | 'TableMeta'
+  | 'TableRowMeta'
 
 interface ParametersType {
   name: string

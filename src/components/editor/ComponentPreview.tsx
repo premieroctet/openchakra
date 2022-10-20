@@ -1,6 +1,9 @@
 import React, { memo, Suspense, lazy, useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import AlertPreview from '~components/editor/previews/AlertPreview'
+import TablePreview, {
+  TrPreview,
+} from '~components/editor/previews/TablePreview'
 import AvatarPreview, {
   AvatarBadgePreview,
   AvatarGroupPreview,
@@ -104,6 +107,9 @@ const ComponentPreview: React.FC<{
     case 'StatLabel':
     case 'StatNumber':
     case 'StatArrow':
+    case 'Td':
+    case 'Th':
+    case 'TableCaption':
       return (
         <PreviewContainer
           component={component}
@@ -144,6 +150,12 @@ const ComponentPreview: React.FC<{
     case 'Grid':
     case 'Center':
     case 'Container':
+    case 'TableContainer':
+    case 'Table':
+    case 'Thead':
+    case 'Tbody':
+    case 'Tfoot':
+      // case 'Tr':
       return (
         <WithChildrenPreviewContainer
           enableVisualHelper
@@ -215,6 +227,11 @@ const ComponentPreview: React.FC<{
       return <StatHelpTextPreview component={component} />
     case 'StatGroup':
       return <StatGroupPreview component={component} />
+    case 'Table':
+    case 'TableContainer':
+      return <TablePreview component={component} />
+    case 'Tr':
+      return <TrPreview component={component} />
     case 'Conditional':
       return <ConditionalPreview component={component} />
     case 'Loop':

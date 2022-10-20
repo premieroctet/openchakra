@@ -113,6 +113,22 @@ export const menuItems: MenuItems = {
     },
   },
   Switch: {},
+  Table: {
+    children: {
+      TableContainer: {},
+      Table: {},
+      TableCaption: {},
+      Thead: {},
+      Tbody: {},
+      Tfoot: {},
+      Tr: {},
+      Th: {},
+      Td: {},
+    },
+  },
+  TableRow: {
+    children: {},
+  },
   Tabs: {
     children: {
       Tabs: {},
@@ -198,6 +214,15 @@ export const componentsList: ComponentType[] = [
   'StatLabel',
   'StatNumber',
   'Switch',
+  'Table',
+  'Thead',
+  'Tbody',
+  'Tfoot',
+  'Tr',
+  'Th',
+  'Td',
+  'TableCaption',
+  'TableContainer',
   'Tab',
   'TabList',
   'TabPanel',
