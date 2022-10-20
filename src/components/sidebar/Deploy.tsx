@@ -1,13 +1,13 @@
+import React, {useState} from 'react'
 import { useSelector } from 'react-redux'
 import { useToast } from '@chakra-ui/react'
-import React, {useState} from 'react'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import { ProjectState } from '~core/models/project'
 import { getFullComponents } from '~core/selectors/components'
 import { deploy } from '../../utils/deploy'
 import { getModels } from '../../core/selectors/dataSources';
 
-const deployComponents = (state: ProjectState, models, toast: any) => {
+const deployComponents = (state: ProjectState, models: any, toast: any) => {
   toast({
     title: 'Starting publishing',
     status: 'success',

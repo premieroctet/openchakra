@@ -1,3 +1,4 @@
+import React, { useState, memo, useEffect, useMemo } from 'react'
 import { CopyIcon, CheckIcon, EditIcon } from '@chakra-ui/icons'
 import { FiTrash2 } from 'react-icons/fi'
 import { GoRepo, GoCode } from 'react-icons/go'
@@ -25,9 +26,7 @@ import {
   ListItem,
 } from '@chakra-ui/react'
 import { useSelector } from 'react-redux'
-import React, { useState, memo, useEffect, useMemo } from 'react'
-import styled from 'styled-components'
-
+import styled from '@emotion/styled'
 import { componentsList } from '~componentsList'
 import {
   getSelectedComponent,

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import Pages from './pages/Pages'
 import Sidebar from './Sidebar'
 import { getShowLeftPanel } from '~core/selectors/app'

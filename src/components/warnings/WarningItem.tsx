@@ -1,14 +1,9 @@
+import React from 'react'
 import {
   Box,
   Text,
-  List,
   ListItem,
 } from '@chakra-ui/react'
-import { useSelector } from 'react-redux'
-import React, { useState, memo, useEffect, useMemo } from 'react'
-import styled from 'styled-components'
-
-import { getShowWarnings } from '~core/selectors/app'
 import useDispatch from '~hooks/useDispatch'
 
 const WarningItem = ({warning}) => {
