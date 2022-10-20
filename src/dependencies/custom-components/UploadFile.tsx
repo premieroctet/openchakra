@@ -8,6 +8,7 @@ import mime from 'mime'
 const UploadFile = (
   {
     dataSource, 
+    attribute,
     value,
     backend, 
     ressource_id, 
@@ -16,6 +17,7 @@ const UploadFile = (
   }
   : {
       dataSource: {_id: null} | null
+      attribute: string
       value: string
       backend: string
       ressource_id: string
@@ -39,7 +41,7 @@ const UploadFile = (
       await FileManager.createFile(fileToUpload?.name, fileToUpload, '', mime.getExtension(fileToUpload?.name) || '', [])
       .then(res => {
         // Send ressource url 
-          backend && post(`myAlfred/api/studio/action`, {action: 'put', parent: ressource_id, attribute:'url', value: res?.Location})
+          backend && post(`myAlfred/api/studio/action`, {action: 'put', parent: ressource_id, attribute, value: res?.Location})
         })
         .catch((err) => console.error(err))
         
