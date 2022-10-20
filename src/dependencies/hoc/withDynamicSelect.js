@@ -14,6 +14,7 @@ const withDynamicSelect = Component => {
     const attribute=props.attribute
     return (
       <Component onChange={onChange} datavalue={internalDataValue} {...props}>
+      <option value={null}></option>
       {(values||[]).map(v =>
         (<option value={v._id}>{attribute ? v[attribute]: v}</option>)
       )}
