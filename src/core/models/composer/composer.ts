@@ -25,7 +25,7 @@ class Composer {
     props = {},
     rootParentType,
   }: AddNode): string => {
-    const id = generateId()
+    const id = generateId(type)
 
     if (parent === 'root' && !this.rootComponentType) {
       this.rootComponentType = type

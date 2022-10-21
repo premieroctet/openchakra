@@ -132,6 +132,9 @@ const Inspector = () => {
           flexDir="column"
         >
           {isRoot ? 'Document' : type}
+          <Box color="yellow.500" fontSize="xs">
+            {!isRoot && id}
+          </Box>
           {!!component.componentName && (
             <Text fontSize="xs" fontWeight="light">
               {component.componentName}
