@@ -8,12 +8,14 @@ import FlexPanel from './FlexPanel'
 
 const DisplayPanel = () => {
   const { setValue } = useForm()
-  const display = usePropsSelector('display')
-
-  const customResponsiveProps = typeof display === 'string' ? {} : display
-  
   const theme = useTheme()
   const themeBreakpoints: { string: string } = theme.breakpoints
+  
+
+  const display = usePropsSelector('display')
+  const customResponsiveProps = typeof display === 'string' && display.length > 0 ? {base: display} : display
+
+  
   const settledBreakpoints = Object.keys(customResponsiveProps)
   const availableBreakpoints = Object.keys(themeBreakpoints)
   .filter(bkpt => !settledBreakpoints.includes(bkpt))
@@ -27,7 +29,15 @@ const DisplayPanel = () => {
     'inline-block'
   ]
     
-  const AddABreakpoint = () => {
+  
+  const AddABreakpoint = ({currentProps, availableOptions}: {currentProps: any, availableOptions: any}) => {
+    const addBreakpoint = (e: {
+      target: { form: { [x: string]: { value: string } } }
+    }) => {
+      setValue('display', {...currentProps, [e.target.form['addBreakpoint'].value]: availableOptions[0]})
+    }
+  
+
     return (
       <form onSubmit={(ev) => addBreakpoint(ev)}>
         <FormControl label="breakpoint" htmlFor="breakpoint">
@@ -50,25 +60,22 @@ const DisplayPanel = () => {
     const [breakpoint] = e?.target?.name.split('-')
     const { value } = e.target
     
-    let newCustomRespProps = {}
+    let newCustomRespProps = null
     
     if (value) {
       newCustomRespProps = { ...customResponsiveProps, [breakpoint]: value }
     } else {
+      // console.log('here drop', breakpoint)
       let prepareRespProps = customResponsiveProps
       delete prepareRespProps[breakpoint]
       newCustomRespProps = Object.keys(prepareRespProps).length !== 0 ? prepareRespProps : ''
+
     }
 
     setValue('display', newCustomRespProps)
   }
 
-  const addBreakpoint = (e: {
-    target: { form: { [x: string]: { value: string } } }
-  }) => {
-    setValue('display', {...customResponsiveProps, [e.target.form['addBreakpoint'].value]: ''})
-  }
-
+ 
   return (
     <>
       {settledBreakpoints.map((breakpoint: string, i: number) => (
@@ -81,14 +88,14 @@ const DisplayPanel = () => {
                 onChange={e => handleBreakpoints(e)}
                 name={`${breakpoint}-display`}
               >
-                {availableOptions.map((option, i) => <option key={`ao${i}`} value={option}>{option}</option>)}
+                {availableOptions.map((option, i) => <option key={`ao${i}`} >{option}</option>)}
               </Select>
             </FormControl>
           </div>
         )
       )}
 
-      <AddABreakpoint />
+      <AddABreakpoint availableOptions={availableOptions} currentProps={customResponsiveProps}  />
 
       {display === 'flex' && <FlexPanel />}
     </>

@@ -4,6 +4,15 @@ import { getDefaultFormProps } from '~utils/defaultProps'
 import { useInspectorUpdate } from '~contexts/inspector-context'
 import { useEffect } from 'react'
 
+export function isJsonString(str: string) {
+  try {
+    JSON.parse(str)
+  } catch (e) {
+    return false
+  }
+  return true
+}
+
 const usePropsSelector = (propsName: string) => {
   const { addActiveProps } = useInspectorUpdate()
 
@@ -19,7 +28,7 @@ const usePropsSelector = (propsName: string) => {
     const propsValue = component.props[propsName]
 
     if (propsValue !== undefined) {
-      return propsValue
+      return isJsonString(propsValue) ? JSON.parse(propsValue) : propsValue
     }
 
     if (getDefaultFormProps(component.type)[propsName] !== undefined) {

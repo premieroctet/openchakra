@@ -39,14 +39,6 @@ export type PageSettings = {
 
 const DEFAULT_ID = 'root'
 
-function isJsonString(str: string) {
-  try {
-    JSON.parse(str)
-  } catch (e) {
-    return false
-  }
-  return true
-}
 
 const DEFAULT_PAGE = generateId('page')
 
@@ -139,11 +131,8 @@ const project = createModel({
       payload: { id: string; name: string; value: string },
     ) {
       return produce(state, (draftState: ProjectState) => {
-        const parseValue =
-          isJsonString(payload.value) && JSON.parse(payload.value)
-        draftState.pages[draftState.activePage].components[payload.id].props[
-          payload.name
-        ] = parseValue || payload.value
+        const newValue = typeof payload.value === 'string' ? payload.value : JSON.stringify(payload.value)
+        draftState.pages[draftState.activePage].components[payload.id].props[payload.name] = newValue
       })
     },
     deleteProps(state: ProjectState, payload: { id: string; name: string }) {

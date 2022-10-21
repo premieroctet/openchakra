@@ -2,7 +2,7 @@ import camelCase from 'lodash/camelCase'
 import filter from 'lodash/filter'
 import isBoolean from 'lodash/isBoolean'
 import lodash from 'lodash'
-
+import { isJsonString } from '../hooks/usePropsSelector'
 import icons from '~iconsList'
 
 import {
@@ -193,9 +193,9 @@ const buildBlock = ({
         .filter(p => !HIDDEN_ATTRIBUTES.includes(p))
         .forEach((propName: string) => {
           const propsValue = childComponent.props[propName]
-          const propsValueAsObject = typeof propsValue === 'object'
+          const propsValueAsObject = isJsonString(propsValue)
+          const jsonPropsValues = propsValueAsObject && JSON.parse(propsValue)
 
-          console.log(propsContent)
 
           if (propName=='actionProps' || propName=='nextActionProps') {
             const valuesCopy={
@@ -209,8 +209,9 @@ const buildBlock = ({
           if (propName=='dataSource') {
             propsContent += ` dataSourceId='${propsValue}'`
           }
-          if (propsValueAsObject && propsValue) {
-            const gatheredProperties = Object.entries(propsValue)
+
+          if (propsValueAsObject && Object.keys(jsonPropsValues).length >= 1) {  
+            const gatheredProperties = Object.entries(jsonPropsValues)
               .map(([prop, value]) => {
                 return `${prop}: '${value}'`
               })
