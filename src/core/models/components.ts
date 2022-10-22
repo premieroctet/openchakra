@@ -19,6 +19,7 @@ export type ComponentsStateWithUndo = {
 }
 
 const DEFAULT_ID = 'root'
+const componentsWithRefs = Object.keys(ComponentWithRefs)
 
 export const INITIAL_COMPONENTS: IComponents = {
   root: {
@@ -60,6 +61,7 @@ const components = createModel({
         type: string
         optional: boolean
         exposed: boolean
+        ref: boolean
       },
     ) {
       return produce(state, (draftState: ComponentsState) => {
@@ -77,6 +79,8 @@ const components = createModel({
           // @ts-ignore
           draftState.components[payload.id].params[index].exposed =
             payload.exposed
+          // @ts-ignore
+          draftState.components[payload.id].params[index].ref = payload.ref
         } else {
           draftState.components[payload.id].params?.push({
             name: payload.name,
@@ -84,6 +88,7 @@ const components = createModel({
             type: payload.type,
             optional: payload.optional,
             exposed: payload.exposed,
+            ref: payload.ref,
           })
         }
       })
@@ -224,14 +229,15 @@ const components = createModel({
           parent: payload.parentName,
           rootParentType: payload.rootParentType || payload.type,
         }
-        if (ComponentWithRefs.includes(payload.type)) {
-          const ref = `${id.replace('-', '_')}_ref`.toLowerCase()
+        if (componentsWithRefs.includes(payload.type)) {
+          const ref = `ref${id.replace('-', '_')}`
           draftState.components['root'].params?.push({
             name: ref,
-            type: 'any',
+            type: `RefObject<${ComponentWithRefs[payload.type]}>`,
             value: 'null',
             optional: true,
             exposed: false,
+            ref: true,
           })
           draftState.components[id].props['ref'] = `{${ref}}`
         }
@@ -249,19 +255,22 @@ const components = createModel({
           ...draftState.components,
           ...payload.components,
         }
-        Object.entries(draftState.components).map(([id, comp]) => {
-          const ref = `${id.replace('-', '_')}_ref`.toLowerCase()
-          if (ComponentWithRefs.includes(comp.type)) {
-            draftState.components['root'].params?.push({
-              name: ref,
-              type: 'any',
-              value: 'null',
-              optional: true,
-              exposed: false,
-            })
-            draftState.components[id].props['ref'] = `{${ref}}`
-          }
-        })
+        const newRefElements = Object.entries(
+          draftState.components,
+        ).filter(([id, comp]) => componentsWithRefs.includes(comp.type))
+        if (newRefElements.length) {
+          const [id, comp] = newRefElements[newRefElements.length - 1]
+          const ref = `ref${id.replace('-', '_')}`
+          draftState.components['root'].params?.push({
+            name: ref,
+            type: `RefObject<${ComponentWithRefs[comp.type]}>`,
+            value: 'null',
+            optional: true,
+            exposed: false,
+            ref: true,
+          })
+          draftState.components[id].props['ref'] = `{${ref}}`
+        }
       })
     },
     select(

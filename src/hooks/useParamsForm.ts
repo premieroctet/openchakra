@@ -13,7 +13,8 @@ export const useParamsForm = () => {
       value: any,
       type: string,
       optional: boolean,
-      exposed: boolean,
+      exposed: boolean = false,
+      ref: boolean = false,
     ) => {
       dispatch.components.updateParams({
         id: 'root',
@@ -22,6 +23,7 @@ export const useParamsForm = () => {
         type,
         optional,
         exposed,
+        ref,
       })
       dispatch.customComponents.updateParams({
         id: componentId,
@@ -30,6 +32,7 @@ export const useParamsForm = () => {
         type,
         optional,
         exposed,
+        ref,
       })
     },
     [componentId, dispatch.components, dispatch.customComponents],

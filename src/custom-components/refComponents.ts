@@ -1,1 +1,1 @@
-export const ComponentWithRefs = ['Input']
+export const ComponentWithRefs: any = { Input: 'HTMLInputElement' }
