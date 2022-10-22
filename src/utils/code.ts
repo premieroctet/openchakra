@@ -39,7 +39,7 @@ type BuildSingleBlockParams = {
   forceBuildBlock?: boolean
 }
 
-const buildParams = (paramsName: any) => {
+const buildParams = (paramsName: any, customOcTsx: boolean = false) => {
   let paramTypes = ``
   let params = ``
 
@@ -48,13 +48,18 @@ const buildParams = (paramsName: any) => {
   paramsName.forEach((param: any) => {
     const optional = param.optional ? '?' : ''
     paramTypes += `${param.name}${optional}: ${param.type}, `
-    let operand =
-      param.type == 'string'
-        ? `'${param.value}'`
-        : param.type == 'Function'
-        ? `${param.value.slice(1, param.value.length - 1)}`
-        : `${param.value}`
-    params += `${param.name}=${operand}, `
+    params += `${param.name}`
+    if (customOcTsx) {
+      let operand =
+        param.type == 'string'
+          ? `'${param.value}'`
+          : param.type == 'Function'
+          ? `${param.value.slice(1, param.value.length - 1)}`
+          : `${param.value}`
+      params += `=${operand}, `
+    } else {
+      params += `, `
+    }
   })
   paramTypes += `}`
   params += `}`
@@ -448,7 +453,7 @@ export const generateOcTsxCode = async (
 ) => {
   let code = buildBlock({ component: components.root, components })
   let componentsCodes = buildComponents(components)
-  const { paramTypes, params } = buildParams(components.root.params)
+  const { paramTypes, params } = buildParams(components.root.params, true)
   const iconImports = Array.from(new Set(getIconsImports(components)))
 
   let imports = [
