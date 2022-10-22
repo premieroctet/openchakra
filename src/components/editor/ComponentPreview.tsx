@@ -151,7 +151,6 @@ const ComponentPreview: React.FC<{
     case 'Center':
     case 'Container':
     case 'TableContainer':
-    case 'Table':
     case 'Thead':
     case 'Tbody':
     case 'Tfoot':
@@ -228,7 +227,6 @@ const ComponentPreview: React.FC<{
     case 'StatGroup':
       return <StatGroupPreview component={component} />
     case 'Table':
-    case 'TableContainer':
       return <TablePreview component={component} />
     case 'Tr':
       return <TrPreview component={component} />
