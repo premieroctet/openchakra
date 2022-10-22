@@ -4,6 +4,17 @@ const ALERT_COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'AlertIcon',
   'AlertTitle',
 ]
+const TABLE_COMPONENTS: (ComponentType | MetaComponentType)[] = [
+  'Table',
+  'Thead',
+  'Tbody',
+  'Tfoot',
+  'Tr',
+  'Th',
+  'Td',
+  'TableCaption',
+  'TableContainer',
+]
 
 const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   ...ALERT_COMPONENTS,
@@ -68,6 +79,7 @@ const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'AccordionIcon',
   'InputRightElement',
   'InputLeftElement',
+  ...TABLE_COMPONENTS,
   'Tab',
   'TabList',
   'TabPanel',
@@ -88,6 +100,8 @@ const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'BreadcrumbMeta',
   'TabsMeta',
   'StatMeta',
+  'TableMeta',
+  'TableRowMeta',
   // Allow custom components
   'Conditional',
   'Loop',

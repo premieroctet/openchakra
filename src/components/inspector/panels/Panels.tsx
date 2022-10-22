@@ -53,11 +53,14 @@ import TabPanel from './components/TabPanel'
 import StatArrowPanel from './components/StatArrowPanel'
 import StatLabelPanel from './components/StatLabelPanel'
 import SkeletonPanel from './components/SkeletonPanel'
+import TablePanel from './components/TablePanel'
 import ConditionalPanel from './components/ConditionalPanel'
 import LoopPanel from './components/LoopPanel'
 import { useSelector } from 'react-redux'
 import { getCustomComponentNames } from '~core/selectors/customComponents'
 import { convertToPascal } from '~components/editor/Editor'
+import TdPanel from './components/TdPanel'
+import TableCaptionPanel from './components/TableCaptionPanel'
 
 const importView = (component: any) => {
   component = convertToPascal(component)
@@ -163,6 +166,10 @@ const Panels: React.FC<{
       {type === 'StatArrow' && <StatArrowPanel />}
       {type === 'StatLabel' && <StatLabelPanel />}
       {type === 'StatNumber' && <StatLabelPanel />}
+      {type === 'Table' && <TablePanel />}
+      {type === 'TableCaption' && <TableCaptionPanel />}
+      {type === 'Td' && <TdPanel />}
+      {type === 'Th' && <TdPanel />}
       {type === 'Conditional' && <ConditionalPanel />}
       {type === 'Loop' && <LoopPanel />}
     </>

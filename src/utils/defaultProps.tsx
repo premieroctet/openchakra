@@ -67,10 +67,18 @@ import {
   StatNumberProps,
   StatArrowProps,
   SkeletonProps,
+  TableContainerProps,
+  TableProps,
+  TableCaptionProps,
+  TableBodyProps,
+  TableRowProps,
+  TableFooterProps,
+  TableHeadProps,
+  TableColumnHeaderProps,
+  TableCellProps,
 } from '@chakra-ui/react'
 
 import iconsList from '~iconsList'
-import { useSelector } from 'react-redux'
 
 type PropsWithForm<T> = T & { form?: T }
 
@@ -151,6 +159,15 @@ type PreviewDefaultProps = {
   Skeleton?: PropsWithForm<SkeletonProps>
   SkeletonCircle?: PropsWithForm<SkeletonProps>
   SkeletonText?: PropsWithForm<SkeletonProps>
+  TableContainer?: PropsWithForm<TableContainerProps>
+  Table?: PropsWithForm<TableProps>
+  TableCaption?: PropsWithForm<TableCaptionProps>
+  Tr?: PropsWithForm<TableRowProps>
+  // Td?: PropsWithForm<TableCellProps>
+  // Th?: PropsWithForm<TableColumnHeaderProps>
+  TBody?: PropsWithForm<TableBodyProps>
+  THead?: PropsWithForm<TableHeadProps>
+  TFoot?: PropsWithForm<TableFooterProps>
 }
 
 export const DEFAULT_PROPS: PreviewDefaultProps | any = {
@@ -331,6 +348,10 @@ export const DEFAULT_PROPS: PreviewDefaultProps | any = {
     children: 'Tag name',
   },
   Text: { children: 'Text value' },
+  Td: { children: 'data', isNumeric: false },
+  Th: { children: 'heading', isNumeric: false },
+  TableCaption: { children: 'Table Caption', placement: 'bottom' },
+  Table: { variant: 'simple' },
   Conditional: { condition: false },
   Loop: { list: [1, 2, 3, 4] },
 }

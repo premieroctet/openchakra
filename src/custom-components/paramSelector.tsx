@@ -14,8 +14,6 @@ import {
 import { ChevronLeftIcon } from '@chakra-ui/icons'
 import { useSelector } from 'react-redux'
 import { getComponentParamNames } from '~core/selectors/components'
-import { MdCheckCircle } from 'react-icons/md'
-import { IoMdRadioButtonOff } from 'react-icons/io'
 import { useForm } from '~hooks/useForm'
 import usePropsSelector from '~hooks/usePropsSelector'
 
