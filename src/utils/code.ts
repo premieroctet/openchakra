@@ -364,7 +364,7 @@ export const generateCode = async (
     ),
   ]
 
-  code = `import React from 'react';
+  code = `import React, {RefObject} from 'react';
 import {
   ChakraProvider,
   ${imports.join(',')}
@@ -439,7 +439,7 @@ export const generateOcTsxCode = async (
     ),
   ]
 
-  code = `import React from 'react';
+  code = `import React, {RefObject} from 'react';
 import {
   ChakraProvider,
   ${imports.join(',')}

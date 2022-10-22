@@ -29,7 +29,7 @@ export default async function handler(req, res) {
       `src/custom-components/test/${fileName}.oc.tsx`,
       req.body.ocTsxBody,
     )
-    let fileContent = fs.readFileSync(`${req.body.path}/${fileName}.tsx`, {
+    let fileContent = await fs.readFile(`${req.body.path}/${fileName}.tsx`, {
       encoding: 'utf-8',
     })
     let mainArray = fileContent.split(
