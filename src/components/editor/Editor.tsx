@@ -61,7 +61,7 @@ const Editor: React.FC = () => {
       setCode(code)
       if (selectedComponent !== undefined) {
         let fileName = convertToPascal(customComponents[selectedComponent])
-        const { refsCode, appCode } = generateMainTsx(components.root.params)
+        const { refsCode, appCode } = generateMainTsx(components.root.params, fileName)
         let previewCode = await generatePreview(
           components,
           fileName,

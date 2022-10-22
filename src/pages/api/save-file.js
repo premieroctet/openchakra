@@ -29,12 +29,34 @@ export default async function handler(req, res) {
       `src/custom-components/test/${fileName}.oc.tsx`,
       req.body.ocTsxBody,
     )
+    let fileContent = fs.readFileSync(`${req.body.path}/${fileName}.tsx`, {
+      encoding: 'utf-8',
+    })
+    let mainArray = fileContent.split(
+      '// Refs are declared in here do not edit content and comments\n',
+    )
+    mainArray[1] = `${req.body.refsBody}\n`
+    let appArray = mainArray[2].split(
+      `// ${pascalName}App's props are updated automatically do not edit content and comments\n`,
+    )
+    appArray[1] = `${req.body.appBody}\n`
+    mainArray[2] = appArray.join(
+      `// ${pascalName}App's props are updated automatically do not edit content and comments\n`,
+    )
+    fileContent = mainArray.join(
+      '// Refs are declared in here do not edit content and comments\n',
+    )
+    const writeTSX = fs.writeFile(
+      `${req.body.path}/${fileName}.tsx`,
+      fileContent,
+    )
     await Promise.all([
       writeCode,
       writeJson,
       writePreview,
       writePanel,
       writeOcTsx,
+      writeTSX,
     ])
     res.statusCode = 200
     res.json({ message: 'success' })
