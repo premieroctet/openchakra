@@ -53,8 +53,10 @@ const Editor: React.FC = () => {
 
   useEffect(() => {
     const getCode = async () => {
-      const code = await generateCode(components, customComponents)
-      const ocTsxCode = await generateOcTsxCode(components, customComponents)
+      const [code, ocTsxCode] = await Promise.all([
+        generateCode(components, customComponents),
+        generateOcTsxCode(components, customComponents),
+      ])
       setCode(code)
       if (selectedComponent !== undefined) {
         let fileName = convertToPascal(customComponents[selectedComponent])

@@ -5,6 +5,7 @@ import templates, { TemplateType } from '~templates'
 import { generateId } from '~utils/generateId'
 import { duplicateComponent, deleteComponent } from '~utils/recursive'
 import omit from 'lodash/omit'
+import { ComponentWithRefs } from '~custom-components/refComponents'
 
 export type ComponentsState = {
   components: IComponents
@@ -223,6 +224,17 @@ const components = createModel({
           parent: payload.parentName,
           rootParentType: payload.rootParentType || payload.type,
         }
+        if (ComponentWithRefs.includes(payload.type)) {
+          const ref = `${id.replace('-', '_')}_ref`.toLowerCase()
+          draftState.components['root'].params?.push({
+            name: ref,
+            type: 'any',
+            value: 'null',
+            optional: false,
+            exposed: false,
+          })
+          draftState.components[id].props['ref'] = `{${ref}}`
+        }
       })
     },
     addMetaComponent(
@@ -237,6 +249,19 @@ const components = createModel({
           ...draftState.components,
           ...payload.components,
         }
+        Object.entries(draftState.components).map(([id, comp]) => {
+          const ref = `${id.replace('-', '_')}_ref`.toLowerCase()
+          if (ComponentWithRefs.includes(comp.type)) {
+            draftState.components['root'].params?.push({
+              name: ref,
+              type: 'any',
+              value: 'null',
+              optional: false,
+              exposed: false,
+            })
+            draftState.components[id].props['ref'] = `{${ref}}`
+          }
+        })
       })
     },
     select(
