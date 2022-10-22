@@ -365,6 +365,22 @@ const getIconsImports = (components: IComponents) => {
   })
 }
 
+export const generateMainTsx = (params: any) => {
+  let refsCode = ``
+  let appCode = `<App \n`
+  params.map((param: any) => {
+    appCode += `${param.name}={${param.name}}\n`
+    if (
+      param.name.length >= 4 &&
+      param.name.slice(param.name.length - 4) === '_ref'
+    ) {
+      refsCode += `const ${param.name} = useRef(${param.value});\n`
+    }
+  })
+  appCode += `/>`
+  return { refsCode, appCode }
+}
+
 export const generateCode = async (
   components: IComponents,
   currentComponents: CustomDictionary,

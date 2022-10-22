@@ -230,7 +230,7 @@ const components = createModel({
             name: ref,
             type: 'any',
             value: 'null',
-            optional: false,
+            optional: true,
             exposed: false,
           })
           draftState.components[id].props['ref'] = `{${ref}}`
@@ -256,7 +256,7 @@ const components = createModel({
               name: ref,
               type: 'any',
               value: 'null',
-              optional: false,
+              optional: true,
               exposed: false,
             })
             draftState.components[id].props['ref'] = `{${ref}}`
