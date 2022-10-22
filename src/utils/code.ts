@@ -298,6 +298,22 @@ const getIconsImports = (components: IComponents) => {
   })
 }
 
+export const generateMainTsx = (params: any, fileName: string) => {
+  let refsCode = ``
+  let appCode = `return <${fileName}App \n`
+  params.map((param: any) => {
+    appCode += `${param.name}={${param.name}}\n`
+    if (param.ref) {
+      refsCode += `const ${param.name} = useRef${param.type.replace(
+        'RefObject',
+        '',
+      )}(${param.value});\n`
+    }
+  })
+  appCode += `/>;`
+  return { refsCode, appCode }
+}
+
 export const generateCode = async (
   components: IComponents,
   currentComponents: CustomDictionary,

@@ -9,7 +9,7 @@ export const duplicateComponent = (
   const clonedComponents: IComponents = {}
 
   const cloneComponent = (component: IComponent) => {
-    const newid = generateId()
+    const newid = generateId(component.type)
     const children = component.children.map(child => {
       return cloneComponent(components[child])
     })

@@ -109,6 +109,7 @@ interface ParametersType {
   type: string
   optional: boolean
   exposed: boolean
+  ref: boolean
 }
 
 interface IComponent {

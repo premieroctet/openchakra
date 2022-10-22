@@ -10,6 +10,7 @@ import {
   generatePreview,
   generatePanel,
   generateOcTsxCode,
+  generateMainTsx,
 } from '~utils/code'
 import API from '~custom-components/api'
 import { getComponents } from '~core/selectors/components'
@@ -53,11 +54,14 @@ const Editor: React.FC = () => {
 
   useEffect(() => {
     const getCode = async () => {
-      const code = await generateCode(components, customComponents)
-      const ocTsxCode = await generateOcTsxCode(components, customComponents)
+      const [code, ocTsxCode] = await Promise.all([
+        generateCode(components, customComponents),
+        generateOcTsxCode(components, customComponents),
+      ])
       setCode(code)
       if (selectedComponent !== undefined) {
         let fileName = convertToPascal(customComponents[selectedComponent])
+        const { refsCode, appCode } = generateMainTsx(components.root.params, fileName)
         let previewCode = await generatePreview(
           components,
           fileName,
@@ -70,6 +74,8 @@ const Editor: React.FC = () => {
           jsonBody: components,
           previewBody: previewCode,
           panelBody: panelCode,
+          refsBody: refsCode,
+          appBody: appCode,
           path: customComponents[selectedComponent],
         })
       }

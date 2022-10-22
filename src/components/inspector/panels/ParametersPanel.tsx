@@ -48,6 +48,7 @@ const ParametersPanel = () => {
     type: '',
     optional: false,
     exposed: false,
+    ref: false,
   }
   const [quickParams, setQuickParams] = useState(DEFAULT_PARAMS)
   const [hasError, setError] = useState(false)
@@ -81,6 +82,7 @@ const ParametersPanel = () => {
               quickParams.type,
               quickParams.optional,
               quickParams.exposed,
+              quickParams.ref,
             )
             setQuickParams(DEFAULT_PARAMS)
             setError(false)

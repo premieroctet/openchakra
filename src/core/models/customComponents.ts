@@ -46,6 +46,7 @@ const customComponents = createModel({
         type: string
         optional: boolean
         exposed: boolean
+        ref: boolean
       },
     ) {
       return produce(state, (draftState: CustomComponentsState) => {
@@ -57,6 +58,7 @@ const customComponents = createModel({
           draftState.parameters[payload.id][index].type = payload.type
           draftState.parameters[payload.id][index].optional = payload.optional
           draftState.parameters[payload.id][index].exposed = payload.exposed
+          draftState.parameters[payload.id][index].ref = payload.ref
         } else {
           draftState.parameters[payload.id]?.push({
             name: payload.name,
@@ -64,6 +66,7 @@ const customComponents = createModel({
             type: payload.type,
             optional: payload.optional,
             exposed: payload.exposed,
+            ref: payload.ref,
           })
         }
       })
