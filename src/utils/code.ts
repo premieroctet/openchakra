@@ -49,7 +49,7 @@ const buildParams = (paramsName: any, customOcTsx: boolean = false) => {
     const optional = param.optional ? '?' : ''
     paramTypes += `${param.name}${optional}: ${param.type}, `
     params += `${param.name}`
-    if (customOcTsx || !param.optional) {
+    if (customOcTsx) {
       let operand =
         param.type == 'string'
           ? `'${param.value}'`
