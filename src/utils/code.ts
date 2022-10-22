@@ -39,7 +39,7 @@ type BuildSingleBlockParams = {
   forceBuildBlock?: boolean
 }
 
-const buildParams = (paramsName: any, ocTsx: boolean = false) => {
+const buildParams = (paramsName: any, customOcTsx: boolean = false) => {
   let paramTypes = ``
   let params = ``
 
@@ -48,16 +48,17 @@ const buildParams = (paramsName: any, ocTsx: boolean = false) => {
   paramsName.forEach((param: any) => {
     const optional = param.optional ? '?' : ''
     paramTypes += `${param.name}${optional}: ${param.type}, `
-    if (ocTsx) {
+    params += `${param.name}`
+    if (customOcTsx || !param.optional) {
       let operand =
         param.type == 'string'
           ? `'${param.value}'`
           : param.type == 'Function'
           ? `${param.value.slice(1, param.value.length - 1)}`
           : `${param.value}`
-      params += `${param.name}=${operand}, `
+      params += `=${operand}, `
     } else {
-      params += `${param.name}, `
+      params += `, `
     }
   })
   paramTypes += `}`
