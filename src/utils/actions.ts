@@ -17,7 +17,8 @@ export const ACTIONS:IActions={
   'login': {
     label: 'Login',
     options:{
-      source: ({components}) => components.map(c => ({key: c.id, label: c.id})),
+      email: ({components}) => components.map(p => ({key: p.id, label: `${p.type}/${p.id}`})),
+      password: ({components}) => components.map(p => ({key: p.id, label: `${p.type}/${p.id}`})),
     },
     next: ['openPage'],
   },
