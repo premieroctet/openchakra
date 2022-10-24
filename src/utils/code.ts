@@ -359,7 +359,7 @@ const buildHooks = (components: IComponents) => {
   if (dataProviders.length == 0) {
     return ''
   }
-  let code = `const {get}=useFetch('${config.targetDomain}', {cachePolicy: 'no-cache'})`
+  let code = `const {get}=useFetch('/', {cachePolicy: 'no-cache'})`
   code +=
     '\n' +
     dataProviders
