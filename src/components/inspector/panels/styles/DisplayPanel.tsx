@@ -1,25 +1,13 @@
 import React, { memo } from 'react'
-import { Button, Select, useTheme } from '@chakra-ui/react'
+import { Select } from '@chakra-ui/react'
 import FormControl from '~components/inspector/controls/FormControl'
-import { useForm } from '~hooks/useForm'
-import usePropsSelector from '~hooks/usePropsSelector'
 import FlexPanel from './FlexPanel'
+import useBreakpoints from '~hooks/useBreakpoints'
 
 
 const DisplayPanel = () => {
-  const { setValue } = useForm()
-  const theme = useTheme()
-  const themeBreakpoints: { string: string } = theme.breakpoints
   
-
-  const display = usePropsSelector('display')
-  const customResponsiveProps = typeof display === 'string' && display.length > 0 ? {base: display} : display
-
-  
-  const settledBreakpoints = Object.keys(customResponsiveProps)
-  const availableBreakpoints = Object.keys(themeBreakpoints)
-  .filter(bkpt => !settledBreakpoints.includes(bkpt))
-
+  const emotionProp = 'display'
   const availableOptions = [
     '',
     'block',
@@ -28,54 +16,8 @@ const DisplayPanel = () => {
     'grid',
     'inline-block'
   ]
-    
-  
-  const AddABreakpoint = ({currentProps, availableOptions}: {currentProps: any, availableOptions: any}) => {
-    const addBreakpoint = (e: {
-      target: { form: { [x: string]: { value: string } } }
-    }) => {
-      setValue('display', {...currentProps, [e.target.form['addBreakpoint'].value]: availableOptions[0]})
-    }
-  
+  const {responsiveValues, settledBreakpoints, handleBreakpoints, AddABreakpoint} = useBreakpoints(emotionProp)
 
-    return (
-      <form onSubmit={(ev) => addBreakpoint(ev)}>
-        <FormControl label="breakpoint" htmlFor="breakpoint">
-          <Select size="sm" name="addBreakpoint" id="breakpoint">
-            {availableBreakpoints.map(bkpt => (
-              <option key={bkpt} value={bkpt}>
-                {bkpt}
-              </option>
-            ))}
-          </Select>
-        </FormControl>
-        <Button type='submit' size="xs" onClick={(e) => addBreakpoint(e)}>
-          Add breakpoint
-        </Button>
-      </form>
-    )
-  }
-
-  const handleBreakpoints = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const [breakpoint] = e?.target?.name.split('-')
-    const { value } = e.target
-    
-    let newCustomRespProps = null
-    
-    if (value) {
-      newCustomRespProps = { ...customResponsiveProps, [breakpoint]: value }
-    } else {
-      // console.log('here drop', breakpoint)
-      let prepareRespProps = customResponsiveProps
-      delete prepareRespProps[breakpoint]
-      newCustomRespProps = Object.keys(prepareRespProps).length !== 0 ? prepareRespProps : ''
-
-    }
-
-    setValue('display', newCustomRespProps)
-  }
-
- 
   return (
     <>
       {settledBreakpoints.map((breakpoint: string, i: number) => (
@@ -84,20 +26,20 @@ const DisplayPanel = () => {
             <FormControl label="Display">
               <Select
                 size="sm"
-                value={customResponsiveProps?.[breakpoint] || ''}
-                onChange={e => handleBreakpoints(e)}
-                name={`${breakpoint}-display`}
+                value={responsiveValues?.[breakpoint] || ''}
+                onChange={e => handleBreakpoints(e, responsiveValues)}
+                name={`${breakpoint}-${emotionProp}`}
               >
                 {availableOptions.map((option, i) => <option key={`ao${i}`} >{option}</option>)}
               </Select>
             </FormControl>
+            {responsiveValues?.[breakpoint] === 'flex' && <FlexPanel bkpt={breakpoint} />}
           </div>
         )
       )}
 
-      <AddABreakpoint availableOptions={availableOptions} currentProps={customResponsiveProps}  />
+      <AddABreakpoint availableOptions={availableOptions} currentProps={responsiveValues}  />
 
-      {display === 'flex' && <FlexPanel />}
     </>
   )
 }
