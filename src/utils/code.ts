@@ -193,7 +193,7 @@ const buildBlock = ({
         .filter(p => !HIDDEN_ATTRIBUTES.includes(p))
         .forEach((propName: string) => {
           const propsValue = childComponent.props[propName]
-          const propsValueAsObject = isJsonString(propsValue)
+          const propsValueAsObject = propsValue !== 'null' && isJsonString(propsValue) // TODO revise this temporary fix = propsValue !== 'null' // bgGradient buggy when deleted
           const jsonPropsValues = propsValueAsObject && JSON.parse(propsValue)
 
 
