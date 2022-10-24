@@ -163,7 +163,7 @@ const buildBlock = ({
 
 
       if (isDynamicComponent(childComponent)) {
-        propsContent += ` backend='${config.targetDomain}'`
+        propsContent += ` backend='/'`
         try {
           const tp = getDataProviderDataType(components[childComponent.parent], components, childComponent.props.dataSource, models)
           if (tp.type) {
@@ -246,7 +246,7 @@ const buildBlock = ({
         })
 
       if (childComponent.type=='Timer') {
-        propsContent += ` backend='${config.targetDomain}'`
+        propsContent += ` backend='/'`
       }
 
       if (childComponent.props.page) {
