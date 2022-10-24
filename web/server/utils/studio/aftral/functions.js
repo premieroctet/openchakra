@@ -1,11 +1,14 @@
+const { BadRequestError, NotFoundError } = require('../../errors');
 import mongoose from 'mongoose'
 import lodash from 'lodash'
+const bcrypt=require('bcryptjs')
 import Program from '../../../models/Program'
 import Theme from '../../../models/Theme'
 import Session from '../../../models/Session'
 const TraineeTheme = require('../../../models/TraineeTheme')
 const TraineeResource = require('../../../models/TraineeResource')
 const TraineeSession = require('../../../models/TraineeSession')
+const User = require('../../../models/User');
 
 const getModel = id => {
   const conn=mongoose.connection
@@ -168,6 +171,25 @@ const getSession = id => {
   return getTraineeSession(id)
 }
 
+const login = (email, password) => {
+  console.log(`Login with ${email} and ${password}`)
+  return User.findOne({email})
+    .then(user => {
+      if (!user) {
+        throw new NotFoundError(`Invalid email or password`)
+      }
+      console.log(`Comparing ${password} and ${user.password}`)
+      return bcrypt.compare(password, user.password)
+        .then(matched => {
+          console.log(`Matched:${matched}`)
+          if (!matched) {
+            throw new NotFoundError(`Invalid email or password`)
+          }
+          return user
+        })
+    })
+}
+
 module.exports={addThemeToProgram, addThemeToSession, addResourceToSession,
   addResourceToProgram, addResourceToTheme,
   removeChildFromParent,
@@ -176,4 +198,5 @@ module.exports={addThemeToProgram, addThemeToSession, addResourceToSession,
   getNext,
   getPrevious,
   getSession,
+  login
 }

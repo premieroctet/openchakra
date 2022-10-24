@@ -1,6 +1,8 @@
+const { login } = require('../../utils/studio/aftral/functions');
 const {ACTIONS} = require('../../utils/studio/actions')
 const {buildQuery} = require('../../utils/database')
 const path=require('path')
+const jwt = require('jsonwebtoken')
 const fs=require('fs').promises
 const child_process = require('child_process')
 const mongoose=require('mongoose')
@@ -109,6 +111,26 @@ router.post('/action', (req, res) => {
   return actionFn(req.body)
     .then(result => {
       return res.json(result)
+    })
+    .catch(err => {
+      console.log(err)
+      return res.status(err.status || HTTP_CODES.SYSTEM_ERROR).json(err.message || err)
+    })
+})
+
+router.post('/login', (req, res) => {
+  console.log(`Trying to log`)
+  const {email, password}=req.body
+
+  return login(email, password)
+    .then(user => {
+      const token=jwt.sign({id: user.id}, 'secret')
+      console.log(`Created token ${token}`)
+      return res.cookie('token', `Bearer ${token}`, {
+        httpOnly: false,
+        secure: true,
+        sameSite: true,
+      }).json(user)
     })
     .catch(err => {
       console.log(err)

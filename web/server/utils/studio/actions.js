@@ -16,9 +16,14 @@ const {
   getNext, getPrevious,
   getSession,
   getModel,
+  login,
 } = require('./aftral/functions')
 
 const ACTIONS={
+
+  login: ({email, password}) => {
+    return login(email, password)
+  },
 
   put: ({parent, attribute, value}) => {
     console.log(`Putting ${parent} ${attribute} to ${value}`)

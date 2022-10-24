@@ -1,11 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
-const moment = require('moment')
-const {getMangopayMessage} = require('../../../utils/i18n')
-const {hideIllegal} = require('../../../utils/text')
-const {ACCOUNT_MIN_AGE}=require('../../../utils/consts')
+const bcrypt = require('bcryptjs')
 
-const maxBirth=new Date(moment().add(-ACCOUNT_MIN_AGE, 'years'))
 
 const UserSchema = new Schema({
   firstname: {
@@ -24,6 +20,8 @@ const UserSchema = new Schema({
   password: {
     type: String,
     required: true,
+    default: 'invalid',
+    set: pass => bcrypt.hashSync(pass, 10)
   },
   role: {
     type: String,
