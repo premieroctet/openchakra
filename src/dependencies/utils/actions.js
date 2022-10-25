@@ -1,16 +1,24 @@
-import axios from 'axios';
-
-import { getComponentDataValue } from './values';
+import axios from 'axios'
+import { getComponentDataValue } from './values'
 
 const API_ROOT='/myAlfred/api/studio'
 export const ACTIONS={
+  login : ({props, backend}) => {
+    const email=getComponentDataValue(props.email)
+    const password=getComponentDataValue(props.password)
+    let url=`${API_ROOT}/login`
+      return axios.post(url, {email, password})
+        .then(res => {
+          console.log(JSON.stringify(res, null, 2))
+        })
+  },
   openPage: ({value, props, backend}) => {
     let url=`/${props.page}`
     if (value && value._id) {
       url=`${url}?id=${value._id}`
     }
     // new page
-    if (props.open && !(props.open=='false') ) {
+    if (props.open && !(props.open==='false') ) {
       return Promise.resolve(window.open(url, 'blank'))
     }
     else {

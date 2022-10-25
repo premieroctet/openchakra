@@ -195,8 +195,6 @@ const buildBlock = ({
           const propsValue = childComponent.props[propName]
           const propsValueAsObject = typeof propsValue === 'object'
 
-          console.log(propsContent)
-
           if (propName=='actionProps' || propName=='nextActionProps') {
             const valuesCopy={
               ...propsValue,
@@ -359,7 +357,7 @@ const buildHooks = (components: IComponents) => {
   if (dataProviders.length == 0) {
     return ''
   }
-  let code = `const {get}=useFetch('/', {cachePolicy: 'no-cache'})`
+  let code = `const {get}=useFetch(null, {cachePolicy: 'no-cache'})`
   code +=
     '\n' +
     dataProviders
@@ -483,12 +481,15 @@ import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
 import {useLocation} from "react-router-dom"
 
 ${dynamics || ''}
+import { useUserContext } from './dependencies/context/user'
 ${componentsCodes}
 
 const ${componentName} = () => {
   ${hooksCode}
   const query = new URLSearchParams(useLocation().search)
   const id=query.get('id')
+  const loggedUser=useUserContext()
+
   return (
   <ChakraProvider resetCSS>
     <Metadata
@@ -513,6 +514,7 @@ ${pageNames.map(name => `<li><a href='/${name}'>${name}</a></li>`).join('\n')}
 */
   const { pages, rootPage } = state
   let code = `import {BrowserRouter, Routes, Route} from 'react-router-dom'
+  import { UserWrapper } from './dependencies/context/user';
   ${Object.values(pages)
     .map(
       page =>
@@ -524,7 +526,7 @@ ${pageNames.map(name => `<li><a href='/${name}'>${name}</a></li>`).join('\n')}
     .join('\n')}
 
   const App = () => (
-    <>
+    <UserWrapper>
     <BrowserRouter>
     <Routes>
       <Route path='/' element={<${getPageComponentName(rootPage, pages)}/>} />
@@ -539,10 +541,10 @@ ${pageNames.map(name => `<li><a href='/${name}'>${name}</a></li>`).join('\n')}
         .join('\n')}
     </Routes>
     </BrowserRouter>
-    </>
+    </UserWrapper>
   )
 
-  export default App
+  export default withUserContext(App)
   `
   code = await formatCode(code)
   return code
