@@ -1,8 +1,10 @@
+const { sendCookie } = require('../../config/passport');
 const { login } = require('../../utils/studio/aftral/functions');
 const {ACTIONS} = require('../../utils/studio/actions')
 const {buildQuery} = require('../../utils/database')
 const path=require('path')
 const jwt = require('jsonwebtoken')
+
 const fs=require('fs').promises
 const child_process = require('child_process')
 const mongoose=require('mongoose')
@@ -11,6 +13,7 @@ const lodash=require('lodash')
 const {getModels} =require('../../utils/database')
 const {HTTP_CODES, NotFoundError}=require('../../utils/errors')
 const PRODUCTION_ROOT='/home/ec2-user/studio/'
+const passport = require('passport')
 
 const router = express.Router()
 
@@ -124,18 +127,16 @@ router.post('/login', (req, res) => {
 
   return login(email, password)
     .then(user => {
-      const token=jwt.sign({id: user.id}, 'secret')
-      console.log(`Created token ${token}`)
-      return res.cookie('token', `Bearer ${token}`, {
-        httpOnly: false,
-        secure: true,
-        sameSite: true,
-      }).json(user)
+      return sendCookie(user).json(user)
     })
     .catch(err => {
       console.log(err)
       return res.status(err.status || HTTP_CODES.SYSTEM_ERROR).json(err.message || err)
     })
+})
+
+router.get('/current-user', passport.authenticate('cookie', {session: false}), (req, res) => {
+  return res.json(req.user)
 })
 
 router.post('/:model', (req, res) => {
@@ -150,7 +151,7 @@ router.post('/:model', (req, res) => {
     })
 })
 
-router.get('/:model/:id?', (req, res) => {
+router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (req, res) => {
   const model=req.params.model
   const fields=req.query.fields?.split(',') || []
   const id=req.params.id
