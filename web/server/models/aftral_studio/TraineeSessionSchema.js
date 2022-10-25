@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const AddressSchema = require('../AddressSchema')
 const lodash=require('lodash')
 const Schema = mongoose.Schema
 const formatDuration = require('format-duration')

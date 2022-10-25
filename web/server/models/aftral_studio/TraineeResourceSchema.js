@@ -1,32 +1,10 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const formatDuration = require('format-duration')
+const ResourceSchema=require('./ResourceSchema')
 
 const TraineeResourceSchema = new Schema({
-  name: {
-    type: String,
-    required: false,
-  },
-  short_name: {
-    type: String,
-    required: false,
-  },
-  code: {
-    type: String,
-    required: false,
-  },
-  description: {
-    type: String,
-    required: false,
-  },
-  type: {
-    type: String,
-    required: false,
-  },
-  url: {
-    type: String,
-    required: false,
-  },
+  ...ResourceSchema.obj,
   spent_time: {
     type: Number,
     default: 0,

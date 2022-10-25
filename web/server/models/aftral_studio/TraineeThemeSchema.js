@@ -1,24 +1,11 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const lodash=require('lodash')
+const ThemeSchema = require('./ThemeSchema')
+
 
 const TraineeThemeSchema = new Schema({
-  name: {
-    type: String,
-    required: false,
-  },
-  code: {
-    type: String,
-    required: false,
-  },
-  description: {
-    type: String,
-    required: false,
-  },
-  picture: {
-    type: String,
-    required: false,
-  },
+  ...ThemeSchema.obj,
   resources: [{
     type: Schema.Types.ObjectId,
     ref: 'traineeResource',
