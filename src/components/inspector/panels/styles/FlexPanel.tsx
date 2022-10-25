@@ -5,9 +5,8 @@ import useBreakpoints from '~hooks/useBreakpoints'
 
 const FlexPanel = ({bkpt}: {bkpt : string}) => {
 
-  const {responsiveValues: alignItemsResponsiveValues, handleBreakpoints} = useBreakpoints('alignItems')
-  const {responsiveValues: flexDirectionResponsiveValues } = useBreakpoints('flexDirection')
-  const {responsiveValues: justifyContentResponsiveValues } = useBreakpoints('justifyContent')
+  const {responsiveValues, handleBreakpoints} = useBreakpoints(['alignItems', 'flexDirection', 'justifyContent'])
+  const {alignItems, flexDirection, justifyContent} = responsiveValues
 
   return (
     <>
@@ -15,8 +14,8 @@ const FlexPanel = ({bkpt}: {bkpt : string}) => {
         <Select
           name={`${bkpt}-flexDirection`}
           size="sm"
-          value={flexDirectionResponsiveValues?.[bkpt] || ''}
-          onChange={e => handleBreakpoints(e, flexDirectionResponsiveValues)}
+          value={flexDirection?.[bkpt] || ''}
+          onChange={() => handleBreakpoints}
           >
           <option>row</option>
           <option>row-reverse</option>
@@ -29,8 +28,8 @@ const FlexPanel = ({bkpt}: {bkpt : string}) => {
         <Select
           name={`${bkpt}-justifyContent`}
           size="sm"
-          value={justifyContentResponsiveValues?.[bkpt] || ''}
-          onChange={e => handleBreakpoints(e, justifyContentResponsiveValues)}
+          value={justifyContent?.[bkpt] || ''}
+          onChange={() => handleBreakpoints}
         >
           <option>flex-start</option>
           <option>center</option>
@@ -44,8 +43,8 @@ const FlexPanel = ({bkpt}: {bkpt : string}) => {
         <Select
           name={`${bkpt}-alignItems`}
           size="sm"
-          value={alignItemsResponsiveValues?.[bkpt] || ''}
-          onChange={e => handleBreakpoints(e, alignItemsResponsiveValues)}
+          value={alignItems?.[bkpt] || ''}
+          onChange={() => handleBreakpoints}
         >
           <option>stretch</option>
           <option>flex-start</option>

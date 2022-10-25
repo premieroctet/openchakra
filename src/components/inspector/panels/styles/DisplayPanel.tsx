@@ -16,7 +16,7 @@ const DisplayPanel = () => {
     'grid',
     'inline-block'
   ]
-  const {responsiveValues, settledBreakpoints, handleBreakpoints, AddABreakpoint} = useBreakpoints(emotionProp)
+  const {responsiveValues, settledBreakpoints, handleBreakpoints, AddABreakpoint} = useBreakpoints([emotionProp])
 
   return (
     <>
@@ -26,19 +26,19 @@ const DisplayPanel = () => {
             <FormControl label="Display">
               <Select
                 size="sm"
-                value={responsiveValues?.[breakpoint] || ''}
-                onChange={e => handleBreakpoints(e, responsiveValues)}
                 name={`${breakpoint}-${emotionProp}`}
+                value={responsiveValues[emotionProp]?.[breakpoint] || ''}
+                onChange={() => handleBreakpoints}
               >
                 {availableOptions.map((option, i) => <option key={`ao${i}`} >{option}</option>)}
               </Select>
             </FormControl>
-            {responsiveValues?.[breakpoint] === 'flex' && <FlexPanel bkpt={breakpoint} />}
+            {responsiveValues[emotionProp]?.[breakpoint] === 'flex' && <FlexPanel bkpt={breakpoint} />}
           </div>
         )
       )}
 
-      <AddABreakpoint availableOptions={availableOptions} currentProps={responsiveValues}  />
+      <AddABreakpoint currentProps={responsiveValues} />
 
     </>
   )

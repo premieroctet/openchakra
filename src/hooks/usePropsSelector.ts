@@ -41,4 +41,35 @@ const usePropsSelector = (propsName: string) => {
   return value
 }
 
+export const useAllPropsSelector = (propsName: string[]) => {
+  // const { addActiveProps } = useInspectorUpdate()
+
+  // useEffect(() => {
+  //   // Register form props name for custom props panel
+  //   addActiveProps(propsName)
+  // }, [addActiveProps, propsName])
+
+
+  const value = useSelector((state: RootState) => {
+    const currentState = state.project.present
+    const currentPage = currentState.pages[currentState.activePage]
+    const component = currentPage.components[currentPage.selectedId]
+    const propsValue = component.props
+
+    if (propsValue !== undefined) {
+      return Object.fromEntries(
+        Object.entries(propsValue)
+        // @ts-ignore
+        .map(([key, data]) => [key, isJsonString(data) ? JSON.parse(data) : data])
+        .filter(([key, data]) => key !== 'status')
+        .filter(([key, data]) => propsName.includes(key))
+      )
+    }
+
+    return {}
+  })
+
+  return value
+}
+
 export default usePropsSelector
