@@ -50,18 +50,19 @@ import TabsPanel from '~components/inspector/panels/components/TabsPanel'
 import TagPanel from '~components/inspector/panels/components/TagPanel'
 import TextareaPanel from '~components/inspector/panels/components/TextareaPanel'
 
-import { allowsDataSource } from '../../../utils/dataSources';
-import { allowsActions } from '../../../utils/actions';
+import { allowsActions } from '../../../utils/actions'
+import { allowsDataSource } from '../../../utils/dataSources'
 import { getComponents } from '../../../core/selectors/components'
 import { useForm } from '../../../hooks/useForm'
-import ActionsPanel from './ActionsPanel';
+import ActionsPanel from './ActionsPanel'
 import DataProviderPanel from '../../../custom-components/DataProvider/DataProviderPanel'
 import DataSourcePanel from './DataSourcePanel'
 import FormControl from '../controls/FormControl'
+import VisibilityPanel from './VisibilityPanel'
 import useDispatch from '../../../hooks/useDispatch'
 import usePropsSelector from '../../../hooks/usePropsSelector'
 
-let extraPanels:{[key:string]:  React.FC<React.Component>} = {}
+let extraPanels: { [key: string]: React.FC<React.Component> } = {}
 
 const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
   component,
@@ -75,14 +76,17 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
 
   const compPanel = extraPanels[type]
   if (compPanel) {
-    return <>
-    {React.createElement(compPanel)}
-    <DataSourcePanel />
-    </>
+    return (
+      <>
+        {React.createElement(compPanel)}
+        <DataSourcePanel />
+      </>
+    )
   }
 
   return (
     <>
+      <VisibilityPanel />
       {type === 'Button' && <ButtonPanel />}
       {type === 'Checkbox' && <CheckboxPanel />}
       {type === 'Box' && <BoxPanel />}
@@ -135,7 +139,7 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
       {type === 'BreadcrumbItem' && <BreadcrumbItemPanel />}
       {type === 'BreadcrumbLink' && <LinkPanel />}
       {allowsDataSource(component) && <DataSourcePanel />}
-      {allowsActions(component) && <ActionsPanel/>}
+      {allowsActions(component) && <ActionsPanel />}
     </>
   )
 }
