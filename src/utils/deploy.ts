@@ -4,6 +4,9 @@ import { build, copyFile, install, start } from './http'
 import { generateCode, generateApp, normalizePageName } from './code'
 import { validate } from './validation'
 
+// If true, build target project when compliaiton fixed
+const TARGET_BUILD = false
+
 const copyCode = (pageName: string, contents: Buffer) => {
   return copyFile({
     contents: contents,
@@ -11,7 +14,7 @@ const copyCode = (pageName: string, contents: Buffer) => {
   })
 }
 
-export const deploy = (state: ProjectState, models:any) => {
+export const deploy = (state: ProjectState, models: any) => {
   const pages = Object.values(state.pages)
   return Promise.all(
     pages.map(({ pageName, components }) => validate(components)),
@@ -39,15 +42,9 @@ export const deploy = (state: ProjectState, models:any) => {
     .then(() => {
       return install()
     })
-    /**
-    NO BUILD and RESTART for demo
     .then(() => {
-      return build()
+      return TARGET_BUILD ? build().then(() => start()) : true
     })
-    .then(() => {
-      return start()
-    })
-    */
     .catch(err => {
       console.error(err)
       throw err

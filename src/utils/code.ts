@@ -19,10 +19,8 @@ import {
   UPLOAD_TYPE,
   getDataProviderDataType,
   getFieldsForDataProvider,
-  getComponentsHierarchy,
-} from './dataSources';
+} from './dataSources'
 import { ProjectState, PageState } from '../core/models/project'
-import config from '../../env.json'
 
 //const HIDDEN_ATTRIBUTES=['dataSource', 'attribute']
 const HIDDEN_ATTRIBUTES: string[] = []
@@ -44,8 +42,7 @@ export const getPageUrl = (
 ) => {
   try {
     return pages[pageId].pageName.toLowerCase().replace(/ /i, '-')
-  }
-  catch(err) {
+  } catch (err) {
     console.error(`getPageUrl ${pageId}:${err}`)
     throw err
   }
@@ -128,7 +125,7 @@ type BuildBlockParams = {
   components: IComponents
   forceBuildBlock?: boolean
   pages: { [key: string]: PageState }
-  models: any,
+  models: any
 }
 
 const buildBlock = ({
@@ -136,12 +133,12 @@ const buildBlock = ({
   components,
   forceBuildBlock = false,
   pages,
-  models
+  models,
 }: BuildBlockParams) => {
   let content = ''
   component.children.forEach((key: string) => {
     let childComponent = components[key]
-    if (childComponent.type == 'DataProvider') {
+    if (childComponent.type === 'DataProvider') {
       return
     }
     if (!childComponent) {
@@ -159,26 +156,36 @@ const buildBlock = ({
       // Set reload function
       propsContent += ` reload={reload} `
       // Provide page data context
-      propsContent += ` context={root?.[0]?._id}`
-
+      if (dataProvider) {
+        propsContent += ` context={root?.[0]?._id}`
+      }
 
       if (isDynamicComponent(childComponent)) {
-        propsContent += ` backend='${config.targetDomain}'`
+        propsContent += ` backend='/'`
         try {
-          const tp = getDataProviderDataType(components[childComponent.parent], components, childComponent.props.dataSource, models)
+          const tp = getDataProviderDataType(
+            components[childComponent.parent],
+            components,
+            childComponent.props.dataSource,
+            models,
+          )
           if (tp.type) {
             propsContent += ` dataModel='${tp.type}' `
+          } else {
+            console.error(
+              `No data provider data type found for ${childComponent.parent}`,
+            )
           }
-          else {
-            console.error(`No data provider data type found for ${childComponent.parent}`)
-          }
-        }
-        catch(err) {
+        } catch (err) {
           console.error(err)
         }
       }
       // Set if dynamic container
-      if ((CONTAINER_TYPE.includes(childComponent.type) || SELECT_TYPE.includes(childComponent.type)) && !!dataProvider) {
+      if (
+        (CONTAINER_TYPE.includes(childComponent.type) ||
+          SELECT_TYPE.includes(childComponent.type)) &&
+        !!dataProvider
+      ) {
         propsContent += ` dynamicContainer `
       }
 
@@ -193,24 +200,26 @@ const buildBlock = ({
         .filter(p => !HIDDEN_ATTRIBUTES.includes(p))
         .forEach((propName: string) => {
           const propsValue = childComponent.props[propName]
-          const propsValueAsObject = propsValue !== 'null' && isJsonString(propsValue) // TODO revise this temporary fix = propsValue !== 'null' // bgGradient buggy when deleted
+          const propsValueAsObject =
+            propsValue !== 'null' && isJsonString(propsValue) // TODO revise this temporary fix = propsValue !== 'null' // bgGradient buggy when deleted
           const jsonPropsValues = propsValueAsObject && JSON.parse(propsValue)
 
-
-          if (propName=='actionProps' || propName=='nextActionProps') {
-            const valuesCopy={
+          if (propName === 'actionProps' || propName === 'nextActionProps') {
+            const valuesCopy = {
               ...propsValue,
-              page: propsValue.page ? getPageUrl(propsValue.page, pages) : undefined
+              page: propsValue.page
+                ? getPageUrl(propsValue.page, pages)
+                : undefined,
             }
             propsContent += ` ${propName}='${JSON.stringify(valuesCopy)}'`
             return
           }
 
-          if (propName=='dataSource') {
+          if (propName === 'dataSource') {
             propsContent += ` dataSourceId='${propsValue}'`
           }
 
-          if (propsValueAsObject && Object.keys(jsonPropsValues).length >= 1) {  
+          if (propsValueAsObject && Object.keys(jsonPropsValues).length >= 1) {
             const gatheredProperties = Object.entries(jsonPropsValues)
               .map(([prop, value]) => {
                 return `${prop}: '${value}'`
@@ -228,7 +237,7 @@ const buildBlock = ({
             }
           } else if (propName !== 'children' && propsValue) {
             let operand =
-              propName == 'dataSource' && paramProvider
+              propName === 'dataSource' && paramProvider
                 ? `={${paramProvider}}`
                 : `='${propsValue}'`
 
@@ -246,8 +255,8 @@ const buildBlock = ({
           }
         })
 
-      if (childComponent.type=='Timer') {
-        propsContent += ` backend='${config.targetDomain}'`
+      if (childComponent.type === 'Timer') {
+        propsContent += ` backend='/'`
       }
 
       if (childComponent.props.page) {
@@ -270,7 +279,7 @@ const buildBlock = ({
         components,
         forceBuildBlock,
         pages,
-        models
+        models,
       })}
       </${componentName}>`
       } else {
@@ -352,15 +361,17 @@ const getIconsImports = (components: IComponents) => {
 const buildHooks = (components: IComponents) => {
   // Returns attributes names used in this dataProvider for 'dataProvider'
   const getDataProviderFields = (dataProvider: IComponent) => {
-    const fields=getFieldsForDataProvider(dataProvider.id, components)
+    const fields = getFieldsForDataProvider(dataProvider.id, components)
     return fields
   }
 
-  const dataProviders: IComponent[] = lodash(components).pickBy(c => c.props?.model).values()
-  if (dataProviders.length == 0) {
+  const dataProviders: IComponent[] = lodash(components)
+    .pickBy(c => c.props?.model)
+    .values()
+  if (dataProviders.length === 0) {
     return ''
   }
-  let code = `const {get}=useFetch('${config.targetDomain}', {cachePolicy: 'no-cache'})`
+  let code = `const {get}=useFetch(null, {cachePolicy: 'no-cache'})`
   code +=
     '\n' +
     dataProviders
@@ -381,7 +392,7 @@ const buildHooks = (components: IComponents) => {
       .map(dp => {
         const dataId = dp.id.replace(/comp-/, '')
         const dpFields = getDataProviderFields(dp).join(',')
-        const idPart = dp.id == 'root' ? `\${id ? \`\${id}/\`: \`\`}` : ''
+        const idPart = dp.id === 'root' ? `\${id ? \`\${id}/\`: \`\`}` : ''
         const apiUrl = `/myAlfred/api/studio/${dp.props.model}/${idPart}${
           dpFields ? `?fields=${dpFields}` : ''
         }`
@@ -399,7 +410,7 @@ const buildDynamics = (components: IComponents) => {
     Object.values(components).filter(c => isDynamicComponent(c)),
     c => c.type,
   )
-  if (dynamicComps.length == 0) {
+  if (dynamicComps.length === 0) {
     return null
   }
   const groups = lodash.groupBy(dynamicComps, c => getDynamicType(c))
@@ -427,17 +438,16 @@ export const generateCode = async (
   },
   models: any,
 ) => {
-  const {
-    pageName,
-    components,
-    metaTitle,
-    metaDescription,
-    metaImageUrl,
-  } = pages[pageId]
+  const { components, metaTitle, metaDescription, metaImageUrl } = pages[pageId]
 
   let hooksCode = buildHooks(components)
   let dynamics = buildDynamics(components)
-  let code = buildBlock({ component: components.root, components, pages, models })
+  let code = buildBlock({
+    component: components.root,
+    components,
+    pages,
+    models,
+  })
   let componentsCodes = buildComponents(components, pages)
   const iconImports = [...new Set(getIconsImports(components))]
 
@@ -445,7 +455,7 @@ export const generateCode = async (
     ...new Set(
       Object.keys(components)
         .filter(name => name !== 'root')
-        .filter(name => components[name].type != 'DataProvider')
+        .filter(name => components[name].type !== 'DataProvider')
         .map(name => components[name].type),
     ),
   ]
@@ -481,7 +491,9 @@ ${
 import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
     : ''
 }
+
 import {useLocation} from "react-router-dom"
+import { useUserContext } from './dependencies/context/user'
 
 ${dynamics || ''}
 ${componentsCodes}
@@ -490,6 +502,8 @@ const ${componentName} = () => {
   ${hooksCode}
   const query = new URLSearchParams(useLocation().search)
   const id=query.get('id')
+  const loggedUser=useUserContext()
+
   return (
   <ChakraProvider resetCSS>
     <Metadata
@@ -514,6 +528,7 @@ ${pageNames.map(name => `<li><a href='/${name}'>${name}</a></li>`).join('\n')}
 */
   const { pages, rootPage } = state
   let code = `import {BrowserRouter, Routes, Route} from 'react-router-dom'
+  import { UserWrapper } from './dependencies/context/user';
   ${Object.values(pages)
     .map(
       page =>
@@ -525,7 +540,7 @@ ${pageNames.map(name => `<li><a href='/${name}'>${name}</a></li>`).join('\n')}
     .join('\n')}
 
   const App = () => (
-    <>
+    <UserWrapper>
     <BrowserRouter>
     <Routes>
       <Route path='/' element={<${getPageComponentName(rootPage, pages)}/>} />
@@ -540,7 +555,7 @@ ${pageNames.map(name => `<li><a href='/${name}'>${name}</a></li>`).join('\n')}
         .join('\n')}
     </Routes>
     </BrowserRouter>
-    </>
+    </UserWrapper>
   )
 
   export default App

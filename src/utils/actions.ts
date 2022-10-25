@@ -1,84 +1,90 @@
-type IActions={
-  [key:string]: {
-    label:string,
-    options:{
+type IActions = {
+  [key: string]: {
+    label: string
+    options: {
       [key: string]: any
     }
   }
 }
-export const ACTIONS:IActions={
-  'create': {
+export const ACTIONS: IActions = {
+  create: {
     label: 'Create new data',
-    options:{
-      model: ({models}) => models.map(m => ({key:m.name, label: m.name})),
+    options: {
+      model: ({ models }) => models.map(m => ({ key: m.name, label: m.name })),
     },
     next: ['openPage'],
   },
-  'login': {
+  login: {
     label: 'Login',
-    options:{
-      source: ({components}) => components.map(c => ({key: c.id, label: c.id})),
+    options: {
+      email: ({ components }) =>
+        components.map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      password: ({ components }) =>
+        components.map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
     },
     next: ['openPage'],
   },
-  'openPage': {
+  openPage: {
     label: 'Open page',
     options: {
-      page: ({pages}) => Object.values(pages).map(p => ({key: p.pageId, label: p.pageName})),
-      open : () => [{key: true, label: 'In new page'}, {key: false, label: 'In same page'}]
-    }
+      page: ({ pages }) =>
+        Object.values(pages).map(p => ({ key: p.pageId, label: p.pageName })),
+      open: () => [
+        { key: true, label: 'In new page' },
+        { key: false, label: 'In same page' },
+      ],
+    },
   },
-  'levelUp': {
-    label: "Move item up",
-    options: {
-    }
+  levelUp: {
+    label: 'Move item up',
+    options: {},
   },
-  'levelDown': {
-    label: "Move item down",
-    options: {
-    }
+  levelDown: {
+    label: 'Move item down',
+    options: {},
   },
-  'previous': {
-    label: "Previous",
+  previous: {
+    label: 'Previous',
     options: {
       //data: ({components}) => components.map(p => ({key: p.id, label: p.id})),
     },
     next: ['openPage'],
   },
-  'next': {
-    label: "Next",
+  next: {
+    label: 'Next',
     options: {
       //data: ({components}) => components.map(p => ({key: p.id, label: p.id})),
     },
     next: ['openPage'],
   },
-  'publishProgram': {
-    label: "Publish",
+  publishProgram: {
+    label: 'Publish',
     options: {
       //data: ({components}) => components.map(p => ({key: p.id, label: p.id})),
-    }
+    },
   },
-  'delete': {
+  delete: {
     label: 'Delete',
     options: {
       //data: ({components}) => components.map(p => ({key: p.id, label: p.id})),
-    }
+    },
   },
-  'gotoSession': {
+  gotoSession: {
     label: 'Get session',
     options: {
       //data: ({components}) => components.map(p => ({key: p.id, label: p.id})),
     },
     next: ['openPage'],
   },
-  addChild :{
+  addChild: {
     label: 'Add child',
     options: {
-      child: ({components}) => components.map(p => ({key: p.id, label: `${p.type}/${p.id}`})),
-    }
-  }
+      child: ({ components }) =>
+        components.map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+    },
+  },
 }
 
-export const allowsActions = (component:IComponent) => {
+export const allowsActions = (component: IComponent) => {
   return ['Button', 'IconButton'].includes(component.type)
 }

@@ -5,9 +5,7 @@ import templates, { TemplateType } from '~templates'
 import { generateId } from '~utils/generateId'
 import { duplicateComponent, deleteComponent } from '~utils/recursive'
 import omit from 'lodash/omit'
-import mapValues from 'lodash/mapValues'
 import flatten from 'lodash/flatten'
-import jpath from 'jsonpath'
 
 export interface PageState extends PageSettings {
   components: IComponents
@@ -39,7 +37,6 @@ export type PageSettings = {
 
 const DEFAULT_ID = 'root'
 
-
 const DEFAULT_PAGE = generateId('page')
 
 export const INITIAL_COMPONENTS: IComponents = {
@@ -60,7 +57,7 @@ export const getComponentById = (state: ProjectState, componentId: string) => {
   const allComps = flatten(
     Object.values(state.pages).map(p => Object.values(p.components)),
   )
-  return allComps.find(c => c.id == componentId)
+  return allComps.find(c => c.id === componentId)
 }
 
 const project = createModel({
@@ -123,7 +120,6 @@ const project = createModel({
 
         draftState.pages[draftState.activePage].components[componentId].props =
           defaultProps || {}
-
       })
     },
     updateProps(
@@ -131,8 +127,13 @@ const project = createModel({
       payload: { id: string; name: string; value: string },
     ) {
       return produce(state, (draftState: ProjectState) => {
-        const newValue = typeof payload.value === 'string' ? payload.value : JSON.stringify(payload.value)
-        draftState.pages[draftState.activePage].components[payload.id].props[payload.name] = newValue
+        const newValue =
+          typeof payload.value === 'string'
+            ? payload.value
+            : JSON.stringify(payload.value)
+        draftState.pages[draftState.activePage].components[payload.id].props[
+          payload.name
+        ] = newValue
       })
     },
     deleteProps(state: ProjectState, payload: { id: string; name: string }) {

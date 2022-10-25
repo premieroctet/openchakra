@@ -4,7 +4,7 @@ import { useInteractive } from '~hooks/useInteractive'
 import { Box } from '@chakra-ui/react'
 
 const DataProviderPreview: React.FC<IPreviewProps> = ({ component }) => {
-  const { drop, isOver } = useDropComponent(component.id, ['Avatar'])
+  const { drop } = useDropComponent(component.id, ['Avatar'])
   const { props, ref } = useInteractive(component, true)
 
   const label = props?.model

@@ -1,5 +1,4 @@
-
 export const getComponentDataValue = componentId => {
   const component = document.getElementById(componentId)
-  return component.attributes.datavalue.value
+  return component?.value
 }
