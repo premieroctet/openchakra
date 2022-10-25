@@ -127,7 +127,7 @@ router.post('/login', (req, res) => {
 
   return login(email, password)
     .then(user => {
-      return sendCookie(user).json(user)
+      return sendCookie(user, res).json(user)
     })
     .catch(err => {
       console.log(err)

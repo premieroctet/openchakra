@@ -6,7 +6,7 @@ const User = require('../models/User')
 passport.use(new CookieStrategy(
   function(token, done) {
     const user=jwt.decode(token)
-    User.findById(user.id)
+    User.findById(user.id, 'firstname name role')
       .then(user => {
         if (user) {
           return done(null, user)
@@ -17,7 +17,7 @@ passport.use(new CookieStrategy(
   }
 ));
 
-const sendCookie = user => {
+const sendCookie = (user, res) => {
   const token=jwt.sign({id: user.id}, 'secret')
   return res.cookie('token', token, {
     httpOnly: false,
