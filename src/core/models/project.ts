@@ -5,9 +5,7 @@ import templates, { TemplateType } from '~templates'
 import { generateId } from '~utils/generateId'
 import { duplicateComponent, deleteComponent } from '~utils/recursive'
 import omit from 'lodash/omit'
-import mapValues from 'lodash/mapValues'
 import flatten from 'lodash/flatten'
-import jpath from 'jsonpath'
 
 export interface PageState extends PageSettings {
   components: IComponents
@@ -68,7 +66,7 @@ export const getComponentById = (state: ProjectState, componentId: string) => {
   const allComps = flatten(
     Object.values(state.pages).map(p => Object.values(p.components)),
   )
-  return allComps.find(c => c.id == componentId)
+  return allComps.find(c => c.id === componentId)
 }
 
 const project = createModel({
@@ -131,7 +129,6 @@ const project = createModel({
 
         draftState.pages[draftState.activePage].components[componentId].props =
           defaultProps || {}
-
       })
     },
     updateProps(

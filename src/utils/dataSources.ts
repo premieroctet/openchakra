@@ -8,7 +8,12 @@ export const CONTAINER_TYPE: ComponentType[] = [
   'List',
   'Container',
 ]
-export const TEXT_TYPE: ComponentType[] = ['Text', 'Heading', 'Badge', 'ListItem']
+export const TEXT_TYPE: ComponentType[] = [
+  'Text',
+  'Heading',
+  'Badge',
+  'ListItem',
+]
 export const ACTION_TYPE: ComponentType[] = ['Button', 'IconButton']
 export const IMAGE_TYPE: ComponentType[] = ['Image', 'Avatar', 'Media']
 export const PROGRESS_TYPE: ComponentType[] = ['Progress', 'CircularProgress']
@@ -19,90 +24,152 @@ export const CHECKBOX_TYPE: ComponentType[] = ['Checkbox']
 export const INPUT_TYPE: ComponentType[] = ['Input', 'Textarea']
 export const UPLOAD_TYPE: ComponentType[] = ['UploadFile']
 
-const ALL_DYNAMICS=lodash.flatten([
-  CONTAINER_TYPE, TEXT_TYPE, ACTION_TYPE, IMAGE_TYPE, PROGRESS_TYPE,
-  DATE_TYPE, SELECT_TYPE, CHECKBOX_TYPE, INPUT_TYPE, UPLOAD_TYPE
+const ALL_DYNAMICS = lodash.flatten([
+  CONTAINER_TYPE,
+  TEXT_TYPE,
+  ACTION_TYPE,
+  IMAGE_TYPE,
+  PROGRESS_TYPE,
+  DATE_TYPE,
+  SELECT_TYPE,
+  CHECKBOX_TYPE,
+  INPUT_TYPE,
+  UPLOAD_TYPE,
 ])
 
 export const allowsDataSource = (component: IComponent): boolean => {
   return ALL_DYNAMICS.includes(component.type)
 }
 
-export const isMultipleDispatcher = (component: IComponent):boolean => {
-    return CONTAINER_TYPE.includes(component.type)
+export const isMultipleDispatcher = (component: IComponent): boolean => {
+  return CONTAINER_TYPE.includes(component.type)
 }
 
-export const getComponentsHierarchy = (component: IComponent, components: IComponents): IComponent[] => {
-  if (component.parent==component.id) {
+export const getComponentsHierarchy = (
+  component: IComponent,
+  components: IComponents,
+): IComponent[] => {
+  if (component.parent === component.id) {
     return [component]
   }
-  return [component, ...getComponentsHierarchy(components[component.parent], components)]
+  return [
+    component,
+    ...getComponentsHierarchy(components[component.parent], components),
+  ]
 }
 
-export const getDataProviders = (component: IComponent, components: IComponents):IComponent[] => {
-  return Object.values(components)
-    //.filter(c => !!c.props?.model || !!c.props.dataSource)
-    //.filter(c => !!c.props?.model)
-    .filter(c => c.type=='DataProvider' || c.id=='root')
-    .filter(c => c.id != component.id)
+export const getDataProviders = (
+  component: IComponent,
+  components: IComponents,
+): IComponent[] => {
+  return (
+    Object.values(components)
+      //.filter(c => !!c.props?.model || !!c.props.dataSource)
+      //.filter(c => !!c.props?.model)
+      .filter(c => c.type === 'DataProvider' || c.id === 'root')
+      .filter(c => c.id !== component.id)
+  )
 }
 
-export const getDataProviderDataType = (component: IComponent, components: IComponents, dataSource:string, models: any): IDataType => {
-  if (component.props.model && component.props.dataSource==dataSource) {
+export const getDataProviderDataType = (
+  component: IComponent,
+  components: IComponents,
+  dataSource: string,
+  models: any,
+): IDataType => {
+  if (component.props.model && component.props.dataSource === dataSource) {
     return {
       type: component.props.model,
       multiple: true,
-      ref: true
+      ref: true,
     }
   }
-  if (component.id=='root') {
+  if (component.id === 'root') {
     // Search dataProviders
-    const dp=components[dataSource]
+    const dp = components[dataSource]
     if (dp) {
       return {
         type: dp.props.model,
         multiple: true,
-        ref: true
+        ref: true,
       }
     }
     throw new Error('Root component has no model defined')
   }
 
-  const parent=components[component.parent]
-  let parentDataProviderType={...getDataProviderDataType(parent, components, dataSource, models)}
-  if (component.props.dataSource==dataSource) {
+  const parent = components[component.parent]
+  let parentDataProviderType = {
+    ...getDataProviderDataType(parent, components, dataSource, models),
+  }
+  if (component.props.dataSource === dataSource) {
     if (component.props?.attribute) {
-      const att=models.find((m:any) => m.name==parentDataProviderType.type).attributes[component.props?.attribute]
-      parentDataProviderType={...att}
+      const att = models.find(
+        (m: any) => m.name === parentDataProviderType.type,
+      ).attributes[component.props?.attribute]
+      parentDataProviderType = { ...att }
     }
     if (isMultipleDispatcher(component)) {
-      parentDataProviderType={...parentDataProviderType, multiple: false}
+      parentDataProviderType = { ...parentDataProviderType, multiple: false }
     }
   }
   return parentDataProviderType
 }
 
-export const getAvailableAttributes = (component: IComponent, components: IComponents, models:any):any => {
+export const getAvailableAttributes = (
+  component: IComponent,
+  components: IComponents,
+  models: any,
+): any => {
   if (!component.props?.dataSource) {
     return null
   }
-  const dataType=getDataProviderDataType(components[component.parent], components, component.props.dataSource, models)
-  const attributes=models.find((m:any) => m.name==dataType.type)?.attributes || {}
-  const cardinalityAttributes=lodash.pickBy(attributes, att => att.multiple==isMultipleDispatcher(component))
+  const dataType = getDataProviderDataType(
+    components[component.parent],
+    components,
+    component.props.dataSource,
+    models,
+  )
+  const attributes =
+    models.find((m: any) => m.name === dataType.type)?.attributes || {}
+  const cardinalityAttributes = lodash.pickBy(
+    attributes,
+    att => att.multiple === isMultipleDispatcher(component),
+  )
   return cardinalityAttributes
 }
 
-const computeDataFieldName = (component: IComponent, components: IComponents, dataSourceId:string):string => {
-  if (component.props.model || (component.props.dataSource && component.props.dataSource!=dataSourceId)) {
+const computeDataFieldName = (
+  component: IComponent,
+  components: IComponents,
+  dataSourceId: string,
+): string => {
+  if (
+    component.props.model ||
+    (component.props.dataSource && component.props.dataSource !== dataSourceId)
+  ) {
     return null
   }
-  const parentFieldName=computeDataFieldName(components[component.parent], components, dataSourceId)
-  const result=[parentFieldName, component.props.attribute].filter(s => !!s).join('.')
+  const parentFieldName = computeDataFieldName(
+    components[component.parent],
+    components,
+    dataSourceId,
+  )
+  const result = [parentFieldName, component.props.attribute]
+    .filter(s => !!s)
+    .join('.')
   return result
 }
 
 // Traverse down-up from components to dataprovider to join all fields
-export const getFieldsForDataProvider = (dataProviderId: string, components:IComponents):string[] => {
-  const linkedComponents=Object.values(components).filter(c => c.props?.dataSource==dataProviderId)
-  return lodash(linkedComponents).map(c => computeDataFieldName(c, components, dataProviderId)).filter(c => !!c).uniq()
+export const getFieldsForDataProvider = (
+  dataProviderId: string,
+  components: IComponents,
+): string[] => {
+  const linkedComponents = Object.values(components).filter(
+    c => c.props?.dataSource === dataProviderId,
+  )
+  return lodash(linkedComponents)
+    .map(c => computeDataFieldName(c, components, dataProviderId))
+    .filter(c => !!c)
+    .uniq()
 }
