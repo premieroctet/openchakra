@@ -3,10 +3,13 @@ import { Select } from '@chakra-ui/react'
 import FormControl from '~components/inspector/controls/FormControl'
 import useBreakpoints from '~hooks/useBreakpoints'
 
-const FlexPanel = ({bkpt}: {bkpt : string}) => {
-
-  const {responsiveValues, handleBreakpoints} = useBreakpoints(['alignItems', 'flexDirection', 'justifyContent'])
-  const {alignItems, flexDirection, justifyContent} = responsiveValues
+const FlexPanel = ({ bkpt }: { bkpt: string }) => {
+  const { responsiveValues, handleBreakpoints } = useBreakpoints([
+    'alignItems',
+    'flexDirection',
+    'justifyContent',
+  ])
+  const { alignItems, flexDirection, justifyContent } = responsiveValues
 
   return (
     <>
@@ -15,8 +18,8 @@ const FlexPanel = ({bkpt}: {bkpt : string}) => {
           name={`${bkpt}-flexDirection`}
           size="sm"
           value={flexDirection?.[bkpt] || ''}
-          onChange={() => handleBreakpoints}
-          >
+          onChange={handleBreakpoints}
+        >
           <option>row</option>
           <option>row-reverse</option>
           <option>column</option>
@@ -29,7 +32,7 @@ const FlexPanel = ({bkpt}: {bkpt : string}) => {
           name={`${bkpt}-justifyContent`}
           size="sm"
           value={justifyContent?.[bkpt] || ''}
-          onChange={() => handleBreakpoints}
+          onChange={handleBreakpoints}
         >
           <option>flex-start</option>
           <option>center</option>
@@ -44,7 +47,7 @@ const FlexPanel = ({bkpt}: {bkpt : string}) => {
           name={`${bkpt}-alignItems`}
           size="sm"
           value={alignItems?.[bkpt] || ''}
-          onChange={() => handleBreakpoints}
+          onChange={handleBreakpoints}
         >
           <option>stretch</option>
           <option>flex-start</option>
