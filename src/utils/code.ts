@@ -219,9 +219,9 @@ const buildSingleBlock = ({
                 : `${loopValue}`
             }`
       }.map((item${childComponent.id.slice(
+        7,
         10,
-        13,
-      )}, index${childComponent.id.slice(10, 13)}) => (<Box>${buildBlock({
+      )}, index${childComponent.id.slice(7, 10)}) => (<Box>${buildBlock({
         component: childComponent,
         components,
         forceBuildBlock,
@@ -315,9 +315,9 @@ const buildBlock = ({
                   : `${loopValue}`
               }`
         }.map((item${childComponent.id.slice(
+          7,
           10,
-          13,
-        )}, index${childComponent.id.slice(10, 13)}) => (<Box>${buildBlock({
+        )}, index${childComponent.id.slice(7, 10)}) => (<Box>${buildBlock({
           component: childComponent,
           components,
           forceBuildBlock,
