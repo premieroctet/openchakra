@@ -230,7 +230,7 @@ const buildBlock = ({
 
           if (propName === 'hiddenRoles') {
             propsContent += ` hiddenRoles='${JSON.stringify(propsValue)}'`
-            propsContent += ` user={loggedUser}`
+            propsContent += ` user={user}`
             return
           }
 
@@ -549,7 +549,7 @@ const ${componentName} = () => {
   ${hooksCode}
   const query = new URLSearchParams(useLocation().search)
   const id=query.get('id')
-  const loggedUser=useUserContext()
+  const {user}=useUserContext()
 
   return (
   <ChakraProvider resetCSS>
