@@ -59,6 +59,10 @@ const isDynamicComponent = (comp: IComponent) => {
   return !!comp.props.dataSource
 }
 
+const isMaskableComponent = (comp: IComponent) => {
+  return !!comp.props.hiddenRoles
+}
+
 const getDynamicType = (comp: IComponent) => {
   if (CONTAINER_TYPE.includes(comp.type)) {
     return 'Container'
@@ -148,6 +152,8 @@ const buildBlock = ({
       const paramProvider = dataProvider?.id.replace(/comp-/, '')
       const componentName = isDynamicComponent(childComponent)
         ? `Dynamic${capitalize(childComponent.type)}`
+        : isMaskableComponent(childComponent)
+        ? `Maskable${capitalize(childComponent.type)}`
         : capitalize(childComponent.type)
       let propsContent = ''
 
@@ -199,7 +205,8 @@ const buildBlock = ({
       propsNames
         .filter(p => !HIDDEN_ATTRIBUTES.includes(p))
         .forEach((propName: string) => {
-          const propsValue = childComponent.props[propName]
+          const val=childComponent.props[propName]
+          const propsValue = val!==null && isJsonString(val) ? JSON.parse(val) : val
           const propsValueAsObject =
             propsValue !== 'null' && isJsonString(propsValue) // TODO revise this temporary fix = propsValue !== 'null' // bgGradient buggy when deleted
           const jsonPropsValues = propsValueAsObject && JSON.parse(propsValue)
@@ -217,6 +224,12 @@ const buildBlock = ({
 
           if (propName === 'dataSource') {
             propsContent += ` dataSourceId='${propsValue}'`
+          }
+
+          if (propName === 'hiddenRoles') {
+            propsContent += ` hiddenRoles='${JSON.stringify(propsValue)}'`
+            propsContent += ` user={loggedUser}`
+            return
           }
 
           if (propsValueAsObject && Object.keys(jsonPropsValues).length >= 1) {
@@ -405,7 +418,7 @@ const buildHooks = (components: IComponents) => {
   return code
 }
 
-const buildDynamics = (components: IComponents) => {
+const buildDynamics = (components: IComponents, extraImports: string[]) => {
   const dynamicComps = lodash.uniqBy(
     Object.values(components).filter(c => isDynamicComponent(c)),
     c => c.type,
@@ -414,13 +427,13 @@ const buildDynamics = (components: IComponents) => {
     return null
   }
   const groups = lodash.groupBy(dynamicComps, c => getDynamicType(c))
-  let code = `${Object.keys(groups)
-    .map(
-      g => `import withDynamic${g} from './dependencies/hoc/withDynamic${g}'`,
-    )
-    .join('\n')}
+  Object.keys(groups).forEach(g =>
+    extraImports.push(
+      `import withDynamic${g} from './dependencies/hoc/withDynamic${g}'`,
+    ),
+  )
 
-  ${Object.keys(groups)
+  let code = `${Object.keys(groups)
     .map(g => {
       return groups[g]
         .map(comp => `const Dynamic${comp.type}=withDynamic${g}(${comp.type})`)
@@ -428,6 +441,28 @@ const buildDynamics = (components: IComponents) => {
     })
     .join('\n')}
   `
+  return code
+}
+
+const buildMaskable = (components: IComponents, extraImports: string[]) => {
+  const maskableComps = Object.values(components).filter(c =>
+    isMaskableComponent(c),
+  )
+
+  if (maskableComps.length === 0) {
+    return null
+  }
+
+  const types = lodash(maskableComps)
+    .map(c => c.type)
+    .uniq()
+
+  extraImports.push(
+    `import withMaskability from './dependencies/hoc/withMaskability'`,
+  )
+  let code = types
+    .map(type => `const Maskable${type}=withMaskability(${type})`)
+    .join('\n')
   return code
 }
 
@@ -440,8 +475,10 @@ export const generateCode = async (
 ) => {
   const { components, metaTitle, metaDescription, metaImageUrl } = pages[pageId]
 
+  const extraImports: string[] = []
   let hooksCode = buildHooks(components)
-  let dynamics = buildDynamics(components)
+  let dynamics = buildDynamics(components, extraImports)
+  let maskable = buildMaskable(components, extraImports)
   let code = buildBlock({
     component: components.root,
     components,
@@ -494,8 +531,10 @@ import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
 
 import {useLocation} from "react-router-dom"
 import { useUserContext } from './dependencies/context/user'
+${extraImports.join('\n')}
 
 ${dynamics || ''}
+${maskable || ''}
 ${componentsCodes}
 
 const ${componentName} = () => {
