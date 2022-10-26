@@ -18,7 +18,9 @@ const FlexPanel = ({ bkpt = 'base' }: { bkpt: string }) => {
           name={`${bkpt}-flexDirection`}
           size="sm"
           value={flexDirection?.[bkpt] || ''}
-          onChange={handleBreakpoints}
+          onChange={e =>
+            handleBreakpoints('flexDirection', bkpt, e.currentTarget.value)
+          }
         >
           <option>row</option>
           <option>row-reverse</option>
@@ -32,7 +34,9 @@ const FlexPanel = ({ bkpt = 'base' }: { bkpt: string }) => {
           name={`${bkpt}-justifyContent`}
           size="sm"
           value={justifyContent?.[bkpt] || ''}
-          onChange={handleBreakpoints}
+          onChange={e =>
+            handleBreakpoints('justifyContent', bkpt, e.currentTarget.value)
+          }
         >
           <option>flex-start</option>
           <option>center</option>
@@ -47,7 +51,9 @@ const FlexPanel = ({ bkpt = 'base' }: { bkpt: string }) => {
           name={`${bkpt}-alignItems`}
           size="sm"
           value={alignItems?.[bkpt] || ''}
-          onChange={handleBreakpoints}
+          onChange={e =>
+            handleBreakpoints('alignItems', bkpt, e.currentTarget.value)
+          }
         >
           <option>stretch</option>
           <option>flex-start</option>

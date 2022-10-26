@@ -6,14 +6,13 @@ import { useForm } from '~hooks/useForm'
 
 export interface responsiveProperties {
   [property: string]: {
-    [bkptNickName: string]: string
+    [bkptNickName: string]: string | number | null
   }
 }
 
 function useBreakpoints(properties: string[] = []) {
   const { setValue } = useForm()
   const propsvalues = useAllPropsSelector(properties)
-  // console.log('propvalues', trucenplus)
   const theme = useTheme()
   const themeBreakpoints: { string: string } = theme.breakpoints
 
@@ -43,12 +42,11 @@ function useBreakpoints(properties: string[] = []) {
     bkpt => !settledBreakpoints.includes(bkpt),
   )
 
-  const handleBreakpoints = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const [breakpoint, propertyToUpdate] = e?.target?.name.split('-')
-    const { value } = e.target
-
-    console.log(breakpoint, propertyToUpdate, value)
-
+  const handleBreakpoints = (
+    propertyToUpdate: string,
+    breakpoint: string,
+    value: string | number | null,
+  ) => {
     let newCustomRespProps = responsiveValues[propertyToUpdate]
 
     if (value) {
@@ -69,7 +67,7 @@ function useBreakpoints(properties: string[] = []) {
     text,
     currentProps,
   }: {
-    text: string
+    text?: string
     currentProps: any
   }) => {
     const addBreakpoint = (e: {

@@ -56,13 +56,18 @@ const PaddingPanel = ({ type }: PaddingPanelPropsType) => {
       {settledBreakpoints.map((breakpoint: string, i: number) => (
         <Box key={i}>
           <FormControl>
-            <FormLabel fontSize="xs" htmlFor="width" textTransform="capitalize">
+            <FormLabel
+              fontSize="xs"
+              htmlFor={`${ATTRIBUTES[type].all}-${breakpoint}`}
+              textTransform="capitalize"
+            >
               {type}
             </FormLabel>
             {breakpoint}
 
             <InputGroup size="sm">
               <Input
+                id={`${ATTRIBUTES[type].all}-${breakpoint}`}
                 mb={1}
                 placeholder="All"
                 size="sm"
@@ -71,7 +76,13 @@ const PaddingPanel = ({ type }: PaddingPanelPropsType) => {
                 value={
                   responsiveValues[ATTRIBUTES[type].all]?.[breakpoint] || ''
                 }
-                onChange={handleBreakpoints}
+                onChange={e =>
+                  handleBreakpoints(
+                    ATTRIBUTES[type].all,
+                    breakpoint,
+                    e.currentTarget.value,
+                  )
+                }
               />
             </InputGroup>
 
@@ -90,7 +101,13 @@ const PaddingPanel = ({ type }: PaddingPanelPropsType) => {
                   value={
                     responsiveValues[ATTRIBUTES[type].left]?.[breakpoint] || ''
                   }
-                  onChange={handleBreakpoints}
+                  onChange={e =>
+                    handleBreakpoints(
+                      ATTRIBUTES[type].left,
+                      breakpoint,
+                      e.currentTarget.value,
+                    )
+                  }
                   autoComplete="off"
                 />
               </InputGroup>
@@ -109,7 +126,13 @@ const PaddingPanel = ({ type }: PaddingPanelPropsType) => {
                   value={
                     responsiveValues[ATTRIBUTES[type].right]?.[breakpoint] || ''
                   }
-                  onChange={handleBreakpoints}
+                  onChange={e =>
+                    handleBreakpoints(
+                      ATTRIBUTES[type].right,
+                      breakpoint,
+                      e.currentTarget.value,
+                    )
+                  }
                   autoComplete="off"
                 />
               </InputGroup>
@@ -128,7 +151,13 @@ const PaddingPanel = ({ type }: PaddingPanelPropsType) => {
                   value={
                     responsiveValues[ATTRIBUTES[type].top]?.[breakpoint] || ''
                   }
-                  onChange={handleBreakpoints}
+                  onChange={e =>
+                    handleBreakpoints(
+                      ATTRIBUTES[type].top,
+                      breakpoint,
+                      e.currentTarget.value,
+                    )
+                  }
                   autoComplete="off"
                 />
               </InputGroup>
@@ -148,7 +177,13 @@ const PaddingPanel = ({ type }: PaddingPanelPropsType) => {
                     responsiveValues[ATTRIBUTES[type].bottom]?.[breakpoint] ||
                     ''
                   }
-                  onChange={handleBreakpoints}
+                  onChange={e =>
+                    handleBreakpoints(
+                      ATTRIBUTES[type].bottom,
+                      breakpoint,
+                      e.currentTarget.value,
+                    )
+                  }
                   autoComplete="off"
                 />
               </InputGroup>
