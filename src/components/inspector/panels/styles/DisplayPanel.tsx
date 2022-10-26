@@ -4,9 +4,7 @@ import FormControl from '~components/inspector/controls/FormControl'
 import FlexPanel from './FlexPanel'
 import useBreakpoints from '~hooks/useBreakpoints'
 
-
 const DisplayPanel = () => {
-  
   const emotionProp = 'display'
   const availableOptions = [
     '',
@@ -14,32 +12,39 @@ const DisplayPanel = () => {
     'flex',
     'inline',
     'grid',
-    'inline-block'
+    'inline-block',
   ]
-  const {responsiveValues, settledBreakpoints, handleBreakpoints, AddABreakpoint} = useBreakpoints([emotionProp])
+  const {
+    responsiveValues,
+    settledBreakpoints,
+    handleBreakpoints,
+    AddABreakpoint,
+  } = useBreakpoints([emotionProp])
 
   return (
     <>
       {settledBreakpoints.map((breakpoint: string, i: number) => (
-          <div key={i}>
-            {breakpoint}
-            <FormControl label="Display">
-              <Select
-                size="sm"
-                name={`${breakpoint}-${emotionProp}`}
-                value={responsiveValues[emotionProp]?.[breakpoint] || ''}
-                onChange={() => handleBreakpoints}
-              >
-                {availableOptions.map((option, i) => <option key={`ao${i}`} >{option}</option>)}
-              </Select>
-            </FormControl>
-            {responsiveValues[emotionProp]?.[breakpoint] === 'flex' && <FlexPanel bkpt={breakpoint} />}
-          </div>
-        )
-      )}
+        <div key={i}>
+          {breakpoint}
+          <FormControl label="Display">
+            <Select
+              size="sm"
+              name={`${breakpoint}-${emotionProp}`}
+              value={responsiveValues[emotionProp]?.[breakpoint] || ''}
+              onChange={handleBreakpoints}
+            >
+              {availableOptions.map((option, i) => (
+                <option key={`ao${i}`}>{option}</option>
+              ))}
+            </Select>
+          </FormControl>
+          {responsiveValues[emotionProp]?.[breakpoint] === 'flex' && (
+            <FlexPanel bkpt={breakpoint} />
+          )}
+        </div>
+      ))}
 
       <AddABreakpoint currentProps={responsiveValues} />
-
     </>
   )
 }
