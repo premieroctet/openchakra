@@ -26,7 +26,7 @@ export default async function handler(req, res) {
       req.body.panelBody,
     )
     const writeOcTsx = fs.writeFile(
-      `src/custom-components/test/${fileName}.oc.tsx`,
+      `src/custom-components/customOcTsx/${fileName}.oc.tsx`,
       req.body.ocTsxBody,
     )
     let fileContent = await fs.readFile(`${req.body.path}/${fileName}.tsx`, {

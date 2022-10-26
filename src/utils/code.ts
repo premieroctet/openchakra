@@ -527,7 +527,9 @@ export const generateOcTsxCode = async (
           name =>
             `import { ${convertToPascal(
               currentComponents[components[name].type],
-            )} } from 'src/custom-components/test/${components[name].type}';`,
+            )} } from 'src/custom-components/customOcTsx/${
+              components[name].type
+            }';`,
         ),
     ),
   ]
@@ -574,7 +576,7 @@ export const generatePreview = async (
   import { useInteractive } from '~hooks/useInteractive'
   import { Box } from "@chakra-ui/react";
 
-  ${`import { ${fileName} } from 'src/custom-components/test/${selectedComponent}';`}
+  ${`import { ${fileName} } from 'src/custom-components/customOcTsx/${selectedComponent}';`}
   
   ${
     iconImports.length

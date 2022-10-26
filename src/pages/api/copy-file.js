@@ -6,7 +6,7 @@ export default async function handler(req, res) {
     const promises = Object.keys(customComponents).map(component => {
       return fs.copyFile(
         `${customComponents[component]}/${component}.tsx`,
-        `src/custom-components/test/${component}.tsx`,
+        `src/custom-components/customOcTsx/${component}.tsx`,
       )
     })
     await Promise.all(promises)
