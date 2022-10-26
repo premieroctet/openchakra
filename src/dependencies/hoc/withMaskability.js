@@ -2,7 +2,7 @@ import React from 'react'
 
 const withMaskability = Component => {
   const internal = ({ hiddenRoles, user, ...props }) => {
-    const roles = (hiddenRoles || '').split(',')
+    const roles = JSON.parse(hiddenRoles)
     if (roles.includes(user?.role)) {
       return null
     }

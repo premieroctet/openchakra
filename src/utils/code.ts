@@ -205,17 +205,12 @@ const buildBlock = ({
       propsNames
         .filter(p => !HIDDEN_ATTRIBUTES.includes(p))
         .forEach((propName: string) => {
-          const propsValue = childComponent.props[propName]
+          const val=childComponent.props[propName]
+          const propsValue = val!==null && isJsonString(val) ? JSON.parse(val) : val
           const propsValueAsObject =
             propsValue !== 'null' && isJsonString(propsValue) // TODO revise this temporary fix = propsValue !== 'null' // bgGradient buggy when deleted
-          if (propsValueAsObject) {
-            console.log(`Prop name:${propName}`)
-          }
           const jsonPropsValues = propsValueAsObject && JSON.parse(propsValue)
 
-          if (propsValueAsObject) {
-            console.log(`${propName}:${JSON.stringify(jsonPropsValues)}`)
-          }
           if (propName === 'actionProps' || propName === 'nextActionProps') {
             const valuesCopy = {
               ...propsValue,
@@ -232,8 +227,9 @@ const buildBlock = ({
           }
 
           if (propName === 'hiddenRoles') {
-            propsContent += ` hiddenRoles='${JSON.parse(propsValue).join(',')}'`
+            propsContent += ` hiddenRoles='${JSON.stringify(propsValue)}'`
             propsContent += ` user={loggedUser}`
+            return
           }
 
           if (propsValueAsObject && Object.keys(jsonPropsValues).length >= 1) {

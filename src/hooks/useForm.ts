@@ -10,7 +10,6 @@ export const useForm = () => {
   const setValueFromEvent = ({
     target: { name, value },
   }: ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
-    alert(name, value)
     setValue(name, value)
   }
 
