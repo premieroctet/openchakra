@@ -7,6 +7,7 @@ import {
   getIsHovered,
 } from '../core/selectors/components'
 import { getShowOverview, getFocusedComponent } from '../core/selectors/app'
+import { isJsonString } from './usePropsSelector'
 
 export const useInteractive = (
   component: IComponent,
@@ -22,9 +23,16 @@ export const useInteractive = (
     item: { id: component.id, type: component.type, isMoved: true },
   })
 
+  const whatTheProps = Object.fromEntries(
+    Object.entries(component.props).map(([key, data]) => [
+      key,
+      isJsonString(data) ? JSON.parse(data) : data,
+    ]),
+  )
+
   const ref = useRef<HTMLDivElement>(null)
   let props = {
-    ...component.props,
+    ...whatTheProps,
     onMouseOver: (event: MouseEvent) => {
       event.stopPropagation()
       dispatch.project.hover(component.id)
