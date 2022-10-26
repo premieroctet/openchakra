@@ -211,6 +211,8 @@ const buildBlock = ({
           const propsValueAsObject =
             typeof propsValue === 'object' && val !== null // TODO revise this temporary fix = propsValue !== 'null' // bgGradient buggy when deleted
 
+          // console.log('propsValue', typeof propsValue, propsValue, Object.keys(propsValue), Object.keys(propsValue).length)
+
           if (propName === 'actionProps' || propName === 'nextActionProps') {
             const valuesCopy = {
               ...propsValue,
@@ -235,7 +237,9 @@ const buildBlock = ({
           if (propsValueAsObject && Object.keys(propsValue).length >= 1) {
             const gatheredProperties = Object.entries(propsValue)
               .map(([prop, value]) => {
-                return `${prop}: '${value}'`
+                return !isNaN(parseInt(value))
+                  ? `${prop}: ${value}`
+                  : `${prop}: '${value}'`
               })
               .join(', ')
 
@@ -248,7 +252,11 @@ const buildBlock = ({
               let operand = `={<${propsValue} />}`
               propsContent += `${propName}${operand} `
             }
-          } else if (propName !== 'children' && propsValue) {
+          } else if (
+            propName !== 'children' &&
+            typeof propsValue !== 'object' &&
+            propsValue
+          ) {
             let operand =
               propName === 'dataSource' && paramProvider
                 ? `={${paramProvider}}`
