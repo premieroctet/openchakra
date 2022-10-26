@@ -13,6 +13,7 @@ const DisplayPanel = () => {
     'inline',
     'grid',
     'inline-block',
+    'none',
   ]
   const {
     responsiveValues,
@@ -31,7 +32,13 @@ const DisplayPanel = () => {
               size="sm"
               name={`${breakpoint}-${emotionProp}`}
               value={responsiveValues[emotionProp]?.[breakpoint] || ''}
-              onChange={handleBreakpoints}
+              onChange={e =>
+                handleBreakpoints(
+                  emotionProp,
+                  breakpoint,
+                  e.currentTarget.value,
+                )
+              }
             >
               {availableOptions.map((option, i) => (
                 <option key={`ao${i}`}>{option}</option>
