@@ -36,7 +36,7 @@ function useBreakpoints(properties: string[] = []) {
       })
       return acc
     },
-    [],
+    ['base'],
   )
 
   const availableBreakpoints = Object.keys(themeBreakpoints).filter(
