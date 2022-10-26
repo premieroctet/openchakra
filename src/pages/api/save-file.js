@@ -1,4 +1,5 @@
 import { promises as fs } from 'fs'
+import { formatCode } from '~utils/code'
 
 export default async function handler(req, res) {
   const fileName = req.body.path.split('/').slice(-1)[0]
@@ -46,6 +47,7 @@ export default async function handler(req, res) {
     fileContent = mainArray.join(
       '// Refs are declared in here do not edit content and comments\n',
     )
+    fileContent = await formatCode(fileContent)
     const writeTSX = fs.writeFile(
       `${req.body.path}/${fileName}.tsx`,
       fileContent,

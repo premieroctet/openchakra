@@ -67,6 +67,12 @@ const buildParams = (paramsName: any, customOcTsx: boolean = false) => {
   paramTypes += `}`
   params += `}`
 
+  if (params.length <= 2) {
+    return { paramTypes: undefined, params: undefined }
+  }
+  paramTypes = `type AppPropsTypes = ${paramTypes}`
+  params = `${params}: AppPropsTypes`
+
   return { paramTypes, params }
 }
 
@@ -470,11 +476,11 @@ import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
 
   ${customImports.join(';')}
 
-type AppPropsTypes = ${paramTypes}
+${paramTypes ? paramTypes : ''}
 
 ${componentsCodes}
 
-const App = (${params}: AppPropsTypes) => (
+const App = (${params ? params : ''}) => (
   <ChakraProvider resetCSS>
     ${code}
   </ChakraProvider>
@@ -547,11 +553,11 @@ import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
 
   ${customImports.join(';')}
 
-type AppPropsTypes = ${paramTypes}
+${paramTypes ? paramTypes : ''}
 
 ${componentsCodes}
 
-const App = (${params}: AppPropsTypes) => (
+const App = (${params ? params : ''}) => (
   <ChakraProvider resetCSS>
     ${code}
   </ChakraProvider>
