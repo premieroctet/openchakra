@@ -161,7 +161,7 @@ class FileManager {
       // @ts-ignore
       result = await FileManager.list(
         folderName,
-        result && result.NextContinuationToken,
+        (result && result.NextContinuationToken) || '',
       )
       // @ts-ignore
       count += result.KeyCount

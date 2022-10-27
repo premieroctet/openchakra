@@ -79,6 +79,7 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
     return (
       <>
         {React.createElement(compPanel)}
+        <VisibilityPanel />
         <DataSourcePanel />
       </>
     )
