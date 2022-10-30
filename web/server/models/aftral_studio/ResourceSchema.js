@@ -28,8 +28,18 @@ const ResourceSchema = new Schema({
   },
   duration: {
     type: Number,
+    default: 0,
     required: false,
   },
+  spent_time: {
+    type: Number,
+    default: 0,
+    required: false,
+  },
+  origin: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'resource',
+  }
 }, {toJSON: {virtuals: true, getters: true}})
 
 module.exports = ResourceSchema

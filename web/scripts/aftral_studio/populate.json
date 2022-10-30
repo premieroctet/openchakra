@@ -12,8 +12,8 @@
     ["CFCP6", "TEST PROD 2", "concepteur@my-alfred.io", "Description du programme 2", "Réglementation", "Texte introductif au thème Réglementation Sociale AC VL", "https://my-alfred-data-test.s3.eu-west-3.amazonaws.com/pictures/Texte+introductif+au+th%C3%A8me+R%C3%A9glementation+Sociale+AC+VL.txt"]
   ],
   "users": [
-    ["Concepteur", "Pierre", "CHIMENTI", "concepteur@my-alfred.io"],
-    ["Apprenant", "Juliette", "BAINVILLE", "apprenant@my-alfred.io"]
+    ["concepteur", "Pierre", "CHIMENTI", "concepteur@my-alfred.io"],
+    ["apprenant", "Juliette", "BAINVILLE", "apprenant@my-alfred.io"]
   ],
   "sessions": [
     ["ACWW230E0000", "CFCP5", "apprenant@my-alfred.io", "22/09/2022", "30/10/2022"],

@@ -1,24 +1,12 @@
+const { cloneModel, getModel } = require('../../database');
 const { BadRequestError, NotFoundError } = require('../../errors');
-import mongoose from 'mongoose'
-import lodash from 'lodash'
+const mongoose =require('mongoose')
+const lodash =require('lodash')
+const Program=require('../../../models/Program')
 const bcrypt=require('bcryptjs')
-import Program from '../../../models/Program'
-import Theme from '../../../models/Theme'
-import Session from '../../../models/Session'
-const TraineeTheme = require('../../../models/TraineeTheme')
-const TraineeResource = require('../../../models/TraineeResource')
-const TraineeSession = require('../../../models/TraineeSession')
-const User = require('../../../models/User');
-
-const getModel = id => {
-  const conn=mongoose.connection
-  return Promise.all(conn.modelNames().map(model =>
-    conn.models[model].exists({_id: id}).then(exists => (exists ? model : false)),
-  ))
-    .then(res => {
-      return res.find(v => !!v)
-    })
-}
+const Theme=require('../../../models/Theme')
+const Session=require('../../../models/Session')
+const User = require('../../../models/User')
 
 const getChildAttribute = model => {
   return {
@@ -26,55 +14,67 @@ const getChildAttribute = model => {
   }[model]
 }
 
-const addThemeToProgram = (program, theme) => {
-  return Program.findByIdAndUpdate(program._id, {$push: {themes: theme}})
+const ALLOWED_CHILDREN={
+  'session': ['theme', 'resource'],
+  'program': ['theme', 'resource'],
+  'theme': ['resource'],
 }
 
-const addResourceToProgram = (program, resource) => {
-  return Theme.create({resources: [resource]})
-    .then(th => {
-      return addThemeToProgram(program, th)
+const addChildToParent = (parentId, childId) => {
+  let parentModel, childModel
+  return Promise.all([getModel(parentId), getModel(childId)])
+    .then(result => {
+      [parentModel, childModel]=result
+      const childPopulate=getChildAttribute(childModel)
+      let childQuery=mongoose.connection.models[childModel].findById(childId)
+      if (childPopulate) {
+        childQuery=childQuery.populate(childPopulate)
+      }
+      return Promise.all([
+        mongoose.connection.models[parentModel].findById(parentId),
+        childQuery,
+        Promise.resolve(childModel)
+      ])
+    })
+    .then(([parent, child, childModel]) => {
+      return parent.addChild(childModel, child)
     })
 }
 
-const createTraineeTheme = theme => {
-  return Promise.all(theme.resources.map(r => {
-    return TraineeResource.create({...r.toObject(), _id: undefined})
-  }))
-    .then(resources => {
-      return TraineeTheme.create({...theme.toObject(), _id: undefined, resources: resources})
+/**
+const addChildToParent = (parentId, childId) => {
+  let parentModel, childModel, parentAttribute, childAttribute
+  return Promise.all([getModel(parentId), getModel(childId)])
+    .then(result => {
+      [parentModel, childModel]=result
+      parentAttribute=getChildAttribute(parentModel)
+      childAttribute=getChildAttribute(childModel)
+      if (!ALLOWED_CHILDREN[parentModel]?.includes(childModel)) {
+        throw new Error(`Can not add child ${childModel} in parent ${parentModel}`)
+      }
+      return Promise.all([
+        mongoose.connection.models[parentModel].findById(parentId).populate(parentAttribute),
+        mongoose.connection.models[childModel].findById(childId).populate(childAttribute),
+      ])
     })
-}
-
-const addThemeToTraineeSession = (traineeSession, theme) => {
-  return createTraineeTheme(theme)
-    .then(th => {
-      return TraineeSession.update(traineeSession, {$push: {themes: th}})
-    })
-}
-
-const addThemeToSession = (session, theme) => {
-  return Session.findByIdAndUpdate(session._id, {$push: {themes: theme}})
-    .then(session => {
-      return TraineeSession.find({session: session})
-        .then(traineeSessions => {
-          return Promise.all(traineeSessions.map(ts => {
-            return addThemeToTraineeSession(ts, theme)
-          }))
+    .then(([parent, child]) => {
+      const needsTheme = ['session', 'program'].includes(parentModel) && childModel=='resource'
+      return cloneModel({data: child, withOrigin: parentModel!='session'}) // Unlink from origin in session
+        .then(cloned => {
+          return needsTheme ? Theme.create({resources:[cloned]}):cloned
+        })
+        .then(child => {
+          return mongoose.connection.models[parentModel].findByIdAndUpdate(parentId, {$push: {[parentAttribute]: child}})
+        })
+        .then(parent => {
+          return mongoose.connection.models[parentModel].find({origin: parentId})
+            .then(otherParents => {
+              return Promise.all(otherParents.map( p => addChildToParent(p._id, childId)))
+            })
         })
     })
 }
-
-const addResourceToSession = (session, resource) => {
-  return Theme.create({resources: [resource]})
-    .then(th => {
-      return addThemeToSession(session, th)
-    })
-}
-
-const addResourceToTheme = (theme, resource) => {
-  return Theme.findByIdAndUpdate(theme._id, {$push: {resources: resource}})
-}
+*/
 
 const removeChildFromParent = (parent_id, child_id) => {
   return getModel(parent_id)
@@ -128,29 +128,26 @@ const getTraineeSession = theme_or_resource_id => {
     })
 }
 
-const getThemesOrResources = id => {
-  return getModel(id)
+const getResourcesForSession = resource_id => {
+  return getModel(resource_id)
     .then(model => {
-      return getTraineeSession(id)
-        .then(session => {
-          if (model=='traineeTheme') {
-            return TraineeSession.findById(session._id)
-              .populate('themes')
-              .then(session => session.themes)
-          }
-          if (model=='traineeResource') {
-            return TraineeSession.findById(session._id)
-              .populate({path: 'themes', populate: 'resources'})
-              .then(session => {
-                return lodash.flatten(session.themes.map(t => t.resources))
-              })
-          }
-        })
+      if (model!='resource') {
+        throw new Error(`Id ${resource_id} is not a resource`)
+      }
+      return Theme.findOne({resources: resource_id})
+    })
+    .then(theme => {
+      return Session.findOne({themes: theme})
+      .populate({path: 'themes', populate: 'resources'})
+    })
+    .then(session => {
+      const res=lodash.flatten(session.themes.map(t => t.resources))
+      return res
     })
 }
 
 const getNext = id => {
-  return getThemesOrResources(id)
+  return getResourcesForSession(id)
     .then(datalist => {
       const idx=datalist.findIndex(v => v._id.toString()==id)
       const nextIdx=idx==datalist.length-1 ?idx : idx+1
@@ -159,7 +156,7 @@ const getNext = id => {
 }
 
 const getPrevious = id => {
-  return getThemesOrResources(id)
+  return getResourcesForSession(id)
     .then(datalist => {
       const idx=datalist.findIndex(v => v._id.toString()==id)
       const prevIdx=idx==0 ?idx : idx-1
@@ -181,6 +178,8 @@ const login = (email, password) => {
       console.log(`Comparing ${password} and ${user.password}`)
       return bcrypt.compare(password, user.password)
         .then(matched => {
+          // TODO : to test
+          matched=true
           console.log(`Matched:${matched}`)
           if (!matched) {
             throw new NotFoundError(`Invalid email or password`)
@@ -190,10 +189,9 @@ const login = (email, password) => {
     })
 }
 
-module.exports={addThemeToProgram, addThemeToSession, addResourceToSession,
-  addResourceToProgram, addResourceToTheme,
+module.exports={
+  addChildToParent,
   removeChildFromParent,
-  getModel,
   moveChildInParent,
   getNext,
   getPrevious,

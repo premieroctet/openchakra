@@ -12,7 +12,8 @@ const express = require('express')
 const lodash=require('lodash')
 const {getModels} =require('../../utils/database')
 const {HTTP_CODES, NotFoundError}=require('../../utils/errors')
-const PRODUCTION_ROOT='/home/ec2-user/studio/'
+//const PRODUCTION_ROOT='/home/ec2-user/studio/'
+const PRODUCTION_ROOT='/home/seb/workspace'
 const passport = require('passport')
 
 const router = express.Router()
@@ -152,6 +153,7 @@ router.post('/:model', (req, res) => {
 })
 
 router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (req, res) => {
+  console.log(`USer is ${JSON.stringify(req.user)})`)
   const model=req.params.model
   const fields=req.query.fields?.split(',') || []
   const id=req.params.id

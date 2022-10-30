@@ -1,21 +1,16 @@
+const { getModel } = require('../database');
 const mongoose = require('mongoose')
 const Theme = require('../../models/Theme')
 const Resource = require('../../models/Resource')
 const Session = require('../../models/Session')
-const TraineeResource = require('../../models/TraineeResource')
 const {NotFoundError} = require('../errors')
 const Program = require('../../models/Program')
 const {
-  addResourceToProgram,
-  addResourceToSession,
-  addResourceToTheme,
-  addThemeToProgram,
-  addThemeToSession,
+  addChildToParent,
   moveChildInParent,
   removeChildFromParent,
   getNext, getPrevious,
   getSession,
-  getModel,
   login,
 } = require('./aftral/functions')
 
@@ -62,7 +57,7 @@ const ACTIONS={
 
   addSpentTime: ({id, duration}) => {
     console.log(`Duration ${duration} for ${id}`)
-    return TraineeResource.findByIdAndUpdate(id, {$inc: {spent_time: duration}})
+    return Resource.findByIdAndUpdate(id, {$inc: {spent_time: duration}})
   },
 
   delete: ({parent, child}) => {
@@ -70,21 +65,7 @@ const ACTIONS={
   },
 
   addChild: ({parent, child}) => {
-    return Promise.all([
-      ...[Program, Session, Theme].map(model => model.findById(parent)),
-      ...[Theme, Resource].map(model => model.findById(child)),
-    ])
-      .then(result => {
-        const[program, session, theme, childTheme, childResource]=result
-        if (program && childTheme) { return addThemeToProgram(program, childTheme) }
-        else if (program && childResource) { return addResourceToProgram(program, childResource) }
-        else if (session && childTheme) { return addThemeToSession(session, childTheme) }
-        else if (session && childResource) { return addResourceToSession(session, childResource) }
-        else if (theme && childResource) { return addResourceToTheme(theme, childResource) }
-
-        return Promise.reject(`Unkown case ${result.map(r => !!r)}`)
-
-      })
+    return addChild(parent, child)
   },
 
   next: ({id}) => {

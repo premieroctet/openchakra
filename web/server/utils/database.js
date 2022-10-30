@@ -1,5 +1,6 @@
 const mongoose=require('mongoose')
 const lodash=require('lodash')
+require('../models/TrainingCenter')
 
 const MONGOOSE_OPTIONS={
   useNewUrlParser: true,
@@ -42,11 +43,21 @@ const DECLARED_VIRTUALS={
     trainees_count: {path: 'trainees_count', instance: 'Number', requires: 'trainees'},
     trainers_count: {path: 'trainees_count', instance: 'Number', requires: 'trainers'},
     status: {path: 'status', instance: 'String', requires: 'start'},
+    spent_time: {path: 'spent_time', instance: 'Number', requires: 'themes.resources'},
+  },
+  theme: {
+    hidden: {path: 'hidden', instance: 'Boolean', requires:'name,code,picture'},
+    spent_time: {path: 'spent_time', instance: 'Number', requires: 'resources'},
+  },
+  /**
+  session: {
+    trainees_count: {path: 'trainees_count', instance: 'Number', requires: 'trainees'},
+    trainers_count: {path: 'trainees_count', instance: 'Number', requires: 'trainers'},
+    status: {path: 'status', instance: 'String', requires: 'start'},
   },
   traineeSession: {
     description: {path: 'description', instance: 'String', requires: 'session.program.description'},
     spent_time: {path: 'spent_time', instance: 'Number', requires: 'themes.resources'},
-    spent_time_str: {path: 'spent_time_str', instance: 'String', requires: 'themes.resources'},
     duration: {path: 'duration', instance: 'Number', requires: 'session.program.duration'}
   },
   traineeTheme: {
@@ -59,6 +70,7 @@ const DECLARED_VIRTUALS={
   theme: {
     hidden: {path: 'hidden', instance: 'Boolean', requires:'name,code,picture'},
   }
+  */
 }
 
 const getVirtualCharacteristics = (modelName, attName) => {
@@ -195,9 +207,46 @@ const buildQuery = (model, id, fields) => {
   return query
 }
 
+const cloneArray = ({data, withOrigin, forceData={}}) => {
+  if (!lodash.isArray(data)) {throw new Error(`Expected array, got ${data}`)}
+  return Promise.all(data.map( d => cloneModel({data:d, withOrigin, forceData})))
+}
+
+const cloneModel = ({data, withOrigin, forceData={}}) => {
+  var model=null
+  var clone=null
+  return getModel(data)
+    .then(res => {
+      model=res
+      clone={...lodash.omit(data.toObject(), ['_id', 'id']), origin: withOrigin ? data:undefined, ...forceData}
+      const childrenToClone=getModelAttributes(model)
+      .filter((([name, properties]) => !name.includes('.') && properties.ref && properties.multiple))
+      .map(([name])=>name)
+      // Don(t clone ref attributes if present in extraData
+      .filter(name=> !Object.keys(forceData).includes(name))
+      return Promise.all(childrenToClone.map(att => {
+        return Promise.all(data[att].map(v => cloneModel({data:v, withOrigin})))
+          .then(cloned => clone[att]=cloned)
+      }))
+    })
+    .then(res => {
+      return mongoose.connection.models[model].create(clone)
+    })
+}
+
+const getModel = id => {
+  const conn=mongoose.connection
+  return Promise.all(conn.modelNames().map(model =>
+    conn.models[model].exists({_id: id}).then(exists => (exists ? model : false)),
+  ))
+    .then(res => {
+      return res.find(v => !!v)
+    })
+}
+
 module.exports={
   hasRefs, MONGOOSE_OPTIONS, attributesComparator,
   getSimpleModelAttributes, getReferencedModelAttributes,
   getModelAttributes, getModels, buildQuery, buildPopulate,
-  buildPopulates,
+  buildPopulates, cloneModel, cloneArray, getModel,
 }
