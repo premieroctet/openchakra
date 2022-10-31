@@ -31,15 +31,17 @@ const ResourceSchema = new Schema({
     default: 0,
     required: false,
   },
+  // Store millis, return seconds
   spent_time: {
     type: Number,
     default: 0,
+    get: v => (v||0)/1000,
     required: false,
   },
   origin: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'resource',
-  }
+  },
 }, {toJSON: {virtuals: true, getters: true}})
 
 module.exports = ResourceSchema

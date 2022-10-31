@@ -1,7 +1,7 @@
-const { cloneModel, cloneArray } = require('../../utils/database')
 const moment = require('moment')
 const mongoose = require('mongoose')
 const lodash=require('lodash')
+const {cloneModel, cloneArray} = require('../../utils/database')
 
 const Schema = mongoose.Schema
 
@@ -11,6 +11,10 @@ const SessionSchema = new Schema({
     required: false,
   },
   code: {
+    type: String,
+    required: false,
+  },
+  description: {
     type: String,
     required: false,
   },
@@ -45,17 +49,18 @@ const SessionSchema = new Schema({
   trainees: [{
     type: Schema.Types.ObjectId,
     ref: 'user',
-    required: true,
+    required: false,
   }],
-  trainee: [{
+  trainee: {
     type: Schema.Types.ObjectId,
     ref: 'user',
-    required: true,
-  }],
+    required: false,
+  },
   origin: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'resource',
-  }
+    default: null,
+  },
 },
 {toJSON: {virtuals: true, getters: true},
 })
@@ -72,10 +77,10 @@ SessionSchema.virtual('status').get(function() {
   return moment()>this.end_date ? 'Terminée': 'En cours'
 })
 
-SessionSchema.methods.updateThemes = function (themes) {
-  return cloneArray({data:themes})
+SessionSchema.methods.updateThemes = function(themes) {
+  return cloneArray({data: themes})
     .then(clonedThemes => {
-      this.themes=clonedTheme
+      this.themes=clonedThemes
       return this.save()
     })
 }
@@ -83,16 +88,16 @@ SessionSchema.methods.updateThemes = function (themes) {
 SessionSchema.pre(['save'], function() {
   if (this.isModified('program') && this.program && !this.origin) {
     console.log('program is modified')
-    return mongoose.connection.models['program'].findById(this.program._id).populate({path: 'themes', populate :'resources'})
+    return mongoose.connection.models.program.findById(this.program._id).populate({path: 'themes', populate: 'resources'})
       .then(program => {
         return cloneArray({data: program.themes})
           .then(themes => {
             this.themes=themes
-            return mongoose.connection.models['session']
-                .find({origin: this._id})
-                .then(sessions=> {
-                  return Promise.all(sessions.map(s => s.updateThemes(program.themes)))
-                })
+            return mongoose.connection.models.session
+              .find({origin: this._id})
+              .then(sessions => {
+                return Promise.all(sessions.map(s => s.updateThemes(program.themes)))
+              })
           })
       })
   }
@@ -102,21 +107,21 @@ SessionSchema.virtual('spent_time').get(function() {
   return lodash.sum(this.themes.map(t => t.spent_time || 0))
 })
 
-SessionSchema.methods.addChild = function (model, data) {
+SessionSchema.methods.addChild = function(model, data) {
   return cloneModel({data})
-   .then(cloned => {
-     this.themes.push(cloned)
-     return this.save()
-   })
-   .then(() => {
-     // Session formateur => envoyer sur sessions apprenants
-     if (!this.origin) {
-       return mongoose.connection.models['session'].find({origin: this._id})
-         .then(subs => {
-           return subs.map(s => {console.log(`sub child`); return s.addChild(model, data)})
-         })
-     }
-   })
+    .then(cloned => {
+      this.themes.push(cloned)
+      return this.save()
+    })
+    .then(() => {
+      // Session formateur => envoyer sur sessions apprenants
+      if (!this.origin) {
+        return mongoose.connection.models.session.find({origin: this._id})
+          .then(subs => {
+            return subs.map(s => { console.log(`sub child`); return s.addChild(model, data) })
+          })
+      }
+    })
 }
 
 module.exports = SessionSchema

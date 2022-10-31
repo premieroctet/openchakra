@@ -1,9 +1,9 @@
-const { cloneModel, getModel } = require('../../database');
-const { BadRequestError, NotFoundError } = require('../../errors');
 const mongoose =require('mongoose')
 const lodash =require('lodash')
-const Program=require('../../../models/Program')
 const bcrypt=require('bcryptjs')
+const {cloneModel, getModel} = require('../../database')
+const {BadRequestError, NotFoundError} = require('../../errors')
+const Program=require('../../../models/Program')
 const Theme=require('../../../models/Theme')
 const Session=require('../../../models/Session')
 const User = require('../../../models/User')
@@ -20,30 +20,8 @@ const ALLOWED_CHILDREN={
   'theme': ['resource'],
 }
 
-const addChildToParent = (parentId, childId) => {
-  let parentModel, childModel
-  return Promise.all([getModel(parentId), getModel(childId)])
-    .then(result => {
-      [parentModel, childModel]=result
-      const childPopulate=getChildAttribute(childModel)
-      let childQuery=mongoose.connection.models[childModel].findById(childId)
-      if (childPopulate) {
-        childQuery=childQuery.populate(childPopulate)
-      }
-      return Promise.all([
-        mongoose.connection.models[parentModel].findById(parentId),
-        childQuery,
-        Promise.resolve(childModel)
-      ])
-    })
-    .then(([parent, child, childModel]) => {
-      return parent.addChild(childModel, child)
-    })
-}
-
-/**
-const addChildToParent = (parentId, childId) => {
-  let parentModel, childModel, parentAttribute, childAttribute
+const addChild = (parentId, childId, level=0) => {
+  let parentModel, childModel, parentAttribute, childAttribute, cloned
   return Promise.all([getModel(parentId), getModel(childId)])
     .then(result => {
       [parentModel, childModel]=result
@@ -59,22 +37,22 @@ const addChildToParent = (parentId, childId) => {
     })
     .then(([parent, child]) => {
       const needsTheme = ['session', 'program'].includes(parentModel) && childModel=='resource'
-      return cloneModel({data: child, withOrigin: parentModel!='session'}) // Unlink from origin in session
-        .then(cloned => {
-          return needsTheme ? Theme.create({resources:[cloned]}):cloned
+      return cloneModel({data: child, withOrigin: !(parentModel=='session' && !parent.origin)}) // Unlink from origin in session
+        .then(res => {
+          cloned=res
+          return needsTheme ? Theme.create({resources: [cloned]}):cloned
         })
         .then(child => {
           return mongoose.connection.models[parentModel].findByIdAndUpdate(parentId, {$push: {[parentAttribute]: child}})
         })
         .then(parent => {
-          return mongoose.connection.models[parentModel].find({origin: parentId})
+          return mongoose.connection.models[parentModel].find({origin: parent._id})
             .then(otherParents => {
-              return Promise.all(otherParents.map( p => addChildToParent(p._id, childId)))
+              return Promise.all(otherParents.map(p => addChild(p._id, cloned._id, level+1)))
             })
         })
     })
 }
-*/
 
 const removeChildFromParent = (parent_id, child_id) => {
   return getModel(parent_id)
@@ -116,13 +94,13 @@ const moveChildInParent = (parent_id, child_id, up) => {
 const getTraineeSession = theme_or_resource_id => {
   return getModel(theme_or_resource_id)
     .then(model => {
-      if (model=='traineeTheme') {
-        return TraineeSession.findOne({themes: theme_or_resource_id})
+      if (model=='theme') {
+        return Session.findOne({themes: theme_or_resource_id})
       }
-      if (model=='traineeResource') {
-        return TraineeTheme.findOne({resources: theme_or_resource_id})
+      if (model=='resource') {
+        return Theme.findOne({resources: theme_or_resource_id})
           .then(theme => {
-            return TraineeSession.findOne({themes: theme})
+            return Session.findOne({themes: theme})
           })
       }
     })
@@ -138,7 +116,7 @@ const getResourcesForSession = resource_id => {
     })
     .then(theme => {
       return Session.findOne({themes: theme})
-      .populate({path: 'themes', populate: 'resources'})
+        .populate({path: 'themes', populate: 'resources'})
     })
     .then(session => {
       const res=lodash.flatten(session.themes.map(t => t.resources))
@@ -189,12 +167,37 @@ const login = (email, password) => {
     })
 }
 
+const putAttribute = ({parent, attribute, value}) => {
+  console.log(`Putting ${parent} ${attribute} to ${value}`)
+  let mongooseModel=null
+  return getModel(parent)
+    .then(model => {
+      mongooseModel=mongoose.connection.models[model]
+      return mongooseModel.updateMany(
+        {$or: [{_id: parent}, {origin: parent}]},
+        {[attribute]: value})
+    })
+}
+
+const filterDataUser = ({model, data, user}) => {
+  if (model=='session') {
+    data=data.filter(d =>
+      (user.role=='apprenant' ? d.trainee?._id.toString()==user._id.toString()
+        : user.roles=='formateur' ? d.trainers.map(t => t._id.toString()).includes(user._id.toString()) && !d.trainee
+          : !d.trainee),
+    )
+  }
+  return data
+}
+
 module.exports={
-  addChildToParent,
+  addChild,
   removeChildFromParent,
   moveChildInParent,
   getNext,
   getPrevious,
   getSession,
-  login
+  login,
+  putAttribute,
+  filterDataUser,
 }

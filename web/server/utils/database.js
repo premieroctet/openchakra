@@ -46,7 +46,7 @@ const DECLARED_VIRTUALS={
     spent_time: {path: 'spent_time', instance: 'Number', requires: 'themes.resources'},
   },
   theme: {
-    hidden: {path: 'hidden', instance: 'Boolean', requires:'name,code,picture'},
+    hidden: {path: 'hidden', instance: 'Boolean', requires: 'name,code,picture'},
     spent_time: {path: 'spent_time', instance: 'Number', requires: 'resources'},
   },
   /**
@@ -161,9 +161,16 @@ const buildPopulates = (fields, model) => {
   // tofix: cf. lodash.mergeWith
   const modelAttributes=Object.fromEntries(getModelAttributes(model))
 
+  const modelAttributesNames=Object.keys(modelAttributes)
+  const requiredAttributesNames=lodash(fields).map(f => f.split('.')[0]).uniq().value()
+  const unknownAttributesNames=lodash(requiredAttributesNames).difference(modelAttributesNames).value()
+  if (unknownAttributesNames.length>0) {
+    throw new Error(`Model ${model} : unknown attributes ${unknownAttributesNames}`)
+  }
+
   const populates=lodash(fields)
   // Retain only ObjectId fields
-    .filter(att => modelAttributes[att.split('.')[0]].ref==true)
+    .filter(att => { console.log(att.split('.')[0]); return modelAttributes[att.split('.')[0]].ref==true })
     .groupBy(att => att.split('.')[0])
     // Build populates for each 1st level attribute
     .mapValues(fields => fields.map(f => buildPopulate(f, model)))
@@ -182,9 +189,9 @@ const buildQuery = (model, id, fields) => {
   console.log(`Requesting model ${model}, id ${id || 'none'} fields:${fields}`)
   const modelAttributes=Object.fromEntries(getModelAttributes(model))
 
-  const virtuals=lodash(fields.map(f=>f.split('.')[0]))
+  const virtuals=lodash(fields.map(f => f.split('.')[0]))
     .uniq()
-    .map(f=>DECLARED_VIRTUALS[model]?.[f]?.requires?.split(','))
+    .map(f => DECLARED_VIRTUALS[model]?.[f]?.requires?.split(','))
     .flatten()
     .filter(f => !!f)
     .value()
@@ -208,29 +215,32 @@ const buildQuery = (model, id, fields) => {
 }
 
 const cloneArray = ({data, withOrigin, forceData={}}) => {
-  if (!lodash.isArray(data)) {throw new Error(`Expected array, got ${data}`)}
-  return Promise.all(data.map( d => cloneModel({data:d, withOrigin, forceData})))
+  if (!lodash.isArray(data)) { throw new Error(`Expected array, got ${data}`) }
+  return Promise.all(data.map(d => cloneModel({data: d, withOrigin, forceData})))
 }
 
 const cloneModel = ({data, withOrigin, forceData={}}) => {
-  var model=null
-  var clone=null
+  let model=null
+  let clone=null
   return getModel(data)
     .then(res => {
       model=res
-      clone={...lodash.omit(data.toObject(), ['_id', 'id']), origin: withOrigin ? data:undefined, ...forceData}
+      clone={...lodash.omit(data.toObject(), ['_id', 'id']), origin: withOrigin ? data._id:undefined, ...forceData}
       const childrenToClone=getModelAttributes(model)
-      .filter((([name, properties]) => !name.includes('.') && properties.ref && properties.multiple))
-      .map(([name])=>name)
+        .filter((([name, properties]) => !name.includes('.') && properties.ref && properties.multiple))
+        .map(([name]) => name)
       // Don(t clone ref attributes if present in extraData
-      .filter(name=> !Object.keys(forceData).includes(name))
+        .filter(name => !Object.keys(forceData).includes(name))
       return Promise.all(childrenToClone.map(att => {
-        return Promise.all(data[att].map(v => cloneModel({data:v, withOrigin})))
+        return Promise.all(data[att].map(v => cloneModel({data: v, withOrigin})))
           .then(cloned => clone[att]=cloned)
       }))
     })
     .then(res => {
       return mongoose.connection.models[model].create(clone)
+    })
+    .catch(err => {
+      console.trace(`${err}:${data}`)
     })
 }
 

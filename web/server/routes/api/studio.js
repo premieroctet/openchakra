@@ -1,7 +1,5 @@
-const { sendCookie } = require('../../config/passport');
-const { login } = require('../../utils/studio/aftral/functions');
-const {ACTIONS} = require('../../utils/studio/actions')
-const {buildQuery} = require('../../utils/database')
+const {sendCookie} = require('../../config/passport')
+const {login, filterDataUser} = require('../../utils/studio/aftral/functions')
 const path=require('path')
 const jwt = require('jsonwebtoken')
 
@@ -10,11 +8,14 @@ const child_process = require('child_process')
 const mongoose=require('mongoose')
 const express = require('express')
 const lodash=require('lodash')
-const {getModels} =require('../../utils/database')
-const {HTTP_CODES, NotFoundError}=require('../../utils/errors')
-//const PRODUCTION_ROOT='/home/ec2-user/studio/'
-const PRODUCTION_ROOT='/home/seb/workspace'
+// const PRODUCTION_ROOT='/home/ec2-user/studio/'
+// const PRODUCTION_ROOT='/home/seb/workspace'
+const PRODUCTION_ROOT='/Users/seb/workspace'
 const passport = require('passport')
+const {HTTP_CODES, NotFoundError}=require('../../utils/errors')
+const {getModels} =require('../../utils/database')
+const {ACTIONS} = require('../../utils/studio/actions')
+const {buildQuery} = require('../../utils/database')
 
 const router = express.Router()
 
@@ -155,12 +156,17 @@ router.post('/:model', (req, res) => {
 router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (req, res) => {
   console.log(`USer is ${JSON.stringify(req.user)})`)
   const model=req.params.model
-  const fields=req.query.fields?.split(',') || []
+  let fields=req.query.fields?.split(',') || []
   const id=req.params.id
+
+  if (model=='session') {
+    fields=lodash([...fields, 'trainers', 'trainees', 'trainee']).uniq().value()
+  }
 
   const query=buildQuery(model, id, fields)
   query
     .then(data => {
+      data=filterDataUser({model, data, user: req.user})
       if (id && data.length==0) {
         throw new NotFoundError(`Can't find ${model}:${id}`)
       }

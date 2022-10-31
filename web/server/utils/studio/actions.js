@@ -1,17 +1,14 @@
-const { getModel } = require('../database');
-const mongoose = require('mongoose')
-const Theme = require('../../models/Theme')
 const Resource = require('../../models/Resource')
-const Session = require('../../models/Session')
 const {NotFoundError} = require('../errors')
 const Program = require('../../models/Program')
 const {
-  addChildToParent,
+  addChild,
   moveChildInParent,
   removeChildFromParent,
   getNext, getPrevious,
   getSession,
   login,
+  putAttribute,
 } = require('./aftral/functions')
 
 const ACTIONS={
@@ -21,15 +18,7 @@ const ACTIONS={
   },
 
   put: ({parent, attribute, value}) => {
-    console.log(`Putting ${parent} ${attribute} to ${value}`)
-    return getModel(parent)
-      .then(model => {
-        return mongoose.connection.models[model].findByIdAndUpdate(parent, {[attribute]: value})
-      })
-      .then(res => {
-        console.log(res)
-        return res
-      })
+    return putAttribute({parent, attribute, value})
   },
 
   publish: ({id}) => {

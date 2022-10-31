@@ -1,6 +1,6 @@
-const { cloneArray } = require('../../utils/database')
 const mongoose = require('mongoose')
 const lodash=require('lodash')
+const {cloneArray} = require('../../utils/database')
 
 const Schema = mongoose.Schema
 
@@ -29,11 +29,12 @@ const ThemeSchema = new Schema({
   resources: [{
     type: Schema.Types.ObjectId,
     ref: 'resource',
-    required: false,
+    required: true,
   }],
   origin: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'resource',
+    default: null,
   },
 }, {toJSON: {virtuals: true, getters: true}})
 
@@ -43,6 +44,9 @@ ThemeSchema.virtual('hidden').get(function() {
 })
 
 ThemeSchema.virtual('spent_time').get(function() {
+  if (!this.resources) {
+    return 0
+  }
   return lodash.sum(this.resources.map(t => t.spent_time || 0))
 })
 
