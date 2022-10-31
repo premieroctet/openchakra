@@ -76,7 +76,7 @@ export const getDataProviderDataType = (
   components: IComponents,
   dataSource: string,
   models: any,
-): IDataType => {
+): IDataType|null => {
   if (component.props.model && component.props.dataSource === dataSource) {
     return {
       type: component.props.model,
@@ -86,21 +86,15 @@ export const getDataProviderDataType = (
   }
   if (component.id === 'root') {
     // Search dataProviders
-    const dp = components[dataSource]
-    if (dp) {
-      return {
-        type: dp.props.model,
-        multiple: true,
-        ref: true,
-      }
-    }
-    throw new Error('Root component has no model defined')
+    return null
   }
 
   const parent = components[component.parent]
-  let parentDataProviderType = {
-    ...getDataProviderDataType(parent, components, dataSource, models),
+  let pdt=getDataProviderDataType(parent, components, dataSource, models)
+  if (!pdt) {
+    return null
   }
+  let parentDataProviderType = {...pdt}
   if (component.props.dataSource === dataSource) {
     if (component.props?.attribute) {
       const att = models.find(
@@ -123,14 +117,22 @@ export const getAvailableAttributes = (
   if (!component.props?.dataSource) {
     return null
   }
-  const dataType = getDataProviderDataType(
+  let dataType = getDataProviderDataType(
     components[component.parent],
     components,
     component.props.dataSource,
     models,
   )
+  // NOt fund in parent: direct dataprovider
+  if (!dataType) {
+    dataType = {
+      type: components[component.props.dataSource].props.model,
+      multiple: true,
+      ref: true,
+    }
+  }
   const attributes =
-    models.find((m: any) => m.name === dataType.type)?.attributes || {}
+    models.find((m: any) => m.name === dataType?.type)?.attributes || {}
   const cardinalityAttributes = lodash.pickBy(
     attributes,
     att => att.multiple === isMultipleDispatcher(component),
@@ -142,7 +144,7 @@ const computeDataFieldName = (
   component: IComponent,
   components: IComponents,
   dataSourceId: string,
-): string => {
+): string|null => {
   if (
     component.props.model ||
     (component.props.dataSource && component.props.dataSource !== dataSourceId)
@@ -165,11 +167,17 @@ export const getFieldsForDataProvider = (
   dataProviderId: string,
   components: IComponents,
 ): string[] => {
+  const isRoot=components[dataProviderId].id=='root'
+
   const linkedComponents = Object.values(components).filter(
     c => c.props?.dataSource === dataProviderId,
   )
-  return lodash(linkedComponents)
+
+  const fields=isRoot ?
+  lodash(linkedComponents)
     .map(c => computeDataFieldName(c, components, dataProviderId))
     .filter(c => !!c)
-    .uniq()
+    .uniq().value()
+  : lodash(linkedComponents).map(c=> c.props.attribute).uniq().value()
+  return fields
 }

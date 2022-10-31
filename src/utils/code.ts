@@ -169,12 +169,19 @@ const buildBlock = ({
       if (isDynamicComponent(childComponent)) {
         propsContent += ` backend='/'`
         try {
-          const tp = getDataProviderDataType(
+          let tp = getDataProviderDataType(
             components[childComponent.parent],
             components,
             childComponent.props.dataSource,
             models,
           )
+          if (!tp) {
+            tp = {
+              type: components[childComponent.props.dataSource].props.model,
+              multiple: true,
+              ref: true,
+            }
+          }
           if (tp.type) {
             propsContent += ` dataModel='${tp.type}' `
           } else {
@@ -230,7 +237,7 @@ const buildBlock = ({
 
           if (propName === 'hiddenRoles') {
             propsContent += ` hiddenRoles='${JSON.stringify(propsValue)}'`
-            propsContent += ` user={user}`
+            propsContent += ` user={user} `
             return
           }
 
@@ -238,8 +245,8 @@ const buildBlock = ({
             const gatheredProperties = Object.entries(propsValue)
               .map(([prop, value]) => {
                 return !isNaN(parseInt(value))
-                  ? `${prop}: ${value}`
-                  : `${prop}: '${value}'`
+                  ? ` ${prop}: '${value}' `
+                  : ` ${prop}: '${value}' `
               })
               .join(', ')
 
@@ -304,7 +311,7 @@ const buildBlock = ({
       })}
       </${componentName}>`
       } else {
-        content += `<${componentName} ${propsContent} />`
+        content += `<${componentName} ${propsContent}  />`
       }
     } else {
       content += `<${childComponent.componentName} />`

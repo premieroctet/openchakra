@@ -1,64 +1,50 @@
-import { getAvailableAttributes } from '../../utils/dataSources'
+import { getAvailableAttributes, getFieldsForDataProvider } from '../../utils/dataSources'
 import lodash from 'lodash'
 import project from '../data/attributesProject.json'
 import models from '../data/dataModel.json'
 
-const COMPONENTS = Object.values(project.pages)[0].components
-
+// @ts-ignore
 describe('DataSources tests', () => {
-  test('Get attributes for program provider', () => {
+
+  test('Get attributes for session provider', () => {
+    const components=project.pages['page-L8VM99NLPD123'].components
     const EXPECTED = lodash.pickBy(
-      models.find(m => m.name === 'program')?.attributes,
+      models.find(m => m.name === 'session')?.attributes,
       a => a.multiple,
     )
-    const component = COMPONENTS['comp-ProgramsBox']
+    const component = components['comp-L947UEF7AJ5UH']
     const attributes: any = getAvailableAttributes(
       component,
-      COMPONENTS,
+      components,
       models,
     )
     return expect(attributes).toMatchObject(EXPECTED)
   })
 
-  test('Get attributes for program name', () => {
+  test('Get attributes for resource provider', () => {
+    const components=project.pages['page-L8VM99NLPD123'].components
     const EXPECTED = lodash.pickBy(
-      models.find(m => m.name === 'program')?.attributes,
-      a => !a.multiple,
-    )
-    const component = COMPONENTS['comp-ProgramName']
-    const attributes: any = getAvailableAttributes(
-      component,
-      COMPONENTS,
-      models,
-    )
-    return expect(attributes).toMatchObject(EXPECTED)
-  })
-
-  test('Get attributes for themes box', () => {
-    const EXPECTED = lodash.pickBy(
-      models.find(m => m.name === 'program')?.attributes,
+      models.find(m => m.name === 'resource')?.attributes,
       a => a.multiple,
     )
-    const component = COMPONENTS['comp-ThemesBox']
+    const component = components['comp-L9QUTVVF04ZVU']
     const attributes: any = getAvailableAttributes(
       component,
-      COMPONENTS,
+      components,
       models,
     )
     return expect(attributes).toMatchObject(EXPECTED)
   })
 
-  test('Get attributes for theme name', () => {
+  // @ts-ignore
+  test.only('Get fields for non-root dataSource', () => {
+    const components=project.pages['page-L8VM99NLPD123'].components
     const EXPECTED = lodash.pickBy(
-      models.find(m => m.name === 'theme')?.attributes,
-      a => !a.multiple,
+      models.find(m => m.name === 'resource')?.attributes,
+      a => a.multiple,
     )
-    const component = COMPONENTS['comp-ThemeName']
-    const attributes: any = getAvailableAttributes(
-      component,
-      COMPONENTS,
-      models,
-    )
-    return expect(attributes).toMatchObject(EXPECTED)
+    const fields:String[] = getFieldsForDataProvider('comp-L9QV07F8BOEES', components)
+    return expect(fields).toEqual(['name'])
   })
+
 })
