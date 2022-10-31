@@ -72,7 +72,7 @@ const Timer = ({
       if (dataSource) {
         try {
           axios
-            .post(`${backend}/myAlfred/api/studio/action`, {
+            .post(`/myAlfred/api/studio/action`, {
               action: 'addSpentTime',
               id: dataSource._id,
               duration: RESSOURCE_SENDING_PERIOD,
