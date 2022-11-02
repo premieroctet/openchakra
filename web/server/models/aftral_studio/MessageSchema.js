@@ -24,7 +24,7 @@ const MessageSchema = new Schema({
 
 
 MessageSchema.virtual('sender_name').get(() => {
-  return destinee_user ? destinee_user.contact_name : destinee_session.contact_name
+  return this.destinee_user?.contact_name || this.destinee_session?.contact_name
 })
 
 module.exports = MessageSchema

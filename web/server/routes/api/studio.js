@@ -105,7 +105,7 @@ router.post('/start', (req, res) => {
   return res.json(result)
 })
 
-router.post('/action', (req, res) => {
+router.post('/action', passport.authenticate('cookie', {session: false}), (req, res) => {
   const action=req.body.action
   const actionFn=ACTIONS[action]
   if (!actionFn) {

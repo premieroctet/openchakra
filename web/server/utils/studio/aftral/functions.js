@@ -7,6 +7,7 @@ const Program=require('../../../models/Program')
 const Theme=require('../../../models/Theme')
 const Session=require('../../../models/Session')
 const User = require('../../../models/User')
+const Message = require('../../../models/Message')
 
 const getChildAttribute = model => {
   return {
