@@ -173,6 +173,10 @@ router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (r
     fields=lodash([...fields, 'trainers', 'trainees', 'trainee']).uniq().value()
   }
 
+  if (model=='message') {
+    fields=lodash([...fields, 'sender', 'destinee_user', 'destinee_session']).uniq().value()
+  }
+
   const query=buildQuery(model, id, fields)
   query
     .then(data => {
