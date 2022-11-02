@@ -57,30 +57,9 @@ const DECLARED_VIRTUALS={
     contact_name: {path: 'contact_name', instance: 'String', requires: 'name,firstname,role'},
   },
   message: {
-    sender_name: {path: 'sender_name', instance: 'String', requires: 'destinee_session'},
+    destinee_name: {path: 'destinee_name', instance: 'String', requires: 'destinee_session.trainers,destinee_session.trainees,destinee_user'},
+    sender_name: {path: 'sender_name', instance: 'String', requires: 'sender'},
   },
-  /**
-  session: {
-    trainees_count: {path: 'trainees_count', instance: 'Number', requires: 'trainees'},
-    trainers_count: {path: 'trainees_count', instance: 'Number', requires: 'trainers'},
-    status: {path: 'status', instance: 'String', requires: 'start'},
-  },
-  traineeSession: {
-    description: {path: 'description', instance: 'String', requires: 'session.program.description'},
-    spent_time: {path: 'spent_time', instance: 'Number', requires: 'themes.resources'},
-    duration: {path: 'duration', instance: 'Number', requires: 'session.program.duration'}
-  },
-  traineeTheme: {
-    spent_time: {path: 'spent_time', instance: 'Number', requires: 'resources'},
-    spent_time_str: {path: 'spent_time_str', instance: 'String', requires: 'resources'},
-  },
-  traineeResource: {
-    spent_time_str: {path: 'spent_time_str', instance: 'String', requires: 'spent_time'},
-  },
-  theme: {
-    hidden: {path: 'hidden', instance: 'Boolean', requires:'name,code,picture'},
-  }
-  */
 }
 
 const getVirtualCharacteristics = (modelName, attName) => {

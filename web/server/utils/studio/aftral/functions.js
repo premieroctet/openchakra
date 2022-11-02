@@ -189,7 +189,6 @@ const filterDataUser = ({model, data, user}) => {
     )
   }
   if (model=='resource' && user.role=='concepteur') {
-    console.log('filter resources for concepteur')
     return Theme.find()
       .then(themes => {
         data=data.filter(d => !d.origin)
@@ -201,8 +200,10 @@ const filterDataUser = ({model, data, user}) => {
   if (model=='message') {
     const userId=user._id.toString()
     data=data.filter(d => {
-      const destIds=lodash(d)
-        .map(d => [d.sender._id, d.destinee_user?._id, d.destinee_session?.trainees, d.destinee_session?.trainers])
+      const destIds=lodash([d.sender && d.sender._id,
+        d.destinee_user && d.destinee_user?._id,
+        d.destinee_session?.trainees?.map(t => t._id),
+        d.destinee_session?.trainers?.map(t => t._id)])
         .flattenDeep()
         .value()
       return destIds.some(i => i?.toString()==userId)

@@ -4,7 +4,10 @@ const Schema = mongoose.Schema
 
 const MessageSchema = new Schema({
   contents: String,
-  date: Date,
+  date: {
+    type: Date,
+    default: Date.now(),
+  },
   sender: {
     type: Schema.Types.ObjectId,
     ref: 'user',
@@ -22,9 +25,12 @@ const MessageSchema = new Schema({
   },
 }, {toJSON: {virtuals: true, getters: true}})
 
-
-MessageSchema.virtual('sender_name').get(() => {
+MessageSchema.virtual('destinee_name').get(function() {
   return this.destinee_user?.contact_name || this.destinee_session?.contact_name
+})
+
+MessageSchema.virtual('sender_name').get(function() {
+  return this.sender?.contact_name
 })
 
 module.exports = MessageSchema
