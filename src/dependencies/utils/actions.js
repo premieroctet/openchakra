@@ -11,6 +11,16 @@ export const ACTIONS = {
       throw new Error(err.response?.data || err)
     })
   },
+  sendMessage: ({ props }) => {
+    const destinee = getComponentDataValue(props.destinee)
+    const contents = getComponentDataValue(props.contents)
+    let url = `${API_ROOT}/action`
+    return axios.post(url, {
+      action: 'sendMessage',
+      destinee: destinee,
+      contents: contents,
+    })
+  },
   openPage: ({ value, props }) => {
     let url = `/${props.page}`
     if (value && value._id) {
