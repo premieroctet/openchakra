@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
+const formatDuration = require('format-duration')
 
 const ResourceSchema = new Schema({
   name: {
@@ -35,7 +36,6 @@ const ResourceSchema = new Schema({
   spent_time: {
     type: Number,
     default: 0,
-    get: v => (v||0)/1000,
     required: false,
   },
   origin: {
@@ -43,5 +43,10 @@ const ResourceSchema = new Schema({
     ref: 'resource',
   },
 }, {toJSON: {virtuals: true, getters: true}})
+
+ResourceSchema.virtual('spent_time_str').get(function() {
+  const timeMillis=this.spent_time||0
+  return formatDuration(timeMillis, {leading: true})
+})
 
 module.exports = ResourceSchema

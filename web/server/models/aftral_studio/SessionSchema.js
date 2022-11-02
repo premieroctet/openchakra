@@ -1,6 +1,7 @@
 const moment = require('moment')
 const mongoose = require('mongoose')
 const lodash=require('lodash')
+const formatDuration = require('format-duration')
 const {cloneModel, cloneArray} = require('../../utils/database')
 
 const Schema = mongoose.Schema
@@ -104,11 +105,12 @@ SessionSchema.pre(['save'], function() {
 })
 
 SessionSchema.virtual('spent_time').get(function() {
-  return `Session ${this.name}`
+  return lodash.sum(this.themes.map(t => t.spent_time || 0))
 })
 
-SessionSchema.virtual('spent_time').get(function() {
-  return lodash.sum(this.themes.map(t => t.spent_time || 0))
+SessionSchema.virtual('spent_time_str').get(function() {
+  const timeMillis=lodash.sum(this.themes.map(t => t.spent_time || 0))
+  return formatDuration(timeMillis, {leading: true})
 })
 
 SessionSchema.methods.addChild = function(model, data) {

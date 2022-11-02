@@ -19,7 +19,7 @@ const AlbumSchema = new Schema({
   creation_date: {
     type: Date,
     required: true,
-    default: Date.now(),
+    default: Date.now,
   },
   user: {
     type: Schema.Types.ObjectId,

@@ -44,11 +44,16 @@ const DECLARED_VIRTUALS={
     trainers_count: {path: 'trainees_count', instance: 'Number', requires: 'trainers'},
     status: {path: 'status', instance: 'String', requires: 'start'},
     spent_time: {path: 'spent_time', instance: 'Number', requires: 'themes.resources'},
+    spent_time_str: {path: 'spent_time_str', instance: 'String', requires: 'themes.resources'},
     contact_name: {path: 'contact_name', instance: 'String', requires: 'name'},
   },
   theme: {
     hidden: {path: 'hidden', instance: 'Boolean', requires: 'name,code,picture'},
     spent_time: {path: 'spent_time', instance: 'Number', requires: 'resources'},
+    spent_time_str: {path: 'spent_time_str', instance: 'String', requires: 'resources'},
+  },
+  resource: {
+    spent_time_str: {path: 'spent_time_str', instance: 'String', requires: 'spent_time'},
   },
   contact: {
     name: {path: 'name', instance: 'String', requires: '_id'},
