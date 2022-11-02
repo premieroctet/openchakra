@@ -22,6 +22,7 @@ export const ACTIONS = {
         contents: contents,
       })
       .then(res => {
+        clearComponentValue(props.destinee)
         clearComponentValue(props.contents)
         return res
       })
