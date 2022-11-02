@@ -6,7 +6,8 @@ const MessageSchema = new Schema({
   contents: String,
   date: {
     type: Date,
-    default: Date.now(),
+    default: Date.now,
+    required: true,
   },
   sender: {
     type: Schema.Types.ObjectId,

@@ -208,6 +208,7 @@ const filterDataUser = ({model, data, user}) => {
         .value()
       return destIds.some(i => i?.toString()==userId)
     })
+    data=lodash.orderBy(data, 'date', 'desc')
   }
   return data
 }
