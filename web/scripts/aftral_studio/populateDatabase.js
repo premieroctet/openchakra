@@ -85,7 +85,7 @@ const createUser = data => {
 
 const createSession = (data, center) => {
   const emails=data.trainee.split(',')
-  return Promise.all([Program.findOne({code: data.program_code}).populate({path: 'themes', populate: 'resources'}), User.find({email: {$in: emails}})])
+  return Promise.all([Program.findOne({code: data.program_code}).populate({path: 'themes', populate: 'resources'}), User.find()])
     .then(([program, users]) => {
       return cloneArray({data: program.themes, withOrigin: false})
         .then(themes => {
@@ -93,9 +93,11 @@ const createSession = (data, center) => {
             {code: data.code},
             {name: `${data.code}-${program.name}`,
               description: program.description,
-              code: data.code, trainees: users,
+              code: data.code, trainees: users.filter(u => u.role=='apprenant'),
+              trainers: users.filter(u => u.role=='formateur'),
               start: moment(data.start, 'DD/MM/YYYY'), end: moment(data.end, 'DD/MM/YYYY'), location: center, program: program._id,
-              themes: themes.map(t => t._id)},
+              themes: themes.map(t => t._id),
+            },
             {upsert: true, new: true},
           )
         })
@@ -103,7 +105,7 @@ const createSession = (data, center) => {
 }
 
 const createTraineeSession = (session, trainee) => {
-  return cloneModel({data: session, forceData: {trainee: trainee, trainees: session.trainees}})
+  return cloneModel({data: session, forceData: {trainee: trainee, trainees: session.trainees, trainers: session.trainers}})
     .catch(err => { console.error(`${err}:${data}`) })
 }
 
@@ -112,6 +114,7 @@ const generateTraineeSessions = () => {
     .populate({path: 'program', populate: {path: 'themes', populate: 'resources'}})
     .populate({path: 'themes', populate: 'resources'})
     .populate('trainees')
+    .populate('trainers')
     .then(sessions => {
       return Promise.all(sessions.map(session => {
         return Promise.all(session.trainees.map(trainee => {

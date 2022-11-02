@@ -101,6 +101,12 @@
 			"firstname": "Juliette",
 			"name": "BAINVILLE",
 			"email": "apprenant@my-alfred.io"
+		},
+    {
+			"role": "formateur",
+			"firstname": "John",
+			"name": "DOE",
+			"email": "formateur@my-alfred.io"
 		}
 	],
 	"sessions": [{
