@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { getComponentDataValue } from './values'
+import { getComponentDataValue, clearComponentValue } from './values'
 
 const API_ROOT = '/myAlfred/api/studio'
 export const ACTIONS = {
@@ -15,11 +15,16 @@ export const ACTIONS = {
     const destinee = getComponentDataValue(props.destinee)
     const contents = getComponentDataValue(props.contents)
     let url = `${API_ROOT}/action`
-    return axios.post(url, {
-      action: 'sendMessage',
-      destinee: destinee,
-      contents: contents,
-    })
+    return axios
+      .post(url, {
+        action: 'sendMessage',
+        destinee: destinee,
+        contents: contents,
+      })
+      .then(res => {
+        clearComponentValue(props.contents)
+        return res
+      })
   },
   openPage: ({ value, props }) => {
     let url = `/${props.page}`
