@@ -12,6 +12,7 @@ const InputPanel = () => {
 
   const size = usePropsSelector('size')
   const variant = usePropsSelector('variant')
+  const type = usePropsSelector('type')
 
   return (
     <>
@@ -31,6 +32,21 @@ const InputPanel = () => {
           <option>unstyled</option>
           <option>flushed</option>
           <option>filled</option>
+        </Select>
+      </FormControl>
+      
+      <FormControl htmlFor="type" label="type">
+        <Select
+          id="type"
+          onChange={setValueFromEvent}
+          name="type"
+          size="sm"
+          value={type || ''}
+        >
+          <option>text</option>
+          <option>tel</option>
+          <option>email</option>
+          <option>file</option>
         </Select>
       </FormControl>
 

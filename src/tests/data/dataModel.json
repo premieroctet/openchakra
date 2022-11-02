@@ -11,6 +11,11 @@
       "multiple": false,
       "ref": false
     },
+    "designer": {
+      "type": "user",
+      "multiple": false,
+      "ref": true
+    },
     "duration": {
       "type": "Number",
       "multiple": false,
@@ -21,8 +26,53 @@
       "multiple": false,
       "ref": false
     },
+    "ordered": {
+      "type": "Boolean",
+      "multiple": false,
+      "ref": false
+    },
+    "picture": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "published": {
+      "type": "Boolean",
+      "multiple": false,
+      "ref": false
+    },
     "themes": {
       "type": "theme",
+      "multiple": true,
+      "ref": true
+    },
+    "designer.email": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "designer.firstname": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "designer.name": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "designer.password": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "designer.role": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "designer.sessions": {
+      "type": "traineeSession",
       "multiple": true,
       "ref": true
     }
@@ -30,27 +80,92 @@
 }, {
   "name": "resource",
   "attributes": {
-    "res_code": {
+    "code": {
       "type": "String",
       "multiple": false,
       "ref": false
     },
-    "res_description": {
+    "description": {
       "type": "String",
       "multiple": false,
       "ref": false
     },
-    "res_name": {
+    "duration": {
+      "type": "Number",
+      "multiple": false,
+      "ref": false
+    },
+    "name": {
       "type": "String",
       "multiple": false,
       "ref": false
     },
-    "res_type": {
+    "origin": {
+      "type": "resource",
+      "multiple": false,
+      "ref": true
+    },
+    "short_name": {
       "type": "String",
       "multiple": false,
       "ref": false
     },
-    "res_url": {
+    "spent_time": {
+      "type": "Number",
+      "multiple": false,
+      "ref": false
+    },
+    "type": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "url": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "origin.code": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "origin.description": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "origin.duration": {
+      "type": "Number",
+      "multiple": false,
+      "ref": false
+    },
+    "origin.name": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "origin.origin": {
+      "type": "resource",
+      "multiple": false,
+      "ref": true
+    },
+    "origin.short_name": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "origin.spent_time": {
+      "type": "Number",
+      "multiple": false,
+      "ref": false
+    },
+    "origin.type": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "origin.url": {
       "type": "String",
       "multiple": false,
       "ref": false
@@ -64,13 +179,13 @@
       "multiple": false,
       "ref": false
     },
-    "end": {
-      "type": "Date",
+    "description": {
+      "type": "String",
       "multiple": false,
       "ref": false
     },
-    "end_str": {
-      "type": "String",
+    "end": {
+      "type": "Date",
       "multiple": false,
       "ref": false
     },
@@ -84,20 +199,40 @@
       "multiple": false,
       "ref": false
     },
+    "origin": {
+      "type": "resource",
+      "multiple": false,
+      "ref": true
+    },
     "program": {
       "type": "program",
       "multiple": false,
       "ref": true
+    },
+    "spent_time": {
+      "type": "Number",
+      "multiple": false,
+      "ref": false
     },
     "start": {
       "type": "Date",
       "multiple": false,
       "ref": false
     },
-    "start_str": {
+    "status": {
       "type": "String",
       "multiple": false,
       "ref": false
+    },
+    "themes": {
+      "type": "theme",
+      "multiple": true,
+      "ref": true
+    },
+    "trainee": {
+      "type": "user",
+      "multiple": true,
+      "ref": true
     },
     "trainees": {
       "type": "user",
@@ -129,6 +264,51 @@
       "multiple": false,
       "ref": false
     },
+    "origin.code": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "origin.description": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "origin.duration": {
+      "type": "Number",
+      "multiple": false,
+      "ref": false
+    },
+    "origin.name": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "origin.origin": {
+      "type": "resource",
+      "multiple": false,
+      "ref": true
+    },
+    "origin.short_name": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "origin.spent_time": {
+      "type": "Number",
+      "multiple": false,
+      "ref": false
+    },
+    "origin.type": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "origin.url": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
     "program.code": {
       "type": "String",
       "multiple": false,
@@ -139,6 +319,11 @@
       "multiple": false,
       "ref": false
     },
+    "program.designer": {
+      "type": "user",
+      "multiple": false,
+      "ref": true
+    },
     "program.duration": {
       "type": "Number",
       "multiple": false,
@@ -146,6 +331,21 @@
     },
     "program.name": {
       "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "program.ordered": {
+      "type": "Boolean",
+      "multiple": false,
+      "ref": false
+    },
+    "program.picture": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "program.published": {
+      "type": "Boolean",
       "multiple": false,
       "ref": false
     },
@@ -163,10 +363,30 @@
       "multiple": false,
       "ref": false
     },
+    "description": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "hidden": {
+      "type": "Boolean",
+      "multiple": false,
+      "ref": false
+    },
     "name": {
       "type": "String",
       "multiple": false,
       "ref": false
+    },
+    "ordered": {
+      "type": "Boolean",
+      "multiple": false,
+      "ref": false
+    },
+    "origin": {
+      "type": "resource",
+      "multiple": false,
+      "ref": true
     },
     "picture": {
       "type": "String",
@@ -177,107 +397,53 @@
       "type": "resource",
       "multiple": true,
       "ref": true
-    }
-  }
-}, {
-  "name": "traineeSession",
-  "attributes": {
-    "score": {
-      "type": "Number",
-      "multiple": false,
-      "ref": false
-    },
-    "session": {
-      "type": "session",
-      "multiple": false,
-      "ref": true
     },
     "spent_time": {
       "type": "Number",
       "multiple": false,
       "ref": false
     },
-    "trainee": {
-      "type": "user",
-      "multiple": false,
-      "ref": true
-    },
-    "session.code": {
+    "origin.code": {
       "type": "String",
       "multiple": false,
       "ref": false
     },
-    "session.end": {
-      "type": "Date",
-      "multiple": false,
-      "ref": false
-    },
-    "session.end_str": {
+    "origin.description": {
       "type": "String",
       "multiple": false,
       "ref": false
     },
-    "session.location": {
-      "type": "trainingCenter",
-      "multiple": false,
-      "ref": true
-    },
-    "session.name": {
-      "type": "String",
-      "multiple": false,
-      "ref": false
-    },
-    "session.program": {
-      "type": "program",
-      "multiple": false,
-      "ref": true
-    },
-    "session.start": {
-      "type": "Date",
-      "multiple": false,
-      "ref": false
-    },
-    "session.start_str": {
-      "type": "String",
-      "multiple": false,
-      "ref": false
-    },
-    "session.trainees": {
-      "type": "user",
-      "multiple": true,
-      "ref": true
-    },
-    "session.trainees_count": {
+    "origin.duration": {
       "type": "Number",
       "multiple": false,
       "ref": false
     },
-    "session.trainers": {
-      "type": "user",
-      "multiple": true,
+    "origin.name": {
+      "type": "String",
+      "multiple": false,
+      "ref": false
+    },
+    "origin.origin": {
+      "type": "resource",
+      "multiple": false,
       "ref": true
     },
-    "trainee.email": {
+    "origin.short_name": {
       "type": "String",
       "multiple": false,
       "ref": false
     },
-    "trainee.firstname": {
+    "origin.spent_time": {
+      "type": "Number",
+      "multiple": false,
+      "ref": false
+    },
+    "origin.type": {
       "type": "String",
       "multiple": false,
       "ref": false
     },
-    "trainee.name": {
-      "type": "String",
-      "multiple": false,
-      "ref": false
-    },
-    "trainee.password": {
-      "type": "String",
-      "multiple": false,
-      "ref": false
-    },
-    "trainee.role": {
+    "origin.url": {
       "type": "String",
       "multiple": false,
       "ref": false
@@ -329,6 +495,11 @@
       "type": "String",
       "multiple": false,
       "ref": false
+    },
+    "sessions": {
+      "type": "traineeSession",
+      "multiple": true,
+      "ref": true
     }
   }
 }]

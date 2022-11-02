@@ -1,44 +1,59 @@
-import { CONTAINER_TYPE } from './dataSources';
+import { CONTAINER_TYPE } from './dataSources'
 
 import lodash from 'lodash'
-const projectSchema=require('./projectSchema.json')
+const projectSchema = require('./projectSchema.json')
 var Validator = require('jsonschema').Validator
 
-const checkEmptyDataAttribute = (comp: IComponent, icomponents: IComponents) => {
-  if (!CONTAINER_TYPE.includes(comp.type)
-  && comp.props.dataSource
-  && !comp.props.attribute) {
+const checkEmptyDataAttribute = (
+  comp: IComponent,
+  icomponents: IComponents,
+) => {
+  if (
+    !CONTAINER_TYPE.includes(comp.type) &&
+    comp.props.dataSource &&
+    !comp.props.attribute
+  ) {
     throw new Error(`Datasource attribute is not set`)
   }
 }
 
 const checkEmptyDataProvider = (comp: IComponent, icomponents: IComponents) => {
-  if (comp.type == 'DataProvider') {
+  if (comp.type === 'DataProvider') {
     if (!comp.props?.model) {
       throw new Error(`DataProvider has no model`)
     }
   }
 }
 
-const checkDispatcherManyChildren = (comp: IComponent, icomponents: IComponents) => {
-  const parent=icomponents[comp.parent]
-  if (CONTAINER_TYPE.includes(parent.type)
-  && parent.props.dataSource
-  && parent.children.slice(1).includes(comp.id)) {
-      throw new Error(`Extra child ${comp.type} of dynamic ${parent.type} will not appear at runtime`)
-    }
+const checkDispatcherManyChildren = (
+  comp: IComponent,
+  icomponents: IComponents,
+) => {
+  const parent = icomponents[comp.parent]
+  if (
+    CONTAINER_TYPE.includes(parent.type) &&
+    parent.props.dataSource &&
+    parent.children.slice(1).includes(comp.id)
+  ) {
+    throw new Error(
+      `Extra child ${comp.type} of dynamic ${parent.type} will not appear at runtime`,
+    )
+  }
 }
 
 const checkEmptyIcons = (comp: IComponent, icomponents: IComponents) => {
   const ICON_PROPS = ['leftIcon', 'rightIcon', 'icon']
-  return ICON_PROPS.map(i => {
-    if (comp?.props?.[i] == 'Icon') {
+  ICON_PROPS.forEach(i => {
+    if (comp?.props?.[i] === 'Icon') {
       throw new Error(`Icon ${comp.id} is not defined`)
     }
   })
 }
 
-const checkAvailableDataProvider = (comp: IComponent, icomponents: IComponents) => {
+const checkAvailableDataProvider = (
+  comp: IComponent,
+  icomponents: IComponents,
+) => {
   if (!comp.props?.dataSource) {
     return
   }
@@ -47,60 +62,74 @@ const checkAvailableDataProvider = (comp: IComponent, icomponents: IComponents) 
   }
 }
 
-const checkUnlinkedDataProvider = (comp: IComponent, icomponents: IComponents) => {
+const checkUnlinkedDataProvider = (
+  comp: IComponent,
+  icomponents: IComponents,
+) => {
   if (!comp.props?.dataSource) {
     return
   }
-  const dp=icomponents[comp.props.dataSource]
+  const dp = icomponents[comp.props.dataSource]
   if (!dp.props.model) {
     throw new Error(`DataSource '${comp.props.dataSource}' has no model`)
   }
 }
 
-export const validateComponent= (component: IComponent, components: IComponents):IWarning[] => {
-  const warnings=lodash([checkEmptyDataProvider, checkAvailableDataProvider,
-    checkEmptyIcons, checkDispatcherManyChildren, checkEmptyDataAttribute,
-    checkUnlinkedDataProvider])
-      .map(v => {
-        try {
-          v(component, components)
-        }
-        catch(err) {
-          return ({component, message: err.message})
-        }
+export const validateComponent = (
+  component: IComponent,
+  components: IComponents,
+): IWarning[] => {
+  const warnings = lodash([
+    checkEmptyDataProvider,
+    checkAvailableDataProvider,
+    checkEmptyIcons,
+    checkDispatcherManyChildren,
+    checkEmptyDataAttribute,
+    checkUnlinkedDataProvider,
+  ])
+    .map(v => {
+      try {
+        v(component, components)
+        return null
+      } catch (err) {
+        return { component, message: err.message }
       }
-    )
+    })
     .flatten()
     .filter(w => !!w)
     .value()
   return warnings
 }
 
-export const validate = (icomponents: IComponents):IWarning[] => {
+export const validate = (icomponents: IComponents): IWarning[] => {
   const components = Object.values(icomponents)
-  const warnings=lodash([checkEmptyDataProvider, checkAvailableDataProvider,
-    checkEmptyIcons, checkDispatcherManyChildren, checkEmptyDataAttribute,
-    checkUnlinkedDataProvider])
+  const warnings = lodash([
+    checkEmptyDataProvider,
+    checkAvailableDataProvider,
+    checkEmptyIcons,
+    checkDispatcherManyChildren,
+    checkEmptyDataAttribute,
+    checkUnlinkedDataProvider,
+  ])
     .map(v => {
-      return components
-      .map(c => {
+      return components.map(c => {
         try {
           v(c, icomponents)
+          return null
+        } catch (err) {
+          return { component: c, message: err.message }
         }
-        catch(err) {
-          return ({component: c, message: err.message})
-        }
-      })}
-    )
+      })
+    })
     .flatten()
     .filter(c => !!c)
     .value()
-    return warnings
+  return warnings
 }
 
 export const validateJSON = (jsonObject: object) => {
   const validator = new Validator()
-  const validationResult= validator.validate(jsonObject, projectSchema)
+  const validationResult = validator.validate(jsonObject, projectSchema)
   if (!validationResult.valid) {
     throw new Error(validationResult.errors)
   }

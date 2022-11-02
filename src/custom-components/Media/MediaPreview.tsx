@@ -2,7 +2,7 @@ import React from 'react'
 import { useDropComponent } from '~hooks/useDropComponent'
 import { useInteractive } from '~hooks/useInteractive'
 import { Box } from '@chakra-ui/react'
-import Media from './Media'
+import Media from '~dependencies/custom-components/Media'
 
 const MediaPreview: React.FC<IPreviewProps> = ({ component }) => {
   

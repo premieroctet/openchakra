@@ -5,7 +5,7 @@ export const getModelNames = (state: RootState) => {
 }
 
 export const getModelAttributes = (modelName: string) => (state: RootState) => {
-  const attrs = state.dataSources.models.find(i => i.name == modelName)
+  const attrs = state.dataSources.models.find(i => i.name === modelName)
     ?.attributes
   return attrs
 }

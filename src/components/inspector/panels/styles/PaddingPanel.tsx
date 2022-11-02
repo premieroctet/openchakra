@@ -14,8 +14,7 @@ import {
   ArrowUpIcon,
   ChevronDownIcon,
 } from '@chakra-ui/icons'
-import { useForm } from '~hooks/useForm'
-import usePropsSelector from '~hooks/usePropsSelector'
+import useBreakpoints from '~hooks/useBreakpoints'
 
 type PaddingPanelPropsType = {
   type: 'margin' | 'padding'
@@ -39,101 +38,160 @@ const ATTRIBUTES = {
 }
 
 const PaddingPanel = ({ type }: PaddingPanelPropsType) => {
-  const { setValueFromEvent } = useForm()
-
-  const all = usePropsSelector(ATTRIBUTES[type].all)
-  const left = usePropsSelector(ATTRIBUTES[type].left)
-  const right = usePropsSelector(ATTRIBUTES[type].right)
-  const bottom = usePropsSelector(ATTRIBUTES[type].bottom)
-  const top = usePropsSelector(ATTRIBUTES[type].top)
+  const {
+    responsiveValues,
+    settledBreakpoints,
+    handleBreakpoints,
+    AddABreakpoint,
+  } = useBreakpoints([
+    ATTRIBUTES[type].all,
+    ATTRIBUTES[type].left,
+    ATTRIBUTES[type].right,
+    ATTRIBUTES[type].bottom,
+    ATTRIBUTES[type].top,
+  ])
 
   return (
     <Box mb={4}>
-      <FormControl>
-        <FormLabel fontSize="xs" htmlFor="width" textTransform="capitalize">
-          {type}
-        </FormLabel>
+      {settledBreakpoints.map((breakpoint: string, i: number) => (
+        <Box key={i}>
+          <FormControl>
+            <FormLabel
+              fontSize="xs"
+              htmlFor={`${ATTRIBUTES[type].all}-${breakpoint}`}
+              textTransform="capitalize"
+            >
+              {type}
+            </FormLabel>
+            {breakpoint}
 
-        <InputGroup size="sm">
-          <Input
-            mb={1}
-            placeholder="All"
-            size="sm"
-            type="text"
-            name={ATTRIBUTES[type].all}
-            value={all || ''}
-            onChange={setValueFromEvent}
-          />
-        </InputGroup>
+            <InputGroup size="sm">
+              <Input
+                id={`${ATTRIBUTES[type].all}-${breakpoint}`}
+                mb={1}
+                placeholder="All"
+                size="sm"
+                type="text"
+                name={`${breakpoint}-${ATTRIBUTES[type].all}`}
+                value={
+                  responsiveValues[ATTRIBUTES[type].all]?.[breakpoint] || ''
+                }
+                onChange={e =>
+                  handleBreakpoints(
+                    ATTRIBUTES[type].all,
+                    breakpoint,
+                    e.currentTarget.value,
+                  )
+                }
+              />
+            </InputGroup>
 
-        <SimpleGrid columns={2} spacing={1}>
-          <InputGroup size="sm">
-            <InputLeftElement
-              children={
-                <ArrowBackIcon path="" fontSize="md" color="gray.300" />
-              }
-            />
-            <Input
-              placeholder="left"
-              size="sm"
-              type="text"
-              name={ATTRIBUTES[type].left}
-              value={left || ''}
-              onChange={setValueFromEvent}
-              autoComplete="off"
-            />
-          </InputGroup>
+            <SimpleGrid columns={2} spacing={1}>
+              <InputGroup size="sm">
+                <InputLeftElement
+                  children={
+                    <ArrowBackIcon path="" fontSize="md" color="gray.300" />
+                  }
+                />
+                <Input
+                  placeholder="left"
+                  size="sm"
+                  type="text"
+                  name={`${breakpoint}-${ATTRIBUTES[type].left}`}
+                  value={
+                    responsiveValues[ATTRIBUTES[type].left]?.[breakpoint] || ''
+                  }
+                  onChange={e =>
+                    handleBreakpoints(
+                      ATTRIBUTES[type].left,
+                      breakpoint,
+                      e.currentTarget.value,
+                    )
+                  }
+                  autoComplete="off"
+                />
+              </InputGroup>
 
-          <InputGroup size="sm">
-            <InputLeftElement
-              children={
-                <ArrowForwardIcon path="" fontSize="md" color="gray.300" />
-              }
-            />
-            <Input
-              placeholder="right"
-              size="sm"
-              type="text"
-              value={right || ''}
-              name={ATTRIBUTES[type].right}
-              onChange={setValueFromEvent}
-              autoComplete="off"
-            />
-          </InputGroup>
+              <InputGroup size="sm">
+                <InputLeftElement
+                  children={
+                    <ArrowForwardIcon path="" fontSize="md" color="gray.300" />
+                  }
+                />
+                <Input
+                  placeholder="right"
+                  size="sm"
+                  type="text"
+                  name={`${breakpoint}-${ATTRIBUTES[type].right}`}
+                  value={
+                    responsiveValues[ATTRIBUTES[type].right]?.[breakpoint] || ''
+                  }
+                  onChange={e =>
+                    handleBreakpoints(
+                      ATTRIBUTES[type].right,
+                      breakpoint,
+                      e.currentTarget.value,
+                    )
+                  }
+                  autoComplete="off"
+                />
+              </InputGroup>
 
-          <InputGroup size="sm">
-            <InputLeftElement
-              children={<ArrowUpIcon path="" fontSize="md" color="gray.300" />}
-            />
-            <Input
-              placeholder="top"
-              size="sm"
-              type="text"
-              value={top || ''}
-              name={ATTRIBUTES[type].top}
-              onChange={setValueFromEvent}
-              autoComplete="off"
-            />
-          </InputGroup>
+              <InputGroup size="sm">
+                <InputLeftElement
+                  children={
+                    <ArrowUpIcon path="" fontSize="md" color="gray.300" />
+                  }
+                />
+                <Input
+                  placeholder="top"
+                  size="sm"
+                  type="text"
+                  name={`${breakpoint}-${ATTRIBUTES[type].top}`}
+                  value={
+                    responsiveValues[ATTRIBUTES[type].top]?.[breakpoint] || ''
+                  }
+                  onChange={e =>
+                    handleBreakpoints(
+                      ATTRIBUTES[type].top,
+                      breakpoint,
+                      e.currentTarget.value,
+                    )
+                  }
+                  autoComplete="off"
+                />
+              </InputGroup>
 
-          <InputGroup size="sm">
-            <InputLeftElement
-              children={
-                <ChevronDownIcon path="" fontSize="md" color="gray.300" />
-              }
-            />
-            <Input
-              placeholder="bottom"
-              size="sm"
-              type="text"
-              value={bottom || ''}
-              name={ATTRIBUTES[type].bottom}
-              onChange={setValueFromEvent}
-              autoComplete="off"
-            />
-          </InputGroup>
-        </SimpleGrid>
-      </FormControl>
+              <InputGroup size="sm">
+                <InputLeftElement
+                  children={
+                    <ChevronDownIcon path="" fontSize="md" color="gray.300" />
+                  }
+                />
+                <Input
+                  placeholder="bottom"
+                  size="sm"
+                  type="text"
+                  name={`${breakpoint}-${ATTRIBUTES[type].bottom}`}
+                  value={
+                    responsiveValues[ATTRIBUTES[type].bottom]?.[breakpoint] ||
+                    ''
+                  }
+                  onChange={e =>
+                    handleBreakpoints(
+                      ATTRIBUTES[type].bottom,
+                      breakpoint,
+                      e.currentTarget.value,
+                    )
+                  }
+                  autoComplete="off"
+                />
+              </InputGroup>
+            </SimpleGrid>
+          </FormControl>
+        </Box>
+      ))}
+      <AddABreakpoint currentProps={responsiveValues} text={type} />
     </Box>
   )
 }

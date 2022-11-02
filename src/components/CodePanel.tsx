@@ -4,8 +4,12 @@ import { Box, Button, useClipboard } from '@chakra-ui/react'
 import { generateCode } from '~utils/code'
 import theme from 'prism-react-renderer/themes/nightOwl'
 import { useSelector } from 'react-redux'
-import { getComponents, getActivePageId, getPages} from '~core/selectors/components'
-import {getModels} from '~core/selectors/dataSources'
+import {
+  getComponents,
+  getActivePageId,
+  getPages,
+} from '~core/selectors/components'
+import { getModels } from '~core/selectors/dataSources'
 
 const CodePanel = () => {
   const components = useSelector(getComponents)
@@ -14,7 +18,6 @@ const CodePanel = () => {
   const [code, setCode] = useState<string | undefined>(undefined)
   const models = useSelector(getModels)
 
-
   useEffect(() => {
     const getCode = async () => {
       const code = await generateCode(pageId, pages, models)
@@ -22,7 +25,7 @@ const CodePanel = () => {
     }
 
     getCode()
-  }, [components, pageId, pages])
+  }, [components, models, pageId, pages])
 
   const { onCopy, hasCopied } = useClipboard(code!)
 

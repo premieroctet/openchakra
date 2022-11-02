@@ -1,5 +1,8 @@
 import React, { useState, memo, useEffect, useMemo } from 'react'
-import styled from 'styled-components'
+import { CheckIcon, CopyIcon, EditIcon, WarningIcon } from '@chakra-ui/icons';
+import { FiTrash2 } from 'react-icons/fi'
+import { GoRepo, GoCode } from 'react-icons/go'
+import { IoMdRefresh } from 'react-icons/io'
 import {
   Link,
   Box,
@@ -22,11 +25,9 @@ import {
   Tooltip,
   Flex,
 } from '@chakra-ui/react';
-import { CheckIcon, CopyIcon, EditIcon, WarningIcon } from '@chakra-ui/icons';
-import { FiTrash2 } from 'react-icons/fi'
-import { GoRepo, GoCode } from 'react-icons/go'
-import { IoMdRefresh } from 'react-icons/io'
 import { useSelector } from 'react-redux'
+import styled from '@emotion/styled'
+
 import { componentsList } from '~componentsList'
 import { generateComponentCode, formatCode } from '~utils/code'
 import {
@@ -44,8 +45,11 @@ import useDispatch from '~hooks/useDispatch'
 
 import {
   getComponentWarnings,
-  getWarnings
+  getPages,
 } from '../../core/selectors/components';
+import {
+  getModels,
+} from '../../core/selectors/dataSources';
 import ActionButton from './ActionButton'
 
 const CodeActionButton = memo(() => {
@@ -54,6 +58,8 @@ const CodeActionButton = memo(() => {
 
   const selectedId = useSelector(getSelectedComponentId)
   const components = useSelector(getComponents)
+  const pages = useSelector(getPages)
+  const models = useSelector(getModels)
 
   const parentId = components[selectedId].parent
   const parent = { ...components[parentId] }
@@ -72,6 +78,8 @@ const CodeActionButton = memo(() => {
           components,
           componentName: components[selectedId].componentName,
           forceBuildBlock: true,
+          pages,
+          models
         })
         onCopy(await formatCode(code))
         setIsLoading(false)
@@ -89,7 +97,6 @@ const Inspector = () => {
   const [componentName, onChangeComponentName] = useState('')
   const componentsNames = useSelector(getComponentNames)
   const warnings = useSelector(getComponentWarnings(component))
-  const [warningMessages, setWarningMessages] = useState([])
 
   const { clearActiveProps } = useInspectorUpdate()
 
@@ -123,12 +130,6 @@ const Inspector = () => {
     clearActiveProps()
   }, [clearActiveProps])
 
-  useEffect(() => {
-    const msg=warnings
-      .map(w => w.message)
-    setWarningMessages(msg)
-  }, [component])
-
   return (
     //@ts-ignore
     <RightPanel show={showRightPanel}>
@@ -147,8 +148,8 @@ const Inspector = () => {
         >
           <Flex justifyContent="space-between">
           {isRoot ? 'Document' : type}<br/>{component.id}
-          {warningMessages.length>0 ?
-            <Tooltip label={<Box>{warningMessages.map(m => <p>{m}</p>)}</Box>}>
+          {warnings.length>0 ?
+            <Tooltip label={<Box>{warnings.map(w => <p>{w.message}</p>)}</Box>}>
               <WarningIcon color='red.500' />
             </Tooltip>:null
           }

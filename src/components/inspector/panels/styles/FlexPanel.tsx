@@ -1,24 +1,26 @@
 import React, { memo } from 'react'
 import { Select } from '@chakra-ui/react'
 import FormControl from '~components/inspector/controls/FormControl'
-import { useForm } from '~hooks/useForm'
-import usePropsSelector from '~hooks/usePropsSelector'
+import useBreakpoints from '~hooks/useBreakpoints'
 
-const FlexPanel = () => {
-  const { setValueFromEvent } = useForm()
-
-  const alignItems = usePropsSelector('alignItems')
-  const flexDirection = usePropsSelector('flexDirection')
-  const justifyContent = usePropsSelector('justifyContent')
+const FlexPanel = ({ bkpt = 'base' }: { bkpt: string }) => {
+  const { responsiveValues, handleBreakpoints } = useBreakpoints([
+    'alignItems',
+    'flexDirection',
+    'justifyContent',
+  ])
+  const { alignItems, flexDirection, justifyContent } = responsiveValues
 
   return (
     <>
       <FormControl label="Direction">
         <Select
-          name="flexDirection"
+          name={`${bkpt}-flexDirection`}
           size="sm"
-          value={flexDirection}
-          onChange={setValueFromEvent}
+          value={flexDirection?.[bkpt] || ''}
+          onChange={e =>
+            handleBreakpoints('flexDirection', bkpt, e.currentTarget.value)
+          }
         >
           <option>row</option>
           <option>row-reverse</option>
@@ -29,10 +31,12 @@ const FlexPanel = () => {
 
       <FormControl label="Justify content">
         <Select
-          name="justifyContent"
+          name={`${bkpt}-justifyContent`}
           size="sm"
-          value={justifyContent}
-          onChange={setValueFromEvent}
+          value={justifyContent?.[bkpt] || ''}
+          onChange={e =>
+            handleBreakpoints('justifyContent', bkpt, e.currentTarget.value)
+          }
         >
           <option>flex-start</option>
           <option>center</option>
@@ -44,10 +48,12 @@ const FlexPanel = () => {
 
       <FormControl label="Align items">
         <Select
-          name="alignItems"
+          name={`${bkpt}-alignItems`}
           size="sm"
-          value={alignItems || ''}
-          onChange={setValueFromEvent}
+          value={alignItems?.[bkpt] || ''}
+          onChange={e =>
+            handleBreakpoints('alignItems', bkpt, e.currentTarget.value)
+          }
         >
           <option>stretch</option>
           <option>flex-start</option>

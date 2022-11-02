@@ -1,12 +1,13 @@
 import React, {useState} from 'react'
-import styled from 'styled-components'
-import { useToast } from '@chakra-ui/react'
 import { useSelector } from 'react-redux'
+import { useToast } from '@chakra-ui/react'
+import styled from '@emotion/styled'
+import { ProjectState } from '~core/models/project'
 import { getFullComponents } from '~core/selectors/components'
 import { deploy } from '../../utils/deploy'
-import { ProjectState } from '~core/models/project'
+import { getModels } from '../../core/selectors/dataSources';
 
-const deployComponents = (state: ProjectState, toast: any) => {
+const deployComponents = (state: ProjectState, models: any, toast: any) => {
   toast({
     title: 'Starting publishing',
     status: 'success',
@@ -14,7 +15,7 @@ const deployComponents = (state: ProjectState, toast: any) => {
     duration: 2000,
     isClosable: true,
   })
-  return deploy(state)
+  return deploy(state, models)
     .then(() => {
       toast({
         title: 'Published on production',
@@ -25,6 +26,7 @@ const deployComponents = (state: ProjectState, toast: any) => {
       })
     })
     .catch(err => {
+      console.error(err)
       toast({
         title: 'Error while publishing',
         description: String(err),
@@ -40,11 +42,13 @@ const Deploy = () => {
   const toast = useToast()
   const state = useSelector(getFullComponents)
   const [deploying, setIsDeploying]=useState(false)
+  const models = useSelector(getModels)
+
   return (
     <DeployButton
       onClick={() => {
         setIsDeploying(true)
-        deployComponents(state, toast)
+        deployComponents(state, models, toast)
           .finally(() => setIsDeploying(false))
       }}
       disabled={deploying}

@@ -4,10 +4,8 @@ import { DndProvider } from 'react-dnd'
 import Backend from 'react-dnd-html5-backend'
 import { Global } from '@emotion/react'
 import { useSelector } from 'react-redux'
-import Metadata from '~custom-components/Metadata'
+import Metadata from '~dependencies/Metadata'
 import useShortcuts from '~hooks/useShortcuts'
-// import Header from '~components/Header'
-// import Sidebar from '~components/sidebar/Sidebar'
 import EditorErrorBoundary from '~components/errorBoundaries/EditorErrorBoundary'
 import Editor from '~components/editor/Editor'
 import { InspectorProvider } from '~contexts/inspector-context'
@@ -15,7 +13,9 @@ import Inspector from '~components/inspector/Inspector'
 import Warnings from '~components/warnings/Warnings'
 import '~custom-components/Card/CardInit'
 import '~custom-components/Date/DateInit'
+import '~custom-components/UploadFile/UploadFileInit'
 import '~custom-components/Media/MediaInit'
+import '~custom-components/Timer/TimerInit'
 import '~custom-components/DataProvider/DataProviderInit'
 import Menu from '~components/sidebar/Menu'
 import MediasContainer from '~components/MediasContainer'
@@ -36,7 +36,6 @@ const App = () => {
         })}
       />
       <Metadata />
-      {/* <Header /> */}
       <DndProvider backend={Backend}>
         <Flex h="100vh">
           <Menu />

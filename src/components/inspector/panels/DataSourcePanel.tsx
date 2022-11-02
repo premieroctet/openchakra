@@ -17,20 +17,18 @@ import {getModels, getModelAttributes} from '~core/selectors/dataSources'
 
 
 const DataSourcePanel:React.FC = () => {
-  const components:IComponents = useSelector<IComponents>(getComponents)
-  const activeComponent:IComponent = useSelector<IComponent>(getSelectedComponent)
+  const components:IComponents = useSelector(getComponents)
+  const activeComponent:IComponent = useSelector(getSelectedComponent)
   const { setValueFromEvent } = useForm()
   const dataSource = usePropsSelector('dataSource')
   const attribute = usePropsSelector('attribute')
   const limit = usePropsSelector('limit')
   const [providers, setProviders] = useState<IComponent[]>([])
-  const provider = providers.find(p => p.id == dataSource)
   const [attributes, setAttributes] = useState([])
   const models = useSelector(getModels)
 
   useEffect(() => {
-    const dataProviders = getDataProviders(activeComponent, components)
-    setProviders(dataProviders)
+    setProviders(getDataProviders(activeComponent, components))
     if (models.length>0) {
       const attrs=getAvailableAttributes(activeComponent, components, models)
       setAttributes(attrs)
@@ -48,9 +46,9 @@ const DataSourcePanel:React.FC = () => {
           size="sm"
           value={dataSource || ''}
         >
-          <option value={null}></option>
-          {providers.map(provider => (
-            <option value={provider.id}>
+          <option value={undefined}></option>
+          {providers.map((provider, i) => (
+            <option key={`prov${i}`} value={provider.id}>
               {`${provider.id} (${provider.props?.model})`}
             </option>
           ))}
@@ -65,9 +63,9 @@ const DataSourcePanel:React.FC = () => {
             size="sm"
             value={attribute || ''}
           >
-            <option value={null}></option>
-            {Object.keys(attributes).map(attribute => (
-              <option value={attribute}>{attribute}</option>
+            <option value={undefined}></option>
+            {Object.keys(attributes).map((attribute, i) => (
+              <option key={`attr${i}`} value={attribute}>{attribute}</option>
             ))}
           </Select>
         </FormControl>

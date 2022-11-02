@@ -1,12 +1,14 @@
 import React from 'react'
 import { useDropComponent } from '~hooks/useDropComponent'
 import { useInteractive } from '~hooks/useInteractive'
-import { Text } from '@chakra-ui/react'
+import { Box, Text } from '@chakra-ui/react'
 
 const DatePreview: React.FC<IPreviewProps> = ({ component }) => {
   
-  const { drop, isOver } = useDropComponent(component.id)
+  const { drop, isOver } = useDropComponent(component.id, [])
   const { props, ref } = useInteractive(component, true)
+
+  let boxProps: any = {}
 
   if (isOver) {
     props.bg = 'teal.50'
@@ -20,7 +22,9 @@ const DatePreview: React.FC<IPreviewProps> = ({ component }) => {
   const dateToDisplay = dateTimeFormat.format(dateToConsider)
 
   return (
-    <Text as={'span'} {...props}>{dateToDisplay}</Text>
+    <Box as={'span'} pos="relative" ref={drop(ref)} {...boxProps}>
+      <Text as={'span'} {...props}>{dateToDisplay}</Text>
+    </Box>
   )
 }
 

@@ -40,7 +40,7 @@ export const getComponentBy = (nameOrId: string | IComponent['id']) => (
   state: RootState,
 ) => getActiveComponents(state)[nameOrId]
 
-export const getSelectedComponent = (state: RootState) => {
+export const getSelectedComponent = (state: RootState):IComponent => {
   return getActiveComponents(state)[getActivePage(state).selectedId]
 }
 
