@@ -1,5 +1,4 @@
 const moment = require('moment')
-const lodash=require('lodash')
 const PromiseSerial = require('promise-serial')
 const mongoose = require('mongoose')
 const bcrypt=require('bcryptjs')
@@ -39,9 +38,11 @@ let resssourceIdx=0
 let themeIdx=0
 
 const createResource = data => {
+  console.log(`Creation ressource ${data.resource_name}`)
   return Resource.findOneAndUpdate(
-    {url: data.resource_url, name: data.resource_name},
-    {$set: {url: data.resource_url, name: data.resource_name, code: `RES_${resssourceIdx}`, type: 'TP', short_name: data.resource_name}},
+    {name: data.resource_name},
+    {$set: {url: data.resource_url, name: data.resource_name, code: `RES_${resssourceIdx}`, type: 'TP',
+      short_name: data.resource_name}},
     {upsert: true, new: true})
 }
 
@@ -105,7 +106,7 @@ const createSession = (data, center) => {
 }
 
 const createTraineeSession = (session, trainee) => {
-  return cloneModel({data: session, forceData: {trainee: trainee, trainees: session.trainees, trainers: session.trainers}})
+  return cloneModel({data: session, withOrigin: true, forceData: {trainee: trainee, trainees: session.trainees, trainers: session.trainers}})
     .catch(err => { console.error(`${err}:${data}`) })
 }
 

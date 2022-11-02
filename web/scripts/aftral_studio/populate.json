@@ -77,8 +77,8 @@
 			"designer": "concepteur@my-alfred.io",
 			"description": "Description du programme 2",
 			"theme_name": "Juridique",
-			"resource_url": "S_17323_5A6 Replay du webinaire sur la prépaie.txt",
-			"resource_name": "https://my-alfred-data-test.s3.eu-west-3.amazonaws.com/pictures/S_17323_5A6+Replay+du+webinaire+sur+la+pr%C3%A9paie.txt"
+			"resource_name": "S_17323_5A6 Replay du webinaire sur la prépaie.txt",
+			"resource_url": "https://my-alfred-data-test.s3.eu-west-3.amazonaws.com/pictures/S_17323_5A6+Replay+du+webinaire+sur+la+pr%C3%A9paie.txt"
 		},
 		{
 			"code": "CFCP6",

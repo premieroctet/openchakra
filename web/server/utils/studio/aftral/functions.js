@@ -197,12 +197,14 @@ const filterDataUser = ({model, data, user}) => {
         return data
       })
   }
+  
   if (model=='theme') {
-    return Session.find()
-      .then(sessions => {
-        data=data.filter(d => !d.origin)
-        const sessionsThemes=lodash(sessions).map(t => t.themes).flatten().map(r => r._id.toString())
-        data=data.filter(d => !sessionsThemes.includes(d._id.toString()))
+    data=data.filter(d => !d.origin)
+    return Promise.all([Session.find(), Program.find()])
+      .then(parents => {
+        const themes=lodash(parents).flatten().map(t => t.themes).flatten().map(r => r._id.toString())
+        console.log(`themes:${themes}`)
+        data=data.filter(d => !themes.includes(d._id.toString()))
         return data
       })
   }
