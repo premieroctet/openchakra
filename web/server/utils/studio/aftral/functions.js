@@ -188,7 +188,7 @@ const filterDataUser = ({model, data, user}) => {
           : !d.trainee),
     )
   }
-  if (model=='resource' && user.role=='concepteur') {
+  if (model=='resource') {
     return Theme.find()
       .then(themes => {
         data=data.filter(d => !d.origin)
@@ -197,6 +197,17 @@ const filterDataUser = ({model, data, user}) => {
         return data
       })
   }
+  if (model=='theme') {
+    return Session.find()
+      .then(sessions => {
+        data=data.filter(d => !d.origin)
+        const sessionsThemes=lodash(sessions).map(t => t.themes).flatten().map(r => r._id.toString())
+        data=data.filter(d => !sessionsThemes.includes(d._id.toString()))
+        return data
+      })
+  }
+
+
   if (model=='message') {
     const userId=user._id.toString()
     data=data.filter(d => {
