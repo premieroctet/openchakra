@@ -1,5 +1,5 @@
 const {sendCookie} = require('../../config/passport')
-const {login, filterDataUser} = require('../../utils/studio/aftral/functions')
+const {login, filterDataUser, getContacts} = require('../../utils/studio/aftral/functions')
 const path=require('path')
 const jwt = require('jsonwebtoken')
 
@@ -8,9 +8,9 @@ const child_process = require('child_process')
 const mongoose=require('mongoose')
 const express = require('express')
 const lodash=require('lodash')
-const PRODUCTION_ROOT='/home/ec2-user/studio/'
+// const PRODUCTION_ROOT='/home/ec2-user/studio/'
 // const PRODUCTION_ROOT='/home/seb/workspace'
-//const PRODUCTION_ROOT='/Users/seb/workspace'
+const PRODUCTION_ROOT='/Users/seb/workspace'
 const passport = require('passport')
 const {HTTP_CODES, NotFoundError}=require('../../utils/errors')
 const {getModels} =require('../../utils/database')
@@ -113,7 +113,7 @@ router.post('/action', (req, res) => {
     return res.status(404).json(`Unkown action:${action}`)
   }
 
-  return actionFn(req.body)
+  return actionFn(req.body, req.user)
     .then(result => {
       return res.json(result)
     })
@@ -154,10 +154,20 @@ router.post('/:model', (req, res) => {
 })
 
 router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (req, res) => {
-  console.log(`USer is ${JSON.stringify(req.user)})`)
   const model=req.params.model
   let fields=req.query.fields?.split(',') || []
   const id=req.params.id
+
+  if (model=='contact') {
+    return getContacts(req.user, id)
+      .then(contacts => {
+        return res.json(contacts)
+      })
+      .catch(err => {
+        console.error(err)
+        res.status(err.status || HTTP_CODES.SYSTEM_ERROR).json(err.message || err)
+      })
+  }
 
   if (model=='session') {
     fields=lodash([...fields, 'trainers', 'trainees', 'trainee']).uniq().value()
@@ -166,7 +176,9 @@ router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (r
   const query=buildQuery(model, id, fields)
   query
     .then(data => {
-      data=filterDataUser({model, data, user: req.user})
+      return filterDataUser({model, data, user: req.user})
+    })
+    .then(data => {
       if (id && data.length==0) {
         throw new NotFoundError(`Can't find ${model}:${id}`)
       }

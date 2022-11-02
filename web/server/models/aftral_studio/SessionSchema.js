@@ -104,6 +104,10 @@ SessionSchema.pre(['save'], function() {
 })
 
 SessionSchema.virtual('spent_time').get(function() {
+  return `Session ${this.name}`
+})
+
+SessionSchema.virtual('spent_time').get(function() {
   return lodash.sum(this.themes.map(t => t.spent_time || 0))
 })
 
@@ -123,5 +127,9 @@ SessionSchema.methods.addChild = function(model, data) {
       }
     })
 }
+
+SessionSchema.virtual('contact_name').get(function() {
+  return `Session ${this.name}`
+})
 
 module.exports = SessionSchema

@@ -33,6 +33,8 @@ require('./models/Resource')
 require('./models/Session')
 require('./models/TrainingCenter')
 require('./models/User')
+require('./models/Contact')
+require('./models/Message')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 

@@ -21,7 +21,7 @@ const UserSchema = new Schema({
     type: String,
     required: true,
     default: 'invalid',
-    set: pass => bcrypt.hashSync(pass, 10)
+    set: pass => bcrypt.hashSync(pass, 10),
   },
   role: {
     type: String,
@@ -31,7 +31,11 @@ const UserSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'traineeSession',
     required: true,
-  }]
+  }],
 }, {toJSON: {virtuals: true, getters: true}})
+
+UserSchema.virtual('contact_name').get(function() {
+  return `${this.firstname} ${this.name} (${this.role})`
+})
 
 module.exports = UserSchema

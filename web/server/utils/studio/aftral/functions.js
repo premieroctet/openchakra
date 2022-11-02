@@ -187,7 +187,58 @@ const filterDataUser = ({model, data, user}) => {
           : !d.trainee),
     )
   }
+  if (model=='resource' && user.role=='concepteur') {
+    console.log('filter resources for concepteur')
+    return Theme.find()
+      .then(themes => {
+        data=data.filter(d => !d.origin)
+        const themesResources=lodash(themes).map(t => t.resources).flatten().map(r => r._id.toString())
+        data=data.filter(d => !themesResources.includes(d._id.toString()))
+        return data
+      })
+  }
+  if (model=='message') {
+    const userId=user._id.toString()
+    data=data.filter(d => {
+      const destIds=lodash(d)
+        .map(d => [d.sender._id, d.destinee_user?._id, d.destinee_session?.trainees, d.destinee_session?.trainers])
+        .flattenDeep()
+        .value()
+      return destIds.some(i => i?.toString()==userId)
+    })
+  }
   return data
+}
+
+const getContacts = (user, id) => {
+  return Session.find({origin: null, $or: [{trainees: user._id}, {trainers: user._id}]})
+    .populate('trainees')
+    .populate('trainers')
+    .then(sessions => {
+      let allContacts=lodash(sessions)
+        .map(s => [...s.trainers, ...s.trainees])
+        .flatten()
+        .uniqBy(user => user._id.toString())
+        .value()
+      allContacts=[...allContacts, ...lodash.uniqBy(sessions, s => s.contact_name)]
+      console.log(allContacts)
+      return allContacts.map(contact => ({_id: contact._id, name: contact.contact_name}))
+    })
+}
+
+const sendMessage = (sender, destinee, contents) => {
+  console.log(`Received $${sender}, ${destinee}, ${contents}`)
+  return getModel(destinee)
+    .then(model => {
+      let data={sender: sender._id, contents: contents}
+      if (model=='session') {
+        data.destinee_session=destinee
+      }
+      else if (model=='user') {
+        data.destinee_user=destinee
+      }
+      return Message.create({sender: sender._id, ...data})
+    })
 }
 
 module.exports={
@@ -200,4 +251,6 @@ module.exports={
   login,
   putAttribute,
   filterDataUser,
+  getContacts,
+  sendMessage,
 }

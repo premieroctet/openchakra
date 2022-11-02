@@ -9,6 +9,7 @@ const {
   getSession,
   login,
   putAttribute,
+  sendMessage,
 } = require('./aftral/functions')
 
 const ACTIONS={
@@ -67,6 +68,11 @@ const ACTIONS={
 
   session: ({id}) => {
     return getSession(id)
+  },
+
+  sendMessage: ({destinee, contents}, sender) => {
+    console.log(`Destinee:${destinee},contents:${contents},sender:${sender}`)
+    return sendMessage(sender, destinee, contents)
   },
 
 }
