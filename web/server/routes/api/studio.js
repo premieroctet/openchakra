@@ -8,9 +8,9 @@ const child_process = require('child_process')
 const mongoose=require('mongoose')
 const express = require('express')
 const lodash=require('lodash')
-// const PRODUCTION_ROOT='/home/ec2-user/studio/'
+const PRODUCTION_ROOT='/home/ec2-user/studio/'
 // const PRODUCTION_ROOT='/home/seb/workspace'
-const PRODUCTION_ROOT='/Users/seb/workspace'
+//const PRODUCTION_ROOT='/Users/seb/workspace'
 const passport = require('passport')
 const {HTTP_CODES, NotFoundError}=require('../../utils/errors')
 const {getModels} =require('../../utils/database')
@@ -180,7 +180,7 @@ router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (r
   const query=buildQuery(model, id, fields)
   query
     .then(data => {
-      return filterDataUser({model, data, user: req.user})
+      return id ? data : filterDataUser({model, data, user: req.user})
     })
     .then(data => {
       if (id && data.length==0) {
