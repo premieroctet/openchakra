@@ -4,6 +4,7 @@ type IActions = {
     options: {
       [key: string]: any
     }
+    next?: string[]
   }
 }
 export const ACTIONS: IActions = {

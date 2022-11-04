@@ -41,7 +41,11 @@ export const getPageUrl = (
   pages: { [key: string]: PageState },
 ) => {
   try {
-    return pages[pageId].pageName.toLowerCase().replace(/ /i, '-')
+    return pages?.[pageId]?.pageName
+      .toLowerCase()
+      .replace(/ /i, '-')
+      .normalize('NFD')
+      .replace(/\p{Diacritic}/gu, '')
   } catch (err) {
     console.error(`getPageUrl ${pageId}:${err}`)
     throw err
@@ -287,8 +291,9 @@ const buildBlock = ({
         propsContent += ` backend='/'`
       }
 
-      if (childComponent.props.page) {
-        const destPageUrl = getPageUrl(childComponent.props.page, pages)
+      if (childComponent.props.actionProps) {
+        const waitAMinute = JSON.parse(childComponent.props.actionProps)
+        const destPageUrl = getPageUrl(waitAMinute.page, pages)
         propsContent += ` pageName={'${destPageUrl}'} `
         propsContent += `onClick={() => window.location='/${destPageUrl}'}`
       }
