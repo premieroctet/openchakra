@@ -24,8 +24,9 @@ const VisibilityPanel: React.FC = () => {
   return (
     <FormControl htmlFor="hiddenRoles" label="Hidden for">
       <List>
-        {ROLES.map(role => (
+        {ROLES.map((role, i) => (
           <Checkbox
+            key={`vis${i}`}
             name={role}
             value={role}
             isChecked={hiddenRoles.includes(role)}
