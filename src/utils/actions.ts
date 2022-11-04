@@ -83,6 +83,15 @@ export const ACTIONS: IActions = {
         components.map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
     },
   },
+  sendMessage: {
+    label: 'Send Message',
+    options: {
+      destinee: ({ components }) =>
+        components.map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      contents: ({ components }) =>
+        components.map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+    },
+  },
 }
 
 export const allowsActions = (component: IComponent) => {

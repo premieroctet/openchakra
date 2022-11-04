@@ -53,7 +53,7 @@
     "webpack-bundle-analyzer": "^3.6.0"
   },
   "scripts": {
-    "dev": "HTTPS=true next dev",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "test": "jest",
