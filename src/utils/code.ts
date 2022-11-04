@@ -292,10 +292,14 @@ const buildBlock = ({
       }
 
       if (childComponent.props.actionProps) {
-        const waitAMinute = JSON.parse(childComponent.props.actionProps)
-        const destPageUrl = getPageUrl(waitAMinute.page, pages)
-        propsContent += ` pageName={'${destPageUrl}'} `
-        propsContent += `onClick={() => window.location='/${destPageUrl}'}`
+        const { page } = isJsonString(childComponent.props.actionProps)
+          ? JSON.parse(childComponent.props.actionProps)
+          : childComponent.props.actionProps
+        if (page) {
+          const destPageUrl = getPageUrl(page, pages)
+          propsContent += ` pageName={'${destPageUrl}'} `
+          propsContent += `onClick={() => window.location='/${destPageUrl}'}`
+        }
       }
 
       if (
