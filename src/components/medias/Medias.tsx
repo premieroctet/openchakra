@@ -269,7 +269,7 @@ const MediaSearch = styled.input`
 const MediaGrid = styled.div`
   --grid-space: 2rem;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   column-gap: var(--grid-space);
   row-gap: var(--grid-space);
   padding: 2rem;
@@ -284,6 +284,15 @@ const MediaCard = styled.div`
   row-gap: 1rem;
   border-radius: 2rem;
   box-shadow: 0px 10px 5px rgba(199, 199, 199, 0.9);
+
+  iframe {
+    width: 100%;
+  }
+
+  p {
+    word-break: break-all;
+    font-size: 0.8em;
+  }
 
   .closeButton {
     display: flex;
