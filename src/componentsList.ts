@@ -46,7 +46,12 @@ export const menuItems: MenuItems = {
   },
   Button: {},
   Center: {},
-  Conditional: {},
+  Conditional: {
+    children: {
+      TrueBox: {},
+      FalseBox: {},
+    },
+  },
   Container: {},
   Checkbox: {},
   CircularProgress: {},
@@ -231,4 +236,6 @@ export const componentsList: ComponentType[] = [
   'Tag',
   'Text',
   'Textarea',
+  'TrueBox',
+  'FalseBox',
 ]

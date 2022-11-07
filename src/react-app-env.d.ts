@@ -89,6 +89,8 @@ type ComponentType =
   | 'Td'
   | 'TableCaption'
   | 'TableContainer'
+  | 'TrueBox'
+  | 'FalseBox'
   | string
 
 type MetaComponentType =
@@ -102,6 +104,7 @@ type MetaComponentType =
   | 'StatMeta'
   | 'TableMeta'
   | 'TableRowMeta'
+  | 'ConditionalMeta'
 
 interface ParametersType {
   name: string

@@ -101,6 +101,22 @@ export const buildBreadcrumb = (parent: string): ComposedComponent => {
   }
 }
 
+export const buildConditional = (parent: string): ComposedComponent => {
+  const composer = new Composer()
+
+  const nodeId = composer.addNode({ type: 'Box', parent })
+  composer.addNode({ type: 'TrueBox', parent: nodeId })
+  composer.addNode({ type: 'FalseBox', parent: nodeId })
+
+  const components = composer.getComponents()
+
+  return {
+    components,
+    root: nodeId,
+    parent,
+  }
+}
+
 export const buildFormControl = (parent: string): ComposedComponent => {
   const composer = new Composer()
 
@@ -281,6 +297,7 @@ const builders: ComposerBuilders = {
   StatMeta: buildStats,
   TableMeta: buildTable,
   TableRowMeta: buildTableRow,
+  ConditionalMeta: buildConditional,
 }
 
 export default builders

@@ -102,9 +102,12 @@ const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'StatMeta',
   'TableMeta',
   'TableRowMeta',
+  'ConditionalMeta',
   // Allow custom components
   'Conditional',
   'Loop',
+  'TrueBox',
+  'FalseBox',
 ]
 
 export const AccordionWhitelist: (
