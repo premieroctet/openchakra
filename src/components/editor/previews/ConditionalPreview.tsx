@@ -52,7 +52,7 @@ const ConditionalPreview: React.FC<IPreviewProps> = ({ component }) => {
   }
 
   return (
-    <Box pos="relative">
+    <Box pos="relative" {...props} ref={drop(ref)}>
       {props.show === 'show-both' || props.show === undefined ? (
         <>
           <ComponentPreview componentName={component.children[0]} />

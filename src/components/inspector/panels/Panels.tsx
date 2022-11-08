@@ -48,7 +48,6 @@ import AspectRatioPanel from '~components/inspector/panels/components/AspectRati
 import BreadcrumbPanel from '~components/inspector/panels/components/BreadcrumbPanel'
 import BreadcrumbItemPanel from '~components/inspector/panels/components/BreadcrumbItemPanel'
 import HighlightPanel from '~components/inspector/panels/components/HighlightPanel'
-import NoPanel from './components/NoPanel'
 import KbdPanel from './components/KbdPanel'
 import TabPanel from './components/TabPanel'
 import StatArrowPanel from './components/StatArrowPanel'
@@ -173,6 +172,8 @@ const Panels: React.FC<{
       {type === 'Th' && <TdPanel />}
       {type === 'Conditional' && <ConditionalPanel />}
       {type === 'Loop' && <LoopPanel />}
+      {type === 'TrueBox' && <BoxPanel />}
+      {type === 'FalseBox' && <BoxPanel />}
     </>
   )
 }
