@@ -429,19 +429,13 @@ export const generateCode = async (
           name =>
             name !== 'root' &&
             components[name].type !== 'Conditional' &&
+            components[name].type !== 'Loop' &&
+            components[name].type !== 'Box' &&
             !Object.keys(currentComponents).includes(components[name].type),
         )
         .map(name => components[name].type),
     ),
   ]
-
-  const loopIndex = imports.indexOf('Loop')
-  const boxIndex = imports.indexOf('Box')
-  if (loopIndex !== -1 && boxIndex === -1) {
-    imports[loopIndex] = 'Box'
-  } else if (loopIndex !== -1 && boxIndex !== -1) {
-    imports = imports.filter(imp => imp !== 'Loop')
-  }
 
   const customImports = [
     ...new Set(
@@ -466,6 +460,7 @@ export const generateCode = async (
   code = `import React, {RefObject} from 'react';
 import {
   ChakraProvider,
+  Box,
   ${imports.join(',')}
 } from "@chakra-ui/react";${
     iconImports.length
@@ -506,19 +501,13 @@ export const generateOcTsxCode = async (
           name =>
             name !== 'root' &&
             components[name].type !== 'Conditional' &&
+            components[name].type !== 'Loop' &&
+            components[name].type !== 'Box' &&
             !Object.keys(currentComponents).includes(components[name].type),
         )
         .map(name => components[name].type),
     ),
   ]
-
-  const loopIndex = imports.indexOf('Loop')
-  const boxIndex = imports.indexOf('Box')
-  if (loopIndex !== -1 && boxIndex === -1) {
-    imports[loopIndex] = 'Box'
-  } else if (loopIndex !== -1 && boxIndex !== -1) {
-    imports = imports.filter(imp => imp !== 'Loop')
-  }
 
   const customImports = [
     ...new Set(
@@ -543,6 +532,7 @@ export const generateOcTsxCode = async (
   code = `import React, {RefObject} from 'react';
 import {
   ChakraProvider,
+  Box,
   ${imports.join(',')}
 } from "@chakra-ui/react";${
     iconImports.length

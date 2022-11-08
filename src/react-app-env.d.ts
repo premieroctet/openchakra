@@ -102,6 +102,7 @@ type MetaComponentType =
   | 'StatMeta'
   | 'TableMeta'
   | 'TableRowMeta'
+  | 'ConditionalMeta'
 
 interface ParametersType {
   name: string

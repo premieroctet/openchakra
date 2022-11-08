@@ -46,7 +46,11 @@ export const menuItems: MenuItems = {
   },
   Button: {},
   Center: {},
-  Conditional: {},
+  Conditional: {
+    children: {
+      Box: {}
+    },
+  },
   Container: {},
   Checkbox: {},
   CircularProgress: {},
