@@ -104,7 +104,7 @@ export const buildBreadcrumb = (parent: string): ComposedComponent => {
 export const buildConditional = (parent: string): ComposedComponent => {
   const composer = new Composer()
 
-  const nodeId = composer.addNode({ type: 'Box', parent })
+  const nodeId = composer.addNode({ type: 'Conditional', parent })
   composer.addNode({ type: 'TrueBox', parent: nodeId })
   composer.addNode({ type: 'FalseBox', parent: nodeId })
 
