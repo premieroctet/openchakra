@@ -182,6 +182,10 @@ const buildSingleBlock = ({
       content += `<${componentName} ${propsContent}>${childComponent.props.children}</${componentName}>`
     } else if (childComponent.type === 'Icon') {
       content += `<${childComponent.props.icon} ${propsContent} />`
+    } else if (componentName === 'TrueBox' || componentName === 'FalseBox') {
+      content += `<Box ${propsContent}>
+    ${buildBlock({ component: childComponent, components, forceBuildBlock })}
+    </Box>`
     } else if (
       childComponent.children.length &&
       componentName !== 'Conditional' &&
@@ -203,17 +207,17 @@ const buildSingleBlock = ({
                 ? `${conditionalValue.slice(1, -1)}`
                 : `'${conditionalValue}'`
             }`
-      }? <>${buildSingleBlock({
+      }? ${buildSingleBlock({
         index: 0,
         component: childComponent,
         components,
         forceBuildBlock,
-      })}</>: <>${buildSingleBlock({
+      })}: ${buildSingleBlock({
         index: 1,
         component: childComponent,
         components,
         forceBuildBlock,
-      })}</>}`
+      })}}`
     } else if (componentName === 'Loop') {
       const loopValue = returnLoopValue(propsNames, childComponent)
       content += `{${
@@ -278,6 +282,10 @@ const buildBlock = ({
         content += `<${componentName} ${propsContent}>${childComponent.props.children}</${componentName}>`
       } else if (childComponent.type === 'Icon') {
         content += `<${childComponent.props.icon} ${propsContent} />`
+      } else if (componentName === 'TrueBox' || componentName === 'FalseBox') {
+        content += `<Box ${propsContent}>
+      ${buildBlock({ component: childComponent, components, forceBuildBlock })}
+      </Box>`
       } else if (
         childComponent.children.length &&
         componentName !== 'Conditional' &&
@@ -299,17 +307,17 @@ const buildBlock = ({
                   ? `${conditionalValue.slice(1, -1)}`
                   : `'${conditionalValue}'`
               }`
-        }? <>${buildSingleBlock({
+        }? ${buildSingleBlock({
           index: 0,
           component: childComponent,
           components,
           forceBuildBlock,
-        })}</>: <>${buildSingleBlock({
+        })}: ${buildSingleBlock({
           index: 1,
           component: childComponent,
           components,
           forceBuildBlock,
-        })}</>}`
+        })}}`
       } else if (componentName === 'Loop') {
         const loopValue = returnLoopValue(propsNames, childComponent)
         content += `{${
@@ -429,19 +437,15 @@ export const generateCode = async (
           name =>
             name !== 'root' &&
             components[name].type !== 'Conditional' &&
+            components[name].type !== 'Loop' &&
+            components[name].type !== 'Box' &&
+            components[name].type !== 'TrueBox' &&
+            components[name].type !== 'FalseBox' &&
             !Object.keys(currentComponents).includes(components[name].type),
         )
         .map(name => components[name].type),
     ),
   ]
-
-  const loopIndex = imports.indexOf('Loop')
-  const boxIndex = imports.indexOf('Box')
-  if (loopIndex !== -1 && boxIndex === -1) {
-    imports[loopIndex] = 'Box'
-  } else if (loopIndex !== -1 && boxIndex !== -1) {
-    imports = imports.filter(imp => imp !== 'Loop')
-  }
 
   const customImports = [
     ...new Set(
@@ -466,6 +470,7 @@ export const generateCode = async (
   code = `import React, {RefObject} from 'react';
 import {
   ChakraProvider,
+  Box,
   ${imports.join(',')}
 } from "@chakra-ui/react";${
     iconImports.length
@@ -506,19 +511,15 @@ export const generateOcTsxCode = async (
           name =>
             name !== 'root' &&
             components[name].type !== 'Conditional' &&
+            components[name].type !== 'Loop' &&
+            components[name].type !== 'Box' &&
+            components[name].type !== 'TrueBox' &&
+            components[name].type !== 'FalseBox' &&
             !Object.keys(currentComponents).includes(components[name].type),
         )
         .map(name => components[name].type),
     ),
   ]
-
-  const loopIndex = imports.indexOf('Loop')
-  const boxIndex = imports.indexOf('Box')
-  if (loopIndex !== -1 && boxIndex === -1) {
-    imports[loopIndex] = 'Box'
-  } else if (loopIndex !== -1 && boxIndex !== -1) {
-    imports = imports.filter(imp => imp !== 'Loop')
-  }
 
   const customImports = [
     ...new Set(
@@ -543,6 +544,7 @@ export const generateOcTsxCode = async (
   code = `import React, {RefObject} from 'react';
 import {
   ChakraProvider,
+  Box,
   ${imports.join(',')}
 } from "@chakra-ui/react";${
     iconImports.length
