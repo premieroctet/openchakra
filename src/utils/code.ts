@@ -395,7 +395,7 @@ const getIconsImports = (components: IComponents) => {
 
 export const generateMainTsx = (params: any, fileName: string) => {
   let refsCode = ``
-  let appCode = `return <${fileName}Oc \n`
+  let appCode = `return <${fileName}OC \n`
   params.map((param: any) => {
     appCode += `${
       param.ref
