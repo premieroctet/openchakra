@@ -5,10 +5,7 @@ import { generateCode } from '~utils/code'
 import theme from 'prism-react-renderer/themes/nightOwl'
 import { useSelector } from 'react-redux'
 import { getComponents } from '~core/selectors/components'
-import {
-  getCustomComponents,
-} from '~core/selectors/customComponents'
-
+import { getCustomComponents } from '~core/selectors/customComponents'
 
 const CodePanel = () => {
   const components = useSelector(getComponents)
