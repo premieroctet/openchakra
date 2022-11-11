@@ -63,7 +63,8 @@
     "test": "jest --watch",
     "test:ci": "jest --ci",
     "analyze": "BUNDLE_VISUALIZE=1 react-app-rewired build",
-    "lint": "next lint"
+    "lint": "next lint",
+    "format": "prettier --write '**/*.{js,ts,tsx,json}' --config .prettierrc"
   },
   "browserslist": {
     "production": [

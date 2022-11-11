@@ -1,0 +1,8 @@
+node_modules
+.next
+.git
+.github
+public
+**/*.yaml
+scripts
+src/models/doc.ts
