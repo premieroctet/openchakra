@@ -1,15 +1,19 @@
+const mongooseLeanVirtuals=require('mongoose-lean-virtuals')
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+const {getDataModel} = require('../../config/config')
 
-const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
+let FilterPresentationSchema=null
 
-const FilterPresentationSchema = new Schema({
-  label: {
-    type: String,
-    required: true,
-  },
-})
+try {
+  FilterPresentationSchema=require(`./${getDataModel()}/FilterPresentationSchema`)
+}
+catch(err) {
+  if (err.code !== 'MODULE_NOT_FOUND') {
+    throw err
+  }
+  FilterPresentationSchema=require(`./others/FilterPresentationSchema`)
+}
 
-FilterPresentationSchema.plugin(mongooseLeanVirtuals)
+FilterPresentationSchema?.plugin(mongooseLeanVirtuals)
 
-module.exports = mongoose.model('filterPresentation', FilterPresentationSchema)
+module.exports = FilterPresentationSchema ? mongoose.model('filterPresentation', FilterPresentationSchema) : null

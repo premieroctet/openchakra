@@ -3,4 +3,5 @@ module.exports = {
   groupImports: false,
   emptyLineBetweenGroups: false,
   danglingCommas: false,
+  declarationKeyword: 'const'
 }

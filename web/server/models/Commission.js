@@ -1,37 +1,18 @@
-const {COMMISSION_SOURCE} = require('../../utils/consts')
+const mongooseLeanVirtuals=require('mongoose-lean-virtuals')
 const mongoose = require('mongoose')
-const Schema=mongoose.Schema
+const {getDataModel} = require('../../config/config')
 
-const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
+let CommissionSchema=null
 
-const CommissionSchema = new Schema({
-  // Commission rate
-  rate: {
-    type: Number,
-    required: true,
-    min: 0,
-    max: 1.0,
-  },
-  // Commission fixed fee
-  fixed: {
-    type: Number,
-    required: false,
-    min: 0,
-  },
-  // Destinee company
-  target: {
-    type: Schema.Types.ObjectId,
-    ref: 'company',
-    required: true,
-  },
-  // Taken from provider or customer ?
-  source: {
-    type: String,
-    enum: Object.keys(COMMISSION_SOURCE),
-    required: true,
-  },
-})
+try {
+  CommissionSchema=require(`./${getDataModel()}/CommissionSchema`)
+}
+catch(err) {
+  if (err.code !== 'MODULE_NOT_FOUND') {
+    throw err
+  }
+  CommissionSchema=require(`./others/CommissionSchema`)
+}
 
-CommissionSchema.plugin(mongooseLeanVirtuals)
-
-module.exports = mongoose.model('commission', CommissionSchema)
+CommissionSchema?.plugin(mongooseLeanVirtuals)
+module.exports = CommissionSchema ? mongoose.model('commission', CommissionSchema) : null

@@ -6,12 +6,14 @@ let ServiceSchema=null
 
 try {
   ServiceSchema=require(`./${getDataModel()}/ServiceSchema`)
-  ServiceSchema.plugin(mongooseLeanVirtuals)
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {
     throw err
   }
+  ServiceSchema=require(`./others/ServiceSchema`)
 }
+
+ServiceSchema?.plugin(mongooseLeanVirtuals)
 
 module.exports = ServiceSchema ? mongoose.model('service', ServiceSchema) : null

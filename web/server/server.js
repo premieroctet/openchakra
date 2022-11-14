@@ -1,3 +1,4 @@
+
 const axios=require('axios')
 const mongoose=require('mongoose')
 const cookieParser=require('cookie-parser')
@@ -26,6 +27,15 @@ const Booking = require('./models/Booking')
 const ServiceUser = require('./models/ServiceUser')
 const Category = require('./models/Category')
 const PriceList = require('./models/PriceList')
+require('./models/Program')
+require('./models/Theme')
+require('./models/Resource')
+require('./models/Session')
+require('./models/TrainingCenter')
+require('./models/User')
+require('./models/Contact')
+require('./models/Message')
+
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 
 
@@ -69,6 +79,7 @@ const chatRooms = require('./routes/api/chatRooms')
 const admin = require('./routes/api/admin/dashboard')
 const blog = require('./routes/api/blog')
 const feurst = require('./routes/api/feurst/feurst')
+const studio = require('./routes/api/studio')
 const path = require('path')
 const app = express()
 const {initIO} = require('./utils/socketIO')
@@ -157,6 +168,7 @@ checkConfig()
     app.use('/myAlfred/api/authentication', authRoutes)
     app.use('/blog', blog)
     app.use('/feurst/api', feurst)
+    app.use('/myAlfred/api/studio', studio)
 
     // const port = process.env.PORT || 5000;
     const rootPath = path.join(__dirname, '/..')
@@ -182,8 +194,9 @@ checkConfig()
 
     // HTTPS server using certificates
     const httpsServer = https.createServer({
-      cert: fs.readFileSync(`${process.env.HOME}/.ssh/fullchain.pem`),
-      key: fs.readFileSync(`${process.env.HOME}/.ssh/privkey.pem`),
+      cert: fs.readFileSync(`${process.env.HOME}/.ssh/Main.txt`),
+      key: fs.readFileSync(`${process.env.HOME}/.ssh/Key.txt`),
+      ca: fs.readFileSync(`${process.env.HOME}/.ssh/Intermediate.txt`),
     },
     app)
     const io = initIO(httpsServer)
