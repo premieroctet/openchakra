@@ -27,11 +27,13 @@ export const ACTIONS = {
         return res
       })
   },
-  openPage: ({ value, props }) => {
+  openPage: ({ value, dataModel, query, props }) => {
+    const queryParams = query
     let url = `/${props.page}`
     if (value && value._id) {
-      url = `${url}?id=${value._id}`
+      queryParams.set(dataModel, value._id)
     }
+    url = `${url}?${queryParams.toString()}`
     // new page
     if (props.open && !(props.open === 'false')) {
       return Promise.resolve(window.open(url, 'blank'))

@@ -76,8 +76,12 @@ export const getDataProviderDataType = (
   components: IComponents,
   dataSource: string,
   models: any,
-): IDataType|null => {
-  if (component.props.model && component.props.dataSource === dataSource) {
+): IDataType | null => {
+  if (
+    component.props.model &&
+    (component.props.dataSource === dataSource ||
+      (dataSource == 'root' && component.id == 'root'))
+  ) {
     return {
       type: component.props.model,
       multiple: true,
@@ -90,11 +94,11 @@ export const getDataProviderDataType = (
   }
 
   const parent = components[component.parent]
-  let pdt=getDataProviderDataType(parent, components, dataSource, models)
+  let pdt = getDataProviderDataType(parent, components, dataSource, models)
   if (!pdt) {
     return null
   }
-  let parentDataProviderType = {...pdt}
+  let parentDataProviderType = { ...pdt }
   if (component.props.dataSource === dataSource) {
     if (component.props?.attribute) {
       const att = models.find(
@@ -144,7 +148,7 @@ const computeDataFieldName = (
   component: IComponent,
   components: IComponents,
   dataSourceId: string,
-): string|null => {
+): string | null => {
   if (
     component.props.model ||
     (component.props.dataSource && component.props.dataSource !== dataSourceId)
@@ -167,17 +171,21 @@ export const getFieldsForDataProvider = (
   dataProviderId: string,
   components: IComponents,
 ): string[] => {
-  const isRoot=components[dataProviderId].id=='root'
+  const isRoot = components[dataProviderId].id == 'root'
 
   const linkedComponents = Object.values(components).filter(
     c => c.props?.dataSource === dataProviderId,
   )
 
-  const fields=isRoot ?
-  lodash(linkedComponents)
-    .map(c => computeDataFieldName(c, components, dataProviderId))
-    .filter(c => !!c)
-    .uniq().value()
-  : lodash(linkedComponents).map(c=> c.props.attribute).uniq().value()
+  const fields = isRoot
+    ? lodash(linkedComponents)
+        .map(c => computeDataFieldName(c, components, dataProviderId))
+        .filter(c => !!c)
+        .uniq()
+        .value()
+    : lodash(linkedComponents)
+        .map(c => c.props.attribute)
+        .uniq()
+        .value()
   return fields
 }

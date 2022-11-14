@@ -533,6 +533,8 @@ export const generateCode = async (
     module[c] ? '@chakra-ui/react' : `./dependencies/custom-components/${c}`,
   )
 
+  const rootIdQuery = components['root']?.props?.model
+
   code = `import React, {useState, useEffect} from 'react';
   import Metadata from './dependencies/Metadata';
   ${hooksCode ? `import useFetch from 'use-http'` : ''}
@@ -564,7 +566,7 @@ ${componentsCodes}
 const ${componentName} = () => {
   ${hooksCode}
   const query = new URLSearchParams(useLocation().search)
-  const id=query.get('id')
+  const id=query.get('${rootIdQuery}')
   const {user}=useUserContext()
 
   return (

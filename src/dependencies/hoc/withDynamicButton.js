@@ -1,13 +1,16 @@
 import React from 'react'
 
 import { ACTIONS } from '../utils/actions'
+import { useLocation } from 'react-router-dom'
 
 const withDynamicButton = Component => {
-  const internal = props => {
+  const Internal = props => {
+    const query = new URLSearchParams(useLocation().search)
     const value = props.dataSource
     const action = props.action
     const nextAction = props.nextAction
     const context = props.context
+    const dataModel = props.dataModel
     const actionProps = props.actionProps ? JSON.parse(props.actionProps) : {}
     const nextActionProps = props.nextActionProps
       ? JSON.parse(props.nextActionProps)
@@ -24,6 +27,8 @@ const withDynamicButton = Component => {
           props: actionProps,
           backend,
           context,
+          dataModel,
+          query,
           model: props.dataModel,
         })
           .then(res => {
@@ -35,6 +40,8 @@ const withDynamicButton = Component => {
               props: nextActionProps,
               backend,
               context,
+              dataModel,
+              query,
               model: props.dataModel,
             })
           })
@@ -48,7 +55,7 @@ const withDynamicButton = Component => {
     return <Component {...props} onClick={onClick}></Component>
   }
 
-  return internal
+  return Internal
 }
 
 export default withDynamicButton
