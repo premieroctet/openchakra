@@ -8,10 +8,7 @@ try {
   TrainingCenterSchema=require(`./${getDataModel()}/TrainingCenterSchema`)
 }
 catch(err) {
-  if (err.code !== 'MODULE_NOT_FOUND') {
-    throw err
-  }
-  TrainingCenterSchema=require(`./others/TrainingCenterSchema`)
+  TrainingCenterSchema=null
 }
 
 TrainingCenterSchema?.plugin(mongooseLeanVirtuals)

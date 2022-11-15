@@ -38,6 +38,9 @@ const UserSchema = new Schema({
     type: Boolean,
     default: true,
   },
+  cgv_validation_date: {
+    type: Date,
+  },
   password: {
     type: String,
     default: 'INVALID',

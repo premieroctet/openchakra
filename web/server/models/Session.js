@@ -8,10 +8,7 @@ try {
   SessionSchema=require(`./${getDataModel()}/SessionSchema`)
 }
 catch(err) {
-  if (err.code !== 'MODULE_NOT_FOUND') {
-    throw err
-  }
-  SessionSchema=require(`./others/SessionSchema`)
+  SessionSchema=null
 }
 
 SessionSchema?.plugin(mongooseLeanVirtuals)

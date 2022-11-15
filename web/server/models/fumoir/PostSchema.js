@@ -6,6 +6,9 @@ const PostSchema = new Schema({
     type: String,
     required: true,
   },
+  media: [{
+    type: String,
+  }],
   date: {
     type: Date,
     default: Date.now,

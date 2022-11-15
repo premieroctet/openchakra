@@ -8,10 +8,7 @@ try {
   JobSchema=require(`./${getDataModel()}/JobSchema`)
 }
 catch(err) {
-  if (err.code !== 'MODULE_NOT_FOUND') {
-    throw err
-  }
-  JobSchema=require(`./others/JobSchema`)
+  JobSchema=null
 }
 
 JobSchema?.plugin(mongooseLeanVirtuals)
