@@ -1,3 +1,4 @@
+const UserSessionData = require('../../models/UserSessionData');
 const Resource = require('../../models/Resource')
 const {NotFoundError} = require('../errors')
 const Program = require('../../models/Program')
@@ -11,6 +12,7 @@ const {
   putAttribute,
   sendMessage,
 } = require('./aftral/functions')
+const url=require('url')
 
 const ACTIONS={
 
@@ -45,9 +47,26 @@ const ACTIONS={
     return moveChildInParent(parent, child, false)
   },
 
-  addSpentTime: ({id, duration}) => {
-    console.log(`Duration ${duration} for ${id}`)
-    return Resource.findByIdAndUpdate(id, {$inc: {spent_time: duration}})
+  addSpentTime: ({id, duration}, user, referrer) => {
+    const params=url.parse(referrer, true).query
+    console.log('Adding')
+    //console.log(`Params:${params}`)
+    return UserSessionData.findOneAndUpdate(
+      {session: params.session, user: user._id},
+      {},
+      {upsert: true}
+    )
+    .then(data => {
+      console.log(data)
+      const spentData=data.spent_times.find(d => d.resource==id)
+      if (spentData) {
+        spentData.spent_time += duration
+      }
+      else {
+        data.spent_times.push({resource: id, spent_time: duration})
+      }
+      return data.save()
+    })
   },
 
   delete: ({parent, child}) => {

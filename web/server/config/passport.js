@@ -6,7 +6,7 @@ const User = require('../models/User')
 passport.use(new CookieStrategy(
   function(token, done) {
     const user=jwt.decode(token)
-    User.findById(user.id, 'firstname name role')
+    User.findById(user.id)
       .then(user => {
         if (user) {
           return done(null, user)

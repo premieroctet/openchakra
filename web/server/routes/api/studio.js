@@ -1,5 +1,10 @@
+const {
+  filterDataUser,
+  getContacts,
+  getResourceSpentTime,
+  login
+} = require('../../utils/studio/aftral/functions');
 const {sendCookie} = require('../../config/passport')
-const {login, filterDataUser, getContacts} = require('../../utils/studio/aftral/functions')
 const path=require('path')
 const jwt = require('jsonwebtoken')
 
@@ -8,14 +13,15 @@ const child_process = require('child_process')
 const mongoose=require('mongoose')
 const express = require('express')
 const lodash=require('lodash')
-const PRODUCTION_ROOT='/home/ec2-user/studio/'
-// const PRODUCTION_ROOT='/home/seb/workspace'
+//const PRODUCTION_ROOT='/home/ec2-user/studio/'
+const PRODUCTION_ROOT='/home/seb/workspace'
 //const PRODUCTION_ROOT='/Users/seb/workspace'
 const passport = require('passport')
 const {HTTP_CODES, NotFoundError}=require('../../utils/errors')
 const {getModels} =require('../../utils/database')
 const {ACTIONS} = require('../../utils/studio/actions')
-const {buildQuery} = require('../../utils/database')
+const {buildQuery, addComputedFields} = require('../../utils/database')
+const url=require('url')
 
 const router = express.Router()
 
@@ -113,7 +119,7 @@ router.post('/action', passport.authenticate('cookie', {session: false}), (req, 
     return res.status(404).json(`Unkown action:${action}`)
   }
 
-  return actionFn(req.body, req.user)
+  return actionFn(req.body, req.user, req.get('Referrer'))
     .then(result => {
       return res.json(result)
     })
@@ -153,48 +159,45 @@ router.post('/:model', (req, res) => {
     })
 })
 
-router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (req, res) => {
+router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), async (req, res) => {
   const model=req.params.model
   let fields=req.query.fields?.split(',') || []
   const id=req.params.id
+  const params=url.parse(req.get('Referrer'), true).query
+  const user=req.user
 
   if (model=='contact') {
-    return getContacts(req.user, id)
-      .then(contacts => {
-        return res.json(contacts)
-      })
+    const contacts=await getContacts(req.user, id)
       .catch(err => {
         console.error(err)
         res.status(err.status || HTTP_CODES.SYSTEM_ERROR).json(err.message || err)
       })
+    return res.json(contacts)
   }
 
   if (model=='session') {
-    fields=lodash([...fields, 'trainers', 'trainees', 'trainee']).uniq().value()
+    fields=lodash([...fields, 'trainers', 'trainees']).uniq().value()
   }
 
   if (model=='message') {
     fields=lodash([...fields, 'sender', 'destinee_user', 'destinee_session']).uniq().value()
   }
 
-  const query=buildQuery(model, id, fields)
-  query
-    .then(data => {
-      return id ? data : filterDataUser({model, data, user: req.user})
-    })
-    .then(data => {
-      if (id && data.length==0) {
-        throw new NotFoundError(`Can't find ${model}:${id}`)
-      }
-      if (['theme', 'resource'].includes(model) && !id) {
-        data=data.filter(t => t.name)
-      }
-      res.json(data)
-    })
-    .catch(err => {
-      console.error(err)
-      res.status(err.status || HTTP_CODES.SYSTEM_ERROR).json(err.message || err)
-    })
+  let data=await buildQuery(model, id, fields).lean()
+  for (let d of data) {
+    await addComputedFields(user, params, d, model, fields)
+    .catch(err => console.error(err))
+  }
+  if (!id) {
+    data=await filterDataUser({model, data, user: req.user})
+  }
+  if (id && data.length==0) {
+    throw new NotFoundError(`Can't find ${model}:${id}`)
+  }
+  if (['theme', 'resource'].includes(model) && !id) {
+    data=data.filter(t => t.name)
+  }
+  return res.json(data)
 })
 
 module.exports=router

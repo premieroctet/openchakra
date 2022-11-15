@@ -43,11 +43,4 @@ ThemeSchema.virtual('hidden').get(function() {
   return (!this.name && !this.code && !this.picture)
 })
 
-ThemeSchema.virtual('spent_time').get(function() {
-  if (!this.resources) {
-    return 0
-  }
-  return lodash.sum(this.resources.map(t => t.spent_time || 0))
-})
-
 module.exports = ThemeSchema

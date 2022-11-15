@@ -1,3 +1,4 @@
+const UserSessionData = require('../../../models/UserSessionData');
 const mongoose =require('mongoose')
 const lodash =require('lodash')
 const bcrypt=require('bcryptjs')
@@ -183,7 +184,7 @@ const putAttribute = ({parent, attribute, value}) => {
 const filterDataUser = ({model, data, user}) => {
   if (model=='session') {
     data=data.filter(d =>
-      (user.role=='apprenant' ? d.trainee?._id.toString()==user._id.toString()
+      (user.role=='apprenant' ? user.sessions.includes(d._id)
         : user.roles=='formateur' ? d.trainers.map(t => t._id.toString()).includes(user._id.toString()) && !d.trainee
           : !d.trainee),
     )
@@ -197,7 +198,7 @@ const filterDataUser = ({model, data, user}) => {
         return data
       })
   }
-  
+
   if (model=='theme') {
     data=data.filter(d => !d.origin)
     return Promise.all([Session.find(), Program.find()])

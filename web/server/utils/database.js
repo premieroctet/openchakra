@@ -1,5 +1,9 @@
 const mongoose=require('mongoose')
 const lodash=require('lodash')
+const formatDuration = require('format-duration')
+// TODO: Omporting Theme makes a cyclic import. Why ?
+//const Theme = require('../models/Theme');
+const UserSessionData = require('../models/UserSessionData');
 require('../models/TrainingCenter')
 
 const MONGOOSE_OPTIONS={
@@ -38,22 +42,21 @@ const attributesComparator = (att1, att2) => {
   return att1.includes('.') ? 1 : -1
 }
 
+
 const DECLARED_VIRTUALS={
   session: {
     trainees_count: {path: 'trainees_count', instance: 'Number', requires: 'trainees'},
     trainers_count: {path: 'trainees_count', instance: 'Number', requires: 'trainers'},
     status: {path: 'status', instance: 'String', requires: 'start'},
-    spent_time: {path: 'spent_time', instance: 'Number', requires: 'themes.resources'},
-    spent_time_str: {path: 'spent_time_str', instance: 'String', requires: 'themes.resources'},
+    spent_time_str: {path: 'spent_time_str', instance: 'String', requires: 'themes'},
     contact_name: {path: 'contact_name', instance: 'String', requires: 'name'},
   },
   theme: {
     hidden: {path: 'hidden', instance: 'Boolean', requires: 'name,code,picture'},
-    spent_time: {path: 'spent_time', instance: 'Number', requires: 'resources'},
     spent_time_str: {path: 'spent_time_str', instance: 'String', requires: 'resources'},
   },
   resource: {
-    spent_time_str: {path: 'spent_time_str', instance: 'String', requires: 'spent_time'},
+    spent_time_str: {path: 'spent_time_str', instance: 'String', requires: '_id'},
   },
   contact: {
     name: {path: 'name', instance: 'String', requires: '_id'},
@@ -134,6 +137,9 @@ const buildPopulate = (field, model) => {
   }
   const currentField=fields[0]
   const currentAttribute=attributes[currentField]
+  if (!currentAttribute) {
+    throw new Error(`Can not get attribute for ${model}/${currentField}`)
+  }
   if (!currentAttribute.ref) {
     return null
   }
@@ -164,7 +170,7 @@ const buildPopulates = (fields, model) => {
 
   const populates=lodash(fields)
   // Retain only ObjectId fields
-    .filter(att => { console.log(att.split('.')[0]); return modelAttributes[att.split('.')[0]].ref==true })
+    .filter(att => modelAttributes[att.split('.')[0]].ref==true)
     .groupBy(att => att.split('.')[0])
     // Build populates for each 1st level attribute
     .mapValues(fields => fields.map(f => buildPopulate(f, model)))
@@ -248,9 +254,104 @@ const getModel = id => {
     })
 }
 
+const addComputedFields= async (user, queryParams, data, model) => {
+  // UGLY
+  if (model=='session') {
+    queryParams.session=data._id.toString()
+  }
+  const compFields=COMPUTED_FIELDS[model] || {}
+  // Compute direct attributes
+  for (f in compFields) {
+    const computedValue=await compFields[f](user, queryParams, data)
+    data[f]=computedValue
+  }
+  // Handle references => sub
+  const refAttributes=getModelAttributes(model).filter(att => !(att[0].includes('.')) && att[1].ref)
+  for ([attName, attParams] of refAttributes) {
+    const children=data[attName]
+    if (attParams.multiple) {
+      if (children) {
+        attName=='themes' && console.log(`There are ${children.length} ${attName}`)
+        for (let child of children) {
+          attName=='themes' && console.log(`Computing for ${attName} ${attParams.type}`)
+          await addComputedFields(user, queryParams, child, attParams.type)
+          attName=='themes' && console.log('after')
+        }
+      }
+    }
+    else {
+      children && await addComputedFields(user, queryParams, children, attParams.type)
+    }
+  }
+  return data
+}
+
+const formatTime= (timeMillis) => {
+  return formatDuration(timeMillis, {leading: true})
+}
+
+const getResourceSpentTime = (user, queryParams, resource) => {
+  return UserSessionData.findOne({session: queryParams.session, user: user._id})
+    .then(data => {
+      const spent=data?.spent_times?.find(s => s.resource._id.toString()==resource._id.toString())?.spent_time || 0
+      return spent
+    })
+}
+
+const getResourceSpentTimeStr = (user, queryParams, resource) => {
+  return getResourceSpentTime(user, queryParams, resource)
+    .then(res => formatTime(res))
+}
+
+const getThemeSpentTime = (user, queryParams, theme) => {
+  return mongoose.connection.models['theme'].findById(theme._id.toString())
+    .then(data => {
+      if (!data) { return 0}
+      return Promise.all(data.resources.map(r => getResourceSpentTime(user, queryParams, r._id)))
+    })
+    .then(results => {
+      return lodash.sum(results)
+    })
+}
+
+const getThemeSpentTimeStr = (user, queryParams, theme) => {
+  return getThemeSpentTime(user, queryParams, theme)
+    .then(res => formatTime(res))
+}
+
+const getSessionSpentTime = (user, queryParams, session) => {
+  return mongoose.connection.models['session'].findById(session._id.toString())
+    .then(data => {
+      if (!data) { return 0}
+      return Promise.all(data.themes.map(t => getThemeSpentTime(user, queryParams, t._id)))
+    })
+    .then(results => {
+      return lodash.sum(results)
+    })
+}
+
+const getSessionSpentTimeStr = (user, queryParams, session) => {
+  return getSessionSpentTime(user, queryParams, session)
+    .then(res => formatTime(res))
+}
+
+
+const COMPUTED_FIELDS={
+  resource: {
+    spent_time_str: getResourceSpentTimeStr,
+  },
+  theme: {
+    spent_time_str: getThemeSpentTimeStr,
+  },
+  session: {
+    spent_time_str: getSessionSpentTimeStr,
+  }
+}
+
 module.exports={
   hasRefs, MONGOOSE_OPTIONS, attributesComparator,
   getSimpleModelAttributes, getReferencedModelAttributes,
   getModelAttributes, getModels, buildQuery, buildPopulate,
   buildPopulates, cloneModel, cloneArray, getModel,
+  addComputedFields,
 }

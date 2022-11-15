@@ -29,7 +29,7 @@ const UserSchema = new Schema({
   },
   sessions: [{
     type: Schema.Types.ObjectId,
-    ref: 'traineeSession',
+    ref: 'session',
     required: true,
   }],
 }, {toJSON: {virtuals: true, getters: true}})

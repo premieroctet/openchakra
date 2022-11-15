@@ -101,13 +101,16 @@ const createSession = (data, center) => {
             },
             {upsert: true, new: true},
           )
+          .then(s => {
+            console.log(`Created session ${s}`)
+            return s
+          })
         })
     })
 }
 
 const createTraineeSession = (session, trainee) => {
-  return cloneModel({data: session, withOrigin: true, forceData: {trainee: trainee, trainees: session.trainees, trainers: session.trainers}})
-    .catch(err => { console.error(`${err}:${data}`) })
+  return User.findOneAndUpdate({_id: trainee}, {$addToSet: {sessions: session}})
 }
 
 const generateTraineeSessions = () => {
@@ -130,6 +133,8 @@ async function run() {
   await mongoose.connect(getDatabaseUri(), MONGOOSE_OPTIONS)
   await mongoose.connection.dropDatabase()
   await PromiseSerial(data.programs.map(p => () => createResource(p)))
+  const resCount=await Resource.count()
+  console.log(`Created ${resCount} resources`)
   await PromiseSerial(data.programs.map(p => () => createTheme(p)))
   await PromiseSerial(data.users.map(p => () => createUser(p)))
   await PromiseSerial(data.programs.map(p => () => generateProgram(p)))
