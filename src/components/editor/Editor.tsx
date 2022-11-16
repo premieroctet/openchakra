@@ -12,7 +12,7 @@ import ComponentPreview from '~components/editor/ComponentPreview'
 import devices from '~config/devices'
 import useDispatch from '~hooks/useDispatch'
 
-import { getWarnings } from '../../core/selectors/components';
+import { getWarnings } from '../../core/selectors/components'
 import config from '../../../env.json'
 
 export const gridStyles = {
@@ -30,7 +30,10 @@ const Editor: React.FC = () => {
   const showOverview = useSelector(getShowOverview)
   const components = useSelector(getComponents)
   const dispatch = useDispatch()
-  const { get, error } = useFetch(config.targetDomain)
+  const { get, error } = useFetch(config.targetDomain, {
+    cachePolicy: 'no-cache',
+    timeout: 1000,
+  })
 
   const { drop } = useDropComponent('root')
   const isEmpty = !components.root.children.length
@@ -58,10 +61,13 @@ const Editor: React.FC = () => {
   useEffect(() => {
     get('/myAlfred/api/studio/models')
       .then(res => {
+        if (!res) {
+          throw new Error()
+        }
         dispatch.dataSources.setModels(res)
       })
       .catch(err => {
-        alert(err)
+        alert(`Could not get models from backend:${err}`)
       })
   }, [dispatch.dataSources, get])
 
