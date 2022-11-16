@@ -28,7 +28,7 @@ const UploadFile = ({
     s3Config.secretAccessKey || '',
   )
   const [uploadInfo, setUploadInfo] = useState('')
-  const { post, response, error } = useFetch('/')
+  const { post, response, error } = useFetch()
 
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault()
