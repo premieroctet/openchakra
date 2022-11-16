@@ -1,7 +1,7 @@
 import { RootState } from '~core/store'
 
 export const getModelNames = (state: RootState) => {
-  return state.dataSources.models.map(m => m.name)
+  return state.dataSources.models?.map(m => m.name) || []
 }
 
 export const getModelAttributes = (modelName: string) => (state: RootState) => {

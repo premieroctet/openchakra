@@ -408,7 +408,7 @@ const buildHooks = (components: IComponents) => {
   if (dataProviders.length === 0) {
     return ''
   }
-  let code = `const {get}=useFetch(null, {cachePolicy: 'no-cache'})`
+  let code = `const {get}=useFetch(null, {cachePolicy: 'no-cache', timeout:1000})`
   code +=
     '\n' +
     dataProviders
@@ -534,6 +534,8 @@ export const generateCode = async (
   )
 
   const rootIdQuery = components['root']?.props?.model
+  const rootIgnoreUrlParams =
+    components['root']?.props?.ignoreUrlParams == 'true'
 
   code = `import React, {useState, useEffect} from 'react';
   import Metadata from './dependencies/Metadata';
@@ -566,7 +568,7 @@ ${componentsCodes}
 const ${componentName} = () => {
   ${hooksCode}
   const query = new URLSearchParams(useLocation().search)
-  const id=query.get('${rootIdQuery}')
+  const id=${rootIgnoreUrlParams ? 'null' : `query.get('${rootIdQuery}')`}
   const {user}=useUserContext()
 
   return (

@@ -1,4 +1,4 @@
-import { Select } from '@chakra-ui/react'
+import { Select, Checkbox } from '@chakra-ui/react'
 import { useSelector } from 'react-redux'
 import React, { memo } from 'react'
 import { getModelNames } from '~core/selectors/dataSources'
@@ -11,20 +11,22 @@ const capitalize = (word: string) => {
 }
 
 const DataProviderPanel = () => {
-  const { setValueFromEvent } = useForm()
+  const { setValueFromEvent, setValue } = useForm()
   const model = usePropsSelector('model')
+  const ignoreUrlParams = usePropsSelector('ignoreUrlParams')
   const modelNames = useSelector(getModelNames)
 
-  const setDataModel = event => {
-    setValueFromEvent(event)
+  const setIgnoreUrlParams = event => {
+    setValue('ignoreUrlParams', event.target.checked)
   }
 
+  const cbLabel = `Ignore '${model}' param in URL`
   return (
     <>
       <FormControl htmlFor="model" label="Model">
         <Select
           id="model"
-          onChange={setDataModel}
+          onChange={setValueFromEvent}
           name="model"
           size="sm"
           value={model || ''}
@@ -37,6 +39,16 @@ const DataProviderPanel = () => {
           ))}
         </Select>
       </FormControl>
+      {model && (
+        <FormControl htmlFor="ignoreUrlParams" label={cbLabel}>
+          <Checkbox
+            id="ignoreUrlParams"
+            name="ignoreUrlParams"
+            isChecked={ignoreUrlParams}
+            onChange={setIgnoreUrlParams}
+          ></Checkbox>
+        </FormControl>
+      )}
     </>
   )
 }
