@@ -4,7 +4,6 @@ import FileManager from '../utils/S3filemanager'
 import { s3Config } from '../utils/s3Config'
 import useFetch from 'use-http'
 import mime from 'mime'
-import config from '../../../env.json'
 
 const UploadFile = ({
   dataSource,
