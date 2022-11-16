@@ -28,7 +28,7 @@ const UploadFile = ({
     s3Config.secretAccessKey || '',
   )
   const [uploadInfo, setUploadInfo] = useState('')
-  const { post, response, error } = useFetch(null, { cachePolicy: 'no-cache' })
+  const { post, response, error } = useFetch('/')
 
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -49,13 +49,12 @@ const UploadFile = ({
       )
         .then(res => {
           // Send ressource url
-          backend &&
-            post(`myAlfred/api/studio/action`, {
-              action: 'put',
-              parent: ressource_id,
-              attribute,
-              value: res?.Location,
-            })
+          post(`myAlfred/api/studio/action`, {
+            action: 'put',
+            parent: ressource_id,
+            attribute,
+            value: res?.Location,
+          })
         })
         .catch(err => console.error(err))
 
