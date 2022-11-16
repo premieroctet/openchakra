@@ -18,11 +18,23 @@ const UserSchema = new Schema({
   photo: {
     type: String,
   },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    set: v => v.toLowerCase().trim(),
+  contact: {
+    email: {
+      type: String,
+      required: true,
+      set: v => v.toLowerCase().trim(),
+    },
+    linkedIn: {
+      type: String,
+      set: v => v.toLowerCase().trim(),
+    },
+    twitter: {
+      type: String,
+      set: v => v.toLowerCase().trim(),
+    },
+    phone: {
+      type: String,
+    },
   },
   job: {
     type: String,

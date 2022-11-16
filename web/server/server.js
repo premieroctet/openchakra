@@ -35,6 +35,8 @@ require('./models/TrainingCenter')
 require('./models/User')
 require('./models/Contact')
 require('./models/Message')
+require('./models/Post')
+require('./models/Subscription')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 
