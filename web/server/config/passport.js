@@ -4,7 +4,7 @@ const CookieStrategy = require('passport-cookie').Strategy
 const User = require('../models/User')
 
 passport.use(new CookieStrategy(
-  function(token, done) {
+  (token, done) => {
     const user=jwt.decode(token)
     User.findById(user.id)
       .then(user => {
@@ -14,8 +14,8 @@ passport.use(new CookieStrategy(
         return done(null, false, {message: 'Vous devez être connecté'})
       })
       .catch(err => console.error(err))
-  }
-));
+  },
+))
 
 const sendCookie = (user, res) => {
   const token=jwt.sign({id: user.id}, 'secret')
