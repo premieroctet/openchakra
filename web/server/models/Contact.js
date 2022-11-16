@@ -8,7 +8,9 @@ try {
   ContactSchema=require(`./${getDataModel()}/ContactSchema`)
 }
 catch(err) {
-  ContactSchema=null
+  if (err.code !== 'MODULE_NOT_FOUND') {
+    throw err
+  }
 }
 
 ContactSchema?.plugin(mongooseLeanVirtuals)

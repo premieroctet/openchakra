@@ -8,7 +8,9 @@ try {
   CommissionSchema=require(`./${getDataModel()}/CommissionSchema`)
 }
 catch(err) {
-  CommissionSchema=null
+  if (err.code !== 'MODULE_NOT_FOUND') {
+    throw err
+  }
 }
 
 CommissionSchema?.plugin(mongooseLeanVirtuals)

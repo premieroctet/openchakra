@@ -8,7 +8,9 @@ try {
   ResourceSchema=require(`./${getDataModel()}/ResourceSchema`)
 }
 catch(err) {
-  ResourceSchema=null
+  if (err.code !== 'MODULE_NOT_FOUND') {
+    throw err
+  }
 }
 
 ResourceSchema?.plugin(mongooseLeanVirtuals)

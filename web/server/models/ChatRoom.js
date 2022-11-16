@@ -8,7 +8,9 @@ try {
   ChatRoomSchema=require(`./${getDataModel()}/ChatRoomSchema`)
 }
 catch(err) {
-  ChatRoomSchema=null
+  if (err.code !== 'MODULE_NOT_FOUND') {
+    throw err
+  }
 }
 
 ChatRoomSchema?.plugin(mongooseLeanVirtuals)

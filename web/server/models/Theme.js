@@ -8,7 +8,9 @@ try {
   ThemeSchema=require(`./${getDataModel()}/ThemeSchema`)
 }
 catch(err) {
-  ThemeSchema=null
+  if (err.code !== 'MODULE_NOT_FOUND') {
+    throw err
+  }
 }
 
 ThemeSchema?.plugin(mongooseLeanVirtuals)

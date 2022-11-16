@@ -8,7 +8,9 @@ try {
   ProgramSchema=require(`./${getDataModel()}/ProgramSchema`)
 }
 catch(err) {
-  ProgramSchema=null
+  if (err.code !== 'MODULE_NOT_FOUND') {
+    throw err
+  }
 }
 
 ProgramSchema?.plugin(mongooseLeanVirtuals)
