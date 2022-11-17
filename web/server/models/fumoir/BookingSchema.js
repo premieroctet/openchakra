@@ -5,7 +5,7 @@ const {PLACES}=require('../../../utils/fumoir/consts')
 const Schema = mongoose.Schema
 
 const BookingSchema = new Schema({
-  tablenumber: {
+  table_number: {
     type: String,
     required: true,
   },
@@ -33,11 +33,6 @@ const BookingSchema = new Schema({
     type: String,
     enum: [...Object.keys(PLACES)],
     required: true,
-  },
-  // Cancel/refuse reason
-  reason: {
-    type: String,
-    required: false,
   },
   
 }, schemaOptions)

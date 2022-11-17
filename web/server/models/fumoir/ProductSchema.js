@@ -22,19 +22,11 @@ const ProductSchema = new Schema({
   hint: { // Note de dégustation
     type: String,
   },
-  rating: {
-    type: Number,
-    min: 1,
-    max: 5,
-  },
-  analytical: {
+  supplier: {
     type: Schema.Types.ObjectId,
     ref: 'company',
   },
-  photo: {
-    type: String,
-  },
-  group: {
+  picture: {
     type: String,
   },
   recommandation: [{
@@ -50,11 +42,14 @@ const ProductSchema = new Schema({
   category3: {
     type: String,
   },
-  priceExcludingTax: {
+  priceWT: { // Price without tax
     type: Number,
+    min: 0,
   },
-  tax: {
+  vat: {
     type: Number,
+    min: 0,
+    max: 1,
   },
   stock: {
     type: Number,
@@ -64,6 +59,10 @@ const ProductSchema = new Schema({
   },
   
 }, schemaOptions)
+
+ProductSchema.virtual('totalprice').get(function() {
+  return this.priceExcludingTax * (1 + this.tax)
+})
 
 ProductSchema.virtual('totalprice').get(function() {
   return this.priceExcludingTax * (1 + this.tax)

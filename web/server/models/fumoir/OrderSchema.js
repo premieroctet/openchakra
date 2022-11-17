@@ -3,7 +3,7 @@ const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 const Schema = mongoose.Schema
 const {schemaOptions} = require('../../utils/schemas')
 
-const BookingItemSchema = new Schema({
+const OrderItemSchema = new Schema({
   product: {
     type: Schema.Types.ObjectId,
     ref: 'product',
@@ -16,17 +16,15 @@ const BookingItemSchema = new Schema({
     min: 1,
     required: true,
   },
-  // Catalog price
-  catalog_price: {
+  priceWT: {
     type: Number,
     min: 0,
     required: true,
   },
-  // Price after discount (or from price list)
-  net_price: {
+  vat: {
     type: Number,
     min: 0,
-    required: true,
+    max: 1,
   },
 }, schemaOptions)
 
@@ -35,22 +33,26 @@ const OrderSchema = new Schema({
   billing_number: {
     type: String,
   },
-  items: [BookingItemSchema],
+  items: [OrderItemSchema],
   payment: {
-    type: {
+    id: {
       type: String,
     },
     date: {
       type: Date,
     },
   },
-  booking_ref: {
+  booking: {
     type: Schema.Types.ObjectId,
     ref: 'booking',
   },
-  order_creator: {
+  // member or guest have to be fulfilled
+  member: {
     type: Schema.Types.ObjectId,
     ref: 'user',
+  },
+  guest: {
+    type: String,
   },
 }, schemaOptions)
 

@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 const {schemaOptions} = require('../../utils/schemas')
-const {REVIEW_STATUS} = require('../../../utils/consts')
 
 const Schema = mongoose.Schema
 
@@ -27,12 +26,6 @@ const ReviewSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: 'user',
-  },
-  status: {
-    type: String,
-    enum: Object.values(REVIEW_STATUS),
-    default: REVIEW_STATUS.NOT_MODERATED,
-    required: true,
   },
 }, schemaOptions)
 

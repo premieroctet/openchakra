@@ -3,11 +3,11 @@ const {schemaOptions} = require('../../utils/schemas')
 const Schema = mongoose.Schema
 
 const PostSchema = new Schema({
-  post: {
+  content: {
     type: String,
     required: true,
   },
-  media: [{
+  media: [{ // url S3
     type: String,
   }],
   date: {
