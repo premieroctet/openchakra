@@ -1,3 +1,4 @@
+const { schemaOptions } = require('../../utils/schemas');
 const mongooseLeanVirtuals=require('mongoose-lean-virtuals')
 const mongoose = require('mongoose')
 
@@ -33,7 +34,7 @@ const FeurstProspectSchema = new Schema({
     type: String,
     required: false,
   },
-}, {toJSON: {virtuals: true, getters: true}})
+}, schemaOptions)
 
 FeurstProspectSchema.plugin(mongooseLeanVirtuals)
 module.exports = FeurstProspectSchema

@@ -1,4 +1,6 @@
+const { schemaOptions } = require('../../utils/schemas');
 const mongoose = require('mongoose')
+
 const Schema = mongoose.Schema
 
 const ResourceSchema = new Schema({
@@ -35,13 +37,8 @@ const ResourceSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'resource',
   },
-}, {toJSON: {virtuals: true, getters: true}})
+}, schemaOptions)
 
-/**
-ResourceSchema.virtual('spent_time_str', function (user, session) {
-  return `HOP${user}:${session}`
-})
-*/
 ResourceSchema.virtual('spent_time_str').get(function() {
   return null
 })

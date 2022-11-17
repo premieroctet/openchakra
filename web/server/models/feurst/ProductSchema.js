@@ -1,4 +1,6 @@
+const { schemaOptions } = require('../../utils/schemas');
 const mongoose = require('mongoose')
+
 const Schema = mongoose.Schema
 
 const ProductSchema = new Schema({
@@ -38,7 +40,7 @@ const ProductSchema = new Schema({
     }],
     'default': [],
   },
-}, {toJSON: {virtuals: true, getters: true}})
+}, schemaOptions)
 
 ProductSchema.virtual('is_assembly').get(function() {
   return this.components?.length>0 && this.description=='ENSEMBLE'

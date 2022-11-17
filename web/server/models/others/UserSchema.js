@@ -1,4 +1,6 @@
+const { schemaOptions } = require('../../utils/schemas');
 const mongoose = require('mongoose')
+
 const Schema = mongoose.Schema
 const moment = require('moment')
 const {getMangopayMessage} = require('../../../utils/i18n')
@@ -350,7 +352,7 @@ const UserSchema = new Schema({
     type: Boolean,
     default: false,
   },
-}, {toJSON: {virtuals: true, getters: true}})
+}, schemaOptions)
 
 UserSchema.virtual('id_card_error_text').get(function() {
   return getMangopayMessage(this.id_card_error)

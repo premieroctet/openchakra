@@ -30,7 +30,7 @@ const BookingItemSchema = new Schema({
     min: 0,
     required: true,
   },
-}, {toJSON: {virtuals: true, getters: true}})
+}, schemaOptions)
 
 BookingItemSchema.virtual('discount').get(function() {
   if (!this.catalog_price || !this.net_price) {
@@ -92,7 +92,7 @@ const QuotationBookingBaseSchema=new Schema({
     type: Date,
     required: false,
   },
-}, {toJSON: {virtuals: true, getters: true}})
+}, schemaOptions)
 
 QuotationBookingBaseSchema.virtual('net_amount').get(function() {
   if (lodash.isEmpty(this.items)) {

@@ -1,4 +1,6 @@
+const { schemaOptions } = require('../../utils/schemas');
 const mongoose = require('mongoose')
+
 const Schema = mongoose.Schema
 const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 const {hideIllegal} = require('../../utils/text')
@@ -38,7 +40,7 @@ const ChatRoomsSchema = new Schema({
     ref: 'booking',
     required: false,
   },
-}, {toJSON: {virtuals: true, getters: true}})
+}, schemaOptions)
 
 /** Return latest message date */
 ChatRoomsSchema.virtual('latest').get(function() {

@@ -1,4 +1,6 @@
+const { schemaOptions } = require('../../utils/schemas');
 const mongoose = require('mongoose')
+
 const Schema = mongoose.Schema
 const bcrypt = require('bcryptjs')
 
@@ -26,6 +28,6 @@ const UserSessionDataSchema = new Schema({
     }
   }
   ]
-}, {toJSON: {virtuals: true, getters: true}})
+}, schemaOptions)
 
 module.exports = UserSessionDataSchema

@@ -1,9 +1,10 @@
+const { schemaOptions } = require('../../utils/schemas');
 const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
 
 const ContactSchema = new Schema({
-}, {toJSON: {virtuals: true, getters: true}})
+}, schemaOptions)
 
 
 ContactSchema.virtual('name').get(() => {

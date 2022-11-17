@@ -1,4 +1,6 @@
+const { schemaOptions } = require('../../utils/schemas');
 const mongoose = require('mongoose')
+
 const Schema = mongoose.Schema
 const {ROLES}=require('../../../utils/feurst/consts')
 
@@ -51,7 +53,7 @@ const UserSchema = new Schema({
   },
   // Comments for admins
   comment: String,
-}, {toJSON: {virtuals: true, getters: true}})
+}, schemaOptions)
 
 UserSchema.virtual('avatar_letters').get(function() {
   const first_letter = this.firstname ? this.firstname.charAt(0) : ''
