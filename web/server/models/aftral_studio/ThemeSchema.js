@@ -1,3 +1,4 @@
+const { schemaOptions } = require('../../utils/schemas');
 const mongoose = require('mongoose')
 const lodash=require('lodash')
 const {cloneArray} = require('../../utils/database')
@@ -36,7 +37,7 @@ const ThemeSchema = new Schema({
     ref: 'resource',
     default: null,
   },
-}, {toJSON: {virtuals: true, getters: true}})
+}, schemaOptions)
 
 
 ThemeSchema.virtual('hidden').get(function() {

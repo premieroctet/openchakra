@@ -1,3 +1,4 @@
+const { schemaOptions } = require('../../utils/schemas');
 const moment = require('moment')
 const mongoose = require('mongoose')
 const lodash=require('lodash')
@@ -51,11 +52,10 @@ const SessionSchema = new Schema({
     ref: 'user',
     required: false,
   }],
-},
-{toJSON: {virtuals: true, getters: true},
-})
+}, schemaOptions)
 
 SessionSchema.virtual('trainees_count').get(function() {
+  console.log(`Trainees are ${JSON.stringify(this.trainees)}`)
   return this.trainees?.length || 0
 })
 

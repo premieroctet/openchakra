@@ -1,4 +1,6 @@
+const { schemaOptions } = require('../../utils/schemas');
 const mongoose = require('mongoose')
+
 const Schema = mongoose.Schema
 
 const PriceListSchema = new Schema({
@@ -16,6 +18,6 @@ const PriceListSchema = new Schema({
     min: 0,
     required: true,
   },
-}, {toJSON: {virtuals: true, getters: true}})
+}, schemaOptions)
 
 module.exports = PriceListSchema

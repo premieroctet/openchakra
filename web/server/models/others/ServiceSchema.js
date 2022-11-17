@@ -1,3 +1,4 @@
+const { schemaOptions } = require('../../utils/schemas');
 const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 const mongoose = require('mongoose')
 
@@ -56,10 +57,7 @@ const ServiceSchema = new Schema({
     required: true,
     sparse: true,
   },
-}, {
-  toJSON: {virtuals: true, getters: true},
-  toObject: {virtuals: true, getters: true},
-})
+}, schemaOptions)
 
 // travel_tax available for any service made at customer's place
 ServiceSchema.virtual('travel_tax').get(function() {

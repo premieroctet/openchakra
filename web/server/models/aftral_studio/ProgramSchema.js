@@ -1,4 +1,6 @@
+const { schemaOptions } = require('../../utils/schemas');
 const mongoose = require('mongoose')
+
 const Schema = mongoose.Schema
 
 const ProgramSchema = new Schema({
@@ -44,6 +46,6 @@ const ProgramSchema = new Schema({
     type: Boolean,
     default: false,
   },
-}, {toJSON: {virtuals: true, getters: true}})
+}, schemaOptions)
 
 module.exports = ProgramSchema

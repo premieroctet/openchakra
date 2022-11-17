@@ -1,3 +1,4 @@
+const { schemaOptions } = require('../../utils/schemas');
 const mongoose = require('mongoose')
 const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 
@@ -44,7 +45,7 @@ const UIConfigurationSchema = new Schema({
     label: String,
     id: String,
   }],
-}, {toJSON: {virtuals: true, getters: true}})
+}, schemaOptions)
 
 UIConfigurationSchema.virtual('type_label').get(function() {
   return this.type=='content' ? `${this.classname}.${this.type}` : this.classname

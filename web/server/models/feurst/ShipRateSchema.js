@@ -1,3 +1,4 @@
+const { schemaOptions } = require('../../utils/schemas');
 const mongoose = require('mongoose')
 const {roundCurrency} = require('../../../utils/converters')
 
@@ -36,6 +37,6 @@ const ShipRateSchema = new Schema({
     get: v => roundCurrency(v),
     default: true,
   },
-}, {toJSON: {virtuals: true, getters: true}})
+}, schemaOptions)
 
 module.exports = ShipRateSchema

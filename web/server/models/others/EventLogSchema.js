@@ -1,4 +1,6 @@
+const { schemaOptions } = require('../../utils/schemas');
 const mongoose = require('mongoose')
+
 const Schema = mongoose.Schema
 
 const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
@@ -72,7 +74,7 @@ const EventLogSchema = new Schema({
     type: Schema.Types.Mixed,
     required: false,
   },
-}, {toJSON: {virtuals: true, getters: true}})
+}, schemaOptions)
 
 EventLogSchema.plugin(mongooseLeanVirtuals)
 

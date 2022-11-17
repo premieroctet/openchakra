@@ -1,3 +1,4 @@
+const { schemaOptions } = require('../../utils/schemas');
 const mongoose = require('mongoose')
 const lodash=require('lodash')
 const {
@@ -246,7 +247,7 @@ const BookingSchema = new Schema({
     type: String,
     required: function() { return this.location==LOCATION_ELEARNING && this.status==BOOK_STATUS.CONFIRMED },
   },
-}, {toJSON: {virtuals: true, getters: true}})
+}, schemaOptions)
 
 BookingSchema.virtual('alfred_amount').get(function() {
   return this.amount - this.customer_fee - this.provider_fee
