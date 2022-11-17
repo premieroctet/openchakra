@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema
 const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
-const {REVIEW_STATUS} = require('../../../utils/consts')
+const {schemaOptions} = require('../../utils/schemas')
 
+const Schema = mongoose.Schema
 
 const SubscriptionSchema = new Schema({
   start: {
@@ -15,7 +15,7 @@ const SubscriptionSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'user',
   },
-})
+}, schemaOptions)
 
 SubscriptionSchema.plugin(mongooseLeanVirtuals)
 

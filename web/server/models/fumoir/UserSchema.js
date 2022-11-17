@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+const {schemaOptions} = require('../../utils/schemas')
 const {ROLES}=require('../../../utils/fumoir/consts')
+
+const Schema = mongoose.Schema
 
 const UserSchema = new Schema({
   firstname: {
@@ -69,7 +71,7 @@ const UserSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'resetToken',
   },
-}, {toJSON: {virtuals: true, getters: true}})
+}, schemaOptions)
 
 
 UserSchema.virtual('full_name').get(function() {

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const {schemaOptions} = require('../../utils/schemas')
 const Schema = mongoose.Schema
 
 const PostSchema = new Schema({
@@ -18,6 +19,6 @@ const PostSchema = new Schema({
     ref: 'user',
   },
 
-})
+}, schemaOptions)
 
 module.exports = PostSchema

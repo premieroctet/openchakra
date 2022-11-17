@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const {schemaOptions} = require('../../utils/schemas')
 const Schema = mongoose.Schema
 
 const ProductSchema = new Schema({
@@ -18,22 +19,20 @@ const ProductSchema = new Schema({
   features: [{ // Caractéristiques
     type: String,
   }],
+  hint: { // Note de dégustation
+    type: String,
+  },
   rating: {
     type: Number,
     min: 1,
     max: 5,
   },
-  hint: { // Note de dégustation
-    type: String,
-  },
   analytical: {
-    type: String,
+    type: Schema.Types.ObjectId,
+    ref: 'company',
   },
   photo: {
     type: String,
-  },
-  price: {
-    type: Number,
   },
   group: {
     type: String,
@@ -42,17 +41,20 @@ const ProductSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'product',
   }],
-  //   family: {
-  //     type: String,
-  //   },
-  //   weight: {
-  //     type: Number,
-  //     min: 0,
-  //     required: true,
-  //   },
+  category1: {
+    type: String,
+  },
+  category2: {
+    type: String,
+  },
+  category3: {
+    type: String,
+  },
+  priceExcludingTax: {
+    type: Number,
+  },
   tax: {
-    type: Schema.Types.ObjectId,
-    ref: 'taxes',
+    type: Number,
   },
   stock: {
     type: Number,
@@ -61,10 +63,10 @@ const ProductSchema = new Schema({
     // required: true, TODO make mandatory then import
   },
   
-}, {toJSON: {virtuals: true, getters: true}})
+}, schemaOptions)
 
 ProductSchema.virtual('totalprice').get(function() {
-  return this.price * (1 + this.tax)
+  return this.priceExcludingTax * (1 + this.tax)
 })
 
 module.exports=ProductSchema

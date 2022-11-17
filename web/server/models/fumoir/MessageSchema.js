@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
+const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
+const {schemaOptions} = require('../../utils/schemas')
 const Schema = mongoose.Schema
 
-const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 
 const MessageSchema = new Schema({
   subject: {
@@ -28,7 +29,7 @@ const MessageSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'user',
   },
-})
+}, schemaOptions)
 
 MessageSchema.plugin(mongooseLeanVirtuals)
 
