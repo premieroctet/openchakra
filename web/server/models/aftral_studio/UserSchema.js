@@ -1,4 +1,6 @@
+const { schemaOptions } = require('../../utils/schemas');
 const mongoose = require('mongoose')
+
 const Schema = mongoose.Schema
 const bcrypt = require('bcryptjs')
 
@@ -29,10 +31,10 @@ const UserSchema = new Schema({
   },
   sessions: [{
     type: Schema.Types.ObjectId,
-    ref: 'traineeSession',
+    ref: 'session',
     required: true,
   }],
-}, {toJSON: {virtuals: true, getters: true}})
+}, schemaOptions)
 
 UserSchema.virtual('contact_name').get(function() {
   return `${this.firstname} ${this.name} (${this.role})`

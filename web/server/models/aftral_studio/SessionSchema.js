@@ -1,7 +1,7 @@
+const { schemaOptions } = require('../../utils/schemas');
 const moment = require('moment')
 const mongoose = require('mongoose')
 const lodash=require('lodash')
-const formatDuration = require('format-duration')
 const {cloneModel, cloneArray} = require('../../utils/database')
 
 const Schema = mongoose.Schema
@@ -52,21 +52,10 @@ const SessionSchema = new Schema({
     ref: 'user',
     required: false,
   }],
-  trainee: {
-    type: Schema.Types.ObjectId,
-    ref: 'user',
-    required: false,
-  },
-  origin: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'resource',
-    default: null,
-  },
-},
-{toJSON: {virtuals: true, getters: true},
-})
+}, schemaOptions)
 
 SessionSchema.virtual('trainees_count').get(function() {
+  console.log(`Trainees are ${JSON.stringify(this.trainees)}`)
   return this.trainees?.length || 0
 })
 
@@ -104,15 +93,6 @@ SessionSchema.pre(['save'], function() {
   }
 })
 
-SessionSchema.virtual('spent_time').get(function() {
-  return lodash.sum(this.themes.map(t => t.spent_time || 0))
-})
-
-SessionSchema.virtual('spent_time_str').get(function() {
-  const timeMillis=lodash.sum(this.themes.map(t => t.spent_time || 0))
-  return formatDuration(timeMillis, {leading: true})
-})
-
 SessionSchema.methods.addChild = function(model, data) {
   return cloneModel({data})
     .then(cloned => {
@@ -132,6 +112,10 @@ SessionSchema.methods.addChild = function(model, data) {
 
 SessionSchema.virtual('contact_name').get(function() {
   return `Session ${this.name}`
+})
+
+SessionSchema.virtual('spent_time_str').get(function() {
+  return null
 })
 
 module.exports = SessionSchema

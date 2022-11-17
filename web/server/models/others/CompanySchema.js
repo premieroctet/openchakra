@@ -1,3 +1,4 @@
+const { schemaOptions } = require('../../utils/schemas');
 const mongoose = require('mongoose')
 const AddressSchema = require('../AddressSchema')
 const {hideIllegal} = require('../../../utils/text')
@@ -65,7 +66,7 @@ const CompanySchema = new Schema({
     ref: 'user',
     required: [true, 'Le nom du délégué est requis'],
   },
-}, {toJSON: {virtuals: true, getters: true}})
+}, schemaOptions)
 
 CompanySchema.virtual('full_name').get(function() {
   return this.name

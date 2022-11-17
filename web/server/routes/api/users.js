@@ -102,8 +102,8 @@ router.get('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     .populate({path: 'company', populate: {path: 'sales_representative'}})
     .populate('companies')
     .then(data => {
-      data=filterUsers(data, DATA_TYPE, req.user, VIEW)
-      res.json(data)
+      const filteredData=filterUsers(data, DATA_TYPE, req.user, VIEW)
+      res.json(filteredData)
     })
     .catch(err => {
       console.error(err)

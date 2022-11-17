@@ -1,3 +1,4 @@
+const { schemaOptions } = require('../../utils/schemas');
 const mongoose = require('mongoose')
 const {getDeadLine}=require('../../../utils/dateutils')
 const {hideIllegal} = require('../../../utils/text')
@@ -194,7 +195,7 @@ const ServiceUserSchema = new Schema({
   cpf_link: {
     type: String,
   },
-}, {toJSON: {virtuals: true, getters: true}})
+}, schemaOptions)
 
 ServiceUserSchema.virtual('is_graduated').get(function() {
   return Boolean(this.diploma && this.diploma.name!='null')

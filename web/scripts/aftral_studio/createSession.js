@@ -3,7 +3,7 @@ const PromiseSerial = require('promise-serial')
 const mongoose = require('mongoose')
 const bcrypt=require('bcryptjs')
 const {MONGOOSE_OPTIONS, cloneModel, cloneArray} = require('../../server/utils/database')
-const Trainingcenter = require('../../server/models/TrainingCenter')
+const TrainingCenter = require('../../server/models/TrainingCenter')
 const Session = require('../../server/models/Session')
 const User = require('../../server/models/User')
 const Resource = require('../../server/models/Resource')
@@ -76,35 +76,26 @@ const generateProgram = data => {
     })
 }
 
-const createUser = data => {
-  return User.findOneAndUpdate(
-    {email: data.email},
-    {role: data.role, firstname: data.firstname, name: data.name, email: data.email, password: PASSWD},
-    {upsert: true, new: true},
-  )
-}
-
-const createSession = (data, center) => {
-  const emails=data.trainee.split(',')
-  return Promise.all([Program.findOne({code: data.program_code}).populate({path: 'themes', populate: 'resources'}), User.find()])
-    .then(([program, users]) => {
+const createSession = (program, center) => {
+  return User.find()
+    .then(users => {
       return cloneArray({data: program.themes, withOrigin: false})
         .then(themes => {
           return Session.findOneAndUpdate(
-            {code: data.code},
-            {name: `${data.code}-${program.name}`,
+            {code: program.code},
+            {name: `${program.code}-${program.name}`,
               description: program.description,
-              code: data.code, trainees: users.filter(u => u.role=='apprenant'),
+              code: program.code, trainees: users.filter(u => u.role=='apprenant'),
               trainers: users.filter(u => u.role=='formateur'),
-              start: moment(data.start, 'DD/MM/YYYY'), end: moment(data.end, 'DD/MM/YYYY'), location: center, program: program._id,
+              start: moment(), end: moment().add(10, 'days'), location: center, program: program._id,
               themes: themes.map(t => t._id),
             },
             {upsert: true, new: true},
           )
-          .then(s => {
-            console.log(`Created session ${s}`)
-            return s
-          })
+            .then(s => {
+              console.log(`Created session ${s}`)
+              return s
+            })
         })
     })
 }
@@ -113,34 +104,36 @@ const createTraineeSession = (session, trainee) => {
   return User.findOneAndUpdate({_id: trainee}, {$addToSet: {sessions: session}})
 }
 
-const generateTraineeSessions = () => {
-  return Session.find()
-    .populate({path: 'program', populate: {path: 'themes', populate: 'resources'}})
-    .populate({path: 'themes', populate: 'resources'})
+const generateTraineeSessions = session => {
+  return Session.findById(session._id)
     .populate('trainees')
-    .populate('trainers')
-    .then(sessions => {
-      return Promise.all(sessions.map(session => {
-        return Promise.all(session.trainees.map(trainee => {
-          return createTraineeSession(session, trainee)
-        }))
+    .then(session => {
+      return Promise.all(session.trainees.map(trainee => {
+        return createTraineeSession(session, trainee)
       }))
     })
 }
 
 async function run() {
-// await mongoose.connect('mongodb://localhost/test', MONGOOSE_OPTIONS)
+  const program_name=process.argv[2]
+  if (!program_name) {
+    console.error(`No program name provided`)
+    process.exit(1)
+  }
   await mongoose.connect(getDatabaseUri(), MONGOOSE_OPTIONS)
-  await mongoose.connection.dropDatabase()
-  await PromiseSerial(data.programs.map(p => () => createResource(p)))
-  const resCount=await Resource.count()
-  console.log(`Created ${resCount} resources`)
-  await PromiseSerial(data.programs.map(p => () => createTheme(p)))
-  await PromiseSerial(data.users.map(p => () => createUser(p)))
-  await PromiseSerial(data.programs.map(p => () => generateProgram(p)))
-  const center=await generateCenter()
-  await Promise.all(data.sessions.map(p => createSession(p, center)))
-  await generateTraineeSessions()
+  const program=await Program.findOne({name: program_name})
+    .populate({path: 'themes', populate: 'resources'})
+  const center=await TrainingCenter.findOne()
+  if (!program) {
+    console.error(`No program with name ${program_name} found`)
+    process.exit(1)
+  }
+  if (!center) {
+    console.error(`No center found`)
+    process.exit(1)
+  }
+  const session=await createSession(program, center)
+  await generateTraineeSessions(session)
   console.log('Terminé')
 }
 

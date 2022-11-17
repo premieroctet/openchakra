@@ -1,3 +1,4 @@
+const { schemaOptions } = require('../../utils/schemas');
 const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
@@ -24,7 +25,7 @@ const MessageSchema = new Schema({
     ref: 'session',
     required: false,
   },
-}, {toJSON: {virtuals: true, getters: true}})
+}, schemaOptions)
 
 MessageSchema.virtual('destinee_name').get(function() {
   return this.destinee_user?.contact_name || this.destinee_session?.contact_name

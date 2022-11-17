@@ -1,3 +1,4 @@
+const { schemaOptions } = require('../../utils/schemas');
 const {canAlfredParticularRegister} = require('../../../config/config')
 const mongoose = require('mongoose')
 const {CESU, INSURANCE_TYPES} = require('../../../utils/consts')
@@ -119,7 +120,7 @@ const ShopSchema = new Schema({
   id_mangopay: {
     type: String,
   },
-}, {toJSON: {virtuals: true, getters: true}})
+}, schemaOptions)
 
 ShopSchema.virtual('insurance_text').get(function() {
   return this.insurances && this.insurances.map(ins => {

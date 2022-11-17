@@ -1,4 +1,6 @@
+const { schemaOptions } = require('../../utils/schemas');
 const mongoose = require('mongoose')
+
 const Schema = mongoose.Schema
 
 const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
@@ -28,7 +30,7 @@ const AvailabilitySchema = new Schema({
     required: true,
   },
   timelapses: [{type: Number}], // array containing indexes of available timelapses
-}, {toJSON: {virtuals: true, getters: true}})
+}, schemaOptions)
 
 AvailabilitySchema.virtual('is_punctual').get(function() {
   return ![undefined, null].includes(this.punctual)
