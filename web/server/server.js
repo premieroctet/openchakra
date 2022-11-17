@@ -17,9 +17,7 @@ const {
 }=require('../config/config')
 const {HTTP_CODES} = require('./utils/errors')
 const Shiprate = require('./models/ShipRate')
-
 const Product = require('./models/Product')
-
 const Order = require('./models/Order')
 const Quotation = require('./models/Quotation')
 const Service = require('./models/Service')
@@ -35,6 +33,7 @@ require('./models/TrainingCenter')
 require('./models/User')
 require('./models/Contact')
 require('./models/Message')
+require('./models/LoggedUser')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 

@@ -183,7 +183,9 @@ router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), as
     fields=lodash([...fields, 'sender', 'destinee_user', 'destinee_session']).uniq().value()
   }
 
-  let data=await buildQuery(model, id, fields).lean({virtuals: true})
+  const queryModel='loggedUser' ? 'user' : model
+  const queryId=req.user?._id || 'INVALIDID'
+  let data=await buildQuery(queryModel, queryId, fields).lean({virtuals: true})
   for (let d of data) {
     await addComputedFields(user, params, d, model, fields)
     .catch(err => console.error(err))

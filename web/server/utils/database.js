@@ -64,6 +64,9 @@ const DECLARED_VIRTUALS={
   user: {
     contact_name: {path: 'contact_name', instance: 'String', requires: 'name,firstname,role'},
   },
+  loggedUser: {
+    contact_name: {path: 'contact_name', instance: 'String', requires: 'name,firstname,role'},
+  },
   message: {
     destinee_name: {path: 'destinee_name', instance: 'String', requires: 'destinee_session.trainers,destinee_session.trainees,destinee_user'},
     sender_name: {path: 'sender_name', instance: 'String', requires: 'sender'},
