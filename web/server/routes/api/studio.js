@@ -13,8 +13,8 @@ const child_process = require('child_process')
 const mongoose=require('mongoose')
 const express = require('express')
 const lodash=require('lodash')
-const PRODUCTION_ROOT='/home/ec2-user/studio/'
-//const PRODUCTION_ROOT='/home/seb/workspace'
+//const PRODUCTION_ROOT='/home/ec2-user/studio/'
+const PRODUCTION_ROOT='/home/seb/workspace'
 //const PRODUCTION_ROOT='/Users/seb/workspace'
 const passport = require('passport')
 const {HTTP_CODES, NotFoundError}=require('../../utils/errors')
@@ -160,11 +160,14 @@ router.post('/:model', (req, res) => {
 })
 
 router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), async (req, res) => {
+
   const model=req.params.model
   let fields=req.query.fields?.split(',') || []
   const id=req.params.id
   const params=url.parse(req.get('Referrer'), true).query
   const user=req.user
+
+  console.log(`GET ${model}/${id} ${fields}`)
 
   if (model=='contact') {
     const contacts=await getContacts(req.user, id)
@@ -183,8 +186,8 @@ router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), as
     fields=lodash([...fields, 'sender', 'destinee_user', 'destinee_session']).uniq().value()
   }
 
-  const queryModel='loggedUser' ? 'user' : model
-  const queryId=req.user?._id || 'INVALIDID'
+  const queryModel = model=='loggedUser' ? 'user' : model
+  const queryId = req.user?._id || 'INVALIDID'
   let data=await buildQuery(queryModel, queryId, fields).lean({virtuals: true})
   for (let d of data) {
     await addComputedFields(user, params, d, model, fields)
