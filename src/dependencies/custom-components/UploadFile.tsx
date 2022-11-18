@@ -44,7 +44,7 @@ const UploadFile = ({
         fileToUpload?.name,
         fileToUpload,
         '',
-        mime.getExtension(fileToUpload?.name) || '',
+        mime.lookup(fileToUpload?.name) || '',
         [],
       )
         .then(res => {
