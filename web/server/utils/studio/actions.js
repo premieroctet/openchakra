@@ -52,7 +52,7 @@ const ACTIONS={
     // console.log(`Params:${params}`)
     return UserSessionData.findOneAndUpdate(
       {session: params.session, user: user._id},
-      {},
+      {session: params.session, user: user._id},
       {upsert: true},
     )
       .then(data => {
@@ -76,8 +76,8 @@ const ACTIONS={
     return addChild(parent, child)
   },
 
-  next: ({id}) => {
-    return getNext(id)
+  next: ({id}, user, referrer) => {
+    return getNext(id, user, referrer)
   },
 
   previous: ({id}) => {

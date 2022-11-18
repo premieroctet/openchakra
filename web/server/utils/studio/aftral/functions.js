@@ -1,9 +1,10 @@
-const UserSessionData = require('../../../models/UserSessionData');
+const url=require('url')
 const mongoose =require('mongoose')
 const lodash =require('lodash')
 const bcrypt=require('bcryptjs')
 const {cloneModel, getModel} = require('../../database')
 const {BadRequestError, NotFoundError} = require('../../errors')
+const UserSessionData = require('../../../models/UserSessionData');
 const Program=require('../../../models/Program')
 const Theme=require('../../../models/Theme')
 const Session=require('../../../models/Session')
@@ -112,7 +113,7 @@ const getResourcesForSession = resource_id => {
   return getModel(resource_id)
     .then(model => {
       if (model!='resource') {
-        throw new Error(`Id ${resource_id} is not a resource`)
+        throw new Error(`Id ${resource_id} is not a resource but a ${model}`)
       }
       return Theme.findOne({resources: resource_id})
     })
@@ -126,13 +127,22 @@ const getResourcesForSession = resource_id => {
     })
 }
 
-const getNext = id => {
-  return getResourcesForSession(id)
-    .then(datalist => {
-      const idx=datalist.findIndex(v => v._id.toString()==id)
-      const nextIdx=idx==datalist.length-1 ?idx : idx+1
-      return datalist[nextIdx]
-    })
+// Mark ressource finished then return next
+const getNext = (id, user, referrer) => {
+  const params=url.parse(referrer, true).query
+  return UserSessionData.findOneAndUpdate(
+    {user: user._id, session: params.session},
+    {$addToSet:{finished: id}},
+    {upsert: true}
+  )
+  .then(() => {
+    return getResourcesForSession(id)
+      .then(datalist => {
+        const idx=datalist.findIndex(v => v._id.toString()==id)
+        const nextIdx=idx==datalist.length-1 ?idx : idx+1
+        return datalist[nextIdx]
+      })
+  })
 }
 
 const getPrevious = id => {

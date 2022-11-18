@@ -26,8 +26,12 @@ const UserSessionDataSchema = new Schema({
       type: Number,
       required: true,
     }
-  }
-  ]
+  }],
+  finished: [{
+    type: Schema.Types.ObjectId,
+    ref: 'resource',
+    required: true,
+  }],
 }, schemaOptions)
 
 module.exports = UserSessionDataSchema

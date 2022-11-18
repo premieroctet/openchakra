@@ -55,16 +55,11 @@ const SessionSchema = new Schema({
 }, schemaOptions)
 
 SessionSchema.virtual('trainees_count').get(function() {
-  console.log(`Trainees are ${JSON.stringify(this.trainees)}`)
   return this.trainees?.length || 0
 })
 
 SessionSchema.virtual('trainers_count').get(function() {
   return this.trainers?.length || 0
-})
-
-SessionSchema.virtual('status').get(function() {
-  return moment()>this.end_date ? 'Terminée': 'En cours'
 })
 
 SessionSchema.methods.updateThemes = function(themes) {
@@ -112,6 +107,10 @@ SessionSchema.methods.addChild = function(model, data) {
 
 SessionSchema.virtual('contact_name').get(function() {
   return `Session ${this.name}`
+})
+
+SessionSchema.virtual('spent_time').get(function() {
+  return null
 })
 
 SessionSchema.virtual('spent_time_str').get(function() {

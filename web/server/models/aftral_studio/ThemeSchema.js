@@ -39,6 +39,13 @@ const ThemeSchema = new Schema({
   },
 }, schemaOptions)
 
+ThemeSchema.virtual('spent_time').get(function() {
+  return null
+})
+
+ThemeSchema.virtual('spent_time_str').get(function() {
+  return null
+})
 
 ThemeSchema.virtual('hidden').get(function() {
   return (!this.name && !this.code && !this.picture)

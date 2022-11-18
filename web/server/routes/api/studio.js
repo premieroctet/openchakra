@@ -151,7 +151,6 @@ router.post('/:model', (req, res) => {
   const model=req.params.model
   return mongoose.connection.models[model].create({})
     .then(data => {
-      console.log(`CReated ata ${data}`)
       return res.json(data)
     })
     .catch(err => {
@@ -190,10 +189,7 @@ router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), as
   const queryId = model=='loggedUser' ? (req.user?._id || 'INVALIDID') : id
 
   let data=await buildQuery(queryModel, queryId, fields).lean({virtuals: true})
-  for (let d of data) {
-    await addComputedFields(user, params, d, model, fields)
-    .catch(err => console.error(err))
-  }
+  await Promise.all(data.map(d => addComputedFields(user, params, d, model)))
   if (!id) {
     data=await filterDataUser({model, data, user: req.user})
   }
