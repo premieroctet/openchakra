@@ -81,5 +81,11 @@ UserSchema.virtual('full_name').get(function() {
   return `${this.firstname} ${this.name}`
 })
 
+UserSchema.virtual('is_active', {
+  ref: 'subscription',
+  localField: 'active',
+  foreignField: 'is_active',
+})
+
 
 module.exports = UserSchema

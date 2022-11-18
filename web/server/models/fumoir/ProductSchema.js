@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const {schemaOptions} = require('../../utils/schemas')
 const Schema = mongoose.Schema
 
+
 const ProductSchema = new Schema({
   reference: {
     type: String,
@@ -33,14 +34,9 @@ const ProductSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'product',
   }],
-  category1: {
-    type: String,
-  },
-  category2: {
-    type: String,
-  },
-  category3: {
-    type: String,
+  category: {
+    type: Schema.Types.ObjectId,
+    ref: 'category',
   },
   priceWT: { // Price without tax
     type: Number,
