@@ -37,7 +37,6 @@ const UploadFile = ({
     const inputFile = form.querySelector('[type="file"]') as HTMLInputElement
     const fileToUpload =
       inputFile && inputFile?.files && (inputFile?.files[0] as File)
-    const ext = mime.getExtension(fileToUpload?.name) || null
 
     if (fileToUpload) {
       // upload file to S3
@@ -45,7 +44,8 @@ const UploadFile = ({
         fileToUpload?.name,
         fileToUpload,
         '',
-        mime.getType(ext) || '',
+        // @ts-ignore
+        mime.getType(mime.getExtension(fileToUpload?.name)) || '',
         [],
       )
         .then(res => {
