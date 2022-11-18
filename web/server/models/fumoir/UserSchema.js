@@ -17,7 +17,10 @@ const UserSchema = new Schema({
     type: String,
     enum: Object.keys(ROLES),
   },
-  photo: {
+  picture: {
+    type: String,
+  },
+  banner: {
     type: String,
   },
   contact: {

@@ -64,8 +64,10 @@ ProductSchema.virtual('totalprice').get(function() {
   return this.priceExcludingTax * (1 + this.tax)
 })
 
-ProductSchema.virtual('totalprice').get(function() {
-  return this.priceExcludingTax * (1 + this.tax)
+ProductSchema.virtual('reviews', {
+  ref: 'Review',
+  localField: 'content',
+  foreignField: '_id',
 })
 
 module.exports=ProductSchema
