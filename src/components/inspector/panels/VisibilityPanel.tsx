@@ -5,7 +5,13 @@ import FormControl from '../controls/FormControl'
 import usePropsSelector from '../../../hooks/usePropsSelector'
 import { List, Checkbox } from '@chakra-ui/react'
 
-const ROLES = ['apprenant', 'formateur', 'concepteur', 'administrateur']
+const ROLES = [
+  'apprenant',
+  'formateur',
+  'concepteur',
+  'administrateur',
+  'gestionnaire',
+]
 
 const VisibilityPanel: React.FC = () => {
   const hiddenRoles = usePropsSelector('hiddenRoles')
