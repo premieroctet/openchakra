@@ -4,6 +4,10 @@ import FileManager from '../utils/S3filemanager'
 import { s3Config } from '../utils/s3Config'
 import useFetch from 'use-http'
 import mime from 'mime'
+import JSZip from 'jszip'
+import { getExtension } from './MediaWrapper'
+
+const uploadUrl = `https://localhost:4002/myAlfred/api/studio/uploadfile`
 
 const UploadFile = ({
   dataSource,
@@ -39,25 +43,66 @@ const UploadFile = ({
       inputFile && inputFile?.files && (inputFile?.files[0] as File)
 
     if (fileToUpload) {
-      // upload file to S3
-      await FileManager.createFile(
-        fileToUpload?.name,
-        fileToUpload,
-        '',
-        // @ts-ignore
-        mime.getType(mime.getExtension(fileToUpload?.name)) || '',
-        [],
-      )
-        .then(res => {
-          // Send ressource url
-          post(`myAlfred/api/studio/action`, {
-            action: 'put',
-            parent: ressource_id,
-            attribute,
-            value: res?.Location,
-          })
-        })
-        .catch(err => console.error(err))
+      const typeOfUpload = getExtension(fileToUpload?.name)
+
+      switch (typeOfUpload) {
+        case 'zip':
+          JSZip.loadAsync(fileToUpload)
+            .then(zip => {
+              // On décompresse 💆🏻
+              Object.keys(zip.files).forEach(function(filename) {
+                zip.files[filename]
+                  .async('blob')
+                  .then(async function(fileData) {
+                    let file = new File(
+                      [fileData],
+                      `${fileToUpload?.name}/${filename}`,
+                      { type: mime.getType(getExtension(filename)) || '' },
+                    )
+
+                    await FileManager.createFile(
+                      file.name,
+                      file,
+                      '',
+                      file.type,
+                      [],
+                    )
+                  })
+              })
+            })
+            .then(res =>
+              post(uploadUrl, {
+                action: 'put',
+                parent: ressource_id,
+                attribute,
+                // When scorm uploaded (usually zip file), refer story.html
+                value: `https://${s3Config.bucketName}.s3.${s3Config.region}/${fileToUpload?.name}/story.html`,
+              }),
+            )
+
+          break
+
+        default:
+          await FileManager.createFile(
+            fileToUpload?.name,
+            fileToUpload,
+            '',
+            // @ts-ignore
+            fileToUpload?.type,
+            [],
+          )
+            .then(res => {
+              // Send ressource url
+              post(uploadUrl, {
+                action: 'put',
+                parent: ressource_id,
+                attribute,
+                value: res?.Location,
+              })
+            })
+            .catch(err => console.error(err))
+          break
+      }
 
       if (response.ok) setUploadInfo('Ressource ajoutée')
       if (error) setUploadInfo('Echec ajout ressource')
