@@ -158,7 +158,7 @@ router.post('/:model', (req, res) => {
     })
 })
 
-router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), async (req, res) => {
+router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (req, res) => {
 
   const model=req.params.model
   let fields=req.query.fields?.split(',') || []
@@ -169,12 +169,14 @@ router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), as
   console.log(`GET ${model}/${id} ${fields}`)
 
   if (model=='contact') {
-    const contacts=await getContacts(req.user, id)
-      .catch(err => {
-        console.error(err)
-        res.status(err.status || HTTP_CODES.SYSTEM_ERROR).json(err.message || err)
-      })
-    return res.json(contacts)
+    return getContacts(req.user, id)
+    .then(contacts => {
+      return res.json(contacts)
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(err.status || HTTP_CODES.SYSTEM_ERROR).json(err.message || err)
+    })
   }
 
   if (model=='session') {
@@ -188,18 +190,23 @@ router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), as
   const queryModel = model=='loggedUser' ? 'user' : model
   const queryId = model=='loggedUser' ? (req.user?._id || 'INVALIDID') : id
 
-  let data=await buildQuery(queryModel, queryId, fields).lean({virtuals: true})
-  await Promise.all(data.map(d => addComputedFields(user, params, d, model)))
-  if (!id) {
-    data=await filterDataUser({model, data, user: req.user})
-  }
-  if (id && data.length==0) {
-    throw new NotFoundError(`Can't find ${model}:${id}`)
-  }
-  if (['theme', 'resource'].includes(model) && !id) {
-    data=data.filter(t => t.name)
-  }
-  return res.json(data)
+  buildQuery(queryModel, queryId, fields).lean({virtuals: true})
+    .then(data => {
+      if (id && data.length==0) {
+        throw new NotFoundError(`Can't find ${model}:${id}`)
+      }
+      return Promise.all(data.map(d => addComputedFields(user, params, d, model)))
+    })
+    .then(data => {
+      return id ? Promise.resolve(data):filterDataUser({model, data, user: req.user})
+    })
+    .then(data => {
+      if (['theme', 'resource'].includes(model) && !id) {
+        data=data.filter(t => t.name)
+      }
+      console.log(`Returning data`)
+      return res.json(data)
+    })
 })
 
 module.exports=router

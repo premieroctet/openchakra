@@ -268,9 +268,10 @@ const addComputedFields= async (user, queryParams, data, model) => {
   }
 
   // UGLY
+  /**
   if (model=='session') {
     queryParams.session=data._id.toString()
-  }
+  }*/
   const compFields=COMPUTED_FIELDS[model] || {}
   // Compute direct attributes
   const x=await PromiseSerial(Object.keys(compFields).map(f => () => compFields[f](user, queryParams, data)
@@ -288,6 +289,7 @@ const addComputedFields= async (user, queryParams, data, model) => {
       }
     }
   }
+  return data
 }
 
 const formatTime= (timeMillis) => {
@@ -295,9 +297,13 @@ const formatTime= (timeMillis) => {
 }
 
 const getResourceSpentTime = async (user, queryParams, resource) => {
-  const data=await UserSessionData.findOne({user: user._id})
-  const spent=data?.spent_times?.find(s => s.resource._id.toString()==resource._id.toString())?.spent_time || 0
-  return spent
+  console.log(`Searchinf res ${resource._id}`)
+  const data=await UserSessionData.find({user: user._id})
+  const spent=lodash(data)
+    .map(d => d.spent_times)
+    .flatten()
+    .find(sp => sp.resource._id.toString()==resource._id.toString())
+  return spent?.spent_time || 0
 }
 
 const getResourceStatus = async (user, queryParams, resource) => {
@@ -323,9 +329,9 @@ const getResourceSpentTimeStr = async (user, queryParams, resource) => {
 
 const getThemeSpentTime = async (user, queryParams, theme) => {
   const data=await mongoose.connection.models['theme'].findById(theme._id.toString())
-  if (!data) { return 0}
   const results=await Promise.all(data.resources.map(r => getResourceSpentTime(user, queryParams, r._id)))
-  return lodash.sum(results)
+  const spent=lodash.sum(results)
+  return spent
 }
 
 const getThemeSpentTimeStr = async (user, queryParams, theme) => {
@@ -337,7 +343,8 @@ const getSessionSpentTime = async (user, queryParams, session) => {
   const data=await mongoose.connection.models['session'].findById(session._id.toString())
   if (!data) { return 0}
   const results=await Promise.all(data.themes.map(t => getThemeSpentTime(user, queryParams, t._id)))
-  return lodash.sum(results)
+  const spent=lodash.sum(results)
+  return spent
 }
 
 const getSessionSpentTimeStr = async (user, queryParams, session) => {
