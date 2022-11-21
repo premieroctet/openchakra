@@ -297,7 +297,6 @@ const formatTime= (timeMillis) => {
 }
 
 const getResourceSpentTime = async (user, queryParams, resource) => {
-  console.log(`Searchinf res ${resource._id}`)
   const data=await UserSessionData.find({user: user._id})
   const spent=lodash(data)
     .map(d => d.spent_times)
@@ -306,6 +305,13 @@ const getResourceSpentTime = async (user, queryParams, resource) => {
   return spent?.spent_time || 0
 }
 
+/** Not finished, not in progress:
++  Parent theme ordered:
++   - first in theme: "available"
++   - next of 'finished' one : "available"
++   - else "to come"
++  Parent theme unordered: available
++  */
 const getResourceStatus = async (user, queryParams, resource) => {
   const [data, spent]=await Promise.all([
     UserSessionData.findOne({user: user._id}, {finished:1}),
@@ -318,7 +324,7 @@ const getResourceStatus = async (user, queryParams, resource) => {
   if (spent>0) {
     return `En cours`
   }
-  return 'On ne sait pas'
+  return 'Disponible'
 }
 
 const getResourceSpentTimeStr = async (user, queryParams, resource) => {
