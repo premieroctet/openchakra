@@ -280,7 +280,7 @@ const addComputedFields= async (user, queryParams, data, model) => {
   const refAttributes=getModelAttributes(model).filter(att => !(att[0].includes('.')) && att[1].ref)
   for ([attName, attParams] of refAttributes) {
     const children=data[attName]
-    if (children) {
+    if (children && !['program', 'origin'].includes(attName)) {
       if (attParams.multiple) {
         const y=await PromiseSerial(children.map(child => () => addComputedFields(user, queryParams, child, attParams.type)))
       }
@@ -296,83 +296,10 @@ const formatTime= (timeMillis) => {
   return formatDuration(timeMillis||0, {leading: true})
 }
 
-const getResourceSpentTime = async (user, queryParams, resource) => {
-  const data=await UserSessionData.find({user: user._id})
-  const spent=lodash(data)
-    .map(d => d.spent_times)
-    .flatten()
-    .find(sp => sp.resource._id.toString()==resource._id.toString())
-  return spent?.spent_time || 0
-}
+const COMPUTED_FIELDS={}
 
-/** Not finished, not in progress:
-+  Parent theme ordered:
-+   - first in theme: "available"
-+   - next of 'finished' one : "available"
-+   - else "to come"
-+  Parent theme unordered: available
-+  */
-const getResourceStatus = async (user, queryParams, resource) => {
-  const [data, spent]=await Promise.all([
-    UserSessionData.findOne({user: user._id}, {finished:1}),
-    getResourceSpentTime(user, queryParams, resource)
-  ])
-  const finished=data?.finished.find(r => r.toString()==resource._id.toString())
-  if (finished) {
-    return 'Terminé'
-  }
-  if (spent>0) {
-    return `En cours`
-  }
-  return 'Disponible'
-}
-
-const getResourceSpentTimeStr = async (user, queryParams, resource) => {
-  const res=await getResourceSpentTime(user, queryParams, resource)
-  const str=formatTime(res)
-  return str
-}
-
-const getThemeSpentTime = async (user, queryParams, theme) => {
-  const data=await mongoose.connection.models['theme'].findById(theme._id.toString())
-  const results=await Promise.all(data.resources.map(r => getResourceSpentTime(user, queryParams, r._id)))
-  const spent=lodash.sum(results)
-  return spent
-}
-
-const getThemeSpentTimeStr = async (user, queryParams, theme) => {
-  const res=await getThemeSpentTime(user, queryParams, theme)
-  return formatTime(res)
-}
-
-const getSessionSpentTime = async (user, queryParams, session) => {
-  const data=await mongoose.connection.models['session'].findById(session._id.toString())
-  if (!data) { return 0}
-  const results=await Promise.all(data.themes.map(t => getThemeSpentTime(user, queryParams, t._id)))
-  const spent=lodash.sum(results)
-  return spent
-}
-
-const getSessionSpentTimeStr = async (user, queryParams, session) => {
-  const res=await getSessionSpentTime(user, queryParams, session)
-  return formatTime(res)
-}
-
-
-const COMPUTED_FIELDS={
-  resource: {
-    spent_time: getResourceSpentTime,
-    spent_time_str: getResourceSpentTimeStr,
-    status: getResourceStatus,
-  },
-  theme: {
-    spent_time: getThemeSpentTime,
-    spent_time_str: getThemeSpentTimeStr,
-  },
-  session: {
-    spent_time: getSessionSpentTime,
-    spent_time_str: getSessionSpentTimeStr,
-  }
+const declareComputedField = (model, attribute, fn) => {
+  lodash.set(COMPUTED_FIELDS, `${model}.${attribute}`, fn)
 }
 
 module.exports={
@@ -380,5 +307,5 @@ module.exports={
   getSimpleModelAttributes, getReferencedModelAttributes,
   getModelAttributes, getModels, buildQuery, buildPopulate,
   buildPopulates, cloneModel, cloneArray, getModel,
-  addComputedFields,
+  addComputedFields, declareComputedField, formatTime,
 }

@@ -1,8 +1,13 @@
+const {
+  cloneModel,
+  declareComputedField,
+  formatTime,
+  getModel
+} = require('../../database');
 const url=require('url')
 const mongoose =require('mongoose')
 const lodash =require('lodash')
 const bcrypt=require('bcryptjs')
-const {cloneModel, getModel} = require('../../database')
 const {BadRequestError, NotFoundError} = require('../../errors')
 const UserSessionData = require('../../../models/UserSessionData');
 const Program=require('../../../models/Program')
@@ -122,8 +127,33 @@ const getResourcesForSession = resource_id => {
         .populate({path: 'themes', populate: 'resources'})
     })
     .then(session => {
+      if (!session) {
+        return []
+      }
       const res=lodash.flatten(session.themes.map(t => t.resources))
       return res
+    })
+}
+
+const getNextResource = id => {
+  return getResourcesForSession(id)
+    .then(datalist => {
+      const idx=datalist.findIndex(v => v._id.toString()==id)
+      if (idx==datalist.length-1) {
+        throw new NotFoundError('Last resource')
+      }
+      return datalist[idx+1]
+    })
+}
+
+const getPrevResource = id => {
+  return getResourcesForSession(id)
+    .then(datalist => {
+      const idx=datalist.findIndex(v => v._id.toString()==id)
+      if (idx==0) {
+        throw new NotFoundError('First resource')
+      }
+      return datalist[idx-1]
     })
 }
 
@@ -136,22 +166,12 @@ const getNext = (id, user, referrer) => {
     {upsert: true}
   )
   .then(() => {
-    return getResourcesForSession(id)
-      .then(datalist => {
-        const idx=datalist.findIndex(v => v._id.toString()==id)
-        const nextIdx=idx==datalist.length-1 ?idx : idx+1
-        return datalist[nextIdx]
-      })
+    return getNextResource(id)
   })
 }
 
 const getPrevious = id => {
-  return getResourcesForSession(id)
-    .then(datalist => {
-      const idx=datalist.findIndex(v => v._id.toString()==id)
-      const prevIdx=idx==0 ?idx : idx-1
-      return datalist[prevIdx]
-    })
+  return getPrevResource(id)
 }
 
 const getSession = id => {
@@ -267,6 +287,82 @@ const sendMessage = (sender, destinee, contents) => {
       return Message.create({sender: sender._id, ...data})
     })
 }
+
+const getResourceSpentTime = async (user, queryParams, resource) => {
+  const data=await UserSessionData.find({user: user._id})
+  const spent=lodash(data)
+    .map(d => d.spent_times)
+    .flatten()
+    .find(sp => sp.resource._id.toString()==resource._id.toString())
+  return spent?.spent_time || 0
+}
+
+/** Not finished, not in progress:
++  Parent theme ordered:
++   - first in theme: "available"
++   - next of 'finished' one : "available"
++   - else "to come"
++  Parent theme unordered: available
++  */
+const getResourceStatus = async (user, queryParams, resource) => {
+  const [data, spent]=await Promise.all([
+    UserSessionData.findOne({user: user._id}, {finished:1}),
+    getResourceSpentTime(user, queryParams, resource)
+  ])
+  const finished=data?.finished.find(r => r.toString()==resource._id.toString())
+  if (finished) {
+    return 'Terminé'
+  }
+  if (spent>0) {
+    return `En cours`
+  }
+  const theme=await Theme.findOne({'resources': resource}, {ordered:1})
+  if (!theme) {
+    return ''
+  }
+  return theme.ordered ? 'A venir' : 'Disponible'
+}
+
+const getResourceSpentTimeStr = async (user, queryParams, resource) => {
+  const res=await getResourceSpentTime(user, queryParams, resource)
+  const str=formatTime(res)
+  return str
+}
+
+const getThemeSpentTime = async (user, queryParams, theme) => {
+  const data=await Theme.findById(theme._id.toString())
+  const results=await Promise.all(data.resources.map(r => getResourceSpentTime(user, queryParams, r._id)))
+  const spent=lodash.sum(results)
+  return spent
+}
+
+const getThemeSpentTimeStr = async (user, queryParams, theme) => {
+  const res=await getThemeSpentTime(user, queryParams, theme)
+  return formatTime(res)
+}
+
+const getSessionSpentTime = async (user, queryParams, session) => {
+  const data=await Session.findById(session._id.toString())
+  if (!data) { return 0}
+  const results=await Promise.all(data.themes.map(t => getThemeSpentTime(user, queryParams, t._id)))
+  const spent=lodash.sum(results)
+  return spent
+}
+
+const getSessionSpentTimeStr = async (user, queryParams, session) => {
+  const res=await getSessionSpentTime(user, queryParams, session)
+  return formatTime(res)
+}
+
+declareComputedField('resource', 'spent_time', getResourceSpentTime)
+declareComputedField('resource', 'spent_time_str', getResourceSpentTimeStr)
+declareComputedField('resource', 'status', getResourceStatus)
+
+declareComputedField('theme', 'spent_time', getThemeSpentTime)
+declareComputedField('theme', 'spent_time_str', getThemeSpentTimeStr)
+
+declareComputedField('session', 'spent_time', getSessionSpentTime)
+declareComputedField('session', 'spent_time_str', getSessionSpentTimeStr)
 
 module.exports={
   addChild,
