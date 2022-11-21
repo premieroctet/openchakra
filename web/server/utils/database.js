@@ -292,8 +292,8 @@ const addComputedFields= async (user, queryParams, data, model) => {
   return data
 }
 
-const formatTime= (timeMillis) => {
-  return formatDuration(timeMillis||0, {leading: true})
+const formatTime = (timeMillis) => {
+  return formatDuration(timeMillis?timeMillis/60 : 0, {leading: true})
 }
 
 const COMPUTED_FIELDS={}
