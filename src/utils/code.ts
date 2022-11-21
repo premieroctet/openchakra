@@ -9,7 +9,7 @@ const capitalize = (value: string) => {
 }
 
 export const formatCode = async (code: string) => {
-  let formattedCode = `// 🚨 Your props contains invalid code`
+  let formattedCode = `// 🚨 Your props contains invalid code\n${code}`
 
   const prettier = await import('prettier/standalone')
   const babylonParser = await import('prettier/parser-babylon')
