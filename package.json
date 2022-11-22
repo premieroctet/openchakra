@@ -89,6 +89,7 @@
     "@types/react-color": "^3.0.1",
     "@types/react-redux": "^7.1.7",
     "babel-jest": "^26.2.2",
+    "find-cycle": "^1.0.0",
     "husky": "^4.2.1",
     "lint-staged": "^10.0.7",
     "next-compose-plugins": "^2.2.0",

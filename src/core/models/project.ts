@@ -1,11 +1,13 @@
 import { createModel } from '@rematch/core'
-import produce from 'immer'
-import { DEFAULT_PROPS } from '~utils/defaultProps'
-import templates, { TemplateType } from '~templates'
-import { generateId } from '~utils/generateId'
-import { duplicateComponent, deleteComponent } from '~utils/recursive'
-import omit from 'lodash/omit'
+import fromPairs from 'lodash/fromPairs'
 import flatten from 'lodash/flatten'
+import omit from 'lodash/omit'
+
+import { DEFAULT_PROPS } from '~utils/defaultProps'
+import { duplicateComponent, deleteComponent } from '~utils/recursive'
+import { generateId } from '~utils/generateId'
+import produce from 'immer'
+import templates, { TemplateType } from '~templates'
 
 export interface PageState extends PageSettings {
   components: IComponents
@@ -47,6 +49,26 @@ export const INITIAL_COMPONENTS: IComponents = {
     children: [],
     props: {},
   },
+}
+
+export const replaceId = (data, oldId, newId) => {
+  const stringData = JSON.stringify(data).replace(new RegExp(oldId, 'g'), newId)
+  return JSON.parse(stringData)
+}
+
+export const duplicatePageImpl = page => {
+  const newIds = [
+    [page.pageId, generateId('page')],
+    ...Object.keys(page.components).map(compId =>
+      compId == 'root' ? ['root', 'root'] : [compId, generateId('comp')],
+    ),
+  ]
+  const newPage = newIds.reduce(
+    (p, [oldId, newId]) => replaceId(p, oldId, newId),
+    page,
+  )
+  newPage.pageName = `${page.pageName}-copie`
+  return newPage
 }
 
 const getActiveComponents = (state: ProjectState) => {
@@ -423,6 +445,17 @@ const project = createModel({
         pages: newPages,
         activePage: newActivePage,
         rootPage,
+      }
+    },
+    duplicatePage(state: ProjectState, pageId: string): ProjectState {
+      if (!state.pages[pageId]) {
+        return state
+      }
+      const newPage = duplicatePageImpl(state.pages[pageId])
+      return {
+        ...state,
+        pages: { ...state.pages, [newPage.pageId]: newPage },
+        activePage: newPage.pageId,
       }
     },
     setActivePage(state: ProjectState, pageId: string): ProjectState {

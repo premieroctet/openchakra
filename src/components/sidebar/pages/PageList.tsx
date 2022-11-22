@@ -27,6 +27,13 @@ const PageActions = ({ page }: { page: string }) => {
     )
   }
 
+  const duplicatePage = () => {
+    dispatch.project
+      .duplicatePage(page)
+      .then(() => console.log('ok'))
+      .catch(err => console.error(err))
+  }
+
   const buttonProps = {
     p: 0,
     w: '30px',
@@ -47,6 +54,9 @@ const PageActions = ({ page }: { page: string }) => {
       </Button>
       <Button {...buttonProps} onClick={() => console.log('Nothing yet')}>
         <Image w={'30px'} title="Save" src="/icons/save.svg" />
+      </Button>
+      <Button {...buttonProps} onClick={duplicatePage}>
+        <Image w={'30px'} title="Save" src="/icons/duplicate.svg" />
       </Button>
     </>
   )
