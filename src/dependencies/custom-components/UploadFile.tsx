@@ -7,7 +7,7 @@ import mime from 'mime'
 import JSZip from 'jszip'
 import { getExtension } from './MediaWrapper'
 
-const uploadUrl = `https://localhost:4002/myAlfred/api/studio/uploadfile`
+const uploadUrl = `/myAlfred/api/studio/uploadfile`
 
 const UploadFile = ({
   dataSource,
@@ -56,7 +56,7 @@ const UploadFile = ({
                   .then(async function(fileData) {
                     let file = new File(
                       [fileData],
-                      `${fileToUpload?.name}/${filename}`,
+                      `${fileToUpload?.name}/${filename}`.replace(/ /g, '+'),
                       { type: mime.getType(getExtension(filename)) || '' },
                     )
 
