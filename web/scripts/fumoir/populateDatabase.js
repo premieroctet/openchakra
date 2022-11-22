@@ -107,6 +107,8 @@ const subscriptionFactory = factory(Subscription, {
 
 const subscriptions = Array.from({length: entries.subscription}, () => subscriptionFactory.generate({
   _id: faker.database.mongodbObjectId(),
+  start: `${faker.date.past()}`,
+  end: `${faker.date.future()}`,
 }))
 
 
