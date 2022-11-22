@@ -52,6 +52,7 @@ const nextApp = is_production() || is_validation() ? next({prod}) : next({dev})
 const routes = require('./routes')
 const routerHandler = routes.getRequestHandler(nextApp)
 const {config} = require('../config/config')
+const http = require('http')
 const https = require('https')
 const fs = require('fs')
 const authRoutes = require('./routes/api/authentication')
@@ -196,6 +197,13 @@ checkConfig()
     }
     app.get('*', routerHandler)
 
+    // HTTP only handling redirect to HTTPS
+    http.createServer((req, res) => {
+      res.writeHead(301, {'Location': `https://${ req.headers.host }${req.url}`})
+      res.end()
+    }).listen(80)
+    console.log('Created server on port 80')
+    
     // HTTPS server using certificates
     const httpsServer = https.createServer({
       cert: fs.readFileSync(`${process.env.HOME}/.ssh/Main.txt`),
