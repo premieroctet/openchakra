@@ -6,11 +6,6 @@ const bcrypt = require('bcryptjs')
 
 
 const UserSessionDataSchema = new Schema({
-  session: {
-    type: Schema.Types.ObjectId,
-    ref: 'session',
-    required: true,
-  },
   user: {
     type: Schema.Types.ObjectId,
     ref: 'user',

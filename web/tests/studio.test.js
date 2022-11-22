@@ -22,7 +22,7 @@ const Program = require('../server/models/Program')
 const User = require('../server/models/User')
 
 
-describe('Studio models API', () => {
+describe.only('Studio models API', () => {
 
   test('Should return the models names', () => {
     const EXPECTED=new Set(['program', 'theme', 'resource', 'session', 'trainingCenter', 'user'])
@@ -67,7 +67,15 @@ describe('Studio models API', () => {
     const EXPECTED_MULTI=[{path: 'themes', populate: {path: 'resources'}}]
     const pops=buildPopulates(fields, 'program')
     expect(pops).toEqual(EXPECTED_MULTI)
-    const fields2=['session.trainers', 'session.trainees']
+  })
+
+  test.only('Should build huge populate', () => {
+    const fields='trainers,trainees,trainees.firstname,trainees.name,\
+    trainees.email,trainees.sessions,trainers.firstname,trainers.name,\
+    trainees.sessions.spent_time'.replace(/ /g, '').split(',')
+    const EXPECTED_MULTI=[{path: 'trainers'}, {path: 'trainees', populate:{path:'sessions', populate:{path:'themes'}}}]
+    const pops=buildPopulates(fields, 'session')
+    expect(pops).toEqual(EXPECTED_MULTI)
   })
 
   test('Should populate virtuals level 1', () => {
@@ -85,7 +93,7 @@ describe('Studio models API', () => {
   })
 })
 
-describe.only('Studio data function', () => {
+describe('Studio data function', () => {
 
   beforeAll(async() => {
     await mongoose.connect('mongodb://localhost/test', MONGOOSE_OPTIONS)
@@ -217,7 +225,7 @@ describe.only('Studio data function', () => {
     return expect(trSession.themes[0].name).toBe(NAME)
   })
 
-  test.only('Should copy resource attribute in linked program', async() => {
+  test('Should copy resource attribute in linked program', async() => {
     const NAME='tagada'
     let program=await Program.findOne().populate('themes')
     let prgmResource=program.themes[0].resources[0]

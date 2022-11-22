@@ -263,15 +263,6 @@ const getModel = id => {
 
 const addComputedFields= async (user, queryParams, data, model) => {
 
-  if (model=='user') {
-    return data
-  }
-
-  // UGLY
-  /**
-  if (model=='session') {
-    queryParams.session=data._id.toString()
-  }*/
   const compFields=COMPUTED_FIELDS[model] || {}
   // Compute direct attributes
   const x=await PromiseSerial(Object.keys(compFields).map(f => () => compFields[f](user, queryParams, data)

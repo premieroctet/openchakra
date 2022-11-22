@@ -51,8 +51,8 @@ const ACTIONS={
     console.log('Adding')
     // console.log(`Params:${params}`)
     return UserSessionData.findOneAndUpdate(
-      {session: params.session, user: user._id},
-      {session: params.session, user: user._id},
+      {user: user._id},
+      {user: user._id},
       {upsert: true},
     )
       .then(data => {

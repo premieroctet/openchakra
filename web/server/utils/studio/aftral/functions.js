@@ -161,8 +161,8 @@ const getPrevResource = id => {
 const getNext = (id, user, referrer) => {
   const params=url.parse(referrer, true).query
   return UserSessionData.findOneAndUpdate(
-    {user: user._id, session: params.session},
-    {$addToSet:{finished: id}},
+    {user: user._id},
+    {user: user._id, $addToSet:{finished: id}},
     {upsert: true}
   )
   .then(() => {
