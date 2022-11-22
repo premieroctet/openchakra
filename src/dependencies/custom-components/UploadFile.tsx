@@ -78,7 +78,7 @@ const UploadFile = ({
                 parent: ressource_id,
                 attribute,
                 // When scorm uploaded (usually zip file), refer story.html
-                value: `https://${s3Config.bucketName}.s3.${s3Config.region}.amazonaws.com/pictures/${fileToUpload?.name}/story.html`
+                value: `https://${s3Config.bucketName}.s3.${s3Config.region}.amazonaws.com/${fileToUpload?.name}/story.html`
                   .replace('.zip', '')
                   .replace(/ /g, '+'),
               }),
