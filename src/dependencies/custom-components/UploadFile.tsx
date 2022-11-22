@@ -7,7 +7,7 @@ import mime from 'mime'
 import JSZip from 'jszip'
 import { getExtension } from './MediaWrapper'
 
-const uploadUrl = `/myAlfred/api/studio/uploadfile`
+const uploadUrl = `/myAlfred/api/studio/action`
 
 const UploadFile = ({
   dataSource,
