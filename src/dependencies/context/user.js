@@ -13,7 +13,7 @@ export function UserWrapper({ children }) {
   const [user, setUser] = useState(null)
   const { get } = useFetch()
 
-  const getCurrentUser = () => {
+  const getCurrentUser = useCallback(() => {
     get(`/myAlfred/api/studio/current-user`)
       .then(data => {
         setUser(data)
@@ -22,7 +22,7 @@ export function UserWrapper({ children }) {
         setUser(false)
         console.error('Cant fetch current user', error)
       })
-  }
+  }, [get])
 
   useEffect(() => {
     getCurrentUser()
