@@ -24,6 +24,7 @@ const Service = require('./models/Service')
 const Booking = require('./models/Booking')
 const ServiceUser = require('./models/ServiceUser')
 const Category = require('./models/Category')
+require('./models/CategoryProduct')
 const PriceList = require('./models/PriceList')
 require('./models/Program')
 require('./models/Theme')
@@ -34,6 +35,9 @@ require('./models/User')
 require('./models/Contact')
 require('./models/Message')
 require('./models/LoggedUser')
+require('./models/Post')
+require('./models/Subscription')
+require('./models/Event')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 
@@ -47,6 +51,7 @@ const nextApp = is_production() || is_validation() ? next({prod}) : next({dev})
 const routes = require('./routes')
 const routerHandler = routes.getRequestHandler(nextApp)
 const {config} = require('../config/config')
+const http = require('http')
 const https = require('https')
 const fs = require('fs')
 const authRoutes = require('./routes/api/authentication')
@@ -191,6 +196,13 @@ checkConfig()
     }
     app.get('*', routerHandler)
 
+    // HTTP only handling redirect to HTTPS
+    http.createServer((req, res) => {
+      res.writeHead(301, {'Location': `https://${ req.headers.host }${req.url}`})
+      res.end()
+    }).listen(80)
+    console.log('Created server on port 80')
+    
     // HTTPS server using certificates
     const httpsServer = https.createServer({
       cert: fs.readFileSync(`${process.env.HOME}/.ssh/Main.txt`),

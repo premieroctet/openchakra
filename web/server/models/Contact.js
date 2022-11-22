@@ -11,7 +11,6 @@ catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {
     throw err
   }
-  ContactSchema=require(`./others/ContactSchema`)
 }
 
 ContactSchema?.plugin(mongooseLeanVirtuals)

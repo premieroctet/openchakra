@@ -1,7 +1,7 @@
 const express=require('express')
 const mongoose = require('mongoose')
 const lodash = require('lodash')
-const passport=require('passport')
+const passport = require('passport')
 const {PART, PRO}=require('../../../utils/consts')
 const {HTTP_CODES}=require('../../utils/errors')
 const {isPlatform} = require('../../../config/config')

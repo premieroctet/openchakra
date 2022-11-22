@@ -2,10 +2,10 @@ const mongooseLeanVirtuals=require('mongoose-lean-virtuals')
 const mongoose = require('mongoose')
 const {getDataModel} = require('../../config/config')
 
-let ChatRoomSchema=null
+let PostSchema=null
 
 try {
-  ChatRoomSchema=require(`./${getDataModel()}/ChatRoomSchema`)
+  PostSchema=require(`./${getDataModel()}/PostSchema`)
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {
@@ -13,5 +13,5 @@ catch(err) {
   }
 }
 
-ChatRoomSchema?.plugin(mongooseLeanVirtuals)
-module.exports = ChatRoomSchema ? mongoose.model('chatRoom', ChatRoomSchema) : null
+PostSchema?.plugin(mongooseLeanVirtuals)
+module.exports = PostSchema ? mongoose.model('post', PostSchema) : null

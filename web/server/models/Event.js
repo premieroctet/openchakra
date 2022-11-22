@@ -2,10 +2,11 @@ const mongooseLeanVirtuals=require('mongoose-lean-virtuals')
 const mongoose = require('mongoose')
 const {getDataModel}=require('../../config/config')
 
-let ReviewSchema=null
+let EventSchema=null
 
 try {
-  ReviewSchema=require(`./${getDataModel()}/ReviewSchema`)
+  EventSchema=require(`./${getDataModel()}/EventSchema`)
+  EventSchema.plugin(mongooseLeanVirtuals)
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {
@@ -13,6 +14,4 @@ catch(err) {
   }
 }
 
-ReviewSchema?.plugin(mongooseLeanVirtuals)
-
-module.exports = ReviewSchema ? mongoose.model('review', ReviewSchema) : null
+module.exports = EventSchema ? mongoose.model('event', EventSchema) : null
