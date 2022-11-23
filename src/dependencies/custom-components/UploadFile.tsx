@@ -1,7 +1,7 @@
 import { Box, Text } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import FileManager from '../utils/S3filemanager'
-import { s3Config } from '../utils/s3Config'
+import { s3Config, S3UrlRessource } from '../utils/s3Config'
 import useFetch from 'use-http'
 import mime from 'mime'
 import JSZip from 'jszip'
@@ -47,42 +47,47 @@ const UploadFile = ({
 
       switch (typeOfUpload) {
         case 'zip':
-          JSZip.loadAsync(fileToUpload)
-            .then(zip => {
-              // On décompresse 💆🏻
-              Object.keys(zip.files).forEach(function(filename) {
+          await JSZip.loadAsync(fileToUpload)
+            .then(async zip => {
+              for await (const filename of Object.keys(zip.files)) {
                 zip.files[filename]
                   .async('blob')
                   .then(async function(fileData) {
-                    let file = new File(
-                      [fileData],
-                      `${fileToUpload?.name}/${filename}`
-                        .replace('.zip', '')
-                        .replace(/ /g, '+'),
-                      { type: mime.getType(getExtension(filename)) || '' },
-                    )
+                    /* If we're not reading a folder */
+                    if (!zip.files[filename]?.dir) {
+                      const { fileInFolder } = S3UrlRessource({
+                        filename,
+                        folder: fileToUpload?.name,
+                      })
+                      let file = new File([fileData], fileInFolder, {
+                        type: mime.getType(getExtension(filename)) || '',
+                      })
 
-                    await FileManager.createFile(
-                      file.name,
-                      file,
-                      '',
-                      file.type,
-                      [],
-                    )
+                      await FileManager.createFile(
+                        file.name,
+                        file,
+                        '',
+                        file.type,
+                        [],
+                      )
+                    }
                   })
-              })
+              }
             })
-            .then(res =>
+            .then(res => {
+              const { scormUrl } = S3UrlRessource({
+                folder: fileToUpload?.name,
+              })
+
               post(uploadUrl, {
                 action: 'put',
                 parent: ressource_id,
                 attribute,
                 // When scorm uploaded (usually zip file), refer story.html
-                value: `https://${s3Config.bucketName}.s3.${s3Config.region}.amazonaws.com/${fileToUpload?.name}/story.html`
-                  .replace('.zip', '')
-                  .replace(/ /g, '+'),
-              }),
-            )
+                value: encodeURI(scormUrl),
+              })
+            })
+            .catch(err => console.error('uploadzippedfiles', err))
 
           break
 
