@@ -17,7 +17,11 @@ export const S3UrlRessource = ({
 }) => {
   const filteredFilename = filename && filename.replace(/(\s)/g, '_')
   const filteredFolder =
-    folder && folder.replace(/(\s)/g, '_').replace('.zip', '')
+    folder &&
+    folder
+      .replace(/[^a-zA-Z0-9_\-()*!.']/g, '')
+      .replace(/[\s]/g, '_')
+      .replace('.zip', '')
   const fileInFolder = [
     s3Config.rootFolderName,
     filteredFolder,
