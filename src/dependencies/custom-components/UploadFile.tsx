@@ -63,13 +63,15 @@ const UploadFile = ({
                         type: mime.getType(getExtension(filename)) || '',
                       })
 
-                      await FileManager.createFile(
-                        file.name,
-                        file,
-                        '',
-                        file.type,
-                        [],
-                      )
+                      console.log(file)
+
+                      // await FileManager.createFile(
+                      //   file.name,
+                      //   file,
+                      //   '',
+                      //   file.type,
+                      //   [],
+                      // )
                     }
                   })
               }
@@ -79,13 +81,15 @@ const UploadFile = ({
                 folder: fileToUpload?.name,
               })
 
-              post(uploadUrl, {
-                action: 'put',
-                parent: ressource_id,
-                attribute,
-                // When scorm uploaded (usually zip file), refer story.html
-                value: encodeURI(scormUrl),
-              })
+              console.log('scormUrl', scormUrl, encodeURI(scormUrl))
+
+              // post(uploadUrl, {
+              //   action: 'put',
+              //   parent: ressource_id,
+              //   attribute,
+              //   // When scorm uploaded (usually zip file), refer story.html
+              //   value: encodeURI(scormUrl),
+              // })
             })
             .catch(err => console.error('uploadzippedfiles', err))
 
