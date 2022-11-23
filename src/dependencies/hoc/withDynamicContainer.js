@@ -51,6 +51,10 @@ const withDynamicContainer = Component => {
       orgData = lodash.get(orgData, props.attribute)
     }
     orgData = orgData || []
+    if (props.contextFilter) {
+      const contextIds=props.contextFilter.map(o => o._id.toString())
+      orgData=lodash.intersectionBy(props.contextFilter, orgData, data => data._id)
+    }
     let data = []
     try {
       data = orgData.slice(0, parseInt(props?.limit) || undefined)
