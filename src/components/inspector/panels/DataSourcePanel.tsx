@@ -9,7 +9,6 @@ import {
 } from '~utils/dataSources'
 import { getModels, getModelAttributes } from '~core/selectors/dataSources'
 import AccordionContainer from '~components/inspector/AccordionContainer'
-
 import {
   getComponents,
   getSelectedComponent,
@@ -28,8 +27,8 @@ const DataSourcePanel: React.FC = () => {
   const limit = usePropsSelector('limit')
   const contextFilter = usePropsSelector('contextFilter')
   const [providers, setProviders] = useState<IComponent[]>([])
+  const [contextProviders, setContextProviders] = useState<IComponent[]>([])
   const [attributes, setAttributes] = useState([])
-  const [enableFilterContext, setEnableContextFilter] = useState(false)
   const models = useSelector(getModels)
 
   useEffect(() => {
@@ -40,21 +39,16 @@ const DataSourcePanel: React.FC = () => {
     }
   }, [activeComponent, components, dataSource, models])
 
-  /**
   useEffect(() => {
-    if (!models || !components) {
-      return
+    if (!providers?.length>0 || !activeComponent || components?.length>0) {return}
+    // TODO: have to fix getDataProviderDataType and remove try/catch
+    try{
+      const currentModel=getDataProviderDataType(activeComponent, components, dataSource, models)?.type
+      console.log(`Current mode:${JSON.stringify(currentModel)}`)
+      setContextProviders(providers.filter(p => p.props.model==currentModel))
     }
-    const [res, root]=[activeComponent, components['root']].map(comp =>
-      getDataProviderDataType(comp, components, dataSource, models))
-    const compatible=res.type==root.type
-    setEnableContextFilter(compatible)
-    if (!compatible) {
-      setValue('contextFilter', false)
-    }
-  }, [dataSource, attribute, models, components]
-  )
-  */
+    catch(err){console.error(err)}
+  }, [providers, activeComponent, components])
 
   const onContextFilterChange = ev => {
     setValue('contextFilter', ev.target.checked)
@@ -109,16 +103,22 @@ const DataSourcePanel: React.FC = () => {
             />
           </FormControl>
         )}
-        {CONTAINER_TYPE.includes(activeComponent?.type) && enableFilterContext && (
-          <FormControl htmlFor="contextFilter" label="Filter context">
-            <Checkbox
-              id="contextFilter"
-              name="contextFilter"
-              size="sm"
-              value={limit}
-              type="number"
-              onChange={onContextFilterChange}
-            />
+        {CONTAINER_TYPE.includes(activeComponent?.type)  && (
+          <FormControl htmlFor="contextFilter" label="Filter">
+          <Select
+            id="contextFilter"
+            onChange={setValueFromEvent}
+            name="contextFilter"
+            size="sm"
+            value={contextFilter || ''}
+          >
+            <option value={undefined}></option>
+            {contextProviders.map((provider, i) => (
+              <option key={`prov${i}`} value={provider.id}>
+                {`${provider.id} (${provider.props?.model})`}
+              </option>
+            ))}
+          </Select>
           </FormControl>
         )}
       </AccordionContainer>
