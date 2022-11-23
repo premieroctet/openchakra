@@ -37,7 +37,7 @@ const BookingSchema = new Schema({
   
 }, schemaOptions)
 
-ProductSchema.virtual('booking_total_person').get(function() {
+BookingSchema.virtual('booking_total_person').get(function() {
   return this.members?.length + this.guests?.length
 })
 
