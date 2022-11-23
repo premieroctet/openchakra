@@ -239,6 +239,11 @@ const buildBlock = ({
             propsContent += ` dataSourceId='${propsValue}'`
           }
 
+          if (propName === 'contextFilter') {
+            propsContent += ` contextFilter={${propsValue.replace(/^comp-/, '')}}`
+            return
+          }
+
           if (propName === 'hiddenRoles') {
             propsContent += ` hiddenRoles='${JSON.stringify(propsValue)}'`
             propsContent += ` user={user} `

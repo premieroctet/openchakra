@@ -52,9 +52,10 @@ const PageActions = ({ page }: { page: string }) => {
       <Button {...buttonProps} onClick={() => deleteP(page)}>
         <Image w={'30px'} title="Edit" src="/icons/delete.svg" />
       </Button>
-      <Button {...buttonProps} onClick={() => console.log('Nothing yet')}>
+      {false && <Button {...buttonProps} onClick={() => console.log('Nothing yet')}>
         <Image w={'30px'} title="Save" src="/icons/save.svg" />
       </Button>
+      }
       <Button {...buttonProps} onClick={duplicatePage}>
         <Image w={'30px'} title="Save" src="/icons/duplicate.svg" />
       </Button>
