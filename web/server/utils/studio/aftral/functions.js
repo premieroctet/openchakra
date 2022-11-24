@@ -1,15 +1,15 @@
-const {
-  cloneModel,
-  declareComputedField,
-  formatTime,
-  getModel
-} = require('../../database');
 const url=require('url')
 const mongoose =require('mongoose')
 const lodash =require('lodash')
 const bcrypt=require('bcryptjs')
+const {
+  cloneModel,
+  declareComputedField,
+  formatTime,
+  getModel,
+} = require('../../database')
 const {BadRequestError, NotFoundError} = require('../../errors')
-const UserSessionData = require('../../../models/UserSessionData');
+const UserSessionData = require('../../../models/UserSessionData')
 const Program=require('../../../models/Program')
 const Theme=require('../../../models/Theme')
 const Session=require('../../../models/Session')
@@ -162,12 +162,12 @@ const getNext = (id, user, referrer) => {
   const params=url.parse(referrer, true).query
   return UserSessionData.findOneAndUpdate(
     {user: user._id},
-    {user: user._id, $addToSet:{finished: id}},
-    {upsert: true}
+    {user: user._id, $addToSet: {finished: id}},
+    {upsert: true},
   )
-  .then(() => {
-    return getNextResource(id)
-  })
+    .then(() => {
+      return getNextResource(id)
+    })
 }
 
 const getPrevious = id => {
@@ -288,7 +288,7 @@ const sendMessage = (sender, destinee, contents) => {
     })
 }
 
-const getResourceSpentTime = async (user, queryParams, resource) => {
+const getResourceSpentTime = async(user, queryParams, resource) => {
   const data=await UserSessionData.find({user: user._id})
   const spent=lodash(data)
     .map(d => d.spent_times)
@@ -304,10 +304,10 @@ const getResourceSpentTime = async (user, queryParams, resource) => {
 +   - else "to come"
 +  Parent theme unordered: available
 +  */
-const getResourceStatus = async (user, queryParams, resource) => {
+const getResourceStatus = async(user, queryParams, resource) => {
   const [data, spent]=await Promise.all([
-    UserSessionData.findOne({user: user._id}, {finished:1}),
-    getResourceSpentTime(user, queryParams, resource)
+    UserSessionData.findOne({user: user._id}, {finished: 1}),
+    getResourceSpentTime(user, queryParams, resource),
   ])
   const finished=data?.finished.find(r => r.toString()==resource._id.toString())
   if (finished) {
@@ -316,40 +316,41 @@ const getResourceStatus = async (user, queryParams, resource) => {
   if (spent>0) {
     return `En cours`
   }
-  const theme=await Theme.findOne({'resources': resource}, {ordered:1})
+  const theme=await Theme.findOne({'resources': resource}, {ordered: 1})
   if (!theme) {
     return ''
   }
   return theme.ordered ? 'A venir' : 'Disponible'
 }
 
-const getResourceSpentTimeStr = async (user, queryParams, resource) => {
+const getResourceSpentTimeStr = async(user, queryParams, resource) => {
   const res=await getResourceSpentTime(user, queryParams, resource)
   const str=formatTime(res)
   return str
 }
 
-const getThemeSpentTime = async (user, queryParams, theme) => {
+const getThemeSpentTime = async(user, queryParams, theme) => {
   const data=await Theme.findById(theme._id.toString())
   const results=await Promise.all(data.resources.map(r => getResourceSpentTime(user, queryParams, r._id)))
   const spent=lodash.sum(results)
   return spent
 }
 
-const getThemeSpentTimeStr = async (user, queryParams, theme) => {
+const getThemeSpentTimeStr = async(user, queryParams, theme) => {
   const res=await getThemeSpentTime(user, queryParams, theme)
   return formatTime(res)
 }
 
-const getSessionSpentTime = async (user, queryParams, session) => {
+const getSessionSpentTime = async(user, queryParams, session) => {
+  // console.log(`Computing session ${session._id} time for user ${user._id}`)
   const data=await Session.findById(session._id.toString())
-  if (!data) { return 0}
+  if (!data) { return 0 }
   const results=await Promise.all(data.themes.map(t => getThemeSpentTime(user, queryParams, t._id)))
   const spent=lodash.sum(results)
   return spent
 }
 
-const getSessionSpentTimeStr = async (user, queryParams, session) => {
+const getSessionSpentTimeStr = async(user, queryParams, session) => {
   const res=await getSessionSpentTime(user, queryParams, session)
   return formatTime(res)
 }

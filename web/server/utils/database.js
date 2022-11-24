@@ -3,8 +3,7 @@ const mongoose=require('mongoose')
 const lodash=require('lodash')
 const formatDuration = require('format-duration')
 // TODO: Omporting Theme makes a cyclic import. Why ?
-//const Theme = require('../models/Theme');
-const UserSessionData = require('../models/UserSessionData');
+// const Theme = require('../models/Theme');
 require('../models/TrainingCenter')
 
 const MONGOOSE_OPTIONS={
@@ -43,6 +42,7 @@ const attributesComparator = (att1, att2) => {
   return att1.includes('.') ? 1 : -1
 }
 
+const COMPUTED_FIELDS={}
 
 const DECLARED_VIRTUALS={
   session: {
@@ -60,7 +60,7 @@ const DECLARED_VIRTUALS={
   resource: {
     spent_time: {path: 'spent_time', instance: 'Number', requires: '_id'},
     spent_time_str: {path: 'spent_time_str', instance: 'String', requires: 'spent_time'},
-    status: {path: 'status', instance: 'String', required: 'finished'}
+    status: {path: 'status', instance: 'String', required: 'finished'},
   },
   contact: {
     name: {path: 'name', instance: 'String', requires: '_id'},
@@ -191,6 +191,16 @@ const buildPopulates = (fields, model) => {
   return populates
 }
 
+const getModel = id => {
+  const conn=mongoose.connection
+  return Promise.all(conn.modelNames().map(model =>
+    conn.models[model].exists({_id: id}).then(exists => (exists ? model : false)),
+  ))
+    .then(res => {
+      return res.find(v => !!v)
+    })
+}
+
 const buildQuery = (model, id, fields) => {
 
   console.log(`Requesting model ${model}, id ${id || 'none'} fields:${fields}`)
@@ -221,11 +231,6 @@ const buildQuery = (model, id, fields) => {
   return query
 }
 
-const cloneArray = ({data, withOrigin, forceData={}}) => {
-  if (!lodash.isArray(data)) { throw new Error(`Expected array, got ${data}`) }
-  return Promise.all(data.map(d => cloneModel({data: d, withOrigin, forceData})))
-}
-
 const cloneModel = ({data, withOrigin, forceData={}}) => {
   let model=null
   let clone=null
@@ -243,7 +248,7 @@ const cloneModel = ({data, withOrigin, forceData={}}) => {
           .then(cloned => clone[att]=cloned)
       }))
     })
-    .then(res => {
+    .then(() => {
       return mongoose.connection.models[model].create(clone)
     })
     .catch(err => {
@@ -251,43 +256,52 @@ const cloneModel = ({data, withOrigin, forceData={}}) => {
     })
 }
 
-const getModel = id => {
-  const conn=mongoose.connection
-  return Promise.all(conn.modelNames().map(model =>
-    conn.models[model].exists({_id: id}).then(exists => (exists ? model : false)),
-  ))
-    .then(res => {
-      return res.find(v => !!v)
-    })
+const cloneArray = ({data, withOrigin, forceData={}}) => {
+  if (!lodash.isArray(data)) { throw new Error(`Expected array, got ${data}`) }
+  return Promise.all(data.map(d => cloneModel({data: d, withOrigin, forceData})))
 }
 
-const addComputedFields= async (user, queryParams, data, model) => {
+const addComputedFields= async(user, queryParams, data, model, level=0) => {
+
+  const log = msg => {
+    console.log(`${'--'.repeat(level)}${msg}`)
+  }
+
+  let newUser=user
+  if (model=='user') {
+    newUser=await mongoose.connection.models.user.findById(data._id)
+    log(`Loaded user ${user?.email}`)
+  }
 
   const compFields=COMPUTED_FIELDS[model] || {}
+  if (Object.keys(compFields).length>0) {
+    log(`Fields for ${model} ${JSON.stringify(data)}`)
+  }
   // Compute direct attributes
-  const x=await PromiseSerial(Object.keys(compFields).map(f => () => compFields[f](user, queryParams, data)
-    .then(res => {data[f]=res})))
+  const x=await PromiseSerial(Object.keys(compFields).map(f => () => compFields[f](newUser, queryParams, data)
+    .then(res => { data[f]=res })))
   // Handle references => sub
   const refAttributes=getModelAttributes(model).filter(att => !(att[0].includes('.')) && att[1].ref)
   for ([attName, attParams] of refAttributes) {
     const children=data[attName]
+    log(`Down in ${attName} with children ${JSON.stringify(children)}`)
     if (children && !['program', 'origin'].includes(attName)) {
       if (attParams.multiple) {
-        const y=await PromiseSerial(children.map(child => () => addComputedFields(user, queryParams, child, attParams.type)))
+        if (children?.length>0) {
+          const y=await PromiseSerial(children.map(child => () => addComputedFields(newUser, queryParams, child, attParams.type, level+1)))
+        }
       }
-      else {
-        const z=await addComputedFields(user, queryParams, children, attParams.type)
+      else if (children) {
+        const z=await addComputedFields(newUser, queryParams, children, attParams.type, level+1)
       }
     }
   }
   return data
 }
 
-const formatTime = (timeMillis) => {
+const formatTime = timeMillis => {
   return formatDuration(timeMillis?timeMillis/60 : 0, {leading: true})
 }
-
-const COMPUTED_FIELDS={}
 
 const declareComputedField = (model, attribute, fn) => {
   lodash.set(COMPUTED_FIELDS, `${model}.${attribute}`, fn)
