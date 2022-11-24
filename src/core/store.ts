@@ -8,6 +8,7 @@ import { createWrapper, MakeStore } from 'next-redux-wrapper'
 import { ProjectStateWithUndo } from './models/project'
 import { AppState } from './models/app'
 import { DataSourcesState } from './models/dataSources'
+import { RolesState } from './models/roles'
 import models from './models'
 import filterUndoableActions from '~utils/undo'
 
@@ -15,6 +16,7 @@ export type RootState = {
   app: AppState
   project: ProjectStateWithUndo
   dataSources: DataSourcesState
+  roles: RolesState
 }
 
 const version = parseInt(process.env.NEXT_PUBLIC_VERSION || '1', 10)
