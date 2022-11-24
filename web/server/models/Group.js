@@ -8,10 +8,7 @@ try {
   GroupSchema=require(`./${getDataModel()}/GroupSchema`)
 }
 catch(err) {
-  if (err.code !== 'MODULE_NOT_FOUND') {
-    throw err
-  }
-  GroupSchema=require(`./others/GroupSchema`)
+  GroupSchema=null
 }
 
 GroupSchema?.plugin(mongooseLeanVirtuals)

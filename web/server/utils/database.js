@@ -5,6 +5,7 @@ const formatDuration = require('format-duration')
 //const Theme = require('../models/Theme');
 const UserSessionData = require('../models/UserSessionData');
 require('../models/TrainingCenter')
+require('../models/Category')
 
 const MONGOOSE_OPTIONS={
   useNewUrlParser: true,
@@ -44,6 +45,29 @@ const attributesComparator = (att1, att2) => {
 
 
 const DECLARED_VIRTUALS={
+  user: {
+    // fumoir
+    full_name: {path: 'full_name', instance: 'String', requires: 'firstname,name'},
+    is_active: {path: 'is_active', instance: 'Boolean', requires: 'active'},
+    // aftral studio
+    contact_name: {path: 'contact_name', instance: 'String', requires: 'name,firstname,role'},
+  },
+  //fumoir
+  booking: {
+    booking_total_person: {path: 'booking_total_person', instance: 'Number', requires: 'members,guests'}
+  },
+  company: {
+    full_name: {path: 'full_name', instance: 'String', requires: 'name'},
+    mangopay_provider_id: {path: 'mangopay_provider_id', instance: 'String', requires: 'id_mangopay'},
+  },
+  product: {
+    total_price: {path: 'total_price', instance: 'Number', requires: 'priceWT,tax'},
+    reviews: {path: 'reviews', instance: 'review', requires: '_id'},
+  },
+  subscription: {
+    is_active: {path: 'is_active', instance: 'Boolean', requires: 'start,end'},
+  },
+  // aftral
   session: {
     trainees_count: {path: 'trainees_count', instance: 'Number', requires: 'trainees'},
     trainers_count: {path: 'trainees_count', instance: 'Number', requires: 'trainers'},
@@ -68,11 +92,10 @@ const DECLARED_VIRTUALS={
   contact: {
     name: {path: 'name', instance: 'String', requires: '_id'},
   },
-  user: {
-    contact_name: {path: 'contact_name', instance: 'String', requires: 'name,firstname,role'},
-  },
   loggedUser: {
     contact_name: {path: 'contact_name', instance: 'String', requires: 'name,firstname,role'},
+    full_name: {path: 'full_name', instance: 'String', requires: 'firstname,name'},
+    is_active: {path: 'is_active', instance: 'Boolean', requires: 'active'},
   },
   message: {
     destinee_name: {path: 'destinee_name', instance: 'String', requires: 'destinee_session.trainers,destinee_session.trainees,destinee_user'},

@@ -2,10 +2,11 @@ const mongooseLeanVirtuals=require('mongoose-lean-virtuals')
 const mongoose = require('mongoose')
 const {getDataModel}=require('../../config/config')
 
-let ShopSchema=null
+let EventSchema=null
 
 try {
-  ShopSchema=require(`./${getDataModel()}/ShopSchema`)
+  EventSchema=require(`./${getDataModel()}/EventSchema`)
+  EventSchema.plugin(mongooseLeanVirtuals)
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {
@@ -13,6 +14,4 @@ catch(err) {
   }
 }
 
-ShopSchema?.plugin(mongooseLeanVirtuals)
-
-module.exports = ShopSchema ? mongoose.model('shop', ShopSchema) : null
+module.exports = EventSchema ? mongoose.model('event', EventSchema) : null
