@@ -553,6 +553,7 @@ import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
     : ''
 }
 
+import Fonts from './dependencies/theme/Fonts'
 import {useLocation} from "react-router-dom"
 import { useUserContext } from './dependencies/context/user'
 ${extraImports.join('\n')}
@@ -569,6 +570,7 @@ const ${componentName} = () => {
 
   return (
   <ChakraProvider resetCSS>
+    <Fonts />
     <Metadata
       metaTitle={'${metaTitle}'}
       metaDescription={'${metaDescription}'}
