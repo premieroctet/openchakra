@@ -4,18 +4,13 @@ import lodash from 'lodash'
 import FormControl from '../controls/FormControl'
 import usePropsSelector from '../../../hooks/usePropsSelector'
 import { List, Checkbox } from '@chakra-ui/react'
-
-const ROLES = [
-  'apprenant',
-  'formateur',
-  'concepteur',
-  'administrateur',
-  'gestionnaire',
-]
+import { getRoles } from '~core/selectors/roles'
+import { useSelector } from 'react-redux'
 
 const VisibilityPanel: React.FC = () => {
   const hiddenRoles = usePropsSelector('hiddenRoles')
   const { setValue } = useForm()
+  const roles = useSelector(getRoles)
 
   const onRoleChange = event => {
     const { name, checked } = event.target
@@ -30,7 +25,7 @@ const VisibilityPanel: React.FC = () => {
   return (
     <FormControl htmlFor="hiddenRoles" label="Hidden for">
       <List>
-        {ROLES.map((role, i) => (
+        {Object.keys(roles).map((role, i) => (
           <Checkbox
             key={`vis${i}`}
             name={role}
@@ -38,7 +33,7 @@ const VisibilityPanel: React.FC = () => {
             isChecked={hiddenRoles.includes(role)}
             onChange={onRoleChange}
           >
-            {role}
+            {roles[role]}
           </Checkbox>
         ))}
       </List>

@@ -71,6 +71,19 @@ const Editor: React.FC = () => {
       })
   }, [dispatch.dataSources, get])
 
+  useEffect(() => {
+    get('/myAlfred/api/studio/roles')
+      .then(res => {
+        if (!res) {
+          throw new Error()
+        }
+        dispatch.roles.setRoles(res)
+      })
+      .catch(err => {
+        alert(`Could not get roles from backend:${err}`)
+      })
+  }, [dispatch.roles, get])
+
   const Playground = (
     <Box
       p={2}
