@@ -11,6 +11,7 @@ import {
 import FormControl from '~components/inspector/controls/FormControl'
 import { ComboboxOption } from '@reach/combobox'
 import InputSuggestion from '~components/inspector/inputs/InputSuggestion'
+import TextControl from '~components/inspector/controls/TextControl'
 import { useForm } from '~hooks/useForm'
 import usePropsSelector from '~hooks/usePropsSelector'
 
@@ -22,6 +23,7 @@ const TextPanel = () => {
   const fontStyle = usePropsSelector('fontStyle')
   const textAlign = usePropsSelector('textAlign')
   const fontSize = usePropsSelector('fontSize')
+  // const fontFamily = usePropsSelector('fontFamily')
   const letterSpacing = usePropsSelector('letterSpacing')
   const lineHeight = usePropsSelector('lineHeight')
 
@@ -98,6 +100,20 @@ const TextPanel = () => {
           />
         </ButtonGroup>
       </FormControl>
+
+      <TextControl name="fontFamily" label="Font family" />
+
+      {/* <FormControl label="Font family" htmlFor="fontFamily">
+        <InputSuggestion
+          value={fontFamily}
+          handleChange={setValueFromEvent}
+          name="fontFamily"
+        >
+          {Object.keys(theme.fonts).map(option => (
+            <ComboboxOption key={option} value={option} />
+          ))}
+        </InputSuggestion>
+      </FormControl> */}
 
       <FormControl label="Font size" htmlFor="fontSize">
         <InputSuggestion
