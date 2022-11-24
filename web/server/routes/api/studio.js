@@ -1,9 +1,11 @@
+const { getDataModel } = require('../../../config/config');
 const {
   filterDataUser,
   getContacts,
   getResourceSpentTime,
   login
 } = require('../../utils/studio/aftral/functions');
+const {ROLES}=require(`../../../utils/${getDataModel()}/consts`);
 const {sendCookie} = require('../../config/passport')
 const path=require('path')
 const jwt = require('jsonwebtoken')
@@ -28,6 +30,11 @@ const router = express.Router()
 router.get('/models', (req, res) => {
   const allModels=getModels()
   return res.json(allModels)
+})
+
+router.get('/roles', (req, res) => {
+  console.log()
+  return res.json(ROLES)
 })
 
 router.post('/file', (req, res) => {

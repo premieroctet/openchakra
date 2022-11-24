@@ -355,15 +355,55 @@ const getSessionSpentTimeStr = async(user, queryParams, session) => {
   return formatTime(res)
 }
 
+const getThemeProgress = async (user, queryParams, theme) => {
+  const th=await Theme.findById(theme._id)
+  const userData=await UserSessionData.findOne({user: user._id})
+  const finishedResources=th.resources.filter(r => userData?.finished?.includes(r._id))
+  return {finished: finishedResources.length, total: th.resources.length}
+}
+
+const getThemeProgressStr = async (user, queryParams, theme) => {
+  const progress=await getThemeProgress(user, queryParams, theme)
+  return `${progress.finished}/${progress.total}`
+}
+
+const getThemeProgressPercent = async (user, queryParams, theme) => {
+  const progress=await getThemeProgress(user, queryParams, theme)
+  return progress.finished*1.0/progress.total*100
+}
+
+const getSessionProgress = async (user, queryParams, session) => {
+  const sess=await Session.findById(session._id).populate('themes')
+  if (!sess) { return {finished:0, total:0}}
+  const userData=await UserSessionData.findOne({user: user._id})
+  const resources=lodash.flatten(sess.themes.map(t => t.resources))
+  const finishedResources=resources.filter(r => userData?.finished?.includes(r._id))
+  return {finished: finishedResources.length, total: resources.length}
+}
+
+const getSessionProgressStr = async (user, queryParams, session) => {
+  const progress=await getSessionProgress(user, queryParams, session)
+  return `${progress.finished}/${progress.total}`
+}
+
+const getSessionProgressPercent = async (user, queryParams, session) => {
+  const progress=await getSessionProgress(user, queryParams, session)
+  return progress.finished*1.0/progress.total*100
+}
+
 declareComputedField('resource', 'spent_time', getResourceSpentTime)
 declareComputedField('resource', 'spent_time_str', getResourceSpentTimeStr)
 declareComputedField('resource', 'status', getResourceStatus)
 
 declareComputedField('theme', 'spent_time', getThemeSpentTime)
 declareComputedField('theme', 'spent_time_str', getThemeSpentTimeStr)
+declareComputedField('theme', 'progress_str', getThemeProgressStr)
+declareComputedField('theme', 'progress_percent', getThemeProgressPercent)
 
 declareComputedField('session', 'spent_time', getSessionSpentTime)
 declareComputedField('session', 'spent_time_str', getSessionSpentTimeStr)
+declareComputedField('session', 'progress_str', getSessionProgressStr)
+declareComputedField('session', 'progress_percent', getSessionProgressPercent)
 
 module.exports={
   addChild,

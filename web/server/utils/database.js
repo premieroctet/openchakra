@@ -1,10 +1,10 @@
-const PromiseSerial = require('promise-serial')
 const mongoose=require('mongoose')
 const lodash=require('lodash')
 const formatDuration = require('format-duration')
 // TODO: Omporting Theme makes a cyclic import. Why ?
 // const Theme = require('../models/Theme');
 require('../models/TrainingCenter')
+require('../models/Category')
 
 const MONGOOSE_OPTIONS={
   useNewUrlParser: true,
@@ -45,17 +45,44 @@ const attributesComparator = (att1, att2) => {
 const COMPUTED_FIELDS={}
 
 const DECLARED_VIRTUALS={
+  user: {
+    // fumoir
+    full_name: {path: 'full_name', instance: 'String', requires: 'firstname,name'},
+    is_active: {path: 'is_active', instance: 'Boolean', requires: 'active'},
+    // aftral studio
+    contact_name: {path: 'contact_name', instance: 'String', requires: 'name,firstname,role'},
+  },
+  // fumoir
+  booking: {
+    booking_total_person: {path: 'booking_total_person', instance: 'Number', requires: 'members,guests'},
+  },
+  company: {
+    full_name: {path: 'full_name', instance: 'String', requires: 'name'},
+    mangopay_provider_id: {path: 'mangopay_provider_id', instance: 'String', requires: 'id_mangopay'},
+  },
+  product: {
+    total_price: {path: 'total_price', instance: 'Number', requires: 'priceWT,tax'},
+    reviews: {path: 'reviews', instance: 'review', requires: '_id'},
+  },
+  subscription: {
+    is_active: {path: 'is_active', instance: 'Boolean', requires: 'start,end'},
+  },
+  // aftral
   session: {
     trainees_count: {path: 'trainees_count', instance: 'Number', requires: 'trainees'},
     trainers_count: {path: 'trainees_count', instance: 'Number', requires: 'trainers'},
     spent_time: {path: 'spent_time', instance: 'String', requires: 'themes'},
     spent_time_str: {path: 'spent_time_str', instance: 'String', requires: 'themes'},
     contact_name: {path: 'contact_name', instance: 'String', requires: 'name'},
+    progress_str: {path: 'progress_str', instance: 'String', requires: 'name'},
+    progress_percent: {path: 'progress_percent', instance: 'Number', requires: 'name'},
   },
   theme: {
     hidden: {path: 'hidden', instance: 'Boolean', requires: 'name,code,picture'},
     spent_time: {path: 'spent_time', instance: 'String', requires: 'resources'},
     spent_time_str: {path: 'spent_time_str', instance: 'String', requires: 'resources'},
+    progress_str: {path: 'progress_str', instance: 'String', requires: 'name'},
+    progress_percent: {path: 'progress_percent', instance: 'Number', requires: 'name'},
   },
   resource: {
     spent_time: {path: 'spent_time', instance: 'Number', requires: '_id'},
@@ -65,11 +92,10 @@ const DECLARED_VIRTUALS={
   contact: {
     name: {path: 'name', instance: 'String', requires: '_id'},
   },
-  user: {
-    contact_name: {path: 'contact_name', instance: 'String', requires: 'name,firstname,role'},
-  },
   loggedUser: {
     contact_name: {path: 'contact_name', instance: 'String', requires: 'name,firstname,role'},
+    full_name: {path: 'full_name', instance: 'String', requires: 'firstname,name'},
+    is_active: {path: 'is_active', instance: 'Boolean', requires: 'active'},
   },
   message: {
     destinee_name: {path: 'destinee_name', instance: 'String', requires: 'destinee_session.trainers,destinee_session.trainees,destinee_user'},
@@ -278,7 +304,7 @@ const addComputedFields= async(user, queryParams, data, model, level=0) => {
     log(`Fields for ${model} ${JSON.stringify(data)}`)
   }
   // Compute direct attributes
-  const x=await PromiseSerial(Object.keys(compFields).map(f => () => compFields[f](newUser, queryParams, data)
+  const x=await Promise.allSettled(Object.keys(compFields).map(f => compFields[f](user, queryParams, data)
     .then(res => { data[f]=res })))
   // Handle references => sub
   const refAttributes=getModelAttributes(model).filter(att => !(att[0].includes('.')) && att[1].ref)
@@ -287,8 +313,8 @@ const addComputedFields= async(user, queryParams, data, model, level=0) => {
     log(`Down in ${attName} with children ${JSON.stringify(children)}`)
     if (children && !['program', 'origin'].includes(attName)) {
       if (attParams.multiple) {
-        if (children?.length>0) {
-          const y=await PromiseSerial(children.map(child => () => addComputedFields(newUser, queryParams, child, attParams.type, level+1)))
+        if (children.length>0) {
+          const y=await Promise.allSettled(children.map(child => addComputedFields(user, queryParams, child, attParams.type)))
         }
       }
       else if (children) {
