@@ -12,8 +12,6 @@ import {
   Tab,
   TabPanels,
   TabPanel,
-  Button,
-  Text,
 } from '@chakra-ui/react'
 import { AddIcon, CloseIcon, EditIcon, SearchIcon } from '@chakra-ui/icons'
 import DragItem from './DragItem'
@@ -27,34 +25,7 @@ import useDispatch from '~hooks/useDispatch'
 import API from '~custom-components/api'
 import { convertToPascal } from '~components/editor/Editor'
 import { generatePreview, generatePanel, generateOcTsxCode } from '~utils/code'
-
-const AddComponent = () => {
-  const createComponnet = async () => {
-    const res = await API.post('/add-component')
-    console.log(res)
-  }
-
-  return (
-    <Flex alignItems={'center'} justifyContent="space-between">
-      <Box flex={1}>
-        <Button
-          bgColor="teal.500"
-          _hover={{ bgColor: 'teal.300' }}
-          onClick={() => {
-            console.log('clicked')
-            createComponnet()
-          }}
-        >
-          <AddIcon mx={1} />
-
-          <Text letterSpacing="wide" fontSize="sm" textTransform="capitalize">
-            Create Component
-          </Text>
-        </Button>
-      </Box>
-    </Flex>
-  )
-}
+import AddComponent from './AddComponent'
 
 const Menu = () => {
   const [searchTerm, setSearchTerm] = useState('')
