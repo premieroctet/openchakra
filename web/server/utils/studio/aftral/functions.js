@@ -356,7 +356,7 @@ const getSessionSpentTimeStr = async (user, queryParams, session) => {
 
 const getThemeProgress = async (user, queryParams, theme) => {
   const userData=await UserSessionData.findOne({user: user._id})
-  const finishedResources=theme.resources.filter(r => userData.finished.includes(r._id))
+  const finishedResources=theme.resources.filter(r => userData?.finished?.includes(r._id))
   return {finished: finishedResources.length, total: theme.resources.length}
 }
 
@@ -375,7 +375,7 @@ const getSessionProgress = async (user, queryParams, session) => {
   if (!sess) { return {finished:0, total:0}}
   const userData=await UserSessionData.findOne({user: user._id})
   const resources=lodash.flatten(sess.themes.map(t => t.resources))
-  const finishedResources=resources.filter(r => userData.finished.includes(r._id))
+  const finishedResources=resources.filter(r => userData?.finished?.includes(r._id))
   return {finished: finishedResources.length, total: resources.length}
 }
 
