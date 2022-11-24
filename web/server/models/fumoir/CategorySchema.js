@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const {schemaOptions} = require('../../utils/schemas')
 const Schema = mongoose.Schema
 
-const CategoryProductSchema = new Schema({
+const CategorySchema = new Schema({
   name: {
     type: String,
   },
@@ -12,4 +12,4 @@ const CategoryProductSchema = new Schema({
   },
 }, schemaOptions)
 
-module.exports=CategoryProductSchema
+module.exports=CategorySchema

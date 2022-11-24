@@ -53,17 +53,17 @@ const ProductSchema = new Schema({
     set: v => parseInt(v),
     // required: true, TODO make mandatory then import
   },
-  
+
 }, schemaOptions)
 
-ProductSchema.virtual('totalprice').get(function() {
-  return this.priceExcludingTax * (1 + this.tax)
+ProductSchema.virtual('total_price').get(function() {
+  return this.priceWT * (1 + this.tax)
 })
 
 ProductSchema.virtual('reviews', {
   ref: 'Review',
-  localField: 'content',
-  foreignField: '_id',
+  localField: '_id',
+  foreignField: 'product',
 })
 
 module.exports=ProductSchema

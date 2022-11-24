@@ -24,8 +24,8 @@ const Service = require('./models/Service')
 const Booking = require('./models/Booking')
 const ServiceUser = require('./models/ServiceUser')
 const Category = require('./models/Category')
-require('./models/CategoryProduct')
 const PriceList = require('./models/PriceList')
+require('./models/ResetToken')
 require('./models/Program')
 require('./models/Theme')
 require('./models/Resource')
@@ -202,7 +202,7 @@ checkConfig()
     //   res.end()
     // }).listen(80)
     // console.log('Created server on port 80')
-    
+
     // HTTPS server using certificates
     const httpsServer = https.createServer({
       cert: fs.readFileSync(`${process.env.HOME}/.ssh/Main.txt`),
