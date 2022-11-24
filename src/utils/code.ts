@@ -240,7 +240,12 @@ const buildBlock = ({
           }
 
           if (propName === 'contextFilter') {
-            propsContent += ` contextFilter={${propsValue.replace(/^comp-/, '')}}`
+            if (propsValue) {
+              propsContent += ` contextFilter={${propsValue.replace(
+                /^comp-/,
+                '',
+              )}}`
+            }
             return
           }
 
