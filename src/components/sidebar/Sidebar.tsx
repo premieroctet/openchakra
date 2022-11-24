@@ -12,8 +12,10 @@ import {
   Tab,
   TabPanels,
   TabPanel,
+  Button,
+  Text,
 } from '@chakra-ui/react'
-import { CloseIcon, EditIcon, SearchIcon } from '@chakra-ui/icons'
+import { AddIcon, CloseIcon, EditIcon, SearchIcon } from '@chakra-ui/icons'
 import DragItem from './DragItem'
 import { menuItems, MenuItem } from '~componentsList'
 import { useSelector } from 'react-redux'
@@ -25,6 +27,34 @@ import useDispatch from '~hooks/useDispatch'
 import API from '~custom-components/api'
 import { convertToPascal } from '~components/editor/Editor'
 import { generatePreview, generatePanel, generateOcTsxCode } from '~utils/code'
+
+const AddComponent = () => {
+  const createComponnet = async () => {
+    const res = await API.post('/add-component')
+    console.log(res)
+  }
+
+  return (
+    <Flex alignItems={'center'} justifyContent="space-between">
+      <Box flex={1}>
+        <Button
+          bgColor="teal.500"
+          _hover={{ bgColor: 'teal.300' }}
+          onClick={() => {
+            console.log('clicked')
+            createComponnet()
+          }}
+        >
+          <AddIcon mx={1} />
+
+          <Text letterSpacing="wide" fontSize="sm" textTransform="capitalize">
+            Create Component
+          </Text>
+        </Button>
+      </Box>
+    </Flex>
+  )
+}
 
 const Menu = () => {
   const [searchTerm, setSearchTerm] = useState('')
@@ -91,7 +121,7 @@ const Menu = () => {
       })
       if (customComponents !== newComponentsList) autoselectComponent()
       await API.post('/copy-file', newComponentsList)
-    }, 3000)
+    }, 3000000)
     return () => {
       clearInterval(interval)
     }
@@ -214,6 +244,8 @@ const Menu = () => {
             </TabPanel>
             <TabPanel>
               <Box p={0} pt={0}>
+                <AddComponent />
+
                 {(Object.keys(customComponents) as ComponentType[])
                   .filter(c =>
                     c.toLowerCase().includes(searchTerm.toLowerCase()),
