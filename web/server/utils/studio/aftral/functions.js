@@ -355,9 +355,10 @@ const getSessionSpentTimeStr = async (user, queryParams, session) => {
 }
 
 const getThemeProgress = async (user, queryParams, theme) => {
+  const th=await Theme.findById(theme._id)
   const userData=await UserSessionData.findOne({user: user._id})
-  const finishedResources=theme.resources.filter(r => userData?.finished?.includes(r._id))
-  return {finished: finishedResources.length, total: theme.resources.length}
+  const finishedResources=th.resources.filter(r => userData?.finished?.includes(r._id))
+  return {finished: finishedResources.length, total: th.resources.length}
 }
 
 const getThemeProgressStr = async (user, queryParams, theme) => {

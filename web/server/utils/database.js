@@ -1,4 +1,3 @@
-const PromiseSerial = require('promise-serial')
 const mongoose=require('mongoose')
 const lodash=require('lodash')
 const formatDuration = require('format-duration')
@@ -269,7 +268,7 @@ const addComputedFields= async (user, queryParams, data, model) => {
 
   const compFields=COMPUTED_FIELDS[model] || {}
   // Compute direct attributes
-  const x=await PromiseSerial(Object.keys(compFields).map(f => () => compFields[f](user, queryParams, data)
+  const x=await Promise.allSettled(Object.keys(compFields).map(f => compFields[f](user, queryParams, data)
     .then(res => {data[f]=res})))
   // Handle references => sub
   const refAttributes=getModelAttributes(model).filter(att => !(att[0].includes('.')) && att[1].ref)
@@ -277,7 +276,7 @@ const addComputedFields= async (user, queryParams, data, model) => {
     const children=data[attName]
     if (children && !['program', 'origin'].includes(attName)) {
       if (attParams.multiple) {
-        const y=await PromiseSerial(children.map(child => () => addComputedFields(user, queryParams, child, attParams.type)))
+        const y=await Promise.allSettled(children.map(child => addComputedFields(user, queryParams, child, attParams.type)))
       }
       else {
         const z=await addComputedFields(user, queryParams, children, attParams.type)
