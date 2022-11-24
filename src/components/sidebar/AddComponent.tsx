@@ -1,4 +1,4 @@
-import { AddIcon, CheckCircleIcon } from '@chakra-ui/icons'
+import { AddIcon } from '@chakra-ui/icons'
 import {
   Box,
   Button,
@@ -20,11 +20,13 @@ import React, { useRef } from 'react'
 import API from '~custom-components/api'
 
 const AddComponent = () => {
-  const ref = useRef(null)
+  const ref = useRef<HTMLInputElement>(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const createComponent = async () => {
-    const res = await API.post('/add-component')
+    const res = await API.post('/add-component', {
+      path: ref.current?.value,
+    })
     console.log(res)
   }
 
@@ -55,14 +57,13 @@ const AddComponent = () => {
             <PopoverArrow bgColor="white" />
             <PopoverCloseButton />
             <PopoverBody>
-              <Input outlineColor="teal" ref={ref}></Input>
+              <Input outlineColor="teal" ref={ref} />
             </PopoverBody>
             <PopoverFooter display="flex" justifyContent="flex-end">
               <Button
                 bgColor="teal.500"
                 _hover={{ bgColor: 'teal.300' }}
                 onClick={() => {
-                  console.log('clicked')
                   createComponent()
                   onClose()
                 }}
