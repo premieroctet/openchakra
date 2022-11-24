@@ -12,8 +12,9 @@ import {
   Tab,
   TabPanels,
   TabPanel,
+  ButtonGroup,
 } from '@chakra-ui/react'
-import { AddIcon, CloseIcon, EditIcon, SearchIcon } from '@chakra-ui/icons'
+import { AddIcon, CloseIcon, DeleteIcon, EditIcon, SearchIcon } from '@chakra-ui/icons'
 import DragItem from './DragItem'
 import { menuItems, MenuItem } from '~componentsList'
 import { useSelector } from 'react-redux'
@@ -39,6 +40,12 @@ const Menu = () => {
     })
     dispatch.customComponents.select(name)
     dispatch.components.reset(JSON.parse(response.data.content))
+  }
+
+  const handleDeleteClick = async (name: string) => {
+    const response = await API.post('/delete-component', {
+      path: customComponents[name],
+    })
   }
 
   const autoselectComponent = () => {
@@ -92,7 +99,7 @@ const Menu = () => {
       })
       if (customComponents !== newComponentsList) autoselectComponent()
       await API.post('/copy-file', newComponentsList)
-    }, 3000000)
+    }, 30000)
     return () => {
       clearInterval(interval)
     }
@@ -241,16 +248,31 @@ const Menu = () => {
                             {name}
                           </DragItem>
                         </Box>
-                        <IconButton
-                          aria-label="Edit"
-                          size="sm"
-                          onClick={() => {
-                            handleEditClick(name)
-                          }}
-                          disabled={name === selectedComponent}
+                        <ButtonGroup size='xs' isAttached variant='outline'
+                          colorScheme='teal'
+
                         >
-                          <EditIcon color="white" />
-                        </IconButton>
+                          <IconButton
+                            aria-label="Edit"
+                            onClick={() => {
+                              handleEditClick(name)
+                            }}
+                            disabled={name === selectedComponent}
+                          >
+                            <EditIcon color="gray.300" />
+                          </IconButton>
+                          <IconButton
+                            aria-label="Delete"
+                            onClick={() => {
+                              handleDeleteClick(name)
+                            }}
+                            disabled={name === selectedComponent}
+                          >
+                            <DeleteIcon color="red" />
+                          </IconButton>
+                        </ButtonGroup>
+
+
                       </Flex>
                     )
                   })}
