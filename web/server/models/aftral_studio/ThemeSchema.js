@@ -47,6 +47,14 @@ ThemeSchema.virtual('spent_time_str').get(function() {
   return null
 })
 
+ThemeSchema.virtual('progress_str').get(function() {
+  return null
+})
+
+ThemeSchema.virtual('progress_percent').get(function() {
+  return null
+})
+
 ThemeSchema.virtual('hidden').get(function() {
   return (!this.name && !this.code && !this.picture)
 })

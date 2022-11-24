@@ -51,11 +51,15 @@ const DECLARED_VIRTUALS={
     spent_time: {path: 'spent_time', instance: 'String', requires: 'themes'},
     spent_time_str: {path: 'spent_time_str', instance: 'String', requires: 'themes'},
     contact_name: {path: 'contact_name', instance: 'String', requires: 'name'},
+    progress_str: {path: 'progress_str', instance: 'String', requires: 'name'},
+    progress_percent: {path: 'progress_percent', instance: 'Number', requires: 'name'},
   },
   theme: {
     hidden: {path: 'hidden', instance: 'Boolean', requires: 'name,code,picture'},
     spent_time: {path: 'spent_time', instance: 'String', requires: 'resources'},
     spent_time_str: {path: 'spent_time_str', instance: 'String', requires: 'resources'},
+    progress_str: {path: 'progress_str', instance: 'String', requires: 'name'},
+    progress_percent: {path: 'progress_percent', instance: 'Number', requires: 'name'},
   },
   resource: {
     spent_time: {path: 'spent_time', instance: 'Number', requires: '_id'},
