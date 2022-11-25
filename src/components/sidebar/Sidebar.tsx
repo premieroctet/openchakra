@@ -99,7 +99,7 @@ const Menu = () => {
       })
       if (customComponents !== newComponentsList) autoselectComponent()
       await API.post('/copy-file', newComponentsList)
-    }, 30000)
+    }, 3000)
     return () => {
       clearInterval(interval)
     }
