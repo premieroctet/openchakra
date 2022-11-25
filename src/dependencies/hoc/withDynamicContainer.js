@@ -52,8 +52,8 @@ const withDynamicContainer = Component => {
     }
     orgData = orgData || []
     if (props.contextFilter) {
-      const contextIds=props.contextFilter.map(o => o._id.toString())
-      orgData=lodash.intersectionBy(props.contextFilter, orgData, data => data._id)
+      const contextIds = props.contextFilter.map(o => o._id.toString())
+      orgData = orgData.filter(d => contextIds.includes(d._id))
     }
     let data = []
     try {

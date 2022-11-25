@@ -40,15 +40,23 @@ const DataSourcePanel: React.FC = () => {
   }, [activeComponent, components, dataSource, models])
 
   useEffect(() => {
-    if (!providers?.length>0 || !activeComponent || components?.length>0) {return}
-    // TODO: have to fix getDataProviderDataType and remove try/catch
-    try{
-      const currentModel=getDataProviderDataType(activeComponent, components, dataSource, models)?.type
-      console.log(`Current mode:${JSON.stringify(currentModel)}`)
-      setContextProviders(providers.filter(p => p.props.model==currentModel))
+    if (!providers?.length > 0 || !activeComponent || components?.length > 0) {
+      return
     }
-    catch(err){console.error(err)}
-  }, [providers, activeComponent, components])
+    // TODO: have to fix getDataProviderDataType and remove try/catch
+    try {
+      const currentModel = getDataProviderDataType(
+        activeComponent,
+        components,
+        dataSource,
+        models,
+      )?.type
+      console.log(`Current mode:${JSON.stringify(currentModel)}`)
+      setContextProviders(providers.filter(p => p.props.model == currentModel))
+    } catch (err) {
+      console.error(err)
+    }
+  }, [providers, activeComponent, components, dataSource, models])
 
   const onContextFilterChange = ev => {
     setValue('contextFilter', ev.target.checked)
@@ -103,22 +111,22 @@ const DataSourcePanel: React.FC = () => {
             />
           </FormControl>
         )}
-        {CONTAINER_TYPE.includes(activeComponent?.type)  && (
+        {CONTAINER_TYPE.includes(activeComponent?.type) && (
           <FormControl htmlFor="contextFilter" label="Filter">
-          <Select
-            id="contextFilter"
-            onChange={setValueFromEvent}
-            name="contextFilter"
-            size="sm"
-            value={contextFilter || ''}
-          >
-            <option value={undefined}></option>
-            {contextProviders.map((provider, i) => (
-              <option key={`prov${i}`} value={provider.id}>
-                {`${provider.id} (${provider.props?.model})`}
-              </option>
-            ))}
-          </Select>
+            <Select
+              id="contextFilter"
+              onChange={setValueFromEvent}
+              name="contextFilter"
+              size="sm"
+              value={contextFilter || ''}
+            >
+              <option value={undefined}></option>
+              {contextProviders.map((provider, i) => (
+                <option key={`prov${i}`} value={provider.id}>
+                  {`${provider.id} (${provider.props?.model})`}
+                </option>
+              ))}
+            </Select>
           </FormControl>
         )}
       </AccordionContainer>
