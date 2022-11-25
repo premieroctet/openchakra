@@ -16,8 +16,6 @@ import usePropsSelector from '~hooks/usePropsSelector'
 
 const TextPanel = () => {
   const { setValue, setValueFromEvent } = useForm()
-  console.log(theme);
-  
 
   const fontWeight = usePropsSelector('fontWeight')
   const fontStyle = usePropsSelector('fontStyle')
