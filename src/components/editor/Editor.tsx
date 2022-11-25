@@ -83,7 +83,6 @@ const Editor: React.FC = () => {
         })
       }
     }
-
     getCode()
   }, [components, selectedComponent])
 

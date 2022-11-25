@@ -43,17 +43,17 @@ const Menu = () => {
   }
 
   const handleDeleteClick = async (name: string) => {
+    // Call delete file inside delete-component
     const response = await API.post('/delete-component', {
       path: customComponents[name],
     })
   }
 
   const autoselectComponent = () => {
-    if (selectedComponent === undefined && Object.keys(customComponents).length)
+    if ((selectedComponent === undefined && Object.keys(customComponents).length) || (!Object.keys(customComponents).includes(String(selectedComponent)))) {
       handleEditClick(Object.keys(customComponents)[0])
-    else if (!Object.keys(customComponents).includes(String(selectedComponent)))
-      handleEditClick(Object.keys(customComponents)[0])
-    else if (!Object.keys(customComponents).length)
+      console.log(Object.keys(customComponents));
+    } else if (!Object.keys(customComponents).length)
       dispatch.customComponents.unselect()
   }
 
@@ -71,20 +71,25 @@ const Menu = () => {
   }
 
   useEffect(() => {
-    const interval = setInterval(async () => {
-      const newComponentsList = await API.get('/refresh').then(res => res.data)
+    const initFunction = async () => {
+      const newComponentsList = await API.post('/init').then(res => res.data)
       dispatch.customComponents.updateCustomComponents(newComponentsList)
 
+      /*
+      // shift this in delete-component, no need to call here.
       const componentDiffs = getObjectDiff(newComponentsList)
       componentDiffs.deletedComponents.map(async component => {
         await API.post('/delete-file', {
           path: customComponents[component],
         })
       })
+
+      // Do this both in add-component and init 
       componentDiffs.newComponents.map(async component => {
         const jsonResponse = await API.post('/read-json', {
           path: newComponentsList[component],
         })
+
         let components = JSON.parse(jsonResponse.data.content)
         let fileName = convertToPascal(newComponentsList[component])
         let previewCode = await generatePreview(components, fileName, component)
@@ -97,13 +102,22 @@ const Menu = () => {
           ocTsxBody: ocTsxCode,
         })
       })
-      if (customComponents !== newComponentsList) autoselectComponent()
-      await API.post('/copy-file', newComponentsList)
-    }, 3000)
-    return () => {
-      clearInterval(interval)
+       */
+
+      // if (customComponents !== newComponentsList)
+      //   autoselectComponent()
+
+
+      // Remove this totally and link & unlink commands in add/delete-component. 
+      // Also add in init for initial symlinks
+      // await API.post('/copy-file', newComponentsList)
     }
-  }, [customComponents])
+    initFunction()
+  }, [])
+
+  useEffect(()=>{
+    autoselectComponent()
+  },[customComponents])
 
   return (
     <DarkMode>
