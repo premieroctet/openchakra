@@ -26,13 +26,14 @@ function useBreakpoints(properties: string[] = []) {
 
   const settledBreakpoints = Object.entries(responsiveValues).reduce(
     (acc: string[] = [], [key, data]) => {
-      const currbkpt = Object.keys(data)
+      const currbkpt = (data && Object.keys(data)) || null
 
-      currbkpt.forEach((bkpt: string) => {
-        if (!acc.includes(bkpt)) {
-          acc.push(bkpt)
-        }
-      })
+      currbkpt &&
+        currbkpt.forEach((bkpt: string) => {
+          if (!acc.includes(bkpt)) {
+            acc.push(bkpt)
+          }
+        })
       return acc
     },
     ['base'],
