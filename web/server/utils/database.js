@@ -296,25 +296,20 @@ const addComputedFields= async(user, queryParams, data, model, level=0) => {
   let newUser=user
   if (model=='user') {
     newUser=await mongoose.connection.models.user.findById(data._id)
-    log(`Loaded user ${user?.email}`)
   }
 
   const compFields=COMPUTED_FIELDS[model] || {}
-  if (Object.keys(compFields).length>0) {
-    log(`Fields for ${model} ${JSON.stringify(data)}`)
-  }
   // Compute direct attributes
-  const x=await Promise.allSettled(Object.keys(compFields).map(f => compFields[f](user, queryParams, data)
-    .then(res => { data[f]=res })))
+  const x=await Promise.allSettled(Object.keys(compFields).map(f => compFields[f](newUser, queryParams, data)
+    .then(res => {data[f]=res })))
   // Handle references => sub
   const refAttributes=getModelAttributes(model).filter(att => !(att[0].includes('.')) && att[1].ref)
   for ([attName, attParams] of refAttributes) {
     const children=data[attName]
-    log(`Down in ${attName} with children ${JSON.stringify(children)}`)
     if (children && !['program', 'origin'].includes(attName)) {
       if (attParams.multiple) {
         if (children.length>0) {
-          const y=await Promise.allSettled(children.map(child => addComputedFields(user, queryParams, child, attParams.type)))
+          const y=await Promise.allSettled(children.map(child => addComputedFields(newUser, queryParams, child, attParams.type)))
         }
       }
       else if (children) {
