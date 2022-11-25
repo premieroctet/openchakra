@@ -342,7 +342,6 @@ const getThemeSpentTimeStr = async(user, queryParams, theme) => {
 }
 
 const getSessionSpentTime = async(user, queryParams, session) => {
-  // console.log(`Computing session ${session._id} time for user ${user._id}`)
   const data=await Session.findById(session._id.toString())
   if (!data) { return 0 }
   const results=await Promise.all(data.themes.map(t => getThemeSpentTime(user, queryParams, t._id)))
