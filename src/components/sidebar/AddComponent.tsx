@@ -26,10 +26,12 @@ const AddComponent = () => {
 
   const createComponent = async () => {
     const componentPath = ref.current?.value
+    dispatch.app.toggleLoader()
     const res = await API.post('/add-component', {
       path: componentPath,
     })
-    dispatch.customComponents.addCustomComponent(res.data.component,`../remote/${componentPath}`)
+    dispatch.customComponents.addCustomComponent(res.data,`../remote/${componentPath}`)
+    dispatch.app.toggleLoader()
   }
 
   return (

@@ -6,6 +6,7 @@ import { Global } from '@emotion/react'
 import Metadata from '~components/Metadata'
 import useShortcuts from '~hooks/useShortcuts'
 import Header from '~components/Header'
+import Loader from '~components/Loader'
 import Sidebar from '~components/sidebar/Sidebar'
 import EditorErrorBoundary from '~components/errorBoundaries/EditorErrorBoundary'
 import Editor from '~components/editor/Editor'
@@ -22,6 +23,7 @@ const App = () => {
           html: { minWidth: '860px', backgroundColor: '#1a202c' },
         })}
       />
+      <Loader/>
       <Metadata />
       <Header />
       <DndProvider backend={HTML5Backend}>

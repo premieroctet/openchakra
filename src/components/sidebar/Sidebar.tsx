@@ -13,6 +13,7 @@ import {
   TabPanels,
   TabPanel,
   ButtonGroup,
+  Button,
 } from '@chakra-ui/react'
 import { CloseIcon, DeleteIcon, EditIcon, SearchIcon } from '@chakra-ui/icons'
 import DragItem from './DragItem'
@@ -232,8 +233,6 @@ const Menu = () => {
                             <DeleteIcon color="red" />
                           </IconButton>
                         </ButtonGroup>
-
-
                       </Flex>
                     )
                   })}
