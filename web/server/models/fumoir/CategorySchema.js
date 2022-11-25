@@ -6,6 +6,9 @@ const CategorySchema = new Schema({
   name: {
     type: String,
   },
+  picture: {
+    type: String,
+  },
   parent: {
     type: Schema.Types.ObjectId,
     ref: 'category',
