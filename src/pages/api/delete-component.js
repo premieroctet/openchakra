@@ -3,12 +3,8 @@ import shell from 'shelljs'
 
 export default async function handler(req, res) {
   try {
-    // const response = await shellExec('bit --version')
-    const response2 = shell.exec(`cd .. && bit remove ${req.body.path.substr(10)} -s`)
-    res.status(200).json({
-      //   response,
-      response2,
-    })
+    const response = shell.exec(`cd .. && bit remove ${req.body.path.substr(10)} -s`)
+    res.status(200).json(response)
   } catch (err) {
     console.log(err)
   }
