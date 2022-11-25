@@ -44,7 +44,14 @@ export default async function handler(req, res) {
         generateOcTsxCode(json, jsons),
       ])
 
-      // 2.3 Write the generated files
+      // 2.3 Create symlink
+      shell.ln(
+        '-sf',
+        `../../../${jsons[component]}/${component}.tsx`,
+        `src/custom-components/customOcTsx/${component}.tsx`,
+      )
+
+      // 2.4 Write the generated files
       const writePreview = fs.promises.writeFile(
         `src/custom-components/editor/previews/${componentName}Preview.oc.tsx`,
         previewCode,
@@ -58,13 +65,6 @@ export default async function handler(req, res) {
         ocTsxCode,
       )
       await Promise.all([writePreview, writePanel, writeOcTsx])
-
-      // 2.4 Create symlink
-      shell.ln(
-        '-sf',
-        `../../../${jsons[component]}/${component}.tsx`,
-        `src/custom-components/customOcTsx/${component}.tsx`,
-      )
     })
     res.statusCode = 200
     res.json(jsons)

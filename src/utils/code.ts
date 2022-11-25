@@ -487,7 +487,7 @@ export default App;`
 
 export const generateOcTsxCode = async (
   components: IComponents,
-  currentComponents: CustomDictionary,
+  currentComponents: CustomDictionary = {},
 ) => {
   let code = buildBlock({ component: components.root, components })
   let componentsCodes = buildComponents(components)

@@ -14,7 +14,7 @@ import {
   TabPanel,
   ButtonGroup,
 } from '@chakra-ui/react'
-import { AddIcon, CloseIcon, DeleteIcon, EditIcon, SearchIcon } from '@chakra-ui/icons'
+import { CloseIcon, DeleteIcon, EditIcon, SearchIcon } from '@chakra-ui/icons'
 import DragItem from './DragItem'
 import { menuItems, MenuItem } from '~componentsList'
 import { useSelector } from 'react-redux'
@@ -24,8 +24,6 @@ import {
 } from '~core/selectors/customComponents'
 import useDispatch from '~hooks/useDispatch'
 import API from '~custom-components/api'
-import { convertToPascal } from '~components/editor/Editor'
-import { generatePreview, generatePanel, generateOcTsxCode } from '~utils/code'
 import AddComponent from './AddComponent'
 
 const Menu = () => {
@@ -43,81 +41,30 @@ const Menu = () => {
   }
 
   const handleDeleteClick = async (name: string) => {
-    // Call delete file inside delete-component
-    const response = await API.post('/delete-component', {
+    dispatch.customComponents.deleteCustomComponent(name)
+    await API.post('/delete-component', {
       path: customComponents[name],
     })
   }
 
   const autoselectComponent = () => {
-    if ((selectedComponent === undefined && Object.keys(customComponents).length) || (!Object.keys(customComponents).includes(String(selectedComponent)))) {
+    if ((selectedComponent === undefined && Object.keys(customComponents).length) || (!Object.keys(customComponents).includes(String(selectedComponent))))
       handleEditClick(Object.keys(customComponents)[0])
-      console.log(Object.keys(customComponents));
-    } else if (!Object.keys(customComponents).length)
+    else if (!Object.keys(customComponents).length)
       dispatch.customComponents.unselect()
-  }
-
-  const getObjectDiff = (updatedList: Record<string, unknown>) => {
-    let deletedComponents = Object.keys(customComponents).filter(
-      component => !Object.keys(updatedList).includes(component),
-    )
-    let newComponents = Object.keys(updatedList).filter(
-      component => !Object.keys(customComponents).includes(component),
-    )
-    return {
-      deletedComponents: deletedComponents,
-      newComponents: newComponents,
-    }
   }
 
   useEffect(() => {
     const initFunction = async () => {
       const newComponentsList = await API.post('/init').then(res => res.data)
       dispatch.customComponents.updateCustomComponents(newComponentsList)
-
-      /*
-      // shift this in delete-component, no need to call here.
-      const componentDiffs = getObjectDiff(newComponentsList)
-      componentDiffs.deletedComponents.map(async component => {
-        await API.post('/delete-file', {
-          path: customComponents[component],
-        })
-      })
-
-      // Do this both in add-component and init 
-      componentDiffs.newComponents.map(async component => {
-        const jsonResponse = await API.post('/read-json', {
-          path: newComponentsList[component],
-        })
-
-        let components = JSON.parse(jsonResponse.data.content)
-        let fileName = convertToPascal(newComponentsList[component])
-        let previewCode = await generatePreview(components, fileName, component)
-        let panelCode = await generatePanel(components, fileName)
-        const ocTsxCode = await generateOcTsxCode(components, customComponents)
-        await API.post('/init', {
-          path: newComponentsList[component],
-          previewBody: previewCode,
-          panelBody: panelCode,
-          ocTsxBody: ocTsxCode,
-        })
-      })
-       */
-
-      // if (customComponents !== newComponentsList)
-      //   autoselectComponent()
-
-
-      // Remove this totally and link & unlink commands in add/delete-component. 
-      // Also add in init for initial symlinks
-      // await API.post('/copy-file', newComponentsList)
     }
     initFunction()
   }, [])
 
-  useEffect(()=>{
+  useEffect(() => {
     autoselectComponent()
-  },[customComponents])
+  }, [customComponents])
 
   return (
     <DarkMode>
