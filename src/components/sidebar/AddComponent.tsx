@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   Flex,
-  IconButton,
   Input,
   Popover,
   PopoverArrow,
@@ -18,16 +17,19 @@ import {
 } from '@chakra-ui/react'
 import React, { useRef } from 'react'
 import API from '~custom-components/api'
+import useDispatch from '~hooks/useDispatch'
 
 const AddComponent = () => {
   const ref = useRef<HTMLInputElement>(null)
+  const dispatch = useDispatch()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const createComponent = async () => {
+    const componentPath = ref.current?.value
     const res = await API.post('/add-component', {
-      path: ref.current?.value,
+      path: componentPath,
     })
-    console.log(res)
+    dispatch.customComponents.addCustomComponent(res.data.component,`../remote/${componentPath}`)
   }
 
   return (

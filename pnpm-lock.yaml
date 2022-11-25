@@ -64,7 +64,6 @@ specifiers:
   redux: ^4.0.5
   redux-persist: ^6.0.0
   redux-undo: ^1.0.0
-  shell-exec: ^1.1.2
   shelljs: ^0.8.5
   ts-loader: ^9.4.1
   typedoc: ^0.16.9
@@ -110,7 +109,6 @@ dependencies:
   redux: 4.2.0
   redux-persist: 6.0.0_redux@4.2.0
   redux-undo: 1.0.1
-  shell-exec: 1.1.2
   shelljs: 0.8.5
   webpack-bundle-analyzer: 3.9.0
 
@@ -7866,11 +7864,6 @@ packages:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
     dev: true
-
-  /shell-exec/1.1.2:
-    resolution: {integrity: sha512-v2NWVDP0ws+S7miKy2oSpJ/OuL6NKuMosPNUZLDWFBlMnBtuoZxZOwxpQJwhsFZgMb+r7frpDTT8p4OSnhkpsg==}
-    engines: {node: '>=12'}
-    dev: false
 
   /shelljs/0.8.5:
     resolution: {integrity: sha512-TiwcRcrkhHvbrZbnRcFYMLl30Dfov3HKqzp5tO5b4pt6G/SezKcYhmDg15zXVBswHmctSAQKznqNW2LO5tTDow==}

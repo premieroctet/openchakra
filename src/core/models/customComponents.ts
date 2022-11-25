@@ -32,10 +32,26 @@ const customComponents = createModel({
       state: CustomComponentsState,
       components: CustomDictionary,
     ): CustomComponentsState {
-      return {
-        ...state,
-        components,
-      }
+      return produce(state, (draftState: CustomComponentsState) => {
+        draftState.components=components
+      })
+    },
+    addCustomComponent(
+      state: CustomComponentsState,
+      component: string,
+      componentPath: string,
+    ): CustomComponentsState {
+      return produce(state, (draftState: CustomComponentsState) => {
+        draftState.components[component]=componentPath
+      })
+    },
+    deleteCustomComponent(
+      state: CustomComponentsState,
+      component: string,
+    ): CustomComponentsState {
+      return produce(state, (draftState: CustomComponentsState) => {
+        delete draftState.components[component]
+      })
     },
     updateParams(
       state: CustomComponentsState,
