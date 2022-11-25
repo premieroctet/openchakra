@@ -7,9 +7,7 @@ export default async function handler(req, res) {
   const component = req.body.path?.split('/').slice(-1)[0]
   try {
     // 1. Create bit component
-    const response = shell.exec(
-      `cd .. && bit create tiui-react-oc ${req.body.path}`,
-    )
+    shell.exec(`cd .. && bit create tiui-react-oc ${req.body.path}`)
 
     // 2. Read json
     const fileContent = fs.readFileSync(
@@ -48,7 +46,7 @@ export default async function handler(req, res) {
     )
     await Promise.all([writePreview, writePanel, writeOcTsx])
 
-    res.status(200).json(response, component)
+    res.status(200).json(component)
   } catch (err) {
     console.log(err)
     res.status(400).json({ err })
