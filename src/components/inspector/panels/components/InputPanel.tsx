@@ -34,7 +34,7 @@ const InputPanel = () => {
           <option>filled</option>
         </Select>
       </FormControl>
-      
+
       <FormControl htmlFor="type" label="type">
         <Select
           id="type"
@@ -46,7 +46,7 @@ const InputPanel = () => {
           <option>text</option>
           <option>tel</option>
           <option>email</option>
-          <option>file</option>
+          <option>password</option>
         </Select>
       </FormControl>
 
