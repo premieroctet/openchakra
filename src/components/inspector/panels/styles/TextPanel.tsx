@@ -36,214 +36,206 @@ const TextPanel = () => {
   return (
     <>
       {settledBreakpoints.map((breakpoint: string, i: number) => (
-        <>
-          <Box key={i}>
-            {breakpoint}
-            <FormControl label="Style">
+        <Box key={i}>
+          {breakpoint}
+          <FormControl label="Style">
+            <IconButton
+              mr={1}
+              aria-label="bold"
+              icon={<GoBold />}
+              onClick={() => {
+                handleBreakpoints(
+                  'fontWeight',
+                  breakpoint,
+                  responsiveValues['fontWeight']?.[breakpoint] ? null : 'bold',
+                )
+              }}
+              size="xs"
+              colorScheme={
+                responsiveValues['fontWeight']?.[breakpoint]
+                  ? 'whatsapp'
+                  : 'gray'
+              }
+              variant={
+                responsiveValues['fontWeight']?.[breakpoint]
+                  ? 'solid'
+                  : 'outline'
+              }
+            >
+              Bold
+            </IconButton>
+            <IconButton
+              aria-label="italic"
+              icon={<GoItalic />}
+              onClick={() => {
+                handleBreakpoints(
+                  'fontStyle',
+                  breakpoint,
+                  responsiveValues['fontStyle']?.[breakpoint] === 'italic'
+                    ? null
+                    : 'italic',
+                )
+              }}
+              size="xs"
+              colorScheme={
+                responsiveValues['fontStyle']?.[breakpoint] === 'italic'
+                  ? 'whatsapp'
+                  : 'gray'
+              }
+              variant={
+                responsiveValues['fontStyle']?.[breakpoint] === 'italic'
+                  ? 'solid'
+                  : 'outline'
+              }
+            >
+              Italic
+            </IconButton>
+          </FormControl>
+
+          <FormControl label="Text align">
+            <ButtonGroup size="xs" isAttached>
               <IconButton
-                mr={1}
                 aria-label="bold"
-                icon={<GoBold />}
+                icon={<MdFormatAlignLeft />}
                 onClick={() => {
-                  handleBreakpoints(
-                    'fontWeight',
-                    breakpoint,
-                    responsiveValues['fontWeight']?.[breakpoint]
-                      ? null
-                      : 'bold',
-                  )
+                  handleBreakpoints('textAlign', breakpoint, 'left')
                 }}
-                size="xs"
                 colorScheme={
-                  responsiveValues['fontWeight']?.[breakpoint]
+                  responsiveValues['textAlign']?.[breakpoint] === 'left'
                     ? 'whatsapp'
                     : 'gray'
                 }
                 variant={
-                  responsiveValues['fontWeight']?.[breakpoint]
+                  responsiveValues['textAlign']?.[breakpoint] === 'left'
                     ? 'solid'
                     : 'outline'
                 }
-              >
-                Bold
-              </IconButton>
+              />
+
               <IconButton
                 aria-label="italic"
-                icon={<GoItalic />}
+                icon={<MdFormatAlignCenter />}
                 onClick={() => {
-                  handleBreakpoints(
-                    'fontStyle',
-                    breakpoint,
-                    responsiveValues['fontStyle']?.[breakpoint] === 'italic'
-                      ? null
-                      : 'italic',
-                  )
+                  handleBreakpoints('textAlign', breakpoint, 'center')
                 }}
-                size="xs"
                 colorScheme={
-                  responsiveValues['fontStyle']?.[breakpoint] === 'italic'
+                  responsiveValues['textAlign']?.[breakpoint] === 'center'
                     ? 'whatsapp'
                     : 'gray'
                 }
                 variant={
-                  responsiveValues['fontStyle']?.[breakpoint] === 'italic'
+                  responsiveValues['textAlign']?.[breakpoint] === 'center'
                     ? 'solid'
                     : 'outline'
                 }
-              >
-                Italic
-              </IconButton>
-            </FormControl>
+              />
 
-            <FormControl label="Text align">
-              <ButtonGroup size="xs" isAttached>
-                <IconButton
-                  aria-label="bold"
-                  icon={<MdFormatAlignLeft />}
-                  onClick={() => {
-                    handleBreakpoints('textAlign', breakpoint, 'left')
-                  }}
-                  colorScheme={
-                    responsiveValues['textAlign']?.[breakpoint] === 'left'
-                      ? 'whatsapp'
-                      : 'gray'
-                  }
-                  variant={
-                    responsiveValues['textAlign']?.[breakpoint] === 'left'
-                      ? 'solid'
-                      : 'outline'
-                  }
-                />
-
-                <IconButton
-                  aria-label="italic"
-                  icon={<MdFormatAlignCenter />}
-                  onClick={() => {
-                    handleBreakpoints('textAlign', breakpoint, 'center')
-                  }}
-                  colorScheme={
-                    responsiveValues['textAlign']?.[breakpoint] === 'center'
-                      ? 'whatsapp'
-                      : 'gray'
-                  }
-                  variant={
-                    responsiveValues['textAlign']?.[breakpoint] === 'center'
-                      ? 'solid'
-                      : 'outline'
-                  }
-                />
-
-                <IconButton
-                  aria-label="italic"
-                  icon={<MdFormatAlignRight />}
-                  onClick={() => {
-                    handleBreakpoints('textAlign', breakpoint, 'right')
-                  }}
-                  colorScheme={
-                    responsiveValues['textAlign']?.[breakpoint] === 'right'
-                      ? 'whatsapp'
-                      : 'gray'
-                  }
-                  variant={
-                    responsiveValues['textAlign']?.[breakpoint] === 'right'
-                      ? 'solid'
-                      : 'outline'
-                  }
-                />
-
-                <IconButton
-                  aria-label="italic"
-                  icon={<MdFormatAlignJustify />}
-                  onClick={() => {
-                    handleBreakpoints('textAlign', breakpoint, 'justify')
-                  }}
-                  colorScheme={
-                    responsiveValues['textAlign']?.[breakpoint] === 'justify'
-                      ? 'whatsapp'
-                      : 'gray'
-                  }
-                  variant={
-                    responsiveValues['textAlign']?.[breakpoint] === 'justify'
-                      ? 'solid'
-                      : 'outline'
-                  }
-                />
-              </ButtonGroup>
-            </FormControl>
-
-            <FormControl label="Font family" htmlFor="fontFamily">
-              <InputSuggestion
-                value={responsiveValues['fontFamily']?.[breakpoint] || ''}
-                handleChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  handleBreakpoints(
-                    'fontFamily',
-                    breakpoint,
-                    e.currentTarget.value,
-                  )
+              <IconButton
+                aria-label="italic"
+                icon={<MdFormatAlignRight />}
+                onClick={() => {
+                  handleBreakpoints('textAlign', breakpoint, 'right')
+                }}
+                colorScheme={
+                  responsiveValues['textAlign']?.[breakpoint] === 'right'
+                    ? 'whatsapp'
+                    : 'gray'
                 }
-                name="fontFamily"
-              >
-                {Object.keys(theme.fonts).map(option => (
-                  <ComboboxOption key={option} value={option} />
-                ))}
-              </InputSuggestion>
-            </FormControl>
-
-            <FormControl label="Font size" htmlFor="fontSize">
-              <InputSuggestion
-                value={responsiveValues['fontSize']?.[breakpoint] || ''}
-                handleChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  handleBreakpoints(
-                    'fontSize',
-                    breakpoint,
-                    e.currentTarget.value,
-                  )
+                variant={
+                  responsiveValues['textAlign']?.[breakpoint] === 'right'
+                    ? 'solid'
+                    : 'outline'
                 }
-                name={`${breakpoint}-fontSize`}
-              >
-                {Object.keys(theme.fonts).map(option => (
-                  <ComboboxOption key={option} value={option} />
-                ))}
-              </InputSuggestion>
-            </FormControl>
+              />
 
-            <FormControl label="Line height" htmlFor="lineHeight">
-              <InputSuggestion
-                value={responsiveValues['lineHeight']?.[breakpoint] || ''}
-                handleChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  handleBreakpoints(
-                    'lineHeight',
-                    breakpoint,
-                    e.currentTarget.value,
-                  )
+              <IconButton
+                aria-label="italic"
+                icon={<MdFormatAlignJustify />}
+                onClick={() => {
+                  handleBreakpoints('textAlign', breakpoint, 'justify')
+                }}
+                colorScheme={
+                  responsiveValues['textAlign']?.[breakpoint] === 'justify'
+                    ? 'whatsapp'
+                    : 'gray'
                 }
-                name={`${breakpoint}-lineHeight`}
-              >
-                {Object.keys(theme.lineHeights).map(option => (
-                  <ComboboxOption key={option} value={option} />
-                ))}
-              </InputSuggestion>
-            </FormControl>
+                variant={
+                  responsiveValues['textAlign']?.[breakpoint] === 'justify'
+                    ? 'solid'
+                    : 'outline'
+                }
+              />
+            </ButtonGroup>
+          </FormControl>
 
-            <FormControl label="Letter spacing" htmlFor="letterSpacing">
-              <InputSuggestion
-                value={responsiveValues['letterSpacing']?.[breakpoint] || ''}
-                handleChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  handleBreakpoints(
-                    'letterSpacing',
-                    breakpoint,
-                    e.currentTarget.value,
-                  )
-                }
-                name={`${breakpoint}-letterSpacing`}
-              >
-                {Object.keys(theme.letterSpacings).map(option => (
-                  <ComboboxOption key={option} value={option} />
-                ))}
-              </InputSuggestion>
-            </FormControl>
-          </Box>
-        </>
+          <FormControl label="Font family" htmlFor="fontFamily">
+            <InputSuggestion
+              value={responsiveValues['fontFamily']?.[breakpoint] || ''}
+              handleChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                handleBreakpoints(
+                  'fontFamily',
+                  breakpoint,
+                  e.currentTarget.value,
+                )
+              }
+              name="fontFamily"
+            >
+              {Object.keys(theme.fonts).map(option => (
+                <ComboboxOption key={option} value={option} />
+              ))}
+            </InputSuggestion>
+          </FormControl>
+
+          <FormControl label="Font size" htmlFor="fontSize">
+            <InputSuggestion
+              value={responsiveValues['fontSize']?.[breakpoint] || ''}
+              handleChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                handleBreakpoints('fontSize', breakpoint, e.currentTarget.value)
+              }
+              name={`${breakpoint}-fontSize`}
+            >
+              {Object.keys(theme.fonts).map(option => (
+                <ComboboxOption key={option} value={option} />
+              ))}
+            </InputSuggestion>
+          </FormControl>
+
+          <FormControl label="Line height" htmlFor="lineHeight">
+            <InputSuggestion
+              value={responsiveValues['lineHeight']?.[breakpoint] || ''}
+              handleChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                handleBreakpoints(
+                  'lineHeight',
+                  breakpoint,
+                  e.currentTarget.value,
+                )
+              }
+              name={`${breakpoint}-lineHeight`}
+            >
+              {Object.keys(theme.lineHeights).map(option => (
+                <ComboboxOption key={option} value={option} />
+              ))}
+            </InputSuggestion>
+          </FormControl>
+
+          <FormControl label="Letter spacing" htmlFor="letterSpacing">
+            <InputSuggestion
+              value={responsiveValues['letterSpacing']?.[breakpoint] || ''}
+              handleChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                handleBreakpoints(
+                  'letterSpacing',
+                  breakpoint,
+                  e.currentTarget.value,
+                )
+              }
+              name={`${breakpoint}-letterSpacing`}
+            >
+              {Object.keys(theme.letterSpacings).map(option => (
+                <ComboboxOption key={option} value={option} />
+              ))}
+            </InputSuggestion>
+          </FormControl>
+        </Box>
       ))}
 
       <AddABreakpoint currentProps={responsiveValues} />
