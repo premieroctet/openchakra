@@ -1,5 +1,5 @@
 const FUMOIR_ADMIN='FUMOIR_ADMIN'
-const FUMOIR_WTR='FUMOIR_WTR'
+const FUMOIR_MANAGER='FUMOIR_MANAGER'
 const FUMOIR_CHEF='FUMOIR_CHEF'
 const FUMOIR_MEMBER='FUMOIR_MEMBER'
 
@@ -8,7 +8,7 @@ const FUMOIR_BASE = 'FUMOIR'
 const ROLES = {
   [FUMOIR_ADMIN]: 'Administrateur',
   [FUMOIR_CHEF]: 'Cuisinier',
-  [FUMOIR_WTR]: 'Fumoir manager',
+  [FUMOIR_MANAGER]: 'Manager fumoir',
   [FUMOIR_MEMBER]: 'Membre',
 }
 

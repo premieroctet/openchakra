@@ -1,4 +1,4 @@
-const { getDataModel } = require('../../../config/config');
+const { getDataModel, getProductionRoot , getProductionPort} = require('../../../config/config');
 const {
   filterDataUser,
   getContacts,
@@ -9,15 +9,11 @@ const {ROLES}=require(`../../../utils/${getDataModel()}/consts`);
 const {sendCookie} = require('../../config/passport')
 const path=require('path')
 const jwt = require('jsonwebtoken')
-
 const fs=require('fs').promises
 const child_process = require('child_process')
 const mongoose=require('mongoose')
 const express = require('express')
 const lodash=require('lodash')
-//const PRODUCTION_ROOT='/home/ec2-user/studio/'
-const PRODUCTION_ROOT='/home/seb/workspace'
-//const PRODUCTION_ROOT='/Users/seb/workspace'
 const passport = require('passport')
 const {HTTP_CODES, NotFoundError}=require('../../utils/errors')
 const {getModels} =require('../../utils/database')
@@ -26,6 +22,9 @@ const {buildQuery, addComputedFields} = require('../../utils/database')
 const url=require('url')
 
 const router = express.Router()
+
+const PRODUCTION_ROOT=getProductionRoot()
+const PRODUCTION_PORT=getProductionPort()
 
 router.get('/models', (req, res) => {
   const allModels=getModels()
@@ -106,7 +105,7 @@ router.post('/start', (req, res) => {
   }
 
   const destpath=path.join(PRODUCTION_ROOT, projectName)
-  const result=child_process.exec('serve -p 4001 build/',
+  const result=child_process.exec(`serve -p ${PRODUCTION_PORT} build/`,
     {
       cwd: destpath,
     }, (error, stdout, stderr) => {
@@ -199,6 +198,8 @@ router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (r
 
   buildQuery(queryModel, queryId, fields).lean({virtuals: true})
     .then(data => {
+      // Force duplicate children
+      data=JSON.parse(JSON.stringify(data))
       if (id && data.length==0) {
         throw new NotFoundError(`Can't find ${model}:${id}`)
       }

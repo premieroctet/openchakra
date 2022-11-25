@@ -4,6 +4,7 @@ const {MODE, TAWKTO_URL, DISABLE_ALFRED_SELF_REGISTER, DISABLE_ALFRED_PARTICULAR
   SITE_MODE, SIB_APIKEY,
   DATA_MODEL, SKIP_FAILED_PAYMENT,
   HOSTNAME, PORT, MONO_PROVIDER,
+  PRODUCTION_ROOT, PRODUCTION_PORT
 }=require('../mode')
 
 const SITE_MODES={
@@ -36,6 +37,14 @@ const is_validation = () => {
 
 const is_development = () => {
   return get_mode()==MODES.DEVELOPMENT || get_mode()==MODES.DEVELOPMENT_NOSSL
+}
+
+const getProductionRoot = () => {
+  return PRODUCTION_ROOT
+}
+
+const getProductionPort = () => {
+  return PRODUCTION_PORT
 }
 
 const MONGO_BASE_URI='mongodb://localhost/'
@@ -145,6 +154,7 @@ const displayConfig = () => {
 
   console.log(`Configuration is:\n\
 \tMode:${get_mode()}\n\
+\tProduction root:${getProductionRoot()}\n\
 \tSite mode:${isPlatform() ? 'plateforme' : isMarketplace() ? 'marketplace' : 'inconnu'}\n\
 \tDatabase:${databaseName}\n\
 \tData model:${DATA_MODEL}\n\
@@ -177,6 +187,12 @@ const checkConfig = () => {
 
     if (isEmpty(DATABASE_NAME)) {
       reject(`DATABASE_NAME non renseigné`)
+    }
+    if (isEmpty(PRODUCTION_ROOT)) {
+      reject(`PRODUCTION_ROOT non renseigné`)
+    }
+    if (isEmpty(PRODUCTION_PORT)) {
+      reject(`PRODUCTION_PORT non renseigné`)
     }
     // Deprecated
     if (SIB_TEMPLATES) {
@@ -280,4 +296,6 @@ module.exports = {
   displayConfig,
   DOC_PATH, CGV_PATH, CGV_EXPIRATION_DELAY,
   bookingUrl,
+  getProductionRoot,
+  getProductionPort,
 }

@@ -23,23 +23,21 @@ const UserSchema = new Schema({
   banner: {
     type: String,
   },
-  contact: {
-    email: {
-      type: String,
-      required: true,
-      set: v => v.toLowerCase().trim(),
-    },
-    linkedIn: {
-      type: String,
-      set: v => v.toLowerCase().trim(),
-    },
-    twitter: {
-      type: String,
-      set: v => v.toLowerCase().trim(),
-    },
-    phone: {
-      type: String,
-    },
+  email: {
+    type: String,
+    required: true,
+    set: v => v.toLowerCase().trim(),
+  },
+  linkedIn: {
+    type: String,
+    set: v => v.toLowerCase().trim(),
+  },
+  twitter: {
+    type: String,
+    set: v => v.toLowerCase().trim(),
+  },
+  phone: {
+    type: String,
   },
   job: {
     type: String,
