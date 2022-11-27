@@ -38,6 +38,7 @@ import SkeletonPreview, {
   SkeletonCirclePreview,
   SkeletonTextPreview,
 } from './previews/SkeletonPreview'
+import TooltipPreview from './previews/TooltipPreview'
 import { getCustomComponentNames } from '~core/selectors/customComponents'
 import { convertToPascal } from './Editor'
 
@@ -234,6 +235,8 @@ const ComponentPreview: React.FC<{
       return <ConditionalPreview component={component} />
     case 'Loop':
       return <LoopPreview component={component} />
+    case 'Tooltip':
+      return <TooltipPreview component={component} />
     default:
       return null
   }
