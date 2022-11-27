@@ -145,6 +145,7 @@ export const menuItems: MenuItems = {
   Tag: {},
   Text: {},
   Textarea: {},
+  Tooltip: {},
   Menu: { soon: true },
 }
 

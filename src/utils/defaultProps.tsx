@@ -74,6 +74,7 @@ import {
   TableRowProps,
   TableFooterProps,
   TableHeadProps,
+  TooltipProps,
   TableColumnHeaderProps,
   TableCellProps,
 } from '@chakra-ui/react'
@@ -147,6 +148,7 @@ type PreviewDefaultProps = {
   BreadcrumbLink?: PropsWithForm<BreadcrumbLinkProps>
   Editable?: PropsWithForm<EditableProps>
   Menu?: PropsWithForm<MenuProps>
+  Tooltip?: PropsWithForm<TooltipProps>
   NumberInput?: PropsWithForm<NumberInputProps>
   Radio?: PropsWithForm<RadioProps>
   RadioGroup?: PropsWithForm<RadioGroupProps>
@@ -354,6 +356,7 @@ export const DEFAULT_PROPS: PreviewDefaultProps | any = {
   Table: { variant: 'simple' },
   Conditional: { condition: false },
   Loop: { list: [1, 2, 3, 4] },
+  Tooltip: {label: 'This is my label', 'aria-label': 'beautiful tooltip'},
 }
 
 export const getDefaultFormProps = (type: ComponentType) => {

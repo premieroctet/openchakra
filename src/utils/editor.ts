@@ -91,6 +91,7 @@ const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'StatHelpText',
   'StatArrow',
   'StatGroup',
+  'Tooltip',
   // Allow meta components
   'AlertMeta',
   'FormControlMeta',
