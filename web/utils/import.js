@@ -102,7 +102,7 @@ const extractData = (bufferData, options) => {
     [TEXT_TYPE]: extractCsv,
   }
   if (!Object.keys(EXTRACTS).includes(options?.format)) {
-    return Promise.reject(`Null or invalid options.format:${options.format}`)
+    return Promise.reject(`Null or invalid options.format:${options?.format}`)
   }
   options={columns: true, ...options}
   return EXTRACTS[options.format](bufferData, options)

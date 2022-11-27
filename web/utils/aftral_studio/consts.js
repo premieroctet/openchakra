@@ -4,12 +4,6 @@ const CONCEPTEUR='concepteur'
 const ADMINISTRATEUR='administrateur'
 const GESTIONNAIRE='gestionnaire'
 
-const FUMOIR_WTR='FUMOIR_WTR'
-const FUMOIR_CHEF='FUMOIR_CHEF'
-const FUMOIR_MEMBER='FUMOIR_MEMBER'
-
-const FUMOIR_BASE = 'FUMOIR'
-
 const ROLES = {
   [APPRENANT]: 'Apprenant',
   [FORMATEUR]: 'Formateur',
@@ -18,6 +12,11 @@ const ROLES = {
   [GESTIONNAIRE]: 'Gestionnaire',
 }
 
+const PASSWORD='$2a$10$OlaUPHw1dNXx3wEfamFXb.iCqxGKjmsjxJaaJ1B5DIlt/6rdlBCFC'
+
 module.exports={
   ROLES,
+  APPRENANT,
+  FORMATEUR,
+  PASSWORD,
 }
