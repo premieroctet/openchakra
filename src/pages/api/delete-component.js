@@ -1,19 +1,16 @@
+import shell from 'shelljs'
 import { promises as fs } from 'fs'
+import { convertToPascal } from '~components/editor/Editor'
 
 export default async function handler(req, res) {
   const fileName = req.body.path.split('/').slice(-1)[0]
-  let fileArray = fileName.split('-')
-  fileArray = fileArray.map(word => {
-    return `${word.slice(0, 1).toUpperCase()}${word.slice(1)}`
-  })
-  const pascalName = fileArray.join('')
+  const componentName = convertToPascal(req.body.path)
   try {
-    console.log('Deleting files...')
     const deletePreview = fs.unlink(
-      `src/custom-components/editor/previews/${pascalName}Preview.oc.tsx`,
+      `src/custom-components/editor/previews/${componentName}Preview.oc.tsx`,
     )
     const deletePanel = fs.unlink(
-      `src/custom-components/inspector/panels/components/${pascalName}Panel.oc.tsx`,
+      `src/custom-components/inspector/panels/components/${componentName}Panel.oc.tsx`,
     )
     const deleteTsx = fs.unlink(
       `src/custom-components/customOcTsx/${fileName}.tsx`,
@@ -21,13 +18,10 @@ export default async function handler(req, res) {
     const deleteOcTsx = fs.unlink(
       `src/custom-components/customOcTsx/${fileName}.oc.tsx`,
     )
-
     await Promise.all([deletePreview, deletePanel, deleteTsx, deleteOcTsx])
-    res.statusCode = 200
-    res.json({ message: 'success' })
+    const response = shell.exec(`cd .. && bit remove ${req.body.path.substr(10)} -s`)
+    res.status(200).json(response)
   } catch (err) {
     console.log(err)
-    res.statusCode = 400
-    res.json({ message: 'bad request' })
   }
 }

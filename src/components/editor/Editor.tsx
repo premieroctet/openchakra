@@ -65,12 +65,14 @@ const Editor: React.FC = () => {
           components.root.params,
           fileName,
         )
-        let previewCode = await generatePreview(
-          components,
-          fileName,
-          selectedComponent,
-        )
-        let panelCode = await generatePanel(components, fileName)
+        const [previewCode, panelCode] = await Promise.all([
+          generatePreview(
+            components,
+            fileName,
+            selectedComponent,
+          ),
+          generatePanel(components, fileName)
+        ])
         await API.post('/save-file', {
           codeBody: code,
           ocTsxBody: ocTsxCode,
@@ -83,8 +85,9 @@ const Editor: React.FC = () => {
         })
       }
     }
-
+    dispatch.app.toggleLoader()
     getCode()
+    dispatch.app.toggleLoader()
   }, [components, selectedComponent])
 
   let editorBackgroundProps = {}

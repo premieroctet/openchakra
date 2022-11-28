@@ -12,6 +12,7 @@ import {
   Tab,
   TabPanels,
   TabPanel,
+  ButtonGroup,
 } from '@chakra-ui/react'
 import { CloseIcon, EditIcon, SearchIcon } from '@chakra-ui/icons'
 import DragItem from './DragItem'
@@ -23,8 +24,8 @@ import {
 } from '~core/selectors/customComponents'
 import useDispatch from '~hooks/useDispatch'
 import API from '~custom-components/api'
-import { convertToPascal } from '~components/editor/Editor'
-import { generatePreview, generatePanel, generateOcTsxCode } from '~utils/code'
+import AddComponent from './AddComponent'
+import DeleteComponent from './DeleteComponent'
 
 const Menu = () => {
   const [searchTerm, setSearchTerm] = useState('')
@@ -41,60 +42,26 @@ const Menu = () => {
   }
 
   const autoselectComponent = () => {
-    if (selectedComponent === undefined && Object.keys(customComponents).length)
-      handleEditClick(Object.keys(customComponents)[0])
-    else if (!Object.keys(customComponents).includes(String(selectedComponent)))
+    if ((selectedComponent === undefined && Object.keys(customComponents).length) || (!Object.keys(customComponents).includes(String(selectedComponent))))
       handleEditClick(Object.keys(customComponents)[0])
     else if (!Object.keys(customComponents).length)
       dispatch.customComponents.unselect()
   }
 
-  const getObjectDiff = (updatedList: Record<string, unknown>) => {
-    let deletedComponents = Object.keys(customComponents).filter(
-      component => !Object.keys(updatedList).includes(component),
-    )
-    let newComponents = Object.keys(updatedList).filter(
-      component => !Object.keys(customComponents).includes(component),
-    )
-    return {
-      deletedComponents: deletedComponents,
-      newComponents: newComponents,
+  useEffect(() => {
+    const initFunction = async () => {
+      const newComponentsList = await API.post('/init').then(res => res.data)
+      dispatch.customComponents.updateCustomComponents(newComponentsList)
     }
-  }
+    dispatch.app.toggleLoader()
+    initFunction()
+    dispatch.app.toggleLoader()
+  }, [])
 
   useEffect(() => {
-    const interval = setInterval(async () => {
-      const newComponentsList = await API.get('/refresh').then(res => res.data)
-      dispatch.customComponents.updateCustomComponents(newComponentsList)
-
-      const componentDiffs = getObjectDiff(newComponentsList)
-      componentDiffs.deletedComponents.map(async component => {
-        await API.post('/delete-file', {
-          path: customComponents[component],
-        })
-      })
-      componentDiffs.newComponents.map(async component => {
-        const jsonResponse = await API.post('/read-json', {
-          path: newComponentsList[component],
-        })
-        let components = JSON.parse(jsonResponse.data.content)
-        let fileName = convertToPascal(newComponentsList[component])
-        let previewCode = await generatePreview(components, fileName, component)
-        let panelCode = await generatePanel(components, fileName)
-        const ocTsxCode = await generateOcTsxCode(components, customComponents)
-        await API.post('/init', {
-          path: newComponentsList[component],
-          previewBody: previewCode,
-          panelBody: panelCode,
-          ocTsxBody: ocTsxCode,
-        })
-      })
-      if (customComponents !== newComponentsList) autoselectComponent()
-      await API.post('/copy-file', newComponentsList)
-    }, 3000)
-    return () => {
-      clearInterval(interval)
-    }
+    dispatch.app.toggleLoader()
+    autoselectComponent()
+    dispatch.app.toggleLoader()
   }, [customComponents])
 
   return (
@@ -214,6 +181,8 @@ const Menu = () => {
             </TabPanel>
             <TabPanel>
               <Box p={0} pt={0}>
+                <AddComponent />
+
                 {(Object.keys(customComponents) as ComponentType[])
                   .filter(c =>
                     c.toLowerCase().includes(searchTerm.toLowerCase()),
@@ -238,16 +207,21 @@ const Menu = () => {
                             {name}
                           </DragItem>
                         </Box>
-                        <IconButton
-                          aria-label="Edit"
-                          size="sm"
-                          onClick={() => {
-                            handleEditClick(name)
-                          }}
-                          disabled={name === selectedComponent}
+                        <ButtonGroup size='xs' isAttached variant='outline'
+                          colorScheme='teal'
+
                         >
-                          <EditIcon color="white" />
-                        </IconButton>
+                          <IconButton
+                            aria-label="Edit"
+                            onClick={() => {
+                              handleEditClick(name)
+                            }}
+                            disabled={name === selectedComponent}
+                          >
+                            <EditIcon color="gray.300" />
+                          </IconButton>
+                          <DeleteComponent name={name} />
+                        </ButtonGroup>
                       </Flex>
                     )
                   })}

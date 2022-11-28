@@ -14,7 +14,7 @@ import {
   TabPanel,
   Input,
   Portal,
-  useTheme,
+  theme,
 } from '@chakra-ui/react'
 import ColorPicker from 'coloreact'
 import HuesPickerControl from './HuesPickerControl'
@@ -32,7 +32,6 @@ type ColorPickerPropType = {
 }
 
 const ColorPickerControl = (props: ColorPickerPropType) => {
-  const theme = useTheme()
   const themeColors: any = omit(theme.colors, [
     'transparent',
     'current',

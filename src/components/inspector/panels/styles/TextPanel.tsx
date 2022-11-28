@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import { IconButton, ButtonGroup, useTheme, Select } from '@chakra-ui/react'
+import { IconButton, ButtonGroup, theme, Select } from '@chakra-ui/react'
 import ColorsControl from '~components/inspector/controls/ColorsControl'
 import { GoBold, GoItalic } from 'react-icons/go'
 import {
@@ -16,7 +16,6 @@ import usePropsSelector from '~hooks/usePropsSelector'
 
 const TextPanel = () => {
   const { setValue, setValueFromEvent } = useForm()
-  const theme = useTheme()
 
   const fontWeight = usePropsSelector('fontWeight')
   const fontStyle = usePropsSelector('fontStyle')
