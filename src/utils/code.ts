@@ -418,7 +418,7 @@ const buildHooks = (components: IComponents) => {
   if (dataProviders.length === 0) {
     return ''
   }
-  let code = `const {get}=useFetch(null, {cachePolicy: 'no-cache', timeout:10000})`
+  let code = `const {get}=useFetch(null, {cachePolicy: 'no-cache', timeout:30000})`
   code +=
     '\n' +
     dataProviders
