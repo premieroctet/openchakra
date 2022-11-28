@@ -1,5 +1,5 @@
 const { APPRENANT } = require('../../../utils/aftral_studio/consts');
-
+const bcrypt=require('bcryptjs')
 const Session = require('../../models/Session')
 const Program = require('../../models/Program')
 const {cloneArray} = require('../database')
@@ -10,6 +10,7 @@ const {FORMATEUR, PASSWORD} = require('../../../utils/aftral_studio/consts')
 const {extractData, guessFileType} = require('../../../utils/import')
 
 const upsertUser = ({firstname, lastname, email, password, role}) => {
+  const hashedPassword=bcrypt.hashSync(password, 10)
   return User.findOneAndUpdate(
     {email},
     {firstname, name: lastname, email, password, role},
