@@ -150,8 +150,10 @@ let menuItems: MenuItems = {
     },
   },
   NumberInput: {
-    title: 'Number input',
     group: 'form',
+    title: 'Number Input',
+    rootParentType: 'Input',
+    children: {},
   },
   Progress: {},
   Radio: {

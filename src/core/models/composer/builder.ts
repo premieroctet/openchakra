@@ -134,6 +134,37 @@ export const buildInputGroup = (parent: string): ComposedComponent => {
   }
 }
 
+export const buildNumberInput = (parent: string): ComposedComponent => {
+  const composer = new Composer('Input')
+
+  const nodeId = composer.addNode({ type: 'NumberInput', parent })
+  composer.addNode({
+    type: 'NumberInputField',
+    parent: nodeId,
+  })
+
+  const elementId = composer.addNode({
+    type: 'NumberInputStepper',
+    parent: nodeId,
+  })
+  composer.addNode({
+    type: 'NumberIncrementStepper',
+    parent: elementId,
+  })
+  composer.addNode({
+    type: 'NumberDecrementStepper',
+    parent: elementId,
+  })
+
+  const components = composer.getComponents()
+
+  return {
+    components,
+    root: nodeId,
+    parent,
+  }
+}
+
 export type BuilderFn = (parent: string) => ComposedComponent
 
 type ComposerBuilders = {
@@ -146,6 +177,7 @@ let builders: ComposerBuilders = {
   AccordionMeta: buildAccordion,
   ListMeta: buildList,
   InputGroupMeta: buildInputGroup,
+  NumberInputMeta: buildNumberInput,
   BreadcrumbMeta: buildBreadcrumb,
 }
 

@@ -78,6 +78,7 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'AccordionMeta',
   'UploadFileMeta',
   'ListMeta',
+  'NumberInputMeta',
   'InputGroupMeta',
   'BreadcrumbMeta',
 ]

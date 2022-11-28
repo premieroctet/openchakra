@@ -36,6 +36,10 @@ import {
   EditableProps,
   MenuProps,
   NumberInputProps,
+  NumberInputFieldProps,
+  NumberInputStepperProps,
+  NumberIncrementStepperProps,
+  NumberDecrementStepperProps,
   RadioProps,
   SelectProps,
   RadioGroupProps,
@@ -133,6 +137,10 @@ type PreviewDefaultProps = {
   Editable?: PropsWithForm<EditableProps>
   Menu?: PropsWithForm<MenuProps>
   NumberInput?: PropsWithForm<NumberInputProps>
+  NumberInputField?: PropsWithForm<NumberInputFieldProps>
+  NumberInputStepper?: PropsWithForm<NumberInputStepperProps>
+  NumberIncrementStepper?: PropsWithForm<NumberIncrementStepperProps>
+  NumberDecrementStepper?: PropsWithForm<NumberDecrementStepperProps>
   Radio?: PropsWithForm<RadioProps>
   RadioGroup?: PropsWithForm<RadioGroupProps>
   List?: PropsWithForm<ListProps>

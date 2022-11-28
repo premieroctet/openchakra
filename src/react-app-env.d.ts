@@ -59,6 +59,10 @@ type ComponentType =
   | 'Media'
   | 'Menu'
   | 'NumberInput'
+  | 'NumberInputField'
+  | 'NumberInputStepper'
+  | 'NumberIncrementStepper'
+  | 'NumberDecrementStepper'
   | 'Progress'
   | 'Radio'
   | 'RadioGroup'
@@ -85,6 +89,7 @@ type MetaComponentType =
   | 'AlertMeta'
   | 'CardMeta'
   | 'InputGroupMeta'
+  | 'NumberInputMeta'
   | 'UploadFileMeta'
   | 'BreadcrumbMeta'
 
@@ -107,16 +112,16 @@ interface IPreviewProps {
 }
 
 interface IDataType {
-  type: String,
-  multiple: boolean,
-  ref: boolean,
+  type: String
+  multiple: boolean
+  ref: boolean
 }
 
 interface IWarning {
-  pageId: String,
-  pageName: String,
-  component: IComponent,
-  message: strring,
+  pageId: String
+  pageName: String
+  component: IComponent
+  message: strring
 }
 
 interface ComponentItemProps {
