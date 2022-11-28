@@ -1,5 +1,8 @@
+const {
+  importTrainees,
+  importTrainers
+} = require('../../server/utils/aftral_studio/import');
 const {XL_TYPE} = require('../../utils/consts')
-const {importSession} = require('../../server/utils/studio_aftral/import')
 const {promises: fs} = require('fs')
 const util = require('util')
 
@@ -12,7 +15,6 @@ describe('XLSX imports', () => {
 
   beforeAll(() => {
     return exec('rm -rf dump', {cwd: '/tmp'})
-    /**
       .then(() => {
         console.log('mongodump')
         return exec(`mongodump --db=${databaseName}`, {cwd: '/tmp'})
@@ -25,7 +27,6 @@ describe('XLSX imports', () => {
         console.log('mongorestore')
         return exec(`mongorestore --drop`, {cwd: '/tmp'})
       })
-      */
       .then(() => {
         console.log('connect')
         return mongoose.connect('mongodb://localhost/test', MONGOOSE_OPTIONS)
@@ -35,7 +36,13 @@ describe('XLSX imports', () => {
   it('should do sthg', () => {
     return fs.readFile('tests/data/aftral_studio/Session_Formateur.xlsx')
       .then(buffer => {
-        return importSession(buffer)
+        return importTrainers(buffer)
+      })
+      .then(res => {
+        return fs.readFile('tests/data/aftral_studio/Apprenant.xlsx')
+      })
+      .then(buffer => {
+        return importTrainees(buffer)
       })
   }, 20000)
 

@@ -16,6 +16,11 @@ const Session=require('../../../models/Session')
 const User = require('../../../models/User')
 const Message = require('../../../models/Message')
 
+const RES_FINISHED='Terminé'
+const RES_CURRENT='En cours'
+const RES_TO_COME='A venir'
+const RES_AVAILABLE='Disponible'
+
 const getChildAttribute = model => {
   return {
     program: 'themes', session: 'themes', theme: 'resources', traineeTheme: 'resources',
@@ -293,7 +298,7 @@ const getResourceSpentTime = async(user, queryParams, resource) => {
   const spent=lodash(data)
     .map(d => d.spent_times)
     .flatten()
-    .find(sp => sp.resource._id.toString()==resource._id.toString())
+    .find(sp => sp.resource._id==resource._id)
   return spent?.spent_time || 0
 }
 
@@ -305,23 +310,35 @@ const getResourceSpentTime = async(user, queryParams, resource) => {
 +  Parent theme unordered: available
 +  */
 const getResourceStatus = async(user, queryParams, resource) => {
-  const [data, spent]=await Promise.all([
-    UserSessionData.findOne({user: user._id}, {finished: 1}),
-    getResourceSpentTime(user, queryParams, resource),
-  ])
-  const finished=data?.finished.find(r => r.toString()==resource._id.toString())
-  if (finished) {
-    return 'Terminé'
+  const data=await UserSessionData.findOne({user: user._id})
+  if (data) {
+    const finished=data.finished.find(r => r.toString()==resource._id.toString())
+    if (finished) {
+      return RES_FINISHED
+    }
+    const spent=data.spent_times?.find(s => s.resource._id.toString()==resource._id.toString())?.spent_time || 0
+    if (spent>0) {
+      return RES_CURRENT
+    }
   }
-  if (spent>0) {
-    return `En cours`
-  }
-  const theme=await Theme.findOne({'resources': resource}, {ordered: 1})
-  if (!theme) {
-    return ''
-  }
-  return theme.ordered ? 'A venir' : 'Disponible'
+  return RES_AVAILABLE
 }
+
+const getThemeStatus = async (user, queryParams, theme) => {
+  const th=await Theme.findById(theme._id)
+  const allStatus=await Promise.allSettled(th.resources.map(r => getResourceStatus(user, queryParams, r)))
+    .then(res => {
+      return res.filter(r=>r.status=='fulfilled').map(r=>r.value)
+    })
+  if (allStatus.includes(RES_CURRENT)) {
+    return RES_CURRENT
+  }
+  if (allStatus.length>0 && allStatus.every(v => v==RES_FINISHED)) {
+    return RES_FINISHED
+  }
+  return RES_AVAILABLE
+}
+
 
 const getResourceSpentTimeStr = async(user, queryParams, resource) => {
   const res=await getResourceSpentTime(user, queryParams, resource)
@@ -331,7 +348,7 @@ const getResourceSpentTimeStr = async(user, queryParams, resource) => {
 
 const getThemeSpentTime = async(user, queryParams, theme) => {
   const data=await Theme.findById(theme._id.toString())
-  const results=await Promise.all(data.resources.map(r => getResourceSpentTime(user, queryParams, r._id)))
+  const results=await Promise.all(data.resources.map(r => getResourceSpentTime(user, queryParams, r)))
   const spent=lodash.sum(results)
   return spent
 }
@@ -398,6 +415,7 @@ declareComputedField('theme', 'spent_time', getThemeSpentTime)
 declareComputedField('theme', 'spent_time_str', getThemeSpentTimeStr)
 declareComputedField('theme', 'progress_str', getThemeProgressStr)
 declareComputedField('theme', 'progress_percent', getThemeProgressPercent)
+declareComputedField('theme', 'status', getThemeStatus)
 
 declareComputedField('session', 'spent_time', getSessionSpentTime)
 declareComputedField('session', 'spent_time_str', getSessionSpentTimeStr)

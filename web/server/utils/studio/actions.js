@@ -48,8 +48,6 @@ const ACTIONS={
 
   addSpentTime: ({id, duration}, user, referrer) => {
     const params=url.parse(referrer, true).query
-    console.log('Adding')
-    // console.log(`Params:${params}`)
     return UserSessionData.findOneAndUpdate(
       {user: user._id},
       {user: user._id},

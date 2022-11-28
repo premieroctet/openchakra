@@ -83,6 +83,7 @@ const DECLARED_VIRTUALS={
     spent_time_str: {path: 'spent_time_str', instance: 'String', requires: 'resources'},
     progress_str: {path: 'progress_str', instance: 'String', requires: 'name'},
     progress_percent: {path: 'progress_percent', instance: 'Number', requires: 'name'},
+    status: {path: 'status', instance: 'String', requires: 'resources'},
   },
   resource: {
     spent_time: {path: 'spent_time', instance: 'Number', requires: '_id'},

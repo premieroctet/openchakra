@@ -59,4 +59,8 @@ ThemeSchema.virtual('hidden').get(function() {
   return (!this.name && !this.code && !this.picture)
 })
 
+ThemeSchema.virtual('status').get(function() {
+  return null
+})
+
 module.exports = ThemeSchema

@@ -212,7 +212,6 @@ router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (r
       if (['theme', 'resource'].includes(model) && !id) {
         data=data.filter(t => t.name)
       }
-      console.log(`Returning data`)
       return res.json(data)
     })
 })
