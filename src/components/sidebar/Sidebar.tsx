@@ -34,13 +34,11 @@ const Menu = () => {
   const selectedComponent = useSelector(getSelectedCustomComponentId)
 
   const handleEditClick = async (name: string) => {
-    dispatch.app.toggleLoader()
     const response = await API.post('/read-json', {
       path: customComponents[name],
     })
     dispatch.customComponents.select(name)
     dispatch.components.reset(JSON.parse(response.data.content))
-    dispatch.app.toggleLoader()
   }
 
   const autoselectComponent = () => {
