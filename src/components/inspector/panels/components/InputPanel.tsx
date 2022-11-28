@@ -44,8 +44,9 @@ const InputPanel = () => {
           value={type || ''}
         >
           <option>text</option>
-          <option>tel</option>
           <option>email</option>
+          <option>date</option>
+          <option>tel</option>
           <option>password</option>
         </Select>
       </FormControl>
