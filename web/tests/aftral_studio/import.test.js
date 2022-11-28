@@ -1,3 +1,4 @@
+const { getDatabaseUri } = require('../../config/config');
 const {
   importTrainees,
   importTrainers
@@ -14,6 +15,7 @@ const {MONGOOSE_OPTIONS} = require('../../server/utils/database')
 describe('XLSX imports', () => {
 
   beforeAll(() => {
+    /**
     return exec('rm -rf dump', {cwd: '/tmp'})
       .then(() => {
         console.log('mongodump')
@@ -31,6 +33,8 @@ describe('XLSX imports', () => {
         console.log('connect')
         return mongoose.connect('mongodb://localhost/test', MONGOOSE_OPTIONS)
       })
+      */
+    return mongoose.connect(getDatabaseUri(), MONGOOSE_OPTIONS)
   }, 30000)
 
   it('should do sthg', () => {

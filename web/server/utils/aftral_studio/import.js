@@ -19,15 +19,25 @@ const upsertUser = ({firstname, lastname, email, password, role}) => {
 
 const upsertSession = ({programCode, sessionCode, newTrainee, newTrainer, sessionStart, sessionEnd}) => {
   let program
-  return Program.findOne({code: programCode})
-    .populate({path: 'themes', populate: {path: 'resources'}})
-    .then(res => {
-      program=res
-      if (!program) { throw new Error(`No program for code ${programCode}`) }
-      return cloneArray({data: program.themes, withOrigin: false})
+  return Session.findOne({code: sessionCode})
+    .then(session => {
+      if (!session || !session.program) {
+        console.log(`Session: ${session}, program: ${session?.program} Cloning themes`)
+        return Program.findOne({code: programCode})
+          .populate({path: 'themes', populate: {path: 'resources'}})
+          .then(res => {
+            program=res
+            if (!program) { throw new Error(`No program for code ${programCode}`) }
+            return cloneArray({data: program.themes, withOrigin: false})
+          })
+      }
+      return Promise.resolve(null)
     })
     .then(clone => {
-      const dataSet={$set: {name: sessionCode,program: program, themes: clone}, $addToSet:{}}
+      const dataSet={$set: {name: sessionCode,program: program}, $addToSet:{}}
+      if (clone) {
+        dataSet['$set'].themes=clone
+      }
       if (newTrainer) {
         dataSet['$addToSet'].trainers=newTrainer
       }
@@ -40,6 +50,10 @@ const upsertSession = ({programCode, sessionCode, newTrainee, newTrainer, sessio
         dataSet,
         {upsert: true, new: true},
       )
+      .then(result => {
+        console.log(`Session result:${result}`)
+        return result
+      })
     })
 }
 
