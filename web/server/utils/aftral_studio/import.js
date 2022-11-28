@@ -117,7 +117,8 @@ const importTrainer = record => {
       })
     })
     .then(session => {
-      console.log(`Session:${session._id}`)
+      user.sessions.push(session)
+      return user.save()
     })
 
 }

@@ -252,7 +252,7 @@ const filterDataUser = ({model, data, user}) => {
   if (model=='session') {
     data=data.filter(d =>
       (user.role=='apprenant' ? user.sessions.includes(d._id)
-        : user.roles=='formateur' ? d.trainers.map(t => t._id.toString()).includes(user._id.toString()) && !d.trainee
+        : user.role=='formateur' ? d.trainers.map(t => t._id.toString()).includes(user._id.toString()) && !d.trainee
           : !d.trainee),
     )
   }
@@ -271,7 +271,6 @@ const filterDataUser = ({model, data, user}) => {
     return Promise.all([Session.find(), Program.find()])
       .then(parents => {
         const themes=lodash(parents).flatten().map(t => t.themes).flatten().map(r => r._id.toString())
-        console.log(`themes:${themes}`)
         data=data.filter(d => !themes.includes(d._id.toString()))
         return data
       })
@@ -305,7 +304,6 @@ const getContacts = (user, id) => {
         .uniqBy(user => user._id.toString())
         .value()
       allContacts=[...allContacts, ...lodash.uniqBy(sessions, s => s.contact_name)]
-      console.log(allContacts)
       return allContacts.map(contact => ({_id: contact._id, name: contact.contact_name}))
     })
 }
@@ -326,15 +324,13 @@ const sendMessage = (sender, destinee, contents) => {
 }
 
 const getResourceSpentTime = async(user, queryParams, resource) => {
+  resource=typeof(resource)=='string' ? resource : resource._id
   const key=`${user?.id}/${JSON.stringify(queryParams)}/${resource}/spent`
   if (myCache.has(key)) {
     return myCache.get(key)
   }
-  const data=await UserSessionData.find({user: user._id})
-  const spent=lodash(data)
-    .map(d => d.spent_times)
-    .flatten()
-    .find(sp => sp.resource._id==resource._id)
+  const data=await UserSessionData.findOne({user: user._id})
+  const spent=data?.spent_times?.find(sp => sp.resource._id.toString()==resource.toString())
   const res=spent?.spent_time || 0
   myCache.set(key, res)
   return res
@@ -348,6 +344,7 @@ const getResourceSpentTime = async(user, queryParams, resource) => {
 +  Parent theme unordered: available
 +  */
 const getResourceStatus = async(user, queryParams, resource) => {
+  resource=typeof(resource)=='string' ? resource : resource._id
   const key=`${user?.id}/${JSON.stringify(queryParams)}/${resource}/status`
   if (myCache.has(key)) {
     return myCache.get(key)
@@ -371,6 +368,7 @@ const getResourceStatus = async(user, queryParams, resource) => {
 }
 
 const getThemeStatus = async (user, queryParams, theme) => {
+  theme=typeof(theme)=='string' ? theme : theme._id
   const key=`${user?.id}/${JSON.stringify(queryParams)}/${theme}/status`
   if (myCache.has(key)) {
     return myCache.get(key)
@@ -415,9 +413,15 @@ const getResourceSpentTimeStr = async(user, queryParams, resource) => {
 }
 
 const getThemeSpentTime = async(user, queryParams, theme) => {
+  theme=typeof(theme)=='string' ? theme : theme._id
+  const key=`${user?.id}/${JSON.stringify(queryParams)}/${theme}/spent`
+  if (myCache.has(key)) {
+    return myCache.get(key)
+  }
   const data=await Theme.findById(theme._id.toString())
   const results=await Promise.all(data.resources.map(r => getResourceSpentTime(user, queryParams, r)))
   const spent=lodash.sum(results)
+  myCache.set(key, spent)
   return spent
 }
 
@@ -427,7 +431,8 @@ const getThemeSpentTimeStr = async(user, queryParams, theme) => {
 }
 
 const getSessionSpentTime = async(user, queryParams, session) => {
-  const data=await Session.findById(session._id.toString())
+  session=typeof(session)=='string' ? session : session._id
+  const data=await Session.findById(session)
   if (!data) { return 0 }
   const results=await Promise.all(data.themes.map(t => getThemeSpentTime(user, queryParams, t._id)))
   const spent=lodash.sum(results)
