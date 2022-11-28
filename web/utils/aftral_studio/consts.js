@@ -12,7 +12,7 @@ const ROLES = {
   [GESTIONNAIRE]: 'Gestionnaire',
 }
 
-const PASSWORD='$2a$10$OlaUPHw1dNXx3wEfamFXb.iCqxGKjmsjxJaaJ1B5DIlt/6rdlBCFC'
+const PASSWORD='password'
 
 module.exports={
   ROLES,
