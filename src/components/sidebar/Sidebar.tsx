@@ -13,9 +13,8 @@ import {
   TabPanels,
   TabPanel,
   ButtonGroup,
-  Button,
 } from '@chakra-ui/react'
-import { CloseIcon, DeleteIcon, EditIcon, SearchIcon } from '@chakra-ui/icons'
+import { CloseIcon, EditIcon, SearchIcon } from '@chakra-ui/icons'
 import DragItem from './DragItem'
 import { menuItems, MenuItem } from '~componentsList'
 import { useSelector } from 'react-redux'
@@ -35,18 +34,13 @@ const Menu = () => {
   const selectedComponent = useSelector(getSelectedCustomComponentId)
 
   const handleEditClick = async (name: string) => {
+    dispatch.app.toggleLoader()
     const response = await API.post('/read-json', {
       path: customComponents[name],
     })
     dispatch.customComponents.select(name)
     dispatch.components.reset(JSON.parse(response.data.content))
-  }
-
-  const handleDeleteClick = async (name: string) => {
-    dispatch.customComponents.deleteCustomComponent(name)
-    await API.post('/delete-component', {
-      path: customComponents[name],
-    })
+    dispatch.app.toggleLoader()
   }
 
   const autoselectComponent = () => {
@@ -61,11 +55,15 @@ const Menu = () => {
       const newComponentsList = await API.post('/init').then(res => res.data)
       dispatch.customComponents.updateCustomComponents(newComponentsList)
     }
+    dispatch.app.toggleLoader()
     initFunction()
+    dispatch.app.toggleLoader()
   }, [])
 
   useEffect(() => {
+    dispatch.app.toggleLoader()
     autoselectComponent()
+    dispatch.app.toggleLoader()
   }, [customComponents])
 
   return (
@@ -224,7 +222,7 @@ const Menu = () => {
                           >
                             <EditIcon color="gray.300" />
                           </IconButton>
-                          <DeleteComponent name={name}/>
+                          <DeleteComponent name={name} />
                         </ButtonGroup>
                       </Flex>
                     )
