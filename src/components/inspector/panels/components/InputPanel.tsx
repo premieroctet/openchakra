@@ -46,6 +46,7 @@ const InputPanel = () => {
           <option>text</option>
           <option>email</option>
           <option>date</option>
+          <option>time</option>
           <option>tel</option>
           <option>password</option>
         </Select>
