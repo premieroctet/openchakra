@@ -1,4 +1,11 @@
-const { APPRENANT } = require('../../../utils/aftral_studio/consts');
+const moment = require('moment');
+const {
+  APPRENANT,
+  FORMATEUR,
+  PASSWORD
+} = require('../../../utils/aftral_studio/consts');
+const { TEXT_TYPE } = require('../../../utils/consts');
+const {promises: fs} = require('fs')
 const bcrypt=require('bcryptjs')
 const Session = require('../../models/Session')
 const Program = require('../../models/Program')
@@ -6,7 +13,6 @@ const {cloneArray} = require('../database')
 const User = require('../../models/User')
 require('../../models/Theme')
 require('../../models/Resource')
-const {FORMATEUR, PASSWORD} = require('../../../utils/aftral_studio/consts')
 const {extractData, guessFileType} = require('../../../utils/import')
 
 const upsertUser = ({firstname, lastname, email, password, role}) => {
@@ -19,11 +25,10 @@ const upsertUser = ({firstname, lastname, email, password, role}) => {
 }
 
 const upsertSession = ({programCode, sessionCode, newTrainee, newTrainer, sessionStart, sessionEnd}) => {
-  let program
+  let program=null
   return Session.findOne({code: sessionCode})
     .then(session => {
       if (!session || !session.program) {
-        console.log(`Session: ${session}, program: ${session?.program} Cloning themes`)
         return Program.findOne({code: programCode})
           .populate({path: 'themes', populate: {path: 'resources'}})
           .then(res => {
@@ -35,7 +40,20 @@ const upsertSession = ({programCode, sessionCode, newTrainee, newTrainer, sessio
       return Promise.resolve(null)
     })
     .then(clone => {
-      const dataSet={$set: {name: sessionCode,program: program}, $addToSet:{}}
+      const dataSet={$set: {code: sessionCode, name: sessionCode, start: sessionStart, end: sessionEnd}, $addToSet:{}}
+      if (program) {
+        dataSet['$set'].program=program
+      }
+      if (sessionStart) {
+        const startMoment=moment(sessionStart, 'DD-MM-YYYY')
+        if (!startMoment.isValid()) {throw new Error(`Invalid session start date:${sessionStart}`)}
+        dataSet['$set'].start=startMoment
+      }
+      if (sessionEnd) {
+        const endMoment=moment(sessionEnd, 'DD-MM-YYYY')
+        if (!endMoment.isValid()) {throw new Error(`Invalid session end date:${sessionEnd}`)}
+        dataSet['$set'].end=moment(sessionStart, 'DD-MM-YYYY')
+      }
       if (clone) {
         dataSet['$set'].themes=clone
       }
@@ -51,10 +69,6 @@ const upsertSession = ({programCode, sessionCode, newTrainee, newTrainer, sessio
         dataSet,
         {upsert: true, new: true},
       )
-      .then(result => {
-        console.log(`Session result:${result}`)
-        return result
-      })
     })
 }
 
@@ -78,10 +92,10 @@ const importTrainee = record => {
   })
 }
 
-const importTrainees = rawData => {
-  return guessFileType(rawData)
-    .then(format => {
-      return extractData(rawData, {format: format, tab: 'Apprenant_20221122_0506'})
+const importTrainees = filePath => {
+  return fs.readFile(filePath)
+    .then(buffer => {
+      return extractData(buffer, {format: TEXT_TYPE, delimiter:';'})
     })
     .then(({records}) => {
       return Promise.all(records.map(record => importTrainee(record)))
@@ -108,10 +122,10 @@ const importTrainer = record => {
 
 }
 
-const importTrainers = rawData => {
-  return guessFileType(rawData)
-    .then(format => {
-      return extractData(rawData, {format: format, tab: 'Session_Formateur (1)'})
+const importTrainers = filePath => {
+  return fs.readFile(filePath)
+    .then(buffer => {
+      return extractData(buffer, {format: TEXT_TYPE, delimiter:';'})
     })
     .then(({records}) => {
       return Promise.all(records.map(record => importTrainer(record)))

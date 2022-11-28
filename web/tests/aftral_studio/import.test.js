@@ -4,7 +4,6 @@ const {
   importTrainers
 } = require('../../server/utils/aftral_studio/import');
 const {XL_TYPE} = require('../../utils/consts')
-const {promises: fs} = require('fs')
 const util = require('util')
 
 const exec = util.promisify(require('child_process').exec)
@@ -38,15 +37,9 @@ describe('XLSX imports', () => {
   }, 30000)
 
   it('should do sthg', () => {
-    return fs.readFile('tests/data/aftral_studio/Session_Formateur.xlsx')
-      .then(buffer => {
-        return importTrainers(buffer)
-      })
+    return importTrainers('tests/data/aftral_studio/Session_Formateur.csv')
       .then(res => {
-        return fs.readFile('tests/data/aftral_studio/Apprenant.xlsx')
-      })
-      .then(buffer => {
-        return importTrainees(buffer)
+        return importTrainees('tests/data/aftral_studio/Apprenant.csv')
       })
   }, 20000)
 
