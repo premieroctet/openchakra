@@ -252,7 +252,7 @@ const filterDataUser = ({model, data, user}) => {
   if (model=='session') {
     data=data.filter(d =>
       (user.role=='apprenant' ? user.sessions.includes(d._id)
-        : user.roles=='formateur' ? d.trainers.map(t => t._id.toString()).includes(user._id.toString()) && !d.trainee
+        : user.role=='formateur' ? d.trainers.map(t => t._id.toString()).includes(user._id.toString()) && !d.trainee
           : !d.trainee),
     )
   }
@@ -305,7 +305,6 @@ const getContacts = (user, id) => {
         .uniqBy(user => user._id.toString())
         .value()
       allContacts=[...allContacts, ...lodash.uniqBy(sessions, s => s.contact_name)]
-      console.log(allContacts)
       return allContacts.map(contact => ({_id: contact._id, name: contact.contact_name}))
     })
 }
