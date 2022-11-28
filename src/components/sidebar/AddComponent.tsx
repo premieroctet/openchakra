@@ -31,7 +31,7 @@ const AddComponent = () => {
   const componentValid = (componentPath: string | undefined = ref.current?.value) => {
     if (componentPath === undefined || componentPath.length === 0) return false
     componentPath.split('/').forEach((word)=>{
-      if (!regex.test(componentPath)) return false
+      if (!regex.test(word)) return false
     })
     return true
   }
