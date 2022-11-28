@@ -54,7 +54,7 @@ const ACTIONS={
       {upsert: true},
     )
       .then(data => {
-        const spentData=data.spent_times.find(d => d.resource==id)
+        const spentData=data?.spent_times.find(d => d?.resource==id)
         if (spentData) {
           spentData.spent_time += duration
         }

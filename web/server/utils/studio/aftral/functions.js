@@ -1,3 +1,5 @@
+const NodeCache = require( "node-cache" )
+const myCache = new NodeCache({stdTTL: 6, checkperiod: 6})
 const url=require('url')
 const mongoose =require('mongoose')
 const lodash =require('lodash')
@@ -140,12 +142,38 @@ const getResourcesForSession = resource_id => {
     })
 }
 
+// Get next theme in session
+const getNextTheme = theme_id => {
+  return Session.findOne({themes: theme_id})
+    .populate('themes')
+    .then(session => {
+      const idx=session.themes.findIndex(t => t._id.toString()==theme_id._id.toString())
+      if (idx==session.themes.length-1) {
+        return null
+      }
+      return themes[idx+1]
+    })
+}
+
+// Get previous theme in session
+const getPrevTheme = theme_id => {
+  return Session.findOne({themes: theme_id})
+    .populate('themes')
+    .then(session => {
+      const idx=session.themes.findIndex(v => v._id.toString()==theme_id._id.toString())
+      if (idx==0) {
+        return null
+      }
+      return session.themes[idx-1]
+    })
+}
+
 const getNextResource = id => {
   return getResourcesForSession(id)
     .then(datalist => {
       const idx=datalist.findIndex(v => v._id.toString()==id)
       if (idx==datalist.length-1) {
-        throw new NotFoundError('Last resource')
+        return null
       }
       return datalist[idx+1]
     })
@@ -156,7 +184,7 @@ const getPrevResource = id => {
     .then(datalist => {
       const idx=datalist.findIndex(v => v._id.toString()==id)
       if (idx==0) {
-        throw new NotFoundError('First resource')
+        return null
       }
       return datalist[idx-1]
     })
@@ -171,12 +199,16 @@ const getNext = (id, user, referrer) => {
     {upsert: true},
   )
     .then(() => {
-      return getNextResource(id)
+      const nextRes=getNextResource(id)
+      if (!nextRes) { throw new NotFoundError('Last resource')}
+      return nextRes
     })
 }
 
 const getPrevious = id => {
-  return getPrevResource(id)
+  const prevRes=getPrevResource(id)
+  if (!prevRes) {throw new NotFoundError('First resource')}
+  return prevRes
 }
 
 const getSession = id => {
@@ -294,12 +326,18 @@ const sendMessage = (sender, destinee, contents) => {
 }
 
 const getResourceSpentTime = async(user, queryParams, resource) => {
+  const key=`${user?.id}/${JSON.stringify(queryParams)}/${resource}/spent`
+  if (myCache.has(key)) {
+    return myCache.get(key)
+  }
   const data=await UserSessionData.find({user: user._id})
   const spent=lodash(data)
     .map(d => d.spent_times)
     .flatten()
     .find(sp => sp.resource._id==resource._id)
-  return spent?.spent_time || 0
+  const res=spent?.spent_time || 0
+  myCache.set(key, res)
+  return res
 }
 
 /** Not finished, not in progress:
@@ -310,33 +348,63 @@ const getResourceSpentTime = async(user, queryParams, resource) => {
 +  Parent theme unordered: available
 +  */
 const getResourceStatus = async(user, queryParams, resource) => {
+  const key=`${user?.id}/${JSON.stringify(queryParams)}/${resource}/status`
+  if (myCache.has(key)) {
+    return myCache.get(key)
+  }
   const data=await UserSessionData.findOne({user: user._id})
+  let res=null
   if (data) {
     const finished=data.finished.find(r => r.toString()==resource._id.toString())
     if (finished) {
+      myCache.set(key, RES_FINISHED)
       return RES_FINISHED
     }
-    const spent=data.spent_times?.find(s => s.resource._id.toString()==resource._id.toString())?.spent_time || 0
+    const spent=data?.spent_times?.find(s => s.resource._id.toString()==resource._id.toString())?.spent_time || 0
     if (spent>0) {
+      myCache.set(key, RES_CURRENT)
       return RES_CURRENT
     }
   }
+  myCache.set(key, RES_AVAILABLE)
   return RES_AVAILABLE
 }
 
 const getThemeStatus = async (user, queryParams, theme) => {
+  const key=`${user?.id}/${JSON.stringify(queryParams)}/${theme}/status`
+  if (myCache.has(key)) {
+    return myCache.get(key)
+  }
   const th=await Theme.findById(theme._id)
   const allStatus=await Promise.allSettled(th.resources.map(r => getResourceStatus(user, queryParams, r)))
     .then(res => {
       return res.filter(r=>r.status=='fulfilled').map(r=>r.value)
     })
   if (allStatus.includes(RES_CURRENT)) {
+    myCache.set(key, RES_CURRENT)
     return RES_CURRENT
   }
   if (allStatus.length>0 && allStatus.every(v => v==RES_FINISHED)) {
+    myCache.set(key, RES_FINISHED)
     return RES_FINISHED
   }
-  return RES_AVAILABLE
+  const session=await Session.findOne({themes: theme})
+  if (!session.ordered) {
+    myCache.set(key, RES_AVAILABLE)
+    return RES_AVAILABLE
+  }
+  const prevTheme=await getPrevTheme(theme)
+  if (!prevTheme) {
+    myCache.set(key, RES_AVAILABLE)
+    return RES_AVAILABLE
+  }
+  const prevStatus=await getThemeStatus(user, queryParams, prevTheme._id)
+  if (prevStatus==RES_FINISHED) {
+    myCache.set(key, RES_AVAILABLE)
+    return RES_AVAILABLE
+  }
+  myCache.set(key, RES_TO_COME)
+  return RES_TO_COME
 }
 
 

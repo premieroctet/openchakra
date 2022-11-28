@@ -169,7 +169,7 @@ router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (r
   const model=req.params.model
   let fields=req.query.fields?.split(',') || []
   const id=req.params.id
-  const params=url.parse(req.get('Referrer'), true).query
+  const params={...url.parse(req.get('Referrer'), true).query}
   const user=req.user
 
   console.log(`GET ${model}/${id} ${fields}`)

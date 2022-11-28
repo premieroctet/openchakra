@@ -27,6 +27,10 @@ const SessionSchema = new Schema({
     type: Date,
     required: false,
   },
+  ordered: {
+    type: Boolean,
+    default: false,
+  },
   program: {
     type: Schema.Types.ObjectId,
     ref: 'program',
