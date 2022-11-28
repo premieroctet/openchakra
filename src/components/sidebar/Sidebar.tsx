@@ -26,6 +26,7 @@ import {
 import useDispatch from '~hooks/useDispatch'
 import API from '~custom-components/api'
 import AddComponent from './AddComponent'
+import DeleteComponent from './DeleteComponent'
 
 const Menu = () => {
   const [searchTerm, setSearchTerm] = useState('')
@@ -223,15 +224,7 @@ const Menu = () => {
                           >
                             <EditIcon color="gray.300" />
                           </IconButton>
-                          <IconButton
-                            aria-label="Delete"
-                            onClick={() => {
-                              handleDeleteClick(name)
-                            }}
-                            disabled={name === selectedComponent}
-                          >
-                            <DeleteIcon color="red" />
-                          </IconButton>
+                          <DeleteComponent name={name}/>
                         </ButtonGroup>
                       </Flex>
                     )
