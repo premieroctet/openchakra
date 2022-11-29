@@ -52,7 +52,7 @@ const upsertSession = ({programCode, sessionCode, newTrainee, newTrainer, sessio
       if (sessionEnd) {
         const endMoment=moment(sessionEnd, 'DD-MM-YYYY')
         if (!endMoment.isValid()) {throw new Error(`Invalid session end date:${sessionEnd}`)}
-        dataSet['$set'].end=moment(sessionStart, 'DD-MM-YYYY')
+        dataSet['$set'].end=endMoment
       }
       if (clone) {
         dataSet['$set'].themes=clone
@@ -117,8 +117,8 @@ const importTrainer = record => {
       })
     })
     .then(session => {
-      user.sessions.push(session)
-      return user.save()
+      formateur.sessions.push(session)
+      return formateur.save()
     })
 
 }
