@@ -17,13 +17,15 @@ const Themer = () => {
     <ChakraProvider resetCSS>
       <Button
         px={6}
-        bgGradient="linear(to-br, teal.50, teal.500)"
+        bgGradient="linear(to-br, blue.300, green.300, yellow.300, red.300)"
         display="flex"
         flexDirection="row"
         alignItems="center"
         fontSize="sm"
         whiteSpace="nowrap"
-        _hover={{ bgGradient: 'linear(to-tl, green.200, pink.500)' }}
+        _hover={{
+          bgGradient: 'linear(to-br, blue.200, green.200, yellow.200, red.200)',
+        }}
         onClick={onOpen}
       >
         Theme
