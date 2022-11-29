@@ -369,6 +369,10 @@ const getResourceStatus = async(user, queryParams, resource) => {
   if (!theme) {
     throw new Error(`No theme for resource ${resource}`)
   }
+  if (theme.ordered) {
+    myCache.set(key, RES_TO_COME)
+    return RES_TO_COME
+  }
   myCache.set(key, RES_AVAILABLE)
   return RES_AVAILABLE
 }
