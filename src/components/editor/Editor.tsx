@@ -2,7 +2,7 @@ import { Box, Text, Link } from '@chakra-ui/react'
 import { useSelector } from 'react-redux'
 import React, { memo, useEffect } from 'react'
 import SplitPane from 'react-split-pane'
-import useFetch from 'use-http'
+import axios from 'axios'
 
 import { getComponents } from '~core/selectors/components'
 import { getShowOverview, getShowCode, getDevice } from '~core/selectors/app'
@@ -30,10 +30,6 @@ const Editor: React.FC = () => {
   const showOverview = useSelector(getShowOverview)
   const components = useSelector(getComponents)
   const dispatch = useDispatch()
-  const { get, error } = useFetch(config.targetDomain, {
-    cachePolicy: 'no-cache',
-    timeout: 1000,
-  })
 
   const { drop } = useDropComponent('root')
   const isEmpty = !components.root.children.length
@@ -59,30 +55,32 @@ const Editor: React.FC = () => {
   }
 
   useEffect(() => {
-    get('/myAlfred/api/studio/models')
+    axios
+      .get(`${config.targetDomain}/myAlfred/api/studio/models`)
       .then(res => {
-        if (!res) {
+        if (!res.data) {
           throw new Error()
         }
-        dispatch.dataSources.setModels(res)
+        dispatch.dataSources.setModels(res.data)
       })
       .catch(err => {
         alert(`Could not get models from backend:${err}`)
       })
-  }, [dispatch.dataSources, get])
+  }, [dispatch.dataSources])
 
   useEffect(() => {
-    get('/myAlfred/api/studio/roles')
+    axios
+      .get(`${config.targetDomain}/myAlfred/api/studio/roles`)
       .then(res => {
         if (!res) {
           throw new Error()
         }
-        dispatch.roles.setRoles(res)
+        dispatch.roles.setRoles(res.data)
       })
       .catch(err => {
         alert(`Could not get roles from backend:${err}`)
       })
-  }, [dispatch.roles, get])
+  }, [dispatch.roles])
 
   const Playground = (
     <Box
