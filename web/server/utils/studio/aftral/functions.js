@@ -503,17 +503,14 @@ const getSessionProgressPercent = async (user, queryParams, session) => {
   return progress.finished*1.0/progress.total*100
 }
 
-declareComputedField('resource', 'spent_time', getResourceSpentTime)
 declareComputedField('resource', 'spent_time_str', getResourceSpentTimeStr)
 declareComputedField('resource', 'status', getResourceStatus)
 
-declareComputedField('theme', 'spent_time', getThemeSpentTime)
 declareComputedField('theme', 'spent_time_str', getThemeSpentTimeStr)
 declareComputedField('theme', 'progress_str', getThemeProgressStr)
 declareComputedField('theme', 'progress_percent', getThemeProgressPercent)
 declareComputedField('theme', 'status', getThemeStatus)
 
-declareComputedField('session', 'spent_time', getSessionSpentTime)
 declareComputedField('session', 'spent_time_str', getSessionSpentTimeStr)
 declareComputedField('session', 'progress_str', getSessionProgressStr)
 declareComputedField('session', 'progress_percent', getSessionProgressPercent)

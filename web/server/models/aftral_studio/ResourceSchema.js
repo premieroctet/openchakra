@@ -43,10 +43,6 @@ ResourceSchema.virtual('spent_time_str').get(function() {
   return null
 })
 
-ResourceSchema.virtual('spent_time').get(function() {
-  return null
-})
-
 ResourceSchema.virtual('status').get(function() {
   return null
 })

@@ -113,10 +113,6 @@ SessionSchema.virtual('contact_name').get(function() {
   return `Session ${this.name}`
 })
 
-SessionSchema.virtual('spent_time').get(function() {
-  return null
-})
-
 SessionSchema.virtual('spent_time_str').get(function() {
   return null
 })

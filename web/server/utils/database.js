@@ -300,8 +300,9 @@ const addComputedFields= async(user, queryParams, data, model, level=0) => {
   }
 
   const compFields=COMPUTED_FIELDS[model] || {}
+  const presentCompFields=Object.keys(compFields).filter(f => data.hasOwnProperty(f))
   // Compute direct attributes
-  const x=await Promise.allSettled(Object.keys(compFields).map(f => compFields[f](newUser, queryParams, data)
+  await Promise.allSettled(presentCompFields.map(f => compFields[f](newUser, queryParams, data)
     .then(res => {data[f]=res })))
   // Handle references => sub
   const refAttributes=getModelAttributes(model).filter(att => !(att[0].includes('.')) && att[1].ref)
