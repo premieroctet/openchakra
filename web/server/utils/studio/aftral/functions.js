@@ -1,5 +1,11 @@
+const { NotFoundError } = require('../../errors');
 const NodeCache = require( "node-cache" )
-const myCache = new NodeCache({stdTTL: 6, checkperiod: 6})
+const {
+  RES_AVAILABLE,
+  RES_CURRENT,
+  RES_FINISHED,
+  RES_TO_COME
+} = require('../../../../utils/aftral_studio/consts');
 const url=require('url')
 const mongoose =require('mongoose')
 const lodash =require('lodash')
@@ -10,7 +16,6 @@ const {
   formatTime,
   getModel,
 } = require('../../database')
-const {BadRequestError, NotFoundError} = require('../../errors')
 const UserSessionData = require('../../../models/UserSessionData')
 const Program=require('../../../models/Program')
 const Theme=require('../../../models/Theme')
@@ -18,10 +23,7 @@ const Session=require('../../../models/Session')
 const User = require('../../../models/User')
 const Message = require('../../../models/Message')
 
-const RES_FINISHED='Terminé'
-const RES_CURRENT='En cours'
-const RES_TO_COME='A venir'
-const RES_AVAILABLE='Disponible'
+const myCache = new NodeCache({stdTTL: 6, checkperiod: 6})
 
 const getChildAttribute = model => {
   return {
