@@ -418,7 +418,7 @@ const buildHooks = (components: IComponents) => {
   if (dataProviders.length === 0) {
     return ''
   }
-  let code = `const {get}=useFetch(null, {cachePolicy: 'no-cache', timeout:30000})`
+  let code = `const get=axios.get`
   code +=
     '\n' +
     dataProviders
@@ -444,7 +444,7 @@ const buildHooks = (components: IComponents) => {
           dpFields ? `?fields=${dpFields}` : ''
         }`
         return `get(\`${apiUrl}\`)
-        .then(res => set${capitalize(dataId)}(res))
+        .then(res => set${capitalize(dataId)}(res.data))
         .catch(err => alert(err))`
       })
       .join('\n')}
@@ -549,7 +549,7 @@ export const generateCode = async (
 
   code = `import React, {useState, useEffect} from 'react';
   import Metadata from './dependencies/Metadata';
-  ${hooksCode ? `import useFetch from 'use-http'` : ''}
+  ${hooksCode ? `import axios from 'axios'` : ''}
   import {ChakraProvider} from "@chakra-ui/react";
   ${Object.entries(groupedComponents)
     .map(([modName, components]) => {
