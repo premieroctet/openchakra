@@ -375,7 +375,7 @@ const getThemeStatus = async (user, queryParams, theme) => {
   if (myCache.has(key)) {
     return myCache.get(key)
   }
-  const th=await Theme.findById(theme._id)
+  const th=await Theme.findById(theme)
   const allStatus=await Promise.allSettled(th.resources.map(r => getResourceStatus(user, queryParams, r)))
     .then(res => {
       return res.filter(r=>r.status=='fulfilled').map(r=>r.value)
