@@ -149,7 +149,7 @@ const getNextTheme = theme_id => {
   return Session.findOne({themes: theme_id})
     .populate('themes')
     .then(session => {
-      const idx=session.themes.findIndex(t => t._id.toString()==theme_id._id.toString())
+      const idx=session.themes.findIndex(t => t._id.toString()==theme_id.toString())
       if (idx==session.themes.length-1) {
         return null
       }
@@ -162,7 +162,7 @@ const getPrevTheme = theme_id => {
   return Session.findOne({themes: theme_id})
     .populate('themes')
     .then(session => {
-      const idx=session.themes.findIndex(v => v._id.toString()==theme_id._id.toString())
+      const idx=session.themes.findIndex(v => v._id.toString()==theme_id.toString())
       if (idx==0) {
         return null
       }
@@ -354,16 +354,20 @@ const getResourceStatus = async(user, queryParams, resource) => {
   const data=await UserSessionData.findOne({user: user._id})
   let res=null
   if (data) {
-    const finished=data?.finished?.find(r => r.toString()==resource._id.toString())
+    const finished=data?.finished?.find(r => r.toString()==resource.toString())
     if (finished) {
       myCache.set(key, RES_FINISHED)
       return RES_FINISHED
     }
-    const spent=data?.spent_times?.find(s => s.resource._id.toString()==resource._id.toString())?.spent_time || 0
+    const spent=data?.spent_times?.find(s => s.resource._id.toString()==resource.toString())?.spent_time || 0
     if (spent>0) {
       myCache.set(key, RES_CURRENT)
       return RES_CURRENT
     }
+  }
+  const theme=await Theme.findOne({resources: resource})
+  if (!theme) {
+    throw new Error(`No theme for resource ${resource}`)
   }
   myCache.set(key, RES_AVAILABLE)
   return RES_AVAILABLE
@@ -457,7 +461,10 @@ const getThemeProgress = async (user, queryParams, theme) => {
   if (myCache.has(key)) {
     return myCache.get(key)
   }
-  const th=await Theme.findById(theme._id)
+  const th=await Theme.findById(theme)
+  if (!th) {
+    console.error(`No theme for ${theme}`)
+  }
   const userData=await UserSessionData.findOne({user: user._id})
   const finishedResources=th.resources.filter(r => userData?.finished?.includes(r._id))
   const progress={finished: finishedResources.length, total: th.resources.length}
@@ -527,4 +534,7 @@ module.exports={
   filterDataUser,
   getContacts,
   sendMessage,
+  getResourceStatus,
+  getThemeStatus,
+  myCache,
 }
