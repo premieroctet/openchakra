@@ -1,11 +1,14 @@
-const { getDataModel, getProductionRoot , getProductionPort} = require('../../../config/config');
+const {RES_TO_COME} = require('../../../utils/aftral_studio/consts')
+const {ForbiddenError} = require('../../utils/errors')
+const {getDataModel, getProductionRoot, getProductionPort} = require('../../../config/config')
 const {
   filterDataUser,
   getContacts,
   getResourceSpentTime,
-  login
-} = require('../../utils/studio/aftral/functions');
-const {ROLES}=require(`../../../utils/${getDataModel()}/consts`);
+  login,
+} = require('../../utils/studio/aftral/functions')
+
+const {ROLES}=require(`../../../utils/${getDataModel()}/consts`)
 const {sendCookie} = require('../../config/passport')
 const path=require('path')
 const jwt = require('jsonwebtoken')
@@ -176,13 +179,13 @@ router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (r
 
   if (model=='contact') {
     return getContacts(req.user, id)
-    .then(contacts => {
-      return res.json(contacts)
-    })
-    .catch(err => {
-      console.error(err)
-      return res.status(err.status || HTTP_CODES.SYSTEM_ERROR).json(err.message || err)
-    })
+      .then(contacts => {
+        return res.json(contacts)
+      })
+      .catch(err => {
+        console.error(err)
+        return res.status(err.status || HTTP_CODES.SYSTEM_ERROR).json(err.message || err)
+      })
   }
 
   if (model=='session') {
@@ -212,7 +215,14 @@ router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (r
       if (['theme', 'resource'].includes(model) && !id) {
         data=data.filter(t => t.name)
       }
+      if (id && model=='resource' && data[0]?.status==RES_TO_COME) {
+        throw new ForbiddenError(`Ressource non encore disponible`)
+      }
       return res.json(data)
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(err.status || 500).json(err.message || err)
     })
 })
 

@@ -89,6 +89,7 @@ const DECLARED_VIRTUALS={
     spent_time: {path: 'spent_time', instance: 'Number', requires: '_id'},
     spent_time_str: {path: 'spent_time_str', instance: 'String', requires: 'spent_time'},
     status: {path: 'status', instance: 'String', required: 'finished'},
+    annotation: {path: 'annotation', instance: 'String', required: '_id'},
   },
   contact: {
     name: {path: 'name', instance: 'String', requires: '_id'},
@@ -303,7 +304,7 @@ const addComputedFields= async(user, queryParams, data, model, level=0) => {
   const presentCompFields=Object.keys(compFields).filter(f => data.hasOwnProperty(f))
   // Compute direct attributes
   await Promise.allSettled(presentCompFields.map(f => compFields[f](newUser, queryParams, data)
-    .then(res => {data[f]=res })))
+    .then(res => { data[f]=res })))
   // Handle references => sub
   const refAttributes=getModelAttributes(model).filter(att => !(att[0].includes('.')) && att[1].ref)
   for ([attName, attParams] of refAttributes) {

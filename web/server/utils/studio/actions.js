@@ -19,8 +19,8 @@ const ACTIONS={
     return login(email, password)
   },
 
-  put: ({parent, attribute, value}) => {
-    return putAttribute({parent, attribute, value})
+  put: ({parent, attribute, value}, user) => {
+    return putAttribute({parent, attribute, value, user})
   },
 
   publish: ({id}) => {

@@ -1,15 +1,15 @@
-const { NotFoundError } = require('../../errors');
-const NodeCache = require( "node-cache" )
+const url=require('url')
+const NodeCache = require('node-cache')
+const mongoose =require('mongoose')
+const lodash =require('lodash')
+const bcrypt=require('bcryptjs')
 const {
   RES_AVAILABLE,
   RES_CURRENT,
   RES_FINISHED,
-  RES_TO_COME
-} = require('../../../../utils/aftral_studio/consts');
-const url=require('url')
-const mongoose =require('mongoose')
-const lodash =require('lodash')
-const bcrypt=require('bcryptjs')
+  RES_TO_COME,
+} = require('../../../../utils/aftral_studio/consts')
+const {NotFoundError} = require('../../errors')
 const {
   cloneModel,
   declareComputedField,
@@ -202,14 +202,14 @@ const getNext = (id, user, referrer) => {
   )
     .then(() => {
       const nextRes=getNextResource(id)
-      if (!nextRes) { throw new NotFoundError('Last resource')}
+      if (!nextRes) { throw new NotFoundError('Last resource') }
       return nextRes
     })
 }
 
 const getPrevious = id => {
   const prevRes=getPrevResource(id)
-  if (!prevRes) {throw new NotFoundError('First resource')}
+  if (!prevRes) { throw new NotFoundError('First resource') }
   return prevRes
 }
 
@@ -238,15 +238,25 @@ const login = (email, password) => {
     })
 }
 
-const putAttribute = ({parent, attribute, value}) => {
+const putAttribute = ({parent, attribute, value, user}) => {
   console.log(`Putting ${parent} ${attribute} to ${value}`)
   let mongooseModel=null
+  let model=null
   return getModel(parent)
-    .then(model => {
+    .then(res => {
+      model=res
       mongooseModel=mongoose.connection.models[model]
       return mongooseModel.updateMany(
         {$or: [{_id: parent}, {origin: parent}]},
         {[attribute]: value})
+    })
+    .then(res => {
+      if (model=='resource' && attribute=='annotation') {
+        // return setVirtualAttribute({model, parent, attribute, value, user})
+        return setResourceAnnotation({model, parent, attribute, value, user})
+          .then(() => res)
+      }
+      return Promise.resolve(res)
     })
 }
 
@@ -326,7 +336,7 @@ const sendMessage = (sender, destinee, contents) => {
 }
 
 const getResourceSpentTime = async(user, queryParams, resource) => {
-  resource=typeof(resource)=='string' ? resource : resource._id
+  resource=typeof (resource)=='string' ? resource : resource._id
   const key=`${user?.id}/${JSON.stringify(queryParams)}/${resource.toString()}/spent`
   if (myCache.has(key)) {
     return myCache.get(key)
@@ -346,7 +356,7 @@ const getResourceSpentTime = async(user, queryParams, resource) => {
 +  Parent theme unordered: available
 +  */
 const getResourceStatus = async(user, queryParams, resource) => {
-  resource=typeof(resource)=='string' ? resource : resource._id
+  resource=typeof (resource)=='string' ? resource : resource._id
   const key=`${user?.id}/${JSON.stringify(queryParams)}/${resource}/status`
   if (myCache.has(key)) {
     return myCache.get(key)
@@ -377,8 +387,8 @@ const getResourceStatus = async(user, queryParams, resource) => {
   return RES_AVAILABLE
 }
 
-const getThemeStatus = async (user, queryParams, theme) => {
-  theme=typeof(theme)=='string' ? theme : theme._id
+const getThemeStatus = async(user, queryParams, theme) => {
+  theme=typeof (theme)=='string' ? theme : theme._id
   const key=`${user?.id}/${JSON.stringify(queryParams)}/${theme}/status`
   if (myCache.has(key)) {
     return myCache.get(key)
@@ -386,7 +396,7 @@ const getThemeStatus = async (user, queryParams, theme) => {
   const th=await Theme.findById(theme)
   const allStatus=await Promise.allSettled(th.resources.map(r => getResourceStatus(user, queryParams, r)))
     .then(res => {
-      return res.filter(r=>r.status=='fulfilled').map(r=>r.value)
+      return res.filter(r => r.status=='fulfilled').map(r => r.value)
     })
   if (allStatus.includes(RES_CURRENT)) {
     myCache.set(key, RES_CURRENT)
@@ -415,6 +425,11 @@ const getThemeStatus = async (user, queryParams, theme) => {
   return RES_TO_COME
 }
 
+const getResourceAnnotation = async(user, queryParams, resource) => {
+  resource=typeof (resource)=='string' ? resource : resource._id
+  const userData=await UserSessionData.findOne({user: user._id, 'annotations.resource': resource}, {annotations: 1})
+  return userData?.annotations.find(a => a.resource.toString()==resource.toString()).annotation || ''
+}
 
 const getResourceSpentTimeStr = async(user, queryParams, resource) => {
   const res=await getResourceSpentTime(user, queryParams, resource)
@@ -423,7 +438,7 @@ const getResourceSpentTimeStr = async(user, queryParams, resource) => {
 }
 
 const getThemeSpentTime = async(user, queryParams, theme) => {
-  theme=typeof(theme)=='string' ? theme : theme._id
+  theme=typeof (theme)=='string' ? theme : theme._id
   const key=`${user?.id}/${JSON.stringify(queryParams)}/${theme}/spent`
   if (myCache.has(key)) {
     return myCache.get(key)
@@ -441,7 +456,7 @@ const getThemeSpentTimeStr = async(user, queryParams, theme) => {
 }
 
 const getSessionSpentTime = async(user, queryParams, session) => {
-  session=typeof(session)=='string' ? session : session._id
+  session=typeof (session)=='string' ? session : session._id
   const key=`${user?.id}/${JSON.stringify(queryParams)}/${session}/spent`
   if (myCache.has(key)) {
     return myCache.get(key)
@@ -459,8 +474,8 @@ const getSessionSpentTimeStr = async(user, queryParams, session) => {
   return formatTime(res)
 }
 
-const getThemeProgress = async (user, queryParams, theme) => {
-  theme=typeof(theme)=='string' ? theme : theme._id
+const getThemeProgress = async(user, queryParams, theme) => {
+  theme=typeof (theme)=='string' ? theme : theme._id
   const key=`${user?.id}/${JSON.stringify(queryParams)}/${theme}/progress`
   if (myCache.has(key)) {
     return myCache.get(key)
@@ -476,24 +491,24 @@ const getThemeProgress = async (user, queryParams, theme) => {
   return progress
 }
 
-const getThemeProgressStr = async (user, queryParams, theme) => {
+const getThemeProgressStr = async(user, queryParams, theme) => {
   const progress=await getThemeProgress(user, queryParams, theme)
   return `${progress.finished}/${progress.total}`
 }
 
-const getThemeProgressPercent = async (user, queryParams, theme) => {
+const getThemeProgressPercent = async(user, queryParams, theme) => {
   const progress=await getThemeProgress(user, queryParams, theme)
   return progress.finished*1.0/progress.total*100
 }
 
-const getSessionProgress = async (user, queryParams, session) => {
-  session=typeof(session)=='string' ? session : session._id
+const getSessionProgress = async(user, queryParams, session) => {
+  session=typeof (session)=='string' ? session : session._id
   const key=`${user?.id}/${JSON.stringify(queryParams)}/${session}/progress`
   if (myCache.has(key)) {
     return myCache.get(key)
   }
   const sess=await Session.findById(session).populate('themes')
-  let progress={finished:0, total:0}
+  let progress={finished: 0, total: 0}
   if (sess) {
     const userData=await UserSessionData.findOne({user: user._id})
     const resources=lodash.flatten(sess.themes.map(t => t.resources))
@@ -504,18 +519,37 @@ const getSessionProgress = async (user, queryParams, session) => {
   return progress
 }
 
-const getSessionProgressStr = async (user, queryParams, session) => {
+const getSessionProgressStr = async(user, queryParams, session) => {
   const progress=await getSessionProgress(user, queryParams, session)
   return `${progress.finished}/${progress.total}`
 }
 
-const getSessionProgressPercent = async (user, queryParams, session) => {
+const getSessionProgressPercent = async(user, queryParams, session) => {
   const progress=await getSessionProgress(user, queryParams, session)
   return progress.finished*1.0/progress.total*100
 }
 
+const setResourceAnnotation = ({model, parent, attribute, value, user}) => {
+  return UserSessionData.findOneAndUpdate(
+    {user: user._id},
+    {user: user._id},
+    {upsert: true, new: true},
+  )
+    .then(data => {
+      const annotation=data?.annotations?.find(a => a.resource._id.toString()==parent.toString())
+      if (annotation) {
+        annotation.annotation =value
+      }
+      else {
+        data.annotations.push({resource: parent, annotation: value})
+      }
+      return data.save()
+    })
+}
+
 declareComputedField('resource', 'spent_time_str', getResourceSpentTimeStr)
 declareComputedField('resource', 'status', getResourceStatus)
+declareComputedField('resource', 'annotation', getResourceAnnotation)
 
 declareComputedField('theme', 'spent_time_str', getThemeSpentTimeStr)
 declareComputedField('theme', 'progress_str', getThemeProgressStr)
@@ -541,4 +575,6 @@ module.exports={
   getResourceStatus,
   getThemeStatus,
   myCache,
+  setResourceAnnotation,
+  getResourceAnnotation,
 }
