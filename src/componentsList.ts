@@ -45,10 +45,18 @@ export const menuItems: MenuItems = {
     },
   },
   Button: {},
+  Card: {
+    children: {
+      Card: {},
+      CardHeader: {},
+      CardBody: {},
+      CardFooter: {},
+    },
+  },
   Center: {},
   Conditional: {
     children: {
-      Box: {}
+      Box: {},
     },
   },
   Container: {},
@@ -176,6 +184,10 @@ export const componentsList: ComponentType[] = [
   'BreadcrumbItem',
   'BreadcrumbLink',
   'Button',
+  'Card',
+  'CardHeader',
+  'CardBody',
+  'CardFooter',
   'Center',
   'Checkbox',
   'CircularProgress',

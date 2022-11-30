@@ -63,6 +63,7 @@ import { getCustomComponentNames } from '~core/selectors/customComponents'
 import { convertToPascal } from '~components/editor/Editor'
 import TdPanel from './components/TdPanel'
 import TableCaptionPanel from './components/TableCaptionPanel'
+import CardPanel from './components/CardPanel'
 import TooltipPanel from './components/TooltipPanel'
 
 const importView = (component: any) => {
@@ -178,6 +179,7 @@ const Panels: React.FC<{
       {type === 'Th' && <TdPanel />}
       {type === 'Conditional' && <ConditionalPanel />}
       {type === 'Loop' && <LoopPanel />}
+      {type === 'Card' && <CardPanel />}
       {type === 'Tooltip' && <TooltipPanel />}
     </>
   )

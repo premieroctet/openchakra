@@ -24,6 +24,10 @@ const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'Badge',
   'Box',
   'Button',
+  'Card', 
+  'CardHeader', 
+  'CardBody', 
+  'CardFooter',
   'Center',
   'Checkbox',
   'CircularProgress',
@@ -108,6 +112,7 @@ const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'TableMeta',
   'TableRowMeta',
   'ConditionalMeta',
+  'CardMeta',
   'TagMeta',
   // Allow custom components
   'Conditional',

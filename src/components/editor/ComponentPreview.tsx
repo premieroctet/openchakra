@@ -38,6 +38,11 @@ import SkeletonPreview, {
   SkeletonCirclePreview,
   SkeletonTextPreview,
 } from './previews/SkeletonPreview'
+import CardPreview, {
+  CardHeaderPreview,
+  CardBodyPreview,
+  CardFooterPreview,
+} from './previews/CardPreview'
 import TooltipPreview from './previews/TooltipPreview'
 import TagPreview, {
   TagLabelPreview,
@@ -250,6 +255,14 @@ const ComponentPreview: React.FC<{
       return <ConditionalPreview component={component} />
     case 'Loop':
       return <LoopPreview component={component} />
+    case 'Card':
+      return <CardPreview component={component} />
+    case 'CardHeader':
+      return <CardHeaderPreview component={component} />
+    case 'CardBody':
+      return <CardBodyPreview component={component} />
+    case 'CardFooter':
+      return <CardFooterPreview component={component} />
     case 'Tooltip':
       return <TooltipPreview component={component} />
     default:
