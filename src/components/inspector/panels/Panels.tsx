@@ -63,6 +63,8 @@ import { getCustomComponentNames } from '~core/selectors/customComponents'
 import { convertToPascal } from '~components/editor/Editor'
 import TdPanel from './components/TdPanel'
 import TableCaptionPanel from './components/TableCaptionPanel'
+import ModalPanel from './components/ModalPanel'
+import ModalHeaderPanel from './components/ModalHeaderPanel'
 import CardPanel from './components/CardPanel'
 import TooltipPanel from './components/TooltipPanel'
 
@@ -179,6 +181,8 @@ const Panels: React.FC<{
       {type === 'Th' && <TdPanel />}
       {type === 'Conditional' && <ConditionalPanel />}
       {type === 'Loop' && <LoopPanel />}
+      {type === 'Modal' && <ModalPanel />}
+      {type === 'ModalHeader' && <ModalHeaderPanel />}
       {type === 'Card' && <CardPanel />}
       {type === 'Tooltip' && <TooltipPanel />}
     </>

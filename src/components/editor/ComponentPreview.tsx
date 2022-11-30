@@ -38,6 +38,14 @@ import SkeletonPreview, {
   SkeletonCirclePreview,
   SkeletonTextPreview,
 } from './previews/SkeletonPreview'
+import ModalPreview, {
+  ModalCloseButtonPreview,
+  ModalBodyPreview,
+  ModalContentPreview,
+  ModalFooterPreview,
+  ModalHeaderPreview,
+  ModalOverlayPreview,
+} from './previews/ModalPreview'
 import CardPreview, {
   CardHeaderPreview,
   CardBodyPreview,
@@ -255,6 +263,20 @@ const ComponentPreview: React.FC<{
       return <ConditionalPreview component={component} />
     case 'Loop':
       return <LoopPreview component={component} />
+    case 'Modal':
+      return <ModalPreview component={component} />
+    case 'ModalCloseButton':
+      return <ModalCloseButtonPreview component={component} />
+    case 'ModalHeader':
+      return <ModalHeaderPreview component={component} />
+    case 'ModalContent':
+      return <ModalContentPreview component={component} />
+    case 'ModalOverlay':
+      return <ModalOverlayPreview component={component} />
+    case 'ModalFooter':
+      return <ModalFooterPreview component={component} />
+    case 'ModalBody':
+      return <ModalBodyPreview component={component} />
     case 'Card':
       return <CardPreview component={component} />
     case 'CardHeader':

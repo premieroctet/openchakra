@@ -83,6 +83,12 @@ import {
   TooltipProps,
   TableColumnHeaderProps,
   TableCellProps,
+  ModalProps,
+  ModalOverlayProps,
+  ModalContentProps,
+  ModalHeaderProps,
+  ModalFooterProps,
+  ModalBodyProps,
 } from '@chakra-ui/react'
 
 import iconsList from '~iconsList'
@@ -185,6 +191,13 @@ type PreviewDefaultProps = {
   TBody?: PropsWithForm<TableBodyProps>
   THead?: PropsWithForm<TableHeadProps>
   TFoot?: PropsWithForm<TableFooterProps>
+  Modal?: PropsWithForm<ModalProps>
+  ModalOverlay?: PropsWithForm<ModalOverlayProps>
+  ModalContent?: PropsWithForm<ModalContentProps>
+  ModalHeader?: PropsWithForm<ModalHeaderProps>
+  ModalFooter?: PropsWithForm<ModalFooterProps>
+  ModalBody?: PropsWithForm<ModalBodyProps>
+  ModalCloseButton?: PropsWithForm<any>
 }
 
 export const DEFAULT_PROPS: PreviewDefaultProps | any = {
@@ -297,6 +310,13 @@ export const DEFAULT_PROPS: PreviewDefaultProps | any = {
   },
   ListItem: { children: 'list' },
   Kbd: { children: 'shift' },
+  Modal: { size: 'md' },
+  ModalOverlay: {},
+  ModalContent: {},
+  ModalHeader: { children: 'Modal Title' },
+  ModalFooter: {},
+  ModalBody: {},
+  ModalCloseButton: {},
   Progress: {
     value: 60,
     min: 0,

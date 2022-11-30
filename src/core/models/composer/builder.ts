@@ -157,6 +157,28 @@ export const buildAccordion = (parent: string): ComposedComponent => {
   }
 }
 
+export const buildModal = (parent: string): ComposedComponent => {
+  const composer = new Composer()
+
+  const nodeId = composer.addNode({ type: 'Modal', parent })
+  composer.addNode({ type: 'ModalOverlay', parent: nodeId })
+  const content = composer.addNode({ type: 'ModalContent', parent: nodeId })
+  composer.addNode({ type: 'ModalHeader', parent: content })
+  composer.addNode({ type: 'ModalCloseButton', parent: content })
+  const body = composer.addNode({ type: 'ModalBody', parent: content })
+  composer.addNode({ type: 'Text', parent: body})
+  const footer = composer.addNode({ type: 'ModalFooter', parent: content })
+  composer.addNode({type: 'Button', parent: footer})
+
+  const components = composer.getComponents()
+
+  return {
+    components,
+    root: nodeId,
+    parent,
+  }
+}
+
 export const buildTabs = (parent: string): ComposedComponent => {
   const composer = new Composer('Tabs')
 
@@ -335,6 +357,7 @@ const builders: ComposerBuilders = {
   TableMeta: buildTable,
   TableRowMeta: buildTableRow,
   ConditionalMeta: buildConditional,
+  ModalMeta: buildModal,
   CardMeta: buildCard,
   TagMeta: buildTag,
 }
