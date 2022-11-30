@@ -78,6 +78,10 @@ type ComponentType =
   | 'TabPanel'
   | 'TabPanels'
   | 'Tag'
+  | 'TagLabel'
+  | 'TagLeftIcon'
+  | 'TagRightIcon'
+  | 'TagCloseButton'
   | 'Text'
   | 'Textarea'
   | 'Table'
@@ -103,6 +107,7 @@ type MetaComponentType =
   | 'TableMeta'
   | 'TableRowMeta'
   | 'ConditionalMeta'
+  | 'TagMeta'
 
 interface ParametersType {
   name: string

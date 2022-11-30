@@ -3,7 +3,7 @@ import FormControl from './FormControl'
 import { Select } from '@chakra-ui/react'
 import { useForm } from '~hooks/useForm'
 
-export type Size = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
+export type Size = '2xs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full'
 type SizeControlPropsType = {
   name?: string
   label?: string | ReactNode

@@ -38,6 +38,12 @@ import SkeletonPreview, {
   SkeletonCirclePreview,
   SkeletonTextPreview,
 } from './previews/SkeletonPreview'
+import TagPreview, {
+  TagLabelPreview,
+  TagLeftIconPreview,
+  TagRightIconPreview,
+  TagCloseButtonPreview,
+} from './previews/TagPreview'
 import { getCustomComponentNames } from '~core/selectors/customComponents'
 import { convertToPascal } from './Editor'
 
@@ -129,7 +135,6 @@ const ComponentPreview: React.FC<{
     case 'AlertTitle':
     case 'InputRightAddon':
     case 'InputLeftAddon':
-    case 'Tag':
       return (
         <PreviewContainer
           component={component}
@@ -230,6 +235,16 @@ const ComponentPreview: React.FC<{
       return <TablePreview component={component} />
     case 'Tr':
       return <TrPreview component={component} />
+    case 'Tag':
+      return <TagPreview component={component} />
+    case 'TagLabel':
+      return <TagLabelPreview component={component} />
+    case 'TagLeftIcon':
+      return <TagLeftIconPreview component={component} />
+    case 'TagRightIcon':
+      return <TagRightIconPreview component={component} />
+    case 'TagCloseButton':
+      return <TagCloseButtonPreview component={component} />
     case 'Conditional':
       return <ConditionalPreview component={component} />
     case 'Loop':

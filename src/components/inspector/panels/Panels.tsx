@@ -20,6 +20,8 @@ import TextareaPanel from '~components/inspector/panels/components/TextareaPanel
 import CircularProgressPanel from '~components/inspector/panels/components/CircularProgressPanel'
 import HeadingPanel from '~components/inspector/panels/components/HeadingPanel'
 import TagPanel from '~components/inspector/panels/components/TagPanel'
+import TagLabelPanel from './components/TagLabelPanel'
+import TagIconPanel from './components/TagIconPanel'
 import SimpleGridPanel from '~components/inspector/panels/components/SimpleGridPanel'
 import SwitchPanel from '~components/inspector/panels/components/SwitchPanel'
 import AlertPanel from '~components/inspector/panels/components/AlertPanel'
@@ -134,6 +136,9 @@ const Panels: React.FC<{
       {type === 'AlertTitle' && <AlertTitlePanel />}
       {type === 'AlertDescription' && <AlertDescriptionPanel />}
       {type === 'Tag' && <TagPanel />}
+      {type === 'TagLabel' && <TagLabelPanel />}
+      {type === 'TagLeftIcon' && <TagIconPanel />}
+      {type === 'TagRightIcon' && <TagIconPanel />}
       {type === 'Flex' && <FlexPanel />}
       {type === 'Stack' && <StackPanel />}
       {type === 'FormControl' && <FormControlPanel />}

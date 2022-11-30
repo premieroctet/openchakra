@@ -280,6 +280,23 @@ export const buildInputGroup = (parent: string): ComposedComponent => {
   }
 }
 
+export const buildTag = (parent: string): ComposedComponent => {
+  const composer = new Composer()
+
+  const nodeId = composer.addNode({ type: 'Tag', parent })
+  composer.addNode({ type: 'TagLeftIcon', parent: nodeId })
+  composer.addNode({ type: 'TagLabel', parent: nodeId })
+  composer.addNode({ type: 'TagCloseButton', parent: nodeId })
+
+  const components = composer.getComponents()
+
+  return {
+    components,
+    root: nodeId,
+    parent,
+  }
+}
+
 type BuilderFn = (parent: string) => ComposedComponent
 
 type ComposerBuilders = {
@@ -298,6 +315,7 @@ const builders: ComposerBuilders = {
   TableMeta: buildTable,
   TableRowMeta: buildTableRow,
   ConditionalMeta: buildConditional,
+  TagMeta: buildTag,
 }
 
 export default builders

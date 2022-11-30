@@ -142,7 +142,15 @@ export const menuItems: MenuItems = {
       TabPanels: {},
     },
   },
-  Tag: {},
+  Tag: {
+    children: {
+      Tag: {},
+      TagLabel: {},
+      TagLeftIcon: {},
+      TagRightIcon: {},
+      TagCloseButton: {},
+    },
+  },
   Text: {},
   Textarea: {},
   Menu: { soon: true },
@@ -233,6 +241,10 @@ export const componentsList: ComponentType[] = [
   'TabPanels',
   'Tabs',
   'Tag',
+  'TagLabel',
+  'TagLeftIcon',
+  'TagRightIcon',
+  'TagCloseButton',
   'Text',
   'Textarea',
 ]
