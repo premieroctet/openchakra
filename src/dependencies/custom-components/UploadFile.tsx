@@ -2,12 +2,36 @@ import { Box, Text } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import FileManager from '../utils/S3filemanager'
 import { s3Config, S3UrlRessource } from '../utils/s3Config'
-import useFetch from 'use-http'
+import axios from 'axios'
 import mime from 'mime'
 import JSZip from 'jszip'
 import { getExtension } from './MediaWrapper'
 
 const uploadUrl = `/myAlfred/api/studio/action`
+
+function createFileFromBlob(folder: string, filename: string, fileData: Blob) {
+  const { fileInFolder } = S3UrlRessource({
+    filename,
+    folder,
+  })
+  return new File([fileData], fileInFolder, {
+    type: mime.getType(getExtension(filename)) || '',
+  })
+}
+
+async function uploadFileToS3(file: File) {
+  return await FileManager.createFile(file.name, file, '', file.type, [])
+}
+
+const sendMultipleToS3 = async (folder: string, unzip: any) => {
+  for await (const filename of Object.keys(unzip.files)) {
+    const blob = await unzip.files[filename].async('blob')
+    if (!unzip.files[filename]?.dir) {
+      const file = createFileFromBlob(folder, filename, blob)
+      await uploadFileToS3(file)
+    }
+  }
+}
 
 const UploadFile = ({
   dataSource,
@@ -32,7 +56,6 @@ const UploadFile = ({
     s3Config.secretAccessKey || '',
   )
   const [uploadInfo, setUploadInfo] = useState('')
-  const { post, response, error } = useFetch()
 
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -45,88 +68,50 @@ const UploadFile = ({
     if (fileToUpload) {
       const typeOfUpload = getExtension(fileToUpload?.name)
 
-      switch (typeOfUpload) {
-        case 'zip':
-          await JSZip.loadAsync(fileToUpload)
-            .then(async zip => {
-              for await (const filename of Object.keys(zip.files)) {
-                zip.files[filename]
-                  .async('blob')
-                  .then(async function(fileData) {
-                    /* If we're not reading a folder */
-                    if (!zip.files[filename]?.dir) {
-                      const { fileInFolder } = S3UrlRessource({
-                        filename,
-                        folder: fileToUpload?.name,
-                      })
-                      let file = new File([fileData], fileInFolder, {
-                        type: mime.getType(getExtension(filename)) || '',
-                      })
-
-                      console.log(file)
-
-                      await FileManager.createFile(
-                        file.name,
-                        file,
-                        '',
-                        file.type,
-                        [],
-                      )
-                    }
-                  })
-              }
-            })
-            .then(res => {
-              const { scormUrl } = S3UrlRessource({
-                folder: fileToUpload?.name,
-              })
-
-              console.log('scormUrl', scormUrl, encodeURI(scormUrl))
-
-              post(uploadUrl, {
-                action: 'put',
-                parent: ressource_id,
-                attribute,
-                // When scorm uploaded (usually zip file), refer story.html
-                value: encodeURI(scormUrl),
-              })
-            })
-            .catch(err => console.error('uploadzippedfiles', err))
-
-          break
-
-        default:
-          await FileManager.createFile(
-            fileToUpload?.name,
-            fileToUpload,
-            '',
-            // @ts-ignore
-            fileToUpload?.type,
-            [],
-          )
-            .then(res => {
-              // Send ressource url
-              post(uploadUrl, {
-                action: 'put',
-                parent: ressource_id,
-                attribute,
-                value: res?.Location,
-              })
-            })
-            .catch(err => console.error(err))
-          break
+      let paramsBack = {
+        action: 'put',
+        parent: ressource_id,
+        attribute,
       }
 
-      if (response.ok) setUploadInfo('Ressource ajoutée')
-      if (error) setUploadInfo('Echec ajout ressource')
+      setUploadInfo('')
+
+      const switchUploadType = async () => {
+        switch (typeOfUpload) {
+          case 'zip':
+            const unzipped = await JSZip.loadAsync(fileToUpload)
+            await sendMultipleToS3(fileToUpload?.name, unzipped)
+
+            const { scormUrl } = S3UrlRessource({
+              folder: fileToUpload?.name,
+            })
+
+            paramsBack = { ...paramsBack, ...{ value: encodeURI(scormUrl) } }
+            break
+
+          default:
+            const res = await uploadFileToS3(fileToUpload)
+            paramsBack = { ...paramsBack, ...{ value: res?.Location } }
+            break
+        }
+      }
+
+      const saveUrl = async () => {
+        console.log('Hey, on y arrive', uploadUrl, paramsBack)
+        axios
+          .post(uploadUrl, paramsBack)
+          .then(() => {
+            setUploadInfo('Ressource ajoutée')
+          })
+          .catch(e => {
+            setUploadInfo('Echec ajout ressource')
+          })
+      }
+
+      await switchUploadType()
+      await saveUrl()
     }
   }
-
-  //   useEffect(() => {
-  //     const form = document.querySelector('#uploadressource') as HTMLFormElement
-  //     const inputFile = form.querySelector('[type="file"]') as HTMLInputElement
-  //     inputFile.value = value
-  // }, [value])
 
   return (
     <Box {...props}>
