@@ -44,7 +44,7 @@ const TextPanel = () => {
           <option>black</option>
         </Select>
       </FormControl>
-      <FormControl label="Font Weight" htmlFor="fontStyle">
+      <FormControl label="Font Style" htmlFor="fontStyle">
         <Select
           name="fontStyle"
           size="sm"
