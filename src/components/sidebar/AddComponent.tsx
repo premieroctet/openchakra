@@ -64,7 +64,11 @@ const AddComponent = () => {
           placement="right"
         >
           <PopoverTrigger>
-            <Button bgColor="teal.500" _hover={{ bgColor: 'teal.300' }}>
+            <Button
+              bgColor="teal.500"
+              _hover={{ bgColor: 'teal.300' }}
+              color="white"
+            >
               <AddIcon mx={1} />
               <Text
                 letterSpacing="wide"
