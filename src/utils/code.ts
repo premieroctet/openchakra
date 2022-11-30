@@ -445,7 +445,7 @@ const buildHooks = (components: IComponents) => {
         }`
         return `get(\`${apiUrl}\`)
         .then(res => set${capitalize(dataId)}(res.data))
-        .catch(err => alert(err))`
+        .catch(err => alert(err?.response?.data || err))`
       })
       .join('\n')}
   }, [get, refresh])\n`
