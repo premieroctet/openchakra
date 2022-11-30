@@ -153,6 +153,7 @@ export const menuItems: MenuItems = {
   },
   Text: {},
   Textarea: {},
+  Tooltip: {},
   Menu: { soon: true },
 }
 
@@ -247,4 +248,5 @@ export const componentsList: ComponentType[] = [
   'TagCloseButton',
   'Text',
   'Textarea',
+  'Tooltip',
 ]
