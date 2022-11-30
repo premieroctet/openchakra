@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import { IconButton, ButtonGroup, useTheme, Box } from '@chakra-ui/react'
+import { IconButton, ButtonGroup, useTheme, Box, Input } from '@chakra-ui/react'
 import ColorsControl from '~components/inspector/controls/ColorsControl'
 import { GoBold, GoItalic } from 'react-icons/go'
 import {
@@ -9,8 +9,6 @@ import {
   MdFormatAlignJustify,
 } from 'react-icons/md'
 import FormControl from '~components/inspector/controls/FormControl'
-import { ComboboxOption } from '@reach/combobox'
-import InputSuggestion from '~components/inspector/inputs/InputSuggestion'
 import useBreakpoints from '~hooks/useBreakpoints'
 
 const TextPanel = () => {
@@ -168,72 +166,114 @@ const TextPanel = () => {
             </ButtonGroup>
           </FormControl>
 
-          <FormControl label="Font family" htmlFor="fontFamily">
-            <InputSuggestion
+          <FormControl
+            key={`fontFamily-${i}`}
+            htmlFor={`${breakpoint}-fontFamily`}
+            label={'fontFamily'}
+          >
+            <Input
+              id={`${breakpoint}-fontFamily`}
+              list={`${breakpoint}-fontFamily-flavors`}
+              size="sm"
+              type="text"
+              name={`${breakpoint}-fontFamily`}
               value={responsiveValues['fontFamily']?.[breakpoint] || ''}
-              handleChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              onChange={e =>
                 handleBreakpoints(
                   'fontFamily',
                   breakpoint,
                   e.currentTarget.value,
                 )
               }
-              name="fontFamily"
-            >
+              autoComplete="off"
+            />
+
+            <datalist id={`${breakpoint}-fontFamily-flavors`}>
               {Object.keys(theme.fonts).map(option => (
-                <ComboboxOption key={option} value={option} />
+                <option key={option} value={option} />
               ))}
-            </InputSuggestion>
+            </datalist>
           </FormControl>
 
-          <FormControl label="Font size" htmlFor="fontSize">
-            <InputSuggestion
+          <FormControl
+            key={`fontSize-${i}`}
+            htmlFor={`${breakpoint}-fontSize`}
+            label={'fontSize'}
+          >
+            <Input
+              id={`${breakpoint}-fontSize`}
+              list={`${breakpoint}-fontSize-flavors`}
+              size="sm"
+              type="text"
+              name={`${breakpoint}-fontSize`}
               value={responsiveValues['fontSize']?.[breakpoint] || ''}
-              handleChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              onChange={e =>
                 handleBreakpoints('fontSize', breakpoint, e.currentTarget.value)
               }
-              name={`${breakpoint}-fontSize`}
-            >
-              {Object.keys(theme.fonts).map(option => (
-                <ComboboxOption key={option} value={option} />
+              autoComplete="off"
+            />
+
+            <datalist id={`${breakpoint}-fontSize-flavors`}>
+              {Object.keys(theme.fontSizes).map(option => (
+                <option key={option} value={option} />
               ))}
-            </InputSuggestion>
+            </datalist>
           </FormControl>
 
-          <FormControl label="Line height" htmlFor="lineHeight">
-            <InputSuggestion
+          <FormControl
+            key={`lineHeight-${i}`}
+            htmlFor={`${breakpoint}-lineHeight`}
+            label={'lineHeight'}
+          >
+            <Input
+              id={`${breakpoint}-lineHeight`}
+              list={`${breakpoint}-lineHeight-flavors`}
+              size="sm"
+              type="text"
+              name={`${breakpoint}-lineHeight`}
               value={responsiveValues['lineHeight']?.[breakpoint] || ''}
-              handleChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              onChange={e =>
                 handleBreakpoints(
                   'lineHeight',
                   breakpoint,
                   e.currentTarget.value,
                 )
               }
-              name={`${breakpoint}-lineHeight`}
-            >
+              autoComplete="off"
+            />
+            <datalist id={`${breakpoint}-lineHeight-flavors`}>
               {Object.keys(theme.lineHeights).map(option => (
-                <ComboboxOption key={option} value={option} />
+                <option key={option} value={option} />
               ))}
-            </InputSuggestion>
+            </datalist>
           </FormControl>
 
-          <FormControl label="Letter spacing" htmlFor="letterSpacing">
-            <InputSuggestion
+          <FormControl
+            key={`letterSpacing-${i}`}
+            htmlFor={`${breakpoint}-letterSpacing`}
+            label={'letterSpacing'}
+          >
+            <Input
+              id={`${breakpoint}-letterSpacing`}
+              list={`${breakpoint}-letterSpacing-flavors`}
+              size="sm"
+              type="text"
+              name={`${breakpoint}-letterSpacing`}
               value={responsiveValues['letterSpacing']?.[breakpoint] || ''}
-              handleChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              onChange={e =>
                 handleBreakpoints(
                   'letterSpacing',
                   breakpoint,
                   e.currentTarget.value,
                 )
               }
-              name={`${breakpoint}-letterSpacing`}
-            >
+              autoComplete="off"
+            />
+            <datalist id={`${breakpoint}-letterSpacing-flavors`}>
               {Object.keys(theme.letterSpacings).map(option => (
-                <ComboboxOption key={option} value={option} />
+                <option key={option} value={option} />
               ))}
-            </InputSuggestion>
+            </datalist>
           </FormControl>
         </Box>
       ))}
