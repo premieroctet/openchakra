@@ -5,24 +5,24 @@ import React, {
   useEffect,
   useCallback,
 } from 'react'
-import useFetch from 'use-http'
+import axios from 'axios'
 
 export const UserContext = createContext()
 
 export function UserWrapper({ children }) {
   const [user, setUser] = useState(null)
-  const { get } = useFetch()
 
   const getCurrentUser = useCallback(() => {
-    get(`/myAlfred/api/studio/current-user`)
-      .then(data => {
-        setUser(data)
+    axios
+      .get(`/myAlfred/api/studio/current-user`)
+      .then(res => {
+        setUser(res.data)
       })
       .catch(error => {
         setUser(false)
         console.error('Cant fetch current user', error)
       })
-  }, [get])
+  }, [])
 
   useEffect(() => {
     getCurrentUser()
