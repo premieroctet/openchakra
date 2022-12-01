@@ -1,7 +1,16 @@
 import React from 'react'
 import lodash from 'lodash'
 
-import { getComponentDataValue } from '../utils/values'
+const normalize = str => {
+  str = str
+    ? str
+        .trim()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+    : ''
+  return str
+}
 
 const isOtherSource = (element, dataSourceId) => {
   if (
@@ -61,9 +70,9 @@ const withDynamicContainer = Component => {
     }
     if (props.textFilter && props.textFilter) {
       const filterValue = props.textFilter
-      const regExp = new RegExp(filterValue?.trim(), 'i')
+      const regExp = new RegExp(normalize(filterValue).trim(), 'i')
       orgData = orgData.filter(d =>
-        FILTER_ATTRIBUTES.some(att => regExp.test(d[att])),
+        FILTER_ATTRIBUTES.some(att => regExp.test(normalize(d[att]))),
       )
     }
     let data = []
