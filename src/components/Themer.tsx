@@ -4,6 +4,7 @@ import {
   DeleteIcon,
   InfoOutlineIcon,
 } from '@chakra-ui/icons'
+import { Select as MultiSelect } from 'chakra-react-select'
 import {
   Button,
   ChakraProvider,
@@ -25,13 +26,11 @@ import {
   withDefaultProps,
   Box,
   Text,
-  CheckboxGroup,
   Stack,
   Checkbox,
   Divider,
   HStack,
   Tooltip,
-  useCheckboxGroup,
   IconButton,
 } from '@chakra-ui/react'
 import { omit } from 'lodash'
@@ -40,23 +39,38 @@ import React, { useState } from 'react'
 const themeColors: any = Object.keys(
   omit(baseTheme.colors, ['transparent', 'current', 'black', 'white']),
 )
-const themeComponents: any = Object.keys(baseTheme.components)
 
-const initialThemeState = [
+const componentsWithLabel = Object.keys(baseTheme.components).map(
+  (comp: string) => ({
+    label: comp,
+    value: comp,
+  }),
+)
+
+interface DefPropsType {
+  colorScheme?: string
+  size?: string
+  variant?: string
+}
+interface ThemeExtType {
+  defaultProps: DefPropsType
+  components?: Array<string>
+}
+
+const initialThemeState: Array<ThemeExtType> = [
   {
     defaultProps: {
       colorScheme: 'blue',
       size: 'md',
       variant: 'solid',
     },
-    components: themeComponents,
   },
 ]
 
 const ThemeLayers = () => {
-  const [selectedOption, setSelectedOption] = useState('All')
   const [themeState, setThemeState] = useState(initialThemeState)
   // baseStyle, defaultProps, sizes, variants, parts
+  console.log(themeState)
 
   return (
     <ChakraProvider resetCSS>
@@ -66,7 +80,8 @@ const ThemeLayers = () => {
             <AccordionItem key={i}>
               <AccordionButton _expanded={{ bg: 'teal.100' }}>
                 <Box flex="1" textAlign="left">
-                  Layer {i}: {layer.components ? layer.components : 'All'}
+                  Layer {i}:{' '}
+                  {layer.components ? layer.components.join(', ') : 'All'}
                 </Box>
                 <AccordionIcon />
                 {i ? (
@@ -88,95 +103,150 @@ const ThemeLayers = () => {
                   <Text mx={1}>(Default)</Text>
                 )}
               </AccordionButton>
-              <AccordionPanel p={4}>
-                <CheckboxGroup
+              <AccordionPanel p={4} overflowY="visible">
+                <Stack>
+                  <HStack>
+                    <Checkbox
+                      isDisabled={!i}
+                      colorScheme="teal"
+                      value="colorScheme"
+                      isChecked={!!layer.defaultProps.colorScheme}
+                      onChange={() => {
+                        themeState[i].defaultProps.colorScheme
+                          ? delete themeState[i].defaultProps.colorScheme
+                          : (themeState[i].defaultProps.colorScheme = 'blue')
+                        setThemeState([...themeState])
+                      }}
+                    >
+                      ColorScheme
+                    </Checkbox>
+                    {themeColors.map((themeColor: string) => (
+                      <Tooltip key={themeColor} label={themeColor}>
+                        <IconButton
+                          colorScheme={themeColor}
+                          mr={2}
+                          boxShadow="md"
+                          border={
+                            layer.defaultProps.colorScheme === themeColor
+                              ? '2px solid black'
+                              : 'none'
+                          }
+                          isRound
+                          aria-label="Color"
+                          size="sm"
+                          icon={
+                            layer.defaultProps.colorScheme === themeColor ? (
+                              <CheckIcon color="black" />
+                            ) : (
+                              <></>
+                            )
+                          }
+                          onClick={() => {
+                            layer.defaultProps.colorScheme = themeColor
+                            setThemeState([...themeState])
+                          }}
+                        />
+                      </Tooltip>
+                    ))}
+                  </HStack>
+                  <Divider />
+                  <HStack>
+                    <Checkbox
+                      isDisabled={!i}
+                      colorScheme="teal"
+                      value="size"
+                      isChecked={!!layer.defaultProps.size}
+                      onChange={() => {
+                        themeState[i].defaultProps.size
+                          ? delete themeState[i].defaultProps.size
+                          : (themeState[i].defaultProps.size = 'md')
+                        setThemeState([...themeState])
+                      }}
+                    >
+                      Size
+                    </Checkbox>
+                    <Select
+                      id="size"
+                      onChange={e => {
+                        themeState[i].defaultProps.size = e.target.value
+                        setThemeState([...themeState])
+                      }}
+                      name="size"
+                      size="sm"
+                      value={layer.defaultProps.size}
+                    >
+                      <option value="xs">xs</option>
+                      <option value="sm">sm</option>
+                      <option value="md">md</option>
+                      <option value="lg">lg</option>
+                      <option value="xl">xl</option>
+                    </Select>
+                  </HStack>
+                  <Divider />
+                  <HStack>
+                    <Checkbox
+                      isDisabled={!i}
+                      colorScheme="teal"
+                      value="variant"
+                      isChecked={!!layer.defaultProps.variant}
+                      onChange={() => {
+                        themeState[i].defaultProps.variant
+                          ? delete themeState[i].defaultProps.variant
+                          : (themeState[i].defaultProps.variant = 'solid')
+                        setThemeState([...themeState])
+                      }}
+                    >
+                      Variant
+                    </Checkbox>
+                    <Select
+                      id="variant"
+                      onChange={e => {
+                        themeState[i].defaultProps.variant = e.target.value
+                        setThemeState([...themeState])
+                      }}
+                      name="variant"
+                      size="sm"
+                      value={layer.defaultProps.variant}
+                    >
+                      <option value="outline">outline</option>
+                      <option value="ghost">ghost</option>
+                      <option value="unstyled">unstyled</option>
+                      <option value="link">link</option>
+                      <option value="solid">solid</option>
+                    </Select>
+                  </HStack>
+                  <Divider />
+                </Stack>
+                <Text>Applies to: </Text>
+                <MultiSelect
+                  maxMenuHeight={160}
+                  menuPlacement="top"
+                  isMulti
+                  name={'layer' + i}
+                  options={componentsWithLabel}
+                  placeholder="All (if none selected)"
+                  closeMenuOnSelect={false}
+                  size="sm"
                   colorScheme="teal"
-                  defaultValue={['colorScheme', 'size', 'variant']}
-                >
-                  <Stack>
-                    <HStack>
-                      <Checkbox value="colorScheme">ColorScheme</Checkbox>
-                      {themeColors.map((themeColor: string, i: number) => (
-                        <Tooltip key={themeColor} label={themeColor}>
-                          <IconButton
-                            colorScheme={themeColor}
-                            mr={2}
-                            boxShadow="md"
-                            border={
-                              layer.defaultProps.colorScheme == themeColor
-                                ? '2px solid black'
-                                : 'none'
-                            }
-                            isRound
-                            aria-label="Color"
-                            size="sm"
-                            icon={
-                              layer.defaultProps.colorScheme == themeColor ? (
-                                <CheckIcon color="black" />
-                              ) : (
-                                <></>
-                              )
-                            }
-                            onClick={() => {
-                              layer.defaultProps.colorScheme = themeColor
-                              setThemeState([...themeState])
-                            }}
-                          />
-                        </Tooltip>
-                      ))}
-                    </HStack>
-                    <Divider />
-                    <HStack>
-                      <Checkbox value="size">Size</Checkbox>
-                      <Select
-                        id="size"
-                        onChange={e => {
-                          themeState[i].defaultProps.size = e.target.value
-                          setThemeState([...themeState])
-                        }}
-                        name="size"
-                        size="sm"
-                        value={layer.defaultProps.size}
-                      >
-                        <option value="xs">xs</option>
-                        <option value="sm">sm</option>
-                        <option value="md">md</option>
-                        <option value="lg">lg</option>
-                        <option value="xl">xl</option>
-                      </Select>
-                    </HStack>
-                    <Divider />
-                    <HStack>
-                      <Checkbox value="variant">Variant</Checkbox>
-                      <Select
-                        id="variant"
-                        onChange={e => {
-                          themeState[i].defaultProps.variant = e.target.value
-                          setThemeState([...themeState])
-                        }}
-                        name="variant"
-                        size="sm"
-                        value={layer.defaultProps.variant}
-                      >
-                        <option value="outline">outline</option>
-                        <option value="ghost">ghost</option>
-                        <option value="unstyled">unstyled</option>
-                        <option value="link">link</option>
-                        <option value="solid">solid</option>
-                      </Select>
-                    </HStack>
-                    <Divider />
-                  </Stack>
-                </CheckboxGroup>
-                <HStack m={1}>
-                  <Text>Applies to: </Text>
-                  <Select
+                  tagVariant="outline"
+                  isDisabled={!i}
+                  selectedOptionStyle="check"
+                  hideSelectedOptions={false}
+                  onChange={comps => {
+                    comps.length
+                      ? (themeState[i].components = comps.map(c => c.value))
+                      : delete themeState[i].components
+                    setThemeState([...themeState])
+                  }}
+                />
+                {/* <Select
                     variant="flushed"
                     px={2}
                     value={selectedOption}
                     onChange={e => setSelectedOption(e.target.value)}
+                    isDisabled={!i}
+                    placeholder="All"
                   >
-                    <option value="All">All</option>
                     {Object.keys(baseTheme.components).map((comp: any) => {
                       return (
                         <option key={comp} value={comp}>
@@ -184,8 +254,7 @@ const ThemeLayers = () => {
                         </option>
                       )
                     })}
-                  </Select>
-                </HStack>
+                  </Select> */}
               </AccordionPanel>
             </AccordionItem>
           )
@@ -215,15 +284,6 @@ const Themer = () => {
     <ChakraProvider
       resetCSS
       theme={extendTheme(
-        // {
-        //   components: {
-        //     Button: {
-        //       defaultProps: {
-        //         colorScheme: 'blue',
-        //       },
-        //     },
-        //   },
-        // },
         withDefaultProps({
           defaultProps: {
             colorScheme: 'blue',
