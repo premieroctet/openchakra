@@ -289,12 +289,9 @@ const cloneArray = ({data, withOrigin, forceData={}}) => {
   return Promise.all(data.map(d => cloneModel({data: d, withOrigin, forceData})))
 }
 
-const addComputedFields= async(user, queryParams, data, model, level=0) => {
+const addComputedFields= async(user, queryParams, data, model, prefix='') => {
 
-  const log = msg => {
-    console.log(`${'--'.repeat(level)}${msg}`)
-  }
-
+  const newPrefix=`${prefix}/${model}/${data._id}`
   let newUser=user
   if (model=='user') {
     newUser=await mongoose.connection.models.user.findById(data._id)
@@ -312,11 +309,11 @@ const addComputedFields= async(user, queryParams, data, model, level=0) => {
     if (children && !['program', 'origin'].includes(attName)) {
       if (attParams.multiple) {
         if (children.length>0) {
-          const y=await Promise.allSettled(children.map(child => addComputedFields(newUser, queryParams, child, attParams.type)))
+          const y=await Promise.allSettled(children.map(child => addComputedFields(newUser, queryParams, child, attParams.type, `${newPrefix}/${attName}`)))
         }
       }
       else if (children) {
-        const z=await addComputedFields(newUser, queryParams, children, attParams.type, level+1)
+        const z=await addComputedFields(newUser, queryParams, children, attParams.type, `${newPrefix}/${attName}`)
       }
     }
   }
