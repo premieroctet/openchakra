@@ -20,7 +20,12 @@ const withDynamicInput = Component => {
 
     useEffect(() => {
       if (!neverTyped) {
-        ACTIONS.putValue({ context, value: debouncedValue, props, backend })
+        ACTIONS.putValue({
+          context: dataSource?._id,
+          value: debouncedValue,
+          props,
+          backend,
+        })
           .then(() => props.reload())
           .catch(err => console.error(err))
       }
