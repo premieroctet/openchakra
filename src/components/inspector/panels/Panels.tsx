@@ -13,6 +13,8 @@ import IconButtonPanel from '~components/inspector/panels/components/IconButtonP
 import ProgressPanel from '~components/inspector/panels/components/ProgressPanel'
 import LinkPanel from '~components/inspector/panels/components/LinkPanel'
 import SpinnerPanel from '~components/inspector/panels/components/SpinnerPanel'
+import PopoverContentPanel from './components/PopoverContentPanel'
+import PopoverPanel from './components/PopoverPanel'
 import CloseButtonPanel from '~components/inspector/panels/components/CloseButtonPanel'
 import DividerPanel from '~components/inspector/panels/components/DividerPanel'
 import CodePanel from '~components/inspector/panels/components/CodePanel'
@@ -185,6 +187,9 @@ const Panels: React.FC<{
       {type === 'ModalHeader' && <ModalHeaderPanel />}
       {type === 'Card' && <CardPanel />}
       {type === 'Tooltip' && <TooltipPanel />}
+      {type === 'Popover' && <PopoverPanel />}
+      {type === 'PopoverHeader' && <PopoverContentPanel />}
+      {type === 'PopoverBody' && <PopoverContentPanel />}
     </>
   )
 }

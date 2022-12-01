@@ -46,6 +46,15 @@ import ModalPreview, {
   ModalHeaderPreview,
   ModalOverlayPreview,
 } from './previews/ModalPreview'
+import PopoverPreview, {
+  PopoverHeaderPreview,
+  PopoverArrowPreview,
+  PopoverBodyPreview,
+  PopoverCloseButtonPreview,
+  PopoverContentPreview,
+  PopoverFooterPreview,
+  PopoverTriggerPreview,
+} from './previews/PopoverPreview'
 import CardPreview, {
   CardHeaderPreview,
   CardBodyPreview,
@@ -243,6 +252,22 @@ const ComponentPreview: React.FC<{
       return <StatPreview component={component} />
     case 'StatHelpText':
       return <StatHelpTextPreview component={component} />
+    case 'Popover':
+      return <PopoverPreview component={component} />
+    case 'PopoverCloseButton':
+      return <PopoverCloseButtonPreview component={component} />
+    case 'PopoverHeader':
+      return <PopoverHeaderPreview component={component} />
+    case 'PopoverContent':
+      return <PopoverContentPreview component={component} />
+    case 'PopoverArrow':
+      return <PopoverArrowPreview component={component} />
+    case 'PopoverFooter':
+      return <PopoverFooterPreview component={component} />
+    case 'PopoverBody':
+      return <PopoverBodyPreview component={component} />
+    case 'PopoverTrigger':
+      return <PopoverTriggerPreview component={component} />
     case 'StatGroup':
       return <StatGroupPreview component={component} />
     case 'Table':

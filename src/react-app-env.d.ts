@@ -66,6 +66,15 @@ type ComponentType =
   | 'ModalBody'
   | 'ModalCloseButton'
   | 'NumberInput'
+  | 'Popover'
+  | 'PopoverTrigger'
+  | 'PopoverContent'
+  | 'PopoverHeader'
+  | 'PopoverBody'
+  | 'PopoverFooter' 
+  | 'PopoverArrow'
+  | 'PopoverCloseButton'
+  | 'PopoverAnchor'
   | 'Progress'
   | 'Radio'
   | 'RadioGroup'
@@ -122,6 +131,7 @@ type MetaComponentType =
   | 'ModalMeta'
   | 'CardMeta'
   | 'TagMeta'
+  | 'PopoverMeta'
 
 interface ParametersType {
   name: string

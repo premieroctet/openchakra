@@ -17,6 +17,13 @@ import {
   AvatarProps,
   CheckboxProps,
   LinkProps,
+  PopoverProps,
+  PopoverContentProps,
+  PopoverHeaderProps,
+  PopoverBodyProps,
+  PopoverFooterProps,
+  PopoverArrowProps,
+  PopoverCloseButtonProps,
   SpinnerProps,
   CloseButtonProps,
   HeadingProps,
@@ -122,6 +129,15 @@ type PreviewDefaultProps = {
   CircularProgress?: PropsWithForm<CircularProgressProps>
   Heading?: PropsWithForm<HeadingProps>
   Highlight?: PropsWithForm<HighlightProps>
+  Popover?: PropsWithForm<PopoverProps>,
+  PopoverTrigger?: PropsWithForm<any>,
+  PopoverContent?: PropsWithForm<PopoverContentProps>,
+  PopoverHeader?: PropsWithForm<PopoverHeaderProps>,
+  PopoverBody?: PropsWithForm<PopoverBodyProps>,
+  PopoverFooter?: PropsWithForm<PopoverFooterProps>,
+  PopoverArrow?: PropsWithForm<PopoverArrowProps>,
+  PopoverCloseButton?: PropsWithForm<PopoverCloseButtonProps>,
+  PopoverAnchor?: PropsWithForm<any>,
   Tag?: PropsWithForm<TagProps>
   TagLabel?: PropsWithForm<TagLabelProps>
   TagLeftIcon?: PropsWithForm<any>
@@ -317,6 +333,15 @@ export const DEFAULT_PROPS: PreviewDefaultProps | any = {
   ModalFooter: {},
   ModalBody: {},
   ModalCloseButton: {},
+  Popover: {},
+  PopoverTrigger: {},
+  PopoverContent: {},
+  PopoverHeader: {children: 'Popover Title'},
+  PopoverBody: {children: 'This is the body of my popover'},
+  PopoverFooter: {},
+  PopoverArrow: {},
+  PopoverCloseButton: {},
+  PopoverAnchor: {},
   Progress: {
     value: 60,
     min: 0,
