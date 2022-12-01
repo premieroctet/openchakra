@@ -255,6 +255,12 @@ const buildBlock = ({
             return
           }
 
+          if (propName === 'textFilter' && !!propsValue) {
+            const compKey = propsValue.replace(/^comp-/, '')
+            propsContent += ` textFilter={${compKey}}`
+            return
+          }
+
           if (propsValueAsObject && Object.keys(propsValue).length >= 1) {
             const gatheredProperties = Object.entries(propsValue)
               .map(([prop, value]) => {
@@ -297,6 +303,10 @@ const buildBlock = ({
           }
         })
 
+      if (isFilterComponent(childComponent, components)) {
+        const stateName = childComponent.id.replace(/^comp-/, '')
+        propsContent += ` onChange={ev => set${stateName}(ev.target.value)}`
+      }
       if (childComponent.type === 'Timer') {
         propsContent += ` backend='/'`
       }
@@ -405,6 +415,21 @@ const getIconsImports = (components: IComponents) => {
   })
 }
 
+const buildFilterStates = (components: IComponents) => {
+  const filterComponents: IComponent[] = lodash(components)
+    .pickBy(c =>
+      Object.values(components).some(other => other?.props?.textFilter == c.id),
+    )
+    .values()
+
+  return filterComponents
+    .map(c => {
+      const stateName: any = c.id.replace(/^comp-/, '')
+      return `const [${stateName}, set${stateName}]=useState(null)`
+    })
+    .join('\n')
+}
+
 const buildHooks = (components: IComponents) => {
   // Returns attributes names used in this dataProvider for 'dataProvider'
   const getDataProviderFields = (dataProvider: IComponent) => {
@@ -423,7 +448,7 @@ const buildHooks = (components: IComponents) => {
     '\n' +
     dataProviders
       .map(dp => {
-        const dataId = dp.id.replace(/comp-/, '')
+        const dataId = dp.id.replace(/^comp-/, '')
         return `const [${dataId}, set${capitalize(dataId)}]=useState([])`
       })
       .join(`\n`)
@@ -450,6 +475,12 @@ const buildHooks = (components: IComponents) => {
       .join('\n')}
   }, [get, refresh])\n`
   return code
+}
+
+const isFilterComponent = (component: IComponent, components: IComponents) => {
+  return Object.values(components).some(
+    c => c.props?.textFilter == component.id,
+  )
 }
 
 const buildDynamics = (components: IComponents, extraImports: string[]) => {
@@ -511,6 +542,7 @@ export const generateCode = async (
 
   const extraImports: string[] = []
   let hooksCode = buildHooks(components)
+  let filterStates = buildFilterStates(components)
   let dynamics = buildDynamics(components, extraImports)
   let maskable = buildMaskable(components, extraImports)
   let code = buildBlock({
@@ -578,6 +610,7 @@ ${componentsCodes}
 
 const ${componentName} = () => {
   ${hooksCode}
+  ${filterStates}
   const query = new URLSearchParams(useLocation().search)
   const id=${rootIgnoreUrlParams ? 'null' : `query.get('${rootIdQuery}')`}
   const {user}=useUserContext()

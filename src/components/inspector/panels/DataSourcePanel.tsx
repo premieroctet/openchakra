@@ -26,6 +26,7 @@ const DataSourcePanel: React.FC = () => {
   const attribute = usePropsSelector('attribute')
   const limit = usePropsSelector('limit')
   const contextFilter = usePropsSelector('contextFilter')
+  const textFilter = usePropsSelector('textFilter')
   const [providers, setProviders] = useState<IComponent[]>([])
   const [contextProviders, setContextProviders] = useState<IComponent[]>([])
   const [attributes, setAttributes] = useState([])
@@ -112,7 +113,7 @@ const DataSourcePanel: React.FC = () => {
           </FormControl>
         )}
         {CONTAINER_TYPE.includes(activeComponent?.type) && (
-          <FormControl htmlFor="contextFilter" label="Filter">
+          <FormControl htmlFor="contextFilter" label="Filter context">
             <Select
               id="contextFilter"
               onChange={setValueFromEvent}
@@ -126,6 +127,26 @@ const DataSourcePanel: React.FC = () => {
                   {`${provider.id} (${provider.props?.model})`}
                 </option>
               ))}
+            </Select>
+          </FormControl>
+        )}
+        {CONTAINER_TYPE.includes(activeComponent?.type) && (
+          <FormControl htmlFor="textFilter" label="Filter text">
+            <Select
+              id="textFilter"
+              onChange={setValueFromEvent}
+              name="textFilter"
+              size="sm"
+              value={textFilter || ''}
+            >
+              <option value={undefined}></option>
+              {Object.values(components)
+                .filter(c => c.type == 'Input')
+                .map((component, i) => (
+                  <option key={`comp${i}`} value={component.id}>
+                    {`${component.id} (${component.type})`}
+                  </option>
+                ))}
             </Select>
           </FormControl>
         )}

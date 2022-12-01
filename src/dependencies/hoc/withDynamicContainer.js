@@ -1,6 +1,8 @@
 import React from 'react'
 import lodash from 'lodash'
 
+import { getComponentDataValue } from '../utils/values'
+
 const isOtherSource = (element, dataSourceId) => {
   if (
     element.props.dynamicContainer &&
@@ -41,6 +43,8 @@ const setRecurseDataSource = (element, dataSource, dataSourceId, level = 0) => {
   }
 }
 const withDynamicContainer = Component => {
+  const FILTER_ATTRIBUTES = ['code', 'name', 'short_name', 'description']
+
   const internal = props => {
     if (!props.dataSource) {
       return null
@@ -54,6 +58,13 @@ const withDynamicContainer = Component => {
     if (props.contextFilter) {
       const contextIds = props.contextFilter.map(o => o._id.toString())
       orgData = orgData.filter(d => contextIds.includes(d._id))
+    }
+    if (props.textFilter && props.textFilter) {
+      const filterValue = props.textFilter
+      const regExp = new RegExp(filterValue?.trim(), 'i')
+      orgData = orgData.filter(d =>
+        FILTER_ATTRIBUTES.some(att => regExp.test(d[att])),
+      )
     }
     let data = []
     try {
