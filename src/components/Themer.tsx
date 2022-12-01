@@ -34,8 +34,10 @@ import {
   IconButton,
 } from '@chakra-ui/react'
 import { omit } from 'lodash'
-import React, { useState } from 'react'
-import { ThemeExtType } from '~core/models/customComponents'
+import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { getTheme } from '~core/selectors/customComponents'
+import useDispatch from '~hooks/useDispatch'
 
 const themeColors: any = Object.keys(
   omit(baseTheme.colors, ['transparent', 'current', 'black', 'white']),
@@ -48,20 +50,13 @@ const componentsWithLabel = Object.keys(baseTheme.components).map(
   }),
 )
 
-const initialThemeState: Array<ThemeExtType> = [
-  {
-    defaultProps: {
-      colorScheme: 'blue',
-      size: 'md',
-      variant: 'solid',
-    },
-  },
-]
-
 const ThemeLayers = () => {
-  const [themeState, setThemeState] = useState(initialThemeState)
-  // baseStyle, defaultProps, sizes, variants, parts
-  console.log(themeState)
+  const themeState = useSelector(getTheme)
+  const dispatch = useDispatch()
+  useEffect(() => {
+    // TODO: baseStyle, parts, fonts, layer & text styles
+    // Call API to save themeState to a json file
+  }, [themeState])
 
   return (
     <ChakraProvider resetCSS>
@@ -80,8 +75,7 @@ const ThemeLayers = () => {
                     bgColor="red.500"
                     _hover={{ bgColor: 'red.300' }}
                     onClick={() => {
-                      themeState.splice(i, 1)
-                      setThemeState([...themeState])
+                      dispatch.customComponents.removeLayer(i)
                     }}
                     color="white"
                     size="sm"
@@ -104,9 +98,15 @@ const ThemeLayers = () => {
                       isChecked={!!layer.defaultProps.colorScheme}
                       onChange={() => {
                         themeState[i].defaultProps.colorScheme
-                          ? delete themeState[i].defaultProps.colorScheme
-                          : (themeState[i].defaultProps.colorScheme = 'blue')
-                        setThemeState([...themeState])
+                          ? dispatch.customComponents.deleteProp(
+                              i,
+                              'colorScheme',
+                            )
+                          : dispatch.customComponents.updateProp({
+                              extIndex: i,
+                              propType: 'colorScheme',
+                              propValue: 'blue',
+                            })
                       }}
                     >
                       ColorScheme
@@ -133,8 +133,11 @@ const ThemeLayers = () => {
                             )
                           }
                           onClick={() => {
-                            layer.defaultProps.colorScheme = themeColor
-                            setThemeState([...themeState])
+                            dispatch.customComponents.updateProp({
+                              extIndex: i,
+                              propType: 'colorScheme',
+                              propValue: themeColor,
+                            })
                           }}
                         />
                       </Tooltip>
@@ -149,9 +152,12 @@ const ThemeLayers = () => {
                       isChecked={!!layer.defaultProps.size}
                       onChange={() => {
                         themeState[i].defaultProps.size
-                          ? delete themeState[i].defaultProps.size
-                          : (themeState[i].defaultProps.size = 'md')
-                        setThemeState([...themeState])
+                          ? dispatch.customComponents.deleteProp(i, 'size')
+                          : dispatch.customComponents.updateProp({
+                              extIndex: i,
+                              propType: 'size',
+                              propValue: 'md',
+                            })
                       }}
                     >
                       Size
@@ -159,8 +165,11 @@ const ThemeLayers = () => {
                     <Select
                       id="size"
                       onChange={e => {
-                        themeState[i].defaultProps.size = e.target.value
-                        setThemeState([...themeState])
+                        dispatch.customComponents.updateProp({
+                          extIndex: i,
+                          propType: 'size',
+                          propValue: e.target.value,
+                        })
                       }}
                       name="size"
                       size="sm"
@@ -182,9 +191,12 @@ const ThemeLayers = () => {
                       isChecked={!!layer.defaultProps.variant}
                       onChange={() => {
                         themeState[i].defaultProps.variant
-                          ? delete themeState[i].defaultProps.variant
-                          : (themeState[i].defaultProps.variant = 'solid')
-                        setThemeState([...themeState])
+                          ? dispatch.customComponents.deleteProp(i, 'variant')
+                          : dispatch.customComponents.updateProp({
+                              extIndex: i,
+                              propType: 'variant',
+                              propValue: 'solid',
+                            })
                       }}
                     >
                       Variant
@@ -192,8 +204,11 @@ const ThemeLayers = () => {
                     <Select
                       id="variant"
                       onChange={e => {
-                        themeState[i].defaultProps.variant = e.target.value
-                        setThemeState([...themeState])
+                        dispatch.customComponents.updateProp({
+                          extIndex: i,
+                          propType: 'variant',
+                          propValue: e.target.value,
+                        })
                       }}
                       name="variant"
                       size="sm"
@@ -224,10 +239,10 @@ const ThemeLayers = () => {
                   selectedOptionStyle="check"
                   hideSelectedOptions={false}
                   onChange={comps => {
-                    comps.length
-                      ? (themeState[i].components = comps.map(c => c.value))
-                      : delete themeState[i].components
-                    setThemeState([...themeState])
+                    dispatch.customComponents.updateLayerComponents(
+                      i,
+                      comps.map(c => c.value),
+                    )
                   }}
                 />
                 {/* <Select
@@ -254,9 +269,7 @@ const ThemeLayers = () => {
       <Button
         bgColor="teal.500"
         _hover={{ bgColor: 'teal.300' }}
-        onClick={() => {
-          setThemeState([...themeState, themeState.slice(-1)[0]])
-        }}
+        onClick={() => dispatch.customComponents.addLayer()}
         color="white"
         m={2}
       >

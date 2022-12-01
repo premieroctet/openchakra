@@ -149,15 +149,26 @@ const customComponents = createModel({
     updateProp(
       state: CustomComponentsState,
       payload: {
-        propValue: string
-        propType: string
         extIndex: number
+        propType: string
+        propValue: string
       },
     ): CustomComponentsState {
       return produce(state, (draftState: CustomComponentsState) => {
         draftState.theme[payload.extIndex].defaultProps[
           payload.propType as keyof DefPropsType
         ] = payload.propValue
+      })
+    },
+    deleteProp(
+      state: CustomComponentsState,
+      extIndex: number,
+      propType: string,
+    ): CustomComponentsState {
+      return produce(state, (draftState: CustomComponentsState) => {
+        delete draftState.theme[extIndex].defaultProps[
+          propType as keyof DefPropsType
+        ]
       })
     },
     updateLayerComponents(
