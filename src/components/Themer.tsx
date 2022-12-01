@@ -35,6 +35,7 @@ import {
 } from '@chakra-ui/react'
 import { omit } from 'lodash'
 import React, { useState } from 'react'
+import { ThemeExtType } from '~core/models/customComponents'
 
 const themeColors: any = Object.keys(
   omit(baseTheme.colors, ['transparent', 'current', 'black', 'white']),
@@ -46,16 +47,6 @@ const componentsWithLabel = Object.keys(baseTheme.components).map(
     value: comp,
   }),
 )
-
-interface DefPropsType {
-  colorScheme?: string
-  size?: string
-  variant?: string
-}
-interface ThemeExtType {
-  defaultProps: DefPropsType
-  components?: Array<string>
-}
 
 const initialThemeState: Array<ThemeExtType> = [
   {
