@@ -24,12 +24,13 @@ export type CustomComponentsState = {
   selectedId?: IComponent['type']
   parameters: ComponentParametersType
   theme: Array<ThemeExtType>
+  themePath?: string
 }
 
 const DEFAULT_ID = undefined
-
 const INITIAL_COMPONENTS: CustomDictionary = {}
 const INITIAL_PARAMETERS: ComponentParametersType = {}
+const DEFAULT_THEME_PATH = undefined
 const INITIAL_THEME: ThemeExtType = {
   defaultProps: {
     colorScheme: 'blue',
@@ -44,6 +45,7 @@ const customComponents = createModel({
     parameters: INITIAL_PARAMETERS,
     selectedId: DEFAULT_ID,
     theme: [INITIAL_THEME],
+    themePath: DEFAULT_THEME_PATH,
   } as CustomComponentsState,
   reducers: {
     updateCustomComponents(
@@ -194,6 +196,15 @@ const customComponents = createModel({
       return produce(state, (draftState: CustomComponentsState) => {
         draftState.theme.splice(extIndex, 1)
       })
+    },
+    setThemePath(
+      state: CustomComponentsState,
+      themePath: string,
+    ): CustomComponentsState {
+      return {
+        ...state,
+        themePath,
+      }
     },
   },
 })

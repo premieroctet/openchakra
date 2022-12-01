@@ -36,8 +36,9 @@ import {
 import { omit } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { getTheme } from '~core/selectors/customComponents'
+import { getTheme, getThemePath } from '~core/selectors/customComponents'
 import useDispatch from '~hooks/useDispatch'
+import API from '~custom-components/api'
 
 const themeColors: any = Object.keys(
   omit(baseTheme.colors, ['transparent', 'current', 'black', 'white']),
@@ -52,10 +53,20 @@ const componentsWithLabel = Object.keys(baseTheme.components).map(
 
 const ThemeLayers = () => {
   const themeState = useSelector(getTheme)
+  const themePath = useSelector(getThemePath)
   const dispatch = useDispatch()
+
   useEffect(() => {
     // TODO: baseStyle, parts, fonts, layer & text styles
-    // Call API to save themeState to a json file
+    const updateThemeJson = async () => {
+      await API.post('/save-theme', {
+        themePath,
+        themeState,
+      })
+    }
+    dispatch.app.toggleLoader()
+    updateThemeJson()
+    dispatch.app.toggleLoader()
   }, [themeState])
 
   return (
@@ -285,18 +296,7 @@ const ThemeLayers = () => {
 const Themer = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   return (
-    <ChakraProvider
-      resetCSS
-      theme={extendTheme(
-        withDefaultProps({
-          defaultProps: {
-            colorScheme: 'blue',
-            size: 'md',
-            variant: 'solid',
-          },
-        }),
-      )}
-    >
+    <ChakraProvider resetCSS>
       <Button
         px={6}
         bgGradient="linear(to-br, blue.300, green.300, yellow.300, red.300)"

@@ -14,17 +14,20 @@ function getComponentWithLocation(path) {
 
 async function getJsons() {
   let jsons = {}
-  const files = glob.sync(`../remote/**/*.oc.json`, {})
+  const [files, themeJsonPath] = await Promise.all([
+    glob(`../remote/**/*.oc.json`, {}),
+    glob(`../remote/**/theme.json`, {}),
+  ])
   files.forEach(element => {
     const { comp, dir } = getComponentWithLocation(element)
     jsons[comp] = dir
   })
-  return jsons
+  return { jsons, themeJsonPath }
 }
 
 export default async function handler(req, res) {
-  // 1. load initial components with paths
-  const jsons = await getJsons()
+  // 1. load initial components with paths & themeJson Path
+  const { jsons, themeJsonPath } = await getJsons()
 
   // 2 Write files for initial components
   try {
@@ -67,7 +70,7 @@ export default async function handler(req, res) {
       await Promise.all([writePreview, writePanel, writeOcTsx])
     })
     res.statusCode = 200
-    res.json(jsons)
+    res.json({ newComponentsList: jsons, themeJsonPath })
   } catch (err) {
     console.log(err)
     res.statusCode = 400
