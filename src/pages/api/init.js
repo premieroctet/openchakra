@@ -18,7 +18,7 @@ async function getJsons() {
     glob(`../remote/**/*.oc.json`, {}),
     glob(`../remote/**/theme.json`, {}),
   ])
-  files.forEach(element => {
+  files?.forEach(element => {
     const { comp, dir } = getComponentWithLocation(element)
     jsons[comp] = dir
   })

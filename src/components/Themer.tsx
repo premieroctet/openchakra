@@ -58,11 +58,13 @@ const ThemeLayers = () => {
 
   useEffect(() => {
     // TODO: baseStyle, parts, fonts, layer & text styles
+
     const updateThemeJson = async () => {
-      await API.post('/save-theme', {
-        themePath,
-        themeState,
-      })
+      if (themePath)
+        await API.post('/save-theme', {
+          themePath,
+          themeState,
+        })
     }
     dispatch.app.toggleLoader()
     updateThemeJson()
@@ -248,6 +250,10 @@ const ThemeLayers = () => {
                   tagVariant="outline"
                   isDisabled={!i}
                   selectedOptionStyle="check"
+                  value={layer.components?.map((comp: string) => ({
+                    label: comp,
+                    value: comp,
+                  }))}
                   hideSelectedOptions={false}
                   onChange={comps => {
                     dispatch.customComponents.updateLayerComponents(
