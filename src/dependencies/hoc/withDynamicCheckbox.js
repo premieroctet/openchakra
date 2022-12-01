@@ -7,7 +7,7 @@ const withDynamicCheckbox = Component => {
   const Internal = ({ dataSource, context, backend, ...props }) => {
     const onChange = ev => {
       ACTIONS.putValue({
-        context,
+        context: dataSource?._id,
         value: !!ev.target.checked,
         props,
         backend,

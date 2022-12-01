@@ -79,7 +79,9 @@ const withDynamicContainer = Component => {
     try {
       data = orgData.slice(0, parseInt(props?.limit) || undefined)
     } catch (err) {
-      console.error(`Can not slice ${JSON.stringify(orgData)}:${err}`)
+      console.error(
+        `Container ${props.id} can not slice ${JSON.stringify(orgData)}:${err}`,
+      )
     }
     return (
       <Component {...lodash.omit(props, ['children'])}>
