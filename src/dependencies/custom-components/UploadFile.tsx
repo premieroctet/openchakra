@@ -103,6 +103,15 @@ const UploadFile = ({
           .then(() => {
             setUploadInfo('Ressource ajoutée')
           })
+          .then(() => {
+            
+            axios.post(uploadUrl, {
+              action: 'put',
+              parent: ressource_id,
+              attribute: 'version',
+              value: versionScorm,
+            })
+          })
           .catch(e => {
             setUploadInfo('Echec ajout ressource')
           })
