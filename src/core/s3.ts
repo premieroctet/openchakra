@@ -13,17 +13,14 @@ export type ListFileErrorResponse = {
   data: any
 }
 
-
 const S3 = new AWS.S3(s3Config)
 AWS.config.update({ region: 'eu-west-3' })
-
-
 
 export const uploadFile = (filename: string, contents: any) => {
   // Setting up S3 upload parameters
   const params = {
     Bucket: 'my-alfred-data-test', // getDataModel(),
-    Key: `pictures/${filename}`, // File name you want to save as in S3
+    Key: `${process.env.NEXT_PUBLIC_S3_ROOTPATH || 'pictures'}/${filename}`, // File name you want to save as in S3
     ContentType: mime.lookup(filename),
     Body: contents,
   }
@@ -63,7 +60,6 @@ export const listFiles = async () => {
     secretAccessKey,
   }))(s3Config)
 
-  console.log(awsConfig)
   AWS.config.update(awsConfig)
 
   const s3 = new AWS.S3({
@@ -78,6 +74,7 @@ export const listFiles = async () => {
   try {
     const req = await s3
       .listObjectsV2({
+        Prefix: `${process.env.NEXT_PUBLIC_S3_ROOTPATH || 'pictures'}`,
         Bucket: s3Config.bucketName,
       })
       .promise()
