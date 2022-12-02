@@ -1,11 +1,14 @@
-const { getDataModel, getProductionRoot , getProductionPort} = require('../../../config/config');
+const {RES_TO_COME} = require('../../../utils/aftral_studio/consts')
+const {ForbiddenError} = require('../../utils/errors')
+const {getDataModel, getProductionRoot, getProductionPort} = require('../../../config/config')
 const {
   filterDataUser,
   getContacts,
   getResourceSpentTime,
-  login
-} = require('../../utils/studio/aftral/functions');
-const {ROLES}=require(`../../../utils/${getDataModel()}/consts`);
+  login,
+} = require('../../utils/studio/aftral/functions')
+
+const {ROLES}=require(`../../../utils/${getDataModel()}/consts`)
 const {sendCookie} = require('../../config/passport')
 const path=require('path')
 const jwt = require('jsonwebtoken')
@@ -169,20 +172,20 @@ router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (r
   const model=req.params.model
   let fields=req.query.fields?.split(',') || []
   const id=req.params.id
-  const params={...url.parse(req.get('Referrer'), true).query}
+  const params=req.get('Referrer') ? {...url.parse(req.get('Referrer'), true).query} : {}
   const user=req.user
 
   console.log(`GET ${model}/${id} ${fields}`)
 
   if (model=='contact') {
     return getContacts(req.user, id)
-    .then(contacts => {
-      return res.json(contacts)
-    })
-    .catch(err => {
-      console.error(err)
-      return res.status(err.status || HTTP_CODES.SYSTEM_ERROR).json(err.message || err)
-    })
+      .then(contacts => {
+        return res.json(contacts)
+      })
+      .catch(err => {
+        console.error(err)
+        return res.status(err.status || HTTP_CODES.SYSTEM_ERROR).json(err.message || err)
+      })
   }
 
   if (model=='session') {
@@ -200,6 +203,11 @@ router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (r
     .then(data => {
       // Force duplicate children
       data=JSON.parse(JSON.stringify(data))
+
+      // Remove unrequired virtuals
+      const requiredFields=lodash([...fields, '_id']).map(f => f.split('.')[0]).uniq().value()
+      data=data.map(d => lodash.pick(d, requiredFields))
+
       if (id && data.length==0) {
         throw new NotFoundError(`Can't find ${model}:${id}`)
       }
@@ -212,7 +220,15 @@ router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (r
       if (['theme', 'resource'].includes(model) && !id) {
         data=data.filter(t => t.name)
       }
+      if (id && model=='resource' && data[0]?.status==RES_TO_COME) {
+        throw new ForbiddenError(`Ressource non encore disponible`)
+      }
+      console.log(`GET ${model}/${id} ${fields}: data sent`)
       return res.json(data)
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(err.status || 500).json(err.message || err)
     })
 })
 

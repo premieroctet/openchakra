@@ -89,6 +89,7 @@ const DECLARED_VIRTUALS={
     spent_time: {path: 'spent_time', instance: 'Number', requires: '_id'},
     spent_time_str: {path: 'spent_time_str', instance: 'String', requires: 'spent_time'},
     status: {path: 'status', instance: 'String', required: 'finished'},
+    annotation: {path: 'annotation', instance: 'String', required: '_id'},
   },
   contact: {
     name: {path: 'name', instance: 'String', requires: '_id'},
@@ -288,12 +289,9 @@ const cloneArray = ({data, withOrigin, forceData={}}) => {
   return Promise.all(data.map(d => cloneModel({data: d, withOrigin, forceData})))
 }
 
-const addComputedFields= async(user, queryParams, data, model, level=0) => {
+const addComputedFields= async(user, queryParams, data, model, prefix='') => {
 
-  const log = msg => {
-    console.log(`${'--'.repeat(level)}${msg}`)
-  }
-
+  const newPrefix=`${prefix}/${model}/${data._id}`
   let newUser=user
   if (model=='user') {
     newUser=await mongoose.connection.models.user.findById(data._id)
@@ -303,7 +301,7 @@ const addComputedFields= async(user, queryParams, data, model, level=0) => {
   const presentCompFields=Object.keys(compFields).filter(f => data.hasOwnProperty(f))
   // Compute direct attributes
   await Promise.allSettled(presentCompFields.map(f => compFields[f](newUser, queryParams, data)
-    .then(res => {data[f]=res })))
+    .then(res => { data[f]=res })))
   // Handle references => sub
   const refAttributes=getModelAttributes(model).filter(att => !(att[0].includes('.')) && att[1].ref)
   for ([attName, attParams] of refAttributes) {
@@ -311,11 +309,11 @@ const addComputedFields= async(user, queryParams, data, model, level=0) => {
     if (children && !['program', 'origin'].includes(attName)) {
       if (attParams.multiple) {
         if (children.length>0) {
-          const y=await Promise.allSettled(children.map(child => addComputedFields(newUser, queryParams, child, attParams.type)))
+          const y=await Promise.allSettled(children.map(child => addComputedFields(newUser, queryParams, child, attParams.type, `${newPrefix}/${attName}`)))
         }
       }
       else if (children) {
-        const z=await addComputedFields(newUser, queryParams, children, attParams.type, level+1)
+        const z=await addComputedFields(newUser, queryParams, children, attParams.type, `${newPrefix}/${attName}`)
       }
     }
   }
