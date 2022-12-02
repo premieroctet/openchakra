@@ -4,20 +4,19 @@ import FormControl from '~components/inspector/controls/FormControl'
 import useBreakpoints from '~hooks/useBreakpoints'
 
 const BorderPanel = () => {
-
   const {
     responsiveValues,
     settledBreakpoints,
     handleBreakpoints,
     AddABreakpoint,
-  } = useBreakpoints(['border, borderRadius'])
+  } = useBreakpoints(['border', 'borderRadius'])
 
   return (
     <>
-    {settledBreakpoints.map((breakpoint: string, i: number) => (
-      <Box key={i}>
-        {breakpoint}
-        <FormControl
+      {settledBreakpoints.map((breakpoint: string, i: number) => (
+        <Box key={i}>
+          {breakpoint}
+          <FormControl
             key={`border-${i}`}
             htmlFor={`${breakpoint}-border`}
             label={'border'}
@@ -29,17 +28,13 @@ const BorderPanel = () => {
               name={`${breakpoint}-border`}
               value={responsiveValues['border']?.[breakpoint] || ''}
               onChange={e =>
-                handleBreakpoints(
-                  'border',
-                  breakpoint,
-                  e.currentTarget.value,
-                )
+                handleBreakpoints('border', breakpoint, e.currentTarget.value)
               }
               autoComplete="off"
             />
           </FormControl>
-        
-        <FormControl
+
+          <FormControl
             key={`borderRadius-${i}`}
             htmlFor={`${breakpoint}-borderRadius`}
             label={'borderRadius'}
@@ -60,14 +55,10 @@ const BorderPanel = () => {
               autoComplete="off"
             />
           </FormControl>
-        
-    
-      </Box>
-    ))}
-    <AddABreakpoint currentProps={responsiveValues} />
-  
-
-  </>
+        </Box>
+      ))}
+      <AddABreakpoint currentProps={responsiveValues} />
+    </>
   )
 }
 
