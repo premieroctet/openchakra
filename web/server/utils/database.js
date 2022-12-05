@@ -1,6 +1,7 @@
 const mongoose=require('mongoose')
 const lodash=require('lodash')
 const formatDuration = require('format-duration')
+const {ROLES, STATUS} = require('../../utils/aftral_studio/consts')
 // TODO: Omporting Theme makes a cyclic import. Why ?
 // const Theme = require('../models/Theme');
 require('../models/TrainingCenter')
@@ -83,12 +84,12 @@ const DECLARED_VIRTUALS={
     spent_time_str: {path: 'spent_time_str', instance: 'String', requires: 'resources'},
     progress_str: {path: 'progress_str', instance: 'String', requires: 'name'},
     progress_percent: {path: 'progress_percent', instance: 'Number', requires: 'name'},
-    status: {path: 'status', instance: 'String', requires: 'resources'},
+    status: {path: 'status', instance: 'String', enumValues: [null, ...Object.keys(STATUS)], requires: 'resources'},
   },
   resource: {
     spent_time: {path: 'spent_time', instance: 'Number', requires: '_id'},
     spent_time_str: {path: 'spent_time_str', instance: 'String', requires: 'spent_time'},
-    status: {path: 'status', instance: 'String', required: 'finished'},
+    status: {path: 'status', instance: 'String', enumValues: [null, ...Object.keys(STATUS)], required: 'finished'},
     annotation: {path: 'annotation', instance: 'String', required: '_id'},
   },
   contact: {
@@ -117,10 +118,12 @@ const getAttributeCaracteristics = att => {
   const baseData = multiple ? att.caster : att
   const type= baseData.instance=='ObjectID' ? baseData.options.ref : baseData.instance
   const ref=baseData.instance=='ObjectID'
+  const enumValues=att.enumValues
   return ({
     type,
     multiple,
     ref,
+    enumValues,
   })
 }
 
