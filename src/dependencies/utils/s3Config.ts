@@ -34,6 +34,6 @@ export const S3UrlRessource = ({
   return {
     fileInFolder,
     completeUrl: `https://${s3Config.bucketName}.s3.${s3Config.region}.amazonaws.com/${fileInFolder}`,
-    scormUrl: `https://${s3Config.bucketName}.s3.${s3Config.region}.amazonaws.com/${fileInFolder}/story.html`,
+    scormUrl: `https://${s3Config.bucketName}.s3.${s3Config.region}.amazonaws.com/${fileInFolder}/index_lms.html`,
   }
 }
