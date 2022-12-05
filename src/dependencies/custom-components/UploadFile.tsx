@@ -42,6 +42,7 @@ const isScormZip = async (unzipped: any) => {
       if (filename === 'imsmanifest.xml') {
         const text = await unzipped.files[filename].async('string')
         const imsmanifest = xmljs.xml2js(text, { compact: true })
+        //@ts-ignore
         scormVersion = imsmanifest?.manifest?._attributes?.version
       }
     }
