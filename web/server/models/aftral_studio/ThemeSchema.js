@@ -1,6 +1,7 @@
-const { schemaOptions } = require('../../utils/schemas');
 const mongoose = require('mongoose')
 const lodash=require('lodash')
+const {ROLES} = require('../../../utils/aftral_studio/consts')
+const {schemaOptions} = require('../../utils/schemas')
 const {cloneArray} = require('../../utils/database')
 
 const Schema = mongoose.Schema
@@ -39,15 +40,15 @@ const ThemeSchema = new Schema({
   },
 }, schemaOptions)
 
-ThemeSchema.virtual('spent_time_str').get(function() {
+ThemeSchema.virtual('spent_time_str').get(() => {
   return null
 })
 
-ThemeSchema.virtual('progress_str').get(function() {
+ThemeSchema.virtual('progress_str').get(() => {
   return null
 })
 
-ThemeSchema.virtual('progress_percent').get(function() {
+ThemeSchema.virtual('progress_percent').get(() => {
   return null
 })
 
@@ -55,7 +56,7 @@ ThemeSchema.virtual('hidden').get(function() {
   return (!this.name && !this.code && !this.picture)
 })
 
-ThemeSchema.virtual('status').get(function() {
+ThemeSchema.virtual('status').get(() => {
   return null
 })
 
