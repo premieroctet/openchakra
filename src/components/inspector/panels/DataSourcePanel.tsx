@@ -35,8 +35,16 @@ const DataSourcePanel: React.FC = () => {
   useEffect(() => {
     setProviders(getDataProviders(activeComponent, components))
     if (models.length > 0) {
-      const attrs = getAvailableAttributes(activeComponent, components, models)
-      setAttributes(attrs)
+      try {
+        const attrs = getAvailableAttributes(
+          activeComponent,
+          components,
+          models,
+        )
+        setAttributes(attrs)
+      } catch (err) {
+        alert(err)
+      }
     }
   }, [activeComponent, components, dataSource, models])
 

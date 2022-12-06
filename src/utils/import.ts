@@ -19,7 +19,9 @@ export async function loadFromJSON() {
 
   try {
     return JSON.parse(contents)
-  } catch (error) {}
+  } catch (error) {
+    alert(error)
+  }
 
   return INITIAL_COMPONENTS
 }

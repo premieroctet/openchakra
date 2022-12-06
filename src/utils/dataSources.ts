@@ -129,8 +129,14 @@ export const getAvailableAttributes = (
   )
   // NOt fund in parent: direct dataprovider
   if (!dataType) {
+    const dsComponent = components[component.props.dataSource]
+    if (!dsComponent) {
+      throw new Error(
+        `DataProvider ${component.props.dataSource} referenced by ${component.id} (type ${component.type}) is missing`,
+      )
+    }
     dataType = {
-      type: components[component.props.dataSource].props.model,
+      type: dsComponent.props.model,
       multiple: true,
       ref: true,
     }

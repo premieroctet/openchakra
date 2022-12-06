@@ -54,7 +54,10 @@ const withDynamicButton = Component => {
             console.log('ok')
             props.reload()
           })
-          .catch(alert)
+          .catch(err => {
+            console.error(err)
+            alert(err)
+          })
       }
     }
     const conditionalProperties = getConditionalProperties(

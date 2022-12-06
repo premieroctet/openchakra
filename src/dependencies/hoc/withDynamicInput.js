@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import lodash from 'lodash'
+
 import { ACTIONS } from '../utils/actions'
 import useDebounce from '../hooks/useDebounce.hook'
 
 const withDynamicInput = Component => {
   const Internal = ({ dataSource, context, backend, ...props }) => {
-    const [internalDataValue, setInternalDataValue] = useState(
-      lodash.get(dataSource, props.attribute),
-    )
+    const [internalDataValue, setInternalDataValue] = useState(null)
+
     const [neverTyped, setNeverTyped] = useState(true)
     const debouncedValue = useDebounce(internalDataValue, 500)
+
+    useEffect(() => {
+      setInternalDataValue(lodash.get(dataSource, props.attribute))
+    }, [dataSource, props.attribute])
 
     const onChange = ev => {
       setInternalDataValue(ev.target.value)
