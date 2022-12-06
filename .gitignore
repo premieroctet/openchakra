@@ -23,4 +23,4 @@ yarn-debug.log*
 yarn-error.log*
 
 .next
-src/custom-components
+pnpm-lock.yaml
