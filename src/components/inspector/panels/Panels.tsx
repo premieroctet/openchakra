@@ -13,6 +13,8 @@ import IconButtonPanel from '~components/inspector/panels/components/IconButtonP
 import ProgressPanel from '~components/inspector/panels/components/ProgressPanel'
 import LinkPanel from '~components/inspector/panels/components/LinkPanel'
 import SpinnerPanel from '~components/inspector/panels/components/SpinnerPanel'
+import PopoverContentPanel from './components/PopoverContentPanel'
+import PopoverPanel from './components/PopoverPanel'
 import CloseButtonPanel from '~components/inspector/panels/components/CloseButtonPanel'
 import DividerPanel from '~components/inspector/panels/components/DividerPanel'
 import CodePanel from '~components/inspector/panels/components/CodePanel'
@@ -20,6 +22,8 @@ import TextareaPanel from '~components/inspector/panels/components/TextareaPanel
 import CircularProgressPanel from '~components/inspector/panels/components/CircularProgressPanel'
 import HeadingPanel from '~components/inspector/panels/components/HeadingPanel'
 import TagPanel from '~components/inspector/panels/components/TagPanel'
+import TagLabelPanel from './components/TagLabelPanel'
+import TagIconPanel from './components/TagIconPanel'
 import SimpleGridPanel from '~components/inspector/panels/components/SimpleGridPanel'
 import SwitchPanel from '~components/inspector/panels/components/SwitchPanel'
 import AlertPanel from '~components/inspector/panels/components/AlertPanel'
@@ -61,6 +65,10 @@ import { getCustomComponentNames } from '~core/selectors/customComponents'
 import { convertToPascal } from '~components/editor/Editor'
 import TdPanel from './components/TdPanel'
 import TableCaptionPanel from './components/TableCaptionPanel'
+import ModalPanel from './components/ModalPanel'
+import ModalHeaderPanel from './components/ModalHeaderPanel'
+import CardPanel from './components/CardPanel'
+import TooltipPanel from './components/TooltipPanel'
 
 const importView = (component: any) => {
   component = convertToPascal(component)
@@ -134,6 +142,9 @@ const Panels: React.FC<{
       {type === 'AlertTitle' && <AlertTitlePanel />}
       {type === 'AlertDescription' && <AlertDescriptionPanel />}
       {type === 'Tag' && <TagPanel />}
+      {type === 'TagLabel' && <TagLabelPanel />}
+      {type === 'TagLeftIcon' && <TagIconPanel />}
+      {type === 'TagRightIcon' && <TagIconPanel />}
       {type === 'Flex' && <FlexPanel />}
       {type === 'Stack' && <StackPanel />}
       {type === 'FormControl' && <FormControlPanel />}
@@ -172,6 +183,13 @@ const Panels: React.FC<{
       {type === 'Th' && <TdPanel />}
       {type === 'Conditional' && <ConditionalPanel />}
       {type === 'Loop' && <LoopPanel />}
+      {type === 'Modal' && <ModalPanel />}
+      {type === 'ModalHeader' && <ModalHeaderPanel />}
+      {type === 'Card' && <CardPanel />}
+      {type === 'Tooltip' && <TooltipPanel />}
+      {type === 'Popover' && <PopoverPanel />}
+      {type === 'PopoverHeader' && <PopoverContentPanel />}
+      {type === 'PopoverBody' && <PopoverContentPanel />}
     </>
   )
 }

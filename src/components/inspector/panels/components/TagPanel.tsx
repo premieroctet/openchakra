@@ -2,7 +2,6 @@ import React from 'react'
 import { Select } from '@chakra-ui/react'
 import { useForm } from '~hooks/useForm'
 import SizeControl from '~components/inspector/controls/SizeControl'
-import ChildrenControl from '~components/inspector/controls/ChildrenControl'
 import ColorsControl from '~components/inspector/controls/ColorsControl'
 import FormControl from '~components/inspector/controls/FormControl'
 import usePropsSelector from '~hooks/usePropsSelector'
@@ -17,7 +16,6 @@ const TagPanel = () => {
 
   return (
     <>
-      <ChildrenControl />
       <SizeControl
         options={['sm', 'md', 'lg']}
         name="size"
@@ -40,7 +38,12 @@ const TagPanel = () => {
 
       <ColorsControl label="Color Scheme" name="colorScheme" />
 
-      <SizeControl name="rounded" label="Border radius" value={rounded} />
+      <SizeControl
+        name="rounded"
+        label="Border radius"
+        value={rounded}
+        options={['sm', 'md', 'lg', 'full']}
+      />
 
       <SwitchControl label="Inline" name="isInline" />
     </>

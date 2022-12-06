@@ -97,7 +97,13 @@ const buildStyledProps = (propsNames: string[], childComponent: IComponent) => {
 
         propsContent += `${propName}${operand} `
       }
-    } else if (propName !== 'children' && propsValue) {
+    } else if (
+      propName.toLowerCase() === 'as' &&
+      childComponent.type !== 'Icon'
+    ) {
+      let operand = `={${propsValue}}`
+      propsContent += `${propName}${operand} `
+    } else if (propName !== 'children' && propsValue && propName !== 'showpreview') {
       let operand = `='${propsValue}'`
       if (propsValue[0] === '{' && propsValue[propsValue.length - 1] === '}') {
         operand = `=${propsValue}`
