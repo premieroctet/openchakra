@@ -193,10 +193,13 @@ const Menu = () => {
             <TabPanel>
               <Box p={0} pt={0}>
                 <ButtonGroup
-                  size="xs"
+                  size="sm"
                   isAttached
                   variant="outline"
                   colorScheme="teal"
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
                 >
                   <AddComponent />
                   <InstallComponent />

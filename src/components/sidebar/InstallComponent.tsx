@@ -1,4 +1,4 @@
-import { AddIcon } from '@chakra-ui/icons'
+import { AddIcon, DownloadIcon } from '@chakra-ui/icons'
 import {
   Box,
   Button,
@@ -51,66 +51,58 @@ const InstallComponent = () => {
   }
 
   return (
-    <Flex alignItems={'center'} justifyContent="space-between">
-      <Box flex={1}>
-        <Popover
-          initialFocusRef={ref}
-          isOpen={isOpen}
-          onOpen={onOpen}
-          onClose={onClose}
-          placement="right"
+    <Popover
+      initialFocusRef={ref}
+      isOpen={isOpen}
+      onOpen={onOpen}
+      onClose={onClose}
+      placement="right"
+    >
+      <PopoverTrigger>
+        <Button
+          bgColor="teal.500"
+          _hover={{ bgColor: 'teal.300' }}
+          color="white"
+          leftIcon={<DownloadIcon />}
         >
-          <PopoverTrigger>
-            <Button
-              bgColor="teal.500"
-              _hover={{ bgColor: 'teal.300' }}
-              color="white"
-            >
-              <AddIcon mx={1} />
-              <Text
-                letterSpacing="wide"
-                fontSize="sm"
-                textTransform="capitalize"
-              >
-                Install components
-              </Text>
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent p={5} bgColor="white">
-            <PopoverArrow bgColor="white" />
-            <PopoverCloseButton />
-            <PopoverBody>
-              <FormControl isRequired isInvalid={!componentValid()}>
-                <FormLabel fontWeight="bold">Location</FormLabel>
-                <Input
-                  outlineColor="teal"
-                  ref={ref}
-                  placeholder="<repo-name>/<component-name>"
-                  _placeholder={{ color: 'gray.400' }}
-                  size="sm"
-                />
-                <FormErrorMessage>
-                  package names can only contain alphanumeric, lowercase
-                  characters, and the following [@, ., -, _, $, !, /]
-                </FormErrorMessage>
-              </FormControl>
-            </PopoverBody>
-            <PopoverFooter display="flex" justifyContent="flex-end">
-              <Button
-                colorScheme="teal"
-                color="teal.500"
-                variant="outline"
-                onClick={() => {
-                  installComponent()
-                }}
-              >
-                Install
-              </Button>
-            </PopoverFooter>
-          </PopoverContent>
-        </Popover>
-      </Box>
-    </Flex>
+          <Text letterSpacing="wide" fontSize="sm" textTransform="capitalize">
+            Install
+          </Text>
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent p={5} bgColor="white">
+        <PopoverArrow bgColor="white" />
+        <PopoverCloseButton />
+        <PopoverBody>
+          <FormControl isRequired isInvalid={!componentValid()}>
+            <FormLabel fontWeight="bold">Location</FormLabel>
+            <Input
+              outlineColor="teal"
+              ref={ref}
+              placeholder="<package-name>"
+              _placeholder={{ color: 'gray.400' }}
+              size="sm"
+            />
+            <FormErrorMessage>
+              package names can only contain alphanumeric, lowercase characters,
+              and the following [@, ., -, _, $, !, /]
+            </FormErrorMessage>
+          </FormControl>
+        </PopoverBody>
+        <PopoverFooter display="flex" justifyContent="flex-end">
+          <Button
+            colorScheme="teal"
+            color="teal.500"
+            variant="outline"
+            onClick={() => {
+              installComponent()
+            }}
+          >
+            Install
+          </Button>
+        </PopoverFooter>
+      </PopoverContent>
+    </Popover>
   )
 }
 
