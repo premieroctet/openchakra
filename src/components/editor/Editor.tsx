@@ -1,5 +1,12 @@
 import React, { memo, useState, useEffect } from 'react'
-import { Box, Text, Link } from '@chakra-ui/react'
+import {
+  Box,
+  Text,
+  Link,
+  ChakraProvider,
+  extendTheme,
+  withDefaultProps,
+} from '@chakra-ui/react'
 import { useDropComponent } from '~hooks/useDropComponent'
 import SplitPane from 'react-split-pane'
 import CodePanel from '~components/CodePanel'
@@ -17,9 +24,11 @@ import { getComponents } from '~core/selectors/components'
 import {
   getCustomComponents,
   getSelectedCustomComponentId,
+  getTheme,
 } from '~core/selectors/customComponents'
 import { getShowLayout, getShowCode } from '~core/selectors/app'
 import ComponentPreview from '~components/editor/ComponentPreview'
+import { ThemeExtType } from '~core/models/customComponents'
 
 export const gridStyles = {
   backgroundImage:
@@ -42,6 +51,7 @@ const Editor: React.FC = () => {
   const showCode = useSelector(getShowCode)
   const showLayout = useSelector(getShowLayout)
   const components = useSelector(getComponents)
+  const themeState = useSelector(getTheme)
   const dispatch = useDispatch()
 
   const { drop } = useDropComponent('root')
@@ -66,12 +76,8 @@ const Editor: React.FC = () => {
           fileName,
         )
         const [previewCode, panelCode] = await Promise.all([
-          generatePreview(
-            components,
-            fileName,
-            selectedComponent,
-          ),
-          generatePanel(components, fileName)
+          generatePreview(components, fileName, selectedComponent),
+          generatePanel(components, fileName),
         ])
         await API.post('/save-file', {
           codeBody: code,
@@ -122,25 +128,51 @@ const Editor: React.FC = () => {
       onClick={onSelectBackground}
     >
       {isEmpty && (
+        // TODO: Change this
         <Text maxWidth="md" color="gray.400" fontSize="xl" textAlign="center">
-          Create new components using the terminal to see them here. Click the
-          edit button beside any component to load it!
-          {/* Or load{' '}
+          Create new components using the `Create Component` button in the left
+          sidebar. Click the edit button beside the component to load it! Or
+          load{' '}
           <Link
             color="gray.500"
+            href="https://bit.cloud/"
             onClick={(e: React.MouseEvent) => {
               e.stopPropagation()
-              dispatch.components.loadDemo('onboarding')
+              // dispatch.components.loadDemo('onboarding')
             }}
             textDecoration="underline"
           >
-            the custom components
-          </Link> */}
+            components from bit
+          </Link>
         </Text>
       )}
-      {components.root.children.map((name: string) => (
-        <ComponentPreview key={name} componentName={name} />
-      ))}
+      <ChakraProvider
+        resetCSS
+        theme={extendTheme(
+          ...themeState.map((themeExt: ThemeExtType) =>
+            withDefaultProps(themeExt),
+          ),
+          // {
+          //   styles: {
+          //     global: {
+          //       'html, body': {
+          //         fontFamily: `'Fira Code', sans-serif`,
+          //       },
+          //     },
+          //   },
+          // },
+          // {
+          //   fonts: {
+          //     heading: `'Fira Code', sans-serif`,
+          //     body: `'Fira Code', sans-serif`,
+          //   },
+          // },
+        )}
+      >
+        {components.root.children.map((name: string) => (
+          <ComponentPreview key={name} componentName={name} />
+        ))}
+      </ChakraProvider>
     </Box>
   )
 

@@ -5,6 +5,7 @@ import {
   Flex,
   FormControl,
   FormErrorMessage,
+  FormHelperText,
   FormLabel,
   Input,
   Popover,
@@ -28,7 +29,9 @@ const AddComponent = () => {
   const dispatch = useDispatch()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const componentValid = (componentPath: string | undefined = ref.current?.value) => {
+  const componentValid = (
+    componentPath: string | undefined = ref.current?.value,
+  ) => {
     if (componentPath === undefined || componentPath.length === 0) return false
     return componentPath
       .split('/')
@@ -37,13 +40,16 @@ const AddComponent = () => {
 
   const createComponent = async () => {
     const componentPath = ref.current?.value
-    if (!componentValid(componentPath)) return;
+    if (!componentValid(componentPath)) return
     onClose()
     dispatch.app.toggleLoader()
     const res = await API.post('/add-component', {
       path: componentPath,
     })
-    dispatch.customComponents.addCustomComponent(res.data, `../remote/${componentPath}`)
+    dispatch.customComponents.addCustomComponent(
+      res.data,
+      `../remote/${componentPath}`,
+    )
     dispatch.app.toggleLoader()
   }
 
@@ -58,7 +64,11 @@ const AddComponent = () => {
           placement="right"
         >
           <PopoverTrigger>
-            <Button bgColor="teal.500" _hover={{ bgColor: 'teal.300' }}>
+            <Button
+              bgColor="teal.500"
+              _hover={{ bgColor: 'teal.300' }}
+              color="white"
+            >
               <AddIcon mx={1} />
               <Text
                 letterSpacing="wide"
@@ -75,15 +85,24 @@ const AddComponent = () => {
             <PopoverBody>
               <FormControl isRequired isInvalid={!componentValid()}>
                 <FormLabel fontWeight="bold">Location</FormLabel>
-                <Input outlineColor="teal" ref={ref} placeholder='<repo-name>/<component-name>' />
-                <FormErrorMessage>component names can only contain alphanumeric, lowercase characters, and the following ["-", "_", "$", "!", "/"]</FormErrorMessage>
+                <Input
+                  outlineColor="teal"
+                  ref={ref}
+                  placeholder="<repo-name>/<component-name>"
+                  _placeholder={{ color: 'gray.400' }}
+                  size="sm"
+                />
+                <FormErrorMessage>
+                  component names can only contain alphanumeric, lowercase
+                  characters, and the following [-, _, $, !, /]
+                </FormErrorMessage>
               </FormControl>
             </PopoverBody>
             <PopoverFooter display="flex" justifyContent="flex-end">
               <Button
-                colorScheme='teal'
-                color='teal.500'
-                variant='outline'
+                colorScheme="teal"
+                color="teal.500"
+                variant="outline"
                 onClick={() => {
                   createComponent()
                 }}

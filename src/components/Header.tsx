@@ -34,6 +34,7 @@ import { getCustomComponents } from '~core/selectors/customComponents'
 import { getShowLayout, getShowCode } from '~core/selectors/app'
 import HeaderMenu from '~components/headerMenu/HeaderMenu'
 import { FaReact } from 'react-icons/fa'
+import Themer from './Themer'
 
 const CodeSandboxButton = () => {
   const components = useSelector(getComponents)
@@ -186,8 +187,8 @@ const Header = () => {
                 fontSize="xs"
                 mr={2}
                 mb={0}
-                htmlFor="code"
                 pb={0}
+                htmlFor="code"
                 whiteSpace="nowrap"
               >
                 Code panel
@@ -202,6 +203,7 @@ const Header = () => {
                 />
               </LightMode>
             </FormControl>
+            <Themer />
           </HStack>
 
           <Stack direction="row">

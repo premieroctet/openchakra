@@ -42,7 +42,11 @@ const Menu = () => {
   }
 
   const autoselectComponent = () => {
-    if ((selectedComponent === undefined && Object.keys(customComponents).length) || (!Object.keys(customComponents).includes(String(selectedComponent))))
+    if (
+      (selectedComponent === undefined &&
+        Object.keys(customComponents).length) ||
+      !Object.keys(customComponents).includes(String(selectedComponent))
+    )
       handleEditClick(Object.keys(customComponents)[0])
     else if (!Object.keys(customComponents).length)
       dispatch.customComponents.unselect()
@@ -50,8 +54,11 @@ const Menu = () => {
 
   useEffect(() => {
     const initFunction = async () => {
-      const newComponentsList = await API.post('/init').then(res => res.data)
+      const { newComponentsList, themeJsonPath } = await API.post('/init').then(
+        res => res.data,
+      )
       dispatch.customComponents.updateCustomComponents(newComponentsList)
+      dispatch.customComponents.setThemePath(themeJsonPath)
     }
     dispatch.app.toggleLoader()
     initFunction()
@@ -207,9 +214,11 @@ const Menu = () => {
                             {name}
                           </DragItem>
                         </Box>
-                        <ButtonGroup size='xs' isAttached variant='outline'
-                          colorScheme='teal'
-
+                        <ButtonGroup
+                          size="xs"
+                          isAttached
+                          variant="outline"
+                          colorScheme="teal"
                         >
                           <IconButton
                             aria-label="Edit"
