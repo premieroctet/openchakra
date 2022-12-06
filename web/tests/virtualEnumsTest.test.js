@@ -1,9 +1,9 @@
+const mongoose = require('mongoose')
 const {STATUS} = require('../utils/aftral_studio/consts')
 const {MONGOOSE_OPTIONS, getModels} = require('../server/utils/database')
 const {getDatabaseUri} = require('../config/config')
 require('../server/models/Resource')
 require('../server/models/Theme')
-const mongoose = require('mongoose')
 
 describe('Schema virtual enum attributes', () => {
 
