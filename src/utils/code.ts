@@ -476,9 +476,9 @@ ${paramTypes ? paramTypes : ''}
 ${componentsCodes}
 
 const App = (${params ? params : ''}) => (
-  <ChakraProvider resetCSS>
+  <>
     ${code}
-  </ChakraProvider>
+  </>
 );
 
 export default App;`
@@ -548,9 +548,9 @@ ${paramTypes ? paramTypes : ''}
 ${componentsCodes}
 
 const App = (${params ? params : ''}) => (
-  <ChakraProvider resetCSS>
+  <>
     ${code}
-  </ChakraProvider>
+  </>
 );
 
 export default App;`

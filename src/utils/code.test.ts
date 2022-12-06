@@ -80,7 +80,7 @@ describe('Code utils', () => {
   })
 
   it('should generate whole tree code', async () => {
-    const code = await generateCode(componentFixtures)
+    const code = await generateCode(componentFixtures, {})
 
     expect(code).toEqual(`import React from 'react'
 import { ChakraProvider, Box, Text } from '@chakra-ui/react'
@@ -102,7 +102,7 @@ export default App
   })
 
   it('should generate icons imports and icon instanciation', async () => {
-    const code = await generateCode(componentFixturesWithButtonIcon)
+    const code = await generateCode(componentFixturesWithButtonIcon, {})
 
     expect(code).toEqual(`import React from 'react'
 import { ChakraProvider, Box, Button } from '@chakra-ui/react'

@@ -72,7 +72,7 @@ const ThemeLayers = () => {
   }, [themeState])
 
   return (
-    <ChakraProvider resetCSS>
+    <>
       <Accordion allowToggle>
         {themeState.map((layer, i) => {
           return (
@@ -295,7 +295,7 @@ const ThemeLayers = () => {
           Add Layer
         </Text>
       </Button>
-    </ChakraProvider>
+    </>
   )
 }
 
