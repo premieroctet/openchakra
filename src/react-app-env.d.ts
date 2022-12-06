@@ -134,3 +134,9 @@ interface ComponentItemProps {
   soon?: boolean
   rootParentType?: ComponentType
 }
+
+class Filter {
+  attribute: String
+  operator: String
+  value?: any
+}

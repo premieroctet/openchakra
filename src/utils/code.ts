@@ -222,8 +222,6 @@ const buildBlock = ({
           const propsValueAsObject =
             typeof propsValue === 'object' && val !== null // TODO revise this temporary fix = propsValue !== 'null' // bgGradient buggy when deleted
 
-          // console.log('propsValue', typeof propsValue, propsValue, Object.keys(propsValue), Object.keys(propsValue).length)
-
           if (propName === 'actionProps' || propName === 'nextActionProps') {
             const valuesCopy = {
               ...propsValue,
@@ -261,6 +259,11 @@ const buildBlock = ({
             return
           }
 
+          if (/^conditions/.test(propName)) {
+            propsContent += ` ${propName}={${JSON.stringify(propsValue)}}`
+            return
+          }
+
           if (propsValueAsObject && Object.keys(propsValue).length >= 1) {
             const gatheredProperties = Object.entries(propsValue)
               .map(([prop, value]) => {
@@ -270,7 +273,7 @@ const buildBlock = ({
               })
               .join(', ')
 
-            propsContent += `${propName}={{${gatheredProperties}}}`
+            propsContent += `${propName}={{${gatheredProperties}}} `
           } else if (
             propName.toLowerCase().includes('icon') &&
             childComponent.type !== 'Icon'

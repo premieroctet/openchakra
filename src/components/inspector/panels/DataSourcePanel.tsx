@@ -52,7 +52,6 @@ const DataSourcePanel: React.FC = () => {
         dataSource,
         models,
       )?.type
-      console.log(`Current mode:${JSON.stringify(currentModel)}`)
       setContextProviders(providers.filter(p => p.props.model == currentModel))
     } catch (err) {
       console.error(err)

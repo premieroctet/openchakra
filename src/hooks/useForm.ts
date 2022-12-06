@@ -24,5 +24,15 @@ export const useForm = () => {
     [componentId, dispatch.project],
   )
 
-  return { setValue, setValueFromEvent }
+  const removeValue = useCallback(
+    (name: string) => {
+      dispatch.project.deleteProps({
+        id: componentId,
+        name,
+      })
+    },
+    [componentId, dispatch.project],
+  )
+
+  return { setValue, setValueFromEvent, removeValue }
 }
