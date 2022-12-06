@@ -195,6 +195,10 @@ router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (r
   if (model=='message') {
     fields=lodash([...fields, 'sender', 'destinee_user', 'destinee_session']).uniq().value()
   }
+  
+  if (model=='resource') {
+    fields=lodash([...fields, 'version']).uniq().value()
+  }
 
   const queryModel = model=='loggedUser' ? 'user' : model
   const queryId = model=='loggedUser' ? (req.user?._id || 'INVALIDID') : id
