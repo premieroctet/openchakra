@@ -61,7 +61,7 @@ const DECLARED_VIRTUALS={
     mangopay_provider_id: {path: 'mangopay_provider_id', instance: 'String', requires: 'id_mangopay'},
   },
   product: {
-    total_price: {path: 'total_price', instance: 'Number', requires: 'priceWT,tax'},
+    net_price: {path: 'net_price', instance: 'Number', requires: 'vat_rate,price'},
     reviews: {path: 'reviews', instance: 'review', requires: '_id'},
   },
   subscription: {
@@ -301,7 +301,7 @@ const addComputedFields= async(user, queryParams, data, model, level=0) => {
   const compFields=COMPUTED_FIELDS[model] || {}
   // Compute direct attributes
   const x=await Promise.allSettled(Object.keys(compFields).map(f => compFields[f](newUser, queryParams, data)
-    .then(res => {data[f]=res })))
+    .then(res => { data[f]=res })))
   // Handle references => sub
   const refAttributes=getModelAttributes(model).filter(att => !(att[0].includes('.')) && att[1].ref)
   for ([attName, attParams] of refAttributes) {

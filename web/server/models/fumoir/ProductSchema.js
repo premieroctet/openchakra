@@ -7,15 +7,15 @@ const ProductSchema = new Schema({
   reference: {
     type: String,
     unique: true,
-    required: true,
+    required: false,
   },
   name: {
     type: String,
-    required: true,
+    required: false,
   },
   description: {
     type: String,
-    required: true,
+    required: false,
   },
   features: [{ // Caractéristiques
     type: String,
@@ -38,11 +38,11 @@ const ProductSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'category',
   },
-  priceWT: { // Price without tax
+  price: { // Price including tax
     type: Number,
     min: 0,
   },
-  vat: {
+  vat_rate: { // VAT rate (0.0 => 1.0)
     type: Number,
     min: 0,
     max: 1,
@@ -50,14 +50,15 @@ const ProductSchema = new Schema({
   stock: {
     type: Number,
     min: 0,
+    default: 0,
     set: v => parseInt(v),
-    // required: true, TODO make mandatory then import
+    // required: false, TODO make mandatory then import
   },
 
 }, schemaOptions)
 
-ProductSchema.virtual('total_price').get(function() {
-  return this.priceWT * (1 + this.tax)
+ProductSchema.virtual('net_price').get(function() {
+  return this.price * (1 - this.vat_rate)
 })
 
 ProductSchema.virtual('reviews', {

@@ -207,7 +207,9 @@ const putAttribute = ({parent, attribute, value}) => {
       mongooseModel=mongoose.connection.models[model]
       return mongooseModel.updateMany(
         {$or: [{_id: parent}, {origin: parent}]},
-        {[attribute]: value})
+        {[attribute]: value},
+        {runValidators: true},
+      )
     })
 }
 
@@ -354,38 +356,38 @@ const getSessionSpentTimeStr = async(user, queryParams, session) => {
   return formatTime(res)
 }
 
-const getThemeProgress = async (user, queryParams, theme) => {
+const getThemeProgress = async(user, queryParams, theme) => {
   const th=await Theme.findById(theme._id)
   const userData=await UserSessionData.findOne({user: user._id})
   const finishedResources=th.resources.filter(r => userData?.finished?.includes(r._id))
   return {finished: finishedResources.length, total: th.resources.length}
 }
 
-const getThemeProgressStr = async (user, queryParams, theme) => {
+const getThemeProgressStr = async(user, queryParams, theme) => {
   const progress=await getThemeProgress(user, queryParams, theme)
   return `${progress.finished}/${progress.total}`
 }
 
-const getThemeProgressPercent = async (user, queryParams, theme) => {
+const getThemeProgressPercent = async(user, queryParams, theme) => {
   const progress=await getThemeProgress(user, queryParams, theme)
   return progress.finished*1.0/progress.total*100
 }
 
-const getSessionProgress = async (user, queryParams, session) => {
+const getSessionProgress = async(user, queryParams, session) => {
   const sess=await Session.findById(session._id).populate('themes')
-  if (!sess) { return {finished:0, total:0}}
+  if (!sess) { return {finished: 0, total: 0} }
   const userData=await UserSessionData.findOne({user: user._id})
   const resources=lodash.flatten(sess.themes.map(t => t.resources))
   const finishedResources=resources.filter(r => userData?.finished?.includes(r._id))
   return {finished: finishedResources.length, total: resources.length}
 }
 
-const getSessionProgressStr = async (user, queryParams, session) => {
+const getSessionProgressStr = async(user, queryParams, session) => {
   const progress=await getSessionProgress(user, queryParams, session)
   return `${progress.finished}/${progress.total}`
 }
 
-const getSessionProgressPercent = async (user, queryParams, session) => {
+const getSessionProgressPercent = async(user, queryParams, session) => {
   const progress=await getSessionProgress(user, queryParams, session)
   return progress.finished*1.0/progress.total*100
 }
