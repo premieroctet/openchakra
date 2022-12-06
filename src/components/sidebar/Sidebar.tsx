@@ -13,6 +13,7 @@ import {
   TabPanels,
   TabPanel,
   ButtonGroup,
+  Button,
 } from '@chakra-ui/react'
 import { CloseIcon, EditIcon, SearchIcon } from '@chakra-ui/icons'
 import DragItem from './DragItem'
@@ -20,17 +21,20 @@ import { menuItems, MenuItem } from '~componentsList'
 import { useSelector } from 'react-redux'
 import {
   getCustomComponents,
+  getInstalledComponents,
   getSelectedCustomComponentId,
 } from '~core/selectors/customComponents'
 import useDispatch from '~hooks/useDispatch'
 import API from '~custom-components/api'
 import AddComponent from './AddComponent'
 import DeleteComponent from './DeleteComponent'
+import InstallComponent from './InstallComponent'
 
 const Menu = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const dispatch = useDispatch()
   const customComponents = useSelector(getCustomComponents)
+  const installedComponents = useSelector(getInstalledComponents)
   const selectedComponent = useSelector(getSelectedCustomComponentId)
 
   const handleEditClick = async (name: string) => {
@@ -188,7 +192,15 @@ const Menu = () => {
             </TabPanel>
             <TabPanel>
               <Box p={0} pt={0}>
-                <AddComponent />
+                <ButtonGroup
+                  size="xs"
+                  isAttached
+                  variant="outline"
+                  colorScheme="teal"
+                >
+                  <AddComponent />
+                  <InstallComponent />
+                </ButtonGroup>
 
                 {(Object.keys(customComponents) as ComponentType[])
                   .filter(c =>
@@ -229,6 +241,43 @@ const Menu = () => {
                           >
                             <EditIcon color="gray.300" />
                           </IconButton>
+                          <DeleteComponent name={name} />
+                        </ButtonGroup>
+                      </Flex>
+                    )
+                  })}
+                {Array.from(installedComponents)
+                  .filter(c =>
+                    c.toLowerCase().includes(searchTerm.toLowerCase()),
+                  )
+                  .map(componentPath => {
+                    const name = componentPath.split('.').slice(-1)[0]
+                    return (
+                      <Flex
+                        alignItems={'center'}
+                        justifyContent="space-between"
+                        key={name}
+                      >
+                        <Box flex={1}>
+                          <DragItem
+                            isInstalled
+                            key={name}
+                            custom={true}
+                            label={name}
+                            type={name}
+                            id={name}
+                            rootParentType={name}
+                            isSelected={false}
+                          >
+                            {name}
+                          </DragItem>
+                        </Box>
+                        <ButtonGroup
+                          size="xs"
+                          isAttached
+                          variant="outline"
+                          colorScheme="teal"
+                        >
                           <DeleteComponent name={name} />
                         </ButtonGroup>
                       </Flex>

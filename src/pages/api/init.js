@@ -23,6 +23,7 @@ async function getJsons() {
   return { jsons, themeJsonPath: themeJsonPath[0] }
 }
 
+// TODO: Load file with installed components
 export default async function handler(req, res) {
   // 1. load initial components with paths & themeJson Path
   const { jsons, themeJsonPath } = await getJsons()

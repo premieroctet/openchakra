@@ -21,6 +21,7 @@ export interface ThemeExtType {
 
 export type CustomComponentsState = {
   components: CustomDictionary
+  installedComponents: Set<string>
   selectedId?: IComponent['type']
   parameters: ComponentParametersType
   theme: Array<ThemeExtType>
@@ -42,6 +43,7 @@ const INITIAL_THEME: ThemeExtType = {
 const customComponents = createModel({
   state: {
     components: INITIAL_COMPONENTS,
+    installedComponents: new Set(),
     parameters: INITIAL_PARAMETERS,
     selectedId: DEFAULT_ID,
     theme: [INITIAL_THEME],
@@ -205,6 +207,17 @@ const customComponents = createModel({
         ...state,
         themePath,
       }
+    },
+    updateInstalledComponents(
+      state: CustomComponentsState,
+      installedComponentPath: string,
+      isAdded: boolean,
+    ): CustomComponentsState {
+      return produce(state, (draftState: CustomComponentsState) => {
+        isAdded
+          ? draftState.installedComponents.add(installedComponentPath)
+          : draftState.installedComponents.delete(installedComponentPath)
+      })
     },
   },
 })
