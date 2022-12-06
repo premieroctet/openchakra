@@ -16,7 +16,7 @@ export const decodeShareUrl = (): IComponents | null => {
       return JSON.parse(LZString.decompressFromEncodedURIComponent(sharedData))
     }
   } catch (e) {
-    console.log(e)
+    console.error(e)
   }
 
   return null

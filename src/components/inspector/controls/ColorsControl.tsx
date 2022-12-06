@@ -1,6 +1,7 @@
 import React, { ReactNode, memo } from 'react'
 import FormControl from './FormControl'
 import ColorPickerControl from './ColorPickerControl'
+import { withFilters } from '../../hoc/Filters'
 
 type ColorControlPropsType = {
   name: string
@@ -21,4 +22,4 @@ const ColorsControl = (props: ColorControlPropsType) => {
   )
 }
 
-export default memo(ColorsControl)
+export default memo(withFilters(ColorsControl))

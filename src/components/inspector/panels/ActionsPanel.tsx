@@ -1,19 +1,10 @@
-import { Accordion, Input, Select } from '@chakra-ui/react'
+import { Accordion, Select } from '@chakra-ui/react'
 import { useSelector } from 'react-redux'
-import React, { useState, useEffect, memo } from 'react'
-import {
-  getDataProviders,
-  getAvailableAttributes,
-  CONTAINER_TYPE,
-} from '~utils/dataSources'
-import { getModels, getModelAttributes } from '~core/selectors/dataSources'
+import React, { memo } from 'react'
+import { getModels } from '~core/selectors/dataSources'
 import AccordionContainer from '~components/inspector/AccordionContainer'
 import { ACTIONS } from '../../../utils/actions'
-import {
-  getComponents,
-  getPages,
-  getSelectedComponent,
-} from '../../../core/selectors/components'
+import { getComponents, getPages } from '../../../core/selectors/components'
 import { useForm } from '../../../hooks/useForm'
 import FormControl from '../controls/FormControl'
 import usePropsSelector from '../../../hooks/usePropsSelector'

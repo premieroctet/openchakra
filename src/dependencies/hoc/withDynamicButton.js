@@ -1,7 +1,12 @@
 import React from 'react'
 
-import { ACTIONS } from '../utils/actions'
 import { useLocation } from 'react-router-dom'
+
+import { ACTIONS } from '../utils/actions'
+import {
+  extractFiltersFromProps,
+  getConditionalProperties,
+} from '../utils/filters'
 
 const withDynamicButton = Component => {
   const Internal = props => {
@@ -52,7 +57,17 @@ const withDynamicButton = Component => {
           .catch(alert)
       }
     }
-    return <Component {...props} onClick={onClick}></Component>
+    const conditionalProperties = getConditionalProperties(
+      props,
+      props.dataSource,
+    )
+    return (
+      <Component
+        {...props}
+        onClick={onClick}
+        {...conditionalProperties}
+      ></Component>
+    )
   }
 
   return Internal

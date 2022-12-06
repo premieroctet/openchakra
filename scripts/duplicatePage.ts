@@ -4,7 +4,6 @@ import { duplicatePageImpl } from '../src/core/models/project'
 
 const fs = require('fs').promises
 import { generateId } from '../src/utils/generateId'
-const lodash = require('lodash')
 
 const mergeProjects = (projects: any[]) => {
   console.log(`Merging projects`)

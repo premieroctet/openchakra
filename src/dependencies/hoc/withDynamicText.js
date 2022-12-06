@@ -1,10 +1,22 @@
 import React from 'react'
 import lodash from 'lodash'
+import { getConditionalProperties } from '../utils/filters'
 
 const withDynamicText = Component => {
   const internal = props => {
     const value = lodash.get(props.dataSource, props.attribute)
-    return <Component {...lodash.omit(props, ['children'])}>{value}</Component>
+    const conditionalProperties = getConditionalProperties(
+      props,
+      props.dataSource,
+    )
+    return (
+      <Component
+        {...lodash.omit(props, ['children'])}
+        {...conditionalProperties}
+      >
+        {value}
+      </Component>
+    )
   }
 
   return internal
