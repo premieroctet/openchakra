@@ -152,21 +152,6 @@ const Editor: React.FC = () => {
           ...themeState.map((themeExt: ThemeExtType) =>
             withDefaultProps(themeExt),
           ),
-          // {
-          //   styles: {
-          //     global: {
-          //       'html, body': {
-          //         fontFamily: `'Fira Code', sans-serif`,
-          //       },
-          //     },
-          //   },
-          // },
-          // {
-          //   fonts: {
-          //     heading: `'Fira Code', sans-serif`,
-          //     body: `'Fira Code', sans-serif`,
-          //   },
-          // },
         )}
       >
         {components.root.children.map((name: string) => (
