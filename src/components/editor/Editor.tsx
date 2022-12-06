@@ -128,20 +128,22 @@ const Editor: React.FC = () => {
       onClick={onSelectBackground}
     >
       {isEmpty && (
+        // TODO: Change this
         <Text maxWidth="md" color="gray.400" fontSize="xl" textAlign="center">
-          Create new components using the terminal to see them here. Click the
-          edit button beside any component to load it!
-          {/* Or load{' '}
+          Create new components using the `Create Component` button in the left
+          sidebar. Click the edit button beside the component to load it! Or
+          load{' '}
           <Link
             color="gray.500"
+            href="https://bit.cloud/"
             onClick={(e: React.MouseEvent) => {
               e.stopPropagation()
-              dispatch.components.loadDemo('onboarding')
+              // dispatch.components.loadDemo('onboarding')
             }}
             textDecoration="underline"
           >
-            the custom components
-          </Link> */}
+            components from bit
+          </Link>
         </Text>
       )}
       <ChakraProvider
@@ -150,6 +152,21 @@ const Editor: React.FC = () => {
           ...themeState.map((themeExt: ThemeExtType) =>
             withDefaultProps(themeExt),
           ),
+          // {
+          //   styles: {
+          //     global: {
+          //       'html, body': {
+          //         fontFamily: `'Fira Code', sans-serif`,
+          //       },
+          //     },
+          //   },
+          // },
+          // {
+          //   fonts: {
+          //     heading: `'Fira Code', sans-serif`,
+          //     body: `'Fira Code', sans-serif`,
+          //   },
+          // },
         )}
       >
         {components.root.children.map((name: string) => (

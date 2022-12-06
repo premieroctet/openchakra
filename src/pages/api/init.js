@@ -15,12 +15,12 @@ function getComponentWithLocation(path) {
 async function getJsons() {
   let jsons = {}
   const files = glob.sync(`../remote/**/*.oc.json`, {})
-  const themeJsonPath = glob(`../remote/**/theme.json`, {})
+  const themeJsonPath = glob.sync(`../remote/**/theme.json`, {})
   files?.forEach(element => {
     const { comp, dir } = getComponentWithLocation(element)
     jsons[comp] = dir
   })
-  return { jsons, themeJsonPath }
+  return { jsons, themeJsonPath: themeJsonPath[0] }
 }
 
 export default async function handler(req, res) {
