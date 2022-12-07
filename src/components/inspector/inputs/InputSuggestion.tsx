@@ -46,6 +46,7 @@ const InputSuggestion: React.FC<FormControlPropType> = ({
         aria-labelledby={name}
         size="sm"
         autoComplete="off"
+        borderColor="gray.200"
       />
 
       {isFocus && (

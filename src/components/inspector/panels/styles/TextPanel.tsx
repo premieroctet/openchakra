@@ -32,6 +32,7 @@ const TextPanel = () => {
           size="sm"
           value={fontWeight || 'normal'}
           onChange={setValueFromEvent}
+          borderColor="gray.200"
         >
           <option>hairline</option>
           <option>thin</option>
@@ -50,6 +51,7 @@ const TextPanel = () => {
           size="sm"
           value={fontStyle || 'normal'}
           onChange={setValueFromEvent}
+          borderColor="gray.200"
         >
           <option>italic</option>
           <option>normal</option>

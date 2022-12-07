@@ -30,6 +30,7 @@ const DimensionPanel = () => {
           value={overflow || ''}
           onChange={setValueFromEvent}
           name="overflow"
+          borderColor="gray.200"
         >
           <option>visible</option>
           <option>hidden</option>

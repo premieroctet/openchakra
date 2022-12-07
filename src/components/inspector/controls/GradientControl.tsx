@@ -103,6 +103,7 @@ const GradientControl = (props: GradientControlPropsType) => {
                 `linear(${directionValue}, ${gradientColor.toString()})`,
               )
           }}
+          borderColor="gray.200"
         >
           {choices?.map((choice: string) => (
             <option key={choice}>{choice}</option>
@@ -112,6 +113,7 @@ const GradientControl = (props: GradientControlPropsType) => {
       <FormControl label="Clip to Text" htmlFor="bgClip">
         <Checkbox
           defaultChecked={textGradient}
+          borderColor="gray.200"
           onChange={e =>
             e.target.checked
               ? setValue('bgClip', `text`)
@@ -121,7 +123,7 @@ const GradientControl = (props: GradientControlPropsType) => {
       </FormControl>
 
       {gradientColor.map((e, i) => (
-        <Box textAlign="right" mt={3} key={i}>
+        <Box textAlign="right" mt={3} key={i} borderColor="gray.200">
           {i >= 1 && (
             <IconButton
               onClick={() => removeGradient(i)}

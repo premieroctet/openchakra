@@ -6,6 +6,7 @@ import {
   ChakraProvider,
   extendTheme,
   withDefaultProps,
+  theme as baseTheme,
 } from '@chakra-ui/react'
 import { useDropComponent } from '~hooks/useDropComponent'
 import SplitPane from 'react-split-pane'
@@ -112,67 +113,84 @@ const Editor: React.FC = () => {
   }
 
   const Playground = (
-    <Box
-      p={2}
-      {...editorBackgroundProps}
-      height="100%"
-      minWidth="10rem"
-      width="100%"
-      display={isEmpty ? 'flex' : 'block'}
-      justifyContent="center"
-      alignItems="center"
-      overflow="auto"
-      ref={drop}
-      position="relative"
-      flexDirection="column"
-      onClick={onSelectBackground}
-    >
-      {isEmpty && (
-        <Text maxWidth="md" color="gray.400" fontSize="xl" textAlign="center">
-          Create new components using the `Create Component` button in the left
-          sidebar. Click the edit button beside the component to load it! Or
-          load{' '}
-          <Link
-            color="gray.500"
-            href="https://bit.cloud/"
-            onClick={(e: React.MouseEvent) => {
-              e.stopPropagation()
-              // dispatch.components.loadDemo('onboarding')
-            }}
-            textDecoration="underline"
-          >
-            components from bit
-          </Link>
-        </Text>
+    <ChakraProvider
+      cssVarsRoot=".rishabh"
+      theme={extendTheme(
+        // ...themeState.map((themeExt: ThemeExtType) =>
+        //   withDefaultProps(themeExt),
+        // ),
+        {
+          semanticTokens: {
+            colors: {
+              'chakra-body-text': {
+                _light: 'red.600',
+                _dark: 'red.200',
+              },
+              'chakra-body-bg': {
+                _light: 'pink.200',
+                _dark: 'pink.800',
+              },
+              'chakra-border-color': {
+                _light: 'yellow.700',
+                _dark: 'blue.300',
+              },
+              'chakra-subtle-bg': {
+                _light: 'purple.100',
+                _dark: 'purple.700',
+              },
+              'chakra-placeholder-color': {
+                _light: 'purple.600',
+                _dark: 'purple.400',
+              },
+            },
+          },
+          config: {
+            ...baseTheme.config,
+            cssVarPrefix: baseTheme.config.cssVarPrefix + 'main',
+          },
+        },
       )}
-      <ChakraProvider
-        resetCSS
-        theme={extendTheme(
-          ...themeState.map((themeExt: ThemeExtType) =>
-            withDefaultProps(themeExt),
-          ),
-          // {
-          //   styles: {
-          //     global: {
-          //       'html, body': {
-          //         fontFamily: `'Fira Code', sans-serif`,
-          //       },
-          //     },
-          //   },
-          // },
-          // {
-          //   fonts: {
-          //     heading: `'Fira Code', sans-serif`,
-          //     body: `'Fira Code', sans-serif`,
-          //   },
-          // },
-        )}
+    >
+      <Box
+        className="rishabh"
+        p={2}
+        {...editorBackgroundProps}
+        height="100%"
+        minWidth="10rem"
+        width="100%"
+        display={isEmpty ? 'flex' : 'block'}
+        justifyContent="center"
+        alignItems="center"
+        overflow="auto"
+        ref={drop}
+        position="relative"
+        flexDirection="column"
+        onClick={onSelectBackground}
       >
+        {isEmpty && (
+          <Text maxWidth="md" color="gray.400" fontSize="xl" textAlign="center">
+            Create new components using the `Create Component` button in the
+            left sidebar. Click the edit button beside the component to load it!
+            Or load{' '}
+            <Link
+              color="gray.500"
+              href="https://bit.cloud/"
+              onClick={(e: React.MouseEvent) => {
+                e.stopPropagation()
+                // dispatch.components.loadDemo('onboarding')
+              }}
+              textDecoration="underline"
+            >
+              components from bit
+            </Link>
+          </Text>
+        )}
+
         {components.root.children.map((name: string) => (
           <ComponentPreview key={name} componentName={name} />
         ))}
-      </ChakraProvider>
-    </Box>
+      </Box>
+    </ChakraProvider>
   )
 
   if (!showCode) {

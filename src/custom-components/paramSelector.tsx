@@ -28,7 +28,7 @@ const ParamSelector = ({ prop }: any) => {
           <ChevronLeftIcon />
         </PopoverTrigger>
         <Portal>
-          <PopoverContent>
+          <PopoverContent color="black" borderColor="gray.200">
             <PopoverArrow />
             <PopoverCloseButton />
             <PopoverHeader>Select parameter</PopoverHeader>

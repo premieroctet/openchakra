@@ -91,6 +91,9 @@ const Menu = () => {
               value={searchTerm}
               color="gray.300"
               placeholder="Search ..."
+              _placeholder={{
+                color: 'gray',
+              }}
               onChange={(event: ChangeEvent<HTMLInputElement>) =>
                 setSearchTerm(event.target.value)
               }

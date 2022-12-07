@@ -1,9 +1,4 @@
-import {
-  AddIcon,
-  CheckIcon,
-  DeleteIcon,
-  InfoOutlineIcon,
-} from '@chakra-ui/icons'
+import { AddIcon, CheckIcon, DeleteIcon } from '@chakra-ui/icons'
 import { Select as MultiSelect } from 'chakra-react-select'
 import {
   Button,
@@ -35,6 +30,7 @@ import {
   TabPanels,
   TabList,
   Tab,
+  extendTheme,
 } from '@chakra-ui/react'
 import { omit } from 'lodash'
 import React, { useEffect, useState } from 'react'
@@ -316,7 +312,58 @@ const ThemeCustomStyles = () => {
 const Themer = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   return (
-    <ChakraProvider>
+    <ChakraProvider
+    // cssVarsRoot=".theme"
+    // theme={
+    //   extendTheme({
+    //   styles: {
+    //     global: {
+    //       html: {
+    //         color: 'global-color',
+    //         bg: 'global-bg',
+    //       },
+    //     },
+    //   },
+    //   semanticTokens: {
+    //     colors: {
+    //       'chakra-body-text': {
+    //         _light: 'pink.800',
+    //         _dark: 'pink.200',
+    //       },
+    //       'chakra-body-bg': {
+    //         _light: 'telegram.200',
+    //         _dark: 'telegram.800',
+    //       },
+    //       'chakra-border-color': {
+    //         _light: 'pink',
+    //         _dark: 'blue.300',
+    //       },
+    //       'chakra-subtle-bg': {
+    //         _light: 'purple.100',
+    //         _dark: 'purple.700',
+    //       },
+    //       'chakra-placeholder-color': {
+    //         _light: 'purple.800',
+    //         _dark: 'purple.100',
+    //       },
+    //       // 'global-color': baseTheme.semanticTokens.colors['chakra-body-text'],
+    //       // 'global-bg': baseTheme.semanticTokens.colors['chakra-body-bg'],
+    //       'global-color': {
+    //         _light: 'gray.800',
+    //         _dark: 'gray.200',
+    //       },
+    //       'global-bg': {
+    //         _light: 'green.200',
+    //         _dark: 'green.800',
+    //       },
+    //     },
+    //   },
+    //   config: {
+    //     ...baseTheme.config,
+    //     cssVarPrefix: baseTheme.config.cssVarPrefix + 'theme',
+    //   },
+    // })}
+    >
       <Button
         px={6}
         bgGradient="linear(to-br, blue.300, green.300, yellow.300, red.300)"
@@ -342,11 +389,11 @@ const Themer = () => {
           </DrawerHeader>
           <DrawerBody>
             <Tabs
-              size="sm"
               variant="line"
               isLazy
               colorScheme="teal"
               orientation="vertical"
+              className="theme"
             >
               <TabList>
                 <Tab>
