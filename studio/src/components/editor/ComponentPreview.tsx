@@ -22,8 +22,8 @@ import PreviewContainer from '~components/editor/PreviewContainer'
 import SelectPreview from '~components/editor/previews/SelectPreview'
 import WithChildrenPreviewContainer from '~components/editor/WithChildrenPreviewContainer'
 
-import { getComponentWarnings } from '../../core/selectors/components';
-import { getShowOverview } from '../../core/selectors/app';
+import { getComponentWarnings } from '../../core/selectors/components'
+import { getShowOverview } from '../../core/selectors/app'
 import BreadcrumbItemPreview from './previews/BreadcrumbItemPreview'
 import BreadcrumbPreview from './previews/BreadcrumbPreview'
 import IconButtonPreview from './previews/IconButtonPreview'
@@ -39,8 +39,8 @@ let extraPreviews: previews = {}
 
 const ComponentPreview: React.FC<{
   componentName: string
-  id?: string,
-  bgColor?: string|null,
+  id?: string
+  bgColor?: string | null
 }> = ({ componentName, ...forwardedProps }) => {
   const showOverview = useSelector(getShowOverview)
 
@@ -48,12 +48,12 @@ const ComponentPreview: React.FC<{
   if (!component) {
     console.error(`ComponentPreview unavailable for component ${componentName}`)
   }
-  const warnings=useSelector(getComponentWarnings(component))
+  const warnings = useSelector(getComponentWarnings(component))
 
   // Light red background in case of warnings
   if (showOverview) {
-    if (warnings.length>0) {
-      forwardedProps.bgColor='red.100'
+    if (warnings.length > 0) {
+      forwardedProps.bgColor = 'red.100'
     }
   }
   const type = (component && component.type) || null
@@ -73,7 +73,6 @@ const ComponentPreview: React.FC<{
     case 'Badge':
     case 'Image':
     case 'Text':
-    case 'Link':
     case 'Spinner':
     case 'Checkbox':
     case 'Textarea':
@@ -123,6 +122,7 @@ const ComponentPreview: React.FC<{
     case 'Flex':
     case 'FormControl':
     case 'Tabs':
+    case 'Link':
     case 'List':
     case 'TabList':
     case 'TabPanels':

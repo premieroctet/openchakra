@@ -6,7 +6,7 @@ import ChildrenControl from '~components/inspector/controls/ChildrenControl'
 const LinkPanel = () => {
   return (
     <>
-      <ChildrenControl />
+      {/* <ChildrenControl /> */}
       <TextControl name="href" label="Href" />
       <SwitchControl label="External" name="isExternal" />
     </>
