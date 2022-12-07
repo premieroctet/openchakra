@@ -5,7 +5,6 @@ import { s3Config, S3UrlRessource } from '../utils/s3Config'
 import axios from 'axios'
 import mime from 'mime'
 import JSZip from 'jszip'
-import xmljs from 'xml-js'
 import { getExtension } from './MediaWrapper'
 
 const uploadUrl = `/myAlfred/api/studio/action`
@@ -20,11 +19,11 @@ function createFileFromBlob(folder: string, filename: string, fileData: Blob) {
   })
 }
 
-const uploadFileToS3 = async (file: File) => {
+async function uploadFileToS3(file: File) {
   return await FileManager.createFile(file.name, file, '', file.type, [])
 }
 
-const uploadMultipleToS3 = async (folder: string, unzip: any) => {
+const sendMultipleToS3 = async (folder: string, unzip: any) => {
   for await (const filename of Object.keys(unzip.files)) {
     const blob = await unzip.files[filename].async('blob')
     if (!unzip.files[filename]?.dir) {
@@ -32,22 +31,6 @@ const uploadMultipleToS3 = async (folder: string, unzip: any) => {
       await uploadFileToS3(file)
     }
   }
-}
-
-const isScormZip = async (unzipped: any) => {
-  let scormVersion = null
-  // looking for scorm version in imsmanifest.xml
-  for (const filename of Object.keys(unzipped.files)) {
-    if (!unzipped.files[filename]?.dir) {
-      if (filename === 'imsmanifest.xml') {
-        const text = await unzipped.files[filename].async('string')
-        const imsmanifest = xmljs.xml2js(text, { compact: true })
-        //@ts-ignore
-        scormVersion = imsmanifest?.manifest?._attributes?.version
-      }
-    }
-  }
-  return scormVersion
 }
 
 const UploadFile = ({
@@ -91,35 +74,21 @@ const UploadFile = ({
         attribute,
       }
 
-      let paramsScormVersion = {
-        ...paramsBack,
-        attribute: 'version',
-        value: null,
-      }
-
       setUploadInfo('')
 
       const switchUploadType = async () => {
         switch (typeOfUpload) {
           case 'zip':
             const unzipped = await JSZip.loadAsync(fileToUpload)
+            await sendMultipleToS3(fileToUpload?.name, unzipped)
 
-            const scormVersion = await isScormZip(unzipped)
+            const { scormUrl } = S3UrlRessource({
+              folder: fileToUpload?.name,
+            })
 
-            await uploadMultipleToS3(fileToUpload?.name, unzipped)
-
-            if (scormVersion) {
-              const { scormUrl } = S3UrlRessource({
-                folder: fileToUpload?.name,
-              })
-
-              paramsBack = { ...paramsBack, ...{ value: encodeURI(scormUrl) } }
-              paramsScormVersion = {
-                ...paramsScormVersion,
-                ...{ value: scormVersion },
-              }
-            }
+            paramsBack = { ...paramsBack, ...{ value: encodeURI(scormUrl) } }
             break
+
           default:
             const res = await uploadFileToS3(fileToUpload)
             paramsBack = { ...paramsBack, ...{ value: res?.Location } }
@@ -128,18 +97,11 @@ const UploadFile = ({
       }
 
       const saveUrl = async () => {
+        console.log('Hey, on y arrive', uploadUrl, paramsBack)
         axios
           .post(uploadUrl, paramsBack)
           .then(() => {
             setUploadInfo('Ressource ajoutée')
-          })
-          .then(() => {
-            /* scorm file ? save version */
-            if (paramsScormVersion.value !== null) {
-              axios
-                .post(uploadUrl, paramsScormVersion)
-                .catch(err => console.error('scormversion not saved', err))
-            }
           })
           .catch(e => {
             setUploadInfo('Echec ajout ressource')

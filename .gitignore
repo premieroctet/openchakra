@@ -1,8 +1,18 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
 # dependencies
+<<<<<<< HEAD
 **/node_modules
 
+||||||| bcf869f3e
+/node_modules
+/.pnp
+.pnp.js
+=======
+**/node_modules
+/.pnp
+.pnp.js
+>>>>>>> 9d72af0c52be59d4a42ad85b335ec1eef682e14d
 
 # testing
 /coverage
@@ -15,13 +25,36 @@
 **/web/storage
 
 # misc
+<<<<<<< HEAD
 .env
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 web/yarn.lock
 web/package-lock.json
+||||||| bcf869f3e
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+=======
+**/.DS_Store
+**/.env.local
+**/.env.development.local
+**/.env.test.local
+**/.env.production.local
+
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+>>>>>>> 9d72af0c52be59d4a42ad85b335ec1eef682e14d
+
+<<<<<<< HEAD
 
 **/web/static/assets/css/custom.css
 **/web/static/custom
@@ -177,3 +210,12 @@ android/
 # Python
 **/__pycache__
 **/*.pyc
+||||||| bcf869f3e
+.next
+.env
+env.json
+=======
+**/.next
+**/.env
+**/env.json
+>>>>>>> 9d72af0c52be59d4a42ad85b335ec1eef682e14d
