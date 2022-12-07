@@ -288,22 +288,6 @@ const ThemeLayers = () => {
                     )
                   }}
                 />
-                {/* <Select
-                    variant="flushed"
-                    px={2}
-                    value={selectedOption}
-                    onChange={e => setSelectedOption(e.target.value)}
-                    isDisabled={!i}
-                    placeholder="All"
-                  >
-                    {Object.keys(baseTheme.components).map((comp: any) => {
-                      return (
-                        <option key={comp} value={comp}>
-                          {comp}
-                        </option>
-                      )
-                    })}
-                  </Select> */}
               </AccordionPanel>
             </AccordionItem>
           )
@@ -332,7 +316,7 @@ const ThemeCustomStyles = () => {
 const Themer = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   return (
-    <ChakraProvider resetCSS>
+    <ChakraProvider>
       <Button
         px={6}
         bgGradient="linear(to-br, blue.300, green.300, yellow.300, red.300)"

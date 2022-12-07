@@ -23,7 +23,7 @@ const App = () => {
           html: { minWidth: '860px', backgroundColor: '#1a202c' },
         })}
       />
-      <Loader/>
+      <Loader />
       <Metadata />
       <Header />
       <DndProvider backend={HTML5Backend}>
