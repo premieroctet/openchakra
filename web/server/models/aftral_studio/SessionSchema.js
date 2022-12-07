@@ -27,6 +27,10 @@ const SessionSchema = new Schema({
     type: Date,
     required: false,
   },
+  ordered: {
+    type: Boolean,
+    default: false,
+  },
   program: {
     type: Schema.Types.ObjectId,
     ref: 'program',
@@ -107,10 +111,6 @@ SessionSchema.methods.addChild = function(model, data) {
 
 SessionSchema.virtual('contact_name').get(function() {
   return `Session ${this.name}`
-})
-
-SessionSchema.virtual('spent_time').get(function() {
-  return null
 })
 
 SessionSchema.virtual('spent_time_str').get(function() {

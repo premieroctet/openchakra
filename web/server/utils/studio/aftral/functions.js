@@ -1,20 +1,29 @@
 const url=require('url')
+const NodeCache = require('node-cache')
 const mongoose =require('mongoose')
 const lodash =require('lodash')
 const bcrypt=require('bcryptjs')
+const {
+  RES_AVAILABLE,
+  RES_CURRENT,
+  RES_FINISHED,
+  RES_TO_COME,
+} = require('../../../../utils/aftral_studio/consts')
+const {NotFoundError} = require('../../errors')
 const {
   cloneModel,
   declareComputedField,
   formatTime,
   getModel,
 } = require('../../database')
-const {BadRequestError, NotFoundError} = require('../../errors')
 const UserSessionData = require('../../../models/UserSessionData')
 const Program=require('../../../models/Program')
 const Theme=require('../../../models/Theme')
 const Session=require('../../../models/Session')
 const User = require('../../../models/User')
 const Message = require('../../../models/Message')
+
+const myCache = new NodeCache({stdTTL: 15, checkperiod: 10})
 
 const getChildAttribute = model => {
   return {
@@ -135,12 +144,38 @@ const getResourcesForSession = resource_id => {
     })
 }
 
+// Get next theme in session
+const getNextTheme = theme_id => {
+  return Session.findOne({themes: theme_id})
+    .populate('themes')
+    .then(session => {
+      const idx=session.themes.findIndex(t => t._id.toString()==theme_id.toString())
+      if (idx==session.themes.length-1) {
+        return null
+      }
+      return themes[idx+1]
+    })
+}
+
+// Get previous theme in session
+const getPrevTheme = theme_id => {
+  return Session.findOne({themes: theme_id})
+    .populate('themes')
+    .then(session => {
+      const idx=session.themes.findIndex(v => v._id.toString()==theme_id.toString())
+      if (idx==0) {
+        return null
+      }
+      return session.themes[idx-1]
+    })
+}
+
 const getNextResource = id => {
   return getResourcesForSession(id)
     .then(datalist => {
       const idx=datalist.findIndex(v => v._id.toString()==id)
       if (idx==datalist.length-1) {
-        throw new NotFoundError('Last resource')
+        return null
       }
       return datalist[idx+1]
     })
@@ -151,7 +186,7 @@ const getPrevResource = id => {
     .then(datalist => {
       const idx=datalist.findIndex(v => v._id.toString()==id)
       if (idx==0) {
-        throw new NotFoundError('First resource')
+        return null
       }
       return datalist[idx-1]
     })
@@ -166,12 +201,16 @@ const getNext = (id, user, referrer) => {
     {upsert: true},
   )
     .then(() => {
-      return getNextResource(id)
+      const nextRes=getNextResource(id)
+      if (!nextRes) { throw new NotFoundError('Last resource') }
+      return nextRes
     })
 }
 
 const getPrevious = id => {
-  return getPrevResource(id)
+  const prevRes=getPrevResource(id)
+  if (!prevRes) { throw new NotFoundError('First resource') }
+  return prevRes
 }
 
 const getSession = id => {
@@ -199,11 +238,13 @@ const login = (email, password) => {
     })
 }
 
-const putAttribute = ({parent, attribute, value}) => {
+const putAttribute = ({parent, attribute, value, user}) => {
   console.log(`Putting ${parent} ${attribute} to ${value}`)
   let mongooseModel=null
+  let model=null
   return getModel(parent)
-    .then(model => {
+    .then(res => {
+      model=res
       mongooseModel=mongoose.connection.models[model]
       return mongooseModel.updateMany(
         {$or: [{_id: parent}, {origin: parent}]},
@@ -211,13 +252,21 @@ const putAttribute = ({parent, attribute, value}) => {
         {runValidators: true},
       )
     })
+    .then(res => {
+      if (model=='resource' && attribute=='annotation') {
+        // return setVirtualAttribute({model, parent, attribute, value, user})
+        return setResourceAnnotation({model, parent, attribute, value, user})
+          .then(() => res)
+      }
+      return Promise.resolve(res)
+    })
 }
 
 const filterDataUser = ({model, data, user}) => {
   if (model=='session') {
     data=data.filter(d =>
       (user.role=='apprenant' ? user.sessions.includes(d._id)
-        : user.roles=='formateur' ? d.trainers.map(t => t._id.toString()).includes(user._id.toString()) && !d.trainee
+        : user.role=='formateur' ? d.trainers.map(t => t._id.toString()).includes(user._id.toString()) && !d.trainee
           : !d.trainee),
     )
   }
@@ -236,7 +285,6 @@ const filterDataUser = ({model, data, user}) => {
     return Promise.all([Session.find(), Program.find()])
       .then(parents => {
         const themes=lodash(parents).flatten().map(t => t.themes).flatten().map(r => r._id.toString())
-        console.log(`themes:${themes}`)
         data=data.filter(d => !themes.includes(d._id.toString()))
         return data
       })
@@ -270,7 +318,6 @@ const getContacts = (user, id) => {
         .uniqBy(user => user._id.toString())
         .value()
       allContacts=[...allContacts, ...lodash.uniqBy(sessions, s => s.contact_name)]
-      console.log(allContacts)
       return allContacts.map(contact => ({_id: contact._id, name: contact.contact_name}))
     })
 }
@@ -291,13 +338,36 @@ const sendMessage = (sender, destinee, contents) => {
 }
 
 const getResourceSpentTime = async(user, queryParams, resource) => {
-  const data=await UserSessionData.find({user: user._id})
-  const spent=lodash(data)
-    .map(d => d.spent_times)
-    .flatten()
-    .find(sp => sp.resource._id.toString()==resource._id.toString())
-  return spent?.spent_time || 0
+  resource=typeof (resource)=='string' ? resource : resource._id
+  const key=`${user?.id}/${JSON.stringify(queryParams)}/${resource.toString()}/spent`
+  if (myCache.has(key)) {
+    return myCache.get(key)
+  }
+  const data=await UserSessionData.findOne({user: user._id})
+  const spent=data?.spent_times?.find(sp => sp.resource._id.toString()==resource.toString())
+  const res=spent?.spent_time || 0
+  myCache.set(key, res)
+  return res
 }
+
+const isResourceFinished = async(user, queryParams, resource) => {
+  resource = typeof (resource) == 'string' ? resource : resource._id
+  const finished = await UserSessionData.exists({
+    user: user._id,
+    'finished': resource,
+  })
+  return finished
+}
+
+const isResourceCurrent = async(user, queryParams, resource) => {
+  const finished = await isResourceFinished(user, queryParams, resource)
+  if (finished) {
+    return false
+  }
+  const current = await getResourceSpentTime(user, queryParams, resource) > 0
+  return current
+}
+
 
 /** Not finished, not in progress:
 +  Parent theme ordered:
@@ -307,52 +377,162 @@ const getResourceSpentTime = async(user, queryParams, resource) => {
 +  Parent theme unordered: available
 +  */
 const getResourceStatus = async(user, queryParams, resource) => {
-  const [data, spent]=await Promise.all([
-    UserSessionData.findOne({user: user._id}, {finished: 1}),
-    getResourceSpentTime(user, queryParams, resource),
-  ])
-  const finished=data?.finished.find(r => r.toString()==resource._id.toString())
-  if (finished) {
-    return 'Terminé'
+  resource=typeof (resource)=='string' ? resource : resource._id
+  const key=`${user?.id}/${JSON.stringify(queryParams)}/${resource}/status`
+  if (myCache.has(key)) {
+    return myCache.get(key)
   }
-  if (spent>0) {
-    return `En cours`
+
+  if (await isResourceFinished(user, queryParams, resource)) {
+    myCache.set(key, RES_FINISHED)
+    return RES_FINISHED
   }
-  const theme=await Theme.findOne({'resources': resource}, {ordered: 1})
-  if (!theme) {
-    return ''
+  if ((await isResourceCurrent(user, queryParams, resource)) > 0) {
+    myCache.set(key, RES_CURRENT)
+    return RES_CURRENT
   }
-  return theme.ordered ? 'A venir' : 'Disponible'
+  // Ordered theme or not ?
+  const theme = await Theme.findOne({
+    resources: resource,
+  })
+  if (!theme.ordered) {
+    myCache.set(key, RES_AVAILABLE)
+    return RES_AVAILABLE
+  }
+  const themeStatus=await getThemeStatus(user, queryParams, theme)
+  if (themeStatus==RES_TO_COME) {
+    myCache.set(key, RES_TO_COME)
+    return RES_TO_COME
+  }
+  // Theme status must be available or current
+  // First resource: available
+  const resIndex=theme.resources.findIndex(r => r._id.toString()==resource.toString())
+  if (resIndex==0) {
+    myCache.set(key, RES_AVAILABLE)
+    return RES_AVAILABLE
+  }
+  const prevResource=theme.resources[resIndex-1]
+  const prevStatus=await getResourceStatus(user, queryParams, prevResource)
+  if (prevStatus==RES_FINISHED) {
+    myCache.set(key, RES_AVAILABLE)
+    return RES_AVAILABLE
+  }
+  myCache.set(key, RES_TO_COME)
+  return RES_TO_COME
+}
+
+const isThemeCurrent = async(user, queryParams, theme) => {
+  theme = typeof (theme) == 'string' ? theme : theme._id
+  const th = await Theme.findById(theme)
+  const isCurrent = await Promise.all(th.resources.map(r => isResourceCurrent(user, queryParams, r)))
+  return isCurrent.some(v => !!v)
+}
+
+const isThemeFinished = async(user, queryParams, theme) => {
+  theme = typeof (theme) == 'string' ? theme : theme._id
+  const th = await Theme.findById(theme)
+  if (!th) {
+    console.trace(`No theme for ${theme}`)
+  }
+  const finishedStatus = await Promise.all(th.resources.map(r => isResourceFinished(user, queryParams, r)))
+  const themeFinished=finishedStatus.every(v => !!v)
+  return themeFinished
+}
+
+const getThemeStatus = async(user, queryParams, theme) => {
+  try {
+    theme = typeof (theme) == 'string' ? theme : theme._id
+    const key = `${user?.id}/${JSON.stringify(queryParams)}/${theme}/status`
+    if (myCache.has(key)) {
+      return myCache.get(key)
+    }
+    if (await isThemeCurrent(user, queryParams, theme)) {
+      myCache.set(key, RES_CURRENT)
+      return RES_CURRENT
+    }
+    if (await isThemeFinished(user, queryParams, theme)) {
+      myCache.set(key, RES_FINISHED)
+      return RES_FINISHED
+    }
+    // Handle availability depending on session ordered/unordered
+    const session = await Session.findOne({
+      themes: theme,
+    })
+    if (!session.ordered) {
+      myCache.set(key, RES_AVAILABLE)
+      return RES_AVAILABLE
+    }
+    // First theme: available
+    const prevTheme = await getPrevTheme(theme)
+    if (!prevTheme) {
+      myCache.set(key, RES_AVAILABLE)
+      return RES_AVAILABLE
+    }
+    if (await isThemeFinished(user, queryParams, prevTheme)) {
+      myCache.set(key, RES_AVAILABLE)
+      return RES_AVAILABLE
+    }
+    myCache.set(key, RES_TO_COME)
+    return RES_TO_COME
+  }
+  catch (err) {
+    console.error(err)
+  }
+}
+
+const getResourceAnnotation = async(user, queryParams, resource) => {
+  resource = typeof (resource) == 'string' ? resource : resource._id
+  const userData = await UserSessionData.findOne({
+    user: user._id,
+    'annotations.resource': resource,
+  }, {
+    annotations: 1,
+  })
+  return userData?.annotations.find(a => a.resource.toString() == resource.toString()).annotation || ''
 }
 
 const getResourceSpentTimeStr = async(user, queryParams, resource) => {
-  const res=await getResourceSpentTime(user, queryParams, resource)
-  const str=formatTime(res)
+  const res = await getResourceSpentTime(user, queryParams, resource)
+  const str = formatTime(res)
   return str
 }
 
 const getThemeSpentTime = async(user, queryParams, theme) => {
-  const data=await Theme.findById(theme._id.toString())
-  const results=await Promise.all(data.resources.map(r => getResourceSpentTime(user, queryParams, r._id)))
-  const spent=lodash.sum(results)
+  theme = typeof (theme) == 'string' ? theme : theme._id
+  const key = `${user?.id}/${JSON.stringify(queryParams)}/${theme}/spent`
+  if (myCache.has(key)) {
+    return myCache.get(key)
+  }
+  const data = await Theme.findById(theme._id.toString())
+  const results = await Promise.all(data.resources.map(r => getResourceSpentTime(user, queryParams, r)))
+  const spent = lodash.sum(results)
+  myCache.set(key, spent)
   return spent
 }
 
 const getThemeSpentTimeStr = async(user, queryParams, theme) => {
-  const res=await getThemeSpentTime(user, queryParams, theme)
+  const res = await getThemeSpentTime(user, queryParams, theme)
   return formatTime(res)
 }
 
 const getSessionSpentTime = async(user, queryParams, session) => {
-  const data=await Session.findById(session._id.toString())
-  if (!data) { return 0 }
-  const results=await Promise.all(data.themes.map(t => getThemeSpentTime(user, queryParams, t._id)))
-  const spent=lodash.sum(results)
+  session = typeof (session) == 'string' ? session : session._id
+  const key = `${user?.id}/${JSON.stringify(queryParams)}/${session}/spent`
+  if (myCache.has(key)) {
+    return myCache.get(key)
+  }
+  const data = await Session.findById(session)
+  if (!data) {
+    return 0
+  }
+  const results = await Promise.all(data.themes.map(t => getThemeSpentTime(user, queryParams, t._id)))
+  const spent = lodash.sum(results)
+  myCache.set(key, spent)
   return spent
 }
 
 const getSessionSpentTimeStr = async(user, queryParams, session) => {
-  const res=await getSessionSpentTime(user, queryParams, session)
+  const res = await getSessionSpentTime(user, queryParams, session)
   return formatTime(res)
 }
 
@@ -392,21 +572,20 @@ const getSessionProgressPercent = async(user, queryParams, session) => {
   return progress.finished*1.0/progress.total*100
 }
 
-declareComputedField('resource', 'spent_time', getResourceSpentTime)
 declareComputedField('resource', 'spent_time_str', getResourceSpentTimeStr)
 declareComputedField('resource', 'status', getResourceStatus)
+declareComputedField('resource', 'annotation', getResourceAnnotation)
 
-declareComputedField('theme', 'spent_time', getThemeSpentTime)
 declareComputedField('theme', 'spent_time_str', getThemeSpentTimeStr)
 declareComputedField('theme', 'progress_str', getThemeProgressStr)
 declareComputedField('theme', 'progress_percent', getThemeProgressPercent)
+declareComputedField('theme', 'status', getThemeStatus)
 
-declareComputedField('session', 'spent_time', getSessionSpentTime)
 declareComputedField('session', 'spent_time_str', getSessionSpentTimeStr)
 declareComputedField('session', 'progress_str', getSessionProgressStr)
 declareComputedField('session', 'progress_percent', getSessionProgressPercent)
 
-module.exports={
+module.exports = {
   addChild,
   removeChildFromParent,
   moveChildInParent,
@@ -418,4 +597,9 @@ module.exports={
   filterDataUser,
   getContacts,
   sendMessage,
+  getResourceStatus,
+  getThemeStatus,
+  myCache,
+  setResourceAnnotation,
+  getResourceAnnotation,
 }

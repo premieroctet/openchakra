@@ -19,8 +19,8 @@ const ACTIONS={
     return login(email, password)
   },
 
-  put: ({parent, attribute, value}) => {
-    return putAttribute({parent, attribute, value})
+  put: ({parent, attribute, value}, user) => {
+    return putAttribute({parent, attribute, value, user})
   },
 
   publish: ({id}) => {
@@ -48,15 +48,13 @@ const ACTIONS={
 
   addSpentTime: ({id, duration}, user, referrer) => {
     const params=url.parse(referrer, true).query
-    console.log('Adding')
-    // console.log(`Params:${params}`)
     return UserSessionData.findOneAndUpdate(
       {user: user._id},
       {user: user._id},
       {upsert: true, runValidators: true},
     )
       .then(data => {
-        const spentData=data.spent_times.find(d => d.resource==id)
+        const spentData=data?.spent_times.find(d => d?.resource==id)
         if (spentData) {
           spentData.spent_time += duration
         }

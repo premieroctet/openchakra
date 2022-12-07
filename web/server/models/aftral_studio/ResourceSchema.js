@@ -1,5 +1,5 @@
-const { schemaOptions } = require('../../utils/schemas');
 const mongoose = require('mongoose')
+const {schemaOptions} = require('../../utils/schemas')
 
 const Schema = mongoose.Schema
 
@@ -39,15 +39,15 @@ const ResourceSchema = new Schema({
   },
 }, schemaOptions)
 
-ResourceSchema.virtual('spent_time_str').get(function() {
+ResourceSchema.virtual('spent_time_str').get(() => {
   return null
 })
 
-ResourceSchema.virtual('spent_time').get(function() {
+ResourceSchema.virtual('status').get(() => {
   return null
 })
 
-ResourceSchema.virtual('status').get(function() {
+ResourceSchema.virtual('annotation').get(() => {
   return null
 })
 

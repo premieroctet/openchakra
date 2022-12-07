@@ -207,7 +207,7 @@ router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (r
   const model=req.params.model
   let fields=req.query.fields?.split(',') || []
   const id=req.params.id
-  const params=url.parse(req.get('Referrer'), true).query
+  const params=req.get('Referrer') ? {...url.parse(req.get('Referrer'), true).query} : {}
   const user=req.user
 
   console.log(`GET ${model}/${id} ${fields}`)
@@ -238,6 +238,11 @@ router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (r
     .then(data => {
       // Force duplicate children
       data=JSON.parse(JSON.stringify(data))
+
+      // Remove unrequired virtuals
+      const requiredFields=lodash([...fields, '_id']).map(f => f.split('.')[0]).uniq().value()
+      data=data.map(d => lodash.pick(d, requiredFields))
+
       if (id && data.length==0) {
         throw new NotFoundError(`Can't find ${model}:${id}`)
       }
@@ -250,8 +255,15 @@ router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (r
       if (['theme', 'resource'].includes(model) && !id) {
         data=data.filter(t => t.name)
       }
-      console.log(`Returning data`)
+      if (id && model=='resource' && data[0]?.status==RES_TO_COME) {
+        throw new ForbiddenError(`Ressource non encore disponible`)
+      }
+      console.log(`GET ${model}/${id} ${fields}: data sent`)
       return res.json(data)
+    })
+    .catch(err => {
+      console.error(err)
+      return res.status(err.status || 500).json(err.message || err)
     })
 })
 
