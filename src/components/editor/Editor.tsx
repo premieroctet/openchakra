@@ -128,7 +128,6 @@ const Editor: React.FC = () => {
       onClick={onSelectBackground}
     >
       {isEmpty && (
-        // TODO: Change this
         <Text maxWidth="md" color="gray.400" fontSize="xl" textAlign="center">
           Create new components using the `Create Component` button in the left
           sidebar. Click the edit button beside the component to load it! Or

@@ -20,10 +20,8 @@ import {
   AccordionPanel,
   AccordionIcon,
   useDisclosure,
-  extendTheme,
   theme as baseTheme,
   Select,
-  withDefaultProps,
   Box,
   Text,
   Stack,
@@ -32,6 +30,11 @@ import {
   HStack,
   Tooltip,
   IconButton,
+  Tabs,
+  TabPanel,
+  TabPanels,
+  TabList,
+  Tab,
 } from '@chakra-ui/react'
 import { omit } from 'lodash'
 import React, { useEffect, useState } from 'react'
@@ -50,6 +53,29 @@ const componentsWithLabel = Object.keys(baseTheme.components).map(
     value: comp,
   }),
 )
+
+const ThemeTokens = () => {
+  const themeState = useSelector(getTheme)
+  const themePath = useSelector(getThemePath)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    // TODO: Semantic tokens
+
+    const updateThemeJson = async () => {
+      if (themePath)
+        await API.post('/save-theme', {
+          themePath,
+          themeState,
+        })
+    }
+    dispatch.app.toggleLoader()
+    updateThemeJson()
+    dispatch.app.toggleLoader()
+  }, [themeState])
+
+  return <>ThemeTokens</>
+}
 
 const ThemeLayers = () => {
   const themeState = useSelector(getTheme)
@@ -299,6 +325,10 @@ const ThemeLayers = () => {
   )
 }
 
+const ThemeCustomStyles = () => {
+  return <>ThemeCustomStyles</>
+}
+
 const Themer = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   return (
@@ -325,17 +355,61 @@ const Themer = () => {
           <DrawerCloseButton />
           <DrawerHeader borderBottomWidth="1px">
             Customize Project Theme
-            <Tooltip
-              label="Add theme layers where the lower layer overrides the theme configuration set in above layers"
-              fontSize="md"
-              hasArrow
-              placement="left"
-            >
-              <InfoOutlineIcon color="teal.300" w={4} h={4} ml={2} />
-            </Tooltip>
           </DrawerHeader>
           <DrawerBody>
-            <ThemeLayers />
+            <Tabs
+              size="sm"
+              variant="line"
+              isLazy
+              colorScheme="teal"
+              orientation="vertical"
+            >
+              <TabList>
+                <Tab>
+                  <Tooltip
+                    label="Set default CSS properties"
+                    fontSize="sm"
+                    hasArrow
+                    placement="right"
+                  >
+                    Tokens
+                  </Tooltip>
+                </Tab>
+                <Divider />
+                <Tab>
+                  <Tooltip
+                    label="Add theme layers where the lower layer overrides the theme configuration set in above layers"
+                    fontSize="sm"
+                    hasArrow
+                    placement="right"
+                  >
+                    Layers
+                  </Tooltip>
+                </Tab>
+                <Divider />
+                <Tab>
+                  <Tooltip
+                    label="Create your own custom styles"
+                    fontSize="sm"
+                    hasArrow
+                    placement="right"
+                  >
+                    Custom Styles
+                  </Tooltip>
+                </Tab>
+              </TabList>
+              <TabPanels>
+                <TabPanel>
+                  <ThemeTokens />
+                </TabPanel>
+                <TabPanel>
+                  <ThemeLayers />
+                </TabPanel>
+                <TabPanel>
+                  <ThemeCustomStyles />
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
           </DrawerBody>
         </DrawerContent>
       </Drawer>
