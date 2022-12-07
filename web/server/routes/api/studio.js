@@ -1,5 +1,3 @@
-const {RES_TO_COME} = require('../../../utils/aftral_studio/consts')
-const {ForbiddenError} = require('../../utils/errors')
 const {getDataModel, getProductionRoot, getProductionPort} = require('../../../config/config')
 const {
   filterDataUser,
@@ -7,7 +5,6 @@ const {
   getResourceSpentTime,
   login,
 } = require('../../utils/studio/aftral/functions')
-
 const {ROLES}=require(`../../../utils/${getDataModel()}/consts`)
 const {sendCookie} = require('../../config/passport')
 const path=require('path')
@@ -23,6 +20,7 @@ const {getModels} =require('../../utils/database')
 const {ACTIONS} = require('../../utils/studio/actions')
 const {buildQuery, addComputedFields} = require('../../utils/database')
 const url=require('url')
+const UserSessionData = require('../../models/UserSessionData')
 
 const router = express.Router()
 
@@ -133,7 +131,7 @@ router.post('/action', passport.authenticate('cookie', {session: false}), (req, 
       return res.json(result)
     })
     .catch(err => {
-      console.log(err)
+      console.error(err)
       return res.status(err.status || HTTP_CODES.SYSTEM_ERROR).json(err.message || err)
     })
 })
@@ -150,6 +148,43 @@ router.post('/login', (req, res) => {
       console.log(err)
       return res.status(err.status || HTTP_CODES.SYSTEM_ERROR).json(err.message || err)
     })
+})
+
+// router.post('/scormupdate', passport.authenticate('cookie', {session: false}), (req, res) => {
+router.post('/scormupdate', (req, res) => {
+  
+  const value = req.body
+  const idRessource = req?.body?.cmi?.entry
+  const user = req.user
+
+  // console.log(value, idRessource, user)
+  console.log(value)
+
+  // const updateScorm = UserSessionData.findOneAndUpdate({
+  //   user: user._id,
+  // }, {
+  //   user: user._id,
+  // }, {
+  //   upsert: true,
+  //   new: true,
+  // })
+  //   .then(data => {
+  //     const scormProgress = data?.modules_progress?.find(a => a.resource._id.toString() == idRessource.toString())
+  //     if (scormProgress) {
+  //       scormProgress.module_progress = value
+  //     }
+  //     else {
+  //       data.modules_progress.push({
+  //         resource: parent,
+  //         module_progress: value,
+  //       })
+  //     }
+  //     return data.save()
+  //   })
+  //   .catch(e => console.error(e))
+    
+  // return res.json(updateScorm)
+  return res.json({})
 })
 
 router.get('/current-user', passport.authenticate('cookie', {session: false}), (req, res) => {

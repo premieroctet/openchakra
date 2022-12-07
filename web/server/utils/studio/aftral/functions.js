@@ -248,7 +248,9 @@ const putAttribute = ({parent, attribute, value, user}) => {
       mongooseModel=mongoose.connection.models[model]
       return mongooseModel.updateMany(
         {$or: [{_id: parent}, {origin: parent}]},
-        {[attribute]: value})
+        {[attribute]: value},
+        {runValidators: true},
+      )
     })
     .then(res => {
       if (model=='resource' && attribute=='annotation') {

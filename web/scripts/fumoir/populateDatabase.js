@@ -13,7 +13,7 @@ mongoose.Promise = global.Promise // Tell Mongoose to use ES6 promises
 const User = require('../../server/models/User')
 const Company = require('../../server/models/Company')
 const Subscription = require('../../server/models/Subscription')
-const ProductCategory = require('../../server/models/CategoryProduct')
+const Category = require('../../server/models/Category')
 
 const entries = {
   product_category: 2,
@@ -27,7 +27,7 @@ const entries = {
  * PRODUCT CATEGORIES
  */
 
-const productCategoryFactory = factory(ProductCategory, {
+const productCategoryFactory = factory(Category, {
   __v: {
     skip: true,
   },
@@ -118,7 +118,7 @@ async function loadData() {
     await User.insertMany(users)
     await Subscription.insertMany(subscriptions)
     
-    await ProductCategory.insertMany(productCategories)
+    await Category.insertMany(productCategories)
     console.log('👍👍👍👍👍 Cooool ! Import done !')
     process.exit()
   }

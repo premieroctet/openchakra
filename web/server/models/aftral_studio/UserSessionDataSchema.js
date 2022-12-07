@@ -22,6 +22,17 @@ const UserSessionDataSchema = new Schema({
       required: true,
     },
   }],
+  modules_progress: [{
+    resource: {
+      type: Schema.Types.ObjectId,
+      ref: 'resource',
+      required: true,
+    },
+    module_progress: {
+      type: String,
+      required: true,
+    },
+  }],
   annotations: [{
     resource: {
       type: Schema.Types.ObjectId,

@@ -27,7 +27,7 @@ const ACTIONS={
     return Program.findOneAndUpdate(
       {_id: id},
       {published: true},
-      {new: true},
+      {new: true, runValidators: true},
     )
       .then(result => {
         console.log(`result publish ${JSON.stringify(result)}`)
@@ -51,7 +51,7 @@ const ACTIONS={
     return UserSessionData.findOneAndUpdate(
       {user: user._id},
       {user: user._id},
-      {upsert: true},
+      {upsert: true, runValidators: true},
     )
       .then(data => {
         const spentData=data?.spent_times.find(d => d?.resource==id)
