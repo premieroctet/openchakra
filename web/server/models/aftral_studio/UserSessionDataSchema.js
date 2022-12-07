@@ -1,4 +1,4 @@
-const { schemaOptions } = require('../../utils/schemas');
+const {schemaOptions} = require('../../utils/schemas')
 const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
@@ -20,7 +20,29 @@ const UserSessionDataSchema = new Schema({
     spent_time: {
       type: Number,
       required: true,
-    }
+    },
+  }],
+  modules_progress: [{
+    resource: {
+      type: Schema.Types.ObjectId,
+      ref: 'resource',
+      required: true,
+    },
+    module_progress: {
+      type: String,
+      required: true,
+    },
+  }],
+  annotations: [{
+    resource: {
+      type: Schema.Types.ObjectId,
+      ref: 'resource',
+      required: true,
+    },
+    annotation: {
+      type: String,
+      required: false,
+    },
   }],
   finished: [{
     type: Schema.Types.ObjectId,
