@@ -10,6 +10,12 @@ export default async function handler(req, res) {
   const pascalName = fileArray.join('')
 
   try {
+    if (req.body.codeBody[0] !== '/') {
+      await fs.writeFile(
+        `src/custom-components/customOcTsx/${fileName}.oc.tsx`,
+        req.body.ocTsxBody,
+      )
+    }
     const writeCode = fs.writeFile(
       `${req.body.path}/${fileName}.oc.tsx`,
       req.body.codeBody,
@@ -25,10 +31,6 @@ export default async function handler(req, res) {
     const writePanel = fs.writeFile(
       `src/custom-components/inspector/panels/components/${pascalName}Panel.oc.tsx`,
       req.body.panelBody,
-    )
-    const writeOcTsx = fs.writeFile(
-      `src/custom-components/customOcTsx/${fileName}.oc.tsx`,
-      req.body.ocTsxBody,
     )
     let fileContent = await fs.readFile(`${req.body.path}/${fileName}.tsx`, {
       encoding: 'utf-8',
@@ -57,7 +59,6 @@ export default async function handler(req, res) {
       writeJson,
       writePreview,
       writePanel,
-      writeOcTsx,
       writeTSX,
     ])
     res.statusCode = 200
