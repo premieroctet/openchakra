@@ -255,21 +255,24 @@ const components = createModel({
           ...draftState.components,
           ...payload.components,
         }
-        const newRefElements = Object.entries(
-          draftState.components,
-        ).filter(([id, comp]) => componentsWithRefs.includes(comp.type))
+        const newRefElements = Object.entries(draftState.components).filter(
+          ([id, comp]) =>
+            componentsWithRefs.includes(comp.type) &&
+            draftState.components[payload.root].children.includes(id),
+        )
         if (newRefElements.length) {
-          const [id, comp] = newRefElements[newRefElements.length - 1]
-          const ref = `ref${id.replace('-', '_')}`
-          draftState.components['root'].params?.push({
-            name: ref,
-            type: `RefObject<${ComponentWithRefs[comp.type]}>`,
-            value: 'null',
-            optional: true,
-            exposed: false,
-            ref: true,
+          newRefElements.map(([id, comp]) => {
+            const ref = `ref${id.replace('-', '_')}`
+            draftState.components['root'].params?.push({
+              name: ref,
+              type: `RefObject<${ComponentWithRefs[comp.type]}>`,
+              value: 'null',
+              optional: true,
+              exposed: false,
+              ref: true,
+            })
+            draftState.components[id].props['ref'] = `{${ref}}`
           })
-          draftState.components[id].props['ref'] = `{${ref}}`
         }
       })
     },
