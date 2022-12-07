@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>WebView.ipa</key>
+	<array>
+		<dict>
+			<key>architectures</key>
+			<array>
+				<string>armv7</string>
+				<string>arm64</string>
+			</array>
+			<key>bitcode</key>
+			<true/>
+			<key>certificate</key>
+			<dict>
+				<key>SHA1</key>
+				<string>11E35B73B036300ED75A0A7A2692DB22AD33AC66</string>
+				<key>dateExpires</key>
+				<string>19/06/2021</string>
+				<key>type</key>
+				<string>Apple Distribution</string>
+			</dict>
+			<key>entitlements</key>
+			<dict>
+				<key>application-identifier</key>
+				<string>2B5UV468Y8.com.myalfred.myApp</string>
+				<key>beta-reports-active</key>
+				<true/>
+				<key>com.apple.developer.team-identifier</key>
+				<string>2B5UV468Y8</string>
+				<key>get-task-allow</key>
+				<false/>
+				<key>keychain-access-groups</key>
+				<array>
+					<string>2B5UV468Y8.com.myalfred.myApp</string>
+				</array>
+			</dict>
+			<key>name</key>
+			<string>MyAlfred.app</string>
+			<key>profile</key>
+			<dict>
+				<key>UUID</key>
+				<string>18061c04-84cd-41e9-b0bf-1b8d9c033257</string>
+				<key>name</key>
+				<string>iOS Team Store Provisioning Profile: *</string>
+			</dict>
+			<key>symbols</key>
+			<true/>
+			<key>team</key>
+			<dict>
+				<key>id</key>
+				<string>2B5UV468Y8</string>
+				<key>name</key>
+				<string>MY ALFRED</string>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>

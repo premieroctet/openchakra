@@ -1,0 +1,57 @@
+
+## Requirements
+* node 14 + yarn
+* mongodb
+* filezilla
+
+
+clés ssh en place
+Récupérer images du projet avec filezilla
+
+## Packages global
+
+yarn global add nodemon pm2
+
+## Récupérer le projet
+
+git clone https://github.com/SebastienAuvray/myAlfred
+
+Puis, dans le projet myalfred :
+
+. passer sur branche adéquate (suivant plateforme)
+. aller dans le dossier web
+
+### créer le fichier mode.js
+
+[source, JavaScript]
+web/mode.js
+----
+const MODE = 'development'; /* 'production', 'development' */
+const TAWKTO_URL = 'https://embed.tawk.to/5de4db8c43be710e1d201adc/default'
+const SIB_TEMPLATES='all-inclusive' /* 'my-alfred', 'all-inclusive' */
+const DATABASE_NAME='test-myAlfred-V2'
+const MANGOPAY_CLIENTID='testmyalfredv2'
+const MANGOPAY_APIKEY='cSNrzHm5YRaQxTdZVqWxWAnyYDphvg2hzBVdgTiAOLmgxvF2oN'
+const SITE_MODE='platform'
+const DATA_MODEL='feurst'
+
+module.exports = {MODE, TAWKTO_URL, SIB_TEMPLATES, DATABASE_NAME, MANGOPAY_CLIENTID, MANGOPAY_APIKEY, SITE_MODE, DATA_MODEL}
+----
+
+TIP: Afin de pouvoir utiliser Node sous le port 1024, `sudo setcap cap_net_bind_service=+ep `readlink -f \`which node\`` `
+
+## build
+
+Passer dans le fichier `mode.js` le MODE en `'production'`
+[source, bash]
+----
+$ yarn build
+
+# Puis, yarn start
+----
+
+## Go
+
+yarn install
+
+yarn dev

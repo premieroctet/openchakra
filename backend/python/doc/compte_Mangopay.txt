@@ -1,0 +1,5 @@
+Nom de société: My Alfred
+E-mail: sebastien.auvray@my-alfred.io
+ClientID: my-alfred
+Clef API: uw2hhYipWnYoFbkd1ep9XtBfLjm2gZ8JoSPxbm5QzP51CFUqY3
+

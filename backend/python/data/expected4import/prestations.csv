@@ -1,0 +1,2 @@
+_id,search_filter,label,price,service,billing,filter_presentation,category,calculating,job,__v
+ObjectId("5cc81bfe8691598377ba2fcf"),"["5cc1aae670142865dab77f46"]",Coupe classique,20,ObjectId("5cd20c2d9d4e6b21f67d2782"),ObjectId("5cc1a88770142865dab77f40"),ObjectId("5cc1a97f70142865dab77f43"),ObjectId("5cc1aa6270142865dab77f45"),ObjectId("5cc1a9d570142865dab77f44"),ObjectId("5cc1a8d270142865dab77f41"),0

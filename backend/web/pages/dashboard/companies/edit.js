@@ -1,0 +1,341 @@
+import {withTranslation} from 'react-i18next'
+import {Typography} from '@material-ui/core'
+import {withStyles} from '@material-ui/core/styles'
+import Button from '@material-ui/core/Button'
+import Checkbox from '@material-ui/core/Checkbox'
+import FormControl from '@material-ui/core/FormControl'
+import Grid from '@material-ui/core/Grid'
+import MenuItem from '@material-ui/core/MenuItem'
+import React from 'react'
+import Router from 'next/router'
+import Select from '@material-ui/core/Select'
+import TextField from '@material-ui/core/TextField'
+import axios from 'axios'
+import DashboardLayout from '../../../hoc/Layout/DashboardLayout'
+import withParams from '../../../components/withParams'
+import LocationSelect from '../../../components/Geo/LocationSelect'
+import {COMPANY_SIZE, COMPANY_ACTIVITY} from '../../../utils/consts'
+import {SIRET} from '../../../config/config'
+import {clearAuthenticationToken, setAxiosAuthentication} from '../../../utils/authentication'
+import {formatAddress} from '../../../utils/text'
+import {snackBarSuccess, snackBarError} from '../../../utils/notifications'
+
+const styles = () => ({
+  signupContainer: {
+    alignItems: 'center',
+    justifyContent: 'top',
+    flexDirection: 'column',
+
+  },
+  card: {
+    padding: '1.5rem 3rem',
+    marginTop: '100px',
+  },
+  cardContant: {
+    flexDirection: 'column',
+  },
+  linkText: {
+    textDecoration: 'none',
+    color: 'black',
+    fontSize: 12,
+    lineHeight: 4.15,
+  },
+  chips: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  chip: {
+    margin: 2,
+  },
+})
+
+class View extends React.Component {
+
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      company: null,
+      suggestion_address: null,
+      errors: {},
+    }
+    this.onChange = this.onChange.bind(this)
+    this.SIZE_OPTIONS= Object.keys(COMPANY_SIZE).map(key => (
+      <MenuItem value={key}>{COMPANY_SIZE[key]}</MenuItem>
+    ))
+    this.ACTIVITY_OPTIONS= Object.keys(COMPANY_ACTIVITY).map(key => (
+      <MenuItem value={key}>{COMPANY_ACTIVITY[key]}</MenuItem>
+    ))
+  }
+
+  componentDidMount() {
+    localStorage.setItem('path', Router.pathname)
+    const id = this.props.id
+    if (!id) {
+      this.setState({company: {}})
+      return
+    }
+    setAxiosAuthentication()
+    axios.get(`/myAlfred/api/admin/companies/${id}`)
+      .then(response => {
+        let company = response.data
+        this.setState({company: company})
+      })
+      .catch(err => {
+        console.error(err)
+        if (err.response.status === 401 || err.response.status === 403) {
+          clearAuthenticationToken()
+          Router.push({pathname: '/login'})
+        }
+      })
+  }
+
+  checkSiret = siret => {
+    if (!siret) {
+      return
+    }
+    const config = {
+      headers: {Authorization: `Bearer ${SIRET.token}`},
+    }
+    Promise.any([SIRET.siretUrl, SIRET.sirenUrl].map(u => axios.get(`${u}/${siret}`, config)))
+      .then(() => {
+        snackBarSuccess('Numéro SIRET/SIREN reconnu')
+      })
+      .catch(err => console.error(err))
+  }
+
+  onChange = e => {
+    const {company} = this.state
+    let {name, value} = e.target
+    if (name=='siret') {
+      value = value.replaceAll(' ', '')
+      this.checkSiret(value)
+    }
+    company[name] = value
+    this.setState({company: company})
+  }
+
+  onCheck = e => {
+    const state = this.state.company
+    const {checked}=e.target
+    state.vat_subject = checked
+    if (!checked) {
+      state.vat_number=null
+    }
+    this.setState({company: state})
+  }
+
+  onAddressChange = suggestion => {
+    this.setState({suggestion_address: suggestion ? suggestion.suggestion : null})
+  }
+
+  onSubmit = e => {
+    e.preventDefault()
+    const {company, suggestion_address}=this.state
+    const address = suggestion_address ? {
+      address: suggestion_address.name,
+      city: suggestion_address.city,
+      zip_code: suggestion_address.postcode,
+      country: suggestion_address.country,
+      gps: {
+        lat: suggestion_address.latlng.lat,
+        lng: suggestion_address.latlng.lng,
+      },
+    }
+      :
+      null
+
+    if (address) {
+      company.billing_address = address
+    }
+
+    axios.post('/myAlfred/api/admin/companies', {...company})
+      .then(res => {
+        if (company._id) {
+          this.setState({errors: {}})
+          snackBarSuccess('Entreprise modifiée')
+          this.componentDidMount()
+        }
+        else {
+          snackBarSuccess('Entreprise créée')
+          Router.push(`/dashboard/companies/edit?id=${res.data._id}`)
+        }
+      })
+      .catch(err => {
+        console.error(err)
+        snackBarError(err.response.data)
+        this.setState({errors: err.response.data})
+      })
+  }
+
+  render() {
+    const {classes} = this.props
+    const {company, errors, suggestion_address} = this.state
+
+    const placeholder = formatAddress(company ? company.billing_address : null) || 'Modifiez votre adresse'
+    if (!company) {
+      return null
+    }
+
+    return (
+      <DashboardLayout>
+        <Grid container className={classes.signupContainer}>
+          <Grid>
+            <Grid item style={{display: 'flex', justifyContent: 'center'}}>
+              <Typography style={{fontSize: 30}}>Nom</Typography>
+            </Grid>
+            <form onSubmit={this.onSubmit}>
+              <Grid item>
+                <TextField
+                  margin="normal"
+                  style={{width: '100%'}}
+                  type="text"
+                  name="name"
+                  value={company.name}
+                  onChange={this.onChange}
+                  error={errors.name}
+                />
+              </Grid>
+              <Grid item style={{display: 'flex', justifyContent: 'center'}}>
+                <Typography style={{fontSize: 20}}>Site web</Typography>
+              </Grid>
+              <Grid item>
+                <TextField
+                  margin="normal"
+                  style={{width: '100%'}}
+                  type="text"
+                  name="website"
+                  value={company.website}
+                  onChange={this.onChange}
+                  error={errors.website}
+                />
+              </Grid>
+              <Grid item style={{display: 'flex', justifyContent: 'center'}}>
+                <Typography style={{fontSize: 20}}>Adresse siège social</Typography>
+              </Grid>
+              <form>
+                <LocationSelect
+                  placeholder={placeholder}
+                  onChange={this.onAddressChange}
+                  onClear={this.onAddressChange}
+                />
+              </form>
+
+
+              <Grid item style={{width: '100%', marginTop: 20}}>
+                <Typography style={{fontSize: 20}}>Effectif de l'entreprise</Typography>
+                <FormControl className={classes.formControl} style={{width: '100%'}}>
+                  <Select
+                    value={company.size}
+                    onChange={this.onChange}
+                    name={'size'}
+                    error={errors.size}
+                  >
+                    {this.SIZE_OPTIONS}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item style={{width: '100%', marginTop: 20}}>
+                <Typography style={{fontSize: 20}}>Secteur d'activité</Typography>
+                <FormControl className={classes.formControl} style={{width: '100%'}}>
+                  <Select
+                    value={company.activity}
+                    onChange={this.onChange}
+                    name={'activity'}
+                    error={errors.activity}
+                  >
+                    {this.ACTIVITY_OPTIONS}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item style={{width: '100%', marginTop: 20}}>
+                <Typography style={{fontSize: 20}}>Assujetti à la TVA</Typography>
+                <FormControl className={classes.formControl} style={{width: '100%'}}>
+                  <Checkbox
+                    onChange={this.onCheck}
+                    name={'vat_subject'}
+                    checked={company.vat_subject}
+                  />
+                </FormControl>
+              </Grid>
+              { company.vat_subject ?
+                <>
+                  <Grid item style={{display: 'flex', justifyContent: 'center'}}>
+                    <Typography style={{fontSize: 20}}>N° de TVA</Typography>
+                  </Grid>
+                  <Grid item>
+                    <TextField
+                      margin="normal"
+                      style={{width: '100%'}}
+                      type="text"
+                      name="vat_number"
+                      value={company.vat_number}
+                      onChange={this.onChange}
+                      error={errors.vat_number}
+                    />
+                  </Grid>
+                </>
+                :
+                null
+              }
+              <Grid item style={{display: 'flex', justifyContent: 'center'}}>
+                <Typography style={{fontSize: 20}}>N° de Siren/Siret</Typography>
+              </Grid>
+              <Grid item>
+                <TextField
+                  margin="normal"
+                  style={{width: '100%'}}
+                  type="text"
+                  name="siret"
+                  value={company.siret}
+                  onChange={this.onChange}
+                  error={errors.siret}
+                />
+              </Grid>
+              <Grid item style={{display: 'flex', justifyContent: 'center'}}>
+                <Typography style={{fontSize: 20}}>Ajouter un administrateur</Typography>
+              </Grid>
+              <Grid item>
+                <TextField
+                  margin="normal"
+                  style={{width: '100%'}}
+                  name="admin_firstname"
+                  value={company.admin_firstname}
+                  onChange={this.onChange}
+                  error={errors.admin_firstname}
+                  placeholder={'Prénom'}
+                />
+                <TextField
+                  margin="normal"
+                  style={{width: '100%'}}
+                  name="admin_name"
+                  value={company.admin_name}
+                  onChange={this.onChange}
+                  error={errors.admin_name}
+                  placeholder={'Nom'}
+                />
+                <TextField
+                  margin="normal"
+                  style={{width: '100%'}}
+                  name="admin_email"
+                  value={company.admin_email}
+                  onChange={this.onChange}
+                  error={errors.admin_email}
+                  placeholder={'Email'}
+                />
+              </Grid>
+              <Grid item style={{display: 'flex', justifyContent: 'center', marginTop: 30}}>
+                <Button type="submit" variant="contained" color="primary" style={{width: '100%'}}>
+                    Enregistrer
+                </Button>
+              </Grid>
+            </form>
+          </Grid>
+        </Grid>
+      </DashboardLayout>
+    )
+  }
+}
+
+
+export default withTranslation(null, {withRef: true})(withStyles(styles)(withParams(View)))

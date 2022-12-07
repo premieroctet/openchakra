@@ -1,0 +1,58 @@
+import {withTranslation} from 'react-i18next'
+import Chip from '@material-ui/core/Chip'
+import React from 'react'
+import Grid from '@material-ui/core/Grid'
+import styles from './SelectSlotTimerStyle'
+import withStyles from '@material-ui/core/styles/withStyles'
+import Avatar from '@material-ui/core/Avatar'
+
+class SelectSlotTimer extends React.Component {
+  constructor(props) {
+    super(props)
+    this.createRender = this.createRender.bind(this)
+  }
+
+  toggleTimeSlot = item => {
+    this.props.onChange(item)
+  };
+
+  createRender = (arrayLength, index, classes, bookings) => {
+    let items = []
+
+    const anyAvatar = bookings ? Object.keys(bookings).length>0 : false
+    for (let i = index; i < index+arrayLength; i++) {
+      const pattern = this.props.slots[i]==null ? 'repeating-linear-gradient(45deg, #4fbdd7 48%, #FFFFFF  50%, #4fbdd7 51%)' : ''
+      const classname = this.props.slots[i] ? 'customscheduleactive' : 'customschedule'
+      const avatar=bookings[i] ? `/${bookings[i]}` : null
+      let avatarProp = avatar ? <Avatar src={avatar} /> : anyAvatar ? <div /> : null
+      items.push(
+        <Grid key={i} item xl={4} lg={4} md={4} sm={6} xs={6}>
+          <Chip
+            clickable
+            label={`${(`0${ i}`).slice(-2) }h00 - ${ (`0${ i + 1}`).slice(-2) }h00`}
+            style={{backgroundImage: pattern}}
+            className={`${classname} ${classes.textFieldChips}`}
+            avatar={ avatarProp }
+            onClick={() => {
+              this.toggleTimeSlot(i)
+            }}
+            selectable={false}
+          />
+        </Grid>,
+      )
+    }
+    return items
+  };
+
+  render() {
+    const {classes, arrayLength, index, bookings} = this.props
+
+    return (
+      <Grid container item style={{width: '100%', margin: 0, textAlign: 'center'}}>
+        {this.createRender(arrayLength, index, classes, bookings)}
+      </Grid>
+    )
+  }
+}
+
+export default withTranslation(null, {withRef: true})(withStyles(styles, {withTheme: true})(SelectSlotTimer))
