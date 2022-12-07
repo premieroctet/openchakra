@@ -1,0 +1,59 @@
+{
+  "name": "studio-test",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@chakra-ui/icons": "^2.0.11",
+    "@chakra-ui/react": "^2.3.5",
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "aws-sdk": "^2.1257.0",
+    "axios": "^1.1.2",
+    "framer-motion": "^7.5.3",
+    "jszip": "^3.10.1",
+    "mime": "^3.0.0",
+    "mime-types": "^2.1.35",
+    "moment": "^2.29.4",
+    "next": "^12.3.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.4.2",
+    "react-scripts": "5.0.1",
+    "react-timer-hook": "^3.0.5",
+    "typescript": "^4.8.4",
+    "web-vitals": "^2.1.4",
+    "xml-js": "^1.6.11"
+  },
+  "proxy": "PROXY",
+  "scripts": {
+    "dev": "HTTPS=true next dev",
+    "start": "HTTPS=true SSL_CRT_FILE=~/.ssh/Main.txt SSL_KEY_FILE=~/.ssh/Key.txt react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@types/mime": "^3.0.1"
+  }
+}
