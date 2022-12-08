@@ -1,6 +1,9 @@
 import { createModel } from '@rematch/core'
+import { enableMapSet } from 'immer';
 import produce from 'immer'
 import { convertToPascal } from '~components/editor/Editor';
+
+enableMapSet();
 
 export interface CustomDictionary {
   [Key: string]: string

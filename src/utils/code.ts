@@ -860,6 +860,7 @@ export const generateICPreview = async (
   }
 
   const ${fileName}Preview = ({ component }: Props) => {
+
   const { isOver } = useDropComponent(component.id)
   const { props, ref } = useInteractive(component, true)
 
