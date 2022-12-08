@@ -10,7 +10,7 @@ export default async function handler(req, res) {
 
     // 2.1 Generate preview code
     const componentName = convertToPascal(component)
-    const previewCode = await generateICPreview(componentName)
+    const previewCode = await generateICPreview(componentName) 
 
     // 2.2 Write the generated file
     fs.writeFileSync(

@@ -13,6 +13,7 @@
   "bin": {
     "uiez": "./cli.js"
   },
+  "type": "module",
   "dependencies": {
     "@bugsnag/js": "^6.5.2",
     "@bugsnag/plugin-react": "^6.5.0",
