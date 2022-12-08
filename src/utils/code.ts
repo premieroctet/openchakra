@@ -426,13 +426,13 @@ export const generateMainTsx = (params: any, fileName: string) => {
 export const generateCode = async (
   components: IComponents,
   currentComponents: CustomDictionary,
-  installedComponents: CustomDictionary = {}
+  installedComponents: CustomDictionary
 ) => {
   let code = buildBlock({ component: components.root, components })
   let componentsCodes = buildComponents(components)
   const { paramTypes, params } = buildParams(components.root.params)
   const iconImports = Array.from(new Set(getIconsImports(components)))
-
+  
   let imports = [
     ...new Set(
       Object.keys(components)

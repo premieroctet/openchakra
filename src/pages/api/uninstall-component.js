@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   const componentName = convertToPascal(fileName)
   try {
     const deletePreview = fs.unlink(
-      `src/installed-components/${componentName}Preview.oc.tsx`,
+      `src/installed-components/${componentName}Preview.ic.tsx`,
     )
     await Promise.all([deletePreview])
 
