@@ -1,5 +1,7 @@
 import shell from 'shelljs'
 import fs from 'fs'
+import { convertToPascal } from '../../../src/components/editor/Editor'
+import { generateICPreview } from '../../utils/code'
 
 export default async function handler(req, res) {
   const componentPath = req.body.path

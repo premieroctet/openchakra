@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 function packageToComponent(packageName) {
-  // var component = '@tiui/remote.ui.action-card'
   var component
   component = packageName.replace("@", "");
   const myArray = component.split(".");
@@ -13,7 +12,6 @@ function packageToComponent(packageName) {
       component += '/'
   }
   component = component.replace("/", ".");
-
   return component;
 }
 
@@ -25,10 +23,10 @@ export default async function handler(req, res) {
     //BIT Login to get cookie
 
     var data = JSON.stringify({
-      "username": "trilogy-innovation",
-      "password": "7FiePA8VkLSuAxW"
-      // "username": process.env.BIT_USERNAME,
-      // "password": process.env.BIT_PASSWORD
+      // "username": "trilogy-innovation",
+      // "password": "7FiePA8VkLSuAxW"
+      "username": process.env.NEXT_BIT_USERNAME,
+      "password": process.env.NEXT_BIT_PASSWORD
     });
 
     var config = {

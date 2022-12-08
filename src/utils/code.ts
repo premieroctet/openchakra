@@ -825,33 +825,18 @@ export const generatePanel = async (
 }
 
 export const generateICPreview = async (
-  components: IComponents,
   fileName: string,
   selectedComponent?: string,
 ) => {
-  let code = buildBlock({ component: components.root, components })
-  const iconImports = Array.from(new Set(getIconsImports(components)))
-  const paramsContent = destructureParams(components.root.params)
 
-  code = `import React from 'react'
+  let code = `import React from 'react'
   import { useDropComponent } from '~hooks/useDropComponent'
   import { useInteractive } from '~hooks/useInteractive'
   import { Box } from "@chakra-ui/react";
 
-  ${`import { ${fileName} } from 'src/custom-components/customOcTsx/${selectedComponent}';`}
+  ${`import { ${fileName} } from '${selectedComponent}';`}
 
-  ${
-    iconImports.length
-      ? `
-  import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
-      : ''
-  }
-
-  interface Props {
-    component: IComponent
-  }
-
-  const ${fileName}Preview = ({ component }: Props) => {
+  const ${fileName}Preview = ({ component }: any) => {
   const { isOver } = useDropComponent(component.id)
   const { props, ref } = useInteractive(component, true)
 
@@ -859,7 +844,6 @@ export const generateICPreview = async (
       props.bg = 'teal.50'
     }
 
-    ${paramsContent}
 
     return (<Box {...props} ref={ref}>
       ${`<${fileName}  {...props}/>`}

@@ -1,5 +1,8 @@
 import { createModel } from '@rematch/core'
+import { enableMapSet } from 'immer';
 import produce from 'immer'
+
+enableMapSet();
 
 export interface CustomDictionary {
   [Key: string]: string
