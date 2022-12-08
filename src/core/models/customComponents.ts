@@ -1,6 +1,7 @@
 import { createModel } from '@rematch/core'
 import { enableMapSet } from 'immer';
 import produce from 'immer'
+import { convertToPascal } from '~components/editor/Editor';
 
 enableMapSet();
 
@@ -24,7 +25,7 @@ export interface ThemeExtType {
 
 export type CustomComponentsState = {
   components: CustomDictionary
-  installedComponents: Set<string>
+  installedComponents: CustomDictionary
   selectedId?: IComponent['type']
   parameters: ComponentParametersType
   theme: Array<ThemeExtType>
@@ -46,7 +47,7 @@ const INITIAL_THEME: ThemeExtType = {
 const customComponents = createModel({
   state: {
     components: INITIAL_COMPONENTS,
-    installedComponents: new Set(),
+    installedComponents: {},
     parameters: INITIAL_PARAMETERS,
     selectedId: DEFAULT_ID,
     theme: [INITIAL_THEME],
@@ -217,9 +218,10 @@ const customComponents = createModel({
       isAdded: boolean,
     ): CustomComponentsState {
       return produce(state, (draftState: CustomComponentsState) => {
+        let componentName = convertToPascal(installedComponentPath.split('.').splice(-1)[0])
         isAdded
-          ? draftState.installedComponents.add(installedComponentPath)
-          : draftState.installedComponents.delete(installedComponentPath)
+          ? draftState.installedComponents[componentName]=installedComponentPath
+          : delete draftState.installedComponents.componentName
       })
     },
   },
