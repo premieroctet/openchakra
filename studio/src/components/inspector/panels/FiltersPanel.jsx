@@ -4,20 +4,20 @@ import { useEffect, useState, memo } from 'react'
 import { OPERATORS, ValueComponent } from '../../../dependencies/utils/filters'
 
 const FiltersPanel = ({ attributes, filter, onValidate }) => {
-  const [attribute, setAttribute] = useState(filter.attribute)
+  const [attribute, setAttribute] = useState(filter?.attribute || null)
   const [operators, setOperators] = useState([])
-  const [operator, setOperator] = useState(filter.operator || null)
-  const [value, setValue] = useState(filter.value || null)
+  const [operator, setOperator] = useState(filter?.operator || null)
+  const [value, setValue] = useState(filter?.value || null)
 
   useEffect(() => {
-    setOperators(OPERATORS[attributes[attribute].type] || [])
+    setOperators(OPERATORS[attributes[attribute]?.type] || [])
   }, [attribute, attributes])
 
   useEffect(() => {
     setValue(null)
   }, [attribute, operator])
 
-  const enumValues = attributes[attribute].enumValues
+  const enumValues = attributes[attribute]?.enumValues
 
   const onValidateInternal = () => {
     onValidate({ attribute, operator, value, type })
