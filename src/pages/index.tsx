@@ -34,7 +34,15 @@ const App = () => {
               <Editor />
             </Box>
           </EditorErrorBoundary>
-
+          <style>
+            {
+              '\
+              .inspector select, .inspector input{\
+              border-color:var(--chakra-colors-gray-200) !important;\
+              }\
+              '
+            }
+          </style>
           <Box
             maxH="calc(100vh - 3rem)"
             flex="0 0 15rem"
@@ -42,6 +50,7 @@ const App = () => {
             overflowY="auto"
             overflowX="visible"
             borderLeft="1px solid #cad5de"
+            className="inspector"
           >
             <InspectorProvider>
               <Inspector />

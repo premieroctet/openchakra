@@ -191,15 +191,7 @@ const Inspector = () => {
         )}
       </Box>
 
-      <Box
-        pb={1}
-        bg="white"
-        px={3}
-        color="black"
-        sx={{
-          borderColor: 'blue',
-        }}
-      >
+      <Box pb={1} bg="white" px={3} color="black">
         <Panels component={component} isRoot={isRoot} isCustom={isCustom} />
       </Box>
 

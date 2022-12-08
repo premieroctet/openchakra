@@ -125,6 +125,7 @@ const Menu = () => {
             top={8}
             boxShadow="dark-lg"
             bgColor="#2e3748"
+            borderColor="gray"
             color="white"
           >
             <Tab>Built-in</Tab>

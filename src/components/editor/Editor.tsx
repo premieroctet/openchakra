@@ -8,6 +8,7 @@ import {
   withDefaultProps,
   theme as baseTheme,
 } from '@chakra-ui/react'
+import { theme as proTheme } from '@chakra-ui/pro-theme'
 import { useDropComponent } from '~hooks/useDropComponent'
 import SplitPane from 'react-split-pane'
 import CodePanel from '~components/CodePanel'
@@ -114,7 +115,6 @@ const Editor: React.FC = () => {
 
   const Playground = (
     <ChakraProvider
-      cssVarsRoot=".rishabh"
       theme={extendTheme(
         // ...themeState.map((themeExt: ThemeExtType) =>
         //   withDefaultProps(themeExt),
@@ -131,8 +131,8 @@ const Editor: React.FC = () => {
                 _dark: 'pink.800',
               },
               'chakra-border-color': {
-                _light: 'yellow.700',
-                _dark: 'blue.300',
+                _light: 'yellow.400',
+                _dark: 'pink.300',
               },
               'chakra-subtle-bg': {
                 _light: 'purple.100',
@@ -142,17 +142,29 @@ const Editor: React.FC = () => {
                 _light: 'purple.600',
                 _dark: 'purple.400',
               },
+              'chakra-outline-color': {
+                _light: 'orange',
+                _dark: 'orange',
+              },
             },
           },
-          config: {
-            ...baseTheme.config,
-            cssVarPrefix: baseTheme.config.cssVarPrefix + 'main',
+          styles: {
+            global: {
+              body: {
+                color: 'purple',
+                bg: 'yellow',
+              },
+            },
           },
         },
+        {
+          colors: { ...proTheme.colors, brand: proTheme.colors.purple },
+        },
+        proTheme,
       )}
     >
       <Box
-        className="rishabh"
+        bg="chakra-body-bg"
         p={2}
         {...editorBackgroundProps}
         height="100%"

@@ -31,6 +31,7 @@ import {
   TabList,
   Tab,
   extendTheme,
+  LightMode,
 } from '@chakra-ui/react'
 import { omit } from 'lodash'
 import React, { useEffect, useState } from 'react'
@@ -260,6 +261,7 @@ const ThemeLayers = () => {
                 </Stack>
                 <Text>Applies to: </Text>
                 <MultiSelect
+                  className="multiselect"
                   maxMenuHeight={160}
                   menuPlacement="top"
                   isMulti
@@ -269,6 +271,7 @@ const ThemeLayers = () => {
                   closeMenuOnSelect={false}
                   size="sm"
                   colorScheme="teal"
+                  focusBorderColor="teal.500"
                   tagVariant="outline"
                   isDisabled={!i}
                   selectedOptionStyle="check"
@@ -312,58 +315,57 @@ const ThemeCustomStyles = () => {
 const Themer = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   return (
-    <ChakraProvider
-    // cssVarsRoot=".theme"
-    // theme={
-    //   extendTheme({
-    //   styles: {
-    //     global: {
-    //       html: {
-    //         color: 'global-color',
-    //         bg: 'global-bg',
-    //       },
-    //     },
-    //   },
-    //   semanticTokens: {
-    //     colors: {
-    //       'chakra-body-text': {
-    //         _light: 'pink.800',
-    //         _dark: 'pink.200',
-    //       },
-    //       'chakra-body-bg': {
-    //         _light: 'telegram.200',
-    //         _dark: 'telegram.800',
-    //       },
-    //       'chakra-border-color': {
-    //         _light: 'pink',
-    //         _dark: 'blue.300',
-    //       },
-    //       'chakra-subtle-bg': {
-    //         _light: 'purple.100',
-    //         _dark: 'purple.700',
-    //       },
-    //       'chakra-placeholder-color': {
-    //         _light: 'purple.800',
-    //         _dark: 'purple.100',
-    //       },
-    //       // 'global-color': baseTheme.semanticTokens.colors['chakra-body-text'],
-    //       // 'global-bg': baseTheme.semanticTokens.colors['chakra-body-bg'],
-    //       'global-color': {
-    //         _light: 'gray.800',
-    //         _dark: 'gray.200',
-    //       },
-    //       'global-bg': {
-    //         _light: 'green.200',
-    //         _dark: 'green.800',
-    //       },
-    //     },
-    //   },
-    //   config: {
-    //     ...baseTheme.config,
-    //     cssVarPrefix: baseTheme.config.cssVarPrefix + 'theme',
-    //   },
-    // })}
-    >
+    <LightMode>
+      {/* cssVarsRoot=".themer"
+    theme={
+      extendTheme({
+      styles: {
+        global: {
+          html: {
+            color: 'global-color',
+            bg: 'global-bg',
+          },
+        },
+      },
+      semanticTokens: {
+        colors: {
+          'chakra-body-text': {
+            _light: 'pink.800',
+            _dark: 'pink.200',
+          },
+          'chakra-body-bg': {
+            _light: 'telegram.200',
+            _dark: 'telegram.800',
+          },
+          'chakra-border-color': {
+            _light: 'pink',
+            _dark: 'blue.300',
+          },
+          'chakra-subtle-bg': {
+            _light: 'purple.100',
+            _dark: 'purple.700',
+          },
+          'chakra-placeholder-color': {
+            _light: 'purple.800',
+            _dark: 'purple.100',
+          },
+          // 'global-color': baseTheme.semanticTokens.colors['chakra-body-text'],
+          // 'global-bg': baseTheme.semanticTokens.colors['chakra-body-bg'],
+          'global-color': {
+            _light: 'gray.800',
+            _dark: 'gray.200',
+          },
+          'global-bg': {
+            _light: 'green.200',
+            _dark: 'green.800',
+          },
+        },
+      },
+      config: {
+        ...baseTheme.config,
+        cssVarPrefix: baseTheme.config.cssVarPrefix + 'theme',
+      },
+    })} */}
       <Button
         px={6}
         bgGradient="linear(to-br, blue.300, green.300, yellow.300, red.300)"
@@ -382,7 +384,20 @@ const Themer = () => {
       </Button>
       <Drawer placement="bottom" onClose={onClose} isOpen={isOpen} size="xl">
         <DrawerOverlay />
-        <DrawerContent bgColor="white">
+        <style>
+          {
+            '\
+              .themer select, .themer input, .themer hr, .themer span, .themer .chakra-tabs__tablist, .themer .chakra-modal__body, .themer .chakra-modal__header, .themer chakra-tabs__tab-panels, .themer .chakra-accordion__item, .multiselect{\
+              border-color:var(--chakra-colors-gray-200) !important;\
+              }\
+              '
+          }
+        </style>
+        <DrawerContent
+          className="themer"
+          bgColor="white"
+          style={{ color: 'black', colorScheme: 'teal' }}
+        >
           <DrawerCloseButton />
           <DrawerHeader borderBottomWidth="1px">
             Customize Project Theme
@@ -444,7 +459,7 @@ const Themer = () => {
           </DrawerBody>
         </DrawerContent>
       </Drawer>
-    </ChakraProvider>
+    </LightMode>
   )
 }
 

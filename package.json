@@ -17,6 +17,7 @@
     "@bugsnag/js": "^6.5.2",
     "@bugsnag/plugin-react": "^6.5.0",
     "@chakra-ui/icons": "2.0.13",
+    "@chakra-ui/pro-theme": "^0.0.57",
     "@chakra-ui/react": "2.4.2",
     "@emotion/react": "11.10.5",
     "@emotion/styled": "11.10.5",
