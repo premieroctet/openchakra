@@ -249,7 +249,7 @@ const Menu = () => {
                       </Flex>
                     )
                   })}
-                {Array.from(installedComponents)
+                {Object.keys(installedComponents)
                   .filter(c =>
                     c.toLowerCase().includes(searchTerm.toLowerCase()),
                   )
@@ -281,7 +281,7 @@ const Menu = () => {
                           variant="outline"
                           colorScheme="teal"
                         >
-                          <DeleteComponent name={name} />
+                          <DeleteComponent name={name} isInstalled/>
                         </ButtonGroup>
                       </Flex>
                     )

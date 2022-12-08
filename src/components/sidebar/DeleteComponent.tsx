@@ -15,23 +15,38 @@ import useDispatch from '~hooks/useDispatch'
 import { useSelector } from 'react-redux'
 import {
   getCustomComponents,
-  getSelectedCustomComponentId
+  getInstalledComponents,
+  getSelectedCustomComponentId,
 } from '~core/selectors/customComponents'
 import { DeleteIcon } from '@chakra-ui/icons'
 
-const DeleteComponent = ({name}: {name: string}) => {
+const DeleteComponent = ({
+  name,
+  isInstalled = false,
+}: {
+  name: string
+  isInstalled?: boolean
+}) => {
   const selectedComponent = useSelector(getSelectedCustomComponentId)
   const customComponents = useSelector(getCustomComponents)
+  const installedComponents = useSelector(getInstalledComponents)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const dispatch = useDispatch()
   const cancelRef = useRef<any>(null)
 
   const handleDeleteClick = async () => {
     dispatch.app.toggleLoader()
-    dispatch.customComponents.deleteCustomComponent(name)
-    await API.post('/delete-component', {
-      path: customComponents[name],
-    })
+    if (isInstalled) {
+      dispatch.customComponents.updateInstalledComponents(name, false)
+      await API.post('/uninstall-component', {
+        path: installedComponents[name],
+      })
+    } else {
+      dispatch.customComponents.deleteCustomComponent(name)
+      await API.post('/delete-component', {
+        path: customComponents[name],
+      })
+    }
     dispatch.app.toggleLoader()
   }
 
@@ -51,8 +66,8 @@ const DeleteComponent = ({name}: {name: string}) => {
         onClose={onClose}
       >
         <AlertDialogOverlay>
-          <AlertDialogContent bgColor='white'>
-            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+          <AlertDialogContent bgColor="white">
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
               Delete Component
             </AlertDialogHeader>
 
@@ -61,14 +76,17 @@ const DeleteComponent = ({name}: {name: string}) => {
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={onClose} color='teal.300'>
+              <Button ref={cancelRef} onClick={onClose} color="teal.300">
                 Cancel
               </Button>
-              <Button color='red' onClick={() => {
-                handleDeleteClick()
-                onClose()
-              }}
-                ml={3}>
+              <Button
+                color="red"
+                onClick={() => {
+                  handleDeleteClick()
+                  onClose()
+                }}
+                ml={3}
+              >
                 Delete
               </Button>
             </AlertDialogFooter>

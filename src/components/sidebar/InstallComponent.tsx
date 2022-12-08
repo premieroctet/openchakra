@@ -39,14 +39,14 @@ const InstallComponent = () => {
   }
 
   const installComponent = async () => {
-    const componentPath = ref.current?.value
+    const componentPath: string = ref.current? ref.current.value : ''
     if (!componentValid(componentPath)) return
     onClose()
     dispatch.app.toggleLoader()
     const res = await API.post('/install-component', {
       path: componentPath,
     })
-    dispatch.customComponents.updateInstalledComponents(res.data, true)
+    dispatch.customComponents.updateInstalledComponents(componentPath, true)
     dispatch.app.toggleLoader()
   }
 
