@@ -59,7 +59,7 @@ const Menu = () => {
   useEffect(() => {
     const initFunction = async () => {
       const { newComponentsList, themeJsonPath } = await API.post('/init').then(
-        res => res.data,
+        (res: any) => res.data,
       )
       dispatch.customComponents.updateCustomComponents(newComponentsList)
       dispatch.customComponents.setThemePath(themeJsonPath)
