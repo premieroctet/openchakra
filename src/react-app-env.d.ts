@@ -84,6 +84,10 @@ type ComponentType =
   | 'Skeleton'
   | 'SkeletonCircle'
   | 'SkeletonText'
+  | 'RangeSlider'
+  | 'RangeSliderTrack'
+  | 'RangeSliderFilledTrack'
+  | 'RangeSliderThumb'
   | 'Stack'
   | 'Stat'
   | 'StatLabel'
@@ -132,6 +136,7 @@ type MetaComponentType =
   | 'CardMeta'
   | 'TagMeta'
   | 'PopoverMeta'
+  | 'RangeSliderMeta'
 
 interface ParametersType {
   name: string

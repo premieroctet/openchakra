@@ -135,6 +135,14 @@ export const menuItems: MenuItems = {
   Skeleton: {},
   SkeletonCircle: {},
   SkeletonText: {},
+  RangeSlider: {
+    children: {
+      RangeSlider: {},
+      RangeSliderTrack: {},
+      RangeSliderFilledTrack: {},
+      RangeSliderThumb: {},
+    },
+  },
   Spinner: {},
   Select: {},
   Stack: {},
@@ -301,4 +309,8 @@ export const componentsList: ComponentType[] = [
   'Text',
   'Textarea',
   'Tooltip',
+  'RangeSlider',
+  'RangeSliderTrack',
+  'RangeSliderFilledTrack',
+  'RangeSliderThumb'
 ]
