@@ -37,6 +37,7 @@ require("./models/LoggedUser");
 require("./models/Post");
 require("./models/Subscription");
 require("./models/Event");
+require("./models/Company");
 
 const { MONGOOSE_OPTIONS } = require("./utils/database");
 
