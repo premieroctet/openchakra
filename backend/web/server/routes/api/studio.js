@@ -1,4 +1,6 @@
+const { retainRequiredFields } = require("../../utils/database");
 const path = require("path");
+
 const fs = require("fs").promises;
 const child_process = require("child_process");
 const url = require("url");
@@ -291,12 +293,8 @@ router.get(
         // Force duplicate children
         data = JSON.parse(JSON.stringify(data));
 
-        // Remove unrequired virtuals
-        const requiredFields = lodash([...fields, "_id"])
-          .map(f => f.split(".")[0])
-          .uniq()
-          .value();
-        data = data.map(d => lodash.pick(d, requiredFields));
+        // Remove extra virtuals
+        data = retainRequiredFields({ data, fields });
 
         if (id && data.length == 0) {
           throw new NotFoundError(`Can't find ${model}:${id}`);
