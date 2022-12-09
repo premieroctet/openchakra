@@ -1,0 +1,1 @@
+../../../../remote/ui-made-easy-new-components/example/example.tsx

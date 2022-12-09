@@ -11,8 +11,8 @@ export default async function handler(req, res) {
     )
     await Promise.all([deletePreview])
 
-    shell.exec(`cd .. && bit uninstall ${req.body.path}`)
-    res.status(200).json('success')
+    // shell.exec(`bit uninstall ${req.body.path}`)
+    res.status(200).json(componentName)
   } catch (err) {
     console.log(err)
   }

@@ -58,11 +58,12 @@ const Menu = () => {
 
   useEffect(() => {
     const initFunction = async () => {
-      const { newComponentsList, themeJsonPath } = await API.post('/init').then(
+      const { newComponentsList, themeJsonPath, installedList } = await API.post('/init').then(
         (res: any) => res.data,
       )
       dispatch.customComponents.updateCustomComponents(newComponentsList)
       dispatch.customComponents.setThemePath(themeJsonPath)
+      dispatch.customComponents.initInstalledComponents(installedList)
     }
     dispatch.app.toggleLoader()
     initFunction()
@@ -74,6 +75,7 @@ const Menu = () => {
     autoselectComponent()
     dispatch.app.toggleLoader()
   }, [customComponents])
+
 
   return (
     <DarkMode>

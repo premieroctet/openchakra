@@ -218,7 +218,15 @@ const customComponents = createModel({
         let componentName = convertToPascal(installedComponentPath.split('.').splice(-1)[0])
         isAdded
           ? draftState.installedComponents[componentName]=installedComponentPath
-          : delete draftState.installedComponents.componentName
+          : delete draftState.installedComponents[componentName]
+      })
+    },
+    initInstalledComponents(
+      state: CustomComponentsState,
+      components: CustomDictionary,
+    ): CustomComponentsState {
+      return produce(state, (draftState: CustomComponentsState) => {
+        draftState.installedComponents = components
       })
     },
   },

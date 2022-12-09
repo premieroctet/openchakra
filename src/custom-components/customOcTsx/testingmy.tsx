@@ -1,0 +1,1 @@
+../../../../remote/ui-made-easy-new-components/testingmy/testingmy.tsx

@@ -30,6 +30,12 @@ export default async function handler(req, res) {
 
   // 2 Write files for initial components
   try {
+    // 2.0 Read Installed-Components Names
+    let installedList = JSON.parse(fs.readFileSync('src/installed-components/installedList.json', {
+      encoding: 'utf-8',
+    }))
+    console.log(installedList, "sjbjjkb");
+
     Object.keys(jsons).map(async component => {
       // 2.1 Read json
       const fileContent = fs.readFileSync(
@@ -69,7 +75,7 @@ export default async function handler(req, res) {
       await Promise.all([writePreview, writePanel, writeOcTsx])
     })
     res.statusCode = 200
-    res.json({ newComponentsList: jsons, themeJsonPath })
+    res.json({ newComponentsList: jsons, themeJsonPath, installedList})
   } catch (err) {
     console.log(err)
     res.statusCode = 400
