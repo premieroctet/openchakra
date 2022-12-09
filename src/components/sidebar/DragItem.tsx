@@ -89,7 +89,7 @@ const DragItem: React.FC<ComponentItemProps> = ({
           borderRadius={4}
           px={1}
         >
-          ⬇️
+          BIT
         </Box>
       )}
       {soon && (

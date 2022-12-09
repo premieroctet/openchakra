@@ -16,15 +16,13 @@ function packageToComponent(packageName) {
 }
 
 export default async function handler(req, res) {
-  // const component = req.body.component;
-  const component = packageToComponent(req.component);
+  const component = req.body.component;
+  const path = req.body.path;
   try {
 
     //BIT Login to get cookie
 
     var data = JSON.stringify({
-      // "username": "trilogy-innovation",
-      // "password": "7FiePA8VkLSuAxW"
       "username": process.env.NEXT_BIT_USERNAME,
       "password": process.env.NEXT_BIT_PASSWORD
     });
@@ -51,17 +49,18 @@ export default async function handler(req, res) {
       .catch(function (error) {
         console.log(error);
       });
-
+    
 
     // BIT GraphQL API to get props of a component
 
     var data = JSON.stringify({
       "query": "\n  query getComponentDocs($id: String!) {\n    getHost {\n      id # for gql caching\n      getDocs(id: $id) {\n        abstract\n        properties {\n          name\n          description\n          required\n          type\n          default: defaultValue {\n            value\n          }\n        }\n      }\n    }\n  }\n",
       "variables": {
-        "id": component
+        "id": packageToComponent(path)
       },
       "operationName": "getComponentDocs"
     });
+
 
     var config = {
       method: 'post',
@@ -86,18 +85,9 @@ export default async function handler(req, res) {
         console.log(error);
       });
 
-    // res.status(200).json('success')
-    return parameters
+    res.status(200).json(parameters)
   } catch (err) {
     console.log(err)
     res.status(400).json({ err })
   }
 }
-
-const API = axios.create({
-  baseURL: `${typeof window !== 'undefined' && window.location.href}api`,
-  timeout: 30000,
-})
-
-const res = await handler({ component: '@tiui/remote.ui.action-card' })
-console.log(res)

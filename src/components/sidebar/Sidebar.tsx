@@ -14,6 +14,16 @@ import {
   TabPanel,
   ButtonGroup,
   Button,
+  Tooltip,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverHeader,
+  PopoverBody,
+  PopoverFooter,
+  Link
 } from '@chakra-ui/react'
 import { CloseIcon, EditIcon, SearchIcon } from '@chakra-ui/icons'
 import DragItem from './DragItem'
@@ -29,6 +39,7 @@ import API from '~custom-components/api'
 import AddComponent from './AddComponent'
 import DeleteComponent from './DeleteComponent'
 import InstallComponent from './InstallComponent'
+
 
 const Menu = () => {
   const [searchTerm, setSearchTerm] = useState('')
@@ -76,6 +87,20 @@ const Menu = () => {
     dispatch.app.toggleLoader()
   }, [customComponents])
 
+  const getParameters = async (name: string, pathPackage: string) => {
+    const res = await API.post('/get-parameters', {
+      component: name,
+      path: pathPackage
+    })
+    return res;
+  }
+
+  const [param, setParam] = useState([]);
+
+  const [isShown, setIsShown] = useState(false);
+  const handleClick = () => {
+    setIsShown(current => !current);
+  };
 
   return (
     <DarkMode>
@@ -256,7 +281,7 @@ const Menu = () => {
                     c.toLowerCase().includes(searchTerm.toLowerCase()),
                   )
                   .map(componentPath => {
-                    const name = componentPath.split('.').slice(-1)[0]
+                    const name = componentPath.split('.').slice(-1)[0];
                     return (
                       <Flex
                         alignItems={'center'}
@@ -283,7 +308,36 @@ const Menu = () => {
                           variant="outline"
                           colorScheme="teal"
                         >
-                          <DeleteComponent name={name} isInstalled/>
+                          <Popover>
+                            <PopoverTrigger>
+                              <Button
+                                onClick={() => {
+                                  handleClick()
+                                  console.log(name)
+                                  console.log(installedComponents[name])
+                                  const aj = getParameters(name, installedComponents[name]);
+                                }}>
+                                +
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent color="whiteAlpha.900" backgroundColor="#703A8D" fontSize="sm">
+                              <PopoverArrow />
+                              <PopoverCloseButton />
+                              <PopoverHeader>
+                                {name}
+                                {param}
+                                </PopoverHeader>
+                              <PopoverBody>
+                                <Link href="https://bit.cloud">{installedComponents[name]}</Link>
+                              </PopoverBody>
+                            </PopoverContent>
+                          </Popover>
+                          {isShown && (
+                            <div>
+
+                            </div>
+                          )}
+                          <DeleteComponent name={name} isInstalled />
                         </ButtonGroup>
                       </Flex>
                     )
