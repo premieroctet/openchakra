@@ -446,6 +446,14 @@ const buildHooks = (components: IComponents) => {
   if (dataProviders.length === 0) {
     return ''
   }
+
+  const isIdInDependencyArray = dataProviders.reduce((acc, curr, i) => {
+    if (curr.id === 'root') {
+      acc = true
+    }
+    return acc
+  }, false)
+
   let code = `const get=axios.get`
   code +=
     '\n' +
@@ -476,7 +484,7 @@ const buildHooks = (components: IComponents) => {
         .catch(err => alert(err?.response?.data || err))`
       })
       .join('\n')}
-  }, [get, refresh])\n`
+  }, [get, ${isIdInDependencyArray ? 'id, ' : ''}refresh])\n`
   return code
 }
 
@@ -612,11 +620,11 @@ ${maskable || ''}
 ${componentsCodes}
 
 const ${componentName} = () => {
-  ${hooksCode}
-  ${filterStates}
   const query = new URLSearchParams(useLocation().search)
   const id=${rootIgnoreUrlParams ? 'null' : `query.get('${rootIdQuery}')`}
   const {user}=useUserContext()
+  ${hooksCode}
+  ${filterStates}
 
   return (
   <ChakraProvider resetCSS>
