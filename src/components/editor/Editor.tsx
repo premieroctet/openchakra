@@ -25,12 +25,18 @@ import API from '~custom-components/api'
 import { getComponents } from '~core/selectors/components'
 import {
   getCustomComponents,
+  getNewTheme,
   getSelectedCustomComponentId,
   getTheme,
 } from '~core/selectors/customComponents'
 import { getShowLayout, getShowCode } from '~core/selectors/app'
 import ComponentPreview from '~components/editor/ComponentPreview'
-import { ThemeExtType } from '~core/models/customComponents'
+import { NewThemeType, ThemeExtType } from '~core/models/customComponents'
+import { omit } from 'lodash'
+
+export const themeColors: any = Object.keys(
+  omit(baseTheme.colors, ['transparent', 'current', 'black', 'white']),
+)
 
 export const gridStyles = {
   backgroundImage:
@@ -54,6 +60,7 @@ const Editor: React.FC = () => {
   const showLayout = useSelector(getShowLayout)
   const components = useSelector(getComponents)
   const themeState = useSelector(getTheme)
+  const newThemeState = useSelector(getNewTheme)
   const dispatch = useDispatch()
 
   const { drop } = useDropComponent('root')
@@ -113,58 +120,61 @@ const Editor: React.FC = () => {
     ...rootProps,
   }
 
+  const myTheme = {
+    semanticTokens: {
+      colors: {
+        'chakra-body-bg': {
+          _light: newThemeState.bgColor,
+          _dark: 'gray.800',
+        },
+        'chakra-body-text': {
+          _light: newThemeState.textColor,
+          _dark: 'gray.100',
+        },
+      },
+    },
+    colors: {
+      primary:
+        baseTheme.colors[
+          newThemeState.primary as keyof typeof baseTheme.colors
+        ],
+      secondary:
+        baseTheme.colors[
+          newThemeState.secondary as keyof typeof baseTheme.colors
+        ],
+    },
+    components: {
+      Button: {
+        defaultProps: {
+          colorScheme: 'primary',
+        },
+      },
+    },
+  }
+
   const Playground = (
     <ChakraProvider
       theme={extendTheme(
         // ...themeState.map((themeExt: ThemeExtType) =>
         //   withDefaultProps(themeExt),
         // ),
-        {
-          semanticTokens: {
-            colors: {
-              'chakra-body-text': {
-                _light: 'red.600',
-                _dark: 'red.200',
-              },
-              'chakra-body-bg': {
-                _light: 'pink.200',
-                _dark: 'pink.800',
-              },
-              'chakra-border-color': {
-                _light: 'yellow.400',
-                _dark: 'pink.300',
-              },
-              'chakra-subtle-bg': {
-                _light: 'purple.100',
-                _dark: 'purple.700',
-              },
-              'chakra-placeholder-color': {
-                _light: 'purple.600',
-                _dark: 'purple.400',
-              },
-              'chakra-outline-color': {
-                _light: 'orange',
-                _dark: 'orange',
-              },
-            },
-          },
-          styles: {
-            global: {
-              body: {
-                color: 'purple',
-                bg: 'yellow',
-              },
-            },
-          },
-        },
-        {
-          colors: { ...proTheme.colors, brand: proTheme.colors.purple },
-        },
-        proTheme,
+        // {
+        myTheme,
+        baseTheme,
       )}
     >
+      <style>
+        {
+          '\
+          .editor {\
+          background-color:var(--chakra-colors-chakra-body-bg) !important;\
+          }\
+          '
+        }
+      </style>
       <Box
         bg="chakra-body-bg"
+        className="editor"
         p={2}
         {...editorBackgroundProps}
         height="100%"

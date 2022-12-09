@@ -114,7 +114,7 @@ const Menu = () => {
                   onClick={() => setSearchTerm('')}
                 />
               ) : (
-                <SearchIcon path="" color="gray.300" />
+                <SearchIcon color="gray" />
               )}
             </InputRightElement>
           </InputGroup>

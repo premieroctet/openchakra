@@ -1,5 +1,6 @@
 import { AddIcon, CheckIcon, DeleteIcon } from '@chakra-ui/icons'
 import { Select as MultiSelect } from 'chakra-react-select'
+import ColorPicker from 'coloreact'
 import {
   Button,
   ChakraProvider,
@@ -32,17 +33,32 @@ import {
   Tab,
   extendTheme,
   LightMode,
+  VStack,
+  Input,
+  Popover,
+  PopoverTrigger,
+  Portal,
+  PopoverContent,
+  PopoverArrow,
+  PopoverBody,
+  Grid,
+  Slider,
+  SliderTrack,
+  SliderFilledTrack,
+  SliderThumb,
 } from '@chakra-ui/react'
 import { omit } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { getTheme, getThemePath } from '~core/selectors/customComponents'
+import {
+  getNewTheme,
+  getTheme,
+  getThemePath,
+} from '~core/selectors/customComponents'
 import useDispatch from '~hooks/useDispatch'
 import API from '~custom-components/api'
-
-const themeColors: any = Object.keys(
-  omit(baseTheme.colors, ['transparent', 'current', 'black', 'white']),
-)
+import { themeColors } from './editor/Editor'
+import { NewThemeType } from '~core/models/customComponents'
 
 const componentsWithLabel = Object.keys(baseTheme.components).map(
   (comp: string) => ({
@@ -51,53 +67,194 @@ const componentsWithLabel = Object.keys(baseTheme.components).map(
   }),
 )
 
-const ThemeTokens = () => {
-  const themeState = useSelector(getTheme)
-  const themePath = useSelector(getThemePath)
+const ColorSchemePicker = ({
+  propType,
+  withFullColor = false,
+}: {
+  propType: string
+  withFullColor?: boolean
+}) => {
   const dispatch = useDispatch()
-
-  useEffect(() => {
-    // TODO: Semantic tokens
-
-    const updateThemeJson = async () => {
-      if (themePath)
-        await API.post('/save-theme', {
-          themePath,
-          themeState,
-        })
-    }
-    dispatch.app.toggleLoader()
-    updateThemeJson()
-    dispatch.app.toggleLoader()
-  }, [themeState])
-
-  return <>ThemeTokens</>
+  const [hue, setHue] = useState(500)
+  return (
+    <>
+      <Grid mb={2} templateColumns="repeat(5, 1fr)" gap={1}>
+        {themeColors.map((themeColor: string) => {
+          const fullThemeColor = withFullColor
+            ? themeColor + '.' + hue
+            : themeColor
+          return (
+            <Tooltip key={fullThemeColor} label={fullThemeColor}>
+              <IconButton
+                bg={`${themeColor}.${withFullColor ? hue : 500}`}
+                mr={2}
+                boxShadow="md"
+                isRound
+                aria-label="Color"
+                size="xs"
+                onClick={() => {
+                  dispatch.customComponents.updateNewTheme(
+                    propType,
+                    fullThemeColor,
+                  )
+                }}
+              />
+            </Tooltip>
+          )
+        })}
+      </Grid>
+      {withFullColor && (
+        <>
+          <Slider
+            onChange={value => {
+              value = value === 0 ? 50 : value
+              setHue(value)
+            }}
+            min={0}
+            max={900}
+            step={100}
+            value={hue}
+          >
+            <SliderTrack>
+              <SliderFilledTrack />
+            </SliderTrack>
+            <SliderThumb boxSize={8}>
+              <Box borderRadius="full" fontSize="xs">
+                {hue}
+              </Box>
+            </SliderThumb>
+          </Slider>
+        </>
+      )}
+    </>
+  )
 }
 
-const ThemeLayers = () => {
-  const themeState = useSelector(getTheme)
-  const themePath = useSelector(getThemePath)
+const ParentColorPicker = ({
+  withFullColor = false,
+  selectedColor,
+  propType,
+}: {
+  withFullColor?: boolean
+  selectedColor: string
+  propType: string
+}) => {
   const dispatch = useDispatch()
 
-  useEffect(() => {
-    // TODO: baseStyle, parts, fonts, layer & text styles
+  let propsIconButton: any = { bg: selectedColor }
+  if (!withFullColor) {
+    propsIconButton = { colorScheme: selectedColor }
+  }
+  return (
+    <>
+      <Popover placement="top">
+        <PopoverTrigger>
+          <IconButton
+            {...propsIconButton}
+            mr={2}
+            boxShadow="md"
+            isRound
+            aria-label="Color"
+            size="sm"
+          />
+        </PopoverTrigger>
+        <PopoverContent width={200}>
+          <PopoverArrow />
+          <PopoverBody alignItems="center" justifyContent="center">
+            {withFullColor ? (
+              <Tabs size="sm" variant="soft-rounded" colorScheme="teal">
+                <TabList>
+                  <Tab>ColorScheme</Tab>
+                  <Tab>All</Tab>
+                </TabList>
+                <TabPanels mt={4}>
+                  <TabPanel p={0}>
+                    <ColorSchemePicker propType={propType} withFullColor />
+                  </TabPanel>
 
-    const updateThemeJson = async () => {
-      if (themePath)
-        await API.post('/save-theme', {
-          themePath,
-          themeState,
-        })
-    }
-    dispatch.app.toggleLoader()
-    updateThemeJson()
-    dispatch.app.toggleLoader()
-  }, [themeState])
+                  <TabPanel p={0}>
+                    <Box position="relative" h={150} w={150}>
+                      <ColorPicker
+                        opacity
+                        color={selectedColor.split('.')[0]}
+                        onChange={(color: any) => {}}
+                        onComplete={(color: any) => {
+                          dispatch.customComponents.updateNewTheme(
+                            propType,
+                            color.rgbString,
+                          )
+                        }}
+                      />
+                    </Box>
+                  </TabPanel>
+                </TabPanels>
+              </Tabs>
+            ) : (
+              <ColorSchemePicker propType={propType} />
+            )}
+          </PopoverBody>
+        </PopoverContent>
+      </Popover>
+      <Input
+        width={200}
+        size="sm"
+        borderColor="gray.200"
+        name="bgColor"
+        onChange={e => {
+          dispatch.customComponents.updateNewTheme(propType, e.target.value)
+        }}
+        value={selectedColor}
+      />
+    </>
+  )
+}
+
+const ThemeTokens = ({ themeState }: { themeState: NewThemeType }) => {
+  const dispatch = useDispatch()
+
+  return (
+    <VStack divider={<Divider />} alignItems="flex-start">
+      <HStack spacing={4}>
+        <Text>Primary Color</Text>
+        <ParentColorPicker
+          propType="primary"
+          selectedColor={themeState.primary}
+        />
+      </HStack>
+      <HStack spacing={4}>
+        <Text>Secondary Color</Text>
+        <ParentColorPicker
+          propType="secondary"
+          selectedColor={themeState.secondary}
+        />
+      </HStack>
+      <HStack spacing={4}>
+        <Text>Background Color</Text>
+        <ParentColorPicker
+          withFullColor={true}
+          selectedColor={themeState.bgColor}
+          propType="bgColor"
+        />
+      </HStack>
+      <HStack spacing={4}>
+        <Text>Text Color</Text>
+        <ParentColorPicker
+          withFullColor={true}
+          selectedColor={themeState.textColor}
+          propType="textColor"
+        />
+      </HStack>
+    </VStack>
+  )
+}
+
+const ThemeLayers = ({ themeState }: any) => {
+  const dispatch = useDispatch()
 
   return (
     <>
       <Accordion allowToggle>
-        {themeState.map((layer, i) => {
+        {themeState.map((layer: any, i: number) => {
           return (
             <AccordionItem key={i}>
               <AccordionButton _expanded={{ bg: 'teal.100' }}>
@@ -314,58 +471,27 @@ const ThemeCustomStyles = () => {
 
 const Themer = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const themeState = useSelector(getTheme)
+  const newThemeState = useSelector(getNewTheme)
+  const themePath = useSelector(getThemePath)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    // TODO: baseStyle, parts, fonts, layer & text styles
+    const updateThemeJson = async () => {
+      if (themePath)
+        await API.post('/save-theme', {
+          themePath,
+          themeState,
+        })
+    }
+    dispatch.app.toggleLoader()
+    updateThemeJson()
+    dispatch.app.toggleLoader()
+  }, [themeState, newThemeState])
+
   return (
     <LightMode>
-      {/* cssVarsRoot=".themer"
-    theme={
-      extendTheme({
-      styles: {
-        global: {
-          html: {
-            color: 'global-color',
-            bg: 'global-bg',
-          },
-        },
-      },
-      semanticTokens: {
-        colors: {
-          'chakra-body-text': {
-            _light: 'pink.800',
-            _dark: 'pink.200',
-          },
-          'chakra-body-bg': {
-            _light: 'telegram.200',
-            _dark: 'telegram.800',
-          },
-          'chakra-border-color': {
-            _light: 'pink',
-            _dark: 'blue.300',
-          },
-          'chakra-subtle-bg': {
-            _light: 'purple.100',
-            _dark: 'purple.700',
-          },
-          'chakra-placeholder-color': {
-            _light: 'purple.800',
-            _dark: 'purple.100',
-          },
-          // 'global-color': baseTheme.semanticTokens.colors['chakra-body-text'],
-          // 'global-bg': baseTheme.semanticTokens.colors['chakra-body-bg'],
-          'global-color': {
-            _light: 'gray.800',
-            _dark: 'gray.200',
-          },
-          'global-bg': {
-            _light: 'green.200',
-            _dark: 'green.800',
-          },
-        },
-      },
-      config: {
-        ...baseTheme.config,
-        cssVarPrefix: baseTheme.config.cssVarPrefix + 'theme',
-      },
-    })} */}
       <Button
         px={6}
         bgGradient="linear(to-br, blue.300, green.300, yellow.300, red.300)"
@@ -446,10 +572,10 @@ const Themer = () => {
               </TabList>
               <TabPanels>
                 <TabPanel>
-                  <ThemeTokens />
+                  <ThemeTokens themeState={newThemeState} />
                 </TabPanel>
                 <TabPanel>
-                  <ThemeLayers />
+                  <ThemeLayers themeState={themeState} />
                 </TabPanel>
                 <TabPanel>
                   <ThemeCustomStyles />

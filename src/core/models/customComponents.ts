@@ -19,12 +19,20 @@ export interface ThemeExtType {
   components?: Array<string>
 }
 
+export interface NewThemeType {
+  primary: string
+  secondary: string
+  textColor: string
+  bgColor: string
+}
+
 export type CustomComponentsState = {
   components: CustomDictionary
   selectedId?: IComponent['type']
   parameters: ComponentParametersType
   theme: Array<ThemeExtType>
   themePath?: string
+  newTheme: NewThemeType
 }
 
 const DEFAULT_ID = undefined
@@ -38,6 +46,12 @@ const INITIAL_THEME: ThemeExtType = {
     variant: 'solid',
   },
 }
+const INITIAL_NEW_THEME: NewThemeType = {
+  primary: 'blue',
+  secondary: 'cyan',
+  textColor: 'gray.900',
+  bgColor: 'pink.100',
+}
 
 const customComponents = createModel({
   state: {
@@ -45,6 +59,7 @@ const customComponents = createModel({
     parameters: INITIAL_PARAMETERS,
     selectedId: DEFAULT_ID,
     theme: [INITIAL_THEME],
+    newTheme: INITIAL_NEW_THEME,
     themePath: DEFAULT_THEME_PATH,
   } as CustomComponentsState,
   reducers: {
@@ -205,6 +220,15 @@ const customComponents = createModel({
         ...state,
         themePath,
       }
+    },
+    updateNewTheme(
+      state: CustomComponentsState,
+      propType: string,
+      propValue: string,
+    ): CustomComponentsState {
+      return produce(state, (draftState: CustomComponentsState) => {
+        draftState.newTheme[propType as keyof NewThemeType] = propValue
+      })
     },
   },
 })

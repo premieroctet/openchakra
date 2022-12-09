@@ -5,6 +5,8 @@ export const getCustomComponents = (state: RootState) =>
 
 export const getTheme = (state: RootState) => state.customComponents.theme
 
+export const getNewTheme = (state: RootState) => state.customComponents.newTheme
+
 export const getThemePath = (state: RootState) =>
   state.customComponents.themePath
 
