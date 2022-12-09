@@ -6,6 +6,7 @@ import axios from 'axios'
 import mime from 'mime'
 import JSZip from 'jszip'
 import { getExtension } from './MediaWrapper'
+import styled from '@emotion/styled'
 
 const uploadUrl = `/myAlfred/api/studio/action`
 
@@ -56,6 +57,14 @@ const UploadFile = ({
     s3Config.secretAccessKey || '',
   )
   const [uploadInfo, setUploadInfo] = useState('')
+  const [fileName, setFileName] = useState('')
+
+  const onFileNameChange = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    // setFileName(e.currentTarget.value)
+    console.log(e.currentTarget)
+  }
 
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -66,6 +75,10 @@ const UploadFile = ({
       inputFile && inputFile?.files && (inputFile?.files[0] as File)
 
     if (fileToUpload) {
+      setFileName(fileToUpload?.name)
+
+      console.log(fileName)
+
       const typeOfUpload = getExtension(fileToUpload?.name)
 
       let paramsBack = {
@@ -97,7 +110,6 @@ const UploadFile = ({
       }
 
       const saveUrl = async () => {
-        console.log('Hey, on y arrive', uploadUrl, paramsBack)
         axios
           .post(uploadUrl, paramsBack)
           .then(() => {
@@ -108,19 +120,41 @@ const UploadFile = ({
           })
       }
 
-      await switchUploadType()
-      await saveUrl()
+      //await switchUploadType()
+      //await saveUrl()
     }
   }
 
   return (
     <Box {...props}>
       <form id="uploadressource" onSubmit={ev => handleUpload(ev)}>
-        {children}
+        <UploadZone>
+          <input type="file" value={fileName} onChange={onFileNameChange} />
+          {/* Whatever in children, they bring focus on InputFile */}
+          {children}
+        </UploadZone>
       </form>
       {uploadInfo && <Text>{uploadInfo}</Text>} {/*Component status */}
     </Box>
   )
 }
+
+const UploadZone = styled.label`
+  input[type='file'] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  *:not(input[type='file']) {
+    pointer-events: none;
+  }
+`
 
 export default UploadFile
