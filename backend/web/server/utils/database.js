@@ -64,6 +64,30 @@ const DECLARED_VIRTUALS = {
       requires: "name,firstname,role"
     }
   },
+  drink: {
+    net_price: {
+      path: "net_price",
+      instance: "Number",
+      requires: "price,vat_rate"
+    },
+    reviews: { path: "reviews", instance: "review", requires: "_id" }
+  },
+  meal: {
+    net_price: {
+      path: "net_price",
+      instance: "Number",
+      requires: "price,vat_rate"
+    },
+    reviews: { path: "reviews", instance: "review", requires: "_id" }
+  },
+  cigar: {
+    net_price: {
+      path: "net_price",
+      instance: "Number",
+      requires: "price,vat_rate"
+    },
+    reviews: { path: "reviews", instance: "review", requires: "_id" }
+  },
   // fumoir
   booking: {
     booking_total_person: {

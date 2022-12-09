@@ -8,6 +8,7 @@
 # testing
 /coverage
 
+backend/web/mode_*.js
 # production
 **/build
 **/dist

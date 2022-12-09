@@ -15,15 +15,6 @@ const {
   getPort
 } = require("../config/config");
 const { HTTP_CODES } = require("./utils/errors");
-const Shiprate = require("./models/ShipRate");
-const Product = require("./models/Product");
-const Order = require("./models/Order");
-const Quotation = require("./models/Quotation");
-const Service = require("./models/Service");
-const Booking = require("./models/Booking");
-const ServiceUser = require("./models/ServiceUser");
-const Category = require("./models/Category");
-const PriceList = require("./models/PriceList");
 require("./models/ResetToken");
 require("./models/Program");
 require("./models/Theme");
@@ -38,6 +29,9 @@ require("./models/Post");
 require("./models/Subscription");
 require("./models/Event");
 require("./models/Company");
+require("./models/Drink");
+require("./models/Meal");
+require("./models/Cigar");
 
 const { MONGOOSE_OPTIONS } = require("./utils/database");
 
