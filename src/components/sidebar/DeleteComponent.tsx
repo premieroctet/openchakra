@@ -39,7 +39,7 @@ const DeleteComponent = ({
     if (isInstalled) {
       dispatch.customComponents.updateInstalledComponents(name, false)
       await API.post('/uninstall-component', {
-        path: installedComponents[name],
+        path: installedComponents[name]
       })
     } else {
       dispatch.customComponents.deleteCustomComponent(name)

@@ -22,10 +22,6 @@ import React, { useRef, useState, useEffect } from 'react'
 import API from '~custom-components/api'
 import useDispatch from '~hooks/useDispatch'
 
-import {
-  getInstalledComponents
-} from '~core/selectors/customComponents'
-import { useSelector } from 'react-redux'
 
 const regex = /^[a-z@][a-z0-9-_$!/.]*$/
 
@@ -33,17 +29,6 @@ const InstallComponent = () => {
   const ref = useRef<HTMLInputElement>(null)
   const dispatch = useDispatch()
   const { isOpen, onOpen, onClose } = useDisclosure()
-
-  const installedComponents = useSelector(getInstalledComponents)
-  // console.log(installedComponents, "sjkdcn")
-  // const [installedList, setinstalledList] = useState({})
-
-  // useEffect(() => {
-  //   setinstalledList(installedComponents)
-  // }, [installedComponents])
-  // console.log(installedList, "dkjbnjk")
-  // console.log(installedComponents, "xyjsskdcn")
-
 
   const componentValid = (
     componentPath: string | undefined = ref.current?.value,
@@ -61,8 +46,7 @@ const InstallComponent = () => {
     dispatch.app.toggleLoader()
     dispatch.customComponents.updateInstalledComponents(componentPath, true)
     const res = await API.post('/install-component', {
-      path: componentPath,
-      installed: installedComponents
+      path: componentPath
     })
     dispatch.app.toggleLoader()
   }
