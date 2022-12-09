@@ -1,33 +1,34 @@
+const path = require("path");
+const fs = require("fs").promises;
+const child_process = require("child_process");
+const url = require("url");
+const lodash = require("lodash");
+const express = require("express");
+const mongoose = require("mongoose");
+const passport = require("passport");
+const {
+  filterDataUser,
+  getContacts,
+  login
+} = require("../../utils/studio/aftral/functions");
 const {
   getDataModel,
   getProductionRoot,
   getProductionPort
 } = require("../../../config/config");
 const {
-  filterDataUser,
-  getContacts,
-  getResourceSpentTime,
-  login
-} = require("../../utils/studio/aftral/functions");
-const {
   ROLES,
   RES_TO_COME
 } = require(`../../../utils/${getDataModel()}/consts`);
 const { sendCookie } = require("../../config/passport");
-const path = require("path");
-const jwt = require("jsonwebtoken");
-const fs = require("fs").promises;
-const child_process = require("child_process");
-const mongoose = require("mongoose");
-const express = require("express");
-const lodash = require("lodash");
-const passport = require("passport");
-const { HTTP_CODES, NotFoundError } = require("../../utils/errors");
+const {
+  HTTP_CODES,
+  NotFoundError,
+  ForbiddenError
+} = require("../../utils/errors");
 const { getModels } = require("../../utils/database");
 const { ACTIONS } = require("../../utils/studio/actions");
 const { buildQuery, addComputedFields } = require("../../utils/database");
-const url = require("url");
-const UserSessionData = require("../../models/UserSessionData");
 
 const router = express.Router();
 

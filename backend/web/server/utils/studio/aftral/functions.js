@@ -74,11 +74,12 @@ const addChild = (parentId, childId, level = 0) => {
           return needsTheme ? Theme.create({ resources: [cloned] }) : cloned;
         })
         .then(child => {
-          return mongoose.connection.models[
-            parentModel
-          ].findByIdAndUpdate(parentId, {
-            $push: { [parentAttribute]: child }
-          });
+          return mongoose.connection.models[parentModel].findByIdAndUpdate(
+            parentId,
+            {
+              $push: { [parentAttribute]: child }
+            }
+          );
         })
         .then(parent => {
           return mongoose.connection.models[parentModel]
@@ -421,9 +422,9 @@ const isResourceCurrent = async (user, queryParams, resource) => {
 
 /** Not finished, not in progress:
 +  Parent theme ordered:
-+   - first in theme: "available"
-+   - next of 'finished' one : "available"
-+   - else "to come"
++   - first in theme: 'available'
++   - next of 'finished' one : 'available'
++   - else 'to come'
 +  Parent theme unordered: available
 +  */
 const getResourceStatus = async (user, queryParams, resource) => {
