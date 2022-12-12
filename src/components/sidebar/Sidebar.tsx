@@ -90,20 +90,16 @@ const Menu = () => {
     dispatch.app.toggleLoader()
   }, [customComponents])
 
+  const [param, setParam] = useState(String);
+
   const getParameters = async (name: string, pathPackage: string) => {
     const res = await API.post('/get-parameters', {
       component: name,
       path: pathPackage
     })
+    console.log(res)
     setParam(JSON.stringify(res.data));
   }
-
-  const [param, setParam] = useState(String);
-
-  const [isShown, setIsShown] = useState(false);
-  const handleClick = () => {
-    setIsShown(current => !current);
-  };
 
 
   return (
@@ -316,7 +312,6 @@ const Menu = () => {
                             <PopoverTrigger>
                               <Button
                                 onClick={() => {
-                                  handleClick()
                                   getParameters(name, installedComponents[name]);
                                 }}>
                                 +
@@ -329,17 +324,12 @@ const Menu = () => {
                                 {name}
                               </PopoverHeader>
                               <PopoverBody>
-                                {/* {param} */}
+                                {param}
                                 {/* <InstalledPropTable param={param}/> */}
                                 {/* <ComponentPreview key={name} componentName={name} /> */}
                               </PopoverBody>
                             </PopoverContent>
                           </Popover>
-                          {isShown && (
-                            <div>
-
-                            </div>
-                          )}
                           <DeleteComponent name={name} isInstalled />
                         </ButtonGroup>
                       </Flex>

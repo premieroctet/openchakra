@@ -3,13 +3,13 @@ import { useDropComponent } from '~hooks/useDropComponent'
 import { useInteractive } from '~hooks/useInteractive'
 import { Box } from '@chakra-ui/react'
 
-import { Testingmy } from 'src/custom-components/customOcTsx/testingmy'
+import { Testnew } from 'src/custom-components/customOcTsx/testnew'
 
 interface Props {
   component: IComponent;
 }
 
-const TestingmyPreview = ({ component }: Props) => {
+const TestnewPreview = ({ component }: Props) => {
   const { isOver } = useDropComponent(component.id)
   const { props, ref } = useInteractive(component, true)
 
@@ -21,9 +21,9 @@ const TestingmyPreview = ({ component }: Props) => {
 
   return (
     <Box {...props} ref={ref}>
-      <Testingmy {...props} />
+      <Testnew {...props} />
     </Box>
   )
 }
 
-export default TestingmyPreview
+export default TestnewPreview

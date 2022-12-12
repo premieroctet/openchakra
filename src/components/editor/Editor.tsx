@@ -68,7 +68,7 @@ const Editor: React.FC = () => {
     const getCode = async () => {
       const [code, ocTsxCode] = await Promise.all([
         generateCode(components, customComponents, installedComponents),
-        generateOcTsxCode(components, customComponents),
+        generateOcTsxCode(components, customComponents, installedComponents),
       ])
       setCode(code)
       if (selectedComponent !== undefined) {
