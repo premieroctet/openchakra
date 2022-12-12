@@ -97,7 +97,6 @@ const ComponentPreview: React.FC<{
     console.error(`ComponentPreview unavailable for component ${componentName}`)
   }
   const type = (component && component.type) || null
-
   const [views, setViews] = useState<any>([])
   const [instView, setInstView] = useState<any>()
   const customComponents = useSelector(getCustomComponentNames)

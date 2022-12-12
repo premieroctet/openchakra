@@ -23,7 +23,8 @@ import {
   PopoverHeader,
   PopoverBody,
   PopoverFooter,
-  Link
+  Link,
+  list
 } from '@chakra-ui/react'
 import { CloseIcon, EditIcon, SearchIcon } from '@chakra-ui/icons'
 import DragItem from './DragItem'
@@ -39,6 +40,8 @@ import API from '~custom-components/api'
 import AddComponent from './AddComponent'
 import DeleteComponent from './DeleteComponent'
 import InstallComponent from './InstallComponent'
+import InstalledPropTable from './InstalledPropTable'
+import ComponentPreview from '~components/editor/ComponentPreview'
 
 
 const Menu = () => {
@@ -92,15 +95,16 @@ const Menu = () => {
       component: name,
       path: pathPackage
     })
-    return res;
+    setParam(JSON.stringify(res.data));
   }
 
-  const [param, setParam] = useState([]);
+  const [param, setParam] = useState(String);
 
   const [isShown, setIsShown] = useState(false);
   const handleClick = () => {
     setIsShown(current => !current);
   };
+
 
   return (
     <DarkMode>
@@ -313,9 +317,7 @@ const Menu = () => {
                               <Button
                                 onClick={() => {
                                   handleClick()
-                                  console.log(name)
-                                  console.log(installedComponents[name])
-                                  const aj = getParameters(name, installedComponents[name]);
+                                  getParameters(name, installedComponents[name]);
                                 }}>
                                 +
                               </Button>
@@ -325,10 +327,11 @@ const Menu = () => {
                               <PopoverCloseButton />
                               <PopoverHeader>
                                 {name}
-                                {param}
-                                </PopoverHeader>
+                              </PopoverHeader>
                               <PopoverBody>
-                                <Link href="https://bit.cloud">{installedComponents[name]}</Link>
+                                {/* {param} */}
+                                {/* <InstalledPropTable param={param}/> */}
+                                {/* <ComponentPreview key={name} componentName={name} /> */}
                               </PopoverBody>
                             </PopoverContent>
                           </Popover>
