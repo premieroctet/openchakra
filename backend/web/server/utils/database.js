@@ -93,6 +93,11 @@ const DECLARED_VIRTUALS = {
       path: "net_price",
       instance: "Number",
       requires: "price,vat_rate"
+    },
+    total_price: {
+      path: "total_price",
+      instance: "Number",
+      requires: "price,quantity"
     }
   },
   // fumoir

@@ -36,6 +36,10 @@ OrderItemSchema.virtual("net_price").get(function() {
   return this.price * (1 - this.vat_rate);
 });
 
+OrderItemSchema.virtual("total_price").get(function() {
+  return this.price * this.quantity;
+});
+
 OrderItemSchema.plugin(mongooseLeanVirtuals);
 
 module.exports = OrderItemSchema;
