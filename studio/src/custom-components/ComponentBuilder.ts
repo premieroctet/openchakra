@@ -32,8 +32,11 @@ export const buildUploadFile: BuilderFn = parent => {
     parent,
   })
 
-  composer.addNode({ type: 'Input', parent: nodeId, props: {type: 'file'} })
-  composer.addNode({ type: 'Button', parent: nodeId, props: {type: 'submit'} })
+  composer.addNode({
+    type: 'IconButton',
+    parent: nodeId,
+    props: { icon: 'EditIcon' },
+  })
 
   const components = composer.getComponents()
 
