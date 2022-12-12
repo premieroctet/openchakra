@@ -76,14 +76,6 @@ const Pages = () => {
           mt={19}
           position={'relative'}
         >
-          <Image
-            position={'absolute'}
-            bottom={-6}
-            src="/images/createPage_woman.svg"
-            w={'120px'}
-            mb={2}
-          />
-
           <CreatePageAction />
         </Box>
       </Box>
