@@ -88,6 +88,13 @@ const DECLARED_VIRTUALS = {
     },
     reviews: { path: "reviews", instance: "review", requires: "_id" }
   },
+  orderItem: {
+    net_price: {
+      path: "net_price",
+      instance: "Number",
+      requires: "price,vat_rate"
+    }
+  },
   // fumoir
   booking: {
     booking_total_person: {
