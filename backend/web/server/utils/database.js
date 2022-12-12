@@ -70,7 +70,7 @@ const DECLARED_VIRTUALS = {
       instance: "Number",
       requires: "price,vat_rate"
     },
-    reviews: { path: "reviews", instance: "review", requires: "_id" }
+    reviews: { path: "reviews", instance: "review", requires: "" }
   },
   meal: {
     net_price: {
@@ -78,7 +78,7 @@ const DECLARED_VIRTUALS = {
       instance: "Number",
       requires: "price,vat_rate"
     },
-    reviews: { path: "reviews", instance: "review", requires: "_id" }
+    reviews: { path: "reviews", instance: "review", requires: "" }
   },
   cigar: {
     net_price: {
@@ -86,7 +86,7 @@ const DECLARED_VIRTUALS = {
       instance: "Number",
       requires: "price,vat_rate"
     },
-    reviews: { path: "reviews", instance: "review", requires: "_id" }
+    reviews: { path: "reviews", instance: "review", requires: "" }
   },
   orderItem: {
     net_price: {
@@ -129,7 +129,7 @@ const DECLARED_VIRTUALS = {
       instance: "Number",
       requires: "vat_rate,price"
     },
-    reviews: { path: "reviews", instance: "review", requires: "_id" }
+    reviews: { path: "reviews", instance: "review", requires: "" }
   },
   subscription: {
     is_active: { path: "is_active", instance: "Boolean", requires: "start,end" }
@@ -202,7 +202,7 @@ const DECLARED_VIRTUALS = {
     }
   },
   resource: {
-    spent_time: { path: "spent_time", instance: "Number", requires: "_id" },
+    spent_time: { path: "spent_time", instance: "Number", requires: "" },
     spent_time_str: {
       path: "spent_time_str",
       instance: "String",
@@ -214,10 +214,10 @@ const DECLARED_VIRTUALS = {
       enumValues: [null, ...Object.keys(STATUS)],
       required: "finished"
     },
-    annotation: { path: "annotation", instance: "String", required: "_id" }
+    annotation: { path: "annotation", instance: "String", required: "" }
   },
   contact: {
-    name: { path: "name", instance: "String", requires: "_id" }
+    name: { path: "name", instance: "String", requires: "" }
   },
   loggedUser: {
     contact_name: {

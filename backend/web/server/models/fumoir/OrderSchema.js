@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const mongooseLeanVirtuals = require("mongoose-lean-virtuals");
 const Schema = mongoose.Schema;
 const { schemaOptions } = require("../../utils/schemas");
+const lodash = require("lodash");
 
 const OrderSchema = new Schema(
   {
@@ -39,10 +40,10 @@ const OrderSchema = new Schema(
 );
 
 OrderSchema.virtual("total_price").get(function() {
-  if (!items) {
+  if (!this.items) {
     return 0;
   }
-  return items.map(i => i.total_price);
+  return lodash.sum(this.items.map(i => i.total_price));
 });
 
 OrderSchema.plugin(mongooseLeanVirtuals);
