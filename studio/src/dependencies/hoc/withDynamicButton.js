@@ -40,7 +40,7 @@ const withDynamicButton = Component => {
             if (!nextAction) {
               return true
             }
-            return ACTIONS[nextAction]({
+            const params = {
               value: res,
               props: nextActionProps,
               backend,
@@ -48,7 +48,9 @@ const withDynamicButton = Component => {
               dataModel,
               query,
               model: props.dataModel,
-            })
+              ...res,
+            }
+            return ACTIONS[nextAction](params)
           })
           .then(() => {
             console.log('ok')

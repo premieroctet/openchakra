@@ -27,11 +27,11 @@ export const ACTIONS = {
         return res;
       });
   },
-  openPage: ({ value, dataModel, query, props }) => {
+  openPage: ({ value, model, query, props }) => {
     const queryParams = query;
     let url = `/${props.page}`;
     if (value && value._id) {
-      queryParams.set(dataModel, value._id);
+      queryParams.set(model, value._id);
     }
     url = `${url}?${queryParams.toString()}`;
     // new page
@@ -43,7 +43,10 @@ export const ACTIONS = {
   },
   create: ({ value, props }) => {
     let url = `${API_ROOT}/${props.model}`;
-    return axios.post(url).then(res => res.data);
+    return axios.post(url).then(res => ({
+      model: props.model,
+      value: res.data
+    }));
   },
   levelUp: ({ value, props, context }) => {
     let url = `${API_ROOT}/action`;
