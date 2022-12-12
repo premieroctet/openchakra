@@ -90,14 +90,13 @@ const Menu = () => {
     dispatch.app.toggleLoader()
   }, [customComponents])
 
-  const [param, setParam] = useState(String);
+  const [param, setParam] = useState('[{}]');
 
   const getParameters = async (name: string, pathPackage: string) => {
     const res = await API.post('/get-parameters', {
       component: name,
       path: pathPackage
     })
-    console.log(res)
     setParam(JSON.stringify(res.data));
   }
 
@@ -313,19 +312,20 @@ const Menu = () => {
                               <Button
                                 onClick={() => {
                                   getParameters(name, installedComponents[name]);
+                                  setParam(`[{"name":"headline","description":"","required":false,"type":"string","default":null},{"name":"onEmailChange","description":"","required":false,"type":"any","default":null},{"name":"passwordValue","description":"","required":false,"type":"string","default":null},{"name":"onPasswordChange","description":"","required":false,"type":"any","default":null},{"name":"signinUrl","description":"","required":false,"type":"string","default":null},{"name":"emailValue","description":"","required":false,"type":"string","default":null},{"name":"nameValue","description":"","required":false,"type":"string","default":null},{"name":"onNameChange","description":"","required":false,"type":"any","default":null},{"name":"imgUrl","description":"","required":false,"type":"string","default":null}]`)
                                 }}>
                                 +
                               </Button>
                             </PopoverTrigger>
-                            <PopoverContent color="whiteAlpha.900" backgroundColor="#703A8D" fontSize="sm">
+                            <PopoverContent color="whiteAlpha.900" backgroundColor="#703A8D" fontSize="sm" width="60vw">
                               <PopoverArrow />
                               <PopoverCloseButton />
-                              <PopoverHeader>
+                              {/* <PopoverHeader>
                                 {name}
-                              </PopoverHeader>
+                              </PopoverHeader> */}
                               <PopoverBody>
-                                {param}
-                                {/* <InstalledPropTable param={param}/> */}
+                                {/* {param} */}
+                                <InstalledPropTable param={param} />
                                 {/* <ComponentPreview key={name} componentName={name} /> */}
                               </PopoverBody>
                             </PopoverContent>

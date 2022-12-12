@@ -1,6 +1,8 @@
 import React, { RefObject } from 'react'
 import { ChakraProvider, Box, Center, Button, Text } from '@chakra-ui/react'
 
+import { ActionCard } from '@tiui/remote.ui.action-card'
+
 const App = () => (
   <>
     <Center
@@ -26,6 +28,7 @@ const App = () => (
         Test button
       </Button>
     </Center>
+    <ActionCard />
   </>
 )
 
