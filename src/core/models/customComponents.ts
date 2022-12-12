@@ -24,6 +24,10 @@ export interface NewThemeType {
   secondary: string
   textColor: string
   bgColor: string
+  paperColor: string
+  successColor: string
+  borderColor: string
+  errorColor: string
 }
 
 export type CustomComponentsState = {
@@ -50,7 +54,11 @@ const INITIAL_NEW_THEME: NewThemeType = {
   primary: 'blue',
   secondary: 'cyan',
   textColor: 'gray.900',
-  bgColor: 'pink.100',
+  bgColor: 'gray.200',
+  paperColor: 'whiteAlpha.900',
+  successColor: 'green.600',
+  borderColor: 'gray.200',
+  errorColor: 'red.600',
 }
 
 const customComponents = createModel({

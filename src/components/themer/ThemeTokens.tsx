@@ -32,11 +32,43 @@ const ThemeTokens = ({ themeState }: { themeState: NewThemeType }) => {
         />
       </HStack>
       <HStack spacing={4}>
+        <Text>Paper Color</Text>
+        <ParentColorPicker
+          withFullColor={true}
+          selectedColor={themeState.paperColor}
+          propType="paperColor"
+        />
+      </HStack>
+      <HStack spacing={4}>
         <Text>Text Color</Text>
         <ParentColorPicker
           withFullColor={true}
           selectedColor={themeState.textColor}
           propType="textColor"
+        />
+      </HStack>
+      <HStack spacing={4}>
+        <Text>Border Color</Text>
+        <ParentColorPicker
+          withFullColor={true}
+          selectedColor={themeState.borderColor}
+          propType="borderColor"
+        />
+      </HStack>
+      <HStack spacing={4}>
+        <Text>Error Color</Text>
+        <ParentColorPicker
+          withFullColor={true}
+          selectedColor={themeState.errorColor}
+          propType="errorColor"
+        />
+      </HStack>
+      <HStack spacing={4}>
+        <Text>Success Color</Text>
+        <ParentColorPicker
+          withFullColor={true}
+          selectedColor={themeState.successColor}
+          propType="successColor"
         />
       </HStack>
     </VStack>

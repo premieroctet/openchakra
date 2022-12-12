@@ -33,6 +33,7 @@ import { getShowLayout, getShowCode } from '~core/selectors/app'
 import ComponentPreview from '~components/editor/ComponentPreview'
 import { NewThemeType, ThemeExtType } from '~core/models/customComponents'
 import { omit } from 'lodash'
+import myTheme from './myTheme'
 
 export const themeColors: any = Object.keys(
   omit(baseTheme.colors, ['transparent', 'current', 'black', 'white']),
@@ -120,38 +121,6 @@ const Editor: React.FC = () => {
     ...rootProps,
   }
 
-  const myTheme = {
-    semanticTokens: {
-      colors: {
-        'chakra-body-bg': {
-          _light: newThemeState.bgColor,
-          _dark: 'gray.800',
-        },
-        'chakra-body-text': {
-          _light: newThemeState.textColor,
-          _dark: 'gray.100',
-        },
-      },
-    },
-    colors: {
-      primary:
-        baseTheme.colors[
-          newThemeState.primary as keyof typeof baseTheme.colors
-        ],
-      secondary:
-        baseTheme.colors[
-          newThemeState.secondary as keyof typeof baseTheme.colors
-        ],
-    },
-    components: {
-      Button: {
-        defaultProps: {
-          colorScheme: 'primary',
-        },
-      },
-    },
-  }
-
   const Playground = (
     <ChakraProvider
       theme={extendTheme(
@@ -159,7 +128,7 @@ const Editor: React.FC = () => {
         //   withDefaultProps(themeExt),
         // ),
         // {
-        myTheme,
+        myTheme(newThemeState),
         baseTheme,
       )}
     >
