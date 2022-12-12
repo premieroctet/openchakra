@@ -392,6 +392,7 @@ const buildQuery = (model, id, fields) => {
 
   const allFields = [...fields, ...virtuals];
 
+  console.log(`All fields:${allFields}`);
   const populates = buildPopulates(allFields, model);
 
   const select = lodash(allFields)

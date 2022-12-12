@@ -33,6 +33,7 @@ require("./models/Drink");
 require("./models/Meal");
 require("./models/Cigar");
 require("./models/Order");
+require("./models/OrderItem");
 require("./models/Booking");
 
 const { MONGOOSE_OPTIONS } = require("./utils/database");

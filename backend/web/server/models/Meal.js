@@ -1,17 +1,13 @@
-const mongoose = require("mongoose");
-const { PRODUCT_DISC_OPTION } = require("../../utils/fumoir/consts");
-const { schemaOptions } = require("../utils/schemas");
+const MealSchema = require("./fumoir/MealSchema");
+const mongooseLeanVirtuals = require("mongoose-lean-virtuals");
 
 let Meal = null;
 
 try {
   const Product = require(`./Product`);
   if (Product) {
-    Meal = Product.discriminator(
-      "meal",
-      new mongoose.Schema({}, { ...schemaOptions, ...PRODUCT_DISC_OPTION })
-    );
-    // TODO: create DrinkSchema Drink?.plugin(mongooseLeanVirtuals)
+    MealSchema.plugin(mongooseLeanVirtuals);
+    Meal = Product.discriminator("meal", MealSchema);
   }
 } catch (err) {
   if (err.code !== "MODULE_NOT_FOUND") {

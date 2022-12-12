@@ -192,6 +192,7 @@ export const getFieldsForDataProvider = (
     : lodash(linkedComponents)
         .map(c => c.props.attribute)
         .uniq()
+        .filter(v => !!v)
         .value()
   return fields
 }

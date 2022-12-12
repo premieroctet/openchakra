@@ -4,6 +4,7 @@
 .pnp.js
 
 **/studio-test/src/[A-Z]*.js
+**/studio-test/src/[A-Z]*.css
 
 # testing
 /coverage

@@ -241,6 +241,7 @@ router.get(
     const model = req.params.model;
     let fields = req.query.fields?.split(",") || [];
     const id = req.params.id;
+    console.log(`Getting ${model} ${id} ${fields}`);
     const params = req.get("Referrer")
       ? { ...url.parse(req.get("Referrer"), true).query }
       : {};
