@@ -1,11 +1,12 @@
 import { Box, Text } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import FileManager from "../utils/S3filemanager";
 import { s3Config, S3UrlRessource } from "../utils/s3Config";
 import axios from "axios";
 import mime from "mime";
 import JSZip from "jszip";
 import xmljs from "xml-js";
+import styled from "@emotion/styled";
 import { getExtension } from "./MediaWrapper";
 
 const uploadUrl = `/myAlfred/api/studio/action`;
@@ -73,16 +74,16 @@ const UploadFile = ({
     s3Config.secretAccessKey || ""
   );
   const [uploadInfo, setUploadInfo] = useState("");
+  const [file, setFile] = useState<File | null>();
 
-  const handleUpload = async (e: React.FormEvent) => {
+  const onFileNameChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
+    const currentFile = e.target.files && e.target.files[0];
+    setFile(currentFile);
+  };
 
-    const form = e.target as HTMLFormElement;
-    const inputFile = form.querySelector('[type="file"]') as HTMLInputElement;
-    const fileToUpload =
-      inputFile && inputFile?.files && (inputFile?.files[0] as File);
-
-    if (fileToUpload) {
+  const handleUpload = useCallback(
+    async (fileToUpload: File) => {
       const typeOfUpload = getExtension(fileToUpload?.name);
 
       let paramsBack = {
@@ -103,7 +104,6 @@ const UploadFile = ({
         switch (typeOfUpload) {
           case "zip":
             const unzipped = await JSZip.loadAsync(fileToUpload);
-
             const scormVersion = await isScormZip(unzipped);
 
             await uploadMultipleToS3(fileToUpload?.name, unzipped);
@@ -120,6 +120,7 @@ const UploadFile = ({
               };
             }
             break;
+
           default:
             const res = await uploadFileToS3(fileToUpload);
             paramsBack = { ...paramsBack, ...{ value: res?.Location } };
@@ -148,17 +149,46 @@ const UploadFile = ({
 
       await switchUploadType();
       await saveUrl();
+    },
+    [attribute, ressource_id]
+  );
+
+  useEffect(() => {
+    if (file) {
+      handleUpload(file);
     }
-  };
+  }, [file, handleUpload]);
 
   return (
     <Box {...props}>
-      <form id="uploadressource" onSubmit={ev => handleUpload(ev)}>
-        {children}
+      <form id="uploadressource">
+        <UploadZone>
+          <input type="file" onChange={onFileNameChange} />
+          {/* Whatever in children, it bring focus on InputFile */}
+          {children}
+        </UploadZone>
       </form>
       {uploadInfo && <Text>{uploadInfo}</Text>} {/*Component status */}
     </Box>
   );
 };
+
+const UploadZone = styled.label`
+  input[type="file"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  *:not(input[type="file"]) {
+    pointer-events: none;
+  }
+`;
 
 export default UploadFile;
