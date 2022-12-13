@@ -43,6 +43,7 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'List',
   'ListItem',
   'Media',
+  'NumberFormat',
   'Progress',
   'Radio',
   'RadioGroup',

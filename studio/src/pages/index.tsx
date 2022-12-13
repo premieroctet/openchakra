@@ -16,6 +16,7 @@ import '~custom-components/Date/DateInit'
 import '~custom-components/UploadFile/UploadFileInit'
 import '~custom-components/Media/MediaInit'
 import '~custom-components/Timer/TimerInit'
+import '~custom-components/NumberFormat/NumberFormatInit'
 import '~custom-components/DataProvider/DataProviderInit'
 import Menu from '~components/sidebar/Menu'
 import MediasContainer from '~components/MediasContainer'
@@ -62,7 +63,7 @@ const App = () => {
             overflowX="visible"
             borderLeft="1px solid #cad5de"
           >
-          {false && <Warnings />}
+            {false && <Warnings />}
           </Box>
         </Flex>
       </DndProvider>
