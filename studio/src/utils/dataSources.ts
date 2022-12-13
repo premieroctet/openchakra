@@ -21,7 +21,7 @@ export const DATE_TYPE: ComponentType[] = ['Date']
 export const SELECT_TYPE: ComponentType[] = ['Select']
 export const SOURCE_TYPE: ComponentType[] = ['Timer']
 export const CHECKBOX_TYPE: ComponentType[] = ['Checkbox']
-export const INPUT_TYPE: ComponentType[] = ['Input', 'Textarea']
+export const INPUT_TYPE: ComponentType[] = ['Input', 'Textarea', 'NumberInput']
 export const UPLOAD_TYPE: ComponentType[] = ['UploadFile']
 
 const ALL_DYNAMICS = lodash.flatten([

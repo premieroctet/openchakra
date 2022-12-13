@@ -44,6 +44,7 @@ const InputPanel = () => {
           value={type || ''}
         >
           <option>text</option>
+          <option>number</option>
           <option>email</option>
           <option>date</option>
           <option>time</option>

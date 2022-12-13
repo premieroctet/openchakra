@@ -58,12 +58,6 @@ export const ACTIONS: IActions = {
     },
     next: ['openPage'],
   },
-  publishProgram: {
-    label: 'Publish',
-    options: {
-      //data: ({components}) => components.map(p => ({key: p.id, label: p.id})),
-    },
-  },
   delete: {
     label: 'Delete',
     options: {
@@ -93,6 +87,29 @@ export const ACTIONS: IActions = {
         components.map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
     },
   },
+  addOrderItem: {
+    label: 'Add to order',
+    options: {
+      quantity: ({ components }) =>
+        components
+          .filter(c => c.type == 'Input')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+    },
+  },
+  inviteGuest: {
+    label: 'Invite to event',
+    options: {
+      email: ({ components }) =>
+        components
+          .filter(c => c.type == 'Input')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      phone: ({ components }) =>
+        components
+          .filter(c => c.type == 'Input')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+    },
+  },
+  // FUMOIR
 }
 
 export const allowsActions = (component: IComponent) => {

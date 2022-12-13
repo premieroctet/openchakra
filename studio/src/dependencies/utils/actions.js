@@ -3,17 +3,17 @@ import { getComponentDataValue, clearComponentValue } from './values'
 
 const API_ROOT = '/myAlfred/api/studio'
 export const ACTIONS = {
-  login: ({ props }) => {
-    const email = getComponentDataValue(props.email)
-    const password = getComponentDataValue(props.password)
+  login: ({ props, index }) => {
+    const email = getComponentDataValue(props.email, index)
+    const password = getComponentDataValue(props.password, index)
     let url = `${API_ROOT}/login`
     return axios.post(url, { email, password }).catch(err => {
       throw new Error(err.response?.data || err)
     })
   },
-  sendMessage: ({ props }) => {
-    const destinee = getComponentDataValue(props.destinee)
-    const contents = getComponentDataValue(props.contents)
+  sendMessage: ({ props, index }) => {
+    const destinee = getComponentDataValue(props.destinee, index)
+    const contents = getComponentDataValue(props.contents, index)
     let url = `${API_ROOT}/action`
     return axios
       .post(url, {
@@ -22,8 +22,8 @@ export const ACTIONS = {
         contents: contents,
       })
       .then(res => {
-        clearComponentValue(props.destinee)
-        clearComponentValue(props.contents)
+        clearComponentValue(props.destinee, index)
+        clearComponentValue(props.contents, index)
         return res
       })
   },
@@ -76,10 +76,6 @@ export const ACTIONS = {
       .post(url, { action: 'previous', id: value._id })
       .then(res => res.data)
   },
-  publish: ({ value, props }) => {
-    let url = `${API_ROOT}/action`
-    return axios.post(url, { action: 'publish', id: value._id })
-  },
   delete: ({ value, props, context }) => {
     let url = `${API_ROOT}/action`
     return axios.post(url, {
@@ -94,8 +90,8 @@ export const ACTIONS = {
       .post(url, { action: 'session', id: value._id })
       .then(res => res.data)
   },
-  addChild: ({ value, props, context }) => {
-    const childId = getComponentDataValue(props.child)
+  addChild: ({ value, props, context, index }) => {
+    const childId = getComponentDataValue(props.child, index)
     let url = `${API_ROOT}/action`
     const body = { action: 'addChild', parent: context, child: childId }
     return axios.post(url, body)
@@ -108,6 +104,30 @@ export const ACTIONS = {
       parent: context,
       attribute: props.attribute,
       value: value,
+    }
+    return axios.post(url, body)
+  },
+  addOrderItem: ({ value, props, context, index }) => {
+    const quantity = getComponentDataValue(props.quantity, index)
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'addOrderItem',
+      parent: value?._id,
+      context,
+      quantity,
+    }
+    return axios.post(url, body)
+  },
+  inviteGuest: ({ value, props, context, index }) => {
+    const [email, phone] = ['email', 'phone'].map(att =>
+      getComponentDataValue(props[att], index),
+    )
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'inviteGuest',
+      parent: context,
+      email,
+      phone,
     }
     return axios.post(url, body)
   },

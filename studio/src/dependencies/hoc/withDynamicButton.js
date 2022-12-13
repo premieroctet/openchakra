@@ -28,6 +28,7 @@ const withDynamicButton = Component => {
           return alert(`Undefined action ${action}`)
         }
         return ACTIONS[action]({
+          ...props,
           value: value,
           props: actionProps,
           backend,
@@ -41,6 +42,7 @@ const withDynamicButton = Component => {
               return true
             }
             const params = {
+              ...props,
               value: res,
               props: nextActionProps,
               backend,

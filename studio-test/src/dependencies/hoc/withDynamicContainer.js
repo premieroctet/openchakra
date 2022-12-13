@@ -1,6 +1,6 @@
 import React from "react";
 import lodash from "lodash";
-
+import util from "util";
 const normalize = str => {
   str = str
     ? str
@@ -21,31 +21,43 @@ const isOtherSource = (element, dataSourceId) => {
     return true;
   }
 };
-const setRecurseDataSource = (element, dataSource, dataSourceId, level = 0) => {
+const setRecurseDataSource = (
+  element,
+  dataSource,
+  dataSourceId,
+  suffix = ""
+) => {
   if (React.Children.count(element.props.children) === 0) {
     return [];
   } else {
-    return React.Children.map(element.props.children, function(child) {
+    return React.Children.map(element.props.children, function(child, index) {
+      console.log(`child:${child}, id:${child.props?.id}, index:${index}`);
+      const newSuffix = `${suffix}_${index}`;
+      const newId = child.props?.id ? `${child.props?.id}${suffix}` : undefined;
       //if (child.props === undefined || (child.props.dataSourceId && child.props.dataSourceId!=dataSourceId)) {
       if (child.props === undefined) {
         return child;
       } else if (React.Children.count(child.props.children) === 0) {
         if (isOtherSource(child, dataSourceId)) {
-          return React.cloneElement(child, {});
+          return React.cloneElement(child, { id: newId, index: suffix });
         }
-        return React.cloneElement(child, { dataSource });
+        return React.cloneElement(child, {
+          id: newId,
+          index: suffix,
+          dataSource
+        });
       } else {
         if (isOtherSource(child, dataSourceId)) {
           return React.cloneElement(
             child,
-            {},
-            setRecurseDataSource(child, dataSource, dataSourceId, level + 1)
+            { id: newId, index: suffix },
+            setRecurseDataSource(child, dataSource, dataSourceId, newSuffix)
           );
         }
         return React.cloneElement(
           child,
-          { dataSource },
-          setRecurseDataSource(child, dataSource, dataSourceId, level + 1)
+          { id: newId, index: suffix, dataSource },
+          setRecurseDataSource(child, dataSource, dataSourceId, newSuffix)
         );
       }
     });
@@ -85,15 +97,25 @@ const withDynamicContainer = Component => {
     }
     return (
       <Component {...lodash.omit(props, ["children"])}>
-        {data.map(d => (
-          <>
-            {React.cloneElement(
-              firstChild,
-              { dataSource: d },
-              setRecurseDataSource(firstChild, d, props.dataSourceId)
-            )}
-          </>
-        ))}
+        {data.map((d, index) => {
+          const newId = firstChild.props?.id
+            ? `${firstChild.props?.id}_${index}`
+            : undefined;
+          return (
+            <>
+              {React.cloneElement(
+                firstChild,
+                { id: newId, index, dataSource: d },
+                setRecurseDataSource(
+                  firstChild,
+                  d,
+                  props.dataSourceId,
+                  `_${index}`
+                )
+              )}
+            </>
+          );
+        })}
       </Component>
     );
   };

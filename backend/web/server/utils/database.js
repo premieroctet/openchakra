@@ -240,6 +240,13 @@ const DECLARED_VIRTUALS = {
         "destinee_session.trainers,destinee_session.trainees,destinee_user"
     },
     sender_name: { path: "sender_name", instance: "String", requires: "sender" }
+  },
+  event: {
+    members_count: {
+      path: "members_count",
+      instance: "Number",
+      required: "guests_count,members"
+    }
   }
 };
 

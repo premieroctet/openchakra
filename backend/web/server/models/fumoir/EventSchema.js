@@ -38,16 +38,25 @@ const EventSchema = new Schema(
     guests: [
       {
         // Guest email addresses
-        type: String
+        email: String,
+        phone: String
       }
     ],
     place: {
       type: String,
       enum: [...Object.keys(PLACES)],
       required: false
+    },
+    guests_count: {
+      type: Number,
+      default: 0
     }
   },
   schemaOptions
 );
+
+EventSchema.virtual("members_count").get(function() {
+  return this.guests_count + this.members?.length || 0;
+});
 
 module.exports = EventSchema;
