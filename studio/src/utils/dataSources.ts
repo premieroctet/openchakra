@@ -10,6 +10,7 @@ export const CONTAINER_TYPE: ComponentType[] = [
 ]
 export const TEXT_TYPE: ComponentType[] = [
   'Text',
+  'NumberFormat',
   'Heading',
   'Badge',
   'ListItem',
