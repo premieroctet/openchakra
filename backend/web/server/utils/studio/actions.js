@@ -1,5 +1,5 @@
 const {
-  addOrderItem,
+  setOrderItem,
   inviteGuest,
   removeOrderItem
 } = require("./fumoir/functions");
@@ -98,6 +98,10 @@ const ACTIONS = {
 
   addOrderItem: ({ context, parent, quantity }) => {
     return addOrderItem({ order: context, product: parent, quantity });
+  },
+
+  setOrderItem: ({ context, parent, quantity }) => {
+    return setOrderItem({ order: context, product: parent, quantity });
   },
 
   removeOrderItem: ({ context, parent }) => {

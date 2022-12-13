@@ -107,11 +107,11 @@ export const ACTIONS = {
     };
     return axios.post(url, body);
   },
-  addOrderItem: ({ value, props, context, index }) => {
+  setOrderItem: ({ value, props, context, index }) => {
     const quantity = getComponentDataValue(props.quantity, index);
     let url = `${API_ROOT}/action`;
     const body = {
-      action: "addOrderItem",
+      action: "setOrderItem",
       parent: value?._id,
       context,
       quantity

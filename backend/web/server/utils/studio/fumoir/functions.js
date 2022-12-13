@@ -10,29 +10,34 @@ const inviteGuest = ({ event, email, phone }) => {
   });
 };
 
-const addOrderItem = ({ order, product, quantity }) => {
-  return Product.findById(product)
-    .then(product => {
-      if (!product) {
-        throw new NotFoundError(`Produit ${product} introuvable`);
+const setOrderItem = ({ order, product, quantity }) => {
+  return Order.findById(order)
+    .populate("items")
+    .then(order => {
+      if (!order) {
+        throw new NotFoundError(`Commande ${order} introuvable`);
       }
-      return OrderItem.create({
-        product: product,
-        price: product.price,
-        vat_rate: product.vat_rate,
-        quantity
-      });
-    })
-    .then(orderItem =>
-      Order.findByIdAndUpdate(
-        order,
-        { $push: { items: orderItem } },
-        { new: true }
-      )
-    )
-    .then(res => {
-      console.log(res);
-      return res;
+      const item = order.items.find(i => i.product.toString() == product);
+      if (item) {
+        item.quantity = parseInt(quantity);
+        return item.save();
+      }
+      return Product.findById(product)
+        .then(product =>
+          OrderItem.create({
+            product: product,
+            price: product.price,
+            vat_rate: product.vat_rate,
+            quantity
+          })
+        )
+        .then(item =>
+          Order.findByIdAndUpdate(
+            order,
+            { $push: { items: item } },
+            { new: true }
+          )
+        );
     });
 };
 
@@ -47,4 +52,4 @@ const removeOrderItem = ({ order, item }) => {
     });
 };
 
-module.exports = { inviteGuest, addOrderItem, removeOrderItem };
+module.exports = { inviteGuest, setOrderItem, removeOrderItem };
