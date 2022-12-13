@@ -3,12 +3,12 @@ import { Text } from "@chakra-ui/react";
 
 const NumberComp = ({
   "data-lang": dataLang,
-  "data-value": dataValue,
+  value: dataValue,
   "data-format": dataFormat,
   ...props
 }: {
   "data-lang"?: string;
-  "data-value": string;
+  value: string;
   "data-format": string;
 }) => {
   const languageToConsider = dataLang ? dataLang : "fr-FR";
