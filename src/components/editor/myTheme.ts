@@ -20,7 +20,8 @@ const myTheme = (newThemeState: NewThemeType) => ({
         _light: newThemeState.paperColor,
         _dark: 'gray.700',
       },
-      borderColor: {
+      'chakra-border-color': {
+        // borderColor: {
         _light: newThemeState.borderColor,
         _dark: 'gray.700',
       },
@@ -29,24 +30,20 @@ const myTheme = (newThemeState: NewThemeType) => ({
   colors: {
     brand:
       baseTheme.colors[newThemeState.brand as keyof typeof baseTheme.colors],
-    error:
-      baseTheme.colors[newThemeState.error as keyof typeof baseTheme.colors],
-    success:
-      baseTheme.colors[newThemeState.success as keyof typeof baseTheme.colors],
   },
   components: {
     Accordion: {
       baseStyle: {
         container: {
           bg: 'paperColor',
-          borderColor: 'borderColor',
+          borderColor: 'chakra-border-color',
         },
       },
     },
     Alert: {
       baseStyle: {
         container: {
-          borderColor: 'borderColor',
+          borderColor: 'chakra-border-color',
         },
       },
     },
@@ -54,7 +51,7 @@ const myTheme = (newThemeState: NewThemeType) => ({
       baseStyle: {
         container: {
           bg: 'paperColor',
-          borderColor: 'borderColor',
+          borderColor: 'chakra-border-color',
           color: 'chakra-body-text',
         },
         excessLabel: {
@@ -75,7 +72,7 @@ const myTheme = (newThemeState: NewThemeType) => ({
     Card: {
       baseStyle: {
         container: {
-          borderColor: 'borderColor',
+          borderColor: 'chakra-border-color',
           backgroundColor: 'paperColor',
         },
       },
@@ -97,7 +94,28 @@ const myTheme = (newThemeState: NewThemeType) => ({
     },
     Divider: {
       baseStyle: {
-        color: 'borderColor',
+        color: 'chakra-border-color',
+      },
+    },
+    Icon: {
+      baseStyle: {
+        color: 'primaryColor',
+      },
+    },
+    IconButton: {
+      defaultProps: {
+        colorScheme: 'brand',
+      },
+    },
+    Popover: {
+      baseStyle: {
+        arrow: {
+          borderColor: 'chakra-border-color',
+          bg: 'paperColor',
+        },
+        content: {
+          backgroundColor: 'paperColor',
+        },
       },
     },
     Progress: {
@@ -105,9 +123,64 @@ const myTheme = (newThemeState: NewThemeType) => ({
         colorScheme: 'brand',
       },
     },
+    Radio: {
+      defaultProps: {
+        colorScheme: 'brand',
+      },
+    },
+    RangeSlider: {
+      defaultProps: {
+        colorScheme: 'brand',
+      },
+    },
+    Select: {
+      baseStyle: {
+        icon: {
+          color: 'primaryColor',
+        },
+      },
+    },
     Spinner: {
       baseStyle: {
         color: 'primaryColor',
+      },
+    },
+    Switch: {
+      defaultProps: {
+        colorScheme: 'brand',
+      },
+    },
+    Slider: {
+      defaultProps: {
+        colorScheme: 'brand',
+      },
+    },
+    Table: {
+      defaultProps: {
+        variant: 'striped',
+        colorScheme: 'brand',
+      },
+      baseStyle: {
+        table: {
+          bg: 'paperColor',
+          width: 'full',
+        },
+      },
+    },
+    Tabs: {
+      defaultProps: {
+        variant: 'soft-rounded',
+        colorScheme: 'brand',
+      },
+      baseStyle: {
+        tabpanels: {
+          bg: 'paperColor',
+        },
+      },
+    },
+    Tag: {
+      defaultProps: {
+        colorScheme: 'brand',
       },
     },
   },

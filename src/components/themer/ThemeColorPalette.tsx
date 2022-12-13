@@ -41,18 +41,6 @@ const paletteOptions = [
     description: 'Applies this as border color ',
     withFullColor: true,
   },
-  // {
-  //   label: 'Error Color',
-  //   propType: 'errorColor',
-  //   description: 'Applies this as Error color ',
-  //   withFullColor: false,
-  // },
-  // {
-  //   label: 'Success Color',
-  //   propType: 'successColor',
-  //   description: 'Applies this as Success color ',
-  //   withFullColor: false,
-  // },
 ]
 
 const PaletteOption = ({
