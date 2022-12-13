@@ -58,6 +58,7 @@ type ComponentType =
   | 'ListIcon'
   | 'Media'
   | 'Menu'
+  | 'NumberFormat'
   | 'NumberInput'
   | 'NumberInputField'
   | 'NumberInputStepper'
