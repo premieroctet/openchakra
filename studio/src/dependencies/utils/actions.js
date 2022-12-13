@@ -118,6 +118,15 @@ export const ACTIONS = {
     }
     return axios.post(url, body)
   },
+  removeOrderItem: ({ value, context }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'removeOrderItem',
+      parent: value?._id,
+      context,
+    }
+    return axios.post(url, body)
+  },
   inviteGuest: ({ value, props, context, index }) => {
     const [email, phone] = ['email', 'phone'].map(att =>
       getComponentDataValue(props[att], index),

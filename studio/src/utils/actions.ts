@@ -96,6 +96,10 @@ export const ACTIONS: IActions = {
           .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
     },
   },
+  removeOrderItem: {
+    label: 'Remove from order',
+    options: [],
+  },
   inviteGuest: {
     label: 'Invite to event',
     options: {

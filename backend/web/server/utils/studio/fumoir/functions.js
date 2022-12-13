@@ -36,4 +36,15 @@ const addOrderItem = ({ order, product, quantity }) => {
     });
 };
 
-module.exports = { inviteGuest, addOrderItem };
+const removeOrderItem = ({ order, item }) => {
+  return Order.findByIdAndUpdate(order, { $pull: { items: item } })
+    .then(() => {
+      return OrderItem.findByIdAndRemove(item);
+    })
+    .then(res => {
+      console.log(res);
+      return res;
+    });
+};
+
+module.exports = { inviteGuest, addOrderItem, removeOrderItem };

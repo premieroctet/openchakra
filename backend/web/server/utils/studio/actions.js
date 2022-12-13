@@ -1,4 +1,8 @@
-const { addOrderItem, inviteGuest } = require("./fumoir/functions");
+const {
+  addOrderItem,
+  inviteGuest,
+  removeOrderItem
+} = require("./fumoir/functions");
 const url = require("url");
 const UserSessionData = require("../../models/UserSessionData");
 const { NotFoundError } = require("../errors");
@@ -94,6 +98,10 @@ const ACTIONS = {
 
   addOrderItem: ({ context, parent, quantity }) => {
     return addOrderItem({ order: context, product: parent, quantity });
+  },
+
+  removeOrderItem: ({ context, parent }) => {
+    return removeOrderItem({ order: context, item: parent });
   }
 };
 
