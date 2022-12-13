@@ -45,9 +45,8 @@ const InstalledPropTable = ({ param }: installPropTable) => {
                                 <Td>{property.type}</Td>
                                 <Td>{(property.description) ? (property.description) : "-"}</Td>
                                 <Td>{(property.required) ? 'YES' : '-'}</Td>
+                                <Td>{(property.default) ? JSON.stringify(property.default) : "-"}</Td>
 
-                                {/* <Td>{String(property.required)}</Td> */}
-                                <Td>{(property.default) ? (property.default) : "-"}</Td>
                             </Tr>
                         ))
                     }
