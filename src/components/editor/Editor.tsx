@@ -5,7 +5,6 @@ import {
   Link,
   ChakraProvider,
   extendTheme,
-  withDefaultProps,
   theme as baseTheme,
 } from '@chakra-ui/react'
 import { theme as proTheme } from '@chakra-ui/pro-theme'
@@ -31,7 +30,6 @@ import {
 } from '~core/selectors/customComponents'
 import { getShowLayout, getShowCode } from '~core/selectors/app'
 import ComponentPreview from '~components/editor/ComponentPreview'
-import { NewThemeType, ThemeExtType } from '~core/models/customComponents'
 import { omit } from 'lodash'
 import myTheme from './myTheme'
 
@@ -129,7 +127,6 @@ const Editor: React.FC = () => {
         // ),
         // {
         myTheme(newThemeState),
-        baseTheme,
       )}
     >
       <style>

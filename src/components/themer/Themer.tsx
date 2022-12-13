@@ -28,7 +28,7 @@ import {
 import useDispatch from '~hooks/useDispatch'
 import API from '~custom-components/api'
 import ThemeCustomStyles from './CustomStyles'
-import ThemeTokens from './ThemeTokens'
+import ThemeColorPalette from './ThemeTokens'
 import ThemeLayers from './ThemeLayers'
 
 const Themer = () => {
@@ -106,7 +106,7 @@ const Themer = () => {
                     hasArrow
                     placement="right"
                   >
-                    Tokens
+                    Color Palette
                   </Tooltip>
                 </Tab>
                 <Divider />
@@ -117,7 +117,7 @@ const Themer = () => {
                     hasArrow
                     placement="right"
                   >
-                    Layers
+                    Fonts
                   </Tooltip>
                 </Tab>
                 <Divider />
@@ -134,7 +134,7 @@ const Themer = () => {
               </TabList>
               <TabPanels>
                 <TabPanel>
-                  <ThemeTokens themeState={newThemeState} />
+                  <ThemeColorPalette themeState={newThemeState} />
                 </TabPanel>
                 <TabPanel>
                   <ThemeLayers themeState={themeState} />
