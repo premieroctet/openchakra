@@ -38,6 +38,10 @@ import SkeletonPreview, {
   SkeletonCirclePreview,
   SkeletonTextPreview,
 } from './previews/SkeletonPreview'
+import RangeSliderPreview from './previews/RangeSliderPreview'
+import RangeSliderTrackPreview from './previews/RangeSliderTrackPreview'
+import RangeSliderThumbPreview from './previews/RangeSliderThumbPreview'
+import RangeSliderFilledTrackPreview from './previews/RangeSliderFilledTrackPreview'
 import ModalPreview, {
   ModalCloseButtonPreview,
   ModalBodyPreview,
@@ -136,6 +140,7 @@ const ComponentPreview: React.FC<{
     case 'StatLabel':
     case 'StatNumber':
     case 'StatArrow':
+    case 'RangeSliderFilledTrack':
     case 'Td':
     case 'Th':
     case 'TableCaption':
@@ -248,6 +253,12 @@ const ComponentPreview: React.FC<{
       return <SkeletonTextPreview component={component} />
     case 'SkeletonCircle':
       return <SkeletonCirclePreview component={component} />
+    case 'RangeSliderTrack':
+      return <RangeSliderTrackPreview component={component} />
+    case 'RangeSlider':
+      return <RangeSliderPreview component={component} />
+    case 'RangeSliderThumb':
+      return <RangeSliderThumbPreview component={component} />
     case 'Stat':
       return <StatPreview component={component} />
     case 'StatHelpText':

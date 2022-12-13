@@ -396,6 +396,22 @@ export const buildTag = (parent: string): ComposedComponent => {
   }
 }
 
+export const buildRangeSlider = (parent: string): ComposedComponent => {
+  const composer = new Composer()
+  const nodeId = composer.addNode({ type: 'RangeSlider' })
+  const track = composer.addNode({ type: 'RangeSliderTrack', parent: nodeId })
+  composer.addNode({ type: 'RangeSliderFilledTrack', parent: track })
+  composer.addNode({ type: 'RangeSliderThumb', parent: nodeId , props: {index: '0'}})
+  composer.addNode({ type: 'RangeSliderThumb', parent: nodeId , props: {index: '1'}})
+  const components = composer.getComponents()
+
+  return {
+    components,
+    root: nodeId,
+    parent,
+  }
+}
+
 type BuilderFn = (parent: string) => ComposedComponent
 
 type ComposerBuilders = {
@@ -417,7 +433,8 @@ const builders: ComposerBuilders = {
   ModalMeta: buildModal,
   CardMeta: buildCard,
   TagMeta: buildTag,
-  PopoverMeta: buildPopover
+  PopoverMeta: buildPopover,
+  RangeSliderMeta: buildRangeSlider,
 }
 
 export default builders

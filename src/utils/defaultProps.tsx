@@ -96,6 +96,9 @@ import {
   ModalHeaderProps,
   ModalFooterProps,
   ModalBodyProps,
+  RangeSliderProps,
+  RangeSliderTrackProps,
+  RangeSliderThumbProps,
 } from '@chakra-ui/react'
 
 import iconsList from '~iconsList'
@@ -214,6 +217,10 @@ type PreviewDefaultProps = {
   ModalFooter?: PropsWithForm<ModalFooterProps>
   ModalBody?: PropsWithForm<ModalBodyProps>
   ModalCloseButton?: PropsWithForm<any>
+  RangeSlider?: PropsWithForm<RangeSliderProps>
+  RangeSliderTrack?: PropsWithForm<RangeSliderTrackProps>
+  RangeSliderFilledTrack?: PropsWithForm<any>
+  RangeSliderThumb?: PropsWithForm<RangeSliderThumbProps>
 }
 
 export const DEFAULT_PROPS: PreviewDefaultProps | any = {
@@ -369,6 +376,17 @@ export const DEFAULT_PROPS: PreviewDefaultProps | any = {
     spacingX: 1,
     spacingY: 1,
   },
+  RangeSlider: {
+    defaultvalue: ['20', '30'],
+    min: 1,
+    max: 100,
+    'aria-label': ['min', 'max'],
+  },
+  RangeSliderFilledTrack: {},
+  RangeSliderThumb: {
+    index: '0'
+  },
+  RangeSliderTrack: {},
   Stack: {
     spacing: 2,
     form: {

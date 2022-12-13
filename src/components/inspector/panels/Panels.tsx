@@ -57,6 +57,7 @@ import TabPanel from './components/TabPanel'
 import StatArrowPanel from './components/StatArrowPanel'
 import StatLabelPanel from './components/StatLabelPanel'
 import SkeletonPanel from './components/SkeletonPanel'
+import RangeSliderPanel from '~components/inspector/panels/components/RangeSliderPanel'
 import TablePanel from './components/TablePanel'
 import ConditionalPanel from './components/ConditionalPanel'
 import LoopPanel from './components/LoopPanel'
@@ -177,6 +178,7 @@ const Panels: React.FC<{
       {type === 'StatArrow' && <StatArrowPanel />}
       {type === 'StatLabel' && <StatLabelPanel />}
       {type === 'StatNumber' && <StatLabelPanel />}
+      {type === 'RangeSlider' && <RangeSliderPanel />}
       {type === 'Table' && <TablePanel />}
       {type === 'TableCaption' && <TableCaptionPanel />}
       {type === 'Td' && <TdPanel />}
