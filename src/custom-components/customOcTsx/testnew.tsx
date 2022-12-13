@@ -1,1 +1,0 @@
-../../../../remote/testnew/testnew.tsx

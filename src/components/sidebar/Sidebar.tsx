@@ -306,7 +306,7 @@ const Menu = () => {
                           variant="outline"
                           colorScheme="teal"
                         >
-                          <Popover>
+                          <Popover placement='right'>
                             <PopoverTrigger>
                               <Button
                                 onClick={() => {
@@ -315,7 +315,7 @@ const Menu = () => {
                                 +
                               </Button>
                             </PopoverTrigger>
-                            <PopoverContent color="whiteAlpha.900" backgroundColor="#1A202C" fontSize="sm" width="70vw" borderRadius={0} borderColor='#319795'>
+                            <PopoverContent color="whiteAlpha.900" backgroundColor="#1A202C" fontSize="sm" width="max-content" borderRadius={0} borderColor='#319795'>
                               <PopoverArrow />
                               <PopoverCloseButton />
                               <PopoverBody>

@@ -27,7 +27,7 @@ const InstalledPropTable = ({ param }: installPropTable) => {
     let paramList = JSON.parse(param);
     return (
         <TableContainer>
-            <Table variant='simple'>
+            <Table variant='simple' size='sm' maxWidth='max-content'>
                 <Thead>
                     <Tr backgroundColor="#384150">
                         <Th>Name</Th>
