@@ -25,7 +25,7 @@ const ParamSelector = ({ prop }: any) => {
     <span>
       <Popover placement="left" trigger="hover">
         <PopoverTrigger>
-          <ChevronLeftIcon />
+          <ChevronLeftIcon color="black" />
         </PopoverTrigger>
         <Portal>
           <PopoverContent color="black" borderColor="gray.200">

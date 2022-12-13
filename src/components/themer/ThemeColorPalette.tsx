@@ -6,16 +6,16 @@ import ParentColorPicker from './ParentColorPicker'
 
 const paletteOptions = [
   {
-    label: 'Primary Color',
-    propType: 'primary',
-    description: 'Applies this as background color to blah blah components',
+    label: 'Brand ColorScheme',
+    propType: 'brand',
+    description: 'Set the brand color scheme for your project',
     withFullColor: false,
   },
   {
-    label: 'Secondary Color',
-    propType: 'secondary',
+    label: 'Primary Color',
+    propType: 'primaryColor',
     description: 'Applies this as foreground color to blah blah components',
-    withFullColor: false,
+    withFullColor: true,
   },
   {
     label: 'Background Color',
@@ -41,18 +41,18 @@ const paletteOptions = [
     description: 'Applies this as border color ',
     withFullColor: true,
   },
-  {
-    label: 'Error Color',
-    propType: 'errorColor',
-    description: 'Applies this as Error color ',
-    withFullColor: true,
-  },
-  {
-    label: 'Success Color',
-    propType: 'successColor',
-    description: 'Applies this as Success color ',
-    withFullColor: true,
-  },
+  // {
+  //   label: 'Error Color',
+  //   propType: 'errorColor',
+  //   description: 'Applies this as Error color ',
+  //   withFullColor: false,
+  // },
+  // {
+  //   label: 'Success Color',
+  //   propType: 'successColor',
+  //   description: 'Applies this as Success color ',
+  //   withFullColor: false,
+  // },
 ]
 
 const PaletteOption = ({

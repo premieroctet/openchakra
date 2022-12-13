@@ -20,14 +20,14 @@ export interface ThemeExtType {
 }
 
 export interface NewThemeType {
-  primary: string
-  secondary: string
+  brand: string
+  primaryColor: string
   textColor: string
   bgColor: string
   paperColor: string
-  successColor: string
   borderColor: string
-  errorColor: string
+  success: string
+  error: string
 }
 
 export type CustomComponentsState = {
@@ -51,14 +51,14 @@ const INITIAL_THEME: ThemeExtType = {
   },
 }
 const INITIAL_NEW_THEME: NewThemeType = {
-  primary: 'blue',
-  secondary: 'cyan',
+  brand: 'cyan',
+  primaryColor: 'blue.400',
   textColor: 'gray.900',
-  bgColor: 'gray.200',
+  bgColor: 'blackAlpha.100',
   paperColor: 'whiteAlpha.900',
-  successColor: 'green.600',
   borderColor: 'gray.200',
-  errorColor: 'red.600',
+  success: 'green',
+  error: 'red',
 }
 
 const customComponents = createModel({

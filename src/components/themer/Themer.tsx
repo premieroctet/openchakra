@@ -1,6 +1,5 @@
 import {
   Button,
-  ChakraProvider,
   Drawer,
   DrawerBody,
   DrawerCloseButton,
@@ -28,7 +27,7 @@ import {
 import useDispatch from '~hooks/useDispatch'
 import API from '~custom-components/api'
 import ThemeCustomStyles from './CustomStyles'
-import ThemeColorPalette from './ThemeTokens'
+import ThemeColorPalette from './ThemeColorPalette'
 import ThemeLayers from './ThemeLayers'
 
 const Themer = () => {
