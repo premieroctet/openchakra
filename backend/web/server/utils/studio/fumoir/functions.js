@@ -52,4 +52,14 @@ const removeOrderItem = ({ order, item }) => {
     });
 };
 
-module.exports = { inviteGuest, setOrderItem, removeOrderItem };
+const registerToEvent = ({ event, user }) => {
+  console.log(`Adding ${user} to event ${event}`);
+  return Event.findByIdAndUpdate(event, { $addToSet: { members: user } });
+};
+
+module.exports = {
+  inviteGuest,
+  setOrderItem,
+  removeOrderItem,
+  registerToEvent
+};

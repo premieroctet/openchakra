@@ -139,5 +139,13 @@ export const ACTIONS = {
       phone
     };
     return axios.post(url, body);
+  },
+  registerToEvent: ({ context }) => {
+    let url = `${API_ROOT}/action`;
+    const body = {
+      action: "registerToEvent",
+      context
+    };
+    return axios.post(url, body);
   }
 };

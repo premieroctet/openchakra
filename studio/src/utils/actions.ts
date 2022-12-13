@@ -113,6 +113,10 @@ export const ACTIONS: IActions = {
           .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
     },
   },
+  registerToEvent: {
+    label: 'Register to event',
+    options: {},
+  },
   // FUMOIR
 }
 

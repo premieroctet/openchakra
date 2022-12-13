@@ -1,7 +1,8 @@
 const {
-  setOrderItem,
   inviteGuest,
-  removeOrderItem
+  registerToEvent,
+  removeOrderItem,
+  setOrderItem
 } = require("./fumoir/functions");
 const url = require("url");
 const UserSessionData = require("../../models/UserSessionData");
@@ -106,6 +107,10 @@ const ACTIONS = {
 
   removeOrderItem: ({ context, parent }) => {
     return removeOrderItem({ order: context, item: parent });
+  },
+
+  registerToEvent: ({ context }, user) => {
+    return registerToEvent({ event: context, user });
   }
 };
 
