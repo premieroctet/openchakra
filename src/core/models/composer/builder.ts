@@ -213,14 +213,24 @@ export const buildTabs = (parent: string): ComposedComponent => {
     props: { children: 'Two' },
   })
 
-  composer.addNode({
+  const firstPanel = composer.addNode({
     type: 'TabPanel',
     parent: tabPanelsId,
+  })
+  const secondPanel = composer.addNode({
+    type: 'TabPanel',
+    parent: tabPanelsId,
+  })
+
+  composer.addNode({
+    type: 'Text',
+    parent: firstPanel,
     props: { children: 'One !' },
   })
+
   composer.addNode({
-    type: 'TabPanel',
-    parent: tabPanelsId,
+    type: 'Text',
+    parent: secondPanel,
     props: { children: 'Two !' },
   })
 

@@ -92,7 +92,6 @@ const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'Text',
   'Kbd',
   'Textarea',
-  'Tab',
   'Accordion',
   'Editable',
   'AspectRatio',

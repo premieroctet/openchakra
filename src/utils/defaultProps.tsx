@@ -426,7 +426,7 @@ export const DEFAULT_PROPS: PreviewDefaultProps | any = {
     isChecked: false,
   },
   Tab: { children: 'Tab' },
-  Tabs: { children: '', size: 'md' },
+  Tabs: { children: '', size: 'md', variant: 'line' },
   TabPanel: { children: 'Tab' },
   Tag: { rounded: 'full', variant: 'subtle' },
   TagLabel: { children: 'Tag name' },
