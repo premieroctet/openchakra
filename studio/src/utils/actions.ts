@@ -116,6 +116,7 @@ export const ACTIONS: IActions = {
   registerToEvent: {
     label: 'Register to event',
     options: {},
+    next: ['openPage'],
   },
   // FUMOIR
 }
