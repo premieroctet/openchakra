@@ -113,6 +113,7 @@ export const ACTIONS: IActions = {
           .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
     },
   },
+  // Mettre un warning si les composants ne sont pas dans le même flex
   registerToEvent: {
     label: 'Register to event',
     options: {},
