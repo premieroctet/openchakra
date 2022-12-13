@@ -26,7 +26,7 @@ export const useInteractive = (
   const whatTheProps = Object.fromEntries(
     Object.entries(component.props).map(([key, data]) => [
       key,
-      isJsonString(data) ? JSON.parse(data) : data,
+      typeof data === 'string' && isJsonString(data) ? JSON.parse(data) : data,
     ]),
   )
 
