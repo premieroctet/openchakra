@@ -29,7 +29,7 @@ const InstalledPropTable = ({ param }: installPropTable) => {
         <TableContainer>
             <Table variant='simple'>
                 <Thead>
-                    <Tr>
+                    <Tr backgroundColor="#384150">
                         <Th>Name</Th>
                         <Th>Type</Th>
                         <Th>Description</Th>
@@ -43,9 +43,11 @@ const InstalledPropTable = ({ param }: installPropTable) => {
                             <Tr key={property.name}>
                                 <Td>{property.name}</Td>
                                 <Td>{property.type}</Td>
-                                <Td>{property.description}</Td>
-                                <Td>{property.required}</Td>
-                                <Td>{property.default}</Td>
+                                <Td>{(property.description) ? (property.description) : "-"}</Td>
+                                <Td>{(property.required) ? 'YES' : '-'}</Td>
+
+                                {/* <Td>{String(property.required)}</Td> */}
+                                <Td>{(property.default) ? (property.default) : "-"}</Td>
                             </Tr>
                         ))
                     }

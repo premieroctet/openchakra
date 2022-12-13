@@ -41,7 +41,6 @@ import AddComponent from './AddComponent'
 import DeleteComponent from './DeleteComponent'
 import InstallComponent from './InstallComponent'
 import InstalledPropTable from './InstalledPropTable'
-import ComponentPreview from '~components/editor/ComponentPreview'
 
 
 const Menu = () => {
@@ -312,21 +311,15 @@ const Menu = () => {
                               <Button
                                 onClick={() => {
                                   getParameters(name, installedComponents[name]);
-                                  setParam(`[{"name":"headline","description":"","required":false,"type":"string","default":null},{"name":"onEmailChange","description":"","required":false,"type":"any","default":null},{"name":"passwordValue","description":"","required":false,"type":"string","default":null},{"name":"onPasswordChange","description":"","required":false,"type":"any","default":null},{"name":"signinUrl","description":"","required":false,"type":"string","default":null},{"name":"emailValue","description":"","required":false,"type":"string","default":null},{"name":"nameValue","description":"","required":false,"type":"string","default":null},{"name":"onNameChange","description":"","required":false,"type":"any","default":null},{"name":"imgUrl","description":"","required":false,"type":"string","default":null}]`)
                                 }}>
                                 +
                               </Button>
                             </PopoverTrigger>
-                            <PopoverContent color="whiteAlpha.900" backgroundColor="#703A8D" fontSize="sm" width="60vw">
+                            <PopoverContent color="whiteAlpha.900" backgroundColor="#1A202C" fontSize="sm" width="70vw" borderRadius={0} borderColor='#319795'>
                               <PopoverArrow />
                               <PopoverCloseButton />
-                              {/* <PopoverHeader>
-                                {name}
-                              </PopoverHeader> */}
                               <PopoverBody>
-                                {/* {param} */}
                                 <InstalledPropTable param={param} />
-                                {/* <ComponentPreview key={name} componentName={name} /> */}
                               </PopoverBody>
                             </PopoverContent>
                           </Popover>
