@@ -110,12 +110,7 @@ const DECLARED_VIRTUALS = {
   // fumoir
   booking: {},
   company: {
-    full_name: { path: "full_name", instance: "String", requires: "name" },
-    mangopay_provider_id: {
-      path: "mangopay_provider_id",
-      instance: "String",
-      requires: "id_mangopay"
-    }
+    full_name: { path: "full_name", instance: "String", requires: "name" }
   },
   product: {
     net_price: {

@@ -124,7 +124,7 @@ checkConfig()
         /* eslint-enable global-require */
       }
     });
-    app.use(express.static("static"));
+    //app.use(express.static("static"));
 
     if (!is_development_nossl() && !is_development()) {
       app.use((req, res, next) => {

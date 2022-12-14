@@ -6,14 +6,25 @@ import useDebounce from "../hooks/useDebounce.hook";
 
 const withDynamicInput = Component => {
   const Internal = ({ dataSource, context, backend, ...props }) => {
-    const [internalDataValue, setInternalDataValue] = useState(null);
+    let keptValue = lodash.get(dataSource, props.attribute);
+
+    const isADate =
+      !isNaN(Date.parse(keptValue)) && new Date(Date.parse(keptValue));
+    if (props?.type === "datetime-local") {
+      if (isADate instanceof Date) {
+        keptValue = isADate.toISOString().slice(0, 16);
+      }
+    }
+    if (props?.type === "date") {
+      if (isADate instanceof Date) {
+        keptValue = isADate.toISOString().slice(0, 10);
+      }
+    }
+
+    const [internalDataValue, setInternalDataValue] = useState(keptValue);
 
     const [neverTyped, setNeverTyped] = useState(true);
     const debouncedValue = useDebounce(internalDataValue, 500);
-
-    useEffect(() => {
-      setInternalDataValue(lodash.get(dataSource, props.attribute));
-    }, [dataSource, props.attribute]);
 
     const onChange = ev => {
       setInternalDataValue(ev.target.value);

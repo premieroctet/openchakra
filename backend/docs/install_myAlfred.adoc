@@ -30,12 +30,10 @@ const MODE = 'development'; /* 'production', 'development' */
 const TAWKTO_URL = 'https://embed.tawk.to/5de4db8c43be710e1d201adc/default'
 const SIB_TEMPLATES='all-inclusive' /* 'my-alfred', 'all-inclusive' */
 const DATABASE_NAME='test-myAlfred-V2'
-const MANGOPAY_CLIENTID='testmyalfredv2'
-const MANGOPAY_APIKEY='cSNrzHm5YRaQxTdZVqWxWAnyYDphvg2hzBVdgTiAOLmgxvF2oN'
 const SITE_MODE='platform'
-const DATA_MODEL='feurst'
+const DATA_MODEL='<nom_du_client>'
 
-module.exports = {MODE, TAWKTO_URL, SIB_TEMPLATES, DATABASE_NAME, MANGOPAY_CLIENTID, MANGOPAY_APIKEY, SITE_MODE, DATA_MODEL}
+module.exports = {MODE, TAWKTO_URL, SIB_TEMPLATES, DATABASE_NAME, SITE_MODE, DATA_MODEL}
 ----
 
 TIP: Afin de pouvoir utiliser Node sous le port 1024, `sudo setcap cap_net_bind_service=+ep `readlink -f \`which node\`` `
