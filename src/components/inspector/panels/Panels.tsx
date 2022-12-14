@@ -15,6 +15,7 @@ import LinkPanel from '~components/inspector/panels/components/LinkPanel'
 import SpinnerPanel from '~components/inspector/panels/components/SpinnerPanel'
 import PopoverContentPanel from './components/PopoverContentPanel'
 import PopoverPanel from './components/PopoverPanel'
+import AccordionPanelPanel from './components/AccordionPanelPanel'
 import CloseButtonPanel from '~components/inspector/panels/components/CloseButtonPanel'
 import DividerPanel from '~components/inspector/panels/components/DividerPanel'
 import CodePanel from '~components/inspector/panels/components/CodePanel'
@@ -163,6 +164,7 @@ const Panels: React.FC<{
       {type === 'ListIcon' && <ListIconPanel />}
       {type === 'Accordion' && <AccordionPanel />}
       {type === 'AccordionItem' && <AccordionItemPanel />}
+      {type === 'AccordionPanel' && <AccordionPanelPanel />}
       {type === 'FormLabel' && <FormLabelPanel />}
       {type === 'FormHelperText' && <FormHelperTextPanel />}
       {type === 'FormErrorMessage' && <FormErrorMessagePanel />}

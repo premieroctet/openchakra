@@ -227,6 +227,7 @@ export const DEFAULT_PROPS: PreviewDefaultProps | any = {
   AlertDescription: {
     children: 'Alert description',
   },
+  AccordionPanel: {showpreview: true},
   AlertTitle: {
     children: 'Alert title',
     mr: 1,
