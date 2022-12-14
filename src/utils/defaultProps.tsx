@@ -17,6 +17,14 @@ import {
   AvatarProps,
   CheckboxProps,
   LinkProps,
+  MenuProps,
+  MenuButtonProps,
+  MenuListProps,
+  MenuItemProps,
+  MenuItemOptionProps,
+  MenuGroupProps,
+  MenuOptionGroupProps,
+  MenuDividerProps,
   PopoverProps,
   PopoverContentProps,
   PopoverHeaderProps,
@@ -47,7 +55,10 @@ import {
   AspectRatioProps,
   BreadcrumbItemProps,
   EditableProps,
-  MenuProps,
+  SliderProps,
+  SliderTrackProps,
+  SliderThumbProps,
+  SliderMarkProps,
   NumberInputProps,
   RadioProps,
   SelectProps,
@@ -187,7 +198,18 @@ type PreviewDefaultProps = {
   BreadcrumbItem?: PropsWithForm<BreadcrumbItemProps>
   BreadcrumbLink?: PropsWithForm<BreadcrumbLinkProps>
   Editable?: PropsWithForm<EditableProps>
+  Slider?: PropsWithForm<SliderProps>
+  SliderTrack?: PropsWithForm<SliderTrackProps>
+  SliderFilledTrack?: PropsWithForm<any>
+  SliderThumb?: PropsWithForm<SliderThumbProps>
+  SliderMark?: PropsWithForm<SliderMarkProps>
   Menu?: PropsWithForm<MenuProps>
+  MenuButton?: PropsWithForm<MenuButtonProps>
+  MenuList?: PropsWithForm<MenuListProps>
+  MenuItem?: PropsWithForm<MenuItemProps>
+  MenuItemOption?: PropsWithForm<MenuItemOptionProps>
+  MenuGroup?: PropsWithForm<MenuGroupProps>
+  MenuOptionGroup?: PropsWithForm<MenuOptionGroupProps>
   Tooltip?: PropsWithForm<TooltipProps>
   NumberInput?: PropsWithForm<NumberInputProps>
   Radio?: PropsWithForm<RadioProps>
@@ -334,6 +356,14 @@ export const DEFAULT_PROPS: PreviewDefaultProps | any = {
   },
   ListItem: { children: 'list' },
   Kbd: { children: 'shift' },
+  Menu: {},
+  MenuButton: { as: 'Button', children: 'Menu Button' },
+  MenuList: {},
+  MenuItem: { children: 'My Account' },
+  MenuItemOption: { value: 'asc', children: 'Ascending' },
+  MenuGroup: { title: 'Profile' },
+  MenuOptionGroup: { title: 'Order', type: 'radio' },
+  MenuDivider: {},
   Modal: { size: 'md' },
   ModalOverlay: {},
   ModalContent: {},
@@ -377,6 +407,18 @@ export const DEFAULT_PROPS: PreviewDefaultProps | any = {
     spacingX: 1,
     spacingY: 1,
   },
+  Slider: {
+    step: 1,
+    size: 'md',
+    value: 50,
+    min: 1,
+    max: 100,
+    'aria-label': 'slider',
+  },
+  SliderFilledTrack: {},
+  SliderThumb: {},
+  SliderTrack: {},
+  SliderMark: { children: '95%', value: 95 },
   RangeSlider: {
     min: 1,
     max: 100,

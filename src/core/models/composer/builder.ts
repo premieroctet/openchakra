@@ -27,6 +27,60 @@ export const buildAlert = (parent: string): ComposedComponent => {
   }
 }
 
+export const buildMenu = (parent: string): ComposedComponent => {
+  const composer = new Composer()
+
+  const nodeId = composer.addNode({ type: 'Menu', parent })
+  composer.addNode({ type: 'MenuButton', parent: nodeId })
+  const list = composer.addNode({ type: 'MenuList', parent: nodeId })
+  const groupOne = composer.addNode({ type: 'MenuGroup', parent: list })
+  composer.addNode({ type: 'MenuItem', parent: groupOne })
+  composer.addNode({
+    type: 'MenuItem',
+    parent: groupOne,
+    props: { children: 'Payments' },
+  })
+  composer.addNode({ type: 'MenuDivider', parent: list })
+  const groupTwo = composer.addNode({
+    type: 'MenuGroup',
+    parent: list,
+    props: { title: 'Help' },
+  })
+  composer.addNode({
+    type: 'MenuItem',
+    parent: groupTwo,
+    props: { children: 'Docs' },
+  })
+  composer.addNode({
+    type: 'MenuItem',
+    parent: groupTwo,
+    props: { children: 'FAQ' },
+  })
+
+  const components = composer.getComponents()
+
+  return {
+    components,
+    root: nodeId,
+    parent,
+  }
+}
+
+export const buildSlider = (parent: string): ComposedComponent => {
+  const composer = new Composer()
+  const nodeId = composer.addNode({ type: 'Slider' })
+  const track = composer.addNode({ type: 'SliderTrack', parent: nodeId })
+  composer.addNode({ type: 'SliderFilledTrack', parent: track })
+  composer.addNode({ type: 'SliderThumb', parent: nodeId })
+  const components = composer.getComponents()
+
+  return {
+    components,
+    root: nodeId,
+    parent,
+  }
+}
+
 export const buildTable = (parent: string): ComposedComponent => {
   const composer = new Composer()
 
@@ -411,8 +465,16 @@ export const buildRangeSlider = (parent: string): ComposedComponent => {
   const nodeId = composer.addNode({ type: 'RangeSlider' })
   const track = composer.addNode({ type: 'RangeSliderTrack', parent: nodeId })
   composer.addNode({ type: 'RangeSliderFilledTrack', parent: track })
-  composer.addNode({ type: 'RangeSliderThumb', parent: nodeId , props: {index: '0'}})
-  composer.addNode({ type: 'RangeSliderThumb', parent: nodeId , props: {index: '1'}})
+  composer.addNode({
+    type: 'RangeSliderThumb',
+    parent: nodeId,
+    props: { index: '0' },
+  })
+  composer.addNode({
+    type: 'RangeSliderThumb',
+    parent: nodeId,
+    props: { index: '1' },
+  })
   const components = composer.getComponents()
 
   return {
@@ -445,6 +507,8 @@ const builders: ComposerBuilders = {
   TagMeta: buildTag,
   PopoverMeta: buildPopover,
   RangeSliderMeta: buildRangeSlider,
+  MenuMeta: buildMenu,
+  SliderMeta: buildSlider,
 }
 
 export default builders

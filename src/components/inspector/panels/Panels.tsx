@@ -71,6 +71,14 @@ import ModalPanel from './components/ModalPanel'
 import ModalHeaderPanel from './components/ModalHeaderPanel'
 import CardPanel from './components/CardPanel'
 import TooltipPanel from './components/TooltipPanel'
+import MenuPanel from './components/MenuPanel'
+import MenuItemOptionsPanel from './components/MenuItemOptionsPanel'
+import MenuOptionsGroupPanel from './components/MenuOptionsGroupPanel'
+import MenuGroupPanel from './components/MenuGroupPanel'
+import MenuItemPanel from './components/MenuItemPanel'
+import MenuButtonPanel from './components/MenuButtonPanel'
+import SliderPanel from '~components/inspector/panels/components/SliderPanel'
+import SliderMarkPanel from './components/SliderMarkPanel'
 
 const importView = (component: any) => {
   component = convertToPascal(component)
@@ -194,6 +202,14 @@ const Panels: React.FC<{
       {type === 'Popover' && <PopoverPanel />}
       {type === 'PopoverHeader' && <PopoverContentPanel />}
       {type === 'PopoverBody' && <PopoverContentPanel />}
+      {type === 'Menu' && <MenuPanel />}
+      {type === 'MenuItemOption' && <MenuItemOptionsPanel />}
+      {type === 'MenuOptionGroup' && <MenuOptionsGroupPanel />}
+      {type === 'MenuGroup' && <MenuGroupPanel />}
+      {type === 'MenuItem' && <MenuItemPanel />}
+      {type === 'MenuButton' && <MenuButtonPanel />}
+      {type === 'Slider' && <SliderPanel />}
+      {type === 'SliderMark' && <SliderMarkPanel />}
     </>
   )
 }

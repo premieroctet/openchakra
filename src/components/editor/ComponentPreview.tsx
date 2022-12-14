@@ -71,6 +71,18 @@ import TagPreview, {
   TagRightIconPreview,
   TagCloseButtonPreview,
 } from './previews/TagPreview'
+import MenuPreview, {
+  MenuListPreview,
+  MenuButtonPreview,
+  MenuItemPreview,
+  MenuItemOptionPreview,
+  MenuGroupPreview,
+  MenuOptionGroupPreview,
+  MenuDividerPreview,
+} from './previews/MenuPreview'
+import SliderPreview from './previews/SliderPreview'
+import SliderTrackPreview from './previews/SliderTrackPreview'
+import SliderThumbPreview from './previews/SliderThumbPreview'
 import { getCustomComponentNames } from '~core/selectors/customComponents'
 import { convertToPascal } from './Editor'
 
@@ -128,6 +140,8 @@ const ComponentPreview: React.FC<{
     case 'Heading':
     case 'Switch':
     case 'FormLabel':
+    case 'SliderFilledTrack':
+    case 'SliderMark':
     case 'FormHelperText':
     case 'FormErrorMessage':
     case 'Tab':
@@ -323,6 +337,28 @@ const ComponentPreview: React.FC<{
       return <CardFooterPreview component={component} />
     case 'Tooltip':
       return <TooltipPreview component={component} />
+    case 'Menu':
+      return <MenuPreview component={component} />
+    case 'MenuButton':
+      return <MenuButtonPreview component={component} />
+    case 'MenuList':
+      return <MenuListPreview component={component} />
+    case 'MenuGroup':
+      return <MenuGroupPreview component={component} />
+    case 'MenuOptionGroup':
+      return <MenuOptionGroupPreview component={component} />
+    case 'MenuItemOption':
+      return <MenuItemOptionPreview component={component} />
+    case 'MenuItem':
+      return <MenuItemPreview component={component} />
+    case 'MenuDivider':
+      return <MenuDividerPreview component={component} />
+    case 'SliderTrack':
+      return <SliderTrackPreview component={component} />
+    case 'Slider':
+      return <SliderPreview component={component} />
+    case 'SliderThumb':
+      return <SliderThumbPreview component={component} />
     default:
       return null
   }
