@@ -1,6 +1,7 @@
 import React from "react";
+import Document from "next/document";
 
-class MyDocument extends React.Component {
+class MyDocument extends Document {
   render() {
     return null;
   }
