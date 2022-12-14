@@ -1,5 +1,4 @@
 import { AddIcon, CheckIcon, DeleteIcon } from '@chakra-ui/icons'
-import { Select as MultiSelect } from 'chakra-react-select'
 import {
   Button,
   Accordion,
@@ -198,7 +197,7 @@ const ThemeLayers = ({ themeState }: any) => {
                   <Divider />
                 </Stack>
                 <Text>Applies to: </Text>
-                <MultiSelect
+                {/* <MultiSelect
                   className="multiselect"
                   maxMenuHeight={160}
                   menuPlacement="top"
@@ -224,7 +223,7 @@ const ThemeLayers = ({ themeState }: any) => {
                       comps.map(c => c.value),
                     )
                   }}
-                />
+                /> */}
               </AccordionPanel>
             </AccordionItem>
           )

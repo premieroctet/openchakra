@@ -136,7 +136,8 @@ const Themer = () => {
                   <ThemeColorPalette themeState={newThemeState} />
                 </TabPanel>
                 <TabPanel>
-                  <ThemeLayers themeState={themeState} />
+                  {/* <ThemeLayers themeState={themeState} /> */}
+                  <>TODO: Add fonts</>
                 </TabPanel>
                 <TabPanel>
                   <ThemeCustomStyles />

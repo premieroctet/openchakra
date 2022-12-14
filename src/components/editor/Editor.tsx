@@ -7,7 +7,6 @@ import {
   extendTheme,
   theme as baseTheme,
 } from '@chakra-ui/react'
-import { theme as proTheme } from '@chakra-ui/pro-theme'
 import { useDropComponent } from '~hooks/useDropComponent'
 import SplitPane from 'react-split-pane'
 import CodePanel from '~components/CodePanel'
