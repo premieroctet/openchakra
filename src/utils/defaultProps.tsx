@@ -378,10 +378,8 @@ export const DEFAULT_PROPS: PreviewDefaultProps | any = {
     spacingY: 1,
   },
   RangeSlider: {
-    defaultvalue: ['20', '30'],
     min: 1,
     max: 100,
-    'aria-label': ['min', 'max'],
   },
   RangeSliderFilledTrack: {},
   RangeSliderThumb: {
