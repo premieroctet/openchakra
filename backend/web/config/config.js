@@ -255,13 +255,6 @@ if (is_development()) {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 }
 
-// FTP direcctory for incoming data
-const getExchangeDirectory = () => {
-  if (is_development()) {
-    return "/home/seb/test";
-  }
-  return "/home/feurst_ftp/www";
-};
 const RANDOM_ID = new Date().getTime();
 
 const DOC_PATH = `/static/assets/docs/${getDataModel()}`;
@@ -317,7 +310,6 @@ module.exports = {
   skipFailedPayment,
   getSibApiKey,
   getPort,
-  getExchangeDirectory,
   RANDOM_ID,
   displayConfig,
   DOC_PATH,

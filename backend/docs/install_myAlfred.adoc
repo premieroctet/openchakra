@@ -31,7 +31,7 @@ const TAWKTO_URL = 'https://embed.tawk.to/5de4db8c43be710e1d201adc/default'
 const SIB_TEMPLATES='all-inclusive' /* 'my-alfred', 'all-inclusive' */
 const DATABASE_NAME='test-myAlfred-V2'
 const SITE_MODE='platform'
-const DATA_MODEL='feurst'
+const DATA_MODEL='<nom_du_client>'
 
 module.exports = {MODE, TAWKTO_URL, SIB_TEMPLATES, DATABASE_NAME, SITE_MODE, DATA_MODEL}
 ----
