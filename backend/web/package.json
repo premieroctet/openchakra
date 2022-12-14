@@ -13,7 +13,6 @@
     "test": "jest"
   },
   "dependencies": {
-    "@react-pdf/renderer": "^2.1.1",
     "@socialgouv/jours-feries": "^2.0.0",
     "axios": "^0.24.0",
     "bcryptjs": "^2.4.3",
@@ -67,7 +66,6 @@
     "store2": "^2.13.2",
     "strip-bom": "^4.0.0",
     "styled-components": "^5.3.5",
-    "tmp": "^0.2.1",
     "url-loader": "^4.1.1",
     "uuid": "^3.3.3",
     "validator": "^10.11.0",
