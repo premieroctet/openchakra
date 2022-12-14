@@ -13,7 +13,6 @@
     "test": "jest"
   },
   "dependencies": {
-    "@socialgouv/jours-feries": "^2.0.0",
     "axios": "^0.24.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
@@ -23,7 +22,6 @@
     "csstree-validator": "^2.0.1",
     "csv-parse": "^4.15.3",
     "csv-string": "^4.1.0",
-    "date-fns": "^2.17.0",
     "exceljs": "^4.3.0",
     "express": "^4.16.4",
     "file-system": "^2.2.2",
@@ -35,7 +33,6 @@
     "i18next-http-backend": "^1.4.1",
     "is-webview": "^1.0.1",
     "jsonwebtoken": "^8.5.1",
-    "jss": "^9.8.7",
     "libphonenumber-js": "^1.9.49",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
@@ -49,7 +46,6 @@
     "next-routes": "^1.4.2",
     "node-cache": "^5.1.2",
     "node-localstorage": "^2.2.1",
-    "node-xlsx": "^0.21.0",
     "nominatim-client": "^3.2.1",
     "passport": "^0.4.0",
     "passport-cookie": "^1.0.9",
