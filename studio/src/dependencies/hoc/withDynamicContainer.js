@@ -69,12 +69,11 @@ const withDynamicContainer = Component => {
     if (!props.dataSource) {
       return null
     }
-    const firstChild = React.Children.toArray(props.children)[0]
     let orgData = props.dataSource
     if (props.attribute) {
       orgData = lodash.get(orgData, props.attribute)
     }
-    orgData = orgData || []
+    orgData = orgData
     if (props.contextFilter) {
       const contextIds = props.contextFilter.map(o => o._id.toString())
       orgData = orgData.filter(d => contextIds.includes(d._id))
@@ -94,6 +93,9 @@ const withDynamicContainer = Component => {
         `Container ${props.id} can not slice ${JSON.stringify(orgData)}:${err}`,
       )
     }
+
+    const firstChild = React.Children.toArray(props.children)[0]
+    
     return (
       <Component {...lodash.omit(props, ['children'])}>
         {data.map((d, index) => {

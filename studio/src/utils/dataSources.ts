@@ -142,6 +142,9 @@ export const getAvailableAttributes = (
       ref: true,
     }
   }
+  if (component.props.dataSource && dataType.multiple!=isMultipleDispatcher(component)) {
+    return []
+  }
   const attributes =
     models.find((m: any) => m.name === dataType?.type)?.attributes || {}
   const cardinalityAttributes = lodash.pickBy(
