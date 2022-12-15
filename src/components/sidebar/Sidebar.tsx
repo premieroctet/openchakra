@@ -74,6 +74,7 @@ const Menu = () => {
   return (
     <DarkMode>
       <Box
+        className="sidebar"
         maxH="calc(100vh - 3rem)"
         overflowY="auto"
         overflowX="visible"

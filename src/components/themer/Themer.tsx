@@ -71,15 +71,6 @@ const Themer = () => {
       </Button>
       <Drawer placement="bottom" onClose={onClose} isOpen={isOpen} size="xl">
         <DrawerOverlay />
-        <style>
-          {
-            '\
-              .themer select, .themer input, .themer hr, .themer span, .themer .chakra-tabs__tablist, .themer .chakra-modal__body, .themer .chakra-modal__header, .themer chakra-tabs__tab-panels, .themer .chakra-accordion__item, .multiselect{\
-              border-color:var(--chakra-colors-gray-200) !important;\
-              }\
-              '
-          }
-        </style>
         <DrawerContent
           className="themer"
           bgColor="white"

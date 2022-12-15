@@ -123,6 +123,7 @@ const Header = () => {
   return (
     <DarkMode>
       <Flex
+        className="header"
         justifyContent="space-between"
         bg="#1a202c"
         as="header"

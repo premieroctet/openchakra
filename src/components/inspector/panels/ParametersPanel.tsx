@@ -113,7 +113,11 @@ const ParametersPanel = () => {
                   <ChevronDownIcon />
                 </MenuButton>
                 <Portal>
-                  <MenuList borderColor="gray.200" color="black">
+                  <MenuList
+                    borderColor="gray.200"
+                    color="black"
+                    className="paramsMenu"
+                  >
                     {paramTypes.map((type: string) => (
                       <MenuItem
                         key={type}

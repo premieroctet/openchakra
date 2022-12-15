@@ -28,10 +28,16 @@ const ParamSelector = ({ prop }: any) => {
           <ChevronLeftIcon color="black" />
         </PopoverTrigger>
         <Portal>
-          <PopoverContent color="black" borderColor="gray.200">
+          <PopoverContent
+            color="black"
+            borderColor="gray.200"
+            className="paramSelector"
+          >
             <PopoverArrow />
             <PopoverCloseButton />
-            <PopoverHeader>Select parameter</PopoverHeader>
+            <PopoverHeader borderColor="gray.200">
+              Select parameter
+            </PopoverHeader>
             <PopoverBody>
               <List>
                 {params?.map((param: string) => (

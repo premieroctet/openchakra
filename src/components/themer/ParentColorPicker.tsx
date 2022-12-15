@@ -115,7 +115,7 @@ const ParentColorPicker = ({
             size="sm"
           />
         </PopoverTrigger>
-        <PopoverContent width={200}>
+        <PopoverContent width={200} borderColor="gray.200">
           <PopoverArrow />
           <PopoverBody alignItems="center" justifyContent="center">
             {withFullColor ? (

@@ -4,7 +4,6 @@ import {
   Text,
   Link,
   ChakraProvider,
-  extendTheme,
   theme as baseTheme,
 } from '@chakra-ui/react'
 import { useDropComponent } from '~hooks/useDropComponent'
@@ -31,6 +30,7 @@ import { getShowLayout, getShowCode } from '~core/selectors/app'
 import ComponentPreview from '~components/editor/ComponentPreview'
 import { omit } from 'lodash'
 import myTheme from './myTheme'
+import '@fontsource/aladin'
 
 export const themeColors: any = Object.keys(
   omit(baseTheme.colors, ['transparent', 'current', 'black', 'white']),
@@ -119,27 +119,10 @@ const Editor: React.FC = () => {
   }
 
   const Playground = (
-    <ChakraProvider
-      theme={extendTheme(
-        // ...themeState.map((themeExt: ThemeExtType) =>
-        //   withDefaultProps(themeExt),
-        // ),
-        // {
-        myTheme(newThemeState),
-      )}
-    >
-      <style>
-        {
-          '\
-          .editor {\
-          background-color:var(--chakra-colors-chakra-body-bg) !important;\
-          }\
-          '
-        }
-      </style>
+    <ChakraProvider theme={myTheme(newThemeState)} resetCSS={false}>
       <Box
-        bg="chakra-body-bg"
         className="editor"
+        bg="chakra-body-bg"
         p={2}
         {...editorBackgroundProps}
         height="100%"

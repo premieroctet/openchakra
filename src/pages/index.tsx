@@ -37,8 +37,17 @@ const App = () => {
           <style>
             {
               '\
-              .inspector select, .inspector input{\
-              border-color:var(--chakra-colors-gray-200) !important;\
+              .inspector select, .inspector input, .themer select, .themer input, .themer hr, .themer .chakra-tabs__tablist, .themer .chakra-modal__header, .themer chakra-tabs__tab-panels, .themer .chakra-accordion__item, .chakra-popover__popper{\
+                border-color:var(--chakra-colors-gray-200) !important;\
+              }\
+              .inspector, .header, .sidebar, .themer, .customPropsMenu, .paramSelector, .paramsMenu, .chakra-popover__popper {\
+                font-family:sans-serif !important;\
+              }\
+              .editor {\
+                background-color:var(--chakra-colors-chakra-body-bg) !important;\
+              }\
+              .chakra-slider__thumb {\
+                color:var(--chakra-colors-black) !important;\
               }\
               '
             }

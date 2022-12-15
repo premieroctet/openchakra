@@ -111,7 +111,11 @@ const CustomPropsPanel = () => {
                 <ChevronDownIcon />
               </MenuButton>
               <Portal>
-                <MenuList borderColor="gray.200" color="black">
+                <MenuList
+                  className="customPropsMenu"
+                  borderColor="gray.200"
+                  color="black"
+                >
                   {params?.map((param: string) => (
                     <MenuItem
                       key={param}
