@@ -1,3 +1,4 @@
+const moment = require('moment');
 const mongoose = require("mongoose");
 const { schemaOptions } = require("../../utils/schemas");
 const { PLACES } = require("../../../utils/fumoir/consts");
@@ -14,8 +15,10 @@ const BookingSchema = new Schema(
       type: Date,
       required: false // required: true,
     },
-    end_date: {
-      type: Date,
+    duration: {
+      type: Number,
+      min: 1,
+      max: 24,
       required: false // required: true,
     },
     booking_user: {
@@ -51,12 +54,20 @@ const BookingSchema = new Schema(
     }
   },
   schemaOptions
-);
+)
+
+BookingSchema.virtual("end_date").get(function() {
+  return this.start_date && this.duration ?
+    moment(this.start_date).add(this.duration, 'hours')
+    :
+    null
+})
 
 BookingSchema.virtual("orders", {
   ref: "order", // The Model to use
   localField: "_id", // Find in Model, where localField
   foreignField: "booking" // is equal to foreignField
-});
+})
+
 
 module.exports = BookingSchema;
