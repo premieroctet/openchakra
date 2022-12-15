@@ -95,13 +95,12 @@
     "next-compose-plugins": "^2.2.0",
     "next-transpile-modules": "^4.0.2",
     "prettier": "^1.19.1",
-    "pretty-quick": "^2.0.1",
     "ts-jest": "^29.0.3",
     "typedoc": "^0.16.9"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged && pretty-quick --staged"
+      "pre-commit": "lint-staged"
     }
   },
   "lint-staged": {
