@@ -1,11 +1,7 @@
 import { useRef, useEffect } from "react";
 
 // Hook
-const useEventListener = (
-  eventName: string,
-  handler: Function,
-  element = window
-) => {
+const useEventListener = (eventName: string, handler: Function, element = window) => {
   // Create a ref that stores handler
   const savedHandler = useRef<Function>();
 
@@ -25,8 +21,7 @@ const useEventListener = (
       if (!isSupported) return;
 
       // Create event listener that calls handler function stored in ref
-      const eventListener: EventListenerOrEventListenerObject = event =>
-        savedHandler.current && savedHandler.current(event);
+      const eventListener: EventListenerOrEventListenerObject = (event) => savedHandler.current && savedHandler.current(event);
 
       // Add event listener
       element.addEventListener(eventName, eventListener);
@@ -38,6 +33,6 @@ const useEventListener = (
     },
     [eventName, element] // Re-run if eventName or element changes
   );
-};
+}
 
-export default useEventListener;
+export default useEventListener

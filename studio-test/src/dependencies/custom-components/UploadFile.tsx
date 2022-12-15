@@ -1,55 +1,55 @@
-import { Box, Text } from "@chakra-ui/react";
-import React, { useEffect, useState, useCallback } from "react";
-import FileManager from "../utils/S3filemanager";
-import { s3Config, S3UrlRessource } from "../utils/s3Config";
-import axios from "axios";
-import mime from "mime";
-import JSZip from "jszip";
-import xmljs from "xml-js";
-import styled from "@emotion/styled";
-import { getExtension } from "./MediaWrapper";
+import { Box, Text } from '@chakra-ui/react'
+import React, { useEffect, useState, useCallback } from 'react'
+import FileManager from '../utils/S3filemanager'
+import { s3Config, S3UrlRessource } from '../utils/s3Config'
+import axios from 'axios'
+import mime from 'mime'
+import JSZip from 'jszip'
+import xmljs from 'xml-js'
+import styled from '@emotion/styled'
+import { getExtension } from './MediaWrapper'
 
-const uploadUrl = `/myAlfred/api/studio/action`;
+const uploadUrl = `/myAlfred/api/studio/action`
 
 function createFileFromBlob(folder: string, filename: string, fileData: Blob) {
   const { fileInFolder } = S3UrlRessource({
     filename,
-    folder
-  });
+    folder,
+  })
   return new File([fileData], fileInFolder, {
-    type: mime.getType(getExtension(filename)) || ""
-  });
+    type: mime.getType(getExtension(filename)) || '',
+  })
 }
 
 const uploadFileToS3 = async (file: File) => {
-  return await FileManager.createFile(file.name, file, "", file.type, []);
-};
+  return await FileManager.createFile(file.name, file, '', file.type, [])
+}
 
 const uploadMultipleToS3 = async (folder: string, unzip: any) => {
   for await (const filename of Object.keys(unzip.files)) {
-    const blob = await unzip.files[filename].async("blob");
+    const blob = await unzip.files[filename].async('blob')
     if (!unzip.files[filename]?.dir) {
-      const file = createFileFromBlob(folder, filename, blob);
-      await uploadFileToS3(file);
+      const file = createFileFromBlob(folder, filename, blob)
+      await uploadFileToS3(file)
     }
   }
-};
+}
 
 const isScormZip = async (unzipped: any) => {
-  let scormVersion = null;
+  let scormVersion = null
   // looking for scorm version in imsmanifest.xml
   for (const filename of Object.keys(unzipped.files)) {
     if (!unzipped.files[filename]?.dir) {
-      if (filename === "imsmanifest.xml") {
-        const text = await unzipped.files[filename].async("string");
-        const imsmanifest = xmljs.xml2js(text, { compact: true });
+      if (filename === 'imsmanifest.xml') {
+        const text = await unzipped.files[filename].async('string')
+        const imsmanifest = xmljs.xml2js(text, { compact: true })
         //@ts-ignore
-        scormVersion = imsmanifest?.manifest?._attributes?.version;
+        scormVersion = imsmanifest?.manifest?._attributes?.version
       }
     }
   }
-  return scormVersion;
-};
+  return scormVersion
+}
 
 const UploadFile = ({
   dataSource,
@@ -60,104 +60,104 @@ const UploadFile = ({
   children,
   ...props
 }: {
-  dataSource: { _id: null } | null;
-  attribute: string;
-  value: string;
-  backend: string;
-  ressource_id: string;
-  children: React.ReactNode;
+  dataSource: { _id: null } | null
+  attribute: string
+  value: string
+  backend: string
+  ressource_id: string
+  children: React.ReactNode
 }) => {
   FileManager.initialize(
     s3Config.region,
     s3Config.bucketName,
-    s3Config.accessKeyId || "",
-    s3Config.secretAccessKey || ""
-  );
-  const [uploadInfo, setUploadInfo] = useState("");
-  const [file, setFile] = useState<File | null>();
+    s3Config.accessKeyId || '',
+    s3Config.secretAccessKey || '',
+  )
+  const [uploadInfo, setUploadInfo] = useState('')
+  const [file, setFile] = useState<File | null>()
 
   const onFileNameChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    const currentFile = e.target.files && e.target.files[0];
-    setFile(currentFile);
-  };
+    e.preventDefault()
+    const currentFile = e.target.files && e.target.files[0]
+    setFile(currentFile)
+  }
 
   const handleUpload = useCallback(
     async (fileToUpload: File) => {
-      const typeOfUpload = getExtension(fileToUpload?.name);
+      const typeOfUpload = getExtension(fileToUpload?.name)
 
       let paramsBack = {
-        action: "put",
+        action: 'put',
         parent: ressource_id,
-        attribute
-      };
+        attribute,
+      }
 
       let paramsScormVersion = {
         ...paramsBack,
-        attribute: "version",
-        value: null
-      };
+        attribute: 'version',
+        value: null,
+      }
 
-      setUploadInfo("");
+      setUploadInfo('')
 
       const switchUploadType = async () => {
         switch (typeOfUpload) {
-          case "zip":
-            const unzipped = await JSZip.loadAsync(fileToUpload);
-            const scormVersion = await isScormZip(unzipped);
+          case 'zip':
+            const unzipped = await JSZip.loadAsync(fileToUpload)
+            const scormVersion = await isScormZip(unzipped)
 
-            await uploadMultipleToS3(fileToUpload?.name, unzipped);
+            await uploadMultipleToS3(fileToUpload?.name, unzipped)
 
             if (scormVersion) {
               const { scormUrl } = S3UrlRessource({
-                folder: fileToUpload?.name
-              });
+                folder: fileToUpload?.name,
+              })
 
-              paramsBack = { ...paramsBack, ...{ value: encodeURI(scormUrl) } };
+              paramsBack = { ...paramsBack, ...{ value: encodeURI(scormUrl) } }
               paramsScormVersion = {
                 ...paramsScormVersion,
-                ...{ value: scormVersion }
-              };
+                ...{ value: scormVersion },
+              }
             }
-            break;
+            break
 
           default:
-            const res = await uploadFileToS3(fileToUpload);
-            paramsBack = { ...paramsBack, ...{ value: res?.Location } };
-            break;
+            const res = await uploadFileToS3(fileToUpload)
+            paramsBack = { ...paramsBack, ...{ value: res?.Location } }
+            break
         }
-      };
+      }
 
       const saveUrl = async () => {
         axios
           .post(uploadUrl, paramsBack)
           .then(() => {
-            setUploadInfo("Ressource ajoutée");
+            setUploadInfo('Ressource ajoutée')
           })
           .then(() => {
             /* scorm file ? save version */
             if (paramsScormVersion.value !== null) {
               axios
                 .post(uploadUrl, paramsScormVersion)
-                .catch(err => console.error("scormversion not saved", err));
+                .catch(err => console.error('scormversion not saved', err))
             }
           })
           .catch(e => {
-            setUploadInfo("Echec ajout ressource");
-          });
-      };
+            setUploadInfo('Echec ajout ressource')
+          })
+      }
 
-      await switchUploadType();
-      await saveUrl();
+      await switchUploadType()
+      await saveUrl()
     },
-    [attribute, ressource_id]
-  );
+    [attribute, ressource_id],
+  )
 
   useEffect(() => {
     if (file) {
-      handleUpload(file);
+      handleUpload(file)
     }
-  }, [file, handleUpload]);
+  }, [file, handleUpload])
 
   return (
     <Box {...props}>
@@ -170,11 +170,11 @@ const UploadFile = ({
       </form>
       {uploadInfo && <Text>{uploadInfo}</Text>} {/*Component status */}
     </Box>
-  );
-};
+  )
+}
 
 const UploadZone = styled.label`
-  input[type="file"] {
+  input[type='file'] {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -186,9 +186,9 @@ const UploadZone = styled.label`
     border-width: 0;
   }
 
-  *:not(input[type="file"]) {
+  *:not(input[type='file']) {
     pointer-events: none;
   }
-`;
+`
 
-export default UploadFile;
+export default UploadFile

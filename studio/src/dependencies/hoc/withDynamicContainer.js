@@ -31,7 +31,6 @@ const setRecurseDataSource = (
     return []
   } else {
     return React.Children.map(element.props.children, function(child, index) {
-      console.log(`child:${child}, id:${child.props?.id}, index:${index}`)
       const newSuffix = `${suffix}_${index}`
       const newId = child.props?.id ? `${child.props?.id}${suffix}` : undefined
       //if (child.props === undefined || (child.props.dataSourceId && child.props.dataSourceId!=dataSourceId)) {

@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 
 const withMaskability = (Component: React.FC<any>) => {
   const internal = ({
@@ -6,28 +6,28 @@ const withMaskability = (Component: React.FC<any>) => {
     user,
     ...props
   }: {
-    hiddenRoles: string;
-    user: { role: string };
+    hiddenRoles: string
+    user: { role: string }
   }) => {
-    const rolesToHide = JSON.parse(hiddenRoles);
-    const roleUser = user?.role;
+    const rolesToHide = JSON.parse(hiddenRoles)
+    const roleUser = user?.role
 
     // if nothing to hide, render
     if (rolesToHide?.length && rolesToHide.length === 0) {
-      return <Component {...props} />;
+      return <Component {...props} />
     }
 
     // When roleUser is available, reveal
     if (roleUser) {
       if (rolesToHide.includes(roleUser)) {
-        return null;
+        return null
       }
-      return <Component {...props} />;
+      return <Component {...props} />
     }
-    return null;
-  };
+    return null
+  }
 
-  return internal;
-};
+  return internal
+}
 
-export default withMaskability;
+export default withMaskability

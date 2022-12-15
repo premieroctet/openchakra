@@ -1,8 +1,7 @@
-import React from "react";
+import React from 'react'
 
 export const getExtension = (filename: string) =>
-  filename.substring(filename.lastIndexOf(".") + 1, filename.length) ||
-  filename;
+  filename.substring(filename.lastIndexOf('.') + 1, filename.length) || filename
 
 export const mediaWrapper = ({
   src,
@@ -10,29 +9,29 @@ export const mediaWrapper = ({
   htmlWidth,
   ...props
 }: {
-  src: string;
-  htmlHeight?: string;
-  htmlWidth?: string;
+  src: string
+  htmlHeight?: string
+  htmlWidth?: string
 }) => {
   // const {htmlWidth, htmlHeight} = props
 
   /* TODO assign type to htmlWidth, htmlHeight */
   const document = {
-    width: htmlWidth || "100%",
-    height: htmlHeight || "100%"
-  };
+    width: htmlWidth || '100%',
+    height: htmlHeight || '100%',
+  }
 
   const isVideoProvider = (src: string) => {
     /* Detect YouTube and Vimeo url videos */
-    const regex = /(http:|https:|)\/\/(player.|www.)?(vimeo\.com|youtu(be\.com|\.be|be\.googleapis\.com))\/(video\/|embed\/|watch\?v=|v\/)?([A-Za-z0-9._%-]*)(\&\S+)?/g;
-    return regex.test(src);
-  };
+    const regex = /(http:|https:|)\/\/(player.|www.)?(vimeo\.com|youtu(be\.com|\.be|be\.googleapis\.com))\/(video\/|embed\/|watch\?v=|v\/)?([A-Za-z0-9._%-]*)(\&\S+)?/g
+    return regex.test(src)
+  }
 
-  const ext = !isVideoProvider(src) ? getExtension(src) : "html";
+  const ext = !isVideoProvider(src) ? getExtension(src) : 'html'
 
   switch (ext) {
-    case "mp4":
-    case "webm":
+    case 'mp4':
+    case 'webm':
       return (
         <video
           width={document.width}
@@ -42,21 +41,21 @@ export const mediaWrapper = ({
         >
           <source src={src} type={`video/${ext}`} />
         </video>
-      );
-    case "pdf":
+      )
+    case 'pdf':
       return (
         <object
           type="application/pdf"
           data={src}
-          role={"document"}
+          role={'document'}
           width={document.width}
           height={document.height}
         ></object>
-      );
-    case "doc":
-    case "docx":
-    case "xls":
-    case "xlsx":
+      )
+    case 'doc':
+    case 'docx':
+    case 'xls':
+    case 'xlsx':
       return (
         <iframe
           title={src}
@@ -66,9 +65,9 @@ export const mediaWrapper = ({
           frameBorder="0"
           allowFullScreen
         ></iframe>
-      );
-    case "txt":
-    case "html":
+      )
+    case 'txt':
+    case 'html':
       return (
         <iframe
           loading="lazy"
@@ -78,7 +77,7 @@ export const mediaWrapper = ({
           height={htmlHeight}
           allowFullScreen
         ></iframe>
-      );
+      )
     default:
       return (
         <img
@@ -88,6 +87,6 @@ export const mediaWrapper = ({
           height={document.height}
           alt=""
         />
-      );
+      )
   }
-};
+}

@@ -1,15 +1,15 @@
-import AWS from "aws-sdk";
+import AWS from 'aws-sdk'
 
-const S3_API_VERSION = "2006-03-01";
+const S3_API_VERSION = '2006-03-01'
 
 type ListFileResponse = {
-  message: string;
-  data: AWS.S3.ListObjectsOutput;
-};
+  message: string
+  data: AWS.S3.ListObjectsOutput
+}
 class FileManager {
-  static s3: AWS.S3;
-  static bucketName: string;
-  static rootFolderName: string;
+  static s3: AWS.S3
+  static bucketName: string
+  static rootFolderName: string
 
   /**
    * Initialize the s3 configurations
@@ -23,16 +23,16 @@ class FileManager {
     bucketName: string,
     accessKeyId: string,
     secretAccessKey: string,
-    rootFolderName = ""
+    rootFolderName = '',
   ) {
-    AWS.config.update({ region });
+    AWS.config.update({ region })
     FileManager.s3 = new AWS.S3({
       apiVersion: S3_API_VERSION,
       accessKeyId,
-      secretAccessKey
-    });
-    FileManager.bucketName = bucketName;
-    FileManager.rootFolderName = rootFolderName;
+      secretAccessKey,
+    })
+    FileManager.bucketName = bucketName
+    FileManager.rootFolderName = rootFolderName
   }
 
   /**
@@ -42,18 +42,18 @@ class FileManager {
    * @returns {promise} Promise with response object
    */
   static async read(objectKey: string) {
-    if (FileManager.rootFolderName !== "" && objectKey[0] !== "/") {
-      objectKey = `/${objectKey}`;
+    if (FileManager.rootFolderName !== '' && objectKey[0] !== '/') {
+      objectKey = `/${objectKey}`
     }
 
     return Promise.resolve(
       await FileManager.s3
         .getObject({
           Key: `${FileManager.rootFolderName}${objectKey}`,
-          Bucket: FileManager.bucketName
+          Bucket: FileManager.bucketName,
         })
-        .promise()
-    );
+        .promise(),
+    )
   }
 
   /**
@@ -63,11 +63,11 @@ class FileManager {
    * @returns {promise} Promise with response object
    */
   static async list(pathToFolder: string, continuationToken: string) {
-    if (FileManager.rootFolderName !== "" && pathToFolder[0] !== "/") {
-      pathToFolder = `/${pathToFolder}`;
+    if (FileManager.rootFolderName !== '' && pathToFolder[0] !== '/') {
+      pathToFolder = `/${pathToFolder}`
     }
-    if (pathToFolder !== "" && pathToFolder.slice(-1) !== "/") {
-      pathToFolder = `${pathToFolder}/`;
+    if (pathToFolder !== '' && pathToFolder.slice(-1) !== '/') {
+      pathToFolder = `${pathToFolder}/`
     }
 
     return Promise.resolve(
@@ -75,10 +75,10 @@ class FileManager {
         .listObjectsV2({
           Prefix: `${FileManager.rootFolderName}${pathToFolder}`,
           Bucket: FileManager.bucketName,
-          ContinuationToken: continuationToken
+          ContinuationToken: continuationToken,
         })
-        .promise()
-    );
+        .promise(),
+    )
   }
 
   /**
@@ -94,17 +94,23 @@ class FileManager {
     folderName: string,
     acl: string,
     contentType: string,
-    metaData: any
+    metaData: any,
   ) {
     if (!folderName.match(/\/$/)) {
       return Promise.reject({
         status: 400,
-        message: `Invalid folder name: ${folderName}`
-      });
+        message: `Invalid folder name: ${folderName}`,
+      })
     }
     return Promise.resolve(
-      await FileManager.write(folderName, undefined, acl, contentType, metaData)
-    );
+      await FileManager.write(
+        folderName,
+        undefined,
+        acl,
+        contentType,
+        metaData,
+      ),
+    )
   }
 
   /**
@@ -122,17 +128,17 @@ class FileManager {
     buffer: ReadableStream | Blob,
     acl: string,
     contentType: string,
-    metaData: any
+    metaData: any,
   ) {
     if (fileName.match(/\/$/)) {
       return Promise.reject({
         status: 400,
-        message: `Invalid file name: ${fileName}`
-      });
+        message: `Invalid file name: ${fileName}`,
+      })
     }
     return Promise.resolve(
-      await FileManager.write(fileName, buffer, acl, contentType, metaData)
-    );
+      await FileManager.write(fileName, buffer, acl, contentType, metaData),
+    )
   }
 
   /**
@@ -142,26 +148,26 @@ class FileManager {
    * @returns {promise} Promise with number
    */
   static async count(folderName: string) {
-    if (folderName !== "" && !folderName.match(/\/$/)) {
+    if (folderName !== '' && !folderName.match(/\/$/)) {
       return Promise.reject({
         status: 400,
-        message: `Invalid folder name: ${folderName}`
-      });
+        message: `Invalid folder name: ${folderName}`,
+      })
     }
 
     let count = 0,
-      result;
+      result
     do {
       // @ts-ignore
       result = await FileManager.list(
         folderName,
-        (result && result.NextContinuationToken) || ""
-      );
+        (result && result.NextContinuationToken) || '',
+      )
       // @ts-ignore
-      count += result.KeyCount;
-    } while (result && typeof result.NextContinuationToken !== "undefined");
+      count += result.KeyCount
+    } while (result && typeof result.NextContinuationToken !== 'undefined')
 
-    return Promise.resolve(count);
+    return Promise.resolve(count)
   }
 
   /**
@@ -173,16 +179,16 @@ class FileManager {
     if (!folderName.match(/\/$/)) {
       return Promise.reject({
         status: 400,
-        message: `Invalid folder name: ${folderName}`
-      });
+        message: `Invalid folder name: ${folderName}`,
+      })
     }
     if ((await FileManager.count(folderName)) > 1) {
       return Promise.reject({
         status: 400,
-        message: `Folder ${folderName} is not empty`
-      });
+        message: `Folder ${folderName} is not empty`,
+      })
     }
-    return Promise.resolve(await FileManager.delete(folderName));
+    return Promise.resolve(await FileManager.delete(folderName))
   }
 
   /**
@@ -195,10 +201,10 @@ class FileManager {
     if (fileName.match(/\/$/)) {
       return Promise.reject({
         status: 400,
-        message: `Invalid file name: ${fileName}`
-      });
+        message: `Invalid file name: ${fileName}`,
+      })
     }
-    return Promise.resolve(await FileManager.delete(fileName));
+    return Promise.resolve(await FileManager.delete(fileName))
   }
 
   /**
@@ -216,10 +222,10 @@ class FileManager {
     buffer: ReadableStream | Blob | undefined,
     acl: string,
     contentType: string,
-    metaData: any
+    metaData: any,
   ) {
-    if (FileManager.rootFolderName !== "" && objectKey[0] !== "/") {
-      objectKey = `/${objectKey}`;
+    if (FileManager.rootFolderName !== '' && objectKey[0] !== '/') {
+      objectKey = `/${objectKey}`
     }
 
     return FileManager.s3
@@ -229,15 +235,15 @@ class FileManager {
         Body: buffer,
         ACL: acl,
         ContentType: contentType,
-        Metadata: metaData
+        Metadata: metaData,
       })
       .promise()
       .then(res => {
-        return Promise.resolve(res);
+        return Promise.resolve(res)
       })
       .catch(err => {
-        return Promise.reject(err);
-      });
+        return Promise.reject(err)
+      })
   }
 
   /**
@@ -247,19 +253,19 @@ class FileManager {
    * @returns {promise} Promise with response object
    */
   static async delete(objectKey: string) {
-    if (FileManager.rootFolderName !== "" && objectKey[0] !== "/") {
-      objectKey = `/${objectKey}`;
+    if (FileManager.rootFolderName !== '' && objectKey[0] !== '/') {
+      objectKey = `/${objectKey}`
     }
 
     return Promise.resolve(
       await FileManager.s3
         .deleteObject({
           Key: `${FileManager.rootFolderName}${objectKey}`,
-          Bucket: FileManager.bucketName
+          Bucket: FileManager.bucketName,
         })
-        .promise()
-    );
+        .promise(),
+    )
   }
 }
 
-export default FileManager;
+export default FileManager

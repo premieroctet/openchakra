@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react'
 
 const withDynamicSelect = Component => {
   const Internal = props => {
-    const values = props.dataSource;
-    const attribute = props.attribute;
+    const values = props.dataSource
+    const attribute = props.attribute
     return (
       <Component {...props}>
         <option value={null}></option>
@@ -11,10 +11,10 @@ const withDynamicSelect = Component => {
           <option value={v._id}>{attribute ? v[attribute] : v}</option>
         ))}
       </Component>
-    );
-  };
+    )
+  }
 
-  return Internal;
-};
+  return Internal
+}
 
-export default withDynamicSelect;
+export default withDynamicSelect

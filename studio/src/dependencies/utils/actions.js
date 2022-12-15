@@ -41,8 +41,8 @@ export const ACTIONS = {
       return Promise.resolve((window.location = url))
     }
   },
-  create: ({ value, props }) => {
-    let url = `${API_ROOT}/${props.model}`
+  create: ({ value, context, props }) => {
+    let url = `${API_ROOT}/${props.model}?context=${context}`
     return axios.post(url).then(res => ({
       model: props.model,
       value: res.data,

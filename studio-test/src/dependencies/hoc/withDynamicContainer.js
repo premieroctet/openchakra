@@ -1,16 +1,16 @@
-import React from "react";
-import lodash from "lodash";
-import util from "util";
+import React from 'react'
+import lodash from 'lodash'
+import util from 'util'
 const normalize = str => {
   str = str
     ? str
         .trim()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
         .toLowerCase()
-    : "";
-  return str;
-};
+    : ''
+  return str
+}
 
 const isOtherSource = (element, dataSourceId) => {
   if (
@@ -18,89 +18,88 @@ const isOtherSource = (element, dataSourceId) => {
     element.props.dataSourceId &&
     element.props.dataSourceId !== dataSourceId
   ) {
-    return true;
+    return true
   }
-};
+}
 const setRecurseDataSource = (
   element,
   dataSource,
   dataSourceId,
-  suffix = ""
+  suffix = '',
 ) => {
   if (React.Children.count(element.props.children) === 0) {
-    return [];
+    return []
   } else {
     return React.Children.map(element.props.children, function(child, index) {
-      console.log(`child:${child}, id:${child.props?.id}, index:${index}`);
-      const newSuffix = `${suffix}_${index}`;
-      const newId = child.props?.id ? `${child.props?.id}${suffix}` : undefined;
+      const newSuffix = `${suffix}_${index}`
+      const newId = child.props?.id ? `${child.props?.id}${suffix}` : undefined
       //if (child.props === undefined || (child.props.dataSourceId && child.props.dataSourceId!=dataSourceId)) {
       if (child.props === undefined) {
-        return child;
+        return child
       } else if (React.Children.count(child.props.children) === 0) {
         if (isOtherSource(child, dataSourceId)) {
-          return React.cloneElement(child, { id: newId, index: suffix });
+          return React.cloneElement(child, { id: newId, index: suffix })
         }
         return React.cloneElement(child, {
           id: newId,
           index: suffix,
-          dataSource
-        });
+          dataSource,
+        })
       } else {
         if (isOtherSource(child, dataSourceId)) {
           return React.cloneElement(
             child,
             { id: newId, index: suffix },
-            setRecurseDataSource(child, dataSource, dataSourceId, newSuffix)
-          );
+            setRecurseDataSource(child, dataSource, dataSourceId, newSuffix),
+          )
         }
         return React.cloneElement(
           child,
           { id: newId, index: suffix, dataSource },
-          setRecurseDataSource(child, dataSource, dataSourceId, newSuffix)
-        );
+          setRecurseDataSource(child, dataSource, dataSourceId, newSuffix),
+        )
       }
-    });
+    })
   }
-};
+}
 const withDynamicContainer = Component => {
-  const FILTER_ATTRIBUTES = ["code", "name", "short_name", "description"];
+  const FILTER_ATTRIBUTES = ['code', 'name', 'short_name', 'description']
 
   const internal = props => {
     if (!props.dataSource) {
-      return null;
+      return null
     }
-    const firstChild = React.Children.toArray(props.children)[0];
-    let orgData = props.dataSource;
+    const firstChild = React.Children.toArray(props.children)[0]
+    let orgData = props.dataSource
     if (props.attribute) {
-      orgData = lodash.get(orgData, props.attribute);
+      orgData = lodash.get(orgData, props.attribute)
     }
-    orgData = orgData || [];
+    orgData = orgData || []
     if (props.contextFilter) {
-      const contextIds = props.contextFilter.map(o => o._id.toString());
-      orgData = orgData.filter(d => contextIds.includes(d._id));
+      const contextIds = props.contextFilter.map(o => o._id.toString())
+      orgData = orgData.filter(d => contextIds.includes(d._id))
     }
     if (props.textFilter && props.textFilter) {
-      const filterValue = props.textFilter;
-      const regExp = new RegExp(normalize(filterValue).trim(), "i");
+      const filterValue = props.textFilter
+      const regExp = new RegExp(normalize(filterValue).trim(), 'i')
       orgData = orgData.filter(d =>
-        FILTER_ATTRIBUTES.some(att => regExp.test(normalize(d[att])))
-      );
+        FILTER_ATTRIBUTES.some(att => regExp.test(normalize(d[att]))),
+      )
     }
-    let data = [];
+    let data = []
     try {
-      data = orgData.slice(0, parseInt(props?.limit) || undefined);
+      data = orgData.slice(0, parseInt(props?.limit) || undefined)
     } catch (err) {
       console.error(
-        `Container ${props.id} can not slice ${JSON.stringify(orgData)}:${err}`
-      );
+        `Container ${props.id} can not slice ${JSON.stringify(orgData)}:${err}`,
+      )
     }
     return (
-      <Component {...lodash.omit(props, ["children"])}>
+      <Component {...lodash.omit(props, ['children'])}>
         {data.map((d, index) => {
           const newId = firstChild.props?.id
             ? `${firstChild.props?.id}_${index}`
-            : undefined;
+            : undefined
           return (
             <>
               {React.cloneElement(
@@ -110,17 +109,17 @@ const withDynamicContainer = Component => {
                   firstChild,
                   d,
                   props.dataSourceId,
-                  `_${index}`
-                )
+                  `_${index}`,
+                ),
               )}
             </>
-          );
+          )
         })}
       </Component>
-    );
-  };
+    )
+  }
 
-  return internal;
-};
+  return internal
+}
 
-export default withDynamicContainer;
+export default withDynamicContainer

@@ -1,31 +1,31 @@
-import React from "react";
+import React from 'react'
 
-import { useLocation } from "react-router-dom";
+import { useLocation } from 'react-router-dom'
 
-import { ACTIONS } from "../utils/actions";
+import { ACTIONS } from '../utils/actions'
 import {
   extractFiltersFromProps,
-  getConditionalProperties
-} from "../utils/filters";
+  getConditionalProperties,
+} from '../utils/filters'
 
 const withDynamicButton = Component => {
   const Internal = props => {
-    const query = new URLSearchParams(useLocation().search);
-    const value = props.dataSource;
-    const action = props.action;
-    const nextAction = props.nextAction;
-    const context = props.context;
-    const dataModel = props.dataModel;
-    const actionProps = props.actionProps ? JSON.parse(props.actionProps) : {};
+    const query = new URLSearchParams(useLocation().search)
+    const value = props.dataSource
+    const action = props.action
+    const nextAction = props.nextAction
+    const context = props.context
+    const dataModel = props.dataModel
+    const actionProps = props.actionProps ? JSON.parse(props.actionProps) : {}
     const nextActionProps = props.nextActionProps
       ? JSON.parse(props.nextActionProps)
-      : {};
-    const backend = props.backend;
-    let onClick = props.onClick;
+      : {}
+    const backend = props.backend
+    let onClick = props.onClick
     if (action) {
       onClick = () => {
         if (!ACTIONS[action]) {
-          return alert(`Undefined action ${action}`);
+          return alert(`Undefined action ${action}`)
         }
         return ACTIONS[action]({
           ...props,
@@ -35,11 +35,11 @@ const withDynamicButton = Component => {
           context,
           dataModel,
           query,
-          model: props.dataModel
+          model: props.dataModel,
         })
           .then(res => {
             if (!nextAction) {
-              return true;
+              return true
             }
             const params = {
               ...props,
@@ -50,34 +50,34 @@ const withDynamicButton = Component => {
               dataModel,
               query,
               model: props.dataModel,
-              ...res
-            };
-            return ACTIONS[nextAction](params);
+              ...res,
+            }
+            return ACTIONS[nextAction](params)
           })
           .then(() => {
-            console.log("ok");
-            props.reload();
+            console.log('ok')
+            props.reload()
           })
           .catch(err => {
-            console.error(err);
-            alert(err);
-          });
-      };
+            console.error(err)
+            alert(err)
+          })
+      }
     }
     const conditionalProperties = getConditionalProperties(
       props,
-      props.dataSource
-    );
+      props.dataSource,
+    )
     return (
       <Component
         {...props}
         onClick={onClick}
         {...conditionalProperties}
       ></Component>
-    );
-  };
+    )
+  }
 
-  return Internal;
-};
+  return Internal
+}
 
-export default withDynamicButton;
+export default withDynamicButton

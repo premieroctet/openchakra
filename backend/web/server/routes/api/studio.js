@@ -138,10 +138,7 @@ router.post("/start", (req, res) => {
   return res.json(result);
 });
 
-router.post(
-  "/action",
-  passport.authenticate("cookie", { session: false }),
-  (req, res) => {
+router.post("/action", passport.authenticate("cookie", { session: false }), (req, res) => {
     const action = req.body.action;
     const actionFn = ACTIONS[action];
     if (!actionFn) {
@@ -214,18 +211,17 @@ router.post("/scormupdate", (req, res) => {
   return res.json({});
 });
 
-router.get(
-  "/current-user",
-  passport.authenticate("cookie", { session: false }),
-  (req, res) => {
+router.get("/current-user", passport.authenticate("cookie", { session: false }), (req, res) => {
     return res.json(req.user);
   }
 );
 
-router.post("/:model", (req, res) => {
+router.post("/:model", passport.authenticate("cookie", { session: false }), (req, res) => {
   const model = req.params.model;
+  const context= req.query.context
+  const params=model=='order' && context ? {booking: context}:{}
   return mongoose.connection.models[model]
-    .create({})
+    .create(params)
     .then(data => {
       return res.json(data);
     })
@@ -234,10 +230,7 @@ router.post("/:model", (req, res) => {
     });
 });
 
-router.get(
-  "/:model/:id?",
-  passport.authenticate("cookie", { session: false }),
-  (req, res) => {
+router.get("/:model/:id?", passport.authenticate("cookie", { session: false }), (req, res) => {
     const model = req.params.model;
     let fields = req.query.fields?.split(",") || [];
     const id = req.params.id;
