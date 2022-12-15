@@ -420,7 +420,6 @@ const ${componentName} = () => (
 }
 
 const getIconsImports = (components: IComponents) => {
-  console.log(icons)
   return Object.keys(components).flatMap(name => {
     return Object.keys(components[name].props)
       .filter(
