@@ -37,7 +37,9 @@ const BookingSchema = new Schema(
       }
     ],
     people_count: {
-      type: Number
+      type: Number,
+      min:1,
+      max:15,
     },
     comments: {
       type: String
