@@ -7,7 +7,7 @@ require('../../server/models/ResetToken')
 require('../../server/models/Booking')
 require('../../server/models/Order')
 
-describe('Test virtual multiple ref', () => {
+describe('Test virtual single ref', () => {
 
   beforeAll( async () => {
     await mongoose.connect(getDatabaseUri(), MONGOOSE_OPTIONS)
@@ -15,7 +15,9 @@ describe('Test virtual multiple ref', () => {
 
   it('booking.orders must be ref:true, multiple: true', async () => {
     const models= await getModels()
-    const attParams=models.find(m => m.name=="booking")?.attributes?.orders
-    console.log(`booking.orders params: ${JSON.stringify(attParams)}`)
+    const orderParam=models.find(m => m.name=="booking")?.attributes?.orders
+    console.log(orderParam)
+    const EXPECTED={type: 'order', multiple: true, ref:true, enumValues: undefined}
+    return expect(orderParam).toMatchObject(EXPECTED)
   })
 })

@@ -303,9 +303,6 @@ const getReferencedModelAttributes = modelName => {
 };
 
 const getModelAttributes = modelName => {
-  if (modelName=='booking') {
-    console.log(`Virtuals:${JSON.stringify(lodash.flatten(getReferencedModelAttributes(modelName)), null, 2)}`)
-  }
 
   const attrs = [
     ...getSimpleModelAttributes(modelName),
