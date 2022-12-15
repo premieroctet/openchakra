@@ -51,4 +51,10 @@ const BookingSchema = new Schema(
   schemaOptions
 );
 
+BookingSchema.virtual("orders", {
+  ref: "order", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "booking" // is equal to foreignField
+});
+
 module.exports = BookingSchema;

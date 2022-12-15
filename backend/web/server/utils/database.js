@@ -108,7 +108,13 @@ const DECLARED_VIRTUALS = {
     }
   },
   // fumoir
-  booking: {},
+  booking: {
+    orders: { path: "orders", instance: "Array", requires: "", multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options:{ref: 'order'}}
+    }
+  },
   company: {
     full_name: { path: "full_name", instance: "String", requires: "name" }
   },
@@ -297,6 +303,10 @@ const getReferencedModelAttributes = modelName => {
 };
 
 const getModelAttributes = modelName => {
+  if (modelName=='booking') {
+    console.log(`Virtuals:${JSON.stringify(lodash.flatten(getReferencedModelAttributes(modelName)), null, 2)}`)
+  }
+
   const attrs = [
     ...getSimpleModelAttributes(modelName),
     ...lodash.flatten(getReferencedModelAttributes(modelName))
