@@ -109,6 +109,7 @@ const DECLARED_VIRTUALS = {
   },
   // fumoir
   booking: {
+    end_date: { path: "end_date", instance: "Date", requires: ""},
     orders: { path: "orders", instance: "Array", requires: "", multiple: true,
     caster: {
       instance: 'ObjectID',
