@@ -1,27 +1,27 @@
-const WebpackBar = require("webpackbar");
+const WebpackBar = require('webpackbar')
 
 module.exports = {
-  webpack: (config, { isServer }) => {
+  webpack: (config, {isServer}) => {
     // Fixes npm packages that depend on `fs` module
     if (!isServer) {
       config.node = {
-        fs: "empty"
-      };
+        fs: 'empty',
+      }
     }
     config.module.rules.push({
       test: /\.(png|jp(e*)g|gif|svg|ttf|woff2)$/,
       exclude: /(node_modules)/,
-      loader: require.resolve("url-loader")
-    });
+      loader: require.resolve('url-loader'),
+    })
 
     config.plugins.push(
       new WebpackBar({
         fancy: true,
         profile: true,
-        basic: false
-      })
-    );
+        basic: false,
+      }),
+    )
 
-    return config;
-  }
-};
+    return config
+  },
+}
