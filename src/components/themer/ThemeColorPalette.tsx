@@ -70,8 +70,6 @@ const PaletteOption = ({
 }
 
 const ThemeColorPalette = ({ themeState }: { themeState: NewThemeType }) => {
-  const dispatch = useDispatch()
-
   return (
     <VStack divider={<Divider />} alignItems="flex-start">
       {paletteOptions.map(paletteOption => (

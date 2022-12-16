@@ -29,6 +29,7 @@ import API from '~custom-components/api'
 import ThemeCustomStyles from './CustomStyles'
 import ThemeColorPalette from './ThemeColorPalette'
 import ThemeLayers from './ThemeLayers'
+import ThemeFonts from './ThemeFonts'
 
 const Themer = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -49,7 +50,7 @@ const Themer = () => {
     dispatch.app.toggleLoader()
     updateThemeJson()
     dispatch.app.toggleLoader()
-  }, [themeState, newThemeState])
+  }, [newThemeState])
 
   return (
     <LightMode>
@@ -127,8 +128,7 @@ const Themer = () => {
                   <ThemeColorPalette themeState={newThemeState} />
                 </TabPanel>
                 <TabPanel>
-                  {/* <ThemeLayers themeState={themeState} /> */}
-                  <>TODO: Add fonts</>
+                  <ThemeFonts themeState={newThemeState} />
                 </TabPanel>
                 <TabPanel>
                   <ThemeCustomStyles />

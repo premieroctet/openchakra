@@ -26,6 +26,8 @@ export interface NewThemeType {
   bgColor: string
   paperColor: string
   borderColor: string
+  headingFontFamily: string
+  bodyFontFamily: string
 }
 
 export type CustomComponentsState = {
@@ -55,6 +57,8 @@ const INITIAL_NEW_THEME: NewThemeType = {
   bgColor: 'blackAlpha.100',
   paperColor: 'whiteAlpha.900',
   borderColor: 'gray.200',
+  headingFontFamily: 'roboto',
+  bodyFontFamily: 'roboto',
 }
 
 const customComponents = createModel({

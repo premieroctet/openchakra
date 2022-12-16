@@ -29,8 +29,8 @@ const myTheme = (themeState: NewThemeType) =>
       },
     },
     fonts: {
-      heading: `Aladin, sans-serif`,
-      body: `Aladin, sans-serif`,
+      heading: `Heading Font Family, sans-serif`,
+      body: `Body Font Family, sans-serif`,
     },
     colors: {
       brand:

@@ -30,7 +30,8 @@ import { getShowLayout, getShowCode } from '~core/selectors/app'
 import ComponentPreview from '~components/editor/ComponentPreview'
 import { omit } from 'lodash'
 import myTheme from './myTheme'
-import '@fontsource/aladin'
+import Fonts from '~components/Fonts'
+// import '@fontsource/aladin'
 
 export const themeColors: any = Object.keys(
   omit(baseTheme.colors, ['transparent', 'current', 'black', 'white']),
@@ -120,6 +121,16 @@ const Editor: React.FC = () => {
 
   const Playground = (
     <ChakraProvider theme={myTheme(newThemeState)} resetCSS={false}>
+      {/* <style>
+        {`\
+          @import url("https://fonts.googleapis.com/css2?family=Rubik+Gemstones&display=swap");\
+          @import url("https://cdn.jsdelivr.net/npm/@fontsource/arizonia/index.css");\
+        `}
+      </style> */}
+      <Fonts
+        headingFontFamily={newThemeState.headingFontFamily}
+        bodyFontFamily={newThemeState.bodyFontFamily}
+      />
       <Box
         className="editor"
         bg="chakra-body-bg"
