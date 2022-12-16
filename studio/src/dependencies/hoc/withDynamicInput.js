@@ -8,16 +8,20 @@ const withDynamicInput = Component => {
   const Internal = ({ dataSource, context, backend, ...props }) => {
     let keptValue = lodash.get(dataSource, props.attribute)
 
-    const isADate =
-      !isNaN(Date.parse(keptValue)) && new Date(Date.parse(keptValue))
-    if (props?.type === 'datetime-local') {
-      if (isADate instanceof Date) {
-        keptValue = isADate.toISOString().slice(0, 16)
+    const isADate = !isNaN(Date.parse(keptValue)) && new Date(Date.parse(keptValue));
+
+    if (isADate instanceof Date) {
+
+      const retainedDate = isADate.toLocaleString(undefined, {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute:'2-digit'})
+        .split(/\s/)
+      const transformedDate = `${retainedDate[0].split('/').reverse().join('-')}T${retainedDate[1]}`
+
+      if (props?.type === 'datetime-local') {
+          keptValue = transformedDate.slice(0, 16)
       }
-    }
-    if (props?.type === 'date') {
-      if (isADate instanceof Date) {
-        keptValue = isADate.toISOString().slice(0, 10)
+
+      if (props?.type === 'date') {
+          keptValue = transformedDate.slice(0, 10)
       }
     }
 
