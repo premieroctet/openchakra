@@ -1,13 +1,14 @@
-import React from 'react'
-import { useDropComponent } from '~hooks/useDropComponent'
-import { useInteractive } from '~hooks/useInteractive'
 import { RadioGroup, Radio, Flex } from '@chakra-ui/react'
 import { useSelector } from 'react-redux'
+import React from 'react'
+import * as Chakra from '@chakra-ui/react'
 import {getComponents} from '~core/selectors/components'
-import { getModels, getModelAttributes } from '~core/selectors/dataSources'
 import { getDataProviderDataType } from '~utils/dataSources'
+import { getModels } from '~core/selectors/dataSources'
+import { useDropComponent } from '~hooks/useDropComponent'
+import { useInteractive } from '~hooks/useInteractive'
 
-import icons from '~iconsList'
+import WithChildrenPreviewContainer from '../WithChildrenPreviewContainer';
 
 interface Props {
   component: IComponent
@@ -36,15 +37,25 @@ const RadioGroupPreview = ({ component }: Props) => {
   }
   const values=dp?.enumValues || []
 
+  if (props.dataSource && values) {
   return (
     <RadioGroup ref={ref} {...props}>
     <>
-    {
-      values.map((e, idx) => <Flex flexDirection='row'><Radio value={e} />{e}</Flex>)
+    { values.map((e, idx) => <Flex flexDirection='row'><Radio value={e} />{e}</Flex>)
     }
     </>
     </RadioGroup>
   )
+  }
+  else {
+    return <WithChildrenPreviewContainer
+      enableVisualHelper
+      component={component}
+      type={Chakra.RadioGroup}
+      isBoxWrapped
+    />
+
+  }
 }
 
 export default RadioGroupPreview
