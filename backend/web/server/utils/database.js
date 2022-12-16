@@ -101,11 +101,8 @@ const DECLARED_VIRTUALS = {
     }
   },
   order: {
-    total_price: {
-      path: "total_price",
-      instance: "Number",
-      requires: "items"
-    }
+    total_price: {path: "total_price", instance: "Number", requires: "items"},
+    paid: {path: "paid", instance: "Boolean", requires: "items"},
   },
   // fumoir
   booking: {

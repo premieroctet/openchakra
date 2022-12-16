@@ -15,14 +15,6 @@ const OrderSchema = new Schema(
         ref: "orderItem"
       }
     ],
-    payment: {
-      id: {
-        type: String
-      },
-      date: {
-        type: Date
-      }
-    },
     booking: {
       type: Schema.Types.ObjectId,
       ref: "booking"
@@ -44,6 +36,13 @@ OrderSchema.virtual("total_price").get(function() {
     return 0;
   }
   return lodash.sum(this.items.map(i => i.total_price));
+});
+
+OrderSchema.virtual("paid").get(function() {
+  if (!this.items) {
+    return true
+  }
+  return this.items.every(i => i.paid==true)
 });
 
 OrderSchema.plugin(mongooseLeanVirtuals);

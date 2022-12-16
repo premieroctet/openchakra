@@ -27,6 +27,11 @@ const OrderItemSchema = new Schema(
       type: Number,
       min: 0,
       max: 1
+    },
+    paid: {
+      type: Boolean,
+      default: false,
+      required: true,
     }
   },
   schemaOptions
