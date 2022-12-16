@@ -94,7 +94,7 @@ const ACTIONS = {
   },
 
   inviteGuest: ({ parent, email, phone }) => {
-    return inviteGuest({ event: parent, email, phone });
+    return inviteGuest({ eventOrBooking: parent, email, phone });
   },
 
   addOrderItem: ({ context, parent, quantity }) => {
