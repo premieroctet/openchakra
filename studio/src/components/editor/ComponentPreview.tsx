@@ -18,6 +18,7 @@ import AvatarPreview, {
 } from '~components/editor/previews/AvatarPreview'
 import ButtonPreview from '~components/editor/previews/ButtonPreview'
 import NumberInputPreview from '~components/editor/previews/NumberInputPreview'
+import RadioGroupPreview from '~components/editor/previews/RadioGroupPreview'
 import PreviewContainer from '~components/editor/PreviewContainer'
 import SelectPreview from '~components/editor/previews/SelectPreview'
 import WithChildrenPreviewContainer from '~components/editor/WithChildrenPreviewContainer'
@@ -138,7 +139,6 @@ const ComponentPreview: React.FC<{
           {...forwardedProps}
         />
       )
-    case 'RadioGroup':
     case 'Stack':
     case 'InputGroup':
       return (
@@ -151,6 +151,8 @@ const ComponentPreview: React.FC<{
         />
       )
     // More complex components
+    case 'RadioGroup':
+      return <RadioGroupPreview component={component} />
     case 'InputRightElement':
       return <InputRightElementPreview component={component} />
     case 'InputLeftElement':

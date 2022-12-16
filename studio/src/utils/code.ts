@@ -17,6 +17,7 @@ import {
   SOURCE_TYPE,
   TEXT_TYPE,
   UPLOAD_TYPE,
+  ENUM_TYPE,
   getDataProviderDataType,
   getFieldsForDataProvider,
 } from './dataSources'
@@ -101,6 +102,9 @@ const getDynamicType = (comp: IComponent) => {
   if (UPLOAD_TYPE.includes(comp.type)) {
     return 'UploadFile'
   }
+  if (ENUM_TYPE.includes(comp.type)) {
+    return 'Enum'
+  }
   throw new Error(`No dynamic found for ${comp.type}`)
 }
 
@@ -184,6 +188,13 @@ const buildBlock = ({
               type: components[childComponent.props.dataSource].props.model,
               multiple: true,
               ref: true,
+            }
+          }
+
+          if (tp?.type && childComponent.props?.attribute) {
+            const att=models.find(m => m.name==tp.type).attributes[childComponent.props?.attribute]
+            if (att?.enumValues) {
+              propsContent += ` enum='${att.enumValues.join(',')}'`
             }
           }
           if (tp.type) {

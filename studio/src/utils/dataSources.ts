@@ -24,6 +24,8 @@ export const SOURCE_TYPE: ComponentType[] = ['Timer']
 export const CHECKBOX_TYPE: ComponentType[] = ['Checkbox']
 export const INPUT_TYPE: ComponentType[] = ['Input', 'Textarea', 'NumberInput']
 export const UPLOAD_TYPE: ComponentType[] = ['UploadFile']
+export const ENUM_TYPE: ComponentType[] = ['RadioGroup']
+//export const ENUM_TYPE: ComponentType[] = ['RadioGroup','Select']
 
 const ALL_DYNAMICS = lodash.flatten([
   CONTAINER_TYPE,
@@ -36,6 +38,7 @@ const ALL_DYNAMICS = lodash.flatten([
   CHECKBOX_TYPE,
   INPUT_TYPE,
   UPLOAD_TYPE,
+  ENUM_TYPE,
 ])
 
 export const allowsDataSource = (component: IComponent): boolean => {
