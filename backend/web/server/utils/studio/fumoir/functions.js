@@ -1,13 +1,22 @@
+const { BadRequestError, NotFoundError } = require('../../errors');
+const mongoose = require('mongoose');
+const { getModel } = require('../../database');
 const OrderItem = require("../../../models/OrderItem");
 const Product = require("../../../models/Product");
 const Order = require("../../../models/Order");
 const Event = require("../../../models/Event");
-const { NotFoundError } = require("../../errors");
 
-const inviteGuest = ({ event, email, phone }) => {
-  return Event.findByIdAndUpdate(event, {
-    $push: { guests: { email, phone } }
-  });
+const inviteGuest = ({ eventOrBooking, email, phone }) => {
+  return getModel(eventOrBooking)
+    .then(modelName => {
+      if (!['booking', 'event'].includes(modelName)) {
+        throw new BadRequestError(`Found model ${modelName} for ${eventOrBooking}, should be event or booking`)
+      }
+      mongooseModel = mongoose.connection.models[modelName];
+      return mongooseModel.findByIdAndUpdate(eventOrBooking, {
+        $push: { guests: { email, phone } }
+      });
+    })
 };
 
 const setOrderItem = ({ order, product, quantity }) => {

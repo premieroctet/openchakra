@@ -36,7 +36,8 @@ const BookingSchema = new Schema(
     guests: [
       {
         // Guest email addresses
-        type: String
+        email: String,
+        phone: String
       }
     ],
     people_count: {

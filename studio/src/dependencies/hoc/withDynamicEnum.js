@@ -22,11 +22,11 @@ const withDynamicEnum = Component => {
 
     return (
       <Component {...spreaded} onChange={onChange}>
-      <>
+      <Flex flexDirection={props.flexDirection}>
       {
         enumValues.map((e, idx) => <Flex flexDirection='row'><Radio value={e} />{e}</Flex>)
       }
-      </>
+      </Flex>
       </Component>
     )
   }

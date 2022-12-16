@@ -389,9 +389,7 @@ const buildPopulates = (fields, model) => {
 
 const getModel = id => {
   const conn = mongoose.connection;
-  return Promise.all(
-    conn
-      .modelNames()
+  return Promise.all(conn.modelNames()
       .map(model =>
         conn.models[model]
           .exists({ _id: id })
