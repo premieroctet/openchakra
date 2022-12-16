@@ -117,7 +117,7 @@ const project = createModel({
 
       const activePage = newState?.activePage || resetPageId
 
-      const rootPage = activePage
+      const rootPage = newState?.rootPage || activePage
 
       return {
         ...state,
