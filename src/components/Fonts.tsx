@@ -1,7 +1,5 @@
 import { Global } from '@emotion/react'
 
-let variable = 'arbutus'
-
 const Fonts = ({
   headingFontFamily,
   bodyFontFamily,

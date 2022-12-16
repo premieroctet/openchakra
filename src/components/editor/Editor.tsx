@@ -152,7 +152,7 @@ const Editor: React.FC = () => {
           <Text maxWidth="md" color="gray.400" fontSize="xl" textAlign="center">
             Create new components using the `Create Component` button in the
             left sidebar. Click the edit button beside the component to load it!
-            Or load{' '}
+            Or install{' '}
             <Link
               color="gray.500"
               href="https://bit.cloud/"

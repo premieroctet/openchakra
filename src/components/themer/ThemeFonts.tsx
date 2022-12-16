@@ -1,4 +1,12 @@
-import { Button, Divider, HStack, Select, Text, VStack } from '@chakra-ui/react'
+import {
+  Button,
+  Divider,
+  HStack,
+  Link,
+  Select,
+  Text,
+  VStack,
+} from '@chakra-ui/react'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { NewThemeType } from '~core/models/customComponents'
@@ -25,6 +33,13 @@ const ThemeFonts = ({ themeState }: { themeState: NewThemeType }) => {
 
   return (
     <VStack divider={<Divider />} alignItems="stretch">
+      <Text>
+        View font previews{' '}
+        <Link href="https://fontsource.org/fonts" target="_blank" color="blue">
+          here
+        </Link>
+      </Text>
+
       <HStack spacing={4}>
         <Text>Heading Font Family</Text>
         <Select

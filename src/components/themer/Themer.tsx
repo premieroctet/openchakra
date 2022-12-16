@@ -93,6 +93,7 @@ const Themer = () => {
                 <Tab>
                   <Tooltip
                     label="Set default CSS properties"
+                    fontFamily="sans-serif"
                     fontSize="sm"
                     hasArrow
                     placement="right"
@@ -104,6 +105,7 @@ const Themer = () => {
                 <Tab>
                   <Tooltip
                     label="Add theme layers where the lower layer overrides the theme configuration set in above layers"
+                    fontFamily="sans-serif"
                     fontSize="sm"
                     hasArrow
                     placement="right"
@@ -115,6 +117,7 @@ const Themer = () => {
                 <Tab>
                   <Tooltip
                     label="Create your own custom styles"
+                    fontFamily="sans-serif"
                     fontSize="sm"
                     hasArrow
                     placement="right"
