@@ -4,7 +4,11 @@ import { getConditionalProperties } from '../utils/filters'
 
 const withDynamicText = Component => {
   const internal = props => {
-    const value = lodash.get(props.dataSource, props.attribute)
+    const enums=props.enum ?  JSON.parse(props.enum) : null
+    let value = lodash.get(props.dataSource, props.attribute)
+    if (enums && value in enums) {
+      value=enums[value]
+    }
     const conditionalProperties = getConditionalProperties(
       props,
       props.dataSource,

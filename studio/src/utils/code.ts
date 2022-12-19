@@ -194,7 +194,7 @@ const buildBlock = ({
           if (tp?.type && childComponent.props?.attribute) {
             const att=models.find(m => m.name==tp.type).attributes[childComponent.props?.attribute]
             if (att?.enumValues) {
-              propsContent += ` enum='${att.enumValues.join(',')}'`
+              propsContent += ` enum='${JSON.stringify(att.enumValues)}'`
             }
           }
           if (tp.type) {

@@ -41,7 +41,7 @@ const RadioGroupPreview = ({ component }: Props) => {
   return (
     <RadioGroup ref={ref} {...props}>
     <>
-    { values.map((e, idx) => <Flex flexDirection='row'><Radio value={e} />{e}</Flex>)
+    { Object.keys(values).map((k, idx) => <Flex flexDirection='row'><Radio value={k} />{values[k]}</Flex>)
     }
     </>
     </RadioGroup>

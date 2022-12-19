@@ -6,7 +6,7 @@ import lodash from 'lodash'
 const withDynamicEnum = Component => {
   const internal = props => {
     const dataSource=props.dataSource
-    const enumValues=props?.enum?.split(',') || []
+    const enumValues=JSON.parse(props?.enum || {})
     const value = lodash.get(props.dataSource, props.attribute)
     const spreaded = {...lodash.omit(props, ['children']), 'data-value': value, value}
 
@@ -24,7 +24,7 @@ const withDynamicEnum = Component => {
       <Component {...spreaded} onChange={onChange}>
       <Flex flexDirection={props.flexDirection}>
       {
-        enumValues.map((e, idx) => <Flex flexDirection='row'><Radio value={e} />{e}</Flex>)
+        Object.keys(enumValues).map((k, idx) => <Flex flexDirection='row'><Radio value={k} />{enumValues[k]}</Flex>)
       }
       </Flex>
       </Component>
