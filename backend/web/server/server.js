@@ -162,7 +162,7 @@ checkConfig()
         .then(res => {
           const result = res.data;
           const expected = RANDOM_ID;
-          if (result == expected) {
+          if (result != expected) {
             throw new Error(`Host ${getHostUrl()} is wrong`);
           }
         })
