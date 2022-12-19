@@ -3,7 +3,7 @@ import { Select } from '@chakra-ui/react'
 import FormControl from '~components/inspector/controls/FormControl'
 import useBreakpoints from '~hooks/useBreakpoints'
 
-const FlexPanel = ({ bkpt = 'base' }: { bkpt: string }) => {
+const FlexPanel = ({ bkpt = 'base' }: { bkpt?: string }) => {
   const { responsiveValues, handleBreakpoints } = useBreakpoints([
     'alignItems',
     'flexDirection',
