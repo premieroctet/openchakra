@@ -53,10 +53,6 @@ const UserSchema = new Schema(
     description: {
       type: String
     },
-    active: {
-      type: Boolean,
-      default: true
-    },
     cgv_validation_date: {
       type: Date
     },
@@ -74,6 +70,12 @@ const UserSchema = new Schema(
         type: Date
       }
     ],
+    subscription_start: {
+      type: Date,
+    },
+    subscription_end: {
+      type: Date,
+    },
     resetToken: {
       type: Schema.Types.ObjectId,
       ref: "resetToken"
@@ -86,10 +88,9 @@ UserSchema.virtual("full_name").get(function() {
   return `${this.firstname} ${this.lastname}`;
 });
 
-UserSchema.virtual("is_active", {
-  ref: "subscription",
-  localField: "active",
-  foreignField: "is_active"
+UserSchema.virtual("is_active").get(function() {
+  return this.subscription_start && this.subscription_end
+  && moment().isBetween(this.subscription_start, this.subscription_end)
 });
 
 module.exports = UserSchema;

@@ -154,7 +154,7 @@ const UploadFile = ({
         await saveUrl()
       }
     },
-    [attribute, ressource_id],
+    [attribute, dataSource, ressource_id],
   )
 
   useEffect(() => {
