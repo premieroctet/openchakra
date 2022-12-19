@@ -10,7 +10,7 @@ export default async function handler(req, res) {
 
   try {
     // 1. Bit Install component
-    shell.exec(`bit install ${req.body.path}`)
+    shell.exec(`cd .. && bit install ${req.body.path}`)
 
     // 2.1 Generate preview code
     const componentName = convertToPascal(component)
