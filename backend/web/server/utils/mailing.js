@@ -90,9 +90,7 @@ const sendNotification = (
 
   // Send SMS
   if (enable_sms && destinee.phone && SMS_CONTENTS[notif_index.toString()]) {
-    console.log("Sending SMS");
     const smsContents = fillSms(SMS_CONTENTS[notif_index.toString()], params);
-    console.log(`SMS contents is ${smsContents}`);
     if (!smsContents) {
       console.error(
         `Error creating SMS ${notif_index} to ${
@@ -101,7 +99,6 @@ const sendNotification = (
       );
       result = false;
     } else {
-      console.log("Calling SIB.sendSms");
       resultSms = SIB.sendSms(destinee.phone, smsContents);
     }
   }

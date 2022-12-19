@@ -3,11 +3,11 @@ const {
   registerToEvent,
   removeOrderItem,
   setOrderItem
-} = require("./fumoir/functions");
-const url = require("url");
-const UserSessionData = require("../../models/UserSessionData");
-const { NotFoundError } = require("../errors");
-const Program = require("../../models/Program");
+} = require("./fumoir/functions")
+const url = require("url")
+const UserSessionData = require("../../models/UserSessionData")
+const { NotFoundError } = require("../errors")
+const Program = require("../../models/Program")
 const {
   addChild,
   moveChildInParent,
@@ -18,7 +18,7 @@ const {
   login,
   putAttribute,
   sendMessage
-} = require("./aftral/functions");
+} = require("./aftral_studio/functions")
 
 const ACTIONS = {
   login: ({ email, password }) => {

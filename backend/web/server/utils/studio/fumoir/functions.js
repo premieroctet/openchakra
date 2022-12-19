@@ -1,6 +1,11 @@
+const {
+  declareEnumField,
+  declareVirtualField,
+  getModel
+} = require('../../database');
+const { PLACES, ROLES } = require('../../../../utils/fumoir/consts');
 const { BadRequestError, NotFoundError } = require('../../errors');
 const mongoose = require('mongoose');
-const { getModel } = require('../../database');
 const OrderItem = require("../../../models/OrderItem");
 const Product = require("../../../models/Product");
 const Order = require("../../../models/Order");
@@ -65,6 +70,43 @@ const registerToEvent = ({ event, user }) => {
   console.log(`Adding ${user} to event ${event}`);
   return Event.findByIdAndUpdate(event, { $addToSet: { members: user } });
 };
+
+
+declareEnumField({model: 'user', field: 'role', enumValues: ROLES})
+declareVirtualField({model:'user', field:'full_name', instance: "String", requires: "firstname,name"})
+declareVirtualField({model:'user', field:'is_active', instance: "Boolean", requires: "active" })
+declareEnumField({model: 'loggedUser', field: 'role', enumValues: ROLES})
+declareVirtualField({model:'loggedUser', field:'full_name', instance: "String", requires: "firstname,name"})
+declareVirtualField({model:'loggedUser', field:'is_active', instance: "Boolean", requires: "active" })
+declareEnumField({model: 'booking', field: 'place', enumValues: PLACES})
+
+declareVirtualField({model: 'booking', field: 'end_date', instance: "Date", requires: ""})
+declareVirtualField({model: 'booking', field: 'orders', instance: "Array", requires: "", multiple: true,
+caster: {
+  instance: 'ObjectID',
+  options:{ref: 'order'}}})
+declareVirtualField({model: 'cigar', field: 'net_price', instance: "Number", requires: "price,vat_rate"})
+declareVirtualField({model: 'cigar', field: 'reviews', instance: "review", requires: "" })
+declareVirtualField({model: 'company', field: 'full_name', instance: "String", requires: "name" })
+declareVirtualField({model: 'drink', field: "net_price", instance: "Number", requires: "price,vat_rate"})
+declareVirtualField({model: 'drink', field: "reviews", instance: "review", requires: ""})
+declareVirtualField({model: 'meal', field: "net_price", instance: "Number", requires: "price,vat_rate"})
+declareVirtualField({model: 'meal', field: "reviews", instance: "review", requires: ""})
+
+declareEnumField({model: 'event', field: 'place', enumValues: PLACES})
+declareVirtualField({model: 'event', field: "members_count", instance: "Number", required: "guests_count,members"})
+
+declareVirtualField({model: 'order', field: "total_price", instance: "Number", required: "items"})
+declareVirtualField({model: 'order', field: "paid", instance: "Boolean", required: "items"})
+
+declareVirtualField({model: 'orderItem', field: "net_price", instance: "Number", requires: "price,vat_rate"})
+declareVirtualField({model: 'orderItem', field: "total_price", instance: "Number", requires: "price,quantity"})
+
+declareVirtualField({model: 'product', field: "net_price", instance: "Number", requires: "price,vat_rate"})
+declareVirtualField({model: 'product', field: "reviews", instance: "review", requires: ""})
+
+declareVirtualField({model: 'subscription', field: "is_active", instance: "Boolean", requires: "start,end"})
+
 
 module.exports = {
   inviteGuest,

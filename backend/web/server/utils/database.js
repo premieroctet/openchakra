@@ -1,9 +1,11 @@
+//const { PLACES } = require('../../utils/fumoir/consts');
 const mongoose = require("mongoose");
 const lodash = require("lodash");
 const formatDuration = require("format-duration");
-const { ROLES, STATUS } = require("../../utils/aftral_studio/consts");
+//const { ROLES, STATUS } = require("../../utils/aftral_studio/consts");
 // TODO: Omporting Theme makes a cyclic import. Why ?
 // const Theme = require('../models/Theme');
+const util=require('util')
 require("../models/TrainingCenter");
 require("../models/Category");
 
@@ -48,200 +50,10 @@ const attributesComparator = (att1, att2) => {
 
 const COMPUTED_FIELDS = {};
 
-const DECLARED_VIRTUALS = {
-  user: {
-    // fumoir
-    full_name: {
-      path: "full_name",
-      instance: "String",
-      requires: "firstname,name"
-    },
-    is_active: { path: "is_active", instance: "Boolean", requires: "active" },
-    // aftral studio
-    contact_name: {
-      path: "contact_name",
-      instance: "String",
-      requires: "name,firstname,role"
-    }
-  },
-  drink: {
-    net_price: {
-      path: "net_price",
-      instance: "Number",
-      requires: "price,vat_rate"
-    },
-    reviews: { path: "reviews", instance: "review", requires: "" }
-  },
-  meal: {
-    net_price: {
-      path: "net_price",
-      instance: "Number",
-      requires: "price,vat_rate"
-    },
-    reviews: { path: "reviews", instance: "review", requires: "" }
-  },
-  cigar: {
-    net_price: {
-      path: "net_price",
-      instance: "Number",
-      requires: "price,vat_rate"
-    },
-    reviews: { path: "reviews", instance: "review", requires: "" }
-  },
-  orderItem: {
-    net_price: {
-      path: "net_price",
-      instance: "Number",
-      requires: "price,vat_rate"
-    },
-    total_price: {
-      path: "total_price",
-      instance: "Number",
-      requires: "price,quantity"
-    }
-  },
-  order: {
-    total_price: {path: "total_price", instance: "Number", requires: "items"},
-    paid: {path: "paid", instance: "Boolean", requires: "items"},
-  },
-  // fumoir
-  booking: {
-    end_date: { path: "end_date", instance: "Date", requires: ""},
-    orders: { path: "orders", instance: "Array", requires: "", multiple: true,
-    caster: {
-      instance: 'ObjectID',
-      options:{ref: 'order'}}
-    }
-  },
-  company: {
-    full_name: { path: "full_name", instance: "String", requires: "name" }
-  },
-  product: {
-    net_price: {
-      path: "net_price",
-      instance: "Number",
-      requires: "vat_rate,price"
-    },
-    reviews: { path: "reviews", instance: "review", requires: "" }
-  },
-  subscription: {
-    is_active: { path: "is_active", instance: "Boolean", requires: "start,end" }
-  },
-  // aftral
-  session: {
-    trainees_count: {
-      path: "trainees_count",
-      instance: "Number",
-      requires: "trainees"
-    },
-    trainers_count: {
-      path: "trainees_count",
-      instance: "Number",
-      requires: "trainers"
-    },
-    spent_time: { path: "spent_time", instance: "String", requires: "themes" },
-    spent_time_str: {
-      path: "spent_time_str",
-      instance: "String",
-      requires: "themes"
-    },
-    contact_name: {
-      path: "contact_name",
-      instance: "String",
-      requires: "name"
-    },
-    progress_str: {
-      path: "progress_str",
-      instance: "String",
-      requires: "name"
-    },
-    progress_percent: {
-      path: "progress_percent",
-      instance: "Number",
-      requires: "name"
-    }
-  },
-  theme: {
-    hidden: {
-      path: "hidden",
-      instance: "Boolean",
-      requires: "name,code,picture"
-    },
-    spent_time: {
-      path: "spent_time",
-      instance: "String",
-      requires: "resources"
-    },
-    spent_time_str: {
-      path: "spent_time_str",
-      instance: "String",
-      requires: "resources"
-    },
-    progress_str: {
-      path: "progress_str",
-      instance: "String",
-      requires: "name"
-    },
-    progress_percent: {
-      path: "progress_percent",
-      instance: "Number",
-      requires: "name"
-    },
-    status: {
-      path: "status",
-      instance: "String",
-      enumValues: [null, ...Object.keys(STATUS)],
-      requires: "resources"
-    }
-  },
-  resource: {
-    spent_time: { path: "spent_time", instance: "Number", requires: "" },
-    spent_time_str: {
-      path: "spent_time_str",
-      instance: "String",
-      requires: "spent_time"
-    },
-    status: {
-      path: "status",
-      instance: "String",
-      enumValues: [null, ...Object.keys(STATUS)],
-      required: "finished"
-    },
-    annotation: { path: "annotation", instance: "String", required: "" }
-  },
-  contact: {
-    name: { path: "name", instance: "String", requires: "" }
-  },
-  loggedUser: {
-    contact_name: {
-      path: "contact_name",
-      instance: "String",
-      requires: "name,firstname,role"
-    },
-    full_name: {
-      path: "full_name",
-      instance: "String",
-      requires: "firstname,name"
-    },
-    is_active: { path: "is_active", instance: "Boolean", requires: "active" }
-  },
-  message: {
-    destinee_name: {
-      path: "destinee_name",
-      instance: "String",
-      requires:
-        "destinee_session.trainers,destinee_session.trainees,destinee_user"
-    },
-    sender_name: { path: "sender_name", instance: "String", requires: "sender" }
-  },
-  event: {
-    members_count: {
-      path: "members_count",
-      instance: "Number",
-      required: "guests_count,members"
-    }
-  }
-};
+let DECLARED_ENUMS = {
+}
+
+const DECLARED_VIRTUALS = {}
 
 const getVirtualCharacteristics = (modelName, attName) => {
   if (
@@ -253,13 +65,24 @@ const getVirtualCharacteristics = (modelName, attName) => {
   return DECLARED_VIRTUALS[modelName][attName];
 };
 
-const getAttributeCaracteristics = att => {
+const getAttributeCaracteristics = (modelName, att) => {
   const multiple = att.instance == "Array";
   const baseData = multiple ? att.caster : att;
   const type =
     baseData.instance == "ObjectID" ? baseData.options.ref : baseData.instance;
   const ref = baseData.instance == "ObjectID";
-  const enumValues = att.enumValues;
+  let enumValues = lodash.isEmpty(att.enumValues) ? undefined : att.enumValues;
+  if (enumValues) {
+    const enumObject=DECLARED_ENUMS[modelName]?.[att.path]
+    if (!enumObject) {
+      throw new Error(`${modelName}.${att.path}:no declared enum`)
+    }
+    const enumObjectKeys=Object.keys(enumObject)
+    if (lodash.intersection(enumObjectKeys, enumValues).length!=enumValues.length) {
+      throw new Error(`${modelName}.${att.path}:inconsistent enum:${JSON.stringify(enumValues)}/${JSON.stringify(enumObjectKeys)}`)
+    }
+    enumValues=enumObject
+  }
   return {
     type,
     multiple,
@@ -283,7 +106,7 @@ const getBaseModelAttributes = modelName => {
 const getSimpleModelAttributes = modelName => {
   const atts = getBaseModelAttributes(modelName).map(att => [
     att.path,
-    getAttributeCaracteristics(att)
+    getAttributeCaracteristics(modelName, att)
   ]);
   return atts;
 };
@@ -571,9 +394,40 @@ const formatTime = timeMillis => {
   return formatDuration(timeMillis ? timeMillis / 60 : 0, { leading: true });
 };
 
-const declareComputedField = (model, attribute, fn) => {
-  lodash.set(COMPUTED_FIELDS, `${model}.${attribute}`, fn);
+const declareComputedField = (model, field, fn) => {
+  lodash.set(COMPUTED_FIELDS, `${model}.${field}`, fn);
 };
+
+const declareVirtualField=({model, field, ...rest}) => {
+  const enumValues=rest.enumValues ? Object.keys(rest.enumValues) : undefined
+  lodash.set(DECLARED_VIRTUALS, `${model}.${field}`, {path: field, ...rest, enumValues});
+  if (!lodash.isEmpty(rest.enumValues)) {
+    declareEnumField({model, field, enumValues: rest.enumValues})
+  }
+}
+
+const declareEnumField = ({model, field, enumValues}) => {
+  lodash.set(DECLARED_ENUMS, `${model}.${field}`, enumValues);
+}
+
+// Default filter
+let filterDataUser = ({ model, data, user }) => data
+
+const setFilterDataUser = fn => {
+  filterDataUser = fn
+}
+
+// Pre proceses model, fields, id before querying
+// If preprocessGet returns attribute data, it is returned instead of actual query
+let preprocessGet = data => Promise.resolve(data)
+
+const setPreprocessGet = fn => {
+  preprocessGet = fn
+}
+
+const callPreprocessGet = data => {
+  return preprocessGet(data)
+}
 
 module.exports = {
   hasRefs,
@@ -591,6 +445,12 @@ module.exports = {
   getModel,
   addComputedFields,
   declareComputedField,
+  declareVirtualField,
+  declareEnumField,
   formatTime,
-  retainRequiredFields
+  retainRequiredFields,
+  setFilterDataUser,
+  filterDataUser,
+  setPreprocessGet,
+  callPreprocessGet,
 };

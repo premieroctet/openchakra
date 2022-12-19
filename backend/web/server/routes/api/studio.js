@@ -1,23 +1,20 @@
-const { retainRequiredFields } = require("../../utils/database");
-const path = require("path");
-
-const fs = require("fs").promises;
-const child_process = require("child_process");
-const url = require("url");
-const lodash = require("lodash");
-const express = require("express");
-const mongoose = require("mongoose");
-const passport = require("passport");
+const User = require('../../models/User');
+const { getDataModel } = require('../../../config/config');
+require(`../../utils/studio/${getDataModel()}/functions`);
+const path = require("path")
+const {promises: fs} = require("fs")
+const child_process = require("child_process")
+const url = require("url")
+const lodash = require("lodash")
+const bcrypt = require("bcryptjs")
+const express = require("express")
+const mongoose = require("mongoose")
+const passport = require("passport")
 const {
-  filterDataUser,
-  getContacts,
-  login
-} = require("../../utils/studio/aftral/functions");
-const {
-  getDataModel,
   getProductionRoot,
   getProductionPort
 } = require("../../../config/config");
+const { retainRequiredFields, filterDataUser, callPreprocessGet } = require("../../utils/database")
 const {
   ROLES,
   RES_TO_COME
@@ -36,6 +33,26 @@ const router = express.Router();
 
 const PRODUCTION_ROOT = getProductionRoot();
 const PRODUCTION_PORT = getProductionPort();
+
+
+const login = (email, password) => {
+  console.log(`Login with ${email} and ${password}`);
+  return User.findOne({ email }).then(user => {
+    if (!user) {
+      throw new NotFoundError(`Invalid email or password`);
+    }
+    console.log(`Comparing ${password} and ${user.password}`);
+    return bcrypt.compare(password, user.password).then(matched => {
+      // TODO : to test
+      matched = true;
+      console.log(`Matched:${matched}`);
+      if (!matched) {
+        throw new NotFoundError(`Invalid email or password`);
+      }
+      return user;
+    });
+  });
+};
 
 router.get("/models", (req, res) => {
   const allModels = getModels();
@@ -234,7 +251,6 @@ router.get("/:model/:id?", passport.authenticate("cookie", { session: false }), 
     const model = req.params.model;
     let fields = req.query.fields?.split(",") || [];
     const id = req.params.id;
-    console.log(`Getting ${model} ${id} ${fields}`);
     const params = req.get("Referrer")
       ? { ...url.parse(req.get("Referrer"), true).query }
       : {};
@@ -242,80 +258,39 @@ router.get("/:model/:id?", passport.authenticate("cookie", { session: false }), 
 
     console.log(`GET ${model}/${id} ${fields}`);
 
-    if (model == "contact") {
-      return getContacts(req.user, id)
-        .then(contacts => {
-          return res.json(contacts);
+    callPreprocessGet({model, fields, id, user: req.user})
+      .then(({model, fields, id, data}) => {
+        if (data) {
+          return res.json(data)
+        }
+        else return  buildQuery(model, id, fields)
+          .lean({ virtuals: true })
+          .then(data => {
+            // Force duplicate children
+            data = JSON.parse(JSON.stringify(data));
+            // Remove extra virtuals
+            data = retainRequiredFields({ data, fields });
+            if (id && data.length == 0) { throw new NotFoundError(`Can't find ${model}:${id}`) }
+            return Promise.all(data.map(d => addComputedFields(user, params, d, model)))
+          })
+          .then(data => {
+            return id ? Promise.resolve(data) : filterDataUser({ model, data, user: req.user })
+          })
+          .then(data => {
+            if (["theme", "resource"].includes(model) && !id) {
+              data = data.filter(t => t.name);
+            }
+            if (id && model == "resource" && data[0]?.status == RES_TO_COME) {
+              throw new ForbiddenError(`Ressource non encore disponible`);
+            }
+            console.log(`GET ${model}/${id} ${fields}: data sent`);
+            return res.json(data);
+          })
+          .catch(err => {
+            console.error(err);
+            return res.status(err.status || 500).json(err.message || err);
         })
-        .catch(err => {
-          console.error(err);
-          return res
-            .status(err.status || HTTP_CODES.SYSTEM_ERROR)
-            .json(err.message || err);
-        });
-    }
-
-    if (model == "session") {
-      fields = lodash([...fields, "trainers", "trainees"])
-        .uniq()
-        .value();
-    }
-
-    if (model == "message") {
-      fields = lodash([
-        ...fields,
-        "sender",
-        "destinee_user",
-        "destinee_session"
-      ])
-        .uniq()
-        .value();
-    }
-
-    if (model == "resource") {
-      fields = lodash([...fields, "version"])
-        .uniq()
-        .value();
-    }
-
-    const queryModel = model == "loggedUser" ? "user" : model;
-    const queryId = model == "loggedUser" ? req.user?._id || "INVALIDID" : id;
-
-    buildQuery(queryModel, queryId, fields)
-      .lean({ virtuals: true })
-      .then(data => {
-        // Force duplicate children
-        data = JSON.parse(JSON.stringify(data));
-
-        // Remove extra virtuals
-        data = retainRequiredFields({ data, fields });
-
-        if (id && data.length == 0) {
-          throw new NotFoundError(`Can't find ${model}:${id}`);
-        }
-        return Promise.all(
-          data.map(d => addComputedFields(user, params, d, model))
-        );
       })
-      .then(data => {
-        return id
-          ? Promise.resolve(data)
-          : filterDataUser({ model, data, user: req.user });
-      })
-      .then(data => {
-        if (["theme", "resource"].includes(model) && !id) {
-          data = data.filter(t => t.name);
-        }
-        if (id && model == "resource" && data[0]?.status == RES_TO_COME) {
-          throw new ForbiddenError(`Ressource non encore disponible`);
-        }
-        console.log(`GET ${model}/${id} ${fields}: data sent`);
-        return res.json(data);
-      })
-      .catch(err => {
-        console.error(err);
-        return res.status(err.status || 500).json(err.message || err);
-      });
   }
 );
 

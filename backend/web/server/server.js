@@ -162,13 +162,12 @@ checkConfig()
         .then(res => {
           const result = res.data;
           const expected = RANDOM_ID;
-          console.log(`Result:${res.data}, expected:${RANDOM_ID}`);
-          if (result != expected) {
-            throw new Error(`Got different test values`);
+          if (result == expected) {
+            throw new Error(`Host ${getHostUrl()} is wrong`);
           }
         })
         .catch(err => {
-          console.error(`Host ${getHostUrl()} seems incorrect:${err.message}`);
+          console.error(err)
           process.exit(1);
         });
     });
