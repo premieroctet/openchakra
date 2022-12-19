@@ -87,6 +87,13 @@ export const ACTIONS: IActions = {
         components.map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
     },
   },
+  createPost: {
+    label: 'Create post',
+    options: {
+      contents: ({ components }) =>
+        components.map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+    },
+  },
   setOrderItem: {
     label: 'Set to order',
     options: {

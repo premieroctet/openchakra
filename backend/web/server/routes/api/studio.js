@@ -39,6 +39,7 @@ const login = (email, password) => {
   console.log(`Login with ${email} and ${password}`);
   return User.findOne({ email }).then(user => {
     if (!user) {
+      console.error(`No user with email ${email}`)
       throw new NotFoundError(`Invalid email or password`);
     }
     console.log(`Comparing ${password} and ${user.password}`);

@@ -27,6 +27,19 @@ export const ACTIONS = {
         return res
       })
   },
+  createPost: ({ props, index }) => {
+    const contents = getComponentDataValue(props.contents, index)
+    let url = `${API_ROOT}/action`
+    return axios
+      .post(url, {
+        action: 'createPost',
+        contents: contents,
+      })
+      .then(res => {
+        clearComponentValue(props.contents, index)
+        return res
+      })
+  },
   openPage: ({ value, model, query, props }) => {
     const queryParams = query
     let url = `/${props.page}`

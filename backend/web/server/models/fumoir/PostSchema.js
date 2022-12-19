@@ -3,7 +3,7 @@ const {schemaOptions} = require('../../utils/schemas')
 const Schema = mongoose.Schema
 
 const PostSchema = new Schema({
-  content: {
+  contents: {
     type: String,
     required: true,
   },

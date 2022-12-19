@@ -1,3 +1,4 @@
+const Post = require('../../models/Post');
 const {
   inviteGuest,
   registerToEvent,
@@ -89,8 +90,11 @@ const ACTIONS = {
   },
 
   sendMessage: ({ destinee, contents }, sender) => {
-    console.log(`Destinee:${destinee},contents:${contents},sender:${sender}`);
     return sendMessage(sender, destinee, contents);
+  },
+
+  createPost: ({contents }, sender) => {
+    return Post.create({contents, author: sender})
   },
 
   inviteGuest: ({ parent, email, phone }) => {
