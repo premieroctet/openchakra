@@ -1,3 +1,4 @@
+const moment = require('moment');
 const mongoose = require("mongoose");
 const { schemaOptions } = require("../../utils/schemas");
 const { ROLES } = require("../../../utils/fumoir/consts");
@@ -89,8 +90,13 @@ UserSchema.virtual("full_name").get(function() {
 });
 
 UserSchema.virtual("is_active").get(function() {
-  return this.subscription_start && this.subscription_end
-  && moment().isBetween(this.subscription_start, this.subscription_end)
+  const active=moment().isBetween(moment(this.subscription_start), moment(this.subscription_end))
+  return active
+});
+
+UserSchema.virtual("is_active_str").get(function() {
+  const active=moment().isBetween(moment(this.subscription_start), moment(this.subscription_end))
+  return active ? 'Actif':'Inactif'
 });
 
 module.exports = UserSchema;

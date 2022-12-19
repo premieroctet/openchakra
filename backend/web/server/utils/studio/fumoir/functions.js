@@ -74,10 +74,12 @@ const registerToEvent = ({ event, user }) => {
 
 declareEnumField({model: 'user', field: 'role', enumValues: ROLES})
 declareVirtualField({model:'user', field:'full_name', instance: "String", requires: "firstname,lastname"})
-declareVirtualField({model:'user', field:'is_active', instance: "Boolean", requires: "" })
+declareVirtualField({model:'user', field:'is_active', instance: "Boolean", requires: "subscription_start,subscription_end" })
+declareVirtualField({model:'user', field:'is_active_str', instance: "String", requires: "subscription_start,subscription_end" })
 declareEnumField({model: 'loggedUser', field: 'role', enumValues: ROLES})
 declareVirtualField({model:'loggedUser', field:'full_name', instance: "String", requires: "firstname,name"})
-declareVirtualField({model:'loggedUser', field:'is_active', instance: "Boolean", requires: "active" })
+declareVirtualField({model:'loggedUser', field:'is_active', instance: "Boolean", requires: "subscription_start,subscription_end" })
+declareVirtualField({model:'loggedUser', field:'is_active_str', instance: "String", requires: "subscription_start,subscription_end" })
 declareEnumField({model: 'booking', field: 'place', enumValues: PLACES})
 
 declareVirtualField({model: 'booking', field: 'end_date', instance: "Date", requires: ""})
