@@ -92,6 +92,10 @@ export const ACTIONS: IActions = {
     options: {
       contents: ({ components }) =>
         components.map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      media: ({ components }) =>
+        components
+          .filter(c => c.type=='UploadFile')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
     },
   },
   setOrderItem: {

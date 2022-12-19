@@ -73,7 +73,7 @@ const registerToEvent = ({ event, user }) => {
 
 
 declareEnumField({model: 'user', field: 'role', enumValues: ROLES})
-declareVirtualField({model:'user', field:'full_name', instance: "String", requires: "firstname,name"})
+declareVirtualField({model:'user', field:'full_name', instance: "String", requires: "firstname,lastname"})
 declareVirtualField({model:'user', field:'is_active', instance: "Boolean", requires: "active" })
 declareEnumField({model: 'loggedUser', field: 'role', enumValues: ROLES})
 declareVirtualField({model:'loggedUser', field:'full_name', instance: "String", requires: "firstname,name"})

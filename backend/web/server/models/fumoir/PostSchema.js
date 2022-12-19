@@ -7,9 +7,9 @@ const PostSchema = new Schema({
     type: String,
     required: true,
   },
-  media: [{ // url S3
+  media: { // url S3
     type: String,
-  }],
+  },
   date: {
     type: Date,
     default: Date.now,

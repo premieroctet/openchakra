@@ -75,6 +75,7 @@ const UploadFile = ({
   )
   const [uploadInfo, setUploadInfo] = useState('')
   const [file, setFile] = useState<File | null>()
+  const [s3File, setS3File] = useState<string|null>()
 
   const onFileNameChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
@@ -123,6 +124,7 @@ const UploadFile = ({
 
           default:
             const res = await uploadFileToS3(fileToUpload)
+            setS3File(res.Location)
             paramsBack = { ...paramsBack, ...{ value: res?.Location } }
             break
         }
@@ -148,7 +150,9 @@ const UploadFile = ({
       }
 
       await switchUploadType()
-      await saveUrl()
+      if (dataSource) {
+        await saveUrl()
+      }
     },
     [attribute, ressource_id],
   )
@@ -160,7 +164,7 @@ const UploadFile = ({
   }, [file, handleUpload])
 
   return (
-    <Box {...props}>
+    <Box {...props} data-value={s3File} display='flex' flexDirection='row'>
       <form id="uploadressource">
         <UploadZone>
           <input type="file" onChange={onFileNameChange} />
@@ -168,6 +172,7 @@ const UploadFile = ({
           {children}
         </UploadZone>
       </form>
+      <img width={100} src={s3File || undefined} />
       {uploadInfo && <Text>{uploadInfo}</Text>} {/*Component status */}
     </Box>
   )

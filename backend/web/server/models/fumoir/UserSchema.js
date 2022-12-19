@@ -83,7 +83,7 @@ const UserSchema = new Schema(
 );
 
 UserSchema.virtual("full_name").get(function() {
-  return `${this.firstname} ${this.name}`;
+  return `${this.firstname} ${this.lastname}`;
 });
 
 UserSchema.virtual("is_active", {

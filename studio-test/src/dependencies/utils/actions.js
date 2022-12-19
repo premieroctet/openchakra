@@ -29,11 +29,14 @@ export const ACTIONS = {
   },
   createPost: ({ props, index }) => {
     const contents = getComponentDataValue(props.contents, index)
+    const mediaComp = document.getElementById(props.media)
+    const value=mediaComp && mediaComp.getAttribute('data-value')
     let url = `${API_ROOT}/action`
     return axios
       .post(url, {
         action: 'createPost',
         contents: contents,
+        media: value,
       })
       .then(res => {
         clearComponentValue(props.contents, index)

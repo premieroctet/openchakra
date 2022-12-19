@@ -93,8 +93,8 @@ const ACTIONS = {
     return sendMessage(sender, destinee, contents);
   },
 
-  createPost: ({contents }, sender) => {
-    return Post.create({contents, author: sender})
+  createPost: ({contents, media }, sender) => {
+    return Post.create({contents, media, author: sender})
   },
 
   inviteGuest: ({ parent, email, phone }) => {
