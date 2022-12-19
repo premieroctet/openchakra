@@ -5,6 +5,7 @@ import { useForm } from '~hooks/useForm'
 import ColorsControl from '~components/inspector/controls/ColorsControl'
 import usePropsSelector from '~hooks/usePropsSelector'
 import SwitchControl from '~components/inspector/controls/SwitchControl'
+import TextControl from '~components/inspector/controls/TextControl'
 
 const TabsPanel = () => {
   const { setValueFromEvent } = useForm()
@@ -78,6 +79,7 @@ const TabsPanel = () => {
         </Select>
       </FormControl>
       <ColorsControl label="Color Scheme" name="colorScheme" />
+      <TextControl name="defaultIndex" label="Default Index" />
     </>
   )
 }

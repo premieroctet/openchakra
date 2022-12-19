@@ -15,6 +15,7 @@ import LinkPanel from '~components/inspector/panels/components/LinkPanel'
 import SpinnerPanel from '~components/inspector/panels/components/SpinnerPanel'
 import PopoverContentPanel from './components/PopoverContentPanel'
 import PopoverPanel from './components/PopoverPanel'
+import AccordionPanelPanel from './components/AccordionPanelPanel'
 import CloseButtonPanel from '~components/inspector/panels/components/CloseButtonPanel'
 import DividerPanel from '~components/inspector/panels/components/DividerPanel'
 import CodePanel from '~components/inspector/panels/components/CodePanel'
@@ -57,6 +58,7 @@ import TabPanel from './components/TabPanel'
 import StatArrowPanel from './components/StatArrowPanel'
 import StatLabelPanel from './components/StatLabelPanel'
 import SkeletonPanel from './components/SkeletonPanel'
+import RangeSliderPanel from '~components/inspector/panels/components/RangeSliderPanel'
 import TablePanel from './components/TablePanel'
 import ConditionalPanel from './components/ConditionalPanel'
 import LoopPanel from './components/LoopPanel'
@@ -69,6 +71,14 @@ import ModalPanel from './components/ModalPanel'
 import ModalHeaderPanel from './components/ModalHeaderPanel'
 import CardPanel from './components/CardPanel'
 import TooltipPanel from './components/TooltipPanel'
+import MenuPanel from './components/MenuPanel'
+import MenuItemOptionsPanel from './components/MenuItemOptionsPanel'
+import MenuOptionsGroupPanel from './components/MenuOptionsGroupPanel'
+import MenuGroupPanel from './components/MenuGroupPanel'
+import MenuItemPanel from './components/MenuItemPanel'
+import MenuButtonPanel from './components/MenuButtonPanel'
+import SliderPanel from '~components/inspector/panels/components/SliderPanel'
+import SliderMarkPanel from './components/SliderMarkPanel'
 
 const importView = (component: any) => {
   component = convertToPascal(component)
@@ -162,6 +172,7 @@ const Panels: React.FC<{
       {type === 'ListIcon' && <ListIconPanel />}
       {type === 'Accordion' && <AccordionPanel />}
       {type === 'AccordionItem' && <AccordionItemPanel />}
+      {type === 'AccordionPanel' && <AccordionPanelPanel />}
       {type === 'FormLabel' && <FormLabelPanel />}
       {type === 'FormHelperText' && <FormHelperTextPanel />}
       {type === 'FormErrorMessage' && <FormErrorMessagePanel />}
@@ -177,6 +188,7 @@ const Panels: React.FC<{
       {type === 'StatArrow' && <StatArrowPanel />}
       {type === 'StatLabel' && <StatLabelPanel />}
       {type === 'StatNumber' && <StatLabelPanel />}
+      {type === 'RangeSlider' && <RangeSliderPanel />}
       {type === 'Table' && <TablePanel />}
       {type === 'TableCaption' && <TableCaptionPanel />}
       {type === 'Td' && <TdPanel />}
@@ -190,6 +202,14 @@ const Panels: React.FC<{
       {type === 'Popover' && <PopoverPanel />}
       {type === 'PopoverHeader' && <PopoverContentPanel />}
       {type === 'PopoverBody' && <PopoverContentPanel />}
+      {type === 'Menu' && <MenuPanel />}
+      {type === 'MenuItemOption' && <MenuItemOptionsPanel />}
+      {type === 'MenuOptionGroup' && <MenuOptionsGroupPanel />}
+      {type === 'MenuGroup' && <MenuGroupPanel />}
+      {type === 'MenuItem' && <MenuItemPanel />}
+      {type === 'MenuButton' && <MenuButtonPanel />}
+      {type === 'Slider' && <SliderPanel />}
+      {type === 'SliderMark' && <SliderMarkPanel />}
     </>
   )
 }

@@ -22,10 +22,11 @@ const AccordionPreview: React.FC<IPreviewProps> = ({ component }) => {
   if (isOver) {
     props.bg = 'teal.50'
   }
+  delete props['defaultIndex']
 
   return (
     <Box ref={drop(ref)} {...boxProps}>
-      <Accordion {...props}>
+      <Accordion {...props} defaultIndex={0}>
         {component.children.map((key: string) => (
           <ComponentPreview key={key} componentName={key} />
         ))}
@@ -82,7 +83,7 @@ export const AccordionPanelPreview = ({ component }: IPreviewProps) => {
     props.bg = 'teal.50'
   }
 
-  return (
+  return props.showpreview ? (
     <Box ref={drop(ref)} {...boxProps}>
       <AccordionPanel {...props}>
         {component.children.map((key: string) => (
@@ -90,6 +91,8 @@ export const AccordionPanelPreview = ({ component }: IPreviewProps) => {
         ))}
       </AccordionPanel>
     </Box>
+  ) : (
+    <></>
   )
 }
 
