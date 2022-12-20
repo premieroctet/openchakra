@@ -24,6 +24,7 @@ import {
   PopoverBody,
   PopoverFooter,
   Link,
+  Text,
   list
 } from '@chakra-ui/react'
 import { CloseIcon, EditIcon, SearchIcon } from '@chakra-ui/icons'
@@ -114,7 +115,7 @@ const Menu = () => {
         backgroundColor="#2e3748"
         width="15rem"
       >
-        <Box p={0} pb={0} position="sticky" w="100%" bgColor="#2e3748" top={0}>
+        <Box p={0} pb={0} position="sticky" w="100%" bgColor="#2e3748" top={0} zIndex={2}>
           <InputGroup size="sm" mb={0}>
             <Input
               value={searchTerm}
@@ -130,7 +131,7 @@ const Menu = () => {
               }}
               zIndex={0}
             />
-            <InputRightElement zIndex={1}>
+            <InputRightElement >
               {searchTerm ? (
                 <IconButton
                   color="gray.300"
@@ -152,6 +153,7 @@ const Menu = () => {
             boxShadow="dark-lg"
             bgColor="#2e3748"
             color="white"
+            zIndex={2}
           >
             <Tab>Built-in</Tab>
             <Tab>Custom</Tab>
@@ -241,7 +243,7 @@ const Menu = () => {
                         justifyContent="space-between"
                         key={name}
                       >
-                        <Box flex={1}>
+                        <Box flex={1} width="60%">
                           <DragItem
                             key={name}
                             custom={true}
@@ -254,6 +256,7 @@ const Menu = () => {
                             {name}
                           </DragItem>
                         </Box>
+                        <Box>
                         <ButtonGroup
                           size="xs"
                           isAttached
@@ -271,6 +274,7 @@ const Menu = () => {
                           </IconButton>
                           <DeleteComponent name={name} />
                         </ButtonGroup>
+                        </Box>
                       </Flex>
                     )
                   })}
@@ -286,7 +290,7 @@ const Menu = () => {
                         justifyContent="space-between"
                         key={name}
                       >
-                        <Box flex={1}>
+                        <Box flex={1} width="60%">
                           <DragItem
                             isInstalled
                             key={name}

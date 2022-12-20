@@ -63,7 +63,7 @@ const DragItem: React.FC<ComponentItemProps> = ({
       {...boxProps}
     >
       <DragHandleIcon path="" fontSize="xs" mr={2} />
-      <Text letterSpacing="wide" fontSize="sm" textTransform="capitalize">
+      <Text letterSpacing="wide" fontSize="sm" textTransform="capitalize" overflow="hidden" whiteSpace="nowrap">
         {label}
       </Text>
       {isMeta && (
@@ -79,7 +79,7 @@ const DragItem: React.FC<ComponentItemProps> = ({
           preset
         </Box>
       )}
-      {isInstalled && (
+      {/* {isInstalled && (
         <Box
           ml={2}
           borderWidth="1px"
@@ -89,9 +89,8 @@ const DragItem: React.FC<ComponentItemProps> = ({
           borderRadius={4}
           px={1}
         >
-          BIT
         </Box>
-      )}
+      )} */}
       {soon && (
         <Box
           ml={2}
