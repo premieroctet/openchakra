@@ -25,7 +25,10 @@ export const deploy = (state: ProjectState, models: any) => {
           .fromPairs()
           .pickBy(v => v.length>0)
           .mapValues(v => v.map(err => `${err.component.id}:${err.message}`).join(','))
-        throw new Error(JSON.stringify(error, null, 2))
+          .value()
+        if (!lodash.isEmpty(error)) {
+          throw new Error(JSON.stringify(error, null, 2))
+        }
       }
       return Promise.all(
         pages.map(page => generateCode(page.pageId, state.pages, models)),
