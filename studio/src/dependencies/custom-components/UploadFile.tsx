@@ -172,7 +172,6 @@ const UploadFile = ({
           {children}
         </UploadZone>
       </form>
-      <img width={100} src={s3File || undefined} />
       {uploadInfo && <Text>{uploadInfo}</Text>} {/*Component status */}
     </Box>
   )
