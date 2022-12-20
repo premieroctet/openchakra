@@ -2,7 +2,7 @@ import camelCase from 'lodash/camelCase'
 import filter from 'lodash/filter'
 import isBoolean from 'lodash/isBoolean'
 import lodash from 'lodash'
-import { isJsonString } from '../hooks/usePropsSelector'
+
 import icons from '~iconsList'
 
 import {
@@ -10,6 +10,7 @@ import {
   CHECKBOX_TYPE,
   CONTAINER_TYPE,
   DATE_TYPE,
+  ENUM_TYPE,
   IMAGE_TYPE,
   INPUT_TYPE,
   PROGRESS_TYPE,
@@ -17,11 +18,12 @@ import {
   SOURCE_TYPE,
   TEXT_TYPE,
   UPLOAD_TYPE,
-  ENUM_TYPE,
   getDataProviderDataType,
   getFieldsForDataProvider,
-} from './dataSources'
+  isSingleDataPage,
+} from './dataSources';
 import { ProjectState, PageState } from '../core/models/project'
+import { isJsonString } from '../hooks/usePropsSelector'
 
 //const HIDDEN_ATTRIBUTES=['dataSource', 'attribute']
 const HIDDEN_ATTRIBUTES: string[] = []
@@ -137,7 +139,21 @@ type BuildBlockParams = {
   components: IComponents
   forceBuildBlock?: boolean
   pages: { [key: string]: PageState }
-  models: any
+  models: any,
+  singleDataPage: boolean,
+  noAutoSaveComponents: string[]
+}
+
+// Wether component is linked to a save action, thus must not save during onChange
+const getNoAutoSaveComponents = (components: IComponents): IComponent[] => {
+  let c=Object.values(components)
+    .filter(c => c.props?.action=='save' && c.props?.actionProps)
+    .map(c => JSON.parse(c.props.actionProps))
+  c=c.map(obj => lodash.pickBy(obj, (_, k)=> /^component_/.test(k)))
+  c=c.map(obj => Object.values(obj).filter(v => !!v))
+  c=lodash.flattenDeep(c)
+  c=lodash.uniq(c)
+  return c
 }
 
 const buildBlock = ({
@@ -146,8 +162,11 @@ const buildBlock = ({
   forceBuildBlock = false,
   pages,
   models,
+  singleDataPage,
+  noAutoSaveComponents
 }: BuildBlockParams) => {
   let content = ''
+  const singleData=isSingleDataPage(components)
   component.children.forEach((key: string) => {
     let childComponent = components[key]
     if (childComponent.type === 'DataProvider') {
@@ -171,7 +190,16 @@ const buildBlock = ({
       propsContent += ` reload={reload} `
       // Provide page data context
       if (dataProvider) {
-        propsContent += ` context={root?.[0]?._id}`
+        if (singleDataPage) {
+          propsContent += ` context={root?._id}`
+        }
+        else {
+          propsContent += ` context={root?.[0]?._id}`
+        }
+      }
+
+      if (noAutoSaveComponents.includes(childComponent.id)) {
+        propsContent += ` noautosave `
       }
 
       if (isDynamicComponent(childComponent)) {
@@ -245,7 +273,8 @@ const buildBlock = ({
           }
 
           if (propName === 'dataSource') {
-            propsContent += ` dataSourceId='${propsValue}'`
+            propsContent += ` dataSourceId={'${propsValue}'}`
+            if (propsValue) {propsContent += ` key={${propsValue.replace(/^comp-/, '')}${singleData? '': '[0]'}?._id}`}
           }
 
           if (propName === 'contextFilter') {
@@ -351,6 +380,8 @@ const buildBlock = ({
         forceBuildBlock,
         pages,
         models,
+        singleDataPage,
+        noAutoSaveComponents,
       })}
       </${componentName}>`
       } else {
@@ -367,6 +398,8 @@ const buildBlock = ({
 const buildComponents = (
   components: IComponents,
   pages: { [key: string]: PageState },
+  singleDataPage: boolean,
+  noAutoSaveComponents: string[]
 ) => {
   const codes = filter(components, comp => !!comp.componentName).map(comp => {
     return generateComponentCode({
@@ -375,6 +408,8 @@ const buildComponents = (
       forceBuildBlock: true,
       componentName: comp.componentName,
       pages,
+      singleDataPage,
+      noAutoSaveComponents
     })
   })
 
@@ -393,7 +428,9 @@ type GenerateComponentCode = {
   componentName?: string
   forceBuildBlock?: boolean
   pages: { [key: string]: PageState }
-  models: any[]
+  models: any[],
+  singleDataPage: boolean,
+  noAutoSaveComponents: string[]
 }
 
 export const generateComponentCode = ({
@@ -403,6 +440,8 @@ export const generateComponentCode = ({
   forceBuildBlock,
   pages,
   models,
+  singleDataPage,
+  noAutoSaveComponents
 }: GenerateComponentCode) => {
   let code = buildBlock({
     component,
@@ -410,6 +449,8 @@ export const generateComponentCode = ({
     forceBuildBlock,
     pages,
     models,
+    singleDataPage,
+    noAutoSaveComponents,
   })
 
   code = `
@@ -458,6 +499,8 @@ const buildHooks = (components: IComponents) => {
     return ''
   }
 
+  const singlePage=isSingleDataPage(components)
+
   const isIdInDependencyArray = dataProviders.reduce((acc, curr, i) => {
     if (curr.id === 'root') {
       acc = true
@@ -471,7 +514,7 @@ const buildHooks = (components: IComponents) => {
     dataProviders
       .map(dp => {
         const dataId = dp.id.replace(/^comp-/, '')
-        return `const [${dataId}, set${capitalize(dataId)}]=useState([])`
+        return `const [${dataId}, set${capitalize(dataId)}]=useState(${singlePage ? 'null':'[]'})`
       })
       .join(`\n`)
   code += `\n
@@ -490,9 +533,18 @@ const buildHooks = (components: IComponents) => {
         const apiUrl = `/myAlfred/api/studio/${dp.props.model}/${idPart}${
           dpFields ? `?fields=${dpFields}` : ''
         }`
-        return `get(\`${apiUrl}\`)
-        .then(res => set${capitalize(dataId)}(res.data))
+        let thenClause=singlePage ?
+         `.then(res => set${capitalize(dataId)}(res.data[0]))`
+         :
+         `.then(res => set${capitalize(dataId)}(res.data))`
+
+        let query= `get(\`${apiUrl}\`)
+        ${thenClause}
         .catch(err => alert(err?.response?.data || err))`
+        if (singlePage) {
+          query=`// For single data page\nif (id) {\n${query}\n}`
+        }
+        return query
       })
       .join('\n')}
   }, [get, ${isIdInDependencyArray ? 'id, ' : ''}refresh])\n`
@@ -567,13 +619,18 @@ export const generateCode = async (
   let filterStates = buildFilterStates(components)
   let dynamics = buildDynamics(components, extraImports)
   let maskable = buildMaskable(components, extraImports)
+  const singleDataPage=isSingleDataPage(components)
+  const noAutoSaveComponents=getNoAutoSaveComponents(components)
+
   let code = buildBlock({
     component: components.root,
     components,
     pages,
     models,
+    singleDataPage,
+    noAutoSaveComponents
   })
-  let componentsCodes = buildComponents(components, pages)
+  let componentsCodes = buildComponents(components, pages, singleDataPage, noAutoSaveComponents)
   const iconImports = [...new Set(getIconsImports(components))]
 
   const imports = [

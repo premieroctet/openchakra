@@ -1,4 +1,6 @@
+import lodash from 'lodash'
 import axios from 'axios'
+
 import { getComponentDataValue, clearComponentValue } from './values'
 
 const API_ROOT = '/myAlfred/api/studio'
@@ -164,4 +166,12 @@ export const ACTIONS = {
     }
     return axios.post(url, body)
   },
+  save: ({ value, props, context, dataSource, index }) => {
+    let url = `${API_ROOT}/${props.model}${dataSource? `/${dataSource._id}`:''}`
+    const components=lodash(props).pickBy((v, k) => /^component_/.test(k) && !!v).values()
+    const body = Object.fromEntries(components.map(c => [document.getElementById(c).getAttribute('attribute'), getComponentDataValue(c, index)||null]))
+    const httpAction=dataSource ? axios.put : axios.post
+    return httpAction(url, body)
+  },
+
 }

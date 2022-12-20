@@ -5,7 +5,8 @@ import { ACTIONS } from '../utils/actions'
 import useDebounce from '../hooks/useDebounce.hook'
 
 const withDynamicInput = Component => {
-  const Internal = ({ dataSource, context, backend, ...props }) => {
+  const Internal = ({ dataSource, noautosave, context, backend, ...props }) => {
+
     let keptValue = lodash.get(dataSource, props.attribute)
 
     const isADate = !isNaN(Date.parse(keptValue)) && new Date(Date.parse(keptValue));
@@ -25,6 +26,7 @@ const withDynamicInput = Component => {
       }
     }
 
+
     const [internalDataValue, setInternalDataValue] = useState(keptValue)
 
     const [neverTyped, setNeverTyped] = useState(true)
@@ -38,7 +40,7 @@ const withDynamicInput = Component => {
     }
 
     useEffect(() => {
-      if (!neverTyped) {
+      if (!neverTyped && !noautosave) {
         ACTIONS.putValue({
           context: dataSource?._id,
           value: debouncedValue,
@@ -53,22 +55,22 @@ const withDynamicInput = Component => {
     }, [backend, context, debouncedValue, neverTyped])
 
     return (
-      isADate instanceof Date ? 
-      <Component 
-        {...props} 
+      isADate instanceof Date ?
+      <Component
+        {...props}
         type="text"
-        value={internalDataValue} 
-        onChange={onChange} 
+        value={internalDataValue}
+        onChange={onChange}
         onFocus={function(thing) {
           thing.target.type = props?.type
         }}
         onBlur={function(thing) {
           thing.target.type = 'text'
         }}
-      /> : <Component 
-      {...props} 
-      value={internalDataValue} 
-      onChange={onChange} 
+      /> : <Component
+      {...props}
+      value={internalDataValue}
+      onChange={onChange}
     />
     )
   }

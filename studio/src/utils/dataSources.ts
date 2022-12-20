@@ -49,6 +49,10 @@ export const isMultipleDispatcher = (component: IComponent): boolean => {
   return CONTAINER_TYPE.includes(component.type)
 }
 
+export const isSingleDataPage = (components: IComponents): boolean => {
+  return components?.root?.props?.cardinality=='single'
+}
+
 export const getComponentsHierarchy = (
   component: IComponent,
   components: IComponents,
@@ -81,6 +85,7 @@ export const getDataProviderDataType = (
   dataSource: string,
   models: any,
 ): IDataType | null => {
+
   if (
     component.props.model &&
     (component.props.dataSource === dataSource ||

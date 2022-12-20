@@ -19,7 +19,14 @@ export const deploy = (state: ProjectState, models: any) => {
   return Promise.all(
     pages.map(({ pageName, components }) => validate(components)),
   )
-    .then(() => {
+    .then(res => {
+      if (res.length>0) {
+        const error=lodash(pages.map((p, idx) => [p.pageName, res[idx]]))
+          .fromPairs()
+          .pickBy(v => v.length>0)
+          .mapValues(v => v.map(err => `${err.component.id}:${err.message}`).join(','))
+        throw new Error(JSON.stringify(error, null, 2))
+      }
       return Promise.all(
         pages.map(page => generateCode(page.pageId, state.pages, models)),
       )

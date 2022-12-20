@@ -236,10 +236,36 @@ router.get("/current-user", passport.authenticate("cookie", { session: false }),
 
 router.post("/:model", passport.authenticate("cookie", { session: false }), (req, res) => {
   const model = req.params.model;
+  let params=req.body
   const context= req.query.context
-  const params=model=='order' && context ? {booking: context}:{}
+  params=model=='order' && context ? {...params, booking: context}:params
+
+  if (!model) {
+    return res.status(HTTP_CODE.BAD_REQUEST).json(`Model is required`)
+  }
+
   return mongoose.connection.models[model]
-    .create(params)
+    .create([params], {runValidators: true})
+    .then(data => {
+      return res.json(data);
+    })
+    .catch(err => {
+      return res.status(500).json(err);
+    });
+});
+
+router.put("/:model/:id", passport.authenticate("cookie", { session: false }), (req, res) => {
+  const model = req.params.model;
+  const id = req.params.id;
+  let params=req.body
+  const context= req.query.context
+  params=model=='order' && context ? {...params, booking: context}:params
+
+  if (!model || !id) {
+    return res.status(HTTP_CODE.BAD_REQUEST).json(`Model and id are required`)
+  }
+  return mongoose.connection.models[model]
+    .findByIdAndUpdate(id, params, {new: true, runValidators: true})
     .then(data => {
       return res.json(data);
     })

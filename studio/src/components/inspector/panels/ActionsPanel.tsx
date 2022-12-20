@@ -47,7 +47,7 @@ const ActionPanel = ({
                 size="sm"
                 value={actionProps[k] || ''}
               >
-                <option value={undefined}></option>
+                <option value={null}></option>
                 {optionValues.map((optionValue, i) => (
                   <option key={`acp${i}`} value={optionValue.key}>
                     {optionValue.label}

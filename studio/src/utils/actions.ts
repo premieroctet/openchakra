@@ -1,3 +1,5 @@
+import lodash from 'lodash'
+
 type IActions = {
   [key: string]: {
     label: string
@@ -123,6 +125,19 @@ export const ACTIONS: IActions = {
           .filter(c => c.type == 'Input')
           .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
     },
+  },
+  save: {
+    label: 'Save/create',
+    options: {
+      model: ({ models }) => models.map(m => ({ key: m.name, label: m.name })),
+      ...Object.fromEntries(lodash.range(10).map((idx:number) => {
+      return [
+        `component_${idx}`,
+        ({ components }) => components
+          .filter(comp => comp.props?.dataSource && comp.props?.attribute)
+          .map(comp => ({ key: comp.id, label: `${comp.type}/${comp.id}` }))
+
+      ]}))}
   },
   // Mettre un warning si les composants ne sont pas dans le même flex
   registerToEvent: {

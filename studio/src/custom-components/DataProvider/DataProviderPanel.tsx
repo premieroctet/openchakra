@@ -13,6 +13,7 @@ const capitalize = (word: string) => {
 const DataProviderPanel = () => {
   const { setValueFromEvent, setValue } = useForm()
   const model = usePropsSelector('model')
+  const cardinality = usePropsSelector('cardinality')
   const ignoreUrlParams = usePropsSelector('ignoreUrlParams')
   const modelNames = useSelector(getModelNames)
 
@@ -49,6 +50,20 @@ const DataProviderPanel = () => {
           ></Checkbox>
         </FormControl>
       )}
+      {model && <FormControl htmlFor="model" label="Page requires">
+        <Select
+          id="cardinality"
+          onChange={setValueFromEvent}
+          name="cardinality"
+          size="sm"
+          value={cardinality || ''}
+        >
+          <option value={undefined}></option>
+          <option value={'single'}>single data</option>
+          <option value={'multiple'}>multiple data</option>
+        </Select>
+      </FormControl>
+      }
     </>
   )
 }
