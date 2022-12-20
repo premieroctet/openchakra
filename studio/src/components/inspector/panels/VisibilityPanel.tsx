@@ -6,6 +6,7 @@ import usePropsSelector from '../../../hooks/usePropsSelector'
 import { List, Checkbox } from '@chakra-ui/react'
 import { getRoles } from '~core/selectors/roles'
 import { useSelector } from 'react-redux'
+import { MultiSelect } from 'react-multi-select-component'
 
 const VisibilityPanel: React.FC = () => {
   const hiddenRoles = usePropsSelector('hiddenRoles')
@@ -22,22 +23,21 @@ const VisibilityPanel: React.FC = () => {
     setValue('hiddenRoles', newRoles)
   }
 
+  const getPairs = rs => {
+    return (rs||[]).map(r => ({value: r, label: roles[r]}))
+  }
+
   return (
     <FormControl htmlFor="hiddenRoles" label="Hidden for">
-      <List>
-        {Object.keys(roles).map((role, i) => (
-          <Checkbox
-            key={`vis${i}`}
-            name={role}
-            value={role}
-            isChecked={hiddenRoles.includes(role)}
-            onChange={onRoleChange}
-          >
-            {roles[role]}
-          </Checkbox>
-        ))}
-      </List>
-    </FormControl>
+      <MultiSelect
+          options={getPairs(Object.keys(roles))}
+          value={getPairs(hiddenRoles)}
+          onChange={values => setValue('hiddenRoles', values.map(v => v.value))}
+          labelledBy="Select"
+          hasSelectAll={false}
+          disableSearch={true}
+        />
+      </FormControl>
   )
 }
 
