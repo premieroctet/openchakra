@@ -96,7 +96,7 @@ const Inspector = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [componentName, onChangeComponentName] = useState('')
   const componentsNames = useSelector(getComponentNames)
-  const warnings = useSelector(getComponentWarnings(component))
+  const warnings = []//useSelector(getComponentWarnings(component)) TODO reimplement
 
   const { clearActiveProps } = useInspectorUpdate()
 

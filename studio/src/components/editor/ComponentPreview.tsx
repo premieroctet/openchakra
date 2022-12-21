@@ -49,14 +49,17 @@ const ComponentPreview: React.FC<{
   if (!component) {
     console.error(`ComponentPreview unavailable for component ${componentName}`)
   }
-  const warnings = useSelector(getComponentWarnings(component))
 
-  // Light red background in case of warnings
-  if (showOverview) {
-    if (warnings.length > 0) {
-      forwardedProps.bgColor = 'red.100'
-    }
-  }
+  //* TODO reimplement
+  // const warnings = useSelector(getComponentWarnings(component))
+  //
+  // // Light red background in case of warnings
+  // if (showOverview) {
+  //   if (warnings.length > 0) {
+  //     forwardedProps.bgColor = 'red.100'
+  //   }
+  // }
+
   const type = (component && component.type) || null
 
   const extraPreview = extraPreviews[type]
