@@ -32,6 +32,7 @@ export const useInteractive = (
 
   const ref = useRef<HTMLDivElement>(null)
   let props = {
+    id: component.id,
     ...whatTheProps,
     onMouseOver: (event: MouseEvent) => {
       event.stopPropagation()
