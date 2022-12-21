@@ -56,15 +56,15 @@ const UploadFile = ({
   attribute,
   value,
   backend,
-  ressource_id,
   children,
+  reload,
   ...props
 }: {
   dataSource: { _id: null } | null
   attribute: string
   value: string
   backend: string
-  ressource_id: string
+  reload: any
   children: React.ReactNode
 }) => {
   FileManager.initialize(
@@ -89,7 +89,7 @@ const UploadFile = ({
 
       let paramsBack = {
         action: 'put',
-        parent: ressource_id,
+        parent: dataSource?._id,
         attribute,
       }
 
@@ -154,7 +154,7 @@ const UploadFile = ({
         await saveUrl()
       }
     },
-    [attribute, dataSource, ressource_id],
+    [attribute, dataSource],
   )
 
   useEffect(() => {
