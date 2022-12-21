@@ -99,4 +99,11 @@ UserSchema.virtual("is_active_str").get(function() {
   return active ? 'Actif':'Inactif'
 });
 
+// Returns my posts
+UserSchema.virtual("posts", {
+  ref: "post", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "author" // is equal to foreignField
+});
+
 module.exports = UserSchema;
