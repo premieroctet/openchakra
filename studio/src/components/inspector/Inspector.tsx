@@ -16,7 +16,6 @@ import {
   ModalBody,
   FormControl,
   FormLabel,
-  IconButton,
   Input,
   FormErrorMessage,
   FormHelperText,
@@ -154,11 +153,10 @@ const Inspector = () => {
         >
           <Flex justifyContent="space-between">
           {isRoot ? 'Document' : type}<br/>{component.id}
-          <IconButton
+          <SearchIcon
             onClick={() => {
               setModalSearchOpen(true)
             }}
-            icon={<SearchIcon />}
           />
           {warnings.length>0 ?
             <Tooltip label={<Box>{warnings.map(w => <p>{w.message}</p>)}</Box>}>
