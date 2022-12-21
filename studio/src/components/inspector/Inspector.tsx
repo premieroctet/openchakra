@@ -1,5 +1,6 @@
 import React, { useState, memo, useEffect, useMemo } from 'react'
-import { CheckIcon, CopyIcon, EditIcon, WarningIcon } from '@chakra-ui/icons';
+import lodash from 'lodash'
+import { CheckIcon, CopyIcon, EditIcon, WarningIcon, SearchIcon } from '@chakra-ui/icons';
 import { FiTrash2 } from 'react-icons/fi'
 import { GoRepo, GoCode } from 'react-icons/go'
 import { IoMdRefresh } from 'react-icons/io'
@@ -15,6 +16,7 @@ import {
   ModalBody,
   FormControl,
   FormLabel,
+  IconButton,
   Input,
   FormErrorMessage,
   FormHelperText,
@@ -96,6 +98,10 @@ const Inspector = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [componentName, onChangeComponentName] = useState('')
   const componentsNames = useSelector(getComponentNames)
+  const components = useSelector(getComponents)
+
+  const [isModalSearchOpen, setModalSearchOpen] = useState(false)
+
   const warnings = []//useSelector(getComponentWarnings(component)) TODO reimplement
 
   const { clearActiveProps } = useInspectorUpdate()
@@ -148,6 +154,12 @@ const Inspector = () => {
         >
           <Flex justifyContent="space-between">
           {isRoot ? 'Document' : type}<br/>{component.id}
+          <IconButton
+            onClick={() => {
+              setModalSearchOpen(true)
+            }}
+            icon={<SearchIcon />}
+          />
           {warnings.length>0 ?
             <Tooltip label={<Box>{warnings.map(w => <p>{w.message}</p>)}</Box>}>
               <WarningIcon color='red.500' />
@@ -269,6 +281,24 @@ const Inspector = () => {
           </ModalContent>
         </ModalOverlay>
       </Modal>
+      <Modal isOpen={isModalSearchOpen} onClose={() => setModalSearchOpen(false)}>
+        <ModalContent>
+          <ModalHeader>Select component</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody flexDirection='row'>
+            {lodash.sortBy(Object.values(components), c => c.id).map(comp =>(
+              <p>
+              <Link onClick={() => {
+                dispatch.project.select(comp.id);
+                document.getElementById(comp.id)?.scrollIntoView();
+                setModalSearchOpen(false)
+              }}>{comp.id}/{comp.type}</Link>
+              </p>
+            ))}
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+
     </RightPanel>
   )
 }
