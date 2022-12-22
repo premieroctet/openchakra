@@ -39,8 +39,8 @@ OrderSchema.virtual("total_price").get(function() {
 });
 
 OrderSchema.virtual("paid").get(function() {
-  if (!this.items) {
-    return true
+  if (!this.items || this.items.length==0) {
+    return false
   }
   return this.items.every(i => i.paid==true)
 });

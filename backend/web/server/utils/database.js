@@ -171,6 +171,7 @@ const buildPopulate = (field, model) => {
 };
 
 const buildPopulates = (fields, model) => {
+
   // TODO Bug: in ['program.themes', 'program.otherref']
   // should return {path: 'program', populate: [{path: 'themes'}, {path: 'otherref'}]}
   // but today return {path: 'program', populate: {path: 'themes'}]}

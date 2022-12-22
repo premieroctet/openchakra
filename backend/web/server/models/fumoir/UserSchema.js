@@ -106,7 +106,7 @@ UserSchema.virtual("posts", {
   foreignField: "author" // is equal to foreignField
 });
 
-// Returns my posts
+// Returns my bookings
 UserSchema.virtual("bookings", {
   ref: "booking", // The Model to use
   localField: "_id", // Find in Model, where localField

@@ -95,6 +95,11 @@ declareVirtualField({model: 'user', field: 'bookings', instance: 'Array', requir
     instance: 'ObjectID',
     options: {ref: 'booking'}}})
 
+declareVirtualField({model: 'user', field: 'events', instance: 'Array', requires: '', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'event'}}})
+
 declareEnumField({model: 'loggedUser', field: 'role', enumValues: ROLES})
 declareVirtualField({model: 'loggedUser', field: 'full_name', instance: 'String', requires: 'firstname,name'})
 declareVirtualField({model: 'loggedUser', field: 'is_active', instance: 'Boolean', requires: 'subscription_start,subscription_end'})
@@ -109,6 +114,10 @@ declareVirtualField({model: 'loggedUser', field: 'bookings', instance: 'Array', 
     instance: 'ObjectID',
     options: {ref: 'booking'}}})
 
+declareVirtualField({model: 'loggedUser', field: 'events', instance: 'Array', requires: '', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'event'}}})
 
 declareEnumField({model: 'booking', field: 'place', enumValues: PLACES})
 
@@ -117,6 +126,8 @@ declareVirtualField({model: 'booking', field: 'orders', instance: 'Array', requi
   caster: {
     instance: 'ObjectID',
     options: {ref: 'order'}}})
+declareVirtualField({model: 'booking', field: 'paid', instance: 'Number', requires: 'orders'})
+
 declareVirtualField({model: 'cigar', field: 'net_price', instance: 'Number', requires: 'price,vat_rate'})
 declareVirtualField({model: 'cigar', field: 'reviews', instance: 'review', requires: ''})
 declareVirtualField({model: 'company', field: 'full_name', instance: 'String', requires: 'name'})

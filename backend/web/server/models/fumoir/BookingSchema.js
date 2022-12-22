@@ -69,5 +69,12 @@ BookingSchema.virtual('orders', {
   foreignField: 'booking', // is equal to foreignField
 })
 
+BookingSchema.virtual("paid").get(function() {
+  if (!this.orders || this.orders.length==0) {
+    return false
+  }
+  return this.orders.every(i => i.paid==true)
+});
+
 
 module.exports = BookingSchema
