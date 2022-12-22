@@ -137,7 +137,9 @@ export const ACTIONS: IActions = {
           .filter(comp => comp.props?.dataSource && comp.props?.attribute)
           .map(comp => ({ key: comp.id, label: `${comp.type}/${comp.id}` }))
 
-      ]}))}
+      ]})),
+    },
+    next: ['openPage'],
   },
   // Mettre un warning si les composants ne sont pas dans le même flex
   registerToEvent: {
