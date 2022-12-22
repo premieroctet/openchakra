@@ -113,4 +113,12 @@ UserSchema.virtual("bookings", {
   foreignField: "booking_user" // is equal to foreignField
 });
 
+// Returns my bookings
+UserSchema.virtual("events", {
+  ref: "event", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "members", // is equal to foreignField
+  match: user => { console.log(`Testing with ${JSON.stringify(user)}`); return({members: user._id})}
+});
+
 module.exports = UserSchema;
