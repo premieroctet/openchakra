@@ -149,7 +149,10 @@ export const ACTIONS: IActions = {
   // Mettre un warning si les composants ne sont pas dans le même flex
   pay: {
     label: 'Pay',
-    options: {},
+    options: {
+      redirect: ({ pages }) =>
+        Object.values(pages).map(p => ({ key: p.pageId, label: p.pageName })),
+    },
   },
   // FUMOIR
 }

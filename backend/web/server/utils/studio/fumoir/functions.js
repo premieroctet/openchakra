@@ -90,6 +90,11 @@ declareVirtualField({model: 'user', field: 'posts', instance: 'Array', requires:
     instance: 'ObjectID',
     options: {ref: 'post'}}})
 
+declareVirtualField({model: 'user', field: 'bookings', instance: 'Array', requires: '', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'booking'}}})
+
 declareEnumField({model: 'loggedUser', field: 'role', enumValues: ROLES})
 declareVirtualField({model: 'loggedUser', field: 'full_name', instance: 'String', requires: 'firstname,name'})
 declareVirtualField({model: 'loggedUser', field: 'is_active', instance: 'Boolean', requires: 'subscription_start,subscription_end'})
@@ -98,6 +103,12 @@ declareVirtualField({model: 'loggedUser', field: 'posts', instance: 'Array', req
   caster: {
     instance: 'ObjectID',
     options: {ref: 'post'}}})
+
+declareVirtualField({model: 'loggedUser', field: 'bookings', instance: 'Array', requires: '', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'booking'}}})
+
 
 declareEnumField({model: 'booking', field: 'place', enumValues: PLACES})
 
