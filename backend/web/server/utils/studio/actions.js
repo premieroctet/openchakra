@@ -1,14 +1,15 @@
-const Post = require('../../models/Post');
+const url = require('url')
+const Post = require('../../models/Post')
+const UserSessionData = require('../../models/UserSessionData')
+const {NotFoundError} = require('../errors')
+const Program = require('../../models/Program')
 const {
   inviteGuest,
+  payOrder,
   registerToEvent,
   removeOrderItem,
-  setOrderItem
-} = require("./fumoir/functions")
-const url = require("url")
-const UserSessionData = require("../../models/UserSessionData")
-const { NotFoundError } = require("../errors")
-const Program = require("../../models/Program")
+  setOrderItem,
+} = require('./fumoir/functions')
 const {
   addChild,
   moveChildInParent,
@@ -18,104 +19,110 @@ const {
   getSession,
   login,
   putAttribute,
-  sendMessage
-} = require("./aftral_studio/functions")
+  sendMessage,
+} = require('./aftral_studio/functions')
 
 const ACTIONS = {
-  login: ({ email, password }) => {
-    return login(email, password);
+  login: ({email, password}) => {
+    return login(email, password)
   },
 
-  put: ({ parent, attribute, value }, user) => {
-    return putAttribute({ parent, attribute, value, user });
+  put: ({parent, attribute, value}, user) => {
+    return putAttribute({parent, attribute, value, user})
   },
 
-  publish: ({ id }) => {
+  publish: ({id}) => {
     return Program.findOneAndUpdate(
-      { _id: id },
-      { published: true },
-      { new: true, runValidators: true }
+      {_id: id},
+      {published: true},
+      {new: true, runValidators: true},
     ).then(result => {
-      console.log(`result publish ${JSON.stringify(result)}`);
+      console.log(`result publish ${JSON.stringify(result)}`)
       if (!result) {
-        throw new NotFoundError(`Program ${id} not found`);
+        throw new NotFoundError(`Program ${id} not found`)
       }
-      return result;
-    });
+      return result
+    })
   },
 
-  levelUp: ({ parent, child }) => {
-    return moveChildInParent(parent, child, true);
+  levelUp: ({parent, child}) => {
+    return moveChildInParent(parent, child, true)
   },
 
-  levelDown: ({ parent, child }) => {
-    return moveChildInParent(parent, child, false);
+  levelDown: ({parent, child}) => {
+    return moveChildInParent(parent, child, false)
   },
 
-  addSpentTime: ({ id, duration }, user, referrer) => {
-    const params = url.parse(referrer, true).query;
+  addSpentTime: ({id, duration}, user, referrer) => {
+    const params = url.parse(referrer, true).query
     return UserSessionData.findOneAndUpdate(
-      { user: user._id },
-      { user: user._id },
-      { upsert: true, runValidators: true }
+      {user: user._id},
+      {user: user._id},
+      {upsert: true, runValidators: true},
     ).then(data => {
-      const spentData = data?.spent_times.find(d => d?.resource == id);
+      const spentData = data?.spent_times.find(d => d?.resource == id)
       if (spentData) {
-        spentData.spent_time += duration;
-      } else {
-        data.spent_times.push({ resource: id, spent_time: duration });
+        spentData.spent_time += duration
       }
-      return data.save();
-    });
+      else {
+        data.spent_times.push({resource: id, spent_time: duration})
+      }
+      return data.save()
+    })
   },
 
-  delete: ({ parent, child }) => {
-    return removeChildFromParent(parent, child);
+  delete: ({parent, child}) => {
+    return removeChildFromParent(parent, child)
   },
 
-  addChild: ({ parent, child }) => {
-    return addChild(parent, child);
+  addChild: ({parent, child}) => {
+    return addChild(parent, child)
   },
 
-  next: ({ id }, user, referrer) => {
-    return getNext(id, user, referrer);
+  next: ({id}, user, referrer) => {
+    return getNext(id, user, referrer)
   },
 
-  previous: ({ id }) => {
-    return getPrevious(id);
+  previous: ({id}) => {
+    return getPrevious(id)
   },
 
-  session: ({ id }) => {
-    return getSession(id);
+  session: ({id}) => {
+    return getSession(id)
   },
 
-  sendMessage: ({ destinee, contents }, sender) => {
-    return sendMessage(sender, destinee, contents);
+  sendMessage: ({destinee, contents}, sender) => {
+    return sendMessage(sender, destinee, contents)
   },
 
-  createPost: ({contents, media }, sender) => {
+  createPost: ({contents, media}, sender) => {
     return Post.create({contents, media, author: sender})
   },
 
-  inviteGuest: ({ parent, email, phone }) => {
-    return inviteGuest({ eventOrBooking: parent, email, phone });
+  inviteGuest: ({parent, email, phone}) => {
+    return inviteGuest({eventOrBooking: parent, email, phone})
   },
 
-  addOrderItem: ({ context, parent, quantity }) => {
-    return addOrderItem({ order: context, product: parent, quantity });
+  addOrderItem: ({context, parent, quantity}) => {
+    return addOrderItem({order: context, product: parent, quantity})
   },
 
-  setOrderItem: ({ context, parent, quantity }) => {
-    return setOrderItem({ order: context, product: parent, quantity });
+  setOrderItem: ({context, parent, quantity}) => {
+    return setOrderItem({order: context, product: parent, quantity})
   },
 
-  removeOrderItem: ({ context, parent }) => {
-    return removeOrderItem({ order: context, item: parent });
+  removeOrderItem: ({context, parent}) => {
+    return removeOrderItem({order: context, item: parent})
   },
 
-  registerToEvent: ({ context }, user) => {
-    return registerToEvent({ event: context, user });
-  }
-};
+  registerToEvent: ({context}, user) => {
+    return registerToEvent({event: context, user})
+  },
 
-module.exports = { ACTIONS };
+  pay: ({context}, user) => {
+    return payOrder({order: context, user})
+  },
+
+}
+
+module.exports = {ACTIONS}
