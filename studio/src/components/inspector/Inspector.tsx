@@ -53,6 +53,38 @@ import {
 } from '../../core/selectors/dataSources';
 import ActionButton from './ActionButton'
 
+const ComponentLink = ({componentid, children, closeFn}) => {
+  const dispatch = useDispatch()
+
+  return (
+    <Link onClick={() => {
+      dispatch.project.select(componentid)
+      document.getElementById(componentid)?.scrollIntoView()
+      closeFn()
+    }}>{children}</Link>
+  )
+}
+
+const TreeRenderer = ({componentid, components, level, closeFn}) => {
+  console.log(`closeFn:${closeFn}`)
+  componentid = componentid || 'root'
+  level = level || 0
+  const node=components[componentid]
+  if (node) {
+    return (
+      <Box ml={level}>
+        <ComponentLink componentid={componentid} closeFn={closeFn}>{node.type}/{node.id}</ComponentLink>
+        <>
+        {node.children.map(c =>
+          <TreeRenderer componentid={c} components={components} level={level+1} closeFn={closeFn} />
+        )}
+        </>
+      </Box>
+    )
+  }
+  return null
+}
+
 const CodeActionButton = memo(() => {
   const [isLoading, setIsLoading] = useState(false)
   const { onCopy, hasCopied } = useClipboard()
@@ -280,19 +312,11 @@ const Inspector = () => {
         </ModalOverlay>
       </Modal>
       <Modal isOpen={isModalSearchOpen} onClose={() => setModalSearchOpen(false)}>
-        <ModalContent>
+        <ModalContent maxW="50%">
           <ModalHeader>Select component</ModalHeader>
           <ModalCloseButton />
           <ModalBody flexDirection='row'>
-            {lodash.sortBy(Object.values(components), c => c.id).map(comp =>(
-              <p>
-              <Link onClick={() => {
-                dispatch.project.select(comp.id);
-                document.getElementById(comp.id)?.scrollIntoView();
-                setModalSearchOpen(false)
-              }}>{comp.id}/{comp.type}</Link>
-              </p>
-            ))}
+            <TreeRenderer components={components} closeFn={()=>setModalSearchOpen(false)} />
           </ModalBody>
         </ModalContent>
       </Modal>
