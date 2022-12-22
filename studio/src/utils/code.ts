@@ -533,7 +533,7 @@ const buildHooks = (components: IComponents) => {
         const apiUrl = `/myAlfred/api/studio/${dp.props.model}/${idPart}${
           dpFields ? `?fields=${dpFields}` : ''
         }`
-        let thenClause=singlePage ?
+        let thenClause=dp.id=='root' && singlePage ?
          `.then(res => set${capitalize(dataId)}(res.data[0]))`
          :
          `.then(res => set${capitalize(dataId)}(res.data))`
@@ -541,7 +541,7 @@ const buildHooks = (components: IComponents) => {
         let query= `get(\`${apiUrl}\`)
         ${thenClause}
         .catch(err => alert(err?.response?.data || err))`
-        if (singlePage) {
+        if (dp.id=='root' && singlePage) {
           query=`// For single data page\nif (id) {\n${query}\n}`
         }
         return query
