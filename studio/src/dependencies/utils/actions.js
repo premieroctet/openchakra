@@ -174,4 +174,13 @@ export const ACTIONS = {
     return httpAction(url, body)
   },
 
+  pay: ({ context }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'pay',
+      context,
+    }
+    return axios.post(url, body)
+  },
+
 }

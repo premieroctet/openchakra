@@ -146,6 +146,12 @@ export const ACTIONS: IActions = {
     next: ['openPage'],
   },
   // FUMOIR
+  // Mettre un warning si les composants ne sont pas dans le même flex
+  pay: {
+    label: 'Pay',
+    options: {},
+  },
+  // FUMOIR
 }
 
 export const allowsActions = (component: IComponent) => {
