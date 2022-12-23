@@ -430,6 +430,17 @@ const callPreprocessGet = data => {
   return preprocessGet(data)
 }
 
+// Post create data, allows to create extra data, etc, etc
+let postCreateData = data => Promise.resolve(data)
+
+const setPostCreateData = fn => {
+  postCreateData = fn
+}
+
+const callPostCreateData = data => {
+  return postCreateData(data)
+}
+
 module.exports = {
   hasRefs,
   MONGOOSE_OPTIONS,
@@ -454,4 +465,6 @@ module.exports = {
   filterDataUser,
   setPreprocessGet,
   callPreprocessGet,
+  setPostCreateData,
+  callPostCreateData,
 };

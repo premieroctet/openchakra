@@ -1,5 +1,15 @@
+const {
+  getDataModel,
+  getProductionPort,
+  getProductionRoot
+} = require('../../../config/config');
+const {
+  callPostCreateData,
+  callPreprocessGet,
+  filterDataUser,
+  retainRequiredFields
+} = require('../../utils/database');
 const User = require('../../models/User');
-const { getDataModel } = require('../../../config/config');
 require(`../../utils/studio/${getDataModel()}/functions`);
 const path = require("path")
 const {promises: fs} = require("fs")
@@ -10,11 +20,7 @@ const bcrypt = require("bcryptjs")
 const express = require("express")
 const mongoose = require("mongoose")
 const passport = require("passport")
-const {
-  getProductionRoot,
-  getProductionPort
-} = require("../../../config/config");
-const { retainRequiredFields, filterDataUser, callPreprocessGet } = require("../../utils/database")
+
 const {
   ROLES,
   RES_TO_COME
@@ -246,10 +252,14 @@ router.post("/:model", passport.authenticate("cookie", { session: false }), (req
 
   return mongoose.connection.models[model]
     .create([params], {runValidators: true})
+    .then(([data]) => {
+      return callPostCreateData({model, params, data})
+    })
     .then(data => {
       return res.json(data);
     })
     .catch(err => {
+      console.error(err)
       return res.status(500).json(err);
     });
 });

@@ -52,6 +52,10 @@ const BookingSchema = new Schema(
       enum: [...Object.keys(PLACES)],
       required: false, // required: true,
     },
+    orders: [{
+      type: Schema.Types.ObjectId,
+      ref: 'order',
+    }],
   },
   schemaOptions,
 )
@@ -63,18 +67,12 @@ BookingSchema.virtual('end_date').get(function() {
     null
 })
 
-BookingSchema.virtual('orders', {
-  ref: 'order', // The Model to use
-  localField: '_id', // Find in Model, where localField
-  foreignField: 'booking', // is equal to foreignField
-})
-
-BookingSchema.virtual("paid").get(function() {
+BookingSchema.virtual('paid').get(function() {
   if (!this.orders || this.orders.length==0) {
     return false
   }
   return this.orders.every(i => i.paid==true)
-});
+})
 
 
 module.exports = BookingSchema

@@ -3,6 +3,7 @@ const {
   declareEnumField,
   declareVirtualField,
   getModel,
+  setPostCreateData,
 } = require('../../database')
 const {PLACES, ROLES} = require('../../../../utils/fumoir/consts')
 const {BadRequestError, NotFoundError} = require('../../errors')
@@ -80,6 +81,22 @@ const registerToEvent = ({event, user}) => {
   return Event.findByIdAndUpdate(event, {$addToSet: {members: user}})
 }
 
+const postCreate = ({model, params, data}) => {
+  if (model=='booking') {
+    return Order.create({booking: data._id})
+      .then(order => {
+        console.log(`Created ${order}`)
+        data.orders=[order]
+        return data.save()
+      })
+  }
+
+  return data
+
+}
+
+setPostCreateData(postCreate)
+
 
 declareEnumField({model: 'user', field: 'role', enumValues: ROLES})
 declareVirtualField({model: 'user', field: 'full_name', instance: 'String', requires: 'firstname,lastname'})
@@ -122,10 +139,6 @@ declareVirtualField({model: 'loggedUser', field: 'events', instance: 'Array', re
 declareEnumField({model: 'booking', field: 'place', enumValues: PLACES})
 
 declareVirtualField({model: 'booking', field: 'end_date', instance: 'Date', requires: ''})
-declareVirtualField({model: 'booking', field: 'orders', instance: 'Array', requires: '', multiple: true,
-  caster: {
-    instance: 'ObjectID',
-    options: {ref: 'order'}}})
 declareVirtualField({model: 'booking', field: 'paid', instance: 'Number', requires: 'orders'})
 
 declareVirtualField({model: 'cigar', field: 'net_price', instance: 'Number', requires: 'price,vat_rate'})
