@@ -4,11 +4,10 @@ import FormControl from '~components/inspector/controls/FormControl'
 import { useForm } from '~hooks/useForm'
 import usePropsSelector from '~hooks/usePropsSelector'
 import SwitchControl from '~components/inspector/controls/SwitchControl'
+import TextControl from '~components/inspector/controls/TextControl'
 
 const TooltipPanel = () => {
   const { setValueFromEvent } = useForm()
-  const label = usePropsSelector('label')
-  const ariaLabel = usePropsSelector('aria-label')
   const placement = usePropsSelector('placement')
 
   return (
@@ -40,24 +39,8 @@ const TooltipPanel = () => {
           <option>left-end</option>
         </Select>
       </FormControl>
-      <FormControl label="Label">
-        <Input
-          size="sm"
-          value={label || ''}
-          type="text"
-          name="label"
-          onChange={setValueFromEvent}
-        />
-      </FormControl>
-      <FormControl label="Aria Label">
-        <Input
-          size="sm"
-          value={ariaLabel || ''}
-          type="text"
-          name="aria-label"
-          onChange={setValueFromEvent}
-        />
-      </FormControl>
+      <TextControl name="label" label="Label" />
+      <TextControl name="aria-label" label="Aria Label" />
     </>
   )
 }
