@@ -28,7 +28,6 @@ import useDispatch from '~hooks/useDispatch'
 import API from '~custom-components/api'
 import ThemeCustomStyles from './CustomStyles'
 import ThemeColorPalette from './ThemeColorPalette'
-import ThemeLayers from './ThemeLayers'
 import ThemeFonts from './ThemeFonts'
 
 const Themer = () => {
@@ -39,7 +38,7 @@ const Themer = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    // TODO: baseStyle, parts, fonts, layer & text styles
+    // TODO: layer & text styles
     const updateThemeJson = async () => {
       if (themePath)
         await API.post('/save-theme', {

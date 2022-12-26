@@ -31,7 +31,6 @@ import ComponentPreview from '~components/editor/ComponentPreview'
 import { omit } from 'lodash'
 import myTheme from './myTheme'
 import Fonts from '~components/Fonts'
-// import '@fontsource/aladin'
 
 export const themeColors: any = Object.keys(
   omit(baseTheme.colors, ['transparent', 'current', 'black', 'white']),
