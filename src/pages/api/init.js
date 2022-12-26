@@ -34,7 +34,6 @@ export default async function handler(req, res) {
     let installedList = JSON.parse(fs.readFileSync('src/installed-components/installedList.json', {
       encoding: 'utf-8',
     }))
-    console.log(installedList, "sjbjjkb");
 
     Object.keys(jsons).map(async component => {
       // 2.1 Read json
