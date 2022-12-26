@@ -17,13 +17,9 @@ import {
   Tab,
   LightMode,
 } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import {
-  getNewTheme,
-  getTheme,
-  getThemePath,
-} from '~core/selectors/customComponents'
+import { getNewTheme, getThemePath } from '~core/selectors/customComponents'
 import useDispatch from '~hooks/useDispatch'
 import API from '~custom-components/api'
 import ThemeCustomStyles from './CustomStyles'
@@ -32,7 +28,6 @@ import ThemeFonts from './ThemeFonts'
 
 const Themer = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const themeState = useSelector(getTheme)
   const newThemeState = useSelector(getNewTheme)
   const themePath = useSelector(getThemePath)
   const dispatch = useDispatch()
@@ -43,7 +38,7 @@ const Themer = () => {
       if (themePath)
         await API.post('/save-theme', {
           themePath,
-          themeState,
+          themeState: newThemeState,
         })
     }
     dispatch.app.toggleLoader()

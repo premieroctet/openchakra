@@ -54,11 +54,11 @@ const Menu = () => {
 
   useEffect(() => {
     const initFunction = async () => {
-      const { newComponentsList, themeJsonPath } = await API.post('/init').then(
-        res => res.data,
-      )
+      const { newComponentsList, themePath, newTheme } = await API.post(
+        '/init',
+      ).then(res => res.data)
       dispatch.customComponents.updateCustomComponents(newComponentsList)
-      dispatch.customComponents.setThemePath(themeJsonPath)
+      dispatch.customComponents.setTheme(themePath, newTheme)
     }
     dispatch.app.toggleLoader()
     initFunction()

@@ -24,7 +24,6 @@ import {
   getCustomComponents,
   getNewTheme,
   getSelectedCustomComponentId,
-  getTheme,
 } from '~core/selectors/customComponents'
 import { getShowLayout, getShowCode } from '~core/selectors/app'
 import ComponentPreview from '~components/editor/ComponentPreview'
@@ -57,7 +56,6 @@ const Editor: React.FC = () => {
   const showCode = useSelector(getShowCode)
   const showLayout = useSelector(getShowLayout)
   const components = useSelector(getComponents)
-  const themeState = useSelector(getTheme)
   const newThemeState = useSelector(getNewTheme)
   const dispatch = useDispatch()
 

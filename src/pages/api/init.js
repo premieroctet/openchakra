@@ -20,15 +20,15 @@ async function getJsons() {
     const { comp, dir } = getComponentWithLocation(element)
     jsons[comp] = dir
   })
-  return { jsons, themeJsonPath: themeJsonPath[0] }
+  return { jsons, themePath: themeJsonPath[0] }
 }
 
 export default async function handler(req, res) {
   // 1. load initial components with paths & themeJson Path
-  const { jsons, themeJsonPath } = await getJsons()
+  const { jsons, themePath } = await getJsons()
 
-  // 2 Write files for initial components
   try {
+    // 2 Write files for initial components
     Object.keys(jsons).map(async component => {
       // 2.1 Read json
       const fileContent = fs.readFileSync(
@@ -67,8 +67,13 @@ export default async function handler(req, res) {
       )
       await Promise.all([writePreview, writePanel, writeOcTsx])
     })
+
+    // 3 Read theme.json
+    const fileContent = fs.readFileSync(themePath, { encoding: 'utf-8' })
+    const newTheme = JSON.parse(fileContent)
+
     res.statusCode = 200
-    res.json({ newComponentsList: jsons, themeJsonPath })
+    res.json({ newComponentsList: jsons, themePath, newTheme })
   } catch (err) {
     console.log(err)
     res.statusCode = 400
