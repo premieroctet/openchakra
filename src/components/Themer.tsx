@@ -4,7 +4,6 @@ import {
   DeleteIcon,
   InfoOutlineIcon,
 } from '@chakra-ui/icons'
-import { Select as MultiSelect } from 'chakra-react-select'
 import {
   Button,
   ChakraProvider,
@@ -237,47 +236,6 @@ const ThemeLayers = () => {
                   <Divider />
                 </Stack>
                 <Text>Applies to: </Text>
-                <MultiSelect
-                  maxMenuHeight={160}
-                  menuPlacement="top"
-                  isMulti
-                  name={'layer' + i}
-                  options={componentsWithLabel}
-                  placeholder="All (if none selected)"
-                  closeMenuOnSelect={false}
-                  size="sm"
-                  colorScheme="teal"
-                  tagVariant="outline"
-                  isDisabled={!i}
-                  selectedOptionStyle="check"
-                  value={layer.components?.map((comp: string) => ({
-                    label: comp,
-                    value: comp,
-                  }))}
-                  hideSelectedOptions={false}
-                  onChange={comps => {
-                    dispatch.customComponents.updateLayerComponents(
-                      i,
-                      comps.map(c => c.value),
-                    )
-                  }}
-                />
-                {/* <Select
-                    variant="flushed"
-                    px={2}
-                    value={selectedOption}
-                    onChange={e => setSelectedOption(e.target.value)}
-                    isDisabled={!i}
-                    placeholder="All"
-                  >
-                    {Object.keys(baseTheme.components).map((comp: any) => {
-                      return (
-                        <option key={comp} value={comp}>
-                          {comp}
-                        </option>
-                      )
-                    })}
-                  </Select> */}
               </AccordionPanel>
             </AccordionItem>
           )
