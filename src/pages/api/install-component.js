@@ -30,6 +30,8 @@ export default async function handler(req, res) {
     installedList[componentName] = componentPath;
     fs.writeFileSync("src/installed-components/installedList.json",JSON.stringify(installedList),"utf-8");
 
+    shell.exec(`pnpm i ${req.body.path}`)
+
     res.status(200).json(componentName)
   } catch (err) {
     console.log(err)
