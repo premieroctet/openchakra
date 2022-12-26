@@ -928,7 +928,7 @@ export const generateICPreview = async (
 
   let code = `import React from 'react'
   import { useDropComponent } from '~hooks/useDropComponent'
-  import { useInstalledInteractive } from '~hooks/useInstalledInteractive'
+  import { useInteractive } from '~hooks/useInteractive'
   import { Box } from "@chakra-ui/react";
 
   ${`import { ${fileName} } from '${selectedComponent}';`}
@@ -940,7 +940,7 @@ export const generateICPreview = async (
   const ${fileName}Preview = ({ component }: Props) => {
 
   const { isOver } = useDropComponent(component.id)
-  const { props, ref } = useInstalledInteractive(component, true)
+  const { props, ref } = useInteractive(component, true)
 
   if (isOver) {
       props.bg = 'teal.50'
