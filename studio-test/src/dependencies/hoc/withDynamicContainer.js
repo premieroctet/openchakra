@@ -1,6 +1,7 @@
 import React from 'react'
 import lodash from 'lodash'
-import util from 'util'
+import {getComponentDataValue} from '../utils/values'
+
 const normalize = str => {
   str = str
     ? str
@@ -63,9 +64,10 @@ const setRecurseDataSource = (
   }
 }
 const withDynamicContainer = Component => {
-  const FILTER_ATTRIBUTES = ['code', 'name', 'short_name', 'description']
+  const FILTER_ATTRIBUTES = ['code', 'name', 'short_name', 'description', 'title']
 
   const internal = props => {
+
     if (!props.dataSource) {
       return null
     }
@@ -78,12 +80,18 @@ const withDynamicContainer = Component => {
       const contextIds = props.contextFilter.map(o => o._id.toString())
       orgData = orgData.filter(d => contextIds.includes(d._id))
     }
-    if (props.textFilter && props.textFilter) {
+    if (props.textFilter) {
       const filterValue = props.textFilter
       const regExp = new RegExp(normalize(filterValue).trim(), 'i')
       orgData = orgData.filter(d =>
         FILTER_ATTRIBUTES.some(att => regExp.test(normalize(d[att]))),
       )
+    }
+    if (props.filterAttribute && props.filterValue) {
+      const value=props.filterValue //getComponentDataValue(props.filterValue, props.index)
+      const regExp = new RegExp(normalize(value).trim(), 'i')
+      const attribute=props.filterAttribute
+      orgData = orgData.filter(d =>regExp.test(normalize(d[attribute])))
     }
     let data = []
     try {
@@ -95,7 +103,7 @@ const withDynamicContainer = Component => {
     }
 
     const firstChild = React.Children.toArray(props.children)[0]
-    
+
     return (
       <Component {...lodash.omit(props, ['children'])}>
         {data.map((d, index) => {

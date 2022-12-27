@@ -5,6 +5,7 @@ import React, { useState, useEffect, memo } from 'react'
 import {
   getDataProviders,
   getAvailableAttributes,
+  getFilterAttributes,
   CONTAINER_TYPE,
 } from '~utils/dataSources'
 import { getModels, getModelAttributes } from '~core/selectors/dataSources'
@@ -26,10 +27,12 @@ const DataSourcePanel: React.FC = () => {
   const attribute = usePropsSelector('attribute')
   const limit = usePropsSelector('limit')
   const contextFilter = usePropsSelector('contextFilter')
-  const textFilter = usePropsSelector('textFilter')
+  const filterValue = usePropsSelector('filterValue')
+  const filterAttribute = usePropsSelector('filterAttribute')
   const [providers, setProviders] = useState<IComponent[]>([])
   const [contextProviders, setContextProviders] = useState<IComponent[]>([])
   const [attributes, setAttributes] = useState([])
+  const [filterAttributes, setFilterAttributes] = useState([])
   const models = useSelector(getModels)
 
   useEffect(() => {
@@ -42,6 +45,16 @@ const DataSourcePanel: React.FC = () => {
           models,
         )
         setAttributes(attrs)
+      } catch (err) {
+        alert(err)
+      }
+      try {
+        const filterAttrs = getFilterAttributes(
+          activeComponent,
+          components,
+          models,
+        )
+        setFilterAttributes(filterAttrs)
       } catch (err) {
         alert(err)
       }
@@ -78,7 +91,7 @@ const DataSourcePanel: React.FC = () => {
             id="dataSource"
             onChange={setValueFromEvent}
             name="dataSource"
-            size="sm"
+            size="xs"
             value={dataSource || ''}
           >
             <option value={undefined}></option>
@@ -95,7 +108,7 @@ const DataSourcePanel: React.FC = () => {
               id="attribute"
               onChange={setValueFromEvent}
               name="attribute"
-              size="sm"
+              size="xs"
               value={attribute || ''}
             >
               <option value={undefined}></option>
@@ -112,7 +125,7 @@ const DataSourcePanel: React.FC = () => {
             <Input
               id="limit"
               name="limit"
-              size="sm"
+              size="xs"
               value={limit}
               type="number"
               onChange={setValueFromEvent}
@@ -125,7 +138,7 @@ const DataSourcePanel: React.FC = () => {
               id="contextFilter"
               onChange={setValueFromEvent}
               name="contextFilter"
-              size="sm"
+              size="xs"
               value={contextFilter || ''}
             >
               <option value={undefined}></option>
@@ -137,18 +150,19 @@ const DataSourcePanel: React.FC = () => {
             </Select>
           </FormControl>
         )}
-        {CONTAINER_TYPE.includes(activeComponent?.type) && (
-          <FormControl htmlFor="textFilter" label="Filter text">
+        {CONTAINER_TYPE.includes(activeComponent?.type) && filterAttributes && (
+          <>
+          <FormControl htmlFor="filterValue" label="Filter value">
             <Select
-              id="textFilter"
+              id="filterValue"
               onChange={setValueFromEvent}
-              name="textFilter"
-              size="sm"
-              value={textFilter || ''}
+              name="filterValue"
+              size="xs"
+              value={filterValue || ''}
             >
               <option value={undefined}></option>
               {Object.values(components)
-                .filter(c => c.type == 'Input')
+                .filter(c => !CONTAINER_TYPE.includes(c.type))
                 .map((component, i) => (
                   <option key={`comp${i}`} value={component.id}>
                     {`${component.id} (${component.type})`}
@@ -156,7 +170,24 @@ const DataSourcePanel: React.FC = () => {
                 ))}
             </Select>
           </FormControl>
-        )}
+        <FormControl htmlFor="filterAttribute" label="Filter attribute">
+          <Select
+            id="filterAttribute"
+            onChange={setValueFromEvent}
+            name="filterAttribute"
+            size="xs"
+            value={filterAttribute || ''}
+          >
+            <option value={undefined}></option>
+            {Object.keys(filterAttributes).map((attribute, i) => (
+              <option key={`attr${i}`} value={attribute}>
+                {attribute}
+              </option>
+            ))}
+          </Select>
+        </FormControl>
+        </>
+      )}
       </AccordionContainer>
     </Accordion>
   )

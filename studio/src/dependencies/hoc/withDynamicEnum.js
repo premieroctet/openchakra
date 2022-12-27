@@ -1,16 +1,20 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { Radio, Flex } from '@chakra-ui/react'
 import { ACTIONS } from '../utils/actions'
 import lodash from 'lodash'
 
 const withDynamicEnum = Component => {
-  const internal = props => {
+
+  const Internal = props => {
     const dataSource=props.dataSource
     const enumValues=JSON.parse(props?.enum || {})
-    const value = lodash.get(props.dataSource, props.attribute)
-    const spreaded = {...lodash.omit(props, ['children']), 'data-value': value, value}
+    const [internalValue, setInternalValue] = useState(lodash.get(props.dataSource, props.attribute))
+    //const spreaded = {...lodash.omit(props, ['children']), 'data-value': internalValue, value: internalValue}
 
     const onChange = evValue => {
+      setInternalValue(evValue)
+      props.setStateValue(evValue)
+
       ACTIONS.putValue({
         context: dataSource?._id,
         value: evValue,
@@ -21,7 +25,7 @@ const withDynamicEnum = Component => {
     }
 
     return (
-      <Component {...spreaded} onChange={onChange}>
+      <Component onChange={onChange} key={internalValue} value={internalValue}>
       <Flex flexDirection={props.flexDirection}>
       {
         Object.keys(enumValues).map((k, idx) => <Flex flexDirection='row'><Radio value={k} />{enumValues[k]}</Flex>)
@@ -31,7 +35,7 @@ const withDynamicEnum = Component => {
     )
   }
 
-  return internal
+  return Internal
 }
 
 export default withDynamicEnum

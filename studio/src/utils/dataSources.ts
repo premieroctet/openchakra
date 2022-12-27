@@ -159,6 +159,40 @@ export const getAvailableAttributes = (
   return cardinalityAttributes
 }
 
+export const getFilterAttributes = (
+  component: IComponent,
+  components: IComponents,
+  models: any,
+): any => {
+  if (!component.props?.dataSource) {
+    return null
+  }
+  let dataType = getDataProviderDataType(
+    components[component.parent],
+    components,
+    component.props.dataSource,
+    models,
+  )
+  // NOt fund in parent: direct dataprovider
+  if (!dataType) {
+    const dsComponent = components[component.props.dataSource]
+    if (!dsComponent) {
+      throw new Error(
+        `DataProvider ${component.props.dataSource} referenced by ${component.id} (type ${component.type}) is missing`,
+      )
+    }
+    dataType = {
+      type: dsComponent.props.model,
+      multiple: true,
+      ref: true,
+    }
+  }
+  const attributes =
+    models.find((m: any) => m.name === dataType?.type)?.attributes || {}
+  const simpleAttributes=lodash.pickBy(attributes, (v,k) => !v.ref && !v.multiple && !k.includes('.'))
+  return simpleAttributes
+}
+
 const computeDataFieldName = (
   component: IComponent,
   components: IComponents,

@@ -33,7 +33,8 @@ const withDynamicInput = Component => {
     const debouncedValue = useDebounce(internalDataValue, 500)
 
     const onChange = ev => {
-      setInternalDataValue(ev.target.value)
+      ev = ev.target?.value || ev
+      setInternalDataValue(ev)
       if (neverTyped) {
         setNeverTyped(false)
       }
