@@ -92,10 +92,10 @@ import { convertToPascal } from './Editor'
 const importView = (component: any, isInstalled: boolean = false) => {
   if (isInstalled) {
     return lazy(() =>
-    import(
-      `src/installed-components/${component}Preview.ic.tsx`
-    ).catch(() => import('src/custom-components/fallback')),
-  )
+      import(`src/installed-components/${component}Preview.ic.tsx`).catch(() =>
+        import('src/custom-components/fallback'),
+      ),
+    )
   }
   component = convertToPascal(component)
   return lazy(() =>
@@ -135,12 +135,13 @@ const ComponentPreview: React.FC<{
     async function loadViews() {
       const installedComponent = componentName.split('-')[0]
       const View = await importView(installedComponent, true)
-      const loadedComponent = <View key={installedComponent} component={component} />
+      const loadedComponent = (
+        <View key={installedComponent} component={component} />
+      )
       Promise.all([loadedComponent]).then(setInstView)
     }
     loadViews()
   }, [installedComponents])
-
 
   if (type && Object.keys(installedComponents).includes(type)) {
     return <Suspense fallback={'Loading...'}>{instView}</Suspense>

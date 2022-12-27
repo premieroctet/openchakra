@@ -4,7 +4,10 @@ import ComponentPreview from '~components/editor/ComponentPreview'
 import { RangeSlider } from '@chakra-ui/react'
 import { useDropComponent } from '~hooks/useDropComponent'
 
-const acceptedTypesStat: ComponentType[] = ['RangeSliderTrack', 'RangeSliderThumb']
+const acceptedTypesStat: ComponentType[] = [
+  'RangeSliderTrack',
+  'RangeSliderThumb',
+]
 
 export const RangeSliderPreview = ({ component }: IPreviewProps) => {
   const { props, ref } = useInteractive(component, true)
