@@ -22,7 +22,6 @@ import React, { useRef, useState, useEffect } from 'react'
 import API from '~custom-components/api'
 import useDispatch from '~hooks/useDispatch'
 
-
 const regex = /^[a-z@][a-z0-9-_$!/.]*$/
 
 const InstallComponent = () => {
@@ -40,14 +39,14 @@ const InstallComponent = () => {
   }
 
   const installComponent = async () => {
-    const componentPath: string = ref.current? ref.current.value : ''
+    const componentPath: string = ref.current ? ref.current.value : ''
     if (!componentValid(componentPath)) return
     onClose()
     dispatch.app.toggleLoader()
-    dispatch.customComponents.updateInstalledComponents(componentPath, true)
-    const res = await API.post('/install-component', {
-      path: componentPath
+    await API.post('/install-component', {
+      path: componentPath,
     })
+    dispatch.customComponents.updateInstalledComponents(componentPath, true)
     dispatch.app.toggleLoader()
   }
 

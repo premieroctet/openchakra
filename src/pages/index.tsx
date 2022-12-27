@@ -15,7 +15,6 @@ import Inspector from '~components/inspector/Inspector'
 
 const App = () => {
   useShortcuts()
-  console.log(process.env.NEXT_BIT_USERNAME)
   return (
     <>
       <Global
