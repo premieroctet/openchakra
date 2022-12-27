@@ -65,18 +65,20 @@ const ComponentLink = ({componentid, children, closeFn}) => {
   )
 }
 
-const TreeRenderer = ({componentid, components, level, closeFn}) => {
-  console.log(`closeFn:${closeFn}`)
+const TreeRenderer = ({componentid, components, level, closeFn, filter}) => {
   componentid = componentid || 'root'
   level = level || 0
   const node=components[componentid]
   if (node) {
+    const title=`${node.type}/${node.id}`
+    const re=new RegExp(filter || '', 'i')
+    console.log(title, re)
     return (
       <Box ml={level}>
-        <ComponentLink componentid={componentid} closeFn={closeFn}>{node.type}/{node.id}</ComponentLink>
+        {re?.test(title) && <ComponentLink componentid={componentid} closeFn={closeFn}>{title}</ComponentLink>}
         <>
         {node.children.map(c =>
-          <TreeRenderer componentid={c} components={components} level={level+1} closeFn={closeFn} />
+          <TreeRenderer componentid={c} components={components} level={level+1} closeFn={closeFn} filter={filter}/>
         )}
         </>
       </Box>
@@ -132,6 +134,7 @@ const Inspector = () => {
   const components = useSelector(getComponents)
 
   const [isModalSearchOpen, setModalSearchOpen] = useState(false)
+  const [treeFilter, setTreeFilter] = useState(null)
 
   const warnings = []//useSelector(getComponentWarnings(component)) TODO reimplement
 
@@ -166,6 +169,11 @@ const Inspector = () => {
   useEffect(() => {
     clearActiveProps()
   }, [clearActiveProps])
+
+  const onTreeFilterChange = ev => {
+    const value=ev.target.value
+    setTreeFilter(value || null)
+  }
 
   return (
     //@ts-ignore
@@ -316,7 +324,8 @@ const Inspector = () => {
           <ModalHeader>Select component</ModalHeader>
           <ModalCloseButton />
           <ModalBody flexDirection='row'>
-            <TreeRenderer components={components} closeFn={()=>setModalSearchOpen(false)} />
+            <Input onChange={onTreeFilterChange}/>
+            <TreeRenderer components={components} closeFn={()=>setModalSearchOpen(false)} filter={treeFilter}/>
           </ModalBody>
         </ModalContent>
       </Modal>
