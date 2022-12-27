@@ -35,6 +35,9 @@ require('./models/Order')
 require('./models/OrderItem')
 require('./models/Booking')
 require('./models/Guest')
+require('./models/CigarCategory')
+require('./models/DrinkCategory')
+require('./models/MealCategory')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 

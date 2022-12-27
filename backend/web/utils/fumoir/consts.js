@@ -28,6 +28,8 @@ const EVENT_STATUS = {
 
 // Discriminator for mongoose products
 const PRODUCT_DISC_OPTION = {discriminatorKey: 'kind'}
+// Discriminator for mongoose products
+const CATEGORY_DISC_OPTION = {discriminatorKey: 'kind'}
 
 module.exports = {
   ROLES,
@@ -35,4 +37,5 @@ module.exports = {
   PRODUCT_DISC_OPTION,
   EVENT_STATUS,
   TO_COME, CURRENT, FINISHED,
+  CATEGORY_DISC_OPTION,
 }
