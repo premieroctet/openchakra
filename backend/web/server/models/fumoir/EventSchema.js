@@ -1,62 +1,77 @@
-const mongoose = require("mongoose");
-const { schemaOptions } = require("../../utils/schemas");
-const { PLACES } = require("../../../utils/fumoir/consts");
+const mongoose = require('mongoose')
+const moment = require('moment')
+const {schemaOptions} = require('../../utils/schemas')
+const {PLACES, TO_COME, CURRENT, FINISHED} = require('../../../utils/fumoir/consts')
 
-const Schema = mongoose.Schema;
+const Schema = mongoose.Schema
 
 const EventSchema = new Schema(
   {
     title: {
-      type: String
+      type: String,
     },
     description: {
-      type: String
+      type: String,
     },
     picture: {
-      type: String
+      type: String,
     },
     start_date: {
       type: Date,
-      required: false
+      required: false,
     },
     end_date: {
       type: Date,
-      required: false
+      required: false,
     },
     booking_user: {
       // User who booked
       type: Schema.Types.ObjectId,
-      ref: "user",
-      required: false
+      ref: 'user',
+      required: false,
     },
     members: [
       {
         type: Schema.Types.ObjectId,
-        ref: "user"
-      }
+        ref: 'user',
+      },
     ],
     guests: [
       {
         // Guest email addresses
         email: String,
-        phone: String
-      }
+        phone: String,
+      },
     ],
     place: {
       type: String,
       enum: [...Object.keys(PLACES)],
-      required: false
+      required: false,
     },
     guests_count: {
       type: Number,
-      default: 0
-    }
+      default: 0,
+    },
   },
-  schemaOptions
-);
+  schemaOptions,
+)
 
-EventSchema.virtual("members_count").get(function() {
-  return this.guests_count + this.members?.length || 0;
-});
+EventSchema.virtual('members_count').get(function() {
+  return this.guests_count + this.members?.length || 0
+})
 
-module.exports = EventSchema;
+EventSchema.virtual('status').get(function(){
+  if (this.start_date && moment() < moment(this.start_date)) {
+    return TO_COME
+  }
+  if (this.end_date && moment() > moment(this.end_date)) {
+    return FINISHED
+  }
+  // Not before, not after => current if both dates defined
+  if (this.start_date && this.end_date) {
+    return CURRENT
+  }
+  return null
+})
+
+module.exports = EventSchema

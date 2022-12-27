@@ -5,7 +5,7 @@ const {
   getModel,
   setPostCreateData,
 } = require('../../database')
-const {PLACES, ROLES} = require('../../../../utils/fumoir/consts')
+const {PLACES, ROLES, EVENT_STATUS} = require('../../../../utils/fumoir/consts')
 const {BadRequestError, NotFoundError} = require('../../errors')
 const OrderItem = require('../../../models/OrderItem')
 const Product = require('../../../models/Product')
@@ -150,10 +150,11 @@ declareVirtualField({model: 'meal', field: 'net_price', instance: 'Number', requ
 declareVirtualField({model: 'meal', field: 'reviews', instance: 'review', requires: ''})
 
 declareEnumField({model: 'event', field: 'place', enumValues: PLACES})
-declareVirtualField({model: 'event', field: 'members_count', instance: 'Number', required: 'guests_count,members'})
+declareVirtualField({model: 'event', field: 'members_count', instance: 'Number', requires: 'guests_count,members'})
+declareVirtualField({model: 'event', field: 'status', instance: 'String', requires: 'start_date,end_date', enumValues: EVENT_STATUS})
 
-declareVirtualField({model: 'order', field: 'total_price', instance: 'Number', required: 'items'})
-declareVirtualField({model: 'order', field: 'paid', instance: 'Boolean', required: 'items'})
+declareVirtualField({model: 'order', field: 'total_price', instance: 'Number', requires: 'items'})
+declareVirtualField({model: 'order', field: 'paid', instance: 'Boolean', requires: 'items'})
 
 declareVirtualField({model: 'orderItem', field: 'net_price', instance: 'Number', requires: 'price,vat_rate'})
 declareVirtualField({model: 'orderItem', field: 'total_price', instance: 'Number', requires: 'price,quantity'})
