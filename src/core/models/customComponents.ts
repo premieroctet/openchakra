@@ -1,5 +1,6 @@
 import { createModel } from '@rematch/core'
 import produce from 'immer'
+import { convertToPascal } from '~components/editor/Editor'
 
 export interface CustomDictionary {
   [Key: string]: string
@@ -22,6 +23,7 @@ export interface NewThemeType {
 
 export type CustomComponentsState = {
   components: CustomDictionary
+  installedComponents: CustomDictionary
   selectedId?: IComponent['type']
   parameters: ComponentParametersType
   themePath?: string
@@ -46,6 +48,7 @@ const INITIAL_NEW_THEME: NewThemeType = {
 const customComponents = createModel({
   state: {
     components: INITIAL_COMPONENTS,
+    installedComponents: {},
     parameters: INITIAL_PARAMETERS,
     selectedId: DEFAULT_ID,
     newTheme: INITIAL_NEW_THEME,
@@ -162,6 +165,30 @@ const customComponents = createModel({
         themePath,
         newTheme,
       }
+    },
+    updateInstalledComponents(
+      state: CustomComponentsState,
+      installedComponentPath: string,
+      isAdded: boolean,
+    ): CustomComponentsState {
+      return produce(state, (draftState: CustomComponentsState) => {
+        let componentName = convertToPascal(
+          installedComponentPath.split('.').splice(-1)[0],
+        )
+        isAdded
+          ? (draftState.installedComponents[
+              componentName
+            ] = installedComponentPath)
+          : delete draftState.installedComponents[componentName]
+      })
+    },
+    initInstalledComponents(
+      state: CustomComponentsState,
+      components: CustomDictionary,
+    ): CustomComponentsState {
+      return produce(state, (draftState: CustomComponentsState) => {
+        draftState.installedComponents = components
+      })
     },
     updateNewTheme(
       state: CustomComponentsState,

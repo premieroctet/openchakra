@@ -8,6 +8,7 @@ const DragItem: React.FC<ComponentItemProps> = ({
   soon,
   label,
   isMeta,
+  isInstalled,
   isSelected,
   custom,
   isChild,
@@ -15,7 +16,15 @@ const DragItem: React.FC<ComponentItemProps> = ({
 }) => {
   const [, drag] = useDrag({
     type,
-    item: { id: type, type, isMeta, custom, rootParentType, isSelected },
+    item: {
+      id: type,
+      type,
+      isMeta,
+      isInstalled,
+      custom,
+      rootParentType,
+      isSelected,
+    },
   })
 
   let boxProps: any = {
@@ -54,7 +63,7 @@ const DragItem: React.FC<ComponentItemProps> = ({
       {...boxProps}
     >
       <DragHandleIcon path="" fontSize="xs" mr={2} />
-      <Text letterSpacing="wide" fontSize="sm" textTransform="capitalize">
+      <Text letterSpacing="wide" fontSize="sm" textTransform="capitalize" overflow="hidden" whiteSpace="nowrap">
         {label}
       </Text>
       {isMeta && (
@@ -70,6 +79,18 @@ const DragItem: React.FC<ComponentItemProps> = ({
           preset
         </Box>
       )}
+      {/* {isInstalled && (
+        <Box
+          ml={2}
+          borderWidth="1px"
+          color="teal.300"
+          borderColor="teal.600"
+          fontSize="xs"
+          borderRadius={4}
+          px={1}
+        >
+        </Box>
+      )} */}
       {soon && (
         <Box
           ml={2}

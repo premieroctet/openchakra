@@ -5,16 +5,17 @@ import { generateCode } from '~utils/code'
 import theme from 'prism-react-renderer/themes/nightOwl'
 import { useSelector } from 'react-redux'
 import { getComponents } from '~core/selectors/components'
-import { getCustomComponents } from '~core/selectors/customComponents'
+import { getCustomComponents, getInstalledComponents } from '~core/selectors/customComponents'
 
 const CodePanel = () => {
   const components = useSelector(getComponents)
   const customComponents = useSelector(getCustomComponents)
+  const installedComponents = useSelector(getInstalledComponents)
   const [code, setCode] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     const getCode = async () => {
-      const code = await generateCode(components, customComponents)
+      const code = await generateCode(components, customComponents, installedComponents)
       setCode(code)
     }
     getCode()

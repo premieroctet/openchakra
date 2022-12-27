@@ -3,6 +3,9 @@ import { RootState } from '~core/store'
 export const getCustomComponents = (state: RootState) =>
   state.customComponents.components
 
+export const getInstalledComponents = (state: RootState) =>
+  state.customComponents.installedComponents
+
 export const getNewTheme = (state: RootState) => state.customComponents.newTheme
 
 export const getThemePath = (state: RootState) =>

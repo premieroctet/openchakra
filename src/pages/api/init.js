@@ -23,12 +23,19 @@ async function getJsons() {
   return { jsons, themePath: themeJsonPath[0] }
 }
 
+// TODO: Load file with installed components
 export default async function handler(req, res) {
   // 1. load initial components with paths & themeJson Path
   const { jsons, themePath } = await getJsons()
 
   try {
-    // 2 Write files for initial components
+    // 2.0 Read Installed-Components Names
+    let installedList = JSON.parse(
+      fs.readFileSync('src/installed-components/installedList.json', {
+        encoding: 'utf-8',
+      }),
+    )
+
     Object.keys(jsons).map(async component => {
       // 2.1 Read json
       const fileContent = fs.readFileSync(
@@ -73,7 +80,7 @@ export default async function handler(req, res) {
     const newTheme = JSON.parse(fileContent)
 
     res.statusCode = 200
-    res.json({ newComponentsList: jsons, themePath, newTheme })
+    res.json({ newComponentsList: jsons, themePath, newTheme, installedList })
   } catch (err) {
     console.log(err)
     res.statusCode = 400

@@ -23,7 +23,7 @@ type ComponentType =
   | 'BreadcrumbItem'
   | 'BreadcrumbLink'
   | 'Button'
-  | 'Card' 
+  | 'Card'
   | 'CardHeader'
   | 'CardBody'
   | 'CardFooter'
@@ -78,7 +78,7 @@ type ComponentType =
   | 'PopoverContent'
   | 'PopoverHeader'
   | 'PopoverBody'
-  | 'PopoverFooter' 
+  | 'PopoverFooter'
   | 'PopoverArrow'
   | 'PopoverCloseButton'
   | 'PopoverAnchor'
@@ -188,6 +188,7 @@ interface ComponentItemProps {
   isChild?: boolean
   isSelected?: boolean
   isMeta?: boolean
+  isInstalled?: boolean
   soon?: boolean
   custom?: boolean
   rootParentType?: ComponentType
