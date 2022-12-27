@@ -82,6 +82,23 @@ const destructureParams = (params: any) => {
     .toString()} } = props`
 }
 
+const buildMenuButtonProps = (
+  propNames: string[],
+  childComponent: IComponent,
+) => {
+  let props = []
+  if (childComponent.props['as'] === 'Button') {
+    props = propNames.filter((prop: string) => {
+      return prop !== 'isRound' && prop !== 'icon'
+    })
+  } else {
+    props = propNames.filter((prop: string) => {
+      return prop !== 'leftIcon' && prop !== 'rightIcon' && prop !== 'children'
+    })
+  }
+  return props
+}
+
 const buildStyledProps = (propsNames: string[], childComponent: IComponent) => {
   let propsContent = ``
 
@@ -169,12 +186,15 @@ const buildSingleBlock = ({
   } else if (forceBuildBlock || !childComponent.componentName) {
     const componentName = convertToPascal(childComponent.type)
     let propsContent = ''
-    const propsNames = Object.keys(childComponent.props).filter(propName => {
+    let propsNames = Object.keys(childComponent.props).filter(propName => {
       if (childComponent.type === 'Icon') {
         return propName !== 'icon'
       }
       return true
     })
+    if (componentName === 'MenuButton') {
+      propsNames = buildMenuButtonProps(propsNames, childComponent)
+    }
     // Special case for Highlight component
     if (componentName === 'Highlight') {
       const [query, children, ...restProps] = propsNames
@@ -187,7 +207,8 @@ const buildSingleBlock = ({
     }
     if (
       typeof childComponent.props.children === 'string' &&
-      childComponent.children.length === 0
+      childComponent.children.length === 0 &&
+      propsNames.includes('children')
     ) {
       content += `<${componentName} ${propsContent}>${childComponent.props.children}</${componentName}>`
     } else if (childComponent.type === 'Icon') {
@@ -263,12 +284,15 @@ const buildBlock = ({
     } else if (forceBuildBlock || !childComponent.componentName) {
       const componentName = convertToPascal(childComponent.type)
       let propsContent = ''
-      const propsNames = Object.keys(childComponent.props).filter(propName => {
+      let propsNames = Object.keys(childComponent.props).filter(propName => {
         if (childComponent.type === 'Icon') {
           return propName !== 'icon'
         }
         return true
       })
+      if (componentName === 'MenuButton') {
+        propsNames = buildMenuButtonProps(propsNames, childComponent)
+      }
       // Special case for Highlight component
       if (componentName === 'Highlight') {
         const [query, children, ...restProps] = propsNames
@@ -283,7 +307,8 @@ const buildBlock = ({
       }
       if (
         typeof childComponent.props.children === 'string' &&
-        childComponent.children.length === 0
+        childComponent.children.length === 0 &&
+        propsNames.includes('children')
       ) {
         content += `<${componentName} ${propsContent}>${childComponent.props.children}</${componentName}>`
       } else if (childComponent.type === 'Icon') {
@@ -397,7 +422,12 @@ const ${componentName} = () => (
 const getIconsImports = (components: IComponents) => {
   return Object.keys(components).flatMap(name => {
     return Object.keys(components[name].props)
-      .filter(prop => prop.toLowerCase().includes('icon'))
+      .filter(
+        prop =>
+          (prop.toLowerCase().includes('icon') && prop !== 'iconSpacing') ||
+          (prop.toLowerCase() === 'as' &&
+            Object.keys(icons).includes(components[name].props[prop])),
+      )
       .filter(prop => !!components[name].props[prop])
       .map(prop => components[name].props[prop])
   })
@@ -433,18 +463,32 @@ export const generateCode = async (
   const iconImports = Array.from(new Set(getIconsImports(components)))
 
   let imports = [
-    ...new Set(
-      Object.keys(components)
-        .filter(
-          name =>
-            name !== 'root' &&
-            components[name].type !== 'Conditional' &&
-            components[name].type !== 'Loop' &&
-            components[name].type !== 'Box' &&
-            !Object.keys(currentComponents).includes(components[name].type),
-        )
-        .map(name => components[name].type),
-    ),
+    ...new Set([
+      ...new Set(
+        Object.keys(components)
+          .filter(
+            name =>
+              name !== 'root' &&
+              components[name].type !== 'Conditional' &&
+              components[name].type !== 'Loop' &&
+              components[name].type !== 'Box' &&
+              !Object.keys(currentComponents).includes(components[name].type),
+          )
+          .map(name => components[name].type),
+      ),
+      ...new Set(
+        Object.keys(components).flatMap(name => {
+          return Object.keys(components[name].props)
+            .filter(
+              prop =>
+                prop.toLowerCase() === 'as' &&
+                !Object.keys(icons).includes(components[name].props[prop]),
+            )
+            .filter(prop => !!components[name].props[prop])
+            .map(prop => components[name].props[prop])
+        }),
+      ),
+    ]),
   ]
 
   const customImports = [
@@ -505,18 +549,32 @@ export const generateOcTsxCode = async (
   const iconImports = Array.from(new Set(getIconsImports(components)))
 
   let imports = [
-    ...new Set(
-      Object.keys(components)
-        .filter(
-          name =>
-            name !== 'root' &&
-            components[name].type !== 'Conditional' &&
-            components[name].type !== 'Loop' &&
-            components[name].type !== 'Box' &&
-            !Object.keys(currentComponents).includes(components[name].type),
-        )
-        .map(name => components[name].type),
-    ),
+    ...new Set([
+      ...new Set(
+        Object.keys(components)
+          .filter(
+            name =>
+              name !== 'root' &&
+              components[name].type !== 'Conditional' &&
+              components[name].type !== 'Loop' &&
+              components[name].type !== 'Box' &&
+              !Object.keys(currentComponents).includes(components[name].type),
+          )
+          .map(name => components[name].type),
+      ),
+      ...new Set(
+        Object.keys(components).flatMap(name => {
+          return Object.keys(components[name].props)
+            .filter(
+              prop =>
+                prop.toLowerCase() === 'as' &&
+                !Object.keys(icons).includes(components[name].props[prop]),
+            )
+            .filter(prop => !!components[name].props[prop])
+            .map(prop => components[name].props[prop])
+        }),
+      ),
+    ]),
   ]
 
   const customImports = [

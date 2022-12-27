@@ -38,6 +38,10 @@ import SkeletonPreview, {
   SkeletonCirclePreview,
   SkeletonTextPreview,
 } from './previews/SkeletonPreview'
+import RangeSliderPreview from './previews/RangeSliderPreview'
+import RangeSliderTrackPreview from './previews/RangeSliderTrackPreview'
+import RangeSliderThumbPreview from './previews/RangeSliderThumbPreview'
+import RangeSliderFilledTrackPreview from './previews/RangeSliderFilledTrackPreview'
 import ModalPreview, {
   ModalCloseButtonPreview,
   ModalBodyPreview,
@@ -67,6 +71,18 @@ import TagPreview, {
   TagRightIconPreview,
   TagCloseButtonPreview,
 } from './previews/TagPreview'
+import MenuPreview, {
+  MenuListPreview,
+  MenuButtonPreview,
+  MenuItemPreview,
+  MenuItemOptionPreview,
+  MenuGroupPreview,
+  MenuOptionGroupPreview,
+  MenuDividerPreview,
+} from './previews/MenuPreview'
+import SliderPreview from './previews/SliderPreview'
+import SliderTrackPreview from './previews/SliderTrackPreview'
+import SliderThumbPreview from './previews/SliderThumbPreview'
 import { getCustomComponentNames } from '~core/selectors/customComponents'
 import { convertToPascal } from './Editor'
 
@@ -124,9 +140,10 @@ const ComponentPreview: React.FC<{
     case 'Heading':
     case 'Switch':
     case 'FormLabel':
+    case 'SliderFilledTrack':
+    case 'SliderMark':
     case 'FormHelperText':
     case 'FormErrorMessage':
-    case 'TabPanel':
     case 'Tab':
     case 'Input':
     case 'Radio':
@@ -136,6 +153,7 @@ const ComponentPreview: React.FC<{
     case 'StatLabel':
     case 'StatNumber':
     case 'StatArrow':
+    case 'RangeSliderFilledTrack':
     case 'Td':
     case 'Th':
     case 'TableCaption':
@@ -174,6 +192,7 @@ const ComponentPreview: React.FC<{
     case 'Tabs':
     case 'List':
     case 'TabList':
+    case 'TabPanel':
     case 'TabPanels':
     case 'Grid':
     case 'Center':
@@ -248,6 +267,12 @@ const ComponentPreview: React.FC<{
       return <SkeletonTextPreview component={component} />
     case 'SkeletonCircle':
       return <SkeletonCirclePreview component={component} />
+    case 'RangeSliderTrack':
+      return <RangeSliderTrackPreview component={component} />
+    case 'RangeSlider':
+      return <RangeSliderPreview component={component} />
+    case 'RangeSliderThumb':
+      return <RangeSliderThumbPreview component={component} />
     case 'Stat':
       return <StatPreview component={component} />
     case 'StatHelpText':
@@ -312,6 +337,28 @@ const ComponentPreview: React.FC<{
       return <CardFooterPreview component={component} />
     case 'Tooltip':
       return <TooltipPreview component={component} />
+    case 'Menu':
+      return <MenuPreview component={component} />
+    case 'MenuButton':
+      return <MenuButtonPreview component={component} />
+    case 'MenuList':
+      return <MenuListPreview component={component} />
+    case 'MenuGroup':
+      return <MenuGroupPreview component={component} />
+    case 'MenuOptionGroup':
+      return <MenuOptionGroupPreview component={component} />
+    case 'MenuItemOption':
+      return <MenuItemOptionPreview component={component} />
+    case 'MenuItem':
+      return <MenuItemPreview component={component} />
+    case 'MenuDivider':
+      return <MenuDividerPreview component={component} />
+    case 'SliderTrack':
+      return <SliderTrackPreview component={component} />
+    case 'Slider':
+      return <SliderPreview component={component} />
+    case 'SliderThumb':
+      return <SliderThumbPreview component={component} />
     default:
       return null
   }

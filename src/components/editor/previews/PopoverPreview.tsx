@@ -1,8 +1,6 @@
 import React from 'react'
 import { useDropComponent } from '~hooks/useDropComponent'
 import { useInteractive } from '~hooks/useInteractive'
-import { getComponentBy } from '~core/selectors/components'
-import { useSelector } from 'react-redux'
 import ComponentPreview from '~components/editor/ComponentPreview'
 import {
   Popover,
@@ -27,25 +25,19 @@ const PopoverPreview = ({ component }: Props) => {
   if (isOver) {
     props.bg = 'teal.50'
   }
-  let prop = {...props}
+  let prop = { ...props }
   delete prop['isOpen']
   return (
     <Popover isOpen={props.showpreview} ref={drop(ref)} {...prop}>
       <div>
         {component.children
-          .filter(
-            (key: string) =>
-              useSelector(getComponentBy(key)).type === 'PopoverTrigger',
-          )
+          .filter((key: string, index: number) => index === 0)
           .map((key: string) => (
             <ComponentPreview key={key} componentName={key} />
           ))}
       </div>
       {component.children
-        .filter(
-          (key: string) =>
-            useSelector(getComponentBy(key)).type !== 'PopoverTrigger',
-        )
+        .filter((key: string, index: number) => index !== 0)
         .map((key: string) => (
           <ComponentPreview key={key} componentName={key} />
         ))}

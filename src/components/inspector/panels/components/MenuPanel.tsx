@@ -4,16 +4,15 @@ import FormControl from '~components/inspector/controls/FormControl'
 import { useForm } from '~hooks/useForm'
 import usePropsSelector from '~hooks/usePropsSelector'
 import SwitchControl from '~components/inspector/controls/SwitchControl'
-import TextControl from '~components/inspector/controls/TextControl'
 
-const TooltipPanel = () => {
+const MenuPanel = () => {
   const { setValueFromEvent } = useForm()
   const placement = usePropsSelector('placement')
 
   return (
     <>
-      <SwitchControl label="Has Arrow" name="hasArrow" />
-
+      <SwitchControl label="Show Menu" name="showpreview" />
+      <SwitchControl label="isOpen" name="isOpen" />
       <FormControl htmlFor="placement" label="Placement">
         <Select
           id="placement"
@@ -23,26 +22,31 @@ const TooltipPanel = () => {
           value={placement || ''}
         >
           <option>auto</option>
-          <option>top</option>
-          <option>right</option>
-          <option>bottom</option>
-          <option>left</option>
-          <option>auto-start</option>
-          <option>top-start</option>
-          <option>right-start</option>
-          <option>bottom-start</option>
-          <option>left-start</option>
           <option>auto-end</option>
-          <option>top-end</option>
-          <option>right-end</option>
+          <option>auto-start</option>
+          <option>bottom</option>
           <option>bottom-end</option>
+          <option>bottom-start</option>
+          <option>top</option>
+          <option>top-end</option>
+          <option>top-start</option>
+          <option>right</option>
+          <option>right-end</option>
+          <option>right-start</option>
+          <option>left</option>
           <option>left-end</option>
+          <option>left-start</option>
+          <option>end</option>
+          <option>end-end</option>
+          <option>end-start</option>
+          <option>start</option>
+          <option>start-end</option>
+          <option>start-start</option>
         </Select>
       </FormControl>
-      <TextControl name="label" label="Label" />
-      <TextControl name="aria-label" label="Aria Label" />
+      <SwitchControl label="isLazy" name="isLazy" />
     </>
   )
 }
 
-export default memo(TooltipPanel)
+export default memo(MenuPanel)
