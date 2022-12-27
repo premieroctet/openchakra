@@ -118,7 +118,7 @@ const Inspector = () => {
 
   return (
     <>
-      <Box bg="white">
+      <Box bg="white" color="black">
         <Box
           fontWeight="semibold"
           fontSize="md"
@@ -191,7 +191,7 @@ const Inspector = () => {
         )}
       </Box>
 
-      <Box pb={1} bg="white" px={3}>
+      <Box pb={1} bg="white" px={3} color="black">
         <Panels component={component} isRoot={isRoot} isCustom={isCustom} />
       </Box>
 

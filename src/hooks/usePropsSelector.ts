@@ -10,7 +10,6 @@ const usePropsSelector = (propsName: string) => {
   const params = useSelector(getCustomComponentParameters)
 
   useEffect(() => {
-    // TODO: Register form props name for custom props panel
     addActiveProps(propsName)
   }, [addActiveProps, propsName])
 

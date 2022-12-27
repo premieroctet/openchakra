@@ -25,6 +25,7 @@ const SizeControl = (props: SizeControlPropsType) => {
         name={props.name || 'size'}
         value={props.value || ''}
         onChange={setValueFromEvent}
+        borderColor="gray.200"
       >
         {choices.map(choice => (
           <option key={choice}>{choice}</option>

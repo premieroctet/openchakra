@@ -84,6 +84,10 @@ const CustomPropsPanel = () => {
           isInvalid={hasError}
           value={quickProps.name}
           placeholder={`prop`}
+          _placeholder={{
+            color: 'gray',
+          }}
+          borderColor="gray.200"
           onChange={(event: ChangeEvent<HTMLInputElement>) =>
             setQuickProps({ ...quickProps, name: event.target.value })
           }
@@ -93,17 +97,25 @@ const CustomPropsPanel = () => {
             isInvalid={hasError}
             value={quickProps.value}
             placeholder={`value`}
+            _placeholder={{
+              color: 'gray',
+            }}
+            borderColor="gray.200"
             onChange={(event: ChangeEvent<HTMLInputElement>) =>
               setQuickProps({ ...quickProps, value: event.target.value })
             }
           />
-          <InputRightAddon>
+          <InputRightAddon borderColor="gray.200">
             <Menu>
               <MenuButton type="button">
                 <ChevronDownIcon />
               </MenuButton>
               <Portal>
-                <MenuList>
+                <MenuList
+                  className="customPropsMenu"
+                  borderColor="gray.200"
+                  color="black"
+                >
                   {params?.map((param: string) => (
                     <MenuItem
                       key={param}

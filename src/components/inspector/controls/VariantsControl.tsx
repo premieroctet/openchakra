@@ -20,6 +20,7 @@ const VariantsControl = (props: VariantsControlPropsType) => {
         name={props.name}
         size="sm"
         value={props.value || ''}
+        borderColor="gray.200"
       >
         <option>solid</option>
         <option>outline</option>

@@ -69,6 +69,7 @@ const ParametersPanel = () => {
   const customParams = params?.filter(
     (paramsName: any) => !activeParams.includes(paramsName),
   )
+  const viewParamsRef = useRef(null)
 
   return (
     <>
@@ -100,15 +101,23 @@ const ParametersPanel = () => {
               onChange={(event: ChangeEvent<HTMLInputElement>) =>
                 setQuickParams({ ...quickParams, type: event.target.value })
               }
+              _placeholder={{
+                color: 'gray',
+              }}
+              borderColor="gray.200"
             />
 
-            <InputRightAddon>
+            <InputRightAddon borderColor="gray.200">
               <Menu>
                 <MenuButton type="button">
                   <ChevronDownIcon />
                 </MenuButton>
                 <Portal>
-                  <MenuList>
+                  <MenuList
+                    borderColor="gray.200"
+                    color="black"
+                    className="paramsMenu"
+                  >
                     {paramTypes.map((type: string) => (
                       <MenuItem
                         key={type}
@@ -131,6 +140,10 @@ const ParametersPanel = () => {
               isInvalid={hasError}
               value={quickParams.name}
               placeholder={`name`}
+              _placeholder={{
+                color: 'gray',
+              }}
+              borderColor="gray.200"
               onChange={(event: ChangeEvent<HTMLInputElement>) =>
                 setQuickParams({ ...quickParams, name: event.target.value })
               }
@@ -141,6 +154,10 @@ const ParametersPanel = () => {
               isInvalid={hasError}
               value={quickParams.value}
               placeholder={`value`}
+              _placeholder={{
+                color: 'gray',
+              }}
+              borderColor="gray.200"
               onChange={(event: ChangeEvent<HTMLInputElement>) =>
                 setQuickParams({ ...quickParams, value: event.target.value })
               }
@@ -156,6 +173,7 @@ const ParametersPanel = () => {
                   optional: event.target.checked,
                 })
               }}
+              borderColor="gray.200"
             >
               optional
               <Tooltip

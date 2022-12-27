@@ -54,11 +54,11 @@ const Menu = () => {
 
   useEffect(() => {
     const initFunction = async () => {
-      const { newComponentsList, themeJsonPath } = await API.post('/init').then(
-        res => res.data,
-      )
+      const { newComponentsList, themePath, newTheme } = await API.post(
+        '/init',
+      ).then(res => res.data)
       dispatch.customComponents.updateCustomComponents(newComponentsList)
-      dispatch.customComponents.setThemePath(themeJsonPath)
+      dispatch.customComponents.setTheme(themePath, newTheme)
     }
     dispatch.app.toggleLoader()
     initFunction()
@@ -74,6 +74,7 @@ const Menu = () => {
   return (
     <DarkMode>
       <Box
+        className="sidebar"
         maxH="calc(100vh - 3rem)"
         overflowY="auto"
         overflowX="visible"
@@ -91,6 +92,9 @@ const Menu = () => {
               value={searchTerm}
               color="gray.300"
               placeholder="Search ..."
+              _placeholder={{
+                color: 'gray',
+              }}
               onChange={(event: ChangeEvent<HTMLInputElement>) =>
                 setSearchTerm(event.target.value)
               }
@@ -111,7 +115,7 @@ const Menu = () => {
                   onClick={() => setSearchTerm('')}
                 />
               ) : (
-                <SearchIcon path="" color="gray.300" />
+                <SearchIcon color="gray" />
               )}
             </InputRightElement>
           </InputGroup>
@@ -122,6 +126,7 @@ const Menu = () => {
             top={8}
             boxShadow="dark-lg"
             bgColor="#2e3748"
+            borderColor="gray"
             color="white"
           >
             <Tab>Built-in</Tab>

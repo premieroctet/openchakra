@@ -17,6 +17,7 @@ const DisplayPanel = () => {
           value={display || ''}
           onChange={setValueFromEvent}
           name="display"
+          borderColor="gray.200"
         >
           <option>block</option>
           <option>flex</option>

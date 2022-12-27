@@ -25,7 +25,13 @@ const StylesPanel: React.FC<Props> = ({
   showChildren,
   parentIsRoot,
 }) => (
-  <Accordion defaultIndex={[0]} allowMultiple>
+  <Accordion
+    defaultIndex={[0]}
+    allowMultiple
+    textColor="black"
+    borderColor="gray.200"
+    bgColor="gray.50"
+  >
     <AccordionContainer title="Parameters">
       <ParametersPanel />
     </AccordionContainer>

@@ -4,8 +4,7 @@ import {
   Text,
   Link,
   ChakraProvider,
-  extendTheme,
-  withDefaultProps,
+  theme as baseTheme,
 } from '@chakra-ui/react'
 import { useDropComponent } from '~hooks/useDropComponent'
 import SplitPane from 'react-split-pane'
@@ -23,12 +22,18 @@ import API from '~custom-components/api'
 import { getComponents } from '~core/selectors/components'
 import {
   getCustomComponents,
+  getNewTheme,
   getSelectedCustomComponentId,
-  getTheme,
 } from '~core/selectors/customComponents'
 import { getShowLayout, getShowCode } from '~core/selectors/app'
 import ComponentPreview from '~components/editor/ComponentPreview'
-import { ThemeExtType } from '~core/models/customComponents'
+import { omit } from 'lodash'
+import myTheme from './myTheme'
+import Fonts from '~components/Fonts'
+
+export const themeColors: any = Object.keys(
+  omit(baseTheme.colors, ['transparent', 'current', 'black', 'white']),
+)
 
 export const gridStyles = {
   backgroundImage:
@@ -51,7 +56,7 @@ const Editor: React.FC = () => {
   const showCode = useSelector(getShowCode)
   const showLayout = useSelector(getShowLayout)
   const components = useSelector(getComponents)
-  const themeState = useSelector(getTheme)
+  const newThemeState = useSelector(getNewTheme)
   const dispatch = useDispatch()
 
   const { drop } = useDropComponent('root')
@@ -112,68 +117,58 @@ const Editor: React.FC = () => {
   }
 
   const Playground = (
-    <Box
-      p={2}
-      {...editorBackgroundProps}
-      height="100%"
-      minWidth="10rem"
-      width="100%"
-      display={isEmpty ? 'flex' : 'block'}
-      justifyContent="center"
-      alignItems="center"
-      overflow="auto"
-      ref={drop}
-      position="relative"
-      flexDirection="column"
-      onClick={onSelectBackground}
-    >
-      {isEmpty && (
-        // TODO: Change this
-        <Text maxWidth="md" color="gray.400" fontSize="xl" textAlign="center">
-          Create new components using the `Create Component` button in the left
-          sidebar. Click the edit button beside the component to load it! Or
-          load{' '}
-          <Link
-            color="gray.500"
-            href="https://bit.cloud/"
-            onClick={(e: React.MouseEvent) => {
-              e.stopPropagation()
-              // dispatch.components.loadDemo('onboarding')
-            }}
-            textDecoration="underline"
-          >
-            components from bit
-          </Link>
-        </Text>
-      )}
-      <ChakraProvider
-        resetCSS
-        theme={extendTheme(
-          ...themeState.map((themeExt: ThemeExtType) =>
-            withDefaultProps(themeExt),
-          ),
-          // {
-          //   styles: {
-          //     global: {
-          //       'html, body': {
-          //         fontFamily: `'Fira Code', sans-serif`,
-          //       },
-          //     },
-          //   },
-          // },
-          // {
-          //   fonts: {
-          //     heading: `'Fira Code', sans-serif`,
-          //     body: `'Fira Code', sans-serif`,
-          //   },
-          // },
-        )}
+    <ChakraProvider theme={myTheme(newThemeState)} resetCSS={false}>
+      {/* <style>
+        {`\
+          @import url("https://fonts.googleapis.com/css2?family=Rubik+Gemstones&display=swap");\
+          @import url("https://cdn.jsdelivr.net/npm/@fontsource/arizonia/index.css");\
+        `}
+      </style> */}
+      <Fonts
+        headingFontFamily={newThemeState.headingFontFamily}
+        bodyFontFamily={newThemeState.bodyFontFamily}
+      />
+      <Box
+        className="editor"
+        bg="chakra-body-bg"
+        p={2}
+        {...editorBackgroundProps}
+        height="100%"
+        minWidth="10rem"
+        width="100%"
+        display={isEmpty ? 'flex' : 'block'}
+        justifyContent="center"
+        alignItems="center"
+        overflow="auto"
+        ref={drop}
+        position="relative"
+        flexDirection="column"
+        onClick={onSelectBackground}
       >
+        {isEmpty && (
+          <Text maxWidth="md" color="gray.400" fontSize="xl" textAlign="center">
+            Create new components using the `Create Component` button in the
+            left sidebar. Click the edit button beside the component to load it!
+            Or install{' '}
+            <Link
+              color="gray.500"
+              href="https://bit.cloud/"
+              onClick={(e: React.MouseEvent) => {
+                e.stopPropagation()
+                // dispatch.components.loadDemo('onboarding')
+              }}
+              textDecoration="underline"
+            >
+              components from bit
+            </Link>
+          </Text>
+        )}
+
         {components.root.children.map((name: string) => (
           <ComponentPreview key={name} componentName={name} />
         ))}
-      </ChakraProvider>
-    </Box>
+      </Box>
+    </ChakraProvider>
   )
 
   if (!showCode) {
