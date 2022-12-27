@@ -55,7 +55,7 @@
     "webpack-bundle-analyzer": "4.7.0"
   },
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3004",
     "build": "next build",
     "start": "next start -p 3003",
     "test": "jest --watch",
