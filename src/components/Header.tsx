@@ -34,7 +34,7 @@ import { getCustomComponents, getInstalledComponents } from '~core/selectors/cus
 import { getShowLayout, getShowCode } from '~core/selectors/app'
 import HeaderMenu from '~components/headerMenu/HeaderMenu'
 import { FaReact } from 'react-icons/fa'
-import Themer from './Themer'
+import Themer from './themer/Themer'
 
 const CodeSandboxButton = () => {
   const components = useSelector(getComponents)
@@ -124,6 +124,7 @@ const Header = () => {
   return (
     <DarkMode>
       <Flex
+        className="header"
         justifyContent="space-between"
         bg="#1a202c"
         as="header"

@@ -20,7 +20,7 @@ function renderWithRedux(
 ) {
   return {
     ...render(
-      <ChakraProvider resetCSS>
+      <ChakraProvider>
         <DndProvider backend={HTML5Backend}>
           <Provider store={store}>{components}</Provider>
         </DndProvider>

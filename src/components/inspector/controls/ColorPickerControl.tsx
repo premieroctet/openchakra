@@ -167,6 +167,7 @@ const ColorPickerControl = (props: ColorPickerPropType) => {
           name={props.name}
           onChange={setValueFromEvent}
           value={value}
+          borderColor="gray.200"
         />
       )}
     </>

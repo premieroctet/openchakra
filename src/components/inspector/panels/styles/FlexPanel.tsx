@@ -19,6 +19,7 @@ const FlexPanel = () => {
           size="sm"
           value={flexDirection}
           onChange={setValueFromEvent}
+          borderColor="gray.200"
         >
           <option>row</option>
           <option>row-reverse</option>
@@ -33,6 +34,7 @@ const FlexPanel = () => {
           size="sm"
           value={justifyContent}
           onChange={setValueFromEvent}
+          borderColor="gray.200"
         >
           <option>flex-start</option>
           <option>center</option>
@@ -48,6 +50,7 @@ const FlexPanel = () => {
           size="sm"
           value={alignItems || ''}
           onChange={setValueFromEvent}
+          borderColor="gray.200"
         >
           <option>stretch</option>
           <option>flex-start</option>

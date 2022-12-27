@@ -1,6 +1,6 @@
 import { createModel } from '@rematch/core'
 import produce from 'immer'
-import { convertToPascal } from '~components/editor/Editor';
+import { convertToPascal } from '~components/editor/Editor'
 
 export interface CustomDictionary {
   [Key: string]: string
@@ -10,14 +10,15 @@ export interface ComponentParametersType {
   [Key: string]: Array<ParametersType>
 }
 
-export interface DefPropsType {
-  colorScheme?: string
-  size?: string
-  variant?: string
-}
-export interface ThemeExtType {
-  defaultProps: DefPropsType
-  components?: Array<string>
+export interface NewThemeType {
+  brand: string
+  primaryColor: string
+  textColor: string
+  bgColor: string
+  paperColor: string
+  borderColor: string
+  headingFontFamily: string
+  bodyFontFamily: string
 }
 
 export type CustomComponentsState = {
@@ -25,20 +26,23 @@ export type CustomComponentsState = {
   installedComponents: CustomDictionary
   selectedId?: IComponent['type']
   parameters: ComponentParametersType
-  theme: Array<ThemeExtType>
   themePath?: string
+  newTheme: NewThemeType
 }
 
 const DEFAULT_ID = undefined
 const INITIAL_COMPONENTS: CustomDictionary = {}
 const INITIAL_PARAMETERS: ComponentParametersType = {}
 const DEFAULT_THEME_PATH = undefined
-const INITIAL_THEME: ThemeExtType = {
-  defaultProps: {
-    colorScheme: 'blue',
-    size: 'md',
-    variant: 'solid',
-  },
+const INITIAL_NEW_THEME: NewThemeType = {
+  brand: 'cyan',
+  primaryColor: 'blue.400',
+  textColor: 'gray.900',
+  bgColor: 'blackAlpha.100',
+  paperColor: 'whiteAlpha.900',
+  borderColor: 'gray.200',
+  headingFontFamily: 'roboto',
+  bodyFontFamily: 'roboto',
 }
 
 const customComponents = createModel({
@@ -47,7 +51,7 @@ const customComponents = createModel({
     installedComponents: {},
     parameters: INITIAL_PARAMETERS,
     selectedId: DEFAULT_ID,
-    theme: [INITIAL_THEME],
+    newTheme: INITIAL_NEW_THEME,
     themePath: DEFAULT_THEME_PATH,
   } as CustomComponentsState,
   reducers: {
@@ -151,62 +155,15 @@ const customComponents = createModel({
         selectedId: DEFAULT_ID,
       }
     },
-    updateProp(
-      state: CustomComponentsState,
-      payload: {
-        extIndex: number
-        propType: string
-        propValue: string
-      },
-    ): CustomComponentsState {
-      return produce(state, (draftState: CustomComponentsState) => {
-        draftState.theme[payload.extIndex].defaultProps[
-          payload.propType as keyof DefPropsType
-        ] = payload.propValue
-      })
-    },
-    deleteProp(
-      state: CustomComponentsState,
-      extIndex: number,
-      propType: string,
-    ): CustomComponentsState {
-      return produce(state, (draftState: CustomComponentsState) => {
-        delete draftState.theme[extIndex].defaultProps[
-          propType as keyof DefPropsType
-        ]
-      })
-    },
-    updateLayerComponents(
-      state: CustomComponentsState,
-      extIndex: number,
-      components: Array<string>,
-    ): CustomComponentsState {
-      return produce(state, (draftState: CustomComponentsState) => {
-        components.length
-          ? (draftState.theme[extIndex].components = components)
-          : delete draftState.theme[extIndex].components
-      })
-    },
-    addLayer(state: CustomComponentsState): CustomComponentsState {
-      return produce(state, (draftState: CustomComponentsState) => {
-        draftState.theme.push(INITIAL_THEME)
-      })
-    },
-    removeLayer(
-      state: CustomComponentsState,
-      extIndex: number,
-    ): CustomComponentsState {
-      return produce(state, (draftState: CustomComponentsState) => {
-        draftState.theme.splice(extIndex, 1)
-      })
-    },
-    setThemePath(
+    setTheme(
       state: CustomComponentsState,
       themePath: string,
+      newTheme: NewThemeType,
     ): CustomComponentsState {
       return {
         ...state,
         themePath,
+        newTheme,
       }
     },
     updateInstalledComponents(
@@ -215,9 +172,13 @@ const customComponents = createModel({
       isAdded: boolean,
     ): CustomComponentsState {
       return produce(state, (draftState: CustomComponentsState) => {
-        let componentName = convertToPascal(installedComponentPath.split('.').splice(-1)[0])
+        let componentName = convertToPascal(
+          installedComponentPath.split('.').splice(-1)[0],
+        )
         isAdded
-          ? draftState.installedComponents[componentName]=installedComponentPath
+          ? (draftState.installedComponents[
+              componentName
+            ] = installedComponentPath)
           : delete draftState.installedComponents[componentName]
       })
     },
@@ -227,6 +188,15 @@ const customComponents = createModel({
     ): CustomComponentsState {
       return produce(state, (draftState: CustomComponentsState) => {
         draftState.installedComponents = components
+      })
+    },
+    updateNewTheme(
+      state: CustomComponentsState,
+      propType: string,
+      propValue: string,
+    ): CustomComponentsState {
+      return produce(state, (draftState: CustomComponentsState) => {
+        draftState.newTheme[propType as keyof NewThemeType] = propValue
       })
     },
   },

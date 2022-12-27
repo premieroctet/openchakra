@@ -63,6 +63,10 @@ const PaddingPanel = ({ type }: PaddingPanelPropsType) => {
             name={ATTRIBUTES[type].all}
             value={all || ''}
             onChange={setValueFromEvent}
+            borderColor="gray.200"
+            _placeholder={{
+              color: 'gray',
+            }}
           />
         </InputGroup>
 
@@ -79,6 +83,10 @@ const PaddingPanel = ({ type }: PaddingPanelPropsType) => {
               value={left || ''}
               onChange={setValueFromEvent}
               autoComplete="off"
+              borderColor="gray.200"
+              _placeholder={{
+                color: 'gray',
+              }}
             />
           </InputGroup>
 
@@ -94,6 +102,10 @@ const PaddingPanel = ({ type }: PaddingPanelPropsType) => {
               name={ATTRIBUTES[type].right}
               onChange={setValueFromEvent}
               autoComplete="off"
+              borderColor="gray.200"
+              _placeholder={{
+                color: 'gray',
+              }}
             />
           </InputGroup>
 
@@ -109,6 +121,10 @@ const PaddingPanel = ({ type }: PaddingPanelPropsType) => {
               name={ATTRIBUTES[type].top}
               onChange={setValueFromEvent}
               autoComplete="off"
+              borderColor="gray.200"
+              _placeholder={{
+                color: 'gray',
+              }}
             />
           </InputGroup>
 
@@ -124,6 +140,10 @@ const PaddingPanel = ({ type }: PaddingPanelPropsType) => {
               name={ATTRIBUTES[type].bottom}
               onChange={setValueFromEvent}
               autoComplete="off"
+              borderColor="gray.200"
+              _placeholder={{
+                color: 'gray',
+              }}
             />
           </InputGroup>
         </SimpleGrid>

@@ -10,7 +10,7 @@ import { AppProps } from 'next/app'
 
 const Main = ({ Component, pageProps }: AppProps) => (
   <BugsnagErrorBoundary>
-    <ChakraProvider resetCSS>
+    <ChakraProvider>
       <AppErrorBoundary>
         <Component {...pageProps} />
       </AppErrorBoundary>

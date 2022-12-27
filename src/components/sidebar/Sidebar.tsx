@@ -25,7 +25,7 @@ import {
   PopoverFooter,
   Link,
   Text,
-  list
+  list,
 } from '@chakra-ui/react'
 import { CloseIcon, EditIcon, SearchIcon } from '@chakra-ui/icons'
 import DragItem from './DragItem'
@@ -42,7 +42,6 @@ import AddComponent from './AddComponent'
 import DeleteComponent from './DeleteComponent'
 import InstallComponent from './InstallComponent'
 import InstalledPropTable from './InstalledPropTable'
-
 
 const Menu = () => {
   const [searchTerm, setSearchTerm] = useState('')
@@ -72,11 +71,14 @@ const Menu = () => {
 
   useEffect(() => {
     const initFunction = async () => {
-      const { newComponentsList, themeJsonPath, installedList } = await API.post('/init').then(
-        (res: any) => res.data,
-      )
+      const {
+        newComponentsList,
+        themePath,
+        newTheme,
+        installedList,
+      } = await API.post('/init').then(res => res.data)
       dispatch.customComponents.updateCustomComponents(newComponentsList)
-      dispatch.customComponents.setThemePath(themeJsonPath)
+      dispatch.customComponents.setTheme(themePath, newTheme)
       dispatch.customComponents.initInstalledComponents(installedList)
     }
     dispatch.app.toggleLoader()
@@ -90,20 +92,20 @@ const Menu = () => {
     dispatch.app.toggleLoader()
   }, [customComponents])
 
-  const [param, setParam] = useState('[{}]');
+  const [param, setParam] = useState('[{}]')
 
   const getParameters = async (name: string, pathPackage: string) => {
     const res = await API.post('/get-parameters', {
       component: name,
-      path: pathPackage
+      path: pathPackage,
     })
-    setParam(JSON.stringify(res.data));
+    setParam(JSON.stringify(res.data))
   }
-
 
   return (
     <DarkMode>
       <Box
+        className="sidebar"
         maxH="calc(100vh - 3rem)"
         overflowY="auto"
         overflowX="visible"
@@ -115,12 +117,23 @@ const Menu = () => {
         backgroundColor="#2e3748"
         width="15rem"
       >
-        <Box p={0} pb={0} position="sticky" w="100%" bgColor="#2e3748" top={0} zIndex={2}>
+        <Box
+          p={0}
+          pb={0}
+          position="sticky"
+          w="100%"
+          bgColor="#2e3748"
+          top={0}
+          zIndex={2}
+        >
           <InputGroup size="sm" mb={0}>
             <Input
               value={searchTerm}
               color="gray.300"
               placeholder="Search ..."
+              _placeholder={{
+                color: 'gray',
+              }}
               onChange={(event: ChangeEvent<HTMLInputElement>) =>
                 setSearchTerm(event.target.value)
               }
@@ -131,7 +144,7 @@ const Menu = () => {
               }}
               zIndex={0}
             />
-            <InputRightElement >
+            <InputRightElement>
               {searchTerm ? (
                 <IconButton
                   color="gray.300"
@@ -141,7 +154,7 @@ const Menu = () => {
                   onClick={() => setSearchTerm('')}
                 />
               ) : (
-                <SearchIcon path="" color="gray.300" />
+                <SearchIcon color="gray" />
               )}
             </InputRightElement>
           </InputGroup>
@@ -152,6 +165,7 @@ const Menu = () => {
             top={8}
             boxShadow="dark-lg"
             bgColor="#2e3748"
+            borderColor="gray"
             color="white"
             zIndex={2}
           >
@@ -257,23 +271,23 @@ const Menu = () => {
                           </DragItem>
                         </Box>
                         <Box>
-                        <ButtonGroup
-                          size="xs"
-                          isAttached
-                          variant="outline"
-                          colorScheme="teal"
-                        >
-                          <IconButton
-                            aria-label="Edit"
-                            onClick={() => {
-                              handleEditClick(name)
-                            }}
-                            disabled={name === selectedComponent}
+                          <ButtonGroup
+                            size="xs"
+                            isAttached
+                            variant="outline"
+                            colorScheme="teal"
                           >
-                            <EditIcon color="gray.300" />
-                          </IconButton>
-                          <DeleteComponent name={name} />
-                        </ButtonGroup>
+                            <IconButton
+                              aria-label="Edit"
+                              onClick={() => {
+                                handleEditClick(name)
+                              }}
+                              disabled={name === selectedComponent}
+                            >
+                              <EditIcon color="gray.300" />
+                            </IconButton>
+                            <DeleteComponent name={name} />
+                          </ButtonGroup>
                         </Box>
                       </Flex>
                     )
@@ -283,7 +297,7 @@ const Menu = () => {
                     c.toLowerCase().includes(searchTerm.toLowerCase()),
                   )
                   .map(componentPath => {
-                    const name = componentPath.split('.').slice(-1)[0];
+                    const name = componentPath.split('.').slice(-1)[0]
                     return (
                       <Flex
                         alignItems={'center'}
@@ -310,16 +324,24 @@ const Menu = () => {
                           variant="outline"
                           colorScheme="teal"
                         >
-                          <Popover placement='right'>
+                          <Popover placement="right">
                             <PopoverTrigger>
                               <Button
                                 onClick={() => {
-                                  getParameters(name, installedComponents[name]);
-                                }}>
+                                  getParameters(name, installedComponents[name])
+                                }}
+                              >
                                 +
                               </Button>
                             </PopoverTrigger>
-                            <PopoverContent color="whiteAlpha.900" backgroundColor="#1A202C" fontSize="sm" width="max-content" borderRadius={0} borderColor='#319795'>
+                            <PopoverContent
+                              color="whiteAlpha.900"
+                              backgroundColor="#1A202C"
+                              fontSize="sm"
+                              width="max-content"
+                              borderRadius={0}
+                              borderColor="#319795"
+                            >
                               <PopoverArrow />
                               <PopoverCloseButton />
                               <PopoverBody>

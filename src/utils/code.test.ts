@@ -92,7 +92,7 @@ const MyBox = () => (
 )
 
 const App = () => (
-  <ChakraProvider resetCSS>
+  <ChakraProvider>
     <MyBox />
   </ChakraProvider>
 )
@@ -115,7 +115,7 @@ const MyBox = () => (
 )
 
 const App = () => (
-  <ChakraProvider resetCSS>
+  <ChakraProvider>
     <MyBox />
   </ChakraProvider>
 )

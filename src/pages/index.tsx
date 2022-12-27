@@ -23,7 +23,7 @@ const App = () => {
           html: { minWidth: '860px', backgroundColor: '#1a202c' },
         })}
       />
-      <Loader/>
+      <Loader />
       <Metadata />
       <Header />
       <DndProvider backend={HTML5Backend}>
@@ -34,7 +34,24 @@ const App = () => {
               <Editor />
             </Box>
           </EditorErrorBoundary>
-
+          <style>
+            {
+              '\
+              .inspector select, .inspector input, .themer select, .themer input, .themer hr, .themer .chakra-tabs__tablist, .themer .chakra-modal__header, .themer chakra-tabs__tab-panels, .themer .chakra-accordion__item, .chakra-popover__popper{\
+                border-color:var(--chakra-colors-gray-200) !important;\
+              }\
+              .inspector, .header, .sidebar, .themer, .customPropsMenu, .paramSelector, .paramsMenu, .chakra-popover__popper {\
+                font-family:sans-serif !important;\
+              }\
+              .editor {\
+                background-color:var(--chakra-colors-chakra-body-bg) !important;\
+              }\
+              .chakra-slider__thumb {\
+                color:var(--chakra-colors-black) !important;\
+              }\
+              '
+            }
+          </style>
           <Box
             maxH="calc(100vh - 3rem)"
             flex="0 0 15rem"
@@ -42,6 +59,7 @@ const App = () => {
             overflowY="auto"
             overflowX="visible"
             borderLeft="1px solid #cad5de"
+            className="inspector"
           >
             <InspectorProvider>
               <Inspector />
