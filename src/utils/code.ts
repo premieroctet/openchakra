@@ -456,7 +456,7 @@ export const generateMainTsx = (params: any, fileName: string) => {
 export const generateCode = async (
   components: IComponents,
   currentComponents: CustomDictionary,
-  installedComponents: CustomDictionary
+  installedComponents: CustomDictionary,
 ) => {
   let code = buildBlock({ component: components.root, components })
   let componentsCodes = buildComponents(components)
@@ -524,7 +524,9 @@ export const generateCode = async (
         )
         .map(
           name =>
-            `import { ${components[name].type} } from '${installedComponents[components[name].type]}';`,
+            `import { ${components[name].type} } from '${
+              installedComponents[components[name].type]
+            }';`,
         ),
     ),
   ]
@@ -561,7 +563,7 @@ export default App;`
 export const generateOcTsxCode = async (
   components: IComponents,
   currentComponents: CustomDictionary = {},
-  installedComponents: CustomDictionary = {}
+  installedComponents: CustomDictionary = {},
 ) => {
   let code = buildBlock({ component: components.root, components })
   let componentsCodes = buildComponents(components)
@@ -598,7 +600,6 @@ export const generateOcTsxCode = async (
     ]),
   ]
 
-
   const customImports = [
     ...new Set(
       Object.keys(components)
@@ -630,7 +631,9 @@ export const generateOcTsxCode = async (
         )
         .map(
           name =>
-            `import { ${components[name].type} } from '${installedComponents[components[name].type]}';`,
+            `import { ${components[name].type} } from '${
+              installedComponents[components[name].type]
+            }';`,
         ),
     ),
   ]
@@ -925,7 +928,6 @@ export const generateICPreview = async (
   fileName: string,
   selectedComponent?: string,
 ) => {
-
   let code = `import React from 'react'
   import { useDropComponent } from '~hooks/useDropComponent'
   import { useInteractive } from '~hooks/useInteractive'

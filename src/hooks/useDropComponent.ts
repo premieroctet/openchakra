@@ -2,7 +2,10 @@ import { useDrop, DropTargetMonitor } from 'react-dnd'
 import { rootComponents } from '~utils/editor'
 import useDispatch from './useDispatch'
 import builder from '~core/models/composer/builder'
-import { getCustomComponentNames, getInstalledComponents } from '~core/selectors/customComponents'
+import {
+  getCustomComponentNames,
+  getInstalledComponents,
+} from '~core/selectors/customComponents'
 import { useSelector } from 'react-redux'
 
 export const useDropComponent = (
@@ -15,7 +18,11 @@ export const useDropComponent = (
   const installedComponents = useSelector(getInstalledComponents)
 
   const [{ isOver }, drop] = useDrop({
-    accept: [...accept, ...customComponents, ...Object.keys(installedComponents)],
+    accept: [
+      ...accept,
+      ...customComponents,
+      ...Object.keys(installedComponents),
+    ],
     collect: monitor => ({
       isOver: monitor.isOver({ shallow: true }) && monitor.canDrop(),
     }),

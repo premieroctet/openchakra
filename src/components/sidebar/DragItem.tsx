@@ -63,7 +63,13 @@ const DragItem: React.FC<ComponentItemProps> = ({
       {...boxProps}
     >
       <DragHandleIcon path="" fontSize="xs" mr={2} />
-      <Text letterSpacing="wide" fontSize="sm" textTransform="capitalize" overflow="hidden" whiteSpace="nowrap">
+      <Text
+        letterSpacing="wide"
+        fontSize="sm"
+        textTransform="capitalize"
+        overflow="hidden"
+        whiteSpace="nowrap"
+      >
         {label}
       </Text>
       {isMeta && (

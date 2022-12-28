@@ -5,12 +5,9 @@ import { useDropComponent } from '~hooks/useDropComponent'
 import { useInteractive } from '~hooks/useInteractive'
 
 const ConditionalPreview: React.FC<IPreviewProps> = ({ component }) => {
-  const acceptedTypes = [
-    'Box',
-  ] as ComponentType[]
+  const acceptedTypes = ['Box'] as ComponentType[]
   const { props, ref } = useInteractive(component, true)
   const { drop, isOver } = useDropComponent(component.id, acceptedTypes)
-
 
   if (isOver) {
     props.bg = 'teal.50'

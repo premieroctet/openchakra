@@ -19,7 +19,9 @@ export default async function handler(req, res) {
       `src/custom-components/customOcTsx/${fileName}.oc.tsx`,
     )
     await Promise.all([deletePreview, deletePanel, deleteTsx, deleteOcTsx])
-    const response = shell.exec(`cd .. && bit remove ${req.body.path.substr(10)} -s`)
+    const response = shell.exec(
+      `cd .. && bit remove ${req.body.path.substr(10)} -s`,
+    )
     res.status(200).json(response)
   } catch (err) {
     console.log(err)

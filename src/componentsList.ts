@@ -307,7 +307,7 @@ export const componentsList: ComponentType[] = [
   'SkeletonCircle',
   'SkeletonText',
   'Slider',
-  'SliderTrack' ,
+  'SliderTrack',
   'SliderFilledTrack',
   'SliderThumb',
   'SliderMark',
@@ -344,5 +344,5 @@ export const componentsList: ComponentType[] = [
   'RangeSlider',
   'RangeSliderTrack',
   'RangeSliderFilledTrack',
-  'RangeSliderThumb'
+  'RangeSliderThumb',
 ]

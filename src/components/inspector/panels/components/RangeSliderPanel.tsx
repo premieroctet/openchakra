@@ -15,7 +15,10 @@ const RangeSliderPanel = () => {
     <>
       <TextControl name="min" label="Min" />
       <TextControl name="max" label="Max" />
-      <TextControl name="minStepsBetweenThumbs" label="Min Steps Between Thumbs" />
+      <TextControl
+        name="minStepsBetweenThumbs"
+        label="Min Steps Between Thumbs"
+      />
       <SwitchControl label="Reversed" name="isReversed" />
       <SwitchControl label="ReadOnly" name="isReadOnly" />
 
