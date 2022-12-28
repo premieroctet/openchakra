@@ -6,7 +6,7 @@ const {
 const {
   callPostCreateData,
   callPreprocessGet,
-  filterDataUser,
+  callFilterDataUser,
   retainRequiredFields
 } = require('../../utils/database');
 const User = require('../../models/User');
@@ -297,10 +297,11 @@ router.get("/:model/:id?", passport.authenticate("cookie", { session: false }), 
 
     callPreprocessGet({model, fields, id, user: req.user})
       .then(({model, fields, id, data}) => {
+        console.log(`POSTGET ${model}/${id} ${fields}`);
         if (data) {
           return res.json(data)
         }
-        else return  buildQuery(model, id, fields)
+        else return buildQuery(model, id, fields)
           .lean({ virtuals: true })
           .then(data => {
             // Force duplicate children
@@ -311,7 +312,7 @@ router.get("/:model/:id?", passport.authenticate("cookie", { session: false }), 
             return Promise.all(data.map(d => addComputedFields(user, params, d, model)))
           })
           .then(data => {
-            return id ? Promise.resolve(data) : filterDataUser({ model, data, user: req.user })
+            return id ? Promise.resolve(data) : callFilterDataUser({ model, data, id, user: req.user })
           })
           .then(data => {
             if (["theme", "resource"].includes(model) && !id) {

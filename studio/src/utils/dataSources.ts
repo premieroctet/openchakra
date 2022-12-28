@@ -110,9 +110,7 @@ export const getDataProviderDataType = (
   let parentDataProviderType = { ...pdt }
   if (component.props.dataSource === dataSource) {
     if (component.props?.attribute) {
-      const att = models.find(
-        (m: any) => m.name === parentDataProviderType.type,
-      ).attributes[component.props?.attribute]
+      const att = models[parentDataProviderType.type].attributes[component.props?.attribute]
       parentDataProviderType = { ...att }
     }
     if (isMultipleDispatcher(component)) {
@@ -150,12 +148,12 @@ export const getAvailableAttributes = (
       ref: true,
     }
   }
-  const attributes =
-    models.find((m: any) => m.name === dataType?.type)?.attributes || {}
+  const attributes = models[dataType?.type]?.attributes || {}
   const cardinalityAttributes = lodash.pickBy(
     attributes,
     att => att.multiple === isMultipleDispatcher(component),
   )
+
   return cardinalityAttributes
 }
 
@@ -187,9 +185,9 @@ export const getFilterAttributes = (
       ref: true,
     }
   }
-  const attributes =
-    models.find((m: any) => m.name === dataType?.type)?.attributes || {}
+  const attributes = models[dataType?.type]?.attributes || {}
   const simpleAttributes=lodash.pickBy(attributes, (v,k) => !v.ref && !v.multiple && !k.includes('.'))
+
   return simpleAttributes
 }
 

@@ -9,48 +9,26 @@ const CategorySchema = new Schema({
   picture: {
     type: String,
   },
+  children: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'category',
+    //autopopulate: true,
+    required: false,
+  }],
 }, schemaOptions)
 
-CategorySchema.add({parent: CategorySchema})
+CategorySchema.virtual('parent', {
+  ref: 'category', // The Model to use
+  localField: '_id', // Find in Model, where localField
+  foreignField: 'children', // is equal to foreignField
+  justOne: true,
+  autopopulate: true,
+})
 
-CategorySchema.statics.ancestor = function() {
-  
-  return this.aggregate([
-    {
-      $match: {
-        parent: {
-          $exists: true,
-        },
-      },
-    },
-    {
-      $graphLookup: {
-        from: 'categories',
-        startWith: '$parent',
-        connectFromField: 'parent',
-        connectToField: '_id',
-        maxDepth: 3,
-        depthField: 'depth',
-        as: 'ancestor',
-      },
-    }])
+CategorySchema.methods.getDepth = function() {
+  return this.parent? 1+this.parent.getDepth():0
 }
 
-CategorySchema.statics.child = function() {
-  
-  return this.aggregate([
-    {
-      $graphLookup: {
-        from: 'categories',
-        startWith: '$_id',
-        connectFromField: '_id',
-        connectToField: 'parent',
-        maxDepth: 3,
-        depthField: 'depth',
-        as: 'child',
-      },
-    }])
-
-}
+CategorySchema.plugin(require('mongoose-autopopulate'))
 
 module.exports=CategorySchema

@@ -1,4 +1,5 @@
 const url = require('url')
+const mongoose=require('mongoose')
 const Post = require('../../models/Post')
 const UserSessionData = require('../../models/UserSessionData')
 const {NotFoundError} = require('../errors')
@@ -10,6 +11,8 @@ const {
   removeOrderItem,
   setOrderItem,
 } = require('./fumoir/functions')
+const {getModel}=require('../database')
+/**
 const {
   addChild,
   moveChildInParent,
@@ -21,14 +24,21 @@ const {
   putAttribute,
   sendMessage,
 } = require('./aftral_studio/functions')
+*/
 
 const ACTIONS = {
-  login: ({email, password}) => {
-    return login(email, password)
-  },
-
   put: ({parent, attribute, value}, user) => {
-    return putAttribute({parent, attribute, value, user})
+    let model = null
+    return getModel(parent)
+      .then(res => {
+        model = res
+        const mongooseModel = mongoose.connection.models[model]
+        return mongooseModel.updateMany(
+          {$or: [{_id: parent}, {origin: parent}]},
+          {[attribute]: value},
+          {runValidators: true},
+        )
+      })
   },
 
   publish: ({id}) => {

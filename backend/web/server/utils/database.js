@@ -6,8 +6,6 @@ const formatDuration = require("format-duration");
 // TODO: Omporting Theme makes a cyclic import. Why ?
 // const Theme = require('../models/Theme');
 const util=require('util')
-require("../models/TrainingCenter");
-require("../models/Category");
 
 const MONGOOSE_OPTIONS = {
   useNewUrlParser: true,
@@ -135,17 +133,17 @@ const getModelAttributes = modelName => {
 
 const getModels = () => {
   const modelNames = lodash.sortBy(mongoose.modelNames());
-  const result = [];
+  const result = {};
   modelNames.forEach(name => {
     const attrs = getModelAttributes(name);
-    result.push({ name, attributes: Object.fromEntries(attrs) });
+    result[name]={ name, attributes: Object.fromEntries(attrs) }
   });
   return result;
 };
 
 const buildPopulate = (field, model) => {
   const fields = field.split(".");
-  const attributes = getModels().find(m => m.name == model).attributes;
+  const attributes = getModels()[model].attributes;
   if (fields.length == 0) {
     return null;
   }
@@ -412,10 +410,14 @@ const declareEnumField = ({model, field, enumValues}) => {
 }
 
 // Default filter
-let filterDataUser = ({ model, data, user }) => data
+let filterDataUser = ({ model, data, id, user }) => data
 
 const setFilterDataUser = fn => {
   filterDataUser = fn
+}
+
+const callFilterDataUser = data => {
+  return filterDataUser(data)
 }
 
 // Pre proceses model, fields, id before querying
@@ -462,7 +464,7 @@ module.exports = {
   formatTime,
   retainRequiredFields,
   setFilterDataUser,
-  filterDataUser,
+  callFilterDataUser,
   setPreprocessGet,
   callPreprocessGet,
   setPostCreateData,

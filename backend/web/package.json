@@ -93,7 +93,8 @@
     "is-webview": "^1.0.1",
     "jest": "^27.5.1",
     "jssoup": "^0.0.15",
-    "systemjs-plugin-json": "^0.3.0"
+    "systemjs-plugin-json": "^0.3.0",
+    "tree-traversal": "^1.1.2"
   },
   "version": "0.0.0"
 }

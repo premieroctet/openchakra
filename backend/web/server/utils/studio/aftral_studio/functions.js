@@ -252,12 +252,11 @@ const getSession = id => {
 
 const putAttribute = ({parent, attribute, value, user}) => {
   console.log(`Putting ${parent} ${attribute} to ${value}`)
-  let mongooseModel = null
   let model = null
   return getModel(parent)
     .then(res => {
       model = res
-      mongooseModel = mongoose.connection.models[model]
+      const mongooseModel = mongoose.connection.models[model]
       return mongooseModel.updateMany(
         {$or: [{_id: parent}, {origin: parent}]},
         {[attribute]: value},
@@ -335,6 +334,7 @@ const filterDataUser = ({model, data, user}) => {
 
 
 setFilterDataUser(filterDataUser)
+
 const getContacts = (user, id) => {
   return Session.find({
     origin: null,

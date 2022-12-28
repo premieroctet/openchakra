@@ -3,8 +3,11 @@ const {
   declareEnumField,
   declareVirtualField,
   getModel,
+  setFilterDataUser,
   setPostCreateData,
+  setPreprocessGet,
 } = require('../../database')
+const lodash=require('lodash')
 const {PLACES, ROLES, EVENT_STATUS} = require('../../../../utils/fumoir/consts')
 const {BadRequestError, NotFoundError} = require('../../errors')
 const OrderItem = require('../../../models/OrderItem')
@@ -97,6 +100,31 @@ const postCreate = ({model, params, data}) => {
 
 setPostCreateData(postCreate)
 
+const filterDataUser = ({model, data, id, user}) => {
+
+  // List mode
+  if (!id) {
+    if (model == 'category') {
+      const allChildren=lodash.flattenDeep(data.map(d => d.children.map(c => c._id)))
+      return data.filter(d => !allChildren.includes(d._id))
+    }
+  }
+
+  return data
+}
+
+setFilterDataUser(filterDataUser)
+
+const preprocessGet = ({model, fields, id, user}) => {
+  if (model == 'category') {
+    console.log('adding parent')
+    fields = lodash([...fields, 'parent']).uniq().value()
+  }
+  return Promise.resolve({model, fields, id})
+}
+
+setPreprocessGet(preprocessGet)
+
 
 declareEnumField({model: 'user', field: 'role', enumValues: ROLES})
 declareVirtualField({model: 'user', field: 'full_name', instance: 'String', requires: 'firstname,lastname'})
@@ -148,6 +176,11 @@ declareVirtualField({model: 'drink', field: 'net_price', instance: 'Number', req
 declareVirtualField({model: 'drink', field: 'reviews', instance: 'review', requires: ''})
 declareVirtualField({model: 'meal', field: 'net_price', instance: 'Number', requires: 'price,vat_rate'})
 declareVirtualField({model: 'meal', field: 'reviews', instance: 'review', requires: ''})
+
+declareVirtualField({model: 'category', field: 'parent', instance: 'category', requires: ''})
+declareVirtualField({model: 'cigarCategory', field: 'parent', instance: 'category', requires: ''})
+declareVirtualField({model: 'mealCategory', field: 'parent', instance: 'category', requires: ''})
+declareVirtualField({model: 'drinkCategory', field: 'parent', instance: 'category', requires: ''})
 
 declareEnumField({model: 'event', field: 'place', enumValues: PLACES})
 declareVirtualField({model: 'event', field: 'members_count', instance: 'Number', requires: 'guests_count,members'})

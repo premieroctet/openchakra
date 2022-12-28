@@ -1,7 +1,7 @@
 import { Accordion, Input, Select, Checkbox } from '@chakra-ui/react'
 import { useSelector } from 'react-redux'
 import React, { useState, useEffect, memo } from 'react'
-
+import lodash from 'lodash'
 import {
   getDataProviders,
   getAvailableAttributes,
@@ -31,13 +31,13 @@ const DataSourcePanel: React.FC = () => {
   const filterAttribute = usePropsSelector('filterAttribute')
   const [providers, setProviders] = useState<IComponent[]>([])
   const [contextProviders, setContextProviders] = useState<IComponent[]>([])
-  const [attributes, setAttributes] = useState([])
-  const [filterAttributes, setFilterAttributes] = useState([])
+  const [attributes, setAttributes] = useState({})
+  const [filterAttributes, setFilterAttributes] = useState({})
   const models = useSelector(getModels)
 
   useEffect(() => {
     setProviders(getDataProviders(activeComponent, components))
-    if (models.length > 0) {
+    if (!lodash.isEmpty(models)) {
       try {
         const attrs = getAvailableAttributes(
           activeComponent,
@@ -46,6 +46,7 @@ const DataSourcePanel: React.FC = () => {
         )
         setAttributes(attrs)
       } catch (err) {
+        console.error(err)
         alert(err)
       }
       try {
@@ -59,7 +60,7 @@ const DataSourcePanel: React.FC = () => {
         alert(err)
       }
     }
-  }, [activeComponent, components, dataSource, models])
+  }, [activeComponent, components, models])
 
   useEffect(() => {
     if (!providers?.length > 0 || !activeComponent || components?.length > 0) {
@@ -152,6 +153,22 @@ const DataSourcePanel: React.FC = () => {
         )}
         {CONTAINER_TYPE.includes(activeComponent?.type) && filterAttributes && (
           <>
+          <FormControl htmlFor="filterAttribute" label="Filter attribute">
+            <Select
+              id="filterAttribute"
+              onChange={setValueFromEvent}
+              name="filterAttribute"
+              size="xs"
+              value={filterAttribute || ''}
+            >
+              <option value={undefined}></option>
+              {Object.keys(filterAttributes).map((attribute, i) => (
+                <option key={`attr${i}`} value={attribute}>
+                  {attribute}
+                </option>
+              ))}
+            </Select>
+          </FormControl>
           <FormControl htmlFor="filterValue" label="Filter value">
             <Select
               id="filterValue"
@@ -170,22 +187,6 @@ const DataSourcePanel: React.FC = () => {
                 ))}
             </Select>
           </FormControl>
-        <FormControl htmlFor="filterAttribute" label="Filter attribute">
-          <Select
-            id="filterAttribute"
-            onChange={setValueFromEvent}
-            name="filterAttribute"
-            size="xs"
-            value={filterAttribute || ''}
-          >
-            <option value={undefined}></option>
-            {Object.keys(filterAttributes).map((attribute, i) => (
-              <option key={`attr${i}`} value={attribute}>
-                {attribute}
-              </option>
-            ))}
-          </Select>
-        </FormControl>
         </>
       )}
       </AccordionContainer>

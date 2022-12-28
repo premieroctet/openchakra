@@ -13,9 +13,9 @@ describe('Schema virtual enum attributes', () => {
 
   test('Should return theme status enumValues', async() => {
     const models=await getModels()
-    const themeAttributes=models.find(m => m.name=='theme').attributes
+    const themeAttributes=models.theme.attributes
     expect(themeAttributes.status.enumValues).toEqual([null, ...Object.keys(STATUS)])
-    const resourcesAttributes=models.find(m => m.name=='resource').attributes
+    const resourcesAttributes=models.resource.attributes
     return expect(resourcesAttributes.status.enumValues).toEqual([null, ...Object.keys(STATUS)])
   })
 

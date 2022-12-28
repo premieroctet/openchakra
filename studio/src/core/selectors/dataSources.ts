@@ -1,12 +1,11 @@
 import { RootState } from '~core/store'
 
 export const getModelNames = (state: RootState) => {
-  return state.dataSources.models?.map(m => m.name) || []
+  return Object.keys(state.dataSources.models)
 }
 
 export const getModelAttributes = (modelName: string) => (state: RootState) => {
-  const attrs = state.dataSources.models.find(i => i.name === modelName)
-    ?.attributes
+  const attrs = state.dataSources.models[modelName]?.attributes
   return attrs
 }
 

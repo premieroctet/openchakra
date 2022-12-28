@@ -118,7 +118,6 @@ const ActionsPanel: React.FC = () => {
     setValueFromEvent(ev)
   }
 
-  console.log(`action props:${JSON.stringify(actionProps)}`)
   return (
     <Accordion>
       <AccordionContainer title="Actions">

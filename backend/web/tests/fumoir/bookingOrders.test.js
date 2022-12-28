@@ -15,7 +15,7 @@ describe('Test virtual single ref', () => {
 
   it('booking.orders must be ref:true, multiple: true', async () => {
     const models= await getModels()
-    const orderParam=models.find(m => m.name=="booking")?.attributes?.orders
+    const orderParam=models.booking?.attributes?.orders
     console.log(orderParam)
     const EXPECTED={type: 'order', multiple: true, ref:true, enumValues: undefined}
     return expect(orderParam).toMatchObject(EXPECTED)
