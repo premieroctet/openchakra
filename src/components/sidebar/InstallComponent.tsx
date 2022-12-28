@@ -1,11 +1,8 @@
 import { AddIcon, DownloadIcon } from '@chakra-ui/icons'
 import {
-  Box,
   Button,
-  Flex,
   FormControl,
   FormErrorMessage,
-  FormHelperText,
   FormLabel,
   Input,
   Popover,
@@ -18,14 +15,16 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef } from 'react'
 import API from '~custom-components/api'
 import useDispatch from '~hooks/useDispatch'
+import { useRouter } from 'next/router'
 
 const regex = /^[a-z@][a-z0-9-_$!/.]*$/
 
 const InstallComponent = () => {
   const ref = useRef<HTMLInputElement>(null)
+  const router = useRouter()
   const dispatch = useDispatch()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -48,6 +47,7 @@ const InstallComponent = () => {
     })
     dispatch.customComponents.updateInstalledComponents(componentPath, true)
     dispatch.app.toggleLoader()
+    router.reload()
   }
 
   return (
