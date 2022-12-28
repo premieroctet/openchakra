@@ -169,18 +169,21 @@ declareEnumField({model: 'booking', field: 'place', enumValues: PLACES})
 declareVirtualField({model: 'booking', field: 'end_date', instance: 'Date', requires: ''})
 declareVirtualField({model: 'booking', field: 'paid', instance: 'Number', requires: 'orders'})
 
-declareVirtualField({model: 'cigar', field: 'net_price', instance: 'Number', requires: 'price,vat_rate'})
-declareVirtualField({model: 'cigar', field: 'reviews', instance: 'review', requires: ''})
+const PRODUCT_MODELS=['product','cigar','drink','meal']
+PRODUCT_MODELS.forEach(m => {
+  declareVirtualField({model: m, field: 'net_price', instance: 'Number', requires: 'price,vat_rate'})
+  declareVirtualField({model: m, field: 'reviews', instance: 'review', requires: ''})
+})
 declareVirtualField({model: 'company', field: 'full_name', instance: 'String', requires: 'name'})
-declareVirtualField({model: 'drink', field: 'net_price', instance: 'Number', requires: 'price,vat_rate'})
-declareVirtualField({model: 'drink', field: 'reviews', instance: 'review', requires: ''})
-declareVirtualField({model: 'meal', field: 'net_price', instance: 'Number', requires: 'price,vat_rate'})
-declareVirtualField({model: 'meal', field: 'reviews', instance: 'review', requires: ''})
 
-declareVirtualField({model: 'category', field: 'parent', instance: 'category', requires: ''})
-declareVirtualField({model: 'cigarCategory', field: 'parent', instance: 'category', requires: ''})
-declareVirtualField({model: 'mealCategory', field: 'parent', instance: 'category', requires: ''})
-declareVirtualField({model: 'drinkCategory', field: 'parent', instance: 'category', requires: ''})
+const CAT_MODELS=['category', 'cigarCategory', 'mealCategory', 'drinkCategory']
+CAT_MODELS.forEach(m => {
+  declareVirtualField({model: m, field: 'parent', instance: 'category', requires: ''})
+  declareVirtualField({model: m, field: 'products', instance: 'Array', requires: '', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'product'}}})
+})
 
 declareEnumField({model: 'event', field: 'place', enumValues: PLACES})
 declareVirtualField({model: 'event', field: 'members_count', instance: 'Number', requires: 'guests_count,members'})
@@ -191,9 +194,6 @@ declareVirtualField({model: 'order', field: 'paid', instance: 'Boolean', require
 
 declareVirtualField({model: 'orderItem', field: 'net_price', instance: 'Number', requires: 'price,vat_rate'})
 declareVirtualField({model: 'orderItem', field: 'total_price', instance: 'Number', requires: 'price,quantity'})
-
-declareVirtualField({model: 'product', field: 'net_price', instance: 'Number', requires: 'price,vat_rate'})
-declareVirtualField({model: 'product', field: 'reviews', instance: 'review', requires: ''})
 
 declareVirtualField({model: 'subscription', field: 'is_active', instance: 'Boolean', requires: 'start,end'})
 
