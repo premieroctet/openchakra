@@ -53,23 +53,7 @@ const withDynamicInput = Component => {
     }, [backend, context, debouncedValue, neverTyped])
 
     return (
-      isADate instanceof Date ? 
-      <Component 
-        {...props} 
-        type="text"
-        value={internalDataValue} 
-        onChange={onChange} 
-        onFocus={function(thing) {
-          thing.target.type = props?.type
-        }}
-        onBlur={function(thing) {
-          thing.target.type = 'text'
-        }}
-      /> : <Component 
-      {...props} 
-      value={internalDataValue} 
-      onChange={onChange} 
-    />
+      <Component {...props} value={internalDataValue} onChange={onChange} />
     )
   }
 
