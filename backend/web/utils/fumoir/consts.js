@@ -33,6 +33,8 @@ const PRODUCT_DISC_OPTION = {discriminatorKey: 'kind'}
 // Discriminator for mongoose products
 const CATEGORY_DISC_OPTION = {discriminatorKey: 'kind'}
 
+const [TO_PAY_STR, PAID_STR]=['À payer', 'Payé']
+
 module.exports = {
   ROLES,
   PLACES,
@@ -40,4 +42,5 @@ module.exports = {
   EVENT_STATUS,
   TO_COME, CURRENT, FINISHED, ALL,
   CATEGORY_DISC_OPTION,
+  TO_PAY_STR, PAID_STR,
 }

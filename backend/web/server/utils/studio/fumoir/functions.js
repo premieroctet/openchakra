@@ -170,7 +170,8 @@ declareVirtualField({model: 'loggedUser', field: 'events', instance: 'Array', re
 
 declareEnumField({model: 'booking', field: 'place', enumValues: PLACES})
 declareVirtualField({model: 'booking', field: 'end_date', instance: 'Date', requires: ''})
-declareVirtualField({model: 'booking', field: 'paid', instance: 'Number', requires: 'orders'})
+declareVirtualField({model: 'booking', field: 'paid', instance: 'Boolean', requires: 'orders'})
+declareVirtualField({model: 'booking', field: 'paid_str', instance: 'String', requires: 'orders'})
 declareVirtualField({model: 'booking', field: 'status', instance: 'String', requires: 'start_date,end_date', enumValues: EVENT_STATUS})
 
 const PRODUCT_MODELS=['product', 'cigar', 'drink', 'meal']
@@ -195,6 +196,7 @@ declareVirtualField({model: 'event', field: 'status', instance: 'String', requir
 
 declareVirtualField({model: 'order', field: 'total_price', instance: 'Number', requires: 'items'})
 declareVirtualField({model: 'order', field: 'paid', instance: 'Boolean', requires: 'items'})
+declareVirtualField({model: 'order', field: 'paid_str', instance: 'String', requires: 'items'})
 
 declareVirtualField({model: 'orderItem', field: 'net_price', instance: 'Number', requires: 'price,vat_rate'})
 declareVirtualField({model: 'orderItem', field: 'total_price', instance: 'Number', requires: 'price,quantity'})

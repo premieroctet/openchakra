@@ -41,6 +41,13 @@ OrderSchema.virtual('paid').get(function() {
   return this.items.every(i => i.paid==true)
 })
 
+OrderSchema.virtual('paid_str').get(function() {
+  if (!this.items || this.items.length==0) {
+    return TO_PAY_STR
+  }
+  return this.items.every(i => i.paid==true) ? PAID_STR : TO_PAY
+})
+
 OrderSchema.plugin(mongooseLeanVirtuals)
 
 module.exports = OrderSchema

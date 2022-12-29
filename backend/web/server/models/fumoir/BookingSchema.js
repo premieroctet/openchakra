@@ -3,8 +3,10 @@ const mongoose = require('mongoose')
 const {
   CURRENT,
   FINISHED,
+  PAID_STR,
   PLACES,
   TO_COME,
+  TO_PAY_STR,
 } = require('../../../utils/fumoir/consts')
 const {schemaOptions} = require('../../utils/schemas')
 
@@ -77,6 +79,13 @@ BookingSchema.virtual('paid').get(function() {
     return false
   }
   return this.orders.every(i => i.paid==true)
+})
+
+BookingSchema.virtual('paid_str').get(function() {
+  if (!this.orders || this.orders.length==0) {
+    return TO_PAY_STR
+  }
+  return this.orders.every(i => i.paid==true) ? PAID_STR : TO_PAY
 })
 
 BookingSchema.virtual('status').get(function() {
