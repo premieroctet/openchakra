@@ -157,6 +157,11 @@ export const ACTIONS = {
       phone,
     }
     return axios.post(url, body)
+    .then(res => {
+      ['email', 'phone'].map(att =>
+        clearComponentValue(props[att], index))
+      return res
+    })
   },
   registerToEvent: ({ context }) => {
     let url = `${API_ROOT}/action`
