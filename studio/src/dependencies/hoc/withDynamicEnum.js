@@ -26,11 +26,11 @@ const withDynamicEnum = Component => {
 
     return (
       <Component onChange={onChange} key={internalValue} value={internalValue}>
-      <Flex flexDirection={props.flexDirection}>
-      {
-        Object.keys(enumValues).map((k, idx) => <Flex flexDirection='row'><Radio value={k} />{enumValues[k]}</Flex>)
-      }
-      </Flex>
+        <Flex flexDirection={props.flexDirection} justifyContent={props.justifyContent}>
+        {
+          Object.keys(enumValues).map((k, idx) => <Flex flexDirection='row'><Radio value={k} />{enumValues[k]}</Flex>)
+        }
+        </Flex>
       </Component>
     )
   }

@@ -40,15 +40,15 @@ const RadioGroupPreview = ({ component }: Props) => {
   if (props.dataSource && values) {
   return (
     <RadioGroup ref={ref} {...props}>
-    <>
-    { Object.keys(values).map((k, idx) => <Flex flexDirection='row'><Radio value={k} />{values[k]}</Flex>)
-    }
-    </>
+      <Flex flexDirection={props.flexDirection} justifyContent={props.justifyContent}>
+      {Object.keys(values).map((k, idx) => <Flex flexDirection='row'><Radio value={k} />{values[k]}</Flex>)}
+      </Flex>
     </RadioGroup>
   )
   }
   else {
     return <WithChildrenPreviewContainer
+      {...props}
       enableVisualHelper
       component={component}
       type={Chakra.RadioGroup}
