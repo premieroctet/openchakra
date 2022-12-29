@@ -48,8 +48,10 @@ const BookingSchema = new Schema(
     ],
     people_count: {
       type: Number,
-      min: 1,
+      min: 0,
       max: 15,
+      default: 0,
+      required: true,
     },
     comments: {
       type: String,

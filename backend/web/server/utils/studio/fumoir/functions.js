@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const lodash=require('lodash')
+const Guest = require('../../../models/Guest')
 const {
   declareEnumField,
   declareVirtualField,
@@ -21,10 +22,12 @@ const inviteGuest = ({eventOrBooking, email, phone}) => {
       if (!['booking', 'event'].includes(modelName)) {
         throw new BadRequestError(`Found model ${modelName} for ${eventOrBooking}, should be event or booking`)
       }
-      mongooseModel = mongoose.connection.models[modelName]
-      return mongooseModel.findByIdAndUpdate(eventOrBooking, {
-        $push: {guests: {email, phone}},
-      })
+      return Guest.create({email, phone})
+        .then(guest => {
+          mongooseModel = mongoose.connection.models[modelName]
+          return mongooseModel.findByIdAndUpdate(eventOrBooking, {$push: {guests: guest},
+          })
+        })
     })
 }
 
