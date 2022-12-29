@@ -120,6 +120,10 @@ const preprocessGet = ({model, fields, id, user}) => {
     console.log('adding parent')
     fields = lodash([...fields, 'parent']).uniq().value()
   }
+  if (model=='loggedUser') {
+    model='user'
+    id = user?._id || 'INVALIDID'
+  }
   return Promise.resolve({model, fields, id})
 }
 
