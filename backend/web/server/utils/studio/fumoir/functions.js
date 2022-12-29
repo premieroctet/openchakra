@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const lodash=require('lodash')
 const {
   declareEnumField,
   declareVirtualField,
@@ -7,7 +8,6 @@ const {
   setPostCreateData,
   setPreprocessGet,
 } = require('../../database')
-const lodash=require('lodash')
 const {PLACES, ROLES, EVENT_STATUS} = require('../../../../utils/fumoir/consts')
 const {BadRequestError, NotFoundError} = require('../../errors')
 const OrderItem = require('../../../models/OrderItem')
@@ -165,11 +165,11 @@ declareVirtualField({model: 'loggedUser', field: 'events', instance: 'Array', re
     options: {ref: 'event'}}})
 
 declareEnumField({model: 'booking', field: 'place', enumValues: PLACES})
-
 declareVirtualField({model: 'booking', field: 'end_date', instance: 'Date', requires: ''})
 declareVirtualField({model: 'booking', field: 'paid', instance: 'Number', requires: 'orders'})
+declareVirtualField({model: 'booking', field: 'status', instance: 'String', requires: 'start_date,end_date', enumValues: EVENT_STATUS})
 
-const PRODUCT_MODELS=['product','cigar','drink','meal']
+const PRODUCT_MODELS=['product', 'cigar', 'drink', 'meal']
 PRODUCT_MODELS.forEach(m => {
   declareVirtualField({model: m, field: 'net_price', instance: 'Number', requires: 'price,vat_rate'})
   declareVirtualField({model: m, field: 'reviews', instance: 'review', requires: ''})

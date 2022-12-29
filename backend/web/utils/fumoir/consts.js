@@ -16,11 +16,13 @@ const PLACES = {
   [FUMOIR_BASE]: 'Fumoir de Georges',
 }
 
+const ALL=null
 const TO_COME='TO_COME'
 const CURRENT='CURRENT'
 const FINISHED='FINISHED'
 
 const EVENT_STATUS = {
+  [ALL]: 'Tous',
   [TO_COME]: 'A venir',
   [CURRENT]: 'En cours',
   [FINISHED]: 'Terminé',
@@ -36,6 +38,6 @@ module.exports = {
   PLACES,
   PRODUCT_DISC_OPTION,
   EVENT_STATUS,
-  TO_COME, CURRENT, FINISHED,
+  TO_COME, CURRENT, FINISHED, ALL,
   CATEGORY_DISC_OPTION,
 }

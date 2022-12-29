@@ -1,7 +1,12 @@
 const moment = require('moment')
 const mongoose = require('mongoose')
+const {
+  CURRENT,
+  FINISHED,
+  PLACES,
+  TO_COME,
+} = require('../../../utils/fumoir/consts')
 const {schemaOptions} = require('../../utils/schemas')
-const {PLACES} = require('../../../utils/fumoir/consts')
 
 const Schema = mongoose.Schema
 
@@ -72,6 +77,20 @@ BookingSchema.virtual('paid').get(function() {
     return false
   }
   return this.orders.every(i => i.paid==true)
+})
+
+BookingSchema.virtual('status').get(function() {
+  if (this.start_date && moment() < moment(this.start_date)) {
+    return TO_COME
+  }
+  if (this.end_date && moment() > moment(this.end_date)) {
+    return FINISHED
+  }
+  // Not before, not after => current if both dates defined
+  if (this.start_date && this.end_date) {
+    return CURRENT
+  }
+  return null
 })
 
 
