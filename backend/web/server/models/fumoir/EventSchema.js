@@ -38,9 +38,8 @@ const EventSchema = new Schema(
     ],
     guests: [
       {
-        // Guest email addresses
-        email: String,
-        phone: String,
+        type: Schema.Types.ObjectId,
+        ref: 'guest',
       },
     ],
     place: {
@@ -60,7 +59,7 @@ EventSchema.virtual('members_count').get(function() {
   return this.guests_count + this.members?.length || 0
 })
 
-EventSchema.virtual('status').get(function(){
+EventSchema.virtual('status').get(function() {
   if (this.start_date && moment() < moment(this.start_date)) {
     return TO_COME
   }
