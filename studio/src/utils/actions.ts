@@ -129,7 +129,7 @@ export const ACTIONS: IActions = {
   save: {
     label: 'Save/create',
     options: {
-      model: ({ models }) => models.map(m => ({ key: m.name, label: m.name })),
+      model: ({ models }) => Object.values(models).map(m => ({ key: m.name, label: m.name })),
       ...Object.fromEntries(lodash.range(10).map((idx:number) => {
       return [
         `component_${idx}`,
