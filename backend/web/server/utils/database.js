@@ -1,19 +1,23 @@
-//const { PLACES } = require('../../utils/fumoir/consts');
-const mongoose = require("mongoose");
-const lodash = require("lodash");
-const formatDuration = require("format-duration");
-//const { ROLES, STATUS } = require("../../utils/aftral_studio/consts");
+// const { PLACES } = require('../../utils/fumoir/consts');
+const util=require('util')
+const mongoose = require('mongoose')
+const lodash = require('lodash')
+const formatDuration = require('format-duration')
+const Booking = require('../models/Booking')
+const {CURRENT, FINISHED} = require('../../utils/fumoir/consts')
+const {BadRequestError} = require('./errors')
+
+// const { ROLES, STATUS } = require("../../utils/aftral_studio/consts");
 // TODO: Omporting Theme makes a cyclic import. Why ?
 // const Theme = require('../models/Theme');
-const util=require('util')
 
 const MONGOOSE_OPTIONS = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   // poolSize: 10,
   useCreateIndex: true,
-  useFindAndModify: false
-};
+  useFindAndModify: false,
+}
 
 // Utilities
 
@@ -23,16 +27,16 @@ req fournit le contexte permettant de trouver le modèle dans la bonne BD
 TODO Use mongoose.models instead
 */
 const hasRefs = (req, field, id) => {
-  const modelName = field.split(".")[0];
+  const modelName = field.split('.')[0]
   /* eslint-disable global-require */
-  const model = require(`../models/${modelName}`);
+  const model = require(`../models/${modelName}`)
   /* eslint-enable global-require */
   const attribute = field
-    .split(".")
+    .split('.')
     .slice(1)
-    .join(".");
-  return model.exists({ [attribute]: id });
-};
+    .join('.')
+  return model.exists({[attribute]: id})
+}
 
 /**
 Compares attributes recursively :
@@ -40,13 +44,13 @@ Compares attributes recursively :
 - 2nd level attributes are greater than 1st level ones, then lexicographically sorted
 */
 const attributesComparator = (att1, att2) => {
-  if (att1.includes(".") == att2.includes(".")) {
-    return att1.localeCompare(att2);
+  if (att1.includes('.') == att2.includes('.')) {
+    return att1.localeCompare(att2)
   }
-  return att1.includes(".") ? 1 : -1;
-};
+  return att1.includes('.') ? 1 : -1
+}
 
-const COMPUTED_FIELDS = {};
+const COMPUTED_FIELDS = {}
 
 let DECLARED_ENUMS = {
 }
@@ -58,18 +62,18 @@ const getVirtualCharacteristics = (modelName, attName) => {
     !(modelName in DECLARED_VIRTUALS) ||
     !(attName in DECLARED_VIRTUALS[modelName])
   ) {
-    throw new Error(`Missing virtual declaration for ${modelName}.${attName}`);
+    throw new Error(`Missing virtual declaration for ${modelName}.${attName}`)
   }
-  return DECLARED_VIRTUALS[modelName][attName];
-};
+  return DECLARED_VIRTUALS[modelName][attName]
+}
 
 const getAttributeCaracteristics = (modelName, att) => {
-  const multiple = att.instance == "Array";
-  const baseData = multiple ? att.caster : att;
+  const multiple = att.instance == 'Array'
+  const baseData = multiple ? att.caster : att
   const type =
-    baseData.instance == "ObjectID" ? baseData.options.ref : baseData.instance;
-  const ref = baseData.instance == "ObjectID";
-  let enumValues = lodash.isEmpty(att.enumValues) ? undefined : att.enumValues;
+    baseData.instance == 'ObjectID' ? baseData.options.ref : baseData.instance
+  const ref = baseData.instance == 'ObjectID'
+  let enumValues = lodash.isEmpty(att.enumValues) ? undefined : att.enumValues
   if (enumValues) {
     const enumObject=DECLARED_ENUMS[modelName]?.[att.path]
     if (!enumObject) {
@@ -85,88 +89,88 @@ const getAttributeCaracteristics = (modelName, att) => {
     type,
     multiple,
     ref,
-    enumValues
-  };
-};
+    enumValues,
+  }
+}
 
 const getBaseModelAttributes = modelName => {
-  const schema = mongoose.model(modelName).schema;
+  const schema = mongoose.model(modelName).schema
   const schema_atts = Object.values(schema.paths).filter(
-    att => !att.path.startsWith("_")
-  );
+    att => !att.path.startsWith('_'),
+  )
   const virtuals_atts = Object.keys(schema.virtuals)
-    .filter(c => c != "id")
-    .map(att => getVirtualCharacteristics(modelName, att));
-  const attributes = [...schema_atts, ...virtuals_atts];
-  return attributes;
-};
+    .filter(c => c != 'id')
+    .map(att => getVirtualCharacteristics(modelName, att))
+  const attributes = [...schema_atts, ...virtuals_atts]
+  return attributes
+}
 
 const getSimpleModelAttributes = modelName => {
   const atts = getBaseModelAttributes(modelName).map(att => [
     att.path,
-    getAttributeCaracteristics(modelName, att)
-  ]);
-  return atts;
-};
+    getAttributeCaracteristics(modelName, att),
+  ])
+  return atts
+}
 
 const getReferencedModelAttributes = modelName => {
   const res = getBaseModelAttributes(modelName)
-    .filter(att => att.instance == "ObjectID")
+    .filter(att => att.instance == 'ObjectID')
     .map(att =>
       getSimpleModelAttributes(att.options.ref).map(([attName, instance]) => [
         `${att.path}.${attName}`,
-        instance
-      ])
-    );
-  return res;
-};
+        instance,
+      ]),
+    )
+  return res
+}
 
 const getModelAttributes = modelName => {
 
   const attrs = [
     ...getSimpleModelAttributes(modelName),
-    ...lodash.flatten(getReferencedModelAttributes(modelName))
-  ];
-  attrs.sort((att1, att2) => attributesComparator(att1[0], att2[0]));
-  return attrs;
-};
+    ...lodash.flatten(getReferencedModelAttributes(modelName)),
+  ]
+  attrs.sort((att1, att2) => attributesComparator(att1[0], att2[0]))
+  return attrs
+}
 
 const getModels = () => {
-  const modelNames = lodash.sortBy(mongoose.modelNames());
-  const result = {};
+  const modelNames = lodash.sortBy(mongoose.modelNames())
+  const result = {}
   modelNames.forEach(name => {
-    const attrs = getModelAttributes(name);
-    result[name]={ name, attributes: Object.fromEntries(attrs) }
-  });
-  return result;
-};
+    const attrs = getModelAttributes(name)
+    result[name]={name, attributes: Object.fromEntries(attrs)}
+  })
+  return result
+}
 
 const buildPopulate = (field, model) => {
-  const fields = field.split(".");
-  const attributes = getModels()[model].attributes;
+  const fields = field.split('.')
+  const attributes = getModels()[model].attributes
   if (fields.length == 0) {
-    return null;
+    return null
   }
-  const currentField = fields[0];
-  const currentAttribute = attributes[currentField];
+  const currentField = fields[0]
+  const currentAttribute = attributes[currentField]
   if (!currentAttribute) {
-    throw new Error(`Can not get attribute for ${model}/${currentField}`);
+    throw new Error(`Can not get attribute for ${model}/${currentField}`)
   }
   if (!currentAttribute.ref) {
-    return null;
+    return null
   }
-  let result = { path: currentField };
+  let result = {path: currentField}
   if (fields.length > 1) {
     const nextPop = buildPopulate(
-      fields.slice(1).join("."),
-      currentAttribute.type
-    );
+      fields.slice(1).join('.'),
+      currentAttribute.type,
+    )
     if (nextPop) {
-      result.populate = nextPop;
+      result.populate = nextPop
     }
   }
-  return result;
-};
+  return result
+}
 
 const buildPopulates = (fields, model) => {
 
@@ -174,193 +178,193 @@ const buildPopulates = (fields, model) => {
   // should return {path: 'program', populate: [{path: 'themes'}, {path: 'otherref'}]}
   // but today return {path: 'program', populate: {path: 'themes'}]}
   // tofix: cf. lodash.mergeWith
-  const modelAttributes = Object.fromEntries(getModelAttributes(model));
+  const modelAttributes = Object.fromEntries(getModelAttributes(model))
 
-  const modelAttributesNames = Object.keys(modelAttributes);
+  const modelAttributesNames = Object.keys(modelAttributes)
   const requiredAttributesNames = lodash(fields)
-    .map(f => f.split(".")[0])
+    .map(f => f.split('.')[0])
     .uniq()
-    .value();
+    .value()
   const unknownAttributesNames = lodash(requiredAttributesNames)
     .difference(modelAttributesNames)
-    .value();
+    .value()
   if (unknownAttributesNames.length > 0) {
     throw new Error(
-      `Model ${model} : unknown attributes ${unknownAttributesNames}`
-    );
+      `Model ${model} : unknown attributes ${unknownAttributesNames}`,
+    )
   }
 
   const populates = lodash(fields)
     // Retain only ObjectId fields
-    .filter(att => modelAttributes[att.split(".")[0]].ref == true)
-    .groupBy(att => att.split(".")[0])
+    .filter(att => modelAttributes[att.split('.')[0]].ref == true)
+    .groupBy(att => att.split('.')[0])
     // Build populates for each 1st level attribute
     .mapValues(fields => fields.map(f => buildPopulate(f, model)))
     // Merge populates for each 1st level attribute
     .mapValues(
       pops => pops.reduce((acc, pop) => lodash.mergeWith(acc, pop)),
-      {}
+      {},
     )
     .values()
-    .value();
-  return populates;
-};
+    .value()
+  return populates
+}
 
 const getModel = id => {
-  const conn = mongoose.connection;
+  const conn = mongoose.connection
   return Promise.all(conn.modelNames()
-      .map(model =>
-        conn.models[model]
-          .exists({ _id: id })
-          .then(exists => (exists ? model : false))
-      )
+    .map(model =>
+      conn.models[model]
+        .exists({_id: id})
+        .then(exists => (exists ? model : false)),
+    ),
   ).then(res => {
-    return res.find(v => !!v);
-  });
-};
+    return res.find(v => !!v)
+  })
+}
 
 const buildQuery = (model, id, fields) => {
-  console.log(`Requesting model ${model}, id ${id || "none"} fields:${fields}`);
-  const modelAttributes = Object.fromEntries(getModelAttributes(model));
+  console.log(`Requesting model ${model}, id ${id || 'none'} fields:${fields}`)
+  const modelAttributes = Object.fromEntries(getModelAttributes(model))
 
-  const virtuals = lodash(fields.map(f => f.split(".")[0]))
+  const virtuals = lodash(fields.map(f => f.split('.')[0]))
     .uniq()
-    .map(f => DECLARED_VIRTUALS[model]?.[f]?.requires?.split(","))
+    .map(f => DECLARED_VIRTUALS[model]?.[f]?.requires?.split(','))
     .flatten()
     .filter(f => !!f)
-    .value();
+    .value()
 
-  const allFields = [...fields, ...virtuals];
+  const allFields = [...fields, ...virtuals]
 
-  console.log(`All fields:${allFields}`);
-  const populates = buildPopulates(allFields, model);
+  console.log(`All fields:${allFields}`)
+  const populates = buildPopulates(allFields, model)
 
   const select = lodash(allFields)
-    .map(att => att.split(".")[0])
+    .map(att => att.split('.')[0])
     .uniq()
     .filter(att => modelAttributes[att].ref == false)
     .map(att => [att, true])
     .fromPairs()
-    .value();
+    .value()
 
-  const criterion = id ? { _id: id } : {};
-  let query = mongoose.connection.models[model].find(criterion, select);
-  query = populates.reduce((q, key) => q.populate(key), query);
-  return query;
-};
+  const criterion = id ? {_id: id} : {}
+  let query = mongoose.connection.models[model].find(criterion, select)
+  query = populates.reduce((q, key) => q.populate(key), query)
+  return query
+}
 
-const cloneModel = ({ data, withOrigin, forceData = {} }) => {
-  let model = null;
-  let clone = null;
+const cloneModel = ({data, withOrigin, forceData = {}}) => {
+  let model = null
+  let clone = null
   return getModel(data)
     .then(res => {
-      model = res;
+      model = res
       clone = {
-        ...lodash.omit(data.toObject(), ["_id", "id"]),
+        ...lodash.omit(data.toObject(), ['_id', 'id']),
         origin: withOrigin ? data._id : undefined,
-        ...forceData
-      };
+        ...forceData,
+      }
       const childrenToClone = getModelAttributes(model)
         .filter(
           ([name, properties]) =>
-            !name.includes(".") && properties.ref && properties.multiple
+            !name.includes('.') && properties.ref && properties.multiple,
         )
         .map(([name]) => name)
         // Don(t clone ref attributes if present in extraData
-        .filter(name => !Object.keys(forceData).includes(name));
+        .filter(name => !Object.keys(forceData).includes(name))
       return Promise.all(
         childrenToClone.map(att => {
           return Promise.all(
-            data[att].map(v => cloneModel({ data: v, withOrigin }))
-          ).then(cloned => (clone[att] = cloned));
-        })
-      );
+            data[att].map(v => cloneModel({data: v, withOrigin})),
+          ).then(cloned => (clone[att] = cloned))
+        }),
+      )
     })
     .then(() => {
-      return mongoose.connection.models[model].create(clone);
+      return mongoose.connection.models[model].create(clone)
     })
     .catch(err => {
-      console.trace(`${err}:${data}`);
-    });
-};
+      console.trace(`${err}:${data}`)
+    })
+}
 
-const cloneArray = ({ data, withOrigin, forceData = {} }) => {
+const cloneArray = ({data, withOrigin, forceData = {}}) => {
   if (!lodash.isArray(data)) {
-    throw new Error(`Expected array, got ${data}`);
+    throw new Error(`Expected array, got ${data}`)
   }
   return Promise.all(
-    data.map(d => cloneModel({ data: d, withOrigin, forceData }))
-  );
-};
+    data.map(d => cloneModel({data: d, withOrigin, forceData})),
+  )
+}
 
 /**
 mongoose returns virtuals even if they are not present in select clause
 => keep only require fields in data hierarchy
 */
 
-const retainRequiredFields = ({ data, fields }) => {
+const retainRequiredFields = ({data, fields}) => {
   if (lodash.isArray(data)) {
-    return data.map(d => retainRequiredFields({ data: d, fields }));
+    return data.map(d => retainRequiredFields({data: d, fields}))
   }
   if (!lodash.isObject(data)) {
-    return data;
+    return data
   }
   const thisLevelFields = [
-    "id",
-    "_id",
+    'id',
+    '_id',
     ...lodash(fields)
-      .map(f => f.split(".")[0])
+      .map(f => f.split('.')[0])
       .uniq()
-      .value()
-  ];
-  const pickedData = lodash.pick(data, thisLevelFields);
+      .value(),
+  ]
+  const pickedData = lodash.pick(data, thisLevelFields)
   const nextLevelFields = fields
-    .filter(f => f.includes("."))
-    .map(f => f.split(".")[0]);
+    .filter(f => f.includes('.'))
+    .map(f => f.split('.')[0])
   nextLevelFields.forEach(f => {
     pickedData[f] = retainRequiredFields({
       data: lodash.get(data, f),
       fields: fields
         .filter(f2 => new RegExp(`^${f}\.`).test(f2))
-        .map(f2 => f2.replace(new RegExp(`^${f}\.`), ""))
-    });
-  });
-  return pickedData;
-};
+        .map(f2 => f2.replace(new RegExp(`^${f}\.`), '')),
+    })
+  })
+  return pickedData
+}
 
-const addComputedFields = async (
+const addComputedFields = async(
   user,
   queryParams,
   data,
   model,
-  prefix = ""
+  prefix = '',
 ) => {
-  const newPrefix = `${prefix}/${model}/${data._id}`;
-  let newUser = user;
-  if (model == "user") {
-    newUser = await mongoose.connection.models.user.findById(data._id);
+  const newPrefix = `${prefix}/${model}/${data._id}`
+  let newUser = user
+  if (model == 'user') {
+    newUser = await mongoose.connection.models.user.findById(data._id)
   }
 
-  const compFields = COMPUTED_FIELDS[model] || {};
+  const compFields = COMPUTED_FIELDS[model] || {}
   const presentCompFields = Object.keys(compFields).filter(f =>
-    data.hasOwnProperty(f)
-  );
-  const requiredCompFields = lodash.pick(compFields, presentCompFields);
+    data.hasOwnProperty(f),
+  )
+  const requiredCompFields = lodash.pick(compFields, presentCompFields)
   // Compute direct attributes
   const x = await Promise.allSettled(
     Object.keys(requiredCompFields).map(f =>
       requiredCompFields[f](newUser, queryParams, data).then(res => {
-        data[f] = res;
-      })
-    )
-  );
+        data[f] = res
+      }),
+    ),
+  )
   // Handle references => sub
   const refAttributes = getModelAttributes(model).filter(
-    att => !att[0].includes(".") && att[1].ref
-  );
+    att => !att[0].includes('.') && att[1].ref,
+  )
   for ([attName, attParams] of refAttributes) {
-    const children = data[attName];
-    if (children && !["program", "origin"].includes(attName)) {
+    const children = data[attName]
+    if (children && !['program', 'origin'].includes(attName)) {
       if (attParams.multiple) {
         if (children.length > 0) {
           const y = await Promise.allSettled(
@@ -370,47 +374,48 @@ const addComputedFields = async (
                 queryParams,
                 child,
                 attParams.type,
-                `${newPrefix}/${attName}`
-              )
-            )
-          );
+                `${newPrefix}/${attName}`,
+              ),
+            ),
+          )
         }
-      } else if (children) {
+      }
+      else if (children) {
         const z = await addComputedFields(
           newUser,
           queryParams,
           children,
           attParams.type,
-          `${newPrefix}/${attName}`
-        );
+          `${newPrefix}/${attName}`,
+        )
       }
     }
   }
-  return data;
-};
+  return data
+}
 
 const formatTime = timeMillis => {
-  return formatDuration(timeMillis ? timeMillis / 60 : 0, { leading: true });
-};
+  return formatDuration(timeMillis ? timeMillis / 60 : 0, {leading: true})
+}
 
 const declareComputedField = (model, field, fn) => {
-  lodash.set(COMPUTED_FIELDS, `${model}.${field}`, fn);
-};
+  lodash.set(COMPUTED_FIELDS, `${model}.${field}`, fn)
+}
 
 const declareVirtualField=({model, field, ...rest}) => {
   const enumValues=rest.enumValues ? Object.keys(rest.enumValues) : undefined
-  lodash.set(DECLARED_VIRTUALS, `${model}.${field}`, {path: field, ...rest, enumValues});
+  lodash.set(DECLARED_VIRTUALS, `${model}.${field}`, {path: field, ...rest, enumValues})
   if (!lodash.isEmpty(rest.enumValues)) {
     declareEnumField({model, field, enumValues: rest.enumValues})
   }
 }
 
 const declareEnumField = ({model, field, enumValues}) => {
-  lodash.set(DECLARED_ENUMS, `${model}.${field}`, enumValues);
+  lodash.set(DECLARED_ENUMS, `${model}.${field}`, enumValues)
 }
 
 // Default filter
-let filterDataUser = ({ model, data, id, user }) => data
+let filterDataUser = ({model, data, id, user}) => data
 
 const setFilterDataUser = fn => {
   filterDataUser = fn
@@ -443,6 +448,30 @@ const callPostCreateData = data => {
   return postCreateData(data)
 }
 
+const removeData = dataId => {
+  let model=null
+  return getModel(dataId)
+    .then(result => {
+      model=result
+      return mongoose.connection.models[model].findById(dataId)
+    })
+    .then(data => {
+      // TODO: move in fumoir/functions
+      if (model=='booking') {
+        return Booking.findById(data._id).populate({path: 'orders', populate: 'items'})
+          .then(data => {
+            if ([FINISHED, CURRENT].includes(data.status)) {
+              throw new BadRequestError(`Une réservation terminée ou en cours ne peut être annulée`)
+            }
+            if (data.paid) {
+              throw new BadRequestError(`Une réservation payée ne peut être annulée`)
+            }
+            return data.delete()
+          })
+      }
+    })
+}
+
 module.exports = {
   hasRefs,
   MONGOOSE_OPTIONS,
@@ -469,4 +498,5 @@ module.exports = {
   callPreprocessGet,
   setPostCreateData,
   callPostCreateData,
-};
+  removeData,
+}

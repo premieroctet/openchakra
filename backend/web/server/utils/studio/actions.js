@@ -4,6 +4,7 @@ const Post = require('../../models/Post')
 const UserSessionData = require('../../models/UserSessionData')
 const {NotFoundError} = require('../errors')
 const Program = require('../../models/Program')
+const {getModel, removeData}=require('../database')
 const {
   inviteGuest,
   payOrder,
@@ -11,7 +12,7 @@ const {
   removeOrderItem,
   setOrderItem,
 } = require('./fumoir/functions')
-const {getModel}=require('../database')
+
 /**
 const {
   addChild,
@@ -82,7 +83,10 @@ const ACTIONS = {
   },
 
   delete: ({parent, child}) => {
-    return removeChildFromParent(parent, child)
+    if (parent!=child) {
+      return removeChildFromParent(parent, child)
+    }
+    return removeData(parent)
   },
 
   addChild: ({parent, child}) => {
