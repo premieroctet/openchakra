@@ -1,5 +1,11 @@
 const mongoose = require('mongoose')
 const lodash=require('lodash')
+const {
+  EVENT_STATUS,
+  FUMOIR_MEMBER,
+  PLACES,
+  ROLES,
+} = require('../../../../utils/fumoir/consts')
 const Guest = require('../../../models/Guest')
 const {
   declareEnumField,
@@ -9,7 +15,6 @@ const {
   setPostCreateData,
   setPreprocessGet,
 } = require('../../database')
-const {PLACES, ROLES, EVENT_STATUS} = require('../../../../utils/fumoir/consts')
 const {BadRequestError, NotFoundError} = require('../../errors')
 const OrderItem = require('../../../models/OrderItem')
 const Product = require('../../../models/Product')
@@ -110,6 +115,12 @@ const filterDataUser = ({model, data, id, user}) => {
     if (model == 'category') {
       const allChildren=lodash.flattenDeep(data.map(d => d.children.map(c => c._id)))
       return data.filter(d => !allChildren.includes(d._id))
+    }
+    if (model=='user') {
+      if ([FUMOIR_MEMBER].includes(user.role)) {
+        console.log(`filter rol:${user.role},${JSON.stringify(data)}`)
+        return data.filter(d => d.role==FUMOIR_MEMBER)
+      }
     }
   }
 

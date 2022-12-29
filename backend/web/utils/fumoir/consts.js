@@ -36,7 +36,7 @@ const CATEGORY_DISC_OPTION = {discriminatorKey: 'kind'}
 const [TO_PAY_STR, PAID_STR]=['À payer', 'Payé']
 
 module.exports = {
-  ROLES,
+  ROLES, FUMOIR_MEMBER,
   PLACES,
   PRODUCT_DISC_OPTION,
   EVENT_STATUS,
