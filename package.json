@@ -22,6 +22,7 @@
     "@emotion/styled": "11.10.5",
     "@mdx-js/react": "1.5.5",
     "@reach/combobox": "0.7.3",
+    "@react-native-community/async-storage": "^1.12.1",
     "@rehooks/local-storage": "2.1.1",
     "@rematch/core": "1.3.0",
     "axios": "0.27.2",

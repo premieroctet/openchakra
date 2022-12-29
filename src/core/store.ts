@@ -2,7 +2,8 @@ import { init } from '@rematch/core'
 import { combineReducers } from 'redux'
 import undoable from 'redux-undo'
 import { persistReducer, persistStore } from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
+// import storage from 'redux-persist/lib/storage'
+import AsyncStorage from '@react-native-community/async-storage'
 import { createWrapper, MakeStore } from 'next-redux-wrapper'
 
 import { ComponentsStateWithUndo } from './models/components'
@@ -21,7 +22,7 @@ const version = parseInt(process.env.NEXT_PUBLIC_VERSION || '1', 10)
 
 const persistConfig = {
   key: `openchakra_v${version}`,
-  storage,
+  storage: AsyncStorage,
   whitelist: ['present'],
   version,
   throttle: 500,
