@@ -32,7 +32,7 @@ const BookingSchema = new Schema(
       // User who booked
       type: Schema.Types.ObjectId,
       ref: 'user',
-      required: false, // required: true,
+      required: true,
     },
     members: [
       {
@@ -85,7 +85,7 @@ BookingSchema.virtual('paid_str').get(function() {
   if (!this.orders || this.orders.length==0) {
     return TO_PAY_STR
   }
-  return this.orders.every(i => i.paid==true) ? PAID_STR : TO_PAY
+  return this.orders.every(i => i.paid==true) ? PAID_STR : TO_PAY_STR
 })
 
 BookingSchema.virtual('status').get(function() {

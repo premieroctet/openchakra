@@ -13,7 +13,7 @@ export const ACTIONS: IActions = {
   create: {
     label: 'Create new data',
     options: {
-      model: ({ models }) => models.map(m => ({ key: m.name, label: m.name })),
+      model: ({ models }) => Object.values(models).map(m => ({ key: m.name, label: m.name })),
     },
     next: ['openPage'],
   },

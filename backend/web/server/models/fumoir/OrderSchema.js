@@ -1,5 +1,7 @@
+const {PAID_STR, TO_PAY_STR} = require('../../../utils/fumoir/consts')
 const mongoose = require('mongoose')
 const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
+
 const Schema = mongoose.Schema
 const lodash = require('lodash')
 const {schemaOptions} = require('../../utils/schemas')
@@ -45,7 +47,7 @@ OrderSchema.virtual('paid_str').get(function() {
   if (!this.items || this.items.length==0) {
     return TO_PAY_STR
   }
-  return this.items.every(i => i.paid==true) ? PAID_STR : TO_PAY
+  return this.items.every(i => i.paid==true) ? PAID_STR : TO_PAY_STR
 })
 
 OrderSchema.plugin(mongooseLeanVirtuals)
