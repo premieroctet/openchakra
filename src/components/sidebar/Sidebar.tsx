@@ -51,6 +51,7 @@ const Menu = () => {
   const selectedComponent = useSelector(getSelectedCustomComponentId)
 
   const handleEditClick = async (name: string) => {
+    if (!customComponents[name]) return
     const response = await API.post('/read-json', {
       path: customComponents[name],
     })
