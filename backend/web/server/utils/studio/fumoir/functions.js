@@ -153,7 +153,7 @@ const preprocessGet = ({model, fields, id, user}) => {
     return Message.find({$or: [{sender: user._id}, {receiver: user._id}]})
       .populate('sender')
       .populate('receiver')
-      .sort({createdAt: -1})
+      .sort({'creation_date': -1})
       .then(messages => {
         if (id) {
           messages=messages.filter(m => getPartner(m, user)._id.toString()==id)

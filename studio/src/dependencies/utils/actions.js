@@ -13,15 +13,15 @@ export const ACTIONS = {
       throw new Error(err.response?.data || err)
     })
   },
-  sendMessage: ({ props, index }) => {
-    const destinee = getComponentDataValue(props.destinee, index)
+  sendMessage: ({ value, props, index }) => {
+    const destinee = props.destinee ? getComponentDataValue(props.destinee, index) : value._id
     const contents = getComponentDataValue(props.contents, index)
     let url = `${API_ROOT}/action`
     return axios
       .post(url, {
         action: 'sendMessage',
-        destinee: destinee,
-        contents: contents,
+        destinee,
+        contents,
       })
       .then(res => {
         clearComponentValue(props.destinee, index)

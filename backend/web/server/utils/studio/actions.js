@@ -1,5 +1,6 @@
 const url = require('url')
 const mongoose=require('mongoose')
+const Message = require('../../models/Message')
 const Post = require('../../models/Post')
 const UserSessionData = require('../../models/UserSessionData')
 const {NotFoundError} = require('../errors')
@@ -106,7 +107,7 @@ const ACTIONS = {
   },
 
   sendMessage: ({destinee, contents}, sender) => {
-    return sendMessage(sender, destinee, contents)
+    return Message.create({sender: sender._id, receiver: destinee, content: contents})
   },
 
   createPost: ({contents, media}, sender) => {

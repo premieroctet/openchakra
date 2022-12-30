@@ -7,7 +7,7 @@ const Schema = mongoose.Schema
 const MessageSchema = new Schema({
   subject: {
     type: String,
-    required: true,
+    required: false,
   },
   content: {
     type: String,
@@ -19,10 +19,12 @@ const MessageSchema = new Schema({
   receiver: {
     type: Schema.Types.ObjectId,
     ref: 'user',
+    required: true,
   },
   sender: {
     type: Schema.Types.ObjectId,
     ref: 'user',
+    required: true,
   },
 }, schemaOptions)
 
