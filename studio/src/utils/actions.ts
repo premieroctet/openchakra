@@ -157,6 +157,12 @@ export const ACTIONS: IActions = {
     },
   },
   // FUMOIR
+  // Mettre un warning si les composants ne sont pas dans le même flex
+  previous: {
+    label: 'Previous',
+    options: {},
+  },
+  // FUMOIR
 }
 
 export const allowsActions = (component: IComponent) => {

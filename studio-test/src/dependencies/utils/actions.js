@@ -187,5 +187,7 @@ export const ACTIONS = {
     }
     return axios.post(url, body)
   },
-
+  previous: () => {
+    window.history.back()
+  }
 }
