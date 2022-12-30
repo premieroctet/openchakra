@@ -125,7 +125,7 @@ const filterDataUser = ({model, data, id, user}) => {
     if (model=='message') {
       if ([FUMOIR_MEMBER].includes(user.role)) {
         data=data.filter(d => [d.sender._id, d.receiver._id].includes(user._id.toString()))
-        return lodash.orderBy(data, ['creation_date'], ['desc'])
+        return lodash.orderBy(data, ['creation_date'], ['asc'])
       }
     }
     if (model=='booking') {
@@ -157,7 +157,7 @@ const preprocessGet = ({model, fields, id, user}) => {
     return Message.find({$or: [{sender: user._id}, {receiver: user._id}]})
       .populate('sender')
       .populate('receiver')
-      .sort({'creation_date': -1})
+      .sort({'creation_date': 1})
       .then(messages => {
         if (id) {
           messages=messages.filter(m => getPartner(m, user)._id.toString()==id)
@@ -166,8 +166,7 @@ const preprocessGet = ({model, fields, id, user}) => {
         const convs=lodash(partnerMessages)
           .values()
           .map(msgs => { const partner=getPartner(msgs[0], user); return ({_id: partner._id, partner, messages: msgs}) })
-          .sortBy('creation_date', 'desc')
-        console.log(JSON.stringify(convs, null, 2))
+          .sortBy('creation_date', 'asc')
         return {model, fields, id, data: convs}
       })
   }

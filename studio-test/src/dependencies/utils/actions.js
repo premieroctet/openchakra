@@ -98,7 +98,7 @@ export const ACTIONS = {
     let url = `${API_ROOT}/action`
     return axios.post(url, {
       action: 'delete',
-      parent: context,
+      //parent: context,
       child: value._id,
     })
   },
