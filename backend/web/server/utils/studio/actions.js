@@ -84,10 +84,10 @@ const ACTIONS = {
   },
 
   delete: ({parent, child}) => {
-    if (parent!=child) {
+    if (parent && child && parent!=child) {
       return removeChildFromParent(parent, child)
     }
-    return removeData(parent)
+    return removeData(child)
   },
 
   addChild: ({parent, child}) => {
