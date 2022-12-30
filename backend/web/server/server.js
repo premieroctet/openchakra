@@ -38,6 +38,8 @@ require('./models/Guest')
 require('./models/CigarCategory')
 require('./models/DrinkCategory')
 require('./models/MealCategory')
+require('./models/Message')
+require('./models/Conversation')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 

@@ -13,11 +13,6 @@ const MessageSchema = new Schema({
     type: String,
     required: true,
   },
-  date: {
-    type: Date,
-    default: Date.now,
-    required: true,
-  },
   is_read: {
     type: Date,
   },

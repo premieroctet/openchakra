@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const lodash=require('lodash')
+const Message = require('../../../models/Message')
 const {
   EVENT_STATUS,
   FUMOIR_MEMBER,
@@ -118,8 +119,13 @@ const filterDataUser = ({model, data, id, user}) => {
     }
     if (model=='user') {
       if ([FUMOIR_MEMBER].includes(user.role)) {
-        console.log(`filter rol:${user.role},${JSON.stringify(data)}`)
         return data.filter(d => d.role==FUMOIR_MEMBER)
+      }
+    }
+    if (model=='message') {
+      if ([FUMOIR_MEMBER].includes(user.role)) {
+        data=data.filter(d => [d.sender._id, d.receiver._id].includes(user._id.toString()))
+        return lodash.orderBy(data, ['creation_date'], ['desc'])
       }
     }
   }
@@ -138,49 +144,58 @@ const preprocessGet = ({model, fields, id, user}) => {
     model='user'
     id = user?._id || 'INVALIDID'
   }
+
+  if (model=='conversation') {
+    const getPartner= (m, user) => {
+      return m.sender._id.toString()==user._id.toString() ? m.receiver : m.sender
+    }
+
+    return Message.find({$or: [{sender: user._id}, {receiver: user._id}]})
+      .populate('sender')
+      .populate('receiver')
+      .sort({createdAt: -1})
+      .then(messages => {
+        if (id) {
+          messages=messages.filter(m => getPartner(m, user)._id.toString()==id)
+        }
+        const partnerMessages=lodash.groupBy(messages, m => getPartner(m, user)._id)
+        const convs=lodash(partnerMessages)
+          .values()
+          .map(msgs => { const partner=getPartner(msgs[0], user); return ({_id: partner._id, partner, messages: msgs}) })
+          .sortBy('creation_date', 'desc')
+        console.log(JSON.stringify(convs, null, 2))
+        return {model, fields, id, data: convs}
+      })
+  }
   return Promise.resolve({model, fields, id})
 }
 
 setPreprocessGet(preprocessGet)
 
+const USER_MODELS=['user', 'loggedUser']
 
-declareEnumField({model: 'user', field: 'role', enumValues: ROLES})
-declareVirtualField({model: 'user', field: 'full_name', instance: 'String', requires: 'firstname,lastname'})
-declareVirtualField({model: 'user', field: 'is_active', instance: 'Boolean', requires: 'subscription_start,subscription_end'})
-declareVirtualField({model: 'user', field: 'is_active_str', instance: 'String', requires: 'subscription_start,subscription_end'})
-declareVirtualField({model: 'user', field: 'posts', instance: 'Array', requires: '', multiple: true,
-  caster: {
-    instance: 'ObjectID',
-    options: {ref: 'post'}}})
+USER_MODELS.forEach(m => {
+  declareEnumField({model: m, field: 'role', enumValues: ROLES})
+  declareVirtualField({model: m, field: 'full_name', instance: 'String', requires: 'firstname,lastname'})
+  declareVirtualField({model: m, field: 'is_active', instance: 'Boolean', requires: 'subscription_start,subscription_end'})
+  declareVirtualField({model: m, field: 'is_active_str', instance: 'String', requires: 'subscription_start,subscription_end'})
+  declareVirtualField({model: m, field: 'posts', instance: 'Array', requires: '', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'post'}}})
 
-declareVirtualField({model: 'user', field: 'bookings', instance: 'Array', requires: '', multiple: true,
-  caster: {
-    instance: 'ObjectID',
-    options: {ref: 'booking'}}})
+  declareVirtualField({model: m, field: 'bookings', instance: 'Array', requires: '', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'booking'}}})
 
-declareVirtualField({model: 'user', field: 'events', instance: 'Array', requires: '', multiple: true,
-  caster: {
-    instance: 'ObjectID',
-    options: {ref: 'event'}}})
+  declareVirtualField({model: m, field: 'events', instance: 'Array', requires: '', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'event'}}})
 
-declareEnumField({model: 'loggedUser', field: 'role', enumValues: ROLES})
-declareVirtualField({model: 'loggedUser', field: 'full_name', instance: 'String', requires: 'firstname,name'})
-declareVirtualField({model: 'loggedUser', field: 'is_active', instance: 'Boolean', requires: 'subscription_start,subscription_end'})
-declareVirtualField({model: 'loggedUser', field: 'is_active_str', instance: 'String', requires: 'subscription_start,subscription_end'})
-declareVirtualField({model: 'loggedUser', field: 'posts', instance: 'Array', requires: '', multiple: true,
-  caster: {
-    instance: 'ObjectID',
-    options: {ref: 'post'}}})
+})
 
-declareVirtualField({model: 'loggedUser', field: 'bookings', instance: 'Array', requires: '', multiple: true,
-  caster: {
-    instance: 'ObjectID',
-    options: {ref: 'booking'}}})
-
-declareVirtualField({model: 'loggedUser', field: 'events', instance: 'Array', requires: '', multiple: true,
-  caster: {
-    instance: 'ObjectID',
-    options: {ref: 'event'}}})
 
 declareEnumField({model: 'booking', field: 'place', enumValues: PLACES})
 declareVirtualField({model: 'booking', field: 'end_date', instance: 'Date', requires: ''})
