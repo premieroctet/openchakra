@@ -1,5 +1,3 @@
-import React, { useState, memo, useEffect, useMemo } from 'react'
-import lodash from 'lodash'
 import { CheckIcon, CopyIcon, EditIcon, WarningIcon, SearchIcon } from '@chakra-ui/icons';
 import { FiTrash2 } from 'react-icons/fi'
 import { GoRepo, GoCode } from 'react-icons/go'
@@ -27,6 +25,8 @@ import {
   Flex,
 } from '@chakra-ui/react';
 import { useSelector } from 'react-redux'
+import React, { useState, memo, useEffect, useMemo } from 'react'
+import lodash from 'lodash'
 import styled from '@emotion/styled'
 
 import { componentsList } from '~componentsList'
@@ -45,6 +45,7 @@ import useClipboard from '~hooks/useClipboard'
 import useDispatch from '~hooks/useDispatch'
 
 import {
+  getActivePage,
   getComponentWarnings,
   getPages,
 } from '../../core/selectors/components';
@@ -132,6 +133,7 @@ const Inspector = () => {
   const [componentName, onChangeComponentName] = useState('')
   const componentsNames = useSelector(getComponentNames)
   const components = useSelector(getComponents)
+  const activePage = useSelector(getActivePage)
 
   const [isModalSearchOpen, setModalSearchOpen] = useState(false)
   const [treeFilter, setTreeFilter] = useState(null)
@@ -191,7 +193,9 @@ const Inspector = () => {
           justifyContent="space-between"
           flexDir="column"
         >
-          <Flex justifyContent="space-between">
+          <Flex justifyContent="space-between" flexDirection='column'>
+          <p>{activePage?.pageName}</p>
+          <Flex justifyContent="space-between" flexDirection='row'>
           {isRoot ? 'Document' : type}<br/>{component.id}
           <SearchIcon
             onClick={() => {
@@ -203,6 +207,7 @@ const Inspector = () => {
               <WarningIcon color='red.500' />
             </Tooltip>:null
           }
+          </Flex>
           </Flex>
           {!!component.componentName && (
             <Text fontSize="xs" fontWeight="light">

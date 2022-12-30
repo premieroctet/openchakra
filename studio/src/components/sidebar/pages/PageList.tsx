@@ -102,7 +102,7 @@ const PageList = ({ searchTerm }: { searchTerm: string }) => {
                 wordBreak={'break-all'}
                 overflow={'hidden'}
                 textAlign={'left'}
-                onClick={() => dispatch.project.setActivePage(page)}
+                onClick={() => dispatch.project.setActivePage(pageId)}
                 fontWeight={isSelectedPage ? 'bold' : 'normal'}
               >
                 {pageName}

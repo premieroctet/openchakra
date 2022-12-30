@@ -23,7 +23,7 @@ export const getFullComponents = (state: RootState): ProjectState =>
 export const getPages = (state: RootState) =>
   getPresentState(state).pages
 
-const getActivePage = (state: RootState): PageState => {
+export const getActivePage = (state: RootState): PageState => {
   return getPresentState(state).pages[getPresentState(state).activePage]
 }
 
