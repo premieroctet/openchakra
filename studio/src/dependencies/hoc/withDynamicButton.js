@@ -60,7 +60,7 @@ const withDynamicButton = Component => {
           })
           .catch(err => {
             console.error(err)
-            alert(err)
+            alert(err.response?.data || err)
           })
       }
     }
