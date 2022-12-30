@@ -47,7 +47,7 @@ const PageActions = ({ page }: { page: string }) => {
       <Button {...buttonProps} onClick={onOpen}>
         <Image w={'30px'} title="Edit" src="/icons/edit.svg" />
       </Button>
-      <PageSettings isOpen={isOpen} onClose={onClose} page={page} key={page}/>
+      {isOpen && <PageSettings isOpen={isOpen} onClose={onClose} page={page} key={page}/>}
 
       <Button {...buttonProps} onClick={() => deleteP(page)}>
         <Image w={'30px'} title="Edit" src="/icons/delete.svg" />
