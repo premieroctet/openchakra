@@ -1,5 +1,16 @@
 const mongoose = require('mongoose')
 const lodash=require('lodash')
+const User = require('../../../models/User')
+const {generate_id} = require('../../../../utils/consts')
+const {
+  declareEnumField,
+  declareVirtualField,
+  getModel,
+  setFilterDataUser,
+  setPostCreateData,
+  setPreCreateData,
+  setPreprocessGet,
+} = require('../../database')
 const Message = require('../../../models/Message')
 const {
   EVENT_STATUS,
@@ -8,14 +19,6 @@ const {
   ROLES,
 } = require('../../../../utils/fumoir/consts')
 const Guest = require('../../../models/Guest')
-const {
-  declareEnumField,
-  declareVirtualField,
-  getModel,
-  setFilterDataUser,
-  setPostCreateData,
-  setPreprocessGet,
-} = require('../../database')
 const {BadRequestError, NotFoundError} = require('../../errors')
 const OrderItem = require('../../../models/OrderItem')
 const Product = require('../../../models/Product')
@@ -93,6 +96,22 @@ const registerToEvent = ({event, user}) => {
   return Event.findByIdAndUpdate(event, {$addToSet: {members: user}})
 }
 
+const preCreate = ({model, params}) => {
+  if (model=='user') {
+    return User.findOne({email: params.email})
+      .then(user => {
+        if (user) {
+          throw new BadRequestError(`Le compte ${params.email} existe déjà`)
+        }
+        params={...params, password: generate_id()}
+        return Promise.resolve({model, params})
+      })
+  }
+  return Promise.resolve({model, params})
+}
+
+setPreCreateData(preCreate)
+
 const postCreate = ({model, params, data}) => {
   if (model=='booking') {
     return Order.create({booking: data._id})
@@ -102,9 +121,11 @@ const postCreate = ({model, params, data}) => {
         return data.save()
       })
   }
+  if (model=='user') {
+    console.log(`Sending mail to ${params.email} with temp password ${params.password}`)
+  }
 
-  return data
-
+  return Promise.resolve(data)
 }
 
 setPostCreateData(postCreate)

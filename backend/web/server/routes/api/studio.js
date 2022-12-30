@@ -1,14 +1,15 @@
 const {
+  callFilterDataUser,
+  callPostCreateData,
+  callPreCreateData,
+  callPreprocessGet,
+  retainRequiredFields,
+} = require('../../utils/database')
+const {
   getDataModel,
   getProductionPort,
   getProductionRoot,
 } = require('../../../config/config')
-const {
-  callPostCreateData,
-  callPreprocessGet,
-  callFilterDataUser,
-  retainRequiredFields,
-} = require('../../utils/database')
 require(`../../utils/studio/${getDataModel()}/functions`)
 const path = require('path')
 const {promises: fs} = require('fs')
@@ -252,17 +253,24 @@ router.post('/:model', passport.authenticate('cookie', {session: false}), (req, 
     return res.status(HTTP_CODE.BAD_REQUEST).json(`Model is required`)
   }
 
-  return mongoose.connection.models[model]
-    .create([params], {runValidators: true})
-    .then(([data]) => {
-      return callPostCreateData({model, params, data})
-    })
-    .then(data => {
-      return res.json(data)
+  return callPreCreateData({model, params})
+    .then(({model, params}) => {
+      return mongoose.connection.models[model]
+        .create([params], {runValidators: true})
+        .then(([data]) => {
+          return callPostCreateData({model, params, data})
+        })
+        .then(data => {
+          return res.json(data)
+        })
+        .catch(err => {
+          console.error(err)
+          return res.status(err.status||500).json(err.message || err)
+        })
     })
     .catch(err => {
       console.error(err)
-      return res.status(500).json(err)
+      return res.status(err.status||500).json(err.message || err)
     })
 })
 

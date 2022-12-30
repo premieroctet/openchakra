@@ -32,7 +32,7 @@ const setRecurseDataSource = (
     return []
   } else {
     return React.Children.map(element.props.children, function(child, index) {
-      const newSuffix = `${suffix}_${index}`
+      const newSuffix = child?.props?.dataSourceId ? `${suffix}_${index}` : suffix
       const newId = child.props?.id ? `${child.props?.id}${suffix}` : undefined
       //if (child.props === undefined || (child.props.dataSourceId && child.props.dataSourceId!=dataSourceId)) {
       if (child.props === undefined) {
@@ -93,13 +93,14 @@ const withDynamicContainer = Component => {
       const attribute=props.filterAttribute
       orgData = orgData.filter(d =>regExp.test(normalize(d[attribute])))
     }
-    let data = []
+    let data = orgData
+    if (true || !lodash.isNil(props?.limit)) {
     try {
-      data = orgData.slice(0, parseInt(props?.limit) || undefined)
-    } catch (err) {
-      console.error(
-        `Container ${props.id} can not slice ${JSON.stringify(orgData)}:${err}`,
-      )
+        data = orgData.slice(0, parseInt(props?.limit) || undefined)
+      }
+      catch (err) {
+        console.error(`Container ${props.id} can not slice ${JSON.stringify(orgData)}:${err}`)
+      }
     }
 
     const firstChild = React.Children.toArray(props.children)[0]

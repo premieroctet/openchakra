@@ -33,7 +33,7 @@ const ActionPanel = ({
           value={action || ''}
         >
           <option value={undefined}></option>
-          {actions.map(action => (
+          {lodash.orderBy(actions, a => ACTIONS[a].label).map(action => (
             <option value={action}>{ACTIONS[action].label}</option>
           ))}
         </Select>

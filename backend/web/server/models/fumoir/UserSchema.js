@@ -1,5 +1,6 @@
 const moment = require('moment')
 const mongoose = require('mongoose')
+const bcrypt = require('bcryptjs')
 const {schemaOptions} = require('../../utils/schemas')
 const {ROLES} = require('../../../utils/fumoir/consts')
 
@@ -21,6 +22,7 @@ const UserSchema = new Schema(
     role: {
       type: String,
       enum: Object.keys(ROLES),
+      required: true,
     },
     picture: {
       type: String,
@@ -59,12 +61,8 @@ const UserSchema = new Schema(
     },
     password: {
       type: String,
-      default: 'INVALID',
+      set: pass => bcrypt.hashSync(pass, 10),
       required: true,
-    },
-    creation_date: {
-      type: Date,
-      default: Date.now,
     },
     last_login: [
       {

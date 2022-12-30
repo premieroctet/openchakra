@@ -437,6 +437,17 @@ const callPreprocessGet = data => {
   return preprocessGet(data)
 }
 
+// Pre create data, allows to insert extra fields, etc..
+let preCreateData = data => Promise.resolve(data)
+
+const setPreCreateData = fn => {
+  preCreateData = fn
+}
+
+const callPreCreateData = data => {
+  return preCreateData(data)
+}
+
 // Post create data, allows to create extra data, etc, etc
 let postCreateData = data => Promise.resolve(data)
 
@@ -496,6 +507,8 @@ module.exports = {
   callFilterDataUser,
   setPreprocessGet,
   callPreprocessGet,
+  setPreCreateData,
+  callPreCreateData,
   setPostCreateData,
   callPostCreateData,
   removeData,
