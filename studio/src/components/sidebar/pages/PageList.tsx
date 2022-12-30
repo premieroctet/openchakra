@@ -1,4 +1,5 @@
 import React from 'react'
+import lodash from 'lodash'
 import {
   Box,
   Button,
@@ -14,6 +15,7 @@ import {
   getActivePageId,
 } from '~core/selectors/components'
 import useDispatch from '~hooks/useDispatch'
+
 import PageSettings from './PageSettings'
 
 const PageActions = ({ page }: { page: string }) => {
@@ -69,13 +71,15 @@ const PageList = ({ searchTerm }: { searchTerm: string }) => {
   const rootPage = useSelector(getRootPageId)
   const dispatch = useDispatch()
 
+  const sortedPages=lodash(pages).values().orderBy(params => lodash.kebabCase(params.pageName)).value()
+
   return (
     <List mb={8}>
-      {Object.entries(pages)
-        .filter(([page, params]) =>
+      {sortedPages
+        .filter(params =>
           params.pageName.toLowerCase().includes(searchTerm.toLowerCase()),
         )
-        .map(([page, params], i) => {
+        .map((params, i) => {
           const { pageId, pageName } = params
           const isIndexPage = pageId === rootPage
           const isSelectedPage = pageId === activePage
@@ -101,11 +105,11 @@ const PageList = ({ searchTerm }: { searchTerm: string }) => {
                 onClick={() => dispatch.project.setActivePage(page)}
                 fontWeight={isSelectedPage ? 'bold' : 'normal'}
               >
-                <small>{pageName}<br/>{pageId}</small>
+                {pageName}
                 {isIndexPage && '*'}
               </Button>
               <Box display={'flex'} alignItems="center">
-                <PageActions page={page} />
+                <PageActions page={pageId} />
               </Box>
             </ListItem>
           )
