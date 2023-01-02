@@ -1,4 +1,5 @@
-import React from 'react'
+import React, {useState} from 'react'
+import axios from 'axios';
 
 import { useLocation } from 'react-router-dom'
 
@@ -22,6 +23,13 @@ const withDynamicButton = Component => {
       : {}
     const backend = props.backend
     let onClick = props.onClick
+
+    const [actionAllowed, setActionAllowed]=useState(true)
+
+    axios.get(`/myAlfred/api/studio/action-allowed/${action}/${value?._id}`)
+      .then(res => setActionAllowed(res.data))
+      .catch(err => console.error(err))
+
     if (action) {
       onClick = () => {
         if (!ACTIONS[action]) {
@@ -69,7 +77,7 @@ const withDynamicButton = Component => {
       props.dataSource,
     )
     return (
-      <Component
+      <Component disabled={!actionAllowed}
         {...props}
         onClick={onClick}
         {...conditionalProperties}

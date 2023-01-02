@@ -34,12 +34,14 @@ const EventSchema = new Schema(
       {
         type: Schema.Types.ObjectId,
         ref: 'user',
+        required: true,
       },
     ],
     guests: [
       {
         type: Schema.Types.ObjectId,
         ref: 'guest',
+        required: true,
       },
     ],
     place: {

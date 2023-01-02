@@ -3,6 +3,7 @@ const util=require('util')
 const mongoose = require('mongoose')
 const lodash = require('lodash')
 const formatDuration = require('format-duration')
+const Event = require('../models/Event')
 const Booking = require('../models/Booking')
 const {CURRENT, FINISHED} = require('../../utils/fumoir/consts')
 const {BadRequestError} = require('./errors')
@@ -479,6 +480,10 @@ const removeData = dataId => {
             }
             return data.delete()
           })
+      }
+      if (model=='guest') {
+        return Event.update({}, {$pull: {guests: dataId}})
+          .then(() => data.delete())
       }
     })
 }

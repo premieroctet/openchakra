@@ -1,16 +1,3 @@
-const {
-  callFilterDataUser,
-  callPostCreateData,
-  callPreCreateData,
-  callPreprocessGet,
-  retainRequiredFields,
-} = require('../../utils/database')
-const {
-  getDataModel,
-  getProductionPort,
-  getProductionRoot,
-} = require('../../../config/config')
-require(`../../utils/studio/${getDataModel()}/functions`)
 const path = require('path')
 const {promises: fs} = require('fs')
 const child_process = require('child_process')
@@ -19,6 +6,21 @@ const bcrypt = require('bcryptjs')
 const express = require('express')
 const mongoose = require('mongoose')
 const passport = require('passport')
+const {
+  callFilterDataUser,
+  callPostCreateData,
+  callPreCreateData,
+  callPreprocessGet,
+  retainRequiredFields,
+} = require('../../utils/database')
+const {callAllowedAction} = require('../../utils/studio/actions')
+const {
+  getDataModel,
+  getProductionPort,
+  getProductionRoot,
+} = require('../../../config/config')
+require(`../../utils/studio/${getDataModel()}/functions`)
+require(`../../utils/studio/${getDataModel()}/actions`)
 const User = require('../../models/User')
 
 const {
@@ -69,6 +71,14 @@ router.get('/models', (req, res) => {
 router.get('/roles', (req, res) => {
   console.log()
   return res.json(ROLES)
+})
+
+router.get('/action-allowed/:action/:dataId', passport.authenticate('cookie', {session: false}), (req, res) => {
+  const {action, dataId}=req.params
+  const user=req.user
+
+  return callAllowedAction({action, dataId, user})
+    .then(allowed => res.json(allowed))
 })
 
 router.post('/file', (req, res) => {
