@@ -20,7 +20,7 @@ export default async function handler(req, res) {
     )
     await Promise.all([deletePreview, deletePanel, deleteTsx, deleteOcTsx])
     const response = shell.exec(
-      `cd .. && bit remove ${req.body.path.substr(10)} -s`,
+      `cd .. && bit remove ${req.body.path.substr(10)} -fs`,
     )
     res.status(200).json(response)
   } catch (err) {
