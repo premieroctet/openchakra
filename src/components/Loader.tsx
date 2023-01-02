@@ -22,7 +22,7 @@ const Loader = () => {
         justifyContent="center"
         w="0"
       >
-        <Text fontSize="xl" as="b">
+        <Text fontSize="xl" as="b" fontFamily="sans-serif" color="black">
           Loading...
         </Text>
         <CircularProgress isIndeterminate color="teal.500" />

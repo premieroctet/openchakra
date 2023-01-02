@@ -70,7 +70,7 @@ const InstallComponent = () => {
           </Text>
         </Button>
       </PopoverTrigger>
-      <PopoverContent p={5} bgColor="white">
+      <PopoverContent p={5} bgColor="white" color="black">
         <PopoverArrow bgColor="white" />
         <PopoverCloseButton />
         <PopoverBody>
