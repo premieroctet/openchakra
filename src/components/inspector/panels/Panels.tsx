@@ -80,7 +80,7 @@ import MenuButtonPanel from './components/MenuButtonPanel'
 import SliderPanel from '~components/inspector/panels/components/SliderPanel'
 import SliderMarkPanel from './components/SliderMarkPanel'
 
-const importView = (component: any) => {
+const importView = (component: string) => {
   component = convertToPascal(component)
   return lazy(() =>
     import(
@@ -95,18 +95,16 @@ const Panels: React.FC<{
   isCustom?: boolean
 }> = ({ component, isRoot, isCustom = false }) => {
   const { type } = component
-  const [views, setViews] = useState<any>([])
+  const [view, setView] = useState<any>()
   const customComponents = useSelector(getCustomComponentNames)
 
   useEffect(() => {
     async function loadViews() {
-      const componentPromises = await customComponents.map(
-        async (component: any) => {
-          const View = await importView(component)
-          return <View key={component} />
-        },
-      )
-      Promise.all(componentPromises).then(setViews)
+      if (type) {
+        const View = await importView(type)
+        const loadedPanel = <View />
+        Promise.all([loadedPanel]).then(setView)
+      }
     }
     loadViews()
   }, [customComponents])
@@ -116,10 +114,7 @@ const Panels: React.FC<{
   }
 
   if (isCustom) {
-    const ind = customComponents.indexOf(type)
-    if (ind !== -1)
-      return <Suspense fallback={'Loading...'}>{views[ind]}</Suspense>
-    return <>Loading...</>
+    return <Suspense fallback={'Loading...'}>{view}</Suspense>
   }
 
   return (
