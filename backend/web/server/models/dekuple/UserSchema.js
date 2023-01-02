@@ -1,16 +1,16 @@
-const { schemaOptions } = require('../../utils/schemas');
 const mongoose = require('mongoose')
+const bcrypt=require('bcryptjs')
+const {GENDER} = require('../../../utils/dekuple/consts')
+const {schemaOptions} = require('../../utils/schemas')
 
 const Schema = mongoose.Schema
-const bcrypt = require('bcryptjs')
-
 
 const UserSchema = new Schema({
   firstname: {
     type: String,
     required: true,
   },
-  name: {
+  lastname: {
     type: String,
     required: true,
   },
@@ -24,6 +24,56 @@ const UserSchema = new Schema({
     required: true,
     default: 'invalid',
     set: pass => bcrypt.hashSync(pass, 10),
+  },
+  withings_id: {
+    type: String,
+    required: true,
+  },
+  picture: {
+    type: String,
+    required: false,
+  },
+  weight: { // kg
+    type: Number,
+    required: false,
+  },
+  height: { // cm
+    type: Number,
+    required: false,
+  },
+  birthday: {
+    type: Date,
+    required: true,
+  },
+  gender: {
+    type: String,
+    enum: [null, ...Object.keys(GENDER)],
+    default: null,
+    required: false,
+  },
+  phone: {
+    type: String,
+    required: false,
+  },
+  smoker: {
+    type: Boolean,
+    required: false,
+  },
+  highBloodPressureTreatment: {
+    type: Boolean,
+    required: false,
+  },
+  tensiometer_withings_id: {
+    type: String,
+    required: false,
+  },
+  tensiometer_mark: {
+    type: String,
+    required: false,
+  },
+  tensiometer_serial_number: {
+    type: String,
+    required: false,
   },
 }, schemaOptions)
 

@@ -1,5 +1,3 @@
-// const { PLACES } = require('../../utils/fumoir/consts');
-const util=require('util')
 const mongoose = require('mongoose')
 const lodash = require('lodash')
 const formatDuration = require('format-duration')

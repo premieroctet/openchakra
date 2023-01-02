@@ -199,7 +199,6 @@ const preprocessGet = ({model, fields, id, user}) => {
 setPreprocessGet(preprocessGet)
 
 const USER_MODELS=['user', 'loggedUser']
-
 USER_MODELS.forEach(m => {
   declareEnumField({model: m, field: 'role', enumValues: ROLES})
   declareVirtualField({model: m, field: 'full_name', instance: 'String', requires: 'firstname,lastname'})
