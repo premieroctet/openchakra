@@ -83,6 +83,10 @@ const UserSchema = new Schema(
   schemaOptions,
 )
 
+UserSchema.virtual('company_name').get(function() {
+  return this?.company?.name
+})
+
 UserSchema.virtual('full_name').get(function() {
   return `${this.firstname} ${this.lastname}`
 })
