@@ -47,7 +47,7 @@ const UserSchema = new Schema({
   },
   gender: {
     type: String,
-    enum: [null, ...Object.keys(GENDER)],
+    enum: Object.keys(GENDER),
     default: null,
     required: false,
   },
