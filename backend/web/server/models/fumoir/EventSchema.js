@@ -34,12 +34,7 @@ const EventSchema = new Schema(
       {
         type: Schema.Types.ObjectId,
         ref: 'user',
-      },
-    ],
-    guests: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'guest',
+        required: true,
       },
     ],
     place: {
@@ -47,13 +42,25 @@ const EventSchema = new Schema(
       enum: [...Object.keys(PLACES)],
       required: false,
     },
-    guests_count: {
-      type: Number,
-      default: 0,
-    },
   },
   schemaOptions,
 )
+
+/**
+ TODO: should rather be a virtual function insteadd of this trick
+ BUT: if it's a function, mongoose asks got foreignField declaration during populate
+ THEN: exclude fields are marked as computed in buildPopulate(s)
+ */
+EventSchema.virtual('guests', {
+  ref: 'guest', // The Model to use
+  localField: '_id', // Find in Model, where localField
+  foreignField: '_id', // is equal to foreignField
+})
+
+// Computed field
+EventSchema.virtual('guests_count').get(() => {
+  return null
+})
 
 EventSchema.virtual('members_count').get(function() {
   return this.guests_count + this.members?.length || 0

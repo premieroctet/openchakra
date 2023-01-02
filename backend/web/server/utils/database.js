@@ -3,6 +3,8 @@ const util=require('util')
 const mongoose = require('mongoose')
 const lodash = require('lodash')
 const formatDuration = require('format-duration')
+const UserSessionData = require('../models/UserSessionData')
+const Event = require('../models/Event')
 const Booking = require('../models/Booking')
 const {CURRENT, FINISHED} = require('../../utils/fumoir/consts')
 const {BadRequestError} = require('./errors')
@@ -464,6 +466,7 @@ const removeData = dataId => {
   return getModel(dataId)
     .then(result => {
       model=result
+      console.log(`FOund model ${model}`)
       return mongoose.connection.models[model].findById(dataId)
     })
     .then(data => {
@@ -479,6 +482,14 @@ const removeData = dataId => {
             }
             return data.delete()
           })
+      }
+      if (model=='guest') {
+        console.log('model guest')
+        return Promise.all([
+          UserSessionData.updateMany({}, {$pull: {guests: {guest: dataId}}}),
+          // TODO: update the bookings but the context is required
+        ])
+          .then(() => data.delete())
       }
     })
 }

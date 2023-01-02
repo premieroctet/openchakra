@@ -115,6 +115,30 @@ let ACTIONS = {
     return Post.create({contents, media, author: sender})
   },
 
+  inviteGuest: ({parent, email, phone}) => {
+    return inviteGuest({eventOrBooking: parent, email, phone})
+  },
+
+  addOrderItem: ({context, parent, quantity}) => {
+    return addOrderItem({order: context, product: parent, quantity})
+  },
+
+  setOrderItem: ({context, parent, quantity}) => {
+    return setOrderItem({order: context, product: parent, quantity})
+  },
+
+  removeOrderItem: ({context, parent}) => {
+    return removeOrderItem({order: context, item: parent})
+  },
+
+  registerToEvent: ({context}, user) => {
+    return registerToEvent({event: context, user})
+  },
+
+  pay: ({context}, user) => {
+    return payOrder({order: context, user})
+  },
+
 }
 
 let ALLOW_ACTION= () => true
