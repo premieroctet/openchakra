@@ -274,6 +274,7 @@ declareVirtualField({model: 'event', field: 'guests_count', instance: 'Number', 
 declareVirtualField({model: 'order', field: 'total_price', instance: 'Number', requires: 'items'})
 declareVirtualField({model: 'order', field: 'paid', instance: 'Boolean', requires: 'items'})
 declareVirtualField({model: 'order', field: 'paid_str', instance: 'String', requires: 'items'})
+declareVirtualField({model: 'order', field: 'remaining_total', instance: 'Number', requires: 'items,payments'})
 
 declareVirtualField({model: 'orderItem', field: 'net_price', instance: 'Number', requires: 'price,vat_rate'})
 declareVirtualField({model: 'orderItem', field: 'total_price', instance: 'Number', requires: 'price,quantity'})

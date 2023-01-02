@@ -1,10 +1,10 @@
-const {PAID_STR, TO_PAY_STR} = require('../../../utils/fumoir/consts')
 const mongoose = require('mongoose')
 const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
+const lodash = require('lodash')
+const {PAID_STR, TO_PAY_STR} = require('../../../utils/fumoir/consts')
+const {schemaOptions} = require('../../utils/schemas')
 
 const Schema = mongoose.Schema
-const lodash = require('lodash')
-const {schemaOptions} = require('../../utils/schemas')
 
 const OrderSchema = new Schema(
   {
@@ -25,6 +25,23 @@ const OrderSchema = new Schema(
     guest: {
       type: String,
     },
+    payments: [
+      {
+        date: {
+          type: Date,
+          required: true,
+        },
+        customer: {
+          type: String,
+          required: true,
+        },
+        amount: {
+          type: Number,
+          min: 0,
+          required: true,
+        },
+      },
+    ],
   },
   schemaOptions,
 )
@@ -34,6 +51,18 @@ OrderSchema.virtual('total_price').get(function() {
     return 0
   }
   return lodash.sum(this.items.map(i => i.total_price))
+})
+
+OrderSchema.virtual('remaining_total').get(function() {
+  if (!this.items) {
+    return 0
+  }
+  const total=lodash.sum(this.items.map(i => i.total_price))
+  if (!this.payments) {
+    return total
+  }
+  const paid=lodash.sum(this.payments.map(p => p.amount))
+  return total-paid
 })
 
 OrderSchema.virtual('paid').get(function() {
