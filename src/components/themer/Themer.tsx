@@ -25,6 +25,7 @@ import API from '~custom-components/api'
 import ThemeCustomStyles from './CustomStyles'
 import ThemeColorPalette from './ThemeColorPalette'
 import ThemeFonts from './ThemeFonts'
+import { GiLargePaintBrush } from 'react-icons/gi'
 
 const Themer = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -47,20 +48,16 @@ const Themer = () => {
   }, [newThemeState])
 
   return (
-    <LightMode>
+    <>
       <Button
-        px={6}
-        bgGradient="linear(to-br, blue.300, green.300, yellow.300, red.300)"
+        mx={4}
         display="flex"
         flexDirection="row"
         alignItems="center"
-        fontSize="sm"
-        whiteSpace="nowrap"
-        _hover={{
-          bgGradient: 'linear(to-br, blue.200, green.200, yellow.200, red.200)',
-        }}
+        rightIcon={<GiLargePaintBrush />}
+        variant="ghost"
+        size="xs"
         onClick={onOpen}
-        color="black"
       >
         Theme
       </Button>
@@ -135,7 +132,7 @@ const Themer = () => {
           </DrawerBody>
         </DrawerContent>
       </Drawer>
-    </LightMode>
+    </>
   )
 }
 

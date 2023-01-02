@@ -14,19 +14,19 @@ const paletteOptions = [
   {
     label: 'Primary Color',
     propType: 'primaryColor',
-    description: 'Applies this as foreground color to blah blah components',
+    description: 'Applies this as foreground color to icons',
     withFullColor: true,
   },
   {
     label: 'Background Color',
     propType: 'bgColor',
-    description: 'Applies this as body background color ',
+    description: 'Applies this as body background color',
     withFullColor: true,
   },
   {
     label: 'Paper Color',
     propType: 'paperColor',
-    description: 'Applies this as component background color ',
+    description: 'Applies this as component background color',
     withFullColor: true,
   },
   {

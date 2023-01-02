@@ -20,6 +20,7 @@ import {
   PopoverFooter,
   Tooltip,
   HStack,
+  Spacer,
 } from '@chakra-ui/react'
 import { ExternalLinkIcon, SmallCloseIcon, CheckIcon } from '@chakra-ui/icons'
 import { DiGithubBadge } from 'react-icons/di'
@@ -212,9 +213,9 @@ const Header = () => {
                 />
               </LightMode>
             </FormControl>
-            <Themer />
           </HStack>
-
+          <Themer />
+          <Spacer />
           <Stack direction="row">
             <CodeSandboxButton />
             <Popover>
