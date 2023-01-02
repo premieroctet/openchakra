@@ -1,7 +1,5 @@
 const UserSessionData = require('../../../models/UserSessionData')
 const {getModel} = require('../../database')
-const Event = require('../../../models/Event')
-const {getDataModel} = require('../../../../config/config')
 const {addAction, setAllowActionFn} = require('../actions')
 const {
   inviteGuest,
