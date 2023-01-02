@@ -408,9 +408,9 @@ export const DEFAULT_PROPS: PreviewDefaultProps | any = {
     spacingY: 1,
   },
   Slider: {
-    step: 1,
-    size: 'md',
-    value: 50,
+    // step: 1,
+    // size: 'md',
+    // value: 70,
     min: 1,
     max: 100,
     'aria-label': 'slider',
