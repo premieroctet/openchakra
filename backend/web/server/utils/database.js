@@ -1,15 +1,8 @@
 // const { PLACES } = require('../../utils/fumoir/consts');
-const util=require('util')
 const mongoose = require('mongoose')
 const lodash = require('lodash')
 const formatDuration = require('format-duration')
-<<<<<<< HEAD
 const UserSessionData = require('../models/UserSessionData')
-const Event = require('../models/Event')
-||||||| f1e4cd839
-=======
-const Event = require('../models/Event')
->>>>>>> 8452d5cde715aa4d96b9fc6ea18167389cfdb0c3
 const Booking = require('../models/Booking')
 const {CURRENT, FINISHED} = require('../../utils/fumoir/consts')
 const {BadRequestError} = require('./errors')
