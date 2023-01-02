@@ -89,7 +89,7 @@ import SliderTrackPreview from './previews/SliderTrackPreview'
 import SliderThumbPreview from './previews/SliderThumbPreview'
 import { convertToPascal } from './Editor'
 
-const importView = (component: any, isInstalled: boolean = false) => {
+const importView = (component: string, isInstalled: boolean = false) => {
   if (isInstalled) {
     return lazy(() =>
       import(`src/installed-components/${component}Preview.ic.tsx`).catch(() =>
@@ -113,20 +113,18 @@ const ComponentPreview: React.FC<{
     console.error(`ComponentPreview unavailable for component ${componentName}`)
   }
   const type = (component && component.type) || null
-  const [views, setViews] = useState<any>([])
+  const [view, setView] = useState<any>()
   const [instView, setInstView] = useState<any>()
   const customComponents = useSelector(getCustomComponentNames)
   const installedComponents = useSelector(getInstalledComponents)
 
   useEffect(() => {
     async function loadViews() {
-      const componentPromises = await customComponents.map(
-        async (customComponent: string) => {
-          const View = await importView(customComponent)
-          return <View key={customComponent} component={component} />
-        },
-      )
-      Promise.all(componentPromises).then(setViews)
+      if (type) {
+        const View = await importView(type)
+        const loadedComponent = <View component={component} />
+        Promise.all([loadedComponent]).then(setView)
+      }
     }
     loadViews()
   }, [customComponents])
@@ -135,9 +133,7 @@ const ComponentPreview: React.FC<{
     async function loadViews() {
       const installedComponent = componentName.split('-')[0]
       const View = await importView(installedComponent, true)
-      const loadedComponent = (
-        <View key={installedComponent} component={component} />
-      )
+      const loadedComponent = <View component={component} />
       Promise.all([loadedComponent]).then(setInstView)
     }
     loadViews()
@@ -148,10 +144,7 @@ const ComponentPreview: React.FC<{
   }
 
   if (type && customComponents.includes(type)) {
-    const ind = customComponents.indexOf(type)
-    if (ind !== -1)
-      return <Suspense fallback={'Loading...'}>{views[ind]}</Suspense>
-    return <>Loading...</>
+    return <Suspense fallback={'Loading...'}>{view}</Suspense>
   }
 
   switch (type) {
