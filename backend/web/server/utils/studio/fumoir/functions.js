@@ -243,7 +243,7 @@ USER_MODELS.forEach(m => {
 declareEnumField({model: 'booking', field: 'place', enumValues: PLACES})
 declareVirtualField({model: 'booking', field: 'end_date', instance: 'Date', requires: ''})
 declareVirtualField({model: 'booking', field: 'paid', instance: 'Boolean', requires: 'orders'})
-declareVirtualField({model: 'booking', field: 'paid_str', instance: 'String', requires: 'orders'})
+declareVirtualField({model: 'booking', field: 'paid_str', instance: 'String', requires: 'orders,orders.items'})
 declareVirtualField({model: 'booking', field: 'status', instance: 'String', requires: 'start_date,end_date', enumValues: EVENT_STATUS})
 
 const PRODUCT_MODELS=['product', 'cigar', 'drink', 'meal']
