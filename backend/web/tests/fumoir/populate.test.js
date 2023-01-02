@@ -30,7 +30,7 @@ describe('Test virtual single ref', () => {
     expect(pops).toEqual([{path: 'items'}])
   })
 
-  it.skip('post author company should populate company', async() => {
+  it('post author company should populate company', async() => {
     const pops=buildPopulates(['author.company_name'], 'post')
     expect(pops).toEqual([{path: 'author', populates: {path: 'company'}}])
   })

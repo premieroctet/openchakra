@@ -236,9 +236,9 @@ const buildQuery = (model, id, fields) => {
   console.log(`Requesting model ${model}, id ${id || 'none'} fields:${fields}`)
   const modelAttributes = Object.fromEntries(getModelAttributes(model))
 
-  const populates = buildPopulates(allFields, model)
+  const populates = buildPopulates(fields, model)
 
-  const select = lodash(allFields)
+  const select = lodash(fields)
     .map(att => att.split('.')[0])
     .uniq()
     .filter(att => modelAttributes[att].ref == false)
