@@ -205,7 +205,7 @@ const preprocessGet = ({model, fields, id, user}) => {
           if (lodash.isEmpty(messages)) {
             return User.findById(id)
               .then(partner => {
-                const data=[{partner, messages: []}]
+                const data=[{_id: partner._id, partner, messages: []}]
                 return {model, fields, id, data}
               })
           }
