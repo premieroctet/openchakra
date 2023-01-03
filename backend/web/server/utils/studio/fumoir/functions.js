@@ -195,15 +195,15 @@ const preprocessGet = ({model, fields, id, user}) => {
     }
 
     return Message.find({$or: [{sender: user._id}, {receiver: user._id}]})
-      .populate('sender')
-      .populate('receiver')
+      .populate({path: 'sender', populate: {path: 'company'}})
+      .populate({path: 'receiver', populate: {path: 'company'}})
       .sort({'creation_date': 1})
       .then(messages => {
         if (id) {
           messages=messages.filter(m => getPartner(m, user)._id.toString()==id)
           // If no messages for one parner, forge it
           if (lodash.isEmpty(messages)) {
-            return User.findById(id)
+            return User.findById(id).populate('company')
               .then(partner => {
                 const data=[{_id: partner._id, partner, messages: []}]
                 return {model, fields, id, data}
