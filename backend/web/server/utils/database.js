@@ -180,6 +180,15 @@ const buildPopulates = (fields, model) => {
   // tofix: cf. lodash.mergeWith
   const modelAttributes = Object.fromEntries(getModelAttributes(model))
 
+  const virtuals = lodash(fields.map(f => f.split('.')[0]))
+    .uniq()
+    .map(f => DECLARED_VIRTUALS[model]?.[f]?.requires?.split(','))
+    .flatten()
+    .filter(f => !!f)
+    .value()
+
+  fields = [...fields, ...virtuals]
+
   const modelAttributesNames = Object.keys(modelAttributes)
   const requiredAttributesNames = lodash(fields)
     .map(f => f.split('.')[0])
@@ -227,19 +236,9 @@ const buildQuery = (model, id, fields) => {
   console.log(`Requesting model ${model}, id ${id || 'none'} fields:${fields}`)
   const modelAttributes = Object.fromEntries(getModelAttributes(model))
 
-  const virtuals = lodash(fields.map(f => f.split('.')[0]))
-    .uniq()
-    .map(f => DECLARED_VIRTUALS[model]?.[f]?.requires?.split(','))
-    .flatten()
-    .filter(f => !!f)
-    .value()
+  const populates = buildPopulates(fields, model)
 
-  const allFields = [...fields, ...virtuals]
-
-  console.log(`All fields:${allFields}`)
-  const populates = buildPopulates(allFields, model)
-
-  const select = lodash(allFields)
+  const select = lodash(fields)
     .map(att => att.split('.')[0])
     .uniq()
     .filter(att => modelAttributes[att].ref == false)
