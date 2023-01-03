@@ -50,6 +50,7 @@ export const ACTIONS = {
     let url = `/${props.page}`
     if (value && value._id) {
       queryParams.set(model, value._id)
+      queryParams.set('id', value._id)
     }
     url = `${url}?${queryParams.toString()}`
     // new page

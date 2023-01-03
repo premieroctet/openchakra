@@ -689,7 +689,7 @@ ${componentsCodes}
 
 const ${componentName} = () => {
   const query = new URLSearchParams(useLocation().search)
-  const id=${rootIgnoreUrlParams ? 'null' : `query.get('${rootIdQuery}')`}
+  const id=${rootIgnoreUrlParams ? 'null' : `query.get('${rootIdQuery}') || query.get('id')`}
   const {user}=useUserContext()
   ${hooksCode}
   ${filterStates}
