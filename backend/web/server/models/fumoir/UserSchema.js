@@ -87,6 +87,10 @@ UserSchema.virtual('company_name').get(function() {
   return this?.company?.name
 })
 
+UserSchema.virtual('company_description').get(function() {
+  return this?.company?.description
+})
+
 UserSchema.virtual('full_name').get(function() {
   return `${this.firstname} ${this.lastname}`
 })

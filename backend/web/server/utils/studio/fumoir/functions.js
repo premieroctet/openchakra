@@ -246,6 +246,7 @@ USER_MODELS.forEach(m => {
       options: {ref: 'event'}}})
 
   declareVirtualField({model: m, field: 'company_name', instance: 'String', requires: 'company'})
+  declareVirtualField({model: m, field: 'company_description', instance: 'String', requires: 'company'})
 
 })
 
