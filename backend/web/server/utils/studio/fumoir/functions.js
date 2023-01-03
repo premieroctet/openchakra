@@ -201,6 +201,14 @@ const preprocessGet = ({model, fields, id, user}) => {
       .then(messages => {
         if (id) {
           messages=messages.filter(m => getPartner(m, user)._id.toString()==id)
+          // If no messages for one parner, forge it
+          if (lodash.isEmpty(messages)) {
+            return User.findById(id)
+              .then(partner => {
+                const data=[{partner, messages: []}]
+                return {model, fields, id, data}
+              })
+          }
         }
         const partnerMessages=lodash.groupBy(messages, m => getPartner(m, user)._id)
         const convs=lodash(partnerMessages)
