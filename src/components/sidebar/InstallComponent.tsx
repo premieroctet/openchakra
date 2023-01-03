@@ -28,6 +28,19 @@ const InstallComponent = () => {
   const dispatch = useDispatch()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
+  const validateBit = async (name: string, pathPackage: string) => {
+    try {
+      const res = await API.post('/bit-component-valid', {
+        component: name,
+        path: pathPackage,
+      })
+      return true;
+    }
+    catch {
+      return false;
+    }
+  }
+
   const componentValid = (
     componentPath: string | undefined = ref.current?.value,
   ) => {
@@ -38,6 +51,7 @@ const InstallComponent = () => {
   const installComponent = async () => {
     const componentPath: string = ref.current ? ref.current.value : ''
     if (!componentValid(componentPath)) return
+    if(!(await validateBit('name', componentPath))) return
     onClose()
     dispatch.app.toggleLoader()
     await API.post('/install-component', {
