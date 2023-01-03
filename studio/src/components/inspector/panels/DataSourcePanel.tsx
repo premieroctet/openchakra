@@ -34,11 +34,10 @@ const DataSourcePanel: React.FC = () => {
   const [providers, setProviders] = useState<IComponent[]>([])
   const [contextProviders, setContextProviders] = useState<IComponent[]>([])
   const [attributes, setAttributes] = useState({})
+  const [subAttributes, setSubAttributes] = useState({})
   const [filterAttributes, setFilterAttributes] = useState({})
   const models = useSelector(getModels)
 
-  console.log(`Actual component:${activeComponent?.type}`)
-  console.log(`Attribute:${JSON.stringify(attributes?.[attribute])}`)
   useEffect(() => {
     setProviders(getDataProviders(activeComponent, components))
     if (!lodash.isEmpty(models)) {
@@ -56,6 +55,16 @@ const DataSourcePanel: React.FC = () => {
       }
       catch (err) {
         alert(err)
+      }
+      if (subDataSource) {
+        const model=models[components[subDataSource].props?.model]
+        if (model) {
+          const subAttrs=lodash(model.attributes)
+            .pickBy((def, k) => !k.includes('.') && !def.mutiple && !def.ref)
+            .value()
+          setSubAttributes(subAttrs)
+        }
+
       }
     }
   }, [activeComponent, components, models])
@@ -187,6 +196,45 @@ const DataSourcePanel: React.FC = () => {
           </FormControl>
         </>
       )}
+      {activeComponent?.type=="Select" &&
+      <>
+        <FormControl htmlFor="subDataSource" label="Choose in datasource">
+        <Select
+          id="subDataSource"
+          onChange={setValueFromEvent}
+          name="subDataSource"
+          size="xs"
+          value={subDataSource || ''}
+        >
+          <option value={undefined}></option>
+          {providers.map((provider, i) => (
+            <option key={`prov${i}`} value={provider.id}>
+              {`${provider.id} (${provider.props?.model})`}
+            </option>
+          ))}
+        </Select>
+        </FormControl>
+      {subAttributes && (
+        <FormControl htmlFor="subAttribute" label="Display attribute">
+          <Select
+            id="subAttribute"
+            onChange={setValueFromEvent}
+            name="subAttribute"
+            size="xs"
+            value={subAttribute || ''}
+          >
+            <option value={undefined}></option>
+            {Object.keys(subAttributes).map((attribute, i) => (
+              <option key={`attr${i}`} value={attribute}>
+                {attribute}
+              </option>
+            ))}
+          </Select>
+        </FormControl>
+      )}
+      }
+      </>
+      }
       </AccordionContainer>
     </Accordion>
   )
