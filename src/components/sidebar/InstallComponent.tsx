@@ -20,7 +20,7 @@ import API from '~custom-components/api'
 import useDispatch from '~hooks/useDispatch'
 import { useRouter } from 'next/router'
 
-const regex = /^[a-z@][a-z0-9-_$!/.]*$/
+const regex = /\@\w+\/+\w+\./
 
 const InstallComponent = () => {
   const ref = useRef<HTMLInputElement>(null)
@@ -31,10 +31,8 @@ const InstallComponent = () => {
   const componentValid = (
     componentPath: string | undefined = ref.current?.value,
   ) => {
-    if (componentPath === undefined || componentPath.length === 0) return false
-    return componentPath
-      .split('/')
-      .reduce((acc, word) => acc && regex.test(word), true)
+    if (componentPath === undefined || componentPath.length === 0 || !regex.test(componentPath)) return false
+    return true
   }
 
   const installComponent = async () => {
