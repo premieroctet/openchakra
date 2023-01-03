@@ -13,6 +13,9 @@ const CompanySchema = new Schema(
     siret: {
       type: String,
     },
+    website: {
+      type: String,
+    },
     description: {
       type: String,
       set: text => hideIllegal(text),
