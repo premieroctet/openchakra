@@ -1,11 +1,13 @@
 const url = require('url')
 const mongoose=require('mongoose')
+const lodash=require('lodash')
+const {buildPopulates, getModel, removeData} = require('../database')
 const Message = require('../../models/Message')
 const Post = require('../../models/Post')
 const UserSessionData = require('../../models/UserSessionData')
 const {NotFoundError} = require('../errors')
 const Program = require('../../models/Program')
-const {getModel, removeData}=require('../database')
+
 /**
 const {
   inviteGuest,
@@ -36,11 +38,19 @@ let ACTIONS = {
       .then(res => {
         model = res
         const mongooseModel = mongoose.connection.models[model]
-        return mongooseModel.updateMany(
-          {$or: [{_id: parent}, {origin: parent}]},
-          {[attribute]: value},
-          {runValidators: true},
-        )
+        const populates=buildPopulates([attribute], model)
+        let query=mongooseModel.find({$or: [{_id: parent}, {origin: parent}]})
+        query = populates.reduce((q, key) => q.populate(key), query)
+        return query
+          .then(objects => {
+            return Promise.all(objects.map(object => {
+              let paths=attribute.split('.')
+              let obj=paths.length>1 ? lodash.get(object, paths.slice(0, paths.length-1)) : object
+              console.log(obj)
+              lodash.set(obj, paths.slice(-1)[0], value)
+              return obj.save({runValidators: true})
+            }))
+          })
       })
   },
 
