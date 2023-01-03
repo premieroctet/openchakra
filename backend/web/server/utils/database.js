@@ -151,7 +151,18 @@ const buildPopulate = (field, model) => {
   if (fields.length == 0) {
     return null
   }
-  const currentField = fields[0]
+  let currentField = fields[0]
+  const virtuals = lodash(fields.map(f => f.split('.')[0]))
+    .uniq()
+    .map(f => DECLARED_VIRTUALS[model]?.[f]?.requires?.split(','))
+    .flatten()
+    .filter(f => !!f)
+    .value()
+
+  if (virtuals?.length>0) {
+    // TODO: should also take next fields into account
+    currentField=virtuals[0]
+  }
   const currentAttribute = attributes[currentField]
   if (!currentAttribute) {
     throw new Error(`Can not get attribute for ${model}/${currentField}`)
@@ -178,6 +189,7 @@ const buildPopulates = (fields, model) => {
   // should return {path: 'program', populate: [{path: 'themes'}, {path: 'otherref'}]}
   // but today return {path: 'program', populate: {path: 'themes'}]}
   // tofix: cf. lodash.mergeWith
+
   const modelAttributes = Object.fromEntries(getModelAttributes(model))
 
   const virtuals = lodash(fields.map(f => f.split('.')[0]))
@@ -216,6 +228,7 @@ const buildPopulates = (fields, model) => {
     )
     .values()
     .value()
+
   return populates
 }
 

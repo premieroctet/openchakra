@@ -30,8 +30,13 @@ describe('Test virtual single ref', () => {
     expect(pops).toEqual([{path: 'items'}])
   })
 
+  it('booking paid_str should populate items', async() => {
+    const pops=buildPopulates(['paid_str'], 'booking')
+    expect(pops).toEqual([{path: 'orders', populate: {path: 'items'}}])
+  })
+
   it('post author company should populate company', async() => {
     const pops=buildPopulates(['author.company_name'], 'post')
-    expect(pops).toEqual([{path: 'author', populates: {path: 'company'}}])
+    expect(pops).toEqual([{path: 'author', populate: {path: 'company'}}])
   })
 })
