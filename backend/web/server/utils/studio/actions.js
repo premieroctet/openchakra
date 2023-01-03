@@ -38,7 +38,17 @@ let ACTIONS = {
       .then(res => {
         model = res
         const mongooseModel = mongoose.connection.models[model]
+
+        if (attribute.split('.').length==1) {
+          // Simple attribute => simple method
+          return mongooseModel.updateMany(
+            {$or: [{_id: parent}, {origin: parent}]},
+            {[attribute]: value},
+            {runValidators: true},
+          )
+        }
         const populates=buildPopulates([attribute], model)
+        console.log(`Populates in PUT:${JSON.stringify(populates)}`)
         let query=mongooseModel.find({$or: [{_id: parent}, {origin: parent}]})
         query = populates.reduce((q, key) => q.populate(key), query)
         return query
@@ -46,7 +56,6 @@ let ACTIONS = {
             return Promise.all(objects.map(object => {
               let paths=attribute.split('.')
               let obj=paths.length>1 ? lodash.get(object, paths.slice(0, paths.length-1)) : object
-              console.log(obj)
               lodash.set(obj, paths.slice(-1)[0], value)
               return obj.save({runValidators: true})
             }))

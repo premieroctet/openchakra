@@ -25,6 +25,8 @@ const DataSourcePanel: React.FC = () => {
   const { setValueFromEvent, setValue } = useForm()
   const dataSource = usePropsSelector('dataSource')
   const attribute = usePropsSelector('attribute')
+  const subDataSource = usePropsSelector('subDataSource')
+  const subAttribute = usePropsSelector('subAttribute')
   const limit = usePropsSelector('limit')
   const contextFilter = usePropsSelector('contextFilter')
   const filterValue = usePropsSelector('filterValue')
@@ -35,28 +37,24 @@ const DataSourcePanel: React.FC = () => {
   const [filterAttributes, setFilterAttributes] = useState({})
   const models = useSelector(getModels)
 
+  console.log(`Actual component:${activeComponent?.type}`)
+  console.log(`Attribute:${JSON.stringify(attributes?.[attribute])}`)
   useEffect(() => {
     setProviders(getDataProviders(activeComponent, components))
     if (!lodash.isEmpty(models)) {
       try {
-        const attrs = getAvailableAttributes(
-          activeComponent,
-          components,
-          models,
-        )
+        const attrs = getAvailableAttributes(activeComponent, components, models)
         setAttributes(attrs)
-      } catch (err) {
+      }
+      catch (err) {
         console.error(err)
         alert(err)
       }
       try {
-        const filterAttrs = getFilterAttributes(
-          activeComponent,
-          components,
-          models,
-        )
+        const filterAttrs = getFilterAttributes(activeComponent, components, models)
         setFilterAttributes(filterAttrs)
-      } catch (err) {
+      }
+      catch (err) {
         alert(err)
       }
     }

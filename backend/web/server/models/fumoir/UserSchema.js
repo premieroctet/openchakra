@@ -59,6 +59,10 @@ const UserSchema = new Schema(
     cgv_validation_date: {
       type: Date,
     },
+    favorite_cigar: {
+      type: Schema.Types.ObjectId,
+      ref: 'cigar',
+    },
     password: {
       type: String,
       set: pass => bcrypt.hashSync(pass, 10),
