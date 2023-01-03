@@ -134,7 +134,7 @@ const UploadFile = ({
         axios
           .post(uploadUrl, paramsBack)
           .then(() => {
-            setUploadInfo('Ressource ajoutée')
+            //setUploadInfo('Ressource ajoutée')
           })
           .then(() => {
             /* scorm file ? save version */
