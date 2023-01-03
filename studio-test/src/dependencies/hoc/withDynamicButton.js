@@ -1,8 +1,7 @@
 import React, {useState} from 'react'
 import axios from 'axios';
-
+import lodash from 'lodash'
 import { useLocation } from 'react-router-dom'
-
 import { ACTIONS } from '../utils/actions'
 import {
   extractFiltersFromProps,
@@ -12,7 +11,10 @@ import {
 const withDynamicButton = Component => {
   const Internal = props => {
     const query = new URLSearchParams(useLocation().search)
-    const value = props.dataSource
+    let value = props.dataSource
+    if (props.attribute) {
+      value=lodash.get(value, props.attribute)
+    }
     const action = props.action
     const nextAction = props.nextAction
     const context = props.context
