@@ -20,7 +20,6 @@ CategorySchema.virtual('children', {
   ref: 'category', // The Model to use
   localField: '_id', // Find in Model, where localField
   foreignField: 'parent', // is equal to foreignField
-  justOne: true,
 })
 
 CategorySchema.virtual('products', {
