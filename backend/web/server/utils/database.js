@@ -249,6 +249,15 @@ const buildQuery = (model, id, fields) => {
   console.log(`Requesting model ${model}, id ${id || 'none'} fields:${fields}`)
   const modelAttributes = Object.fromEntries(getModelAttributes(model))
 
+  const virtuals = lodash(fields.map(f => f.split('.')[0]))
+    .uniq()
+    .map(f => DECLARED_VIRTUALS[model]?.[f]?.requires?.split(','))
+    .flatten()
+    .filter(f => !!f)
+    .value()
+
+  fields = [...fields, ...virtuals]
+
   const populates = buildPopulates(fields, model)
 
   const select = lodash(fields)
