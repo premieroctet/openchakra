@@ -83,7 +83,7 @@ const Themer = () => {
               <TabList>
                 <Tab>
                   <Tooltip
-                    label="Set default CSS properties"
+                    label="Customize the colorScheme and different colors for your project"
                     fontFamily="sans-serif"
                     fontSize="sm"
                     hasArrow
@@ -95,7 +95,7 @@ const Themer = () => {
                 <Divider />
                 <Tab>
                   <Tooltip
-                    label="Add theme layers where the lower layer overrides the theme configuration set in above layers"
+                    label="Customise the heading and body font family"
                     fontFamily="sans-serif"
                     fontSize="sm"
                     hasArrow
