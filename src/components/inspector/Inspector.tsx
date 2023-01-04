@@ -118,6 +118,25 @@ const Inspector = () => {
     clearActiveProps()
   }, [clearActiveProps])
 
+  const handleChildrenDelete = (children: string[]) => {
+    if (children) {
+      children.forEach(childId => {
+        if (
+          Object.keys(ComponentWithRefs).includes(childId.split('-')[0]) &&
+          components[childId].props['ref']
+        ) {
+          dispatch.components.deleteParams({
+            id: 'root',
+            name: components[childId].props['ref'].slice(1, -1),
+          })
+        }
+        if (components[childId].children) {
+          handleChildrenDelete(components[childId].children)
+        }
+      })
+    }
+  }
+
   const onDelete = () => {
     dispatch.components.deleteComponent(component.id)
     if (
@@ -130,17 +149,7 @@ const Inspector = () => {
       })
     }
 
-    component.children.forEach(childId => {
-      if (
-        Object.keys(ComponentWithRefs).includes(childId.split('-')[0]) &&
-        components[childId].props['ref']
-      ) {
-        dispatch.components.deleteParams({
-          id: 'root',
-          name: components[childId].props['ref'].slice(1, -1),
-        })
-      }
-    })
+    handleChildrenDelete(component.children)
   }
 
   return (
