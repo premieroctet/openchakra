@@ -270,11 +270,18 @@ declareVirtualField({model: 'company', field: 'full_name', instance: 'String', r
 
 const CAT_MODELS=['category', 'cigarCategory', 'mealCategory', 'drinkCategory']
 CAT_MODELS.forEach(m => {
-  declareVirtualField({model: m, field: 'parent', instance: 'category', requires: ''})
+  declareVirtualField({model: m, field: 'children', instance: 'Array', requires: '', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'category'}
+    }
+  })
   declareVirtualField({model: m, field: 'products', instance: 'Array', requires: '', multiple: true,
     caster: {
       instance: 'ObjectID',
-      options: {ref: 'product'}}})
+      options: {ref: 'product'}
+    }
+  })
 })
 
 declareEnumField({model: 'event', field: 'place', enumValues: PLACES})

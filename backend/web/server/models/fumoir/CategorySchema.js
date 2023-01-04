@@ -9,18 +9,17 @@ const CategorySchema = new Schema({
   picture: {
     type: String,
   },
-  children: [{
+  parent: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'category',
-    //autopopulate: true,
-    required: true,
-  }],
+    required: false,
+  },
 }, schemaOptions)
 
-CategorySchema.virtual('parent', {
+CategorySchema.virtual('children', {
   ref: 'category', // The Model to use
   localField: '_id', // Find in Model, where localField
-  foreignField: 'children', // is equal to foreignField
+  foreignField: 'parent', // is equal to foreignField
   justOne: true,
 })
 
