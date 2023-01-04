@@ -77,4 +77,22 @@ const UserSchema = new Schema({
   },
 }, schemaOptions)
 
+UserSchema.virtual('measures', {
+  ref: 'measure', // The Model to use
+  localField: '_id', // Find in Model, where localField
+  foreignField: 'user', // is equal to foreignField
+})
+
+UserSchema.virtual('appointments', {
+  ref: 'appointment', // The Model to use
+  localField: '_id', // Find in Model, where localField
+  foreignField: 'user', // is equal to foreignField
+})
+
+UserSchema.virtual('reminders', {
+  ref: 'reminder', // The Model to use
+  localField: '_id', // Find in Model, where localField
+  foreignField: 'user', // is equal to foreignField
+})
+
 module.exports = UserSchema
