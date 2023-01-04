@@ -50,6 +50,7 @@ export const ACTIONS = {
     let url = `/${props.page}`
     if (value && value._id) {
       queryParams.set(model, value._id)
+      queryParams.set('id', value._id)
     }
     url = `${url}?${queryParams.toString()}`
     // new page
@@ -121,7 +122,7 @@ export const ACTIONS = {
       model: props.dataModel,
       parent: context,
       attribute: props.attribute,
-      value: value,
+      value:JSON.stringify(value),
     }
     return axios.post(url, body)
   },

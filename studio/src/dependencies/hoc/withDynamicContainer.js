@@ -66,7 +66,21 @@ const setRecurseDataSource = (
 const withDynamicContainer = Component => {
   const FILTER_ATTRIBUTES = ['code', 'name', 'short_name', 'description', 'title']
 
-  const internal = props => {
+  const internal = ({hiddenRoles, user, ...props}) => {
+
+    /** withMaskability */
+    // TODO: in code.ts, generate withMaskability(withDynamic()) ...
+    if (hiddenRoles) {
+      const rolesToHide = JSON.parse(hiddenRoles)
+      console.log(`Roles to hide:${rolesToHide}`)
+      const roleUser = user?.role
+
+      // When roleUser is available, reveal
+      if (roleUser && rolesToHide.includes(roleUser)) {
+        return null
+      }
+    }
+    /** withMaskability*/
 
     if (!props.dataSource) {
       return null

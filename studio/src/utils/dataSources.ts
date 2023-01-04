@@ -221,7 +221,7 @@ export const getFieldsForDataProvider = (
   const isRoot = components[dataProviderId].id == 'root'
 
   const linkedComponents = Object.values(components).filter(
-    c => c.props?.dataSource === dataProviderId,
+    c => c.props?.dataSource === dataProviderId || c.props?.subDataSource === dataProviderId,
   )
 
   const fields = isRoot
@@ -231,7 +231,7 @@ export const getFieldsForDataProvider = (
         .uniq()
         .value()
     : lodash(linkedComponents)
-        .map(c => c.props.attribute)
+        .map(c => c.props?.dataSource === dataProviderId ? c.props.attribute : c.props.subAttribute)
         .uniq()
         .filter(v => !!v)
         .value()

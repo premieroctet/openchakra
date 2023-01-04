@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const lodash = require('lodash')
 const formatDuration = require('format-duration')
+const UserSessionData = require('../models/UserSessionData')
 const Booking = require('../models/Booking')
 const {CURRENT, FINISHED} = require('../../utils/fumoir/consts')
 const {BadRequestError} = require('./errors')
@@ -149,7 +150,18 @@ const buildPopulate = (field, model) => {
   if (fields.length == 0) {
     return null
   }
-  const currentField = fields[0]
+  let currentField = fields[0]
+  const virtuals = lodash(fields.map(f => f.split('.')[0]))
+    .uniq()
+    .map(f => DECLARED_VIRTUALS[model]?.[f]?.requires?.split(','))
+    .flatten()
+    .filter(f => !!f)
+    .value()
+
+  if (virtuals?.length>0) {
+    // TODO: should also take next fields into account
+    currentField=virtuals[0]
+  }
   const currentAttribute = attributes[currentField]
   if (!currentAttribute) {
     throw new Error(`Can not get attribute for ${model}/${currentField}`)
@@ -176,7 +188,17 @@ const buildPopulates = (fields, model) => {
   // should return {path: 'program', populate: [{path: 'themes'}, {path: 'otherref'}]}
   // but today return {path: 'program', populate: {path: 'themes'}]}
   // tofix: cf. lodash.mergeWith
+
   const modelAttributes = Object.fromEntries(getModelAttributes(model))
+
+  const virtuals = lodash(fields.map(f => f.split('.')[0]))
+    .uniq()
+    .map(f => DECLARED_VIRTUALS[model]?.[f]?.requires?.split(','))
+    .flatten()
+    .filter(f => !!f)
+    .value()
+
+  fields = [...fields, ...virtuals]
 
   const modelAttributesNames = Object.keys(modelAttributes)
   const requiredAttributesNames = lodash(fields)
@@ -205,6 +227,7 @@ const buildPopulates = (fields, model) => {
     )
     .values()
     .value()
+
   return populates
 }
 
@@ -232,12 +255,11 @@ const buildQuery = (model, id, fields) => {
     .filter(f => !!f)
     .value()
 
-  const allFields = [...fields, ...virtuals]
+  fields = [...fields, ...virtuals]
 
-  console.log(`All fields:${allFields}`)
-  const populates = buildPopulates(allFields, model)
+  const populates = buildPopulates(fields, model)
 
-  const select = lodash(allFields)
+  const select = lodash(fields)
     .map(att => att.split('.')[0])
     .uniq()
     .filter(att => modelAttributes[att].ref == false)
@@ -462,6 +484,7 @@ const removeData = dataId => {
   return getModel(dataId)
     .then(result => {
       model=result
+      console.log(`FOund model ${model}`)
       return mongoose.connection.models[model].findById(dataId)
     })
     .then(data => {
@@ -477,6 +500,13 @@ const removeData = dataId => {
             }
             return data.delete()
           })
+      }
+      if (model=='guest') {
+        return Promise.all([
+          UserSessionData.updateMany({}, {$pull: {guests: {guest: dataId}}}),
+          // TODO: update the bookings but the context is required
+        ])
+          .then(() => data.delete())
       }
     })
 }

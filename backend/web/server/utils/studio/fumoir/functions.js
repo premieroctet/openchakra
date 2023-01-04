@@ -1,8 +1,7 @@
 const mongoose = require('mongoose')
 const lodash=require('lodash')
-const User = require('../../../models/User')
-const {generate_id} = require('../../../../utils/consts')
 const {
+  declareComputedField,
   declareEnumField,
   declareVirtualField,
   getModel,
@@ -11,6 +10,9 @@ const {
   setPreCreateData,
   setPreprocessGet,
 } = require('../../database')
+const UserSessionData = require('../../../models/UserSessionData')
+const User = require('../../../models/User')
+const {generate_id} = require('../../../../utils/consts')
 const Message = require('../../../models/Message')
 const {
   EVENT_STATUS,
@@ -25,18 +27,33 @@ const Product = require('../../../models/Product')
 const Order = require('../../../models/Order')
 const Event = require('../../../models/Event')
 
-const inviteGuest = ({eventOrBooking, email, phone}) => {
+const inviteGuest = ({eventOrBooking, email, phone}, user) => {
   return getModel(eventOrBooking)
     .then(modelName => {
       if (!['booking', 'event'].includes(modelName)) {
         throw new BadRequestError(`Found model ${modelName} for ${eventOrBooking}, should be event or booking`)
       }
-      return Guest.create({email, phone})
-        .then(guest => {
-          mongooseModel = mongoose.connection.models[modelName]
-          return mongooseModel.findByIdAndUpdate(eventOrBooking, {$push: {guests: guest},
+      if (modelName=='booking') {
+        return Guest.create({email, phone})
+          .then(guest => Booking.findByIdAndUpdate(eventOrBooking, {$push: {guests: guest}}))
+      }
+      if (modelName=='event') {
+        return UserSessionData.findOneAndUpdate({user: user._id},
+          {user: user._id},
+          {upsert: true, runValidators: true, new: true},
+        )
+          .populate({path: 'guests', populate: 'guest'})
+          .then(r => {
+            if (r.guests.find(g => g.email==email)) {
+              throw new BadRequestError(`${email} est déjà invité pour cet événement`)
+            }
+            return Guest.create({email, phone})
+              .then(guest => {
+                r.guests.push({event: eventOrBooking, guest: guest._id})
+                return r.save()
+              })
           })
-        })
+      }
     })
 }
 
@@ -172,18 +189,30 @@ const preprocessGet = ({model, fields, id, user}) => {
     id = user?._id || 'INVALIDID'
   }
 
+  if (model=='user') {
+    fields.push('role')
+  }
+  
   if (model=='conversation') {
     const getPartner= (m, user) => {
       return m.sender._id.toString()==user._id.toString() ? m.receiver : m.sender
     }
 
     return Message.find({$or: [{sender: user._id}, {receiver: user._id}]})
-      .populate('sender')
-      .populate('receiver')
+      .populate({path: 'sender', populate: {path: 'company'}})
+      .populate({path: 'receiver', populate: {path: 'company'}})
       .sort({'creation_date': 1})
       .then(messages => {
         if (id) {
           messages=messages.filter(m => getPartner(m, user)._id.toString()==id)
+          // If no messages for one parner, forge it
+          if (lodash.isEmpty(messages)) {
+            return User.findById(id).populate('company')
+              .then(partner => {
+                const data=[{_id: partner._id, partner, messages: []}]
+                return {model, fields, id, data}
+              })
+          }
         }
         const partnerMessages=lodash.groupBy(messages, m => getPartner(m, user)._id)
         const convs=lodash(partnerMessages)
@@ -219,13 +248,16 @@ USER_MODELS.forEach(m => {
       instance: 'ObjectID',
       options: {ref: 'event'}}})
 
+  declareVirtualField({model: m, field: 'company_name', instance: 'String', requires: 'company'})
+  declareVirtualField({model: m, field: 'company_description', instance: 'String', requires: 'company'})
+
 })
 
 
 declareEnumField({model: 'booking', field: 'place', enumValues: PLACES})
 declareVirtualField({model: 'booking', field: 'end_date', instance: 'Date', requires: ''})
 declareVirtualField({model: 'booking', field: 'paid', instance: 'Boolean', requires: 'orders'})
-declareVirtualField({model: 'booking', field: 'paid_str', instance: 'String', requires: 'orders'})
+declareVirtualField({model: 'booking', field: 'paid_str', instance: 'String', requires: 'orders,orders.items'})
 declareVirtualField({model: 'booking', field: 'status', instance: 'String', requires: 'start_date,end_date', enumValues: EVENT_STATUS})
 
 const PRODUCT_MODELS=['product', 'cigar', 'drink', 'meal']
@@ -247,16 +279,43 @@ CAT_MODELS.forEach(m => {
 declareEnumField({model: 'event', field: 'place', enumValues: PLACES})
 declareVirtualField({model: 'event', field: 'members_count', instance: 'Number', requires: 'guests_count,members'})
 declareVirtualField({model: 'event', field: 'status', instance: 'String', requires: 'start_date,end_date', enumValues: EVENT_STATUS})
+declareVirtualField({model: 'event', field: 'guests', instance: 'Array', requires: '', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'guest'}}})
+declareVirtualField({model: 'event', field: 'guests_count', instance: 'Number', requires: ''})
 
 declareVirtualField({model: 'order', field: 'total_price', instance: 'Number', requires: 'items'})
 declareVirtualField({model: 'order', field: 'paid', instance: 'Boolean', requires: 'items'})
 declareVirtualField({model: 'order', field: 'paid_str', instance: 'String', requires: 'items'})
+declareVirtualField({model: 'order', field: 'remaining_total', instance: 'Number', requires: 'items,payments'})
 
 declareVirtualField({model: 'orderItem', field: 'net_price', instance: 'Number', requires: 'price,vat_rate'})
 declareVirtualField({model: 'orderItem', field: 'total_price', instance: 'Number', requires: 'price,quantity'})
 
 declareVirtualField({model: 'subscription', field: 'is_active', instance: 'Boolean', requires: 'start,end'})
 
+const computeEventGuests = (user, params, data) => {
+  return UserSessionData.findOne({user: user._id, 'guests.event': data._id})
+    .populate({path: 'guests', populate: 'guest'})
+    .then(usd => {
+      if (!usd) {
+        return []
+      }
+      return usd.guests
+        .filter(g => g.event._id.toString()==data._id.toString())
+        .map(g => g.guest)
+    })
+}
+
+declareComputedField('event', 'guests', computeEventGuests)
+
+const computeEventGuestsCount = (user, params, data) => {
+  return computeEventGuests(user, params, data)
+    .then(guests => guests.length)
+}
+
+declareComputedField('event', 'guests_count', computeEventGuestsCount)
 
 module.exports = {
   inviteGuest,

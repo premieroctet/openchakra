@@ -59,6 +59,10 @@ const UserSchema = new Schema(
     cgv_validation_date: {
       type: Date,
     },
+    favorite_cigar: {
+      type: Schema.Types.ObjectId,
+      ref: 'cigar',
+    },
     password: {
       type: String,
       set: pass => bcrypt.hashSync(pass, 10),
@@ -82,6 +86,14 @@ const UserSchema = new Schema(
   },
   schemaOptions,
 )
+
+UserSchema.virtual('company_name').get(function() {
+  return this?.company?.name
+})
+
+UserSchema.virtual('company_description').get(function() {
+  return this?.company?.description
+})
 
 UserSchema.virtual('full_name').get(function() {
   return `${this.firstname} ${this.lastname}`

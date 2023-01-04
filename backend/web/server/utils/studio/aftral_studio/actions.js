@@ -1,13 +1,11 @@
 const url = require('url')
 const mongoose=require('mongoose')
-const lodash=require('lodash')
-const {buildPopulates, getModel, removeData} = require('../database')
 const Message = require('../../models/Message')
 const Post = require('../../models/Post')
 const UserSessionData = require('../../models/UserSessionData')
 const {NotFoundError} = require('../errors')
 const Program = require('../../models/Program')
-
+const {getModel, removeData}=require('../database')
 /**
 const {
   inviteGuest,
@@ -38,29 +36,11 @@ let ACTIONS = {
       .then(res => {
         model = res
         const mongooseModel = mongoose.connection.models[model]
-
-        const parsedValue=JSON.parse(value)
-        if (attribute.split('.').length==1) {
-          // Simple attribute => simple method
-          return mongooseModel.updateMany(
-            {$or: [{_id: parent}, {origin: parent}]},
-            {[attribute]: parsedValue},
-            {runValidators: true},
-          )
-        }
-        const populates=buildPopulates([attribute], model)
-        console.log(`Populates in PUT:${JSON.stringify(populates)}`)
-        let query=mongooseModel.find({$or: [{_id: parent}, {origin: parent}]})
-        query = populates.reduce((q, key) => q.populate(key), query)
-        return query
-          .then(objects => {
-            return Promise.all(objects.map(object => {
-              let paths=attribute.split('.')
-              let obj=paths.length>1 ? lodash.get(object, paths.slice(0, paths.length-1)) : object
-              lodash.set(obj, paths.slice(-1)[0], parsedValue)
-              return obj.save({runValidators: true})
-            }))
-          })
+        return mongooseModel.updateMany(
+          {$or: [{_id: parent}, {origin: parent}]},
+          {[attribute]: value},
+          {runValidators: true},
+        )
       })
   },
 
@@ -133,6 +113,30 @@ let ACTIONS = {
 
   createPost: ({contents, media}, sender) => {
     return Post.create({contents, media, author: sender})
+  },
+
+  inviteGuest: ({parent, email, phone}) => {
+    return inviteGuest({eventOrBooking: parent, email, phone})
+  },
+
+  addOrderItem: ({context, parent, quantity}) => {
+    return addOrderItem({order: context, product: parent, quantity})
+  },
+
+  setOrderItem: ({context, parent, quantity}) => {
+    return setOrderItem({order: context, product: parent, quantity})
+  },
+
+  removeOrderItem: ({context, parent}) => {
+    return removeOrderItem({order: context, item: parent})
+  },
+
+  registerToEvent: ({context}, user) => {
+    return registerToEvent({event: context, user})
+  },
+
+  pay: ({context}, user) => {
+    return payOrder({order: context, user})
   },
 
 }
