@@ -79,6 +79,7 @@ CodeActionButton.displayName = 'CodeActionButton'
 const Inspector = () => {
   const dispatch = useDispatch()
   const component = useSelector(getSelectedComponent)
+  const components = useSelector(getComponents)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [componentName, onChangeComponentName] = useState('')
   const componentsNames = useSelector(getComponentNames)
@@ -119,12 +120,27 @@ const Inspector = () => {
 
   const onDelete = () => {
     dispatch.components.deleteComponent(component.id)
-    if (Object.keys(ComponentWithRefs).includes(type) && component.props['ref']) {
+    if (
+      Object.keys(ComponentWithRefs).includes(type) &&
+      component.props['ref']
+    ) {
       dispatch.components.deleteParams({
         id: 'root',
-        name: component.props['ref'].slice(1,-1),
+        name: component.props['ref'].slice(1, -1),
       })
     }
+
+    component.children.forEach(childId => {
+      if (
+        Object.keys(ComponentWithRefs).includes(childId.split('-')[0]) &&
+        components[childId].props['ref']
+      ) {
+        dispatch.components.deleteParams({
+          id: 'root',
+          name: components[childId].props['ref'].slice(1, -1),
+        })
+      }
+    })
   }
 
   return (
