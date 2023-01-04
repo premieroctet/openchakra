@@ -155,6 +155,10 @@ const filterDataUser = ({model, data, id, user}) => {
       const allChildren=lodash.flattenDeep(data.map(d => (d.children||[]).map(c => c._id)))
       return data.filter(d => !allChildren.includes(d._id))
     }
+    // for sub categories, return only top level
+    if (/.*Category/.test(model)) {
+      return data.filter(d => !d.parent)
+    }
     if (model=='user') {
       if ([FUMOIR_MEMBER].includes(user.role)) {
         return data.filter(d => d.role==FUMOIR_MEMBER)
@@ -180,7 +184,7 @@ const filterDataUser = ({model, data, id, user}) => {
 setFilterDataUser(filterDataUser)
 
 const preprocessGet = ({model, fields, id, user}) => {
-  if (model == 'category') {
+  if (/.*Category/i.test(model)) {
     console.log('adding parent')
     fields = lodash([...fields, 'parent']).uniq().value()
   }

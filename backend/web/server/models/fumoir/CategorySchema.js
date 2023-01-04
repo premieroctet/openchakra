@@ -20,6 +20,7 @@ CategorySchema.virtual('children', {
   ref: 'category', // The Model to use
   localField: '_id', // Find in Model, where localField
   foreignField: 'parent', // is equal to foreignField
+  autopopulate: true,
 })
 
 CategorySchema.virtual('products', {
@@ -32,6 +33,6 @@ CategorySchema.methods.getDepth = function() {
   return this.parent? 1+this.parent.getDepth():0
 }
 
-//CategorySchema.plugin(require('mongoose-autopopulate'))
+CategorySchema.plugin(require('mongoose-autopopulate'))
 
 module.exports=CategorySchema

@@ -152,6 +152,12 @@ export const ACTIONS: IActions = {
   pay: {
     label: 'Pay',
     options: {
+      customer: ({ components }) => components
+        .filter(comp => comp.type=='Select')
+        .map(comp => ({ key: comp.id, label: `${comp.type}/${comp.id}` })),
+      amount: ({ components }) => components
+        .filter(comp => comp.type=='Input')
+        .map(comp => ({ key: comp.id, label: `${comp.type}/${comp.id}` })),
       redirect: ({ pages }) =>
         Object.values(pages).map(p => ({ key: p.pageId, label: p.pageName })),
     },

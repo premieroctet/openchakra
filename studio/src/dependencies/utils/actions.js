@@ -186,10 +186,12 @@ export const ACTIONS = {
       })
   },
 
-  pay: ({ context }) => {
+  pay: ({ context, props }) => {
     let url = `${API_ROOT}/action`
     const body = {
       action: 'pay',
+      customer: props.customer,
+      amount: props.amount,
       context,
     }
     return axios.post(url, body)
