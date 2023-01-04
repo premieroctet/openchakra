@@ -89,6 +89,12 @@ const withDynamicContainer = Component => {
     if (props.attribute) {
       orgData = lodash.get(orgData, props.attribute)
     }
+
+    if (!lodash.isArray(orgData)) {
+      console.warn(`Container ${props.id}:expected array, got ${JSON.stringify(orgData)}`)
+      return null
+    }
+
     orgData = orgData
     if (props.contextFilter) {
       const contextIds = props.contextFilter.map(o => o._id.toString())
@@ -116,6 +122,7 @@ const withDynamicContainer = Component => {
         console.error(`Container ${props.id} can not slice ${JSON.stringify(orgData)}:${err}`)
       }
     }
+
 
     const firstChild = React.Children.toArray(props.children)[0]
 
