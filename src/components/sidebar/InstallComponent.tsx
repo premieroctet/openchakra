@@ -31,7 +31,12 @@ const InstallComponent = () => {
   const componentValid = (
     componentPath: string | undefined = ref.current?.value,
   ) => {
-    if (componentPath === undefined || componentPath.length === 0 || !regex.test(componentPath)) return false
+    if (
+      componentPath === undefined ||
+      componentPath.length === 0 ||
+      !regex.test(componentPath)
+    )
+      return false
     return true
   }
 
