@@ -13,7 +13,7 @@ const CategorySchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'category',
     //autopopulate: true,
-    required: false,
+    required: true,
   }],
 }, schemaOptions)
 

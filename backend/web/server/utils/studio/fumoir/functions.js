@@ -152,7 +152,7 @@ const filterDataUser = ({model, data, id, user}) => {
   // List mode
   if (!id) {
     if (model == 'category') {
-      const allChildren=lodash.flattenDeep(data.map(d => d.children.map(c => c._id)))
+      const allChildren=lodash.flattenDeep(data.map(d => (d.children||[]).map(c => c._id)))
       return data.filter(d => !allChildren.includes(d._id))
     }
     if (model=='user') {
@@ -192,7 +192,7 @@ const preprocessGet = ({model, fields, id, user}) => {
   if (model=='user') {
     fields.push('role')
   }
-  
+
   if (model=='conversation') {
     const getPartner= (m, user) => {
       return m.sender._id.toString()==user._id.toString() ? m.receiver : m.sender
