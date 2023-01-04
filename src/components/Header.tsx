@@ -39,6 +39,7 @@ import { getShowLayout, getShowCode } from '~core/selectors/app'
 import HeaderMenu from '~components/headerMenu/HeaderMenu'
 import { FaReact } from 'react-icons/fa'
 import Themer from './themer/Themer'
+import DeployButton from './DeployButton'
 
 const CodeSandboxButton = () => {
   const components = useSelector(getComponents)
@@ -217,6 +218,7 @@ const Header = () => {
           <Themer />
           <Spacer />
           <Stack direction="row">
+            <DeployButton />
             <CodeSandboxButton />
             <Popover>
               {({ onClose }) => (

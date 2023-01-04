@@ -52,7 +52,7 @@ const CustomPropsPanel = () => {
     dispatch.app.toggleCodePanel()
     setTimeout(() => {
       dispatch.app.toggleCodePanel()
-    }, 1);
+    }, 1)
   }
 
   const activeProps = activePropsRef || []
@@ -67,7 +67,7 @@ const CustomPropsPanel = () => {
           dispatch.app.toggleCodePanel()
           setTimeout(() => {
             dispatch.app.toggleCodePanel()
-          }, 1);
+          }, 1)
 
           event.preventDefault()
           if (quickProps.name && quickProps.value) {

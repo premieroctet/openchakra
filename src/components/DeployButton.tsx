@@ -1,4 +1,3 @@
-import { AddIcon, DownloadIcon } from '@chakra-ui/icons'
 import {
   Button,
   FormControl,
@@ -13,44 +12,40 @@ import {
   PopoverFooter,
   PopoverTrigger,
   Text,
+  Tooltip,
   useDisclosure,
 } from '@chakra-ui/react'
 import React, { useRef } from 'react'
 import API from '~custom-components/api'
 import useDispatch from '~hooks/useDispatch'
-import { useRouter } from 'next/router'
+import { BiGitCommit } from 'react-icons/bi'
 
-const regex = /\@\w+\/+\w+\./
-
-const InstallComponent = () => {
+const DeployButton = () => {
   const ref = useRef<HTMLInputElement>(null)
-  const router = useRouter()
   const dispatch = useDispatch()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const componentValid = (
-    componentPath: string | undefined = ref.current?.value,
+  const messageValid = (
+    commitMessage: string | undefined = ref.current?.value,
   ) => {
     if (
-      componentPath === undefined ||
-      componentPath.length === 0 ||
-      !regex.test(componentPath)
+      commitMessage === undefined ||
+      commitMessage.length === 0 ||
+      commitMessage.length >= 50
     )
       return false
     return true
   }
 
-  const installComponent = async () => {
-    const componentPath: string = ref.current ? ref.current.value : ''
-    if (!componentValid(componentPath)) return
+  const deploy = async () => {
+    const commitMessage: string = ref.current ? ref.current.value : ''
+    if (!messageValid(commitMessage)) return
     onClose()
     dispatch.app.toggleLoader()
-    await API.post('/install-component', {
-      path: componentPath,
+    await API.post('/deploy', {
+      message: commitMessage,
     })
-    dispatch.customComponents.updateInstalledComponents(componentPath, true)
     dispatch.app.toggleLoader()
-    router.reload()
   }
 
   return (
@@ -59,36 +54,45 @@ const InstallComponent = () => {
       isOpen={isOpen}
       onOpen={onOpen}
       onClose={onClose}
-      placement="right"
+      placement="bottom"
     >
       <PopoverTrigger>
         <Button
-          bgColor="teal.500"
-          _hover={{ bgColor: 'teal.300' }}
-          color="white"
-          leftIcon={<DownloadIcon />}
+          display="flex"
+          flexDirection="row"
+          alignItems="center"
+          rightIcon={<BiGitCommit />}
+          variant="ghost"
+          size="xs"
         >
-          <Text letterSpacing="wide" fontSize="sm" textTransform="capitalize">
-            Install
-          </Text>
+          <Tooltip
+            label="Commit and push to git"
+            fontFamily="sans-serif"
+            fontSize="sm"
+            hasArrow
+            placement="bottom"
+          >
+            <Text letterSpacing="wide" fontSize="xs" textTransform="capitalize">
+              Deploy
+            </Text>
+          </Tooltip>
         </Button>
       </PopoverTrigger>
       <PopoverContent p={5} bgColor="white" color="black">
         <PopoverArrow bgColor="white" />
         <PopoverCloseButton />
         <PopoverBody>
-          <FormControl isRequired isInvalid={!componentValid()}>
-            <FormLabel fontWeight="bold">Location</FormLabel>
+          <FormControl isRequired isInvalid={!messageValid()}>
+            <FormLabel fontWeight="bold">Commit Message</FormLabel>
             <Input
               outlineColor="teal"
               ref={ref}
-              placeholder="<package-name>"
+              placeholder="<commit-message>"
               _placeholder={{ color: 'gray.400' }}
               size="sm"
             />
             <FormErrorMessage>
-              package names can only contain alphanumeric, lowercase characters,
-              and the following [@, ., -, _, $, !, /]
+              commit message length should be between 1-50
             </FormErrorMessage>
           </FormControl>
         </PopoverBody>
@@ -98,10 +102,10 @@ const InstallComponent = () => {
             color="teal.500"
             variant="outline"
             onClick={() => {
-              installComponent()
+              deploy()
             }}
           >
-            Install
+            Deploy
           </Button>
         </PopoverFooter>
       </PopoverContent>
@@ -109,4 +113,4 @@ const InstallComponent = () => {
   )
 }
 
-export default InstallComponent
+export default DeployButton

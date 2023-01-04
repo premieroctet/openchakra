@@ -1,5 +1,5 @@
 const ThemeCustomStyles = () => {
-  return <>ThemeCustomStyles</>
+  return <>Coming Soon!</>
 }
 
 export default ThemeCustomStyles
