@@ -39,11 +39,12 @@ let ACTIONS = {
         model = res
         const mongooseModel = mongoose.connection.models[model]
 
+        const parsedValue=JSON.parse(value)
         if (attribute.split('.').length==1) {
           // Simple attribute => simple method
           return mongooseModel.updateMany(
             {$or: [{_id: parent}, {origin: parent}]},
-            {[attribute]: value},
+            {[attribute]: parsedValue},
             {runValidators: true},
           )
         }
@@ -56,7 +57,7 @@ let ACTIONS = {
             return Promise.all(objects.map(object => {
               let paths=attribute.split('.')
               let obj=paths.length>1 ? lodash.get(object, paths.slice(0, paths.length-1)) : object
-              lodash.set(obj, paths.slice(-1)[0], value)
+              lodash.set(obj, paths.slice(-1)[0], parsedValue)
               return obj.save({runValidators: true})
             }))
           })

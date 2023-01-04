@@ -177,6 +177,8 @@ const buildBlock = ({
     } else if (forceBuildBlock || !childComponent.componentName) {
       const dataProvider = components[childComponent.props.dataSource]
       const paramProvider = dataProvider?.id.replace(/comp-/, '')
+      const subDataProvider = components[childComponent.props.subDataSource]
+      const paramSubProvider = subDataProvider?.id.replace(/comp-/, '')
       const componentName = isDynamicComponent(childComponent)
         ? `Dynamic${capitalize(childComponent.type)}`
         : isMaskableComponent(childComponent)
@@ -330,6 +332,9 @@ const buildBlock = ({
             let operand =
               propName === 'dataSource' && paramProvider
                 ? `={${paramProvider}}`
+                :
+                propName === 'subDataSource' && paramSubProvider
+                  ? `={${paramSubProvider}}`
                 : `='${propsValue}'`
 
             if (propsValue === true || propsValue === 'true') {

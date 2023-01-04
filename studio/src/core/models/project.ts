@@ -57,9 +57,10 @@ const getDeleteError = (state: ProjectState, componentId:string) => {
   const components=page.components
   const comp=components[componentId]
   if (comp.type=='DataProvider') {
-    const linkedComponents=Object.values(components).filter(c => c.props?.dataSource==componentId)
+    const linkedComponents=Object.values(components)
+    .filter(c => c.props?.dataSource==componentId || c.props?.subDataSource==componentId)
     if (linkedComponents.length>0) {
-      return `Suppreesion impossible:ce dataprovider est utilisé par ${lodash.map(linkedComponents, 'id')}`
+      return `Suppression impossible:ce dataprovider est utilisé par ${lodash.map(linkedComponents, 'id')}`
     }
   }
   return null
@@ -196,7 +197,6 @@ const project = createModel({
     },
 
     deleteComponent(state: ProjectState, componentId: string) {
-      //alert('on ne supprime pas')
       const msg=getDeleteError(state, componentId)
       if (msg) {
         alert(msg)

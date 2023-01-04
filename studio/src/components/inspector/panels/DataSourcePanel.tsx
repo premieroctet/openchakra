@@ -57,9 +57,9 @@ const DataSourcePanel: React.FC = () => {
         alert(err)
       }
       if (subDataSource) {
-        const model=models[components[subDataSource].props?.model]
+        const model = models[components[subDataSource].props ?.model]
         if (model) {
-          const subAttrs=lodash(model.attributes)
+          const subAttrs = lodash(model.attributes)
             .pickBy((def, k) => !k.includes('.') && !def.mutiple && !def.ref)
             .value()
           setSubAttributes(subAttrs)
@@ -67,10 +67,10 @@ const DataSourcePanel: React.FC = () => {
 
       }
     }
-  }, [activeComponent, components, models])
+  }, [activeComponent, components, models, subDataSource])
 
   useEffect(() => {
-    if (!providers?.length > 0 || !activeComponent || components?.length > 0) {
+    if (!providers ?.length > 0 || !activeComponent || components ?.length > 0) {
       return
     }
     // TODO: have to fix getDataProviderDataType and remove try/catch
@@ -80,7 +80,7 @@ const DataSourcePanel: React.FC = () => {
         components,
         dataSource,
         models,
-      )?.type
+      ) ?.type
       setContextProviders(providers.filter(p => p.props.model == currentModel))
     } catch (err) {
       console.error(err)
@@ -105,7 +105,7 @@ const DataSourcePanel: React.FC = () => {
             <option value={undefined}></option>
             {providers.map((provider, i) => (
               <option key={`prov${i}`} value={provider.id}>
-                {`${provider.id} (${provider.props?.model})`}
+                {`${provider.id} (${provider.props ?.model})`}
               </option>
             ))}
           </Select>
@@ -128,7 +128,7 @@ const DataSourcePanel: React.FC = () => {
             </Select>
           </FormControl>
         )}
-        {CONTAINER_TYPE.includes(activeComponent?.type) && (
+        {CONTAINER_TYPE.includes(activeComponent ?.type) && (
           <FormControl htmlFor="limit" label="Limit">
             <Input
               id="limit"
@@ -140,7 +140,7 @@ const DataSourcePanel: React.FC = () => {
             />
           </FormControl>
         )}
-        {CONTAINER_TYPE.includes(activeComponent?.type) && (
+        {CONTAINER_TYPE.includes(activeComponent ?.type) && (
           <FormControl htmlFor="contextFilter" label="Filter context">
             <Select
               id="contextFilter"
@@ -152,89 +152,88 @@ const DataSourcePanel: React.FC = () => {
               <option value={undefined}></option>
               {contextProviders.map((provider, i) => (
                 <option key={`prov${i}`} value={provider.id}>
-                  {`${provider.id} (${provider.props?.model})`}
+                  {`${provider.id} (${provider.props ?.model})`}
                 </option>
               ))}
             </Select>
           </FormControl>
         )}
-        {CONTAINER_TYPE.includes(activeComponent?.type) && filterAttributes && (
+        {CONTAINER_TYPE.includes(activeComponent ?.type) && filterAttributes && (
           <>
-          <FormControl htmlFor="filterAttribute" label="Filter attribute">
-            <Select
-              id="filterAttribute"
-              onChange={setValueFromEvent}
-              name="filterAttribute"
-              size="xs"
-              value={filterAttribute || ''}
-            >
-              <option value={undefined}></option>
-              {Object.keys(filterAttributes).map((attribute, i) => (
-                <option key={`attr${i}`} value={attribute}>
-                  {attribute}
-                </option>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl htmlFor="filterValue" label="Filter value">
-            <Select
-              id="filterValue"
-              onChange={setValueFromEvent}
-              name="filterValue"
-              size="xs"
-              value={filterValue || ''}
-            >
-              <option value={undefined}></option>
-              {Object.values(components)
-                .filter(c => !CONTAINER_TYPE.includes(c.type))
-                .map((component, i) => (
-                  <option key={`comp${i}`} value={component.id}>
-                    {`${component.id} (${component.type})`}
+            <FormControl htmlFor="filterAttribute" label="Filter attribute">
+              <Select
+                id="filterAttribute"
+                onChange={setValueFromEvent}
+                name="filterAttribute"
+                size="xs"
+                value={filterAttribute || ''}
+              >
+                <option value={undefined}></option>
+                {Object.keys(filterAttributes).map((attribute, i) => (
+                  <option key={`attr${i}`} value={attribute}>
+                    {attribute}
                   </option>
                 ))}
-            </Select>
-          </FormControl>
-        </>
-      )}
-      {activeComponent?.type=="Select" &&
-      <>
-        <FormControl htmlFor="subDataSource" label="Choose in datasource">
-        <Select
-          id="subDataSource"
-          onChange={setValueFromEvent}
-          name="subDataSource"
-          size="xs"
-          value={subDataSource || ''}
-        >
-          <option value={undefined}></option>
-          {providers.map((provider, i) => (
-            <option key={`prov${i}`} value={provider.id}>
-              {`${provider.id} (${provider.props?.model})`}
-            </option>
-          ))}
-        </Select>
-        </FormControl>
-      {subAttributes && (
-        <FormControl htmlFor="subAttribute" label="Display attribute">
-          <Select
-            id="subAttribute"
-            onChange={setValueFromEvent}
-            name="subAttribute"
-            size="xs"
-            value={subAttribute || ''}
-          >
-            <option value={undefined}></option>
-            {Object.keys(subAttributes).map((attribute, i) => (
-              <option key={`attr${i}`} value={attribute}>
-                {attribute}
-              </option>
-            ))}
-          </Select>
-        </FormControl>
-      )}
-      }
-      </>
-      }
+              </Select>
+            </FormControl>
+            <FormControl htmlFor="filterValue" label="Filter value">
+              <Select
+                id="filterValue"
+                onChange={setValueFromEvent}
+                name="filterValue"
+                size="xs"
+                value={filterValue || ''}
+              >
+                <option value={undefined}></option>
+                {Object.values(components)
+                  .filter(c => !CONTAINER_TYPE.includes(c.type))
+                  .map((component, i) => (
+                    <option key={`comp${i}`} value={component.id}>
+                      {`${component.id} (${component.type})`}
+                    </option>
+                  ))}
+              </Select>
+            </FormControl>
+          </>
+        )}
+        {activeComponent ?.type == "Select" && (
+          <>
+            <FormControl htmlFor="subDataSource" label="Choose in datasource">
+              <Select
+                id="subDataSource"
+                onChange={setValueFromEvent}
+                name="subDataSource"
+                size="xs"
+                value={subDataSource || ''}
+              >
+                <option value={undefined}></option>
+                {providers.map((provider, i) => (
+                  <option key={`prov${i}`} value={provider.id}>
+                    {`${provider.id} (${provider.props ?.model})`}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
+            {subAttributes && (
+              <FormControl htmlFor="subAttribute" label="Display attribute">
+                <Select
+                  id="subAttribute"
+                  onChange={setValueFromEvent}
+                  name="subAttribute"
+                  size="xs"
+                  value={subAttribute || ''}
+                >
+                  <option value={undefined}></option>
+                  {Object.keys(subAttributes).map((attribute, i) => (
+                    <option key={`attr${i}`} value={attribute}>
+                      {attribute}
+                    </option>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
+          </>
+        )}
       </AccordionContainer>
     </Accordion>
   )

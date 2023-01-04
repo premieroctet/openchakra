@@ -122,7 +122,7 @@ export const ACTIONS = {
       model: props.dataModel,
       parent: context,
       attribute: props.attribute,
-      value: value,
+      value:JSON.stringify(value),
     }
     return axios.post(url, body)
   },
