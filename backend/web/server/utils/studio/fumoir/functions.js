@@ -189,6 +189,10 @@ const preprocessGet = ({model, fields, id, user}) => {
     id = user?._id || 'INVALIDID'
   }
 
+  if (model=='user') {
+    fields.push('role')
+  }
+  
   if (model=='conversation') {
     const getPartner= (m, user) => {
       return m.sender._id.toString()==user._id.toString() ? m.receiver : m.sender

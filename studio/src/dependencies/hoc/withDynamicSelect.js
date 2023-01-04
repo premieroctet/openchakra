@@ -13,7 +13,6 @@ const withDynamicSelect = Component => {
 
     const onChange = ev => {
       const {value} = ev.target
-      console.log(`Selected value ${JSON.stringify(value)}`)
       if (!noautosave) {
         ACTIONS.putValue({
           context: dataSource?._id,
@@ -30,15 +29,15 @@ const withDynamicSelect = Component => {
         <option value={undefined}></option>
         {refValues ?
           refValues.map(v => (
-            <option value={v?._id}>{lodash.get(v, props.subAttribute)}</option>
+            <option key={v?._id} value={v?._id}>{lodash.get(v, props.subAttribute)}</option>
           ))
           :enumValues ?
           Object.entries(enumValues).map(([k, v]) => (
-            <option value={k}>{v}</option>
+            <option key={k} value={k}>{v}</option>
           ))
           :
           (values || []).map(v => (
-            <option value={v._id}>{attribute ? v[attribute] : v}</option>
+            <option key={v._id} value={v._id}>{attribute ? lodash.get(v, attribute) : v}</option>
           ))
         }
       </Component>

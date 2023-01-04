@@ -63,7 +63,7 @@ export const getPageComponentName = (
 }
 
 const isDynamicComponent = (comp: IComponent) => {
-  return !!comp.props.dataSource
+  return !!comp.props.dataSource || !!comp.props.subDataSource
 }
 
 const isMaskableComponent = (comp: IComponent) => {
