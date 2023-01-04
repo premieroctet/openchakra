@@ -39,6 +39,7 @@ import useClipboard from '~hooks/useClipboard'
 import { useInspectorUpdate } from '~contexts/inspector-context'
 import { componentsList } from '~componentsList'
 import { getCustomComponentNames } from '~core/selectors/customComponents'
+import { ComponentWithRefs } from '~custom-components/refComponents'
 
 const CodeActionButton = memo(() => {
   const [isLoading, setIsLoading] = useState(false)
@@ -116,6 +117,16 @@ const Inspector = () => {
     clearActiveProps()
   }, [clearActiveProps])
 
+  const onDelete = () => {
+    dispatch.components.deleteComponent(component.id)
+    if (Object.keys(ComponentWithRefs).includes(type) && component.props['ref']) {
+      dispatch.components.deleteParams({
+        id: 'root',
+        name: component.props['ref'].slice(1,-1),
+      })
+    }
+  }
+
   return (
     <>
       <Box bg="white" color="black">
@@ -184,7 +195,7 @@ const Inspector = () => {
             <ActionButton
               bg="red.500"
               label="Remove"
-              onClick={() => dispatch.components.deleteComponent(component.id)}
+              onClick={onDelete}
               icon={<FiTrash2 />}
             />
           </Stack>

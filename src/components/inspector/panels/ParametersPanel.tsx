@@ -58,11 +58,6 @@ const ParametersPanel = () => {
       id: 'root',
       name: paramsName,
     })
-    if (customComponentName)
-      dispatch.customComponents.deleteParams({
-        id: customComponentName,
-        name: paramsName,
-      })
   }
 
   const activeParams = activeParamsRef || []
