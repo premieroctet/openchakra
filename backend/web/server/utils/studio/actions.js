@@ -137,7 +137,7 @@ let ACTIONS = {
 
 }
 
-let ALLOW_ACTION= () => true
+let ALLOW_ACTION= () => Promise.resolve(true)
 
 const setAllowActionFn = fn => {
   ALLOW_ACTION = fn

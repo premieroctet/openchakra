@@ -40,6 +40,9 @@ require('./models/DrinkCategory')
 require('./models/MealCategory')
 require('./models/Message')
 require('./models/Conversation')
+require('./models/Measure')
+require('./models/Reminder')
+require('./models/Appointment')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 
