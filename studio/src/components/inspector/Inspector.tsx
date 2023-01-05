@@ -73,7 +73,6 @@ const TreeRenderer = ({componentid, components, level, closeFn, filter}) => {
   if (node) {
     const title=`${node.type}/${node.id}`
     const re=new RegExp(filter || '', 'i')
-    console.log(title, re)
     return (
       <Box ml={level}>
         {re?.test(title) && <ComponentLink componentid={componentid} closeFn={closeFn}>{title}</ComponentLink>}
