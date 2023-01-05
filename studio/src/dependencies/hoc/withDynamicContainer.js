@@ -39,24 +39,20 @@ const setRecurseDataSource = (
         return child
       } else if (React.Children.count(child.props.children) === 0) {
         if (isOtherSource(child, dataSourceId)) {
-          return React.cloneElement(child, { id: newId, index: suffix })
+          return React.cloneElement(child, { id: newId, level: suffix })
         }
-        return React.cloneElement(child, {
-          id: newId,
-          index: suffix,
-          dataSource,
-        })
+        return React.cloneElement(child, {id: newId, level: suffix, dataSource})
       } else {
         if (isOtherSource(child, dataSourceId)) {
           return React.cloneElement(
             child,
-            { id: newId, index: suffix },
+            { id: newId, level: suffix },
             setRecurseDataSource(child, dataSource, dataSourceId, newSuffix),
           )
         }
         return React.cloneElement(
           child,
-          { id: newId, index: suffix, dataSource },
+          { id: newId, level: suffix, dataSource },
           setRecurseDataSource(child, dataSource, dataSourceId, newSuffix),
         )
       }
@@ -136,7 +132,7 @@ const withDynamicContainer = Component => {
             <>
               {React.cloneElement(
                 firstChild,
-                { id: newId, index, dataSource: d },
+                { id: newId, level: index, dataSource: d },
                 setRecurseDataSource(
                   firstChild,
                   d,

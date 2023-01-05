@@ -27,6 +27,7 @@ CategorySchema.virtual('products', {
   ref: 'product', // The Model to use
   localField: '_id', // Find in Model, where localField
   foreignField: 'category', // is equal to foreignField
+  autopopulate: true,
 })
 
 CategorySchema.methods.getDepth = function() {

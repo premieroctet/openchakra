@@ -5,17 +5,17 @@ import { getComponent, getComponentDataValue, clearComponentValue } from './valu
 
 const API_ROOT = '/myAlfred/api/studio'
 export const ACTIONS = {
-  login: ({ props, index }) => {
-    const email = getComponentDataValue(props.email, index)
-    const password = getComponentDataValue(props.password, index)
+  login: ({ props, level }) => {
+    const email = getComponentDataValue(props.email, level)
+    const password = getComponentDataValue(props.password, level)
     let url = `${API_ROOT}/login`
     return axios.post(url, { email, password }).catch(err => {
       throw new Error(err.response?.data || err)
     })
   },
-  sendMessage: ({ value, props, index }) => {
-    const destinee = props.destinee ? getComponentDataValue(props.destinee, index) : value._id
-    const contents = getComponentDataValue(props.contents, index)
+  sendMessage: ({ value, props, level }) => {
+    const destinee = props.destinee ? getComponentDataValue(props.destinee, level) : value._id
+    const contents = getComponentDataValue(props.contents, level)
     let url = `${API_ROOT}/action`
     return axios
       .post(url, {
@@ -24,13 +24,13 @@ export const ACTIONS = {
         contents,
       })
       .then(res => {
-        clearComponentValue(props.destinee, index)
-        clearComponentValue(props.contents, index)
+        clearComponentValue(props.destinee, level)
+        clearComponentValue(props.contents, level)
         return res
       })
   },
-  createPost: ({ props, index }) => {
-    const contents = getComponentDataValue(props.contents, index)
+  createPost: ({ props, level }) => {
+    const contents = getComponentDataValue(props.contents, level)
     const mediaComp = document.getElementById(props.media)
     const value=mediaComp && mediaComp.getAttribute('data-value')
     let url = `${API_ROOT}/action`
@@ -41,7 +41,7 @@ export const ACTIONS = {
         media: value,
       })
       .then(res => {
-        clearComponentValue(props.contents, index)
+        clearComponentValue(props.contents, level)
         return res
       })
   },
@@ -109,8 +109,8 @@ export const ACTIONS = {
       .post(url, { action: 'session', id: value._id })
       .then(res => res.data)
   },
-  addChild: ({ value, props, context, index }) => {
-    const childId = getComponentDataValue(props.child, index)
+  addChild: ({ value, props, context, level }) => {
+    const childId = getComponentDataValue(props.child, level)
     let url = `${API_ROOT}/action`
     const body = { action: 'addChild', parent: context, child: childId }
     return axios.post(url, body)
@@ -126,8 +126,8 @@ export const ACTIONS = {
     }
     return axios.post(url, body)
   },
-  setOrderItem: ({ value, props, context, index }) => {
-    const quantity = getComponentDataValue(props.quantity, index)
+  setOrderItem: ({ value, props, context, level }) => {
+    const quantity = getComponentDataValue(props.quantity, level)
     let url = `${API_ROOT}/action`
     const body = {
       action: 'setOrderItem',
@@ -146,9 +146,9 @@ export const ACTIONS = {
     }
     return axios.post(url, body)
   },
-  inviteGuest: ({ value, props, context, index }) => {
+  inviteGuest: ({ value, props, context, level }) => {
     const [email, phone] = ['email', 'phone'].map(att =>
-      getComponentDataValue(props[att], index),
+      getComponentDataValue(props[att], level),
     )
     let url = `${API_ROOT}/action`
     const body = {
@@ -160,7 +160,7 @@ export const ACTIONS = {
     return axios.post(url, body)
     .then(res => {
       ['email', 'phone'].map(att =>
-        clearComponentValue(props[att], index))
+        clearComponentValue(props[att], level))
       return res
     })
   },
@@ -172,16 +172,16 @@ export const ACTIONS = {
     }
     return axios.post(url, body)
   },
-  save: ({ value, props, context, dataSource, index }) => {
+  save: ({ value, props, context, dataSource, level }) => {
     let url = `${API_ROOT}/${props.model}${dataSource._id ? `/${dataSource._id}`:''}`
     const components=lodash(props).pickBy((v, k) => /^component_/.test(k) && !!v).values()
     const body = Object.fromEntries(components.map(c =>
-      [getComponent(c, index)?.getAttribute('attribute'), getComponentDataValue(c, index)||null]
+      [getComponent(c, level)?.getAttribute('attribute'), getComponentDataValue(c, level)||null]
     ))
     const httpAction=dataSource._id ? axios.put : axios.post
     return httpAction(url, body)
       .then(res => {
-        components.forEach(c => clearComponentValue(c, index))
+        components.forEach(c => clearComponentValue(c, level))
         return res
       })
   },
