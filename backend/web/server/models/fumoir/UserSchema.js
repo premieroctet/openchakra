@@ -67,7 +67,6 @@ const UserSchema = new Schema(
     },
     company_description: {
       type: String,
-      set: text => hideIllegal(text),
     },
     cgv_validation_date: {
       type: Date,
