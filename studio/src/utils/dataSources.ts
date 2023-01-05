@@ -226,22 +226,14 @@ export const getFieldsForDataProvider = (
   dataProviderId: string,
   components: IComponents,
 ): string[] => {
-  const isRoot = components[dataProviderId].id == 'root'
-
   const linkedComponents = Object.values(components).filter(
     c => c.props?.dataSource === dataProviderId || c.props?.subDataSource === dataProviderId,
   )
 
-  const fields = isRoot
-    ? lodash(linkedComponents)
-        .map(c => computeDataFieldName(c, components, dataProviderId))
-        .filter(c => !!c)
-        .uniq()
-        .value()
-    : lodash(linkedComponents)
-        .map(c => c.props?.dataSource === dataProviderId ? c.props.attribute : c.props.subAttribute)
-        .uniq()
-        .filter(v => !!v)
-        .value()
+  const fields = lodash(linkedComponents)
+      .map(c => computeDataFieldName(c, components, dataProviderId))
+      .filter(c => !!c)
+      .uniq()
+      .value()
   return fields
 }
