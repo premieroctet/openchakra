@@ -86,7 +86,6 @@ export const getDataProviderDataType = (
   dataSource: string,
   models: any,
 ): IDataType | null => {
-
   if (
     component.props.model &&
     (component.props.dataSource === dataSource ||
@@ -99,6 +98,14 @@ export const getDataProviderDataType = (
     }
   }
   if (component.id === 'root') {
+    if (dataSource!='root') {
+      const model=components[dataSource].props.model
+      return {
+        type: model,
+        multiple: true,
+        ref: true,
+      }
+    }
     // Search dataProviders
     return null
   }
