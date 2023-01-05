@@ -7,6 +7,7 @@ export const CONTAINER_TYPE: ComponentType[] = [
   'Flex',
   'List',
   'Container',
+  'AccordionPanel'
 ]
 export const TEXT_TYPE: ComponentType[] = [
   'Text',
