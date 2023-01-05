@@ -49,12 +49,25 @@ const UserSchema = new Schema(
     job: {
       type: String,
     },
-    company: {
-      type: Schema.Types.ObjectId,
-      ref: 'company',
-    },
     description: {
       type: String,
+    },
+    company_name: {
+      type: String,
+      required: false,
+    },
+    company_siret: {
+      type: String,
+    },
+    company_website: {
+      type: String,
+    },
+    company_address: {
+      type: String,
+    },
+    company_description: {
+      type: String,
+      set: text => hideIllegal(text),
     },
     cgv_validation_date: {
       type: Date,
@@ -86,14 +99,6 @@ const UserSchema = new Schema(
   },
   schemaOptions,
 )
-
-UserSchema.virtual('company_name').get(function() {
-  return this?.company?.name
-})
-
-UserSchema.virtual('company_description').get(function() {
-  return this?.company?.description
-})
 
 UserSchema.virtual('full_name').get(function() {
   return `${this.firstname} ${this.lastname}`
