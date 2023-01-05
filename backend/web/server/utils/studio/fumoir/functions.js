@@ -155,9 +155,9 @@ const filterDataUser = ({model, data, id, user}) => {
       const allChildren=lodash.flattenDeep(data.map(d => (d.children||[]).map(c => c._id)))
       return data.filter(d => !allChildren.includes(d._id))
     }
-    // for sub categories, return only top level
+    // for sub categories, return top level first
     if (/.*Category/.test(model)) {
-      return data.filter(d => !d.parent)
+      return lodash.sortBy(data, d => (d.parent? 1: 0))
     }
     if (model=='user') {
       if ([FUMOIR_MEMBER].includes(user.role)) {
