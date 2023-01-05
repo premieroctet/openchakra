@@ -1,13 +1,14 @@
 import { Box, Text } from '@chakra-ui/react'
-import React, { useEffect, useState, useCallback } from 'react'
-import FileManager from '../utils/S3filemanager'
-import { s3Config, S3UrlRessource } from '../utils/s3Config'
+import JSZip from 'jszip'
+import React, { useState } from 'react';
 import axios from 'axios'
 import mime from 'mime'
-import JSZip from 'jszip'
-import xmljs from 'xml-js'
 import styled from '@emotion/styled'
+import xmljs from 'xml-js'
+import { ACTIONS } from '../utils/actions';
 import { getExtension } from './MediaWrapper'
+import { s3Config, S3UrlRessource } from '../utils/s3Config'
+import FileManager from '../utils/S3filemanager'
 
 const uploadUrl = `/myAlfred/api/studio/action`
 
@@ -81,16 +82,19 @@ const UploadFile = ({
     e.preventDefault()
     const currentFile = e.target.files && e.target.files[0]
     setFile(currentFile)
+    if (currentFile) {
+      await handleUpload(currentFile)
+    }
   }
 
-  const handleUpload = useCallback(
-    async (fileToUpload: File) => {
+  const handleUpload = async (fileToUpload: File) => {
       const typeOfUpload = getExtension(fileToUpload?.name)
 
       let paramsBack = {
         action: 'put',
         parent: dataSource?._id,
         attribute,
+        value: '',
       }
 
       let paramsScormVersion = {
@@ -131,8 +135,11 @@ const UploadFile = ({
       }
 
       const saveUrl = async () => {
-        axios
-          .post(uploadUrl, paramsBack)
+        return ACTIONS.putValue({
+          context: dataSource?._id,
+          props: {attribute: attribute},
+          value: paramsBack.value,
+        })
           .then(() => {
             //setUploadInfo('Ressource ajoutée')
           })
@@ -145,6 +152,7 @@ const UploadFile = ({
             }
           })
           .catch(e => {
+            console.error(e)
             setUploadInfo('Echec ajout ressource')
           })
       }
@@ -152,16 +160,9 @@ const UploadFile = ({
       await switchUploadType()
       if (dataSource) {
         await saveUrl()
+        reload()
       }
-    },
-    [attribute, dataSource],
-  )
-
-  useEffect(() => {
-    if (file) {
-      handleUpload(file)
     }
-  }, [file, handleUpload])
 
   return (
     <Box {...props} data-value={s3File} display='flex' flexDirection='row'>
