@@ -192,6 +192,7 @@ const preprocessGet = ({model, fields, id, user}) => {
   if (model=='user') {
     fields.push('role')
   }
+
   
   if (model=='conversation') {
     const getPartner= (m, user) => {

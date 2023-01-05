@@ -1,5 +1,22 @@
+const {
+  declareEnumField,
+  declareVirtualField,
+  setPreprocessGet,
+} = require('../../database')
 const {GENDER, MEASURE_TYPE} = require('../../../../utils/dekuple/consts')
-const {declareEnumField, declareVirtualField} = require('../../database')
+
+const preprocessGet = ({model, fields, id, user}) => {
+  if (model=='loggedUser') {
+    model='user'
+    id = user?._id || 'INVALIDID'
+  }
+
+  return Promise.resolve({model, fields, id})
+
+}
+
+setPreprocessGet(preprocessGet)
+
 
 const USER_MODELS=['user', 'loggedUser']
 USER_MODELS.forEach(m => {
