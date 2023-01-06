@@ -27,7 +27,7 @@ const UserSchema = new Schema({
   },
   withings_id: {
     type: String,
-    required: true,
+    required: false, // true,
   },
   picture: {
     type: String,
@@ -43,7 +43,7 @@ const UserSchema = new Schema({
   },
   birthday: {
     type: Date,
-    required: true,
+    required: false, // true,
   },
   gender: {
     type: String,
