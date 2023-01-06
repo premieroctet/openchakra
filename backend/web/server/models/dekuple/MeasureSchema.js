@@ -4,6 +4,11 @@ const {schemaOptions} = require('../../utils/schemas')
 const Schema = mongoose.Schema
 
 const MeasureSchema = new Schema({
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'user',
+    required: true,
+  },
   date: {
     type: Date,
     required: true,
