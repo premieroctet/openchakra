@@ -39,16 +39,16 @@ const AddComponent = () => {
   }
 
   const createComponent = async () => {
-    const componentPath = ref.current?.value
-    if (!componentValid(componentPath)) return
+    const component = ref.current?.value
+    if (!componentValid(component)) return
     onClose()
     dispatch.app.toggleLoader()
     const res = await API.post('/add-component', {
-      path: componentPath,
+      path: component,
     })
     dispatch.customComponents.addCustomComponent(
-      res.data,
-      `../remote/${componentPath}`,
+      component ?? '',
+      `../remote/${res.data}`,
     )
     dispatch.app.toggleLoader()
   }
@@ -82,7 +82,7 @@ const AddComponent = () => {
             <Input
               outlineColor="teal"
               ref={ref}
-              placeholder="<repo-name>/<component-name>"
+              placeholder="<component-name>"
               _placeholder={{ color: 'gray.400' }}
               size="sm"
             />
