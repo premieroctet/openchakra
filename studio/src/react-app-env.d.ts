@@ -113,16 +113,16 @@ interface IPreviewProps {
 }
 
 interface IDataType {
-  type: String
+  type: string
   multiple: boolean
   ref: boolean
 }
 
 interface IWarning {
-  pageId: String
-  pageName: String
+  pageId: string
+  pageName: string
   component: IComponent
-  message: strring
+  message: string
 }
 
 interface ComponentItemProps {
@@ -137,7 +137,7 @@ interface ComponentItemProps {
 }
 
 class Filter {
-  attribute: String
-  operator: String
+  attribute: string
+  operator: string
   value?: any
 }

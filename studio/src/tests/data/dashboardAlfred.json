@@ -1,0 +1,2283 @@
+{
+  "pageId": "page-LCKMBTLMBFHJC",
+  "components": {
+    "root": {
+      "id": "root",
+      "parent": "root",
+      "type": "Box",
+      "children": [
+        "comp-LCKMBTLMB51CR",
+        "comp-LCKMBTLMSMT0K",
+        "comp-LCKMBTLMZ957P",
+        "comp-LCKMBTLMSCUYT",
+        "comp-LCKMBTLM6VZO6",
+        "comp-LCKMBTLMNQ0W2",
+        "comp-LCKMBTLMRM5TU",
+        "comp-LCKMBTLMXLQVU"
+      ],
+      "props": {
+        "model": "product",
+        "cardinality": "multiple"
+      }
+    },
+    "comp-LCKMBTLMB51CR": {
+      "id": "comp-LCKMBTLMB51CR",
+      "props": {
+        "m": "{\"base\":\"0\"}",
+        "p": "{\"base\":\"0\"}",
+        "height": "{\"base\":\"100vh\"}",
+        "minHeight": "{\"base\":\"100vh\"}",
+        "maxHeight": "{\"base\":\"100vh\"}",
+        "overflow": "{\"base\":\"visible\"}"
+      },
+      "children": [
+        "comp-LCKMBTLMAR06K",
+        "comp-LCKMBTLMWOK6L"
+      ],
+      "type": "Flex",
+      "parent": "root",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMAR06K": {
+      "id": "comp-LCKMBTLMAR06K",
+      "props": {
+        "flexGrow": "0.1",
+        "backgroundImage": "https://www.alfredplace.io/wp-content/uploads/2022/12/fond-bleu-cle-de-juliette-01.png",
+        "flexDirection": "{\"base\":\"column\"}",
+        "p": "{\"base\":\"0\"}",
+        "width": "{\"base\":\"14%\"}",
+        "position": "fixed",
+        "left": "0px",
+        "top": "0px",
+        "bottom": "0px",
+        "backgroundSize": "cover"
+      },
+      "children": [
+        "comp-LCKMBTLMH3TX5",
+        "comp-LCKMBTLMYUKXR",
+        "comp-LCKMBTLMB8MHO",
+        "comp-LCKMBTLMZC8T7",
+        "comp-LCKMBTLMPOSUF",
+        "comp-LCKMBTLMYGRU4"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMB51CR",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMWOK6L": {
+      "id": "comp-LCKMBTLMWOK6L",
+      "props": {
+        "flexGrow": "0.9",
+        "width": "{\"base\":\"100%\"}",
+        "flexDirection": "{\"base\":\"column\"}",
+        "backgroundImage": "https://www.alfredplace.io/wp-content/uploads/2022/10/Fond_Plan-de-travail-1.png",
+        "backgroundSize": "contain",
+        "height": "{\"base\":\"100vh\"}",
+        "minHeight": "{\"base\":\"100vh\"}",
+        "maxHeight": "{\"base\":\"100vh\"}",
+        "overflow": "{\"base\":\"scroll\"}",
+        "minWidth": "{}",
+        "maxWidth": "{}",
+        "pl": "{\"base\":\"14%\"}",
+        "pt": "{}"
+      },
+      "children": [
+        "comp-LCKMBTLMKX0GN",
+        "comp-LCKMBTLMK6V3J",
+        "comp-LCKMBTLMCR9NU",
+        "comp-LCKMBTLM2KNN4",
+        "comp-LCKMBTLMOQ7Y3",
+        "comp-LCKMD8U9V7O67"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMB51CR",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMH3TX5": {
+      "id": "comp-LCKMBTLMH3TX5",
+      "props": {
+        "flexDirection": "{\"base\":\"column\"}",
+        "width": "{}",
+        "justifyContent": "{\"base\":\"center\"}",
+        "alignItems": "{\"base\":\"center\"}",
+        "pt": "{\"base\":\"10%\"}"
+      },
+      "children": [
+        "comp-LCKMBTLM5W09N",
+        "comp-LCKMBTLMJI7ES",
+        "comp-LCKMBTLMV5XPG"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMAR06K",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLM5W09N": {
+      "id": "comp-LCKMBTLM5W09N",
+      "props": {
+        "size": "lg"
+      },
+      "children": [],
+      "type": "Avatar",
+      "parent": "comp-LCKMBTLMH3TX5",
+      "rootParentType": "Avatar"
+    },
+    "comp-LCKMBTLMJI7ES": {
+      "id": "comp-LCKMBTLMJI7ES",
+      "props": {
+        "children": "Karen Finzi",
+        "color": "#ffff",
+        "fontWeight": "bold",
+        "mt": "{\"base\":\"2%\"}",
+        "mb": "{\"base\":\"2%\"}",
+        "textAlign": "center"
+      },
+      "children": [],
+      "type": "Text",
+      "parent": "comp-LCKMBTLMH3TX5",
+      "rootParentType": "Text"
+    },
+    "comp-LCKMBTLMV5XPG": {
+      "id": "comp-LCKMBTLMV5XPG",
+      "props": {
+        "children": "Gestionnaire",
+        "mt": "{}",
+        "mb": "{\"base\":\"%\"}",
+        "backgroundColor": "#fff",
+        "color": "#E1B374",
+        "fontWeight": "bold"
+      },
+      "children": [],
+      "type": "Tag",
+      "parent": "comp-LCKMBTLMH3TX5",
+      "rootParentType": "Tag"
+    },
+    "comp-LCKMBTLMBB59X": {
+      "id": "comp-LCKMBTLMBB59X",
+      "props": {
+        "justifyContent": "{\"base\":\"flex-end\"}",
+        "backgroundColor": "",
+        "alignItems": "{\"base\":\"center\"}",
+        "width": "{\"base\":\"70%\"}",
+        "mt": "{\"base\":\"20%\"}",
+        "flexGrow": "0.6",
+        "pt": "{\"base\":\"8%\"}",
+        "pb": "{\"base\":\"8%\"}",
+        "borderRadius": "40px 0px 0px 40px",
+        "pr": "{\"base\":\"2%\"}",
+        "page": "page-LAM8NUSU3WFYE",
+        "action": "openPage",
+        "actionProps": {
+          "page": "page-LAM8NUSU3WFYE"
+        }
+      },
+      "children": [
+        "comp-LCKMBTLM3VV2Y",
+        "comp-LCKMBTLM16WGR"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMYUKXR",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLM3VV2Y": {
+      "id": "comp-LCKMBTLM3VV2Y",
+      "props": {
+        "src": "https://www.alfredplace.io/wp-content/uploads/2022/11/dashboard-blanc-17-1.png",
+        "width": "{\"base\":\"10%\"}",
+        "minWidth": "{\"base\":\"10%\"}",
+        "maxWidth": "{\"base\":\"10%\"}",
+        "htmlHeight": "20%",
+        "htmlWidth": "20%"
+      },
+      "children": [],
+      "type": "Media",
+      "parent": "comp-LCKMBTLMBB59X",
+      "rootParentType": "Media"
+    },
+    "comp-LCKMBTLM16WGR": {
+      "id": "comp-LCKMBTLM16WGR",
+      "props": {
+        "children": "Dashboard",
+        "color": "#fff",
+        "fontWeight": "bold",
+        "ml": "{\"base\":\"5%\"}"
+      },
+      "children": [],
+      "type": "Text",
+      "parent": "comp-LCKMBTLMBB59X",
+      "rootParentType": "Text"
+    },
+    "comp-LCKMBTLMYUKXR": {
+      "id": "comp-LCKMBTLMYUKXR",
+      "props": {
+        "alignItems": "{\"base\":\"center\"}",
+        "justifyContent": "{\"base\":\"flex-end\"}",
+        "p": "{\"base\":\"0\"}",
+        "m": "{\"base\":\"0\"}",
+        "border": "0px"
+      },
+      "children": [
+        "comp-LCKMBTLMBB59X"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMAR06K",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMKX0GN": {
+      "id": "comp-LCKMBTLMKX0GN",
+      "props": {
+        "pl": "{}",
+        "backgroundColor": "#E1B374",
+        "flexGrow": "1",
+        "justifyContent": "{\"base\":\"center\"}",
+        "alignItems": "{\"base\":\"center\"}",
+        "p": "{\"base\":\"1%\"}",
+        "height": "{\"base\":\"5vh\"}",
+        "maxHeight": "{\"base\":\"5vh\"}"
+      },
+      "children": [
+        "comp-LCKMBTLMUX704"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMWOK6L",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMUX704": {
+      "id": "comp-LCKMBTLMUX704",
+      "props": {
+        "children": "Espace gestionnaire",
+        "fontWeight": "bold",
+        "color": "#ffff",
+        "fontFamily": "tomarik",
+        "mb": "{\"base\":\"1%\"}"
+      },
+      "children": [],
+      "type": "Text",
+      "parent": "comp-LCKMBTLMKX0GN",
+      "rootParentType": "Text"
+    },
+    "comp-LCKMBTLMUD8JQ": {
+      "id": "comp-LCKMBTLMUD8JQ",
+      "props": {
+        "children": "Gestion des produits",
+        "fontWeight": "bold",
+        "color": "#ffff",
+        "fontFamily": "tomarik",
+        "mb": "{\"base\":\"1%\"}"
+      },
+      "children": [],
+      "type": "Text",
+      "parent": "comp-LCKMBTLM229L5",
+      "rootParentType": "Text"
+    },
+    "comp-LCKMBTLM229L5": {
+      "id": "comp-LCKMBTLM229L5",
+      "props": {
+        "flexDirection": "{\"base\":\"column\"}",
+        "backgroundColor": "#424041",
+        "border": "",
+        "borderRadius": "10px",
+        "p": "{\"base\":\"1%\"}",
+        "pl": "{\"base\":\"2%\"}",
+        "pr": "{\"base\":\"2%\"}"
+      },
+      "children": [
+        "comp-LCKMBTLMUD8JQ"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMK6V3J",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMK6V3J": {
+      "id": "comp-LCKMBTLMK6V3J",
+      "props": {
+        "pl": "{\"base\":\"3%\"}",
+        "mt": "{\"base\":\"2%\"}"
+      },
+      "children": [
+        "comp-LCKMBTLM229L5"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMWOK6L",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMF5HMX": {
+      "id": "comp-LCKMBTLMF5HMX",
+      "props": {
+        "src": "https://www.alfredplace.io/wp-content/uploads/2022/10/menu-fumoir-05.svg",
+        "width": "{\"base\":\"10%\"}",
+        "minWidth": "{\"base\":\"10%\"}",
+        "maxWidth": "{\"base\":\"10%\"}",
+        "htmlHeight": "20%",
+        "htmlWidth": "20%"
+      },
+      "children": [],
+      "type": "Media",
+      "parent": "comp-LCKMBTLM9IN01",
+      "rootParentType": "Media"
+    },
+    "comp-LCKMBTLM5QUZX": {
+      "id": "comp-LCKMBTLM5QUZX",
+      "props": {
+        "children": "Les comptes",
+        "color": "#fff",
+        "fontWeight": "bold",
+        "ml": "{\"base\":\"5%\"}"
+      },
+      "children": [],
+      "type": "Text",
+      "parent": "comp-LCKMBTLM9IN01",
+      "rootParentType": "Text"
+    },
+    "comp-LCKMBTLM9IN01": {
+      "id": "comp-LCKMBTLM9IN01",
+      "props": {
+        "justifyContent": "{\"base\":\"flex-end\"}",
+        "backgroundColor": "",
+        "alignItems": "{\"base\":\"center\"}",
+        "width": "{\"base\":\"70%\"}",
+        "mt": "{\"base\":\"20%\"}",
+        "flexGrow": "0.6",
+        "pt": "{\"base\":\"8%\"}",
+        "pb": "{\"base\":\"8%\"}",
+        "borderRadius": "40px 0px 0px 40px",
+        "pr": "{\"base\":\"2%\"}",
+        "page": "page-LAM8NUSU3WFCE",
+        "action": "openPage",
+        "actionProps": {
+          "page": "page-LAM8NUSU3WFCE"
+        }
+      },
+      "children": [
+        "comp-LCKMBTLMF5HMX",
+        "comp-LCKMBTLM5QUZX"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMB8MHO",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMB8MHO": {
+      "id": "comp-LCKMBTLMB8MHO",
+      "props": {
+        "alignItems": "{\"base\":\"center\"}",
+        "justifyContent": "{\"base\":\"flex-end\"}",
+        "p": "{\"base\":\"0\"}",
+        "m": "{\"base\":\"0\"}",
+        "border": "0px"
+      },
+      "children": [
+        "comp-LCKMBTLM9IN01"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMAR06K",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMR9MZ8": {
+      "id": "comp-LCKMBTLMR9MZ8",
+      "props": {
+        "src": "https://www.alfredplace.io/wp-content/uploads/2022/10/menu-fumoir-04.svg",
+        "width": "{\"base\":\"10%\"}",
+        "minWidth": "{\"base\":\"10%\"}",
+        "maxWidth": "{\"base\":\"10%\"}",
+        "htmlHeight": "20%",
+        "htmlWidth": "20%"
+      },
+      "children": [],
+      "type": "Media",
+      "parent": "comp-LCKMBTLM5ETVS",
+      "rootParentType": "Media"
+    },
+    "comp-LCKMBTLMX2AQD": {
+      "id": "comp-LCKMBTLMX2AQD",
+      "props": {
+        "children": "Les évènements",
+        "color": "#fff",
+        "fontWeight": "bold",
+        "ml": "{\"base\":\"5%\"}"
+      },
+      "children": [],
+      "type": "Text",
+      "parent": "comp-LCKMBTLM5ETVS",
+      "rootParentType": "Text"
+    },
+    "comp-LCKMBTLM5ETVS": {
+      "id": "comp-LCKMBTLM5ETVS",
+      "props": {
+        "justifyContent": "{\"base\":\"flex-end\"}",
+        "backgroundColor": "",
+        "alignItems": "{\"base\":\"center\"}",
+        "width": "{\"base\":\"70%\"}",
+        "mt": "{\"base\":\"20%\"}",
+        "flexGrow": "0.6",
+        "pt": "{\"base\":\"8%\"}",
+        "pb": "{\"base\":\"8%\"}",
+        "borderRadius": "40px 0px 0px 40px",
+        "pr": "{\"base\":\"2%\"}",
+        "page": "page-LASAHLU2CQZKF",
+        "action": "openPage",
+        "actionProps": "{\"page\":\"page-LASAF6K2HDMW9\",\"open\":\"false\"}"
+      },
+      "children": [
+        "comp-LCKMBTLMR9MZ8",
+        "comp-LCKMBTLMX2AQD"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMYGRU4",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMYGRU4": {
+      "id": "comp-LCKMBTLMYGRU4",
+      "props": {
+        "alignItems": "{\"base\":\"center\"}",
+        "justifyContent": "{\"base\":\"flex-end\"}",
+        "p": "{\"base\":\"0\"}",
+        "m": "{\"base\":\"0\"}",
+        "border": "0px"
+      },
+      "children": [
+        "comp-LCKMBTLM5ETVS"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMAR06K",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMSITN5": {
+      "id": "comp-LCKMBTLMSITN5",
+      "props": {
+        "src": "https://www.alfredplace.io/wp-content/uploads/2022/10/table-1.png",
+        "width": "{\"base\":\"10%\"}",
+        "minWidth": "{\"base\":\"10%\"}",
+        "maxWidth": "{\"base\":\"10%\"}",
+        "htmlHeight": "20%",
+        "htmlWidth": "20%"
+      },
+      "children": [],
+      "type": "Media",
+      "parent": "comp-LCKMBTLMPWTKU",
+      "rootParentType": "Media"
+    },
+    "comp-LCKMBTLMWBPP7": {
+      "id": "comp-LCKMBTLMWBPP7",
+      "props": {
+        "children": "Les réservations",
+        "color": "#fff",
+        "fontWeight": "bold",
+        "ml": "{\"base\":\"5%\"}"
+      },
+      "children": [],
+      "type": "Text",
+      "parent": "comp-LCKMBTLMPWTKU",
+      "rootParentType": "Text"
+    },
+    "comp-LCKMBTLMPWTKU": {
+      "id": "comp-LCKMBTLMPWTKU",
+      "props": {
+        "justifyContent": "{\"base\":\"flex-end\"}",
+        "backgroundColor": "",
+        "alignItems": "{\"base\":\"center\"}",
+        "width": "{\"base\":\"70%\"}",
+        "mt": "{\"base\":\"20%\"}",
+        "flexGrow": "0.6",
+        "pt": "{\"base\":\"8%\"}",
+        "pb": "{\"base\":\"8%\"}",
+        "borderRadius": "40px 0px 0px 40px",
+        "pr": "{\"base\":\"2%\"}",
+        "page": "page-LAM8NUSU3WE8",
+        "action": "openPage",
+        "actionProps": {
+          "page": "page-LAM8NUSU3WE8"
+        }
+      },
+      "children": [
+        "comp-LCKMBTLMSITN5",
+        "comp-LCKMBTLMWBPP7"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMZC8T7",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMZC8T7": {
+      "id": "comp-LCKMBTLMZC8T7",
+      "props": {
+        "alignItems": "{\"base\":\"center\"}",
+        "justifyContent": "{\"base\":\"flex-end\"}",
+        "p": "{\"base\":\"0\"}",
+        "m": "{\"base\":\"0\"}",
+        "border": "0px"
+      },
+      "children": [
+        "comp-LCKMBTLMPWTKU"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMAR06K",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLM77CUL": {
+      "id": "comp-LCKMBTLM77CUL",
+      "props": {
+        "src": "https://www.alfredplace.io/wp-content/uploads/2022/11/couvert-03.svg",
+        "width": "{\"base\":\"10%\"}",
+        "minWidth": "{\"base\":\"10%\"}",
+        "maxWidth": "{\"base\":\"10%\"}",
+        "htmlHeight": "20%",
+        "htmlWidth": "20%"
+      },
+      "children": [],
+      "type": "Media",
+      "parent": "comp-LCKMBTLMXVGNF",
+      "rootParentType": "Media"
+    },
+    "comp-LCKMBTLMBNM4H": {
+      "id": "comp-LCKMBTLMBNM4H",
+      "props": {
+        "children": "Les produits",
+        "color": "#000",
+        "fontWeight": "bold",
+        "ml": "{\"base\":\"5%\"}"
+      },
+      "children": [],
+      "type": "Text",
+      "parent": "comp-LCKMBTLMXVGNF",
+      "rootParentType": "Text"
+    },
+    "comp-LCKMBTLMXVGNF": {
+      "id": "comp-LCKMBTLMXVGNF",
+      "props": {
+        "justifyContent": "{\"base\":\"flex-end\"}",
+        "backgroundColor": "#fff",
+        "alignItems": "{\"base\":\"center\"}",
+        "width": "{\"base\":\"70%\"}",
+        "mt": "{\"base\":\"20%\"}",
+        "flexGrow": "0.6",
+        "pt": "{\"base\":\"8%\"}",
+        "pb": "{\"base\":\"8%\"}",
+        "borderRadius": "40px 0px 0px 40px",
+        "pr": "{\"base\":\"2%\"}",
+        "page": "page-LCKMBTLMBFHJC",
+        "action": "openPage",
+        "actionProps": "{\"page\":\"page-LCKMBTLMBFHJC\",\"open\":\"false\"}",
+        "dataSource": ""
+      },
+      "children": [
+        "comp-LCKMBTLM77CUL",
+        "comp-LCKMBTLMBNM4H"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMPOSUF",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMPOSUF": {
+      "id": "comp-LCKMBTLMPOSUF",
+      "props": {
+        "alignItems": "{\"base\":\"center\"}",
+        "justifyContent": "{\"base\":\"flex-end\"}",
+        "p": "{\"base\":\"0\"}",
+        "m": "{\"base\":\"0\"}",
+        "border": "0px"
+      },
+      "children": [
+        "comp-LCKMBTLMXVGNF"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMAR06K",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMZT217": {
+      "children": [
+        "comp-LCKMBTLMX37GC"
+      ],
+      "type": "Accordion",
+      "parent": "comp-LCKMBTLMOQ7Y3",
+      "id": "comp-LCKMBTLMZT217",
+      "props": {
+        "index": "0",
+        "allowToggle": "true",
+        "width": "{\"base\":\"100%\"}",
+        "mt": "{\"base\":\"1%\"}",
+        "mr": "{\"base\":\"2%\"}",
+        "ml": "{\"base\":\"2%\"}",
+        "border": "0px"
+      },
+      "rootParentType": "Accordion"
+    },
+    "comp-LCKMBTLMX37GC": {
+      "children": [
+        "comp-LCKMBTLMRS7A6",
+        "comp-LCKMBTLMCWGX7"
+      ],
+      "type": "AccordionItem",
+      "parent": "comp-LCKMBTLMZT217",
+      "id": "comp-LCKMBTLMX37GC",
+      "props": {
+        "width": "{\"base\":\"100%\"}",
+        "border": "0px"
+      },
+      "rootParentType": "Accordion"
+    },
+    "comp-LCKMBTLMRS7A6": {
+      "children": [
+        "comp-LCKMBTLMLMQ1H",
+        "comp-LCKMBTLMK00OJ"
+      ],
+      "type": "AccordionButton",
+      "parent": "comp-LCKMBTLMX37GC",
+      "id": "comp-LCKMBTLMRS7A6",
+      "props": {
+        "backgroundColor": "#424041",
+        "color": "#ffff",
+        "fontWeight": "bold",
+        "width": "{\"base\":\"100%\"}",
+        "borderRadius": "10px",
+        "_hover": "{{ background: \"none\" }}",
+        "border": "0px"
+      },
+      "rootParentType": "Accordion"
+    },
+    "comp-LCKMBTLMCWGX7": {
+      "children": [
+        "comp-LCKMBTLMC97Y5"
+      ],
+      "type": "AccordionPanel",
+      "parent": "comp-LCKMBTLMX37GC",
+      "id": "comp-LCKMBTLMCWGX7",
+      "props": {
+        "color": "",
+        "p": "{\"base\":\"2%\"}",
+        "width": "{\"base\":\"100%\"}"
+      },
+      "rootParentType": "Accordion"
+    },
+    "comp-LCKMBTLMLMQ1H": {
+      "children": [],
+      "type": "Text",
+      "parent": "comp-LCKMBTLMRS7A6",
+      "id": "comp-LCKMBTLMLMQ1H",
+      "props": {
+        "children": "Boissons"
+      },
+      "rootParentType": "Text"
+    },
+    "comp-LCKMBTLMK00OJ": {
+      "children": [],
+      "type": "AccordionIcon",
+      "parent": "comp-LCKMBTLMRS7A6",
+      "id": "comp-LCKMBTLMK00OJ",
+      "props": {},
+      "rootParentType": "Accordion"
+    },
+    "comp-LCKMBTLMJEZV9": {
+      "id": "comp-LCKMBTLMJEZV9",
+      "props": {
+        "src": "",
+        "dataSource": "comp-LCKMBTLMSMT0K",
+        "attribute": "picture",
+        "width": "{\"base\":\"25%\"}",
+        "minWidth": "{\"base\":\"25%\"}",
+        "maxWidth": "{\"base\":\"25%\"}",
+        "mr": "{\"base\":\"2%\"}"
+      },
+      "children": [],
+      "type": "Image",
+      "parent": "comp-LCKMBTLM54GB2",
+      "rootParentType": "Image"
+    },
+    "comp-LCKMBTLMQHD8B": {
+      "id": "comp-LCKMBTLMQHD8B",
+      "props": {
+        "flexDirection": "{\"base\":\"column\"}",
+        "p": "{\"base\":\"0\"}",
+        "m": "{\"base\":\"0\"}",
+        "width": "{\"base\":\"100%\"}",
+        "height": "{}",
+        "minHeight": "{}",
+        "maxHeight": "{}"
+      },
+      "children": [
+        "comp-LCKMBTLMNRAPK",
+        "comp-LCKMBTLMUYTRD",
+        "comp-LCKMBTLMSQXFU"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLM54GB2",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMVGM1R": {
+      "id": "comp-LCKMBTLMVGM1R",
+      "props": {
+        "children": "TALISKER 10 ANS au verre",
+        "fontWeight": "bold",
+        "mr": "{}",
+        "dataSource": "comp-LCKMBTLMSMT0K",
+        "attribute": "name"
+      },
+      "children": [],
+      "type": "Text",
+      "parent": "comp-LCKMBTLMNRAPK",
+      "rootParentType": "Text"
+    },
+    "comp-LCKMBTLMNRAPK": {
+      "id": "comp-LCKMBTLMNRAPK",
+      "props": {
+        "flexDirection": "{\"base\":\"row\"}",
+        "mt": "{\"base\":\"2%\"}",
+        "justifyContent": "{\"base\":\"space-between\"}"
+      },
+      "children": [
+        "comp-LCKMBTLMVGM1R",
+        "comp-LCKMBTLMSR8D1"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMQHD8B",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMG9MW8": {
+      "id": "comp-LCKMBTLMG9MW8",
+      "props": {
+        "children": "12€50",
+        "dataSource": "comp-LCKMBTLMSMT0K",
+        "attribute": "price"
+      },
+      "children": [],
+      "type": "Text",
+      "parent": "comp-LCKMBTLMUYTRD",
+      "rootParentType": "Text"
+    },
+    "comp-LCKMBTLMUYTRD": {
+      "id": "comp-LCKMBTLMUYTRD",
+      "props": {
+        "flexDirection": "{\"base\":\"row\"}",
+        "mt": "{\"base\":\"2%\"}"
+      },
+      "children": [
+        "comp-LCKMBTLMG9MW8",
+        "comp-LCKMBTLMD15Z7"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMQHD8B",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLM11AOU": {
+      "id": "comp-LCKMBTLM11AOU",
+      "props": {
+        "children": "Modifier",
+        "variant": "subtle",
+        "size": "sm",
+        "backgroundColor": "#E1B374",
+        "fontWeight": "bold",
+        "color": "#ffff",
+        "mt": "{}",
+        "width": "{\"base\":\"30%\"}",
+        "action": "openPage",
+        "actionProps": "{\"page\":\"page-L9QSPE0HX8JP3\",\"open\":\"true\"}",
+        "mr": "{\"base\":\"2%\"}",
+        "dataSource": "comp-LCKMBTLMSMT0K"
+      },
+      "children": [],
+      "type": "Button",
+      "parent": "comp-LCKMBTLMSQXFU",
+      "rootParentType": "Button"
+    },
+    "comp-LCKMBTLMSR8D1": {
+      "id": "comp-LCKMBTLMSR8D1",
+      "props": {
+        "children": "En stock",
+        "variant": "subtle",
+        "colorScheme": "green",
+        "dataSource": "comp-LCKMBTLMSMT0K",
+        "width": "{}",
+        "maxHeight": "{}",
+        "borderRadius": "{\"base\":\"5\"}",
+        "attribute": "stock"
+      },
+      "children": [],
+      "type": "Badge",
+      "parent": "comp-LCKMBTLMNRAPK",
+      "rootParentType": "Badge"
+    },
+    "comp-LCKMBTLMCR9NU": {
+      "id": "comp-LCKMBTLMCR9NU",
+      "props": {
+        "justifyContent": "{\"base\":\"center\"}",
+        "alignItems": "{\"base\":\"center\"}",
+        "backgroundColor": "#fff",
+        "borderRadius": "10px",
+        "boxShadow": "5px 10px 5px  #424041B3",
+        "ml": "{\"base\":\"3%\"}",
+        "mr": "{\"base\":\"3%\"}",
+        "mt": "{\"base\":\"2%\"}",
+        "mb": "{\"base\":\"1%\"}",
+        "p": "{\"base\":\"1%\"}"
+      },
+      "children": [
+        "comp-LCKMBTLMSSHT1"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMWOK6L",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMSQXFU": {
+      "id": "comp-LCKMBTLMSQXFU",
+      "props": {
+        "justifyContent": "{\"base\":\"flex-end\"}",
+        "alignItems": "{\"base\":\"center\"}"
+      },
+      "children": [
+        "comp-LCKMBTLM11AOU",
+        "comp-LCKMBTLMABJWV"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMQHD8B",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMABJWV": {
+      "id": "comp-LCKMBTLMABJWV",
+      "props": {
+        "aria-label": "icon",
+        "icon": "ViewOffIcon",
+        "size": "sm",
+        "backgroundColor": "#E1B374",
+        "borderRadius": "10",
+        "color": "#ffff",
+        "fontWeight": "bold",
+        "variant": "subtle",
+        "dataSource": "",
+        "action": ""
+      },
+      "children": [],
+      "type": "IconButton",
+      "parent": "comp-LCKMBTLMSQXFU",
+      "rootParentType": "IconButton"
+    },
+    "comp-LCKMBTLMOQ7Y3": {
+      "id": "comp-LCKMBTLMOQ7Y3",
+      "props": {
+        "justifyContent": "{\"base\":\"space-between\"}",
+        "width": "{\"base\":\"100%\"}"
+      },
+      "children": [
+        "comp-LCKMBTLMZT217",
+        "comp-LCKMBTLMZQ47F",
+        "comp-LCKMBTLM1KQNI"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMWOK6L",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMKL44E": {
+      "children": [],
+      "type": "Text",
+      "parent": "comp-LCKMBTLMQRD2W",
+      "id": "comp-LCKMBTLMKL44E",
+      "props": {
+        "children": "Mets"
+      },
+      "rootParentType": "Text"
+    },
+    "comp-LCKMBTLMQVMDW": {
+      "children": [],
+      "type": "AccordionIcon",
+      "parent": "comp-LCKMBTLMQRD2W",
+      "id": "comp-LCKMBTLMQVMDW",
+      "props": {},
+      "rootParentType": "Accordion"
+    },
+    "comp-LCKMBTLMQRD2W": {
+      "children": [
+        "comp-LCKMBTLMKL44E",
+        "comp-LCKMBTLMQVMDW"
+      ],
+      "type": "AccordionButton",
+      "parent": "comp-LCKMBTLMXYD9O",
+      "id": "comp-LCKMBTLMQRD2W",
+      "props": {
+        "backgroundColor": "#424041",
+        "color": "#ffff",
+        "fontWeight": "bold",
+        "width": "{\"base\":\"100%\"}",
+        "borderRadius": "10px",
+        "_hover": "{{ background: \"none\" }}",
+        "border": "0px"
+      },
+      "rootParentType": "Accordion"
+    },
+    "comp-LCKMBTLMWH7LN": {
+      "id": "comp-LCKMBTLMWH7LN",
+      "props": {
+        "src": "https://www.alfredplace.io/wp-content/uploads/2022/10/talisker-10-ans-.png",
+        "width": "{\"base\":\"20%\"}",
+        "minWidth": "{\"base\":\"20%\"}",
+        "maxWidth": "{\"base\":\"20%\"}",
+        "dataSource": "comp-LCKMBTLMZ957P",
+        "attribute": "picture",
+        "mr": "{\"base\":\"2%\"}"
+      },
+      "children": [],
+      "type": "Image",
+      "parent": "comp-LCKMBTLMQJ3OM",
+      "rootParentType": "Image"
+    },
+    "comp-LCKMBTLMPQ2T2": {
+      "id": "comp-LCKMBTLMPQ2T2",
+      "props": {
+        "children": "TALISKER 10 ANS au verre",
+        "fontWeight": "bold",
+        "mr": "{}",
+        "dataSource": "comp-LCKMBTLMZ957P",
+        "attribute": "name"
+      },
+      "children": [],
+      "type": "Text",
+      "parent": "comp-LCKMBTLM8LXV6",
+      "rootParentType": "Text"
+    },
+    "comp-LCKMBTLM2ZIS0": {
+      "id": "comp-LCKMBTLM2ZIS0",
+      "props": {
+        "children": "En stock",
+        "variant": "subtle",
+        "colorScheme": "green",
+        "dataSource": "comp-LCKMBTLMZ957P",
+        "attribute": "stock",
+        "borderRadius": "{\"base\":\"5\"}"
+      },
+      "children": [],
+      "type": "Badge",
+      "parent": "comp-LCKMBTLM8LXV6",
+      "rootParentType": "Badge"
+    },
+    "comp-LCKMBTLM8LXV6": {
+      "id": "comp-LCKMBTLM8LXV6",
+      "props": {
+        "flexDirection": "{\"base\":\"row\"}",
+        "mt": "{\"base\":\"2%\"}",
+        "justifyContent": "{\"base\":\"space-between\"}"
+      },
+      "children": [
+        "comp-LCKMBTLMPQ2T2",
+        "comp-LCKMBTLM2ZIS0"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLM57P40",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMVLEAX": {
+      "id": "comp-LCKMBTLMVLEAX",
+      "props": {
+        "children": "12€50",
+        "dataSource": "comp-LCKMBTLMZ957P",
+        "attribute": "price"
+      },
+      "children": [],
+      "type": "Text",
+      "parent": "comp-LCKMBTLM4WQG4",
+      "rootParentType": "Text"
+    },
+    "comp-LCKMBTLM4WQG4": {
+      "id": "comp-LCKMBTLM4WQG4",
+      "props": {
+        "flexDirection": "{\"base\":\"row\"}",
+        "mt": "{\"base\":\"2%\"}"
+      },
+      "children": [
+        "comp-LCKMBTLMVLEAX",
+        "comp-LCKMBTLMLX4DQ"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLM57P40",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMY9MGN": {
+      "id": "comp-LCKMBTLMY9MGN",
+      "props": {
+        "children": "Modifier",
+        "variant": "subtle",
+        "size": "sm",
+        "backgroundColor": "#E1B374",
+        "fontWeight": "bold",
+        "color": "#ffff",
+        "mt": "{}",
+        "width": "{\"base\":\"30%\"}",
+        "action": "openPage",
+        "actionProps": "{\"page\":\"page-LBKNGMSV4CVXI\",\"open\":\"true\"}",
+        "mr": "{\"base\":\"2%\"}",
+        "dataSource": "comp-LCKMBTLMZ957P"
+      },
+      "children": [],
+      "type": "Button",
+      "parent": "comp-LCKMBTLMEVEOJ",
+      "rootParentType": "Button"
+    },
+    "comp-LCKMBTLM0YJE1": {
+      "id": "comp-LCKMBTLM0YJE1",
+      "props": {
+        "aria-label": "icon",
+        "icon": "DeleteIcon",
+        "size": "sm",
+        "backgroundColor": "#E1B374",
+        "borderRadius": "10",
+        "color": "#ffff",
+        "fontWeight": "bold",
+        "variant": "solid",
+        "dataSource": "root",
+        "action": "delete"
+      },
+      "children": [],
+      "type": "IconButton",
+      "parent": "comp-LCKMBTLMEVEOJ",
+      "rootParentType": "IconButton"
+    },
+    "comp-LCKMBTLMEVEOJ": {
+      "id": "comp-LCKMBTLMEVEOJ",
+      "props": {
+        "justifyContent": "{\"base\":\"flex-end\"}",
+        "alignItems": "{\"base\":\"center\"}"
+      },
+      "children": [
+        "comp-LCKMBTLMY9MGN",
+        "comp-LCKMBTLM0YJE1"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLM57P40",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLM57P40": {
+      "id": "comp-LCKMBTLM57P40",
+      "props": {
+        "flexDirection": "{\"base\":\"column\"}",
+        "p": "{\"base\":\"0\"}",
+        "m": "{\"base\":\"0\"}",
+        "width": "{\"base\":\"100%\"}",
+        "height": "{}",
+        "minHeight": "{}",
+        "maxHeight": "{}"
+      },
+      "children": [
+        "comp-LCKMBTLM8LXV6",
+        "comp-LCKMBTLM4WQG4",
+        "comp-LCKMBTLMEVEOJ"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMQJ3OM",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMCWR1Y": {
+      "children": [
+        "comp-LCKMBTLMUEMVE"
+      ],
+      "type": "AccordionPanel",
+      "parent": "comp-LCKMBTLMXYD9O",
+      "id": "comp-LCKMBTLMCWR1Y",
+      "props": {
+        "color": "",
+        "backgroundColor": "#fff00",
+        "p": "{\"base\":\"2%\"}",
+        "width": "{\"base\":\"100%\"}"
+      },
+      "rootParentType": "Accordion"
+    },
+    "comp-LCKMBTLMXYD9O": {
+      "children": [
+        "comp-LCKMBTLMQRD2W",
+        "comp-LCKMBTLMCWR1Y"
+      ],
+      "type": "AccordionItem",
+      "parent": "comp-LCKMBTLMZQ47F",
+      "id": "comp-LCKMBTLMXYD9O",
+      "props": {
+        "width": "{\"base\":\"100%\"}",
+        "border": "0px"
+      },
+      "rootParentType": "Accordion"
+    },
+    "comp-LCKMBTLMZQ47F": {
+      "children": [
+        "comp-LCKMBTLMXYD9O"
+      ],
+      "type": "Accordion",
+      "parent": "comp-LCKMBTLMOQ7Y3",
+      "id": "comp-LCKMBTLMZQ47F",
+      "props": {
+        "index": "0",
+        "allowToggle": "true",
+        "width": "{\"base\":\"100%\"}",
+        "mt": "{\"base\":\"1%\"}",
+        "border": "0px"
+      },
+      "rootParentType": "Accordion"
+    },
+    "comp-LCKMBTLM2CIQ6": {
+      "children": [],
+      "type": "Text",
+      "parent": "comp-LCKMBTLMMVRR7",
+      "id": "comp-LCKMBTLM2CIQ6",
+      "props": {
+        "children": "Cigares"
+      },
+      "rootParentType": "Text"
+    },
+    "comp-LCKMBTLMX8S3K": {
+      "children": [],
+      "type": "AccordionIcon",
+      "parent": "comp-LCKMBTLMMVRR7",
+      "id": "comp-LCKMBTLMX8S3K",
+      "props": {},
+      "rootParentType": "Accordion"
+    },
+    "comp-LCKMBTLMMVRR7": {
+      "children": [
+        "comp-LCKMBTLM2CIQ6",
+        "comp-LCKMBTLMX8S3K"
+      ],
+      "type": "AccordionButton",
+      "parent": "comp-LCKMBTLMIC4N8",
+      "id": "comp-LCKMBTLMMVRR7",
+      "props": {
+        "backgroundColor": "#424041",
+        "color": "#ffff",
+        "fontWeight": "bold",
+        "width": "{\"base\":\"100%\"}",
+        "borderRadius": "10px",
+        "_hover": "{{ background: \"none\" }}",
+        "border": "0px"
+      },
+      "rootParentType": "Accordion"
+    },
+    "comp-LCKMBTLM005DO": {
+      "id": "comp-LCKMBTLM005DO",
+      "props": {
+        "src": "https://www.alfredplace.io/wp-content/uploads/2022/10/talisker-10-ans-.png",
+        "width": "{\"base\":\"25%\"}",
+        "minWidth": "{\"base\":\"25%\"}",
+        "maxWidth": "{\"base\":\"25%\"}",
+        "dataSource": "comp-LCKMBTLMSCUYT",
+        "attribute": "picture",
+        "mr": "{\"base\":\"2%\"}"
+      },
+      "children": [],
+      "type": "Image",
+      "parent": "comp-LCKMBTLMHTYJE",
+      "rootParentType": "Image"
+    },
+    "comp-LCKMBTLMZBG56": {
+      "id": "comp-LCKMBTLMZBG56",
+      "props": {
+        "children": "TALISKER 10 ANS au verre",
+        "fontWeight": "bold",
+        "mr": "{}",
+        "dataSource": "comp-LCKMBTLMSCUYT",
+        "attribute": "name"
+      },
+      "children": [],
+      "type": "Text",
+      "parent": "comp-LCKMBTLMXT0U4",
+      "rootParentType": "Text"
+    },
+    "comp-LCKMBTLMU6B8B": {
+      "id": "comp-LCKMBTLMU6B8B",
+      "props": {
+        "children": "En stock",
+        "variant": "subtle",
+        "colorScheme": "green",
+        "dataSource": "comp-LCKMBTLMSCUYT",
+        "attribute": "stock",
+        "borderRadius": "{\"base\":\"5\"}"
+      },
+      "children": [],
+      "type": "Badge",
+      "parent": "comp-LCKMBTLMXT0U4",
+      "rootParentType": "Badge"
+    },
+    "comp-LCKMBTLMXT0U4": {
+      "id": "comp-LCKMBTLMXT0U4",
+      "props": {
+        "flexDirection": "{\"base\":\"row\"}",
+        "mt": "{\"base\":\"2%\"}",
+        "justifyContent": "{\"base\":\"space-between\"}"
+      },
+      "children": [
+        "comp-LCKMBTLMZBG56",
+        "comp-LCKMBTLMU6B8B"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMGBM4Q",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLM1KD6M": {
+      "id": "comp-LCKMBTLM1KD6M",
+      "props": {
+        "children": "12€50",
+        "dataSource": "comp-LCKMBTLMSCUYT",
+        "attribute": "price"
+      },
+      "children": [],
+      "type": "Text",
+      "parent": "comp-LCKMBTLMC20EY",
+      "rootParentType": "Text"
+    },
+    "comp-LCKMBTLMC20EY": {
+      "id": "comp-LCKMBTLMC20EY",
+      "props": {
+        "flexDirection": "{\"base\":\"row\"}",
+        "mt": "{\"base\":\"2%\"}"
+      },
+      "children": [
+        "comp-LCKMBTLM1KD6M",
+        "comp-LCKMBTLM6C88E"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMGBM4Q",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMVUWYO": {
+      "id": "comp-LCKMBTLMVUWYO",
+      "props": {
+        "children": "Modifier",
+        "variant": "subtle",
+        "size": "sm",
+        "backgroundColor": "#E1B374",
+        "fontWeight": "bold",
+        "color": "#ffff",
+        "mt": "{}",
+        "width": "{\"base\":\"30%\"}",
+        "action": "openPage",
+        "actionProps": "{\"page\":\"page-L9QSPE0HX8JA5\",\"open\":\"true\"}",
+        "mr": "{\"base\":\"2%\"}",
+        "dataSource": "comp-LCKMBTLMSCUYT"
+      },
+      "children": [],
+      "type": "Button",
+      "parent": "comp-LCKMBTLMNOTCN",
+      "rootParentType": "Button"
+    },
+    "comp-LCKMBTLM4TOZ0": {
+      "id": "comp-LCKMBTLM4TOZ0",
+      "props": {
+        "aria-label": "icon",
+        "icon": "ViewOffIcon",
+        "size": "sm",
+        "backgroundColor": "#E1B374",
+        "borderRadius": "10",
+        "color": "#ffff",
+        "fontWeight": "bold",
+        "variant": "subtle",
+        "dataSource": "comp-LCKMBTLMSCUYT",
+        "action": "delete"
+      },
+      "children": [],
+      "type": "IconButton",
+      "parent": "comp-LCKMBTLMNOTCN",
+      "rootParentType": "IconButton"
+    },
+    "comp-LCKMBTLMNOTCN": {
+      "id": "comp-LCKMBTLMNOTCN",
+      "props": {
+        "justifyContent": "{\"base\":\"flex-end\"}",
+        "alignItems": "{\"base\":\"center\"}"
+      },
+      "children": [
+        "comp-LCKMBTLMVUWYO",
+        "comp-LCKMBTLM4TOZ0"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMGBM4Q",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMGBM4Q": {
+      "id": "comp-LCKMBTLMGBM4Q",
+      "props": {
+        "flexDirection": "{\"base\":\"column\"}",
+        "p": "{\"base\":\"0\"}",
+        "m": "{\"base\":\"0\"}",
+        "width": "{\"base\":\"100%\"}"
+      },
+      "children": [
+        "comp-LCKMBTLMXT0U4",
+        "comp-LCKMBTLMC20EY",
+        "comp-LCKMBTLMNOTCN"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMHTYJE",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLME3JUN": {
+      "children": [
+        "comp-LCKMBTLMB832C"
+      ],
+      "type": "AccordionPanel",
+      "parent": "comp-LCKMBTLMIC4N8",
+      "id": "comp-LCKMBTLME3JUN",
+      "props": {
+        "color": "",
+        "p": "{\"base\":\"2%\"}",
+        "width": "{\"base\":\"100%\"}"
+      },
+      "rootParentType": "Accordion"
+    },
+    "comp-LCKMBTLMIC4N8": {
+      "children": [
+        "comp-LCKMBTLMMVRR7",
+        "comp-LCKMBTLME3JUN"
+      ],
+      "type": "AccordionItem",
+      "parent": "comp-LCKMBTLM1KQNI",
+      "id": "comp-LCKMBTLMIC4N8",
+      "props": {
+        "width": "{\"base\":\"100%\"}",
+        "border": "0px"
+      },
+      "rootParentType": "Accordion"
+    },
+    "comp-LCKMBTLM1KQNI": {
+      "children": [
+        "comp-LCKMBTLMIC4N8"
+      ],
+      "type": "Accordion",
+      "parent": "comp-LCKMBTLMOQ7Y3",
+      "id": "comp-LCKMBTLM1KQNI",
+      "props": {
+        "index": "0",
+        "allowToggle": "true",
+        "width": "{\"base\":\"100%\"}",
+        "mt": "{\"base\":\"1%\"}",
+        "ml": "{\"base\":\"2%\"}",
+        "mr": "{\"base\":\"2%\"}",
+        "border": "0px"
+      },
+      "rootParentType": "Accordion"
+    },
+    "comp-LCKMBTLMHQ95C": {
+      "id": "comp-LCKMBTLMHQ95C",
+      "props": {
+        "children": "Ajouter boisson",
+        "variant": "solid",
+        "size": "md",
+        "backgroundColor": "#E1B374",
+        "color": "#ffff",
+        "fontWeight": "bold",
+        "action": "create",
+        "actionProps": "{\"page\":\"page-L9QSPE0HX8JP3\",\"open\":\"false\",\"model\":\"drink\"}",
+        "colorScheme": "blackAlpha",
+        "dataSource": "comp-LCKMBTLMSMT0K",
+        "nextAction": "openPage",
+        "nextActionProps": "{\"page\":\"page-L9QSPE0HX8JP3\",\"open\":\"true\"}"
+      },
+      "children": [],
+      "type": "Button",
+      "parent": "comp-LCKMBTLM2KNN4",
+      "rootParentType": "Button"
+    },
+    "comp-LCKMBTLM2KNN4": {
+      "id": "comp-LCKMBTLM2KNN4",
+      "props": {
+        "justifyContent": "{\"base\":\"space-between\"}",
+        "mt": "{\"base\":\"1%\"}",
+        "mb": "{\"base\":\"1%\"}",
+        "ml": "{\"base\":\"10%\"}",
+        "mr": "{\"base\":\"10%\"}"
+      },
+      "children": [
+        "comp-LCKMBTLMHQ95C",
+        "comp-LCKMBTLM8P6NG",
+        "comp-LCKMBTLMNA7AQ"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMWOK6L",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLM8P6NG": {
+      "id": "comp-LCKMBTLM8P6NG",
+      "props": {
+        "children": "Ajouter met",
+        "variant": "solid",
+        "size": "md",
+        "backgroundColor": "#E1B374",
+        "color": "#ffff",
+        "fontWeight": "bold",
+        "colorScheme": "blackAlpha",
+        "action": "create",
+        "actionProps": "{\"page\":\"page-LAWEEYLQE7X2N\",\"open\":\"false\",\"model\":\"meal\"}",
+        "dataSource": "comp-LCKMBTLMZ957P",
+        "nextAction": "openPage",
+        "nextActionProps": "{\"page\":\"page-LBKNGMSV4CVXI\",\"open\":\"true\"}"
+      },
+      "children": [],
+      "type": "Button",
+      "parent": "comp-LCKMBTLM2KNN4",
+      "rootParentType": "Button"
+    },
+    "comp-LCKMBTLMSSHT1": {
+      "children": [
+        "comp-LCKMBTLMKIPJ2",
+        "comp-LCKMBTLMOJTMP"
+      ],
+      "type": "InputGroup",
+      "parent": "comp-LCKMBTLMCR9NU",
+      "id": "comp-LCKMBTLMSSHT1",
+      "props": {},
+      "rootParentType": "Input"
+    },
+    "comp-LCKMBTLMKIPJ2": {
+      "children": [],
+      "type": "Input",
+      "parent": "comp-LCKMBTLMSSHT1",
+      "id": "comp-LCKMBTLMKIPJ2",
+      "props": {
+        "borderRadius": "20",
+        "width": "{\"base\":\"60%\"}",
+        "fontStyle": "italic",
+        "placeholder": "Rechercher un produit...",
+        "border": "3px solid grey",
+        "focusBorderColor": "#E1B374"
+      },
+      "rootParentType": "Input"
+    },
+    "comp-LCKMBTLMOJTMP": {
+      "id": "comp-LCKMBTLMOJTMP",
+      "props": {
+        "aria-label": "icon",
+        "icon": "SearchIcon",
+        "size": "md",
+        "backgroundColor": "whiteAlpha.500",
+        "ml": "{\"base\":\"-12\"}"
+      },
+      "children": [],
+      "type": "IconButton",
+      "parent": "comp-LCKMBTLMSSHT1",
+      "rootParentType": "IconButton"
+    },
+    "comp-LCKMBTLMNA7AQ": {
+      "id": "comp-LCKMBTLMNA7AQ",
+      "props": {
+        "children": "Ajouter cigare",
+        "variant": "solid",
+        "size": "md",
+        "backgroundColor": "#E1B374",
+        "color": "#ffff",
+        "fontWeight": "bold",
+        "colorScheme": "blackAlpha",
+        "action": "create",
+        "actionProps": "{\"page\":\"page-LAWEEYLQE7X2N\",\"open\":\"false\",\"model\":\"cigar\"}",
+        "dataSource": "comp-LCKMBTLMSCUYT",
+        "nextAction": "openPage",
+        "nextActionProps": "{\"page\":\"page-LBKOFA5SHMFXR\",\"open\":\"true\"}"
+      },
+      "children": [],
+      "type": "Button",
+      "parent": "comp-LCKMBTLM2KNN4",
+      "rootParentType": "Button"
+    },
+    "comp-LCKMBTLM54GB2": {
+      "id": "comp-LCKMBTLM54GB2",
+      "props": {
+        "width": "{\"base\":\"100%\"}",
+        "p": "{\"base\":\"0\"}",
+        "m": "{\"base\":\"0\"}"
+      },
+      "children": [
+        "comp-LCKMBTLMJEZV9",
+        "comp-LCKMBTLMQHD8B"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMWR3QM",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMWR3QM": {
+      "id": "comp-LCKMBTLMWR3QM",
+      "props": {
+        "dataSource": "",
+        "flexDirection": "{\"base\":\"column\"}",
+        "borderRadius": "{\"base\":\"10\"}",
+        "alignItems": "{\"base\":\"center\"}",
+        "backgroundColor": "#ffffff",
+        "border": "{\"base\":\"1px solid #424041\"}",
+        "boxShadow": "{\"base\":\"5px 10px 5px #424041B3\"}",
+        "mb": "{\"base\":\"2%\"}",
+        "p": "{\"base\":\"2%\"}",
+        "width": "{\"base\":\"100%\"}"
+      },
+      "children": [
+        "comp-LCKMBTLM54GB2"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMC97Y5",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMSMT0K": {
+      "id": "comp-LCKMBTLMSMT0K",
+      "props": {
+        "model": "drink"
+      },
+      "children": [],
+      "type": "DataProvider",
+      "parent": "root",
+      "rootParentType": "DataProvider"
+    },
+    "comp-LCKMBTLMZ957P": {
+      "id": "comp-LCKMBTLMZ957P",
+      "props": {
+        "model": "meal"
+      },
+      "children": [],
+      "type": "DataProvider",
+      "parent": "root",
+      "rootParentType": "DataProvider"
+    },
+    "comp-LCKMBTLMSCUYT": {
+      "id": "comp-LCKMBTLMSCUYT",
+      "props": {
+        "model": "cigar"
+      },
+      "children": [],
+      "type": "DataProvider",
+      "parent": "root",
+      "rootParentType": "DataProvider"
+    },
+    "comp-LCKMBTLMQJ3OM": {
+      "id": "comp-LCKMBTLMQJ3OM",
+      "props": {
+        "border": "{\"base\":\"1px solid #424041\"}",
+        "borderRadius": "{\"base\":\"10\"}",
+        "backgroundColor": "#ffffff",
+        "boxShadow": "{\"base\":\"5px 10px 5px  #424041B3\"}",
+        "height": "{}",
+        "minHeight": "{}",
+        "maxHeight": "{}",
+        "width": "{\"base\":\"100%\"}",
+        "mb": "{\"base\":\"2%\"}",
+        "p": "{\"base\":\"2%\"}"
+      },
+      "children": [
+        "comp-LCKMBTLMWH7LN",
+        "comp-LCKMBTLM57P40"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMUEMVE",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMUEMVE": {
+      "id": "comp-LCKMBTLMUEMVE",
+      "props": {
+        "flexDirection": "{\"base\":\"column\"}",
+        "dataSource": "comp-LCKMBTLMZ957P",
+        "alignItems": "{\"base\":\"center\"}",
+        "m": "{\"base\":\"0\"}",
+        "p": "{\"base\":\"0\"}"
+      },
+      "children": [
+        "comp-LCKMBTLMQJ3OM"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMCWR1Y",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMHTYJE": {
+      "id": "comp-LCKMBTLMHTYJE",
+      "props": {},
+      "children": [
+        "comp-LCKMBTLM005DO",
+        "comp-LCKMBTLMGBM4Q"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMV8Q7C",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMV8Q7C": {
+      "id": "comp-LCKMBTLMV8Q7C",
+      "props": {
+        "flexDirection": "{\"base\":\"column\"}",
+        "dataSource": "comp-LCKMBTLMSCUYT",
+        "alignItems": "{\"base\":\"center\"}",
+        "boxShadow": "{\"base\":\"5px 10px 5px #424041B3\"}",
+        "borderRadius": "{\"base\":\"10\"}",
+        "backgroundColor": "#fff",
+        "mb": "{\"base\":\"2%\"}",
+        "p": "{\"base\":\"2\"}"
+      },
+      "children": [
+        "comp-LCKMBTLMHTYJE"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMB832C",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMLX4DQ": {
+      "id": "comp-LCKMBTLMLX4DQ",
+      "props": {
+        "children": "€",
+        "dataSource": "",
+        "attribute": "price"
+      },
+      "children": [],
+      "type": "Text",
+      "parent": "comp-LCKMBTLM4WQG4",
+      "rootParentType": "Text"
+    },
+    "comp-LCKMBTLMD15Z7": {
+      "id": "comp-LCKMBTLMD15Z7",
+      "props": {
+        "children": "€",
+        "dataSource": "",
+        "attribute": "price"
+      },
+      "children": [],
+      "type": "Text",
+      "parent": "comp-LCKMBTLMUYTRD",
+      "rootParentType": "Text"
+    },
+    "comp-LCKMBTLM6C88E": {
+      "id": "comp-LCKMBTLM6C88E",
+      "props": {
+        "children": "€",
+        "dataSource": "",
+        "attribute": "price"
+      },
+      "children": [],
+      "type": "Text",
+      "parent": "comp-LCKMBTLMC20EY",
+      "rootParentType": "Text"
+    },
+    "comp-LCKMBTLM92DA3": {
+      "id": "comp-LCKMBTLM92DA3",
+      "props": {
+        "justifyContent": "{\"base\":\"flex-start\"}",
+        "alignItems": "{\"base\":\"flex-start\"}",
+        "mt": "{}",
+        "width": "{\"base\":\"100%\"}"
+      },
+      "children": [
+        "comp-LCKMBTLMEGXJA"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMD8U9V7O67",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLM6VZO6": {
+      "id": "comp-LCKMBTLM6VZO6",
+      "props": {
+        "model": "mealCategory"
+      },
+      "children": [],
+      "type": "DataProvider",
+      "parent": "root",
+      "rootParentType": "DataProvider"
+    },
+    "comp-LCKMBTLMEGXJA": {
+      "children": [
+        "comp-LCKMBTLMTY917"
+      ],
+      "type": "Accordion",
+      "parent": "comp-LCKMBTLM92DA3",
+      "id": "comp-LCKMBTLMEGXJA",
+      "props": {
+        "index": "0",
+        "allowToggle": "true"
+      },
+      "rootParentType": "Accordion"
+    },
+    "comp-LCKMBTLMTY917": {
+      "children": [
+        "comp-LCKMBTLMQWDUX",
+        "comp-LCKMBTLM6UY9U"
+      ],
+      "type": "AccordionItem",
+      "parent": "comp-LCKMBTLMEGXJA",
+      "id": "comp-LCKMBTLMTY917",
+      "props": {},
+      "rootParentType": "Accordion"
+    },
+    "comp-LCKMBTLMQWDUX": {
+      "children": [
+        "comp-LCKMBTLMGWYJX",
+        "comp-LCKMBTLMOYUVH"
+      ],
+      "type": "AccordionButton",
+      "parent": "comp-LCKMBTLMTY917",
+      "id": "comp-LCKMBTLMQWDUX",
+      "props": {
+        "backgroundColor": "#424041",
+        "_hover": "{{ background: \"none\" }}",
+        "borderRadius": "{\"base\":\"10px\"}"
+      },
+      "rootParentType": "Accordion"
+    },
+    "comp-LCKMBTLM6UY9U": {
+      "children": [
+        "comp-LCKMBTLMKECWW"
+      ],
+      "type": "AccordionPanel",
+      "parent": "comp-LCKMBTLMTY917",
+      "id": "comp-LCKMBTLM6UY9U",
+      "props": {},
+      "rootParentType": "Accordion"
+    },
+    "comp-LCKMBTLMGWYJX": {
+      "children": [],
+      "type": "Text",
+      "parent": "comp-LCKMBTLMQWDUX",
+      "id": "comp-LCKMBTLMGWYJX",
+      "props": {
+        "children": "Créez une nouvelle catégorie de produit",
+        "color": "#fff",
+        "fontWeight": "{\"base\":\"bold\"}"
+      },
+      "rootParentType": "Text"
+    },
+    "comp-LCKMBTLMOYUVH": {
+      "children": [],
+      "type": "AccordionIcon",
+      "parent": "comp-LCKMBTLMQWDUX",
+      "id": "comp-LCKMBTLMOYUVH",
+      "props": {
+        "color": "#fff"
+      },
+      "rootParentType": "Accordion"
+    },
+    "comp-LCKMBTLMKECWW": {
+      "id": "comp-LCKMBTLMKECWW",
+      "props": {},
+      "children": [
+        "comp-LCKMBTLMKFPJJ",
+        "comp-LCKMBTLMHURCF",
+        "comp-LCKMBTLM2PA4E"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLM6UY9U",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMKFPJJ": {
+      "id": "comp-LCKMBTLMKFPJJ",
+      "props": {
+        "flexDirection": "{\"base\":\"column\"}",
+        "justifyContent": "{\"base\":\"center\"}",
+        "alignItems": "{\"base\":\"stretch\"}",
+        "p": "{\"base\":\"2%\"}"
+      },
+      "children": [
+        "comp-LCKMBTLM09J9V",
+        "comp-LCKMBTLM31NOL",
+        "comp-LCKMBTLM8DXRF",
+        "comp-LCKMBTLM4DZLX"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMKECWW",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMHURCF": {
+      "id": "comp-LCKMBTLMHURCF",
+      "props": {
+        "flexDirection": "{\"base\":\"column\"}",
+        "justifyContent": "{\"base\":\"center\"}",
+        "alignItems": "{\"base\":\"stretch\"}",
+        "p": "{\"base\":\"2%\"}"
+      },
+      "children": [
+        "comp-LCKMBTLMTZ2Z3",
+        "comp-LCKMBTLMMM4EC",
+        "comp-LCKMBTLMXDD93",
+        "comp-LCKMBTLM7E2PY"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMKECWW",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLM2PA4E": {
+      "id": "comp-LCKMBTLM2PA4E",
+      "props": {
+        "flexDirection": "{\"base\":\"column\"}",
+        "justifyContent": "{\"base\":\"center\"}",
+        "alignItems": "{\"base\":\"stretch\"}",
+        "p": "{\"base\":\"2%\"}"
+      },
+      "children": [
+        "comp-LCKMBTLM7F3W0",
+        "comp-LCKMBTLM0PW2S",
+        "comp-LCKMBTLM9HGJU",
+        "comp-LCKMBTLM8MQT1"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMKECWW",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLM31NOL": {
+      "id": "comp-LCKMBTLM31NOL",
+      "props": {
+        "icon": "ChevronDownIcon",
+        "variant": "outline",
+        "size": "md",
+        "dataSource": "comp-LCKMBTLMRM5TU",
+        "attribute": "parent",
+        "subDataSource": "comp-LCKMBTLMRM5TU",
+        "subAttribute": "name",
+        "focusBorderColor": "#E1B374"
+      },
+      "children": [],
+      "type": "Select",
+      "parent": "comp-LCKMBTLMKFPJJ",
+      "rootParentType": "Select"
+    },
+    "comp-LCKMBTLMMM4EC": {
+      "id": "comp-LCKMBTLMMM4EC",
+      "props": {
+        "icon": "ChevronDownIcon",
+        "variant": "outline",
+        "size": "md",
+        "mt": "{\"base\":\"2%\"}",
+        "dataSource": "comp-LCKMBTLM6VZO6",
+        "attribute": "parent",
+        "subDataSource": "comp-LCKMBTLM6VZO6",
+        "subAttribute": "name",
+        "focusBorderColor": "#E1B374"
+      },
+      "children": [],
+      "type": "Select",
+      "parent": "comp-LCKMBTLMHURCF",
+      "rootParentType": "Select"
+    },
+    "comp-LCKMBTLM0PW2S": {
+      "id": "comp-LCKMBTLM0PW2S",
+      "props": {
+        "icon": "ChevronDownIcon",
+        "variant": "outline",
+        "size": "md",
+        "mt": "{\"base\":\"2%\"}",
+        "dataSource": "comp-LCKMBTLMNQ0W2",
+        "attribute": "parent",
+        "subDataSource": "comp-LCKMBTLMNQ0W2",
+        "subAttribute": "name",
+        "focusBorderColor": "#E1B374"
+      },
+      "children": [],
+      "type": "Select",
+      "parent": "comp-LCKMBTLM2PA4E",
+      "rootParentType": "Select"
+    },
+    "comp-LCKMBTLM09J9V": {
+      "id": "comp-LCKMBTLM09J9V",
+      "props": {
+        "children": "Catégorie boisson",
+        "textAlign": "{\"base\":\"center\"}",
+        "mt": "{\"base\":\"2%\"}",
+        "textDecoration": "underline",
+        "fontWeight": "{\"base\":\"bold\"}",
+        "fontFamily": "{\"base\":\"radikal\"}"
+      },
+      "children": [],
+      "type": "Text",
+      "parent": "comp-LCKMBTLMKFPJJ",
+      "rootParentType": "Text"
+    },
+    "comp-LCKMBTLMTZ2Z3": {
+      "id": "comp-LCKMBTLMTZ2Z3",
+      "props": {
+        "children": "Catégorie Plats",
+        "textAlign": "{\"base\":\"center\"}",
+        "fontFamily": "{\"base\":\"radikal\"}",
+        "fontWeight": "{\"base\":\"bold\"}",
+        "textDecoration": "underline"
+      },
+      "children": [],
+      "type": "Text",
+      "parent": "comp-LCKMBTLMHURCF",
+      "rootParentType": "Text"
+    },
+    "comp-LCKMBTLM7F3W0": {
+      "id": "comp-LCKMBTLM7F3W0",
+      "props": {
+        "children": "Catégorie cigares",
+        "textAlign": "{\"base\":\"center\"}",
+        "textDecoration": "underline",
+        "fontWeight": "{\"base\":\"bold\"}",
+        "fontFamily": "{\"base\":\"radikal\"}"
+      },
+      "children": [],
+      "type": "Text",
+      "parent": "comp-LCKMBTLM2PA4E",
+      "rootParentType": "Text"
+    },
+    "comp-LCKMBTLM4DZLX": {
+      "id": "comp-LCKMBTLM4DZLX",
+      "props": {
+        "children": "Enregistrer",
+        "variant": "solid",
+        "size": "md",
+        "mt": "{\"base\":\"2%\"}",
+        "dataSource": "comp-LCKMBTLMRM5TU",
+        "action": "save",
+        "actionProps": "{\"model\":\"drinkCategory\",\"component_0\":\"comp-LCKMBTLM31NOL\",\"component_1\":\"comp-LCKMBTLM8DXRF\"}",
+        "backgroundColor": "#E1B374",
+        "color": "#fff"
+      },
+      "children": [],
+      "type": "Button",
+      "parent": "comp-LCKMBTLMKFPJJ",
+      "rootParentType": "Button"
+    },
+    "comp-LCKMBTLM7E2PY": {
+      "id": "comp-LCKMBTLM7E2PY",
+      "props": {
+        "children": "Enregistrer",
+        "variant": "solid",
+        "size": "md",
+        "mt": "{\"base\":\"2%\"}",
+        "dataSource": "comp-LCKMBTLM6VZO6",
+        "action": "save",
+        "actionProps": "{\"model\":\"mealCategory\",\"component_0\":\"comp-LCKMBTLMMM4EC\",\"component_1\":\"comp-LCKMBTLMXDD93\"}",
+        "backgroundColor": "#E1B374",
+        "color": "#fff"
+      },
+      "children": [],
+      "type": "Button",
+      "parent": "comp-LCKMBTLMHURCF",
+      "rootParentType": "Button"
+    },
+    "comp-LCKMBTLM8MQT1": {
+      "id": "comp-LCKMBTLM8MQT1",
+      "props": {
+        "children": "Enregistrer",
+        "variant": "solid",
+        "size": "md",
+        "mt": "{\"base\":\"2%\"}",
+        "dataSource": "comp-LCKMBTLMNQ0W2",
+        "action": "save",
+        "actionProps": "{\"model\":\"cigarCategory\",\"component_0\":\"comp-LCKMBTLM0PW2S\",\"component_1\":\"comp-LCKMBTLM9HGJU\"}",
+        "backgroundColor": "#E1B374",
+        "color": "#fff"
+      },
+      "children": [],
+      "type": "Button",
+      "parent": "comp-LCKMBTLM2PA4E",
+      "rootParentType": "Button"
+    },
+    "comp-LCKMBTLMNQ0W2": {
+      "id": "comp-LCKMBTLMNQ0W2",
+      "props": {
+        "model": "cigarCategory"
+      },
+      "children": [],
+      "type": "DataProvider",
+      "parent": "root",
+      "rootParentType": "DataProvider"
+    },
+    "comp-LCKMBTLMRM5TU": {
+      "id": "comp-LCKMBTLMRM5TU",
+      "props": {
+        "model": "drinkCategory"
+      },
+      "children": [],
+      "type": "DataProvider",
+      "parent": "root",
+      "rootParentType": "DataProvider"
+    },
+    "comp-LCKMBTLM8DXRF": {
+      "id": "comp-LCKMBTLM8DXRF",
+      "props": {
+        "pt": "{}",
+        "mt": "{\"base\":\"2%\"}",
+        "dataSource": "comp-LCKMBTLMRM5TU",
+        "attribute": "name",
+        "focusBorderColor": "#E1B374",
+        "type": "email"
+      },
+      "children": [],
+      "type": "Input",
+      "parent": "comp-LCKMBTLMKFPJJ",
+      "rootParentType": "Input"
+    },
+    "comp-LCKMBTLMXDD93": {
+      "id": "comp-LCKMBTLMXDD93",
+      "props": {
+        "dataSource": "comp-LCKMBTLM6VZO6",
+        "attribute": "name",
+        "focusBorderColor": "#E1B374"
+      },
+      "children": [],
+      "type": "Input",
+      "parent": "comp-LCKMBTLMHURCF",
+      "rootParentType": "Input"
+    },
+    "comp-LCKMBTLM9HGJU": {
+      "id": "comp-LCKMBTLM9HGJU",
+      "props": {
+        "dataSource": "comp-LCKMBTLMNQ0W2",
+        "attribute": "name",
+        "focusBorderColor": "#E1B374"
+      },
+      "children": [],
+      "type": "Input",
+      "parent": "comp-LCKMBTLM2PA4E",
+      "rootParentType": "Input"
+    },
+    "comp-LCKMBTLMC97Y5": {
+      "id": "comp-LCKMBTLMC97Y5",
+      "props": {
+        "flexDirection": "{\"base\":\"column\"}",
+        "dataSource": "comp-LCKMBTLMSMT0K",
+        "alignItems": "{\"base\":\"center\"}",
+        "m": "{\"base\":\"0\"}",
+        "p": "{\"base\":\"0\"}"
+      },
+      "children": [
+        "comp-LCKMBTLMWR3QM"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMCWGX7",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMLI5UQ": {
+      "children": [],
+      "type": "Text",
+      "parent": "comp-LCKMBTLMFWKWH",
+      "id": "comp-LCKMBTLMLI5UQ",
+      "props": {
+        "children": "Ajouter une entité analytique ",
+        "color": "#fff",
+        "fontWeight": "{\"base\":\"bold\"}"
+      },
+      "rootParentType": "Text"
+    },
+    "comp-LCKMBTLM93CAL": {
+      "children": [],
+      "type": "AccordionIcon",
+      "parent": "comp-LCKMBTLMFWKWH",
+      "id": "comp-LCKMBTLM93CAL",
+      "props": {
+        "color": "#fff"
+      },
+      "rootParentType": "Accordion"
+    },
+    "comp-LCKMBTLMFWKWH": {
+      "children": [
+        "comp-LCKMBTLMLI5UQ",
+        "comp-LCKMBTLM93CAL"
+      ],
+      "type": "AccordionButton",
+      "parent": "comp-LCKMBTLMA88F1",
+      "id": "comp-LCKMBTLMFWKWH",
+      "props": {
+        "backgroundColor": "#424041",
+        "_hover": "{{ background: \"none\" }}",
+        "borderRadius": "{\"base\":\"10px\"}",
+        "border": "{}"
+      },
+      "rootParentType": "Accordion"
+    },
+    "comp-LCKMBTLMRB4IG": {
+      "children": [
+        "comp-LCKMBTLMRK37N",
+        "comp-LCKMJ9TYK1VXG"
+      ],
+      "type": "AccordionPanel",
+      "parent": "comp-LCKMBTLMA88F1",
+      "id": "comp-LCKMBTLMRB4IG",
+      "props": {},
+      "rootParentType": "Accordion"
+    },
+    "comp-LCKMBTLMA88F1": {
+      "children": [
+        "comp-LCKMBTLMFWKWH",
+        "comp-LCKMBTLMRB4IG"
+      ],
+      "type": "AccordionItem",
+      "parent": "comp-LCKMBTLMP37VI",
+      "id": "comp-LCKMBTLMA88F1",
+      "props": {},
+      "rootParentType": "Accordion"
+    },
+    "comp-LCKMBTLMP37VI": {
+      "children": [
+        "comp-LCKMBTLMA88F1"
+      ],
+      "type": "Accordion",
+      "parent": "comp-LCKMD8U9V7O67",
+      "id": "comp-LCKMBTLMP37VI",
+      "props": {
+        "index": "0",
+        "allowToggle": "true",
+        "width": "{\"base\":\"100%\"}"
+      },
+      "rootParentType": "Accordion"
+    },
+    "comp-LCKMBTLMQ3VAP": {
+      "id": "comp-LCKMBTLMQ3VAP",
+      "props": {
+        "children": "Fournisseur",
+        "textAlign": "{\"base\":\"center\"}",
+        "textDecoration": "underline",
+        "fontWeight": "{\"base\":\"bold\"}",
+        "fontFamily": "{\"base\":\"radikal\"}"
+      },
+      "children": [],
+      "type": "Text",
+      "parent": "comp-LCKMBTLMRK37N",
+      "rootParentType": "Text"
+    },
+    "comp-LCKMBTLMRTW9I": {
+      "id": "comp-LCKMBTLMRTW9I",
+      "props": {
+        "dataSource": "comp-LCKMBTLMXLQVU",
+        "attribute": "name",
+        "focusBorderColor": "#E1B374"
+      },
+      "children": [],
+      "type": "Input",
+      "parent": "comp-LCKMBTLMRK37N",
+      "rootParentType": "Input"
+    },
+    "comp-LCKMBTLMMWY4T": {
+      "id": "comp-LCKMBTLMMWY4T",
+      "props": {
+        "children": "Enregistrer",
+        "variant": "solid",
+        "size": "md",
+        "mt": "{\"base\":\"2%\"}",
+        "dataSource": "comp-LCKMBTLMXLQVU",
+        "action": "save",
+        "actionProps": "{\"model\":\"company\",\"component_0\":\"comp-LCKMBTLMRTW9I\"}",
+        "backgroundColor": "#E1B374",
+        "color": "#fff"
+      },
+      "children": [],
+      "type": "Button",
+      "parent": "comp-LCKMBTLMRK37N",
+      "rootParentType": "Button"
+    },
+    "comp-LCKMBTLMRK37N": {
+      "id": "comp-LCKMBTLMRK37N",
+      "props": {
+        "flexDirection": "{\"base\":\"column\"}",
+        "justifyContent": "{\"base\":\"center\"}",
+        "alignItems": "{\"base\":\"stretch\"}",
+        "p": "{\"base\":\"2%\"}"
+      },
+      "children": [
+        "comp-LCKMBTLMQ3VAP",
+        "comp-LCKMBTLMRTW9I",
+        "comp-LCKMBTLMMWY4T"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMRB4IG",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMBTLMXLQVU": {
+      "id": "comp-LCKMBTLMXLQVU",
+      "props": {
+        "model": "company",
+        "cardinality": "multiple"
+      },
+      "children": [],
+      "type": "DataProvider",
+      "parent": "root",
+      "rootParentType": "DataProvider"
+    },
+    "comp-LCKMBTLMB832C": {
+      "id": "comp-LCKMBTLMB832C",
+      "props": {
+        "flexDirection": "{\"base\":\"column\"}",
+        "justifyContent": "{\"base\":\"center\"}",
+        "alignItems": "{\"base\":\"center\"}",
+        "m": "{\"base\":\"0\"}",
+        "p": "{\"base\":\"0\"}"
+      },
+      "children": [
+        "comp-LCKMBTLMV8Q7C"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLME3JUN",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMD8U9V7O67": {
+      "id": "comp-LCKMD8U9V7O67",
+      "props": {
+        "alignItems": "{\"base\":\"space-between\"}",
+        "justifyContent": "{\"base\":\"flex-start\"}",
+        "p": "{\"base\":\"2\"}",
+        "mt": "{\"base\":\"5%\"}"
+      },
+      "children": [
+        "comp-LCKMBTLM92DA3",
+        "comp-LCKMBTLMP37VI"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMWOK6L",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMHVZXGFJSQ": {
+      "id": "comp-LCKMHVZXGFJSQ",
+      "props": {
+        "mt": "{\"base\":\"1%\"}",
+        "mb": "{\"base\":\"1%\"}",
+        "alignItems": "{\"base\":\"center\"}"
+      },
+      "children": [
+        "comp-LCKMHZTM3U0B1",
+        "comp-LCKMI3HIO0JXA",
+        "comp-LCKN283FRQL8V"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMJ9TYK1VXG",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKMHZTM3U0B1": {
+      "id": "comp-LCKMHZTM3U0B1",
+      "props": {
+        "src": "https://my-alfred-data-test.s3-eu-west-3.amazonaws.com/fumoir/business card.png",
+        "htmlHeight": "20px",
+        "htmlWidth": "20px"
+      },
+      "children": [],
+      "type": "Media",
+      "parent": "comp-LCKMHVZXGFJSQ",
+      "rootParentType": "Media"
+    },
+    "comp-LCKMI3HIO0JXA": {
+      "id": "comp-LCKMI3HIO0JXA",
+      "props": {
+        "children": "Text value",
+        "dataSource": "comp-LCKMBTLMXLQVU",
+        "attribute": "name",
+        "ml": "{\"base\":\"2%\"}",
+        "width": "{\"base\":\"100%\"}"
+      },
+      "children": [],
+      "type": "Text",
+      "parent": "comp-LCKMHVZXGFJSQ",
+      "rootParentType": "Text"
+    },
+    "comp-LCKMJ9TYK1VXG": {
+      "id": "comp-LCKMJ9TYK1VXG",
+      "props": {
+        "dataSource": "comp-LCKMBTLMXLQVU",
+        "flexDirection": "{\"base\":\"column\"}"
+      },
+      "children": [
+        "comp-LCKMHVZXGFJSQ"
+      ],
+      "type": "Flex",
+      "parent": "comp-LCKMBTLMRB4IG",
+      "rootParentType": "Flex"
+    },
+    "comp-LCKN283FRQL8V": {
+      "id": "comp-LCKN283FRQL8V",
+      "props": {
+        "aria-label": "icon",
+        "icon": "DeleteIcon",
+        "size": "md",
+        "isRound": "true",
+        "backgroundColor": "#E1B374",
+        "color": "#fff",
+        "ml": "{\"base\":\"5%\"}",
+        "dataSource": "comp-LCKMBTLMXLQVU",
+        "action": "delete"
+      },
+      "children": [],
+      "type": "IconButton",
+      "parent": "comp-LCKMHVZXGFJSQ",
+      "rootParentType": "IconButton"
+    }
+  },
+  "selectedId": "comp-LCKMBTLM8DXRF",
+  "pageName": "dashboard Alfred",
+  "metaTitle": "",
+  "metaDescription": "",
+  "metaImageUrl": "",
+  "rootPage": false
+}

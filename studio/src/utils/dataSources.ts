@@ -84,7 +84,7 @@ export const getDataProviderDataType = (
   component: IComponent,
   components: IComponents,
   dataSource: string,
-  models: any,
+  models: { [key: string]: any; },
 ): IDataType | null => {
   if (
     component.props.model &&
@@ -203,7 +203,7 @@ const computeDataFieldName = (
   component: IComponent,
   components: IComponents,
   dataSourceId: string,
-): string[] | string | null => {
+): any => {
 
   // On dataProvider: break
   if (component.props.model) {
@@ -250,7 +250,7 @@ export const getFieldsForDataProvider = (
   components: IComponents,
 ): string[] => {
 
-  const linkedComponents = Object.values(components).filter(
+  const linkedComponents:IComponent[] = Object.values(components).filter(
     c => c.props?.dataSource === dataProviderId || c.props?.subDataSource === dataProviderId,
   )
 

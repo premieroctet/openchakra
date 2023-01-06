@@ -1,4 +1,4 @@
-import project, { ProjectState, INITIAL_COMPONENTS } from './components'
+import project, { ProjectState, INITIAL_COMPONENTS } from './project'
 import { onboarding } from '~templates/onboarding'
 import produce from 'immer'
 
