@@ -1,6 +1,5 @@
 import React from 'react'
 import lodash from 'lodash'
-import {getComponentDataValue} from '../utils/values'
 
 const normalize = str => {
   str = str
@@ -34,25 +33,26 @@ const setRecurseDataSource = (
     return React.Children.map(element.props.children, function(child, index) {
       const newSuffix = child?.props?.dataSourceId ? `${suffix}_${index}` : suffix
       const newId = child.props?.id ? `${child.props?.id}${suffix}` : undefined
+      const level=newId ? newId.split(/(_.*)$/)[1] : undefined
       //if (child.props === undefined || (child.props.dataSourceId && child.props.dataSourceId!=dataSourceId)) {
       if (child.props === undefined) {
         return child
       } else if (React.Children.count(child.props.children) === 0) {
         if (isOtherSource(child, dataSourceId)) {
-          return React.cloneElement(child, { id: newId, level: suffix })
+          return React.cloneElement(child, { id: newId, level})
         }
-        return React.cloneElement(child, {id: newId, level: suffix, dataSource})
+        return React.cloneElement(child, {id: newId, level, dataSource})
       } else {
         if (isOtherSource(child, dataSourceId)) {
           return React.cloneElement(
             child,
-            { id: newId, level: suffix },
+            { id: newId, level },
             setRecurseDataSource(child, dataSource, dataSourceId, newSuffix),
           )
         }
         return React.cloneElement(
           child,
-          { id: newId, level: suffix, dataSource },
+          { id: newId, level, dataSource },
           setRecurseDataSource(child, dataSource, dataSourceId, newSuffix),
         )
       }
