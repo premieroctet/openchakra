@@ -221,7 +221,7 @@ const computeDataFieldName = (
     attrs.push(component.props.attribute)
   }
   if (component.props.subDataSource==dataSourceId) {
-    attrs.push(component.props.subAattribute)
+    attrs.push(component.props.subAttribute)
   }
 
   const result = attrs.map(att =>
