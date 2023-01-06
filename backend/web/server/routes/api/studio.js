@@ -2,6 +2,7 @@ const path = require('path')
 const {promises: fs} = require('fs')
 const child_process = require('child_process')
 const url = require('url')
+const lodash=require('lodash')
 const bcrypt = require('bcryptjs')
 const express = require('express')
 const mongoose = require('mongoose')
@@ -249,6 +250,17 @@ router.get('/current-user', passport.authenticate('cookie', {session: false}), (
   return res.json(req.user)
 },
 )
+
+router.post('/register', (req, res) => {
+  const body=lodash.mapValues(req.body, v => JSON.parse(v))
+  return ACTIONS.register(body)
+    .then(result => res.json(result))
+    .catch(err => {
+      console.error(err)
+      return res.status(err.status||500).json(err.message || err)
+    })
+
+})
 
 router.post('/:model', passport.authenticate('cookie', {session: false}), (req, res) => {
   const model = req.params.model

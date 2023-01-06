@@ -8,20 +8,20 @@ const Schema = mongoose.Schema
 const UserSchema = new Schema({
   firstname: {
     type: String,
-    required: true,
+    required: [true, 'Le prénom est obligatoire'],
   },
   lastname: {
     type: String,
-    required: true,
+    required: [true, 'Le nom de famille est obligatoire'],
   },
   email: {
     type: String,
-    required: true,
+    required: [true, 'L\'email est obligatoire'],
     set: v => v.toLowerCase().trim(),
   },
   password: {
     type: String,
-    required: true,
+    required: [true, 'Le mot de passe est obligatoire'],
     default: 'invalid',
     set: pass => bcrypt.hashSync(pass, 10),
   },
@@ -49,7 +49,7 @@ const UserSchema = new Schema({
     type: String,
     enum: Object.keys(GENDER),
     default: null,
-    required: false,
+    required: [true, `Le genre est obligatoire (${Object.values(GENDER)})`],
   },
   phone: {
     type: String,

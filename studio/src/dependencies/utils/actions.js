@@ -180,13 +180,13 @@ export const ACTIONS = {
     ))
     const httpAction=dataSource?._id ? axios.put : axios.post
     return httpAction(url, body)
-      .then(res => {
-        components.forEach(c => clearComponentValue(c, level))
-        return ({
-          model: props.model,
-          value: res.data,
-        })
+    .then(res => {
+      components.forEach(c => clearComponentValue(c, level))
+      return ({
+        model: props.model,
+        value: res.data,
       })
+    })
   },
 
   pay: ({ context, props }) => {
@@ -199,7 +199,26 @@ export const ACTIONS = {
     }
     return axios.post(url, body)
   },
+
   previous: () => {
     window.history.back()
-  }
+  },
+
+  register: ({ value, props, context, dataSource, level }) => {
+    let url = `${API_ROOT}/register`
+    const components=lodash(props).pickBy((v, k) => /^component_/.test(k) && !!v).values()
+    const body = Object.fromEntries(components.map(c =>
+      [getComponent(c, level)?.getAttribute('attribute'), getComponentDataValue(c, level)||null]
+    ))
+    const bodyJson=lodash.mapValues(body, v => JSON.stringify(v))
+    return axios.post(url, bodyJson)
+      .then(res => {
+        components.forEach(c => clearComponentValue(c, level))
+        return ({
+          model: 'user',
+          value: res.data,
+        })
+      })
+  },
+
 }

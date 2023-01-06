@@ -1,6 +1,7 @@
 const url = require('url')
 const mongoose=require('mongoose')
 const lodash=require('lodash')
+const User = require('../../models/User')
 const {buildPopulates, getModel, removeData} = require('../database')
 const Message = require('../../models/Message')
 const Post = require('../../models/Post')
@@ -135,6 +136,16 @@ let ACTIONS = {
     return Post.create({contents, media, author: sender})
   },
 
+  register: props => {
+    console.log(`Register with ${JSON.stringify(props)}`)
+    return User.exists({email: props.email})
+      .then(exists => {
+        if (exists) {
+          return Promise.reject(`Un compte avec le mail ${props.email} existe déjà`)
+        }
+        return User.create({...props})
+      })
+  },
 }
 
 let ALLOW_ACTION= () => Promise.resolve(true)
