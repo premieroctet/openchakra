@@ -12,6 +12,7 @@ const {
 } = require('../../database')
 const UserSessionData = require('../../../models/UserSessionData')
 const User = require('../../../models/User')
+const Booking = require('../../../models/Booking')
 const {generate_id} = require('../../../../utils/consts')
 const Message = require('../../../models/Message')
 const {
