@@ -203,13 +203,19 @@ const computeDataFieldName = (
   component: IComponent,
   components: IComponents,
   dataSourceId: string,
-): string[] | null => {
-  if (
-    component.props.model ||
-    (component.props.dataSource !== dataSourceId && component.props.subDataSource !== dataSourceId)
+): string[] | string | null => {
+
+  // On dataProvider: break
+  if (component.props.model) {
+    return null
+  }
+  // I have datasource(s) but different: break
+  if ((component.props.dataSource && component.props.dataSource !== dataSourceId)
+  && (component.props.subDataSource && component.props.subDataSource !== dataSourceId)
   ) {
     return null
   }
+
   const parentFieldName = computeDataFieldName(
     components[component.parent],
     components,
@@ -224,9 +230,17 @@ const computeDataFieldName = (
     attrs.push(component.props.subAttribute)
   }
 
+  if (attrs.length==0) {
+    return parentFieldName
+  }
   const result = attrs.map(att =>
     [parentFieldName, att].filter(s => !!s).join('.')
   )
+
+
+  if (!component.props.subDataSource) {
+    return result[0]
+  }
   return result
 }
 
@@ -235,6 +249,7 @@ export const getFieldsForDataProvider = (
   dataProviderId: string,
   components: IComponents,
 ): string[] => {
+
   const linkedComponents = Object.values(components).filter(
     c => c.props?.dataSource === dataProviderId || c.props?.subDataSource === dataProviderId,
   )
