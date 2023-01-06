@@ -1,9 +1,21 @@
 const {
   declareEnumField,
   declareVirtualField,
+  setPreCreateData,
   setPreprocessGet,
 } = require('../../database')
 const {GENDER, MEASURE_TYPE} = require('../../../../utils/dekuple/consts')
+
+
+const preCreate = ({model, params, user}) => {
+  if (['measure', 'appointment', 'reminder'].includes(model)) {
+    params.user=user
+  }
+  return Promise.resolve({model, params})
+}
+
+setPreCreateData(preCreate)
+
 
 const preprocessGet = ({model, fields, id, user}) => {
   if (model=='loggedUser') {
