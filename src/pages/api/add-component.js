@@ -4,14 +4,17 @@ import { convertToPascal } from '~components/editor/Editor'
 import { generateOcTsxCode, generatePanel, generatePreview } from '~utils/code'
 
 export default async function handler(req, res) {
-  const component = req.body.path?.split('/').slice(-1)[0]
+  const component = req.body.path
+  const repoName = shell.exec('REPO=${PWD%/*} && echo -n ${REPO##*/}').stdout
+  const componentPath = `${repoName}/${component}`
+
   try {
     // 1. Create bit component
-    shell.exec(`cd .. && bit create tiui-react-oc ${req.body.path}`)
+    shell.exec(`cd .. && bit create tiui-react-oc ${componentPath}`)
 
     // 2. Read json
     const fileContent = fs.readFileSync(
-      `../remote/${req.body.path}/${component}.oc.json`,
+      `../remote/${componentPath}/${component}.oc.json`,
       { encoding: 'utf-8' },
     )
     const json = JSON.parse(fileContent)
@@ -27,7 +30,7 @@ export default async function handler(req, res) {
     // 2.4 Create symlink
     shell.ln(
       '-sf',
-      `../../../../remote/${req.body.path}/${component}.tsx`,
+      `../../../../remote/${componentPath}/${component}.tsx`,
       `src/custom-components/customOcTsx/${component}.tsx`,
     )
 
@@ -46,7 +49,7 @@ export default async function handler(req, res) {
     )
     await Promise.all([writePreview, writePanel, writeOcTsx])
 
-    res.status(200).json(component)
+    res.status(200).json(componentPath)
   } catch (err) {
     console.log(err)
     res.status(400).json({ err })
