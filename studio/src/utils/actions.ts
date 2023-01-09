@@ -9,6 +9,7 @@ type IActions = {
     next?: string[]
   }
 }
+
 export const ACTIONS: IActions = {
   create: {
     label: 'Create new data',
@@ -168,12 +169,27 @@ export const ACTIONS: IActions = {
     label: 'Previous',
     options: {},
   },
+  // Register new User
+  register: {
+    label: 'Register new account',
+    options: {
+      ...Object.fromEntries(lodash.range(10).map((idx:number) => {
+      return [
+        `component_${idx}`,
+        ({ components }) => components
+          .filter(comp => comp.props?.dataSource && comp.props?.attribute)
+          .map(comp => ({ key: comp.id, label: `${comp.type}/${comp.id}` }))
+
+      ]})),
+    },
+    next: ['openPage'],
+  },
   logout: {
     label: 'Logout',
     options: {},
     next: ['openPage'],
   },
-  // FUMOIR
+
 }
 
 export const allowsActions = (component: IComponent) => {

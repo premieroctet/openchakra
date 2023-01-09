@@ -1,5 +1,5 @@
 const projectTest=require('../data/testProject.json')
-const {validateJSON}=require('../../src/utils/validation')
+const {validateJSON}=require('../../utils/validation')
 
 describe('JSON project validation', () => {
   it('should validate', () => {

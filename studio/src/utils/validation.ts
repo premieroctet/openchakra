@@ -106,7 +106,7 @@ export const validateComponent = (
       try {
         v(component, components)
         return null
-      } catch (err) {
+      } catch (err:any) {
         return { component, message: err.message }
       }
     })
@@ -132,7 +132,7 @@ export const validate = (icomponents: IComponents): IWarning[] => {
         try {
           v(c, icomponents)
           return null
-        } catch (err) {
+        } catch (err:any) {
           return { component: c, message: err.message }
         }
       })

@@ -84,7 +84,7 @@ export const getDataProviderDataType = (
   component: IComponent,
   components: IComponents,
   dataSource: string,
-  models: any,
+  models: { [key: string]: any; },
 ): IDataType | null => {
   if (
     component.props.model &&
@@ -203,24 +203,44 @@ const computeDataFieldName = (
   component: IComponent,
   components: IComponents,
   dataSourceId: string,
-): string | null => {
-  if (
-    component.props.model ||
-    (component.props.dataSource && component.props.dataSource !== dataSourceId && component.props.subDataSource !== dataSourceId)
+): any => {
+
+  // On dataProvider: break
+  if (component.props.model) {
+    return null
+  }
+  // I have datasource(s) but different: break
+  if ((component.props.dataSource && component.props.dataSource !== dataSourceId)
+  && (component.props.subDataSource && component.props.subDataSource !== dataSourceId)
   ) {
     return null
   }
+
   const parentFieldName = computeDataFieldName(
     components[component.parent],
     components,
     dataSourceId,
   )
 
-  const attr=component.props.dataSource==dataSourceId ?
-    component.props.attribute:component.props.subAttribute
-  const result = [parentFieldName, attr]
-    .filter(s => !!s)
-    .join('.')
+  const attrs=[]
+  if (component.props.dataSource==dataSourceId) {
+    attrs.push(component.props.attribute)
+  }
+  if (component.props.subDataSource==dataSourceId) {
+    attrs.push(component.props.subAttribute)
+  }
+
+  if (attrs.length==0) {
+    return parentFieldName
+  }
+  const result = attrs.map(att =>
+    [parentFieldName, att].filter(s => !!s).join('.')
+  )
+
+
+  if (!component.props.subDataSource) {
+    return result[0]
+  }
   return result
 }
 
@@ -229,23 +249,17 @@ export const getFieldsForDataProvider = (
   dataProviderId: string,
   components: IComponents,
 ): string[] => {
-  const linkedComponents = Object.values(components).filter(
+
+  const linkedComponents:IComponent[] = Object.values(components).filter(
     c => c.props?.dataSource === dataProviderId || c.props?.subDataSource === dataProviderId,
   )
 
-  if (/LCHOOZGC737SX/.test(dataProviderId)) {
-    console.log(`Components for ${dataProviderId}:${linkedComponents.map(c => c.id)}`)
-  }
-
   const fields = lodash(linkedComponents)
       .map(c => computeDataFieldName(c, components, dataProviderId))
+      .flatten()
       .filter(c => !!c)
       .uniq()
       .value()
-
-  if (/LCHOOZGC737SX/.test(dataProviderId)) {
-    console.log(`Fields for ${dataProviderId}:${fields}`)
-  }
 
   return fields
 }
