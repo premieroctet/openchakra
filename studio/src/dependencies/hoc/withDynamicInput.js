@@ -56,10 +56,10 @@ const withDynamicInput = Component => {
     }, [backend, context, dataSource._id, debouncedValue, neverTyped, noautosave, props])
 
     return (
-      <Component 
-      {...props} 
-      value={(typeof internalDataValue === 'string' && internalDataValue) || ''} 
-      onChange={onChange} 
+      <Component
+      {...props}
+      value={(typeof internalDataValue === 'string' && internalDataValue) || ''}
+      onChange={onChange}
     />
     )
   }
