@@ -172,5 +172,5 @@ export const ACTIONS: IActions = {
 }
 
 export const allowsActions = (component: IComponent) => {
-  return ['Button', 'IconButton', 'Flex'].includes(component.type)
+  return ['Button', 'IconButton'].includes(component.type)
 }
