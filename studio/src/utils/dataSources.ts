@@ -86,28 +86,14 @@ export const getDataProviderDataType = (
   dataSource: string,
   models: { [key: string]: any; },
 ): IDataType | null => {
-  if (
-    component.props.model &&
-    (component.props.dataSource === dataSource ||
-      (dataSource == 'root' && component.id == 'root'))
-  ) {
-    return {
-      type: component.props.model,
-      multiple: true,
-      ref: true,
-    }
+  console.log(`get DP type:${component.id} ${component.props.dataSource} for ds ${dataSource}`)
+  // This is the data provider: return the type
+  if ((component.type=='DataProvider' && component.id==dataSource)
+      || (component.id=='root' && dataSource=='root')) {
+    return { type: component.props.model, multiple: true, ref: true}
   }
   if (component.id === 'root') {
-    if (dataSource!='root') {
-      const model=components[dataSource].props.model
-      return {
-        type: model,
-        multiple: true,
-        ref: true,
-      }
-    }
-    // Search dataProviders
-    return null
+    return getDataProviderDataType(components[dataSource], components, dataSource, models)
   }
 
   const parent = components[component.parent]
@@ -133,7 +119,7 @@ export const getAvailableAttributes = (
   components: IComponents,
   models: any,
 ): any => {
-  if (!component.props?.dataSource) {
+  if (!component.props?.dataSource && !component.props?.model) {
     return null
   }
   let dataType = getDataProviderDataType(
