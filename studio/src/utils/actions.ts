@@ -168,6 +168,11 @@ export const ACTIONS: IActions = {
     label: 'Previous',
     options: {},
   },
+  logout: {
+    label: 'Logout',
+    options: {},
+    next: ['openPage'],
+  },
   // FUMOIR
 }
 
