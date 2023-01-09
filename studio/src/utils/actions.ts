@@ -177,7 +177,7 @@ export const ACTIONS: IActions = {
       return [
         `component_${idx}`,
         ({ components }) => components
-          .filter(comp => comp.props?.dataSource && comp.props?.attribute)
+          .filter(comp => (comp.props?.dataSource||comp.props?.model) && comp.props?.attribute)
           .map(comp => ({ key: comp.id, label: `${comp.type}/${comp.id}` }))
 
       ]})),

@@ -64,6 +64,8 @@ export const getPageComponentName = (
 
 const isDynamicComponent = (comp: IComponent) => {
   return !!comp.props.dataSource || !!comp.props.subDataSource
+    || (!!comp.props.action)
+    || (comp.props.model && comp.props.attribute)
 }
 
 const isMaskableComponent = (comp: IComponent) => {
@@ -176,6 +178,7 @@ const buildBlock = ({
       throw new Error(`invalid component ${key}`)
     } else if (forceBuildBlock || !childComponent.componentName) {
       const dataProvider = components[childComponent.props.dataSource]
+      const isDpValid=getValidDataProviders(components).find(dp => dp.id==childComponent.props.dataSource)
       const paramProvider = dataProvider?.id.replace(/comp-/, '')
       const subDataProvider = components[childComponent.props.subDataSource]
       const paramSubProvider = subDataProvider?.id.replace(/comp-/, '')
@@ -191,7 +194,7 @@ const buildBlock = ({
       // Set reload function
       propsContent += ` reload={reload} `
       // Provide page data context
-      if (dataProvider) {
+      if (dataProvider && isDpValid) {
         if (singleDataPage) {
           propsContent += ` context={root?._id}`
         }
@@ -206,37 +209,43 @@ const buildBlock = ({
 
       if (isDynamicComponent(childComponent)) {
         propsContent += ` backend='/'`
-        try {
-          let tp = getDataProviderDataType(
+          let tp = null
+            try {
+              tp =getDataProviderDataType(
             components[childComponent.parent],
             components,
             childComponent.props.dataSource,
             models,
           )
+        } catch (err) {
+          console.error(err)
+        }
           if (!tp) {
+            try {
             tp = {
               type: components[childComponent.props.dataSource].props.model,
               multiple: true,
               ref: true,
             }
+          } catch (err) {
+            console.error(err)
+          }
           }
 
-          if (tp?.type && childComponent.props?.attribute) {
-            const att=models[tp.type].attributes[childComponent.props?.attribute]
+          if (((childComponent.props.dataSource && tp?.type) || childComponent.props.model) && childComponent.props?.attribute) {
+            console.log(`Tp:${JSON.stringify(tp?.type)},mode:${JSON.stringify(childComponent.props.model)}`)
+            const att=models[tp?.type || childComponent.props.model].attributes[childComponent.props?.attribute]
             if (att?.enumValues) {
               propsContent += ` enum='${JSON.stringify(att.enumValues)}'`
             }
           }
-          if (tp.type) {
+          if (tp?.type) {
             propsContent += ` dataModel='${tp.type}' `
           } else {
             console.error(
               `No data provider data type found for ${childComponent.parent}`,
             )
           }
-        } catch (err) {
-          console.error(err)
-        }
       }
       // Set if dynamic container
       if (
@@ -275,6 +284,9 @@ const buildBlock = ({
           }
 
           if (propName === 'dataSource') {
+            if (!isDpValid) {
+              return
+            }
             propsContent += ` dataSourceId={'${propsValue}'}`
             if (propsValue) {propsContent += ` key={${propsValue.replace(/^comp-/, '')}${singleData? '': '[0]'}?._id}`}
           }
@@ -490,6 +502,13 @@ const buildFilterStates = (components: IComponents) => {
     .join('\n')
 }
 
+const getValidDataProviders = (components:IComponents): IComponent[] => {
+  const result = lodash(components)
+    .pickBy(c => (c.type=='DataProvider' || c.id=='root') && c.props?.model)
+    .values()
+  return result
+}
+
 const buildHooks = (components: IComponents) => {
   // Returns attributes names used in this dataProvider for 'dataProvider'
   const getDataProviderFields = (dataProvider: IComponent) => {
@@ -497,9 +516,7 @@ const buildHooks = (components: IComponents) => {
     return fields
   }
 
-  const dataProviders: IComponent[] = lodash(components)
-    .pickBy(c => c.props?.model)
-    .values()
+  const dataProviders=getValidDataProviders(components)
   if (dataProviders.length === 0) {
     return ''
   }

@@ -53,7 +53,7 @@ const withDynamicInput = Component => {
             .catch(err => console.error(err))
         }
       }
-    }, [backend, context, debouncedValue, neverTyped])
+    }, [backend, context, dataSource._id, debouncedValue, neverTyped, noautosave, props])
 
     return (
       <Component 
