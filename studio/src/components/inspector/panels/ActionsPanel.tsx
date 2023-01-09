@@ -80,7 +80,7 @@ const ActionPanel = ({
 }
 
 const ActionsPanel: React.FC = () => {
-  const { setValueFromEvent, setValue } = useForm()
+  const { setValueFromEvent, setValue, removeValue } = useForm()
   const action = usePropsSelector('action')
   const nextAction = usePropsSelector('nextAction')
   const actionProps = usePropsSelector('actionProps')
@@ -113,8 +113,7 @@ const ActionsPanel: React.FC = () => {
   }
 
   const onActionChange = (ev: React.ChangeEvent<HTMLSelectElement>) => {
-    // TODO Reset action props on action change
-    //setValue('actionProps', {})
+    removeValue(ev.target.name=='action' ? 'actionProps':'nextActionProps')
     setValueFromEvent(ev)
   }
 
