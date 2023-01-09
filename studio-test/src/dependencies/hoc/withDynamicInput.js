@@ -7,7 +7,7 @@ import useDebounce from '../hooks/useDebounce.hook'
 const withDynamicInput = Component => {
   const Internal = ({ dataSource, noautosave, context, backend, ...props }) => {
 
-    let keptValue = lodash.get(dataSource, props.attribute)
+    let keptValue = lodash.get(dataSource, props.attribute) || ''
 
     const isADate = !isNaN(Date.parse(keptValue)) && new Date(Date.parse(keptValue));
 
@@ -42,21 +42,25 @@ const withDynamicInput = Component => {
 
     useEffect(() => {
       if (!neverTyped && !noautosave) {
-        ACTIONS.putValue({
-          context: dataSource?._id,
-          value: debouncedValue,
-          props,
-          backend,
-        })
-          .then(() => props.reload())
-          .catch(err => console.error(err))
+        if (typeof debouncedValue === 'string') {
+          ACTIONS.putValue({
+            context: dataSource?._id,
+            value: debouncedValue,
+            props,
+            backend,
+          })
+            .then(() => props.reload())
+            .catch(err => console.error(err))
+        }
       }
-
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [backend, context, debouncedValue, neverTyped])
 
     return (
-      <Component {...props} value={internalDataValue} onChange={onChange} />
+      <Component 
+      {...props} 
+      value={(typeof internalDataValue === 'string' && internalDataValue) || ''} 
+      onChange={onChange} 
+    />
     )
   }
 
