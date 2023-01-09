@@ -83,9 +83,12 @@ checkConfig()
   })
   .then(() => {
     // Body parser middleware
-    app.use(bodyParser.urlencoded({extended: false}))
+    app.use(bodyParser.urlencoded({extended: true}))
     app.use(bodyParser.json())
 
+    // Body POST limit
+    app.use(express.json({limit: '1mb'}))
+    app.use(express.urlencoded({limit: '1mb'}))
     // Passport middleware
     app.use(passport.initialize())
 
