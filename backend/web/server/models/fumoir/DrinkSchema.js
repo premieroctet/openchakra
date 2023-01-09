@@ -5,12 +5,8 @@ const {schemaOptions} = require('../../utils/schemas')
 const Schema = mongoose.Schema
 
 const DrinkSchema = new Schema(
-  {
-    tasting: {
-      type: String,
-      required: false,
-    },
-  },
+  // TODO: set tasting HERE
+  {},
   {...schemaOptions, ...PRODUCT_DISC_OPTION},
 )
 

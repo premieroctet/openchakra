@@ -18,6 +18,11 @@ const ProductSchema = new Schema(
       type: String,
       required: false,
     },
+    // TODO set tasting in DrinkSchema ONLY
+    tasting: {
+      type: String,
+      required: false,
+    },
     features: {
       // Caractéristiques
       type: String,
