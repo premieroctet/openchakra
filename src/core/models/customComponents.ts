@@ -6,10 +6,6 @@ export interface CustomDictionary {
   [Key: string]: string
 }
 
-export interface ComponentParametersType {
-  [Key: string]: Array<ParametersType>
-}
-
 export interface NewThemeType {
   brand: string
   primaryColor: string
@@ -25,14 +21,12 @@ export type CustomComponentsState = {
   components: CustomDictionary
   installedComponents: CustomDictionary
   selectedId?: IComponent['type']
-  parameters: ComponentParametersType
   themePath?: string
   newTheme: NewThemeType
 }
 
 const DEFAULT_ID = undefined
 const INITIAL_COMPONENTS: CustomDictionary = {}
-const INITIAL_PARAMETERS: ComponentParametersType = {}
 const DEFAULT_THEME_PATH = undefined
 const INITIAL_NEW_THEME: NewThemeType = {
   brand: 'cyan',
@@ -49,7 +43,6 @@ const customComponents = createModel({
   state: {
     components: INITIAL_COMPONENTS,
     installedComponents: {},
-    parameters: INITIAL_PARAMETERS,
     selectedId: DEFAULT_ID,
     newTheme: INITIAL_NEW_THEME,
     themePath: DEFAULT_THEME_PATH,
@@ -79,56 +72,6 @@ const customComponents = createModel({
       return produce(state, (draftState: CustomComponentsState) => {
         delete draftState.components[component]
       })
-    },
-    updateParams(
-      state: CustomComponentsState,
-      payload: {
-        id: string
-        name: string
-        value: any
-        type: string
-        optional: boolean
-        exposed: boolean
-        ref: boolean
-      },
-    ) {
-      return produce(state, (draftState: CustomComponentsState) => {
-        const index = draftState.parameters[payload.id]?.findIndex(
-          (item: any) => item.name === payload.name,
-        )
-        if (index !== undefined && index !== -1) {
-          draftState.parameters[payload.id][index].value = payload.value
-          draftState.parameters[payload.id][index].type = payload.type
-          draftState.parameters[payload.id][index].optional = payload.optional
-          draftState.parameters[payload.id][index].exposed = payload.exposed
-          draftState.parameters[payload.id][index].ref = payload.ref
-        } else {
-          draftState.parameters[payload.id]?.push({
-            name: payload.name,
-            value: payload.value,
-            type: payload.type,
-            optional: payload.optional,
-            exposed: payload.exposed,
-            ref: payload.ref,
-          })
-        }
-      })
-    },
-    deleteParams(
-      state: CustomComponentsState,
-      payload: { id: string; name: string },
-    ) {
-      return {
-        ...state,
-        parameters: {
-          ...state.parameters,
-          [payload.id]: [
-            ...state.parameters[payload.id]?.filter(
-              (item: any) => item.name !== payload.name,
-            ),
-          ],
-        },
-      }
     },
     reset(
       state: CustomComponentsState,
