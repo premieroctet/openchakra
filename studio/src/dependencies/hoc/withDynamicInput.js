@@ -5,7 +5,7 @@ import { ACTIONS } from '../utils/actions'
 import useDebounce from '../hooks/useDebounce.hook'
 
 const withDynamicInput = Component => {
-  const Internal = ({ dataSource, noautosave, context, backend, ...props }) => {
+  const Internal = ({ dataSource, noautosave, context, backend, suggestions, ...props }) => {
 
     let keptValue = lodash.get(dataSource, props.attribute) || ''
 
@@ -53,14 +53,26 @@ const withDynamicInput = Component => {
             .catch(err => console.error(err))
         }
       }
-    }, [backend, context, dataSource?._id, debouncedValue, neverTyped, noautosave, props])
+    }, [backend, context, dataSource, debouncedValue, neverTyped, noautosave, props])
 
+    if (suggestions) {
+      props={...props, list: 'suggestions'}
+    }
     return (
+      <>
       <Component
       {...props}
       value={(typeof internalDataValue === 'string' && internalDataValue) || ''}
       onChange={onChange}
-    />
+      />
+      {suggestions && (
+        <datalist id={`suggestions`}>
+          {JSON.parse(suggestions).map(sugg => (
+            <option key={sugg} value={sugg}/>
+          ))}
+        </datalist>
+      )}
+      </>
     )
   }
 

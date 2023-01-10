@@ -11,6 +11,7 @@ const AppointmentSchema = new Schema({
   type: { // Heartbeat, Blood pressure
     type: String,
     required: true,
+    suggestions: ['Rendez-vous cardiologue', 'Rendez-vous généraliste', 'Prise de sang'],
   },
   description: {
     type: String,

@@ -68,6 +68,7 @@ const getVirtualCharacteristics = (modelName, attName) => {
 
 const getAttributeCaracteristics = (modelName, att) => {
   const multiple = att.instance == 'Array'
+  const suggestions = att.options?.suggestions
   const baseData = multiple ? att.caster : att
   const type =
     baseData.instance == 'ObjectID' ? baseData.options.ref : baseData.instance
@@ -89,6 +90,7 @@ const getAttributeCaracteristics = (modelName, att) => {
     multiple,
     ref,
     enumValues,
+    suggestions,
   }
 }
 

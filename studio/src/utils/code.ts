@@ -238,6 +238,9 @@ const buildBlock = ({
             if (att?.enumValues) {
               propsContent += ` enum='${JSON.stringify(att.enumValues)}'`
             }
+            if (att?.suggestions) {
+              propsContent += ` suggestions='${JSON.stringify(att.suggestions)}'`
+            }
           }
           if (tp?.type) {
             propsContent += ` dataModel='${tp.type}' `
