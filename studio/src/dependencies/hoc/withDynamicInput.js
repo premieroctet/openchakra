@@ -62,7 +62,7 @@ const withDynamicInput = Component => {
       <>
       <Component
       {...props}
-      value={(typeof internalDataValue === 'string' && internalDataValue) || ''}
+      value={lodash.isNil(internalDataValue) ? '' : internalDataValue}
       onChange={onChange}
       />
       {suggestions && (
