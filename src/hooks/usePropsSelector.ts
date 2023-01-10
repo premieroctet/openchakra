@@ -3,11 +3,9 @@ import { RootState } from '~core/store'
 import { getDefaultFormProps } from '~utils/defaultProps'
 import { useInspectorUpdate } from '~contexts/inspector-context'
 import { useEffect } from 'react'
-import { getComponentParams } from '~core/selectors/components'
 
 const usePropsSelector = (propsName: string) => {
   const { addActiveProps } = useInspectorUpdate()
-  const params = useSelector(getComponentParams)
 
   useEffect(() => {
     addActiveProps(propsName)
@@ -26,6 +24,7 @@ const usePropsSelector = (propsName: string) => {
       return getDefaultFormProps(component.type)[propsName]
     }
 
+    const params = state.components.present.components['root'].params
     const defaultCustomValue = params?.filter(
       param => param.name === propsName,
     )[0].value
