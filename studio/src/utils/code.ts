@@ -189,6 +189,12 @@ const buildBlock = ({
         : capitalize(childComponent.type)
       let propsContent = ''
 
+      // DIRTY: stateValue for RAdioGroup to get value
+      if (childComponent.type=='RadioGroup') {
+        propsContent += ` setComponentValue={setComponentValue} `
+      }
+      propsContent += ` getComponentValue={getComponentValue} `
+
       // Set component id
       propsContent += ` id='${childComponent.id}' `
       // Set reload function
@@ -204,7 +210,7 @@ const buildBlock = ({
       }
 
       if (noAutoSaveComponents.includes(childComponent.id)) {
-        propsContent += ` noautosave `
+        propsContent += ` noautosave={true} `
       }
 
       if (isDynamicComponent(childComponent)) {
@@ -233,9 +239,8 @@ const buildBlock = ({
           }
 
           if (((childComponent.props.dataSource && tp?.type) || childComponent.props.model) && childComponent.props?.attribute) {
-            console.log(`Tp:${JSON.stringify(tp?.type)},mode:${JSON.stringify(childComponent.props.model)}`)
             const att=models[tp?.type || childComponent.props.model].attributes[childComponent.props?.attribute]
-            if (att?.enumValues) {
+            if (att?.enumValues && (childComponent.type!='RadioGroup' || lodash.isEmpty(childComponent.children))) {
               propsContent += ` enum='${JSON.stringify(att.enumValues)}'`
             }
             if (att?.suggestions) {
@@ -493,7 +498,7 @@ const getIconsImports = (components: IComponents) => {
 const buildFilterStates = (components: IComponents) => {
   const filterComponents: IComponent[] = lodash(components)
     .pickBy(c =>
-      Object.values(components).some(other => other?.props?.textFilter == c.id),
+      Object.values(components).some(other => other?.props?.textFilter == c.id)
     )
     .values()
 
@@ -706,6 +711,7 @@ import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
 import Fonts from './dependencies/theme/Fonts'
 import {useLocation} from "react-router-dom"
 import { useUserContext } from './dependencies/context/user'
+import { getComponentDataValue } from './dependencies/utils/values'
 ${extraImports.join('\n')}
 
 ${dynamics || ''}
@@ -715,6 +721,23 @@ ${componentsCodes}
 const ${componentName} = () => {
   const query = new URLSearchParams(useLocation().search)
   const id=${rootIgnoreUrlParams ? 'null' : `query.get('${rootIdQuery}') || query.get('id')`}
+  const [componentsValues, setComponentsValues]=useState({})
+
+  const setComponentValue = (compId, value) => {
+    setComponentsValues(s=> ({...s, [compId]: value}))
+  }
+
+  const getComponentValue = (compId, index) => {
+    let value=componentsValues[compId]
+    if (!value) {
+      value=componentsValues[\`\$\{compId\}\$\{index\}\`]
+    }
+    if (!value) {
+      value=getComponentDataValue(compId, index)
+    }
+    return value
+  }
+
   const {user}=useUserContext()
   ${hooksCode}
   ${filterStates}

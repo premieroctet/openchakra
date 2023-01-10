@@ -37,6 +37,7 @@ setPreprocessGet(preprocessGet)
 const USER_MODELS=['user', 'loggedUser']
 USER_MODELS.forEach(m => {
   declareEnumField({model: m, field: 'gender', enumValues: GENDER})
+  declareVirtualField({model: m, field: 'fullname', instance: 'String', requires: 'firstname,lastname'})
   declareVirtualField({model: m, field: 'measures', instance: 'Array', requires: '', multiple: true,
     caster: {
       instance: 'ObjectID',
@@ -54,4 +55,4 @@ USER_MODELS.forEach(m => {
 declareEnumField({model: 'measure', field: 'type', enumValues: MEASURE_TYPE})
 declareVirtualField({model: 'measure', field: 'recommandation', instance: 'String', requires: 'sys,dia'})
 declareEnumField({model: 'appointment', field: 'type', instance: 'String', enumValues: APPOINTMENT_TYPE})
-declareVirtualField({model: 'appointment', field: 'type_str', instance: 'String', requires: 'type', enumValues: APPOINTMENT_TYPE})
+declareVirtualField({model: 'appointment', field: 'type_str', instance: 'String', requires: 'type,otherTitle'})

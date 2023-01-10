@@ -77,6 +77,10 @@ const UserSchema = new Schema({
   },
 }, schemaOptions)
 
+UserSchema.virtual('fullname').get(function() {
+  return `${this.firstname || ''} ${this.lastname || ''}`
+})
+
 UserSchema.virtual('measures', {
   ref: 'measure', // The Model to use
   localField: '_id', // Find in Model, where localField
