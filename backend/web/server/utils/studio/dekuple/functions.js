@@ -1,10 +1,14 @@
 const {
+  APPOINTMENT_TYPE,
+  GENDER,
+  MEASURE_TYPE,
+} = require('../../../../utils/dekuple/consts')
+const {
   declareEnumField,
   declareVirtualField,
   setPreCreateData,
   setPreprocessGet,
 } = require('../../database')
-const {GENDER, MEASURE_TYPE} = require('../../../../utils/dekuple/consts')
 
 
 const preCreate = ({model, params, user}) => {
@@ -49,3 +53,5 @@ USER_MODELS.forEach(m => {
 
 declareEnumField({model: 'measure', field: 'type', enumValues: MEASURE_TYPE})
 declareVirtualField({model: 'measure', field: 'recommandation', instance: 'String', requires: 'sys,dia'})
+declareEnumField({model: 'appointment', field: 'type', instance: 'String', enumValues: APPOINTMENT_TYPE})
+declareVirtualField({model: 'appointment', field: 'type_str', instance: 'String', requires: 'type', enumValues: APPOINTMENT_TYPE})
