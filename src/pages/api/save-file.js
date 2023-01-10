@@ -35,6 +35,7 @@ export default async function handler(req, res) {
     let fileContent = await fs.readFile(`${req.body.path}/${fileName}.tsx`, {
       encoding: 'utf-8',
     })
+    fileContent = fileContent.replaceAll(`// 🚨 Your props contains invalid code\n`, '')
     let mainArray = fileContent.split(
       '// Refs are declared in here do not edit content and comments\n',
     )
