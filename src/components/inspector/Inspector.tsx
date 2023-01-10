@@ -39,6 +39,7 @@ import useClipboard from '~hooks/useClipboard'
 import { useInspectorUpdate } from '~contexts/inspector-context'
 import { componentsList } from '~componentsList'
 import { getCustomComponentNames } from '~core/selectors/customComponents'
+import { ComponentWithRefs } from '~custom-components/refComponents'
 
 const CodeActionButton = memo(() => {
   const [isLoading, setIsLoading] = useState(false)
@@ -78,6 +79,7 @@ CodeActionButton.displayName = 'CodeActionButton'
 const Inspector = () => {
   const dispatch = useDispatch()
   const component = useSelector(getSelectedComponent)
+  const components = useSelector(getComponents)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [componentName, onChangeComponentName] = useState('')
   const componentsNames = useSelector(getComponentNames)
@@ -115,6 +117,40 @@ const Inspector = () => {
   useEffect(() => {
     clearActiveProps()
   }, [clearActiveProps])
+
+  const handleChildrenDelete = (children: string[]) => {
+    if (children) {
+      children.forEach(childId => {
+        if (
+          Object.keys(ComponentWithRefs).includes(childId.split('-')[0]) &&
+          components[childId].props['ref']
+        ) {
+          dispatch.components.deleteParams({
+            id: 'root',
+            name: components[childId].props['ref'].slice(1, -1),
+          })
+        }
+        if (components[childId].children) {
+          handleChildrenDelete(components[childId].children)
+        }
+      })
+    }
+  }
+
+  const onDelete = () => {
+    dispatch.components.deleteComponent(component.id)
+    if (
+      Object.keys(ComponentWithRefs).includes(type) &&
+      component.props['ref']
+    ) {
+      dispatch.components.deleteParams({
+        id: 'root',
+        name: component.props['ref'].slice(1, -1),
+      })
+    }
+
+    handleChildrenDelete(component.children)
+  }
 
   return (
     <>
@@ -184,7 +220,7 @@ const Inspector = () => {
             <ActionButton
               bg="red.500"
               label="Remove"
-              onClick={() => dispatch.components.deleteComponent(component.id)}
+              onClick={onDelete}
               icon={<FiTrash2 />}
             />
           </Stack>
