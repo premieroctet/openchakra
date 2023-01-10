@@ -48,3 +48,4 @@ USER_MODELS.forEach(m => {
 })
 
 declareEnumField({model: 'measure', field: 'type', enumValues: MEASURE_TYPE})
+declareVirtualField({model: 'measure', field: 'recommandation', instance: 'String', requires: 'sys,dia'})
