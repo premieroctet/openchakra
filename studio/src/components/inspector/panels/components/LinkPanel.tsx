@@ -6,6 +6,7 @@ import { useForm } from '~hooks/useForm'
 import usePropsSelector from '~hooks/usePropsSelector'
 import { useSelector } from 'react-redux'
 import { getPages } from '~/core/selectors/components'
+import { getPageUrl } from '../../../../utils/code'
 
 const LinkPanel = () => {
   const pages = useSelector(getPages)
@@ -27,8 +28,10 @@ const LinkPanel = () => {
         />
 
         <datalist id={`href-flavors`}>
-          {Object.keys(pages).map(page => (
-            <option key={pages[page].pageId} value={pages[page].pageName} />
+          {Object.values(pages).map(page => (
+            <option key={page.pageId} value={getPageUrl(page.pageId, pages)}>
+            {page.pageName}
+            </option>
           ))}
         </datalist>
       </FormControl>
