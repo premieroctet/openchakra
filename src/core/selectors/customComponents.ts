@@ -27,10 +27,3 @@ export const getCustomComponentNames = (state: RootState) =>
 
 export const getCustomComponentPaths = (state: RootState) =>
   Object.values(state.customComponents.components)
-
-export const getCustomComponentParameters = (state: RootState) =>
-  state.customComponents.parameters
-
-export const getCustomComponentParametersBy = (
-  nameOrId: IComponent['type'] | IComponent['id'],
-) => (state: RootState) => state.customComponents.parameters[nameOrId]

@@ -25,17 +25,8 @@ export const useParamsForm = () => {
         exposed,
         ref,
       })
-      dispatch.customComponents.updateParams({
-        id: componentId,
-        name,
-        value,
-        type,
-        optional,
-        exposed,
-        ref,
-      })
     },
-    [componentId, dispatch.components, dispatch.customComponents],
+    [componentId, dispatch.components],
   )
 
   return { setValue }
