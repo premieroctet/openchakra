@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import lodash from 'lodash'
 import { ACTIONS } from '../utils/actions'
 
@@ -7,12 +7,15 @@ const withDynamicSelect = Component => {
     let values = dataSource
     let value=lodash.get(dataSource, props.attribute)
     value=value?._id || value
+    const [internalValue, setInternalValue]=useState(value)
+
     const attribute = props.attribute
     const enumValues=props.enum ? JSON.parse(props.enum) : null
     const refValues=props.subDataSource
 
     const onChange = ev => {
       const {value} = ev.target
+      setInternalValue(value)
       if (!noautosave) {
         ACTIONS.putValue({
           context: dataSource?._id,
@@ -25,7 +28,7 @@ const withDynamicSelect = Component => {
     }
 
     return (
-      <Component {...props} value={value} onChange={onChange}>
+      <Component {...props} value={internalValue} onChange={onChange}>
         <option value={undefined}></option>
         {refValues ?
           refValues.map(v => (
