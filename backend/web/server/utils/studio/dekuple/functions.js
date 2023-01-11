@@ -1,5 +1,6 @@
 const {
   APPOINTMENT_TYPE,
+  REMINDER_TYPE,
   GENDER,
   MEASURE_TYPE,
 } = require('../../../../utils/dekuple/consts')
@@ -56,3 +57,5 @@ declareEnumField({model: 'measure', field: 'type', enumValues: MEASURE_TYPE})
 declareVirtualField({model: 'measure', field: 'recommandation', instance: 'String', requires: 'sys,dia'})
 declareEnumField({model: 'appointment', field: 'type', instance: 'String', enumValues: APPOINTMENT_TYPE})
 declareVirtualField({model: 'appointment', field: 'type_str', instance: 'String', requires: 'type,otherTitle'})
+declareEnumField({model: 'reminder', field: 'type', instance: 'String', enumValues: REMINDER_TYPE})
+declareVirtualField({model: 'reminder', field: 'type_str', instance: 'String', requires: 'type,otherTitle'})

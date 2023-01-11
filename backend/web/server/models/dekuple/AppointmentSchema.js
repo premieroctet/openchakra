@@ -1,8 +1,5 @@
 const mongoose = require('mongoose')
-const {
-  APPOINTEMNT_OTHER,
-  APPOINTMENT_TYPE,
-} = require('../../../utils/dekuple/consts')
+const {APPOINTMENT_OTHER, APPOINTMENT_TYPE} = require('../../../utils/dekuple/consts')
 const {schemaOptions} = require('../../utils/schemas')
 
 const Schema = mongoose.Schema
@@ -36,7 +33,7 @@ AppointmentSchema.virtual('type_str').get(function() {
   if (!this.type) {
     return null
   }
-  if (this.type==APPOINTEMNT_OTHER) {
+  if (this.type==APPOINTMENT_OTHER) {
     return this.otherTitle
   }
   return APPOINTMENT_TYPE[this.type]
