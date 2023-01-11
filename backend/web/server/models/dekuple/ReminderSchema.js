@@ -27,12 +27,35 @@ const ReminderSchema = new Schema({
     type: Date,
     required: true,
   },
-  days: [{
-    type: Number,
-    min: 0,
-    max: 6,
-    required: true,
-  }],
+  // TODO: UGLY !!!
+  monday: {
+    type: Boolean,
+    required: false,
+  },
+  tuesday: {
+    type: Boolean,
+    required: false,
+  },
+  wednesday: {
+    type: Boolean,
+    required: false,
+  },
+  thursday: {
+    type: Boolean,
+    required: false,
+  },
+  friday: {
+    type: Boolean,
+    required: false,
+  },
+  saturday: {
+    type: Boolean,
+    required: false,
+  },
+  sunday: {
+    type: Boolean,
+    required: false,
+  },
 }, schemaOptions)
 
 ReminderSchema.virtual('type_str').get(function() {
