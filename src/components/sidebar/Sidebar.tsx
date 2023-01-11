@@ -42,6 +42,7 @@ import AddComponent from './AddComponent'
 import DeleteComponent from './DeleteComponent'
 import InstallComponent from './InstallComponent'
 import InstalledPropTable from './InstalledPropTable'
+import DeployButton from '~components/DeployButton'
 
 const Menu = () => {
   const [searchTerm, setSearchTerm] = useState('')
@@ -244,7 +245,7 @@ const Menu = () => {
                   alignItems="center"
                 >
                   <AddComponent />
-                  <InstallComponent />
+                  <DeployButton />
                 </ButtonGroup>
 
                 {(Object.keys(customComponents) as ComponentType[])
