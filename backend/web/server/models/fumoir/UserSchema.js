@@ -24,6 +24,10 @@ const UserSchema = new Schema(
       enum: Object.keys(ROLES),
       required: true,
     },
+    // Locker #
+    locker: {
+      type: Number,
+    },
     picture: {
       type: String,
     },
