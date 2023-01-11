@@ -49,7 +49,7 @@ const withDynamicInput = Component => {
             props,
             backend,
           })
-            .then(() => props.reload())
+            .then(() => {}) //props.reload())
             .catch(err => console.error(err))
         }
       }

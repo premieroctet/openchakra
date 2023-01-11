@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import axios from 'axios';
 import lodash from 'lodash'
 import { useLocation } from 'react-router-dom'
@@ -28,9 +28,11 @@ const withDynamicButton = Component => {
 
     const [actionAllowed, setActionAllowed]=useState(true)
 
-    axios.get(`/myAlfred/api/studio/action-allowed/${action}/${value?._id}`)
-      .then(res => setActionAllowed(res.data))
-      .catch(err => console.error(err))
+    useEffect(()=> {
+      axios.get(`/myAlfred/api/studio/action-allowed/${action}/${value?._id}`)
+        .then(res => setActionAllowed(res.data))
+        .catch(err => console.error(err))
+    }, [action, value])
 
     if (action) {
       onClick = () => {

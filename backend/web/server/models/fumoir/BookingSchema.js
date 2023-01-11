@@ -21,6 +21,7 @@ const BookingSchema = new Schema(
     start_date: {
       type: Date,
       required: false, // required: true,
+      min: () => moment(),
     },
     duration: {
       type: Number,
