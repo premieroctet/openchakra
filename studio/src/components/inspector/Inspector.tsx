@@ -25,7 +25,7 @@ import {
   Flex,
 } from '@chakra-ui/react';
 import { useSelector } from 'react-redux'
-import React, { useState, memo, useEffect, useMemo } from 'react'
+import React, { useState, memo, useEffect, useMemo, useRef } from 'react'
 import lodash from 'lodash'
 import styled from '@emotion/styled'
 
@@ -136,6 +136,7 @@ const Inspector = () => {
 
   const [isModalSearchOpen, setModalSearchOpen] = useState(false)
   const [treeFilter, setTreeFilter] = useState(null)
+  const initialRef = useRef(null)
 
   const warnings = []//useSelector(getComponentWarnings(component)) TODO reimplement
 
@@ -273,7 +274,7 @@ const Inspector = () => {
         showChildren={componentHasChildren}
         parentIsRoot={parentIsRoot}
       />
-      <Modal onClose={onClose} isOpen={isOpen} isCentered>
+      <Modal onClose={onClose} isOpen={isOpen} isCentered >
         <ModalOverlay>
           <ModalContent>
             <form onSubmit={saveComponent}>
@@ -323,17 +324,18 @@ const Inspector = () => {
           </ModalContent>
         </ModalOverlay>
       </Modal>
-      <Modal isOpen={isModalSearchOpen} onClose={() => setModalSearchOpen(false)}>
+      {isModalSearchOpen &&
+      <Modal isOpen={isModalSearchOpen} onClose={() => {setModalSearchOpen(false);setTreeFilter(null)}} initialFocusRef={initialRef} >
         <ModalContent maxW="50%">
           <ModalHeader>Select component</ModalHeader>
           <ModalCloseButton />
           <ModalBody flexDirection='row'>
-            <Input onChange={onTreeFilterChange}/>
+            <Input onChange={onTreeFilterChange} ref={initialRef}/>
             <TreeRenderer components={components} closeFn={()=>setModalSearchOpen(false)} filter={treeFilter}/>
           </ModalBody>
         </ModalContent>
       </Modal>
-
+    }
     </RightPanel>
   )
 }
