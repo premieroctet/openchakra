@@ -30,7 +30,7 @@
   "proxy": "PROXY",
   "scripts": {
     "dev": "HTTPS=true next dev",
-    "start": "HTTPS=true SSL_CRT_FILE=~/.ssh/Main.txt SSL_KEY_FILE=~/.ssh/Key.txt react-scripts start",
+    "start": "HTTPS=true react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
