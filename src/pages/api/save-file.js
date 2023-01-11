@@ -22,7 +22,7 @@ export default async function handler(req, res) {
     )
     const writeJson = fs.writeFile(
       `${req.body.path}/${fileName}.oc.json`,
-      JSON.stringify(req.body.jsonBody),
+      JSON.stringify(req.body.jsonBody, null, 2),
     )
     const writePreview = fs.writeFile(
       `src/custom-components/editor/previews/${pascalName}Preview.oc.tsx`,
