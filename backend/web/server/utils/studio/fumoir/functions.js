@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const lodash=require('lodash')
+const moment=require('moment')
 const {
   declareComputedField,
   declareEnumField,
@@ -101,12 +102,29 @@ const removeOrderItem = ({order, item}) => {
 }
 
 const payOrder = ({order, user}) => {
-  return Order.findById(order)
-    .then(order => {
-      if (!order) { throw new NotFoundError(`Order ${order} not found`) }
-      console.log(`Items are ${JSON.stringify(order.items)}`)
-      return OrderItem.updateMany({_id: {$in: order.items.map(i => i._id)}}, {$set: {paid: true}})
-    })
+  return getModel(order)
+   .then(model => {
+     if (model=='event') {
+       return Promise.all([
+         UserSessionData.findOneAndUpdate({user: user._id},
+         {user: user._id},
+         {upsert: true, runValidators: true, new: true}),
+         Event.findById(order)
+       ])
+       .then(([usd, ev]) => {
+         usd.payments.push({event: order, amount: ev.price, date: moment()})
+         return usd.save()
+       })
+     }
+     if (model=='order') {
+      return Order.findById(order)
+        .then(order => {
+          if (!order) { throw new NotFoundError(`Order ${order} not found`) }
+          console.log(`Items are ${JSON.stringify(order.items)}`)
+          return OrderItem.updateMany({_id: {$in: order.items.map(i => i._id)}}, {$set: {paid: true}})
+        })
+    }
+  })
 }
 
 const registerToEvent = ({event, user}) => {
