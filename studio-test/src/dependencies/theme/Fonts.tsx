@@ -28,6 +28,20 @@ const Fonts = () => (
         font-weight: normal;
         font-style: normal;
       }
+      @font-face {
+        font-family: 'Futura';
+        src: local('Futura'), 
+            url('fonts/futura.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: 'Digital-7';
+        src: local('digital 7'), local('digital-7'),
+            url('fonts/digital-7.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+      }
       `}
   />
 )
