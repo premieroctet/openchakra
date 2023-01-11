@@ -20,9 +20,11 @@ const withDynamicInput = Component => {
       if (props?.type === 'datetime-local') {
           keptValue = transformedDate.slice(0, 16)
       }
-
       if (props?.type === 'date') {
-          keptValue = transformedDate.slice(0, 10)
+        keptValue = transformedDate.slice(0, 10)
+      }
+      if (props?.type === 'time') {
+          keptValue = transformedDate.slice(11, 16)
       }
     }
 
