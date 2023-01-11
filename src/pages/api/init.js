@@ -55,8 +55,8 @@ export default async function handler(req, res) {
       // 2.3 Create symlink
       shell.ln(
         '-sf',
-        `../../../${jsons[component]}/${component}.tsx`,
-        `src/custom-components/customOcTsx/${component}.tsx`,
+        `../../../${jsons[component]}/${component}`,
+        `src/custom-components/customOcTsx/${component}`,
       )
 
       // 2.4 Write the generated files

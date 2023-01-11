@@ -12,9 +12,7 @@ export default async function handler(req, res) {
     const deletePanel = fs.unlink(
       `src/custom-components/inspector/panels/components/${componentName}Panel.oc.tsx`,
     )
-    const deleteTsx = fs.unlink(
-      `src/custom-components/customOcTsx/${fileName}.tsx`,
-    )
+    const deleteTsx = fs.unlink(`src/custom-components/customOcTsx/${fileName}`)
     const deleteOcTsx = fs.unlink(
       `src/custom-components/customOcTsx/${fileName}.oc.tsx`,
     )

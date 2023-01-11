@@ -30,8 +30,8 @@ export default async function handler(req, res) {
     // 2.4 Create symlink
     shell.ln(
       '-sf',
-      `../../../../remote/${componentPath}/${component}.tsx`,
-      `src/custom-components/customOcTsx/${component}.tsx`,
+      `../../../../remote/${componentPath}/${component}`,
+      `src/custom-components/customOcTsx/${component}`,
     )
 
     // 2.5 Write the generated files
