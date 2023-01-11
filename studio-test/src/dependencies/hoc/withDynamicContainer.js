@@ -1,5 +1,6 @@
 import React from 'react'
 import lodash from 'lodash'
+import {getComponentDataValue} from '../utils/values'
 
 const normalize = str => {
   str = str
@@ -104,7 +105,7 @@ const withDynamicContainer = Component => {
       )
     }
     if (props.filterAttribute && props.filterValue) {
-      const value=props.filterValue //getComponentDataValue(props.filterValue, props.index)
+      const value=getComponentDataValue(props.filterValue, props.index)
       const regExp = new RegExp(normalize(value).trim(), 'i')
       const attribute=props.filterAttribute
       orgData = orgData.filter(d =>regExp.test(normalize(d[attribute])))
