@@ -35,6 +35,8 @@ const CATEGORY_DISC_OPTION = {discriminatorKey: 'kind'}
 
 const [TO_PAY_STR, PAID_STR]=['À payer', 'Payé']
 
+const MAX_EVENT_GUESTS=2
+
 module.exports = {
   ROLES, FUMOIR_MEMBER,
   PLACES,
@@ -43,4 +45,5 @@ module.exports = {
   TO_COME, CURRENT, FINISHED, ALL,
   CATEGORY_DISC_OPTION,
   TO_PAY_STR, PAID_STR,
+  MAX_EVENT_GUESTS,
 }

@@ -21,6 +21,7 @@ const {
   FUMOIR_MEMBER,
   PLACES,
   ROLES,
+  MAX_EVENT_GUESTS,
 } = require('../../../../utils/fumoir/consts')
 const Guest = require('../../../models/Guest')
 const {BadRequestError, NotFoundError} = require('../../errors')
@@ -46,7 +47,10 @@ const inviteGuest = ({eventOrBooking, email, phone}, user) => {
         )
           .populate({path: 'guests', populate: 'guest'})
           .then(r => {
-            if (r.guests.find(g => g.email==email)) {
+            if (r.guests.filter(g => g.event._id.toString()==eventOrBooking).length>=MAX_EVENT_GUESTS) {
+              throw new BadRequestError(`Le nombre d'invités maximum est ${MAX_EVENT_GUESTS} pour un événement`)
+            }
+            if (r.guests.find(g => g.guest.email==email)) {
               throw new BadRequestError(`${email} est déjà invité pour cet événement`)
             }
             return Guest.create({email, phone})
@@ -101,7 +105,8 @@ const removeOrderItem = ({order, item}) => {
     })
 }
 
-const payOrder = ({order, user}) => {
+const payOrder = ({order, redirect, user}) => {
+  console.log(`Have to redirect to ${redirect}`)
   return getModel(order)
    .then(model => {
      if (model=='event') {
@@ -115,6 +120,7 @@ const payOrder = ({order, user}) => {
          usd.payments.push({event: order, amount: ev.price, date: moment()})
          return usd.save()
        })
+       .then(() => ({redirect}))
      }
      if (model=='order') {
       return Order.findById(order)
@@ -123,6 +129,7 @@ const payOrder = ({order, user}) => {
           console.log(`Items are ${JSON.stringify(order.items)}`)
           return OrderItem.updateMany({_id: {$in: order.items.map(i => i._id)}}, {$set: {paid: true}})
         })
+        .then(() => ({redirect}))
     }
   })
 }

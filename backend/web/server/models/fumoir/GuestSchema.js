@@ -9,7 +9,7 @@ const GuestSchema = new Schema(
     email: {
       type: String,
       validate: v => !v || Validator.isEmail(v),
-      required: false, // required: true,
+      required: [true, 'L\'email de l\'invité est obligatoire']
     },
     phone: {
       type: String,

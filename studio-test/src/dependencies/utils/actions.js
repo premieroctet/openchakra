@@ -193,11 +193,15 @@ export const ACTIONS = {
     let url = `${API_ROOT}/action`
     const body = {
       action: 'pay',
-      customer: props.customer,
-      amount: props.amount,
       context,
+      ...props
     }
     return axios.post(url, body)
+      .then(res => {
+        if (res.data.redirect) {
+          window.location=`/${res.data.redirect}`
+        }
+      })
   },
 
   previous: () => {
@@ -220,7 +224,7 @@ export const ACTIONS = {
         })
       })
   },
-  
+
   logout: () => {
     document.cookie = 'token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     return Promise.resolve()

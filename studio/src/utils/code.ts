@@ -269,6 +269,9 @@ const buildBlock = ({
               page: propsValue.page
                 ? getPageUrl(propsValue.page, pages)
                 : undefined,
+              redirect: propsValue.redirect
+                ? getPageUrl(propsValue.redirect, pages)
+                : undefined,
             }
             propsContent += ` ${propName}='${JSON.stringify(valuesCopy)}'`
             return

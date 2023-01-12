@@ -44,6 +44,7 @@ let ACTIONS = {
         if (attribute.split('.').length==1) {
           // Simple attribute => simple method
           return mongooseModel.updateMany(
+            // TODO Aftral only (parent or origin)
             {$or: [{_id: parent}, {origin: parent}]},
             {[attribute]: parsedValue},
             {runValidators: true},

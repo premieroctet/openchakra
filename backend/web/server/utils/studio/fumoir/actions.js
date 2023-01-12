@@ -14,8 +14,8 @@ const inviteGuestAction=({parent, email, phone}, user) => {
   return inviteGuest({eventOrBooking: parent, email, phone}, user)
 }
 
-const payAction=({context}, user) => {
-  return payOrder({order: context, user})
+const payAction=({context, redirect}, user) => {
+  return payOrder({order: context, redirect, user})
 }
 
 const registerToEventAction=({context}, user) => {
