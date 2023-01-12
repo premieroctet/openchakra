@@ -169,7 +169,8 @@ export const getFilterAttributes = (
   models: any,
 ): any => {
   const attributes = getComponentAttributes(component, components, models)
-  const simpleAttributes=lodash.pickBy(attributes, (v,k) => !v.ref && !v.multiple && !k.includes('.'))
+  // TODO Filter subAttributes yto retain non multiple && non ref only
+  const simpleAttributes=lodash.pickBy(attributes, (v,k) => !v.ref && !v.multiple)
 
   return simpleAttributes
 }
