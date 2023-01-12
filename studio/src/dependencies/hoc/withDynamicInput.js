@@ -43,7 +43,6 @@ const withDynamicInput = Component => {
         setInternalDataValue(val)
       }
       if (!noautosave) {
-        if (typeof debouncedValue === 'string') {
           ACTIONS.putValue({
             context: dataSource?._id,
             value: val,
@@ -58,7 +57,6 @@ const withDynamicInput = Component => {
               alert(err.response?.data || err)
             })
         }
-      }
     }
 
     if (suggestions) {
