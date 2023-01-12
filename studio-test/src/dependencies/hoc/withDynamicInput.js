@@ -32,7 +32,6 @@ const withDynamicInput = Component => {
 
     const [internalDataValue, setInternalDataValue] = useState(keptValue)
 
-    const [neverTyped, setNeverTyped] = useState(true)
     const debouncedValue = useDebounce(internalDataValue, 500)
 
     const onChange = ev => {
@@ -40,26 +39,27 @@ const withDynamicInput = Component => {
       if (setComponentValue) {
         setComponentValue(props.id, val)
       }
-      setInternalDataValue(val)
-      if (neverTyped) {
-        setNeverTyped(false)
+      if (noautosave) {
+        setInternalDataValue(val)
       }
-    }
-
-    useEffect(() => {
-      if (!neverTyped && !noautosave) {
+      if (!noautosave) {
         if (typeof debouncedValue === 'string') {
           ACTIONS.putValue({
             context: dataSource?._id,
-            value: debouncedValue,
+            value: val,
             props,
             backend,
           })
-            .then(() => {}) //props.reload())
-            .catch(err => console.error(err))
+            .then(() => {
+              setInternalDataValue(val)
+            }) //props.reload())
+            .catch(err => {
+              console.error(err)
+              alert(err.response?.data || err)
+            })
         }
       }
-    }, [backend, context, dataSource, debouncedValue, neverTyped, noautosave, props])
+    }
 
     if (suggestions) {
       props={...props, list: 'suggestions'}
