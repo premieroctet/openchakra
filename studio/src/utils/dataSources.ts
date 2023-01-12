@@ -86,7 +86,6 @@ export const getDataProviderDataType = (
   dataSource: string,
   models: { [key: string]: any; },
 ): IDataType | null => {
-  console.log(`get DP type:${component.id} ${component.props.dataSource} for ds ${dataSource}`)
   // This is the data provider: return the type
   if ((component.type=='DataProvider' && component.id==dataSource)
       || (component.id=='root' && dataSource=='root')) {

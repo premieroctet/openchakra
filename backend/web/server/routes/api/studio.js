@@ -1,4 +1,5 @@
 const path = require('path')
+const zlib=require('zlib')
 const {promises: fs} = require('fs')
 const child_process = require('child_process')
 const url = require('url')
@@ -88,9 +89,10 @@ router.post('/file', (req, res) => {
     return res.status(HTTP_CODES.BAD_REQUEST).json()
   }
   const destpath = path.join(PRODUCTION_ROOT, projectName, 'src', filePath)
+  const unzippedContents=zlib.inflateSync(new Buffer(contents, 'base64')).toString();
   console.log(`Copying in ${destpath}`)
   return fs
-    .writeFile(destpath, contents)
+    .writeFile(destpath, unzippedContents)
     .then(() => {
       return res.json()
     })

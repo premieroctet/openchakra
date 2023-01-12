@@ -1,8 +1,10 @@
+import zlib from 'zlib'
 import config from '../../env.json'
 import axios from 'axios'
 
 export const copyFile = ({ contents, filePath }) => {
-  const body = { contents, projectName: config.projectName, filePath }
+  const zippedContents=zlib.deflateSync(contents).toString('base64')
+  const body = { contents:zippedContents, projectName: config.projectName, filePath }
   return axios.post(`${config.targetDomain}/myAlfred/api/studio/file`, body)
 }
 
