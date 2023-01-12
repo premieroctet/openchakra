@@ -5,6 +5,7 @@ const UserSessionData = require('../models/UserSessionData')
 const Booking = require('../models/Booking')
 const {CURRENT, FINISHED} = require('../../utils/fumoir/consts')
 const {BadRequestError} = require('./errors')
+const util=require('util')
 
 // const { ROLES, STATUS } = require("../../utils/aftral_studio/consts");
 // TODO: Omporting Theme makes a cyclic import. Why ?
@@ -49,12 +50,12 @@ const attributesComparator = (att1, att2) => {
   return att1.includes('.') ? 1 : -1
 }
 
-const COMPUTED_FIELDS = {}
+let COMPUTED_FIELDS_GETTERS = {}
+let COMPUTED_FIELDS_SETTERS = {}
 
-let DECLARED_ENUMS = {
-}
+let DECLARED_ENUMS = {}
 
-const DECLARED_VIRTUALS = {}
+let DECLARED_VIRTUALS = {}
 
 const getVirtualCharacteristics = (modelName, attName) => {
   if (
@@ -367,7 +368,7 @@ const addComputedFields = async(
     newUser = await mongoose.connection.models.user.findById(data._id)
   }
 
-  const compFields = COMPUTED_FIELDS[model] || {}
+  const compFields = COMPUTED_FIELDS_GETTERS[model] || {}
   const presentCompFields = Object.keys(compFields).filter(f =>
     data.hasOwnProperty(f),
   )
@@ -420,8 +421,15 @@ const formatTime = timeMillis => {
   return formatDuration(timeMillis ? timeMillis / 60 : 0, {leading: true})
 }
 
-const declareComputedField = (model, field, fn) => {
-  lodash.set(COMPUTED_FIELDS, `${model}.${field}`, fn)
+const declareComputedField = (model, field, getFn, setFn) => {
+  if (getFn) {
+    lodash.set(COMPUTED_FIELDS_GETTERS, `${model}.${field}`, getFn)
+  }
+  if (setFn) {
+    lodash.set(COMPUTED_FIELDS_SETTERS, `${model}.${field}`, setFn)
+  }
+  console.log(`Getters after:${util.inspect(COMPUTED_FIELDS_GETTERS)}`)
+  console.log(`Setters after:${util.inspect(COMPUTED_FIELDS_SETTERS)}`)
 }
 
 const declareVirtualField=({model, field, ...rest}) => {
@@ -479,6 +487,44 @@ const setPostCreateData = fn => {
 
 const callPostCreateData = data => {
   return postCreateData(data)
+}
+
+const putAttribute = ({parent, attribute, value, user}) => {
+  let model = null
+  return getModel(parent)
+    .then(res => {
+      model = res
+      const setter=lodash.get(COMPUTED_FIELDS_SETTERS, `${model}.${attribute}`)
+      if (setter) {
+        return setter({id:parent, attribute, value, user})
+      }
+      const mongooseModel = mongoose.connection.models[model]
+
+      const parsedValue=JSON.parse(value)
+      if (attribute.split('.').length==1) {
+        // Simple attribute => simple method
+        return mongooseModel.updateMany(
+          // TODO Aftral only (parent or origin)
+          {$or: [{_id: parent}, {origin: parent}]},
+          {[attribute]: parsedValue},
+          {runValidators: true},
+        )
+      }
+      const populates=buildPopulates([attribute], model)
+      console.log(`Populates in PUT:${JSON.stringify(populates)}`)
+      let query=mongooseModel.find({$or: [{_id: parent}, {origin: parent}]})
+      query = populates.reduce((q, key) => q.populate(key), query)
+      return query
+        .then(objects => {
+          return Promise.all(objects.map(object => {
+            let paths=attribute.split('.')
+            let obj=paths.length>1 ? lodash.get(object, paths.slice(0, paths.length-1)) : object
+            lodash.set(obj, paths.slice(-1)[0], parsedValue)
+            return obj.save({runValidators: true})
+          }))
+        })
+    })
+
 }
 
 const removeData = dataId => {
@@ -542,4 +588,5 @@ module.exports = {
   setPostCreateData,
   callPostCreateData,
   removeData,
+  putAttribute,
 }
