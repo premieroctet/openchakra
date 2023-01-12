@@ -190,7 +190,7 @@ const buildBlock = ({
       let propsContent = ''
 
       // DIRTY: stateValue for RAdioGroup to get value
-      if (childComponent.type=='RadioGroup') {
+      if ((['RadioGroup', 'Input']).includes(childComponent.type)) {
         propsContent += ` setComponentValue={setComponentValue} `
       }
       propsContent += ` getComponentValue={getComponentValue} `
@@ -353,7 +353,7 @@ const buildBlock = ({
             propsValue
           ) {
             let operand =
-              propName === 'dataSource' && paramProvider
+              (propName === 'dataSource' && paramProvider)
                 ? `={${paramProvider}}`
                 :
                 propName === 'subDataSource' && paramSubProvider
@@ -502,6 +502,8 @@ const buildFilterStates = (components: IComponents) => {
   const filterComponents: IComponent[] = lodash(components)
     .pickBy(c =>
       Object.values(components).some(other => other?.props?.textFilter == c.id)
+      ||
+      Object.values(components).some(other => other?.props?.filterValue == c.id)
     )
     .values()
 

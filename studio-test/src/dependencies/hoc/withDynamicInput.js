@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import lodash from 'lodash'
+import util from 'util'
 
 import { ACTIONS } from '../utils/actions'
 import useDebounce from '../hooks/useDebounce.hook'
 
 const withDynamicInput = Component => {
-  const Internal = ({ dataSource, noautosave, context, backend, suggestions, ...props }) => {
+
+  const Internal = ({ dataSource, noautosave, context, backend, suggestions, setComponentValue, ...props }) => {
 
     let keptValue = lodash.get(dataSource, props.attribute) || ''
 
@@ -28,15 +30,17 @@ const withDynamicInput = Component => {
       }
     }
 
-
     const [internalDataValue, setInternalDataValue] = useState(keptValue)
 
     const [neverTyped, setNeverTyped] = useState(true)
     const debouncedValue = useDebounce(internalDataValue, 500)
 
     const onChange = ev => {
-      ev = ev.target?.value || ev
-      setInternalDataValue(ev)
+      const val = ev.target ? ev.target.value : ev
+      if (setComponentValue) {
+        setComponentValue(props.id, val)
+      }
+      setInternalDataValue(val)
       if (neverTyped) {
         setNeverTyped(false)
       }
@@ -60,6 +64,7 @@ const withDynamicInput = Component => {
     if (suggestions) {
       props={...props, list: 'suggestions'}
     }
+
     return (
       <>
       <Component

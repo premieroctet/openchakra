@@ -453,7 +453,7 @@ const project = createModel({
       if (Object.keys(state.pages).length === 1) {
         return state
       }
-      const newPages = omit(state.pages, [pageId])
+      const newPages = lodash.omit(state.pages, [pageId])
       const newActivePage = Object.keys(newPages)[0]
       const rootPage =
         pageId === state.rootPage ? newActivePage : state.rootPage

@@ -3,7 +3,6 @@ import React, {useState} from 'react'
 import lodash from 'lodash'
 
 import { ACTIONS } from '../utils/actions'
-import { getComponentDataValue } from '../utils/values';
 
 const withDynamicEnum = Component => {
 
@@ -11,7 +10,6 @@ const withDynamicEnum = Component => {
     const dataSource=props.dataSource
     const enumValues=props.enum ? JSON.parse(props.enum) : null
     const [internalValue, setInternalValue] = useState(lodash.get(props.dataSource, props.attribute))
-    //const spreaded = {...lodash.omit(props, ['children']), 'data-value': internalValue, value: internalValue}
 
     const onChange = evValue => {
       setInternalValue(evValue)
