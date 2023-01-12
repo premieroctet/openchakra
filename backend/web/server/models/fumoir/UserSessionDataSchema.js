@@ -22,6 +22,16 @@ const UserSessionDataSchema = new Schema({
       required: true,
     },
   }],
+  guests_count: [{
+    event: {
+      type: Schema.Types.ObjectId,
+      ref: 'event',
+      required: true,
+    },
+    count: {
+      type: Number
+    },
+  }],
   payments: [{
     event: {
       type: Schema.Types.ObjectId,

@@ -47,16 +47,26 @@ const inviteGuest = ({eventOrBooking, email, phone}, user) => {
         )
           .populate({path: 'guests', populate: 'guest'})
           .then(r => {
-            if (r.guests.filter(g => g.event._id.toString()==eventOrBooking).length>=MAX_EVENT_GUESTS) {
-              throw new BadRequestError(`Le nombre d'invités maximum est ${MAX_EVENT_GUESTS} pour un événement`)
-            }
+            // Must not invite the same email twice
             if (r.guests.find(g => g.guest.email==email)) {
               throw new BadRequestError(`${email} est déjà invité pour cet événement`)
             }
-            return Guest.create({email, phone})
-              .then(guest => {
-                r.guests.push({event: eventOrBooking, guest: guest._id})
-                return r.save()
+            // Must not invite too many people
+            const actualGuestsCount=r.guests.filter(g => g.event._id.toString()==eventOrBooking).length
+            console.log(`Dejà ${actualGuestsCount} invités`)
+            if (actualGuestsCount+1>MAX_EVENT_GUESTS) {
+              throw new BadRequestError(`Le nombre d'invités maximum est ${MAX_EVENT_GUESTS} pour un événement`)
+            }
+            return getEventGuestsCount(user, null, {_id: eventOrBooking})
+              .then(count => {
+                if (actualGuestsCount+1>count) {
+                  throw new BadRequestError(`Nombre d'invités (${count}) déjà atteint`)
+                }
+                return Guest.create({email, phone})
+                  .then(guest => {
+                    r.guests.push({event: eventOrBooking, guest: guest._id})
+                    return r.save()
+                  })
               })
           })
       }
@@ -329,27 +339,56 @@ declareVirtualField({model: 'orderItem', field: 'total_price', instance: 'Number
 
 declareVirtualField({model: 'subscription', field: 'is_active', instance: 'Boolean', requires: 'start,end'})
 
-const computeEventGuests = (user, params, data) => {
+const getEventGuests = (user, params, data) => {
   return UserSessionData.findOne({user: user._id, 'guests.event': data._id})
     .populate({path: 'guests', populate: 'guest'})
     .then(usd => {
-      if (!usd) {
-        return []
-      }
-      return usd.guests
+      if (!usd) {return [] }
+      const guests=usd.guests
         .filter(g => g.event._id.toString()==data._id.toString())
         .map(g => g.guest)
+      return guests
     })
 }
 
-declareComputedField('event', 'guests', computeEventGuests)
+declareComputedField('event', 'guests', getEventGuests)
 
-const computeEventGuestsCount = (user, params, data) => {
-  return computeEventGuests(user, params, data)
-    .then(guests => guests.length)
+const getEventGuestsCount = (user, params, data) => {
+  return UserSessionData.findOne({user: user._id, 'guests_count.event': data._id})
+    .then(usd => {
+      if (!usd) { return 0}
+      return usd.guests_count.find(gc => gc.event._id.toString()==data._id).count
+    })
 }
 
-declareComputedField('event', 'guests_count', computeEventGuestsCount)
+const setEventGuestsCount = ({id, attribute, value,user}) => {
+  if (value>MAX_EVENT_GUESTS) {
+    throw new BadRequestError(`Vous ne pouvez inviter plus de ${MAX_EVENT_GUESTS} personnes`)
+  }
+  return getEventGuests(user, null, {_id: id})
+    .then(guests => {
+      console.log(`INvitations count:${guests.length}`)
+      if (guests.length>value) {
+        throw new BadRequestError(`Vous avez déjà envoyé ${guests.length} invitations`)
+      }
+      return UserSessionData.findOneAndUpdate({user: user._id},
+        {user: user._id},
+        {upsert: true, runValidators: true, new: true},
+      )
+    })
+    .then(usd => {
+      const guests_count=usd.guests_count.find(gc => gc.event._id.toString()==id)
+      if (guests_count) {
+        guests_count.count=value
+      }
+      else {
+        usd.guests_count.push({event: id, count: value})
+      }
+      return usd.save()
+    })
+}
+
+declareComputedField('event', 'guests_count', getEventGuestsCount, setEventGuestsCount)
 
 module.exports = {
   inviteGuest,
