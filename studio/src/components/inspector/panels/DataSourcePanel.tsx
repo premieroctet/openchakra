@@ -22,8 +22,9 @@ import usePropsSelector from '../../../hooks/usePropsSelector'
 const DataSourcePanel: React.FC = () => {
   const components: IComponents = useSelector(getComponents)
   const activeComponent: IComponent = useSelector(getSelectedComponent)
-  const { setValueFromEvent, setValue } = useForm()
+  const { setValueFromEvent, setValue, removeValue } = useForm()
   const dataSource = usePropsSelector('dataSource')
+  const model = usePropsSelector('model')
   const attribute = usePropsSelector('attribute')
   const subDataSource = usePropsSelector('subDataSource')
   const subAttribute = usePropsSelector('subAttribute')
@@ -91,13 +92,27 @@ const DataSourcePanel: React.FC = () => {
     setValue('contextFilter', ev.target.checked)
   }
 
+  const onDataSourceOrModelChange = ev => {
+    const {name, value}=ev.target
+    console.log(name, value)
+    if (!value) {
+      removeValue(name)
+    }
+    else {
+      setValueFromEvent(ev)
+    }
+    removeValue(name=='model'?'dataSource':'model')
+    removeValue('attribute')
+  }
+
+  console.log(`Model is ${JSON.stringify(model)}`)
   return (
     <Accordion>
       <AccordionContainer title="Data source">
         <FormControl htmlFor="dataSource" label="Datasource">
           <Select
             id="dataSource"
-            onChange={setValueFromEvent}
+            onChange={onDataSourceOrModelChange}
             name="dataSource"
             size="xs"
             value={dataSource || ''}
@@ -106,6 +121,22 @@ const DataSourcePanel: React.FC = () => {
             {providers.map((provider, i) => (
               <option key={`prov${i}`} value={provider.id}>
                 {`${provider.id} (${provider.props ?.model})`}
+              </option>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl htmlFor="model" label="Model">
+          <Select
+            id="model"
+            onChange={onDataSourceOrModelChange}
+            name="model"
+            size="xs"
+            value={model || ''}
+          >
+            <option value={undefined}></option>
+            {Object.keys(models).map(model => (
+              <option key={model} value={model}>
+                {model}
               </option>
             ))}
           </Select>

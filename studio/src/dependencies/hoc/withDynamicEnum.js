@@ -1,36 +1,44 @@
-import React, {useState} from 'react'
 import { Radio, Flex } from '@chakra-ui/react'
-import { ACTIONS } from '../utils/actions'
+import React, {useState} from 'react'
 import lodash from 'lodash'
+
+import { ACTIONS } from '../utils/actions'
+import { getComponentDataValue } from '../utils/values';
 
 const withDynamicEnum = Component => {
 
-  const Internal = props => {
+  const Internal = ({children, noautosave, ...props}) => {
     const dataSource=props.dataSource
-    const enumValues=JSON.parse(props?.enum || {})
+    const enumValues=props.enum ? JSON.parse(props.enum) : null
     const [internalValue, setInternalValue] = useState(lodash.get(props.dataSource, props.attribute))
     //const spreaded = {...lodash.omit(props, ['children']), 'data-value': internalValue, value: internalValue}
 
     const onChange = evValue => {
       setInternalValue(evValue)
-      props.setStateValue(evValue)
+      props.setComponentValue && props.setComponentValue(props.id, evValue)
 
-      ACTIONS.putValue({
-        context: dataSource?._id,
-        value: evValue,
-        props,
-      })
+      if (!noautosave) {
+        ACTIONS.putValue({
+          context: dataSource?._id,
+          value: evValue,
+          props,
+        })
         .then(() => props.reload())
         .catch(err => console.error(err))
+      }
     }
 
     return (
       <Component {...props} onChange={onChange} key={internalValue} value={internalValue}>
-        <Flex flexDirection={props.flexDirection} justifyContent={props.justifyContent}>
-        {
-          Object.keys(enumValues).map((k, idx) => <Flex flexDirection='row'><Radio value={k} />{enumValues[k]}</Flex>)
+        {enumValues ?
+          <Flex flexDirection={props.flexDirection} justifyContent={props.justifyContent}>
+          {
+            Object.keys(enumValues).map((k, idx) => <Flex flexDirection='row'><Radio value={k} />{enumValues[k]}</Flex>)
+          }
+          </Flex>
+          :null
         }
-        </Flex>
+        <div>{children}</div>
       </Component>
     )
   }

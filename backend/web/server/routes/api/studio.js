@@ -306,6 +306,7 @@ router.put('/:model/:id', passport.authenticate('cookie', {session: false}), (re
   if (!model || !id) {
     return res.status(HTTP_CODE.BAD_REQUEST).json(`Model and id are required`)
   }
+  console.log(`UPdateing:${id} with ${JSON.stringify(params)}`)
   return mongoose.connection.models[model]
     .findByIdAndUpdate(id, params, {new: true, runValidators: true})
     .then(data => {

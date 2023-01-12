@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const bcrypt=require('bcryptjs')
-const {GENDER} = require('../../../utils/dekuple/consts')
+const {GENDER, SMOKER_TYPE} = require('../../../utils/dekuple/consts')
 const {schemaOptions} = require('../../utils/schemas')
 
 const Schema = mongoose.Schema
@@ -56,7 +56,8 @@ const UserSchema = new Schema({
     required: false,
   },
   smoker: {
-    type: Boolean,
+    type: String,
+    enum: Object.keys(SMOKER_TYPE),
     required: false,
   },
   highBloodPressureTreatment: {
@@ -76,6 +77,10 @@ const UserSchema = new Schema({
     required: false,
   },
 }, schemaOptions)
+
+UserSchema.virtual('fullname').get(function() {
+  return `${this.firstname || ''} ${this.lastname || ''}`
+})
 
 UserSchema.virtual('measures', {
   ref: 'measure', // The Model to use

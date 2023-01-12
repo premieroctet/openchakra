@@ -22,7 +22,7 @@ export const PROGRESS_TYPE: ComponentType[] = ['Progress', 'CircularProgress']
 export const DATE_TYPE: ComponentType[] = ['Date']
 export const SELECT_TYPE: ComponentType[] = ['Select']
 export const SOURCE_TYPE: ComponentType[] = ['Timer']
-export const CHECKBOX_TYPE: ComponentType[] = ['Checkbox']
+export const CHECKBOX_TYPE: ComponentType[] = ['Checkbox', 'Radio']
 export const INPUT_TYPE: ComponentType[] = ['Input', 'Textarea', 'NumberInput']
 export const UPLOAD_TYPE: ComponentType[] = ['UploadFile']
 export const ENUM_TYPE: ComponentType[] = ['RadioGroup']
@@ -114,7 +114,7 @@ export const getDataProviderDataType = (
   return parentDataProviderType
 }
 
-export const getAvailableAttributes = (
+const getComponentAttributes = (
   component: IComponent,
   components: IComponents,
   models: any,
@@ -122,32 +122,45 @@ export const getAvailableAttributes = (
   if (!component.props?.dataSource && !component.props?.model) {
     return null
   }
-  let dataType = getDataProviderDataType(
-    components[component.parent],
-    components,
-    component.props.dataSource,
-    models,
-  )
-  // NOt fund in parent: direct dataprovider
-  if (!dataType) {
-    const dsComponent = components[component.props.dataSource]
-    if (!dsComponent) {
-      throw new Error(
-        `DataProvider ${component.props.dataSource} referenced by ${component.id} (type ${component.type}) is missing`,
-      )
+
+  let model=component.props.model
+  if (!model) {
+    let dataType = getDataProviderDataType(
+      components[component.parent],
+      components,
+      component.props.dataSource,
+      models,
+    )
+    // NOt fund in parent: direct dataprovider
+    if (!dataType) {
+      const dsComponent = components[component.props.dataSource]
+      if (!dsComponent) {
+        throw new Error(
+          `DataProvider ${component.props.dataSource} referenced by ${component.id} (type ${component.type}) is missing`,
+        )
+      }
+      dataType = {
+        type: dsComponent.props.model,
+        multiple: true,
+        ref: true,
+      }
     }
-    dataType = {
-      type: dsComponent.props.model,
-      multiple: true,
-      ref: true,
-    }
+    model=dataType?.type
   }
-  const attributes = models[dataType?.type]?.attributes || {}
+  const attributes = models[model]?.attributes || {}
+  return attributes
+}
+
+export const getAvailableAttributes = (
+  component: IComponent,
+  components: IComponents,
+  models: any,
+): any => {
+  const attributes = getComponentAttributes(component, components, models)
   const cardinalityAttributes = lodash.pickBy(
     attributes,
     att => att.multiple === isMultipleDispatcher(component),
   )
-
   return cardinalityAttributes
 }
 
@@ -156,30 +169,7 @@ export const getFilterAttributes = (
   components: IComponents,
   models: any,
 ): any => {
-  if (!component.props?.dataSource) {
-    return null
-  }
-  let dataType = getDataProviderDataType(
-    components[component.parent],
-    components,
-    component.props.dataSource,
-    models,
-  )
-  // NOt fund in parent: direct dataprovider
-  if (!dataType) {
-    const dsComponent = components[component.props.dataSource]
-    if (!dsComponent) {
-      throw new Error(
-        `DataProvider ${component.props.dataSource} referenced by ${component.id} (type ${component.type}) is missing`,
-      )
-    }
-    dataType = {
-      type: dsComponent.props.model,
-      multiple: true,
-      ref: true,
-    }
-  }
-  const attributes = models[dataType?.type]?.attributes || {}
+  const attributes = getComponentAttributes(component, components, models)
   const simpleAttributes=lodash.pickBy(attributes, (v,k) => !v.ref && !v.multiple && !k.includes('.'))
 
   return simpleAttributes
@@ -193,6 +183,10 @@ const computeDataFieldName = (
 
   // On dataProvider: break
   if (component.props.model) {
+    return null
+  }
+  // On root: break
+  if (component.id=='root') {
     return null
   }
   // I have datasource(s) but different: break

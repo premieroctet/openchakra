@@ -11,14 +11,22 @@ const capitalize = (word: string) => {
 }
 
 const DataProviderPanel = () => {
-  const { setValueFromEvent, setValue } = useForm()
+  const { setValueFromEvent, setValue, removeValue } = useForm()
   const model = usePropsSelector('model')
   const cardinality = usePropsSelector('cardinality')
   const ignoreUrlParams = usePropsSelector('ignoreUrlParams')
   const modelNames = useSelector(getModelNames)
 
-  const setIgnoreUrlParams = event => {
+  const setIgnoreUrlParams = (event:React.ChangeEvent<HTMLInputElement>) => {
     setValue('ignoreUrlParams', event.target.checked)
+  }
+
+  const onModelChange = (ev:React.ChangeEvent<HTMLSelectElement>) => {
+    const {value}=ev.target
+    setValueFromEvent(ev)
+    if (!value) {
+      removeValue('cardinality')
+    }
   }
 
   const cbLabel = `Ignore '${model}' param in URL`
@@ -27,7 +35,7 @@ const DataProviderPanel = () => {
       <FormControl htmlFor="model" label="Model">
         <Select
           id="model"
-          onChange={setValueFromEvent}
+          onChange={onModelChange}
           name="model"
           size="sm"
           value={model || ''}

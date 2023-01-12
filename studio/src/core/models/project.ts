@@ -1,7 +1,4 @@
 import { createModel } from '@rematch/core'
-import fromPairs from 'lodash/fromPairs'
-import flatten from 'lodash/flatten'
-import omit from 'lodash/omit'
 import lodash from 'lodash'
 import { DEFAULT_PROPS } from '~utils/defaultProps'
 import { duplicateComponent, deleteComponent } from '~utils/recursive'
@@ -91,7 +88,7 @@ const getActiveComponents = (state: ProjectState) => {
 }
 
 export const getComponentById = (state: ProjectState, componentId: string) => {
-  const allComps = flatten(
+  const allComps = lodash.flatten(
     Object.values(state.pages).map(p => Object.values(p.components)),
   )
   return allComps.find(c => c.id === componentId)
@@ -184,7 +181,7 @@ const project = createModel({
               ...state.pages[state.activePage].components,
               [payload.id]: {
                 ...state.pages[state.activePage].components[payload.id],
-                props: omit(
+                props: lodash.omit(
                   state.pages[state.activePage].components[payload.id].props,
                   payload.name,
                 ),
