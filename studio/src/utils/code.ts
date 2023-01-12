@@ -64,7 +64,7 @@ export const getPageComponentName = (
 
 const isDynamicComponent = (comp: IComponent) => {
   return !!comp.props.dataSource || !!comp.props.subDataSource
-    || (!!comp.props.action)
+    || (!!comp.props.action && !CONTAINER_TYPE.includes(comp.type))
     || (comp.props.model && comp.props.attribute)
 }
 
@@ -190,7 +190,7 @@ const buildBlock = ({
       let propsContent = ''
 
       // DIRTY: stateValue for RAdioGroup to get value
-      if ((['RadioGroup', 'Input']).includes(childComponent.type)) {
+      if ((['RadioGroup', 'Input', 'Select']).includes(childComponent.type)) {
         propsContent += ` setComponentValue={setComponentValue} `
       }
       propsContent += ` getComponentValue={getComponentValue} `
@@ -316,6 +316,10 @@ const buildBlock = ({
             propsContent += ` hiddenRoles='${JSON.stringify(propsValue)}'`
             propsContent += ` user={user} `
             return
+          }
+
+          if (propName === 'filterValue') {
+            propsContent += ` upd={componentsValues} `
           }
 
           if (propName === 'textFilter' && !!propsValue) {

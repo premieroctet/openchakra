@@ -3,7 +3,7 @@ import lodash from 'lodash'
 import { ACTIONS } from '../utils/actions'
 
 const withDynamicSelect = Component => {
-  const Internal = ({noautosave, dataSource, ...props}) => {
+  const Internal = ({noautosave, dataSource, setComponentValue, ...props}) => {
     let values = dataSource
     let value=lodash.get(dataSource, props.attribute)
     value=value?._id || value
@@ -16,6 +16,9 @@ const withDynamicSelect = Component => {
     const onChange = ev => {
       const {value} = ev.target
       setInternalValue(value)
+      if (setComponentValue) {
+        setComponentValue(value)
+      }
       if (!noautosave) {
         ACTIONS.putValue({
           context: dataSource?._id,
