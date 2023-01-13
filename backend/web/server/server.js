@@ -43,6 +43,7 @@ require('./models/Conversation')
 require('./models/Measure')
 require('./models/Reminder')
 require('./models/Appointment')
+require('./models/Payment')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 

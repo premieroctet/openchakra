@@ -1,4 +1,4 @@
-const Order = require('../../../models/Order')
+const Booking = require('../../../models/Booking');
 const UserSessionData = require('../../../models/UserSessionData')
 const {getModel} = require('../../database')
 const {addAction, setAllowActionFn} = require('../actions')
@@ -33,20 +33,11 @@ addAction('removeOrderItem', removeOrderItemAction)
 addAction('setOrderItem', setOrderItemAction)
 
 const isActionAllowed = ({action, dataId, user}) => {
-  if (action=='pay') {
-    return getModel(dataId)
-      .then(dm => {
-        if (dm=='event') {
-          return UserSessionData.findOne({user: user._id, 'guests.event': dataId})
-            .then(usd => usd?.guests?.length>0)
-        }
-        if (dm=='order') {
-          return Order.findById(dataId)
-            .populate('items')
-            .populate('payments')
-            .then(o => o.remaining_total>0)
-        }
-      })
+  if (action=='payOrder') {
+    return Booking.findById(dataId)
+      .populate('items')
+      .populate('payments')
+      .then(o => o.paid==false)
   }
   return Promise.resolve(true)
 }

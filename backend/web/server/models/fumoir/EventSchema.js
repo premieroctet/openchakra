@@ -49,6 +49,13 @@ const EventSchema = new Schema(
   schemaOptions,
 )
 
+// This booking's payments
+EventSchema.virtual('payments', {
+  ref: 'payment', // The Model to use
+  localField: '_id', // Find in Model, where localField
+  foreignField: 'event', // is equal to foreignField
+})
+
 /**
  TODO: should rather be a virtual function insteadd of this trick
  BUT: if it's a function, mongoose asks got foreignField declaration during populate

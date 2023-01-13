@@ -1,3 +1,4 @@
+const Payment = require('../../../models/Payment');
 const { addAction } = require('../actions');
 const mongoose = require('mongoose')
 const lodash=require('lodash')
@@ -28,7 +29,6 @@ const Guest = require('../../../models/Guest')
 const {BadRequestError, NotFoundError} = require('../../errors')
 const OrderItem = require('../../../models/OrderItem')
 const Product = require('../../../models/Product')
-const Order = require('../../../models/Order')
 const Event = require('../../../models/Event')
 
 const inviteGuest = ({eventOrBooking, email, phone}, user) => {
@@ -90,7 +90,7 @@ const inviteGuest = ({eventOrBooking, email, phone}, user) => {
 }
 
 const setOrderItem = ({order, product, quantity}) => {
-  return Order.findById(order)
+  return Booking.findById(order)
     .populate('items')
     .then(order => {
       if (!order) {
@@ -111,7 +111,7 @@ const setOrderItem = ({order, product, quantity}) => {
           }),
         )
         .then(item =>
-          Order.findByIdAndUpdate(
+          Booking.findByIdAndUpdate(
             order,
             {$push: {items: item}},
             {new: true},
@@ -121,7 +121,7 @@ const setOrderItem = ({order, product, quantity}) => {
 }
 
 const removeOrderItem = ({order, item}) => {
-  return Order.findByIdAndUpdate(order, {$pull: {items: item}})
+  return Booking.findByIdAndUpdate(order, {$pull: {items: item}})
     .then(() => {
       return OrderItem.findByIdAndRemove(item)
     })
@@ -153,34 +153,37 @@ const payEvent=({context, redirect}, user) => {
 }
 
 const payOrder=({context, redirect}, user) => {
-  const orderId=context
-  return getModel(orderId)
+  const bookingId=context
+  return getModel(bookingId, 'booking')
    .then(model => {
-     if (model!='order') {
-       throw new BadRequestError(`${orderId} model is ${model}, expected 'order'`)
-     }
-    return Order.findById(orderId)
-      .then(order => {
-        if (!order) { throw new NotFoundError(`Order ${order} not found`) }
-        console.log(`Items are ${JSON.stringify(order.items)}`)
-        return OrderItem.updateMany({_id: {$in: order.items.map(i => i._id)}}, {$set: {paid: true}})
+     return Booking.findById(bookingId)
+      .populate('items')
+      .populate('payments')
+      .then(booking => {
+        if (!booking) { throw new NotFoundError(`Réservation ${bookingId} introuvable`) }
+        if (booking.remaining_total==0) {
+          throw new BadRequestError(`Réservation ${bookingId} déjà payée`)
+        }
+        return Payment.create({booking, member:user, total_amount:booking.remaining_total})
       })
       .then(() => ({redirect}))
   })
 }
 
 const cashOrder=({context, guest, amount, redirect}, user) => {
-  const orderId=context
-  return getModel(orderId)
+  const bookingId=context
+  return getModel(bookingId, 'booking')
    .then(model => {
-     if (model!='order') {
-       throw new BadRequestError(`${orderId} model is ${model}, expected 'order'`)
-     }
-    return Order.findById(orderId)
-      .then(order => {
-        if (!order) { throw new NotFoundError(`Order ${order} not found`) }
-        console.log(`Items are ${JSON.stringify(order.items)}`)
-        return OrderItem.updateMany({_id: {$in: order.items.map(i => i._id)}}, {$set: {paid: true}})
+    return Booking.findById(bookingId)
+      .populate('items')
+      .populate('payments')
+      .then(booking => {
+        if (!booking) { throw new NotFoundError(`Réservation ${bookingId} not found`) }
+        if (amount>booking.remaining_total) {
+          throw new BadRequestError(`Il ne reste que ${booking.remaining_total}€ à payer`)
+        }
+        const customer=guest ? {guest}: {member: user}
+        return Payment.create({booking, ...customer, total_amount:amount})
       })
       .then(() => ({redirect}))
   })
@@ -212,14 +215,6 @@ const preCreate = ({model, params}) => {
 setPreCreateData(preCreate)
 
 const postCreate = ({model, params, data}) => {
-  if (model=='booking') {
-    return Order.create({booking: data._id})
-      .then(order => {
-        console.log(`Created ${order}`)
-        data.orders=[order]
-        return data.save()
-      })
-  }
   if (model=='user') {
     console.log(`Sending mail to ${params.email} with temp password ${params.password}`)
   }
@@ -267,7 +262,6 @@ setFilterDataUser(filterDataUser)
 
 const preprocessGet = ({model, fields, id, user}) => {
   if (/.*Category/i.test(model)) {
-    console.log('adding parent')
     fields = lodash([...fields, 'parent']).uniq().value()
   }
   if (model=='loggedUser') {
@@ -339,10 +333,18 @@ USER_MODELS.forEach(m => {
 
 declareEnumField({model: 'booking', field: 'place', enumValues: PLACES})
 declareVirtualField({model: 'booking', field: 'end_date', instance: 'Date', requires: ''})
-declareVirtualField({model: 'booking', field: 'paid', instance: 'Boolean', requires: 'orders'})
-declareVirtualField({model: 'booking', field: 'paid_str', instance: 'String', requires: 'orders,orders.items'})
+declareVirtualField({model: 'booking', field: 'paid', instance: 'Boolean', requires: 'items,payments'})
+declareVirtualField({model: 'booking', field: 'paid_str', instance: 'String', requires: 'items,payments'})
 declareVirtualField({model: 'booking', field: 'status', instance: 'String', requires: 'start_date,end_date', enumValues: EVENT_STATUS})
 declareVirtualField({model: 'booking', field: 'people_count', instance: 'Number', requires: 'guests_count'})
+declareVirtualField({model: 'booking', field: 'total_price', instance: 'Number', requires: 'items'})
+declareVirtualField({model: 'booking', field: 'remaining_total', instance: 'Number', requires: 'items,payments'})
+declareVirtualField({model: 'booking', field: 'payments', instance: 'Array', requires: '', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'payment'}}})
+
+
 
 const PRODUCT_MODELS=['product', 'cigar', 'drink', 'meal']
 PRODUCT_MODELS.forEach(m => {
@@ -375,11 +377,10 @@ declareVirtualField({model: 'event', field: 'guests', instance: 'Array', require
     instance: 'ObjectID',
     options: {ref: 'guest'}}})
 declareVirtualField({model: 'event', field: 'guests_count', instance: 'Number', requires: ''})
-
-declareVirtualField({model: 'order', field: 'total_price', instance: 'Number', requires: 'items'})
-declareVirtualField({model: 'order', field: 'paid', instance: 'Boolean', requires: 'items'})
-declareVirtualField({model: 'order', field: 'paid_str', instance: 'String', requires: 'items'})
-declareVirtualField({model: 'order', field: 'remaining_total', instance: 'Number', requires: 'items,payments'})
+declareVirtualField({model: 'event', field: 'payments', instance: 'Array', requires: '', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'payment'}}})
 
 declareVirtualField({model: 'orderItem', field: 'net_price', instance: 'Number', requires: 'price,vat_rate'})
 declareVirtualField({model: 'orderItem', field: 'total_price', instance: 'Number', requires: 'price,quantity'})

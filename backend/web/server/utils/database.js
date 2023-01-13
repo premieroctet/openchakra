@@ -234,7 +234,7 @@ const buildPopulates = (fields, model) => {
   return populates
 }
 
-const getModel = id => {
+const getModel = (id, expectedModel) => {
   const conn = mongoose.connection
   return Promise.all(conn.modelNames()
     .map(model =>
@@ -243,7 +243,14 @@ const getModel = id => {
         .then(exists => (exists ? model : false)),
     ),
   ).then(res => {
-    return res.find(v => !!v)
+    const model=res.find(v => !!v)
+    if (!model) {
+      throw new Error(`Model not found for ${id}`)
+    }
+    if (expectedModel && model!=expectedModel) {
+      throw new Error(`Found model ${model} for ${id}, ${expectedModel} was expected`)
+    }
+    return model
   })
 }
 
@@ -428,8 +435,6 @@ const declareComputedField = (model, field, getFn, setFn) => {
   if (setFn) {
     lodash.set(COMPUTED_FIELDS_SETTERS, `${model}.${field}`, setFn)
   }
-  console.log(`Getters after:${util.inspect(COMPUTED_FIELDS_GETTERS)}`)
-  console.log(`Setters after:${util.inspect(COMPUTED_FIELDS_SETTERS)}`)
 }
 
 const declareVirtualField=({model, field, ...rest}) => {
@@ -500,12 +505,11 @@ const putAttribute = ({parent, attribute, value, user}) => {
       }
       const mongooseModel = mongoose.connection.models[model]
 
-      const parsedValue=JSON.parse(value)
       if (attribute.split('.').length==1) {
         // Simple attribute => simple method
         return mongooseModel.findById(parent)
           .then(object => {
-            object[attribute]=parsedValue
+            object[attribute]=value
             return object.save()
           })
       }
@@ -518,7 +522,7 @@ const putAttribute = ({parent, attribute, value, user}) => {
           return Promise.all(objects.map(object => {
             let paths=attribute.split('.')
             let obj=paths.length>1 ? lodash.get(object, paths.slice(0, paths.length-1)) : object
-            lodash.set(obj, paths.slice(-1)[0], parsedValue)
+            lodash.set(obj, paths.slice(-1)[0], value)
             return obj.save({runValidators: true})
           }))
         })
@@ -531,7 +535,6 @@ const removeData = dataId => {
   return getModel(dataId)
     .then(result => {
       model=result
-      console.log(`FOund model ${model}`)
       return mongoose.connection.models[model].findById(dataId)
     })
     .then(data => {

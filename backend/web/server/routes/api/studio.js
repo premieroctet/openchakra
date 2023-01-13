@@ -197,7 +197,6 @@ router.post('/action', passport.authenticate('cookie', {session: false}), (req, 
 )
 
 router.post('/login', (req, res) => {
-  console.log(`Trying to log`)
   const {email, password} = req.body
 
   return login(email, password)

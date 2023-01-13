@@ -32,29 +32,6 @@ const UserSessionDataSchema = new Schema({
       type: Number
     },
   }],
-  payments: [{
-    event: {
-      type: Schema.Types.ObjectId,
-      ref: 'event',
-      required: false,
-    },
-    order: {
-      type: Schema.Types.ObjectId,
-      ref: 'order',
-      required: false,
-    },
-    amount: {
-      type: Number,
-      min: 0,
-      required: true,
-    },
-
-    date: {
-      type: Date,
-      default: () => moment(),
-      required: true,
-    }
-  }],
 }, schemaOptions)
 
 module.exports = UserSessionDataSchema

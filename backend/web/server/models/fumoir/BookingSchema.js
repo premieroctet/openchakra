@@ -8,6 +8,7 @@ const {
   TO_PAY_STR,
 } = require('../../../utils/fumoir/consts');
 const moment = require('moment')
+const lodash = require('lodash')
 const mongoose = require('mongoose')
 const {schemaOptions} = require('../../utils/schemas')
 
@@ -66,19 +67,28 @@ const BookingSchema = new Schema(
       enum: [...Object.keys(PLACES)],
       required: false, // required: true,
     },
-    orders: [{
-      type: Schema.Types.ObjectId,
-      ref: 'order',
-    }],
+    // Order items
+    items: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'orderItem',
+      },
+    ],
   },
   schemaOptions,
 )
+
+// This booking's payments
+BookingSchema.virtual('payments', {
+  ref: 'payment', // The Model to use
+  localField: '_id', // Find in Model, where localField
+  foreignField: 'booking', // is equal to foreignField
+})
 
 BookingSchema.pre('validate', function (next) {
   if (this.guests_count < this.guests.length) {
     this.invalidate('guests_count', `Vous avez déjà envoyé ${this.guests.length} invitations`, this.guests_count)
   }
-
   next();
 });
 
@@ -91,20 +101,6 @@ BookingSchema.virtual('end_date').get(function() {
     moment(this.start_date).add(this.duration, 'hours')
     :
     null
-})
-
-BookingSchema.virtual('paid').get(function() {
-  if (!this.orders || this.orders.length==0) {
-    return false
-  }
-  return this.orders.every(i => i.paid==true)
-})
-
-BookingSchema.virtual('paid_str').get(function() {
-  if (!this.orders || this.orders.length==0) {
-    return TO_PAY_STR
-  }
-  return this.orders.every(i => i.paid==true) ? PAID_STR : TO_PAY_STR
 })
 
 BookingSchema.virtual('status').get(function() {
@@ -121,5 +117,27 @@ BookingSchema.virtual('status').get(function() {
   return null
 })
 
+BookingSchema.virtual('total_price').get(function() {
+  return lodash(this.items).map('total_price').sum()
+})
+
+BookingSchema.virtual('remaining_total').get(function() {
+  const already_paid=lodash(this.payments).map('total_amount').sum()
+  const total=lodash(this.items).map('total_price').sum()
+  return total-already_paid
+})
+
+BookingSchema.virtual('paid').get(function() {
+  const already_paid=lodash(this.payments).map('total_amount').sum()
+  const total=lodash(this.items).map('total_price').sum()
+  return already_paid==total
+})
+
+BookingSchema.virtual('paid_str').get(function() {
+  const already_paid=lodash(this.payments).map('total_amount').sum()
+  const total=lodash(this.items).map('total_price').sum()
+  const res=already_paid==total ? PAID_STR : TO_PAY_STR
+  return res
+})
 
 module.exports = BookingSchema
