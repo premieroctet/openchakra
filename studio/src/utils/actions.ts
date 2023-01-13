@@ -150,10 +150,24 @@ export const ACTIONS: IActions = {
   },
   // FUMOIR
   // Mettre un warning si les composants ne sont pas dans le même flex
-  pay: {
-    label: 'Pay',
+  payEvent: {
+    label: 'Pay event',
     options: {
-      customer: ({ components }) => components
+      redirect: ({ pages }) =>
+        Object.values(pages).map(p => ({ key: p.pageId, label: p.pageName })),
+    },
+  },
+  payOrder: {
+    label: 'Pay order',
+    options: {
+      redirect: ({ pages }) =>
+        Object.values(pages).map(p => ({ key: p.pageId, label: p.pageName })),
+    },
+  },
+  cashOrder: {
+    label: 'Cash order',
+    options: {
+      guest: ({ components }) => components
         .filter(comp => comp.type=='Select')
         .map(comp => ({ key: comp.id, label: `${comp.type}/${comp.id}` })),
       amount: ({ components }) => components
