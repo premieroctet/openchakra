@@ -1,3 +1,4 @@
+const { addAction } = require('../actions');
 const mongoose = require('mongoose')
 const lodash=require('lodash')
 const moment=require('moment')
@@ -130,34 +131,64 @@ const removeOrderItem = ({order, item}) => {
     })
 }
 
-const payOrder = ({order, redirect, user}) => {
-  console.log(`Have to redirect to ${redirect}`)
+const payEvent=({context, redirect}, user) => {
+  const order=context
   return getModel(order)
    .then(model => {
-     if (model=='event') {
-       return Promise.all([
-         UserSessionData.findOneAndUpdate({user: user._id},
-         {user: user._id},
-         {upsert: true, runValidators: true, new: true}),
-         Event.findById(order)
-       ])
-       .then(([usd, ev]) => {
-         usd.payments.push({event: order, amount: ev.price, date: moment()})
-         return usd.save()
-       })
-       .then(() => ({redirect}))
+     if (model!='event') {
+       throw new BadRequestError(`${orderId} model is ${model}, expected 'event'`)
      }
-     if (model=='order') {
-      return Order.findById(order)
-        .then(order => {
-          if (!order) { throw new NotFoundError(`Order ${order} not found`) }
-          console.log(`Items are ${JSON.stringify(order.items)}`)
-          return OrderItem.updateMany({_id: {$in: order.items.map(i => i._id)}}, {$set: {paid: true}})
-        })
-        .then(() => ({redirect}))
-    }
+     return Promise.all([
+       UserSessionData.findOneAndUpdate({user: user._id},
+       {user: user._id},
+       {upsert: true, runValidators: true, new: true}),
+       Event.findById(order)
+     ])
+     .then(([usd, ev]) => {
+       usd.payments.push({event: order, amount: ev.price, date: moment()})
+       return usd.save()
+     })
+     .then(() => ({redirect}))
   })
 }
+
+const payOrder=({context, redirect}, user) => {
+  const orderId=context
+  return getModel(orderId)
+   .then(model => {
+     if (model!='order') {
+       throw new BadRequestError(`${orderId} model is ${model}, expected 'order'`)
+     }
+    return Order.findById(orderId)
+      .then(order => {
+        if (!order) { throw new NotFoundError(`Order ${order} not found`) }
+        console.log(`Items are ${JSON.stringify(order.items)}`)
+        return OrderItem.updateMany({_id: {$in: order.items.map(i => i._id)}}, {$set: {paid: true}})
+      })
+      .then(() => ({redirect}))
+  })
+}
+
+const cashOrder=({context, guest, amount, redirect}, user) => {
+  const orderId=context
+  return getModel(orderId)
+   .then(model => {
+     if (model!='order') {
+       throw new BadRequestError(`${orderId} model is ${model}, expected 'order'`)
+     }
+    return Order.findById(orderId)
+      .then(order => {
+        if (!order) { throw new NotFoundError(`Order ${order} not found`) }
+        console.log(`Items are ${JSON.stringify(order.items)}`)
+        return OrderItem.updateMany({_id: {$in: order.items.map(i => i._id)}}, {$set: {paid: true}})
+      })
+      .then(() => ({redirect}))
+  })
+}
+
+addAction('payEvent', payEvent)
+addAction('payOrder', payOrder)
+addAction('cashOrder', cashOrder)
 
 const registerToEvent = ({event, user}) => {
   console.log(`Adding ${user} to event ${event}`)

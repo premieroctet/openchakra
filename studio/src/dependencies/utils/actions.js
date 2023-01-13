@@ -189,13 +189,32 @@ export const ACTIONS = {
     })
   },
 
-  pay: ({ context, props }) => {
+  payEvent: ({ context, props }) => {
     let url = `${API_ROOT}/action`
-    const body = {
-      action: 'pay',
-      context,
-      ...props
-    }
+    const body = {action: 'payEvent', context,...props}
+    return axios.post(url, body)
+      .then(res => {
+        if (res.data.redirect) {
+          window.location=`/${res.data.redirect}`
+        }
+      })
+  },
+
+  payOrder: ({ context, props }) => {
+    let url = `${API_ROOT}/action`
+    const body = {action: 'payOrder', context,...props}
+    return axios.post(url, body)
+      .then(res => {
+        if (res.data.redirect) {
+          window.location=`/${res.data.redirect}`
+        }
+      })
+  },
+
+  cashOrder: ({ context, value, level, props, getComponentValue }) => {
+    const [guest, amount]=[props.guest, props.amount].map(c => getComponentValue(c, level))
+    let url = `${API_ROOT}/action`
+    const body = {action: 'cashOrder', context, ...props, guest, amount}
     return axios.post(url, body)
       .then(res => {
         if (res.data.redirect) {
