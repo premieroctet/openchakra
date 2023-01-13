@@ -1,3 +1,7 @@
+const {
+  FUMOIR_MANAGER,
+  FUMOIR_MEMBER
+} = require('../../../../utils/fumoir/consts');
 const Booking = require('../../../models/Booking');
 const UserSessionData = require('../../../models/UserSessionData')
 const {getModel} = require('../../database')
@@ -34,10 +38,22 @@ addAction('setOrderItem', setOrderItemAction)
 
 const isActionAllowed = ({action, dataId, user}) => {
   if (action=='payOrder') {
+    if (user.role!=FUMOIR_MEMBER) {
+      return Promise.resolve(false)
+    }
     return Booking.findById(dataId)
       .populate('items')
       .populate('payments')
-      .then(o => o.paid==false)
+      .then(o => o?.paid==false)
+  }
+  if (action=='cashOrder') {
+    if (user.role!=FUMOIR_MANAGER) {
+      return Promise.resolve(false)
+    }
+    return Booking.findById(dataId)
+      .populate('items')
+      .populate('payments')
+      .then(o => o?.paid==false)
   }
   return Promise.resolve(true)
 }
