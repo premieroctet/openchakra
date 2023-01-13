@@ -6,28 +6,6 @@ const UserSessionData = require('../../models/UserSessionData')
 const {NotFoundError} = require('../errors')
 const Program = require('../../models/Program')
 const {getModel, removeData}=require('../database')
-/**
-const {
-  inviteGuest,
-  payOrder,
-  registerToEvent,
-  removeOrderItem,
-  setOrderItem,
-} = require('./fumoir/functions')
-*/
-/**
-const {
-  addChild,
-  moveChildInParent,
-  removeChildFromParent,
-  getNext,
-  getPrevious,
-  getSession,
-  login,
-  putAttribute,
-  sendMessage,
-} = require('./aftral_studio/functions')
-*/
 
 let ACTIONS = {
   put: ({parent, attribute, value}, user) => {
@@ -113,30 +91,6 @@ let ACTIONS = {
 
   createPost: ({contents, media}, sender) => {
     return Post.create({contents, media, author: sender})
-  },
-
-  inviteGuest: ({parent, email, phone}) => {
-    return inviteGuest({eventOrBooking: parent, email, phone})
-  },
-
-  addOrderItem: ({context, parent, quantity}) => {
-    return addOrderItem({order: context, product: parent, quantity})
-  },
-
-  setOrderItem: ({context, parent, quantity}) => {
-    return setOrderItem({order: context, product: parent, quantity})
-  },
-
-  removeOrderItem: ({context, parent}) => {
-    return removeOrderItem({order: context, item: parent})
-  },
-
-  registerToEvent: ({context}, user) => {
-    return registerToEvent({event: context, user})
-  },
-
-  pay: ({context}, user) => {
-    return payOrder({order: context, user})
   },
 
 }

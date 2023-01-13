@@ -51,6 +51,7 @@ const withDynamicInput = Component => {
           })
             .then(() => {
               setInternalDataValue(val)
+              props.reload()
             }) //props.reload())
             .catch(err => {
               console.error(err)

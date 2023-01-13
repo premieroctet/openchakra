@@ -503,12 +503,11 @@ const putAttribute = ({parent, attribute, value, user}) => {
       const parsedValue=JSON.parse(value)
       if (attribute.split('.').length==1) {
         // Simple attribute => simple method
-        return mongooseModel.updateMany(
-          // TODO Aftral only (parent or origin)
-          {$or: [{_id: parent}, {origin: parent}]},
-          {[attribute]: parsedValue},
-          {runValidators: true},
-        )
+        return mongooseModel.findById(parent)
+          .then(object => {
+            object[attribute]=parsedValue
+            return object.save()
+          })
       }
       const populates=buildPopulates([attribute], model)
       console.log(`Populates in PUT:${JSON.stringify(populates)}`)

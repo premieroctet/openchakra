@@ -37,6 +37,21 @@ const inviteGuest = ({eventOrBooking, email, phone}, user) => {
         throw new BadRequestError(`Found model ${modelName} for ${eventOrBooking}, should be event or booking`)
       }
       if (modelName=='booking') {
+        return Booking.findById(eventOrBooking)
+          .populate('guests')
+          .then(booking => {
+            if (booking.guests.find(g => g.email==email)) {
+              throw new BadRequestError(`${email} est déjà invité pour cet événement`)
+            }
+            if (booking.guests.length>=booking.guests_count) {
+              throw new BadRequestError(`Vous avez déjà envoyé ${booking.guests.length} invitations`)
+            }
+            return Guest.create({email, phone})
+              .then(guest => {
+                booking.guests.push(guest._id)
+                return booking.save()
+              })
+          })
         return Guest.create({email, phone})
           .then(guest => Booking.findByIdAndUpdate(eventOrBooking, {$push: {guests: guest}}))
       }
@@ -296,6 +311,7 @@ declareVirtualField({model: 'booking', field: 'end_date', instance: 'Date', requ
 declareVirtualField({model: 'booking', field: 'paid', instance: 'Boolean', requires: 'orders'})
 declareVirtualField({model: 'booking', field: 'paid_str', instance: 'String', requires: 'orders,orders.items'})
 declareVirtualField({model: 'booking', field: 'status', instance: 'String', requires: 'start_date,end_date', enumValues: EVENT_STATUS})
+declareVirtualField({model: 'booking', field: 'people_count', instance: 'Number', requires: 'guests_count'})
 
 const PRODUCT_MODELS=['product', 'cigar', 'drink', 'meal']
 PRODUCT_MODELS.forEach(m => {

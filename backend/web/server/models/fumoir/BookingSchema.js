@@ -1,13 +1,14 @@
-const moment = require('moment')
-const mongoose = require('mongoose')
 const {
   CURRENT,
   FINISHED,
+  MAX_BOOKING_GUESTS,
   PAID_STR,
   PLACES,
   TO_COME,
   TO_PAY_STR,
-} = require('../../../utils/fumoir/consts')
+} = require('../../../utils/fumoir/consts');
+const moment = require('moment')
+const mongoose = require('mongoose')
 const {schemaOptions} = require('../../utils/schemas')
 
 const Schema = mongoose.Schema
@@ -41,16 +42,19 @@ const BookingSchema = new Schema(
         ref: 'user',
       },
     ],
-    guests: [
-      {
+    guests: {
+      type: [{
         type: Schema.Types.ObjectId,
         ref: 'guest',
-      },
-    ],
-    people_count: {
+      }],
+      default: [],
+      validate: [value => value.length <= MAX_BOOKING_GUESTS, 'Vous ne pouvez inviter plus de ${MAX_BOOKING_GUESTS} personnes'],
+      required: true,
+    },
+    guests_count: {
       type: Number,
       min: 0,
-      max: 15,
+      max: [MAX_BOOKING_GUESTS, `Vous ne pouvez inviter plus de ${MAX_BOOKING_GUESTS} personnes`],
       default: 0,
       required: true,
     },
@@ -69,6 +73,18 @@ const BookingSchema = new Schema(
   },
   schemaOptions,
 )
+
+BookingSchema.pre('validate', function (next) {
+  if (this.guests_count < this.guests.length) {
+    this.invalidate('guests_count', `Vous avez déjà envoyé ${this.guests.length} invitations`, this.guests_count)
+  }
+
+  next();
+});
+
+BookingSchema.virtual('people_count').get(function() {
+  return (this.guests_count || 0)+1
+})
 
 BookingSchema.virtual('end_date').get(function() {
   return this.start_date && this.duration ?
