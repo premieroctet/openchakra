@@ -37,20 +37,22 @@ const PaymentSchema = new Schema({
     ref: 'guest',
   },
   // How much was paid
-  net_amount: {
+  total_amount: {
     type: Number,
     min: 0,
+    required: true,
   },
   vat_amount: {
     type: Number,
     min: 0,
-  },
-  total_amount: {
-    type: Number,
-    min: 0,
+    required: true,
   },
   },
   schemaOptions,
 )
+
+PaymentSchema.virtual('net_amount').get(function(){
+  return this.total_amount-this.vat_amount
+})
 
 module.exports = PaymentSchema

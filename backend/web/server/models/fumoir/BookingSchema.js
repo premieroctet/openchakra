@@ -121,10 +121,25 @@ BookingSchema.virtual('total_price').get(function() {
   return lodash(this.items).map('total_price').sum()
 })
 
+BookingSchema.virtual('total_vat_amount').get(function() {
+  return lodash(this.items).map('total_vat_amount').sum()
+})
+
+BookingSchema.virtual('total_net_price').get(function() {
+  return lodash(this.items).map('total_net_price').sum()
+})
+
 BookingSchema.virtual('remaining_total').get(function() {
   const already_paid=lodash(this.payments).map('total_amount').sum()
   const total=lodash(this.items).map('total_price').sum()
   return total-already_paid
+})
+
+BookingSchema.virtual('remaining_vat_amount').get(function() {
+  const total=this.total_price
+  const vat_total=this.total_vat_amount
+  const remaining_total=this.remaining_total
+  return remaining_total*vat_total/total
 })
 
 BookingSchema.virtual('paid').get(function() {

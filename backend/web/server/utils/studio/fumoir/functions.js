@@ -164,7 +164,9 @@ const payOrder=({context, redirect}, user) => {
         if (booking.remaining_total==0) {
           throw new BadRequestError(`Réservation ${bookingId} déjà payée`)
         }
-        return Payment.create({booking, member:user, total_amount:booking.remaining_total})
+        const remaining=booking.total_remaining
+        const remaining_vat=booking.remaining_vat_amount
+        return Payment.create({booking, member:user, total_amount:booking.remaining_total, vat_amount:remaining_vat})
       })
       .then(() => ({redirect}))
   })
@@ -183,7 +185,10 @@ const cashOrder=({context, guest, amount, redirect}, user) => {
           throw new BadRequestError(`Il ne reste que ${booking.remaining_total}€ à payer`)
         }
         const customer=guest ? {guest}: {member: user}
-        return Payment.create({booking, ...customer, total_amount:amount})
+        const remaining=booking.total_remaining
+        const remaining_vat=booking.remaining_vat_amount
+        const payment_tva=amount*remaining_vat/remaining_total
+        return Payment.create({booking, ...customer, total_amount:amount, vat_amount:payment_tva})
       })
       .then(() => ({redirect}))
   })
@@ -343,7 +348,11 @@ declareVirtualField({model: 'booking', field: 'payments', instance: 'Array', req
   caster: {
     instance: 'ObjectID',
     options: {ref: 'payment'}}})
+declareVirtualField({model: 'booking', field: 'total_vat_amount', instance: 'Number', requires: 'items,payments'})
+declareVirtualField({model: 'booking', field: 'total_net_price', instance: 'Number', requires: 'items'})
+declareVirtualField({model: 'booking', field: 'remaining_vat_amount', instance: 'Number', requires: 'items,payments'})
 
+declareVirtualField({model: 'payment', field: 'net_amount', instance: 'Number', requires: 'total_amount,vat_amount'})
 
 
 const PRODUCT_MODELS=['product', 'cigar', 'drink', 'meal']
@@ -383,8 +392,10 @@ declareVirtualField({model: 'event', field: 'payments', instance: 'Array', requi
     options: {ref: 'payment'}}})
 
 declareVirtualField({model: 'orderItem', field: 'net_price', instance: 'Number', requires: 'price,vat_rate'})
+declareVirtualField({model: 'orderItem', field: 'vat_amount', instance: 'Number', requires: 'price,vat_rate'})
+declareVirtualField({model: 'orderItem', field: 'total_net_price', instance: 'Number', requires: 'price,vat_rate,quantity'})
+declareVirtualField({model: 'orderItem', field: 'total_vat_amount', instance: 'Number', requires: 'price,vat_rate,quantity'})
 declareVirtualField({model: 'orderItem', field: 'total_price', instance: 'Number', requires: 'price,quantity'})
-
 declareVirtualField({model: 'subscription', field: 'is_active', instance: 'Boolean', requires: 'start,end'})
 
 const getEventGuests = (user, params, data) => {

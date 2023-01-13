@@ -18,7 +18,7 @@ const OrderItemSchema = new Schema(
       required: true
     },
     price: {
-      // Price including tax
+      // Price including tax for one item
       type: Number,
       min: 0
     },
@@ -28,17 +28,24 @@ const OrderItemSchema = new Schema(
       min: 0,
       max: 1
     },
-    paid: {
-      type: Boolean,
-      default: false,
-      required: true,
-    }
   },
   schemaOptions
 );
 
+OrderItemSchema.virtual("vat_amount").get(function() {
+  return this.price * this.vat_rate
+});
+
 OrderItemSchema.virtual("net_price").get(function() {
   return this.price * (1 - this.vat_rate);
+});
+
+OrderItemSchema.virtual("total_vat_amount").get(function() {
+  return this.price * this.vat_rate * this.quantity
+});
+
+OrderItemSchema.virtual("total_net_price").get(function() {
+  return this.price * (1 - this.vat_rate) * this.quantity;
 });
 
 OrderItemSchema.virtual("total_price").get(function() {
