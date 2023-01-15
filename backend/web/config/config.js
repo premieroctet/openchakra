@@ -15,7 +15,13 @@ const {
   PORT,
   MONO_PROVIDER,
   PRODUCTION_ROOT,
-  PRODUCTION_PORT
+  PRODUCTION_PORT,
+  VIVAWALLET_BASE_URL,
+  VIVAWALLET_API_ID,
+  VIVAWALLET_API_KEY,
+  VIVAWALLET_CLIENT_ID,
+  VIVAWALLET_CLIENT_SECRET,
+  VIVAWALLET_MODE
 } = require("../mode");
 
 const SITE_MODES = {
@@ -123,6 +129,17 @@ const getHostUrl = () => {
   const host_url = `${protocol}://${hostname}${includePort ? `:${port}` : ""}/`;
   return host_url;
 };
+
+const getVivaWalletConfig = () => {
+  return {
+    production: VIVAWALLET_MODE=='production',
+    baseUrl: VIVAWALLET_BASE_URL,
+    apiId: VIVAWALLET_API_ID,
+    apiKey: VIVAWALLET_API_KEY,
+    clientId: VIVAWALLET_CLIENT_ID,
+    clientSecret: VIVAWALLET_CLIENT_SECRET,
+  }
+}
 
 const completeConfig = {
   default: {
@@ -317,5 +334,6 @@ module.exports = {
   CGV_EXPIRATION_DELAY,
   bookingUrl,
   getProductionRoot,
-  getProductionPort
+  getProductionPort,
+  getVivaWalletConfig,
 };
