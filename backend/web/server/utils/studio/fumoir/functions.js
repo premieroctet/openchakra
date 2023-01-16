@@ -172,7 +172,7 @@ const payOrder=({context, redirect, color}, user) => {
         }
         return Payment.create({
           booking, member:user,
-          amount:booking.total_remaining, vat_amount:remaining_vat
+          amount:booking.remaining_total, vat_amount:booking.remaining_vat_amount
         })
       })
       .then(payment => {
