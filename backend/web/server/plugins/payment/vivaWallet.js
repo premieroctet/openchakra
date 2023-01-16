@@ -38,7 +38,6 @@ const getAuthToken = () => {
 const getWebHookToken = () => {
   const url=new URL('/api/messages/config/token', WEBHOOK_DOMAIN).toString()
   const auth=`${vvConfig.apiId}:${vvConfig.apiKey}`
-  console.log(`auth:${auth}`)
   const base64Auth=Buffer.from(auth).toString('base64')
 
   return axios.get(url,
@@ -53,13 +52,13 @@ const getWebHookToken = () => {
     })
 }
 
-const initiatePayment = (amountEuros, email) => {
+const initiatePayment = ({amount, email}) => {
   const url=new URL('/checkout/v2/orders', 'https://demo-api.vivapayments.com').toString()
 
   return getAuthToken()
     .then(token => {
       return axios.post(url,
-        {amount: amountEuros*100, customer: {email}},
+        {amount: amount*100, customer: {email}},
         {headers: {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'}},
       )
     })

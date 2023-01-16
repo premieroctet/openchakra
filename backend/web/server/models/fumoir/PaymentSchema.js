@@ -6,6 +6,8 @@ const {
   PLACES,
   TO_COME,
   TO_PAY_STR,
+  PAYMENT_STATUS,
+  PAYMENT_CREATED,
 } = require('../../../utils/fumoir/consts');
 const moment = require('moment')
 const mongoose = require('mongoose')
@@ -37,7 +39,7 @@ const PaymentSchema = new Schema({
     ref: 'guest',
   },
   // How much was paid
-  total_amount: {
+  amount: {
     type: Number,
     min: 0,
     required: true,
@@ -47,6 +49,12 @@ const PaymentSchema = new Schema({
     min: 0,
     required: true,
   },
+  status: {
+    type: String,
+    enum: Object.keys(PAYMENT_STATUS),
+    default: PAYMENT_CREATED,
+    required: true,
+  }
   },
   schemaOptions,
 )

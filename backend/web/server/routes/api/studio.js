@@ -272,6 +272,8 @@ router.get('/payment-hook', (req, res) => {
 })
 
 router.post('/payment-hook', (req, res) => {
+  const params=req.query
+  console.log(`Payment hook called with params ${JSON.stringify(params)}`)
   return res.json()
 })
 

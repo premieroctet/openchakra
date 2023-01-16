@@ -1,3 +1,12 @@
+const {
+  EVENT_STATUS,
+  FUMOIR_MEMBER,
+  MAX_EVENT_GUESTS,
+  PAYMENT_STATUS,
+  PLACES,
+  ROLES,
+} = require('../../../../utils/fumoir/consts');
+const { initiatePayment } = require('../../../plugins/payment/vivaWallet');
 const Payment = require('../../../models/Payment');
 const { addAction } = require('../actions');
 const mongoose = require('mongoose')
@@ -18,13 +27,6 @@ const User = require('../../../models/User')
 const Booking = require('../../../models/Booking')
 const {generate_id} = require('../../../../utils/consts')
 const Message = require('../../../models/Message')
-const {
-  EVENT_STATUS,
-  FUMOIR_MEMBER,
-  PLACES,
-  ROLES,
-  MAX_EVENT_GUESTS,
-} = require('../../../../utils/fumoir/consts')
 const Guest = require('../../../models/Guest')
 const {BadRequestError, NotFoundError} = require('../../errors')
 const OrderItem = require('../../../models/OrderItem')
@@ -138,18 +140,14 @@ const payEvent=({context, redirect}, user) => {
      if (model!='event') {
        throw new BadRequestError(`${orderId} model is ${model}, expected 'event'`)
      }
-     return Promise.all([
-       UserSessionData.findOneAndUpdate({user: user._id},
-       {user: user._id},
-       {upsert: true, runValidators: true, new: true}),
-       Event.findById(order)
-     ])
-     .then(([usd, ev]) => {
-       usd.payments.push({event: order, amount: ev.price, date: moment()})
-       return usd.save()
-     })
-     .then(() => ({redirect}))
-  })
+     return Payment.create({event: order, event_member: user, member:user, amount:50, vat_amount:0})
+   })
+   .then(payment => {
+     return initiatePayment({amount: payment.amount, email: user.email})
+   })
+   .then(redirect => {
+     return ({redirect})
+   })
 }
 
 const payOrder=({context, redirect}, user) => {
@@ -166,7 +164,7 @@ const payOrder=({context, redirect}, user) => {
         }
         const remaining=booking.total_remaining
         const remaining_vat=booking.remaining_vat_amount
-        return Payment.create({booking, member:user, total_amount:booking.remaining_total, vat_amount:remaining_vat})
+        return Payment.create({booking, member:user, amount:booking.remaining_total, vat_amount:remaining_vat})
       })
       .then(() => ({redirect}))
   })
@@ -353,6 +351,7 @@ declareVirtualField({model: 'booking', field: 'total_net_price', instance: 'Numb
 declareVirtualField({model: 'booking', field: 'remaining_vat_amount', instance: 'Number', requires: 'items,payments'})
 
 declareVirtualField({model: 'payment', field: 'net_amount', instance: 'Number', requires: 'total_amount,vat_amount'})
+declareEnumField({model: 'payment', field: 'status', enumValues: PAYMENT_STATUS})
 
 
 const PRODUCT_MODELS=['product', 'cigar', 'drink', 'meal']

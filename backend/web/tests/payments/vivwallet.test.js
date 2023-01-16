@@ -9,7 +9,7 @@ describe('VivaWallet tests', () => {
   })
 
   test('Should initiate payment', async() => {
-    const url=await initiatePayment(100, 'sebastien.auvray@free.fr')
+    const url=await initiatePayment({amount: 100, email: 'sebastien.auvray@free.fr'})
     console.log(url)
     return expect(url).toMatch(/^https:\/\/demo.vivapayments.com\/web\/checkout\?ref=/)
   })
