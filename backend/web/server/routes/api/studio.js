@@ -38,6 +38,7 @@ const {
 const {getModels} = require('../../utils/database')
 const {ACTIONS} = require('../../utils/studio/actions')
 const {buildQuery, addComputedFields} = require('../../utils/database')
+const {getWebHookToken} = require('../../plugins/payment/vivaWallet')
 
 const router = express.Router()
 
@@ -249,8 +250,7 @@ router.post('/scormupdate', (req, res) => {
 
 router.get('/current-user', passport.authenticate('cookie', {session: false}), (req, res) => {
   return res.json(req.user)
-},
-)
+})
 
 router.post('/register', (req, res) => {
   const body=lodash.mapValues(req.body, v => JSON.parse(v))
@@ -261,6 +261,18 @@ router.post('/register', (req, res) => {
       return res.status(err.status||500).json(err.message || err)
     })
 
+})
+
+// Validate webhook
+router.get('/payment-hook', (req, res) => {
+  return getWebHookToken()
+    .then(token => {
+      return res.set('test-header', 'value').json({key: token})
+    })
+})
+
+router.post('/payment-hook', (req, res) => {
+  return res.json()
 })
 
 router.post('/:model', passport.authenticate('cookie', {session: false}), (req, res) => {
