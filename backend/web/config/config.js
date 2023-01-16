@@ -162,7 +162,7 @@ const SIRET = {
 };
 
 const getSibApiKey = () => {
-  return SIB_APIKEY;
+  return SIB_APIKEY
 };
 
 const canAlfredSelfRegister = () => {

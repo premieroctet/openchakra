@@ -3,7 +3,6 @@ const {isValidPhoneNumber} = require('libphonenumber-js')
 
 class RegExpParam extends RegExp {
 
-
   constructor(reg, repl) {
     super(reg)
     this.repl = repl

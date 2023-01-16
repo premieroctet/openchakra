@@ -1,44 +1,33 @@
-const {sendBillingToAlfred}=require('./mailing')
-
-const mongoose = require('mongoose')
-
-const BookingSchema=require('../models/Booking')
-const UserSchema=require('../models/User')
-
-const MONGOOSE_OPTIONS={
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  poolSize: 10,
-  useCreateIndex: true,
-  useFindAndModify: false,
-}
-
-let Booking=null
+const {
+  sendBookingRegister2Guest,
+  sendEventRegister2Admin,
+  sendEventRegister2Guest,
+  sendEventRegister2Member,
+  sendForgotPassword,
+  sendNewBookingToManager,
+  sendNewBookingToMember,
+  sendNewEvent,
+  sendNewMessage,
+  sendWelcomeRegister
+} = require('../../server/utils/studio/fumoir/mailing');
 
 describe('Mailing tests', () => {
 
-  beforeAll(() => {
-    return mongoose.connect('mongodb://localhost/test-myAlfred', MONGOOSE_OPTIONS)
-      .then(conn => {
-        User=conn.model('User', UserSchema)
-        Booking=conn.model('booking', BookingSchema)
-      })
-  })
-
-  afterAll(() => {
-    return mongoose.disconnect()
-  })
-
-  test('Send Alfred billing CC', () => {
-    return Booking.find()
-      .populate('alfred')
-      .populate('user')
-      .then(bookings => {
-        const alfBooking=bookings[0]
-        alfBooking.alfred.email='sebastien.auvray@alfredplace.io'
-        alfBooking.user.email='sebastien.auvray@alfredplace.io'
-        return sendBillingToAlfred(alfBooking)
-      })
+  test('Send Mails', async () => {
+    const user1={email: 'sebastien.auvray@free.fr', locker:42}
+    const booking={booking_user: user1}
+    await sendNewBookingToMember(booking)
+    await sendNewBookingToManager(booking, {email: 'sebastien.auvray@free.fr'})
+    /**
+    await sendNewEvent()
+    await sendWelcomeRegister()
+    await sendNewMessage()
+    await sendEventRegister2Member()
+    await sendEventRegister2Guest()
+    await sendBookingRegister2Guest()
+    await sendEventRegister2Admin()
+    await sendForgotPassword()
+    */
   })
 
 })

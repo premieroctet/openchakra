@@ -170,8 +170,9 @@ const payOrder=({context, redirect, color}, user) => {
         if (booking.remaining_total==0) {
           throw new BadRequestError(`Réservation ${bookingId} déjà payée`)
         }
+        console.log(`Remaining total: ${booking.remaining_total}`)
         const params={
-          booking, member:user,
+          booking: booking._id, member:user._id,
           amount:booking.remaining_total, vat_amount:booking.remaining_vat_amount
         }
         console.log(`Params:${JSON.stringify(params)}`)

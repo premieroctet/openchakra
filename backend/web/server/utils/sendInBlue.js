@@ -7,6 +7,7 @@ const SIB_API_KEY_V3 = getSibApiKey()
 class SIB_V3 {
 
   constructor() {
+    console.log(`COnstructing with ${SIB_API_KEY_V3}`)
     let defaultClient = SibApiV3Sdk.ApiClient.instance
     let apiKey = defaultClient.authentications['api-key']
     apiKey.apiKey = SIB_API_KEY_V3
@@ -15,7 +16,7 @@ class SIB_V3 {
     this.smsInstance = new SibApiV3Sdk.TransactionalSMSApi()
   }
 
-  sendMail(index, email, ccs, data, attachment=null) {
+  sendMail({index, email, ccs, data, attachment=null}) {
     console.log(`Sending mail template #${index} to ${email} with data ${JSON.stringify(data)}, attachment:${attachment ? 'yes' : 'no'}`)
 
     let emailData = new SibApiV3Sdk.SendSmtpEmail()
@@ -37,7 +38,7 @@ class SIB_V3 {
         return true
       })
       .catch(err => {
-        console.error(err)
+        console.error(err.response?.text || err)
         console.error(`Error while sending ${JSON.stringify(lodash.omit(emailData, 'attachment'))}:${JSON.stringify(err.response.body)}`)
         return false
       })
