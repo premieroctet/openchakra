@@ -32,11 +32,6 @@ const UserSessionDataSchema = new Schema({
       type: Number
     },
   }],
-  payments: [{
-    type: Schema.Types.ObjectId,
-    ref: 'payment',
-    required: true,
-  }],
 }, schemaOptions)
 
 module.exports = UserSessionDataSchema

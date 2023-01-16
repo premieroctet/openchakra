@@ -52,7 +52,7 @@ const getWebHookToken = () => {
     })
 }
 
-const initiatePayment = ({amount, email}) => {
+const initiatePayment = ({amount, email, color}) => {
   const url=new URL('/checkout/v2/orders', 'https://demo-api.vivapayments.com').toString()
 
   return getAuthToken()
@@ -64,8 +64,13 @@ const initiatePayment = ({amount, email}) => {
     })
     .then(res => {
       const code=res.data.orderCode
-      const payment_url=new URL('/web/checkout?ref=%s', PAYMENT_DOMAIN).toString()
-      return util.format(payment_url, code)
+      const payment_url=new URL('/web/checkout', PAYMENT_DOMAIN)
+      payment_url.searchParams.append('ref', code)
+      if (color) {
+        payment_url.searchParams.append('color', color.replace(/^#/, ''))
+      }
+      console.log(`Payment:${payment_url}`)
+      return payment_url.toString()
     })
 }
 

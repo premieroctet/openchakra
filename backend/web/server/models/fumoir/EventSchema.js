@@ -27,12 +27,6 @@ const EventSchema = new Schema(
       type: Date,
       required: false,
     },
-    booking_user: {
-      // User who booked
-      type: Schema.Types.ObjectId,
-      ref: 'user',
-      required: false,
-    },
     members: [
       {
         type: Schema.Types.ObjectId,

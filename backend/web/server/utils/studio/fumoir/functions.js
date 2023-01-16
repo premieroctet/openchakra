@@ -1,8 +1,10 @@
 const {
   EVENT_STATUS,
+  EVENT_VAT_RATE,
   FUMOIR_MEMBER,
   MAX_EVENT_GUESTS,
   PAYMENT_STATUS,
+  PAYMENT_SUCCESS,
   PLACES,
   ROLES,
 } = require('../../../../utils/fumoir/consts');
@@ -71,7 +73,6 @@ const inviteGuest = ({eventOrBooking, email, phone}, user) => {
             }
             // Must not invite too many people
             const actualGuestsCount=r.guests.filter(g => g.event._id.toString()==eventOrBooking).length
-            console.log(`Dejà ${actualGuestsCount} invités`)
             if (actualGuestsCount+1>MAX_EVENT_GUESTS) {
               throw new BadRequestError(`Le nombre d'invités maximum est ${MAX_EVENT_GUESTS} pour un événement`)
             }
@@ -127,30 +128,37 @@ const removeOrderItem = ({order, item}) => {
     .then(() => {
       return OrderItem.findByIdAndRemove(item)
     })
-    .then(res => {
-      console.log(res)
-      return res
-    })
 }
 
-const payEvent=({context, redirect}, user) => {
-  const order=context
-  return getModel(order)
+const payEvent=({context, redirect, color}, user) => {
+  const eventId=context
+  return getModel(eventId, 'event')
    .then(model => {
-     if (model!='event') {
-       throw new BadRequestError(`${orderId} model is ${model}, expected 'event'`)
+     return Promise.all([
+       Event.findOne({_id: eventId, members: user}),
+       UserSessionData.findOne({user: user, 'guests_count.event': eventId}),
+       Payment.find({event: eventId, event_member: user, status: PAYMENT_SUCCESS})
+     ])
+   })
+   .then(([ev, usd, payments]) => {
+     if (!ev) { return false }
+     const guests_count=usd ? usd.guests_count.find(gc => gc.event._id.toString()==eventId).count : 0
+     const remainingToPay=ev.price*guests_count-lodash(payments).map('amount').sum()
+     if (remainingToPay==0) {
+       throw new BadRequestError(`Il n'y a rien à payer sur cet événement'`)
      }
-     return Payment.create({event: order, event_member: user, member:user, amount:50, vat_amount:0})
+     const vat=EVENT_VAT_RATE*remainingToPay
+     return Payment.create({event: eventId, event_member: user, member:user, amount:remainingToPay, vat_amount:vat})
    })
    .then(payment => {
-     return initiatePayment({amount: payment.amount, email: user.email})
+     return initiatePayment({amount: payment.amount, email: user.email, color})
    })
    .then(redirect => {
      return ({redirect})
    })
 }
 
-const payOrder=({context, redirect}, user) => {
+const payOrder=({context, redirect, color}, user) => {
   const bookingId=context
   return getModel(bookingId, 'booking')
    .then(model => {
@@ -162,11 +170,17 @@ const payOrder=({context, redirect}, user) => {
         if (booking.remaining_total==0) {
           throw new BadRequestError(`Réservation ${bookingId} déjà payée`)
         }
-        const remaining=booking.total_remaining
-        const remaining_vat=booking.remaining_vat_amount
-        return Payment.create({booking, member:user, amount:booking.remaining_total, vat_amount:remaining_vat})
+        return Payment.create({
+          booking, member:user,
+          amount:booking.total_remaining, vat_amount:remaining_vat
+        })
       })
-      .then(() => ({redirect}))
+      .then(payment => {
+        return initiatePayment({amount: payment.amount, email: user.email, color})
+      })
+      .then(redirect => {
+        return ({redirect})
+      })
   })
 }
 
@@ -425,7 +439,6 @@ const setEventGuestsCount = ({id, attribute, value,user}) => {
   }
   return getEventGuests(user, null, {_id: id})
     .then(guests => {
-      console.log(`INvitations count:${guests.length}`)
       if (guests.length>value) {
         throw new BadRequestError(`Vous avez déjà envoyé ${guests.length} invitations`)
       }

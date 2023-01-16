@@ -155,6 +155,17 @@ export const ACTIONS: IActions = {
     options: {
       redirect: ({ pages }) =>
         Object.values(pages).map(p => ({ key: p.pageId, label: p.pageName })),
+      color: ({ pages }) => {
+        const colors=lodash(pages).values()
+          .map(page => page.components).map(components => Object.values(components)).flatten()
+          .map(component => ['color', 'backgroundColor', 'focusBorderColor'].map(color => component.props[color])).flatten()
+          .filter(color => !!color && /^#/.test(color))
+          .map(color => color.toLowerCase())
+          .uniq().sort()
+          .map(color => ({key: color, label: color}))
+          .value()
+        return colors
+      }
     },
   },
   payOrder: {
@@ -162,6 +173,17 @@ export const ACTIONS: IActions = {
     options: {
       redirect: ({ pages }) =>
         Object.values(pages).map(p => ({ key: p.pageId, label: p.pageName })),
+      color: ({ pages }) => {
+        const colors=lodash(pages).values()
+        .map(page => page.components).map(components => Object.values(components)).flatten()
+        .map(component => ['color', 'backgroundColor', 'focusBorderColor'].map(color => component.props[color])).flatten()
+        .filter(color => !!color && /^#/.test(color))
+        .map(color => color.toLowerCase())
+        .uniq().sort()
+        .map(color => ({key: color, label: color}))
+        .value()
+        return colors
+      }
     },
   },
   cashOrder: {
