@@ -172,10 +172,18 @@ const payOrder=({context, redirect, color}, user) => {
         }
         const params={
           booking, member:user,
+<<<<<<< HEAD
           amount:booking.remaining_total, vat_amount:booking.remaining_vat_amount
         }
         console.log(`Params:${JSON.stringify(params)}`)
         return Payment.create(params)
+||||||| 0c5b86fad
+          amount:booking.total_remaining, vat_amount:remaining_vat
+        })
+=======
+          amount:booking.total_remaining, vat_amount:booking.remaining_vat_amount
+        })
+>>>>>>> 3918bda0d1bac5827f95d2c1c3e2774a5981186f
       })
       .then(payment => {
         return initiatePayment({amount: payment.amount, email: user.email, color})
