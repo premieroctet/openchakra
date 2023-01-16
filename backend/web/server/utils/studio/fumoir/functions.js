@@ -170,10 +170,12 @@ const payOrder=({context, redirect, color}, user) => {
         if (booking.remaining_total==0) {
           throw new BadRequestError(`Réservation ${bookingId} déjà payée`)
         }
-        return Payment.create({
+        const params={
           booking, member:user,
           amount:booking.remaining_total, vat_amount:booking.remaining_vat_amount
-        })
+        }
+        console.log(`Params:${JSON.stringify(params)}`)
+        return Payment.create(params)
       })
       .then(payment => {
         return initiatePayment({amount: payment.amount, email: user.email, color})
