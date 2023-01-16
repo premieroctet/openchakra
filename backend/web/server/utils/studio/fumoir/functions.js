@@ -173,7 +173,7 @@ const payOrder=({context, redirect, color}, user) => {
         const params={
           booking, member:user,
           amount:booking.remaining_total, vat_amount:booking.remaining_vat_amount
-        }
+        })
         console.log(`Params:${JSON.stringify(params)}`)
         return Payment.create(params)
       })
