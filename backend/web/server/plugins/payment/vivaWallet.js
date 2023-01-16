@@ -1,4 +1,3 @@
-const util=require('util')
 const axios=require('axios')
 const {getVivaWalletConfig}=require('../../../config/config')
 
@@ -7,20 +6,20 @@ const vvConfig=getVivaWalletConfig()
 const LIVE_DOMAIN='https://www.vivapayments.com'
 
 const AUTH_TOKEN_DOMAIN=vvConfig.production ? LIVE_DOMAIN: 'https://demo-accounts.vivapayments.com'
-const PAYMENT_DOMAIN=vvConfig.production ? LIVE_DOMAIN: 'https://demo.vivapayments.com'
+const PAYMENT_DOMAIN=vvConfig.production ? LIVE_DOMAIN: 'https://demo-api.vivapayments.com'
 const WEBHOOK_DOMAIN=vvConfig.production ? LIVE_DOMAIN: 'https://demo.vivapayments.com'
+const PAYMENT_PAGE_DOMAIN=vvConfig.production ? LIVE_DOMAIN: 'https://demo.vivapayments.com'
 // https://developer.vivawallet.com/smart-checkout/smart-checkout-integration/#step-2-redirect-the-customer-to-smart-checkout-to-pay-the-payment-order
 
 const getAuthToken = () => {
   const url=new URL('/connect/token', AUTH_TOKEN_DOMAIN).toString()
-  // const url=new URL('/connect/token', 'https://demo.vivapayments.com').toString()
   const auth=`${vvConfig.clientId}:${vvConfig.clientSecret}`
   const base64Auth=Buffer.from(auth).toString('base64')
   const params = new URLSearchParams()
   params.append('grant_type', 'client_credentials')
 
   return axios.post(url,
-    'grant_type=client_credentials',
+    params,
     {
       headers: {
         Authorization: `Basic ${base64Auth}`,
@@ -28,10 +27,9 @@ const getAuthToken = () => {
       },
     },
   )
-    .then(res => res.data.access_token)
-    .catch(err => {
-      console.error(err.response)
-      throw err
+    .then(res => {
+      console.log(`Got token ${JSON.stringify(res.data, null, 2)}`)
+      return res.data.access_token
     })
 }
 
@@ -42,19 +40,15 @@ const getWebHookToken = () => {
 
   return axios.get(url,
     {
-      headers: {
-        Authorization: `Basic ${base64Auth}`,
-      },
-    },
-  )
-    .then(res => {
-      return res.data.Key
+      headers: {Authorizations: `Basic ${base64Auth}`},
     })
+    .then(({data: {Key}}) => Key)
 }
 
 const initiatePayment = ({amount, email, color}) => {
-  const url=new URL('/checkout/v2/orders', 'https://demo-api.vivapayments.com').toString()
+  const url=new URL('/checkout/v2/orders', PAYMENT_DOMAIN).toString()
 
+  console.log(`POSTing ${url},amount:${amount},email:${email}`)
   return getAuthToken()
     .then(token => {
       return axios.post(url,
@@ -62,14 +56,14 @@ const initiatePayment = ({amount, email, color}) => {
         {headers: {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'}},
       )
     })
-    .then(res => {
-      const code=res.data.orderCode
-      const payment_url=new URL('/web/checkout', PAYMENT_DOMAIN)
-      payment_url.searchParams.append('ref', code)
+    .then(({data: {code}}) => {
+      const payment_url=new URL('/web/checkout', PAYMENT_PAGE_DOMAIN)
+      /** As of https://developer.vivawallet.com/smart-checkout/smart-checkout-integration/#step-2-redirect-the-customer-to-smart-checkout-to-pay-the-payment-order
+       Should pass code as string */
+      payment_url.searchParams.append('ref', code.toString())
       if (color) {
         payment_url.searchParams.append('color', color.replace(/^#/, ''))
       }
-      console.log(`Payment:${payment_url}`)
       return payment_url.toString()
     })
 }

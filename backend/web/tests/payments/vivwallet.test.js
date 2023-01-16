@@ -4,18 +4,18 @@ jest.setTimeout(20000)
 
 describe('VivaWallet tests', () => {
 
-  test('Should return token', async() => {
-    expect(getAuthToken()).resolves.toMatch(/.+/)
+  test('Should return token', () => {
+    return expect(getAuthToken()).resolves.toMatch(/.+/)
   })
 
-  test('Should initiate payment', async() => {
-    const url=await initiatePayment({amount: 100, email: 'sebastien.auvray@free.fr'})
-    console.log(url)
-    return expect(url).toMatch(/^https:\/\/demo.vivapayments.com\/web\/checkout\?ref=/)
-  })
-
-  test('Should get webhook token', async() => {
+  test('Should get webhook token', () => {
     return expect(getWebHookToken()).resolves.toMatch(/.+/)
+  })
+
+  test.only('Should initiate payment', () => {
+    const BODY={amount: 100, email: 'sebastien.auvray@free.fr'}
+    const EXPECTED=/^https:\/\/demo.vivapayments.com\/web\/checkout\?ref=/
+    return expect(initiatePayment(BODY)).resolves.toMatch(EXPECTED)
   })
 
 
