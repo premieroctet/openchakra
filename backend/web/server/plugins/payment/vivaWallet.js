@@ -1,4 +1,5 @@
 const axios=require('axios')
+const util=require('util')
 const {getVivaWalletConfig}=require('../../../config/config')
 
 const vvConfig=getVivaWalletConfig()
@@ -27,10 +28,7 @@ const getAuthToken = () => {
       },
     },
   )
-    .then(res => {
-      console.log(`Got token ${JSON.stringify(res.data, null, 2)}`)
-      return res.data.access_token
-    })
+    .then(res => res.data.access_token)
 }
 
 const getWebHookToken = () => {
@@ -40,7 +38,7 @@ const getWebHookToken = () => {
 
   return axios.get(url,
     {
-      headers: {Authorizations: `Basic ${base64Auth}`},
+      headers: {Authorization: `Basic ${base64Auth}`},
     })
     .then(({data: {Key}}) => Key)
 }
@@ -48,7 +46,6 @@ const getWebHookToken = () => {
 const initiatePayment = ({amount, email, color}) => {
   const url=new URL('/checkout/v2/orders', PAYMENT_DOMAIN).toString()
 
-  console.log(`POSTing ${url},amount:${amount},email:${email}`)
   return getAuthToken()
     .then(token => {
       return axios.post(url,
@@ -56,7 +53,8 @@ const initiatePayment = ({amount, email, color}) => {
         {headers: {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'}},
       )
     })
-    .then(({data: {code}}) => {
+    .then(res => {
+      const code=res.data.orderCode
       const payment_url=new URL('/web/checkout', PAYMENT_PAGE_DOMAIN)
       /** As of https://developer.vivawallet.com/smart-checkout/smart-checkout-integration/#step-2-redirect-the-customer-to-smart-checkout-to-pay-the-payment-order
        Should pass code as string */
