@@ -107,7 +107,7 @@ const DataSourcePanel: React.FC = () => {
 
   console.log(`Model is ${JSON.stringify(model)}`)
   return (
-    <Accordion>
+    <Accordion allowToggle={true}>
       <AccordionContainer title="Data source">
         <FormControl htmlFor="dataSource" label="Datasource">
           <Select
