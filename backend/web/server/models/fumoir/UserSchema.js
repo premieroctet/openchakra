@@ -95,6 +95,9 @@ const UserSchema = new Schema(
     subscription_end: {
       type: Date,
     },
+    subscription_price: {
+      type: Number,
+    },
     resetToken: {
       type: Schema.Types.ObjectId,
       ref: 'resetToken',
