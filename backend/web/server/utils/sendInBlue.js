@@ -7,7 +7,6 @@ const SIB_API_KEY_V3 = getSibApiKey()
 class SIB_V3 {
 
   constructor() {
-    console.log(`COnstructing with ${SIB_API_KEY_V3}`)
     let defaultClient = SibApiV3Sdk.ApiClient.instance
     let apiKey = defaultClient.authentications['api-key']
     apiKey.apiKey = SIB_API_KEY_V3
@@ -32,7 +31,7 @@ class SIB_V3 {
     }
     Object.assign(emailData.params, data)
 
-    this.smtpInstance.sendTransacEmail(emailData)
+    return this.smtpInstance.sendTransacEmail(emailData)
       .then(data => {
         console.log(`SMTP called successfully with params ${JSON.stringify({...emailData, attachment: !!emailData.attachment})}. Result: ${JSON.stringify(data)}`)
         return true

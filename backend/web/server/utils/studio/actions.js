@@ -1,3 +1,4 @@
+const { sendNewMessage } = require('./fumoir/mailing');
 const {
   buildPopulates,
   getModel,
@@ -85,6 +86,11 @@ let ACTIONS = {
 
   sendMessage: ({destinee, contents}, sender) => {
     return Message.create({sender: sender._id, receiver: destinee, content: contents})
+      .then(m => Message.findById(m._id).populate('sender').populate('receiver'))
+      .then(m => {
+        sendNewMessage({member: m.receiver, partner: m.sender })
+        return  m
+      })
   },
 
   createPost: ({contents, media}, sender) => {

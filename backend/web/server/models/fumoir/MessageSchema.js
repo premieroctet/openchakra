@@ -28,6 +28,12 @@ const MessageSchema = new Schema({
   },
 }, schemaOptions)
 
+MessageSchema.methods.getPartner = function(user) {
+  const userId=typeof(user)=='string' ? user : user._id.toString()
+  return this.sender._id.toString()==userId ?
+    this.receiver: this.sender
+}
+
 MessageSchema.plugin(mongooseLeanVirtuals)
 
 module.exports = MessageSchema

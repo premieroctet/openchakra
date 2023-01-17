@@ -1,6 +1,12 @@
 const {
+  sendBookingRegister2Guest,
+  sendEventRegister2Admin,
+  sendEventRegister2Guest
+} = require('./mailing');
+const {
   EVENT_STATUS,
   EVENT_VAT_RATE,
+  FUMOIR_ADMIN,
   FUMOIR_MEMBER,
   MAX_EVENT_GUESTS,
   PAYMENT_STATUS,
@@ -44,6 +50,7 @@ const inviteGuest = ({eventOrBooking, email, phone}, user) => {
       if (modelName=='booking') {
         return Booking.findById(eventOrBooking)
           .populate('guests')
+          .populate('booking_user')
           .then(booking => {
             if (booking.guests.find(g => g.email==email)) {
               throw new BadRequestError(`${email} est déjà invité pour cet événement`)
@@ -55,6 +62,8 @@ const inviteGuest = ({eventOrBooking, email, phone}, user) => {
               .then(guest => {
                 booking.guests.push(guest._id)
                 return booking.save()
+                .then(b => Promise.allSettled([sendBookingRegister2Guest({booking, guest})]))
+                  .then(() => booking)
               })
           })
         return Guest.create({email, phone})
@@ -84,7 +93,9 @@ const inviteGuest = ({eventOrBooking, email, phone}, user) => {
                 return Guest.create({email, phone})
                   .then(guest => {
                     r.guests.push({event: eventOrBooking, guest: guest._id})
-                    return r.save()
+                    return Event.findById(eventOrBooking)
+                      .then(ev => Promise.allSettled([sendEventRegister2Guest({event:ev, member:user, guest: guest})]))
+                      .then(()=> r.save())
                   })
               })
           })
@@ -216,6 +227,8 @@ addAction('cashOrder', cashOrder)
 const registerToEvent = ({event, user}) => {
   console.log(`Adding ${user} to event ${event}`)
   return Event.findByIdAndUpdate(event, {$addToSet: {members: user}})
+    .then(ev => Promise.all([Event.findById(event), User.find({role: FUMOIR_ADMIN})]))
+    .then(([ev, admins]) => Promise.allSettled(admins.map(a =>sendEventRegister2Admin({event:ev, member:user, admin:a}))))
 }
 
 const preCreate = ({model, params}) => {

@@ -10,9 +10,7 @@ const {SIB} = require('./sendInBlue')
 const SMS_CONTENTS = {
 }
 
-const sendNotification = ({notification, destinee, ccs, params, attachment=null}) => {
-
-  console.log(`Sending notif ${notification} to ${JSON.stringify(destinee)}(${destinee._id}) using ${JSON.stringify(params)}`)
+const sendNotification = ({notification, destinee, ccs, params, attachment}) => {
 
   let enable_mails = true
   let enable_sms = true
@@ -40,7 +38,7 @@ const sendNotification = ({notification, destinee, ccs, params, attachment=null}
       resultSms = SIB.sendSms(destinee.phone, smsContents)
     }
   }
-  return resultMail && resultSms
+  return resultMail
 }
 
 

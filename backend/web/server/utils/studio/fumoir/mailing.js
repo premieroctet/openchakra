@@ -1,3 +1,5 @@
+const { datetime_str } = require('../../../../utils/dateutils');
+const moment=require('moment')
 const { sendNotification } = require('../../mailing');
 
 const SIB_IDS={
@@ -14,26 +16,26 @@ const SIB_IDS={
 }
 
 // #1
-const sendNewBookingToMember = booking => {
-  sendNotification({
+const sendNewBookingToMember = ({booking}) => {
+  return sendNotification({
     notification: SIB_IDS.NEW_BOOKING_2_MEMBER,
     destinee: booking.booking_user,
     params: {
       member_firstname: booking.booking_user.firstname,
-      reservation_date: booking.start_date,
+      booking_date: datetime_str(booking.start_date),
       duration: booking.duration,
-    }
+    },
   });
 };
 
 // #2
-const sendNewBookingToManager = (booking, manager) => {
-  sendNotification({
+const sendNewBookingToManager = ({booking, manager}) => {
+  return sendNotification({
     notification: SIB_IDS.NEW_BOOKING_2_MANAGER,
     destinee: manager,
     params: {
       member_fullname: booking.booking_user.full_name,
-      reservation_date: booking.start_date,
+      booking_date: datetime_str(booking.start_date),
       duration: booking.duration,
       locker: booking.booking_user.locker,
     }
@@ -41,85 +43,102 @@ const sendNewBookingToManager = (booking, manager) => {
 }
 
 // #3
-const sendNewEvent = (event, destinee) => {
-    sendNotification({
+const sendNewEvent = ({event, member}) => {
+    return sendNotification({
       notification: SIB_IDS.NEW_EVENT_AVAILABLE,
-      destinee: destinee,
+      destinee: member,
       params: {
-        event_date: event.start_date,
+        event_tile: event.title,
+        event_date: datetime_str(event.start_date),
+        member_firstname: member.firstname,
       }
     })
 }
 
 // #4
-const sendWelcomeRegister = destinee => {
-    sendNotification({
+const sendWelcomeRegister = ({member, password}) => {
+    return sendNotification({
       notification: SIB_IDS.WELCOME_REGISTER,
-      destinee: destinee,
+      destinee: member,
       params: {
-        login: destinee.email,
+        member_firstname: member.firstname,
+        login: member.email,
+        password: password,
       }
     });
 };
 
 // #5
-const sendNewMessage = (destinee, partner) => {
-  sendNotification({
+const sendNewMessage = ({member, partner}) => {
+  return sendNotification({
     notification: SIB_IDS.NEW_MESSAGE,
-    destinee: destinee,
+    destinee: member,
     params: {
+      member_firstname: member.firstname,
       partner_firstname: partner.firstname,
-
     }
   });
 };
 
 
 // #6
-const sendEventRegister2Member = (event, destinee) => {
-  sendNotification({
+const sendEventRegister2Member = ({event, member}) => {
+  return sendNotification({
     notification: SIB_IDS.EVENT_REGISTER_2_MEMBER,
-    destinee: destinee,
+    destinee: member,
     params: {
+      member_firstname: member.firstname,
+      event_date: datetime_str(event.start_date),
+      duration: event.duration,
     }
   })
 }
 
 // #7
-const sendEventRegister2Guest = (event, destinee) => {
-  sendNotification({
+const sendEventRegister2Guest = ({event, member, guest}) => {
+  return sendNotification({
     notification: SIB_IDS.EVENT_REGISTER_2_GUEST,
-    destinee: destinee,
+    destinee: guest,
     params: {
+      member_fullname: member.full_name,
+      event_date: datetime_str(event.start_date),
     }
   })
 }
 
 // #8
-const sendBookingRegister2Guest = (event, destinee) => {
-  sendNotification({
+const sendBookingRegister2Guest = ({booking, guest}) => {
+  return sendNotification({
     notification: SIB_IDS.BOOKING_REGISTER_2_GUEST,
-    destinee: destinee,
+    destinee: guest,
     params: {
+      member_fullname: booking.booking_user.full_name,
+      booking_date: datetime_str(booking.start_date),
+      duration: booking.duration,
     }
   })
 }
 
 // #9
-const sendEventRegister2Admin = (event, destinee) => {
-  sendNotification({
+const sendEventRegister2Admin = ({event, member, admin}) => {
+  return sendNotification({
     notification: SIB_IDS.EVENT_REGISTER_2_ADMIN,
-    destinee: destinee,
+    destinee: admin,
     params: {
+      event_title: event.title,
+      member_fullname: member.full_name,
+      event_date: datetime_str(event.start_date),
     }
   })
 }
 
-const sendForgotPassword = user => {
-  sendNotification({
+// #10
+const sendForgotPassword = ({user}) => {
+  return sendNotification({
     notification: SIB_IDS.FORGOT_PASSWORD,
-    destinee: destinee,
+    destinee: user,
     params: {
+      member_firstname: user.firstname,
     }
   })
 }

@@ -133,7 +133,6 @@ BookingSchema.virtual('total_net_price').get(function() {
 BookingSchema.virtual('remaining_total').get(function() {
   const already_paid=lodash(this.payments).filter(p=>p.status==PAYMENT_SUCCESS).map('total_amount').sum()
   const total=lodash(this.items).map('total_price').sum()
-  console.log(`payments:${JSON.stringify(this.payments)}, already paid:${already_paid},total:${total}`)
   return total-already_paid
 })
 

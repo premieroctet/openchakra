@@ -3,7 +3,7 @@ const {extendMoment} = require('moment-range')
 const isEmpty = require('../server/validation/is-empty')
 const {MONTH_PERIOD} = require('./consts.js')
 moment = extendMoment(moment)
-
+moment.locale('fr')
 
 const DAYS = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
 
@@ -66,12 +66,20 @@ const getDeadLine = deadline => {
   return m
 }
 
+const datetime_str = datetime => {
+  return `${moment(datetime).format('LLLL')}`
+}
+
+const date_str = datetime => {
+  return `${moment(datetime).format('L')}`
+}
+
 const booking_datetime_str = booking => {
-  return `Le ${moment(booking.prestation_date).format('LLLL')}`
+  return datetime_str(booking.prestation_date)
 }
 
 const booking_date_str = booking => {
-  return `Le ${moment(booking.prestation_date).format('L')}`
+  return date_str(booking.prestation_date)
 }
 
 const getDefaultAvailability = () => {
@@ -194,4 +202,5 @@ module.exports = {
   getAvailabilityForDate, combineTimelapses, timelapsesSetToArray,
   getPeriodStart, getExcludedDays, getExcludedTimes,
   booking_date_str,
+  datetime_str, datetime_str,
 }
