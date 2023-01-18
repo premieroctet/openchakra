@@ -131,7 +131,7 @@ BookingSchema.virtual('total_net_price').get(function() {
 })
 
 BookingSchema.virtual('remaining_total').get(function() {
-  const already_paid=lodash(this.payments).filter(p=>p.status==PAYMENT_SUCCESS).map('total_amount').sum()
+  const already_paid=lodash(this.payments).filter(p=>p.status==PAYMENT_SUCCESS).map('amount').sum()
   const total=lodash(this.items).map('total_price').sum()
   return total-already_paid
 })
@@ -144,13 +144,13 @@ BookingSchema.virtual('remaining_vat_amount').get(function() {
 })
 
 BookingSchema.virtual('paid').get(function() {
-  const already_paid=lodash(this.payments).filter(p=>p.status==PAYMENT_SUCCESS).map('total_amount').sum()
+  const already_paid=lodash(this.payments).filter(p=>p.status==PAYMENT_SUCCESS).map('amount').sum()
   const total=lodash(this.items).map('total_price').sum()
   return already_paid==total
 })
 
 BookingSchema.virtual('paid_str').get(function() {
-  const already_paid=lodash(this.payments).filter(p=>p.status==PAYMENT_SUCCESS).map('total_amount').sum()
+  const already_paid=lodash(this.payments).filter(p=>p.status==PAYMENT_SUCCESS).map('amount').sum()
   const total=lodash(this.items).map('total_price').sum()
   const res=already_paid==total ? PAID_STR : TO_PAY_STR
   return res

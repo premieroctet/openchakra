@@ -184,7 +184,8 @@ const payOrder=({context, redirect, color}, user) => {
         console.log(`Remaining total: ${booking.remaining_total}`)
         const params={
           booking: booking._id, member:user._id,
-          amount:booking.remaining_total, vat_amount:booking.remaining_vat_amount
+          amount:booking.remaining_total, vat_amount:booking.remaining_vat_amount,
+          status: PAYMENT_SUCCESS,
         }
         console.log(`Params:${JSON.stringify(params)}`)
         return Payment.create(params)
@@ -211,10 +212,11 @@ const cashOrder=({context, guest, amount, redirect}, user) => {
           throw new BadRequestError(`Il ne reste que ${booking.remaining_total}€ à payer`)
         }
         const customer=guest ? {guest}: {member: user}
-        const remaining=booking.total_remaining
+        console.log(`total_remaining:${booking.total_remaining},remaining_vat:${booking.remaining_vat_amount}`)
+        const remaining=booking.remaining_total
         const remaining_vat=booking.remaining_vat_amount
-        const payment_tva=amount*remaining_vat/remaining_total
-        return Payment.create({booking, ...customer, total_amount:amount, vat_amount:payment_tva})
+        const payment_tva=amount*remaining_vat/remaining
+        return Payment.create({booking, ...customer, amount:amount, vat_amount:payment_tva, status: PAYMENT_SUCCESS})
       })
       .then(() => ({redirect}))
   })

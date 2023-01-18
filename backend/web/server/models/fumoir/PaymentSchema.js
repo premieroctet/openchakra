@@ -60,7 +60,7 @@ const PaymentSchema = new Schema({
 )
 
 PaymentSchema.virtual('net_amount').get(function(){
-  return this.total_amount-this.vat_amount
+  return this.amount-this.vat_amount
 })
 
 module.exports = PaymentSchema

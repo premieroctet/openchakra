@@ -71,7 +71,7 @@ const isActionAllowed = ({action, dataId, user}) => {
     return Booking.findById(dataId)
       .populate('items')
       .populate('payments')
-      .then(o => o?.paid==false)
+      .then(o => o.remaining_total>0)
   }
   return Promise.resolve(true)
 }
