@@ -208,7 +208,9 @@ export const ACTIONS = {
     return axios.post(url, body)
       .then(res => {
         if (res.data.redirect) {
-          window.location=`/${res.data.redirect}`
+          let url=res.data.redirect
+          url=/^http/.test(url) ? url : `/${url}`
+          window.location=url
         }
       })
   },

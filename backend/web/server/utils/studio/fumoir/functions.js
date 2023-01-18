@@ -159,13 +159,19 @@ const payEvent=({context, redirect, color}, user) => {
        throw new BadRequestError(`Il n'y a rien à payer sur cet événement'`)
      }
      const vat=EVENT_VAT_RATE*remainingToPay
-     return Payment.create({event: eventId, event_member: user, member:user, amount:remainingToPay, vat_amount:vat})
+     const params={
+       event: eventId, event_member: user, member:user, amount:remainingToPay,
+       vat_amount:vat,
+       status: PAYMENT_SUCCESS,
+     }
+     return Payment.create(params)
    })
    .then(payment => {
      return initiatePayment({amount: payment.amount, email: user.email, color})
-   })
-   .then(redirect => {
-     return ({redirect})
+       .then(({orderCode, redirect}) => {
+         return Payment.findByIdAndUpdate(payment._id, {orderCode})
+           .then(p => ({redirect}))
+       })
    })
 }
 
@@ -187,14 +193,14 @@ const payOrder=({context, redirect, color}, user) => {
           amount:booking.remaining_total, vat_amount:booking.remaining_vat_amount,
           status: PAYMENT_SUCCESS,
         }
-        console.log(`Params:${JSON.stringify(params)}`)
         return Payment.create(params)
       })
       .then(payment => {
         return initiatePayment({amount: payment.amount, email: user.email, color})
-      })
-      .then(redirect => {
-        return ({redirect})
+          .then(({orderCode, redirect}) => {
+            return Payment.findByIdAndUpdate(payment._id, {orderCode})
+              .then(p => ({redirect}))
+          })
       })
   })
 }

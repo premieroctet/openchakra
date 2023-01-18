@@ -49,6 +49,11 @@ const PaymentSchema = new Schema({
     min: 0,
     required: true,
   },
+  // Viva Wallet order code
+  orderCode: {
+    type: String,
+    required: false,
+  },
   status: {
     type: String,
     enum: Object.keys(PAYMENT_STATUS),

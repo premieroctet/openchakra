@@ -62,7 +62,7 @@ const initiatePayment = ({amount, email, color}) => {
       if (color) {
         payment_url.searchParams.append('color', color.replace(/^#/, ''))
       }
-      return payment_url.toString()
+      return {orderCode:code, redirect:payment_url.toString()}
     })
 }
 
