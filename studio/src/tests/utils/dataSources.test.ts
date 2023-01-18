@@ -48,10 +48,10 @@ describe('DataSources tests', () => {
     return expect(fields).toEqual(EXPECTED)
   })
 
-  test.only('Get fields for Select with dataSource and subDataSource', () => {
-    const components=page4Select.pages['page-L9QSPE0HX8JV8'].components
+  test('Get fields for Select with dataSource and subDataSource', () => {
+    const components=page4Select.pages['page-L9QSPE0HX8JV2'].components
     // @ts-ignore
-    const EXPECTED = ['members', 'members.banner', 'members.creation_date']
+    const EXPECTED = ['guests.email']
     // @ts-ignore
     const fields:String[] = getFieldsForDataProvider('root', components)
     return expect(fields).toEqual(EXPECTED)

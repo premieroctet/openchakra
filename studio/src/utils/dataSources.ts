@@ -207,7 +207,12 @@ const computeDataFieldName = (
     attrs.push(component.props.attribute)
   }
   if (component.props.subDataSource==dataSourceId) {
-    attrs.push(component.props.subAttribute)
+    if (component.props.subAttribute) {
+        attrs.push(`${component.props.subAttribute}.${component.props.subAttributeDisplay}`)
+    }
+    else {
+      attrs.push(component.props.subAttributeText)
+    }
   }
 
   if (attrs.length==0) {

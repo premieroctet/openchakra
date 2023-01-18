@@ -302,6 +302,10 @@ const buildBlock = ({
             if (propsValue) {propsContent += ` key={${propsValue.replace(/^comp-/, '')}${singleData? '': '[0]'}?._id}`}
           }
 
+          if (propName === 'subDataSource') {
+            propsContent += ` subDataSourceId={'${propsValue}'}`
+          }
+
           if (propName === 'contextFilter') {
             if (propsValue) {
               propsContent += ` contextFilter={${propsValue.replace(

@@ -1,15 +1,17 @@
-import { Accordion, Input, Select, Checkbox } from '@chakra-ui/react'
+import { Accordion, Input, Select, Box } from '@chakra-ui/react'
 import { useSelector } from 'react-redux'
 import React, { useState, useEffect, memo } from 'react'
 import lodash from 'lodash'
+
 import {
   getDataProviders,
   getAvailableAttributes,
   getFilterAttributes,
   CONTAINER_TYPE,
 } from '~utils/dataSources'
-import { getModels, getModelAttributes } from '~core/selectors/dataSources'
+import { getModels } from '~core/selectors/dataSources'
 import AccordionContainer from '~components/inspector/AccordionContainer'
+
 import {
   getComponents,
   getSelectedComponent,
@@ -28,6 +30,7 @@ const DataSourcePanel: React.FC = () => {
   const attribute = usePropsSelector('attribute')
   const subDataSource = usePropsSelector('subDataSource')
   const subAttribute = usePropsSelector('subAttribute')
+  const subAttributeDisplay = usePropsSelector('subAttributeDisplay')
   const limit = usePropsSelector('limit')
   const contextFilter = usePropsSelector('contextFilter')
   const filterValue = usePropsSelector('filterValue')
@@ -36,6 +39,7 @@ const DataSourcePanel: React.FC = () => {
   const [contextProviders, setContextProviders] = useState<IComponent[]>([])
   const [attributes, setAttributes] = useState({})
   const [subAttributes, setSubAttributes] = useState({})
+  const [subAttributesDisplay, setSubAttributesDisplay] = useState({})
   const [filterAttributes, setFilterAttributes] = useState({})
   const models = useSelector(getModels)
 
@@ -57,18 +61,28 @@ const DataSourcePanel: React.FC = () => {
       catch (err) {
         alert(err)
       }
-      if (subDataSource) {
+      if (!subDataSource) {
+        setSubAttributes({})
+        setSubAttributesDisplay({})
+      }
+      else {
         const model = models[components[subDataSource].props ?.model]
         if (model) {
           const subAttrs = lodash(model.attributes)
-            .pickBy((def, k) => !k.includes('.') && !def.mutiple && !def.ref)
+            .pickBy((def, k) => def.multiple && def.ref)
             .value()
           setSubAttributes(subAttrs)
         }
-
+        console.log(`SubAttribute:${JSON.stringify(!!subAttribute)}`)
+        const subModel=subAttribute ? models[model.attributes[subAttribute].type] : model
+        console.log(`SubModel:${typeof(subModel)}`)
+        const subAttrsDisplay = lodash(subModel.attributes)
+          .pickBy((def, k) => !def.multiple && !def.ref)
+          .value()
+        setSubAttributesDisplay(subAttrsDisplay)
       }
     }
-  }, [activeComponent, components, models, subDataSource])
+  }, [activeComponent, components, models, subDataSource, subAttribute])
 
   useEffect(() => {
     if (!providers ?.length > 0 || !activeComponent || components ?.length > 0) {
@@ -103,6 +117,31 @@ const DataSourcePanel: React.FC = () => {
     }
     removeValue(name=='model'?'dataSource':'model')
     removeValue('attribute')
+  }
+
+  const onSubDataSourceChange = ev => {
+    const {name, value}=ev.target
+    console.log(name, value)
+    if (!value) {
+      removeValue(name)
+    }
+    else {
+      setValueFromEvent(ev)
+    }
+    removeValue('subAttribute')
+    removeValue('subAttributeDisplay')
+  }
+
+  const onSubAttributeChange = ev => {
+    const {name, value}=ev.target
+    console.log(name, value)
+    if (!value) {
+      removeValue(name)
+    }
+    else {
+      setValueFromEvent(ev)
+    }
+    removeValue('subAttributeDisplay')
   }
 
   console.log(`Model is ${JSON.stringify(model)}`)
@@ -228,11 +267,12 @@ const DataSourcePanel: React.FC = () => {
           </>
         )}
         {activeComponent ?.type == "Select" && (
-          <>
-            <FormControl htmlFor="subDataSource" label="Choose in datasource">
+          <Box borderWidth='1px' p='5px'>
+            <small>Choose values</small>
+            <FormControl htmlFor="subDataSource" label="Datasource">
               <Select
                 id="subDataSource"
-                onChange={setValueFromEvent}
+                onChange={onSubDataSourceChange}
                 name="subDataSource"
                 size="xs"
                 value={subDataSource || ''}
@@ -245,11 +285,10 @@ const DataSourcePanel: React.FC = () => {
                 ))}
               </Select>
             </FormControl>
-            {subAttributes && (
-              <FormControl htmlFor="subAttribute" label="Display attribute">
+              <FormControl htmlFor="subAttribute" label="Attribute">
                 <Select
                   id="subAttribute"
-                  onChange={setValueFromEvent}
+                  onChange={onSubAttributeChange}
                   name="subAttribute"
                   size="xs"
                   value={subAttribute || ''}
@@ -262,8 +301,23 @@ const DataSourcePanel: React.FC = () => {
                   ))}
                 </Select>
               </FormControl>
-            )}
-          </>
+              <FormControl htmlFor="subAttributeDisplay" label="Display attribute">
+                <Select
+                  id="subAttributeDisplay"
+                  onChange={setValueFromEvent}
+                  name="subAttributeDisplay"
+                  size="xs"
+                  value={subAttributeDisplay || ''}
+                >
+                  <option value={undefined}></option>
+                  {Object.keys(subAttributesDisplay).map((attribute, i) => (
+                    <option key={`attr${i}`} value={attribute}>
+                      {attribute}
+                    </option>
+                  ))}
+                </Select>
+              </FormControl>
+          </Box>
         )}
       </AccordionContainer>
     </Accordion>

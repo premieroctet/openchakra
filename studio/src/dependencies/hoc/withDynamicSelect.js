@@ -3,15 +3,22 @@ import lodash from 'lodash'
 import { ACTIONS } from '../utils/actions'
 
 const withDynamicSelect = Component => {
-  const Internal = ({noautosave, dataSource, setComponentValue, ...props}) => {
-    let values = dataSource
+  const Internal = ({noautosave, dataSource, subDataSource, subAttribute, subAttributeDisplay, setComponentValue, ...props}) => {
+    console.log(`Datasource:${JSON.stringify(dataSource,null, 2)}`)
+    let values = props.dataSourceId ? dataSource: null
     let value=lodash.get(dataSource, props.attribute)
     value=value?._id || value
     const [internalValue, setInternalValue]=useState(value)
 
     const attribute = props.attribute
     const enumValues=props.enum ? JSON.parse(props.enum) : null
-    const refValues=props.subDataSource
+    let refValues=null
+    if (props.subDataSourceId=='root') {
+      subDataSource=dataSource
+    }
+    if (subDataSource) {
+      refValues=lodash.get(subDataSource, subAttribute, subDataSource)
+    }
 
     const onChange = ev => {
       const {value} = ev.target
@@ -35,7 +42,7 @@ const withDynamicSelect = Component => {
         <option value={undefined}></option>
         {refValues ?
           refValues.map(v => (
-            <option key={v?._id} value={v?._id}>{lodash.get(v, props.subAttribute)}</option>
+            <option key={v?._id} value={v?._id}>{lodash.get(v, subAttributeDisplay)}</option>
           ))
           :enumValues ?
           Object.entries(enumValues).map(([k, v]) => (

@@ -1,65 +1,140 @@
 {
   "pages": {
-    "page-L9QSPE0HX8JV8": {
-      "pageId": "page-L9QSPE0HX8JV8",
+    "page-L9QSPE0HX8JV2": {
+      "pageId": "page-L9QSPE0HX8JV2",
       "components": {
         "root": {
           "id": "root",
           "parent": "root",
           "type": "Box",
           "children": [
-            "comp-LD0SR36XYUG0F"
+            "comp-LD1HY89C41S5B"
           ],
           "props": {
             "model": "booking",
-            "cardinality": "mutiple"
+            "cardinality": "multiple"
           }
         },
-        "comp-LD0SR36XYUG0F": {
-          "id": "comp-LD0SR36XYUG0F",
+        "comp-L9Q2LJWRE3FPQ": {
+          "id": "comp-L9Q2LJWRE3FPQ",
+          "props": {
+            "alignItems": "{\"base\":\"center\"}",
+            "flexDirection": "{\"base\":\"column\"}",
+            "m": "{\"base\":\"0\"}",
+            "p": "{}",
+            "maxWidth": "{}",
+            "minWidth": "{}",
+            "justifyContent": "{\"base\":\"center\"}",
+            "pr": "{\"base\":\"1\"}",
+            "mr": "{\"base\":\"1%\"}",
+            "ml": "{\"base\":\"-2\"}",
+            "pl": "{\"base\":\"1\"}",
+            "pt": "{\"base\":\"1\"}",
+            "pb": "{\"base\":\"1\"}",
+            "maxHeight": "{}"
+          },
+          "children": [
+            "comp-L9Q2QEGREQ71F",
+            "comp-LA2HEBQ5TGZD6",
+            "comp-LA2HEF38S8G0T"
+          ],
+          "type": "Flex",
+          "parent": "comp-LA2HEBQ5TGZD6",
+          "rootParentType": "Flex"
+        },
+        "comp-L9Q2QEGREQ71F": {
+          "id": "comp-L9Q2QEGREQ71F",
+          "props": {
+            "src": "https://www.alfredplace.io/wp-content/uploads/2022/10/menu-fumoir-03.svg",
+            "width": "{}",
+            "maxWidth": "{\"base\":\"30%\"}",
+            "p": "{\"base\":\"0\"}",
+            "m": "{\"base\":\"0\"}"
+          },
+          "children": [],
+          "type": "Media",
+          "parent": "comp-L9Q2LJWRE3FPQ",
+          "rootParentType": "Media"
+        },
+        "comp-L9Q2R3HMBZB3F": {
+          "id": "comp-L9Q2R3HMBZB3F",
+          "props": {
+            "children": "Accueil",
+            "color": "#DAB679",
+            "fontSize": "xs",
+            "fontWeight": "bold"
+          },
+          "children": [],
+          "type": "Text",
+          "parent": "comp-LA2HEF38S8G0T",
+          "rootParentType": "Text"
+        },
+        "comp-LA2HEBQ5TGZD6": {
+          "id": "comp-LA2HEBQ5TGZD6",
+          "props": {},
+          "children": [
+            "comp-L9Q2LJWRE3FPQ"
+          ],
+          "type": "Flex",
+          "parent": "comp-L9Q2LJWRE3FPQ",
+          "rootParentType": "Flex"
+        },
+        "comp-LA2HEF38S8G0T": {
+          "id": "comp-LA2HEF38S8G0T",
+          "props": {},
+          "children": [
+            "comp-L9Q2R3HMBZB3F"
+          ],
+          "type": "Flex",
+          "parent": "comp-L9Q2LJWRE3FPQ",
+          "rootParentType": "Flex"
+        },
+        "comp-LD1HY89C41S5B": {
+          "id": "comp-LD1HY89C41S5B",
           "props": {
             "dataSource": "root"
           },
           "children": [
-            "comp-LD0SR4BTDOA46"
+            "comp-LD1HY9XJK3287"
           ],
           "type": "Flex",
           "parent": "root",
           "rootParentType": "Flex"
         },
-        "comp-LD0SR4BTDOA46": {
-          "id": "comp-LD0SR4BTDOA46",
+        "comp-LD1HY9XJK3287": {
+          "id": "comp-LD1HY9XJK3287",
           "props": {},
           "children": [
-            "comp-LD0SRD5TS88M5"
+            "comp-LD1HYH9YO3I2W"
           ],
           "type": "Flex",
-          "parent": "comp-LD0SR36XYUG0F",
+          "parent": "comp-LD1HY89C41S5B",
           "rootParentType": "Flex"
         },
-        "comp-LD0SRD5TS88M5": {
-          "id": "comp-LD0SRD5TS88M5",
+        "comp-LD1HYH9YO3I2W": {
+          "id": "comp-LD1HYH9YO3I2W",
           "props": {
             "icon": "ChevronDownIcon",
             "variant": "outline",
             "size": "md",
             "subDataSource": "root",
-            "subAttribute": "comments"
+            "subAttribute": "guests",
+            "subAttributeDisplay": "email"
           },
           "children": [],
           "type": "Select",
-          "parent": "comp-LD0SR4BTDOA46",
+          "parent": "comp-LD1HY9XJK3287",
           "rootParentType": "Select"
         }
       },
-      "selectedId": "comp-LD0SRD5TS88M5",
-      "pageName": "test",
+      "selectedId": "comp-LD1HYH9YO3I2W",
+      "pageName": "commande",
       "metaTitle": "",
       "metaDescription": "",
       "metaImageUrl": "",
       "rootPage": false
     }
   },
-  "activePage": "page-L9QSPE0HX8JV8",
-  "rootPage": "page-L9QSPE0HX8JV8"
+  "activePage": "page-L9QSPE0HX8JV2",
+  "rootPage": "page-L9QSPE0HX8JV2"
 }
