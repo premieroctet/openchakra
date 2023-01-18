@@ -1,0 +1,65 @@
+{
+  "pages": {
+    "page-L9QSPE0HX8JV8": {
+      "pageId": "page-L9QSPE0HX8JV8",
+      "components": {
+        "root": {
+          "id": "root",
+          "parent": "root",
+          "type": "Box",
+          "children": [
+            "comp-LD0SR36XYUG0F"
+          ],
+          "props": {
+            "model": "booking",
+            "cardinality": "mutiple"
+          }
+        },
+        "comp-LD0SR36XYUG0F": {
+          "id": "comp-LD0SR36XYUG0F",
+          "props": {
+            "dataSource": "root"
+          },
+          "children": [
+            "comp-LD0SR4BTDOA46"
+          ],
+          "type": "Flex",
+          "parent": "root",
+          "rootParentType": "Flex"
+        },
+        "comp-LD0SR4BTDOA46": {
+          "id": "comp-LD0SR4BTDOA46",
+          "props": {},
+          "children": [
+            "comp-LD0SRD5TS88M5"
+          ],
+          "type": "Flex",
+          "parent": "comp-LD0SR36XYUG0F",
+          "rootParentType": "Flex"
+        },
+        "comp-LD0SRD5TS88M5": {
+          "id": "comp-LD0SRD5TS88M5",
+          "props": {
+            "icon": "ChevronDownIcon",
+            "variant": "outline",
+            "size": "md",
+            "subDataSource": "root",
+            "subAttribute": "comments"
+          },
+          "children": [],
+          "type": "Select",
+          "parent": "comp-LD0SR4BTDOA46",
+          "rootParentType": "Select"
+        }
+      },
+      "selectedId": "comp-LD0SRD5TS88M5",
+      "pageName": "test",
+      "metaTitle": "",
+      "metaDescription": "",
+      "metaImageUrl": "",
+      "rootPage": false
+    }
+  },
+  "activePage": "page-L9QSPE0HX8JV8",
+  "rootPage": "page-L9QSPE0HX8JV8"
+}

@@ -1,8 +1,11 @@
 import { getAvailableAttributes, getFieldsForDataProvider } from '../../utils/dataSources'
 import lodash from 'lodash'
 import project from '../data/attributesProject.json'
-import models from '../data/dataModel.json'
+import modelsAftral from '../data/dataModel.json'
 import dashboardPage from '../data/dashboardAlfred.json'
+import models4Select from './models.json'
+import page4Select from './pageSelect.json'
+
 
 // @ts-ignore
 describe('DataSources tests', () => {
@@ -42,6 +45,15 @@ describe('DataSources tests', () => {
     const EXPECTED = ['parent', 'name']
     // @ts-ignore
     const fields:String[] = getFieldsForDataProvider('comp-LCKMBTLMRM5TU', components)
+    return expect(fields).toEqual(EXPECTED)
+  })
+
+  test.only('Get fields for Select with dataSource and subDataSource', () => {
+    const components=page4Select.pages['page-L9QSPE0HX8JV8'].components
+    // @ts-ignore
+    const EXPECTED = ['members', 'members.banner', 'members.creation_date']
+    // @ts-ignore
+    const fields:String[] = getFieldsForDataProvider('root', components)
     return expect(fields).toEqual(EXPECTED)
   })
 
