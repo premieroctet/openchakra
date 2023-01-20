@@ -211,7 +211,7 @@ const computeDataFieldName = (
         attrs.push(`${component.props.subAttribute}.${component.props.subAttributeDisplay}`)
     }
     else {
-      attrs.push(component.props.subAttributeText)
+      attrs.push(component.props.subAttributeDisplay)
     }
   }
 
