@@ -164,8 +164,11 @@ const UploadFile = ({
       }
     }
 
+  // SAU to propagate attribute
+  const pr={...props, attribute}
+
   return (
-    <Box {...props} data-value={s3File} display='flex' flexDirection='row'>
+    <Box {...pr} data-value={s3File} display='flex' flexDirection='row'>
       <form id="uploadressource">
         <UploadZone>
           <input type="file" onChange={onFileNameChange} />
