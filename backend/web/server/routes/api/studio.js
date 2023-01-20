@@ -32,6 +32,7 @@ const {
   getProductionRoot,
 } = require('../../../config/config')
 require(`../../utils/studio/${getDataModel()}/functions`)
+require(`../../utils/studio/${getDataModel()}/actions`)
 const User = require('../../models/User')
 
 const {
