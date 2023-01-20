@@ -10,6 +10,9 @@ const AUTH_TOKEN_DOMAIN=vvConfig.production ? LIVE_DOMAIN: 'https://demo-account
 const PAYMENT_DOMAIN=vvConfig.production ? LIVE_DOMAIN: 'https://demo-api.vivapayments.com'
 const WEBHOOK_DOMAIN=vvConfig.production ? LIVE_DOMAIN: 'https://demo.vivapayments.com'
 const PAYMENT_PAGE_DOMAIN=vvConfig.production ? LIVE_DOMAIN: 'https://demo.vivapayments.com'
+
+const HOOK_PAYMENT_SUCCESSFUL=1796
+const HOOK_PAYMENT_FAILED=1798
 // https://developer.vivawallet.com/smart-checkout/smart-checkout-integration/#step-2-redirect-the-customer-to-smart-checkout-to-pay-the-payment-order
 
 const getAuthToken = () => {
@@ -49,7 +52,7 @@ const initiatePayment = ({amount, email, color}) => {
   return getAuthToken()
     .then(token => {
       return axios.post(url,
-        {amount: amount*100, customer: {email}},
+        {amount: amount*100, customer: {email}, sourceCode: vvConfig.sourceCode},
         {headers: {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'}},
       )
     })
@@ -70,4 +73,5 @@ module.exports={
   getAuthToken,
   getWebHookToken,
   initiatePayment,
+  HOOK_PAYMENT_SUCCESSFUL, HOOK_PAYMENT_FAILED,
 }

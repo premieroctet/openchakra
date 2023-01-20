@@ -1,3 +1,6 @@
+const { HOOK_PAYMENT_SUCCESSFUL } = require('../../plugins/payment/vivaWallet');
+const Payment = require('../../models/Payment');
+
 const path = require('path')
 const zlib=require('zlib')
 const {promises: fs} = require('fs')
@@ -22,7 +25,6 @@ const {
   getProductionRoot,
 } = require('../../../config/config')
 require(`../../utils/studio/${getDataModel()}/functions`)
-require(`../../utils/studio/${getDataModel()}/actions`)
 const User = require('../../models/User')
 
 const {
@@ -272,8 +274,17 @@ router.get('/payment-hook', (req, res) => {
 })
 
 router.post('/payment-hook', (req, res) => {
-  const params=req.query
+  const params=req.body
   console.log(`Payment hook called with params ${JSON.stringify(params)}`)
+  if (params.EventTypeId==HOOK_PAYMENT_SUCCESSFUL) {
+    return Payment.updateOne({orderCode: params.EventData.OrderCode}, {status: PAYMENT_SUCCESS})
+      .then(() => res.json)
+  }
+  else if (params.EventTypeId==HOOK_PAYMENT_FAILED) {
+    return Payment.updateOne({orderCode: params.EventData.OrderCode}, {status: HOOK_PAYMENT_FAILED})
+      .then(() => res.json)
+  }
+  console.error(`Hook was not handled`)
   return res.json()
 })
 

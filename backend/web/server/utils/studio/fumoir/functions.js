@@ -162,7 +162,6 @@ const payEvent=({context, redirect, color}, user) => {
      const params={
        event: eventId, event_member: user, member:user, amount:remainingToPay,
        vat_amount:vat,
-       status: PAYMENT_SUCCESS,
      }
      return Payment.create(params)
    })
@@ -191,7 +190,6 @@ const payOrder=({context, redirect, color}, user) => {
         const params={
           booking: booking._id, member:user._id,
           amount:booking.remaining_total, vat_amount:booking.remaining_vat_amount,
-          status: PAYMENT_SUCCESS,
         }
         return Payment.create(params)
       })
@@ -222,6 +220,7 @@ const cashOrder=({context, guest, amount, redirect}, user) => {
         const remaining=booking.remaining_total
         const remaining_vat=booking.remaining_vat_amount
         const payment_tva=amount*remaining_vat/remaining
+        // No vivwallet redirect, payment is considered successful
         return Payment.create({booking, ...customer, amount:amount, vat_amount:payment_tva, status: PAYMENT_SUCCESS})
       })
       .then(() => ({redirect}))
