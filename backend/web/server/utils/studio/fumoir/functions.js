@@ -291,7 +291,10 @@ const filterDataUser = ({model, data, id, user}) => {
       if ([FUMOIR_MEMBER].includes(user.role)) {
         data=data.filter(d => d.booking_user?._id?.toString()==user._id.toString())
       }
-      return lodash.orderBy(data, ['start_date'], ['desc'])
+      return lodash.orderBy(data, ['start_date'], ['asc'])
+    }
+    if (model=='event') {
+      return lodash.orderBy(data, ['start_date'], ['asc'])
     }
   }
 
