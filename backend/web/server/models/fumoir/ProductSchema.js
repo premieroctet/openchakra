@@ -8,7 +8,7 @@ const ProductSchema = new Schema(
   {
     reference: {
       type: String,
-      required: true,
+      required: [true, 'Le code produit est obligatoire'],
     },
     name: {
       type: String,
@@ -30,7 +30,7 @@ const ProductSchema = new Schema(
     supplier: {
       type: Schema.Types.ObjectId,
       ref: 'company',
-      required: true,
+      required: [true, "L'entité analytique est obligatoire"],
     },
     picture: {
       type: String,
@@ -45,21 +45,22 @@ const ProductSchema = new Schema(
     category: {
       type: Schema.Types.ObjectId,
       ref: 'category',
-      required: true,
+      required: [true, 'La catégorie est obligatoire'],
     },
     price: {
       // Price including tax
       type: Number,
       min: 0,
-      required: true,
+      required: [true, 'Le prix est obligatoire'],
     },
     vat_rate: {
       // VAT rate (0.0 => 1.0)
       type: Number,
-      min: 0,
-      max: 1,
+      min: [0, 'Le taux de TVA doit être entre 0 et 1'],
+      max: [1, 'Le taux de TVA doit être entre 0 et 1'],
       default: 0,
-      required: true,
+      required: [true, 'Le taux de tva est obligatoire'],
+
     },
     stock: {
       type: Number,
