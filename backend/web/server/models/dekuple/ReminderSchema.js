@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
 const {schemaOptions} = require('../../utils/schemas')
+const lodash=require('lodash')
+const moment=require('moment')
 const {REMINDER_TYPE, REMINDER_OTHER} = require('../../../utils/dekuple/consts')
 
 const Schema = mongoose.Schema
@@ -66,6 +68,13 @@ ReminderSchema.virtual('type_str').get(function() {
     return this.otherTitle
   }
   return REMINDER_TYPE[this.type]
+})
+
+ReminderSchema.virtual('reccurency_str').get(function() {
+  const DAYS=lodash.range(7).map(d => ['en', 'fr'].map(l =>moment().weekday(d).locale(l).format('dddd').toLowerCase()))
+  console.log(`Days are ${DAYS}`)
+  const trueDays=DAYS.filter(([en, r]) => this[en]).map(([en, fr])=>`${fr}s`)
+  return `Tous les ${trueDays.join(', ').replace(/, ([^,]*)$/, ' et $1')}`
 })
 
 
