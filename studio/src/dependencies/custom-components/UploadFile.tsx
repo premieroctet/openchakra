@@ -165,7 +165,7 @@ const UploadFile = ({
     }
 
   // SAU to propagate attribute
-  const pr={...props, attribute}
+  const pr={...props, attribute, value: s3File}
 
   return (
     <Box {...pr} data-value={s3File} display='flex' flexDirection='row'>
