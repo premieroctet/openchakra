@@ -1,4 +1,11 @@
-const { HOOK_PAYMENT_SUCCESSFUL } = require('../../plugins/payment/vivaWallet');
+const {
+  PAYMENT_FAILURE,
+  PAYMENT_SUCCESS
+} = require('../../../utils/fumoir/consts');
+const {
+  HOOK_PAYMENT_FAILED,
+  HOOK_PAYMENT_SUCCESSFUL
+} = require('../../plugins/payment/vivaWallet');
 const Payment = require('../../models/Payment');
 
 const path = require('path')
@@ -281,7 +288,7 @@ router.post('/payment-hook', (req, res) => {
       .then(() => res.json)
   }
   else if (params.EventTypeId==HOOK_PAYMENT_FAILED) {
-    return Payment.updateOne({orderCode: params.EventData.OrderCode}, {status: HOOK_PAYMENT_FAILED})
+    return Payment.updateOne({orderCode: params.EventData.OrderCode}, {status: PAYMENT_FAILURE})
       .then(() => res.json)
   }
   console.error(`Hook was not handled`)
