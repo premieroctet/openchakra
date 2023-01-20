@@ -34,6 +34,7 @@ const ProductSchema = new Schema(
     },
     picture: {
       type: String,
+      required: [true, "L'illustration est obligatoire"],
     },
     recommandation: [
       {
