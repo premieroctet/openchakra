@@ -8,11 +8,11 @@ const ProductSchema = new Schema(
   {
     reference: {
       type: String,
-      required: false,
+      required: true,
     },
     name: {
       type: String,
-      required: false,
+      required: true,
     },
     description: {
       type: String,
@@ -30,6 +30,7 @@ const ProductSchema = new Schema(
     supplier: {
       type: Schema.Types.ObjectId,
       ref: 'company',
+      required: true,
     },
     picture: {
       type: String,
@@ -44,11 +45,13 @@ const ProductSchema = new Schema(
     category: {
       type: Schema.Types.ObjectId,
       ref: 'category',
+      required: true,
     },
     price: {
       // Price including tax
       type: Number,
       min: 0,
+      required: true,
     },
     vat_rate: {
       // VAT rate (0.0 => 1.0)
@@ -56,6 +59,7 @@ const ProductSchema = new Schema(
       min: 0,
       max: 1,
       default: 0,
+      required: true,
     },
     stock: {
       type: Number,
