@@ -182,9 +182,12 @@ const computeDataFieldName = (
 ): any => {
 
   // On dataProvider: break
+  // TODO: commented because returns null if Select has a model even if it has a subDataSource/subAttributeDisplay
+  /**
   if (component.props.model) {
     return null
   }
+  */
   // On root: break
   if (component.id=='root') {
     return null
