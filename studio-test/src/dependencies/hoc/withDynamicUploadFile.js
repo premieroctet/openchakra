@@ -1,11 +1,12 @@
 import React from 'react'
-// import get from 'lodash/get'
+import lodash from 'lodash'
 
 const withDynamicUploadFile = Component => {
 
-  const Internal = (props) => {
-    // const value = get(dataSource, props.attribute)
-    return <Component {...props}/>
+  const Internal = (props, dataSource, attribute) => {
+    const value = lodash.get(dataSource, props.attribute)
+    const pr={...props, value}
+    return <Component {...pr}/>
   }
 
   return Internal

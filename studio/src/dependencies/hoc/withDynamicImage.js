@@ -9,7 +9,7 @@ const withDynamicImage = Component => {
       src=props.src
     }
     return (
-      <Component {...lodash.omit(props, ['children'])} src={src} />
+      <Component {...lodash.omit(props, ['children'])} src={src} value={src}/>
     )
   }
 
