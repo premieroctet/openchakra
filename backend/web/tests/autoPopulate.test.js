@@ -1,8 +1,22 @@
+const {getDataModel} = require('../config/config')
+
+jest.mock('../config/config', () => {
+  const originalModule = jest.requireActual('../config/config');
+
+  //Mock the default export and named export 'foo'
+  return {
+    __esModule: true,
+    ...originalModule,
+    getDataModel: jest.fn(() => 'fumoir'),
+  };
+});
+
 const mongoose = require('mongoose')
 const lodash=require('lodash')
 const {MONGOOSE_OPTIONS} = require('../server/utils/database')
 const {getDatabaseUri} = require('../config/config')
 const Category=require('../server/models/Category')
+require('../server/models/Product')
 const {depthSync}=require('tree-traversal')
 
 const treeDisplay = {
@@ -33,6 +47,7 @@ describe('Autopopulate', () => {
     const children=await Promise.all('Vin Spiritueux Champagne Soft'.split(' ').map((name, idx) => Category.create({name, children: childrenGroups[idx]})))
     const parent=await Category.create({name: 'Boissons', children})
 
+    console.log(JSON.stringify(parent))
     console.time('Loading')
     const loadedParent=await Category.findOne({name: 'Boissons'})
     console.timeEnd('Loading')
