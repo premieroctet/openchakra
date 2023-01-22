@@ -1,46 +1,28 @@
-const { getDatabaseUri } = require('../../config/config');
-const {
-  importTrainees,
-  importTrainers
-} = require('../../server/utils/aftral_studio/import');
-const {XL_TYPE} = require('../../utils/consts')
-const util = require('util')
-
-const exec = util.promisify(require('child_process').exec)
+const moment=require('moment')
 const mongoose = require('mongoose')
-const {databaseName} = require('../../config/config')
+const {forceDataModelAftralStudio}=require('../utils')
+forceDataModelAftralStudio()
+const {importTrainees, importTrainers} = require('../../server/utils/aftral_studio/import')
 const {MONGOOSE_OPTIONS} = require('../../server/utils/database')
+const Program=require('../../server/models/Program')
+
+jest.setTimeout(20000)
 
 describe('XLSX imports', () => {
 
-  beforeAll(() => {
-    /**
-    return exec('rm -rf dump', {cwd: '/tmp'})
-      .then(() => {
-        console.log('mongodump')
-        return exec(`mongodump --db=${databaseName}`, {cwd: '/tmp'})
-      })
-      .then(() => {
-        console.log('mv')
-        return exec(`mv dump/${databaseName} dump/test`, {cwd: '/tmp'})
-      })
-      .then(() => {
-        console.log('mongorestore')
-        return exec(`mongorestore --drop`, {cwd: '/tmp'})
-      })
-      .then(() => {
-        console.log('connect')
-        return mongoose.connect('mongodb://localhost/test', MONGOOSE_OPTIONS)
-      })
-      */
-    return mongoose.connect(getDatabaseUri(), MONGOOSE_OPTIONS)
-  }, 30000)
+  beforeAll(async() => {
+    await mongoose.connect(`mongodb://localhost/test${moment().unix()}`, MONGOOSE_OPTIONS)
+  })
 
-  it('should do sthg', () => {
-    return importTrainers('tests/data/aftral_studio/Session_Formateur.csv')
-      .then(res => {
-        return importTrainees('tests/data/aftral_studio/Apprenant.csv')
-      })
-  }, 20000)
+  afterAll(async() => {
+    await mongoose.connection.dropDatabase()
+  })
+
+  it('should do sthg', async() => {
+    await Program.create({'code': 'ACWW03'})
+    const query=importTrainers('tests/data/aftral_studio/Session_Formateur.csv')
+      .then(() => importTrainees('tests/data/aftral_studio/Apprenant.csv'))
+    return expect(query).resolves.not.toThrowError()
+  })
 
 })

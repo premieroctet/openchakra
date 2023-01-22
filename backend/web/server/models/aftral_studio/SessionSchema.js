@@ -1,7 +1,7 @@
-const { schemaOptions } = require('../../utils/schemas');
 const moment = require('moment')
 const mongoose = require('mongoose')
 const lodash=require('lodash')
+const {schemaOptions} = require('../../utils/schemas')
 const {cloneModel, cloneArray} = require('../../utils/database')
 
 const Schema = mongoose.Schema
@@ -76,7 +76,6 @@ SessionSchema.methods.updateThemes = function(themes) {
 
 SessionSchema.pre(['save'], function() {
   if (this.isModified('program') && this.program && !this.origin) {
-    console.log('program is modified')
     return mongoose.connection.models.program.findById(this.program._id).populate({path: 'themes', populate: 'resources'})
       .then(program => {
         return cloneArray({data: program.themes})
@@ -113,15 +112,15 @@ SessionSchema.virtual('contact_name').get(function() {
   return `Session ${this.name}`
 })
 
-SessionSchema.virtual('spent_time_str').get(function() {
+SessionSchema.virtual('spent_time_str').get(() => {
   return null
 })
 
-SessionSchema.virtual('progress_str').get(function() {
+SessionSchema.virtual('progress_str').get(() => {
   return null
 })
 
-SessionSchema.virtual('progress_percent').get(function() {
+SessionSchema.virtual('progress_percent').get(() => {
   return null
 })
 

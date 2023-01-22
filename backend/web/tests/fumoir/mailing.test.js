@@ -11,8 +11,6 @@ const {
   sendWelcomeRegister
 } = require('../../server/utils/studio/fumoir/mailing');
 
-jest.setTimeout(20000)
-
 describe('Mailing tests', () => {
 
   const roleEmail = role => {

@@ -109,7 +109,6 @@ const importTrainer = record => {
     email: record.EMAIL_FORMATEUR, password: PASSWORD, role: FORMATEUR,
   })
     .then(user => {
-      console.log('upserted user')
       formateur=user
       return upsertSession({
         programCode: record.CODE_PRODUIT, sessionCode: record.CODE_SESSION,
