@@ -1,8 +1,7 @@
 const mongoose = require('mongoose')
-const moment=require('moment')
+const moment = require('moment')
 const {forceDataModelFumoir}=require('../utils')
 forceDataModelFumoir()
-
 const {MONGOOSE_OPTIONS} = require('../../server/utils/database')
 const Category=require('../../server/models/Category')
 require('../../server/models/Product')
@@ -31,6 +30,7 @@ describe('Autopopulate', () => {
 
   afterAll(async() => {
     await mongoose.connection.dropDatabase()
+    await mongoose.connection.close()
   })
 
   test('Should autopopulate multiple levels', async() => {

@@ -39,6 +39,7 @@ describe('XLSX imports', () => {
 
   afterAll(async() => {
     await mongoose.connection.dropDatabase()
+    await mongoose.connection.close()
   })
 
   it('should return proper status', async() => {

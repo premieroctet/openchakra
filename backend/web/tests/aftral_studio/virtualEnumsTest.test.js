@@ -1,28 +1,22 @@
-const moment=require('moment')
-const {forceDataModelAftralStudio}=require('../utils')
-forceDataModelAftralStudio()
-
 const mongoose = require('mongoose')
-const {STATUS} = require('../../utils/aftral_studio/consts')
-const {MONGOOSE_OPTIONS, getModels} = require('../../server/utils/database')
-require('../../server/utils/studio/aftral_studio/functions')
-require('../../server/models/Resource')
-require('../../server/models/Theme')
-require('../../server/models/TrainingCenter')
+const {STATUS} = require('../utils/aftral_studio/consts')
+const {MONGOOSE_OPTIONS, getModels} = require('../server/utils/database')
+const {getDatabaseUri} = require('../config/config')
+require('../server/models/Resource')
+require('../server/models/Theme')
 
 describe('Schema virtual enum attributes', () => {
 
-  beforeAll(async () => {
-    await mongoose.connect(`mongodb://localhost/test${moment().unix()}`, MONGOOSE_OPTIONS)
-    await mongoose.connection.dropDatabase()
+  beforeAll(() => {
+    return mongoose.connect(getDatabaseUri(), MONGOOSE_OPTIONS)
   })
 
   test('Should return theme status enumValues', async() => {
     const models=await getModels()
     const themeAttributes=models.theme.attributes
-    expect(themeAttributes.status.enumValues).toEqual(STATUS)
+    expect(themeAttributes.status.enumValues).toEqual([null, ...Object.keys(STATUS)])
     const resourcesAttributes=models.resource.attributes
-    return expect(resourcesAttributes.status.enumValues).toEqual(STATUS)
+    return expect(resourcesAttributes.status.enumValues).toEqual([null, ...Object.keys(STATUS)])
   })
 
 })

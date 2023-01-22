@@ -20,6 +20,7 @@ describe('Test virtual single ref', () => {
 
   afterAll(async() => {
     await mongoose.connection.dropDatabase()
+    await mongoose.connection.close()
   })
 
   it('author full_name should populate none', async() => {

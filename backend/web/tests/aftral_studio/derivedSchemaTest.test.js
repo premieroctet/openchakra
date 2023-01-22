@@ -24,6 +24,7 @@ describe('Schema inheritance tests', () => {
 
   afterAll(async() => {
     await mongoose.connection.dropDatabase()
+    await mongoose.connection.close()
   })
 
   test('Should clone resource', async() => {

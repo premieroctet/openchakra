@@ -19,9 +19,13 @@ describe('ResourceAnnotation', () => {
   let user, resource
   beforeAll(async() => {
     await mongoose.connect(`mongodb://localhost/test${moment().unix()}`, MONGOOSE_OPTIONS)
-    await mongoose.connection.dropDatabase()
     user=await User.create({firstname: 'Sébastien', name: 'Auvray', email: 'email@test.com', role: APPRENANT})
     resource=await Resource.create({name: 'resource test'})
+  })
+
+  afterAll(async() => {
+    await mongoose.connection.dropDatabase()
+    await mongoose.connection.close()
   })
 
   test('Should autopopulate multiple levels', async() => {

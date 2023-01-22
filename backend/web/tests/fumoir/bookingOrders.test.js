@@ -22,6 +22,7 @@ describe('Test virtual single ref', () => {
 
   afterAll(async() => {
     await mongoose.connection.dropDatabase()
+    await mongoose.connection.close()
   })
 
   it('booking.payments must be ref:true, multiple: true', async() => {

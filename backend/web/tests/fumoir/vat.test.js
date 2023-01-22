@@ -35,6 +35,7 @@ describe('Test vat on products, order item and so on', () => {
 
   afterAll(async() => {
     await mongoose.connection.dropDatabase()
+    await mongoose.connection.close()
   })
 
   it('Product should compute vat', async() => {

@@ -99,7 +99,6 @@ describe.skip('Studio data function', () => {
 
   beforeAll(async() => {
     await mongoose.connect(`mongodb://localhost/test${moment().unix()}`, MONGOOSE_OPTIONS)
-    await mongoose.connection.dropDatabase()
     const resources=await Promise.all(lodash.range(4).map(idx => Resource.create({name: `res${idx}`, url: `url${idx}`})))
     const themes=await Theme.create([{resources: resources.slice(0, 2)}, {resources: resources.slice(2, 4)}])
     const trainees=await Promise.all(lodash.range(4).map(idx => User.create(
@@ -108,7 +107,11 @@ describe.skip('Studio data function', () => {
     await Program.create({themes: themes})
     const session=await Session.create({trainees: trainees.map(t => t._id)})
     await Promise.all(trainees.map(t => Session.create({trainee: t, origin: session._id})))
-    console.log()
+  })
+
+  afterAll(async() => {
+    await mongoose.connection.dropDatabase()
+    await mongoose.connection.close()
   })
 
   test('Should add theme to program', async() => {

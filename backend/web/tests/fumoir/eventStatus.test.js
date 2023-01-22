@@ -16,6 +16,7 @@ describe('Test virtual single ref', () => {
 
   afterAll(async() => {
     await mongoose.connection.dropDatabase()
+    await mongoose.connection.close()
   })
 
   it('Must have proper status', async() => {

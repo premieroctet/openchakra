@@ -17,6 +17,7 @@ describe('Test virtual single ref', () => {
 
   afterAll(async() => {
     await mongoose.connection.dropDatabase()
+    await mongoose.connection.close()
   })
 
   it('reminder days must be unique', async() => {
