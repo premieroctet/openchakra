@@ -15,4 +15,47 @@ const login = username => {
     })
 }
 
-module.exports={login}
+const forceDataModelFumoir = () => {
+  require('../server/utils/studio/fumoir/functions')
+  jest.mock('../config/config', () => {
+    const originalModule = jest.requireActual('../config/config');
+
+    //Mock the default export and named export 'foo'
+    return {
+      __esModule: true,
+      ...originalModule,
+      getDataModel: jest.fn(() => 'fumoir'),
+    };
+  });
+}
+
+const forceDataModelDekuple = () => {
+  jest.mock('../config/config', () => {
+    const originalModule = jest.requireActual('../config/config');
+
+    //Mock the default export and named export 'foo'
+    return {
+      __esModule: true,
+      ...originalModule,
+      getDataModel: jest.fn(() => 'dekuple'),
+    };
+  });
+}
+
+const forceDataModelAftralStudio = () => {
+  jest.mock('../config/config', () => {
+    const originalModule = jest.requireActual('../config/config');
+
+    //Mock the default export and named export 'foo'
+    return {
+      __esModule: true,
+      ...originalModule,
+      getDataModel: jest.fn(() => 'aftral_studio'),
+    };
+  });
+}
+
+module.exports={
+  login,
+  forceDataModelFumoir, forceDataModelDekuple, forceDataModelAftralStudio,
+}

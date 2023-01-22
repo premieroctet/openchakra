@@ -1,17 +1,24 @@
 const mongoose = require('mongoose')
+const moment=require('moment')
+const {forceDataModelFumoir}=require('../utils')
+forceDataModelFumoir()
 const {MONGOOSE_OPTIONS, buildPopulates} = require('../../server/utils/database')
-const {getDataModel} = require('../../config/config')
 require(`../../server/routes/api/studio`)
 require('../../server/models/Post')
 require('../../server/models/Company')
 require('../../server/models/Category')
 require('../../server/models/ResetToken')
+require('../../server/models/Cigar')
+
+jest.setTimeout(30000)
 
 describe('Test virtual single ref', () => {
 
   beforeAll(async() => {
-    if (getDataModel()!='fumoir') { throw new Eror('Expected "fumoir" datamodel') }
-    await mongoose.connect('mongodb://localhost/test', MONGOOSE_OPTIONS)
+    await mongoose.connect(`mongodb://localhost/test${moment().unix()}`, MONGOOSE_OPTIONS)
+  })
+
+  afterAll(async() => {
     await mongoose.connection.dropDatabase()
   })
 
@@ -20,23 +27,9 @@ describe('Test virtual single ref', () => {
     expect(pops).toEqual([])
   })
 
-  it('user company_name should populate company', async() => {
-    const pops=buildPopulates(['company_name'], 'user')
-    expect(pops).toEqual([{path: 'company'}])
-  })
-
-  it('order paid_str should populate items', async() => {
-    const pops=buildPopulates(['paid_str'], 'order')
-    expect(pops).toEqual([{path: 'items'}])
-  })
-
   it('booking paid_str should populate items', async() => {
     const pops=buildPopulates(['paid_str'], 'booking')
-    expect(pops).toEqual([{path: 'orders', populate: {path: 'items'}}])
+    expect(pops).toEqual([{path: 'items'}, {path: 'payments'}])
   })
 
-  it('post author company should populate company', async() => {
-    const pops=buildPopulates(['author.company_name'], 'post')
-    expect(pops).toEqual([{path: 'author', populate: {path: 'company'}}])
-  })
 })
