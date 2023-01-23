@@ -1,4 +1,4 @@
-const {schemaOptions} = require('../../utils/schemas')
+const {schemaOptions} = require('../../../utils/schemas')
 const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema

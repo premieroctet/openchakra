@@ -39,19 +39,19 @@ const forceDataModelDekuple = () => {
   })
 }
 
-const forceDataModelAftralStudio = () => {
+const forceDataModelAftral = () => {
   jest.mock('../config/config', () => {
     const originalModule = jest.requireActual('../config/config')
 
     return {
       __esModule: true,
       ...originalModule,
-      getDataModel: jest.fn(() => 'aftral_studio'),
+      getDataModel: jest.fn(() => 'aftral'),
     }
   })
 }
 
 module.exports={
   login,
-  forceDataModelFumoir, forceDataModelDekuple, forceDataModelAftralStudio,
+  forceDataModelFumoir, forceDataModelDekuple, forceDataModelAftral,
 }

@@ -1,6 +1,7 @@
-const { schemaOptions } = require('../../utils/schemas');
 const mongoose = require('mongoose')
-const AddressSchema=require('../AddressSchema')
+const {schemaOptions} = require('../../../utils/schemas')
+
+const AddressSchema=require('../../../models/AddressSchema')
 
 const Schema = mongoose.Schema
 
@@ -17,7 +18,7 @@ const TrainingCenterSchema = new Schema({
     type: AddressSchema,
     required: true,
   },
-}, schemaOptions
+}, schemaOptions,
 )
 
 module.exports = TrainingCenterSchema

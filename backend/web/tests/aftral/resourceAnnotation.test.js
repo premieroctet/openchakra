@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const moment=require('moment')
-const {forceDataModelAftralStudio}=require('../utils')
-forceDataModelAftralStudio()
+const {forceDataModelAftral}=require('../utils')
+forceDataModelAftral()
 const {
   getResourceAnnotation,
   setResourceAnnotation,

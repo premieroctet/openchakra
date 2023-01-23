@@ -1,8 +1,8 @@
 const lodash=require('lodash')
 const moment=require('moment')
 const mongoose=require('mongoose')
-const {forceDataModelAftralStudio}=require('../utils')
-forceDataModelAftralStudio()
+const {forceDataModelAftral}=require('../utils')
+forceDataModelAftral()
 const {
   addChildToParent,
   getNext,

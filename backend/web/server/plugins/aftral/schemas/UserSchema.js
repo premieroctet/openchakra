@@ -1,8 +1,8 @@
-const { schemaOptions } = require('../../utils/schemas');
 const mongoose = require('mongoose')
+const bcrypt = require('bcryptjs')
+const {schemaOptions} = require('../../../utils/schemas')
 
 const Schema = mongoose.Schema
-const bcrypt = require('bcryptjs')
 
 
 const UserSchema = new Schema({
