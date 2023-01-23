@@ -41,7 +41,7 @@ router.get('/oauth_callback', function (req, res) {
     var options = {
         consumerKey: wConfig.clientId,
         consumerSecret: wConfig.clientSecret,
-        callbackUrl: 'http://my-alfred.io:4202/withings/oauth_callback'
+        callbackUrl: 'http://my-alfred.io:4202/withings/oauth_callback',
         userID: req.query.userid
     };
     var client = new Withings(options);
