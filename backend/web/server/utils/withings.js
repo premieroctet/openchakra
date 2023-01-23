@@ -1,12 +1,11 @@
-var express = require('express')
-//var config = require('./config/app')
-var app = express()
-var Withings = require('withings-lib');
-var cookieParser = require('cookie-parser');
-var session = require('express-session');
+const session = require('express-session');
+const express = require('express')
+const { getWithingsConfig } = require('../../config/config');
+const Withings = require('withings-lib');
+const cookieParser = require('cookie-parser');
+const app = express()
 
-const CLIENT_ID='c17b9af2902c60fe8ba0c8d53ec801dcad79427b069b3a4a3716ec03177a87aa'
-const CLIENT_SECRET='eff25c4e04183a941f23dd6e5127d69c03d8cbd949411088730746c2af3b79b0'
+const wConfig=getWithingsConfig()
 
 app.use(cookieParser());
 app.use(session({secret: 'bigSecret'}));
@@ -17,9 +16,9 @@ app.get('/withings', function (req, res) {
     // Create an API client and start authentication via OAuth
     console.log(`Getting /')'`)
     var options = {
-        consumerKey: CLIENT_ID,
-        consumerSecret: CLIENT_SECRET,
-        callbackUrl: 'http://my-alfred.io:5000/withings/oauth_callback'
+        consumerKey: wConfig.clientId,
+        consumerSecret: wConfig.clientSecret,
+        callbackUrl: 'https://dekuple.my-alfred.io:4202/withings/oauth_callback'
     };
     var client = new Withings(options);
 
