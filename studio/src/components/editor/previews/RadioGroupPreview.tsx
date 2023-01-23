@@ -20,7 +20,6 @@ const RadioGroupPreview = ({ component }: Props) => {
   const components: IComponents = useSelector(getComponents)
   const models = useSelector(getModels)
 
-
   if (isOver) {
     props.bg = 'teal.50'
   }
@@ -37,7 +36,7 @@ const RadioGroupPreview = ({ component }: Props) => {
   }
   const values=dp?.enumValues || []
 
-  if (props.dataSource && values) {
+  if (props.dataSource && values && component.children?.length==0) {
   return (
     <RadioGroup ref={ref} {...props}>
       <Flex flexDirection={props.flexDirection} justifyContent={props.justifyContent}>
