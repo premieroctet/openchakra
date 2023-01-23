@@ -38,6 +38,9 @@ router.get('/', (req, res) => {
 router.get('/oauth-callback', function (req, res) {
     var verifier = req.query.oauth_verifier
     var oauthSettings = req.session.oauth
+    if (!oauthSettings) {
+      return res.sendStatus(200)
+    }
     var options = {
         consumerKey: wConfig.clientId,
         consumerSecret: wConfig.clientSecret,
