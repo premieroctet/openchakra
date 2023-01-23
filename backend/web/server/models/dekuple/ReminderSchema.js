@@ -4,6 +4,16 @@ const {REMINDER_TYPE, REMINDER_OTHER} = require('../../../utils/dekuple/consts')
 
 const Schema = mongoose.Schema
 
+const DAYS_LOCALE= [
+  ['monday', 'lundi'],
+  ['tuesday', 'mardi'],
+  ['wednesday','mercredi'],
+  ['thursday','jeudi'],
+  ['friday','vendredi'],
+  ['saturday', 'samedi'],
+  ['sunday', 'dimanche'],
+]
+
 const ReminderSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
@@ -66,6 +76,11 @@ ReminderSchema.virtual('type_str').get(function() {
     return this.otherTitle
   }
   return REMINDER_TYPE[this.type]
+})
+
+ReminderSchema.virtual('reccurency_str').get(function() {
+  const fr_days=DAYS_LOCALE.filter(([en, fr]) => this[en]).map(([en, fr]) => `${fr}s`)
+  return `Tous les ${fr_days.join(', ').replace(/, ([^,]*)$/, ' et $1')}`
 })
 
 
