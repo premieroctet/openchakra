@@ -1,6 +1,7 @@
 const axios = require('axios')
 const mongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
+const session = require('express-session');
 const express = require('express')
 const next = require('next')
 const bodyParser = require('body-parser')
@@ -66,6 +67,7 @@ const http = require('http')
 const https = require('https')
 const fs = require('fs')
 const studio = require('./routes/api/studio')
+const withings = require('./routes/api/withings')
 const path = require('path')
 const app = express()
 const {serverContextFromRequest} = require('./utils/serverContext')
@@ -92,6 +94,7 @@ checkConfig()
     app.use(express.urlencoded({limit: '1mb'}))
     // Passport middleware
     app.use(passport.initialize())
+    app.use(session({secret: 'bigSecret'}));
 
     app.use(cookieParser())
     // Passport config
@@ -126,6 +129,7 @@ checkConfig()
     // Check hostname is valid
     app.use('/testping', (req, res) => res.json(RANDOM_ID))
     app.use('/myAlfred/api/studio', studio)
+    app.use('/myAlfred/api/withings', withings)
 
     // const port = process.env.PORT || 5000;
     const rootPath = path.join(__dirname, '/..')

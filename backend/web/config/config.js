@@ -14,8 +14,8 @@ const {
   HOSTNAME,
   PORT,
   MONO_PROVIDER,
-  PRODUCTION_ROOT,
   PRODUCTION_PORT,
+  PRODUCTION_ROOT,
   VIVAWALLET_BASE_URL,
   VIVAWALLET_API_ID,
   VIVAWALLET_API_KEY,
@@ -23,6 +23,8 @@ const {
   VIVAWALLET_CLIENT_SECRET,
   VIVAWALLET_MODE,
   VIVAWALLET_SOURCE_CODE,
+  WITHINGS_CLIENT_ID,
+  WITHINGS_CLIENT_SECRET,
 } = require('../mode')
 
 const SITE_MODES = {
@@ -140,6 +142,13 @@ const getVivaWalletConfig = () => {
     clientId: VIVAWALLET_CLIENT_ID,
     clientSecret: VIVAWALLET_CLIENT_SECRET,
     sourceCode: VIVAWALLET_SOURCE_CODE,
+  }
+}
+
+const getWithingsConfig = () => {
+  return {
+    clientId: WITHINGS_CLIENT_ID,
+    clientSecret: WITHINGS_CLIENT_SECRET,
   }
 }
 
@@ -339,4 +348,5 @@ module.exports = {
   getProductionRoot,
   getProductionPort,
   getVivaWalletConfig,
+  getWithingsConfig,
 }
