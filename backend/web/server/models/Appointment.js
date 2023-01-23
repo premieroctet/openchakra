@@ -5,7 +5,8 @@ const {getDataModel} = require('../../config/config')
 let AppointmentSchema=null
 
 try {
-  AppointmentSchema=require(`./${getDataModel()}/AppointmentSchema`)
+  AppointmentSchema=require(`../plugins/${getDataModel()}/schemas/AppointmentSchema`)
+  AppointmentSchema.plugin(mongooseLeanVirtuals)
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {
@@ -13,5 +14,4 @@ catch(err) {
   }
 }
 
-AppointmentSchema?.plugin(mongooseLeanVirtuals)
 module.exports = AppointmentSchema ? mongoose.model('appointment', AppointmentSchema) : null

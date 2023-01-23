@@ -5,7 +5,7 @@ const {getDataModel}=require('../../config/config')
 let EventSchema=null
 
 try {
-  EventSchema=require(`./${getDataModel()}/EventSchema`)
+  EventSchema=require(`../plugins/${getDataModel()}/schemas/EventSchema`)
   EventSchema.plugin(mongooseLeanVirtuals)
 }
 catch(err) {

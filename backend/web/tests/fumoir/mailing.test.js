@@ -8,8 +8,8 @@ const {
   sendNewBookingToMember,
   sendNewEvent,
   sendNewMessage,
-  sendWelcomeRegister
-} = require('../../server/utils/studio/fumoir/mailing');
+  sendWelcomeRegister,
+} = require('../../server/plugins/fumoir/mailing')
 
 describe('Mailing tests', () => {
 
@@ -25,43 +25,43 @@ describe('Mailing tests', () => {
   const booking = {booking_user: member, start_date: new Date(), duration: 2}
   const ev = {title: 'Evénement', start_date: new Date(), duration: 4}
 
-  test('sendNewBookingToMember', async () => {
+  test('sendNewBookingToMember', async() => {
     return expect(sendNewBookingToMember({booking})).resolves.not.toThrowError()
   })
 
-  test('sendNewBookingToManager', async() =>{
+  test('sendNewBookingToManager', async() => {
     return expect(sendNewBookingToManager({booking, manager})).resolves.not.toThrowError()
   })
 
-  test('sendNewEvent', async()  =>{
+  test('sendNewEvent', async() => {
     return expect(sendNewEvent({event: ev, member})).resolves.not.toThrowError()
   })
 
-  test('sendWelcomeRegister', async () =>{
-    return expect(sendWelcomeRegister({member, password:'Default password'})).resolves.not.toThrowError()
+  test('sendWelcomeRegister', async() => {
+    return expect(sendWelcomeRegister({member, password: 'Default password'})).resolves.not.toThrowError()
   })
 
-  test('sendNewMessage', async () =>{
+  test('sendNewMessage', async() => {
     return expect(sendNewMessage({member, partner})).resolves.not.toThrowError()
   })
 
-  test('sendEventRegister2Member', async ()=>{
-    return expect(sendEventRegister2Member({event:ev, member})).resolves.not.toThrowError()
+  test('sendEventRegister2Member', async() => {
+    return expect(sendEventRegister2Member({event: ev, member})).resolves.not.toThrowError()
   })
 
-  test('sendEventRegister2Guest', async () =>{
+  test('sendEventRegister2Guest', async() => {
     return expect(sendEventRegister2Guest({event: ev, member, guest})).resolves.not.toThrowError()
   })
 
-  test('sendBookingRegister2Guest', async () =>{
+  test('sendBookingRegister2Guest', async() => {
     return expect(sendBookingRegister2Guest({booking, guest})).resolves.not.toThrowError()
   })
 
-  test('sendEventRegister2Admin', async () =>{
+  test('sendEventRegister2Admin', async() => {
     return expect(sendEventRegister2Admin({event: ev, member: member, admin})).resolves.not.toThrowError()
   })
 
-  test('sendForgotPassword', async () =>{
+  test('sendForgotPassword', async() => {
     return expect(sendForgotPassword({user: member})).resolves.not.toThrowError()
   })
 

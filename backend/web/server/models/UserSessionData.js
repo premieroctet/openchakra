@@ -5,7 +5,7 @@ const {getDataModel} = require('../../config/config')
 let UserSessionDataSchema=null
 
 try {
-  UserSessionDataSchema=require(`./${getDataModel()}/UserSessionDataSchema`)
+  UserSessionDataSchema=require(`../plugins/${getDataModel()}/schemas/UserSessionDataSchema`)
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {

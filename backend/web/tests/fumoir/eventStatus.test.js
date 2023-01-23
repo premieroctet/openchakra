@@ -3,7 +3,7 @@ const moment = require('moment')
 const {forceDataModelFumoir}=require('../utils')
 forceDataModelFumoir()
 const {MONGOOSE_OPTIONS} = require('../../server/utils/database')
-const {TO_COME, FINISHED, CURRENT}=require('../../utils/fumoir/consts')
+const {TO_COME, FINISHED, CURRENT}=require('../../server/plugins/fumoir/consts')
 const Event=require('../../server/models/Event')
 
 jest.setTimeout(20000)

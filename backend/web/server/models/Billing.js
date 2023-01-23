@@ -5,7 +5,7 @@ const {getDataModel} = require('../../config/config')
 let BillingSchema=null
 
 try {
-  BillingSchema=require(`./${getDataModel()}/BillingSchema`)
+  BillingSchema=require(`../plugins/${getDataModel()}/schemas/BillingSchema`)
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {

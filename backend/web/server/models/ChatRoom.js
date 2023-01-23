@@ -5,7 +5,7 @@ const {getDataModel} = require('../../config/config')
 let ChatRoomSchema=null
 
 try {
-  ChatRoomSchema=require(`./${getDataModel()}/ChatRoomSchema`)
+  ChatRoomSchema=require(`../plugins/${getDataModel()}/schemas/ChatRoomSchema`)
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {

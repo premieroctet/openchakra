@@ -11,7 +11,7 @@ const Company = require('../../server/models/Company')
 require('../../server/models/Cigar')
 const Payment = require('../../server/models/Payment')
 const Category = require('../../server/models/Category')
-const {PAYMENT_SUCCESS} = require('../../utils/fumoir/consts')
+const {PAYMENT_SUCCESS} = require('../../server/plugins/fumoir/consts')
 const {MONGOOSE_OPTIONS} = require('../../server/utils/database')
 
 jest.setTimeout(20000)

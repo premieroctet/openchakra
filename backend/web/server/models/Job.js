@@ -5,7 +5,7 @@ const {getDataModel} = require('../../config/config')
 let JobSchema=null
 
 try {
-  JobSchema=require(`./${getDataModel()}/JobSchema`)
+  JobSchema=require(`../plugins/${getDataModel()}/schemas/JobSchema`)
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {

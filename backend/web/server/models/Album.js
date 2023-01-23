@@ -5,7 +5,8 @@ const {getDataModel} = require('../../config/config')
 let AlbumSchema=null
 
 try {
-  AlbumSchema=require(`./${getDataModel()}/AlbumSchema`)
+  AlbumSchema=require(`../plugins/${getDataModel()}/schemas/AlbumSchema`)
+  AlbumSchema.plugin(mongooseLeanVirtuals)
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {
@@ -13,5 +14,4 @@ catch(err) {
   }
 }
 
-AlbumSchema?.plugin(mongooseLeanVirtuals)
 module.exports = AlbumSchema ? mongoose.model('album', AlbumSchema) : null

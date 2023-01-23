@@ -5,7 +5,7 @@ const {getDataModel} = require('../../config/config')
 let ResetTokenSchema=null
 
 try {
-  ResetTokenSchema=require(`./${getDataModel()}/ResetTokenSchema`)
+  ResetTokenSchema=require(`../plugins/${getDataModel()}/schemas/ResetTokenSchema`)
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {

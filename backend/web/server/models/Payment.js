@@ -5,7 +5,8 @@ const {getDataModel} = require('../../config/config')
 let PaymentSchema=null
 
 try {
-  PaymentSchema=require(`./${getDataModel()}/PaymentSchema`)
+  PaymentSchema=require(`../plugins/${getDataModel()}/schemas/PaymentSchema`)
+  PaymentSchema.plugin(mongooseLeanVirtuals)
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {
@@ -13,5 +14,4 @@ catch(err) {
   }
 }
 
-PaymentSchema?.plugin(mongooseLeanVirtuals)
 module.exports = PaymentSchema ? mongoose.model('payment', PaymentSchema) : null

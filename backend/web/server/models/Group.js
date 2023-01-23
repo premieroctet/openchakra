@@ -5,7 +5,7 @@ const {getDataModel} = require('../../config/config')
 let GroupSchema=null
 
 try {
-  GroupSchema=require(`./${getDataModel()}/GroupSchema`)
+  GroupSchema=require(`../plugins/${getDataModel()}/schemas/GroupSchema`)
 }
 catch(err) {
   GroupSchema=null

@@ -5,7 +5,7 @@ const {getDataModel} = require('../../config/config')
 let PriceListSchema=null
 
 try {
-  PriceListSchema=require(`./${getDataModel()}/PriceListSchema`)
+  PriceListSchema=require(`../plugins/${getDataModel()}/schemas/PriceListSchema`)
   PriceListSchema.plugin(mongooseLeanVirtuals)
 }
 catch(err) {

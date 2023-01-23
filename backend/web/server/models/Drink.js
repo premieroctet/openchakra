@@ -1,20 +1,19 @@
-const DrinkSchema = require("./fumoir/DrinkSchema");
-const mongoose = require("mongoose");
-const mongooseLeanVirtuals = require("mongoose-lean-virtuals");
-const { PRODUCT_DISC_OPTION } = require("../../utils/fumoir/consts");
-const { schemaOptions } = require("../utils/schemas");
+const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
+const {getDataModel}=require('../../config/config')
 
-let Drink = null;
+let Drink = null
 try {
-  const Product = require(`./Product`);
+  const Product = require(`./Product`)
   if (Product) {
-    DrinkSchema.plugin(mongooseLeanVirtuals);
-    Drink = Product.discriminator("drink", DrinkSchema);
+    const DrinkSchema = require(`../plugins/${getDataModel()}/schemas/DrinkSchema`)
+    DrinkSchema.plugin(mongooseLeanVirtuals)
+    Drink = Product.discriminator('drink', DrinkSchema)
   }
-} catch (err) {
-  if (err.code !== "MODULE_NOT_FOUND") {
-    throw err;
+}
+catch (err) {
+  if (err.code !== 'MODULE_NOT_FOUND') {
+    throw err
   }
 }
 
-module.exports = Drink;
+module.exports = Drink

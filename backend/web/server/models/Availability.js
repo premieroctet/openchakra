@@ -5,7 +5,7 @@ const {getDataModel} = require('../../config/config')
 let AvailabilitySchema=null
 
 try {
-  AvailabilitySchema=require(`./${getDataModel()}/AvailabilitySchema`)
+  AvailabilitySchema=require(`../plugins/${getDataModel()}/schemas/AvailabilitySchema`)
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {

@@ -1,17 +1,20 @@
-const CigarSchema = require("./fumoir/CigarSchema");
-const mongooseLeanVirtuals = require("mongoose-lean-virtuals");
+const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
+const {getDataModel}=require('../../config/config')
 
-let Cigar = null;
+let Cigar = null
 
 try {
-  const Product = require(`./Product`);
+  const Product = require(`./Product`)
   if (Product) {
-    CigarSchema.plugin(mongooseLeanVirtuals);
-    Cigar = Product.discriminator("cigar", CigarSchema);
-  }
-} catch (err) {
-  if (err.code !== "MODULE_NOT_FOUND") {
-    throw err;
+    const CigarSchema=require(`../plugins/${getDataModel()}/schemas/CigarSchema`)
+    CigarSchema.plugin(mongooseLeanVirtuals)
+    Cigar = Product.discriminator('cigar', CigarSchema)
   }
 }
-module.exports = Cigar;
+catch (err) {
+  if (err.code !== 'MODULE_NOT_FOUND') {
+    throw err
+  }
+}
+
+module.exports = Cigar

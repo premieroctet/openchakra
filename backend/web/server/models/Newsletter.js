@@ -5,7 +5,7 @@ const {getDataModel}=require('../../config/config')
 let NewsletterSchema=null
 
 try {
-  NewsletterSchema=require(`./${getDataModel()}/NewsletterSchema`)
+  NewsletterSchema=require(`../plugins/${getDataModel()}/schemas/NewsletterSchema`)
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {

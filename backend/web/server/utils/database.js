@@ -1,10 +1,9 @@
-const util=require('util')
 const mongoose = require('mongoose')
 const lodash = require('lodash')
 const formatDuration = require('format-duration')
 const UserSessionData = require('../models/UserSessionData')
 const Booking = require('../models/Booking')
-const {CURRENT, FINISHED} = require('../../utils/fumoir/consts')
+const {CURRENT, FINISHED} = require('../plugins/fumoir/consts')
 const {BadRequestError} = require('./errors')
 
 // const { ROLES, STATUS } = require("../../utils/aftral_studio/consts");

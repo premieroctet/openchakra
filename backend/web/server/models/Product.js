@@ -5,7 +5,7 @@ const {getDataModel}=require('../../config/config')
 let ProductSchema=null
 
 try {
-  ProductSchema=require(`./${getDataModel()}/ProductSchema`)
+  ProductSchema=require(`../plugins/${getDataModel()}/schemas/ProductSchema`)
   ProductSchema.plugin(mongooseLeanVirtuals)
 }
 catch(err) {

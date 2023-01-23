@@ -5,7 +5,7 @@ const {getDataModel} = require('../../config/config')
 let OrderItemSchema=null
 
 try {
-  OrderItemSchema=require(`./${getDataModel()}/OrderItemSchema`)
+  OrderItemSchema=require(`../plugins/${getDataModel()}/schemas/OrderItemSchema`)
   OrderItemSchema.plugin(mongooseLeanVirtuals)
 }
 catch(err) {

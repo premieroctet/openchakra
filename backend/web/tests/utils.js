@@ -16,7 +16,6 @@ const login = username => {
 }
 
 const forceDataModelFumoir = () => {
-  require('../server/utils/studio/fumoir/functions')
   jest.mock('../config/config', () => {
     const originalModule = jest.requireActual('../config/config')
 

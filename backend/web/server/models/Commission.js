@@ -5,7 +5,7 @@ const {getDataModel} = require('../../config/config')
 let CommissionSchema=null
 
 try {
-  CommissionSchema=require(`./${getDataModel()}/CommissionSchema`)
+  CommissionSchema=require(`../plugins/${getDataModel()}/schemas/CommissionSchema`)
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {

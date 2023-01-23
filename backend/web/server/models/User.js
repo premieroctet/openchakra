@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const {getDataModel}=require('../../config/config')
 
 
-const UserSchema=require(`./${getDataModel()}/UserSchema`)
+const UserSchema=require(`../plugins/${getDataModel()}/schemas/UserSchema`)
 
 UserSchema.plugin(mongooseLeanVirtuals)
 

@@ -5,7 +5,7 @@ const {getDataModel} = require('../../config/config')
 let TrainingCenterSchema=null
 
 try {
-  TrainingCenterSchema=require(`./${getDataModel()}/TrainingCenterSchema`)
+  TrainingCenterSchema=require(`../plugins/${getDataModel()}/schemas/TrainingCenterSchema`)
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {

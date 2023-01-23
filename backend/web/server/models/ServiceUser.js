@@ -5,7 +5,7 @@ const {getDataModel}=require('../../config/config')
 let ServiceUserSchema=null
 
 try {
-  ServiceUserSchema=require(`./${getDataModel()}/ServiceUserSchema`)
+  ServiceUserSchema=require(`../plugins/${getDataModel()}/schemas/ServiceUserSchema`)
   ServiceUserSchema.plugin(mongooseLeanVirtuals)
 }
 catch(err) {

@@ -5,7 +5,7 @@ const {getDataModel} = require('../../config/config')
 let PrestationSchema=null
 
 try {
-  PrestationSchema=require(`./${getDataModel()}/PrestationSchema`)
+  PrestationSchema=require(`../plugins/${getDataModel()}/schemas/PrestationSchema`)
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {

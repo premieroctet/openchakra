@@ -5,7 +5,7 @@ const {getDataModel} = require('../../config/config')
 let GuestSchema=null
 
 try {
-  GuestSchema=require(`./${getDataModel()}/GuestSchema`)
+  GuestSchema=require(`../plugins/${getDataModel()}/schemas/GuestSchema`)
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {
