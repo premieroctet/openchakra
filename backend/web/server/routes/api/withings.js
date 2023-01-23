@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
   var options = {
     consumerKey: wConfig.clientId,
     consumerSecret: wConfig.clientSecret,
-    callbackUrl: 'https://dekuple.my-alfred.io/myAlfred/api/withings/oauth_callback',
+    callbackUrl: 'https://dekuple.my-alfred.io/myAlfred/api/withings/oauth-callback',
   };
   var client = new Withings(options);
 
@@ -35,13 +35,13 @@ router.get('/', (req, res) => {
 });
 
 // On return from the authorization
-router.get('/oauth_callback', function (req, res) {
+router.get('/oauth-callback', function (req, res) {
     var verifier = req.query.oauth_verifier
     var oauthSettings = req.session.oauth
     var options = {
         consumerKey: wConfig.clientId,
         consumerSecret: wConfig.clientSecret,
-        callbackUrl: 'https://dekuple.my-alfred.io/myAlfred/api/withings/oauth_callback',
+        callbackUrl: 'https://dekuple.my-alfred.io/myAlfred/api/withings/oauth-callback',
         userID: req.query.userid
     };
     var client = new Withings(options);
