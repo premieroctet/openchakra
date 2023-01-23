@@ -28,6 +28,7 @@ router.get('/', (req, res) => {
       requestTokenSecret: tokenSecret
     };
 
+    console.log(`Session set to ${JSON.stringnify(req.session.oauth)}`)
     const url = client.authorizeUrl(token, tokenSecret)
     console.log(`Redirecting to ${url}`)
     res.redirect(url);
@@ -38,6 +39,7 @@ router.get('/', (req, res) => {
 router.get('/oauth-callback', function (req, res) {
     var verifier = req.query.oauth_verifier
     var oauthSettings = req.session.oauth
+    console.log(`Session getting ${JSON.stringnify(oauthSettings)}`)
     if (!oauthSettings) {
       return res.sendStatus(200)
     }
