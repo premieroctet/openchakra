@@ -1,11 +1,16 @@
 import { ACTIONS } from '../utils/actions'
 
-import React from 'react'
+import React, {useState} from 'react'
 import lodash from 'lodash'
 
 const withDynamicCheckbox = Component => {
   const Internal = ({ dataSource, context, backend, ...props }) => {
+
+    const initialValue = lodash.get(dataSource, props.attribute)
+    const [value, setValue]=useState(initialValue)
+
     const onChange = ev => {
+      setValue(!!ev.target.checked)
       ACTIONS.putValue({
         context: dataSource?._id,
         value: !!ev.target.checked,
@@ -14,8 +19,12 @@ const withDynamicCheckbox = Component => {
       }).then(() => props.reload())
     }
 
-    const value = lodash.get(dataSource, props.attribute)
-    return <Component {...props} isChecked={value} onChange={onChange} />
+    const pr={...props, isChecked: value, value}
+    return (
+      <div {...pr}>
+        <Component {...lodash.omit(props, ['id'])} isChecked={value} onChange={onChange} />
+      </div>
+    )
   }
 
   return Internal
