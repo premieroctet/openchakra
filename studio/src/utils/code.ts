@@ -46,7 +46,7 @@ export const getPageUrl = (
   try {
     return pages?.[pageId]?.pageName
       .toLowerCase()
-      .replace(/ /i, '-')
+      .replace(/ /gi, '-')
       .normalize('NFD')
       .replace(/\p{Diacritic}/gu, '')
   } catch (err) {
