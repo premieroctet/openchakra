@@ -1,5 +1,9 @@
+
+const moment = require('moment')
 const mongoose = require('mongoose')
 const bcrypt=require('bcryptjs')
+const {getAccessToken} = require('../../../utils/withings')
+const {getFreshAccessToken} = require('../../../utils/withings')
 const {GENDER, SMOKER_TYPE} = require('../consts')
 const {schemaOptions} = require('../../../utils/schemas')
 
@@ -27,10 +31,6 @@ const UserSchema = new Schema({
     default: 'invalid',
     set: pass => bcrypt.hashSync(pass, 10),
   },
-  withings_id: {
-    type: String,
-    required: false, // true,
-  },
   picture: {
     type: String,
     required: false,
@@ -45,11 +45,11 @@ const UserSchema = new Schema({
     type: Number,
     min: [10, 'La taille doit être >  10 cm'],
     max: [300, 'La taille doit être <  300 cm'],
-    required:  [true, 'La taille est obligatoire'],
+    required: [true, 'La taille est obligatoire'],
   },
   birthday: {
     type: Date,
-    required: true,
+    required: [true, 'La date de naissance est obligatoire'],
   },
   gender: {
     type: String,
@@ -70,17 +70,30 @@ const UserSchema = new Schema({
     type: Boolean,
     required: false,
   },
-  tensiometer_withings_id: {
+  withings_id: {
+    type: String,
+    required: false, // true,
+  },
+  // At user creation, usercode allows to get a token.
+  // Lasy access token, retrieved only on demand
+  withings_usercode: {
     type: String,
     required: false,
   },
-  tensiometer_mark: {
+  access_token: {
     type: String,
-    required: false,
+    required: false, // true,
   },
-  tensiometer_serial_number: {
+  expires_at: {
+    type: Date,
+  },
+  refresh_token: {
     type: String,
-    required: false,
+    required: false, // true,
+  },
+  csrf_token: {
+    type: String,
+    required: false, // true,
   },
 }, schemaOptions)
 

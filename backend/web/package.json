@@ -45,6 +45,7 @@
     "next": "9",
     "next-routes": "^1.4.2",
     "node-cache": "^5.1.2",
+    "node-cron": "^3.0.2",
     "node-localstorage": "^2.2.1",
     "nominatim-client": "^3.2.1",
     "passport": "^0.4.0",

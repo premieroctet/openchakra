@@ -1,3 +1,7 @@
+const moment = require('moment')
+const cron = require('node-cron')
+const {getAccessToken, getFreshAccessToken} = require('../../utils/withings')
+const User = require('../../models/User')
 const {
   declareEnumField,
   declareVirtualField,
@@ -64,3 +68,35 @@ declareVirtualField({model: 'appointment', field: 'type_str', instance: 'String'
 declareEnumField({model: 'reminder', field: 'type', instance: 'String', enumValues: REMINDER_TYPE})
 declareVirtualField({model: 'reminder', field: 'type_str', instance: 'String', requires: 'type,otherTitle'})
 declareVirtualField({model: 'reminder', field: 'reccurency_str', instance: 'String', requires: 'monday,tuesday,wednesday,thursday,friday,saturday,sunday'})
+
+
+// Ensure Users tokens are up to date every hour
+cron.schedule('0 */30 * * * *', () => {
+  const expirationMoment=moment().add(1, 'hour')
+  User.find({$or: [{access_token: null}, {expires_at: {$lte: expirationMoment}}]})
+    .then(users => {
+      console.log(`Found ${users.length} users without tokens or nearly expiring tokens`)
+      if (users.length==0) {
+        return null
+      }
+      return Promise.allSettled(users.map(u => {
+        const fn=!u.access_token ? getAccessToken(u.withings_usercode) : getFreshAccessToken(u.refresh_token)
+        return fn
+          .then(tokens => {
+            u.access_token=tokens.access_token
+            u.refresh_token=tokens.refresh_token
+            u.csrf_token=tokens.csrf_token
+            u.expires_at=moment().add(tokens.expires_in, 'seconds')
+            u.withings_usercode=null
+            return u.save()
+          })
+      }))
+    })
+    .then(res => {
+      if (!res) { return }
+      const ok=res.filter(r => r.status=='fulfilled').map(r => r.value.email)
+      const nok=res.filter(r => r.status=='rejected').map(r => r.reason)
+      console.log(`Users token updated:${JSON.stringify(ok)}`)
+      console.error(`Errors:${JSON.stringify(nok)}`)
+    })
+})
