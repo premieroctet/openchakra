@@ -3,5 +3,8 @@ module.exports = {
   groupImports: false,
   emptyLineBetweenGroups: false,
   danglingCommas: false,
-  declarationKeyword: 'const'
+  declarationKeyword: 'const',
+  importStatementFormatter({ importStatement }) {
+    return importStatement.replace(/;$/, '');
+  },
 }
