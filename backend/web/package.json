@@ -24,7 +24,6 @@
     "csv-string": "^4.1.0",
     "exceljs": "^4.3.0",
     "express": "^4.16.4",
-    "express-session": "^1.17.3",
     "file-system": "^2.2.2",
     "format-duration": "^2.0.0",
     "glob": "^7.1.4",
@@ -66,8 +65,7 @@
     "url-loader": "^4.1.1",
     "uuid": "^3.3.3",
     "validator": "^10.11.0",
-    "webpackbar": "^5.0.2",
-    "withings-lib": "^0.2.2"
+    "webpackbar": "^5.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.13.1",

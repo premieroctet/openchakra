@@ -8,10 +8,12 @@ const Schema = mongoose.Schema
 const UserSchema = new Schema({
   firstname: {
     type: String,
+    set: v => v?.trim(),
     required: [true, 'Le prénom est obligatoire'],
   },
   lastname: {
     type: String,
+    set: v => v?.trim(),
     required: [true, 'Le nom de famille est obligatoire'],
   },
   email: {
@@ -35,15 +37,19 @@ const UserSchema = new Schema({
   },
   weight: { // kg
     type: Number,
-    required: false,
+    min: [10, 'La taille doit être >  10 cm'],
+    max: [300, 'La taille doit être <  300 cm'],
+    required: true,
   },
   height: { // cm
     type: Number,
-    required: false,
+    min: [1, 'Le poids doit être > 1 kg'],
+    max: [600, 'Le poids doit être < 600 kg'],
+    required: true,
   },
   birthday: {
     type: Date,
-    required: false, // true,
+    required: true,
   },
   gender: {
     type: String,

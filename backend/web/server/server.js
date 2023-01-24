@@ -1,7 +1,6 @@
 const axios = require('axios')
 const mongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
-const session = require('express-session');
 const express = require('express')
 const next = require('next')
 const bodyParser = require('body-parser')
@@ -94,7 +93,6 @@ checkConfig()
     app.use(express.urlencoded({limit: '1mb'}))
     // Passport middleware
     app.use(passport.initialize())
-    app.use(session({secret: 'bigSecret'}));
 
     app.use(cookieParser())
     // Passport config
