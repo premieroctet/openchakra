@@ -1,9 +1,5 @@
-
-const moment = require('moment')
 const mongoose = require('mongoose')
 const bcrypt=require('bcryptjs')
-const {getAccessToken} = require('../../../utils/withings')
-const {getFreshAccessToken} = require('../../../utils/withings')
 const {GENDER, SMOKER_TYPE} = require('../consts')
 const {schemaOptions} = require('../../../utils/schemas')
 

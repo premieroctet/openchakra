@@ -142,6 +142,11 @@ const getFreshAccessToken = refreshToken => {
     })
 }
 
+// From https://developer.withings.com/api-reference/#operation/oauth2-listusers
+const getUsersList = () => {
+  return Promise.reject('Not implemented')
+}
+
 module.exports={
   getNonce,
   createUser,

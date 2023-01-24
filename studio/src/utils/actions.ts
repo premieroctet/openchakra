@@ -225,7 +225,10 @@ export const ACTIONS: IActions = {
     options: {},
     next: ['openPage'],
   },
-
+  openWithingsSettings: {
+    label: 'Open withings settings',
+    options: {},
+  },
 }
 
 export const allowsActions = (component: IComponent) => {
