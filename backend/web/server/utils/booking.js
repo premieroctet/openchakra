@@ -135,6 +135,5 @@ const createBooking = ({
 };
 
 module.exports = {
-  checkPaid,
   createBooking
 };

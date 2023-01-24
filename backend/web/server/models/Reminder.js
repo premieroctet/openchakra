@@ -5,7 +5,7 @@ const {getDataModel} = require('../../config/config')
 let ReminderSchema=null
 
 try {
-  ReminderSchema=require(`./${getDataModel()}/ReminderSchema`)
+  ReminderSchema=require(`../plugins/${getDataModel()}/schemas/ReminderSchema`)
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {

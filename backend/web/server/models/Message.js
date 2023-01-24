@@ -5,7 +5,7 @@ const {getDataModel} = require('../../config/config')
 let MessageSchema=null
 
 try {
-  MessageSchema=require(`./${getDataModel()}/MessageSchema`)
+  MessageSchema=require(`../plugins/${getDataModel()}/schemas/MessageSchema`)
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {

@@ -5,7 +5,7 @@ const {getDataModel}=require('../../config/config')
 let UIConfigurationSchema=null
 
 try {
-  UIConfigurationSchema=require(`./${getDataModel()}/UIConfigurationSchema`)
+  UIConfigurationSchema=require(`../plugins/${getDataModel()}/schemas/UIConfigurationSchema`)
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {

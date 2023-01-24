@@ -5,7 +5,7 @@ const {getDataModel} = require('../../config/config')
 let ConversationSchema=null
 
 try {
-  ConversationSchema=require(`./${getDataModel()}/ConversationSchema`)
+  ConversationSchema=require(`../plugins/${getDataModel()}/schemas/ConversationSchema`)
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {

@@ -1,17 +1,19 @@
-const MealSchema = require("./fumoir/MealSchema");
-const mongooseLeanVirtuals = require("mongoose-lean-virtuals");
+const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
+const {getDataModel}=require('../../config/config')
 
-let Meal = null;
+let Meal = null
 
 try {
-  const Product = require(`./Product`);
+  const Product = require(`./Product`)
   if (Product) {
-    MealSchema.plugin(mongooseLeanVirtuals);
-    Meal = Product.discriminator("meal", MealSchema);
-  }
-} catch (err) {
-  if (err.code !== "MODULE_NOT_FOUND") {
-    throw err;
+    const MealSchema=require(`../plugins/${getDataModel()}/schemas/MealSchema`)
+    MealSchema.plugin(mongooseLeanVirtuals)
+    Meal = Product.discriminator('meal', MealSchema)
   }
 }
-module.exports = Meal;
+catch (err) {
+  if (err.code !== 'MODULE_NOT_FOUND') {
+    throw err
+  }
+}
+module.exports = Meal

@@ -4,7 +4,7 @@ const {getDataModel} = require('../../config/config')
 
 let QuotationSchema=null
 try {
-  QuotationSchema=require(`./${getDataModel()}/QuotationSchema`)
+  QuotationSchema=require(`../plugins/${getDataModel()}/schemas/QuotationSchema`)
   QuotationSchema.plugin(mongooseLeanVirtuals)
 }
 catch(err) {

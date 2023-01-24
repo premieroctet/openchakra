@@ -1,25 +1,32 @@
-const { MONGOOSE_OPTIONS, getModels } = require('../../server/utils/database');
-const { getDatabaseUri } = require('../../config/config');
-const mongoose = require('mongoose');
-const moment = require('moment');
-const {TO_COME, FINISHED, CURRENT}=require('../../utils/fumoir/consts')
+const mongoose = require('mongoose')
+const moment = require('moment')
+const {forceDataModelFumoir}=require('../utils')
+forceDataModelFumoir()
+const {MONGOOSE_OPTIONS} = require('../../server/utils/database')
+const {TO_COME, FINISHED, CURRENT}=require('../../server/plugins/fumoir/consts')
 const Event=require('../../server/models/Event')
+
+jest.setTimeout(20000)
 
 describe('Test virtual single ref', () => {
 
-  beforeAll(() => {
-    return mongoose.connect('mongodb://localhost/test', MONGOOSE_OPTIONS)
-        .then(() => mongoose.connection.dropDatabase())
+  beforeAll(async() => {
+    await mongoose.connect(`mongodb://localhost/test${moment().unix()}`, MONGOOSE_OPTIONS)
   })
 
-  it('Must have proper status', async () => {
+  afterAll(async() => {
+    await mongoose.connection.dropDatabase()
+    await mongoose.connection.close()
+  })
+
+  it('Must have proper status', async() => {
     const yesterday=moment().add(-1, 'days')
     const tomorrow=moment().add(1, 'days')
     const [evToCome, evCurrent, evFinished, evUndefined]=await Event.create([
       {start_date: tomorrow},
       {start_date: yesterday, end_date: tomorrow},
       {end_date: yesterday},
-      {}
+      {},
     ])
     expect(evToCome.status).toEqual(TO_COME)
     expect(evCurrent.status).toEqual(CURRENT)

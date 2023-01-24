@@ -5,7 +5,7 @@ const {getDataModel} = require('../../config/config')
 let MeasureSchema=null
 
 try {
-  MeasureSchema=require(`./${getDataModel()}/MeasureSchema`)
+  MeasureSchema=require(`../plugins/${getDataModel()}/schemas/MeasureSchema`)
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {

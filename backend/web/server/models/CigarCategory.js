@@ -1,17 +1,19 @@
-const CigarCategorySchema = require("./fumoir/CigarCategorySchema");
-const mongooseLeanVirtuals = require("mongoose-lean-virtuals");
+const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
+const {getDataModel}=require('../../config/config')
 
-let CigarCategory = null;
+let CigarCategory = null
 
 try {
-  const Category = require(`./Category`);
+  const Category = require(`./Category`)
   if (Category) {
-    CigarCategorySchema.plugin(mongooseLeanVirtuals);
-    CigarCategory = Category.discriminator("cigarCategory", CigarCategorySchema)
+    const CigarCategorySchema=require(`../plugins/${getDataModel()}/schemas/CigarCategorySchema`)
+    CigarCategorySchema.plugin(mongooseLeanVirtuals)
+    CigarCategory = Category.discriminator('cigarCategory', CigarCategorySchema)
   }
-} catch (err) {
-  if (err.code !== "MODULE_NOT_FOUND") {
-    throw err;
+}
+catch (err) {
+  if (err.code !== 'MODULE_NOT_FOUND') {
+    throw err
   }
 }
 module.exports = CigarCategory

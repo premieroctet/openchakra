@@ -1,9 +1,9 @@
-const axios = require('axios');
-const moment = require('moment');
-const lodash = require('lodash');
+const axios = require('axios')
+const moment = require('moment')
+const lodash = require('lodash')
 const {createHmac} = require('crypto')
+const {GENDER, GENDER_MALE} = require('../plugins/dekuple/consts')
 const {getWithingsConfig} = require('../../config/config')
-const { GDR_MALE, GENDER } = require('../../utils/dekuple/consts');
 
 const wConfig=getWithingsConfig()
 
@@ -68,7 +68,7 @@ const createUser = (user) => {
 
       const measures=JSON.stringify([{value:user.height, unit:-2, type:4}, {value:user.weight, unit:0, type:1}])
       const shortname=[user.firstname[0], user.lastname.slice(0,2)].map(s => s.toUpperCase()).join('')
-      const gender=user.gender==GDR_MALE ? 0:1
+      const gender=user.gender==GENDER_MALE ? 0:1
       const birthdate=moment(user.birthday).unix().toString()
 
       const body={

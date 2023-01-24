@@ -15,4 +15,43 @@ const login = username => {
     })
 }
 
-module.exports={login}
+const forceDataModelFumoir = () => {
+  jest.mock('../config/config', () => {
+    const originalModule = jest.requireActual('../config/config')
+
+    return {
+      __esModule: true,
+      ...originalModule,
+      getDataModel: jest.fn(() => 'fumoir'),
+    }
+  })
+}
+
+const forceDataModelDekuple = () => {
+  jest.mock('../config/config', () => {
+    const originalModule = jest.requireActual('../config/config')
+
+    return {
+      __esModule: true,
+      ...originalModule,
+      getDataModel: jest.fn(() => 'dekuple'),
+    }
+  })
+}
+
+const forceDataModelAftral = () => {
+  jest.mock('../config/config', () => {
+    const originalModule = jest.requireActual('../config/config')
+
+    return {
+      __esModule: true,
+      ...originalModule,
+      getDataModel: jest.fn(() => 'aftral'),
+    }
+  })
+}
+
+module.exports={
+  login,
+  forceDataModelFumoir, forceDataModelDekuple, forceDataModelAftral,
+}

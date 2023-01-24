@@ -5,7 +5,7 @@ const {getDataModel} = require('../../config/config')
 let FilterPresentationSchema=null
 
 try {
-  FilterPresentationSchema=require(`./${getDataModel()}/FilterPresentationSchema`)
+  FilterPresentationSchema=require(`../plugins/${getDataModel()}/schemas/FilterPresentationSchema`)
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {

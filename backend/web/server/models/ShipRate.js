@@ -5,7 +5,7 @@ const {getDataModel} = require('../../config/config')
 let ShipRateSchema=null
 
 try {
-  ShipRateSchema=require(`./${getDataModel()}/ShipRateSchema`)
+  ShipRateSchema=require(`../plugins/${getDataModel()}/schemas/ShipRateSchema`)
   ShipRateSchema.plugin(mongooseLeanVirtuals)
 }
 catch(err) {

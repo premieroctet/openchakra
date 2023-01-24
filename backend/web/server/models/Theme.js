@@ -5,7 +5,7 @@ const {getDataModel} = require('../../config/config')
 let ThemeSchema=null
 
 try {
-  ThemeSchema=require(`./${getDataModel()}/ThemeSchema`)
+  ThemeSchema=require(`../plugins/${getDataModel()}/schemas/ThemeSchema`)
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {

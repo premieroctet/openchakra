@@ -5,7 +5,7 @@ const {getDataModel} = require('../../config/config')
 let ProgramSchema=null
 
 try {
-  ProgramSchema=require(`./${getDataModel()}/ProgramSchema`)
+  ProgramSchema=require(`../plugins/${getDataModel()}/schemas/ProgramSchema`)
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {

@@ -5,7 +5,7 @@ const {getDataModel}=require('../../config/config')
 let CategorySchema=null
 
 try {
-  CategorySchema=require(`./${getDataModel()}/CategorySchema`)
+  CategorySchema=require(`../plugins/${getDataModel()}/schemas/CategorySchema`)
   CategorySchema.plugin(mongooseLeanVirtuals)
 }
 catch(err) {

@@ -3,7 +3,7 @@ const {
   APPRENANT,
   FORMATEUR,
   PASSWORD
-} = require('../../../utils/aftral_studio/consts');
+} = require('../../plugins/aftral/consts');
 const { TEXT_TYPE } = require('../../../utils/consts');
 const {promises: fs} = require('fs')
 const bcrypt=require('bcryptjs')
@@ -109,7 +109,6 @@ const importTrainer = record => {
     email: record.EMAIL_FORMATEUR, password: PASSWORD, role: FORMATEUR,
   })
     .then(user => {
-      console.log('upserted user')
       formateur=user
       return upsertSession({
         programCode: record.CODE_PRODUIT, sessionCode: record.CODE_SESSION,

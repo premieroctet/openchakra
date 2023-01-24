@@ -5,7 +5,7 @@ const {getDataModel} = require('../../config/config')
 let ContactSchema=null
 
 try {
-  ContactSchema=require(`./${getDataModel()}/ContactSchema`)
+  ContactSchema=require(`../plugins/${getDataModel()}/schemas/ContactSchema`)
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {

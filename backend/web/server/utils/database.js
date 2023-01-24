@@ -3,9 +3,8 @@ const lodash = require('lodash')
 const formatDuration = require('format-duration')
 const UserSessionData = require('../models/UserSessionData')
 const Booking = require('../models/Booking')
-const {CURRENT, FINISHED} = require('../../utils/fumoir/consts')
+const {CURRENT, FINISHED} = require('../plugins/fumoir/consts')
 const {BadRequestError} = require('./errors')
-const util=require('util')
 
 // const { ROLES, STATUS } = require("../../utils/aftral_studio/consts");
 // TODO: Omporting Theme makes a cyclic import. Why ?
@@ -255,7 +254,7 @@ const getModel = (id, expectedModel) => {
 }
 
 const buildQuery = (model, id, fields) => {
-  console.log(`Requesting model ${model}, id ${id || 'none'} fields:${fields}`)
+  console.log(`Requesting model:${model}, id:${id || 'none'} fields:${fields}`)
   const modelAttributes = Object.fromEntries(getModelAttributes(model))
 
   const virtuals = lodash(fields.map(f => f.split('.')[0]))
@@ -501,7 +500,7 @@ const putAttribute = ({parent, attribute, value, user}) => {
       model = res
       const setter=lodash.get(COMPUTED_FIELDS_SETTERS, `${model}.${attribute}`)
       if (setter) {
-        return setter({id:parent, attribute, value, user})
+        return setter({id: parent, attribute, value, user})
       }
       const mongooseModel = mongoose.connection.models[model]
 

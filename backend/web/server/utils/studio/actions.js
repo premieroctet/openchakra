@@ -1,19 +1,15 @@
-const { sendNewMessage } = require('./fumoir/mailing');
-const {
-  buildPopulates,
-  getModel,
-  putAttribute,
-  removeData
-} = require('../database');
 const url = require('url')
-const mongoose=require('mongoose')
-const lodash=require('lodash')
+const {
+  putAttribute,
+  removeData,
+} = require('../database')
 const User = require('../../models/User')
 const Message = require('../../models/Message')
 const Post = require('../../models/Post')
 const UserSessionData = require('../../models/UserSessionData')
 const {NotFoundError} = require('../errors')
 const Program = require('../../models/Program')
+const {sendNewMessage} = require('../../plugins/fumoir/mailing')
 
 let ACTIONS = {
   put: ({parent, attribute, value}, user) => {
@@ -88,8 +84,8 @@ let ACTIONS = {
     return Message.create({sender: sender._id, receiver: destinee, content: contents})
       .then(m => Message.findById(m._id).populate('sender').populate('receiver'))
       .then(m => {
-        sendNewMessage({member: m.receiver, partner: m.sender })
-        return  m
+        sendNewMessage({member: m.receiver, partner: m.sender})
+        return m
       })
   },
 

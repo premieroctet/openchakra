@@ -5,7 +5,7 @@ const {getDataModel}=require('../../config/config')
 let ServiceSchema=null
 
 try {
-  ServiceSchema=require(`./${getDataModel()}/ServiceSchema`)
+  ServiceSchema=require(`../plugins/${getDataModel()}/schemas/ServiceSchema`)
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {

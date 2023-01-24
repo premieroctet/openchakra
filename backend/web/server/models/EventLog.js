@@ -5,14 +5,13 @@ const {getDataModel} = require('../../config/config')
 let EventLogSchema=null
 
 try {
-  EventLogSchema=require(`./${getDataModel()}/EventLogSchema`)
+  EventLogSchema=require(`../plugins/${getDataModel()}/schemas/EventLogSchema`)
+  EventLogSchema.plugin(mongooseLeanVirtuals)
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {
     throw err
   }
-  EventLogSchema=require(`./others/EventLogSchema`)
 }
 
-EventLogSchema?.plugin(mongooseLeanVirtuals)
 module.exports = EventLogSchema ? mongoose.model('eventLog', EventLogSchema) : null

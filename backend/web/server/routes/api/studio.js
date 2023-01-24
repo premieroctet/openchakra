@@ -1,12 +1,3 @@
-const {
-  PAYMENT_FAILURE,
-  PAYMENT_SUCCESS
-} = require('../../../utils/fumoir/consts');
-const {
-  HOOK_PAYMENT_FAILED,
-  HOOK_PAYMENT_SUCCESSFUL
-} = require('../../plugins/payment/vivaWallet');
-const Payment = require('../../models/Payment');
 
 const path = require('path')
 const zlib=require('zlib')
@@ -18,6 +9,15 @@ const bcrypt = require('bcryptjs')
 const express = require('express')
 const mongoose = require('mongoose')
 const passport = require('passport')
+const Payment = require('../../models/Payment')
+const {
+  HOOK_PAYMENT_FAILED,
+  HOOK_PAYMENT_SUCCESSFUL,
+} = require('../../plugins/payment/vivaWallet')
+const {
+  PAYMENT_FAILURE,
+  PAYMENT_SUCCESS,
+} = require('../../plugins/fumoir/consts')
 const {
   callFilterDataUser,
   callPostCreateData,
@@ -31,14 +31,14 @@ const {
   getProductionPort,
   getProductionRoot,
 } = require('../../../config/config')
-require(`../../utils/studio/${getDataModel()}/functions`)
-require(`../../utils/studio/${getDataModel()}/actions`)
+require(`../../plugins/${getDataModel()}/functions`)
+require(`../../plugins/${getDataModel()}/actions`)
 const User = require('../../models/User')
 
 const {
   ROLES,
   RES_TO_COME,
-} = require(`../../../utils/${getDataModel()}/consts`)
+} = require(`../../plugins/${getDataModel()}/consts`)
 const {sendCookie} = require('../../config/passport')
 const {
   HTTP_CODES,
@@ -100,7 +100,7 @@ router.post('/file', (req, res) => {
     return res.status(HTTP_CODES.BAD_REQUEST).json()
   }
   const destpath = path.join(PRODUCTION_ROOT, projectName, 'src', filePath)
-  const unzippedContents=zlib.inflateSync(new Buffer(contents, 'base64')).toString();
+  const unzippedContents=zlib.inflateSync(new Buffer(contents, 'base64')).toString()
   console.log(`Copying in ${destpath}`)
   return fs
     .writeFile(destpath, unzippedContents)
