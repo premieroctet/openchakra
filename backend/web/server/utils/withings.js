@@ -173,18 +173,17 @@ const getUsers = () => {
     })
 }
 
-const getMeasures = (userid, access_token, since) => {
+const getMeasures = (access_token, since) => {
 
   if (!access_token) { return Promise.reject(`Invalid token:${access_token}`) }
-  if (!userid) { return Promise.reject(`Invalid userid:${userid}`) }
   const lastupdate=moment(since)
   if (!lastupdate.isValid()) { return Promise.reject(`Invalid since:${since}`) }
 
   const body= {
     action: 'getmeas',
     meastypes: [WITHINGS_MEASURE_SYS, WITHINGS_MEASURE_DIA, WITHINGS_MEASURE_BPM].join(','),
-    category: 1, lastupdate: lastupdate.unix(),
-    userid: userid,
+    category: 1,
+    lastupdate: lastupdate.unix(),
   }
 
   return axios.post(MEASURE_DOMAIN, new URLSearchParams(body),
