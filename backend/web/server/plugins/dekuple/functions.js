@@ -69,6 +69,20 @@ declareEnumField({model: 'reminder', field: 'type', instance: 'String', enumValu
 declareVirtualField({model: 'reminder', field: 'type_str', instance: 'String', requires: 'type,otherTitle'})
 declareVirtualField({model: 'reminder', field: 'reccurency_str', instance: 'String', requires: 'monday,tuesday,wednesday,thursday,friday,saturday,sunday'})
 
+const updateTokens = user => {
+  const fn=!user.access_token ? getAccessToken(user.withings_usercode) : getFreshAccessToken(user.refresh_token)
+  return fn
+    .then(tokens => {
+      user.withings_id=tokens.userid
+      user.access_token=tokens.access_token
+      user.refresh_token=tokens.refresh_token
+      user.csrf_token=tokens.csrf_token
+      user.expires_at=moment().add(tokens.expires_in, 'seconds')
+      user.withings_usercode=null
+      return user.save()
+    })
+
+}
 
 // Ensure Users tokens are up to date every hour
 cron.schedule('0 */30 * * * *', () => {
@@ -79,18 +93,7 @@ cron.schedule('0 */30 * * * *', () => {
       if (users.length==0) {
         return null
       }
-      return Promise.allSettled(users.map(u => {
-        const fn=!u.access_token ? getAccessToken(u.withings_usercode) : getFreshAccessToken(u.refresh_token)
-        return fn
-          .then(tokens => {
-            u.access_token=tokens.access_token
-            u.refresh_token=tokens.refresh_token
-            u.csrf_token=tokens.csrf_token
-            u.expires_at=moment().add(tokens.expires_in, 'seconds')
-            u.withings_usercode=null
-            return u.save()
-          })
-      }))
+      return Promise.allSettled(users.map(u => updateTokens(u)))
     })
     .then(res => {
       if (!res) { return }
@@ -100,3 +103,7 @@ cron.schedule('0 */30 * * * *', () => {
       console.error(`Errors:${JSON.stringify(nok)}`)
     })
 })
+
+module.exports={
+  updateTokens,
+}

@@ -66,13 +66,13 @@ const UserSchema = new Schema({
     type: Boolean,
     required: false,
   },
-  withings_id: {
-    type: String,
-    required: false, // true,
-  },
   // At user creation, usercode allows to get a token.
   // Lasy access token, retrieved only on demand
   withings_usercode: {
+    type: String,
+    required: false,
+  },
+  withings_id: {
     type: String,
     required: false,
   },

@@ -5,19 +5,20 @@ const {MONGOOSE_OPTIONS} = require('../../server/utils/database')
 const User = require('../../server/models/User')
 const {
   createUser,
-  getAccessToken,
-  getFreshAccessToken,
   getNonce,
+  getUsers,
+  getMeasures,
 } = require('../../server/utils/withings')
 const {forceDataModelDekuple} = require('../utils')
 const {GENDER_MALE} = require('../../server/plugins/dekuple/consts')
+const {updateTokens} = require('../../server/plugins/dekuple/functions')
 
 forceDataModelDekuple()
 
 describe('Test withings calls', () => {
 
   beforeAll(async() => {
-    await mongoose.connect(`mongodb://localhost/test${moment()}`, MONGOOSE_OPTIONS)
+    await mongoose.connect(`mongodb://localhost/test${moment().unix()}`, MONGOOSE_OPTIONS)
   })
 
   afterAll(async() => {
@@ -25,29 +26,35 @@ describe('Test withings calls', () => {
     await mongoose.connection.close()
   })
 
-  it.skip('must return a nonce', async() => {
+  it('must return a nonce', async() => {
     return expect(getNonce()).resolves.toBeTruthy()
   })
 
-  it.skip('must create a user', async() => {
+  it('must create a user', async() => {
     const userdata={
       height: 170, weight: 68, gender: GENDER_MALE, email: 'sebastien.auvray@free.fr',
-      firstname: 'Sébastien', lastname: 'Legrand'}
+      firstname: 'Sébastien', lastname: 'Legrand', birthday: moment().add(-50, 'years')}
     const usercode=await createUser(userdata)
-    expect(usercode).toBeTruthy()
-    const tokens=await getAccessToken(usercode)
-    expect(tokens).toBeTruthy()
-    const newTokens = await getFreshAccessToken(tokens.refresh_token)
-    expect(newTokens).toBeTruthy()
+    const user=await User.create({...userdata, withings_usercode: usercode})
+    expect(user.withings_usercode).toBeTruthy()
+    expect(user.access_token).toBeFalsy()
+    await updateTokens(user)
+    const prevToken=user.access_token
+    expect(prevToken).toBeTruthy()
+    await updateTokens(user)
+    const currToken=user.access_token
+    expect(currToken).toBeTruthy()
+    expect(currToken).not.toEqual(prevToken)
   })
 
-  it('must return a fresh token)', async() => {
-    let user=await User.findOne({email: /sebas/})
-    await user.getAccessToken()
-    await User.findOneAndUpdate({email: user.email}, {$set: {expires_at: moment().add(-2, 'days')}})
-    user=await User.findOne({email: /sebas/})
-    await user.getAccessToken()
-    return expect(current).not.toEqual(previous)
+  it('must return the users)', async() => {
+    expect(getUsers()).resolves.toBeTruthy()
+  })
+
+  it('must return the measures)', async() => {
+    const user=await User.findOne()
+    const since=moment().add(-4, 'days')
+    expect(getMeasures(user.access_token, since)).resolves.toBeTruthy()
   })
 
 })

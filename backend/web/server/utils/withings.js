@@ -2,7 +2,10 @@ const {createHmac} = require('crypto')
 const axios = require('axios')
 const moment = require('moment')
 const lodash = require('lodash')
-const {GENDER, GENDER_MALE} = require('../plugins/dekuple/consts')
+const {
+  GENDER, GENDER_MALE,
+  WITHINGS_MEASURE_SYS, WITHINGS_MEASURE_DIA, WITHINGS_MEASURE_BPM,
+} = require('../plugins/dekuple/consts')
 const {getWithingsConfig} = require('../../config/config')
 
 const wConfig=getWithingsConfig()
@@ -10,6 +13,7 @@ const wConfig=getWithingsConfig()
 const NONCE_DOMAIN='https://wbsapi.withings.net/v2/signature'
 const SDK_DOMAIN='https://wbsapi.withings.net/v2/sdk'
 const OAUTH2_DOMAIN='https://wbsapi.withings.net/v2/oauth2'
+const MEASURE_DOMAIN='https://wbsapi.withings.net/measure'
 
 
 const generateTSSignature=({action, clientId, clientSecret, timestamp}) => {
@@ -143,8 +147,59 @@ const getFreshAccessToken = refreshToken => {
 }
 
 // From https://developer.withings.com/api-reference/#operation/oauth2-listusers
-const getUsersList = () => {
-  return Promise.reject('Not implemented')
+const getUsers = () => {
+
+  const action='listusers'
+
+  return getNonce()
+    .then(nonce => {
+      const signature=generateNonceSignature({
+        action, clientId: wConfig.clientId, clientSecret: wConfig.clientSecret, nonce,
+      })
+
+      const body={action, client_id: wConfig.clientId, nonce, signature}
+
+      return axios.post(OAUTH2_DOMAIN, body)
+        .then(res => {
+          if (res.data.status!=0) {
+            throw new Error(JSON.stringify(res.data))
+          }
+          return res.data.body
+        })
+        .catch(err => {
+          console.error(err)
+          throw err
+        })
+    })
+}
+
+const getMeasures = (userid, access_token, since) => {
+
+  if (!access_token) { return Promise.reject(`Invalid token:${access_token}`) }
+  const lastupdate=moment(since)
+  if (!lastupdate.isValid()) { return Promise.reject(`Invalid since:${since}`) }
+
+  const body= {
+    action: 'getmeas',
+    meastypes: [WITHINGS_MEASURE_SYS, WITHINGS_MEASURE_DIA, WITHINGS_MEASURE_BPM].join(','),
+    category: 1, lastupdate: lastupdate.unix(),
+  }
+
+  return axios.post(MEASURE_DOMAIN, body,
+    {headers: {
+      Authorization: `Bearer ${access_token}`,
+    }},
+  )
+    .then(res => {
+      if (res.data.status!=0) {
+        throw new Error(JSON.stringify(res.data))
+      }
+      return res.data.body
+    })
+    .catch(err => {
+      console.error(err)
+      throw err
+    })
 }
 
 module.exports={
@@ -152,4 +207,6 @@ module.exports={
   createUser,
   getAccessToken,
   getFreshAccessToken,
+  getUsers,
+  getMeasures,
 }
