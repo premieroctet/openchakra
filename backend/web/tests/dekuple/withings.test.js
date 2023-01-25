@@ -54,7 +54,7 @@ describe('Test withings calls', () => {
   it('must return the measures)', async() => {
     const user=await User.findOne()
     const since=moment().add(-4, 'days')
-    expect(getMeasures(user.access_token, since)).resolves.toBeTruthy()
+    expect(getMeasures(user.withings_id, user.access_token, since)).resolves.toBeTruthy()
   })
 
 })
