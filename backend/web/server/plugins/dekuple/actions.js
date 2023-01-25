@@ -22,5 +22,10 @@ const registerAction = props => {
     })
 }
 
+const openWithingsSettingsAction = () => {
+  return Promise.resolve({redirect: 'tagaada'})
+}
+
 
 addAction('register', registerAction)
+addAction('openWithingsSettings', openWithingsSettingsAction)

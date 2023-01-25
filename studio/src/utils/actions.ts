@@ -225,6 +225,10 @@ export const ACTIONS: IActions = {
     options: {},
     next: ['openPage'],
   },
+  openWithingsSetup: {
+    label: 'Open withings setup',
+    options: {},
+  },
   openWithingsSettings: {
     label: 'Open withings settings',
     options: {},

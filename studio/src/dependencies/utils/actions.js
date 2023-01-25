@@ -253,25 +253,14 @@ export const ACTIONS = {
     return Promise.resolve()
   },
 
+  // From https://developer.withings.com/sdk/v2/tree/sdk-webviews/device-setup-webview
+  openWithingsSetup: params => {
+    window.location='https://localhost/myAlfred/api/withings/setup'
+  },
+
   // From https://developer.withings.com/sdk/v2/tree/sdk-webviews/device-settings-webview
   openWithingsSettings: params => {
-    console.log(`Params:${JSON.stringify(params, null, 2)}`)
-    const SETTINGS_URL='https://inappviews.withings.com/sdk/setup'
-    return axios.get(`/myAlfred/api/studio/current-user`)
-      .then(res => {
-        const user=res.data
-        Cookies.set('access_token', user.access_token, {
-          domain: '.withings.com',
-          'max-age': 10800,
-          secure: true,
-        })
-        //console.log(`Set cookie: ${Cookies.get('access_token')}`)
-        console.log(`Cookie:${document.cookie}`)
-        const url=new URL(SETTINGS_URL)
-        url.searchParams.set('csrf_token', user.csrf_token)
-        window.location=url.toString()
-      })
-
+    window.location='https://localhost/myAlfred/api/withings/settings'
   }
 
 }
