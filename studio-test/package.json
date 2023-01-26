@@ -13,7 +13,6 @@
     "aws-sdk": "^2.1257.0",
     "axios": "^1.1.2",
     "framer-motion": "^7.5.3",
-    "js-cookie": "^3.0.1",
     "jszip": "^3.10.1",
     "mime": "^3.0.0",
     "mime-types": "^2.1.35",

@@ -1,6 +1,5 @@
 import lodash from 'lodash'
 import axios from 'axios'
-import Cookies from 'js-cookie'
 import {getComponent, clearComponentValue} from './values'
 
 const API_ROOT = '/myAlfred/api/studio'
