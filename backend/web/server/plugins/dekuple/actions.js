@@ -2,6 +2,7 @@ const User = require('../../models/User')
 const {updateTokens} = require('./functions')
 const {createUser} = require('../../utils/withings')
 const {addAction} = require('../../utils/studio/actions')
+const { validatePassword } = require('../../../utils/passwords')
 
 const registerAction = props => {
   console.log(`Dekuple Register with ${JSON.stringify(props)}`)
@@ -10,7 +11,8 @@ const registerAction = props => {
       if (exists) {
         return Promise.reject(`Un compte avec le mail ${props.email} existe déjà`)
       }
-      return User.create({...props})
+      return validatePassword({...props})
+        .then(() => User.create({...props}))
     })
     .then(user => {
       return createUser(user)

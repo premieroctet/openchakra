@@ -15,7 +15,6 @@ const checkPass1 = pass => {
   }
 }
 
-
 const checkPass2 = (pass1, pass2) => {
   if (pass1==pass2) {
     return {check: true}
@@ -26,7 +25,18 @@ const checkPass2 = (pass1, pass2) => {
   }
 }
 
+const validatePassword = ({password, password2}) => {
+  if (!PATTERN.test(password)) {
+    return Promise.reject(`Format de mot de passe incorrect`)
+  }
+  if (password!=password2) {
+    return Promise.reject(`Les mots de passe saisis sont différents`)
+  }
+  return Promise.resolve()
+}
+
 module.exports = {
   checkPass1,
   checkPass2,
+  validatePassword,
 }

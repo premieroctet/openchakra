@@ -93,6 +93,10 @@ const UserSchema = new Schema({
   },
 }, schemaOptions)
 
+// REquired for register validation only
+UserSchema.virtual('password2').get(function() {
+})
+
 UserSchema.virtual('fullname').get(function() {
   return `${this.firstname || ''} ${this.lastname || ''}`
 })

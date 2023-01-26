@@ -57,6 +57,7 @@ USER_MODELS.forEach(m => {
     caster: {
       instance: 'ObjectID',
       options: {ref: 'reminder'}}})
+  declareVirtualField({model: m, field: 'password2', instance: 'String'})
 })
 
 declareEnumField({model: 'measure', field: 'type', enumValues: MEASURE_TYPE})
