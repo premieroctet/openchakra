@@ -1,8 +1,11 @@
+const mongoose = require('mongoose')
+
 const HTTP_CODES={
   BAD_REQUEST: 400,
   NOT_LOGGED: 401,
   FORBIDDEN: 403,
   NOT_FOUND: 404,
+  UNPROCESSABLE_ENTITY: 422,
   SYSTEM_ERROR: 500,
 }
 
@@ -40,12 +43,38 @@ class BadRequestError extends StatusError {
   }
 }
 
+class UnprocessableEntityError extends StatusError {
+  constructor(message) {
+    super(message, HTTP_CODES.UNPROCESSABLE_ENTITY)
+  }
+}
+
 class SystemError extends StatusError {
   constructor(message) {
     super(message, HTTP_CODES.SYSTEM_ERROR)
   }
 }
 
-module.exports={StatusError, NotFoundError, ForbiddenError, BadRequestError,
+const parseError = err => {
+  if (err instanceof mongoose.Error.ValidationError) {
+    const messages = []
+    for (let field in err.errors) {
+      messages.push(err.errors[field].message)
+    }
+    return {
+      status: HTTP_CODES.UNPROCESSABLE_ENTITY,
+      body: messages.join(', '),
+    }
+  }
+  return {
+    status: err.status || HTTP_CODES.SYSTEM_ERROR,
+    body: err.message || err
+  }
+}
+
+module.exports={
+  StatusError, NotFoundError, ForbiddenError, BadRequestError,
   NotLoggedError, SystemError,
-  HTTP_CODES}
+  HTTP_CODES,
+  parseError,
+}

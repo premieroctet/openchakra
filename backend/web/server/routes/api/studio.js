@@ -106,9 +106,6 @@ router.post('/file', (req, res) => {
     .then(() => {
       return res.json()
     })
-    .catch(err => {
-      return res.status(HTTP_CODES.SYSTEM_ERROR).json(err)
-    })
 })
 
 router.post('/install', (req, res) => {
@@ -197,14 +194,7 @@ router.post('/action', passport.authenticate('cookie', {session: false}), (req, 
     .then(result => {
       return res.json(result)
     })
-    .catch(err => {
-      console.error(err)
-      return res
-        .status(err.status || HTTP_CODES.SYSTEM_ERROR)
-        .json(err.message || err)
-    })
-},
-)
+})
 
 router.post('/login', (req, res) => {
   const {email, password} = req.body
@@ -212,12 +202,6 @@ router.post('/login', (req, res) => {
   return login(email, password)
     .then(user => {
       return sendCookie(user, res).json(user)
-    })
-    .catch(err => {
-      console.log(err)
-      return res
-        .status(err.status || HTTP_CODES.SYSTEM_ERROR)
-        .json(err.message || err)
     })
 })
 
@@ -265,11 +249,6 @@ router.post('/register', (req, res) => {
   const body=lodash.mapValues(req.body, v => JSON.parse(v))
   return ACTIONS.register(body)
     .then(result => res.json(result))
-    .catch(err => {
-      console.error(err)
-      return res.status(err.status||500).json(err.message || err)
-    })
-
 })
 
 // Validate webhook
@@ -318,14 +297,6 @@ router.post('/:model', passport.authenticate('cookie', {session: false}), (req, 
         .then(data => {
           return res.json(data)
         })
-        .catch(err => {
-          console.error(err)
-          return res.status(err.status||500).json(err.message || err)
-        })
-    })
-    .catch(err => {
-      console.error(err)
-      return res.status(err.status||500).json(err.message || err)
     })
 })
 
@@ -339,14 +310,11 @@ router.put('/:model/:id', passport.authenticate('cookie', {session: false}), (re
   if (!model || !id) {
     return res.status(HTTP_CODE.BAD_REQUEST).json(`Model and id are required`)
   }
-  console.log(`UPdateing:${id} with ${JSON.stringify(params)}`)
+  console.log(`Updating:${id} with ${JSON.stringify(params)}`)
   return mongoose.connection.models[model]
     .findByIdAndUpdate(id, params, {new: true, runValidators: true})
     .then(data => {
       return res.json(data)
-    })
-    .catch(err => {
-      return res.status(500).json(err)
     })
 })
 
@@ -389,10 +357,6 @@ router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (r
           }
           console.log(`GET ${model}/${id} ${fields}: data sent`)
           return res.json(data)
-        })
-        .catch(err => {
-          console.error(err)
-          return res.status(err.status || 500).json(err.message || err)
         })
     })
 },

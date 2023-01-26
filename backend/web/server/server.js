@@ -14,7 +14,7 @@ const {
   getHostUrl,
   getPort,
 } = require('../config/config')
-const {HTTP_CODES} = require('./utils/errors')
+const { HTTP_CODES, parseError } = require('./utils/errors')
 require('./models/ResetToken')
 require('./models/Program')
 require('./models/Theme')
@@ -37,7 +37,6 @@ require('./models/Guest')
 require('./models/CigarCategory')
 require('./models/DrinkCategory')
 require('./models/MealCategory')
-require('./models/Message')
 require('./models/Conversation')
 require('./models/Measure')
 require('./models/Reminder')
@@ -137,7 +136,6 @@ checkConfig()
         /* eslint-enable global-require */
       }
     })
-    // app.use(express.static("static"));
 
     if (!is_development_nossl() && !is_development()) {
       app.use((req, res, next) => {
@@ -149,6 +147,13 @@ checkConfig()
       })
     }
     app.get('*', routerHandler)
+
+    // Single error handler.YEAAAAAHHHHHH !!!
+    app.use((err, req, res, next) => {
+      console.error(err)
+      const {status, body}=parseError(err)
+      return res.status(status).json(body)
+    })
 
     // HTTP only handling redirect to HTTPS
     // http.createServer((req, res) => {
