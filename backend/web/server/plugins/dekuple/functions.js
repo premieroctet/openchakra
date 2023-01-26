@@ -89,7 +89,6 @@ cron.schedule('0 */30 * * * *', () => {
   const expirationMoment=moment().add(1, 'hour')
   User.find({$or: [{access_token: null}, {expires_at: {$lte: expirationMoment}}]})
     .then(users => {
-      console.log(`Found ${users.length} users without tokens or nearly expiring tokens`)
       if (users.length==0) {
         return null
       }
@@ -99,8 +98,12 @@ cron.schedule('0 */30 * * * *', () => {
       if (!res) { return }
       const ok=res.filter(r => r.status=='fulfilled').map(r => r.value.email)
       const nok=res.filter(r => r.status=='rejected').map(r => r.reason)
-      console.log(`Users token updated:${JSON.stringify(ok)}`)
-      console.error(`Errors:${JSON.stringify(nok)}`)
+      if (ok.length>0) {
+        console.log(`Updated tokens for ${ok.join(',')}`)
+      }
+      if (nok) {
+        console.error(`Errors:${JSON.stringify(nok)}`)
+      }
     })
 })
 
