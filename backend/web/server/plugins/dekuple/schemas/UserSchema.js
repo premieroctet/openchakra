@@ -53,6 +53,11 @@ const UserSchema = new Schema({
     default: null,
     required: [true, `Le genre est obligatoire (${Object.values(GENDER)})`],
   },
+  cguAccepted: {
+    type: Boolean,
+    validate: [value => !!value, 'Vous devez accepter les CGU'],
+    required: [true, 'Vous devez accepter les CGU'],
+  },
   phone: {
     type: String,
     required: false,
@@ -93,7 +98,8 @@ const UserSchema = new Schema({
   },
 }, schemaOptions)
 
-// REquired for register validation only
+/* eslint-disable prefer-arrow-callback */
+// Required for register validation only
 UserSchema.virtual('password2').get(function() {
 })
 
@@ -118,5 +124,8 @@ UserSchema.virtual('reminders', {
   localField: '_id', // Find in Model, where localField
   foreignField: 'user', // is equal to foreignField
 })
+
+/* eslint-enable prefer-arrow-callback */
+
 
 module.exports = UserSchema
