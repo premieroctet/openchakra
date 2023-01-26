@@ -1,5 +1,6 @@
-const {createUser} = require('../../utils/withings')
 const User = require('../../models/User')
+const {updateTokens} = require('./functions')
+const {createUser} = require('../../utils/withings')
 const {addAction} = require('../../utils/studio/actions')
 
 const registerAction = props => {
@@ -13,8 +14,8 @@ const registerAction = props => {
     })
     .then(user => {
       return createUser(user)
-        .then(withingsCode => User.findByIdAndUpdate(user._id, {withings_usercode: withingsCode}))
-        .then(() => user)
+        .then(withingsCode => {user.withings_usercode=withingsCode; return user.save()})
+        .then(user => updateTokens(user))
         .catch(err => {
           return User.findByIdAndDelete(user._id)
             .then(() => Promise.reject(err))
