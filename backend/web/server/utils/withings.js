@@ -7,6 +7,7 @@ const {
   WITHINGS_MEASURE_SYS, WITHINGS_MEASURE_DIA, WITHINGS_MEASURE_BPM,
 } = require('../plugins/dekuple/consts')
 const {getWithingsConfig} = require('../../config/config')
+const {normalize}=require('../../utils/text')
 
 const wConfig=getWithingsConfig()
 
@@ -76,7 +77,7 @@ const createUser = user => {
       const hashedSignature=generateNonceSignature({action, clientId: wConfig.clientId, clientSecret: wConfig.clientSecret, nonce})
 
       const measures=JSON.stringify([{value: user.height, unit: -2, type: 4}, {value: user.weight, unit: 0, type: 1}])
-      const shortname=[user.firstname[0], user.lastname.slice(0, 2)].map(s => s.toUpperCase()).join('')
+      const shortname=normalize(`${user.firstname[0]}${user.lastname.slice(0, 2)}`).toUpperCase()
       const gender=user.gender==GENDER_MALE ? 0:1
       const birthdate=moment(user.birthday).unix().toString()
 
