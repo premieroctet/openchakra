@@ -13,20 +13,20 @@ describe('DataSources tests', () => {
   test('Get attributes for session provider', () => {
     const components=project.pages['page-L8VM99NLPD123'].components
     // @ts-ignore
-    const EXPECTED = lodash.pickBy(models.session?.attributes, a => a.multiple)
+    const EXPECTED = lodash.pickBy(modelsAftral.session?.attributes, a => a.multiple)
     const component = components['comp-L947UEF7AJ5UH']
     // @ts-ignore
-    const attributes: any = getAvailableAttributes(component, components, models)
+    const attributes: any = getAvailableAttributes(component, components, modelsAftral)
     return expect(attributes).toMatchObject(EXPECTED)
   })
 
   test('Get attributes for resource provider', () => {
     const components=project.pages['page-L8VM99NLPD123'].components
     // @ts-ignore
-    const EXPECTED = lodash.pickBy(models.resource?.attributes, a => a.multiple)
+    const EXPECTED = lodash.pickBy(modelsAftral.resource?.attributes, a => a.multiple)
     const component = components['comp-L9QUTVVF04ZVU']
     // @ts-ignore
-    const attributes: any = getAvailableAttributes(component, components, models)
+    const attributes: any = getAvailableAttributes(component, components, modelsAftral)
     return expect(attributes).toMatchObject(EXPECTED)
   })
 
