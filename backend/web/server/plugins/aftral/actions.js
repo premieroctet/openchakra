@@ -3,9 +3,9 @@ const mongoose=require('mongoose')
 const Message = require('../../models/Message')
 const Post = require('../../models/Post')
 const UserSessionData = require('../../models/UserSessionData')
-const {NotFoundError} = require('../errors')
+const {NotFoundError} = require('../../utils/errors')
 const Program = require('../../models/Program')
-const {getModel, removeData}=require('../database')
+const {getModel, removeData}=require('../../utils/database')
 
 let ACTIONS = {
   put: ({parent, attribute, value}, user) => {
