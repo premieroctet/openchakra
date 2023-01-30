@@ -1,6 +1,9 @@
+const {getDataModel, getPort}=require('./config/config')
+
+const processName=`BACKEND-${getDataModel()}-${getPort()}`.toUpperCase()
 module.exports = {
   apps: [{
-    name: 'API',
+    name: processName,
     script: 'server/server.js',
 
     // Options reference: https://pm2.io/doc/en/runtime/reference/ecosystem-file/
@@ -27,4 +30,4 @@ module.exports = {
       'post-deploy': 'npm install && pm2 reload ecosystem.config.js --env production',
     },
   },
-};
+}
