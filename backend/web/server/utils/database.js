@@ -483,7 +483,7 @@ const callPreCreateData = data => {
 }
 
 // Post create data, allows to create extra data, etc, etc
-let postCreateData = data => Promise.resolve(data)
+let postCreateData = data => Promise.resolve(data.data)
 
 const setPostCreateData = fn => {
   postCreateData = fn
