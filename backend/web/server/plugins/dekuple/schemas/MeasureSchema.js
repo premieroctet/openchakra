@@ -34,7 +34,7 @@ const MeasureSchema = new Schema({
 
 }, schemaOptions)
 
-MeasureSchema.virtual('recommandation').get(() => {
+MeasureSchema.virtual('recommandation').get(function() {
   const sys=this.sys
   const dia=this.dia
 
