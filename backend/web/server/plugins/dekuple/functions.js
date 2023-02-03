@@ -1,3 +1,11 @@
+const {
+  APPOINTMENT_TYPE,
+  GENDER,
+  MEASURE_MANUAL,
+  MEASURE_SOURCE,
+  REMINDER_TYPE,
+  SMOKER_TYPE,
+} = require('./consts')
 const moment = require('moment')
 const cron = require('node-cron')
 const {getAccessToken, getFreshAccessToken} = require('../../utils/withings')
@@ -8,13 +16,6 @@ const {
   setPreCreateData,
   setPreprocessGet,
 } = require('../../utils/database')
-const {
-  APPOINTMENT_TYPE,
-  REMINDER_TYPE,
-  GENDER,
-  MEASURE_TYPE,
-  SMOKER_TYPE,
-} = require('./consts')
 
 
 const preCreate = ({model, params, user}) => {
@@ -60,7 +61,7 @@ USER_MODELS.forEach(m => {
   declareVirtualField({model: m, field: 'password2', instance: 'String'})
 })
 
-declareEnumField({model: 'measure', field: 'type', enumValues: MEASURE_TYPE})
+declareEnumField({model: 'measure', field: 'source', enumValues: MEASURE_SOURCE})
 declareVirtualField({model: 'measure', field: 'recommandation', instance: 'String', requires: 'sys,dia'})
 
 declareEnumField({model: 'appointment', field: 'type', instance: 'String', enumValues: APPOINTMENT_TYPE})
@@ -107,6 +108,17 @@ cron.schedule('0 */30 * * * *', () => {
       }
     })
 })
+
+// Get all measures TODO should be notified by Withings
+// cron.schedule('*/2 * * * * *', () => {
+//   User.find({}, {access_token:1})
+//     .populate({path:'measures', select:'source date', match: {source: MEASURE_AUTO}})
+//     .lean()
+//     .then(user => {
+//       console.log(`Measures:${JSON.stringify(user, null, 2)}`)
+//
+//     })
+// })
 
 module.exports={
   updateTokens,

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const lodash=require('lodash')
-const {MEASURE_TYPE} = require('../consts')
+const {MEASURE_SOURCE} = require('../consts')
 const {schemaOptions} = require('../../../utils/schemas')
 const Schema = mongoose.Schema
 
@@ -12,11 +12,6 @@ const MeasureSchema = new Schema({
   },
   date: {
     type: Date,
-    required: true,
-  },
-  type: {
-    type: String,
-    enum: Object.keys(MEASURE_TYPE),
     required: true,
   },
   sys: {
@@ -31,7 +26,11 @@ const MeasureSchema = new Schema({
     type: Number,
     required: false,
   },
-
+  source: {
+    type: String,
+    enum: Object.keys(MEASURE_SOURCE),
+    required: true,
+  },
 }, schemaOptions)
 
 MeasureSchema.virtual('recommandation').get(function() {
