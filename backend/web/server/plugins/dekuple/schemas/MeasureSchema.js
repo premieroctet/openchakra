@@ -1,7 +1,8 @@
+const { MEASURE_AUTO, MEASURE_MANUAL, MEASURE_SOURCE } = require('../consts')
 const mongoose = require('mongoose')
 const lodash=require('lodash')
-const {MEASURE_SOURCE} = require('../consts')
 const {schemaOptions} = require('../../../utils/schemas')
+
 const Schema = mongoose.Schema
 
 const MeasureSchema = new Schema({
