@@ -26,10 +26,10 @@ const MeasureSchema = new Schema({
     type: Number,
     required: false,
   },
-  source: {
-    type: String,
-    enum: Object.keys(MEASURE_SOURCE),
-    required: true,
+  // Group measure id
+  withings_group: {
+    type: Number,
+    required: false,
   },
 }, schemaOptions)
 
@@ -46,6 +46,11 @@ MeasureSchema.virtual('recommandation').get(function() {
   if (lodash.inRange(sys, 100, 130.1) && lodash.inRange(dia, 60, 80.1)) {
     return 'Refaire autotest au moins une fois par an'
   }
+})
+
+MeasureSchema.virtual('source').get(function() {
+  const src=!!this.withings_group ? MEASURE_AUTO : MEASURE_MANUAL
+  return src
 })
 
 
