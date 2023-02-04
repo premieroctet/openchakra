@@ -33,7 +33,8 @@ describe('Test withings calls', () => {
   it('must create a user', async() => {
     const userdata={
       height: 170, weight: 68, gender: GENDER_MALE, email: 'sebastien.auvray@free.fr',
-      firstname: 'Sébastien', lastname: 'Legrand', birthday: moment().add(-50, 'years')}
+      firstname: 'Sébastien', lastname: 'Legrand', birthday: moment().add(-50, 'years'),
+      cguAccepted: true}
     const usercode=await createUser(userdata)
     const user=await User.create({...userdata, withings_usercode: usercode})
     expect(user.withings_usercode).toBeTruthy()
