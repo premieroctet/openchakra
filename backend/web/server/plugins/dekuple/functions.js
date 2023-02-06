@@ -1,3 +1,14 @@
+const {
+  APPOINTMENT_TYPE,
+  GENDER,
+  MEASURE_AUTO,
+  MEASURE_SOURCE,
+  REMINDER_TYPE,
+  SMOKER_TYPE,
+  WITHINGS_MEASURE_BPM,
+  WITHINGS_MEASURE_DIA,
+  WITHINGS_MEASURE_SYS,
+} = require('./consts')
 const Measure = require('../../models/Measure')
 const {
   getAccessToken,
@@ -5,15 +16,6 @@ const {
   getMeasures
 } = require('../../utils/withings')
 const lodash=require('lodash')
-const {
-  APPOINTMENT_TYPE,
-  GENDER,
-  MEASURE_AUTO,
-  MEASURE_MANUAL,
-  MEASURE_SOURCE,
-  REMINDER_TYPE,
-  SMOKER_TYPE,
-} = require('./consts')
 const moment = require('moment')
 const cron = require('node-cron')
 const User = require('../../models/User')
@@ -117,26 +119,29 @@ cron.schedule('0 */30 * * * *', () => {
 
 // Get all measures TODO should be notified by Withings
 cron.schedule('0 */10 * * * *', async () => {
+  console.log(`Getting measures`)
   const users=await User.find({}, {access_token:1, email:1})
-      .populate({path:'measures', select:'source date'})
-      .lean()
+      .populate({path:'measures'})
+      .lean({virtuals: true})
   for (const user of users) {
     const latestMeasure=lodash(user.measures)
       .filter(m => m.source==MEASURE_AUTO)
       .maxBy(m => m.date)
-    const since=latestMeasure?.date.add(1, 'second') || moment().add(-2, 'days')
     if (user.access_token) {
+      const since=latestMeasure?.date.add(1, 'second') || moment().add(-10, 'days')
       const newMeasures=await getMeasures(user.access_token, since)
       for (const grp of newMeasures.measuregrps) {
         const dekMeasure={
-          user: user._id, date: grp.date, withings_group: grp.grpid,
+          user: user._id, date: moment.unix(grp.date), withings_group: grp.grpid,
           sys: grp.measures.find(m => m.type==WITHINGS_MEASURE_SYS)?.value,
-          dia: grp.measures.find(m => m.type==WITHINGS_MEASURE_SYS)?.value,
+          dia: grp.measures.find(m => m.type==WITHINGS_MEASURE_DIA)?.value,
           heartbeat: grp.measures.find(m => m.type==WITHINGS_MEASURE_BPM)?.value,
         }
-        console.log(`Creating ${JSON.Stringify(dekMeasure)}`)
         await Measure.create(dekMeasure)
           .catch(err => console.error(err))
+      }
+      if (newMeasures.measuregrps.length>0) {
+        console.log(`Measures:${newMeasures.measuregrps.length} new for ${user.email}`)
       }
     }
   }
