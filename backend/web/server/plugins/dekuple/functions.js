@@ -69,6 +69,10 @@ USER_MODELS.forEach(m => {
       instance: 'ObjectID',
       options: {ref: 'reminder'}}})
   declareVirtualField({model: m, field: 'password2', instance: 'String'})
+  declareVirtualField({model: m, field: 'devices', instance: 'Array', requires: '', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'device'}}})
 })
 
 declareVirtualField({model: 'measure', field: 'recommandation', instance: 'String', requires: 'sys,dia'})
