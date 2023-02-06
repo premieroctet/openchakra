@@ -8,14 +8,16 @@ const {
   getNonce,
   getUsers,
   getMeasures,
+  getAuthorizationCode,
 } = require('../../server/utils/withings')
 const {forceDataModelDekuple} = require('../utils')
+const {is_development}=require('../../config/config')
 const {GENDER_MALE} = require('../../server/plugins/dekuple/consts')
 const {updateTokens} = require('../../server/plugins/dekuple/functions')
 
 forceDataModelDekuple()
 
-describe('Test withings calls', () => {
+describe('Test withings calls on test DB', () => {
 
   beforeAll(async() => {
     await mongoose.connect(`mongodb://localhost/test${moment().unix()}`, MONGOOSE_OPTIONS)
@@ -54,8 +56,45 @@ describe('Test withings calls', () => {
 
   it('must return the measures)', async() => {
     const user=await User.findOne()
+    console.log(user.creation_date)
     const since=moment().add(-4, 'days')
-    expect(getMeasures(user.access_token, since)).resolves.toBeTruthy()
+    const measures=await getMeasures(user.access_token, since)
+    const fmtMeasures={
+      ...measures,
+      measuregrps: measures.measuregrps.map(g => ({...g, date: moment.unix(g.date)})),
+    }
+    console.log(JSON.stringify(fmtMeasures, null, 2))
+    expect(measures).toBeTruthy()
+  })
+})
+
+describe.only('Test withings calls on actual DB', () => {
+
+  beforeAll(async() => {
+    if (!is_development()) {
+      throw new Error('Can run on development mode only')
+    }
+    await mongoose.connect(`mongodb://localhost/dekuple`, MONGOOSE_OPTIONS)
   })
 
+  afterAll(async() => {
+    await mongoose.connection.close()
+  })
+
+  it('must return the measures)', async() => {
+    await User.update({email: /sebas/}, {$set: {access_token: null}})
+    let user=await User.findOne({email: /sebas/})
+    console.log(user)
+    user.withings_usercode=(await getAuthorizationCode(user.email))
+    user=await updateTokens(user)
+    console.log(JSON.stringify(user, null, 2))
+    const since=moment().add(-4, 'days')
+    const measures=await getMeasures(user.access_token, since)
+    const fmtMeasures={
+      ...measures,
+      measuregrps: measures.measuregrps.map(g => ({...g, date: moment.unix(g.date)})),
+    }
+    console.log(JSON.stringify(fmtMeasures, null, 2))
+    expect(measures).toBeTruthy()
+  })
 })

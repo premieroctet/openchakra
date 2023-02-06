@@ -105,6 +105,29 @@ const createUser = user => {
 
 }
 
+const getAuthorizationCode = email => {
+
+  return getNonce()
+    .then(nonce => {
+      const action='recoverauthorizationcode'
+      const signature=generateNonceSignature({
+        action, clientId: wConfig.clientId, clientSecret: wConfig.clientSecret, nonce})
+
+      const body={action, client_id: wConfig.clientId, nonce, signature, email}
+      return axios.post(OAUTH2_DOMAIN, body)
+        .then(res => {
+          if (res.data.status!=0) {
+            return Promise.reject(JSON.stringify(res.data))
+          }
+          return res.data.body.user.code
+        })
+    })
+    .catch(err => {
+      console.error(err)
+      throw err
+    })
+}
+
 const getAccessToken = usercode => {
 
   const body={
@@ -207,6 +230,7 @@ const getMeasures = (access_token, since) => {
 module.exports={
   getNonce,
   createUser,
+  getAuthorizationCode,
   getAccessToken,
   getFreshAccessToken,
   getUsers,
