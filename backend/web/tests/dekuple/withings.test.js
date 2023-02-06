@@ -9,6 +9,7 @@ const {
   getUsers,
   getMeasures,
   getAuthorizationCode,
+  getDevices,
 } = require('../../server/utils/withings')
 const {forceDataModelDekuple} = require('../utils')
 const {is_development}=require('../../config/config')
@@ -63,7 +64,6 @@ describe('Test withings calls on test DB', () => {
       ...measures,
       measuregrps: measures.measuregrps.map(g => ({...g, date: moment.unix(g.date)})),
     }
-    console.log(JSON.stringify(fmtMeasures, null, 2))
     expect(measures).toBeTruthy()
   })
 })
@@ -84,17 +84,26 @@ describe.only('Test withings calls on actual DB', () => {
   it('must return the measures)', async() => {
     await User.update({email: /sebas/}, {$set: {access_token: null}})
     let user=await User.findOne({email: /sebas/})
-    console.log(user)
     user.withings_usercode=(await getAuthorizationCode(user.email))
     user=await updateTokens(user)
-    console.log(JSON.stringify(user, null, 2))
     const since=moment().add(-4, 'days')
     const measures=await getMeasures(user.access_token, since)
     const fmtMeasures={
       ...measures,
       measuregrps: measures.measuregrps.map(g => ({...g, date: moment.unix(g.date)})),
     }
-    console.log(JSON.stringify(fmtMeasures, null, 2))
     expect(measures).toBeTruthy()
   })
+
+  it('must return the devices)', async() => {
+    await User.update({email: /sebas/}, {$set: {access_token: null}})
+    let user=await User.findOne({email: /sebas/})
+    user.withings_usercode=(await getAuthorizationCode(user.email))
+    user=await updateTokens(user)
+    const devices=await getDevices(user.access_token)
+    console.log(JSON.stringify(devices, null, 2))
+    expect(devices).toBeTruthy()
+  })
+
+
 })

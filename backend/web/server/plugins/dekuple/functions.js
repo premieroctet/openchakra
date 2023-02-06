@@ -1,4 +1,10 @@
 const {
+  getAccessToken,
+  getDevices,
+  getFreshAccessToken,
+  getMeasures
+} = require('../../utils/withings')
+const {
   APPOINTMENT_TYPE,
   GENDER,
   MEASURE_AUTO,
@@ -10,15 +16,11 @@ const {
   WITHINGS_MEASURE_SYS,
 } = require('./consts')
 const Measure = require('../../models/Measure')
-const {
-  getAccessToken,
-  getFreshAccessToken,
-  getMeasures
-} = require('../../utils/withings')
 const lodash=require('lodash')
 const moment = require('moment')
 const cron = require('node-cron')
 const User = require('../../models/User')
+const Device = require('../../models/Device')
 const {
   declareEnumField,
   declareVirtualField,
@@ -118,7 +120,7 @@ cron.schedule('0 */30 * * * *', () => {
 })
 
 // Get all measures TODO should be notified by Withings
-cron.schedule('0 */10 * * * *', async () => {
+cron.schedule('12 */10 * * * *', async () => {
   console.log(`Getting measures`)
   const users=await User.find({}, {access_token:1, email:1})
       .populate({path:'measures'})
@@ -143,6 +145,33 @@ cron.schedule('0 */10 * * * *', async () => {
       if (newMeasures.measuregrps.length>0) {
         console.log(`Measures:${newMeasures.measuregrps.length} new for ${user.email}`)
       }
+    }
+  }
+})
+
+// Get all devices TODO should be notified by Withings
+//cron.schedule('0 */10 * * * *', async () => {
+cron.schedule('24 */10 * * * *', async () => {
+  console.log(`Getting devices`)
+  const users=await User.find({access_token:{$ne: null}})
+    .populate('devices')
+    .lean({virtuals: true})
+  for (const user of users) {
+    const devices=await getDevices(user.access_token)
+      .catch(err => {console.error(err)})
+    const dbDevicesIds=user.devices.map(d => d.deviceid)
+    const newDevices=devices.filter(d => !dbDevicesIds.includes(d.deviceid))
+    for (const device of newDevices) {
+      const dev={
+        user: user._id,
+        ...device,
+        last_session_date: moment.unix(device.last_session_date),
+      }
+      await Device.create(dev)
+        .catch(err => console.error(err))
+    }
+    if (newDevices.length>0) {
+      console.log(`Devices:${newDevices.length} new for ${user.email}(${newDevices.map(d => d.model)})`)
     }
   }
 })
