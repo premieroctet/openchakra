@@ -176,10 +176,8 @@ checkConfig()
       console.log(`Checking correct hostname`)
       axios
         .get(new URL('/testping', getHostUrl()).toString())
-        .then(res => {
-          const result = res.data
-          const expected = RANDOM_ID
-          if (result != expected) {
+        .then(({data}) => {
+          if (data != RANDOM_ID) {
             throw new Error(`Host ${getHostUrl()} is wrong`)
           }
         })

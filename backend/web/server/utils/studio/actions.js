@@ -100,8 +100,9 @@ let ACTIONS = {
         if (exists) {
           return Promise.reject(`Un compte avec le mail ${props.email} existe déjà`)
         }
-        return User.create({...props})
+        return validatePassword({...props})
       })
+      .then(() => User.create({...props}))
   },
 }
 
