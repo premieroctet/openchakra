@@ -1,7 +1,8 @@
+const { MEASURE_AUTO, MEASURE_MANUAL, MEASURE_SOURCE } = require('../consts')
 const mongoose = require('mongoose')
 const lodash=require('lodash')
-const {MEASURE_TYPE} = require('../consts')
 const {schemaOptions} = require('../../../utils/schemas')
+
 const Schema = mongoose.Schema
 
 const MeasureSchema = new Schema({
@@ -12,11 +13,6 @@ const MeasureSchema = new Schema({
   },
   date: {
     type: Date,
-    required: true,
-  },
-  type: {
-    type: String,
-    enum: Object.keys(MEASURE_TYPE),
     required: true,
   },
   sys: {
@@ -31,10 +27,14 @@ const MeasureSchema = new Schema({
     type: Number,
     required: false,
   },
-
+  // Group measure id
+  withings_group: {
+    type: Number,
+    required: false,
+  },
 }, schemaOptions)
 
-MeasureSchema.virtual('recommandation').get(() => {
+MeasureSchema.virtual('recommandation').get(function() {
   const sys=this.sys
   const dia=this.dia
 
@@ -47,6 +47,11 @@ MeasureSchema.virtual('recommandation').get(() => {
   if (lodash.inRange(sys, 100, 130.1) && lodash.inRange(dia, 60, 80.1)) {
     return 'Refaire autotest au moins une fois par an'
   }
+})
+
+MeasureSchema.virtual('source').get(function() {
+  const src=!!this.withings_group ? MEASURE_AUTO : MEASURE_MANUAL
+  return src
 })
 
 
