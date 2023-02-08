@@ -42,6 +42,34 @@ const Fonts = () => (
         font-weight: normal;
         font-style: normal;
       }
+      @font-face {
+        font-family: 'Cabin';
+        src: local('Cabin'), 
+            url('fonts/Cabin-Regular.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: 'Cabin';
+        src: local('Cabin'), 
+            url('fonts/Cabin-Bold.ttf') format('truetype');
+        font-weight: bold;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: 'DancingScript';
+        src: local('DancingScript'), 
+            url('fonts/DancingScript-Regular.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: 'DancingScript';
+        src: local('DancingScript'), 
+            url('fonts/DancingScript-Bold.ttf') format('truetype');
+        font-weight: bold;
+        font-style: normal;
+      }
       `}
   />
 )
