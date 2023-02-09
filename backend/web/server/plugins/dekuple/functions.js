@@ -26,6 +26,7 @@ const {
   declareVirtualField,
   setPreCreateData,
   setPreprocessGet,
+  setFilterDataUser,
 } = require('../../utils/database')
 
 const preCreate = ({model, params, user}) => {
@@ -50,6 +51,21 @@ const preprocessGet = ({model, fields, id, user}) => {
 
 setPreprocessGet(preprocessGet)
 
+const filterDataUser = ({model, data, id, user}) => {
+
+  // List mode
+  if (['user', 'loggedUser'].includes(model)) {
+    console.log(`Calling filter with ${JSON.stringify(data)}`)
+    return data.map(d => ({
+      ...d,
+      measures: d.measures && lodash.orderBy(d.measures, ['date'], ['desc'])
+    }))
+  }
+
+  return data
+}
+
+setFilterDataUser(filterDataUser)
 
 const USER_MODELS=['user', 'loggedUser']
 USER_MODELS.forEach(m => {
