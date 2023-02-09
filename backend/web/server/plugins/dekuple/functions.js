@@ -151,7 +151,9 @@ cron.schedule('*/2 * * * * *', async () => {
       .maxBy(m => m.date)
     if (user.access_token) {
       const since=latestMeasure? moment(latestMeasure.date).add(5, 'seconds') : moment().add(-10, 'days')
+      console.log(`User ${user.email}:request measures since ${since}`)
       const newMeasures=await getMeasures(user.access_token, since)
+      console.log(`User ${user.email}:got measures ${JSON.stringify(newMeasures)}`)
       if (newMeasures.measuregrps.length>0) {
         console.log(`User ${user.email}:got ${newMeasures.measuregrps.length} new measures since ${since}`)
       }
