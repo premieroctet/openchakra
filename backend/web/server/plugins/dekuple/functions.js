@@ -124,7 +124,7 @@ cron.schedule('0 */30 * * * *', () => {
 })
 
 // Get all measures TODO should be notified by Withings
-cron.schedule('12 */10 * * * *', async () => {
+cron.schedule('0 * * * * *', async () => {
   console.log(`Getting measures`)
   const users=await User.find({}, {access_token:1, email:1})
       .populate({path:'measures'})
