@@ -5,6 +5,10 @@
 
 **/studio-test/src/[A-Z]*.js
 **/studio-test/src/[A-Z]*.css
+# Mac .gitignore is case unsensitive :-|
+!studio-test/src/utils.js
+!studio-test/src/index.js
+!studio-test/src/index.css
 
 # testing
 /coverage
