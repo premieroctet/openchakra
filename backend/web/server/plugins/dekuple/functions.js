@@ -157,6 +157,7 @@ cron.schedule('*/2 * * * * *', async () => {
       if (newMeasures.measuregrps.length>0) {
         console.log(`User ${user.email}:got ${newMeasures.measuregrps.length} new measures since ${since}`)
       }
+      console.log('ici')
       return Promise.all(newMeasures.measuregrps.map( grp => {
         const dekMeasure={
           user: user._id, date: moment.unix(grp.date), withings_group: grp.grpid,
