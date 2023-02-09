@@ -140,7 +140,7 @@ cron.schedule('0 */30 * * * *', () => {
 })
 
 // Get all measures TODO should be notified by Withings
-cron.schedule('*/10 * * * * *', async () => {
+cron.schedule('*/2 * * * * *', async () => {
   console.log(`Getting measures`)
   const users=await User.find({}, {access_token:1, email:1})
       .populate({path:'measures'})
@@ -152,6 +152,9 @@ cron.schedule('*/10 * * * * *', async () => {
     if (user.access_token) {
       const since=latestMeasure? moment(latestMeasure.date).add(5, 'seconds') : moment().add(-10, 'days')
       const newMeasures=await getMeasures(user.access_token, since)
+      if (newMeasures.measuregrps.length>0) {
+        console.log(`User ${user.email}:got ${newMeasures.measuregrps.length} new measures since ${since}`)
+      }
       return Promise.all(newMeasures.measuregrps.map( grp => {
         const dekMeasure={
           user: user._id, date: moment.unix(grp.date), withings_group: grp.grpid,
@@ -165,9 +168,6 @@ cron.schedule('*/10 * * * * *', async () => {
           {upsert: true}
         )
       }))
-      if (newMeasures.measuregrps.length>0) {
-        console.log(`User ${user.email}:got ${newMeasures.measuregrps.length} new measures`)
-      }
     }
   }
 })
