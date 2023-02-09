@@ -1,21 +1,29 @@
 import Cookies from 'universal-cookie'
 import store from "store"
 
-const ensureCookie = () => {
+const KEY='token'
+
+const cookies=new Cookies()
+
+const ensureToken = () => {
   console.log('calling ensureCookie')
-  const cookies=new Cookies()
-  const cookie=cookies.get('token')
-  const stored=store.get('token')
+  const cookie=cookies.get(KEY)
+  const stored=store.get(KEY)
   console.log(`cookie:${cookie}`)
   console.log(`stored:${stored}`)
   if (cookie && !stored) {
     console.log(`Storing token in storage`)
-    store.set('token', cookie)
+    store.set(KEY, cookie)
   }
   if (!cookie && stored) {
     console.log(`Setting cookie from storage`)
-    cookies.set('token', stored)
+    cookies.set(KEY, stored)
   }
 }
 
-export {ensureCookie}
+const clearToken = () => {
+  cookies.remove(KEY)
+  store.remove(KEY)
+}
+
+export {ensureCookie, clearToken}
