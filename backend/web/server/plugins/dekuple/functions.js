@@ -150,20 +150,23 @@ cron.schedule('*/10 * * * * *', async () => {
       .filter(m => m.source==MEASURE_AUTO)
       .maxBy(m => m.date)
     if (user.access_token) {
-      const since=latestMeasure? moment(latestMeasure.date).add(1, 'second') : moment().add(-10, 'days')
+      const since=latestMeasure? moment(latestMeasure.date).add(5, 'seconds') : moment().add(-10, 'days')
       const newMeasures=await getMeasures(user.access_token, since)
-      for (const grp of newMeasures.measuregrps) {
+      return Promise.all(newMeasures.measuregrps.map( grp => {
         const dekMeasure={
           user: user._id, date: moment.unix(grp.date), withings_group: grp.grpid,
           sys: grp.measures.find(m => m.type==WITHINGS_MEASURE_SYS)?.value,
           dia: grp.measures.find(m => m.type==WITHINGS_MEASURE_DIA)?.value,
           heartbeat: grp.measures.find(m => m.type==WITHINGS_MEASURE_BPM)?.value,
         }
-        await Measure.create(dekMeasure)
-          .catch(err => console.error(err))
-      }
+        return Measure.findOneAndUpdate(
+          {withings_group: dekMeasure.withings_group},
+          {...dekMeasure},
+          {upsert: true}
+        )
+      }))
       if (newMeasures.measuregrps.length>0) {
-        console.log(`Measures:${newMeasures.measuregrps.length} new for ${user.email}`)
+        console.log(`User ${user.email}:got ${newMeasures.measuregrps.length} new measures`)
       }
     }
   }
