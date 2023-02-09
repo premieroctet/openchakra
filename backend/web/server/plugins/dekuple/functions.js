@@ -145,7 +145,7 @@ cron.schedule('*/2 * * * * *', async () => {
   const users=await User.find({}, {access_token:1, email:1})
       .populate({path:'measures'})
       .lean({virtuals: true})
-  for (const user of users) {
+  return Promise.all(users.map(async user => {
     const latestMeasure=lodash(user.measures)
       .filter(m => m.source==MEASURE_AUTO)
       .maxBy(m => m.date)
@@ -157,7 +157,6 @@ cron.schedule('*/2 * * * * *', async () => {
       if (newMeasures.measuregrps.length>0) {
         console.log(`User ${user.email}:got ${newMeasures.measuregrps.length} new measures since ${since}`)
       }
-      console.log('ici')
       return Promise.all(newMeasures.measuregrps.map( grp => {
         const dekMeasure={
           user: user._id, date: moment.unix(grp.date), withings_group: grp.grpid,
@@ -172,7 +171,7 @@ cron.schedule('*/2 * * * * *', async () => {
         )
       }))
     }
-  }
+  }))
 })
 
 // Get all devices TODO should be notified by Withings
