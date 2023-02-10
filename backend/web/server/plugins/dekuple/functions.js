@@ -175,30 +175,32 @@ cron.schedule('*/30 * * * * *', async () => {
 })
 
 // Get all devices TODO should be notified by Withings
-//cron.schedule('0 */10 * * * *', async () => {
 cron.schedule('24 */10 * * * *', async () => {
   console.log(`Getting devices`)
   const users=await User.find({access_token:{$ne: null}})
     .populate('devices')
     .lean({virtuals: true})
-  for (const user of users) {
+  return Promise.allSettled(users.map(async user => {
     const devices=await getDevices(user.access_token)
-      .catch(err => {console.error(err)})
-    const dbDevicesIds=user.devices.map(d => d.deviceid)
-    const newDevices=devices.filter(d => !dbDevicesIds.includes(d.deviceid))
-    for (const device of newDevices) {
-      const dev={
-        user: user._id,
-        ...device,
-        last_session_date: moment.unix(device.last_session_date),
-      }
-      await Device.create(dev)
-        .catch(err => console.error(err))
+    if (devices.length>0) {
+      console.log(`User ${user.email}: ${devices.length} devices found`)
     }
-    if (newDevices.length>0) {
-      console.log(`Devices:${newDevices.length} new for ${user.email}(${newDevices.map(d => d.model)})`)
-    }
-  }
+    const mappedDevices=devices.map(device => ({
+      user: user._id,
+      ...device,
+      last_session_date: moment.unix(device.last_session_date),
+    }))
+    // First remove all devices
+    await Device.deleteMany({user: user._id}).catch(err => {console.error(err)})
+    // Then recreate devices
+    await Device.create(mappedDevices).catch(err => {console.error(err)})
+  }))
+  .then(res => {
+    const errors=lodash.zip(res, users)
+      .filter(([r]) => r.status=='rejected')
+      .map(([r,u]) => `User ${u.email}: ${r.reason}`)
+    errors.length>0 &&console.error(errors)
+  })
 })
 
 module.exports={
