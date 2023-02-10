@@ -1,5 +1,7 @@
-import lodash from 'lodash'
 import axios from 'axios'
+import lodash from 'lodash'
+
+import { clearToken } from './token';
 import {getComponent, clearComponentValue} from './values'
 
 const API_ROOT = '/myAlfred/api/studio'
@@ -248,7 +250,7 @@ export const ACTIONS = {
   },
 
   logout: () => {
-    document.cookie = 'token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    clearToken()
     return Promise.resolve()
   },
 

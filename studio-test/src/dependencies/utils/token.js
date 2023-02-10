@@ -26,4 +26,4 @@ const clearToken = () => {
   store.remove(KEY)
 }
 
-export {ensureCookie, clearToken}
+export {ensureToken, clearToken}

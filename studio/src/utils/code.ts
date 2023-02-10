@@ -722,6 +722,7 @@ import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
 }
 
 import Fonts from './dependencies/theme/Fonts'
+import {ensureToken} from './dependencies/utils/token'
 import {useLocation} from "react-router-dom"
 import { useUserContext } from './dependencies/context/user'
 import { getComponentDataValue } from './dependencies/utils/values'
@@ -750,6 +751,11 @@ const ${componentName} = () => {
     }
     return value
   }
+
+  // ensure token set if lost during domain change
+  useEffect(() => {
+    ensureToken()
+  }, [])
 
   const {user}=useUserContext()
   ${hooksCode}
