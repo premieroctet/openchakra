@@ -1,15 +1,6 @@
-const url = require('url')
 const NodeCache = require('node-cache')
 const mongoose = require('mongoose')
 const lodash = require('lodash')
-const bcrypt = require('bcryptjs')
-const {
-  RES_AVAILABLE,
-  RES_CURRENT,
-  RES_FINISHED,
-  RES_TO_COME,
-  STATUS,
-} = require('./consts')
 const {
   cloneModel,
   declareComputedField,
@@ -24,8 +15,15 @@ const UserSessionData = require('../../models/UserSessionData')
 const Program = require('../../models/Program')
 const Theme = require('../../models/Theme')
 const Session = require('../../models/Session')
-const User = require('../../models/User')
+require('../../models/User')
 const Message = require('../../models/Message')
+const {
+  RES_AVAILABLE,
+  RES_CURRENT,
+  RES_FINISHED,
+  RES_TO_COME,
+  STATUS,
+} = require('./consts')
 
 const myCache = new NodeCache({stdTTL: 15, checkperiod: 10})
 
@@ -223,8 +221,7 @@ const getPrevResource = id => {
 }
 
 // Mark ressource finished then return next
-const getNext = (id, user, referrer) => {
-  const params = url.parse(referrer, true).query
+const getNext = (id, user) => {
   return UserSessionData.findOneAndUpdate(
     {user: user._id},
     {user: user._id, $addToSet: {finished: id}},
@@ -335,7 +332,7 @@ const filterDataUser = ({model, data, user}) => {
 
 setFilterDataUser(filterDataUser)
 
-const getContacts = (user, id) => {
+const getContacts = user => {
   return Session.find({
     origin: null,
     $or: [{trainees: user._id}, {trainers: user._id}],
