@@ -32,7 +32,6 @@ const {
   EVENT_VAT_RATE,
   FUMOIR_ADMIN,
   FUMOIR_MEMBER,
-  MAX_EVENT_GUESTS,
   PAYMENT_STATUS,
   PAYMENT_SUCCESS,
   PLACES,
@@ -40,11 +39,8 @@ const {
 } = require('./consts')
 
 const inviteGuest = ({eventOrBooking, email, phone}, user) => {
-  return getModel(eventOrBooking)
+  return getModel(eventOrBooking, ['booking', 'event'])
     .then(modelName => {
-      if (!['booking', 'event'].includes(modelName)) {
-        throw new BadRequestError(`Found model ${modelName} for ${eventOrBooking}, should be event or booking`)
-      }
       if (modelName=='booking') {
         return Booking.findById(eventOrBooking)
           .populate('guests')
@@ -68,20 +64,24 @@ const inviteGuest = ({eventOrBooking, email, phone}, user) => {
           .then(guest => Booking.findByIdAndUpdate(eventOrBooking, {$push: {guests: guest}}))
       }
       if (modelName=='event') {
-        return UserSessionData.findOneAndUpdate({user: user._id},
-          {user: user._id},
-          {upsert: true, runValidators: true, new: true},
-        )
+        return Promise.all([
+          UserSessionData.findOneAndUpdate({user: user._id},
+            {user: user._id},
+            {upsert: true, runValidators: true, new: true},
+          )
           .populate({path: 'guests', populate: 'guest'})
-          .then(r => {
+          ,
+          Event.findById(eventOrBooking)
+        ])
+          .then(([r, ev]) => {
             // Must not invite the same email twice
-            if (r.guests.find(g => g.guest.email==email)) {
+            if (r.guests.find(g => g.event._id.toString()==eventOrBooking && g.guest.email==email)) {
               throw new BadRequestError(`${email} est déjà invité pour cet événement`)
             }
             // Must not invite too many people
             const actualGuestsCount=r.guests.filter(g => g.event._id.toString()==eventOrBooking).length
-            if (actualGuestsCount+1>MAX_EVENT_GUESTS) {
-              throw new BadRequestError(`Le nombre d'invités maximum est ${MAX_EVENT_GUESTS} pour un événement`)
+            if (ev.max_guests_per_member < actualGuestsCount+1) {
+              throw new BadRequestError(`Le nombre d'invités maximum est ${ev.max_guests_per_member} pour un événement`)
             }
             return getEventGuestsCount(user, null, {_id: eventOrBooking})
               .then(count => {
@@ -458,29 +458,32 @@ const getEventGuestsCount = (user, params, data) => {
 }
 
 const setEventGuestsCount = ({id, attribute, value, user}) => {
-  if (value>MAX_EVENT_GUESTS) {
-    throw new BadRequestError(`Vous ne pouvez inviter plus de ${MAX_EVENT_GUESTS} personnes`)
-  }
-  return getEventGuests(user, null, {_id: id})
-    .then(guests => {
-      if (guests.length>value) {
-        throw new BadRequestError(`Vous avez déjà envoyé ${guests.length} invitations`)
-      }
-      return UserSessionData.findOneAndUpdate({user: user._id},
-        {user: user._id},
-        {upsert: true, runValidators: true, new: true},
-      )
-    })
-    .then(usd => {
-      const guests_count=usd.guests_count.find(gc => gc.event._id.toString()==id)
-      if (guests_count) {
-        guests_count.count=value
-      }
-      else {
-        usd.guests_count.push({event: id, count: value})
-      }
-      return usd.save()
-    })
+  return Event.findById(id)
+    .then(event => {
+    if (value>event.max_guests_per_member) {
+      throw new BadRequestError(`Vous ne pouvez inviter plus de ${event.max_guests_per_member} personnes`)
+    }
+    return getEventGuests(user, null, {_id: id})
+      .then(guests => {
+        if (guests.length>value) {
+          throw new BadRequestError(`Vous avez déjà envoyé ${guests.length} invitations`)
+        }
+        return UserSessionData.findOneAndUpdate({user: user._id},
+          {user: user._id},
+          {upsert: true, runValidators: true, new: true},
+        )
+      })
+      .then(usd => {
+        const guests_count=usd.guests_count.find(gc => gc.event._id.toString()==id)
+        if (guests_count) {
+          guests_count.count=value
+        }
+        else {
+          usd.guests_count.push({event: id, count: value})
+        }
+        return usd.save()
+      })
+  })
 }
 
 declareComputedField('event', 'guests_count', getEventGuestsCount, setEventGuestsCount)

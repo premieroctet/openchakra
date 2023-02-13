@@ -39,6 +39,14 @@ const EventSchema = new Schema(
       enum: [...Object.keys(PLACES)],
       required: false,
     },
+    max_guests_per_member: {
+      type: Number,
+      required: true,
+    },
+    max_people: {
+      type: Number,
+      required: true,
+    }
   },
   schemaOptions,
 )
