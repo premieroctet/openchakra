@@ -12,11 +12,11 @@ const SMS_CONTENTS = {
 
 const sendNotification = ({notification, destinee, ccs, params, attachment}) => {
 
-  let enable_mails = true
-  let enable_sms = true
+  let enable_mails = is_production()
+  let enable_sms = is_production()
 
   if (!enable_sms && !enable_mails) {
-    console.log(`Mailing disabled:${msg}`)
+    console.log(`Mailing disabled:${JSON.stringify(destinee)}/${notification}`)
     return true
   }
 

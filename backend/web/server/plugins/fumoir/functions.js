@@ -64,38 +64,31 @@ const inviteGuest = ({eventOrBooking, email, phone}, user) => {
           .then(guest => Booking.findByIdAndUpdate(eventOrBooking, {$push: {guests: guest}}))
       }
       if (modelName=='event') {
-        return Promise.all([
-          UserSessionData.findOneAndUpdate({user: user._id},
-            {user: user._id},
-            {upsert: true, runValidators: true, new: true},
-          )
-          .populate({path: 'guests', populate: 'guest'})
-          ,
-          Event.findById(eventOrBooking)
-        ])
-          .then(([r, ev]) => {
+        return Event.findById(eventOrBooking)
+          .populate({path: 'members', populate: 'member guest'})
+          .then(ev => {
+            return Promise.all([
+              Promise.resolve(ev),
+              getEventGuests(user, {}, ev),
+            ])
+          })
+          .then(([ev, guests])=> {
             // Must not invite the same email twice
-            if (r.guests.find(g => g.event._id.toString()==eventOrBooking && g.guest.email==email)) {
+            if (guests.includes(email)) {
               throw new BadRequestError(`${email} est déjà invité pour cet événement`)
             }
-            // Must not invite too many people
-            const actualGuestsCount=r.guests.filter(g => g.event._id.toString()==eventOrBooking).length
-            if (ev.max_guests_per_member < actualGuestsCount+1) {
-              throw new BadRequestError(`Le nombre d'invités maximum est ${ev.max_guests_per_member} pour un événement`)
+            if (ev.max_guests_per_member < guests.length+1) {
+              throw new BadRequestError(`Le nombre d'invités maximum est ${ev.max_guests_per_member} pour cet événement`)
             }
-            return getEventGuestsCount(user, null, {_id: eventOrBooking})
-              .then(count => {
-                if (actualGuestsCount+1>count) {
-                  throw new BadRequestError(`Nombre d'invités (${count}) déjà atteint`)
-                }
-                return Guest.create({email, phone})
-                  .then(guest => {
-                    r.guests.push({event: eventOrBooking, guest: guest._id})
-                    return Event.findById(eventOrBooking)
-                      .then(ev => Promise.allSettled([sendEventRegister2Guest({event: ev, member: user, guest: guest})]))
-                      .then(() => r.save())
-                  })
+            if (ev.people_count+1>ev.max_people) {
+              throw new BadRequestError(`La capacité de cet événement est atteinte:${ev.max_people} invités`)
+            }
+            return Guest.create({email, phone})
+              .then(g => {
+                ev.members.find(m => m.member._id.toString()==user._id.toString()).guest=g._id
+                return Promise.all([ev.save(), g])
               })
+              .then(([ev, guest]) => Promise.allSettled([sendEventRegister2Guest({event: ev, member: user, guest: guest})]))
           })
       }
     })
@@ -231,8 +224,15 @@ addAction('cashOrder', cashOrder)
 
 const registerToEvent = ({event, user}) => {
   console.log(`Adding ${user} to event ${event}`)
-  return Event.findByIdAndUpdate(event, {$addToSet: {members: user}})
-    .then(ev => Promise.all([Event.findById(event), User.find({role: FUMOIR_ADMIN})]))
+  return Event.findById(event)
+    .then(ev => {
+      if (ev.members.find(m => m.member._id.toString()==user._id.toString())) {
+        throw new BadRequestError(`Vous êtes déjà inscrit à cet événement`)
+      }
+      ev.members.push({member: user._id})
+      return ev.save()
+    })
+    .then(ev => Promise.all([Promise.resolve(ev), User.find({role: FUMOIR_ADMIN})]))
     .then(([ev, admins]) => Promise.allSettled(admins.map(a => sendEventRegister2Admin({event: ev, member: user, admin: a}))))
 }
 
@@ -427,6 +427,8 @@ declareVirtualField({model: 'event', field: 'payments', instance: 'Array', requi
   caster: {
     instance: 'ObjectID',
     options: {ref: 'payment'}}})
+declareVirtualField({model: 'event', field: 'people_count', instance: 'Number', requires: ''})
+
 
 declareVirtualField({model: 'orderItem', field: 'net_price', instance: 'Number', requires: 'price,vat_rate'})
 declareVirtualField({model: 'orderItem', field: 'vat_amount', instance: 'Number', requires: 'price,vat_rate'})
@@ -436,24 +438,22 @@ declareVirtualField({model: 'orderItem', field: 'total_price', instance: 'Number
 declareVirtualField({model: 'subscription', field: 'is_active', instance: 'Boolean', requires: 'start,end'})
 
 const getEventGuests = (user, params, data) => {
-  return UserSessionData.findOne({user: user._id, 'guests.event': data._id})
-    .populate({path: 'guests', populate: 'guest'})
-    .then(usd => {
-      if (!usd) { return [] }
-      const guests=usd.guests
-        .filter(g => g.event._id.toString()==data._id.toString())
-        .map(g => g.guest)
-      return guests
+  return Event.findById(data._id)
+    .populate({path: 'members', populate: 'member guest'})
+    .then(event => {
+      const m=event.members
+        .find(m => m.member._id.toString()==user._id.toString() && !!m.guest)
+      return m ? [m.guest]:[]
     })
 }
 
 declareComputedField('event', 'guests', getEventGuests)
 
 const getEventGuestsCount = (user, params, data) => {
-  return UserSessionData.findOne({user: user._id, 'guests_count.event': data._id})
-    .then(usd => {
-      if (!usd) { return 0 }
-      return usd.guests_count.find(gc => gc.event._id.toString()==data._id).count
+  return getEventGuests(user, params, data)
+    .then(guests => {
+      console.log(`Guests:${guests.length}`)
+      return guests.length
     })
 }
 
@@ -494,4 +494,5 @@ module.exports = {
   removeOrderItem,
   registerToEvent,
   payOrder,
+  getEventGuestsCount,
 }

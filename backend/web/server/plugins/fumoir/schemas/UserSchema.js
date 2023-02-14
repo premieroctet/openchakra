@@ -138,7 +138,7 @@ UserSchema.virtual('bookings', {
 UserSchema.virtual('events', {
   ref: 'event', // The Model to use
   localField: '_id', // Find in Model, where localField
-  foreignField: 'members', // is equal to foreignField
+  foreignField: 'members.member', // is equal to foreignField
 })
 
 module.exports = UserSchema

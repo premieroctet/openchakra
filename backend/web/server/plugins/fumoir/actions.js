@@ -1,3 +1,10 @@
+const {
+  getEventGuestsCount,
+  inviteGuest,
+  registerToEvent,
+  removeOrderItem,
+  setOrderItem,
+} = require('./functions')
 const lodash=require('lodash')
 const Payment = require('../../models/Payment')
 const Event = require('../../models/Event')
@@ -9,12 +16,6 @@ const {
   FUMOIR_MEMBER,
   PAYMENT_SUCCESS,
 } = require('./consts')
-const {
-  inviteGuest,
-  registerToEvent,
-  removeOrderItem,
-  setOrderItem,
-} = require('./functions')
 
 const inviteGuestAction=({parent, email, phone}, user) => {
   return inviteGuest({eventOrBooking: parent, email, phone}, user)
@@ -42,15 +43,16 @@ const isActionAllowed = ({action, dataId, user}) => {
   if (action=='payEvent') {
     return Promise.all([
       Event.findOne({_id: dataId, members: user}),
-      UserSessionData.findOne({user: user, 'guests_count.event': dataId}),
       Payment.find({event: dataId, event_member: user, status: PAYMENT_SUCCESS}),
     ])
-      .then(([ev, usd, payments]) => {
+      .then(([ev, payments]) => {
         if (!ev) { return false }
-        const guests_count=usd ? usd.guests_count.find(gc => gc.event._id.toString()==dataId).count : 0
-        const already_paid=lodash(payments).map('amount').sum()
-        const reminingToPay=ev.price*guests_count-already_paid
-        return reminingToPay>0
+        return getEventGuestsCount(user, {}, {_id: dataId})
+          .then(guests_count => {
+            const already_paid=lodash(payments).map('amount').sum()
+            const reminingToPay=ev.price*guests_count-already_paid
+            return reminingToPay>0
+          })
       })
   }
   if (action=='payOrder') {
