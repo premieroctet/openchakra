@@ -441,7 +441,7 @@ declareVirtualField({model: 'event', field: 'payments', instance: 'Array', requi
   caster: {
     instance: 'ObjectID',
     options: {ref: 'payment'}}})
-declareVirtualField({model: 'event', field: 'people_count', instance: 'Number', requires: ''})
+declareVirtualField({model: 'event', field: 'people_count', instance: 'Number', requires: 'members'})
 
 
 declareVirtualField({model: 'orderItem', field: 'net_price', instance: 'Number', requires: 'price,vat_rate'})
