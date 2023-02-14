@@ -266,7 +266,7 @@ export const ACTIONS = {
 
   forgotPassword: ({ value, props, level, getComponentValue }) => {
     const email=getComponentValue(props.email, level)
-    let url = `${API_ROOT}/action`
+    let url = `${API_ROOT}/anonymous-action`
     const body = {
       action: 'forgotPassword',
       email,

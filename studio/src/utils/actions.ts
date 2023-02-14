@@ -241,6 +241,7 @@ export const ACTIONS: IActions = {
           .filter(c => c.type == 'Input')
           .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
     },
+    next: ['openPage'],
   },
 }
 

@@ -193,6 +193,20 @@ router.post('/action', passport.authenticate('cookie', {session: false}), (req, 
     })
 })
 
+router.post('/anonymous-action', (req, res) => {
+  const action = req.body.action
+  const actionFn = ACTIONS[action]
+  if (!actionFn) {
+    console.error(`Unkown action:${action}`)
+    return res.status(404).json(`Unkown action:${action}`)
+  }
+
+  return actionFn(req.body, null, req.get('Referrer'))
+    .then(result => {
+      return res.json(result)
+    })
+})
+
 router.post('/login', (req, res) => {
   const {email, password} = req.body
 
