@@ -1,8 +1,8 @@
+const { FUMOIR_MEMBER, ROLES } = require('../consts')
 const moment = require('moment')
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const {schemaOptions} = require('../../../utils/schemas')
-const {ROLES} = require('../consts')
 
 const Schema = mongoose.Schema
 
@@ -92,15 +92,12 @@ const UserSchema = new Schema(
     ],
     subscription_start: {
       type: Date,
-      required: [true, "La date de début d'abonnement est obligatoire"],
     },
     subscription_end: {
       type: Date,
-      required: [true, "La date de fin d'abonnement est obligatoire"],
     },
     subscription_price: {
       type: Number,
-      required: [true, "Le prix de l'abonnement est obligatoire"],
     },
     resetToken: {
       type: Schema.Types.ObjectId,
@@ -109,6 +106,18 @@ const UserSchema = new Schema(
   },
   schemaOptions,
 )
+
+UserSchema.path('subscription_start').required(function() {
+  return this.role==FUMOIR_MEMBER
+}, "La date de début d'abonnement est obligatoire")
+
+UserSchema.path('subscription_end').required(function() {
+  return this.role==FUMOIR_MEMBER
+}, "La date de fin d'abonnement est obligatoire")
+
+UserSchema.path('subscription_price').required(function() {
+  return this.role==FUMOIR_MEMBER
+}, "Le prix de l'abonnement est obligatoire")
 
 UserSchema.virtual('full_name').get(function() {
   return `${this.firstname} ${this.lastname}`

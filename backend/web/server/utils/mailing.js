@@ -17,7 +17,7 @@ const sendNotification = ({notification, destinee, ccs, params, attachment}) => 
   let enable_sms = isProduction() || isValidation()
 
   if (!enable_sms && !enable_mails) {
-    console.log(`Mailing disabled:${JSON.stringify(destinee)}/${notification}`)
+    console.log(`Mailing disabled:${JSON.stringify(destinee)}/${notification}/${JSON.stringify(params)}`)
     return true
   }
 

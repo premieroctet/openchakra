@@ -262,6 +262,21 @@ export const ACTIONS = {
   // From https://developer.withings.com/sdk/v2/tree/sdk-webviews/device-settings-webview
   openWithingsSettings: params => {
     window.location='https://localhost/myAlfred/api/withings/settings'
-  }
+  },
+
+  forgotPassword: ({ value, props, level, getComponentValue }) => {
+    const email=getComponentValue(props.email, level)
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'forgotPassword',
+      email,
+    }
+    return axios.post(url, body)
+    .then(res => {
+      ['email', 'phone'].map(att =>
+        clearComponentValue(props[att], level))
+      return res
+    })
+  },
 
 }

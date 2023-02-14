@@ -233,6 +233,15 @@ export const ACTIONS: IActions = {
     label: 'Open withings settings',
     options: {},
   },
+  forgotPassword: {
+    label: 'Forgot password',
+    options: {
+      email: ({ components }) =>
+        components
+          .filter(c => c.type == 'Input')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+    },
+  },
 }
 
 export const allowsActions = (component: IComponent) => {

@@ -1,3 +1,8 @@
+const { sendForgotPassword } = require('./mailing')
+const bcryptjs = require('bcryptjs')
+const { generatePassword } = require('../../../utils/passwords')
+const User = require('../../models/User')
+const { BadRequestError } = require('../../utils/errors')
 const {
   getEventGuestsCount,
   inviteGuest,
@@ -34,10 +39,26 @@ const setOrderItemAction=({context, parent, quantity}) => {
   return setOrderItem({order: context, product: parent, quantity})
 }
 
+const forgotPasswordAction=({context, parent, email}) => {
+  console.log(`Email:${email}`)
+  return User.findOne({email})
+   .then(user => {
+     if (!user) {
+       throw new BadRequestError(`Aucun compte n'est associé à cet email`)
+     }
+     const password=generatePassword()
+     user.password=bcryptjs.hashSync(password, 10)
+     return user.save()
+       .then(user => sendForgotPassword({user, password}))
+   })
+  return Promise.reject('Not implemented')
+}
+
 addAction('inviteGuest', inviteGuestAction)
 addAction('registerToEvent', registerToEventAction)
 addAction('removeOrderItem', removeOrderItemAction)
 addAction('setOrderItem', setOrderItemAction)
+addAction('forgotPassword', forgotPasswordAction)
 
 const isActionAllowed = ({action, dataId, user}) => {
   if (action=='payEvent') {
