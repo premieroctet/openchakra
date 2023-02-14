@@ -297,7 +297,7 @@ export const onboarding: IComponents = {
       size: 'md',
       as: 'input',
       variant: 'outline',
-      isFullWidth: true,
+      width: '100%',
       focusBorderColor: 'blue.500',
       errorBorderColor: 'red.500',
       placeholder: 'Your email',

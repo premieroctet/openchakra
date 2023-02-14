@@ -17,7 +17,7 @@ const NumberInputPanel = () => {
 
       <SwitchControl label="Invalid" name="isInvalid" />
       <SwitchControl label="Read Only" name="isReadOnly" />
-      <SwitchControl label="Full width" name="isFullWidth" />
+      <SwitchControl label="Width" name="width" />
     </>
   )
 }
