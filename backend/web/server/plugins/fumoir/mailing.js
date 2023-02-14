@@ -23,6 +23,7 @@ const sendNewBookingToMember = ({booking}) => {
       member_firstname: booking.booking_user.firstname,
       booking_date: datetime_str(booking.start_date),
       duration: booking.duration,
+      booking_number: booking.booking_number,
     },
   })
 }
@@ -37,6 +38,7 @@ const sendNewBookingToManager = ({booking, manager}) => {
       booking_date: datetime_str(booking.start_date),
       duration: booking.duration,
       locker: booking.booking_user.locker,
+      booking_number: booking.booking_number,
     },
   })
 }
@@ -114,6 +116,7 @@ const sendBookingRegister2Guest = ({booking, guest}) => {
       member_fullname: booking.booking_user.full_name,
       booking_date: datetime_str(booking.start_date),
       duration: booking.duration,
+      booking_number: booking.booking_number,
     },
   })
 }

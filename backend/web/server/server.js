@@ -7,6 +7,7 @@ const bodyParser = require('body-parser')
 const passport = require('passport')
 const glob = require('glob')
 const cors = require('cors')
+const autoIncrement = require('mongoose-auto-increment')
 const {
   RANDOM_ID,
   checkConfig,
@@ -75,6 +76,7 @@ const {serverContextFromRequest} = require('./utils/serverContext')
 checkConfig()
   .then(() => {
     return mongoose.connect(getDatabaseUri(), MONGOOSE_OPTIONS)
+      .then(conn => autoIncrement.initialize(conn))
   })
   // Connect to MongoDB
   .then(() => {

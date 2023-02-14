@@ -1,6 +1,7 @@
 const moment = require('moment')
 const lodash = require('lodash')
 const mongoose = require('mongoose')
+const autoIncrement = require('mongoose-auto-increment')
 const {
   CURRENT,
   FINISHED,
@@ -19,18 +20,18 @@ const BookingSchema = new Schema(
   {
     table_number: {
       type: String,
-      required: false, // required: true,
+      required: false,
     },
     start_date: {
       type: Date,
-      required: false, // required: true,
-      min: () => moment(),
+      required: [true, "La date/heure de réservation est obligatoire"],
+      min: [moment(), "Date antérieure à la date d'aujourd'hui"],
     },
     duration: {
       type: Number,
       min: 1,
       max: 24,
-      required: false, // required: true,
+      required: [true, "La durée de réservation est obligatoire"],
     },
     booking_user: {
       // User who booked
@@ -58,7 +59,7 @@ const BookingSchema = new Schema(
       min: 0,
       max: [MAX_BOOKING_GUESTS, `Vous ne pouvez inviter plus de ${MAX_BOOKING_GUESTS} personnes`],
       default: 0,
-      required: true,
+      required: [true, "Le nombre d'invités est obligatoire"],
     },
     comments: {
       type: String,
@@ -75,9 +76,21 @@ const BookingSchema = new Schema(
         ref: 'orderItem',
       },
     ],
+    // Booking order #
+    booking_number: {
+      type: Number,
+      required: true,
+    }
   },
   schemaOptions,
 )
+
+// Ensure autoincrement is initalized
+if (mongoose.connection) {
+  autoIncrement.initialize(mongoose.connection)
+}
+
+BookingSchema.plugin(autoIncrement.plugin, { model: 'booking', field: 'booking_number' });
 
 // This booking's payments
 BookingSchema.virtual('payments', {

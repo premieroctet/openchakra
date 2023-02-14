@@ -3,7 +3,20 @@ const {
   sendEventRegister2Admin,
   sendEventRegister2Guest,
   sendForgotPassword,
+  sendNewBookingToManager,
+  sendNewBookingToMember,
 } = require('./mailing')
+const {
+  EVENT_STATUS,
+  EVENT_VAT_RATE,
+  FUMOIR_ADMIN,
+  FUMOIR_MANAGER,
+  FUMOIR_MEMBER,
+  PAYMENT_STATUS,
+  PAYMENT_SUCCESS,
+  PLACES,
+  ROLES,
+} = require('./consts')
 const moment = require('moment')
 const bcrypt = require('bcryptjs')
 const lodash=require('lodash')
@@ -31,16 +44,6 @@ const {BadRequestError, NotFoundError} = require('../../utils/errors')
 const OrderItem = require('../../models/OrderItem')
 const Product = require('../../models/Product')
 const Event = require('../../models/Event')
-const {
-  EVENT_STATUS,
-  EVENT_VAT_RATE,
-  FUMOIR_ADMIN,
-  FUMOIR_MEMBER,
-  PAYMENT_STATUS,
-  PAYMENT_SUCCESS,
-  PLACES,
-  ROLES,
-} = require('./consts')
 
 const inviteGuest = ({eventOrBooking, email, phone}, user) => {
   return getModel(eventOrBooking, ['booking', 'event'])
@@ -272,6 +275,12 @@ const postCreate = ({model, params, data}) => {
   if (model=='user') {
     console.log(`Sending mail to ${params.email} with temp password ${params.nonHashedPassword}`)
     sendForgotPassword({user:data, password:params.nonHashedPassword})
+  }
+  if (model=='booking') {
+    console.log(`Sending mail to ${data.booking_user.email} and admins for booking ${data._id}`)
+    sendNewBookingToMember({booking:data})
+    User.find({role: FUMOIR_MANAGER})
+      .then(managers => Promise.allSettled(managers.map(manager => sendNewBookingToManager({booking:data, manager}))))
   }
 
   return Promise.resolve(data)
