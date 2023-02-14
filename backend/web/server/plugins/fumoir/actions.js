@@ -50,8 +50,8 @@ const forgotPasswordAction=({context, parent, email}) => {
      user.password=bcryptjs.hashSync(password, 10)
      return user.save()
        .then(user => sendForgotPassword({user, password}))
+       .then(user => `Un email a été envoyé à l'adresse ${email}`)
    })
-  return Promise.reject('Not implemented')
 }
 
 addAction('inviteGuest', inviteGuestAction)
