@@ -257,6 +257,9 @@ const unregisterFromEvent = ({event, user}) => {
   return Event.findById(event)
     .populate({path: 'members', populate: 'member guest'})
     .then(event => {
+      if (!event) {
+        throw new NotFoundError(`Evénément ${event} inconnu`)
+      }
       const member=event.members.find(m => m.member._id.toString()==user._id.toString())
       sendEventUnregister2Member({event, member: member.member})
       if (member.guest) {
