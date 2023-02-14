@@ -85,7 +85,7 @@ const inviteGuest = ({eventOrBooking, email, phone}, user) => {
               throw new BadRequestError(`Le nombre d'invités maximum est ${ev.max_guests_per_member} pour cet événement`)
             }
             if (ev.people_count+1>ev.max_people) {
-              throw new BadRequestError(`La capacité de cet événement est atteinte:${ev.max_people} invités`)
+              throw new BadRequestError(`Cet événement est complet`)
             }
             return Guest.create({email, phone})
               .then(g => {
@@ -229,9 +229,13 @@ addAction('cashOrder', cashOrder)
 const registerToEvent = ({event, user}) => {
   console.log(`Adding ${user} to event ${event}`)
   return Event.findById(event)
+    .populate('members')
     .then(ev => {
       if (ev.members.find(m => m.member._id.toString()==user._id.toString())) {
         throw new BadRequestError(`Vous êtes déjà inscrit à cet événement`)
+      }
+      if (ev.people_count+1>ev.max_people) {
+        throw new BadRequestError(`Cet événement est complet`)
       }
       ev.members.push({member: user._id})
       return ev.save()
