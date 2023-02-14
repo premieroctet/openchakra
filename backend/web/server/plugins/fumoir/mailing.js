@@ -12,6 +12,9 @@ const SIB_IDS={
   BOOKING_REGISTER_2_GUEST: 8,
   EVENT_REGISTER_2_ADMIN: 9,
   FORGOT_PASSWORD: 10,
+  EVENT_UNREGISTER_2_MEMBER: 12,
+  EVENT_UNREGISTER_2_GUEST: 13,
+  EVENT_UNREGISTER_2_ADMIN: 14,
 }
 
 // #1
@@ -146,6 +149,44 @@ const sendForgotPassword = ({user, password}) => {
   })
 }
 
+// #12
+const sendEventUnregister2Member = ({event, member}) => {
+  return sendNotification({
+    notification: SIB_IDS.EVENT_UNREGISTER_2_MEMBER,
+    destinee: member,
+    params: {
+      member_firstname: member.firstname,
+      event_date: datetime_str(event.start_date),
+      duration: event.duration,
+    },
+  })
+}
+
+// #13
+const sendEventUnregister2Guest = ({event, member, guest}) => {
+  return sendNotification({
+    notification: SIB_IDS.EVENT_UNREGISTER_2_GUEST,
+    destinee: guest,
+    params: {
+      member_fullname: member.full_name,
+      event_date: datetime_str(event.start_date),
+    },
+  })
+}
+
+// #14
+const sendEventUnregister2Admin = ({event, member, admin}) => {
+  return sendNotification({
+    notification: SIB_IDS.EVENT_UNREGISTER_2_ADMIN,
+    destinee: admin,
+    params: {
+      event_title: event.title,
+      member_fullname: member.full_name,
+      event_date: datetime_str(event.start_date),
+    },
+  })
+}
+
 module.exports = {
   sendNewBookingToMember,
   sendNewBookingToManager,
@@ -157,4 +198,7 @@ module.exports = {
   sendBookingRegister2Guest,
   sendEventRegister2Admin,
   sendForgotPassword,
+  sendEventUnregister2Member,
+  sendEventUnregister2Guest,
+  sendEventUnregister2Admin,
 }

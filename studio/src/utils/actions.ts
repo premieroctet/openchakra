@@ -148,6 +148,12 @@ export const ACTIONS: IActions = {
     options: {},
     next: ['openPage'],
   },
+  // Mettre un warning si les composants ne sont pas dans le même flex
+  unregisterFromEvent: {
+    label: 'Unregister from event',
+    options: {},
+    next: ['openPage'],
+  },
   // FUMOIR
   // Mettre un warning si les composants ne sont pas dans le même flex
   payEvent: {

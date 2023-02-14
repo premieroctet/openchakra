@@ -173,6 +173,14 @@ export const ACTIONS = {
     }
     return axios.post(url, body)
   },
+  unregisterFromEvent: ({ context }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'unregisterFromEvent',
+      context,
+    }
+    return axios.post(url, body)
+  },
   save: ({ value, props, context, dataSource, level, getComponentValue }) => {
     let url = `${API_ROOT}/${props.model}${dataSource?._id ? `/${dataSource._id}`:''}`
     const components=lodash(props).pickBy((v, k) => /^component_/.test(k) && !!v).values()

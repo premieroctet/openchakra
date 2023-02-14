@@ -7,6 +7,7 @@ const {
   getEventGuestsCount,
   inviteGuest,
   registerToEvent,
+  unregisterFromEvent,
   removeOrderItem,
   setOrderItem,
 } = require('./functions')
@@ -29,6 +30,10 @@ const inviteGuestAction=({parent, email, phone}, user) => {
 
 const registerToEventAction=({context}, user) => {
   return registerToEvent({event: context, user})
+}
+
+const unregisterFromEventAction=({context}, user) => {
+  return unregisterFromEvent({event: context, user})
 }
 
 const removeOrderItemAction=({context, parent}) => {
@@ -56,6 +61,7 @@ const forgotPasswordAction=({context, parent, email}) => {
 
 addAction('inviteGuest', inviteGuestAction)
 addAction('registerToEvent', registerToEventAction)
+addAction('unregisterFromEvent', unregisterFromEventAction)
 addAction('removeOrderItem', removeOrderItemAction)
 addAction('setOrderItem', setOrderItemAction)
 addAction('forgotPassword', forgotPasswordAction)
@@ -97,6 +103,10 @@ const isActionAllowed = ({action, dataId, user}) => {
   if (action=='registerToEvent') {
     return Event.exists({_id: dataId, 'members.member': user._id})
         .then(exists=> !exists)
+  }
+  if (action=='unregisterFromEvent') {
+    return Event.exists({_id: dataId, 'members.member': user._id})
+        .then(exists=> exists)
   }
   return Promise.resolve(true)
 }

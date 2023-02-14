@@ -2,6 +2,9 @@ const {
   sendBookingRegister2Guest,
   sendEventRegister2Admin,
   sendEventRegister2Guest,
+  sendEventUnregister2Admin,
+  sendEventUnregister2Guest,
+  sendEventUnregister2Member,
   sendForgotPassword,
   sendNewBookingToManager,
   sendNewBookingToMember,
@@ -233,21 +236,37 @@ addAction('payOrder', payOrder)
 addAction('cashOrder', cashOrder)
 
 const registerToEvent = ({event, user}) => {
-  console.log(`Adding ${user} to event ${event}`)
   return Event.findById(event)
     .populate('members')
-    .then(ev => {
-      if (ev.members.find(m => m.member._id.toString()==user._id.toString())) {
+    .then(event => {
+      if (event.members.find(m => m.member._id.toString()==user._id.toString())) {
         throw new BadRequestError(`Vous êtes déjà inscrit à cet événement`)
       }
-      if (ev.people_count+1>ev.max_people) {
+      if (event.people_count+1>event.max_people) {
         throw new BadRequestError(`Cet événement est complet`)
       }
-      ev.members.push({member: user._id})
-      return ev.save()
+      event.members.push({member: user._id})
+      return event.save()
     })
-    .then(ev => Promise.all([Promise.resolve(ev), User.find({role: FUMOIR_ADMIN})]))
-    .then(([ev, admins]) => Promise.allSettled(admins.map(a => sendEventRegister2Admin({event: ev, member: user, admin: a}))))
+    .then(event => Promise.all([Promise.resolve(event), User.find({role: FUMOIR_ADMIN})]))
+    .then(([event, admins]) => Promise.allSettled(admins.map(admin => sendEventRegister2Admin({event, member: user, admin}))))
+}
+
+// TODO: do refund if required
+const unregisterFromEvent = ({event, user}) => {
+  return Event.findById(event)
+    .populate({path: 'members', populate: 'member guest'})
+    .then(event => {
+      const member=event.members.find(m => m.member._id.toString()==user._id.toString())
+      sendEventUnregister2Member({event, member: member.member})
+      if (member.guest) {
+        sendEventUnregister2Guest({event, member: member.member, guest: member.guest})
+      }
+      User.find({role: FUMOIR_ADMIN})
+        .then(admins => Promise.allSettled(admins.map(admin => sendEventUnregister2Admin({event, member: user, admin}))))
+      event.members=event.members.filter(m => m.member._id.toString()!=user._id.toString())
+      return event.save()
+    })
 }
 
 const preCreate = ({model, params}) => {
@@ -527,6 +546,7 @@ module.exports = {
   setOrderItem,
   removeOrderItem,
   registerToEvent,
+  unregisterFromEvent,
   payOrder,
   getEventGuestsCount,
 }
