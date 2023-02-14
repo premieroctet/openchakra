@@ -454,6 +454,7 @@ declareVirtualField({model: 'event', field: 'payments', instance: 'Array', requi
     instance: 'ObjectID',
     options: {ref: 'payment'}}})
 declareVirtualField({model: 'event', field: 'people_count', instance: 'Number', requires: 'members'})
+declareVirtualField({model: 'event', field: 'registration_status', instance: 'String', requires: 'members'})
 
 
 declareVirtualField({model: 'orderItem', field: 'net_price', instance: 'Number', requires: 'price,vat_rate'})
@@ -474,6 +475,13 @@ const getEventGuests = (user, params, data) => {
 }
 
 declareComputedField('event', 'guests', getEventGuests)
+
+const getEventRegistrationStatus = (user, params, data) => {
+  return Event.exists({_id: data._id, 'members.member': user._id})
+    .then(exists => exists ? 'Vous êtes inscrit': '')
+}
+
+declareComputedField('event', 'registration_status', getEventRegistrationStatus)
 
 const getEventGuestsCount = (user, params, data) => {
   return getEventGuests(user, params, data)

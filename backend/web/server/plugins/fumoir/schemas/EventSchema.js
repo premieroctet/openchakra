@@ -94,6 +94,10 @@ EventSchema.virtual('people_count').get(function() {
   return members_count+guests_count
 })
 
+EventSchema.virtual('registration_status').get(function() {
+  return null
+})
+
 EventSchema.virtual('status').get(function() {
   if (this.start_date && moment() < moment(this.start_date)) {
     return TO_COME
