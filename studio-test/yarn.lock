@@ -9376,6 +9376,11 @@ statuses@2.0.1:
   resolved "https://registry.yarnpkg.com/statuses/-/statuses-1.5.0.tgz#161c7dac177659fd9811f43771fa99381478628c"
   integrity sha512-OpZ3zP+jT1PI7I8nemJX4AKmAX070ZkYPVWV/AaKTJl+tXCTGyVdC1a4SL8RUQYEwk/f34ZX8UTykN68FwrqAA==
 
+storage@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/storage/-/storage-0.2.0.tgz#b978d8fda47a0accbcc10bf3944fdce308f1d355"
+  integrity sha512-JslWQU/kNJE/rBfTdlAlZo6r1m5biRszJFqU6W/x5FzUuSHSiCaDXolzwSwvUJOLShHWCjTfeTwuznEGZYlU6Q==
+
 store@^2.0.12:
   version "2.0.12"
   resolved "https://registry.yarnpkg.com/store/-/store-2.0.12.tgz#8c534e2a0b831f72b75fc5f1119857c44ef5d593"
