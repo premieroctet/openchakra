@@ -48,15 +48,15 @@ const {MONGOOSE_OPTIONS} = require('./utils/database')
 require('console-stamp')(console, '[dd/mm/yy HH:MM:ss.l]')
 
 const {
-  is_production,
-  is_validation,
-  is_development,
-  is_development_nossl,
+  isProduction,
+  isValidation,
+  isDevelopment,
+  isDevelopment_nossl,
 } = require('../config/config')
 const dev = process.env.NODE_DEV !== 'production' // true false
 const prod = process.env.NODE_DEV === 'production' // true false
 const nextApp =
-  is_production() || is_validation() ? next({prod}) : next({dev})
+  isProduction() || isValidation() ? next({prod}) : next({dev})
 const routes = require('./routes')
 const routerHandler = routes.getRequestHandler(nextApp)
 const {config} = require('../config/config')
@@ -114,7 +114,7 @@ checkConfig()
 
     // Hide test pages
     app.use((req, res, next) => {
-      if (is_production() && req.url.match(/^\/test\//)) {
+      if (isProduction() && req.url.match(/^\/test\//)) {
         return res.sendStatus(HTTP_CODES.NOT_FOUND)
       }
       return next()
@@ -137,7 +137,7 @@ checkConfig()
       }
     })
 
-    if (!is_development_nossl() && !is_development()) {
+    if (!isDevelopment_nossl() && !isDevelopment()) {
       app.use((req, res, next) => {
         if (!req.secure) {
           console.log(`'Redirecting to ${JSON.stringify(req.originalUrl)}`)

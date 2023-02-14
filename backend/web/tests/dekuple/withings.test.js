@@ -12,7 +12,7 @@ const {
   getDevices,
 } = require('../../server/utils/withings')
 const {forceDataModelDekuple} = require('../utils')
-const {is_development}=require('../../config/config')
+const {isDevelopment}=require('../../config/config')
 const {GENDER_MALE} = require('../../server/plugins/dekuple/consts')
 const {updateTokens} = require('../../server/plugins/dekuple/functions')
 
@@ -71,7 +71,7 @@ describe('Test withings calls on test DB', () => {
 describe.only('Test withings calls on actual DB', () => {
 
   beforeAll(async() => {
-    if (!is_development()) {
+    if (!isDevelopment()) {
       throw new Error('Can run on development mode only')
     }
     await mongoose.connect(`mongodb://localhost/dekuple`, MONGOOSE_OPTIONS)

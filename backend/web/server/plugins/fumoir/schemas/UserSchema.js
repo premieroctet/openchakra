@@ -11,10 +11,12 @@ const UserSchema = new Schema(
     firstname: {
       type: String,
       required: true,
+      required: [true, 'Le prénom est obligatoire'],
     },
     lastname: {
       type: String,
       required: true,
+      required: [true, 'Le nom de famille est obligatoire'],
     },
     dateOfBirth: {
       type: Date,
@@ -22,7 +24,7 @@ const UserSchema = new Schema(
     role: {
       type: String,
       enum: Object.keys(ROLES),
-      required: true,
+      required: [true, 'Le rôle est obligatoire'],
     },
     // Locker #
     locker: {
@@ -81,8 +83,7 @@ const UserSchema = new Schema(
     },
     password: {
       type: String,
-      set: pass => bcrypt.hashSync(pass, 10),
-      required: true,
+      required: [true, 'Le mot de passe est obligatoire'],
     },
     last_login: [
       {
@@ -91,12 +92,15 @@ const UserSchema = new Schema(
     ],
     subscription_start: {
       type: Date,
+      required: [true, "La date de début d'abonnement est obligatoire"],
     },
     subscription_end: {
       type: Date,
+      required: [true, "La date de fin d'abonnement est obligatoire"],
     },
     subscription_price: {
       type: Number,
+      required: [true, "Le prix de l'abonnement est obligatoire"],
     },
     resetToken: {
       type: Schema.Types.ObjectId,

@@ -1,4 +1,13 @@
+const {
+  sendBookingRegister2Guest,
+  sendEventRegister2Admin,
+  sendEventRegister2Guest,
+  sendForgotPassword,
+} = require('./mailing')
+const moment = require('moment')
+const bcrypt = require('bcryptjs')
 const lodash=require('lodash')
+const { generatePassword } = require('../../../utils/passwords')
 const {initiatePayment} = require('../payment/vivaWallet')
 const Payment = require('../../models/Payment')
 const {addAction} = require('../../utils/studio/actions.js')
@@ -22,11 +31,6 @@ const {BadRequestError, NotFoundError} = require('../../utils/errors')
 const OrderItem = require('../../models/OrderItem')
 const Product = require('../../models/Product')
 const Event = require('../../models/Event')
-const {
-  sendBookingRegister2Guest,
-  sendEventRegister2Admin,
-  sendEventRegister2Guest,
-} = require('./mailing')
 const {
   EVENT_STATUS,
   EVENT_VAT_RATE,
@@ -243,7 +247,12 @@ const preCreate = ({model, params}) => {
         if (user) {
           throw new BadRequestError(`Le compte ${params.email} existe déjà`)
         }
-        params={...params, password: generate_id()}
+        if (moment(params.subscription_start).isAfter(params.subscription_end)) {
+          throw new BadRequestError(`Les dates de début et fin d'abonnement sont incohérentes`)
+        }
+        const password=generatePassword()
+        params.password=bcrypt.hashSync(password, 10)
+        params.nonHashedPassword=password
         return Promise.resolve({model, params})
       })
   }
@@ -254,7 +263,8 @@ setPreCreateData(preCreate)
 
 const postCreate = ({model, params, data}) => {
   if (model=='user') {
-    console.log(`Sending mail to ${params.email} with temp password ${params.password}`)
+    console.log(`Sending mail to ${params.email} with temp password ${params.nonHashedPassword}`)
+    sendForgotPassword({user:data, password:params.nonHashedPassword})
   }
 
   return Promise.resolve(data)

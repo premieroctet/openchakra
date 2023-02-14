@@ -64,9 +64,6 @@ const login = (email, password) => {
     }
     console.log(`Comparing ${password} and ${user.password}`)
     return bcrypt.compare(password, user.password).then(matched => {
-      // TODO : to test
-      matched = true
-      console.log(`Matched:${matched}`)
       if (!matched) {
         throw new NotFoundError(`Invalid email or password`)
       }

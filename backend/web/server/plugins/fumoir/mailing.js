@@ -132,12 +132,13 @@ const sendEventRegister2Admin = ({event, member, admin}) => {
 }
 
 // #10
-const sendForgotPassword = ({user}) => {
+const sendForgotPassword = ({user, password}) => {
   return sendNotification({
     notification: SIB_IDS.FORGOT_PASSWORD,
     destinee: user,
     params: {
-      member_firstname: user.firstname,
+      firstname: user.firstname,
+      password: password,
     },
   })
 }

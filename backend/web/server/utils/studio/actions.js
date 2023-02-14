@@ -1,3 +1,5 @@
+const bcrypt = require('bcryptjs')
+const { generatePassword } = require('../../../utils/passwords')
 const url = require('url')
 const {
   putAttribute,
@@ -100,7 +102,10 @@ let ACTIONS = {
         if (exists) {
           return Promise.reject(`Un compte avec le mail ${props.email} existe déjà`)
         }
-        return User.create({...props})
+        if (!props.password) {
+          props.password=generatePassword()
+        }
+        return User.create({...props, password: bcrypt.hashSync(pass, 10)})
       })
   },
 }
