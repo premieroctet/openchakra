@@ -141,32 +141,35 @@ const payEvent=({context, redirect, color}, user) => {
   return getModel(eventId, 'event')
     .then(model => {
       return Promise.all([
-        Event.findOne({_id: eventId, members: user}),
-        UserSessionData.findOne({user: user, 'guests_count.event': eventId}),
+        Event.findOne({_id: eventId, 'members.member': user}),
         Payment.find({event: eventId, event_member: user, status: PAYMENT_SUCCESS}),
       ])
     })
-    .then(([ev, usd, payments]) => {
+    .then(([ev, payments]) => {
       if (!ev) { return false }
-      const guests_count=usd ? usd.guests_count.find(gc => gc.event._id.toString()==eventId).count : 0
-      const remainingToPay=ev.price*guests_count-lodash(payments).map('amount').sum()
-      if (remainingToPay==0) {
-        throw new BadRequestError(`Il n'y a rien à payer sur cet événement'`)
-      }
-      const vat=EVENT_VAT_RATE*remainingToPay
-      const params={
-        event: eventId, event_member: user, member: user, amount: remainingToPay,
-        vat_amount: vat,
-      }
-      return Payment.create(params)
-    })
-    .then(payment => {
-      return initiatePayment({amount: payment.amount, email: user.email, color})
-        .then(({orderCode, redirect}) => {
-          return Payment.findByIdAndUpdate(payment._id, {orderCode})
-            .then(p => ({redirect}))
+      return getEventGuestsCount(user, null, ev)
+        .then(guests_count => {
+          console.log(`guests count:${guests_count}`)
+          const remainingToPay=ev.price*guests_count-lodash(payments).map('amount').sum()
+          console.log(`Remaining to pay:${remainingToPay}`)
+          if (remainingToPay==0) {
+            throw new BadRequestError(`Il n'y a rien à payer sur cet événement'`)
+          }
+          const vat=EVENT_VAT_RATE*remainingToPay
+          const params={
+            event: eventId, event_member: user, member: user, amount: remainingToPay,
+            vat_amount: vat,
+          }
+          return Payment.create(params)
         })
-    })
+        .then(payment =>
+          initiatePayment({amount: payment.amount, email: user.email, color})
+            .then(({orderCode, redirect}) => {
+              return Payment.findByIdAndUpdate(payment._id, {orderCode})
+                .then(p => ({redirect}))
+              })
+          )
+        })
 }
 
 const payOrder=({context, redirect, color}, user) => {

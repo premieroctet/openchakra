@@ -63,7 +63,7 @@ addAction('forgotPassword', forgotPasswordAction)
 const isActionAllowed = ({action, dataId, user}) => {
   if (action=='payEvent') {
     return Promise.all([
-      Event.findOne({_id: dataId, members: user}),
+      Event.findOne({_id: dataId, 'members.member': user}),
       Payment.find({event: dataId, event_member: user, status: PAYMENT_SUCCESS}),
     ])
       .then(([ev, payments]) => {
