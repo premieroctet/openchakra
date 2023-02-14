@@ -9,6 +9,7 @@ import {
 } from '../utils/filters'
 
 const withDynamicButton = Component => {
+
   const Internal = props => {
     const query = new URLSearchParams(useLocation().search)
     let value = props.dataSource
@@ -80,6 +81,11 @@ const withDynamicButton = Component => {
       props,
       props.dataSource,
     )
+
+    // Hide if action unavailable and hideIfForbidden is set
+    if (props.hideIfForbidden && !actionAllowed) {
+      return null
+    }
     return (
       <Component disabled={!actionAllowed}
         {...props}

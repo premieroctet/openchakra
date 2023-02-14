@@ -1,15 +1,17 @@
-import { Accordion, Select } from '@chakra-ui/react'
+import { Accordion, Select, Checkbox } from '@chakra-ui/react'
+import { MultiSelect } from 'react-multi-select-component'
 import { useSelector } from 'react-redux'
 import React, { memo } from 'react'
+import lodash from 'lodash'
+
 import { getModels } from '~core/selectors/dataSources'
 import AccordionContainer from '~components/inspector/AccordionContainer'
+
 import { ACTIONS } from '../../../utils/actions'
 import { getComponents, getPages } from '../../../core/selectors/components'
 import { useForm } from '../../../hooks/useForm'
 import FormControl from '../controls/FormControl'
 import usePropsSelector from '../../../hooks/usePropsSelector'
-import { MultiSelect } from 'react-multi-select-component'
-import lodash from 'lodash'
 
 const ActionPanel = ({
   id,
@@ -81,6 +83,7 @@ const ActionPanel = ({
 
 const ActionsPanel: React.FC = () => {
   const { setValueFromEvent, setValue, removeValue } = useForm()
+  const hideIfForbidden = usePropsSelector('hideIfForbidden')
   const action = usePropsSelector('action')
   const nextAction = usePropsSelector('nextAction')
   const actionProps = usePropsSelector('actionProps')
@@ -116,10 +119,21 @@ const ActionsPanel: React.FC = () => {
     removeValue(ev.target.name=='action' ? 'actionProps':'nextActionProps')
     setValueFromEvent(ev)
   }
+  const onHideChange = ev => {
+    setValue('hideIfForbidden', ev.target.checked)
+  }
 
   return (
     <Accordion>
       <AccordionContainer title="Actions">
+        <FormControl htmlFor="hideIfForbidden" label='Hide if action is forbidden'>
+          <Checkbox
+            id="hideIfForbidden"
+            name="hideIfForbidden"
+            isChecked={hideIfForbidden}
+            onChange={onHideChange}
+          ></Checkbox>
+        </FormControl>
         <ActionPanel
           id="action"
           actionLabel="Action"
