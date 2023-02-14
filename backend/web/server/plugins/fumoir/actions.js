@@ -94,6 +94,10 @@ const isActionAllowed = ({action, dataId, user}) => {
       .populate('payments')
       .then(o => o.remaining_total>0)
   }
+  if (action=='registerToEvent') {
+    return Event.exists({_id: dataId, 'members.member': user._id})
+        .then(exists=> !exists)
+  }
   return Promise.resolve(true)
 }
 
