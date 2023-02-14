@@ -1,21 +1,33 @@
+const {
+  getAccessToken,
+  getDevices,
+  getFreshAccessToken,
+  getMeasures
+} = require('../../utils/withings')
+const {
+  APPOINTMENT_TYPE,
+  GENDER,
+  MEASURE_AUTO,
+  MEASURE_SOURCE,
+  REMINDER_TYPE,
+  SMOKER_TYPE,
+  WITHINGS_MEASURE_BPM,
+  WITHINGS_MEASURE_DIA,
+  WITHINGS_MEASURE_SYS,
+} = require('./consts')
+const Measure = require('../../models/Measure')
+const lodash=require('lodash')
 const moment = require('moment')
 const cron = require('node-cron')
-const {getAccessToken, getFreshAccessToken} = require('../../utils/withings')
 const User = require('../../models/User')
+const Device = require('../../models/Device')
 const {
   declareEnumField,
   declareVirtualField,
   setPreCreateData,
   setPreprocessGet,
+  setFilterDataUser,
 } = require('../../utils/database')
-const {
-  APPOINTMENT_TYPE,
-  REMINDER_TYPE,
-  GENDER,
-  MEASURE_TYPE,
-  SMOKER_TYPE,
-} = require('./consts')
-
 
 const preCreate = ({model, params, user}) => {
   if (['measure', 'appointment', 'reminder'].includes(model)) {
@@ -39,6 +51,21 @@ const preprocessGet = ({model, fields, id, user}) => {
 
 setPreprocessGet(preprocessGet)
 
+const filterDataUser = ({model, data, id, user}) => {
+
+  // List mode
+  if (['user', 'loggedUser'].includes(model)) {
+    console.log(`Calling filter with ${JSON.stringify(data)}`)
+    return data.map(d => ({
+      ...d,
+      measures: d.measures && lodash.orderBy(d.measures, ['date'], ['desc'])
+    }))
+  }
+
+  return data
+}
+
+setFilterDataUser(filterDataUser)
 
 const USER_MODELS=['user', 'loggedUser']
 USER_MODELS.forEach(m => {
@@ -58,10 +85,14 @@ USER_MODELS.forEach(m => {
       instance: 'ObjectID',
       options: {ref: 'reminder'}}})
   declareVirtualField({model: m, field: 'password2', instance: 'String'})
+  declareVirtualField({model: m, field: 'devices', instance: 'Array', requires: '', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'device'}}})
 })
 
-declareEnumField({model: 'measure', field: 'type', enumValues: MEASURE_TYPE})
 declareVirtualField({model: 'measure', field: 'recommandation', instance: 'String', requires: 'sys,dia'})
+declareVirtualField({model: 'measure', field: 'source', instance: 'String', requires: 'withings_group', enumValues: MEASURE_SOURCE})
 
 declareEnumField({model: 'appointment', field: 'type', instance: 'String', enumValues: APPOINTMENT_TYPE})
 declareVirtualField({model: 'appointment', field: 'type_str', instance: 'String', requires: 'type,otherTitle'})
@@ -106,6 +137,70 @@ cron.schedule('0 */30 * * * *', () => {
         console.error(`Errors:${JSON.stringify(nok)}`)
       }
     })
+})
+
+// Get all measures TODO should be notified by Withings
+cron.schedule('*/30 * * * * *', async () => {
+  console.log(`Getting measures`)
+  const users=await User.find({}, {access_token:1, email:1})
+      .populate({path:'measures'})
+      .lean({virtuals: true})
+  return Promise.all(users.map(async user => {
+    const latestMeasure=lodash(user.measures)
+      .filter(m => m.source==MEASURE_AUTO)
+      .maxBy(m => m.date)
+    if (user.access_token) {
+      const since=latestMeasure? moment(latestMeasure.date).add(5, 'seconds') : moment().add(-10, 'days')
+      console.log(`User ${user.email}:request measures since ${since}`)
+      const newMeasures=await getMeasures(user.access_token, since)
+      console.log(`User ${user.email}:got measures ${JSON.stringify(newMeasures)}`)
+      if (newMeasures.measuregrps.length>0) {
+        console.log(`User ${user.email}:got ${newMeasures.measuregrps.length} new measures since ${since}`)
+      }
+      return Promise.all(newMeasures.measuregrps.map( grp => {
+        const dekMeasure={
+          user: user._id, date: moment.unix(grp.date), withings_group: grp.grpid,
+          sys: grp.measures.find(m => m.type==WITHINGS_MEASURE_SYS)?.value,
+          dia: grp.measures.find(m => m.type==WITHINGS_MEASURE_DIA)?.value,
+          heartbeat: grp.measures.find(m => m.type==WITHINGS_MEASURE_BPM)?.value,
+        }
+        return Measure.findOneAndUpdate(
+          {withings_group: dekMeasure.withings_group},
+          {...dekMeasure},
+          {upsert: true}
+        )
+      }))
+    }
+  }))
+})
+
+// Get all devices TODO should be notified by Withings
+cron.schedule('24 */10 * * * *', async () => {
+  console.log(`Getting devices`)
+  const users=await User.find({access_token:{$ne: null}})
+    .populate('devices')
+    .lean({virtuals: true})
+  return Promise.allSettled(users.map(async user => {
+    const devices=await getDevices(user.access_token)
+    if (devices.length>0) {
+      console.log(`User ${user.email}: ${devices.length} devices found`)
+    }
+    const mappedDevices=devices.map(device => ({
+      user: user._id,
+      ...device,
+      last_session_date: moment.unix(device.last_session_date),
+    }))
+    // First remove all devices
+    await Device.deleteMany({user: user._id}).catch(err => {console.error(err)})
+    // Then recreate devices
+    await Device.create(mappedDevices).catch(err => {console.error(err)})
+  }))
+  .then(res => {
+    const errors=lodash.zip(res, users)
+      .filter(([r]) => r.status=='rejected')
+      .map(([r,u]) => `User ${u.email}: ${r.reason}`)
+    errors.length>0 &&console.error(errors)
+  })
 })
 
 module.exports={

@@ -583,7 +583,7 @@ const buildHooks = (components: IComponents) => {
 
         let query= `get(\`${apiUrl}\`)
         ${thenClause}
-        .catch(err => alert(err?.response?.data || err))`
+        .catch(err => err.code!='ERR_NETWORK' && alert(err?.response?.data || err))`
         if (dp.id=='root' && singlePage) {
           query=`// For single data page\nif (id) {\n${query}\n}`
         }
@@ -722,6 +722,7 @@ import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
 }
 
 import Fonts from './dependencies/theme/Fonts'
+import {ensureToken} from './dependencies/utils/token'
 import {useLocation} from "react-router-dom"
 import { useUserContext } from './dependencies/context/user'
 import { getComponentDataValue } from './dependencies/utils/values'
@@ -750,6 +751,11 @@ const ${componentName} = () => {
     }
     return value
   }
+
+  // ensure token set if lost during domain change
+  useEffect(() => {
+    ensureToken()
+  }, [])
 
   const {user}=useUserContext()
   ${hooksCode}

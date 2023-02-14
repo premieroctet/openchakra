@@ -346,7 +346,8 @@ router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (r
           return Promise.all(data.map(d => addComputedFields(user, params, d, model)))
         })
         .then(data => {
-          return id ? Promise.resolve(data) : callFilterDataUser({model, data, id, user: req.user})
+          //return id ? Promise.resolve(data) : callFilterDataUser({model, data, id, user: req.user})
+          return callFilterDataUser({model, data, id, user: req.user})
         })
         .then(data => {
           if (['theme', 'resource'].includes(model) && !id) {

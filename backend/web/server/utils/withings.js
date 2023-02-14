@@ -15,6 +15,7 @@ const NONCE_DOMAIN='https://wbsapi.withings.net/v2/signature'
 const SDK_DOMAIN='https://wbsapi.withings.net/v2/sdk'
 const OAUTH2_DOMAIN='https://wbsapi.withings.net/v2/oauth2'
 const MEASURE_DOMAIN='https://wbsapi.withings.net/measure'
+const USER_DOMAIN='https://wbsapi.withings.net/v2/user'
 
 
 const generateTSSignature=({action, clientId, clientSecret, timestamp}) => {
@@ -103,6 +104,29 @@ const createUser = user => {
       throw err
     })
 
+}
+
+const getAuthorizationCode = email => {
+
+  return getNonce()
+    .then(nonce => {
+      const action='recoverauthorizationcode'
+      const signature=generateNonceSignature({
+        action, clientId: wConfig.clientId, clientSecret: wConfig.clientSecret, nonce})
+
+      const body={action, client_id: wConfig.clientId, nonce, signature, email}
+      return axios.post(OAUTH2_DOMAIN, body)
+        .then(res => {
+          if (res.data.status!=0) {
+            return Promise.reject(JSON.stringify(res.data))
+          }
+          return res.data.body.user.code
+        })
+    })
+    .catch(err => {
+      console.error(err)
+      throw err
+    })
 }
 
 const getAccessToken = usercode => {
@@ -204,11 +228,33 @@ const getMeasures = (access_token, since) => {
     })
 }
 
+const getDevices = access_token => {
+
+  if (!access_token) { return Promise.reject(`Invalid token:${access_token}`) }
+
+  const body= {action: 'getdevice'}
+
+  //return axios.post(MEASURE_DOMAIN, new URLSearchParams(body),
+  return axios.post(USER_DOMAIN, new URLSearchParams(body),
+    {headers: {
+      Authorization: `Bearer ${access_token}`,
+    }},
+  )
+    .then(res => {
+      if (res.data.status!=0) {
+        throw new Error(JSON.stringify(res.data))
+      }
+      return res.data.body.devices || []
+    })
+}
+
 module.exports={
   getNonce,
   createUser,
+  getAuthorizationCode,
   getAccessToken,
   getFreshAccessToken,
   getUsers,
   getMeasures,
+  getDevices
 }
