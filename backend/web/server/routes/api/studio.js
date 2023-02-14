@@ -1,3 +1,5 @@
+const { FUMOIR_MEMBER } = require('../../plugins/fumoir/consts')
+
 const moment = require('moment')
 const path = require('path')
 const zlib=require('zlib')
@@ -65,15 +67,17 @@ const login = (email, password) => {
       throw new NotFoundError(`Invalid email or password`)
     }
     // TODO move in fumoir
-    if (!user.subscription_start) {
-      throw new ForbiddenError(`Votre abonnement n'est pas valide`)
-    }
-    if (user.subscription_start && moment().isBefore(moment(user.subscription_start))) {
-      throw new ForbiddenError(`Votre abonnement débute le ${date_str(user.subscription_start)}`)
-    }
-    // TODO move in fumoir
-    if (user.subscription_end && moment().isAfter(moment(user.subscription_end))) {
-      throw new ForbiddenError(`Votre abonnement s'est terminé le ${date_str(user.subscription_end)}`)
+    if (user.role==FUMOIR_MEMBER) {
+      if (!user.subscription_start) {
+        throw new ForbiddenError(`Votre abonnement n'est pas valide`)
+      }
+      if (user.subscription_start && moment().isBefore(moment(user.subscription_start))) {
+        throw new ForbiddenError(`Votre abonnement débute le ${date_str(user.subscription_start)}`)
+      }
+      // TODO move in fumoir
+      if (user.subscription_end && moment().isAfter(moment(user.subscription_end))) {
+        throw new ForbiddenError(`Votre abonnement s'est terminé le ${date_str(user.subscription_end)}`)
+      }
     }
     console.log(`Comparing ${password} and ${user.password}`)
     return bcrypt.compare(password, user.password).then(matched => {
