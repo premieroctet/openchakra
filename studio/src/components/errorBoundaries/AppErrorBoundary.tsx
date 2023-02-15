@@ -9,7 +9,7 @@ type ErrorBoundaryState = {
   hasError: boolean
 }
 
-type ErrorBoundaryProps = {}
+type ErrorBoundaryProps = { children?: React.ReactNode }
 
 export default class AppErrorBoundary extends Component<
   ErrorBoundaryProps,
