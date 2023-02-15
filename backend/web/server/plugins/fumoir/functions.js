@@ -250,6 +250,7 @@ const registerToEvent = ({event, user}) => {
     })
     .then(event => Promise.all([Promise.resolve(event), User.find({role: FUMOIR_ADMIN})]))
     .then(([event, admins]) => Promise.allSettled(admins.map(admin => sendEventRegister2Admin({event, member: user, admin}))))
+    .then(() => event)
 }
 
 // TODO: do refund if required
@@ -508,7 +509,6 @@ declareComputedField('event', 'registration_status', getEventRegistrationStatus)
 const getEventGuestsCount = (user, params, data) => {
   return getEventGuests(user, params, data)
     .then(guests => {
-      console.log(`Guests:${guests.length}`)
       return guests.length
     })
 }

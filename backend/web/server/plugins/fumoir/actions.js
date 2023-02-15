@@ -28,12 +28,12 @@ const inviteGuestAction=({parent, email, phone}, user) => {
 }
 
 
-const registerToEventAction=({context}, user) => {
-  return registerToEvent({event: context, user})
+const registerToEventAction=({value}, user) => {
+  return registerToEvent({event: value, user})
 }
 
-const unregisterFromEventAction=({context}, user) => {
-  return unregisterFromEvent({event: context, user})
+const unregisterFromEventAction=({value}, user) => {
+  return unregisterFromEvent({event: value, user})
 }
 
 const removeOrderItemAction=({context, parent}) => {

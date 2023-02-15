@@ -165,21 +165,27 @@ export const ACTIONS = {
       return res
     })
   },
-  registerToEvent: ({ context }) => {
+  registerToEvent: ({ value }) => {
     let url = `${API_ROOT}/action`
     const body = {
       action: 'registerToEvent',
-      context,
+      value: value._id,
     }
     return axios.post(url, body)
+      .then(res => {
+        return {_id: res.data}
+      })
   },
-  unregisterFromEvent: ({ context }) => {
+  unregisterFromEvent: ({ value }) => {
     let url = `${API_ROOT}/action`
     const body = {
       action: 'unregisterFromEvent',
-      context,
+      value: value._id,
     }
     return axios.post(url, body)
+      .then(res => {
+        return {_id: res.data}
+      })
   },
   save: ({ value, props, context, dataSource, level, getComponentValue }) => {
     let url = `${API_ROOT}/${props.model}${dataSource?._id ? `/${dataSource._id}`:''}`
