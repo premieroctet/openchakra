@@ -1,40 +1,46 @@
 import React, {useState} from 'react'
+import {Flex, Button} from '@chakra-ui/react'
 import { Document, Page, pdfjs } from 'react-pdf';
+import workerSrc from "./PdfWorker";
 
-import workerSrc from "../../../pdf-worker";
 pdfjs.GlobalWorkerOptions.workerSrc = workerSrc;
-
-const sample = 'https://interactive-examples.mdn.mozilla.net/media/examples/In-CC0.pdf'
 
 const PdfFile = ({src}) => {
 
-    const [numPages, setNumPages] = useState(null);
-    const [pageNumber, setPageNumber] = useState(1);    
+  const [pagesCount, setPagesCount] = useState(0)
+  const [pageNumber, setPageNumber] = useState(0)
 
-    function onDocumentLoadSuccess({ numPages }) {
-      setNumPages(numPages);
-    }
+  function onLoadSuccess({ numPages }) {
+    setPagesCount(numPages)
+    setPageNumber(1)
+  }
+
+  function onLoadError(err) {
+    console.error(`Error ${err} when loading ${src}`)
+  }
+
+  const prevEnabled=pageNumber>1
+  const nextEnabled=pageNumber<pagesCount
+
   return (
-    <div>
-    <Document 
-      file={src} 
-      onLoadSuccess={onDocumentLoadSuccess}
+    <>
+    <Flex flexDirection='row' alignItems='center'>
+    <Button isDisabled={!prevEnabled} onClick={()=>setPageNumber(pageNumber-1)}>{'<'}</Button>
+    {`${pageNumber}/${pagesCount}`}
+    <Button isDisabled={!nextEnabled} onClick={()=>setPageNumber(pageNumber+1)}>{'>'}</Button>
+    </Flex>
+    <Document
+      file={src}
+      onLoadSuccess={onLoadSuccess}
+      onLoadError={onLoadError}
       >
-        {Array.from(
-        new Array(numPages),
-        (el, index) => (
-          <Page
-            wrap
-            key={`page_${index + 1}`}
-            pageNumber={index + 1}
-          />
-        ),
-      )}
+        <Page
+          wrap
+          key={`page_${pageNumber}`}
+          pageNumber={pageNumber}
+        />
     </Document>
-    <p>
-    Page {pageNumber} of {numPages}
-  </p>
-  </div>
+    </>
   )
 }
 
