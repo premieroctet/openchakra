@@ -1,5 +1,6 @@
 const {
   CASH_MODE,
+  CASH_CARD,
   EVENT_STATUS,
   EVENT_VAT_RATE,
   FUMOIR_ADMIN,
@@ -42,6 +43,7 @@ const {
   setPreCreateData,
   setPreprocessGet,
 } = require('../../utils/database')
+const {idEqual}=require('../../utils/database')
 const UserSessionData = require('../../models/UserSessionData')
 const User = require('../../models/User')
 const Booking = require('../../models/Booking')
@@ -100,7 +102,7 @@ const inviteGuest = ({eventOrBooking, email, phone}, user) => {
             }
             return Guest.create({email, phone})
               .then(g => {
-                ev.members.find(m => m.member._id.toString()==user._id.toString()).guest=g._id
+                ev.members.find(m => idEqual(m.member._id, user._id)).guest=g._id
                 return Promise.all([ev.save(), g])
               })
               .then(([ev, guest]) => Promise.allSettled([sendEventRegister2Guest({event: ev, member: user, guest: guest})]))
@@ -169,7 +171,7 @@ const payEvent=({context, redirect, color}, user) => {
           const vat=EVENT_VAT_RATE*remainingToPay
           const params={
             event: eventId, event_member: user, member: user, amount: remainingToPay,
-            vat_amount: vat,
+            vat_amount: vat, mode: CASH_CARD,
           }
           return Payment.create(params)
         })
@@ -212,7 +214,7 @@ const payOrder=({context, redirect, color}, user) => {
     })
 }
 
-const cashOrder=({context, guest, amount, redirect}, user) => {
+const cashOrder=({context, guest, amount, mode, redirect}, user) => {
   const bookingId=context
   return getModel(bookingId, 'booking')
     .then(model => {
@@ -230,7 +232,7 @@ const cashOrder=({context, guest, amount, redirect}, user) => {
           const remaining_vat=booking.remaining_vat_amount
           const payment_tva=amount*remaining_vat/remaining
           // No vivwallet redirect, payment is considered successful
-          return Payment.create({booking, ...customer, amount: amount, vat_amount: payment_tva, status: PAYMENT_SUCCESS})
+          return Payment.create({booking, ...customer, amount, vat_amount: payment_tva, mode, status: PAYMENT_SUCCESS})
         })
         .then(() => ({redirect}))
     })
@@ -265,7 +267,7 @@ const registerToEvent = ({event, user}) => {
   return Event.findById(event)
     .populate('members')
     .then(event => {
-      if (event.members.find(m => m.member._id.toString()==user._id.toString())) {
+      if (event.members.find(m => idEqual(m.member._id, user._id))) {
         throw new BadRequestError(`Vous êtes déjà inscrit à cet événement`)
       }
       if (event.people_count+1>event.max_people) {
@@ -287,14 +289,14 @@ const unregisterFromEvent = ({event, user}) => {
       if (!event) {
         throw new NotFoundError(`Evénément ${event} inconnu`)
       }
-      const member=event.members.find(m => m.member._id.toString()==user._id.toString())
+      const member=event.members.find(m => idEqual(m.member._id, user._id))
       sendEventUnregister2Member({event, member: member.member})
       if (member.guest) {
         sendEventUnregister2Guest({event, member: member.member, guest: member.guest})
       }
       User.find({role: FUMOIR_ADMIN})
         .then(admins => Promise.allSettled(admins.map(admin => sendEventUnregister2Admin({event, member: user, admin}))))
-      event.members=event.members.filter(m => m.member._id.toString()!=user._id.toString())
+      event.members=event.members.filter(m => !idEqual(m.member._id, user._id))
       return event.save()
     })
 }
@@ -356,13 +358,13 @@ const filterDataUser = ({model, data, id, user}) => {
     }
     if (model=='message') {
       if ([FUMOIR_MEMBER].includes(user.role)) {
-        data=data.filter(d => [d.sender._id, d.receiver._id].includes(user._id.toString()))
+        data=data.filter(d => [d.sender._id, d.receiver._id].some(id => idEqual(user._id)))
         return lodash.orderBy(data, ['creation_date'], ['asc'])
       }
     }
     if (model=='booking') {
       if ([FUMOIR_MEMBER].includes(user.role)) {
-        data=data.filter(d => d.booking_user?._id?.toString()==user._id.toString())
+        data=data.filter(d => idEqual(d.booking_user?._id, user._id))
       }
       return lodash.orderBy(data, ['start_date'], ['asc'])
     }
@@ -391,7 +393,7 @@ const preprocessGet = ({model, fields, id, user}) => {
 
   if (model=='conversation') {
     const getPartner= (m, user) => {
-      return m.sender._id.toString()==user._id.toString() ? m.receiver : m.sender
+      return idEqual(m.sender._id, user._id) ? m.receiver : m.sender
     }
 
     return Message.find({$or: [{sender: user._id}, {receiver: user._id}]})
@@ -400,7 +402,7 @@ const preprocessGet = ({model, fields, id, user}) => {
       .sort({'creation_date': 1})
       .then(messages => {
         if (id) {
-          messages=messages.filter(m => getPartner(m, user)._id.toString()==id)
+          messages=messages.filter(m => idEqual(getPartner(m, user)._id, id))
           // If no messages for one parner, forge it
           if (lodash.isEmpty(messages)) {
             return User.findById(id).populate('company')
@@ -533,7 +535,7 @@ const getEventGuests = (user, params, data) => {
     .populate({path: 'members', populate: 'member guest'})
     .then(event => {
       const m=event.members
-        .find(m => m.member._id.toString()==user._id.toString() && !!m.guest)
+        .find(m => idEqual(m.member._id, user._id) && !!m.guest)
       return m ? [m.guest]:[]
     })
 }
@@ -571,7 +573,7 @@ const setEventGuestsCount = ({id, attribute, value, user}) => {
         )
       })
       .then(usd => {
-        const guests_count=usd.guests_count.find(gc => gc.event._id.toString()==id)
+        const guests_count=usd.guests_count.find(gc => idEqual(gc.event._id, id))
         if (guests_count) {
           guests_count.count=value
         }

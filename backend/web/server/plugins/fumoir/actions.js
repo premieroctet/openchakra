@@ -22,6 +22,7 @@ const {
   FUMOIR_MEMBER,
   PAYMENT_SUCCESS,
 } = require('./consts')
+const {idEqual}=require('../../utils/database')
 
 const inviteGuestAction=({parent, email, phone}, user) => {
   return inviteGuest({eventOrBooking: parent, email, phone}, user)
@@ -100,9 +101,17 @@ const isActionAllowed = ({action, dataId, user}) => {
       .populate('payments')
       .then(o => o.remaining_total>0)
   }
-  if (action=='registerToEvent') {
-    return Event.exists({_id: dataId, 'members.member': user._id})
-        .then(exists=> !exists)
+  if (['registerToEvent', 'inviteGuest'].includes(action)) {
+    return Event.findById(dataId)
+      .populate('members')
+      .then(event=> {
+        if(!event) return false
+        if (event.people_count>=event.max_people) { return false}
+        const selfMember=event.members.find(m => idEqual(m.member._id, user._id))
+        if (action=='registerToEvent' && selfMember) { return false}
+        if (action=='inviteGuest' && selfMember.guest) { return false}
+        return true
+      })
   }
   if (action=='unregisterFromEvent') {
     return Event.exists({_id: dataId, 'members.member': user._id})

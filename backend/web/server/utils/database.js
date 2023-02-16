@@ -568,6 +568,11 @@ const removeData = dataId => {
     })
 }
 
+// Compares ObjecTID/string with ObjectId/string
+const idEqual = (id1, id2) => {
+  return JSON.stringify(id1)==JSON.stringify(id2)
+}
+
 module.exports = {
   hasRefs,
   MONGOOSE_OPTIONS,
@@ -598,4 +603,5 @@ module.exports = {
   callPostCreateData,
   removeData,
   putAttribute,
+  idEqual,
 }
