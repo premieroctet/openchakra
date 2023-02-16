@@ -418,6 +418,11 @@ USER_MODELS.forEach(m => {
       instance: 'ObjectID',
       options: {ref: 'event'}}})
 
+  declareVirtualField({model: m, field: 'reviews', instance: 'Array', requires: '', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'review'}}})
+
 })
 
 

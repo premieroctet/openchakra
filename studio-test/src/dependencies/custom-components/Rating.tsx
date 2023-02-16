@@ -65,8 +65,9 @@ const Rating = React.forwardRef(
       );
     };
 
+    const prop={value: rating}
     return (
-      <Stack isInline justify="center">
+      <Stack isInline justify="center" {...prop} >
         {/* @ts-ignore */}
         <input name="rating" type="hidden" value={rating} ref={ref} />
         {lodash.range(1, scale+1).map(i => (
