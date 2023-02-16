@@ -45,6 +45,7 @@ require('./models/Appointment')
 require('./models/Payment')
 require('./models/Accessory')
 require('./models/AccessoryCategory')
+require('./models/Review')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 

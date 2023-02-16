@@ -154,4 +154,11 @@ UserSchema.virtual('events', {
   foreignField: 'members.member', // is equal to foreignField
 })
 
+// Returns my reviewz
+UserSchema.virtual('reviews', {
+  ref: 'review', // The Model to use
+  localField: '_id', // Find in Model, where localField
+  foreignField: 'user', // is equal to foreignField
+})
+
 module.exports = UserSchema
