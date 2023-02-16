@@ -201,6 +201,7 @@ const payOrder=({context, redirect, color}, user) => {
           const params={
             booking: booking._id, member: user._id,
             amount: booking.remaining_total, vat_amount: booking.remaining_vat_amount,
+            mode: CASH_CARD,
           }
           return Payment.create(params)
         })
