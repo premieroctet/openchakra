@@ -249,6 +249,11 @@ export const ACTIONS: IActions = {
     },
     next: ['openPage'],
   },
+  getCigarReview: {
+    label: 'Get cigar review',
+    options: {},
+    next: ['openPage'],
+  },
 }
 
 export const allowsActions = (component: IComponent) => {

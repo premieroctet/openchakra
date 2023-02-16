@@ -1,3 +1,4 @@
+const Review = require('../../models/Review')
 const {
   sendBookingRegister2Guest,
   sendEventRegister2Admin,
@@ -548,6 +549,20 @@ const setEventGuestsCount = ({id, attribute, value, user}) => {
 }
 
 declareComputedField('event', 'guests_count', getEventGuestsCount, setEventGuestsCount)
+
+const getCigarReview=({value}, user) => {
+  return Review.findOneAndUpdate(
+    {cigar: value, user:user},
+    {},
+    {upsert: true, new: true}
+  )
+  .then(review => {
+    console.log(JSON.stringify(review))
+    return review
+  })
+}
+
+addAction('getCigarReview', getCigarReview)
 
 module.exports = {
   inviteGuest,

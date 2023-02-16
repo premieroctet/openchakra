@@ -293,4 +293,19 @@ export const ACTIONS = {
     })
   },
 
+  getCigarReview: ({ value}) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'getCigarReview',
+      value: value._id,
+    }
+    return axios.post(url, body)
+    .then(res => {
+      return ({
+        model: 'review',
+        value: res.data,
+      })
+    })
+  },
+
 }
