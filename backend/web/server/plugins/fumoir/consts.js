@@ -47,6 +47,14 @@ const PAYMENT_STATUS={
   [PAYMENT_FAILURE]: 'Echoué',
 }
 
+const CASH_CASH='CASH'
+const CASH_CARD='CARD'
+
+const CASH_MODE={
+  [CASH_CARD]: 'Carte bancaire',
+  [CASH_CASH]: 'Espèces',
+}
+
 const EVENT_VAT_RATE=0.2
 
 module.exports = {
@@ -60,4 +68,5 @@ module.exports = {
   MAX_BOOKING_GUESTS,
   PAYMENT_STATUS, PAYMENT_CREATED, PAYMENT_SUCCESS, PAYMENT_FAILURE,
   EVENT_VAT_RATE,
+  CASH_MODE, CASH_CARD, CASH_CASH,
 }

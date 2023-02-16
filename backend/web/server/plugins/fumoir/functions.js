@@ -1,4 +1,16 @@
 const {
+  CASH_MODE,
+  EVENT_STATUS,
+  EVENT_VAT_RATE,
+  FUMOIR_ADMIN,
+  FUMOIR_MANAGER,
+  FUMOIR_MEMBER,
+  PAYMENT_STATUS,
+  PAYMENT_SUCCESS,
+  PLACES,
+  ROLES,
+} = require('./consts')
+const {
   generatePassword,
   validatePassword
 } = require('../../../utils/passwords')
@@ -14,17 +26,6 @@ const {
   sendNewBookingToManager,
   sendNewBookingToMember,
 } = require('./mailing')
-const {
-  EVENT_STATUS,
-  EVENT_VAT_RATE,
-  FUMOIR_ADMIN,
-  FUMOIR_MANAGER,
-  FUMOIR_MEMBER,
-  PAYMENT_STATUS,
-  PAYMENT_SUCCESS,
-  PLACES,
-  ROLES,
-} = require('./consts')
 const moment = require('moment')
 const bcryptjs = require('bcryptjs')
 const lodash=require('lodash')
@@ -467,8 +468,10 @@ declareVirtualField({model: 'booking', field: 'total_vat_amount', instance: 'Num
 declareVirtualField({model: 'booking', field: 'total_net_price', instance: 'Number', requires: 'items'})
 declareVirtualField({model: 'booking', field: 'remaining_vat_amount', instance: 'Number', requires: 'items,payments'})
 
+
 declareVirtualField({model: 'payment', field: 'net_amount', instance: 'Number', requires: 'total_amount,vat_amount'})
 declareEnumField({model: 'payment', field: 'status', enumValues: PAYMENT_STATUS})
+declareEnumField({model: 'payment', field: 'mode', enumValues: CASH_MODE})
 
 
 const PRODUCT_MODELS=['product', 'cigar', 'drink', 'meal', 'accessory']

@@ -201,6 +201,7 @@ export const ACTIONS: IActions = {
       amount: ({ components }) => components
         .filter(comp => comp.type=='Input')
         .map(comp => ({ key: comp.id, label: `${comp.type}/${comp.id}` })),
+      mode: () => [{ key: 'CASH', label: `Espèces` },{ key: 'CARD', label: `Carte bancaire` }],
     },
     next: ['openPage'],
   },

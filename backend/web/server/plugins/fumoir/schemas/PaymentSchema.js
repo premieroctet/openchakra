@@ -1,8 +1,5 @@
+const { CASH_MODE, PAYMENT_CREATED, PAYMENT_STATUS } = require('../consts')
 const mongoose = require('mongoose')
-const {
-  PAYMENT_STATUS,
-  PAYMENT_CREATED,
-} = require('../consts')
 const {schemaOptions} = require('../../../utils/schemas')
 
 const Schema = mongoose.Schema
@@ -52,6 +49,11 @@ const PaymentSchema = new Schema({
     default: PAYMENT_CREATED,
     required: true,
   },
+  mode: {
+    type: String,
+    enum: Object.keys(CASH_MODE),
+    required: true,
+  }
 },
 schemaOptions,
 )

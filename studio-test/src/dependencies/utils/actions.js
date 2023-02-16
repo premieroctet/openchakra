@@ -231,9 +231,9 @@ export const ACTIONS = {
   },
 
   cashOrder: ({ context, value, level, props, getComponentValue }) => {
-    const [guest, amount]=[props.guest, props.amount].map(c => getComponentValue(c, level))
+    const [guest, amount, mode]=[props.guest, props.amount, props.mode].map(c => getComponentValue(c, level))
     let url = `${API_ROOT}/action`
-    const body = {action: 'cashOrder', context, ...props, guest, amount}
+    const body = {action: 'cashOrder', context, ...props, guest, amount, mode}
     return axios.post(url, body)
   },
 
