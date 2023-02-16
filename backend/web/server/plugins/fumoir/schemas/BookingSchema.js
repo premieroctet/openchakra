@@ -157,6 +157,9 @@ BookingSchema.virtual('remaining_vat_amount').get(function() {
 })
 
 BookingSchema.virtual('paid').get(function() {
+  if (lodash.isEmpty(this.items.length)) {
+    return false
+  }
   const already_paid=lodash(this.payments).filter(p => p.status==PAYMENT_SUCCESS).map('amount').sum()
   const total=lodash(this.items).map('total_price').sum()
   return already_paid==total
