@@ -482,6 +482,8 @@ declareVirtualField({model: 'cigar', field: 'reviews', instance: 'Array', requir
     options: {ref: 'review'}}
 })
 
+declareVirtualField({model: 'cigar', field: 'average_taste_note', instance: 'Number', requires: 'reviews'})
+
 declareVirtualField({model: 'company', field: 'full_name', instance: 'String', requires: 'name'})
 
 const CAT_MODELS=['category', 'cigarCategory', 'mealCategory', 'drinkCategory', 'accessoryCategory']
