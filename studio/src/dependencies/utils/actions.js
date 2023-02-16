@@ -235,11 +235,6 @@ export const ACTIONS = {
     let url = `${API_ROOT}/action`
     const body = {action: 'cashOrder', context, ...props, guest, amount}
     return axios.post(url, body)
-      .then(res => {
-        if (res.data.redirect) {
-          window.location=`/${res.data.redirect}`
-        }
-      })
   },
 
   previous: () => {
