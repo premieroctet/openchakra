@@ -157,7 +157,7 @@ BookingSchema.virtual('remaining_vat_amount').get(function() {
 })
 
 BookingSchema.virtual('paid').get(function() {
-  if (lodash.isEmpty(this.items.length)) {
+  if (this.items.length==0) {
     return false
   }
   const already_paid=lodash(this.payments).filter(p => p.status==PAYMENT_SUCCESS).map('amount').sum()
@@ -166,7 +166,7 @@ BookingSchema.virtual('paid').get(function() {
 })
 
 BookingSchema.virtual('paid_str').get(function() {
-  if (lodash.isEmpty(this.items)) {
+  if (this.items.length==0) {
     return ''
   }
   const already_paid=lodash(this.payments).filter(p => p.status==PAYMENT_SUCCESS).map('amount').sum()
