@@ -28,6 +28,7 @@
     "jszip": "^3.10.1",
     "lodash": "^4.17.15",
     "lodash-es": "^4.17.15",
+    "lucide-react": "^0.114.0",
     "lz-string": "^1.4.4",
     "mime": "^3.0.0",
     "mime-types": "^2.1.35",

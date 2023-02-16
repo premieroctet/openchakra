@@ -64,6 +64,7 @@ type ComponentType =
   | 'NumberInputStepper'
   | 'NumberIncrementStepper'
   | 'NumberDecrementStepper'
+  | 'Rating'
   | 'Progress'
   | 'Radio'
   | 'RadioGroup'
