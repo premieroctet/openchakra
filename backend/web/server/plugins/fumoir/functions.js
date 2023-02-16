@@ -441,14 +441,14 @@ declareVirtualField({model: 'payment', field: 'net_amount', instance: 'Number', 
 declareEnumField({model: 'payment', field: 'status', enumValues: PAYMENT_STATUS})
 
 
-const PRODUCT_MODELS=['product', 'cigar', 'drink', 'meal']
+const PRODUCT_MODELS=['product', 'cigar', 'drink', 'meal', 'accessory']
 PRODUCT_MODELS.forEach(m => {
   declareVirtualField({model: m, field: 'net_price', instance: 'Number', requires: 'price,vat_rate'})
   declareVirtualField({model: m, field: 'reviews', instance: 'review', requires: ''})
 })
 declareVirtualField({model: 'company', field: 'full_name', instance: 'String', requires: 'name'})
 
-const CAT_MODELS=['category', 'cigarCategory', 'mealCategory', 'drinkCategory']
+const CAT_MODELS=['category', 'cigarCategory', 'mealCategory', 'drinkCategory', 'accessoryCategory']
 CAT_MODELS.forEach(m => {
   declareVirtualField({model: m, field: 'children', instance: 'Array', requires: '', multiple: true,
     caster: {
