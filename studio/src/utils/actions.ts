@@ -254,6 +254,21 @@ export const ACTIONS: IActions = {
     options: {},
     next: ['openPage'],
   },
+  changePassword: {
+    label: 'Change password',
+    options: {
+      password: ({ components }) =>
+        components
+          .filter(c => c.type == 'Input')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      password2: ({ components }) =>
+        components
+          .filter(c => c.type == 'Input')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+    },
+    next: ['openPage'],
+  },
+
 }
 
 export const allowsActions = (component: IComponent) => {

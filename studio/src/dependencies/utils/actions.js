@@ -308,4 +308,17 @@ export const ACTIONS = {
     })
   },
 
+  changePassword: ({ value, props, context, level, getComponentValue }) => {
+    const [password, password2] = ['password', 'password2'].map(att =>
+      getComponentValue(props[att], level),
+    )
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'changePassword',
+      password,
+      password2,
+    }
+    return axios.post(url, body)
+  },
+
 }

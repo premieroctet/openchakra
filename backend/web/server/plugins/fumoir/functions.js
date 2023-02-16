@@ -1,3 +1,7 @@
+const {
+  generatePassword,
+  validatePassword
+} = require('../../../utils/passwords')
 const Review = require('../../models/Review')
 const {
   sendBookingRegister2Guest,
@@ -22,9 +26,8 @@ const {
   ROLES,
 } = require('./consts')
 const moment = require('moment')
-const bcrypt = require('bcryptjs')
+const bcryptjs = require('bcryptjs')
 const lodash=require('lodash')
-const { generatePassword } = require('../../../utils/passwords')
 const {initiatePayment} = require('../payment/vivaWallet')
 const Payment = require('../../models/Payment')
 const {addAction} = require('../../utils/studio/actions.js')
@@ -232,9 +235,30 @@ const cashOrder=({context, guest, amount, redirect}, user) => {
     })
 }
 
+const getCigarReview=({value}, user) => {
+  return Review.findOneAndUpdate(
+    {cigar: value, user:user},
+    {},
+    {upsert: true, new: true}
+  )
+  .then(review => {
+    return review
+  })
+}
+
+const changePassword=({password, password2}, user) => {
+  return validatePassword({password, password2})
+    .then(()=> {
+      const hashed=bcryptjs.hashSync(password, 10)
+      return User.findByIdAndUpdate(user._id, {password: hashed})
+    })
+}
+
 addAction('payEvent', payEvent)
 addAction('payOrder', payOrder)
 addAction('cashOrder', cashOrder)
+addAction('getCigarReview', getCigarReview)
+addAction('changePassword', changePassword)
 
 const registerToEvent = ({event, user}) => {
   return Event.findById(event)
@@ -285,7 +309,7 @@ const preCreate = ({model, params}) => {
           throw new BadRequestError(`Les dates de début et fin d'abonnement sont incohérentes`)
         }
         const password=generatePassword()
-        params.password=bcrypt.hashSync(password, 10)
+        params.password=bcryptjs.hashSync(password, 10)
         params.nonHashedPassword=password
         return Promise.resolve({model, params})
       })
@@ -555,20 +579,6 @@ const setEventGuestsCount = ({id, attribute, value, user}) => {
 }
 
 declareComputedField('event', 'guests_count', getEventGuestsCount, setEventGuestsCount)
-
-const getCigarReview=({value}, user) => {
-  return Review.findOneAndUpdate(
-    {cigar: value, user:user},
-    {},
-    {upsert: true, new: true}
-  )
-  .then(review => {
-    console.log(JSON.stringify(review))
-    return review
-  })
-}
-
-addAction('getCigarReview', getCigarReview)
 
 module.exports = {
   inviteGuest,
