@@ -163,6 +163,9 @@ BookingSchema.virtual('paid').get(function() {
 })
 
 BookingSchema.virtual('paid_str').get(function() {
+  if (lodash.isEmpty(this.items)) {
+    return ''
+  }
   const already_paid=lodash(this.payments).filter(p => p.status==PAYMENT_SUCCESS).map('amount').sum()
   const total=lodash(this.items).map('total_price').sum()
   const res=already_paid==total ? PAID_STR : TO_PAY_STR
