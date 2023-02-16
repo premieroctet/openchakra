@@ -41,10 +41,10 @@ const ReviewSchema = new Schema({
   before_ignition_note: noteType,
   before_ignition_comment: String,
   // Start smoking
-  smoking_start_spicy: Boolean,
-  smoking_start_stinging: Boolean,
-  smoking_start_raspy: Boolean,
-  smoking_start_pungent: Boolean,
+  smoking_start_spicy: Boolean, // piquant
+  smoking_start_stinging: Boolean, // cuisant
+  smoking_start_rough: Boolean, // râppeux
+  smoking_start_pungent: Boolean, // âcre
   smoking_start_note: noteType,
   smoking_start_comment: String,
   // During smoke
