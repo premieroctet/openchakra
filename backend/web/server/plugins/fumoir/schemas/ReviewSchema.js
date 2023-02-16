@@ -25,10 +25,8 @@ const ReviewSchema = new Schema({
     default: Date.now,
     required: true,
   },
-  comment: {
-    type: String,
-  },
-  general_aspect: noteType,
+  general_comment: String,
+  general_aspect_note: noteType,
   aroma_spicy: Boolean,
   aroma_woody: Boolean,
   aroma_empyreumatic: Boolean,
@@ -43,7 +41,7 @@ const ReviewSchema = new Schema({
   before_ignition_note: noteType,
   before_ignition_comment: String,
   // Start smoking
-  smoking_start_spicy_: Boolean,
+  smoking_start_spicy: Boolean,
   smoking_start_stinging: Boolean,
   smoking_start_raspy: Boolean,
   smoking_start_pungent: Boolean,
