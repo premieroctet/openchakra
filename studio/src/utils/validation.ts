@@ -1,8 +1,8 @@
-import { CONTAINER_TYPE } from './dataSources'
-
 import lodash from 'lodash'
 const projectSchema = require('./projectSchema.json')
 var Validator = require('jsonschema').Validator
+import { CONTAINER_TYPE } from './dataSources'
+import {ACTIONS} from './actions'
 
 const checkEmptyDataAttribute = (
   comp: IComponent,
@@ -17,6 +17,31 @@ const checkEmptyDataAttribute = (
   ) {
     throw new Error(`Datasource attribute is not set`)
   }
+}
+
+const checkActionsProperties = (
+  comp: IComponent,
+  icomponents: IComponents,
+) => {
+  const actionAtts=['action', 'nextAction']
+  actionAtts.forEach(actionAtt => {
+    if (comp.props[actionAtt]) {
+      const actionName=comp.props[actionAtt]
+      const required=ACTIONS[actionName].required || []
+      let actionProps=comp.props[`${actionAtt}Props`]
+      try {
+        actionProps=JSON.parse(actionProps)
+      }
+      catch(err){}
+      if (required.length>0) {
+        console.log(`Actionprops:${Object.keys(actionProps)}`)
+      }
+      const missing=required.filter(r => lodash.isEmpty(actionProps[r]))
+      if (!lodash.isEmpty(missing)) {
+        throw new Error(`Action ${actionName} requires attributes ${missing}`)
+      }
+    }
+  })
 }
 
 const checkEmptyDataProvider = (comp: IComponent, icomponents: IComponents) => {
@@ -101,6 +126,7 @@ export const validateComponent = (
     checkEmptyDataAttribute,
     checkUnlinkedDataProvider,
     checkCardinality,
+    checkActionsProperties,
   ])
     .map(v => {
       try {
@@ -126,6 +152,7 @@ export const validate = (icomponents: IComponents): IWarning[] => {
     checkEmptyDataAttribute,
     checkUnlinkedDataProvider,
     checkCardinality,
+    checkActionsProperties,
   ])
     .map(v => {
       return components.map(c => {

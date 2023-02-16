@@ -80,6 +80,7 @@ export const ACTIONS: IActions = {
       child: ({ components }) =>
         components.map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
     },
+    required:['child']
   },
   sendMessage: {
     label: 'Send Message',
@@ -89,6 +90,7 @@ export const ACTIONS: IActions = {
       contents: ({ components }) =>
         components.map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
     },
+    required:['contents']
   },
   createPost: {
     label: 'Create post',
@@ -126,6 +128,7 @@ export const ACTIONS: IActions = {
           .filter(c => c.type == 'Input')
           .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
     },
+    required: ['email']
   },
   save: {
     label: 'Save/create',
@@ -204,6 +207,7 @@ export const ACTIONS: IActions = {
       mode: () => [{ key: 'CASH', label: `Espèces` },{ key: 'CARD', label: `Carte bancaire` }],
     },
     next: ['openPage'],
+    required:['amount', 'mode']
   },
   // FUMOIR
   // Mettre un warning si les composants ne sont pas dans le même flex
@@ -248,6 +252,7 @@ export const ACTIONS: IActions = {
           .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
     },
     next: ['openPage'],
+    required:['email']
   },
   getCigarReview: {
     label: 'Get cigar review',
@@ -267,6 +272,7 @@ export const ACTIONS: IActions = {
           .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
     },
     next: ['openPage'],
+    required:['password', 'password2']
   },
 
 }
