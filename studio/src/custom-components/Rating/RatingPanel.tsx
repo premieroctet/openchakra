@@ -1,6 +1,6 @@
 import React, { memo } from 'react'
-import { 
-  Input, 
+import {
+  Input,
   Select,
 } from '@chakra-ui/react'
 import { useForm } from '~hooks/useForm'
@@ -12,6 +12,7 @@ const RatingPanel = () => {
   const { setValueFromEvent } = useForm()
   const illu = usePropsSelector('illu')
   const size = usePropsSelector('size')
+  const rating = usePropsSelector('rating')
   const scale = usePropsSelector('scale')
   const fillColor = usePropsSelector('fillColor')
   const strokeColor = usePropsSelector('strokeColor')
@@ -55,6 +56,16 @@ const RatingPanel = () => {
           id="ratingstrokecolor"
           size="sm"
           name="strokeColor"
+          onChange={setValueFromEvent}
+        />
+      </FormControl>
+      <FormControl label="Rating" htmlFor="rating">
+        <Input
+          value={rating || ''}
+          id="rating"
+          type={'number'}
+          size="sm"
+          name="rating"
           onChange={setValueFromEvent}
         />
       </FormControl>
