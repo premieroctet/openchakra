@@ -64,7 +64,7 @@ const login = (email, password) => {
   return User.findOne({email}).then(user => {
     if (!user) {
       console.error(`No user with email ${email}`)
-      throw new NotFoundError(`Invalid email or password`)
+      throw new NotFoundError(`Email ou mot de passe invalide`)
     }
     // TODO move in fumoir
     if (user.role==FUMOIR_MEMBER) {
@@ -82,7 +82,7 @@ const login = (email, password) => {
     console.log(`Comparing ${password} and ${user.password}`)
     return bcrypt.compare(password, user.password).then(matched => {
       if (!matched) {
-        throw new NotFoundError(`Invalid email or password`)
+        throw new NotFoundError(`Email ou mot de passe invalide`)
       }
       return user
     })
