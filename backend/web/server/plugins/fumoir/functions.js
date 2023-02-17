@@ -1,4 +1,27 @@
 const {
+  sendBookingRegister2Guest,
+  sendEventRegister2Admin,
+  sendEventRegister2Guest,
+  sendEventUnregister2Admin,
+  sendEventUnregister2Guest,
+  sendEventUnregister2Member,
+  sendForgotPassword,
+  sendNewBookingToManager,
+  sendNewBookingToMember,
+  sendWelcomeRegister,
+} = require('./mailing')
+const {
+  declareComputedField,
+  declareEnumField,
+  declareVirtualField,
+  getModel,
+  idEqual,
+  setFilterDataUser,
+  setPostCreateData,
+  setPreCreateData,
+  setPreprocessGet,
+} = require('../../utils/database')
+const {
   CASH_MODE,
   CASH_CARD,
   EVENT_STATUS,
@@ -16,34 +39,12 @@ const {
   validatePassword
 } = require('../../../utils/passwords')
 const Review = require('../../models/Review')
-const {
-  sendBookingRegister2Guest,
-  sendEventRegister2Admin,
-  sendEventRegister2Guest,
-  sendEventUnregister2Admin,
-  sendEventUnregister2Guest,
-  sendEventUnregister2Member,
-  sendForgotPassword,
-  sendNewBookingToManager,
-  sendNewBookingToMember,
-} = require('./mailing')
 const moment = require('moment')
 const bcryptjs = require('bcryptjs')
 const lodash=require('lodash')
 const {initiatePayment} = require('../payment/vivaWallet')
 const Payment = require('../../models/Payment')
 const {addAction} = require('../../utils/studio/actions.js')
-const {
-  declareComputedField,
-  declareEnumField,
-  declareVirtualField,
-  getModel,
-  setFilterDataUser,
-  setPostCreateData,
-  setPreCreateData,
-  setPreprocessGet,
-} = require('../../utils/database')
-const {idEqual}=require('../../utils/database')
 const UserSessionData = require('../../models/UserSessionData')
 const User = require('../../models/User')
 const Booking = require('../../models/Booking')
@@ -326,7 +327,7 @@ setPreCreateData(preCreate)
 const postCreate = ({model, params, data}) => {
   if (model=='user') {
     console.log(`Sending mail to ${params.email} with temp password ${params.nonHashedPassword}`)
-    sendForgotPassword({user:data, password:params.nonHashedPassword})
+    sendWelcomeRegister({member:data, password:params.nonHashedPassword})
   }
   if (model=='booking') {
     console.log(`Sending mail to ${data.booking_user.email} and admins for booking ${data._id}`)
