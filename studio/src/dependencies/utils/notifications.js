@@ -9,6 +9,7 @@ import {
   Button,
 } from '@chakra-ui/react'
 
+// TODO configure error color in project
 export const Error = ({title='Erreur', message, onClose}) => {
 
   return (
@@ -24,7 +25,7 @@ export const Error = ({title='Erreur', message, onClose}) => {
          <AlertDialogCloseButton />
          <AlertDialogBody>{message}</AlertDialogBody>
          <AlertDialogFooter>
-           <Button colorScheme='red' ml={3} onClick={onClose}>Ok</Button>
+           <Button color='#DAB679' ml={3} onClick={onClose}>Ok</Button>
          </AlertDialogFooter>
        </AlertDialogContent>
      </AlertDialog>
