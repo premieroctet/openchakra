@@ -195,6 +195,9 @@ const buildBlock = ({
       }
       propsContent += ` getComponentValue={getComponentValue} `
 
+      if (childComponent.type=='Button') {
+        propsContent+= ` class="noprint" `
+      }
       // Set component id
       propsContent += ` id='${childComponent.id}' `
       // Set reload function

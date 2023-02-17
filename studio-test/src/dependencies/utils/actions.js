@@ -315,6 +315,7 @@ export const ACTIONS = {
   },
 
   savePagePDF: () => {
+    /** TODO Prints white pages
     var doc = new jsPDF('p', 'pt','a4',true)
     var elementHTML = document.querySelector("#root")
     doc.html(document.body, {
@@ -323,6 +324,8 @@ export const ACTIONS = {
             doc.save('facture.pdf');
         },
     });
+    */
+    return window.print()
   },
 
 }
