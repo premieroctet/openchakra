@@ -274,7 +274,10 @@ export const ACTIONS: IActions = {
     next: ['openPage'],
     required:['password', 'password2']
   },
-
+  savePage: {
+    label: 'Save page',
+    options:{}
+  }
 }
 
 export const allowsActions = (component: IComponent) => {

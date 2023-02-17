@@ -16,6 +16,7 @@
     "aws-sdk": "^2.1257.0",
     "axios": "^1.1.2",
     "framer-motion": "^7.5.3",
+    "jspdf": "^2.5.1",
     "jszip": "^3.10.1",
     "lucide-react": "^0.114.0",
     "mime": "^3.0.0",

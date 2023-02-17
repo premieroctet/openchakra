@@ -1,6 +1,6 @@
 import axios from 'axios'
 import lodash from 'lodash'
-
+import {jsPDF} from 'jspdf'
 import { clearToken } from './token';
 import {getComponent, clearComponentValue} from './values'
 
@@ -312,6 +312,17 @@ export const ACTIONS = {
       password2,
     }
     return axios.post(url, body)
+  },
+
+  savePage: () => {
+    var doc = new jsPDF('p', 'pt','a4',true)
+    var elementHTML = document.querySelector("#root")
+    doc.html(document.body, {
+        callback: function(doc) {
+            // Save the PDF
+            doc.save('facture.pdf');
+        },
+    });
   },
 
 }
