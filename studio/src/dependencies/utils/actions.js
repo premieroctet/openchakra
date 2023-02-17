@@ -314,7 +314,7 @@ export const ACTIONS = {
     return axios.post(url, body)
   },
 
-  savePage: () => {
+  savePagePDF: () => {
     var doc = new jsPDF('p', 'pt','a4',true)
     var elementHTML = document.querySelector("#root")
     doc.html(document.body, {

@@ -274,8 +274,8 @@ export const ACTIONS: IActions = {
     next: ['openPage'],
     required:['password', 'password2']
   },
-  savePage: {
-    label: 'Save page',
+  savePagePDF: {
+    label: 'Save page as PDF',
     options:{}
   }
 }
