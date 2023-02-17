@@ -472,9 +472,10 @@ declareVirtualField({model: 'booking', field: 'total_net_price', instance: 'Numb
 declareVirtualField({model: 'booking', field: 'remaining_vat_amount', instance: 'Number', requires: 'items,payments'})
 
 
-declareVirtualField({model: 'payment', field: 'net_amount', instance: 'Number', requires: 'total_amount,vat_amount'})
+declareVirtualField({model: 'payment', field: 'net_amount', instance: 'Number', requires: 'amount,vat_amount'})
 declareEnumField({model: 'payment', field: 'status', enumValues: PAYMENT_STATUS})
 declareEnumField({model: 'payment', field: 'mode', enumValues: CASH_MODE})
+declareVirtualField({model: 'payment', field: 'customer_str', instance: 'String', requires: 'member,guest,booking'})
 
 
 const PRODUCT_MODELS=['product', 'cigar', 'drink', 'meal', 'accessory']

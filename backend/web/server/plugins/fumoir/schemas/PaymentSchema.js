@@ -1,3 +1,4 @@
+const Booking = require('../../../models/Booking')
 const { CASH_MODE, PAYMENT_CREATED, PAYMENT_STATUS } = require('../consts')
 const mongoose = require('mongoose')
 const {schemaOptions} = require('../../../utils/schemas')
@@ -60,6 +61,15 @@ schemaOptions,
 
 PaymentSchema.virtual('net_amount').get(function() {
   return this.amount-this.vat_amount
+})
+
+PaymentSchema.virtual('customer_str').get(function() {
+  if (this.member) {
+    return `${this.member.firstname} ${this.member.lastname}`
+  }
+  if (this.guest) {
+    return `${this.guest.email}`
+  }
 })
 
 module.exports = PaymentSchema
