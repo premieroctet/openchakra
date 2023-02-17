@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import lodash from 'lodash'
 import { Box, Icon, Stack } from '@chakra-ui/react'
 import * as icons from 'lucide-react'
@@ -11,19 +11,33 @@ const Rating = React.forwardRef(
     illu = 'Star',
     scale = 5,
     fillColor = 'gold',
-    strokeColor = 'gray'
+    strokeColor = 'gray',
+    onChange,
+    readOnly,
   }: {
     value: number
     size: number
     illu: string
     scale: number
     fillColor: string
-    strokeColor: string
+    strokeColor: string,
+    onChange: any,
+    readOnly: boolean,
   }, ref) => {
 
     const [rating, setRating] = useState(value);
 
+    useEffect(()=> {
+      if (onChange) {
+        const event={target:{value: rating}}
+        onChange(event)
+      }
+    }, [rating])
+
     const onClick = (idx:number) => {
+      if (readOnly) {
+        return
+      }
       if (!isNaN(idx)) {
         // allow user to click first icon and set rating to zero if rating is already 1
         if (rating === 1 && idx === 1) {
@@ -49,7 +63,6 @@ const Rating = React.forwardRef(
     };
 
     const RatingButton = ({ idx, fill }: {idx: number, fill:boolean}) => {
-      console.log(`Fill:${fill}`)
       return (
         <Box
           as="button"
