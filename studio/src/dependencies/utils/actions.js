@@ -10,9 +10,7 @@ export const ACTIONS = {
     const email = getComponentValue(props.email, level)
     const password = getComponentValue(props.password, level)
     let url = `${API_ROOT}/login`
-    return axios.post(url, { email, password }).catch(err => {
-      throw new Error(err.response?.data || err)
-    })
+    return axios.post(url, { email, password })
   },
   sendMessage: ({ value, props, level, getComponentValue }) => {
     const destinee = props.destinee ? getComponentValue(props.destinee, level) : value._id
