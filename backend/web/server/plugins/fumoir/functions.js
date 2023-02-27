@@ -598,4 +598,5 @@ module.exports = {
   unregisterFromEvent,
   payOrder,
   getEventGuestsCount,
+  getEventGuests,
 }

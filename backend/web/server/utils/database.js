@@ -338,7 +338,6 @@ const cloneArray = ({data, withOrigin, forceData = {}}) => {
 mongoose returns virtuals even if they are not present in select clause
 => keep only require fields in data hierarchy
 */
-
 const retainRequiredFields = ({data, fields}) => {
   if (lodash.isArray(data)) {
     return data.map(d => retainRequiredFields({data: d, fields}))

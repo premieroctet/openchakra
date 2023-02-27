@@ -1,10 +1,11 @@
+const { BadRequestError, NotFoundError } = require('../../utils/errors')
 const { sendForgotPassword } = require('./mailing')
 const bcryptjs = require('bcryptjs')
 const { generatePassword } = require('../../../utils/passwords')
 const User = require('../../models/User')
-const { BadRequestError } = require('../../utils/errors')
 const {
   getEventGuestsCount,
+  getEventGuests,
   inviteGuest,
   registerToEvent,
   unregisterFromEvent,
@@ -101,21 +102,38 @@ const isActionAllowed = ({action, dataId, user}) => {
       .populate('payments')
       .then(o => o.remaining_total>0)
   }
-  if (['registerToEvent', 'inviteGuest'].includes(action)) {
+  if (action=='registerToEvent') {
     return Event.findById(dataId)
       .populate('members')
       .then(event=> {
         if(!event) return false
         if (event.people_count>=event.max_people) { return false}
         const selfMember=event.members.find(m => idEqual(m.member._id, user._id))
-        if (action=='registerToEvent' && selfMember) { return false}
-        if (action=='inviteGuest' && selfMember.guest) { return false}
+        if (selfMember) { return false}
         return true
       })
   }
+  if (action=='inviteGuest') {
+    return Promise.all([Booking.findById(dataId).populate('guests'), Event.findById(dataId)])
+      .then(([booking, event]) => {
+        if (!booking && !event) {
+          throw new NotFoundError(`No booking or event with id ${dataId}`)
+        }
+        if (event) {
+          if (event.people_count>=event.max_people) { return false}
+          return getEventGuests(user, null, event)
+            .then(guests => guests.length==0)
+        }
+        if (booking) {
+          if (booking.guests.length>=booking.guests_count) { return false}
+          return true
+        }
+      })
+  }
+
   if (action=='unregisterFromEvent') {
     return Event.exists({_id: dataId, 'members.member': user._id})
-        .then(exists=> exists)
+      .then(exists=> exists)
   }
   return Promise.resolve(true)
 }
