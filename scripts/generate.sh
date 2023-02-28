@@ -33,7 +33,7 @@ git checkout -b $PROJECT_NAME
 )
 
 (cd backend/web &&
-  ( echo "const MODE=\"development\"" > mode.js ) &&
+  ( echo "const MODE=\"validation\"" > mode.js ) &&
   ( echo "const PORT=${BACKEND_PORT}" >> mode.js ) &&
   ( echo "const PRODUCTION_PORT=${STUDIO_TEST_PORT}" >> mode.js ) &&
   ( echo "const DATA_MODEL=\"${PROJECT_NAME}\"" >> mode.js ) &&
