@@ -27,7 +27,7 @@ const withDynamicEnum = Component => {
     }
 
     return (
-      <Component {...props} onChange={onChange} key={internalValue} value={internalValue}>
+      <Component {...props} onChange={onChange} key={internalValue} value={internalValue} data-value={internalValue} >
         {enumValues ?
           <Flex flexDirection={props.flexDirection} justifyContent={props.justifyContent}>
           {
