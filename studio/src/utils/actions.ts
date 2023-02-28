@@ -223,7 +223,6 @@ export const ACTIONS: IActions = {
   logout: {
     label: 'Logout',
     options: {},
-    next: ['openPage'],
   },
   openWithingsSetup: {
     label: 'Open withings setup',
@@ -232,6 +231,11 @@ export const ACTIONS: IActions = {
   openWithingsSettings: {
     label: 'Open withings settings',
     options: {},
+  },
+  deactivateAccount: {
+    label: 'Deactivate account',
+    options: {},
+    next: ['openPage', 'logout'],
   },
 }
 

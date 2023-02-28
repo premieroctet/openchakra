@@ -60,7 +60,11 @@ const login = (email, password) => {
   return User.findOne({email}).then(user => {
     if (!user) {
       console.error(`No user with email ${email}`)
-      throw new NotFoundError(`Invalid email or password`)
+      throw new NotFoundError(`Mail ou mot de passe invalide`)
+    }
+    if (user.active===false) {
+      console.error(`Deactived user ${email}`)
+      throw new NotFoundError(`Ce compte est désactivé`)
     }
     console.log(`Comparing ${password} and ${user.password}`)
     return bcrypt.compare(password, user.password).then(matched => {
@@ -68,7 +72,7 @@ const login = (email, password) => {
       matched = true
       console.log(`Matched:${matched}`)
       if (!matched) {
-        throw new NotFoundError(`Invalid email or password`)
+        throw new NotFoundError(`Mail ou mot de passe invalide`)
       }
       return user
     })

@@ -251,6 +251,7 @@ export const ACTIONS = {
 
   logout: () => {
     clearToken()
+    window.location='/'
     return Promise.resolve()
   },
 
@@ -262,6 +263,14 @@ export const ACTIONS = {
   // From https://developer.withings.com/sdk/v2/tree/sdk-webviews/device-settings-webview
   openWithingsSettings: params => {
     window.location='https://localhost/myAlfred/api/withings/settings'
-  }
+  },
+
+  deactivateAccount: () => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'deactivateAccount',
+    }
+    return axios.post(url, body)
+  },
 
 }
