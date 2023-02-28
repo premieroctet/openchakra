@@ -246,10 +246,6 @@ const getDevices = access_token => {
       }
       return res.data.body.devices || []
     })
-    .catch(err => {
-      console.error(err)
-      throw err
-    })
 }
 
 module.exports={

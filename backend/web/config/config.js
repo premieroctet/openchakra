@@ -49,15 +49,15 @@ const get_mode = () => {
   return MODE
 }
 
-const is_production = () => {
+const isProduction = () => {
   return get_mode() == MODES.PRODUCTION
 }
 
-const is_validation = () => {
+const isValidation = () => {
   return get_mode() == MODES.VALIDATION
 }
 
-const is_development = () => {
+const isDevelopment = () => {
   return (
     get_mode() == MODES.DEVELOPMENT || get_mode() == MODES.DEVELOPMENT_NOSSL
   )
@@ -78,7 +78,7 @@ const getChatURL = () => {
 }
 
 const getHostName = () => {
-  if (is_development()) {
+  if (isDevelopment()) {
     return HOSTNAME || 'localhost'
   }
   if (!HOSTNAME) {
@@ -88,7 +88,7 @@ const getHostName = () => {
 }
 
 const getPort = () => {
-  if (is_validation() && isNaN(parseInt(PORT))) {
+  if (isValidation() && isNaN(parseInt(PORT))) {
     throw new Error(`PORT config missing or not an integer`)
   }
   return PORT || 443
@@ -98,7 +98,7 @@ const mustDisplayChat = () => {
   return Boolean(TAWKTO_URL)
 }
 
-const is_development_nossl = () => {
+const isDevelopment_nossl = () => {
   return get_mode() == MODES.DEVELOPMENT_NOSSL
 }
 
@@ -119,9 +119,9 @@ const appName = 'myalfred'
 const databaseName = DATABASE_NAME
 const serverPort = process.env.PORT || 3122
 
-const SERVER_PROD = is_production() || is_development()
+const SERVER_PROD = isProduction() || isDevelopment()
 
-const ENABLE_MAILING = is_production()
+const ENABLE_MAILING = isProduction()
 
 const getHostUrl = () => {
   const protocol = 'https'
@@ -219,11 +219,11 @@ const checkConfig = () => {
       )
     }
 
-    if (!is_development() && !HOSTNAME) {
+    if (!isDevelopment() && !HOSTNAME) {
       reject(`HOSTNAME: obligatoire en mode ${MODE}`)
     }
 
-    if (is_validation() && isNaN(parseInt(PORT))) {
+    if (isValidation() && isNaN(parseInt(PORT))) {
       reject(`PORT: obligatoire en mode ${MODE}`)
     }
 
@@ -275,11 +275,11 @@ ONLY DEV & VALIDATION MODES
 Consider failed payment succeeded
 */
 const skipFailedPayment = () => {
-  return !is_production() && !!SKIP_FAILED_PAYMENT
+  return !isProduction() && !!SKIP_FAILED_PAYMENT
 }
 
 // DEV mode: allow https without certificate
-if (is_development()) {
+if (isDevelopment()) {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 }
 
@@ -318,10 +318,10 @@ module.exports = {
   },
   completeConfig,
   SIRET,
-  is_production,
-  is_validation,
-  is_development,
-  is_development_nossl,
+  isProduction,
+  isValidation,
+  isDevelopment,
+  isDevelopment_nossl,
   SERVER_PROD,
   getHostUrl,
   ENABLE_MAILING,

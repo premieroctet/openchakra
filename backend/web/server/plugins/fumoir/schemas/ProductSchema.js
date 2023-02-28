@@ -78,10 +78,5 @@ ProductSchema.virtual('net_price').get(function() {
   return this.price * (1 - this.vat_rate)
 })
 
-ProductSchema.virtual('reviews', {
-  ref: 'Review',
-  localField: '_id',
-  foreignField: 'product',
-})
 
 module.exports = ProductSchema

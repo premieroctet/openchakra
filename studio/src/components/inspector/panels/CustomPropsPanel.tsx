@@ -60,9 +60,9 @@ const CustomPropsPanel = () => {
         }}
       >
         <InputGroup mb={3} size="sm">
-          <InputRightElement
-            children={<Box as={IoIosFlash} color="gray.300" />}
-          />
+          <InputRightElement>
+            <Box as={IoIosFlash} color="gray.300" />
+          </InputRightElement>
           <Input
             ref={inputRef}
             isInvalid={hasError}

@@ -80,6 +80,7 @@ export const ACTIONS: IActions = {
       child: ({ components }) =>
         components.map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
     },
+    required:['child']
   },
   sendMessage: {
     label: 'Send Message',
@@ -89,6 +90,7 @@ export const ACTIONS: IActions = {
       contents: ({ components }) =>
         components.map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
     },
+    required:['contents']
   },
   createPost: {
     label: 'Create post',
@@ -126,6 +128,7 @@ export const ACTIONS: IActions = {
           .filter(c => c.type == 'Input')
           .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
     },
+    required: ['email']
   },
   save: {
     label: 'Save/create',
@@ -145,6 +148,12 @@ export const ACTIONS: IActions = {
   // Mettre un warning si les composants ne sont pas dans le même flex
   registerToEvent: {
     label: 'Register to event',
+    options: {},
+    next: ['openPage'],
+  },
+  // Mettre un warning si les composants ne sont pas dans le même flex
+  unregisterFromEvent: {
+    label: 'Unregister from event',
     options: {},
     next: ['openPage'],
   },
@@ -195,9 +204,10 @@ export const ACTIONS: IActions = {
       amount: ({ components }) => components
         .filter(comp => comp.type=='Input')
         .map(comp => ({ key: comp.id, label: `${comp.type}/${comp.id}` })),
-      redirect: ({ pages }) =>
-        Object.values(pages).map(p => ({ key: p.pageId, label: p.pageName })),
+      mode: () => [{ key: 'CASH', label: `Espèces` },{ key: 'CARD', label: `Carte bancaire` }],
     },
+    next: ['openPage'],
+    required:['amount', 'mode']
   },
   // FUMOIR
   // Mettre un warning si les composants ne sont pas dans le même flex
@@ -223,7 +233,6 @@ export const ACTIONS: IActions = {
   logout: {
     label: 'Logout',
     options: {},
-    next: ['openPage'],
   },
   openWithingsSetup: {
     label: 'Open withings setup',
@@ -233,6 +242,48 @@ export const ACTIONS: IActions = {
     label: 'Open withings settings',
     options: {},
   },
+  forgotPassword: {
+    label: 'Forgot password',
+    options: {
+      email: ({ components }) =>
+        components
+          .filter(c => c.type == 'Input')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+    },
+    next: ['openPage'],
+    required:['email']
+  },
+  getCigarReview: {
+    label: 'Get cigar review',
+    options: {},
+    next: ['openPage'],
+  },
+  changePassword: {
+    label: 'Change password',
+    options: {
+      password: ({ components }) =>
+        components
+          .filter(c => c.type == 'Input')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      password2: ({ components }) =>
+        components
+          .filter(c => c.type == 'Input')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+    },
+    next: ['openPage'],
+    required:['password', 'password2']
+  },
+  savePagePDF: {
+    label: 'Save page as PDF',
+    options:{}
+  },
+
+  deactivateAccount: {
+    label: 'Deactivate account',
+    options: {},
+    next: ['openPage', 'logout'],
+  },
+
 }
 
 export const allowsActions = (component: IComponent) => {

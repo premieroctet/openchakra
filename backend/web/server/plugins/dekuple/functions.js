@@ -26,6 +26,7 @@ const {
   declareVirtualField,
   setPreCreateData,
   setPreprocessGet,
+  setFilterDataUser,
 } = require('../../utils/database')
 
 const preCreate = ({model, params, user}) => {
@@ -50,6 +51,21 @@ const preprocessGet = ({model, fields, id, user}) => {
 
 setPreprocessGet(preprocessGet)
 
+const filterDataUser = ({model, data, id, user}) => {
+
+  // List mode
+  if (['user', 'loggedUser'].includes(model)) {
+    console.log(`Calling filter with ${JSON.stringify(data)}`)
+    return data.map(d => ({
+      ...d,
+      measures: d.measures && lodash.orderBy(d.measures, ['date'], ['desc'])
+    }))
+  }
+
+  return data
+}
+
+setFilterDataUser(filterDataUser)
 
 const USER_MODELS=['user', 'loggedUser']
 USER_MODELS.forEach(m => {
@@ -124,60 +140,67 @@ cron.schedule('0 */30 * * * *', () => {
 })
 
 // Get all measures TODO should be notified by Withings
-cron.schedule('12 */10 * * * *', async () => {
+cron.schedule('*/30 * * * * *', async () => {
   console.log(`Getting measures`)
   const users=await User.find({}, {access_token:1, email:1})
       .populate({path:'measures'})
       .lean({virtuals: true})
-  for (const user of users) {
+  return Promise.all(users.map(async user => {
     const latestMeasure=lodash(user.measures)
       .filter(m => m.source==MEASURE_AUTO)
       .maxBy(m => m.date)
     if (user.access_token) {
-      const since=latestMeasure?.date.add(1, 'second') || moment().add(-10, 'days')
+      const since=latestMeasure? moment(latestMeasure.date).add(5, 'seconds') : moment().add(-10, 'days')
+      console.log(`User ${user.email}:request measures since ${since}`)
       const newMeasures=await getMeasures(user.access_token, since)
-      for (const grp of newMeasures.measuregrps) {
+      console.log(`User ${user.email}:got measures ${JSON.stringify(newMeasures)}`)
+      if (newMeasures.measuregrps.length>0) {
+        console.log(`User ${user.email}:got ${newMeasures.measuregrps.length} new measures since ${since}`)
+      }
+      return Promise.all(newMeasures.measuregrps.map( grp => {
         const dekMeasure={
           user: user._id, date: moment.unix(grp.date), withings_group: grp.grpid,
           sys: grp.measures.find(m => m.type==WITHINGS_MEASURE_SYS)?.value,
           dia: grp.measures.find(m => m.type==WITHINGS_MEASURE_DIA)?.value,
           heartbeat: grp.measures.find(m => m.type==WITHINGS_MEASURE_BPM)?.value,
         }
-        await Measure.create(dekMeasure)
-          .catch(err => console.error(err))
-      }
-      if (newMeasures.measuregrps.length>0) {
-        console.log(`Measures:${newMeasures.measuregrps.length} new for ${user.email}`)
-      }
+        return Measure.findOneAndUpdate(
+          {withings_group: dekMeasure.withings_group},
+          {...dekMeasure},
+          {upsert: true}
+        )
+      }))
     }
-  }
+  }))
 })
 
 // Get all devices TODO should be notified by Withings
-//cron.schedule('0 */10 * * * *', async () => {
 cron.schedule('24 */10 * * * *', async () => {
   console.log(`Getting devices`)
   const users=await User.find({access_token:{$ne: null}})
     .populate('devices')
     .lean({virtuals: true})
-  for (const user of users) {
+  return Promise.allSettled(users.map(async user => {
     const devices=await getDevices(user.access_token)
-      .catch(err => {console.error(err)})
-    const dbDevicesIds=user.devices.map(d => d.deviceid)
-    const newDevices=devices.filter(d => !dbDevicesIds.includes(d.deviceid))
-    for (const device of newDevices) {
-      const dev={
-        user: user._id,
-        ...device,
-        last_session_date: moment.unix(device.last_session_date),
-      }
-      await Device.create(dev)
-        .catch(err => console.error(err))
+    if (devices.length>0) {
+      console.log(`User ${user.email}: ${devices.length} devices found`)
     }
-    if (newDevices.length>0) {
-      console.log(`Devices:${newDevices.length} new for ${user.email}(${newDevices.map(d => d.model)})`)
-    }
-  }
+    const mappedDevices=devices.map(device => ({
+      user: user._id,
+      ...device,
+      last_session_date: moment.unix(device.last_session_date),
+    }))
+    // First remove all devices
+    await Device.deleteMany({user: user._id}).catch(err => {console.error(err)})
+    // Then recreate devices
+    await Device.create(mappedDevices).catch(err => {console.error(err)})
+  }))
+  .then(res => {
+    const errors=lodash.zip(res, users)
+      .filter(([r]) => r.status=='rejected')
+      .map(([r,u]) => `User ${u.email}: ${r.reason}`)
+    errors.length>0 &&console.error(errors)
+  })
 })
 
 module.exports={

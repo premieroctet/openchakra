@@ -1,5 +1,7 @@
-import lodash from 'lodash'
 import axios from 'axios'
+import lodash from 'lodash'
+import {jsPDF} from 'jspdf'
+import { clearToken } from './token';
 import {getComponent, clearComponentValue} from './values'
 
 const API_ROOT = '/myAlfred/api/studio'
@@ -8,9 +10,7 @@ export const ACTIONS = {
     const email = getComponentValue(props.email, level)
     const password = getComponentValue(props.password, level)
     let url = `${API_ROOT}/login`
-    return axios.post(url, { email, password }).catch(err => {
-      throw new Error(err.response?.data || err)
-    })
+    return axios.post(url, { email, password })
   },
   sendMessage: ({ value, props, level, getComponentValue }) => {
     const destinee = props.destinee ? getComponentValue(props.destinee, level) : value._id
@@ -163,13 +163,27 @@ export const ACTIONS = {
       return res
     })
   },
-  registerToEvent: ({ context }) => {
+  registerToEvent: ({ value }) => {
     let url = `${API_ROOT}/action`
     const body = {
       action: 'registerToEvent',
-      context,
+      value: value._id,
     }
     return axios.post(url, body)
+      .then(res => {
+        return {_id: res.data}
+      })
+  },
+  unregisterFromEvent: ({ value }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'unregisterFromEvent',
+      value: value._id,
+    }
+    return axios.post(url, body)
+      .then(res => {
+        return {_id: res.data}
+      })
   },
   save: ({ value, props, context, dataSource, level, getComponentValue }) => {
     let url = `${API_ROOT}/${props.model}${dataSource?._id ? `/${dataSource._id}`:''}`
@@ -215,15 +229,10 @@ export const ACTIONS = {
   },
 
   cashOrder: ({ context, value, level, props, getComponentValue }) => {
-    const [guest, amount]=[props.guest, props.amount].map(c => getComponentValue(c, level))
+    const [guest, amount]=[props.guest, props.amount, props.mode].map(c => getComponentValue(c, level))
     let url = `${API_ROOT}/action`
-    const body = {action: 'cashOrder', context, ...props, guest, amount}
+    const body = {action: 'cashOrder', context, ...props, guest, amount, mode:props.mode}
     return axios.post(url, body)
-      .then(res => {
-        if (res.data.redirect) {
-          window.location=`/${res.data.redirect}`
-        }
-      })
   },
 
   previous: () => {
@@ -248,7 +257,8 @@ export const ACTIONS = {
   },
 
   logout: () => {
-    document.cookie = 'token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    clearToken()
+    window.location='/'
     return Promise.resolve()
   },
 
@@ -260,6 +270,71 @@ export const ACTIONS = {
   // From https://developer.withings.com/sdk/v2/tree/sdk-webviews/device-settings-webview
   openWithingsSettings: params => {
     window.location='https://localhost/myAlfred/api/withings/settings'
-  }
+  },
+
+  forgotPassword: ({ value, props, level, getComponentValue }) => {
+    const email=getComponentValue(props.email, level)
+    let url = `${API_ROOT}/anonymous-action`
+    const body = {
+      action: 'forgotPassword',
+      email,
+    }
+    return axios.post(url, body)
+    .then(res => {
+      ['email', 'phone'].map(att =>
+        clearComponentValue(props[att], level))
+      return res
+    })
+  },
+
+  getCigarReview: ({ value}) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'getCigarReview',
+      value: value._id,
+    }
+    return axios.post(url, body)
+    .then(res => {
+      return ({
+        model: 'review',
+        value: res.data,
+      })
+    })
+  },
+
+  changePassword: ({ value, props, context, level, getComponentValue }) => {
+    const [password, password2] = ['password', 'password2'].map(att =>
+      getComponentValue(props[att], level),
+    )
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'changePassword',
+      password,
+      password2,
+    }
+    return axios.post(url, body)
+  },
+
+  savePagePDF: () => {
+    /** TODO Prints white pages
+    var doc = new jsPDF('p', 'pt','a4',true)
+    var elementHTML = document.querySelector("#root")
+    doc.html(document.body, {
+        callback: function(doc) {
+            // Save the PDF
+            doc.save('facture.pdf');
+        },
+    });
+    */
+    return window.print()
+  },
+
+  deactivateAccount: () => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'deactivateAccount',
+    }
+    return axios.post(url, body)
+  },
 
 }

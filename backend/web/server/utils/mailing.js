@@ -1,9 +1,10 @@
-const lodash=require('lodash')
 const {
   getDataModel,
   getHostUrl,
-  is_production,
-}=require('../../config/config')
+  isProduction,
+  isValidation,
+} = require('../../config/config')
+const lodash=require('lodash')
 const {fillSms} = require('../../utils/sms')
 const {SIB} = require('./sendInBlue')
 
@@ -12,11 +13,12 @@ const SMS_CONTENTS = {
 
 const sendNotification = ({notification, destinee, ccs, params, attachment}) => {
 
-  let enable_mails = true
-  let enable_sms = true
+  let enable_mails = isProduction() || isValidation()
+  let enable_sms = isProduction() || isValidation()
+  const prefix=(!enable_sms && !enable_mails) ? '***** DISABLED':''
+  console.log(`${prefix}:send notification #${notification} to ${destinee.email} with params ${JSON.stringify(params)}`)
 
   if (!enable_sms && !enable_mails) {
-    console.log(`Mailing disabled:${msg}`)
     return true
   }
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Flex, Box } from '@chakra-ui/react'
 import { DndProvider } from 'react-dnd'
-import Backend from 'react-dnd-html5-backend'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 import { Global } from '@emotion/react'
 import { useSelector } from 'react-redux'
 import Metadata from '~dependencies/Metadata'
@@ -14,6 +14,7 @@ import Warnings from '~components/warnings/Warnings'
 import '~custom-components/Card/CardInit'
 import '~custom-components/Date/DateInit'
 import '~custom-components/UploadFile/UploadFileInit'
+import '~custom-components/Rating/RatingInit'
 import '~custom-components/Media/MediaInit'
 import '~custom-components/Timer/TimerInit'
 import '~custom-components/NumberFormat/NumberFormatInit'
@@ -37,7 +38,7 @@ const App = () => {
         })}
       />
       <Metadata />
-      <DndProvider backend={Backend}>
+      <DndProvider backend={HTML5Backend}>
         <Flex h="100vh">
           <Menu />
           {/* <Sidebar /> */}

@@ -287,7 +287,7 @@ const Inspector = () => {
                     size="md"
                     autoFocus
                     variant="outline"
-                    isFullWidth
+                    width="100%"
                     focusBorderColor="blue.500"
                     errorBorderColor="red.500"
                     value={componentName}

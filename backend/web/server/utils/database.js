@@ -233,6 +233,12 @@ const buildPopulates = (fields, model) => {
   return populates
 }
 
+/**
+ Returns model from database id
+ expectedModel is a string or an array of string.
+ If defined and non empty, getModel returns exception if model is found and
+ is neither the expectedModel (String type) or included in expectedModel (array type)
+*/
 const getModel = (id, expectedModel) => {
   const conn = mongoose.connection
   return Promise.all(conn.modelNames()
@@ -246,8 +252,10 @@ const getModel = (id, expectedModel) => {
     if (!model) {
       throw new Error(`Model not found for ${id}`)
     }
-    if (expectedModel && model!=expectedModel) {
-      throw new Error(`Found model ${model} for ${id}, ${expectedModel} was expected`)
+    if (expectedModel && !lodash.isEmpty(expectedModel)) {
+      if ((lodash.isString(expectedModel) && expectedModel!=model)
+      || (lodash.isArray(expectedModel) && !lodash.includes(expectedModel, model)))
+      throw new Error(`Found model ${model} for ${id}, ${JSON.stringify(expectedModel)} was expected`)
     }
     return model
   })
@@ -330,7 +338,6 @@ const cloneArray = ({data, withOrigin, forceData = {}}) => {
 mongoose returns virtuals even if they are not present in select clause
 => keep only require fields in data hierarchy
 */
-
 const retainRequiredFields = ({data, fields}) => {
   if (lodash.isArray(data)) {
     return data.map(d => retainRequiredFields({data: d, fields}))
@@ -560,6 +567,11 @@ const removeData = dataId => {
     })
 }
 
+// Compares ObjecTID/string with ObjectId/string
+const idEqual = (id1, id2) => {
+  return JSON.stringify(id1)==JSON.stringify(id2)
+}
+
 module.exports = {
   hasRefs,
   MONGOOSE_OPTIONS,
@@ -590,4 +602,5 @@ module.exports = {
   callPostCreateData,
   removeData,
   putAttribute,
+  idEqual,
 }

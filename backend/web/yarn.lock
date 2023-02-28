@@ -7410,6 +7410,13 @@ mongodb@3.7.3:
   optionalDependencies:
     saslprep "^1.0.0"
 
+mongoose-auto-increment@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/mongoose-auto-increment/-/mongoose-auto-increment-5.0.1.tgz#827e051d9cc371dabe8bff1a704431d341cb79df"
+  integrity sha512-fuSw0np0ZZXYjNBBrD6Wg0y70N0i5NhBuH3AIETTXCchaq45FeHpISoQ3fFbbdSFhfVEDRtg+hVxEDpFjdI2lw==
+  dependencies:
+    extend "^3.0.0"
+
 mongoose-autopopulate@^0.16.1:
   version "0.16.1"
   resolved "https://registry.yarnpkg.com/mongoose-autopopulate/-/mongoose-autopopulate-0.16.1.tgz#69e12506dcfcaead92d276f773dd66dd6a287737"

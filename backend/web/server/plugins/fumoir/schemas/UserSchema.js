@@ -1,8 +1,8 @@
+const { FUMOIR_MEMBER, ROLES } = require('../consts')
 const moment = require('moment')
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const {schemaOptions} = require('../../../utils/schemas')
-const {ROLES} = require('../consts')
 
 const Schema = mongoose.Schema
 
@@ -11,10 +11,12 @@ const UserSchema = new Schema(
     firstname: {
       type: String,
       required: true,
+      required: [true, 'Le prénom est obligatoire'],
     },
     lastname: {
       type: String,
       required: true,
+      required: [true, 'Le nom de famille est obligatoire'],
     },
     dateOfBirth: {
       type: Date,
@@ -22,7 +24,7 @@ const UserSchema = new Schema(
     role: {
       type: String,
       enum: Object.keys(ROLES),
-      required: true,
+      required: [true, 'Le rôle est obligatoire'],
     },
     // Locker #
     locker: {
@@ -81,8 +83,7 @@ const UserSchema = new Schema(
     },
     password: {
       type: String,
-      set: pass => bcrypt.hashSync(pass, 10),
-      required: true,
+      required: [true, 'Le mot de passe est obligatoire'],
     },
     last_login: [
       {
@@ -105,6 +106,18 @@ const UserSchema = new Schema(
   },
   schemaOptions,
 )
+
+UserSchema.path('subscription_start').required(function() {
+  return this.role==FUMOIR_MEMBER
+}, "La date de début d'abonnement est obligatoire")
+
+UserSchema.path('subscription_end').required(function() {
+  return this.role==FUMOIR_MEMBER
+}, "La date de fin d'abonnement est obligatoire")
+
+UserSchema.path('subscription_price').required(function() {
+  return this.role==FUMOIR_MEMBER
+}, "Le prix de l'abonnement est obligatoire")
 
 UserSchema.virtual('full_name').get(function() {
   return `${this.firstname} ${this.lastname}`
@@ -138,7 +151,14 @@ UserSchema.virtual('bookings', {
 UserSchema.virtual('events', {
   ref: 'event', // The Model to use
   localField: '_id', // Find in Model, where localField
-  foreignField: 'members', // is equal to foreignField
+  foreignField: 'members.member', // is equal to foreignField
+})
+
+// Returns my reviewz
+UserSchema.virtual('reviews', {
+  ref: 'review', // The Model to use
+  localField: '_id', // Find in Model, where localField
+  foreignField: 'user', // is equal to foreignField
 })
 
 module.exports = UserSchema

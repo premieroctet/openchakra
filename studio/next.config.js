@@ -1,7 +1,15 @@
-const withPlugins = require('next-compose-plugins')
-const withTM = require('next-transpile-modules')(['browser-nativefs'])
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.BUNDLE_VISUALIZE == 1,
-})
+module.exports = {
+  webpack: (config) => {
+    // load worker files as a urls by using Asset Modules
+    // https://webpack.js.org/guides/asset-modules/
+    config.module.rules.unshift({
+      test: /pdf\.worker\.(min\.)?js/,
+      type: "asset/resource",
+      generator: {
+        filename: "static/worker/[hash][ext][query]"
+      }
+    });
 
-module.exports = withPlugins([[withBundleAnalyzer, {}], [withTM]])
+    return config;
+  }
+};

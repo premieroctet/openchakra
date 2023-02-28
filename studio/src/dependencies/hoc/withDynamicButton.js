@@ -7,9 +7,14 @@ import {
   extractFiltersFromProps,
   getConditionalProperties,
 } from '../utils/filters'
+import {Error} from '../utils/notifications'
 
 const withDynamicButton = Component => {
+
   const Internal = props => {
+
+    const [errorMessage, setErrorMessage]=useState(null)
+
     const query = new URLSearchParams(useLocation().search)
     let value = props.dataSource
     if (props.attribute) {
@@ -37,7 +42,7 @@ const withDynamicButton = Component => {
     if (action) {
       onClick = () => {
         if (!ACTIONS[action]) {
-          return alert(`Undefined action ${action}`)
+          return setErrorMessage(`Undefined action ${action}`)
         }
         return ACTIONS[action]({
           ...props,
@@ -72,7 +77,7 @@ const withDynamicButton = Component => {
           })
           .catch(err => {
             console.error(err)
-            alert(err.response?.data || err)
+            setErrorMessage(err.response?.data || err)
           })
       }
     }
@@ -80,12 +85,20 @@ const withDynamicButton = Component => {
       props,
       props.dataSource,
     )
+
+    // Hide if action unavailable and hideIfForbidden is set
+    if (props.hideIfForbidden && !actionAllowed) {
+      return null
+    }
     return (
+      <>
       <Component disabled={!actionAllowed}
         {...props}
         onClick={onClick}
         {...conditionalProperties}
-      ></Component>
+      />
+      {errorMessage && <Error message={errorMessage} onClose={()=>setErrorMessage(null)}/>}
+      </>
     )
   }
 

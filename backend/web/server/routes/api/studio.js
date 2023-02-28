@@ -1,3 +1,5 @@
+const { FUMOIR_MEMBER } = require('../../plugins/fumoir/consts')
+const moment = require('moment')
 const path = require('path')
 const zlib=require('zlib')
 const {promises: fs} = require('fs')
@@ -8,6 +10,7 @@ const bcrypt = require('bcryptjs')
 const express = require('express')
 const mongoose = require('mongoose')
 const passport = require('passport')
+const { date_str, datetime_str } = require('../../../utils/dateutils')
 const Payment = require('../../models/Payment')
 const {
   HOOK_PAYMENT_FAILED,
@@ -60,15 +63,31 @@ const login = (email, password) => {
   return User.findOne({email}).then(user => {
     if (!user) {
       console.error(`No user with email ${email}`)
-      throw new NotFoundError(`Invalid email or password`)
+      throw new NotFoundError(`Email ou mot de passe invalide`)
+    }
+    // TODO move in fumoir
+    if (user.role==FUMOIR_MEMBER) {
+      if (!user.subscription_start) {
+        throw new ForbiddenError(`Votre abonnement n'est pas valide`)
+      }
+      if (user.subscription_start && moment().isBefore(moment(user.subscription_start))) {
+        throw new ForbiddenError(`Votre abonnement débute le ${date_str(user.subscription_start)}`)
+      }
+      // TODO move in fumoir
+      if (user.subscription_end && moment().isAfter(moment(user.subscription_end))) {
+        throw new ForbiddenError(`Votre abonnement s'est terminé le ${date_str(user.subscription_end)}`)
+      }
+    }
+    if (user.active===false) {
+      console.error(`Deactived user ${email}`)
+      throw new NotFoundError(`Ce compte est désactivé`)
     }
     console.log(`Comparing ${password} and ${user.password}`)
     return bcrypt.compare(password, user.password).then(matched => {
-      // TODO : to test
-      matched = true
-      console.log(`Matched:${matched}`)
+      // TODO check actual password
+      matched=true
       if (!matched) {
-        throw new NotFoundError(`Invalid email or password`)
+        throw new NotFoundError(`Email ou mot de passe invalide`)
       }
       return user
     })
@@ -191,6 +210,20 @@ router.post('/action', passport.authenticate('cookie', {session: false}), (req, 
   }
 
   return actionFn(req.body, req.user, req.get('Referrer'))
+    .then(result => {
+      return res.json(result)
+    })
+})
+
+router.post('/anonymous-action', (req, res) => {
+  const action = req.body.action
+  const actionFn = ACTIONS[action]
+  if (!actionFn) {
+    console.error(`Unkown action:${action}`)
+    return res.status(404).json(`Unkown action:${action}`)
+  }
+
+  return actionFn(req.body, null, req.get('Referrer'))
     .then(result => {
       return res.json(result)
     })
@@ -346,7 +379,8 @@ router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (r
           return Promise.all(data.map(d => addComputedFields(user, params, d, model)))
         })
         .then(data => {
-          return id ? Promise.resolve(data) : callFilterDataUser({model, data, id, user: req.user})
+          //return id ? Promise.resolve(data) : callFilterDataUser({model, data, id, user: req.user})
+          return callFilterDataUser({model, data, id, user: req.user})
         })
         .then(data => {
           if (['theme', 'resource'].includes(model) && !id) {

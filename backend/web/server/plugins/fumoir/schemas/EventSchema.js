@@ -27,18 +27,33 @@ const EventSchema = new Schema(
       type: Date,
       required: false,
     },
-    members: [
-      {
+    members: [{
+      member: {
         type: Schema.Types.ObjectId,
         ref: 'user',
         required: true,
       },
+      guest: {
+        type: Schema.Types.ObjectId,
+        ref: 'guest',
+        required: false,
+      },
+    }
     ],
     place: {
       type: String,
       enum: [...Object.keys(PLACES)],
       required: false,
     },
+    max_guests_per_member: {
+      type: Number,
+      get: v => 1,
+      required: true,
+    },
+    max_people: {
+      type: Number,
+      required: true,
+    }
   },
   schemaOptions,
 )
@@ -68,6 +83,19 @@ EventSchema.virtual('guests_count').get(() => {
 
 EventSchema.virtual('members_count').get(function() {
   return this.guests_count + this.members?.length || 0
+})
+
+EventSchema.virtual('people_count').get(function() {
+  if (!this.members) {
+    return 0
+  }
+  const members_count=this.members.length
+  const guests_count=this.members.filter(m => !!m.guest).length
+  return members_count+guests_count
+})
+
+EventSchema.virtual('registration_status').get(function() {
+  return null
 })
 
 EventSchema.virtual('status').get(function() {

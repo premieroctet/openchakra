@@ -202,5 +202,5 @@ module.exports = {
   getAvailabilityForDate, combineTimelapses, timelapsesSetToArray,
   getPeriodStart, getExcludedDays, getExcludedTimes,
   booking_date_str,
-  datetime_str, datetime_str,
+  datetime_str, date_str,
 }

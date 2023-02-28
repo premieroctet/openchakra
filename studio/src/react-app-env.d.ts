@@ -64,6 +64,7 @@ type ComponentType =
   | 'NumberInputStepper'
   | 'NumberIncrementStepper'
   | 'NumberDecrementStepper'
+  | 'Rating'
   | 'Progress'
   | 'Radio'
   | 'RadioGroup'
@@ -134,6 +135,7 @@ interface ComponentItemProps {
   isMeta?: boolean
   soon?: boolean
   rootParentType?: ComponentType
+  children?: React.ReactNode
 }
 
 class Filter {

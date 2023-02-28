@@ -11,7 +11,6 @@ export const CONTAINER_TYPE: ComponentType[] = [
 ]
 export const TEXT_TYPE: ComponentType[] = [
   'Text',
-  'NumberFormat',
   'Heading',
   'Badge',
   'ListItem',
@@ -23,7 +22,7 @@ export const DATE_TYPE: ComponentType[] = ['Date']
 export const SELECT_TYPE: ComponentType[] = ['Select']
 export const SOURCE_TYPE: ComponentType[] = ['Timer']
 export const CHECKBOX_TYPE: ComponentType[] = ['Checkbox', 'Radio']
-export const INPUT_TYPE: ComponentType[] = ['Input', 'Textarea', 'NumberInput']
+export const INPUT_TYPE: ComponentType[] = ['Input', 'Textarea', 'NumberInput', 'Rating', 'NumberFormat']
 export const UPLOAD_TYPE: ComponentType[] = ['UploadFile']
 export const ENUM_TYPE: ComponentType[] = ['RadioGroup']
 //export const ENUM_TYPE: ComponentType[] = ['RadioGroup','Select']
