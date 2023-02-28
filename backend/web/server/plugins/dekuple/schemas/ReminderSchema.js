@@ -27,7 +27,7 @@ const ReminderSchema = new Schema({
   },
   time: { // Only use time part of the date
     type: Date,
-    required: true,
+    required: [true,'La date est obligatoire'],
   },
   // TODO: UGLY !!!
   monday: {

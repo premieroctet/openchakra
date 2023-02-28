@@ -29,6 +29,10 @@ const openWithingsSettingsAction = () => {
   return Promise.resolve({redirect: 'tagaada'})
 }
 
+const deactivateAccount = (params, user) => {
+  return User.findByIdAndUpdate(user._id, {active: false}, {new: true})
+}
 
 addAction('register', registerAction)
 addAction('openWithingsSettings', openWithingsSettingsAction)
+addAction('deactivateAccount', deactivateAccount)

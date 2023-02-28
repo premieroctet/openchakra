@@ -258,6 +258,7 @@ export const ACTIONS = {
 
   logout: () => {
     clearToken()
+    window.location='/'
     return Promise.resolve()
   },
 
@@ -326,6 +327,14 @@ export const ACTIONS = {
     });
     */
     return window.print()
+  },
+
+  deactivateAccount: () => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'deactivateAccount',
+    }
+    return axios.post(url, body)
   },
 
 }
