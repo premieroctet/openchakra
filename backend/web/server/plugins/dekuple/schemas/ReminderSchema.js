@@ -72,10 +72,21 @@ ReminderSchema.virtual('type_str').get(function() {
 
 ReminderSchema.virtual('reccurency_str').get(function() {
   const DAYS=lodash.range(7).map(d => ['en', 'fr'].map(l =>moment().weekday(d).locale(l).format('dddd').toLowerCase()))
-  console.log(`Days are ${DAYS}`)
   const trueDays=DAYS.filter(([en, r]) => this[en]).map(([en, fr])=>`${fr}s`)
   return `Tous les ${trueDays.join(', ').replace(/, ([^,]*)$/, ' et $1')}`
 })
 
+ReminderSchema.methods.shouldLaunch = function() {
+  moment.locale('en')
+  const now=moment()
+  const nowDayOfWeek=now.format('dddd').toLowerCase()//.locale('en')
+  // Check day
+  if (!this[nowDayOfWeek]) {
+    return false
+  }
+  // Check hour minutes
+  const HOURMIN_FMT='HHmm'
+  return now.format(HOURMIN_FMT)==moment(this.time).format(HOURMIN_FMT)
+}
 
 module.exports = ReminderSchema

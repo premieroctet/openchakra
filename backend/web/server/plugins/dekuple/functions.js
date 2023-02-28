@@ -1,3 +1,4 @@
+const Reminder = require('../../models/Reminder')
 const {
   getAccessToken,
   getDevices,
@@ -201,6 +202,13 @@ cron.schedule('24 */10 * * * *', async () => {
       .map(([r,u]) => `User ${u.email}: ${r.reason}`)
     errors.length>0 &&console.error(errors)
   })
+})
+
+// Send notifications for reminders
+cron.schedule('15 * * * * *', async () => {
+  let reminders=await Reminder.find().populate('user')
+  reminders=reminders.filter(r => r.shouldLaunch())
+  console.log(`Found ${reminders.map(r => moment(r.time))}`)
 })
 
 module.exports={
