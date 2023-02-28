@@ -76,7 +76,7 @@ ReminderSchema.virtual('reccurency_str').get(function() {
   return `Tous les ${trueDays.join(', ').replace(/, ([^,]*)$/, ' et $1')}`
 })
 
-ReminderSchema.methods.shouldLaunch = function() {
+ReminderSchema.methods.shouldNotify = function() {
   moment.locale('en')
   const now=moment()
   const nowDayOfWeek=now.format('dddd').toLowerCase()//.locale('en')

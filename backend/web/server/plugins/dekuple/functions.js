@@ -1,4 +1,5 @@
 const Reminder = require('../../models/Reminder')
+const Appointment = require('../../models/Appointment')
 const {
   getAccessToken,
   getDevices,
@@ -204,11 +205,21 @@ cron.schedule('24 */10 * * * *', async () => {
   })
 })
 
-// Send notifications for reminders
+// Send notifications for reminders & apppointments
+// Poll every minute
 cron.schedule('15 * * * * *', async () => {
   let reminders=await Reminder.find().populate('user')
-  reminders=reminders.filter(r => r.shouldLaunch())
-  console.log(`Found ${reminders.map(r => moment(r.time))}`)
+  reminders=reminders.filter(r => r.shouldNotify())
+  if (!lodash.isEmpty(reminders)) {
+    console.log(`Remind ${reminders.map(r => `${r.type_str} for ${r.user.email}`)}`)
+  }
+
+  let appointments=await Appointment.find().populate('user')
+  appointments=appointments.filter(a => a.shouldNotify())
+
+  if (!lodash.isEmpty(appointments)) {
+    console.log(`Appointment ${appointments.map(r => `${r.type_str} for ${r.user.email}`)}`)
+  }
 })
 
 module.exports={
