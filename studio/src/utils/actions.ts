@@ -233,7 +233,6 @@ export const ACTIONS: IActions = {
   logout: {
     label: 'Logout',
     options: {},
-    next: ['openPage'],
   },
   openWithingsSetup: {
     label: 'Open withings setup',
@@ -277,7 +276,14 @@ export const ACTIONS: IActions = {
   savePagePDF: {
     label: 'Save page as PDF',
     options:{}
-  }
+  },
+
+  deactivateAccount: {
+    label: 'Deactivate account',
+    options: {},
+    next: ['openPage', 'logout'],
+  },
+
 }
 
 export const allowsActions = (component: IComponent) => {

@@ -27,6 +27,11 @@ const UserSchema = new Schema({
     default: 'invalid',
     set: pass => bcrypt.hashSync(pass, 10),
   },
+  active: {
+    type: Boolean,
+    default: true,
+    required: true,
+  },
   picture: {
     type: String,
     required: false,

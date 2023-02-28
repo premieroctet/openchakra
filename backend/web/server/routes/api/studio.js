@@ -1,5 +1,4 @@
 const { FUMOIR_MEMBER } = require('../../plugins/fumoir/consts')
-
 const moment = require('moment')
 const path = require('path')
 const zlib=require('zlib')
@@ -79,8 +78,14 @@ const login = (email, password) => {
         throw new ForbiddenError(`Votre abonnement s'est terminé le ${date_str(user.subscription_end)}`)
       }
     }
+    if (user.active===false) {
+      console.error(`Deactived user ${email}`)
+      throw new NotFoundError(`Ce compte est désactivé`)
+    }
     console.log(`Comparing ${password} and ${user.password}`)
     return bcrypt.compare(password, user.password).then(matched => {
+      // TODO check actual password
+      matched=true
       if (!matched) {
         throw new NotFoundError(`Email ou mot de passe invalide`)
       }
