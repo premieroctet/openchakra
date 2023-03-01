@@ -70,6 +70,13 @@ const Fonts = () => (
         font-weight: bold;
         font-style: normal;
       }
+      @font-face {
+        font-family: 'Playfair Display';
+        src: local('Playfair Display'), 
+            url('fonts/PlayfairDisplay-regular.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+      }
       `}
   />
 )
