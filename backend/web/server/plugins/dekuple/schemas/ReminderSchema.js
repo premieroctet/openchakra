@@ -29,6 +29,11 @@ const ReminderSchema = new Schema({
     type: Date,
     required: [true,'La date est obligatoire'],
   },
+  active: {
+    type: Boolean,
+    default: true,
+    required: true,
+  },
   // TODO: UGLY !!!
   monday: {
     type: Boolean,

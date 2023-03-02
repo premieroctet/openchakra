@@ -206,7 +206,7 @@ cron.schedule('24 */10 * * * *', async () => {
 
 // Send notifications for reminders
 cron.schedule('15 * * * * *', async () => {
-  let reminders=await Reminder.find().populate('user')
+  let reminders=await Reminder.find({active: true}).populate('user')
   reminders=reminders.filter(r => r.shouldLaunch())
   console.log(`Found ${reminders.map(r => moment(r.time))}`)
 })
