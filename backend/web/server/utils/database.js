@@ -564,6 +564,7 @@ const removeData = dataId => {
         ])
           .then(() => data.delete())
       }
+      return data.delete()
     })
 }
 

@@ -94,12 +94,12 @@ export const ACTIONS = {
       .post(url, { action: 'previous', id: value._id })
       .then(res => res.data)
   },
-  delete: ({ value, props, context }) => {
+  delete: ({ value}) => {
     let url = `${API_ROOT}/action`
     return axios.post(url, {
       action: 'delete',
       //parent: context,
-      child: value._id,
+      id: value._id,
     })
   },
   gotoSession: ({ value, props }) => {
