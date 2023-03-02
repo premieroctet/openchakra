@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
-const {APPOINTMENT_OTHER, APPOINTMENT_TYPE} = require('../consts')
+const moment=require('moment')
+const {APPOINTMENT_OTHER, APPOINTMENT_TYPE, APPOINTMENT_NOTIF_DELAY} = require('../consts')
 const {schemaOptions} = require('../../../utils/schemas')
 
 const Schema = mongoose.Schema
@@ -38,5 +39,12 @@ AppointmentSchema.virtual('type_str').get(function() {
   }
   return APPOINTMENT_TYPE[this.type]
 })
+
+AppointmentSchema.methods.shouldNotify = function() {
+  const DMYHM_FMT='DDMMYYHHmm'
+  const notif_moment=moment().add(APPOINTMENT_NOTIF_DELAY, 'minutes').format(DMYHM_FMT)
+  return moment(this.date).format(DMYHM_FMT)==notif_moment
+}
+
 
 module.exports = AppointmentSchema

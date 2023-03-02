@@ -12,10 +12,10 @@ export const getComponent = (componentId, suffix) => {
 
 export const getComponentDataValue = (componentId, suffix) => {
   let component = document.getElementById(componentId)
-  if (!(component?.value || component?.getAttribute('value'))) {
+  if (!(component?.value || component?.getAttribute('value') || component?.getAttribute('data-value'))) {
     component = document.getElementById(`${componentId}${suffix}`)
   }
-  return component?.value || component?.getAttribute('value')
+  return component?.value || component?.getAttribute('value') || component?.getAttribute('data-value')
 }
 
 export const clearComponentValue = (componentId, suffix) => {
