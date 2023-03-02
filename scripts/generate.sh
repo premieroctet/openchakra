@@ -30,8 +30,8 @@ git checkout -b $PROJECT_NAME
 
   echo -e "EXT_PUBLIC_VERSION=1" > .env
   echo -e "NEXT_PUBLIC_BUGSNAG_API_KEY=18bc83982a86e6477448b6bc16c0c18e" >> .env
-  echo -e "NEXT_PUBLIC_S3_ID=AKIA6QQ32HPKCYGWQ72B" >> .env
-  echo -e "NEXT_PUBLIC_S3_SECRET=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" >> .env
+  echo -e "NEXT_PUBLIC_S3_ID=<S3_ID>" >> .env
+  echo -e "NEXT_PUBLIC_S3_SECRET=<S3_SECRET>" >> .env
   echo -e "NEXT_PUBLIC_S3_ROOTPATH=${PROJECT_NAME}" >> .env
 
   echo "Installing studio modules" && yarn
@@ -75,4 +75,8 @@ cat "$SCRIPTPATH/nginxfragment.txt" |
 
 echo "************************************************************************************************"
 echo -e "Ajoutez l'entrée suivante dans votre DNS:\n${PROJECT_NAME} IN CNAME my-alfred.io."
+echo "************************************************************************************************"
+
+echo "************************************************************************************************"
+echo -e "Dans le fichier ${PROJECT_DIRECTORY}/studio/.env\nmettez à jour les entrées NEXT_PUBLIC_S3_ID et NEXT_PUBLIC_S3_SECRET"
 echo "************************************************************************************************"
