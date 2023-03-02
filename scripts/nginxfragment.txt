@@ -1,0 +1,21 @@
+    server {
+        listen       443;
+        listen       [::]:443;
+        server_name  {PROJECT_NAME}.my-alfred.io;
+
+        ssl on;
+        ssl_certificate /home/ec2-user/.ssh/subdomains-fullchain.pem;
+        ssl_certificate_key /home/ec2-user/.ssh/subdomains-privkey.pem;
+
+        # Load configuration files for the default server block.
+        include /etc/nginx/default.d/*.conf;
+
+            location / {
+               proxy_pass https://localhost:{STUDIO_TEST_PORT};
+            }
+
+            location /myAlfred/api {
+               proxy_pass https://localhost:{BACKEND_PORT}/myAlfred/api;
+            }
+    }
+
