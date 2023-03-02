@@ -59,11 +59,8 @@ let ACTIONS = {
     })
   },
 
-  delete: ({parent, child}) => {
-    if (parent && child && parent!=child) {
-      return removeChildFromParent(parent, child)
-    }
-    return removeData(child)
+  delete: ({id}) => {
+    return removeData(id)
   },
 
   addChild: ({parent, child}) => {
