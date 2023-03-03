@@ -208,7 +208,7 @@ cron.schedule('24 */10 * * * *', async () => {
 // Send notifications for reminders & apppointments
 // Poll every minute
 cron.schedule('15 * * * * *', async () => {
-  let reminders=await Reminder.find({active: true}.populate('user')
+  let reminders=await Reminder.find({active: true}).populate('user')
   reminders=reminders.filter(r => r.shouldNotify())
   if (!lodash.isEmpty(reminders)) {
     console.log(`Remind ${reminders.map(r => `${r.type_str} for ${r.user.email}`)}`)
