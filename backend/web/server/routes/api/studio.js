@@ -47,7 +47,7 @@ const {
   NotFoundError,
   ForbiddenError,
 } = require('../../utils/errors')
-const {getModels} = require('../../utils/database')
+const {getExposedModels} = require('../../utils/database')
 const {ACTIONS} = require('../../utils/studio/actions')
 const {buildQuery, addComputedFields} = require('../../utils/database')
 const {getWebHookToken} = require('../../plugins/payment/vivaWallet')
@@ -93,7 +93,7 @@ const login = (email, password) => {
 }
 
 router.get('/models', (req, res) => {
-  const allModels = getModels()
+  const allModels = getExposedModels()
   return res.json(allModels)
 })
 
