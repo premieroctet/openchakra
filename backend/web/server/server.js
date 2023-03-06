@@ -46,6 +46,12 @@ require('./models/Payment')
 require('./models/Accessory')
 require('./models/AccessoryCategory')
 require('./models/Review')
+require('./models/Offer')
+require('./models/Objective')
+require('./models/Specificity')
+require('./models/Contents')
+require('./models/Key')
+require('./models/Group')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 

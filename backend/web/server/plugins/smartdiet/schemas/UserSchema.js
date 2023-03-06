@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const bcrypt=require('bcryptjs')
-const {GENDER, SMOKER_TYPE} = require('../consts')
+const { HOME_STATUS } = require('../consts')
 const {schemaOptions} = require('../../../utils/schemas')
 
 const Schema = mongoose.Schema
@@ -21,11 +21,25 @@ const UserSchema = new Schema({
     required: [true, 'L\'email est obligatoire'],
     set: v => v.toLowerCase().trim(),
   },
+  pseudo: {
+    type: String,
+    set: v => v?.trim(),
+    required: [true, 'Le pesudo est obligatoire'],
+  },
+  company: {
+    type: Schema.Types.ObjectId,
+    ref: 'company',
+    required: false,
+  },
   password: {
     type: String,
     required: [true, 'Le mot de passe est obligatoire'],
     default: 'invalid',
-    set: pass => bcrypt.hashSync(pass, 10),
+  },
+  home_status: {
+    type: String,
+    enum: Object.keys(HOME_STATUS),
+    required: [true, 'Le status est obligatoire'],
   },
 }, schemaOptions)
 
