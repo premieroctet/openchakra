@@ -24,12 +24,12 @@ const EventSchema = new Schema({
     enum: Object.keys(EVENT_TYPE),
     required: [true, 'Le type est obligatoire'],
   },
-  registered_users: [{
+  registered_by: [{
     type: Schema.Types.ObjectId,
     ref: 'user',
   }],
   // Users who refused the challenge
-  refused_users: [{
+  refused_by: [{
     type: Schema.Types.ObjectId,
     ref: 'user',
   }],
