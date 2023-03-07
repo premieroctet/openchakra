@@ -1,11 +1,12 @@
-const Reminder = require('../../models/Reminder')
-const Appointment = require('../../models/Appointment')
 const {
   getAccessToken,
+  getAuthorizationCode,
   getDevices,
   getFreshAccessToken,
   getMeasures
 } = require('../../utils/withings')
+const Reminder = require('../../models/Reminder')
+const Appointment = require('../../models/Appointment')
 const {
   APPOINTMENT_TYPE,
   GENDER,
@@ -105,18 +106,21 @@ declareVirtualField({model: 'reminder', field: 'type_str', instance: 'String', r
 declareVirtualField({model: 'reminder', field: 'reccurency_str', instance: 'String', requires: 'monday,tuesday,wednesday,thursday,friday,saturday,sunday'})
 
 const updateTokens = user => {
-  const fn=!user.access_token ? getAccessToken(user.withings_usercode) : getFreshAccessToken(user.refresh_token)
-  return fn
-    .then(tokens => {
-      user.withings_id=tokens.userid
-      user.access_token=tokens.access_token
-      user.refresh_token=tokens.refresh_token
-      user.csrf_token=tokens.csrf_token
-      user.expires_at=moment().add(tokens.expires_in, 'seconds')
-      user.withings_usercode=null
-      return user.save()
+  return getAuthorizationCode(user.email)
+    .then(authCode => {
+      user.withings_usercode=authCode
+      const fn=!user.access_token ? getAccessToken(user.withings_usercode) : getFreshAccessToken(user.refresh_token)
+      return fn
+        .then(tokens => {
+          user.withings_id=tokens.userid
+          user.access_token=tokens.access_token
+          user.refresh_token=tokens.refresh_token
+          user.csrf_token=tokens.csrf_token
+          user.expires_at=moment().add(tokens.expires_in, 'seconds')
+          user.withings_usercode=null
+          return user.save()
+        })
     })
-
 }
 
 // Ensure Users tokens are up to date every hour
