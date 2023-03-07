@@ -102,7 +102,7 @@ let ACTIONS = {
         if (!props.password) {
           props.password=generatePassword()
         }
-        return User.create({...props, password: bcrypt.hashSync(pass, 10)})
+        return User.create({...props, password: bcrypt.hashSync(props.password, 10)})
       })
   },
 }
