@@ -124,6 +124,7 @@ const updateTokens = user => {
 }
 
 // Ensure Users tokens are up to date every hour
+// TODO It's a quick fix, should not have to request authorization each time
 cron.schedule('0 */30 * * * *', () => {
   const expirationMoment=moment().add(1, 'hour')
   User.find({$or: [{access_token: null}, {expires_at: {$lte: expirationMoment}}]})
