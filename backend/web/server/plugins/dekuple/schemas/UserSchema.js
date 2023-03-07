@@ -63,6 +63,11 @@ const UserSchema = new Schema({
     validate: [value => !!value, 'Vous devez accepter les CGU'],
     required: [true, 'Vous devez accepter les CGU'],
   },
+  dataTreatmentAccepted: {
+    type: Boolean,
+    validate: [value => !!value, 'Vous devez accepter le traitement des données'],
+    required: [true, 'Vous devez accepter le traitement des données'],
+  },
   phone: {
     type: String,
     required: false,
