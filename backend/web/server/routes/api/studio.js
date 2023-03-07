@@ -279,7 +279,14 @@ router.get('/current-user', passport.authenticate('cookie', {session: false}), (
 router.post('/register', (req, res) => {
   const body=lodash.mapValues(req.body, v => JSON.parse(v))
   return ACTIONS.register(body)
-    .then(result => res.json(result))
+    .then(result => {
+      const {email, password}=req.body
+      console.log(`Login with ${email} ${password}`)
+      return login(email, password)
+        .then(user => {
+          return sendCookie(user, res).json(user)
+        })
+    })
 })
 
 // Validate webhook
