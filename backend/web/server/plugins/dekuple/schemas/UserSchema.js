@@ -40,13 +40,13 @@ const UserSchema = new Schema({
     type: Number,
     min: [1, 'Le poids doit être > 1 kg'],
     max: [600, 'Le poids doit être < 600 kg'],
-    required: [true, 'Le poids est obligatoire'],
+    required: false,
   },
   height: { // cm
     type: Number,
     min: [10, 'La taille doit être >  10 cm'],
     max: [300, 'La taille doit être <  300 cm'],
-    required: [true, 'La taille est obligatoire'],
+    required: false,
   },
   birthday: {
     type: Date,
