@@ -60,7 +60,8 @@ const filterDataUser = ({model, data, id, user}) => {
     console.log(`Calling filter with ${JSON.stringify(data)}`)
     return data.map(d => ({
       ...d,
-      measures: d.measures && lodash.orderBy(d.measures, ['date'], ['desc'])
+      measures: d.measures && lodash.orderBy(d.measures, ['date'], ['desc']),
+      appointments: d.appointments && lodash.orderBy(d.appointments, ['date'], ['asc'])
     }))
   }
 
