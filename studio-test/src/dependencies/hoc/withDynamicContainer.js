@@ -1,6 +1,5 @@
 import React from 'react'
 import lodash from 'lodash'
-import {getComponentDataValue} from '../utils/values'
 
 const normalize = str => {
   str = str
@@ -105,7 +104,7 @@ const withDynamicContainer = Component => {
       )
     }
     if (props.filterAttribute && props.filterValue) {
-      const value=getComponentDataValue(props.filterValue, props.index)
+      const value=props.getComponentValue(props.filterValue, props.level)
       // TODO Check why value "null" comes as string
       if (!(lodash.isNil(value) || value=="null")) {
         const regExp = new RegExp(normalize(value).trim(), 'i')
