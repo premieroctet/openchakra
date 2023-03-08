@@ -1,27 +1,16 @@
+const lodash=require('lodash')
+const moment = require('moment')
+const cron = require('node-cron')
+const Measure = require('../../models/Measure')
+const Appointment = require('../../models/Appointment')
+const Reminder = require('../../models/Reminder')
 const {
   getAccessToken,
   getAuthorizationCode,
   getDevices,
   getFreshAccessToken,
-  getMeasures
+  getMeasures,
 } = require('../../utils/withings')
-const Reminder = require('../../models/Reminder')
-const Appointment = require('../../models/Appointment')
-const {
-  APPOINTMENT_TYPE,
-  GENDER,
-  MEASURE_AUTO,
-  MEASURE_SOURCE,
-  REMINDER_TYPE,
-  SMOKER_TYPE,
-  WITHINGS_MEASURE_BPM,
-  WITHINGS_MEASURE_DIA,
-  WITHINGS_MEASURE_SYS,
-} = require('./consts')
-const Measure = require('../../models/Measure')
-const lodash=require('lodash')
-const moment = require('moment')
-const cron = require('node-cron')
 const User = require('../../models/User')
 const Device = require('../../models/Device')
 const {
@@ -31,6 +20,18 @@ const {
   setPreprocessGet,
   setFilterDataUser,
 } = require('../../utils/database')
+const {
+  APPOINTMENT_TYPE,
+  APPOINTMENT_STATUS,
+  GENDER,
+  MEASURE_AUTO,
+  MEASURE_SOURCE,
+  REMINDER_TYPE,
+  SMOKER_TYPE,
+  WITHINGS_MEASURE_BPM,
+  WITHINGS_MEASURE_DIA,
+  WITHINGS_MEASURE_SYS,
+} = require('./consts')
 
 const preCreate = ({model, params, user}) => {
   if (['measure', 'appointment', 'reminder'].includes(model)) {
@@ -62,7 +63,7 @@ const filterDataUser = ({model, data, id, user}) => {
     return data.map(d => ({
       ...d,
       measures: d.measures && lodash.orderBy(d.measures, ['date'], ['desc']),
-      appointments: d.appointments && lodash.orderBy(d.appointments, ['date'], ['asc'])
+      appointments: d.appointments && lodash.orderBy(d.appointments, ['date'], ['asc']),
     }))
   }
 
@@ -100,6 +101,7 @@ declareVirtualField({model: 'measure', field: 'source', instance: 'String', requ
 
 declareEnumField({model: 'appointment', field: 'type', instance: 'String', enumValues: APPOINTMENT_TYPE})
 declareVirtualField({model: 'appointment', field: 'type_str', instance: 'String', requires: 'type,otherTitle'})
+declareVirtualField({model: 'appointment', field: 'status', instance: 'String', requires: 'date', enumValues: APPOINTMENT_STATUS})
 
 declareEnumField({model: 'reminder', field: 'type', instance: 'String', enumValues: REMINDER_TYPE})
 declareVirtualField({model: 'reminder', field: 'type_str', instance: 'String', requires: 'type,otherTitle'})
@@ -148,11 +150,11 @@ cron.schedule('0 */30 * * * *', () => {
 })
 
 // Get all measures TODO should be notified by Withings
-cron.schedule('*/30 * * * * *', async () => {
+cron.schedule('*/30 * * * * *', async() => {
   console.log(`Getting measures`)
-  const users=await User.find({}, {access_token:1, email:1})
-      .populate({path:'measures'})
-      .lean({virtuals: true})
+  const users=await User.find({}, {access_token: 1, email: 1})
+    .populate({path: 'measures'})
+    .lean({virtuals: true})
   return Promise.all(users.map(async user => {
     const latestMeasure=lodash(user.measures)
       .filter(m => m.source==MEASURE_AUTO)
@@ -165,7 +167,7 @@ cron.schedule('*/30 * * * * *', async () => {
       if (newMeasures.measuregrps.length>0) {
         console.log(`User ${user.email}:got ${newMeasures.measuregrps.length} new measures since ${since}`)
       }
-      return Promise.all(newMeasures.measuregrps.map( grp => {
+      return Promise.all(newMeasures.measuregrps.map(grp => {
         const dekMeasure={
           user: user._id, date: moment.unix(grp.date), withings_group: grp.grpid,
           sys: grp.measures.find(m => m.type==WITHINGS_MEASURE_SYS)?.value,
@@ -175,7 +177,7 @@ cron.schedule('*/30 * * * * *', async () => {
         return Measure.findOneAndUpdate(
           {withings_group: dekMeasure.withings_group},
           {...dekMeasure},
-          {upsert: true}
+          {upsert: true},
         )
       }))
     }
@@ -183,9 +185,9 @@ cron.schedule('*/30 * * * * *', async () => {
 })
 
 // Get all devices TODO should be notified by Withings
-cron.schedule('24 */10 * * * *', async () => {
+cron.schedule('24 */10 * * * *', async() => {
   console.log(`Getting devices`)
-  const users=await User.find({access_token:{$ne: null}})
+  const users=await User.find({access_token: {$ne: null}})
     .populate('devices')
     .lean({virtuals: true})
   return Promise.allSettled(users.map(async user => {
@@ -199,21 +201,21 @@ cron.schedule('24 */10 * * * *', async () => {
       last_session_date: moment.unix(device.last_session_date),
     }))
     // First remove all devices
-    await Device.deleteMany({user: user._id}).catch(err => {console.error(err)})
+    await Device.deleteMany({user: user._id}).catch(err => { console.error(err) })
     // Then recreate devices
-    await Device.create(mappedDevices).catch(err => {console.error(err)})
+    await Device.create(mappedDevices).catch(err => { console.error(err) })
   }))
-  .then(res => {
-    const errors=lodash.zip(res, users)
-      .filter(([r]) => r.status=='rejected')
-      .map(([r,u]) => `User ${u.email}: ${r.reason}`)
-    errors.length>0 &&console.error(errors)
-  })
+    .then(res => {
+      const errors=lodash.zip(res, users)
+        .filter(([r]) => r.status=='rejected')
+        .map(([r, u]) => `User ${u.email}: ${r.reason}`)
+      errors.length>0 &&console.error(errors)
+    })
 })
 
 // Send notifications for reminders & apppointments
 // Poll every minute
-cron.schedule('15 * * * * *', async () => {
+cron.schedule('15 * * * * *', async() => {
   let reminders=await Reminder.find({active: true}).populate('user')
   reminders=reminders.filter(r => r.shouldNotify())
   if (!lodash.isEmpty(reminders)) {
