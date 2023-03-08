@@ -230,6 +230,21 @@ export const ACTIONS: IActions = {
     },
     next: ['openPage'],
   },
+  // Register new User
+  registerAndLogin: {
+    label: 'Register new account+login',
+    options: {
+      ...Object.fromEntries(lodash.range(15).map((idx:number) => {
+      return [
+        `component_${idx}`,
+        ({ components }) => components
+          .filter(comp => (comp.props?.dataSource||comp.props?.model) && comp.props?.attribute)
+          .map(comp => ({ key: comp.id, label: `${comp.type}/${comp.id}` }))
+
+      ]})),
+    },
+    next: ['openPage'],
+  },
   logout: {
     label: 'Logout',
     options: {},

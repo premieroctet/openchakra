@@ -16,10 +16,10 @@ const instance = axios.create({
   }),
 })
 
-describe('Test virtual single ref', () => {
+describe('Test dekuple actions', () => {
 
-  const USER_DATA={
-    email: `sebastien.auvray${moment().unix()}@free.fr`, password: '600Bimota!', password2: '600Bimota!',
+  let USER_DATA={
+    email: `sebastien.auvray${moment().valueOf()}@free.fr`, password: '600Bimota!', password2: '600Bimota!',
     firstname: 'Sébastien', lastname: 'Auvray', gender: 'MALE', birthday: moment(),
     cguAccepted: true, dataTreatmentAccepted: true,
   }
@@ -34,8 +34,16 @@ describe('Test virtual single ref', () => {
   })
 
   it('Must register', async() => {
+    const user_data={...USER_DATA, email:`sebastien.auvray${moment().valueOf()}@free.fr`}
     return instance.post(
       'https://localhost/myAlfred/api/studio/register',
+      lodash.mapValues(user_data, v => JSON.stringify(v)),
+    )
+  })
+
+  it('Must register then login', async() => {
+    return instance.post(
+      'https://localhost/myAlfred/api/studio/register-and-login',
       lodash.mapValues(USER_DATA, v => JSON.stringify(v)),
     )
   })
