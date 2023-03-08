@@ -31,7 +31,7 @@ const Fonts = () => (
       @font-face {
         font-family: 'Futura';
         src: local('Futura'), 
-            url('fonts/futura.ttf') format('truetype');
+          url('fonts/Futura Medium.otf') format('opentype');
         font-weight: normal;
         font-style: normal;
       }
