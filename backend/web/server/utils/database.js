@@ -207,6 +207,7 @@ const buildPopulate = (field, model) => {
   return result
 }
 
+// TODO query.populates accepts an array of populates !!!!
 const buildPopulates = (fields, model) => {
 
   // TODO Bug: in ['program.themes', 'program.otherref']
