@@ -136,7 +136,7 @@ const isActionAllowed = ({action, dataId, user}) => {
       .populate({path: 'invitations', populate: 'member'})
       .then(ev=> {
         console.log(JSON.stringify(ev))
-        ev.invitations?.some(i => idEqual(i.member._id, user._id))
+        return ev.invitations?.some(i => idEqual(i.member._id, user._id))
       })
   }
   return Promise.resolve(true)
