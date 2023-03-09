@@ -1,3 +1,4 @@
+const moment = require('moment')
 const { BadRequestError, NotFoundError } = require('../../utils/errors')
 const { sendForgotPassword } = require('./mailing')
 const bcryptjs = require('bcryptjs')
@@ -107,6 +108,7 @@ const isActionAllowed = ({action, dataId, user}) => {
       .populate('invitations')
       .then(event=> {
         if(!event) return false
+        if (moment(event.start_date).isBefore(moment())) {return false}
         if (event.people_count>=event.max_people) { return false}
         const selfMember=event.invitations.find(m => idEqual(m.member._id, user._id))
         if (selfMember) { return false}
@@ -135,7 +137,7 @@ const isActionAllowed = ({action, dataId, user}) => {
     return Event.findById(dataId)
       .populate({path: 'invitations', populate: 'member'})
       .then(ev=> {
-        console.log(JSON.stringify(ev))
+        if (moment(ev.start_date).isBefore(moment())) { return false }
         return ev.invitations?.some(i => idEqual(i.member._id, user._id))
       })
   }

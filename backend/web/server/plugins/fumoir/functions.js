@@ -274,6 +274,9 @@ const registerToEvent = ({event, user}) => {
   return Event.findById(event)
     .populate('invitations')
     .then(event => {
+      if (moment(event.start_date).isBefore(moment())) {
+        throw new BadRequestError(`Cet événement est passé`)
+      }
       if (event.invitations.find(m => idEqual(m.member._id, user._id))) {
         throw new BadRequestError(`Vous êtes déjà inscrit à cet événement`)
       }
@@ -297,7 +300,10 @@ const unregisterFromEvent = ({event, user}) => {
     .populate({path: 'invitations', populate: 'member guest'})
     .then(event => {
       if (!event) {
-        throw new NotFoundError(`Evénément ${event} inconnu`)
+        throw new NotFoundError(`Evénement ${event} inconnu`)
+      }
+      if (moment(event.start_date).isBefore(moment())) {
+        throw new BadRequestError(`Cet événement est passé`)
       }
       const invitation=event.invitations.find(m => idEqual(m.member._id, user._id))
       sendEventUnregister2Member({event, member: invitation.member})
