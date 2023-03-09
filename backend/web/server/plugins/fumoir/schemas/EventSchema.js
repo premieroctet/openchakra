@@ -9,6 +9,7 @@ const EventSchema = new Schema(
   {
     title: {
       type: String,
+      required: [true, 'Le titre est obligatoire']
     },
     description: {
       type: String,
@@ -18,14 +19,15 @@ const EventSchema = new Schema(
     },
     price: {
       type: Number,
+      required: [true, 'Le prix est obligatoire']
     },
     start_date: {
       type: Date,
-      required: false,
+      required: [true, 'La date de début est obligatoire']
     },
     end_date: {
       type: Date,
-      required: false,
+      required: [true, 'La date de fin est obligatoire']
     },
     invitations: [{
       type: Schema.Types.ObjectId,
@@ -40,7 +42,7 @@ const EventSchema = new Schema(
     max_guests_per_member: {
       type: Number,
       get: v => 1,
-      required: [true, "Le nombre d'invités maxmimum par membre obligatoire"],
+      required: [true, "Le nombre d'invités maximum par membre obligatoire"],
     },
     max_people: {
       type: Number,
