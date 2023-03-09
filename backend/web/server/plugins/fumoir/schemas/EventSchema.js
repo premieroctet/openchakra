@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const moment = require('moment')
 const {schemaOptions} = require('../../../utils/schemas')
+const { BadRequestError } = require('../../../utils/errors')
 const {PLACES, TO_COME, CURRENT, FINISHED} = require('../consts')
 
 const Schema = mongoose.Schema
@@ -104,6 +105,14 @@ EventSchema.virtual('status').get(function() {
     return CURRENT
   }
   return null
+})
+
+// Forbid modification for past event
+EventSchema.pre(/update/i, async function() {
+  const docToUpdate = await this.model.findOne(this.getQuery());
+  if (moment(docToUpdate?.start_date).isBefore(moment())) {
+    throw new BadRequestError(`Impossible de modifier un événement passé`)
+  }
 })
 
 module.exports = EventSchema
