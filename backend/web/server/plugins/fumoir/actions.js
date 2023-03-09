@@ -71,7 +71,7 @@ addAction('forgotPassword', forgotPasswordAction)
 const isActionAllowed = ({action, dataId, user}) => {
   if (action=='payEvent') {
     return Promise.all([
-      Event.findOne({_id: dataId, 'members.member': user}),
+      Event.findOne({_id: dataId, 'invitations.member': user}),
       Payment.find({event: dataId, event_member: user, status: PAYMENT_SUCCESS}),
     ])
       .then(([ev, payments]) => {
@@ -104,11 +104,11 @@ const isActionAllowed = ({action, dataId, user}) => {
   }
   if (action=='registerToEvent') {
     return Event.findById(dataId)
-      .populate('members')
+      .populate('invitations')
       .then(event=> {
         if(!event) return false
         if (event.people_count>=event.max_people) { return false}
-        const selfMember=event.members.find(m => idEqual(m.member._id, user._id))
+        const selfMember=event.invitations.find(m => idEqual(m.member._id, user._id))
         if (selfMember) { return false}
         return true
       })
@@ -132,8 +132,12 @@ const isActionAllowed = ({action, dataId, user}) => {
   }
 
   if (action=='unregisterFromEvent') {
-    return Event.exists({_id: dataId, 'members.member': user._id})
-      .then(exists=> exists)
+    return Event.findById(dataId)
+      .populate({path: 'invitations', populate: 'member'})
+      .then(ev=> {
+        console.log(JSON.stringify(ev))
+        ev.invitations?.some(i => idEqual(i.member._id, user._id))
+      })
   }
   return Promise.resolve(true)
 }
