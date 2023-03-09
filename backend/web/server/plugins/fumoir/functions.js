@@ -84,7 +84,7 @@ const inviteGuest = ({eventOrBooking, email, phone}, user) => {
       }
       if (modelName=='event') {
         return Event.findById(eventOrBooking)
-          .populate({path: 'invitations', populate: 'member guest'})
+          .populate({path: 'invitations', populate: [{path:'member'}, {path: 'guest'}]})
           .then(ev => {
             return Promise.all([
               Promise.resolve(ev),
@@ -102,9 +102,12 @@ const inviteGuest = ({eventOrBooking, email, phone}, user) => {
             if (ev.people_count+1>ev.max_people) {
               throw new BadRequestError(`Cet événement est complet`)
             }
+            const invitation=ev.invitations.find(m => idEqual(m.member._id, user._id))
+            if (!invitation) {
+              throw new BadRequestError(`Vous n'êtes pas inscrit à cet événement`)
+            }
             return Guest.create({email, phone})
               .then(g => {
-                const invitation=ev.invitations.find(m => idEqual(m.member._id, user._id))
                 invitation.guest=g
                 return invitation.save()
                   .then(()=> {
