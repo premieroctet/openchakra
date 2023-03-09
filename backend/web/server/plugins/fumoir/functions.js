@@ -496,6 +496,7 @@ declareVirtualField({model: 'payment', field: 'net_amount', instance: 'Number', 
 declareEnumField({model: 'payment', field: 'status', enumValues: PAYMENT_STATUS})
 declareEnumField({model: 'payment', field: 'mode', enumValues: CASH_MODE})
 declareVirtualField({model: 'payment', field: 'customer_str', instance: 'String', requires: 'member,guest,booking'})
+declareVirtualField({model: 'payment', field: 'receipt_number', instance: 'String', requires: `${CREATED_AT_ATTRIBUTE},receipt_id`})
 
 
 const PRODUCT_MODELS=['product', 'cigar', 'drink', 'meal', 'accessory']
