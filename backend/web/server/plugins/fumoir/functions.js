@@ -313,7 +313,7 @@ const unregisterFromEvent = ({event, user}) => {
       User.find({role: FUMOIR_ADMIN})
         .then(admins => Promise.allSettled(admins.map(admin => sendEventUnregister2Admin({event, member: user, admin}))))
       event.invitations=event.invitations.filter(m => !idEqual(m.member._id, user._id))
-      return Guest.findByIdAndRemove(invitation.guest._id)
+      return (invitation.guest ? Guest.findByIdAndRemove(invitation.guest._id) : Promise.resolve())
         .then(()=> Invitation.findByIdAndRemove(invitation._id))
         .then(()=>event.save())
     })
