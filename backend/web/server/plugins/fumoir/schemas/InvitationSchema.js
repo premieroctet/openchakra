@@ -21,4 +21,17 @@ const InvitationSchema = new Schema(
   schemaOptions,
 )
 
+// Link to event)
+InvitationSchema.virtual('event', {
+  ref: 'event', // The Model to use
+  localField: '_id', // Find in Model, where localField
+  foreignField: 'invitations', // is equal to foreignField
+  justOne: true,
+})
+
+// Computed field
+InvitationSchema.virtual('paid_str').get(function() {
+  return null
+})
+
 module.exports = InvitationSchema

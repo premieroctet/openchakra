@@ -160,7 +160,7 @@ const payEvent=({context, redirect, color}, user) => {
   return getModel(eventId, 'event')
     .then(model => {
       return Promise.all([
-        Event.findOne({_id: eventId, 'invitations.member': user}),
+        Event.findById(eventId),
         Payment.find({event: eventId, event_member: user, status: PAYMENT_SUCCESS}),
       ])
     })
@@ -543,6 +543,10 @@ declareVirtualField({model: 'orderItem', field: 'total_vat_amount', instance: 'N
 declareVirtualField({model: 'orderItem', field: 'total_price', instance: 'Number', requires: 'price,quantity'})
 declareVirtualField({model: 'subscription', field: 'is_active', instance: 'Boolean', requires: 'start,end'})
 
+declareVirtualField({model: 'invitation', field: 'paid_str', instance: 'String'})
+// TODO :fix declareVirtualField to allow single ref
+declareVirtualField({model: 'invitation', field: 'event', instance: 'String'})
+
 const getEventGuests = (user, params, data) => {
   return Event.findById(data._id)
     .populate({path: 'invitations', populate: 'member guest'})
@@ -599,6 +603,30 @@ const setEventGuestsCount = ({id, attribute, value, user}) => {
 }
 
 declareComputedField('event', 'guests_count', getEventGuestsCount, setEventGuestsCount)
+
+const getInvitationPaidStr = (user, params, data) => {
+  return Invitation.findById(data._id).populate([
+    {path: 'member'},
+    {path: 'guest'},
+    {path: 'event', populate:'payments'}
+  ])
+    .then(invitation => {
+      console.log(`invitation:${invitation}`)
+      const member_id=invitation.member._id
+      const paid=lodash(invitation.event.payments)
+        .filter(p => idEqual(p.event_member._id, member_id))
+        .filter(p => p.status==PAYMENT_SUCCESS)
+        .map(p => p.amount)
+        .sum()
+      const to_pay=(invitation.guest ? 1:0)*invitation.event.price
+      if (to_pay<=paid) {
+        return 'Payé'
+      }
+      return 'Non payé'
+    })
+}
+
+declareComputedField('invitation', 'paid_str', getInvitationPaidStr)
 
 module.exports = {
   inviteGuest,
