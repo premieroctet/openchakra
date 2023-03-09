@@ -239,6 +239,14 @@ const buildPopulates = (fields, model) => {
     )
   }
 
+  // Customizer to merge same keys are arrays
+  const customizer= (a, b) => {
+    if (a?.path && b?.path && a.path!=b.path) {
+      //return {...a, ...b, path:[a.path, b.path]}
+      return [a, b]
+    }
+  }
+
   const populates = lodash(fields)
     // Retain only ObjectId fields
     .filter(att => modelAttributes[att.split('.')[0]].ref == true)
@@ -247,7 +255,7 @@ const buildPopulates = (fields, model) => {
     .mapValues(fields => fields.map(f => buildPopulate(f, model)))
     // Merge populates for each 1st level attribute
     .mapValues(
-      pops => pops.reduce((acc, pop) => lodash.mergeWith(acc, pop)),
+      pops => pops.reduce((acc, pop) => lodash.mergeWith({}, acc, pop, customizer)),
       {},
     )
     .values()
@@ -298,6 +306,8 @@ const buildQuery = (model, id, fields) => {
   fields = [...fields, ...virtuals]
 
   const populates = buildPopulates(fields, model)
+
+  console.log(`Populates is ${JSON.stringify(populates)}, fields are ${fields}`)
 
   const select = lodash(fields)
     .map(att => att.split('.')[0])

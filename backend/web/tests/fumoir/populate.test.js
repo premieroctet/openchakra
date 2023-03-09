@@ -1,6 +1,8 @@
+const Event = require('../../server/models/Event')
 const mongoose = require('mongoose')
 const moment=require('moment')
 const {forceDataModelFumoir}=require('../utils')
+
 forceDataModelFumoir()
 const {MONGOOSE_OPTIONS, buildPopulates} = require('../../server/utils/database')
 require(`../../server/routes/api/studio`)
@@ -31,6 +33,11 @@ describe('Test virtual single ref', () => {
   it('booking paid_str should populate items', async() => {
     const pops=buildPopulates(['paid_str'], 'booking')
     expect(pops).toEqual([{path: 'items'}, {path: 'payments'}])
+  })
+
+  it('event invitations should populate memeber & guest', async() => {
+    const pops=buildPopulates(['invitations.member', 'invitations.guest'], 'event')
+    expect(pops).toEqual([{path: 'invitations', populate: [{path: 'member'}, {path:'guest'}]}])
   })
 
 })
