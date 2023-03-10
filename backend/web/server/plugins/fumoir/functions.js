@@ -345,11 +345,9 @@ setPreCreateData(preCreate)
 
 const postCreate = ({model, params, data}) => {
   if (model=='user') {
-    console.log(`Sending mail to ${params.email} with temp password ${params.nonHashedPassword}`)
     sendWelcomeRegister({member:data, password:params.nonHashedPassword})
   }
   if (model=='booking') {
-    console.log(`Sending mail to ${data.booking_user.email} and admins for booking ${data._id}`)
     sendNewBookingToMember({booking:data})
     User.find({role: FUMOIR_MANAGER})
       .then(managers => Promise.allSettled(managers.map(manager => sendNewBookingToManager({booking:data, manager}))))

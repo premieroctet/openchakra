@@ -305,7 +305,8 @@ router.post('/payment-hook', (req, res) => {
   return res.json()
 })
 
-router.post('/:model', passport.authenticate('cookie', {session: false}), (req, res) => {
+//router.post('/:model', passport.authenticate('cookie', {session: false}), (req, res) => {
+router.post('/:model', (req, res) => {
   const model = req.params.model
   let params=req.body
   const context= req.query.context
