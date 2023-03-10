@@ -2,7 +2,7 @@ import React from 'react'
 import { useDropComponent } from '~hooks/useDropComponent'
 import { useInteractive } from '~hooks/useInteractive'
 import { Box } from '@chakra-ui/react'
-import Lexical from '~dependencies/custom-components/Lexical'
+import Lexical from '~dependencies/custom-components/Lexical/Lexical'
 
 const LexicalPreview: React.FC<IPreviewProps> = ({ component }) => {
 
