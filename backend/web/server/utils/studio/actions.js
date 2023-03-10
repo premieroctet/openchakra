@@ -99,8 +99,10 @@ let ACTIONS = {
         if (exists) {
           return Promise.reject(`Un compte avec le mail ${props.email} existe déjà`)
         }
+        let pass=props.password
         if (!props.password) {
           props.password=generatePassword()
+          pass=props.password
         }
         return User.create({...props, password: bcrypt.hashSync(pass, 10)})
       })

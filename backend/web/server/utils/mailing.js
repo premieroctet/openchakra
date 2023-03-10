@@ -8,42 +8,46 @@ const lodash=require('lodash')
 const {fillSms} = require('../../utils/sms')
 const {SIB} = require('./sendInBlue')
 
-const SMS_CONTENTS = {
+let SMS_CONTENTS = {}
+
+const setSmsContents = data => {
+  SMS_CONTENTS = data
 }
 
 const sendNotification = ({notification, destinee, ccs, params, attachment}) => {
 
   let enable_mails = isProduction() || isValidation()
   let enable_sms = isProduction() || isValidation()
-  const prefix=(!enable_sms && !enable_mails) ? '***** DISABLED':''
-  console.log(`${prefix}:send notification #${notification} to ${destinee.email} with params ${JSON.stringify(params)}`)
+
+  const prefix=(!enable_sms && !enable_mails) ? '***** DISABLED:':''
+  console.log(`${prefix}send notification #${notification} to ${destinee.email} with params ${JSON.stringify(params)}`)
 
   if (!enable_sms && !enable_mails) {
-    return true
+    return Promise.resolve(true)
   }
 
   let resultMail = true, resultSms = true
 
-  resultMail = SIB.sendMail({index:notification, email:destinee.email, ccs, data:params, attachment})
+  if (enable_mails) {
+    resultMail = SIB.sendMail({index:notification, email:destinee.email, ccs, data:params, attachment})
+  }
 
   // Send SMS
   if (enable_sms && destinee.phone && SMS_CONTENTS[notification.toString()]) {
-    console.log('Sending SMS')
     const smsContents = fillSms(SMS_CONTENTS[notification.toString()], params)
-    console.log(`SMS contents is ${ smsContents}`)
     if (!smsContents) {
       console.error(`Error creating SMS ${notification} to ${destinee.phone} with params ${JSON.stringify(params)}`)
       result = false
     }
     else {
-      console.log('Calling SIB.sendSms')
       resultSms = SIB.sendSms(destinee.phone, smsContents)
     }
   }
-  return resultMail
+  return Promise.resolve(resultMail)
 }
 
 
 module.exports = {
-  sendNotification
+  sendNotification,
+  setSmsContents
 }

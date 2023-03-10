@@ -109,7 +109,7 @@ EventSchema.virtual('status').get(function() {
 
 // Forbid modification for past event
 EventSchema.pre(/update/i, async function() {
-  const docToUpdate = await this.model.findOne(this.getQuery());
+  const docToUpdate = await this.model.findOne(this.getQuery())
   if (moment(docToUpdate?.start_date).isBefore(moment())) {
     throw new BadRequestError(`Impossible de modifier un événement passé`)
   }

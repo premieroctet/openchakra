@@ -1,5 +1,5 @@
+const { sendNotification, setSmsContents } = require('../../utils/mailing')
 const {datetime_str} = require('../../../utils/dateutils')
-const {sendNotification} = require('../../utils/mailing')
 
 const SIB_IDS={
   NEW_BOOKING_2_MEMBER: 1,
@@ -17,13 +17,23 @@ const SIB_IDS={
   EVENT_UNREGISTER_2_ADMIN: 14,
 }
 
+const SMS_CONTENTS={
+  [SIB_IDS.NEW_BOOKING_2_MEMBER]: 'Bonjour, votre réservation au Fumoir George a été prise en compte',
+  [SIB_IDS.NEW_EVENT_AVAILABLE]: 'Bonjour, un nouvel évènement est disponible sur votre application Fumoir George',
+  [SIB_IDS.EVENT_REGISTER_2_MEMBER]: `Bonjour, votre participation à l'évènement du {{params.event_date}} a été prise en compte`,
+  [SIB_IDS.FORGOT_PASSWORD]: 'Bonjour, votre mot de passe provisoire pour vous connecter au Fumoir George est le suivant : {{params.password}}',
+  [SIB_IDS.WELCOME_REGISTER]: `Bonjour, vous êtes invité à rejoindre l'application le Fumoir George. Vos identifiants sont les suivants : login : {{params.login}}  mot de passe : {{params.password}}`
+}
+
+setSmsContents(SMS_CONTENTS)
+
 // #1
 const sendNewBookingToMember = ({booking}) => {
   return sendNotification({
     notification: SIB_IDS.NEW_BOOKING_2_MEMBER,
     destinee: booking.booking_user,
     params: {
-      member_firstname: booking.booking_user.firstname,
+      firstname: booking.booking_user.firstname,
       booking_date: datetime_str(booking.start_date),
       duration: booking.duration,
       booking_number: booking.booking_number,
@@ -52,9 +62,11 @@ const sendNewEvent = ({event, member}) => {
     notification: SIB_IDS.NEW_EVENT_AVAILABLE,
     destinee: member,
     params: {
-      event_tile: event.title,
+      event_title: event.title,
       event_date: datetime_str(event.start_date),
-      member_firstname: member.firstname,
+      event_price: event.price,
+      event_guests: event.max_guests_per_member,
+      firstname: member.firstname,
     },
   })
 }
@@ -65,7 +77,7 @@ const sendWelcomeRegister = ({member, password}) => {
     notification: SIB_IDS.WELCOME_REGISTER,
     destinee: member,
     params: {
-      member_firstname: member.firstname,
+      firstname: member.firstname,
       login: member.email,
       password: password,
     },
@@ -78,7 +90,7 @@ const sendNewMessage = ({member, partner}) => {
     notification: SIB_IDS.NEW_MESSAGE,
     destinee: member,
     params: {
-      member_firstname: member.firstname,
+      firstname: member.firstname,
       partner_firstname: partner.firstname,
     },
   })
@@ -91,7 +103,8 @@ const sendEventRegister2Member = ({event, member}) => {
     notification: SIB_IDS.EVENT_REGISTER_2_MEMBER,
     destinee: member,
     params: {
-      member_firstname: member.firstname,
+      firstname: member.firstname,
+      event_title: event.title,
       event_date: datetime_str(event.start_date),
       duration: event.duration,
     },
@@ -104,6 +117,7 @@ const sendEventRegister2Guest = ({event, member, guest}) => {
     notification: SIB_IDS.EVENT_REGISTER_2_GUEST,
     destinee: guest,
     params: {
+      event_title: event.title,
       member_fullname: member.full_name,
       event_date: datetime_str(event.start_date),
     },
@@ -143,6 +157,7 @@ const sendForgotPassword = ({user, password}) => {
     notification: SIB_IDS.FORGOT_PASSWORD,
     destinee: user,
     params: {
+      login: user.email,
       firstname: user.firstname,
       password: password,
     },
@@ -155,7 +170,7 @@ const sendEventUnregister2Member = ({event, member}) => {
     notification: SIB_IDS.EVENT_UNREGISTER_2_MEMBER,
     destinee: member,
     params: {
-      member_firstname: member.firstname,
+      firstname: member.firstname,
       event_date: datetime_str(event.start_date),
       duration: event.duration,
     },
