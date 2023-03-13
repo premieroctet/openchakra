@@ -99,14 +99,23 @@ let ACTIONS = {
         if (exists) {
           return Promise.reject(`Un compte avec le mail ${props.email} existe déjà`)
         }
-        let pass=props.password
-        if (!props.password) {
-          props.password=generatePassword()
-          pass=props.password
+
+        let promise
+        if (props.password) {
+          promise=validatePassword({...props})
         }
-        return User.create({...props, password: bcrypt.hashSync(pass, 10)})
-      })
-  },
+        else {
+          props.password=generatePassword()
+          promise=Promise.resolve()
+        }
+
+        return promise
+          .then(()=> {
+            return User.create({...props, password: bcrypt.hashSync(props.password, 10)})
+          })
+    })
+  }
+
 }
 
 let ALLOW_ACTION= () => Promise.resolve(true)

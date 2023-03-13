@@ -1,8 +1,17 @@
 const mongooseLeanVirtuals=require('mongoose-lean-virtuals')
 const mongoose = require('mongoose')
-const {getDataModel}=require('../../config/config')
+const {getDataModel} = require('../../config/config')
 
-const UserSchema=require(`../plugins/${getDataModel()}/schemas/UserSchema`)
-UserSchema.plugin(mongooseLeanVirtuals)
+let LoggedUserSchema=null
 
-module.exports = mongoose.model('loggedUser', UserSchema)
+try {
+  LoggedUserSchema=require(`../plugins/${getDataModel()}/schemas/UserSchema`)
+}
+catch(err) {
+  if (err.code !== 'MODULE_NOT_FOUND') {
+    throw err
+  }
+}
+
+LoggedUserSchema?.plugin(mongooseLeanVirtuals)
+module.exports = LoggedUserSchema ? mongoose.model('loggedUser', LoggedUserSchema) : null

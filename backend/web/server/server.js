@@ -46,6 +46,12 @@ require('./models/Payment')
 require('./models/Accessory')
 require('./models/AccessoryCategory')
 require('./models/Review')
+require('./models/Offer')
+require('./models/Objective')
+require('./models/Specificity')
+require('./models/Contents')
+require('./models/Key')
+require('./models/Group')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 
@@ -181,10 +187,8 @@ checkConfig()
       console.log(`Checking correct hostname`)
       axios
         .get(new URL('/testping', getHostUrl()).toString())
-        .then(res => {
-          const result = res.data
-          const expected = RANDOM_ID
-          if (result != expected) {
+        .then(({data}) => {
+          if (data != RANDOM_ID) {
             throw new Error(`Host ${getHostUrl()} is wrong`)
           }
         })

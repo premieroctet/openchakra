@@ -33,14 +33,34 @@ const {
   getProductionPort,
   getProductionRoot,
 } = require('../../../config/config')
-require(`../../plugins/${getDataModel()}/functions`)
-require(`../../plugins/${getDataModel()}/actions`)
+try {
+  require(`../../plugins/${getDataModel()}/functions`)
+}
+catch(err) {
+  if (err.code !== 'MODULE_NOT_FOUND') {throw err}
+  console.warn(`No functions module for ${getDataModel()}`)
+}
+
+try {
+  require(`../../plugins/${getDataModel()}/actions`)
+}
+catch(err) {
+  if (err.code !== 'MODULE_NOT_FOUND') { throw err }
+  console.warn(`No actions module for ${getDataModel()}`)
+}
+
 const User = require('../../models/User')
 
-const {
-  ROLES,
-  RES_TO_COME,
-} = require(`../../plugins/${getDataModel()}/consts`)
+let ROLES={}
+try{
+  ROLES=require(`../../plugins/${getDataModel()}/consts`).ROLES
+  RES_TO_COME=require(`../../plugins/${getDataModel()}/consts`).RES_TO_COME
+}
+catch(err) {
+  if (err.code !== 'MODULE_NOT_FOUND') {throw err}
+  console.warn(`No consts module for ${getDataModel()}`)
+}
+
 const {sendCookie} = require('../../config/passport')
 const {
   HTTP_CODES,
