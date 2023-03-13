@@ -24,7 +24,7 @@ const UserSchema = new Schema({
   pseudo: {
     type: String,
     set: v => v?.trim(),
-    required: [true, 'Le pesudo est obligatoire'],
+    required: [true, 'Le pseudo est obligatoire'],
   },
   company: {
     type: Schema.Types.ObjectId,
@@ -39,12 +39,24 @@ const UserSchema = new Schema({
   role: {
     type: String,
     enum: Object.keys(ROLES),
-    required: [true, 'Le rôle est obligatoire'],
+    default: ROLES.ROLE_CUSTOMER,
+    required: false,
+    //required: [true, 'Le rôle est obligatoire'],
   },
   home_status: {
     type: String,
     enum: Object.keys(HOME_STATUS),
     required: false,
+  },
+  cguAccepted: {
+    type: Boolean,
+    validate: [value => !!value, 'Vous devez accepter les CGU'],
+    required: [true, 'Vous devez accepter les CGU'],
+  },
+  dataTreatmentAccepted: {
+    type: Boolean,
+    validate: [value => !!value, 'Vous devez accepter le traitement des données'],
+    required: [true, 'Vous devez accepter le traitement des données'],
   },
 }, schemaOptions)
 
