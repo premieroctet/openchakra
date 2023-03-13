@@ -1,6 +1,6 @@
+const { HOME_STATUS, ROLES } = require('../consts')
 const mongoose = require('mongoose')
 const bcrypt=require('bcryptjs')
-const { HOME_STATUS } = require('../consts')
 const {schemaOptions} = require('../../../utils/schemas')
 
 const Schema = mongoose.Schema
@@ -36,10 +36,15 @@ const UserSchema = new Schema({
     required: [true, 'Le mot de passe est obligatoire'],
     default: 'invalid',
   },
+  role: {
+    type: String,
+    enum: Object.keys(ROLES),
+    required: [true, 'Le rôle est obligatoire'],
+  },
   home_status: {
     type: String,
     enum: Object.keys(HOME_STATUS),
-    required: [true, 'Le status est obligatoire'],
+    required: false,
   },
 }, schemaOptions)
 
