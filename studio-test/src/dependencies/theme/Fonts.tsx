@@ -77,6 +77,29 @@ const Fonts = () => (
         font-weight: normal;
         font-style: normal;
       }
+
+      /* Fontes all-inclusive */
+      @font-face {
+        font-family: 'Playfair Display';
+        src: local('Playfair Display'), 
+            url('fonts/PlayfairDisplay-regular.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: 'Playfair Display';
+        src: local('Playfair Display'), 
+            url('fonts/PlayfairDisplay-regular.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: 'Playfair Display';
+        src: local('Playfair Display'), 
+            url('fonts/PlayfairDisplay-regular.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+      }
       `}
   />
 )
