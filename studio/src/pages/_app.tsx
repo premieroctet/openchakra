@@ -11,6 +11,8 @@ import AppErrorBoundary from '~components/errorBoundaries/AppErrorBoundary'
 import { AppProps } from 'next/app'
 import Fonts from '~dependencies/theme/Fonts'
 
+import '../../public/styles.css'
+
 const Main = ({ Component, pageProps }: AppProps) => (
   <BugsnagErrorBoundary>
     <ChakraProvider resetCSS theme={theme}>

@@ -52,6 +52,7 @@ type ComponentType =
   | 'InputRightAddon'
   | 'InputLeftElement'
   | 'InputRightElement'
+  | 'Lexical'
   | 'Link'
   | 'List'
   | 'ListItem'
