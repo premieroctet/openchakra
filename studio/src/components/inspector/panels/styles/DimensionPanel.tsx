@@ -28,6 +28,13 @@ const DimensionPanel = () => {
     'overflow',
   ])
 
+  const LABELS={
+    minWidth: 'minW',
+    maxWidth: 'maxW',
+    minHeight: 'minH',
+    maxHeight: 'maxH',
+  }
+
   return (
     <>
       {settledBreakpoints.map((breakpoint: string, i: number) => (
@@ -38,7 +45,7 @@ const DimensionPanel = () => {
               <FormControl
                 key={`diminp-${i}`}
                 htmlFor={`${breakpoint}-${dimInp}`}
-                label={dimInp}
+                label={LABELS[dimInp]||dimInp}
               >
                 <Input
                   id={`${breakpoint}-${dimInp}`}
