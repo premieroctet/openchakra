@@ -285,13 +285,6 @@ const buildBlock = ({
           const propsValueAsObject =
             typeof propsValue === 'object' && val !== null // TODO revise this temporary fix = propsValue !== 'null' // bgGradient buggy when deleted
 
-          const isCustomPropsAsAString = /\{\{([^}]+)\}\}/.test(propsValue)
-
-          let customPropsAsAString
-          if (isCustomPropsAsAString) {
-            customPropsAsAString = val;
-          }
-
           if (propName === 'actionProps' || propName === 'nextActionProps') {
             const valuesCopy = {
               ...propsValue,
@@ -359,10 +352,7 @@ const buildBlock = ({
               .join(', ')
 
             propsContent += `${propName}={{${gatheredProperties}}} `
-          } else if (customPropsAsAString) {
-            propsContent += `${propName}=${customPropsAsAString} `
-          }
-          else if (
+          } else if (
             propName.toLowerCase().includes('icon') &&
             childComponent.type !== 'Icon'
           ) {
