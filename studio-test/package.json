@@ -41,7 +41,7 @@
   "proxy": "https://localhost",
   "scripts": {
     "dev": "HTTPS=true next dev",
-    "start": "HTTPS=true react-scripts start",
+    "start": "HTTPS=true react-scripts --max_old_space_size=2048 start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

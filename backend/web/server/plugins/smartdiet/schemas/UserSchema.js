@@ -1,6 +1,6 @@
+const { HOME_STATUS, ROLES } = require('../consts')
 const mongoose = require('mongoose')
 const bcrypt=require('bcryptjs')
-const { HOME_STATUS } = require('../consts')
 const {schemaOptions} = require('../../../utils/schemas')
 
 const Schema = mongoose.Schema
@@ -24,7 +24,7 @@ const UserSchema = new Schema({
   pseudo: {
     type: String,
     set: v => v?.trim(),
-    required: [true, 'Le pesudo est obligatoire'],
+    required: [true, 'Le pseudo est obligatoire'],
   },
   company: {
     type: Schema.Types.ObjectId,
@@ -36,10 +36,27 @@ const UserSchema = new Schema({
     required: [true, 'Le mot de passe est obligatoire'],
     default: 'invalid',
   },
+  role: {
+    type: String,
+    enum: Object.keys(ROLES),
+    default: ROLES.ROLE_CUSTOMER,
+    required: false,
+    //required: [true, 'Le rôle est obligatoire'],
+  },
   home_status: {
     type: String,
     enum: Object.keys(HOME_STATUS),
-    required: [true, 'Le status est obligatoire'],
+    required: false,
+  },
+  cguAccepted: {
+    type: Boolean,
+    validate: [value => !!value, 'Vous devez accepter les CGU'],
+    required: [true, 'Vous devez accepter les CGU'],
+  },
+  dataTreatmentAccepted: {
+    type: Boolean,
+    validate: [value => !!value, 'Vous devez accepter le traitement des données'],
+    required: [true, 'Vous devez accepter le traitement des données'],
   },
 }, schemaOptions)
 

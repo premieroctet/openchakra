@@ -20,8 +20,13 @@ const CodePanel = () => {
 
   useEffect(() => {
     const getCode = async () => {
-      const code = await generateCode(pageId, pages, models)
-      setCode(code)
+      try {
+        const code = await generateCode(pageId, pages, models)
+        setCode(code)
+      }
+      catch(err:any) {
+        setCode(`// 🚨 Your props contains invalid code\n${err.message}`)
+      }
     }
 
     getCode()

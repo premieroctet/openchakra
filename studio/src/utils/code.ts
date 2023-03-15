@@ -2,6 +2,7 @@ import camelCase from 'lodash/camelCase'
 import filter from 'lodash/filter'
 import isBoolean from 'lodash/isBoolean'
 import lodash from 'lodash'
+import {encode} from 'html-entities'
 
 import icons from '~iconsList'
 
@@ -122,16 +123,12 @@ export const formatCode = async (code: string) => {
   const prettier = await import('prettier/standalone')
   const babylonParser = await import('prettier/parser-babylon')
 
-  try {
-    formattedCode = prettier.format(code, {
-      parser: 'babel',
-      plugins: [babylonParser],
-      semi: false,
-      singleQuote: true,
-    })
-  } catch (e) {
-    console.error(e)
-  }
+  formattedCode = prettier.format(code, {
+    parser: 'babel',
+    plugins: [babylonParser],
+    semi: false,
+    singleQuote: true,
+  })
 
   return formattedCode
 }
@@ -371,7 +368,7 @@ const buildBlock = ({
                 :
                 propName === 'subDataSource' && paramSubProvider
                   ? `={${paramSubProvider}}`
-                : `='${propsValue}'`
+                : `='${encode(propsValue)}'`
 
             if (propsValue === true || propsValue === 'true') {
               operand = ` `
@@ -780,7 +777,7 @@ const ${componentName} = () => {
 
 export default ${componentName};`
 
-  return await formatCode(code)
+    return await formatCode(code)
 }
 
 export const generateApp = async (state: ProjectState) => {
