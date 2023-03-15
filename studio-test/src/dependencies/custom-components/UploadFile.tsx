@@ -97,12 +97,17 @@ const UploadFile = ({
         value: '',
       }
 
-      let paramsScormVersion = {
+      type scormVersion = {
+        attribute: string,
+        value: string | null,
+      }
+
+      let paramsScormVersion: scormVersion = {
         ...paramsBack,
         attribute: 'version',
         value: null,
       }
-
+      
       setUploadInfo('')
 
       const switchUploadType = async () => {
