@@ -1,3 +1,4 @@
+const { CREATED_AT_ATTRIBUTE } = require('../../utils/consts')
 const moment = require('moment')
 const mongoose = require('mongoose')
 const {MONGOOSE_OPTIONS} = require('../../server/utils/database')
@@ -57,7 +58,7 @@ describe('Test withings calls on test DB', () => {
 
   it('must return the measures)', async() => {
     const user=await User.findOne()
-    console.log(user.creation_date)
+    console.log(user[CREATED_AT_ATTRIBUTE])
     const since=moment().add(-4, 'days')
     const measures=await getMeasures(user.access_token, since)
     const fmtMeasures={

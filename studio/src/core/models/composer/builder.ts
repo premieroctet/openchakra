@@ -89,6 +89,44 @@ export const buildAccordion = (parent: string): ComposedComponent => {
   }
 }
 
+export const buildTabs = (parent: string): ComposedComponent => {
+  const composer = new Composer('Tabs')
+
+  const nodeId = composer.addNode({ type: 'Tabs', parent })
+  const tabListId = composer.addNode({ type: 'TabList', parent: nodeId })
+  const tabPanelsId = composer.addNode({ type: 'TabPanels', parent: nodeId })
+
+  composer.addNode({
+    type: 'Tab',
+    parent: tabListId,
+    props: { children: 'One' },
+  })
+  composer.addNode({
+    type: 'Tab',
+    parent: tabListId,
+    props: { children: 'Two' },
+  })
+
+  composer.addNode({
+    type: 'TabPanel',
+    parent: tabPanelsId,
+    props: { children: 'One !' },
+  })
+  composer.addNode({
+    type: 'TabPanel',
+    parent: tabPanelsId,
+    props: { children: 'Two !' },
+  })
+
+  const components = composer.getComponents()
+
+  return {
+    components,
+    root: nodeId,
+    parent,
+  }
+}
+
 export const buildList = (parent: string): ComposedComponent => {
   const composer = new Composer('List')
 
@@ -179,6 +217,7 @@ let builders: ComposerBuilders = {
   InputGroupMeta: buildInputGroup,
   NumberInputMeta: buildNumberInput,
   BreadcrumbMeta: buildBreadcrumb,
+  TabsMeta: buildTabs,
 }
 
 type registerParams = {

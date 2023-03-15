@@ -122,16 +122,12 @@ export const formatCode = async (code: string) => {
   const prettier = await import('prettier/standalone')
   const babylonParser = await import('prettier/parser-babylon')
 
-  try {
-    formattedCode = prettier.format(code, {
-      parser: 'babel',
-      plugins: [babylonParser],
-      semi: false,
-      singleQuote: true,
-    })
-  } catch (e) {
-    console.error(e)
-  }
+  formattedCode = prettier.format(code, {
+    parser: 'babel',
+    plugins: [babylonParser],
+    semi: false,
+    singleQuote: true,
+  })
 
   return formattedCode
 }
@@ -780,7 +776,7 @@ const ${componentName} = () => {
 
 export default ${componentName};`
 
-  return await formatCode(code)
+    return await formatCode(code)
 }
 
 export const generateApp = async (state: ProjectState) => {

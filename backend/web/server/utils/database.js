@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const lodash = require('lodash')
 const formatDuration = require('format-duration')
+const { UPDATED_AT_ATTRIBUTE, CREATED_AT_ATTRIBUTE } = require('../../utils/consts')
 const UserSessionData = require('../models/UserSessionData')
 const Booking = require('../models/Booking')
 const {CURRENT, FINISHED} = require('../plugins/fumoir/consts')
@@ -144,6 +145,28 @@ const getModels = () => {
     result[name]={name, attributes: Object.fromEntries(attrs)}
   })
   return result
+}
+
+/**
+Returns only models & attributes visible for studio users
+*/
+const getExposedModels = () => {
+  const isHidddenAttributeName = attName => {
+    const res=
+    [CREATED_AT_ATTRIBUTE, UPDATED_AT_ATTRIBUTE].some(att=> {
+      return attName==att || attName.endsWith(`.${att}`)
+    })
+    return res
+  }
+
+  const models=lodash(getModels())
+    .omitBy((v, k)=> k=='IdentityCounter')
+    .mapValues(v => ({
+      ...v,
+      attributes: lodash(v.attributes).omitBy((v, k) => isHidddenAttributeName(k))
+    }))
+
+  return models
 }
 
 const buildPopulate = (field, model) => {
@@ -604,4 +627,5 @@ module.exports = {
   removeData,
   putAttribute,
   idEqual,
+  getExposedModels,
 }

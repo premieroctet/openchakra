@@ -1,3 +1,4 @@
+const { CREATED_AT_ATTRIBUTE, generate_id } = require('../../../utils/consts')
 const {
   sendBookingRegister2Guest,
   sendEventRegister2Admin,
@@ -48,7 +49,6 @@ const {addAction} = require('../../utils/studio/actions.js')
 const UserSessionData = require('../../models/UserSessionData')
 const User = require('../../models/User')
 const Booking = require('../../models/Booking')
-const {generate_id} = require('../../../utils/consts')
 const Message = require('../../models/Message')
 const Guest = require('../../models/Guest')
 const {BadRequestError, NotFoundError} = require('../../utils/errors')
@@ -361,7 +361,7 @@ const filterDataUser = ({model, data, id, user}) => {
     if (model=='message') {
       if ([FUMOIR_MEMBER].includes(user.role)) {
         data=data.filter(d => [d.sender._id, d.receiver._id].some(id => idEqual(user._id)))
-        return lodash.orderBy(data, ['creation_date'], ['asc'])
+        return lodash.orderBy(data, [CREATED_AT_ATTRIBUTE], ['asc'])
       }
     }
     if (model=='booking') {
@@ -401,7 +401,7 @@ const preprocessGet = ({model, fields, id, user}) => {
     return Message.find({$or: [{sender: user._id}, {receiver: user._id}]})
       .populate({path: 'sender', populate: {path: 'company'}})
       .populate({path: 'receiver', populate: {path: 'company'}})
-      .sort({'creation_date': 1})
+      .sort({CREATED_AT_ATTRIBUTE: 1})
       .then(messages => {
         if (id) {
           messages=messages.filter(m => idEqual(getPartner(m, user)._id, id))
@@ -418,7 +418,7 @@ const preprocessGet = ({model, fields, id, user}) => {
         const convs=lodash(partnerMessages)
           .values()
           .map(msgs => { const partner=getPartner(msgs[0], user); return ({_id: partner._id, partner, messages: msgs}) })
-          .sortBy('creation_date', 'asc')
+          .sortBy(CREATED_AT_ATTRIBUTE, 'asc')
         return {model, fields, id, data: convs}
       })
   }
