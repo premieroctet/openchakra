@@ -2,6 +2,7 @@ import camelCase from 'lodash/camelCase'
 import filter from 'lodash/filter'
 import isBoolean from 'lodash/isBoolean'
 import lodash from 'lodash'
+import {encode} from 'html-entities'
 
 import icons from '~iconsList'
 
@@ -377,7 +378,7 @@ const buildBlock = ({
                 :
                 propName === 'subDataSource' && paramSubProvider
                   ? `={${paramSubProvider}}`
-                : `='${propsValue}'`
+                : `='${encode(propsValue)}'`
 
             if (propsValue === true || propsValue === 'true') {
               operand = ` `
