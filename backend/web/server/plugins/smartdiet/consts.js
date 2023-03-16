@@ -1,0 +1,60 @@
+const STATUS_SOLO='SOLO'
+const STATUS_COUPLE='COUPLE'
+const STATUS_FAMILY='FAMILY'
+const STATUS_FLATSHARING='FLATSHARING'
+
+const HOME_STATUS = {
+  [STATUS_SOLO]: 'Solo',
+  [STATUS_COUPLE]: 'Couple',
+  [STATUS_FAMILY]: 'Famille',
+  [STATUS_FLATSHARING]: 'Colocation',
+}
+
+const CONTENTS_ARTICLE= 'ARTICLE'
+const CONTENTS_INFOGRAPHY='INFOGRAPHY'
+const CONTENTS_VIDEO='VIDEO'
+const CONTENTS_PODCAST='PODCAST'
+
+const CONTENTS_TYPE = {
+  [CONTENTS_ARTICLE]: 'Article',
+  [CONTENTS_VIDEO]: 'Vidéo',
+  [CONTENTS_INFOGRAPHY]: 'Infography',
+  [CONTENTS_PODCAST]: 'Podcast',
+}
+
+const EVENT_MENU= 'MENU'
+const EVENT_IND_CHALLENGE='IND_CHALLENGE'
+const EVENT_COLL_CHALLENGE='COLL_CHALLENGE'
+const EVENT_WEBINAR='WEBINAR'
+const EVENT_QUIZZ='QUIZZ'
+
+const EVENT_TYPE = {
+  [EVENT_MENU]: 'Menu',
+  [EVENT_IND_CHALLENGE]: 'Challenge individuel',
+  [EVENT_COLL_CHALLENGE]: 'Challenge collectif',
+  [EVENT_WEBINAR]: 'Webinaire',
+  [EVENT_QUIZZ]: 'Quizz',
+}
+
+const ROLE_CUSTOMER='CUSTOMER'
+const ROLE_RH='RH'
+const ROLE_DIET='DIET'
+const ROLE_SUPER_ADMIN='SUPER_ADMIN'
+const ROLE_ADMIN='ADMIN'
+const ROLE_SUPPORT='SUPPORT'
+
+const ROLES={
+  [ROLE_CUSTOMER]: 'Abonné',
+  [ROLE_RH]: 'RH',
+  [ROLE_DIET]: 'Diététicien(ne)',
+  [ROLE_SUPER_ADMIN]: 'Superadministrateur',
+  [ROLE_ADMIN]: 'Administrateur',
+  [ROLE_SUPPORT]: 'Support',
+}
+
+module.exports={
+  HOME_STATUS,
+  CONTENTS_TYPE,
+  EVENT_TYPE,
+  ROLES,
+}

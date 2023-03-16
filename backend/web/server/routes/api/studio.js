@@ -33,14 +33,34 @@ const {
   getProductionPort,
   getProductionRoot,
 } = require('../../../config/config')
-require(`../../plugins/${getDataModel()}/functions`)
-require(`../../plugins/${getDataModel()}/actions`)
+try {
+  require(`../../plugins/${getDataModel()}/functions`)
+}
+catch(err) {
+  if (err.code !== 'MODULE_NOT_FOUND') {throw err}
+  console.warn(`No functions module for ${getDataModel()}`)
+}
+
+try {
+  require(`../../plugins/${getDataModel()}/actions`)
+}
+catch(err) {
+  if (err.code !== 'MODULE_NOT_FOUND') { throw err }
+  console.warn(`No actions module for ${getDataModel()}`)
+}
+
 const User = require('../../models/User')
 
-const {
-  ROLES,
-  RES_TO_COME,
-} = require(`../../plugins/${getDataModel()}/consts`)
+let ROLES={}
+try{
+  ROLES=require(`../../plugins/${getDataModel()}/consts`).ROLES
+  RES_TO_COME=require(`../../plugins/${getDataModel()}/consts`).RES_TO_COME
+}
+catch(err) {
+  if (err.code !== 'MODULE_NOT_FOUND') {throw err}
+  console.warn(`No consts module for ${getDataModel()}`)
+}
+
 const {sendCookie} = require('../../config/passport')
 const {
   HTTP_CODES,
@@ -122,6 +142,25 @@ router.post('/file', (req, res) => {
     .then(() => {
       return res.json()
     })
+})
+
+router.post('/clean', (req, res) => {
+  const {projectName, fileNames} = req.body
+  if (!projectName) {
+    return res.status(HTTP_CODES.BAD_REQUEST).json()
+  }
+  const keepFileNames=[...fileNames, 'App.js']
+  const destpath = path.join(PRODUCTION_ROOT, projectName, 'src')
+  return fs.readdir(destpath)
+    .then(files => {
+      const diskFiles=files.filter(f => /[A-Z].*\.js$/.test(f))
+      const extraFiles=lodash(diskFiles)
+        .difference(keepFileNames)
+        .map(f => path.join(destpath, f))
+        .map(f => fs.unlink(f))
+      return Promise.allSettled(extraFiles)
+    })
+    .then(() => res.json())
 })
 
 router.post('/install', (req, res) => {

@@ -46,6 +46,7 @@ import SimpleGridPanel from '~components/inspector/panels/components/SimpleGridP
 import SpinnerPanel from '~components/inspector/panels/components/SpinnerPanel'
 import StackPanel from '~components/inspector/panels/components/StackPanel'
 import SwitchPanel from '~components/inspector/panels/components/SwitchPanel'
+import TabPanel from '~components/inspector/panels/components/TabPanel'
 import TabsPanel from '~components/inspector/panels/components/TabsPanel'
 import TagPanel from '~components/inspector/panels/components/TagPanel'
 import TextareaPanel from '~components/inspector/panels/components/TextareaPanel'
@@ -118,6 +119,7 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
       {type === 'Flex' && <FlexPanel />}
       {type === 'Stack' && <StackPanel />}
       {type === 'FormControl' && <FormControlPanel />}
+      {type === 'Tab' && <TabPanel />}
       {type === 'Tabs' && <TabsPanel />}
       {type === 'Input' && <InputPanel />}
       {type === 'Radio' && <RadioPanel />}

@@ -144,7 +144,6 @@ const DataSourcePanel: React.FC = () => {
     removeValue('subAttributeDisplay')
   }
 
-  console.log(`Model is ${JSON.stringify(model)}`)
   return (
     <Accordion allowToggle={true}>
       <AccordionContainer title="Data source">
