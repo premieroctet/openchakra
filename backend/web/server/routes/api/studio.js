@@ -161,6 +161,7 @@ router.post('/clean', (req, res) => {
         .map(f => fs.unlink(f))
       return Promise.allSettled(extraFiles)
     })
+    .then(() => res.json())
 })
 
 router.post('/install', (req, res) => {
