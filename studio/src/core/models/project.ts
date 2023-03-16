@@ -101,7 +101,7 @@ const project = createModel({
         pageId: DEFAULT_PAGE,
         components: INITIAL_COMPONENTS,
         selectedId: DEFAULT_ID,
-        pageName: 'index',
+        pageName: 'home',
         metaTitle: '',
         metaDescription: '',
         metaImageUrl: '',
@@ -117,7 +117,7 @@ const project = createModel({
       const pages = newState?.pages || {
         [resetPageId]: {
           pageId: resetPageId,
-          pageName: 'index',
+          pageName: 'home',
           metaTitle: '',
           metaDescription: '',
           metaImageUrl: '',
