@@ -150,13 +150,13 @@ router.post('/clean', (req, res) => {
   if (!projectName) {
     return res.status(HTTP_CODES.BAD_REQUEST).json()
   }
-  fileNames=[...fileNames, 'App.js']
+  const keepFileNames=[...fileNames, 'App.js']
   const destpath = path.join(PRODUCTION_ROOT, projectName, 'src')
   return fs.readdir(destpath)
     .then(files => {
       const diskFiles=files.filter(f => /[A-Z].*\.js$/.test(f))
       const extraFiles=lodash(diskFiles)
-        .difference(fileNames)
+        .difference(keepFileNames)
         .map(f => path.join(destpath, f))
         .map(f => fs.unlink(f))
       return Promise.allSettled(extraFiles)
