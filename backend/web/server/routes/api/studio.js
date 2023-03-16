@@ -150,6 +150,7 @@ router.post('/clean', (req, res) => {
   if (!projectName) {
     return res.status(HTTP_CODES.BAD_REQUEST).json()
   }
+  fileNames=[...fileNames, 'App.js']
   const destpath = path.join(PRODUCTION_ROOT, projectName, 'src')
   return fs.readdir(destpath)
     .then(files => {
