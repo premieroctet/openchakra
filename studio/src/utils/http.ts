@@ -22,3 +22,8 @@ export const start = () => {
   const body = { projectName: config.projectName }
   return axios.post(`${config.targetDomain}/myAlfred/api/studio/start`, body)
 }
+
+export const clean = (fileNames:string[]) => {
+  const body = { projectName: config.projectName , fileNames}
+  return axios.post(`${config.targetDomain}/myAlfred/api/studio/clean`, body)
+}
