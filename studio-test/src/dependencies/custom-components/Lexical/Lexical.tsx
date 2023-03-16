@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import WappizyTheme from "./lexicalTheme";
 // import { $getSelection } from "lexical"
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
@@ -33,13 +33,17 @@ function Placeholder() {
 const Lexical = (
   {
     "data-editable": dataEditable = true, // read-only or writable
+    "data-value": dataValue,
+    id,
     ...props
   }
   :{
     'data-editable': boolean
+    'data-value': string
+    'id': string
   }) => {
 
-    let [html, setHtml] = useState("");
+    let [html, setHtml] = useState(dataValue);
 
     const editorConfig = {
       namespace: 'Waou',
@@ -66,7 +70,7 @@ const Lexical = (
     };
 
   return (
-    <LexicalComposer initialConfig={editorConfig}>
+    <LexicalComposer initialConfig={editorConfig} {...props}>
     <div className="editor-container">
       { dataEditable && <ToolbarPlugin /> }
       <div className={`editor-inner ${dataEditable && 'editable'}`}>
@@ -87,6 +91,7 @@ const Lexical = (
         <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
       </div>
     </div>
+    <input type={'hidden'} value={html} id={id} data-value={html} {...props} />
   </LexicalComposer>
   )
 

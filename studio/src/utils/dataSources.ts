@@ -14,6 +14,7 @@ export const TEXT_TYPE: ComponentType[] = [
   'Heading',
   'Badge',
   'ListItem',
+  'Lexical',
 ]
 export const ACTION_TYPE: ComponentType[] = ['Button', 'IconButton']
 export const IMAGE_TYPE: ComponentType[] = ['Image', 'Avatar', 'Media']
