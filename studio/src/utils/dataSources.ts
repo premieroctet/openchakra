@@ -89,19 +89,16 @@ export const getDataProviderDataType = (
   if ((component.type=='DataProvider' && component.id==dataSource)
       || (component.id=='root' && dataSource=='root')) {
     const result={ type: component.props.model, multiple: true, ref: true}
-    console.log(`Getting datatype for ${component.id}:${JSON.stringify(result)}`)
     return result
   }
   if (component.id === 'root') {
     const result=getDataProviderDataType(components[dataSource], components, dataSource, models)
-    console.log(`Getting datatype for ${component.id}:${JSON.stringify(result)}`)
     return result
   }
 
   const parent = components[component.parent]
   let pdt = getDataProviderDataType(parent, components, dataSource, models)
   if (!pdt) {
-    console.log(`Getting datatype for ${component.id}:${JSON.stringify(null)}`)
     return null
   }
   let parentDataProviderType = { ...pdt }
@@ -114,7 +111,6 @@ export const getDataProviderDataType = (
       parentDataProviderType = { ...parentDataProviderType, multiple: false }
     }
   }
-  console.log(`Getting datatype for ${component.id}:${JSON.stringify(parentDataProviderType)}`)
   return parentDataProviderType
 }
 

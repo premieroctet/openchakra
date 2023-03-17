@@ -1,5 +1,8 @@
+const {
+  generatePassword,
+  validatePassword
+} = require('../../../utils/passwords')
 const bcrypt = require('bcryptjs')
-const { generatePassword } = require('../../../utils/passwords')
 const url = require('url')
 const {
   putAttribute,

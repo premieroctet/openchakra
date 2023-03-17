@@ -1,4 +1,4 @@
-const { CONTENTS_TYPE, EVENT_TYPE, HOME_STATUS } = require('./consts')
+const { CONTENTS_TYPE, EVENT_TYPE, HOME_STATUS, ROLES } = require('./consts')
 const lodash=require('lodash')
 const moment = require('moment')
 const User = require('../../models/User')
@@ -25,6 +25,7 @@ USER_MODELS.forEach(m => {
   declareVirtualField({model: m, field: 'fullname', instance: 'String', requires: 'firstname,lastname'})
   declareVirtualField({model: m, field: 'password2', instance: 'String'})
   declareEnumField({model: m, field: 'home_status', enumValues:HOME_STATUS})
+  declareEnumField({model: m, field: 'role', enumValues:ROLES})
 })
 
 declareEnumField({model: 'contents', field: 'type', enumValues:CONTENTS_TYPE})

@@ -145,6 +145,25 @@ router.post('/file', (req, res) => {
     })
 })
 
+router.post('/clean', (req, res) => {
+  const {projectName, fileNames} = req.body
+  if (!projectName) {
+    return res.status(HTTP_CODES.BAD_REQUEST).json()
+  }
+  const keepFileNames=[...fileNames, 'App.js']
+  const destpath = path.join(PRODUCTION_ROOT, projectName, 'src')
+  return fs.readdir(destpath)
+    .then(files => {
+      const diskFiles=files.filter(f => /[A-Z].*\.js$/.test(f))
+      const extraFiles=lodash(diskFiles)
+        .difference(keepFileNames)
+        .map(f => path.join(destpath, f))
+        .map(f => fs.unlink(f))
+      return Promise.allSettled(extraFiles)
+    })
+    .then(() => res.json())
+})
+
 router.post('/install', (req, res) => {
   const {projectName} = req.body
   if (!projectName) {

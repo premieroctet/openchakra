@@ -94,6 +94,7 @@ type MetaComponentType =
   | 'NumberInputMeta'
   | 'UploadFileMeta'
   | 'BreadcrumbMeta'
+  | 'TabsMeta'
 
 interface IComponent {
   children: string[]

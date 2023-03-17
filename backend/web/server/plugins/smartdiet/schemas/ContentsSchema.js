@@ -19,10 +19,14 @@ const ContentsSchema = new Schema({
     enum: Object.keys(CONTENTS_TYPE),
     required: [true, 'Le type est obligatoire'],
   },
-  type: {
+  duration: {
     type: Number,
     required: [true, 'La durée est obligatoire'],
   },
+  viewed_by: [{
+    type: Schema.Types.ObjectId,
+    ref: 'user',
+  }],
   // Specificity or objective : requires one amongst the two
   specificity: {
     type: Schema.Types.ObjectId,

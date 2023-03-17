@@ -1,6 +1,7 @@
-import { ProjectState } from '~/core/models/project'
 import lodash from 'lodash'
-import { build, copyFile, install, start } from './http'
+import { ProjectState } from '~/core/models/project'
+import { PageSettings } from '../core/models/project';
+import { build, copyFile, install, start, clean } from './http'
 import { generateCode, generateApp, normalizePageName } from './code'
 import { validate } from './validation'
 
@@ -12,6 +13,10 @@ const copyCode = (pageName: string, contents: Buffer) => {
     contents: contents,
     filePath: `${normalizePageName(pageName)}.js`,
   })
+}
+
+const cleanPages = (pages:PageSettings[]) => {
+  return clean(pages.map(page => `${normalizePageName(page.pageName)}.js`))
 }
 
 export const deploy = (state: ProjectState, models: any) => {
@@ -31,7 +36,12 @@ export const deploy = (state: ProjectState, models: any) => {
         }
       }
       return Promise.all(
-        pages.map(page => generateCode(page.pageId, state.pages, models)),
+        pages.map(page => {
+          return generateCode(page.pageId, state.pages, models)
+            .catch(err => {
+              return Promise.reject(`Page "${page.pageName}":${err}`)
+            })
+        })
       )
     })
     .then(codes => {
@@ -48,6 +58,9 @@ export const deploy = (state: ProjectState, models: any) => {
     })
     .then(code => {
       return copyCode('App', code)
+    })
+    .then(() => {
+      return cleanPages(pages)
     })
     .then(() => {
       return install()

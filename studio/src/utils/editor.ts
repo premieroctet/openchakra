@@ -53,6 +53,11 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'Select',
   'Stack',
   'Switch',
+  'Tab',
+  'TabList',
+  'TabPanel',
+  'TabPanels',
+  'Tabs',
   'Tag',
   'Text',
   'Textarea',
@@ -83,6 +88,7 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'NumberInputMeta',
   'InputGroupMeta',
   'BreadcrumbMeta',
+  'TabsMeta',
 ]
 
 export const AccordionWhitelist: (
