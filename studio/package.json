@@ -53,6 +53,7 @@
     "react-timer-hook": "^3.0.5",
     "redux": "^4.0.5",
     "redux-persist": "^6.0.0",
+    "redux-persist-transform-compress": "^4.2.0",
     "redux-undo": "^1.0.0",
     "ssh2": "^1.11.0",
     "store": "^2.0.12",
