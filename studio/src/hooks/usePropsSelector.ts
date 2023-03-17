@@ -3,15 +3,7 @@ import { RootState } from '~core/store'
 import { getDefaultFormProps } from '~utils/defaultProps'
 import { useInspectorUpdate } from '~contexts/inspector-context'
 import { useEffect } from 'react'
-
-export function isJsonString(str: string) {
-  try {
-    JSON.parse(str)
-  } catch (e) {
-    return false
-  }
-  return true
-}
+import { isJsonString } from '~dependencies/utils/misc'
 
 const usePropsSelector = (propsName: string) => {
   const { addActiveProps } = useInspectorUpdate()

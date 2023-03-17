@@ -24,7 +24,7 @@ import {
   isSingleDataPage,
 } from './dataSources';
 import { ProjectState, PageState } from '../core/models/project'
-import { isJsonString } from '../hooks/usePropsSelector'
+import { isJsonString } from '../dependencies/utils/misc'
 
 //const HIDDEN_ATTRIBUTES=['dataSource', 'attribute']
 const HIDDEN_ATTRIBUTES: string[] = []
