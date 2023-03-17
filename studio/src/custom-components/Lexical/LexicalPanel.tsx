@@ -1,10 +1,10 @@
 import React, { memo } from 'react'
-import ChildrenControl from '~components/inspector/controls/ChildrenControl'
+import SwitchControl from '~components/inspector/controls/SwitchControl'
 
 const LexicalPanel = () => {
   return (
     <>
-      <ChildrenControl />
+      <SwitchControl label="Editable" name="isEditable" />
     </>
   )
 }

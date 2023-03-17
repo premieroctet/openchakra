@@ -1,8 +1,6 @@
-import React, {useState, useEffect, useRef} from 'react'
+import React, {useState} from 'react'
 import WappizyTheme from "./lexicalTheme";
-// import { $getSelection } from "lexical"
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
-// import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
@@ -10,12 +8,10 @@ import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
 import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
 import TreeViewPlugin from "./plugins/TreeViewPlugin";
 import ToolbarPlugin from "./plugins/ToolbarPlugin";
-import { LocalStoragePlugin } from './plugins/LocalStoragePlugin';
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
 import { ListItemNode, ListNode } from "@lexical/list";
 import { CodeHighlightNode, CodeNode } from "@lexical/code";
-import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { AutoLinkNode, LinkNode } from "@lexical/link";
 import { LinkPlugin } from "@lexical/react/LexicalLinkPlugin";
 import { ListPlugin } from "@lexical/react/LexicalListPlugin";
@@ -27,20 +23,24 @@ import HtmlSerializerPlugin from "./plugins/HtmlSerializer";
 
 
 function Placeholder() {
-  return <div className="editor-placeholder">Enter some rich text...</div>;
+  return <div className="editor-placeholder">Tapez...</div>;
 }
 
 const Lexical = (
   {
-    "data-editable": dataEditable = true, // read-only or writable
+    isEditable = false, // read-only or writable
     "data-value": dataValue,
     id,
+    attribute,
+    level,
     ...props
   }
   :{
-    'data-editable': boolean
+    'isEditable': boolean
     'data-value': string
     'id': string
+    'attribute': string
+    'level': string
   }) => {
 
     let [html, setHtml] = useState(dataValue);
@@ -66,14 +66,15 @@ const Lexical = (
         AutoLinkNode,
         LinkNode
       ],
-      editable: dataEditable,
+      editable: isEditable,
     };
 
   return (
-    <LexicalComposer initialConfig={editorConfig} {...props}>
+    <>
+    <LexicalComposer initialConfig={editorConfig}>
     <div className="editor-container">
-      { dataEditable && <ToolbarPlugin /> }
-      <div className={`editor-inner ${dataEditable && 'editable'}`}>
+      { isEditable && <ToolbarPlugin /> }
+      <div className={`editor-inner ${isEditable && 'editable'}`}>
         <RichTextPlugin
           contentEditable={<ContentEditable className="editor-input" />}
           placeholder={<Placeholder />}
@@ -85,14 +86,14 @@ const Lexical = (
         <ListPlugin />
         <LinkPlugin />
         <AutoLinkPlugin />
-        {/* <LocalStoragePlugin namespace='ahaha' /> */}
-        <HtmlSerializerPlugin setHtml={setHtml} />
+        <HtmlSerializerPlugin html={html} setHtml={setHtml} />
         <ListMaxIndentLevelPlugin maxDepth={7} />
         <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
       </div>
     </div>
-    <input type={'hidden'} value={html} id={id} data-value={html} {...props} />
   </LexicalComposer>
+    <input type={'hidden'} value={html} id={id} data-attribute={attribute} />
+    </>
   )
 
 }
