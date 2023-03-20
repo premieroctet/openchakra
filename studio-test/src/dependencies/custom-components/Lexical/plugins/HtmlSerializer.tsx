@@ -21,7 +21,7 @@ export default function HtmlSerializerPlugin({html, setHtml, contentByEditor}) {
       editor.update(() => {
         // In the browser you can use the native DOMParser API to parse the HTML string.
         const parser = new DOMParser();
-        const parseHtml = contentByEditor ? html : (isJsonString(html) && JSON.parse(html)) || ""
+        const parseHtml = isJsonString(html) ? JSON.parse(html) : html || ''
         const dom = parser.parseFromString(parseHtml, "text/html");
       
         // Once you have the DOM instance it's easy to generate LexicalNodes.
