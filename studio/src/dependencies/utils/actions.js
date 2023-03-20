@@ -239,8 +239,25 @@ export const ACTIONS = {
     window.history.back()
   },
 
-  register: ({ value, props, context, dataSource, level, getComponentValue }) => {
+  register: ({ value, props, dataSource, level, getComponentValue }) => {
     let url = `${API_ROOT}/register`
+    const components=lodash(props).pickBy((v, k) => /^component_/.test(k) && !!v).values()
+    const body = Object.fromEntries(components.map(c =>
+      [getComponent(c, level)?.getAttribute('attribute'), getComponentValue(c, level)||null]
+    ))
+    const bodyJson=lodash.mapValues(body, v => JSON.stringify(v))
+    return axios.post(url, bodyJson)
+      .then(res => {
+        components.forEach(c => clearComponentValue(c, level))
+        return ({
+          model: 'user',
+          value: res.data,
+        })
+      })
+  },
+
+  registerAndLogin: ({ value, props, dataSource, level, getComponentValue }) => {
+    let url = `${API_ROOT}/register-and-login`
     const components=lodash(props).pickBy((v, k) => /^component_/.test(k) && !!v).values()
     const body = Object.fromEntries(components.map(c =>
       [getComponent(c, level)?.getAttribute('attribute'), getComponentValue(c, level)||null]

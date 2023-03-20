@@ -3,8 +3,13 @@ const axios = require('axios')
 const moment = require('moment')
 const lodash = require('lodash')
 const {
-  GENDER, GENDER_MALE,
-  WITHINGS_MEASURE_SYS, WITHINGS_MEASURE_DIA, WITHINGS_MEASURE_BPM,
+  GENDER,
+  GENDER_MALE,
+  WITHINGS_DEFAULT_HEIGHT,
+  WITHINGS_DEFAULT_WEIGHT,
+  WITHINGS_MEASURE_BPM,
+  WITHINGS_MEASURE_DIA,
+  WITHINGS_MEASURE_SYS,
 } = require('../plugins/dekuple/consts')
 const {getWithingsConfig} = require('../../config/config')
 const {normalize}=require('../../utils/text')
@@ -53,8 +58,12 @@ const getNonce = () => {
 }
 
 // From https://developer.withings.com/sdk/v2/tree/sdk-webviews/required-web-services#user-creation-api
-const createUser = user => {
+const createUser = org_user => {
 
+  // Use "local copy"
+  user={...org_user.toObject()}
+
+  console.log(`Creating Dekuple user ${JSON.stringify(user)}`)
   // Validate user data
   const VALIDS={
     birthday: v => moment(v).isValid(),
@@ -65,6 +74,10 @@ const createUser = user => {
     firstname: v => v?.toString().trim().length>0,
     lastname: v => v?.toString().trim().length>0,
   }
+
+  // Use default height/weight is user empty
+  user.height=user.height || WITHINGS_DEFAULT_HEIGHT
+  user.weight=user.weight || WITHINGS_DEFAULT_WEIGHT
 
   const errors=Object.entries(VALIDS).filter(([att, fn]) => !fn(lodash.get(user, att))).map(([att]) => att)
   if (errors.length>0) {
