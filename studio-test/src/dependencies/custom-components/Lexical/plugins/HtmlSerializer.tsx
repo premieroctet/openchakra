@@ -49,7 +49,7 @@ export default function HtmlSerializerPlugin({html, setHtml, contentByEditor}) {
     return () => {
       removeUpdateListener();
     };
-  }, [contentByEditor, editor, firstTime, html, setHtml]);
+  }, [contentByEditor, editor, html, setHtml]);
 
   return null
 }
