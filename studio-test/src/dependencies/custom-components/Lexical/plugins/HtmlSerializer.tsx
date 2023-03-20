@@ -12,8 +12,6 @@ export default function HtmlSerializerPlugin({html, setHtml, contentByEditor}) {
   
   useEffect(() => {
 
-    console.log(html, isJsonString(html))
-
     if (firstTime) {
 
       setFirstTime(false)
