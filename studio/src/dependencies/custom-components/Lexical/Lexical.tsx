@@ -29,21 +29,20 @@ function Placeholder() {
 const Lexical = (
   {
     isEditable = false, // read-only or writable
-    "data-value": dataValue,
+    contentByEditor = false,
+    value: dataValue,
     id,
     attribute,
-    level,
-    ...props
   }
   :{
-    'isEditable': boolean
-    'data-value': string
-    'id': string
-    'attribute': string
-    'level': string
+    isEditable: boolean
+    contentByEditor: boolean
+    value: string
+    id: string
+    attribute: string
   }) => {
 
-    let [html, setHtml] = useState(dataValue);
+    let [html, setHtml] = useState(dataValue || '');
 
     const editorConfig = {
       namespace: 'Waou',
@@ -86,13 +85,17 @@ const Lexical = (
         <ListPlugin />
         <LinkPlugin />
         <AutoLinkPlugin />
-        <HtmlSerializerPlugin html={html} setHtml={setHtml} />
+        <HtmlSerializerPlugin 
+          contentByEditor={contentByEditor} 
+          html={html} 
+          setHtml={setHtml} 
+        />
         <ListMaxIndentLevelPlugin maxDepth={7} />
         <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
       </div>
     </div>
   </LexicalComposer>
-    <input type={'hidden'} value={html} id={id} data-attribute={attribute} />
+    {!contentByEditor && <input type={'hidden'} value={html} id={id} data-attribute={attribute} />}
     </>
   )
 

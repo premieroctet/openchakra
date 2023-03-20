@@ -5,13 +5,14 @@ import { useEffect, useState } from "react";
 import { isJsonString } from '../../../utils/misc'
 
 /* @ts-ignore */
-export default function HtmlSerializerPlugin({html, setHtml}) {
+export default function HtmlSerializerPlugin({html, setHtml, contentByEditor}) {
 
   const [firstTime, setFirstTime] = useState(true)
-
   const [editor] = useLexicalComposerContext();
   
   useEffect(() => {
+
+    console.log(html, isJsonString(html))
 
     if (firstTime) {
 
@@ -20,7 +21,7 @@ export default function HtmlSerializerPlugin({html, setHtml}) {
       editor.update(() => {
         // In the browser you can use the native DOMParser API to parse the HTML string.
         const parser = new DOMParser();
-        const parseHtml = (isJsonString(html) && JSON.parse(html)) || ""
+        const parseHtml = contentByEditor ? html : (isJsonString(html) && JSON.parse(html)) || ""
         const dom = parser.parseFromString(parseHtml, "text/html");
       
         // Once you have the DOM instance it's easy to generate LexicalNodes.
@@ -48,7 +49,7 @@ export default function HtmlSerializerPlugin({html, setHtml}) {
     return () => {
       removeUpdateListener();
     };
-  }, [editor, firstTime, html, setHtml]);
+  }, [contentByEditor, editor, firstTime, html, setHtml]);
 
   return null
 }
