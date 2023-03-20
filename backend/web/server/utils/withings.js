@@ -11,7 +11,7 @@ const {
   WITHINGS_MEASURE_DIA,
   WITHINGS_MEASURE_SYS,
 } = require('../plugins/dekuple/consts')
-const {getWithingsConfig} = require('../../config/config')
+const {getHostName, getWithingsConfig} = require('../../config/config')
 const {normalize}=require('../../utils/text')
 
 const wConfig=getWithingsConfig()
@@ -144,10 +144,12 @@ const getAuthorizationCode = email => {
 
 const getAccessToken = usercode => {
 
+  const redirect_uri=`https://${getHostName()}`
+  
   const body={
     action: 'requesttoken',
     client_id: wConfig.clientId, client_secret: wConfig.clientSecret,
-    grant_type: 'authorization_code', code: usercode, redirect_uri: 'https://dekuple.my-alfred.io',
+    grant_type: 'authorization_code', code: usercode, redirect_uri,
   }
 
   return axios.post(OAUTH2_DOMAIN, body)

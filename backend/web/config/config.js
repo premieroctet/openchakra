@@ -349,4 +349,5 @@ module.exports = {
   getProductionPort,
   getVivaWalletConfig,
   getWithingsConfig,
+  getHostName,
 }

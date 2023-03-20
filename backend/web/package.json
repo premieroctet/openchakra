@@ -3,7 +3,7 @@
   "main": "server/server.js",
   "license": "UNLICENSED",
   "scripts": {
-    "dev": "nodemon -w server -w package.json -w utils server/server.js",
+    "dev": "nodemon -w config -w server -w package.json -w utils server/server.js",
     "certification": "nodemon -w . server_certif.js",
     "devreport": "nodemon --report-uncaught-exception --report-on-signal --report-on-fatalerror -w server -w package.json server/server.js",
     "build": "export NODE_OPTIONS=--max_old_space_size=8192 && next build",
