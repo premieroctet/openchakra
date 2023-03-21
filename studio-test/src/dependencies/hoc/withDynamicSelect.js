@@ -4,7 +4,6 @@ import { ACTIONS } from '../utils/actions'
 
 const withDynamicSelect = Component => {
   const Internal = ({noautosave, dataSource, subDataSource, subAttribute, subAttributeDisplay, setComponentValue, ...props}) => {
-    console.log(`Datasource:${JSON.stringify(dataSource,null, 2)}`)
     let values = props.dataSourceId ? dataSource: null
     let value=lodash.get(dataSource, props.attribute)
     value=value?._id || value
