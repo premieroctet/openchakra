@@ -8,7 +8,6 @@ const LexicalPanel = () => {
 
   return (
     <>
-      <SwitchControl label="Content by Editor" name="contentByEditor" />
       <SwitchControl label="Editable" name="isEditable" />
     </>
   )
