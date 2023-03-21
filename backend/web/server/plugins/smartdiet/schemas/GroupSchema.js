@@ -23,14 +23,10 @@ const GroupSchema = new Schema({
     ref: 'user',
     required: [true, 'Le modérateur est obligatoire'],
   },
-  // Specificity or objective : requires one amongst the two
-  specificity: {
+  // Targets: specificity/objectives
+  targets: {
     type: Schema.Types.ObjectId,
-    ref: 'specificity',
-  },
-  objective: {
-    type: Schema.Types.ObjectId,
-    ref: 'objective',
+    ref: 'target',
   },
 }, schemaOptions)
 

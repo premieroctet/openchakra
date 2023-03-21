@@ -1,4 +1,5 @@
-const { HOME_STATUS, ROLES } = require('../consts')
+const { ACTIVITY, HOME_STATUS, ROLES } = require('../consts')
+const { GENDER } = require('../../dekuple/consts')
 const mongoose = require('mongoose')
 const bcrypt=require('bcryptjs')
 const {schemaOptions} = require('../../../utils/schemas')
@@ -40,8 +41,7 @@ const UserSchema = new Schema({
     type: String,
     enum: Object.keys(ROLES),
     default: ROLES.ROLE_CUSTOMER,
-    required: false,
-    //required: [true, 'Le rôle est obligatoire'],
+    required: [true, 'Le rôle est obligatoire'],
   },
   home_status: {
     type: String,
@@ -58,6 +58,24 @@ const UserSchema = new Schema({
     validate: [value => !!value, 'Vous devez accepter le traitement des données'],
     required: [true, 'Vous devez accepter le traitement des données'],
   },
+  child_count: {
+    type: Number,
+    required: [true, "Le nombre d'enfants est obligatoire"],
+  },
+  gender: {
+    type: String,
+    enum: Object.keys(GENDER),
+    required: false,
+  },
+  activity: {
+    type: String,
+    enum: Object.keys(ACTIVITY),
+    required: false,
+  },
+  targets: [{
+    type: Schema.Types.ObjectId,
+    ref: 'target',
+  }],
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */

@@ -61,6 +61,7 @@ const setRecurseDataSource = (
   }
 }
 const withDynamicContainer = Component => {
+  // TODO vomi
   const FILTER_ATTRIBUTES = ['code', 'name', 'short_name', 'description', 'title']
 
   const internal = ({hiddenRoles, user, ...props}) => {

@@ -52,9 +52,42 @@ const ROLES={
   [ROLE_SUPPORT]: 'Support',
 }
 
+const GENDER_MALE='MALE'
+const GENDER_FEMALE='FEMALE'
+const GENDER_NON_BINARY='NON_BINARY'
+
+const GENDER = {
+  [GENDER_MALE]: 'Homme',
+  [GENDER_FEMALE]: 'Femme',
+  [GENDER_NON_BINARY]: 'Non genré',
+}
+
+const ACT_ACTIVE='ACTIVE'
+const ACT_STUDENT='STUDENT'
+const ACT_RETIRED='RETIRED'
+const ACT_OTHER='OTHER'
+
+const ACTIVITY={
+  [ACT_ACTIVE]: 'Actif',
+  [ACT_STUDENT]: 'Etudiant',
+  [ACT_RETIRED]: 'En retraite',
+  [ACT_OTHER]: 'Autre',
+}
+
+const TARGET_OBJECTIVE='OBJECTIVE'
+const TARGET_SPECIFICITY='SPECIFICITY'
+
+const TARGET_TYPE={
+  [TARGET_OBJECTIVE]: 'Objectif',
+  [TARGET_SPECIFICITY]: 'Spécificité',
+}
+
 module.exports={
   HOME_STATUS,
   CONTENTS_TYPE,
   EVENT_TYPE,
   ROLES,
+  GENDER,
+  ACTIVITY,
+  TARGET_TYPE,
 }
