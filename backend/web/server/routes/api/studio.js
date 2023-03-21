@@ -219,7 +219,8 @@ router.post('/start', (req, res) => {
   return res.json(result)
 })
 
-router.post('/action', passport.authenticate('cookie', {session: false}), (req, res) => {
+//router.post('/action', passport.authenticate('cookie', {session: false}), (req, res) => {
+router.post('/action', (req, res) => {
   const action = req.body.action
   const actionFn = ACTIONS[action]
   if (!actionFn) {
@@ -351,7 +352,8 @@ router.post('/:model', passport.authenticate('cookie', {session: false}), (req, 
     })
 })
 
-router.put('/:model/:id', passport.authenticate('cookie', {session: false}), (req, res) => {
+//router.put('/:model/:id', passport.authenticate('cookie', {session: false}), (req, res) => {
+router.put('/:model/:id', (req, res) => {
   const model = req.params.model
   const id = req.params.id
   let params=req.body
@@ -369,7 +371,8 @@ router.put('/:model/:id', passport.authenticate('cookie', {session: false}), (re
     })
 })
 
-router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (req, res) => {
+//router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (req, res) => {
+router.get('/:model/:id?', (req, res) => {
   const model = req.params.model
   let fields = req.query.fields?.split(',') || []
   const id = req.params.id
