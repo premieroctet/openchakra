@@ -35,24 +35,24 @@ const setRecurseDataSource = (
       const newId = child.props?.id ? `${child.props?.id}${suffix}` : undefined
       const level=newId ? newId.split(/(_.*)$/)[1] : undefined
       //if (child.props === undefined || (child.props.dataSourceId && child.props.dataSourceId!=dataSourceId)) {
-      if (child.props === undefined) {
-        return child
-      } else if (React.Children.count(child.props.children) === 0) {
+        if (child.props === undefined) {
+          return child
+        } else if (React.Children.count(child.props.children) === 0) {
         if (isOtherSource(child, dataSourceId)) {
-          return React.cloneElement(child, { id: newId, level})
+          return React.cloneElement(child, { id: newId, level, key: newId})
         }
-        return React.cloneElement(child, {id: newId, level, dataSource})
+        return React.cloneElement(child, {id: newId, level, dataSource, key: newId})
       } else {
         if (isOtherSource(child, dataSourceId)) {
           return React.cloneElement(
             child,
-            { id: newId, level },
+            { id: newId, level, key: newId },
             setRecurseDataSource(child, dataSource, dataSourceId, newSuffix),
           )
         }
         return React.cloneElement(
           child,
-          { id: newId, level, dataSource },
+          { id: newId, level, dataSource, key: newId },
           setRecurseDataSource(child, dataSource, dataSourceId, newSuffix),
         )
       }
@@ -91,7 +91,6 @@ const withDynamicContainer = Component => {
       return null
     }
 
-    orgData = orgData
     if (props.contextFilter) {
       const contextIds = props.contextFilter.map(o => o._id.toString())
       orgData = orgData.filter(d => contextIds.includes(d._id))
