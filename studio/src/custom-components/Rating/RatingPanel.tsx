@@ -13,10 +13,8 @@ const RatingPanel = () => {
   const { setValueFromEvent } = useForm()
   const illu = usePropsSelector('illu')
   const size = usePropsSelector('size')
-  const rating = usePropsSelector('rating')
+  const rating = usePropsSelector('value')
   const scale = usePropsSelector('scale')
-  const fillColor = usePropsSelector('fillColor')
-  const strokeColor = usePropsSelector('strokeColor')
 
   return (
     <>
@@ -62,7 +60,7 @@ const RatingPanel = () => {
           id="rating"
           type={'number'}
           size="sm"
-          name="rating"
+          name="value"
           onChange={setValueFromEvent}
         />
       </FormControl>

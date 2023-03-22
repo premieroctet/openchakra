@@ -6,7 +6,7 @@ import * as icons from 'lucide-react'
 
 const Rating = React.forwardRef(
   ({
-    value = 2,
+    value = 0,
     size = 20,
     illu = 'Star',
     scale = 5,
@@ -35,6 +35,8 @@ const Rating = React.forwardRef(
       }
     }, [rating])
 
+    useEffect(() => setRating(value), [value])
+
     const onClick = (idx:number) => {
       if (readOnly) {
         return
@@ -56,7 +58,6 @@ const Rating = React.forwardRef(
           name={illu}
           boxSize={`${size}px`}
           stroke={strokeColor}
-          //onClick={() => onClick(idx)}
           fillOpacity={fill ? "100%" : "0"}
           fill={fillColor}
         />
