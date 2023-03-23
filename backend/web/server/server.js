@@ -51,6 +51,12 @@ require('./models/Contents')
 require('./models/Key')
 require('./models/Group')
 require('./models/Target')
+require('./models/PartnerApplication')
+require('./models/Trophy')
+require('./models/Spoon')
+require('./models/CollectiveChallenge')
+require('./models/PartnerApplication')
+require('./models/Gift')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 

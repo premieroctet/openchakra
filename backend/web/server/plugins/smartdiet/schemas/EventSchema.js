@@ -1,6 +1,6 @@
+const { EVENT_COLL_CHALLENGE, EVENT_TYPE, HOME_STATUS } = require('../consts')
 const mongoose = require('mongoose')
 const bcrypt=require('bcryptjs')
-const { HOME_STATUS, EVENT_TYPE } = require('../consts')
 const {schemaOptions} = require('../../../utils/schemas')
 
 const Schema = mongoose.Schema
@@ -21,6 +21,7 @@ const EventSchema = new Schema({
   type: {
     type: String,
     enum: Object.keys(EVENT_TYPE),
+    validate: [v => v!=EVENT_COLL_CHALLENGE, 'Challenge collectif en BD doit être créé par le type CollectiveChallenge'],
     required: [true, 'Le type est obligatoire'],
   },
   registered_by: [{

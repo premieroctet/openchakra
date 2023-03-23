@@ -10,6 +10,11 @@ const ContentsSchema = new Schema({
     type: String,
     required: [true, 'Le nom est obligatoire'],
   },
+  // default==true =>Contents available for every user
+  default: {
+    type: Boolean,
+    required: [true, 'Le status "default" est obligatoire'],
+  },
   picture: {
     type: String,
     required: [true, 'L\'illustration est obligatoire'],
@@ -27,6 +32,11 @@ const ContentsSchema = new Schema({
     type: Number,
     required: [true, 'La durée est obligatoire'],
   },
+  key: {
+    type: Schema.Types.ObjectId,
+    ref: 'key',
+    required: [true, 'La clé est obligatoire'],
+  },
   viewed_by: [{
     type: Schema.Types.ObjectId,
     ref: 'user',
@@ -43,10 +53,6 @@ const ContentsSchema = new Schema({
   shares: [{
     type: Schema.Types.ObjectId,
     ref: 'user',
-  }],
-  key: [{
-    type: Schema.Types.ObjectId,
-    ref: 'key',
   }],
 }, schemaOptions)
 

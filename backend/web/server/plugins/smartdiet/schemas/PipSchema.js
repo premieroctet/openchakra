@@ -15,13 +15,12 @@ const PipSchema = new Schema({
   },
   theme: {
     type: String,
-    enum: Object.keys(THEME),
     required: [true, 'Le thème est obligatoire'],
   },
-  /** TODO definition
   context: {
+    type: String,
+    required: [true, 'Le contexte est obligatoire'],
   },
-  */
   spoons: {
     type: Number,
     required: [true, 'Le nombre de cuillères est obligatoire'],
@@ -30,10 +29,10 @@ const PipSchema = new Schema({
     type: String,
     required: [true, 'Le détail est obligatoire'],
   },
-  /** TODO Définition
-  hardness: {
+  hard: {
+    type: Boolean,
+    required: [true, 'La difficulté est obligatoire'],
   },
-  */
   proof: {
     type: String,
     required: false,

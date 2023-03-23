@@ -1,6 +1,11 @@
+const {
+  EVENT_COLL_CHALLENGE
+} = require('../../server/plugins/smartdiet/consts')
+const CollectiveChallenge = require('../../server/models/CollectiveChallenge')
 const moment=require('moment')
 const mongoose = require('mongoose')
 const {forceDataModelSmartdiet, buildAttributesException}=require('../utils')
+
 forceDataModelSmartdiet()
 const {MONGOOSE_OPTIONS} = require('../../server/utils/database')
 const {ROLE_CUSTOMER, ROLE_ADMIN, STATUS_FAMILY} = require('../../server/plugins/smartdiet/consts')
@@ -161,6 +166,23 @@ describe('Test models ', () => {
       lastname: 'Auvray', firstname: 'Sébastien',
     })
       .catch(err => { console.error(err) })
+  })
+
+  it('CollectiveChallenge should inherit from Event', async () => {
+    await CollectiveChallenge.create({
+      spoons:1, name: 'Challenge collectif',
+      start_date: moment(), end_date: moment()
+    })
+    expect(Event.create({
+      type: EVENT_COLL_CHALLENGE,
+      spoons:1, name: 'Challenge collectif',
+      start_date: moment(), end_date: moment()
+    }))
+    .rejects
+    .toThrow(/.*doit.*CollectiveChallenge.*/)
+    const events=await Event.find()
+    console.log(events)
+    expect(events.length).toBe(1)
   })
 
 })

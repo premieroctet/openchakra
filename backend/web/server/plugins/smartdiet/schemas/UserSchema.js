@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const {ACTIVITY, HOME_STATUS, ROLES, ROLE_CUSTOMER, STATUS_FAMILY} = require('../consts')
 const {GENDER} = require('../../dekuple/consts')
 const {schemaOptions} = require('../../../utils/schemas')
+const lodash=require('lodash')
 
 const Schema = mongoose.Schema
 
@@ -96,6 +97,19 @@ UserSchema.virtual('password2').get(function() {
 UserSchema.virtual('fullname').get(function() {
   return `${this.firstname || ''} ${this.lastname || ''}`
 })
+
+UserSchema.virtual('spoons_count').get(function() {
+  return lodash(this.spoons)
+    .map(s => s.count)
+    .sum()
+})
+
+// TODO Use justOne to return the shop or null
+UserSchema.virtual("spoons", {
+  ref: "spoon", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "user" // is equal to foreignField
+});
 
 /* eslint-enable prefer-arrow-callback */
 

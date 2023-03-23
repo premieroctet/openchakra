@@ -22,8 +22,7 @@ const CompanySchema = new Schema(
       required: true,
     },
     size: {
-      type: String,
-      enum: Object.keys(COMPANY_SIZE),
+      type: Number,
       required: true,
     },
     administrator: {

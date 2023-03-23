@@ -1,5 +1,6 @@
 const {
   ACTIVITY,
+  COMPANY_ACTIVITY,
   CONTENTS_TYPE,
   EVENT_TYPE,
   GENDER,
@@ -36,11 +37,21 @@ USER_MODELS.forEach(m => {
   declareEnumField({model: m, field: 'role', enumValues:ROLES})
   declareEnumField({model: m, field: 'gender', enumValues:GENDER})
   declareEnumField({model: m, field: 'activity', enumValues:ACTIVITY})
+  declareVirtualField({model: m, field: 'spoons_count', instance: 'Number', requires: 'spoons'})
+  declareVirtualField({model: m, field: 'spoons', instance: 'Array',
+    requires: '', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'spoon'}}
+  })
 })
+
+declareEnumField({model: 'company', field: 'activity', enumValues: COMPANY_ACTIVITY})
 
 declareEnumField({model: 'contents', field: 'type', enumValues:CONTENTS_TYPE})
 
 declareEnumField({model: 'event', field: 'type', enumValues:EVENT_TYPE})
+declareEnumField({model: 'collectiveChallenge', field: 'type', enumValues:EVENT_TYPE})
 
 declareEnumField({model: 'category', field: 'type', enumValues:TARGET_TYPE})
 declareVirtualField({model: 'category', field: 'targets', instance: 'Array',
