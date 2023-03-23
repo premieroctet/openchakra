@@ -1,7 +1,6 @@
-const { ACTIVITY, HOME_STATUS, ROLES } = require('../consts')
-const { GENDER } = require('../../dekuple/consts')
 const mongoose = require('mongoose')
-const bcrypt=require('bcryptjs')
+const {ACTIVITY, HOME_STATUS, ROLES, ROLE_CUSTOMER, STATUS_FAMILY} = require('../consts')
+const {GENDER} = require('../../dekuple/consts')
 const {schemaOptions} = require('../../../utils/schemas')
 
 const Schema = mongoose.Schema
@@ -22,10 +21,14 @@ const UserSchema = new Schema({
     required: [true, 'L\'email est obligatoire'],
     set: v => v.toLowerCase().trim(),
   },
+  birthday: {
+    type: String,
+    required: [function() { return this.role==ROLE_CUSTOMER }, 'La date de naissance est obligatoire'],
+  },
   pseudo: {
     type: String,
     set: v => v?.trim(),
-    required: [true, 'Le pseudo est obligatoire'],
+    required: [function() { return this.role==ROLE_CUSTOMER }, 'Le pseudo est obligatoire'],
   },
   company: {
     type: Schema.Types.ObjectId,
@@ -46,31 +49,38 @@ const UserSchema = new Schema({
   home_status: {
     type: String,
     enum: Object.keys(HOME_STATUS),
-    required: false,
+    required: [function() { return this.role==ROLE_CUSTOMER }, 'Le statut est obligatoire'],
   },
   cguAccepted: {
     type: Boolean,
-    validate: [value => !!value, 'Vous devez accepter les CGU'],
-    required: [true, 'Vous devez accepter les CGU'],
+    validate: {
+      validator: function(v) { return this.role!=ROLE_CUSTOMER || !!v },
+      message: 'Vous devez accepter les CGU',
+    },
+    required: [function() { return this.role==ROLE_CUSTOMER }, 'Vous devez accepter les CGU'],
   },
   dataTreatmentAccepted: {
     type: Boolean,
-    validate: [value => !!value, 'Vous devez accepter le traitement des données'],
-    required: [true, 'Vous devez accepter le traitement des données'],
+    validate: {
+      validator: function(v) { return this.role!=ROLE_CUSTOMER || !!v },
+      message: 'Vous devez accepter le traitement des données',
+    },
+    required: [function() { return this.role==ROLE_CUSTOMER }, 'Vous devez accepter le traitement des données'],
   },
   child_count: {
     type: Number,
-    required: [true, "Le nombre d'enfants est obligatoire"],
+    required: [function() { return this.role==ROLE_CUSTOMER && this.home_status==STATUS_FAMILY },
+      'Le nombre d\'enfants est obligatoire'],
   },
   gender: {
     type: String,
     enum: Object.keys(GENDER),
-    required: false,
+    required: [function() { return this.role==ROLE_CUSTOMER }, 'Le genre est obligatoire'],
   },
   activity: {
     type: String,
     enum: Object.keys(ACTIVITY),
-    required: false,
+    required: [function() { return this.role==ROLE_CUSTOMER }, "L'activité est obligatoire"],
   },
   targets: [{
     type: Schema.Types.ObjectId,

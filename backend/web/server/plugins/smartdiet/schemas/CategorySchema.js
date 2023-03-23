@@ -1,6 +1,5 @@
-const { CONTENTS_TYPE, HOME_STATUS, TARGET_TYPE } = require('../consts')
 const mongoose = require('mongoose')
-const bcrypt=require('bcryptjs')
+const {TARGET_TYPE} = require('../consts')
 const {schemaOptions} = require('../../../utils/schemas')
 
 const Schema = mongoose.Schema
@@ -21,10 +20,10 @@ const CategorySchema = new Schema({
   },
 }, schemaOptions)
 
-CategorySchema.virtual("targets", {
-  ref: "target", // The Model to use
-  localField: "_id", // Find in Model, where localField
-  foreignField: "category" // is equal to foreignField
-});
+CategorySchema.virtual('targets', {
+  ref: 'target', // The Model to use
+  localField: '_id', // Find in Model, where localField
+  foreignField: 'category', // is equal to foreignField
+})
 
 module.exports = CategorySchema

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const bcrypt=require('bcryptjs')
-const { HOME_STATUS, CONTENTS_TYPE } = require('../consts')
+const {HOME_STATUS, CONTENTS_TYPE} = require('../consts')
 const {schemaOptions} = require('../../../utils/schemas')
 
 const Schema = mongoose.Schema
@@ -18,6 +18,10 @@ const ContentsSchema = new Schema({
     type: String,
     enum: Object.keys(CONTENTS_TYPE),
     required: [true, 'Le type est obligatoire'],
+  },
+  contents: {
+    type: String,
+    required: [true, 'Le contenu est obligatoire'],
   },
   duration: {
     type: Number,

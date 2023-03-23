@@ -1,6 +1,4 @@
 const mongoose = require('mongoose')
-const bcrypt=require('bcryptjs')
-const { HOME_STATUS, CONTENTS_TYPE } = require('../consts')
 const {schemaOptions} = require('../../../utils/schemas')
 
 const Schema = mongoose.Schema
@@ -27,6 +25,11 @@ const GroupSchema = new Schema({
   targets: {
     type: Schema.Types.ObjectId,
     ref: 'target',
+  },
+  company: {
+    type: Schema.Types.ObjectId,
+    ref: 'company',
+    required: false,
   },
 }, schemaOptions)
 
