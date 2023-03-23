@@ -10,14 +10,13 @@ const EventSchema = new Schema({
     type: String,
     required: [true, 'Le nom est obligatoire'],
   },
-  date: {
+  start_date: {
     type: Date,
     required: [true, 'La date de début est obligatoire'],
   },
-  duration: { // In hours
-    type: Number,
-    min: [0, 'La durée doit être positive'],
-    required: [true, 'La durée est obligatoire'],
+  end_date: {
+    type: Date,
+    required: [true, 'La date de fin est obligatoire'],
   },
   type: {
     type: String,
