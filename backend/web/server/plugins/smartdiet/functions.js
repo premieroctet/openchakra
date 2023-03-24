@@ -56,7 +56,7 @@ USER_MODELS.forEach(m => {
 
 declareEnumField({model: 'company', field: 'activity', enumValues: COMPANY_ACTIVITY})
 
-declareEnumField({model: 'contents', field: 'type', enumValues:CONTENTS_TYPE})
+declareEnumField({model: 'content', field: 'type', enumValues:CONTENTS_TYPE})
 
 declareEnumField({model: 'event', field: 'type', enumValues:EVENT_TYPE})
 declareEnumField({model: 'collectiveChallenge', field: 'type', enumValues:EVENT_TYPE})
