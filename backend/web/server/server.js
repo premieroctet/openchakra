@@ -57,6 +57,8 @@ require('./models/Spoon')
 require('./models/CollectiveChallenge')
 require('./models/PartnerApplication')
 require('./models/Gift')
+require('./models/SpoonGain')
+require('./models/UserSpoon')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 
