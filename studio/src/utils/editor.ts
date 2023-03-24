@@ -39,6 +39,7 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'InputGroup',
   'InputRightAddon',
   'InputLeftAddon',
+  'Lexical',
   'Link',
   'List',
   'ListItem',

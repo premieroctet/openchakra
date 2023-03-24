@@ -1,14 +1,19 @@
 const mongoose = require('mongoose')
 const bcrypt=require('bcryptjs')
-const { HOME_STATUS, CONTENTS_TYPE } = require('../consts')
+const {HOME_STATUS, CONTENTS_TYPE} = require('../consts')
 const {schemaOptions} = require('../../../utils/schemas')
 
 const Schema = mongoose.Schema
 
-const ContentsSchema = new Schema({
+const ContentSchema = new Schema({
   name: {
     type: String,
     required: [true, 'Le nom est obligatoire'],
+  },
+  // default==true =>Contents available for every user
+  default: {
+    type: Boolean,
+    required: [true, 'Le status "default" est obligatoire'],
   },
   picture: {
     type: String,
@@ -19,23 +24,28 @@ const ContentsSchema = new Schema({
     enum: Object.keys(CONTENTS_TYPE),
     required: [true, 'Le type est obligatoire'],
   },
+  contents: {
+    type: String,
+    required: [true, 'Le contenu est obligatoire'],
+  },
   duration: {
     type: Number,
     required: [true, 'La durée est obligatoire'],
+  },
+  key: {
+    type: Schema.Types.ObjectId,
+    ref: 'key',
+    required: [true, 'La clé est obligatoire'],
   },
   viewed_by: [{
     type: Schema.Types.ObjectId,
     ref: 'user',
   }],
-  // Specificity or objective : requires one amongst the two
-  specificity: {
+  // Targets: specificity/objectives
+  targets: [{
     type: Schema.Types.ObjectId,
-    ref: 'specificity',
-  },
-  objective: {
-    type: Schema.Types.ObjectId,
-    ref: 'objective',
-  },
+    ref: 'target',
+  }],
   likes: [{
     type: Schema.Types.ObjectId,
     ref: 'user',
@@ -44,10 +54,6 @@ const ContentsSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'user',
   }],
-  key: [{
-    type: Schema.Types.ObjectId,
-    ref: 'key',
-  }],
 }, schemaOptions)
 
-module.exports = ContentsSchema
+module.exports = ContentSchema

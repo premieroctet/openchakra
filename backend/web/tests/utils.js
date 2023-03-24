@@ -8,14 +8,14 @@ const storeAuth = res => {
   })
 }
 
-const login = username => {
+export const login = username => {
   return axios.post('https://localhost/myAlfred/api/users/force-login', {username: username})
     .then(res => {
       return storeAuth(res)
     })
 }
 
-const forceDataModelFumoir = () => {
+export const forceDataModelFumoir = () => {
   jest.mock('../config/config', () => {
     const originalModule = jest.requireActual('../config/config')
 
@@ -27,7 +27,7 @@ const forceDataModelFumoir = () => {
   })
 }
 
-const forceDataModelDekuple = () => {
+export const forceDataModelDekuple = () => {
   jest.mock('../config/config', () => {
     const originalModule = jest.requireActual('../config/config')
 
@@ -39,7 +39,7 @@ const forceDataModelDekuple = () => {
   })
 }
 
-const forceDataModelAftral = () => {
+export const forceDataModelAftral = () => {
   jest.mock('../config/config', () => {
     const originalModule = jest.requireActual('../config/config')
 
@@ -51,7 +51,20 @@ const forceDataModelAftral = () => {
   })
 }
 
-module.exports={
-  login,
-  forceDataModelFumoir, forceDataModelDekuple, forceDataModelAftral,
+export const forceDataModelSmartdiet = () => {
+  jest.mock('../config/config', () => {
+    const originalModule = jest.requireActual('../config/config')
+
+    return {
+      __esModule: true,
+      ...originalModule,
+      getDataModel: jest.fn(() => 'smartdiet'),
+    }
+  })
+}
+
+// Creates the regular expression matching model attributes validation fail
+export const buildAttributesException = attributes => {
+  return new RegExp(attributes.map(att => `(?=.*${att})`).join(''))
+  // (?=.*birthday)(?=.*gender)(?=.*dataTreatmentAccepted)(?=.*cguAccepted)(?=.*pseudo)(?=.*home_status)/
 }

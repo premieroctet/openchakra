@@ -7,7 +7,7 @@ import {
   getIsHovered,
 } from '../core/selectors/components'
 import { getShowOverview, getFocusedComponent } from '../core/selectors/app'
-import { isJsonString } from './usePropsSelector'
+import { isJsonString } from '../dependencies/utils/misc'
 
 export const useInteractive = (
   component: IComponent,
