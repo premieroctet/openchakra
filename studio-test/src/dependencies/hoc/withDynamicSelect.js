@@ -12,9 +12,12 @@ const withDynamicSelect = Component => {
     const attribute = props.attribute
     const enumValues=props.enum ? JSON.parse(props.enum) : null
     let refValues=null
+
+    /** TODO Buggy. Why ???
     if (props.subDataSourceId=='root') {
       subDataSource=dataSource
-    }
+    }*/
+
     if (subDataSource) {
       refValues=lodash.get(subDataSource, subAttribute, subDataSource)
     }
