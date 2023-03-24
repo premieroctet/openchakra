@@ -1,4 +1,4 @@
-const Contents = require('../../models/Contents')
+const Content = require('../../models/Content')
 const {
   declareComputedField,
   declareEnumField,
@@ -70,8 +70,8 @@ declareVirtualField({model: 'category', field: 'targets', instance: 'Array',
     options: {ref: 'target'}}
 })
 
-const getAvailableEvents = (user, params, data) => {
-  return Contents.find()
+const getAvailableContents = (user, params, data) => {
+  return Content.find()
     .then(contents => {
       const user_targets=user.targets.map(t => t._id.toString())
       const filtered_contents=contents.filter(c => {
@@ -81,8 +81,9 @@ const getAvailableEvents = (user, params, data) => {
     })
 }
 
-declareComputedField('user', 'available_contents', getAvailableEvents)
-declareComputedField('loggedUser', 'available_contents', getAvailableEvents)
+declareComputedField('user', 'available_contents', getAvailableContents)
+declareComputedField('loggedUser', 'available_contents', getAvailableContents)
 
 module.exports={
+  getAvailableContents,
 }

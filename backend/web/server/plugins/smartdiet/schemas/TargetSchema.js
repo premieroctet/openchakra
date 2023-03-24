@@ -12,11 +12,11 @@ const TargetSchema = new Schema({
   category: {
     type: Schema.Types.ObjectId,
     ref: 'category',
-    required: true,
+    required: [true, 'La catégorie est obligatoire'],
   },
   picture: {
     type: String,
-    required: true,
+    required: false,
   },
 }, schemaOptions)
 

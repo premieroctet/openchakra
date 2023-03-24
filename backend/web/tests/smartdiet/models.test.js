@@ -1,6 +1,14 @@
 const {
-  EVENT_COLL_CHALLENGE
+  getAvailableContents
+} = require('../../server/plugins/smartdiet/functions')
+const {
+  ACTIVITY,
+  EVENT_COLL_CHALLENGE,
+  GENDER,
+  HOME_STATUS
 } = require('../../server/plugins/smartdiet/consts')
+
+const { STATUS } = require('../../server/plugins/aftral/consts')
 const CollectiveChallenge = require('../../server/models/CollectiveChallenge')
 const moment=require('moment')
 const mongoose = require('mongoose')
@@ -24,7 +32,7 @@ const CigarCategory=require('../../server/models/CigarCategory')
 const Commission=require('../../server/models/Commission')
 const Company=require('../../server/models/Company')
 const Contact=require('../../server/models/Contact')
-const Contents=require('../../server/models/Contents')
+const Content=require('../../server/models/Content')
 const Conversation=require('../../server/models/Conversation')
 const Device=require('../../server/models/Device')
 const Drink=require('../../server/models/Drink')
@@ -98,7 +106,7 @@ describe('Test models ', () => {
     expect(Commission).toBeFalsy()
     expect(Company).toBeTruthy()
     expect(Contact).toBeFalsy()
-    expect(Contents).toBeTruthy()
+    expect(Content).toBeTruthy()
     expect(Conversation).toBeFalsy()
     expect(Device).toBeFalsy()
     expect(Drink).toBeFalsy()
@@ -185,4 +193,17 @@ describe('Test models ', () => {
     expect(events.length).toBe(1)
   })
 
+  it.only('Should return target events', async () => {
+    const user=await User.create({
+      activity: Object.keys(ACTIVITY)[0],
+      gender: Object.keys(GENDER)[0],
+      dataTreatmentAccepted: true, cguAccepted: true,
+      home_status: Object.keys(HOME_STATUS)[0],
+      pseudo: 'seb', birthday: moment(),
+      role: ROLE_CUSTOMER, email: 'a@a.com',
+      lastname: 'Auvray', firstname: 'Sébastien'})
+    //const content=await Content.create({})
+    const contents=await getAvailableContents(user)
+    console.log(contents)
+  })
 })
