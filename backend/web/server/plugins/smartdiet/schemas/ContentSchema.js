@@ -5,7 +5,7 @@ const {schemaOptions} = require('../../../utils/schemas')
 
 const Schema = mongoose.Schema
 
-const ContentsSchema = new Schema({
+const ContentSchema = new Schema({
   name: {
     type: String,
     required: [true, 'Le nom est obligatoire'],
@@ -56,4 +56,4 @@ const ContentsSchema = new Schema({
   }],
 }, schemaOptions)
 
-module.exports = ContentsSchema
+module.exports = ContentSchema
