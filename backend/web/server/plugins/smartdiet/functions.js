@@ -1,11 +1,3 @@
-const Content = require('../../models/Content')
-const {
-  declareComputedField,
-  declareEnumField,
-  declareVirtualField,
-  setPreCreateData,
-  setPreprocessGet,
-} = require('../../utils/database')
 const {
   ACTIVITY,
   COMPANY_ACTIVITY,
@@ -14,8 +6,17 @@ const {
   GENDER,
   HOME_STATUS,
   ROLES,
+  SPOON_SOURCE,
   TARGET_TYPE
 } = require('./consts')
+const Content = require('../../models/Content')
+const {
+  declareComputedField,
+  declareEnumField,
+  declareVirtualField,
+  setPreCreateData,
+  setPreprocessGet,
+} = require('../../utils/database')
 const lodash=require('lodash')
 const moment = require('moment')
 const User = require('../../models/User')
@@ -69,6 +70,10 @@ declareVirtualField({model: 'category', field: 'targets', instance: 'Array',
     instance: 'ObjectID',
     options: {ref: 'target'}}
 })
+
+declareEnumField({model: 'userSpoon', field: 'source', enumValues: SPOON_SOURCE})
+
+declareEnumField({model: 'spoonGain', field: 'source', enumValues: SPOON_SOURCE})
 
 const getAvailableContents = (user, params, data) => {
   return Content.find()
