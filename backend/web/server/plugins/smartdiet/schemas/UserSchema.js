@@ -23,7 +23,7 @@ const UserSchema = new Schema({
     set: v => v.toLowerCase().trim(),
   },
   birthday: {
-    type: String,
+    type: Date,
     required: [function() { return this.role==ROLE_CUSTOMER }, 'La date de naissance est obligatoire'],
   },
   pseudo: {
