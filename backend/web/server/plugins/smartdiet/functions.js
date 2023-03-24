@@ -1,3 +1,11 @@
+const Contents = require('../../models/Contents')
+const {
+  declareComputedField,
+  declareEnumField,
+  declareVirtualField,
+  setPreCreateData,
+  setPreprocessGet,
+} = require('../../utils/database')
 const {
   ACTIVITY,
   COMPANY_ACTIVITY,
@@ -11,12 +19,6 @@ const {
 const lodash=require('lodash')
 const moment = require('moment')
 const User = require('../../models/User')
-const {
-  declareEnumField,
-  declareVirtualField,
-  setPreCreateData,
-  setPreprocessGet,
-} = require('../../utils/database')
 
 const preprocessGet = ({model, fields, id, user}) => {
   if (model=='loggedUser') {
@@ -44,6 +46,12 @@ USER_MODELS.forEach(m => {
       instance: 'ObjectID',
       options: {ref: 'spoon'}}
   })
+  declareVirtualField({model: m, field: 'available_contents', instance: 'Array',
+    requires: '', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'contents'}}
+  })
 })
 
 declareEnumField({model: 'company', field: 'activity', enumValues: COMPANY_ACTIVITY})
@@ -54,12 +62,27 @@ declareEnumField({model: 'event', field: 'type', enumValues:EVENT_TYPE})
 declareEnumField({model: 'collectiveChallenge', field: 'type', enumValues:EVENT_TYPE})
 
 declareEnumField({model: 'category', field: 'type', enumValues:TARGET_TYPE})
+
 declareVirtualField({model: 'category', field: 'targets', instance: 'Array',
   requires: '', multiple: true,
   caster: {
     instance: 'ObjectID',
     options: {ref: 'target'}}
 })
+
+const getAvailableEvents = (user, params, data) => {
+  return Contents.find()
+    .then(contents => {
+      const user_targets=user.targets.map(t => t._id.toString())
+      const filtered_contents=contents.filter(c => {
+        const content_targets=c.targets?.map(t => t._id.toString())
+        return lodash.isEqual(user_targets.sort(), content_targets.sort())
+      })
+    })
+}
+
+declareComputedField('user', 'available_contents', getAvailableEvents)
+declareComputedField('loggedUser', 'available_contents', getAvailableEvents)
 
 module.exports={
 }
