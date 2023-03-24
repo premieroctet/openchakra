@@ -36,6 +36,7 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'Image',
   'Input',
   'UploadFile',
+  'IconCheck',
   'InputGroup',
   'InputRightAddon',
   'InputLeftAddon',
