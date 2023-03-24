@@ -6,16 +6,15 @@ import {
 import { useForm } from '~hooks/useForm'
 import FormControl from '~components/inspector/controls/FormControl'
 import usePropsSelector from '~hooks/usePropsSelector'
+import ColorPickerControl from '../../components/inspector/controls/ColorPickerControl'
 
 const RatingPanel = () => {
 
   const { setValueFromEvent } = useForm()
   const illu = usePropsSelector('illu')
   const size = usePropsSelector('size')
-  const rating = usePropsSelector('rating')
+  const rating = usePropsSelector('value')
   const scale = usePropsSelector('scale')
-  const fillColor = usePropsSelector('fillColor')
-  const strokeColor = usePropsSelector('strokeColor')
 
   return (
     <>
@@ -42,21 +41,17 @@ const RatingPanel = () => {
         />
       </FormControl>
        <FormControl label="Fill color" htmlFor="ratingfillcolor">
-        <Input
-          value={fillColor || ''}
-          id="ratingfillcolor"
-          size="sm"
-          name="fillColor"
-          onChange={setValueFromEvent}
+        <ColorPickerControl
+          withFullColor={true}
+          name={'fillColor'}
+          gradient={false}
         />
       </FormControl>
        <FormControl label="Stroke color" htmlFor="ratingstrokecolor">
-        <Input
-          value={strokeColor || ''}
-          id="ratingstrokecolor"
-          size="sm"
-          name="strokeColor"
-          onChange={setValueFromEvent}
+        <ColorPickerControl
+          withFullColor={true}
+          name={'strokeColor'}
+          gradient={false}
         />
       </FormControl>
       <FormControl label="Rating" htmlFor="rating">
@@ -65,7 +60,7 @@ const RatingPanel = () => {
           id="rating"
           type={'number'}
           size="sm"
-          name="rating"
+          name="value"
           onChange={setValueFromEvent}
         />
       </FormControl>
