@@ -75,9 +75,13 @@ const getAvailableContents = (user, params, data) => {
     .then(contents => {
       const user_targets=user.targets.map(t => t._id.toString())
       const filtered_contents=contents.filter(c => {
-        const content_targets=c.targets?.map(t => t._id.toString())
+        if (c.default) {
+          return true
+        }
+        const content_targets=c.targets?.map(t => t._id.toString()) || []
         return lodash.isEqual(user_targets.sort(), content_targets.sort())
       })
+      return filtered_contents
     })
 }
 

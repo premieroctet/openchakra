@@ -194,6 +194,9 @@ describe('Test models ', () => {
   })
 
   it.only('Should return target events', async () => {
+    const cat=await Category.create({name: 'Poids', picture: 'hop'})
+    const target=await Target.create({name: 'Cible poids', category: cat})
+    const target2=await Target.create({name: 'Cible poids 2', category: cat})
     const user=await User.create({
       activity: Object.keys(ACTIVITY)[0],
       gender: Object.keys(GENDER)[0],
@@ -201,8 +204,15 @@ describe('Test models ', () => {
       home_status: Object.keys(HOME_STATUS)[0],
       pseudo: 'seb', birthday: moment(),
       role: ROLE_CUSTOMER, email: 'a@a.com',
-      lastname: 'Auvray', firstname: 'Sébastien'})
-    //const content=await Content.create({})
+      lastname: 'Auvray', firstname: 'Sébastien',
+      targets:[target, target2]
+    })
+    const key=await Key.create({name: 'name', picture: 'hop'})
+    const content=await Content.create({
+      name: 'name', key: key, duration: 1,
+      contents: 'contenu', default: false, picture: 'hop', type: 'VIDEO',
+      targets:[target, target2]
+    })
     const contents=await getAvailableContents(user)
     console.log(contents)
   })

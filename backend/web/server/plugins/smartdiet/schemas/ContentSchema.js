@@ -42,10 +42,10 @@ const ContentSchema = new Schema({
     ref: 'user',
   }],
   // Targets: specificity/objectives
-  targets: {
+  targets: [{
     type: Schema.Types.ObjectId,
     ref: 'target',
-  },
+  }],
   likes: [{
     type: Schema.Types.ObjectId,
     ref: 'user',
