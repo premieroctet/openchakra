@@ -24,6 +24,7 @@ type ComponentType =
   | 'BreadcrumbLink'
   | 'Button'
   | 'Card'
+  | 'Chart'
   | 'Center'
   | 'Checkbox'
   | 'CircularProgress'
