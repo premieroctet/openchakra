@@ -12,7 +12,6 @@ const CreatePageAction = () => {
     <>
     <Button
       borderRadius={'full'}
-      ml={8}
       paddingInline={'6'}
       bgColor="#5bbdc5"
       color={'white'}

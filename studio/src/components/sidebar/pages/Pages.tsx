@@ -66,18 +66,15 @@ const Pages = () => {
             )}
           </InputRightElement>
         </InputGroup>
-        <PageList searchTerm={searchTerm} />
         <Box
-          alignSelf={'end'}
           display="flex"
           flexDirection="column"
-          alignItems={'start'}
           mb={3}
-          mt={19}
-          position={'relative'}
+          mt={2}
         >
           <CreatePageAction />
         </Box>
+        <PageList searchTerm={searchTerm} />
       </Box>
     </DarkMode>
   )
