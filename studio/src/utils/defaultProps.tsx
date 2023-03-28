@@ -301,6 +301,7 @@ let DEFAULT_PROPS: PreviewDefaultProps = {
     children: 'Tag name',
   },
   Text: { children: 'Text value' },
+  VisuallyHidden: { children: '' },
 }
 
 //@ts-ignore
