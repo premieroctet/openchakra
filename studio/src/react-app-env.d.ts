@@ -84,6 +84,7 @@ type ComponentType =
   | 'Text'
   | 'Textarea'
   | 'Timer'
+  | 'VisuallyHidden'
 
 type MetaComponentType =
   | 'FormControlMeta'
