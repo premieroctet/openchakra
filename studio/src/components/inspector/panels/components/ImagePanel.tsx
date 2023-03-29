@@ -20,6 +20,7 @@ const ImagePanel = () => {
   const alt = usePropsSelector('alt')
   const htmlHeight = usePropsSelector('htmlHeight')
   const htmlWidth = usePropsSelector('htmlWidth')
+  const srcWhenChecked = usePropsSelector('srcWhenChecked')
 
   return (
     <>
@@ -29,6 +30,17 @@ const ImagePanel = () => {
           value={src || ''}
           size="sm"
           name="src"
+          onChange={setValueFromEvent}
+        />
+        <Button size={'xs'} onClick={onOpen}>...</Button>
+      </FormControl>
+
+      <FormControl label="Source when checked" htmlFor="src">
+        <Input
+          placeholder="Image URL"
+          value={src || ''}
+          size="sm"
+          name="srcWhenChecked"
           onChange={setValueFromEvent}
         />
         <Button size={'xs'} onClick={onOpen}>...</Button>
