@@ -14,7 +14,7 @@ const MediaPreview: React.FC<IPreviewProps> = ({ component }) => {
   }
 
   return (
-    <Box pos="relative" ref={drop(ref)} {...props}>
+    <Box pos="relative"  {...props}>
       <Media ref={drop(ref)} src={props.src} {...props} />
     </Box>
   )

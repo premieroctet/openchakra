@@ -13,12 +13,11 @@ export const mediaWrapper = ({
   src,
   htmlHeight,
   htmlWidth,
-  isIframe = false,
+  ...props
 }: {
   src: string
   htmlHeight?: string
   htmlWidth?: string
-  isIframe?: boolean
 }) => {
   // const {htmlWidth, htmlHeight} = props
 
@@ -28,20 +27,13 @@ export const mediaWrapper = ({
     height: htmlHeight || '100%',
   }
 
-  const forceExt = (src: string, isIframe:boolean) => {
-     if (isIframe || isVideoProvider(src)) {
-      return 'html'
-     }
-     return false
-  }
-
   const isVideoProvider = (src: string) => {
     /* Detect YouTube and Vimeo url videos */
     const regex = /(http:|https:|)\/\/(player.|www.)?(vimeo\.com|youtu(be\.com|\.be|be\.googleapis\.com))\/(video\/|embed\/|watch\?v=|v\/)?([A-Za-z0-9._%-]*)(\&\S+)?/g
     return regex.test(src)
   }
 
-  const ext = forceExt(src, isIframe) || getExtension(src)
+  const ext = !isVideoProvider(src) ? getExtension(src) : 'html'
 
   switch (ext) {
     case 'mp4':
@@ -78,15 +70,6 @@ export const mediaWrapper = ({
     case 'html':
       return (
         <iframe
-          style={
-            {
-              height: 'inherit', 
-              width: 'inherit', 
-              minHeight: 'inherit',
-              minWidth: 'inherit',
-              borderRadius: 'inherit',
-            }
-          }
           loading="lazy"
           title={src}
           src={src}

@@ -4,7 +4,6 @@ import {
   Input, 
   useDisclosure,
 } from '@chakra-ui/react'
-import SwitchControl from '~components/inspector/controls/SwitchControl'
 import { useForm } from '~hooks/useForm'
 import FormControl from '~components/inspector/controls/FormControl'
 import usePropsSelector from '~hooks/usePropsSelector'
@@ -19,7 +18,6 @@ const MediaPanel = () => {
   const alt = usePropsSelector('alt')
   const htmlHeight = usePropsSelector('htmlHeight')
   const htmlWidth = usePropsSelector('htmlWidth')
-  const isIframe = usePropsSelector('isIframe')
 
   return (
     <>
@@ -59,7 +57,6 @@ const MediaPanel = () => {
           onChange={setValueFromEvent}
         />
       </FormControl>
-      <SwitchControl label="Is iframe" name="isIframe" />
 
       <MediaModal isOpen={isOpen} onClose={onClose} />
     </>
