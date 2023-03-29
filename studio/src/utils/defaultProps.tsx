@@ -197,7 +197,6 @@ let DEFAULT_PROPS: PreviewDefaultProps = {
   },
   Checkbox: {
     children: 'Label checkbox',
-    isReadOnly: true,
     isChecked: false,
   },
   CircularProgress: {
