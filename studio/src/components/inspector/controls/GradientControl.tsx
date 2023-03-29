@@ -82,7 +82,7 @@ const GradientControl = (props: GradientControlPropsType) => {
       setGradientColor(colorCopy)
     } else {
       setGradientColor(colorCopy)
-      setValue(props.name, null)
+      setValue(props.name, "")
     }
   }
 
