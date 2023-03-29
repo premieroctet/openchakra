@@ -1,3 +1,4 @@
+const { EVENT_DISCRIMINATOR } = require('../../smartdiet/consts')
 const mongoose = require('mongoose')
 const moment = require('moment')
 const {schemaOptions} = require('../../../utils/schemas')
@@ -55,7 +56,7 @@ const EventSchema = new Schema(
       required: true,
     }
   },
-  schemaOptions,
+  {...schemaOptions, ...EVENT_DISCRIMINATOR },
 )
 
 // This booking's payments

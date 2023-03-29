@@ -114,7 +114,10 @@ const Medias = ({
 
   // Images filtered by search input => TODO improve search
   const imagesToDisplay = mediaSearch
-    ? filteredImages.filter((img: s3media) => img.Key.includes(mediaSearch))
+    ? filteredImages.filter((img: s3media) => {
+      const s3file = img.Key.toLowerCase()
+      return s3file.includes(mediaSearch.toLowerCase())
+    })
     : filteredImages
 
   return (

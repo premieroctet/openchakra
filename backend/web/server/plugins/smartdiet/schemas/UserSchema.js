@@ -1,7 +1,8 @@
-const { HOME_STATUS, ROLES } = require('../consts')
 const mongoose = require('mongoose')
-const bcrypt=require('bcryptjs')
+const {ACTIVITY, HOME_STATUS, ROLES, ROLE_CUSTOMER, STATUS_FAMILY} = require('../consts')
+const {GENDER} = require('../../dekuple/consts')
 const {schemaOptions} = require('../../../utils/schemas')
+const lodash=require('lodash')
 
 const Schema = mongoose.Schema
 
@@ -21,10 +22,14 @@ const UserSchema = new Schema({
     required: [true, 'L\'email est obligatoire'],
     set: v => v.toLowerCase().trim(),
   },
+  birthday: {
+    type: Date,
+    required: [function() { return this.role==ROLE_CUSTOMER }, 'La date de naissance est obligatoire'],
+  },
   pseudo: {
     type: String,
     set: v => v?.trim(),
-    required: [true, 'Le pseudo est obligatoire'],
+    required: [function() { return this.role==ROLE_CUSTOMER }, 'Le pseudo est obligatoire'],
   },
   company: {
     type: Schema.Types.ObjectId,
@@ -40,24 +45,48 @@ const UserSchema = new Schema({
     type: String,
     enum: Object.keys(ROLES),
     default: ROLES.ROLE_CUSTOMER,
-    required: false,
-    //required: [true, 'Le rôle est obligatoire'],
+    required: [true, 'Le rôle est obligatoire'],
   },
   home_status: {
     type: String,
     enum: Object.keys(HOME_STATUS),
-    required: false,
+    required: [function() { return this.role==ROLE_CUSTOMER }, 'Le statut est obligatoire'],
   },
   cguAccepted: {
     type: Boolean,
-    validate: [value => !!value, 'Vous devez accepter les CGU'],
-    required: [true, 'Vous devez accepter les CGU'],
+    validate: {
+      validator: function(v) { return this.role!=ROLE_CUSTOMER || !!v },
+      message: 'Vous devez accepter les CGU',
+    },
+    required: [function() { return this.role==ROLE_CUSTOMER }, 'Vous devez accepter les CGU'],
   },
   dataTreatmentAccepted: {
     type: Boolean,
-    validate: [value => !!value, 'Vous devez accepter le traitement des données'],
-    required: [true, 'Vous devez accepter le traitement des données'],
+    validate: {
+      validator: function(v) { return this.role!=ROLE_CUSTOMER || !!v },
+      message: 'Vous devez accepter le traitement des données',
+    },
+    required: [function() { return this.role==ROLE_CUSTOMER }, 'Vous devez accepter le traitement des données'],
   },
+  child_count: {
+    type: Number,
+    required: [function() { return this.role==ROLE_CUSTOMER && this.home_status==STATUS_FAMILY },
+      'Le nombre d\'enfants est obligatoire'],
+  },
+  gender: {
+    type: String,
+    enum: Object.keys(GENDER),
+    required: [function() { return this.role==ROLE_CUSTOMER }, 'Le genre est obligatoire'],
+  },
+  activity: {
+    type: String,
+    enum: Object.keys(ACTIVITY),
+    required: [function() { return this.role==ROLE_CUSTOMER }, "L'activité est obligatoire"],
+  },
+  targets: [{
+    type: Schema.Types.ObjectId,
+    ref: 'target',
+  }],
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
@@ -68,6 +97,22 @@ UserSchema.virtual('password2').get(function() {
 UserSchema.virtual('fullname').get(function() {
   return `${this.firstname || ''} ${this.lastname || ''}`
 })
+
+UserSchema.virtual('spoons_count').get(function() {
+  return lodash(this.spoons)
+    .map(s => s.count)
+    .sum()
+})
+
+// Computed virtual
+UserSchema.virtual('available_contents').get(function() {})
+
+// TODO Use justOne to return the shop or null
+UserSchema.virtual("spoons", {
+  ref: "spoon", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "user" // is equal to foreignField
+});
 
 /* eslint-enable prefer-arrow-callback */
 

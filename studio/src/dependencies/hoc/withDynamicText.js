@@ -17,6 +17,8 @@ const withDynamicText = Component => {
       <Component
         {...lodash.omit(props, ['children'])}
         {...conditionalProperties}
+        data-value={value}
+        value={value}
       >
         {value}
       </Component>
