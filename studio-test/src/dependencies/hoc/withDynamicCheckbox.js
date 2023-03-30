@@ -4,10 +4,11 @@ import React, {useState} from 'react'
 import lodash from 'lodash'
 
 const withDynamicCheckbox = Component => {
-  const Internal = ({ dataSource, context, backend, ...props }) => {
+  const Internal = ({ dataSource, context, subDataSource, subAttribute, enum: enums, backend, ...props }) => {
 
     const initialValue = lodash.get(dataSource, props.attribute)
     const [value, setValue]=useState(initialValue)
+    let refValues=null
 
     const onChange = ev => {
       setValue(!!ev.target.checked)
@@ -18,6 +19,18 @@ const withDynamicCheckbox = Component => {
         backend,
       }).then(() => props.reload())
     }
+
+    // attribute, dataModel, value
+
+    if (enums) {
+      const checkOptions = JSON.parse(enums)
+    }
+
+
+    console.log({ dataSource, context, subDataSource, subAttribute, enums, backend, ...props })
+    // console.log(checkOptions)
+    console.log(initialValue)
+    console.log('props', props)
 
     const pr={...props, isChecked: value, value}
     return (
