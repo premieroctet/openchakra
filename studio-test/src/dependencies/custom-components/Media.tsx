@@ -1,14 +1,26 @@
 import React from 'react'
 import { mediaWrapper } from './MediaWrapper'
-import { 
-  Box,
-} from '@chakra-ui/react'
 
 // TODO: DIsplay "Source needed" in Studio only
-const Media = ({src, ...props}:{src: string }) => (
+const Media = ({
+  src, 
+  htmlWidth, 
+  htmlHeight, 
+  isIframe = false,
+}:{
+  src: string, 
+  htmlWidth: string, 
+  htmlHeight: string, 
+  isIframe: boolean 
+}) => {  
+
+  return (
   <>
-  {src ? <Box {...props}>{mediaWrapper({src, ...props})}</Box> : null}
+  {src ? <>
+    {mediaWrapper({src, htmlWidth, htmlHeight, isIframe})}
+    </> : null
+  }
   </>
-)
+)}
 
 export default Media
