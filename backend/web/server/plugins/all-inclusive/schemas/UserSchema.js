@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const bcrypt=require('bcryptjs')
 const {schemaOptions} = require('../../../utils/schemas')
+const {ROLES} = require('../consts')
 
 const Schema = mongoose.Schema
 
@@ -30,6 +31,11 @@ const UserSchema = new Schema({
     type: Boolean,
     default: true,
     required: true,
+  },
+  role: {
+    type: String,
+    enum: Object.keys(ROLES),
+    required: [true, 'Le rôle est obligatoire'],
   },
 }, schemaOptions)
 

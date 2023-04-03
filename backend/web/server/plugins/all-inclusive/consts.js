@@ -11,5 +11,6 @@ const ROLES={
 }
 
 module.exports={
-  ROLES
+  ROLES,
+  ROLE_TI,
 }
