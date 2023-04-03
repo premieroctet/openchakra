@@ -13,4 +13,5 @@ const ROLES={
 module.exports={
   ROLES,
   ROLE_TI,
+  ROLE_COMPANY_ADMIN,
 }
