@@ -342,9 +342,7 @@ const buildBlock = ({
           if (propsValueAsObject && Object.keys(propsValue).length >= 1) {
             const gatheredProperties = Object.entries(propsValue)
               .map(([prop, value]) => {
-                return !isNaN(parseInt(value))
-                  ? ` ${prop}: '${value}' `
-                  : ` ${prop}: '${value}' `
+                return ` '${prop}': '${value}' `
               })
               .join(', ')
 
