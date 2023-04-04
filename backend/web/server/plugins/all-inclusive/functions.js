@@ -1,3 +1,4 @@
+const { ROLES } = require('./consts')
 const {
   declareEnumField,
   declareVirtualField,
@@ -21,4 +22,5 @@ setPreprocessGet(preprocessGet)
 const USER_MODELS=['user', 'loggedUser']
 USER_MODELS.forEach(m => {
   declareVirtualField({model: m, field: 'fullname', instance: 'String', requires: 'firstname,lastname'})
+  declareEnumField({model: m, field: 'role', enumValues: ROLES})
 })
