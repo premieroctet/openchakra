@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import { Input } from '@chakra-ui/react'
+import { Select } from '@chakra-ui/react'
 import SwitchControl from '~components/inspector/controls/SwitchControl'
 import FormControl from '~components/inspector/controls/FormControl'
 import { useForm } from '~hooks/useForm'
@@ -16,24 +16,21 @@ const LinkPanel = () => {
   return (
     <>
       <FormControl htmlFor={`href`} label={'Href'}>
-        <Input
+        <Select
           id={`href`}
-          list={`href-flavors`}
           size="xs"
-          type="text"
           name={`href`}
           value={href || ''}
           onChange={setValueFromEvent}
           autoComplete="off"
-        />
+        >
 
-        <datalist id={`href-flavors`}>
           {Object.values(pages).map(page => (
-            <option key={page.pageId} value={getPageUrl(page.pageId, pages)}>
+            <option key={page.pageId} value={page.pageId}>
             {page.pageName}
             </option>
           ))}
-        </datalist>
+        </Select>
       </FormControl>
       <SwitchControl label="External" name="isExternal" />
     </>

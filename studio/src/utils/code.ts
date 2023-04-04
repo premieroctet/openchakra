@@ -45,6 +45,9 @@ export const getPageUrl = (
   pages: { [key: string]: PageState },
 ) => {
   try {
+    if (!pages[pageId]) {
+      throw new Error(`Page ${pageId} inconnue`)
+    }
     return pages?.[pageId]?.pageName
       .toLowerCase()
       .replace(/ /gi, '-')
@@ -376,6 +379,10 @@ const buildBlock = ({
               !isNaN(propsValue)
             ) {
               operand = `={${propsValue}}`
+            }
+
+            if (propName=='href') {
+              operand=`="${getPageUrl(propsValue, pages)}"`
             }
 
             propsContent += ` ${propName}${operand}`
