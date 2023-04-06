@@ -45,7 +45,6 @@ const UserSchema = new Schema({
     type: String,
     enum: Object.keys(ROLES),
     default: ROLES.ROLE_CUSTOMER,
-    required: [true, 'Le rôle est obligatoire'],
   },
   home_status: {
     type: String,

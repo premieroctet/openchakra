@@ -1,3 +1,6 @@
+const {forceDataModelSmartdiet, buildAttributesException}=require('../utils')
+forceDataModelSmartdiet()
+
 const {
   getAvailableContents
 } = require('../../server/plugins/smartdiet/functions')
@@ -12,9 +15,6 @@ const { STATUS } = require('../../server/plugins/aftral/consts')
 const CollectiveChallenge = require('../../server/models/CollectiveChallenge')
 const moment=require('moment')
 const mongoose = require('mongoose')
-const {forceDataModelSmartdiet, buildAttributesException}=require('../utils')
-
-forceDataModelSmartdiet()
 const {MONGOOSE_OPTIONS} = require('../../server/utils/database')
 const {ROLE_CUSTOMER, ROLE_ADMIN, STATUS_FAMILY} = require('../../server/plugins/smartdiet/consts')
 
@@ -155,11 +155,9 @@ describe('Test models ', () => {
 
   it('Mandatory attributes for user role', () => {
     const ex=buildAttributesException('activity birthday gender dataTreatmentAccepted cguAccepted pseudo home_status'.split(' '))
-    expect(User.create({
-      role: ROLE_CUSTOMER, email: 'a@a.com',
-      lastname: 'Auvray', firstname: 'Sébastien'}))
-      .rejects
-      .toThrow(ex)
+    expect(User.create({email: 'a@a.com', lastname: 'Auvray', firstname: 'Sébastien'}))
+      .resolves
+      .toBeTruthy()
     const ex2=buildAttributesException('activity birthday gender dataTreatmentAccepted cguAccepted pseudo child_count'.split(' '))
     expect(User.create({
       role: ROLE_CUSTOMER, email: 'a@a.com',
@@ -189,11 +187,10 @@ describe('Test models ', () => {
     .rejects
     .toThrow(/.*doit.*CollectiveChallenge.*/)
     const events=await Event.find()
-    console.log(events)
     expect(events.length).toBe(1)
   })
 
-  it.only('Should return target events', async () => {
+  it('Should return target events', async () => {
     const cat=await Category.create({name: 'Poids', picture: 'hop'})
     const target=await Target.create({name: 'Cible poids', category: cat})
     const target2=await Target.create({name: 'Cible poids 2', category: cat})
@@ -214,6 +211,5 @@ describe('Test models ', () => {
       targets:[target, target2]
     })
     const contents=await getAvailableContents(user)
-    console.log(contents)
   })
 })
