@@ -156,8 +156,8 @@ describe('Test models ', () => {
   it('Mandatory attributes for user role', () => {
     const ex=buildAttributesException('activity birthday gender dataTreatmentAccepted cguAccepted pseudo home_status'.split(' '))
     expect(User.create({email: 'a@a.com', lastname: 'Auvray', firstname: 'Sébastien'}))
-      .resolves
-      .toBeTruthy()
+    .rejects
+    .toThrow(ex)
     const ex2=buildAttributesException('activity birthday gender dataTreatmentAccepted cguAccepted pseudo child_count'.split(' '))
     expect(User.create({
       role: ROLE_CUSTOMER, email: 'a@a.com',
