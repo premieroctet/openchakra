@@ -70,7 +70,7 @@ const getVirtualCharacteristics = (modelName, attName) => {
 const getAttributeCaracteristics = (modelName, att) => {
   const multiple = att.instance == 'Array'
   const suggestions = att.options?.suggestions
-  const baseData = multiple ? att.caster : att
+  const baseData = att.caster || att
   const type =
     baseData.instance == 'ObjectID' ? baseData.options.ref : baseData.instance
   const ref = baseData.instance == 'ObjectID'
@@ -311,6 +311,10 @@ const buildQuery = (model, id, fields) => {
   let query = mongoose.connection.models[model].find(criterion, select)
   query = populates.reduce((q, key) => q.populate(key), query)
   return query
+}
+
+const simpleCloneModel = data => {
+  return lodash.omit(data.toObject(), ['_id', 'id'])
 }
 
 const cloneModel = ({data, withOrigin, forceData = {}}) => {
@@ -628,4 +632,5 @@ module.exports = {
   putAttribute,
   idEqual,
   getExposedModels,
+  simpleCloneModel,
 }
