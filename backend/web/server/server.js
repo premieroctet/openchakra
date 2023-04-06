@@ -59,7 +59,7 @@ require('./models/PartnerApplication')
 require('./models/Gift')
 require('./models/SpoonGain')
 require('./models/UserSpoon')
-require('./models/Contents')
+require('./models/Content')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 
