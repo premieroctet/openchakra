@@ -55,7 +55,8 @@ export const getPageUrl = (
       .replace(/\p{Diacritic}/gu, '')
   } catch (err) {
     console.error(`getPageUrl ${pageId}:${err}`)
-    throw err
+    return pageId
+    //throw err
   }
 }
 
