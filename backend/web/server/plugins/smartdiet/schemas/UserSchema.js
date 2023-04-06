@@ -107,7 +107,6 @@ UserSchema.virtual('spoons_count').get(function() {
 // Computed virtual
 UserSchema.virtual('available_contents').get(function() {})
 
-// TODO Use justOne to return the shop or null
 UserSchema.virtual("spoons", {
   ref: "spoon", // The Model to use
   localField: "_id", // Find in Model, where localField

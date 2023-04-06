@@ -28,6 +28,14 @@ const OfferSchema = new Schema({
     type: Number,
     required: [true, 'Le nombre de contenus autorisés est obligatoire'],
   },
+
 }, schemaOptions)
+
+OfferSchema.virtual("company", {
+  ref: "company", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "offer", // is equal to foreignField
+  justOne: true,
+});
 
 module.exports = OfferSchema

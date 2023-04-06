@@ -1,4 +1,6 @@
+const { getModels } = require('../../server/utils/database')
 const {forceDataModelSmartdiet, buildAttributesException}=require('../utils')
+
 forceDataModelSmartdiet()
 
 const {
@@ -212,4 +214,19 @@ describe('Test models ', () => {
     })
     const contents=await getAvailableContents(user)
   })
+
+  it('Offer.company must be ref unique', async () => {
+    const models=getModels()
+    const targetsType=models.category.attributes.targets
+    console.log(targetsType)
+    expect(targetsType.type).toBe('target')
+    expect(targetsType.multiple).toBe(true)
+    expect(targetsType.ref).toBe(true)
+    const companyType=models.offer.attributes.company
+    console.log(companyType)
+    expect(companyType.type).toBe('company')
+    expect(companyType.multiple).toBe(false)
+    expect(companyType.ref).toBe(true)
+  })
+
 })

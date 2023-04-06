@@ -1,4 +1,14 @@
 const {
+  declareComputedField,
+  declareEnumField,
+  declareVirtualField,
+  setPostCreateData,
+  setPreCreateData,
+  setPreprocessGet,
+  simpleCloneModel,
+} = require('../../utils/database')
+const Offer = require('../../models/Offer')
+const {
   ACTIVITY,
   COMPANY_ACTIVITY,
   CONTENTS_TYPE,
@@ -10,13 +20,6 @@ const {
   TARGET_TYPE
 } = require('./consts')
 const Content = require('../../models/Content')
-const {
-  declareComputedField,
-  declareEnumField,
-  declareVirtualField,
-  setPreCreateData,
-  setPreprocessGet,
-} = require('../../utils/database')
 const lodash=require('lodash')
 const moment = require('moment')
 const User = require('../../models/User')
@@ -75,6 +78,13 @@ declareEnumField({model: 'userSpoon', field: 'source', enumValues: SPOON_SOURCE}
 
 declareEnumField({model: 'spoonGain', field: 'source', enumValues: SPOON_SOURCE})
 
+declareVirtualField({model: 'offer', field: 'company', instance: 'offer',
+  requires: '', multiple: false,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'company'}}
+})
+
 const getAvailableContents = (user, params, data) => {
   return Content.find()
     .then(contents => {
@@ -92,6 +102,27 @@ const getAvailableContents = (user, params, data) => {
 
 declareComputedField('user', 'available_contents', getAvailableContents)
 declareComputedField('loggedUser', 'available_contents', getAvailableContents)
+
+
+const postCreate = ({model, params, data}) => {
+  // Create company => duplicate offer
+  if (model=='company') {
+    return Offer.findById(data.offer)
+      .then(offer => Offer.create(simpleCloneModel(data.offer)))
+      .then(offer => {data.offer=offer._id; return data})
+      .then(data => data.save())
+  }
+  if (model=='booking') {
+    console.log(`Sending mail to ${data.booking_user.email} and admins for booking ${data._id}`)
+    sendNewBookingToMember({booking:data})
+    User.find({role: FUMOIR_MANAGER})
+      .then(managers => Promise.allSettled(managers.map(manager => sendNewBookingToManager({booking:data, manager}))))
+  }
+
+  return Promise.resolve(data)
+}
+
+setPostCreateData(postCreate)
 
 module.exports={
   getAvailableContents,

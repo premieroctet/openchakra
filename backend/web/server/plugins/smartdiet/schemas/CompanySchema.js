@@ -30,6 +30,11 @@ const CompanySchema = new Schema(
       ref: 'user',
       required: true,
     },
+    offer: {
+      type: Schema.Types.ObjectId,
+      ref: 'offer',
+      required: true,
+    },
   },
   schemaOptions,
 )
