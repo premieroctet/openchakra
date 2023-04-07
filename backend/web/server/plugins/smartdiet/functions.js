@@ -66,7 +66,6 @@ declareEnumField({model: 'event', field: 'type', enumValues:EVENT_TYPE})
 declareEnumField({model: 'collectiveChallenge', field: 'type', enumValues:EVENT_TYPE})
 
 declareEnumField({model: 'category', field: 'type', enumValues:TARGET_TYPE})
-
 declareVirtualField({model: 'category', field: 'targets', instance: 'Array',
   requires: '', multiple: true,
   caster: {
@@ -83,6 +82,25 @@ declareVirtualField({model: 'offer', field: 'company', instance: 'offer',
   caster: {
     instance: 'ObjectID',
     options: {ref: 'company'}}
+})
+
+declareVirtualField({model: 'target', field: 'contents', instance: 'Array',
+  requires: '', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'content'}}
+})
+declareVirtualField({model: 'target', field: 'groups', instance: 'Array',
+  requires: '', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'group'}}
+})
+declareVirtualField({model: 'target', field: 'users', instance: 'Array',
+  requires: '', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'user'}}
 })
 
 const getAvailableContents = (user, params, data) => {

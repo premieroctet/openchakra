@@ -20,4 +20,23 @@ const TargetSchema = new Schema({
   },
 }, schemaOptions)
 
+TargetSchema.virtual("contents", {
+  ref: "content", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "targets" // is equal to foreignField
+});
+
+TargetSchema.virtual("groups", {
+  ref: "group", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "targets" // is equal to foreignField
+});
+
+
+TargetSchema.virtual("users", {
+  ref: "user", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "targets" // is equal to foreignField
+});
+
 module.exports = TargetSchema
