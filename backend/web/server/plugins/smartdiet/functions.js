@@ -61,6 +61,9 @@ USER_MODELS.forEach(m => {
 declareEnumField({model: 'company', field: 'activity', enumValues: COMPANY_ACTIVITY})
 
 declareEnumField({model: 'content', field: 'type', enumValues:CONTENTS_TYPE})
+declareVirtualField({model: 'content', field: 'likes_count', instance: 'Number', requires: 'likes'})
+declareVirtualField({model: 'content', field: 'shares_count', instance: 'Number', requires: 'shares'})
+declareVirtualField({model: 'content', field: 'comments_count', instance: 'Number', requires: 'comments'})
 
 declareEnumField({model: 'event', field: 'type', enumValues:EVENT_TYPE})
 declareEnumField({model: 'collectiveChallenge', field: 'type', enumValues:EVENT_TYPE})

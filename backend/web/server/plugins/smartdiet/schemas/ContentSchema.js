@@ -56,4 +56,16 @@ const ContentSchema = new Schema({
   }],
 }, schemaOptions)
 
+ContentSchema.virtual('likes_count').get(function() {
+  return this.likes?.length || 0
+})
+
+ContentSchema.virtual('shares_count').get(function() {
+  return this.shares?.length || 0
+})
+
+ContentSchema.virtual('comments_count').get(function() {
+  throw new Error('Not implemented, requires comments')
+})
+
 module.exports = ContentSchema
