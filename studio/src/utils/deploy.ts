@@ -3,7 +3,7 @@ import { ProjectState } from '~/core/models/project'
 import { PageSettings } from '../core/models/project';
 import { build, copyFile, install, start, clean } from './http'
 import { generateCode, generateApp, normalizePageName } from './code'
-import { validate } from './validation'
+import { validateComponents } from './validation'
 
 // If true, build target project when compliaiton fixed
 const TARGET_BUILD = false
@@ -22,7 +22,7 @@ const cleanPages = (pages:PageSettings[]) => {
 export const deploy = (state: ProjectState, models: any) => {
   const pages = Object.values(state.pages)
   return Promise.all(
-    pages.map(({ pageName, components }) => validate(components)),
+    pages.map(({ pageName, components }) => validateComponents(components)),
   )
     .then(res => {
       if (res.length>0) {

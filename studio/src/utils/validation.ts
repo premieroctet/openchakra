@@ -142,7 +142,7 @@ export const validateComponent = (
   return warnings
 }
 
-export const validate = (icomponents: IComponents): IWarning[] => {
+export const validateComponents = (icomponents: IComponents): IWarning[] => {
   const components = Object.values(icomponents)
   const warnings = lodash([
     checkEmptyDataProvider,
