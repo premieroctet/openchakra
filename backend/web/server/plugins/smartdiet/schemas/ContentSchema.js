@@ -65,7 +65,8 @@ ContentSchema.virtual('shares_count').get(function() {
 })
 
 ContentSchema.virtual('comments_count').get(function() {
-  throw new Error('Not implemented, requires comments')
+  console.error('Not implemented, requires comments')
+  return 0
 })
 
 module.exports = ContentSchema
