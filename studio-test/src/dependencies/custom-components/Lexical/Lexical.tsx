@@ -86,7 +86,7 @@ const editorConfig = {
 };
 
 // TODO add all properties to root returned component
-const props={id, value: html, ...rest}
+const props={id, attribute, value: html, ...rest}
 return (
   <Flex {...props}>
     <LexicalComposer initialConfig={editorConfig} >
