@@ -7,7 +7,7 @@ const withDynamicCheckbox = Component => {
   const Internal = ({ dataSource, context, backend, ...props }) => {
 
     const initialValue = lodash.get(dataSource, props.attribute)
-    const [value, setValue]=useState(initialValue)
+    const [value, setValue]=useState(initialValue || false)
 
     const onChange = ev => {
       setValue(!!ev.target.checked)
