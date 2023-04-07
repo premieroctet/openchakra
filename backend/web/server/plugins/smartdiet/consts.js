@@ -18,7 +18,7 @@ const CONTENTS_PODCAST='PODCAST'
 const CONTENTS_TYPE = {
   [CONTENTS_ARTICLE]: 'Article',
   [CONTENTS_VIDEO]: 'Vidéo',
-  [CONTENTS_INFOGRAPHY]: 'Infography',
+  [CONTENTS_INFOGRAPHY]: 'Infographie',
   [CONTENTS_PODCAST]: 'Podcast',
 }
 
