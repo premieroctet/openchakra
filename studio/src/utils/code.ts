@@ -363,6 +363,10 @@ const buildBlock = ({
         propsContent += ` backend='/'`
       }
 
+      if (childComponent.type === 'Input' && childComponent.props.type=='password') {
+        propsContent += ` displayEye`
+      }
+
       if (childComponent.props.actionProps) {
         const { page } = isJsonString(childComponent.props.actionProps)
           ? JSON.parse(childComponent.props.actionProps)
