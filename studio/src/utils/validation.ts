@@ -1,6 +1,8 @@
 import lodash from 'lodash'
-const projectSchema = require('./projectSchema.json')
-var Validator = require('jsonschema').Validator
+import { ProjectState } from '~/core/models/project'
+import { getPageUrl } from './misc';
+import projectSchema from './projectSchema.json'
+const Validator = require('jsonschema').Validator
 import { CONTAINER_TYPE } from './dataSources'
 import {ACTIONS} from './actions'
 
@@ -142,7 +144,7 @@ export const validateComponent = (
   return warnings
 }
 
-export const validate = (icomponents: IComponents): IWarning[] => {
+export const validateComponents = (icomponents: IComponents): IWarning[] => {
   const components = Object.values(icomponents)
   const warnings = lodash([
     checkEmptyDataProvider,
@@ -168,6 +170,24 @@ export const validate = (icomponents: IComponents): IWarning[] => {
     .filter(c => !!c)
     .value()
   return warnings
+}
+
+export const validateProject = (project: ProjectState): IWarning[] => {
+  const pages=Object.values(project.pages)
+  const warningPages=lodash(pages)
+    .groupBy(page => getPageUrl(page.pageId, project.pages))
+    .mapValues(v => v.map(p => p.pageName))
+    .pickBy(v => v.length>1)
+    .values()
+  console.log(`warningpages: ${JSON.stringify(warningPages, null, 2)}`)
+
+  const warningsComponents = lodash(pages)
+    .map(p => [p.pageName, validateComponents(p.components)])
+    .fromPairs()
+    .pickBy(v => v.length>0)
+    .mapValues(v => v.map(err => `${err.component.id}:${err.message}`).join(','))
+    .value()
+  return lodash.isEmpty(warningsComponents) ? null : warningsComponents
 }
 
 export const validateJSON = (jsonObject: object) => {

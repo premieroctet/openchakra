@@ -6,7 +6,7 @@ import { useForm } from '~hooks/useForm'
 import usePropsSelector from '~hooks/usePropsSelector'
 import { useSelector } from 'react-redux'
 import { getPages } from '~/core/selectors/components'
-import { getPageUrl } from '../../../../utils/code'
+import { getPageUrl } from '../../../../utils/misc'
 
 const LinkPanel = () => {
   const pages = useSelector(getPages)

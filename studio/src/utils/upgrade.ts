@@ -1,6 +1,6 @@
 import lodash from 'lodash'
 import { ProjectState } from '~core/models/project'
-import { getPageUrl } from '~utils/code'
+import { getPageUrl } from '~utils/misc'
 
 export const CURRENT_VERSION=2
 
