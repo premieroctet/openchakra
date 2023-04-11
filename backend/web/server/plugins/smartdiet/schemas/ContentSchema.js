@@ -6,6 +6,11 @@ const {schemaOptions} = require('../../../utils/schemas')
 const Schema = mongoose.Schema
 
 const ContentSchema = new Schema({
+  creator: {
+    type: Schema.Types.ObjectId,
+    ref: 'user',
+    required: [true, 'Le créateur est obligatoire'],
+  },
   name: {
     type: String,
     required: [true, 'Le nom est obligatoire'],
@@ -54,6 +59,24 @@ const ContentSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'user',
   }],
+  url: {
+    type: String,
+    required: false,
+  },
+  extra_url: {
+    type: String,
+    required: false,
+  },
+  active: {
+    type: Boolean,
+    default: false,
+    required: true,
+  },
+  source: {
+    type: String,
+    required: false,
+  }
+
 }, schemaOptions)
 
 ContentSchema.virtual('likes_count').get(function() {
