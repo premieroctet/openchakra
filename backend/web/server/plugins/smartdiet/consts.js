@@ -65,11 +65,13 @@ const ACTIVITY={
 const TARGET_OBJECTIVE='OBJECTIVE'
 const TARGET_SPECIFICITY='SPECIFICITY'
 const TARGET_ACTIVITY='ACTIVITY'
+const TARGET_HOME='HOME'
 
 const TARGET_TYPE={
   [TARGET_OBJECTIVE]: 'Objectif',
   [TARGET_SPECIFICITY]: 'Spécificité',
   [TARGET_ACTIVITY]: 'Activité',
+  [TARGET_HOME]: 'Foyer',
 }
 
 const COMPANY_ACTIVITY_AGROALIMENTAIRE='COMPANY_ACTIVITY_AGROALIMENTAIRE'
@@ -203,6 +205,14 @@ const SPOON_SOURCE={
 // Discriminator for mongoose products
 const EVENT_DISCRIMINATOR = {discriminatorKey: 'kind'}
 
+const HARDNESS_EASY='EASY'
+const HARDNESS_HARD='HARD'
+
+const HARDNESS={
+  HARDNESS_EASY: "C'est du gâteau",
+  HARDNESS_HARD: "C'est pas de la tarte",
+}
+
 module.exports={
   CONTENTS_TYPE,
   EVENT_TYPE,
@@ -215,4 +225,5 @@ module.exports={
   SPOON_SOURCE,
   EVENT_DISCRIMINATOR,
   EVENT_COLL_CHALLENGE,
+  HARDNESS,
 }

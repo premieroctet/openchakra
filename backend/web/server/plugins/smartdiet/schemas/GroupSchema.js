@@ -31,6 +31,11 @@ const GroupSchema = new Schema({
     ref: 'company',
     required: false,
   },
+  key: {
+    type: Schema.Types.ObjectId,
+    ref: 'key',
+    required: [true, 'La clé est obligatoire'],
+  },
 }, schemaOptions)
 
 module.exports = GroupSchema

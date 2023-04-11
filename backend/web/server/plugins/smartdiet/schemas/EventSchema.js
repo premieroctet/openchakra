@@ -10,6 +10,10 @@ const EventSchema = new Schema({
     type: String,
     required: [true, 'Le nom est obligatoire'],
   },
+  description: {
+    type: String,
+    required: [true, 'La description est obligatoire'],
+  },
   start_date: {
     type: Date,
     required: [true, 'La date de début est obligatoire'],
@@ -24,6 +28,7 @@ const EventSchema = new Schema({
     validate: [v => v!=EVENT_COLL_CHALLENGE, 'Challenge collectif en BD doit être créé par le type CollectiveChallenge'],
     required: [true, 'Le type est obligatoire'],
   },
+  // Users who registered
   registered_by: [{
     type: Schema.Types.ObjectId,
     ref: 'user',
