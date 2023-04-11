@@ -1,6 +1,6 @@
 import camelCase from 'lodash/camelCase'
 
-const capitalize = (value: string) => {
+export const capitalize = (value: string) => {
   return value.charAt(0).toUpperCase() + value.slice(1)
 }
 
