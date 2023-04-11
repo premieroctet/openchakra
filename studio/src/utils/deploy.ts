@@ -2,7 +2,8 @@ import lodash from 'lodash'
 import { ProjectState } from '~/core/models/project'
 import { PageSettings } from '../core/models/project';
 import { build, copyFile, install, start, clean } from './http'
-import { generateCode, generateApp, normalizePageName } from './code'
+import { generateCode, generateApp } from './code'
+import { normalizePageName } from './misc';
 import { validateComponents , validateProject} from './validation'
 
 // If true, build target project when compliaiton fixed
