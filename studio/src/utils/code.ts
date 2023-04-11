@@ -1,7 +1,7 @@
 import {encode} from 'html-entities'
 import filter from 'lodash/filter'
 import isBoolean from 'lodash/isBoolean'
-import lodash, { capitalize } from 'lodash';
+import lodash from 'lodash';
 
 import icons from '~iconsList'
 
@@ -23,7 +23,12 @@ import {
   isSingleDataPage,
 } from './dataSources';
 import { ProjectState, PageState } from '../core/models/project'
-import { getPageFileName, getPageUrl, normalizePageName } from './misc';
+import {
+  capitalize,
+  getPageFileName,
+  getPageUrl,
+  normalizePageName
+} from './misc';
 import { isJsonString } from '../dependencies/utils/misc'
 
 //const HIDDEN_ATTRIBUTES=['dataSource', 'attribute']
