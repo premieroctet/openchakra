@@ -11,6 +11,7 @@ import {
 } from 'react-icons/md'
 import FormControl from '~components/inspector/controls/FormControl'
 import useBreakpoints from '~hooks/useBreakpoints'
+import { fontsName } from '~/dependencies/theme/Fonts'
 
 const TextPanel = () => {
   const theme = useTheme()
@@ -220,6 +221,7 @@ const TextPanel = () => {
               {Object.keys(theme.fonts).map(option => (
                 <option key={option} value={option} />
               ))}
+              {fontsName.map((font) => <option key={font} value={font} />)}
             </datalist>
           </FormControl>
 

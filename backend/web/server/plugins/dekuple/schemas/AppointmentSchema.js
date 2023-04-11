@@ -1,6 +1,9 @@
 const mongoose = require('mongoose')
 const moment=require('moment')
-const {APPOINTMENT_OTHER, APPOINTMENT_TYPE, APPOINTMENT_NOTIF_DELAY} = require('../consts')
+const {
+  APPOINTMENT_OTHER, APPOINTMENT_TYPE, APPOINTMENT_NOTIF_DELAY,
+  APPOINTMENT_STATUS_TO_COME, APPOINTMENT_STATUS_PAST,
+} = require('../consts')
 const {schemaOptions} = require('../../../utils/schemas')
 
 const Schema = mongoose.Schema
@@ -38,6 +41,18 @@ AppointmentSchema.virtual('type_str').get(function() {
     return this.otherTitle
   }
   return APPOINTMENT_TYPE[this.type]
+})
+
+AppointmentSchema.virtual('status').get(function() {
+  if (!this.date) {
+    return null
+  }
+  if (moment(this.date).isBefore(moment())) {
+    return APPOINTMENT_STATUS_PAST
+  }
+  if (moment(this.date).isAfter(moment())) {
+    return APPOINTMENT_STATUS_TO_COME
+  }
 })
 
 AppointmentSchema.methods.shouldNotify = function() {

@@ -31,7 +31,7 @@ const Fonts = () => (
       @font-face {
         font-family: 'Futura';
         src: local('Futura'), 
-            url('fonts/futura.ttf') format('truetype');
+            url('fonts/Futura Medium.otf') format('opentype');
         font-weight: normal;
         font-style: normal;
       }
@@ -77,8 +77,44 @@ const Fonts = () => (
         font-weight: normal;
         font-style: normal;
       }
+
+      /* Fontes all-inclusive */
+      @font-face {
+        font-family: 'Crapaud';
+        src: local('Crapaud'), 
+            url('fonts/crapaud_petit.ttf') format('truetype');
+        font-weight: lighter;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: 'Crapaud';
+        src: local('Crapaud'), 
+            url('fonts/crapaud_gros.ttf') format('truetype');
+        font-weight: bold;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: 'berthold-akzidenz';
+        src: local('berthold-akzidenz-grotesk'), 
+            url('fonts/berthold-akzidenz-grotesk.otf') format('opentype');
+        font-weight: normal;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: 'berthold-akzidenz condensed';
+        src: local('berthold-akzidenz-grotesk condensed'), 
+            url('fonts/berthold-akzidenz-grotesk-be-condensed.otf') format('opentype');
+        font-weight: normal;
+        font-style: normal;
+      }
       `}
   />
 )
+
+export const fontsName = [
+  'Crapaud',
+  'berthold-akzidenz',
+  'berthold-akzidenz condensed'
+]
 
 export default Fonts

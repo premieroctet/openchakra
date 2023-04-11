@@ -4,7 +4,6 @@ import { ACTIONS } from '../utils/actions'
 
 const withDynamicSelect = Component => {
   const Internal = ({noautosave, dataSource, subDataSource, subAttribute, subAttributeDisplay, setComponentValue, ...props}) => {
-    console.log(`Datasource:${JSON.stringify(dataSource,null, 2)}`)
     let values = props.dataSourceId ? dataSource: null
     let value=lodash.get(dataSource, props.attribute)
     value=value?._id || value
@@ -13,9 +12,12 @@ const withDynamicSelect = Component => {
     const attribute = props.attribute
     const enumValues=props.enum ? JSON.parse(props.enum) : null
     let refValues=null
+
+    /** TODO Buggy. Why ???
     if (props.subDataSourceId=='root') {
       subDataSource=dataSource
-    }
+    }*/
+
     if (subDataSource) {
       refValues=lodash.get(subDataSource, subAttribute, subDataSource)
     }

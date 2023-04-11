@@ -3,7 +3,10 @@ const mongoose = require('mongoose')
 const {forceDataModelDekuple}=require('../utils')
 forceDataModelDekuple()
 const {MONGOOSE_OPTIONS} = require('../../server/utils/database')
-const {GENDER_MALE, REMINDER_MEDICATION}=require('../../server/plugins/dekuple/consts')
+const {
+  GENDER_MALE, REMINDER_MEDICATION, APPOINTMENT_CARDIOLOGIST,
+  APPOINTMENT_STATUS_PAST, APPOINTMENT_STATUS_TO_COME,
+}=require('../../server/plugins/dekuple/consts')
 
 const Album=require('../../server/models/Album')
 const Appointment=require('../../server/models/Appointment')
@@ -69,14 +72,14 @@ describe('Test virtual single ref', () => {
     await mongoose.connection.close()
   })
 
+  const USER_DATA={
+    email: 'test@a.com', firstname: 'Sébastien', birthday: Date.now(), lastname: 'Auvray',
+    password: 'INVALID', gender: GENDER_MALE, height: 170, weight: 68,
+    dataTreatmentAccepted: true, cguAccepted: true,
+  }
+
   it('reminder days must be unique', async() => {
-    const userPromise=User.create(
-      [{
-        email: 'test@a.com', firstname: 'Sébastien', birthday: Date.now(), lastname: 'Auvray',
-        password: 'INVALID', gender: GENDER_MALE, height: 170, weight:68,
-      }],
-      {runValidators: true},
-    )
+    const userPromise=User.create([USER_DATA], {runValidators: true})
     expect(userPromise).resolves.not.toThrowError()
     const [user]=await userPromise
 
@@ -138,4 +141,13 @@ describe('Test virtual single ref', () => {
     expect(User).toBeTruthy()
     expect(UserSessionData).toBeNull()
   })
+
+  it('must return appointment status', async() => {
+    const user=await User.create(USER_DATA)
+    const app1=await Appointment.create({user, type: APPOINTMENT_CARDIOLOGIST, date: moment().add(-2, 'days')})
+    expect(app1.status).toEqual(APPOINTMENT_STATUS_PAST)
+    const app2=await Appointment.create({user, type: APPOINTMENT_CARDIOLOGIST, date: moment().add(2, 'days')})
+    expect(app2.status).toEqual(APPOINTMENT_STATUS_TO_COME)
+  })
+
 })

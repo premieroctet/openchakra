@@ -6,7 +6,7 @@ import * as icons from 'lucide-react'
 
 const Rating = React.forwardRef(
   ({
-    value = 2,
+    value = 0,
     size = 20,
     illu = 'Star',
     scale = 5,
@@ -14,6 +14,7 @@ const Rating = React.forwardRef(
     strokeColor = 'gray',
     onChange,
     readOnly,
+    ...props
   }: {
     value: number
     size: number
@@ -34,6 +35,8 @@ const Rating = React.forwardRef(
       }
     }, [rating])
 
+    useEffect(() => setRating(value), [value])
+
     const onClick = (idx:number) => {
       if (readOnly) {
         return
@@ -53,9 +56,8 @@ const Rating = React.forwardRef(
        <Icon
           as={lodash.get(icons, illu)}
           name={illu}
-          boxSize={`${size * 1.3}px`}
+          boxSize={`${size}px`}
           stroke={strokeColor}
-          //onClick={() => onClick(idx)}
           fillOpacity={fill ? "100%" : "0"}
           fill={fillColor}
         />
@@ -66,7 +68,7 @@ const Rating = React.forwardRef(
       return (
         <Box
           as="button"
-          aria-label={`Rate ${idx}`}
+          aria-label={`Notez ${idx}`}
           height={`${size}px`}
           width={`${size}px`}
           mx={1}
@@ -78,9 +80,8 @@ const Rating = React.forwardRef(
       );
     };
 
-    const prop={value: rating}
     return (
-      <Stack isInline justify="center" {...prop} >
+      <Stack isInline justify="center" {...props} >
         {/* @ts-ignore */}
         <input name="rating" type="hidden" value={rating} ref={ref} />
         {lodash.range(1, scale+1).map(i => (

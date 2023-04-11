@@ -203,6 +203,8 @@ let menuItems: MenuItems = {
       TabPanels: {},
     },
   },
+  VisuallyHidden: {},
+  
   /*"Tabs",
   "TabList",
   "TabPanel",

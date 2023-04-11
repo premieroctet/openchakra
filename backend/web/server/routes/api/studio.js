@@ -1,16 +1,16 @@
-const { FUMOIR_MEMBER } = require('../../plugins/fumoir/consts')
-const moment = require('moment')
 const path = require('path')
 const zlib=require('zlib')
 const {promises: fs} = require('fs')
 const child_process = require('child_process')
 const url = require('url')
+const moment = require('moment')
 const lodash=require('lodash')
 const bcrypt = require('bcryptjs')
 const express = require('express')
 const mongoose = require('mongoose')
 const passport = require('passport')
-const { date_str, datetime_str } = require('../../../utils/dateutils')
+const {FUMOIR_MEMBER} = require('../../plugins/fumoir/consts')
+const {date_str, datetime_str} = require('../../../utils/dateutils')
 const Payment = require('../../models/Payment')
 const {
   HOOK_PAYMENT_FAILED,
@@ -103,12 +103,11 @@ const login = (email, password) => {
       throw new NotFoundError(`Ce compte est désactivé`)
     }
     console.log(`Comparing ${password} and ${user.password}`)
-    return bcrypt.compare(password, user.password).then(matched => {
-      if (!matched) {
-        throw new NotFoundError(`Email ou mot de passe invalide`)
-      }
-      return user
-    })
+    const matched=bcrypt.compareSync(password, user.password)
+    if (!matched) {
+      throw new NotFoundError(`Email ou mot de passe invalide`)
+    }
+    return user
   })
 }
 
@@ -321,6 +320,18 @@ router.post('/register', (req, res) => {
     .then(result => res.json(result))
 })
 
+router.post('/register-and-login', (req, res) => {
+  const body=lodash.mapValues(req.body, v => JSON.parse(v))
+  return ACTIONS.register(body)
+    .then(result => {
+      const {email, password}=body
+      return login(email, password)
+        .then(user => {
+          return sendCookie(user, res).json(user)
+        })
+    })
+})
+
 // Validate webhook
 router.get('/payment-hook', (req, res) => {
   return getWebHookToken()
@@ -416,7 +427,7 @@ router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (r
           return Promise.all(data.map(d => addComputedFields(user, params, d, model)))
         })
         .then(data => {
-          //return id ? Promise.resolve(data) : callFilterDataUser({model, data, id, user: req.user})
+          // return id ? Promise.resolve(data) : callFilterDataUser({model, data, id, user: req.user})
           return callFilterDataUser({model, data, id, user: req.user})
         })
         .then(data => {
