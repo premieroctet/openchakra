@@ -1,3 +1,12 @@
+import camelCase from 'lodash/camelCase'
+
+const capitalize = (value: string) => {
+  return value.charAt(0).toUpperCase() + value.slice(1)
+}
+
+export const normalizePageName = (pageName: string) => {
+  return capitalize(camelCase(pageName))
+}
 
 export const getPageFileName = (
   pageId: string,

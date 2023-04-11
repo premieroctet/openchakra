@@ -1,8 +1,7 @@
-import camelCase from 'lodash/camelCase'
+import {encode} from 'html-entities'
 import filter from 'lodash/filter'
 import isBoolean from 'lodash/isBoolean'
-import lodash from 'lodash'
-import {encode} from 'html-entities'
+import lodash, { capitalize } from 'lodash';
 
 import icons from '~iconsList'
 
@@ -24,15 +23,11 @@ import {
   isSingleDataPage,
 } from './dataSources';
 import { ProjectState, PageState } from '../core/models/project'
+import { getPageFileName, getPageUrl, normalizePageName } from './misc';
 import { isJsonString } from '../dependencies/utils/misc'
-import {getPageUrl,getPageFileName} from './misc'
 
 //const HIDDEN_ATTRIBUTES=['dataSource', 'attribute']
 const HIDDEN_ATTRIBUTES: string[] = []
-
-export const normalizePageName = (pageName: string) => {
-  return capitalize(camelCase(pageName))
-}
 
 export const getPageComponentName = (
   pageId: string,
@@ -89,10 +84,6 @@ const getDynamicType = (comp: IComponent) => {
     return 'Enum'
   }
   throw new Error(`No dynamic found for ${comp.type}`)
-}
-
-const capitalize = (value: string) => {
-  return value.charAt(0).toUpperCase() + value.slice(1)
 }
 
 export const formatCode = async (code: string) => {
