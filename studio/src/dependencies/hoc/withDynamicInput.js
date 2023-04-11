@@ -73,7 +73,7 @@ const withDynamicInput = Component => {
     }
 
     return (
-      <InputGroup {...props}>
+      <InputGroup id={props.id} value={lodash.isNil(internalDataValue) ? '' : internalDataValue}>
       <Component
       {...props}
       value={lodash.isNil(internalDataValue) ? '' : internalDataValue}
