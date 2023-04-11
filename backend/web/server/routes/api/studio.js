@@ -112,7 +112,6 @@ const login = (email, password) => {
 }
 
 router.get('/models', (req, res) => {
-  console.log(`Getting models`)
   const allModels = getExposedModels()
   return res.json(allModels)
 })
