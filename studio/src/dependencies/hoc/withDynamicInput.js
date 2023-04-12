@@ -60,7 +60,7 @@ const withDynamicInput = Component => {
         }
     }
 
-    props={...props, readOnly}
+    props={...props, readOnly, value:lodash.isNil(internalDataValue) ? '' : internalDataValue}
     if (suggestions) {
       props={...props, list: 'suggestions'}
     }
@@ -72,11 +72,12 @@ const withDynamicInput = Component => {
       setVisibilityType(visibilityType=='password' ? 'text' : 'password')
     }
 
+    const parentProps=lodash.pick(props, 'id dataSource name dataSourceId value level model attribute noautosave readOnly context backend setComponentValue'.split(' '))
+
     return (
-      <InputGroup id={props.id} value={lodash.isNil(internalDataValue) ? '' : internalDataValue}>
+      <InputGroup {...parentProps}>
       <Component
-      {...props}
-      value={lodash.isNil(internalDataValue) ? '' : internalDataValue}
+      {...lodash.omit(props, ['id'])}
       onChange={onChange}
       />
       {suggestions && (
