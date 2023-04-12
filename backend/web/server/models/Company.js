@@ -7,6 +7,7 @@ try {
   CompanySchema=require(`../plugins/${getDataModel()}/schemas/CompanySchema`)
 }
 catch(err) {
+  console.error(err)
   if (err.code !== 'MODULE_NOT_FOUND') {
     throw err
   }
