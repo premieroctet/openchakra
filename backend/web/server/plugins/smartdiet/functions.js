@@ -59,6 +59,12 @@ USER_MODELS.forEach(m => {
 })
 
 declareEnumField({model: 'company', field: 'activity', enumValues: COMPANY_ACTIVITY})
+declareVirtualField({model: 'company', field: 'administrators', instance: 'Array',
+  requires: '', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'user'}}
+})
 
 declareEnumField({model: 'content', field: 'type', enumValues:CONTENTS_TYPE})
 declareVirtualField({model: 'content', field: 'likes_count', instance: 'Number', requires: 'likes'})

@@ -47,11 +47,6 @@ const UserSchema = new Schema({
     default: ROLE_CUSTOMER,
     required: [true, 'Le rôle est obligatoire'],
   },
-  home_status: {
-    type: String,
-    enum: Object.keys(HOME_STATUS),
-    required: [function() { return this.role==ROLE_CUSTOMER }, 'Le statut est obligatoire'],
-  },
   cguAccepted: {
     type: Boolean,
     validate: {
@@ -70,8 +65,8 @@ const UserSchema = new Schema({
   },
   child_count: {
     type: Number,
-    required: [function() { return this.role==ROLE_CUSTOMER && this.home_status==STATUS_FAMILY },
-      'Le nombre d\'enfants est obligatoire'],
+    default: 0,
+    required: false,
   },
   gender: {
     type: String,

@@ -25,11 +25,6 @@ const CompanySchema = new Schema(
       type: Number,
       required: true,
     },
-    administrator: {
-      type: Schema.Types.ObjectId,
-      ref: 'user',
-      required: true,
-    },
     offer: {
       type: Schema.Types.ObjectId,
       ref: 'offer',
@@ -38,5 +33,12 @@ const CompanySchema = new Schema(
   },
   schemaOptions,
 )
+
+CompanySchema.virtual("administrators", {
+  ref: "user", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "company", // is equal to foreignField
+  justOne: true,
+});
 
 module.exports = CompanySchema

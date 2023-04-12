@@ -10,6 +10,16 @@ type IActions = {
   }
 }
 
+const pagesList= ({pages}) => {
+  console.log(JSON.stringify(lodash(pages).values().orderBy(p => p.pageName.toLowerCase()), null, 2))
+  //return Object.values(pages).map(p => ({ key: p.pageId, label: p.pageName }))
+  return lodash(pages)
+    .values()
+    .orderBy(p => p.pageName.toLowerCase())
+    .map(p => ({ key: p.pageId, label: p.pageName }))
+    .value()
+}
+
 export const ACTIONS: IActions = {
   create: {
     label: 'Create new data',
@@ -31,8 +41,7 @@ export const ACTIONS: IActions = {
   openPage: {
     label: 'Open page',
     options: {
-      page: ({ pages }) =>
-        Object.values(pages).map(p => ({ key: p.pageId, label: p.pageName })),
+      page: ({ pages }) => pagesList({pages}),
       open: () => [
         { key: true, label: 'In new page' },
         { key: false, label: 'In same page' },

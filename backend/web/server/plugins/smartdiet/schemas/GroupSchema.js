@@ -22,14 +22,19 @@ const GroupSchema = new Schema({
     required: [true, 'Le modérateur est obligatoire'],
   },
   // Targets: specificity/objectives
-  targets: {
+  targets: [{
     type: Schema.Types.ObjectId,
     ref: 'target',
-  },
+  }],
   company: {
     type: Schema.Types.ObjectId,
     ref: 'company',
     required: false,
+  },
+  key: {
+    type: Schema.Types.ObjectId,
+    ref: 'key',
+    required: [true, 'La clé est obligatoire'],
   },
 }, schemaOptions)
 
