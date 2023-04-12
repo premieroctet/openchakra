@@ -8,7 +8,7 @@ try {
   if (Event) {
     const MenuSchema = require(`../plugins/${getDataModel()}/schemas/MenuSchema`)
     MenuSchema.plugin(mongooseLeanVirtuals)
-    Menu = Event.discriminator('Menu', MenuSchema)
+    Menu = Event.discriminator('menu', MenuSchema)
   }
 }
 catch (err) {
@@ -17,4 +17,4 @@ catch (err) {
   }
 }
 
-module.exports = CollectiveChallenge
+module.exports = Menu

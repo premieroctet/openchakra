@@ -17,4 +17,4 @@ catch (err) {
   }
 }
 
-module.exports = CollectiveChallenge
+module.exports = IndividualChallenge

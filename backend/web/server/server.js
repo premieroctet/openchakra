@@ -60,6 +60,9 @@ require('./models/Gift')
 require('./models/SpoonGain')
 require('./models/UserSpoon')
 require('./models/Content')
+require('./models/Menu')
+require('./models/Webinar')
+require('./models/IndividualChallenge')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 

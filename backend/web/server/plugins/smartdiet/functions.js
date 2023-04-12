@@ -1,4 +1,16 @@
 const {
+  ACTIVITY,
+  COMPANY_ACTIVITY,
+  CONTENTS_TYPE,
+  EVENT_TYPE,
+  GENDER,
+  HARDNESS,
+  HOME_STATUS,
+  ROLES,
+  SPOON_SOURCE,
+  TARGET_TYPE
+} = require('./consts')
+const {
   declareComputedField,
   declareEnumField,
   declareVirtualField,
@@ -8,17 +20,6 @@ const {
   simpleCloneModel,
 } = require('../../utils/database')
 const Offer = require('../../models/Offer')
-const {
-  ACTIVITY,
-  COMPANY_ACTIVITY,
-  CONTENTS_TYPE,
-  EVENT_TYPE,
-  GENDER,
-  HOME_STATUS,
-  ROLES,
-  SPOON_SOURCE,
-  TARGET_TYPE
-} = require('./consts')
 const Content = require('../../models/Content')
 const lodash=require('lodash')
 const moment = require('moment')
@@ -73,6 +74,10 @@ declareVirtualField({model: 'content', field: 'comments_count', instance: 'Numbe
 
 declareEnumField({model: 'event', field: 'type', enumValues:EVENT_TYPE})
 declareEnumField({model: 'collectiveChallenge', field: 'type', enumValues:EVENT_TYPE})
+declareEnumField({model: 'individualChallenge', field: 'type', enumValues:EVENT_TYPE})
+declareEnumField({model: 'individualChallenge', field: 'hardness', enumValues:HARDNESS})
+declareEnumField({model: 'menu', field: 'type', enumValues:EVENT_TYPE})
+declareEnumField({model: 'webinar', field: 'type', enumValues:EVENT_TYPE})
 
 declareEnumField({model: 'category', field: 'type', enumValues:TARGET_TYPE})
 declareVirtualField({model: 'category', field: 'targets', instance: 'Array',

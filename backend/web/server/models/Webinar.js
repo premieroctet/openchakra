@@ -12,9 +12,10 @@ try {
   }
 }
 catch (err) {
+  console.log('no webinar')
   if (err.code !== 'MODULE_NOT_FOUND') {
     throw err
   }
 }
 
-module.exports = CollectiveChallenge
+module.exports = Webinar

@@ -10,14 +10,6 @@ const {schemaOptions} = require('../../../utils/schemas')
 const Schema = mongoose.Schema
 
 const CollectiveChallengeSchema = new Schema({
-  type: {
-    type: String,
-    enum: Object.keys(EVENT_TYPE),
-    default: EVENT_COLL_CHALLENGE,
-    set: () => EVENT_COLL_CHALLENGE,
-    required: [true, 'Le type est obligatoire'],
-  },
-
   spoons: {
     type: Number,
     required: [true, 'Le nombre de cuillères est obligatoire'],
