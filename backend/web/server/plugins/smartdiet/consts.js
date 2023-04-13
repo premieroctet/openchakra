@@ -209,8 +209,8 @@ const HARDNESS_EASY='EASY'
 const HARDNESS_HARD='HARD'
 
 const HARDNESS={
-  HARDNESS_EASY: "C'est du gâteau",
-  HARDNESS_HARD: "C'est pas de la tarte",
+  HARDNESS_EASY: "Du gâteau",
+  HARDNESS_HARD: "De la tarte",
 }
 
 module.exports={
