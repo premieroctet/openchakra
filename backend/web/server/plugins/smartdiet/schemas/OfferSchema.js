@@ -1,6 +1,6 @@
+const { GROUPS_CREDIT, HOME_STATUS } = require('../consts')
 const mongoose = require('mongoose')
 const bcrypt=require('bcryptjs')
-const { HOME_STATUS } = require('../consts')
 const {schemaOptions} = require('../../../utils/schemas')
 
 const Schema = mongoose.Schema
@@ -22,7 +22,7 @@ const OfferSchema = new Schema({
   },
   webinars_credit: {
     type: Number,
-    required: [true, 'Le crédit de webinars est obligatoire'],
+    required: [function() {return !this.webinars_unlimited}, 'Le crédit de webinars est obligatoire'],
   },
   webinars_unlimited: {
     type: Boolean,
@@ -30,15 +30,15 @@ const OfferSchema = new Schema({
   },
   infographies_credit: {
     type: Number,
-    required: [true, "Le crédit d'infographies est obligatoire"],
+    required: [function() {return !this.infographies_unlimited}, "Le crédit d'infographies est obligatoire"],
   },
-  inforgraphies_unlimited: {
+  infographies_unlimited: {
     type: Boolean,
     required: true,
   },
   articles_credit: {
     type: Number,
-    required: [true, 'Le crédit d\'articles est obligatoire'],
+    required: [function() {return !this.articles_unlimited}, 'Le crédit d\'articles est obligatoire'],
   },
   articles_unlimited: {
     type: Boolean,
@@ -46,7 +46,7 @@ const OfferSchema = new Schema({
   },
   podcasts_credit: {
     type: Number,
-    required: [true, 'Le crédit de podcats est obligatoire'],
+    required: [function() {return !this.podcasts_unlimited}, 'Le crédit de podcats est obligatoire'],
   },
   podcasts_unlimited: {
     type: Boolean,
@@ -54,7 +54,7 @@ const OfferSchema = new Schema({
   },
   video_credit: {
     type: Number,
-    required: [true, 'Le crédit de vidéos est obligatoire'],
+    required: [function() {return !this.video_unlimited}, 'Le crédit de vidéos est obligatoire'],
   },
   video_unlimited: {
     type: Boolean,
@@ -72,6 +72,13 @@ const OfferSchema = new Schema({
   coaching_credit: {
     type: Number,
     required: [true, 'Le crédit de coachings est obligatoire'],
+  },
+  hotdiet_available: {
+    type: Boolean,
+  },
+  groups_credit: {
+    type: String,
+    enum: Object.keys(GROUPS_CREDIT),
   },
 }, schemaOptions)
 

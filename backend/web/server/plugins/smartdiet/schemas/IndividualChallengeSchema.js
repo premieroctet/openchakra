@@ -18,6 +18,14 @@ const IndividualChallengeSchema = new Schema({
     type: String,
     required: [true, 'L\'astuce est obligatoire'],
   },
+  success_message: {
+    type: String,
+    required: [true, 'Le message de succès est obligatoire'],
+  },
+  fail_message: {
+    type: String,
+    required: [true, "Le message d'échec' est obligatoire"],
+  },
 },
 {...schemaOptions, ...EVENT_DISCRIMINATOR}
 )

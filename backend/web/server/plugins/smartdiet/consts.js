@@ -213,6 +213,14 @@ const HARDNESS={
   HARDNESS_HARD: "De la tarte",
 }
 
+const GROUPS_CREDIT_ONE="GROUPS_CREDIT_ONE"
+const GROUPS_CREDIT_UNLIMITED="GROUPS_CREDIT_UNLIMITED"
+
+const GROUPS_CREDIT={
+ GROUPS_CREDIT_ONE:"Un groupe",
+ GROUPS_CREDIT_UNLIMITED:"Groupes illimités",
+}
+
 module.exports={
   CONTENTS_TYPE,
   EVENT_TYPE,
@@ -229,4 +237,5 @@ module.exports={
   EVENT_MENU,
   EVENT_WEBINAR,
   HARDNESS,
+  GROUPS_CREDIT,
 }

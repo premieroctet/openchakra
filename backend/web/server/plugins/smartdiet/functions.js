@@ -34,7 +34,18 @@ const preprocessGet = ({model, fields, id, user}) => {
   return Promise.resolve({model, fields, id})
 
 }
+
 setPreprocessGet(preprocessGet)
+
+const preCreate = ({model, params, user}) => {
+  if (['content', 'collectiveChallenge', 'individualChallenge', 'webinar', 'menu'].includes(model)) {
+    params.user=user
+  }
+  return Promise.resolve({model, params})
+}
+
+setPreCreateData(preCreate)
+
 
 const USER_MODELS=['user', 'loggedUser']
 USER_MODELS.forEach(m => {

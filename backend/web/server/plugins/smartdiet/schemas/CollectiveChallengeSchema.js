@@ -18,12 +18,6 @@ const CollectiveChallengeSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'team',
   }],
-  /**
-  TODO New model ??
-  ranking: {
-
-  },
-  */
   pips: [{
     type: Schema.Types.ObjectId,
     ref: 'pip',
