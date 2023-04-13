@@ -1,6 +1,8 @@
-const { COACHING, ROLES } = require('../consts')
 const mongoose = require("mongoose")
+const bcrypt=require('bcryptjs')
 const { schemaOptions } = require('../../../utils/schemas')
+const lodash=require('lodash')
+const { AVAILABILITY, COACHING, ROLES } = require('../consts')
 const IBANValidator = require('iban-validator-js')
 
 const Schema = mongoose.Schema;
@@ -19,6 +21,12 @@ const UserSchema = new Schema({
     required: true,
     set: v => v.toLowerCase().trim(),
     required: [true, "L'email est obligatoire"],
+  },
+  password: {
+    type: String,
+    required: [true, 'Le mot de passe est obligatoire'],
+    default: 'invalid',
+    set: pass => bcrypt.hashSync(pass, 10),
   },
   role: {
     type: String,
@@ -49,7 +57,7 @@ const UserSchema = new Schema({
   coaching: {
     type: String,
     enum: Object.keys(COACHING),
-    required: [true, "Le mode d'accompagnement est obligatroire"],
+    required: [true, "Le mode d'accompagnement est obligatoire"],
   },
   coaching_company: {
     type: String,
@@ -76,15 +84,22 @@ const UserSchema = new Schema({
   },
   iban: {
     type: String,
-    validate: [v => IBANValidator.isValid(v), "L'IBAN es invalide"],
+    validate: [v => IBANValidator.isValid(v), "L'IBAN est invalide"],
   },
-
+  availability: {
+    type: String,
+    enum: Object.keys(AVAILABILITY),
+    required: false,
+  },
 }, schemaOptions
 );
 
 UserSchema.virtual("full_name").get(function() {
   return `${this.firstname} ${this.name}`;
 });
+
+// For password checking only
+UserSchema.virtual("password2")
 
 UserSchema.virtual('profile_progress').get(function() {
   const attributes='firstname lastname email phone birthday nationality picture id_card iban'.split(' ')
@@ -95,6 +110,24 @@ UserSchema.virtual('profile_progress').get(function() {
     filled=[...filled, ...companyAttributes.map(att => !!lodash.get(this, att))]
   }
   return (filled.filter(v => !!v)*1.0/filled.length)*100
+});
+
+UserSchema.virtual("comments", {
+  ref: "comment", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "user" // is equal to foreignField
+});
+
+UserSchema.virtual("recommandations", {
+  ref: "recommandation", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "user" // is equal to foreignField
+});
+
+UserSchema.virtual("quotations", {
+  ref: "quotation", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "user" // is equal to foreignField
 });
 
 module.exports = UserSchema;

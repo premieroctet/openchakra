@@ -41,8 +41,27 @@ const COMPANY_STATUS={
   COMPANY_STATUS_SNC:"Société en nom collectif",
   COMPANY_STATUS_SCOP:"Société coopérative de production",
   COMPANY_STATUS_SCA:"Société en commandite par actions",
-COMPANY_STATUS_SCS:"Société en commandite simple",
+  COMPANY_STATUS_SCS:"Société en commandite simple",
 }
+
+const AVAILABILITY_AVAILABLE="AVAILABILITY_AVAILABLE"
+const AVAILABILITY_NOT_AVAILABLE="AVAILABILITY_NOT_AVAILABLE"
+
+const AVAILABILITY={
+ AVAILABILITY_AVAILABLE:"Disponible",
+ AVAILABILITY_NOT_AVAILABLE:"Indisponible",
+}
+
+const EXPERIENCE_LESS_1="EXPERIENCE_LESS_1"
+const EXPERIENCE_1_TO_5="EXPERIENCE_1_TO_5"
+const EXPERIENCE_MORE_5="EXPERIENCE_MORE_5"
+
+const EXPERIENCE={
+ EXPERIENCE_LESS_1:"Moins d'1 an",
+ EXPERIENCE_1_TO_5:"de 1 à 5 ans",
+ EXPERIENCE_MORE_5:"Plus de 5 ans",
+}
+
 
 module.exports={
   ROLES,
@@ -51,4 +70,6 @@ module.exports={
   COACHING,
   COACH_OTHER,
   COMPANY_STATUS,
+  AVAILABILITY,
+  EXPERIENCE,
 }

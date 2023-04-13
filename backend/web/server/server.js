@@ -63,6 +63,10 @@ require('./models/Content')
 require('./models/Menu')
 require('./models/Webinar')
 require('./models/IndividualChallenge')
+require('./models/JobUser')
+require('./models/Comment')
+require('./models/Recommandation')
+require('./models/Quotation')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 
