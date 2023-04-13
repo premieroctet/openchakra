@@ -25,6 +25,16 @@ const preprocessGet = ({model, fields, id, user}) => {
 
 setPreprocessGet(preprocessGet)
 
+const preCreate = ({model, params, user}) => {
+  if (model=='jobUser') {
+    params.user=user
+  }
+  return Promise.resolve({model, params})
+}
+
+setPreCreateData(preCreate)
+
+
 const USER_MODELS=['user', 'loggedUser']
 USER_MODELS.forEach(m => {
   declareVirtualField({model: m, field: 'full_name', instance: 'String', requires: 'firstname,lastname'})
