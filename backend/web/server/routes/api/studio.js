@@ -399,8 +399,7 @@ router.put('/:model/:id', passport.authenticate('cookie', {session: false}), (re
     })
 })
 
-//router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (req, res) => {
-router.get('/:model/:id?', (req, res) => {
+router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (req, res) => {
   const model = req.params.model
   let fields = req.query.fields?.split(',') || []
   const id = req.params.id
