@@ -19,19 +19,19 @@ const JobUserSchema = new Schema({
   experience: {
     type: String,
     enum: Object.keys(EXPERIENCE),
-    required: [true, "L'expérience est obligatoire"]
+    //required: [true, "L'expérience est obligatoire"]
   },
   rate: {
     type: Number,
-    required: [true, 'Le taux horaire indicatif est obligatoire'],
+    //required: [true, 'Le taux horaire indicatif est obligatoire'],
   },
   activities: {
     type: String,
-    required: [true, 'Les activités sont obligatoires'],
+    //required: [true, 'Les activités sont obligatoires'],
   },
   skills: {
     type: String,
-    required: [true, 'Les compétences sont obligatoires'],
+    //required: [true, 'Les compétences sont obligatoires'],
   },
   customer_location: {
     type: Boolean,

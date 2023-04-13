@@ -48,6 +48,11 @@ USER_MODELS.forEach(m => {
       instance: 'ObjectID',
       options: {ref: 'quotation'}}
   })
+  declareVirtualField({model: m, field: 'jobs', instance: 'Array', requires: '', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'jobUser'}}
+  })
 })
 
 declareEnumField({model: 'company', field: 'status', enumValues: COMPANY_STATUS})

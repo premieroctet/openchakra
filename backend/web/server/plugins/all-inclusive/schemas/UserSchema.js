@@ -127,6 +127,12 @@ UserSchema.virtual('profile_progress').get(function() {
   return (filled.filter(v => !!v)*1.0/filled.length)*100
 });
 
+UserSchema.virtual("jobs", {
+  ref: "job", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "user" // is equal to foreignField
+});
+
 UserSchema.virtual("comments", {
   ref: "comment", // The Model to use
   localField: "_id", // Find in Model, where localField
