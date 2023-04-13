@@ -81,7 +81,11 @@ const UserSchema = new Schema({
   },
   active: {
     type: Boolean,
-    default: false,
+    default: true,
+  },
+  hidden: {
+    type: Boolean,
+    default: true,
   },
   // Agreed by AllE
   qualified: {
