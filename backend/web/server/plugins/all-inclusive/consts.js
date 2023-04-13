@@ -10,6 +10,8 @@ const ROLES={
   [ROLE_ALLE_ADMIN]: 'Admin. All-E',
 }
 
+const DEFAULT_ROLE=ROLE_TI
+
 const COACH_ALLE='COACH_ALLE'
 const COACH_OTHER='COACH_OTHER'
 const COACH_NONE='COACH_NONE'
@@ -72,4 +74,5 @@ module.exports={
   COMPANY_STATUS,
   AVAILABILITY,
   EXPERIENCE,
+  DEFAULT_ROLE,
 }

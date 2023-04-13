@@ -1,3 +1,4 @@
+const { getDataModel } = require('../../../config/config')
 const {
   generatePassword,
   validatePassword
@@ -15,6 +16,8 @@ const UserSessionData = require('../../models/UserSessionData')
 const {NotFoundError} = require('../errors')
 const Program = require('../../models/Program')
 const {sendNewMessage} = require('../../plugins/fumoir/mailing')
+
+const {DEFAULT_ROLE} = require(`../../plugins/${getDataModel()}/consts`)
 
 let ACTIONS = {
   put: ({parent, attribute, value}, user) => {
@@ -110,6 +113,10 @@ let ACTIONS = {
         else {
           props.password=generatePassword()
           promise=Promise.resolve()
+        }
+
+        if (DEFAULT_ROLE && !props.role) {
+          props.role=DEFAULT_ROLE
         }
 
         return promise

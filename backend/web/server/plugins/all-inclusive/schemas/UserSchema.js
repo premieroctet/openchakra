@@ -1,4 +1,10 @@
-const { AVAILABILITY, COACHING, COACH_OTHER, ROLES } = require('../consts')
+const {
+  AVAILABILITY,
+  COACHING,
+  COACH_OTHER,
+  DEFAULT_ROLE,
+  ROLES
+} = require('../consts')
 const mongoose = require("mongoose")
 const bcrypt=require('bcryptjs')
 const { schemaOptions } = require('../../../utils/schemas')
@@ -36,6 +42,7 @@ const UserSchema = new Schema({
   role: {
     type: String,
     enum: Object.keys(ROLES),
+    default: DEFAULT_ROLE,
     required: [true, 'Le rôle est obligatoire'],
   },
   phone: {
