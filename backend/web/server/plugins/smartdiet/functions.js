@@ -93,6 +93,8 @@ declareVirtualField({model: 'company', field: 'groups', instance: 'Array',
 declareVirtualField({model: 'company', field: 'likes_count', instance: 'Number'})
 declareVirtualField({model: 'company', field: 'comments_count', instance: 'Number'})
 declareVirtualField({model: 'company', field: 'shares_count', instance: 'Number'})
+declareVirtualField({model: 'company', field: 'contents_count', instance: 'Number'})
+declareVirtualField({model: 'company', field: 'groups_count', instance: 'Number', requires:'groups'})
 
 declareEnumField({model: 'content', field: 'type', enumValues:CONTENTS_TYPE})
 declareVirtualField({model: 'content', field: 'likes_count', instance: 'Number', requires: 'likes'})

@@ -54,6 +54,10 @@ CompanySchema.virtual("groups", {
   foreignField: "company", // is equal to foreignField
 });
 
+CompanySchema.virtual('groups_count').get(function() {
+  return this.groups?.length || 0
+})
+
 CompanySchema.virtual('likes_count').get(function() {
   return mongoose.model('content').find()
     .populate('likes')
@@ -82,6 +86,10 @@ CompanySchema.virtual('comments_count').get(function() {
   return mongoose.model('comment').find({pip: null})
   .populate('user')
   .then(comments => comments.countBy(c => c.user.company._id==this._id))
+})
+
+CompanySchema.virtual('contents_count').get(function() {
+  return mongoose.model('content').countDocuments()
 })
 
 module.exports = CompanySchema
