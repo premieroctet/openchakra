@@ -24,7 +24,9 @@ const UserSchema = new Schema({
   },
   birthday: {
     type: Date,
-    required: [function() { return this.role==ROLE_CUSTOMER }, 'La date de naissance est obligatoire'],
+    //required: [function() { return this.role==ROLE_CUSTOMER }, 'La date de naissance est obligatoire'],
+    required: false,
+
   },
   pseudo: {
     type: String,
@@ -71,12 +73,8 @@ const UserSchema = new Schema({
   gender: {
     type: String,
     enum: Object.keys(GENDER),
-    required: [function() { return this.role==ROLE_CUSTOMER }, 'Le genre est obligatoire'],
-  },
-  activity: {
-    type: String,
-    enum: Object.keys(ACTIVITY),
-    required: [function() { return this.role==ROLE_CUSTOMER }, "L'activité est obligatoire"],
+    //required: [function() { return this.role==ROLE_CUSTOMER }, 'Le genre est obligatoire'],
+    required: false,
   },
   targets: [{
     type: Schema.Types.ObjectId,

@@ -4,6 +4,7 @@ const {
   CONTENTS_TYPE,
   EVENT_TYPE,
   GENDER,
+  GROUPS_CREDIT,
   HARDNESS,
   HOME_STATUS,
   ROLES,
@@ -34,7 +35,18 @@ const preprocessGet = ({model, fields, id, user}) => {
   return Promise.resolve({model, fields, id})
 
 }
+
 setPreprocessGet(preprocessGet)
+
+const preCreate = ({model, params, user}) => {
+  if (['content', 'collectiveChallenge', 'individualChallenge', 'webinar', 'menu'].includes(model)) {
+    params.user=user
+  }
+  return Promise.resolve({model, params})
+}
+
+setPreCreateData(preCreate)
+
 
 const USER_MODELS=['user', 'loggedUser']
 USER_MODELS.forEach(m => {
@@ -97,6 +109,7 @@ declareVirtualField({model: 'offer', field: 'company', instance: 'offer',
     instance: 'ObjectID',
     options: {ref: 'company'}}
 })
+declareEnumField({model: 'offer', field: 'groups_credit', enumValues: GROUPS_CREDIT})
 
 declareVirtualField({model: 'target', field: 'contents', instance: 'Array',
   requires: '', multiple: true,

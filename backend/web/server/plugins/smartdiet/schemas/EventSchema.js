@@ -6,6 +6,11 @@ const {schemaOptions} = require('../../../utils/schemas')
 const Schema = mongoose.Schema
 
 const EventSchema = new Schema({
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'user',
+    required: [true, 'Le créateur est obligatoire'],
+  },
   name: {
     type: String,
     required: [true, 'Le nom est obligatoire'],
@@ -36,10 +41,10 @@ const EventSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'user',
   }],
-  key: [{
+  key: {
     type: Schema.Types.ObjectId,
     ref: 'key',
-  }],
+  },
 }, schemaOptions)
 
 EventSchema.virtual('type')

@@ -209,8 +209,16 @@ const HARDNESS_EASY='EASY'
 const HARDNESS_HARD='HARD'
 
 const HARDNESS={
-  HARDNESS_EASY: "C'est du gâteau",
-  HARDNESS_HARD: "C'est pas de la tarte",
+  HARDNESS_EASY: "Du gâteau",
+  HARDNESS_HARD: "De la tarte",
+}
+
+const GROUPS_CREDIT_ONE="GROUPS_CREDIT_ONE"
+const GROUPS_CREDIT_UNLIMITED="GROUPS_CREDIT_UNLIMITED"
+
+const GROUPS_CREDIT={
+ GROUPS_CREDIT_ONE:"Un groupe",
+ GROUPS_CREDIT_UNLIMITED:"Groupes illimités",
 }
 
 module.exports={
@@ -229,4 +237,5 @@ module.exports={
   EVENT_MENU,
   EVENT_WEBINAR,
   HARDNESS,
+  GROUPS_CREDIT,
 }
