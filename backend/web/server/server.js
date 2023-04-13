@@ -67,6 +67,7 @@ require('./models/JobUser')
 require('./models/Comment')
 require('./models/Recommandation')
 require('./models/Quotation')
+require('./models/Pip')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 
