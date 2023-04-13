@@ -28,6 +28,11 @@ const UserSchema = new Schema({
     default: 'invalid',
     set: pass => bcrypt.hashSync(pass, 10),
   },
+  cguAccepted: {
+    type: Boolean,
+    validate: [value => !!value, 'Vous devez accepter les CGU'],
+    required: [true, 'Vous devez accepter les CGU'],
+  },
   role: {
     type: String,
     enum: Object.keys(ROLES),
