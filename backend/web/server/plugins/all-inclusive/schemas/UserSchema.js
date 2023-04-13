@@ -128,7 +128,7 @@ UserSchema.virtual('profile_progress').get(function() {
 });
 
 UserSchema.virtual("jobs", {
-  ref: "job", // The Model to use
+  ref: "jobUser", // The Model to use
   localField: "_id", // Find in Model, where localField
   foreignField: "user" // is equal to foreignField
 });
