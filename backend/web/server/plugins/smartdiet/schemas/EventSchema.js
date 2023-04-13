@@ -22,11 +22,9 @@ const EventSchema = new Schema({
     type: Date,
     required: [true, 'La date de fin est obligatoire'],
   },
-  type: {
+  picture: {
     type: String,
-    enum: Object.keys(EVENT_TYPE),
-    validate: [v => v!=EVENT_COLL_CHALLENGE, 'Challenge collectif en BD doit être créé par le type CollectiveChallenge'],
-    required: [true, 'Le type est obligatoire'],
+    required: false,
   },
   // Users who registered
   registered_by: [{
@@ -43,5 +41,7 @@ const EventSchema = new Schema({
     ref: 'key',
   }],
 }, schemaOptions)
+
+EventSchema.virtual('type')
 
 module.exports = EventSchema

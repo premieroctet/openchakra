@@ -72,12 +72,12 @@ declareVirtualField({model: 'content', field: 'likes_count', instance: 'Number',
 declareVirtualField({model: 'content', field: 'shares_count', instance: 'Number', requires: 'shares'})
 declareVirtualField({model: 'content', field: 'comments_count', instance: 'Number', requires: 'comments'})
 
-declareEnumField({model: 'event', field: 'type', enumValues:EVENT_TYPE})
-declareEnumField({model: 'collectiveChallenge', field: 'type', enumValues:EVENT_TYPE})
-declareEnumField({model: 'individualChallenge', field: 'type', enumValues:EVENT_TYPE})
+const EVENT_MODELS=['event', 'collectiveChallenge', 'individualChallenge', 'menu', 'webinar']
+EVENT_MODELS.forEach(m => {
+  declareVirtualField({model: m, field: 'type', instance: 'String', enumValues: EVENT_TYPE})
+})
+
 declareEnumField({model: 'individualChallenge', field: 'hardness', enumValues:HARDNESS})
-declareEnumField({model: 'menu', field: 'type', enumValues:EVENT_TYPE})
-declareEnumField({model: 'webinar', field: 'type', enumValues:EVENT_TYPE})
 
 declareEnumField({model: 'category', field: 'type', enumValues:TARGET_TYPE})
 declareVirtualField({model: 'category', field: 'targets', instance: 'Array',
