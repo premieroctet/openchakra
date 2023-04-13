@@ -1,10 +1,10 @@
 const mongoose = require('mongoose')
 const {getDataModel}=require('../../config/config')
 
-let CompanySchema=null
+let JobUserSchema=null
 
 try {
-  CompanySchema=require(`../plugins/${getDataModel()}/schemas/CompanySchema`)
+  JobUserSchema=require(`../plugins/${getDataModel()}/schemas/JobUserSchema`)
 }
 catch(err) {
   console.error(err)
@@ -13,4 +13,4 @@ catch(err) {
   }
 }
 
-module.exports = CompanySchema ? mongoose.model('company', CompanySchema) : null
+module.exports = JobUserSchema ? mongoose.model('jobUser', JobUserSchema) : null
