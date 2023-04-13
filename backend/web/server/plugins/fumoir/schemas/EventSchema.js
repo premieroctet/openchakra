@@ -77,9 +77,7 @@ EventSchema.virtual('guests_count').get(() => {
   return null
 })
 
-EventSchema.virtual('members_count').get(function() {
-  return this.guests_count + this.invitations?.length || 0
-})
+EventSchema.virtual('members_count').get()
 
 EventSchema.virtual('people_count').get(function() {
   if (!this.invitations) {

@@ -31,7 +31,6 @@ const UserSchema = new Schema({
   password: {
     type: String,
     required: [true, 'Le mot de passe est obligatoire'],
-    default: 'invalid',
     set: pass => bcrypt.hashSync(pass, 10),
   },
   cguAccepted: {
@@ -81,7 +80,11 @@ const UserSchema = new Schema({
   },
   active: {
     type: Boolean,
-    default: false,
+    default: true,
+  },
+  hidden: {
+    type: Boolean,
+    default: true,
   },
   // Agreed by AllE
   qualified: {

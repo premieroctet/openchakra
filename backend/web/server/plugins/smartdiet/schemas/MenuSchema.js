@@ -1,6 +1,6 @@
 const {
-  EVENT_COLL_CHALLENGE,
   EVENT_DISCRIMINATOR,
+  EVENT_MENU,
   EVENT_TYPE,
   HARDNESS
 } = require('../consts')
@@ -15,5 +15,9 @@ const MenuSchema = new Schema({
 },
 {...schemaOptions, ...EVENT_DISCRIMINATOR}
 )
+
+MenuSchema.virtual('type').get(function() {
+  return EVENT_MENU
+})
 
 module.exports = MenuSchema

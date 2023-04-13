@@ -1,9 +1,10 @@
-const mongoose = require('mongoose')
-const {schemaOptions} = require('../../../utils/schemas')
 const {
   EVENT_DISCRIMINATOR,
+  EVENT_IND_CHALLENGE,
   HARDNESS
 } = require('../consts')
+const mongoose = require('mongoose')
+const {schemaOptions} = require('../../../utils/schemas')
 
 const Schema = mongoose.Schema
 
@@ -20,5 +21,9 @@ const IndividualChallengeSchema = new Schema({
 },
 {...schemaOptions, ...EVENT_DISCRIMINATOR}
 )
+
+IndividualChallengeSchema.virtual('type').get(function() {
+  return EVENT_IND_CHALLENGE
+})
 
 module.exports = IndividualChallengeSchema

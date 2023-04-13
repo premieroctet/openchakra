@@ -40,4 +40,8 @@ const CollectiveChallengeSchema = new Schema({
 {...schemaOptions, ...EVENT_DISCRIMINATOR}
 )
 
+CollectiveChallengeSchema.virtual('type').get(function() {
+  return EVENT_COLL_CHALLENGE
+})
+
 module.exports = CollectiveChallengeSchema
