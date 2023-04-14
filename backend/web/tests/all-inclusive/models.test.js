@@ -38,7 +38,7 @@ describe('Test virtual single ref', () => {
     await JobUser.update({customer_location: false, foreign_location: true})
     expect((await JobUser.findOne()).location_str).toEqual('À distance')
     await JobUser.update({customer_location: true, foreign_location: true})
-    expect((await JobUser.findOne()).location_str).toEqual('Chez le client e à distance')
+    expect((await JobUser.findOne()).location_str).toEqual('Chez le client et à distance')
   })
 
 })
