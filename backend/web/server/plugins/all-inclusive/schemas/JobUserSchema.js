@@ -25,14 +25,6 @@ const JobUserSchema = new Schema({
     type: Number,
     //required: [true, 'Le taux horaire indicatif est obligatoire'],
   },
-  activities: {
-    type: String,
-    //required: [true, 'Les activités sont obligatoires'],
-  },
-  skills: {
-    type: String,
-    //required: [true, 'Les compétences sont obligatoires'],
-  },
   customer_location: {
     type: Boolean,
     required: false,
@@ -60,5 +52,17 @@ const JobUserSchema = new Schema({
 
 }, schemaOptions
 );
+
+JobUserSchema.virtual("activities", {
+  ref: "activity", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "job" // is equal to foreignField
+});
+
+JobUserSchema.virtual("skills", {
+  ref: "skill", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "job" // is equal to foreignField
+});
 
 module.exports = JobUserSchema;

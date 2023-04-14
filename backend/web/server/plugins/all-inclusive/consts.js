@@ -75,4 +75,5 @@ module.exports={
   AVAILABILITY,
   EXPERIENCE,
   DEFAULT_ROLE,
+  COACH_ALLE,
 }
