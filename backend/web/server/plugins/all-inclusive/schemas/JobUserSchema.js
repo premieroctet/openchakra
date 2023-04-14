@@ -12,6 +12,9 @@ const JobUserSchema = new Schema({
     type: String,
     required: [true, 'Le nom est obligatoire']
   },
+  city: {
+    type: String,
+  },
   user: {
     type: Schema.Types.ObjectId,
     ref: "user",
