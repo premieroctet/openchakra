@@ -33,6 +33,10 @@ const ContentSchema = new Schema({
     type: String,
     required: [true, 'Le contenu est obligatoire'],
   },
+  preview: {
+    type: String,
+    required: false,
+  },
   duration: {
     type: Number,
     required: [true, 'La durée est obligatoire'],
