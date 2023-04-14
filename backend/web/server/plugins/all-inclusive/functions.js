@@ -77,4 +77,4 @@ declareVirtualField({model: 'jobUser', field: 'skills', instance: 'Array', requi
     instance: 'ObjectID',
     options: {ref: 'skill'}}
 })
-declareVirtualField({model: 'jobUser', field: 'location_str', instance: 'String'})
+declareVirtualField({model: 'jobUser', field: 'location_str', instance: 'String', requires: 'customer_location foreign_location'})
