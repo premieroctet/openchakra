@@ -7,7 +7,6 @@ try {
   RecommandationSchema=require(`../plugins/${getDataModel()}/schemas/RecommandationSchema`)
 }
 catch(err) {
-  console.error(err)
   if (err.code !== 'MODULE_NOT_FOUND') {
     throw err
   }

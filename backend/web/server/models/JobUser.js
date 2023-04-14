@@ -7,7 +7,6 @@ try {
   JobUserSchema=require(`../plugins/${getDataModel()}/schemas/JobUserSchema`)
 }
 catch(err) {
-  console.error(err)
   if (err.code !== 'MODULE_NOT_FOUND') {
     throw err
   }
