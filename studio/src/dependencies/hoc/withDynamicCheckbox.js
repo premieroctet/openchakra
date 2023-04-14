@@ -9,7 +9,7 @@ const withDynamicCheckbox = Component => {
     const initialValue = lodash.get(dataSource, props.attribute)
     const [value, setValue]=useState((!addTarget && initialValue) || false)
 
-    console.log(`Datasource is ${JSON.stringify(dataSource._id)}, context is ${JSON.stringify(context)}`)
+    console.log(`Datasource is ${JSON.stringify(dataSource?._id)}, context is ${JSON.stringify(context)}`)
     const onChange = ev => {
       setValue(!!ev.target.checked)
       const action=addTarget ?
