@@ -354,4 +354,15 @@ export const ACTIONS = {
     return axios.post(url, body)
   },
 
+  addTarget: ({ value, context, append }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'addTarget',
+      value,
+      context,
+      append,
+    }
+    return axios.post(url, body)
+  },
+
 }
