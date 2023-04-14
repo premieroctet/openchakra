@@ -1,3 +1,4 @@
+const { capitalize } = require('../../../../utils/text')
 const mongoose = require("mongoose")
 const bcrypt=require('bcryptjs')
 const { schemaOptions } = require('../../../utils/schemas')
@@ -52,6 +53,13 @@ const JobUserSchema = new Schema({
 
 }, schemaOptions
 );
+
+JobUserSchema.virtual("location_str").get(function() {
+  const locations=[]
+  if (this.customer_location) { locations.push("chez le client")}
+  if (this.foreign_location) { locations.push("à distance")}
+  return capitalize(locations.join(" et "))
+})
 
 JobUserSchema.virtual("activities", {
   ref: "activity", // The Model to use
