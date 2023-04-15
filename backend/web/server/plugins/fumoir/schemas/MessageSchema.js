@@ -1,8 +1,6 @@
 const mongoose = require('mongoose')
-const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 const {schemaOptions} = require('../../../utils/schemas')
 const Schema = mongoose.Schema
-
 
 const MessageSchema = new Schema({
   subject: {
@@ -33,7 +31,5 @@ MessageSchema.methods.getPartner = function(user) {
   return this.sender._id.toString()==userId ?
     this.receiver: this.sender
 }
-
-MessageSchema.plugin(mongooseLeanVirtuals)
 
 module.exports = MessageSchema

@@ -1,4 +1,3 @@
-const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 const {Schema}=require('mongoose')
 const lodash=require('lodash')
 
@@ -47,6 +46,6 @@ AddressSchema.methods.match = function(rhs) {
   return match
 }
 
-AddressSchema.plugin(mongooseLeanVirtuals)
+AddressSchema.plugin(require('mongoose-lean-virtuals'))
 
 module.exports=AddressSchema

@@ -1,4 +1,3 @@
-const mongooseLeanVirtuals=require('mongoose-lean-virtuals')
 const mongoose = require('mongoose')
 const {getDataModel} = require('../../config/config')
 const Event = require(`./Event`)
@@ -7,7 +6,7 @@ let Webinar = null
 try {
   if (Event) {
     const WebinarSchema = require(`../plugins/${getDataModel()}/schemas/WebinarSchema`)
-    WebinarSchema.plugin(mongooseLeanVirtuals)
+    WebinarSchema.plugin(require('mongoose-lean-virtuals'))
     Webinar = Event.discriminator('webinar', WebinarSchema)
   }
 }

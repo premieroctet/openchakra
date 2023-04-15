@@ -1,4 +1,3 @@
-const mongooseLeanVirtuals=require('mongoose-lean-virtuals')
 const mongoose = require('mongoose')
 const {getDataModel} = require('../../config/config')
 const Event = require(`./Event`)
@@ -7,7 +6,7 @@ let Menu = null
 try {
   if (Event) {
     const MenuSchema = require(`../plugins/${getDataModel()}/schemas/MenuSchema`)
-    MenuSchema.plugin(mongooseLeanVirtuals)
+    MenuSchema.plugin(require('mongoose-lean-virtuals'))
     Menu = Event.discriminator('menu', MenuSchema)
   }
 }

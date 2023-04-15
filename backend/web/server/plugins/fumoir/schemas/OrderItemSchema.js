@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 const Schema = mongoose.Schema
 const {schemaOptions} = require('../../../utils/schemas')
 
@@ -51,7 +50,5 @@ OrderItemSchema.virtual('total_net_price').get(function() {
 OrderItemSchema.virtual('total_price').get(function() {
   return this.price * this.quantity
 })
-
-OrderItemSchema.plugin(mongooseLeanVirtuals)
 
 module.exports = OrderItemSchema
