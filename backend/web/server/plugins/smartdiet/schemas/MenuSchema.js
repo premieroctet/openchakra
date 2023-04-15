@@ -11,7 +11,11 @@ const {schemaOptions} = require('../../../utils/schemas')
 const Schema = mongoose.Schema
 
 const MenuSchema = new Schema({
-
+  // Targets: specificity/objectives
+  targets: [{
+    type: Schema.Types.ObjectId,
+    ref: 'target',
+  }],
 },
 {...schemaOptions, ...EVENT_DISCRIMINATOR}
 )

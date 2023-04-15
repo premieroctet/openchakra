@@ -8,7 +8,6 @@ try {
   JobUserSchema.plugin(require('mongoose-lean-virtuals'))
 }
 catch(err) {
-  console.error(err)
   if (err.code !== 'MODULE_NOT_FOUND') {
     throw err
   }

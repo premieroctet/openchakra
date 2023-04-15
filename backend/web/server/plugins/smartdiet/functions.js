@@ -78,6 +78,23 @@ declareVirtualField({model: 'company', field: 'administrators', instance: 'Array
     instance: 'ObjectID',
     options: {ref: 'user'}}
 })
+declareVirtualField({model: 'company', field: 'webinars', instance: 'Array',
+  requires: '', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'webinar'}}
+})
+declareVirtualField({model: 'company', field: 'groups', instance: 'Array',
+  requires: '', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'group'}}
+})
+declareVirtualField({model: 'company', field: 'likes_count', instance: 'Number'})
+declareVirtualField({model: 'company', field: 'comments_count', instance: 'Number'})
+declareVirtualField({model: 'company', field: 'shares_count', instance: 'Number'})
+declareVirtualField({model: 'company', field: 'contents_count', instance: 'Number'})
+declareVirtualField({model: 'company', field: 'groups_count', instance: 'Number', requires:'groups'})
 
 declareEnumField({model: 'content', field: 'type', enumValues:CONTENTS_TYPE})
 declareVirtualField({model: 'content', field: 'likes_count', instance: 'Number', requires: 'likes'})
