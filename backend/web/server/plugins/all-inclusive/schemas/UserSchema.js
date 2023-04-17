@@ -157,7 +157,13 @@ const UserSchema = new Schema({
   },
   company_picture: {
     type: String,
-  }
+  },
+  representative_firstname: {
+    type: String,
+  },
+  representative_lastname: {
+    type: String,
+  },
 }, schemaOptions
 );
 
