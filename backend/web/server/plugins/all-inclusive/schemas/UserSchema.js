@@ -3,7 +3,7 @@ const {
   COACHING,
   COACH_OTHER,
   COMPANY_ACTIVITY,
-  COMPANY_BUYER,
+  ROLE_COMPANY_BUYER,
   COMPANY_SIZE,
   COMPANY_STATUS,
   DEFAULT_ROLE,
@@ -50,7 +50,7 @@ const UserSchema = new Schema({
   },
   phone: {
     type: String,
-    required: [function() { return this.role==COMPANY_BUYER}, 'Le téléphone est obligatoire'],
+    required: [function() { return this.role==ROLE_COMPANY_BUYER}, 'Le téléphone est obligatoire'],
   },
   birthday: {
     type: Date,
@@ -112,7 +112,7 @@ const UserSchema = new Schema({
   },
   company_name: {
     type: String,
-    required: [function() { return this.role==COMPANY_BUYER}, "Le nom de l'entreprise' est obligatoire"],
+    required: [function() { return this.role==ROLE_COMPANY_BUYER}, "Le nom de l'entreprise' est obligatoire"],
   },
   company_status: {
     type: String,
@@ -122,7 +122,7 @@ const UserSchema = new Schema({
   siret: {
     type: String,
     validate: [v => siret.isSIRET(v)||siret.isSIREN(v), 'Le SIRET ou SIREN est invalide'],
-    required: [function() { return this.role==COMPANY_BUYER}, "Le nom de l'entreprise' est obligatoire"],
+    required: [function() { return this.role==ROLE_COMPANY_BUYER}, "Le nom de l'entreprise' est obligatoire"],
   },
   // In french: "Avis de situation"
   status_report: {
@@ -151,7 +151,7 @@ const UserSchema = new Schema({
   },
   company_function: {
     type: String,
-    required: [function() { return this.role==COMPANY_BUYER}, 'La fonction est obligatoire'],
+    required: [function() { return this.role==ROLE_COMPANY_BUYER}, 'La fonction est obligatoire'],
   },
 }, schemaOptions
 );
