@@ -1,3 +1,4 @@
+const siret = require('siret')
 const {
   AVAILABILITY,
   COACHING,
@@ -122,7 +123,7 @@ const UserSchema = new Schema({
   },
   siret: {
     type: String,
-    validate: [v => this.siret.isSIRET(v)||this.siret.isSIREN(v), 'Le SIRET ou SIREN est invalide'],
+    validate: [v => siret.isSIRET(v)||siret.isSIREN(v), 'Le SIRET ou SIREN est invalide'],
     required: false,
   },
   // In french: "Avis de situation"
