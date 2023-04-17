@@ -163,4 +163,5 @@ module.exports={
   COACH_ALLE,
   COMPANY_ACTIVITY,
   COMPANY_SIZE,
+  COMPANY_BUYER,
 }
