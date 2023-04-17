@@ -123,7 +123,7 @@ const UserSchema = new Schema({
   siret: {
     type: String,
     validate: [v => siret.isSIRET(v)||siret.isSIREN(v), 'Le SIRET ou SIREN est invalide'],
-    required: [function() { return this.role==ROLE_COMPANY_BUYER}, "Le nom de l'entreprise' est obligatoire"],
+    required: false,
   },
   // In french: "Avis de situation"
   status_report: {
@@ -152,7 +152,7 @@ const UserSchema = new Schema({
   },
   company_function: {
     type: String,
-    required: [function() { return this.role==ROLE_COMPANY_BUYER}, 'La fonction est obligatoire'],
+    required: false,
   },
   company_picture: {
     type: String,
