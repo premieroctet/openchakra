@@ -3,11 +3,12 @@ const {
   COACHING,
   COACH_OTHER,
   COMPANY_ACTIVITY,
-  ROLE_COMPANY_BUYER,
   COMPANY_SIZE,
   COMPANY_STATUS,
   DEFAULT_ROLE,
-  ROLES
+  ROLES,
+  ROLE_COMPANY_BUYER,
+  ROLE_TI
 } = require('../consts')
 const NATIONALITIES=require('../nationalities')
 const mongoose = require("mongoose")
@@ -54,7 +55,7 @@ const UserSchema = new Schema({
   },
   birthday: {
     type: Date,
-    required: [function() { return this.role==TI}, 'La date de naissance est obligatoire'],
+    required: [function() { return this.role==ROLE_TI}, 'La date de naissance est obligatoire'],
   },
   picture: {
     type: String,
@@ -67,11 +68,11 @@ const UserSchema = new Schema({
   coaching: {
     type: String,
     enum: Object.keys(COACHING),
-    required: [function() { return this.role==TI}, "Le mode d'accompagnement est obligatoire"],
+    required: [function() { return this.role==ROLE_TI}, "Le mode d'accompagnement est obligatoire"],
   },
   coaching_company: {
     type: String,
-    required: [function() { return this.role==TI && this.coaching==COACH_OTHER}, 'La structure accompagnante est obligatoire'],
+    required: [function() { return this.role==ROLE_TI && this.coaching==COACH_OTHER}, 'La structure accompagnante est obligatoire'],
   },
   coaching_end_date: {
     type: String,
@@ -83,7 +84,7 @@ const UserSchema = new Schema({
   },
   hidden: {
     type: Boolean,
-    default: function() { return this.role==TI},
+    default: function() { return this.role==ROLE_TI},
   },
   // Agreed by AllE
   qualified: {
