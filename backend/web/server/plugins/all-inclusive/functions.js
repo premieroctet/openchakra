@@ -6,6 +6,7 @@ const {
   COMPANY_STATUS,
   CONTRACT_TYPE,
   EXPERIENCE,
+  QUOTATION_STATUS,
   ROLES
 } = require('./consts')
 const NATIONALITIES = require('./nationalities.json')
@@ -99,3 +100,6 @@ declareVirtualField({model: 'jobUser', field: 'experiences', instance: 'Array', 
 })
 
 declareEnumField({model: 'experience', field: 'contract_type', enumValues: CONTRACT_TYPE})
+
+declareVirtualField({model: 'quotation', field: 'status', instance: 'String', enumValues: QUOTATION_STATUS,
+  requires: 'billing_sent_date,customer_accept_billing_date,customer_accept_quotation_date,customer_refuse_billing_date,customer_refuse_quotation_date,quotation_sent_date,ti_finished_date,ti_refuse_date'})
