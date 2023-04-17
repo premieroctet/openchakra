@@ -1,10 +1,13 @@
-const { CONTRACT_TYPE } = require('../consts')
 const mongoose = require("mongoose")
 const { schemaOptions } = require('../../../utils/schemas')
 
 const Schema = mongoose.Schema;
 
-const ExperienceSchema = new Schema({
+const DiplomaSchema = new Schema({
+  name: {
+    type: String,
+    required: [true, 'Le nom du diplôme est obligatoire'],
+  },
   start_date: {
     type: Date,
     required: false,
@@ -13,23 +16,16 @@ const ExperienceSchema = new Schema({
     type: Date,
     required: false,
   },
-  function: {
+  school: {
     type: String,
-    required: [true, 'Le poste est obligatoire'],
+    required: false,
   },
-  company: {
+  city: {
     type: String,
   },
   description: {
     type: String,
-    required: [true, 'Le description est obligatoire'],
-  },
-  contract_type: {
-    type: String,
-    enum: Object.keys(CONTRACT_TYPE),
-  },
-  city: {
-    type: String,
+    required: false,
   },
   picture: {
     type: String,
@@ -42,4 +38,4 @@ const ExperienceSchema = new Schema({
 }, schemaOptions
 );
 
-module.exports = ExperienceSchema
+module.exports = DiplomaSchema

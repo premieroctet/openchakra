@@ -72,6 +72,7 @@ require('./models/Activity')
 require('./models/Experience')
 require('./models/Request')
 require('./models/Pip')
+require('./models/Diploma')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 
