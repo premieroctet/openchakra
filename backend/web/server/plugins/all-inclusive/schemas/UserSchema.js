@@ -185,7 +185,7 @@ UserSchema.virtual('profile_progress').get(function() {
   if (this.role==ROLE_COMPANY_BUYER) {
     filled=[...filled, ...companyAttributes.map(att => !!lodash.get(this, att))]
   }
-  return (filled.filter(v => !!v)*1.0/filled.length)*100
+  return (filled.filter(v => !!v).length*1.0/filled.length)*100
 });
 
 UserSchema.virtual("jobs", {
