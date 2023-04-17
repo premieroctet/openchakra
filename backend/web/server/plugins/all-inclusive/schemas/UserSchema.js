@@ -113,7 +113,7 @@ const UserSchema = new Schema({
     type: String,
     required: [function() { return this.role==COMPANY_BUYER}, "Le nom de l'entreprise' est obligatoire"],
   },
-  status: {
+  company_status: {
     type: String,
     enum: Object.keys(COMPANY_STATUS),
     required: [true, 'Le statut est obligatoire'],

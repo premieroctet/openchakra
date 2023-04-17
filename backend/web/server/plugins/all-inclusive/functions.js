@@ -1,10 +1,13 @@
 const {
   AVAILABILITY,
   COACHING,
+  COMPANY_ACTIVITY,
+  COMPANY_SIZE,
   COMPANY_STATUS,
   EXPERIENCE,
   ROLES
 } = require('./consts')
+const NATIONALITIES = require('./nationalities.json')
 const {
   declareEnumField,
   declareVirtualField,
@@ -63,6 +66,10 @@ USER_MODELS.forEach(m => {
       instance: 'ObjectID',
       options: {ref: 'jobUser'}}
   })
+  declareEnumField({model: m, field: 'nationality', enumValues: NATIONALITIES})
+  declareEnumField({model: m, field: 'company_status', enumValues: COMPANY_STATUS})
+  declareEnumField({model: m, field: 'company_activity', enumValues: COMPANY_ACTIVITY})
+  declareEnumField({model: m, field: 'company_size', enumValues: COMPANY_SIZE})
 })
 
 declareEnumField({model: 'company', field: 'status', enumValues: COMPANY_STATUS})
