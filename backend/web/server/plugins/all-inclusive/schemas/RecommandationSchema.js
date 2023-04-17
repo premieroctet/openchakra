@@ -7,6 +7,18 @@ const IBANValidator = require('iban-validator-js')
 const Schema = mongoose.Schema;
 
 const RecommandationSchema = new Schema({
+  title: {
+    type: String,
+    required: [true, 'Le titre est obligatoire'],
+  },
+  note: {
+    type: Number,
+    required: [true, 'La note est obligatoire'],
+  },
+  comment: {
+    type: String,
+    required: [true, 'Le commentaire est obligatoire'],
+  },
   firstname: {
     type: String,
     required: [true, 'Le nom est obligatoire']
@@ -18,7 +30,7 @@ const RecommandationSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: "user",
-    required: true,
+    required: [true, 'Le destinataire de la recommandation est obligatoire'],
   },
 }, schemaOptions
 );
