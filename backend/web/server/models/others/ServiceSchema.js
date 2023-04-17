@@ -1,5 +1,4 @@
 const { schemaOptions } = require('../../utils/schemas');
-const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
@@ -71,7 +70,5 @@ ServiceSchema.virtual('prestations', {
 })
 
 ServiceSchema.index({label: 'text'})
-
-ServiceSchema.plugin(mongooseLeanVirtuals)
 
 module.exports=ServiceSchema

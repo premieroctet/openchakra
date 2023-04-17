@@ -1,4 +1,3 @@
-const mongooseLeanVirtuals=require('mongoose-lean-virtuals')
 const mongoose = require('mongoose')
 const {getDataModel} = require('../../config/config')
 
@@ -6,7 +5,7 @@ let ShipRateSchema=null
 
 try {
   ShipRateSchema=require(`../plugins/${getDataModel()}/schemas/ShipRateSchema`)
-  ShipRateSchema.plugin(mongooseLeanVirtuals)
+  ShipRateSchema.plugin(require('mongoose-lean-virtuals'))
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {

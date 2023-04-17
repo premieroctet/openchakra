@@ -1,4 +1,3 @@
-const mongooseLeanVirtuals=require('mongoose-lean-virtuals')
 const mongoose = require('mongoose')
 const {getDataModel} = require('../../config/config')
 
@@ -7,7 +6,7 @@ try {
   const Event = require(`./Event`)
   if (Event) {
     const IndividualChallengeSchema = require(`../plugins/${getDataModel()}/schemas/IndividualChallengeSchema`)
-    IndividualChallengeSchema.plugin(mongooseLeanVirtuals)
+    IndividualChallengeSchema.plugin(require('mongoose-lean-virtuals'))
     IndividualChallenge = Event.discriminator('individualChallenge', IndividualChallengeSchema)
   }
 }

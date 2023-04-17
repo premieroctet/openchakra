@@ -1,8 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
-
 const PrestationSchema = new Schema({
   label: {
     type: String,
@@ -83,7 +81,5 @@ const PrestationSchema = new Schema({
 })
 
 PrestationSchema.index({label: 'text'})
-
-PrestationSchema.plugin(mongooseLeanVirtuals)
 
 module.exports =PrestationSchema

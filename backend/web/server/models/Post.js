@@ -1,4 +1,3 @@
-const mongooseLeanVirtuals=require('mongoose-lean-virtuals')
 const mongoose = require('mongoose')
 const {getDataModel} = require('../../config/config')
 
@@ -6,6 +5,7 @@ let PostSchema=null
 
 try {
   PostSchema=require(`../plugins/${getDataModel()}/schemas/PostSchema`)
+  PostSchema.plugin(require('mongoose-lean-virtuals'))
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {
@@ -13,5 +13,4 @@ catch(err) {
   }
 }
 
-PostSchema?.plugin(mongooseLeanVirtuals)
 module.exports = PostSchema ? mongoose.model('post', PostSchema) : null
