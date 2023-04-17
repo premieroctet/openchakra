@@ -118,7 +118,7 @@ const UserSchema = new Schema({
   company_status: {
     type: String,
     enum: Object.keys(COMPANY_STATUS),
-    required: [true, 'Le statut est obligatoire'],
+    required: false,
   },
   siret: {
     type: String,
@@ -143,17 +143,20 @@ const UserSchema = new Schema({
   company_activity: {
     type: String,
     enum: Object.keys(COMPANY_ACTIVITY),
-    required: true,
+    required: false,
   },
   company_size: {
     type: String,
     enum: Object.keys(COMPANY_SIZE),
-    required: true,
+    required: false,
   },
   company_function: {
     type: String,
     required: [function() { return this.role==ROLE_COMPANY_BUYER}, 'La fonction est obligatoire'],
   },
+  company_picture: {
+    type: String,
+  }
 }, schemaOptions
 );
 
@@ -166,10 +169,10 @@ UserSchema.virtual("password2")
 
 UserSchema.virtual('profile_progress').get(function() {
   const attributes='firstname lastname email phone birthday nationality picture id_card iban'.split(' ')
-  const companyAttributes='name status siret status_report insurance_type insurance_report picture'
-    .split(' ').map(att => `company.${att}`)
+  const companyAttributes='company_name company_status siret status_report insurance_type insurance_report company_picture'
+    .split(' ')
   let filled=attributes.map(att => !!lodash.get(this, att))
-  if (this.company) {
+  if (this.role==ROLE_COMPANY_BUYER) {
     filled=[...filled, ...companyAttributes.map(att => !!lodash.get(this, att))]
   }
   return (filled.filter(v => !!v)*1.0/filled.length)*100
