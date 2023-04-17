@@ -53,9 +53,19 @@ const JobUserSchema = new Schema({
     type: String,
     required: false,
   },
-
 }, schemaOptions
 );
+
+JobUserSchema.virtual("search_field").get(function() {
+  let res=[this.name]
+  if (this.skills) {
+    res=[...res, this.skills.map(s => s.name)]
+  }
+  if (this.activities) {
+    res=[...res, this.activities.map(a => a.name)]
+  }
+  return res.join(',')
+})
 
 JobUserSchema.virtual("location_str").get(function() {
   const locations=[]
@@ -72,6 +82,12 @@ JobUserSchema.virtual("activities", {
 
 JobUserSchema.virtual("skills", {
   ref: "skill", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "job" // is equal to foreignField
+});
+
+JobUserSchema.virtual("experiences", {
+  ref: "experience", // The Model to use
   localField: "_id", // Find in Model, where localField
   foreignField: "job" // is equal to foreignField
 });

@@ -203,4 +203,10 @@ UserSchema.virtual("quotations", {
   foreignField: "user" // is equal to foreignField
 });
 
+UserSchema.virtual("requests", {
+  ref: "request", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "user" // is equal to foreignField
+});
+
 module.exports = UserSchema;

@@ -4,6 +4,7 @@ const {
   COMPANY_ACTIVITY,
   COMPANY_SIZE,
   COMPANY_STATUS,
+  CONTRACT_TYPE,
   EXPERIENCE,
   ROLES
 } = require('./consts')
@@ -29,7 +30,7 @@ const preprocessGet = ({model, fields, id, user}) => {
 setPreprocessGet(preprocessGet)
 
 const preCreate = ({model, params, user}) => {
-  if (model=='jobUser') {
+  if (['jobUser', 'request'].includes(model)) {
     params.user=user
   }
   return Promise.resolve({model, params})
@@ -70,6 +71,11 @@ USER_MODELS.forEach(m => {
   declareEnumField({model: m, field: 'company_status', enumValues: COMPANY_STATUS})
   declareEnumField({model: m, field: 'company_activity', enumValues: COMPANY_ACTIVITY})
   declareEnumField({model: m, field: 'company_size', enumValues: COMPANY_SIZE})
+  declareVirtualField({model: m, field: 'requests', instance: 'Array', requires: '', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'request'}}
+  })
 })
 
 declareEnumField({model: 'company', field: 'status', enumValues: COMPANY_STATUS})
@@ -85,3 +91,11 @@ declareVirtualField({model: 'jobUser', field: 'skills', instance: 'Array', requi
     options: {ref: 'skill'}}
 })
 declareVirtualField({model: 'jobUser', field: 'location_str', instance: 'String', requires: 'customer_location,foreign_location'})
+declareVirtualField({model: 'jobUser', field: 'search_field', instance: 'String', requires: 'name,skills.name,activities.name'})
+declareVirtualField({model: 'jobUser', field: 'experiences', instance: 'Array', requires: '', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'experience'}}
+})
+
+declareEnumField({model: 'experience', field: 'contract_type', enumValues: CONTRACT_TYPE})
