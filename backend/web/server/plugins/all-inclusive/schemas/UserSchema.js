@@ -97,7 +97,10 @@ const UserSchema = new Schema({
     enum: Object.keys(NATIONALITIES),
     required: false,
   },
-  id_card: {
+  identity_proof_1: {
+    type: String,
+  },
+  identity_proof_2: {
     type: String,
   },
   iban: {
@@ -175,7 +178,7 @@ UserSchema.virtual("full_name").get(function() {
 UserSchema.virtual("password2")
 
 UserSchema.virtual('profile_progress').get(function() {
-  const attributes='firstname lastname email phone birthday nationality picture id_card iban'.split(' ')
+  const attributes='firstname lastname email phone birthday nationality picture identity_proof_1 iban'.split(' ')
   const companyAttributes='company_name company_status siret status_report insurance_type insurance_report company_picture'
     .split(' ')
   let filled=attributes.map(att => !!lodash.get(this, att))

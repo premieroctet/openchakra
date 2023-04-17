@@ -79,7 +79,7 @@ const USER_MODELS=['user', 'loggedUser']
 USER_MODELS.forEach(m => {
   declareVirtualField({model: m, field: 'full_name', instance: 'String', requires: 'firstname,lastname'})
   declareEnumField({model: m, field: 'role', enumValues: ROLES})
-  declareVirtualField({model: m, field: 'profile_progress', instance: 'Number', requires: 'firstname,lastname,email,phone,birthday,nationality,picture,id_card,iban,company_name,company_status,siret,status_report,insurance_type,insurance_report,company_picture'})
+  declareVirtualField({model: m, field: 'profile_progress', instance: 'Number', requires: 'firstname,lastname,email,phone,birthday,nationality,picture,identity_proof_1,iban,company_name,company_status,siret,status_report,insurance_type,insurance_report,company_picture'})
   declareEnumField({model: m, field: 'coaching', enumValues: COACHING})
   declareVirtualField({model: m, field: 'password2', instance: 'String'})
   declareEnumField({model: m, field: 'availability', enumValues: AVAILABILITY})
