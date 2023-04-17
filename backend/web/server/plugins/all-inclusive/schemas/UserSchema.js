@@ -25,7 +25,7 @@ const UserSchema = new Schema({
     type: String,
     required: [true, 'Le prénom est obligatoire'],
   },
-  name: {
+  lastname: {
     type: String,
     required: [true, 'Le nom de famille est obligatoire'],
   },
@@ -162,7 +162,7 @@ const UserSchema = new Schema({
 );
 
 UserSchema.virtual("full_name").get(function() {
-  return `${this.firstname} ${this.name}`;
+  return `${this.firstname} ${this.lastname}`;
 });
 
 // For password checking only
