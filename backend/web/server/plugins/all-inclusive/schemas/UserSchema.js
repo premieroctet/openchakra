@@ -2,9 +2,13 @@ const {
   AVAILABILITY,
   COACHING,
   COACH_OTHER,
+  COMPANY_ACTIVITY,
+  COMPANY_SIZE,
+  COMPANY_STATUS,
   DEFAULT_ROLE,
   ROLES
 } = require('../consts')
+const NATIONALITIES=require('../nationalities')
 const mongoose = require("mongoose")
 const bcrypt=require('bcryptjs')
 const { schemaOptions } = require('../../../utils/schemas')
@@ -41,21 +45,15 @@ const UserSchema = new Schema({
   role: {
     type: String,
     enum: Object.keys(ROLES),
-    default: DEFAULT_ROLE,
     required: [true, 'Le rôle est obligatoire'],
   },
   phone: {
     type: String,
-    required: false,
+    required: [function() { return this.role==COMPANY_BUYER}, 'Le téléphone est obligatoire'],
   },
   birthday: {
     type: Date,
-    required: [true, 'La date de naissance est obligatoire'],
-  },
-  company: {
-    type: Schema.Types.ObjectId,
-    ref: "company",
-    required: false,
+    required: [function() { return this.role==TI}, 'La date de naissance est obligatoire'],
   },
   picture: {
     type: String,
@@ -68,11 +66,11 @@ const UserSchema = new Schema({
   coaching: {
     type: String,
     enum: Object.keys(COACHING),
-    required: [true, "Le mode d'accompagnement est obligatoire"],
+    required: [function() { return this.role==TI}, "Le mode d'accompagnement est obligatoire"],
   },
   coaching_company: {
     type: String,
-    required: [function() { return this.coaching==COACH_OTHER}, 'La structure accompagnante est obligatoire'],
+    required: [function() { return this.role==TI && this.coaching==COACH_OTHER}, 'La structure accompagnante est obligatoire'],
   },
   coaching_end_date: {
     type: String,
@@ -84,7 +82,7 @@ const UserSchema = new Schema({
   },
   hidden: {
     type: Boolean,
-    default: true,
+    default: function() { return this.role==TI},
   },
   // Agreed by AllE
   qualified: {
@@ -93,6 +91,8 @@ const UserSchema = new Schema({
   },
   nationality: {
     type: String,
+    enum: Object.keys(NATIONALITIES),
+    required: false,
   },
   id_card: {
     type: String,
@@ -108,6 +108,49 @@ const UserSchema = new Schema({
   },
   address: {
     type: String,
+  },
+  company_name: {
+    type: String,
+    required: [function() { return this.role==COMPANY_BUYER}, "Le nom de l'entreprise' est obligatoire"],
+  },
+  status: {
+    type: String,
+    enum: Object.keys(COMPANY_STATUS),
+    required: [true, 'Le statut est obligatoire'],
+  },
+  siret: {
+    type: String,
+    validate: [v => siret.isSIRET(v)||siret.isSIREN(v), 'Le SIRET ou SIREN est invalide'],
+    required: [function() { return this.role==COMPANY_BUYER}, "Le nom de l'entreprise' est obligatoire"],
+  },
+  // In french: "Avis de situation"
+  status_report: {
+    type: String,
+  },
+  vat_subject: {
+    type: Boolean,
+  },
+  // Insurance type : décennale, tiers
+  insurance_type: {
+    type: String,
+  },
+  // Insurance document
+  insurance_report: {
+    type: String,
+  },
+  company_activity: {
+    type: String,
+    enum: Object.keys(COMPANY_ACTIVITY),
+    required: true,
+  },
+  company_size: {
+    type: String,
+    enum: Object.keys(COMPANY_SIZE),
+    required: true,
+  },
+  company_function: {
+    type: String,
+    required: [function() { return this.role==COMPANY_BUYER}, 'La fonction est obligatoire'],
   },
 }, schemaOptions
 );
