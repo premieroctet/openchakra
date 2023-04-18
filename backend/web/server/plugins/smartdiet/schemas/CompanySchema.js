@@ -64,7 +64,7 @@ CompanySchema.virtual('likes_count').get(function() {
     .then(contents => {
       var count=0
       contents.forEach(content => {
-        count+=content.likes?.countBy(l => l.company._id==this._id) || 0
+        count+=lodash.filter(content.likes||[], l => l.company._id==this._id)?.length || 0
       });
       return count
     })
@@ -76,20 +76,26 @@ CompanySchema.virtual('shares_count').get(function() {
     .then(contents => {
       var count=0
       contents.forEach(content => {
-        count+=content.shares?.countBy(s => s.company._id==this._id) || 0
+        count+=lodash.filter(content.shares||[], s => s.company._id==this._id)?.length||0
       });
+      console.log(`shares_count:${count}`)
       return count
     })
 })
 
 CompanySchema.virtual('comments_count').get(function() {
   return mongoose.model('comment').find({pip: null})
-  .populate('user')
-  .then(comments => comments.countBy(c => c.user.company._id==this._id))
+    .populate('user')
+    .then(comments => {
+      const count=lodash.filter(comments||[], c => c.user.company._id==this._id)?.length||0
+      console.log(`comments_count:${count}`)
+      return count
+    })
 })
 
 CompanySchema.virtual('contents_count').get(function() {
-  return mongoose.model('content').countDocuments()
+  // TODO WTF
+  return 0
 })
 
 module.exports = CompanySchema
