@@ -138,6 +138,11 @@ declareVirtualField({model: 'jobUser', field: 'diploma', instance: 'Array', requ
     instance: 'ObjectID',
     options: {ref: 'diploma'}}
 })
+declareVirtualField({model: 'jobUser', field: 'photos', instance: 'Array', requires: '', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'photo'}}
+})
 
 declareEnumField({model: 'experience', field: 'contract_type', enumValues: CONTRACT_TYPE})
 
