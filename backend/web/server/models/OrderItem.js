@@ -1,12 +1,11 @@
 const mongoose = require('mongoose')
-const mongooseLeanVirtuals=require('mongoose-lean-virtuals')
 const {getDataModel} = require('../../config/config')
 
 let OrderItemSchema=null
 
 try {
   OrderItemSchema=require(`../plugins/${getDataModel()}/schemas/OrderItemSchema`)
-  OrderItemSchema.plugin(mongooseLeanVirtuals)
+  OrderItemSchema.plugin(require('mongoose-lean-virtuals'))
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {

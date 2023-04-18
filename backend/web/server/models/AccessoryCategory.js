@@ -1,4 +1,3 @@
-const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 const {getDataModel}=require('../../config/config')
 
 let AccessoryCategory = null
@@ -7,7 +6,7 @@ try {
   const Category = require(`./Category`)
   if (Category) {
     const AccessoryCategorySchema=require(`../plugins/${getDataModel()}/schemas/AccessoryCategorySchema`)
-    AccessoryCategorySchema.plugin(mongooseLeanVirtuals)
+    AccessoryCategorySchema.plugin(require('mongoose-lean-virtuals'))
     AccessoryCategory = Category.discriminator('accessoryCategory', AccessoryCategorySchema)
   }
 }

@@ -6,7 +6,6 @@ import {
   InputRightElement,
   DarkMode,
   IconButton,
-  Image,
 } from '@chakra-ui/react'
 import { CloseIcon, SearchIcon } from '@chakra-ui/icons'
 import PageList from './PageList'
@@ -66,17 +65,14 @@ const Pages = () => {
             )}
           </InputRightElement>
         </InputGroup>
-        <PageList searchTerm={searchTerm} />
         <Box
-          alignSelf={'end'}
           display="flex"
           flexDirection="column"
-          alignItems={'start'}
           mb={3}
-          mt={19}
-          position={'relative'}
+          mt={2}
         >
           <CreatePageAction />
+          <PageList searchTerm={searchTerm} />
         </Box>
       </Box>
     </DarkMode>

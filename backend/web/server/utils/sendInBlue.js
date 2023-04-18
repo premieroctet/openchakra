@@ -48,7 +48,7 @@ class SIB_V3 {
     console.log(`Sending SMS to ${number}, data:${JSON.stringify(data)}`)
 
     const smsData = new SibApiV3Sdk.SendTransacSms()
-    smsData.sender = 'MyAlfred'
+    smsData.sender = 'Contact'
     smsData.recipient = number
     smsData.content = data
     smsData.type = 'transactional'

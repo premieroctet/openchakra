@@ -66,6 +66,7 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'Tab',
   'Table',
   'Timer',
+  'VisuallyHidden',
   'Accordion',
   'Editable',
   'AspectRatio',

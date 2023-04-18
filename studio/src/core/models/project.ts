@@ -5,6 +5,7 @@ import { duplicateComponent, deleteComponent } from '~utils/recursive'
 import { generateId } from '~utils/generateId'
 import produce from 'immer'
 import templates, { TemplateType } from '~templates'
+import { CURRENT_VERSION } from '../../utils/upgrade';
 
 export interface PageState extends PageSettings {
   components: IComponents
@@ -18,6 +19,7 @@ export type ProjectState = {
   activePage: string
   rootPage: string
   hoveredId?: IComponent['id']
+  version: number
 }
 export type ProjectStateWithUndo = {
   past: ProjectState[]
@@ -105,11 +107,11 @@ const project = createModel({
         metaTitle: '',
         metaDescription: '',
         metaImageUrl: '',
-        rootPage: true,
       },
     },
     activePage: DEFAULT_PAGE,
     rootPage: DEFAULT_PAGE,
+    version: CURRENT_VERSION,
   } as ProjectState,
   reducers: {
     reset(state: ProjectState, newState: ProjectState): ProjectState {
@@ -123,19 +125,20 @@ const project = createModel({
           metaImageUrl: '',
           components: INITIAL_COMPONENTS,
           selectedId: DEFAULT_ID,
-          rootPage: true,
         },
       }
 
       const activePage = newState?.activePage || resetPageId
 
       const rootPage = newState?.rootPage || activePage
+      const version = newState?.version || CURRENT_VERSION
 
       return {
         ...state,
         pages,
         activePage,
         rootPage,
+        version,
       }
     },
 

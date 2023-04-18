@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import lodash from 'lodash'
 import util from 'util'
-
+import {InputGroup, InputRightElement} from '@chakra-ui/react'
+import {AiOutlineEye, AiOutlineEyeInvisible} from 'react-icons/ai'
 import { ACTIONS } from '../utils/actions'
 import useDebounce from '../hooks/useDebounce.hook'
 
 const withDynamicInput = Component => {
 
-  const Internal = ({ dataSource, dataSourceId, noautosave, readOnly, context, backend, suggestions, setComponentValue, ...props }) => {
+  const Internal = ({ dataSource, dataSourceId, noautosave, readOnly, context, backend, suggestions, setComponentValue, displayEye, ...props }) => {
 
     let keptValue = lodash.get(dataSource, props.attribute) || ''
 
@@ -31,6 +32,7 @@ const withDynamicInput = Component => {
     }
 
     const [internalDataValue, setInternalDataValue] = useState(keptValue)
+    const [visibilityType, setVisibilityType]= useState('password')
 
     const debouncedValue = useDebounce(internalDataValue, 500)
 
@@ -58,16 +60,24 @@ const withDynamicInput = Component => {
         }
     }
 
-    props={...props, readOnly}
+    props={...props, readOnly, value:lodash.isNil(internalDataValue) ? '' : internalDataValue}
     if (suggestions) {
       props={...props, list: 'suggestions'}
     }
+    if (displayEye) {
+      props={...props, type:visibilityType}
+    }
+
+    const toggleSecret = () => {
+      setVisibilityType(visibilityType=='password' ? 'text' : 'password')
+    }
+
+    const parentProps=lodash.pick(props, 'id dataSource name dataSourceId value level model attribute noautosave readOnly context backend setComponentValue'.split(' '))
 
     return (
-      <>
+      <InputGroup {...parentProps}>
       <Component
-      {...props}
-      value={lodash.isNil(internalDataValue) ? '' : internalDataValue}
+      {...lodash.omit(props, ['id'])}
       onChange={onChange}
       />
       {suggestions && (
@@ -77,7 +87,15 @@ const withDynamicInput = Component => {
           ))}
         </datalist>
       )}
-      </>
+      {displayEye &&
+        <InputRightElement>
+          {visibilityType=='password' ?
+          <AiOutlineEye onClick={toggleSecret} title='Afficher le mot de passe'/>
+          :
+          <AiOutlineEyeInvisible onClick={toggleSecret} title='Masquer le mot de passe'/>
+        }
+        </InputRightElement>}
+      </InputGroup>
     )
   }
 

@@ -1,8 +1,7 @@
-import camelCase from 'lodash/camelCase'
+import {encode} from 'html-entities'
 import filter from 'lodash/filter'
 import isBoolean from 'lodash/isBoolean'
-import lodash from 'lodash'
-import {encode} from 'html-entities'
+import lodash from 'lodash';
 
 import icons from '~iconsList'
 
@@ -24,37 +23,16 @@ import {
   isSingleDataPage,
 } from './dataSources';
 import { ProjectState, PageState } from '../core/models/project'
+import {
+  capitalize,
+  getPageFileName,
+  getPageUrl,
+  normalizePageName
+} from './misc';
 import { isJsonString } from '../dependencies/utils/misc'
 
 //const HIDDEN_ATTRIBUTES=['dataSource', 'attribute']
 const HIDDEN_ATTRIBUTES: string[] = []
-
-export const normalizePageName = (pageName: string) => {
-  return capitalize(camelCase(pageName))
-}
-
-export const getPageFileName = (
-  pageId: string,
-  pages: { [key: string]: PageState },
-) => {
-  return normalizePageName(pages[pageId].pageName)
-}
-
-export const getPageUrl = (
-  pageId: string,
-  pages: { [key: string]: PageState },
-) => {
-  try {
-    return pages?.[pageId]?.pageName
-      .toLowerCase()
-      .replace(/ /gi, '-')
-      .normalize('NFD')
-      .replace(/\p{Diacritic}/gu, '')
-  } catch (err) {
-    console.error(`getPageUrl ${pageId}:${err}`)
-    throw err
-  }
-}
 
 export const getPageComponentName = (
   pageId: string,
@@ -111,10 +89,6 @@ const getDynamicType = (comp: IComponent) => {
     return 'Enum'
   }
   throw new Error(`No dynamic found for ${comp.type}`)
-}
-
-const capitalize = (value: string) => {
-  return value.charAt(0).toUpperCase() + value.slice(1)
 }
 
 export const formatCode = async (code: string) => {
@@ -192,11 +166,6 @@ const buildBlock = ({
       }
       propsContent += ` getComponentValue={getComponentValue} `
 
-      /**
-      if (childComponent.type=='Button') {
-        propsContent+= ` class="noprint" `
-      }
-      */
       // Set component id
       propsContent += ` id='${childComponent.id}' `
       // Set reload function
@@ -342,9 +311,7 @@ const buildBlock = ({
           if (propsValueAsObject && Object.keys(propsValue).length >= 1) {
             const gatheredProperties = Object.entries(propsValue)
               .map(([prop, value]) => {
-                return !isNaN(parseInt(value))
-                  ? ` ${prop}: '${value}' `
-                  : ` ${prop}: '${value}' `
+                return ` '${prop}': '${value}' `
               })
               .join(', ')
 
@@ -380,6 +347,10 @@ const buildBlock = ({
               operand = `={${propsValue}}`
             }
 
+            if (propName=='href') {
+              operand=`="${getPageUrl(propsValue, pages)}"`
+            }
+
             propsContent += ` ${propName}${operand}`
           }
         })
@@ -390,6 +361,10 @@ const buildBlock = ({
       }
       if (childComponent.type === 'Timer') {
         propsContent += ` backend='/'`
+      }
+
+      if (childComponent.type === 'Input' && childComponent.props.type=='password') {
+        propsContent += ` displayEye`
       }
 
       if (childComponent.props.actionProps) {

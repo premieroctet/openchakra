@@ -1,8 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
-
 const AlbumSchema = new Schema({
   /*
   // Album name
@@ -31,5 +29,4 @@ const AlbumSchema = new Schema({
   },
 })
 
-AlbumSchema.plugin(mongooseLeanVirtuals)
 module.exports = AlbumSchema

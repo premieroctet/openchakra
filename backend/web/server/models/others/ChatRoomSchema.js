@@ -1,8 +1,6 @@
 const { schemaOptions } = require('../../utils/schemas');
 const mongoose = require('mongoose')
-
 const Schema = mongoose.Schema
-const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 const {hideIllegal} = require('../../utils/text')
 
 
@@ -49,7 +47,5 @@ ChatRoomsSchema.virtual('latest').get(function() {
   }
   return Math.max(...this.messages.map(m => m.date))
 })
-
-ChatRoomsSchema.plugin(mongooseLeanVirtuals)
 
 module.exports = ChatRoomsSchema

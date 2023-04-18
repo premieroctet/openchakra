@@ -1,13 +1,20 @@
-import { Input, Select } from '@chakra-ui/react'
 import React from 'react'
+import { 
+  Button,
+  Input, 
+  useDisclosure,
+} from '@chakra-ui/react'
 
 import { useForm } from '~hooks/useForm'
 import FormControl from '~components/inspector/controls/FormControl'
 import usePropsSelector from '~hooks/usePropsSelector'
+import MediaModal from '~components/inspector/inputs/MediaModal'
+
 
 const ImagePanel = () => {
   const { setValueFromEvent } = useForm()
 
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const src = usePropsSelector('src')
   const fallbackSrc = usePropsSelector('fallbackSrc')
   const alt = usePropsSelector('alt')
@@ -24,6 +31,7 @@ const ImagePanel = () => {
           name="src"
           onChange={setValueFromEvent}
         />
+        <Button size={'xs'} onClick={onOpen}>...</Button>
       </FormControl>
 
       <FormControl label="Fallback Src" htmlFor="fallbackSrc">
@@ -62,6 +70,8 @@ const ImagePanel = () => {
           onChange={setValueFromEvent}
         />
       </FormControl>
+    
+      <MediaModal isOpen={isOpen} onClose={onClose} />
     </>
   )
 }

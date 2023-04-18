@@ -1,4 +1,3 @@
-const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 const {getDataModel}=require('../../config/config')
 
 let Drink = null
@@ -6,7 +5,7 @@ try {
   const Product = require(`./Product`)
   if (Product) {
     const DrinkSchema = require(`../plugins/${getDataModel()}/schemas/DrinkSchema`)
-    DrinkSchema.plugin(mongooseLeanVirtuals)
+    DrinkSchema.plugin(require('mongoose-lean-virtuals'))
     Drink = Product.discriminator('drink', DrinkSchema)
   }
 }

@@ -1,27 +1,19 @@
 const Validator = require('validator')
+const lodash=require('lodash')
 const {isValidPhoneNumber} = require('libphonenumber-js')
 
-class RegExpParam extends RegExp {
-
-  constructor(reg, repl) {
-    super(reg)
-    this.repl = repl
-  }
-
-  [Symbol.replace](str) {
-    return RegExp.prototype[Symbol.replace].call(this, str, this.repl)
-  }
-}
+const PARAM_RE = RegExp('{{\\s*params.([^\\s]+)\\s*}}')
 
 const fillSms = (pattern, values) => {
-  const r = RegExp('{{\\s*params.([^\\s]+)\\s*}}')
-  while (found = r.exec(pattern)) {
-    const param = found[1]
-    if (values[param] == undefined) {
-      console.error(`Missing param ${param}`)
-      return null
+  let match=null
+  while (match = pattern.match(PARAM_RE)) {
+    const param = match[1]
+    let replaceValue=values[param]
+    if (lodash.isNil(replaceValue)) {
+      console.warn(`SMS:Missing param ${param} in '${pattern}'`)
+      replaceValue=`<${param}>`
     }
-    pattern = pattern.replace(new RegExpParam(`{{\\s*params.${param}\\s*}}`, values[param]))
+    pattern = pattern.replace(PARAM_RE, replaceValue)
   }
   return pattern
 }

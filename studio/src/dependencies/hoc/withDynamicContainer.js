@@ -136,7 +136,7 @@ const withDynamicContainer = Component => {
             <>
               {React.cloneElement(
                 firstChild,
-                { id: newId, level: index, dataSource: d },
+                { id: newId, level: index, dataSource: d, _id: d?._id },
                 setRecurseDataSource(
                   firstChild,
                   d,

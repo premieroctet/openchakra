@@ -55,6 +55,7 @@ const {BadRequestError, NotFoundError} = require('../../utils/errors')
 const OrderItem = require('../../models/OrderItem')
 const Product = require('../../models/Product')
 const Event = require('../../models/Event')
+const Invitation = require('../../models/Invitation')
 
 const inviteGuest = ({eventOrBooking, email, phone}, user) => {
   return getModel(eventOrBooking, ['booking', 'event'])
@@ -83,7 +84,7 @@ const inviteGuest = ({eventOrBooking, email, phone}, user) => {
       }
       if (modelName=='event') {
         return Event.findById(eventOrBooking)
-          .populate({path: 'members', populate: 'member guest'})
+          .populate({path: 'invitations', populate: [{path:'member'}, {path: 'guest'}]})
           .then(ev => {
             return Promise.all([
               Promise.resolve(ev),
@@ -101,10 +102,17 @@ const inviteGuest = ({eventOrBooking, email, phone}, user) => {
             if (ev.people_count+1>ev.max_people) {
               throw new BadRequestError(`Cet événement est complet`)
             }
+            const invitation=ev.invitations.find(m => idEqual(m.member._id, user._id))
+            if (!invitation) {
+              throw new BadRequestError(`Vous n'êtes pas inscrit à cet événement`)
+            }
             return Guest.create({email, phone})
               .then(g => {
-                ev.members.find(m => idEqual(m.member._id, user._id)).guest=g._id
-                return Promise.all([ev.save(), g])
+                invitation.guest=g
+                return invitation.save()
+                  .then(()=> {
+                    return Promise.all([ev, g])
+                  })
               })
               .then(([ev, guest]) => Promise.allSettled([sendEventRegister2Guest({event: ev, member: user, guest: guest})]))
           })
@@ -155,7 +163,7 @@ const payEvent=({context, redirect, color}, user) => {
   return getModel(eventId, 'event')
     .then(model => {
       return Promise.all([
-        Event.findOne({_id: eventId, 'members.member': user}),
+        Event.findById(eventId),
         Payment.find({event: eventId, event_member: user, status: PAYMENT_SUCCESS}),
       ])
     })
@@ -267,16 +275,22 @@ addAction('changePassword', changePassword)
 
 const registerToEvent = ({event, user}) => {
   return Event.findById(event)
-    .populate('members')
+    .populate('invitations')
     .then(event => {
-      if (event.members.find(m => idEqual(m.member._id, user._id))) {
+      if (moment(event.start_date).isBefore(moment())) {
+        throw new BadRequestError(`Cet événement est passé`)
+      }
+      if (event.invitations.find(m => idEqual(m.member._id, user._id))) {
         throw new BadRequestError(`Vous êtes déjà inscrit à cet événement`)
       }
       if (event.people_count+1>event.max_people) {
         throw new BadRequestError(`Cet événement est complet`)
       }
-      event.members.push({member: user._id})
-      return event.save()
+      return Invitation.create({member: user._id})
+        .then(inv => {
+          event.invitations.push(inv)
+          return event.save()
+        })
     })
     .then(event => Promise.all([Promise.resolve(event), User.find({role: FUMOIR_ADMIN})]))
     .then(([event, admins]) => Promise.allSettled(admins.map(admin => sendEventRegister2Admin({event, member: user, admin}))))
@@ -286,20 +300,25 @@ const registerToEvent = ({event, user}) => {
 // TODO: do refund if required
 const unregisterFromEvent = ({event, user}) => {
   return Event.findById(event)
-    .populate({path: 'members', populate: 'member guest'})
+    .populate({path: 'invitations', populate: 'member guest'})
     .then(event => {
       if (!event) {
-        throw new NotFoundError(`Evénément ${event} inconnu`)
+        throw new NotFoundError(`Evénement ${event} inconnu`)
       }
-      const member=event.members.find(m => idEqual(m.member._id, user._id))
-      sendEventUnregister2Member({event, member: member.member})
-      if (member.guest) {
-        sendEventUnregister2Guest({event, member: member.member, guest: member.guest})
+      if (moment(event.start_date).isBefore(moment())) {
+        throw new BadRequestError(`Cet événement est passé`)
+      }
+      const invitation=event.invitations.find(m => idEqual(m.member._id, user._id))
+      sendEventUnregister2Member({event, member: invitation.member})
+      if (invitation.guest) {
+        sendEventUnregister2Guest({event, member: invitation.member, guest: invitation.guest})
       }
       User.find({role: FUMOIR_ADMIN})
         .then(admins => Promise.allSettled(admins.map(admin => sendEventUnregister2Admin({event, member: user, admin}))))
-      event.members=event.members.filter(m => !idEqual(m.member._id, user._id))
-      return event.save()
+      event.invitations=event.invitations.filter(m => !idEqual(m.member._id, user._id))
+      return (invitation.guest ? Guest.findByIdAndRemove(invitation.guest._id) : Promise.resolve())
+        .then(()=> Invitation.findByIdAndRemove(invitation._id))
+        .then(()=>event.save())
     })
 }
 
@@ -326,11 +345,9 @@ setPreCreateData(preCreate)
 
 const postCreate = ({model, params, data}) => {
   if (model=='user') {
-    console.log(`Sending mail to ${params.email} with temp password ${params.nonHashedPassword}`)
     sendWelcomeRegister({member:data, password:params.nonHashedPassword})
   }
   if (model=='booking') {
-    console.log(`Sending mail to ${data.booking_user.email} and admins for booking ${data._id}`)
     sendNewBookingToMember({booking:data})
     User.find({role: FUMOIR_MANAGER})
       .then(managers => Promise.allSettled(managers.map(manager => sendNewBookingToManager({booking:data, manager}))))
@@ -477,6 +494,7 @@ declareVirtualField({model: 'payment', field: 'net_amount', instance: 'Number', 
 declareEnumField({model: 'payment', field: 'status', enumValues: PAYMENT_STATUS})
 declareEnumField({model: 'payment', field: 'mode', enumValues: CASH_MODE})
 declareVirtualField({model: 'payment', field: 'customer_str', instance: 'String', requires: 'member,guest,booking'})
+declareVirtualField({model: 'payment', field: 'receipt_number', instance: 'String', requires: `${CREATED_AT_ATTRIBUTE},receipt_id`})
 
 
 const PRODUCT_MODELS=['product', 'cigar', 'drink', 'meal', 'accessory']
@@ -511,7 +529,7 @@ CAT_MODELS.forEach(m => {
 })
 
 declareEnumField({model: 'event', field: 'place', enumValues: PLACES})
-declareVirtualField({model: 'event', field: 'members_count', instance: 'Number', requires: 'guests_count,members'})
+declareVirtualField({model: 'event', field: 'members_count', instance: 'Number', requires: 'guests_count,invitations'})
 declareVirtualField({model: 'event', field: 'status', instance: 'String', requires: 'start_date,end_date', enumValues: EVENT_STATUS})
 declareVirtualField({model: 'event', field: 'guests', instance: 'Array', requires: '', multiple: true,
   caster: {
@@ -522,8 +540,8 @@ declareVirtualField({model: 'event', field: 'payments', instance: 'Array', requi
   caster: {
     instance: 'ObjectID',
     options: {ref: 'payment'}}})
-declareVirtualField({model: 'event', field: 'people_count', instance: 'Number', requires: 'members'})
-declareVirtualField({model: 'event', field: 'registration_status', instance: 'String', requires: 'members'})
+declareVirtualField({model: 'event', field: 'people_count', instance: 'Number', requires: 'invitations'})
+declareVirtualField({model: 'event', field: 'registration_status', instance: 'String', requires: 'invitations'})
 
 
 declareVirtualField({model: 'orderItem', field: 'net_price', instance: 'Number', requires: 'price,vat_rate'})
@@ -533,11 +551,15 @@ declareVirtualField({model: 'orderItem', field: 'total_vat_amount', instance: 'N
 declareVirtualField({model: 'orderItem', field: 'total_price', instance: 'Number', requires: 'price,quantity'})
 declareVirtualField({model: 'subscription', field: 'is_active', instance: 'Boolean', requires: 'start,end'})
 
+declareVirtualField({model: 'invitation', field: 'paid_str', instance: 'String'})
+// TODO :fix declareVirtualField to allow single ref
+declareVirtualField({model: 'invitation', field: 'event', instance: 'String'})
+
 const getEventGuests = (user, params, data) => {
   return Event.findById(data._id)
-    .populate({path: 'members', populate: 'member guest'})
+    .populate({path: 'invitations', populate: 'member guest'})
     .then(event => {
-      const m=event.members
+      const m=event.invitations
         .find(m => idEqual(m.member._id, user._id) && !!m.guest)
       return m ? [m.guest]:[]
     })
@@ -546,7 +568,7 @@ const getEventGuests = (user, params, data) => {
 declareComputedField('event', 'guests', getEventGuests)
 
 const getEventRegistrationStatus = (user, params, data) => {
-  return Event.exists({_id: data._id, 'members.member': user._id})
+  return Event.exists({_id: data._id, 'invitations.member': user._id})
     .then(exists => exists ? 'Vous êtes inscrit': '')
 }
 
@@ -589,6 +611,30 @@ const setEventGuestsCount = ({id, attribute, value, user}) => {
 }
 
 declareComputedField('event', 'guests_count', getEventGuestsCount, setEventGuestsCount)
+
+const getInvitationPaidStr = (user, params, data) => {
+  return Invitation.findById(data._id).populate([
+    {path: 'member'},
+    {path: 'guest'},
+    {path: 'event', populate:'payments'}
+  ])
+    .then(invitation => {
+      console.log(`invitation:${invitation}`)
+      const member_id=invitation.member._id
+      const paid=lodash(invitation.event.payments)
+        .filter(p => idEqual(p.event_member._id, member_id))
+        .filter(p => p.status==PAYMENT_SUCCESS)
+        .map(p => p.amount)
+        .sum()
+      const to_pay=(invitation.guest ? 1:0)*invitation.event.price
+      if (to_pay<=paid) {
+        return 'Payé'
+      }
+      return 'Non payé'
+    })
+}
+
+declareComputedField('invitation', 'paid_str', getInvitationPaidStr)
 
 module.exports = {
   inviteGuest,

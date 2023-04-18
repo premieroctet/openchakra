@@ -1,4 +1,3 @@
-const mongooseLeanVirtuals=require('mongoose-lean-virtuals')
 const mongoose = require('mongoose')
 const {getDataModel} = require('../../config/config')
 
@@ -6,6 +5,7 @@ let SessionSchema=null
 
 try {
   SessionSchema=require(`../plugins/${getDataModel()}/schemas/SessionSchema`)
+  SessionSchema.plugin(require('mongoose-lean-virtuals'))
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {
@@ -13,5 +13,4 @@ catch(err) {
   }
 }
 
-SessionSchema?.plugin(mongooseLeanVirtuals)
 module.exports = SessionSchema ? mongoose.model('session', SessionSchema) : null

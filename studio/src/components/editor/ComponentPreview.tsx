@@ -83,10 +83,8 @@ const ComponentPreview: React.FC<{
     case 'CircularProgress':
     case 'Heading':
     case 'Switch':
-    case 'FormLabel':
     case 'FormHelperText':
     case 'FormErrorMessage':
-    case 'Tab':
     case 'Input':
     case 'Radio':
     case 'ListItem':
@@ -100,7 +98,6 @@ const ComponentPreview: React.FC<{
       )
     // Wrapped functional components (forward ref issue)
     case 'AlertIcon':
-    case 'Progress':
     case 'CloseButton':
     case 'AccordionIcon':
     case 'Code':
@@ -124,9 +121,12 @@ const ComponentPreview: React.FC<{
     case 'SimpleGrid':
     case 'Flex':
     case 'FormControl':
+    case 'FormLabel':
     case 'Tabs':
+    case 'Tab':
     case 'Link':
     case 'List':
+    case 'Progress':
     case 'TabList':
     case 'TabPanel':
     case 'TabPanels':
@@ -134,6 +134,7 @@ const ComponentPreview: React.FC<{
     case 'GridItem':
     case 'Center':
     case 'Container':
+    case 'VisuallyHidden':
       return (
         <WithChildrenPreviewContainer
           enableVisualHelper

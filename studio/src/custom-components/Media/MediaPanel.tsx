@@ -2,27 +2,24 @@ import React, { memo } from 'react'
 import { 
   Button,
   Input, 
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalBody,
-  ModalCloseButton, 
   useDisclosure,
 } from '@chakra-ui/react'
+import SwitchControl from '~components/inspector/controls/SwitchControl'
 import { useForm } from '~hooks/useForm'
 import FormControl from '~components/inspector/controls/FormControl'
 import usePropsSelector from '~hooks/usePropsSelector'
-import Medias from '~components/medias/Medias'
+import MediaModal from '~components/inspector/inputs/MediaModal'
 
 
 const MediaPanel = () => {
 
-  const { setValueFromEvent, setValue } = useForm()
+  const { setValueFromEvent } = useForm()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const src = usePropsSelector('src')
   const alt = usePropsSelector('alt')
   const htmlHeight = usePropsSelector('htmlHeight')
   const htmlWidth = usePropsSelector('htmlWidth')
+  const isIframe = usePropsSelector('isIframe')
 
   return (
     <>
@@ -62,18 +59,9 @@ const MediaPanel = () => {
           onChange={setValueFromEvent}
         />
       </FormControl>
+      <SwitchControl label="Is iframe" name="isIframe" />
 
-
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent minW={'60vw'} maxH={'90vh'} overflowY={'scroll'}>
-          <ModalCloseButton />
-          <ModalBody display={'flex'} flexDirection={'column'}>
-          <Medias setMediaSrc={setValue} mediaPanelClose={onClose}/>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-      
+      <MediaModal isOpen={isOpen} onClose={onClose} />
     </>
   )
 }

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Flex } from '@chakra-ui/react'
 import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
@@ -85,11 +86,11 @@ const editorConfig = {
 };
 
 // TODO add all properties to root returned component
-const props={id, value: html, ...rest}
+const props={id, attribute, value: html, ...rest}
 return (
-  <span {...props}>
-    <LexicalComposer initialConfig={editorConfig}>
-      <div className="editor-container">
+  <Flex {...props}>
+    <LexicalComposer initialConfig={editorConfig} >
+      <div className="editor-container" >
         {isEditable && <ToolbarPlugin />}
         <div className={`editor-inner ${isEditable && 'editable'}`}>
           <RichTextPlugin
@@ -109,7 +110,7 @@ return (
         </div>
       </div>
     </LexicalComposer>
-  </span>
+  </Flex>
 )
 
 }
