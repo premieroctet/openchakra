@@ -74,7 +74,6 @@ const withDynamicInput = Component => {
 
     const parentProps=lodash.pick(props, 'id dataSource name dataSourceId value level model attribute noautosave readOnly context backend setComponentValue'.split(' '))
 
-    console.log(`Parent props are ${JSON.stringify(parentProps)}`)
     return (
       <InputGroup {...parentProps}>
       <Component
