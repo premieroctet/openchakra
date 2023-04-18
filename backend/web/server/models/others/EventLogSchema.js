@@ -1,9 +1,6 @@
 const { schemaOptions } = require('../../utils/schemas');
 const mongoose = require('mongoose')
-
 const Schema = mongoose.Schema
-
-const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 
 const EventLogSchema = new Schema({
   // Event date
@@ -75,7 +72,5 @@ const EventLogSchema = new Schema({
     required: false,
   },
 }, schemaOptions)
-
-EventLogSchema.plugin(mongooseLeanVirtuals)
 
 module.exports = EventLogSchema

@@ -98,7 +98,12 @@ UserSchema.virtual('spoons_count').get(function() {
 })
 
 // Computed virtual
-UserSchema.virtual('available_contents').get(function() {})
+UserSchema.virtual('available_contents', {
+  ref: "content", // The Model to use
+  localField: "targets", // Find in Model, where localField
+  foreignField: "targets", // is equal to foreignField
+  //match: {default: true}
+})
 
 UserSchema.virtual("spoons", {
   ref: "spoon", // The Model to use

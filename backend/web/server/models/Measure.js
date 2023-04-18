@@ -1,4 +1,3 @@
-const mongooseLeanVirtuals=require('mongoose-lean-virtuals')
 const mongoose = require('mongoose')
 const {getDataModel} = require('../../config/config')
 
@@ -6,6 +5,7 @@ let MeasureSchema=null
 
 try {
   MeasureSchema=require(`../plugins/${getDataModel()}/schemas/MeasureSchema`)
+  MeasureSchema.plugin(require('mongoose-lean-virtuals'))
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {
@@ -13,5 +13,4 @@ catch(err) {
   }
 }
 
-MeasureSchema?.plugin(mongooseLeanVirtuals)
 module.exports = MeasureSchema ? mongoose.model('measure', MeasureSchema) : null

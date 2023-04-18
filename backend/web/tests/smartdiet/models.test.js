@@ -1,3 +1,4 @@
+const { CONTENTS_TYPE } = require('../../server/plugins/smartdiet/consts')
 const { getModels } = require('../../server/utils/database')
 const {forceDataModelSmartdiet, buildAttributesException}=require('../utils')
 
@@ -218,15 +219,34 @@ describe('Test models ', () => {
   it('Offer.company must be ref unique', async () => {
     const models=getModels()
     const targetsType=models.category.attributes.targets
-    console.log(targetsType)
     expect(targetsType.type).toBe('target')
     expect(targetsType.multiple).toBe(true)
     expect(targetsType.ref).toBe(true)
     const companyType=models.offer.attributes.company
-    console.log(companyType)
     expect(companyType.type).toBe('company')
     expect(companyType.multiple).toBe(false)
     expect(companyType.ref).toBe(true)
+  })
+
+  it('User must see defaut contents', async () => {
+    const tgtCat=await Category.create({name: 'cat', picture: 'pct'})
+    const target=await Target.create({name:'hop', category: tgtCat})
+    const key=await Key.create({name: 'Clé', picture: 'Tagada'})
+    const user=await User.create({dataTreatmentAccepted:true,cguAccepted:true,
+        pseudo: 'Seb',email: 'email', lastname: 'Auvray', firstname: 'Seb',
+        targets: target
+    })
+    const content=await Content.create({
+      key, duration:1, contents: 'hop', picture: 'picture', default: false, name: 'Contenu',
+      type:Object.keys(CONTENTS_TYPE)[0], creator:user, targets: target,
+    })
+    const content2=await Content.create({
+      key, duration:1, contents: 'hop2', picture: 'picture', default: false, name: 'Contenu',
+      type:Object.keys(CONTENTS_TYPE)[0], creator:user, default: true,
+    })
+
+    const foundUser=await User.findOne().populate('available_contents')
+    expect(foundUser.targets).toHaveLength(2)
   })
 
 })

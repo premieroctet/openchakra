@@ -106,6 +106,9 @@ const UserSchema = new Schema({
     enum: Object.keys(AVAILABILITY),
     required: false,
   },
+  address: {
+    type: String,
+  },
 }, schemaOptions
 );
 

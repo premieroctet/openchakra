@@ -15,7 +15,7 @@ const {
   getHostUrl,
   getPort,
 } = require('../config/config')
-const { HTTP_CODES, parseError } = require('./utils/errors')
+const {HTTP_CODES, parseError} = require('./utils/errors')
 require('./models/ResetToken')
 require('./models/Program')
 require('./models/Theme')
@@ -67,6 +67,8 @@ require('./models/JobUser')
 require('./models/Comment')
 require('./models/Recommandation')
 require('./models/Quotation')
+require('./models/Skill')
+require('./models/Activity')
 require('./models/Pip')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')

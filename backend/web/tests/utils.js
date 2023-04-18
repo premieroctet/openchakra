@@ -63,6 +63,18 @@ export const forceDataModelSmartdiet = () => {
   })
 }
 
+export const forceDataModelAllInclusive = () => {
+  jest.mock('../config/config', () => {
+    const originalModule = jest.requireActual('../config/config')
+
+    return {
+      __esModule: true,
+      ...originalModule,
+      getDataModel: jest.fn(() => 'all-inclusive'),
+    }
+  })
+}
+
 // Creates the regular expression matching model attributes validation fail
 export const buildAttributesException = attributes => {
   return new RegExp(attributes.map(att => `(?=.*${att})`).join(''))

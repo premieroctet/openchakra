@@ -1,3 +1,4 @@
+const { capitalize } = require('../../../../utils/text')
 const mongoose = require("mongoose")
 const bcrypt=require('bcryptjs')
 const { schemaOptions } = require('../../../utils/schemas')
@@ -10,6 +11,9 @@ const JobUserSchema = new Schema({
   name: {
     type: String,
     required: [true, 'Le nom est obligatoire']
+  },
+  city: {
+    type: String,
   },
   user: {
     type: Schema.Types.ObjectId,
@@ -24,14 +28,6 @@ const JobUserSchema = new Schema({
   rate: {
     type: Number,
     //required: [true, 'Le taux horaire indicatif est obligatoire'],
-  },
-  activities: {
-    type: String,
-    //required: [true, 'Les activités sont obligatoires'],
-  },
-  skills: {
-    type: String,
-    //required: [true, 'Les compétences sont obligatoires'],
   },
   customer_location: {
     type: Boolean,
@@ -60,5 +56,24 @@ const JobUserSchema = new Schema({
 
 }, schemaOptions
 );
+
+JobUserSchema.virtual("location_str").get(function() {
+  const locations=[]
+  if (this.customer_location) { locations.push("chez le client")}
+  if (this.foreign_location) { locations.push("à distance")}
+  return capitalize(locations.join(" et "))
+})
+
+JobUserSchema.virtual("activities", {
+  ref: "activity", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "job" // is equal to foreignField
+});
+
+JobUserSchema.virtual("skills", {
+  ref: "skill", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "job" // is equal to foreignField
+});
 
 module.exports = JobUserSchema;

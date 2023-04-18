@@ -67,3 +67,14 @@ USER_MODELS.forEach(m => {
 
 declareEnumField({model: 'company', field: 'status', enumValues: COMPANY_STATUS})
 declareEnumField({model: 'jobUser', field: 'experience', enumValues: EXPERIENCE})
+declareVirtualField({model: 'jobUser', field: 'activities', instance: 'Array', requires: '', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'activity'}}
+})
+declareVirtualField({model: 'jobUser', field: 'skills', instance: 'Array', requires: '', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'skill'}}
+})
+declareVirtualField({model: 'jobUser', field: 'location_str', instance: 'String', requires: 'customer_location,foreign_location'})

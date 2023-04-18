@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
 const {schemaOptions} = require('../../../utils/schemas')
 
 const Schema = mongoose.Schema
@@ -70,7 +69,5 @@ const ReviewSchema = new Schema({
   feeling_lightness: Boolean,
 
 }, schemaOptions)
-
-ReviewSchema.plugin(mongooseLeanVirtuals)
 
 module.exports = ReviewSchema

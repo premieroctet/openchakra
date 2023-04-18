@@ -59,9 +59,9 @@ const EXPERIENCE_1_TO_5="EXPERIENCE_1_TO_5"
 const EXPERIENCE_MORE_5="EXPERIENCE_MORE_5"
 
 const EXPERIENCE={
- EXPERIENCE_LESS_1:"Moins d'1 an",
+ EXPERIENCE_LESS_1:"< 1 an",
  EXPERIENCE_1_TO_5:"de 1 à 5 ans",
- EXPERIENCE_MORE_5:"Plus de 5 ans",
+ EXPERIENCE_MORE_5:"> 5 ans",
 }
 
 
@@ -75,4 +75,5 @@ module.exports={
   AVAILABILITY,
   EXPERIENCE,
   DEFAULT_ROLE,
+  COACH_ALLE,
 }

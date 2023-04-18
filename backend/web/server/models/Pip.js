@@ -5,7 +5,7 @@ const {getDataModel} = require('../../config/config')
 let PipSchema=null
 
 try {
-  PipSchema=require(`../plugins/${getDataModel()}/schemas/KeySchema`)
+  PipSchema=require(`../plugins/${getDataModel()}/schemas/PipSchema`)
   PipSchema.plugin(mongooseLeanVirtuals)
 }
 catch(err) {
