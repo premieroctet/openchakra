@@ -55,7 +55,9 @@ const withDynamicInput = Component => {
             }) //props.reload())
             .catch(err => {
               console.error(err)
-              alert(err.response?.data || err)
+              if (!(err.response?.status==401) && err.code!='ERR_NETWORK') {
+                alert(err.response?.data || err)
+              }
             })
         }
     }
