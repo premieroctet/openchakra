@@ -112,6 +112,8 @@ USER_MODELS.forEach(m => {
       instance: 'ObjectID',
       options: {ref: 'request'}}
   })
+  declareVirtualField({model: m, field: 'qualified_str', instance: 'String'})
+  declareVirtualField({model: m, field: 'visible_str', instance: 'String'})
 })
 
 declareEnumField({model: 'company', field: 'status', enumValues: COMPANY_STATUS})

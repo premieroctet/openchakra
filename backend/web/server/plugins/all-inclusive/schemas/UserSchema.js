@@ -218,4 +218,12 @@ UserSchema.virtual("requests", {
   foreignField: "user" // is equal to foreignField
 });
 
+UserSchema.virtual("qualified_str").get(function() {
+  return this.qualified ? 'qualifié' : 'à qualifier'
+});
+
+UserSchema.virtual("visible_str").get(function() {
+  return this.hidden ? 'masqué' : 'visible'
+});
+
 module.exports = UserSchema;
