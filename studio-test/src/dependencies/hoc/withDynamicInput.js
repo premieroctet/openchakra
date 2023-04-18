@@ -55,7 +55,9 @@ const withDynamicInput = Component => {
             }) //props.reload())
             .catch(err => {
               console.error(err)
-              alert(err.response?.data || err)
+              if (!(err.response?.status==401) && err.code!='ERR_NETWORK') {
+                alert(err.response?.data || err)
+              }
             })
         }
     }
@@ -74,7 +76,6 @@ const withDynamicInput = Component => {
 
     const parentProps=lodash.pick(props, 'id dataSource name dataSourceId value level model attribute noautosave readOnly context backend setComponentValue'.split(' '))
 
-    console.log(`Parent props are ${JSON.stringify(parentProps)}`)
     return (
       <InputGroup {...parentProps}>
       <Component

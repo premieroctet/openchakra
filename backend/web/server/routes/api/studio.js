@@ -424,7 +424,8 @@ router.put('/:model/:id', passport.authenticate('cookie', {session: false}), (re
     })
 })
 
-router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (req, res) => {
+
+const loadFromDb = (req, res) => {
   const model = req.params.model
   let fields = req.query.fields?.split(',') || []
   const id = req.params.id
@@ -466,7 +467,16 @@ router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (r
           return res.json(data)
         })
     })
-},
-)
+
+}
+
+router.get('/jobUser/:id?', (req, res) => {
+  req.params.model='jobUser'
+  return loadFromDb(req, res)
+})
+
+router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (req, res) => {
+  return loadFromDb(req, res)
+})
 
 module.exports = router
