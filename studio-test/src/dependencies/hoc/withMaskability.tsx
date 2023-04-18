@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { NOT_CONNECTED } from '../utils/misc';
+
 const withMaskability = (Component: React.FC<any>) => {
   const internal = ({
     hiddenRoles,
@@ -10,8 +12,9 @@ const withMaskability = (Component: React.FC<any>) => {
     user: { role: string }
   }) => {
     const rolesToHide = JSON.parse(hiddenRoles)
-    const roleUser = user?.role
+    const roleUser = user?.role || NOT_CONNECTED
 
+    console.log(`Hide for ${hiddenRoles}, i am ${roleUser}`)
     // if nothing to hide, render
     if (rolesToHide?.length && rolesToHide.length === 0) {
       return <Component {...props} />
