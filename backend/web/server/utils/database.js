@@ -152,11 +152,7 @@ Returns only models & attributes visible for studio users
 */
 const getExposedModels = () => {
   const isHidddenAttributeName = attName => {
-    const res=
-    [CREATED_AT_ATTRIBUTE, UPDATED_AT_ATTRIBUTE].some(att=> {
-      return attName==att || attName.endsWith(`.${att}`)
-    })
-    return res
+    return false
   }
 
   const models=lodash(getModels())

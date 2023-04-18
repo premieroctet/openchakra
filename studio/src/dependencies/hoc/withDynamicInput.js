@@ -10,7 +10,7 @@ const withDynamicInput = Component => {
 
   const Internal = ({ dataSource, dataSourceId, noautosave, readOnly, context, backend, suggestions, setComponentValue, displayEye, ...props }) => {
 
-    let keptValue = lodash.get(dataSource, props.attribute) || ''
+    let keptValue = lodash.get(dataSource, props.attribute) || props.value
 
     const isADate = !isNaN(Date.parse(keptValue)) && new Date(Date.parse(keptValue));
 
@@ -74,6 +74,7 @@ const withDynamicInput = Component => {
 
     const parentProps=lodash.pick(props, 'id dataSource name dataSourceId value level model attribute noautosave readOnly context backend setComponentValue'.split(' '))
 
+    console.log(`Parent props are ${JSON.stringify(parentProps)}`)
     return (
       <InputGroup {...parentProps}>
       <Component

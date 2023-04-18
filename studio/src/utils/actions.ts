@@ -320,6 +320,21 @@ export const ACTIONS: IActions = {
     next: ['openPage', 'logout'],
   },
 
+  createRecommandation: {
+    label: 'Create recommandation',
+    options: {
+      ...Object.fromEntries(lodash.range(15).map((idx:number) => {
+      return [
+        `component_${idx}`,
+        ({ components }) => components
+          .filter(comp => (comp.props?.dataSource || comp.props?.model) && comp.props?.attribute)
+          .map(comp => ({ key: comp.id, label: `${comp.type}/${comp.id}` }))
+
+      ]})),
+    },
+    next: ['openPage'],
+  },
+
 }
 
 export const allowsActions = (component: IComponent) => {

@@ -69,7 +69,11 @@ require('./models/Recommandation')
 require('./models/Quotation')
 require('./models/Skill')
 require('./models/Activity')
+require('./models/Experience')
+require('./models/Request')
 require('./models/Pip')
+require('./models/Diploma')
+require('./models/Photo')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 
