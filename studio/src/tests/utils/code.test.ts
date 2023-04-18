@@ -10,7 +10,7 @@ describe('Code generation', () => {
         .then(([project, models])=> {
           Object.keys(project.pages).map(pageId => {
             return generateCode(pageId, project.pages, models)
-              .then(code => console.log(coode))
+              .then(code => console.log(code))
           })
         })
       }))
