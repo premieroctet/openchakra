@@ -100,4 +100,12 @@ JobUserSchema.virtual("photos", {
   foreignField: "job" // is equal to foreignField
 });
 
+JobUserSchema.virtual("recommandations", {
+  ref: "recommandation", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "job" // is equal to foreignField
+});
+
+
+
 module.exports = JobUserSchema;

@@ -21,16 +21,16 @@ const RecommandationSchema = new Schema({
   },
   firstname: {
     type: String,
-    required: [true, 'Le nom est obligatoire']
+    required: [true, 'Le prénom est obligatoire']
   },
   lastname: {
     type: String,
     required: [true, 'Le nom est obligatoire']
   },
-  user: {
+  job: {
     type: Schema.Types.ObjectId,
-    ref: "user",
-    required: [true, 'Le destinataire de la recommandation est obligatoire'],
+    ref: "jobUser",
+    required: [true, 'Le métier du TI est obligatoire'],
   },
 }, schemaOptions
 );

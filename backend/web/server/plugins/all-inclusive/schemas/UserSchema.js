@@ -200,12 +200,6 @@ UserSchema.virtual("comments", {
   foreignField: "user" // is equal to foreignField
 });
 
-UserSchema.virtual("recommandations", {
-  ref: "recommandation", // The Model to use
-  localField: "_id", // Find in Model, where localField
-  foreignField: "user" // is equal to foreignField
-});
-
 UserSchema.virtual("quotations", {
   ref: "quotation", // The Model to use
   localField: "_id", // Find in Model, where localField

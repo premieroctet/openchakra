@@ -88,11 +88,6 @@ USER_MODELS.forEach(m => {
       instance: 'ObjectID',
       options: {ref: 'comment'}}
   })
-  declareVirtualField({model: m, field: 'recommandations', instance: 'Array', requires: '', multiple: true,
-    caster: {
-      instance: 'ObjectID',
-      options: {ref: 'recommandation'}}
-  })
   declareVirtualField({model: m, field: 'quotations', instance: 'Array', requires: '', multiple: true,
     caster: {
       instance: 'ObjectID',
@@ -145,6 +140,12 @@ declareVirtualField({model: 'jobUser', field: 'photos', instance: 'Array', requi
     instance: 'ObjectID',
     options: {ref: 'photo'}}
 })
+declareVirtualField({model: 'jobUser', field: 'recommandations', instance: 'Array', requires: '', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'recommandation'}}
+})
+
 
 declareEnumField({model: 'experience', field: 'contract_type', enumValues: CONTRACT_TYPE})
 
