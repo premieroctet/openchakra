@@ -49,10 +49,6 @@ const JobUserSchema = new Schema({
     min: [0, 'Le montant minimum est 0'],
     required: [function() { return this.customer_location}, 'Le tarif de déplacement est obligatoire']
   },
-  diploma: {
-    type: String,
-    required: false,
-  },
 }, schemaOptions
 );
 
@@ -88,6 +84,12 @@ JobUserSchema.virtual("skills", {
 
 JobUserSchema.virtual("experiences", {
   ref: "experience", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "job" // is equal to foreignField
+});
+
+JobUserSchema.virtual("diploma", {
+  ref: "diploma", // The Model to use
   localField: "_id", // Find in Model, where localField
   foreignField: "job" // is equal to foreignField
 });
