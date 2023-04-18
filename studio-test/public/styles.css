@@ -63,7 +63,7 @@ h1 {
 }
 
 .editor-input {
-  min-height: 150px;
+  min-height: 10px;
   resize: none;
   font-size: 15px;
   caret-color: rgb(5, 5, 5);
