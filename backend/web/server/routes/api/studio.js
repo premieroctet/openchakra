@@ -355,6 +355,16 @@ router.post('/payment-hook', (req, res) => {
   return res.json()
 })
 
+router.get('/statTest', (req, res) => {
+  const data=lodash.range(360)
+    .map(v => {
+      const rad=v*Math.PI/180.0
+      const cos=Math.cos(rad)
+      return ({x:v, y:cos})
+    })
+  return res.json(data)
+})
+
 router.post('/:model', passport.authenticate('cookie', {session: false}), (req, res) => {
   const model = req.params.model
   let params=req.body
