@@ -15,6 +15,7 @@
 
 backend/web/mode_*.js
 backend/web/mode-*.js
+backend/web/fumoir*.json
 # production
 **/build
 **/dist
