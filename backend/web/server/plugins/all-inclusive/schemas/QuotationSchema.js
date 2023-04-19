@@ -26,10 +26,10 @@ const QuotationSchema = new Schema({
     type: String,
     required: [true, 'Le nom est obligatoire']
   },
-  user: {
+  mission: {
     type: Schema.Types.ObjectId,
-    ref: "user",
-    required: [true, "L'utilisateur est obligatoire"],
+    ref: "mission",
+    required: false,
   },
   // Date when quotation is sent to customer
   quotation_sent_date: {
