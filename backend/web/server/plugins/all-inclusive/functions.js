@@ -19,7 +19,8 @@ const {
   CONTRACT_TYPE,
   EXPERIENCE,
   QUOTATION_STATUS,
-  ROLES
+  ROLES,
+  MISSION_FREQUENCY,
 } = require('./consts')
 const NATIONALITIES = require('./nationalities.json')
 
@@ -180,3 +181,4 @@ declareVirtualField({model: 'mission', field: 'quotations', instance: 'Array', r
     instance: 'ObjectID',
     options: {ref: 'quotation'}}
 })
+declareEnumField({model: 'mission', field: 'frequency', enumValues: MISSION_FREQUENCY})
