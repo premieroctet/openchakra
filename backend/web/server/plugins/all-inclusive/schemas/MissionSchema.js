@@ -19,10 +19,15 @@ const MissionSchema = new Schema({
     type: Date,
     required: false,
   },
-  // Duration in nhours
+  // TODO: convert to hours/days...
   duration: {
-    type: Number,
+    type: String,
     required:false,
+  },
+  // Mission address
+  address: {
+    type: String,
+    required: [function() { return this.customer_location}, "L'adresse de mission est obligatoire"],
   },
   required_services: {
     type: String,
