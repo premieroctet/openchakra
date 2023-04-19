@@ -181,13 +181,9 @@ UserSchema.virtual("full_name").get(function() {
 UserSchema.virtual("password2")
 
 UserSchema.virtual('profile_progress').get(function() {
-  const attributes='firstname lastname email phone birthday nationality picture identity_proof_1 iban'.split(' ')
-  const companyAttributes='company_name company_status siret status_report insurance_type insurance_report company_picture'
-    .split(' ')
-  let filled=attributes.map(att => !!lodash.get(this, att))
-  if (this.role==ROLE_COMPANY_BUYER) {
-    filled=[...filled, ...companyAttributes.map(att => !!lodash.get(this, att))]
-  }
+  const attributes1='firstname lastname email phone birthday nationality picture identity_proof_1 iban'.split(' ')
+  const attrbiutes2='company_name company_status siret status_report insurance_type insurance_report company_picture'.split(' ')
+  let filled=[...attributes1, ...attrbiutes2].map(att => !!lodash.get(this, att))
   return (filled.filter(v => !!v).length*1.0/filled.length)*100
 });
 
