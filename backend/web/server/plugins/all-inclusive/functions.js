@@ -113,7 +113,7 @@ USER_MODELS.forEach(m => {
   declareVirtualField({model: m, field: 'recommandations', instance: 'Array', requires: '', multiple: true,
     caster: {
       instance: 'ObjectID',
-      options: {ref: 'recommmandation'}}
+      options: {ref: 'recommandation'}}
   })
   declareVirtualField({model: m, field: 'finished_missions_count', instance: 'Number', requires: 'missions'})
   declareVirtualField({model: m, field: 'missions', instance: 'Array', requires: '', multiple: true,
