@@ -1,10 +1,4 @@
 import React from 'react'
-import dynamic from 'next/dynamic';
-
-const PdfFile = dynamic(() => import("./PdfFile"), {
-  ssr: false
-});
-
 
 export const getExtension = (filename: string) =>
   filename.substring(filename.lastIndexOf('.') + 1, filename.length) || filename
@@ -58,7 +52,13 @@ export const mediaWrapper = ({
       )
     case 'pdf':
       return (
-        <PdfFile src={src}/>
+        <object
+          type="application/pdf"
+          data={src}
+          role={'document'}
+          width={document.width}
+          height={document.height}
+        ></object>
       )
     case 'doc':
     case 'docx':
