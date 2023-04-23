@@ -3,27 +3,29 @@ const {
   ROLE_TI
 } = require('../../server/plugins/all-inclusive/consts')
 const User = require('../../server/models/User')
+const JobUser = require('../../server/models/JobUser')
 const Recommandation = require('../../server/models/Recommandation')
 const moment=require('moment')
 const mongoose = require('mongoose')
 const {forceDataModelAllInclusive}=require('../utils')
 
 forceDataModelAllInclusive()
+require('../../server/plugins/all-inclusive/functions')
 const {MONGOOSE_OPTIONS} = require('../../server/utils/database')
 
 jest.setTimeout(40000)
 
-describe('Test virtual single ref', () => {
-
-  var user
-  var job
+describe('Test user model', () => {
 
   beforeAll(async() => {
     await mongoose.connect(`mongodb://localhost/test${moment().unix()}`, MONGOOSE_OPTIONS)
-    user=await User.create({
+    const user=await User.create({
         firstname: 'Sébastien', lastname: 'Auvray', birthday: moment(), cguAccepted: true,
         password: 'prout', email: 's@a.com', coaching: COACH_ALLE, role: ROLE_TI})
-    job=await JobUser.create({name: 'Peintre', user})
+    const job=await JobUser.create({name: 'Peintre', user})
+    await Recommandation.create({
+      title:'a', firstname:'a', lastname: 'a', user, job, comment:'Bien joué', note:2
+    })
   })
 
   afterAll(async() => {
@@ -34,8 +36,12 @@ describe('Test virtual single ref', () => {
   it("Must compute finished_missions_count", async() => {
   })
 
-  it("Must compute recommandations_count", async() => {
-    await Recommandation.create({title:'a', firstname:'a', lastname: 'a', user})
+  it.only("Must compute recommandations_count", async() => {
+    console.log(await Recommandation.findOne().populate('job'))
+    console.log(await User.findOne())
+    const user=await User.findOne()
+      .populate({path: 'recommandations', populate: {path: 'job'}})
+    expect(user.recommandations_count).toEqual(1)
   })
 
   it("Must compute recommandations_note", async() => {

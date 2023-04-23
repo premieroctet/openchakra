@@ -226,7 +226,7 @@ UserSchema.virtual("requests", {
 UserSchema.virtual("recommandations", {
   ref: "recommandation", // The Model to use
   localField: "_id", // Find in Model, where localField
-  foreignField: "job.user._id" // is equal to foreignField
+  foreignField: "job.user" // is equal to foreignField
 });
 
 UserSchema.virtual("qualified_str").get(function() {
@@ -245,8 +245,8 @@ UserSchema.virtual("finished_missions_count").get(function() {
 })
 
 UserSchema.virtual("recommandations_count").get(function() {
-  console.error('Not implemented')
-  return 0
+  console.log(this.recommandations)
+  return this.recommandations?.length || 0
 })
 
 UserSchema.virtual("comments_note").get(function() {
