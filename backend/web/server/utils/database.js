@@ -640,4 +640,5 @@ module.exports = {
   idEqual,
   getExposedModels,
   simpleCloneModel,
+  buildPopulates,
 }
