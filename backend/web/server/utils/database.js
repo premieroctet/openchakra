@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const lodash = require('lodash')
 const formatDuration = require('format-duration')
-const { UPDATED_AT_ATTRIBUTE, CREATED_AT_ATTRIBUTE } = require('../../utils/consts')
+const { UPDATED_AT_ATTRIBUTE, CREATED_AT_ATTRIBUTE, MODEL_ATTRIBUTES_DEPTH } = require('../../utils/consts')
 const UserSessionData = require('../models/UserSessionData')
 const Booking = require('../models/Booking')
 const {CURRENT, FINISHED} = require('../plugins/fumoir/consts')
@@ -115,11 +115,12 @@ const getSimpleModelAttributes = modelName => {
   return atts
 }
 
-const getReferencedModelAttributes = modelName => {
+const getReferencedModelAttributes = (modelName, level) => {
   const res = getBaseModelAttributes(modelName)
     .filter(att => att.instance == 'ObjectID')
     .map(att =>
-      getSimpleModelAttributes(att.options.ref).map(([attName, instance]) => [
+      //getSimpleModelAttributes(att.options.ref).map(([attName, instance]) => [
+      getModelAttributes(att.options.ref, level-1).map(([attName, instance]) => [
         `${att.path}.${attName}`,
         instance,
       ]),
@@ -127,11 +128,15 @@ const getReferencedModelAttributes = modelName => {
   return res
 }
 
-const getModelAttributes = modelName => {
+const getModelAttributes = (modelName, level=MODEL_ATTRIBUTES_DEPTH) => {
+
+  if (level==0) {
+    return []
+  }
 
   const attrs = [
     ...getSimpleModelAttributes(modelName),
-    ...lodash.flatten(getReferencedModelAttributes(modelName)),
+    ...lodash.flatten(getReferencedModelAttributes(modelName, level)),
   ]
   attrs.sort((att1, att2) => attributesComparator(att1[0], att2[0]))
   return attrs
@@ -162,7 +167,7 @@ const getExposedModels = () => {
       attributes: lodash(v.attributes).omitBy((v, k) => isHidddenAttributeName(k))
     }))
 
-  return models
+  return models.value()
 }
 
 const buildPopulate = (field, model) => {
@@ -303,8 +308,6 @@ const buildQuery = (model, id, fields) => {
   fields = [...fields, ...virtuals]
 
   const populates = buildPopulates(fields, model)
-
-  console.log(`Populates is ${JSON.stringify(populates)}, fields are ${fields}`)
 
   const select = lodash(fields)
     .map(att => att.split('.')[0])
