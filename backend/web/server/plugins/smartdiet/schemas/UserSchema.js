@@ -26,12 +26,15 @@ const UserSchema = new Schema({
     type: Date,
     //required: [function() { return this.role==ROLE_CUSTOMER }, 'La date de naissance est obligatoire'],
     required: false,
-
   },
   pseudo: {
     type: String,
     set: v => v?.trim(),
     required: [function() { return this.role==ROLE_CUSTOMER }, 'Le pseudo est obligatoire'],
+  },
+  picture: {
+    type: String,
+    required: false,
   },
   company: {
     type: Schema.Types.ObjectId,

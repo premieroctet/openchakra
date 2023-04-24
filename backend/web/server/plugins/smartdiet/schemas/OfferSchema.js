@@ -26,6 +26,7 @@ const OfferSchema = new Schema({
   },
   webinars_unlimited: {
     type: Boolean,
+    default: false,
     required: true,
   },
   infographies_credit: {
@@ -34,6 +35,7 @@ const OfferSchema = new Schema({
   },
   infographies_unlimited: {
     type: Boolean,
+    default: false,
     required: true,
   },
   articles_credit: {
@@ -42,6 +44,7 @@ const OfferSchema = new Schema({
   },
   articles_unlimited: {
     type: Boolean,
+    default: false,
     required: true,
   },
   podcasts_credit: {
@@ -50,6 +53,7 @@ const OfferSchema = new Schema({
   },
   podcasts_unlimited: {
     type: Boolean,
+    default: false,
     required: true,
   },
   video_credit: {
@@ -58,6 +62,7 @@ const OfferSchema = new Schema({
   },
   video_unlimited: {
     type: Boolean,
+    default: false,
     required: true,
   },
   collective_challenge_available: {

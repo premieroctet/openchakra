@@ -48,7 +48,6 @@ catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') { throw err }
   console.warn(`No actions module for ${getDataModel()}`)
 }
-
 const User = require('../../models/User')
 
 let ROLES={}
@@ -355,6 +354,42 @@ router.post('/payment-hook', (req, res) => {
   return res.json()
 })
 
+// Not protected to allow external recommandations
+router.post('/recommandation', (req, res) => {
+  let params=req.body
+  const context= req.query.context
+  const user=req.user
+  const model = 'recommandation'
+  params.model=model
+
+  if (!model) {
+    return res.status(HTTP_CODES.BAD_REQUEST).json(`Model is required`)
+  }
+
+  return callPreCreateData({model, params, user})
+    .then(({model, params}) => {
+      return mongoose.connection.models[model]
+        .create([params], {runValidators: true})
+        .then(([data]) => {
+          return callPostCreateData({model, params, data})
+        })
+        .then(data => {
+          return res.json(data)
+        })
+    })
+})
+
+router.get('/statTest', (req, res) => {
+  const data=lodash.range(360)
+    .map(v => {
+      const rad=v*Math.PI/180.0
+      const cos=Math.cos(rad)
+      return ({x:v, y:cos})
+    })
+  return res.json(data)
+})
+
+
 router.post('/:model', passport.authenticate('cookie', {session: false}), (req, res) => {
   const model = req.params.model
   let params=req.body
@@ -365,7 +400,7 @@ router.post('/:model', passport.authenticate('cookie', {session: false}), (req, 
   params=model=='booking' ? {...params, booking_user: user}:params
 
   if (!model) {
-    return res.status(HTTP_CODE.BAD_REQUEST).json(`Model is required`)
+    return res.status(HTTP_CODES.BAD_REQUEST).json(`Model is required`)
   }
 
   return callPreCreateData({model, params, user})
@@ -389,7 +424,7 @@ router.put('/:model/:id', passport.authenticate('cookie', {session: false}), (re
   params=model=='order' && context ? {...params, booking: context}:params
 
   if (!model || !id) {
-    return res.status(HTTP_CODE.BAD_REQUEST).json(`Model and id are required`)
+    return res.status(HTTP_CODES.BAD_REQUEST).json(`Model and id are required`)
   }
   console.log(`Updating:${id} with ${JSON.stringify(params)}`)
   return mongoose.connection.models[model]
@@ -399,7 +434,8 @@ router.put('/:model/:id', passport.authenticate('cookie', {session: false}), (re
     })
 })
 
-router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (req, res) => {
+
+const loadFromDb = (req, res) => {
   const model = req.params.model
   let fields = req.query.fields?.split(',') || []
   const id = req.params.id
@@ -417,7 +453,6 @@ router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (r
         return res.json(data)
       }
       return buildQuery(model, id, fields)
-        .lean({virtuals: true})
         .then(data => {
           // Force duplicate children
           data = JSON.parse(JSON.stringify(data))
@@ -441,7 +476,16 @@ router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (r
           return res.json(data)
         })
     })
-},
-)
+
+}
+
+router.get('/jobUser/:id?', (req, res) => {
+  req.params.model='jobUser'
+  return loadFromDb(req, res)
+})
+
+router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (req, res) => {
+  return loadFromDb(req, res)
+})
 
 module.exports = router

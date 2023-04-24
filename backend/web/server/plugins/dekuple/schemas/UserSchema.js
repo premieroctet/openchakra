@@ -19,7 +19,7 @@ const UserSchema = new Schema({
   email: {
     type: String,
     required: [true, 'L\'email est obligatoire'],
-    set: v => v.toLowerCase().trim(),
+    set: v => v?.toLowerCase().trim(),
   },
   password: {
     type: String,
@@ -56,7 +56,7 @@ const UserSchema = new Schema({
     type: String,
     enum: Object.keys(GENDER),
     default: null,
-    required: [true, `Le genre est obligatoire (${Object.values(GENDER)})`],
+    required: [true, `La civilité est obligatoire (${Object.values(GENDER)})`],
   },
   cguAccepted: {
     type: Boolean,
