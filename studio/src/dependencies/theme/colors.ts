@@ -1,6 +1,6 @@
 export const colors = {
   default: {},
-  allinclusive: {
+  "all-inclusive": {
     'bleutipi': {
       100: "#f7fafc",
       200: '#203f83',
