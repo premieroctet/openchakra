@@ -199,12 +199,6 @@ UserSchema.virtual("customer_missions", {
   foreignField: "user" // is equal to foreignField
 });
 
-UserSchema.virtual("ti_missions", {
-  ref: "mission", // The Model to use
-  localField: "_id", // Find in Model, where localField
-  foreignField: "job.user" // is equal to foreignField
-});
-
 UserSchema.virtual("comments", {
   ref: "comment", // The Model to use
   localField: "_id", // Find in Model, where localField
