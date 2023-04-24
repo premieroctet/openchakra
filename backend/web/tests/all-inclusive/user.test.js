@@ -5,6 +5,7 @@ const {
 const User = require('../../server/models/User')
 const JobUser = require('../../server/models/JobUser')
 const Recommandation = require('../../server/models/Recommandation')
+const Comment = require('../../server/models/Comment')
 const moment=require('moment')
 const mongoose = require('mongoose')
 const {forceDataModelAllInclusive}=require('../utils')
@@ -26,6 +27,11 @@ describe('Test user model', () => {
     await Recommandation.create({
       title:'a', firstname:'a', lastname: 'a', user, job, comment:'Bien joué', note:2
     })
+    await Recommandation.create({
+      title:'a', firstname:'a', lastname: 'a', user, job, comment:'Bien joué', note:3
+    })
+    await Comment.create({user, job, comment:'Comment', note:2, title: 'Bravo'})
+    await Comment.create({user, job, comment:'Comment', note:4, title: 'Bravo'})
   })
 
   afterAll(async() => {
@@ -36,18 +42,28 @@ describe('Test user model', () => {
   it("Must compute finished_missions_count", async() => {
   })
 
-  it.only("Must compute recommandations_count", async() => {
-    console.log(await Recommandation.findOne().populate('job'))
-    console.log(await User.findOne())
+  it("Must compute recommandations_count", async() => {
     const user=await User.findOne()
-      .populate({path: 'recommandations', populate: {path: 'job'}})
-    expect(user.recommandations_count).toEqual(1)
+      .populate({path: 'jobs', populate: {path: 'recommandations'}})
+    expect(user.recommandations_count).toEqual(2)
   })
 
   it("Must compute recommandations_note", async() => {
+    const user=await User.findOne()
+      .populate({path: 'jobs', populate: {path: 'recommandations'}})
+    expect(user.recommandations_note).toEqual(2.5)
+  })
+
+  it("Must compute comments_count", async() => {
+    const user=await User.findOne()
+      .populate({path: 'jobs', populate: {path: 'comments'}})
+    expect(user.comments_count).toEqual(2)
   })
 
   it("Must compute comments_note", async() => {
+    const user=await User.findOne()
+      .populate({path: 'jobs', populate: {path: 'comments'}})
+    expect(user.comments_note).toEqual(3)
   })
 
   it("Must compute revenue", async() => {
@@ -57,9 +73,6 @@ describe('Test user model', () => {
   })
 
   it("Must compute accepted_quotations_count", async() => {
-  })
-
-  it("Must compute commments_count", async() => {
   })
 
   it("Must compute profile_shares_count", async() => {
