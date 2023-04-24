@@ -80,4 +80,11 @@ MissionSchema.virtual("quotations", {
   foreignField: "mission" // is equal to foreignField
 });
 
+MissionSchema.virtual("location_str").get(function() {
+  const locations=[]
+  if (this.customer_location) { locations.push("chez le client")}
+  if (this.foreign_location) { locations.push("à distance")}
+  return capitalize(locations.join(" et "))
+})
+
 module.exports = MissionSchema;

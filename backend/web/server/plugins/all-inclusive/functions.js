@@ -181,10 +181,10 @@ declareVirtualField({model: 'quotation', field: 'status', instance: 'String', en
 
 declareVirtualField({model: 'mission', field: 'status', instance: 'String', enumValues: QUOTATION_STATUS,
     requires: 'quotations'})
-
 declareVirtualField({model: 'mission', field: 'quotations', instance: 'Array', requires: '', multiple: true,
   caster: {
     instance: 'ObjectID',
     options: {ref: 'quotation'}}
 })
 declareEnumField({model: 'mission', field: 'frequency', enumValues: MISSION_FREQUENCY})
+declareVirtualField({model: 'mission', field: 'location_str', instance: 'String', requires: 'customer_location,foreign_location'})
