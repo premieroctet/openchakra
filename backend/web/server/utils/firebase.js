@@ -9,8 +9,9 @@ const app = admin.initializeApp({
 const sendNotification = (user_id, message) => {
   let payload = {
     notification: {
-      title: 'Notification',
+      title: 'Message du fumoir',
       body: message,
+      imageUrl: 'https://my-alfred-data-test.s3-eu-west-3.amazonaws.com/fumoir/Logo%20Le%20Fumoir%20George%20Or&B.svg'
     },
   }
 
