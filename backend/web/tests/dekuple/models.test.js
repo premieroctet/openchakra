@@ -1,12 +1,15 @@
+const { buildAttributesException, forceDataModelDekuple } = require('../utils')
 const moment=require('moment')
 const mongoose = require('mongoose')
-const {forceDataModelDekuple}=require('../utils')
+
 forceDataModelDekuple()
 const {MONGOOSE_OPTIONS} = require('../../server/utils/database')
 const {
   GENDER_MALE, REMINDER_MEDICATION, APPOINTMENT_CARDIOLOGIST,
   APPOINTMENT_STATUS_PAST, APPOINTMENT_STATUS_TO_COME,
+  SYS_MAX, SYS_MIN, DIA_MAX, DIA_MIN, HEARTBEAT_MAX, HEARTBEAT_MIN,
 }=require('../../server/plugins/dekuple/consts')
+require('../../server/plugins/dekuple/functions')
 
 const Album=require('../../server/models/Album')
 const Appointment=require('../../server/models/Appointment')
@@ -148,6 +151,20 @@ describe('Test virtual single ref', () => {
     expect(app1.status).toEqual(APPOINTMENT_STATUS_PAST)
     const app2=await Appointment.create({user, type: APPOINTMENT_CARDIOLOGIST, date: moment().add(2, 'days')})
     expect(app2.status).toEqual(APPOINTMENT_STATUS_TO_COME)
+  })
+
+  it('measure sys 60-230, dia 40-160, bpm 40-180', async() => {
+    const user=await User.create(USER_DATA)
+    const minExc=buildAttributesException(`sys dia heartbeat ${SYS_MIN} ${DIA_MIN} ${HEARTBEAT_MIN}`.split(' '))
+    const maxExc=buildAttributesException(`sys dia heartbeat  ${SYS_MAX} ${DIA_MAX} ${HEARTBEAT_MAX}`.split(' '))
+    expect(Measure.create({user, date: moment(), sys:1, dia:2, heartbeat:12}))
+      .rejects.toThrow(minExc)
+    expect(Measure.create({user, date: moment(), sys:500, dia:500, heartbeat:500}))
+      .rejects.toThrow(maxExc)
+    expect(Measure.create({user, date: moment(), sys:200, dia:120, heartbeat:120}))
+      .resolves.not.toThrowError()
+    return expect(Measure.create({user, date: moment(), dia:2, heartbeat:12, withings_group: 12}))
+      .resolves.not.toThrowError()
   })
 
 })
