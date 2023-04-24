@@ -68,6 +68,15 @@ const [SYS_MIN, SYS_MAX]=[60, 230]
 const [DIA_MIN, DIA_MAX]=[40, 160]
 const [HEARTBEAT_MIN, HEARTBEAT_MAX]=[40, 180]
 
+const TIPS=[
+  "Limiter la consommation de sel (diminution du sodium) tout en privilégiant les légumes et les graines (riches en potassium) peut aider à réduire la tension artérielle (équilibre sodium potassium)",
+  "En moyenne, diminuer sa consommation de sel de 1g par jour permet d'agir à la baisse sur la tension systolique (1g de sel = 5 olives, 1 tranche de saumon fumé, 1 tranche de jambon, 1 portion de fromage, 1 pain au chocolat...)",
+  "Pratiquer une activité physique, marche rapide, vélo, natation, de manière régulière aide à baisser la tension systolique (à partir de 20 min tous les 3 jours)",
+  "Une consommation excessive d'alcool peut dégrader l'effet des médicaments contre l'hypertension",
+  "L'auto mesure de la pression artérielle à domicile permet d'éviter le phénomène d’hypertension \"blouse blanche\" (pression artérielle supérieure liée au stress de l'environnement médical)",
+  "Une baisse de poids même limitée à 5 kg permet d'obtenir une baisse significative de la pression artérielle",
+  "Le tabac augmente le risque de maladie cardiovasculaire chez les personnes ayant de l'hypertension",
+]
 
 module.exports={
   GENDER, GENDER_MALE, GENDER_FEMALE,
@@ -81,4 +90,5 @@ module.exports={
   APPOINTMENT_CARDIOLOGIST,
   APPOINTMENT_STATUS, APPOINTMENT_STATUS_PAST, APPOINTMENT_STATUS_TO_COME,
   SYS_MIN, SYS_MAX, DIA_MIN, DIA_MAX, HEARTBEAT_MIN, HEARTBEAT_MAX,
+  TIPS,
 }
