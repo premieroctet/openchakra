@@ -453,7 +453,6 @@ const loadFromDb = (req, res) => {
         return res.json(data)
       }
       return buildQuery(model, id, fields)
-        .lean({virtuals: true})
         .then(data => {
           // Force duplicate children
           data = JSON.parse(JSON.stringify(data))
