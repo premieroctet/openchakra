@@ -23,6 +23,7 @@ backend/web/mode-*.js
 **/web/storage
 
 # misc
+**/src/theme/colors.ts
 **/.env
 **/env.json
 npm-debug.log*

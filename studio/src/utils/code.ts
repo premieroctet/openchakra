@@ -703,6 +703,7 @@ import {ensureToken} from './dependencies/utils/token'
 import {useLocation} from "react-router-dom"
 import { useUserContext } from './dependencies/context/user'
 import { getComponentDataValue } from './dependencies/utils/values'
+import theme from './theme'
 ${extraImports.join('\n')}
 
 ${dynamics || ''}
@@ -739,7 +740,7 @@ const ${componentName} = () => {
   ${filterStates}
 
   return (
-  <ChakraProvider resetCSS>
+  <ChakraProvider resetCSS theme={theme}>
     <Fonts />
     <Metadata
       metaTitle={'${metaTitle}'}
