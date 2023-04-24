@@ -12,5 +12,18 @@ export const colors = {
       800: "#081021",
       900: "#040810",
     },
+  },
+  smartdiet: {
+    blackAlpha: {
+      100: "#ffffff",
+      200: '#ffffff',
+      300: '#fcf7ed',
+      400: '#f9efdc',
+      500: "#f5e1be",
+      600: "#f4deb8",
+      700: "#f1d6a7",
+      800: "#eece95",
+      900: "#ecc583",
+    }
   }
 }
