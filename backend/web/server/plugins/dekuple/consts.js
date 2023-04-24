@@ -2,8 +2,8 @@ const GENDER_MALE='MALE'
 const GENDER_FEMALE='FEMALE'
 
 const GENDER = {
-  [GENDER_MALE]: 'Homme',
-  [GENDER_FEMALE]: 'Femme',
+  [GENDER_MALE]: 'Monsieur',
+  [GENDER_FEMALE]: 'Madame',
 }
 
 const APPOINTMENT_CARDIOLOGIST='CARDIO'
