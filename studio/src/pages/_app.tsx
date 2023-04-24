@@ -8,7 +8,7 @@ import { ErrorBoundary as BugsnagErrorBoundary } from '~utils/bugsnag'
 import AppErrorBoundary from '~components/errorBoundaries/AppErrorBoundary'
 import { AppProps } from 'next/app'
 import Fonts from '~dependencies/theme/Fonts'
-import theme from '~/theme'
+import theme from '~dependencies/theme/theme'
 
 import '../../public/styles.css'
 

@@ -1,6 +1,7 @@
 export const colors = {
-    /* 
-    'yourcolor': {
+  default: {},
+  allinclusive: {
+    'bleutipi': {
       100: "#f7fafc",
       200: '#203f83',
       300: '#1C3773',
@@ -11,5 +12,5 @@ export const colors = {
       800: "#081021",
       900: "#040810",
     },
-    */
+  }
 }

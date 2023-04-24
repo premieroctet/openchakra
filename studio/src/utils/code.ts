@@ -703,7 +703,7 @@ import {ensureToken} from './dependencies/utils/token'
 import {useLocation} from "react-router-dom"
 import { useUserContext } from './dependencies/context/user'
 import { getComponentDataValue } from './dependencies/utils/values'
-import theme from './theme'
+import theme from './dependencies/theme/theme'
 ${extraImports.join('\n')}
 
 ${dynamics || ''}
