@@ -187,3 +187,13 @@ declareEnumField({model: 'mission', field: 'frequency', enumValues: MISSION_FREQ
 declareVirtualField({model: 'mission', field: 'location_str', instance: 'String', requires: 'customer_location,foreign_location'})
 declareVirtualField({model: 'mission', field: 'ti_tip', instance: 'String', requires: ''})
 declareVirtualField({model: 'mission', field: 'customer_tip', instance: 'String', requires: ''})
+
+
+declareVirtualField({model: 'quotation', field: 'details', instance: 'Array', requires: '', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'quotationDetail'}}
+})
+declareVirtualField({model: 'quotation', field: 'total', instance: 'Number', requires: 'details'})
+
+declareVirtualField({model: 'quotationDetail', field: 'total', instance: 'Number', requires: 'quantity,ht_price,vat'})
