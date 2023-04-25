@@ -170,7 +170,7 @@ const postCreate = ({model, params, data}) => {
   // Create company => duplicate offer
   if (model=='company') {
     return Offer.findById(data.offer)
-      .then(offer => Offer.create(simpleCloneModel(data.offer)))
+      .then(offer => Offer.create(simpleCloneModel(offer)))
       .then(offer => {data.offer=offer._id; return data})
       .then(data => data.save())
   }

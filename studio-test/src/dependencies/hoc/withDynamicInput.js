@@ -10,7 +10,7 @@ const withDynamicInput = Component => {
 
   const Internal = ({ dataSource, dataSourceId, noautosave, readOnly, context, backend, suggestions, setComponentValue, displayEye, ...props }) => {
 
-    let keptValue = lodash.get(dataSource, props.attribute) || ''
+    let keptValue = lodash.get(dataSource, props.attribute) || props.value
 
     const isADate = !isNaN(Date.parse(keptValue)) && new Date(Date.parse(keptValue));
 
@@ -55,7 +55,9 @@ const withDynamicInput = Component => {
             }) //props.reload())
             .catch(err => {
               console.error(err)
-              alert(err.response?.data || err)
+              if (!(err.response?.status==401) && err.code!='ERR_NETWORK') {
+                alert(err.response?.data || err)
+              }
             })
         }
     }

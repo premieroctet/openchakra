@@ -155,7 +155,7 @@ export const ACTIONS: IActions = {
     label: 'Save/create',
     options: {
       model: ({ models }) => Object.values(models).map(m => ({ key: m.name, label: m.name })),
-      ...Object.fromEntries(lodash.range(15).map((idx:number) => {
+      ...Object.fromEntries(lodash.range(25).map((idx:number) => {
       return [
         `component_${idx}`,
         ({ components }) => components
@@ -318,6 +318,21 @@ export const ACTIONS: IActions = {
     label: 'Deactivate account',
     options: {},
     next: ['openPage', 'logout'],
+  },
+
+  createRecommandation: {
+    label: 'Create recommandation',
+    options: {
+      ...Object.fromEntries(lodash.range(15).map((idx:number) => {
+      return [
+        `component_${idx}`,
+        ({ components }) => components
+          .filter(comp => (comp.props?.dataSource || comp.props?.model) && comp.props?.attribute)
+          .map(comp => ({ key: comp.id, label: `${comp.type}/${comp.id}` }))
+
+      ]})),
+    },
+    next: ['openPage'],
   },
 
 }

@@ -49,13 +49,19 @@ const JobUserSchema = new Schema({
     min: [0, 'Le montant minimum est 0'],
     required: [function() { return this.customer_location}, 'Le tarif de déplacement est obligatoire']
   },
-  diploma: {
-    type: String,
-    required: false,
-  },
-
 }, schemaOptions
 );
+
+JobUserSchema.virtual("search_field").get(function() {
+  let res=[this.name]
+  if (this.skills) {
+    res=[...res, this.skills.map(s => s.name)]
+  }
+  if (this.activities) {
+    res=[...res, this.activities.map(a => a.name)]
+  }
+  return res.join(',')
+})
 
 JobUserSchema.virtual("location_str").get(function() {
   const locations=[]
@@ -67,13 +73,39 @@ JobUserSchema.virtual("location_str").get(function() {
 JobUserSchema.virtual("activities", {
   ref: "activity", // The Model to use
   localField: "_id", // Find in Model, where localField
-  foreignField: "job" // is equal to foreignField
+  foreignField: 'jobUser' // is equal to foreignField
 });
 
 JobUserSchema.virtual("skills", {
   ref: "skill", // The Model to use
   localField: "_id", // Find in Model, where localField
-  foreignField: "job" // is equal to foreignField
+  foreignField: 'jobUser' // is equal to foreignField
 });
+
+JobUserSchema.virtual("experiences", {
+  ref: "experience", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: 'jobUser' // is equal to foreignField
+});
+
+JobUserSchema.virtual("diploma", {
+  ref: "diploma", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: 'jobUser' // is equal to foreignField
+});
+
+JobUserSchema.virtual("photos", {
+  ref: "photo", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: 'jobUser' // is equal to foreignField
+});
+
+JobUserSchema.virtual("recommandations", {
+  ref: "recommandation", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: 'jobUser' // is equal to foreignField
+});
+
+
 
 module.exports = JobUserSchema;
