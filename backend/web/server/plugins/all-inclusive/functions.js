@@ -195,5 +195,7 @@ declareVirtualField({model: 'quotation', field: 'details', instance: 'Array', re
     options: {ref: 'quotationDetail'}}
 })
 declareVirtualField({model: 'quotation', field: 'total', instance: 'Number', requires: 'details'})
+declareVirtualField({model: 'quotation', field: 'vat_total', instance: 'Number', requires: 'details'})
 
 declareVirtualField({model: 'quotationDetail', field: 'total', instance: 'Number', requires: 'quantity,ht_price,vat'})
+declareVirtualField({model: 'quotationDetail', field: 'vat_total', instance: 'Number', requires: 'quantity,ht_price,vat'})

@@ -60,4 +60,11 @@ QuotationSchema.virtual("total").get(function() {
   return lodash.sumBy(this.details, 'total')
 })
 
+QuotationSchema.virtual("vat_total").get(function() {
+  if (lodash.isEmpty(this.details)) {
+    return 0
+  }
+  return lodash.sumBy(this.details, 'vat_total')
+})
+
 module.exports = QuotationSchema;
