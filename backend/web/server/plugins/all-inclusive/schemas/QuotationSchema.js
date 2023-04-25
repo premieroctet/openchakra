@@ -11,6 +11,10 @@ const QuotationSchema = new Schema({
     type: String,
     required: [true, 'Le nom est obligatoire']
   },
+  description: {
+    type: String,
+    required: false,
+  },
   firstname: {
     type: String,
     required: [true, 'Le prénom est obligatoire'],
