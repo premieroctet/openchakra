@@ -334,6 +334,11 @@ export const ACTIONS: IActions = {
     },
     next: ['openPage'],
   },
+  alle_create_quotation: {
+    label: 'AE Créer devis',
+    options: {},
+    next: ['openPage'],
+  },
 
 }
 
