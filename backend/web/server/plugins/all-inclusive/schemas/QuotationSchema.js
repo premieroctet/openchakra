@@ -3,6 +3,7 @@ const {
   COACHING,
   EXPERIENCE,
   QUOTATION_STATUS_ASKING,
+  QUOTATION_STATUS_ASKING_ALLE,
   QUOTATION_STATUS_BILL_SENT,
   QUOTATION_STATUS_DISPUTE,
   QUOTATION_STATUS_FINISHED,
@@ -84,7 +85,10 @@ QuotationSchema.virtual('status').get(function() {
   if (this.quotation_sent_date) {
     return QUOTATION_STATUS_QUOT_SENT
   }
-  return QUOTATION_STATUS_ASKING
+  if (this.job) {
+    return QUOTATION_STATUS_ASKING
+  }
+  return QUOTATION_STATUS_ASKING_ALLE
 })
 
 module.exports = QuotationSchema;

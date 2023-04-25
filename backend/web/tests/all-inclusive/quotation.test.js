@@ -2,6 +2,7 @@ const {
   COACHING,
   QUOTATION_STATUS,
   QUOTATION_STATUS_ASKING,
+  QUOTATION_STATUS_ASKING_ALLE,
   QUOTATION_STATUS_BILL_SENT,
   QUOTATION_STATUS_DISPUTE,
   QUOTATION_STATUS_FINISHED,
@@ -13,6 +14,7 @@ const {
   QUOTATION_STATUS_TO_BILL,
   ROLE_TI
 } = require('../../server/plugins/all-inclusive/consts')
+const JobUser = require('../../server/models/JobUser')
 const User = require('../../server/models/User')
 const Quotation = require('../../server/models/Quotation')
 const moment=require('moment')
@@ -26,7 +28,7 @@ jest.setTimeout(20000)
 
 describe('Test quotations', () => {
 
-  let user
+  let user, job
 
   beforeAll(async() => {
     await mongoose.connect(`mongodb://localhost/test${moment().unix()}`, MONGOOSE_OPTIONS)
@@ -34,6 +36,7 @@ describe('Test quotations', () => {
       birthday: moment(), cguAccepted: true, password: 'hop', email:'tagada@a.com',
       firstname: 'Seb', lastname: 'Auvray',
     })
+    job=await JobUser.create({user, name: 'Job'})
   })
 
   afterAll(async() => {
@@ -43,7 +46,9 @@ describe('Test quotations', () => {
 
   it('must return status', async() => {
     await Quotation.create({name: 'Devis', user})
-    expect((await Quotation.findOne()).status).toEqual(QUOTATION_STATUS_ASKING)
+    expect((await Quotation.findOne()).status).toEqual(QUOTATION_STATUS_ASKING_ALLE)
+    await Quotation.findOneAndUpdate({}, {$set: {job}})
+    expect((await Quotation.findOne()).status).toEqual(QUOTATION_STATUS_ASKING_ALLE)
     await Quotation.findOneAndUpdate({}, {$set: {quotation_sent_date: moment()}})
     expect((await Quotation.findOne()).status).toEqual(QUOTATION_STATUS_QUOT_SENT)
     await Quotation.findOneAndUpdate({}, {$set: {ti_refuse_date: moment()}})
