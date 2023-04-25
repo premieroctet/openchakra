@@ -1,8 +1,24 @@
+const {
+  CUSTOMER_TIPS,
+  MISSION_FREQUENCY,
+  MISSION_FREQUENCY_UNKNOWN,
+  MISSION_STATUS_ASKING,
+  MISSION_STATUS_ASKING_ALLE,
+  MISSION_STATUS_BILL_SENT,
+  MISSION_STATUS_DISPUTE,
+  MISSION_STATUS_FINISHED,
+  MISSION_STATUS_QUOT_ACCEPTED,
+  MISSION_STATUS_QUOT_REFUSED,
+  MISSION_STATUS_QUOT_SENT,
+  MISSION_STATUS_TI_REFUSED,
+  MISSION_STATUS_TO_BILL,
+  ROLE_TI,
+  TI_TIPS
+} = require('../consts')
 const { capitalize } = require('../../../../utils/text')
 const mongoose = require("mongoose")
 const lodash=require('lodash')
 const { schemaOptions } = require('../../../utils/schemas')
-const { QUOTATION_STATUS_ASKING, MISSION_FREQUENCY, MISSION_FREQUENCY_UNKNOWN } = require('../consts')
 
 const Schema = mongoose.Schema;
 
@@ -63,15 +79,73 @@ const MissionSchema = new Schema({
     ref: "jobUser",
     required: false,
   },
+  // Date when quotation is sent to customer
+  quotation_sent_date: {
+    type: Date,
+  },
+  ti_refuse_date: {
+    type: Date,
+  },
+  customer_accept_quotation_date: {
+    type: Date,
+  },
+  customer_refuse_quotation_date: {
+    type: Date,
+  },
+  ti_finished_date: {
+    type: Date,
+  },
+  billing_sent_date: {
+    type: Date,
+  },
+  customer_accept_billing_date: {
+    type: Date,
+  },
+  customer_refuse_billing_date: {
+    type: Date,
+  },
 }, schemaOptions
 );
 
-MissionSchema.virtual("status").get(function() {
-  if (lodash.isEmpty(this.quotations)) {
-    return QUOTATION_STATUS_ASKING
+MissionSchema.virtual('status').get(function() {
+  console.log(`${this._id}:${this.job}`)
+  if (this.customer_accept_billing_date) {
+    return MISSION_STATUS_FINISHED
   }
-  const newest_quotation=lodash.maxBy(this.quotations, 'creation_date')
-  return newest_quotation.status
+  if (this.customer_refuse_billing_date) {
+    return MISSION_STATUS_DISPUTE
+  }
+  if (this.billing_sent_date) {
+    return MISSION_STATUS_BILL_SENT
+  }
+  if (this.ti_finished_date) {
+    return MISSION_STATUS_TO_BILL
+  }
+  if (this.customer_refuse_quotation_date) {
+    return MISSION_STATUS_QUOT_REFUSED
+  }
+  if (this.customer_accept_quotation_date) {
+    return MISSION_STATUS_QUOT_ACCEPTED
+  }
+  if (this.ti_refuse_date) {
+    return MISSION_STATUS_TI_REFUSED
+  }
+  if (this.quotation_sent_date) {
+    return MISSION_STATUS_QUOT_SENT
+  }
+  if (!!this.job) {
+    return MISSION_STATUS_ASKING
+  }
+  return MISSION_STATUS_ASKING_ALLE
+})
+
+
+MissionSchema.virtual("ti_tip").get(function() {
+  return TI_TIPS[this.status] || ''
+})
+
+MissionSchema.virtual("customer_tip").get(function() {
+  return CUSTOMER_TIPS[this.status] || ''
 })
 
 MissionSchema.virtual("quotations", {
@@ -86,5 +160,14 @@ MissionSchema.virtual("location_str").get(function() {
   if (this.foreign_location) { locations.push("à distance")}
   return capitalize(locations.join(" et "))
 })
+
+MissionSchema.methods.canCreateQuotation = function() {
+  return this.status==MISSION_STATUS_ASKING
+}
+
+MissionSchema.methods.canRefuseMission = function(user) {
+  console.log(`${this.name}:${this.status} ${this.job}`)
+  return user.role==ROLE_TI && this.status==MISSION_STATUS_ASKING
+}
 
 module.exports = MissionSchema;

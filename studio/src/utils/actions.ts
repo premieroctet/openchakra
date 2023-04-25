@@ -339,6 +339,11 @@ export const ACTIONS: IActions = {
     options: {},
     next: ['openPage'],
   },
+  alle_refuse_mission: {
+    label: 'AE Refuser mission',
+    options: {},
+    next: ['openPage'],
+  },
 
 }
 

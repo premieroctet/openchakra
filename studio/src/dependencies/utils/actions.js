@@ -391,4 +391,24 @@ export const ACTIONS = {
     }))
   },
 
+  alle_create_quotation: ({ value, context, props, level, getComponentValue }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_create_quotation',
+      value,
+      context,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_refuse_mission: ({ value, context, props, level, getComponentValue }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_refuse_mission',
+      value,
+      context,
+    }
+    return axios.post(url, body)
+  },
+
 }

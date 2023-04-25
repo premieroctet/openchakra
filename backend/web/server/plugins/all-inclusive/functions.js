@@ -176,11 +176,8 @@ declareVirtualField({model: 'jobUser', field: 'comments', instance: 'Array', req
 
 declareEnumField({model: 'experience', field: 'contract_type', enumValues: CONTRACT_TYPE})
 
-declareVirtualField({model: 'quotation', field: 'status', instance: 'String', enumValues: QUOTATION_STATUS,
-  requires: 'billing_sent_date,customer_accept_billing_date,customer_accept_quotation_date,customer_refuse_billing_date,customer_refuse_quotation_date,quotation_sent_date,ti_finished_date,ti_refuse_date'})
-
 declareVirtualField({model: 'mission', field: 'status', instance: 'String', enumValues: QUOTATION_STATUS,
-    requires: 'quotations'})
+    requires: 'customer_accept_billing_date,customer_refuse_billing_date,billing_sent_date,ti_finished_date,customer_refuse_quotation_date,customer_accept_quotation_date,ti_refuse_date,quotation_sent_date,job'})
 declareVirtualField({model: 'mission', field: 'quotations', instance: 'Array', requires: '', multiple: true,
   caster: {
     instance: 'ObjectID',
@@ -188,3 +185,5 @@ declareVirtualField({model: 'mission', field: 'quotations', instance: 'Array', r
 })
 declareEnumField({model: 'mission', field: 'frequency', enumValues: MISSION_FREQUENCY})
 declareVirtualField({model: 'mission', field: 'location_str', instance: 'String', requires: 'customer_location,foreign_location'})
+declareVirtualField({model: 'mission', field: 'ti_tip', instance: 'String', requires: ''})
+declareVirtualField({model: 'mission', field: 'customer_tip', instance: 'String', requires: ''})

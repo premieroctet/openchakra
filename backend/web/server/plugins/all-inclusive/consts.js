@@ -164,28 +164,28 @@ const CONTRACT_TYPE={
   CONTRACT_TYPE_FREELANCE:"Freelance",
 }
 
-const QUOTATION_STATUS_ASKING="QUOTATION_STATUS_ASKING"
-const QUOTATION_STATUS_ASKING_ALLE="QUOTATION_STATUS_ASKING_ALLE"
-const QUOTATION_STATUS_TI_REFUSED="QUOTATION_STATUS_TI_REFUSED"
-const QUOTATION_STATUS_QUOT_SENT="QUOTATION_STATUS_QUOT_SENT"
-const QUOTATION_STATUS_QUOT_ACCEPTED="QUOTATION_STATUS_QUOT_ACCEPTED"
-const QUOTATION_STATUS_QUOT_REFUSED="QUOTATION_STATUS_QUOT_REFUSED"
-const QUOTATION_STATUS_TO_BILL="QUOTATION_STATUS_TO_BILL"
-const QUOTATION_STATUS_BILL_SENT="QUOTATION_STATUS_BILL_SENT"
-const QUOTATION_STATUS_FINISHED="QUOTATION_STATUS_FINISHED"
-const QUOTATION_STATUS_DISPUTE="QUOTATION_STATUS_DISPUTE"
+const MISSION_STATUS_ASKING="MISSION_STATUS_ASKING"
+const MISSION_STATUS_ASKING_ALLE="MISSION_STATUS_ASKING_ALLE"
+const MISSION_STATUS_TI_REFUSED="MISSION_STATUS_TI_REFUSED"
+const MISSION_STATUS_QUOT_SENT="MISSION_STATUS_QUOT_SENT"
+const MISSION_STATUS_QUOT_ACCEPTED="MISSION_STATUS_QUOT_ACCEPTED"
+const MISSION_STATUS_QUOT_REFUSED="MISSION_STATUS_QUOT_REFUSED"
+const MISSION_STATUS_TO_BILL="MISSION_STATUS_TO_BILL"
+const MISSION_STATUS_BILL_SENT="MISSION_STATUS_BILL_SENT"
+const MISSION_STATUS_FINISHED="MISSION_STATUS_FINISHED"
+const MISSION_STATUS_DISPUTE="MISSION_STATUS_DISPUTE"
 
 const QUOTATION_STATUS={
-  QUOTATION_STATUS_ASKING:"Demande de mission",
-  QUOTATION_STATUS_ASKING_ALLE:"Demande de mission TIPI",
-  QUOTATION_STATUS_TI_REFUSED:"Refusée par le TI",
-  QUOTATION_STATUS_QUOT_SENT:"Devis transmis",
-  QUOTATION_STATUS_QUOT_ACCEPTED:"Devis accepté",
-  QUOTATION_STATUS_QUOT_REFUSED:"Devis refusé",
-  QUOTATION_STATUS_TO_BILL:"A facturer",
-  QUOTATION_STATUS_BILL_SENT:"Facture transmise",
-  QUOTATION_STATUS_FINISHED:"Terminée",
-  QUOTATION_STATUS_DISPUTE:"Litige",
+  MISSION_STATUS_ASKING:"Demande de mission",
+  MISSION_STATUS_ASKING_ALLE:"Demande de mission TIPI",
+  MISSION_STATUS_TI_REFUSED:"Refusée par le TI",
+  MISSION_STATUS_QUOT_SENT:"Devis transmis",
+  MISSION_STATUS_QUOT_ACCEPTED:"Devis accepté",
+  MISSION_STATUS_QUOT_REFUSED:"Devis refusé",
+  MISSION_STATUS_TO_BILL:"A facturer",
+  MISSION_STATUS_BILL_SENT:"Facture transmise",
+  MISSION_STATUS_FINISHED:"Terminée",
+  MISSION_STATUS_DISPUTE:"Litige",
 }
 
 const MISSION_FREQUENCY_1_DAY="MISSION_FREQUENCY_1_DAY"
@@ -204,6 +204,32 @@ const MISSION_FREQUENCY={
  MISSION_FREQUENCY_UNKNOWN:"Je ne sais pas",
 }
 
+const TI_TIPS= {
+  MISSION_STATUS_ASKING:"Une demande de mission vous a été adressée, la création d’un devis et la validation de celui-ci par l'entreprise est nécessaire pour démarrer la mission",
+  MISSION_STATUS_ASKING_ALLE:"",
+  MISSION_STATUS_TI_REFUSED:"Vous avez refusé la mission. Restez disponible pour d'autres missions",
+  MISSION_STATUS_QUOT_SENT:"Votre devis a bien été envoyé à l'entreprise et est en attente d'acceptation",
+  MISSION_STATUS_QUOT_ACCEPTED:"Votre devis a été accepté. N'hésitez pas à contacter votre client si vous avez besoin de précisions complémentaires",
+  MISSION_STATUS_QUOT_REFUSED:"L'entreprise a refusé votre devis. VOus la contacter pour plus d'informations",
+  MISSION_STATUS_TO_BILL:"La mission est terminée. Vous devez à présent déposer votre facture pour obtenir le paiement de votre mission",
+  MISSION_STATUS_BILL_SENT:"Votre facture a été transmise à l'entreprise. Elle dispose de 48h pour la valider. Au delà de ce délai, le paiement de votre missions sera automatiquement effectué",
+  MISSION_STATUS_FINISHED:"La mission s'achève. L'entreprise a la possibilité de laisser un avis sur votre mission. Gardez un oeil sur votre profil",
+  MISSION_STATUS_DISPUTE:"L'entreprise a refusé votre facture. TIPI en est informé, vous pouvez également contacter l'entreprise pour régler le litige",
+}
+
+const CUSTOMER_TIPS= {
+  MISSION_STATUS_ASKING:"Votre demande de mission a été transmise à l'indépendant.e",
+  MISSION_STATUS_ASKING_ALLE:"Votre demande de mission a été transmise à TIPI",
+  MISSION_STATUS_TI_REFUSED:"L'indépendant.e a refusé la mission. Vous pouvez en chercher un autre ou faire votre demande à TIPI",
+  MISSION_STATUS_QUOT_SENT:"Un devis vous a été envoyé. Pour confirmer la mission, vous devez accepter le devis",
+  MISSION_STATUS_QUOT_ACCEPTED:"Vous avez accepté ce devis. La mission commencera à la date indiquée.",
+  MISSION_STATUS_QUOT_REFUSED:"Vous avez refusé le devis. Vous pouvez contacter l'indépendant.e pour en obteniur un nouveau",
+  MISSION_STATUS_TO_BILL:"La mission est terminée. L'indépendant.e va déposer sa facture. Vous serez notifié dès que la facture sera disponible pour validation",
+  MISSION_STATUS_BILL_SENT:"La facture est disponible. Vous disposez d'un délai de 48h pour la valider. Sans validation de votre part, le paiement sera automatiquement versé à l'indépendant.e",
+  MISSION_STATUS_FINISHED:"La mission s'achève. Vous avez la possibilité de laisser un avis à cet.te indépendant.e",
+  MISSION_STATUS_DISPUTE:"Vous avez refusé la facture. TIPI en est informé, vous pouvez également contacter l'indépendant.e pour régler le litige",
+}
+
 module.exports={
   ROLES,
   ROLE_TI,
@@ -220,16 +246,18 @@ module.exports={
   ROLE_COMPANY_BUYER,
   CONTRACT_TYPE,
   QUOTATION_STATUS,
-  QUOTATION_STATUS_ASKING,
-  QUOTATION_STATUS_ASKING_ALLE,
-  QUOTATION_STATUS_TI_REFUSED,
-  QUOTATION_STATUS_QUOT_SENT,
-  QUOTATION_STATUS_QUOT_ACCEPTED,
-  QUOTATION_STATUS_QUOT_REFUSED,
-  QUOTATION_STATUS_TO_BILL,
-  QUOTATION_STATUS_BILL_SENT,
-  QUOTATION_STATUS_FINISHED,
-  QUOTATION_STATUS_DISPUTE,
+  MISSION_STATUS_ASKING,
+  MISSION_STATUS_ASKING_ALLE,
+  MISSION_STATUS_TI_REFUSED,
+  MISSION_STATUS_QUOT_SENT,
+  MISSION_STATUS_QUOT_ACCEPTED,
+  MISSION_STATUS_QUOT_REFUSED,
+  MISSION_STATUS_TO_BILL,
+  MISSION_STATUS_BILL_SENT,
+  MISSION_STATUS_FINISHED,
+  MISSION_STATUS_DISPUTE,
   MISSION_FREQUENCY,
-  MISSION_FREQUENCY_UNKNOWN
+  MISSION_FREQUENCY_UNKNOWN,
+  TI_TIPS,
+  CUSTOMER_TIPS,
 }

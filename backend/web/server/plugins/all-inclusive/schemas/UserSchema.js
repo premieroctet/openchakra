@@ -217,7 +217,7 @@ UserSchema.virtual("finished_missions_count").get(function() {
   if (lodash.isEmpty(this.mission)) {
     return 0
   }
-  return this.missions.filter(m => m.status==QUOTATION_STATUS_FINISHED).length
+  return this.missions.filter(m => m.status==MISSION_STATUS_FINISHED).length
 })
 
 UserSchema.virtual("recommandations_count").get(function() {
@@ -241,22 +241,18 @@ UserSchema.virtual("comments_note").get(function() {
 })
 
 UserSchema.virtual("revenue").get(function() {
-  console.error('Not implemented')
   return 0
 })
 
 UserSchema.virtual("revenue_to_come").get(function() {
-  console.error('Not implemented')
   return 0
 })
 
 UserSchema.virtual("accepted_quotations_count").get(function() {
-  console.error('Not implemented')
   return 0
 })
 
 UserSchema.virtual("profile_shares_count").get(function() {
-  console.error('Not implemented')
   return 0
 })
 
