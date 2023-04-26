@@ -413,4 +413,13 @@ export const ACTIONS = {
     return axios.post(url, body)
   },
 
+  alle_send_quotation: ({value}) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_send_quotation',
+      value,
+    }
+    return axios.post(url, body)
+  }
+
 }

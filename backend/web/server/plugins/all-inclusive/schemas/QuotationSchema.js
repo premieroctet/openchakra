@@ -71,4 +71,8 @@ QuotationSchema.virtual("vat_total").get(function() {
   return lodash.sumBy(this.details, 'vat_total')
 })
 
+QuotationSchema.methods.canSend = function(user) {
+  return !lodash.isEmpty(this.details)
+}
+
 module.exports = QuotationSchema;
