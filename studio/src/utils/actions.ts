@@ -357,6 +357,16 @@ export const ACTIONS: IActions = {
     options: {},
     next: ['openPage'],
   },
+  alle_accept_quotation: {
+    label: 'AE Accepter le devis',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_refuse_quotation: {
+    label: 'AE Refuser le devis',
+    options: {},
+    next: ['openPage'],
+  },
 
 }
 

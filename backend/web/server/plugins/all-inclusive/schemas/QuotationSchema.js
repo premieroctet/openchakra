@@ -75,4 +75,14 @@ QuotationSchema.methods.canSend = function(user) {
   return !lodash.isEmpty(this.details)
 }
 
+// TODO: fsm
+QuotationSchema.methods.canAccept = function(user) {
+  return true
+}
+
+// TODO: fsm
+QuotationSchema.methods.canRefuse = function(user) {
+  return true
+}
+
 module.exports = QuotationSchema;

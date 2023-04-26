@@ -1,3 +1,4 @@
+const { ROLE_COMPANY_BUYER } = require('./consts')
 const Quotation = require('../../models/Quotation')
 const moment = require('moment')
 const Mission = require('../../models/Mission')
@@ -39,6 +40,36 @@ const alle_send_quotation = ({value, user}) => {
 
 addAction('alle_send_quotation', alle_send_quotation)
 
+const alle_accept_quotation = ({value, user}) => {
+  return isActionAllowed({action:'alle_accept_quotation', dataId:value?._id, user})
+    .then(ok => {
+      if (!ok) {return false}
+      return Quotation.findById(value._id)
+        .then(quotation=> {
+          return Mission.findByIdAndUpdate(
+            quotation.mission._id,
+            {customer_accept_quotation_date: moment()}
+          )
+        })
+    })
+}
+addAction('alle_accept_quotation', alle_accept_quotation)
+
+const alle_refuse_quotation = ({value, user}) => {
+  return isActionAllowed({action:'alle_refuse_quotation', dataId:value?._id, user})
+    .then(ok => {
+      if (!ok) {return false}
+      return Quotation.findById(value._id)
+        .then(quotation=> {
+          return Mission.findByIdAndUpdate(
+            quotation.mission._id,
+            {customer_refuse_quotation_date: moment()}
+          )
+        })
+    })
+}
+addAction('alle_refuse_quotation', alle_refuse_quotation)
+
 const isActionAllowed = ({action, dataId, user}) => {
   if (action=='alle_create_quotation') {
     if (dataId) {
@@ -57,6 +88,20 @@ const isActionAllowed = ({action, dataId, user}) => {
       .populate('details')
       .then(quotation => {
         return !!quotation?.canSend(user)
+      })
+  }
+  if (action=='alle_accept_quotation') {
+    return Quotation.findById(dataId)
+      .populate('details')
+      .then(quotation => {
+        return /**user.role==ROLE_COMPANY_BUYER && */ !!quotation?.canAccept(user)
+      })
+  }
+  if (action=='alle_refuse_quotation') {
+    return Quotation.findById(dataId)
+      .populate('details')
+      .then(quotation => {
+        return /**user.role==ROLE_COMPANY_BUYER && */ !!quotation?.canRefuse(user)
       })
   }
   return Promise.resolve(true)

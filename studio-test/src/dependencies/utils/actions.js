@@ -420,6 +420,25 @@ export const ACTIONS = {
       value,
     }
     return axios.post(url, body)
-  }
+  },
+
+  alle_accept_quotation: ({value}) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_accept_quotation',
+      value,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_refuse_quotation: ({value}) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_refuse_quotation',
+      value,
+    }
+    return axios.post(url, body)
+  },
+
 
 }
