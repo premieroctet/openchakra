@@ -6,18 +6,32 @@ const app = admin.initializeApp({
   credential: admin.credential.cert(firebaseConfig),
 })
 
-const sendNotification = (user_id, message) => {
-  let payload = {
+const sendUserNotification = (user_id, message) => {
+
+  const payload = {
     notification: {
-      title: 'Message du fumoir',
+      title: 'Message personnel',
       body: message,
-      imageUrl: 'https://my-alfred-data-test.s3-eu-west-3.amazonaws.com/fumoir/Logo%20Le%20Fumoir%20George%20Or&B.svg'
     },
   }
-
   const topic=`user_${user_id}`
 
-  console.log(topic)
+  return app.messaging().sendToTopic(topic, payload)
+    .then(response => {
+      console.log(JSON.stringify(response))
+      return response
+    })
+}
+
+const sendAppNotification = (message) => {
+  const payload = {
+    notification: {
+      title: 'Message général',
+      body: message,
+    },
+  }
+  const topic=`user_all`
+
   return app.messaging().sendToTopic(topic, payload)
     .then(response => {
       console.log(JSON.stringify(response))
@@ -26,5 +40,6 @@ const sendNotification = (user_id, message) => {
 }
 
 module.exports={
-  sendNotification,
+  sendUserNotification,
+  sendAppNotification,
 }
