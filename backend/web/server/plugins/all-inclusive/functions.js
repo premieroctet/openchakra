@@ -87,6 +87,10 @@ const preCreate = ({model, params, user}) => {
         return ({model, params})
       })
   }
+  if (model=='quotationDetail' && 'quotation' in params) {
+    params.quotation=params.quotation
+  }
+
   return Promise.resolve({model, params})
 }
 

@@ -65,18 +65,12 @@ export const ACTIONS = {
       [getComponent(c, level)?.getAttribute('attribute') || getComponent(c, level)?.getAttribute('data-attribute'),
         getComponentValue(c, level)||null]
     ))
-    if (props.job) {
-      const jobId=document.getElementById(`${props.job}${level}`)?.getAttribute('_id')
-      body.job=jobId
-    }
-    if (props.mission) {
-      const missionId=document.getElementById(`${props.mission}${level}`)?.getAttribute('_id')
-      body.mission=missionId
-    }
-    if (props.quotation) {
-      const quotationId=document.getElementById(`${props.quotation}${level}`)?.getAttribute('_id')
-      body.quotation=quotationId
-    }
+    'job,mission,quotation'.split(',').forEach(property => {
+      if (props[property]) {
+        const dataId=document.getElementById(`${props[property]}${level}`)?.getAttribute('_id')
+        body[property]=dataId
+      }
+    })
     let url = `${API_ROOT}/${props.model}?context=${context}`
     return axios.post(url, body).then(res => ({
       model: props.model,
