@@ -69,6 +69,14 @@ export const ACTIONS = {
       const jobId=document.getElementById(`${props.job}${level}`)?.getAttribute('_id')
       body.job=jobId
     }
+    if (props.mission) {
+      const missionId=document.getElementById(`${props.mission}${level}`)?.getAttribute('_id')
+      body.mission=missionId
+    }
+    if (props.quotation) {
+      const quotationId=document.getElementById(`${props.quotation}${level}`)?.getAttribute('_id')
+      body.quotation=quotationId
+    }
     let url = `${API_ROOT}/${props.model}?context=${context}`
     return axios.post(url, body).then(res => ({
       model: props.model,

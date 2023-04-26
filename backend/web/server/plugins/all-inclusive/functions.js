@@ -1,3 +1,5 @@
+const moment = require('moment')
+const Mission = require('../../models/Mission')
 const {
   declareEnumField,
   declareVirtualField,
@@ -67,8 +69,23 @@ const preprocessGet = ({model, fields, id, user}) => {
 setPreprocessGet(preprocessGet)
 
 const preCreate = ({model, params, user}) => {
+  console.log(`preCreate ${model} with ${JSON.stringify(params)}`)
   if (['jobUser', 'request', 'mission'].includes(model)) {
     params.user=user
+  }
+  if (model=='quotation' && 'mission' in params) {
+    return Mission.findById(params.mission)
+      .populate('user')
+      .then(mission => {
+        params.name=`Devis du ${moment().format('L')}`
+        console.log(`Mission.user:${JSON.stringify(mission.user.firstname)}`)
+        params.firstname=mission.user.firstname
+        params.lastname=mission.user.lastname
+        params.email=mission.user.email
+        params.company_name=mission.user.company_name
+        params.mission=mission._id
+        return ({model, params})
+      })
   }
   return Promise.resolve({model, params})
 }

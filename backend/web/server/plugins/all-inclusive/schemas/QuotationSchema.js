@@ -29,7 +29,7 @@ const QuotationSchema = new Schema({
   },
   company_name: {
     type: String,
-    required: [true, 'Le prénom est obligatoire'],
+    required: [true, 'Le nom de la compagnie est obligatoire'],
   },
   company_address: {
     type: String,
