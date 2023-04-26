@@ -18,7 +18,6 @@ const QuotationDetailSchema = new Schema({
   },
   ht_price: {
     type: Number,
-    min: [value => value>=0, 'Le prix H.T. doit être >=0'],
     required: [true, 'Le prix H.T. est obligatoire'],
   },
   vat: {
