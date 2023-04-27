@@ -107,6 +107,9 @@ const MissionSchema = new Schema({
   customer_refuse_billing_date: {
     type: Date,
   },
+  bill: {
+    type: String,
+  },
 }, schemaOptions
 );
 
@@ -167,18 +170,32 @@ MissionSchema.virtual("location_str").get(function() {
   return capitalize(locations.join(" et "))
 })
 
-MissionSchema.methods.canCreateQuotation = function() {
-  return this.status==MISSION_STATUS_ASKING
-}
-
 MissionSchema.methods.canRefuseMission = function(user) {
   console.log(`${this.name}:${this.status} ${this.job}`)
   return user.role==ROLE_TI && this.status==MISSION_STATUS_ASKING
 }
 
-MissionSchema.methods.canCancelMission = function(user) {
-  console.log(`${this.name}:${this.status} ${this.job}`)
-  return user.role==ROLE_TI && this.status==MISSION_STATUS_ASKING
+MissionSchema.methods.canCreateQuotation = function() {
+  return this.status==MISSION_STATUS_ASKING
+}
+
+// TODO: fsm
+MissionSchema.methods.canRefuse = function(user) {
+  return true
+}
+
+MissionSchema.methods.canShowQuotation = function(user) {
+  return this.quotations?.length>0
+}
+
+MissionSchema.methods.canEditQuotation = function(user) {
+  return ROLE_TI
+  && [MISSION_STATUS_ASKING || MISSION_STATUS_QUOT_SENT].include(this.status)
+  && this.quotations?.length>0
+}
+
+MissionSchema.methods.canFinishMission = function(user) {
+  return user.role==ROLE_TI && MISSION_STATUS_QUOT_ACCEPTED==this.status
 }
 
 module.exports = MissionSchema;

@@ -450,5 +450,35 @@ export const ACTIONS = {
     return axios.post(url, body)
   },
 
+  alle_show_quotation: ({ value, context, props, level, getComponentValue }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_show_quotation',
+      value,
+      context,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_edit_quotation: ({ value, context, props, level, getComponentValue }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_edit_quotation',
+      value,
+      context,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_ti_finished: ({ value, context, props, level, getComponentValue }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_ti_finished',
+      value,
+      context,
+    }
+    return axios.post(url, body)
+  },
+
 
 }

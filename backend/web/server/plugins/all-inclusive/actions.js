@@ -80,6 +80,23 @@ const alle_refuse_quotation = ({value, user}) => {
 }
 addAction('alle_refuse_quotation', alle_refuse_quotation)
 
+const alle_show_quotation = ({value, user}) => {
+  return isActionAllowed({action:'alle_refuse_quotation', dataId:value?._id, user})
+}
+addAction('alle_show_quotation', alle_show_quotation)
+
+const alle_ti_finished = ({value, user}) => {
+  return isActionAllowed({action:'alle_refuse_quotation', dataId:value?._id, user})
+    .then(ok => {
+      if (!ok) {return false}
+      return Mission.findByIdAndUpdate(
+        value._id,
+        {ti_finished_date: moment()}
+      )
+    })
+}
+addAction('alle_ti_finished', alle_ti_finished)
+
 const isActionAllowed = ({action, dataId, user}) => {
   if (action=='alle_create_quotation') {
     if (dataId) {
@@ -107,17 +124,38 @@ const isActionAllowed = ({action, dataId, user}) => {
       })
   }
   if (action=='alle_accept_quotation') {
-    return Quotation.findById(dataId)
+    return Mission.findById(dataId)
       .populate('details')
-      .then(quotation => {
-        return /**user.role==ROLE_COMPANY_BUYER && */ !!quotation?.canAccept(user)
+      .then(mission => {
+        return /**user.role==ROLE_COMPANY_BUYER && */ !!mission?.canAcceptQuotation(user)
       })
   }
   if (action=='alle_refuse_quotation') {
-    return Quotation.findById(dataId)
+    return Mission.findById(dataId)
       .populate('details')
-      .then(quotation => {
-        return /**user.role==ROLE_COMPANY_BUYER && */ !!quotation?.canRefuse(user)
+      .then(mission => {
+        return /**user.role==ROLE_COMPANY_BUYER && */ !!mission?.canRefuseQuotation(user)
+      })
+  }
+  if (action=='alle_show_quotation') {
+    return Mission.findById(dataId)
+      .populate('quotations')
+      .then(mission => {
+        return /**user.role==ROLE_COMPANY_BUYER && */ !!mission?.canShowQuotation(user)
+      })
+  }
+  if (action=='alle_edit_quotation') {
+    return Mission.findById(dataId)
+      .populate(['quotations', 'job'])
+      .then(mission => {
+        return /**user.role==ROLE_COMPANY_BUYER && */ !!mission?.canEditQuotation(user)
+      })
+  }
+  if (action=='alle_ti_finished') {
+    return Mission.findById(dataId)
+      .populate(['quotations', 'job'])
+      .then(mission => {
+        return /**user.role==ROLE_COMPANY_BUYER && */ !!mission?.canFinishMission(user)
       })
   }
   return Promise.resolve(true)

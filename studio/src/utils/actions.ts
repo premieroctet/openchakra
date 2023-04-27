@@ -372,6 +372,21 @@ export const ACTIONS: IActions = {
     options: {},
     next: ['openPage'],
   },
+  alle_show_quotation: {
+    label: 'AE Voir le devis',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_edit_quotation: {
+    label: 'AE Modifier le devis',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_finish_mission: {
+    label: 'AE Terminer mission',
+    options: {},
+    next: ['openPage'],
+  },
 
 }
 
