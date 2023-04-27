@@ -7,13 +7,13 @@ const {sendQuotationSentToCustomer} = require('./mailing')
 
 const alle_create_quotation = ({value}) => {
 console.log(`value:${JSON.stringify(value)}`)
-  return isActionAllowed({action:'alle_create_quotation', dataId:value?._id})
+  return isActionAllowed({action:'alle_create_quotation', dataId:value?._id, user})
 }
 
 addAction('alle_create_quotation', alle_create_quotation)
 
 const alle_refuse_mission = ({value, user}) => {
-  return isActionAllowed({action:'all_refuse_mission', dataId:value?._id})
+  return isActionAllowed({action:'all_refuse_mission', dataId:value?._id, user})
     .then(ok => {
       if (!ok) {return false}
       return Mission.findByIdAndUpdate(value._id, {ti_refuse_date: moment()})
@@ -23,7 +23,7 @@ const alle_refuse_mission = ({value, user}) => {
 addAction('alle_refuse_mission', alle_refuse_mission)
 
 const alle_cancel_mission = ({value, user}) => {
-  return isActionAllowed({action:'alle_cancel_mission', dataId:value?._id})
+  return isActionAllowed({action:'alle_cancel_mission', dataId:value?._id, user})
     .then(ok => {
       if (!ok) {return false}
       return Mission.findByIdAndUpdate(value._id, {customer_cancel_date: moment()})
@@ -33,7 +33,7 @@ const alle_cancel_mission = ({value, user}) => {
 addAction('alle_cancel_mission', alle_cancel_mission)
 
 const alle_send_quotation = ({value, user}) => {
-  return isActionAllowed({action:'alle_send_quotation', dataId:value?._id})
+  return isActionAllowed({action:'alle_send_quotation', dataId:value?._id, user})
     .then(ok => {
       if (!ok) {return false}
       return Quotation.findById(value._id)
