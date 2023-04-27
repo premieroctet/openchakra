@@ -23,7 +23,15 @@ function createFileFromBlob(folder: string, filename: string, fileData: Blob) {
 }
 
 const uploadFileToS3 = async (file: File) => {
-  return await FileManager.createFile(file.name, file, '', file.type, [])
+
+  if (!s3Config.rootFolderName) {
+    throw new Error(
+      `No root folder. Please fill in REACT_APP_S3_ROOTPATH`
+    );
+  }
+  
+  const fileNameForS3 = s3Config.rootFolderName ? `${s3Config.rootFolderName}/${file.name}` : file.name
+  return await FileManager.createFile(fileNameForS3, file, '', file.type, [])
 }
 
 const uploadMultipleToS3 = async (folder: string, unzip: any) => {
