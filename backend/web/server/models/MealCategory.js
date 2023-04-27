@@ -1,5 +1,3 @@
-const mongooseLeanVirtuals = require('mongoose-lean-virtuals')
-
 const {getDataModel}=require('../../config/config')
 
 let MealCategory = null
@@ -8,7 +6,7 @@ try {
   const Category = require(`./Category`)
   if (Category) {
     const MealCategorySchema = require(`../plugins/${getDataModel()}/schemas/MealCategorySchema`)
-    MealCategorySchema.plugin(mongooseLeanVirtuals)
+    MealCategorySchema.plugin(require('mongoose-lean-virtuals'))
     MealCategory = Category.discriminator('mealCategory', MealCategorySchema)
   }
 }

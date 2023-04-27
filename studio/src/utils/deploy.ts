@@ -2,8 +2,9 @@ import lodash from 'lodash'
 import { ProjectState } from '~/core/models/project'
 import { PageSettings } from '../core/models/project';
 import { build, copyFile, install, start, clean } from './http'
-import { generateCode, generateApp, normalizePageName } from './code'
-import { validate } from './validation'
+import { generateCode, generateApp } from './code'
+import { normalizePageName } from './misc';
+import { validateComponents , validateProject} from './validation'
 
 // If true, build target project when compliaiton fixed
 const TARGET_BUILD = false
@@ -21,19 +22,10 @@ const cleanPages = (pages:PageSettings[]) => {
 
 export const deploy = (state: ProjectState, models: any) => {
   const pages = Object.values(state.pages)
-  return Promise.all(
-    pages.map(({ pageName, components }) => validate(components)),
-  )
+  return Promise.resolve(validateProject(state))
     .then(res => {
-      if (res.length>0) {
-        const error=lodash(pages.map((p, idx) => [p.pageName, res[idx]]))
-          .fromPairs()
-          .pickBy(v => v.length>0)
-          .mapValues(v => v.map(err => `${err.component.id}:${err.message}`).join(','))
-          .value()
-        if (!lodash.isEmpty(error)) {
-          throw new Error(JSON.stringify(error, null, 2))
-        }
+      if (res) {
+        throw new Error(JSON.stringify(res, null, 2))
       }
       return Promise.all(
         pages.map(page => {

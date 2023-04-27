@@ -6,9 +6,18 @@ const {schemaOptions} = require('../../../utils/schemas')
 const Schema = mongoose.Schema
 
 const EventSchema = new Schema({
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'user',
+    required: [true, 'Le créateur est obligatoire'],
+  },
   name: {
     type: String,
     required: [true, 'Le nom est obligatoire'],
+  },
+  description: {
+    type: String,
+    required: [true, 'La description est obligatoire'],
   },
   start_date: {
     type: Date,
@@ -18,12 +27,11 @@ const EventSchema = new Schema({
     type: Date,
     required: [true, 'La date de fin est obligatoire'],
   },
-  type: {
+  picture: {
     type: String,
-    enum: Object.keys(EVENT_TYPE),
-    validate: [v => v!=EVENT_COLL_CHALLENGE, 'Challenge collectif en BD doit être créé par le type CollectiveChallenge'],
-    required: [true, 'Le type est obligatoire'],
+    required: false,
   },
+  // Users who registered
   registered_by: [{
     type: Schema.Types.ObjectId,
     ref: 'user',
@@ -33,10 +41,12 @@ const EventSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'user',
   }],
-  key: [{
+  key: {
     type: Schema.Types.ObjectId,
     ref: 'key',
-  }],
+  },
 }, schemaOptions)
+
+EventSchema.virtual('type')
 
 module.exports = EventSchema

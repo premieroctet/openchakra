@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const mongooseLeanVirtuals = require("mongoose-lean-virtuals");
 const { BUDGET_PERIOD, DASHBOARD_MODE } = require("../../utils/consts");
 
 const GroupSchema = new Schema({
@@ -47,7 +46,5 @@ const GroupSchema = new Schema({
     required: true
   }
 });
-
-GroupSchema.plugin(mongooseLeanVirtuals);
 
 module.exports = GroupSchema;

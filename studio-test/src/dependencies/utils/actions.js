@@ -59,9 +59,18 @@ export const ACTIONS = {
       return Promise.resolve((window.location = url))
     }
   },
-  create: ({ value, context, props, getComponentValue }) => {
+  create: ({ value, context, props, level, getComponentValue }) => {
+    const components=lodash(props).pickBy((v, k) => /^component_/.test(k) && !!v).values()
+    const body = Object.fromEntries(components.map(c =>
+      [getComponent(c, level)?.getAttribute('attribute') || getComponent(c, level)?.getAttribute('data-attribute'),
+        getComponentValue(c, level)||null]
+    ))
+    if (props.job) {
+      const jobId=document.getElementById(`${props.job}${level}`)?.getAttribute('_id')
+      body.job=jobId
+    }
     let url = `${API_ROOT}/${props.model}?context=${context}`
-    return axios.post(url).then(res => ({
+    return axios.post(url, body).then(res => ({
       model: props.model,
       value: res.data,
     }))
@@ -352,6 +361,34 @@ export const ACTIONS = {
       action: 'deactivateAccount',
     }
     return axios.post(url, body)
+  },
+
+  addTarget: ({ value, context, append }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'addTarget',
+      value,
+      context,
+      append,
+    }
+    return axios.post(url, body)
+  },
+
+  createRecommandation: ({ value, context, props, level, getComponentValue }) => {
+    const components=lodash(props).pickBy((v, k) => /^component_/.test(k) && !!v).values()
+    const body = Object.fromEntries(components.map(c =>
+      [getComponent(c, level)?.getAttribute('attribute') || getComponent(c, level)?.getAttribute('data-attribute'),
+        getComponentValue(c, level)||null]
+    ))
+
+    const jobId=document.getElementById(`${props.job}${level}`)?.getAttribute('_id')
+    body.job=require('url').parse(window.location.href, true).query?.jobUser
+
+    let url = `${API_ROOT}/recommandation`
+    return axios.post(url, body).then(res => ({
+      model: props.model,
+      value: res.data,
+    }))
   },
 
 }

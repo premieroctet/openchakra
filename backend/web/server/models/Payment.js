@@ -1,4 +1,3 @@
-const mongooseLeanVirtuals=require('mongoose-lean-virtuals')
 const mongoose = require('mongoose')
 const {getDataModel} = require('../../config/config')
 
@@ -6,7 +5,7 @@ let PaymentSchema=null
 
 try {
   PaymentSchema=require(`../plugins/${getDataModel()}/schemas/PaymentSchema`)
-  PaymentSchema.plugin(mongooseLeanVirtuals)
+  PaymentSchema.plugin(require('mongoose-lean-virtuals'))
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {

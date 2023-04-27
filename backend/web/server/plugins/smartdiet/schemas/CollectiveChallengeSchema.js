@@ -10,14 +10,6 @@ const {schemaOptions} = require('../../../utils/schemas')
 const Schema = mongoose.Schema
 
 const CollectiveChallengeSchema = new Schema({
-  type: {
-    type: String,
-    enum: Object.keys(EVENT_TYPE),
-    default: EVENT_COLL_CHALLENGE,
-    set: () => EVENT_COLL_CHALLENGE,
-    required: [true, 'Le type est obligatoire'],
-  },
-
   spoons: {
     type: Number,
     required: [true, 'Le nombre de cuillères est obligatoire'],
@@ -26,12 +18,6 @@ const CollectiveChallengeSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'team',
   }],
-  /**
-  TODO New model ??
-  ranking: {
-
-  },
-  */
   pips: [{
     type: Schema.Types.ObjectId,
     ref: 'pip',
@@ -47,5 +33,9 @@ const CollectiveChallengeSchema = new Schema({
 },
 {...schemaOptions, ...EVENT_DISCRIMINATOR}
 )
+
+CollectiveChallengeSchema.virtual('type').get(function() {
+  return EVENT_COLL_CHALLENGE
+})
 
 module.exports = CollectiveChallengeSchema

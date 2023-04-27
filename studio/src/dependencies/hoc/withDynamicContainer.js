@@ -69,7 +69,6 @@ const withDynamicContainer = Component => {
     // TODO: in code.ts, generate withMaskability(withDynamic()) ...
     if (hiddenRoles) {
       const rolesToHide = JSON.parse(hiddenRoles)
-      console.log(`Roles to hide:${rolesToHide}`)
       const roleUser = user?.role
 
       // When roleUser is available, reveal
@@ -135,7 +134,7 @@ const withDynamicContainer = Component => {
             <>
               {React.cloneElement(
                 firstChild,
-                { id: newId, level: index, dataSource: d },
+                { id: newId, level: index, dataSource: d, _id: d?._id },
                 setRecurseDataSource(
                   firstChild,
                   d,

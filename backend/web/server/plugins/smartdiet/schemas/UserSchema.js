@@ -24,12 +24,17 @@ const UserSchema = new Schema({
   },
   birthday: {
     type: Date,
-    required: [function() { return this.role==ROLE_CUSTOMER }, 'La date de naissance est obligatoire'],
+    //required: [function() { return this.role==ROLE_CUSTOMER }, 'La date de naissance est obligatoire'],
+    required: false,
   },
   pseudo: {
     type: String,
     set: v => v?.trim(),
     required: [function() { return this.role==ROLE_CUSTOMER }, 'Le pseudo est obligatoire'],
+  },
+  picture: {
+    type: String,
+    required: false,
   },
   company: {
     type: Schema.Types.ObjectId,
@@ -44,13 +49,8 @@ const UserSchema = new Schema({
   role: {
     type: String,
     enum: Object.keys(ROLES),
-    default: ROLES.ROLE_CUSTOMER,
+    default: ROLE_CUSTOMER,
     required: [true, 'Le rôle est obligatoire'],
-  },
-  home_status: {
-    type: String,
-    enum: Object.keys(HOME_STATUS),
-    required: [function() { return this.role==ROLE_CUSTOMER }, 'Le statut est obligatoire'],
   },
   cguAccepted: {
     type: Boolean,
@@ -70,18 +70,14 @@ const UserSchema = new Schema({
   },
   child_count: {
     type: Number,
-    required: [function() { return this.role==ROLE_CUSTOMER && this.home_status==STATUS_FAMILY },
-      'Le nombre d\'enfants est obligatoire'],
+    default: 0,
+    required: false,
   },
   gender: {
     type: String,
     enum: Object.keys(GENDER),
-    required: [function() { return this.role==ROLE_CUSTOMER }, 'Le genre est obligatoire'],
-  },
-  activity: {
-    type: String,
-    enum: Object.keys(ACTIVITY),
-    required: [function() { return this.role==ROLE_CUSTOMER }, "L'activité est obligatoire"],
+    //required: [function() { return this.role==ROLE_CUSTOMER }, 'Le genre est obligatoire'],
+    required: false,
   },
   targets: [{
     type: Schema.Types.ObjectId,
@@ -105,9 +101,13 @@ UserSchema.virtual('spoons_count').get(function() {
 })
 
 // Computed virtual
-UserSchema.virtual('available_contents').get(function() {})
+UserSchema.virtual('available_contents', {
+  ref: "content", // The Model to use
+  localField: "targets", // Find in Model, where localField
+  foreignField: "targets", // is equal to foreignField
+  //match: {default: true}
+})
 
-// TODO Use justOne to return the shop or null
 UserSchema.virtual("spoons", {
   ref: "spoon", // The Model to use
   localField: "_id", // Find in Model, where localField

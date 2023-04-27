@@ -1,3 +1,9 @@
+const { CONTENTS_TYPE } = require('../../server/plugins/smartdiet/consts')
+const { getModels } = require('../../server/utils/database')
+const {forceDataModelSmartdiet, buildAttributesException}=require('../utils')
+
+forceDataModelSmartdiet()
+
 const {
   getAvailableContents
 } = require('../../server/plugins/smartdiet/functions')
@@ -12,9 +18,6 @@ const { STATUS } = require('../../server/plugins/aftral/consts')
 const CollectiveChallenge = require('../../server/models/CollectiveChallenge')
 const moment=require('moment')
 const mongoose = require('mongoose')
-const {forceDataModelSmartdiet, buildAttributesException}=require('../utils')
-
-forceDataModelSmartdiet()
 const {MONGOOSE_OPTIONS} = require('../../server/utils/database')
 const {ROLE_CUSTOMER, ROLE_ADMIN, STATUS_FAMILY} = require('../../server/plugins/smartdiet/consts')
 
@@ -155,11 +158,9 @@ describe('Test models ', () => {
 
   it('Mandatory attributes for user role', () => {
     const ex=buildAttributesException('activity birthday gender dataTreatmentAccepted cguAccepted pseudo home_status'.split(' '))
-    expect(User.create({
-      role: ROLE_CUSTOMER, email: 'a@a.com',
-      lastname: 'Auvray', firstname: 'Sébastien'}))
-      .rejects
-      .toThrow(ex)
+    expect(User.create({email: 'a@a.com', lastname: 'Auvray', firstname: 'Sébastien'}))
+    .rejects
+    .toThrow(ex)
     const ex2=buildAttributesException('activity birthday gender dataTreatmentAccepted cguAccepted pseudo child_count'.split(' '))
     expect(User.create({
       role: ROLE_CUSTOMER, email: 'a@a.com',
@@ -189,11 +190,10 @@ describe('Test models ', () => {
     .rejects
     .toThrow(/.*doit.*CollectiveChallenge.*/)
     const events=await Event.find()
-    console.log(events)
     expect(events.length).toBe(1)
   })
 
-  it.only('Should return target events', async () => {
+  it('Should return target events', async () => {
     const cat=await Category.create({name: 'Poids', picture: 'hop'})
     const target=await Target.create({name: 'Cible poids', category: cat})
     const target2=await Target.create({name: 'Cible poids 2', category: cat})
@@ -214,6 +214,39 @@ describe('Test models ', () => {
       targets:[target, target2]
     })
     const contents=await getAvailableContents(user)
-    console.log(contents)
   })
+
+  it('Offer.company must be ref unique', async () => {
+    const models=getModels()
+    const targetsType=models.category.attributes.targets
+    expect(targetsType.type).toBe('target')
+    expect(targetsType.multiple).toBe(true)
+    expect(targetsType.ref).toBe(true)
+    const companyType=models.offer.attributes.company
+    expect(companyType.type).toBe('company')
+    expect(companyType.multiple).toBe(false)
+    expect(companyType.ref).toBe(true)
+  })
+
+  it('User must see defaut contents', async () => {
+    const tgtCat=await Category.create({name: 'cat', picture: 'pct'})
+    const target=await Target.create({name:'hop', category: tgtCat})
+    const key=await Key.create({name: 'Clé', picture: 'Tagada'})
+    const user=await User.create({dataTreatmentAccepted:true,cguAccepted:true,
+        pseudo: 'Seb',email: 'email', lastname: 'Auvray', firstname: 'Seb',
+        targets: target
+    })
+    const content=await Content.create({
+      key, duration:1, contents: 'hop', picture: 'picture', default: false, name: 'Contenu',
+      type:Object.keys(CONTENTS_TYPE)[0], creator:user, targets: target,
+    })
+    const content2=await Content.create({
+      key, duration:1, contents: 'hop2', picture: 'picture', default: false, name: 'Contenu',
+      type:Object.keys(CONTENTS_TYPE)[0], creator:user, default: true,
+    })
+
+    const foundUser=await User.findOne().populate('available_contents')
+    expect(foundUser.targets).toHaveLength(2)
+  })
+
 })

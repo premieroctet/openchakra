@@ -70,7 +70,7 @@ const getVirtualCharacteristics = (modelName, attName) => {
 const getAttributeCaracteristics = (modelName, att) => {
   const multiple = att.instance == 'Array'
   const suggestions = att.options?.suggestions
-  const baseData = multiple ? att.caster : att
+  const baseData = att.caster || att
   const type =
     baseData.instance == 'ObjectID' ? baseData.options.ref : baseData.instance
   const ref = baseData.instance == 'ObjectID'
@@ -152,11 +152,7 @@ Returns only models & attributes visible for studio users
 */
 const getExposedModels = () => {
   const isHidddenAttributeName = attName => {
-    const res=
-    [CREATED_AT_ATTRIBUTE, UPDATED_AT_ATTRIBUTE].some(att=> {
-      return attName==att || attName.endsWith(`.${att}`)
-    })
-    return res
+    return false
   }
 
   const models=lodash(getModels())
@@ -207,6 +203,7 @@ const buildPopulate = (field, model) => {
   return result
 }
 
+// TODO query.populates accepts an array of populates !!!!
 const buildPopulates = (fields, model) => {
 
   // TODO Bug: in ['program.themes', 'program.otherref']
@@ -239,6 +236,14 @@ const buildPopulates = (fields, model) => {
     )
   }
 
+  // Customizer to merge same keys are arrays
+  const customizer= (a, b) => {
+    if (a?.path && b?.path && a.path!=b.path) {
+      //return {...a, ...b, path:[a.path, b.path]}
+      return [a, b]
+    }
+  }
+
   const populates = lodash(fields)
     // Retain only ObjectId fields
     .filter(att => modelAttributes[att.split('.')[0]].ref == true)
@@ -247,7 +252,7 @@ const buildPopulates = (fields, model) => {
     .mapValues(fields => fields.map(f => buildPopulate(f, model)))
     // Merge populates for each 1st level attribute
     .mapValues(
-      pops => pops.reduce((acc, pop) => lodash.mergeWith(acc, pop)),
+      pops => pops.reduce((acc, pop) => lodash.mergeWith({}, acc, pop, customizer)),
       {},
     )
     .values()
@@ -299,6 +304,8 @@ const buildQuery = (model, id, fields) => {
 
   const populates = buildPopulates(fields, model)
 
+  console.log(`Populates is ${JSON.stringify(populates)}, fields are ${fields}`)
+
   const select = lodash(fields)
     .map(att => att.split('.')[0])
     .uniq()
@@ -311,6 +318,10 @@ const buildQuery = (model, id, fields) => {
   let query = mongoose.connection.models[model].find(criterion, select)
   query = populates.reduce((q, key) => q.populate(key), query)
   return query
+}
+
+const simpleCloneModel = data => {
+  return lodash.omit(data.toObject(), ['_id', 'id'])
 }
 
 const cloneModel = ({data, withOrigin, forceData = {}}) => {
@@ -628,4 +639,5 @@ module.exports = {
   putAttribute,
   idEqual,
   getExposedModels,
+  simpleCloneModel,
 }

@@ -2,6 +2,7 @@ const { EVENT_DISCRIMINATOR } = require('../../smartdiet/consts')
 const mongoose = require('mongoose')
 const moment = require('moment')
 const {schemaOptions} = require('../../../utils/schemas')
+const { BadRequestError } = require('../../../utils/errors')
 const {PLACES, TO_COME, CURRENT, FINISHED} = require('../consts')
 
 const Schema = mongoose.Schema
@@ -10,6 +11,7 @@ const EventSchema = new Schema(
   {
     title: {
       type: String,
+      required: [true, 'Le titre est obligatoire']
     },
     description: {
       type: String,
@@ -19,28 +21,21 @@ const EventSchema = new Schema(
     },
     price: {
       type: Number,
+      required: [true, 'Le prix est obligatoire']
     },
     start_date: {
       type: Date,
-      required: false,
+      required: [true, 'La date de début est obligatoire']
     },
     end_date: {
       type: Date,
-      required: false,
+      required: [true, 'La date de fin est obligatoire']
     },
-    members: [{
-      member: {
-        type: Schema.Types.ObjectId,
-        ref: 'user',
-        required: true,
-      },
-      guest: {
-        type: Schema.Types.ObjectId,
-        ref: 'guest',
-        required: false,
-      },
-    }
-    ],
+    invitations: [{
+      type: Schema.Types.ObjectId,
+      ref: 'invitation',
+      required: true,
+    }],
     place: {
       type: String,
       enum: [...Object.keys(PLACES)],
@@ -49,11 +44,11 @@ const EventSchema = new Schema(
     max_guests_per_member: {
       type: Number,
       get: v => 1,
-      required: true,
+      required: [true, "Le nombre d'invités maximum par membre obligatoire"],
     },
     max_people: {
       type: Number,
-      required: true,
+      required: [true, 'Le nombre de participants maximum est obligatoire'],
     }
   },
   {...schemaOptions, ...EVENT_DISCRIMINATOR },
@@ -83,15 +78,16 @@ EventSchema.virtual('guests_count').get(() => {
 })
 
 EventSchema.virtual('members_count').get(function() {
-  return this.guests_count + this.members?.length || 0
+  return this.guests_count + this.invitations?.length || 0
 })
 
+
 EventSchema.virtual('people_count').get(function() {
-  if (!this.members) {
+  if (!this.invitations) {
     return 0
   }
-  const members_count=this.members.length
-  const guests_count=this.members.filter(m => !!m.guest).length
+  const members_count=this.invitations.length
+  const guests_count=this.invitations.filter(m => !!m.guest).length
   return members_count+guests_count
 })
 
@@ -111,6 +107,14 @@ EventSchema.virtual('status').get(function() {
     return CURRENT
   }
   return null
+})
+
+// Forbid modification for past event
+EventSchema.pre(/update/i, async function() {
+  const docToUpdate = await this.model.findOne(this.getQuery())
+  if (moment(docToUpdate?.start_date).isBefore(moment())) {
+    throw new BadRequestError(`Impossible de modifier un événement passé`)
+  }
 })
 
 module.exports = EventSchema

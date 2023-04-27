@@ -3,7 +3,6 @@ const { canAlfredParticularRegister } = require("../../../config/config");
 const mongoose = require("mongoose");
 const { CESU, INSURANCE_TYPES } = require("../../../utils/consts");
 const { hideIllegal } = require("../../../utils/text");
-const mongooseLeanVirtuals = require("mongoose-lean-virtuals");
 
 const Schema = mongoose.Schema;
 
@@ -134,7 +133,5 @@ ShopSchema.virtual("insurance_text").get(function() {
       .join(", ")
   );
 });
-
-ShopSchema.plugin(mongooseLeanVirtuals);
 
 module.exports = ShopSchema;

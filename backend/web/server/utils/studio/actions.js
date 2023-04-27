@@ -1,13 +1,12 @@
+const mongoose = require('mongoose')
+const { getModel, putAttribute, removeData } = require('../database')
+const { getDataModel } = require('../../../config/config')
 const {
   generatePassword,
   validatePassword
 } = require('../../../utils/passwords')
 const bcrypt = require('bcryptjs')
 const url = require('url')
-const {
-  putAttribute,
-  removeData,
-} = require('../database')
 const User = require('../../models/User')
 const Message = require('../../models/Message')
 const Post = require('../../models/Post')
@@ -15,6 +14,8 @@ const UserSessionData = require('../../models/UserSessionData')
 const {NotFoundError} = require('../errors')
 const Program = require('../../models/Program')
 const {sendNewMessage} = require('../../plugins/fumoir/mailing')
+
+const {DEFAULT_ROLE} = require(`../../plugins/${getDataModel()}/consts`)
 
 let ACTIONS = {
   put: ({parent, attribute, value}, user) => {
@@ -112,12 +113,31 @@ let ACTIONS = {
           promise=Promise.resolve()
         }
 
+        if (DEFAULT_ROLE && !props.role) {
+          props.role=DEFAULT_ROLE
+        }
+
         return promise
           .then(()=> {
             return User.create({...props, password: bcrypt.hashSync(props.password, 10)})
           })
     })
-  }
+  },
+
+  addTarget: ({value, context, append}) => {
+    console.log(`${append ? 'Adding':'Removing'} target ${value} to context ${context}`)
+    return getModel(context)
+      .then(modelName => {
+        const model=mongoose.connection.models[modelName]
+        return append ?
+          model.findByIdAndUpdate(context, {$addToSet: {targets: value}})
+          :
+          model.findByIdAndUpdate(context, {$pull: {targets: value}})
+      })
+      .catch(err => {
+        console.error(err)
+      })
+  },
 
 }
 

@@ -1,6 +1,7 @@
 import React, { memo } from 'react'
 import { useForm } from '../../../hooks/useForm'
 import lodash from 'lodash'
+import { NOT_CONNECTED } from '../../../dependencies/utils/misc';
 import FormControl from '../controls/FormControl'
 import usePropsSelector from '../../../hooks/usePropsSelector'
 import { List, Checkbox } from '@chakra-ui/react'
@@ -30,7 +31,7 @@ const VisibilityPanel: React.FC = () => {
   return (
     <FormControl htmlFor="hiddenRoles" label="Hidden for">
       <MultiSelect
-          options={getPairs(Object.keys(roles))}
+          options={[{value: NOT_CONNECTED, label: 'Non connect'}, ...getPairs(Object.keys(roles))]}
           value={getPairs(hiddenRoles)}
           onChange={values => setValue('hiddenRoles', values.map(v => v.value))}
           labelledBy="Select"

@@ -1,6 +1,6 @@
+const { GROUPS_CREDIT, HOME_STATUS } = require('../consts')
 const mongoose = require('mongoose')
 const bcrypt=require('bcryptjs')
-const { HOME_STATUS } = require('../consts')
 const {schemaOptions} = require('../../../utils/schemas')
 
 const Schema = mongoose.Schema
@@ -20,14 +20,78 @@ const OfferSchema = new Schema({
     min: [0, 'La durée ne peut être négative'],
     required: [true, 'La durée est obligatoire'],
   },
-  webinars_count: {
+  webinars_credit: {
     type: Number,
-    required: [true, 'Le nombre de webinars autorisés est obligatoire'],
+    required: [function() {return !this.webinars_unlimited}, 'Le crédit de webinars est obligatoire'],
   },
-  contents_count: {
+  webinars_unlimited: {
+    type: Boolean,
+    default: false,
+    required: true,
+  },
+  infographies_credit: {
     type: Number,
-    required: [true, 'Le nombre de contenus autorisés est obligatoire'],
+    required: [function() {return !this.infographies_unlimited}, "Le crédit d'infographies est obligatoire"],
+  },
+  infographies_unlimited: {
+    type: Boolean,
+    default: false,
+    required: true,
+  },
+  articles_credit: {
+    type: Number,
+    required: [function() {return !this.articles_unlimited}, 'Le crédit d\'articles est obligatoire'],
+  },
+  articles_unlimited: {
+    type: Boolean,
+    default: false,
+    required: true,
+  },
+  podcasts_credit: {
+    type: Number,
+    required: [function() {return !this.podcasts_unlimited}, 'Le crédit de podcats est obligatoire'],
+  },
+  podcasts_unlimited: {
+    type: Boolean,
+    default: false,
+    required: true,
+  },
+  video_credit: {
+    type: Number,
+    required: [function() {return !this.video_unlimited}, 'Le crédit de vidéos est obligatoire'],
+  },
+  video_unlimited: {
+    type: Boolean,
+    default: false,
+    required: true,
+  },
+  collective_challenge_available: {
+    type: Boolean,
+  },
+  individual_challenge_available: {
+    type: Boolean,
+  },
+  online_coaching_available: {
+    type: Boolean,
+  },
+  coaching_credit: {
+    type: Number,
+    required: [true, 'Le crédit de coachings est obligatoire'],
+  },
+  hotdiet_available: {
+    type: Boolean,
+  },
+  groups_credit: {
+    type: String,
+    enum: Object.keys(GROUPS_CREDIT),
   },
 }, schemaOptions)
+
+OfferSchema.virtual("company", {
+  ref: "company", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "offer", // is equal to foreignField
+  justOne: true,
+});
 
 module.exports = OfferSchema

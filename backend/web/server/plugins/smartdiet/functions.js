@@ -4,19 +4,24 @@ const {
   CONTENTS_TYPE,
   EVENT_TYPE,
   GENDER,
+  GROUPS_CREDIT,
+  HARDNESS,
   HOME_STATUS,
   ROLES,
   SPOON_SOURCE,
   TARGET_TYPE
 } = require('./consts')
-const Content = require('../../models/Content')
 const {
   declareComputedField,
   declareEnumField,
   declareVirtualField,
+  setPostCreateData,
   setPreCreateData,
   setPreprocessGet,
+  simpleCloneModel,
 } = require('../../utils/database')
+const Offer = require('../../models/Offer')
+const Content = require('../../models/Content')
 const lodash=require('lodash')
 const moment = require('moment')
 const User = require('../../models/User')
@@ -30,7 +35,18 @@ const preprocessGet = ({model, fields, id, user}) => {
   return Promise.resolve({model, fields, id})
 
 }
+
 setPreprocessGet(preprocessGet)
+
+const preCreate = ({model, params, user}) => {
+  if (['content', 'collectiveChallenge', 'individualChallenge', 'webinar', 'menu'].includes(model)) {
+    params.user=user
+  }
+  return Promise.resolve({model, params})
+}
+
+setPreCreateData(preCreate)
+
 
 const USER_MODELS=['user', 'loggedUser']
 USER_MODELS.forEach(m => {
@@ -56,14 +72,43 @@ USER_MODELS.forEach(m => {
 })
 
 declareEnumField({model: 'company', field: 'activity', enumValues: COMPANY_ACTIVITY})
+declareVirtualField({model: 'company', field: 'administrators', instance: 'Array',
+  requires: '', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'user'}}
+})
+declareVirtualField({model: 'company', field: 'webinars', instance: 'Array',
+  requires: '', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'webinar'}}
+})
+declareVirtualField({model: 'company', field: 'groups', instance: 'Array',
+  requires: '', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'group'}}
+})
+declareVirtualField({model: 'company', field: 'likes_count', instance: 'Number'})
+declareVirtualField({model: 'company', field: 'comments_count', instance: 'Number'})
+declareVirtualField({model: 'company', field: 'shares_count', instance: 'Number'})
+declareVirtualField({model: 'company', field: 'contents_count', instance: 'Number'})
+declareVirtualField({model: 'company', field: 'groups_count', instance: 'Number', requires:'groups'})
 
 declareEnumField({model: 'content', field: 'type', enumValues:CONTENTS_TYPE})
+declareVirtualField({model: 'content', field: 'likes_count', instance: 'Number', requires: 'likes'})
+declareVirtualField({model: 'content', field: 'shares_count', instance: 'Number', requires: 'shares'})
+declareVirtualField({model: 'content', field: 'comments_count', instance: 'Number', requires: 'comments'})
 
-declareEnumField({model: 'event', field: 'type', enumValues:EVENT_TYPE})
-declareEnumField({model: 'collectiveChallenge', field: 'type', enumValues:EVENT_TYPE})
+const EVENT_MODELS=['event', 'collectiveChallenge', 'individualChallenge', 'menu', 'webinar']
+EVENT_MODELS.forEach(m => {
+  declareVirtualField({model: m, field: 'type', instance: 'String', enumValues: EVENT_TYPE})
+})
+
+declareEnumField({model: 'individualChallenge', field: 'hardness', enumValues:HARDNESS})
 
 declareEnumField({model: 'category', field: 'type', enumValues:TARGET_TYPE})
-
 declareVirtualField({model: 'category', field: 'targets', instance: 'Array',
   requires: '', multiple: true,
   caster: {
@@ -74,6 +119,33 @@ declareVirtualField({model: 'category', field: 'targets', instance: 'Array',
 declareEnumField({model: 'userSpoon', field: 'source', enumValues: SPOON_SOURCE})
 
 declareEnumField({model: 'spoonGain', field: 'source', enumValues: SPOON_SOURCE})
+
+declareVirtualField({model: 'offer', field: 'company', instance: 'offer',
+  requires: '', multiple: false,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'company'}}
+})
+declareEnumField({model: 'offer', field: 'groups_credit', enumValues: GROUPS_CREDIT})
+
+declareVirtualField({model: 'target', field: 'contents', instance: 'Array',
+  requires: '', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'content'}}
+})
+declareVirtualField({model: 'target', field: 'groups', instance: 'Array',
+  requires: '', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'group'}}
+})
+declareVirtualField({model: 'target', field: 'users', instance: 'Array',
+  requires: '', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'user'}}
+})
 
 const getAvailableContents = (user, params, data) => {
   return Content.find()
@@ -92,6 +164,27 @@ const getAvailableContents = (user, params, data) => {
 
 declareComputedField('user', 'available_contents', getAvailableContents)
 declareComputedField('loggedUser', 'available_contents', getAvailableContents)
+
+
+const postCreate = ({model, params, data}) => {
+  // Create company => duplicate offer
+  if (model=='company') {
+    return Offer.findById(data.offer)
+      .then(offer => Offer.create(simpleCloneModel(offer)))
+      .then(offer => {data.offer=offer._id; return data})
+      .then(data => data.save())
+  }
+  if (model=='booking') {
+    console.log(`Sending mail to ${data.booking_user.email} and admins for booking ${data._id}`)
+    sendNewBookingToMember({booking:data})
+    User.find({role: FUMOIR_MANAGER})
+      .then(managers => Promise.allSettled(managers.map(manager => sendNewBookingToManager({booking:data, manager}))))
+  }
+
+  return Promise.resolve(data)
+}
+
+setPostCreateData(postCreate)
 
 module.exports={
   getAvailableContents,

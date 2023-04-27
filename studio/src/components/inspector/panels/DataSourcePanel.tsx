@@ -1,4 +1,4 @@
-import { Accordion, Input, Select, Box } from '@chakra-ui/react'
+import { Accordion, Input, Select, Box, Checkbox } from '@chakra-ui/react'
 import { useSelector } from 'react-redux'
 import React, { useState, useEffect, memo } from 'react'
 import lodash from 'lodash'
@@ -25,6 +25,7 @@ const DataSourcePanel: React.FC = () => {
   const components: IComponents = useSelector(getComponents)
   const activeComponent: IComponent = useSelector(getSelectedComponent)
   const { setValueFromEvent, setValue, removeValue } = useForm()
+  const addTarget = usePropsSelector('addTarget')
   const dataSource = usePropsSelector('dataSource')
   const model = usePropsSelector('model')
   const attribute = usePropsSelector('attribute')
@@ -144,9 +145,23 @@ const DataSourcePanel: React.FC = () => {
     removeValue('subAttributeDisplay')
   }
 
+  const onAddToTargetChange = ev => {
+    setValue(ev.target.name, ev.target.checked)
+  }
+
   return (
     <Accordion allowToggle={true}>
       <AccordionContainer title="Data source">
+        {activeComponent?.type=='Checkbox' &&
+        <FormControl htmlFor="addTarget" label='Add to context'>
+          <Checkbox
+            id="addTarget"
+            name="addTarget"
+            isChecked={addTarget}
+            onChange={onAddToTargetChange}
+          ></Checkbox>
+        </FormControl>
+        }
         <FormControl htmlFor="dataSource" label="Datasource">
           <Select
             id="dataSource"

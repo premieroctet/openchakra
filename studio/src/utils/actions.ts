@@ -10,11 +10,33 @@ type IActions = {
   }
 }
 
+const pagesList= ({pages}) => {
+  console.log(JSON.stringify(lodash(pages).values().orderBy(p => p.pageName.toLowerCase()), null, 2))
+  //return Object.values(pages).map(p => ({ key: p.pageId, label: p.pageName }))
+  return lodash(pages)
+    .values()
+    .orderBy(p => p.pageName.toLowerCase())
+    .map(p => ({ key: p.pageId, label: p.pageName }))
+    .value()
+}
+
 export const ACTIONS: IActions = {
   create: {
     label: 'Create new data',
     options: {
       model: ({ models }) => Object.values(models).map(m => ({ key: m.name, label: m.name })),
+      job: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      ...Object.fromEntries(lodash.range(15).map((idx:number) => {
+      return [
+        `component_${idx}`,
+        ({ components }) => components
+          .filter(comp => (comp.props?.dataSource || comp.props?.model) && comp.props?.attribute)
+          .map(comp => ({ key: comp.id, label: `${comp.type}/${comp.id}` }))
+
+      ]})),
     },
     next: ['openPage'],
   },
@@ -31,8 +53,7 @@ export const ACTIONS: IActions = {
   openPage: {
     label: 'Open page',
     options: {
-      page: ({ pages }) =>
-        Object.values(pages).map(p => ({ key: p.pageId, label: p.pageName })),
+      page: ({ pages }) => pagesList({pages}),
       open: () => [
         { key: true, label: 'In new page' },
         { key: false, label: 'In same page' },
@@ -134,7 +155,7 @@ export const ACTIONS: IActions = {
     label: 'Save/create',
     options: {
       model: ({ models }) => Object.values(models).map(m => ({ key: m.name, label: m.name })),
-      ...Object.fromEntries(lodash.range(15).map((idx:number) => {
+      ...Object.fromEntries(lodash.range(25).map((idx:number) => {
       return [
         `component_${idx}`,
         ({ components }) => components
@@ -297,6 +318,21 @@ export const ACTIONS: IActions = {
     label: 'Deactivate account',
     options: {},
     next: ['openPage', 'logout'],
+  },
+
+  createRecommandation: {
+    label: 'Create recommandation',
+    options: {
+      ...Object.fromEntries(lodash.range(15).map((idx:number) => {
+      return [
+        `component_${idx}`,
+        ({ components }) => components
+          .filter(comp => (comp.props?.dataSource || comp.props?.model) && comp.props?.attribute)
+          .map(comp => ({ key: comp.id, label: `${comp.type}/${comp.id}` }))
+
+      ]})),
+    },
+    next: ['openPage'],
   },
 
 }
