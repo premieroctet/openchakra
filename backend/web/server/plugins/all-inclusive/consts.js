@@ -167,6 +167,7 @@ const CONTRACT_TYPE={
 const MISSION_STATUS_ASKING="MISSION_STATUS_ASKING"
 const MISSION_STATUS_ASKING_ALLE="MISSION_STATUS_ASKING_ALLE"
 const MISSION_STATUS_TI_REFUSED="MISSION_STATUS_TI_REFUSED"
+const MISSION_STATUS_CUST_CANCELLED="MISSION_STATUS_CUST_CANCELLED"
 const MISSION_STATUS_QUOT_SENT="MISSION_STATUS_QUOT_SENT"
 const MISSION_STATUS_QUOT_ACCEPTED="MISSION_STATUS_QUOT_ACCEPTED"
 const MISSION_STATUS_QUOT_REFUSED="MISSION_STATUS_QUOT_REFUSED"
@@ -178,7 +179,8 @@ const MISSION_STATUS_DISPUTE="MISSION_STATUS_DISPUTE"
 const QUOTATION_STATUS={
   MISSION_STATUS_ASKING:"Demande de mission",
   MISSION_STATUS_ASKING_ALLE:"Demande de mission TIPI",
-  MISSION_STATUS_TI_REFUSED:"Refusée par le TI",
+  MISSION_STATUS_TI_REFUSED:"Mission refusée",
+  MISSION_STATUS_CUST_CANCELLED: "Mission annulée",
   MISSION_STATUS_QUOT_SENT:"Devis transmis",
   MISSION_STATUS_QUOT_ACCEPTED:"Devis accepté",
   MISSION_STATUS_QUOT_REFUSED:"Devis refusé",
@@ -208,6 +210,7 @@ const TI_TIPS= {
   MISSION_STATUS_ASKING:"Une demande de mission vous a été adressée, la création d’un devis et la validation de celui-ci par l'entreprise est nécessaire pour démarrer la mission",
   MISSION_STATUS_ASKING_ALLE:"",
   MISSION_STATUS_TI_REFUSED:"Vous avez refusé la mission. Restez disponible pour d'autres missions",
+  MISSION_STATUS_CUST_CANCELLED:"Le client a annulé sa demande de mission",
   MISSION_STATUS_QUOT_SENT:"Votre devis a bien été envoyé à l'entreprise et est en attente d'acceptation",
   MISSION_STATUS_QUOT_ACCEPTED:"Votre devis a été accepté. N'hésitez pas à contacter votre client si vous avez besoin de précisions complémentaires",
   MISSION_STATUS_QUOT_REFUSED:"L'entreprise a refusé votre devis. VOus la contacter pour plus d'informations",
@@ -221,6 +224,7 @@ const CUSTOMER_TIPS= {
   MISSION_STATUS_ASKING:"Votre demande de mission a été transmise à l'indépendant.e",
   MISSION_STATUS_ASKING_ALLE:"Votre demande de mission a été transmise à TIPI",
   MISSION_STATUS_TI_REFUSED:"L'indépendant.e a refusé la mission. Vous pouvez en chercher un autre ou faire votre demande à TIPI",
+  MISSION_STATUS_CUST_CANCELLED:"Vous avez annulé cette demande de mission",
   MISSION_STATUS_QUOT_SENT:"Un devis vous a été envoyé. Pour confirmer la mission, vous devez accepter le devis",
   MISSION_STATUS_QUOT_ACCEPTED:"Vous avez accepté ce devis. La mission commencera à la date indiquée.",
   MISSION_STATUS_QUOT_REFUSED:"Vous avez refusé le devis. Vous pouvez contacter l'indépendant.e pour en obteniur un nouveau",
@@ -249,6 +253,7 @@ module.exports={
   MISSION_STATUS_ASKING,
   MISSION_STATUS_ASKING_ALLE,
   MISSION_STATUS_TI_REFUSED,
+  MISSION_STATUS_CUST_CANCELLED,
   MISSION_STATUS_QUOT_SENT,
   MISSION_STATUS_QUOT_ACCEPTED,
   MISSION_STATUS_QUOT_REFUSED,

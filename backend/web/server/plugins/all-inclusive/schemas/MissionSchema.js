@@ -86,6 +86,9 @@ const MissionSchema = new Schema({
   ti_refuse_date: {
     type: Date,
   },
+  customer_cancel_date: {
+    type: Date,
+  },
   customer_accept_quotation_date: {
     type: Date,
   },
@@ -127,6 +130,9 @@ MissionSchema.virtual('status').get(function() {
   if (this.customer_accept_quotation_date) {
     return MISSION_STATUS_QUOT_ACCEPTED
   }
+  if (this.customer_cancel_date) {
+    return MISSION_STATUS_CUST_CANCELLED
+  }
   if (this.ti_refuse_date) {
     return MISSION_STATUS_TI_REFUSED
   }
@@ -166,6 +172,11 @@ MissionSchema.methods.canCreateQuotation = function() {
 }
 
 MissionSchema.methods.canRefuseMission = function(user) {
+  console.log(`${this.name}:${this.status} ${this.job}`)
+  return user.role==ROLE_TI && this.status==MISSION_STATUS_ASKING
+}
+
+MissionSchema.methods.canCancelMission = function(user) {
   console.log(`${this.name}:${this.status} ${this.job}`)
   return user.role==ROLE_TI && this.status==MISSION_STATUS_ASKING
 }

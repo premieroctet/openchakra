@@ -413,6 +413,16 @@ export const ACTIONS = {
     return axios.post(url, body)
   },
 
+  alle_cancel_mission: ({ value, context, props, level, getComponentValue }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_cancel_mission',
+      value,
+      context,
+    }
+    return axios.post(url, body)
+  },
+
   alle_send_quotation: ({value}) => {
     let url = `${API_ROOT}/action`
     const body = {

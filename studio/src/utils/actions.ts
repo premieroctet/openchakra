@@ -352,6 +352,11 @@ export const ACTIONS: IActions = {
     options: {},
     next: ['openPage'],
   },
+  alle_cancel_mission: {
+    label: 'AE Anuler mission',
+    options: {},
+    next: ['openPage'],
+  },
   alle_send_quotation: {
     label: 'AE Envoyer le devis',
     options: {},

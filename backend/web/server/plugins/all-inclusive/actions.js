@@ -22,6 +22,16 @@ const alle_refuse_mission = ({value, user}) => {
 
 addAction('alle_refuse_mission', alle_refuse_mission)
 
+const alle_cancel_mission = ({value, user}) => {
+  return isActionAllowed({action:'alle_cancel_mission', dataId:value?._id})
+    .then(ok => {
+      if (!ok) {return false}
+      return Mission.findByIdAndUpdate(value._id, {customer_cancel_date: moment()})
+    })
+}
+
+addAction('alle_cancel_mission', alle_cancel_mission)
+
 const alle_send_quotation = ({value, user}) => {
   return isActionAllowed({action:'alle_send_quotation', dataId:value?._id})
     .then(ok => {
@@ -81,6 +91,12 @@ const isActionAllowed = ({action, dataId, user}) => {
     return Mission.findById(dataId)
       .then(mission => {
         return !!mission?.canRefuseMission(user)
+      })
+  }
+  if (action=='alle_cancel_mission') {
+    return Mission.findById(dataId)
+      .then(mission => {
+        return !!mission?.canCancelMission(user)
       })
   }
   if (action=='alle_send_quotation') {
