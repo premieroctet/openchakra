@@ -18,7 +18,6 @@ const alle_refuse_mission = ({value}, user) => {
       return Mission.findByIdAndUpdate(value._id, {ti_refuse_date: moment()})
     })
 }
-
 addAction('alle_refuse_mission', alle_refuse_mission)
 
 const alle_cancel_mission = ({value}, user) => {
@@ -28,7 +27,6 @@ const alle_cancel_mission = ({value}, user) => {
       return Mission.findByIdAndUpdate(value._id, {customer_cancel_date: moment()})
     })
 }
-
 addAction('alle_cancel_mission', alle_cancel_mission)
 
 const alle_send_quotation = ({value}, user) => {
@@ -49,7 +47,6 @@ const alle_send_quotation = ({value}, user) => {
         })
     })
 }
-
 addAction('alle_send_quotation', alle_send_quotation)
 
 const alle_accept_quotation = ({value}, user) => {
@@ -108,13 +105,28 @@ const alle_store_bill = ({value}, user) => {
     if (!ok) {return false}
     return Mission.findByIdAndUpdate(
       value._id,{
-        customer_accept_billing_date: null,
-        customer_refuse_billing_date: null,
+        customer_accept_bill_date: null,
+        customer_refuse_bill_date: null,
       }
     )
   })
 }
 addAction('alle_store_bill', alle_store_bill)
+
+
+const alle_send_bill = ({value}, user) => {
+  return isActionAllowed({action:'alle_send_bill', dataId:value?._id, user})
+    .then(ok => {
+      if (!ok) {return false}
+      return Mission.findByIdAndUpdate(
+        value._id,
+        {bill_sent_date: moment(),
+         customer_refuse_bill_date: null,
+         customer_accept_bill_date: null
+        })
+    })
+}
+addAction('alle_send_bill', alle_send_bill)
 
 const alle_show_bill = ({value}, user) => {
   return isActionAllowed({action:'alle_show_bill', dataId:value?._id, user})
@@ -127,7 +139,7 @@ const alle_accept_bill = ({value}, user) => {
       if (!ok) {return false}
       return Mission.findByIdAndUpdate(
         value._id,
-        {customer_accept_billing_date: moment()}
+        {customer_accept_bill_date: moment()}
       )
     })
 }
@@ -139,7 +151,7 @@ const alle_refuse_bill = ({value}, user) => {
       if (!ok) {return false}
       return Mission.findByIdAndUpdate(
         value._id,
-        {customer_refuse_billing_date: moment()}
+        {customer_refuse_bill_date: moment()}
       )
     })
 }
@@ -200,6 +212,11 @@ const isActionAllowed = ({action, dataId, user}) => {
     return Mission.findById(dataId)
       .populate('quotations')
       .then(mission => mission?.canStoreBill(user))
+  }
+  if (action=='alle_send_bill') {
+    return Mission.findById(dataId)
+      .populate('quotations')
+      .then(mission => mission?.canSendBill(user))
   }
   if (action=='alle_show_bill') {
     return Mission.findById(dataId)

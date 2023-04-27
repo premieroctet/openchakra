@@ -100,13 +100,13 @@ const MissionSchema = new Schema({
   ti_finished_date: {
     type: Date,
   },
-  billing_sent_date: {
+  bill_sent_date: {
     type: Date,
   },
-  customer_accept_billing_date: {
+  customer_accept_bill_date: {
     type: Date,
   },
-  customer_refuse_billing_date: {
+  customer_refuse_bill_date: {
     type: Date,
   },
   bill: {
@@ -116,13 +116,13 @@ const MissionSchema = new Schema({
 );
 
 MissionSchema.virtual('status').get(function() {
-  if (this.customer_accept_billing_date) {
+  if (this.customer_accept_bill_date) {
     return MISSION_STATUS_FINISHED
   }
-  if (this.customer_refuse_billing_date) {
+  if (this.customer_refuse_bill_date) {
     return MISSION_STATUS_DISPUTE
   }
-  if (this.billing_sent_date) {
+  if (this.bill_sent_date) {
     return MISSION_STATUS_BILL_SENT
   }
   if (this.ti_finished_date) {
@@ -213,6 +213,12 @@ MissionSchema.methods.canFinishMission = function(user) {
 MissionSchema.methods.canStoreBill = function(user) {
   return user.role==ROLE_TI &&
     [MISSION_STATUS_TO_BILL, MISSION_STATUS_DISPUTE].includes(this.status)
+}
+
+MissionSchema.methods.canSendBill = function(user) {
+  return user.role==ROLE_TI
+    && this.bill 
+    && [MISSION_STATUS_TO_BILL, MISSION_STATUS_DISPUTE].includes(this.status)
 }
 
 MissionSchema.methods.canShowBill = function(user) {

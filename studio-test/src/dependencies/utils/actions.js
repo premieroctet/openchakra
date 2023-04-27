@@ -530,4 +530,12 @@ export const ACTIONS = {
     return axios.post(url, body)
   },
 
+  alle_send_bill: ({value}) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_send_bill',
+      value,
+    }
+    return axios.post(url, body)
+  },
 }

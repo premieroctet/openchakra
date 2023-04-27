@@ -412,7 +412,11 @@ export const ACTIONS: IActions = {
     options: {},
     next: ['openPage'],
   },
-
+  alle_send_bill: {
+    label: 'AE Envoyer la facture',
+    options: {},
+    next: ['openPage'],
+  },
 }
 
 export const allowsActions = (component: IComponent) => {
