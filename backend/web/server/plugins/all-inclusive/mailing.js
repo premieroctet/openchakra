@@ -19,6 +19,7 @@ const sendQuotationSentToCustomer = ({quotation}) => {
     params: {
       user_full_name: quotation.mission.job.user.full_name,
       customer_firstname: quotation.firstname,
+      message: quotation.description,
     }
   })
 }

@@ -470,10 +470,10 @@ export const ACTIONS = {
     return axios.post(url, body)
   },
 
-  alle_ti_finished: ({ value, context, props, level, getComponentValue }) => {
+  alle_finish_mission: ({ value, context, props, level, getComponentValue }) => {
     let url = `${API_ROOT}/action`
     const body = {
-      action: 'alle_ti_finished',
+      action: 'alle_finish_mission',
       value,
       context,
     }

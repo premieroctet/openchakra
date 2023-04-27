@@ -557,7 +557,7 @@ const putAttribute = ({parent, attribute, value, user}) => {
           })
       }
       const populates=buildPopulates([attribute], model)
-      console.log(`Populates in PUT:${JSON.stringify(populates)}`)
+
       let query=mongooseModel.find({$or: [{_id: parent}, {origin: parent}]})
       query = populates.reduce((q, key) => q.populate(key), query)
       return query
@@ -643,5 +643,4 @@ module.exports = {
   idEqual,
   getExposedModels,
   simpleCloneModel,
-  buildPopulates,
 }

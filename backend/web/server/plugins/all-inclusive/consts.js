@@ -213,7 +213,7 @@ const TI_TIPS= {
   MISSION_STATUS_CUST_CANCELLED:"Le client a annulé sa demande de mission",
   MISSION_STATUS_QUOT_SENT:"Votre devis a bien été envoyé à l'entreprise et est en attente d'acceptation",
   MISSION_STATUS_QUOT_ACCEPTED:"Votre devis a été accepté. N'hésitez pas à contacter votre client si vous avez besoin de précisions complémentaires",
-  MISSION_STATUS_QUOT_REFUSED:"L'entreprise a refusé votre devis. VOus la contacter pour plus d'informations",
+  MISSION_STATUS_QUOT_REFUSED:"L'entreprise a refusé votre devis. Vous pouvez la contacter pour plus d'informations",
   MISSION_STATUS_TO_BILL:"La mission est terminée. Vous devez à présent déposer votre facture pour obtenir le paiement de votre mission",
   MISSION_STATUS_BILL_SENT:"Votre facture a été transmise à l'entreprise. Elle dispose de 48h pour la valider. Au delà de ce délai, le paiement de votre missions sera automatiquement effectué",
   MISSION_STATUS_FINISHED:"La mission s'achève. L'entreprise a la possibilité de laisser un avis sur votre mission. Gardez un oeil sur votre profil",

@@ -24,6 +24,7 @@ const QuotationDetailSchema = new Schema({
     type: Number,
     min: 0,
     max: 1.0,
+    set: v => v || 0,
     required: [true, 'Le taux de TVA est obligatoire'],
   },
   quotation: {

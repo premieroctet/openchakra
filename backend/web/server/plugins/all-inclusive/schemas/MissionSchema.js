@@ -5,6 +5,7 @@ const {
   MISSION_STATUS_ASKING,
   MISSION_STATUS_ASKING_ALLE,
   MISSION_STATUS_BILL_SENT,
+  MISSION_STATUS_CUST_CANCELLED,
   MISSION_STATUS_DISPUTE,
   MISSION_STATUS_FINISHED,
   MISSION_STATUS_QUOT_ACCEPTED,
@@ -115,7 +116,6 @@ const MissionSchema = new Schema({
 );
 
 MissionSchema.virtual('status').get(function() {
-  console.log(`${this._id}:${this.job}`)
   if (this.customer_accept_billing_date) {
     return MISSION_STATUS_FINISHED
   }
@@ -172,35 +172,42 @@ MissionSchema.virtual("location_str").get(function() {
 })
 
 MissionSchema.methods.canRefuseMission = function(user) {
-  console.log(`${this.name}:${this.status} ${this.job}`)
   return user.role==ROLE_TI && this.status==MISSION_STATUS_ASKING
 }
 
 MissionSchema.methods.canCancelMission = function(user) {
   return user.role==ROLE_COMPANY_BUYER && this.status==MISSION_STATUS_ASKING
+  return true
 }
 
-MissionSchema.methods.canCreateQuotation = function() {
+MissionSchema.methods.canCreateQuotation = function(user) {
+  return false
   return this.status==MISSION_STATUS_ASKING
 }
 
 // TODO: fsm
-MissionSchema.methods.canRefuse = function(user) {
-  return true
+MissionSchema.methods.canAcceptQuotation = function(user) {
+  return user.role==ROLE_COMPANY_BUYER && this.status==MISSION_STATUS_QUOT_SENT
+}
+
+// TODO: fsm
+MissionSchema.methods.canRefuseQuotation = function(user) {
+  return user.role==ROLE_COMPANY_BUYER && this.status==MISSION_STATUS_QUOT_SENT
 }
 
 MissionSchema.methods.canShowQuotation = function(user) {
-  return this.quotations?.length>0
+  return !lodash.isEmpty(this.quotations)
 }
 
 MissionSchema.methods.canEditQuotation = function(user) {
-  return ROLE_TI
-  && [MISSION_STATUS_ASKING || MISSION_STATUS_QUOT_SENT].include(this.status)
+  return user.role==ROLE_TI
+  && [MISSION_STATUS_ASKING, MISSION_STATUS_QUOT_SENT].includes(this.status)
   && this.quotations?.length>0
 }
 
 MissionSchema.methods.canFinishMission = function(user) {
-  return user.role==ROLE_TI && MISSION_STATUS_QUOT_ACCEPTED==this.status
+  const res=user.role==ROLE_TI && MISSION_STATUS_QUOT_ACCEPTED==this.status
+  return res
 }
 
 MissionSchema.methods.canStoreBill = function(user) {
