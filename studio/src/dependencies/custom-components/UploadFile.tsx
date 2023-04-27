@@ -6,6 +6,7 @@ import mime from 'mime'
 import styled from '@emotion/styled'
 import xmljs from 'xml-js'
 import { ACTIONS } from '../utils/actions';
+import { generateUUID } from '../utils/crypto';
 import { getExtension } from './MediaWrapper'
 import { s3Config, S3UrlRessource } from '../utils/s3Config'
 import FileManager from '../utils/S3filemanager'
@@ -23,7 +24,15 @@ function createFileFromBlob(folder: string, filename: string, fileData: Blob) {
 }
 
 const uploadFileToS3 = async (file: File) => {
-  return await FileManager.createFile(file.name, file, '', file.type, [])
+
+  if (!s3Config.rootFolderName) {
+    throw new Error(
+      `No root folder. Please fill in REACT_APP_S3_ROOTPATH`
+    );
+  }
+
+  const fileNameForS3 = s3Config.rootFolderName ? `${s3Config.rootFolderName}/public/${generateUUID()}${file.name}` : file.name
+  return await FileManager.createFile(fileNameForS3, file, '', file.type, [])
 }
 
 const uploadMultipleToS3 = async (folder: string, unzip: any) => {
@@ -75,13 +84,11 @@ const UploadFile = ({
     s3Config.secretAccessKey || '',
   )
   const [uploadInfo, setUploadInfo] = useState('')
-  const [file, setFile] = useState<File | null>()
   const [s3File, setS3File] = useState<string|null>()
 
   const onFileNameChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
     const currentFile = e.target.files && e.target.files[0]
-    setFile(currentFile)
     if (currentFile) {
       await handleUpload(currentFile)
     }
