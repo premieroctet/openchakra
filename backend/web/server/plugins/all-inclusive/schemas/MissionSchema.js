@@ -198,4 +198,28 @@ MissionSchema.methods.canFinishMission = function(user) {
   return user.role==ROLE_TI && MISSION_STATUS_QUOT_ACCEPTED==this.status
 }
 
+MissionSchema.methods.canStoreBill = function(user) {
+  return user.role==ROLE_TI &&
+    [MISSION_STATUS_TO_BILL, MISSION_STATUS_DISPUTE].includes(this.status)
+}
+
+MissionSchema.methods.canShowBill = function(user) {
+  return !!this.bill
+}
+
+MissionSchema.methods.canAcceptBill = function(user) {
+  return user.role==ROLE_COMPANY_BUYER && !!this.bill
+  && this.status==MISSION_STATUS_BILL_SENT
+}
+
+MissionSchema.methods.canRefuseBill = function(user) {
+  return user.role==ROLE_COMPANY_BUYER && !!this.bill
+  && this.status==MISSION_STATUS_BILL_SENT
+}
+
+MissionSchema.methods.canLeaveComment = function(user) {
+  return user.role==ROLE_COMPANY_BUYER && !!this.bill
+  && this.status==MISSION_STATUS_FINISHED
+}
+
 module.exports = MissionSchema;

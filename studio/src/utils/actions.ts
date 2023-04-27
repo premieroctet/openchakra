@@ -387,6 +387,31 @@ export const ACTIONS: IActions = {
     options: {},
     next: ['openPage'],
   },
+  alle_store_bill: {
+    label: 'AE Déposer la facture',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_show_bill: {
+    label: 'AE Voir la facture',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_accept_bill: {
+    label: 'AE Accepter la facture',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_refuse_bill: {
+    label: 'AE Refuser la facture',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_leave_comment: {
+    label: 'AE Laisser un commentaire',
+    options: {},
+    next: ['openPage'],
+  },
 
 }
 

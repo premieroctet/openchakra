@@ -97,6 +97,54 @@ const alle_ti_finished = ({value, user}) => {
 }
 addAction('alle_ti_finished', alle_ti_finished)
 
+const alle_store_bill = ({value, user}) => {
+  return isActionAllowed({action:'alle_store_bill', dataId:value?._id, user})
+  .then(ok => {
+    if (!ok) {return false}
+    return Mission.findByIdAndUpdate(
+      value._id,{
+        customer_accept_billing_date: null,
+        customer_refuse_billing_date: null,
+      }
+    )
+  })
+}
+addAction('alle_store_bill', alle_show_quotation)
+
+const alle_show_bill = ({value, user}) => {
+  return isActionAllowed({action:'alle_show_bill', dataId:value?._id, user})
+}
+addAction('alle_show_bill', alle_show_bill)
+
+const alle_accept_bill = ({value, user}) => {
+  return isActionAllowed({action:'alle_accept_bill', dataId:value?._id, user})
+    .then(ok => {
+      if (!ok) {return false}
+      return Mission.findByIdAndUpdate(
+        value._id,
+        {customer_accept_billing_date: moment()}
+      )
+    })
+}
+addAction('alle_accept_bill', alle_accept_bill)
+
+const alle_refuse_bill = ({value, user}) => {
+  return isActionAllowed({action:'alle_refuse_bill', dataId:value?._id, user})
+    .then(ok => {
+      if (!ok) {return false}
+      return Mission.findByIdAndUpdate(
+        value._id,
+        {customer_refuse_billing_date: moment()}
+      )
+    })
+}
+addAction('alle_refuse_bill', alle_refuse_bill)
+
+const alle_leave_comment = ({value, user}) => {
+  return isActionAllowed({action:'alle_leave_comment', dataId:value?._id, user})
+}
+addAction('alle_leave_comment', alle_leave_comment)
+
 const isActionAllowed = ({action, dataId, user}) => {
   if (action=='alle_create_quotation') {
     if (dataId) {
@@ -156,6 +204,41 @@ const isActionAllowed = ({action, dataId, user}) => {
       .populate(['quotations', 'job'])
       .then(mission => {
         return /**user.role==ROLE_COMPANY_BUYER && */ !!mission?.canFinishMission(user)
+      })
+  }
+  if (action=='alle_store_bill') {
+    return Mission.findById(dataId)
+      .populate(['quotations', 'job'])
+      .then(mission => {
+        return /**user.role==ROLE_COMPANY_BUYER && */ !!mission?.canStoreBill(user)
+      })
+  }
+  if (action=='alle_show_bill') {
+    return Mission.findById(dataId)
+      .populate(['quotations', 'job'])
+      .then(mission => {
+        return /**user.role==ROLE_COMPANY_BUYER && */ !!mission?.canShowBill(user)
+      })
+  }
+  if (action=='alle_accept_bill') {
+    return Mission.findById(dataId)
+      .populate(['quotations', 'job'])
+      .then(mission => {
+        return /**user.role==ROLE_COMPANY_BUYER && */ !!mission?.canAcceptBill(user)
+      })
+  }
+  if (action=='alle_refuse_bill') {
+    return Mission.findById(dataId)
+      .populate(['quotations', 'job'])
+      .then(mission => {
+        return /**user.role==ROLE_COMPANY_BUYER && */ !!mission?.canRefuseBill(user)
+      })
+  }
+  if (action=='alle_leave_comment') {
+    return Mission.findById(dataId)
+      .populate(['quotations', 'job'])
+      .then(mission => {
+        return /**user.role==ROLE_COMPANY_BUYER && */ !!mission?.canLeaveComment(user)
       })
   }
   return Promise.resolve(true)

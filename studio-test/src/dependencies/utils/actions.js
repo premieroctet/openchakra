@@ -480,5 +480,54 @@ export const ACTIONS = {
     return axios.post(url, body)
   },
 
+  alle_store_bill: ({ value, context, props, level, getComponentValue }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_store_bill',
+      value,
+      context,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_show_bill: ({ value, context, props, level, getComponentValue }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_show_bill',
+      value,
+      context,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_accept_bill: ({ value, context, props, level, getComponentValue }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_accept_bill',
+      value,
+      context,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_refuse_bill: ({ value, context, props, level, getComponentValue }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_refuse_bill',
+      value,
+      context,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_leave_comment: ({ value, context, props, level, getComponentValue }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_leave_comment',
+      value,
+      context,
+    }
+    return axios.post(url, body)
+  },
 
 }
