@@ -12,6 +12,7 @@ const {
   MISSION_STATUS_QUOT_SENT,
   MISSION_STATUS_TI_REFUSED,
   MISSION_STATUS_TO_BILL,
+  ROLE_COMPANY_BUYER,
   ROLE_TI,
   TI_TIPS
 } = require('../consts')
@@ -173,6 +174,10 @@ MissionSchema.virtual("location_str").get(function() {
 MissionSchema.methods.canRefuseMission = function(user) {
   console.log(`${this.name}:${this.status} ${this.job}`)
   return user.role==ROLE_TI && this.status==MISSION_STATUS_ASKING
+}
+
+MissionSchema.methods.canCancelMission = function(user) {
+  return user.role==ROLE_COMPANY_BUYER && this.status==MISSION_STATUS_ASKING
 }
 
 MissionSchema.methods.canCreateQuotation = function() {
