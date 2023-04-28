@@ -30,7 +30,7 @@ const sendAppNotification = (message) => {
       body: message,
     },
   }
-  const topic=`user_all`
+  const topic=`user_ALL`
 
   return app.messaging().sendToTopic(topic, payload)
     .then(response => {
