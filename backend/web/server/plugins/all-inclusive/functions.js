@@ -70,7 +70,7 @@ setPreprocessGet(preprocessGet)
 
 const preCreate = ({model, params, user}) => {
   console.log(`preCreate ${model} with ${JSON.stringify(params)}`)
-  if (['jobUser', 'request', 'mission'].includes(model)) {
+  if (['jobUser', 'request', 'mission', 'comment'].includes(model)) {
     params.user=user
   }
   if (model=='quotation' && 'mission' in params) {
@@ -105,11 +105,6 @@ USER_MODELS.forEach(m => {
   declareEnumField({model: m, field: 'coaching', enumValues: COACHING})
   declareVirtualField({model: m, field: 'password2', instance: 'String'})
   declareEnumField({model: m, field: 'availability', enumValues: AVAILABILITY})
-  declareVirtualField({model: m, field: 'comments', instance: 'Array', requires: '', multiple: true,
-    caster: {
-      instance: 'ObjectID',
-      options: {ref: 'comment'}}
-  })
   declareVirtualField({model: m, field: 'quotations', instance: 'Array', requires: '', multiple: true,
     caster: {
       instance: 'ObjectID',
@@ -208,6 +203,11 @@ declareEnumField({model: 'mission', field: 'frequency', enumValues: MISSION_FREQ
 declareVirtualField({model: 'mission', field: 'location_str', instance: 'String', requires: 'customer_location,foreign_location'})
 declareVirtualField({model: 'mission', field: 'ti_tip', instance: 'String', requires: ''})
 declareVirtualField({model: 'mission', field: 'customer_tip', instance: 'String', requires: ''})
+declareVirtualField({model: 'mission', field: 'comments', instance: 'Array', requires: '', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'comment'}}
+})
 
 
 declareVirtualField({model: 'quotation', field: 'details', instance: 'Array', requires: '', multiple: true,

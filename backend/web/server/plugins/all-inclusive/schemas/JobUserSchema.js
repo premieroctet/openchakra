@@ -110,12 +110,6 @@ JobUserSchema.virtual("recommandations", {
   foreignField: 'job' // is equal to foreignField
 });
 
-JobUserSchema.virtual("comments", {
-  ref: "comment", // The Model to use
-  localField: "_id", // Find in Model, where localField
-  foreignField: 'job' // is equal to foreignField
-});
-
 JobUserSchema.virtual("missions", {
   ref: "mission", // The Model to use
   localField: "_id", // Find in Model, where localField

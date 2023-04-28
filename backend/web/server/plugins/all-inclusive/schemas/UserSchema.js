@@ -231,12 +231,12 @@ UserSchema.virtual("recommandations_note").get(function() {
 })
 
 UserSchema.virtual("comments_count").get(function() {
-  const recos=lodash(this.jobs||[]).map(j => j.comments || []).flatten()
+  const recos=lodash(this.missions||[]).map(j => j.comments || []).flatten()
   return recos.size()
 })
 
 UserSchema.virtual("comments_note").get(function() {
-  const recos=lodash(this.jobs||[]).map(j => j.comments || []).flatten()
+  const recos=lodash(this.missions||[]).map(j => j.comments || []).flatten()
   return recos.sumBy('note')/recos.size()
 })
 

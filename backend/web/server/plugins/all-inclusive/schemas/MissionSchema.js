@@ -164,6 +164,13 @@ MissionSchema.virtual("quotations", {
   foreignField: "mission" // is equal to foreignField
 });
 
+MissionSchema.virtual("comments", {
+  ref: "comment", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: 'mission' // is equal to foreignField
+});
+
+
 MissionSchema.virtual("location_str").get(function() {
   const locations=[]
   if (this.customer_location) { locations.push("chez le client")}
@@ -217,7 +224,7 @@ MissionSchema.methods.canStoreBill = function(user) {
 
 MissionSchema.methods.canSendBill = function(user) {
   return user.role==ROLE_TI
-    && this.bill 
+    && this.bill
     && [MISSION_STATUS_TO_BILL, MISSION_STATUS_DISPUTE].includes(this.status)
 }
 
