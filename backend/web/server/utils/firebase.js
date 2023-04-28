@@ -18,7 +18,7 @@ const sendUserNotification = (user_id, message) => {
 
   return app.messaging().sendToTopic(topic, payload)
     .then(response => {
-      console.log(JSON.stringify(response))
+      console.debug(`Sent ${topic}/${payload.notification.title}/${payload.notification.body}:${JSON.stringify(response)}`)
       return response
     })
 }
@@ -34,7 +34,7 @@ const sendAppNotification = (message) => {
 
   return app.messaging().sendToTopic(topic, payload)
     .then(response => {
-      console.log(JSON.stringify(response))
+      console.debug(`Sent ${topic}/${payload.notification.title}/${payload.notification.body}:${JSON.stringify(response)}`)
       return response
     })
 }
