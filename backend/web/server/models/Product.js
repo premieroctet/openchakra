@@ -5,7 +5,7 @@ let ProductSchema=null
 
 try {
   ProductSchema=require(`../plugins/${getDataModel()}/schemas/ProductSchema`)
-  PostSchema.plugin(require('mongoose-lean-virtuals'))
+  ProductSchema.plugin(require('mongoose-lean-virtuals'))
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {

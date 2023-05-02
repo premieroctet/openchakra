@@ -560,7 +560,7 @@ const buildHooks = (components: IComponents) => {
 
         let query= `get(\`${apiUrl}\`)
         ${thenClause}
-        .catch(err => err.code!='ERR_NETWORK' && alert(err?.response?.data || err))`
+        .catch(err => !(err.response?.status==401) && err.code!='ERR_NETWORK' && alert(err?.response?.data || err))`
         if (dp.id=='root' && singlePage) {
           query=`// For single data page\nif (id) {\n${query}\n}`
         }
@@ -703,6 +703,7 @@ import {ensureToken} from './dependencies/utils/token'
 import {useLocation} from "react-router-dom"
 import { useUserContext } from './dependencies/context/user'
 import { getComponentDataValue } from './dependencies/utils/values'
+import theme from './dependencies/theme/theme'
 ${extraImports.join('\n')}
 
 ${dynamics || ''}
@@ -739,7 +740,7 @@ const ${componentName} = () => {
   ${filterStates}
 
   return (
-  <ChakraProvider resetCSS>
+  <ChakraProvider resetCSS theme={theme}>
     <Fonts />
     <Metadata
       metaTitle={'${metaTitle}'}

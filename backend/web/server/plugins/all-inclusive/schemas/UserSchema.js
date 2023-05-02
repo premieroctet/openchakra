@@ -115,6 +115,9 @@ const UserSchema = new Schema({
   address: {
     type: String,
   },
+  billing_address: {
+    type: String,
+  },
   company_name: {
     type: String,
     required: [function() { return this.role==ROLE_COMPANY_BUYER}, "Le nom de l'entreprise' est obligatoire"],
@@ -178,18 +181,20 @@ UserSchema.virtual("full_name").get(function() {
 UserSchema.virtual("password2")
 
 UserSchema.virtual('profile_progress').get(function() {
-  const attributes='firstname lastname email phone birthday nationality picture identity_proof_1 iban'.split(' ')
-  const companyAttributes='company_name company_status siret status_report insurance_type insurance_report company_picture'
-    .split(' ')
-  let filled=attributes.map(att => !!lodash.get(this, att))
-  if (this.role==ROLE_COMPANY_BUYER) {
-    filled=[...filled, ...companyAttributes.map(att => !!lodash.get(this, att))]
-  }
+  const attributes1='firstname lastname email phone birthday nationality picture identity_proof_1 iban'.split(' ')
+  const attrbiutes2='company_name company_status siret status_report insurance_type insurance_report company_picture'.split(' ')
+  let filled=[...attributes1, ...attrbiutes2].map(att => !!lodash.get(this, att))
   return (filled.filter(v => !!v).length*1.0/filled.length)*100
 });
 
 UserSchema.virtual("jobs", {
   ref: "jobUser", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "user" // is equal to foreignField
+});
+
+UserSchema.virtual("missions", {
+  ref: "mission", // The Model to use
   localField: "_id", // Find in Model, where localField
   foreignField: "user" // is equal to foreignField
 });
@@ -212,6 +217,12 @@ UserSchema.virtual("requests", {
   foreignField: "user" // is equal to foreignField
 });
 
+UserSchema.virtual("recommandations", {
+  ref: "recommandation", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "job.user._id" // is equal to foreignField
+});
+
 UserSchema.virtual("qualified_str").get(function() {
   return this.qualified ? 'qualifié' : 'à qualifier'
 });
@@ -219,5 +230,47 @@ UserSchema.virtual("qualified_str").get(function() {
 UserSchema.virtual("visible_str").get(function() {
   return this.hidden ? 'masqué' : 'visible'
 });
+
+UserSchema.virtual("finished_missions_count").get(function() {
+  if (lodash.isEmpty(this.mission)) {
+    return 0
+  }
+  return this.missions.filter(m => m.status==QUOTATION_STATUS_FINISHED).length
+})
+
+UserSchema.virtual("recommandations_count").get(function() {
+  console.error('Not implemented')
+  return 0
+})
+
+UserSchema.virtual("comments_note").get(function() {
+  console.error('Not implemented')
+  return 0
+})
+
+UserSchema.virtual("revenue").get(function() {
+  console.error('Not implemented')
+  return 0
+})
+
+UserSchema.virtual("revenue_to_come").get(function() {
+  console.error('Not implemented')
+  return 0
+})
+
+UserSchema.virtual("accepted_quotations_count").get(function() {
+  console.error('Not implemented')
+  return 0
+})
+
+UserSchema.virtual("comments_count").get(function() {
+  console.error('Not implemented')
+  return 0
+})
+
+UserSchema.virtual("profile_shares_count").get(function() {
+  console.error('Not implemented')
+  return 0
+})
 
 module.exports = UserSchema;

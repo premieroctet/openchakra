@@ -7,3 +7,5 @@ export function isJsonString(str: string) {
     }
     return true
   }
+
+  export const NOT_CONNECTED="NOT_CONNECTED"

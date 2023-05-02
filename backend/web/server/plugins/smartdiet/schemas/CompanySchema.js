@@ -64,7 +64,7 @@ CompanySchema.virtual('likes_count').get(function() {
     .then(contents => {
       var count=0
       contents.forEach(content => {
-        count+=lodash.countBy(content.likes||[], l => l.company._id==this._id) || 0
+        count+=lodash.filter(content.likes||[], l => l.company._id==this._id)?.length || 0
       });
       return count
     })
@@ -94,7 +94,8 @@ CompanySchema.virtual('comments_count').get(function() {
 })
 
 CompanySchema.virtual('contents_count').get(function() {
-  return Promise.resolve(mongoose.model('content').countDocuments())
+  // TODO WTF
+  return 0
 })
 
 module.exports = CompanySchema

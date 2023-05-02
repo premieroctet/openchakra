@@ -66,7 +66,7 @@ const preprocessGet = ({model, fields, id, user}) => {
 setPreprocessGet(preprocessGet)
 
 const preCreate = ({model, params, user}) => {
-  if (['jobUser', 'request'].includes(model)) {
+  if (['jobUser', 'request', 'mission'].includes(model)) {
     params.user=user
   }
   return Promise.resolve({model, params})
@@ -109,7 +109,27 @@ USER_MODELS.forEach(m => {
   })
   declareVirtualField({model: m, field: 'qualified_str', instance: 'String'})
   declareVirtualField({model: m, field: 'visible_str', instance: 'String'})
+  declareVirtualField({model: m, field: 'recommandations', instance: 'Array', requires: '', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'recommmandation'}}
+  })
+  declareVirtualField({model: m, field: 'finished_missions_count', instance: 'Number', requires: 'missions'})
+  declareVirtualField({model: m, field: 'missions', instance: 'Array', requires: '', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'mission'}}
+  })
+  declareVirtualField({model: m, field: 'recommandations_count', instance: 'Number', requires: 'recommandations'})
+  declareVirtualField({model: m, field: 'comments_note', instance: 'Number', requires: 'comments'})
+  declareVirtualField({model: m, field: 'revenue', instance: 'Number', requires: 'missions.quotations'})
+  declareVirtualField({model: m, field: 'revenue_to_come', instance: 'Number', requires: 'missions.quotations'})
+  declareVirtualField({model: m, field: 'accepted_quotations_count', instance: 'Number', requires: 'missions.quotations'})
+  declareVirtualField({model: m, field: 'comments_count', instance: 'Number', requires: 'comments'})
+  declareVirtualField({model: m, field: 'profile_shares_count', instance: 'Number', requires: ''})
 })
+
+
 
 declareEnumField({model: 'company', field: 'status', enumValues: COMPANY_STATUS})
 declareEnumField({model: 'jobUser', field: 'experience', enumValues: EXPERIENCE})
@@ -151,3 +171,12 @@ declareEnumField({model: 'experience', field: 'contract_type', enumValues: CONTR
 
 declareVirtualField({model: 'quotation', field: 'status', instance: 'String', enumValues: QUOTATION_STATUS,
   requires: 'billing_sent_date,customer_accept_billing_date,customer_accept_quotation_date,customer_refuse_billing_date,customer_refuse_quotation_date,quotation_sent_date,ti_finished_date,ti_refuse_date'})
+
+declareVirtualField({model: 'mission', field: 'status', instance: 'String', enumValues: QUOTATION_STATUS,
+    requires: 'quotations'})
+
+declareVirtualField({model: 'mission', field: 'quotations', instance: 'Array', requires: '', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'quotation'}}
+})
