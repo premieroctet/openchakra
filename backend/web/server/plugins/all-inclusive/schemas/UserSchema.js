@@ -193,20 +193,8 @@ UserSchema.virtual("jobs", {
   foreignField: "user" // is equal to foreignField
 });
 
-UserSchema.virtual("missions", {
+UserSchema.virtual("customer_missions", {
   ref: "mission", // The Model to use
-  localField: "_id", // Find in Model, where localField
-  foreignField: "user" // is equal to foreignField
-});
-
-UserSchema.virtual("comments", {
-  ref: "comment", // The Model to use
-  localField: "_id", // Find in Model, where localField
-  foreignField: "user" // is equal to foreignField
-});
-
-UserSchema.virtual("quotations", {
-  ref: "quotation", // The Model to use
   localField: "_id", // Find in Model, where localField
   foreignField: "user" // is equal to foreignField
 });
@@ -215,12 +203,6 @@ UserSchema.virtual("requests", {
   ref: "request", // The Model to use
   localField: "_id", // Find in Model, where localField
   foreignField: "user" // is equal to foreignField
-});
-
-UserSchema.virtual("recommandations", {
-  ref: "recommandation", // The Model to use
-  localField: "_id", // Find in Model, where localField
-  foreignField: "job.user._id" // is equal to foreignField
 });
 
 UserSchema.virtual("qualified_str").get(function() {
@@ -239,13 +221,23 @@ UserSchema.virtual("finished_missions_count").get(function() {
 })
 
 UserSchema.virtual("recommandations_count").get(function() {
-  console.error('Not implemented')
-  return 0
+  const recos=lodash(this.jobs||[]).map(j => j.recommandations || []).flatten()
+  return recos.size()
+})
+
+UserSchema.virtual("recommandations_note").get(function() {
+  const recos=lodash(this.jobs||[]).map(j => j.recommandations || []).flatten()
+  return recos.sumBy('note')/recos.size()
+})
+
+UserSchema.virtual("comments_count").get(function() {
+  const recos=lodash(this.jobs||[]).map(j => j.comments || []).flatten()
+  return recos.size()
 })
 
 UserSchema.virtual("comments_note").get(function() {
-  console.error('Not implemented')
-  return 0
+  const recos=lodash(this.jobs||[]).map(j => j.comments || []).flatten()
+  return recos.sumBy('note')/recos.size()
 })
 
 UserSchema.virtual("revenue").get(function() {
@@ -259,11 +251,6 @@ UserSchema.virtual("revenue_to_come").get(function() {
 })
 
 UserSchema.virtual("accepted_quotations_count").get(function() {
-  console.error('Not implemented')
-  return 0
-})
-
-UserSchema.virtual("comments_count").get(function() {
   console.error('Not implemented')
   return 0
 })

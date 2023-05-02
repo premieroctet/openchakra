@@ -5,16 +5,18 @@ const {
 const Skill = require('../../server/models/Skill')
 const User = require('../../server/models/User')
 const JobUser = require('../../server/models/JobUser')
+require('../../server/models/Mission')
 const moment=require('moment')
 const mongoose = require('mongoose')
 const {forceDataModelAllInclusive}=require('../utils')
 
 forceDataModelAllInclusive()
-const {MONGOOSE_OPTIONS} = require('../../server/utils/database')
+require('../../server/plugins/all-inclusive/functions')
+const {MONGOOSE_OPTIONS, getExposedModels} = require('../../server/utils/database')
 
 jest.setTimeout(20000)
 
-describe('Test virtual single ref', () => {
+describe('Test DB', () => {
 
   beforeAll(async() => {
     await mongoose.connect(`mongodb://localhost/test${moment().unix()}`, MONGOOSE_OPTIONS)
@@ -22,7 +24,7 @@ describe('Test virtual single ref', () => {
         firstname: 'Sébastien', lastname: 'Auvray', birthday: moment(), cguAccepted: true,
         password: 'prout', email: 's@a.com', coaching: COACH_ALLE, role: ROLE_TI})
     const job=await JobUser.create({name: 'Peintre', user})
-    const skill=await Skill.create({name: 'A skill', job})
+    await Skill.create({name: 'A skill', job})
   })
 
   afterAll(async() => {
@@ -31,17 +33,9 @@ describe('Test virtual single ref', () => {
   })
 
   it('must load skills', async() => {
-    const skills=await Skill.find()
+    const skill=await Skill.findOne()
     const user=await User.findOne().populate({"path":"jobs","populate":"skills"})
-    expect(user.jobs[0].skills).toHaveLength(1)
-    await JobUser.update({customer_location: false, foreign_location: false})
-    expect((await JobUser.findOne()).location_str).toEqual('')
-    await JobUser.update({customer_location: true, foreign_location: false})
-    expect((await JobUser.findOne()).location_str).toEqual('Chez le client')
-    await JobUser.update({customer_location: false, foreign_location: true})
-    expect((await JobUser.findOne()).location_str).toEqual('À distance')
-    await JobUser.update({customer_location: true, foreign_location: true})
-    expect((await JobUser.findOne()).location_str).toEqual('Chez le client et à distance')
+    expect(user.jobs[0].skills[0].toObject()).toMatchObject(skill.toObject())
   })
 
   it('must display location_str', async() => {
@@ -53,6 +47,16 @@ describe('Test virtual single ref', () => {
     expect((await JobUser.findOne()).location_str).toEqual('À distance')
     await JobUser.update({customer_location: true, foreign_location: true})
     expect((await JobUser.findOne()).location_str).toEqual('Chez le client et à distance')
+  })
+
+  it('must return level 2 attributes', async() => {
+    const models=getExposedModels()
+    const attrs=Object.keys(models.mission.attributes.value())
+    expect(attrs).toContain('job.user.full_name')
+  })
+
+  it('getModels must not cycle', async() => {
+    expect(() => getExposedModels()).not.toThrowError(RangeError)
   })
 
 })

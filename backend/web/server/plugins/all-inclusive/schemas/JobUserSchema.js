@@ -73,39 +73,50 @@ JobUserSchema.virtual("location_str").get(function() {
 JobUserSchema.virtual("activities", {
   ref: "activity", // The Model to use
   localField: "_id", // Find in Model, where localField
-  foreignField: 'jobUser' // is equal to foreignField
+  foreignField: 'job' // is equal to foreignField
 });
 
 JobUserSchema.virtual("skills", {
   ref: "skill", // The Model to use
   localField: "_id", // Find in Model, where localField
-  foreignField: 'jobUser' // is equal to foreignField
+  foreignField: 'job' // is equal to foreignField
 });
 
 JobUserSchema.virtual("experiences", {
   ref: "experience", // The Model to use
   localField: "_id", // Find in Model, where localField
-  foreignField: 'jobUser' // is equal to foreignField
+  foreignField: 'job' // is equal to foreignField
 });
 
 JobUserSchema.virtual("diploma", {
   ref: "diploma", // The Model to use
   localField: "_id", // Find in Model, where localField
-  foreignField: 'jobUser' // is equal to foreignField
+  foreignField: 'job' // is equal to foreignField
 });
 
 JobUserSchema.virtual("photos", {
   ref: "photo", // The Model to use
   localField: "_id", // Find in Model, where localField
-  foreignField: 'jobUser' // is equal to foreignField
+  foreignField: 'job' // is equal to foreignField
 });
 
 JobUserSchema.virtual("recommandations", {
   ref: "recommandation", // The Model to use
   localField: "_id", // Find in Model, where localField
-  foreignField: 'jobUser' // is equal to foreignField
+  foreignField: 'job' // is equal to foreignField
 });
 
+JobUserSchema.virtual("comments", {
+  ref: "comment", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: 'job' // is equal to foreignField
+});
+
+JobUserSchema.virtual("missions", {
+  ref: "mission", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "job" // is equal to foreignField
+});
 
 
 module.exports = JobUserSchema;
