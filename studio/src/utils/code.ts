@@ -748,7 +748,7 @@ const ${componentName} = () => {
   ${hooksCode}
   ${filterStates}
 
-  return (
+  return ${redirectPage ? 'user===null && ': ''} (
   <ChakraProvider resetCSS theme={theme}>
     <Fonts />
     <Metadata
