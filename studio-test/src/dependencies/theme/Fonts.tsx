@@ -31,8 +31,15 @@ const Fonts = () => (
       @font-face {
         font-family: 'Futura';
         src: local('Futura'), 
-            url('fonts/Futura Medium.otf') format('opentype');
+            url('fonts/Futura-medium.otf') format('opentype');
         font-weight: normal;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: 'Futura';
+        src: local('Futura'), 
+            url('fonts/futura.ttf') format('truetype');
+        font-weight: 700;
         font-style: normal;
       }
       @font-face {
@@ -112,9 +119,10 @@ const Fonts = () => (
 )
 
 export const fontsName = [
-  'Crapaud',
   'berthold-akzidenz',
-  'berthold-akzidenz condensed'
+  'berthold-akzidenz condensed',
+  'Crapaud',
+  'Futura'
 ]
 
 export default Fonts
