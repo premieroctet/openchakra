@@ -5,6 +5,5 @@ import IconCheckPreview from './IconCheckPreview'
 
 registerComponent({
   componentType: 'IconCheck',
-  previewComponent: IconCheckPreview,
   componentPanel: IconCheckPanel
 })

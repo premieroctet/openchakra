@@ -1,60 +1,24 @@
 import React from 'react'
 import { 
-  Button,
   Input, 
-  useDisclosure,
 } from '@chakra-ui/react'
-
-import { useForm } from '~hooks/useForm'
 import FormControl from '~components/inspector/controls/FormControl'
+import { useForm } from '~hooks/useForm'
 import usePropsSelector from '~hooks/usePropsSelector'
-import MediaModal from '~components/inspector/inputs/MediaModal'
+import ImageControl from '~components/inspector/controls/ImageControl'
 
 
 const ImagePanel = () => {
   const { setValueFromEvent } = useForm()
 
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const src = usePropsSelector('src')
-  const fallbackSrc = usePropsSelector('fallbackSrc')
   const alt = usePropsSelector('alt')
   const htmlHeight = usePropsSelector('htmlHeight')
   const htmlWidth = usePropsSelector('htmlWidth')
-  const srcWhenChecked = usePropsSelector('srcWhenChecked')
 
   return (
     <>
-      <FormControl label="Source" htmlFor="src">
-        <Input
-          placeholder="Image URL"
-          value={src || ''}
-          size="sm"
-          name="src"
-          onChange={setValueFromEvent}
-        />
-        <Button size={'xs'} onClick={onOpen}>...</Button>
-      </FormControl>
-
-      <FormControl label="Source when checked" htmlFor="src">
-        <Input
-          placeholder="Image URL"
-          value={src || ''}
-          size="sm"
-          name="srcWhenChecked"
-          onChange={setValueFromEvent}
-        />
-        <Button size={'xs'} onClick={onOpen}>...</Button>
-      </FormControl>
-
-      <FormControl label="Fallback Src" htmlFor="fallbackSrc">
-        <Input
-          placeholder="Image URL"
-          value={fallbackSrc || ''}
-          size="sm"
-          name="fallbackSrc"
-          onChange={setValueFromEvent}
-        />
-      </FormControl>
+      <ImageControl label="Source" name={'src'} />
+      <ImageControl label="Fallback Src" name={'fallbackSrc'} />
 
       <FormControl label="Alt" htmlFor="alt">
         <Input
@@ -82,8 +46,6 @@ const ImagePanel = () => {
           onChange={setValueFromEvent}
         />
       </FormControl>
-    
-      <MediaModal isOpen={isOpen} onClose={onClose} />
     </>
   )
 }

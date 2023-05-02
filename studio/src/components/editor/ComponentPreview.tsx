@@ -18,6 +18,7 @@ import AvatarPreview, {
 } from '~components/editor/previews/AvatarPreview'
 import ButtonPreview from '~components/editor/previews/ButtonPreview'
 import NumberInputPreview from '~components/editor/previews/NumberInputPreview'
+import IconCheckPreview from '~components/editor/previews/IconCheckPreview'
 import RadioGroupPreview from '~components/editor/previews/RadioGroupPreview'
 import PreviewContainer from '~components/editor/PreviewContainer'
 import SelectPreview from '~components/editor/previews/SelectPreview'
@@ -135,6 +136,7 @@ const ComponentPreview: React.FC<{
     case 'Center':
     case 'Container':
     case 'VisuallyHidden':
+      console.log('here is one')
       return (
         <WithChildrenPreviewContainer
           enableVisualHelper
@@ -193,6 +195,8 @@ const ComponentPreview: React.FC<{
       return <SelectPreview component={component} />
     case 'NumberInput':
       return <NumberInputPreview component={component} />
+    case 'IconCheck':
+      return <IconCheckPreview component={component} />
     default:
       return null
   }
