@@ -6,24 +6,40 @@ const app = admin.initializeApp({
   credential: admin.credential.cert(firebaseConfig),
 })
 
-const sendNotification = (user_id, message) => {
-  let payload = {
+const sendUserNotification = (user_id, message) => {
+
+  const payload = {
     notification: {
-      title: 'Notification',
+      title: 'Message personnel',
       body: message,
     },
   }
-
   const topic=`user_${user_id}`
 
-  console.log(topic)
   return app.messaging().sendToTopic(topic, payload)
     .then(response => {
-      console.log(JSON.stringify(response))
+      console.debug(`Sent ${topic}/${payload.notification.title}/${payload.notification.body}:${JSON.stringify(response)}`)
+      return response
+    })
+}
+
+const sendAppNotification = (message) => {
+  const payload = {
+    notification: {
+      title: 'Message général',
+      body: message,
+    },
+  }
+  const topic=`user_ALL`
+
+  return app.messaging().sendToTopic(topic, payload)
+    .then(response => {
+      console.debug(`Sent ${topic}/${payload.notification.title}/${payload.notification.body}:${JSON.stringify(response)}`)
       return response
     })
 }
 
 module.exports={
-  sendNotification,
+  sendUserNotification,
+  sendAppNotification,
 }
