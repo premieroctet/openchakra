@@ -212,3 +212,7 @@ env.json
 **/.next
 **/.env
 **/env.json
+
+# Firebase configuration files
+**/*firebase-adminsdk.json
+**/*google-services.json
