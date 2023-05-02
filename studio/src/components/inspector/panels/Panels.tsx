@@ -57,6 +57,7 @@ import { getComponents } from '../../../core/selectors/components'
 import { useForm } from '../../../hooks/useForm'
 import ActionsPanel from './ActionsPanel'
 import DataProviderPanel from '../../../custom-components/DataProvider/DataProviderPanel'
+import RedirectPanel from '../../../custom-components/Navigation/RedirectPanel'
 import DataSourcePanel from './DataSourcePanel'
 import FormControl from '../controls/FormControl'
 import VisibilityPanel from './VisibilityPanel'
@@ -72,7 +73,12 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
   const { type } = component
 
   if (isRoot) {
-    return <DataProviderPanel />
+    return (
+      <>
+        <DataProviderPanel />
+        <RedirectPanel />
+      </>
+    )
   }
 
   const compPanel = extraPanels[type]
