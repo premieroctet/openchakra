@@ -1,6 +1,7 @@
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
+  LexicalEditor,
   CAN_REDO_COMMAND,
   CAN_UNDO_COMMAND,
   REDO_COMMAND,
@@ -18,6 +19,7 @@ import { $isLinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
 import {
   $isParentElementRTL,
   $wrapNodes,
+  $patchStyleText,
   $isAtNodeEnd
 } from "@lexical/selection";
 import { $getNearestNodeOfType, mergeRegister } from "@lexical/utils";
@@ -40,6 +42,8 @@ import {
   getDefaultCodeLanguage,
   getCodeLanguages
 } from "@lexical/code";
+
+import DropDown, {DropDownItem} from '../ui/Dropdown';
 
 const LowPriority = 1;
 
@@ -70,6 +74,94 @@ const blockTypeToBlockName: HtmlBlocks = {
 
 function Divider() {
   return <div className="divider" />;
+}
+
+const FONT_FAMILY_OPTIONS: [string, string][] = [
+  ['Arial', 'Arial'],
+  ['Courier New', 'Courier New'],
+  ['Georgia', 'Georgia'],
+  ['Times New Roman', 'Times New Roman'],
+  ['Trebuchet MS', 'Trebuchet MS'],
+  ['Verdana', 'Verdana'],
+];
+
+const FONT_SIZE_OPTIONS: [string, string][] = [
+  ['10px', '10px'],
+  ['11px', '11px'],
+  ['12px', '12px'],
+  ['13px', '13px'],
+  ['14px', '14px'],
+  ['15px', '15px'],
+  ['16px', '16px'],
+  ['17px', '17px'],
+  ['18px', '18px'],
+  ['19px', '19px'],
+  ['20px', '20px'],
+  ['22px', '22px'],
+  ['24px', '24px'],
+  ['26px', '26px'],
+  ['28px', '28px'],
+  ['30px', '30px'],
+];
+
+function dropDownActiveClass(active: boolean) {
+  if (active) return 'active dropdown-item-active';
+  else return '';
+}
+
+function FontDropDown({
+  editor,
+  value,
+  style,
+  disabled = false,
+}: {
+  editor: LexicalEditor;
+  value: string;
+  style: string;
+  disabled?: boolean;
+}): JSX.Element {
+  const handleClick = useCallback(
+    (option: string) => {
+      editor.update(() => {
+        const selection = $getSelection();
+        if ($isRangeSelection(selection)) {
+          $patchStyleText(selection, {
+            [style]: option,
+          });
+        }
+      });
+    },
+    [editor, style],
+  );
+
+  const buttonAriaLabel =
+    style === 'font-family'
+      ? 'Formatting options for font family'
+      : 'Formatting options for font size';
+
+  return (
+    <DropDown
+      disabled={disabled}
+      buttonClassName={'toolbar-item ' + style}
+      buttonLabel={value}
+      buttonIconClassName={
+        style === 'font-family' ? 'icon block-type font-family' : ''
+      }
+      buttonAriaLabel={buttonAriaLabel}>
+      {(style === 'font-family' ? FONT_FAMILY_OPTIONS : FONT_SIZE_OPTIONS).map(
+        ([option, text]) => (
+          <DropDownItem
+            className={`item ${dropDownActiveClass(value === option)} ${
+              style === 'font-size' ? 'fontsize-item' : ''
+            }`}
+            onClick={() => handleClick(option)}
+            key={option}>
+            <span className="text">{text}</span>
+          </DropDownItem>
+        ),
+      )}
+    </DropDown>
+  );
 }
 
 // function positionEditorElement(editor, rect) {
@@ -448,6 +540,8 @@ export default function ToolbarPlugin() {
   );
 
   const [codeLanguage, setCodeLanguage] = useState("");
+  const [fontFamily, setFontFamily] = useState<string>('Arial');
+  const [fontSize, setFontSize] = useState<string>('15px');
   const [isRTL, setIsRTL] = useState(false);
   const [isLink, setIsLink] = useState(false);
   const [isBold, setIsBold] = useState(false);
@@ -607,6 +701,17 @@ export default function ToolbarPlugin() {
               />,
               document.body
             )}
+          <Divider />
+          <FontDropDown
+            style={'font-family'}
+            value={fontFamily}
+            editor={editor}
+          />
+          <FontDropDown
+            style={'font-size'}
+            value={fontSize}
+            editor={editor}
+          />
           <Divider />
         </>
       )}
