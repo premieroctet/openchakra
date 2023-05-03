@@ -10,7 +10,7 @@ import axios from 'axios'
 export const UserContext = createContext()
 
 export function UserWrapper({ children }) {
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState(false)
 
   const getCurrentUser = useCallback(() => {
     axios
@@ -19,7 +19,7 @@ export function UserWrapper({ children }) {
         setUser(res.data)
       })
       .catch(error => {
-        setUser(false)
+        setUser(null)
         console.error('Cant fetch current user', error)
       })
   }, [])

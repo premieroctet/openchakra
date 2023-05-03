@@ -19,7 +19,8 @@ const {
   CONTRACT_TYPE,
   EXPERIENCE,
   QUOTATION_STATUS,
-  ROLES
+  ROLES,
+  MISSION_FREQUENCY,
 } = require('./consts')
 const NATIONALITIES = require('./nationalities.json')
 
@@ -109,23 +110,19 @@ USER_MODELS.forEach(m => {
   })
   declareVirtualField({model: m, field: 'qualified_str', instance: 'String'})
   declareVirtualField({model: m, field: 'visible_str', instance: 'String'})
-  declareVirtualField({model: m, field: 'recommandations', instance: 'Array', requires: '', multiple: true,
-    caster: {
-      instance: 'ObjectID',
-      options: {ref: 'recommmandation'}}
-  })
   declareVirtualField({model: m, field: 'finished_missions_count', instance: 'Number', requires: 'missions'})
-  declareVirtualField({model: m, field: 'missions', instance: 'Array', requires: '', multiple: true,
+    declareVirtualField({model: m, field: 'customer_missions', instance: 'Array', requires: '', multiple: true,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'mission'}}
   })
-  declareVirtualField({model: m, field: 'recommandations_count', instance: 'Number', requires: 'recommandations'})
-  declareVirtualField({model: m, field: 'comments_note', instance: 'Number', requires: 'comments'})
+  declareVirtualField({model: m, field: 'recommandations_count', instance: 'Number', requires: 'jobs'})
+  declareVirtualField({model: m, field: 'recommandations_note', instance: 'Number', requires: 'jobs'})
+  declareVirtualField({model: m, field: 'comments_count', instance: 'Number', requires: 'jobs'})
+  declareVirtualField({model: m, field: 'comments_note', instance: 'Number', requires: 'jobs'})
   declareVirtualField({model: m, field: 'revenue', instance: 'Number', requires: 'missions.quotations'})
   declareVirtualField({model: m, field: 'revenue_to_come', instance: 'Number', requires: 'missions.quotations'})
   declareVirtualField({model: m, field: 'accepted_quotations_count', instance: 'Number', requires: 'missions.quotations'})
-  declareVirtualField({model: m, field: 'comments_count', instance: 'Number', requires: 'comments'})
   declareVirtualField({model: m, field: 'profile_shares_count', instance: 'Number', requires: ''})
 })
 
@@ -165,6 +162,16 @@ declareVirtualField({model: 'jobUser', field: 'recommandations', instance: 'Arra
     instance: 'ObjectID',
     options: {ref: 'recommandation'}}
 })
+declareVirtualField({model: 'jobUser', field: 'missions', instance: 'Array', requires: '', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'mission'}}
+})
+declareVirtualField({model: 'jobUser', field: 'comments', instance: 'Array', requires: '', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'comment'}}
+})
 
 
 declareEnumField({model: 'experience', field: 'contract_type', enumValues: CONTRACT_TYPE})
@@ -180,3 +187,4 @@ declareVirtualField({model: 'mission', field: 'quotations', instance: 'Array', r
     instance: 'ObjectID',
     options: {ref: 'quotation'}}
 })
+declareEnumField({model: 'mission', field: 'frequency', enumValues: MISSION_FREQUENCY})
