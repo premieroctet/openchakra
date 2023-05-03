@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDropComponent } from '~hooks/useDropComponent'
 import { useInteractive } from '~hooks/useInteractive'
-import icons from '~iconsList'
+import icons from '~lucideiconsList'
 import { Box } from '@chakra-ui/react'
 
 interface Props {
@@ -22,8 +22,8 @@ const IconPreview = ({ component }: Props) => {
     if (Object.keys(icons).includes(icon)) {
       const Icon = icons[icon as keyof typeof icons]
       return (
-        <Box {...props} display="inline">
-          <Icon path="" color={color} boxSize={boxSize} />
+        <Box {...props} display="inline-block" >
+          <Icon color={color} size={boxSize} />
         </Box>
       )
     }
