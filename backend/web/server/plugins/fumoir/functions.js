@@ -348,9 +348,13 @@ const postCreate = ({model, params, data}) => {
     sendWelcomeRegister({member:data, password:params.nonHashedPassword})
   }
   if (model=='booking') {
-    sendNewBookingToMember({booking:data})
-    User.find({role: FUMOIR_MANAGER})
-      .then(managers => Promise.allSettled(managers.map(manager => sendNewBookingToManager({booking:data, manager}))))
+    return Promise.allSettled([
+      sendNewBookingToMember({booking:data}),
+      // Send to admins also
+      User.find({role: {$in: ['FUMOIR_MANAGER', 'FUMOIR_ADMIN']}})
+        .then(managers => Promise.allSettled(managers.map(manager => sendNewBookingToManager({booking:data, manager}))))
+      ])
+      .then(() => data)
   }
 
   return Promise.resolve(data)
@@ -645,4 +649,5 @@ module.exports = {
   payOrder,
   getEventGuestsCount,
   getEventGuests,
+  postCreate,
 }
