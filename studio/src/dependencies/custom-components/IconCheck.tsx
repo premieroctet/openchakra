@@ -23,9 +23,8 @@ const IconCheck = ({
 }) => {
 
   const iconpath = isChecked ? illuChecked : illu
+  // @ts-ignore
   const backgroundToDisplay = isChecked ? backgroundColorChecked : props?.backgroundColor
-
-  
 
   return <FormLabel 
       {...props} 

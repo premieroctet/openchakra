@@ -152,7 +152,7 @@ const DataSourcePanel: React.FC = () => {
   return (
     <Accordion allowToggle={true}>
       <AccordionContainer title="Data source">
-        {activeComponent?.type=='Checkbox' &&
+        {(activeComponent?.type=='Checkbox' || activeComponent?.type=='IconCheck') &&
         <FormControl htmlFor="addTarget" label='Add to context'>
           <Checkbox
             id="addTarget"
