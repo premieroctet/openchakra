@@ -26,7 +26,6 @@
     "framer-motion": "7.3.0",
     "html-entities": "^2.3.3",
     "immer": "^9.0.15",
-    "js-file-download": "^0.4.12",
     "jsonschema": "^1.4.1",
     "jspdf": "^2.5.1",
     "jszip": "^3.10.1",

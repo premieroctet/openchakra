@@ -215,6 +215,7 @@ checkConfig()
           if (data != RANDOM_ID) {
             throw new Error(`Host ${getHostUrl()} is wrong`)
           }
+          console.log(`Checked correct hostname OK`)
         })
         .catch(err => {
           console.error(err)
