@@ -1,4 +1,7 @@
 import React from 'react'
+import {IconButton} from '@chakra-ui/react'
+import { DownloadIcon } from '@chakra-ui/icons'
+import fileDownload from 'js-file-download'
 
 export const getExtension = (filename: string) =>
   filename.substring(filename.lastIndexOf('.') + 1, filename.length) || filename
@@ -8,11 +11,13 @@ export const mediaWrapper = ({
   htmlHeight,
   htmlWidth,
   isIframe = false,
+  canDownload,
 }: {
   src: string
   htmlHeight?: string
   htmlWidth?: string
   isIframe?: boolean
+  canDownload?: boolean
 }) => {
   // const {htmlWidth, htmlHeight} = props
 
@@ -35,6 +40,20 @@ export const mediaWrapper = ({
     return regex.test(src)
   }
 
+  const Comp = () =>
+    canDownload &&
+      (<IconButton
+        aria-label='download'
+      icon={<DownloadIcon />}
+      onClick={() => {
+        const link = document.createElement('a');
+        link.href = src;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }}
+      />) || (null)
+
   const ext = forceExt(src, isIframe) || getExtension(src)
 
   switch (ext) {
@@ -52,13 +71,15 @@ export const mediaWrapper = ({
       )
     case 'pdf':
       return (
-        <object
+        <><object
           type="application/pdf"
           data={src}
           role={'document'}
           width={document.width}
           height={document.height}
         ></object>
+        <Comp />
+        </>
       )
     case 'doc':
     case 'docx':
@@ -80,8 +101,8 @@ export const mediaWrapper = ({
         <iframe
           style={
             {
-              height: 'inherit', 
-              width: 'inherit', 
+              height: 'inherit',
+              width: 'inherit',
               minHeight: 'inherit',
               minWidth: 'inherit',
               borderRadius: 'inherit',

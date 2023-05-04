@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
-import { 
+import {
   Button,
-  Input, 
+  Input,
   useDisclosure,
 } from '@chakra-ui/react'
 import SwitchControl from '~components/inspector/controls/SwitchControl'
@@ -20,6 +20,7 @@ const MediaPanel = () => {
   const htmlHeight = usePropsSelector('htmlHeight')
   const htmlWidth = usePropsSelector('htmlWidth')
   const isIframe = usePropsSelector('isIframe')
+  const canDownload = usePropsSelector('canDownload')
 
   return (
     <>
@@ -60,6 +61,7 @@ const MediaPanel = () => {
         />
       </FormControl>
       <SwitchControl label="Is iframe" name="isIframe" />
+      <SwitchControl label="Download" name="canDownload" />
 
       <MediaModal isOpen={isOpen} onClose={onClose} />
     </>
