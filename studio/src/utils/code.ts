@@ -678,6 +678,13 @@ export const generateCode = async (
   const rootIgnoreUrlParams =
     components['root']?.props?.ignoreUrlParams == 'true'
 
+  const redirectPage=components?.root.props?.autoRedirectPage
+  const autoRedirect =  redirectPage?
+  `useEffect(()=>{
+    if (user) {window.location='/${getPageUrl(redirectPage, pages)  }'}
+  }, [user])`
+  :
+  ''
   code = `import React, {useState, useEffect} from 'react';
   import Metadata from './dependencies/Metadata';
   ${hooksCode ? `import axios from 'axios'` : ''}
@@ -736,10 +743,12 @@ const ${componentName} = () => {
   }, [])
 
   const {user}=useUserContext()
+  ${autoRedirect}
+
   ${hooksCode}
   ${filterStates}
 
-  return (
+  return ${redirectPage ? 'user===null && ': ''} (
   <ChakraProvider resetCSS theme={theme}>
     <Fonts />
     <Metadata

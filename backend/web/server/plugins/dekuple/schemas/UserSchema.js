@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const bcrypt=require('bcryptjs')
-const {GENDER, SMOKER_TYPE} = require('../consts')
+const lodash=require('lodash')
+const {GENDER, SMOKER_TYPE, TIPS} = require('../consts')
 const {schemaOptions} = require('../../../utils/schemas')
 
 const Schema = mongoose.Schema
@@ -141,6 +142,9 @@ UserSchema.virtual('devices', {
   foreignField: 'user', // is equal to foreignField
 })
 
+UserSchema.virtual('tip').get(function() {
+  return TIPS[lodash.random(0, TIPS.length)]
+})
 /* eslint-enable prefer-arrow-callback */
 
 

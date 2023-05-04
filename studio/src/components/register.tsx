@@ -32,7 +32,7 @@ export const registerComponent = ({
   console.log(`Registering custom component ${componentType}`)
   registerComponentType(componentType)
   registerComponentMenu({ componentType, menuChildren })
-  registerPreview({ componentType, previewComponent, isBoxWrapped })
+  previewComponent && registerPreview({ componentType, previewComponent, isBoxWrapped })
   registerPanel({ componentType, componentPanel })
   builderFunction && registerBuilder({ componentType, builderFunction })
   defaultProps && registerDefaultProps({ componentType, defaultProps })

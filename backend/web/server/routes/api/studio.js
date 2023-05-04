@@ -102,7 +102,7 @@ const login = (email, password) => {
       throw new NotFoundError(`Ce compte est désactivé`)
     }
     console.log(`Comparing ${password} and ${user.password}`)
-    const matched=true //bcrypt.compareSync(password, user.password)
+    const matched=bcrypt.compareSync(password, user.password)
     if (!matched) {
       throw new NotFoundError(`Email ou mot de passe invalide`)
     }
@@ -388,7 +388,6 @@ router.get('/statTest', (req, res) => {
     })
   return res.json(data)
 })
-
 
 router.post('/:model', passport.authenticate('cookie', {session: false}), (req, res) => {
   const model = req.params.model

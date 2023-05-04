@@ -10,9 +10,7 @@ type IActions = {
   }
 }
 
-const pagesList= ({pages}) => {
-  console.log(JSON.stringify(lodash(pages).values().orderBy(p => p.pageName.toLowerCase()), null, 2))
-  //return Object.values(pages).map(p => ({ key: p.pageId, label: p.pageName }))
+export const pagesList= ({pages}) => {
   return lodash(pages)
     .values()
     .orderBy(p => p.pageName.toLowerCase())
