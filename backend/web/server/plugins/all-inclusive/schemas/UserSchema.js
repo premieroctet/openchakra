@@ -9,7 +9,8 @@ const {
   DEFAULT_ROLE,
   ROLES,
   ROLE_COMPANY_BUYER,
-  ROLE_TI
+  ROLE_TI,
+  UNACTIVE_REASON,
 } = require('../consts')
 const NATIONALITIES=require('../nationalities')
 const mongoose = require("mongoose")
@@ -82,6 +83,11 @@ const UserSchema = new Schema({
   active: {
     type: Boolean,
     default: true,
+  },
+  unactive_reason: {
+    type: String,
+    enum: Object.keys(UNACTIVE_REASON),
+    required: [function() { return !this.active}, 'Le raison de la désactivation est obligatoire'],
   },
   hidden: {
     type: Boolean,

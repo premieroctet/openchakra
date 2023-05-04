@@ -23,6 +23,7 @@ const {
   QUOTATION_STATUS,
   ROLES,
   MISSION_FREQUENCY,
+  UNACTIVE_REASON,
 } = require('./consts')
 const NATIONALITIES = require('./nationalities.json')
 
@@ -140,6 +141,7 @@ USER_MODELS.forEach(m => {
   declareVirtualField({model: m, field: 'revenue_to_come', instance: 'Number', requires: 'missions.quotations'})
   declareVirtualField({model: m, field: 'accepted_quotations_count', instance: 'Number', requires: 'missions.quotations'})
   declareVirtualField({model: m, field: 'profile_shares_count', instance: 'Number', requires: ''})
+  declareEnumField({model: m, field: 'unactive_reason', enumValues: UNACTIVE_REASON})
 })
 
 

@@ -1,7 +1,9 @@
+const { BadRequestError } = require('../../utils/errors')
 const { ROLE_COMPANY_BUYER } = require('./consts')
 const Quotation = require('../../models/Quotation')
 const moment = require('moment')
 const Mission = require('../../models/Mission')
+const User = require('../../models/User')
 const { addAction, setAllowActionFn } = require('../../utils/studio/actions')
 const {sendQuotationSentToCustomer} = require('./mailing')
 
@@ -161,6 +163,22 @@ const alle_leave_comment = ({value}, user) => {
   return isActionAllowed({action:'alle_leave_comment', dataId:value?._id, user})
 }
 addAction('alle_leave_comment', alle_leave_comment)
+
+const alle_deactivate_account = ({value, reason}, user) => {
+  return isActionAllowed({action:'alle_deactivate_account', dataId:value?._id, user})
+    .then(ok => {
+      if (!ok) {return false}
+      if (!reason?.trim()) {
+        throw new BadRequestError('La raison de désactivation est obligatoire')
+      }
+      return User.findByIdAndUpdate(
+        value._id,
+        {active: false, unactive_reason: reason}
+      )
+    })
+}
+addAction('alle_deactivate_account', alle_deactivate_account)
+
 
 const isActionAllowed = ({action, dataId, user}) => {
   if (action=='alle_create_quotation') {

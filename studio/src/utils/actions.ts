@@ -322,9 +322,13 @@ export const ACTIONS: IActions = {
     options:{}
   },
 
-  deactivateAccount: {
+  alle_deactivate_account: {
     label: 'Deactivate account',
-    options: {},
+    options: {
+      reason: ({ components }) =>
+        components
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+    },
     next: ['openPage', 'logout'],
   },
 

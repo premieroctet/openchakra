@@ -234,6 +234,28 @@ const CUSTOMER_TIPS= {
   MISSION_STATUS_DISPUTE:"Vous avez refusé la facture. TIPI en est informé, vous pouvez également contacter l'indépendant.e pour régler le litige",
 }
 
+const UNACTIVE_REASON_MISUNDERSTAND="UNACTIVE_REASON_MISUNDERSTAND"
+const UNACTIVE_REASON_UNLIKE="UNACTIVE_REASON_UNLIKE"
+const UNACTIVE_REASON_NONEED="UNACTIVE_REASON_NONEED"
+const UNACTIVE_REASON_NOCOMPANY="UNACTIVE_REASON_NOCOMPANY"
+const UNACTIVE_REASON_NOTENOUGH="UNACTIVE_REASON_NOTENOUGH"
+const UNACTIVE_REASON_OTHERACCOUNTS="UNACTIVE_REASON_OTHERACCOUNTS"
+const UNACTIVE_REASON_PRIVACY="UNACTIVE_REASON_PRIVACY"
+const UNACTIVE_REASON_BUSY="UNACTIVE_REASON_BUSY"
+const UNACTIVE_REASON_OTHER="UNACTIVE_REASON_OTHER"
+
+const UNACTIVE_REASON={
+  UNACTIVE_REASON_MISUNDERSTAND:'Je ne comprends pas la plateforme',
+  UNACTIVE_REASON_UNLIKE:'Je n&apos;aime pas la plateforme TIPI',
+  UNACTIVE_REASON_NONEED:'Je n&apos;ai plus besoin de missions',
+  UNACTIVE_REASON_NOCOMPANY:'Je ferme mon entreprise individuelle',
+  UNACTIVE_REASON_NOTENOUGH:'TIPI ne m&apos;apporte assez de missions',
+  UNACTIVE_REASON_OTHERACCOUNTS:'J&apos;ai des comptes sur d&apos;autres marketplaces',
+  UNACTIVE_REASON_PRIVACY:'J&apos;ai un problème de confidentialité',
+  UNACTIVE_REASON_BUSY:'La gestion de mon compte me prend trop de temps',
+  UNACTIVE_REASON_OTHER:'Autre',
+}
+
 module.exports={
   ROLES,
   ROLE_TI,
@@ -265,4 +287,5 @@ module.exports={
   MISSION_FREQUENCY_UNKNOWN,
   TI_TIPS,
   CUSTOMER_TIPS,
+  UNACTIVE_REASON,
 }

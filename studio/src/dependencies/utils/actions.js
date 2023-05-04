@@ -357,10 +357,13 @@ export const ACTIONS = {
     return window.print()
   },
 
-  deactivateAccount: () => {
+  alle_deactivate_account: ({value, props, level, getComponentValue}) => {
+    const reason = getComponentValue(props.reason, level)
     let url = `${API_ROOT}/action`
     const body = {
-      action: 'deactivateAccount',
+      action: 'alle_deactivate_account',
+      value,
+      reason: reason,
     }
     return axios.post(url, body)
   },
