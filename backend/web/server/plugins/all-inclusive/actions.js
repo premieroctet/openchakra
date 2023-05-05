@@ -173,8 +173,8 @@ const alle_leave_comment = ({value}, user) => {
 }
 addAction('alle_leave_comment', alle_leave_comment)
 
-const alle_deactivate_account = ({value, reason}, user) => {
-  return isActionAllowed({action:'alle_deactivate_account', dataId:value?._id, user})
+const deactivateAccount = ({value, reason}, user) => {
+  return isActionAllowed({action:'deactivateAccount', dataId:value?._id, user})
     .then(ok => {
       if (!ok) {return false}
       if (!reason?.trim()) {
@@ -186,7 +186,7 @@ const alle_deactivate_account = ({value, reason}, user) => {
       )
     })
 }
-addAction('alle_deactivate_account', alle_deactivate_account)
+addAction('deactivateAccount', deactivateAccount)
 
 const registerAction = props => {
   console.log(`ALLE Register with ${JSON.stringify(props)}`)

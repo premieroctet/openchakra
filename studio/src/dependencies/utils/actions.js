@@ -357,11 +357,11 @@ export const ACTIONS = {
     return window.print()
   },
 
-  alle_deactivate_account: ({value, props, level, getComponentValue}) => {
+  deactivateAccount: ({value, props, level, getComponentValue}) => {
     const reason = getComponentValue(props.reason, level)
     let url = `${API_ROOT}/action`
     const body = {
-      action: 'alle_deactivate_account',
+      action: 'deactivateAccount',
       value,
       reason: reason,
     }

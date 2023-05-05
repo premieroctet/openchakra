@@ -320,7 +320,7 @@ export const ACTIONS: IActions = {
     options:{}
   },
 
-  alle_deactivate_account: {
+  deactivateAccount: {
     label: 'Deactivate account',
     options: {
       reason: ({ components }) =>
