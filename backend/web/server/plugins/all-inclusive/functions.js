@@ -1,4 +1,20 @@
 const {
+  AVAILABILITY,
+  COACHING,
+  COMPANY_ACTIVITY,
+  COMPANY_SIZE,
+  COMPANY_STATUS,
+  CONTRACT_TYPE,
+  EXPERIENCE,
+  MISSION_FREQUENCY,
+  QUOTATION_STATUS,
+  ROLES,
+  ROLE_TI,
+  UNACTIVE_REASON,
+} = require('./consts')
+const moment = require('moment')
+const Mission = require('../../models/Mission')
+const {
   declareEnumField,
   declareVirtualField,
   idEqual,
@@ -10,18 +26,6 @@ const User = require('../../models/User')
 const { CREATED_AT_ATTRIBUTE } = require('../../../utils/consts')
 const lodash=require('lodash')
 const Message = require('../../models/Message')
-const {
-  AVAILABILITY,
-  COACHING,
-  COMPANY_ACTIVITY,
-  COMPANY_SIZE,
-  COMPANY_STATUS,
-  CONTRACT_TYPE,
-  EXPERIENCE,
-  QUOTATION_STATUS,
-  ROLES,
-  MISSION_FREQUENCY,
-} = require('./consts')
 const NATIONALITIES = require('./nationalities.json')
 
 const preprocessGet = ({model, fields, id, user}) => {
@@ -67,9 +71,32 @@ const preprocessGet = ({model, fields, id, user}) => {
 setPreprocessGet(preprocessGet)
 
 const preCreate = ({model, params, user}) => {
-  if (['jobUser', 'request', 'mission'].includes(model)) {
+  console.log(`preCreate ${model} with ${JSON.stringify(params)}`)
+  if (['jobUser', 'request', 'mission', 'comment'].includes(model)) {
     params.user=user
   }
+  if (model=='quotation' && 'mission' in params) {
+    return Mission.findById(params.mission)
+      .populate('user')
+      .then(mission => {
+        params.name=`Devis du ${moment().format('L')}`
+        console.log(`Mission.user:${JSON.stringify(mission.user.firstname)}`)
+        params.firstname=mission.user.firstname
+        params.lastname=mission.user.lastname
+        params.email=mission.user.email
+        params.company_name=mission.user.company_name
+        params.mission=mission._id
+        return ({model, params})
+      })
+  }
+  if (model=='quotationDetail' && 'quotation' in params) {
+    params.quotation=params.quotation
+  }
+
+  if (model=='user' && !params.role) {
+    params.role=ROLE_TI
+  }
+
   return Promise.resolve({model, params})
 }
 
@@ -84,11 +111,6 @@ USER_MODELS.forEach(m => {
   declareEnumField({model: m, field: 'coaching', enumValues: COACHING})
   declareVirtualField({model: m, field: 'password2', instance: 'String'})
   declareEnumField({model: m, field: 'availability', enumValues: AVAILABILITY})
-  declareVirtualField({model: m, field: 'comments', instance: 'Array', requires: '', multiple: true,
-    caster: {
-      instance: 'ObjectID',
-      options: {ref: 'comment'}}
-  })
   declareVirtualField({model: m, field: 'quotations', instance: 'Array', requires: '', multiple: true,
     caster: {
       instance: 'ObjectID',
@@ -124,6 +146,7 @@ USER_MODELS.forEach(m => {
   declareVirtualField({model: m, field: 'revenue_to_come', instance: 'Number', requires: 'missions.quotations'})
   declareVirtualField({model: m, field: 'accepted_quotations_count', instance: 'Number', requires: 'missions.quotations'})
   declareVirtualField({model: m, field: 'profile_shares_count', instance: 'Number', requires: ''})
+  declareEnumField({model: m, field: 'unactive_reason', enumValues: UNACTIVE_REASON})
 })
 
 
@@ -176,15 +199,31 @@ declareVirtualField({model: 'jobUser', field: 'comments', instance: 'Array', req
 
 declareEnumField({model: 'experience', field: 'contract_type', enumValues: CONTRACT_TYPE})
 
-declareVirtualField({model: 'quotation', field: 'status', instance: 'String', enumValues: QUOTATION_STATUS,
-  requires: 'billing_sent_date,customer_accept_billing_date,customer_accept_quotation_date,customer_refuse_billing_date,customer_refuse_quotation_date,quotation_sent_date,ti_finished_date,ti_refuse_date'})
-
 declareVirtualField({model: 'mission', field: 'status', instance: 'String', enumValues: QUOTATION_STATUS,
-    requires: 'quotations'})
-
+    requires: 'customer_accept_bill_date,customer_refuse_bill_date,bill_sent_date,ti_finished_date,customer_refuse_quotation_date,customer_accept_quotation_date,ti_refuse_date,quotation_sent_date,job,customer_refuse_bill_date,customer_refuse_quotation_date,customer_cancel_date'})
 declareVirtualField({model: 'mission', field: 'quotations', instance: 'Array', requires: '', multiple: true,
   caster: {
     instance: 'ObjectID',
     options: {ref: 'quotation'}}
 })
 declareEnumField({model: 'mission', field: 'frequency', enumValues: MISSION_FREQUENCY})
+declareVirtualField({model: 'mission', field: 'location_str', instance: 'String', requires: 'customer_location,foreign_location'})
+declareVirtualField({model: 'mission', field: 'ti_tip', instance: 'String', requires: ''})
+declareVirtualField({model: 'mission', field: 'customer_tip', instance: 'String', requires: ''})
+declareVirtualField({model: 'mission', field: 'comments', instance: 'Array', requires: '', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'comment'}}
+})
+
+
+declareVirtualField({model: 'quotation', field: 'details', instance: 'Array', requires: '', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'quotationDetail'}}
+})
+declareVirtualField({model: 'quotation', field: 'total', instance: 'Number', requires: 'details'})
+declareVirtualField({model: 'quotation', field: 'vat_total', instance: 'Number', requires: 'details'})
+
+declareVirtualField({model: 'quotationDetail', field: 'total', instance: 'Number', requires: 'quantity,ht_price,vat'})
+declareVirtualField({model: 'quotationDetail', field: 'vat_total', instance: 'Number', requires: 'quantity,ht_price,vat'})

@@ -9,7 +9,8 @@ const {
   DEFAULT_ROLE,
   ROLES,
   ROLE_COMPANY_BUYER,
-  ROLE_TI
+  ROLE_TI,
+  UNACTIVE_REASON,
 } = require('../consts')
 const NATIONALITIES=require('../nationalities')
 const mongoose = require("mongoose")
@@ -82,6 +83,11 @@ const UserSchema = new Schema({
   active: {
     type: Boolean,
     default: true,
+  },
+  unactive_reason: {
+    type: String,
+    enum: Object.keys(UNACTIVE_REASON),
+    required: [function() { return !this.active}, 'Le raison de la désactivation est obligatoire'],
   },
   hidden: {
     type: Boolean,
@@ -217,7 +223,7 @@ UserSchema.virtual("finished_missions_count").get(function() {
   if (lodash.isEmpty(this.mission)) {
     return 0
   }
-  return this.missions.filter(m => m.status==QUOTATION_STATUS_FINISHED).length
+  return this.missions.filter(m => m.status==MISSION_STATUS_FINISHED).length
 })
 
 UserSchema.virtual("recommandations_count").get(function() {
@@ -231,32 +237,28 @@ UserSchema.virtual("recommandations_note").get(function() {
 })
 
 UserSchema.virtual("comments_count").get(function() {
-  const recos=lodash(this.jobs||[]).map(j => j.comments || []).flatten()
+  const recos=lodash(this.missions||[]).map(j => j.comments || []).flatten()
   return recos.size()
 })
 
 UserSchema.virtual("comments_note").get(function() {
-  const recos=lodash(this.jobs||[]).map(j => j.comments || []).flatten()
+  const recos=lodash(this.missions||[]).map(j => j.comments || []).flatten()
   return recos.sumBy('note')/recos.size()
 })
 
 UserSchema.virtual("revenue").get(function() {
-  console.error('Not implemented')
   return 0
 })
 
 UserSchema.virtual("revenue_to_come").get(function() {
-  console.error('Not implemented')
   return 0
 })
 
 UserSchema.virtual("accepted_quotations_count").get(function() {
-  console.error('Not implemented')
   return 0
 })
 
 UserSchema.virtual("profile_shares_count").get(function() {
-  console.error('Not implemented')
   return 0
 })
 

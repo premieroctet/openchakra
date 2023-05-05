@@ -65,10 +65,12 @@ export const ACTIONS = {
       [getComponent(c, level)?.getAttribute('attribute') || getComponent(c, level)?.getAttribute('data-attribute'),
         getComponentValue(c, level)||null]
     ))
-    if (props.job) {
-      const jobId=document.getElementById(`${props.job}${level}`)?.getAttribute('_id')
-      body.job=jobId
-    }
+    'job,mission,quotation'.split(',').forEach(property => {
+      if (props[property]) {
+        const dataId=document.getElementById(`${props[property]}${level}`)?.getAttribute('_id')
+        body[property]=dataId
+      }
+    })
     let url = `${API_ROOT}/${props.model}?context=${context}`
     return axios.post(url, body).then(res => ({
       model: props.model,
@@ -355,10 +357,13 @@ export const ACTIONS = {
     return window.print()
   },
 
-  deactivateAccount: () => {
+  alle_deactivate_account: ({value, props, level, getComponentValue}) => {
+    const reason = getComponentValue(props.reason, level)
     let url = `${API_ROOT}/action`
     const body = {
-      action: 'deactivateAccount',
+      action: 'alle_deactivate_account',
+      value,
+      reason: reason,
     }
     return axios.post(url, body)
   },
@@ -391,4 +396,149 @@ export const ACTIONS = {
     }))
   },
 
+  alle_create_quotation: ({ value, context, props, level, getComponentValue }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_create_quotation',
+      value,
+      context,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_refuse_mission: ({ value, context, props, level, getComponentValue }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_refuse_mission',
+      value,
+      context,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_cancel_mission: ({ value, context, props, level, getComponentValue }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_cancel_mission',
+      value,
+      context,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_send_quotation: ({value}) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_send_quotation',
+      value,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_accept_quotation: ({value}) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_accept_quotation',
+      value,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_refuse_quotation: ({value}) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_refuse_quotation',
+      value,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_show_quotation: ({ value, context, props, level, getComponentValue }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_show_quotation',
+      value,
+      context,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_edit_quotation: ({ value, context, props, level, getComponentValue }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_edit_quotation',
+      value,
+      context,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_finish_mission: ({ value, context, props, level, getComponentValue }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_finish_mission',
+      value,
+      context,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_store_bill: ({ value, context, props, level, getComponentValue }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_store_bill',
+      value,
+      context,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_show_bill: ({ value, context, props, level, getComponentValue }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_show_bill',
+      value,
+      context,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_accept_bill: ({ value, context, props, level, getComponentValue }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_accept_bill',
+      value,
+      context,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_refuse_bill: ({ value, context, props, level, getComponentValue }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_refuse_bill',
+      value,
+      context,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_leave_comment: ({ value, context, props, level, getComponentValue }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_leave_comment',
+      value,
+      context,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_send_bill: ({value}) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_send_bill',
+      value,
+    }
+    return axios.post(url, body)
+  },
 }

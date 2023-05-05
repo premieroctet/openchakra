@@ -27,6 +27,14 @@ export const ACTIONS: IActions = {
         components
           .filter(comp => comp.type=='Flex')
           .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      mission: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      quotation: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
       ...Object.fromEntries(lodash.range(15).map((idx:number) => {
       return [
         `component_${idx}`,
@@ -312,9 +320,13 @@ export const ACTIONS: IActions = {
     options:{}
   },
 
-  deactivateAccount: {
+  alle_deactivate_account: {
     label: 'Deactivate account',
-    options: {},
+    options: {
+      reason: ({ components }) =>
+        components
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+    },
     next: ['openPage', 'logout'],
   },
 
@@ -332,7 +344,81 @@ export const ACTIONS: IActions = {
     },
     next: ['openPage'],
   },
-
+  alle_create_quotation: {
+    label: 'AE Créer devis',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_refuse_mission: {
+    label: 'AE Refuser mission',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_cancel_mission: {
+    label: 'AE Anuler mission',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_send_quotation: {
+    label: 'AE Envoyer le devis',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_accept_quotation: {
+    label: 'AE Accepter le devis',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_refuse_quotation: {
+    label: 'AE Refuser le devis',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_show_quotation: {
+    label: 'AE Voir le devis',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_edit_quotation: {
+    label: 'AE Modifier le devis',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_finish_mission: {
+    label: 'AE Terminer mission',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_store_bill: {
+    label: 'AE Déposer la facture',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_show_bill: {
+    label: 'AE Voir la facture',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_accept_bill: {
+    label: 'AE Accepter la facture',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_refuse_bill: {
+    label: 'AE Refuser la facture',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_leave_comment: {
+    label: 'AE Laisser un commentaire',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_send_bill: {
+    label: 'AE Envoyer la facture',
+    options: {},
+    next: ['openPage'],
+  },
 }
 
 export const allowsActions = (component: IComponent) => {

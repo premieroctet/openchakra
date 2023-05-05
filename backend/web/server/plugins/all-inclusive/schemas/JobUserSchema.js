@@ -10,7 +10,11 @@ const Schema = mongoose.Schema;
 const JobUserSchema = new Schema({
   name: {
     type: String,
-    required: [true, 'Le nom est obligatoire']
+    required: [true, 'Le nom est obligatoire'],
+  },
+  description: {
+    type: String,
+    required: false,
   },
   city: {
     type: String,
@@ -102,12 +106,6 @@ JobUserSchema.virtual("photos", {
 
 JobUserSchema.virtual("recommandations", {
   ref: "recommandation", // The Model to use
-  localField: "_id", // Find in Model, where localField
-  foreignField: 'job' // is equal to foreignField
-});
-
-JobUserSchema.virtual("comments", {
-  ref: "comment", // The Model to use
   localField: "_id", // Find in Model, where localField
   foreignField: 'job' // is equal to foreignField
 });
