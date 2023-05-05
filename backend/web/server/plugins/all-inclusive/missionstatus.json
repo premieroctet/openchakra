@@ -1,0 +1,34 @@
+{
+  "status": [
+	"MISSION_STATUS_ASKING",
+	"MISSION_STATUS_ASKING_ALLE",
+	"MISSION_STATUS_TI_REFUSED",
+	"MISSION_STATUS_CUST_CANCELLED",
+	"MISSION_STATUS_QUOT_SENT",
+	"MISSION_STATUS_QUOT_ACCEPTED",
+	"MISSION_STATUS_QUOT_REFUSED",
+	"MISSION_STATUS_TO_BILL",
+	"MISSION_STATUS_BILL_SENT",
+	"MISSION_STATUS_FINISHED",
+	"MISSION_STATUS_DISPUTE",
+  ],
+  "actions": [
+	"alle_create_quotation",
+	"alle_refuse_mission",
+	"alle_cancel_mission",
+	"alle_send_quotation",
+	"alle_accept_quotation",
+	"alle_refuse_quotation",
+	"alle_show_quotation",
+	"alle_edit_quotation",
+	"alle_finish_mission",
+	"alle_store_bill",
+	"alle_show_bill",
+	"alle_accept_bill",
+	"alle_refuse_bill",
+	"alle_leave_comment",
+  ],
+  "transitions": [
+    [TI, MISSION_STATUS_ASKING, alle_create_quotation, 
+  ]
+}

@@ -47,6 +47,7 @@ type ComponentType =
   | 'Image'
   | 'Input'
   | 'UploadFile'
+  | 'IconCheck'
   | 'InputGroup'
   | 'InputLeftAddon'
   | 'InputRightAddon'

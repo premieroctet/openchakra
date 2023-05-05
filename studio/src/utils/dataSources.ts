@@ -21,7 +21,7 @@ export const PROGRESS_TYPE: ComponentType[] = ['Progress', 'CircularProgress']
 export const DATE_TYPE: ComponentType[] = ['Date']
 export const SELECT_TYPE: ComponentType[] = ['Select']
 export const SOURCE_TYPE: ComponentType[] = ['Timer']
-export const CHECKBOX_TYPE: ComponentType[] = ['Checkbox', 'Radio', 'Switch']
+export const CHECKBOX_TYPE: ComponentType[] = ['Checkbox', 'Radio', 'Switch', 'IconCheck']
 export const INPUT_TYPE: ComponentType[] = ['Lexical', 'Input', 'Textarea', 'NumberInput', 'Rating', 'NumberFormat']
 export const UPLOAD_TYPE: ComponentType[] = ['UploadFile']
 export const ENUM_TYPE: ComponentType[] = ['RadioGroup']
@@ -169,7 +169,12 @@ export const getFilterAttributes = (
   components: IComponents,
   models: any,
 ): any => {
-  const attributes = getComponentAttributes(component, components, models)
+  let attributes = getComponentAttributes(component, components, models)
+  // For container, filter attributes are dataSource.atrtibute's attributes
+  if (CONTAINER_TYPE.includes(component?.type) && component?.props.attribute) {
+    const subModel=models[attributes[component.props.attribute]?.type]
+    attributes=subModel.attributes
+  }
   // TODO Filter subAttributes yto retain non multiple && non ref only
   const simpleAttributes=lodash.pickBy(attributes, (v,k) => !v.ref && !v.multiple)
 

@@ -77,7 +77,9 @@ const withDynamicButton = Component => {
           })
           .catch(err => {
             console.error(err)
-            setErrorMessage(err.response?.data || err)
+            if (err.response?.status!=502) {
+              setErrorMessage(err.response?.data || err)
+            }
           })
       }
     }

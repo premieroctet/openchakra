@@ -75,6 +75,7 @@ require('./models/Pip')
 require('./models/Diploma')
 require('./models/Photo')
 require('./models/Mission')
+require('./models/QuotationDetail')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 
@@ -214,6 +215,7 @@ checkConfig()
           if (data != RANDOM_ID) {
             throw new Error(`Host ${getHostUrl()} is wrong`)
           }
+          console.log(`Checked correct hostname OK`)
         })
         .catch(err => {
           console.error(err)

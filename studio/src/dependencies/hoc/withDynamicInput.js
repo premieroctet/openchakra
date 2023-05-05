@@ -10,7 +10,7 @@ const withDynamicInput = Component => {
 
   const Internal = ({ dataSource, dataSourceId, noautosave, readOnly, context, backend, suggestions, setComponentValue, displayEye, ...props }) => {
 
-    let keptValue = lodash.get(dataSource, props.attribute) || props.value
+    let keptValue = (dataSourceId && lodash.get(dataSource, props.attribute)) || props.value
 
     const isADate = !isNaN(Date.parse(keptValue)) && new Date(Date.parse(keptValue));
 

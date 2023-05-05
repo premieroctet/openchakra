@@ -5,6 +5,7 @@ const {
 const Skill = require('../../server/models/Skill')
 const User = require('../../server/models/User')
 const JobUser = require('../../server/models/JobUser')
+const Mission = require('../../server/models/Mission')
 require('../../server/models/Mission')
 const moment=require('moment')
 const mongoose = require('mongoose')
@@ -25,6 +26,9 @@ describe('Test DB', () => {
         password: 'prout', email: 's@a.com', coaching: COACH_ALLE, role: ROLE_TI})
     const job=await JobUser.create({name: 'Peintre', user})
     await Skill.create({name: 'A skill', job})
+    await Mission.create({
+      name: 'A mission', job, user, description:'Belle mission',
+    })
   })
 
   afterAll(async() => {
@@ -38,7 +42,7 @@ describe('Test DB', () => {
     expect(user.jobs[0].skills[0].toObject()).toMatchObject(skill.toObject())
   })
 
-  it('must display location_str', async() => {
+  it('must display jobUser.location_str', async() => {
     await JobUser.update({customer_location: false, foreign_location: false})
     expect((await JobUser.findOne()).location_str).toEqual('')
     await JobUser.update({customer_location: true, foreign_location: false})
@@ -57,6 +61,17 @@ describe('Test DB', () => {
 
   it('getModels must not cycle', async() => {
     expect(() => getExposedModels()).not.toThrowError(RangeError)
+  })
+
+  it('must display mission.location_str', async() => {
+    await Mission.update({customer_location: false, foreign_location: false})
+    expect((await Mission.findOne()).location_str).toEqual('')
+    await Mission.update({customer_location: true, foreign_location: false})
+    expect((await Mission.findOne()).location_str).toEqual('Chez le client')
+    await Mission.update({customer_location: false, foreign_location: true})
+    expect((await Mission.findOne()).location_str).toEqual('À distance')
+    await Mission.update({customer_location: true, foreign_location: true})
+    expect((await Mission.findOne()).location_str).toEqual('Chez le client et à distance')
   })
 
 })

@@ -1,20 +1,5 @@
-const {
-  AVAILABILITY,
-  COACHING,
-  EXPERIENCE,
-  QUOTATION_STATUS_ASKING,
-  QUOTATION_STATUS_BILL_SENT,
-  QUOTATION_STATUS_DISPUTE,
-  QUOTATION_STATUS_FINISHED,
-  QUOTATION_STATUS_JOB_FINISHED,
-  QUOTATION_STATUS_QUOT_ACCEPTED,
-  QUOTATION_STATUS_QUOT_REFUSED,
-  QUOTATION_STATUS_QUOT_SENT,
-  QUOTATION_STATUS_TI_REFUSED,
-  QUOTATION_STATUS_TO_BILL,
-  ROLES
-} = require('../consts')
 const mongoose = require("mongoose")
+const lodash=require('lodash')
 const bcrypt=require('bcryptjs')
 const { schemaOptions } = require('../../../utils/schemas')
 const IBANValidator = require('iban-validator-js')
@@ -26,65 +11,68 @@ const QuotationSchema = new Schema({
     type: String,
     required: [true, 'Le nom est obligatoire']
   },
+  description: {
+    type: String,
+    required: false,
+  },
+  firstname: {
+    type: String,
+    required: [true, 'Le prénom est obligatoire'],
+  },
+  lastname: {
+    type: String,
+    required: [true, 'Le nom est obligatoire'],
+  },
+  email: {
+    type: String,
+    required: [true, "L'email est obligatoire"],
+  },
+  company_name: {
+    type: String,
+    required: [true, 'Le nom de la compagnie est obligatoire'],
+  },
+  company_address: {
+    type: String,
+    required: false,
+  },
+  representative_firstname: {
+    type: String,
+    required: false,
+  },
+  representative_lastname: {
+    type: String,
+    required: false,
+  },
   mission: {
     type: Schema.Types.ObjectId,
     ref: "mission",
     required: false,
   },
-  // Date when quotation is sent to customer
-  quotation_sent_date: {
-    type: Date,
-  },
-  ti_refuse_date: {
-    type: Date,
-  },
-  customer_accept_quotation_date: {
-    type: Date,
-  },
-  customer_refuse_quotation_date: {
-    type: Date,
-  },
-  ti_finished_date: {
-    type: Date,
-  },
-  billing_sent_date: {
-    type: Date,
-  },
-  customer_accept_billing_date: {
-    type: Date,
-  },
-  customer_refuse_billing_date: {
-    type: Date,
-  },
 }, schemaOptions
 );
 
-QuotationSchema.virtual('status').get(function() {
-  if (this.customer_accept_billing_date) {
-    return QUOTATION_STATUS_FINISHED
+QuotationSchema.virtual("details", {
+  ref: "quotationDetail", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "quotation" // is equal to foreignField
+});
+
+QuotationSchema.virtual("total").get(function() {
+  if (lodash.isEmpty(this.details)) {
+    return 0
   }
-  if (this.customer_refuse_billing_date) {
-    return QUOTATION_STATUS_DISPUTE
-  }
-  if (this.billing_sent_date) {
-    return QUOTATION_STATUS_BILL_SENT
-  }
-  if (this.ti_finished_date) {
-    return QUOTATION_STATUS_TO_BILL
-  }
-  if (this.customer_refuse_quotation_date) {
-    return QUOTATION_STATUS_QUOT_REFUSED
-  }
-  if (this.customer_accept_quotation_date) {
-    return QUOTATION_STATUS_QUOT_ACCEPTED
-  }
-  if (this.ti_refuse_date) {
-    return QUOTATION_STATUS_TI_REFUSED
-  }
-  if (this.quotation_sent_date) {
-    return QUOTATION_STATUS_QUOT_SENT
-  }
-  return QUOTATION_STATUS_ASKING
+  return lodash.sumBy(this.details, 'total')
 })
+
+QuotationSchema.virtual("vat_total").get(function() {
+  if (lodash.isEmpty(this.details)) {
+    return 0
+  }
+  return lodash.sumBy(this.details, 'vat_total')
+})
+
+QuotationSchema.methods.canSend = function(user) {
+  return !lodash.isEmpty(this.details)
+}
 
 module.exports = QuotationSchema;
