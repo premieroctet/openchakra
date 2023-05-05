@@ -2,6 +2,7 @@ const { sendNotification, setSmsContents } = require('../../utils/mailing')
 const {datetime_str} = require('../../../utils/dateutils')
 
 const SIB_IDS={
+  FORGOT_PASSWORD: 20,
   CUSTOMER_QUOTATION_SENT_2_CUSTOMER: 36,
   TIPI_ACCOUNT_CREATED: 37,
   CUSTOMER_ACCOUNT_CREATED: 38,
@@ -12,6 +13,19 @@ const SMS_CONTENTS={
 }
 
 setSmsContents(SMS_CONTENTS)
+
+// #20
+const sendForgotPassword = ({user, password}) => {
+  return sendNotification({
+    notification: SIB_IDS.FORGOT_PASSWORD,
+    destinee: user,
+    params: {
+      user_firstname: user.firstname,
+      login: user.email,
+      password: password,
+    }
+  })
+}
 
 // #36
 const sendQuotationSentToCustomer = ({quotation}) => {
@@ -48,8 +62,10 @@ const sendAccountCreatedToCustomer = ({user}) => {
   })
 }
 
+
 module.exports = {
   sendQuotationSentToCustomer,
   sendAccountCreatedToTIPI,
-  sendAccountCreatedToCustomer
+  sendAccountCreatedToCustomer,
+  sendForgotPassword,
 }

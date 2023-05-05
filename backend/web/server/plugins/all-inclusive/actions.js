@@ -1,9 +1,13 @@
 const {
+  generatePassword,
+  validatePassword
+} = require('../../../utils/passwords')
+const {
   sendAccountCreatedToCustomer,
   sendAccountCreatedToTIPI,
+  sendForgotPassword,
   sendQuotationSentToCustomer
 } = require('./mailing')
-const { validatePassword } = require('../../../utils/passwords')
 const { ROLE_COMPANY_BUYER, ROLE_TI } = require('./consts')
 const { BadRequestError } = require('../../utils/errors')
 const Quotation = require('../../models/Quotation')
@@ -200,6 +204,22 @@ const registerAction = props => {
     })
 }
 addAction('register', registerAction)
+
+const forgotPasswordAction=({context, parent, email}) => {
+  return User.findOne({email})
+   .then(user => {
+     if (!user) {
+       throw new BadRequestError(`Aucun compte n'est associé à cet email`)
+     }
+     const password=generatePassword()
+     user.password=password
+     return user.save()
+       .then(user => sendForgotPassword({user, password}))
+       .then(user => `Un email a été envoyé à l'adresse ${email}`)
+   })
+}
+addAction('forgotPassword', forgotPasswordAction)
+
 
 const isActionAllowed = ({action, dataId, user}) => {
   if (action=='alle_create_quotation') {
