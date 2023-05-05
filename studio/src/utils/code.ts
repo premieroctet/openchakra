@@ -30,6 +30,7 @@ import {
   normalizePageName
 } from './misc';
 import { isJsonString } from '../dependencies/utils/misc'
+import { whatTheHexaColor } from '~components/editor/previews/IconPreview';
 
 //const HIDDEN_ATTRIBUTES=['dataSource', 'attribute']
 const HIDDEN_ATTRIBUTES: string[] = []
@@ -350,7 +351,11 @@ const buildBlock = ({
             if (propName=='href') {
               operand=`="${getPageUrl(propsValue, pages)}"`
             }
-
+            
+            if (propName=='color') {
+              operand=`="${whatTheHexaColor(propsValue)}"`
+            }
+            
             propsContent += ` ${propName}${operand}`
           }
         })
@@ -384,6 +389,7 @@ const buildBlock = ({
       ) {
         content += `<${componentName} ${propsContent}>${childComponent.props.children}</${componentName}>`
       } else if (childComponent.type === 'Icon') {
+        console.log(propsContent)
         content += `<${childComponent.props.icon} ${propsContent} />`
       } else if (childComponent.children.length) {
         content += `<${componentName} ${propsContent}>
@@ -474,10 +480,11 @@ const ${componentName} = () => (
   return code
 }
 
-const getIconsImports = (components: IComponents) => {
+const getIconsImports = (components: IComponents, lib: string) => {
   return Object.keys(components).flatMap(name => {
     return Object.keys(components[name].props)
       .filter(prop => prop.toLowerCase().includes('icon'))
+      .filter(prop => components[name].props['icon'].startsWith(lib))
       .filter(prop => !!components[name].props[prop])
       .map(prop => components[name].props[prop])
   })
@@ -651,7 +658,11 @@ export const generateCode = async (
     noAutoSaveComponents
   })
   let componentsCodes = buildComponents(components, pages, singleDataPage, noAutoSaveComponents)
-  const iconImports = [...new Set(getIconsImports(components))]
+  // const chakraIconImports = [...new Set(getIconsImports(components, 'chakra'))]
+  // const lucideIconImports = [...new Set(getIconsImports(components, 'lucid'))]
+  const iconImports = [...new Set(getIconsImports(components, 'chakra'))]
+
+  
 
   const imports = [
     ...new Set(

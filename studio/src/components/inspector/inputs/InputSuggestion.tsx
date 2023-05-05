@@ -43,7 +43,9 @@ const InputSuggestion: React.FC<FormControlPropType> = ({
         id={name}
         value={ltrim(value)}
         name={name}
-        onChange={handleChange}
+        onChange={e => {
+          console.log('de lautr', e)
+          handleChange(e)}}
         as={Input}
         aria-labelledby={name}
         size="sm"
@@ -55,6 +57,7 @@ const InputSuggestion: React.FC<FormControlPropType> = ({
           <ComboboxList
             style={{ maxHeight: 200, overflow: 'scroll' }}
             aria-labelledby={name}
+            onClick={(e) => console.log(e)}
           >
             {children}
           </ComboboxList>
