@@ -483,7 +483,8 @@ router.get('/jobUser/:id?', (req, res) => {
   return loadFromDb(req, res)
 })
 
-router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (req, res) => {
+//router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (req, res) => {
+router.get('/:model/:id?', (req, res) => {
   return loadFromDb(req, res)
 })
 

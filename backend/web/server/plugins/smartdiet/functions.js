@@ -2,14 +2,17 @@ const {
   ACTIVITY,
   COMPANY_ACTIVITY,
   CONTENTS_TYPE,
+  ECOSCORE,
   EVENT_TYPE,
   GENDER,
   GROUPS_CREDIT,
   HARDNESS,
   HOME_STATUS,
+  NUTRISCORE,
   ROLES,
   SPOON_SOURCE,
-  TARGET_TYPE
+  TARGET_TYPE,
+  UNIT
 } = require('./consts')
 const {
   declareComputedField,
@@ -68,6 +71,36 @@ USER_MODELS.forEach(m => {
     caster: {
       instance: 'ObjectID',
       options: {ref: 'contents'}}
+  })
+  declareVirtualField({model: m, field: 'webinars', instance: 'Array',
+    requires: 'company', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'webinar'}}
+  })
+  declareVirtualField({model: m, field: 'individual_challenges', instance: 'Array',
+    requires: '', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'individualChallenge'}}
+  })
+  declareVirtualField({model: m, field: 'menu', instance: 'Menu',
+    requires: '', multiple: false,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'menu'}}
+  })
+  declareVirtualField({model: m, field: 'collective_challenges', instance: 'Array',
+    requires: '', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'collectiveChallenge'}}
+  })
+  declareVirtualField({model: m, field: 'groups', instance: 'Array',
+    requires: '', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'group'}}
   })
 })
 
@@ -146,6 +179,11 @@ declareVirtualField({model: 'target', field: 'users', instance: 'Array',
     instance: 'ObjectID',
     options: {ref: 'user'}}
 })
+
+declareEnumField({model: 'recipe', field: 'nutriscore', enumValues: NUTRISCORE})
+declareEnumField({model: 'recipe', field: 'ecoscore', enumValues: ECOSCORE})
+
+declareEnumField({model: 'ingredient', field: 'unit', enumValues: UNIT})
 
 const getAvailableContents = (user, params, data) => {
   return Content.find()

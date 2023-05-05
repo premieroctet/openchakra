@@ -1,4 +1,7 @@
+const Menu = require('../../../models/Menu')
+const IndividualChallenge = require('../../../models/IndividualChallenge')
 const mongoose = require('mongoose')
+const moment=require('moment')
 const {ACTIVITY, HOME_STATUS, ROLES, ROLE_CUSTOMER, STATUS_FAMILY} = require('../consts')
 const {GENDER} = require('../../dekuple/consts')
 const {schemaOptions} = require('../../../utils/schemas')
@@ -39,7 +42,7 @@ const UserSchema = new Schema({
   company: {
     type: Schema.Types.ObjectId,
     ref: 'company',
-    required: false,
+    required: true,
   },
   password: {
     type: String,
@@ -83,6 +86,14 @@ const UserSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'target',
   }],
+  skipped_events: [{
+    type: Schema.Types.ObjectId,
+    ref: 'event',
+  }],
+  passed_events: [{
+    type: Schema.Types.ObjectId,
+    ref: 'event',
+  }],
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
@@ -113,6 +124,46 @@ UserSchema.virtual("spoons", {
   localField: "_id", // Find in Model, where localField
   foreignField: "user" // is equal to foreignField
 });
+
+UserSchema.virtual("groups", {
+  ref: "group", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "users" // is equal to foreignField
+});
+
+// User's webinars are the company's ones
+UserSchema.virtual('webinars').get(function() {
+  const exclude=[
+    ...this.skipped_events.map(s => s._id),
+    ...this.passed_events.map(s => s._id),
+  ]
+  return this.company?.webinars?.filter(w => !exclude.some(excl => idEqual(excl._id, w._id))) || []
+})
+
+// User's ind. challenges are all exepct the skipped ones and the passed ones
+UserSchema.virtual('individual_challenges').get(function() {
+  return IndividualChallenge.find()
+    .then(challenges => {
+      const exclude=[
+        ...this.skipped_events.map(s => s._id),
+        ...this.passed_events.map(s => s._id),
+      ]
+      return challenges.filter(c => !exclude.some(excl => idEqual(excl._id, c._id)))
+    })
+})
+
+// First available menu for this week
+UserSchema.virtual('menu').get(function() {
+  return Menu.find()
+    .then(menus => {
+      return menus.find(m => moment().isBetween(m.start_date, m.end_date))
+    })
+})
+
+// User's clletive challenges are the company's ones
+UserSchema.virtual('collective_challenges').get(function() {
+  return this.company?.collective_challenges || []
+})
 
 /* eslint-enable prefer-arrow-callback */
 
