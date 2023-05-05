@@ -3,6 +3,8 @@ const {datetime_str} = require('../../../utils/dateutils')
 
 const SIB_IDS={
   CUSTOMER_QUOTATION_SENT_2_CUSTOMER: 36,
+  TIPI_ACCOUNT_CREATED: 37,
+  CUSTOMER_ACCOUNT_CREATED: 38,
 }
 
 const SMS_CONTENTS={
@@ -24,6 +26,30 @@ const sendQuotationSentToCustomer = ({quotation}) => {
   })
 }
 
+// #37
+const sendAccountCreatedToTIPI = ({user}) => {
+  return sendNotification({
+    notification: SIB_IDS.TIPI_ACCOUNT_CREATED,
+    destinee: user,
+    params: {
+      user_firstname: user.firstname,
+    }
+  })
+}
+
+// #38
+const sendAccountCreatedToCustomer = ({user}) => {
+  return sendNotification({
+    notification: SIB_IDS.CUSTOMER_ACCOUNT_CREATED,
+    destinee: user,
+    params: {
+      user_firstname: user.firstname,
+    }
+  })
+}
+
 module.exports = {
   sendQuotationSentToCustomer,
+  sendAccountCreatedToTIPI,
+  sendAccountCreatedToCustomer
 }

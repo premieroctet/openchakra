@@ -1,11 +1,16 @@
+const {
+  sendAccountCreatedToCustomer,
+  sendAccountCreatedToTIPI,
+  sendQuotationSentToCustomer
+} = require('./mailing')
+const { validatePassword } = require('../../../utils/passwords')
+const { ROLE_COMPANY_BUYER, ROLE_TI } = require('./consts')
 const { BadRequestError } = require('../../utils/errors')
-const { ROLE_COMPANY_BUYER } = require('./consts')
 const Quotation = require('../../models/Quotation')
 const moment = require('moment')
 const Mission = require('../../models/Mission')
 const User = require('../../models/User')
 const { addAction, setAllowActionFn } = require('../../utils/studio/actions')
-const {sendQuotationSentToCustomer} = require('./mailing')
 
 const alle_create_quotation = ({value}) => {
   return isActionAllowed({action:'alle_create_quotation', dataId:value?._id, user})
@@ -179,6 +184,22 @@ const alle_deactivate_account = ({value, reason}, user) => {
 }
 addAction('alle_deactivate_account', alle_deactivate_account)
 
+const registerAction = props => {
+  console.log(`ALLE Register with ${JSON.stringify(props)}`)
+  return User.exists({email: props.email})
+    .then(exists => {
+      if (exists) {
+        return Promise.reject(`Un compte avec le mail ${props.email} existe déjà`)
+      }
+      return validatePassword({...props})
+    })
+    .then(() => User.create({...props, role: props.role || ROLE_TI}))
+    .then(user => {
+      const sendWelcome=user.role==ROLE_TI ? sendAccountCreatedToTIPI : sendAccountCreatedToCustomer
+      return sendWelcome({user})
+    })
+}
+addAction('register', registerAction)
 
 const isActionAllowed = ({action, dataId, user}) => {
   if (action=='alle_create_quotation') {

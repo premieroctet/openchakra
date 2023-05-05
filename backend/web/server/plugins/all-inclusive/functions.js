@@ -1,3 +1,17 @@
+const {
+  AVAILABILITY,
+  COACHING,
+  COMPANY_ACTIVITY,
+  COMPANY_SIZE,
+  COMPANY_STATUS,
+  CONTRACT_TYPE,
+  EXPERIENCE,
+  MISSION_FREQUENCY,
+  QUOTATION_STATUS,
+  ROLES,
+  ROLE_TI,
+  UNACTIVE_REASON,
+} = require('./consts')
 const moment = require('moment')
 const Mission = require('../../models/Mission')
 const {
@@ -12,19 +26,6 @@ const User = require('../../models/User')
 const { CREATED_AT_ATTRIBUTE } = require('../../../utils/consts')
 const lodash=require('lodash')
 const Message = require('../../models/Message')
-const {
-  AVAILABILITY,
-  COACHING,
-  COMPANY_ACTIVITY,
-  COMPANY_SIZE,
-  COMPANY_STATUS,
-  CONTRACT_TYPE,
-  EXPERIENCE,
-  QUOTATION_STATUS,
-  ROLES,
-  MISSION_FREQUENCY,
-  UNACTIVE_REASON,
-} = require('./consts')
 const NATIONALITIES = require('./nationalities.json')
 
 const preprocessGet = ({model, fields, id, user}) => {
@@ -90,6 +91,10 @@ const preCreate = ({model, params, user}) => {
   }
   if (model=='quotationDetail' && 'quotation' in params) {
     params.quotation=params.quotation
+  }
+
+  if (model=='user' && !params.role) {
+    params.role=ROLE_TI
   }
 
   return Promise.resolve({model, params})
