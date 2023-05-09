@@ -102,6 +102,18 @@ USER_MODELS.forEach(m => {
       instance: 'ObjectID',
       options: {ref: 'group'}}
   })
+  declareVirtualField({model: m, field: 'available_groups', instance: 'Array',
+    requires: '', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'group'}}
+  })
+  declareVirtualField({model: m, field: 'registered_groups', instance: 'Array',
+    requires: '', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'group'}}
+  })
 })
 
 declareEnumField({model: 'company', field: 'activity', enumValues: COMPANY_ACTIVITY})

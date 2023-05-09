@@ -1,3 +1,7 @@
+const User = require('../../../models/User')
+
+const Group = require('../../../models/Group')
+
 const Menu = require('../../../models/Menu')
 const IndividualChallenge = require('../../../models/IndividualChallenge')
 const mongoose = require('mongoose')
@@ -125,7 +129,20 @@ UserSchema.virtual("spoons", {
   foreignField: "user" // is equal to foreignField
 });
 
-UserSchema.virtual("groups", {
+UserSchema.virtual("available_groups").get(function() {
+  return User.find(this._id)
+    .populate({path: 'company', populate:'groups'})
+    .then(user => {
+      let groups=lodash(user?.company?.groups || [])
+      // Remove already registered groups
+      groups=groups.filter(g => !g.users.map(u => u._id.toString()).includes(this._id.toString()))
+      // Only retain groups having at least my target my targets
+      groups=groups.filter(g => lodash.intersectionBy(g.targets, this.targets, t=>t._id.toString()))
+      return groups
+    })
+})
+
+UserSchema.virtual("registered_groups", {
   ref: "group", // The Model to use
   localField: "_id", // Find in Model, where localField
   foreignField: "users" // is equal to foreignField
@@ -137,7 +154,9 @@ UserSchema.virtual('webinars').get(function() {
     ...(this.skipped_events?.map(s => s._id)||[]),
     ...(this.passed_events?.map(s => s._id)||[]),
   ]
-  return this.company?.webinars?.filter(w => !exclude.some(excl => idEqual(excl._id, w._id))) || []
+  const res=(this.company?.webinars || []).filter(w => !exclude.some(excl => idEqual(excl._id, w._id)))
+  console.log(`webinars:${JSON.stringify(res)}`)
+  return res
 })
 
 // User's ind. challenges are all exepct the skipped ones and the passed ones
