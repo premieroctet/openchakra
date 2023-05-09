@@ -134,8 +134,8 @@ UserSchema.virtual("groups", {
 // User's webinars are the company's ones
 UserSchema.virtual('webinars').get(function() {
   const exclude=[
-    ...this.skipped_events.map(s => s._id),
-    ...this.passed_events.map(s => s._id),
+    ...(this.skipped_events?.map(s => s._id)||[]),
+    ...(this.passed_events?.map(s => s._id)||[]),
   ]
   return this.company?.webinars?.filter(w => !exclude.some(excl => idEqual(excl._id, w._id))) || []
 })
@@ -145,8 +145,8 @@ UserSchema.virtual('individual_challenges').get(function() {
   return IndividualChallenge.find()
     .then(challenges => {
       const exclude=[
-        ...this.skipped_events.map(s => s._id),
-        ...this.passed_events.map(s => s._id),
+        ...(this.skipped_events?.map(s => s._id)||[]),
+        ...(this.passed_events?.map(s => s._id)||[]),
       ]
       return challenges.filter(c => !exclude.some(excl => idEqual(excl._id, c._id)))
     })

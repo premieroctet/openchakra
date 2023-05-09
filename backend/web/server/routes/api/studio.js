@@ -445,7 +445,7 @@ const loadFromDb = (req, res) => {
 
   console.log(`GET ${model}/${id} ${fields}`)
 
-  callPreprocessGet({model, fields, id, user: req.user})
+  callPreprocessGet({model, fields, id, user})
     .then(({model, fields, id, data}) => {
       console.log(`POSTGET ${model}/${id} ${fields}`)
       if (data) {
@@ -483,8 +483,7 @@ router.get('/jobUser/:id?', (req, res) => {
   return loadFromDb(req, res)
 })
 
-//router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (req, res) => {
-router.get('/:model/:id?', (req, res) => {
+router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (req, res) => {
   return loadFromDb(req, res)
 })
 
