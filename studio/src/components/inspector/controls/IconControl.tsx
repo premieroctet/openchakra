@@ -17,11 +17,9 @@ const IconControl: React.FC<IconControlProps> = ({ name, label }) => {
   const { setValue, setValueFromEvent } = useForm()
   const value = usePropsSelector(name)
 
-  const whatIWant = Object.entries(lucideIcons)
+  const lucideEntries = Object.entries(lucideIcons)
 
-  const updateIcon  = (e) => {
-    console.log(e.target)
-    setValue('lib', 'chakra')
+  const updateIcon  = (e) => {    
     setValue(name, e.target.value)
   }
 
@@ -33,11 +31,15 @@ const IconControl: React.FC<IconControlProps> = ({ name, label }) => {
         name={name}
       >
         {(Object.keys(icons) as Array<keyof typeof icons>)
-          .filter(icon => icon.includes(value) || !value)
+          .filter(icon => icon.toLocaleLowerCase().includes(value.toLocaleLowerCase()) || !value)
           .map((icon, index) => {
             const IconComponent = icons[icon]
             return (
-              <ComboboxOption key={index} value={icon} data-lib={'chakra'}>
+              <ComboboxOption 
+                key={index} 
+                value={icon} 
+                onClick={() => setValue('data-lib', 'chakra')} 
+              >
                 <IconComponent
                   // @ts-ignore
                   path=""
@@ -47,8 +49,14 @@ const IconControl: React.FC<IconControlProps> = ({ name, label }) => {
             )
           })}
 
-          {(whatIWant.map(([iconName, IconComponent]) => 
-              <ComboboxOption key={iconName} value={iconName} data-lib={'lucid'}>
+          {(lucideEntries
+            .filter(([iconName, IconComponent]) => iconName.toLocaleLowerCase().includes(value.toLocaleLowerCase()) || !value)
+            .map(([iconName, IconComponent]) => 
+              <ComboboxOption 
+                key={iconName} 
+                value={iconName} 
+                onClick={() => setValue('data-lib', 'lucid')} 
+              >
                 <IconComponent />
                 <ComboboxOptionText />
               </ComboboxOption>

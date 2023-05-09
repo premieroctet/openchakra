@@ -24,9 +24,10 @@ export function whatTheHexaColor(color: string) {
 }
 
 const IconPreview = ({ component }: Props) => {
-  const { isOver } = useDropComponent(component.id)
+  const { drop, isOver } = useDropComponent(component.id)
   const {
     props: { color, boxSize, icon, ...props },
+    ref
   } = useInteractive(component, true)
 
   const hexaColor = whatTheHexaColor(color)
@@ -36,15 +37,34 @@ const IconPreview = ({ component }: Props) => {
   }
 
   if (icon) {
-    if (Object.keys(icons).includes(icon)) {
-      const Icon = icons[icon as keyof typeof icons]
-      return (
-        <Box {...props} display="inline-block" >
-          <Icon path="" color={hexaColor} boxSize={boxSize} />
-        </Box>
-      )
+
+    let Icon, iconProps = null
+    
+    const libIcon = props?.['data-lib']
+
+    switch (libIcon) {
+      case 'lucid':
+        if (Object.keys(lucidicons).includes(icon)) {
+          Icon = lucidicons[icon as keyof typeof icons]
+          iconProps = {color: hexaColor, size: boxSize}
+        }
+      break;
+        
+      // Chakra Icons by default
+      default:
+        if (Object.keys(icons).includes(icon)) {
+          Icon = icons[icon as keyof typeof icons]
+          iconProps = {color: hexaColor, boxSize: boxSize, path: ""}
+        }
+      break;
     }
-    return null
+
+    return (
+      <Box {...props} display="inline-block" ref={drop(ref)} >
+        {Icon && <Icon {...iconProps}/>}
+     </Box>
+    )
+
   }
 
   return null

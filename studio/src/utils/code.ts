@@ -389,7 +389,6 @@ const buildBlock = ({
       ) {
         content += `<${componentName} ${propsContent}>${childComponent.props.children}</${componentName}>`
       } else if (childComponent.type === 'Icon') {
-        console.log(propsContent)
         content += `<${childComponent.props.icon} ${propsContent} />`
       } else if (childComponent.children.length) {
         content += `<${componentName} ${propsContent}>
@@ -480,11 +479,17 @@ const ${componentName} = () => (
   return code
 }
 
-const getIconsImports = (components: IComponents, lib: string) => {
+const getIconsImports = (components: IComponents, lib?: string | null) => {
   return Object.keys(components).flatMap(name => {
     return Object.keys(components[name].props)
       .filter(prop => prop.toLowerCase().includes('icon'))
-      .filter(prop => components[name].props['icon'].startsWith(lib))
+      .filter(() => {
+        if (components[name].props?.['data-lib']) {
+          return components[name].props?.['data-lib'].includes(lib ?? "chakra")
+        } else {
+          return !lib
+        }
+      })
       .filter(prop => !!components[name].props[prop])
       .map(prop => components[name].props[prop])
   })
@@ -658,9 +663,9 @@ export const generateCode = async (
     noAutoSaveComponents
   })
   let componentsCodes = buildComponents(components, pages, singleDataPage, noAutoSaveComponents)
-  // const chakraIconImports = [...new Set(getIconsImports(components, 'chakra'))]
-  // const lucideIconImports = [...new Set(getIconsImports(components, 'lucid'))]
-  const iconImports = [...new Set(getIconsImports(components, 'chakra'))]
+  
+  const lucideIconImports = [...new Set(getIconsImports(components, 'lucid'))]
+  const iconImports = [...new Set(getIconsImports(components))]
 
   
 
@@ -713,6 +718,12 @@ ${
   iconImports.length
     ? `
 import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
+    : ''
+}
+${
+  lucideIconImports.length
+    ? `
+import { ${lucideIconImports.join(',')} } from "lucide-react";`
     : ''
 }
 
