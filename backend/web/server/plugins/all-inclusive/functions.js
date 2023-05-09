@@ -9,6 +9,8 @@ const {
   MISSION_FREQUENCY,
   QUOTATION_STATUS,
   ROLES,
+  ROLE_COMPANY_ADMIN,
+  ROLE_COMPANY_BUYER,
   ROLE_TI,
   UNACTIVE_REASON,
 } = require('./consts')
@@ -33,6 +35,11 @@ const preprocessGet = ({model, fields, id, user}) => {
     model='user'
     id = user?._id || 'INVALIDID'
   }
+
+  if (model == 'jobUser') {
+    fields = lodash([...fields, 'user.hidden']).uniq().value()
+  }
+  return Promise.resolve({model, fields, id})
 
   if (model=='conversation') {
     const getPartner= (m, user) => {
@@ -227,3 +234,13 @@ declareVirtualField({model: 'quotation', field: 'vat_total', instance: 'Number',
 
 declareVirtualField({model: 'quotationDetail', field: 'total', instance: 'Number', requires: 'quantity,ht_price,vat'})
 declareVirtualField({model: 'quotationDetail', field: 'vat_total', instance: 'Number', requires: 'quantity,ht_price,vat'})
+
+const filterDataUser = ({model, data, user}) => {
+  if (model == 'jobUser') {
+    // Hide jobUser.user.hidden
+    return data.filter(jobUser => !(jobUser.user.hidden===true))
+  }
+  return data
+}
+
+setFilterDataUser(filterDataUser)
