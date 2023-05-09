@@ -453,6 +453,7 @@ const loadFromDb = (req, res) => {
       }
       return buildQuery(model, id, fields)
         .then(data => {
+          console.log(`Got studio:${JSON.stringify(data)}`)
           // Force duplicate children
           data = JSON.parse(JSON.stringify(data))
           // Remove extra virtuals

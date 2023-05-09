@@ -126,14 +126,17 @@ UserSchema.virtual("spoons", {
 UserSchema.virtual("available_groups",
 {localField:'_id', foreignField: 'user'} //DUMMY
 ).get(function() {
-  return mongoose.models.user.find(this._id)
-    .populate({path: 'company', populate:'groups'})
+  return mongoose.models.user.findOne(this._id)
+    .populate({path: 'company', populate: {path: 'groups', populate: 'targets'}})
+    .populate({path: 'targets'})
     .then(user => {
       let groups=lodash(user?.company?.groups || [])
       // Remove already registered groups
       groups=groups.filter(g => !g.users.map(u => u._id.toString()).includes(this._id.toString()))
       // Only retain groups having at least my target my targets
-      groups=groups.filter(g => lodash.intersectionBy(g.targets, this.targets, t=>t._id.toString()))
+      groups=groups.filter(g => lodash.intersectionBy(g.targets, user.targets, t=>t._id.toString()).length>0)
+      //console.log(`Groups:${JSON.stringify(groups, null, 2)}`)
+      console.log('returning from schema')
       return groups
     })
 })
