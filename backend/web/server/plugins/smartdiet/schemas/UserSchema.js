@@ -1,9 +1,3 @@
-const User = require('../../../models/User')
-
-const Group = require('../../../models/Group')
-
-const Menu = require('../../../models/Menu')
-const IndividualChallenge = require('../../../models/IndividualChallenge')
 const mongoose = require('mongoose')
 const moment=require('moment')
 const {ACTIVITY, HOME_STATUS, ROLES, ROLE_CUSTOMER, STATUS_FAMILY} = require('../consts')
@@ -130,7 +124,7 @@ UserSchema.virtual("spoons", {
 });
 
 UserSchema.virtual("available_groups").get(function() {
-  return User.find(this._id)
+  return mongoose.models.user.find(this._id)
     .populate({path: 'company', populate:'groups'})
     .then(user => {
       let groups=lodash(user?.company?.groups || [])
@@ -161,7 +155,7 @@ UserSchema.virtual('webinars').get(function() {
 
 // User's ind. challenges are all exepct the skipped ones and the passed ones
 UserSchema.virtual('individual_challenges').get(function() {
-  return IndividualChallenge.find()
+  return mongoose.models.individualChallenge.find()
     .then(challenges => {
       const exclude=[
         ...(this.skipped_events?.map(s => s._id)||[]),
@@ -173,7 +167,7 @@ UserSchema.virtual('individual_challenges').get(function() {
 
 // First available menu for this week
 UserSchema.virtual('menu').get(function() {
-  return Menu.find()
+  return mongoose.models.menu.find()
     .then(menus => {
       return menus.find(m => moment().isBetween(m.start_date, m.end_date))
     })
