@@ -123,7 +123,9 @@ UserSchema.virtual("spoons", {
   foreignField: "user" // is equal to foreignField
 });
 
-UserSchema.virtual("available_groups").get(function() {
+UserSchema.virtual("available_groups",
+{localField:'_id', foreignField: 'user'} //DUMMY
+).get(function() {
   return mongoose.models.user.find(this._id)
     .populate({path: 'company', populate:'groups'})
     .then(user => {
