@@ -1,14 +1,21 @@
 const {
-  generatePassword,
-  validatePassword
-} = require('../../../utils/passwords')
+  CONTACT_STATUS,
+  ROLE_ALLE_ADMIN,
+  ROLE_COMPANY_BUYER,
+  ROLE_TI
+} = require('./consts')
+
 const {
   sendAccountCreatedToCustomer,
   sendAccountCreatedToTIPI,
+  sendAskContact,
   sendForgotPassword,
   sendQuotationSentToCustomer
 } = require('./mailing')
-const { ROLE_COMPANY_BUYER, ROLE_TI } = require('./consts')
+const {
+  generatePassword,
+  validatePassword
+} = require('../../../utils/passwords')
 const { BadRequestError } = require('../../utils/errors')
 const Quotation = require('../../models/Quotation')
 const moment = require('moment')
@@ -219,6 +226,16 @@ const forgotPasswordAction=({context, parent, email}) => {
    })
 }
 addAction('forgotPassword', forgotPasswordAction)
+
+const askContactAction=(props) => {
+  return User.find({role: ROLE_ALLE_ADMIN})
+    .then(users => Promise.allSettled(users.map(u => sendAskContact({
+      user:u,
+      fields:{...props, urgent: props.urgent ? 'Oui':'Non', status: CONTACT_STATUS[props.status]}
+    }))))
+}
+
+addAction('alle_ask_contact', askContactAction)
 
 
 const isActionAllowed = ({action, dataId, user}) => {

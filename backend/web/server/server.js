@@ -76,6 +76,7 @@ require('./models/Diploma')
 require('./models/Photo')
 require('./models/Mission')
 require('./models/QuotationDetail')
+require('./models/Contact')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 

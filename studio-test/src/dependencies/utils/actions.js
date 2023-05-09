@@ -541,4 +541,17 @@ export const ACTIONS = {
     }
     return axios.post(url, body)
   },
+
+  alle_ask_contact: ({ value, context, props, level, getComponentValue }) => {
+    const components=lodash(props).pickBy((v, k) => /^component_/.test(k) && !!v).values()
+    const body = Object.fromEntries(components.map(c =>
+      [getComponent(c, level)?.getAttribute('attribute') || getComponent(c, level)?.getAttribute('data-attribute'),
+        getComponentValue(c, level)||null]
+    ))
+
+    body.action='alle_ask_contact'
+    let url = `${API_ROOT}/anonymous-action`
+    return axios.post(url, body)
+  },
+
 }

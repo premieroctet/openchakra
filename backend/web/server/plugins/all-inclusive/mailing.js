@@ -3,6 +3,7 @@ const {datetime_str} = require('../../../utils/dateutils')
 
 const SIB_IDS={
   FORGOT_PASSWORD: 20,
+  ASK_CONTACT: 33,
   CUSTOMER_QUOTATION_SENT_2_CUSTOMER: 36,
   TIPI_ACCOUNT_CREATED: 37,
   CUSTOMER_ACCOUNT_CREATED: 38,
@@ -62,10 +63,21 @@ const sendAccountCreatedToCustomer = ({user}) => {
   })
 }
 
+const sendAskContact = ({user, fields}) => {
+  return sendNotification({
+    notification: SIB_IDS.ASK_CONTACT,
+    destinee: user,
+    params: {
+      ...fields
+    }
+  })
+}
+
 
 module.exports = {
   sendQuotationSentToCustomer,
   sendAccountCreatedToTIPI,
   sendAccountCreatedToCustomer,
   sendForgotPassword,
+  sendAskContact,
 }

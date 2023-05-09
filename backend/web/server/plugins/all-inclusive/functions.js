@@ -4,6 +4,7 @@ const {
   COMPANY_ACTIVITY,
   COMPANY_SIZE,
   COMPANY_STATUS,
+  CONTACT_STATUS,
   CONTRACT_TYPE,
   EXPERIENCE,
   MISSION_FREQUENCY,
@@ -235,6 +236,8 @@ declareVirtualField({model: 'quotation', field: 'vat_total', instance: 'Number',
 
 declareVirtualField({model: 'quotationDetail', field: 'total', instance: 'Number', requires: 'quantity,ht_price,vat'})
 declareVirtualField({model: 'quotationDetail', field: 'vat_total', instance: 'Number', requires: 'quantity,ht_price,vat'})
+
+declareEnumField({model: 'contact', field: 'status', enumValues: CONTACT_STATUS})
 
 const filterDataUser = ({model, data, user}) => {
   if (model == 'jobUser') {
