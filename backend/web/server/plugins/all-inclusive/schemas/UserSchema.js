@@ -1,4 +1,3 @@
-const siret = require('siret')
 const {
   AVAILABILITY,
   COACHING,
@@ -8,10 +7,12 @@ const {
   COMPANY_STATUS,
   DEFAULT_ROLE,
   ROLES,
+  ROLE_COMPANY_ADMIN,
   ROLE_COMPANY_BUYER,
   ROLE_TI,
   UNACTIVE_REASON,
 } = require('../consts')
+const siret = require('siret')
 const NATIONALITIES=require('../nationalities')
 const mongoose = require("mongoose")
 const bcrypt=require('bcryptjs')
@@ -44,7 +45,7 @@ const UserSchema = new Schema({
   cguAccepted: {
     type: Boolean,
     validate: [value => !!value, 'Vous devez accepter les CGU'],
-    required: [true, 'Vous devez accepter les CGU'],
+    required: [function() { return [ROLE_COMPANY_BUYER, ROLE_COMPANY_ADMIN, ROLE_TI].includes(this.role)}, 'Vous devez accepter les CGU'],
   },
   role: {
     type: String,
