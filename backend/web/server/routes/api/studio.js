@@ -445,7 +445,7 @@ const loadFromDb = (req, res) => {
 
   console.log(`GET ${model}/${id} ${fields}`)
 
-  callPreprocessGet({model, fields, id, user: req.user})
+  callPreprocessGet({model, fields, id, user})
     .then(({model, fields, id, data}) => {
       console.log(`POSTGET ${model}/${id} ${fields}`)
       if (data) {

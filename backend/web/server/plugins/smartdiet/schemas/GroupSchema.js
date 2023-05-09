@@ -26,11 +26,16 @@ const GroupSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'target',
   }],
-  company: {
+  companies: [{
     type: Schema.Types.ObjectId,
     ref: 'company',
     required: false,
-  },
+  }],
+  users: [{
+    type: Schema.Types.ObjectId,
+    ref: 'user',
+    required: false,
+  }],
   key: {
     type: Schema.Types.ObjectId,
     ref: 'key',

@@ -16,6 +16,22 @@ const MenuSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'target',
   }],
+  start_date: {
+    type: Date,
+    required: [true, 'La date de début est obligatoire']
+  },
+  end_date: {
+    type: Date,
+    required: [true, 'La date de fin est obligatoire']
+  },
+  lunch_recipes: [{
+    type: Schema.Types.ObjectId,
+    ref: 'recipe',
+  }],
+  dinner_recipes: [{
+    type: Schema.Types.ObjectId,
+    ref: 'recipe',
+  }],
 },
 {...schemaOptions, ...EVENT_DISCRIMINATOR}
 )
