@@ -186,11 +186,36 @@ UserSchema.virtual("full_name").get(function() {
 // For password checking only
 UserSchema.virtual("password2")
 
+const PROFILE_ATTRIBUTES={
+  firstname: 'prénom',
+  lastname : 'nom de famille',
+  email : 'email',
+  phone : 'téléphone',
+  birthday : 'date de naissance',
+  nationality : 'nationalité',
+  picture : 'photo de profil',
+  identity_proof_1 : "pièce d'identité",
+  iban : 'iban',
+  company_name : 'nom de la société',
+  company_status : 'statut',
+  siret : 'siret',
+  status_report : 'avis de situation',
+  insurance_type : "type d'assurance",
+  insurance_report : "justificatif d'assurance",
+  company_picture : "logo de l'entreprise",
+}
+
 UserSchema.virtual('profile_progress').get(function() {
-  const attributes1='firstname lastname email phone birthday nationality picture identity_proof_1 iban'.split(' ')
-  const attrbiutes2='company_name company_status siret status_report insurance_type insurance_report company_picture'.split(' ')
-  let filled=[...attributes1, ...attrbiutes2].map(att => !!lodash.get(this, att))
+  let filled=Object.keys(PROFILE_ATTRIBUTES).map(att => !!lodash.get(this, att))
   return (filled.filter(v => !!v).length*1.0/filled.length)*100
+});
+
+UserSchema.virtual('missing_attributes').get(function() {
+  const missing=lodash(PROFILE_ATTRIBUTES)
+    .pickBy((name, att) => !lodash.get(this, att) && name)
+    .values()
+    .join(',')
+  return missing ? `Informations manquantes:${missing}` : ''
 });
 
 UserSchema.virtual("jobs", {
