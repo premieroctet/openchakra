@@ -25,7 +25,6 @@ const DataSourcePanel: React.FC = () => {
   const components: IComponents = useSelector(getComponents)
   const activeComponent: IComponent = useSelector(getSelectedComponent)
   const { setValueFromEvent, setValue, removeValue } = useForm()
-  const addTarget = usePropsSelector('addTarget')
   const dataSource = usePropsSelector('dataSource')
   const model = usePropsSelector('model')
   const attribute = usePropsSelector('attribute')
@@ -36,12 +35,15 @@ const DataSourcePanel: React.FC = () => {
   const contextFilter = usePropsSelector('contextFilter')
   const filterValue = usePropsSelector('filterValue')
   const filterAttribute = usePropsSelector('filterAttribute')
+  const contextAttribute = usePropsSelector('contextAttribute')
   const [providers, setProviders] = useState<IComponent[]>([])
   const [contextProviders, setContextProviders] = useState<IComponent[]>([])
   const [attributes, setAttributes] = useState({})
   const [subAttributes, setSubAttributes] = useState({})
   const [subAttributesDisplay, setSubAttributesDisplay] = useState({})
   const [filterAttributes, setFilterAttributes] = useState({})
+  const [contextAttributes, setContextAttributes] = useState({})
+
   const models = useSelector(getModels)
 
   useEffect(() => {
@@ -98,6 +100,14 @@ const DataSourcePanel: React.FC = () => {
         models,
       ) ?.type
       setContextProviders(providers.filter(p => p.props.model == currentModel))
+
+      const parentType = components.root.props.model
+
+      if (parentType) {
+        setContextAttributes(lodash.pickBy(models[parentType].attributes,
+          (att, name) =>att.ref && att.multiple && !name.includes('.')
+        ))
+      }
     } catch (err) {
       console.error(err)
     }
@@ -153,13 +163,21 @@ const DataSourcePanel: React.FC = () => {
     <Accordion allowToggle={true}>
       <AccordionContainer title="Data source">
         {(activeComponent?.type=='Checkbox' || activeComponent?.type=='IconCheck') &&
-        <FormControl htmlFor="addTarget" label='Add to context'>
-          <Checkbox
-            id="addTarget"
-            name="addTarget"
-            isChecked={addTarget}
-            onChange={onAddToTargetChange}
-          ></Checkbox>
+        <FormControl htmlFor="contextAttribute" label='Ctx attribute'>
+        <Select
+          id="contextAttribute"
+          onChange={setValueFromEvent}
+          name="contextAttribute"
+          size="xs"
+          value={contextAttribute || ''}
+        >
+          <option value={undefined}></option>
+          {Object.keys(contextAttributes).map(att => (
+            <option key={att} value={att}>
+              {att}
+            </option>
+          ))}
+        </Select>
         </FormControl>
         }
         <FormControl htmlFor="dataSource" label="Datasource">

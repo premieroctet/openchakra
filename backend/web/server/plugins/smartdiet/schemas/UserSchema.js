@@ -149,7 +149,6 @@ UserSchema.virtual('webinars').get(function() {
     ...(this.passed_events?.map(s => s._id)||[]),
   ]
   const res=(this.company?.webinars || []).filter(w => !exclude.some(excl => idEqual(excl._id, w._id)))
-  console.log(`webinars:${JSON.stringify(res)}`)
   return res
 })
 

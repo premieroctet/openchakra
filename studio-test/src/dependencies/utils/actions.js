@@ -368,12 +368,13 @@ export const ACTIONS = {
     return axios.post(url, body)
   },
 
-  addTarget: ({ value, context, append }) => {
+  addToContext: ({ value, context, contextAttribute, append }) => {
     let url = `${API_ROOT}/action`
     const body = {
-      action: 'addTarget',
+      action: 'addToContext',
       value,
       context,
+      contextAttribute,
       append,
     }
     return axios.post(url, body)
