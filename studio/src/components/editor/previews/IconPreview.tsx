@@ -1,10 +1,9 @@
 import React from 'react'
 import { useDropComponent } from '~hooks/useDropComponent'
 import { useInteractive } from '~hooks/useInteractive'
-import lucidicons from '~lucideiconsList'
-import icons from '~iconsList'
 import { Box } from '@chakra-ui/react'
 import theme from '~dependencies/theme/theme'
+import {iconStuff} from '~utils/misc' 
 
 interface Props {
   component: IComponent
@@ -38,33 +37,15 @@ const IconPreview = ({ component }: Props) => {
 
   if (icon) {
 
-    let Icon, iconProps = null
-    
-    const libIcon = props?.['data-lib']
+    const {IconFromSet, iconProps} = iconStuff({icon, dataLib: props?.['data-lib'], color: hexaColor, size: boxSize })
 
-    switch (libIcon) {
-      case 'lucid':
-        if (Object.keys(lucidicons).includes(icon)) {
-          Icon = lucidicons[icon as keyof typeof icons]
-          iconProps = {color: hexaColor, size: boxSize}
-        }
-      break;
-        
-      // Chakra Icons by default
-      default:
-        if (Object.keys(icons).includes(icon)) {
-          Icon = icons[icon as keyof typeof icons]
-          iconProps = {color: hexaColor, boxSize: boxSize, path: ""}
-        }
-      break;
+    if (IconFromSet) {
+      return (
+        <Box {...props} display="inline" ref={drop(ref)} >
+          {IconFromSet && <IconFromSet {...iconProps}/>}
+       </Box>
+      )
     }
-
-    return (
-      <Box {...props} display="inline-block" ref={drop(ref)} >
-        {Icon && <Icon {...iconProps}/>}
-     </Box>
-    )
-
   }
 
   return null

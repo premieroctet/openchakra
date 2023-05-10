@@ -4,6 +4,7 @@ import isBoolean from 'lodash/isBoolean'
 import lodash from 'lodash';
 
 import icons from '~iconsList'
+import lucidicons from '~lucideiconsList'
 
 import {
   ACTION_TYPE,
@@ -321,7 +322,8 @@ const buildBlock = ({
             propName.toLowerCase().includes('icon') &&
             childComponent.type !== 'Icon'
           ) {
-            if (Object.keys(icons).includes(propsValue)) {
+            const iconSets = {...icons, ...lucidicons}
+            if (Object.keys(iconSets).includes(propsValue)) {
               let operand = `={<${propsValue} />}`
               propsContent += `${propName}${operand} `
             }
