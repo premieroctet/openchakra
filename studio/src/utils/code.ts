@@ -4,6 +4,7 @@ import isBoolean from 'lodash/isBoolean'
 import lodash from 'lodash';
 
 import icons from '~iconsList'
+import lucidicons from '~lucideiconsList'
 
 import {
   ACTION_TYPE,
@@ -30,6 +31,7 @@ import {
   normalizePageName
 } from './misc';
 import { isJsonString } from '../dependencies/utils/misc'
+import { whatTheHexaColor } from '~components/editor/previews/IconPreview';
 
 //const HIDDEN_ATTRIBUTES=['dataSource', 'attribute']
 const HIDDEN_ATTRIBUTES: string[] = []
@@ -320,7 +322,8 @@ const buildBlock = ({
             propName.toLowerCase().includes('icon') &&
             childComponent.type !== 'Icon'
           ) {
-            if (Object.keys(icons).includes(propsValue)) {
+            const iconSets = {...icons, ...lucidicons}
+            if (Object.keys(iconSets).includes(propsValue)) {
               let operand = `={<${propsValue} />}`
               propsContent += `${propName}${operand} `
             }
@@ -350,7 +353,11 @@ const buildBlock = ({
             if (propName=='href') {
               operand=`="${getPageUrl(propsValue, pages)}"`
             }
-
+            
+            if (propName=='color') {
+              operand=`="${whatTheHexaColor(propsValue)}"`
+            }
+            
             propsContent += ` ${propName}${operand}`
           }
         })
@@ -474,10 +481,17 @@ const ${componentName} = () => (
   return code
 }
 
-const getIconsImports = (components: IComponents) => {
+const getIconsImports = (components: IComponents, lib?: string | null) => {
   return Object.keys(components).flatMap(name => {
     return Object.keys(components[name].props)
       .filter(prop => prop.toLowerCase().includes('icon'))
+      .filter(() => {
+        if (components[name].props?.['data-lib']) {
+          return components[name].props?.['data-lib'].includes(lib ?? "chakra")
+        } else {
+          return !lib
+        }
+      })
       .filter(prop => !!components[name].props[prop])
       .map(prop => components[name].props[prop])
   })
@@ -651,7 +665,11 @@ export const generateCode = async (
     noAutoSaveComponents
   })
   let componentsCodes = buildComponents(components, pages, singleDataPage, noAutoSaveComponents)
+  
+  const lucideIconImports = [...new Set(getIconsImports(components, 'lucid'))]
   const iconImports = [...new Set(getIconsImports(components))]
+
+  
 
   const imports = [
     ...new Set(
@@ -702,6 +720,12 @@ ${
   iconImports.length
     ? `
 import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
+    : ''
+}
+${
+  lucideIconImports.length
+    ? `
+import { ${lucideIconImports.join(',')} } from "lucide-react";`
     : ''
 }
 
