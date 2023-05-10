@@ -284,7 +284,7 @@ describe('Test models ', () => {
     console.log(data)
   })
 
-  it.only('User must empty populate for simple attributes', async () => {
+  it('User must empty populate for simple attributes', async () => {
     await User.create({
       activity: Object.keys(ACTIVITY)[0],
       gender: Object.keys(GENDER)[0],
@@ -298,7 +298,7 @@ describe('Test models ', () => {
     //console.log(users)
     const data=await loadFromDb({
       model: 'user',
-      fields: ['spoons']})
+      fields: ['spoons', 'spoons.user.company.administrators.fullname']})
     console.log(data)
   })
 
