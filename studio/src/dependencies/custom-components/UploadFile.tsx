@@ -62,6 +62,8 @@ const isScormZip = async (unzipped: any) => {
 }
 
 const UploadFile = ({
+  notifmsg,
+  okmsg = 'Ressource ajoutée',
   dataSource,
   attribute,
   value,
@@ -70,6 +72,8 @@ const UploadFile = ({
   reload,
   ...props
 }: {
+  notifmsg: boolean
+  okmsg: string
   dataSource: { _id: null } | null
   attribute: string
   value: string
@@ -153,7 +157,9 @@ const UploadFile = ({
           value: paramsBack.value,
         })
           .then(() => {
-            //setUploadInfo('Ressource ajoutée')
+            if (notifmsg) {
+              setUploadInfo(okmsg)
+            }
           })
           .then(() => {
             /* scorm file ? save version */
