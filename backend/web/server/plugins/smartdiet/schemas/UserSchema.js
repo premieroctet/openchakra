@@ -1,3 +1,4 @@
+const { shareTargets } = require('../../../utils/database')
 const mongoose = require('mongoose')
 const moment=require('moment')
 const {ACTIVITY, ROLES, ROLE_CUSTOMER, STATUS_FAMILY} = require('../consts')
@@ -120,21 +121,11 @@ UserSchema.virtual("spoons", {
   foreignField: "user" // is equal to foreignField
 });
 
-UserSchema.virtual("available_groups",
-{localField:'_id', foreignField: 'user'} //DUMMY
-).get(function() {
-  return mongoose.models.user.findOne(this._id)
-    .populate({path: 'company', populate: {path: 'groups', populate: 'targets'}})
-    .populate({path: 'targets'})
-    .then(user => {
-      let groups=lodash(user?.company?.groups || [])
-      // Remove already registered groups
-      groups=groups.filter(g => !g.users.map(u => u._id.toString()).includes(this._id.toString()))
-      // Only retain groups having at least my target my targets
-      groups=groups.filter(g => lodash.intersectionBy(g.targets, user.targets, t=>t._id.toString()).length>0)
-      //console.log(`Groups:${JSON.stringify(groups, null, 2)}`)
-      return groups
-    })
+UserSchema.virtual("available_groups", {localField: 'idsqd', foreignField: 'idqdsd'}).get(function () {
+  console.log(`my registered groups:${JSON.stringify(this.registered_groups)}`)
+  return lodash(this.company?.groups)
+    .filter(g => shareTargets(this, g))
+    .differenceBy(this.registered_groups, g => g._id.toString())
 })
 
 UserSchema.virtual("registered_groups", {

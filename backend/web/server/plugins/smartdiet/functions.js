@@ -103,7 +103,7 @@ USER_MODELS.forEach(m => {
       options: {ref: 'group'}}
   })
   declareVirtualField({model: m, field: 'available_groups', instance: 'Array',
-    requires: '', multiple: true,
+    requires: 'targets,company.groups.targets,registered_groups', multiple: true,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'group'}}

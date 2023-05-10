@@ -172,10 +172,8 @@ const getExposedModels = () => {
 
 // TODO query.populates accepts an array of populates !!!!
 const buildPopulates = (modelName, fields) => {
-  console.group(`Populates for ${modelName}-${JSON.stringify(fields)}`)
   // Retain all ref fields
   const model=getModels()[modelName]
-  console.group(`Models for ${modelName} is ${model}`)
   const attributes=model.attributes
   let requiredFields=[...fields]
   // Add declared required fields for virtuals
@@ -205,7 +203,6 @@ const buildPopulates = (modelName, fields) => {
     const attType=attributes[attributeName].type
     return {path: attributeName, populate: buildPopulates(attType, fields)}
   })
-  console.groupEnd()
   return pops.value()
 }
 
@@ -548,9 +545,9 @@ const idEqual = (id1, id2) => {
 // Return true if obj1.targets intersects obj2.targets
 const shareTargets = (obj1, obj2) => {
   if (!(obj1.targets && obj2.targets)) {
-    throw new Error(`obj1 && obj2 must have targets`)
+    throw new Error(`obj1 && obj2 must have targets:${!!obj1.targets}/${!!obj2.targets}`)
   }
-  return lodash.intersectionBy(obj1.targets, obj2.targets, t => t._id.toString())
+  return lodash.intersectionBy(obj1.targets, obj2.targets, t => t._id.toString()).length>0
 }
 
 const loadFromDb = ({model, fields, id, user, params}) => {
