@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const moment=require('moment')
-const {ACTIVITY, HOME_STATUS, ROLES, ROLE_CUSTOMER, STATUS_FAMILY} = require('../consts')
+const {ACTIVITY, ROLES, ROLE_CUSTOMER, STATUS_FAMILY} = require('../consts')
 const {GENDER} = require('../../dekuple/consts')
 const {schemaOptions} = require('../../../utils/schemas')
 const lodash=require('lodash')
@@ -40,7 +40,7 @@ const UserSchema = new Schema({
   company: {
     type: Schema.Types.ObjectId,
     ref: 'company',
-    required: true,
+    required: [function() { return this.role==ROLE_CUSTOMER }, 'La compagnie est obligatoire'],
   },
   password: {
     type: String,
@@ -110,11 +110,8 @@ UserSchema.virtual('spoons_count').get(function() {
 })
 
 // Computed virtual
-UserSchema.virtual('available_contents', {
-  ref: "content", // The Model to use
-  localField: "targets", // Find in Model, where localField
-  foreignField: "targets", // is equal to foreignField
-  //match: {default: true}
+UserSchema.virtual('available_contents', {localField: '_id', foreignField: '_id'}).get(function (callback) {
+  return []
 })
 
 UserSchema.virtual("spoons", {
@@ -136,7 +133,6 @@ UserSchema.virtual("available_groups",
       // Only retain groups having at least my target my targets
       groups=groups.filter(g => lodash.intersectionBy(g.targets, user.targets, t=>t._id.toString()).length>0)
       //console.log(`Groups:${JSON.stringify(groups, null, 2)}`)
-      console.log('returning from schema')
       return groups
     })
 })
@@ -148,7 +144,7 @@ UserSchema.virtual("registered_groups", {
 });
 
 // User's webinars are the company's ones
-UserSchema.virtual('webinars').get(function() {
+UserSchema.virtual('webinars', {localField:'_id', foreignField: '_id'}).get(function() {
   const exclude=[
     ...(this.skipped_events?.map(s => s._id)||[]),
     ...(this.passed_events?.map(s => s._id)||[]),

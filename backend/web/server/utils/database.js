@@ -171,6 +171,7 @@ const getExposedModels = () => {
 }
 
 const buildPopulate = (field, model) => {
+  console.log(`Building populate for ${model}.${field}`)
   const fields = field.split('.')
   const attributes = getModels()[model].attributes
   if (fields.length == 0) {
@@ -435,12 +436,13 @@ const addComputedFields = async(
   const refAttributes = getModelAttributes(model).filter(
     att => !att[0].includes('.') && att[1].ref,
   )
-  for ([attName, attParams] of refAttributes) {
+  for (const refAttribute of refAttributes) {
+    const [attName, attParams]=refAttribute
     const children = data[attName]
     if (children && !['program', 'origin'].includes(attName)) {
       if (attParams.multiple) {
         if (children.length > 0) {
-          const y = await Promise.allSettled(
+          await Promise.allSettled(
             children.map(child =>
               addComputedFields(
                 newUser,
@@ -454,7 +456,7 @@ const addComputedFields = async(
         }
       }
       else if (children) {
-        const z = await addComputedFields(
+        await addComputedFields(
           newUser,
           queryParams,
           children,
@@ -610,6 +612,39 @@ const idEqual = (id1, id2) => {
   return JSON.stringify(id1)==JSON.stringify(id2)
 }
 
+// Return true if obj1.targets intersects obj2.targets
+const shareTargets = (obj1, obj2) => {
+  if (!(obj1.targets && obj2.targets)) {
+    throw new Error(`obj1 && obj2 must have targets`)
+  }
+  return lodash.intersectionBy(obj1.targets, obj2.targets, t => t._id.toString())
+}
+
+const loadFromDb = ({model, fields, id, user, params}) => {
+  return callPreprocessGet({model, fields, id, user})
+    .then(({model, fields, id, data}) => {
+      console.log(`POSTGET ${model}/${id} ${fields} ${data}`)
+      if (data) {
+        return data
+      }
+      return buildQuery(model, id, fields)
+        .then(data => {
+          console.log(`got ${data}`)
+          // Force duplicate children
+          data = JSON.parse(JSON.stringify(data))
+          // Remove extra virtuals
+          data = retainRequiredFields({data, fields})
+          if (id && data.length == 0) { throw new NotFoundError(`Can't find ${model}:${id}`) }
+          return Promise.all(data.map(d => addComputedFields(user, params, d, model)))
+        })
+        .then(data => {
+          // return id ? Promise.resolve(data) : callFilterDataUser({model, data, id, user: req.user})
+          return callFilterDataUser({model, data, id, user})
+        })
+    })
+
+}
+
 module.exports = {
   hasRefs,
   MONGOOSE_OPTIONS,
@@ -643,4 +678,6 @@ module.exports = {
   idEqual,
   getExposedModels,
   simpleCloneModel,
+  shareTargets,
+  loadFromDb,
 }

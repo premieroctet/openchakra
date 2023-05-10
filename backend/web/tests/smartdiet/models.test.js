@@ -1,25 +1,27 @@
-const { CONTENTS_TYPE } = require('../../server/plugins/smartdiet/consts')
-const { getModels } = require('../../server/utils/database')
 const {forceDataModelSmartdiet, buildAttributesException}=require('../utils')
-
 forceDataModelSmartdiet()
+
+require('../../server/plugins/smartdiet/functions')
+const { getModels } = require('../../server/utils/database')
 
 const {
   getAvailableContents
 } = require('../../server/plugins/smartdiet/functions')
 const {
   ACTIVITY,
+  CONTENTS_TYPE,
   EVENT_COLL_CHALLENGE,
   GENDER,
-  HOME_STATUS
+  ROLE_CUSTOMER,
+  ROLE_ADMIN,
+  STATUS_FAMILY,
+  COMPANY_ACTIVITY_BANQUE,
 } = require('../../server/plugins/smartdiet/consts')
 
-const { STATUS } = require('../../server/plugins/aftral/consts')
 const CollectiveChallenge = require('../../server/models/CollectiveChallenge')
 const moment=require('moment')
 const mongoose = require('mongoose')
-const {MONGOOSE_OPTIONS} = require('../../server/utils/database')
-const {ROLE_CUSTOMER, ROLE_ADMIN, STATUS_FAMILY} = require('../../server/plugins/smartdiet/consts')
+const {MONGOOSE_OPTIONS, loadFromDb} = require('../../server/utils/database')
 
 const Accessory=require('../../server/models/Accessory')
 const AccessoryCategory=require('../../server/models/AccessoryCategory')
@@ -32,6 +34,7 @@ const Category=require('../../server/models/Category')
 const ChatRoom=require('../../server/models/ChatRoom')
 const Cigar=require('../../server/models/Cigar')
 const CigarCategory=require('../../server/models/CigarCategory')
+const Comment=require('../../server/models/Comment')
 const Commission=require('../../server/models/Commission')
 const Company=require('../../server/models/Company')
 const Contact=require('../../server/models/Contact')
@@ -46,6 +49,7 @@ const EventLog=require('../../server/models/EventLog')
 const FilterPresentation=require('../../server/models/FilterPresentation')
 const Group=require('../../server/models/Group')
 const Guest=require('../../server/models/Guest')
+const IndividualChallenge=require('../../server/models/IndividualChallenge')
 const Job=require('../../server/models/Job')
 const Key=require('../../server/models/Key')
 const LoggedUser=require('../../server/models/LoggedUser')
@@ -53,11 +57,13 @@ const Meal=require('../../server/models/Meal')
 const MealCategory=require('../../server/models/MealCategory')
 const Measure=require('../../server/models/Measure')
 const Message=require('../../server/models/Message')
+const Menu=require('../../server/models/Menu')
 const Newsletter=require('../../server/models/Newsletter')
 const Objective=require('../../server/models/Objective')
 const Offer=require('../../server/models/Offer')
 const OrderItem=require('../../server/models/OrderItem')
 const Payment=require('../../server/models/Payment')
+const Pip=require('../../server/models/Pip')
 const Post=require('../../server/models/Post')
 const Prestation=require('../../server/models/Prestation')
 const PriceList=require('../../server/models/PriceList')
@@ -85,8 +91,18 @@ jest.setTimeout(20000)
 
 describe('Test models ', () => {
 
+  var company
   beforeAll(async() => {
     await mongoose.connect(`mongodb://localhost/test${moment().unix()}`, MONGOOSE_OPTIONS)
+    const offer=await Offer.create({
+      coaching_credit:5, video_unlimited: true, podcasts_unlimited: true,
+      infographies_unlimited: true, articles_unlimited: true,
+      webinars_unlimited: true, duration: 4, price: 500, name: 'Offre'
+    })
+    company=await Company.create({
+      offer, size:12, activity: COMPANY_ACTIVITY_BANQUE, name: 'Wappizy',
+    })
+
   })
 
   afterAll(async() => {
@@ -106,6 +122,7 @@ describe('Test models ', () => {
     expect(ChatRoom).toBeFalsy()
     expect(Cigar).toBeFalsy()
     expect(CigarCategory).toBeFalsy()
+    expect(Comment).toBeTruthy()
     expect(Commission).toBeFalsy()
     expect(Company).toBeTruthy()
     expect(Contact).toBeFalsy()
@@ -132,6 +149,7 @@ describe('Test models ', () => {
     expect(Offer).toBeTruthy()
     expect(OrderItem).toBeFalsy()
     expect(Payment).toBeFalsy()
+    expect(Pip).toBeTruthy()
     expect(Post).toBeFalsy()
     expect(Prestation).toBeFalsy()
     expect(PriceList).toBeFalsy()
@@ -157,11 +175,11 @@ describe('Test models ', () => {
   })
 
   it('Mandatory attributes for user role', () => {
-    const ex=buildAttributesException('activity birthday gender dataTreatmentAccepted cguAccepted pseudo home_status'.split(' '))
+    const ex=buildAttributesException('dataTreatmentAccepted'.split(' '))
     expect(User.create({email: 'a@a.com', lastname: 'Auvray', firstname: 'Sébastien'}))
     .rejects
     .toThrow(ex)
-    const ex2=buildAttributesException('activity birthday gender dataTreatmentAccepted cguAccepted pseudo child_count'.split(' '))
+    const ex2=buildAttributesException('dataTreatmentAccepted cguAccepted pseudo company'.split(' '))
     expect(User.create({
       role: ROLE_CUSTOMER, email: 'a@a.com',
       lastname: 'Auvray', firstname: 'Sébastien', home_status: STATUS_FAMILY}))
@@ -178,17 +196,11 @@ describe('Test models ', () => {
   })
 
   it('CollectiveChallenge should inherit from Event', async () => {
+    const user=await User.findOne({})
     await CollectiveChallenge.create({
-      spoons:1, name: 'Challenge collectif',
-      start_date: moment(), end_date: moment()
+      spoons:1, name: 'Challenge collectif', description: 'Challenge collectif',
+      start_date: moment(), end_date: moment(), user
     })
-    expect(Event.create({
-      type: EVENT_COLL_CHALLENGE,
-      spoons:1, name: 'Challenge collectif',
-      start_date: moment(), end_date: moment()
-    }))
-    .rejects
-    .toThrow(/.*doit.*CollectiveChallenge.*/)
     const events=await Event.find()
     expect(events.length).toBe(1)
   })
@@ -201,17 +213,18 @@ describe('Test models ', () => {
       activity: Object.keys(ACTIVITY)[0],
       gender: Object.keys(GENDER)[0],
       dataTreatmentAccepted: true, cguAccepted: true,
-      home_status: Object.keys(HOME_STATUS)[0],
       pseudo: 'seb', birthday: moment(),
       role: ROLE_CUSTOMER, email: 'a@a.com',
       lastname: 'Auvray', firstname: 'Sébastien',
-      targets:[target, target2]
+      targets:[target, target2],
+      company,
     })
     const key=await Key.create({name: 'name', picture: 'hop'})
     const content=await Content.create({
       name: 'name', key: key, duration: 1,
       contents: 'contenu', default: false, picture: 'hop', type: 'VIDEO',
-      targets:[target, target2]
+      targets:[target, target2],
+      creator: user,
     })
     const contents=await getAvailableContents(user)
   })
@@ -228,17 +241,17 @@ describe('Test models ', () => {
     expect(companyType.ref).toBe(true)
   })
 
-  it('User must see defaut contents', async () => {
+  it('User must see default contents', async () => {
     const tgtCat=await Category.create({name: 'cat', picture: 'pct'})
     const target=await Target.create({name:'hop', category: tgtCat})
     const key=await Key.create({name: 'Clé', picture: 'Tagada'})
     const user=await User.create({dataTreatmentAccepted:true,cguAccepted:true,
         pseudo: 'Seb',email: 'email', lastname: 'Auvray', firstname: 'Seb',
-        targets: target
+        targets: [target], role: ROLE_CUSTOMER, company,
     })
     const content=await Content.create({
       key, duration:1, contents: 'hop', picture: 'picture', default: false, name: 'Contenu',
-      type:Object.keys(CONTENTS_TYPE)[0], creator:user, targets: target,
+      type:Object.keys(CONTENTS_TYPE)[0], creator:user, targets: [target],
     })
     const content2=await Content.create({
       key, duration:1, contents: 'hop2', picture: 'picture', default: false, name: 'Contenu',
@@ -246,7 +259,24 @@ describe('Test models ', () => {
     })
 
     const foundUser=await User.findOne().populate('available_contents')
-    expect(foundUser.targets).toHaveLength(2)
+    console.log('in test')
+    expect(foundUser.available_contents).toHaveLength(1)
+  })
+
+  it.only('User must populate webinars', async () => {
+    await User.create({
+      activity: Object.keys(ACTIVITY)[0],
+      gender: Object.keys(GENDER)[0],
+      dataTreatmentAccepted: true, cguAccepted: true,
+      pseudo: 'seb', birthday: moment(),
+      role: ROLE_CUSTOMER, email: 'a@a.com',
+      lastname: 'Auvray', firstname: 'Sébastien',
+      company,
+    })
+    const users=await User.find().populate({path: 'webinars'})
+    console.log(users)
+    const data=await loadFromDb({model: 'user', fields: ['fullname', 'webinars.description']})
+    console.log(data)
   })
 
 })

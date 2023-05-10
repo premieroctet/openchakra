@@ -67,7 +67,7 @@ USER_MODELS.forEach(m => {
       options: {ref: 'spoon'}}
   })
   declareVirtualField({model: m, field: 'available_contents', instance: 'Array',
-    requires: '', multiple: true,
+    requires: 'targets', multiple: true,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'contents'}}

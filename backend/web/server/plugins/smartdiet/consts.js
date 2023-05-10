@@ -311,4 +311,5 @@ module.exports={
   NUTRISCORE,
   ECOSCORE,
   UNIT,
+  COMPANY_ACTIVITY_BANQUE,
 }
