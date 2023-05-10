@@ -35,8 +35,8 @@ const ActionPanel = ({
           value={action || ''}
         >
           <option value={undefined}></option>
-          {lodash.orderBy(actions, a => ACTIONS[a].label).map(action => (
-            <option value={action}>{ACTIONS[action].label}</option>
+          {lodash.orderBy(actions, a => ACTIONS[a].label).map((action, i) => (
+            <option key={i} value={action}>{ACTIONS[action].label}</option>
           ))}
         </Select>
       </FormControl>

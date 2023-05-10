@@ -1,10 +1,16 @@
 import React, { memo } from 'react'
-import ChildrenControl from '~components/inspector/controls/ChildrenControl'
+import SwitchControl from '~components/inspector/controls/SwitchControl'
+import usePropsSelector from '~hooks/usePropsSelector'
+import TextControl from '~components/inspector/controls/TextControl'
 
 const UploadFilePanel = () => {
+  
+  const noticemsg = usePropsSelector('notifmsg')
+
   return (
     <>
-      <ChildrenControl />
+      <SwitchControl label="Message de confirmation" name="notifmsg" />
+      {noticemsg && <TextControl name="okmsg" label="OK message" />}
     </>
   )
 }
