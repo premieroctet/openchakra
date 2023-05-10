@@ -242,7 +242,7 @@ declareEnumField({model: 'contact', field: 'status', enumValues: CONTACT_STATUS}
 const filterDataUser = ({model, data, user}) => {
   if (model == 'jobUser') {
     // Hide jobUser.user.hidden
-    return data.filter(jobUser => !(jobUser.user.hidden===true))
+    return data.filter(jobUser => !(jobUser.user?.hidden===true))
   }
   return data
 }
