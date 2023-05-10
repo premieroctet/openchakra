@@ -64,13 +64,13 @@ USER_MODELS.forEach(m => {
     requires: '', multiple: true,
     caster: {
       instance: 'ObjectID',
-      options: {ref: 'spoon'}}
+      options: {ref: 'userSpoon'}}
   })
   declareVirtualField({model: m, field: 'available_contents', instance: 'Array',
     requires: 'targets', multiple: true,
     caster: {
       instance: 'ObjectID',
-      options: {ref: 'contents'}}
+      options: {ref: 'content'}}
   })
   declareVirtualField({model: m, field: 'webinars', instance: 'Array',
     requires: 'company,skipped_events,passed_events', multiple: true,

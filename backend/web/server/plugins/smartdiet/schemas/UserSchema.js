@@ -115,7 +115,7 @@ UserSchema.virtual('available_contents', {localField: '_id', foreignField: '_id'
 })
 
 UserSchema.virtual("spoons", {
-  ref: "spoon", // The Model to use
+  ref: "userSpoon", // The Model to use
   localField: "_id", // Find in Model, where localField
   foreignField: "user" // is equal to foreignField
 });

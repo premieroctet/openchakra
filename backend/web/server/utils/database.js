@@ -170,101 +170,43 @@ const getExposedModels = () => {
   return models.value()
 }
 
-const buildPopulate = (field, model) => {
-  console.log(`Building populate for ${model}.${field}`)
-  const fields = field.split('.')
-  const attributes = getModels()[model].attributes
-  if (fields.length == 0) {
-    return null
-  }
-  let currentField = fields[0]
-  const virtuals = lodash(fields.map(f => f.split('.')[0]))
-    .uniq()
-    .map(f => DECLARED_VIRTUALS[model]?.[f]?.requires?.split(','))
-    .flatten()
-    .filter(f => !!f)
-    .value()
-
-  if (virtuals?.length>0) {
-    // TODO: should also take next fields into account
-    currentField=virtuals[0]
-  }
-  const currentAttribute = attributes[currentField]
-  if (!currentAttribute) {
-    throw new Error(`Can not get attribute for ${model}/${currentField}`)
-  }
-  if (!currentAttribute.ref) {
-    return null
-  }
-  let result = {path: currentField}
-  if (fields.length > 1) {
-    const nextPop = buildPopulate(
-      fields.slice(1).join('.'),
-      currentAttribute.type,
-    )
-    if (nextPop) {
-      result.populate = nextPop
-    }
-  }
-  return result
-}
-
 // TODO query.populates accepts an array of populates !!!!
-const buildPopulates = (fields, model) => {
-
-  // TODO Bug: in ['program.themes', 'program.otherref']
-  // should return {path: 'program', populate: [{path: 'themes'}, {path: 'otherref'}]}
-  // but today return {path: 'program', populate: {path: 'themes'}]}
-  // tofix: cf. lodash.mergeWith
-
-  const modelAttributes = Object.fromEntries(getModelAttributes(model))
-
-  const virtuals = lodash(fields.map(f => f.split('.')[0]))
-    .uniq()
-    .map(f => DECLARED_VIRTUALS[model]?.[f]?.requires?.split(','))
-    .flatten()
-    .filter(f => !!f)
-    .value()
-
-  fields = [...fields, ...virtuals]
-
-  const modelAttributesNames = Object.keys(modelAttributes)
-  const requiredAttributesNames = lodash(fields)
-    .map(f => f.split('.')[0])
-    .uniq()
-    .value()
-  const unknownAttributesNames = lodash(requiredAttributesNames)
-    .difference(modelAttributesNames)
-    .value()
-  if (unknownAttributesNames.length > 0) {
-    throw new Error(
-      `Model ${model} : unknown attributes ${unknownAttributesNames}`,
-    )
+const buildPopulates = (modelName, fields) => {
+  console.group(`Populates for ${modelName}-${JSON.stringify(fields)}`)
+  // Retain all ref fields
+  const model=getModels()[modelName]
+  console.group(`Models for ${modelName} is ${model}`)
+  const attributes=model.attributes
+  let requiredFields=[...fields]
+  // Add declared required fields for virtuals
+  let added=true
+  while (added) {
+    added=false
+    lodash(requiredFields).groupBy(f => f.split('.')[0]).keys().forEach(directAttribute => {
+      let required=lodash.get(DECLARED_VIRTUALS, `${modelName}.${directAttribute}.requires`) || null
+      if (required) {
+        required=required.split(',')
+        if (lodash.difference(required, requiredFields).length>0) {
+          requiredFields=lodash.uniq([...requiredFields, ...required])
+          added=true
+        }
+      }
+    })
   }
 
-  // Customizer to merge same keys are arrays
-  const customizer= (a, b) => {
-    if (a?.path && b?.path && a.path!=b.path) {
-      //return {...a, ...b, path:[a.path, b.path]}
-      return [a, b]
-    }
-  }
-
-  const populates = lodash(fields)
-    // Retain only ObjectId fields
-    .filter(att => modelAttributes[att.split('.')[0]].ref == true)
+  // Retain ref attributes only
+  const groupedAttributes=lodash(requiredFields)
     .groupBy(att => att.split('.')[0])
-    // Build populates for each 1st level attribute
-    .mapValues(fields => fields.map(f => buildPopulate(f, model)))
-    // Merge populates for each 1st level attribute
-    .mapValues(
-      pops => pops.reduce((acc, pop) => lodash.mergeWith({}, acc, pop, customizer)),
-      {},
-    )
-    .values()
-    .value()
+    .pickBy((_,attName) => attributes[attName].ref===true)
+    .mapValues(attributes => attributes.map(att => att.split('.').slice(1).join('.')).filter(v => !lodash.isEmpty(v)))
 
-  return populates
+  /// Build populate using att and subpopulation
+  const pops=groupedAttributes.entries().map(([attributeName, fields]) => {
+    const attType=attributes[attributeName].type
+    return {path: attributeName, populate: buildPopulates(attType, fields)}
+  })
+  console.groupEnd()
+  return pops.value()
 }
 
 /**
@@ -299,17 +241,6 @@ const buildQuery = (model, id, fields) => {
   console.log(`Requesting model:${model}, id:${id || 'none'} fields:${fields}`)
   const modelAttributes = Object.fromEntries(getModelAttributes(model))
 
-  const virtuals = lodash(fields.map(f => f.split('.')[0]))
-    .uniq()
-    .map(f => DECLARED_VIRTUALS[model]?.[f]?.requires?.split(','))
-    .flatten()
-    .filter(f => !!f)
-    .value()
-
-  fields = [...fields, ...virtuals]
-
-  const populates = buildPopulates(fields, model)
-
   const select = lodash(fields)
     .map(att => att.split('.')[0])
     .uniq()
@@ -320,7 +251,9 @@ const buildQuery = (model, id, fields) => {
 
   const criterion = id ? {_id: id} : {}
   let query = mongoose.connection.models[model].find(criterion, select)
-  query = populates.reduce((q, key) => q.populate(key), query)
+  const populates=buildPopulates(model, fields)
+  console.log(`Populates is ${JSON.stringify(populates)}`)
+  query = query.populate(populates)
   return query
 }
 
@@ -558,7 +491,7 @@ const putAttribute = ({parent, attribute, value, user}) => {
             return object.save()
           })
       }
-      const populates=buildPopulates([attribute], model)
+      const populates=buildPopulates(model, [attribute])
 
       let query=mongooseModel.find({$or: [{_id: parent}, {origin: parent}]})
       query = populates.reduce((q, key) => q.populate(key), query)
@@ -629,7 +562,6 @@ const loadFromDb = ({model, fields, id, user, params}) => {
       }
       return buildQuery(model, id, fields)
         .then(data => {
-          console.log(`got ${data}`)
           // Force duplicate children
           data = JSON.parse(JSON.stringify(data))
           // Remove extra virtuals
@@ -654,7 +586,6 @@ module.exports = {
   getModelAttributes,
   getModels,
   buildQuery,
-  buildPopulate,
   buildPopulates,
   cloneModel,
   cloneArray,

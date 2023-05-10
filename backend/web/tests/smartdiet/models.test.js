@@ -86,6 +86,8 @@ const TrainingCenter=require('../../server/models/TrainingCenter')
 const UIConfiguration=require('../../server/models/UIConfiguration')
 const User=require('../../server/models/User')
 const UserSessionData=require('../../server/models/UserSessionData')
+const UserSpoon=require('../../server/models/UserSpoon')
+const Webinar=require('../../server/models/Webinar')
 
 jest.setTimeout(20000)
 
@@ -263,7 +265,7 @@ describe('Test models ', () => {
     expect(foundUser.available_contents).toHaveLength(1)
   })
 
-  it.only('User must populate webinars', async () => {
+  it('User must populate webinars', async () => {
     await User.create({
       activity: Object.keys(ACTIVITY)[0],
       gender: Object.keys(GENDER)[0],
@@ -273,9 +275,30 @@ describe('Test models ', () => {
       lastname: 'Auvray', firstname: 'Sébastien',
       company,
     })
-    const users=await User.find().populate({path: 'webinars'})
-    console.log(users)
-    const data=await loadFromDb({model: 'user', fields: ['fullname', 'webinars.description']})
+    //const users=await User.find().populate({path: 'webinars'})
+    //console.log(users)
+    const data=await loadFromDb({
+      model: 'user',
+      //fields: ['fullname', 'webinars.description', 'spoons.count', 'available_contents', 'webinars.animator.fullname']})
+      fields: ['available_contents']})
+    console.log(data)
+  })
+
+  it.only('User must empty populate for simple attributes', async () => {
+    await User.create({
+      activity: Object.keys(ACTIVITY)[0],
+      gender: Object.keys(GENDER)[0],
+      dataTreatmentAccepted: true, cguAccepted: true,
+      pseudo: 'seb', birthday: moment(),
+      role: ROLE_CUSTOMER, email: 'a@a.com',
+      lastname: 'Auvray', firstname: 'Sébastien',
+      company,
+    })
+    //const users=await User.find().populate({path: 'webinars'})
+    //console.log(users)
+    const data=await loadFromDb({
+      model: 'user',
+      fields: ['spoons']})
     console.log(data)
   })
 
