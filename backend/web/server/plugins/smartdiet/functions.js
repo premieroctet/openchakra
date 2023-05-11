@@ -96,6 +96,12 @@ USER_MODELS.forEach(m => {
       instance: 'ObjectID',
       options: {ref: 'individualChallenge'}}
   })
+  declareVirtualField({model: m, field: '_all_menus', instance: 'Menu',
+    multiple: false,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'menu'}}
+  })
   declareVirtualField({model: m, field: 'menu', instance: 'Menu',
     requires: '', multiple: false,
     caster: {

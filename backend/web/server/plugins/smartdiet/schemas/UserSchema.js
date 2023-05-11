@@ -123,7 +123,7 @@ UserSchema.virtual("_all_contents", {
 
 // Computed virtual
 UserSchema.virtual('contents', {localField: '_id', foreignField: '_id'}).get(function (callback) {
-  return this._all_contents.filter(c => [ROLE_CUSTOMER, ROLE_RH].includes(this.role) ? !c.hidden : true)
+  return this._all_contents?.filter(c => [ROLE_CUSTOMER, ROLE_RH].includes(this.role) ? !c.hidden : true) || []
 })
 
 UserSchema.virtual("spoons", {
@@ -161,7 +161,6 @@ UserSchema.virtual("_all_individual_challenges", {
   foreignField: "dummy" // is equal to foreignField
 });
 
-
 // User's ind. challenges are all expect the skipped ones and the passed ones
 UserSchema.virtual('individual_challenges', {localField: 'id', foreignField: 'id'}).get(function() {
   console.log(this._all_individual_challenges)
@@ -169,15 +168,18 @@ UserSchema.virtual('individual_challenges', {localField: 'id', foreignField: 'id
     ...(this.skipped_events?.map(s => s._id)||[]),
     ...(this.passed_events?.map(s => s._id)||[]),
   ]
-  return this._all_individual_challenges.filter(c => !exclude.some(excl => idEqual(excl._id, c._id)))
+  return this._all_individual_challenges?.filter(c => !exclude.some(excl => idEqual(excl._id, c._id)))||[]
 })
+
+UserSchema.virtual("_all_menus", {
+  ref: "menu", // The Model to use
+  localField: "dummy", // Find in Model, where localField
+  foreignField: "dummy" // is equal to foreignField
+});
 
 // First available menu for this week
 UserSchema.virtual('menu').get(function() {
-  return mongoose.models.menu.find()
-    .then(menus => {
-      return menus.find(m => moment().isBetween(m.start_date, m.end_date))
-    })
+  return this._all_menus?.find(m => moment().isBetween(m.start_date, m.end_date)) || null
 })
 
 // User's clletive challenges are the company's ones
