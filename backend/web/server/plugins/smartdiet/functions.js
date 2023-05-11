@@ -45,6 +45,9 @@ const preCreate = ({model, params, user}) => {
   if (['content', 'collectiveChallenge', 'individualChallenge', 'webinar', 'menu'].includes(model)) {
     params.user=user
   }
+  if (['message'].includes(model)) {
+    params.sender=user
+  }
   return Promise.resolve({model, params})
 }
 
@@ -214,6 +217,13 @@ declareEnumField({model: 'recipe', field: 'nutriscore', enumValues: NUTRISCORE})
 declareEnumField({model: 'recipe', field: 'ecoscore', enumValues: ECOSCORE})
 
 declareEnumField({model: 'ingredient', field: 'unit', enumValues: UNIT})
+
+declareVirtualField({model: 'group', field: 'messages', instance: 'Array',
+  multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'message'}}
+})
 
 const getAvailableContents = (user, params, data) => {
   return Content.find()
