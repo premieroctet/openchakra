@@ -10,7 +10,7 @@ interface Props {
 }
 
 export function whatTheHexaColor(color: string) {
-  const colorArray = color?.split('.') || color
+  const colorArray = typeof color === 'string' && color?.split('.') || color
   const isChakraTint = colorArray?.[1] // get the tint
   
   let retainedColor = colorArray?.[0]
@@ -42,7 +42,7 @@ const IconPreview = ({ component }: Props) => {
     if (IconFromSet) {
       return (
         <Box {...props} display="inline" ref={drop(ref)} >
-          {IconFromSet && <IconFromSet {...iconProps}/>}
+          {IconFromSet && <IconFromSet {...iconProps} {...props} />}
        </Box>
       )
     }
