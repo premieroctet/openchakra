@@ -42,7 +42,7 @@ const IconPreview = ({ component }: Props) => {
     if (IconFromSet) {
       return (
         <Box {...props} display="inline" ref={drop(ref)} >
-          {IconFromSet && <IconFromSet {...iconProps}/>}
+          {IconFromSet && <IconFromSet {...iconProps} {...props} />}
        </Box>
       )
     }
