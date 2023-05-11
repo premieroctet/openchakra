@@ -41,8 +41,8 @@ export const getPageUrl = (
 export const iconStuff = ({
   icon, 
   dataLib = '', 
-  color = "#000", 
-  size = "24px"
+  color, 
+  size
 }: {
   icon: string, 
   dataLib: string, 
@@ -56,7 +56,7 @@ export const iconStuff = ({
     case 'lucid':
       if (Object.keys(lucidicons).includes(icon)) {
         IconFromSet = lucidicons[icon as keyof typeof icons]
-        iconProps = {color, size}
+        iconProps = {color, size: size || 'max-content'}
       }
     break;
       
