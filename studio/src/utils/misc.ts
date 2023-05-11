@@ -42,12 +42,14 @@ export const iconStuff = ({
   icon, 
   dataLib = '', 
   color, 
-  size
+  size,
+  fill
 }: {
   icon: string, 
   dataLib: string, 
   color?: string, 
   size?: string,
+  fill?: string,
 }) => {
 
   let IconFromSet, iconProps = null
@@ -56,7 +58,7 @@ export const iconStuff = ({
     case 'lucid':
       if (Object.keys(lucidicons).includes(icon)) {
         IconFromSet = lucidicons[icon as keyof typeof icons]
-        iconProps = {color, size: size || 'max-content'}
+        iconProps = {color, fill, size: size || 'auto'}
       }
     break;
       
@@ -64,7 +66,7 @@ export const iconStuff = ({
     default:
       if (Object.keys(icons).includes(icon)) {
         IconFromSet = icons[icon as keyof typeof icons]
-        iconProps = {color, boxSize: size, path: ""}
+        iconProps = {color, width: "auto", height: "auto", boxSize: size, path: ""}
       }
     break;
   }
