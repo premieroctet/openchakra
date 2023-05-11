@@ -19,6 +19,7 @@ const IconButtonPanel = () => {
       <IconControl name="icon" label="Icon" />
       <SizeControl name="size" label="Size" value={size} />
       <ColorsControl label="Color" name="colorScheme" />
+      <ColorsControl label="Fill Color" name="fill" />
       <SwitchControl label="Loading" name="isLoading" />
       <SwitchControl label="Round" name="isRound" />
       <VariantsControl label="Variant" name="variant" value={variant} />
