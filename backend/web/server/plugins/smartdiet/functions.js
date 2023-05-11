@@ -117,14 +117,8 @@ USER_MODELS.forEach(m => {
       instance: 'ObjectID',
       options: {ref: 'collectiveChallenge'}}
   })
-  declareVirtualField({model: m, field: 'groups', instance: 'Array',
-    requires: '', multiple: true,
-    caster: {
-      instance: 'ObjectID',
-      options: {ref: 'group'}}
-  })
   declareVirtualField({model: m, field: 'available_groups', instance: 'Array',
-    requires: 'targets,company.groups.targets,registered_groups', multiple: true,
+    requires: 'targets,company.groups,company.groups.targets,registered_groups', multiple: true,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'group'}}

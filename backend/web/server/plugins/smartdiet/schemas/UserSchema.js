@@ -132,8 +132,7 @@ UserSchema.virtual("spoons", {
   foreignField: "user" // is equal to foreignField
 });
 
-UserSchema.virtual("available_groups", {localField: 'idsqd', foreignField: 'idqdsd'}).get(function () {
-  console.log(`my registered groups:${JSON.stringify(this.registered_groups)}`)
+UserSchema.virtual("available_groups", {localField: 'id', foreignField: 'id'}).get(function () {
   return lodash(this.company?.groups)
     .filter(g => shareTargets(this, g))
     .differenceBy(this.registered_groups, g => g._id.toString())

@@ -423,6 +423,16 @@ export const ACTIONS: IActions = {
     options: {},
     next: ['openPage'],
   },
+  smartdiet_join_group: {
+    label: 'SM Joindre le groupe',
+    options: {},
+    next: ['openPage'],
+  },
+  smartdiet_leave_group: {
+    label: 'SM Quitter le groupe',
+    options: {},
+    next: ['openPage'],
+  },
 }
 
 export const allowsActions = (component: IComponent) => {
