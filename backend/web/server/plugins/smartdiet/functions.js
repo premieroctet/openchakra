@@ -66,8 +66,14 @@ USER_MODELS.forEach(m => {
       instance: 'ObjectID',
       options: {ref: 'userSpoon'}}
   })
-  declareVirtualField({model: m, field: 'available_contents', instance: 'Array',
-    requires: 'targets', multiple: true,
+  declareVirtualField({model: m, field: '_all_contents', instance: 'Array',
+    multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'content'}}
+  })
+  declareVirtualField({model: m, field: 'contents', instance: 'Array',
+    requires: '_all_contents', multiple: true,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'content'}}
@@ -78,8 +84,14 @@ USER_MODELS.forEach(m => {
       instance: 'ObjectID',
       options: {ref: 'webinar'}}
   })
-  declareVirtualField({model: m, field: 'individual_challenges', instance: 'Array',
+  declareVirtualField({model: m, field: '_all_individual_challenges', instance: 'Array',
     requires: '', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'individualChallenge'}}
+  })
+  declareVirtualField({model: m, field: 'individual_challenges', instance: 'Array',
+    requires: '_all_individual_challenges', multiple: true,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'individualChallenge'}}
@@ -174,7 +186,7 @@ declareVirtualField({model: 'offer', field: 'company', instance: 'offer',
 declareEnumField({model: 'offer', field: 'groups_credit', enumValues: GROUPS_CREDIT})
 
 declareVirtualField({model: 'target', field: 'contents', instance: 'Array',
-  requires: '', multiple: true,
+  multiple: true,
   caster: {
     instance: 'ObjectID',
     options: {ref: 'content'}}

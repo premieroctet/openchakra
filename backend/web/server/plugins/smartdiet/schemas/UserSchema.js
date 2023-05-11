@@ -93,6 +93,11 @@ const UserSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'event',
   }],
+  dummy: {
+    type: Number,
+    default: 0,
+    required: true,
+  },
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
@@ -110,9 +115,15 @@ UserSchema.virtual('spoons_count').get(function() {
     .sum()
 })
 
+UserSchema.virtual("_all_contents", {
+  ref: "content", // The Model to use
+  localField: "dummy", // Find in Model, where localField
+  foreignField: "dummy" // is equal to foreignField
+});
+
 // Computed virtual
-UserSchema.virtual('available_contents', {localField: '_id', foreignField: '_id'}).get(function (callback) {
-  return []
+UserSchema.virtual('contents', {localField: '_id', foreignField: '_id'}).get(function (callback) {
+  return this._all_contents.filter(c => [ROLE_CUSTOMER, ROLE_RH].includes(this.role) ? !c.hidden : true)
 })
 
 UserSchema.virtual("spoons", {
@@ -144,16 +155,21 @@ UserSchema.virtual('webinars', {localField:'_id', foreignField: '_id'}).get(func
   return res
 })
 
-// User's ind. challenges are all exepct the skipped ones and the passed ones
-UserSchema.virtual('individual_challenges').get(function() {
-  return mongoose.models.individualChallenge.find()
-    .then(challenges => {
-      const exclude=[
-        ...(this.skipped_events?.map(s => s._id)||[]),
-        ...(this.passed_events?.map(s => s._id)||[]),
-      ]
-      return challenges.filter(c => !exclude.some(excl => idEqual(excl._id, c._id)))
-    })
+UserSchema.virtual("_all_individual_challenges", {
+  ref: "individualChallenge", // The Model to use
+  localField: "dummy", // Find in Model, where localField
+  foreignField: "dummy" // is equal to foreignField
+});
+
+
+// User's ind. challenges are all expect the skipped ones and the passed ones
+UserSchema.virtual('individual_challenges', {localField: 'id', foreignField: 'id'}).get(function() {
+  console.log(this._all_individual_challenges)
+  const exclude=[
+    ...(this.skipped_events?.map(s => s._id)||[]),
+    ...(this.passed_events?.map(s => s._id)||[]),
+  ]
+  return this._all_individual_challenges.filter(c => !exclude.some(excl => idEqual(excl._id, c._id)))
 })
 
 // First available menu for this week

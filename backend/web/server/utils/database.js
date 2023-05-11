@@ -247,7 +247,7 @@ const buildQuery = (model, id, fields) => {
     .value()
 
   const criterion = id ? {_id: id} : {}
-  let query = mongoose.connection.models[model].find(criterion, select)
+  let query = mongoose.connection.models[model].find(criterion) //, select)
   const populates=buildPopulates(model, fields)
   console.log(`Populates is ${JSON.stringify(populates)}`)
   query = query.populate(populates)
