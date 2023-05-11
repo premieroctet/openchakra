@@ -124,15 +124,15 @@ let ACTIONS = {
     })
   },
 
-  addTarget: ({value, context, append}) => {
-    console.log(`${append ? 'Adding':'Removing'} target ${value} to context ${context}`)
+  addToContext: ({value, context, contextAttribute, append}) => {
+    console.log(`${append ? 'Adding':'Removing'} target ${value} to context ${context}/${contextAttribute}`)
     return getModel(context)
       .then(modelName => {
         const model=mongoose.connection.models[modelName]
         return append ?
-          model.findByIdAndUpdate(context, {$addToSet: {targets: value}})
+          model.findByIdAndUpdate(context, {$addToSet: {[contextAttribute]: value}})
           :
-          model.findByIdAndUpdate(context, {$pull: {targets: value}})
+          model.findByIdAndUpdate(context, {$pull: {[contextAttribute]: value}})
       })
       .catch(err => {
         console.error(err)

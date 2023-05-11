@@ -79,8 +79,12 @@ const ContentSchema = new Schema({
   source: {
     type: String,
     required: false,
-  }
-
+  },
+  dummy: {
+    type: Number,
+    default: 0,
+    required: true,
+  },
 }, schemaOptions)
 
 ContentSchema.virtual('likes_count').get(function() {

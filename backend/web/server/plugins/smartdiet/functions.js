@@ -64,13 +64,19 @@ USER_MODELS.forEach(m => {
     requires: '', multiple: true,
     caster: {
       instance: 'ObjectID',
-      options: {ref: 'spoon'}}
+      options: {ref: 'userSpoon'}}
   })
-  declareVirtualField({model: m, field: 'available_contents', instance: 'Array',
-    requires: '', multiple: true,
+  declareVirtualField({model: m, field: '_all_contents', instance: 'Array',
+    multiple: true,
     caster: {
       instance: 'ObjectID',
-      options: {ref: 'contents'}}
+      options: {ref: 'content'}}
+  })
+  declareVirtualField({model: m, field: 'contents', instance: 'Array',
+    requires: '_all_contents', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'content'}}
   })
   declareVirtualField({model: m, field: 'webinars', instance: 'Array',
     requires: 'company,skipped_events,passed_events', multiple: true,
@@ -78,11 +84,23 @@ USER_MODELS.forEach(m => {
       instance: 'ObjectID',
       options: {ref: 'webinar'}}
   })
-  declareVirtualField({model: m, field: 'individual_challenges', instance: 'Array',
+  declareVirtualField({model: m, field: '_all_individual_challenges', instance: 'Array',
     requires: '', multiple: true,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'individualChallenge'}}
+  })
+  declareVirtualField({model: m, field: 'individual_challenges', instance: 'Array',
+    requires: '_all_individual_challenges', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'individualChallenge'}}
+  })
+  declareVirtualField({model: m, field: '_all_menus', instance: 'Menu',
+    multiple: false,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'menu'}}
   })
   declareVirtualField({model: m, field: 'menu', instance: 'Menu',
     requires: '', multiple: false,
@@ -97,6 +115,18 @@ USER_MODELS.forEach(m => {
       options: {ref: 'collectiveChallenge'}}
   })
   declareVirtualField({model: m, field: 'groups', instance: 'Array',
+    requires: '', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'group'}}
+  })
+  declareVirtualField({model: m, field: 'available_groups', instance: 'Array',
+    requires: 'targets,company.groups.targets,registered_groups', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'group'}}
+  })
+  declareVirtualField({model: m, field: 'registered_groups', instance: 'Array',
     requires: '', multiple: true,
     caster: {
       instance: 'ObjectID',
@@ -162,7 +192,7 @@ declareVirtualField({model: 'offer', field: 'company', instance: 'offer',
 declareEnumField({model: 'offer', field: 'groups_credit', enumValues: GROUPS_CREDIT})
 
 declareVirtualField({model: 'target', field: 'contents', instance: 'Array',
-  requires: '', multiple: true,
+  multiple: true,
   caster: {
     instance: 'ObjectID',
     options: {ref: 'content'}}

@@ -1,8 +1,7 @@
-const Menu = require('../../../models/Menu')
-const IndividualChallenge = require('../../../models/IndividualChallenge')
+const { shareTargets } = require('../../../utils/database')
 const mongoose = require('mongoose')
 const moment=require('moment')
-const {ACTIVITY, HOME_STATUS, ROLES, ROLE_CUSTOMER, STATUS_FAMILY} = require('../consts')
+const {ACTIVITY, ROLES, ROLE_CUSTOMER, STATUS_FAMILY} = require('../consts')
 const {GENDER} = require('../../dekuple/consts')
 const {schemaOptions} = require('../../../utils/schemas')
 const lodash=require('lodash')
@@ -42,7 +41,7 @@ const UserSchema = new Schema({
   company: {
     type: Schema.Types.ObjectId,
     ref: 'company',
-    required: true,
+    required: [function() { return this.role==ROLE_CUSTOMER }, 'La compagnie est obligatoire'],
   },
   password: {
     type: String,
@@ -94,6 +93,11 @@ const UserSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'event',
   }],
+  dummy: {
+    type: Number,
+    default: 0,
+    required: true,
+  },
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
@@ -111,53 +115,71 @@ UserSchema.virtual('spoons_count').get(function() {
     .sum()
 })
 
-// Computed virtual
-UserSchema.virtual('available_contents', {
+UserSchema.virtual("_all_contents", {
   ref: "content", // The Model to use
-  localField: "targets", // Find in Model, where localField
-  foreignField: "targets", // is equal to foreignField
-  //match: {default: true}
+  localField: "dummy", // Find in Model, where localField
+  foreignField: "dummy" // is equal to foreignField
+});
+
+// Computed virtual
+UserSchema.virtual('contents', {localField: '_id', foreignField: '_id'}).get(function (callback) {
+  return this._all_contents?.filter(c => [ROLE_CUSTOMER, ROLE_RH].includes(this.role) ? !c.hidden : true) || []
 })
 
 UserSchema.virtual("spoons", {
-  ref: "spoon", // The Model to use
+  ref: "userSpoon", // The Model to use
   localField: "_id", // Find in Model, where localField
   foreignField: "user" // is equal to foreignField
 });
 
-UserSchema.virtual("groups", {
+UserSchema.virtual("available_groups", {localField: 'idsqd', foreignField: 'idqdsd'}).get(function () {
+  console.log(`my registered groups:${JSON.stringify(this.registered_groups)}`)
+  return lodash(this.company?.groups)
+    .filter(g => shareTargets(this, g))
+    .differenceBy(this.registered_groups, g => g._id.toString())
+})
+
+UserSchema.virtual("registered_groups", {
   ref: "group", // The Model to use
   localField: "_id", // Find in Model, where localField
   foreignField: "users" // is equal to foreignField
 });
 
 // User's webinars are the company's ones
-UserSchema.virtual('webinars').get(function() {
+UserSchema.virtual('webinars', {localField:'_id', foreignField: '_id'}).get(function() {
   const exclude=[
     ...(this.skipped_events?.map(s => s._id)||[]),
     ...(this.passed_events?.map(s => s._id)||[]),
   ]
-  return this.company?.webinars?.filter(w => !exclude.some(excl => idEqual(excl._id, w._id))) || []
+  const res=(this.company?.webinars || []).filter(w => !exclude.some(excl => idEqual(excl._id, w._id)))
+  return res
 })
 
-// User's ind. challenges are all exepct the skipped ones and the passed ones
-UserSchema.virtual('individual_challenges').get(function() {
-  return IndividualChallenge.find()
-    .then(challenges => {
-      const exclude=[
-        ...(this.skipped_events?.map(s => s._id)||[]),
-        ...(this.passed_events?.map(s => s._id)||[]),
-      ]
-      return challenges.filter(c => !exclude.some(excl => idEqual(excl._id, c._id)))
-    })
+UserSchema.virtual("_all_individual_challenges", {
+  ref: "individualChallenge", // The Model to use
+  localField: "dummy", // Find in Model, where localField
+  foreignField: "dummy" // is equal to foreignField
+});
+
+// User's ind. challenges are all expect the skipped ones and the passed ones
+UserSchema.virtual('individual_challenges', {localField: 'id', foreignField: 'id'}).get(function() {
+  console.log(this._all_individual_challenges)
+  const exclude=[
+    ...(this.skipped_events?.map(s => s._id)||[]),
+    ...(this.passed_events?.map(s => s._id)||[]),
+  ]
+  return this._all_individual_challenges?.filter(c => !exclude.some(excl => idEqual(excl._id, c._id)))||[]
 })
+
+UserSchema.virtual("_all_menus", {
+  ref: "menu", // The Model to use
+  localField: "dummy", // Find in Model, where localField
+  foreignField: "dummy" // is equal to foreignField
+});
 
 // First available menu for this week
 UserSchema.virtual('menu').get(function() {
-  return Menu.find()
-    .then(menus => {
-      return menus.find(m => moment().isBetween(m.start_date, m.end_date))
-    })
+  return this._all_menus?.find(m => moment().isBetween(m.start_date, m.end_date)) || null
 })
 
 // User's clletive challenges are the company's ones

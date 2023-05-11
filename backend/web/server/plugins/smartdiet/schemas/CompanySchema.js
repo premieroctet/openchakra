@@ -53,7 +53,7 @@ CompanySchema.virtual("administrators", {
 CompanySchema.virtual("groups", {
   ref: "group", // The Model to use
   localField: "_id", // Find in Model, where localField
-  foreignField: "company", // is equal to foreignField
+  foreignField: "companies", // is equal to foreignField
 });
 
 CompanySchema.virtual('groups_count').get(function() {
