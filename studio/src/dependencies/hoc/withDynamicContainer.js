@@ -63,7 +63,7 @@ const withDynamicContainer = Component => {
   // TODO vomi
   const FILTER_ATTRIBUTES = ['code', 'name', 'short_name', 'description', 'title']
 
-  const internal = ({hiddenRoles, user, ...props}) => {
+  const internal = ({hiddenRoles, user, shuffle, ...props}) => {
 
     /** withMaskability */
     // TODO: in code.ts, generate withMaskability(withDynamic()) ...
@@ -84,6 +84,10 @@ const withDynamicContainer = Component => {
     let orgData = props.dataSource
     if (props.attribute) {
       orgData = lodash.get(orgData, props.attribute)
+    }
+
+    if (shuffle) {
+      orgData=lodash.shuffle(orgData)
     }
 
     if (!lodash.isArray(orgData)) {

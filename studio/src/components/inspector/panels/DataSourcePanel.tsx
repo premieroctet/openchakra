@@ -36,6 +36,7 @@ const DataSourcePanel: React.FC = () => {
   const filterValue = usePropsSelector('filterValue')
   const filterAttribute = usePropsSelector('filterAttribute')
   const contextAttribute = usePropsSelector('contextAttribute')
+  const shuffle = usePropsSelector('shuffle')
   const [providers, setProviders] = useState<IComponent[]>([])
   const [contextProviders, setContextProviders] = useState<IComponent[]>([])
   const [attributes, setAttributes] = useState({})
@@ -155,7 +156,7 @@ const DataSourcePanel: React.FC = () => {
     removeValue('subAttributeDisplay')
   }
 
-  const onAddToTargetChange = ev => {
+  const onCheckboxChange = ev => {
     setValue(ev.target.name, ev.target.checked)
   }
 
@@ -241,6 +242,16 @@ const DataSourcePanel: React.FC = () => {
               onChange={setValueFromEvent}
             />
           </FormControl>
+        )}
+        {CONTAINER_TYPE.includes(activeComponent ?.type) && (
+        <FormControl htmlFor="shuffle" label='Shuffle'>
+          <Checkbox
+            id="shuffle"
+            name="shuffle"
+            isChecked={shuffle}
+            onChange={onCheckboxChange}
+          ></Checkbox>
+        </FormControl>
         )}
         {CONTAINER_TYPE.includes(activeComponent ?.type) && (
           <FormControl htmlFor="contextFilter" label="Filter context">
