@@ -28,10 +28,12 @@ import {
   capitalize,
   getPageFileName,
   getPageUrl,
-  normalizePageName
+  normalizePageName,
+  whatTheHexaColor,
+  iconStuff,
 } from './misc';
 import { isJsonString } from '../dependencies/utils/misc'
-import { whatTheHexaColor } from '~components/editor/previews/IconPreview';
+
 
 //const HIDDEN_ATTRIBUTES=['dataSource', 'attribute']
 const HIDDEN_ATTRIBUTES: string[] = []
@@ -324,7 +326,11 @@ const buildBlock = ({
           ) {
             const iconSets = {...icons, ...lucidicons}
             if (Object.keys(iconSets).includes(propsValue)) {
-              let operand = `={<${propsValue} />}`
+              const {color, fill} = childComponent.props
+              const iconColor = whatTheHexaColor(color || 'black')
+              const fillIconColor = whatTheHexaColor(fill || 'black')
+
+              let operand = `={<${propsValue} color={'${iconColor}'} ${fill ? `fill={'${fillIconColor}'}` : ''} />}`
               propsContent += `${propName}${operand} `
             }
           } else if (
@@ -354,7 +360,7 @@ const buildBlock = ({
               operand=`="${getPageUrl(propsValue, pages)}"`
             }
             
-            if (propName=='color') {
+            if (['color', 'fill'].includes(propName)) {
               operand=`="${whatTheHexaColor(propsValue)}"`
             }
             

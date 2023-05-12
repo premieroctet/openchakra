@@ -1,6 +1,7 @@
 import camelCase from 'lodash/camelCase'
 import lucidicons from '~lucideiconsList'
 import icons from '~iconsList'
+import theme from '~dependencies/theme/theme'
 import { PageState } from '~core/models/project'
 
 export const capitalize = (value: string) => {
@@ -38,6 +39,19 @@ export const getPageUrl = (
   }
 }
 
+export function whatTheHexaColor(color: string) {
+  const colorArray = typeof color === 'string' && color?.split('.') || color
+  const isChakraTint = colorArray?.[1] // get the tint
+  
+  let retainedColor = colorArray?.[0]
+
+  if (isChakraTint) {
+    retainedColor = theme.colors[retainedColor][isChakraTint]
+  }
+
+  return retainedColor
+}
+
 export const iconStuff = ({
   icon, 
   dataLib = '', 
@@ -53,12 +67,15 @@ export const iconStuff = ({
 }) => {
 
   let IconFromSet, iconProps = null
+
+  const colorHexa = whatTheHexaColor(color || 'black')
+  const colorFillHexa = whatTheHexaColor(fill || 'black')
   
   switch (dataLib) {
     case 'lucid':
       if (Object.keys(lucidicons).includes(icon)) {
         IconFromSet = lucidicons[icon as keyof typeof icons]
-        iconProps = {color, fill, size: size || 'auto'}
+        iconProps = {color: colorHexa, fill: colorFillHexa, size: size || 'auto'}
       }
     break;
       
@@ -66,7 +83,7 @@ export const iconStuff = ({
     default:
       if (Object.keys(icons).includes(icon)) {
         IconFromSet = icons[icon as keyof typeof icons]
-        iconProps = {color, width: "auto", height: "auto", boxSize: size, path: ""}
+        iconProps = {color: colorHexa, width: "auto", height: "auto", boxSize: size, path: ""}
       }
     break;
   }
