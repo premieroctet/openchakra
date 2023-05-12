@@ -29,6 +29,10 @@ const UserSchema = new Schema({
     //required: [function() { return this.role==ROLE_CUSTOMER }, 'La date de naissance est obligatoire'],
     required: false,
   },
+  height: {
+    type: Number,
+    required: false,
+  },
   pseudo: {
     type: String,
     set: v => v?.trim(),
@@ -190,6 +194,12 @@ UserSchema.virtual('menu').get(function() {
 UserSchema.virtual('collective_challenges').get(function() {
   return this.company?.collective_challenges || []
 })
+
+UserSchema.virtual("measures", {
+  ref: "measure", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "user" // is equal to foreignField
+});
 
 /* eslint-enable prefer-arrow-callback */
 

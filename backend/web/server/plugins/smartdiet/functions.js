@@ -42,7 +42,7 @@ const preprocessGet = ({model, fields, id, user}) => {
 setPreprocessGet(preprocessGet)
 
 const preCreate = ({model, params, user}) => {
-  if (['content', 'collectiveChallenge', 'individualChallenge', 'webinar', 'menu'].includes(model)) {
+  if (['measure', 'content', 'collectiveChallenge', 'individualChallenge', 'webinar', 'menu'].includes(model)) {
     params.user=user
   }
   if (['message'].includes(model)) {
@@ -128,6 +128,12 @@ USER_MODELS.forEach(m => {
     caster: {
       instance: 'ObjectID',
       options: {ref: 'group'}}
+  })
+  declareVirtualField({model: m, field: 'measures', instance: 'Array',
+    requires: '', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'measure'}}
   })
 })
 
