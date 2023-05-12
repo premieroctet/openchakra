@@ -82,7 +82,7 @@ USER_MODELS.forEach(m => {
       options: {ref: 'content'}}
   })
   declareVirtualField({model: m, field: 'webinars', instance: 'Array',
-    requires: 'company.webinars,skipped_events,passed_events', multiple: true,
+    requires: 'company,company.webinars,skipped_events,passed_events', multiple: true,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'webinar'}}

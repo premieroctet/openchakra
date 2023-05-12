@@ -574,7 +574,7 @@ export const ACTIONS = {
     const body = {
       action: 'smartdiet_event',
       value: value._id,
-      action: 'skip',
+      subAction: 'skip',
     }
     return axios.post(url, body)
       .then(res => {
@@ -587,7 +587,7 @@ export const ACTIONS = {
     const body = {
       action: 'smartdiet_event',
       value: value._id,
-      action: 'join',
+      subAction: 'join',
     }
     return axios.post(url, body)
       .then(res => {
@@ -600,7 +600,7 @@ export const ACTIONS = {
     const body = {
       action: 'smartdiet_event',
       value: value._id,
-      action: 'pass',
+      subAction: 'pass',
     }
     return axios.post(url, body)
       .then(res => {
