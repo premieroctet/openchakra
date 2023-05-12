@@ -17,6 +17,10 @@ const MessageSchema = new Schema({
     ref: 'group',
     required: [true, 'Le groupe est obligatoire'],
   },
+  document: {
+    type: String,
+    required: false,
+  }
 }, schemaOptions)
 
 module.exports = MessageSchema

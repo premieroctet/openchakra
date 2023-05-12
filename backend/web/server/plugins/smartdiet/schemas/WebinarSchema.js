@@ -15,8 +15,7 @@ const WebinarSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'company',
     required: [true, 'La compagnie est obligatoire'],
-  }
-  ,
+  },
   url: {
     type: String,
     required: [true, "L'URL est obligatoire"],

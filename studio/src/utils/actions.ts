@@ -433,6 +433,21 @@ export const ACTIONS: IActions = {
     options: {},
     next: ['openPage'],
   },
+  smartdiet_skip_event: {
+    label: 'SM Zapper evt',
+    options: {},
+    next: ['openPage'],
+  },
+  smartdiet_join_event: {
+    label: 'SM Joindre evt',
+    options: {},
+    next: ['openPage'],
+  },
+  smartdiet_passed_event: {
+    label: 'SM Réussi evt',
+    options: {},
+    next: ['openPage'],
+  },
 }
 
 export const allowsActions = (component: IComponent) => {

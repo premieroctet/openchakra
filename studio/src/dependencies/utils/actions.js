@@ -569,4 +569,42 @@ export const ACTIONS = {
       })
   },
 
+  smartdiet_skip_event: ({ value }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_event',
+      value: value._id,
+      action: 'skip',
+    }
+    return axios.post(url, body)
+      .then(res => {
+        return {_id: res.data}
+      })
+  },
+
+  smartdiet_join_event: ({ value }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_event',
+      value: value._id,
+      action: 'join',
+    }
+    return axios.post(url, body)
+      .then(res => {
+        return {_id: res.data}
+      })
+  },
+
+  smartdiet_passed_event: ({ value }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_event',
+      value: value._id,
+      action: 'pass',
+    }
+    return axios.post(url, body)
+      .then(res => {
+        return {_id: res.data}
+      })
+  },
 }

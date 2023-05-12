@@ -93,6 +93,10 @@ const UserSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'event',
   }],
+  registered_events: [{
+    type: Schema.Types.ObjectId,
+    ref: 'event',
+  }],
   dummy: {
     type: Number,
     default: 0,
@@ -146,6 +150,7 @@ UserSchema.virtual("registered_groups", {
 
 // User's webinars are the company's ones
 UserSchema.virtual('webinars', {localField:'_id', foreignField: '_id'}).get(function() {
+  console.log(`Company:${this.company}`)
   const exclude=[
     ...(this.skipped_events?.map(s => s._id)||[]),
     ...(this.passed_events?.map(s => s._id)||[]),
