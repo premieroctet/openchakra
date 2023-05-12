@@ -37,6 +37,7 @@ const DataSourcePanel: React.FC = () => {
   const filterAttribute = usePropsSelector('filterAttribute')
   const contextAttribute = usePropsSelector('contextAttribute')
   const shuffle = usePropsSelector('shuffle')
+  const radioGroup = usePropsSelector('radioGroup')
   const [providers, setProviders] = useState<IComponent[]>([])
   const [contextProviders, setContextProviders] = useState<IComponent[]>([])
   const [attributes, setAttributes] = useState({})
@@ -44,6 +45,7 @@ const DataSourcePanel: React.FC = () => {
   const [subAttributesDisplay, setSubAttributesDisplay] = useState({})
   const [filterAttributes, setFilterAttributes] = useState({})
   const [contextAttributes, setContextAttributes] = useState({})
+  const [radioGroups, setRadioGroups] = useState([])
 
   const models = useSelector(getModels)
 
@@ -114,9 +116,14 @@ const DataSourcePanel: React.FC = () => {
     }
   }, [providers, activeComponent, components, dataSource, models])
 
-  const onContextFilterChange = ev => {
-    setValue('contextFilter', ev.target.checked)
-  }
+  useEffect(() => {
+    if (lodash.isEmpty(components)) {
+      setRadioGroups([])
+    }
+    else {
+      setRadioGroups(lodash(components).pickBy(attrs => attrs.type==='RadioGroup').keys().value())
+    }
+  }, [components])
 
   const onDataSourceOrModelChange = ev => {
     const {name, value}=ev.target
@@ -164,16 +171,16 @@ const DataSourcePanel: React.FC = () => {
     <Accordion allowToggle={true}>
       <AccordionContainer title="Data source">
         {(activeComponent?.type=='Checkbox' || activeComponent?.type=='IconCheck') &&
-        <FormControl htmlFor="contextAttribute" label='Ctx attribute'>
+        <FormControl htmlFor="radioGroup" label='Radio group'>
         <Select
-          id="contextAttribute"
+          id="radioGroup"
           onChange={setValueFromEvent}
-          name="contextAttribute"
+          name="radioGroup"
           size="xs"
-          value={contextAttribute || ''}
+          value={radioGroup || ''}
         >
           <option value={undefined}></option>
-          {Object.keys(contextAttributes).map(att => (
+          {radioGroups.map(att => (
             <option key={att} value={att}>
               {att}
             </option>
