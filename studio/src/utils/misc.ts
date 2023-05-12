@@ -46,7 +46,7 @@ export function whatTheHexaColor(color: string) {
   let retainedColor = colorArray?.[0]
 
   if (isChakraTint) {
-    retainedColor = theme.colors[retainedColor][isChakraTint]
+    retainedColor = theme.colors[retainedColor]?.[isChakraTint]
   }
 
   return retainedColor
