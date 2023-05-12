@@ -11,7 +11,7 @@ interface Props {
 const IconButtonPreview = ({ component }: Props) => {
   const { isOver } = useDropComponent(component.id)
   const {
-    props: { icon, ...props },
+    props: { icon, fill, ...props },
     ref,
   } = useInteractive(component, true)
 
@@ -21,7 +21,7 @@ const IconButtonPreview = ({ component }: Props) => {
 
   if (icon) {
 
-    const {IconFromSet, iconProps} = iconStuff({icon, dataLib: props?.['data-lib'] })
+    const {IconFromSet, iconProps} = iconStuff({icon, fill, dataLib: props?.['data-lib'] })
 
     if (IconFromSet) {
       return <IconButton ref={ref} icon={<IconFromSet {...iconProps} />} {...props} />
