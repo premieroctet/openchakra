@@ -31,6 +31,7 @@ const IconPanel = () => {
       </FormControl>
 
       <ColorsControl withFullColor label="Color" name="color" enableHues />
+      <ColorsControl withFullColor label="Fill Color" name="fill" />
     </>
   )
 }
