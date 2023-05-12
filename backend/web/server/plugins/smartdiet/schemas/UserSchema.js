@@ -154,7 +154,6 @@ UserSchema.virtual("registered_groups", {
 
 // User's webinars are the company's ones
 UserSchema.virtual('webinars', {localField:'_id', foreignField: '_id'}).get(function() {
-  console.log(`Company:${this.company}`)
   const exclude=[
     ...(this.skipped_events?.map(s => s._id)||[]),
     ...(this.passed_events?.map(s => s._id)||[]),
@@ -171,7 +170,6 @@ UserSchema.virtual("_all_individual_challenges", {
 
 // User's ind. challenges are all expect the skipped ones and the passed ones
 UserSchema.virtual('individual_challenges', {localField: 'id', foreignField: 'id'}).get(function() {
-  console.log(this._all_individual_challenges)
   const exclude=[
     ...(this.skipped_events?.map(s => s._id)||[]),
     ...(this.passed_events?.map(s => s._id)||[]),
@@ -200,6 +198,20 @@ UserSchema.virtual("measures", {
   localField: "_id", // Find in Model, where localField
   foreignField: "user" // is equal to foreignField
 });
+
+UserSchema.virtual("last_measures", {localField: 'id', foreignField: 'id'}).get(function() {
+  if (lodash.isEmpty(this.measures)) {
+    return null
+  }
+  let measures=this.measures.map(m => m.toObject())
+  measures=measures.map(m => lodash.omit(m, '_id,creation_date,update_date,__v,id,user'.split(',')))
+  measures=lodash.orderBy(measures, 'date')
+  const res=Object.fromEntries(Object.keys(measures[0]).map(att => {
+    const last_value=lodash.map(measures, att).filter(v => !!v).pop() || null
+    return [att, last_value]
+  }))
+  return res
+})
 
 /* eslint-enable prefer-arrow-callback */
 

@@ -24,7 +24,7 @@ const MeasureSchema = new Schema({
     type: Number,
     required: false,
   },
-  measures_arms: {
+  arms: {
     type: Number,
     required: false,
   },

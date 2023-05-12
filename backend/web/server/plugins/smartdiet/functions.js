@@ -100,13 +100,13 @@ USER_MODELS.forEach(m => {
       options: {ref: 'individualChallenge'}}
   })
   declareVirtualField({model: m, field: '_all_menus', instance: 'Menu',
-    multiple: false,
+    multiple: true,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'menu'}}
   })
   declareVirtualField({model: m, field: 'menu', instance: 'Menu',
-    requires: '', multiple: false,
+    multiple: false,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'menu'}}
@@ -130,7 +130,13 @@ USER_MODELS.forEach(m => {
       options: {ref: 'group'}}
   })
   declareVirtualField({model: m, field: 'measures', instance: 'Array',
-    requires: '', multiple: true,
+    multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'measure'}}
+  })
+  declareVirtualField({model: m, field: 'last_measures', instance: 'Measure',
+    requires:'measures', multiple: false,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'measure'}}
