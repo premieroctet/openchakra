@@ -255,6 +255,7 @@ declareVirtualField({model: 'group', field: 'messages', instance: 'Array',
 })
 
 declareVirtualField({model: 'message', field: 'pinned', instance: 'Boolean', requires:'pins'})
+declareVirtualField({model: 'message', field: 'liked', instance: 'Boolean', requires:'likes'})
 
 const getAvailableContents = (user, params, data) => {
   return Content.find()

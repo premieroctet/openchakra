@@ -31,6 +31,10 @@ const MessageSchema = new Schema({
   }],
 }, schemaOptions)
 
+MessageSchema.virtual('liked').get(function() {
+  return false
+})
+
 MessageSchema.virtual('pinned').get(function() {
   return false
 })
