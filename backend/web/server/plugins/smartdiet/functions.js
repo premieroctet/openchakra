@@ -145,12 +145,6 @@ USER_MODELS.forEach(m => {
       instance: 'ObjectID',
       options: {ref: 'measure'}}
   })
-  declareVirtualField({model: m, field: 'pinned_messages', instance: 'Array',
-    multiple: true,
-    caster: {
-      instance: 'ObjectID',
-      options: {ref: 'message'}}
-  })
   declareVirtualField({model: m, field: 'pinned_contents', instance: 'Array',
     multiple: true,
     caster: {
@@ -254,6 +248,13 @@ declareVirtualField({model: 'group', field: 'messages', instance: 'Array',
     options: {ref: 'message'}}
 })
 
+declareVirtualField({model: 'group', field: 'pinned_messages', instance: 'Array',
+  requires: 'messages.pinned', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'message'}}
+})
+
 declareVirtualField({model: 'message', field: 'pinned', instance: 'Boolean', requires:'pins'})
 declareVirtualField({model: 'message', field: 'liked', instance: 'Boolean', requires:'likes'})
 
@@ -293,8 +294,8 @@ const setDataLiked= ({id, attribute, value, user}) => {
 }
 
 const getDataPinned = (user, params, data) => {
-  const liked=data?.pins?.some(l => idEqual(l._id, user._id))
-  return Promise.resolve(liked)
+  const pinned=data?.pins?.some(l => idEqual(l._id, user._id))
+  return Promise.resolve(pinned)
 }
 
 const setDataPinned = ({id, attribute, value, user}) => {
@@ -312,6 +313,11 @@ const setDataPinned = ({id, attribute, value, user}) => {
     })
 }
 
+const getPinnedMessages = (user, params, data) => {
+  console.log(`Messages are ${JSON.stringify(data.messages[0], null,2)}`)
+  return Promise.resolve(data.messages.filter(m => m.pins.some(p => idEqual(p._id, user._id))))
+}
+
 declareComputedField('user', 'available_contents', getAvailableContents)
 declareComputedField('loggedUser', 'available_contents', getAvailableContents)
 declareComputedField('comment', 'liked', getDataLiked, setDataLiked)
@@ -319,6 +325,7 @@ declareComputedField('message', 'liked', getDataLiked, setDataLiked)
 declareComputedField('content', 'liked', getDataLiked, setDataLiked)
 declareComputedField('message', 'pinned', getDataLiked, setDataLiked)
 declareComputedField('content', 'pinned', getDataPinned, setDataPinned)
+declareComputedField('group', 'pinned_messages', getPinnedMessages)
 
 
 const postCreate = ({model, params, data}) => {

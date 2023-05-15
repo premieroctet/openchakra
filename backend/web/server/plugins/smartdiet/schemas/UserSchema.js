@@ -213,12 +213,6 @@ UserSchema.virtual("last_measures", {localField: 'id', foreignField: 'id'}).get(
   return res
 })
 
-UserSchema.virtual("pinned_messages", {
-  ref: "message", // The Model to use
-  localField: "_id", // Find in Model, where localField
-  foreignField: "pins" // is equal to foreignField
-});
-
 UserSchema.virtual("pinned_contents", {
   ref: "content", // The Model to use
   localField: "_id", // Find in Model, where localField
