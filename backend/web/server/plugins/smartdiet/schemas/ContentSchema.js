@@ -55,6 +55,10 @@ const ContentSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'user',
   }],
+  pins: [{
+    type: Schema.Types.ObjectId,
+    ref: 'user',
+  }],
   shares: [{
     type: Schema.Types.ObjectId,
     ref: 'user',
@@ -101,5 +105,8 @@ ContentSchema.virtual('liked').get(function() {
   return false
 })
 
+ContentSchema.virtual('pinned').get(function() {
+  return false
+})
 
 module.exports = ContentSchema

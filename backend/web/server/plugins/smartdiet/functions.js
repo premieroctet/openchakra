@@ -145,6 +145,18 @@ USER_MODELS.forEach(m => {
       instance: 'ObjectID',
       options: {ref: 'measure'}}
   })
+  declareVirtualField({model: m, field: 'pinned_messages', instance: 'Array',
+    multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'message'}}
+  })
+  declareVirtualField({model: m, field: 'pinned_contents', instance: 'Array',
+    multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'content'}}
+  })
 })
 
 declareEnumField({model: 'company', field: 'activity', enumValues: COMPANY_ACTIVITY})
@@ -182,6 +194,7 @@ declareVirtualField({model: 'content', field: 'comments', instance: 'Array',
     options: {ref: 'comment'}}
 })
 declareVirtualField({model: 'content', field: 'liked', instance: 'Boolean', requires:'likes'})
+declareVirtualField({model: 'content', field: 'pinned', instance: 'Boolean', requires:'pins'})
 
 const EVENT_MODELS=['event', 'collectiveChallenge', 'individualChallenge', 'menu', 'webinar']
 EVENT_MODELS.forEach(m => {
@@ -241,6 +254,8 @@ declareVirtualField({model: 'group', field: 'messages', instance: 'Array',
     options: {ref: 'message'}}
 })
 
+declareVirtualField({model: 'message', field: 'pinned', instance: 'Boolean', requires:'pins'})
+
 const getAvailableContents = (user, params, data) => {
   return Content.find()
     .then(contents => {
@@ -276,9 +291,33 @@ const setDataLiked= ({id, attribute, value, user}) => {
     })
 }
 
+const getDataPinned = (user, params, data) => {
+  const liked=data?.pins?.some(l => idEqual(l._id, user._id))
+  return Promise.resolve(liked)
+}
+
+const setDataPinned = ({id, attribute, value, user}) => {
+  console.log(`Pinnning:${value}`)
+  return getModel(id, ['message', 'content'])
+    .then(model => {
+      if (value) {
+        // Set liked
+        return mongoose.models[model].findByIdAndUpdate(id, {$addToSet: {pins: user._id}})
+      }
+      else {
+        // Remove liked
+        return mongoose.models[model].findByIdAndUpdate(id, {$pullAll: {pins: [user._id]}})
+      }
+    })
+}
+
 declareComputedField('user', 'available_contents', getAvailableContents)
 declareComputedField('loggedUser', 'available_contents', getAvailableContents)
+declareComputedField('comment', 'liked', getDataLiked, setDataLiked)
+declareComputedField('message', 'liked', getDataLiked, setDataLiked)
 declareComputedField('content', 'liked', getDataLiked, setDataLiked)
+declareComputedField('message', 'pinned', getDataLiked, setDataLiked)
+declareComputedField('content', 'pinned', getDataPinned, setDataPinned)
 
 
 const postCreate = ({model, params, data}) => {

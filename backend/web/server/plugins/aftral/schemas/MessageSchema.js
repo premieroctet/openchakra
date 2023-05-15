@@ -25,6 +25,10 @@ const MessageSchema = new Schema({
     ref: 'session',
     required: false,
   },
+  pins: [{
+    type: Schema.Types.ObjectId,
+    ref: 'user',
+  }],
 }, schemaOptions)
 
 MessageSchema.virtual('destinee_name').get(function() {
@@ -33,6 +37,10 @@ MessageSchema.virtual('destinee_name').get(function() {
 
 MessageSchema.virtual('sender_name').get(function() {
   return this.sender?.contact_name
+})
+
+MessageSchema.virtual('pinned').get(function() {
+  return false
 })
 
 module.exports = MessageSchema
