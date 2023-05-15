@@ -65,7 +65,7 @@ export const ACTIONS = {
       [getComponent(c, level)?.getAttribute('attribute') || getComponent(c, level)?.getAttribute('data-attribute'),
         getComponentValue(c, level)||null]
     ))
-    'job,mission,quotation,group,comment'.split(',').forEach(property => {
+    'job,mission,quotation,group,comment,content'.split(',').forEach(property => {
       if (props[property]) {
         const dataId=document.getElementById(`${props[property]}${level}`)?.getAttribute('_id')
         body[property]=dataId
