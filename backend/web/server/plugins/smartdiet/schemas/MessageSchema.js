@@ -25,6 +25,14 @@ const MessageSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'user',
   }],
+  pins: [{
+    type: Schema.Types.ObjectId,
+    ref: 'user',
+  }],
 }, schemaOptions)
+
+MessageSchema.virtual('pinned').get(function() {
+  return false
+})
 
 module.exports = MessageSchema
