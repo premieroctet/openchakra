@@ -40,7 +40,6 @@ const preprocessGet = ({model, fields, id, user}) => {
   if (model == 'jobUser') {
     fields = lodash([...fields, 'user.hidden']).uniq().value()
   }
-  return Promise.resolve({model, fields, id})
 
   if (model=='conversation') {
     const getPartner= (m, user) => {
