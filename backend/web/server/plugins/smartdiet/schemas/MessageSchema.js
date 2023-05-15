@@ -20,7 +20,11 @@ const MessageSchema = new Schema({
   document: {
     type: String,
     required: false,
-  }
+  },
+  likes: [{
+    type: Schema.Types.ObjectId,
+    ref: 'user',
+  }],
 }, schemaOptions)
 
 module.exports = MessageSchema

@@ -34,6 +34,10 @@ const CommentSchema = new Schema(
       ref: 'content',
       required: false,
     },
+    likes: [{
+      type: Schema.Types.ObjectId,
+      ref: 'user',
+    }],
   },
   schemaOptions,
 )
