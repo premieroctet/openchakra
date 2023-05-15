@@ -46,7 +46,7 @@ const preprocessGet = ({model, fields, id, user}) => {
 setPreprocessGet(preprocessGet)
 
 const preCreate = ({model, params, user}) => {
-  if (['measure', 'content', 'collectiveChallenge', 'individualChallenge', 'webinar', 'menu'].includes(model)) {
+  if (['comment', 'measure', 'content', 'collectiveChallenge', 'individualChallenge', 'webinar', 'menu'].includes(model)) {
     params.user=user
   }
   if (['message'].includes(model)) {
@@ -98,7 +98,7 @@ USER_MODELS.forEach(m => {
       options: {ref: 'individualChallenge'}}
   })
   declareVirtualField({model: m, field: 'individual_challenges', instance: 'Array',
-    requires: '_all_individual_challenges', multiple: true,
+    requires: '_all_individual_challenges,skipped_events,passed_events', multiple: true,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'individualChallenge'}}
