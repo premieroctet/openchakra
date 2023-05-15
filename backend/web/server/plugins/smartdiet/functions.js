@@ -1,3 +1,16 @@
+const mongoose = require('mongoose')
+const {
+  declareComputedField,
+  declareEnumField,
+  declareVirtualField,
+  getModel,
+  idEqual,
+  setPostCreateData,
+  setPreCreateData,
+  setPreprocessGet,
+  simpleCloneModel
+} = require('../../utils/database')
+
 const {
   ACTIVITY,
   COMPANY_ACTIVITY,
@@ -14,15 +27,6 @@ const {
   TARGET_TYPE,
   UNIT
 } = require('./consts')
-const {
-  declareComputedField,
-  declareEnumField,
-  declareVirtualField,
-  setPostCreateData,
-  setPreCreateData,
-  setPreprocessGet,
-  simpleCloneModel,
-} = require('../../utils/database')
 const Offer = require('../../models/Offer')
 const Content = require('../../models/Content')
 const lodash=require('lodash')
@@ -177,6 +181,7 @@ declareVirtualField({model: 'content', field: 'comments', instance: 'Array',
     instance: 'ObjectID',
     options: {ref: 'comment'}}
 })
+declareVirtualField({model: 'content', field: 'liked', instance: 'Boolean', requires:'likes'})
 
 const EVENT_MODELS=['event', 'collectiveChallenge', 'individualChallenge', 'menu', 'webinar']
 EVENT_MODELS.forEach(m => {
@@ -251,8 +256,29 @@ const getAvailableContents = (user, params, data) => {
     })
 }
 
+const getDataLiked = (user, params, data) => {
+  const liked=data?.likes?.some(l => idEqual(l._id, user._id))
+  return Promise.resolve(liked)
+}
+
+const setDataLiked= ({id, attribute, value, user}) => {
+  console.log(`Liking:${value}`)
+  return getModel(id, ['comment', 'message', 'content'])
+    .then(model => {
+      if (value) {
+        // Set liked
+        return mongoose.models[model].findByIdAndUpdate(id, {$addToSet: {likes: user._id}})
+      }
+      else {
+        // Remove liked
+        return mongoose.models[model].findByIdAndUpdate(id, {$pullAll: {likes: [user._id]}})
+      }
+    })
+}
+
 declareComputedField('user', 'available_contents', getAvailableContents)
 declareComputedField('loggedUser', 'available_contents', getAvailableContents)
+declareComputedField('content', 'liked', getDataLiked, setDataLiked)
 
 
 const postCreate = ({model, params, data}) => {

@@ -558,11 +558,12 @@ const loadFromDb = ({model, fields, id, user, params}) => {
         return data
       }
       return buildQuery(model, id, fields)
+        .lean({virtuals: true})
         .then(data => {
           // Force duplicate children
           data = JSON.parse(JSON.stringify(data))
           // Remove extra virtuals
-          data = retainRequiredFields({data, fields})
+          //data = retainRequiredFields({data, fields})
           if (id && data.length == 0) { throw new NotFoundError(`Can't find ${model}:${id}`) }
           return Promise.all(data.map(d => addComputedFields(user, params, d, model)))
         })

@@ -33,10 +33,6 @@ const ContentSchema = new Schema({
     type: String,
     required: [true, 'Le contenu est obligatoire'],
   },
-  preview: {
-    type: String,
-    required: false,
-  },
   duration: {
     type: Number,
     required: [true, 'La durée est obligatoire'],
@@ -100,6 +96,10 @@ ContentSchema.virtual('comments', {
   localField: "_id", // Find in Model, where localField
   foreignField: "comment" // is equal to foreignField
 });
+
+ContentSchema.virtual('liked').get(function() {
+  return false
+})
 
 
 module.exports = ContentSchema
