@@ -95,9 +95,11 @@ ContentSchema.virtual('shares_count').get(function() {
   return this.shares?.length || 0
 })
 
-ContentSchema.virtual('comments_count').get(function() {
-  console.error('Not implemented, requires comments')
-  return 0
-})
+ContentSchema.virtual('comments', {
+  ref: "content", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "comment" // is equal to foreignField
+});
+
 
 module.exports = ContentSchema

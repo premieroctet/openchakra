@@ -29,6 +29,11 @@ const CommentSchema = new Schema(
       ref: 'comment',
       required: false,
     },
+    content: {
+      type: Schema.Types.ObjectId,
+      ref: 'content',
+      required: false,
+    },
   },
   schemaOptions,
 )

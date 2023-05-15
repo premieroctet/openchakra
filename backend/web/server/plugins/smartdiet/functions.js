@@ -171,7 +171,12 @@ declareVirtualField({model: 'company', field: 'groups_count', instance: 'Number'
 declareEnumField({model: 'content', field: 'type', enumValues:CONTENTS_TYPE})
 declareVirtualField({model: 'content', field: 'likes_count', instance: 'Number', requires: 'likes'})
 declareVirtualField({model: 'content', field: 'shares_count', instance: 'Number', requires: 'shares'})
-declareVirtualField({model: 'content', field: 'comments_count', instance: 'Number', requires: 'comments'})
+declareVirtualField({model: 'content', field: 'comments', instance: 'Array',
+  requires: '', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'comment'}}
+})
 
 const EVENT_MODELS=['event', 'collectiveChallenge', 'individualChallenge', 'menu', 'webinar']
 EVENT_MODELS.forEach(m => {
