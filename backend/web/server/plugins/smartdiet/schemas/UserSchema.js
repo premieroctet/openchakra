@@ -210,7 +210,7 @@ UserSchema.virtual("last_measures", {localField: 'id', foreignField: 'id'}).get(
     const last_value=lodash.map(measures, att).filter(v => !!v).pop() || null
     return [att, last_value]
   }))
-  return res
+  return [res]
 })
 
 UserSchema.virtual("pinned_contents", {

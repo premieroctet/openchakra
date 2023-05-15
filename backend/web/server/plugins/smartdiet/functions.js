@@ -139,8 +139,8 @@ USER_MODELS.forEach(m => {
       instance: 'ObjectID',
       options: {ref: 'measure'}}
   })
-  declareVirtualField({model: m, field: 'last_measures', instance: 'Measure',
-    requires:'measures', multiple: false,
+  declareVirtualField({model: m, field: 'last_measures', instance: 'Array',
+    requires:'measures', multiple: true,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'measure'}}
