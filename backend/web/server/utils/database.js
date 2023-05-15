@@ -1,11 +1,11 @@
-const mongoose = require('mongoose')
 const lodash = require('lodash')
+const mongoose = require('mongoose')
+const { BadRequestError, NotFoundError } = require('./errors')
 const formatDuration = require('format-duration')
 const { UPDATED_AT_ATTRIBUTE, CREATED_AT_ATTRIBUTE, MODEL_ATTRIBUTES_DEPTH } = require('../../utils/consts')
 const UserSessionData = require('../models/UserSessionData')
 const Booking = require('../models/Booking')
 const {CURRENT, FINISHED} = require('../plugins/fumoir/consts')
-const {BadRequestError} = require('./errors')
 
 // const { ROLES, STATUS } = require("../../utils/aftral_studio/consts");
 // TODO: Omporting Theme makes a cyclic import. Why ?

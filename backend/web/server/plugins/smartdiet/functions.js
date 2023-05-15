@@ -249,7 +249,7 @@ declareVirtualField({model: 'group', field: 'messages', instance: 'Array',
 })
 
 declareVirtualField({model: 'group', field: 'pinned_messages', instance: 'Array',
-  requires: 'messages.pinned', multiple: true,
+  requires: 'messages.pins,messages.pinned', multiple: true,
   caster: {
     instance: 'ObjectID',
     options: {ref: 'message'}}
@@ -314,8 +314,8 @@ const setDataPinned = ({id, attribute, value, user}) => {
 }
 
 const getPinnedMessages = (user, params, data) => {
-  console.log(`Messages are ${JSON.stringify(data.messages[0], null,2)}`)
-  return Promise.resolve(data.messages.filter(m => m.pins.some(p => idEqual(p._id, user._id))))
+  console.log(`Messages are ${JSON.stringify(data.messages.map(m => [m.content, m.pins]), null,2)}`)
+  return Promise.resolve(data.messages?.filter(m => m.pins?.some(p => idEqual(p._id, user._id)))[0])
 }
 
 declareComputedField('user', 'available_contents', getAvailableContents)
@@ -323,7 +323,7 @@ declareComputedField('loggedUser', 'available_contents', getAvailableContents)
 declareComputedField('comment', 'liked', getDataLiked, setDataLiked)
 declareComputedField('message', 'liked', getDataLiked, setDataLiked)
 declareComputedField('content', 'liked', getDataLiked, setDataLiked)
-declareComputedField('message', 'pinned', getDataLiked, setDataLiked)
+declareComputedField('message', 'pinned', getDataPinned, setDataPinned)
 declareComputedField('content', 'pinned', getDataPinned, setDataPinned)
 declareComputedField('group', 'pinned_messages', getPinnedMessages)
 
