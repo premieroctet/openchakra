@@ -203,7 +203,7 @@ UserSchema.virtual("last_measures", {localField: 'id', foreignField: 'id'}).get(
   if (lodash.isEmpty(this.measures)) {
     return null
   }
-  let measures=this.measures.map(m => m.toObject())
+  let measures=this.measures//.map(m => m.toObject())
   measures=measures.map(m => lodash.omit(m, '_id,creation_date,update_date,__v,id,user'.split(',')))
   measures=lodash.orderBy(measures, 'date')
   const res=Object.fromEntries(Object.keys(measures[0]).map(att => {
