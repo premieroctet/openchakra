@@ -201,8 +201,8 @@ UserSchema.virtual('collective_challenges').get(function() {
 // User's events (even skipped or registered and so on)
 UserSchema.virtual('_all_events').get(function() {
   return [
-    ...this._all_menus, ...this._all_individual_challenges,
-    ...this.collective_challenges, this._all_webinars]
+    ...(this._all_menus||[]), ...(this._all_individual_challenges||[]),
+    ...(this.collective_challenges||[]), ...(this._all_webinars||[])]
     .filter(v=>!!v)
 })
 

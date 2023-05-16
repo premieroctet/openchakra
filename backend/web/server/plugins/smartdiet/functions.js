@@ -25,13 +25,17 @@ const {
   ROLES,
   SPOON_SOURCE,
   TARGET_TYPE,
-  UNIT
+  UNIT,
+  PARTICULAR_COMPANY_NAME,
+  COMPANY_ACTIVITY_SERVICES_AUX_ENTREPRISES,
 } = require('./consts')
 const Offer = require('../../models/Offer')
 const Content = require('../../models/Content')
+const Company = require('../../models/Company')
 const lodash=require('lodash')
 const moment = require('moment')
 const User = require('../../models/User')
+
 
 const preprocessGet = ({model, fields, id, user}) => {
   if (model=='loggedUser') {
@@ -367,6 +371,15 @@ const postCreate = ({model, params, data}) => {
 }
 
 setPostCreateData(postCreate)
+
+/** Upsert PARTICULARS company */
+Company.findOneAndUpdate(
+  {name: PARTICULAR_COMPANY_NAME},
+  {activity: COMPANY_ACTIVITY_SERVICES_AUX_ENTREPRISES},
+  {upsert: true},
+)
+.then(()=> console.log(`Particular company upserted`))
+.catch(err=> console.err(`Particular company upsert error:${err}`))
 
 module.exports={
   getAvailableContents,

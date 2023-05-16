@@ -1,7 +1,9 @@
 const { idEqual, loadFromDb } = require('../../utils/database')
-const { addAction, setAllowActionFn } = require('../../utils/studio/actions')
+const { addAction, setAllowActionFn, ACTIONS } = require('../../utils/studio/actions')
 const User = require('../../models/User')
 const Group = require('../../models/Group')
+const Company = require('../../models/Company')
+const {PARTICULAR_COMPANY_NAME}=require('./consts')
 
 const smartdiet_join_group = ({value, join}, user) => {
   return Group.findByIdAndUpdate(value, join ? {$addToSet: {users: user._id}} : {$pull: {users: user._id}})
@@ -31,6 +33,19 @@ const smartdiet_event = action => ({value}, user) => {
 ['smartdiet_join_event','smartdiet_skip_event','smartdiet_pass_event','smartdiet_start_event'].forEach(action => {
   addAction(action, smartdiet_event(action))
 })
+
+const defaultRegister=ACTIONS.register
+
+const register=props => {
+  // No compay => set the particular one
+  if (!props.company) {
+    return Company.findOne({name: PARTICULAR_COMPANY_NAME})
+      .then(partCompany => defaultRegister({...props, company: partCompany._id}))
+  }
+  return defaultRegister(props)
+}
+
+addAction('register', register)
 
 const isActionAllowed = ({action, dataId, user}) => {
   if (action=='smartdiet_join_event') {
