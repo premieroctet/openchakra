@@ -29,6 +29,7 @@ const User = require('../../models/User')
 const { CREATED_AT_ATTRIBUTE } = require('../../../utils/consts')
 const lodash=require('lodash')
 const Message = require('../../models/Message')
+const JobUser = require('../../models/JobUser')
 const NATIONALITIES = require('./nationalities.json')
 
 const preprocessGet = ({model, fields, id, user}) => {
@@ -38,7 +39,7 @@ const preprocessGet = ({model, fields, id, user}) => {
   }
 
   if (model == 'jobUser') {
-    fields = lodash([...fields, 'user.hidden']).uniq().value()
+    fields = lodash([...fields, 'user.hidden', 'user']).uniq().value()
   }
 
   if (model=='conversation') {
@@ -241,7 +242,15 @@ declareEnumField({model: 'contact', field: 'status', enumValues: CONTACT_STATUS}
 const filterDataUser = ({model, data, user}) => {
   if (model == 'jobUser') {
     // Hide jobUser.user.hidden
-    return data.filter(jobUser => !(jobUser.user?.hidden===true))
+    return Promise.all(data.map(job => JobUser.findById(job._id).populate('user')
+        .then(dbJob => {
+          if (dbJob.user.hidden==false || idEqual(user?._id, dbJob.user._id)) {
+            return job
+          }
+          return null
+        })
+      ))
+      .then(jobs => jobs.filter(v => !!v))
   }
   return data
 }
