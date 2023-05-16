@@ -4,16 +4,15 @@ import React, {useState} from 'react'
 import lodash from 'lodash'
 
 const withDynamicCheckbox = Component => {
-  const Internal = ({ dataSource, context, backend, addTarget, ...props }) => {
+  const Internal = ({ dataSource, context, backend, contextAttribute, ...props }) => {
 
     const initialValue = lodash.get(dataSource, props.attribute)
-    const [value, setValue]=useState((!addTarget && initialValue) || false)
+    const [value, setValue]=useState((!contextAttribute && initialValue) || false)
 
-    console.log(`Datasource is ${JSON.stringify(dataSource?._id)}, context is ${JSON.stringify(context)}`)
     const onChange = ev => {
       setValue(!!ev.target.checked)
-      const action=addTarget ?
-        ACTIONS.addTarget({value: dataSource._id, context, append: !!ev.target.checked})
+      const action=contextAttribute ?
+        ACTIONS.addToContext({value: dataSource._id, context, append: !!ev.target.checked, contextAttribute})
         :
         ACTIONS.putValue({context: dataSource?._id, value: !!ev.target.checked, props,backend})
 

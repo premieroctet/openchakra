@@ -31,9 +31,19 @@ const CompanySchema = new Schema(
       ref: 'offer',
       required: true,
     },
+    collective_challenges: [{
+      type: Schema.Types.ObjectId,
+      ref: "collectiveChallenge",
+    }],
   },
   schemaOptions,
 )
+
+CompanySchema.virtual("webinars", {
+  ref: "webinar", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "companies", // is equal to foreignField
+});
 
 CompanySchema.virtual("administrators", {
   ref: "user", // The Model to use
@@ -42,16 +52,10 @@ CompanySchema.virtual("administrators", {
   justOne: true,
 });
 
-CompanySchema.virtual("webinars", {
-  ref: "webinar", // The Model to use
-  localField: "_id", // Find in Model, where localField
-  foreignField: "company", // is equal to foreignField
-});
-
 CompanySchema.virtual("groups", {
   ref: "group", // The Model to use
   localField: "_id", // Find in Model, where localField
-  foreignField: "company", // is equal to foreignField
+  foreignField: "companies", // is equal to foreignField
 });
 
 CompanySchema.virtual('groups_count').get(function() {
@@ -78,7 +82,6 @@ CompanySchema.virtual('shares_count').get(function() {
       contents.forEach(content => {
         count+=lodash.filter(content.shares||[], s => s.company._id==this._id)?.length||0
       });
-      console.log(`shares_count:${count}`)
       return count
     })
 })
@@ -88,7 +91,6 @@ CompanySchema.virtual('comments_count').get(function() {
     .populate('user')
     .then(comments => {
       const count=lodash.filter(comments||[], c => c.user.company._id==this._id)?.length||0
-      console.log(`comments_count:${count}`)
       return count
     })
 })

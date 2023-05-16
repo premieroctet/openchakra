@@ -49,7 +49,12 @@ const EventSchema = new Schema(
     max_people: {
       type: Number,
       required: [true, 'Le nombre de participants maximum est obligatoire'],
-    }
+    },
+    dummy: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
   },
   {...schemaOptions, ...EVENT_DISCRIMINATOR },
 )

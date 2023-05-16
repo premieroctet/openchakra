@@ -65,7 +65,7 @@ export const ACTIONS = {
       [getComponent(c, level)?.getAttribute('attribute') || getComponent(c, level)?.getAttribute('data-attribute'),
         getComponentValue(c, level)||null]
     ))
-    'job,mission,quotation'.split(',').forEach(property => {
+    'job,mission,quotation,group,comment,content'.split(',').forEach(property => {
       if (props[property]) {
         const dataId=document.getElementById(`${props[property]}${level}`)?.getAttribute('_id')
         body[property]=dataId
@@ -368,12 +368,13 @@ export const ACTIONS = {
     return axios.post(url, body)
   },
 
-  addTarget: ({ value, context, append }) => {
+  addToContext: ({ value, context, contextAttribute, append }) => {
     let url = `${API_ROOT}/action`
     const body = {
-      action: 'addTarget',
+      action: 'addToContext',
       value,
       context,
+      contextAttribute,
       append,
     }
     return axios.post(url, body)
@@ -540,5 +541,70 @@ export const ACTIONS = {
       value,
     }
     return axios.post(url, body)
+  },
+
+  smartdiet_join_group: ({ value }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_join_group',
+      value: value._id,
+      join: true,
+    }
+    return axios.post(url, body)
+      .then(res => {
+        return {_id: res.data}
+      })
+  },
+
+  smartdiet_leave_group: ({ value }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_join_group',
+      value: value._id,
+      join: false,
+    }
+    return axios.post(url, body)
+      .then(res => {
+        return {_id: res.data}
+      })
+  },
+
+  smartdiet_skip_event: ({ value }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_event',
+      value: value._id,
+      subAction: 'skip',
+    }
+    return axios.post(url, body)
+      .then(res => {
+        return {_id: res.data}
+      })
+  },
+
+  smartdiet_join_event: ({ value }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_event',
+      value: value._id,
+      subAction: 'join',
+    }
+    return axios.post(url, body)
+      .then(res => {
+        return {_id: res.data}
+      })
+  },
+
+  smartdiet_passed_event: ({ value }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_event',
+      value: value._id,
+      subAction: 'pass',
+    }
+    return axios.post(url, body)
+      .then(res => {
+        return {_id: res.data}
+      })
   },
 }

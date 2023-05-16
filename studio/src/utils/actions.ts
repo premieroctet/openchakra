@@ -35,6 +35,18 @@ export const ACTIONS: IActions = {
         components
           .filter(comp => comp.type=='Flex')
           .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      group: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      comment: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      content: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
       ...Object.fromEntries(lodash.range(15).map((idx:number) => {
       return [
         `component_${idx}`,
@@ -416,6 +428,31 @@ export const ACTIONS: IActions = {
   },
   alle_send_bill: {
     label: 'AE Envoyer la facture',
+    options: {},
+    next: ['openPage'],
+  },
+  smartdiet_join_group: {
+    label: 'SM Joindre le groupe',
+    options: {},
+    next: ['openPage'],
+  },
+  smartdiet_leave_group: {
+    label: 'SM Quitter le groupe',
+    options: {},
+    next: ['openPage'],
+  },
+  smartdiet_skip_event: {
+    label: 'SM Zapper evt',
+    options: {},
+    next: ['openPage'],
+  },
+  smartdiet_join_event: {
+    label: 'SM Joindre evt',
+    options: {},
+    next: ['openPage'],
+  },
+  smartdiet_passed_event: {
+    label: 'SM Réussi evt',
     options: {},
     next: ['openPage'],
   },
