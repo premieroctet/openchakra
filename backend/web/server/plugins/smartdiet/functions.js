@@ -315,7 +315,7 @@ const setDataPinned = ({id, attribute, value, user}) => {
 
 const getPinnedMessages = (user, params, data) => {
   console.log(`Messages are ${JSON.stringify(data.messages.map(m => [m.content, m.pins]), null,2)}`)
-  return Promise.resolve(data.messages?.filter(m => m.pins?.some(p => idEqual(p._id, user._id)))[0])
+  return Promise.resolve(data.messages?.filter(m => m.pins?.some(p => idEqual(p._id, user._id))))
 }
 
 declareComputedField('user', 'available_contents', getAvailableContents)
