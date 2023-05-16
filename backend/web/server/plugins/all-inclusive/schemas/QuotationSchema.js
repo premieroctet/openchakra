@@ -1,17 +1,19 @@
-const mongoose = require("mongoose")
+const mongoose = require('mongoose')
 const lodash=require('lodash')
-const bcrypt=require('bcryptjs')
-const { schemaOptions } = require('../../../utils/schemas')
-const IBANValidator = require('iban-validator-js')
+const {schemaOptions} = require('../../../utils/schemas')
 
-const Schema = mongoose.Schema;
+const Schema = mongoose.Schema
 
 const QuotationSchema = new Schema({
   name: {
     type: String,
-    required: [true, 'Le nom est obligatoire']
+    required: [true, 'Le nom est obligatoire'],
   },
   description: {
+    type: String,
+    required: false,
+  },
+  reference: {
     type: String,
     required: false,
   },
@@ -45,26 +47,26 @@ const QuotationSchema = new Schema({
   },
   mission: {
     type: Schema.Types.ObjectId,
-    ref: "mission",
+    ref: 'mission',
     required: false,
   },
-}, schemaOptions
-);
+}, schemaOptions,
+)
 
-QuotationSchema.virtual("details", {
-  ref: "quotationDetail", // The Model to use
-  localField: "_id", // Find in Model, where localField
-  foreignField: "quotation" // is equal to foreignField
-});
+QuotationSchema.virtual('details', {
+  ref: 'quotationDetail', // The Model to use
+  localField: '_id', // Find in Model, where localField
+  foreignField: 'quotation', // is equal to foreignField
+})
 
-QuotationSchema.virtual("total").get(function() {
+QuotationSchema.virtual('total').get(function() {
   if (lodash.isEmpty(this.details)) {
     return 0
   }
   return lodash.sumBy(this.details, 'total')
 })
 
-QuotationSchema.virtual("vat_total").get(function() {
+QuotationSchema.virtual('vat_total').get(function() {
   if (lodash.isEmpty(this.details)) {
     return 0
   }
@@ -75,4 +77,4 @@ QuotationSchema.methods.canSend = function(user) {
   return !lodash.isEmpty(this.details)
 }
 
-module.exports = QuotationSchema;
+module.exports = QuotationSchema

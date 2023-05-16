@@ -456,6 +456,21 @@ export const ACTIONS: IActions = {
     options: {},
     next: ['openPage'],
   },
+  alle_ask_contact: {
+    label: 'AE Ask contact',
+    options: {
+      ...Object.fromEntries(lodash.range(15).map((idx:number) => {
+      return [
+        `component_${idx}`,
+        ({ components }) => components
+          .filter(comp => (comp.props?.dataSource || comp.props?.model) && comp.props?.attribute)
+          .map(comp => ({ key: comp.id, label: `${comp.type}/${comp.id}` }))
+
+      ]})),
+    },
+    next: ['openPage'],
+  },
+
 }
 
 export const allowsActions = (component: IComponent) => {
