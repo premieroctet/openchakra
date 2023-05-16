@@ -98,7 +98,8 @@ ContentSchema.virtual('shares_count').get(function() {
 ContentSchema.virtual('comments', {
   ref: "comment", // The Model to use
   localField: "_id", // Find in Model, where localField
-  foreignField: "content" // is equal to foreignField
+  foreignField: "content", // is equal to foreignField
+  match: {parent: null},
 });
 
 ContentSchema.virtual('liked').get(function() {
