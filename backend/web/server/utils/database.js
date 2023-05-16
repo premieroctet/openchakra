@@ -138,8 +138,32 @@ const getModelAttributes = (modelName, level=MODEL_ATTRIBUTES_DEPTH) => {
     ...getSimpleModelAttributes(modelName),
     ...lodash.flatten(getReferencedModelAttributes(modelName, level)),
   ]
-  attrs.sort((att1, att2) => attributesComparator(att1[0], att2[0]))
-  return attrs
+
+  // Auto-create _count attribute for all multiple attributes
+  const multipleAttrs=attrs.filter(att => !att[0].includes('.') && att[1].multiple===true).map(att => att[0])
+  const multiple_name=name => `${name}_count`
+  multipleAttrs.forEach(name => {
+    const multName=multiple_name(name)
+    // Create virtual on the fly
+    mongoose.models[modelName].schema.virtual(multName).get(function() {
+      return this?.[name]?.length || 0
+    })
+    // TODO: UGLY. Properly handle aliases
+    if (modelName=='user') {
+      mongoose.models['loggedUser'].schema.virtual(multName).get(function() {
+        return this?.[name]?.length || 0
+      })
+    }
+    // Declare virtual on the fly
+    declareVirtualField({model: modelName, field: multName, instance: 'Number', requires: name})
+    if (modelName=='user') {
+      declareVirtualField({model: 'loggedUser', field: multName, instance: 'Number', requires: name})
+    }
+  })
+
+  const attrsWithCounts=[...attrs, ...multipleAttrs.map(name => [multiple_name(name), {type:Number, multiple:false, ref:false}])]
+  attrsWithCounts.sort((att1, att2) => attributesComparator(att1[0], att2[0]))
+  return attrsWithCounts
 }
 
 const getModels = () => {
@@ -343,6 +367,7 @@ const addComputedFields = async(
   model,
   prefix = '',
 ) => {
+  console.log(`Queryparams:${model}/${data}`)
   const newPrefix = `${prefix}/${model}/${data._id}`
   let newUser = user
   if (model == 'user') {
@@ -354,6 +379,9 @@ const addComputedFields = async(
     data.hasOwnProperty(f),
   )
   const requiredCompFields = lodash.pick(compFields, presentCompFields)
+  if (model=='message') {
+    console.log(`compfields:${Object.keys(compFields)},presentCompFields:${presentCompFields},requiredCompFields:${Object.keys(requiredCompFields)}`)
+  }
   // Compute direct attributes
   const x = await Promise.allSettled(
     Object.keys(requiredCompFields).map(f =>
