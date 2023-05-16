@@ -44,7 +44,7 @@ const CommentSchema = new Schema(
 )
 
 // Returns my reviewz
-UserSchema.virtual('children', {
+CommentSchema.virtual('children', {
   ref: 'comment', // The Model to use
   localField: '_id', // Find in Model, where localField
   foreignField: 'parent', // is equal to foreignField
