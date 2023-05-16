@@ -3,19 +3,33 @@
 // in case of cloned components
 
 export const getComponent = (componentId, suffix) => {
-  let component = document.getElementById(componentId)
-  if (!component) {
-    component = document.getElementById(`${componentId}${suffix}`)
+  let suffixes=suffix.split('_')
+  while (suffixes.length>0) {
+    const subCompId=`${componentId}${suffixes.join('_')}`
+    const component = document.getElementById(subCompId)
+    if (component) {
+      return component
+    }
+    suffixes.pop()
   }
-  return component
+  return
+
 }
 
 export const getComponentDataValue = (componentId, suffix) => {
-  let component = document.getElementById(componentId)
-  if (!(component?.value || component?.getAttribute('value') || component?.getAttribute('data-value'))) {
-    component = document.getElementById(`${componentId}${suffix}`)
+  let suffixes=suffix.split('_')
+  while (suffixes.length>0) {
+    const subCompId=`${componentId}${suffixes.join('_')}`
+    const component = document.getElementById(subCompId)
+    if (component) {
+      const value=component?.value || component?.getAttribute('value') || component?.getAttribute('data-value')
+      if (value!==undefined) {
+        return value
+      }
+    }
+    suffixes.pop()
   }
-  return component?.value || component?.getAttribute('value') || component?.getAttribute('data-value')
+  return
 }
 
 export const clearComponentValue = (componentId, suffix) => {
