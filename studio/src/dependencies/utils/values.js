@@ -3,22 +3,22 @@
 // in case of cloned components
 
 export const getComponent = (componentId, suffix) => {
-  let suffixes=suffix.split('_')
-  while (suffixes.length>0) {
+  let suffixes=suffix?.split('_') || []
+  while (true) {
     const subCompId=`${componentId}${suffixes.join('_')}`
     const component = document.getElementById(subCompId)
     if (component) {
       return component
     }
-    suffixes.pop()
+    if (!suffixes.pop()) { break}
   }
   return
 
 }
 
 export const getComponentDataValue = (componentId, suffix) => {
-  let suffixes=suffix.split('_')
-  while (suffixes.length>0) {
+  let suffixes=suffix?.split('_') || []
+  while (true) {
     const subCompId=`${componentId}${suffixes.join('_')}`
     const component = document.getElementById(subCompId)
     if (component) {
@@ -27,7 +27,7 @@ export const getComponentDataValue = (componentId, suffix) => {
         return value
       }
     }
-    suffixes.pop()
+    if (!suffixes.pop()) { break}
   }
   return
 }
