@@ -451,8 +451,13 @@ export const ACTIONS: IActions = {
     options: {},
     next: ['openPage'],
   },
-  smartdiet_passed_event: {
+  smartdiet_pass_event: {
     label: 'SM Réussi evt',
+    options: {},
+    next: ['openPage'],
+  },
+  smartdiet_start_event: {
+    label: 'SM Connexion evt',
     options: {},
     next: ['openPage'],
   },

@@ -153,6 +153,11 @@ UserSchema.virtual("registered_groups", {
 });
 
 // User's webinars are the company's ones
+UserSchema.virtual('_all_webinars', {localField:'_id', foreignField: '_id'}).get(function() {
+  return this.company?.webinars||[]
+})
+
+// User's webinars are the company's ones
 UserSchema.virtual('webinars', {localField:'_id', foreignField: '_id'}).get(function() {
   const exclude=[
     ...(this.skipped_events?.map(s => s._id)||[]),
@@ -188,9 +193,17 @@ UserSchema.virtual('menu').get(function() {
   return this._all_menus?.find(m => moment().isBetween(m.start_date, m.end_date)) || null
 })
 
-// User's clletive challenges are the company's ones
+// User's colletive challenges are the company's ones
 UserSchema.virtual('collective_challenges').get(function() {
   return this.company?.collective_challenges || []
+})
+
+// User's events (even skipped or registered and so on)
+UserSchema.virtual('_all_events').get(function() {
+  return [
+    ...this._all_menus, ...this._all_individual_challenges,
+    ...this.collective_challenges, this._all_webinars]
+    .filter(v=>!!v)
 })
 
 UserSchema.virtual("measures", {

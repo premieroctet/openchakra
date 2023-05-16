@@ -573,9 +573,8 @@ export const ACTIONS = {
   smartdiet_skip_event: ({ value }) => {
     let url = `${API_ROOT}/action`
     const body = {
-      action: 'smartdiet_event',
+      action: 'smartdiet_skip_event',
       value: value._id,
-      subAction: 'skip',
     }
     return axios.post(url, body)
       .then(res => {
@@ -586,9 +585,8 @@ export const ACTIONS = {
   smartdiet_join_event: ({ value }) => {
     let url = `${API_ROOT}/action`
     const body = {
-      action: 'smartdiet_event',
+      action: 'smartdiet_join_event',
       value: value._id,
-      subAction: 'join',
     }
     return axios.post(url, body)
       .then(res => {
@@ -596,12 +594,11 @@ export const ACTIONS = {
       })
   },
 
-  smartdiet_passed_event: ({ value }) => {
+  smartdiet_pass_event: ({ value }) => {
     let url = `${API_ROOT}/action`
     const body = {
-      action: 'smartdiet_event',
+      action: 'smartdiet_pass_event',
       value: value._id,
-      subAction: 'pass',
     }
     return axios.post(url, body)
       .then(res => {
