@@ -258,6 +258,13 @@ declareVirtualField({model: 'group', field: 'pinned_messages', instance: 'Array'
 declareVirtualField({model: 'message', field: 'pinned', instance: 'Boolean', requires:'pins'})
 declareVirtualField({model: 'message', field: 'liked', instance: 'Boolean', requires:'likes'})
 
+declareVirtualField({model: 'comment', field: 'children', instance: 'Array',
+  multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'comment'}}
+})
+
 const getAvailableContents = (user, params, data) => {
   return Content.find()
     .then(contents => {

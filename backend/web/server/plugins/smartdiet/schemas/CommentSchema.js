@@ -24,14 +24,15 @@ const CommentSchema = new Schema(
       ref: 'pip',
       required: false,
     },
-    comment: {
-      type: Schema.Types.ObjectId,
-      ref: 'comment',
-      required: false,
-    },
     content: {
       type: Schema.Types.ObjectId,
       ref: 'content',
+      required: false,
+    },
+    // Parent comment (i.e a comment of a comment)
+    parent: {
+      type: Schema.Types.ObjectId,
+      ref: 'comment',
       required: false,
     },
     likes: [{
@@ -41,5 +42,13 @@ const CommentSchema = new Schema(
   },
   schemaOptions,
 )
+
+// Returns my reviewz
+UserSchema.virtual('children', {
+  ref: 'comment', // The Model to use
+  localField: '_id', // Find in Model, where localField
+  foreignField: 'parent', // is equal to foreignField
+})
+
 
 module.exports = CommentSchema
