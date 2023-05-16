@@ -180,15 +180,15 @@ const getModels = () => {
 Returns only models & attributes visible for studio users
 */
 const getExposedModels = () => {
-  const isHidddenAttributeName = attName => {
-    return false
+  const isHidddenAttributeName = (modelName, attName) => {
+    return attName.startsWith('_')
   }
 
   const models=lodash(getModels())
     .omitBy((v, k)=> k=='IdentityCounter')
-    .mapValues(v => ({
+    .mapValues((v, modelName) => ({
       ...v,
-      attributes: lodash(v.attributes).omitBy((v, k) => isHidddenAttributeName(k))
+      attributes: lodash(v.attributes).omitBy((v, k) => isHidddenAttributeName(modelName, k))
     }))
 
   return models.value()
@@ -367,7 +367,6 @@ const addComputedFields = async(
   model,
   prefix = '',
 ) => {
-  console.log(`Queryparams:${model}/${data}`)
   const newPrefix = `${prefix}/${model}/${data._id}`
   let newUser = user
   if (model == 'user') {
