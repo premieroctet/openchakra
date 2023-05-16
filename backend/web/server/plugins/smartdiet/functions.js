@@ -257,6 +257,7 @@ declareVirtualField({model: 'group', field: 'pinned_messages', instance: 'Array'
 
 declareVirtualField({model: 'message', field: 'pinned', instance: 'Boolean', requires:'pins'})
 declareVirtualField({model: 'message', field: 'liked', instance: 'Boolean', requires:'likes'})
+declareVirtualField({model: 'message', field: 'likes_count', instance: 'Number', requires:'likes'})
 
 declareVirtualField({model: 'comment', field: 'children', instance: 'Array',
   multiple: true,
@@ -281,7 +282,7 @@ const getAvailableContents = (user, params, data) => {
 }
 
 const getDataLiked = (user, params, data) => {
-  const liked=data?.likes?.some(l => idEqual(l._id, user._id))
+  const liked=data?.likes?.some(l => idEqual(l._id, user?._id))
   return Promise.resolve(liked)
 }
 
@@ -321,7 +322,6 @@ const setDataPinned = ({id, attribute, value, user}) => {
 }
 
 const getPinnedMessages = (user, params, data) => {
-  console.log(`Messages are ${JSON.stringify(data.messages.map(m => [m.content, m.pins]), null,2)}`)
   return Promise.resolve(data.messages?.filter(m => m.pins?.some(p => idEqual(p._id, user._id))))
 }
 
