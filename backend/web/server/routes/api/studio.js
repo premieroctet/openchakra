@@ -315,13 +315,17 @@ router.get('/current-user', passport.authenticate('cookie', {session: false}), (
 })
 
 router.post('/register', (req, res) => {
-  const body=lodash.mapValues(req.body, v => JSON.parse(v))
+  const ip=req.headers['x-forwarded-for'] || req.socket.remoteAddress
+  const body={register_ip:ip, ...lodash.mapValues(req.body, v => JSON.parse(v))}
+  console.log(`Registering  on ${ip} with body ${JSON.stringify(body)}`)
   return ACTIONS.register(body)
     .then(result => res.json(result))
 })
 
 router.post('/register-and-login', (req, res) => {
-  const body=lodash.mapValues(req.body, v => JSON.parse(v))
+  const ip=req.headers['x-forwarded-for'] || req.socket.remoteAddress
+  const body={register_ip:ip, ...lodash.mapValues(req.body, v => JSON.parse(v))}
+  console.log(`Registering & login on ${ip} with body ${JSON.stringify(body)}`)
   return ACTIONS.register(body)
     .then(result => {
       const {email, password}=body

@@ -177,6 +177,11 @@ const UserSchema = new Schema({
   representative_lastname: {
     type: String,
   },
+  // Origin ip when account registered
+  register_ip: {
+    type: String,
+    required: [true, "L'ip d'enregistrement est obligatoire"],
+  },
 }, schemaOptions
 );
 

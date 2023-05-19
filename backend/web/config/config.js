@@ -63,7 +63,7 @@ const getStripeConfig = () => {
 }
 
 const paymentPlugin=PAYMENT_PLUGIN ?
-  require(`../server/plugins/payment/${PAYMENT_PLUGIN}`)(getStripeConfig())
+  require(`../server/plugins/payment/${PAYMENT_PLUGIN}`).init(getStripeConfig())
   : null
 
 const get_mode = () => {

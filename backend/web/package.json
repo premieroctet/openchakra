@@ -67,6 +67,7 @@
     "socket.io": "^2.4.1",
     "store2": "^2.13.2",
     "strip-bom": "^4.0.0",
+    "stripe": "^12.5.0",
     "styled-components": "^5.3.5",
     "url-loader": "^4.1.1",
     "uuid": "^3.3.3",
