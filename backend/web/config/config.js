@@ -25,6 +25,7 @@ const {
   VIVAWALLET_SOURCE_CODE,
   WITHINGS_CLIENT_ID,
   WITHINGS_CLIENT_SECRET,
+  PAYMENT_PLUGIN,
 } = require('../mode')
 
 const SITE_MODES = {
@@ -38,6 +39,32 @@ const MODES = {
   DEVELOPMENT: 'development',
   DEVELOPMENT_NOSSL: 'development_nossl',
 }
+
+const PAYMENT_PLUGINS = {
+  MANGOPAY: 'mangopay',
+  STRIPE: 'stripe',
+}
+
+const getVivaWalletConfig = () => {
+  return {
+    production: VIVAWALLET_MODE=='production',
+    baseUrl: VIVAWALLET_BASE_URL,
+    apiId: VIVAWALLET_API_ID,
+    apiKey: VIVAWALLET_API_KEY,
+    clientId: VIVAWALLET_CLIENT_ID,
+    clientSecret: VIVAWALLET_CLIENT_SECRET,
+    sourceCode: VIVAWALLET_SOURCE_CODE,
+  }
+}
+
+const getStripeConfig = () => {
+  return {
+  }
+}
+
+const paymentPlugin=PAYMENT_PLUGIN ?
+  require(`../server/plugins/payment/${PAYMENT_PLUGIN}`)(getStripeConfig())
+  : null
 
 const get_mode = () => {
   if (!Object.values(MODES).includes(MODE)) {
@@ -133,18 +160,6 @@ const getHostUrl = () => {
   return host_url
 }
 
-const getVivaWalletConfig = () => {
-  return {
-    production: VIVAWALLET_MODE=='production',
-    baseUrl: VIVAWALLET_BASE_URL,
-    apiId: VIVAWALLET_API_ID,
-    apiKey: VIVAWALLET_API_KEY,
-    clientId: VIVAWALLET_CLIENT_ID,
-    clientSecret: VIVAWALLET_CLIENT_SECRET,
-    sourceCode: VIVAWALLET_SOURCE_CODE,
-  }
-}
-
 const getWithingsConfig = () => {
   return {
     clientId: WITHINGS_CLIENT_ID,
@@ -199,6 +214,7 @@ const displayConfig = () => {
 \tDisplay chat:${mustDisplayChat()} ${mustDisplayChat() ? getChatURL() : ''}\n\
 \tSendInBlue actif:${ENABLE_MAILING}\n\
 \tSendInBlue templates:${DATA_MODEL}\n\
+\tPayment plugin:${PAYMENT_PLUGIN}:${!!paymentPlugin}\n\
 `)
 }
 

@@ -618,4 +618,17 @@ export const ACTIONS = {
     return axios.post(url, body)
   },
 
+  payMission: ({ context, props }) => {
+    let url = `${API_ROOT}/action`
+    const body = {action: 'payMission', context,...props}
+    return axios.post(url, body)
+      .then(res => {
+        if (res.data.redirect) {
+          let url=res.data.redirect
+          url=/^http/.test(url) ? url : `/${url}`
+          window.location=url
+        }
+      })
+  },
+
 }
