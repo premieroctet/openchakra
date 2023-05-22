@@ -457,7 +457,7 @@ const loadFromRequest = (req, res) => {
     })
 }
 
-router.get('/jobUser/:id?', passport.authenticate('nullable-cookie', {session: false}), (req, res) => {
+router.get('/jobUser/:id?', passport.authenticate(['cookie', 'anonymous'], {session: false}), (req, res) => {
   req.params.model='jobUser'
   return loadFromRequest(req, res)
 })
