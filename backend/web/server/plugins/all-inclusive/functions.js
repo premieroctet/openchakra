@@ -13,6 +13,7 @@ const {
   ROLE_COMPANY_ADMIN,
   ROLE_COMPANY_BUYER,
   ROLE_TI,
+  ROLE_ALLE_ADMIN,
   UNACTIVE_REASON,
 } = require('./consts')
 const moment = require('moment')
@@ -240,6 +241,10 @@ declareVirtualField({model: 'quotationDetail', field: 'vat_total', instance: 'Nu
 declareEnumField({model: 'contact', field: 'status', enumValues: CONTACT_STATUS})
 
 const filterDataUser = ({model, data, user}) => {
+  // ALL-E admins have whole visibility
+  if (user?.role==ROLE_ALLE_ADMIN) {
+    return Promise.resolve(data)
+  }
   if (model == 'jobUser') {
     // Hide jobUser.user.hidden
     return Promise.all(data.map(job => JobUser.findById(job._id).populate('user')
