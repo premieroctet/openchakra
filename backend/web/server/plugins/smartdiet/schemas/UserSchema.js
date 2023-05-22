@@ -1,9 +1,9 @@
-const { shareTargets } = require('../../../utils/database')
 const mongoose = require('mongoose')
 const moment=require('moment')
+const { idEqual, shareTargets } = require('../../../utils/database')
+const {schemaOptions} = require('../../../utils/schemas')
 const {ACTIVITY, ROLES, ROLE_CUSTOMER, STATUS_FAMILY} = require('../consts')
 const {GENDER} = require('../../dekuple/consts')
-const {schemaOptions} = require('../../../utils/schemas')
 const lodash=require('lodash')
 
 const Schema = mongoose.Schema
@@ -27,6 +27,10 @@ const UserSchema = new Schema({
   birthday: {
     type: Date,
     //required: [function() { return this.role==ROLE_CUSTOMER }, 'La date de naissance est obligatoire'],
+    required: false,
+  },
+  height: {
+    type: Number,
     required: false,
   },
   pseudo: {
@@ -93,6 +97,10 @@ const UserSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'event',
   }],
+  registered_events: [{
+    type: Schema.Types.ObjectId,
+    ref: 'event',
+  }],
   dummy: {
     type: Number,
     default: 0,
@@ -132,8 +140,7 @@ UserSchema.virtual("spoons", {
   foreignField: "user" // is equal to foreignField
 });
 
-UserSchema.virtual("available_groups", {localField: 'idsqd', foreignField: 'idqdsd'}).get(function () {
-  console.log(`my registered groups:${JSON.stringify(this.registered_groups)}`)
+UserSchema.virtual("available_groups", {localField: 'id', foreignField: 'id'}).get(function () {
   return lodash(this.company?.groups)
     .filter(g => shareTargets(this, g))
     .differenceBy(this.registered_groups, g => g._id.toString())
@@ -144,6 +151,11 @@ UserSchema.virtual("registered_groups", {
   localField: "_id", // Find in Model, where localField
   foreignField: "users" // is equal to foreignField
 });
+
+// User's webinars are the company's ones
+UserSchema.virtual('_all_webinars', {localField:'_id', foreignField: '_id'}).get(function() {
+  return this.company?.webinars||[]
+})
 
 // User's webinars are the company's ones
 UserSchema.virtual('webinars', {localField:'_id', foreignField: '_id'}).get(function() {
@@ -163,7 +175,6 @@ UserSchema.virtual("_all_individual_challenges", {
 
 // User's ind. challenges are all expect the skipped ones and the passed ones
 UserSchema.virtual('individual_challenges', {localField: 'id', foreignField: 'id'}).get(function() {
-  console.log(this._all_individual_challenges)
   const exclude=[
     ...(this.skipped_events?.map(s => s._id)||[]),
     ...(this.passed_events?.map(s => s._id)||[]),
@@ -182,10 +193,45 @@ UserSchema.virtual('menu').get(function() {
   return this._all_menus?.find(m => moment().isBetween(m.start_date, m.end_date)) || null
 })
 
-// User's clletive challenges are the company's ones
+// User's colletive challenges are the company's ones
 UserSchema.virtual('collective_challenges').get(function() {
   return this.company?.collective_challenges || []
 })
+
+// User's events (even skipped or registered and so on)
+UserSchema.virtual('_all_events').get(function() {
+  return [
+    ...(this._all_menus||[]), ...(this._all_individual_challenges||[]),
+    ...(this.collective_challenges||[]), ...(this._all_webinars||[])]
+    .filter(v=>!!v)
+})
+
+UserSchema.virtual("measures", {
+  ref: "measure", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "user" // is equal to foreignField
+});
+
+UserSchema.virtual("last_measures", {localField: 'id', foreignField: 'id'}).get(function() {
+  if (lodash.isEmpty(this.measures)) {
+    return null
+  }
+  let measures=this.measures//.map(m => m.toObject())
+  measures=measures.map(m => lodash.omit(m, '_id,creation_date,update_date,__v,id,user'.split(',')))
+  measures=lodash.orderBy(measures, 'date')
+  const res=Object.fromEntries(Object.keys(measures[0]).map(att => {
+    const last_value=lodash.map(measures, att).filter(v => !!v).pop() || null
+    return [att, last_value]
+  }))
+  return [res]
+})
+
+UserSchema.virtual("pinned_contents", {
+  ref: "content", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "pins" // is equal to foreignField
+});
+
 
 /* eslint-enable prefer-arrow-callback */
 

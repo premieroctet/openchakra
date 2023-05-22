@@ -1,5 +1,6 @@
-const mongoose = require('mongoose')
 const lodash = require('lodash')
+const mongoose = require('mongoose')
+const { BadRequestError, NotFoundError } = require('./errors')
 const formatDuration = require('format-duration')
 const { UPDATED_AT_ATTRIBUTE, CREATED_AT_ATTRIBUTE, MODEL_ATTRIBUTES_DEPTH } = require('../../utils/consts')
 const UserSessionData = require('../models/UserSessionData')
@@ -138,8 +139,32 @@ const getModelAttributes = (modelName, level=MODEL_ATTRIBUTES_DEPTH) => {
     ...getSimpleModelAttributes(modelName),
     ...lodash.flatten(getReferencedModelAttributes(modelName, level)),
   ]
-  attrs.sort((att1, att2) => attributesComparator(att1[0], att2[0]))
-  return attrs
+
+  // Auto-create _count attribute for all multiple attributes
+  const multipleAttrs=attrs.filter(att => !att[0].includes('.') && att[1].multiple===true).map(att => att[0])
+  const multiple_name=name => `${name}_count`
+  multipleAttrs.forEach(name => {
+    const multName=multiple_name(name)
+    // Create virtual on the fly
+    mongoose.models[modelName].schema.virtual(multName).get(function() {
+      return this?.[name]?.length || 0
+    })
+    // TODO: UGLY. Properly handle aliases
+    if (modelName=='user') {
+      mongoose.models['loggedUser'].schema.virtual(multName).get(function() {
+        return this?.[name]?.length || 0
+      })
+    }
+    // Declare virtual on the fly
+    declareVirtualField({model: modelName, field: multName, instance: 'Number', requires: name})
+    if (modelName=='user') {
+      declareVirtualField({model: 'loggedUser', field: multName, instance: 'Number', requires: name})
+    }
+  })
+
+  const attrsWithCounts=[...attrs, ...multipleAttrs.map(name => [multiple_name(name), {type:Number, multiple:false, ref:false}])]
+  attrsWithCounts.sort((att1, att2) => attributesComparator(att1[0], att2[0]))
+  return attrsWithCounts
 }
 
 const getModels = () => {
@@ -156,15 +181,15 @@ const getModels = () => {
 Returns only models & attributes visible for studio users
 */
 const getExposedModels = () => {
-  const isHidddenAttributeName = attName => {
-    return false
+  const isHidddenAttributeName = (modelName, attName) => {
+    return attName.startsWith('_')
   }
 
   const models=lodash(getModels())
     .omitBy((v, k)=> k=='IdentityCounter')
-    .mapValues(v => ({
+    .mapValues((v, modelName) => ({
       ...v,
-      attributes: lodash(v.attributes).omitBy((v, k) => isHidddenAttributeName(k))
+      attributes: lodash(v.attributes).omitBy((v, k) => isHidddenAttributeName(modelName, k))
     }))
 
   return models.value()
@@ -354,6 +379,9 @@ const addComputedFields = async(
     data.hasOwnProperty(f),
   )
   const requiredCompFields = lodash.pick(compFields, presentCompFields)
+  if (model=='message') {
+    console.log(`compfields:${Object.keys(compFields)},presentCompFields:${presentCompFields},requiredCompFields:${Object.keys(requiredCompFields)}`)
+  }
   // Compute direct attributes
   const x = await Promise.allSettled(
     Object.keys(requiredCompFields).map(f =>
@@ -558,11 +586,12 @@ const loadFromDb = ({model, fields, id, user, params}) => {
         return data
       }
       return buildQuery(model, id, fields)
+        .lean({virtuals: true})
         .then(data => {
           // Force duplicate children
           data = JSON.parse(JSON.stringify(data))
           // Remove extra virtuals
-          data = retainRequiredFields({data, fields})
+          //data = retainRequiredFields({data, fields})
           if (id && data.length == 0) { throw new NotFoundError(`Can't find ${model}:${id}`) }
           return Promise.all(data.map(d => addComputedFields(user, params, d, model)))
         })

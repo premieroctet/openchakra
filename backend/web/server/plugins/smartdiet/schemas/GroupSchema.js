@@ -43,4 +43,14 @@ const GroupSchema = new Schema({
   },
 }, schemaOptions)
 
+GroupSchema.virtual('messages', {
+  ref: "message", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "group" // is equal to foreignField
+});
+
+GroupSchema.virtual('pinned_messages', {localField: 'dummy', foreignField: 'dummy'}).get(function () {
+  return []
+})
+
 module.exports = GroupSchema

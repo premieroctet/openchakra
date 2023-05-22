@@ -35,6 +35,18 @@ export const ACTIONS: IActions = {
         components
           .filter(comp => comp.type=='Flex')
           .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      group: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      parent: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      content: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
       ...Object.fromEntries(lodash.range(15).map((idx:number) => {
       return [
         `component_${idx}`,
@@ -419,6 +431,36 @@ export const ACTIONS: IActions = {
     options: {},
     next: ['openPage'],
   },
+  smartdiet_join_group: {
+    label: 'SM Joindre le groupe',
+    options: {},
+    next: ['openPage'],
+  },
+  smartdiet_leave_group: {
+    label: 'SM Quitter le groupe',
+    options: {},
+    next: ['openPage'],
+  },
+  smartdiet_skip_event: {
+    label: 'SM Zapper evt',
+    options: {},
+    next: ['openPage'],
+  },
+  smartdiet_join_event: {
+    label: 'SM Joindre evt',
+    options: {},
+    next: ['openPage'],
+  },
+  smartdiet_pass_event: {
+    label: 'SM Réussi evt',
+    options: {},
+    next: ['openPage'],
+  },
+  smartdiet_start_event: {
+    label: 'SM Connexion evt',
+    options: {},
+    next: ['openPage'],
+  },
   alle_ask_contact: {
     label: 'AE Ask contact',
     options: {
@@ -433,6 +475,7 @@ export const ACTIONS: IActions = {
     },
     next: ['openPage'],
   },
+
 }
 
 export const allowsActions = (component: IComponent) => {
