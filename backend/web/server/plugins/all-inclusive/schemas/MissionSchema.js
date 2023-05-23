@@ -71,6 +71,7 @@ const MissionSchema = new Schema({
     default: MISSION_FREQUENCY_UNKNOWN,
     required: [true, 'La fréquence de mission est obligatoire']
   },
+  // Customer
   user: {
     type: Schema.Types.ObjectId,
     ref: "user",
@@ -111,6 +112,11 @@ const MissionSchema = new Schema({
   },
   bill: {
     type: String,
+  },
+  dummy: {
+    type: Number,
+    default: 0,
+    required: true,
   },
 }, schemaOptions
 );

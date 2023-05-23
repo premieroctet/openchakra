@@ -141,7 +141,13 @@ USER_MODELS.forEach(m => {
   declareVirtualField({model: m, field: 'qualified_str', instance: 'String'})
   declareVirtualField({model: m, field: 'visible_str', instance: 'String'})
   declareVirtualField({model: m, field: 'finished_missions_count', instance: 'Number', requires: 'missions'})
-    declareVirtualField({model: m, field: 'customer_missions', instance: 'Array', requires: '', multiple: true,
+  declareVirtualField({model: m, field: '_missions', instance: 'Array', requires: '', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'mission'}}
+  })
+  declareVirtualField({model: m, field: 'missions', instance: 'Array', multiple: true,
+    requires: '_missions,_missions.user,_missions.job,_missions.job.user', 
     caster: {
       instance: 'ObjectID',
       options: {ref: 'mission'}}

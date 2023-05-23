@@ -19,6 +19,7 @@ const JobUserSchema = new Schema({
   city: {
     type: String,
   },
+  // TI
   user: {
     type: Schema.Types.ObjectId,
     ref: "user",

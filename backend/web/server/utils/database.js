@@ -265,7 +265,7 @@ const buildQuery = (model, id, fields) => {
   const select = lodash(fields)
     .map(att => att.split('.')[0])
     .uniq()
-    .filter(att => modelAttributes[att].ref == false)
+    .filter(att => {if (!modelAttributes[att]) throw new Error(`Unknown attribute ${model}.${att}`); return modelAttributes[att].ref == false})
     .map(att => [att, true])
     .fromPairs()
     .value()

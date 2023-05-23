@@ -1,3 +1,4 @@
+const { idEqual } = require('../../../utils/database')
 const {
   AVAILABILITY,
   COACHING,
@@ -177,6 +178,11 @@ const UserSchema = new Schema({
   representative_lastname: {
     type: String,
   },
+  dummy: {
+    type: Number,
+    default: 0,
+    required: true,
+  },
 }, schemaOptions
 );
 
@@ -225,11 +231,23 @@ UserSchema.virtual("jobs", {
   foreignField: "user" // is equal to foreignField
 });
 
-UserSchema.virtual("customer_missions", {
+// All missions
+UserSchema.virtual("_missions", {
   ref: "mission", // The Model to use
-  localField: "_id", // Find in Model, where localField
-  foreignField: "user" // is equal to foreignField
+  localField: "dummy", // Find in Model, where localField
+  foreignField: "dummy" // is equal to foreignField
 });
+
+UserSchema.virtual("missions", {localField: 'dummy', foreignField: 'dummy'}).get(function() {
+  if (this.role==ROLE_COMPANY_BUYER) {
+    return this._missions?.filter(m => idEqual(m.user?._id, this._id))
+  }
+  if (this.role==ROLE_TI) {
+    return this._missions?.filter(m => idEqual(m.job?.user._id, this._id)) || []
+  }
+  return []
+})
+
 
 UserSchema.virtual("requests", {
   ref: "request", // The Model to use
