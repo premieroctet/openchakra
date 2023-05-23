@@ -1,3 +1,14 @@
+const mongoose = require('mongoose')
+const {
+  declareComputedField,
+  declareEnumField,
+  declareVirtualField,
+  getModel,
+  idEqual,
+  setFilterDataUser,
+  setPreCreateData,
+  setPreprocessGet,
+} = require('../../utils/database')
 const {
   AVAILABILITY,
   COACHING,
@@ -19,14 +30,6 @@ const {
 const { BadRequestError } = require('../../utils/errors')
 const moment = require('moment')
 const Mission = require('../../models/Mission')
-const {
-  declareEnumField,
-  declareVirtualField,
-  idEqual,
-  setFilterDataUser,
-  setPreCreateData,
-  setPreprocessGet,
-} = require('../../utils/database')
 const User = require('../../models/User')
 const { CREATED_AT_ATTRIBUTE } = require('../../../utils/consts')
 const lodash=require('lodash')
@@ -168,6 +171,11 @@ USER_MODELS.forEach(m => {
   declareEnumField({model: m, field: 'unactive_reason', enumValues: UNACTIVE_REASON})
   declareVirtualField({model: m, field: 'missing_attributes', instance: 'String', requires: 'firstname,lastname,email,phone,birthday,nationality,picture,identity_proof_1,iban,company_name,company_status,siret,status_report,insurance_type,insurance_report,company_picture'})
   declareEnumField({model: m, field: 'zip_code', enumValues: DEPARTEMENTS})
+  declareVirtualField({model: m, field: 'pinned_jobs', instance: 'Array', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'jobUser'}}
+  })
 })
 
 
@@ -216,6 +224,7 @@ declareVirtualField({model: 'jobUser', field: 'comments', instance: 'Array', req
     instance: 'ObjectID',
     options: {ref: 'comment'}}
 })
+declareVirtualField({model: 'jobUser', field: 'pinned', instance: 'Boolean', requires:'pins'})
 
 
 declareEnumField({model: 'experience', field: 'contract_type', enumValues: CONTRACT_TYPE})
@@ -268,3 +277,31 @@ const filterDataUser = ({model, data, user}) => {
 }
 
 setFilterDataUser(filterDataUser)
+
+
+const getDataPinned = (user, params, data) => {
+  const pinned=data?.pins?.some(l => idEqual(l._id, user._id))
+  return Promise.resolve(pinned)
+}
+
+const setDataPinned = ({id, attribute, value, user}) => {
+  console.log(`Pinnning:${value}`)
+  return getModel(id, ['jobUser'])
+    .then(model => {
+      if (value) {
+        // Set liked
+        return mongoose.models[model].findByIdAndUpdate(id, {$addToSet: {pins: user._id}})
+      }
+      else {
+        // Remove liked
+        return mongoose.models[model].findByIdAndUpdate(id, {$pullAll: {pins: [user._id]}})
+      }
+    })
+}
+
+const getPinnedJobs = (user, params, data) => {
+  return JobUser.find({pins: user._id})
+}
+
+declareComputedField('jobUser', 'pinned', getDataPinned, setDataPinned)
+declareComputedField('user', 'pinned_jobs', getPinnedJobs)

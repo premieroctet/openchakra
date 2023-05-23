@@ -312,4 +312,8 @@ UserSchema.virtual("profile_shares_count").get(function() {
   return 0
 })
 
+UserSchema.virtual('pinned_jobs', {localField: 'dummy', foreignField: 'dummy'}).get(function () {
+  return []
+})
+
 module.exports = UserSchema;

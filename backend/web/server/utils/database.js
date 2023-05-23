@@ -580,7 +580,6 @@ const shareTargets = (obj1, obj2) => {
 const loadFromDb = ({model, fields, id, user, params}) => {
   return callPreprocessGet({model, fields, id, user})
     .then(({model, fields, id, data}) => {
-      console.log(`POSTGET ${model}/${id} ${fields} ${data}`)
       if (data) {
         return data
       }

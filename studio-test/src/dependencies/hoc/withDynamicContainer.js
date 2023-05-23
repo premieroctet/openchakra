@@ -116,7 +116,7 @@ const withDynamicContainer = Component => {
       }
     }
     let data = orgData
-    if (true || !lodash.isNil(props?.limit)) {
+    if (!lodash.isNil(props?.limit)) {
     try {
         data = orgData.slice(0, parseInt(props?.limit) || undefined)
       }
