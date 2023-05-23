@@ -1,3 +1,4 @@
+const { getModel, loadFromDb } = require('../../utils/database')
 const {
   CONTACT_STATUS,
   ROLE_ALLE_ADMIN,
@@ -326,6 +327,15 @@ const isActionAllowed = ({action, dataId, user, ...rest}) => {
           }
           return true
         })
+    }
+  }
+
+  if (action=='hasChildren') {
+    const childrenAttribute=rest?.actionProps.children
+    if (childrenAttribute) {
+      return getModel(dataId)
+        .then(model => loadFromDb({model, fields:[childrenAttribute], id: dataId, user}))
+        .then(data => data?.[0][childrenAttribute]?.length>0)
     }
   }
 

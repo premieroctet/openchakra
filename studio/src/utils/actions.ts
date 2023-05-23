@@ -479,6 +479,13 @@ export const ACTIONS: IActions = {
     },
     next: ['openPage'],
   },
+  hasChildren: {
+    label: 'Has children',
+    options: {
+      children: ({ attributes }) => Object.keys(attributes || {}).map(att => ({ key: att, label: att }))
+    },
+    next: ['openPage'],
+  },
 
 }
 

@@ -1,14 +1,19 @@
 import { Accordion, Select, Checkbox } from '@chakra-ui/react'
 import { MultiSelect } from 'react-multi-select-component'
 import { useSelector } from 'react-redux'
-import React, { memo } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import lodash from 'lodash'
 
 import { getModels } from '~core/selectors/dataSources'
 import AccordionContainer from '~components/inspector/AccordionContainer'
 
 import { ACTIONS } from '../../../utils/actions'
-import { getComponents, getPages } from '../../../core/selectors/components'
+import { getAvailableAttributes } from '../../../utils/dataSources';
+import {
+  getComponents,
+  getPages,
+  getSelectedComponent
+} from '../../../core/selectors/components';
 import { useForm } from '../../../hooks/useForm'
 import FormControl from '../controls/FormControl'
 import usePropsSelector from '../../../hooks/usePropsSelector'
@@ -92,8 +97,24 @@ const ActionsPanel: React.FC = () => {
   const pages = useSelector(getPages)
   const models = useSelector(getModels)
   const components = useSelector(getComponents)
+  const activeComponent: IComponent = useSelector(getSelectedComponent)
+  const [attrs, setAttrs] = useState({})
 
-  const optionsParams = { pages, models, components: Object.values(components) }
+  useEffect(() => {
+    try {
+      const attributes = getAvailableAttributes(
+        components[activeComponent.parent],
+        components,
+        models,
+      )
+      console.log(`Passing attributes : ${JSON.stringify(attributes)}`)
+      setAttrs(attributes)
+    } catch (err) {
+      console.error(err)
+    }
+  }, [activeComponent, components, models])
+
+  const optionsParams = { pages, models, components: Object.values(components), attributes: attrs }
 
   const onActionPropChange = (ev: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = ev.target
