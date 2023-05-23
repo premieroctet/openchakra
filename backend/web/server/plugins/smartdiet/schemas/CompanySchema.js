@@ -31,10 +31,6 @@ const CompanySchema = new Schema(
       ref: 'offer',
       required: true,
     },
-    webinars: [{
-      type: Schema.Types.ObjectId,
-      ref: "webinar",
-    }],
     collective_challenges: [{
       type: Schema.Types.ObjectId,
       ref: "collectiveChallenge",
@@ -42,6 +38,12 @@ const CompanySchema = new Schema(
   },
   schemaOptions,
 )
+
+CompanySchema.virtual("webinars", {
+  ref: "webinar", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "companies", // is equal to foreignField
+});
 
 CompanySchema.virtual("administrators", {
   ref: "user", // The Model to use

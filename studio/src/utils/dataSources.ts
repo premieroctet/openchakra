@@ -159,7 +159,7 @@ export const getAvailableAttributes = (
   const attributes = getComponentAttributes(component, components, models)
   const cardinalityAttributes = lodash.pickBy(
     attributes,
-    att => att.multiple === isMultipleDispatcher(component),
+    att => component.type==='RadioGroup' || att.multiple === isMultipleDispatcher(component),
   )
   return cardinalityAttributes
 }

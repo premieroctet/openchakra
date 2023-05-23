@@ -1,3 +1,16 @@
+const mongoose = require('mongoose')
+const {
+  declareComputedField,
+  declareEnumField,
+  declareVirtualField,
+  getModel,
+  idEqual,
+  setPostCreateData,
+  setPreCreateData,
+  setPreprocessGet,
+  simpleCloneModel
+} = require('../../utils/database')
+
 const {
   ACTIVITY,
   COMPANY_ACTIVITY,
@@ -12,22 +25,17 @@ const {
   ROLES,
   SPOON_SOURCE,
   TARGET_TYPE,
-  UNIT
+  UNIT,
+  PARTICULAR_COMPANY_NAME,
+  COMPANY_ACTIVITY_SERVICES_AUX_ENTREPRISES,
 } = require('./consts')
-const {
-  declareComputedField,
-  declareEnumField,
-  declareVirtualField,
-  setPostCreateData,
-  setPreCreateData,
-  setPreprocessGet,
-  simpleCloneModel,
-} = require('../../utils/database')
 const Offer = require('../../models/Offer')
 const Content = require('../../models/Content')
+const Company = require('../../models/Company')
 const lodash=require('lodash')
 const moment = require('moment')
 const User = require('../../models/User')
+
 
 const preprocessGet = ({model, fields, id, user}) => {
   if (model=='loggedUser') {
@@ -42,8 +50,11 @@ const preprocessGet = ({model, fields, id, user}) => {
 setPreprocessGet(preprocessGet)
 
 const preCreate = ({model, params, user}) => {
-  if (['content', 'collectiveChallenge', 'individualChallenge', 'webinar', 'menu'].includes(model)) {
+  if (['comment', 'measure', 'content', 'collectiveChallenge', 'individualChallenge', 'webinar', 'menu'].includes(model)) {
     params.user=user
+  }
+  if (['message'].includes(model)) {
+    params.sender=user
   }
   return Promise.resolve({model, params})
 }
@@ -79,7 +90,20 @@ USER_MODELS.forEach(m => {
       options: {ref: 'content'}}
   })
   declareVirtualField({model: m, field: 'webinars', instance: 'Array',
-    requires: 'company,skipped_events,passed_events', multiple: true,
+    requires: 'company,company.webinars,skipped_events,passed_events', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'webinar'}}
+  })
+  declareVirtualField({model: m, field: '_all_events', instance: 'Array',
+    requires: '_all_menus,_all_individual_challenges,collective_challenges,_all_webinars',
+    multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'webinar'}}
+  })
+  declareVirtualField({model: m, field: '_all_webinars', instance: 'Array',
+    requires: 'company.webinars', multiple: true,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'webinar'}}
@@ -91,19 +115,19 @@ USER_MODELS.forEach(m => {
       options: {ref: 'individualChallenge'}}
   })
   declareVirtualField({model: m, field: 'individual_challenges', instance: 'Array',
-    requires: '_all_individual_challenges', multiple: true,
+    requires: '_all_individual_challenges,skipped_events,passed_events', multiple: true,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'individualChallenge'}}
   })
   declareVirtualField({model: m, field: '_all_menus', instance: 'Menu',
-    multiple: false,
+    multiple: true,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'menu'}}
   })
   declareVirtualField({model: m, field: 'menu', instance: 'Menu',
-    requires: '', multiple: false,
+    multiple: false,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'menu'}}
@@ -114,14 +138,8 @@ USER_MODELS.forEach(m => {
       instance: 'ObjectID',
       options: {ref: 'collectiveChallenge'}}
   })
-  declareVirtualField({model: m, field: 'groups', instance: 'Array',
-    requires: '', multiple: true,
-    caster: {
-      instance: 'ObjectID',
-      options: {ref: 'group'}}
-  })
   declareVirtualField({model: m, field: 'available_groups', instance: 'Array',
-    requires: 'targets,company.groups.targets,registered_groups', multiple: true,
+    requires: 'targets,company.groups,company.groups.targets,registered_groups', multiple: true,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'group'}}
@@ -131,6 +149,24 @@ USER_MODELS.forEach(m => {
     caster: {
       instance: 'ObjectID',
       options: {ref: 'group'}}
+  })
+  declareVirtualField({model: m, field: 'measures', instance: 'Array',
+    multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'measure'}}
+  })
+  declareVirtualField({model: m, field: 'last_measures', instance: 'Array',
+    requires:'measures', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'measure'}}
+  })
+  declareVirtualField({model: m, field: 'pinned_contents', instance: 'Array',
+    multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'content'}}
   })
 })
 
@@ -162,7 +198,14 @@ declareVirtualField({model: 'company', field: 'groups_count', instance: 'Number'
 declareEnumField({model: 'content', field: 'type', enumValues:CONTENTS_TYPE})
 declareVirtualField({model: 'content', field: 'likes_count', instance: 'Number', requires: 'likes'})
 declareVirtualField({model: 'content', field: 'shares_count', instance: 'Number', requires: 'shares'})
-declareVirtualField({model: 'content', field: 'comments_count', instance: 'Number', requires: 'comments'})
+declareVirtualField({model: 'content', field: 'comments', instance: 'Array',
+  requires: '', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'comment'}}
+})
+declareVirtualField({model: 'content', field: 'liked', instance: 'Boolean', requires:'likes'})
+declareVirtualField({model: 'content', field: 'pinned', instance: 'Boolean', requires:'pins'})
 
 const EVENT_MODELS=['event', 'collectiveChallenge', 'individualChallenge', 'menu', 'webinar']
 EVENT_MODELS.forEach(m => {
@@ -215,6 +258,31 @@ declareEnumField({model: 'recipe', field: 'ecoscore', enumValues: ECOSCORE})
 
 declareEnumField({model: 'ingredient', field: 'unit', enumValues: UNIT})
 
+declareVirtualField({model: 'group', field: 'messages', instance: 'Array',
+  multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'message'}}
+})
+
+declareVirtualField({model: 'group', field: 'pinned_messages', instance: 'Array',
+  requires: 'messages.pins,messages.pinned', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'message'}}
+})
+
+declareVirtualField({model: 'message', field: 'pinned', instance: 'Boolean', requires:'pins'})
+declareVirtualField({model: 'message', field: 'liked', instance: 'Boolean', requires:'likes'})
+declareVirtualField({model: 'message', field: 'likes_count', instance: 'Number', requires:'likes'})
+
+declareVirtualField({model: 'comment', field: 'children', instance: 'Array',
+  multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'comment'}}
+})
+
 const getAvailableContents = (user, params, data) => {
   return Content.find()
     .then(contents => {
@@ -230,8 +298,58 @@ const getAvailableContents = (user, params, data) => {
     })
 }
 
+const getDataLiked = (user, params, data) => {
+  const liked=data?.likes?.some(l => idEqual(l._id, user?._id))
+  return Promise.resolve(liked)
+}
+
+const setDataLiked= ({id, attribute, value, user}) => {
+  console.log(`Liking:${value}`)
+  return getModel(id, ['comment', 'message', 'content'])
+    .then(model => {
+      if (value) {
+        // Set liked
+        return mongoose.models[model].findByIdAndUpdate(id, {$addToSet: {likes: user._id}})
+      }
+      else {
+        // Remove liked
+        return mongoose.models[model].findByIdAndUpdate(id, {$pullAll: {likes: [user._id]}})
+      }
+    })
+}
+
+const getDataPinned = (user, params, data) => {
+  const pinned=data?.pins?.some(l => idEqual(l._id, user._id))
+  return Promise.resolve(pinned)
+}
+
+const setDataPinned = ({id, attribute, value, user}) => {
+  console.log(`Pinnning:${value}`)
+  return getModel(id, ['message', 'content'])
+    .then(model => {
+      if (value) {
+        // Set liked
+        return mongoose.models[model].findByIdAndUpdate(id, {$addToSet: {pins: user._id}})
+      }
+      else {
+        // Remove liked
+        return mongoose.models[model].findByIdAndUpdate(id, {$pullAll: {pins: [user._id]}})
+      }
+    })
+}
+
+const getPinnedMessages = (user, params, data) => {
+  return Promise.resolve(data.messages?.filter(m => m.pins?.some(p => idEqual(p._id, user._id))))
+}
+
 declareComputedField('user', 'available_contents', getAvailableContents)
 declareComputedField('loggedUser', 'available_contents', getAvailableContents)
+declareComputedField('comment', 'liked', getDataLiked, setDataLiked)
+declareComputedField('message', 'liked', getDataLiked, setDataLiked)
+declareComputedField('content', 'liked', getDataLiked, setDataLiked)
+declareComputedField('message', 'pinned', getDataPinned, setDataPinned)
+declareComputedField('content', 'pinned', getDataPinned, setDataPinned)
+declareComputedField('group', 'pinned_messages', getPinnedMessages)
 
 
 const postCreate = ({model, params, data}) => {
@@ -253,6 +371,15 @@ const postCreate = ({model, params, data}) => {
 }
 
 setPostCreateData(postCreate)
+
+/** Upsert PARTICULARS company */
+Company.findOneAndUpdate(
+  {name: PARTICULAR_COMPANY_NAME},
+  {activity: COMPANY_ACTIVITY_SERVICES_AUX_ENTREPRISES},
+  {upsert: true},
+)
+.then(()=> console.log(`Particular company upserted`))
+.catch(err=> console.err(`Particular company upsert error:${err}`))
 
 module.exports={
   getAvailableContents,
