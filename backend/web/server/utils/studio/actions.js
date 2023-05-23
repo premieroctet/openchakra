@@ -83,8 +83,8 @@ let ACTIONS = {
     return getSession(id)
   },
 
-  sendMessage: ({destinee, contents}, sender) => {
-    return Message.create({sender: sender._id, receiver: destinee, content: contents})
+  sendMessage: ({destinee, contents, attachment}, sender) => {
+    return Message.create({sender: sender._id, receiver: destinee, content: contents, attachment})
       .then(m => Message.findById(m._id).populate('sender').populate('receiver'))
       .then(m => {
         sendNewMessage({member: m.receiver, partner: m.sender})

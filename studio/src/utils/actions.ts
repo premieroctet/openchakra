@@ -128,6 +128,10 @@ export const ACTIONS: IActions = {
         components.map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
       contents: ({ components }) =>
         components.map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      attachment: ({ components }) =>
+        components
+          .filter(c => c.type=='UploadFile')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
     },
     required:['contents']
   },
