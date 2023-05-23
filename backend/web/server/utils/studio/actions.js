@@ -147,8 +147,8 @@ const setAllowActionFn = fn => {
   ALLOW_ACTION = fn
 }
 
-const callAllowedAction = ({action, dataId, user}) => {
-  return ALLOW_ACTION({action, dataId, user})
+const callAllowedAction = (params) => {
+  return ALLOW_ACTION(params)
 }
 
 const addAction= (action, fn) => {

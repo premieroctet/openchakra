@@ -121,11 +121,12 @@ router.get('/roles', (req, res) => {
   return res.json(ROLES)
 })
 
-router.get('/action-allowed/:action/:dataId', passport.authenticate('cookie', {session: false}), (req, res) => {
-  const {action, dataId}=req.params
+router.get('/action-allowed/:action', passport.authenticate('cookie', {session: false}), (req, res) => {
+  const {action}=req.params
+  const query=lodash.mapValues(req.query, v => {try{return JSON.parse(v)} catch(e) {return v}})
   const user=req.user
 
-  return callAllowedAction({action, dataId, user})
+  return callAllowedAction({action, user, ...query})
     .then(allowed => res.json(allowed))
 })
 

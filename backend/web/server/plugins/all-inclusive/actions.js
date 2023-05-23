@@ -238,7 +238,7 @@ const askContactAction=(props) => {
 addAction('alle_ask_contact', askContactAction)
 
 
-const isActionAllowed = ({action, dataId, user}) => {
+const isActionAllowed = ({action, dataId, user, ...rest}) => {
   if (action=='alle_create_quotation') {
     return Mission.findById(dataId)
       .populate('quotations')
@@ -313,6 +313,20 @@ const isActionAllowed = ({action, dataId, user}) => {
     return Mission.findById(dataId)
       .populate('quotations')
       .then(mission => mission?.canLeaveComment(user))
+  }
+
+  if (action=='create') {
+    const actionProps=rest.actionProps
+    if (actionProps?.model=='quotation') {
+      return Mission.findById(dataId)
+        .populate('quotations')
+        .then(mission => {
+          if (mission?.quotations?.length>0) {
+            return false
+          }
+          return true
+        })
+    }
   }
 
   return Promise.resolve(true)

@@ -1,3 +1,4 @@
+const { BadRequestError } = require('../../utils/errors')
 const {
   AVAILABILITY,
   COACHING,
@@ -86,9 +87,12 @@ const preCreate = ({model, params, user}) => {
   if (model=='quotation' && 'mission' in params) {
     return Mission.findById(params.mission)
       .populate('user')
+      .populate('quotations')
       .then(mission => {
+        if (mission.quotations.length>0) {
+          throw new BadRequestError(`Un devis est déjà attaché à cette mission`)
+        }
         params.name=`Devis du ${moment().format('L')}`
-        console.log(`Mission.user:${JSON.stringify(mission.user.firstname)}`)
         params.firstname=mission.user.firstname
         params.lastname=mission.user.lastname
         params.email=mission.user.email
@@ -147,7 +151,7 @@ USER_MODELS.forEach(m => {
       options: {ref: 'mission'}}
   })
   declareVirtualField({model: m, field: 'missions', instance: 'Array', multiple: true,
-    requires: '_missions,_missions.user,_missions.job,_missions.job.user', 
+    requires: '_missions,_missions.user,_missions.job,_missions.job.user',
     caster: {
       instance: 'ObjectID',
       options: {ref: 'mission'}}
