@@ -264,6 +264,8 @@ const CONTACT_STATUS={
   CONTACT_STATUS_COMPANY: 'Je recherche des prestataires',
 }
 
+const DEPARTEMENTS=require('../../../utils/departements.json')
+
 module.exports={
   ROLES,
   ROLE_ALLE_ADMIN,
@@ -298,4 +300,5 @@ module.exports={
   CUSTOMER_TIPS,
   UNACTIVE_REASON,
   CONTACT_STATUS,
+  DEPARTEMENTS,
 }

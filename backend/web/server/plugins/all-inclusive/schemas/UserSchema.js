@@ -7,6 +7,7 @@ const {
   COMPANY_SIZE,
   COMPANY_STATUS,
   DEFAULT_ROLE,
+  DEPARTEMENTS,
   ROLES,
   ROLE_COMPANY_ADMIN,
   ROLE_COMPANY_BUYER,
@@ -122,6 +123,11 @@ const UserSchema = new Schema({
   },
   address: {
     type: String,
+  },
+  zip_code: {
+    type: String,
+    enum: Object.keys(DEPARTEMENTS),
+    required: [function() { return [ROLE_COMPANY_BUYER,ROLE_TI].includes(this.role)}, 'Le département est obligatoire'],
   },
   billing_address: {
     type: String,

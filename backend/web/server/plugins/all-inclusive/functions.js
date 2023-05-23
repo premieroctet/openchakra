@@ -1,4 +1,3 @@
-const { BadRequestError } = require('../../utils/errors')
 const {
   AVAILABILITY,
   COACHING,
@@ -7,6 +6,7 @@ const {
   COMPANY_STATUS,
   CONTACT_STATUS,
   CONTRACT_TYPE,
+  DEPARTEMENTS,
   EXPERIENCE,
   MISSION_FREQUENCY,
   QUOTATION_STATUS,
@@ -16,6 +16,7 @@ const {
   ROLE_TI,
   UNACTIVE_REASON,
 } = require('./consts')
+const { BadRequestError } = require('../../utils/errors')
 const moment = require('moment')
 const Mission = require('../../models/Mission')
 const {
@@ -166,6 +167,7 @@ USER_MODELS.forEach(m => {
   declareVirtualField({model: m, field: 'profile_shares_count', instance: 'Number', requires: ''})
   declareEnumField({model: m, field: 'unactive_reason', enumValues: UNACTIVE_REASON})
   declareVirtualField({model: m, field: 'missing_attributes', instance: 'String', requires: 'firstname,lastname,email,phone,birthday,nationality,picture,identity_proof_1,iban,company_name,company_status,siret,status_report,insurance_type,insurance_report,company_picture'})
+  declareEnumField({model: m, field: 'zip_code', enumValues: DEPARTEMENTS})
 })
 
 
