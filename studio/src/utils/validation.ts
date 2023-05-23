@@ -62,7 +62,7 @@ const checkDispatcherManyChildren = (
   if (
     CONTAINER_TYPE.includes(parent.type) &&
     parent.props.dataSource &&
-    parent.children.slice(1).includes(comp.id)
+    parent.children.slice(2).includes(comp.id)
   ) {
     throw new Error(
       `Extra child ${comp.type} of dynamic ${parent.type} will not appear at runtime`,
