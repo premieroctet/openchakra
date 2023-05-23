@@ -1,3 +1,13 @@
+const { paymentPlugin } = require('../../../config/config')
+const {
+  declareEnumField,
+  declareVirtualField,
+  idEqual,
+  setFilterDataUser,
+  setPostPutData,
+  setPreCreateData,
+  setPreprocessGet,
+} = require('../../utils/database')
 const {
   AVAILABILITY,
   COACHING,
@@ -15,17 +25,10 @@ const {
   ROLE_TI,
   ROLE_ALLE_ADMIN,
   UNACTIVE_REASON,
+  PAYMENT_STATUS,
 } = require('./consts')
 const moment = require('moment')
 const Mission = require('../../models/Mission')
-const {
-  declareEnumField,
-  declareVirtualField,
-  idEqual,
-  setFilterDataUser,
-  setPreCreateData,
-  setPreprocessGet,
-} = require('../../utils/database')
 const User = require('../../models/User')
 const { CREATED_AT_ATTRIBUTE } = require('../../../utils/consts')
 const lodash=require('lodash')
@@ -110,6 +113,19 @@ const preCreate = ({model, params, user}) => {
 }
 
 setPreCreateData(preCreate)
+
+const postPut = ({model, params, data, user}) => {
+  console.log(`postPut ${model} with ${JSON.stringify(data)}`)
+  if (model=='user' && user?.role==ROLE_TI) {
+    return paymentPlugin.upsertProvider(data)
+  }
+  if (model=='user' && user?.role==ROLE_COMPANY_BUYER) {
+    return paymentPlugin.upsertCustomer(data)
+  }
+  return Promise.resolve(data)
+}
+
+setPostPutData(postPut)
 
 
 const USER_MODELS=['user', 'loggedUser']
@@ -225,6 +241,7 @@ declareVirtualField({model: 'mission', field: 'comments', instance: 'Array', req
     instance: 'ObjectID',
     options: {ref: 'comment'}}
 })
+declareEnumField({model: 'mission', field: 'payin_status', enumValues: PAYMENT_STATUS})
 
 
 declareVirtualField({model: 'quotation', field: 'details', instance: 'Array', requires: '', multiple: true,

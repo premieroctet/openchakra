@@ -1,3 +1,4 @@
+const { paymentPlugin } = require('../../../config/config')
 const {
   CONTACT_STATUS,
   ROLE_ALLE_ADMIN,
@@ -207,7 +208,14 @@ const registerAction = props => {
     .then(() => User.create({...props, role: props.role || ROLE_TI}))
     .then(user => {
       const sendWelcome=user.role==ROLE_TI ? sendAccountCreatedToTIPI : sendAccountCreatedToCustomer
-      return sendWelcome({user})
+      sendWelcome({user})
+      if (user.role==ROLE_TI) {
+        return paymentPlugin.upsertProvider(user)
+      }
+      if (user.role==ROLE_COMPANY_BUYER) {
+        return paymentPlugin.upsertCustomer(user)
+      }
+      return user
     })
 }
 addAction('register', registerAction)

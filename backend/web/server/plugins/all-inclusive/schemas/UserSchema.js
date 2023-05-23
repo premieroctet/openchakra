@@ -1,3 +1,5 @@
+const { isPhoneOk } = require('../../../../utils/sms')
+
 const {
   AVAILABILITY,
   COACHING,
@@ -34,7 +36,7 @@ const UserSchema = new Schema({
   email: {
     type: String,
     required: true,
-    set: v => v.toLowerCase().trim(),
+    set: v => v?.toLowerCase().trim(),
     required: [true, "L'email est obligatoire"],
   },
   password: {
@@ -54,7 +56,9 @@ const UserSchema = new Schema({
   },
   phone: {
     type: String,
-    required: [function() { return this.role==ROLE_COMPANY_BUYER}, 'Le téléphone est obligatoire'],
+    validate: [value => isPhoneOk(value), 'Le numéro de téléphone doit commencer par 0 ou +33'],
+    set: v => v?.replace(/^0/, '+33'),
+    required: [function() { return [ROLE_TI, ROLE_COMPANY_BUYER].includes(this.role)}, 'Le téléphone est obligatoire'],
   },
   birthday: {
     type: Date,
@@ -182,6 +186,9 @@ const UserSchema = new Schema({
     type: String,
     required: [true, "L'ip d'enregistrement est obligatoire"],
   },
+  payment_account_id: {
+    type: String,
+  }
 }, schemaOptions
 );
 

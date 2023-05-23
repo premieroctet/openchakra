@@ -13,6 +13,7 @@ const {
   MISSION_STATUS_QUOT_SENT,
   MISSION_STATUS_TI_REFUSED,
   MISSION_STATUS_TO_BILL,
+  PAYMENT_STATUS,
   ROLE_COMPANY_BUYER,
   ROLE_TI,
   TI_TIPS
@@ -110,6 +111,26 @@ const MissionSchema = new Schema({
     type: Date,
   },
   bill: {
+    type: String,
+  },
+  // Payment process
+  payin_id: {
+    type: String,
+  },
+  payin_status: {
+    type: String,
+    enum: Object.keys(PAYMENT_STATUS),
+  },
+  transfer_id: {
+    type: String,
+  },
+  transfer_status: {
+    type: String,
+  },
+  payout_id: {
+    type: String,
+  },
+  payout_status: {
     type: String,
   },
 }, schemaOptions

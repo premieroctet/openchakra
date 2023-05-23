@@ -26,6 +26,7 @@ const {
   WITHINGS_CLIENT_ID,
   WITHINGS_CLIENT_SECRET,
   PAYMENT_PLUGIN,
+  STRIPE_KEY,
 } = require('../mode')
 
 const SITE_MODES = {
@@ -59,12 +60,12 @@ const getVivaWalletConfig = () => {
 
 const getStripeConfig = () => {
   return {
+    STRIPE_KEY
   }
 }
 
-const paymentPlugin=PAYMENT_PLUGIN ?
-  require(`../server/plugins/payment/${PAYMENT_PLUGIN}`).init(getStripeConfig())
-  : null
+const paymentPlugin=PAYMENT_PLUGIN ? require(`../server/plugins/payment/${PAYMENT_PLUGIN}`) : null
+paymentPlugin?.init(getStripeConfig())
 
 const get_mode = () => {
   if (!Object.values(MODES).includes(MODE)) {
@@ -366,4 +367,5 @@ module.exports = {
   getVivaWalletConfig,
   getWithingsConfig,
   getHostName,
+  paymentPlugin,
 }
