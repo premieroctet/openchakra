@@ -282,6 +282,8 @@ const PAYMENT_STATUS={
  PAYMENT_STATUS_SUCCEEDED:"Réussi",
 }
 
+const DEPARTEMENTS=require('../../../utils/departements.json')
+
 module.exports={
   ROLES,
   ROLE_ALLE_ADMIN,
@@ -317,4 +319,5 @@ module.exports={
   UNACTIVE_REASON,
   CONTACT_STATUS,
   PAYMENT_STATUS,
+  DEPARTEMENTS,
 }

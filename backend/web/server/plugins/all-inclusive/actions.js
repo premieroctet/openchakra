@@ -1,4 +1,5 @@
 const { paymentPlugin } = require('../../../config/config')
+const { getModel, loadFromDb } = require('../../utils/database')
 const {
   CONTACT_STATUS,
   ROLE_ALLE_ADMIN,
@@ -246,7 +247,7 @@ const askContactAction=(props) => {
 addAction('alle_ask_contact', askContactAction)
 
 
-const isActionAllowed = ({action, dataId, user}) => {
+const isActionAllowed = ({action, dataId, user, ...rest}) => {
   if (action=='alle_create_quotation') {
     return Mission.findById(dataId)
       .populate('quotations')
@@ -321,6 +322,29 @@ const isActionAllowed = ({action, dataId, user}) => {
     return Mission.findById(dataId)
       .populate('quotations')
       .then(mission => mission?.canLeaveComment(user))
+  }
+
+  if (action=='create') {
+    const actionProps=rest.actionProps
+    if (actionProps?.model=='quotation') {
+      return Mission.findById(dataId)
+        .populate('quotations')
+        .then(mission => {
+          if (mission?.quotations?.length>0) {
+            return false
+          }
+          return true
+        })
+    }
+  }
+
+  if (action=='hasChildren') {
+    const childrenAttribute=rest?.actionProps.children
+    if (childrenAttribute) {
+      return getModel(dataId)
+        .then(model => loadFromDb({model, fields:[childrenAttribute], id: dataId, user}))
+        .then(data => data?.[0][childrenAttribute]?.length>0)
+    }
   }
 
   return Promise.resolve(true)

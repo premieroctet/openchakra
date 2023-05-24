@@ -265,7 +265,7 @@ const buildQuery = (model, id, fields) => {
   const select = lodash(fields)
     .map(att => att.split('.')[0])
     .uniq()
-    .filter(att => modelAttributes[att].ref == false)
+    .filter(att => {if (!modelAttributes[att]) throw new Error(`Unknown attribute ${model}.${att}`); return modelAttributes[att].ref == false})
     .map(att => [att, true])
     .fromPairs()
     .value()
@@ -591,7 +591,6 @@ const shareTargets = (obj1, obj2) => {
 const loadFromDb = ({model, fields, id, user, params}) => {
   return callPreprocessGet({model, fields, id, user})
     .then(({model, fields, id, data}) => {
-      console.log(`POSTGET ${model}/${id} ${fields} ${data}`)
       if (data) {
         return data
       }

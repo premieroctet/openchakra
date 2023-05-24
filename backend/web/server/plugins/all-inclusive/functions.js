@@ -1,3 +1,4 @@
+const mongoose = require('mongoose')
 const { paymentPlugin } = require('../../../config/config')
 const {
   declareEnumField,
@@ -9,6 +10,10 @@ const {
   setPreprocessGet,
 } = require('../../utils/database')
 const {
+  declareComputedField,
+  getModel,
+} = require('../../utils/database')
+const {
   AVAILABILITY,
   COACHING,
   COMPANY_ACTIVITY,
@@ -16,6 +21,7 @@ const {
   COMPANY_STATUS,
   CONTACT_STATUS,
   CONTRACT_TYPE,
+  DEPARTEMENTS,
   EXPERIENCE,
   MISSION_FREQUENCY,
   QUOTATION_STATUS,
@@ -27,6 +33,7 @@ const {
   UNACTIVE_REASON,
   PAYMENT_STATUS,
 } = require('./consts')
+const { BadRequestError } = require('../../utils/errors')
 const moment = require('moment')
 const Mission = require('../../models/Mission')
 const User = require('../../models/User')
@@ -90,9 +97,12 @@ const preCreate = ({model, params, user}) => {
   if (model=='quotation' && 'mission' in params) {
     return Mission.findById(params.mission)
       .populate('user')
+      .populate('quotations')
       .then(mission => {
+        if (mission.quotations.length>0) {
+          throw new BadRequestError(`Un devis est déjà attaché à cette mission`)
+        }
         params.name=`Devis du ${moment().format('L')}`
-        console.log(`Mission.user:${JSON.stringify(mission.user.firstname)}`)
         params.firstname=mission.user.firstname
         params.lastname=mission.user.lastname
         params.email=mission.user.email
@@ -158,7 +168,13 @@ USER_MODELS.forEach(m => {
   declareVirtualField({model: m, field: 'qualified_str', instance: 'String'})
   declareVirtualField({model: m, field: 'visible_str', instance: 'String'})
   declareVirtualField({model: m, field: 'finished_missions_count', instance: 'Number', requires: 'missions'})
-    declareVirtualField({model: m, field: 'customer_missions', instance: 'Array', requires: '', multiple: true,
+  declareVirtualField({model: m, field: '_missions', instance: 'Array', requires: '', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'mission'}}
+  })
+  declareVirtualField({model: m, field: 'missions', instance: 'Array', multiple: true,
+    requires: '_missions,_missions.user,_missions.job,_missions.job.user',
     caster: {
       instance: 'ObjectID',
       options: {ref: 'mission'}}
@@ -173,6 +189,12 @@ USER_MODELS.forEach(m => {
   declareVirtualField({model: m, field: 'profile_shares_count', instance: 'Number', requires: ''})
   declareEnumField({model: m, field: 'unactive_reason', enumValues: UNACTIVE_REASON})
   declareVirtualField({model: m, field: 'missing_attributes', instance: 'String', requires: 'firstname,lastname,email,phone,birthday,nationality,picture,identity_proof_1,iban,company_name,company_status,siret,status_report,insurance_type,insurance_report,company_picture'})
+  declareEnumField({model: m, field: 'zip_code', enumValues: DEPARTEMENTS})
+  declareVirtualField({model: m, field: 'pinned_jobs', instance: 'Array', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'jobUser'}}
+  })
 })
 
 
@@ -221,6 +243,7 @@ declareVirtualField({model: 'jobUser', field: 'comments', instance: 'Array', req
     instance: 'ObjectID',
     options: {ref: 'comment'}}
 })
+declareVirtualField({model: 'jobUser', field: 'pinned', instance: 'Boolean', requires:'pins'})
 
 
 declareEnumField({model: 'experience', field: 'contract_type', enumValues: CONTRACT_TYPE})
@@ -278,3 +301,31 @@ const filterDataUser = ({model, data, user}) => {
 }
 
 setFilterDataUser(filterDataUser)
+
+
+const getDataPinned = (user, params, data) => {
+  const pinned=data?.pins?.some(l => idEqual(l._id, user?._id))
+  return Promise.resolve(pinned)
+}
+
+const setDataPinned = ({id, attribute, value, user}) => {
+  console.log(`Pinnning:${value}`)
+  return getModel(id, ['jobUser'])
+    .then(model => {
+      if (value) {
+        // Set liked
+        return mongoose.models[model].findByIdAndUpdate(id, {$addToSet: {pins: user._id}})
+      }
+      else {
+        // Remove liked
+        return mongoose.models[model].findByIdAndUpdate(id, {$pullAll: {pins: [user._id]}})
+      }
+    })
+}
+
+const getPinnedJobs = (user, params, data) => {
+  return JobUser.find({pins: user?._id})
+}
+
+declareComputedField('jobUser', 'pinned', getDataPinned, setDataPinned)
+declareComputedField('user', 'pinned_jobs', getPinnedJobs)

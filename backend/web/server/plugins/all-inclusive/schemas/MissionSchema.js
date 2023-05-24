@@ -72,6 +72,7 @@ const MissionSchema = new Schema({
     default: MISSION_FREQUENCY_UNKNOWN,
     required: [true, 'La fréquence de mission est obligatoire']
   },
+  // Customer
   user: {
     type: Schema.Types.ObjectId,
     ref: "user",
@@ -132,6 +133,11 @@ const MissionSchema = new Schema({
   },
   payout_status: {
     type: String,
+  },
+  dummy: {
+    type: Number,
+    default: 0,
+    required: true,
   },
 }, schemaOptions
 );
@@ -215,6 +221,7 @@ MissionSchema.methods.canCreateQuotation = function(user) {
 
 // TODO: fsm
 MissionSchema.methods.canAcceptQuotation = function(user) {
+  console.log(`Role:${user.role} ${ROLE_COMPANY_BUYER},status:${this.status} ${MISSION_STATUS_QUOT_SENT}`)
   return user.role==ROLE_COMPANY_BUYER && this.status==MISSION_STATUS_QUOT_SENT
 }
 
