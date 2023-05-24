@@ -15,16 +15,19 @@ export const ACTIONS = {
   sendMessage: ({ value, props, level, getComponentValue }) => {
     const destinee = props.destinee ? getComponentValue(props.destinee, level) : value._id
     const contents = getComponentValue(props.contents, level)
+    const attachment = getComponentValue(props.attachment, level)
     let url = `${API_ROOT}/action`
     return axios
       .post(url, {
         action: 'sendMessage',
         destinee,
         contents,
+        attachment,
       })
       .then(res => {
         clearComponentValue(props.destinee, level)
         clearComponentValue(props.contents, level)
+        clearComponentValue(props.attachment, level)
         return res
       })
   },
@@ -629,6 +632,16 @@ export const ACTIONS = {
           window.location=url
         }
       })
+  },
+
+  hasChildren: ({ value, actionProps}) => {
+    const body={
+      action: 'hasChildren',
+      value: value._id,
+      actionProps,
+    }
+    let url = `${API_ROOT}/action`
+    return axios.post(url, body)
   },
 
 }

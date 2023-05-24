@@ -246,6 +246,12 @@ const askContactAction=(props) => {
 
 addAction('alle_ask_contact', askContactAction)
 
+// TODO: send rest to isActionAllowed
+const hasChildrenAction = ({value, reason}, user) => {
+  return Promise.resolve(true)
+}
+
+addAction('hasChildren', hasChildrenAction)
 
 const isActionAllowed = ({action, dataId, user, ...rest}) => {
   if (action=='alle_create_quotation') {

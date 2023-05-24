@@ -8,11 +8,10 @@ const {
   setPostPutData,
   setPreCreateData,
   setPreprocessGet,
-} = require('../../utils/database')
-const {
   declareComputedField,
   getModel,
 } = require('../../utils/database')
+
 const {
   AVAILABILITY,
   COACHING,
