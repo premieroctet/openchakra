@@ -280,7 +280,7 @@ setFilterDataUser(filterDataUser)
 
 
 const getDataPinned = (user, params, data) => {
-  const pinned=data?.pins?.some(l => idEqual(l._id, user._id))
+  const pinned=data?.pins?.some(l => idEqual(l._id, user?._id))
   return Promise.resolve(pinned)
 }
 
@@ -300,7 +300,7 @@ const setDataPinned = ({id, attribute, value, user}) => {
 }
 
 const getPinnedJobs = (user, params, data) => {
-  return JobUser.find({pins: user._id})
+  return JobUser.find({pins: user?._id})
 }
 
 declareComputedField('jobUser', 'pinned', getDataPinned, setDataPinned)
