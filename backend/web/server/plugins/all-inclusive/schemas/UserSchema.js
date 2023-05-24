@@ -190,7 +190,7 @@ const UserSchema = new Schema({
   // Origin ip when account registered
   register_ip: {
     type: String,
-    required: [true, "L'ip d'enregistrement est obligatoire"],
+    required: false,
   },
   payment_account_id: {
     type: String,

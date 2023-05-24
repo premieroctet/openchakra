@@ -8,6 +8,7 @@ const {
   MISSION_STATUS_CUST_CANCELLED,
   MISSION_STATUS_DISPUTE,
   MISSION_STATUS_FINISHED,
+  MISSION_STATUS_PAYMENT_PENDING,
   MISSION_STATUS_QUOT_ACCEPTED,
   MISSION_STATUS_QUOT_REFUSED,
   MISSION_STATUS_QUOT_SENT,
@@ -118,9 +119,10 @@ const MissionSchema = new Schema({
   payin_id: {
     type: String,
   },
-  payin_status: {
-    type: String,
-    enum: Object.keys(PAYMENT_STATUS),
+  // Null: pending, true: ok
+  payin_achieved: {
+    type: Boolean,
+    required: false,
   },
   transfer_id: {
     type: String,
@@ -158,8 +160,11 @@ MissionSchema.virtual('status').get(function() {
   if (this.customer_refuse_quotation_date) {
     return MISSION_STATUS_QUOT_REFUSED
   }
-  if (this.customer_accept_quotation_date) {
+  if (this.payin_id && this.payin_achieved==true) {
     return MISSION_STATUS_QUOT_ACCEPTED
+  }
+  if (this.payin_id && this.payin_achieved==null) {
+    return MISSION_STATUS_PAYMENT_PENDING
   }
   if (this.customer_cancel_date) {
     return MISSION_STATUS_CUST_CANCELLED

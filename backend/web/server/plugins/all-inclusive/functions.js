@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const cron=require('node-cron')
 const { paymentPlugin } = require('../../../config/config')
 const {
   declareEnumField,
@@ -328,3 +329,20 @@ const getPinnedJobs = (user, params, data) => {
 
 declareComputedField('jobUser', 'pinned', getDataPinned, setDataPinned)
 declareComputedField('user', 'pinned_jobs', getPinnedJobs)
+
+// Send notifications for reminders & apppointments
+// Poll every minute
+cron.schedule('*/5 * * * * *', async() => {
+  return Mission.findOne({payin_id: {$ne:null}, payin_achieved: null})
+    .then(mission => paymentPlugin.getCheckout(mission.payin_id))
+    .then(payment => {
+      if (payment.status=='expired'  || (payment.status=='complete' && payment.payment_status=='unpaid')) {
+        console.log(`Payment ${payment.id} failed`)
+        return Mission.findOneAndUpdate({payin_id: payment.id}, {$unset: {payin_id:true, payin_achieved:true}})
+      }
+      if (payment.status=='complete'  && (payment.payment_status=='paid' || payment.payment_status=='no_payment_required')) {
+        console.log(`Payment ${payment.id} succeded`)
+        return Mission.findOneAndUpdate({payin_id: payment.id}, {payin_achieved:true})
+      }
+    })
+})

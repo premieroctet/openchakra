@@ -440,13 +440,22 @@ export const ACTIONS = {
     return axios.post(url, body)
   },
 
-  alle_accept_quotation: ({value}) => {
+  alle_accept_quotation: ({value, props}) => {
     let url = `${API_ROOT}/action`
     const body = {
       action: 'alle_accept_quotation',
-      value,
+      paymentSuccess: props.paymentSuccess,
+      paymentFailure: props.paymentFailure,
+      value: value._id,
     }
     return axios.post(url, body)
+      .then(res => {
+        if (res.data.redirect) {
+          let redirect=res.data.redirect
+          redirect = /^http/.test(redirect) ? redirect : `/${redirect}`
+          window.location=redirect
+        }
+      })
   },
 
   alle_refuse_quotation: ({value}) => {

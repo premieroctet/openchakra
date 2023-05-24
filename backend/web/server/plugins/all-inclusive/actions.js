@@ -1,3 +1,5 @@
+const { getHostUrl } = require('../../../config/config')
+
 const { paymentPlugin } = require('../../../config/config')
 const { getModel, loadFromDb } = require('../../utils/database')
 const {
@@ -61,7 +63,6 @@ const alle_send_quotation = ({value}, user) => {
             quotation.mission._id,
             {quotation_sent_date: moment(),
               customer_refuse_quotation_date: null,
-              customer_accept_quotation_date: null
             }
           )
         })
@@ -69,18 +70,28 @@ const alle_send_quotation = ({value}, user) => {
 }
 addAction('alle_send_quotation', alle_send_quotation)
 
-const alle_accept_quotation = ({value}, user) => {
-  return isActionAllowed({action:'alle_refuse_quotation', dataId:value?._id, user})
+const alle_accept_quotation = ({value, paymentSuccess, paymentFailure}, user) => {
+  return isActionAllowed({action:'alle_accept_quotation', dataId:value, user})
     .then(ok => {
       if (!ok) {return false}
-      return Mission.findByIdAndUpdate(
-        value?._id,
-        {customer_accept_quotation_date: moment(),
-          customer_refuse_quotation_date: null,
-        }
-      )
+      return loadFromDb({model: 'mission', id:value, fields:['job.user','quotations.total']})
+    })
+    .then(([mission]) => {
+      console.log(JSON.stringify(mission.quotations, null, 2))
+      const [success_url, failure_url]=[paymentSuccess, paymentFailure].map(p => `${getHostUrl()}${p}`)
+      return paymentPlugin.createPayment({source_user: user, amount:mission.quotations[0].total, fee:0,
+        destination_user: mission.job.user, description: 'Un test',
+        success_url, failure_url,
+    })
+    .then(payment => {
+      console.log(JSON.stringify(payment, null, 2))
+      return Mission.findByIdAndUpdate(value, {payin_id:payment.id, payin_achieved:null})
+        .then(() =>payment.url)
+    })
+    .then(url => ({redirect: url}))
     })
 }
+
 addAction('alle_accept_quotation', alle_accept_quotation)
 
 const alle_refuse_quotation = ({value}, user) => {

@@ -373,8 +373,11 @@ export const ACTIONS: IActions = {
   },
   alle_accept_quotation: {
     label: 'AE Accepter le devis',
-    options: {},
-    next: ['openPage'],
+    options: {
+      paymentSuccess: ({ pages }) => pagesList({pages}),
+      paymentFailure: ({ pages }) => pagesList({pages}),
+    },
+    next: [],
   },
   alle_refuse_quotation: {
     label: 'AE Refuser le devis',

@@ -35,7 +35,7 @@ const user2Token = user => {
           city: user.address || undefined,
           postal_code: 76,
         },
-        phone: user.phone ? `+${user.phone}` : undefined,
+        phone: user.phone?.trim().replace(/ /g, '').replace(/^0/, '+33'),
         dob,
       },
     },
@@ -73,7 +73,7 @@ const upsertCustomer = user => {
       line1: user.address,
     },
     name: user.full_name,
-    phone: user.phone,
+    phone: user.phone?.trim().replace(/ /g, '').replace(/^0/, '+33'),
   }
   const fn=user.payment_account_id ?
     Stripe.customers.update(user.payment_account_id, data)
@@ -97,7 +97,6 @@ const upsertProvider = user => {
     })
     .then(account => {
       user.payment_account_id=account.id
-      console.log(JSON.stringify(account, null, 2))
       return account.id
     })
 }
@@ -112,7 +111,7 @@ const getAccounts = () => {
     .then(result => result.data)
 }
 
-const createPayment = ({source_user, amount, fee, destination_user, description}) => {
+const createPayment = ({source_user, amount, fee, destination_user, description, success_url, failure_url}) => {
   if (!description) {
     throw new Error(`Description is required`)
   }
@@ -135,8 +134,8 @@ const createPayment = ({source_user, amount, fee, destination_user, description}
     },
     customer: source_user.payment_account_id,
     mode: 'payment',
-    success_url: 'https://fumoir.my-alfred.io/yes',
-    cancel_url: 'https://fumoir.my-alfred.io/no',
+    success_url: success_url,
+    cancel_url: failure_url,
   })
 }
 

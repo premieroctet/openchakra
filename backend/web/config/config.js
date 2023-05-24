@@ -154,7 +154,7 @@ const ENABLE_MAILING = isProduction()
 const getHostUrl = () => {
   const protocol = 'https'
   const hostname = getHostName()
-  const port = getPort()
+  const port = isDevelopment() ? getProductionPort():getPort()
   const includePort =
     (protocol == 'https' && port != 443) || (protocol == 'http' && port != 80)
   const host_url = `${protocol}://${hostname}${includePort ? `:${port}` : ''}/`
