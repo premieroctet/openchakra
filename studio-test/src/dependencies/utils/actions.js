@@ -621,4 +621,14 @@ export const ACTIONS = {
     return axios.post(url, body)
   },
 
+  hasChildren: ({ value, actionProps}) => {
+    const body={
+      action: 'hasChildren',
+      value: value._id,
+      actionProps,
+    }
+    let url = `${API_ROOT}/action`
+    return axios.post(url, body)
+  },
+
 }
