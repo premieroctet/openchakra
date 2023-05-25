@@ -275,6 +275,16 @@ UserSchema.virtual("missions", {localField: 'dummy', foreignField: 'dummy'}).get
   return []
 })
 
+UserSchema.virtual("missions_with_bill", {localField: 'dummy', foreignField: 'dummy'}).get(function() {
+  if (this.role==ROLE_COMPANY_BUYER) {
+    return this._missions?.filter(m => m.bill && idEqual(m.user?._id, this._id))
+  }
+  if (this.role==ROLE_TI) {
+    return this._missions?.filter(m => m.bill && idEqual(m.job?.user._id, this._id)) || []
+  }
+  return []
+})
+
 
 UserSchema.virtual("requests", {
   ref: "request", // The Model to use
