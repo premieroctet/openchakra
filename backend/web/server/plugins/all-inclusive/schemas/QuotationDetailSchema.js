@@ -20,10 +20,11 @@ const QuotationDetailSchema = new Schema({
     type: Number,
     required: [true, 'Le prix H.T. est obligatoire'],
   },
+  // 0 < vat < 100
   vat: {
     type: Number,
     min: 0,
-    max: 1.0,
+    max: 100,
     set: v => v || 0,
     required: [true, 'Le taux de TVA est obligatoire'],
   },

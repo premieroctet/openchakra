@@ -135,7 +135,6 @@ const UserSchema = new Schema({
   },
   city: {
     type: String,
-    enum: Object.keys(DEPARTEMENTS),
     required: [function() { return [ROLE_TI].includes(this.role)}, 'La ville est obligatoire'],
   },
   billing_address: {
