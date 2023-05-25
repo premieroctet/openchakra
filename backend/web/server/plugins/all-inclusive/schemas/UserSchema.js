@@ -333,8 +333,16 @@ UserSchema.virtual("profile_shares_count").get(function() {
   return 0
 })
 
-UserSchema.virtual('pinned_jobs', {localField: 'dummy', foreignField: 'dummy'}).get(function () {
-  return []
+// All jobs
+UserSchema.virtual("_all_jobs", {
+  ref: "jobUser", // The Model to use
+  localField: "dummy", // Find in Model, where localField
+  foreignField: "dummy" // is equal to foreignField
+});
+
+UserSchema.virtual('pinned_jobs', {localField: 'tagada', foreignField: 'tagada'}).get(function () {
+  return this?._all_jobs?.filter(j => j.pins?.some(p => idEqual(p._id, this._id)))
 })
+
 
 module.exports = UserSchema;

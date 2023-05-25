@@ -190,7 +190,14 @@ USER_MODELS.forEach(m => {
   declareEnumField({model: m, field: 'unactive_reason', enumValues: UNACTIVE_REASON})
   declareVirtualField({model: m, field: 'missing_attributes', instance: 'String', requires: 'firstname,lastname,email,phone,birthday,nationality,picture,identity_proof_1,iban,company_name,company_status,siret,status_report,insurance_type,insurance_report,company_picture'})
   declareEnumField({model: m, field: 'zip_code', enumValues: DEPARTEMENTS})
+  declareVirtualField({model: m, field: '_all_jobs', instance: 'Array', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'jobUser'}}
+  })
   declareVirtualField({model: m, field: 'pinned_jobs', instance: 'Array', multiple: true,
+    // TODO: _all_jobs_pins should be enough to display jibusers if required
+    requires:'_all_jobs.user',
     caster: {
       instance: 'ObjectID',
       options: {ref: 'jobUser'}}
@@ -323,12 +330,7 @@ const setDataPinned = ({id, attribute, value, user}) => {
     })
 }
 
-const getPinnedJobs = (user, params, data) => {
-  return JobUser.find({pins: user?._id})
-}
-
 declareComputedField('jobUser', 'pinned', getDataPinned, setDataPinned)
-declareComputedField('user', 'pinned_jobs', getPinnedJobs)
 
 // Send notifications for reminders & apppointments
 // Poll every minute

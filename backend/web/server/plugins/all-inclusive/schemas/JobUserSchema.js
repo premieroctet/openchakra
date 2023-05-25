@@ -58,6 +58,11 @@ const JobUserSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'user',
   }],
+  dummy: {
+    type: Number,
+    default: 0,
+    required: true,
+  },
 }, schemaOptions
 );
 
