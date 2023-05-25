@@ -301,20 +301,28 @@ UserSchema.virtual("visible_str").get(function() {
 });
 
 UserSchema.virtual("finished_missions_count").get(function() {
-  if (lodash.isEmpty(this.mission)) {
+  if (lodash.isEmpty(this.missions)) {
     return 0
   }
   return this.missions.filter(m => m.status==MISSION_STATUS_FINISHED).length
 })
 
-UserSchema.virtual("recommandations_count").get(function() {
-  const recos=lodash(this.jobs||[]).map(j => j.recommandations || []).flatten()
-  return recos.size()
+// All recommandations
+UserSchema.virtual("_all_recommandations", {
+  ref: "recommandation", // The Model to use
+  localField: "dummy", // Find in Model, where localField
+  foreignField: "dummy" // is equal to foreignField
+});
+
+UserSchema.virtual("recommandations", {localField: 'tagada', foreignField: 'tagada'}).get(function() {
+  const recos=this._all_recommandations?.filter(a => idEqual(a?.job?.user?._id, this._id)) || []
+  console.log(recos.length)
+  return recos
 })
 
 UserSchema.virtual("recommandations_note").get(function() {
-  const recos=lodash(this.jobs||[]).map(j => j.recommandations || []).flatten()
-  return recos.sumBy('note')/recos.size()
+  const recos=this.recommandations || []
+  return lodash.sumBy(recos, 'note')/recos.length
 })
 
 UserSchema.virtual("comments_count").get(function() {

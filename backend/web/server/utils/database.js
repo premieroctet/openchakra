@@ -604,10 +604,8 @@ const loadFromDb = ({model, fields, id, user, params}) => {
           if (id && data.length == 0) { throw new NotFoundError(`Can't find ${model}:${id}`) }
           return Promise.all(data.map(d => addComputedFields(user, params, d, model)))
         })
-        .then(data => {
-          // return id ? Promise.resolve(data) : callFilterDataUser({model, data, id, user: req.user})
-          return callFilterDataUser({model, data, id, user})
-        })
+        .then(data =>  callFilterDataUser({model, data, id, user}))
+        .then(data =>  retainRequiredFields({data, fields}))
     })
 
 }
