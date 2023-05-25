@@ -1,17 +1,20 @@
-const { sendAskRecomandation } = require('./mailing')
-
-const { isEmailOk } = require('../../../utils/sms')
-const { getHostUrl, paymentPlugin } = require('../../../config/config')
-
 const {
   sendAccountCreatedToAdmin,
   sendAccountCreatedToCustomer,
   sendAccountCreatedToTIPI,
   sendAccountDeactivated,
   sendAskContact,
+  sendAskRecomandation,
   sendForgotPassword,
-  sendQuotationSentToCustomer,
+  sendQuotationSentToCustomer
 } = require('./mailing')
+const {
+  getHostUrl,
+  getProductionUrl,
+  paymentPlugin
+} = require('../../../config/config')
+
+const { isEmailOk } = require('../../../utils/sms')
 const { getModel, loadFromDb } = require('../../utils/database')
 const {
   CONTACT_STATUS,
@@ -290,7 +293,7 @@ const askRecommandationAction = ({value, email, message, page}, user) => {
   if (!page) {throw new BadRequestError('La page de recommandation est obligatoire')}
   return loadFromDb({model: 'jobUser', id: value, fields:['user.full_name']})
     .then(([job]) => {
-      sendAskRecomandation({user, destinee_email:email, message,url: getHostUrl(`${page}?id=${value}`)})
+      sendAskRecomandation({user, destinee_email:email, message,url: getProductionUrl(`${page}?id=${value}`)})
       return true
     })
 }

@@ -389,15 +389,13 @@ export const ACTIONS = {
     return axios.post(url, body)
   },
 
-  createRecommandation: ({ value, context, props, level, getComponentValue }) => {
+  createRecommandation: ({ value, props, level, getComponentValue }) => {
     const components=lodash(props).pickBy((v, k) => /^component_/.test(k) && !!v).values()
     const body = Object.fromEntries(components.map(c =>
       [getComponent(c, level)?.getAttribute('attribute') || getComponent(c, level)?.getAttribute('data-attribute'),
         getComponentValue(c, level)||null]
     ))
-
-    const jobId=document.getElementById(`${props.job}${level}`)?.getAttribute('_id')
-    body.job=require('url').parse(window.location.href, true).query?.jobUser
+    body.job=value._id
 
     let url = `${API_ROOT}/recommandation`
     return axios.post(url, body).then(res => ({

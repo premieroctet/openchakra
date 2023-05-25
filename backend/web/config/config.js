@@ -151,13 +151,22 @@ const SERVER_PROD = isProduction() || isDevelopment()
 
 const ENABLE_MAILING = isProduction()
 
-const getHostUrl = (page) => {
+const getHostUrl = page => {
   const protocol = 'https'
   const hostname = getHostName()
-  const port = isDevelopment() ? getProductionPort():getPort()
-  const includePort = 
-    (protocol == 'https' && port != 443) || (protocol == 'http' && port != 80)
+  const port = getPort()
+  const includePort =
+     (protocol == 'https' && port != 443) || (protocol == 'http' && port != 80)
   const host_url = `${protocol}://${hostname}${includePort ? `:${port}` : ''}/${page}`
+  return host_url
+}
+
+const getProductionUrl = page => {
+  const protocol = 'https'
+  const hostname = getHostName()
+  const port = PRODUCTION_PORT
+  const portStr = isDevelopment() ? `:${port}`: ''
+  const host_url = `${protocol}://${hostname}${portStr}/${page}`
   return host_url
 }
 
@@ -368,4 +377,5 @@ module.exports = {
   getWithingsConfig,
   getHostName,
   paymentPlugin,
+  getProductionUrl,
 }
