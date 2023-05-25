@@ -151,13 +151,13 @@ const SERVER_PROD = isProduction() || isDevelopment()
 
 const ENABLE_MAILING = isProduction()
 
-const getHostUrl = () => {
+const getHostUrl = (page) => {
   const protocol = 'https'
   const hostname = getHostName()
   const port = isDevelopment() ? getProductionPort():getPort()
-  const includePort =
+  const includePort = 
     (protocol == 'https' && port != 443) || (protocol == 'http' && port != 80)
-  const host_url = `${protocol}://${hostname}${includePort ? `:${port}` : ''}/`
+  const host_url = `${protocol}://${hostname}${includePort ? `:${port}` : ''}/${page}`
   return host_url
 }
 

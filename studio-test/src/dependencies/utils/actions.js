@@ -1,8 +1,13 @@
+import {jsPDF} from 'jspdf'
 import axios from 'axios'
 import lodash from 'lodash'
-import {jsPDF} from 'jspdf'
+
+import {
+  clearComponentValue,
+  getComponent,
+  getComponentDataValue
+} from './values';
 import { clearToken } from './token';
-import {getComponent, clearComponentValue} from './values'
 
 const API_ROOT = '/myAlfred/api/studio'
 export const ACTIONS = {
@@ -648,6 +653,18 @@ export const ACTIONS = {
       action: 'hasChildren',
       value: value._id,
       actionProps,
+    }
+    let url = `${API_ROOT}/action`
+    return axios.post(url, body)
+  },
+
+  askRecommandation: ({ value, context, props, level, getComponentValue }) => {
+    const body={
+      action: 'askRecommandation',
+      value: value._id,
+      email: getComponentValue(props.email, level)||null,
+      message: getComponentValue(props.message, level)||null,
+      page: props.page,
     }
     let url = `${API_ROOT}/action`
     return axios.post(url, body)

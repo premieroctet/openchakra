@@ -1,3 +1,6 @@
+const { sendAskRecomandation } = require('./mailing')
+
+const { isEmailOk } = require('../../../utils/sms')
 const { getHostUrl, paymentPlugin } = require('../../../config/config')
 
 const {
@@ -279,6 +282,20 @@ const hasChildrenAction = ({value, reason}, user) => {
 }
 
 addAction('hasChildren', hasChildrenAction)
+
+const askRecommandationAction = ({value, email, message, page}, user) => {
+  if (!value) {throw new BadRequestError('Le job est obligatoire')}
+  if (!(email && isEmailOk(email))) {throw new BadRequestError("L'email est invalide")}
+  if (!message?.trim()) {throw new BadRequestError('Le message est obligatoire')}
+  if (!page) {throw new BadRequestError('La page de recommandation est obligatoire')}
+  return loadFromDb({model: 'jobUser', id: value, fields:['user.full_name']})
+    .then(([job]) => {
+      sendAskRecomandation({user, destinee_email:email, message,url: getHostUrl(`${page}?id=${value}`)})
+      return true
+    })
+}
+
+addAction('askRecommandation', askRecommandationAction)
 
 const isActionAllowed = ({action, dataId, user, ...rest}) => {
   if (action=='alle_create_quotation') {

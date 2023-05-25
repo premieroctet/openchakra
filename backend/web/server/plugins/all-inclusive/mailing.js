@@ -2,6 +2,7 @@ const { sendNotification, setSmsContents } = require('../../utils/mailing')
 const {datetime_str} = require('../../../utils/dateutils')
 
 const SIB_IDS={
+  ASK_RECOMMANDATION: 15,
   FORGOT_PASSWORD: 20,
   ASK_CONTACT: 33,
   CUSTOMER_QUOTATION_SENT_2_CUSTOMER: 36,
@@ -97,6 +98,19 @@ const sendAccountDeactivated = ({user}) => {
   })
 }
 
+// Send email to destinee_email asking recommandation for user using URL
+const sendAskRecomandation = ({user, destinee_email, message, url}) => {
+  return sendNotification({
+    notification: SIB_IDS.ASK_RECOMMANDATION,
+    destinee: {email: destinee_email},
+    params: {
+      user_full_name: user.full_name,
+      message,
+      url,
+    }
+  })
+}
+
 module.exports = {
   sendQuotationSentToCustomer,
   sendAccountCreatedToTIPI,
@@ -105,4 +119,5 @@ module.exports = {
   sendAskContact,
   sendAccountCreatedToAdmin,
   sendAccountDeactivated,
+  sendAskRecomandation,
 }

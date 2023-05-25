@@ -488,6 +488,15 @@ export const ACTIONS: IActions = {
     },
     next: ['openPage'],
   },
+  askRecommandation: {
+    label: 'Ask recommandation',
+    options: {
+      email: ({ components }) => components.map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      message: ({ components }) => components.map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      page: ({ pages }) => pagesList({pages}),
+    },
+    next: ['openPage'],
+  },
 
 
 }
