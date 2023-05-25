@@ -37,11 +37,11 @@ const QuotationDetailSchema = new Schema({
 );
 
 QuotationDetailSchema.virtual('total').get(function() {
-  return this.ht_price*this.quantity*(1+this.vat)
+  return this.ht_price*this.quantity*(1+this.vat/100.0)
 })
 
 QuotationDetailSchema.virtual('vat_total').get(function() {
-  return this.ht_price*this.quantity*this.vat
+  return this.ht_price*this.quantity*this.vat/100.0
 })
 
 module.exports = QuotationDetailSchema;
