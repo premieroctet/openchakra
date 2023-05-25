@@ -1,4 +1,5 @@
 const { sendNotification, setSmsContents } = require('../../utils/mailing')
+const JSSoup = require('jssoup').default
 const {datetime_str} = require('../../../utils/dateutils')
 
 const SIB_IDS={
@@ -10,6 +11,7 @@ const SIB_IDS={
   CUSTOMER_ACCOUNT_CREATED: 38,
   ACCOUNT_DEACTIVED: 45,
   ADMIN_ACCOUNT_CREATED: 63,
+  TIPI_SEARCH: 65,
 }
 
 const SMS_CONTENTS={
@@ -111,6 +113,21 @@ const sendAskRecomandation = ({user, destinee_email, message, url}) => {
   })
 }
 
+// Send email to TIPI asking for TI search
+const sendTipiSearch = ({admin, mission}) => {
+  const mission_description_txt=new JSSoup(mission.description||'<html></html>').text
+  return sendNotification({
+    notification: SIB_IDS.TIPI_SEARCH,
+    destinee: admin,
+    params: {
+      ...mission.user,
+      ...mission,
+      location: mission.location_str,
+      message:  mission_description_txt,
+    }
+  })
+}
+
 module.exports = {
   sendQuotationSentToCustomer,
   sendAccountCreatedToTIPI,
@@ -120,4 +137,5 @@ module.exports = {
   sendAccountCreatedToAdmin,
   sendAccountDeactivated,
   sendAskRecomandation,
+  sendTipiSearch,
 }

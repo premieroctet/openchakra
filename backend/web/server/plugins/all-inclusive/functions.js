@@ -1,17 +1,19 @@
-const mongoose = require('mongoose')
-const cron=require('node-cron')
-const { paymentPlugin } = require('../../../config/config')
+const { sendTipiSearch } = require('./mailing')
 const {
+  declareComputedField,
   declareEnumField,
   declareVirtualField,
+  getModel,
   idEqual,
   setFilterDataUser,
+  setPostCreateData,
   setPostPutData,
   setPreCreateData,
   setPreprocessGet,
-  declareComputedField,
-  getModel,
 } = require('../../utils/database')
+const mongoose = require('mongoose')
+const cron=require('node-cron')
+const { paymentPlugin } = require('../../../config/config')
 
 const {
   AVAILABILITY,
@@ -42,6 +44,20 @@ const lodash=require('lodash')
 const Message = require('../../models/Message')
 const JobUser = require('../../models/JobUser')
 const NATIONALITIES = require('./nationalities.json')
+
+const postCreate = ({model, params, data}) => {
+  // Create company => duplicate offer
+  if (model=='mission') {
+    return Promise.all([Mission.findById(data.id).populate('user'), User.find({role: ROLE_ALLE_ADMIN})])
+      .then(([mission, admins]) => {
+        return Promise.allSettled(admins.map(admin => sendTipiSearch({admin, mission:mission.toObject()})))
+    })
+  }
+
+  return Promise.resolve(data)
+}
+
+setPostCreateData(postCreate)
 
 const preprocessGet = ({model, fields, id, user}) => {
   if (model=='loggedUser') {
@@ -90,7 +106,6 @@ const preprocessGet = ({model, fields, id, user}) => {
 setPreprocessGet(preprocessGet)
 
 const preCreate = ({model, params, user}) => {
-  console.log(`preCreate ${model} with ${JSON.stringify(params)}`)
   if (['jobUser', 'request', 'mission', 'comment'].includes(model)) {
     params.user=user
   }
