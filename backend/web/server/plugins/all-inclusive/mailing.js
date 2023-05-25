@@ -68,13 +68,14 @@ const sendAccountCreatedToCustomer = ({user}) => {
   })
 }
 
-const sendAskContact = ({user, fields}) => {
+const sendAskContact = ({user, fields, attachment}) => {
   return sendNotification({
     notification: SIB_IDS.ASK_CONTACT,
     destinee: user,
     params: {
       ...fields
-    }
+    },
+    attachment
   })
 }
 
