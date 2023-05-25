@@ -7,6 +7,7 @@ const SIB_IDS={
   CUSTOMER_QUOTATION_SENT_2_CUSTOMER: 36,
   TIPI_ACCOUNT_CREATED: 37,
   CUSTOMER_ACCOUNT_CREATED: 38,
+  ACCOUNT_DEACTIVED: 45,
   ADMIN_ACCOUNT_CREATED: 63,
 }
 
@@ -86,6 +87,16 @@ const sendAccountCreatedToAdmin = ({user, password}) => {
   })
 }
 
+const sendAccountDeactivated = ({user}) => {
+  return sendNotification({
+    notification: SIB_IDS.ACCOUNT_DEACTIVED,
+    destinee: user,
+    params: {
+      user_firstname: user.firstname,
+    }
+  })
+}
+
 module.exports = {
   sendQuotationSentToCustomer,
   sendAccountCreatedToTIPI,
@@ -93,4 +104,5 @@ module.exports = {
   sendForgotPassword,
   sendAskContact,
   sendAccountCreatedToAdmin,
+  sendAccountDeactivated,
 }

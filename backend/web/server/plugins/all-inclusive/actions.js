@@ -1,6 +1,14 @@
-const { getHostUrl } = require('../../../config/config')
+const { getHostUrl, paymentPlugin } = require('../../../config/config')
 
-const { paymentPlugin } = require('../../../config/config')
+const {
+  sendAccountCreatedToAdmin,
+  sendAccountCreatedToCustomer,
+  sendAccountCreatedToTIPI,
+  sendAccountDeactivated,
+  sendAskContact,
+  sendForgotPassword,
+  sendQuotationSentToCustomer,
+} = require('./mailing')
 const { getModel, loadFromDb } = require('../../utils/database')
 const {
   CONTACT_STATUS,
@@ -8,15 +16,6 @@ const {
   ROLE_COMPANY_BUYER,
   ROLE_TI
 } = require('./consts')
-
-const {
-  sendAccountCreatedToCustomer,
-  sendAccountCreatedToTIPI,
-  sendAskContact,
-  sendForgotPassword,
-  sendQuotationSentToCustomer,
-  sendAccountCreatedToAdmin,
-} = require('./mailing')
 const {
   generatePassword,
   validatePassword
@@ -205,6 +204,10 @@ const deactivateAccount = ({value, reason}, user) => {
         value._id,
         {active: false, unactive_reason: reason}
       )
+      .then(user => {
+        sendAccountDeactivated({user})
+        return user
+      })
     })
 }
 addAction('deactivateAccount', deactivateAccount)
