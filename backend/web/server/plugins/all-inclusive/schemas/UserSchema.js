@@ -126,11 +126,17 @@ const UserSchema = new Schema({
   },
   address: {
     type: String,
+    required: [function() { return [ROLE_TI].includes(this.role)}, "L'adresse est obligatoire"],
   },
   zip_code: {
     type: String,
     enum: Object.keys(DEPARTEMENTS),
     required: [function() { return [ROLE_COMPANY_BUYER,ROLE_TI].includes(this.role)}, 'Le département est obligatoire'],
+  },
+  city: {
+    type: String,
+    enum: Object.keys(DEPARTEMENTS),
+    required: [function() { return [ROLE_TI].includes(this.role)}, 'La ville est obligatoire'],
   },
   billing_address: {
     type: String,
