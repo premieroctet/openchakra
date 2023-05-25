@@ -1,3 +1,7 @@
+const { isEmailOk } = require('../../../../utils/sms')
+
+const Validator = require('validator')
+
 const { isPhoneOk } = require('../../../../utils/sms')
 const { idEqual } = require('../../../utils/database')
 const {
@@ -38,6 +42,7 @@ const UserSchema = new Schema({
     type: String,
     required: true,
     set: v => v?.toLowerCase().trim(),
+    validate: [value => isEmailOk(value), "L'email est invalide"],
     required: [true, "L'email est obligatoire"],
   },
   password: {

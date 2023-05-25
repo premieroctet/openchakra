@@ -7,6 +7,7 @@ const SIB_IDS={
   CUSTOMER_QUOTATION_SENT_2_CUSTOMER: 36,
   TIPI_ACCOUNT_CREATED: 37,
   CUSTOMER_ACCOUNT_CREATED: 38,
+  ADMIN_ACCOUNT_CREATED: 63,
 }
 
 const SMS_CONTENTS={
@@ -73,6 +74,17 @@ const sendAskContact = ({user, fields}) => {
   })
 }
 
+const sendAccountCreatedToAdmin = ({user, password}) => {
+  return sendNotification({
+    notification: SIB_IDS.ADMIN_ACCOUNT_CREATED,
+    destinee: user,
+    params: {
+      user_firstname: user.firstname,
+      login: user.email,
+      password: password,
+    }
+  })
+}
 
 module.exports = {
   sendQuotationSentToCustomer,
@@ -80,4 +92,5 @@ module.exports = {
   sendAccountCreatedToCustomer,
   sendForgotPassword,
   sendAskContact,
+  sendAccountCreatedToAdmin,
 }

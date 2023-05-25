@@ -14,7 +14,8 @@ const {
   sendAccountCreatedToTIPI,
   sendAskContact,
   sendForgotPassword,
-  sendQuotationSentToCustomer
+  sendQuotationSentToCustomer,
+  sendAccountCreatedToAdmin,
 } = require('./mailing')
 const {
   generatePassword,
@@ -215,12 +216,24 @@ const registerAction = props => {
       if (exists) {
         return Promise.reject(`Un compte avec le mail ${props.email} existe déjà`)
       }
+      if (!props.password) {
+        props.password=generatePassword()
+        props.password2=props.password
+        return Promise.resolve()
+      }
       return validatePassword({...props})
     })
     .then(() => User.create({...props, role: props.role || ROLE_TI}))
     .then(user => {
-      const sendWelcome=user.role==ROLE_TI ? sendAccountCreatedToTIPI : sendAccountCreatedToCustomer
-      sendWelcome({user})
+      const sendWelcome=
+        user.role==ROLE_TI ? sendAccountCreatedToTIPI
+        : user.role==ROLE_COMPANY_BUYER ? sendAccountCreatedToCustomer
+        : user.role==ROLE_ALLE_ADMIN ? sendAccountCreatedToAdmin
+        : null
+      if (!sendWelcome) {
+        throw new BadRequestError(`Pas de mail de création de compte défini pour le role ${props.role}`)
+      }
+      sendWelcome({user, password: props.password})
       if (user.role==ROLE_TI) {
         return paymentPlugin.upsertProvider(user)
       }
