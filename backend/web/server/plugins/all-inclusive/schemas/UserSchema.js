@@ -320,6 +320,10 @@ UserSchema.virtual("recommandations", {localField: 'tagada', foreignField: 'taga
   return recos
 })
 
+UserSchema.virtual("recommandations_count", {localField: 'tagada', foreignField: 'tagada'}).get(function() {
+  return this.recommandations?.length || 0
+})
+
 UserSchema.virtual("recommandations_note").get(function() {
   const recos=this.recommandations || []
   return lodash.sumBy(recos, 'note')/recos.length
