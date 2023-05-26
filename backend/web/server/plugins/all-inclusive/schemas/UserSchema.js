@@ -317,7 +317,6 @@ UserSchema.virtual("_all_recommandations", {
 
 UserSchema.virtual("recommandations", {localField: 'tagada', foreignField: 'tagada'}).get(function() {
   const recos=this._all_recommandations?.filter(a => idEqual(a?.job?.user?._id, this._id)) || []
-  console.log(`Recomm for ${this._id}`)
   return recos
 })
 
