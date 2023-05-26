@@ -1,3 +1,4 @@
+const AdminDashboard = require('../../models/AdminDashboard')
 const { sendTipiSearch } = require('./mailing')
 const {
   declareComputedField,
@@ -308,6 +309,21 @@ declareVirtualField({model: 'quotationDetail', field: 'vat_total', instance: 'Nu
 
 declareEnumField({model: 'contact', field: 'status', enumValues: CONTACT_STATUS})
 
+declareVirtualField({model: 'adminDashboard', field: '_all_users', instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'user'}}
+})
+declareVirtualField({model: 'adminDashboard', field: '_all_missions', instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'mission'}}
+})
+declareVirtualField({model: 'adminDashboard', field: 'ti_registered_today', instance: 'Number', requires:'_all_users'})
+declareVirtualField({model: 'adminDashboard', field: 'customers_registered_today', instance: 'Number', requires:'_all_users'})
+declareVirtualField({model: 'adminDashboard', field: 'pending_missions', instance: 'Number', requires:'_all_missions.status'})
+
+
 const filterDataUser = ({model, data, user}) => {
   // ALL-E admins have whole visibility
   if (user?.role==ROLE_ALLE_ADMIN) {
@@ -352,6 +368,12 @@ const setDataPinned = ({id, attribute, value, user}) => {
 }
 
 declareComputedField('jobUser', 'pinned', getDataPinned, setDataPinned)
+
+/** Upsert ONLY adminDashboard */
+AdminDashboard.exists({})
+  .then(exists => !exists && AdminDashboard.create({}))
+  .then(()=> console.log(`Only adminDashboard`))
+  .catch(err=> console.err(`Only adminDashboard:${err}`))
 
 // Send notifications for reminders & apppointments
 // Poll every minute

@@ -81,6 +81,7 @@ require('./models/Recipe')
 require('./models/Instrument')
 require('./models/Ingredient')
 require('./models/RecipeIngredient')
+require('./models/AdminDashboard')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 
