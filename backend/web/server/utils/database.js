@@ -140,7 +140,7 @@ const getModelAttributes = (modelName, level=MODEL_ATTRIBUTES_DEPTH) => {
   ]
 
   // Auto-create _count attribute for all multiple attributes
-  const multipleAttrs=attrs.filter(att => !att[0].includes('.') && att[1].multiple===true).map(att => att[0])
+  const multipleAttrs=[] //attrs.filter(att => !att[0].includes('.') && att[1].multiple===true).map(att => att[0])
   const multiple_name=name => `${name}_count`
   multipleAttrs.forEach(name => {
     const multName=multiple_name(name)
