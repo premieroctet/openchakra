@@ -116,7 +116,7 @@ const withDynamicContainer = Component => {
       }
     }
     let data = orgData
-    if (true || !lodash.isNil(props?.limit)) {
+    if (!lodash.isNil(props?.limit)) {
     try {
         data = orgData.slice(0, parseInt(props?.limit) || undefined)
       }
@@ -126,8 +126,15 @@ const withDynamicContainer = Component => {
     }
 
 
-    const firstChild = React.Children.toArray(props.children)[0]
+    const [firstChild, secondChild] = React.Children.toArray(props.children).slice(0,2)
 
+    if (lodash.isEmpty(data)) {
+      return (
+        <Component {...lodash.omit(props, ['children'])}>
+        {secondChild || null}
+        </Component>
+      )
+    }
     return (
       <Component {...lodash.omit(props, ['children'])}>
         {data.map((d, index) => {

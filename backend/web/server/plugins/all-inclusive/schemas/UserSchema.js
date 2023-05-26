@@ -1,3 +1,4 @@
+const { idEqual } = require('../../../utils/database')
 const {
   AVAILABILITY,
   COACHING,
@@ -6,6 +7,7 @@ const {
   COMPANY_SIZE,
   COMPANY_STATUS,
   DEFAULT_ROLE,
+  DEPARTEMENTS,
   ROLES,
   ROLE_COMPANY_ADMIN,
   ROLE_COMPANY_BUYER,
@@ -122,6 +124,11 @@ const UserSchema = new Schema({
   address: {
     type: String,
   },
+  zip_code: {
+    type: String,
+    enum: Object.keys(DEPARTEMENTS),
+    required: [function() { return [ROLE_COMPANY_BUYER,ROLE_TI].includes(this.role)}, 'Le département est obligatoire'],
+  },
   billing_address: {
     type: String,
   },
@@ -177,6 +184,11 @@ const UserSchema = new Schema({
   representative_lastname: {
     type: String,
   },
+  dummy: {
+    type: Number,
+    default: 0,
+    required: true,
+  },
 }, schemaOptions
 );
 
@@ -225,11 +237,23 @@ UserSchema.virtual("jobs", {
   foreignField: "user" // is equal to foreignField
 });
 
-UserSchema.virtual("customer_missions", {
+// All missions
+UserSchema.virtual("_missions", {
   ref: "mission", // The Model to use
-  localField: "_id", // Find in Model, where localField
-  foreignField: "user" // is equal to foreignField
+  localField: "dummy", // Find in Model, where localField
+  foreignField: "dummy" // is equal to foreignField
 });
+
+UserSchema.virtual("missions", {localField: 'dummy', foreignField: 'dummy'}).get(function() {
+  if (this.role==ROLE_COMPANY_BUYER) {
+    return this._missions?.filter(m => idEqual(m.user?._id, this._id))
+  }
+  if (this.role==ROLE_TI) {
+    return this._missions?.filter(m => idEqual(m.job?.user._id, this._id)) || []
+  }
+  return []
+})
+
 
 UserSchema.virtual("requests", {
   ref: "request", // The Model to use
@@ -286,6 +310,10 @@ UserSchema.virtual("accepted_quotations_count").get(function() {
 
 UserSchema.virtual("profile_shares_count").get(function() {
   return 0
+})
+
+UserSchema.virtual('pinned_jobs', {localField: 'dummy', foreignField: 'dummy'}).get(function () {
+  return []
 })
 
 module.exports = UserSchema;

@@ -128,6 +128,10 @@ export const ACTIONS: IActions = {
         components.map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
       contents: ({ components }) =>
         components.map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      attachment: ({ components }) =>
+        components
+          .filter(c => c.type=='UploadFile')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
     },
     required:['contents']
   },
@@ -472,6 +476,13 @@ export const ACTIONS: IActions = {
           .map(comp => ({ key: comp.id, label: `${comp.type}/${comp.id}` }))
 
       ]})),
+    },
+    next: ['openPage'],
+  },
+  hasChildren: {
+    label: 'Has children',
+    options: {
+      children: ({ attributes }) => Object.keys(attributes || {}).map(att => ({ key: att, label: att }))
     },
     next: ['openPage'],
   },

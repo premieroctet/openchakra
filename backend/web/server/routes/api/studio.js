@@ -121,11 +121,12 @@ router.get('/roles', (req, res) => {
   return res.json(ROLES)
 })
 
-router.get('/action-allowed/:action/:dataId', passport.authenticate('cookie', {session: false}), (req, res) => {
-  const {action, dataId}=req.params
+router.get('/action-allowed/:action', passport.authenticate('cookie', {session: false}), (req, res) => {
+  const {action}=req.params
+  const query=lodash.mapValues(req.query, v => {try{return JSON.parse(v)} catch(e) {return v}})
   const user=req.user
 
-  return callAllowedAction({action, dataId, user})
+  return callAllowedAction({action, user, ...query})
     .then(allowed => res.json(allowed))
 })
 
@@ -453,7 +454,7 @@ const loadFromRequest = (req, res) => {
     })
 }
 
-router.get('/jobUser/:id?', passport.authenticate('nullable-cookie', {session: false}), (req, res) => {
+router.get('/jobUser/:id?', passport.authenticate(['cookie', 'anonymous'], {session: false}), (req, res) => {
   req.params.model='jobUser'
   return loadFromRequest(req, res)
 })
