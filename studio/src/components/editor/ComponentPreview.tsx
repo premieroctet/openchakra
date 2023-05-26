@@ -136,7 +136,6 @@ const ComponentPreview: React.FC<{
     case 'Center':
     case 'Container':
     case 'VisuallyHidden':
-      console.log('here is one')
       return (
         <WithChildrenPreviewContainer
           enableVisualHelper
