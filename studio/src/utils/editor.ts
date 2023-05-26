@@ -16,6 +16,7 @@ export const COMPONENTS: (ComponentType | MetaComponentType)[] = [
   'Card',
   'Center',
   'Checkbox',
+  'CheckboxGroup',
   'CircularProgress',
   'CloseButton',
   'Code',

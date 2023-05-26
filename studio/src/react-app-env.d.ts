@@ -26,6 +26,7 @@ type ComponentType =
   | 'Card'
   | 'Center'
   | 'Checkbox'
+  | 'CheckboxGroup'
   | 'CircularProgress'
   | 'CloseButton'
   | 'Code'

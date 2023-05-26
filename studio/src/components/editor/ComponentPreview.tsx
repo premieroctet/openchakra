@@ -20,6 +20,7 @@ import ButtonPreview from '~components/editor/previews/ButtonPreview'
 import NumberInputPreview from '~components/editor/previews/NumberInputPreview'
 import IconCheckPreview from '~components/editor/previews/IconCheckPreview'
 import RadioGroupPreview from '~components/editor/previews/RadioGroupPreview'
+import CheckboxGroupPreview from '~components/editor/previews/CheckboxGroupPreview'
 import PreviewContainer from '~components/editor/PreviewContainer'
 import SelectPreview from '~components/editor/previews/SelectPreview'
 import WithChildrenPreviewContainer from '~components/editor/WithChildrenPreviewContainer'
@@ -156,6 +157,8 @@ const ComponentPreview: React.FC<{
         />
       )
     // More complex components
+    case 'CheckboxGroup':
+      return <CheckboxGroupPreview component={component} />
     case 'RadioGroup':
       return <RadioGroupPreview component={component} />
     case 'InputRightElement':
