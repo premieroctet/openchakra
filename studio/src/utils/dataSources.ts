@@ -158,7 +158,7 @@ export const getAvailableAttributes = (
   const attributes = getComponentAttributes(component, components, models)
   const cardinalityAttributes = lodash.pickBy(
     attributes,
-    att => component.type==='RadioGroup' || att.multiple === isMultipleDispatcher(component),
+    att => ['RadioGroup', 'CheckboxGroup'].includes(component.type) || att.multiple === isMultipleDispatcher(component),
   )
   return cardinalityAttributes
 }
