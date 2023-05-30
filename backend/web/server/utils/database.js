@@ -219,7 +219,7 @@ const buildPopulates = (modelName, fields) => {
   // Retain ref attributes only
   const groupedAttributes=lodash(requiredFields)
     .groupBy(att => att.split('.')[0])
-    .pickBy((_,attName) => attributes[attName].ref===true)
+    .pickBy((_,attName) => {if (!attributes[attName]){throw new Error(`Attribute ${modelName}.${attName} unknown`)}; return attributes[attName].ref===true})
     .mapValues(attributes => attributes.map(att => att.split('.').slice(1).join('.')).filter(v => !lodash.isEmpty(v)))
 
   /// Build populate using att and subpopulation
@@ -597,7 +597,7 @@ const loadFromDb = ({model, fields, id, user, params}) => {
           // return id ? Promise.resolve(data) : callFilterDataUser({model, data, id, user: req.user})
           return callFilterDataUser({model, data, id, user})
         })
-	.then(data => retainRequiredFields({data, fields})) 
+	.then(data => retainRequiredFields({data, fields}))
     })
 
 }

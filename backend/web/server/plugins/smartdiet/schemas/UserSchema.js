@@ -244,13 +244,20 @@ UserSchema.virtual("pinned_contents", {
   foreignField: "pins" // is equal to foreignField
 });
 
-UserSchema.virtual("targets", {localField: 'dummy', foreignField: 'dummy'}).get(function() {
+UserSchema.virtual("_all_targets", {
+  ref: "target", // The Model to use
+  localField: "dummy", // Find in Model, where localField
+  foreignField: "dummy" // is equal to foreignField
+});
+
+UserSchema.virtual("targets", {localField: 'tagada', foreignField: 'tagada'}).get(function() {
   const all_targets=[...(this.objective_targets||[]), ...(this.health_targets||[]),
     ...(this.activity_targets||[])]
   if (this.home_target) {
     all_targets.push(this.home_target)
   }
-  return all_targets
+  const all_target_ids=all_targets.map(t => t._id)
+  return this._all_targets?.filter(t => all_target_ids.some(i => idEqual(i, t._id))) || []
 })
 
 /* eslint-enable prefer-arrow-callback */

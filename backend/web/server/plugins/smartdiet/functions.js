@@ -168,8 +168,14 @@ USER_MODELS.forEach(m => {
       instance: 'ObjectID',
       options: {ref: 'content'}}
   })
+  declareVirtualField({model: m, field: '_all_targets', instance: 'Array',
+    multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'target'}}
+  })
   declareVirtualField({model: m, field: 'targets', instance: 'Array',
-    requires: 'objective_targets,health_targets,activity_targets,home_target',
+    requires: '_all_targets,objective_targets,health_targets,activity_targets,home_target',
     multiple: true,
     caster: {
       instance: 'ObjectID',
