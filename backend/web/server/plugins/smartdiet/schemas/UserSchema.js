@@ -245,10 +245,10 @@ UserSchema.virtual("pinned_contents", {
 });
 
 UserSchema.virtual("targets", {localField: 'dummy', foreignField: 'dummy'}).get(function() {
-  const all_targets=[...(objective_targets||[]), ...(health_targets||[]),
-    ...(activity_targets||[])]
-  if (home_target) {
-    all_targets.push(home_target)
+  const all_targets=[...(this.objective_targets||[]), ...(this.health_targets||[]),
+    ...(this.activity_targets||[])]
+  if (this.home_target) {
+    all_targets.push(this.home_target)
   }
   return all_targets
 })
