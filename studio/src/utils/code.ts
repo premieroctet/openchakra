@@ -192,7 +192,7 @@ const buildBlock = ({
       if (childComponent.type=='Radio' && hasParentType(childComponent, components, 'RadioGroup')) {
         propsContent += ` insideGroup `
       }
-      if (childComponent.type=='Checkbox' && hasParentType(childComponent, components, 'CheckboxGroup')) {
+      if (['Checkbox', 'IconCheck'].includes(childComponent.type) && hasParentType(childComponent, components, 'CheckboxGroup')) {
         propsContent += ` insideGroup `
       }
 

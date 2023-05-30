@@ -10,7 +10,7 @@ const withDynamicCheckbox = Component => {
     const [value, setValue]=useState((!contextAttribute && initialValue) || false)
 
     if (insideGroup) {
-      return <Component {...props} value={value} />
+      return <Component {...props} value={value} insideGroup />
     }
 
     const onChange = ev => {
