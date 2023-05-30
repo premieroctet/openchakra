@@ -85,10 +85,22 @@ const UserSchema = new Schema({
     //required: [function() { return this.role==ROLE_CUSTOMER }, 'Le genre est obligatoire'],
     required: false,
   },
-  targets: [{
+  objective_targets: [{
     type: Schema.Types.ObjectId,
     ref: 'target',
   }],
+  health_targets: [{
+    type: Schema.Types.ObjectId,
+    ref: 'target',
+  }],
+  activity_targets: [{
+    type: Schema.Types.ObjectId,
+    ref: 'target',
+  }],
+  home_target: {
+    type: Schema.Types.ObjectId,
+    ref: 'target',
+  },
   skipped_events: [{
     type: Schema.Types.ObjectId,
     ref: 'event',
@@ -232,6 +244,14 @@ UserSchema.virtual("pinned_contents", {
   foreignField: "pins" // is equal to foreignField
 });
 
+UserSchema.virtual("targets", {localField: 'dummy', foreignField: 'dummy'}).get(function() {
+  const all_targets=[...(objective_targets||[]), ...(health_targets||[]),
+    ...(activity_targets||[])]
+  if (home_target) {
+    all_targets.push(home_target)
+  }
+  return all_targets
+})
 
 /* eslint-enable prefer-arrow-callback */
 

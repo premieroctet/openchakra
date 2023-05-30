@@ -168,6 +168,13 @@ USER_MODELS.forEach(m => {
       instance: 'ObjectID',
       options: {ref: 'content'}}
   })
+  declareVirtualField({model: m, field: 'targets', instance: 'Array',
+    requires: 'objective_targets,health_targets,activity_targets,home_target',
+    multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'content'}}
+  })
 })
 
 declareEnumField({model: 'company', field: 'activity', enumValues: COMPANY_ACTIVITY})
