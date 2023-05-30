@@ -12,7 +12,7 @@ const withDynamicCheckbox = Component => {
     if (insideGroup) {
       return <Component {...props} value={value} />
     }
-
+    
     const onChange = ev => {
       setValue(!!ev.target.checked)
       const action=contextAttribute ?

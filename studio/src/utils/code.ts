@@ -11,7 +11,7 @@ import {
   CHECKBOX_TYPE,
   CONTAINER_TYPE,
   DATE_TYPE,
-  ENUM_TYPE,
+  GROUP_TYPE,
   IMAGE_TYPE,
   INPUT_TYPE,
   PROGRESS_TYPE,
@@ -32,6 +32,7 @@ import {
   whatTheHexaColor,
   iconStuff,
 } from './misc';
+import { hasParentType } from './validation';
 import { isJsonString } from '../dependencies/utils/misc'
 
 
@@ -81,7 +82,7 @@ const getDynamicType = (comp: IComponent) => {
     return 'Source'
   }
   if (CHECKBOX_TYPE.includes(comp.type)) {
-    return 'Checkbox'
+    return comp.type=='IconCheck' ? 'Checkbox': comp.type
   }
   if (INPUT_TYPE.includes(comp.type)) {
     return 'Input'
@@ -89,8 +90,8 @@ const getDynamicType = (comp: IComponent) => {
   if (UPLOAD_TYPE.includes(comp.type)) {
     return 'UploadFile'
   }
-  if (ENUM_TYPE.includes(comp.type)) {
-    return 'Enum'
+  if (GROUP_TYPE.includes(comp.type)) {
+    return comp.type
   }
   throw new Error(`No dynamic found for ${comp.type}`)
 }
@@ -186,6 +187,13 @@ const buildBlock = ({
 
       if (noAutoSaveComponents.includes(childComponent.id)) {
         propsContent += ` noautosave={true} `
+      }
+
+      if (childComponent.type=='Radio' && hasParentType(childComponent, components, 'RadioGroup')) {
+        propsContent += ` insideGroup `
+      }
+      if (childComponent.type=='Checkbox' && hasParentType(childComponent, components, 'CheckboxGroup')) {
+        propsContent += ` insideGroup `
       }
 
       if (isDynamicComponent(childComponent)) {
@@ -359,11 +367,11 @@ const buildBlock = ({
             if (propName=='href') {
               operand=`="${getPageUrl(propsValue, pages)}"`
             }
-            
+
             if (['color', 'fill'].includes(propName)) {
               operand=`="${whatTheHexaColor(propsValue)}"`
             }
-            
+
             propsContent += ` ${propName}${operand}`
           }
         })
@@ -671,11 +679,11 @@ export const generateCode = async (
     noAutoSaveComponents
   })
   let componentsCodes = buildComponents(components, pages, singleDataPage, noAutoSaveComponents)
-  
+
   const lucideIconImports = [...new Set(getIconsImports(components, 'lucid'))]
   const iconImports = [...new Set(getIconsImports(components))]
 
-  
+
 
   const imports = [
     ...new Set(

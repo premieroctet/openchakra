@@ -92,7 +92,7 @@ type PreviewDefaultProps = {
   AvatarGroup?: PropsWithForm<Omit<AvatarGroupProps, 'children'>>
   Avatar?: PropsWithForm<AvatarProps>
   Checkbox?: PropsWithForm<CheckboxProps>
-  ChecboxGroup?: PropsWithForm<CheckboxGroupProps>
+  CheckboxGroup?: PropsWithForm<CheckboxGroupProps>
   Link?: PropsWithForm<LinkProps>
   Spinner?: PropsWithForm<SpinnerProps>
   CloseButton?: PropsWithForm<CloseButtonProps>
