@@ -173,7 +173,7 @@ USER_MODELS.forEach(m => {
     multiple: true,
     caster: {
       instance: 'ObjectID',
-      options: {ref: 'content'}}
+      options: {ref: 'target'}}
   })
 })
 
