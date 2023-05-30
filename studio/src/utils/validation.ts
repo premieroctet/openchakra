@@ -23,7 +23,8 @@ const checkEmptyDataAttribute = (
     comp.type != 'Button' &&
     comp.type != 'IconButton' &&
     (comp.type!='Radio' || !hasParentType(comp, icomponents, 'RadioGroup')) &&
-    (comp.type!='Checkbox' || !hasParentType(comp, icomponents, 'CheckboxGroup'))
+    (comp.type!='Checkbox' || !hasParentType(comp, icomponents, 'CheckboxGroup')) &&
+    (comp.type!='IconCheck' || !hasParentType(comp, icomponents, 'CheckboxGroup'))
   ) {
     throw new Error(`Datasource attribute is not set`)
   }
