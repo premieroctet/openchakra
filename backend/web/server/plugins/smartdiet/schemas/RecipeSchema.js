@@ -14,8 +14,9 @@ const Schema = mongoose.Schema
 
 const RecipeSchema = new Schema({
   name:{type:String, required: true},
-  duearion: {type:Number, required: false},
+  duration: {type:Number, required: false},
   description: {type:String, required: false},
+  picture: {type:String, required: false},
   source: {type:String, required: false},
   colling_duration: {type:Number, required: false},
   freezing_duration: {type:Number, required: false},
