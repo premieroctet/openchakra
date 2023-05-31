@@ -97,6 +97,10 @@ const UserSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'target',
   }],
+  specificity_targets: [{
+    type: Schema.Types.ObjectId,
+    ref: 'target',
+  }],
   home_target: {
     type: Schema.Types.ObjectId,
     ref: 'target',
@@ -252,7 +256,7 @@ UserSchema.virtual("_all_targets", {
 
 UserSchema.virtual("targets", {localField: 'tagada', foreignField: 'tagada'}).get(function() {
   const all_targets=[...(this.objective_targets||[]), ...(this.health_targets||[]),
-    ...(this.activity_targets||[])]
+    ...(this.activity_targets||[]), ...(this.specificity_targets||[])]
   if (this.home_target) {
     all_targets.push(this.home_target)
   }
