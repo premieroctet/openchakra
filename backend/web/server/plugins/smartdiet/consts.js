@@ -269,6 +269,7 @@ const UNIT_NOISETTE="UNIT_NOISETTE"
 const UNIT_POIGNEE="UNIT_POIGNEE"
 const UNIT_MIGNONETTE="UNIT_MIGNONETTE"
 const UNIT_SACHET="UNIT_SACHET"
+const UNIT_UNITE="UNIT_UNITE"
 
 const UNIT={
  UNIT_KG:"kg",
@@ -289,6 +290,7 @@ const UNIT={
  UNIT_POIGNEE:"poignée",
  UNIT_MIGNONETTE:"mignonette",
  UNIT_SACHET:"sachet",
+ UNIT_UNITE:"unité",
 }
 
 const PARTICULAR_COMPANY_NAME='Adhérent particulier'
