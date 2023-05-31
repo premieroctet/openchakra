@@ -34,18 +34,22 @@
     "react-timer-hook": "^3.0.5",
     "storage": "^0.2.0",
     "store": "^2.0.12",
-    "typescript": "^4.8.4",
     "universal-cookie": "^4.0.4",
     "web-vitals": "^2.1.4",
-    "xml-js": "^1.6.11"
+    "xml-js": "^1.6.11",
+    "@types/node": "20.2.5",
+    "@types/react": "18.2.7",
+    "@types/react-dom": "18.2.4",
+    "eslint": "8.41.0",
+    "eslint-config-next": "13.4.4",
+    "typescript": "5.0.4"
   },
   "proxy": "https://localhost",
   "scripts": {
-    "dev": "HTTPS=true next dev",
-    "start": "HTTPS=true react-scripts --max_old_space_size=2048 start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "eslintConfig": {
     "extends": [
