@@ -268,6 +268,12 @@ declareVirtualField({model: 'target', field: 'users', instance: 'Array',
 
 declareEnumField({model: 'recipe', field: 'nutriscore', enumValues: NUTRISCORE})
 declareEnumField({model: 'recipe', field: 'ecoscore', enumValues: ECOSCORE})
+declareVirtualField({model: 'recipe', field: 'ingredients', instance: 'Array',
+  multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'recipeIngredient'}}
+})
 
 declareEnumField({model: 'ingredient', field: 'unit', enumValues: UNIT})
 

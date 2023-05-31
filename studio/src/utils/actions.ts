@@ -47,6 +47,10 @@ export const ACTIONS: IActions = {
         components
           .filter(comp => comp.type=='Flex')
           .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      recipe: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
       ...Object.fromEntries(lodash.range(15).map((idx:number) => {
       return [
         `component_${idx}`,
