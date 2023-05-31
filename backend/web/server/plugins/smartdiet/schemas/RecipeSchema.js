@@ -27,10 +27,10 @@ const RecipeSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'instrument',
   }],
-  ingredients: {
+  ingredients: [{
     type: Schema.Types.ObjectId,
     ref: 'recipeIngredient',
-  },
+  }],
   nutriscore: {
     type:String,
     enum: Object.keys(NUTRISCORE),
