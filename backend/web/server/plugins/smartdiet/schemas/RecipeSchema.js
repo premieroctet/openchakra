@@ -23,10 +23,10 @@ const RecipeSchema = new Schema({
   marinade_duration: {type:Number, required: false},
   cooking_duration: {type:Number, required: false},
   steps: {type:String, required: false},
-  instruments: {
+  instruments: [{
     type: Schema.Types.ObjectId,
     ref: 'instrument',
-  },
+  }],
   ingredients: {
     type: Schema.Types.ObjectId,
     ref: 'recipeIngredient',
