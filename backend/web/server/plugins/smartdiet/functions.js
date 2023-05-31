@@ -276,6 +276,7 @@ declareVirtualField({model: 'recipe', field: 'ingredients', instance: 'Array',
 })
 
 declareEnumField({model: 'ingredient', field: 'unit', enumValues: UNIT})
+declareVirtualField({model: 'ingredient', field: 'label', instance: 'String', requires:'name,unit'})
 
 declareVirtualField({model: 'group', field: 'messages', instance: 'Array',
   multiple: true,
