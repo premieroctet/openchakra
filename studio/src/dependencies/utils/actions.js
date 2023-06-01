@@ -621,4 +621,13 @@ export const ACTIONS = {
     return axios.post(url, body)
   },
 
+  smartdiet_set_company_code: ({value, props, level, getComponentValue}) => {
+    const code = getComponentValue(props.code, level)
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_set_company_code',
+      code,
+    }
+    return axios.post(url, body)
+},
 }

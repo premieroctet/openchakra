@@ -491,6 +491,18 @@ export const ACTIONS: IActions = {
     next: ['openPage'],
   },
 
+  smartdiet_set_company_code: {
+    label: 'SM Set company code',
+    options: {
+      code: ({ components }) =>
+        components
+          .filter(c => c.type == 'Input')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+    },
+    next: ['openPage'],
+    required:['code']
+  }
+
 }
 
 export const allowsActions = (component: IComponent) => {

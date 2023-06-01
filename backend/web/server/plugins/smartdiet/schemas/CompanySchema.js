@@ -14,6 +14,10 @@ const CompanySchema = new Schema(
     siret: {
       type: String,
     },
+    code: {
+      type: String,
+      required: false,
+    },
     picture: {
       type: String,
     },

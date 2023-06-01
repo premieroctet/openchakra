@@ -47,6 +47,10 @@ const UserSchema = new Schema({
     ref: 'company',
     required: [function() { return this.role==ROLE_CUSTOMER }, 'La compagnie est obligatoire'],
   },
+  company_code: {
+    type: String,
+    required: false,
+  },
   password: {
     type: String,
     required: [true, 'Le mot de passe est obligatoire'],

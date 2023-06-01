@@ -1,3 +1,4 @@
+const { BadRequestError } = require('../../utils/errors')
 const { idEqual, loadFromDb } = require('../../utils/database')
 const { addAction, setAllowActionFn, ACTIONS } = require('../../utils/studio/actions')
 const User = require('../../models/User')
@@ -44,8 +45,19 @@ const register=props => {
   }
   return defaultRegister(props)
 }
-
 addAction('register', register)
+
+const setSmartdietCompanyCode = ({code}, user) => {
+  return Company.findOne({code: code})
+    .then(company => {
+      if (!company) { throw new BadRequestError(`Code entreprise ${code} invalide`)}
+      return User.findByIdAndUpdate(user._id, {company_code: code, company})
+    })
+}
+
+addAction('smartdiet_set_company_code', setSmartdietCompanyCode)
+
+
 
 const isActionAllowed = ({action, dataId, user}) => {
   if (action=='smartdiet_join_event') {
