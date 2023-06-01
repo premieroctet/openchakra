@@ -10,4 +10,4 @@ const hasCycle = (ids, linkFn) => {
   return res
 }
 
-module.exports=hasCycle
+module.exports={hasCycle}
