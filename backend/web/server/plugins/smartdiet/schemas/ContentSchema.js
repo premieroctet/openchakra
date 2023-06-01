@@ -102,6 +102,10 @@ ContentSchema.virtual('comments', {
   match: {parent: null},
 });
 
+ContentSchema.virtual('comments_count').get(function() {
+  return this.comments?.length || 0
+})
+
 ContentSchema.virtual('liked').get(function() {
   return false
 })

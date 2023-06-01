@@ -217,6 +217,7 @@ declareVirtualField({model: 'content', field: 'comments', instance: 'Array', mul
 })
 declareVirtualField({model: 'content', field: 'liked', instance: 'Boolean', requires:'likes'})
 declareVirtualField({model: 'content', field: 'pinned', instance: 'Boolean', requires:'pins'})
+declareVirtualField({model: 'content', field: 'comments_count', instance: 'Number', requires: 'comments'})
 
 const EVENT_MODELS=['event', 'collectiveChallenge', 'individualChallenge', 'menu', 'webinar']
 EVENT_MODELS.forEach(m => {

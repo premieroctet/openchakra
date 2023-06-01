@@ -24,6 +24,11 @@ const UserSchema = new Schema({
     required: [true, 'L\'email est obligatoire'],
     set: v => v.toLowerCase().trim(),
   },
+  phone: {
+    type: String,
+    required: [function() { return this.role==ROLE_CUSTOMER}, 'Le téléphone est obligatoire'],
+  },
+
   birthday: {
     type: Date,
     //required: [function() { return this.role==ROLE_CUSTOMER }, 'La date de naissance est obligatoire'],
