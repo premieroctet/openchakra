@@ -5,7 +5,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogContent,
-  AlertDialogOverlay,
   Button,
 } from '@chakra-ui/react'
 
@@ -19,7 +18,6 @@ export const Error = ({title='Erreur', message, onClose}) => {
        onClose={onClose}
        isCentered
      >
-       <AlertDialogOverlay />
        <AlertDialogContent>
          <AlertDialogHeader>{title}</AlertDialogHeader>
          <AlertDialogCloseButton />
