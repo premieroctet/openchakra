@@ -6046,6 +6046,11 @@ find-cache-dir@^3.3.1:
     make-dir "^3.0.2"
     pkg-dir "^4.1.0"
 
+find-cycle@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/find-cycle/-/find-cycle-1.0.0.tgz#9d4a84b853540e121fd7a2bd7fbc4a6d425364b9"
+  integrity sha512-um47oVzW1wGgkEb1Pbhs/Scb1xYP+RErujOAQCpngJDhG9YHXfOh7HV2l4tFwrNs60XawH4kDul3BvG+ZuTKvQ==
+
 find-up@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/find-up/-/find-up-3.0.0.tgz#49169f1d7993430646da61ecc5ae355c21c97b73"
