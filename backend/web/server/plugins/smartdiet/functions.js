@@ -94,6 +94,12 @@ USER_MODELS.forEach(m => {
       instance: 'ObjectID',
       options: {ref: 'webinar'}}
   })
+  declareVirtualField({model: m, field: 'available_webinars', instance: 'Array',
+    requires: 'webinars', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'webinar'}}
+  })
   declareVirtualField({model: m, field: '_all_events', instance: 'Array',
     requires: '_all_menus,_all_individual_challenges,collective_challenges,_all_webinars',
     multiple: true,

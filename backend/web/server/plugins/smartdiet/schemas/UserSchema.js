@@ -188,8 +188,20 @@ UserSchema.virtual('webinars', {localField:'_id', foreignField: '_id'}).get(func
     ...(this.skipped_events?.map(s => s._id)||[]),
     ...(this.passed_events?.map(s => s._id)||[]),
   ]
-  const res=(this.company?.webinars || []).filter(w => !exclude.some(excl => idEqual(excl._id, w._id)))
+  const res=lodash(this.company?.webinars || [])
+    .filter(w => !exclude.some(excl => idEqual(excl._id, w._id)))
+    .orderBy(['start_date', 'asc'])
+    .value()
   return res
+})
+
+// Webinars to come (i.e future, not skipped, not passed)
+UserSchema.virtual('available_webinars', {localField:'_id', foreignField: '_id'}).get(function() {
+  const now=moment()
+  const webinars=lodash(this.webinars)
+    .filter(w => moment(w.end_date).isAfter(now))
+    .value()
+  return webinars
 })
 
 UserSchema.virtual("_all_individual_challenges", {
