@@ -212,7 +212,22 @@ const computeDataFieldName = (
 
   const attrs=[]
   if (component.props.dataSource==dataSourceId) {
-    attrs.push(component.props.attribute)
+    if (component.props.attribute) {
+      attrs.push(component.props.attribute)
+    }
+    try {
+      const actionProps=JSON.parse(component.props?.actionProps)
+      if (actionProps?.url)  {
+        attrs.push(actionProps.url)
+      }
+    }
+    catch(e) {
+
+    }
+    if (component.props?.actionProps?.url) {
+      attrs.push(component.props?.actionProps?.url)
+      console.log(attrs)
+    }
   }
   if (component.props.subDataSource==dataSourceId) {
     if (component.props.subAttribute) {

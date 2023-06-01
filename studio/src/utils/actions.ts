@@ -501,7 +501,19 @@ export const ACTIONS: IActions = {
     },
     next: ['openPage'],
     required:['code']
-  }
+  },
+
+  openUrl: {
+    label: 'Open URL',
+    options: {
+      url: ({ attributes }) => Object.keys(attributes || {}).map(att => ({ key: att, label: att })),
+      open: () => [
+        { key: true, label: 'In new page' },
+        { key: false, label: 'In same page' },
+      ],
+    },
+  },
+
 
 }
 

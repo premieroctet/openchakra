@@ -629,5 +629,20 @@ export const ACTIONS = {
       code,
     }
     return axios.post(url, body)
-},
+  },
+
+  openUrl: ({value, actionProps}) => {
+    let props=actionProps
+    try { props=JSON.parse(actionProps) } catch(e) {}
+    const {url, open}=props
+    const urlValue=lodash.get(value, url)
+    // new page
+    if (open && !(props.open === 'false')) {
+      return Promise.resolve(window.open(urlValue, 'blank'))
+    } else {
+      return Promise.resolve((window.location = urlValue))
+    }
+  },
+
+
 }
