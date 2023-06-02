@@ -124,9 +124,9 @@ const isActionAllowed = ({action, dataId, user}) => {
           return true
         })
       }
+      return Promise.resolve(true)
   })
 
-  return Promise.resolve(true)
 }
 
 setAllowActionFn(isActionAllowed)
