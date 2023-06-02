@@ -24,14 +24,70 @@ const MenuSchema = new Schema({
     type: Date,
     required: [true, 'La date de fin est obligatoire']
   },
-  lunch_recipes: [{
+  monday_lunch_recipe: {
     type: Schema.Types.ObjectId,
     ref: 'recipe',
-  }],
-  dinner_recipes: [{
+  },
+  monday_dinner_recipe: {
     type: Schema.Types.ObjectId,
     ref: 'recipe',
-  }],
+  },
+  tuesday_lunch_recipe: {
+    type: Schema.Types.ObjectId,
+    ref: 'recipe',
+  },
+  tuesday_dinner_recipe: {
+    type: Schema.Types.ObjectId,
+    ref: 'recipe',
+  },
+  wednesday_lunch_recipe: {
+    type: Schema.Types.ObjectId,
+    ref: 'recipe',
+  },
+  wednesday_dinner_recipe: {
+    type: Schema.Types.ObjectId,
+    ref: 'recipe',
+  },
+  thursday_lunch_recipe: {
+    type: Schema.Types.ObjectId,
+    ref: 'recipe',
+  },
+  thursday_dinner_recipe: {
+    type: Schema.Types.ObjectId,
+    ref: 'recipe',
+  },
+  friday_lunch_recipe: {
+    type: Schema.Types.ObjectId,
+    ref: 'recipe',
+  },
+  friday_dinner_recipe: {
+    type: Schema.Types.ObjectId,
+    ref: 'recipe',
+  },
+  thursday_lunch_recipe: {
+    type: Schema.Types.ObjectId,
+    ref: 'recipe',
+  },
+  thursday_dinner_recipe: {
+    type: Schema.Types.ObjectId,
+    ref: 'recipe',
+  },
+  saturday_lunch_recipe: {
+    type: Schema.Types.ObjectId,
+    ref: 'recipe',
+  },
+  saturday_dinner_recipe: {
+    type: Schema.Types.ObjectId,
+    ref: 'recipe',
+  },
+  sunday_lunch_recipe: {
+    type: Schema.Types.ObjectId,
+    ref: 'recipe',
+  },
+  sunday_dinner_recipe: {
+    type: Schema.Types.ObjectId,
+    ref: 'recipe',
+  },
 },
 {...schemaOptions, ...EVENT_DISCRIMINATOR}
 )

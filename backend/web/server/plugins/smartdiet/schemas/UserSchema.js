@@ -219,6 +219,7 @@ UserSchema.virtual('individual_challenges', {localField: 'id', foreignField: 'id
   const exclude=[
     ...(this.skipped_events?.map(s => s._id)||[]),
     ...(this.passed_events?.map(s => s._id)||[]),
+    ...(this.failed_events?.map(s => s._id)||[]),
   ]
   return this._all_individual_challenges?.filter(c => !exclude.some(excl => idEqual(excl._id, c._id)))||[]
 })
