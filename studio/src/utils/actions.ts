@@ -440,32 +440,37 @@ export const ACTIONS: IActions = {
     next: ['openPage'],
   },
   smartdiet_join_group: {
-    label: 'SM Joindre le groupe',
+    label: 'SM Join group',
     options: {},
     next: ['openPage'],
   },
   smartdiet_leave_group: {
-    label: 'SM Quitter le groupe',
+    label: 'SM Leave group',
     options: {},
     next: ['openPage'],
   },
   smartdiet_skip_event: {
-    label: 'SM Zapper evt',
+    label: 'SM Skip event',
     options: {},
     next: ['openPage'],
   },
   smartdiet_join_event: {
-    label: 'SM Joindre evt',
+    label: 'SM Register event',
     options: {},
     next: ['openPage'],
   },
   smartdiet_pass_event: {
-    label: 'SM Réussi evt',
+    label: 'SM Passed event',
+    options: {},
+    next: ['openPage'],
+  },
+  smartdiet_fail_event: {
+    label: 'SM Failed event',
     options: {},
     next: ['openPage'],
   },
   smartdiet_start_event: {
-    label: 'SM Connexion evt',
+    label: 'SM Start event',
     options: {},
     next: ['openPage'],
   },

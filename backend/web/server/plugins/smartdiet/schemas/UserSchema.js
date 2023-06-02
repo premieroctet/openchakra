@@ -126,6 +126,10 @@ const UserSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'event',
   }],
+  failed_events: [{
+    type: Schema.Types.ObjectId,
+    ref: 'event',
+  }],
   dummy: {
     type: Number,
     default: 0,

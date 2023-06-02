@@ -230,6 +230,15 @@ const buildPopulates = (modelName, fields) => {
   return pops.value()
 }
 
+// Returns mongoose models ordered using child classes first (using discriminators)
+const getMongooseModels = () => {
+  const conn=mongoose.connection
+  const models=conn.modelNames().map(name => conn.models[name])
+  // Model with discriminator is a base model => set latest
+  return lodash(models)
+    .sortBy(model => `${!!model.discriminators ? '1':'0'}:${model.modelName}`)
+    .value()
+}
 /**
  Returns model from database id
  expectedModel is a string or an array of string.
@@ -237,14 +246,12 @@ const buildPopulates = (modelName, fields) => {
  is neither the expectedModel (String type) or included in expectedModel (array type)
 */
 const getModel = (id, expectedModel) => {
-  const conn = mongoose.connection
-  return Promise.all(conn.modelNames()
-    .map(model =>
-      conn.models[model]
-        .exists({_id: id})
-        .then(exists => (exists ? model : false)),
-    ),
-  ).then(res => {
+  return Promise.all(getMongooseModels()
+    .map(model => model.exists({_id: id})
+        .then(exists => (exists ? model.modelName : false))
+    )
+  )
+  .then(res => {
     const model=res.find(v => !!v)
     if (!model) {
       throw new Error(`Model not found for ${id}`)
@@ -636,4 +643,5 @@ module.exports = {
   simpleCloneModel,
   shareTargets,
   loadFromDb,
+  getMongooseModels,
 }
