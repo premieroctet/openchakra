@@ -605,7 +605,11 @@ export const ACTIONS = {
     }
     return axios.post(url, body)
       .then(res => {
-        return {_id: res.data}
+        const object=res.data
+        if (object.url) {
+          return Promise.resolve(window.open(object.url, 'blank'))
+        }
+        return {_id: object}
       })
   },
 

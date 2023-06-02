@@ -1,3 +1,4 @@
+const mongoose = require('mongoose')
 const { getModel, idEqual, loadFromDb } = require('../../utils/database')
 const { BadRequestError } = require('../../utils/errors')
 const { addAction, setAllowActionFn, ACTIONS } = require('../../utils/studio/actions')
@@ -36,7 +37,7 @@ const smartdiet_event = action => ({value}, user) => {
       }
 
       return User.findByIdAndUpdate(user._id, dbAction)
-        .then(() => User.findById(user._id))
+        .then(() => mongoose.models[model].findById(value))
     })
 }
 
