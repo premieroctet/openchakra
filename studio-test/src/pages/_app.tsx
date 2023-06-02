@@ -1,7 +1,5 @@
 import React from 'react'
 import { ChakraProvider } from '@chakra-ui/react'
-import 'react-color-picker/index.css'
-import '@reach/combobox/styles.css'
 
 import { AppProps } from 'next/app'
 import Fonts from '../dependencies/theme/Fonts'
