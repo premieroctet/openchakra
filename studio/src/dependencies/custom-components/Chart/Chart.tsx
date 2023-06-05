@@ -84,6 +84,7 @@ const OwnChart = (
            data: value?.map(v => ({x:moment(v.date).format('L'), y:v[attribute]})),
            backgroundColor: color,
            borderColor: color,
+           spanGaps: true,
          })
       }
       else {return null}
