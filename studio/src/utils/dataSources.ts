@@ -20,7 +20,7 @@ export const IMAGE_TYPE: ComponentType[] = ['Image', 'Avatar', 'Media']
 export const PROGRESS_TYPE: ComponentType[] = ['Progress', 'CircularProgress']
 export const DATE_TYPE: ComponentType[] = ['Date']
 export const SELECT_TYPE: ComponentType[] = ['Select']
-export const SOURCE_TYPE: ComponentType[] = ['Timer']
+export const SOURCE_TYPE: ComponentType[] = ['Timer', 'Chart']
 export const CHECKBOX_TYPE: ComponentType[] = ['Checkbox', 'Radio', 'Switch', 'IconCheck']
 export const INPUT_TYPE: ComponentType[] = ['Lexical', 'Input', 'Textarea', 'NumberInput', 'Rating', 'NumberFormat']
 export const UPLOAD_TYPE: ComponentType[] = ['UploadFile']
@@ -34,6 +34,7 @@ const ALL_DYNAMICS = lodash.flatten([
   PROGRESS_TYPE,
   DATE_TYPE,
   SELECT_TYPE,
+  SOURCE_TYPE,
   CHECKBOX_TYPE,
   INPUT_TYPE,
   UPLOAD_TYPE,
@@ -158,7 +159,7 @@ export const getAvailableAttributes = (
   const attributes = getComponentAttributes(component, components, models)
   const cardinalityAttributes = lodash.pickBy(
     attributes,
-    att => ['RadioGroup', 'CheckboxGroup'].includes(component.type) || att.multiple === isMultipleDispatcher(component),
+    att => ['RadioGroup', 'CheckboxGroup', 'Chart'].includes(component.type) || att.multiple === isMultipleDispatcher(component),
   )
   return cardinalityAttributes
 }

@@ -660,7 +660,6 @@ export const ACTIONS = {
     let url = `${API_ROOT}/anonymous-action`
     return axios.post(url, body)
   },
-
   smartdiet_set_company_code: ({value, props, level, getComponentValue}) => {
     const code = getComponentValue(props.code, level)
     let url = `${API_ROOT}/action`
@@ -719,5 +718,27 @@ export const ACTIONS = {
     return axios.post(url, body)
   },
 
+  smartdiet_set_company_code: ({value, props, level, getComponentValue}) => {
+    const code = getComponentValue(props.code, level)
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_set_company_code',
+      code,
+    }
+    return axios.post(url, body)
+  },
+
+  openUrl: ({value, actionProps}) => {
+    let props=actionProps
+    try { props=JSON.parse(actionProps) } catch(e) {}
+    const {url, open}=props
+    const urlValue=lodash.get(value, url)
+    // new page
+    if (open && !(props.open === 'false')) {
+      return Promise.resolve(window.open(urlValue, 'blank'))
+    } else {
+      return Promise.resolve((window.location = urlValue))
+    }
+  },
 
 }
