@@ -14,6 +14,10 @@ const KeySchema = new Schema({
     type: String,
     required: [true, 'L\'illustration est obligatoire'],
   },
+  color: {
+    type: String,
+    required: false,
+  },
 }, schemaOptions)
 
 module.exports = KeySchema

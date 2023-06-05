@@ -531,6 +531,17 @@ export const ACTIONS: IActions = {
     },
   },
 
+  smartdiet_start_survey: {
+    label: 'SM Start survey',
+    options: {},
+    next: ['openPage'],
+  },
+
+  smartdiet_next_question: {
+    label: 'SM Next question',
+    options: {},
+    next: ['openPage'],
+  },
 
 }
 

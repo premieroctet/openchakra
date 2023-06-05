@@ -1,3 +1,6 @@
+const UserSurvey = require('../../models/UserSurvey')
+const UserQuestion = require('../../models/UserQuestion')
+const Question = require('../../models/Question')
 const mongoose = require('mongoose')
 const { getModel, idEqual, loadFromDb } = require('../../utils/database')
 const { BadRequestError } = require('../../utils/errors')
@@ -6,6 +9,7 @@ const User = require('../../models/User')
 const Group = require('../../models/Group')
 const Company = require('../../models/Company')
 const {PARTICULAR_COMPANY_NAME}=require('./consts')
+const lodash=require('lodash')
 
 const smartdiet_join_group = ({value, join}, user) => {
   return Group.findByIdAndUpdate(value, join ? {$addToSet: {users: user._id}} : {$pull: {users: user._id}})
@@ -64,9 +68,24 @@ const setSmartdietCompanyCode = ({code}, user) => {
       return User.findByIdAndUpdate(user._id, {company_code: code, company})
     })
 }
-
 addAction('smartdiet_set_company_code', setSmartdietCompanyCode)
 
+const smartdietStartSurvey = (_, user) => {
+  return Question.find({}).sort({order: 1})
+    .then(questions => {
+      if (lodash.isEmpty(questions)){survey.delete(); throw new BadRequestError(`Aucun questionnaire n'est disponible`)}
+      return UserSurvey.create({user})
+        .then(survey => Promise.all(questions.map(question => UserQuestion.create({user, survey, question, order: question.order}))))
+        .then(questions => lodash.minBy(questions, 'question.order'))
+    })
+}
+addAction('smartdiet_start_survey', smartdietStartSurvey)
+
+const smartdietNextQuestion = ({value}, user) => {
+  return UserQuestion.findById(value).populate('question')
+    .then(question => UserQuestion.findOne({survey: question.survey, order:question.order+1}))
+}
+addAction('smartdiet_next_question', smartdietNextQuestion)
 
 
 const isActionAllowed = ({action, dataId, user}) => {

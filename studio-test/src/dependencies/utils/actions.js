@@ -660,6 +660,7 @@ export const ACTIONS = {
     let url = `${API_ROOT}/anonymous-action`
     return axios.post(url, body)
   },
+
   smartdiet_set_company_code: ({value, props, level, getComponentValue}) => {
     const code = getComponentValue(props.code, level)
     let url = `${API_ROOT}/action`
@@ -718,27 +719,27 @@ export const ACTIONS = {
     return axios.post(url, body)
   },
 
-  smartdiet_set_company_code: ({value, props, level, getComponentValue}) => {
-    const code = getComponentValue(props.code, level)
+  smartdiet_start_survey: () => {
     let url = `${API_ROOT}/action`
     const body = {
-      action: 'smartdiet_set_company_code',
-      code,
+      action: 'smartdiet_start_survey',
     }
     return axios.post(url, body)
+      .then(res => res.data)
   },
 
-  openUrl: ({value, actionProps}) => {
-    let props=actionProps
-    try { props=JSON.parse(actionProps) } catch(e) {}
-    const {url, open}=props
-    const urlValue=lodash.get(value, url)
-    // new page
-    if (open && !(props.open === 'false')) {
-      return Promise.resolve(window.open(urlValue, 'blank'))
-    } else {
-      return Promise.resolve((window.location = urlValue))
+  smartdiet_next_question: ({value}) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_next_question',
+      value: value._id,
     }
+    return axios.post(url, body)
+      .then(res => {
+        var searchParams = new URLSearchParams(window.location.search);
+        searchParams.set('id', res.data._id)
+        window.location.search=searchParams.toString()
+      })
   },
 
 }

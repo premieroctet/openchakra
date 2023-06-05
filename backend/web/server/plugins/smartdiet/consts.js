@@ -295,6 +295,18 @@ const UNIT={
 
 const PARTICULAR_COMPANY_NAME='Adhérent particulier'
 
+const SURVEY_ANSWER_NEVER=0
+const SURVEY_ANSWER_SOMETIMES=1
+const SURVEY_ANSWER_OFTEN=2
+const SURVEY_ANSWER_ALWAYS=0
+
+const SURVEY_ANSWER={
+  SURVEY_ANSWER_NEVER: 'jamais',
+  SURVEY_ANSWER_SOMETIMES: 'parfois',
+  SURVEY_ANSWER_OFTEN: 'souvent',
+  SURVEY_ANSWER_ALWAYS: 'toujours',
+}
+
 module.exports={
   CONTENTS_TYPE,
   EVENT_TYPE,
@@ -318,4 +330,5 @@ module.exports={
   ECOSCORE,
   UNIT,
   PARTICULAR_COMPANY_NAME,
+  SURVEY_ANSWER,
 }

@@ -400,7 +400,7 @@ Company.findOneAndUpdate(
   {upsert: true},
 )
 .then(()=> console.log(`Particular company upserted`))
-.catch(err=> console.err(`Particular company upsert error:${err}`))
+.catch(err=> console.error(`Particular company upsert error:${err}`))
 
 module.exports={
   getAvailableContents,
