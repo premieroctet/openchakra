@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import {
   Chart as ChartJS,
@@ -16,7 +17,8 @@ import { Box } from '@chakra-ui/react';
 import { TypedChartComponent } from 'react-chartjs-2/dist/types';
 import moment from 'moment'
 import lodash from 'lodash'
-
+import 'moment/locale/fr'
+moment.locale('fr')
 
 ChartJS.register(
     CategoryScale,
@@ -38,19 +40,12 @@ const OwnChart = (
     attribute,
     id,
     chartType = 'line',
-    datasets = [{
-      name: '',
-      data: {
-        date: new Date(),
-        value: 15
-      }
-    }],
     ...props
   }
     : {
       isEditable: boolean
       name: string
-      value:{date:any, [key:string]: number}[] 
+      value:{date:any, [key:string]: number}[]
       attribute: string
       id: string,
       chartType: ChartType,
@@ -75,41 +70,36 @@ const OwnChart = (
         'bar': Bar,
       }
       // @ts-ignore
-      const RetainedChart = Scatter //typesOfCharts[chartType]
-    
-     const labels = value?.map(v => moment(v.date).format('LL'))
+      const RetainedChart = typesOfCharts[chartType]
+
+     const labels = value?.map(v => moment(v.date).format('L'))
      //const data1 = value?.map(v => v.chest)
-     const data1 = value?.map((v, idx) => ({x:moment(v.date).unix(), y:v.chest}))
-     //const data2 = value?.map(v => v.hips)
+     const datasets=lodash.range(5).map(index => {
+       const attribute=props[`series_${index}_attribute`]
+       const label=props[`series_${index}_label`]
+       const color=props[`series_${index}_color`]
+       if (attribute && label) {
+         return ({
+           label,
+           data: value?.map(v => ({x:moment(v.date).format('L'), y:v[attribute]})),
+           backgroundColor: color,
+           borderColor: color,
+         })
+      }
+      else {return null}
+     })
+     .filter(v => !!v)
 
      const data = {
         labels,
-        datasets: [
-          {
-            label: 'Chest',
-            data: data1,
-            borderColor: 'rgb(255, 99, 132)',
-            backgroundColor: 'rgba(255, 99, 132, 0.5)',
-          },
-          /**
-          {
-            label: 'Hips',
-            data: data2,
-            spanGaps: true,
-            borderColor: 'green',
-            backgroundColor: 'rgba(53, 162, 235, 0.5)',
-          },
-          */
-        ],
+        datasets
       };
 
       const FinalChart:TypedChartComponent<ChartType> = () => React.createElement(RetainedChart, {data})
 
   return (
-    <Box {...props}>
-      <FinalChart options={options} data={data} />
-    </Box>
-  );
+    <FinalChart {...props} options={options} data={data} />
+  )
 
 }
 

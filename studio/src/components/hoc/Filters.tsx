@@ -76,10 +76,6 @@ export const withFilters = Component => {
 
     return (
       <>
-        <IconButton
-          icon={<SmallAddIcon />}
-          onClick={() => setModalOpen(true)}
-        />
         {conditions &&
           Object.keys(conditions).map(condId => {
             const propName = getConditionPropertyName(condId)
@@ -102,7 +98,10 @@ export const withFilters = Component => {
               </>
             )
           })}
-        <div>default</div>
+        <div>default
+          <SmallAddIcon onClick={() => setModalOpen(true)}/>
+        </div>
+
         <Component {...props} />
         {attrs && (
           <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)}>
