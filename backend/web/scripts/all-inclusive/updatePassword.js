@@ -4,12 +4,9 @@ const mongoose=require('mongoose')
 const {ROLE_TI, ROLE_COMPANY_ADMIN} = require('../../server/plugins/all-inclusive/consts')
 const User = require('../../server/models/User')
 
-const ACCOUNT=
-  {email: 'marion.deschamps@my-alfred.io', password: 'Password1;'}
-
 mongoose.connect(getDatabaseUri(), MONGOOSE_OPTIONS)
   .then(() => {
-    return User.findOneAndUpdate({email:ACCOUNT.email}, {password: ACCOUNT.password})
+    return User.updateMany({}, {password: 'Password1;'})
   })
   .then(res => {
     console.log(`Updated ${res}`)

@@ -18,6 +18,17 @@ export const pagesList= ({pages}) => {
     .value()
 }
 
+export const colorsList = ({pages}) => {
+  return lodash(pages).values()
+    .map(page => page.components).map(components => Object.values(components)).flatten()
+    .map(component => ['color', 'backgroundColor', 'focusBorderColor'].map(color => component.props[color])).flatten()
+    .filter(color => !!color && /^#/.test(color))
+    .map(color => color.toLowerCase())
+    .uniq().sort()
+    .map(color => ({key: color, label: color}))
+    .value()
+}
+
 export const ACTIONS: IActions = {
   create: {
     label: 'Create new data',
@@ -211,17 +222,7 @@ export const ACTIONS: IActions = {
     options: {
       redirect: ({ pages }) =>
         Object.values(pages).map(p => ({ key: p.pageId, label: p.pageName })),
-      color: ({ pages }) => {
-        const colors=lodash(pages).values()
-          .map(page => page.components).map(components => Object.values(components)).flatten()
-          .map(component => ['color', 'backgroundColor', 'focusBorderColor'].map(color => component.props[color])).flatten()
-          .filter(color => !!color && /^#/.test(color))
-          .map(color => color.toLowerCase())
-          .uniq().sort()
-          .map(color => ({key: color, label: color}))
-          .value()
-        return colors
-      }
+      color: ({ pages }) => colorsLis({pages})
     },
   },
   payOrder: {
@@ -229,17 +230,7 @@ export const ACTIONS: IActions = {
     options: {
       redirect: ({ pages }) =>
         Object.values(pages).map(p => ({ key: p.pageId, label: p.pageName })),
-      color: ({ pages }) => {
-        const colors=lodash(pages).values()
-        .map(page => page.components).map(components => Object.values(components)).flatten()
-        .map(component => ['color', 'backgroundColor', 'focusBorderColor'].map(color => component.props[color])).flatten()
-        .filter(color => !!color && /^#/.test(color))
-        .map(color => color.toLowerCase())
-        .uniq().sort()
-        .map(color => ({key: color, label: color}))
-        .value()
-        return colors
-      }
+      color: ({ pages }) => colorsList({pages}),
     },
   },
   cashOrder: {
@@ -386,8 +377,11 @@ export const ACTIONS: IActions = {
   },
   alle_accept_quotation: {
     label: 'AE Accepter le devis',
-    options: {},
-    next: ['openPage'],
+    options: {
+      paymentSuccess: ({ pages }) => pagesList({pages}),
+      paymentFailure: ({ pages }) => pagesList({pages}),
+    },
+    next: [],
   },
   alle_refuse_quotation: {
     label: 'AE Refuser le devis',
@@ -488,6 +482,14 @@ export const ACTIONS: IActions = {
     },
     next: ['openPage'],
   },
+  payMission: {
+    label: 'Pay mission',
+    options: {
+      redirect: ({ pages }) =>
+        Object.values(pages).map(p => ({ key: p.pageId, label: p.pageName })),
+      color: ({ pages }) => colorsList({pages}),
+    },
+  },
   hasChildren: {
     label: 'Has children',
     options: {
@@ -495,6 +497,16 @@ export const ACTIONS: IActions = {
     },
     next: ['openPage'],
   },
+  askRecommandation: {
+    label: 'Ask recommandation',
+    options: {
+      email: ({ components }) => components.map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      message: ({ components }) => components.map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      page: ({ pages }) => pagesList({pages}),
+    },
+    next: ['openPage'],
+  },
+
 
   smartdiet_set_company_code: {
     label: 'SM Set company code',

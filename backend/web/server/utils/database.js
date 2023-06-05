@@ -503,6 +503,17 @@ const callPostCreateData = data => {
   return postCreateData(data)
 }
 
+// Post put data
+let postPutData = data => Promise.resolve(data.data)
+
+const setPostPutData = fn => {
+  postPutData = fn
+}
+
+const callPostPutData = data => {
+  return postPutData(data)
+}
+
 const putAttribute = ({parent, attribute, value, user}) => {
   let model = null
   return getModel(parent)
@@ -600,11 +611,8 @@ const loadFromDb = ({model, fields, id, user, params}) => {
           if (id && data.length == 0) { throw new NotFoundError(`Can't find ${model}:${id}`) }
           return Promise.all(data.map(d => addComputedFields(user, params, d, model)))
         })
-        .then(data => {
-          // return id ? Promise.resolve(data) : callFilterDataUser({model, data, id, user: req.user})
-          return callFilterDataUser({model, data, id, user})
-        })
-	.then(data => retainRequiredFields({data, fields}))
+        .then(data =>  callFilterDataUser({model, data, id, user}))
+        .then(data =>  retainRequiredFields({data, fields}))
     })
 
 }
@@ -636,6 +644,8 @@ module.exports = {
   callPreCreateData,
   setPostCreateData,
   callPostCreateData,
+  setPostPutData,
+  callPostPutData,
   removeData,
   putAttribute,
   idEqual,

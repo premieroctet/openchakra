@@ -272,6 +272,12 @@ const buildBlock = ({
               redirect: propsValue.redirect
                 ? getPageUrl(propsValue.redirect, pages)
                 : undefined,
+              paymentSuccess: propsValue.paymentSuccess
+                ? getPageUrl(propsValue.paymentSuccess, pages)
+                : undefined,
+              paymentFailure: propsValue.paymentFailure
+                ? getPageUrl(propsValue.paymentFailure, pages)
+                : undefined,
             }
             propsContent += ` ${propName}='${JSON.stringify(valuesCopy)}'`
             return

@@ -81,6 +81,7 @@ require('./models/Recipe')
 require('./models/Instrument')
 require('./models/Ingredient')
 require('./models/RecipeIngredient')
+require('./models/AdminDashboard')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 
@@ -214,7 +215,7 @@ checkConfig()
     httpsServer.listen(getPort(), () => {
       console.log(`${config.appName} running on ${getHostUrl()}`)
       console.log(`Checking correct hostname`)
-      axios
+      !isDevelopment() && axios
         .get(new URL('/testping', getHostUrl()).toString())
         .then(({data}) => {
           if (data != RANDOM_ID) {

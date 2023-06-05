@@ -17,6 +17,7 @@ const CompanySchema = new Schema({
   region: String,
   message: String,
   urgent: Boolean,
+  document: String,
 }, schemaOptions
 );
 

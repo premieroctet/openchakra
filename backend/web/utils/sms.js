@@ -1,6 +1,6 @@
+const { isValidPhoneNumber } = require('libphonenumber-js')
 const Validator = require('validator')
 const lodash=require('lodash')
-const {isValidPhoneNumber} = require('libphonenumber-js')
 
 const PARAM_RE = RegExp('{{\\s*params.([^\\s]+)\\s*}}')
 
@@ -19,7 +19,8 @@ const fillSms = (pattern, values) => {
 }
 
 const isPhoneOk = value => {
-  return Validator.isMobilePhone(value, ['fr-FR'])
+  const corrected=value?.replace(/ /g, '')
+  return /(^0[67]\d{8}$)|(^\+33[67]\d{8}$)/.test(corrected)
 }
 
 const isInternationalPhoneOK = value => {

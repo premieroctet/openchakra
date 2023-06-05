@@ -1,4 +1,5 @@
-const mongoose = require('mongoose')
+const AdminDashboard = require('../../models/AdminDashboard')
+const { sendTipiSearch } = require('./mailing')
 const {
   declareComputedField,
   declareEnumField,
@@ -6,9 +7,15 @@ const {
   getModel,
   idEqual,
   setFilterDataUser,
+  setPostCreateData,
+  setPostPutData,
   setPreCreateData,
   setPreprocessGet,
 } = require('../../utils/database')
+const mongoose = require('mongoose')
+const cron=require('node-cron')
+const { paymentPlugin } = require('../../../config/config')
+
 const {
   AVAILABILITY,
   COACHING,
@@ -25,7 +32,9 @@ const {
   ROLE_COMPANY_ADMIN,
   ROLE_COMPANY_BUYER,
   ROLE_TI,
+  ROLE_ALLE_ADMIN,
   UNACTIVE_REASON,
+  PAYMENT_STATUS,
 } = require('./consts')
 const { BadRequestError } = require('../../utils/errors')
 const moment = require('moment')
@@ -36,6 +45,20 @@ const lodash=require('lodash')
 const Message = require('../../models/Message')
 const JobUser = require('../../models/JobUser')
 const NATIONALITIES = require('./nationalities.json')
+
+const postCreate = ({model, params, data}) => {
+  // Create company => duplicate offer
+  if (model=='mission') {
+    return Promise.all([Mission.findById(data.id).populate('user'), User.find({role: ROLE_ALLE_ADMIN})])
+      .then(([mission, admins]) => {
+        return Promise.allSettled(admins.map(admin => sendTipiSearch({admin, mission:mission.toObject()})))
+    })
+  }
+
+  return Promise.resolve(data)
+}
+
+setPostCreateData(postCreate)
 
 const preprocessGet = ({model, fields, id, user}) => {
   if (model=='loggedUser') {
@@ -84,7 +107,6 @@ const preprocessGet = ({model, fields, id, user}) => {
 setPreprocessGet(preprocessGet)
 
 const preCreate = ({model, params, user}) => {
-  console.log(`preCreate ${model} with ${JSON.stringify(params)}`)
   if (['jobUser', 'request', 'mission', 'comment'].includes(model)) {
     params.user=user
   }
@@ -118,6 +140,19 @@ const preCreate = ({model, params, user}) => {
 
 setPreCreateData(preCreate)
 
+const postPut = ({model, params, data, user}) => {
+  console.log(`postPut ${model} with ${JSON.stringify(data)}`)
+  if (model=='user' && user?.role==ROLE_TI) {
+    return paymentPlugin.upsertProvider(data)
+  }
+  if (model=='user' && user?.role==ROLE_COMPANY_BUYER) {
+    return paymentPlugin.upsertCustomer(data)
+  }
+  return Promise.resolve(data)
+}
+
+setPostPutData(postPut)
+
 
 const USER_MODELS=['user', 'loggedUser']
 USER_MODELS.forEach(m => {
@@ -148,17 +183,29 @@ USER_MODELS.forEach(m => {
   })
   declareVirtualField({model: m, field: 'qualified_str', instance: 'String'})
   declareVirtualField({model: m, field: 'visible_str', instance: 'String'})
-  declareVirtualField({model: m, field: 'finished_missions_count', instance: 'Number', requires: 'missions'})
+  declareVirtualField({model: m, field: 'finished_missions_count', instance: 'Number', requires: '_missions'})
   declareVirtualField({model: m, field: '_missions', instance: 'Array', requires: '', multiple: true,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'mission'}}
   })
   declareVirtualField({model: m, field: 'missions', instance: 'Array', multiple: true,
-    requires: '_missions,_missions.user,_missions.job,_missions.job.user',
+    requires: '_missions,_missions.user,_missions.job,_missions.job.user,_missions.quotations,_missions.comments',
     caster: {
       instance: 'ObjectID',
       options: {ref: 'mission'}}
+  })
+  declareVirtualField({model: m, field: 'missions_with_bill', instance: 'Array', multiple: true,
+    requires: '_missions,_missions.user,_missions.job,_missions.job.user,_missions.quotations',
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'mission'}}
+  })
+  declareVirtualField({model: m, field: 'recommandations', instance: 'Array', multiple: true,
+    requires: '_all_recommandations.job',
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'recommandation'}}
   })
   declareVirtualField({model: m, field: 'recommandations_count', instance: 'Number', requires: 'jobs'})
   declareVirtualField({model: m, field: 'recommandations_note', instance: 'Number', requires: 'jobs'})
@@ -171,10 +218,22 @@ USER_MODELS.forEach(m => {
   declareEnumField({model: m, field: 'unactive_reason', enumValues: UNACTIVE_REASON})
   declareVirtualField({model: m, field: 'missing_attributes', instance: 'String', requires: 'firstname,lastname,email,phone,birthday,nationality,picture,identity_proof_1,iban,company_name,company_status,siret,status_report,insurance_type,insurance_report,company_picture'})
   declareEnumField({model: m, field: 'zip_code', enumValues: DEPARTEMENTS})
-  declareVirtualField({model: m, field: 'pinned_jobs', instance: 'Array', multiple: true,
+  declareVirtualField({model: m, field: '_all_jobs', instance: 'Array', multiple: true,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'jobUser'}}
+  })
+  declareVirtualField({model: m, field: 'pinned_jobs', instance: 'Array', multiple: true,
+    // TODO: _all_jobs_pins should be enough to display jibusers if required
+    requires:'_all_jobs.user',
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'jobUser'}}
+  })
+  declareVirtualField({model: m, field: '_all_recommandations', instance: 'Array', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'recommandation'}}
   })
 })
 
@@ -245,6 +304,7 @@ declareVirtualField({model: 'mission', field: 'comments', instance: 'Array', req
     instance: 'ObjectID',
     options: {ref: 'comment'}}
 })
+declareEnumField({model: 'mission', field: 'payin_status', enumValues: PAYMENT_STATUS})
 
 
 declareVirtualField({model: 'quotation', field: 'details', instance: 'Array', requires: '', multiple: true,
@@ -260,7 +320,26 @@ declareVirtualField({model: 'quotationDetail', field: 'vat_total', instance: 'Nu
 
 declareEnumField({model: 'contact', field: 'status', enumValues: CONTACT_STATUS})
 
+declareVirtualField({model: 'adminDashboard', field: '_all_users', instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'user'}}
+})
+declareVirtualField({model: 'adminDashboard', field: '_all_missions', instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'mission'}}
+})
+declareVirtualField({model: 'adminDashboard', field: 'ti_registered_today', instance: 'Number', requires:'_all_users'})
+declareVirtualField({model: 'adminDashboard', field: 'customers_registered_today', instance: 'Number', requires:'_all_users'})
+declareVirtualField({model: 'adminDashboard', field: 'pending_missions', instance: 'Number', requires:'_all_missions.status'})
+
+
 const filterDataUser = ({model, data, user}) => {
+  // ALL-E admins have whole visibility
+  if (user?.role==ROLE_ALLE_ADMIN) {
+    return Promise.resolve(data)
+  }
   if (model == 'jobUser') {
     // Hide jobUser.user.hidden
     return Promise.all(data.map(job => JobUser.findById(job._id).populate('user')
@@ -280,7 +359,7 @@ setFilterDataUser(filterDataUser)
 
 
 const getDataPinned = (user, params, data) => {
-  const pinned=data?.pins?.some(l => idEqual(l._id, user._id))
+  const pinned=data?.pins?.some(l => idEqual(l._id, user?._id))
   return Promise.resolve(pinned)
 }
 
@@ -299,9 +378,27 @@ const setDataPinned = ({id, attribute, value, user}) => {
     })
 }
 
-const getPinnedJobs = (user, params, data) => {
-  return JobUser.find({pins: user._id})
-}
-
 declareComputedField('jobUser', 'pinned', getDataPinned, setDataPinned)
-declareComputedField('user', 'pinned_jobs', getPinnedJobs)
+
+/** Upsert ONLY adminDashboard */
+AdminDashboard.exists({})
+  .then(exists => !exists && AdminDashboard.create({}))
+  .then(()=> console.log(`Only adminDashboard`))
+  .catch(err=> console.err(`Only adminDashboard:${err}`))
+
+// Send notifications for reminders & apppointments
+// Poll every minute
+cron.schedule('*/5 * * * * *', async() => {
+  return Mission.findOne({payin_id: {$ne:null}, payin_achieved: null})
+    .then(mission => paymentPlugin.getCheckout(mission.payin_id))
+    .then(payment => {
+      if (payment.status=='expired'  || (payment.status=='complete' && payment.payment_status=='unpaid')) {
+        console.log(`Payment ${payment.id} failed`)
+        return Mission.findOneAndUpdate({payin_id: payment.id}, {$unset: {payin_id:true, payin_achieved:true}})
+      }
+      if (payment.status=='complete'  && (payment.payment_status=='paid' || payment.payment_status=='no_payment_required')) {
+        console.log(`Payment ${payment.id} succeded`)
+        return Mission.findOneAndUpdate({payin_id: payment.id}, {payin_achieved:true})
+      }
+    })
+})

@@ -1,8 +1,13 @@
+import {jsPDF} from 'jspdf'
 import axios from 'axios'
 import lodash from 'lodash'
-import {jsPDF} from 'jspdf'
+
+import {
+  clearComponentValue,
+  getComponent,
+  getComponentDataValue
+} from './values';
 import { clearToken } from './token';
-import {getComponent, clearComponentValue} from './values'
 
 const API_ROOT = '/myAlfred/api/studio'
 export const ACTIONS = {
@@ -384,15 +389,13 @@ export const ACTIONS = {
     return axios.post(url, body)
   },
 
-  createRecommandation: ({ value, context, props, level, getComponentValue }) => {
+  createRecommandation: ({ value, props, level, getComponentValue }) => {
     const components=lodash(props).pickBy((v, k) => /^component_/.test(k) && !!v).values()
     const body = Object.fromEntries(components.map(c =>
       [getComponent(c, level)?.getAttribute('attribute') || getComponent(c, level)?.getAttribute('data-attribute'),
         getComponentValue(c, level)||null]
     ))
-
-    const jobId=document.getElementById(`${props.job}${level}`)?.getAttribute('_id')
-    body.job=require('url').parse(window.location.href, true).query?.jobUser
+    body.job=value._id
 
     let url = `${API_ROOT}/recommandation`
     return axios.post(url, body).then(res => ({
@@ -440,13 +443,22 @@ export const ACTIONS = {
     return axios.post(url, body)
   },
 
-  alle_accept_quotation: ({value}) => {
+  alle_accept_quotation: ({value, props}) => {
     let url = `${API_ROOT}/action`
     const body = {
       action: 'alle_accept_quotation',
-      value,
+      paymentSuccess: props.paymentSuccess,
+      paymentFailure: props.paymentFailure,
+      value: value._id,
     }
     return axios.post(url, body)
+      .then(res => {
+        if (res.data.redirect) {
+          let redirect=res.data.redirect
+          redirect = /^http/.test(redirect) ? redirect : `/${redirect}`
+          window.location=redirect
+        }
+      })
   },
 
   alle_refuse_quotation: ({value}) => {
@@ -670,6 +682,41 @@ export const ACTIONS = {
     } else {
       return Promise.resolve((window.location = urlValue))
     }
+  },
+
+  payMission: ({ context, props }) => {
+    let url = `${API_ROOT}/action`
+    const body = {action: 'payMission', context,...props}
+    return axios.post(url, body)
+      .then(res => {
+        if (res.data.redirect) {
+          let url=res.data.redirect
+          url=/^http/.test(url) ? url : `/${url}`
+          window.location=url
+        }
+      })
+  },
+
+  hasChildren: ({ value, actionProps}) => {
+    const body={
+      action: 'hasChildren',
+      value: value._id,
+      actionProps,
+    }
+    let url = `${API_ROOT}/action`
+    return axios.post(url, body)
+  },
+
+  askRecommandation: ({ value, context, props, level, getComponentValue }) => {
+    const body={
+      action: 'askRecommandation',
+      value: value._id,
+      email: getComponentValue(props.email, level)||null,
+      message: getComponentValue(props.message, level)||null,
+      page: props.page,
+    }
+    let url = `${API_ROOT}/action`
+    return axios.post(url, body)
   },
 
 

@@ -1,3 +1,8 @@
+const { isEmailOk } = require('../../../../utils/sms')
+
+const Validator = require('validator')
+
+const { isPhoneOk } = require('../../../../utils/sms')
 const { idEqual } = require('../../../utils/database')
 const {
   AVAILABILITY,
@@ -8,6 +13,7 @@ const {
   COMPANY_STATUS,
   DEFAULT_ROLE,
   DEPARTEMENTS,
+  MISSION_STATUS_FINISHED,
   ROLES,
   ROLE_COMPANY_ADMIN,
   ROLE_COMPANY_BUYER,
@@ -36,7 +42,8 @@ const UserSchema = new Schema({
   email: {
     type: String,
     required: true,
-    set: v => v.toLowerCase().trim(),
+    set: v => v?.toLowerCase().trim(),
+    validate: [value => isEmailOk(value), "L'email est invalide"],
     required: [true, "L'email est obligatoire"],
   },
   password: {
@@ -56,7 +63,9 @@ const UserSchema = new Schema({
   },
   phone: {
     type: String,
-    required: [function() { return this.role==ROLE_COMPANY_BUYER}, 'Le téléphone est obligatoire'],
+    validate: [value => isPhoneOk(value), 'Le numéro de téléphone doit commencer par 0 ou +33'],
+    set: v => v?.replace(/^0/, '+33'),
+    required: [function() { return [ROLE_TI, ROLE_COMPANY_BUYER].includes(this.role)}, 'Le téléphone est obligatoire'],
   },
   birthday: {
     type: Date,
@@ -123,11 +132,16 @@ const UserSchema = new Schema({
   },
   address: {
     type: String,
+    required: [function() { return [ROLE_TI].includes(this.role)}, "L'adresse est obligatoire"],
   },
   zip_code: {
     type: String,
     enum: Object.keys(DEPARTEMENTS),
     required: [function() { return [ROLE_COMPANY_BUYER,ROLE_TI].includes(this.role)}, 'Le département est obligatoire'],
+  },
+  city: {
+    type: String,
+    required: [function() { return [ROLE_TI].includes(this.role)}, 'La ville est obligatoire'],
   },
   billing_address: {
     type: String,
@@ -182,6 +196,14 @@ const UserSchema = new Schema({
     type: String,
   },
   representative_lastname: {
+    type: String,
+  },
+  // Origin ip when account registered
+  register_ip: {
+    type: String,
+    required: false,
+  },
+  payment_account_id: {
     type: String,
   },
   dummy: {
@@ -254,6 +276,16 @@ UserSchema.virtual("missions", {localField: 'dummy', foreignField: 'dummy'}).get
   return []
 })
 
+UserSchema.virtual("missions_with_bill", {localField: 'dummy', foreignField: 'dummy'}).get(function() {
+  if (this.role==ROLE_COMPANY_BUYER) {
+    return this._missions?.filter(m => m.bill && idEqual(m.user?._id, this._id))
+  }
+  if (this.role==ROLE_TI) {
+    return this._missions?.filter(m => m.bill && idEqual(m.job?.user._id, this._id)) || []
+  }
+  return []
+})
+
 
 UserSchema.virtual("requests", {
   ref: "request", // The Model to use
@@ -270,20 +302,31 @@ UserSchema.virtual("visible_str").get(function() {
 });
 
 UserSchema.virtual("finished_missions_count").get(function() {
-  if (lodash.isEmpty(this.mission)) {
+  if (lodash.isEmpty(this.missions)) {
     return 0
   }
   return this.missions.filter(m => m.status==MISSION_STATUS_FINISHED).length
 })
 
-UserSchema.virtual("recommandations_count").get(function() {
-  const recos=lodash(this.jobs||[]).map(j => j.recommandations || []).flatten()
-  return recos.size()
+// All recommandations
+UserSchema.virtual("_all_recommandations", {
+  ref: "recommandation", // The Model to use
+  localField: "dummy", // Find in Model, where localField
+  foreignField: "dummy" // is equal to foreignField
+});
+
+UserSchema.virtual("recommandations", {localField: 'tagada', foreignField: 'tagada'}).get(function() {
+  const recos=this._all_recommandations?.filter(a => idEqual(a?.job?.user?._id, this._id)) || []
+  return recos
+})
+
+UserSchema.virtual("recommandations_count", {localField: 'tagada', foreignField: 'tagada'}).get(function() {
+  return this.recommandations?.length || 0
 })
 
 UserSchema.virtual("recommandations_note").get(function() {
-  const recos=lodash(this.jobs||[]).map(j => j.recommandations || []).flatten()
-  return recos.sumBy('note')/recos.size()
+  const recos=this.recommandations || []
+  return lodash.sumBy(recos, 'note')/recos.length
 })
 
 UserSchema.virtual("comments_count").get(function() {
@@ -312,8 +355,16 @@ UserSchema.virtual("profile_shares_count").get(function() {
   return 0
 })
 
-UserSchema.virtual('pinned_jobs', {localField: 'dummy', foreignField: 'dummy'}).get(function () {
-  return []
+// All jobs
+UserSchema.virtual("_all_jobs", {
+  ref: "jobUser", // The Model to use
+  localField: "dummy", // Find in Model, where localField
+  foreignField: "dummy" // is equal to foreignField
+});
+
+UserSchema.virtual('pinned_jobs', {localField: 'tagada', foreignField: 'tagada'}).get(function () {
+  return this?._all_jobs?.filter(j => j.pins?.some(p => idEqual(p._id, this._id)))
 })
+
 
 module.exports = UserSchema;
