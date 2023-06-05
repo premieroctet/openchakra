@@ -30,7 +30,7 @@ import {
   getPageUrl,
   normalizePageName,
   whatTheHexaColor,
-  iconStuff,
+  addBackslashes,
 } from './misc';
 import { hasParentType } from './validation';
 import { isJsonString } from '../dependencies/utils/misc'
@@ -796,8 +796,8 @@ const ${componentName} = () => {
   <ChakraProvider resetCSS theme={theme}>
     <Fonts />
     <Metadata
-      metaTitle={'${metaTitle}'}
-      metaDescription={'${metaDescription}'}
+      metaTitle={'${addBackslashes(metaTitle)}'}
+      metaDescription={'${addBackslashes(metaDescription)}'}
       metaImageUrl={'${metaImageUrl}'}
     />
     ${code}
