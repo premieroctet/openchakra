@@ -10,9 +10,7 @@ type IActions = {
   }
 }
 
-const pagesList= ({pages}) => {
-  console.log(JSON.stringify(lodash(pages).values().orderBy(p => p.pageName.toLowerCase()), null, 2))
-  //return Object.values(pages).map(p => ({ key: p.pageId, label: p.pageName }))
+export const pagesList= ({pages}) => {
   return lodash(pages)
     .values()
     .orderBy(p => p.pageName.toLowerCase())
@@ -29,7 +27,31 @@ export const ACTIONS: IActions = {
         components
           .filter(comp => comp.type=='Flex')
           .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
-      ...Object.fromEntries(lodash.range(15).map((idx:number) => {
+      mission: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      quotation: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      group: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      parent: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      content: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      recipe: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      ...Object.fromEntries(lodash.range(24).map((idx:number) => {
       return [
         `component_${idx}`,
         ({ components }) => components
@@ -110,6 +132,10 @@ export const ACTIONS: IActions = {
         components.map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
       contents: ({ components }) =>
         components.map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      attachment: ({ components }) =>
+        components
+          .filter(c => c.type=='UploadFile')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
     },
     required:['contents']
   },
@@ -155,7 +181,7 @@ export const ACTIONS: IActions = {
     label: 'Save/create',
     options: {
       model: ({ models }) => Object.values(models).map(m => ({ key: m.name, label: m.name })),
-      ...Object.fromEntries(lodash.range(25).map((idx:number) => {
+      ...Object.fromEntries(lodash.range(32).map((idx:number) => {
       return [
         `component_${idx}`,
         ({ components }) => components
@@ -316,7 +342,11 @@ export const ACTIONS: IActions = {
 
   deactivateAccount: {
     label: 'Deactivate account',
-    options: {},
+    options: {
+      reason: ({ components }) =>
+        components
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+    },
     next: ['openPage', 'logout'],
   },
 
@@ -334,6 +364,161 @@ export const ACTIONS: IActions = {
     },
     next: ['openPage'],
   },
+  alle_create_quotation: {
+    label: 'AE Créer devis',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_refuse_mission: {
+    label: 'AE Refuser mission',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_cancel_mission: {
+    label: 'AE Anuler mission',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_send_quotation: {
+    label: 'AE Envoyer le devis',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_accept_quotation: {
+    label: 'AE Accepter le devis',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_refuse_quotation: {
+    label: 'AE Refuser le devis',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_show_quotation: {
+    label: 'AE Voir le devis',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_edit_quotation: {
+    label: 'AE Modifier le devis',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_finish_mission: {
+    label: 'AE Terminer mission',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_store_bill: {
+    label: 'AE Déposer la facture',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_show_bill: {
+    label: 'AE Voir la facture',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_accept_bill: {
+    label: 'AE Accepter la facture',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_refuse_bill: {
+    label: 'AE Refuser la facture',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_leave_comment: {
+    label: 'AE Laisser un commentaire',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_send_bill: {
+    label: 'AE Envoyer la facture',
+    options: {},
+    next: ['openPage'],
+  },
+  smartdiet_join_group: {
+    label: 'SM Join group',
+    options: {},
+    next: ['openPage'],
+  },
+  smartdiet_leave_group: {
+    label: 'SM Leave group',
+    options: {},
+    next: ['openPage'],
+  },
+  smartdiet_skip_event: {
+    label: 'SM Skip event',
+    options: {},
+    next: ['openPage'],
+  },
+  smartdiet_join_event: {
+    label: 'SM Register event',
+    options: {},
+    next: ['openPage'],
+  },
+  smartdiet_pass_event: {
+    label: 'SM Passed event',
+    options: {},
+    next: ['openPage'],
+  },
+  smartdiet_fail_event: {
+    label: 'SM Failed event',
+    options: {},
+    next: ['openPage'],
+  },
+  smartdiet_start_event: {
+    label: 'SM Start event',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_ask_contact: {
+    label: 'AE Ask contact',
+    options: {
+      ...Object.fromEntries(lodash.range(15).map((idx:number) => {
+      return [
+        `component_${idx}`,
+        ({ components }) => components
+          .filter(comp => (comp.props?.dataSource || comp.props?.model) && comp.props?.attribute)
+          .map(comp => ({ key: comp.id, label: `${comp.type}/${comp.id}` }))
+
+      ]})),
+    },
+    next: ['openPage'],
+  },
+  hasChildren: {
+    label: 'Has children',
+    options: {
+      children: ({ attributes }) => Object.keys(attributes || {}).map(att => ({ key: att, label: att }))
+    },
+    next: ['openPage'],
+  },
+
+  smartdiet_set_company_code: {
+    label: 'SM Set company code',
+    options: {
+      code: ({ components }) =>
+        components
+          .filter(c => c.type == 'Input')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+    },
+    next: ['openPage'],
+    required:['code']
+  },
+
+  openUrl: {
+    label: 'Open URL',
+    options: {
+      url: ({ attributes }) => Object.keys(attributes || {}).map(att => ({ key: att, label: att })),
+      open: () => [
+        { key: true, label: 'In new page' },
+        { key: false, label: 'In same page' },
+      ],
+    },
+  },
+
 
 }
 

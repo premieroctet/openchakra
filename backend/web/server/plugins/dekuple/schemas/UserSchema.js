@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const bcrypt=require('bcryptjs')
-const {GENDER, SMOKER_TYPE} = require('../consts')
+const lodash=require('lodash')
+const {GENDER, SMOKER_TYPE, TIPS} = require('../consts')
 const {schemaOptions} = require('../../../utils/schemas')
 
 const Schema = mongoose.Schema
@@ -19,7 +20,7 @@ const UserSchema = new Schema({
   email: {
     type: String,
     required: [true, 'L\'email est obligatoire'],
-    set: v => v.toLowerCase().trim(),
+    set: v => v?.toLowerCase().trim(),
   },
   password: {
     type: String,
@@ -56,7 +57,7 @@ const UserSchema = new Schema({
     type: String,
     enum: Object.keys(GENDER),
     default: null,
-    required: [true, `Le genre est obligatoire (${Object.values(GENDER)})`],
+    required: [true, `La civilité est obligatoire (${Object.values(GENDER)})`],
   },
   cguAccepted: {
     type: Boolean,
@@ -141,6 +142,9 @@ UserSchema.virtual('devices', {
   foreignField: 'user', // is equal to foreignField
 })
 
+UserSchema.virtual('tip').get(function() {
+  return TIPS[lodash.random(0, TIPS.length)]
+})
 /* eslint-enable prefer-arrow-callback */
 
 

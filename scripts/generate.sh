@@ -33,6 +33,7 @@ git checkout -b $PROJECT_NAME
   echo -e "NEXT_PUBLIC_S3_ID=<S3_ID>" >> .env
   echo -e "NEXT_PUBLIC_S3_SECRET=<S3_SECRET>" >> .env
   echo -e "NEXT_PUBLIC_S3_ROOTPATH=${PROJECT_NAME}" >> .env
+  echo -e "NEXT_PUBLIC_PROJECT=${PROJECT_NAME}" >> .env
 
   echo "Installing studio modules" && yarn
 )

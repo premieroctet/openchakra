@@ -33,10 +33,6 @@ const ContentSchema = new Schema({
     type: String,
     required: [true, 'Le contenu est obligatoire'],
   },
-  preview: {
-    type: String,
-    required: false,
-  },
   duration: {
     type: Number,
     required: [true, 'La durée est obligatoire'],
@@ -56,6 +52,10 @@ const ContentSchema = new Schema({
     ref: 'target',
   }],
   likes: [{
+    type: Schema.Types.ObjectId,
+    ref: 'user',
+  }],
+  pins: [{
     type: Schema.Types.ObjectId,
     ref: 'user',
   }],
@@ -79,8 +79,12 @@ const ContentSchema = new Schema({
   source: {
     type: String,
     required: false,
-  }
-
+  },
+  dummy: {
+    type: Number,
+    default: 0,
+    required: true,
+  },
 }, schemaOptions)
 
 ContentSchema.virtual('likes_count').get(function() {
@@ -91,9 +95,23 @@ ContentSchema.virtual('shares_count').get(function() {
   return this.shares?.length || 0
 })
 
+ContentSchema.virtual('comments', {
+  ref: "comment", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "content", // is equal to foreignField
+  match: {parent: null},
+});
+
 ContentSchema.virtual('comments_count').get(function() {
-  console.error('Not implemented, requires comments')
-  return 0
+  return this.comments?.length || 0
+})
+
+ContentSchema.virtual('liked').get(function() {
+  return false
+})
+
+ContentSchema.virtual('pinned').get(function() {
+  return false
 })
 
 module.exports = ContentSchema

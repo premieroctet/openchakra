@@ -21,11 +21,10 @@ export const PROGRESS_TYPE: ComponentType[] = ['Progress', 'CircularProgress']
 export const DATE_TYPE: ComponentType[] = ['Date']
 export const SELECT_TYPE: ComponentType[] = ['Select']
 export const SOURCE_TYPE: ComponentType[] = ['Timer', 'Chart']
-export const CHECKBOX_TYPE: ComponentType[] = ['Checkbox', 'Radio', 'Switch']
+export const CHECKBOX_TYPE: ComponentType[] = ['Checkbox', 'Radio', 'Switch', 'IconCheck']
 export const INPUT_TYPE: ComponentType[] = ['Lexical', 'Input', 'Textarea', 'NumberInput', 'Rating', 'NumberFormat']
 export const UPLOAD_TYPE: ComponentType[] = ['UploadFile']
-export const ENUM_TYPE: ComponentType[] = ['RadioGroup']
-//export const ENUM_TYPE: ComponentType[] = ['RadioGroup','Select']
+export const GROUP_TYPE: ComponentType[] = ['RadioGroup', 'CheckboxGroup']
 
 const ALL_DYNAMICS = lodash.flatten([
   CONTAINER_TYPE,
@@ -39,7 +38,7 @@ const ALL_DYNAMICS = lodash.flatten([
   CHECKBOX_TYPE,
   INPUT_TYPE,
   UPLOAD_TYPE,
-  ENUM_TYPE,
+  GROUP_TYPE,
 ])
 
 export const allowsDataSource = (component: IComponent): boolean => {
@@ -160,7 +159,7 @@ export const getAvailableAttributes = (
   const attributes = getComponentAttributes(component, components, models)
   const cardinalityAttributes = lodash.pickBy(
     attributes,
-    att => att.multiple === isMultipleDispatcher(component),
+    att => ['RadioGroup', 'CheckboxGroup', 'Chart'].includes(component.type) || att.multiple === isMultipleDispatcher(component),
   )
   return cardinalityAttributes
 }
@@ -170,7 +169,12 @@ export const getFilterAttributes = (
   components: IComponents,
   models: any,
 ): any => {
-  const attributes = getComponentAttributes(component, components, models)
+  let attributes = getComponentAttributes(component, components, models)
+  // For container, filter attributes are dataSource.atrtibute's attributes
+  if (CONTAINER_TYPE.includes(component?.type) && component?.props.attribute) {
+    const subModel=models[attributes[component.props.attribute]?.type]
+    attributes=subModel.attributes
+  }
   // TODO Filter subAttributes yto retain non multiple && non ref only
   const simpleAttributes=lodash.pickBy(attributes, (v,k) => !v.ref && !v.multiple)
 
@@ -209,7 +213,22 @@ const computeDataFieldName = (
 
   const attrs=[]
   if (component.props.dataSource==dataSourceId) {
-    attrs.push(component.props.attribute)
+    if (component.props.attribute) {
+      attrs.push(component.props.attribute)
+    }
+    try {
+      const actionProps=JSON.parse(component.props?.actionProps)
+      if (actionProps?.url)  {
+        attrs.push(actionProps.url)
+      }
+    }
+    catch(e) {
+
+    }
+    if (component.props?.actionProps?.url) {
+      attrs.push(component.props?.actionProps?.url)
+      console.log(attrs)
+    }
   }
   if (component.props.subDataSource==dataSourceId) {
     if (component.props.subAttribute) {

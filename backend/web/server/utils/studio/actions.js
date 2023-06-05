@@ -83,8 +83,8 @@ let ACTIONS = {
     return getSession(id)
   },
 
-  sendMessage: ({destinee, contents}, sender) => {
-    return Message.create({sender: sender._id, receiver: destinee, content: contents})
+  sendMessage: ({destinee, contents, attachment}, sender) => {
+    return Message.create({sender: sender._id, receiver: destinee, content: contents, attachment})
       .then(m => Message.findById(m._id).populate('sender').populate('receiver'))
       .then(m => {
         sendNewMessage({member: m.receiver, partner: m.sender})
@@ -124,15 +124,15 @@ let ACTIONS = {
     })
   },
 
-  addTarget: ({value, context, append}) => {
-    console.log(`${append ? 'Adding':'Removing'} target ${value} to context ${context}`)
+  addToContext: ({value, context, contextAttribute, append}) => {
+    console.log(`${append ? 'Adding':'Removing'} target ${value} to context ${context}/${contextAttribute}`)
     return getModel(context)
       .then(modelName => {
         const model=mongoose.connection.models[modelName]
         return append ?
-          model.findByIdAndUpdate(context, {$addToSet: {targets: value}})
+          model.findByIdAndUpdate(context, {$addToSet: {[contextAttribute]: value}})
           :
-          model.findByIdAndUpdate(context, {$pull: {targets: value}})
+          model.findByIdAndUpdate(context, {$pull: {[contextAttribute]: value}})
       })
       .catch(err => {
         console.error(err)
@@ -147,8 +147,8 @@ const setAllowActionFn = fn => {
   ALLOW_ACTION = fn
 }
 
-const callAllowedAction = ({action, dataId, user}) => {
-  return ALLOW_ACTION({action, dataId, user})
+const callAllowedAction = (params) => {
+  return ALLOW_ACTION(params)
 }
 
 const addAction= (action, fn) => {

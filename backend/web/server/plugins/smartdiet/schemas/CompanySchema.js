@@ -14,6 +14,10 @@ const CompanySchema = new Schema(
     siret: {
       type: String,
     },
+    code: {
+      type: String,
+      required: false,
+    },
     picture: {
       type: String,
     },
@@ -29,11 +33,25 @@ const CompanySchema = new Schema(
     offer: {
       type: Schema.Types.ObjectId,
       ref: 'offer',
-      required: true,
+      required: false,
     },
+    collective_challenges: [{
+      type: Schema.Types.ObjectId,
+      ref: "collectiveChallenge",
+    }],
+    parent: {
+      type: Schema.Types.ObjectId,
+      ref: "company",
+    }
   },
   schemaOptions,
 )
+
+CompanySchema.virtual("webinars", {
+  ref: "webinar", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "companies", // is equal to foreignField
+});
 
 CompanySchema.virtual("administrators", {
   ref: "user", // The Model to use
@@ -42,16 +60,10 @@ CompanySchema.virtual("administrators", {
   justOne: true,
 });
 
-CompanySchema.virtual("webinars", {
-  ref: "webinar", // The Model to use
-  localField: "_id", // Find in Model, where localField
-  foreignField: "company", // is equal to foreignField
-});
-
 CompanySchema.virtual("groups", {
   ref: "group", // The Model to use
   localField: "_id", // Find in Model, where localField
-  foreignField: "company", // is equal to foreignField
+  foreignField: "companies", // is equal to foreignField
 });
 
 CompanySchema.virtual('groups_count').get(function() {
@@ -78,7 +90,6 @@ CompanySchema.virtual('shares_count').get(function() {
       contents.forEach(content => {
         count+=lodash.filter(content.shares||[], s => s.company._id==this._id)?.length||0
       });
-      console.log(`shares_count:${count}`)
       return count
     })
 })
@@ -88,7 +99,6 @@ CompanySchema.virtual('comments_count').get(function() {
     .populate('user')
     .then(comments => {
       const count=lodash.filter(comments||[], c => c.user.company._id==this._id)?.length||0
-      console.log(`comments_count:${count}`)
       return count
     })
 })
@@ -97,5 +107,11 @@ CompanySchema.virtual('contents_count').get(function() {
   // TODO WTF
   return 0
 })
+
+CompanySchema.virtual("children", {
+  ref: "company", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "parent", // is equal to foreignField
+});
 
 module.exports = CompanySchema

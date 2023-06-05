@@ -25,7 +25,6 @@ const DataSourcePanel: React.FC = () => {
   const components: IComponents = useSelector(getComponents)
   const activeComponent: IComponent = useSelector(getSelectedComponent)
   const { setValueFromEvent, setValue, removeValue } = useForm()
-  const addTarget = usePropsSelector('addTarget')
   const dataSource = usePropsSelector('dataSource')
   const model = usePropsSelector('model')
   const attribute = usePropsSelector('attribute')
@@ -36,12 +35,18 @@ const DataSourcePanel: React.FC = () => {
   const contextFilter = usePropsSelector('contextFilter')
   const filterValue = usePropsSelector('filterValue')
   const filterAttribute = usePropsSelector('filterAttribute')
+  const contextAttribute = usePropsSelector('contextAttribute')
+  const shuffle = usePropsSelector('shuffle')
+  const radioGroup = usePropsSelector('radioGroup')
   const [providers, setProviders] = useState<IComponent[]>([])
   const [contextProviders, setContextProviders] = useState<IComponent[]>([])
   const [attributes, setAttributes] = useState({})
   const [subAttributes, setSubAttributes] = useState({})
   const [subAttributesDisplay, setSubAttributesDisplay] = useState({})
   const [filterAttributes, setFilterAttributes] = useState({})
+  const [contextAttributes, setContextAttributes] = useState({})
+  const [radioGroups, setRadioGroups] = useState([])
+
   const models = useSelector(getModels)
 
   useEffect(() => {
@@ -98,14 +103,27 @@ const DataSourcePanel: React.FC = () => {
         models,
       ) ?.type
       setContextProviders(providers.filter(p => p.props.model == currentModel))
+
+      const parentType = components.root.props.model
+
+      if (parentType) {
+        setContextAttributes(lodash.pickBy(models[parentType].attributes,
+          (att, name) =>att.ref && att.multiple && !name.includes('.')
+        ))
+      }
     } catch (err) {
       console.error(err)
     }
   }, [providers, activeComponent, components, dataSource, models])
 
-  const onContextFilterChange = ev => {
-    setValue('contextFilter', ev.target.checked)
-  }
+  useEffect(() => {
+    if (lodash.isEmpty(components)) {
+      setRadioGroups([])
+    }
+    else {
+      setRadioGroups(lodash(components).pickBy(attrs => attrs.type==='RadioGroup').keys().value())
+    }
+  }, [components])
 
   const onDataSourceOrModelChange = ev => {
     const {name, value}=ev.target
@@ -145,21 +163,29 @@ const DataSourcePanel: React.FC = () => {
     removeValue('subAttributeDisplay')
   }
 
-  const onAddToTargetChange = ev => {
+  const onCheckboxChange = ev => {
     setValue(ev.target.name, ev.target.checked)
   }
 
   return (
     <Accordion allowToggle={true}>
       <AccordionContainer title="Data source">
-        {activeComponent?.type=='Checkbox' &&
-        <FormControl htmlFor="addTarget" label='Add to context'>
-          <Checkbox
-            id="addTarget"
-            name="addTarget"
-            isChecked={addTarget}
-            onChange={onAddToTargetChange}
-          ></Checkbox>
+        {(activeComponent?.type=='Checkbox' || activeComponent?.type=='IconCheck') &&
+        <FormControl htmlFor="radioGroup" label='Radio group'>
+        <Select
+          id="radioGroup"
+          onChange={setValueFromEvent}
+          name="radioGroup"
+          size="xs"
+          value={radioGroup || ''}
+        >
+          <option value={undefined}></option>
+          {radioGroups.map(att => (
+            <option key={att} value={att}>
+              {att}
+            </option>
+          ))}
+        </Select>
         </FormControl>
         }
         <FormControl htmlFor="dataSource" label="Datasource">
@@ -223,6 +249,16 @@ const DataSourcePanel: React.FC = () => {
               onChange={setValueFromEvent}
             />
           </FormControl>
+        )}
+        {CONTAINER_TYPE.includes(activeComponent ?.type) && (
+        <FormControl htmlFor="shuffle" label='Shuffle'>
+          <Checkbox
+            id="shuffle"
+            name="shuffle"
+            isChecked={shuffle}
+            onChange={onCheckboxChange}
+          ></Checkbox>
+        </FormControl>
         )}
         {CONTAINER_TYPE.includes(activeComponent ?.type) && (
           <FormControl htmlFor="contextFilter" label="Filter context">

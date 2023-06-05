@@ -26,6 +26,7 @@ const {
   callPreCreateData,
   callPreprocessGet,
   retainRequiredFields,
+  loadFromDb,
 } = require('../../utils/database')
 const {callAllowedAction} = require('../../utils/studio/actions')
 const {
@@ -102,7 +103,7 @@ const login = (email, password) => {
       throw new NotFoundError(`Ce compte est désactivé`)
     }
     console.log(`Comparing ${password} and ${user.password}`)
-    const matched=true //bcrypt.compareSync(password, user.password)
+    const matched=bcrypt.compareSync(password, user.password)
     if (!matched) {
       throw new NotFoundError(`Email ou mot de passe invalide`)
     }
@@ -120,11 +121,12 @@ router.get('/roles', (req, res) => {
   return res.json(ROLES)
 })
 
-router.get('/action-allowed/:action/:dataId', passport.authenticate('cookie', {session: false}), (req, res) => {
-  const {action, dataId}=req.params
+router.get('/action-allowed/:action', passport.authenticate('cookie', {session: false}), (req, res) => {
+  const {action}=req.params
+  const query=lodash.mapValues(req.query, v => {try{return JSON.parse(v)} catch(e) {return v}})
   const user=req.user
 
-  return callAllowedAction({action, dataId, user})
+  return callAllowedAction({action, user, ...query})
     .then(allowed => res.json(allowed))
 })
 
@@ -389,7 +391,6 @@ router.get('/statTest', (req, res) => {
   return res.json(data)
 })
 
-
 router.post('/:model', passport.authenticate('cookie', {session: false}), (req, res) => {
   const model = req.params.model
   let params=req.body
@@ -435,7 +436,7 @@ router.put('/:model/:id', passport.authenticate('cookie', {session: false}), (re
 })
 
 
-const loadFromDb = (req, res) => {
+const loadFromRequest = (req, res) => {
   const model = req.params.model
   let fields = req.query.fields?.split(',') || []
   const id = req.params.id
@@ -446,47 +447,20 @@ const loadFromDb = (req, res) => {
 
   console.log(`GET ${model}/${id} ${fields}`)
 
-  callPreprocessGet({model, fields, id, user: req.user})
-    .then(({model, fields, id, data}) => {
-      console.log(`POSTGET ${model}/${id} ${fields}`)
-      if (data) {
-        return res.json(data)
-      }
-      return buildQuery(model, id, fields)
-        .lean({virtuals: true})
-        .then(data => {
-          // Force duplicate children
-          data = JSON.parse(JSON.stringify(data))
-          // Remove extra virtuals
-          data = retainRequiredFields({data, fields})
-          if (id && data.length == 0) { throw new NotFoundError(`Can't find ${model}:${id}`) }
-          return Promise.all(data.map(d => addComputedFields(user, params, d, model)))
-        })
-        .then(data => {
-          // return id ? Promise.resolve(data) : callFilterDataUser({model, data, id, user: req.user})
-          return callFilterDataUser({model, data, id, user: req.user})
-        })
-        .then(data => {
-          if (['theme', 'resource'].includes(model) && !id) {
-            data = data.filter(t => t.name)
-          }
-          if (id && model == 'resource' && data[0]?.status == RES_TO_COME) {
-            throw new ForbiddenError(`Ressource non encore disponible`)
-          }
-          console.log(`GET ${model}/${id} ${fields}: data sent`)
-          return res.json(data)
-        })
+  return loadFromDb({model, fields, id, user, params})
+    .then(data => {
+      console.log(`GET ${model}/${id} ${fields}: data sent`)
+      res.json(data)
     })
-
 }
 
-router.get('/jobUser/:id?', (req, res) => {
+router.get('/jobUser/:id?', passport.authenticate(['cookie', 'anonymous'], {session: false}), (req, res) => {
   req.params.model='jobUser'
-  return loadFromDb(req, res)
+  return loadFromRequest(req, res)
 })
 
 router.get('/:model/:id?', passport.authenticate('cookie', {session: false}), (req, res) => {
-  return loadFromDb(req, res)
+  return loadFromRequest(req, res)
 })
 
 module.exports = router

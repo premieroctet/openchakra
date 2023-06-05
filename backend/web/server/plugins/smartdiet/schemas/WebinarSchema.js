@@ -11,12 +11,10 @@ const {schemaOptions} = require('../../../utils/schemas')
 const Schema = mongoose.Schema
 
 const WebinarSchema = new Schema({
-  company: {
+  companies: [{
     type: Schema.Types.ObjectId,
     ref: 'company',
-    required: [true, 'La compagnie est obligatoire'],
-  }
-  ,
+  }],
   url: {
     type: String,
     required: [true, "L'URL est obligatoire"],

@@ -1,4 +1,4 @@
-const siret = require('siret')
+const { idEqual } = require('../../../utils/database')
 const {
   AVAILABILITY,
   COACHING,
@@ -7,10 +7,14 @@ const {
   COMPANY_SIZE,
   COMPANY_STATUS,
   DEFAULT_ROLE,
+  DEPARTEMENTS,
   ROLES,
+  ROLE_COMPANY_ADMIN,
   ROLE_COMPANY_BUYER,
-  ROLE_TI
+  ROLE_TI,
+  UNACTIVE_REASON,
 } = require('../consts')
+const siret = require('siret')
 const NATIONALITIES=require('../nationalities')
 const mongoose = require("mongoose")
 const bcrypt=require('bcryptjs')
@@ -43,7 +47,7 @@ const UserSchema = new Schema({
   cguAccepted: {
     type: Boolean,
     validate: [value => !!value, 'Vous devez accepter les CGU'],
-    required: [true, 'Vous devez accepter les CGU'],
+    required: [function() { return [ROLE_COMPANY_BUYER, ROLE_COMPANY_ADMIN, ROLE_TI].includes(this.role)}, 'Vous devez accepter les CGU'],
   },
   role: {
     type: String,
@@ -83,6 +87,11 @@ const UserSchema = new Schema({
     type: Boolean,
     default: true,
   },
+  unactive_reason: {
+    type: String,
+    enum: Object.keys(UNACTIVE_REASON),
+    required: [function() { return !this.active}, 'Le raison de la désactivation est obligatoire'],
+  },
   hidden: {
     type: Boolean,
     default: function() { return this.role==ROLE_TI},
@@ -114,6 +123,11 @@ const UserSchema = new Schema({
   },
   address: {
     type: String,
+  },
+  zip_code: {
+    type: String,
+    enum: Object.keys(DEPARTEMENTS),
+    required: [function() { return [ROLE_COMPANY_BUYER,ROLE_TI].includes(this.role)}, 'Le département est obligatoire'],
   },
   billing_address: {
     type: String,
@@ -170,6 +184,11 @@ const UserSchema = new Schema({
   representative_lastname: {
     type: String,
   },
+  dummy: {
+    type: Number,
+    default: 0,
+    required: true,
+  },
 }, schemaOptions
 );
 
@@ -180,11 +199,36 @@ UserSchema.virtual("full_name").get(function() {
 // For password checking only
 UserSchema.virtual("password2")
 
+const PROFILE_ATTRIBUTES={
+  firstname: 'prénom',
+  lastname : 'nom de famille',
+  email : 'email',
+  phone : 'téléphone',
+  birthday : 'date de naissance',
+  nationality : 'nationalité',
+  picture : 'photo de profil',
+  identity_proof_1 : "pièce d'identité",
+  iban : 'iban',
+  company_name : 'nom de la société',
+  company_status : 'statut',
+  siret : 'siret',
+  status_report : 'avis de situation',
+  insurance_type : "type d'assurance",
+  insurance_report : "justificatif d'assurance",
+  company_picture : "logo de l'entreprise",
+}
+
 UserSchema.virtual('profile_progress').get(function() {
-  const attributes1='firstname lastname email phone birthday nationality picture identity_proof_1 iban'.split(' ')
-  const attrbiutes2='company_name company_status siret status_report insurance_type insurance_report company_picture'.split(' ')
-  let filled=[...attributes1, ...attrbiutes2].map(att => !!lodash.get(this, att))
+  let filled=Object.keys(PROFILE_ATTRIBUTES).map(att => !!lodash.get(this, att))
   return (filled.filter(v => !!v).length*1.0/filled.length)*100
+});
+
+UserSchema.virtual('missing_attributes').get(function() {
+  const missing=lodash(PROFILE_ATTRIBUTES)
+    .pickBy((name, att) => !lodash.get(this, att) && name)
+    .values()
+    .join(',')
+  return missing ? `Informations manquantes:${missing}` : ''
 });
 
 UserSchema.virtual("jobs", {
@@ -193,34 +237,28 @@ UserSchema.virtual("jobs", {
   foreignField: "user" // is equal to foreignField
 });
 
-UserSchema.virtual("missions", {
+// All missions
+UserSchema.virtual("_missions", {
   ref: "mission", // The Model to use
-  localField: "_id", // Find in Model, where localField
-  foreignField: "user" // is equal to foreignField
+  localField: "dummy", // Find in Model, where localField
+  foreignField: "dummy" // is equal to foreignField
 });
 
-UserSchema.virtual("comments", {
-  ref: "comment", // The Model to use
-  localField: "_id", // Find in Model, where localField
-  foreignField: "user" // is equal to foreignField
-});
+UserSchema.virtual("missions", {localField: 'dummy', foreignField: 'dummy'}).get(function() {
+  if (this.role==ROLE_COMPANY_BUYER) {
+    return this._missions?.filter(m => idEqual(m.user?._id, this._id))
+  }
+  if (this.role==ROLE_TI) {
+    return this._missions?.filter(m => idEqual(m.job?.user._id, this._id)) || []
+  }
+  return []
+})
 
-UserSchema.virtual("quotations", {
-  ref: "quotation", // The Model to use
-  localField: "_id", // Find in Model, where localField
-  foreignField: "user" // is equal to foreignField
-});
 
 UserSchema.virtual("requests", {
   ref: "request", // The Model to use
   localField: "_id", // Find in Model, where localField
   foreignField: "user" // is equal to foreignField
-});
-
-UserSchema.virtual("recommandations", {
-  ref: "recommandation", // The Model to use
-  localField: "_id", // Find in Model, where localField
-  foreignField: "job.user._id" // is equal to foreignField
 });
 
 UserSchema.virtual("qualified_str").get(function() {
@@ -235,42 +273,47 @@ UserSchema.virtual("finished_missions_count").get(function() {
   if (lodash.isEmpty(this.mission)) {
     return 0
   }
-  return this.missions.filter(m => m.status==QUOTATION_STATUS_FINISHED).length
+  return this.missions.filter(m => m.status==MISSION_STATUS_FINISHED).length
 })
 
 UserSchema.virtual("recommandations_count").get(function() {
-  console.error('Not implemented')
-  return 0
+  const recos=lodash(this.jobs||[]).map(j => j.recommandations || []).flatten()
+  return recos.size()
+})
+
+UserSchema.virtual("recommandations_note").get(function() {
+  const recos=lodash(this.jobs||[]).map(j => j.recommandations || []).flatten()
+  return recos.sumBy('note')/recos.size()
+})
+
+UserSchema.virtual("comments_count").get(function() {
+  const recos=lodash(this.missions||[]).map(j => j.comments || []).flatten()
+  return recos.size()
 })
 
 UserSchema.virtual("comments_note").get(function() {
-  console.error('Not implemented')
-  return 0
+  const recos=lodash(this.missions||[]).map(j => j.comments || []).flatten()
+  return recos.sumBy('note')/recos.size()
 })
 
 UserSchema.virtual("revenue").get(function() {
-  console.error('Not implemented')
   return 0
 })
 
 UserSchema.virtual("revenue_to_come").get(function() {
-  console.error('Not implemented')
   return 0
 })
 
 UserSchema.virtual("accepted_quotations_count").get(function() {
-  console.error('Not implemented')
-  return 0
-})
-
-UserSchema.virtual("comments_count").get(function() {
-  console.error('Not implemented')
   return 0
 })
 
 UserSchema.virtual("profile_shares_count").get(function() {
-  console.error('Not implemented')
   return 0
+})
+
+UserSchema.virtual('pinned_jobs', {localField: 'dummy', foreignField: 'dummy'}).get(function () {
+  return []
 })
 
 module.exports = UserSchema;

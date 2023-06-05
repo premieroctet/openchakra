@@ -1,9 +1,11 @@
 const jwt = require('jsonwebtoken')
 const passport = require('passport')
 const CookieStrategy = require('passport-cookie').Strategy
+const AnonymousStrategy = require('passport-anonymous').Strategy
 const User = require('../models/User')
 
-passport.use(new CookieStrategy(
+// Requires connection
+const cookieStrategy=new CookieStrategy(
   (token, done) => {
     const user=jwt.decode(token)
     User.findById(user.id)
@@ -15,7 +17,11 @@ passport.use(new CookieStrategy(
       })
       .catch(err => console.error(err))
   },
-))
+)
+passport.use(cookieStrategy)
+
+// Allows non-connected (i.e. for unconnected search)
+passport.use(new AnonymousStrategy())
 
 const sendCookie = (user, res) => {
   const token=jwt.sign({id: user.id}, 'secret')

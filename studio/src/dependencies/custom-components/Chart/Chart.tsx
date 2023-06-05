@@ -11,9 +11,11 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { Line, Bar } from 'react-chartjs-2';
+import { Line, Bar, Scatter } from 'react-chartjs-2';
 import { Box } from '@chakra-ui/react';
 import { TypedChartComponent } from 'react-chartjs-2/dist/types';
+import moment from 'moment'
+import lodash from 'lodash'
 
 
 ChartJS.register(
@@ -48,7 +50,7 @@ const OwnChart = (
     : {
       isEditable: boolean
       name: string
-      value: string
+      value:{date:any, [key:string]: number}[] 
       attribute: string
       id: string,
       chartType: ChartType,
@@ -73,29 +75,31 @@ const OwnChart = (
         'bar': Bar,
       }
       // @ts-ignore
-      const RetainedChart = typesOfCharts[chartType]
+      const RetainedChart = Scatter //typesOfCharts[chartType]
     
-     const labels = ['1er Janvier', 'February', 'March', 'April', 'May', 'June', 'July'];
-     const data1 = [1400, 400, 206, null, 900, 10, 24]
-     const data2 = [45, null, 22, -45, 114, 75, 12]
+     const labels = value?.map(v => moment(v.date).format('LL'))
+     //const data1 = value?.map(v => v.chest)
+     const data1 = value?.map((v, idx) => ({x:moment(v.date).unix(), y:v.chest}))
+     //const data2 = value?.map(v => v.hips)
 
      const data = {
         labels,
         datasets: [
           {
-            label: 'Dataset 1',
+            label: 'Chest',
             data: data1,
-            spanGaps: true,
             borderColor: 'rgb(255, 99, 132)',
             backgroundColor: 'rgba(255, 99, 132, 0.5)',
           },
+          /**
           {
-            label: 'Dataset 2',
+            label: 'Hips',
             data: data2,
             spanGaps: true,
             borderColor: 'green',
             backgroundColor: 'rgba(53, 162, 235, 0.5)',
           },
+          */
         ],
       };
 

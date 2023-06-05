@@ -11,6 +11,10 @@ const MessageSchema = new Schema({
     type: String,
     required: true,
   },
+  // Attachment URL
+  attachment: {
+    type: String,
+  },
   is_read: {
     type: Date,
   },

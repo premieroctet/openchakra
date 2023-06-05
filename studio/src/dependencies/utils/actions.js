@@ -15,16 +15,19 @@ export const ACTIONS = {
   sendMessage: ({ value, props, level, getComponentValue }) => {
     const destinee = props.destinee ? getComponentValue(props.destinee, level) : value._id
     const contents = getComponentValue(props.contents, level)
+    const attachment = getComponentValue(props.attachment, level)
     let url = `${API_ROOT}/action`
     return axios
       .post(url, {
         action: 'sendMessage',
         destinee,
         contents,
+        attachment,
       })
       .then(res => {
         clearComponentValue(props.destinee, level)
         clearComponentValue(props.contents, level)
+        clearComponentValue(props.attachment, level)
         return res
       })
   },
@@ -65,10 +68,13 @@ export const ACTIONS = {
       [getComponent(c, level)?.getAttribute('attribute') || getComponent(c, level)?.getAttribute('data-attribute'),
         getComponentValue(c, level)||null]
     ))
-    if (props.job) {
-      const jobId=document.getElementById(`${props.job}${level}`)?.getAttribute('_id')
-      body.job=jobId
-    }
+    'job,mission,quotation,group,parent,content,recipe'.split(',').forEach(property => {
+      if (props[property]) {
+        //const dataId=document.getElementById(`${props[property]}${level}`)?.getAttribute('_id')
+        const dataId=getComponent(props[property], level)?.getAttribute('_id')||null
+        body[property]=dataId
+      }
+    })
     let url = `${API_ROOT}/${props.model}?context=${context}`
     return axios.post(url, body).then(res => ({
       model: props.model,
@@ -355,20 +361,24 @@ export const ACTIONS = {
     return window.print()
   },
 
-  deactivateAccount: () => {
+  deactivateAccount: ({value, props, level, getComponentValue}) => {
+    const reason = getComponentValue(props.reason, level)
     let url = `${API_ROOT}/action`
     const body = {
       action: 'deactivateAccount',
+      value,
+      reason: reason,
     }
     return axios.post(url, body)
   },
 
-  addTarget: ({ value, context, append }) => {
+  addToContext: ({ value, context, contextAttribute, append }) => {
     let url = `${API_ROOT}/action`
     const body = {
-      action: 'addTarget',
+      action: 'addToContext',
       value,
       context,
+      contextAttribute,
       append,
     }
     return axios.post(url, body)
@@ -390,5 +400,277 @@ export const ACTIONS = {
       value: res.data,
     }))
   },
+
+  alle_create_quotation: ({ value, context, props, level, getComponentValue }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_create_quotation',
+      value,
+      context,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_refuse_mission: ({ value, context, props, level, getComponentValue }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_refuse_mission',
+      value,
+      context,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_cancel_mission: ({ value, context, props, level, getComponentValue }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_cancel_mission',
+      value,
+      context,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_send_quotation: ({value}) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_send_quotation',
+      value,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_accept_quotation: ({value}) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_accept_quotation',
+      value,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_refuse_quotation: ({value}) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_refuse_quotation',
+      value,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_show_quotation: ({ value, context, props, level, getComponentValue }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_show_quotation',
+      value,
+      context,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_edit_quotation: ({ value, context, props, level, getComponentValue }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_edit_quotation',
+      value,
+      context,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_finish_mission: ({ value, context, props, level, getComponentValue }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_finish_mission',
+      value,
+      context,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_store_bill: ({ value, context, props, level, getComponentValue }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_store_bill',
+      value,
+      context,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_show_bill: ({ value, context, props, level, getComponentValue }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_show_bill',
+      value,
+      context,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_accept_bill: ({ value, context, props, level, getComponentValue }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_accept_bill',
+      value,
+      context,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_refuse_bill: ({ value, context, props, level, getComponentValue }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_refuse_bill',
+      value,
+      context,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_leave_comment: ({ value, context, props, level, getComponentValue }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_leave_comment',
+      value,
+      context,
+    }
+    return axios.post(url, body)
+  },
+
+  alle_send_bill: ({value}) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_send_bill',
+      value,
+    }
+    return axios.post(url, body)
+  },
+
+  smartdiet_join_group: ({ value }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_join_group',
+      value: value._id,
+      join: true,
+    }
+    return axios.post(url, body)
+      .then(res => {
+        return {_id: res.data}
+      })
+  },
+
+  smartdiet_leave_group: ({ value }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_join_group',
+      value: value._id,
+      join: false,
+    }
+    return axios.post(url, body)
+      .then(res => {
+        return {_id: res.data}
+      })
+  },
+
+  smartdiet_skip_event: ({ value }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_skip_event',
+      value: value._id,
+    }
+    return axios.post(url, body)
+      .then(res => {
+        return {_id: res.data}
+      })
+  },
+
+  smartdiet_join_event: ({ value }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_join_event',
+      value: value._id,
+    }
+    return axios.post(url, body)
+      .then(res => {
+        return {_id: res.data}
+      })
+  },
+
+  smartdiet_start_event: ({ value }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_start_event',
+      value: value._id,
+    }
+    return axios.post(url, body)
+      .then(res => {
+        const object=res.data
+        if (object.url) {
+          return Promise.resolve(window.open(object.url, 'blank'))
+        }
+        return {_id: object}
+      })
+  },
+
+  smartdiet_pass_event: ({ value }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_pass_event',
+      value: value._id,
+    }
+    return axios.post(url, body)
+      .then(res => {
+        return {_id: res.data}
+      })
+  },
+
+  smartdiet_fail_event: ({ value }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_fail_event',
+      value: value._id,
+    }
+    return axios.post(url, body)
+      .then(res => {
+        return {_id: res.data}
+      })
+  },
+
+  alle_ask_contact: ({ value, context, props, level, getComponentValue }) => {
+    const components=lodash(props).pickBy((v, k) => /^component_/.test(k) && !!v).values()
+    const body = Object.fromEntries(components.map(c =>
+      [getComponent(c, level)?.getAttribute('attribute') || getComponent(c, level)?.getAttribute('data-attribute'),
+        getComponentValue(c, level)||null]
+    ))
+
+    body.action='alle_ask_contact'
+    let url = `${API_ROOT}/anonymous-action`
+    return axios.post(url, body)
+  },
+
+  smartdiet_set_company_code: ({value, props, level, getComponentValue}) => {
+    const code = getComponentValue(props.code, level)
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_set_company_code',
+      code,
+    }
+    return axios.post(url, body)
+  },
+
+  openUrl: ({value, actionProps}) => {
+    let props=actionProps
+    try { props=JSON.parse(actionProps) } catch(e) {}
+    const {url, open}=props
+    const urlValue=lodash.get(value, url)
+    // new page
+    if (open && !(props.open === 'false')) {
+      return Promise.resolve(window.open(urlValue, 'blank'))
+    } else {
+      return Promise.resolve((window.location = urlValue))
+    }
+  },
+
 
 }

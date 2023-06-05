@@ -34,7 +34,7 @@ const withDynamicButton = Component => {
     const [actionAllowed, setActionAllowed]=useState(true)
 
     useEffect(()=> {
-      axios.get(`/myAlfred/api/studio/action-allowed/${action}/${value?._id}`)
+      axios.get(`/myAlfred/api/studio/action-allowed/${action}?dataId=${value?._id}&actionProps=${JSON.stringify(actionProps)}`)
         .then(res => setActionAllowed(res.data))
         .catch(err => console.error(err))
     }, [action, value])
@@ -77,7 +77,9 @@ const withDynamicButton = Component => {
           })
           .catch(err => {
             console.error(err)
-            setErrorMessage(err.response?.data || err)
+            if (err.response?.status!=502) {
+              setErrorMessage(err.response?.data || err)
+            }
           })
       }
     }
