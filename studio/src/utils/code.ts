@@ -11,7 +11,7 @@ import {
   CHECKBOX_TYPE,
   CONTAINER_TYPE,
   DATE_TYPE,
-  ENUM_TYPE,
+  GROUP_TYPE,
   IMAGE_TYPE,
   INPUT_TYPE,
   PROGRESS_TYPE,
@@ -32,6 +32,7 @@ import {
   whatTheHexaColor,
   iconStuff,
 } from './misc';
+import { hasParentType } from './validation';
 import { isJsonString } from '../dependencies/utils/misc'
 
 
@@ -81,7 +82,7 @@ const getDynamicType = (comp: IComponent) => {
     return 'Source'
   }
   if (CHECKBOX_TYPE.includes(comp.type)) {
-    return 'Checkbox'
+    return comp.type=='IconCheck' ? 'Checkbox': comp.type
   }
   if (INPUT_TYPE.includes(comp.type)) {
     return 'Input'
@@ -89,8 +90,8 @@ const getDynamicType = (comp: IComponent) => {
   if (UPLOAD_TYPE.includes(comp.type)) {
     return 'UploadFile'
   }
-  if (ENUM_TYPE.includes(comp.type)) {
-    return 'Enum'
+  if (GROUP_TYPE.includes(comp.type)) {
+    return comp.type
   }
   throw new Error(`No dynamic found for ${comp.type}`)
 }
@@ -124,9 +125,9 @@ type BuildBlockParams = {
 // Wether component is linked to a save action, thus must not save during onChange
 const getNoAutoSaveComponents = (components: IComponents): IComponent[] => {
   let c=Object.values(components)
-    .filter(c => c.props?.action=='save' && c.props?.actionProps)
+    .filter(c => ['save', 'smartdiet_set_company_code'].includes(c.props?.action) && c.props?.actionProps)
     .map(c => JSON.parse(c.props.actionProps))
-  c=c.map(obj => lodash.pickBy(obj, (_, k)=> /^component_/.test(k)))
+  c=c.map(obj => lodash.pickBy(obj, (_, k)=> /^component_|^code$/.test(k)))
   c=c.map(obj => Object.values(obj).filter(v => !!v))
   c=lodash.flattenDeep(c)
   c=lodash.uniq(c)
@@ -186,6 +187,13 @@ const buildBlock = ({
 
       if (noAutoSaveComponents.includes(childComponent.id)) {
         propsContent += ` noautosave={true} `
+      }
+
+      if (childComponent.type=='Radio' && hasParentType(childComponent, components, 'RadioGroup')) {
+        propsContent += ` insideGroup `
+      }
+      if (['Checkbox', 'IconCheck'].includes(childComponent.type) && hasParentType(childComponent, components, 'CheckboxGroup')) {
+        propsContent += ` insideGroup `
       }
 
       if (isDynamicComponent(childComponent)) {

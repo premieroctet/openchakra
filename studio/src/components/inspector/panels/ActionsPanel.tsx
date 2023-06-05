@@ -103,11 +103,10 @@ const ActionsPanel: React.FC = () => {
   useEffect(() => {
     try {
       const attributes = getAvailableAttributes(
-        components[activeComponent.parent],
+        activeComponent,
         components,
         models,
       )
-      console.log(`Passing attributes : ${JSON.stringify(attributes)}`)
       setAttrs(attributes)
     } catch (err) {
       console.error(err)

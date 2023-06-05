@@ -27,6 +27,7 @@
     "exceljs": "^4.3.0",
     "express": ">=5.0.0-beta.1",
     "file-system": "^2.2.2",
+    "find-cycle": "^1.0.0",
     "firebase-admin": "^11.7.0",
     "format-duration": "^2.0.0",
     "glob": "^7.1.4",

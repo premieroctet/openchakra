@@ -18,6 +18,11 @@ const TargetSchema = new Schema({
     type: String,
     required: false,
   },
+  dummy: {
+    type: Number,
+    default: 0,
+    required: true,
+  },
 }, schemaOptions)
 
 TargetSchema.virtual("contents", {

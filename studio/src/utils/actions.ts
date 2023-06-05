@@ -58,7 +58,11 @@ export const ACTIONS: IActions = {
         components
           .filter(comp => comp.type=='Flex')
           .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
-      ...Object.fromEntries(lodash.range(15).map((idx:number) => {
+      recipe: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      ...Object.fromEntries(lodash.range(24).map((idx:number) => {
       return [
         `component_${idx}`,
         ({ components }) => components
@@ -188,7 +192,7 @@ export const ACTIONS: IActions = {
     label: 'Save/create',
     options: {
       model: ({ models }) => Object.values(models).map(m => ({ key: m.name, label: m.name })),
-      ...Object.fromEntries(lodash.range(25).map((idx:number) => {
+      ...Object.fromEntries(lodash.range(32).map((idx:number) => {
       return [
         `component_${idx}`,
         ({ components }) => components
@@ -430,32 +434,37 @@ export const ACTIONS: IActions = {
     next: ['openPage'],
   },
   smartdiet_join_group: {
-    label: 'SM Joindre le groupe',
+    label: 'SM Join group',
     options: {},
     next: ['openPage'],
   },
   smartdiet_leave_group: {
-    label: 'SM Quitter le groupe',
+    label: 'SM Leave group',
     options: {},
     next: ['openPage'],
   },
   smartdiet_skip_event: {
-    label: 'SM Zapper evt',
+    label: 'SM Skip event',
     options: {},
     next: ['openPage'],
   },
   smartdiet_join_event: {
-    label: 'SM Joindre evt',
+    label: 'SM Register event',
     options: {},
     next: ['openPage'],
   },
   smartdiet_pass_event: {
-    label: 'SM Réussi evt',
+    label: 'SM Passed event',
+    options: {},
+    next: ['openPage'],
+  },
+  smartdiet_fail_event: {
+    label: 'SM Failed event',
     options: {},
     next: ['openPage'],
   },
   smartdiet_start_event: {
-    label: 'SM Connexion evt',
+    label: 'SM Start event',
     options: {},
     next: ['openPage'],
   },
@@ -496,6 +505,30 @@ export const ACTIONS: IActions = {
       page: ({ pages }) => pagesList({pages}),
     },
     next: ['openPage'],
+  },
+
+
+  smartdiet_set_company_code: {
+    label: 'SM Set company code',
+    options: {
+      code: ({ components }) =>
+        components
+          .filter(c => c.type == 'Input')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+    },
+    next: ['openPage'],
+    required:['code']
+  },
+
+  openUrl: {
+    label: 'Open URL',
+    options: {
+      url: ({ attributes }) => Object.keys(attributes || {}).map(att => ({ key: att, label: att })),
+      open: () => [
+        { key: true, label: 'In new page' },
+        { key: false, label: 'In same page' },
+      ],
+    },
   },
 
 

@@ -4,12 +4,12 @@ import lodash from 'lodash'
 
 import { ACTIONS } from '../utils/actions'
 
-const withDynamicEnum = Component => {
+const withDynamicCheckboxGroup = Component => {
 
   const Internal = ({children, noautosave, ...props}) => {
     const dataSource=props.dataSource
     const enumValues=props.enum ? JSON.parse(props.enum) : null
-    const [internalValue, setInternalValue] = useState(lodash.get(props.dataSource, props.attribute))
+    const [internalValue, setInternalValue] = useState(lodash.get(props.dataSource, props.attribute).map(v => lodash.isObject(v) ?v._id : v))
 
     const onChange = evValue => {
       setInternalValue(evValue)
@@ -44,4 +44,4 @@ const withDynamicEnum = Component => {
   return Internal
 }
 
-export default withDynamicEnum
+export default withDynamicCheckboxGroup

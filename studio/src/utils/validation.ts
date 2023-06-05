@@ -6,16 +6,25 @@ const Validator = require('jsonschema').Validator
 import { CONTAINER_TYPE } from './dataSources'
 import {ACTIONS} from './actions'
 
+export const hasParentType = (comp: IComponent, comps: IComponents, type: ComponentType) => {
+  if (comp.type==type) {return true}
+  if (comp.id=='root') {return false}
+  return hasParentType(comps[comp.parent], comps, type)
+}
+
 const checkEmptyDataAttribute = (
   comp: IComponent,
   icomponents: IComponents,
 ) => {
   if (
     !CONTAINER_TYPE.includes(comp.type) &&
+    comp.props.dataSource &&
+    !comp.props.attribute &&
     comp.type != 'Button' &&
     comp.type != 'IconButton' &&
-    comp.props.dataSource &&
-    !comp.props.attribute
+    (comp.type!='Radio' || !hasParentType(comp, icomponents, 'RadioGroup')) &&
+    (comp.type!='Checkbox' || !hasParentType(comp, icomponents, 'CheckboxGroup')) &&
+    (comp.type!='IconCheck' || !hasParentType(comp, icomponents, 'CheckboxGroup'))
   ) {
     throw new Error(`Datasource attribute is not set`)
   }

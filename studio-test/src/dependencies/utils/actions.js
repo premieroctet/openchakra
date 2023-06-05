@@ -73,7 +73,7 @@ export const ACTIONS = {
       [getComponent(c, level)?.getAttribute('attribute') || getComponent(c, level)?.getAttribute('data-attribute'),
         getComponentValue(c, level)||null]
     ))
-    'job,mission,quotation,group,parent,content'.split(',').forEach(property => {
+    'job,mission,quotation,group,parent,content,recipe'.split(',').forEach(property => {
       if (props[property]) {
         //const dataId=document.getElementById(`${props[property]}${level}`)?.getAttribute('_id')
         const dataId=getComponent(props[property], level)?.getAttribute('_id')||null
@@ -609,10 +609,38 @@ export const ACTIONS = {
       })
   },
 
+  smartdiet_start_event: ({ value }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_start_event',
+      value: value._id,
+    }
+    return axios.post(url, body)
+      .then(res => {
+        const object=res.data
+        if (object.url) {
+          return Promise.resolve(window.open(object.url, 'blank'))
+        }
+        return {_id: object}
+      })
+  },
+
   smartdiet_pass_event: ({ value }) => {
     let url = `${API_ROOT}/action`
     const body = {
       action: 'smartdiet_pass_event',
+      value: value._id,
+    }
+    return axios.post(url, body)
+      .then(res => {
+        return {_id: res.data}
+      })
+  },
+
+  smartdiet_fail_event: ({ value }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_fail_event',
       value: value._id,
     }
     return axios.post(url, body)
@@ -667,5 +695,29 @@ export const ACTIONS = {
     let url = `${API_ROOT}/action`
     return axios.post(url, body)
   },
+
+  smartdiet_set_company_code: ({value, props, level, getComponentValue}) => {
+    const code = getComponentValue(props.code, level)
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_set_company_code',
+      code,
+    }
+    return axios.post(url, body)
+  },
+
+  openUrl: ({value, actionProps}) => {
+    let props=actionProps
+    try { props=JSON.parse(actionProps) } catch(e) {}
+    const {url, open}=props
+    const urlValue=lodash.get(value, url)
+    // new page
+    if (open && !(props.open === 'false')) {
+      return Promise.resolve(window.open(urlValue, 'blank'))
+    } else {
+      return Promise.resolve((window.location = urlValue))
+    }
+  },
+
 
 }
