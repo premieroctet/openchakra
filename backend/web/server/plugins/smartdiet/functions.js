@@ -315,6 +315,7 @@ declareVirtualField({model: 'comment', field: 'children', instance: 'Array',
 })
 
 declareVirtualField({model: 'key', field: 'user_survey_average', instance: 'Number'})
+declareVirtualField({model: 'key', field: 'trophy_picture', instance: 'String', requires:'spoons_count_for_trophy,trophy_on_picture,trophy_off_picture'})
 
 declareVirtualField({model: 'userSurvey', field: 'questions', instance: 'Array',
   multiple: true,

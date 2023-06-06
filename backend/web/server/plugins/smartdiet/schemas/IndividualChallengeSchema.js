@@ -26,6 +26,14 @@ const IndividualChallengeSchema = new Schema({
     type: String,
     required: [true, "Le message d'échec' est obligatoire"],
   },
+  trophy_on_picture: {
+    type: String,
+    required: [true, "L'illustration de trophée obtenu est obligatoire"],
+  },
+  trophy_off_picture: {
+    type: String,
+    required: [true, "L'illustration de trophée non obtenu est obligatoire"],
+  },
 },
 {...schemaOptions, ...EVENT_DISCRIMINATOR}
 )
@@ -33,5 +41,7 @@ const IndividualChallengeSchema = new Schema({
 IndividualChallengeSchema.virtual('type').get(function() {
   return EVENT_IND_CHALLENGE
 })
+
+IndividualChallengeSchema.virtual('trophy_picture')
 
 module.exports = IndividualChallengeSchema
