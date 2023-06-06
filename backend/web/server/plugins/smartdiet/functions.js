@@ -128,13 +128,13 @@ USER_MODELS.forEach(m => {
       instance: 'ObjectID',
       options: {ref: 'individualChallenge'}}
   })
-  declareVirtualField({model: m, field: '_all_menus', instance: 'Menu',
+  declareVirtualField({model: m, field: '_all_menus', instance: 'menu',
     multiple: true,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'menu'}}
   })
-  declareVirtualField({model: m, field: 'menu', instance: 'Menu',
+  declareVirtualField({model: m, field: 'menu', instance: 'menu',
     multiple: false,
     caster: {
       instance: 'ObjectID',
