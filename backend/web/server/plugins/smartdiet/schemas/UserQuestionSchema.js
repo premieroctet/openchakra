@@ -21,7 +21,7 @@ const UserQuestionSchema = new Schema({
     required: [true, "L'ordre est obligatoire"],
   },
   answer: {
-    type:  Number,
+    type:  String,
     enum: Object.keys(SURVEY_ANSWER),
     required: false,
   }

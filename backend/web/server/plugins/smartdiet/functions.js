@@ -1,3 +1,24 @@
+const {
+  ACTIVITY,
+  COMPANY_ACTIVITY,
+  COMPANY_ACTIVITY_SERVICES_AUX_ENTREPRISES,
+  CONTENTS_TYPE,
+  DAYS,
+  ECOSCORE,
+  EVENT_TYPE,
+  GENDER,
+  GROUPS_CREDIT,
+  HARDNESS,
+  HOME_STATUS,
+  NUTRISCORE,
+  PARTICULAR_COMPANY_NAME,
+  PERIOD,
+  ROLES,
+  SPOON_SOURCE,
+  SURVEY_ANSWER,
+  TARGET_TYPE,
+  UNIT,
+} = require('./consts')
 const UserSurvey = require('../../models/UserSurvey')
 const { CREATED_AT_ATTRIBUTE } = require('../../../utils/consts')
 const mongoose = require('mongoose')
@@ -12,25 +33,6 @@ const {
   setPreprocessGet,
   simpleCloneModel
 } = require('../../utils/database')
-
-const {
-  ACTIVITY,
-  COMPANY_ACTIVITY,
-  CONTENTS_TYPE,
-  ECOSCORE,
-  EVENT_TYPE,
-  GENDER,
-  GROUPS_CREDIT,
-  HARDNESS,
-  HOME_STATUS,
-  NUTRISCORE,
-  ROLES,
-  SPOON_SOURCE,
-  TARGET_TYPE,
-  UNIT,
-  PARTICULAR_COMPANY_NAME,
-  COMPANY_ACTIVITY_SERVICES_AUX_ENTREPRISES,
-} = require('./consts')
 const Offer = require('../../models/Offer')
 const Content = require('../../models/Content')
 const Company = require('../../models/Company')
@@ -277,6 +279,12 @@ declareVirtualField({model: 'recipe', field: 'ingredients', instance: 'Array',
     instance: 'ObjectID',
     options: {ref: 'recipeIngredient'}}
 })
+declareVirtualField({model: 'menu', field: 'recipes', instance: 'Array',
+  multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'menuRecipe'}}
+})
 
 declareEnumField({model: 'ingredient', field: 'unit', enumValues: UNIT})
 declareVirtualField({model: 'ingredient', field: 'label', instance: 'String', requires:'name,unit'})
@@ -314,6 +322,11 @@ declareVirtualField({model: 'userSurvey', field: 'questions', instance: 'Array',
     instance: 'ObjectID',
     options: {ref: 'userQuestion'}}
 })
+
+declareEnumField({model: 'userQuestion', field: 'answer', enumValues:SURVEY_ANSWER})
+
+declareEnumField({model: 'menuRecipe', field: 'day', enumValues:DAYS})
+declareEnumField({model: 'menuRecipe', field: 'period', enumValues:PERIOD})
 
 const getAvailableContents = (user, params, data) => {
   return Content.find()

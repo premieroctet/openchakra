@@ -291,16 +291,42 @@ const UNIT={
 
 const PARTICULAR_COMPANY_NAME='Adhérent particulier'
 
-const SURVEY_ANSWER_NEVER=0
-const SURVEY_ANSWER_SOMETIMES=1
-const SURVEY_ANSWER_OFTEN=2
-const SURVEY_ANSWER_ALWAYS=3
+const SURVEY_ANSWER_NEVER='0'
+const SURVEY_ANSWER_SOMETIMES='1'
+const SURVEY_ANSWER_OFTEN='2'
+const SURVEY_ANSWER_ALWAYS='3'
 
 const SURVEY_ANSWER={
   [SURVEY_ANSWER_NEVER]:'jamais',
   [SURVEY_ANSWER_SOMETIMES]:'parfois',
   [SURVEY_ANSWER_OFTEN]:'souvent',
   [SURVEY_ANSWER_ALWAYS]:'toujours',
+}
+
+const DAYS_MONDAY='0'
+const DAYS_TUESDAY='1'
+const DAYS_WEDNESDAY='2'
+const DAYS_THURSDAY='3'
+const DAYS_FRIDAY='4'
+const DAYS_SATURDAY='5'
+const DAYS_SUNDAY='6'
+
+const DAYS={
+ [DAYS_MONDAY]:'Lundi',
+ [DAYS_TUESDAY]:'Mardi',
+ [DAYS_WEDNESDAY]:'Mercredi',
+ [DAYS_THURSDAY]:'Jeudi',
+ [DAYS_FRIDAY]:'Vendredi',
+ [DAYS_SATURDAY]:'Samedi',
+ [DAYS_SUNDAY]:'Dimanche',
+}
+
+const PERIOD_NOON='0'
+const PERIOD_EVENING='1'
+
+const PERIOD={
+ [PERIOD_NOON]:'Déjeuner',
+ [PERIOD_EVENING]:'Dîner',
 }
 
 module.exports={
@@ -327,4 +353,6 @@ module.exports={
   UNIT,
   PARTICULAR_COMPANY_NAME,
   SURVEY_ANSWER,
+  DAYS,
+  PERIOD,
 }

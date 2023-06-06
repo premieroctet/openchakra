@@ -85,6 +85,7 @@ require('./models/AdminDashboard')
 require('./models/Question')
 require('./models/UserQuestion')
 require('./models/UserSurvey')
+require('./models/MenuRecipe')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 

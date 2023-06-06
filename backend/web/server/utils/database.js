@@ -74,7 +74,13 @@ const getAttributeCaracteristics = (modelName, att) => {
   const type =
     baseData.instance == 'ObjectID' ? baseData.options.ref : baseData.instance
   const ref = baseData.instance == 'ObjectID'
-  let enumValues = lodash.isEmpty(att.enumValues) ? undefined : att.enumValues
+  let enumValues = undefined
+  if (!lodash.isEmpty(att.enumValues)) {
+    enumValues=att.enumValues
+  }
+  if (!lodash.isEmpty(att.options?.enum)) {
+    enumValues=att.options.enum
+  }
   if (enumValues) {
     const enumObject=DECLARED_ENUMS[modelName]?.[att.path]
     if (!enumObject) {
