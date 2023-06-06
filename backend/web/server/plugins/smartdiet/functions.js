@@ -236,6 +236,9 @@ EVENT_MODELS.forEach(m => {
 
 declareEnumField({model: 'individualChallenge', field: 'hardness', enumValues:HARDNESS})
 
+declareVirtualField({model: 'individualChallenge', field: 'trophy_picture',
+  instance: 'String', requires: 'trophy_on_picture,trophy_off_picture'})
+
 declareEnumField({model: 'category', field: 'type', enumValues:TARGET_TYPE})
 declareVirtualField({model: 'category', field: 'targets', instance: 'Array',multiple: true,
   caster: {
@@ -316,6 +319,7 @@ declareVirtualField({model: 'comment', field: 'children', instance: 'Array',
 
 declareVirtualField({model: 'key', field: 'user_survey_average', instance: 'Number'})
 declareVirtualField({model: 'key', field: 'trophy_picture', instance: 'String', requires:'spoons_count_for_trophy,trophy_on_picture,trophy_off_picture'})
+declareVirtualField({model: 'key', field: 'user_spoons', instance: 'Number'})
 
 declareVirtualField({model: 'userSurvey', field: 'questions', instance: 'Array',
   multiple: true,
@@ -407,6 +411,11 @@ const getUserSurveyAverage = (user, params, data) => {
     })
 }
 
+const getUserIndChallengeTrophy = (user, params, data) => {
+  console.log('compute trophy')
+  return Promise.resolve('on')
+}
+
 declareComputedField('user', 'available_contents', getAvailableContents)
 declareComputedField('loggedUser', 'available_contents', getAvailableContents)
 declareComputedField('comment', 'liked', getDataLiked, setDataLiked)
@@ -416,6 +425,7 @@ declareComputedField('message', 'pinned', getDataPinned, setDataPinned)
 declareComputedField('content', 'pinned', getDataPinned, setDataPinned)
 declareComputedField('group', 'pinned_messages', getPinnedMessages)
 declareComputedField('key', 'user_survey_average', getUserSurveyAverage)
+declareComputedField('individualChallenge', 'trophy_picture', getUserIndChallengeTrophy)
 
 
 const postCreate = ({model, params, data}) => {

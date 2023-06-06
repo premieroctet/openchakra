@@ -32,6 +32,8 @@ const KeySchema = new Schema({
   },
 }, schemaOptions)
 
+KeySchema.virtual('user_spoons')
+
 KeySchema.virtual('trophy_picture')
 
 KeySchema.virtual('user_survey_average').get(function() {
