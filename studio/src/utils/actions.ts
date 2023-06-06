@@ -543,6 +543,12 @@ export const ACTIONS: IActions = {
     next: ['openPage'],
   },
 
+  smartdiet_finish_survey: {
+    label: 'SM Finish survey',
+    options: {},
+    next: ['openPage'],
+  },
+
 }
 
 export const allowsActions = (component: IComponent) => {

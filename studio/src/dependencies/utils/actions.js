@@ -742,4 +742,13 @@ export const ACTIONS = {
       })
   },
 
+  smartdiet_finish_survey: ({value}) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_finish_survey',
+      value: value._id,
+    }
+    return axios.post(url, body)
+  },
+
 }

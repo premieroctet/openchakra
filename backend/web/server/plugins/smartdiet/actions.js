@@ -87,6 +87,16 @@ const smartdietNextQuestion = ({value}, user) => {
 }
 addAction('smartdiet_next_question', smartdietNextQuestion)
 
+const smartdietFinishSurvey = ({value}, user) => {
+  return UserQuestion.findById(value).populate('question')
+    .then(question => UserQuestion.exists({survey: question.survey, order:question.order+1}))
+    .then(exists => {
+      if (exists) { throw new BadRequestError(`Le questionnaire n'est pas terminé`)}
+      return true
+    })
+}
+addAction('smartdiet_finish_survey', smartdietFinishSurvey)
+
 
 const isActionAllowed = ({action, dataId, user}) => {
   return getModel(dataId)
@@ -147,6 +157,11 @@ const isActionAllowed = ({action, dataId, user}) => {
       if (action=='smartdiet_next_question') {
         return UserQuestion.findById(dataId).populate('question')
           .then(question => UserQuestion.findOne({survey: question.survey, order:question.order+1}))
+      }
+      if (action=='smartdiet_finish_survey') {
+        return UserQuestion.findById(dataId).populate('question')
+          .then(question => UserQuestion.exists({survey: question.survey, order:question.order+1}))
+          .then(exists => !exists)
       }
       return Promise.resolve(true)
   })
