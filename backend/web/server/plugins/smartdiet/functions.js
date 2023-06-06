@@ -1,3 +1,5 @@
+const UserSurvey = require('../../models/UserSurvey')
+const { CREATED_AT_ATTRIBUTE } = require('../../../utils/consts')
 const mongoose = require('mongoose')
 const {
   declareComputedField,
@@ -304,6 +306,15 @@ declareVirtualField({model: 'comment', field: 'children', instance: 'Array',
     options: {ref: 'comment'}}
 })
 
+declareVirtualField({model: 'key', field: 'user_survey_average', instance: 'Number'})
+
+declareVirtualField({model: 'userSurvey', field: 'questions', instance: 'Array',
+  multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'userQuestion'}}
+})
+
 const getAvailableContents = (user, params, data) => {
   return Content.find()
     .then(contents => {
@@ -363,6 +374,25 @@ const getPinnedMessages = (user, params, data) => {
   return Promise.resolve(data.messages?.filter(m => m.pins?.some(p => idEqual(p._id, user._id))))
 }
 
+const getUserSurveyAverage = (user, params, data) => {
+  const key_id=data._id
+  return UserSurvey
+    .find({user: user}).sort({[CREATED_AT_ATTRIBUTE]: -1})
+    .populate({path: 'questions', populate: 'question'})
+    .lean({virtuals: true})
+    .then(([survey]) => {
+      console.log(`Computing key ${data._id}`)
+      const result=lodash(survey.questions)
+      // TODO: take into account questions with no answer ??
+        //.filter(q => !lodash.isNil(q.answer))
+        .map(q => {console.log(`${q._id}-${q.question.key._id}`); return q})
+        .filter(q => idEqual(q.question.key._id, key_id))
+        .meanBy('answer') || 0
+      console.log(JSON.stringify(result, null, 2))
+      return result
+    })
+}
+
 declareComputedField('user', 'available_contents', getAvailableContents)
 declareComputedField('loggedUser', 'available_contents', getAvailableContents)
 declareComputedField('comment', 'liked', getDataLiked, setDataLiked)
@@ -371,6 +401,7 @@ declareComputedField('content', 'liked', getDataLiked, setDataLiked)
 declareComputedField('message', 'pinned', getDataPinned, setDataPinned)
 declareComputedField('content', 'pinned', getDataPinned, setDataPinned)
 declareComputedField('group', 'pinned_messages', getPinnedMessages)
+declareComputedField('key', 'user_survey_average', getUserSurveyAverage)
 
 
 const postCreate = ({model, params, data}) => {

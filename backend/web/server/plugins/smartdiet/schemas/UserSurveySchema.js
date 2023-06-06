@@ -13,6 +13,11 @@ const UserSurveySchema = new Schema({
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
+UserSurveySchema.virtual('questions', {
+  ref: 'userQuestion', // The Model to use
+  localField: '_id', // Find in Model, where localField
+  foreignField: 'survey', // is equal to foreignField
+})
 /* eslint-enable prefer-arrow-callback */
 
 

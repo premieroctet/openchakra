@@ -20,4 +20,8 @@ const KeySchema = new Schema({
   },
 }, schemaOptions)
 
+KeySchema.virtual('user_survey_average').get(function() {
+  return 0
+})
+
 module.exports = KeySchema
