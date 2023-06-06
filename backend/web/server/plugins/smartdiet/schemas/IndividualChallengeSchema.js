@@ -42,6 +42,8 @@ IndividualChallengeSchema.virtual('type').get(function() {
   return EVENT_IND_CHALLENGE
 })
 
-IndividualChallengeSchema.virtual('trophy_picture')
+IndividualChallengeSchema.virtual('trophy_picture').get(function() {
+  return ''
+})
 
 module.exports = IndividualChallengeSchema
