@@ -298,13 +298,13 @@ const PARTICULAR_COMPANY_NAME='Adhérent particulier'
 const SURVEY_ANSWER_NEVER=0
 const SURVEY_ANSWER_SOMETIMES=1
 const SURVEY_ANSWER_OFTEN=2
-const SURVEY_ANSWER_ALWAYS=0
+const SURVEY_ANSWER_ALWAYS=3
 
 const SURVEY_ANSWER={
-  SURVEY_ANSWER_NEVER: 'jamais',
-  SURVEY_ANSWER_SOMETIMES: 'parfois',
-  SURVEY_ANSWER_OFTEN: 'souvent',
-  SURVEY_ANSWER_ALWAYS: 'toujours',
+  [SURVEY_ANSWER_NEVER]: 'jamais',
+  [SURVEY_ANSWER_SOMETIMES]: 'parfois',
+  [SURVEY_ANSWER_OFTEN]: 'souvent',
+  [SURVEY_ANSWER_ALWAYS]: 'toujours',
 }
 
 module.exports={

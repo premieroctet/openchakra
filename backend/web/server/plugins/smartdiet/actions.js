@@ -73,7 +73,7 @@ addAction('smartdiet_set_company_code', setSmartdietCompanyCode)
 const smartdietStartSurvey = (_, user) => {
   return Question.find({}).sort({order: 1})
     .then(questions => {
-      if (lodash.isEmpty(questions)){survey.delete(); throw new BadRequestError(`Aucun questionnaire n'est disponible`)}
+      if (lodash.isEmpty(questions)){throw new BadRequestError(`Aucun questionnaire n'est disponible`)}
       return UserSurvey.create({user})
         .then(survey => Promise.all(questions.map(question => UserQuestion.create({user, survey, question, order: question.order}))))
         .then(questions => lodash.minBy(questions, 'question.order'))
@@ -144,9 +144,12 @@ const isActionAllowed = ({action, dataId, user}) => {
           return true
         })
       }
+      if (action=='smartdiet_next_question') {
+        return UserQuestion.findById(dataId).populate('question')
+          .then(question => UserQuestion.findOne({survey: question.survey, order:question.order+1}))
+      }
       return Promise.resolve(true)
   })
-
 }
 
 setAllowActionFn(isActionAllowed)
