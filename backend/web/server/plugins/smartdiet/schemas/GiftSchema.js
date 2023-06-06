@@ -10,20 +10,13 @@ const GiftSchema = new Schema({
     type: String,
     required: [true, 'Le nom est obligatoire'],
   },
-  // Spoons required to get this trophy
   description: {
     type: String,
     required: [true, "La description est obligatoire"],
   },
-  // Source of spoons required to get this trophy
   picture: {
     type: String,
     required: [true, "L'illustration est obligatoire"],
-  },
-  trophy: {
-    type: Schema.Types.ObjectId,
-    ref: 'trophy',
-    required: [true, 'Le lien vers trophée est obligatoire'],
   },
 }, schemaOptions)
 
