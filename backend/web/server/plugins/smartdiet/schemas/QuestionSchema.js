@@ -14,6 +14,10 @@ const QuestionSchema = new Schema({
     set: v => v?.trim(),
     required: [true, 'La question est obligatoire'],
   },
+  picture: {
+    type: String,
+    required: [true, "L'illustration est obligatoire"],
+  },
   order: {
     type: Number,
     min: 1,
