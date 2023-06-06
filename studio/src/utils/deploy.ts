@@ -7,7 +7,7 @@ import { normalizePageName, urlClean } from './misc';
 import { validateComponents , validateProject} from './validation'
 
 // If true, build target project when compliaiton fixed
-const TARGET_BUILD = false
+const TARGET_BUILD = true
 
 const copyCode = (pageName: string, contents: Buffer) => {
   
@@ -54,7 +54,6 @@ export const deploy = (state: ProjectState, models: any) => {
         console.error('generate index while deploying', err)
         return Promise.reject(`Page index :${err}`)
       })
-      console.log(code)
       return code
     })
     .then(code => {

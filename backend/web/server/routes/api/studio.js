@@ -224,7 +224,7 @@ router.post('/start', (req, res) => {
 
   const destpath = path.join(PRODUCTION_ROOT, projectName)
   const result = child_process.exec(
-    `serve -p ${PRODUCTION_PORT} build/`,
+    `pm2 restart ecosystem.config.js`,
     {
       cwd: destpath,
     },
