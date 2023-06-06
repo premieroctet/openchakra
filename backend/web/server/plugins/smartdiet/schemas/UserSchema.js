@@ -230,9 +230,10 @@ UserSchema.virtual("_all_menus", {
   foreignField: "dummy" // is equal to foreignField
 });
 
-// First available menu for this week
-UserSchema.virtual('menu').get(function() {
-  return this._all_menus?.find(m => moment().isBetween(m.start_date, m.end_date)) || null
+// First available menu for this week (returned as a list)
+UserSchema.virtual('available_menus').get(function() {
+  const menu=this._all_menus?.find(m => moment().isBetween(m.start_date, m.end_date))
+  return menu ? [menu]:[]
 })
 
 // User's colletive challenges are the company's ones
