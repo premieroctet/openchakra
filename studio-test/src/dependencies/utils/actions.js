@@ -724,8 +724,10 @@ export const ACTIONS = {
     const body = {
       action: 'smartdiet_start_survey',
     }
-    return axios.post(url, body)
-      .then(res => res.data)
+    return axios.post(url, body).then(res => ({
+      model: 'userQuestion',
+      value: res.data,
+    }))
   },
 
   smartdiet_next_question: ({value}) => {
