@@ -1,9 +1,9 @@
+const mongoose = require('mongoose')
 const {
   EVENT_DISCRIMINATOR,
   EVENT_IND_CHALLENGE,
-  HARDNESS
+  HARDNESS,
 } = require('../consts')
-const mongoose = require('mongoose')
 const {schemaOptions} = require('../../../utils/schemas')
 
 const Schema = mongoose.Schema
@@ -34,15 +34,20 @@ const IndividualChallengeSchema = new Schema({
     type: String,
     required: [true, "L'illustration de trophée non obtenu est obligatoire"],
   },
+  spoons_count_for_trophy: {
+    type: Number,
+    default: 5,
+    required: [true, 'Le nombre de cuillères néecssaires pour un trophée est obligatoire'],
+  },
 },
-{...schemaOptions, ...EVENT_DISCRIMINATOR}
+{...schemaOptions, ...EVENT_DISCRIMINATOR},
 )
 
-IndividualChallengeSchema.virtual('type').get(function() {
+IndividualChallengeSchema.virtual('type').get(() => {
   return EVENT_IND_CHALLENGE
 })
 
-IndividualChallengeSchema.virtual('trophy_picture').get(function() {
+IndividualChallengeSchema.virtual('trophy_picture').get(() => {
   return ''
 })
 
