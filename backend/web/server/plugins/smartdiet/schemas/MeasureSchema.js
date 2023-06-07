@@ -36,7 +36,7 @@ const MeasureSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: 'user',
-    required: [true, 'Le patient est obligatoire'],
+    required: [true, "L'utilisateur est obligatoire"],
   },
 }, schemaOptions)
 

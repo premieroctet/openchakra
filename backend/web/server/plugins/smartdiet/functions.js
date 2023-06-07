@@ -39,7 +39,7 @@ const {
   TARGET_TYPE,
   UNIT,
 } = require('./consts')
-const {getUserIndChallengeTrophy}=require('./spoons')
+const {getUserIndChallengeTrophy, getUserKeyTrophy, getUserSpoons}=require('./spoons')
 
 const preprocessGet = ({model, fields, id, user}) => {
   if (model=='loggedUser') {
@@ -74,12 +74,7 @@ USER_MODELS.forEach(m => {
   declareEnumField({model: m, field: 'role', enumValues: ROLES})
   declareEnumField({model: m, field: 'gender', enumValues: GENDER})
   declareEnumField({model: m, field: 'activity', enumValues: ACTIVITY})
-  declareVirtualField({model: m, field: 'spoons_count', instance: 'Number', requires: 'spoons'})
-  declareVirtualField({model: m, field: 'spoons', instance: 'Array', multiple: true,
-    caster: {
-      instance: 'ObjectID',
-      options: {ref: 'userSpoon'}},
-  })
+  declareVirtualField({model: m, field: 'spoons_count', instance: 'Number'})
   declareVirtualField({model: m, field: '_all_contents', instance: 'Array',
     multiple: true,
     caster: {
@@ -246,8 +241,6 @@ declareVirtualField({model: 'category', field: 'targets', instance: 'Array', mul
     options: {ref: 'target'}},
 })
 
-declareEnumField({model: 'userSpoon', field: 'source', enumValues: SPOON_SOURCE})
-
 declareEnumField({model: 'spoonGain', field: 'source', enumValues: SPOON_SOURCE})
 
 declareVirtualField({model: 'offer', field: 'company', instance: 'offer', multiple: false,
@@ -399,7 +392,6 @@ const getUserSurveyAverage = (user, params, data) => {
     .populate({path: 'questions', populate: 'question'})
     .lean({virtuals: true})
     .then(([survey]) => {
-      console.log(`Computing key ${data._id}`)
       const result=lodash(survey.questions)
       // TODO: take into account questions with no answer ??
         // .filter(q => !lodash.isNil(q.answer))
@@ -421,6 +413,9 @@ declareComputedField('content', 'pinned', getDataPinned, setDataPinned)
 declareComputedField('group', 'pinned_messages', getPinnedMessages)
 declareComputedField('key', 'user_survey_average', getUserSurveyAverage)
 declareComputedField('individualChallenge', 'trophy_picture', getUserIndChallengeTrophy)
+declareComputedField('key', 'trophy_picture', getUserKeyTrophy)
+declareComputedField('user', 'spoons_count', getUserSpoons)
+declareComputedField('loggedUser', 'spoons_count', getUserSpoons)
 
 
 const postCreate = ({model, params, data}) => {

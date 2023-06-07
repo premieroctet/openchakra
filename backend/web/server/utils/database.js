@@ -391,9 +391,6 @@ const addComputedFields = async(
     data.hasOwnProperty(f),
   )
   const requiredCompFields = lodash.pick(compFields, presentCompFields)
-  if (model=='message') {
-    console.log(`compfields:${Object.keys(compFields)},presentCompFields:${presentCompFields},requiredCompFields:${Object.keys(requiredCompFields)}`)
-  }
   // Compute direct attributes
   const x = await Promise.allSettled(
     Object.keys(requiredCompFields).map(f =>
