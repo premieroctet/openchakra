@@ -36,7 +36,7 @@ export function UserWrapper({ children } : {children: React.ReactElement}) {
   }, [getCurrentUser])
 
   return (
-    <UserContext.Provider value={user}>{children}</UserContext.Provider>
+    <UserContext.Provider value={{user}}>{children}</UserContext.Provider>
   )
 }
 
