@@ -10,6 +10,8 @@ const {
   DEPARTEMENTS,
   EXPERIENCE,
   MISSION_FREQUENCY,
+  MISSION_STATUS_ASKING,
+  MISSION_STATUS_TI_REFUSED,
   PAYMENT_STATUS,
   QUOTATION_STATUS,
   ROLES,
@@ -19,22 +21,23 @@ const {
   ROLE_TI,
   UNACTIVE_REASON,
 } = require('./consts')
-const Contact = require('../../models/Contact')
-
-const { sendAskContact, sendTipiSearch } = require('./mailing')
-const AdminDashboard = require('../../models/AdminDashboard')
 const {
   declareComputedField,
   declareEnumField,
   declareVirtualField,
   getModel,
   idEqual,
+  loadFromDb,
   setFilterDataUser,
   setPostCreateData,
   setPostPutData,
   setPreCreateData,
   setPreprocessGet,
 } = require('../../utils/database')
+const Contact = require('../../models/Contact')
+
+const { sendAskContact, sendTipiSearch } = require('./mailing')
+const AdminDashboard = require('../../models/AdminDashboard')
 const mongoose = require('mongoose')
 const cron=require('node-cron')
 const { paymentPlugin } = require('../../../config/config')
@@ -304,7 +307,7 @@ declareVirtualField({model: 'jobUser', field: 'pinned', instance: 'Boolean', req
 declareEnumField({model: 'experience', field: 'contract_type', enumValues: CONTRACT_TYPE})
 
 declareVirtualField({model: 'mission', field: 'status', instance: 'String', enumValues: QUOTATION_STATUS,
-    requires: 'customer_accept_bill_date,customer_refuse_bill_date,bill_sent_date,ti_finished_date,customer_refuse_quotation_date,customer_accept_quotation_date,ti_refuse_date,quotation_sent_date,job,customer_refuse_bill_date,customer_refuse_quotation_date,customer_cancel_date'})
+    requires: 'job,customer_accept_bill_date,customer_refuse_bill_date,bill_sent_date,ti_finished_date,customer_refuse_quotation_date,customer_accept_quotation_date,ti_refuse_date,quotation_sent_date,job,customer_refuse_bill_date,customer_refuse_quotation_date,customer_cancel_date'})
 declareVirtualField({model: 'mission', field: 'quotations', instance: 'Array', requires: '', multiple: true,
   caster: {
     instance: 'ObjectID',
@@ -403,17 +406,29 @@ declareComputedField('jobUser', 'pinned', getDataPinned, setDataPinned)
 
 
 declareComputedField('adminDashboard', 'contact_sent', () => Contact.countDocuments())
-declareComputedField('adminDashboard', 'refused_bills', () => Promise.resolve(0))
-declareComputedField('adminDashboard', 'accepted_bills', () => Promise.resolve(0))
+declareComputedField('adminDashboard', 'refused_bills', () =>
+  Mission.countDocuments({customer_refuse_bill_date: {$ne: null}})
+)
+declareComputedField('adminDashboard', 'accepted_bills', () =>
+  Mission.countDocuments({customer_accept_bill_date: {$ne: null}})
+)
 declareComputedField('adminDashboard', 'visible_ti', () => User.countDocuments({role: ROLE_TI, hidden:false}))
 declareComputedField('adminDashboard', 'hidden_ti', () => User.countDocuments({role: ROLE_TI, hidden:true}))
 declareComputedField('adminDashboard', 'qualified_ti', () => User.countDocuments({role: ROLE_TI, qualified:true}))
 declareComputedField('adminDashboard', 'visible_tipi', () => User.countDocuments({role: ROLE_TI, coaching: COACH_ALLE, hidden:false}))
 declareComputedField('adminDashboard', 'hidden_tipi', () => User.countDocuments({role: ROLE_TI, coaching: COACH_ALLE, hidden:true}))
 declareComputedField('adminDashboard', 'qualified_tipi', () => User.countDocuments({role: ROLE_TI, coaching: COACH_ALLE, qualified:true}))
-declareComputedField('adminDashboard', 'missions_requests', () => Promise.resolve(0))
-declareComputedField('adminDashboard', 'refused_missions', () => Promise.resolve(0))
-declareComputedField('adminDashboard', 'sent_quotations', () => Promise.resolve(0))
+declareComputedField('adminDashboard', 'missions_requests', () =>
+  loadFromDb({model: 'mission', fields:['status']})
+    .then(missions => missions.filter(m => m.status==MISSION_STATUS_ASKING).length)
+)
+declareComputedField('adminDashboard', 'refused_missions', () =>
+loadFromDb({model: 'mission', fields:['status']})
+  .then(missions => missions.filter(m => m.status==MISSION_STATUS_TI_REFUSED).length)
+)
+declareComputedField('adminDashboard', 'sent_quotations', () =>
+  Mission.countDocuments({quotation_sent_date: {$ne: null}})
+)
 declareComputedField('adminDashboard', 'quotation_ca_total', () => Promise.resolve(0))
 declareComputedField('adminDashboard', 'commission_ca_total', () => Promise.resolve(0))
 declareComputedField('adminDashboard', 'tipi_commission_ca_total', () => Promise.resolve(0))
