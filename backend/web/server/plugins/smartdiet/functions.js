@@ -46,6 +46,10 @@ const preprocessGet = ({model, fields, id, user}) => {
     model='user'
     id = user?._id || 'INVALIDID'
   }
+  if (model=='content' && !!id) {
+    return Content.findByIdAndUpdate(id, {$addToSet: {viewed_by: user._id}})
+      .then(() => ({model, fields, id}))
+  }
 
   return Promise.resolve({model, fields, id})
 
