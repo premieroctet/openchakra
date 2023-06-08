@@ -334,19 +334,22 @@ declareVirtualField({model: 'quotationDetail', field: 'vat_total', instance: 'Nu
 declareEnumField({model: 'contact', field: 'status', enumValues: CONTACT_STATUS})
 declareEnumField({model: 'contact', field: 'region', enumValues: DEPARTEMENTS})
 
-declareVirtualField({model: 'adminDashboard', field: '_all_users', instance: 'Array', multiple: true,
-  caster: {
-    instance: 'ObjectID',
-    options: {ref: 'user'}}
-})
-declareVirtualField({model: 'adminDashboard', field: '_all_missions', instance: 'Array', multiple: true,
-  caster: {
-    instance: 'ObjectID',
-    options: {ref: 'mission'}}
-})
-declareVirtualField({model: 'adminDashboard', field: 'ti_registered_today', instance: 'Number', requires:'_all_users'})
-declareVirtualField({model: 'adminDashboard', field: 'customers_registered_today', instance: 'Number', requires:'_all_users'})
-declareVirtualField({model: 'adminDashboard', field: 'pending_missions', instance: 'Number', requires:'_all_missions.status'})
+declareVirtualField({model: 'adminDashboard', field: 'contact_sent', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field: 'refused_bills', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field: 'accepted_bills', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field: 'visible_ti', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field: 'hidden_ti', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field: 'qualified_ti', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field: 'visible_tipi', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field: 'hidden_tipi', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field: 'qualified_tipi', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field: 'missions_requests', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field: 'refused_missions', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field: 'sent_quotations', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field: 'quotation_ca_total', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field: 'commission_ca_total', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field: 'tipi_commission_ca_total', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field: 'customer_commission_ca_total', instance: 'Number'})
 
 
 const filterDataUser = ({model, data, user}) => {

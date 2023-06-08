@@ -13,51 +13,24 @@ const { schemaOptions } = require('../../../utils/schemas')
 const Schema = mongoose.Schema;
 
 const AdminDashboardSchema = new Schema({
-  dummy: {
-    type: Number,
-    default: 0,
-    required: true,
-  }
   }, schemaOptions
 );
 
-// All users
-AdminDashboardSchema.virtual('_all_users', {
-  ref: "user", // The Model to use
-  localField: "dummy", // Find in Model, where localField
-  foreignField: "dummy" // is equal to foreignField
-})
-
-// All users
-AdminDashboardSchema.virtual('_all_missions', {
-  ref: "mission", // The Model to use
-  localField: "dummy", // Find in Model, where localField
-  foreignField: "dummy" // is equal to foreignField
-})
-
-AdminDashboardSchema.virtual('ti_registered_today').get(function() {
-  console.time('*************** TI registered')
-  const today=moment().format('LL')
-  const res=this._all_users?.filter(u => u.role==ROLE_TI && u[CREATED_AT_ATTRIBUTE] && moment(u[CREATED_AT_ATTRIBUTE]).format('LL')==moment().format('LL')).length || 0
-  console.timeEnd('*************** TI registered')
-  return res
-})
-
-AdminDashboardSchema.virtual('customers_registered_today').get(function() {
-  console.time('*************** Customers registered')
-  const today=moment().format('LL')
-  const res=this._all_users?.filter(u => u.role==ROLE_COMPANY_BUYER && u[CREATED_AT_ATTRIBUTE] && moment(u[CREATED_AT_ATTRIBUTE]).format('LL')==moment().format('LL')).length || 0
-  console.timeEnd('*************** Customers registered')
-  return res
-})
-
-// All missions
-AdminDashboardSchema.virtual('pending_missions').get(function() {
-  console.time('*************** Pending missions')
-  const status=[MISSION_STATUS_ASKING, MISSION_STATUS_ASKING_ALLE]
-  const res=this._all_missions?.filter(m => status.includes(m.status)).length || 0
-  console.timeEnd('*************** Pending missions')
-  return res
-})
+AdminDashboardSchema.virtual('contact_sent', {localFields:'tagada',foreigneField:'tagada'}).get(function() { return 0 })
+AdminDashboardSchema.virtual('refused_bills', {localFields:'tagada',foreigneField:'tagada'}).get(function() { return 0 })
+AdminDashboardSchema.virtual('accepted_bills', {localFields:'tagada',foreigneField:'tagada'}).get(function() { return 0 })
+AdminDashboardSchema.virtual('visible_ti', {localFields:'tagada',foreigneField:'tagada'}).get(function() { return 0 })
+AdminDashboardSchema.virtual('hidden_ti', {localFields:'tagada',foreigneField:'tagada'}).get(function() { return 0 })
+AdminDashboardSchema.virtual('qualified_ti', {localFields:'tagada',foreigneField:'tagada'}).get(function() { return 0 })
+AdminDashboardSchema.virtual('visible_tipi', {localFields:'tagada',foreigneField:'tagada'}).get(function() { return 0 })
+AdminDashboardSchema.virtual('hidden_tipi', {localFields:'tagada',foreigneField:'tagada'}).get(function() { return 0 })
+AdminDashboardSchema.virtual('qualified_tipi', {localFields:'tagada',foreigneField:'tagada'}).get(function() { return 0 })
+AdminDashboardSchema.virtual('missions_requests', {localFields:'tagada',foreigneField:'tagada'}).get(function() { return 0 })
+AdminDashboardSchema.virtual('refused_missions', {localFields:'tagada',foreigneField:'tagada'}).get(function() { return 0 })
+AdminDashboardSchema.virtual('sent_quotations', {localFields:'tagada',foreigneField:'tagada'}).get(function() { return 0 })
+AdminDashboardSchema.virtual('quotation_ca_total', {localFields:'tagada',foreigneField:'tagada'}).get(function() { return 0 })
+AdminDashboardSchema.virtual('commission_ca_total', {localFields:'tagada',foreigneField:'tagada'}).get(function() { return 0 })
+AdminDashboardSchema.virtual('tipi_commission_ca_total', {localFields:'tagada',foreigneField:'tagada'}).get(function() { return 0 })
+AdminDashboardSchema.virtual('customer_commission_ca_total', {localFields:'tagada',foreigneField:'tagada'}).get(function() { return 0 })
 
 module.exports = AdminDashboardSchema
