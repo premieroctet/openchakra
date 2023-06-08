@@ -17,9 +17,9 @@ const COACH_OTHER='COACH_OTHER'
 const COACH_NONE='COACH_NONE'
 
 const COACHING={
-  COACH_ALLE: 'Par All-Inclusive',
-  COACH_OTHER: 'Par un autre organisme',
-  COACH_NONE: 'Pas accompagné',
+  COACH_ALLE: 'Accompagné.e par All-Inclusive',
+  COACH_OTHER: 'Accompagné.e par un autre organisme',
+  COACH_NONE: 'Pas accompagné.e',
 }
 
 const COMPANY_STATUS_EI="COMPANY_STATUS_EI"
