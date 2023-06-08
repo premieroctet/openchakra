@@ -33,8 +33,10 @@ const DataSourcePanel: React.FC = () => {
   const subAttributeDisplay = usePropsSelector('subAttributeDisplay')
   const limit = usePropsSelector('limit')
   const contextFilter = usePropsSelector('contextFilter')
-  const filterValue = usePropsSelector('filterValue')
   const filterAttribute = usePropsSelector('filterAttribute')
+  const filterValue = usePropsSelector('filterValue')
+  const filterAttribute2 = usePropsSelector('filterAttribute2')
+  const filterValue2 = usePropsSelector('filterValue2')
   const contextAttribute = usePropsSelector('contextAttribute')
   const shuffle = usePropsSelector('shuffle')
   const radioGroup = usePropsSelector('radioGroup')
@@ -303,6 +305,40 @@ const DataSourcePanel: React.FC = () => {
                 name="filterValue"
                 size="xs"
                 value={filterValue || ''}
+              >
+                <option value={undefined}></option>
+                {Object.values(components)
+                  .filter(c => !CONTAINER_TYPE.includes(c.type))
+                  .map((component, i) => (
+                    <option key={`comp${i}`} value={component.id}>
+                      {`${component.id} (${component.type})`}
+                    </option>
+                  ))}
+              </Select>
+            </FormControl>
+            <FormControl htmlFor="filterAttribute2" label="Filter attribute 2">
+              <Select
+                id="filterAttribute2"
+                onChange={setValueFromEvent}
+                name="filterAttribute2"
+                size="xs"
+                value={filterAttribute2 || ''}
+              >
+                <option value={undefined}></option>
+                {Object.keys(filterAttributes).map((attribute, i) => (
+                  <option key={`attr${i}`} value={attribute}>
+                    {attribute}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl htmlFor="filterValue2" label="Filter value 2">
+              <Select
+                id="filterValue2"
+                onChange={setValueFromEvent}
+                name="filterValue2"
+                size="xs"
+                value={filterValue2 || ''}
               >
                 <option value={undefined}></option>
                 {Object.values(components)
