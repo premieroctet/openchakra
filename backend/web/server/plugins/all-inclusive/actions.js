@@ -1,3 +1,6 @@
+const Contact = require('../../models/Contact')
+const axios = require('axios')
+
 const {
   sendAccountCreatedToAdmin,
   sendAccountCreatedToCustomer,
@@ -270,11 +273,17 @@ const forgotPasswordAction=({context, parent, email}) => {
 addAction('forgotPassword', forgotPasswordAction)
 
 const askContactAction=(props) => {
-  return User.find({role: ROLE_ALLE_ADMIN})
-    .then(users => Promise.allSettled(users.map(u => sendAskContact({
-      user:u,
-      fields:{...props, urgent: props.urgent ? 'Oui':'Non', status: CONTACT_STATUS[props.status]}
-    }))))
+  return new Contact(props).validate()
+    .then(() => props.document ? axios.get(props.document) : Promise.resolve({data:null}))
+    .then(({data}) => {
+      const att=data ? {url: props.document} : null
+      return User.find({role: ROLE_ALLE_ADMIN})
+        .then(users => Promise.allSettled(users.map(u => sendAskContact({
+          user:u,
+          fields:{...props, urgent: props.urgent ? 'Oui':'Non', status: CONTACT_STATUS[props.status]},
+          attachment: att,
+        }))))
+    })
 }
 
 addAction('alle_ask_contact', askContactAction)

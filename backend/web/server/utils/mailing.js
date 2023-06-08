@@ -20,7 +20,7 @@ const sendNotification = ({notification, destinee, ccs, params, attachment}) => 
   let enable_sms = isProduction() || isValidation()
 
   const prefix=(!enable_sms && !enable_mails) ? '***** DISABLED:':''
-  console.log(`${prefix}send notification #${notification} to ${destinee.email} with params ${JSON.stringify(params)}`)
+  console.log(`${prefix}send notification #${notification} to ${destinee.email} (${JSON.stringify(params)}) attachment:${!!attachment}`)
 
   if (!enable_sms && !enable_mails) {
     return Promise.resolve(true)

@@ -1,5 +1,5 @@
+const { sendAskContact, sendTipiSearch } = require('./mailing')
 const AdminDashboard = require('../../models/AdminDashboard')
-const { sendTipiSearch } = require('./mailing')
 const {
   declareComputedField,
   declareEnumField,
@@ -53,6 +53,17 @@ const postCreate = ({model, params, data}) => {
       .then(([mission, admins]) => {
         return Promise.allSettled(admins.map(admin => sendTipiSearch({admin, mission:mission.toObject()})))
     })
+  }
+  if (model=='contact') {
+    const contact=data
+    const attachment=contact.document ? {url: contact.document} : null
+    // TODO check sendMail return
+    User.find({role: ROLE_ALLE_ADMIN})
+      .then(users => Promise.allSettled(users.map(u => sendAskContact({
+        user:{email: u.email},
+        fields:{...contact.toObject({virtuals: true}), urgent: contact.urgent ? 'Oui':'Non', status: CONTACT_STATUS[contact.status]},
+        attachment,
+      }))))
   }
 
   return Promise.resolve(data)
@@ -321,6 +332,7 @@ declareVirtualField({model: 'quotationDetail', field: 'total', instance: 'Number
 declareVirtualField({model: 'quotationDetail', field: 'vat_total', instance: 'Number', requires: 'quantity,ht_price,vat'})
 
 declareEnumField({model: 'contact', field: 'status', enumValues: CONTACT_STATUS})
+declareEnumField({model: 'contact', field: 'region', enumValues: DEPARTEMENTS})
 
 declareVirtualField({model: 'adminDashboard', field: '_all_users', instance: 'Array', multiple: true,
   caster: {

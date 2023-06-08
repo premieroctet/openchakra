@@ -395,6 +395,22 @@ router.get('/statTest', (req, res) => {
   return res.json(data)
 })
 
+router.post('/contact', (req, res) => {
+  const model = 'contact'
+  let params=req.body
+  const context= req.query.context
+
+  return callPreCreateData({model, params})
+    .then(({model, params}) => {
+      return mongoose.connection.models[model]
+        .create([params], {runValidators: true})
+        .then(([data]) => {
+          return callPostCreateData({model, params, data})
+        })
+        .then(data => res.json(data))
+    })
+})
+
 router.post('/:model', passport.authenticate('cookie', {session: false}), (req, res) => {
   const model = req.params.model
   let params=req.body
