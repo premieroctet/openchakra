@@ -352,6 +352,8 @@ declareVirtualField({model: 'adminDashboard', field: 'quotation_ca_total', insta
 declareVirtualField({model: 'adminDashboard', field: 'commission_ca_total', instance: 'Number'})
 declareVirtualField({model: 'adminDashboard', field: 'tipi_commission_ca_total', instance: 'Number'})
 declareVirtualField({model: 'adminDashboard', field: 'customer_commission_ca_total', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field: 'ti_registered_today', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field: 'customers_registered_today', instance: 'Number'})
 
 
 const filterDataUser = ({model, data, user}) => {
@@ -416,9 +418,12 @@ declareComputedField('adminDashboard', 'quotation_ca_total', () => Promise.resol
 declareComputedField('adminDashboard', 'commission_ca_total', () => Promise.resolve(0))
 declareComputedField('adminDashboard', 'tipi_commission_ca_total', () => Promise.resolve(0))
 declareComputedField('adminDashboard', 'customer_commission_ca_total', () => Promise.resolve(0))
-
-
-
+declareComputedField('adminDashboard', 'ti_registered_today', () =>
+  User.find({role:ROLE_TI}, {[CREATED_AT_ATTRIBUTE]:1})
+    .then(users => users.filter(u => moment(u[CREATED_AT_ATTRIBUTE]).isSame(moment(), 'day')).length))
+declareComputedField('adminDashboard', 'customers_registered_today', () =>
+  User.find({role:ROLE_COMPANY_BUYER}, {[CREATED_AT_ATTRIBUTE]:1})
+  .then(users => users.filter(u => moment(u[CREATED_AT_ATTRIBUTE]).isSame(moment(), 'day')).length))
 
 
 /** Upsert ONLY adminDashboard */

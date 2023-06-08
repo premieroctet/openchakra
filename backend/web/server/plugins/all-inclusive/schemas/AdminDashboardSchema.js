@@ -32,5 +32,7 @@ AdminDashboardSchema.virtual('quotation_ca_total', {localFields:'tagada',foreign
 AdminDashboardSchema.virtual('commission_ca_total', {localFields:'tagada',foreigneField:'tagada'}).get(function() { return 0 })
 AdminDashboardSchema.virtual('tipi_commission_ca_total', {localFields:'tagada',foreigneField:'tagada'}).get(function() { return 0 })
 AdminDashboardSchema.virtual('customer_commission_ca_total', {localFields:'tagada',foreigneField:'tagada'}).get(function() { return 0 })
+AdminDashboardSchema.virtual('ti_registered_today', {localFields:'tagada',foreigneField:'tagada'}).get(function() { return 0 })
+AdminDashboardSchema.virtual('customers_registered_today', {localFields:'tagada',foreigneField:'tagada'}).get(function() { return 0 })
 
 module.exports = AdminDashboardSchema
