@@ -369,5 +369,14 @@ UserSchema.virtual('pinned_jobs', {localField: 'tagada', foreignField: 'tagada'}
   return this?._all_jobs?.filter(j => j.pins?.some(p => idEqual(p._id, this._id)))
 })
 
+UserSchema.virtual("search_text").get(function() {
+  const attributes='firstname,lastname,qualified_str,visible_str,company_name'.split(',')
+  let values=attributes.map(att => this[att])
+  values.push(COACHING[this.coaching])
+  values.push(DEPARTEMENTS[this.zip_code])
+  values.push(this.admin_validated && 'administratif')
+  values=values.filter(v=>!!v)
+  return values.join(' ')
+});
 
 module.exports = UserSchema;

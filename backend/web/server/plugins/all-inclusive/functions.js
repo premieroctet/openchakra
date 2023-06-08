@@ -235,6 +235,8 @@ USER_MODELS.forEach(m => {
       instance: 'ObjectID',
       options: {ref: 'recommandation'}}
   })
+  declareVirtualField({model: m, field: 'search_text', type: 'String',
+    requires:'firstname,lastname,qualified_str,visible_str,company_name,coaching,zip_code,admin_validated'})
 })
 
 
