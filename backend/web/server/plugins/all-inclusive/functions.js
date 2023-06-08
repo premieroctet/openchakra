@@ -346,7 +346,7 @@ const filterDataUser = ({model, data, user}) => {
     // Hide jobUser.user.hidden
     return Promise.all(data.map(job => JobUser.findById(job._id).populate('user')
         .then(dbJob => {
-          if (dbJob.user.hidden==false || idEqual(user?._id, dbJob.user._id)) {
+          if (dbJob?.user?.hidden==false || idEqual(user?._id, dbJob?.user?._id)) {
             return job
           }
           return null
