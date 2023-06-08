@@ -104,11 +104,13 @@ const UserSchema = new Schema({
   hidden: {
     type: Boolean,
     default: function() { return this.role==ROLE_TI},
+    required: true,
   },
   // Agreed by AllE
   qualified: {
     type: Boolean,
     default: false,
+    required: true,
   },
   nationality: {
     type: String,

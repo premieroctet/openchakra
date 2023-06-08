@@ -1,3 +1,26 @@
+const {
+  AVAILABILITY,
+  COACHING,
+  COACH_ALLE,
+  COMPANY_ACTIVITY,
+  COMPANY_SIZE,
+  COMPANY_STATUS,
+  CONTACT_STATUS,
+  CONTRACT_TYPE,
+  DEPARTEMENTS,
+  EXPERIENCE,
+  MISSION_FREQUENCY,
+  PAYMENT_STATUS,
+  QUOTATION_STATUS,
+  ROLES,
+  ROLE_ALLE_ADMIN,
+  ROLE_COMPANY_ADMIN,
+  ROLE_COMPANY_BUYER,
+  ROLE_TI,
+  UNACTIVE_REASON,
+} = require('./consts')
+const Contact = require('../../models/Contact')
+
 const { sendAskContact, sendTipiSearch } = require('./mailing')
 const AdminDashboard = require('../../models/AdminDashboard')
 const {
@@ -15,27 +38,6 @@ const {
 const mongoose = require('mongoose')
 const cron=require('node-cron')
 const { paymentPlugin } = require('../../../config/config')
-
-const {
-  AVAILABILITY,
-  COACHING,
-  COMPANY_ACTIVITY,
-  COMPANY_SIZE,
-  COMPANY_STATUS,
-  CONTACT_STATUS,
-  CONTRACT_TYPE,
-  DEPARTEMENTS,
-  EXPERIENCE,
-  MISSION_FREQUENCY,
-  QUOTATION_STATUS,
-  ROLES,
-  ROLE_COMPANY_ADMIN,
-  ROLE_COMPANY_BUYER,
-  ROLE_TI,
-  ROLE_ALLE_ADMIN,
-  UNACTIVE_REASON,
-  PAYMENT_STATUS,
-} = require('./consts')
 const { BadRequestError } = require('../../utils/errors')
 const moment = require('moment')
 const Mission = require('../../models/Mission')
@@ -396,6 +398,28 @@ const setDataPinned = ({id, attribute, value, user}) => {
 }
 
 declareComputedField('jobUser', 'pinned', getDataPinned, setDataPinned)
+
+
+declareComputedField('adminDashboard', 'contact_sent', () => Contact.countDocuments())
+declareComputedField('adminDashboard', 'refused_bills', () => Promise.resolve(0))
+declareComputedField('adminDashboard', 'accepted_bills', () => Promise.resolve(0))
+declareComputedField('adminDashboard', 'visible_ti', () => User.countDocuments({role: ROLE_TI, hidden:false}))
+declareComputedField('adminDashboard', 'hidden_ti', () => User.countDocuments({role: ROLE_TI, hidden:true}))
+declareComputedField('adminDashboard', 'qualified_ti', () => User.countDocuments({role: ROLE_TI, qualified:true}))
+declareComputedField('adminDashboard', 'visible_tipi', () => User.countDocuments({role: ROLE_TI, coaching: COACH_ALLE, hidden:false}))
+declareComputedField('adminDashboard', 'hidden_tipi', () => User.countDocuments({role: ROLE_TI, coaching: COACH_ALLE, hidden:true}))
+declareComputedField('adminDashboard', 'qualified_tipi', () => User.countDocuments({role: ROLE_TI, coaching: COACH_ALLE, qualified:true}))
+declareComputedField('adminDashboard', 'missions_requests', () => Promise.resolve(0))
+declareComputedField('adminDashboard', 'refused_missions', () => Promise.resolve(0))
+declareComputedField('adminDashboard', 'sent_quotations', () => Promise.resolve(0))
+declareComputedField('adminDashboard', 'quotation_ca_total', () => Promise.resolve(0))
+declareComputedField('adminDashboard', 'commission_ca_total', () => Promise.resolve(0))
+declareComputedField('adminDashboard', 'tipi_commission_ca_total', () => Promise.resolve(0))
+declareComputedField('adminDashboard', 'customer_commission_ca_total', () => Promise.resolve(0))
+
+
+
+
 
 /** Upsert ONLY adminDashboard */
 AdminDashboard.exists({})
