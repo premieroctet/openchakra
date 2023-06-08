@@ -206,6 +206,9 @@ const UserSchema = new Schema({
   payment_account_id: {
     type: String,
   },
+  admin_validated: {
+    type: Boolean,
+  },
   dummy: {
     type: Number,
     default: 0,
