@@ -7,16 +7,23 @@ import React, {
 } from 'react'
 import axios from 'axios'
 
-export const UserContext = createContext()
+export type UserCtx = {
+  [key:string]: any
+} | false | null
 
-export function UserWrapper({ children }) {
-  const [user, setUser] = useState(false)
+const USER_INIT_STATUS = false
+
+export const UserContext = createContext<UserCtx>(USER_INIT_STATUS)
+
+export function UserWrapper({ children } : {children: React.ReactElement}) {
+  const [user, setUser] = useState<UserCtx>(USER_INIT_STATUS)
 
   const getCurrentUser = useCallback(() => {
     axios
       .get(`/myAlfred/api/studio/current-user`)
       .then(res => {
-        setUser(res.data)
+        const userData = res?.data
+        setUser({...userData})
       })
       .catch(error => {
         setUser(null)
@@ -29,7 +36,7 @@ export function UserWrapper({ children }) {
   }, [getCurrentUser])
 
   return (
-    <UserContext.Provider value={{ user }}>{children}</UserContext.Provider>
+    <UserContext.Provider value={user}>{children}</UserContext.Provider>
   )
 }
 
