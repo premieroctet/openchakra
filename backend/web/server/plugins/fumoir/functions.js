@@ -1,4 +1,17 @@
-const { CREATED_AT_ATTRIBUTE, generate_id } = require('../../../utils/consts')
+const {
+  CASH_CARD,
+  CASH_MODE,
+  EVENT_STATUS,
+  EVENT_VAT_RATE,
+  FUMOIR_ADMIN,
+  FUMOIR_CHEF,
+  FUMOIR_MANAGER,
+  FUMOIR_MEMBER,
+  PAYMENT_STATUS,
+  PAYMENT_SUCCESS,
+  PLACES,
+  ROLES,
+} = require('./consts')
 const {
   sendBookingRegister2Guest,
   sendEventRegister2Admin,
@@ -9,8 +22,10 @@ const {
   sendForgotPassword,
   sendNewBookingToManager,
   sendNewBookingToMember,
+  sendNewEvent,
   sendWelcomeRegister,
 } = require('./mailing')
+const { CREATED_AT_ATTRIBUTE, generate_id } = require('../../../utils/consts')
 const {
   declareComputedField,
   declareEnumField,
@@ -22,19 +37,6 @@ const {
   setPreCreateData,
   setPreprocessGet,
 } = require('../../utils/database')
-const {
-  CASH_MODE,
-  CASH_CARD,
-  EVENT_STATUS,
-  EVENT_VAT_RATE,
-  FUMOIR_ADMIN,
-  FUMOIR_MANAGER,
-  FUMOIR_MEMBER,
-  PAYMENT_STATUS,
-  PAYMENT_SUCCESS,
-  PLACES,
-  ROLES,
-} = require('./consts')
 const {
   generatePassword,
   validatePassword
@@ -351,9 +353,14 @@ const postCreate = ({model, params, data}) => {
     return Promise.allSettled([
       sendNewBookingToMember({booking:data}),
       // Send to admins also
-      User.find({role: {$in: ['FUMOIR_MANAGER', 'FUMOIR_ADMIN']}})
+      User.find({role: {$in: [FUMOIR_MANAGER, FUMOIR_ADMIN, FUMOIR_CHEF]}})
         .then(managers => Promise.allSettled(managers.map(manager => sendNewBookingToManager({booking:data, manager}))))
       ])
+      .then(() => data)
+  }
+  if (model=='event') {
+    return User.find()
+      .then(users => Promise.allSettled(users.map(user => sendNewEvent({event: data, member: user}))))
       .then(() => data)
   }
 
@@ -623,7 +630,6 @@ const getInvitationPaidStr = (user, params, data) => {
     {path: 'event', populate:'payments'}
   ])
     .then(invitation => {
-      console.log(`invitation:${invitation}`)
       const member_id=invitation.member._id
       const paid=lodash(invitation.event.payments)
         .filter(p => idEqual(p.event_member._id, member_id))

@@ -1,4 +1,4 @@
-const { sendNotification, setSmsContents } = require('../../utils/mailing')
+const { sendNotification, setSmsContents, setNotificationsContents } = require('../../utils/mailing')
 const {datetime_str} = require('../../../utils/dateutils')
 
 const SIB_IDS={
@@ -26,6 +26,14 @@ const SMS_CONTENTS={
 }
 
 setSmsContents(SMS_CONTENTS)
+
+const NOTIFICATIONS_CONTENTS={
+  [SIB_IDS.NEW_EVENT_AVAILABLE]: {title: 'Fumoir George', message: 'Un nouvel événement est disponible sur votre application Fumoir George'},
+  [SIB_IDS.NEW_BOOKING_2_MANAGER]: {title: 'Fumoir George', message: 'Une nouvelle réservation a été effectuée pour le {{params.booking_date}}'},
+  [SIB_IDS.NEW_MESSAGE]: {title: 'Fumoir George', message: 'Vous avez reçu un nouveau message'},
+}
+
+setNotificationsContents(NOTIFICATIONS_CONTENTS)
 
 // #1
 const sendNewBookingToMember = ({booking}) => {

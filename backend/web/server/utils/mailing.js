@@ -1,3 +1,4 @@
+const { sendUserNotification } = require('./firebase')
 const {
   getDataModel,
   getHostUrl,
@@ -14,12 +15,22 @@ const setSmsContents = data => {
   SMS_CONTENTS = data
 }
 
+let NOTIFICATIONS_CONTENTS = {}
+
+const setNotificationsContents = data => {
+  NOTIFICATIONS_CONTENTS = data
+}
+
 const sendNotification = ({notification, destinee, ccs, params, attachment}) => {
 
-  let enable_mails = isProduction() || isValidation()
-  let enable_sms = isProduction() || isValidation()
+  /** TEST purpose */
+  const isWappizyMember = /wappizy/.test(destinee.email)
 
-  const prefix=(!enable_sms && !enable_mails) ? '***** DISABLED:':''
+  let enable_mails = isProduction() || isValidation() || isWappizyMember
+  let enable_sms = isProduction() || isValidation() || isWappizyMember
+  let enable_notifications = isProduction() || isValidation() || isWappizyMember
+
+  const prefix=(!enable_sms && !enable_mails && !enable_notifications) ? '***** DISABLED:':''
   console.log(`${prefix}send notification #${notification} to ${destinee.email} with params ${JSON.stringify(params)}`)
 
   if (!enable_sms && !enable_mails) {
@@ -43,11 +54,26 @@ const sendNotification = ({notification, destinee, ccs, params, attachment}) => 
       resultSms = SIB.sendSms(destinee.phone, smsContents)
     }
   }
+
+  // Send Notification
+  if (enable_notifications && destinee._id && NOTIFICATIONS_CONTENTS[notification.toString()]) {
+    const notif=NOTIFICATIONS_CONTENTS[notification.toString()]
+    const notifMessage = fillSms(notif.message, params)
+    if (!notifMessage) {
+      console.error(`Error creating notification ${notification} to ${destinee.phone} with params ${JSON.stringify(params)}`)
+      result = false
+    }
+    else {
+      resultSms = sendUserNotification({user: destinee, title:notif.title, message: notifMessage})
+    }
+  }
+
   return Promise.resolve(resultMail)
 }
 
 
 module.exports = {
   sendNotification,
-  setSmsContents
+  setSmsContents,
+  setNotificationsContents,
 }
