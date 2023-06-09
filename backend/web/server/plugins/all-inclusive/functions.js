@@ -466,6 +466,11 @@ declareComputedField('adminDashboard', 'quotation_ca_total',
   }
 )
 
+//*****************************************************************
+// TODO: Compute actual AA & MER commissions
+//*****************************************************************
+
+// TODO: WTF is that value ??
 declareComputedField('adminDashboard', 'commission_ca_total',
 () => {
   return loadFromDb({model: 'mission', fields:['status','quotations.total']})
@@ -477,9 +482,6 @@ declareComputedField('adminDashboard', 'commission_ca_total',
 }
 )
 
-//*****************************************************************
-// TODO: Compute actual AA & MER commissions
-//*****************************************************************
 declareComputedField('adminDashboard', 'tipi_commission_ca_total',
 () => {
   return loadFromDb({model: 'mission', fields:['name','status','quotations.total','job.user.coaching','job.user.coaching']})
