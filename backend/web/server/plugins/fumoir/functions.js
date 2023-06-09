@@ -1,4 +1,19 @@
 const {
+  sendBookingRegister2Guest,
+  sendEventRegister2Admin,
+  sendEventRegister2Guest,
+  sendEventUnregister2Admin,
+  sendEventUnregister2Guest,
+  sendEventUnregister2Member,
+  sendForgotPassword,
+  sendNewBookingToManager,
+  sendNewBookingToMember,
+  sendNewEvent,
+  sendNewPost,
+  sendWelcomeRegister,
+} = require('./mailing')
+const Post = require('../../models/Post')
+const {
   CASH_CARD,
   CASH_MODE,
   EVENT_STATUS,
@@ -12,19 +27,6 @@ const {
   PLACES,
   ROLES,
 } = require('./consts')
-const {
-  sendBookingRegister2Guest,
-  sendEventRegister2Admin,
-  sendEventRegister2Guest,
-  sendEventUnregister2Admin,
-  sendEventUnregister2Guest,
-  sendEventUnregister2Member,
-  sendForgotPassword,
-  sendNewBookingToManager,
-  sendNewBookingToMember,
-  sendNewEvent,
-  sendWelcomeRegister,
-} = require('./mailing')
 const { CREATED_AT_ATTRIBUTE, generate_id } = require('../../../utils/consts')
 const {
   declareComputedField,
@@ -324,7 +326,7 @@ const unregisterFromEvent = ({event, user}) => {
     })
 }
 
-const preCreate = ({model, params}) => {
+const preCreate = ({model, params, user}) => {
   if (model=='user') {
     return User.findOne({email: params.email})
       .then(user => {
@@ -339,6 +341,9 @@ const preCreate = ({model, params}) => {
         params.nonHashedPassword=password
         return Promise.resolve({model, params})
       })
+  }
+  if (model=='post') {
+    params={...params, author: user}
   }
   return Promise.resolve({model, params})
 }
@@ -361,6 +366,12 @@ const postCreate = ({model, params, data}) => {
   if (model=='event') {
     return User.find()
       .then(users => Promise.allSettled(users.map(user => sendNewEvent({event: data, member: user}))))
+      .then(() => data)
+  }
+
+  if (model=='post') {
+    return Promise.all([Post.findById(data._id).populate('author'), User.find()])
+      .then(([post, users]) => Promise.allSettled(users.map(user => sendNewPost({post, user}))))
       .then(() => data)
   }
 

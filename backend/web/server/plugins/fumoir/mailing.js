@@ -2,6 +2,7 @@ const { sendNotification, setSmsContents, setNotificationsContents } = require('
 const {datetime_str} = require('../../../utils/dateutils')
 
 const SIB_IDS={
+  NEW_POST: -1, // No SIB template
   NEW_BOOKING_2_MEMBER: 1,
   NEW_BOOKING_2_MANAGER: 2,
   NEW_EVENT_AVAILABLE: 3,
@@ -31,9 +32,22 @@ const NOTIFICATIONS_CONTENTS={
   [SIB_IDS.NEW_EVENT_AVAILABLE]: {title: 'Fumoir George', message: 'Un nouvel événement est disponible sur votre application Fumoir George'},
   [SIB_IDS.NEW_BOOKING_2_MANAGER]: {title: 'Fumoir George', message: 'Une nouvelle réservation a été effectuée pour le {{params.booking_date}}'},
   [SIB_IDS.NEW_MESSAGE]: {title: 'Fumoir George', message: 'Vous avez reçu un nouveau message'},
+  [SIB_IDS.NEW_POST]: {title: 'Fumoir George', message: '{{params.post_author_firstname}} a posté une actualité sur le Fumoir George'},
 }
 
 setNotificationsContents(NOTIFICATIONS_CONTENTS)
+
+// #-1
+const sendNewPost = ({post, user}) => {
+  console.log(`post:${JSON.stringify(post)}`)
+  return sendNotification({
+    notification: SIB_IDS.NEW_POST,
+    destinee: user,
+    params: {
+      post_author_firstname: post.author.firstname,
+    },
+  })
+}
 
 // #1
 const sendNewBookingToMember = ({booking}) => {
@@ -211,6 +225,7 @@ const sendEventUnregister2Admin = ({event, member, admin}) => {
 }
 
 module.exports = {
+  sendNewPost,
   sendNewBookingToMember,
   sendNewBookingToManager,
   sendNewEvent,
