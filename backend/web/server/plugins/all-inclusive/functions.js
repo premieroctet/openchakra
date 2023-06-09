@@ -412,12 +412,24 @@ declareComputedField('adminDashboard', 'refused_bills', () =>
 declareComputedField('adminDashboard', 'accepted_bills', () =>
   Mission.countDocuments({customer_accept_bill_date: {$ne: null}})
 )
-declareComputedField('adminDashboard', 'visible_ti', () => User.countDocuments({role: ROLE_TI, hidden:false}))
-declareComputedField('adminDashboard', 'hidden_ti', () => User.countDocuments({role: ROLE_TI, hidden:true}))
-declareComputedField('adminDashboard', 'qualified_ti', () => User.countDocuments({role: ROLE_TI, qualified:true}))
-declareComputedField('adminDashboard', 'visible_tipi', () => User.countDocuments({role: ROLE_TI, coaching: COACH_ALLE, hidden:false}))
-declareComputedField('adminDashboard', 'hidden_tipi', () => User.countDocuments({role: ROLE_TI, coaching: COACH_ALLE, hidden:true}))
-declareComputedField('adminDashboard', 'qualified_tipi', () => User.countDocuments({role: ROLE_TI, coaching: COACH_ALLE, qualified:true}))
+declareComputedField('adminDashboard', 'visible_ti',
+  () => User.countDocuments({role: ROLE_TI, hidden:false})
+)
+declareComputedField('adminDashboard', 'hidden_ti',
+  () => User.countDocuments({role: ROLE_TI, hidden:true})
+)
+declareComputedField('adminDashboard', 'qualified_ti',
+  () => User.countDocuments({role: ROLE_TI, qualified:true})
+)
+declareComputedField('adminDashboard', 'visible_tipi',
+  () => User.countDocuments({role: ROLE_TI, coaching: COACH_ALLE, hidden:false})
+)
+declareComputedField('adminDashboard', 'hidden_tipi',
+  () => User.countDocuments({role: ROLE_TI, coaching: COACH_ALLE, hidden:true})
+)
+declareComputedField('adminDashboard', 'qualified_tipi',
+  () => User.countDocuments({role: ROLE_TI, coaching: COACH_ALLE, qualified:true})
+)
 declareComputedField('adminDashboard', 'missions_requests', () =>
   loadFromDb({model: 'mission', fields:['status']})
     .then(missions => missions.filter(m => m.status==MISSION_STATUS_ASKING).length)
@@ -429,10 +441,18 @@ loadFromDb({model: 'mission', fields:['status']})
 declareComputedField('adminDashboard', 'sent_quotations', () =>
   Mission.countDocuments({quotation_sent_date: {$ne: null}})
 )
-declareComputedField('adminDashboard', 'quotation_ca_total', () => Promise.resolve(0))
-declareComputedField('adminDashboard', 'commission_ca_total', () => Promise.resolve(0))
-declareComputedField('adminDashboard', 'tipi_commission_ca_total', () => Promise.resolve(0))
-declareComputedField('adminDashboard', 'customer_commission_ca_total', () => Promise.resolve(0))
+declareComputedField('adminDashboard', 'quotation_ca_total',
+  () => Promise.resolve(0)
+)
+declareComputedField('adminDashboard', 'commission_ca_total',
+  () => Promise.resolve(0)
+)
+declareComputedField('adminDashboard', 'tipi_commission_ca_total',
+  () => Promise.resolve(0)
+)
+declareComputedField('adminDashboard', 'customer_commission_ca_total',
+  () => Promise.resolve(0)
+)
 declareComputedField('adminDashboard', 'ti_registered_today', () =>
   User.find({role:ROLE_TI}, {[CREATED_AT_ATTRIBUTE]:1})
     .then(users => users.filter(u => moment(u[CREATED_AT_ATTRIBUTE]).isSame(moment(), 'day')).length))
