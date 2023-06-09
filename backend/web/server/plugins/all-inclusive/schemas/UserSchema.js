@@ -1,9 +1,3 @@
-const { isEmailOk } = require('../../../../utils/sms')
-
-const Validator = require('validator')
-
-const { isPhoneOk } = require('../../../../utils/sms')
-const { idEqual } = require('../../../utils/database')
 const {
   AVAILABILITY,
   COACHING,
@@ -13,13 +7,20 @@ const {
   COMPANY_STATUS,
   DEFAULT_ROLE,
   DEPARTEMENTS,
+  MISSION_STATUS_BILL_SENT,
   MISSION_STATUS_FINISHED,
+  MISSION_STATUS_PAYMENT_PENDING,
+  MISSION_STATUS_QUOT_ACCEPTED,
   ROLES,
   ROLE_COMPANY_ADMIN,
   ROLE_COMPANY_BUYER,
   ROLE_TI,
   UNACTIVE_REASON,
 } = require('../consts')
+const { isEmailOk, isPhoneOk } = require('../../../../utils/sms')
+
+const Validator = require('validator')
+const { idEqual } = require('../../../utils/database')
 const siret = require('siret')
 const NATIONALITIES=require('../nationalities')
 const mongoose = require("mongoose")
@@ -344,16 +345,57 @@ UserSchema.virtual("comments_note").get(function() {
   return recos.sumBy('note')/recos.size()
 })
 
+// Achieved revenue : accepeted bills
 UserSchema.virtual("revenue").get(function() {
-  return 0
+  if (this.role!=ROLE_TI) {
+    return 0
+  }
+  return lodash(this.missions)
+      .filter(m => [MISSION_STATUS_FINISHED].includes(m.status))
+      .sumBy(m => m.quotations[0].total)
 })
 
+// Achieved revenue : accepted quotation
 UserSchema.virtual("revenue_to_come").get(function() {
-  return 0
+  if (this.role!=ROLE_TI) {
+    return 0
+  }
+  return lodash(this.missions)
+      .filter(m => m.status==MISSION_STATUS_QUOT_ACCEPTED)
+      .sumBy(m => m.quotations[0].total)
 })
 
 UserSchema.virtual("accepted_quotations_count").get(function() {
+  return this.missions.filter(m => m.status==MISSION_STATUS_QUOT_ACCEPTED ).length
+})
+
+UserSchema.virtual("profile_shares_count").get(function() {
   return 0
+})
+
+// Customer spent
+UserSchema.virtual("spent").get(function() {
+  if (this.role!=ROLE_COMPANY_BUYER) {
+    return 0
+  }
+  return lodash(this.missions)
+      .filter(m => m.status==MISSION_STATUS_FINISHED)
+      .sumBy(m => m.quotations[0].total)
+})
+
+UserSchema.virtual("spent_to_come").get(function() {
+  if (this.role!=ROLE_COMPANY_BUYER) {
+    return 0
+  }
+  return lodash(this.missions)
+    .filter(m => [MISSION_STATUS_QUOT_ACCEPTED].includes(m.status))
+    .sumBy(m => m.quotations[0].total)
+})
+
+UserSchema.virtual("pending_bills").get(function() {
+  return lodash(this.missions)
+    .filter(m => [MISSION_STATUS_BILL_SENT].includes(m.status))
+    .sumBy(m => m.quotations[0].total)
 })
 
 UserSchema.virtual("profile_shares_count").get(function() {

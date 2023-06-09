@@ -227,9 +227,19 @@ USER_MODELS.forEach(m => {
   declareVirtualField({model: m, field: 'recommandations_note', instance: 'Number', requires: 'jobs'})
   declareVirtualField({model: m, field: 'comments_count', instance: 'Number', requires: 'jobs'})
   declareVirtualField({model: m, field: 'comments_note', instance: 'Number', requires: 'jobs'})
-  declareVirtualField({model: m, field: 'revenue', instance: 'Number', requires: 'missions.quotations'})
-  declareVirtualField({model: m, field: 'revenue_to_come', instance: 'Number', requires: 'missions.quotations'})
-  declareVirtualField({model: m, field: 'accepted_quotations_count', instance: 'Number', requires: 'missions.quotations'})
+
+  declareVirtualField({model: m, field: 'revenue', instance: 'Number',
+    requires: 'role,_missions.quotations.total,_missions.status,missions.quotations.total,missions.status'})
+  declareVirtualField({model: m, field: 'revenue_to_come', instance: 'Number',
+    requires: 'role,_missions.quotations.total,_missions.status,missions.quotations.total,missions.status'})
+  declareVirtualField({model: m, field: 'accepted_quotations_count', instance: 'Number', requires: 'role,_missions.status,missions.status'})
+
+  declareVirtualField({model: m, field: 'spent', instance: 'Number',
+    requires: 'role,_missions.quotations.total,_missions.status,missions.quotations.total,missions.status'})
+  declareVirtualField({model: m, field: 'spent_to_come', instance: 'Number',
+    requires: 'role,_missions.quotations.total,_missions.status,missions.quotations.total,missions.status'})
+  declareVirtualField({model: m, field: 'pending_bills', instance: 'Number', requires: 'role,_missions.status,missions.status'})
+
   declareVirtualField({model: m, field: 'profile_shares_count', instance: 'Number', requires: ''})
   declareEnumField({model: m, field: 'unactive_reason', enumValues: UNACTIVE_REASON})
   declareVirtualField({model: m, field: 'missing_attributes', instance: 'String', requires: 'firstname,lastname,email,phone,birthday,nationality,picture,identity_proof_1,iban,company_name,company_status,siret,status_report,insurance_type,insurance_report,company_picture'})
