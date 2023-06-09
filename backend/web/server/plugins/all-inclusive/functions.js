@@ -11,6 +11,8 @@ const {
   EXPERIENCE,
   MISSION_FREQUENCY,
   MISSION_STATUS_ASKING,
+  MISSION_STATUS_FINISHED,
+  MISSION_STATUS_QUOT_SENT,
   MISSION_STATUS_TI_REFUSED,
   PAYMENT_STATUS,
   QUOTATION_STATUS,
@@ -364,6 +366,7 @@ declareVirtualField({model: 'adminDashboard', field: 'sent_quotations', instance
 declareVirtualField({model: 'adminDashboard', field: 'quotation_ca_total', instance: 'Number'})
 declareVirtualField({model: 'adminDashboard', field: 'commission_ca_total', instance: 'Number'})
 declareVirtualField({model: 'adminDashboard', field: 'tipi_commission_ca_total', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field: 'tini_commission_ca_total', instance: 'Number'})
 declareVirtualField({model: 'adminDashboard', field: 'customer_commission_ca_total', instance: 'Number'})
 declareVirtualField({model: 'adminDashboard', field: 'ti_registered_today', instance: 'Number'})
 declareVirtualField({model: 'adminDashboard', field: 'customers_registered_today', instance: 'Number'})
@@ -451,18 +454,67 @@ loadFromDb({model: 'mission', fields:['status']})
 declareComputedField('adminDashboard', 'sent_quotations', () =>
   Mission.countDocuments({quotation_sent_date: {$ne: null}})
 )
+
 declareComputedField('adminDashboard', 'quotation_ca_total',
-  () => Promise.resolve(0)
+  () => {
+    return loadFromDb({model: 'mission', fields:['status','quotations.total']})
+      .then(missions => {
+        return lodash(missions)
+          .filter(m => m.status==MISSION_STATUS_QUOT_SENT)
+          .sumBy(m => m.quotations[0].total)
+      })
+  }
 )
+
 declareComputedField('adminDashboard', 'commission_ca_total',
-  () => Promise.resolve(0)
+() => {
+  return loadFromDb({model: 'mission', fields:['status','quotations.total']})
+    .then(missions => {
+      return lodash(missions)
+        .filter(m => m.status==MISSION_STATUS_FINISHED)
+        .sumBy(m => m.quotations[0].total)*0.15
+    })
+}
 )
+
+//*****************************************************************
+// TODO: Compute actual AA & MER commissions
+//*****************************************************************
 declareComputedField('adminDashboard', 'tipi_commission_ca_total',
-  () => Promise.resolve(0)
+() => {
+  return loadFromDb({model: 'mission', fields:['name','status','quotations.total','job.user.coaching','job.user.coaching']})
+    .then(missions => {
+      return lodash(missions)
+        .filter(m => m.status==MISSION_STATUS_FINISHED)
+        .filter(m => m.job?.user?.coaching==COACH_ALLE)
+        .sumBy(m => m.quotations[0].total)*0.15
+    })
+}
 )
+
+declareComputedField('adminDashboard', 'tini_commission_ca_total',
+() => {
+  return loadFromDb({model: 'mission', fields:['status','quotations.total','job.user.coaching']})
+    .then(missions => {
+      return lodash(missions)
+        .filter(m => m.status==MISSION_STATUS_FINISHED)
+        .filter(m => m.job?.user?.coaching!=COACH_ALLE)
+        .sumBy(m => m.quotations[0].total)*0.15
+    })
+}
+)
+
 declareComputedField('adminDashboard', 'customer_commission_ca_total',
-  () => Promise.resolve(0)
+() => {
+  return loadFromDb({model: 'mission', fields:['status','quotations.total']})
+    .then(missions => {
+      return lodash(missions)
+        .filter(m => m.status==MISSION_STATUS_FINISHED)
+        .sumBy(m => m.quotations[0].total)*0.15
+    })
+}
 )
+
 declareComputedField('adminDashboard', 'ti_registered_today', () =>
   User.find({role:ROLE_TI}, {[CREATED_AT_ATTRIBUTE]:1})
     .then(users => users.filter(u => moment(u[CREATED_AT_ATTRIBUTE]).isSame(moment(), 'day')).length))
