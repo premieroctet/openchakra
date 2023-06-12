@@ -1,4 +1,12 @@
 const {
+  sendAskContact,
+  sendMissionAskedReminder,
+  sendMissionAskedSummary,
+  sendMissionReminderCustomer,
+  sendMissionReminderTI,
+  sendTipiSearch
+} = require('./mailing')
+const {
   AVAILABILITY,
   COACHING,
   COACH_ALLE,
@@ -10,11 +18,13 @@ const {
   DEPARTEMENTS,
   EXPERIENCE,
   MISSION_FREQUENCY,
+  MISSION_REMINDER_DELAY,
   MISSION_STATUS_ASKING,
   MISSION_STATUS_FINISHED,
   MISSION_STATUS_QUOT_SENT,
   MISSION_STATUS_TI_REFUSED,
   PAYMENT_STATUS,
+  PENDING_QUOTATION_DELAY,
   QUOTATION_STATUS,
   ROLES,
   ROLE_ALLE_ADMIN,
@@ -37,8 +47,6 @@ const {
   setPreprocessGet,
 } = require('../../utils/database')
 const Contact = require('../../models/Contact')
-
-const { sendAskContact, sendTipiSearch } = require('./mailing')
 const AdminDashboard = require('../../models/AdminDashboard')
 const mongoose = require('mongoose')
 const cron=require('node-cron')
@@ -54,11 +62,16 @@ const JobUser = require('../../models/JobUser')
 const NATIONALITIES = require('./nationalities.json')
 
 const postCreate = ({model, params, data}) => {
-  // Create company => duplicate offer
   if (model=='mission') {
-    return Promise.all([Mission.findById(data.id).populate('user'), User.find({role: ROLE_ALLE_ADMIN})])
-      .then(([mission, admins]) => {
-        return Promise.allSettled(admins.map(admin => sendTipiSearch({admin, mission:mission.toObject()})))
+    return loadFromDb({model: 'mission', id: data._id, fields:['user.full_name','job.user.full_name']})
+      .then(([[mission], admins]) => {
+        if (!!mission.job) {
+          sendNewMission(mission)
+          sendMissionAskedSummary(mission)
+        }
+        else {
+          sendTipiSearch({admin, mission:mission.toObject()})
+        }
     })
   }
   if (model=='contact') {
@@ -71,6 +84,11 @@ const postCreate = ({model, params, data}) => {
         fields:{...contact.toObject({virtuals: true}), urgent: contact.urgent ? 'Oui':'Non', status: CONTACT_STATUS[contact.status]},
         attachment,
       }))))
+  }
+
+  if (model=='comment') {
+    loadFromDb({model: 'mission', id: data.mission._id, fields:['user','job.user']})
+      .then(([mission]) => sendCommentReceived(mission))
   }
 
   return Promise.resolve(data)
@@ -531,7 +549,7 @@ AdminDashboard.exists({})
   .then(()=> console.log(`Only adminDashboard`))
   .catch(err=> console.err(`Only adminDashboard:${err}`))
 
-// Send notifications for reminders & apppointments
+// Check payment status
 // Poll every minute
 cron.schedule('*/5 * * * * *', async() => {
   return Mission.findOne({payin_id: {$ne:null}, payin_achieved: null})
@@ -545,5 +563,22 @@ cron.schedule('*/5 * * * * *', async() => {
         console.log(`Payment ${payment.id} succeded`)
         return Mission.findOneAndUpdate({payin_id: payment.id}, {payin_achieved:true})
       }
+    })
+})
+
+// Daily notifications (every day at 8AM)
+//cron.schedule('0 0 8 * * *', async() => {
+cron.schedule('*/5 * * * * *', async() => {
+  // Pending quoations: not accepted after 2 days
+  loadFromDb({model: 'mission', fields: ['user.firstname','user.email','status','job.user']})
+    .populate('user')
+    .then(missions => {
+      const pendingQuotations=missions.filter(m => m.status==MISSION_STATUS_QUOT_SENT && moment().diff(moment(m.quotation_sent_date), 'days')==PENDING_QUOTATION_DELAY)
+      Promise.allSettled(pendingQuotations.map(m => sendPendingQuotation(m)))
+      const noQuotationMissions=missions.filter(m => m.status==MISSION_STATUS_ASKING && moment().diff(moment(m[CREATED_AT_ATTRIBUTE]), 'days')==MISSION_QUOTATION_DELAY)
+      Promise.allSettled(noQuotationMissions.map(m => sendMissionAskedReminder(m)))
+      const soonMissions=missions.filter(m => m.status==MISSION_STATUS_QUOT_ACCEPTED && moment().diff(moment(m[CREATED_AT_ATTRIBUTE]), 'days')==MISSION_REMINDER_DELAY)
+      Promise.allSettled(soonMissions.map(m => sendMissionReminderCustomer(m)))
+      Promise.allSettled(soonMissions.map(m => sendMissionReminderTI(m)))
     })
 })
