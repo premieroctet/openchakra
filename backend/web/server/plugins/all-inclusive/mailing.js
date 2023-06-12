@@ -258,11 +258,8 @@ const sendLeaveComment = mission => {
     destinee: mission.user,
     params: {
       user_firstname: mission.job.user.firstname,
-      customer_company_name: mission.user.company_name,
+      customer_firstname: mission.user.firstname,
       mission_name: mission.name,
-      mission_start_date: moment(mission.start_date).format('DD/MM/YY'),
-      mission_description: mission.description,
-      mission_customer_full_name: mission.user.full_name,
     },
   })
 }
