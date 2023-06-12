@@ -139,7 +139,6 @@ const sendAskRecomandation = ({user, destinee_email, message, url}) => {
 
 // Send email to TIPI asking for TI search
 const sendTipiSearch = ({admin, mission}) => {
-  const mission_description_txt=new JSSoup(mission.description||'<html></html>').text
   return sendNotification({
     notification: SIB_IDS.TIPI_SEARCH,
     destinee: admin,
@@ -147,7 +146,7 @@ const sendTipiSearch = ({admin, mission}) => {
       ...mission.user,
       ...mission,
       location: mission.location_str,
-      message:  mission_description_txt,
+      message:  new JSSoup(mission.description||'<html></html>').text,
     }
   })
 }
@@ -186,7 +185,7 @@ const sendNewMission = mission => {
       customer_company_name: mission.user.company_name,
       customer_full_name: mission.user.full_name,
       mission_name: mission.name,
-      mission_description: mission.description,
+      mission_description: new JSSoup(mission.description||'<html></html>').text,
       start_date: moment(mission.start_date).format('DD/MM/YY'),
     },
   })
