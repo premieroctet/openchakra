@@ -1,4 +1,14 @@
 const {
+  sendAskContact,
+  sendCommentReceived,
+  sendMissionAskedReminder,
+  sendMissionAskedSummary,
+  sendMissionReminderCustomer,
+  sendMissionReminderTI,
+  sendNewMission,
+  sendTipiSearch
+} = require('./mailing')
+const {
   AVAILABILITY,
   COACHING,
   COACH_ALLE,
@@ -27,15 +37,6 @@ const {
   ROLE_TI,
   UNACTIVE_REASON,
 } = require('./consts')
-const {
-  sendAskContact,
-  sendMissionAskedReminder,
-  sendMissionAskedSummary,
-  sendMissionReminderCustomer,
-  sendMissionReminderTI,
-  sendNewMission,
-  sendTipiSearch
-} = require('./mailing')
 const {
   declareComputedField,
   declareEnumField,
