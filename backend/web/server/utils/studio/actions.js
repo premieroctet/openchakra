@@ -13,8 +13,8 @@ const Post = require('../../models/Post')
 const UserSessionData = require('../../models/UserSessionData')
 const {NotFoundError} = require('../errors')
 const Program = require('../../models/Program')
-const {sendNewMessage:sendNewMessageFumoir} = require('../../plugins/fumoir/mailing')
-const {sendNewMessage:sendNewMessageTIPI} = require('../../plugins/all-inclusive/mailing')
+const fumoirMailing = require('../../plugins/fumoir/mailing')
+const tipiMailing = require('../../plugins/all-inclusive/mailing')
 
 const {DEFAULT_ROLE} = require(`../../plugins/${getDataModel()}/consts`)
 
@@ -88,8 +88,9 @@ let ACTIONS = {
     return Message.create({sender: sender._id, receiver: destinee, content: contents, attachment})
       .then(m => Message.findById(m._id).populate('sender').populate('receiver'))
       .then(m => {
-        sendNewMessageFumoir && sendNewMessageFumoir({member: m.receiver, partner: m.sender})
-        sendNewMessageTIPI && sendNewMessageTIPI({user: m.receiver})
+        console.log(`Send Msg TIPI:${!!tipiMailing}`)
+        fumoirMailing && fumoirMailing.sendNewMessage({member: m.receiver, partner: m.sender})
+        tipiMailing && tipiMailing.sendNewMessage({user: m.receiver})
         return m
       })
   },
