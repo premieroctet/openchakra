@@ -246,7 +246,7 @@ const sendQuotationAccepted = mission => {
     notification: SIB_IDS.ACCEPTED_QUOTATION,
     destinee: mission.job.user,
     params: {
-      user_firstname: mission.user.firstname,
+      user_firstname: mission.job.user.firstname,
       customer_company_name: mission.user.company_name,
     },
   })
@@ -257,7 +257,7 @@ const sendLeaveComment = mission => {
     notification: SIB_IDS.LEAVE_COMMENT,
     destinee: mission.user,
     params: {
-      user_firstname: mission.user.firstname,
+      user_firstname: mission.job.user.firstname,
       customer_company_name: mission.user.company_name,
       mission_name: mission.name,
       mission_start_date: moment(mission.start_date).format('DD/MM/YY'),
@@ -337,8 +337,8 @@ const sendCompanyRegistered = (account, destinee) => {
     notification: SIB_IDS.COMPANY_REGISTERED,
     destinee: destinee,
     params: {
-      customer_company_name: account.company_name,
-      user_firstname: account.zip_code,
+      company_name: account.company_name,
+      zip_code: account.zip_code,
     },
   })
 }
