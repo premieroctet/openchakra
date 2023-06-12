@@ -106,7 +106,7 @@ const alle_accept_quotation = ({value, paymentSuccess, paymentFailure}, user) =>
         success_url, failure_url,
     })
     .then(payment => {
-      loadFromDb({model: 'mission', id: value._id, fields:['job.user','user']})
+      loadFromDb({model: 'mission', id: value, fields:['job.user','user']})
         .then(([mission])=> sendQuotationAccepted(mission))
       return Mission.findByIdAndUpdate(value, {payin_id:payment.id, payin_achieved:null})
         .then(() =>payment.url)
