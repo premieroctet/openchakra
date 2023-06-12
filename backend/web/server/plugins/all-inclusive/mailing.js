@@ -311,7 +311,7 @@ const  sendBillSent = mission => {
     notification: SIB_IDS.BILL_SENT,
     destinee: mission.user,
     params: {
-      customer_company_name: mission.user.company_name,
+      customer_firstname: mission.user.firstname,
       user_firstname: mission.job.user.firstname,
       mission_name: mission.name,
     },
