@@ -605,7 +605,7 @@ const loadFromDb = ({model, fields, id, user, params}) => {
           return Promise.all(data.map(d => addComputedFields(user, params, d, model)))
         })
         .then(data =>  callFilterDataUser({model, data, id, user}))
-        .then(data =>  retainRequiredFields({data, fields}))
+        //.then(data =>  retainRequiredFields({data, fields}))
     })
 
 }

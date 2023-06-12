@@ -1,12 +1,4 @@
 const {
-  sendAskContact,
-  sendMissionAskedReminder,
-  sendMissionAskedSummary,
-  sendMissionReminderCustomer,
-  sendMissionReminderTI,
-  sendTipiSearch
-} = require('./mailing')
-const {
   AVAILABILITY,
   COACHING,
   COACH_ALLE,
@@ -17,10 +9,12 @@ const {
   CONTRACT_TYPE,
   DEPARTEMENTS,
   EXPERIENCE,
+  MISSING_QUOTATION_DELAY,
   MISSION_FREQUENCY,
   MISSION_REMINDER_DELAY,
   MISSION_STATUS_ASKING,
   MISSION_STATUS_FINISHED,
+  MISSION_STATUS_QUOT_ACCEPTED,
   MISSION_STATUS_QUOT_SENT,
   MISSION_STATUS_TI_REFUSED,
   PAYMENT_STATUS,
@@ -33,6 +27,15 @@ const {
   ROLE_TI,
   UNACTIVE_REASON,
 } = require('./consts')
+const {
+  sendAskContact,
+  sendMissionAskedReminder,
+  sendMissionAskedSummary,
+  sendMissionReminderCustomer,
+  sendMissionReminderTI,
+  sendNewMission,
+  sendTipiSearch
+} = require('./mailing')
 const {
   declareComputedField,
   declareEnumField,
@@ -64,7 +67,7 @@ const NATIONALITIES = require('./nationalities.json')
 const postCreate = ({model, params, data}) => {
   if (model=='mission') {
     return loadFromDb({model: 'mission', id: data._id, fields:['user.full_name','job.user.full_name']})
-      .then(([[mission], admins]) => {
+      .then(([mission]) => {
         if (!!mission.job) {
           sendNewMission(mission)
           sendMissionAskedSummary(mission)
@@ -567,15 +570,14 @@ cron.schedule('*/5 * * * * *', async() => {
 })
 
 // Daily notifications (every day at 8AM)
-//cron.schedule('0 0 8 * * *', async() => {
-cron.schedule('*/5 * * * * *', async() => {
+cron.schedule('0 0 8 * * *', async() => {
+  console.log('crnoning')
   // Pending quoations: not accepted after 2 days
-  loadFromDb({model: 'mission', fields: ['user.firstname','user.email','status','job.user']})
-    .populate('user')
+  loadFromDb({model: 'mission', fields: ['user.firstname','user.email','status','job.user','job.user.full_name']})
     .then(missions => {
       const pendingQuotations=missions.filter(m => m.status==MISSION_STATUS_QUOT_SENT && moment().diff(moment(m.quotation_sent_date), 'days')==PENDING_QUOTATION_DELAY)
       Promise.allSettled(pendingQuotations.map(m => sendPendingQuotation(m)))
-      const noQuotationMissions=missions.filter(m => m.status==MISSION_STATUS_ASKING && moment().diff(moment(m[CREATED_AT_ATTRIBUTE]), 'days')==MISSION_QUOTATION_DELAY)
+      const noQuotationMissions=missions.filter(m => m.status==MISSION_STATUS_ASKING && moment().diff(moment(m[CREATED_AT_ATTRIBUTE]), 'days')==MISSING_QUOTATION_DELAY)
       Promise.allSettled(noQuotationMissions.map(m => sendMissionAskedReminder(m)))
       const soonMissions=missions.filter(m => m.status==MISSION_STATUS_QUOT_ACCEPTED && moment().diff(moment(m[CREATED_AT_ATTRIBUTE]), 'days')==MISSION_REMINDER_DELAY)
       Promise.allSettled(soonMissions.map(m => sendMissionReminderCustomer(m)))
