@@ -122,12 +122,12 @@ const createPayment = ({source_user, amount, fee, destination_user, description,
         product_data: {
           name: description,
         },
-        unit_amount: amount*100,
+        unit_amount: parseInt(amount*100),
       },
       quantity:1
     }],
     payment_intent_data: {
-      application_fee_amount: fee*100,
+      application_fee_amount: parseInt(fee*100),
       transfer_data: {
         destination: destination_user.payment_account_id,
       }
