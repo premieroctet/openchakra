@@ -1,5 +1,10 @@
+const {
+  getModel,
+  loadFromDb,
+  putAttribute,
+  removeData
+} = require('../database')
 const mongoose = require('mongoose')
-const { getModel, putAttribute, removeData } = require('../database')
 const { getDataModel } = require('../../../config/config')
 const {
   generatePassword,
@@ -88,8 +93,12 @@ let ACTIONS = {
     return Message.create({sender: sender._id, receiver: destinee, content: contents, attachment})
       .then(m => Message.findById(m._id).populate('sender').populate('receiver'))
       .then(m => {
-        fumoirMailing && fumoirMailing.sendNewMessage({member: m.receiver, partner: m.sender})
-        tipiMailing && tipiMailing.sendNewMessage({user: destinee})
+        getDataModel()=='fumoir' && fumoirMailing && fumoirMailing.sendNewMessage({member: m.receiver, partner: m.sender})
+        loadFromDb({model: 'message', id:m._id, fields:['receiver.email','receiver.firstname']})
+          .then(([message]) => {
+            console.log(`Message:${JSON.stringify(message)}`)
+            getDataModel()=='all-inclusive' && tipiMailing && tipiMailing.sendNewMessage(message.receiver)
+          })
         return m
       })
   },
