@@ -88,9 +88,8 @@ let ACTIONS = {
     return Message.create({sender: sender._id, receiver: destinee, content: contents, attachment})
       .then(m => Message.findById(m._id).populate('sender').populate('receiver'))
       .then(m => {
-        console.log(`Send Msg TIPI:${!!tipiMailing}`)
         fumoirMailing && fumoirMailing.sendNewMessage({member: m.receiver, partner: m.sender})
-        tipiMailing && tipiMailing.sendNewMessage({user: m.receiver})
+        tipiMailing && tipiMailing.sendNewMessage({user: destinee})
         return m
       })
   },
