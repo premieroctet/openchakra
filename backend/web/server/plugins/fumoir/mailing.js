@@ -2,7 +2,6 @@ const { sendNotification, setSmsContents, setNotificationsContents } = require('
 const {datetime_str} = require('../../../utils/dateutils')
 
 const SIB_IDS={
-  NEW_POST: -1, // No SIB template
   NEW_BOOKING_2_MEMBER: 1,
   NEW_BOOKING_2_MANAGER: 2,
   NEW_EVENT_AVAILABLE: 3,
@@ -16,6 +15,7 @@ const SIB_IDS={
   EVENT_UNREGISTER_2_MEMBER: 12,
   EVENT_UNREGISTER_2_GUEST: 13,
   EVENT_UNREGISTER_2_ADMIN: 14,
+  NEW_POST: 16,
 }
 
 const SMS_CONTENTS={
@@ -45,6 +45,7 @@ const sendNewPost = ({post, user}) => {
     destinee: user,
     params: {
       post_author_firstname: post.author.firstname,
+      post_content: post.contents,
     },
   })
 }
