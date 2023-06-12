@@ -9,12 +9,13 @@ const {
   sendBillSent,
   sendBillingReminder,
   sendCompanyRegistered,
-  sendMissionsFinished,
   sendForgotPassword,
   sendLeaveComment,
-  sendQuotationSentToCustomer,
   sendMissionRefused,
+  sendMissionsFinished,
+  sendQuotationAccepted,
   sendQuotationRefused,
+  sendQuotationSentToCustomer,
 } = require('./mailing')
 const Contact = require('../../models/Contact')
 const axios = require('axios')
