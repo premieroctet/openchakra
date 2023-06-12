@@ -235,7 +235,7 @@ const sendQuotationRefused = mission => {
     notification: SIB_IDS.REFUSED_QUOTATION,
     destinee: mission.job.user,
     params: {
-      user_firstname: mission.user.firstname,
+      user_firstname: mission.job.user.firstname,
       customer_company_name: mission.user.company_name,
     },
   })
