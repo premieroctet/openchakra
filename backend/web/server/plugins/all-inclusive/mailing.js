@@ -199,7 +199,7 @@ const sendMissionAskedReminder = mission => {
     destinee: mission.job.user,
     params: {
       customer_company_name: mission.user.company_name,
-      user_first_name: mission.user.firstname,
+      user_first_name: mission.job.user.firstname,
       mission_name: mission.name,
     },
   })
@@ -210,10 +210,10 @@ const sendMissionAskedSummary = mission => {
     notification: SIB_IDS.MISSION_ASKED_SUMMARY,
     destinee: mission.user,
     params: {
-      customer_company_name: mission.user.company_name,
-      user_firstname: mission.user.firstname,
+      customer_firstname: mission.user.firstname,
+      user_firstname: mission.job.user.firstname,
       mission_name: mission.name,
-      mission_description: mission.description,
+      mission_description: new JSSoup(mission.description||'<html></html>').text,
       mission_creation_date: moment(mission[CREATED_AT_ATTRIBUTE]).format('DD/MM/YY'),
     },
   })
@@ -225,7 +225,7 @@ const sendMissionRefused = mission => {
     destinee: mission.job.user,
     params: {
       customer_firstname: mission.user.firstname,
-      user_firstname: mission.user.firstname,
+      user_firstname: mission.job.user.firstname,
       mission_name: mission.name,
     },
   })
