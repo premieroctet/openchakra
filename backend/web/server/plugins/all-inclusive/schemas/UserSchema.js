@@ -366,7 +366,7 @@ UserSchema.virtual("revenue_to_come").get(function() {
 })
 
 UserSchema.virtual("accepted_quotations_count").get(function() {
-  return this.missions.filter(m => m.status==MISSION_STATUS_QUOT_ACCEPTED ).length
+  return this.missions?.filter(m => m.status==MISSION_STATUS_QUOT_ACCEPTED ).length
 })
 
 UserSchema.virtual("profile_shares_count").get(function() {
