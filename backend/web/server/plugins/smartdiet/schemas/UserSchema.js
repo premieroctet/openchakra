@@ -223,7 +223,7 @@ UserSchema.virtual("_all_menus", {
 });
 
 // First available menu for this week (returned as a list)
-UserSchema.virtual('available_menus').get(function() {
+UserSchema.virtual('available_menus', {localField: 'tagada', foreignField: 'tagada'}).get(function() {
   const menu=this._all_menus?.find(m => moment().isBetween(m.start_date, m.end_date))
   return menu ? [menu]:[]
 })
