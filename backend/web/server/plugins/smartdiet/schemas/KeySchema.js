@@ -32,7 +32,11 @@ const KeySchema = new Schema({
   },
 }, schemaOptions)
 
-KeySchema.virtual('user_spoons').get(function () {
+KeySchema.virtual('user_spoons').get(function(){
+  return null
+})
+
+KeySchema.virtual('user_progress').get(function(){
   return null
 })
 

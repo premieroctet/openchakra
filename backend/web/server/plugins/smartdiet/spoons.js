@@ -144,8 +144,22 @@ const getUserSpoons = (user) => {
   return countUserSpoons(user, null, null)
 }
 
+const getUserKeySpoons = (user, params, key) => {
+  return countUserSpoons(user, key)
+}
+
+const getUserKeyProgress = (user, params, key) => {
+  return computeSourceSpoonCount({source: SPOON_SOURCE_CONTENT_READ, key, user})
+    .then(spoons => {
+      console.log(`Sppons for ${key.name}: ${spoons}`)
+      return 25
+    })
+}
+
 module.exports={
   getUserIndChallengeTrophy,
   getUserKeyTrophy,
   getUserSpoons,
+  getUserKeySpoons,
+  getUserKeyProgress,
 }

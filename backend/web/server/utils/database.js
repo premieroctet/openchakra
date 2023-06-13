@@ -255,6 +255,7 @@ const getModel = (id, expectedModel) => {
   return Promise.all(getMongooseModels()
     .map(model => model.exists({_id: id})
         .then(exists => (exists ? model.modelName : false))
+        .catch(err => {})
     )
   )
   .then(res => {
