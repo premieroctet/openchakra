@@ -30,6 +30,7 @@ const { getModel, loadFromDb } = require('../../utils/database')
 const {
   CONTACT_STATUS,
   ROLE_ALLE_ADMIN,
+  ROLE_ALLE_SUPER_ADMIN,
   ROLE_COMPANY_BUYER,
   ROLE_TI
 } = require('./consts')
@@ -273,7 +274,7 @@ const registerAction = props => {
         throw new BadRequestError(`Pas de mail de création de compte défini pour le role ${props.role}`)
       }
       sendWelcome({user, password: props.password})
-      User.find({role:{$in:[ALLE_ADMIN, ALLE_SUPER_ADMIN]}})
+      User.find({role:{$in:[ROLE_ALLE_ADMIN, ROLE_ALLE_SUPER_ADMIN]}})
         .then(admins => users.map(admin => sendCompanyRegistered(user, admin)))
       if (user.role==ROLE_TI) {
         return paymentPlugin.upsertProvider(user)
