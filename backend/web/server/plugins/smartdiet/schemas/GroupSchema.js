@@ -36,6 +36,11 @@ const GroupSchema = new Schema({
     ref: 'user',
     required: false,
   }],
+  likes: [{
+    type: Schema.Types.ObjectId,
+    ref: 'user',
+    required: false,
+  }],
   key: {
     type: Schema.Types.ObjectId,
     ref: 'key',

@@ -384,7 +384,7 @@ declareComputedField('jobUser', 'pinned', getDataPinned, setDataPinned)
 AdminDashboard.exists({})
   .then(exists => !exists && AdminDashboard.create({}))
   .then(()=> console.log(`Only adminDashboard`))
-  .catch(err=> console.err(`Only adminDashboard:${err}`))
+  .catch(err=> console.error(`Only adminDashboard:${err}`))
 
 // Send notifications for reminders & apppointments
 // Poll every minute

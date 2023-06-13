@@ -18,6 +18,10 @@ const PartnerApplicationSchema = new Schema({
     type: String,
     required: [true, "Le lien est obligatoire"],
   },
+  picture: {
+    type: String,
+    required: [true, "L'illustration est obligatoire"],
+  },
   key: {
     type: Schema.Types.ObjectId,
     ref: 'key',

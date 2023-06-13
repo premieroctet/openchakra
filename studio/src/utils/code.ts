@@ -350,7 +350,7 @@ const buildBlock = ({
           } else if (
             propName !== 'children' &&
             typeof propsValue !== 'object' &&
-            propsValue
+            (propsValue || propsValue===0)
           ) {
             let operand =
               (propName === 'dataSource' && paramProvider)
@@ -358,14 +358,15 @@ const buildBlock = ({
                 :
                 propName === 'subDataSource' && paramSubProvider
                   ? `={${paramSubProvider}}`
-                : `='${encode(propsValue)}'`
+                : `='${propsValue===0 ? '0' : encode(propsValue)}'`
 
             if (propsValue === true || propsValue === 'true') {
               operand = ` `
             } else if (
-              propsValue === 'false' ||
+              childComponent.type!='Radio' &&
+              (propsValue === 'false' ||
               isBoolean(propsValue) ||
-              !isNaN(propsValue)
+              !isNaN(propsValue) )
             ) {
               operand = `={${propsValue}}`
             }

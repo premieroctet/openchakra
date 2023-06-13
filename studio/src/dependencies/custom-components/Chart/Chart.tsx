@@ -52,11 +52,26 @@ const OwnChart = (
       datasets: any,
     }) => {
 
+      // TEST if font
+      const isFontFamily = props.hasOwnProperty('fontFamily')
+      const font = isFontFamily ? props.fontFamily?.base : 'inherit'
+      const isFontSize = props.hasOwnProperty('fontSize')
+      const fontSize = isFontSize ? (parseInt(props.fontSize?.base, 10) || 12 ) : 14
+      
+
       const options = {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
             legend: {
-            position: 'right' as const,
+              position: 'bottom' as const,
+              labels: {
+                usePointStyle: true,
+                font: {
+                  family: isFontFamily ? font : 'inherit',
+                  size: isFontSize ? fontSize : 12
+                }
+              }
             },
             // title: {
             // display: true,
@@ -82,8 +97,10 @@ const OwnChart = (
          return ({
            label,
            data: value?.map(v => ({x:moment(v.date).format('L'), y:v[attribute]})),
+           spanGaps: true,
            backgroundColor: color,
            borderColor: color,
+           spanGaps: true,
          })
       }
       else {return null}
@@ -95,10 +112,12 @@ const OwnChart = (
         datasets
       };
 
-      const FinalChart:TypedChartComponent<ChartType> = () => React.createElement(RetainedChart, {data})
+      const FinalChart:TypedChartComponent<ChartType> = () => React.createElement(RetainedChart, {data, options})
 
   return (
-    <FinalChart {...props} options={options} data={data} />
+    <Box {...props}>
+      <FinalChart />
+    </Box>    
   )
 
 }

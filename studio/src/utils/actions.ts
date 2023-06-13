@@ -62,6 +62,10 @@ export const ACTIONS: IActions = {
         components
           .filter(comp => comp.type=='Flex')
           .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      menu: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
       ...Object.fromEntries(lodash.range(24).map((idx:number) => {
       return [
         `component_${idx}`,
@@ -531,6 +535,23 @@ export const ACTIONS: IActions = {
     },
   },
 
+  smartdiet_start_survey: {
+    label: 'SM Start survey',
+    options: {},
+    next: ['openPage'],
+  },
+
+  smartdiet_next_question: {
+    label: 'SM Next question',
+    options: {},
+    next: ['openPage'],
+  },
+
+  smartdiet_finish_survey: {
+    label: 'SM Finish survey',
+    options: {},
+    next: ['openPage'],
+  },
 
 }
 

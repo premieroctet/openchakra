@@ -10,10 +10,10 @@ const TeamSchema = new Schema({
     type: String,
     required: [true, 'Le nom est obligatoire'],
   },
-  members: {
+  members: [{
     type: Schema.Types.ObjectId,
     ref: 'user',
-  },
+  }],
   // Won spoons
   spoons: {
     type: Number,

@@ -147,9 +147,7 @@ UserSchema.virtual('fullname').get(function() {
 })
 
 UserSchema.virtual('spoons_count').get(function() {
-  return lodash(this.spoons)
-    .map(s => s.count)
-    .sum()
+  return null
 })
 
 UserSchema.virtual("_all_contents", {
@@ -162,12 +160,6 @@ UserSchema.virtual("_all_contents", {
 UserSchema.virtual('contents', {localField: '_id', foreignField: '_id'}).get(function (callback) {
   return this._all_contents?.filter(c => [ROLE_CUSTOMER, ROLE_RH].includes(this.role) ? !c.hidden : true) || []
 })
-
-UserSchema.virtual("spoons", {
-  ref: "userSpoon", // The Model to use
-  localField: "_id", // Find in Model, where localField
-  foreignField: "user" // is equal to foreignField
-});
 
 UserSchema.virtual("available_groups", {localField: 'id', foreignField: 'id'}).get(function () {
   return lodash(this.company?.groups)
@@ -230,9 +222,10 @@ UserSchema.virtual("_all_menus", {
   foreignField: "dummy" // is equal to foreignField
 });
 
-// First available menu for this week
-UserSchema.virtual('menu').get(function() {
-  return this._all_menus?.find(m => moment().isBetween(m.start_date, m.end_date)) || null
+// First available menu for this week (returned as a list)
+UserSchema.virtual('available_menus', {localField: 'tagada', foreignField: 'tagada'}).get(function() {
+  const menu=this._all_menus?.find(m => moment().isBetween(m.start_date, m.end_date))
+  return menu ? [menu]:[]
 })
 
 // User's colletive challenges are the company's ones

@@ -37,6 +37,8 @@ const EventSchema = new Schema({
   },
 }, schemaOptions)
 
-EventSchema.virtual('type')
+EventSchema.virtual('type').get(function () {
+  return null
+})
 
 module.exports = EventSchema
