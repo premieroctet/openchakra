@@ -155,15 +155,15 @@ const isActionAllowed = ({action, dataId, user}) => {
         })
       }
       if (action=='smartdiet_next_question') {
-        return UserQuestion.findById(dataId).populate('question')
+        return UserQuestion.findById(dataId).populate('question').populate('survey')
           .then(question => {
             // Not answered question: no next
-            if (!question.answer) { return false}
+            if (lodash.isNil(question.answer)) { return false}
             return UserQuestion.findOne({survey: question.survey, order:question.order+1})
           })
       }
       if (action=='smartdiet_finish_survey') {
-        return UserQuestion.findById(dataId).populate('question')
+        return UserQuestion.findById(dataId).populate('question').populate('survey')
           .then(question => UserQuestion.exists({survey: question.survey, order:question.order+1}))
           .then(exists => !exists)
       }
