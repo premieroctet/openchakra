@@ -40,4 +40,8 @@ MenuSchema.virtual("recipes", {
   foreignField: "menu" // is equal to foreignField
 });
 
+MenuSchema.virtual("shopping_list", {localField: 'tagada', foreignField: 'tagada'}).get(function() {
+  return null
+})
+
 module.exports = MenuSchema

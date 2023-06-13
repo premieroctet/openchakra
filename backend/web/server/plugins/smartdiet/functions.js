@@ -287,6 +287,14 @@ declareVirtualField({model: 'menu', field: 'recipes', instance: 'Array',
     options: {ref: 'menuRecipe'}},
 })
 
+declareVirtualField({model: 'menu', field: 'shopping_list', instance: 'Array',
+  requires: 'recipes.recipe.ingredients.ingredient',
+  multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'recipeIngredient'}},
+})
+
 declareEnumField({model: 'ingredient', field: 'unit', enumValues: UNIT})
 declareVirtualField({model: 'ingredient', field: 'label', instance: 'String', requires: 'name,unit'})
 
@@ -412,6 +420,18 @@ const getUserSurveyAverage = (user, params, data) => {
     })
 }
 
+const getMenuShoppingList = (user, params, data) => {
+  console.log(data.recipes.map(r => [r.recipe.name,r.recipe._id]))
+  const ingredients=lodash.flatten(data?.recipes.map(r => r.recipe.ingredients))
+  const ingredientsGroup=lodash.groupBy(ingredients, i => i.ingredient._id)
+  const result=lodash(ingredientsGroup)
+    .mapValues(ingrs=>({ingredient:ingrs[0].ingredient, quantity: lodash.sumBy(ingrs, 'quantity')}))
+    .values()
+    .value()
+  console.log(JSON.stringify(result, null, 2))
+  return Promise.resolve(result)
+}
+
 declareComputedField('user', 'available_contents', getAvailableContents)
 declareComputedField('loggedUser', 'available_contents', getAvailableContents)
 declareComputedField('comment', 'liked', getDataLiked, setDataLiked)
@@ -425,6 +445,7 @@ declareComputedField('individualChallenge', 'trophy_picture', getUserIndChalleng
 declareComputedField('key', 'trophy_picture', getUserKeyTrophy)
 declareComputedField('user', 'spoons_count', getUserSpoons)
 declareComputedField('loggedUser', 'spoons_count', getUserSpoons)
+declareComputedField('menu', 'shopping_list', getMenuShoppingList)
 
 
 const postCreate = ({model, params, data}) => {
