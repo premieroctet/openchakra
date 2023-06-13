@@ -52,6 +52,7 @@ const DataSourcePanel: React.FC = () => {
   const models = useSelector(getModels)
   const [isChart, setIsChart] = useState(false)
   const [availableSeries, setAvailableSeries] = useState([])
+  const [dataType, setDataType] = useState('menu')
 
   useEffect(()=> {
     setIsChart(activeComponent?.type=='Chart')
@@ -69,6 +70,14 @@ const DataSourcePanel: React.FC = () => {
       setAvailableSeries([])
     }
   }, [isChart, dataSource, attribute, attributes, models])
+
+  useEffect(() => {
+    try {
+      const type=getDataProviderDataType(activeComponent, components, dataSource, models)
+      setDataType(type.type)
+    }
+    catch(err) {setDataType(null)}
+  }, [dataSource, models, activeComponent, components])
 
   useEffect(() => {
     setProviders(getDataProviders(activeComponent, components))
@@ -209,7 +218,7 @@ const DataSourcePanel: React.FC = () => {
         </Select>
         </FormControl>
         }
-        <FormControl htmlFor="dataSource" label="Datasource">
+        <FormControl htmlFor="dataSource" label={<>Datasource<div>{dataType}</div></>}>
           <Select
             id="dataSource"
             onChange={onDataSourceOrModelChange}
