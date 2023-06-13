@@ -55,10 +55,12 @@ const Lexical = (
       const rawHTML = $generateHtmlFromNodes(editor, null)
       setHtml(rawHTML);
       // Protect against change event if no name defined
+      /**
       if (onChange && name) {
         const event = { target: { name: name, value: rawHTML } }
         onChange(event)
       }
+      */
     })
   }
 

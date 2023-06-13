@@ -1,3 +1,4 @@
+const { idEqual } = require('../../../utils/database')
 const mongoose = require('mongoose')
 const {schemaOptions} = require('../../../utils/schemas')
 const { SURVEY_ANSWER } = require('../consts')
@@ -29,6 +30,13 @@ const UserQuestionSchema = new Schema({
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
+UserQuestionSchema.virtual('index').get(function(){
+  return this.survey?.questions?.findIndex(q => idEqual(q._id, this._id))+1 || 0
+})
+
+UserQuestionSchema.virtual('total').get(function(){
+  return this.survey?.questions?.length || 0
+})
 /* eslint-enable prefer-arrow-callback */
 
 

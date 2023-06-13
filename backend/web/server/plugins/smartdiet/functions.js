@@ -330,6 +330,10 @@ declareEnumField({model: 'userQuestion', field: 'answer', enumValues: SURVEY_ANS
 declareEnumField({model: 'menuRecipe', field: 'day', enumValues: DAYS})
 declareEnumField({model: 'menuRecipe', field: 'period', enumValues: PERIOD})
 
+declareVirtualField({model: 'userQuestion', field: 'index', instance: 'Number', requires:'survey.questions'})
+declareVirtualField({model: 'userQuestion', field: 'total', instance: 'Number', requires:'survey.questions'})
+
+
 const getAvailableContents = (user, params, data) => {
   return Content.find()
     .then(contents => {

@@ -739,7 +739,7 @@ export const ACTIONS = {
     return axios.post(url, body)
       .then(res => {
         var searchParams = new URLSearchParams(window.location.search);
-        searchParams.set('id', res.data._id)
+        searchParams.set('userQuestion', res.data._id)
         window.location.search=searchParams.toString()
       })
   },

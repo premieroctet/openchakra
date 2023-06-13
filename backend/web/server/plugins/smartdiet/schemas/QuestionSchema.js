@@ -31,6 +31,22 @@ const QuestionSchema = new Schema({
     set: v => v?.trim(),
     required: false,
   },
+  subtitle_never: {
+    type: String,
+    required: false,
+  },
+  subtitle_sometimes: {
+    type: String,
+    required: false,
+  },
+  subtitle_often: {
+    type: String,
+    required: false,
+  },
+  subtitle_always: {
+    type: String,
+    required: false,
+  },
   key: {
     type: Schema.Types.ObjectId,
     ref: 'key',
