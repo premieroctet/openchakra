@@ -3,6 +3,7 @@ const {
   getUserKeyProgress,
   getUserKeySpoons,
   getUserKeyTrophy,
+  getUserKeyReadContents,
   getUserSpoons
 } = require('./spoons')
 const mongoose = require('mongoose')
@@ -333,6 +334,7 @@ declareVirtualField({model: 'key', field: 'user_survey_average', instance: 'Numb
 declareVirtualField({model: 'key', field: 'trophy_picture', instance: 'String', requires: 'spoons_count_for_trophy,trophy_on_picture,trophy_off_picture'})
 declareVirtualField({model: 'key', field: 'user_spoons', instance: 'Number'})
 declareVirtualField({model: 'key', field: 'user_progress', instance: 'Number'})
+declareVirtualField({model: 'key', field: 'user_read_contents', instance: 'Number'})
 
 declareVirtualField({model: 'userSurvey', field: 'questions', instance: 'Array',
   multiple: true,
@@ -450,6 +452,7 @@ declareComputedField('individualChallenge', 'trophy_picture', getUserIndChalleng
 declareComputedField('key', 'trophy_picture', getUserKeyTrophy)
 declareComputedField('key', 'user_spoons', getUserKeySpoons)
 declareComputedField('key', 'user_progress', getUserKeyProgress)
+declareComputedField('key', 'user_read_contents', getUserKeyReadContents)
 declareComputedField('user', 'spoons_count', getUserSpoons)
 declareComputedField('loggedUser', 'spoons_count', getUserSpoons)
 declareComputedField('menu', 'shopping_list', getMenuShoppingList)

@@ -148,12 +148,16 @@ const getUserKeySpoons = (user, params, key) => {
   return countUserSpoons(user, key)
 }
 
-const getUserKeyProgress = (user, params, key) => {
+const getUserKeyReadContents = (user, params, key) => {
   return computeSourceSpoonCount({source: SPOON_SOURCE_CONTENT_READ, key, user})
-    .then(spoons => {
-      console.log(`Sppons for ${key.name}: ${spoons}`)
-      return 25
-    })
+}
+
+const getUserKeyProgress = (user, params, key) => {
+  return Promise.all([
+    getUserKeyReadContents(user, params, key),
+    Content.count({key})
+  ])
+    .then(([spoons, total]) => parseInt(spoons*100/total))
 }
 
 module.exports={
@@ -162,4 +166,5 @@ module.exports={
   getUserSpoons,
   getUserKeySpoons,
   getUserKeyProgress,
+  getUserKeyReadContents,
 }

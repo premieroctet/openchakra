@@ -40,10 +40,13 @@ KeySchema.virtual('user_progress').get(function(){
   return null
 })
 
-KeySchema.virtual('trophy_picture').get(function () {
+KeySchema.virtual('user_read_contents').get(function(){
   return null
 })
 
+KeySchema.virtual('trophy_picture').get(function () {
+  return null
+})
 
 KeySchema.virtual('user_survey_average').get(function() {
   return 0
