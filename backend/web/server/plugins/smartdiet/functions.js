@@ -332,6 +332,7 @@ declareVirtualField({model: 'comment', field: 'children', instance: 'Array',
 declareVirtualField({model: 'key', field: 'user_survey_average', instance: 'Number'})
 declareVirtualField({model: 'key', field: 'trophy_picture', instance: 'String', requires: 'spoons_count_for_trophy,trophy_on_picture,trophy_off_picture'})
 declareVirtualField({model: 'key', field: 'user_spoons', instance: 'Number'})
+declareVirtualField({model: 'key', field: 'user_spoons_str', instance: 'String'})
 declareVirtualField({model: 'key', field: 'user_progress', instance: 'Number'})
 declareVirtualField({model: 'key', field: 'user_read_contents', instance: 'Number'})
 
@@ -438,6 +439,12 @@ const getMenuShoppingList = (user, params, data) => {
   return Promise.resolve(result)
 }
 
+const getUserKeySpoonsStr = (user, params, data) => {
+  return getUserKeySpoons(user, params, data)
+    .then(count => {
+      return  `${count} cuillère${count > 1 ? 's' :''}`
+    })
+}
 declareComputedField('user', 'available_contents', getAvailableContents)
 declareComputedField('loggedUser', 'available_contents', getAvailableContents)
 declareComputedField('comment', 'liked', getDataLiked, setDataLiked)
@@ -450,6 +457,7 @@ declareComputedField('key', 'user_survey_average', getUserSurveyAverage)
 declareComputedField('individualChallenge', 'trophy_picture', getUserIndChallengeTrophy)
 declareComputedField('key', 'trophy_picture', getUserKeyTrophy)
 declareComputedField('key', 'user_spoons', getUserKeySpoons)
+declareComputedField('key', 'user_spoons_str', getUserKeySpoonsStr)
 declareComputedField('key', 'user_progress', getUserKeyProgress)
 declareComputedField('key', 'user_read_contents', getUserKeyReadContents)
 declareComputedField('user', 'spoons_count', getUserSpoons)

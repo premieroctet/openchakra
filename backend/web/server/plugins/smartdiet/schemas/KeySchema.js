@@ -36,6 +36,10 @@ KeySchema.virtual('user_spoons').get(function(){
   return null
 })
 
+KeySchema.virtual('user_spoons_str').get(function(){
+  return null
+})
+
 KeySchema.virtual('user_progress').get(function(){
   return null
 })
