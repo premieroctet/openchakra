@@ -157,7 +157,7 @@ const getUserKeyProgress = (user, params, key) => {
     getUserKeyReadContents(user, params, key),
     Content.count({key})
   ])
-    .then(([spoons, total]) => parseInt(spoons*100/total))
+    .then(([spoons, total]) => total ? parseInt(spoons*100/total) : 0)
 }
 
 module.exports={
