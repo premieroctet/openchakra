@@ -222,13 +222,18 @@ UserSchema.virtual("_all_menus", {
   foreignField: "dummy" // is equal to foreignField
 });
 
-// First available menu for this week (returned as a list)
-UserSchema.virtual('available_menus', {localField: 'tagada', foreignField: 'tagada'}).get(function() {
-  const menu=this._all_menus?.find(m => moment().isBetween(m.start_date, m.end_date))
-  return menu ? [menu]:[]
-})
+// First available menu for this week
+UserSchema.virtual("available_menu", {
+  ref: "menu", // The Model to use
+  localField: "dummy", // Find in Model, where localField
+  foreignField: "dummy", // is equal to foreignField
+  options: {
+    match: {$and:[{start_date: {$lt: moment()}}, {end_date:{$gt: moment()}}]},
+  },
+  justOne: true,
+});
 
-// User's colletive challenges are the company's ones
+// User's collective challenges are the company's ones
 UserSchema.virtual('collective_challenges').get(function() {
   return this.company?.collective_challenges || []
 })

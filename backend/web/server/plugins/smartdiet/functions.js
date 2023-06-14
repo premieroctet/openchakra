@@ -140,9 +140,8 @@ USER_MODELS.forEach(m => {
       instance: 'ObjectID',
       options: {ref: 'menu'}},
   })
-  declareVirtualField({model: m, field: 'available_menus', instance: 'Array',
-  requires: '_all_menus.recipes.recipe.ingredients.ingredient.label,_all_menus.recipes.recipe.instruments',
-    multiple: true,
+  declareVirtualField({model: m, field: 'available_menu', instance: 'menu',
+    multiple: false,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'menu'}},
