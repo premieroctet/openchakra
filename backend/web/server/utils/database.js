@@ -123,10 +123,10 @@ const getSimpleModelAttributes = modelName => {
 
 const getReferencedModelAttributes = (modelName, level) => {
   const res = getBaseModelAttributes(modelName)
-    .filter(att => att.instance == 'ObjectID' || att.caster?.instance=='ObjectID')
+    .filter(att => att.instance == 'ObjectID')
     .map(att =>
       //getSimpleModelAttributes(att.options.ref).map(([attName, instance]) => [
-      getModelAttributes(att.options?.ref||att.caster?.options?.ref, level-1).map(([attName, instance]) => [
+      getModelAttributes(att.options.ref, level-1).map(([attName, instance]) => [
         `${att.path}.${attName}`,
         instance,
       ]),
