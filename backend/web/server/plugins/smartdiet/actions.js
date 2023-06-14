@@ -99,7 +99,9 @@ addAction('smartdiet_finish_survey', smartdietFinishSurvey)
 
 
 const isActionAllowed = ({action, dataId, user}) => {
-  return getModel(dataId)
+  // TODO: why can we get "undefined" ??
+  const promise=dataId && dataId!="undefined" ? getModel(dataId) : Promise.resolve(null)
+  return promise
     .then(modelName => {
       if (action=='smartdiet_join_event') {
         return loadFromDb({model: 'user', id:user._id, fields:['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'webinars'], user})
