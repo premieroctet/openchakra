@@ -115,6 +115,15 @@ const withDynamicContainer = Component => {
         orgData = orgData.filter(d =>regExp.test(normalize(d[attribute])))
       }
     }
+    if (props.filterAttribute2 && props.filterValue2) {
+      const value=props.getComponentValue(props.filterValue2, props.level)
+      // TODO Check why value "null" comes as string
+      if (!(lodash.isNil(value) || value=="null")) {
+        const regExp = new RegExp(normalize(value).trim(), 'i')
+        const attribute=props.filterAttribute2
+        orgData = orgData.filter(d =>regExp.test(normalize(d[attribute])))
+      }
+    }
     let data = orgData
     if (!lodash.isNil(props?.limit)) {
     try {

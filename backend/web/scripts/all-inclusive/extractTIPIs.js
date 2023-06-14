@@ -1,12 +1,16 @@
-const {MONGOOSE_OPTIONS} = require('../../server/utils/database');
-const {getDatabaseUri} = require('../../config/config');
+const moment = require('moment')
+const { CREATED_AT_ATTRIBUTE } = require('../../utils/consts')
+const {MONGOOSE_OPTIONS} = require('../../server/utils/database')
+const {getDatabaseUri} = require('../../config/config')
 const mongoose=require('mongoose')
 const User = require('../../server/models/User')
 require('../../server/plugins/all-inclusive/functions')
 const {COACH_ALLE}=require('../../server/plugins/all-inclusive/consts')
+
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 
 const HEADERS=[
+  {title: 'Créé le', id:'created_format'},
   {title: 'Prénom', id:'firstname'},
   {title: 'Nom', id:'lastname'},
   {title: 'Email', id:'email'},
@@ -25,6 +29,7 @@ mongoose.connect(getDatabaseUri(), MONGOOSE_OPTIONS)
       ...u,
       job: u.jobs.map(j => j.name).join(','),
       coaching_alle: u.coaching==COACH_ALLE ? 'oui':'non',
+      created_format: moment(u[CREATED_AT_ATTRIBUTE]).format('DD/MM/YY hh:mm'),
     }))
   })
   .then(users => {

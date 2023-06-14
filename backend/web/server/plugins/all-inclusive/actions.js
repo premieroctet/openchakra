@@ -5,9 +5,20 @@ const {
   sendAccountDeactivated,
   sendAskContact,
   sendAskRecomandation,
+  sendBillRefused,
+  sendBillSent,
+  sendBillingReminder,
+  sendCompanyRegistered,
   sendForgotPassword,
-  sendQuotationSentToCustomer
+  sendLeaveComment,
+  sendMissionRefused,
+  sendMissionsFinished,
+  sendQuotationAccepted,
+  sendQuotationRefused,
+  sendQuotationSentToCustomer,
 } = require('./mailing')
+const Contact = require('../../models/Contact')
+const axios = require('axios')
 const {
   getHostUrl,
   getProductionUrl,
@@ -19,6 +30,7 @@ const { getModel, loadFromDb } = require('../../utils/database')
 const {
   CONTACT_STATUS,
   ROLE_ALLE_ADMIN,
+  ROLE_ALLE_SUPER_ADMIN,
   ROLE_COMPANY_BUYER,
   ROLE_TI
 } = require('./consts')
@@ -44,6 +56,12 @@ const alle_refuse_mission = ({value}, user) => {
     .then(ok => {
       if (!ok) {return false}
       return Mission.findByIdAndUpdate(value._id, {ti_refuse_date: moment()})
+          .populate({path: 'job', populate: {path: 'user'}})
+          .populate({path: 'user'})
+          .then(m => {
+            sendMissionRefused(m)
+            return m
+          })
     })
 }
 addAction('alle_refuse_mission', alle_refuse_mission)
@@ -83,14 +101,14 @@ const alle_accept_quotation = ({value, paymentSuccess, paymentFailure}, user) =>
       return loadFromDb({model: 'mission', id:value, fields:['job.user','quotations.total']})
     })
     .then(([mission]) => {
-      console.log(JSON.stringify(mission.quotations, null, 2))
       const [success_url, failure_url]=[paymentSuccess, paymentFailure].map(p => `${getHostUrl()}${p}`)
       return paymentPlugin.createPayment({source_user: user, amount:mission.quotations[0].total, fee:0,
         destination_user: mission.job.user, description: 'Un test',
         success_url, failure_url,
     })
     .then(payment => {
-      console.log(JSON.stringify(payment, null, 2))
+      loadFromDb({model: 'mission', id: value, fields:['job.user','user']})
+        .then(([mission])=> sendQuotationAccepted(mission))
       return Mission.findByIdAndUpdate(value, {payin_id:payment.id, payin_achieved:null})
         .then(() =>payment.url)
     })
@@ -104,6 +122,8 @@ const alle_refuse_quotation = ({value}, user) => {
   return isActionAllowed({action:'alle_refuse_quotation', dataId:value?._id, user})
     .then(ok => {
       if (!ok) {return false}
+      loadFromDb({model: 'mission', id: value._id, fields:['job.user','user']})
+        .then(([mission])=> sendQuotationRefused(mission))
       return Mission.findByIdAndUpdate(
         value?._id,
         {customer_refuse_quotation_date: moment(),
@@ -128,6 +148,11 @@ const alle_finish_mission = ({value}, user) => {
   return isActionAllowed({action:'alle_finish_mission', dataId:value?._id, user})
     .then(ok => {
       if (!ok) {return false}
+      loadFromDb({model: 'mission', id: value._id, fields:['job.user','user']})
+        .then(([mission])=> {
+          sendMissionsFinished(mission)
+          sendBillingReminder(mission)
+        })
       return Mission.findByIdAndUpdate(
         value._id,
         {ti_finished_date: moment()}
@@ -155,6 +180,8 @@ const alle_send_bill = ({value}, user) => {
   return isActionAllowed({action:'alle_send_bill', dataId:value?._id, user})
     .then(ok => {
       if (!ok) {return false}
+      loadFromDb({model: 'mission', id: value._id, fields:['job.user','user.full_name']})
+        .then(([mission])=> sendBillSent(mission))
       return Mission.findByIdAndUpdate(
         value._id,
         {bill_sent_date: moment(),
@@ -174,6 +201,8 @@ const alle_accept_bill = ({value}, user) => {
   return isActionAllowed({action:'alle_accept_bill', dataId:value?._id, user})
     .then(ok => {
       if (!ok) {return false}
+      loadFromDb({model: 'mission', id: value._id, fields:['job.user','user.full_name']})
+        .then(([mission])=> sendLeaveComment(mission))
       return Mission.findByIdAndUpdate(
         value._id,
         {customer_accept_bill_date: moment()}
@@ -186,6 +215,8 @@ const alle_refuse_bill = ({value}, user) => {
   return isActionAllowed({action:'alle_refuse_bill', dataId:value?._id, user})
     .then(ok => {
       if (!ok) {return false}
+      loadFromDb({model: 'mission', id: value._id, fields:['job.user','user','name']})
+        .then(([mission])=> sendBillRefused(mission))
       return Mission.findByIdAndUpdate(
         value._id,
         {customer_refuse_bill_date: moment()}
@@ -243,6 +274,8 @@ const registerAction = props => {
         throw new BadRequestError(`Pas de mail de création de compte défini pour le role ${props.role}`)
       }
       sendWelcome({user, password: props.password})
+      User.find({role:{$in:[ROLE_ALLE_ADMIN, ROLE_ALLE_SUPER_ADMIN]}})
+        .then(admins => users.map(admin => sendCompanyRegistered(user, admin)))
       if (user.role==ROLE_TI) {
         return paymentPlugin.upsertProvider(user)
       }
@@ -270,11 +303,17 @@ const forgotPasswordAction=({context, parent, email}) => {
 addAction('forgotPassword', forgotPasswordAction)
 
 const askContactAction=(props) => {
-  return User.find({role: ROLE_ALLE_ADMIN})
-    .then(users => Promise.allSettled(users.map(u => sendAskContact({
-      user:u,
-      fields:{...props, urgent: props.urgent ? 'Oui':'Non', status: CONTACT_STATUS[props.status]}
-    }))))
+  return new Contact(props).validate()
+    .then(() => props.document ? axios.get(props.document) : Promise.resolve({data:null}))
+    .then(({data}) => {
+      const att=data ? {url: props.document} : null
+      return User.find({role: ROLE_ALLE_ADMIN})
+        .then(users => Promise.allSettled(users.map(u => sendAskContact({
+          user:u,
+          fields:{...props, urgent: props.urgent ? 'Oui':'Non', status: CONTACT_STATUS[props.status]},
+          attachment: att,
+        }))))
+    })
 }
 
 addAction('alle_ask_contact', askContactAction)
