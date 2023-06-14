@@ -25,6 +25,7 @@ const EVENT_TYPE = {
 const ROLE_CUSTOMER='CUSTOMER'
 const ROLE_RH='RH'
 const ROLE_DIET='DIET'
+const ROLE_EXTERNAL_DIET='EXTERNAL_DIET'
 const ROLE_SUPER_ADMIN='SUPER_ADMIN'
 const ROLE_ADMIN='ADMIN'
 const ROLE_SUPPORT='SUPPORT'
@@ -33,6 +34,7 @@ const ROLES={
   [ROLE_CUSTOMER]:'Abonné',
   [ROLE_RH]:'RH',
   [ROLE_DIET]:'Diététicien(ne)',
+  [ROLE_EXTERNAL_DIET]:'Diététicien(ne) externe',
   [ROLE_SUPER_ADMIN]:'Superadministrateur',
   [ROLE_ADMIN]:'Administrateur',
   [ROLE_SUPPORT]:'Support',
