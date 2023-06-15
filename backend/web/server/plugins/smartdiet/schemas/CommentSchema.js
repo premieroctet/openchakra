@@ -10,7 +10,7 @@ const CommentSchema = new Schema(
     user: {
       type: Schema.Types.ObjectId,
       ref: 'user',
-      required: true,
+      required: [true, "L'utilisateur est obligatoire"],
     },
     text: {
       type: String,

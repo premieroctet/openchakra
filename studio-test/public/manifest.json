@@ -6,7 +6,7 @@
       "src": "favicon.svg",
       "sizes": "64x64",
       "type": "image/svg+xml"
-    },
+    }
   ],
   "start_url": ".",
   "display": "standalone",

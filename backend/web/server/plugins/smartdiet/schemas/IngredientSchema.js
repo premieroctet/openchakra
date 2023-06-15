@@ -1,7 +1,6 @@
 const {
   ECOSCORE,
   EVENT_DISCRIMINATOR,
-  EVENT_MENU,
   EVENT_TYPE,
   HARDNESS,
   NUTRISCORE,
@@ -30,5 +29,9 @@ const IngredientSchema = new Schema({
 },
 {...schemaOptions, ...EVENT_DISCRIMINATOR}
 )
+
+IngredientSchema.virtual('label', {localField: 'tagada', foregignField: 'tagada'}).get(function() {
+  return `${this.name} (${UNIT[this.unit]})`
+})
 
 module.exports = IngredientSchema

@@ -1,5 +1,10 @@
+const {
+  getModel,
+  loadFromDb,
+  putAttribute,
+  removeData
+} = require('../database')
 const mongoose = require('mongoose')
-const { getModel, putAttribute, removeData } = require('../database')
 const { getDataModel } = require('../../../config/config')
 const {
   generatePassword,
@@ -13,7 +18,8 @@ const Post = require('../../models/Post')
 const UserSessionData = require('../../models/UserSessionData')
 const {NotFoundError} = require('../errors')
 const Program = require('../../models/Program')
-const {sendNewMessage} = require('../../plugins/fumoir/mailing')
+const fumoirMailing = require('../../plugins/fumoir/mailing')
+const tipiMailing = require('../../plugins/all-inclusive/mailing')
 
 const {DEFAULT_ROLE} = require(`../../plugins/${getDataModel()}/consts`)
 
@@ -83,11 +89,16 @@ let ACTIONS = {
     return getSession(id)
   },
 
-  sendMessage: ({destinee, contents}, sender) => {
-    return Message.create({sender: sender._id, receiver: destinee, content: contents})
+  sendMessage: ({destinee, contents, attachment}, sender) => {
+    return Message.create({sender: sender._id, receiver: destinee, content: contents, attachment})
       .then(m => Message.findById(m._id).populate('sender').populate('receiver'))
       .then(m => {
-        sendNewMessage({member: m.receiver, partner: m.sender})
+        getDataModel()=='fumoir' && fumoirMailing && fumoirMailing.sendNewMessage({member: m.receiver, partner: m.sender})
+        loadFromDb({model: 'message', id:m._id, fields:['receiver.email','receiver.firstname']})
+          .then(([message]) => {
+            console.log(`Message:${JSON.stringify(message)}`)
+            getDataModel()=='all-inclusive' && tipiMailing && tipiMailing.sendNewMessage(message.receiver)
+          })
         return m
       })
   },
@@ -147,8 +158,8 @@ const setAllowActionFn = fn => {
   ALLOW_ACTION = fn
 }
 
-const callAllowedAction = ({action, dataId, user}) => {
-  return ALLOW_ACTION({action, dataId, user})
+const callAllowedAction = (params) => {
+  return ALLOW_ACTION(params)
 }
 
 const addAction= (action, fn) => {

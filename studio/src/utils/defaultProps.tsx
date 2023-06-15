@@ -12,6 +12,7 @@ import {
   AvatarGroupProps,
   AvatarProps,
   CheckboxProps,
+  CheckboxGroupProps,
   LinkProps,
   SpinnerProps,
   CloseButtonProps,
@@ -91,6 +92,7 @@ type PreviewDefaultProps = {
   AvatarGroup?: PropsWithForm<Omit<AvatarGroupProps, 'children'>>
   Avatar?: PropsWithForm<AvatarProps>
   Checkbox?: PropsWithForm<CheckboxProps>
+  CheckboxGroup?: PropsWithForm<CheckboxGroupProps>
   Link?: PropsWithForm<LinkProps>
   Spinner?: PropsWithForm<SpinnerProps>
   CloseButton?: PropsWithForm<CloseButtonProps>

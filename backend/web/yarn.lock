@@ -2464,6 +2464,11 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.15.11.tgz#b3b790f09cb1696cffcec605de025b088fa4225f"
   integrity sha512-E5Kwq2n4SbMzQOn6wnmBjuK9ouqlURrcZDVfbo9ftDDTFt3nk7ZKK4GMOzoYgnpQJKcxwQw+lGaBvvlMo0qN/Q==
 
+"@types/node@>=8.1.0":
+  version "20.2.1"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.2.1.tgz#de559d4b33be9a808fd43372ccee822c70f39704"
+  integrity sha512-DqJociPbZP1lbZ5SQPk4oag6W7AyaGMO6gSfRwq3PWl4PXTwJpRQJhDq4W0kzrg3w6tJ1SwlvGZ5uKFHY13LIg==
+
 "@types/node@^14.0.1":
   version "14.18.34"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.18.34.tgz#cd2e6fa0dbfb08a62582a7b967558e73c32061ec"
@@ -4889,6 +4894,11 @@ csv-string@^4.1.0:
   resolved "https://registry.yarnpkg.com/csv-string/-/csv-string-4.1.1.tgz#3ab81c702e15adb3396a9f98c3a703b77a0391cc"
   integrity sha512-KGvaJEZEdh2O/EVvczwbPLqJZtSQaWQ4cEJbiOJEG4ALq+dBBqNmBkRXTF4NV79V25+XYtiqbco1IWrmHLm5FQ==
 
+csv-writer@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/csv-writer/-/csv-writer-1.6.0.tgz#d0cea44b6b4d7d3baa2ecc6f3f7209233514bcf9"
+  integrity sha512-NOx7YDFWEsM/fTRAJjRpPp8t+MKRVvniAg9wQlUKx20MFrPs73WLJhFf5iteqrxNYnsy924K3Iroh3yNHeYd2g==
+
 cyclist@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/cyclist/-/cyclist-1.0.1.tgz#596e9698fd0c80e12038c2b82d6eb1b35b6224d9"
@@ -6045,6 +6055,11 @@ find-cache-dir@^3.3.1:
     commondir "^1.0.1"
     make-dir "^3.0.2"
     pkg-dir "^4.1.0"
+
+find-cycle@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/find-cycle/-/find-cycle-1.0.0.tgz#9d4a84b853540e121fd7a2bd7fbc4a6d425364b9"
+  integrity sha512-um47oVzW1wGgkEb1Pbhs/Scb1xYP+RErujOAQCpngJDhG9YHXfOh7HV2l4tFwrNs60XawH4kDul3BvG+ZuTKvQ==
 
 find-up@^3.0.0:
   version "3.0.0"
@@ -9604,6 +9619,13 @@ pascalcase@^0.1.1:
   resolved "https://registry.yarnpkg.com/pascalcase/-/pascalcase-0.1.1.tgz#b363e55e8006ca6fe21784d2db22bd15d7917f14"
   integrity sha512-XHXfu/yOQRy9vYOtUDVMN60OEJjW013GoObG1o+xwQTpB9eYJX/BjXMsdW13ZDPruFhYYn0AG22w0xgQMwl3Nw==
 
+passport-anonymous@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/passport-anonymous/-/passport-anonymous-1.0.1.tgz#241e37274ec44dfb7f6cad234b41c438386bc117"
+  integrity sha512-Mk2dls97nLTzHpsWCYQ54IVGucWaiWSHHr3+IhWYAebg4dRgRQIfyoeYrixoxB2z2z4+EM7p9yjC+a3yMB5z5A==
+  dependencies:
+    passport-strategy "1.x.x"
+
 passport-cookie@^1.0.9:
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/passport-cookie/-/passport-cookie-1.0.9.tgz#a21dca7ce6cc95fb929083a171a9f894024dcecb"
@@ -10058,6 +10080,13 @@ qs@6.9.6:
   version "6.9.6"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.9.6.tgz#26ed3c8243a431b2924aca84cc90471f35d5a0ee"
   integrity sha512-TIRk4aqYLNoJUbd+g2lEdz5kLWIuTMRagAXxl78Q0RiVjAOugHmeKNGdd3cwo/ktpf9aL9epCfFqWDEKysUlLQ==
+
+qs@^6.11.0:
+  version "6.11.2"
+  resolved "https://registry.yarnpkg.com/qs/-/qs-6.11.2.tgz#64bea51f12c1f5da1bc01496f48ffcff7c69d7d9"
+  integrity sha512-tDNIz22aBzCDxLtVH++VnTfzxlfeK5CbqohpSqpJgj1Wg/cQbStNAz3NuqCs5vV+pjBsK4x4pN9HlVh7rcYRiA==
+  dependencies:
+    side-channel "^1.0.4"
 
 querystring-es3@^0.2.0:
   version "0.2.1"
@@ -11263,6 +11292,14 @@ strip-json-comments@^3.1.0, strip-json-comments@^3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-3.1.1.tgz#31f1281b3832630434831c310c01cccda8cbe006"
   integrity sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==
+
+stripe@^12.5.0:
+  version "12.5.0"
+  resolved "https://registry.yarnpkg.com/stripe/-/stripe-12.5.0.tgz#965168a87103a985fac950a7184a71bb107ac904"
+  integrity sha512-eDBh4bv+Uo+GdhjnQ246lM5KaOReoBzxFltgW0HJqco/QEAgSYxZPOpFbd5+gJnZlRqHSB5B+Zqw273SlbdPag==
+  dependencies:
+    "@types/node" ">=8.1.0"
+    qs "^6.11.0"
 
 stubs@^3.0.0:
   version "3.0.0"

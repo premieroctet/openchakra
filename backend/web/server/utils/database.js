@@ -74,7 +74,13 @@ const getAttributeCaracteristics = (modelName, att) => {
   const type =
     baseData.instance == 'ObjectID' ? baseData.options.ref : baseData.instance
   const ref = baseData.instance == 'ObjectID'
-  let enumValues = lodash.isEmpty(att.enumValues) ? undefined : att.enumValues
+  let enumValues = undefined
+  if (!lodash.isEmpty(att.enumValues)) {
+    enumValues=att.enumValues
+  }
+  if (!lodash.isEmpty(att.options?.enum)) {
+    enumValues=att.options.enum
+  }
   if (enumValues) {
     const enumObject=DECLARED_ENUMS[modelName]?.[att.path]
     if (!enumObject) {
@@ -140,7 +146,7 @@ const getModelAttributes = (modelName, level=MODEL_ATTRIBUTES_DEPTH) => {
   ]
 
   // Auto-create _count attribute for all multiple attributes
-  const multipleAttrs=attrs.filter(att => !att[0].includes('.') && att[1].multiple===true).map(att => att[0])
+  const multipleAttrs=[] //attrs.filter(att => !att[0].includes('.') && att[1].multiple===true).map(att => att[0])
   const multiple_name=name => `${name}_count`
   multipleAttrs.forEach(name => {
     const multName=multiple_name(name)
@@ -219,7 +225,7 @@ const buildPopulates = (modelName, fields) => {
   // Retain ref attributes only
   const groupedAttributes=lodash(requiredFields)
     .groupBy(att => att.split('.')[0])
-    .pickBy((_,attName) => attributes[attName].ref===true)
+    .pickBy((_,attName) => {if (!attributes[attName]){throw new Error(`Attribute ${modelName}.${attName} unknown`)}; return attributes[attName].ref===true})
     .mapValues(attributes => attributes.map(att => att.split('.').slice(1).join('.')).filter(v => !lodash.isEmpty(v)))
 
   /// Build populate using att and subpopulation
@@ -230,6 +236,15 @@ const buildPopulates = (modelName, fields) => {
   return pops.value()
 }
 
+// Returns mongoose models ordered using child classes first (using discriminators)
+const getMongooseModels = () => {
+  const conn=mongoose.connection
+  const models=conn.modelNames().map(name => conn.models[name])
+  // Model with discriminator is a base model => set latest
+  return lodash(models)
+    .sortBy(model => `${!!model.discriminators ? '1':'0'}:${model.modelName}`)
+    .value()
+}
 /**
  Returns model from database id
  expectedModel is a string or an array of string.
@@ -237,14 +252,13 @@ const buildPopulates = (modelName, fields) => {
  is neither the expectedModel (String type) or included in expectedModel (array type)
 */
 const getModel = (id, expectedModel) => {
-  const conn = mongoose.connection
-  return Promise.all(conn.modelNames()
-    .map(model =>
-      conn.models[model]
-        .exists({_id: id})
-        .then(exists => (exists ? model : false)),
-    ),
-  ).then(res => {
+  return Promise.all(getMongooseModels()
+    .map(model => model.exists({_id: id})
+        .then(exists => (exists ? model.modelName : false))
+        .catch(err => {})
+    )
+  )
+  .then(res => {
     const model=res.find(v => !!v)
     if (!model) {
       throw new Error(`Model not found for ${id}`)
@@ -265,7 +279,7 @@ const buildQuery = (model, id, fields) => {
   const select = lodash(fields)
     .map(att => att.split('.')[0])
     .uniq()
-    .filter(att => modelAttributes[att].ref == false)
+    .filter(att => {if (!modelAttributes[att]) throw new Error(`Unknown attribute ${model}.${att}`); return modelAttributes[att].ref == false})
     .map(att => [att, true])
     .fromPairs()
     .value()
@@ -378,9 +392,6 @@ const addComputedFields = async(
     data.hasOwnProperty(f),
   )
   const requiredCompFields = lodash.pick(compFields, presentCompFields)
-  if (model=='message') {
-    console.log(`compfields:${Object.keys(compFields)},presentCompFields:${presentCompFields},requiredCompFields:${Object.keys(requiredCompFields)}`)
-  }
   // Compute direct attributes
   const x = await Promise.allSettled(
     Object.keys(requiredCompFields).map(f =>
@@ -496,6 +507,17 @@ const callPostCreateData = data => {
   return postCreateData(data)
 }
 
+// Post put data
+let postPutData = data => Promise.resolve(data.data)
+
+const setPostPutData = fn => {
+  postPutData = fn
+}
+
+const callPostPutData = data => {
+  return postPutData(data)
+}
+
 const putAttribute = ({parent, attribute, value, user}) => {
   let model = null
   return getModel(parent)
@@ -580,7 +602,6 @@ const shareTargets = (obj1, obj2) => {
 const loadFromDb = ({model, fields, id, user, params}) => {
   return callPreprocessGet({model, fields, id, user})
     .then(({model, fields, id, data}) => {
-      console.log(`POSTGET ${model}/${id} ${fields} ${data}`)
       if (data) {
         return data
       }
@@ -594,10 +615,8 @@ const loadFromDb = ({model, fields, id, user, params}) => {
           if (id && data.length == 0) { throw new NotFoundError(`Can't find ${model}:${id}`) }
           return Promise.all(data.map(d => addComputedFields(user, params, d, model)))
         })
-        .then(data => {
-          // return id ? Promise.resolve(data) : callFilterDataUser({model, data, id, user: req.user})
-          return callFilterDataUser({model, data, id, user})
-        })
+        .then(data =>  callFilterDataUser({model, data, id, user}))
+        //.then(data =>  retainRequiredFields({data, fields}))
     })
 
 }
@@ -629,6 +648,8 @@ module.exports = {
   callPreCreateData,
   setPostCreateData,
   callPostCreateData,
+  setPostPutData,
+  callPostPutData,
   removeData,
   putAttribute,
   idEqual,
@@ -636,4 +657,5 @@ module.exports = {
   simpleCloneModel,
   shareTargets,
   loadFromDb,
+  getMongooseModels,
 }

@@ -1,8 +1,13 @@
+import {jsPDF} from 'jspdf'
 import axios from 'axios'
 import lodash from 'lodash'
-import {jsPDF} from 'jspdf'
+
+import {
+  clearComponentValue,
+  getComponent,
+  getComponentDataValue
+} from './values';
 import { clearToken } from './token';
-import {getComponent, clearComponentValue} from './values'
 
 const API_ROOT = '/myAlfred/api/studio'
 export const ACTIONS = {
@@ -15,16 +20,19 @@ export const ACTIONS = {
   sendMessage: ({ value, props, level, getComponentValue }) => {
     const destinee = props.destinee ? getComponentValue(props.destinee, level) : value._id
     const contents = getComponentValue(props.contents, level)
+    const attachment = getComponentValue(props.attachment, level)
     let url = `${API_ROOT}/action`
     return axios
       .post(url, {
         action: 'sendMessage',
         destinee,
         contents,
+        attachment,
       })
       .then(res => {
         clearComponentValue(props.destinee, level)
         clearComponentValue(props.contents, level)
+        clearComponentValue(props.attachment, level)
         return res
       })
   },
@@ -65,7 +73,7 @@ export const ACTIONS = {
       [getComponent(c, level)?.getAttribute('attribute') || getComponent(c, level)?.getAttribute('data-attribute'),
         getComponentValue(c, level)||null]
     ))
-    'job,mission,quotation,group,parent,content'.split(',').forEach(property => {
+    'job,mission,quotation,group,parent,content,recipe,menu'.split(',').forEach(property => {
       if (props[property]) {
         //const dataId=document.getElementById(`${props[property]}${level}`)?.getAttribute('_id')
         const dataId=getComponent(props[property], level)?.getAttribute('_id')||null
@@ -381,15 +389,13 @@ export const ACTIONS = {
     return axios.post(url, body)
   },
 
-  createRecommandation: ({ value, context, props, level, getComponentValue }) => {
+  createRecommandation: ({ value, props, level, getComponentValue }) => {
     const components=lodash(props).pickBy((v, k) => /^component_/.test(k) && !!v).values()
     const body = Object.fromEntries(components.map(c =>
       [getComponent(c, level)?.getAttribute('attribute') || getComponent(c, level)?.getAttribute('data-attribute'),
         getComponentValue(c, level)||null]
     ))
-
-    const jobId=document.getElementById(`${props.job}${level}`)?.getAttribute('_id')
-    body.job=require('url').parse(window.location.href, true).query?.jobUser
+    body.job=value._id
 
     let url = `${API_ROOT}/recommandation`
     return axios.post(url, body).then(res => ({
@@ -437,13 +443,22 @@ export const ACTIONS = {
     return axios.post(url, body)
   },
 
-  alle_accept_quotation: ({value}) => {
+  alle_accept_quotation: ({value, props}) => {
     let url = `${API_ROOT}/action`
     const body = {
       action: 'alle_accept_quotation',
-      value,
+      paymentSuccess: props.paymentSuccess,
+      paymentFailure: props.paymentFailure,
+      value: value._id,
     }
     return axios.post(url, body)
+      .then(res => {
+        if (res.data.redirect) {
+          let redirect=res.data.redirect
+          redirect = /^http/.test(redirect) ? redirect : `/${redirect}`
+          window.location=redirect
+        }
+      })
   },
 
   alle_refuse_quotation: ({value}) => {
@@ -594,10 +609,38 @@ export const ACTIONS = {
       })
   },
 
+  smartdiet_start_event: ({ value }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_start_event',
+      value: value._id,
+    }
+    return axios.post(url, body)
+      .then(res => {
+        const object=res.data
+        if (object.url) {
+          return Promise.resolve(window.open(object.url, 'blank'))
+        }
+        return {_id: object}
+      })
+  },
+
   smartdiet_pass_event: ({ value }) => {
     let url = `${API_ROOT}/action`
     const body = {
       action: 'smartdiet_pass_event',
+      value: value._id,
+    }
+    return axios.post(url, body)
+      .then(res => {
+        return {_id: res.data}
+      })
+  },
+
+  smartdiet_fail_event: ({ value }) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_fail_event',
       value: value._id,
     }
     return axios.post(url, body)
@@ -615,6 +658,98 @@ export const ACTIONS = {
 
     body.action='alle_ask_contact'
     let url = `${API_ROOT}/anonymous-action`
+    return axios.post(url, body)
+  },
+
+  smartdiet_set_company_code: ({value, props, level, getComponentValue}) => {
+    const code = getComponentValue(props.code, level)
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_set_company_code',
+      code,
+    }
+    return axios.post(url, body)
+  },
+
+  openUrl: ({value, actionProps}) => {
+    let props=actionProps
+    try { props=JSON.parse(actionProps) } catch(e) {}
+    const {url, open}=props
+    const urlValue=lodash.get(value, url)
+    // new page
+    if (open && !(props.open === 'false')) {
+      return Promise.resolve(window.open(urlValue, 'blank'))
+    } else {
+      return Promise.resolve((window.location = urlValue))
+    }
+  },
+
+  payMission: ({ context, props }) => {
+    let url = `${API_ROOT}/action`
+    const body = {action: 'payMission', context,...props}
+    return axios.post(url, body)
+      .then(res => {
+        if (res.data.redirect) {
+          let url=res.data.redirect
+          url=/^http/.test(url) ? url : `/${url}`
+          window.location=url
+        }
+      })
+  },
+
+  hasChildren: ({ value, actionProps}) => {
+    const body={
+      action: 'hasChildren',
+      value: value._id,
+      actionProps,
+    }
+    let url = `${API_ROOT}/action`
+    return axios.post(url, body)
+  },
+
+  askRecommandation: ({ value, context, props, level, getComponentValue }) => {
+    const body={
+      action: 'askRecommandation',
+      value: value._id,
+      email: getComponentValue(props.email, level)||null,
+      message: getComponentValue(props.message, level)||null,
+      page: props.page,
+    }
+    let url = `${API_ROOT}/action`
+    return axios.post(url, body)
+  },
+
+  smartdiet_start_survey: () => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_start_survey',
+    }
+    return axios.post(url, body).then(res => ({
+      model: 'userQuestion',
+      value: res.data,
+    }))
+  },
+
+  smartdiet_next_question: ({value}) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_next_question',
+      value: value._id,
+    }
+    return axios.post(url, body)
+      .then(res => {
+        var searchParams = new URLSearchParams(window.location.search);
+        searchParams.set('userQuestion', res.data._id)
+        window.location.search=searchParams.toString()
+      })
+  },
+
+  smartdiet_finish_survey: ({value}) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_finish_survey',
+      value: value._id,
+    }
     return axios.post(url, body)
   },
 

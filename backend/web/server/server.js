@@ -52,13 +52,11 @@ require('./models/Key')
 require('./models/Group')
 require('./models/Target')
 require('./models/PartnerApplication')
-require('./models/Trophy')
 require('./models/Spoon')
 require('./models/CollectiveChallenge')
 require('./models/PartnerApplication')
 require('./models/Gift')
 require('./models/SpoonGain')
-require('./models/UserSpoon')
 require('./models/Content')
 require('./models/Menu')
 require('./models/Webinar')
@@ -81,6 +79,11 @@ require('./models/Recipe')
 require('./models/Instrument')
 require('./models/Ingredient')
 require('./models/RecipeIngredient')
+require('./models/AdminDashboard')
+require('./models/Question')
+require('./models/UserQuestion')
+require('./models/UserSurvey')
+require('./models/MenuRecipe')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 
@@ -214,7 +217,7 @@ checkConfig()
     httpsServer.listen(getPort(), () => {
       console.log(`${config.appName} running on ${getHostUrl()}`)
       console.log(`Checking correct hostname`)
-      axios
+      !isDevelopment() && axios
         .get(new URL('/testping', getHostUrl()).toString())
         .then(({data}) => {
           if (data != RANDOM_ID) {

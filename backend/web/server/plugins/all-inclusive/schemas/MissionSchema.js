@@ -8,11 +8,13 @@ const {
   MISSION_STATUS_CUST_CANCELLED,
   MISSION_STATUS_DISPUTE,
   MISSION_STATUS_FINISHED,
+  MISSION_STATUS_PAYMENT_PENDING,
   MISSION_STATUS_QUOT_ACCEPTED,
   MISSION_STATUS_QUOT_REFUSED,
   MISSION_STATUS_QUOT_SENT,
   MISSION_STATUS_TI_REFUSED,
   MISSION_STATUS_TO_BILL,
+  PAYMENT_STATUS,
   ROLE_COMPANY_BUYER,
   ROLE_TI,
   TI_TIPS
@@ -71,6 +73,7 @@ const MissionSchema = new Schema({
     default: MISSION_FREQUENCY_UNKNOWN,
     required: [true, 'La fréquence de mission est obligatoire']
   },
+  // Customer
   user: {
     type: Schema.Types.ObjectId,
     ref: "user",
@@ -112,6 +115,32 @@ const MissionSchema = new Schema({
   bill: {
     type: String,
   },
+  // Payment process
+  payin_id: {
+    type: String,
+  },
+  // Null: pending, true: ok
+  payin_achieved: {
+    type: Boolean,
+    required: false,
+  },
+  transfer_id: {
+    type: String,
+  },
+  transfer_status: {
+    type: String,
+  },
+  payout_id: {
+    type: String,
+  },
+  payout_status: {
+    type: String,
+  },
+  dummy: {
+    type: Number,
+    default: 0,
+    required: true,
+  },
 }, schemaOptions
 );
 
@@ -131,8 +160,11 @@ MissionSchema.virtual('status').get(function() {
   if (this.customer_refuse_quotation_date) {
     return MISSION_STATUS_QUOT_REFUSED
   }
-  if (this.customer_accept_quotation_date) {
+  if (this.payin_id && this.payin_achieved==true) {
     return MISSION_STATUS_QUOT_ACCEPTED
+  }
+  if (this.payin_id && this.payin_achieved==null) {
+    return MISSION_STATUS_PAYMENT_PENDING
   }
   if (this.customer_cancel_date) {
     return MISSION_STATUS_CUST_CANCELLED
@@ -194,6 +226,7 @@ MissionSchema.methods.canCreateQuotation = function(user) {
 
 // TODO: fsm
 MissionSchema.methods.canAcceptQuotation = function(user) {
+  console.log(`Role:${user.role} ${ROLE_COMPANY_BUYER},status:${this.status} ${MISSION_STATUS_QUOT_SENT}`)
   return user.role==ROLE_COMPANY_BUYER && this.status==MISSION_STATUS_QUOT_SENT
 }
 

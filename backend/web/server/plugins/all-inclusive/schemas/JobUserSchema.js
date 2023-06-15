@@ -19,6 +19,7 @@ const JobUserSchema = new Schema({
   city: {
     type: String,
   },
+  // TI
   user: {
     type: Schema.Types.ObjectId,
     ref: "user",
@@ -52,6 +53,15 @@ const JobUserSchema = new Schema({
     default: 0,
     min: [0, 'Le montant minimum est 0'],
     required: [function() { return this.customer_location}, 'Le tarif de déplacement est obligatoire']
+  },
+  pins: [{
+    type: Schema.Types.ObjectId,
+    ref: 'user',
+  }],
+  dummy: {
+    type: Number,
+    default: 0,
+    required: true,
   },
 }, schemaOptions
 );
@@ -116,5 +126,8 @@ JobUserSchema.virtual("missions", {
   foreignField: "job" // is equal to foreignField
 });
 
+JobUserSchema.virtual('pinned').get(function() {
+  return false
+})
 
 module.exports = JobUserSchema;

@@ -81,7 +81,7 @@ export const storeConfig = {
       })
     },
   },
-  plugins: [persistPlugin],
+  //plugins: [persistPlugin],
 }
 
 // @ts-ignore

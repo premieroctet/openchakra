@@ -1,4 +1,5 @@
 import React from 'react'
+import { UserCtx } from '../context/user';
 
 import { NOT_CONNECTED } from '../utils/misc';
 
@@ -9,10 +10,16 @@ const withMaskability = (Component: React.FC<any>) => {
     ...props
   }: {
     hiddenRoles: string
-    user: { role: string }
+    user: UserCtx
   }) => {
+    
     const rolesToHide = JSON.parse(hiddenRoles)
-    const roleUser = user?.role || NOT_CONNECTED
+    const roleUser = user && user?.role || NOT_CONNECTED
+
+    // while user not yet fetched, mask items doesn't appear
+    if (user === false) {
+      return null
+    }
 
     // if nothing to hide, render
     if (rolesToHide?.length && rolesToHide.length === 0) {
@@ -20,13 +27,12 @@ const withMaskability = (Component: React.FC<any>) => {
     }
 
     // When roleUser is available, reveal
-    if (roleUser) {
-      if (rolesToHide.includes(roleUser)) {
-        return null
-      }
-      return <Component {...props} />
+    if (rolesToHide.includes(roleUser)) {
+      return null
     }
-    return null
+    
+    return <Component {...props} />
+    
   }
 
   return internal

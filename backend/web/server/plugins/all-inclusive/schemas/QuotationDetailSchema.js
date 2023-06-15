@@ -20,10 +20,11 @@ const QuotationDetailSchema = new Schema({
     type: Number,
     required: [true, 'Le prix H.T. est obligatoire'],
   },
+  // 0 < vat < 100
   vat: {
     type: Number,
     min: 0,
-    max: 1.0,
+    max: 100,
     set: v => v || 0,
     required: [true, 'Le taux de TVA est obligatoire'],
   },
@@ -36,11 +37,11 @@ const QuotationDetailSchema = new Schema({
 );
 
 QuotationDetailSchema.virtual('total').get(function() {
-  return this.ht_price*this.quantity*(1+this.vat)
+  return this.ht_price*this.quantity*(1+this.vat/100.0)
 })
 
 QuotationDetailSchema.virtual('vat_total').get(function() {
-  return this.ht_price*this.quantity*this.vat
+  return this.ht_price*this.quantity*this.vat/100.0
 })
 
 module.exports = QuotationDetailSchema;

@@ -55,6 +55,12 @@ export function whatTheHexaColor(color: string) {
   return retainedColor
 }
 
+export function addBackslashes(str: string) {
+  return str
+    .replace(/\\/, '')
+    .replace(/'/g, "\\'")
+}
+
 export const iconStuff = ({
   icon, 
   dataLib = '', 

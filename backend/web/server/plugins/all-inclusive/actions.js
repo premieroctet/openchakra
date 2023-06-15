@@ -1,17 +1,39 @@
 const {
+  sendAccountCreatedToAdmin,
+  sendAccountCreatedToCustomer,
+  sendAccountCreatedToTIPI,
+  sendAccountDeactivated,
+  sendAskContact,
+  sendAskRecomandation,
+  sendBillRefused,
+  sendBillSent,
+  sendBillingReminder,
+  sendCompanyRegistered,
+  sendForgotPassword,
+  sendLeaveComment,
+  sendMissionRefused,
+  sendMissionsFinished,
+  sendQuotationAccepted,
+  sendQuotationRefused,
+  sendQuotationSentToCustomer,
+} = require('./mailing')
+const Contact = require('../../models/Contact')
+const axios = require('axios')
+const {
+  getHostUrl,
+  getProductionUrl,
+  paymentPlugin
+} = require('../../../config/config')
+
+const { isEmailOk } = require('../../../utils/sms')
+const { getModel, loadFromDb } = require('../../utils/database')
+const {
   CONTACT_STATUS,
   ROLE_ALLE_ADMIN,
+  ROLE_ALLE_SUPER_ADMIN,
   ROLE_COMPANY_BUYER,
   ROLE_TI
 } = require('./consts')
-
-const {
-  sendAccountCreatedToCustomer,
-  sendAccountCreatedToTIPI,
-  sendAskContact,
-  sendForgotPassword,
-  sendQuotationSentToCustomer
-} = require('./mailing')
 const {
   generatePassword,
   validatePassword
@@ -34,6 +56,12 @@ const alle_refuse_mission = ({value}, user) => {
     .then(ok => {
       if (!ok) {return false}
       return Mission.findByIdAndUpdate(value._id, {ti_refuse_date: moment()})
+          .populate({path: 'job', populate: {path: 'user'}})
+          .populate({path: 'user'})
+          .then(m => {
+            sendMissionRefused(m)
+            return m
+          })
     })
 }
 addAction('alle_refuse_mission', alle_refuse_mission)
@@ -59,7 +87,6 @@ const alle_send_quotation = ({value}, user) => {
             quotation.mission._id,
             {quotation_sent_date: moment(),
               customer_refuse_quotation_date: null,
-              customer_accept_quotation_date: null
             }
           )
         })
@@ -67,24 +94,36 @@ const alle_send_quotation = ({value}, user) => {
 }
 addAction('alle_send_quotation', alle_send_quotation)
 
-const alle_accept_quotation = ({value}, user) => {
-  return isActionAllowed({action:'alle_refuse_quotation', dataId:value?._id, user})
+const alle_accept_quotation = ({value, paymentSuccess, paymentFailure}, user) => {
+  return isActionAllowed({action:'alle_accept_quotation', dataId:value, user})
     .then(ok => {
       if (!ok) {return false}
-      return Mission.findByIdAndUpdate(
-        value?._id,
-        {customer_accept_quotation_date: moment(),
-          customer_refuse_quotation_date: null,
-        }
-      )
+      return loadFromDb({model: 'mission', id:value, fields:['job.user','quotations.total']})
+    })
+    .then(([mission]) => {
+      const [success_url, failure_url]=[paymentSuccess, paymentFailure].map(p => `${getHostUrl()}${p}`)
+      return paymentPlugin.createPayment({source_user: user, amount:mission.quotations[0].total, fee:0,
+        destination_user: mission.job.user, description: 'Un test',
+        success_url, failure_url,
+    })
+    .then(payment => {
+      loadFromDb({model: 'mission', id: value, fields:['job.user','user']})
+        .then(([mission])=> sendQuotationAccepted(mission))
+      return Mission.findByIdAndUpdate(value, {payin_id:payment.id, payin_achieved:null})
+        .then(() =>payment.url)
+    })
+    .then(url => ({redirect: url}))
     })
 }
+
 addAction('alle_accept_quotation', alle_accept_quotation)
 
 const alle_refuse_quotation = ({value}, user) => {
   return isActionAllowed({action:'alle_refuse_quotation', dataId:value?._id, user})
     .then(ok => {
       if (!ok) {return false}
+      loadFromDb({model: 'mission', id: value._id, fields:['job.user','user']})
+        .then(([mission])=> sendQuotationRefused(mission))
       return Mission.findByIdAndUpdate(
         value?._id,
         {customer_refuse_quotation_date: moment(),
@@ -109,6 +148,11 @@ const alle_finish_mission = ({value}, user) => {
   return isActionAllowed({action:'alle_finish_mission', dataId:value?._id, user})
     .then(ok => {
       if (!ok) {return false}
+      loadFromDb({model: 'mission', id: value._id, fields:['job.user','user']})
+        .then(([mission])=> {
+          sendMissionsFinished(mission)
+          sendBillingReminder(mission)
+        })
       return Mission.findByIdAndUpdate(
         value._id,
         {ti_finished_date: moment()}
@@ -136,6 +180,8 @@ const alle_send_bill = ({value}, user) => {
   return isActionAllowed({action:'alle_send_bill', dataId:value?._id, user})
     .then(ok => {
       if (!ok) {return false}
+      loadFromDb({model: 'mission', id: value._id, fields:['job.user','user.full_name']})
+        .then(([mission])=> sendBillSent(mission))
       return Mission.findByIdAndUpdate(
         value._id,
         {bill_sent_date: moment(),
@@ -155,6 +201,8 @@ const alle_accept_bill = ({value}, user) => {
   return isActionAllowed({action:'alle_accept_bill', dataId:value?._id, user})
     .then(ok => {
       if (!ok) {return false}
+      loadFromDb({model: 'mission', id: value._id, fields:['job.user','user.full_name']})
+        .then(([mission])=> sendLeaveComment(mission))
       return Mission.findByIdAndUpdate(
         value._id,
         {customer_accept_bill_date: moment()}
@@ -167,6 +215,8 @@ const alle_refuse_bill = ({value}, user) => {
   return isActionAllowed({action:'alle_refuse_bill', dataId:value?._id, user})
     .then(ok => {
       if (!ok) {return false}
+      loadFromDb({model: 'mission', id: value._id, fields:['job.user','user','name']})
+        .then(([mission])=> sendBillRefused(mission))
       return Mission.findByIdAndUpdate(
         value._id,
         {customer_refuse_bill_date: moment()}
@@ -191,6 +241,10 @@ const deactivateAccount = ({value, reason}, user) => {
         value._id,
         {active: false, unactive_reason: reason}
       )
+      .then(user => {
+        sendAccountDeactivated({user})
+        return user
+      })
     })
 }
 addAction('deactivateAccount', deactivateAccount)
@@ -202,12 +256,33 @@ const registerAction = props => {
       if (exists) {
         return Promise.reject(`Un compte avec le mail ${props.email} existe déjà`)
       }
+      if (!props.password) {
+        props.password=generatePassword()
+        props.password2=props.password
+        return Promise.resolve()
+      }
       return validatePassword({...props})
     })
     .then(() => User.create({...props, role: props.role || ROLE_TI}))
     .then(user => {
-      const sendWelcome=user.role==ROLE_TI ? sendAccountCreatedToTIPI : sendAccountCreatedToCustomer
-      return sendWelcome({user})
+      const sendWelcome=
+        user.role==ROLE_TI ? sendAccountCreatedToTIPI
+        : user.role==ROLE_COMPANY_BUYER ? sendAccountCreatedToCustomer
+        : user.role==ROLE_ALLE_ADMIN ? sendAccountCreatedToAdmin
+        : null
+      if (!sendWelcome) {
+        throw new BadRequestError(`Pas de mail de création de compte défini pour le role ${props.role}`)
+      }
+      sendWelcome({user, password: props.password})
+      User.find({role:{$in:[ROLE_ALLE_ADMIN, ROLE_ALLE_SUPER_ADMIN]}})
+        .then(admins => users.map(admin => sendCompanyRegistered(user, admin)))
+      if (user.role==ROLE_TI) {
+        return paymentPlugin.upsertProvider(user)
+      }
+      if (user.role==ROLE_COMPANY_BUYER) {
+        return paymentPlugin.upsertCustomer(user)
+      }
+      return user
     })
 }
 addAction('register', registerAction)
@@ -228,17 +303,43 @@ const forgotPasswordAction=({context, parent, email}) => {
 addAction('forgotPassword', forgotPasswordAction)
 
 const askContactAction=(props) => {
-  return User.find({role: ROLE_ALLE_ADMIN})
-    .then(users => Promise.allSettled(users.map(u => sendAskContact({
-      user:u,
-      fields:{...props, urgent: props.urgent ? 'Oui':'Non', status: CONTACT_STATUS[props.status]}
-    }))))
+  return new Contact(props).validate()
+    .then(() => props.document ? axios.get(props.document) : Promise.resolve({data:null}))
+    .then(({data}) => {
+      const att=data ? {url: props.document} : null
+      return User.find({role: ROLE_ALLE_ADMIN})
+        .then(users => Promise.allSettled(users.map(u => sendAskContact({
+          user:u,
+          fields:{...props, urgent: props.urgent ? 'Oui':'Non', status: CONTACT_STATUS[props.status]},
+          attachment: att,
+        }))))
+    })
 }
 
 addAction('alle_ask_contact', askContactAction)
 
+// TODO: send rest to isActionAllowed
+const hasChildrenAction = ({value, reason}, user) => {
+  return Promise.resolve(true)
+}
 
-const isActionAllowed = ({action, dataId, user}) => {
+addAction('hasChildren', hasChildrenAction)
+
+const askRecommandationAction = ({value, email, message, page}, user) => {
+  if (!value) {throw new BadRequestError('Le job est obligatoire')}
+  if (!(email && isEmailOk(email))) {throw new BadRequestError("L'email est invalide")}
+  if (!message?.trim()) {throw new BadRequestError('Le message est obligatoire')}
+  if (!page) {throw new BadRequestError('La page de recommandation est obligatoire')}
+  return loadFromDb({model: 'jobUser', id: value, fields:['user.full_name']})
+    .then(([job]) => {
+      sendAskRecomandation({user, destinee_email:email, message,url: getProductionUrl(`${page}?id=${value}`)})
+      return true
+    })
+}
+
+addAction('askRecommandation', askRecommandationAction)
+
+const isActionAllowed = ({action, dataId, user, ...rest}) => {
   if (action=='alle_create_quotation') {
     return Mission.findById(dataId)
       .populate('quotations')
@@ -313,6 +414,29 @@ const isActionAllowed = ({action, dataId, user}) => {
     return Mission.findById(dataId)
       .populate('quotations')
       .then(mission => mission?.canLeaveComment(user))
+  }
+
+  if (action=='create') {
+    const actionProps=rest.actionProps
+    if (actionProps?.model=='quotation') {
+      return Mission.findById(dataId)
+        .populate('quotations')
+        .then(mission => {
+          if (mission?.quotations?.length>0) {
+            return false
+          }
+          return true
+        })
+    }
+  }
+
+  if (action=='hasChildren') {
+    const childrenAttribute=rest?.actionProps.children
+    if (childrenAttribute) {
+      return getModel(dataId)
+        .then(model => loadFromDb({model, fields:[childrenAttribute], id: dataId, user}))
+        .then(data => data?.[0][childrenAttribute]?.length>0)
+    }
   }
 
   return Promise.resolve(true)

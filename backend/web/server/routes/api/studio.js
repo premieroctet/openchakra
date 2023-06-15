@@ -1,3 +1,17 @@
+const {
+  FUMOIR_MEMBER,
+  PAYMENT_FAILURE,
+  PAYMENT_SUCCESS
+} = require('../../plugins/fumoir/consts')
+const {
+  callFilterDataUser,
+  callPostCreateData,
+  callPostPutData,
+  callPreCreateData,
+  callPreprocessGet,
+  loadFromDb,
+  retainRequiredFields,
+} = require('../../utils/database')
 const path = require('path')
 const zlib=require('zlib')
 const {promises: fs} = require('fs')
@@ -9,31 +23,19 @@ const bcrypt = require('bcryptjs')
 const express = require('express')
 const mongoose = require('mongoose')
 const passport = require('passport')
-const {FUMOIR_MEMBER} = require('../../plugins/fumoir/consts')
 const {date_str, datetime_str} = require('../../../utils/dateutils')
 const Payment = require('../../models/Payment')
 const {
   HOOK_PAYMENT_FAILED,
   HOOK_PAYMENT_SUCCESSFUL,
 } = require('../../plugins/payment/vivaWallet')
-const {
-  PAYMENT_FAILURE,
-  PAYMENT_SUCCESS,
-} = require('../../plugins/fumoir/consts')
-const {
-  callFilterDataUser,
-  callPostCreateData,
-  callPreCreateData,
-  callPreprocessGet,
-  retainRequiredFields,
-  loadFromDb,
-} = require('../../utils/database')
 const {callAllowedAction} = require('../../utils/studio/actions')
 const {
   getDataModel,
   getProductionPort,
   getProductionRoot,
 } = require('../../../config/config')
+
 try {
   require(`../../plugins/${getDataModel()}/functions`)
 }
@@ -122,11 +124,12 @@ router.get('/roles', (req, res) => {
   return res.json(ROLES)
 })
 
-router.get('/action-allowed/:action/:dataId', passport.authenticate('cookie', {session: false}), (req, res) => {
-  const {action, dataId}=req.params
+router.get('/action-allowed/:action', passport.authenticate('cookie', {session: false}), (req, res) => {
+  const {action}=req.params
+  const query=lodash.mapValues(req.query, v => {try{return JSON.parse(v)} catch(e) {return v}})
   const user=req.user
 
-  return callAllowedAction({action, dataId, user})
+  return callAllowedAction({action, user, ...query})
     .then(allowed => res.json(allowed))
 })
 
@@ -275,54 +278,22 @@ router.post('/login', (req, res) => {
     })
 })
 
-// router.post('/scormupdate', passport.authenticate('cookie', {session: false}), (req, res) => {
-router.post('/scormupdate', (req, res) => {
-  const value = req.body
-  const idRessource = req?.body?.cmi?.entry
-  const user = req.user
-
-  // console.log(value, idRessource, user)
-  console.log(value)
-
-  // const updateScorm = UserSessionData.findOneAndUpdate({
-  //   user: user._id,
-  // }, {
-  //   user: user._id,
-  // }, {
-  //   upsert: true,
-  //   new: true,
-  // })
-  //   .then(data => {
-  //     const scormProgress = data?.modules_progress?.find(a => a.resource._id.toString() == idRessource.toString())
-  //     if (scormProgress) {
-  //       scormProgress.module_progress = value
-  //     }
-  //     else {
-  //       data.modules_progress.push({
-  //         resource: parent,
-  //         module_progress: value,
-  //       })
-  //     }
-  //     return data.save()
-  //   })
-  //   .catch(e => console.error(e))
-
-  // return res.json(updateScorm)
-  return res.json({})
-})
-
 router.get('/current-user', passport.authenticate('cookie', {session: false}), (req, res) => {
   return res.json(req.user)
 })
 
 router.post('/register', (req, res) => {
-  const body=lodash.mapValues(req.body, v => JSON.parse(v))
+  const ip=req.headers['x-forwarded-for'] || req.socket.remoteAddress
+  const body={register_ip:ip, ...lodash.mapValues(req.body, v => JSON.parse(v))}
+  console.log(`Registering  on ${ip} with body ${JSON.stringify(body)}`)
   return ACTIONS.register(body)
     .then(result => res.json(result))
 })
 
 router.post('/register-and-login', (req, res) => {
-  const body=lodash.mapValues(req.body, v => JSON.parse(v))
+  const ip=req.headers['x-forwarded-for'] || req.socket.remoteAddress
+  const body={register_ip:ip, ...lodash.mapValues(req.body, v => JSON.parse(v))}
+  console.log(`Registering & login on ${ip} with body ${JSON.stringify(body)}`)
   return ACTIONS.register(body)
     .then(result => {
       const {email, password}=body
@@ -375,9 +346,7 @@ router.post('/recommandation', (req, res) => {
         .then(([data]) => {
           return callPostCreateData({model, params, data})
         })
-        .then(data => {
-          return res.json(data)
-        })
+        .then(data => res.json(data))
     })
 })
 
@@ -389,6 +358,22 @@ router.get('/statTest', (req, res) => {
       return ({x:v, y:cos})
     })
   return res.json(data)
+})
+
+router.post('/contact', (req, res) => {
+  const model = 'contact'
+  let params=req.body
+  const context= req.query.context
+
+  return callPreCreateData({model, params})
+    .then(({model, params}) => {
+      return mongoose.connection.models[model]
+        .create([params], {runValidators: true})
+        .then(([data]) => {
+          return callPostCreateData({model, params, data})
+        })
+        .then(data => res.json(data))
+    })
 })
 
 router.post('/:model', passport.authenticate('cookie', {session: false}), (req, res) => {
@@ -411,9 +396,7 @@ router.post('/:model', passport.authenticate('cookie', {session: false}), (req, 
         .then(([data]) => {
           return callPostCreateData({model, params, data})
         })
-        .then(data => {
-          return res.json(data)
-        })
+        .then(data => res.json(data))
     })
 })
 
@@ -422,6 +405,7 @@ router.put('/:model/:id', passport.authenticate('cookie', {session: false}), (re
   const id = req.params.id
   let params=req.body
   const context= req.query.context
+  const user=req.user
   params=model=='order' && context ? {...params, booking: context}:params
 
   if (!model || !id) {
@@ -430,9 +414,8 @@ router.put('/:model/:id', passport.authenticate('cookie', {session: false}), (re
   console.log(`Updating:${id} with ${JSON.stringify(params)}`)
   return mongoose.connection.models[model]
     .findByIdAndUpdate(id, params, {new: true, runValidators: true})
-    .then(data => {
-      return res.json(data)
-    })
+    .then(data => callPostPutData({model, params, data, user}))
+    .then(data => res.json(data))
 })
 
 
@@ -454,7 +437,7 @@ const loadFromRequest = (req, res) => {
     })
 }
 
-router.get('/jobUser/:id?', passport.authenticate('nullable-cookie', {session: false}), (req, res) => {
+router.get('/jobUser/:id?', passport.authenticate(['cookie', 'anonymous'], {session: false}), (req, res) => {
   req.params.model='jobUser'
   return loadFromRequest(req, res)
 })

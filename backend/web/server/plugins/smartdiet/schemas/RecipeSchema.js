@@ -14,8 +14,9 @@ const Schema = mongoose.Schema
 
 const RecipeSchema = new Schema({
   name:{type:String, required: true},
-  duearion: {type:Number, required: false},
+  duration: {type:Number, required: false},
   description: {type:String, required: false},
+  picture: {type:String, required: false},
   source: {type:String, required: false},
   colling_duration: {type:Number, required: false},
   freezing_duration: {type:Number, required: false},
@@ -23,14 +24,10 @@ const RecipeSchema = new Schema({
   marinade_duration: {type:Number, required: false},
   cooking_duration: {type:Number, required: false},
   steps: {type:String, required: false},
-  instruments: {
+  instruments: [{
     type: Schema.Types.ObjectId,
     ref: 'instrument',
-  },
-  ingredients: {
-    type: Schema.Types.ObjectId,
-    ref: 'recipeIngredient',
-  },
+  }],
   nutriscore: {
     type:String,
     enum: Object.keys(NUTRISCORE),
@@ -120,5 +117,11 @@ const RecipeSchema = new Schema({
 },
 {...schemaOptions, ...EVENT_DISCRIMINATOR}
 )
+
+RecipeSchema.virtual("ingredients", {
+  ref: "recipeIngredient", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "recipe" // is equal to foreignField
+})
 
 module.exports = RecipeSchema

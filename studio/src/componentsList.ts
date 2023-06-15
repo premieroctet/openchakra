@@ -77,6 +77,11 @@ let menuItems: MenuItems = {
   Checkbox: {
     group: 'form',
   },
+  CheckboxGroup: {
+    title: 'Checkbox group',
+    group: 'form',
+    rootParentType: 'Checkbox',
+  },
   CircularProgress: {},
   CloseButton: {},
   Code: {},
@@ -204,7 +209,7 @@ let menuItems: MenuItems = {
     },
   },
   VisuallyHidden: {},
-  
+
   /*"Tabs",
   "TabList",
   "TabPanel",

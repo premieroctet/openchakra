@@ -4,10 +4,14 @@ import React, {useState} from 'react'
 import lodash from 'lodash'
 
 const withDynamicCheckbox = Component => {
-  const Internal = ({ dataSource, context, backend, contextAttribute, ...props }) => {
+  const Internal = ({ dataSource, insideGroup, context, backend, contextAttribute, ...props }) => {
 
-    const initialValue = lodash.get(dataSource, props.attribute)
+    const initialValue = lodash.get(dataSource, props.attribute || '_id')
     const [value, setValue]=useState((!contextAttribute && initialValue) || false)
+
+    if (insideGroup) {
+      return <Component {...props} value={value} insideGroup />
+    }
 
     const onChange = ev => {
       setValue(!!ev.target.checked)

@@ -115,8 +115,17 @@ const withDynamicContainer = Component => {
         orgData = orgData.filter(d =>regExp.test(normalize(d[attribute])))
       }
     }
+    if (props.filterAttribute2 && props.filterValue2) {
+      const value=props.getComponentValue(props.filterValue2, props.level)
+      // TODO Check why value "null" comes as string
+      if (!(lodash.isNil(value) || value=="null")) {
+        const regExp = new RegExp(normalize(value).trim(), 'i')
+        const attribute=props.filterAttribute2
+        orgData = orgData.filter(d =>regExp.test(normalize(d[attribute])))
+      }
+    }
     let data = orgData
-    if (true || !lodash.isNil(props?.limit)) {
+    if (!lodash.isNil(props?.limit)) {
     try {
         data = orgData.slice(0, parseInt(props?.limit) || undefined)
       }
@@ -126,8 +135,15 @@ const withDynamicContainer = Component => {
     }
 
 
-    const firstChild = React.Children.toArray(props.children)[0]
+    const [firstChild, secondChild] = React.Children.toArray(props.children).slice(0,2)
 
+    if (lodash.isEmpty(data)) {
+      return (
+        <Component {...lodash.omit(props, ['children'])}>
+        {secondChild || null}
+        </Component>
+      )
+    }
     return (
       <Component {...lodash.omit(props, ['children'])}>
         {data.map((d, index) => {
