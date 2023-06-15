@@ -330,7 +330,6 @@ declareVirtualField({model: 'comment', field: 'children', instance: 'Array',
     options: {ref: 'comment'}},
 })
 
-declareVirtualField({model: 'key', field: 'user_survey_average', instance: 'Number'})
 declareVirtualField({model: 'key', field: 'trophy_picture', instance: 'String', requires: 'spoons_count_for_trophy,trophy_on_picture,trophy_off_picture'})
 declareVirtualField({model: 'key', field: 'user_spoons', instance: 'Number'})
 declareVirtualField({model: 'key', field: 'user_spoons_str', instance: 'String'})
@@ -418,22 +417,6 @@ const getPinnedMessages = (user, params, data) => {
   return Promise.resolve(data.messages?.filter(m => m.pins?.some(p => idEqual(p._id, user._id))))
 }
 
-const getUserSurveyAverage = (user, params, data) => {
-  const key_id=data._id
-  return UserSurvey
-    .find({user: user}).sort({[CREATED_AT_ATTRIBUTE]: -1})
-    .populate({path: 'questions', populate: 'question'})
-    .lean({virtuals: true})
-    .then(([survey]) => {
-      const result=lodash(survey.questions)
-      // TODO: take into account questions with no answer ??
-        .filter(q => idEqual(q.question.key._id, key_id))
-        .meanBy('answer') || 0
-      console.log(JSON.stringify(result, null, 2))
-      return result
-    })
-}
-
 const getMenuShoppingList = (user, params, data) => {
   console.log(data.recipes.map(r => [r.recipe.name,r.recipe._id]))
   const ingredients=lodash.flatten(data?.recipes.map(r => r.recipe.ingredients))
@@ -456,14 +439,14 @@ const getUserKeySpoonsStr = (user, params, data) => {
 const getUserSurveysProgress = (user, params, data) => {
   return UserSurvey.find({user: user})
     .sort({[CREATED_AT_ATTRIBUTE]: -1})
-    .populate({path: 'questions', populate:{path: 'question', poulate:'key'}})
+    .populate({path: 'questions', populate:{path: 'question'}})
     .lean({virtuals: true})
     .then(surveys => surveys.map(s => ({...s, questions: s.questions.filter(q => idEqual(q.question.key, data._id))})))
     .then(surveys => surveys.filter(s => !lodash.isEmpty(s.questions)))
     .then(surveys => surveys.map(s => ({
-      date: s[CREATED_AT_ATTRIBUTE],
-      value_1: lodash.meanBy(s.questions, q => q.answer || 0)
-    })))
+        date: s[CREATED_AT_ATTRIBUTE],
+        value_1: lodash.meanBy(s.questions, 'answer') || 0,
+      })))
     .catch(err => console.error(err))
 }
 
@@ -475,7 +458,6 @@ declareComputedField('content', 'liked', getDataLiked, setDataLiked)
 declareComputedField('message', 'pinned', getDataPinned, setDataPinned)
 declareComputedField('content', 'pinned', getDataPinned, setDataPinned)
 declareComputedField('group', 'pinned_messages', getPinnedMessages)
-declareComputedField('key', 'user_survey_average', getUserSurveyAverage)
 declareComputedField('individualChallenge', 'trophy_picture', getUserIndChallengeTrophy)
 declareComputedField('key', 'trophy_picture', getUserKeyTrophy)
 declareComputedField('key', 'user_spoons', getUserKeySpoons)
