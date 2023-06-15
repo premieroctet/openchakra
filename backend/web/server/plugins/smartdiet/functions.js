@@ -1,4 +1,16 @@
 const {
+  declareComputedField,
+  declareEnumField,
+  declareVirtualField,
+  getModel,
+  idEqual,
+  loadFromDb,
+  setPostCreateData,
+  setPreCreateData,
+  setPreprocessGet,
+  simpleCloneModel,
+} = require('../../utils/database')
+const {
   getUserIndChallengeTrophy,
   getUserKeyProgress,
   getUserKeySpoons,
@@ -11,17 +23,6 @@ const lodash=require('lodash')
 const moment = require('moment')
 const UserSurvey = require('../../models/UserSurvey')
 const {CREATED_AT_ATTRIBUTE} = require('../../../utils/consts')
-const {
-  declareComputedField,
-  declareEnumField,
-  declareVirtualField,
-  getModel,
-  idEqual,
-  setPostCreateData,
-  setPreCreateData,
-  setPreprocessGet,
-  simpleCloneModel,
-} = require('../../utils/database')
 const Offer = require('../../models/Offer')
 const Content = require('../../models/Content')
 const Company = require('../../models/Company')
@@ -335,6 +336,12 @@ declareVirtualField({model: 'key', field: 'user_spoons', instance: 'Number'})
 declareVirtualField({model: 'key', field: 'user_spoons_str', instance: 'String'})
 declareVirtualField({model: 'key', field: 'user_progress', instance: 'Number'})
 declareVirtualField({model: 'key', field: 'user_read_contents', instance: 'Number'})
+declareVirtualField({model: 'key', field: 'user_surveys_progress', instance: 'Array',
+  multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'chartPoint'}},
+})
 
 declareVirtualField({model: 'userSurvey', field: 'questions', instance: 'Array',
   multiple: true,
@@ -445,6 +452,21 @@ const getUserKeySpoonsStr = (user, params, data) => {
       return  `${count} cuillère${count > 1 ? 's' :''}`
     })
 }
+
+const getUserSurveysProgress = (user, params, data) => {
+  return UserSurvey.find({user: user})
+    .sort({[CREATED_AT_ATTRIBUTE]: -1})
+    .populate({path: 'questions', populate:{path: 'question', poulate:'key'}})
+    .lean({virtuals: true})
+    .then(surveys => surveys.map(s => ({...s, questions: s.questions.filter(q => idEqual(q.question.key, data._id))})))
+    .then(surveys => surveys.filter(s => !lodash.isEmpty(s.questions)))
+    .then(surveys => surveys.map(s => ({
+      date: s[CREATED_AT_ATTRIBUTE],
+      value_1: lodash.meanBy(s.questions, q => q.answer || 0)
+    })))
+    .catch(err => console.error(err))
+}
+
 declareComputedField('user', 'available_contents', getAvailableContents)
 declareComputedField('loggedUser', 'available_contents', getAvailableContents)
 declareComputedField('comment', 'liked', getDataLiked, setDataLiked)
@@ -463,6 +485,7 @@ declareComputedField('key', 'user_read_contents', getUserKeyReadContents)
 declareComputedField('user', 'spoons_count', getUserSpoons)
 declareComputedField('loggedUser', 'spoons_count', getUserSpoons)
 declareComputedField('menu', 'shopping_list', getMenuShoppingList)
+declareComputedField('key', 'user_surveys_progress', getUserSurveysProgress)
 
 
 const postCreate = ({model, params, data}) => {

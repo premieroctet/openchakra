@@ -272,7 +272,7 @@ const getModel = (id, expectedModel) => {
 }
 
 const buildQuery = (model, id, fields) => {
-  console.log(`Requesting model:${model}, id:${id || 'none'} fields:${fields}`)
+  console.log(`Building query model:${model}, id:${id || 'none'} fields:${fields}`)
   const modelAttributes = Object.fromEntries(getModelAttributes(model))
 
   const select = lodash(fields)

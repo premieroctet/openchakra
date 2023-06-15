@@ -44,6 +44,10 @@ KeySchema.virtual('user_progress').get(function(){
   return null
 })
 
+KeySchema.virtual('user_surveys_progress', {localField: 'tagada', foreignField:'tagada'}).get(function(){
+  return null
+})
+
 KeySchema.virtual('user_read_contents').get(function(){
   return null
 })

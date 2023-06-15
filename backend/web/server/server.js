@@ -86,6 +86,7 @@ require('./models/UserSurvey')
 require('./models/MenuRecipe')
 require('./models/Team')
 require('./models/Association')
+require('./models/ChartPoint')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 
