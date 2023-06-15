@@ -451,7 +451,7 @@ const getUserSurveysProgress = (user, params, data) => {
     // Keep questions progress
     .then(surveys => surveys.map(s => ({
         date: s[CREATED_AT_ATTRIBUTE],
-        value_1: (lodash.sumBy(s.questions, 'answer')||0)*100.0/(s.questions.length*maxAnswer),
+        value_1: (lodash.sumBy(s.questions, q => parseInt(q.answer)||0)*100.0/(s.questions.length*maxAnswer)),
       })))
     .catch(err => console.error(err))
 }
