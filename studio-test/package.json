@@ -55,7 +55,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "node src/server.js",
     "lint": "next lint"
   },
   "eslintConfig": {
