@@ -1,3 +1,7 @@
+const path = require('path')
+require('dotenv').config({path: path.resolve(__dirname, '../../../.env')})
+const https = require('https')
+const fs = require('fs')
 const axios = require('axios')
 const mongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
@@ -14,6 +18,11 @@ const {
   getDatabaseUri,
   getHostUrl,
   getPort,
+  isProduction,
+  isValidation,
+  isDevelopment,
+  isDevelopment_nossl,
+  config,
 } = require('../config/config')
 const {HTTP_CODES, parseError} = require('./utils/errors')
 require('./models/ResetToken')
@@ -89,25 +98,14 @@ const {MONGOOSE_OPTIONS} = require('./utils/database')
 
 require('console-stamp')(console, '[dd/mm/yy HH:MM:ss.l]')
 
-const {
-  isProduction,
-  isValidation,
-  isDevelopment,
-  isDevelopment_nossl,
-} = require('../config/config')
 const dev = process.env.NODE_DEV !== 'production' // true false
 const prod = process.env.NODE_DEV === 'production' // true false
 const nextApp =
   isProduction() || isValidation() ? next({prod}) : next({dev})
 const routes = require('./routes')
 const routerHandler = routes.getRequestHandler(nextApp)
-const {config} = require('../config/config')
-const http = require('http')
-const https = require('https')
-const fs = require('fs')
 const studio = require('./routes/api/studio')
 const withings = require('./routes/api/withings')
-const path = require('path')
 const app = express()
 const {serverContextFromRequest} = require('./utils/serverContext')
 
