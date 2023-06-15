@@ -437,15 +437,21 @@ const getUserKeySpoonsStr = (user, params, data) => {
 }
 
 const getUserSurveysProgress = (user, params, data) => {
+  // Get max possible answer
+  const maxAnswer=lodash.maxBy(Object.keys(SURVEY_ANSWER), v => parseInt(v))
   return UserSurvey.find({user: user})
     .sort({[CREATED_AT_ATTRIBUTE]: -1})
     .populate({path: 'questions', populate:{path: 'question'}})
     .lean({virtuals: true})
+    // Keep surveys questions depending on current ky (==data)
+    // TODO: try to filter in populate section above
     .then(surveys => surveys.map(s => ({...s, questions: s.questions.filter(q => idEqual(q.question.key, data._id))})))
+    // Keep surveys having still questions
     .then(surveys => surveys.filter(s => !lodash.isEmpty(s.questions)))
+    // Keep questions progress
     .then(surveys => surveys.map(s => ({
         date: s[CREATED_AT_ATTRIBUTE],
-        value_1: lodash.meanBy(s.questions, 'answer') || 0,
+        value_1: (lodash.sumBy(s.questions, 'answer')||0)*100.0/(s.questions.length*maxAnswer),
       })))
     .catch(err => console.error(err))
 }
