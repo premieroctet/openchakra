@@ -10,13 +10,24 @@ const cors = require('cors')
 const https = require('https')
 const fs = require('fs')
 const app = express()
-const util=require('util')
 const path=require('path')
 
 
-const port = parseInt(process.env.PORT, 10) || 7777;
+const API_PATH = '/myAlfred/api'
+const port = parseInt(process.env.STUDIO_TEST_PORT, 10) || 7777;
+const isSecure = process.env.MODE === 'production'
 
 nextApp.prepare().then(() => {
+
+  app.use(
+    API_PATH, 
+    createProxyMiddleware({ 
+      target: `https://localhost:${process.env.BACKEND_PORT || '443'}`,
+      changeOrigin: true, 
+      pathFilter: API_PATH, 
+      secure: isSecure
+    })
+  );
 
   // Body parser middleware
   app.use(bodyParser.urlencoded({extended: false}))
