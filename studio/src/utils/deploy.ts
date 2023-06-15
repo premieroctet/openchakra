@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import lodash from 'lodash'
 import { ProjectState } from '~/core/models/project'
 import { PageSettings } from '../core/models/project';
@@ -7,7 +8,7 @@ import { normalizePageName, urlClean } from './misc';
 import { validateComponents , validateProject} from './validation'
 
 // If true, build target project when compliaiton fixed
-const TARGET_BUILD = true
+const TARGET_BUILD = process.env.MODE === 'production' || false
 
 const copyCode = (pageName: string, contents: Buffer) => {
   
