@@ -66,8 +66,8 @@ QuotationSchema.virtual('details', {
   foreignField: 'quotation', // is equal to foreignField
 })
 
+// TODO: must use this.mer instead of direct computation
 QuotationSchema.virtual('customer_total').get(function() {
-  console.log(`Cust total:${this.gross_total}:${this.mer}`)
   //const cust_total=this.gross_total+this.mer
   const cust_total=this.gross_total+this.ht_total*MER_RATE
   return cust_total

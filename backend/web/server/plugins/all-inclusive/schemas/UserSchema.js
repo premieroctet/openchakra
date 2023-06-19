@@ -352,7 +352,7 @@ UserSchema.virtual("revenue").get(function() {
   }
   return lodash(this.missions)
       .filter(m => [MISSION_STATUS_FINISHED].includes(m.status))
-      .sumBy(m => m.quotations[0].total)
+      .sumBy(m => m.quotations[0].ti_total)
 })
 
 // Achieved revenue : accepted quotation
@@ -362,7 +362,7 @@ UserSchema.virtual("revenue_to_come").get(function() {
   }
   return lodash(this.missions)
       .filter(m => m.status==MISSION_STATUS_QUOT_ACCEPTED)
-      .sumBy(m => m.quotations[0].total)
+      .sumBy(m => m.quotations[0].ti_total)
 })
 
 UserSchema.virtual("accepted_quotations_count").get(function() {
@@ -380,7 +380,8 @@ UserSchema.virtual("spent").get(function() {
   }
   return lodash(this.missions)
       .filter(m => m.status==MISSION_STATUS_FINISHED)
-      .sumBy(m => m.quotations[0].total)
+      // TODO: finished mission should have a quotations
+      .sumBy(m => m.quotations[0]?.customer_total || 0)
 })
 
 UserSchema.virtual("spent_to_come").get(function() {
@@ -389,13 +390,15 @@ UserSchema.virtual("spent_to_come").get(function() {
   }
   return lodash(this.missions)
     .filter(m => [MISSION_STATUS_QUOT_ACCEPTED].includes(m.status))
-    .sumBy(m => m.quotations[0].total)
+    // TODO: finished mission should have a quotations
+    .sumBy(m => m.quotations[0]?.customer_total || 0)
 })
 
 UserSchema.virtual("pending_bills").get(function() {
   return lodash(this.missions)
     .filter(m => [MISSION_STATUS_BILL_SENT].includes(m.status))
-    .sumBy(m => m.quotations[0].total)
+    // TODO: finished mission should have a quotations
+    .sumBy(m => m.quotations[0]?.customer_total || 0)
 })
 
 UserSchema.virtual("profile_shares_count").get(function() {

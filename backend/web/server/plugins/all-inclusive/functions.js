@@ -253,16 +253,17 @@ USER_MODELS.forEach(m => {
   declareVirtualField({model: m, field: 'comments_note', instance: 'Number', requires: 'jobs'})
 
   declareVirtualField({model: m, field: 'revenue', instance: 'Number',
-    requires: 'role,_missions.quotations.total,_missions.status,missions.quotations.total,missions.status'})
+    requires: 'role,_missions.quotations.ti_total,_missions.status,missions.quotations.ti_total,missions.status'})
   declareVirtualField({model: m, field: 'revenue_to_come', instance: 'Number',
-    requires: 'role,_missions.quotations.total,_missions.status,missions.quotations.total,missions.status'})
+    requires: 'role,_missions.quotations.ti_total,_missions.status,missions.quotations.ti_total,missions.status'})
   declareVirtualField({model: m, field: 'accepted_quotations_count', instance: 'Number', requires: 'role,_missions.status,missions.status'})
 
   declareVirtualField({model: m, field: 'spent', instance: 'Number',
-    requires: 'role,_missions.quotations.total,_missions.status,missions.quotations.total,missions.status'})
+    requires: 'role,_missions.quotations.customer_total,_missions.status,missions.quotations.customer_total,missions.status'})
   declareVirtualField({model: m, field: 'spent_to_come', instance: 'Number',
-    requires: 'role,_missions.quotations.total,_missions.status,missions.quotations.total,missions.status'})
-  declareVirtualField({model: m, field: 'pending_bills', instance: 'Number', requires: 'role,_missions.status,missions.status'})
+    requires: 'role,_missions.quotations.customer_total,_missions.status,missions.quotations.customer_total,missions.status'})
+  declareVirtualField({model: m, field: 'pending_bills', instance: 'Number',
+    requires: 'role,_missions.status,_missions.quotations.customer_total,missions.status,missions.quotations.customer_total'})
 
   declareVirtualField({model: m, field: 'profile_shares_count', instance: 'Number', requires: ''})
   declareEnumField({model: m, field: 'unactive_reason', enumValues: UNACTIVE_REASON})
@@ -486,11 +487,11 @@ declareComputedField('adminDashboard', 'sent_quotations', () =>
 
 declareComputedField('adminDashboard', 'quotation_ca_total',
   () => {
-    return loadFromDb({model: 'mission', fields:['status','quotations.total']})
+    return loadFromDb({model: 'mission', fields:['status','quotations.customer_total']})
       .then(missions => {
         return lodash(missions)
           .filter(m => m.status==MISSION_STATUS_QUOT_SENT)
-          .sumBy(m => m.quotations[0].total)
+          .sumBy(m => m.quotations[0].gross_total)
       })
   }
 )
@@ -502,46 +503,46 @@ declareComputedField('adminDashboard', 'quotation_ca_total',
 // TODO: WTF is that value ??
 declareComputedField('adminDashboard', 'commission_ca_total',
 () => {
-  return loadFromDb({model: 'mission', fields:['status','quotations.total']})
+  return loadFromDb({model: 'mission', fields:['status','quotations.aa']})
     .then(missions => {
       return lodash(missions)
         .filter(m => m.status==MISSION_STATUS_FINISHED)
-        .sumBy(m => m.quotations[0].total)*0.15
+        .sumBy(m => m.quotations[0].aa)
     })
 }
 )
 
 declareComputedField('adminDashboard', 'tipi_commission_ca_total',
 () => {
-  return loadFromDb({model: 'mission', fields:['name','status','quotations.total','job.user.coaching','job.user.coaching']})
+  return loadFromDb({model: 'mission', fields:['name','status','quotations.aa','job.user.coaching','job.user.coaching']})
     .then(missions => {
       return lodash(missions)
         .filter(m => m.status==MISSION_STATUS_FINISHED)
         .filter(m => m.job?.user?.coaching==COACH_ALLE)
-        .sumBy(m => m.quotations[0].total)*0.15
+        .sumBy(m => m.quotations[0].aa)
     })
 }
 )
 
 declareComputedField('adminDashboard', 'tini_commission_ca_total',
 () => {
-  return loadFromDb({model: 'mission', fields:['status','quotations.total','job.user.coaching']})
+  return loadFromDb({model: 'mission', fields:['status','quotations.aa','job.user.coaching']})
     .then(missions => {
       return lodash(missions)
         .filter(m => m.status==MISSION_STATUS_FINISHED)
         .filter(m => m.job?.user?.coaching!=COACH_ALLE)
-        .sumBy(m => m.quotations[0].total)*0.15
+        .sumBy(m => m.quotations[0].aa)
     })
 }
 )
 
 declareComputedField('adminDashboard', 'customer_commission_ca_total',
 () => {
-  return loadFromDb({model: 'mission', fields:['status','quotations.total']})
+  return loadFromDb({model: 'mission', fields:['status','quotations.mer']})
     .then(missions => {
       return lodash(missions)
         .filter(m => m.status==MISSION_STATUS_FINISHED)
-        .sumBy(m => m.quotations[0].total)*0.15
+        .sumBy(m => m.quotations[0].mer)
     })
 }
 )

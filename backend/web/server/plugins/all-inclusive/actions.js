@@ -118,6 +118,12 @@ const alle_accept_quotation = ({value, paymentSuccess, paymentFailure}, user) =>
 
 addAction('alle_accept_quotation', alle_accept_quotation)
 
+const alle_can_accept_quotation = ({value, paymentSuccess, paymentFailure}, user) => {
+  return isActionAllowed({action:'alle_accept_quotation', dataId:value, user})
+}
+
+addAction('alle_can_accept_quotation', alle_can_accept_quotation)
+
 const alle_refuse_quotation = ({value}, user) => {
   return isActionAllowed({action:'alle_refuse_quotation', dataId:value?._id, user})
     .then(ok => {

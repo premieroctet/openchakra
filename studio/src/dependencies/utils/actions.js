@@ -462,6 +462,15 @@ export const ACTIONS = {
       })
   },
 
+  alle_can_accept_quotation: ({value, props}) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_can_accept_quotation',
+      value: value._id,
+    }
+    return axios.post(url, body)
+  },
+
   alle_refuse_quotation: ({value}) => {
     let url = `${API_ROOT}/action`
     const body = {
