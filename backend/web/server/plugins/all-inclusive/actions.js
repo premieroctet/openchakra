@@ -1,4 +1,9 @@
 const {
+  getHostName,
+  getProductionUrl,
+  paymentPlugin
+} = require('../../../config/config')
+const {
   sendAccountCreatedToAdmin,
   sendAccountCreatedToCustomer,
   sendAccountCreatedToTIPI,
@@ -19,11 +24,6 @@ const {
 } = require('./mailing')
 const Contact = require('../../models/Contact')
 const axios = require('axios')
-const {
-  getHostUrl,
-  getProductionUrl,
-  paymentPlugin
-} = require('../../../config/config')
 
 const { isEmailOk } = require('../../../utils/sms')
 const { getModel, loadFromDb } = require('../../utils/database')
@@ -98,11 +98,11 @@ const alle_accept_quotation = ({value, paymentSuccess, paymentFailure}, user) =>
   return isActionAllowed({action:'alle_accept_quotation', dataId:value, user})
     .then(ok => {
       if (!ok) {return false}
-      return loadFromDb({model: 'mission', id:value, fields:['job.user','quotations.total']})
+      return loadFromDb({model: 'mission', id:value, fields:['job.user','customer_total']})
     })
     .then(([mission]) => {
-      const [success_url, failure_url]=[paymentSuccess, paymentFailure].map(p => `${getHostUrl()}${p}`)
-      return paymentPlugin.createPayment({source_user: user, amount:mission.quotations[0].total, fee:0,
+      const [success_url, failure_url]=[paymentSuccess, paymentFailure].map(p => `${getHostName()}${p}`)
+      return paymentPlugin.createPayment({source_user: user, amount:mission.customer_total, fee:0,
         destination_user: mission.job.user, description: 'Un test',
         success_url, failure_url,
     })
