@@ -1,3 +1,4 @@
+const { AA_RATE, MER_RATE } = require('../consts')
 const { isPhoneOk } = require('../../../../utils/sms')
 const mongoose = require('mongoose')
 const lodash=require('lodash')
@@ -65,11 +66,36 @@ QuotationSchema.virtual('details', {
   foreignField: 'quotation', // is equal to foreignField
 })
 
-QuotationSchema.virtual('total').get(function() {
+QuotationSchema.virtual('customer_total').get(function() {
+  console.log(`Cust total:${this.gross_total}:${this.mer}`)
+  //const cust_total=this.gross_total+this.mer
+  const cust_total=this.gross_total+this.ht_total*MER_RATE
+  return cust_total
+})
+
+// TODO: Compute properly fro non qualified TI
+QuotationSchema.virtual('mer').get(function() {
+  //const mer_rate=this.mission.job.user.qualified ? MER_RATE : 0
+  const mer_rate=MER_RATE
+  const mer=this.ht_total*mer_rate
+  return mer
+})
+
+QuotationSchema.virtual('gross_total').get(function() {
   if (lodash.isEmpty(this.details)) {
     return 0
   }
   return lodash.sumBy(this.details, 'total')
+})
+
+QuotationSchema.virtual('aa').get(function() {
+  const aa=this.ht_total*AA_RATE
+  return aa
+})
+
+QuotationSchema.virtual('ti_total').get(function() {
+  const ti_total=this.gross_total-this.aa
+  return ti_total
 })
 
 QuotationSchema.virtual('vat_total').get(function() {
@@ -77,6 +103,13 @@ QuotationSchema.virtual('vat_total').get(function() {
     return 0
   }
   return lodash.sumBy(this.details, 'vat_total')
+})
+
+QuotationSchema.virtual('ht_total').get(function() {
+  if (lodash.isEmpty(this.details)) {
+    return 0
+  }
+  return lodash.sumBy(this.details, 'ht_total')
 })
 
 QuotationSchema.methods.canSend = function(user) {
