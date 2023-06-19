@@ -366,10 +366,11 @@ declareVirtualField({model: 'quotation', field: 'details', instance: 'Array', re
     options: {ref: 'quotationDetail'}}
 })
 declareVirtualField({model: 'quotation', field: 'total', instance: 'Number', requires: 'details'})
-declareVirtualField({model: 'quotation', field: 'vat_total', instance: 'Number', requires: 'details'})
+declareVirtualField({model: 'quotation', field: 'vat_total', instance: 'Number', requires: 'details.vat_total'})
 declareVirtualField({model: 'quotation', field: 'ht_total', instance: 'Number', requires: 'details.ht_total'})
 declareVirtualField({model: 'quotation', field: 'customer_total', instance: 'Number', requires: 'gross_total,mer,ht_total'})
-declareVirtualField({model: 'quotation', field: 'mer', instance: 'Number', requires: 'mission.job.user.qualified,ht_total'})
+//declareVirtualField({model: 'quotation', field: 'mer', instance: 'Number', requires: 'mission.job.user.qualified,ht_total'})
+declareVirtualField({model: 'quotation', field: 'mer', instance: 'Number', requires: 'ht_total'})
 declareVirtualField({model: 'quotation', field: 'gross_total', instance: 'Number', requires: 'details.total'})
 declareVirtualField({model: 'quotation', field: 'aa', instance: 'Number', requires: 'ht_total'})
 declareVirtualField({model: 'quotation', field: 'ti_total', instance: 'Number', requires: 'gross_total,aa'})
