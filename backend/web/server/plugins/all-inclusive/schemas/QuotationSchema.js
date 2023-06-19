@@ -1,3 +1,4 @@
+const { isPhoneOk } = require('../../../../utils/sms')
 const mongoose = require('mongoose')
 const lodash=require('lodash')
 const {schemaOptions} = require('../../../utils/schemas')
@@ -24,6 +25,11 @@ const QuotationSchema = new Schema({
   lastname: {
     type: String,
     required: [true, 'Le nom est obligatoire'],
+  },
+  phone: {
+    type: String,
+    validate: [isPhoneOk, 'Le numéro de téléphone doit commencer par 0 ou +33'],
+    required: false,
   },
   email: {
     type: String,
