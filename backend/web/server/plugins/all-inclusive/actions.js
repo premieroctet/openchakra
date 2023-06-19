@@ -101,7 +101,7 @@ const alle_accept_quotation = ({value, paymentSuccess, paymentFailure}, user) =>
       return loadFromDb({model: 'mission', id:value, fields:['job.user','customer_total']})
     })
     .then(([mission]) => {
-      const [success_url, failure_url]=[paymentSuccess, paymentFailure].map(p => `${getHostName()}${p}`)
+      const [success_url, failure_url]=[paymentSuccess, paymentFailure].map(p => `https://${getHostName()}/${p}`)
       return paymentPlugin.createPayment({source_user: user, amount:mission.customer_total, fee:0,
         destination_user: mission.job.user, description: 'Un test',
         success_url, failure_url,
