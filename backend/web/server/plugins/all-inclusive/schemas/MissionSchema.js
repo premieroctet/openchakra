@@ -283,9 +283,7 @@ MissionSchema.methods.canLeaveComment = function(user) {
 // Got from quotation
 // TODO: must use this.mer instead of direct computation
 MissionSchema.virtual('customer_total').get(function() {
-  //const cust_total=this.gross_total+this.mer
-  const cust_total=this.gross_total+this.ht_total*MER_RATE
-  return cust_total
+  return this.quotations[0]?.customer_total
 })
 
 // TODO: Compute properly fro non qualified TI
