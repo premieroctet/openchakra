@@ -141,6 +141,12 @@ addAction('alle_show_quotation', alle_show_quotation)
 
 const alle_edit_quotation = ({value}, user) => {
   return isActionAllowed({action:'alle_edit_quotation', dataId:value?._id, user})
+    .then(allowed => {
+      if (!allowed) {
+        return false
+      }
+      return Quotation.findOne({mission: value?._id})
+    })
 }
 addAction('alle_edit_quotation', alle_edit_quotation)
 

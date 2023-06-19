@@ -81,10 +81,11 @@ export const ACTIONS = {
       }
     })
     let url = `${API_ROOT}/${props.model}?context=${context}`
-    return axios.post(url, body).then(res => ({
-      model: props.model,
-      value: res.data,
-    }))
+    return axios.post(url, body)
+      .then(res => ({
+        model: props.model,
+        value: res.data,
+      }))
   },
   levelUp: ({ value, props, context }) => {
     let url = `${API_ROOT}/action`
@@ -488,6 +489,10 @@ export const ACTIONS = {
       context,
     }
     return axios.post(url, body)
+      .then(res => ({
+        model: props.model,
+        value: res.data,
+      }))
   },
 
   alle_finish_mission: ({ value, context, props, level, getComponentValue }) => {
