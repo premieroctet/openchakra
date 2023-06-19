@@ -70,6 +70,10 @@ export const ACTIONS: IActions = {
         components
           .filter(comp => comp.type=='Flex')
           .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      collectiveChallenge: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
       ...Object.fromEntries(lodash.range(24).map((idx:number) => {
       return [
         `component_${idx}`,
@@ -79,7 +83,7 @@ export const ACTIONS: IActions = {
 
       ]})),
     },
-    next: ['openPage'],
+    next: ['openPage', 'previous'],
   },
   login: {
     label: 'Login',
@@ -553,6 +557,12 @@ export const ACTIONS: IActions = {
 
   smartdiet_finish_survey: {
     label: 'SM Finish survey',
+    options: {},
+    next: ['openPage'],
+  },
+
+  smartdiet_join_team: {
+    label: 'SM Join team',
     options: {},
     next: ['openPage'],
   },

@@ -17,6 +17,10 @@ const PipSchema = new Schema({
     type: String,
     required: [true, 'Le thème est obligatoire'],
   },
+  picture: {
+    type: String,
+    required: false,
+  },
   context: {
     type: String,
     required: [true, 'Le contexte est obligatoire'],

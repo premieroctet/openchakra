@@ -234,7 +234,7 @@ UserSchema.virtual("available_menu", {
 });
 
 // User's collective challenges are the company's ones
-UserSchema.virtual('collective_challenges').get(function() {
+UserSchema.virtual('collective_challenges', {localField:'tagada', foreignField:'tagada'}).get(function() {
   return this.company?.collective_challenges || []
 })
 

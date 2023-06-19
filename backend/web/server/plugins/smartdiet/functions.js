@@ -1,3 +1,4 @@
+const {BadRequestError} = require('../../utils/errors')
 const {
   declareComputedField,
   declareEnumField,
@@ -27,6 +28,8 @@ const Offer = require('../../models/Offer')
 const Content = require('../../models/Content')
 const Company = require('../../models/Company')
 const User = require('../../models/User')
+const Team = require('../../models/Team')
+const TeamMember = require('../../models/TeamMember')
 const {
   ACTIVITY,
   COMPANY_ACTIVITY,
@@ -71,6 +74,13 @@ const preCreate = ({model, params, user}) => {
   }
   if (['message'].includes(model)) {
     params.sender=user
+  }
+  if (['team'].includes(model)) {
+    return Team.exists({name: params.name?.trim(), collectiveChallenge: params.collectiveChallenge})
+      .then(exists => {
+        if (exists) { throw new BadRequestError(`L'équipe ${params.name} existe déjà pour ce challenge`)}
+        return {model, params}
+      })
   }
   return Promise.resolve({model, params})
 }
@@ -148,6 +158,7 @@ USER_MODELS.forEach(m => {
       options: {ref: 'menu'}},
   })
   declareVirtualField({model: m, field: 'collective_challenges', instance: 'Array', multiple: true,
+    requires:'company.collective_challenges',
     caster: {
       instance: 'ObjectID',
       options: {ref: 'collectiveChallenge'}},
@@ -221,6 +232,11 @@ declareVirtualField({model: 'company', field: 'children', instance: 'Array', mul
   caster: {
     instance: 'ObjectID',
     options: {ref: 'company'}},
+})
+declareVirtualField({model: 'company', field: 'collective_challenges', instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'collectiveChallenge'}},
 })
 
 
@@ -364,6 +380,19 @@ declareVirtualField({model: 'pip', field: 'comments', instance: 'Array', multipl
 })
 declareVirtualField({model: 'pip', field: 'comments_count', instance: 'Number', requires: 'comments'})
 
+declareVirtualField({model: 'team', field: 'members', instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'teamMember'}},
+})
+
+declareVirtualField({model: 'teamMember', field: 'spoons', instance: 'Number'})
+
+declareVirtualField({model: 'collectiveChallenge', field: 'teams', instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'team'}},
+})
 
 const getAvailableContents = (user, params, data) => {
   return Content.find()
@@ -483,7 +512,7 @@ declareComputedField('menu', 'shopping_list', getMenuShoppingList)
 declareComputedField('key', 'user_surveys_progress', getUserSurveysProgress)
 
 
-const postCreate = ({model, params, data}) => {
+const postCreate = ({model, params, data,user}) => {
   // Create company => duplicate offer
   if (model=='company') {
     return Offer.findById(data.offer)
@@ -496,6 +525,10 @@ const postCreate = ({model, params, data}) => {
     sendNewBookingToMember({booking: data})
     User.find({role: FUMOIR_MANAGER})
       .then(managers => Promise.allSettled(managers.map(manager => sendNewBookingToManager({booking: data, manager}))))
+  }
+  if (model=='team') {
+    return TeamMember.create({team: data, user})
+      .then(()=> data)
   }
 
   return Promise.resolve(data)

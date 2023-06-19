@@ -8,6 +8,9 @@ const { addAction, setAllowActionFn, ACTIONS } = require('../../utils/studio/act
 const User = require('../../models/User')
 const Group = require('../../models/Group')
 const Company = require('../../models/Company')
+const CollectiveChallenge = require('../../models/CollectiveChallenge')
+const Team = require('../../models/Team')
+const TeamMember = require('../../models/TeamMember')
 const {PARTICULAR_COMPANY_NAME}=require('./consts')
 const lodash=require('lodash')
 
@@ -97,6 +100,16 @@ const smartdietFinishSurvey = ({value}, user) => {
 }
 addAction('smartdiet_finish_survey', smartdietFinishSurvey)
 
+const smartdietJoinTeam = ({value}, user) => {
+  return isActionAllowed({action: 'smartdiet_join_team', dataId: value, user})
+    .then(allowed => {
+      if (!allowed) throw new BadRequestError(`Vous appartenez déjà à une équipe`)
+      return TeamMember.create({team: value, user})
+    })
+}
+
+addAction('smartdiet_join_team', smartdietJoinTeam)
+
 
 const isActionAllowed = ({action, dataId, user}) => {
   // TODO: why can we get "undefined" ??
@@ -167,6 +180,14 @@ const isActionAllowed = ({action, dataId, user}) => {
       if (action=='smartdiet_finish_survey') {
         return UserQuestion.findById(dataId).populate('question').populate('survey')
           .then(question => UserQuestion.exists({survey: question.survey, order:question.order+1}))
+          .then(exists => !exists)
+      }
+      if (action=='smartdiet_join_team') {
+        // Get all teams of this team's collective challenge, then check if
+        // user in on one of them
+        return Team.findById(dataId, 'collectiveChallenge')
+          .then(team => Team.find({collectiveChallenge: team.collectiveChallenge}))
+          .then(teams => TeamMember.exists({user:user, team: {$in: teams }}))
           .then(exists => !exists)
       }
       return Promise.resolve(true)

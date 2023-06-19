@@ -35,10 +35,6 @@ const CompanySchema = new Schema(
       ref: 'offer',
       required: false,
     },
-    collective_challenges: [{
-      type: Schema.Types.ObjectId,
-      ref: "collectiveChallenge",
-    }],
     parent: {
       type: Schema.Types.ObjectId,
       ref: "company",
@@ -112,6 +108,12 @@ CompanySchema.virtual("children", {
   ref: "company", // The Model to use
   localField: "_id", // Find in Model, where localField
   foreignField: "parent", // is equal to foreignField
+});
+
+CompanySchema.virtual("collective_challenges", {
+  ref: "collectiveChallenge", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "company", // is equal to foreignField
 });
 
 module.exports = CompanySchema
