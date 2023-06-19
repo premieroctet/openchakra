@@ -358,6 +358,12 @@ declareVirtualField({model: 'mission', field: 'comments', instance: 'Array', req
     options: {ref: 'comment'}}
 })
 declareEnumField({model: 'mission', field: 'payin_status', enumValues: PAYMENT_STATUS})
+declareVirtualField({model: 'mission', field: 'customer_total', instance: 'Number', requires: 'quotations.customer_total'})
+declareVirtualField({model: 'mission', field: 'mer', instance: 'Number', requires: 'quotations.mer'})
+declareVirtualField({model: 'mission', field: 'gross_total', instance: 'Number', requires: 'quotations.gross_total'})
+declareVirtualField({model: 'mission', field: 'aa', instance: 'Number', requires: 'quotations.aa'})
+declareVirtualField({model: 'mission', field: 'ti_total', instance: 'Number', requires: 'quotations.ti_total'})
+declareVirtualField({model: 'mission', field: 'vat_total', instance: 'Number', requires: 'quotations.vat_total'})
 
 
 declareVirtualField({model: 'quotation', field: 'details', instance: 'Array', requires: '', multiple: true,
