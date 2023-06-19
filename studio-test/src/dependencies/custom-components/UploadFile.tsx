@@ -144,7 +144,13 @@ const UploadFile = ({
 
           default:
             const res = await uploadFileToS3(fileToUpload)
+              .catch(err => console.error(err))
             setS3File(res.Location)
+
+            if (attribute) {
+              setUploadInfo(okmsg)
+            }
+
             paramsBack = { ...paramsBack, ...{ value: res?.Location } }
             break
         }
