@@ -82,7 +82,7 @@ const getDynamicType = (comp: IComponent) => {
     return 'Source'
   }
   if (CHECKBOX_TYPE.includes(comp.type)) {
-    return comp.type=='IconCheck' ? 'Checkbox': comp.type
+    return ['IconCheck','Switch'].includes(comp.type) ? 'Checkbox': comp.type
   }
   if (INPUT_TYPE.includes(comp.type)) {
     return 'Input'
