@@ -147,7 +147,7 @@ const UploadFile = ({
               .catch(err => console.error(err))
             setS3File(res.Location)
 
-            if (attribute) {
+            if (attribute && notifmsg) {
               setUploadInfo(okmsg)
             }
 
