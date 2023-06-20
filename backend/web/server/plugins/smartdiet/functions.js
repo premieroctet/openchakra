@@ -393,6 +393,11 @@ declareVirtualField({model: 'team', field: 'members', instance: 'Array', multipl
 })
 
 declareVirtualField({model: 'teamMember', field: 'spoons', instance: 'Number'})
+declareVirtualField({model: 'teamMember', field: 'pips', instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'challengeUserPip'}},
+})
 
 declareVirtualField({model: 'collectiveChallenge', field: 'teams', instance: 'Array', multiple: true,
   caster: {

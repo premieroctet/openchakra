@@ -22,4 +22,10 @@ TeamMemberSchema.virtual('spoons').get(function(){
   return 0
 })
 
+TeamMemberSchema.virtual('pips', {
+  ref: 'challengeUserPip',
+  localField: '_id',
+  foreignField: 'user'
+})
+
 module.exports = TeamMemberSchema
