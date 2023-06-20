@@ -120,7 +120,7 @@ const smartdietFindTeamMember = ({value}, user) => {
     .then(members => members.find(m => idEqual(m.team.collectiveChallenge._id, value)))
     .then(member => {
       if (!member) {
-        throw new NotFoundError(`Vous n'êtes pas membre de ce challenge`)
+        throw new NotFoundError(`Vous n'êtes pas membre de ce challenge, rejoignez une équipe!`)
       }
       return member
     })
