@@ -27,4 +27,9 @@ ChallengePipSchema.virtual('spoons').get(function() {
   return lodash(this.userPips || []).sumBy(up => up.valid)*this.pip.spoons
 })
 
+// Pips to validate by diet
+ChallengePipSchema.virtual('pendingUserPips').get(function() {
+  return lodash(this.userPips || []).filter(up => !!up.proof && !up.valid)
+})
+
 module.exports = ChallengePipSchema

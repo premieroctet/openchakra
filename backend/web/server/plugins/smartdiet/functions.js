@@ -413,6 +413,12 @@ declareVirtualField({model: 'challengePip', field: 'userPips', instance: 'Array'
     options: {ref: 'challengeUserPip'}},
 })
 declareVirtualField({model: 'challengePip', field: 'spoons', instance: 'Number'})
+declareVirtualField({model: 'challengePip', field: 'pendingUserPips', instance: 'Array', multiple: true,
+  requires: 'userPips.proof,userPips.valid',
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'challengeUserPip'}},
+})
 
 const getAvailableContents = (user, params, data) => {
   return Content.find()
