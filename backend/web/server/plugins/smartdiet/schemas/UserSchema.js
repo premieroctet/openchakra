@@ -223,14 +223,13 @@ UserSchema.virtual("_all_menus", {
 });
 
 // First available menu for this week
-UserSchema.virtual("available_menu", {
+UserSchema.virtual("available_menus", {
   ref: "menu", // The Model to use
   localField: "dummy", // Find in Model, where localField
   foreignField: "dummy", // is equal to foreignField
   options: {
     match: {$and:[{start_date: {$lt: moment()}}, {end_date:{$gt: moment()}}]},
   },
-  justOne: true,
 });
 
 // User's collective challenges are the company's ones
