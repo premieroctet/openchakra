@@ -1,9 +1,3 @@
-const CollectiveChallenge = require('../../models/CollectiveChallenge')
-const Pip = require('../../models/Pip')
-const ChallengeUserPip = require('../../models/ChallengeUserPip')
-const ChallengeUserPipSchema = require('./schemas/ChallengeUserPipSchema')
-const ChallengePip = require('../../models/ChallengePip')
-const {BadRequestError} = require('../../utils/errors')
 const {
   declareComputedField,
   declareEnumField,
@@ -11,11 +5,18 @@ const {
   getModel,
   idEqual,
   loadFromDb,
+  setFilterDataUser,
   setPostCreateData,
   setPreCreateData,
   setPreprocessGet,
   simpleCloneModel,
 } = require('../../utils/database')
+const CollectiveChallenge = require('../../models/CollectiveChallenge')
+const Pip = require('../../models/Pip')
+const ChallengeUserPip = require('../../models/ChallengeUserPip')
+const ChallengeUserPipSchema = require('./schemas/ChallengeUserPipSchema')
+const ChallengePip = require('../../models/ChallengePip')
+const {BadRequestError} = require('../../utils/errors')
 const {
   getUserIndChallengeTrophy,
   getUserKeyProgress,
@@ -57,6 +58,16 @@ const {
   TARGET_TYPE,
   UNIT,
 } = require('./consts')
+
+const filterDataUser = ({model, data, id, user}) => {
+  if (model=='offer' && !id) {
+    return Offer.find({company: null})
+      .then(offers => data.filter(d => offers.some(o => idEqual(d._id, o._id))))
+  }
+  return Promise.resolve(data)
+}
+
+setFilterDataUser(filterDataUser)
 
 const preprocessGet = ({model, fields, id, user}) => {
   if (model=='loggedUser') {
@@ -243,6 +254,11 @@ declareVirtualField({model: 'company', field: 'collective_challenges', instance:
   caster: {
     instance: 'ObjectID',
     options: {ref: 'collectiveChallenge'}},
+})
+declareVirtualField({model: 'company', field: 'offers', instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'offer'}},
 })
 
 
@@ -546,10 +562,9 @@ declareComputedField('key', 'user_surveys_progress', getUserSurveysProgress)
 const postCreate = ({model, params, data,user}) => {
   // Create company => duplicate offer
   if (model=='company') {
-    return Offer.findById(data.offer)
-      .then(offer => Offer.create(simpleCloneModel(offer)))
-      .then(offer => { data.offer=offer._id; return data })
-      .then(data => data.save())
+    return Offer.findById(params.offer)
+      .then(offer => Offer.create( {...simpleCloneModel(offer), company: data._id}))
+      .then(offer => data)
   }
   if (model=='booking') {
     console.log(`Sending mail to ${data.booking_user.email} and admins for booking ${data._id}`)

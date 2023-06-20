@@ -30,11 +30,6 @@ const CompanySchema = new Schema(
       type: Number,
       required: true,
     },
-    offer: {
-      type: Schema.Types.ObjectId,
-      ref: 'offer',
-      required: false,
-    },
     parent: {
       type: Schema.Types.ObjectId,
       ref: "company",
@@ -42,6 +37,12 @@ const CompanySchema = new Schema(
   },
   schemaOptions,
 )
+
+CompanySchema.virtual("offers", {
+  ref: "offer", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "company", // is equal to foreignField
+});
 
 CompanySchema.virtual("webinars", {
   ref: "webinar", // The Model to use

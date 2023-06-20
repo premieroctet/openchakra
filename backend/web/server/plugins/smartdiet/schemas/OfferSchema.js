@@ -85,13 +85,11 @@ const OfferSchema = new Schema({
     type: String,
     enum: Object.keys(GROUPS_CREDIT),
   },
+  company: {
+    type: Schema.Types.ObjectId,
+    ref: 'company',
+    required: false,
+  },
 }, schemaOptions)
-
-OfferSchema.virtual("company", {
-  ref: "company", // The Model to use
-  localField: "_id", // Find in Model, where localField
-  foreignField: "offer", // is equal to foreignField
-  justOne: true,
-});
 
 module.exports = OfferSchema
