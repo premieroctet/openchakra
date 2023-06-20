@@ -597,27 +597,29 @@ const ensureChallengePipsConsistency = () => {
           {upsert: true}
         ))
       Promise.all(updateChallengePips)
-        .then(res => console.log(`Upsert challenge pips ok:${JSON.stringify(res)}`))
+        .then(res => {
+          console.log(`Upsert challenge pips ok:${JSON.stringify(res)}`)
+          // Ensure all team mebers pips exist
+          const updateMembersPips=ChallengePip.find()
+          .then(challengePips => {
+            return teamMembers.map(member => {
+              const pips=challengePips.filter(p =>idEqual(p.collectiveChallenge, member.team.collectiveChallenge))
+              return Promise.all(pips.map(p => {
+                return ChallengeUserPip.update(
+                  {pip:p, user: member},
+                  {pip:p, user: member },
+                  {upsert: true}
+                )
+              }))
+            })
+          })
+
+          Promise.all(updateMembersPips)
+          .then(res => console.log(`Upsert member pips ok:${JSON.stringify(res)}`))
+          .catch(err => console.error(`Upsert member pips error:${err}`))
+        })
         .catch(err => console.error(`Upsert challenge pips error:${err}`))
 
-      // Ensure all team mebers pips exist
-      const updateMembersPips=ChallengePip.find()
-        .then(challengePips => {
-          return teamMembers.map(member => {
-            const pips=challengePips.filter(p =>idEqual(p.collectiveChallenge, member.team.collectiveChallenge))
-            return Promise.all(pips.map(p => {
-              return ChallengeUserPip.update(
-                {pip:p, user: member},
-                {pip:p, user: member },
-                {upsert: true}
-              )
-            }))
-          })
-        })
-
-      Promise.all(updateMembersPips)
-        .then(res => console.log(`Upsert member pips ok:${JSON.stringify(res)}`))
-        .catch(err => console.error(`Upsert member pips error:${err}`))
     })
 }
 
