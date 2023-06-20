@@ -567,6 +567,12 @@ export const ACTIONS: IActions = {
     next: ['openPage'],
   },
 
+  smartdiet_find_team_member: {
+    label: 'SM Find team member',
+    options: {},
+    next: ['openPage'],
+  },
+
 }
 
 export const allowsActions = (component: IComponent) => {

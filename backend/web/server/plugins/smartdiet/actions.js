@@ -1,10 +1,10 @@
+const { BadRequestError, NotFoundError } = require('../../utils/errors')
 const { ensureChallengePipsConsistency } = require('./functions')
 const UserSurvey = require('../../models/UserSurvey')
 const UserQuestion = require('../../models/UserQuestion')
 const Question = require('../../models/Question')
 const mongoose = require('mongoose')
 const { getModel, idEqual, loadFromDb } = require('../../utils/database')
-const { BadRequestError } = require('../../utils/errors')
 const { addAction, setAllowActionFn, ACTIONS } = require('../../utils/studio/actions')
 const User = require('../../models/User')
 const Group = require('../../models/Group')
@@ -114,6 +114,19 @@ const smartdietJoinTeam = ({value}, user) => {
 }
 
 addAction('smartdiet_join_team', smartdietJoinTeam)
+
+const smartdietFindTeamMember = ({value}, user) => {
+  return TeamMember.find({user}).populate('team')
+    .then(members => members.find(m => idEqual(m.team.collectiveChallenge._id, value)))
+    .then(member => {
+      if (!member) {
+        throw new NotFoundError(`Vous n'êtes pas membre de ce challenge`)
+      }
+      return member
+    })
+}
+
+addAction('smartdiet_find_team_member', smartdietFindTeamMember)
 
 
 const isActionAllowed = ({action, dataId, user}) => {

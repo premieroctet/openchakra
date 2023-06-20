@@ -762,4 +762,16 @@ export const ACTIONS = {
     return axios.post(url, body)
   },
 
+  smartdiet_find_team_member: ({value}) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_find_team_member',
+      value: value._id,
+    }
+    return axios.post(url, body).then(res => ({
+      model: 'teamMember',
+      value: res.data,
+    }))
+  },
+
 }
