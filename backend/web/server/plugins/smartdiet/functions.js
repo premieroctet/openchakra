@@ -621,8 +621,6 @@ const ensureChallengePipsConsistency = () => {
     })
 }
 
-ensureChallengePipsConsistency()
-
 /** Upsert PARTICULARS company */
 Company.findOneAndUpdate(
   {name: PARTICULAR_COMPANY_NAME},
