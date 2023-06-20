@@ -28,7 +28,7 @@ ChallengePipSchema.virtual('spoons').get(function() {
 })
 
 // Pips to validate by diet
-ChallengePipSchema.virtual('pendingUserPips').get(function() {
+ChallengePipSchema.virtual('pendingUserPips', {localField:'tagada', foreignField:'tagada'}).get(function() {
   return lodash(this.userPips || []).filter(up => !!up.proof && !up.valid)
 })
 
