@@ -1,20 +1,21 @@
-require('dotenv').config()
+const path=require('path')
+require('dotenv').config({ path: path.resolve(__dirname, '../../.env') })
+const { createServer } = require('https')
+const { createProxyMiddleware } = require('http-proxy-middleware');
 const express = require('express');
+const dev = process.env.MODE !== 'production'
+const port = parseInt(process.env.STUDIO_TEST_PORT, 10) || 3001;
 const next = require('next')
 const bodyParser = require('body-parser')
-const nextApp = next({prod:true})
+const nextApp = next({ dev })
 const routes = require('./routes')
 const routerHandler = routes.getRequestHandler(nextApp)
 const glob = require('glob')
 const cors = require('cors')
-const https = require('https')
 const fs = require('fs')
 const app = express()
-const path=require('path')
-
 
 const API_PATH = '/myAlfred/api'
-const port = parseInt(process.env.STUDIO_TEST_PORT, 10) || 7777;
 const isSecure = process.env.MODE === 'production'
 
 nextApp.prepare().then(() => {
@@ -48,7 +49,7 @@ nextApp.prepare().then(() => {
   app.get('*', routerHandler)
 
   // HTTPS server using certificates
-  const httpsServer = https.createServer({
+  const httpsServer = createServer({
     cert: fs.readFileSync(`${process.env.HOME}/.ssh/fullchain.pem`),
     key: fs.readFileSync(`${process.env.HOME}/.ssh/privkey.pem`),
   },
