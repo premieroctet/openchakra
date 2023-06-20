@@ -1,3 +1,8 @@
+const CollectiveChallenge = require('../../models/CollectiveChallenge')
+const Pip = require('../../models/Pip')
+const ChallengeUserPip = require('../../models/ChallengeUserPip')
+const ChallengeUserPipSchema = require('./schemas/ChallengeUserPipSchema')
+const ChallengePip = require('../../models/ChallengePip')
 const {BadRequestError} = require('../../utils/errors')
 const {
   declareComputedField,
@@ -20,6 +25,7 @@ const {
   getUserSpoons
 } = require('./spoons')
 const mongoose = require('mongoose')
+require('lodash.product')
 const lodash=require('lodash')
 const moment = require('moment')
 const UserSurvey = require('../../models/UserSurvey')
@@ -394,6 +400,20 @@ declareVirtualField({model: 'collectiveChallenge', field: 'teams', instance: 'Ar
     options: {ref: 'team'}},
 })
 
+declareVirtualField({model: 'collectiveChallenge', field: 'pips', instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'challengePip'}},
+})
+
+declareVirtualField({model: 'challengePip', field: 'userPips', instance: 'Array', multiple: true,
+  requires: 'userPips.valid,pip.spoons',
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'challengeUserPip'}},
+})
+declareVirtualField({model: 'challengePip', field: 'spoons', instance: 'Number'})
+
 const getAvailableContents = (user, params, data) => {
   return Content.find()
     .then(contents => {
@@ -528,13 +548,69 @@ const postCreate = ({model, params, data,user}) => {
   }
   if (model=='team') {
     return TeamMember.create({team: data, user})
-      .then(()=> data)
+      .then(()=> {
+        ensureChallengePipsConsistency()
+        return data
+      })
+  }
+  if (model=='collectiveChallenge') {
+    return Pip.find()
+      .then (pips => Promise.all(pips.map(p => ChallengePip.create({pip:p, collectiveChallenge:data}))))
+      .then(()=> {
+        ensureChallengePipsConsistency()
+        return data
+      })
+  }
+  if (model=='pip') {
+    ensureChallengePipsConsistency()
+  }
+  if (model=='teamMember') {
+    ensureChallengePipsConsistency()
   }
 
   return Promise.resolve(data)
 }
 
 setPostCreateData(postCreate)
+
+const ensureChallengePipsConsistency = () => {
+  // Does every challenge have all pips ?
+  return Promise.all([Pip.find({}, "_id"), CollectiveChallenge.find({}, "_id"),
+    TeamMember.find().populate('team'), ChallengeUserPip.find()])
+    .then(([pips, challenges, teamMembers, challengeUserPips]) => {
+      // Ensure all challenge pips exist
+      const updateChallengePips=lodash.product(pips, challenges)
+        .map(([pip, challenge]) => ChallengePip.updateMany(
+          {pip:pip, collectiveChallenge:challenge},
+          {pip:pip, collectiveChallenge:challenge},
+          {upsert: true}
+        ))
+      Promise.all(updateChallengePips)
+        .then(res => console.log(`Upsert challenge pips ok:${JSON.stringify(res)}`))
+        .catch(err => console.error(`Upsert challenge pips error:${err}`))
+
+      // Ensure all team mebers pips exist
+      const updateMembersPips=ChallengePip.find()
+        .then(challengePips => {
+          return teamMembers.map(member => {
+            const pips=challengePips.filter(p =>idEqual(p.collectiveChallenge, member.team.collectiveChallenge))
+            return Promise.all(pips.map(p => {
+              return ChallengeUserPip.update(
+                {pip:p, user: member},
+                {pip:p, user: member },
+                {upsert: true}
+              )
+            }))
+          })
+        })
+
+      Promise.all(updateMembersPips)
+        .then(res => console.log(`Upsert member pips ok:${JSON.stringify(res)}`))
+        .catch(err => console.error(`Upsert member pips error:${err}`))
+    })
+}
+
+ensureChallengePipsConsistency()
 
 /** Upsert PARTICULARS company */
 Company.findOneAndUpdate(
@@ -547,4 +623,5 @@ Company.findOneAndUpdate(
 
 module.exports={
   getAvailableContents,
+  ensureChallengePipsConsistency,
 }

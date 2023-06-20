@@ -8502,6 +8502,11 @@ lodash.once@^4.0.0:
   resolved "https://registry.yarnpkg.com/lodash.once/-/lodash.once-4.1.1.tgz#0dd3971213c7c56df880977d504c88fb471a97ac"
   integrity sha512-Sb487aTOCr9drQVL8pIxOzVhafOjZN9UU54hiN8PU3uAiSV7lx1yYNpbNmex2PK6dSJoNTSJUUswT651yww3Mg==
 
+lodash.product@^18.10.0:
+  version "18.10.0"
+  resolved "https://registry.yarnpkg.com/lodash.product/-/lodash.product-18.10.0.tgz#113e6d63a99e31530ff0f70788c5a21450fab5c8"
+  integrity sha512-QyJXtayg223OlQUpgeD0xrWnQ/5LrDmAIjTeEZm1jZdQs2laQV5OCsOxo9FmC3TQx/CGOqRuNWyyHuKF2GMGBA==
+
 lodash.set@^4.3.2:
   version "4.3.2"
   resolved "https://registry.yarnpkg.com/lodash.set/-/lodash.set-4.3.2.tgz#d8757b1da807dde24816b0d6a84bea1a76230b23"

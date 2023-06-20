@@ -14,10 +14,6 @@ const CollectiveChallengeSchema = new Schema({
     type: Number,
     required: [true, 'Le nombre de cuillères est obligatoire'],
   },
-  pips: [{
-    type: Schema.Types.ObjectId,
-    ref: 'pip',
-  }],
   company: {
     type: Schema.Types.ObjectId,
     ref: 'company',
@@ -36,6 +32,12 @@ CollectiveChallengeSchema.virtual('type').get(function() {
 
 CollectiveChallengeSchema.virtual('teams', {
     ref: 'team',
+    localField: '_id',
+    foreignField: 'collectiveChallenge',
+})
+
+CollectiveChallengeSchema.virtual('pips', {
+    ref: 'challengePip',
     localField: '_id',
     foreignField: 'collectiveChallenge',
 })

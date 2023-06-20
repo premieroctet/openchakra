@@ -1,3 +1,4 @@
+const { ensureChallengePipsConsistency } = require('./functions')
 const UserSurvey = require('../../models/UserSurvey')
 const UserQuestion = require('../../models/UserQuestion')
 const Question = require('../../models/Question')
@@ -105,6 +106,10 @@ const smartdietJoinTeam = ({value}, user) => {
     .then(allowed => {
       if (!allowed) throw new BadRequestError(`Vous appartenez déjà à une équipe`)
       return TeamMember.create({team: value, user})
+        .then(member => {
+          ensureChallengePipsConsistency()
+          return member
+        })
     })
 }
 
