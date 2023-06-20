@@ -200,6 +200,15 @@ UserSchema.virtual('available_webinars', {localField:'_id', foreignField: '_id'}
   return webinars
 })
 
+// Webinars finished
+UserSchema.virtual('past_webinars', {localField:'_id', foreignField: '_id'}).get(function() {
+  const now=moment()
+  const webinars=lodash(this.webinars)
+    .filter(w => moment(w.end_date).isBefore(now))
+    .value()
+  return webinars
+})
+
 UserSchema.virtual("_all_individual_challenges", {
   ref: "individualChallenge", // The Model to use
   localField: "dummy", // Find in Model, where localField
@@ -216,19 +225,35 @@ UserSchema.virtual('individual_challenges', {localField: 'id', foreignField: 'id
   return this._all_individual_challenges?.filter(c => !exclude.some(excl => idEqual(excl._id, c._id)))||[]
 })
 
+// User's ind. challenges are all expect the skipped ones and the passed ones
+UserSchema.virtual('passed_individual_challenges', {localField: 'id', foreignField: 'id'}).get(function() {
+  const passed=this.passed_events?.map(s => s._id)||[]
+  return this._all_individual_challenges?.filter(c => passed.find(p => idEqual(p._id, c._id)))||[]
+})
+
 UserSchema.virtual("_all_menus", {
   ref: "menu", // The Model to use
   localField: "dummy", // Find in Model, where localField
   foreignField: "dummy" // is equal to foreignField
 });
 
-// First available menu for this week
+// Available menus for this week
 UserSchema.virtual("available_menus", {
   ref: "menu", // The Model to use
   localField: "dummy", // Find in Model, where localField
   foreignField: "dummy", // is equal to foreignField
   options: {
     match: {$and:[{start_date: {$lt: moment()}}, {end_date:{$gt: moment()}}]},
+  },
+});
+
+// Past menus
+UserSchema.virtual("past_menus", {
+  ref: "menu", // The Model to use
+  localField: "dummy", // Find in Model, where localField
+  foreignField: "dummy", // is equal to foreignField
+  options: {
+    match: {end_date:{$lt: moment()}},
   },
 });
 

@@ -138,6 +138,12 @@ USER_MODELS.forEach(m => {
       instance: 'ObjectID',
       options: {ref: 'webinar'}},
   })
+  declareVirtualField({model: m, field: 'past_webinars', instance: 'Array',
+    requires: 'webinars', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'webinar'}},
+  })
   declareVirtualField({model: m, field: '_all_events', instance: 'Array',
     requires: '_all_menus,_all_individual_challenges,collective_challenges,_all_webinars',
     multiple: true,
@@ -162,6 +168,12 @@ USER_MODELS.forEach(m => {
       instance: 'ObjectID',
       options: {ref: 'individualChallenge'}},
   })
+  declareVirtualField({model: m, field: 'passed_individual_challenges', instance: 'Array',
+    requires: '_all_individual_challenges,passed_events', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'individualChallenge'}},
+  })
   declareVirtualField({model: m, field: '_all_menus', instance: 'menu',
     multiple: true,
     caster: {
@@ -169,6 +181,12 @@ USER_MODELS.forEach(m => {
       options: {ref: 'menu'}},
   })
   declareVirtualField({model: m, field: 'available_menus', instance: 'Array',
+    multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'menu'}},
+  })
+  declareVirtualField({model: m, field: 'past_menus', instance: 'Array',
     multiple: true,
     caster: {
       instance: 'ObjectID',
