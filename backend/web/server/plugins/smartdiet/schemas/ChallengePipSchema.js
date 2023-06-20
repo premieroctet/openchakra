@@ -20,7 +20,7 @@ const ChallengePipSchema = new Schema({
 ChallengePipSchema.virtual('userPips', {
   ref: 'challengeUserPip',
   localField: '_id',
-  foreignField: 'challengePip',
+  foreignField: 'pip',
 })
 
 ChallengePipSchema.virtual('spoons').get(function() {
