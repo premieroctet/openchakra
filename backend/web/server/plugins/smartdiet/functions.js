@@ -501,8 +501,7 @@ const getPinnedMessages = (user, params, data) => {
 }
 
 const getMenuShoppingList = (user, params, data) => {
-  console.log(data.recipes.map(r => [r.recipe.name,r.recipe._id]))
-  const ingredients=lodash.flatten(data?.recipes.map(r => r.recipe.ingredients))
+  const ingredients=lodash.flatten(data?.recipes.map(r => r.recipe?.ingredients).filter(v => !!v))
   const ingredientsGroup=lodash.groupBy(ingredients, i => i.ingredient._id)
   const result=lodash(ingredientsGroup)
     .mapValues(ingrs=>({ingredient:ingrs[0].ingredient, quantity: lodash.sumBy(ingrs, 'quantity')}))
