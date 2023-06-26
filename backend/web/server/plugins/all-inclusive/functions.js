@@ -6,6 +6,7 @@ const {
   sendMissionReminderCustomer,
   sendMissionReminderTI,
   sendNewMission,
+  sendProfileOnline,
   sendTipiSearch
 } = require('./mailing')
 const {
@@ -180,18 +181,25 @@ const preCreate = ({model, params, user}) => {
 
 setPreCreateData(preCreate)
 
-const postPut = ({model, params, data, user}) => {
-  console.log(`postPut ${model} with ${JSON.stringify(data)}`)
-  if (model=='user' && user?.role==ROLE_TI) {
-    return paymentPlugin.upsertProvider(data)
-  }
-  if (model=='user' && user?.role==ROLE_COMPANY_BUYER) {
-    return paymentPlugin.upsertCustomer(data)
+const postPutData = ({model, id, attribute, value, user}) => {
+  if (model=='user') {
+    return User.findById(id)
+      .then(account => {
+        if (attribute=='hidden' && value==false) {
+          sendProfileOnline(account)
+        }
+        if (account?.role==ROLE_TI) {
+          return paymentPlugin.upsertProvider(account)
+        }
+        if (account?.role==ROLE_COMPANY_BUYER) {
+          return paymentPlugin.upsertCustomer(account)
+        }
+      })
   }
   return Promise.resolve(data)
 }
 
-setPostPutData(postPut)
+setPostPutData(postPutData)
 
 
 const USER_MODELS=['user', 'loggedUser']
