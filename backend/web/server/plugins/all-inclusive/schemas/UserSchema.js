@@ -1,3 +1,6 @@
+const { MIN_AGE } = require('../consts')
+
+const moment = require('moment')
 const {
   AVAILABILITY,
   COACHING,
@@ -28,6 +31,12 @@ const bcrypt=require('bcryptjs')
 const { schemaOptions } = require('../../../utils/schemas')
 const lodash=require('lodash')
 const IBANValidator = require('iban-validator-js')
+
+const isBirthdayOk = birthday => {
+  if (!birthday) return false
+  const years=moment().diff(moment(birthday), 'years')
+  return years>=MIN_AGE
+}
 
 const Schema = mongoose.Schema;
 
@@ -70,6 +79,7 @@ const UserSchema = new Schema({
   },
   birthday: {
     type: Date,
+    validate: [value => isBirthdayOk(value), `Vous devez avoir au moins ${MIN_AGE} ans pour vous inscrire`],
     required: [function() { return this.role==ROLE_TI}, 'La date de naissance est obligatoire'],
   },
   picture: {

@@ -298,6 +298,8 @@ const MISSING_QUOTATION_DELAY=2
 const MER_RATE=0.15
 const AA_RATE=0.15
 
+const MIN_AGE=18
+
 module.exports={
   ROLES,
   ROLE_ALLE_ADMIN,
@@ -341,4 +343,5 @@ module.exports={
   MISSING_QUOTATION_DELAY,
   MER_RATE,
   AA_RATE,
+  MIN_AGE,
 }
