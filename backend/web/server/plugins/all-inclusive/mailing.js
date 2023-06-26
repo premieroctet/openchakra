@@ -221,7 +221,7 @@ const sendMissionAskedSummary = mission => {
 const sendMissionRefused = mission => {
   return sendNotification({
     notification: SIB_IDS.REFUSED_MISSION,
-    destinee: mission.job.user,
+    destinee: mission.user,
     params: {
       customer_firstname: mission.user.firstname,
       user_firstname: mission.job.user.firstname,
