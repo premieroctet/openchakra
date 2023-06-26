@@ -14,6 +14,10 @@ import { RolesState } from './models/roles'
 import models from './models'
 import filterUndoableActions from '~utils/undo'
 
+const disableStorage=process.env.NEXT_PUBLIC_DISABLE_STORAGE && JSON.parse(process.env.NEXT_PUBLIC_DISABLE_STORAGE)
+console.log(`Storage disabled:${disableStorage}`)
+
+
 const COMPRESS_THRESHOLD=4*1024*1024
 
 export type RootState = {
@@ -81,7 +85,7 @@ export const storeConfig = {
       })
     },
   },
-  plugins: [persistPlugin],
+  plugins: disableStorage ? [] : [persistPlugin],
 }
 
 // @ts-ignore
