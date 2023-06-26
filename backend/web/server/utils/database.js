@@ -507,7 +507,7 @@ const callPostCreateData = data => {
 }
 
 // Post put data
-let postPutData = data => Promise.resolve(data.data)
+let postPutData = data => Promise.resolve(data)
 
 const setPostPutData = fn => {
   postPutData = fn
