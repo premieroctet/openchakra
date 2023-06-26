@@ -1,4 +1,26 @@
 const {
+  ACTIVITY,
+  COMPANY_ACTIVITY,
+  COMPANY_ACTIVITY_SERVICES_AUX_ENTREPRISES,
+  CONTENTS_TYPE,
+  DAYS,
+  ECOSCORE,
+  EVENT_TYPE,
+  GENDER,
+  GROUPS_CREDIT,
+  HARDNESS,
+  HOME_STATUS,
+  NUTRISCORE,
+  PARTICULAR_COMPANY_NAME,
+  PERIOD,
+  ROLES,
+  ROLE_RH,
+  SPOON_SOURCE,
+  SURVEY_ANSWER,
+  TARGET_TYPE,
+  UNIT,
+} = require('./consts')
+const {
   declareComputedField,
   declareEnumField,
   declareVirtualField,
@@ -37,32 +59,15 @@ const Company = require('../../models/Company')
 const User = require('../../models/User')
 const Team = require('../../models/Team')
 const TeamMember = require('../../models/TeamMember')
-const {
-  ACTIVITY,
-  COMPANY_ACTIVITY,
-  COMPANY_ACTIVITY_SERVICES_AUX_ENTREPRISES,
-  CONTENTS_TYPE,
-  DAYS,
-  ECOSCORE,
-  EVENT_TYPE,
-  GENDER,
-  GROUPS_CREDIT,
-  HARDNESS,
-  HOME_STATUS,
-  NUTRISCORE,
-  PARTICULAR_COMPANY_NAME,
-  PERIOD,
-  ROLES,
-  SPOON_SOURCE,
-  SURVEY_ANSWER,
-  TARGET_TYPE,
-  UNIT,
-} = require('./consts')
 
 const filterDataUser = ({model, data, id, user}) => {
   if (model=='offer' && !id) {
     return Offer.find({company: null})
       .then(offers => data.filter(d => offers.some(o => idEqual(d._id, o._id))))
+  }
+  if (model=='user' && user.role==ROLE_RH) {
+    console.log(`I am RH`)
+    data=data.filter(u => user.company && idEqual(u.company?._id, user.company?._id))
   }
   return Promise.resolve(data)
 }
@@ -73,6 +78,9 @@ const preprocessGet = ({model, fields, id, user}) => {
   if (model=='loggedUser') {
     model='user'
     id = user?._id || 'INVALIDID'
+  }
+  if (model=='user') {
+    fields.push('company')
   }
   if (model=='content' && !!id) {
     return Content.findByIdAndUpdate(id, {$addToSet: {viewed_by: user._id}})
