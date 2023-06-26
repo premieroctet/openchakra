@@ -524,6 +524,7 @@ const putAttribute = ({parent, attribute, value, user}) => {
       model = res
       const setter=lodash.get(COMPUTED_FIELDS_SETTERS, `${model}.${attribute}`)
       if (setter) {
+        callPostPutData({model, id:parent, attribute, value, data, user})
         return setter({id: parent, attribute, value, user})
       }
       const mongooseModel = mongoose.connection.models[model]
@@ -532,6 +533,7 @@ const putAttribute = ({parent, attribute, value, user}) => {
         // Simple attribute => simple method
         return mongooseModel.findById(parent)
           .then(object => {
+            callPostPutData({model, id:parent, attribute, value, user})
             object[attribute]=value
             return object.save()
           })

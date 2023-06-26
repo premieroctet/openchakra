@@ -6,7 +6,7 @@ const JSSoup = require('jssoup').default
 const {datetime_str} = require('../../../utils/dateutils')
 
 const SIB_IDS={
-  // TI_PROFILE_ONLINE: 12,
+  TI_PROFILE_ONLINE: 12,
   ASK_RECOMMANDATION: 15,
   PENDING_QUOTATION: 16,
   FORGOT_PASSWORD: 20,
@@ -221,7 +221,7 @@ const sendMissionAskedSummary = mission => {
 const sendMissionRefused = mission => {
   return sendNotification({
     notification: SIB_IDS.REFUSED_MISSION,
-    destinee: mission.job.user,
+    destinee: mission.user,
     params: {
       customer_firstname: mission.user.firstname,
       user_firstname: mission.job.user.firstname,
@@ -370,6 +370,17 @@ const sendMissionReminderTI = mission => {
   })
 }
 
+// => TI
+const sendProfileOnline = user => {
+  return sendNotification({
+    notification: SIB_IDS.TI_PROFILE_ONLINE,
+    destinee: user,
+    params: {
+      user_firstname: user.firstname,
+    },
+  })
+}
+
 module.exports = {
   sendQuotationSentToCustomer,
   sendAccountCreatedToTIPI,
@@ -397,4 +408,5 @@ module.exports = {
   sendCompanyRegistered,
   sendMissionReminderCustomer,
   sendMissionReminderTI,
+  sendProfileOnline,
 }

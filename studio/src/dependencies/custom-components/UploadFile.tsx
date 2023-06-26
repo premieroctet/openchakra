@@ -143,9 +143,18 @@ const UploadFile = ({
             break
 
           default:
-            const res = await uploadFileToS3(fileToUpload)
-            setS3File(res.Location)
-            paramsBack = { ...paramsBack, ...{ value: res?.Location } }
+            await uploadFileToS3(fileToUpload)
+              .then((result) => {
+                setS3File(result.Location)
+                paramsBack = { ...paramsBack, ...{ value: result?.Location } }
+              })
+              .catch(err => console.error(err))
+
+            if (attribute && notifmsg) {
+              setUploadInfo(okmsg)
+            }
+
+            
             break
         }
       }
@@ -194,7 +203,9 @@ const UploadFile = ({
           {children}
         </UploadZone>
       </form>
-      {uploadInfo && <Text>{uploadInfo}</Text>} {/*Component status */}
+      {uploadInfo && 
+      // @ts-ignore
+      <Text>{uploadInfo}</Text>} {/*Component status */}
     </Box>
   )
 }

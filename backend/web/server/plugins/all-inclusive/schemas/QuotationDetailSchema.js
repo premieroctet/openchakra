@@ -44,4 +44,8 @@ QuotationDetailSchema.virtual('vat_total').get(function() {
   return this.ht_price*this.quantity*this.vat/100.0
 })
 
+QuotationDetailSchema.virtual('ht_total').get(function() {
+  return this.ht_price*this.quantity
+})
+
 module.exports = QuotationDetailSchema;

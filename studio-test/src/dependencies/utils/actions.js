@@ -81,10 +81,11 @@ export const ACTIONS = {
       }
     })
     let url = `${API_ROOT}/${props.model}?context=${context}`
-    return axios.post(url, body).then(res => ({
-      model: props.model,
-      value: res.data,
-    }))
+    return axios.post(url, body)
+      .then(res => ({
+        model: props.model,
+        value: res.data,
+      }))
   },
   levelUp: ({ value, props, context }) => {
     let url = `${API_ROOT}/action`
@@ -461,6 +462,15 @@ export const ACTIONS = {
       })
   },
 
+  alle_can_accept_quotation: ({value, props}) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'alle_can_accept_quotation',
+      value: value._id,
+    }
+    return axios.post(url, body)
+  },
+
   alle_refuse_quotation: ({value}) => {
     let url = `${API_ROOT}/action`
     const body = {
@@ -488,6 +498,10 @@ export const ACTIONS = {
       context,
     }
     return axios.post(url, body)
+      .then(res => ({
+        model: props.model,
+        value: res.data,
+      }))
   },
 
   alle_finish_mission: ({ value, context, props, level, getComponentValue }) => {

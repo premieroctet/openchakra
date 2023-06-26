@@ -280,4 +280,32 @@ MissionSchema.methods.canLeaveComment = function(user) {
   && this.status==MISSION_STATUS_FINISHED
 }
 
+// Got from quotation
+// TODO: must use this.mer instead of direct computation
+MissionSchema.virtual('customer_total').get(function() {
+  return this.quotations?.[0]?.customer_total
+})
+
+// TODO: Compute properly fro non qualified TI
+MissionSchema.virtual('mer').get(function() {
+  return this.quotations?.[0]?.mer
+})
+
+MissionSchema.virtual('gross_total').get(function() {
+  return this.quotations?.[0]?.gross_total
+})
+
+MissionSchema.virtual('aa').get(function() {
+  return this.quotations?.[0]?.aa
+})
+
+MissionSchema.virtual('ti_total').get(function() {
+  return this.quotations?.[0]?.ti_total
+})
+
+MissionSchema.virtual('vat_total').get(function() {
+  return this.quotations?.[0]?.vat_total
+})
+
+
 module.exports = MissionSchema;

@@ -395,6 +395,12 @@ export const ACTIONS: IActions = {
     },
     next: [],
   },
+  alle_can_accept_quotation: {
+    label: 'AE Peut accepter le devis',
+    options: {
+    },
+    next: ['openPage'],
+  },
   alle_refuse_quotation: {
     label: 'AE Refuser le devis',
     options: {},
