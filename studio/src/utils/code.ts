@@ -751,7 +751,6 @@ export const generateCode = async (
   code = `import React, {useState, useEffect} from 'react';
   import Metadata from './dependencies/Metadata';
   ${hooksCode ? `import axios from 'axios'` : ''}
-  import {ChakraProvider} from "@chakra-ui/react";
   ${Object.entries(groupedComponents)
     .map(([modName, components]) => {
       const multiple = modName.includes('chakra-ui')
@@ -818,15 +817,14 @@ const ${componentName} = () => {
   ${filterStates}
 
   return ${autoRedirect ? 'user===null && ': ''} (
-  <ChakraProvider resetCSS theme={theme}>
-    <Fonts />
+  <>
     <Metadata
       metaTitle={'${addBackslashes(metaTitle)}'}
       metaDescription={'${addBackslashes(metaDescription)}'}
       metaImageUrl={'${metaImageUrl}'}
     />
     ${code}
-  </ChakraProvider>
+  </>
 )};
 
 export default ${componentName};`
