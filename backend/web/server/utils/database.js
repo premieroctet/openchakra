@@ -524,7 +524,7 @@ const putAttribute = ({parent, attribute, value, user}) => {
       model = res
       const setter=lodash.get(COMPUTED_FIELDS_SETTERS, `${model}.${attribute}`)
       if (setter) {
-        callPostPutData({model, id:parent, attribute, value, data, user})
+        callPostPutData({model, id:parent, attribute, value, user})
         return setter({id: parent, attribute, value, user})
       }
       const mongooseModel = mongoose.connection.models[model]
