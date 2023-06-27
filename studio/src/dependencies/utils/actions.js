@@ -607,7 +607,7 @@ export const ACTIONS = {
     }
     return axios.post(url, body)
       .then(res => {
-        return {_id: res.data}
+        return {_id: res.data?._id}
       })
   },
 
@@ -619,7 +619,7 @@ export const ACTIONS = {
     }
     return axios.post(url, body)
       .then(res => {
-        return {_id: res.data}
+        return {_id: res.data?._id}
       })
   },
 
@@ -647,7 +647,7 @@ export const ACTIONS = {
     }
     return axios.post(url, body)
       .then(res => {
-        return {_id: res.data}
+        return {_id: res.data?._id}
       })
   },
 
@@ -659,7 +659,7 @@ export const ACTIONS = {
     }
     return axios.post(url, body)
       .then(res => {
-        return {_id: res.data}
+        return {_id: res.data?._id}
       })
   },
 
@@ -786,6 +786,24 @@ export const ACTIONS = {
       model: 'teamMember',
       value: res.data,
     }))
+  },
+
+  smartdiet_routine_challenge: ({value}) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_routine_challenge',
+      value: value._id,
+    }
+    return axios.post(url, body)
+  },
+
+  smartdiet_shift_challenge: ({value}) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_shift_challenge',
+      value: value._id,
+    }
+    return axios.post(url, body)
   },
 
 }

@@ -1,10 +1,18 @@
+const {
+  ACTIVITY,
+  EVENT_IND_CHALLENGE,
+  GENDER,
+  NO_CREDIT_AVAILABLE,
+  ROLES,
+  ROLE_CUSTOMER,
+  ROLE_RH,
+  STATUS_FAMILY
+} = require('../consts')
 const mongoose = require('mongoose')
 const moment=require('moment')
 const { ForbiddenError } = require('../../../utils/errors')
 const { idEqual, shareTargets } = require('../../../utils/database')
 const {schemaOptions} = require('../../../utils/schemas')
-const {ACTIVITY, ROLES, ROLE_CUSTOMER, ROLE_RH, STATUS_FAMILY} = require('../consts')
-const {GENDER} = require('../consts')
 const lodash=require('lodash')
 
 const Schema = mongoose.Schema
@@ -131,6 +139,14 @@ const UserSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'event',
   }],
+  routine_events: [{
+    type: Schema.Types.ObjectId,
+    ref: 'event',
+  }],
+  replayed_events: [{
+    type: Schema.Types.ObjectId,
+    ref: 'event',
+  }],
   dummy: {
     type: Number,
     default: 0,
@@ -216,14 +232,31 @@ UserSchema.virtual("_all_individual_challenges", {
   foreignField: "dummy" // is equal to foreignField
 });
 
+// Ind. challenge registered still not failed or passed
+UserSchema.virtual('current_individual_challenge', {localField: 'id', foreignField: 'id'}).get(function() {
+  const exclude=[
+    ...(this.passed_events?.map(s => s._id)||[]),
+    ...(this.failed_events?.map(s => s._id)||[]),
+  ]
+  return (this._all_individual_challenges||[])
+    .filter(i => this.registered_events.some(r => idEqual(r._id, i._id)))
+    .find(i => !exclude.some(e => idEqual(e._id, i._id)))
+})
+
 // User's ind. challenges are all expect the skipped ones and the passed ones
 UserSchema.virtual('individual_challenges', {localField: 'id', foreignField: 'id'}).get(function() {
   const exclude=[
     ...(this.skipped_events?.map(s => s._id)||[]),
     ...(this.passed_events?.map(s => s._id)||[]),
     ...(this.failed_events?.map(s => s._id)||[]),
+    ...(this.routine_events?.map(s => s._id)||[]),
   ]
-  return this._all_individual_challenges?.filter(c => !exclude.some(excl => idEqual(excl._id, c._id)))||[]
+  // Search for a current challenge : registered and not excluded
+  const currentChallenge=this.current_individual_challenge
+  return lodash(this._all_individual_challenges||[])
+    .filter(c => !exclude.some(excl => idEqual(excl._id, c._id)))
+    .filter(c => !currentChallenge || idEqual(currentChallenge._id, c._id))
+    .orderBy(['update_date'], ['asc'])
 })
 
 // User's ind. challenges are all expect the skipped ones and the passed ones
@@ -324,9 +357,28 @@ UserSchema.methods.canView = function(content_id) {
         // If no in viewed contents, check credit
         if (!contents.some(c => idEqual(c._id, content_id))
           && !(offers[0]?.getContentLimit(content.type)>contents.length)) {
-            throw new ForbiddenError(`Votre crédit est épuisé`)
+            throw new ForbiddenError(NO_CREDIT_AVAILABLE)
           }
       }))
+}
+
+UserSchema.methods.canJoinEvent = function(event_id) {
+  if (this.registered_events.some(e => idEqual(e._id, event_id))) {
+    return Promise.resolve(true)
+  }
+  return Promise.all([
+    mongoose.models.company.findById(this.company).populate('offers'),
+    mongoose.models.event.findById(event_id),
+    mongoose.models.event.find({"_id": {$in: this.registered_events}}),
+  ])
+    .then(([{offers}, event, registered_events]) => {
+      const sameTypeEventsCount=registered_events.filter(e => e.type==event.type).length
+      const limit=offers[0]?.getEventLimit(event.type)
+      if (sameTypeEventsCount>=limit) {
+        throw new ForbiddenError(NO_CREDIT_AVAILABLE)
+      }
+      return true
+    })
 }
 /* eslint-enable prefer-arrow-callback */
 

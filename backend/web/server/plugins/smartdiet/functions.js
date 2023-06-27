@@ -173,7 +173,8 @@ USER_MODELS.forEach(m => {
       options: {ref: 'individualChallenge'}},
   })
   declareVirtualField({model: m, field: 'individual_challenges', instance: 'Array',
-    requires: '_all_individual_challenges,skipped_events,passed_events', multiple: true,
+    requires: '_all_individual_challenges,skipped_events,passed_events,routine_events,registered_events.type,_all_individual_challenges.type,failed_events,current_individual_challenge',
+    multiple: true,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'individualChallenge'}},
@@ -249,6 +250,13 @@ USER_MODELS.forEach(m => {
     caster: {
       instance: 'ObjectID',
       options: {ref: 'target'}},
+  })
+  declareVirtualField({model: m, field: 'current_individual_challenge', instance: 'individualChallenge',
+    requires: 'registered_events,failed_events,passed_events',
+    multiple: false,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'individualChallenge'}},
   })
 })
 

@@ -325,6 +325,8 @@ const PERIOD={
  [PERIOD_EVENING]:'Dîner',
 }
 
+const NO_CREDIT_AVAILABLE=`Votre crédit est épuisé ou votre offre ne vous donne pas accès à cet événement`
+
 module.exports={
   CONTENTS_TYPE,
   EVENT_TYPE,
@@ -370,5 +372,7 @@ module.exports={
   SPOON_SOURCE_SURVEY_DONE,
   SPOON_SOURCE_SURVEY_PASSED,
   SPOON_SOURCE_WEBINAR_LIVE,
+  SPOON_SOURCE_WEBINAR_REPLAY,
   CONTENTS_ARTICLE, CONTENTS_INFOGRAPHY, CONTENTS_VIDEO, CONTENTS_PODCAST,
+  NO_CREDIT_AVAILABLE,
 }

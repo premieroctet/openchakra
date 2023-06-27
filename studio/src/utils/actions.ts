@@ -591,6 +591,12 @@ export const ACTIONS: IActions = {
     next: ['openPage'],
   },
 
+  smartdiet_replay_event: {
+    label: 'SM Replay webinar',
+    options: {},
+    next: ['openPage'],
+  },
+
 }
 
 export const allowsActions = (component: IComponent) => {

@@ -1,18 +1,23 @@
-const mongoose = require('mongoose')
-const bcrypt=require('bcryptjs')
-const {schemaOptions} = require('../../../utils/schemas')
-const util=require('util')
+const { SystemError } = require('../../../utils/errors')
 const {
   ARTICLE,
   CONTENTS_ARTICLE,
   CONTENTS_INFOGRAPHY,
   CONTENTS_PODCAST,
   CONTENTS_VIDEO,
+  EVENT_COLL_CHALLENGE,
+  EVENT_IND_CHALLENGE,
+  EVENT_MENU,
+  EVENT_WEBINAR,
   GROUPS_CREDIT,
   INFOGRAPHY,
   PODCAST,
   VIDEO
 } = require('../consts')
+const mongoose = require('mongoose')
+const bcrypt=require('bcryptjs')
+const {schemaOptions} = require('../../../utils/schemas')
+const util=require('util')
 
 const Schema = mongoose.Schema
 
@@ -114,6 +119,16 @@ OfferSchema.methods.getContentLimit=function(type){
   const limit=this[`${att}_unlimited`]? Number.MAX_VALUE : this[`${att}_credit`]
   console.log(`Limit for ${type} is ${limit}`)
   return limit
+}
+
+OfferSchema.methods.getEventLimit=function(type){
+  switch (type) {
+    case EVENT_WEBINAR: return this.webinars_unlimited ? Number.MAX_VALUE : this.webinars_credit
+    case EVENT_COLL_CHALLENGE: return this.collective_challenge_available ? Number.MAX_VALUE : 0
+    case EVENT_IND_CHALLENGE: return this.individual_challenge_available ? Number.MAX_VALUE : 0
+    case EVENT_MENU: return Number.MAX_VALUE
+  }
+  throw new SystemError(`Offer can't get event limit for type ${type}`)
 }
 
 module.exports = OfferSchema

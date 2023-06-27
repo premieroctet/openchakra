@@ -6,7 +6,7 @@ const {SPOON_SOURCE, SPOON_SOURCE_CONTENT_LIKE, SPOON_SOURCE_CONTENT_READ,
   SPOON_SOURCE_MEASURE_CHEST, SPOON_SOURCE_MEASURE_WAIST, SPOON_SOURCE_MEASURE_HIPS,
   SPOON_SOURCE_MEASURE_THIGHS, SPOON_SOURCE_MEASURES_ARMS, SPOON_SOURCE_MEASURE_WEIGHT,
   SPOON_SOURCE_SURVEY_DONE, SPOON_SOURCE_SURVEY_PASSED, SURVEY_ANSWER,
-  SPOON_SOURCE_WEBINAR_LIVE,
+  SPOON_SOURCE_WEBINAR_LIVE, SPOON_SOURCE_WEBINAR_REPLAY,
 }=require('./consts')
 const User=require('../../models/User')
 const SpoonGain=require('../../models/SpoonGain')
@@ -98,6 +98,11 @@ const SOURCE_COMPUTE_FNS={
   [SPOON_SOURCE_WEBINAR_LIVE]: ({source, key_filter, user}) => {
     return User.findById(user._id)
     .populate({path: 'passed_events', match: {'__t': 'webinar'}})
+    .then(u => u.passed_events.length)
+  },
+  [SPOON_SOURCE_WEBINAR_REPLAY]: ({source, key_filter, user}) => {
+    return User.findById(user._id)
+    .populate({path: 'replayed_events', match: {'__t': 'webinar'}})
     .then(u => u.passed_events.length)
   },
 }

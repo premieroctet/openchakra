@@ -1,3 +1,5 @@
+const moment = require('moment')
+const IndividualChallenge = require('../../models/IndividualChallenge')
 const { BadRequestError, NotFoundError } = require('../../utils/errors')
 const { ensureChallengePipsConsistency } = require('./functions')
 const UserSurvey = require('../../models/UserSurvey')
@@ -25,14 +27,17 @@ addAction('smartdiet_join_group', smartdiet_join_group)
 
 // skip, join or pass
 const smartdiet_event = action => ({value}, user) => {
-  return getModel(value, ['webinar', 'individualChallenge', 'menu', 'collectiveChallenge'])
+  return user.canJoinEvent(value)
+    .then(() => getModel(value, ['webinar', 'individualChallenge', 'menu', 'collectiveChallenge']))
     .then(model=> {
       const dbAction=action==
       'smartdiet_skip_event' ? {$addToSet: {skipped_events: value}, $pull: {registered_events: value, passed_events: value}}
-      : action=='smartdiet_pass_event' ? {$addToSet: {passed_events: value}, $pull: {registered_events: value, skipped_events: value}}
-      : action=='smartdiet_join_event' ? {$addToSet: {registered_events: value}, $pull: {passed_events: value, skipped_events: value}}
-      : action=='smartdiet_start_event' ? {$addToSet: {registered_events: value}, $pull: {skipped_events: value}}
-      : action=='smartdiet_fail_event' ? {$addToSet: {failed_events: value}, $pull: {registered_events: value}}
+      : action=='smartdiet_pass_event' ? {$addToSet: {passed_events: value}}
+      : action=='smartdiet_join_event' ? {$addToSet: {registered_events: value}}
+      : action=='smartdiet_start_event' ? {$addToSet: {passed_events: value}}
+      : action=='smartdiet_fail_event' ? {$addToSet: {failed_events: value}}
+      : action=='smartdiet_routine_challenge' ? {$addToSet: {routine_events: value}}
+      : action=='smartdiet_replay_event' ? {$addToSet: {replayed_events: value}}
       :  null
 
       // Specific
@@ -49,9 +54,16 @@ const smartdiet_event = action => ({value}, user) => {
     })
 }
 
-['smartdiet_join_event','smartdiet_skip_event','smartdiet_pass_event','smartdiet_start_event', 'smartdiet_fail_event'].forEach(action => {
+['smartdiet_join_event','smartdiet_skip_event','smartdiet_pass_event',
+'smartdiet_start_event', 'smartdiet_fail_event', 'smartdiet_routine_challenge','smartdiet_replay_event'].forEach(action => {
   addAction(action, smartdiet_event(action))
 })
+
+const smartdietShiftChallenge = ({value, join}, user) => {
+  return IndividualChallenge.findByIdAndUpdate(value, {update_date: moment()})
+}
+
+addAction('smartdiet_shift_challenge', smartdietShiftChallenge)
 
 const defaultRegister=ACTIONS.register
 
@@ -138,7 +150,7 @@ const isActionAllowed = ({action, dataId, user}) => {
         return loadFromDb({model: 'user', id:user._id, fields:['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'webinars'], user})
         .then(([user]) => {
           if (user?.skipped_events?.some(r => idEqual(r._id, dataId))) { return false}
-          if (user?.registered_events?.some(r => idEqual(r._id, dataId))) { return false}
+          if (user?.registered_events?.some(r => idEqual(r._id, dataId))) { return modelName=='menu'}
           if (user?.passed_events?.some(r => idEqual(r._id, dataId))) { return false}
           if (user?.failed_events?.some(r => idEqual(r._id, dataId))) { return false}
           return true
@@ -207,6 +219,12 @@ const isActionAllowed = ({action, dataId, user}) => {
           .then(team => Team.find({collectiveChallenge: team.collectiveChallenge}))
           .then(teams => TeamMember.exists({user:user, team: {$in: teams }}))
           .then(exists => !exists)
+      }
+      if (action=='smartdiet_shift_challenge') {
+        // Get all teams of this team's collective challenge, then check if
+        // user in on one of them
+        return loadFromDb({model: 'user', id: user._id, fields:['current_individual_challenge','_all_individual_challenges','passed_events','failed_events'], user})
+          .then(([user]) => !user.current_individual_challenge)
       }
       return Promise.resolve(true)
   })

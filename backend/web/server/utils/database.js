@@ -231,7 +231,8 @@ const buildPopulates = (modelName, fields) => {
   /// Build populate using att and subpopulation
   const pops=groupedAttributes.entries().map(([attributeName, fields]) => {
     const attType=attributes[attributeName].type
-    return {path: attributeName, populate: buildPopulates(attType, fields)}
+    const subPopulate=buildPopulates(attType, fields)
+    return {path: attributeName, populate: lodash.isEmpty(subPopulate)?undefined:subPopulate }
   })
   return pops.value()
 }
@@ -272,7 +273,6 @@ const getModel = (id, expectedModel) => {
 }
 
 const buildQuery = (model, id, fields) => {
-  console.log(`Building query model:${model}, id:${id || 'none'} fields:${fields}`)
   const modelAttributes = Object.fromEntries(getModelAttributes(model))
 
   const select = lodash(fields)
@@ -286,7 +286,7 @@ const buildQuery = (model, id, fields) => {
   const criterion = id ? {_id: id} : {}
   let query = mongoose.connection.models[model].find(criterion) //, select)
   const populates=buildPopulates(model, fields)
-  console.log(`Populates is ${JSON.stringify(populates)}`)
+  //console.log(`Populates for ${model}/${fields} is ${JSON.stringify(populates, null, 2)}`)
   query = query.populate(populates)
   return query
 }
