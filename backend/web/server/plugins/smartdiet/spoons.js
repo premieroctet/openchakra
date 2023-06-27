@@ -108,19 +108,19 @@ const computeSourceSpoonCount = ({source, key, user}) => {
       // No gain or 0 for this source : return 0
       if (!spoonGain?.gain) {
         //throw new Error(`No defined gain for ${source}`)
-        console.error(`No defined gain for ${source}`)
+        //console.error(`No defined gain for ${source}`)
         return 0
       }
       const fn=SOURCE_COMPUTE_FNS[source]
       if (!fn) {
-        console.error(`Missing compute spoon fn for ${source}`)
+        //console.error(`Missing compute spoon fn for ${source}`)
         return 0
       }
       const key_filter=key ? {key: key._id}:{}
       return fn({source, key_filter, user})
         .then(sourceSpoons => {
           const total=sourceSpoons*spoonGain.gain
-          console.log(`User ${user.email}:source:${source},matched:${sourceSpoons},gain:${spoonGain.gain}=>${total}` )
+          //console.log(`User ${user.email}:source:${source},matched:${sourceSpoons},gain:${spoonGain.gain}=>${total}` )
           return total
         })
         .catch(err => console.error(err))

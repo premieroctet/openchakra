@@ -402,7 +402,7 @@ router.post('/:model', passport.authenticate('cookie', {session: false}), (req, 
 router.put('/:model/:id', passport.authenticate('cookie', {session: false}), (req, res) => {
   const model = req.params.model
   const id = req.params.id
-  let params=req.body
+  let params=lodash(req.body).mapValues(v => JSON.parse(v)).value()
   const context= req.query.context
   const user=req.user
   params=model=='order' && context ? {...params, booking: context}:params

@@ -1,7 +1,18 @@
-const { GROUPS_CREDIT, HOME_STATUS } = require('../consts')
 const mongoose = require('mongoose')
 const bcrypt=require('bcryptjs')
 const {schemaOptions} = require('../../../utils/schemas')
+const util=require('util')
+const {
+  ARTICLE,
+  CONTENTS_ARTICLE,
+  CONTENTS_INFOGRAPHY,
+  CONTENTS_PODCAST,
+  CONTENTS_VIDEO,
+  GROUPS_CREDIT,
+  INFOGRAPHY,
+  PODCAST,
+  VIDEO
+} = require('../consts')
 
 const Schema = mongoose.Schema
 
@@ -31,7 +42,7 @@ const OfferSchema = new Schema({
   },
   infographies_credit: {
     type: Number,
-    required: [function() {return !this.infographies_unlimited}, "Le crédit d'infographies est obligatoire"],
+    required: [function() {console.log(`Unlimited info:${util.inspect(this)}`); return !this.infographies_unlimited}, "Le crédit d'infographies est obligatoire"],
   },
   infographies_unlimited: {
     type: Boolean,
@@ -91,5 +102,18 @@ const OfferSchema = new Schema({
     required: false,
   },
 }, schemaOptions)
+
+OfferSchema.methods.getContentLimit=function(type){
+  const TYPE_2_ATTRIBUTE={
+    [CONTENTS_ARTICLE]:'articles',
+    [CONTENTS_INFOGRAPHY]:'infographies',
+    [CONTENTS_VIDEO]:'video',
+    [CONTENTS_PODCAST]:'podcasts',
+  }
+  const att=TYPE_2_ATTRIBUTE[type]
+  const limit=this[`${att}_unlimited`]? Number.MAX_VALUE : this[`${att}_credit`]
+  console.log(`Limit for ${type} is ${limit}`)
+  return limit
+}
 
 module.exports = OfferSchema

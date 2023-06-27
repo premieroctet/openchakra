@@ -83,8 +83,10 @@ const preprocessGet = ({model, fields, id, user}) => {
     fields.push('company')
   }
   if (model=='content' && !!id) {
-    return Content.findByIdAndUpdate(id, {$addToSet: {viewed_by: user._id}})
-      .then(() => ({model, fields, id}))
+    return user.canView(id)
+      .then(() => Content.findByIdAndUpdate(id, {$addToSet: {viewed_by: user._id}})
+        .then(() => ({model, fields, id}))
+      )
   }
 
   return Promise.resolve({model, fields, id})

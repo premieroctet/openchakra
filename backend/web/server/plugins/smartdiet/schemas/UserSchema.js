@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const moment=require('moment')
+const { ForbiddenError } = require('../../../utils/errors')
 const { idEqual, shareTargets } = require('../../../utils/database')
 const {schemaOptions} = require('../../../utils/schemas')
 const {ACTIVITY, ROLES, ROLE_CUSTOMER, ROLE_RH, STATUS_FAMILY} = require('../consts')
@@ -312,6 +313,21 @@ UserSchema.virtual("targets", {localField: 'tagada', foreignField: 'tagada'}).ge
   return this._all_targets?.filter(t => all_target_ids.some(i => idEqual(i, t._id))) || []
 })
 
+UserSchema.methods.canView = function(content_id) {
+  return mongoose.models.content.findById(content_id)
+    .then(content => Promise.all([
+        mongoose.models.company.findById(this.company).populate('offers'),
+        mongoose.models.content.find({viewed_by:this._id, type: content.type})
+      ])
+      .then(([{offers}, contents]) => {
+        console.log(`Offer:${offers}`)
+        // If no in viewed contents, check credit
+        if (!contents.some(c => idEqual(c._id, content_id))
+          && !(offers[0]?.getContentLimit(content.type)>contents.length)) {
+            throw new ForbiddenError(`Votre crédit est épuisé`)
+          }
+      }))
+}
 /* eslint-enable prefer-arrow-callback */
 
 
