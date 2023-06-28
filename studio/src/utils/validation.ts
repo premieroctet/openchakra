@@ -44,9 +44,6 @@ const checkActionsProperties = (
         actionProps=JSON.parse(actionProps)
       }
       catch(err){}
-      if (required.length>0) {
-        console.log(`Actionprops:${Object.keys(actionProps)}`)
-      }
       const missing=required.filter(r => lodash.isEmpty(actionProps[r]))
       if (!lodash.isEmpty(missing)) {
         throw new Error(`Action ${actionName} requires attributes ${missing}`)
