@@ -1,3 +1,4 @@
+const { getHostName } = require('../../../config/config')
 const moment = require('moment')
 const IndividualChallenge = require('../../models/IndividualChallenge')
 const { BadRequestError, NotFoundError } = require('../../utils/errors')
@@ -139,6 +140,21 @@ const smartdietFindTeamMember = ({value}, user) => {
 }
 
 addAction('smartdiet_find_team_member', smartdietFindTeamMember)
+
+const smartdietOpenTeamPage = ({value, page}, user) => {
+  console.log(`Find team for ${value} then open page ${page}`)
+  return TeamMember.find({user}).populate('team')
+    .then(members => members.find(m => idEqual(m.team.collectiveChallenge._id, value)))
+    .then(member => {
+      if (!member) {
+        throw new NotFoundError(`Vous n'êtes pas membre de ce challenge, rejoignez une équipe!`)
+      }
+      const redirect=`https://${getHostName()}/${page}?id=${member._id}`
+      return {redirect, ...member}
+    })
+}
+
+addAction('smartdiet_open_team_page', smartdietOpenTeamPage)
 
 
 const isActionAllowed = ({action, dataId, user}) => {

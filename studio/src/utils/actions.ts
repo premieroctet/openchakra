@@ -579,6 +579,14 @@ export const ACTIONS: IActions = {
     next: ['openPage'],
   },
 
+  smartdiet_open_team_page: {
+    label: 'SM Open team page',
+    options: {
+      page: ({ pages }) => pagesList({pages}),
+    },
+    next: ['openPage'],
+  },
+
   smartdiet_shift_challenge: {
     label: 'SM Shift challenge',
     options: {},
