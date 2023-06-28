@@ -608,13 +608,6 @@ const postCreate = ({model, params, data,user}) => {
     User.find({role: FUMOIR_MANAGER})
       .then(managers => Promise.allSettled(managers.map(manager => sendNewBookingToManager({booking: data, manager}))))
   }
-  if (model=='team') {
-    return TeamMember.create({team: data, user})
-      .then(()=> {
-        ensureChallengePipsConsistency()
-        return data
-      })
-  }
   if (model=='collectiveChallenge') {
     return Pip.find()
       .then (pips => Promise.all(pips.map(p => ChallengePip.create({pip:p, collectiveChallenge:data}))))
