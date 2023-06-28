@@ -65,9 +65,10 @@ const filterDataUser = ({model, data, id, user}) => {
     return Offer.find({company: null})
       .then(offers => data.filter(d => offers.some(o => idEqual(d._id, o._id))))
   }
+  console.log(`Model:${model}`)
   if (model=='user' && user.role==ROLE_RH) {
     console.log(`I am RH`)
-    data=data.filter(u => user.company && idEqual(u.company?._id, user.company?._id))
+    data=data.filter(u => idEqual(id, user._id) || (user.company && idEqual(u.company?._id, user.company?._id)))
   }
   return Promise.resolve(data)
 }
