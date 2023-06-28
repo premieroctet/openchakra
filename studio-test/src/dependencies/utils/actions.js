@@ -788,6 +788,28 @@ export const ACTIONS = {
     }))
   },
 
+  smartdiet_open_team_page: ({value, props}) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_open_team_page',
+      value: value._id,
+      page: props.page,
+    }
+
+    return axios.post(url, body)
+    .then(res => {
+      if (res.data.redirect) {
+        let redirect=res.data.redirect
+        redirect = /^http/.test(redirect) ? redirect : `/${redirect}`
+        window.location=redirect
+      }
+      return {
+        model: 'teamMember',
+        value: res.data,
+      }
+    })
+  },
+
   smartdiet_routine_challenge: ({value}) => {
     let url = `${API_ROOT}/action`
     const body = {

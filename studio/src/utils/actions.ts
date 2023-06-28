@@ -469,7 +469,7 @@ export const ACTIONS: IActions = {
   smartdiet_join_event: {
     label: 'SM Register event',
     options: {},
-    next: ['openPage', 'smartdiet_find_team_member'],
+    next: ['openPage', 'smartdiet_open_team_page'],
   },
   smartdiet_pass_event: {
     label: 'SM Passed event',
@@ -576,6 +576,14 @@ export const ACTIONS: IActions = {
   smartdiet_find_team_member: {
     label: 'SM Find team member',
     options: {},
+    next: ['openPage'],
+  },
+
+  smartdiet_open_team_page: {
+    label: 'SM Open team page',
+    options: {
+      page: ({ pages }) => pagesList({pages}),
+    },
     next: ['openPage'],
   },
 
