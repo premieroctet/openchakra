@@ -773,12 +773,10 @@ import { ${lucideIconImports.join(',')} } from "lucide-react";`
     : ''
 }
 
-import Fonts from './dependencies/theme/Fonts'
 import {ensureToken} from './dependencies/utils/token'
 import {useLocation} from "react-router-dom"
 import { useUserContext } from './dependencies/context/user'
 import { getComponentDataValue } from './dependencies/utils/values'
-import theme from './dependencies/theme/theme'
 ${extraImports.join('\n')}
 
 ${dynamics || ''}
@@ -817,14 +815,14 @@ const ${componentName} = () => {
   ${filterStates}
 
   return ${autoRedirect ? 'user===null && ': ''} (
-  <>
+    <>
     <Metadata
       metaTitle={'${addBackslashes(metaTitle)}'}
       metaDescription={'${addBackslashes(metaDescription)}'}
       metaImageUrl={'${metaImageUrl}'}
     />
     ${code}
-  </>
+    </>
 )};
 
 export default ${componentName};`
@@ -840,7 +838,10 @@ ${pageNames.map(name => `<li><a href='/${name}'>${name}</a></li>`).join('\n')}
 */
   const { pages, rootPage } = state
   let code = `import {BrowserRouter, Routes, Route} from 'react-router-dom'
-  import { UserWrapper } from './dependencies/context/user';
+  import { UserWrapper } from './dependencies/context/user'
+  import theme from './dependencies/theme/theme'
+  import Fonts from './dependencies/theme/Fonts'
+  import {ChakraProvider} from "@chakra-ui/react"
   ${Object.values(pages)
     .map(
       page =>
@@ -853,6 +854,8 @@ ${pageNames.map(name => `<li><a href='/${name}'>${name}</a></li>`).join('\n')}
 
   const App = () => (
     <UserWrapper>
+    <ChakraProvider resetCSS theme={theme}>
+      <Fonts />
     <BrowserRouter>
     <Routes>
       <Route path='/' element={<${getPageComponentName(rootPage, pages)}/>} />
@@ -867,6 +870,7 @@ ${pageNames.map(name => `<li><a href='/${name}'>${name}</a></li>`).join('\n')}
         .join('\n')}
     </Routes>
     </BrowserRouter>
+    </ChakraProvider>
     </UserWrapper>
   )
 
