@@ -469,7 +469,7 @@ export const ACTIONS: IActions = {
   smartdiet_join_event: {
     label: 'SM Register event',
     options: {},
-    next: ['openPage', 'smartdiet_find_team_member'],
+    next: ['openPage', 'smartdiet_open_team_page'],
   },
   smartdiet_pass_event: {
     label: 'SM Passed event',
