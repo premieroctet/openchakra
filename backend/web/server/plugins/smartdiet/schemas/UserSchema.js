@@ -167,6 +167,12 @@ UserSchema.virtual('spoons_count').get(function() {
   return null
 })
 
+UserSchema.virtual("surveys", {
+  ref: "userSurvey", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "user" // is equal to foreignField
+});
+
 UserSchema.virtual("_all_contents", {
   ref: "content", // The Model to use
   localField: "dummy", // Find in Model, where localField
