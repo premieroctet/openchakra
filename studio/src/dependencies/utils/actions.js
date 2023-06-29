@@ -62,11 +62,13 @@ export const ACTIONS = {
     url = `${url}?${queryParams.toString()}`
     // new page
     if (props.open && !(props.open === 'false')) {
-      return Promise.resolve(window.open(url, 'blank'))
+      window.open(url, 'blank')
     } else {
-      return Promise.resolve((window.location = url))
+      window.location = url
     }
+    throw new Error('break')
   },
+
   create: ({ value, context, props, level, getComponentValue }) => {
     const components=lodash(props).pickBy((v, k) => /^component_/.test(k) && !!v).values()
     const body = Object.fromEntries(components.map(c =>
@@ -232,6 +234,7 @@ export const ACTIONS = {
           let redirect=res.data.redirect
           redirect = /^http/.test(redirect) ? redirect : `/${redirect}`
           window.location=redirect
+          throw new Error('break')
         }
       })
   },
@@ -245,6 +248,7 @@ export const ACTIONS = {
           let url=res.data.redirect
           url=/^http/.test(url) ? url : `/${url}`
           window.location=url
+          throw new Error('break')
         }
       })
   },
@@ -458,6 +462,7 @@ export const ACTIONS = {
           let redirect=res.data.redirect
           redirect = /^http/.test(redirect) ? redirect : `/${redirect}`
           window.location=redirect
+          throw new Error('break')
         }
       })
   },
@@ -688,6 +693,7 @@ export const ACTIONS = {
           let url=res.data.redirect
           url=/^http/.test(url) ? url : `/${url}`
           window.location=url
+          throw new Error('break')
         }
       })
   },
@@ -783,6 +789,7 @@ export const ACTIONS = {
         let redirect=res.data.redirect
         redirect = /^http/.test(redirect) ? redirect : `/${redirect}`
         window.location=redirect
+        throw new Error('break')
       }
       return {
         model: 'teamMember',
