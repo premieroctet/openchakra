@@ -1,5 +1,6 @@
 const {
   ACTIVITY,
+  COACHING_QUESTION_STATUS,
   COMPANY_ACTIVITY,
   COMPANY_ACTIVITY_SERVICES_AUX_ENTREPRISES,
   CONTENTS_TYPE,
@@ -20,6 +21,7 @@ const {
   TARGET_TYPE,
   UNIT,
 } = require('./consts')
+const CoachingQuestion = require('../../models/CoachingQuestion')
 const {
   declareComputedField,
   declareEnumField,
@@ -478,6 +480,22 @@ declareVirtualField({model: 'challengePip', field: 'pendingUserPips', instance: 
     options: {ref: 'challengeUserPip'}},
 })
 
+declareVirtualField({model: 'coaching', field: 'consultations', instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'consultation'}},
+})
+declareVirtualField({model: 'coaching', field: 'remaining_credits', instance: 'Number',
+  requires: 'user.offer.coaching_credit,spent_credits'}
+)
+declareVirtualField({model: 'coaching', field: 'spent_credits', instance: 'Number', requires: 'consultations'})
+declareVirtualField({model: 'coaching', field: 'questions', instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'userCoachingQuestion'}},
+})
+declareEnumField({model: 'userCoachingQuestion', field: 'status', enumValues: COACHING_QUESTION_STATUS})
+
 const getAvailableContents = (user, params, data) => {
   return Content.find()
     .then(contents => {
@@ -622,6 +640,11 @@ const postCreate = ({model, params, data,user}) => {
   if (model=='teamMember') {
     ensureChallengePipsConsistency()
   }
+  if (model=='coaching') {
+    return CoachingQuestion.find()
+      .then(questions => Promise.all(questions.map(question => userCoachingQuestion.create({coaching: data, question}))))
+  }
+
 
   return Promise.resolve(data)
 }
