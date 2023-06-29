@@ -200,7 +200,7 @@ const isActionAllowed = ({action, dataId, user}) => {
               .then(webinar => isRegistered || moment(webinar.end_date).isBefore(moment()))
           }
           else {
-            return !isRegistered
+            return isRegistered
           }
         })
       }
