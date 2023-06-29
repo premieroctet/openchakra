@@ -20,6 +20,8 @@ const HEADERS=[
   {title: 'Qualifié', id: 'qualified_str'},
   {title: 'Accompagnement', id: 'coaching_alle'},
   {title: '% complétude', id: 'profile_progress'},
+  {title: 'Assurance', id: 'insurance_type'},
+  {title: 'Document assurance', id: 'insurance_report'},
 ]
 console.log(`extracting all TIPIs`)
 mongoose.connect(getDatabaseUri(), MONGOOSE_OPTIONS)
