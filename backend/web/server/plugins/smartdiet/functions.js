@@ -85,13 +85,6 @@ const preprocessGet = ({model, fields, id, user}) => {
   if (model=='user') {
     fields.push('company')
   }
-  if (model=='content' && !!id) {
-    return user.canView(id)
-      .then(() => Content.findByIdAndUpdate(id, {$addToSet: {viewed_by: user._id}})
-        .then(() => ({model, fields, id}))
-      )
-  }
-
   return Promise.resolve({model, fields, id})
 
 }
@@ -260,6 +253,13 @@ USER_MODELS.forEach(m => {
     caster: {
       instance: 'ObjectID',
       options: {ref: 'individualChallenge'}},
+  })
+  declareVirtualField({model: m, field: 'offer', instance: 'offer',
+    requires: 'company.offers',
+    multiple: false,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'offer'}},
   })
 })
 

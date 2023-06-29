@@ -63,25 +63,31 @@ const SOURCE_COMPUTE_FNS={
   },
   [SPOON_SOURCE_INDIVIDUAL_CHALLENGE_PASSED]: ({source, key_filter, user}) => {
     return User.findById(user._id)
-      .populate({path: 'passed_events', match: {'__t': 'individualChallenge'}})
+      .populate({path: 'passed_events', match: {'__t': 'individualChallenge', ...key_filter}})
       .then(u => u.passed_events.length)
   },
   [SPOON_SOURCE_MEASURE_CHEST]: ({source, key_filter, user}) => {
+    if (!lodash.isEmpty(key_filter)) {return Promise.resolve(0)}
     return Measure.countDocuments({user, chest: {$ne: null}})
   },
   [SPOON_SOURCE_MEASURE_WAIST]: ({source, key_filter, user}) => {
+    if (!lodash.isEmpty(key_filter)) {return Promise.resolve(0)}
     return Measure.countDocuments({user, waist: {$ne: null}})
   },
   [SPOON_SOURCE_MEASURE_HIPS]: ({source, key_filter, user}) => {
+    if (!lodash.isEmpty(key_filter)) {return Promise.resolve(0)}
     return Measure.countDocuments({user, hips: {$ne: null}})
   },
   [SPOON_SOURCE_MEASURE_THIGHS]: ({source, key_filter, user}) => {
+    if (!lodash.isEmpty(key_filter)) {return Promise.resolve(0)}
     return Measure.countDocuments({user, thighs: {$ne: null}})
   },
   [SPOON_SOURCE_MEASURES_ARMS]: ({source, key_filter, user}) => {
+    if (!lodash.isEmpty(key_filter)) {return Promise.resolve(0)}
     return Measure.countDocuments({user, arms: {$ne: null}})
   },
   [SPOON_SOURCE_MEASURE_WEIGHT]: ({source, key_filter, user}) => {
+    if (!lodash.isEmpty(key_filter)) {return Promise.resolve(0)}
     return Measure.countDocuments({user, weight: {$ne: null}})
   },
   [SPOON_SOURCE_SURVEY_DONE]: ({source, key_filter, user}) => {
@@ -97,12 +103,12 @@ const SOURCE_COMPUTE_FNS={
   },
   [SPOON_SOURCE_WEBINAR_LIVE]: ({source, key_filter, user}) => {
     return User.findById(user._id)
-    .populate({path: 'passed_events', match: {'__t': 'webinar'}})
+    .populate({path: 'passed_events', match: {'__t': 'webinar', ...key_filter}})
     .then(u => u.passed_events.length)
   },
   [SPOON_SOURCE_WEBINAR_REPLAY]: ({source, key_filter, user}) => {
     return User.findById(user._id)
-    .populate({path: 'replayed_events', match: {'__t': 'webinar'}})
+    .populate({path: 'replayed_events', match: {'__t': 'webinar', ...key_filter}})
     .then(u => u.passed_events.length)
   },
 }
@@ -125,7 +131,7 @@ const computeSourceSpoonCount = ({source, key, user}) => {
       return fn({source, key_filter, user})
         .then(sourceSpoons => {
           const total=sourceSpoons*spoonGain.gain
-          //console.log(`User ${user.email}:source:${source},matched:${sourceSpoons},gain:${spoonGain.gain}=>${total}` )
+          //console.log(`User ${user.email}:key:${key?.name},source:${source},matched:${sourceSpoons},gain:${spoonGain.gain}=>${total}` )
           return total
         })
         .catch(err => console.error(err))

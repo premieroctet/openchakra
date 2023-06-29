@@ -325,7 +325,7 @@ const PERIOD={
  [PERIOD_EVENING]:'Dîner',
 }
 
-const NO_CREDIT_AVAILABLE=`Votre crédit est épuisé ou votre offre ne vous donne pas accès à cet événement`
+const NO_CREDIT_AVAILABLE=`Votre crédit est épuisé ou l'accès est refusé`
 
 const COACHING_QUESTION_STATUS_NOT_ADDRESSED="COACHING_QUESTION_STATUS_NOT_ADDRESSED"
 const COACHING_QUESTION_STATUS_NOT_ACQUIRED="COACHING_QUESTION_STATUS_NOT_ACQUIRED"

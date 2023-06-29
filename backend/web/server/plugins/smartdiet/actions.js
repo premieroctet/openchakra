@@ -1,3 +1,4 @@
+const Content = require('../../models/Content')
 const Webinar = require('../../models/Webinar')
 
 const { getHostName } = require('../../../config/config')
@@ -149,8 +150,16 @@ const smartdietOpenTeamPage = ({value, page}, user) => {
       return {redirect, ...member}
     })
 }
-
 addAction('smartdiet_open_team_page', smartdietOpenTeamPage)
+
+const smartdietReadContent = ({value}, user) => {
+  return isActionAllowed({action: 'smartdiet_read_content', dataId: value, user})
+    .then(allowed => {
+      if (!allowed) throw new BadRequestError(`Vous ne pouvez accéder à ce contenu`)
+      return Content.findByIdAndUpdate(value, {$addToSet: {viewed_by: user._id}})
+    })
+}
+addAction('smartdiet_read_content', smartdietReadContent)
 
 
 const isActionAllowed = ({action, dataId, user}) => {
@@ -232,6 +241,11 @@ const isActionAllowed = ({action, dataId, user}) => {
         // user in on one of them
         return loadFromDb({model: 'user', id: user._id, fields:['current_individual_challenge','_all_individual_challenges','passed_events','failed_events'], user})
           .then(([user]) => !user.current_individual_challenge)
+      }
+      if (action=='smartdiet_read_content') {
+        // Get all teams of this team's collective challenge, then check if
+        // user in on one of them
+        return user.canView(dataId)
       }
       return Promise.resolve(true)
   })

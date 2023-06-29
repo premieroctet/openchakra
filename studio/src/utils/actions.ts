@@ -600,6 +600,12 @@ export const ACTIONS: IActions = {
     next: ['openPage'],
   },
 
+  smartdiet_read_content: {
+    label: 'SM Read content',
+    options: {},
+    next: ['openPage'],
+  },
+
 }
 
 export const allowsActions = (component: IComponent) => {

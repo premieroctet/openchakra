@@ -346,6 +346,10 @@ UserSchema.virtual("targets", {localField: 'tagada', foreignField: 'tagada'}).ge
   return this._all_targets?.filter(t => all_target_ids.some(i => idEqual(i, t._id))) || []
 })
 
+UserSchema.virtual('offer', {localField: 'tagada', foreignField: 'tagada'}).get(function() {
+  return this.company?.offers?.[0] || null
+})
+
 UserSchema.methods.canView = function(content_id) {
   return mongoose.models.content.findById(content_id)
     .then(content => Promise.all([
@@ -353,12 +357,12 @@ UserSchema.methods.canView = function(content_id) {
         mongoose.models.content.find({viewed_by:this._id, type: content.type})
       ])
       .then(([{offers}, contents]) => {
-        console.log(`Offer:${offers}`)
         // If no in viewed contents, check credit
         if (!contents.some(c => idEqual(c._id, content_id))
-          && !(offers[0]?.getContentLimit(content.type)>contents.length)) {
+          && !(offers?.[0]?.getContentLimit(content.type)>contents.length)) {
             throw new ForbiddenError(NO_CREDIT_AVAILABLE)
           }
+        return true
       }))
 }
 

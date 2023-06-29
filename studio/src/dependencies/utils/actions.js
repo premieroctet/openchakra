@@ -809,4 +809,14 @@ export const ACTIONS = {
     return axios.post(url, body)
   },
 
+  smartdiet_read_content: ({value}) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_read_content',
+      value: value._id,
+    }
+    return axios.post(url, body)
+      .then(res => ({model: 'content',value: res.data}))
+  },
+
 }
