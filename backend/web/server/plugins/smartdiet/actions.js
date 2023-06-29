@@ -35,16 +35,10 @@ const smartdiet_event = action => ({value}, user) => {
       'smartdiet_skip_event' ? {$addToSet: {skipped_events: value}, $pull: {registered_events: value, passed_events: value}}
       : action=='smartdiet_pass_event' ? {$addToSet: {passed_events: value}}
       : action=='smartdiet_join_event' ? {$addToSet: {registered_events: value}}
-      : action=='smartdiet_start_event' ? {$addToSet: {passed_events: value}}
       : action=='smartdiet_fail_event' ? {$addToSet: {failed_events: value}}
       : action=='smartdiet_routine_challenge' ? {$addToSet: {routine_events: value}}
       : action=='smartdiet_replay_event' ? {$addToSet: {replayed_events: value}}
       :  null
-
-      // Specific
-      if (model=='webinar' && action=='smartdiet_start_event') {
-        dbAction['$addToSet'].passed_events=value
-      }
 
       if (!dbAction) {
         throw new Error(`Event subaction ${JSON.stringify(action)} unknown`)
@@ -56,7 +50,7 @@ const smartdiet_event = action => ({value}, user) => {
 }
 
 ['smartdiet_join_event','smartdiet_skip_event','smartdiet_pass_event',
-'smartdiet_start_event', 'smartdiet_fail_event', 'smartdiet_routine_challenge','smartdiet_replay_event'].forEach(action => {
+'smartdiet_fail_event', 'smartdiet_routine_challenge','smartdiet_replay_event'].forEach(action => {
   addAction(action, smartdiet_event(action))
 })
 
@@ -183,22 +177,10 @@ const isActionAllowed = ({action, dataId, user}) => {
           return true
         })
       }
-      if (action=='smartdiet_start_event') {
-        return loadFromDb({model: 'user', id:user._id, fields:['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'webinars'], user})
-        .then(([user]) => {
-          if (modelName=='menu') { return false}
-          if (modelName=='individualChallenge') {return false}
-          if (user?.passed_events?.some(r => idEqual(r._id, dataId))) { return false}
-          if (!user?.registered_events?.some(r => idEqual(r._id, dataId))) { return false}
-          return true
-        })
-      }
       if (action=='smartdiet_pass_event') {
         return loadFromDb({model: 'user', id:user._id, fields:['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'webinars'], user})
         .then(([user]) => {
           if (modelName=='menu') { return false}
-          if (modelName=='webinar') { return false}
-          if (user?.passed_events?.some(r => idEqual(r._id, dataId))) { return false}
           if (user?.skipped_events?.some(r => idEqual(r._id, dataId))) { return false}
           if (!user?.registered_events?.some(r => idEqual(r._id, dataId))) { return false}
           return true
