@@ -10,7 +10,7 @@ const Schema = mongoose.Schema
 const UserCoachingQuestionSchema = new Schema({
   question: {
     type: Schema.Types.ObjectId,
-    ref: 'coachingQuestionSchema',
+    ref: 'coachingQuestion',
     required: [true, 'La question est obligatoire'],
   },
   status: {
