@@ -630,9 +630,7 @@ export const ACTIONS = {
       value: value._id,
     }
     return axios.post(url, body)
-      .then(res => {
-        return {_id: res.data?._id}
-      })
+      .then(res => res.data)
   },
 
   smartdiet_fail_event: ({ value }) => {
@@ -669,9 +667,8 @@ export const ACTIONS = {
     return axios.post(url, body)
   },
 
-  openUrl: ({value, actionProps}) => {
-    let props=actionProps
-    try { props=JSON.parse(actionProps) } catch(e) {}
+  openUrl: ({value, props}) => {
+    try { props=JSON.parse(props) } catch(e) {}
     const {url, open}=props
     const urlValue=lodash.get(value, url)
     // new page

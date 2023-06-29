@@ -1,3 +1,5 @@
+const Webinar = require('../../models/Webinar')
+
 const { getHostName } = require('../../../config/config')
 const moment = require('moment')
 const IndividualChallenge = require('../../models/IndividualChallenge')
@@ -182,8 +184,15 @@ const isActionAllowed = ({action, dataId, user}) => {
         .then(([user]) => {
           if (modelName=='menu') { return false}
           if (user?.skipped_events?.some(r => idEqual(r._id, dataId))) { return false}
-          if (!user?.registered_events?.some(r => idEqual(r._id, dataId))) { return false}
-          return true
+          const isRegistered=user?.registered_events?.some(r => idEqual(r._id, dataId))
+          // Event must be registered except for past webinars
+          if (modelName=='webinar') {
+            return Webinar.findById(dataId)
+              .then(webinar => isRegistered || moment(webinar.end_date).isBefore(moment()))
+          }
+          else {
+            return !isRegistered
+          }
         })
       }
       if (action=='smartdiet_fail_event') {

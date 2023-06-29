@@ -220,7 +220,7 @@ UserSchema.virtual('available_webinars', {localField:'_id', foreignField: '_id'}
 // Webinars finished
 UserSchema.virtual('past_webinars', {localField:'_id', foreignField: '_id'}).get(function() {
   const now=moment()
-  const webinars=lodash(this.webinars)
+  const webinars=lodash(this._all_webinars)
     .filter(w => moment(w.end_date).isBefore(now))
     .value()
   return webinars
