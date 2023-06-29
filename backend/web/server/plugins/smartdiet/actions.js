@@ -35,9 +35,9 @@ const smartdiet_event = action => ({value}, user) => {
     .then(model=> {
       const dbAction=action==
       'smartdiet_skip_event' ? {$addToSet: {skipped_events: value}, $pull: {registered_events: value, passed_events: value}}
-      : action=='smartdiet_pass_event' ? {$addToSet: {passed_events: value}}
       : action=='smartdiet_join_event' ? {$addToSet: {registered_events: value}}
-      : action=='smartdiet_fail_event' ? {$addToSet: {failed_events: value}}
+      : action=='smartdiet_pass_event' ? {$addToSet: {passed_events: value, registered_events: value}}
+      : action=='smartdiet_fail_event' ? {$addToSet: {failed_events: value, registered_events: value}}
       : action=='smartdiet_routine_challenge' ? {$addToSet: {routine_events: value}}
       : action=='smartdiet_replay_event' ? {$addToSet: {replayed_events: value}}
       :  null
