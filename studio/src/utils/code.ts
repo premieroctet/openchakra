@@ -129,7 +129,7 @@ type BuildBlockParams = {
 // Wether component is linked to a save action, thus must not save during onChange
 const getNoAutoSaveComponents = (components: IComponents): IComponent[] => {
   let c=Object.values(components)
-    .filter(c => ['save', 'smartdiet_set_company_code'].includes(c.props?.action) && c.props?.actionProps)
+    .filter(c => ['save', 'create', 'smartdiet_set_company_code'].includes(c.props?.action) && c.props?.actionProps)
     .map(c => JSON.parse(c.props.actionProps))
   c=c.map(obj => lodash.pickBy(obj, (_, k)=> /^component_|^code$/.test(k)))
   c=c.map(obj => Object.values(obj).filter(v => !!v))
