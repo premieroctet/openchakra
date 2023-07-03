@@ -128,7 +128,7 @@ USER_MODELS.forEach(m => {
       options: {ref: 'content'}},
   })
   declareVirtualField({model: m, field: 'contents', instance: 'Array',
-    requires: '_all_targets,targets,_all_contents.targets,objective_targets,health_targets,activity_targets,specificity_targets,home_target',
+    requires: '_all_targets,targets,_all_contents.targets,objective_targets,health_targets,activity_targets,specificity_targets,home_target,_all_contents.search_text',
     multiple: true,
     caster: {
       instance: 'ObjectID',
@@ -320,6 +320,7 @@ declareVirtualField({model: 'content', field: 'comments', instance: 'Array', mul
 declareVirtualField({model: 'content', field: 'liked', instance: 'Boolean', requires: 'likes'})
 declareVirtualField({model: 'content', field: 'pinned', instance: 'Boolean', requires: 'pins'})
 declareVirtualField({model: 'content', field: 'comments_count', instance: 'Number', requires: 'comments'})
+declareVirtualField({model: 'content', field: 'search_text', instance: 'String', requires: 'name,contents'})
 
 const EVENT_MODELS=['event', 'collectiveChallenge', 'individualChallenge', 'menu', 'webinar']
 EVENT_MODELS.forEach(m => {

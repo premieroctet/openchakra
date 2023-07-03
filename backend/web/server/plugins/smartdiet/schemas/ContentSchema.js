@@ -114,4 +114,11 @@ ContentSchema.virtual('pinned').get(function() {
   return false
 })
 
+ContentSchema.virtual("search_text").get(function() {
+  const attributes='name,contents'.split(',')
+  let values=attributes.map(att => this[att])
+  values=values.filter(v=>!!v)
+  return values.join(' ')
+});
+
 module.exports = ContentSchema
