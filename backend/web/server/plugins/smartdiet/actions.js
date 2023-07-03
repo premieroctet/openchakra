@@ -76,6 +76,9 @@ const register=props => {
 addAction('register', register)
 
 const setSmartdietCompanyCode = ({code}, user) => {
+  if (!code?.trim()) {
+    return User.findById(user._id)
+  }
   return Company.findOne({code: code})
     .then(company => {
       if (!company) { throw new BadRequestError(`Code entreprise ${code} invalide`)}

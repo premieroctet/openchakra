@@ -39,9 +39,8 @@ const UserSchema = new Schema({
   },
   phone: {
     type: String,
-    required: [function() { return this.role==ROLE_CUSTOMER}, 'Le téléphone est obligatoire'],
+    required: false,
   },
-
   birthday: {
     type: Date,
     //required: [function() { return this.role==ROLE_CUSTOMER }, 'La date de naissance est obligatoire'],
