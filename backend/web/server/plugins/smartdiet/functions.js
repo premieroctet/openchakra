@@ -591,7 +591,7 @@ const getUserContents = (user, params, data) => {
     data.activity_targets,data.specificity_targets,data.home_target])
     .flatten()
     .value()
-  return Promise.resolve(data._all_contents.filter(c => setIntersects(c.targets, user_targets)))
+  return Promise.resolve(data._all_contents.filter(c => c.default || setIntersects(c.targets, user_targets)))
 }
 
 declareComputedField('user', 'contents', getUserContents)
