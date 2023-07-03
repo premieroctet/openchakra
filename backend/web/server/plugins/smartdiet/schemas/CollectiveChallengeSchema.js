@@ -18,10 +18,14 @@ const CollectiveChallengeSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'company',
   },
-  association: [{
+  association: {
     type: Schema.Types.ObjectId,
     ref: 'association',
-  }],
+  },
+  donation: {
+    type: Number,
+    default: 0,
+  }
 },
 {...schemaOptions, ...EVENT_DISCRIMINATOR}
 )
