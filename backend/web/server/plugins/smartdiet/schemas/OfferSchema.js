@@ -9,7 +9,6 @@ const {
   EVENT_IND_CHALLENGE,
   EVENT_MENU,
   EVENT_WEBINAR,
-  GROUPS_CREDIT,
   INFOGRAPHY,
   PODCAST,
   VIDEO
@@ -65,7 +64,7 @@ const OfferSchema = new Schema({
   },
   podcasts_credit: {
     type: Number,
-    required: [function() {return !this.podcasts_unlimited}, 'Le crédit de podcats est obligatoire'],
+    required: [function() {return !this.podcasts_unlimited}, 'Le crédit de podcasts est obligatoire'],
   },
   podcasts_unlimited: {
     type: Boolean,
@@ -98,8 +97,13 @@ const OfferSchema = new Schema({
     type: Boolean,
   },
   groups_credit: {
-    type: String,
-    enum: Object.keys(GROUPS_CREDIT),
+    type: Number,
+    required: [function() {return !this.groups_unlimited}, 'Le crédit de groupes est obligatoire'],
+  },
+  groups_unlimited: {
+    type: Boolean,
+    default: false,
+    required: true,
   },
   company: {
     type: Schema.Types.ObjectId,
