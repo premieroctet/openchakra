@@ -1,4 +1,9 @@
 const {
+  idEqual,
+  setIntersects,
+  shareTargets
+} = require('../../../utils/database')
+const {
   ACTIVITY,
   EVENT_IND_CHALLENGE,
   GENDER,
@@ -11,7 +16,6 @@ const {
 const mongoose = require('mongoose')
 const moment=require('moment')
 const { ForbiddenError } = require('../../../utils/errors')
-const { idEqual, shareTargets } = require('../../../utils/database')
 const {schemaOptions} = require('../../../utils/schemas')
 const lodash=require('lodash')
 
@@ -179,9 +183,10 @@ UserSchema.virtual("_all_contents", {
   foreignField: "dummy" // is equal to foreignField
 });
 
+
 // Computed virtual
-UserSchema.virtual('contents', {localField: '_id', foreignField: '_id'}).get(function (callback) {
-  return this._all_contents?.filter(c => [ROLE_CUSTOMER, ROLE_RH].includes(this.role) ? !c.hidden : true) || []
+UserSchema.virtual('contents', {localField: '_id', foreignField: '_id'}).get(function () {
+  return null
 })
 
 UserSchema.virtual("available_groups", {localField: 'id', foreignField: 'id'}).get(function () {

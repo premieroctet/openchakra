@@ -1,4 +1,18 @@
 const {
+  declareComputedField,
+  declareEnumField,
+  declareVirtualField,
+  getModel,
+  idEqual,
+  loadFromDb,
+  setFilterDataUser,
+  setIntersects,
+  setPostCreateData,
+  setPreCreateData,
+  setPreprocessGet,
+  simpleCloneModel,
+} = require('../../utils/database')
+const {
   ACTIVITY,
   COACHING_QUESTION_STATUS,
   COMPANY_ACTIVITY,
@@ -22,19 +36,6 @@ const {
   UNIT,
 } = require('./consts')
 const CoachingQuestion = require('../../models/CoachingQuestion')
-const {
-  declareComputedField,
-  declareEnumField,
-  declareVirtualField,
-  getModel,
-  idEqual,
-  loadFromDb,
-  setFilterDataUser,
-  setPostCreateData,
-  setPreCreateData,
-  setPreprocessGet,
-  simpleCloneModel,
-} = require('../../utils/database')
 const CollectiveChallenge = require('../../models/CollectiveChallenge')
 const Pip = require('../../models/Pip')
 const ChallengeUserPip = require('../../models/ChallengeUserPip')
@@ -127,7 +128,8 @@ USER_MODELS.forEach(m => {
       options: {ref: 'content'}},
   })
   declareVirtualField({model: m, field: 'contents', instance: 'Array',
-    requires: '_all_contents', multiple: true,
+    requires: '_all_targets,targets,_all_contents.targets,objective_targets,health_targets,activity_targets,specificity_targets,home_target',
+    multiple: true,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'content'}},
@@ -502,21 +504,6 @@ declareVirtualField({model: 'coaching', field: 'questions', instance: 'Array', m
 })
 declareEnumField({model: 'userCoachingQuestion', field: 'status', enumValues: COACHING_QUESTION_STATUS})
 
-const getAvailableContents = (user, params, data) => {
-  return Content.find()
-    .then(contents => {
-      const user_targets=user.targets.map(t => t._id.toString())
-      const filtered_contents=contents.filter(c => {
-        if (c.default) {
-          return true
-        }
-        const content_targets=c.targets?.map(t => t._id.toString()) || []
-        return lodash.isEqual(user_targets.sort(), content_targets.sort())
-      })
-      return filtered_contents
-    })
-}
-
 const getDataLiked = (user, params, data) => {
   const liked=data?.likes?.some(l => idEqual(l._id, user?._id))
   return Promise.resolve(liked)
@@ -599,8 +586,16 @@ const getUserSurveysProgress = (user, params, data) => {
     .catch(err => console.error(err))
 }
 
-declareComputedField('user', 'available_contents', getAvailableContents)
-declareComputedField('loggedUser', 'available_contents', getAvailableContents)
+const getUserContents = (user, params, data) => {
+  const user_targets=lodash([data.objective_targets,data.health_targets,
+    data.activity_targets,data.specificity_targets,data.home_target])
+    .flatten()
+    .value()
+  return Promise.resolve(data._all_contents.filter(c => setIntersects(c.targets, user_targets)))
+}
+
+declareComputedField('user', 'contents', getUserContents)
+declareComputedField('loggedUser', 'contents', getUserContents)
 declareComputedField('comment', 'liked', getDataLiked, setDataLiked)
 declareComputedField('message', 'liked', getDataLiked, setDataLiked)
 declareComputedField('content', 'liked', getDataLiked, setDataLiked)
@@ -706,6 +701,5 @@ Company.findOneAndUpdate(
   .catch(err => console.error(`Particular company upsert error:${err}`))
 
 module.exports={
-  getAvailableContents,
   ensureChallengePipsConsistency,
 }
