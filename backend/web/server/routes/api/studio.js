@@ -377,7 +377,7 @@ router.post('/contact', (req, res) => {
 
 router.post('/:model', passport.authenticate('cookie', {session: false}), (req, res) => {
   const model = req.params.model
-  let params=req.body
+  let params=lodash(req.body).mapValues(v => JSON.parse(v)).value()
   const context= req.query.context
   const user=req.user
 

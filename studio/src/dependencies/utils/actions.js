@@ -214,8 +214,9 @@ export const ACTIONS = {
     const body = Object.fromEntries(components.map(c =>
       [getComponent(c, level)?.getAttribute('attribute') || getComponent(c, level)?.getAttribute('data-attribute'), getComponentValue(c, level)||null]
     ))
+    const bodyJson=lodash.mapValues(body, v => JSON.stringify(v))
     const httpAction=dataSource?._id ? axios.put : axios.post
-    return httpAction(url, body)
+    return httpAction(url, bodyJson)
     .then(res => {
       components.forEach(c => clearComponentValue(c, level))
       return ({
