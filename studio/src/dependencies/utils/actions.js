@@ -82,8 +82,9 @@ export const ACTIONS = {
         body[property]=dataId
       }
     })
+    const bodyJson=lodash.mapValues(body, v => JSON.stringify(v))
     let url = `${API_ROOT}/${props.model}?context=${context}`
-    return axios.post(url, body)
+    return axios.post(url, bodyJson)
       .then(res => ({
         model: props.model,
         value: res.data,
