@@ -399,17 +399,6 @@ const buildBlock = ({
         propsContent += ` displayEye`
       }
 
-      if (childComponent.props.actionProps) {
-        const { page } = isJsonString(childComponent.props.actionProps)
-          ? JSON.parse(childComponent.props.actionProps)
-          : childComponent.props.actionProps
-          if (page) {
-            const destPageUrl = getPageUrl(page, pages)
-            propsContent += ` pageName={'${destPageUrl}'} `
-            propsContent += `onClick={() => window.location='/${destPageUrl}'}`
-        }
-      }
-
       if (
         typeof childComponent.props.children === 'string' &&
         childComponent.children.length === 0
