@@ -128,7 +128,7 @@ USER_MODELS.forEach(m => {
       options: {ref: 'content'}},
   })
   declareVirtualField({model: m, field: 'contents', instance: 'Array',
-    requires: `contents.key,contents.comments_count,contents.targets,objective_targets,health_targets,activity_targets,specificity_targets,home_target,contents.search_text`,
+    requires: `targets,contents.key.picture,contents.comments_count,contents.targets,objective_targets,health_targets,activity_targets,specificity_targets,home_target,contents.search_text`,
     multiple: true,
     caster: {
       instance: 'ObjectID',

@@ -199,23 +199,13 @@ UserSchema.virtual('contents', {
   foreignField: "dummy", // is equal to foreignField
   options: {
     match: function() {
-      console.log(`****** Targets:${this.health_targets}`)
+      const all_targets=[...this.activity_targets,...this.health_targets,this.home_target,...this.objective_targets,...this.specificity_targets]
       return {
-        name: /o/
-        //targets: this.health_targets,
+        $or: [{default: true}, {targets: {$in: all_targets}}]
       }
-      return { targets: [...this.activity_targets,...this.health_targets,
-        this.home_target,...this.objective_targets,...this.specificity_targets] }
     }
   }
 })
-
-/**
-// Computed virtual
-UserSchema.virtual('contents', {localField: '_id', foreignField: '_id'}).get(function () {
-  return null
-})
-*/
 
 UserSchema.virtual("available_groups", {localField: 'id', foreignField: 'id'}).get(function () {
   return lodash(this.company?.groups)
