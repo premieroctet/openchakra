@@ -706,9 +706,10 @@ const computeStatistics= ({id, fields}) => {
   console.log(`Computing stats for ${id} fields ${fields}`)
   const company_filter=id ? {_id: id} : {}
   return Company.find(company_filter)
-    .populate(['webinars', 'groups'])
-    .populate({path: 'users', populate:['registered_events','replayed_events']})
+    .populate([{path: 'webinars', select:'type'},{path: 'groups', select:'_id'}])
+    .populate({path: 'users', select: 'registered_events,replayed_events', populate:['registered_events','replayed_events']})
     .then(comps => {
+      console.log(JSON.stringify(comps[1],null,2))
       const companies=lodash(comps)
       const webinars=companies.map(c => c.webinars).flatten()
       const webinars_count=webinars.size()
@@ -723,7 +724,7 @@ const computeStatistics= ({id, fields}) => {
         .map('replayed_events').flatten()
         .filter(e => e.type==EVENT_WEBINAR)
         .size()
-      const groups_count=companies.map('groups').flatten().size()
+      const groups_count=companies.map('groups_count').sum()
       return ({
         webinars_count, average_webinar_registar, webinars_replayed_count,
         groups_count,
