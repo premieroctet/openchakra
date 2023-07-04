@@ -174,7 +174,7 @@ const isActionAllowed = ({action, dataId, user}) => {
         return loadFromDb({model: 'user', id:user._id, fields:['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'webinars'], user})
         .then(([user]) => {
           if (user?.skipped_events?.some(r => idEqual(r._id, dataId))) { return false}
-          if (user?.registered_events?.some(r => idEqual(r._id, dataId))) { return modelName=='menu'}
+          if (user?.registered_events?.some(r => idEqual(r._id, dataId))) { return ['collectiveChallenge','menu'].includes(modelName)}
           if (user?.passed_events?.some(r => idEqual(r._id, dataId))) { return false}
           if (user?.failed_events?.some(r => idEqual(r._id, dataId))) { return false}
           return true

@@ -38,6 +38,12 @@ const CompanySchema = new Schema(
   schemaOptions,
 )
 
+CompanySchema.virtual('users', {
+  ref: 'user', // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "company", // is equal to foreignField
+});
+
 CompanySchema.virtual("offers", {
   ref: "offer", // The Model to use
   localField: "_id", // Find in Model, where localField

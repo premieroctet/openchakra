@@ -1,3 +1,5 @@
+const { EVENT_WEBINAR } = require('./consts')
+
 const {
   declareComputedField,
   declareEnumField,
@@ -85,6 +87,10 @@ const preprocessGet = ({model, fields, id, user}) => {
   }
   if (model=='user') {
     fields.push('company')
+  }
+  if (model=='adminDashboard') {
+    return computeStatistics({id, fields})
+      .then(stats => ({model, fields, id, data:[stats]}))
   }
   return Promise.resolve({model, fields, id})
 
@@ -307,6 +313,11 @@ declareVirtualField({model: 'company', field: 'offers', instance: 'Array', multi
     instance: 'ObjectID',
     options: {ref: 'offer'}},
 })
+declareVirtualField({model: 'company', field: 'users', instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'user'}},
+})
 
 
 declareEnumField({model: 'content', field: 'type', enumValues: CONTENTS_TYPE})
@@ -504,6 +515,16 @@ declareVirtualField({model: 'coaching', field: 'questions', instance: 'Array', m
 })
 declareEnumField({model: 'userCoachingQuestion', field: 'status', enumValues: COACHING_QUESTION_STATUS})
 
+declareVirtualField({model: 'adminDashboard', field:'webinars_count', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'average_webinar_registar', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'webinars_replayed_count', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'groups_count', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'group_active_members_count', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'average_group_answers', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'messages_count', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'users_count', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'active_users_count', instance: 'Number'})
+
 const getDataLiked = (user, params, data) => {
   const liked=data?.likes?.some(l => idEqual(l._id, user?._id))
   return Promise.resolve(liked)
@@ -678,6 +699,35 @@ const ensureChallengePipsConsistency = () => {
         })
         .catch(err => console.error(`Upsert challenge pips error:${err}`))
 
+    })
+}
+
+const computeStatistics= ({id, fields}) => {
+  console.log(`Computing stats for ${id} fields ${fields}`)
+  const company_filter=id ? {_id: id} : {}
+  return Company.find(company_filter)
+    .populate(['webinars', 'groups'])
+    .populate({path: 'users', populate:['registered_events','replayed_events']})
+    .then(comps => {
+      const companies=lodash(comps)
+      const webinars=companies.map(c => c.webinars).flatten()
+      const webinars_count=webinars.size()
+      const registered_count=companies
+        .map('users').flatten()
+        .map('registered_events').flatten()
+        .filter(e => e.type==EVENT_WEBINAR)
+        .size()
+      const average_webinar_registar=registered_count*1.0/webinars_count
+      const webinars_replayed_count=companies
+        .map('users').flatten()
+        .map('replayed_events').flatten()
+        .filter(e => e.type==EVENT_WEBINAR)
+        .size()
+      const groups_count=companies.map('groups').flatten().size()
+      return ({
+        webinars_count, average_webinar_registar, webinars_replayed_count,
+        groups_count,
+      })
     })
 }
 
