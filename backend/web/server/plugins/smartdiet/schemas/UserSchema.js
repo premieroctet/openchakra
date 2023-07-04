@@ -129,7 +129,7 @@ const UserSchema = new Schema({
   home_target: {
     type: Schema.Types.ObjectId,
     ref: 'target',
-    required: true,
+    required: false,
   },
   skipped_events: [{
     type: Schema.Types.ObjectId,
