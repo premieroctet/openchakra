@@ -590,6 +590,8 @@ const getUserContents = (user, params, data) => {
   const user_targets=lodash([data.objective_targets,data.health_targets,
     data.activity_targets,data.specificity_targets,data.home_target])
     .flatten()
+    // To remove null for home_target
+    .filter(v => !lodash.isNil(v))
     .value()
   return Promise.resolve(data._all_contents.filter(c => c.default || setIntersects(c.targets, user_targets)))
 }

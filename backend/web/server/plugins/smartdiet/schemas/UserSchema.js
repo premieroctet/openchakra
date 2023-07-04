@@ -109,46 +109,57 @@ const UserSchema = new Schema({
   objective_targets: [{
     type: Schema.Types.ObjectId,
     ref: 'target',
+    required: true,
   }],
   health_targets: [{
     type: Schema.Types.ObjectId,
     ref: 'target',
+    required: true,
   }],
   activity_targets: [{
     type: Schema.Types.ObjectId,
     ref: 'target',
+    required: true,
   }],
   specificity_targets: [{
     type: Schema.Types.ObjectId,
     ref: 'target',
+    required: true,
   }],
   home_target: {
     type: Schema.Types.ObjectId,
     ref: 'target',
+    required: true,
   },
   skipped_events: [{
     type: Schema.Types.ObjectId,
     ref: 'event',
+    required: true,
   }],
   passed_events: [{
     type: Schema.Types.ObjectId,
     ref: 'event',
+    required: true,
   }],
   registered_events: [{
     type: Schema.Types.ObjectId,
     ref: 'event',
+    required: true,
   }],
   failed_events: [{
     type: Schema.Types.ObjectId,
     ref: 'event',
+    required: true,
   }],
   routine_events: [{
     type: Schema.Types.ObjectId,
     ref: 'event',
+    required: true,
   }],
   replayed_events: [{
     type: Schema.Types.ObjectId,
     ref: 'event',
+    required: true,
   }],
   dummy: {
     type: Number,
