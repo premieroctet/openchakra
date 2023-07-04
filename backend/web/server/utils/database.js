@@ -14,9 +14,12 @@ const {CURRENT, FINISHED} = require('../plugins/fumoir/consts')
 const MONGOOSE_OPTIONS = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+   useFindAndModify: false,
 }
 
 // Utilities
+mongoose.set('useFindAndModify', false)
+mongoose.set('useCreateIndex', true)
 
 /**
 Retourne true si field (model.attribute) contient id
