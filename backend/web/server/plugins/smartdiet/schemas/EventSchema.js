@@ -35,6 +35,11 @@ const EventSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'key',
   },
+  dummy: {
+    type: Number,
+    default: 0,
+    required: true,
+  },
 }, schemaOptions)
 
 EventSchema.virtual('type').get(function () {
