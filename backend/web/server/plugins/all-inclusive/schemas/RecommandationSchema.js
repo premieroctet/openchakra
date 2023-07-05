@@ -32,6 +32,11 @@ const RecommandationSchema = new Schema({
     ref: "jobUser",
     required: [true, 'Le métier du TI est obligatoire'],
   },
+  dummy: {
+    type: Number,
+    default: 0,
+    required: true,
+  },
 }, schemaOptions
 );
 

@@ -18,6 +18,7 @@ import {
 } from '../../../core/selectors/components'
 import { getDataProviderDataType } from '../../../utils/dataSources'
 import { useForm } from '../../../hooks/useForm'
+import ColorsControl from '../controls/ColorsControl';
 import FormControl from '../controls/FormControl'
 import usePropsSelector from '../../../hooks/usePropsSelector'
 
@@ -25,7 +26,6 @@ const DataSourcePanel: React.FC = () => {
   const components: IComponents = useSelector(getComponents)
   const activeComponent: IComponent = useSelector(getSelectedComponent)
   const { setValueFromEvent, setValue, removeValue } = useForm()
-  const addTarget = usePropsSelector('addTarget')
   const dataSource = usePropsSelector('dataSource')
   const model = usePropsSelector('model')
   const attribute = usePropsSelector('attribute')
@@ -34,15 +34,52 @@ const DataSourcePanel: React.FC = () => {
   const subAttributeDisplay = usePropsSelector('subAttributeDisplay')
   const limit = usePropsSelector('limit')
   const contextFilter = usePropsSelector('contextFilter')
-  const filterValue = usePropsSelector('filterValue')
   const filterAttribute = usePropsSelector('filterAttribute')
+  const filterValue = usePropsSelector('filterValue')
+  const filterAttribute2 = usePropsSelector('filterAttribute2')
+  const filterValue2 = usePropsSelector('filterValue2')
+  const contextAttribute = usePropsSelector('contextAttribute')
+  const series_attributes = lodash.range(5).map(idx => usePropsSelector(`series_${idx}_attribute`))
+  const series_labels = lodash.range(5).map(idx => usePropsSelector(`series_${idx}_label`))
+  const shuffle = usePropsSelector('shuffle')
+  const radioGroup = usePropsSelector('radioGroup')
   const [providers, setProviders] = useState<IComponent[]>([])
   const [contextProviders, setContextProviders] = useState<IComponent[]>([])
   const [attributes, setAttributes] = useState({})
   const [subAttributes, setSubAttributes] = useState({})
   const [subAttributesDisplay, setSubAttributesDisplay] = useState({})
   const [filterAttributes, setFilterAttributes] = useState({})
+  const [contextAttributes, setContextAttributes] = useState({})
+  const [radioGroups, setRadioGroups] = useState([])
   const models = useSelector(getModels)
+  const [isChart, setIsChart] = useState(false)
+  const [availableSeries, setAvailableSeries] = useState([])
+  const [dataType, setDataType] = useState('menu')
+
+  useEffect(()=> {
+    setIsChart(activeComponent?.type=='Chart')
+  }, [activeComponent])
+
+  useEffect(()=> {
+    if (isChart && dataSource && attribute && models && !lodash.isEmpty(attributes)) {
+      const type=attributes[attribute]?.type
+      const chartModel=models[type]
+      const numberAttributes=lodash(chartModel.attributes).pickBy((att, attName) =>
+        att.type=='Number' && att.multiple==false && !attName.includes('.')).keys().value()
+        setAvailableSeries(numberAttributes)
+    }
+    else {
+      setAvailableSeries([])
+    }
+  }, [isChart, dataSource, attribute, attributes, models])
+
+  useEffect(() => {
+    try {
+      const type=getDataProviderDataType(activeComponent, components, dataSource, models)
+      setDataType(type.type)
+    }
+    catch(err) {setDataType(null)}
+  }, [dataSource, models, activeComponent, components])
 
   useEffect(() => {
     setProviders(getDataProviders(activeComponent, components))
@@ -98,14 +135,27 @@ const DataSourcePanel: React.FC = () => {
         models,
       ) ?.type
       setContextProviders(providers.filter(p => p.props.model == currentModel))
+
+      const parentType = components.root.props.model
+
+      if (parentType) {
+        setContextAttributes(lodash.pickBy(models[parentType].attributes,
+          (att, name) =>att.ref && att.multiple && !name.includes('.')
+        ))
+      }
     } catch (err) {
       console.error(err)
     }
   }, [providers, activeComponent, components, dataSource, models])
 
-  const onContextFilterChange = ev => {
-    setValue('contextFilter', ev.target.checked)
-  }
+  useEffect(() => {
+    if (lodash.isEmpty(components)) {
+      setRadioGroups([])
+    }
+    else {
+      setRadioGroups(lodash(components).pickBy(attrs => attrs.type==='RadioGroup').keys().value())
+    }
+  }, [components])
 
   const onDataSourceOrModelChange = ev => {
     const {name, value}=ev.target
@@ -145,7 +195,7 @@ const DataSourcePanel: React.FC = () => {
     removeValue('subAttributeDisplay')
   }
 
-  const onAddToTargetChange = ev => {
+  const onCheckboxChange = ev => {
     setValue(ev.target.name, ev.target.checked)
   }
 
@@ -153,16 +203,24 @@ const DataSourcePanel: React.FC = () => {
     <Accordion allowToggle={true}>
       <AccordionContainer title="Data source">
         {(activeComponent?.type=='Checkbox' || activeComponent?.type=='IconCheck') &&
-        <FormControl htmlFor="addTarget" label='Add to context'>
-          <Checkbox
-            id="addTarget"
-            name="addTarget"
-            isChecked={addTarget}
-            onChange={onAddToTargetChange}
-          ></Checkbox>
+        <FormControl htmlFor="radioGroup" label='Radio group'>
+        <Select
+          id="radioGroup"
+          onChange={setValueFromEvent}
+          name="radioGroup"
+          size="xs"
+          value={radioGroup || ''}
+        >
+          <option value={undefined}></option>
+          {radioGroups.map(att => (
+            <option key={att} value={att}>
+              {att}
+            </option>
+          ))}
+        </Select>
         </FormControl>
         }
-        <FormControl htmlFor="dataSource" label="Datasource">
+        <FormControl htmlFor="dataSource" label={<>Datasource<div>{dataType}</div></>}>
           <Select
             id="dataSource"
             onChange={onDataSourceOrModelChange}
@@ -225,6 +283,16 @@ const DataSourcePanel: React.FC = () => {
           </FormControl>
         )}
         {CONTAINER_TYPE.includes(activeComponent ?.type) && (
+        <FormControl htmlFor="shuffle" label='Shuffle'>
+          <Checkbox
+            id="shuffle"
+            name="shuffle"
+            isChecked={shuffle}
+            onChange={onCheckboxChange}
+          ></Checkbox>
+        </FormControl>
+        )}
+        {CONTAINER_TYPE.includes(activeComponent ?.type) && (
           <FormControl htmlFor="contextFilter" label="Filter context">
             <Select
               id="contextFilter"
@@ -267,6 +335,40 @@ const DataSourcePanel: React.FC = () => {
                 name="filterValue"
                 size="xs"
                 value={filterValue || ''}
+              >
+                <option value={undefined}></option>
+                {Object.values(components)
+                  .filter(c => !CONTAINER_TYPE.includes(c.type))
+                  .map((component, i) => (
+                    <option key={`comp${i}`} value={component.id}>
+                      {`${component.id} (${component.type})`}
+                    </option>
+                  ))}
+              </Select>
+            </FormControl>
+            <FormControl htmlFor="filterAttribute2" label="Filter attribute 2">
+              <Select
+                id="filterAttribute2"
+                onChange={setValueFromEvent}
+                name="filterAttribute2"
+                size="xs"
+                value={filterAttribute2 || ''}
+              >
+                <option value={undefined}></option>
+                {Object.keys(filterAttributes).map((attribute, i) => (
+                  <option key={`attr${i}`} value={attribute}>
+                    {attribute}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl htmlFor="filterValue2" label="Filter value 2">
+              <Select
+                id="filterValue2"
+                onChange={setValueFromEvent}
+                name="filterValue2"
+                size="xs"
+                value={filterValue2 || ''}
               >
                 <option value={undefined}></option>
                 {Object.values(components)
@@ -333,6 +435,42 @@ const DataSourcePanel: React.FC = () => {
               </FormControl>
           </Box>
         )}
+        {isChart &&
+          (<Box borderWidth='1px' p='5px'>
+            <small>Series</small>
+            { lodash.range(5).map((_,i)=> (
+              <>
+                <FormControl htmlFor={`series_${i}_attribute`} label={`Series ${i}`}>
+                <Select
+                  id={`series_${i}_attribute`}
+                  name={`series_${i}_attribute`}
+                  onChange={setValueFromEvent}
+                  size="xs"
+                  value={series_attributes[i]}
+                >
+                  <option value={undefined}></option>
+                  {availableSeries.map((serie,i) => (
+                    <option key={`serie${i}`} value={serie}>
+                      {serie}
+                    </option>
+                  ))}
+                </Select>
+                </FormControl>
+                <FormControl htmlFor={`series_${i}_label`} label={`Title ${i}`}>
+                  <Input
+                  id={`series_${i}_label`}
+                  name={`series_${i}_label`}
+                  size="xs"
+                  value={series_labels[i]}
+                  type="text"
+                  onChange={setValueFromEvent}
+                  />
+                </FormControl>
+                <ColorsControl label={`Color ${i}`} name={`series_${i}_color`} />
+                </>
+              ))}
+            </Box>)
+        }
       </AccordionContainer>
     </Accordion>
   )

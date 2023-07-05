@@ -1,8 +1,8 @@
 import React from 'react'
 import { useDropComponent } from '~hooks/useDropComponent'
 import { useInteractive } from '~hooks/useInteractive'
-import icons from '~iconsList'
 import { IconButton } from '@chakra-ui/react'
+import {iconStuff} from '~utils/misc' 
 
 interface Props {
   component: IComponent
@@ -11,7 +11,7 @@ interface Props {
 const IconButtonPreview = ({ component }: Props) => {
   const { isOver } = useDropComponent(component.id)
   const {
-    props: { icon, ...props },
+    props: { icon, fill, ...props },
     ref,
   } = useInteractive(component, true)
 
@@ -20,11 +20,12 @@ const IconButtonPreview = ({ component }: Props) => {
   }
 
   if (icon) {
-    if (Object.keys(icons).includes(icon)) {
-      const Icon = icons[icon as keyof typeof icons]
-      return <IconButton ref={ref} icon={<Icon path="" />} {...props} />
+
+    const {IconFromSet, iconProps} = iconStuff({icon, fill, dataLib: props?.['data-lib'] })
+
+    if (IconFromSet) {
+      return <IconButton ref={ref} icon={<IconFromSet {...iconProps} />} {...props} />
     }
-    return null
   }
 
   return null

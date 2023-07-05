@@ -1,16 +1,17 @@
 import {encode} from 'html-entities'
 import filter from 'lodash/filter'
 import isBoolean from 'lodash/isBoolean'
-import lodash from 'lodash';
+import lodash from 'lodash'
 
 import icons from '~iconsList'
+import lucidicons from '~lucideiconsList'
 
 import {
   ACTION_TYPE,
   CHECKBOX_TYPE,
   CONTAINER_TYPE,
   DATE_TYPE,
-  ENUM_TYPE,
+  GROUP_TYPE,
   IMAGE_TYPE,
   INPUT_TYPE,
   PROGRESS_TYPE,
@@ -22,14 +23,22 @@ import {
   getFieldsForDataProvider,
   isSingleDataPage,
 } from './dataSources';
-import { ProjectState, PageState } from '../core/models/project'
 import {
+  DEFAULT_REDIRECT_PAGE,
+  REDIRECT_COUNT,
+  REDIRECT_PAGE,
+  REDIRECT_ROLE,
+  addBackslashes,
   capitalize,
   getPageFileName,
   getPageUrl,
-  normalizePageName
+  normalizePageName,
+  whatTheHexaColor,
 } from './misc';
+import { ProjectState, PageState } from '../core/models/project'
+import { hasParentType } from './validation';
 import { isJsonString } from '../dependencies/utils/misc'
+
 
 //const HIDDEN_ATTRIBUTES=['dataSource', 'attribute']
 const HIDDEN_ATTRIBUTES: string[] = []
@@ -77,7 +86,7 @@ const getDynamicType = (comp: IComponent) => {
     return 'Source'
   }
   if (CHECKBOX_TYPE.includes(comp.type)) {
-    return 'Checkbox'
+    return ['IconCheck','Switch'].includes(comp.type) ? 'Checkbox': comp.type
   }
   if (INPUT_TYPE.includes(comp.type)) {
     return 'Input'
@@ -85,8 +94,8 @@ const getDynamicType = (comp: IComponent) => {
   if (UPLOAD_TYPE.includes(comp.type)) {
     return 'UploadFile'
   }
-  if (ENUM_TYPE.includes(comp.type)) {
-    return 'Enum'
+  if (GROUP_TYPE.includes(comp.type)) {
+    return comp.type
   }
   throw new Error(`No dynamic found for ${comp.type}`)
 }
@@ -120,9 +129,9 @@ type BuildBlockParams = {
 // Wether component is linked to a save action, thus must not save during onChange
 const getNoAutoSaveComponents = (components: IComponents): IComponent[] => {
   let c=Object.values(components)
-    .filter(c => c.props?.action=='save' && c.props?.actionProps)
+    .filter(c => ['save', 'create', 'smartdiet_set_company_code'].includes(c.props?.action) && c.props?.actionProps)
     .map(c => JSON.parse(c.props.actionProps))
-  c=c.map(obj => lodash.pickBy(obj, (_, k)=> /^component_/.test(k)))
+  c=c.map(obj => lodash.pickBy(obj, (_, k)=> /^component_|^code$/.test(k)))
   c=c.map(obj => Object.values(obj).filter(v => !!v))
   c=lodash.flattenDeep(c)
   c=lodash.uniq(c)
@@ -182,6 +191,13 @@ const buildBlock = ({
 
       if (noAutoSaveComponents.includes(childComponent.id)) {
         propsContent += ` noautosave={true} `
+      }
+
+      if (childComponent.type=='Radio' && hasParentType(childComponent, components, 'RadioGroup')) {
+        propsContent += ` insideGroup `
+      }
+      if (['Checkbox', 'IconCheck'].includes(childComponent.type) && hasParentType(childComponent, components, 'CheckboxGroup')) {
+        propsContent += ` insideGroup `
       }
 
       if (isDynamicComponent(childComponent)) {
@@ -260,6 +276,12 @@ const buildBlock = ({
               redirect: propsValue.redirect
                 ? getPageUrl(propsValue.redirect, pages)
                 : undefined,
+              paymentSuccess: propsValue.paymentSuccess
+                ? getPageUrl(propsValue.paymentSuccess, pages)
+                : undefined,
+              paymentFailure: propsValue.paymentFailure
+                ? getPageUrl(propsValue.paymentFailure, pages)
+                : undefined,
             }
             propsContent += ` ${propName}='${JSON.stringify(valuesCopy)}'`
             return
@@ -320,14 +342,19 @@ const buildBlock = ({
             propName.toLowerCase().includes('icon') &&
             childComponent.type !== 'Icon'
           ) {
-            if (Object.keys(icons).includes(propsValue)) {
-              let operand = `={<${propsValue} />}`
+            const iconSets = {...icons, ...lucidicons}
+            if (Object.keys(iconSets).includes(propsValue)) {
+              const {color, fill} = childComponent.props
+              const iconColor = whatTheHexaColor(color || 'black')
+              const fillIconColor = whatTheHexaColor(fill || 'black')
+
+              let operand = `={<${propsValue} color={'${iconColor}'} ${fill ? `fill={'${fillIconColor}'}` : ''} />}`
               propsContent += `${propName}${operand} `
             }
           } else if (
             propName !== 'children' &&
             typeof propsValue !== 'object' &&
-            propsValue
+            (propsValue || propsValue===0)
           ) {
             let operand =
               (propName === 'dataSource' && paramProvider)
@@ -335,20 +362,25 @@ const buildBlock = ({
                 :
                 propName === 'subDataSource' && paramSubProvider
                   ? `={${paramSubProvider}}`
-                : `='${encode(propsValue)}'`
+                : `='${propsValue===0 ? '0' : encode(propsValue)}'`
 
             if (propsValue === true || propsValue === 'true') {
               operand = ` `
             } else if (
-              propsValue === 'false' ||
+              childComponent.type!='Radio' &&
+              (propsValue === 'false' ||
               isBoolean(propsValue) ||
-              !isNaN(propsValue)
+              !isNaN(propsValue) )
             ) {
               operand = `={${propsValue}}`
             }
 
             if (propName=='href') {
               operand=`="${getPageUrl(propsValue, pages)}"`
+            }
+
+            if (['color', 'fill'].includes(propName)) {
+              operand=`="${whatTheHexaColor(propsValue)}"`
             }
 
             propsContent += ` ${propName}${operand}`
@@ -365,17 +397,6 @@ const buildBlock = ({
 
       if (childComponent.type === 'Input' && childComponent.props.type=='password') {
         propsContent += ` displayEye`
-      }
-
-      if (childComponent.props.actionProps) {
-        const { page } = isJsonString(childComponent.props.actionProps)
-          ? JSON.parse(childComponent.props.actionProps)
-          : childComponent.props.actionProps
-          if (page) {
-            const destPageUrl = getPageUrl(page, pages)
-            propsContent += ` pageName={'${destPageUrl}'} `
-            propsContent += `onClick={() => window.location='/${destPageUrl}'}`
-        }
       }
 
       if (
@@ -474,10 +495,17 @@ const ${componentName} = () => (
   return code
 }
 
-const getIconsImports = (components: IComponents) => {
+const getIconsImports = (components: IComponents, lib?: string | null) => {
   return Object.keys(components).flatMap(name => {
     return Object.keys(components[name].props)
       .filter(prop => prop.toLowerCase().includes('icon'))
+      .filter(() => {
+        if (components[name].props?.['data-lib']) {
+          return components[name].props?.['data-lib'].includes(lib ?? "chakra")
+        } else {
+          return !lib
+        }
+      })
       .filter(prop => !!components[name].props[prop])
       .map(prop => components[name].props[prop])
   })
@@ -651,7 +679,11 @@ export const generateCode = async (
     noAutoSaveComponents
   })
   let componentsCodes = buildComponents(components, pages, singleDataPage, noAutoSaveComponents)
+
+  const lucideIconImports = [...new Set(getIconsImports(components, 'lucid'))]
   const iconImports = [...new Set(getIconsImports(components))]
+
+
 
   const imports = [
     ...new Set(
@@ -674,21 +706,40 @@ export const generateCode = async (
     module[c] ? '@chakra-ui/react' : `./dependencies/custom-components/${c}`,
   )
 
-  const rootIdQuery = components['root']?.props?.model
+  const rootIdQuery = components.root?.props?.model
   const rootIgnoreUrlParams =
     components['root']?.props?.ignoreUrlParams == 'true'
 
+  var usedRoles=[]
+  var autoRedirect=lodash.range(REDIRECT_COUNT)
+    .map(idx => {
+      const [role, page]=[REDIRECT_ROLE, REDIRECT_PAGE].map(att => components?.root.props[`${att}${idx}`])
+      if (role && page) {
+        usedRoles.push(role)
+        return   `useEffect(()=>{
+            if (user?.role=='${role}') {window.location='/${getPageUrl(page, pages)  }'}
+          }, [user])`
+      }
+    })
+    .filter(v => !!v)
+    .join('\n')
+
+    const defaultRedirectPage=components?.root.props[DEFAULT_REDIRECT_PAGE]
+  if (defaultRedirectPage) {
+    const rolesArray=usedRoles.map(role => `'${role}'`).join(',')
+    autoRedirect+=`\nuseEffect(()=>{
+        if (user?.role && ![${rolesArray}].includes(user?.role)) {window.location='/${getPageUrl(defaultRedirectPage, pages)  }'}
+      }, [user])`
+  }
+  /**
   const redirectPage=components?.root.props?.autoRedirectPage
   const autoRedirect =  redirectPage?
-  `useEffect(()=>{
-    if (user) {window.location='/${getPageUrl(redirectPage, pages)  }'}
-  }, [user])`
   :
   ''
+  */
   code = `import React, {useState, useEffect} from 'react';
   import Metadata from './dependencies/Metadata';
   ${hooksCode ? `import axios from 'axios'` : ''}
-  import {ChakraProvider} from "@chakra-ui/react";
   ${Object.entries(groupedComponents)
     .map(([modName, components]) => {
       const multiple = modName.includes('chakra-ui')
@@ -704,13 +755,17 @@ ${
 import { ${iconImports.join(',')} } from "@chakra-ui/icons";`
     : ''
 }
+${
+  lucideIconImports.length
+    ? `
+import { ${lucideIconImports.join(',')} } from "lucide-react";`
+    : ''
+}
 
-import Fonts from './dependencies/theme/Fonts'
 import {ensureToken} from './dependencies/utils/token'
 import {useLocation} from "react-router-dom"
 import { useUserContext } from './dependencies/context/user'
 import { getComponentDataValue } from './dependencies/utils/values'
-import theme from './dependencies/theme/theme'
 ${extraImports.join('\n')}
 
 ${dynamics || ''}
@@ -748,16 +803,15 @@ const ${componentName} = () => {
   ${hooksCode}
   ${filterStates}
 
-  return ${redirectPage ? 'user===null && ': ''} (
-  <ChakraProvider resetCSS theme={theme}>
-    <Fonts />
+  return ${autoRedirect ? 'user===null && ': ''} (
+    <>
     <Metadata
-      metaTitle={'${metaTitle}'}
-      metaDescription={'${metaDescription}'}
+      metaTitle={'${addBackslashes(metaTitle)}'}
+      metaDescription={'${addBackslashes(metaDescription)}'}
       metaImageUrl={'${metaImageUrl}'}
     />
     ${code}
-  </ChakraProvider>
+    </>
 )};
 
 export default ${componentName};`
@@ -773,7 +827,10 @@ ${pageNames.map(name => `<li><a href='/${name}'>${name}</a></li>`).join('\n')}
 */
   const { pages, rootPage } = state
   let code = `import {BrowserRouter, Routes, Route} from 'react-router-dom'
-  import { UserWrapper } from './dependencies/context/user';
+  import { UserWrapper } from './dependencies/context/user'
+  import theme from './dependencies/theme/theme'
+  import Fonts from './dependencies/theme/Fonts'
+  import {ChakraProvider} from "@chakra-ui/react"
   ${Object.values(pages)
     .map(
       page =>
@@ -786,6 +843,8 @@ ${pageNames.map(name => `<li><a href='/${name}'>${name}</a></li>`).join('\n')}
 
   const App = () => (
     <UserWrapper>
+    <ChakraProvider resetCSS theme={theme}>
+      <Fonts />
     <BrowserRouter>
     <Routes>
       <Route path='/' element={<${getPageComponentName(rootPage, pages)}/>} />
@@ -800,6 +859,7 @@ ${pageNames.map(name => `<li><a href='/${name}'>${name}</a></li>`).join('\n')}
         .join('\n')}
     </Routes>
     </BrowserRouter>
+    </ChakraProvider>
     </UserWrapper>
   )
 

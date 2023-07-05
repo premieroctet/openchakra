@@ -14,6 +14,46 @@ const KeySchema = new Schema({
     type: String,
     required: [true, 'L\'illustration est obligatoire'],
   },
+  color: {
+    type: String,
+    required: false,
+  },
+  spoons_count_for_trophy: {
+    type: Number,
+    required: [true, 'Le nombre de cuillères néecssaires pour un trophée est obligatoire']
+  },
+  trophy_on_picture: {
+    type: String,
+    required: [true, "L'illustration de trophée obtenu est obligatoire"],
+  },
+  trophy_off_picture: {
+    type: String,
+    required: [true, "L'illustration de trophée non obtenu est obligatoire"],
+  },
 }, schemaOptions)
+
+KeySchema.virtual('user_spoons').get(function(){
+  return null
+})
+
+KeySchema.virtual('user_spoons_str').get(function(){
+  return null
+})
+
+KeySchema.virtual('user_progress').get(function(){
+  return null
+})
+
+KeySchema.virtual('user_surveys_progress', {localField: 'tagada', foreignField:'tagada'}).get(function(){
+  return null
+})
+
+KeySchema.virtual('user_read_contents').get(function(){
+  return null
+})
+
+KeySchema.virtual('trophy_picture').get(function () {
+  return null
+})
 
 module.exports = KeySchema

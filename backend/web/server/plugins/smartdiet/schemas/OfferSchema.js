@@ -1,7 +1,22 @@
-const { GROUPS_CREDIT, HOME_STATUS } = require('../consts')
+const { SystemError } = require('../../../utils/errors')
+const {
+  ARTICLE,
+  CONTENTS_ARTICLE,
+  CONTENTS_INFOGRAPHY,
+  CONTENTS_PODCAST,
+  CONTENTS_VIDEO,
+  EVENT_COLL_CHALLENGE,
+  EVENT_IND_CHALLENGE,
+  EVENT_MENU,
+  EVENT_WEBINAR,
+  INFOGRAPHY,
+  PODCAST,
+  VIDEO
+} = require('../consts')
 const mongoose = require('mongoose')
 const bcrypt=require('bcryptjs')
 const {schemaOptions} = require('../../../utils/schemas')
+const util=require('util')
 
 const Schema = mongoose.Schema
 
@@ -31,7 +46,7 @@ const OfferSchema = new Schema({
   },
   infographies_credit: {
     type: Number,
-    required: [function() {return !this.infographies_unlimited}, "Le crédit d'infographies est obligatoire"],
+    required: [function() {console.log(`Unlimited info:${util.inspect(this)}`); return !this.infographies_unlimited}, "Le crédit d'infographies est obligatoire"],
   },
   infographies_unlimited: {
     type: Boolean,
@@ -49,7 +64,7 @@ const OfferSchema = new Schema({
   },
   podcasts_credit: {
     type: Number,
-    required: [function() {return !this.podcasts_unlimited}, 'Le crédit de podcats est obligatoire'],
+    required: [function() {return !this.podcasts_unlimited}, 'Le crédit de podcasts est obligatoire'],
   },
   podcasts_unlimited: {
     type: Boolean,
@@ -82,16 +97,42 @@ const OfferSchema = new Schema({
     type: Boolean,
   },
   groups_credit: {
-    type: String,
-    enum: Object.keys(GROUPS_CREDIT),
+    type: Number,
+    required: [function() {return !this.groups_unlimited}, 'Le crédit de groupes est obligatoire'],
+  },
+  groups_unlimited: {
+    type: Boolean,
+    default: false,
+    required: true,
+  },
+  company: {
+    type: Schema.Types.ObjectId,
+    ref: 'company',
+    required: false,
   },
 }, schemaOptions)
 
-OfferSchema.virtual("company", {
-  ref: "company", // The Model to use
-  localField: "_id", // Find in Model, where localField
-  foreignField: "offer", // is equal to foreignField
-  justOne: true,
-});
+OfferSchema.methods.getContentLimit=function(type){
+  const TYPE_2_ATTRIBUTE={
+    [CONTENTS_ARTICLE]:'articles',
+    [CONTENTS_INFOGRAPHY]:'infographies',
+    [CONTENTS_VIDEO]:'video',
+    [CONTENTS_PODCAST]:'podcasts',
+  }
+  const att=TYPE_2_ATTRIBUTE[type]
+  const limit=this[`${att}_unlimited`]? Number.MAX_VALUE : this[`${att}_credit`]
+  console.log(`Limit for ${type} is ${limit}`)
+  return limit
+}
+
+OfferSchema.methods.getEventLimit=function(type){
+  switch (type) {
+    case EVENT_WEBINAR: return this.webinars_unlimited ? Number.MAX_VALUE : this.webinars_credit
+    case EVENT_COLL_CHALLENGE: return this.collective_challenge_available ? Number.MAX_VALUE : 0
+    case EVENT_IND_CHALLENGE: return this.individual_challenge_available ? Number.MAX_VALUE : 0
+    case EVENT_MENU: return Number.MAX_VALUE
+  }
+  throw new SystemError(`Offer can't get event limit for type ${type}`)
+}
 
 module.exports = OfferSchema

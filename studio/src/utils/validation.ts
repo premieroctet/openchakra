@@ -6,16 +6,25 @@ const Validator = require('jsonschema').Validator
 import { CONTAINER_TYPE } from './dataSources'
 import {ACTIONS} from './actions'
 
+export const hasParentType = (comp: IComponent, comps: IComponents, type: ComponentType) => {
+  if (comp.type==type) {return true}
+  if (comp.id=='root') {return false}
+  return hasParentType(comps[comp.parent], comps, type)
+}
+
 const checkEmptyDataAttribute = (
   comp: IComponent,
   icomponents: IComponents,
 ) => {
   if (
     !CONTAINER_TYPE.includes(comp.type) &&
+    comp.props.dataSource &&
+    !comp.props.attribute &&
     comp.type != 'Button' &&
     comp.type != 'IconButton' &&
-    comp.props.dataSource &&
-    !comp.props.attribute
+    (comp.type!='Radio' || !hasParentType(comp, icomponents, 'RadioGroup')) &&
+    (comp.type!='Checkbox' || !hasParentType(comp, icomponents, 'CheckboxGroup')) &&
+    (comp.type!='IconCheck' || !hasParentType(comp, icomponents, 'CheckboxGroup'))
   ) {
     throw new Error(`Datasource attribute is not set`)
   }
@@ -35,9 +44,6 @@ const checkActionsProperties = (
         actionProps=JSON.parse(actionProps)
       }
       catch(err){}
-      if (required.length>0) {
-        console.log(`Actionprops:${Object.keys(actionProps)}`)
-      }
       const missing=required.filter(r => lodash.isEmpty(actionProps[r]))
       if (!lodash.isEmpty(missing)) {
         throw new Error(`Action ${actionName} requires attributes ${missing}`)
@@ -62,7 +68,7 @@ const checkDispatcherManyChildren = (
   if (
     CONTAINER_TYPE.includes(parent.type) &&
     parent.props.dataSource &&
-    parent.children.slice(1).includes(comp.id)
+    parent.children.slice(2).includes(comp.id)
   ) {
     throw new Error(
       `Extra child ${comp.type} of dynamic ${parent.type} will not appear at runtime`,

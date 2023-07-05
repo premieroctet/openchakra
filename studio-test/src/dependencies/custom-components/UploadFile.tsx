@@ -62,19 +62,25 @@ const isScormZip = async (unzipped: any) => {
 }
 
 const UploadFile = ({
+  notifmsg,
+  okmsg = 'Ressource ajoutée',
   dataSource,
   attribute,
   value,
   backend,
   children,
   reload,
+  noautosave,
   ...props
 }: {
+  notifmsg: boolean
+  okmsg: string
   dataSource: { _id: null } | null
   attribute: string
   value: string
   backend: string
   reload: any
+  noautosave: boolean | null
   children: React.ReactNode
 }) => {
   FileManager.initialize(
@@ -114,7 +120,7 @@ const UploadFile = ({
         attribute: 'version',
         value: null,
       }
-      
+
       setUploadInfo('')
 
       const switchUploadType = async () => {
@@ -139,21 +145,36 @@ const UploadFile = ({
             break
 
           default:
-            const res = await uploadFileToS3(fileToUpload)
-            setS3File(res.Location)
-            paramsBack = { ...paramsBack, ...{ value: res?.Location } }
+            await uploadFileToS3(fileToUpload)
+              .then((result) => {
+                setS3File(result.Location)
+                paramsBack = { ...paramsBack, ...{ value: result?.Location } }
+              })
+              .catch(err => console.error(err))
+
+            if (attribute && notifmsg) {
+              setUploadInfo(okmsg)
+            }
+
+
             break
         }
       }
 
       const saveUrl = async () => {
-        return ACTIONS.putValue({
-          context: dataSource?._id,
-          props: {attribute: attribute},
-          value: paramsBack.value,
-        })
+        const promise=noautosave ?
+          Promise.resolve(null)
+          :
+          ACTIONS.putValue({
+            context: dataSource?._id,
+            props: {attribute: attribute},
+            value: paramsBack.value,
+          })
+        promise
           .then(() => {
-            //setUploadInfo('Ressource ajoutée')
+            if (notifmsg) {
+              setUploadInfo(okmsg)
+            }
           })
           .then(() => {
             /* scorm file ? save version */
@@ -188,7 +209,9 @@ const UploadFile = ({
           {children}
         </UploadZone>
       </form>
-      {uploadInfo && <Text>{uploadInfo}</Text>} {/*Component status */}
+      {uploadInfo &&
+      // @ts-ignore
+      <Text>{uploadInfo}</Text>} {/*Component status */}
     </Box>
   )
 }

@@ -31,22 +31,19 @@ const EventSchema = new Schema({
     type: String,
     required: false,
   },
-  // Users who registered
-  registered_by: [{
-    type: Schema.Types.ObjectId,
-    ref: 'user',
-  }],
-  // Users who refused the challenge
-  refused_by: [{
-    type: Schema.Types.ObjectId,
-    ref: 'user',
-  }],
   key: {
     type: Schema.Types.ObjectId,
     ref: 'key',
   },
+  dummy: {
+    type: Number,
+    default: 0,
+    required: true,
+  },
 }, schemaOptions)
 
-EventSchema.virtual('type')
+EventSchema.virtual('type').get(function () {
+  return null
+})
 
 module.exports = EventSchema

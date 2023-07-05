@@ -18,6 +18,17 @@ export const pagesList= ({pages}) => {
     .value()
 }
 
+export const colorsList = ({pages}) => {
+  return lodash(pages).values()
+    .map(page => page.components).map(components => Object.values(components)).flatten()
+    .map(component => ['color', 'backgroundColor', 'focusBorderColor'].map(color => component.props[color])).flatten()
+    .filter(color => !!color && /^#/.test(color))
+    .map(color => color.toLowerCase())
+    .uniq().sort()
+    .map(color => ({key: color, label: color}))
+    .value()
+}
+
 export const ACTIONS: IActions = {
   create: {
     label: 'Create new data',
@@ -35,7 +46,35 @@ export const ACTIONS: IActions = {
         components
           .filter(comp => comp.type=='Flex')
           .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
-      ...Object.fromEntries(lodash.range(15).map((idx:number) => {
+      group: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      parent: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      content: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      recipe: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      menu: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      pip: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      collectiveChallenge: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      ...Object.fromEntries(lodash.range(24).map((idx:number) => {
       return [
         `component_${idx}`,
         ({ components }) => components
@@ -44,7 +83,7 @@ export const ACTIONS: IActions = {
 
       ]})),
     },
-    next: ['openPage'],
+    next: ['openPage', 'previous'],
   },
   login: {
     label: 'Login',
@@ -116,6 +155,10 @@ export const ACTIONS: IActions = {
         components.map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
       contents: ({ components }) =>
         components.map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      attachment: ({ components }) =>
+        components
+          .filter(c => c.type=='UploadFile')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
     },
     required:['contents']
   },
@@ -161,7 +204,7 @@ export const ACTIONS: IActions = {
     label: 'Save/create',
     options: {
       model: ({ models }) => Object.values(models).map(m => ({ key: m.name, label: m.name })),
-      ...Object.fromEntries(lodash.range(25).map((idx:number) => {
+      ...Object.fromEntries(lodash.range(32).map((idx:number) => {
       return [
         `component_${idx}`,
         ({ components }) => components
@@ -191,17 +234,7 @@ export const ACTIONS: IActions = {
     options: {
       redirect: ({ pages }) =>
         Object.values(pages).map(p => ({ key: p.pageId, label: p.pageName })),
-      color: ({ pages }) => {
-        const colors=lodash(pages).values()
-          .map(page => page.components).map(components => Object.values(components)).flatten()
-          .map(component => ['color', 'backgroundColor', 'focusBorderColor'].map(color => component.props[color])).flatten()
-          .filter(color => !!color && /^#/.test(color))
-          .map(color => color.toLowerCase())
-          .uniq().sort()
-          .map(color => ({key: color, label: color}))
-          .value()
-        return colors
-      }
+      color: ({ pages }) => colorsLis({pages})
     },
   },
   payOrder: {
@@ -209,17 +242,7 @@ export const ACTIONS: IActions = {
     options: {
       redirect: ({ pages }) =>
         Object.values(pages).map(p => ({ key: p.pageId, label: p.pageName })),
-      color: ({ pages }) => {
-        const colors=lodash(pages).values()
-        .map(page => page.components).map(components => Object.values(components)).flatten()
-        .map(component => ['color', 'backgroundColor', 'focusBorderColor'].map(color => component.props[color])).flatten()
-        .filter(color => !!color && /^#/.test(color))
-        .map(color => color.toLowerCase())
-        .uniq().sort()
-        .map(color => ({key: color, label: color}))
-        .value()
-        return colors
-      }
+      color: ({ pages }) => colorsList({pages}),
     },
   },
   cashOrder: {
@@ -366,7 +389,16 @@ export const ACTIONS: IActions = {
   },
   alle_accept_quotation: {
     label: 'AE Accepter le devis',
-    options: {},
+    options: {
+      paymentSuccess: ({ pages }) => pagesList({pages}),
+      paymentFailure: ({ pages }) => pagesList({pages}),
+    },
+    next: [],
+  },
+  alle_can_accept_quotation: {
+    label: 'AE Peut accepter le devis',
+    options: {
+    },
     next: ['openPage'],
   },
   alle_refuse_quotation: {
@@ -419,6 +451,161 @@ export const ACTIONS: IActions = {
     options: {},
     next: ['openPage'],
   },
+  smartdiet_join_group: {
+    label: 'SM Join group',
+    options: {},
+    next: ['openPage'],
+  },
+  smartdiet_leave_group: {
+    label: 'SM Leave group',
+    options: {},
+    next: ['openPage'],
+  },
+  smartdiet_skip_event: {
+    label: 'SM Skip event',
+    options: {},
+    next: ['openPage'],
+  },
+  smartdiet_join_event: {
+    label: 'SM Register event',
+    options: {},
+    next: ['openPage', 'smartdiet_open_team_page'],
+  },
+  smartdiet_pass_event: {
+    label: 'SM Passed event',
+    options: {},
+    next: ['openPage','openUrl'],
+  },
+  smartdiet_fail_event: {
+    label: 'SM Failed event',
+    options: {},
+    next: ['openPage'],
+  },
+  alle_ask_contact: {
+    label: 'AE Ask contact',
+    options: {
+      ...Object.fromEntries(lodash.range(15).map((idx:number) => {
+      return [
+        `component_${idx}`,
+        ({ components }) => components
+          .filter(comp => (comp.props?.dataSource || comp.props?.model) && comp.props?.attribute)
+          .map(comp => ({ key: comp.id, label: `${comp.type}/${comp.id}` }))
+
+      ]})),
+    },
+    next: ['openPage'],
+  },
+  payMission: {
+    label: 'Pay mission',
+    options: {
+      redirect: ({ pages }) =>
+        Object.values(pages).map(p => ({ key: p.pageId, label: p.pageName })),
+      color: ({ pages }) => colorsList({pages}),
+    },
+  },
+  hasChildren: {
+    label: 'Has children',
+    options: {
+      children: ({ attributes }) => Object.keys(attributes || {}).map(att => ({ key: att, label: att }))
+    },
+    next: ['openPage'],
+  },
+  askRecommandation: {
+    label: 'Ask recommandation',
+    options: {
+      email: ({ components }) => components.map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      message: ({ components }) => components.map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      page: ({ pages }) => pagesList({pages}),
+    },
+    next: ['openPage'],
+  },
+
+
+  smartdiet_set_company_code: {
+    label: 'SM Set company code',
+    options: {
+      code: ({ components }) =>
+        components
+          .filter(c => c.type == 'Input')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+    },
+    next: ['openPage'],
+    required:['code']
+  },
+
+  openUrl: {
+    label: 'Open URL',
+    options: {
+      url: ({ attributes }) => Object.keys(attributes || {}).map(att => ({ key: att, label: att })),
+      open: () => [
+        { key: true, label: 'In new page' },
+        { key: false, label: 'In same page' },
+      ],
+    },
+  },
+
+  smartdiet_start_survey: {
+    label: 'SM Start survey',
+    options: {},
+    next: ['openPage'],
+  },
+
+  smartdiet_next_question: {
+    label: 'SM Next question',
+    options: {},
+    next: ['openPage'],
+  },
+
+  smartdiet_finish_survey: {
+    label: 'SM Finish survey',
+    options: {},
+    next: ['openPage'],
+  },
+
+  smartdiet_join_team: {
+    label: 'SM Join team',
+    options: {},
+    next: ['openPage'],
+  },
+
+  smartdiet_find_team_member: {
+    label: 'SM Find team member',
+    options: {},
+    next: ['openPage'],
+  },
+
+  smartdiet_open_team_page: {
+    label: 'SM Open team page',
+    options: {
+      page: ({ pages }) => pagesList({pages}),
+    },
+    next: ['openPage'],
+  },
+
+  smartdiet_shift_challenge: {
+    label: 'SM Shift challenge',
+    options: {},
+    next: ['openPage'],
+  },
+
+  smartdiet_routine_challenge: {
+    label: 'SM Routine challenge',
+    options: {},
+    next: ['openPage'],
+  },
+
+  smartdiet_replay_event: {
+    label: 'SM Replay webinar',
+    options: {},
+    next: ['openPage'],
+  },
+
+  smartdiet_read_content: {
+    label: 'SM Read content',
+    options: {},
+    next: ['openPage'],
+  },
+
 }
 
 export const allowsActions = (component: IComponent) => {
