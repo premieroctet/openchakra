@@ -100,7 +100,8 @@ addAction('smartdiet_start_survey', smartdietStartSurvey)
 
 const smartdietNextQuestion = ({value}, user) => {
   return UserQuestion.findById(value).populate('question')
-    .then(question => UserQuestion.findOne({survey: question.survey, order:question.order+1}))
+    .then(question => UserQuestion.find({survey: question.survey, order:{$gt : question.order}}).sort({order:1}))
+    .then(questions => questions[0])
 }
 addAction('smartdiet_next_question', smartdietNextQuestion)
 
@@ -223,13 +224,16 @@ const isActionAllowed = ({action, dataId, user}) => {
           .then(question => {
             // Not answered question: no next
             if (lodash.isNil(question.answer)) { return false}
-            return UserQuestion.findOne({survey: question.survey, order:question.order+1})
+            return UserQuestion.findOne({survey: question.survey, order: {$gt: question.order}})
           })
       }
       if (action=='smartdiet_finish_survey') {
         return UserQuestion.findById(dataId).populate('question').populate('survey')
-          .then(question => UserQuestion.exists({survey: question.survey, order:question.order+1}))
-          .then(exists => !exists)
+          .then(question => Promise.all([
+            UserQuestion.exists({survey: question.survey, order: {$gt: question.order}}),
+            !lodash.isNil(question.answer)
+          ]))
+          .then(([exists, answered]) => !exists && answered)
       }
       if (action=='smartdiet_join_team') {
         // Get all teams of this team's collective challenge, then check if
