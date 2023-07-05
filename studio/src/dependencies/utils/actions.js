@@ -73,7 +73,7 @@ export const ACTIONS = {
     } else {
       window.location = url
     }
-    throw new Error('break')
+    return
   },
 
   create: ({ value, context, props, level, getComponentValue }) => {
@@ -242,8 +242,7 @@ export const ACTIONS = {
         if (res.data.redirect) {
           let redirect=res.data.redirect
           redirect = /^http/.test(redirect) ? redirect : `/${redirect}`
-          window.location=redirect
-          throw new Error('break')
+          return window.location=redirect
         }
       })
   },
@@ -256,8 +255,7 @@ export const ACTIONS = {
         if (res.data.redirect) {
           let url=res.data.redirect
           url=/^http/.test(url) ? url : `/${url}`
-          window.location=url
-          throw new Error('break')
+          return window.location=url
         }
       })
   },
@@ -470,8 +468,7 @@ export const ACTIONS = {
         if (res.data.redirect) {
           let redirect=res.data.redirect
           redirect = /^http/.test(redirect) ? redirect : `/${redirect}`
-          window.location=redirect
-          throw new Error('break')
+          return window.location=redirect
         }
       })
   },
@@ -701,8 +698,7 @@ export const ACTIONS = {
         if (res.data.redirect) {
           let url=res.data.redirect
           url=/^http/.test(url) ? url : `/${url}`
-          window.location=url
-          throw new Error('break')
+          return window.location=url
         }
       })
   },
@@ -797,8 +793,7 @@ export const ACTIONS = {
       if (res.data.redirect) {
         let redirect=res.data.redirect
         redirect = /^http/.test(redirect) ? redirect : `/${redirect}`
-        window.location=redirect
-        throw new Error('break')
+        return window.location=redirect
       }
       return {
         model: 'teamMember',
