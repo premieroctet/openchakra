@@ -52,10 +52,17 @@ export const ACTIONS = {
         return res
       })
   },
-  openPage: ({ value, model, query, props, getComponentValue }) => {
+  openPage: ({ value, level, model, query, props, getComponentValue }) => {
     const queryParams = query
+    queryParams.delete('id')
     let url = `/${props.page}`
-    if (value && value._id) {
+    if ('sourceId' in props) {
+      const compValue=getComponentValue(props.sourceId, level)
+      if (compValue?._id || compValue) {
+        queryParams.set('id', compValue?._id || compValue)
+      }
+    }
+    else if (value && value._id) {
       queryParams.set(model, value._id)
       queryParams.set('id', value._id)
     }

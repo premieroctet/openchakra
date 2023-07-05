@@ -515,6 +515,11 @@ declareVirtualField({model: 'coaching', field: 'questions', instance: 'Array', m
 })
 declareEnumField({model: 'userCoachingQuestion', field: 'status', enumValues: COACHING_QUESTION_STATUS})
 
+declareVirtualField({model: 'adminDashboard', field: 'company', instance: 'company', multiple: false,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'company'}},
+})
 declareVirtualField({model: 'adminDashboard', field:'webinars_count', instance: 'Number'})
 declareVirtualField({model: 'adminDashboard', field:'average_webinar_registar', instance: 'Number'})
 declareVirtualField({model: 'adminDashboard', field:'webinars_replayed_count', instance: 'Number'})
@@ -706,10 +711,9 @@ const computeStatistics= ({id, fields}) => {
   console.log(`Computing stats for ${id} fields ${fields}`)
   const company_filter=id ? {_id: id} : {}
   return Company.find(company_filter)
-    .populate([{path: 'webinars', select:'type'},{path: 'groups', select:'_id'}])
+    .populate([{path: 'webinars', select:'type'},{path: 'groups', populate: 'messages' }])
     .populate({path: 'users', select: 'registered_events,replayed_events', populate:['registered_events','replayed_events']})
     .then(comps => {
-      console.log(JSON.stringify(comps[1],null,2))
       const companies=lodash(comps)
       const webinars=companies.map(c => c.webinars).flatten()
       const webinars_count=webinars.size()
@@ -725,9 +729,14 @@ const computeStatistics= ({id, fields}) => {
         .filter(e => e.type==EVENT_WEBINAR)
         .size()
       const groups_count=companies.map('groups_count').sum()
+      const messages_count=companies
+        .map('groups').flatten()
+        .map('messages').flatten()
+        .size()
       return ({
+        company: id,
         webinars_count, average_webinar_registar, webinars_replayed_count,
-        groups_count,
+        groups_count, messages_count,
       })
     })
 }
