@@ -438,6 +438,9 @@ declareVirtualField({model: 'key', field: 'user_surveys_progress', instance: 'Ar
     instance: 'ObjectID',
     options: {ref: 'chartPoint'}},
 })
+declareVirtualField({model: 'key', field: 'user_passed_challenges', instance: 'Number', required: 'passed_events'})
+declareVirtualField({model: 'key', field: 'user_passed_webinars', instance: 'Number', required: 'passed_events'})
+
 
 declareVirtualField({model: 'userSurvey', field: 'questions', instance: 'Array',
   multiple: true,
@@ -621,6 +624,22 @@ const getUserContents = (user, params, data) => {
   return Promise.resolve(data._all_contents.filter(c => c.default || setIntersects(c.targets, user_targets)))
 }
 
+const getUserPassedChallenges = (user, params, data) => {
+  return User.findById(user._id, 'passed_events')
+    .populate({path: 'passed_events', match:{"__t": "individualChallenge", key: data._id}})
+    .then(res => {
+      return res.passed_events?.length || 0
+    })
+}
+
+const getUserPassedWebinars = (user, params, data) => {
+  return User.findById(user._id, 'passed_events')
+    .populate({path: 'passed_events', match:{"__t": "webinar", key: data._id}})
+    .then(res => {
+      return res.passed_events?.length || 0
+    })
+}
+
 declareComputedField('user', 'contents', getUserContents)
 declareComputedField('loggedUser', 'contents', getUserContents)
 declareComputedField('comment', 'liked', getDataLiked, setDataLiked)
@@ -635,6 +654,8 @@ declareComputedField('key', 'user_spoons', getUserKeySpoons)
 declareComputedField('key', 'user_spoons_str', getUserKeySpoonsStr)
 declareComputedField('key', 'user_progress', getUserKeyProgress)
 declareComputedField('key', 'user_read_contents', getUserKeyReadContents)
+declareComputedField('key', 'user_passed_challenges', getUserPassedChallenges)
+declareComputedField('key', 'user_passed_webinars', getUserPassedWebinars)
 declareComputedField('user', 'spoons_count', getUserSpoons)
 declareComputedField('loggedUser', 'spoons_count', getUserSpoons)
 declareComputedField('menu', 'shopping_list', getMenuShoppingList)
