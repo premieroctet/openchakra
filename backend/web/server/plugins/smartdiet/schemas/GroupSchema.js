@@ -58,4 +58,12 @@ GroupSchema.virtual('pinned_messages', {localField: 'dummy', foreignField: 'dumm
   return []
 })
 
+GroupSchema.virtual('users_count', {localField: 'dummy', foreignField: 'dummy'}).get(function () {
+  return this.users?.length||0
+})
+
+GroupSchema.virtual('messages_count', {localField: 'dummy', foreignField: 'dummy'}).get(function () {
+  return this.messages?.length||0
+})
+
 module.exports = GroupSchema
