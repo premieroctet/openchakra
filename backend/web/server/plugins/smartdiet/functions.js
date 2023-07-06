@@ -134,8 +134,8 @@ USER_MODELS.forEach(m => {
       options: {ref: 'content'}},
   })
   declareVirtualField({model: m, field: 'contents', instance: 'Array',
-    requires: `targets,contents.key.picture,contents.comments_count,contents.targets,objective_targets,health_targets,activity_targets,specificity_targets,home_target,contents.search_text`,
-    multiple: true,
+  requires: '_all_contents.comments_count,_all_targets,targets,_all_contents.targets,objective_targets,health_targets,activity_targets,specificity_targets,home_target,_all_contents.search_text',
+  multiple: true,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'content'}},
@@ -208,7 +208,7 @@ USER_MODELS.forEach(m => {
       options: {ref: 'menu'}},
   })
   declareVirtualField({model: m, field: 'collective_challenges', instance: 'Array', multiple: true,
-    requires:'company.collective_challenges',
+    requires:'company,company.collective_challenges',
     caster: {
       instance: 'ObjectID',
       options: {ref: 'collectiveChallenge'}},
@@ -612,6 +612,16 @@ const getUserSurveysProgress = (user, params, data) => {
     .catch(err => console.error(err))
 }
 
+const getUserContents = (user, params, data) => {
+  const user_targets=lodash([data.objective_targets,data.health_targets,
+    data.activity_targets,data.specificity_targets,data.home_target])
+    .flatten()
+    .value()
+  return Promise.resolve(data._all_contents.filter(c => c.default || setIntersects(c.targets, user_targets)))
+}
+
+declareComputedField('user', 'contents', getUserContents)
+declareComputedField('loggedUser', 'contents', getUserContents)
 declareComputedField('comment', 'liked', getDataLiked, setDataLiked)
 declareComputedField('message', 'liked', getDataLiked, setDataLiked)
 declareComputedField('content', 'liked', getDataLiked, setDataLiked)
