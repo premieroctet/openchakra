@@ -58,12 +58,16 @@ GroupSchema.virtual('pinned_messages', {localField: 'dummy', foreignField: 'dumm
   return []
 })
 
-GroupSchema.virtual('users_count', {localField: 'dummy', foreignField: 'dummy'}).get(function () {
-  return this.users?.length||0
+/* eslint-disable prefer-arrow-callback */
+
+GroupSchema.virtual('users_count', {localField: 'tagada', foreignField: 'tagada'}).get(function () {
+  return 12 //this.users?.length||0
 })
 
-GroupSchema.virtual('messages_count', {localField: 'dummy', foreignField: 'dummy'}).get(function () {
-  return this.messages?.length||0
+GroupSchema.virtual('messages_count', {localField: 'tagada', foreignField: 'tagada'}).get(function () {
+  return 14 //this.messages?.length||0
 })
+
+/* eslint-enable prefer-arrow-callback */
 
 module.exports = GroupSchema
