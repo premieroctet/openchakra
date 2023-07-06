@@ -134,7 +134,7 @@ USER_MODELS.forEach(m => {
       options: {ref: 'content'}},
   })
   declareVirtualField({model: m, field: 'contents', instance: 'Array',
-  requires: '_all_contents.comments_count,_all_targets,targets,_all_contents.targets,objective_targets,health_targets,activity_targets,specificity_targets,home_target,_all_contents.search_text',
+  requires: '_all_contents.comments_count,_all_targets,targets,_all_contents.targets,objective_targets,health_targets,activity_targets,specificity_targets,home_target,_all_contents.search_text,_all_contents.key',
   multiple: true,
     caster: {
       instance: 'ObjectID',
@@ -177,7 +177,7 @@ USER_MODELS.forEach(m => {
       options: {ref: 'individualChallenge'}},
   })
   declareVirtualField({model: m, field: 'individual_challenges', instance: 'Array',
-    requires: '_all_individual_challenges,skipped_events,passed_events,routine_events,registered_events.type,_all_individual_challenges.type,failed_events,current_individual_challenge',
+    requires: '_all_individual_challenges.key,skipped_events,passed_events,routine_events,registered_events.type,_all_individual_challenges.type,failed_events,current_individual_challenge',
     multiple: true,
     caster: {
       instance: 'ObjectID',
@@ -214,7 +214,7 @@ USER_MODELS.forEach(m => {
       options: {ref: 'collectiveChallenge'}},
   })
   declareVirtualField({model: m, field: 'available_groups', instance: 'Array',
-    requires: 'targets,company.groups,company.groups.targets,registered_groups', multiple: true,
+    requires: 'targets,company.groups,company.groups.targets,registered_groups,company.groups.key', multiple: true,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'group'}},
