@@ -75,7 +75,7 @@ export const mediaWrapper = ({
         onClick={() => downloadResource(src||undefined)}
       /></div>) || (null)
 
-  const ext = forceExt(src, isIframe) || getExtension(src)
+  const ext = forceExt(src?.toLowerCase(), isIframe) || getExtension(src.toLowerCase())
 
   switch (ext) {
     case 'mp4':
