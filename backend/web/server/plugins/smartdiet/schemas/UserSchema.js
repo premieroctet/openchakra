@@ -66,7 +66,7 @@ const UserSchema = new Schema({
   },
   company_code: {
     type: String,
-    set: v ? v.replace(/ /g,'') : v,
+    set: v => v ? v.replace(/ /g,'') : v,
     required: false,
   },
   password: {
