@@ -76,7 +76,7 @@ const register=props => {
 addAction('register', register)
 
 const setSmartdietCompanyCode = ({code}, user) => {
-  code=code ? code.replace(/ /g, '')
+  code=code ? code.replace(/ /g, '') : code
   if (!code?.trim()) {
     return User.findById(user._id)
   }
