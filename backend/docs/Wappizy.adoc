@@ -1,0 +1,29 @@
+# Wappizy
+
+## Config
+
+A la racine du projet (openchakra ?), un seul fichier pour les gouverner :
+
+[src, txt]
+..env
+----
+
+# BACK
+WHITELIST_DOMAINS = http://localhost:3000 http://localhost:6777 # needed for CORS, space between protocol+domains+port
+PORT=7247
+STUDIO_TEST_PORT=6777
+BACKEND_PORT=443
+MODE='development' # production | development
+
+# FRONT 
+NEXT_PUBLIC_PROJECT=smartdiet
+NEXT_PUBLIC_BACKEND=https://localhost:443
+NEXT_PUBLIC_S3_ID=AKIA6QQ32HPKPCAEXLWR
+NEXT_PUBLIC_S3_SECRET=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
+NEXT_PUBLIC_S3_ROOTPATH=smartdiet/prod
+NEXT_PUBLIC_DISABLE_STORAGE=false  # disable localstorage for wappizy projects json
+
+## DEV
+NEXT_PUBLIC_BUGSNAG_API_KEY=18bc83982a86e6477448b6bc16c0c18e
+
+----
