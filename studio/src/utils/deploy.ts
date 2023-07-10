@@ -8,7 +8,7 @@ import { normalizePageName, urlClean } from './misc';
 import { validateComponents , validateProject} from './validation'
 
 // If true, build target project when compliaiton fixed
-const TARGET_BUILD = process.env.MODE === 'production' || false
+const TARGET_BUILD = process.env.NEXT_PUBLIC_MODE === 'production' || false
 
 const copyCode = (pageName: string, contents: Buffer) => {
   
