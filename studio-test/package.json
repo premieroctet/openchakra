@@ -51,7 +51,6 @@
     "web-vitals": "^2.1.4",
     "xml-js": "^1.6.11"
   },
-  "proxy": "https://localhost",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
