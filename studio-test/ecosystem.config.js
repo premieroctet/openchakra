@@ -1,6 +1,6 @@
 require('dotenv').config()
 
-const processName=`FRONT-${process.env.NEXT_PUBLIC_PROJECT || 'NO_NEXT_PUBLIC_PROJECT'}-${process.env.PORT}`.toUpperCase()
+const processName=`FRONT-${process.env.NEXT_PUBLIC_PROJECT || 'NO_NEXT_PUBLIC_PROJECT'}-${process.env.STUDIO_TEST_PORT}`.toUpperCase()
 
 module.exports = {
   apps: [{
