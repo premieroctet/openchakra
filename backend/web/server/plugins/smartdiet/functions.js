@@ -32,6 +32,7 @@ const {
   PERIOD,
   ROLES,
   ROLE_RH,
+  SEASON,
   SPOON_SOURCE,
   SURVEY_ANSWER,
   TARGET_TYPE,
@@ -384,6 +385,8 @@ declareVirtualField({model: 'recipe', field: 'ingredients', instance: 'Array',
     instance: 'ObjectID',
     options: {ref: 'recipeIngredient'}},
 })
+declareEnumField({model: 'recipe', field: 'season', enumValues: SEASON})
+
 declareVirtualField({model: 'menu', field: 'recipes', instance: 'Array',
   multiple: true,
   caster: {
