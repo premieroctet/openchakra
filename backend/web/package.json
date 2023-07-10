@@ -24,6 +24,7 @@
     "csv-parse": "^4.15.3",
     "csv-string": "^4.1.0",
     "csv-writer": "^1.6.0",
+    "dotenv": "^16.3.1",
     "exceljs": "^4.3.0",
     "express": ">=5.0.0-beta.1",
     "find-cycle": "^1.0.0",

@@ -1,18 +1,20 @@
+import 'dotenv/config'
 import lodash from 'lodash'
 import { ProjectState } from '~/core/models/project'
 import { PageSettings } from '../core/models/project';
 import { build, copyFile, install, start, clean } from './http'
 import { generateCode, generateApp } from './code'
-import { normalizePageName } from './misc';
+import { normalizePageName, urlClean } from './misc';
 import { validateComponents , validateProject} from './validation'
 
 // If true, build target project when compliaiton fixed
-const TARGET_BUILD = false
+const TARGET_BUILD = process.env.MODE === 'production' || false
 
 const copyCode = (pageName: string, contents: Buffer) => {
+  
   return copyFile({
     contents: contents,
-    filePath: `${normalizePageName(pageName)}.js`,
+    filePath: `${urlClean(pageName)}.js`,
   })
 }
 
@@ -31,6 +33,7 @@ export const deploy = (state: ProjectState, models: any) => {
         pages.map(page => {
           return generateCode(page.pageId, state.pages, models)
             .catch(err => {
+              console.error('generate pages while deploying', err)
               return Promise.reject(`Page "${page.pageName}":${err}`)
             })
         })
@@ -45,11 +48,17 @@ export const deploy = (state: ProjectState, models: any) => {
         namedCodes.map(([pageName, code]) => copyCode(pageName, code)),
       )
     })
-    .then(() => {
-      return generateApp(state)
+    .then(async() => {
+      // generate again index
+      const code = await generateCode(state.rootPage, state.pages, models)
+      .catch(err => {
+        console.error('generate index while deploying', err)
+        return Promise.reject(`Page index :${err}`)
+      })
+      return code
     })
     .then(code => {
-      return copyCode('App', code)
+      return copyCode('index', code)
     })
     .then(() => {
       return cleanPages(pages)
