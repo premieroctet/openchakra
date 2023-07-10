@@ -413,7 +413,7 @@ declareVirtualField({model: 'group', field: 'pinned_messages', instance: 'Array'
     instance: 'ObjectID',
     options: {ref: 'message'}},
 })
-declareVirtualField({model: 'group', field: 'users_count', instance: 'Number', requires: 'users'})
+declareVirtualField({model: 'group', field: 'users_count', instance: 'Number'})
 declareVirtualField({model: 'group', field: 'messages_count', instance: 'Number', requires: 'messages'})
 
 declareVirtualField({model: 'message', field: 'pinned', instance: 'Boolean', requires: 'pins'})
