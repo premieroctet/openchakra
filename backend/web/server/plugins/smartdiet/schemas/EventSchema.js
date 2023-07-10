@@ -1,3 +1,4 @@
+const moment = require('moment')
 const { EVENT_COLL_CHALLENGE, EVENT_TYPE, HOME_STATUS } = require('../consts')
 const mongoose = require('mongoose')
 const bcrypt=require('bcryptjs')
@@ -44,6 +45,10 @@ const EventSchema = new Schema({
 
 EventSchema.virtual('type').get(function () {
   return null
+})
+
+EventSchema.virtual('duration').get(function () {
+  return moment(this.end_date).diff(this.start_date, 'minutes')
 })
 
 module.exports = EventSchema

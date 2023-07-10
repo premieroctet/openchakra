@@ -336,6 +336,7 @@ declareVirtualField({model: 'content', field: 'search_text', instance: 'String',
 const EVENT_MODELS=['event', 'collectiveChallenge', 'individualChallenge', 'menu', 'webinar']
 EVENT_MODELS.forEach(m => {
   declareVirtualField({model: m, field: 'type', instance: 'String', enumValues: EVENT_TYPE})
+  declareVirtualField({model: m, field: 'duration', instance: 'Number', required:'start_date,end_date'})
 })
 
 declareEnumField({model: 'individualChallenge', field: 'hardness', enumValues: HARDNESS})
