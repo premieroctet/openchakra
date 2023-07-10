@@ -16,6 +16,7 @@ BACKEND_PORT=443
 MODE='development' # production | development
 
 # FRONT 
+NEXT_PUBLIC_MODE='development' # production | development
 NEXT_PUBLIC_PROJECT=smartdiet
 NEXT_PUBLIC_BACKEND=https://localhost:443
 NEXT_PUBLIC_S3_ID=AKIA6QQ32HPKPCAEXLWR
