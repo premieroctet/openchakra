@@ -276,7 +276,7 @@ const UNIT={
  [UNIT_POIGNEE]:'poignée',
  [UNIT_MIGNONETTE]:'mignonette',
  [UNIT_SACHET]:'sachet',
- [UNIT_UNITE]:'unité',
+ [UNIT_UNITE]:'',
 }
 
 const PARTICULAR_COMPANY_NAME='Adhérent particulier'
