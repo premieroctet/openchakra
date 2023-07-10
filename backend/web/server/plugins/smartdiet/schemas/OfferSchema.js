@@ -105,6 +105,11 @@ const OfferSchema = new Schema({
     default: false,
     required: true,
   },
+  operations_credit: {
+    type: Number,
+    default : 0,
+    required: true,
+  },
   company: {
     type: Schema.Types.ObjectId,
     ref: 'company',
