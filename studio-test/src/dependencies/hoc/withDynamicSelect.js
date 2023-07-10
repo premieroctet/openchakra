@@ -10,7 +10,7 @@ const withDynamicSelect = Component => {
     const [internalValue, setInternalValue]=useState(value)
 
     const attribute = props.attribute
-    const enumValues=props.enum ? JSON.parse(props.enum) : null
+    const enumValues=props.enum ? lodash.orderBy(JSON.parse(props.enum)) : null
     let refValues=null
 
     /** TODO Buggy. Why ???
