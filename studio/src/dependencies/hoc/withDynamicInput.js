@@ -56,7 +56,7 @@ const withDynamicInput = Component => {
             .catch(err => {
               console.error(err)
               if (!(err.response?.status==401) && err.code!='ERR_NETWORK') {
-                console.log(err.response?.data || err)
+                alert(err.response?.data || err)
               }
             })
         }

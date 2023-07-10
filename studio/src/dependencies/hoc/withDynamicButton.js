@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import axios from 'axios';
 import lodash from 'lodash'
-import { useRouter } from 'next/router'
+import { useLocation } from 'react-router-dom'
 import { ACTIONS } from '../utils/actions'
 import {
   extractFiltersFromProps,
@@ -15,8 +15,7 @@ const withDynamicButton = Component => {
 
     const [errorMessage, setErrorMessage]=useState(null)
 
-    const router = useRouter()
-    const query = new URLSearchParams(router?.asPath)
+    const query = new URLSearchParams(useLocation().search)
     let value = props.dataSource
     if (props.attribute) {
       value=lodash.get(value, props.attribute)

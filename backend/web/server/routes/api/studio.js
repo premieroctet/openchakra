@@ -78,7 +78,6 @@ const router = express.Router()
 
 const PRODUCTION_ROOT = getProductionRoot()
 const PRODUCTION_PORT = getProductionPort()
-const PROJECT_CONTEXT_PATH = 'src/pages'
 
 
 const login = (email, password) => {
@@ -138,7 +137,7 @@ router.post('/file', (req, res) => {
   if (!(projectName && filePath && contents)) {
     return res.status(HTTP_CODES.BAD_REQUEST).json()
   }
-  const destpath = path.join(PRODUCTION_ROOT, projectName, PROJECT_CONTEXT_PATH, filePath)
+  const destpath = path.join(PRODUCTION_ROOT, projectName, 'src', filePath)
   const unzippedContents=zlib.inflateSync(new Buffer(contents, 'base64')).toString()
   console.log(`Copying in ${destpath}`)
   return fs
@@ -153,8 +152,8 @@ router.post('/clean', (req, res) => {
   if (!projectName) {
     return res.status(HTTP_CODES.BAD_REQUEST).json()
   }
-  const keepFileNames=[...fileNames, '_app.tsx', '_document.js']
-  const destpath = path.join(PRODUCTION_ROOT, projectName, PROJECT_CONTEXT_PATH)
+  const keepFileNames=[...fileNames, 'App.js']
+  const destpath = path.join(PRODUCTION_ROOT, projectName, 'src')
   return fs.readdir(destpath)
     .then(files => {
       const diskFiles=files.filter(f => /[A-Z].*\.js$/.test(f))
@@ -227,7 +226,7 @@ router.post('/start', (req, res) => {
 
   const destpath = path.join(PRODUCTION_ROOT, projectName)
   const result = child_process.exec(
-    `pm2 restart ecosystem.config.js`,
+    `serve -p ${PRODUCTION_PORT} build/`,
     {
       cwd: destpath,
     },
