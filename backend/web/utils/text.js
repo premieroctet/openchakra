@@ -1,6 +1,7 @@
 const csv_string = require('csv-string')
 const stripBom = require('strip-bom')
 const moment=require('moment')
+const lodash=require('lodash')
 
 const ARTICLES = 'le la les un une de des d l à'.split(/ /g)
 const SIREN_LENGTH=9
@@ -188,6 +189,14 @@ const formatDeadline = dl => {
   return dl.replace('jours', 'jour(s)').replace('semaines', 'semaine(s)').replace('heures', 'heure(s)')
 }
 
+const splitRemaining = (pattern, delimiter) => {
+  if (lodash.isEmpty(pattern)) {
+    return string
+  }
+  const [first, ...rest]=pattern.split(delimiter)
+  return [first, rest.join(delimiter)]
+}
+
 module.exports = {
   normalize,
   matches,
@@ -210,4 +219,5 @@ module.exports = {
   guessDelimiter,
   formatPercent,
   formatDeadline,
+  splitRemaining,
 }

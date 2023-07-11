@@ -1,3 +1,4 @@
+const { splitRemaining } = require('../../utils/text')
 const lodash = require('lodash')
 const mongoose = require('mongoose')
 const { BadRequestError, NotFoundError } = require('./errors')
@@ -375,12 +376,17 @@ const retainRequiredFields = ({data, fields}) => {
 }
 
 const addComputedFields = async(
+  fields,
   user,
   queryParams,
   data,
   model,
   prefix = '',
 ) => {
+
+  if (lodash.isEmpty(fields)) {
+    return data
+  }
   const newPrefix = `${prefix}/${model}/${data._id}`
   let newUser = user
   if (model == 'user') {
@@ -388,10 +394,10 @@ const addComputedFields = async(
   }
 
   const compFields = COMPUTED_FIELDS_GETTERS[model] || {}
-  const presentCompFields = Object.keys(compFields).filter(f =>
-    data.hasOwnProperty(f),
-  )
+  const presentCompFields = lodash(fields).map(f => f.split('.')[0]).filter(v => !!v).uniq().value()
+
   const requiredCompFields = lodash.pick(compFields, presentCompFields)
+
   // Compute direct attributes
   const x = await Promise.allSettled(
     Object.keys(requiredCompFields).map(f =>
@@ -406,6 +412,10 @@ const addComputedFields = async(
   )
   for (const refAttribute of refAttributes) {
     const [attName, attParams]=refAttribute
+    const requiredSubFields=fields
+      .filter(f => f.startsWith(`${attName}.`))
+      .map(f => splitRemaining(f, '.')[1])
+
     const children = data[attName]
     if (children && !['program', 'origin'].includes(attName)) {
       if (attParams.multiple) {
@@ -413,6 +423,7 @@ const addComputedFields = async(
           await Promise.allSettled(
             children.map(child =>
               addComputedFields(
+                requiredSubFields,
                 newUser,
                 queryParams,
                 child,
@@ -425,6 +436,7 @@ const addComputedFields = async(
       }
       else if (children) {
         await addComputedFields(
+          requiredSubFields,
           newUser,
           queryParams,
           children,
@@ -621,7 +633,7 @@ const loadFromDb = ({model, fields, id, user, params}) => {
           // Remove extra virtuals
           //data = retainRequiredFields({data, fields})
           if (id && data.length == 0) { throw new NotFoundError(`Can't find ${model}:${id}`) }
-          return Promise.all(data.map(d => addComputedFields(user, params, d, model)))
+          return Promise.all(data.map(d => addComputedFields(fields,user, params, d, model)))
         })
         .then(data =>  callFilterDataUser({model, data, id, user}))
         //.then(data =>  retainRequiredFields({data, fields}))
