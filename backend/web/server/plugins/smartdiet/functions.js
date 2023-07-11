@@ -32,6 +32,7 @@ const {
   PERIOD,
   ROLES,
   ROLE_RH,
+  SEASON,
   SPOON_SOURCE,
   SURVEY_ANSWER,
   TARGET_TYPE,
@@ -75,6 +76,7 @@ const filterDataUser = ({model, data, id, user}) => {
     console.log(`I am RH`)
     data=data.filter(u => idEqual(id, user._id) || (user.company && idEqual(u.company?._id, user.company?._id)))
   }
+  data=lodash.sortBy(data, ['order', 'fullname', 'name', 'label'])
   return Promise.resolve(data)
 }
 
@@ -134,8 +136,8 @@ USER_MODELS.forEach(m => {
       options: {ref: 'content'}},
   })
   declareVirtualField({model: m, field: 'contents', instance: 'Array',
-    requires: `targets,contents.key.picture,contents.comments_count,contents.targets,objective_targets,health_targets,activity_targets,specificity_targets,home_target,contents.search_text`,
-    multiple: true,
+  requires: '_all_contents.comments_count,_all_targets,targets,_all_contents.targets,objective_targets,health_targets,activity_target,specificity_targets,home_target,_all_contents.search_text,_all_contents.key',
+  multiple: true,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'content'}},
@@ -177,7 +179,7 @@ USER_MODELS.forEach(m => {
       options: {ref: 'individualChallenge'}},
   })
   declareVirtualField({model: m, field: 'individual_challenges', instance: 'Array',
-    requires: '_all_individual_challenges,skipped_events,passed_events,routine_events,registered_events.type,_all_individual_challenges.type,failed_events,current_individual_challenge',
+    requires: '_all_individual_challenges.key,skipped_events,passed_events,routine_events,registered_events.type,_all_individual_challenges.type,failed_events,current_individual_challenge',
     multiple: true,
     caster: {
       instance: 'ObjectID',
@@ -208,13 +210,13 @@ USER_MODELS.forEach(m => {
       options: {ref: 'menu'}},
   })
   declareVirtualField({model: m, field: 'collective_challenges', instance: 'Array', multiple: true,
-    requires:'company.collective_challenges',
+    requires:'company,company.collective_challenges',
     caster: {
       instance: 'ObjectID',
       options: {ref: 'collectiveChallenge'}},
   })
   declareVirtualField({model: m, field: 'available_groups', instance: 'Array',
-    requires: 'targets,company.groups,company.groups.targets,registered_groups', multiple: true,
+    requires: 'targets,company.groups,company.groups.targets,registered_groups,company.groups.key', multiple: true,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'group'}},
@@ -249,7 +251,7 @@ USER_MODELS.forEach(m => {
       options: {ref: 'target'}},
   })
   declareVirtualField({model: m, field: 'targets', instance: 'Array',
-    requires: '_all_targets.contents,objective_targets,health_targets,activity_targets,specificity_targets,home_target',
+    requires: '_all_targets.contents,objective_targets,health_targets,activity_target,specificity_targets,home_target',
     multiple: true,
     caster: {
       instance: 'ObjectID',
@@ -336,6 +338,7 @@ declareVirtualField({model: 'content', field: 'search_text', instance: 'String',
 const EVENT_MODELS=['event', 'collectiveChallenge', 'individualChallenge', 'menu', 'webinar']
 EVENT_MODELS.forEach(m => {
   declareVirtualField({model: m, field: 'type', instance: 'String', enumValues: EVENT_TYPE})
+  declareVirtualField({model: m, field: 'duration', instance: 'Number', required:'start_date,end_date'})
 })
 
 declareEnumField({model: 'individualChallenge', field: 'hardness', enumValues: HARDNESS})
@@ -383,6 +386,8 @@ declareVirtualField({model: 'recipe', field: 'ingredients', instance: 'Array',
     instance: 'ObjectID',
     options: {ref: 'recipeIngredient'}},
 })
+declareEnumField({model: 'recipe', field: 'season', enumValues: SEASON})
+
 declareVirtualField({model: 'menu', field: 'recipes', instance: 'Array',
   multiple: true,
   caster: {
@@ -407,13 +412,14 @@ declareVirtualField({model: 'group', field: 'messages', instance: 'Array',
     instance: 'ObjectID',
     options: {ref: 'message'}},
 })
-
 declareVirtualField({model: 'group', field: 'pinned_messages', instance: 'Array',
   requires: 'messages.pins,messages.pinned', multiple: true,
   caster: {
     instance: 'ObjectID',
     options: {ref: 'message'}},
 })
+declareVirtualField({model: 'group', field: 'users_count', instance: 'Number'})
+declareVirtualField({model: 'group', field: 'messages_count', instance: 'Number', requires: 'messages'})
 
 declareVirtualField({model: 'message', field: 'pinned', instance: 'Boolean', requires: 'pins'})
 declareVirtualField({model: 'message', field: 'liked', instance: 'Boolean', requires: 'likes'})
@@ -437,6 +443,9 @@ declareVirtualField({model: 'key', field: 'user_surveys_progress', instance: 'Ar
     instance: 'ObjectID',
     options: {ref: 'chartPoint'}},
 })
+declareVirtualField({model: 'key', field: 'user_passed_challenges', instance: 'Number', required: 'passed_events'})
+declareVirtualField({model: 'key', field: 'user_passed_webinars', instance: 'Number', required: 'passed_events'})
+
 
 declareVirtualField({model: 'userSurvey', field: 'questions', instance: 'Array',
   multiple: true,
@@ -515,6 +524,11 @@ declareVirtualField({model: 'coaching', field: 'questions', instance: 'Array', m
 })
 declareEnumField({model: 'userCoachingQuestion', field: 'status', enumValues: COACHING_QUESTION_STATUS})
 
+declareVirtualField({model: 'adminDashboard', field: 'company', instance: 'company', multiple: false,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'company'}},
+})
 declareVirtualField({model: 'adminDashboard', field:'webinars_count', instance: 'Number'})
 declareVirtualField({model: 'adminDashboard', field:'average_webinar_registar', instance: 'Number'})
 declareVirtualField({model: 'adminDashboard', field:'webinars_replayed_count', instance: 'Number'})
@@ -607,6 +621,32 @@ const getUserSurveysProgress = (user, params, data) => {
     .catch(err => console.error(err))
 }
 
+const getUserContents = (user, params, data) => {
+  const user_targets=lodash([data.objective_targets,data.health_targets,
+    data.activity_target,data.specificity_targets,data.home_target])
+    .flatten()
+    .value()
+  return Promise.resolve(data._all_contents.filter(c => c.default || setIntersects(c.targets, user_targets)))
+}
+
+const getUserPassedChallenges = (user, params, data) => {
+  return User.findById(user._id, 'passed_events')
+    .populate({path: 'passed_events', match:{"__t": "individualChallenge", key: data._id}})
+    .then(res => {
+      return res.passed_events?.length || 0
+    })
+}
+
+const getUserPassedWebinars = (user, params, data) => {
+  return User.findById(user._id, 'passed_events')
+    .populate({path: 'passed_events', match:{"__t": "webinar", key: data._id}})
+    .then(res => {
+      return res.passed_events?.length || 0
+    })
+}
+
+declareComputedField('user', 'contents', getUserContents)
+declareComputedField('loggedUser', 'contents', getUserContents)
 declareComputedField('comment', 'liked', getDataLiked, setDataLiked)
 declareComputedField('message', 'liked', getDataLiked, setDataLiked)
 declareComputedField('content', 'liked', getDataLiked, setDataLiked)
@@ -619,6 +659,8 @@ declareComputedField('key', 'user_spoons', getUserKeySpoons)
 declareComputedField('key', 'user_spoons_str', getUserKeySpoonsStr)
 declareComputedField('key', 'user_progress', getUserKeyProgress)
 declareComputedField('key', 'user_read_contents', getUserKeyReadContents)
+declareComputedField('key', 'user_passed_challenges', getUserPassedChallenges)
+declareComputedField('key', 'user_passed_webinars', getUserPassedWebinars)
 declareComputedField('user', 'spoons_count', getUserSpoons)
 declareComputedField('loggedUser', 'spoons_count', getUserSpoons)
 declareComputedField('menu', 'shopping_list', getMenuShoppingList)
@@ -706,10 +748,9 @@ const computeStatistics= ({id, fields}) => {
   console.log(`Computing stats for ${id} fields ${fields}`)
   const company_filter=id ? {_id: id} : {}
   return Company.find(company_filter)
-    .populate([{path: 'webinars', select:'type'},{path: 'groups', select:'_id'}])
+    .populate([{path: 'webinars', select:'type'},{path: 'groups', populate: 'messages' }])
     .populate({path: 'users', select: 'registered_events,replayed_events', populate:['registered_events','replayed_events']})
     .then(comps => {
-      console.log(JSON.stringify(comps[1],null,2))
       const companies=lodash(comps)
       const webinars=companies.map(c => c.webinars).flatten()
       const webinars_count=webinars.size()
@@ -725,9 +766,14 @@ const computeStatistics= ({id, fields}) => {
         .filter(e => e.type==EVENT_WEBINAR)
         .size()
       const groups_count=companies.map('groups_count').sum()
+      const messages_count=companies
+        .map('groups').flatten()
+        .map('messages').flatten()
+        .size()
       return ({
+        company: id,
         webinars_count, average_webinar_registar, webinars_replayed_count,
-        groups_count,
+        groups_count, messages_count,
       })
     })
 }

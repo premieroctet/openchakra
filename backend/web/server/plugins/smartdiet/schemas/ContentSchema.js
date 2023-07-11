@@ -85,6 +85,12 @@ const ContentSchema = new Schema({
     default: 0,
     required: true,
   },
+  linked_contents: [{
+    type: Schema.Types.ObjectId,
+    ref: 'content',
+    required: true,
+  }],
+
 }, schemaOptions)
 
 ContentSchema.virtual('likes_count').get(function() {

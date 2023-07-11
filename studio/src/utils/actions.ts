@@ -99,6 +99,7 @@ export const ACTIONS: IActions = {
     label: 'Open page',
     options: {
       page: ({ pages }) => pagesList({pages}),
+      sourceId: ({ components }) => components.map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
       open: () => [
         { key: true, label: 'In new page' },
         { key: false, label: 'In same page' },

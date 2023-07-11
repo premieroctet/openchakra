@@ -66,6 +66,7 @@ const UserSchema = new Schema({
   },
   company_code: {
     type: String,
+    set: v => v ? v.replace(/ /g,'') : v,
     required: false,
   },
   password: {
@@ -116,11 +117,11 @@ const UserSchema = new Schema({
     ref: 'target',
     required: true,
   }],
-  activity_targets: [{
+  activity_target: {
     type: Schema.Types.ObjectId,
     ref: 'target',
-    required: true,
-  }],
+    required: false,
+  },
   specificity_targets: [{
     type: Schema.Types.ObjectId,
     ref: 'target',
@@ -193,18 +194,9 @@ UserSchema.virtual("_all_contents", {
   foreignField: "dummy" // is equal to foreignField
 });
 
-UserSchema.virtual('contents', {
-  ref: "content", // The Model to use
-  localField: "dummy", // Find in Model, where localField
-  foreignField: "dummy", // is equal to foreignField
-  options: {
-    match: function() {
-      const all_targets=[...this.activity_targets,...this.health_targets,this.home_target,...this.objective_targets,...this.specificity_targets]
-      return {
-        $or: [{default: true}, {targets: {$in: all_targets}}]
-      }
-    }
-  }
+// Computed virtual
+UserSchema.virtual('contents', {localField: '_id', foreignField: '_id'}).get(function () {
+  return null
 })
 
 UserSchema.virtual("available_groups", {localField: 'id', foreignField: 'id'}).get(function () {
@@ -367,9 +359,12 @@ UserSchema.virtual("_all_targets", {
 
 UserSchema.virtual("targets", {localField: 'tagada', foreignField: 'tagada'}).get(function() {
   const all_targets=[...(this.objective_targets||[]), ...(this.health_targets||[]),
-    ...(this.activity_targets||[]), ...(this.specificity_targets||[])]
+    ...(this.specificity_targets||[])]
   if (this.home_target) {
     all_targets.push(this.home_target)
+  }
+  if (this.activity_target) {
+    all_targets.push(this.activity_target)
   }
   const all_target_ids=all_targets.map(t => t._id)
   return this._all_targets?.filter(t => all_target_ids.some(i => idEqual(i, t._id))) || []

@@ -52,10 +52,17 @@ export const ACTIONS = {
         return res
       })
   },
-  openPage: ({ value, model, query, props, getComponentValue }) => {
+  openPage: ({ value, level, model, query, props, getComponentValue }) => {
     const queryParams = query
+    queryParams.delete('id')
     let url = `/${props.page}`
-    if (value && value._id) {
+    if ('sourceId' in props) {
+      const compValue=getComponentValue(props.sourceId, level)
+      if (compValue?._id || compValue) {
+        queryParams.set('id', compValue?._id || compValue)
+      }
+    }
+    else if (value && value._id) {
       queryParams.set(model, value._id)
       queryParams.set('id', value._id)
     }
@@ -66,7 +73,7 @@ export const ACTIONS = {
     } else {
       window.location = url
     }
-    throw new Error('break')
+    return
   },
 
   create: ({ value, context, props, level, getComponentValue }) => {
@@ -235,8 +242,7 @@ export const ACTIONS = {
         if (res.data.redirect) {
           let redirect=res.data.redirect
           redirect = /^http/.test(redirect) ? redirect : `/${redirect}`
-          window.location=redirect
-          throw new Error('break')
+          return window.location=redirect
         }
       })
   },
@@ -249,8 +255,7 @@ export const ACTIONS = {
         if (res.data.redirect) {
           let url=res.data.redirect
           url=/^http/.test(url) ? url : `/${url}`
-          window.location=url
-          throw new Error('break')
+          return window.location=url
         }
       })
   },
@@ -463,8 +468,7 @@ export const ACTIONS = {
         if (res.data.redirect) {
           let redirect=res.data.redirect
           redirect = /^http/.test(redirect) ? redirect : `/${redirect}`
-          window.location=redirect
-          throw new Error('break')
+          return window.location=redirect
         }
       })
   },
@@ -694,8 +698,7 @@ export const ACTIONS = {
         if (res.data.redirect) {
           let url=res.data.redirect
           url=/^http/.test(url) ? url : `/${url}`
-          window.location=url
-          throw new Error('break')
+          return window.location=url
         }
       })
   },
@@ -790,8 +793,7 @@ export const ACTIONS = {
       if (res.data.redirect) {
         let redirect=res.data.redirect
         redirect = /^http/.test(redirect) ? redirect : `/${redirect}`
-        window.location=redirect
-        throw new Error('break')
+        return window.location=redirect
       }
       return {
         model: 'teamMember',
