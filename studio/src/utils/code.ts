@@ -193,10 +193,10 @@ const buildBlock = ({
         propsContent += ` noautosave={true} `
       }
 
-      if (childComponent.type=='Radio' && hasParentType(childComponent, components, 'RadioGroup')) {
+      if (['Checkbox', 'IconCheck', 'Radio'].includes(childComponent.type) && hasParentType(childComponent, components, 'RadioGroup')) {
         propsContent += ` insideGroup `
       }
-      if (['Checkbox', 'IconCheck'].includes(childComponent.type) && hasParentType(childComponent, components, 'CheckboxGroup')) {
+      if (['Checkbox', 'IconCheck', 'Radio'].includes(childComponent.type) && hasParentType(childComponent, components, 'CheckboxGroup')) {
         propsContent += ` insideGroup `
       }
 
