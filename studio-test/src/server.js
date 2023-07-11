@@ -3,11 +3,11 @@ require('dotenv').config({ path: path.resolve(__dirname, '../../.env') })
 const { createServer } = require('https')
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const express = require('express');
-const dev = process.env.MODE !== 'production'
+const prod = process.env.NEXT_PUBLIC_MODE == 'production'
 const port = parseInt(process.env.STUDIO_TEST_PORT, 10) || 3001;
 const next = require('next')
 const bodyParser = require('body-parser')
-const nextApp = next({ dev })
+const nextApp = next({ prod })
 const routes = require('./routes')
 const routerHandler = routes.getRequestHandler(nextApp)
 const glob = require('glob')
@@ -21,11 +21,11 @@ const isSecure = process.env.MODE === 'production'
 nextApp.prepare().then(() => {
 
   app.use(
-    API_PATH, 
-    createProxyMiddleware({ 
+    API_PATH,
+    createProxyMiddleware({
       target: `https://localhost:${process.env.BACKEND_PORT || '443'}`,
-      changeOrigin: true, 
-      pathFilter: API_PATH, 
+      changeOrigin: true,
+      pathFilter: API_PATH,
       secure: isSecure
     })
   );

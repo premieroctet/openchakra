@@ -54,7 +54,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "node src/server.js",
+    "start": "NODE_ENV=production && node src/server.js",
     "lint": "next lint"
   },
   "eslintConfig": {
