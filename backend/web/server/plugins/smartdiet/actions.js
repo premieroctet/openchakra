@@ -239,10 +239,14 @@ const isActionAllowed = ({action, dataId, user}) => {
       if (action=='smartdiet_join_team') {
         // Get all teams of this team's collective challenge, then check if
         // user in on one of them
-        return Team.findById(dataId, 'collectiveChallenge')
-          .then(team => Team.find({collectiveChallenge: team.collectiveChallenge}))
-          .then(teams => TeamMember.exists({user:user, team: {$in: teams }}))
-          .then(exists => !exists)
+        return Team.findById(dataId, 'collectiveChallenge').populate({path: 'collectiveChallenge', populate: {path: 'teams', populate: 'members'}})
+          .then(team => team.collectiveChallenge)
+          .then(challenge => {
+            // Challenge not started yet
+            return moment(challenge.start_date).isAfter(moment())
+            // Not already in a team
+            && !challenge.teams.some(t => t.members.some(m => idEqual(m.user._id, user._id)))
+          })
       }
       if (action=='smartdiet_shift_challenge') {
         // Get all teams of this team's collective challenge, then check if

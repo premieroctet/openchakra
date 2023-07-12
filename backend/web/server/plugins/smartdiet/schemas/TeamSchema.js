@@ -13,7 +13,7 @@ const TeamSchema = new Schema({
   },
   name: {
     type: String,
-    set: v => v.trim(),
+    set: v => v?.trim(),
     required: [true, 'Le nom est obligatoire'],
   },
   picture: {

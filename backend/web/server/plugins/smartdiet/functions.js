@@ -108,9 +108,14 @@ const preCreate = ({model, params, user}) => {
     params.sender=user
   }
   if (['team'].includes(model)) {
-    return Team.exists({name: params.name?.trim(), collectiveChallenge: params.collectiveChallenge})
-      .then(exists => {
-        if (exists) { throw new BadRequestError(`L'équipe ${params.name} existe déjà pour ce challenge`)}
+    return Team.findOne({name: params.name?.trim(), collectiveChallenge: params.collectiveChallenge}).populate('collectiveChallenge')
+      .then(team => {
+        if (team) { throw new BadRequestError(`L'équipe ${params.name} existe déjà pour ce challenge`)}
+        return CollectiveChallenge.findById(params.collectiveChallenge)
+      }) 
+      .then(challenge => {
+        if (!challenge) { throw new BadRequestError(`Le challenge ${params.collectiveChallenge} n'existe pas`)}
+        if (moment().isAfter(moment(challenge.start_date))) { throw new BadRequestError(`Le challenge a déjà démarré`)}
         return {model, params}
       })
   }
