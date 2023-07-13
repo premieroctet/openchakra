@@ -1,6 +1,8 @@
 import React from 'react'
 import lodash from 'lodash'
 
+import { matcher } from '../utils/misc';
+
 const normalize = str => {
   str = str
     ? str
@@ -110,18 +112,14 @@ const withDynamicContainer = Component => {
       const value=props.getComponentValue(props.filterValue, props.level)
       // TODO Check why value "null" comes as string
       if (!(lodash.isNil(value) || value=="null")) {
-        const regExp = new RegExp(normalize(value).trim(), 'i')
-        const attribute=props.filterAttribute
-        orgData = orgData.filter(d =>regExp.test(normalize(d[attribute])))
+        orgData = matcher(value, orgData, props.filterAttribute)
       }
     }
     if (props.filterAttribute2 && props.filterValue2) {
       const value=props.getComponentValue(props.filterValue2, props.level)
       // TODO Check why value "null" comes as string
       if (!(lodash.isNil(value) || value=="null")) {
-        const regExp = new RegExp(normalize(value).trim(), 'i')
-        const attribute=props.filterAttribute2
-        orgData = orgData.filter(d =>regExp.test(normalize(d[attribute])))
+        orgData = matcher(value, orgData, props.filterAttribute2)
       }
     }
     let data = orgData
