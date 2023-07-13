@@ -257,7 +257,7 @@ USER_MODELS.forEach(m => {
   })
   declareVirtualField({model: m, field: 'recommandations_count', instance: 'Number', requires: 'jobs'})
   declareVirtualField({model: m, field: 'recommandations_note', instance: 'Number', requires: 'jobs'})
-  declareVirtualField({model: m, field: 'comments_count', instance: 'Number', requires: 'jobs'})
+  declareVirtualField({model: m, field: 'comments_count', instance: 'Number', requires: 'missions.comments'})
   declareVirtualField({model: m, field: 'comments_note', instance: 'Number', requires: 'jobs'})
 
   declareVirtualField({model: m, field: 'revenue', instance: 'Number',
@@ -345,6 +345,7 @@ declareVirtualField({model: 'jobUser', field: 'comments', instance: 'Array', req
     options: {ref: 'comment'}}
 })
 declareVirtualField({model: 'jobUser', field: 'pinned', instance: 'Boolean', requires:'pins'})
+declareVirtualField({model: 'jobUser', field: 'recommandations_count', instance: 'Number', requires:'recommandations'})
 
 
 declareEnumField({model: 'experience', field: 'contract_type', enumValues: CONTRACT_TYPE})

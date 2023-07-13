@@ -130,4 +130,10 @@ JobUserSchema.virtual('pinned').get(function() {
   return false
 })
 
+/* eslint-disable prefer-arrow-callback */
+JobUserSchema.virtual('recommandations_count').get(function() {
+  return this.recommandations?.length || 0
+})
+/* eslint-enable prefer-arrow-callback */
+
 module.exports = JobUserSchema;
