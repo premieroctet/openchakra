@@ -19,6 +19,10 @@ const QuotationSchema = new Schema({
     type: String,
     required: false,
   },
+  notice: {
+    type: String,
+    required: false,
+  },
   firstname: {
     type: String,
     required: [true, 'Le prénom est obligatoire'],
