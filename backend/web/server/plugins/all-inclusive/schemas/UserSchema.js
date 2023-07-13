@@ -437,4 +437,8 @@ UserSchema.virtual("search_text").get(function() {
   return values.join(' ')
 });
 
+UserSchema.virtual('offer', {localField:'tagada', foreignField: 'tagada'}).get(function() {
+  return this.company?.offers?.[0] || null
+})
+
 module.exports = UserSchema;

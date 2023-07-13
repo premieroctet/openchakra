@@ -85,6 +85,12 @@ const ContentSchema = new Schema({
     default: 0,
     required: true,
   },
+  linked_contents: [{
+    type: Schema.Types.ObjectId,
+    ref: 'content',
+    required: true,
+  }],
+
 }, schemaOptions)
 
 ContentSchema.virtual('likes_count').get(function() {
@@ -113,5 +119,12 @@ ContentSchema.virtual('liked').get(function() {
 ContentSchema.virtual('pinned').get(function() {
   return false
 })
+
+ContentSchema.virtual("search_text").get(function() {
+  const attributes='name,contents'.split(',')
+  let values=attributes.map(att => this[att])
+  values=values.filter(v=>!!v)
+  return values.join(' ')
+});
 
 module.exports = ContentSchema

@@ -52,6 +52,14 @@ KeySchema.virtual('user_read_contents').get(function(){
   return null
 })
 
+KeySchema.virtual('user_passed_challenges').get(function(){
+  return null
+})
+
+KeySchema.virtual('user_passed_webinars').get(function(){
+  return null
+})
+
 KeySchema.virtual('trophy_picture').get(function () {
   return null
 })

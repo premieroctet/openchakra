@@ -1,3 +1,4 @@
+const { splitRemaining } = require('../../utils/text')
 const lodash = require('lodash')
 const mongoose = require('mongoose')
 const { BadRequestError, NotFoundError } = require('./errors')
@@ -14,12 +15,13 @@ const {CURRENT, FINISHED} = require('../plugins/fumoir/consts')
 const MONGOOSE_OPTIONS = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  // poolSize: 10,
   useCreateIndex: true,
-  useFindAndModify: false,
+  useFindAndModify: false
 }
 
 // Utilities
+mongoose.set('useFindAndModify', false)
+mongoose.set('useCreateIndex', true)
 
 /**
 Retourne true si field (model.attribute) contient id
@@ -71,6 +73,7 @@ const getAttributeCaracteristics = (modelName, att) => {
   const multiple = att.instance == 'Array'
   const suggestions = att.options?.suggestions
   const baseData = att.caster || att
+  // TODO: fix type ObjectID => Object
   const type =
     baseData.instance == 'ObjectID' ? baseData.options.ref : baseData.instance
   const ref = baseData.instance == 'ObjectID'
@@ -231,7 +234,8 @@ const buildPopulates = (modelName, fields) => {
   /// Build populate using att and subpopulation
   const pops=groupedAttributes.entries().map(([attributeName, fields]) => {
     const attType=attributes[attributeName].type
-    return {path: attributeName, populate: buildPopulates(attType, fields)}
+    const subPopulate=buildPopulates(attType, fields)
+    return {path: attributeName, populate: lodash.isEmpty(subPopulate)?undefined:subPopulate }
   })
   return pops.value()
 }
@@ -272,7 +276,6 @@ const getModel = (id, expectedModel) => {
 }
 
 const buildQuery = (model, id, fields) => {
-  console.log(`Building query model:${model}, id:${id || 'none'} fields:${fields}`)
   const modelAttributes = Object.fromEntries(getModelAttributes(model))
 
   const select = lodash(fields)
@@ -286,7 +289,7 @@ const buildQuery = (model, id, fields) => {
   const criterion = id ? {_id: id} : {}
   let query = mongoose.connection.models[model].find(criterion) //, select)
   const populates=buildPopulates(model, fields)
-  console.log(`Populates is ${JSON.stringify(populates)}`)
+  //console.log(`Populates for ${model}/${fields} is ${JSON.stringify(populates, null, 2)}`)
   query = query.populate(populates)
   return query
 }
@@ -374,12 +377,17 @@ const retainRequiredFields = ({data, fields}) => {
 }
 
 const addComputedFields = async(
+  fields,
   user,
   queryParams,
   data,
   model,
   prefix = '',
 ) => {
+
+  if (lodash.isEmpty(fields)) {
+    return data
+  }
   const newPrefix = `${prefix}/${model}/${data._id}`
   let newUser = user
   if (model == 'user') {
@@ -387,10 +395,10 @@ const addComputedFields = async(
   }
 
   const compFields = COMPUTED_FIELDS_GETTERS[model] || {}
-  const presentCompFields = Object.keys(compFields).filter(f =>
-    data.hasOwnProperty(f),
-  )
+  const presentCompFields = lodash(fields).map(f => f.split('.')[0]).filter(v => !!v).uniq().value()
+
   const requiredCompFields = lodash.pick(compFields, presentCompFields)
+
   // Compute direct attributes
   const x = await Promise.allSettled(
     Object.keys(requiredCompFields).map(f =>
@@ -405,6 +413,10 @@ const addComputedFields = async(
   )
   for (const refAttribute of refAttributes) {
     const [attName, attParams]=refAttribute
+    const requiredSubFields=fields
+      .filter(f => f.startsWith(`${attName}.`))
+      .map(f => splitRemaining(f, '.')[1])
+
     const children = data[attName]
     if (children && !['program', 'origin'].includes(attName)) {
       if (attParams.multiple) {
@@ -412,6 +424,7 @@ const addComputedFields = async(
           await Promise.allSettled(
             children.map(child =>
               addComputedFields(
+                requiredSubFields,
                 newUser,
                 queryParams,
                 child,
@@ -424,6 +437,7 @@ const addComputedFields = async(
       }
       else if (children) {
         await addComputedFields(
+          requiredSubFields,
           newUser,
           queryParams,
           children,
@@ -524,7 +538,7 @@ const putAttribute = ({parent, attribute, value, user}) => {
       model = res
       const setter=lodash.get(COMPUTED_FIELDS_SETTERS, `${model}.${attribute}`)
       if (setter) {
-        callPostPutData({model, id:parent, attribute, value, data, user})
+        callPostPutData({model, id:parent, attribute, value, user})
         return setter({id: parent, attribute, value, user})
       }
       const mongooseModel = mongoose.connection.models[model]
@@ -592,6 +606,12 @@ const idEqual = (id1, id2) => {
   return JSON.stringify(id1)==JSON.stringify(id2)
 }
 
+// Checks wether ids intersect
+const setIntersects = (ids1, ids2) => {
+  const inter=lodash.intersectionBy(ids1, ids2, v => JSON.stringify(v._id || v))
+  return inter.length>0
+}
+
 // Return true if obj1.targets intersects obj2.targets
 const shareTargets = (obj1, obj2) => {
   if (!(obj1.targets && obj2.targets)) {
@@ -614,7 +634,7 @@ const loadFromDb = ({model, fields, id, user, params}) => {
           // Remove extra virtuals
           //data = retainRequiredFields({data, fields})
           if (id && data.length == 0) { throw new NotFoundError(`Can't find ${model}:${id}`) }
-          return Promise.all(data.map(d => addComputedFields(user, params, d, model)))
+          return Promise.all(data.map(d => addComputedFields(fields,user, params, d, model)))
         })
         .then(data =>  callFilterDataUser({model, data, id, user}))
         //.then(data =>  retainRequiredFields({data, fields}))
@@ -659,4 +679,5 @@ module.exports = {
   shareTargets,
   loadFromDb,
   getMongooseModels,
+  setIntersects,
 }

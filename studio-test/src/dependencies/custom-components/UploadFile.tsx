@@ -70,6 +70,7 @@ const UploadFile = ({
   backend,
   children,
   reload,
+  noautosave,
   ...props
 }: {
   notifmsg: boolean
@@ -79,6 +80,7 @@ const UploadFile = ({
   value: string
   backend: string
   reload: any
+  noautosave: boolean | null
   children: React.ReactNode
 }) => {
   FileManager.initialize(
@@ -118,7 +120,7 @@ const UploadFile = ({
         attribute: 'version',
         value: null,
       }
-      
+
       setUploadInfo('')
 
       const switchUploadType = async () => {
@@ -154,17 +156,21 @@ const UploadFile = ({
               setUploadInfo(okmsg)
             }
 
-            
+
             break
         }
       }
 
       const saveUrl = async () => {
-        return ACTIONS.putValue({
-          context: dataSource?._id,
-          props: {attribute: attribute},
-          value: paramsBack.value,
-        })
+        const promise=noautosave ?
+          Promise.resolve(null)
+          :
+          ACTIONS.putValue({
+            context: dataSource?._id,
+            props: {attribute: attribute},
+            value: paramsBack.value,
+          })
+        promise
           .then(() => {
             if (notifmsg) {
               setUploadInfo(okmsg)
@@ -203,7 +209,7 @@ const UploadFile = ({
           {children}
         </UploadZone>
       </form>
-      {uploadInfo && 
+      {uploadInfo &&
       // @ts-ignore
       <Text>{uploadInfo}</Text>} {/*Component status */}
     </Box>

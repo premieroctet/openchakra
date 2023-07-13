@@ -343,7 +343,7 @@ router.post('/recommandation', (req, res) => {
       return mongoose.connection.models[model]
         .create([params], {runValidators: true})
         .then(([data]) => {
-          return callPostCreateData({model, params, data})
+          return callPostCreateData({model, params, data, user})
         })
         .then(data => res.json(data))
     })
@@ -377,7 +377,7 @@ router.post('/contact', (req, res) => {
 
 router.post('/:model', passport.authenticate('cookie', {session: false}), (req, res) => {
   const model = req.params.model
-  let params=req.body
+  let params=lodash(req.body).mapValues(v => JSON.parse(v)).value()
   const context= req.query.context
   const user=req.user
 
@@ -393,7 +393,7 @@ router.post('/:model', passport.authenticate('cookie', {session: false}), (req, 
       return mongoose.connection.models[model]
         .create([params], {runValidators: true})
         .then(([data]) => {
-          return callPostCreateData({model, params, data})
+          return callPostCreateData({model, params, data, user})
         })
         .then(data => res.json(data))
     })
@@ -402,7 +402,7 @@ router.post('/:model', passport.authenticate('cookie', {session: false}), (req, 
 router.put('/:model/:id', passport.authenticate('cookie', {session: false}), (req, res) => {
   const model = req.params.model
   const id = req.params.id
-  let params=req.body
+  let params=lodash(req.body).mapValues(v => JSON.parse(v)).value()
   const context= req.query.context
   const user=req.user
   params=model=='order' && context ? {...params, booking: context}:params
@@ -411,10 +411,15 @@ router.put('/:model/:id', passport.authenticate('cookie', {session: false}), (re
     return res.status(HTTP_CODES.BAD_REQUEST).json(`Model and id are required`)
   }
   console.log(`Updating:${id} with ${JSON.stringify(params)}`)
+  // Update object instead of findByIdAndUpdate to ensure 'this' exists in required functions
   return mongoose.connection.models[model]
-    .findByIdAndUpdate(id, params, {new: true, runValidators: true})
-    .then(data => callPostPutData({model, params, data, user}))
-    .then(data => res.json(data))
+      .findById(id)
+      .then(data => {
+        Object.keys(params).forEach(k => data[k]=params[k])
+        return data.save()
+      })
+      .then(data => callPostPutData({model, params, data, user}))
+      .then(data => res.json(data))
 })
 
 

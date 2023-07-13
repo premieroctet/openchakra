@@ -12,14 +12,13 @@ const withMaskability = (Component: React.FC<any>) => {
     hiddenRoles: string
     user: UserCtx
   }) => {
-    
-    const rolesToHide = JSON.parse(hiddenRoles)
-    const roleUser = user && user?.role || NOT_CONNECTED
-
     // while user not yet fetched, mask items doesn't appear
     if (user === false) {
       return null
     }
+
+    const rolesToHide = JSON.parse(hiddenRoles)
+    const roleUser = user && user?.role || NOT_CONNECTED
 
     // if nothing to hide, render
     if (rolesToHide?.length && rolesToHide.length === 0) {
@@ -30,9 +29,9 @@ const withMaskability = (Component: React.FC<any>) => {
     if (rolesToHide.includes(roleUser)) {
       return null
     }
-    
+
     return <Component {...props} />
-    
+
   }
 
   return internal

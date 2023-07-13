@@ -1,3 +1,5 @@
+const { EVENT_WEBINAR } = require('./consts')
+
 const {
   declareComputedField,
   declareEnumField,
@@ -5,30 +7,16 @@ const {
   getModel,
   idEqual,
   loadFromDb,
+  setFilterDataUser,
+  setIntersects,
   setPostCreateData,
   setPreCreateData,
   setPreprocessGet,
   simpleCloneModel,
 } = require('../../utils/database')
 const {
-  getUserIndChallengeTrophy,
-  getUserKeyProgress,
-  getUserKeySpoons,
-  getUserKeyTrophy,
-  getUserKeyReadContents,
-  getUserSpoons
-} = require('./spoons')
-const mongoose = require('mongoose')
-const lodash=require('lodash')
-const moment = require('moment')
-const UserSurvey = require('../../models/UserSurvey')
-const {CREATED_AT_ATTRIBUTE} = require('../../../utils/consts')
-const Offer = require('../../models/Offer')
-const Content = require('../../models/Content')
-const Company = require('../../models/Company')
-const User = require('../../models/User')
-const {
   ACTIVITY,
+  COACHING_QUESTION_STATUS,
   COMPANY_ACTIVITY,
   COMPANY_ACTIVITY_SERVICES_AUX_ENTREPRISES,
   CONTENTS_TYPE,
@@ -43,22 +31,69 @@ const {
   PARTICULAR_COMPANY_NAME,
   PERIOD,
   ROLES,
+  ROLE_RH,
+  SEASON,
   SPOON_SOURCE,
   SURVEY_ANSWER,
   TARGET_TYPE,
   UNIT,
 } = require('./consts')
+const CoachingQuestion = require('../../models/CoachingQuestion')
+const CollectiveChallenge = require('../../models/CollectiveChallenge')
+const Pip = require('../../models/Pip')
+const ChallengeUserPip = require('../../models/ChallengeUserPip')
+const ChallengeUserPipSchema = require('./schemas/ChallengeUserPipSchema')
+const ChallengePip = require('../../models/ChallengePip')
+const {BadRequestError} = require('../../utils/errors')
+const {
+  getUserIndChallengeTrophy,
+  getUserKeyProgress,
+  getUserKeySpoons,
+  getUserKeyTrophy,
+  getUserKeyReadContents,
+  getUserSpoons
+} = require('./spoons')
+const mongoose = require('mongoose')
+require('lodash.product')
+const lodash=require('lodash')
+const moment = require('moment')
+const UserSurvey = require('../../models/UserSurvey')
+const {CREATED_AT_ATTRIBUTE} = require('../../../utils/consts')
+const Offer = require('../../models/Offer')
+const Content = require('../../models/Content')
+const Company = require('../../models/Company')
+const User = require('../../models/User')
+const Team = require('../../models/Team')
+const TeamMember = require('../../models/TeamMember')
+
+const filterDataUser = ({model, data, id, user}) => {
+  if (model=='offer' && !id) {
+    return Offer.find({company: null})
+      .then(offers => data.filter(d => offers.some(o => idEqual(d._id, o._id))))
+  }
+  console.log(`Model:${model}`)
+  if (model=='user' && user.role==ROLE_RH) {
+    console.log(`I am RH`)
+    data=data.filter(u => idEqual(id, user._id) || (user.company && idEqual(u.company?._id, user.company?._id)))
+  }
+  data=lodash.sortBy(data, ['order', 'fullname', 'name', 'label'])
+  return Promise.resolve(data)
+}
+
+setFilterDataUser(filterDataUser)
 
 const preprocessGet = ({model, fields, id, user}) => {
   if (model=='loggedUser') {
     model='user'
     id = user?._id || 'INVALIDID'
   }
-  if (model=='content' && !!id) {
-    return Content.findByIdAndUpdate(id, {$addToSet: {viewed_by: user._id}})
-      .then(() => ({model, fields, id}))
+  if (model=='user') {
+    fields.push('company')
   }
-
+  if (model=='adminDashboard') {
+    return computeStatistics({id, fields})
+      .then(stats => ({model, fields, id, data:[stats]}))
+  }
   return Promise.resolve({model, fields, id})
 
 }
@@ -71,6 +106,18 @@ const preCreate = ({model, params, user}) => {
   }
   if (['message'].includes(model)) {
     params.sender=user
+  }
+  if (['team'].includes(model)) {
+    return Team.findOne({name: params.name?.trim(), collectiveChallenge: params.collectiveChallenge}).populate('collectiveChallenge')
+      .then(team => {
+        if (team) { throw new BadRequestError(`L'équipe ${params.name} existe déjà pour ce challenge`)}
+        return CollectiveChallenge.findById(params.collectiveChallenge)
+      }) 
+      .then(challenge => {
+        if (!challenge) { throw new BadRequestError(`Le challenge ${params.collectiveChallenge} n'existe pas`)}
+        if (moment().isAfter(moment(challenge.start_date))) { throw new BadRequestError(`Le challenge a déjà démarré`)}
+        return {model, params}
+      })
   }
   return Promise.resolve({model, params})
 }
@@ -94,7 +141,8 @@ USER_MODELS.forEach(m => {
       options: {ref: 'content'}},
   })
   declareVirtualField({model: m, field: 'contents', instance: 'Array',
-    requires: '_all_contents', multiple: true,
+  requires: '_all_contents.comments_count,_all_targets,targets,_all_contents.targets,objective_targets,health_targets,activity_target,specificity_targets,home_target,_all_contents.search_text,_all_contents.key',
+  multiple: true,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'content'}},
@@ -107,6 +155,12 @@ USER_MODELS.forEach(m => {
   })
   declareVirtualField({model: m, field: 'available_webinars', instance: 'Array',
     requires: 'webinars', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'webinar'}},
+  })
+  declareVirtualField({model: m, field: 'past_webinars', instance: 'Array',
+    requires: '_all_webinars', multiple: true,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'webinar'}},
@@ -130,7 +184,14 @@ USER_MODELS.forEach(m => {
       options: {ref: 'individualChallenge'}},
   })
   declareVirtualField({model: m, field: 'individual_challenges', instance: 'Array',
-    requires: '_all_individual_challenges,skipped_events,passed_events', multiple: true,
+    requires: '_all_individual_challenges.key,skipped_events,passed_events,routine_events,registered_events.type,_all_individual_challenges.type,failed_events,current_individual_challenge',
+    multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'individualChallenge'}},
+  })
+  declareVirtualField({model: m, field: 'passed_individual_challenges', instance: 'Array',
+    requires: '_all_individual_challenges,passed_events', multiple: true,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'individualChallenge'}},
@@ -141,19 +202,26 @@ USER_MODELS.forEach(m => {
       instance: 'ObjectID',
       options: {ref: 'menu'}},
   })
-  declareVirtualField({model: m, field: 'available_menu', instance: 'menu',
-    multiple: false,
+  declareVirtualField({model: m, field: 'available_menus', instance: 'Array',
+    multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'menu'}},
+  })
+  declareVirtualField({model: m, field: 'past_menus', instance: 'Array',
+    multiple: true,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'menu'}},
   })
   declareVirtualField({model: m, field: 'collective_challenges', instance: 'Array', multiple: true,
+    requires:'company,company.collective_challenges',
     caster: {
       instance: 'ObjectID',
       options: {ref: 'collectiveChallenge'}},
   })
   declareVirtualField({model: m, field: 'available_groups', instance: 'Array',
-    requires: 'targets,company.groups,company.groups.targets,registered_groups', multiple: true,
+    requires: 'targets,company.groups,company.groups.targets,registered_groups,company.groups.key', multiple: true,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'group'}},
@@ -188,11 +256,31 @@ USER_MODELS.forEach(m => {
       options: {ref: 'target'}},
   })
   declareVirtualField({model: m, field: 'targets', instance: 'Array',
-    requires: '_all_targets.contents,objective_targets,health_targets,activity_targets,specificity_targets,home_target',
+    requires: '_all_targets.contents,objective_targets,health_targets,activity_target,specificity_targets,home_target',
     multiple: true,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'target'}},
+  })
+  declareVirtualField({model: m, field: 'current_individual_challenge', instance: 'individualChallenge',
+    requires: 'registered_events,failed_events,passed_events',
+    multiple: false,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'individualChallenge'}},
+  })
+  declareVirtualField({model: m, field: 'offer', instance: 'offer',
+    requires: 'company.offers',
+    multiple: false,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'offer'}},
+  })
+  declareVirtualField({model: m, field: 'surveys', instance: 'Array',
+    multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'userSurvey'}},
   })
 })
 
@@ -222,6 +310,21 @@ declareVirtualField({model: 'company', field: 'children', instance: 'Array', mul
     instance: 'ObjectID',
     options: {ref: 'company'}},
 })
+declareVirtualField({model: 'company', field: 'collective_challenges', instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'collectiveChallenge'}},
+})
+declareVirtualField({model: 'company', field: 'offers', instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'offer'}},
+})
+declareVirtualField({model: 'company', field: 'users', instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'user'}},
+})
 
 
 declareEnumField({model: 'content', field: 'type', enumValues: CONTENTS_TYPE})
@@ -235,10 +338,12 @@ declareVirtualField({model: 'content', field: 'comments', instance: 'Array', mul
 declareVirtualField({model: 'content', field: 'liked', instance: 'Boolean', requires: 'likes'})
 declareVirtualField({model: 'content', field: 'pinned', instance: 'Boolean', requires: 'pins'})
 declareVirtualField({model: 'content', field: 'comments_count', instance: 'Number', requires: 'comments'})
+declareVirtualField({model: 'content', field: 'search_text', instance: 'String', requires: 'name,contents'})
 
 const EVENT_MODELS=['event', 'collectiveChallenge', 'individualChallenge', 'menu', 'webinar']
 EVENT_MODELS.forEach(m => {
   declareVirtualField({model: m, field: 'type', instance: 'String', enumValues: EVENT_TYPE})
+  declareVirtualField({model: m, field: 'duration', instance: 'Number', required:'start_date,end_date'})
 })
 
 declareEnumField({model: 'individualChallenge', field: 'hardness', enumValues: HARDNESS})
@@ -260,7 +365,6 @@ declareVirtualField({model: 'offer', field: 'company', instance: 'offer', multip
     instance: 'ObjectID',
     options: {ref: 'company'}},
 })
-declareEnumField({model: 'offer', field: 'groups_credit', enumValues: GROUPS_CREDIT})
 
 declareVirtualField({model: 'target', field: 'contents', instance: 'Array',
   multiple: true,
@@ -287,6 +391,8 @@ declareVirtualField({model: 'recipe', field: 'ingredients', instance: 'Array',
     instance: 'ObjectID',
     options: {ref: 'recipeIngredient'}},
 })
+declareEnumField({model: 'recipe', field: 'season', enumValues: SEASON})
+
 declareVirtualField({model: 'menu', field: 'recipes', instance: 'Array',
   multiple: true,
   caster: {
@@ -311,13 +417,14 @@ declareVirtualField({model: 'group', field: 'messages', instance: 'Array',
     instance: 'ObjectID',
     options: {ref: 'message'}},
 })
-
 declareVirtualField({model: 'group', field: 'pinned_messages', instance: 'Array',
   requires: 'messages.pins,messages.pinned', multiple: true,
   caster: {
     instance: 'ObjectID',
     options: {ref: 'message'}},
 })
+declareVirtualField({model: 'group', field: 'users_count', instance: 'Number'})
+declareVirtualField({model: 'group', field: 'messages_count', instance: 'Number', requires: 'messages'})
 
 declareVirtualField({model: 'message', field: 'pinned', instance: 'Boolean', requires: 'pins'})
 declareVirtualField({model: 'message', field: 'liked', instance: 'Boolean', requires: 'likes'})
@@ -341,6 +448,9 @@ declareVirtualField({model: 'key', field: 'user_surveys_progress', instance: 'Ar
     instance: 'ObjectID',
     options: {ref: 'chartPoint'}},
 })
+declareVirtualField({model: 'key', field: 'user_passed_challenges', instance: 'Number', required: 'passed_events'})
+declareVirtualField({model: 'key', field: 'user_passed_webinars', instance: 'Number', required: 'passed_events'})
+
 
 declareVirtualField({model: 'userSurvey', field: 'questions', instance: 'Array',
   multiple: true,
@@ -364,21 +474,75 @@ declareVirtualField({model: 'pip', field: 'comments', instance: 'Array', multipl
 })
 declareVirtualField({model: 'pip', field: 'comments_count', instance: 'Number', requires: 'comments'})
 
+declareVirtualField({model: 'team', field: 'members', instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'teamMember'}},
+})
 
-const getAvailableContents = (user, params, data) => {
-  return Content.find()
-    .then(contents => {
-      const user_targets=user.targets.map(t => t._id.toString())
-      const filtered_contents=contents.filter(c => {
-        if (c.default) {
-          return true
-        }
-        const content_targets=c.targets?.map(t => t._id.toString()) || []
-        return lodash.isEqual(user_targets.sort(), content_targets.sort())
-      })
-      return filtered_contents
-    })
-}
+declareVirtualField({model: 'teamMember', field: 'spoons', instance: 'Number'})
+declareVirtualField({model: 'teamMember', field: 'pips', instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'challengeUserPip'}},
+})
+
+declareVirtualField({model: 'collectiveChallenge', field: 'teams', instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'team'}},
+})
+
+declareVirtualField({model: 'collectiveChallenge', field: 'pips', instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'challengePip'}},
+})
+
+declareVirtualField({model: 'challengePip', field: 'userPips', instance: 'Array', multiple: true,
+  requires: 'userPips.valid,pip.spoons',
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'challengeUserPip'}},
+})
+declareVirtualField({model: 'challengePip', field: 'spoons', instance: 'Number'})
+declareVirtualField({model: 'challengePip', field: 'pendingUserPips', instance: 'Array', multiple: true,
+  requires: 'userPips.proof,userPips.valid',
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'challengeUserPip'}},
+})
+
+declareVirtualField({model: 'coaching', field: 'consultations', instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'consultation'}},
+})
+declareVirtualField({model: 'coaching', field: 'remaining_credits', instance: 'Number',
+  requires: 'user.offer.coaching_credit,spent_credits'}
+)
+declareVirtualField({model: 'coaching', field: 'spent_credits', instance: 'Number', requires: 'consultations'})
+declareVirtualField({model: 'coaching', field: 'questions', instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'userCoachingQuestion'}},
+})
+declareEnumField({model: 'userCoachingQuestion', field: 'status', enumValues: COACHING_QUESTION_STATUS})
+
+declareVirtualField({model: 'adminDashboard', field: 'company', instance: 'company', multiple: false,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'company'}},
+})
+declareVirtualField({model: 'adminDashboard', field:'webinars_count', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'average_webinar_registar', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'webinars_replayed_count', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'groups_count', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'group_active_members_count', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'average_group_answers', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'messages_count', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'users_count', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'active_users_count', instance: 'Number'})
 
 const getDataLiked = (user, params, data) => {
   const liked=data?.likes?.some(l => idEqual(l._id, user?._id))
@@ -425,8 +589,7 @@ const getPinnedMessages = (user, params, data) => {
 }
 
 const getMenuShoppingList = (user, params, data) => {
-  console.log(data.recipes.map(r => [r.recipe.name,r.recipe._id]))
-  const ingredients=lodash.flatten(data?.recipes.map(r => r.recipe.ingredients))
+  const ingredients=lodash.flatten(data?.recipes.map(r => r.recipe?.ingredients).filter(v => !!v))
   const ingredientsGroup=lodash.groupBy(ingredients, i => i.ingredient._id)
   const result=lodash(ingredientsGroup)
     .mapValues(ingrs=>({ingredient:ingrs[0].ingredient, quantity: lodash.sumBy(ingrs, 'quantity')}))
@@ -463,8 +626,32 @@ const getUserSurveysProgress = (user, params, data) => {
     .catch(err => console.error(err))
 }
 
-declareComputedField('user', 'available_contents', getAvailableContents)
-declareComputedField('loggedUser', 'available_contents', getAvailableContents)
+const getUserContents = (user, params, data) => {
+  const user_targets=lodash([data.objective_targets,data.health_targets,
+    data.activity_target,data.specificity_targets,data.home_target])
+    .flatten()
+    .value()
+  return Promise.resolve(data._all_contents.filter(c => c.default || setIntersects(c.targets, user_targets)))
+}
+
+const getUserPassedChallenges = (user, params, data) => {
+  return User.findById(user._id, 'passed_events')
+    .populate({path: 'passed_events', match:{"__t": "individualChallenge", key: data._id}})
+    .then(res => {
+      return res.passed_events?.length || 0
+    })
+}
+
+const getUserPassedWebinars = (user, params, data) => {
+  return User.findById(user._id, 'passed_events')
+    .populate({path: 'passed_events', match:{"__t": "webinar", key: data._id}})
+    .then(res => {
+      return res.passed_events?.length || 0
+    })
+}
+
+declareComputedField('user', 'contents', getUserContents)
+declareComputedField('loggedUser', 'contents', getUserContents)
 declareComputedField('comment', 'liked', getDataLiked, setDataLiked)
 declareComputedField('message', 'liked', getDataLiked, setDataLiked)
 declareComputedField('content', 'liked', getDataLiked, setDataLiked)
@@ -477,19 +664,20 @@ declareComputedField('key', 'user_spoons', getUserKeySpoons)
 declareComputedField('key', 'user_spoons_str', getUserKeySpoonsStr)
 declareComputedField('key', 'user_progress', getUserKeyProgress)
 declareComputedField('key', 'user_read_contents', getUserKeyReadContents)
+declareComputedField('key', 'user_passed_challenges', getUserPassedChallenges)
+declareComputedField('key', 'user_passed_webinars', getUserPassedWebinars)
 declareComputedField('user', 'spoons_count', getUserSpoons)
 declareComputedField('loggedUser', 'spoons_count', getUserSpoons)
 declareComputedField('menu', 'shopping_list', getMenuShoppingList)
 declareComputedField('key', 'user_surveys_progress', getUserSurveysProgress)
 
 
-const postCreate = ({model, params, data}) => {
+const postCreate = ({model, params, data,user}) => {
   // Create company => duplicate offer
   if (model=='company') {
-    return Offer.findById(data.offer)
-      .then(offer => Offer.create(simpleCloneModel(offer)))
-      .then(offer => { data.offer=offer._id; return data })
-      .then(data => data.save())
+    return Offer.findById(params.offer)
+      .then(offer => Offer.create( {...simpleCloneModel(offer), company: data._id}))
+      .then(offer => data)
   }
   if (model=='booking') {
     console.log(`Sending mail to ${data.booking_user.email} and admins for booking ${data._id}`)
@@ -497,11 +685,103 @@ const postCreate = ({model, params, data}) => {
     User.find({role: FUMOIR_MANAGER})
       .then(managers => Promise.allSettled(managers.map(manager => sendNewBookingToManager({booking: data, manager}))))
   }
+  if (model=='collectiveChallenge') {
+    return Pip.find()
+      .then (pips => Promise.all(pips.map(p => ChallengePip.create({pip:p, collectiveChallenge:data}))))
+      .then(()=> {
+        ensureChallengePipsConsistency()
+        return data
+      })
+  }
+  if (model=='pip') {
+    ensureChallengePipsConsistency()
+  }
+  if (model=='teamMember') {
+    ensureChallengePipsConsistency()
+  }
+  if (model=='coaching') {
+    return CoachingQuestion.find()
+      .then(questions => Promise.all(questions.map(question => userCoachingQuestion.create({coaching: data, question}))))
+  }
+
 
   return Promise.resolve(data)
 }
 
 setPostCreateData(postCreate)
+
+const ensureChallengePipsConsistency = () => {
+  // Does every challenge have all pips ?
+  return Promise.all([Pip.find({}, "_id"), CollectiveChallenge.find({}, "_id"),
+    TeamMember.find().populate('team'), ChallengeUserPip.find()])
+    .then(([pips, challenges, teamMembers, challengeUserPips]) => {
+      // Ensure all challenge pips exist
+      const updateChallengePips=lodash.product(pips, challenges)
+        .map(([pip, challenge]) => ChallengePip.updateMany(
+          {pip:pip, collectiveChallenge:challenge},
+          {pip:pip, collectiveChallenge:challenge},
+          {upsert: true}
+        ))
+      Promise.all(updateChallengePips)
+        .then(res => {
+          console.log(`Upsert challenge pips ok:${JSON.stringify(res)}`)
+          // Ensure all team mebers pips exist
+          const updateMembersPips=ChallengePip.find()
+          .then(challengePips => {
+            return teamMembers.map(member => {
+              const pips=challengePips.filter(p =>idEqual(p.collectiveChallenge, member.team.collectiveChallenge))
+              return Promise.all(pips.map(p => {
+                return ChallengeUserPip.update(
+                  {pip:p, user: member},
+                  {pip:p, user: member },
+                  {upsert: true}
+                )
+              }))
+            })
+          })
+
+          Promise.all(updateMembersPips)
+          .then(res => console.log(`Upsert member pips ok:${JSON.stringify(res)}`))
+          .catch(err => console.error(`Upsert member pips error:${err}`))
+        })
+        .catch(err => console.error(`Upsert challenge pips error:${err}`))
+
+    })
+}
+
+const computeStatistics= ({id, fields}) => {
+  console.log(`Computing stats for ${id} fields ${fields}`)
+  const company_filter=id ? {_id: id} : {}
+  return Company.find(company_filter)
+    .populate([{path: 'webinars', select:'type'},{path: 'groups', populate: 'messages' }])
+    .populate({path: 'users', select: 'registered_events,replayed_events', populate:['registered_events','replayed_events']})
+    .then(comps => {
+      const companies=lodash(comps)
+      const webinars=companies.map(c => c.webinars).flatten()
+      const webinars_count=webinars.size()
+      const registered_count=companies
+        .map('users').flatten()
+        .map('registered_events').flatten()
+        .filter(e => e.type==EVENT_WEBINAR)
+        .size()
+      const average_webinar_registar=registered_count*1.0/webinars_count
+      const webinars_replayed_count=companies
+        .map('users').flatten()
+        .map('replayed_events').flatten()
+        .filter(e => e.type==EVENT_WEBINAR)
+        .size()
+      const groups_count=companies.map('groups_count').sum()
+      const messages_count=companies
+        .map('groups').flatten()
+        .map('messages').flatten()
+        .size()
+      return ({
+        company: id,
+        webinars_count, average_webinar_registar, webinars_replayed_count,
+        groups_count, messages_count,
+      })
+    })
+}
 
 /** Upsert PARTICULARS company */
 Company.findOneAndUpdate(
@@ -513,5 +793,5 @@ Company.findOneAndUpdate(
   .catch(err => console.error(`Particular company upsert error:${err}`))
 
 module.exports={
-  getAvailableContents,
+  ensureChallengePipsConsistency,
 }
