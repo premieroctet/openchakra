@@ -15,7 +15,8 @@ const {CURRENT, FINISHED} = require('../plugins/fumoir/consts')
 const MONGOOSE_OPTIONS = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-   useFindAndModify: false,
+  useCreateIndex: true,
+  useFindAndModify: false
 }
 
 // Utilities
