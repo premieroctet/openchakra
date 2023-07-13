@@ -1,16 +1,6 @@
 const {
-  sendAskContact,
-  sendCommentReceived,
-  sendMissionAskedReminder,
-  sendMissionAskedSummary,
-  sendMissionReminderCustomer,
-  sendMissionReminderTI,
-  sendNewMission,
-  sendProfileOnline,
-  sendTipiSearch
-} = require('./mailing')
-const {
   AVAILABILITY,
+  BOOLEAN,
   COACHING,
   COACH_ALLE,
   COMPANY_ACTIVITY,
@@ -38,6 +28,17 @@ const {
   ROLE_TI,
   UNACTIVE_REASON,
 } = require('./consts')
+const {
+  sendAskContact,
+  sendCommentReceived,
+  sendMissionAskedReminder,
+  sendMissionAskedSummary,
+  sendMissionReminderCustomer,
+  sendMissionReminderTI,
+  sendNewMission,
+  sendProfileOnline,
+  sendTipiSearch
+} = require('./mailing')
 const {
   declareComputedField,
   declareEnumField,
@@ -373,6 +374,7 @@ declareVirtualField({model: 'mission', field: 'gross_total', instance: 'Number',
 declareVirtualField({model: 'mission', field: 'aa', instance: 'Number', requires: 'quotations.aa'})
 declareVirtualField({model: 'mission', field: 'ti_total', instance: 'Number', requires: 'quotations.ti_total'})
 declareVirtualField({model: 'mission', field: 'vat_total', instance: 'Number', requires: 'quotations.vat_total'})
+declareEnumField({model: 'mission', field: 'recurrent', instance: 'String', enumValues: BOOLEAN})
 
 
 declareVirtualField({model: 'quotation', field: 'details', instance: 'Array', requires: '', multiple: true,
