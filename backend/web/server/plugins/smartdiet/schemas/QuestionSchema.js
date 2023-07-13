@@ -31,6 +31,11 @@ const QuestionSchema = new Schema({
     set: v => v?.trim(),
     required: false,
   },
+  sub_description: {
+    type: String,
+    set: v => v?.trim(),
+    required: false,
+  },
   subtitle_never: {
     type: String,
     required: false,

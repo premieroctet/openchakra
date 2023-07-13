@@ -30,15 +30,6 @@ const CompanySchema = new Schema(
       type: Number,
       required: true,
     },
-    offer: {
-      type: Schema.Types.ObjectId,
-      ref: 'offer',
-      required: false,
-    },
-    collective_challenges: [{
-      type: Schema.Types.ObjectId,
-      ref: "collectiveChallenge",
-    }],
     parent: {
       type: Schema.Types.ObjectId,
       ref: "company",
@@ -46,6 +37,18 @@ const CompanySchema = new Schema(
   },
   schemaOptions,
 )
+
+CompanySchema.virtual('users', {
+  ref: 'user', // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "company", // is equal to foreignField
+});
+
+CompanySchema.virtual("offers", {
+  ref: "offer", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "company", // is equal to foreignField
+});
 
 CompanySchema.virtual("webinars", {
   ref: "webinar", // The Model to use
@@ -112,6 +115,12 @@ CompanySchema.virtual("children", {
   ref: "company", // The Model to use
   localField: "_id", // Find in Model, where localField
   foreignField: "parent", // is equal to foreignField
+});
+
+CompanySchema.virtual("collective_challenges", {
+  ref: "collectiveChallenge", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "company", // is equal to foreignField
 });
 
 module.exports = CompanySchema

@@ -6,23 +6,26 @@ const {schemaOptions} = require('../../../utils/schemas')
 const Schema = mongoose.Schema
 
 const TeamSchema = new Schema({
+  collectiveChallenge: {
+    type: Schema.Types.ObjectId,
+    ref: 'collectiveChallenge',
+    required: [true, 'Le challenge est obligatoire'],
+  },
   name: {
     type: String,
+    set: v => v?.trim(),
     required: [true, 'Le nom est obligatoire'],
   },
-  members: [{
-    type: Schema.Types.ObjectId,
-    ref: 'user',
-  }],
-  // Won spoons
-  spoons: {
-    type: Number,
-  },
-  key: {
-    type: Schema.Types.ObjectId,
-    ref: 'key',
-    required: [true, "La clé est obligatoire"],
+  picture: {
+    type: String,
+    required: false,
   },
 }, schemaOptions)
+
+TeamSchema.virtual('members', {
+    ref: 'teamMember',
+    localField: '_id',
+    foreignField: 'team',
+})
 
 module.exports = TeamSchema

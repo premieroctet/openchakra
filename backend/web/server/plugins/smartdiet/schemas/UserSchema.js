@@ -1,9 +1,22 @@
+const {
+  idEqual,
+  setIntersects,
+  shareTargets
+} = require('../../../utils/database')
+const {
+  ACTIVITY,
+  EVENT_IND_CHALLENGE,
+  GENDER,
+  NO_CREDIT_AVAILABLE,
+  ROLES,
+  ROLE_CUSTOMER,
+  ROLE_RH,
+  STATUS_FAMILY
+} = require('../consts')
 const mongoose = require('mongoose')
 const moment=require('moment')
-const { idEqual, shareTargets } = require('../../../utils/database')
+const { ForbiddenError } = require('../../../utils/errors')
 const {schemaOptions} = require('../../../utils/schemas')
-const {ACTIVITY, ROLES, ROLE_CUSTOMER, ROLE_RH, STATUS_FAMILY} = require('../consts')
-const {GENDER} = require('../consts')
 const lodash=require('lodash')
 
 const Schema = mongoose.Schema
@@ -26,9 +39,8 @@ const UserSchema = new Schema({
   },
   phone: {
     type: String,
-    required: [function() { return this.role==ROLE_CUSTOMER}, 'Le téléphone est obligatoire'],
+    required: false,
   },
-
   birthday: {
     type: Date,
     //required: [function() { return this.role==ROLE_CUSTOMER }, 'La date de naissance est obligatoire'],
@@ -54,6 +66,7 @@ const UserSchema = new Schema({
   },
   company_code: {
     type: String,
+    set: v => v ? v.replace(/ /g,'') : v,
     required: false,
   },
   password: {
@@ -97,38 +110,57 @@ const UserSchema = new Schema({
   objective_targets: [{
     type: Schema.Types.ObjectId,
     ref: 'target',
+    required: true,
   }],
   health_targets: [{
     type: Schema.Types.ObjectId,
     ref: 'target',
+    required: true,
   }],
-  activity_targets: [{
+  activity_target: {
     type: Schema.Types.ObjectId,
     ref: 'target',
-  }],
+    required: false,
+  },
   specificity_targets: [{
     type: Schema.Types.ObjectId,
     ref: 'target',
+    required: true,
   }],
   home_target: {
     type: Schema.Types.ObjectId,
     ref: 'target',
+    required: false,
   },
   skipped_events: [{
     type: Schema.Types.ObjectId,
     ref: 'event',
+    required: true,
   }],
   passed_events: [{
     type: Schema.Types.ObjectId,
     ref: 'event',
+    required: true,
   }],
   registered_events: [{
     type: Schema.Types.ObjectId,
     ref: 'event',
+    required: true,
   }],
   failed_events: [{
     type: Schema.Types.ObjectId,
     ref: 'event',
+    required: true,
+  }],
+  routine_events: [{
+    type: Schema.Types.ObjectId,
+    ref: 'event',
+    required: true,
+  }],
+  replayed_events: [{
+    type: Schema.Types.ObjectId,
+    ref: 'event',
+    required: true,
   }],
   dummy: {
     type: Number,
@@ -150,6 +182,12 @@ UserSchema.virtual('spoons_count').get(function() {
   return null
 })
 
+UserSchema.virtual("surveys", {
+  ref: "userSurvey", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "user" // is equal to foreignField
+});
+
 UserSchema.virtual("_all_contents", {
   ref: "content", // The Model to use
   localField: "dummy", // Find in Model, where localField
@@ -157,8 +195,8 @@ UserSchema.virtual("_all_contents", {
 });
 
 // Computed virtual
-UserSchema.virtual('contents', {localField: '_id', foreignField: '_id'}).get(function (callback) {
-  return this._all_contents?.filter(c => [ROLE_CUSTOMER, ROLE_RH].includes(this.role) ? !c.hidden : true) || []
+UserSchema.virtual('contents', {localField: '_id', foreignField: '_id'}).get(function () {
+  return null
 })
 
 UserSchema.virtual("available_groups", {localField: 'id', foreignField: 'id'}).get(function () {
@@ -200,11 +238,31 @@ UserSchema.virtual('available_webinars', {localField:'_id', foreignField: '_id'}
   return webinars
 })
 
+// Webinars finished
+UserSchema.virtual('past_webinars', {localField:'_id', foreignField: '_id'}).get(function() {
+  const now=moment()
+  const webinars=lodash(this._all_webinars)
+    .filter(w => moment(w.end_date).isBefore(now))
+    .value()
+  return webinars
+})
+
 UserSchema.virtual("_all_individual_challenges", {
   ref: "individualChallenge", // The Model to use
   localField: "dummy", // Find in Model, where localField
   foreignField: "dummy" // is equal to foreignField
 });
+
+// Ind. challenge registered still not failed or passed
+UserSchema.virtual('current_individual_challenge', {localField: 'id', foreignField: 'id'}).get(function() {
+  const exclude=[
+    ...(this.passed_events?.map(s => s._id)||[]),
+    ...(this.failed_events?.map(s => s._id)||[]),
+  ]
+  return (this._all_individual_challenges||[])
+    .filter(i => this.registered_events.some(r => idEqual(r._id, i._id)))
+    .find(i => !exclude.some(e => idEqual(e._id, i._id)))
+})
 
 // User's ind. challenges are all expect the skipped ones and the passed ones
 UserSchema.virtual('individual_challenges', {localField: 'id', foreignField: 'id'}).get(function() {
@@ -212,8 +270,20 @@ UserSchema.virtual('individual_challenges', {localField: 'id', foreignField: 'id
     ...(this.skipped_events?.map(s => s._id)||[]),
     ...(this.passed_events?.map(s => s._id)||[]),
     ...(this.failed_events?.map(s => s._id)||[]),
+    ...(this.routine_events?.map(s => s._id)||[]),
   ]
-  return this._all_individual_challenges?.filter(c => !exclude.some(excl => idEqual(excl._id, c._id)))||[]
+  // Search for a current challenge : registered and not excluded
+  const currentChallenge=this.current_individual_challenge
+  return lodash(this._all_individual_challenges||[])
+    .filter(c => !exclude.some(excl => idEqual(excl._id, c._id)))
+    .filter(c => !currentChallenge || idEqual(currentChallenge._id, c._id))
+    .orderBy(['update_date'], ['asc'])
+})
+
+// User's ind. challenges are all expect the skipped ones and the passed ones
+UserSchema.virtual('passed_individual_challenges', {localField: 'id', foreignField: 'id'}).get(function() {
+  const passed=this.passed_events?.map(s => s._id)||[]
+  return this._all_individual_challenges?.filter(c => passed.find(p => idEqual(p._id, c._id)))||[]
 })
 
 UserSchema.virtual("_all_menus", {
@@ -222,19 +292,28 @@ UserSchema.virtual("_all_menus", {
   foreignField: "dummy" // is equal to foreignField
 });
 
-// First available menu for this week
-UserSchema.virtual("available_menu", {
+// Available menus for this week
+UserSchema.virtual("available_menus", {
   ref: "menu", // The Model to use
   localField: "dummy", // Find in Model, where localField
   foreignField: "dummy", // is equal to foreignField
   options: {
     match: {$and:[{start_date: {$lt: moment()}}, {end_date:{$gt: moment()}}]},
   },
-  justOne: true,
+});
+
+// Past menus
+UserSchema.virtual("past_menus", {
+  ref: "menu", // The Model to use
+  localField: "dummy", // Find in Model, where localField
+  foreignField: "dummy", // is equal to foreignField
+  options: {
+    match: {end_date:{$lt: moment()}},
+  },
 });
 
 // User's collective challenges are the company's ones
-UserSchema.virtual('collective_challenges').get(function() {
+UserSchema.virtual('collective_challenges', {localField:'tagada', foreignField:'tagada'}).get(function() {
   return this.company?.collective_challenges || []
 })
 
@@ -280,14 +359,55 @@ UserSchema.virtual("_all_targets", {
 
 UserSchema.virtual("targets", {localField: 'tagada', foreignField: 'tagada'}).get(function() {
   const all_targets=[...(this.objective_targets||[]), ...(this.health_targets||[]),
-    ...(this.activity_targets||[]), ...(this.specificity_targets||[])]
+    ...(this.specificity_targets||[])]
   if (this.home_target) {
     all_targets.push(this.home_target)
+  }
+  if (this.activity_target) {
+    all_targets.push(this.activity_target)
   }
   const all_target_ids=all_targets.map(t => t._id)
   return this._all_targets?.filter(t => all_target_ids.some(i => idEqual(i, t._id))) || []
 })
 
+UserSchema.virtual('offer', {localField: 'tagada', foreignField: 'tagada'}).get(function() {
+  return this.company?.offers?.[0] || null
+})
+
+UserSchema.methods.canView = function(content_id) {
+  return mongoose.models.content.findById(content_id)
+    .then(content => Promise.all([
+        mongoose.models.company.findById(this.company).populate('offers'),
+        mongoose.models.content.find({viewed_by:this._id, type: content.type})
+      ])
+      .then(([{offers}, contents]) => {
+        // If no in viewed contents, check credit
+        if (!contents.some(c => idEqual(c._id, content_id))
+          && !(offers?.[0]?.getContentLimit(content.type)>contents.length)) {
+            throw new ForbiddenError(NO_CREDIT_AVAILABLE)
+          }
+        return true
+      }))
+}
+
+UserSchema.methods.canJoinEvent = function(event_id) {
+  if (this.registered_events.some(e => idEqual(e._id, event_id))) {
+    return Promise.resolve(true)
+  }
+  return Promise.all([
+    mongoose.models.company.findById(this.company).populate('offers'),
+    mongoose.models.event.findById(event_id),
+    mongoose.models.event.find({"_id": {$in: this.registered_events}}),
+  ])
+    .then(([{offers}, event, registered_events]) => {
+      const sameTypeEventsCount=registered_events.filter(e => e.type==event.type).length
+      const limit=offers[0]?.getEventLimit(event.type)
+      if (sameTypeEventsCount>=limit) {
+        throw new ForbiddenError(NO_CREDIT_AVAILABLE)
+      }
+      return true
+    })
+}
 /* eslint-enable prefer-arrow-callback */
 
 

@@ -1,0 +1,57 @@
+# Upgrade de MongoDB vers la version 5.13
+
+reférence : https://www.mongodb.com/docs/manual/release-notes/5.0-upgrade-standalone/
+
+## Installation
+
+[source, bash]
+----
+$ sudo dnf install certbot
+----
+
+
+## Génération du certificat (manual)
+
+[source, bash]
+----
+$ sudo certbot certonly --manual
+----
+
+1. On est amené à renseigné les domaines (ex: *all-entrepreneurs.fr www.all-entrepreneurs.fr*)
+2. Créer le fichier requis dans le dossier *web/static/.well-known/acme-challenge/*
+3. Génération des certificats
+
+[source, bash]
+----
+Certificate is saved at: /etc/letsencrypt/live/all-entrepreneurs.fr/fullchain.pem
+Key is saved at:         /etc/letsencrypt/live/all-entrepreneurs.fr/privkey.pem
+----
+
+NOTE: Je les ai copié dans le dossier .ssh de l'utilisateur puisque actuellement, le serveur vient les chercher ici. Un lien symbolique vers ce dossier à faire ?
+
+## Config serveur
+
+Modification en conséquence du fichier _server.js_
+
+IMPORTANT: Le fichier n'est pas versionné actuellement
+
+[source, bash]
+.web/server/server.js
+----
+
+// HTTPS server using certificates
+const httpsServer = https.createServer({
+  cert: fs.readFileSync(`${process.env.HOME}/.ssh/fullchain.pem`),
+  key: fs.readFileSync(`${process.env.HOME}/.ssh/privkey.pem`),
+},
+app)
+
+----
+
+## Rédémarrage serveur
+
+pm2 restart all
+
+## TODO
+
+Je l'ai fait avec l'option --manual, mais il y a moyen de mettre en place le renouvellement auto du certificat.

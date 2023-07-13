@@ -14,28 +14,36 @@ const CollectiveChallengeSchema = new Schema({
     type: Number,
     required: [true, 'Le nombre de cuillères est obligatoire'],
   },
-  teams: [{
-    type: Schema.Types.ObjectId,
-    ref: 'team',
-  }],
-  pips: [{
-    type: Schema.Types.ObjectId,
-    ref: 'pip',
-  }],
   company: {
     type: Schema.Types.ObjectId,
     ref: 'company',
   },
-  association: [{
+  association: {
     type: Schema.Types.ObjectId,
     ref: 'association',
-  }],
+  },
+  donation: {
+    type: Number,
+    default: 0,
+  }
 },
 {...schemaOptions, ...EVENT_DISCRIMINATOR}
 )
 
 CollectiveChallengeSchema.virtual('type').get(function() {
   return EVENT_COLL_CHALLENGE
+})
+
+CollectiveChallengeSchema.virtual('teams', {
+    ref: 'team',
+    localField: '_id',
+    foreignField: 'collectiveChallenge',
+})
+
+CollectiveChallengeSchema.virtual('pips', {
+    ref: 'challengePip',
+    localField: '_id',
+    foreignField: 'collectiveChallenge',
 })
 
 module.exports = CollectiveChallengeSchema

@@ -42,7 +42,7 @@ export const getPageUrl = (
 export function whatTheHexaColor(color: string) {
   const colorArray = typeof color === 'string' && color?.split('.') || color
   const isChakraTint = colorArray?.[1] // get the tint
-  
+
   let retainedColor = colorArray?.[0]
 
   if (isChakraTint) {
@@ -59,15 +59,15 @@ export function addBackslashes(str: string) {
 }
 
 export const iconStuff = ({
-  icon, 
-  dataLib = '', 
-  color, 
+  icon,
+  dataLib = '',
+  color,
   size,
   fill
 }: {
-  icon: string, 
-  dataLib: string, 
-  color?: string, 
+  icon: string,
+  dataLib: string,
+  color?: string,
   size?: string,
   fill?: string,
 }) => {
@@ -76,7 +76,7 @@ export const iconStuff = ({
 
   const colorHexa = whatTheHexaColor(color || 'black')
   const colorFillHexa = whatTheHexaColor(fill || 'black')
-  
+
   switch (dataLib) {
     case 'lucid':
       if (Object.keys(lucidicons).includes(icon)) {
@@ -84,7 +84,7 @@ export const iconStuff = ({
         iconProps = {color: colorHexa, fill: colorFillHexa, size: size || 'auto'}
       }
     break;
-      
+
     // Chakra Icons by default
     default:
       if (Object.keys(icons).includes(icon)) {
@@ -96,3 +96,8 @@ export const iconStuff = ({
 
   return {IconFromSet, iconProps}
 }
+
+export const REDIRECT_COUNT=4
+export const REDIRECT_ROLE=`autoRedirectRole_`
+export const REDIRECT_PAGE=`autoRedirectPage_`
+export const DEFAULT_REDIRECT_PAGE=`defaultRedirectPage`

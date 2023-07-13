@@ -23,6 +23,9 @@ const checkEmptyDataAttribute = (
     comp.type != 'Button' &&
     comp.type != 'IconButton' &&
     (comp.type!='Radio' || !hasParentType(comp, icomponents, 'RadioGroup')) &&
+    (comp.type!='Checkbox' || !hasParentType(comp, icomponents, 'RadioGroup')) &&
+    (comp.type!='IconCheck' || !hasParentType(comp, icomponents, 'RadioGroup')) &&
+    (comp.type!='Radio' || !hasParentType(comp, icomponents, 'CheckboxGroup')) &&
     (comp.type!='Checkbox' || !hasParentType(comp, icomponents, 'CheckboxGroup')) &&
     (comp.type!='IconCheck' || !hasParentType(comp, icomponents, 'CheckboxGroup'))
   ) {
@@ -44,9 +47,6 @@ const checkActionsProperties = (
         actionProps=JSON.parse(actionProps)
       }
       catch(err){}
-      if (required.length>0) {
-        console.log(`Actionprops:${Object.keys(actionProps)}`)
-      }
       const missing=required.filter(r => lodash.isEmpty(actionProps[r]))
       if (!lodash.isEmpty(missing)) {
         throw new Error(`Action ${actionName} requires attributes ${missing}`)

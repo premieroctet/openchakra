@@ -70,6 +70,10 @@ export const ACTIONS: IActions = {
         components
           .filter(comp => comp.type=='Flex')
           .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      collectiveChallenge: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
       ...Object.fromEntries(lodash.range(24).map((idx:number) => {
       return [
         `component_${idx}`,
@@ -79,7 +83,7 @@ export const ACTIONS: IActions = {
 
       ]})),
     },
-    next: ['openPage'],
+    next: ['openPage', 'previous'],
   },
   login: {
     label: 'Login',
@@ -95,6 +99,7 @@ export const ACTIONS: IActions = {
     label: 'Open page',
     options: {
       page: ({ pages }) => pagesList({pages}),
+      sourceId: ({ components }) => components.map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
       open: () => [
         { key: true, label: 'In new page' },
         { key: false, label: 'In same page' },
@@ -465,20 +470,15 @@ export const ACTIONS: IActions = {
   smartdiet_join_event: {
     label: 'SM Register event',
     options: {},
-    next: ['openPage'],
+    next: ['openPage', 'smartdiet_open_team_page'],
   },
   smartdiet_pass_event: {
     label: 'SM Passed event',
     options: {},
-    next: ['openPage'],
+    next: ['openPage','openUrl'],
   },
   smartdiet_fail_event: {
     label: 'SM Failed event',
-    options: {},
-    next: ['openPage'],
-  },
-  smartdiet_start_event: {
-    label: 'SM Start event',
     options: {},
     next: ['openPage'],
   },
@@ -559,6 +559,50 @@ export const ACTIONS: IActions = {
 
   smartdiet_finish_survey: {
     label: 'SM Finish survey',
+    options: {},
+    next: ['openPage'],
+  },
+
+  smartdiet_join_team: {
+    label: 'SM Join team',
+    options: {},
+    next: ['openPage'],
+  },
+
+  smartdiet_find_team_member: {
+    label: 'SM Find team member',
+    options: {},
+    next: ['openPage'],
+  },
+
+  smartdiet_open_team_page: {
+    label: 'SM Open team page',
+    options: {
+      page: ({ pages }) => pagesList({pages}),
+    },
+    next: ['openPage'],
+  },
+
+  smartdiet_shift_challenge: {
+    label: 'SM Shift challenge',
+    options: {},
+    next: ['openPage'],
+  },
+
+  smartdiet_routine_challenge: {
+    label: 'SM Routine challenge',
+    options: {},
+    next: ['openPage'],
+  },
+
+  smartdiet_replay_event: {
+    label: 'SM Replay webinar',
+    options: {},
+    next: ['openPage'],
+  },
+
+  smartdiet_read_content: {
+    label: 'SM Read content',
     options: {},
     next: ['openPage'],
   },

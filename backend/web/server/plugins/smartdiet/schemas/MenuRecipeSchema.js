@@ -37,4 +37,8 @@ const MenuRecipeSchema = new Schema({
 {...schemaOptions, ...EVENT_DISCRIMINATOR}
 )
 
+MenuRecipeSchema.index(
+  { menu: 1, day: 1, period:1  },
+  { unique: true, message: 'Un menu existe déjà pour ce repas' });
+
 module.exports = MenuRecipeSchema
