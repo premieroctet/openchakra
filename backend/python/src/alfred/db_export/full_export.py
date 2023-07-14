@@ -23,7 +23,7 @@ class FullExport(object):
         d = None
         out = open(os.path.join(directory, "{}.csv".format(doc)), "w", encoding='utf-8')
         keys=[]
-        items = self.db.get_items(doc, exclude_fields=['birthday'])
+        items = self.db.get_items(doc)
         for it in items:
           keys += [i for i in it.keys() if not i.startswith("__") and not i in keys]
         if columns:
