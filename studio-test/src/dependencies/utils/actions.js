@@ -1,6 +1,7 @@
-import {jsPDF} from 'jspdf'
 import axios from 'axios'
 import lodash from 'lodash'
+import html2canvas from 'html2canvas'
+import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
 
 import {
   clearComponentValue,
@@ -365,17 +366,58 @@ export const ACTIONS = {
   },
 
   savePagePDF: () => {
-    /** TODO Prints white pages
-    var doc = new jsPDF('p', 'pt','a4',true)
-    var elementHTML = document.querySelector("#root")
-    doc.html(document.body, {
-        callback: function(doc) {
-            // Save the PDF
-            doc.save('facture.pdf');
-        },
+    //return window.print()
+
+const images = document.getElementsByTagName('img');
+const imagePromises = [];
+
+for (let i = 0; i < images.length; i++) {
+  const image = images[i];
+  const imagePromise = new Promise((resolve, reject) => {
+       if (image.complete) {
+          resolve();
+        } else {
+          image.onload = resolve;
+          image.onerror = reject;
+        }
+  
+  });
+  imagePromises.push(imagePromise);
+}
+
+return Promise.allSettled(imagePromises)
+  .then(res => {
+    return PDFDocument.create().then(pdfDoc => {
+
+    const page = pdfDoc.addPage();
+    const element = document.getElementById('root');
+    html2canvas(element, {ignoreElements: element => element.tagName.toLowerCase()=='button'}).then(canvas => {
+
+    const imgData = canvas.toDataURL('image/jpeg');
+    pdfDoc.embedJpg(imgData).then(jpgImage => {
+
+    const x_ratio=page.getWidth()/jpgImage.width
+    const { width, height } = jpgImage.scale(x_ratio);
+    page.drawImage(jpgImage, {
+      x: (page.getWidth() - width)/2,
+      y: page.getHeight() - height,
+      width,
+      height,
     });
-    */
-    return window.print()
+
+    pdfDoc.save().then(pdfBytes => {
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'document2.pdf';
+      link.click();
+      return null
+    })
+  })
+  })
+  })
+  })
+
   },
 
   deactivateAccount: ({value, props, level, getComponentValue}) => {
