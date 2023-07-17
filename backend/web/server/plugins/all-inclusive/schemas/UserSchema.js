@@ -125,6 +125,7 @@ const UserSchema = new Schema({
   },
   nationality: {
     type: String,
+    set: v => v || undefined, // To allow `null` value as empty
     enum: Object.keys(NATIONALITIES),
     required: false,
   },
