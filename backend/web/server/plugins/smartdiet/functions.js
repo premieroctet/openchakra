@@ -82,7 +82,8 @@ const filterDataUser = ({model, data, id, user}) => {
 
 setFilterDataUser(filterDataUser)
 
-const preprocessGet = ({model, fields, id, user}) => {
+const preprocessGet = ({model, fields, id, user, params}) => {
+  console.log(`preProcessGet:${JSON.stringify(params)}`)
   if (model=='loggedUser') {
     model='user'
     id = user?._id || 'INVALIDID'
@@ -93,6 +94,21 @@ const preprocessGet = ({model, fields, id, user}) => {
   if (model=='adminDashboard') {
     return computeStatistics({id, fields})
       .then(stats => ({model, fields, id, data:[stats]}))
+  }
+  if (model=='menu' && params?.people_count) {
+    return loadFromDb({model:'menu', id, fields:[...(fields||[]), 'people_count']})
+      .then(menus => {
+        const people_count=parseInt(params.people_count)
+        const ratio=people_count/2
+        const computed=menus.map(m => {
+          return {
+            ...m,
+            people_count,
+            shopping_list: m.shopping_list.map(i => ({...i, quantity: i.quantity*ratio}))
+          }
+        })
+        return ({model, fields, id, data:computed})
+      })
   }
   return Promise.resolve({model, fields, id})
 
@@ -112,7 +128,7 @@ const preCreate = ({model, params, user}) => {
       .then(team => {
         if (team) { throw new BadRequestError(`L'équipe ${params.name} existe déjà pour ce challenge`)}
         return CollectiveChallenge.findById(params.collectiveChallenge)
-      }) 
+      })
       .then(challenge => {
         if (!challenge) { throw new BadRequestError(`Le challenge ${params.collectiveChallenge} n'existe pas`)}
         if (moment().isAfter(moment(challenge.start_date))) { throw new BadRequestError(`Le challenge a déjà démarré`)}
@@ -399,7 +415,6 @@ declareVirtualField({model: 'menu', field: 'recipes', instance: 'Array',
     instance: 'ObjectID',
     options: {ref: 'menuRecipe'}},
 })
-
 declareVirtualField({model: 'menu', field: 'shopping_list', instance: 'Array',
   requires: 'recipes.recipe.ingredients.ingredient',
   multiple: true,
@@ -407,6 +422,7 @@ declareVirtualField({model: 'menu', field: 'shopping_list', instance: 'Array',
     instance: 'ObjectID',
     options: {ref: 'recipeIngredient'}},
 })
+declareVirtualField({model: 'menu', field: 'people_count', instance: 'Number'})
 
 declareEnumField({model: 'ingredient', field: 'unit', enumValues: UNIT})
 declareVirtualField({model: 'ingredient', field: 'label', instance: 'String', requires: 'name,unit'})
@@ -595,7 +611,6 @@ const getMenuShoppingList = (user, params, data) => {
     .mapValues(ingrs=>({ingredient:ingrs[0].ingredient, quantity: lodash.sumBy(ingrs, 'quantity')}))
     .values()
     .value()
-  console.log(JSON.stringify(result, null, 2))
   return Promise.resolve(result)
 }
 

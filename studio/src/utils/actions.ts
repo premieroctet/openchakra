@@ -607,6 +607,15 @@ export const ACTIONS: IActions = {
     next: ['openPage'],
   },
 
+  smartdiet_compute_shopping_list: {
+    label: 'SM Shopping list',
+    options: {
+      people: ({ components }) =>
+        components
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+    },
+  },
+
 }
 
 export const allowsActions = (component: IComponent) => {

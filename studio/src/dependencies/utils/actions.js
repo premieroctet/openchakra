@@ -830,4 +830,15 @@ export const ACTIONS = {
       .then(res => ({model: 'content',value: res.data}))
   },
 
+  smartdiet_compute_shopping_list: ({props, level, getComponentValue}) => {
+    const people_count = getComponentValue(props.people, level)
+    const thisUrl=new URL(window.location)
+    if (people_count) {
+      thisUrl.searchParams.set('people_count', people_count)
+    } else {
+      thisUrl.searchParams.delete('people_count', null)
+    }
+    window.location=thisUrl.toString()
+  },
+
 }

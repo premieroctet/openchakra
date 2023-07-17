@@ -427,16 +427,15 @@ const loadFromRequest = (req, res) => {
   const model = req.params.model
   let fields = req.query.fields?.split(',') || []
   const id = req.params.id
-  const params = req.get('Referrer')
-    ? {...url.parse(req.get('Referrer'), true).query}
-    : {}
+  const params=lodash.omit({...req.query}, ['fields', 'id'])
   const user = req.user
 
-  console.log(`GET ${model}/${id} ${fields}`)
+  const logMsg=`GET ${model}/${id} ${fields} ...${JSON.stringify(params)}`
+  console.log(logMsg)
 
   return loadFromDb({model, fields, id, user, params})
     .then(data => {
-      console.log(`GET ${model}/${id} ${fields}: data sent`)
+      console.log(`${logMsg}: data sent`)
       res.json(data)
     })
 }

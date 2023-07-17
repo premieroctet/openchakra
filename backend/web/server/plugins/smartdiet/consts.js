@@ -345,6 +345,9 @@ const SEASON={
  [SEASON_WINTER]:"Hiver",
 }
 
+// Default people count menus quantities
+const MENU_PEOPLE_COUNT=2
+
 module.exports={
   CONTENTS_TYPE,
   EVENT_TYPE,
@@ -394,4 +397,5 @@ module.exports={
   NO_CREDIT_AVAILABLE,
   COACHING_QUESTION_STATUS, COACHING_QUESTION_STATUS_NOT_ADDRESSED,
   SEASON,
+  MENU_PEOPLE_COUNT,
 }

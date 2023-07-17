@@ -578,9 +578,10 @@ const buildHooks = (components: IComponents) => {
         const dataId = dp.id.replace(/comp-/, '')
         const dpFields = getDataProviderFields(dp).join(',')
         const idPart = dp.id === 'root' ? `\${id ? \`\${id}/\`: \`\`}` : ''
+        const urlRest='${new URLSearchParams(Object.entries(queryRest))}'
         const apiUrl = `/myAlfred/api/studio/${dp.props.model}/${idPart}${
-          dpFields ? `?fields=${dpFields}` : ''
-        }`
+          dpFields ? `?fields=${dpFields}&` : ''
+        }${urlRest}`
         let thenClause=dp.id=='root' && singlePage ?
          `.then(res => set${capitalize(dataId)}(res.data[0]))`
          :
@@ -738,6 +739,7 @@ export const generateCode = async (
   ''
   */
   code = `import React, {useState, useEffect} from 'react';
+  import omit from 'lodash/omit';
   import Metadata from './dependencies/Metadata';
   ${hooksCode ? `import axios from 'axios'` : ''}
   ${Object.entries(groupedComponents)
@@ -775,6 +777,7 @@ ${componentsCodes}
 const ${componentName} = () => {
   const query = new URLSearchParams(useLocation().search)
   const id=${rootIgnoreUrlParams ? 'null' : `query.get('${rootIdQuery}') || query.get('id')`}
+  const queryRest=omit(Object.fromEntries(query), ['id'])
   const [componentsValues, setComponentsValues]=useState({})
 
   const setComponentValue = (compId, value) => {

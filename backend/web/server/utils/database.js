@@ -621,7 +621,7 @@ const shareTargets = (obj1, obj2) => {
 }
 
 const loadFromDb = ({model, fields, id, user, params}) => {
-  return callPreprocessGet({model, fields, id, user})
+  return callPreprocessGet({model, fields, id, user, params})
     .then(({model, fields, id, data}) => {
       if (data) {
         return data
