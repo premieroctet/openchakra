@@ -4,10 +4,11 @@ const { createServer } = require('https')
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const express = require('express');
 const prod = process.env.NEXT_PUBLIC_MODE == 'production'
+const dev = process.env.NEXT_PUBLIC_MODE != 'production'
 const port = parseInt(process.env.STUDIO_TEST_PORT, 10) || 3001;
 const next = require('next')
 const bodyParser = require('body-parser')
-const nextApp = next({ prod })
+const nextApp = next({ prod:prod, dev:dev })
 const routes = require('./routes')
 const routerHandler = routes.getRequestHandler(nextApp)
 const glob = require('glob')
@@ -58,3 +59,4 @@ nextApp.prepare().then(() => {
   httpsServer.listen(port, () => console.log(`running on https://localhost:${port}/`))
 
 })
+.catch(err => console.error(err))
