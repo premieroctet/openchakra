@@ -1,3 +1,4 @@
+require('dotenv').config({ path: `../.env`});
 module.exports = {
   webpack: (config) => {
     // load worker files as a urls by using Asset Modules
