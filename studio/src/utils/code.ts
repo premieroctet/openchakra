@@ -193,10 +193,10 @@ const buildBlock = ({
         propsContent += ` noautosave={true} `
       }
 
-      if (childComponent.type=='Radio' && hasParentType(childComponent, components, 'RadioGroup')) {
+      if (['Checkbox', 'IconCheck', 'Radio'].includes(childComponent.type) && hasParentType(childComponent, components, 'RadioGroup')) {
         propsContent += ` insideGroup `
       }
-      if (['Checkbox', 'IconCheck'].includes(childComponent.type) && hasParentType(childComponent, components, 'CheckboxGroup')) {
+      if (['Checkbox', 'IconCheck', 'Radio'].includes(childComponent.type) && hasParentType(childComponent, components, 'CheckboxGroup')) {
         propsContent += ` insideGroup `
       }
 
@@ -578,9 +578,10 @@ const buildHooks = (components: IComponents) => {
         const dataId = dp.id.replace(/comp-/, '')
         const dpFields = getDataProviderFields(dp).join(',')
         const idPart = dp.id === 'root' ? `\${id ? \`\${id}/\`: \`\`}` : ''
+        const urlRest='${new URLSearchParams(Object.entries(queryRest))}'
         const apiUrl = `/myAlfred/api/studio/${dp.props.model}/${idPart}${
-          dpFields ? `?fields=${dpFields}` : ''
-        }`
+          dpFields ? `?fields=${dpFields}&` : ''
+        }${urlRest}`
         let thenClause=dp.id=='root' && singlePage ?
          `.then(res => set${capitalize(dataId)}(res.data[0]))`
          :
@@ -588,7 +589,7 @@ const buildHooks = (components: IComponents) => {
 
         let query= `get(\`${apiUrl}\`)
         ${thenClause}
-        .catch(err => !(err.response?.status==401) && err.code!='ERR_NETWORK' && console.log(err?.response?.data || err))`
+        .catch(err => !(err.response?.status==401) && err.code!='ERR_NETWORK' && alert(err?.response?.data || err))`
         if (dp.id=='root' && singlePage) {
           query=`// For single data page\nif (id) {\n${query}\n}`
         }
@@ -738,6 +739,7 @@ export const generateCode = async (
   ''
   */
   code = `import React, {useState, useEffect} from 'react';
+  import omit from 'lodash/omit';
   import Metadata from '../dependencies/Metadata';
   ${hooksCode ? `import axios from 'axios'` : ''}
   ${Object.entries(groupedComponents)
@@ -777,6 +779,7 @@ const ${componentName} = () => {
   const router = useRouter();
   const query = new URLSearchParams(router?.asPath)
   const id=${rootIgnoreUrlParams ? 'null' : `query.get('${rootIdQuery}') || query.get('id')`}
+  const queryRest=omit(Object.fromEntries(query), ['id'])
   const [componentsValues, setComponentsValues]=useState({})
 
   const setComponentValue = (compId, value) => {
