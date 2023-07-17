@@ -3,8 +3,8 @@ require('dotenv').config({ path: path.resolve(__dirname, '../../.env') })
 const { createServer } = require('https')
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const express = require('express');
-const prod = process.env.NEXT_PUBLIC_MODE == 'production'
-const dev = process.env.NEXT_PUBLIC_MODE != 'production'
+const prod = process.env.NEXT_PUBLIC_MODE in ['production', 'validation']
+const dev = !prod
 const port = parseInt(process.env.STUDIO_TEST_PORT, 10) || 3001;
 const next = require('next')
 const bodyParser = require('body-parser')

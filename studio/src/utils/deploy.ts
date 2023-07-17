@@ -7,11 +7,11 @@ import { generateCode, generateApp } from './code'
 import { normalizePageName, urlClean } from './misc';
 import { validateComponents , validateProject} from './validation'
 
-// If true, build target project when compliaiton fixed
-const TARGET_BUILD = process.env.NEXT_PUBLIC_MODE === 'production' || false
+// If true, build target project when comilation fixed
+const TARGET_BUILD = process.env.NEXT_PUBLIC_MODE in ['production', 'validation'] || false
 
 const copyCode = (pageName: string, contents: Buffer) => {
-  
+
   return copyFile({
     contents: contents,
     filePath: `${urlClean(pageName)}.js`,
