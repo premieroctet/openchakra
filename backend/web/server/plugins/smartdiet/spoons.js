@@ -2,7 +2,7 @@ const lodash=require('lodash')
 const {CREATED_AT_ATTRIBUTE}=require('../../utils/database')
 const {SPOON_SOURCE, SPOON_SOURCE_CONTENT_LIKE, SPOON_SOURCE_CONTENT_READ,
   SPOON_SOURCE_GROUP_JOIN, SPOON_SOURCE_CONTENT_COMMENT, SPOON_SOURCE_CONTENT_PINNED,
-  SPOON_SOURCE_GROUP_MESSAGE, SPOON_SOURCE_GROUP_LIKE, SPOON_SOURCE_INDIVIDUAL_CHALLENGE_PASSED,
+  SPOON_SOURCE_GROUP_MESSAGE, SPOON_SOURCE_GROUP_LIKE, SPOON_SOURCE_INDIVIDUAL_CHALLENGE_PASSED, SPOON_SOURCE_INDIVIDUAL_CHALLENGE_ROUTINE,
   SPOON_SOURCE_MEASURE_CHEST, SPOON_SOURCE_MEASURE_WAIST, SPOON_SOURCE_MEASURE_HIPS,
   SPOON_SOURCE_MEASURE_THIGHS, SPOON_SOURCE_MEASURES_ARMS, SPOON_SOURCE_MEASURE_WEIGHT,
   SPOON_SOURCE_SURVEY_DONE, SPOON_SOURCE_SURVEY_PASSED, SURVEY_ANSWER,
@@ -19,8 +19,8 @@ const UserSurvey=require('../../models/UserSurvey')
 require('../../models/UserQuestion')
 
 const computeChallengeSpoons = ({challenge, user}) => {
-  return User.exists({_id: user._id, passed_events: challenge._id})
-    .then(passed => (passed ? SpoonGain.findOne({source: 'SPOON_SOURCE_INDIVIDUAL_CHALLENGE_PASSED'}) : 0))
+  return Promise.all([User.exists({_id: user._id, passed_events: challenge._id}),User.exists({_id: user._id, routine_events: challenge._id})])
+    .then(([passed, routine]) => (passed ? SpoonGain.findOne({source: SPOON_SOURCE_INDIVIDUAL_CHALLENGE_PASSED}) : routine ? SpoonGain.findOne({source: SPOON_SOURCE_INDIVIDUAL_CHALLENGE_ROUTINE}) : 0 ))
     .then(gain => gain?.gain || 0)
     .catch(err => console.error(err))
 }
@@ -64,6 +64,11 @@ const SOURCE_COMPUTE_FNS={
   [SPOON_SOURCE_INDIVIDUAL_CHALLENGE_PASSED]: ({source, key_filter, user}) => {
     return User.findById(user._id)
       .populate({path: 'passed_events', match: {'__t': 'individualChallenge', ...key_filter}})
+      .then(u => u.passed_events.length)
+  },
+  [SPOON_SOURCE_INDIVIDUAL_CHALLENGE_ROUTINE]: ({source, key_filter, user}) => {
+    return User.findById(user._id)
+      .populate({path: 'routine_events', match: {'__t': 'individualChallenge', ...key_filter}})
       .then(u => u.passed_events.length)
   },
   [SPOON_SOURCE_MEASURE_CHEST]: ({source, key_filter, user}) => {
