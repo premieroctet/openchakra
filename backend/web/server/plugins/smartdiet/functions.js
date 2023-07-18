@@ -821,13 +821,12 @@ Company.findOneAndUpdate(
 
 // Ensure spoon gains table contains every source
 Object.keys(SPOON_SOURCE).forEach(source => {
-  console.log(`Upserting source ${source}`)
   SpoonGain.findOneAndUpdate(
     {source},
     { $setOnInsert: { source, gain: 0 } },
     {upsert: true, runValidators: true},
   )
-  .then(res => console.log(`Source ${source}:${res}`))
+  .then(res => !res && console.log(`Adding 0 sppon gain for missing source ${source}`))
   .catch(err => console.error(err))
 })
 
