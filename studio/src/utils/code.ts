@@ -776,10 +776,9 @@ ${maskable || ''}
 ${componentsCodes}
 
 const ${componentName} = () => {
-  const router = useRouter();
-  const query = new URLSearchParams(router?.asPath)
-  const id=${rootIgnoreUrlParams ? 'null' : `query.get('${rootIdQuery}') || query.get('id')`}
-  const queryRest=omit(Object.fromEntries(query), ['id'])
+  const {query} = useRouter();
+  const id=${rootIgnoreUrlParams ? 'null' : 'query.id'}
+  const queryRest=omit(query, ['id'])
   const [componentsValues, setComponentsValues]=useState({})
 
   const setComponentValue = (compId, value) => {
