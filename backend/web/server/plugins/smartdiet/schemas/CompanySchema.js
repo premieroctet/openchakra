@@ -101,7 +101,7 @@ CompanySchema.virtual('comments_count').get(function() {
   return mongoose.model('comment').find({pip: null})
     .populate('user')
     .then(comments => {
-      const count=lodash.filter(comments||[], c => c.user.company._id==this._id)?.length||0
+      const count=lodash.filter(comments||[], c => c.user?.company._id==this._id)?.length||0
       return count
     })
 })
