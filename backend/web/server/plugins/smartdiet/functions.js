@@ -104,7 +104,17 @@ const preprocessGet = ({model, fields, id, user, params}) => {
           return {
             ...m,
             people_count,
-            shopping_list: m.shopping_list.map(i => ({...i, quantity: i.quantity*ratio}))
+            shopping_list: m.shopping_list.map(i => ({...i, quantity: i.quantity*ratio})),
+            recipes: m.recipes.map(recipe => ({
+              ...recipe,
+              recipe: {
+                ...recipe.recipe,
+                ingredients: recipe.recipe.ingredients.map(ing => ({
+                  ...ing,
+                  quantity: ing.quantity*ratio,
+                }))
+              }
+            }))
           }
         })
         return ({model, fields, id, data:computed})
