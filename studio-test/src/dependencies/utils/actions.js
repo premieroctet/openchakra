@@ -53,9 +53,8 @@ export const ACTIONS = {
         return res
       })
   },
-  openPage: ({ value, level, model, query, props, getComponentValue }) => {
-    const queryParams = query
-    queryParams.delete('id')
+  openPage: ({ value, level, model, props, getComponentValue }) => {
+    const queryParams = new URLSearchParams()
     let url = `/${props.page}`
     if ('sourceId' in props) {
       const compValue=getComponentValue(props.sourceId, level)
@@ -64,7 +63,6 @@ export const ACTIONS = {
       }
     }
     else if (value && value._id) {
-      queryParams.set(model, value._id)
       queryParams.set('id', value._id)
     }
     url = `${url}?${queryParams.toString()}`
@@ -380,7 +378,7 @@ for (let i = 0; i < images.length; i++) {
           image.onload = resolve;
           image.onerror = reject;
         }
-  
+
   });
   imagePromises.push(imagePromise);
 }
