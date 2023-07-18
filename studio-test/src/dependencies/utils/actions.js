@@ -480,6 +480,7 @@ export const ACTIONS = {
       value: value._id,
     }
     return axios.post(url, body)
+      .then(() => value)
   },
 
   alle_refuse_quotation: ({value}) => {
