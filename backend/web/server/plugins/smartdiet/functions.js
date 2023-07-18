@@ -1,4 +1,29 @@
-const { EVENT_WEBINAR } = require('./consts')
+const {
+  ACTIVITY,
+  COACHING_QUESTION_STATUS,
+  COMPANY_ACTIVITY,
+  COMPANY_ACTIVITY_SERVICES_AUX_ENTREPRISES,
+  CONTENTS_TYPE,
+  DAYS,
+  ECOSCORE,
+  EVENT_TYPE,
+  EVENT_WEBINAR,
+  GENDER,
+  GROUPS_CREDIT,
+  HARDNESS,
+  HOME_STATUS,
+  NUTRISCORE,
+  PARTICULAR_COMPANY_NAME,
+  PERIOD,
+  ROLES,
+  ROLE_RH,
+  SEASON,
+  SPOON_SOURCE,
+  SURVEY_ANSWER,
+  TARGET_TYPE,
+  UNIT
+} = require('./consts')
+const SpoonGain = require('../../models/SpoonGain')
 
 const {
   declareComputedField,
@@ -14,30 +39,6 @@ const {
   setPreprocessGet,
   simpleCloneModel,
 } = require('../../utils/database')
-const {
-  ACTIVITY,
-  COACHING_QUESTION_STATUS,
-  COMPANY_ACTIVITY,
-  COMPANY_ACTIVITY_SERVICES_AUX_ENTREPRISES,
-  CONTENTS_TYPE,
-  DAYS,
-  ECOSCORE,
-  EVENT_TYPE,
-  GENDER,
-  GROUPS_CREDIT,
-  HARDNESS,
-  HOME_STATUS,
-  NUTRISCORE,
-  PARTICULAR_COMPANY_NAME,
-  PERIOD,
-  ROLES,
-  ROLE_RH,
-  SEASON,
-  SPOON_SOURCE,
-  SURVEY_ANSWER,
-  TARGET_TYPE,
-  UNIT,
-} = require('./consts')
 const CoachingQuestion = require('../../models/CoachingQuestion')
 const CollectiveChallenge = require('../../models/CollectiveChallenge')
 const Pip = require('../../models/Pip')
@@ -816,6 +817,19 @@ Company.findOneAndUpdate(
 )
   .then(() => console.log(`Particular company upserted`))
   .catch(err => console.error(`Particular company upsert error:${err}`))
+
+
+// Ensure spoon gains table contains every source
+Object.keys(SPOON_SOURCE).forEach(source => {
+  console.log(`Upserting source ${source}`)
+  SpoonGain.findOneAndUpdate(
+    {source},
+    { $setOnInsert: { source, gain: 0 } },
+    {upsert: true, runValidators: true},
+  )
+  .then(res => console.log(`Source ${source}:${res}`))
+  .catch(err => console.error(err))
+})
 
 module.exports={
   ensureChallengePipsConsistency,
