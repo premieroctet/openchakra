@@ -573,15 +573,16 @@ const buildHooks = (components: IComponents) => {
   }
 
   useEffect(() => {
+    if (!process.browser) { return }
     ${dataProviders
       .map(dp => {
         const dataId = dp.id.replace(/comp-/, '')
         const dpFields = getDataProviderFields(dp).join(',')
         const idPart = dp.id === 'root' ? `\${id ? \`\${id}/\`: \`\`}` : ''
-        const urlRest='${new URLSearchParams(Object.entries(queryRest))}'
+        const urlRest='${new URLSearchParams(queryRest)}'
         const apiUrl = `/myAlfred/api/studio/${dp.props.model}/${idPart}${
-          dpFields ? `?fields=${dpFields}&` : ''
-        }${urlRest}`
+          dpFields ? `?fields=${dpFields}&` : '?'
+        }${dp.id=='root' ? urlRest: ''}`
         let thenClause=dp.id=='root' && singlePage ?
          `.then(res => set${capitalize(dataId)}(res.data[0]))`
          :
@@ -776,7 +777,7 @@ ${maskable || ''}
 ${componentsCodes}
 
 const ${componentName} = () => {
-  const {query} = useRouter();
+  const query = process.browser ? Object.fromEntries(new URL(window.location).searchParams) : {}
   const id=${rootIgnoreUrlParams ? 'null' : 'query.id'}
   const queryRest=omit(query, ['id'])
   const [componentsValues, setComponentsValues]=useState({})
