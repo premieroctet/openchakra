@@ -18,8 +18,8 @@ const sendNotification = ({notification, destinee, ccs, params, attachment}) => 
 
   const isWappizy=/wappizy/.test(destinee.email)
 
-  let enable_mails = isProduction() || isValidation() || isWappizy
-  let enable_sms = isProduction() || isValidation() || isWappizy
+  let enable_mails = isProduction() || isWappizy
+  let enable_sms = isProduction()  || isWappizy
 
   const prefix=(!enable_sms && !enable_mails) ? '***** DISABLED:':''
   console.log(`${prefix}send notification #${notification} to ${destinee.email} (${JSON.stringify(params)}) attachment:${!!attachment}`)
