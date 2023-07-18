@@ -8,7 +8,9 @@ import { normalizePageName, urlClean } from './misc';
 import { validateComponents , validateProject} from './validation'
 
 // If true, build target project when comilation fixed
-const TARGET_BUILD = process.env.NEXT_PUBLIC_MODE in ['production', 'validation'] || false
+const TARGET_BUILD = ['production', 'validation'].includes(process.env.NEXT_PUBLIC_MODE) || false
+
+console.log(`Starting in mode ${TARGET_BUILD}`)
 
 const copyCode = (pageName: string, contents: Buffer) => {
 
