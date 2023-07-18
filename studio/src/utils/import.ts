@@ -1,6 +1,7 @@
 import { fileOpen, fileSave } from 'browser-nativefs'
 import { INITIAL_COMPONENTS } from '~core/models/project'
 import { upgradeProject } from "~utils/upgrade"
+import { ProjectState } from '~core/models/project'
 
 export async function loadFromJSON() {
   const blob = await fileOpen({

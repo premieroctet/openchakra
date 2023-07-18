@@ -20,11 +20,20 @@ export type ProjectState = {
   rootPage: string
   hoveredId?: IComponent['id']
   version: number
+  settings: ProjectSettings
 }
 export type ProjectStateWithUndo = {
   past: ProjectState[]
   present: ProjectState
   future: ProjectState[]
+}
+
+export type ProjectSettings = {
+  name: string
+  url: string
+  description: string
+  favicon32: string
+  metaImage: string
 }
 
 export type PageSettings = {
@@ -85,6 +94,10 @@ export const duplicatePageImpl = page => {
   return newPage
 }
 
+const getProjectSettings = (state: ProjectState) => {
+  return state
+}
+
 const getActiveComponents = (state: ProjectState) => {
   return state.pages[state.activePage].components
 }
@@ -112,6 +125,14 @@ const project = createModel({
     activePage: DEFAULT_PAGE,
     rootPage: DEFAULT_PAGE,
     version: CURRENT_VERSION,
+    settings: {
+      name: 'New',
+      url: '',
+      description: '',
+      favicon32: '',
+      metaImage: ''
+    }
+
   } as ProjectState,
   reducers: {
     reset(state: ProjectState, newState: ProjectState): ProjectState {
@@ -421,6 +442,12 @@ const project = createModel({
           },
         },
       }
+    },
+
+    editProjectSettings(state: ProjectState, payload: ProjectSettings): ProjectState {
+      return produce(state, (draftState: ProjectState) => {
+        getProjectSettings(draftState).settings = payload
+      })
     },
     editPageSettings(state: ProjectState, payload: PageSettings): ProjectState {
       const {
