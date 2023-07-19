@@ -808,6 +808,15 @@ return Promise.allSettled(imagePromises)
     return axios.post(url, body)
   },
 
+  smartdiet_leave_team: ({value}) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_leave_team',
+      value: value._id,
+    }
+    return axios.post(url, body)
+  },
+
   smartdiet_find_team_member: ({value}) => {
     let url = `${API_ROOT}/action`
     const body = {

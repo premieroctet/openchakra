@@ -569,6 +569,12 @@ export const ACTIONS: IActions = {
     next: ['openPage'],
   },
 
+  smartdiet_leave_team: {
+    label: 'SM Leave team',
+    options: {},
+    next: ['openPage'],
+  },
+
   smartdiet_find_team_member: {
     label: 'SM Find team member',
     options: {},

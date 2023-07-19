@@ -127,8 +127,16 @@ const smartdietJoinTeam = ({value}, user) => {
         })
     })
 }
-
 addAction('smartdiet_join_team', smartdietJoinTeam)
+
+const smartdietLeaveTeam = ({value}, user) => {
+  return isActionAllowed({action: 'smartdiet_leave_team', dataId: value, user})
+    .then(allowed => {
+      if (!allowed) throw new BadRequestError(`Vous n'appartenez pas à cette équipe`)
+      return TeamMember.remove({team: value, user})
+    })
+}
+addAction('smartdiet_leave_team', smartdietLeaveTeam)
 
 const smartdietFindTeamMember = ({value}, user) => {
   return TeamMember.find({user}).populate('team')
@@ -258,6 +266,11 @@ const isActionAllowed = ({action, dataId, user}) => {
             // Not already in a team
             && !challenge.teams.some(t => t.members.some(m => idEqual(m.user._id, user._id)))
           })
+      }
+      if (action=='smartdiet_leave_team') {
+        // Check if I belong to this team
+        console.log(`Checking for ${dataId}/${user._id}`)
+        return TeamMember.exists({team: dataId, user: user._id})
       }
       if (action=='smartdiet_shift_challenge') {
         // Get all teams of this team's collective challenge, then check if
