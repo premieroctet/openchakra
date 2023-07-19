@@ -3015,10 +3015,10 @@ braces@^3.0.2:
   dependencies:
     fill-range "^7.0.1"
 
-browser-nativefs@^0.7.1:
-  version "0.7.3"
-  resolved "https://registry.yarnpkg.com/browser-nativefs/-/browser-nativefs-0.7.3.tgz#0f10fc91c86829e4e40bfe3b42947587980effa6"
-  integrity sha512-59YYmCMQf755E3MymsSDuIpc1InxoqMTtBVKE01STY1tEy+1eUabFZOBJKYs3fK8k5uTypCCBdBRmkdViobRAw==
+browser-fs-access@^0.34.1:
+  version "0.34.1"
+  resolved "https://registry.yarnpkg.com/browser-fs-access/-/browser-fs-access-0.34.1.tgz#76c14def4e664c4862c562fc51522def830a6b97"
+  integrity sha512-HPaRf2yimp8kWSuWJXc8Mi78dPbDzfduA+Gyq14H4jlMvd6XNfIRm36Y2yRLaa4x0gwcGuepj4zf14oiTlxrxQ==
 
 browser-process-hrtime@^1.0.0:
   version "1.0.0"
