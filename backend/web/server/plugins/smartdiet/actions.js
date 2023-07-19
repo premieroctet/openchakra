@@ -269,7 +269,6 @@ const isActionAllowed = ({action, dataId, user}) => {
       }
       if (action=='smartdiet_leave_team') {
         // Check if I belong to this team
-        console.log(`Checking for ${dataId}/${user._id}`)
         return TeamMember.exists({team: dataId, user: user._id})
       }
       if (action=='smartdiet_shift_challenge') {
