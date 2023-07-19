@@ -194,10 +194,11 @@ const isActionAllowed = ({action, dataId, user}) => {
         })
       }
       if (action=='smartdiet_pass_event') {
-        return loadFromDb({model: 'user', id:user._id, fields:['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'webinars'], user})
+        return loadFromDb({model: 'user', id:user._id, fields:['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'routine_events', 'webinars'], user})
         .then(([user]) => {
           if (modelName=='menu') { return false}
           if (user?.skipped_events?.some(r => idEqual(r._id, dataId))) { return false}
+          if (user?.routine_events?.some(r => idEqual(r._id, dataId))) { return false}
           const isRegistered=user?.registered_events?.some(r => idEqual(r._id, dataId))
           // Event must be registered except for past webinars
           if (modelName=='webinar') {
@@ -207,6 +208,16 @@ const isActionAllowed = ({action, dataId, user}) => {
           else {
             return isRegistered
           }
+        })
+      }
+      if (action=='smartdiet_routine_challenge') {
+        return loadFromDb({model: 'user', id:user._id, fields:['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'routine_events', 'webinars'], user})
+        .then(([user]) => {
+          if (modelName!='individualChallenge') { return false}
+          if (user?.passed_events?.some(r => idEqual(r._id, dataId))) { return false}
+          if (user?.skipped_events?.some(r => idEqual(r._id, dataId))) { return false}
+          if (user?.routine_events?.some(r => idEqual(r._id, dataId))) { return false}
+          return true
         })
       }
       if (action=='smartdiet_fail_event') {
