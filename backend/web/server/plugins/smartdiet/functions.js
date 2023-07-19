@@ -506,6 +506,7 @@ declareVirtualField({model: 'team', field: 'members', instance: 'Array', multipl
     instance: 'ObjectID',
     options: {ref: 'teamMember'}},
 })
+declareVirtualField({model: 'team', field: 'spoons_count', instance: 'Number', requires: 'members.pips.valid'})
 
 declareVirtualField({model: 'teamMember', field: 'spoons', instance: 'Number'})
 declareVirtualField({model: 'teamMember', field: 'pips', instance: 'Array', multiple: true,
