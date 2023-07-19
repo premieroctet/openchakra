@@ -7,7 +7,8 @@ const Metadata = ({
   metaDescription = 'Visual editor for Chakra UI', 
   metaUrl = 'Visual editor for Chakra UI', 
   metaImageUrl = 'https://openchakra.app/images/og-graph-color.png',
-  metaFavicon32 = '/favicon.png'
+  metaFavicon32 = '/favicon.png',
+  metaGaTag=null,
 }: {
   metaTitle?: string,
   metaName?: string,
@@ -15,6 +16,7 @@ const Metadata = ({
   metaUrl?: string
   metaImageUrl?: string
   metaFavicon32?: string
+  metaGaTag?: string | null
 }) => {
   return (
     <Head>
@@ -52,6 +54,12 @@ const Metadata = ({
         property="og:image:url"
         content={metaImageUrl}
       />
+      {metaGaTag && (
+        <>
+        <script async={true} src={`https://www.googletagmanager.com/gtag/js?id=${metaGaTag}`} />
+        <script>{`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${metaGaTag}'); `}</script>
+        </>
+      )}
       
     </Head>
   )

@@ -34,6 +34,7 @@ export type ProjectSettings = {
   description: string
   favicon32: string
   metaImage: string
+  gaTag: string
 }
 
 export type PageSettings = {
@@ -130,7 +131,8 @@ const project = createModel({
       url: '',
       description: '',
       favicon32: '',
-      metaImage: ''
+      metaImage: '',
+      gaTag: ''
     }
 
   } as ProjectState,
@@ -154,12 +156,22 @@ const project = createModel({
       const rootPage = newState?.rootPage || activePage
       const version = newState?.version || CURRENT_VERSION
 
+      const settings = newState?.settings || {
+          name: 'New',
+          url: '',
+          description: '',
+          favicon32: '',
+          metaImage: '',
+          gaTag: ''
+      }
+
       return {
         ...state,
         pages,
         activePage,
         rootPage,
         version,
+        settings,
       }
     },
 

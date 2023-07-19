@@ -20,6 +20,7 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { useState } from 'react'
+import { isJsonString } from '~dependencies/utils/misc'
 
 
 const ProjectSettings = () => {
@@ -30,7 +31,8 @@ const ProjectSettings = () => {
       url, 
       description, 
       favicon32,
-      metaImage
+      metaImage,
+      gaTag
     }
   } = useSelector(getFullComponents)
   
@@ -39,14 +41,15 @@ const ProjectSettings = () => {
     url,
     description,
     favicon32,
-    metaImage
+    metaImage,
+    gaTag,
   })
 
   const dispatch = useDispatch()
 
   const updateProjectSettings = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> ) => {
     const { name, value }: {name: string, value: string} = e.target
-    setProjectSettings({ ...projectSettings, [name]: value })
+    setProjectSettings({ ...projectSettings, [name]: JSON.stringify(value) })
   }
 
   const metaDataSlots = {
@@ -71,14 +74,20 @@ const ProjectSettings = () => {
     favicon32: {
       label: 'Favicon',
       component: Input,
-      tip: '(format .png) 32px x 32px',
+      tip: 'format .png 32px x 32px',
       value: projectSettings.favicon32
     },
     metaImage: {
       label: 'MetaImage',
       component: Input,
-      tip: '(OpenGraph image)',
+      tip: 'OpenGraph image, 1200px x 600px',
       value: projectSettings.metaImage
+    },
+    gaTag: {
+      label: 'gaTag',
+      component: Input,
+      tip: '(identifiant Google Analytics)',
+      value: projectSettings.gaTag
     },
   }
 
@@ -112,7 +121,7 @@ const ProjectSettings = () => {
           <params.component 
             p={2}
             name={formName}
-            value={params.value}
+            value={isJsonString(params.value) ? JSON.parse(params.value) : params.value }
             bgColor= '#ccc'
             color= '#000'
             borderRadius='3xl'
