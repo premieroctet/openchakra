@@ -56,6 +56,10 @@ const UserSchema = new Schema({
     validate: [value => isEmailOk(value), "L'email est invalide"],
     required: [true, "L'email est obligatoire"],
   },
+  admin_comment: {
+    type: String,
+    required: false,
+  },
   password: {
     type: String,
     required: [true, 'Le mot de passe est obligatoire'],
