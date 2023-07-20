@@ -186,12 +186,20 @@ const UserSchema = new Schema({
   vat_subject: {
     type: Boolean,
   },
-  // Insurance type : décennale, tiers
+  // Insurance 1 type : décennale, tiers
   insurance_type: {
     type: String,
   },
-  // Insurance document
+  // Insurance 1 document
   insurance_report: {
+    type: String,
+  },
+  // Insurance 2 type : décennale, tiers
+  insurance2_type: {
+    type: String,
+  },
+  // Insurance 2 document
+  insurance2_report: {
     type: String,
   },
   company_activity: {
