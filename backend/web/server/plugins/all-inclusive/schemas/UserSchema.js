@@ -260,15 +260,21 @@ const PROFILE_ATTRIBUTES={
 
 UserSchema.virtual('profile_progress').get(function() {
   let filled=Object.keys(PROFILE_ATTRIBUTES).map(att => !!lodash.get(this, att))
+  if (this.role==ROLE_TI) {
+    filled.push(this.jobs?.length>0)
+  }
   return (filled.filter(v => !!v).length*1.0/filled.length)*100
 });
 
 UserSchema.virtual('missing_attributes').get(function() {
-  const missing=lodash(PROFILE_ATTRIBUTES)
+  let missing=lodash(PROFILE_ATTRIBUTES)
     .pickBy((name, att) => !lodash.get(this, att) && name)
     .values()
-    .join(',')
-  return missing ? `Informations manquantes:${missing}` : ''
+    .value()
+  if (this.role==ROLE_TI && !(this.jobs?.length>0)) {
+    missing.push('métier') 
+  }
+  return missing ? `Informations manquantes : ${missing.join(', ')}` : ''
 });
 
 UserSchema.virtual("jobs", {
