@@ -1,10 +1,12 @@
 const {
   ACTIVITY,
+  COACHING_MODE,
   COACHING_QUESTION_STATUS,
   COMPANY_ACTIVITY,
   COMPANY_ACTIVITY_SERVICES_AUX_ENTREPRISES,
   CONTENTS_TYPE,
   DAYS,
+  DIET_REGISTRATION_STATUS,
   ECOSCORE,
   EVENT_TYPE,
   EVENT_WEBINAR,
@@ -309,6 +311,23 @@ USER_MODELS.forEach(m => {
       instance: 'ObjectID',
       options: {ref: 'userSurvey'}},
   })
+  declareVirtualField({model: m, field: 'diploma', instance: 'Array',
+    multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'diploma'}},
+  })
+  declareEnumField({model: m, field: 'registration_status', enumValues: DIET_REGISTRATION_STATUS})
+  declareVirtualField({model: m, field: 'diet_comments', instance: 'Array',
+    multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'dietComment'}},
+  })
+  declareVirtualField({model: m, field: 'diet_average_note', instance: 'Number',
+    requires:'diet_comments._defined_notes'})
+  declareVirtualField({model: m, field: 'profile_progress', instance: 'Number',
+    requires:'diploma,adeli,siret,signed_charter'})
 })
 
 declareEnumField({model: 'company', field: 'activity', enumValues: COMPANY_ACTIVITY})
@@ -541,20 +560,34 @@ declareVirtualField({model: 'challengePip', field: 'pendingUserPips', instance: 
     options: {ref: 'challengeUserPip'}},
 })
 
-declareVirtualField({model: 'coaching', field: 'consultations', instance: 'Array', multiple: true,
+declareVirtualField({model: 'coaching', field: 'appointments', instance: 'Array', multiple: true,
   caster: {
     instance: 'ObjectID',
-    options: {ref: 'consultation'}},
+    options: {ref: 'appointment'}},
 })
 declareVirtualField({model: 'coaching', field: 'remaining_credits', instance: 'Number',
   requires: 'user.offer.coaching_credit,spent_credits'}
 )
-declareVirtualField({model: 'coaching', field: 'spent_credits', instance: 'Number', requires: 'consultations'})
+declareVirtualField({model: 'coaching', field: 'spent_credits', instance: 'Number', requires: 'appointments'})
 declareVirtualField({model: 'coaching', field: 'questions', instance: 'Array', multiple: true,
   caster: {
     instance: 'ObjectID',
     options: {ref: 'userCoachingQuestion'}},
 })
+declareEnumField({model: 'coaching', field: 'mode', instance: 'String', enumValues: COACHING_MODE})
+declareVirtualField({model: 'coaching', field: '_all_diets', instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'user'}},
+})
+declareVirtualField({model: 'coaching', field: 'available_diets', instance: 'Array', multiple: true,
+  requires: '_all_diets.reasons',
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'user'}
+  },
+})
+
 declareEnumField({model: 'userCoachingQuestion', field: 'status', enumValues: COACHING_QUESTION_STATUS})
 
 declareVirtualField({model: 'adminDashboard', field: 'company', instance: 'company', multiple: false,

@@ -3,7 +3,7 @@ const {schemaOptions} = require('../../../utils/schemas')
 
 const Schema = mongoose.Schema
 
-const ConsultationSchema = new Schema({
+const AppointmentSchema = new Schema({
   coaching: {
     type: Schema.Types.ObjectId,
     ref: 'coaching',
@@ -22,14 +22,16 @@ const ConsultationSchema = new Schema({
     type: String,
     required: false,
   },
-  objectives: {
-    type: String,
-    required: false,
-  },
   note: {
     type: String,
     required: false,
   },
+  // For each new appointment, copy the ones from the previous
+  objectives: [{
+    type: Schema.Types.ObjectId,
+    ref: 'target',
+    required: false,
+  }],
 }, schemaOptions)
 
-module.exports = ConsultationSchema
+module.exports = AppointmentSchema

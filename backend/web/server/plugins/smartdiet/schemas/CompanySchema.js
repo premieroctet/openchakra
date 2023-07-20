@@ -1,3 +1,4 @@
+const siret = require('siret')
 const mongoose = require('mongoose')
 const {schemaOptions} = require('../../../utils/schemas')
 const lodash=require('lodash')
@@ -13,6 +14,9 @@ const CompanySchema = new Schema(
     },
     siret: {
       type: String,
+      set: v => v ? / /g.replace(v) : v,
+      validate: [v => siret.isSIRET(v)||siret.isSIREN(v) , 'Le siret/siren est invalide'],
+      required: false,
     },
     code: {
       type: String,

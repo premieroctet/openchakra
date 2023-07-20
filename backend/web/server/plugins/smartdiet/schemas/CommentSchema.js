@@ -16,9 +16,6 @@ const CommentSchema = new Schema(
       type: String,
       required: [true, 'Le commentaire est obligatoire'],
     },
-    note: {
-      type: Number,
-    },
     pip: {
       type: Schema.Types.ObjectId,
       ref: 'pip',

@@ -607,9 +607,14 @@ const idEqual = (id1, id2) => {
 }
 
 // Checks wether ids intersect
+const intersection = (ids1, ids2) => {
+  return lodash.intersectionBy(ids1, ids2, v => JSON.stringify(v._id || v)).length
+}
+
+// Checks wether ids intersect
 const setIntersects = (ids1, ids2) => {
-  const inter=lodash.intersectionBy(ids1, ids2, v => JSON.stringify(v._id || v))
-  return inter.length>0
+  const inter_length=intersection(ids1, ids2)
+  return inter_length>0
 }
 
 // Return true if obj1.targets intersects obj2.targets
@@ -680,4 +685,5 @@ module.exports = {
   loadFromDb,
   getMongooseModels,
   setIntersects,
+  intersection,
 }

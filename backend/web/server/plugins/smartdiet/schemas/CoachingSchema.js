@@ -1,3 +1,6 @@
+const { ROLE_EXTERNAL_DIET } = require('../consts')
+
+const { COACHING_MODE } = require('../consts')
 const { schemaOptions } = require('../../../utils/schemas')
 const mongoose = require('mongoose')
 
@@ -14,14 +17,30 @@ const CoachingSchema = new Schema({
     ref: 'user',
     required: false,
   },
+  mode: {
+    type: String,
+    enum: Object.keys(COACHING_MODE),
+    required: false,
+  },
+  reasons: {
+    type: Schema.Types.ObjectId,
+    // TODO: check that target's category's type is TARGET_COACHING
+    ref: 'target',
+    required: false,
+  },
+  dummy: {
+    type: Number,
+    default: 0,
+    required: true,
+  },
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
 // Required for register validation only
-CoachingSchema.virtual('consultations', {
-  ref: 'consultation',
+CoachingSchema.virtual('appointments', {
+  ref: 'appointment',
   localField: '_id',
-  foreignField: 'consultation',
+  foreignField: 'coaching',
 })
 
 CoachingSchema.virtual('questions', {
@@ -36,8 +55,23 @@ CoachingSchema.virtual('remaining_credits').get(function() {
 })
 
 CoachingSchema.virtual('spent_credits').get(function() {
-  return this.consultations?.length || 0
+  return this.appointments?.length || 0
 })
+
+// all diets (hidden)
+CoachingSchema.virtual("_all_diets", {
+  ref: "user", // The Model to use
+  localField: "dummy", // Find in Model, where localField
+  foreignField: "dummy", // is equal to foreignField
+  match: {role: ROLE_EXTERNAL_DIET},
+});
+
+// Returns available diets order by compatible reasons count
+CoachingSchema.virtual('available_diets').get(function() {
+  return lodash(this._all_diets)
+    .orderBy(u => intersection(u.reasons, this.reasons), 'desc')
+    .value()
+});
 
 /* eslint-enable prefer-arrow-callback */
 

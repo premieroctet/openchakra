@@ -41,6 +41,7 @@
     "libphonenumber-js": "^1.9.49",
     "lodash": "^4.17.21",
     "lodash.product": "^18.10.0",
+    "luhn": "^2.4.1",
     "moment": "^2.29.1",
     "moment-range": "^4.0.2",
     "moment-timezone": "^0.5.34",

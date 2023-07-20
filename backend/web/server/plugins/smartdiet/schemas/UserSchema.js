@@ -1,18 +1,25 @@
 const {
-  idEqual,
-  setIntersects,
-  shareTargets
-} = require('../../../utils/database')
-const {
   ACTIVITY,
+  DIET_ACTIVITIES,
+  DIET_REGISTRATION_STATUS,
+  DIET_REGISTRATION_STATUS_TO_QUALIFY,
   EVENT_IND_CHALLENGE,
   GENDER,
   NO_CREDIT_AVAILABLE,
   ROLES,
   ROLE_CUSTOMER,
+  ROLE_EXTERNAL_DIET,
   ROLE_RH,
   STATUS_FAMILY
 } = require('../consts')
+
+const siret = require('siret')
+const luhn = require('luhn')
+const {
+  idEqual,
+  setIntersects,
+  shareTargets
+} = require('../../../utils/database')
 const mongoose = require('mongoose')
 const moment=require('moment')
 const { ForbiddenError } = require('../../../utils/errors')
@@ -162,11 +169,73 @@ const UserSchema = new Schema({
     ref: 'event',
     required: true,
   }],
+  networks: [{
+    type: Schema.Types.ObjectId,
+    ref: 'network',
+    required: true,
+  }],
   dummy: {
     type: Number,
     default: 0,
     required: true,
   },
+  // ROLE_EXTERNAL_DIET
+  job: {
+    type: String,
+    required: false,
+  },
+  address: {
+    type: String,
+    required: false,
+  },
+  zip_code: {
+    type: String,
+    validate: [v => /^\d{5}$/.test(v), 'Le code postal est invalide'],
+    required: false,
+  },
+  siret: {
+    type: String,
+    set: v => v ? / /g.replace(v) : v,
+    validate: [v => siret.isSIRET(v)||siret.isSIREN(v) , 'Le siret/siren est invalide'],
+    required: false,
+  },
+  adeli: {
+    type: String,
+    set: v => v ? / /g.replace(v) : v,
+    validate: [v => luhn.validate(v), 'Le numéro ADELI est invalide'],
+    required: false,
+  },
+  customer_companies: [{
+    type: Schema.Types.ObjectId,
+    ref: 'company',
+    required: true,
+  }],
+  website: {
+    type: String,
+    required: false,
+  },
+  activities: [{
+    type: String,
+    enum: Object.keys(DIET_ACTIVITIES),
+    required: true,
+  }],
+  registration_status: {
+    type: String,
+    enum: Object.keys(DIET_REGISTRATION_STATUS),
+    default: function() {return this.role==ROLE_EXTERNAL_DIET ? DIET_REGISTRATION_STATUS_TO_QUALIFY : undefined},
+    required: [function() {return this.role==ROLE_EXTERNAL_DIET}, 'Le statut de diet externe est obligatoire'],
+  },
+  signed_charter: {
+    type: Boolean,
+    required: false,
+  },
+  // Reasons offered by diet
+  reasons: [{
+    type: Schema.Types.ObjectId,
+    ref: 'target',
+    required: true,
+  }],
+
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
@@ -408,7 +477,34 @@ UserSchema.methods.canJoinEvent = function(event_id) {
       return true
     })
 }
-/* eslint-enable prefer-arrow-callback */
 
+// External Diet
+UserSchema.virtual("diploma", {
+  ref: "diploma", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "user" // is equal to foreignField
+});
+
+// Comments for diet
+UserSchema.virtual("diet_comments", {
+  ref: "dietComment", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "diet" // is equal to foreignField
+});
+
+// Diet : average_note
+UserSchema.virtual('diet_average_note').get(function() {
+  return lodash(this.diet_comments)
+    .map(c => c._defined_notes)
+    .flatten()
+    .mean()
+})
+
+UserSchema.virtual('profile_progress').get(function() {
+  let filled=[this.diploma.length>0, !!this.adeli, !!this.siret, !!this.signed_charter]
+  return (filled.filter(v => !!v).length*1.0/filled.length)*100
+});
+
+/* eslint-enable prefer-arrow-callback */
 
 module.exports = UserSchema

@@ -102,6 +102,7 @@ require('./models/Coaching')
 require('./models/Consultation')
 require('./models/CoachingQuestion')
 require('./models/UserCoachingQuestion')
+require('./models/Network')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 
