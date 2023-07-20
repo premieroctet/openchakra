@@ -182,7 +182,7 @@ const preCreate = ({model, params, user}) => {
 
 setPreCreateData(preCreate)
 
-const postPutData = ({model, id, attribute, value, user}) => {
+const postPutData = ({model, id, attribute, data, user}) => {
   if (model=='user') {
     return User.findById(id)
       .then(account => {
@@ -197,7 +197,7 @@ const postPutData = ({model, id, attribute, value, user}) => {
         }
       })
   }
-  return Promise.resolve(null)
+  return Promise.resolve(data)
 }
 
 setPostPutData(postPutData)
