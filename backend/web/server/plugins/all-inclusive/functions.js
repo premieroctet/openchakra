@@ -596,7 +596,7 @@ cron.schedule('*/5 * * * * *', async() => {
     })
 })
 
-// Daily notifications (every day at 8AM)
+// Daily notifications (every day at 8AM) for missions/quotations reminders
 cron.schedule('0 0 8 * * *', async() => {
   console.log('crnoning')
   // Pending quoations: not accepted after 2 days
@@ -609,5 +609,21 @@ cron.schedule('0 0 8 * * *', async() => {
       const soonMissions=missions.filter(m => m.status==MISSION_STATUS_QUOT_ACCEPTED && moment().diff(moment(m[CREATED_AT_ATTRIBUTE]), 'days')==MISSION_REMINDER_DELAY)
       Promise.allSettled(soonMissions.map(m => sendMissionReminderCustomer(m)))
       Promise.allSettled(soonMissions.map(m => sendMissionReminderTI(m)))
+    })
+})
+
+
+// Daily notifications (every day at 9PM) to complete profile
+cron.schedule('0 0 19 * * *', () => {
+  const today=moment().startOf('day')
+  const isTuesday=today.day()==2
+  console.log(`Checking uncomplete profiles, today is tuesday:${isTuesday}`)
+  // Pending quoations: not accepted after 2 days
+  return loadFromDb({model: 'user', fields: ['role', 'creation_date', 'email', 'profile_progress','missing_attributes']})
+    .then(users => {
+      const uncompleteProfiles=users
+        .filter(u => u.profile_progress < 100)
+        .filter(u => isTuesday || today.diff(moment(u.creation_date).startOf('day'), 'days')==2)
+        .forEach(u => console.log(`Send reminder mail to ${u.email}:${u.missing_attributes}`))
     })
 })
