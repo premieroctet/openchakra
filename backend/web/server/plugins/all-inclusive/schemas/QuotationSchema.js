@@ -33,7 +33,7 @@ const QuotationSchema = new Schema({
   },
   phone: {
     type: String,
-    validate: [isPhoneOk, 'Le numéro de téléphone doit commencer par 0 ou +33'],
+    validate: [v => !v || isPhoneOk(v), 'Le numéro de téléphone doit commencer par 0 ou +33'],
     required: false,
   },
   email: {
