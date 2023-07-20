@@ -70,35 +70,43 @@ const withDynamicInput = Component => {
       props={...props, type:visibilityType}
     }
 
-    const toggleSecret = () => {
-      setVisibilityType(visibilityType=='password' ? 'text' : 'password')
+    const withDisplayEye = Comp =>  {
+
+      const toggleSecret = () => {
+        setVisibilityType(visibilityType=='password' ? 'text' : 'password')
+      }
+
+      const parentProps=lodash.pick(props, 'id dataSource name dataSourceId value level model attribute noautosave readOnly context backend setComponentValue'.split(' '))
+
+      return (
+        <InputGroup {...parentProps}>
+        <Component
+        {...lodash.omit(props, ['id'])}
+        onChange={onChange}
+        />
+        {suggestions && (
+          <datalist id={`suggestions`}>
+            {JSON.parse(suggestions).map(sugg => (
+              <option key={sugg} value={sugg}/>
+            ))}
+          </datalist>
+        )}
+        {displayEye &&
+          <InputRightElement>
+            {visibilityType=='password' ?
+            <AiOutlineEye onClick={toggleSecret} title='Afficher le mot de passe'/>
+            :
+            <AiOutlineEyeInvisible onClick={toggleSecret} title='Masquer le mot de passe'/>
+          }
+          </InputRightElement>}
+        </InputGroup>
+      )
     }
 
-    const parentProps=lodash.pick(props, 'id dataSource name dataSourceId value level model attribute noautosave readOnly context backend setComponentValue'.split(' '))
-
-    return (
-      <InputGroup {...parentProps}>
-      <Component
-      {...lodash.omit(props, ['id'])}
-      onChange={onChange}
-      />
-      {suggestions && (
-        <datalist id={`suggestions`}>
-          {JSON.parse(suggestions).map(sugg => (
-            <option key={sugg} value={sugg}/>
-          ))}
-        </datalist>
-      )}
-      {displayEye &&
-        <InputRightElement>
-          {visibilityType=='password' ?
-          <AiOutlineEye onClick={toggleSecret} title='Afficher le mot de passe'/>
-          :
-          <AiOutlineEyeInvisible onClick={toggleSecret} title='Masquer le mot de passe'/>
-        }
-        </InputRightElement>}
-      </InputGroup>
-    )
+    return displayEye ?
+      withDisplayEye(Component)
+      :
+      <Component {...props} onChange={onChange}/>
   }
 
   return Internal
