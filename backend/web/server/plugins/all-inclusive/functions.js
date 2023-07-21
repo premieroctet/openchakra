@@ -10,6 +10,7 @@ const {
   CONTRACT_TYPE,
   DEPARTEMENTS,
   EXPERIENCE,
+  GENDER,
   MISSING_QUOTATION_DELAY,
   MISSION_FREQUENCY,
   MISSION_REMINDER_DELAY,
@@ -296,7 +297,9 @@ USER_MODELS.forEach(m => {
       options: {ref: 'recommandation'}}
   })
   declareVirtualField({model: m, field: 'search_text', type: 'String',
-    requires:'firstname,lastname,qualified_str,visible_str,company_name,coaching,zip_code,admin_validated'})
+    requires:'firstname,lastname,qualified_str,visible_str,company_name,coaching,zip_code,admin_validated'
+  })
+  declareEnumField({model: m, field: 'gender', instance: 'String', enumValues: GENDER})
 })
 
 

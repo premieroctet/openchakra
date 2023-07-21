@@ -1,6 +1,3 @@
-const { MIN_AGE } = require('../consts')
-
-const moment = require('moment')
 const {
   AVAILABILITY,
   COACHING,
@@ -10,6 +7,8 @@ const {
   COMPANY_STATUS,
   DEFAULT_ROLE,
   DEPARTEMENTS,
+  GENDER,
+  MIN_AGE,
   MISSION_STATUS_BILL_SENT,
   MISSION_STATUS_FINISHED,
   MISSION_STATUS_PAYMENT_PENDING,
@@ -18,8 +17,10 @@ const {
   ROLE_COMPANY_ADMIN,
   ROLE_COMPANY_BUYER,
   ROLE_TI,
-  UNACTIVE_REASON,
+  UNACTIVE_REASON
 } = require('../consts')
+
+const moment = require('moment')
 const { isEmailOk, isPhoneOk } = require('../../../../utils/sms')
 
 const Validator = require('validator')
@@ -64,6 +65,12 @@ const UserSchema = new Schema({
     type: String,
     required: [true, 'Le mot de passe est obligatoire'],
     set: pass => bcrypt.hashSync(pass, 10),
+  },
+  gender: {
+    type: String,
+    set: v => v || undefined,
+    enum: Object.keys(GENDER),
+    required: false,
   },
   cguAccepted: {
     type: Boolean,
