@@ -4,22 +4,14 @@ import useDispatch from '~hooks/useDispatch'
 import {
   Box,
   Heading,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
   FormControl,
   FormLabel,
   Input,
   Button,
   Textarea,
-  Checkbox,
   Text,
 } from '@chakra-ui/react'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { isJsonString } from '~dependencies/utils/misc'
 
 
@@ -44,6 +36,16 @@ const ProjectSettings = () => {
     metaImage,
     gaTag,
   })
+
+  const envvar = {
+    'PROJECT name (for project colors)': process.env.NEXT_PUBLIC_PROJECT,
+    'MODE': process.env.NEXT_PUBLIC_MODE,
+    'S3 ID': process.env.NEXT_PUBLIC_S3_ID,
+    'S3 KEY': process.env.NEXT_PUBLIC_S3_SECRET,
+    'S3 ROOTPATH': process.env.NEXT_PUBLIC_S3_ROOTPATH,
+    'S3 BUCKET': process.env.NEXT_PUBLIC_S3_BUCKET,
+    'BACKEND': process.env.NEXT_PUBLIC_BACKEND,
+  }
 
   const dispatch = useDispatch()
 
@@ -137,6 +139,7 @@ const ProjectSettings = () => {
               color="white"
               minW={'60%'}
               borderRadius={'full'}
+              mb={'4'}
               onClick={() => {
                 dispatch.project.editProjectSettings({...projectSettings})
               }}
@@ -144,6 +147,26 @@ const ProjectSettings = () => {
             >
               Enregistrer
             </Button>
+
+
+        <Heading 
+          as='h2' 
+          color={'black'} 
+          size={'md'}
+          mb={'2'}
+        >
+          Variables
+        </Heading>
+
+        <dl style={{color: '#000'}}>
+          {Object.entries(envvar)
+            .map(([key, value]) => 
+              <React.Fragment key={key}>
+                <dt style={{fontWeight: 'bold', color: '#777'}}>{key}</dt>
+                <dd style={{wordBreak: 'break-all', marginBlockEnd: '.5em'}}>{value ? value : '❌'}</dd>
+              </React.Fragment>)}
+        </dl>
+        
       </Box>
     )
 }
