@@ -1,4 +1,16 @@
 const {
+  sendAskContact,
+  sendCommentReceived,
+  sendMissionAskedReminder,
+  sendMissionAskedSummary,
+  sendMissionReminderCustomer,
+  sendMissionReminderTI,
+  sendNewMission,
+  sendProfileOnline,
+  sendProfileReminder,
+  sendTipiSearch
+} = require('./mailing')
+const {
   AVAILABILITY,
   BOOLEAN,
   COACHING,
@@ -29,17 +41,6 @@ const {
   ROLE_TI,
   UNACTIVE_REASON,
 } = require('./consts')
-const {
-  sendAskContact,
-  sendCommentReceived,
-  sendMissionAskedReminder,
-  sendMissionAskedSummary,
-  sendMissionReminderCustomer,
-  sendMissionReminderTI,
-  sendNewMission,
-  sendProfileOnline,
-  sendTipiSearch
-} = require('./mailing')
 const {
   declareComputedField,
   declareEnumField,
@@ -625,8 +626,12 @@ cron.schedule('0 0 19 * * *', () => {
   return loadFromDb({model: 'user', fields: ['role', 'creation_date', 'email', 'profile_progress','missing_attributes']})
     .then(users => {
       const uncompleteProfiles=users
-        .filter(u => u.profile_progress < 100)
+        .filter(u => u.role==ROLE_TI)
         .filter(u => isTuesday || today.diff(moment(u.creation_date).startOf('day'), 'days')==2)
-        .forEach(u => console.log(`Send reminder mail to ${u.email}:${u.missing_attributes}`))
+        .filter(u => u.profile_progress < 100)
+        .forEach(u => {
+          console.log(`Sending reminder mail to ${u.email}:${u.missing_attributes}`)
+          sendProfileReminder(u)
+        })
     })
 })
