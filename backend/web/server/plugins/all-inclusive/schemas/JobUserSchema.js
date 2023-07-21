@@ -30,9 +30,16 @@ const JobUserSchema = new Schema({
     enum: Object.keys(EXPERIENCE),
     //required: [true, "L'expérience est obligatoire"]
   },
+  on_quotation: {
+    type: Boolean,
+    default: false,
+    required: true,
+  },
   rate: {
     type: Number,
-    //required: [true, 'Le taux horaire indicatif est obligatoire'],
+    set: function(v) {return this.on_quotation ? null : v},
+    //required: [function() { return !this.on_quotation}, 'Le taux horaire indicatif est obligatoire'],
+    required: false,
   },
   customer_location: {
     type: Boolean,
@@ -66,6 +73,7 @@ const JobUserSchema = new Schema({
 }, schemaOptions
 );
 
+/* eslint-disable prefer-arrow-callback */
 JobUserSchema.virtual("search_field").get(function() {
   let res=[this.name]
   if (this.skills) {
@@ -130,9 +138,13 @@ JobUserSchema.virtual('pinned').get(function() {
   return false
 })
 
-/* eslint-disable prefer-arrow-callback */
 JobUserSchema.virtual('recommandations_count').get(function() {
   return this.recommandations?.length || 0
+})
+
+
+JobUserSchema.virtual('rate_str').get(function() {
+  return this.on_quotation ?  "sur devis" : `${this.rate}€/h`
 })
 /* eslint-enable prefer-arrow-callback */
 
