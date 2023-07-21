@@ -611,4 +611,6 @@ export const ACTIONS: IActions = {
 
 export const allowsActions = (component: IComponent) => {
   return ['Button', 'IconButton', 'Flex'].includes(component.type)
+  && (!(component.type === 'Flex' && !!component.props.isFilterComponent))
+
 }
