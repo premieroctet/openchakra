@@ -291,9 +291,9 @@ UserSchema.virtual('missing_attributes').get(function() {
     .values()
     .value()
   if (this.role==ROLE_TI && !(this.jobs?.length>0)) {
-    missing.push('métier') 
+    missing.push('métier')
   }
-  return missing ? `Informations manquantes : ${missing.join(', ')}` : ''
+  return missing ? `Informations manquantes : ${missing.join(', ').replace(/, ([^,]*)$/, ' et $1')}` : ''
 });
 
 UserSchema.virtual("jobs", {
