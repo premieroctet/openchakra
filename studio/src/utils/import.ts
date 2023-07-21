@@ -30,8 +30,12 @@ export async function loadFromJSON() {
 }
 
 export async function saveAsJSON(components: ProjectState) {
+
+  const projectName = components?.settings?.name?.toLowerCase()
+  const nomw = new Date().toISOString().slice(0, -5)
+
   const serialized = JSON.stringify(components, null, 2)
-  const name = `components.json`
+  const name = `${projectName}_${nomw}.json`
 
   await fileSave(
     new Blob([serialized], { type: 'application/json' }),
