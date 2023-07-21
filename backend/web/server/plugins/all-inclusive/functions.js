@@ -351,6 +351,7 @@ declareVirtualField({model: 'jobUser', field: 'comments', instance: 'Array', req
 })
 declareVirtualField({model: 'jobUser', field: 'pinned', instance: 'Boolean', requires:'pins'})
 declareVirtualField({model: 'jobUser', field: 'recommandations_count', instance: 'Number', requires:'recommandations'})
+declareVirtualField({model: 'jobUser', field: 'rate_str', instance: 'String', requires:'on_quotation,rate'})
 
 
 declareEnumField({model: 'experience', field: 'contract_type', enumValues: CONTRACT_TYPE})
