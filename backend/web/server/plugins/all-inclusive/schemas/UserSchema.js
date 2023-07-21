@@ -57,6 +57,10 @@ const UserSchema = new Schema({
     validate: [value => isEmailOk(value), "L'email est invalide"],
     required: [true, "L'email est obligatoire"],
   },
+  admin_comment: {
+    type: String,
+    required: false,
+  },
   password: {
     type: String,
     required: [true, 'Le mot de passe est obligatoire'],
@@ -189,12 +193,20 @@ const UserSchema = new Schema({
   vat_subject: {
     type: Boolean,
   },
-  // Insurance type : décennale, tiers
+  // Insurance 1 type : décennale, tiers
   insurance_type: {
     type: String,
   },
-  // Insurance document
+  // Insurance 1 document
   insurance_report: {
+    type: String,
+  },
+  // Insurance 2 type : décennale, tiers
+  insurance2_type: {
+    type: String,
+  },
+  // Insurance 2 document
+  insurance2_report: {
     type: String,
   },
   company_activity: {
@@ -267,15 +279,21 @@ const PROFILE_ATTRIBUTES={
 
 UserSchema.virtual('profile_progress').get(function() {
   let filled=Object.keys(PROFILE_ATTRIBUTES).map(att => !!lodash.get(this, att))
+  if (this.role==ROLE_TI) {
+    filled.push(this.jobs?.length>0)
+  }
   return (filled.filter(v => !!v).length*1.0/filled.length)*100
 });
 
 UserSchema.virtual('missing_attributes').get(function() {
-  const missing=lodash(PROFILE_ATTRIBUTES)
+  let missing=lodash(PROFILE_ATTRIBUTES)
     .pickBy((name, att) => !lodash.get(this, att) && name)
     .values()
-    .join(',')
-  return missing ? `Informations manquantes:${missing}` : ''
+    .value()
+  if (this.role==ROLE_TI && !(this.jobs?.length>0)) {
+    missing.push('métier') 
+  }
+  return missing ? `Informations manquantes : ${missing.join(', ')}` : ''
 });
 
 UserSchema.virtual("jobs", {
