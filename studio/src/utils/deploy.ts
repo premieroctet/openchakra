@@ -33,7 +33,7 @@ export const deploy = (state: ProjectState, models: any) => {
       }
       return Promise.all(
         pages.map(page => {
-          return generateCode(page.pageId, state.pages, models)
+          return generateCode(page.pageId, state.pages, models, state)
             .catch(err => {
               console.error('generate pages while deploying', err)
               return Promise.reject(`Page "${page.pageName}":${err}`)
@@ -52,7 +52,7 @@ export const deploy = (state: ProjectState, models: any) => {
     })
     .then(async() => {
       // generate again index
-      const code = await generateCode(state.rootPage, state.pages, models)
+      const code = await generateCode(state.rootPage, state.pages, models, state)
       .catch(err => {
         console.error('generate index while deploying', err)
         return Promise.reject(`Page index :${err}`)

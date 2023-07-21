@@ -5,6 +5,7 @@ import { generateCode } from '~utils/code'
 import theme from 'prism-react-renderer/themes/nightOwl'
 import { useSelector } from 'react-redux'
 import {
+  getFullComponents,
   getComponents,
   getActivePageId,
   getPages,
@@ -12,6 +13,7 @@ import {
 import { getModels } from '~core/selectors/dataSources'
 
 const CodePanel = () => {
+  const project = useSelector(getFullComponents)
   const components = useSelector(getComponents)
   const pageId = useSelector(getActivePageId)
   const pages = useSelector(getPages)
@@ -21,7 +23,7 @@ const CodePanel = () => {
   useEffect(() => {
     const getCode = async () => {
       try {
-        const code = await generateCode(pageId, pages, models)
+        const code = await generateCode(pageId, pages, models, project)
         setCode(code)
       }
       catch(err:any) {
