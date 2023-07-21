@@ -38,6 +38,7 @@ import {
 import { ProjectState, PageState } from '../core/models/project'
 import { hasParentType } from './validation';
 import { isJsonString } from '../dependencies/utils/misc'
+import { key } from '../tests/utils/smartdiet_model.json';
 
 
 //const HIDDEN_ATTRIBUTES=['dataSource', 'attribute']
@@ -51,9 +52,10 @@ export const getPageComponentName = (
 }
 
 const isDynamicComponent = (comp: IComponent) => {
-  return !!comp.props.dataSource || !!comp.props.subDataSource
+  return (!!comp.props.dataSource || !!comp.props.subDataSource
     || (!!comp.props.action && !CONTAINER_TYPE.includes(comp.type))
     || (comp.props.model && comp.props.attribute)
+  ) && !(comp.type=='Flex' && comp.props.isFilterComponent)
 }
 
 const isMaskableComponent = (comp: IComponent) => {
@@ -166,6 +168,8 @@ const buildBlock = ({
         ? `Dynamic${capitalize(childComponent.type)}`
         : isMaskableComponent(childComponent)
         ? `Maskable${capitalize(childComponent.type)}`
+        : (childComponent.type==='Flex' && JSON.parse(childComponent?.props?.isFilterComponent || 'false'))
+        ? 'Filter'
         : capitalize(childComponent.type)
       let propsContent = ''
 
@@ -397,6 +401,14 @@ const buildBlock = ({
 
       if (childComponent.type === 'Input' && childComponent.props.type=='password') {
         propsContent += ` displayEye`
+      }
+
+      if (childComponent.type === 'Flex' && childComponent.props.isFilterComponent) {
+        const {props}=childComponent
+        const enums=models[props?.model]?.attributes?.[props.attribute]?.enumValues
+        if (enums) {
+          propsContent += ` enumValues='${JSON.stringify(enums)}'`
+        }
       }
 
       if (
@@ -739,6 +751,7 @@ export const generateCode = async (
   */
   code = `import React, {useState, useEffect} from 'react';
   import Metadata from './dependencies/Metadata';
+  import Filter from './dependencies/custom-components/Filter/Filter';
   ${hooksCode ? `import axios from 'axios'` : ''}
   ${Object.entries(groupedComponents)
     .map(([modName, components]) => {

@@ -57,9 +57,10 @@ import { getComponents } from '../../../core/selectors/components'
 import { useForm } from '../../../hooks/useForm'
 import ActionsPanel from './ActionsPanel'
 import DataProviderPanel from '../../../custom-components/DataProvider/DataProviderPanel'
-import RedirectPanel from '../../../custom-components/Navigation/RedirectPanel'
 import DataSourcePanel from './DataSourcePanel'
+import FilterPanel from './FilterPanel';
 import FormControl from '../controls/FormControl'
+import RedirectPanel from '../../../custom-components/Navigation/RedirectPanel'
 import VisibilityPanel from './VisibilityPanel'
 import useDispatch from '../../../hooks/useDispatch'
 import usePropsSelector from '../../../hooks/usePropsSelector'
@@ -70,7 +71,7 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
   component,
   isRoot,
 }) => {
-  const { type } = component
+  const { type, props } = component
 
   if (isRoot) {
     return (
@@ -149,6 +150,7 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
       {type === 'BreadcrumbLink' && <LinkPanel />}
       {allowsDataSource(component) && <DataSourcePanel />}
       {allowsActions(component) && <ActionsPanel />}
+      {type === 'Flex' && !!props.isFilterComponent && <FilterPanel />}
     </>
   )
 }
