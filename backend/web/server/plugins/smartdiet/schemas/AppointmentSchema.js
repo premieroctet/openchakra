@@ -29,8 +29,18 @@ const AppointmentSchema = new Schema({
   // For each new appointment, copy the ones from the previous
   objectives: [{
     type: Schema.Types.ObjectId,
-    ref: 'target',
-    required: false,
+    ref: 'quizzQuestion',
+    required: true,
+  }],
+  food_documents: [{
+    type: Schema.Types.ObjectId,
+    ref: 'foodDocument',
+    required: true,
+  }],
+  logbooks: [{
+    type: Schema.Types.ObjectId,
+    ref: 'userQuizz',
+    required: true,
   }],
 }, schemaOptions)
 

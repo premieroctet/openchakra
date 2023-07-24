@@ -22,16 +22,22 @@ const CoachingSchema = new Schema({
     enum: Object.keys(COACHING_MODE),
     required: false,
   },
-  reasons: {
+  reasons: [{
     type: Schema.Types.ObjectId,
     // TODO: check that target's category's type is TARGET_COACHING
     ref: 'target',
     required: false,
-  },
+  }],
   dummy: {
     type: Number,
     default: 0,
     required: true,
+  },
+  progress_quizz: {
+    type: Schema.Types.ObjectId,
+    // TODO: check that target's category's type is TARGET_COACHING
+    ref: 'quizz',
+    required: false,
   },
 }, schemaOptions)
 

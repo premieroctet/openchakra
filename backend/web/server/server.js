@@ -104,6 +104,11 @@ require('./models/CoachingQuestion')
 require('./models/UserCoachingQuestion')
 require('./models/Network')
 require('./models/DietComment')
+require('./models/FoodDocument')
+require('./models/Quizz')
+require('./models/QuizzQuestion')
+require('./models/UserQuizz')
+require('./models/QuizzAnswer')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 

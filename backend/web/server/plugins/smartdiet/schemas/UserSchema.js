@@ -505,6 +505,13 @@ UserSchema.virtual('profile_progress').get(function() {
   return (filled.filter(v => !!v).length*1.0/filled.length)*100
 });
 
+// Comments for diet
+UserSchema.virtual("diet_objectives", {
+  ref: "quizzQuestion", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "diet" // is equal to foreignField
+});
+
 /* eslint-enable prefer-arrow-callback */
 
 module.exports = UserSchema

@@ -10,5 +10,5 @@ const pairs=lodash.zip(constants, values)
 pairs.map(([constant]) => console.log(`const ${constant}="${constant}"`))
 
 console.log(`\nconst ${typeName}={`)
-pairs.map(([constant, value]) => console.log(`\ [${constant}]:"${value}",`))
+pairs.map(([constant, value]) => console.log(`\  [${constant}]:"${value}",`))
 console.log('}')

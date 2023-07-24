@@ -10,6 +10,7 @@ const {
   ECOSCORE,
   EVENT_TYPE,
   EVENT_WEBINAR,
+  FOOD_DOCUMENT_TYPE,
   GENDER,
   GROUPS_CREDIT,
   HARDNESS,
@@ -17,6 +18,8 @@ const {
   NUTRISCORE,
   PARTICULAR_COMPANY_NAME,
   PERIOD,
+  QUIZZ_QUESTION_TYPE,
+  QUIZZ_TYPE,
   ROLES,
   ROLE_RH,
   SEASON,
@@ -327,7 +330,14 @@ USER_MODELS.forEach(m => {
   declareVirtualField({model: m, field: 'diet_average_note', instance: 'Number',
     requires:'diet_comments._defined_notes'})
   declareVirtualField({model: m, field: 'profile_progress', instance: 'Number',
-    requires:'diploma,adeli,siret,signed_charter'})
+    requires:'diploma,adeli,siret,signed_charter'
+  })
+  declareVirtualField({model: m, field: 'diet_objectives', instance: 'Array',
+    multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'quizzQuestion'}},
+  })
 })
 
 declareEnumField({model: 'company', field: 'activity', enumValues: COMPANY_ACTIVITY})
@@ -606,6 +616,23 @@ declareVirtualField({model: 'adminDashboard', field:'average_group_answers', ins
 declareVirtualField({model: 'adminDashboard', field:'messages_count', instance: 'Number'})
 declareVirtualField({model: 'adminDashboard', field:'users_count', instance: 'Number'})
 declareVirtualField({model: 'adminDashboard', field:'active_users_count', instance: 'Number'})
+
+declareEnumField({model: 'foodDocument', field: 'type', enumValues: FOOD_DOCUMENT_TYPE})
+
+declareVirtualField({model: 'quizz', field: 'questions', instance: 'company', multiple: false,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'quizzQuestion'}},
+})
+declareEnumField({model: 'quizz', field: 'type', enumValues: QUIZZ_TYPE})
+
+declareEnumField({model: 'quizzQuestion', field: 'type', enumValues: QUIZZ_QUESTION_TYPE})
+
+declareVirtualField({model: 'userQuizz', field: 'answers', instance: 'company', multiple: false,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'quizzAnswer'}},
+})
 
 const getDataLiked = (user, params, data) => {
   const liked=data?.likes?.some(l => idEqual(l._id, user?._id))
