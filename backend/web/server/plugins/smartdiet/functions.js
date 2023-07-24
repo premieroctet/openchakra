@@ -386,6 +386,8 @@ declareVirtualField({model: 'content', field: 'pinned', instance: 'Boolean', req
 declareVirtualField({model: 'content', field: 'comments_count', instance: 'Number', requires: 'comments'})
 declareVirtualField({model: 'content', field: 'search_text', instance: 'String', requires: 'name,contents'})
 
+declareVirtualField({model: 'dietComment', field: '_defined_notes', instance: 'Number', multiple: 'true'})
+
 const EVENT_MODELS=['event', 'collectiveChallenge', 'individualChallenge', 'menu', 'webinar']
 EVENT_MODELS.forEach(m => {
   declareVirtualField({model: m, field: 'type', instance: 'String', enumValues: EVENT_TYPE})

@@ -1,13 +1,20 @@
 const mongoose = require('mongoose')
 const lodash=require('lodash')
 const {schemaOptions} = require('../../../utils/schemas')
-const CommentSchema = require('./CommentSchema')
 
 const Schema = mongoose.Schema
 
 const DietCommentSchema = new Schema(
   {
-    ...CommentSchema,
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: 'user',
+      required: [true, "L'utilisateur est obligatoire"],
+    },
+    text: {
+      type: String,
+      required: [true, 'Le commentaire est obligatoire'],
+    },
     diet: {
       type: Schema.Types.ObjectId,
       ref: 'user',

@@ -501,7 +501,7 @@ UserSchema.virtual('diet_average_note').get(function() {
 })
 
 UserSchema.virtual('profile_progress').get(function() {
-  let filled=[this.diploma.length>0, !!this.adeli, !!this.siret, !!this.signed_charter]
+  let filled=[this.diploma?.length>0, !!this.adeli, !!this.siret, !!this.signed_charter]
   return (filled.filter(v => !!v).length*1.0/filled.length)*100
 });
 

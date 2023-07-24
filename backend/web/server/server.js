@@ -103,6 +103,7 @@ require('./models/Consultation')
 require('./models/CoachingQuestion')
 require('./models/UserCoachingQuestion')
 require('./models/Network')
+require('./models/DietComment')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 
