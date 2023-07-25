@@ -4,6 +4,7 @@
 .pnp.js
 
 **/studio-test/src/pages/*.js
+**/studio-test/src/[A-Z]*.js
 # Preserve _document.js & _app.tsx
 !studio-test/src/pages/_document.js
 !studio-test/src/pages/_app.tsx
