@@ -85,10 +85,8 @@ CoachingSchema.virtual('available_diets', {localField:'tagada', foreignField:'ta
 // Returns the current objectoves (i.e. the newest appointment's ones)
 CoachingSchema.virtual('current_objectives', {localField:'tagada', foreignField:'tagada'}).get(function() {
   return lodash(this.appointments)
-  .orderBy(app => app[CREATED_AT_ATTRIBUTE].start_date, 'desc')
-  .head()
-  .map(u => u?.objectives || [])
-  .value()
+   .orderBy(app => app[CREATED_AT_ATTRIBUTE].start_date, 'desc')
+   .head()?.objectives || []
 })
 
 /* eslint-enable prefer-arrow-callback */
