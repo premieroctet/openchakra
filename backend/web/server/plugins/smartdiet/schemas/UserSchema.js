@@ -1,3 +1,4 @@
+const { CREATED_AT_ATTRIBUTE } = require('../../../../utils/consts')
 const {
   ACTIVITY,
   DIET_ACTIVITIES,
@@ -510,6 +511,18 @@ UserSchema.virtual("diet_objectives", {
   ref: "quizzQuestion", // The Model to use
   localField: "_id", // Find in Model, where localField
   foreignField: "diet" // is equal to foreignField
+});
+
+// Comments for diet
+UserSchema.virtual("coachings", {
+  ref: "coaching", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "user" // is equal to foreignField
+})
+
+UserSchema.virtual('latest_coachings', {localField:'tagada', foreignField:'tagada'}).get(function() {
+  const latest=lodash(this.coachings).maxBy(coaching => coaching[CREATED_AT_ATTRIBUTE])
+  return latest ? [latest]:[]
 });
 
 /* eslint-enable prefer-arrow-callback */

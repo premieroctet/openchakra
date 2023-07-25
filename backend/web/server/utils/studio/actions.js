@@ -1,3 +1,5 @@
+const { callPostCreateData } = require('../database')
+
 const {
   getModel,
   loadFromDb,
@@ -132,6 +134,7 @@ let ACTIONS = {
           .then(()=> {
             return User.create({...props, password: bcrypt.hashSync(props.password, 10)})
           })
+          .then(user => callPostCreateData({model: 'user', data:user}))
     })
   },
 

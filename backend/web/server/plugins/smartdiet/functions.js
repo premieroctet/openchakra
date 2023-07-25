@@ -21,6 +21,7 @@ const {
   QUIZZ_QUESTION_TYPE,
   QUIZZ_TYPE,
   ROLES,
+  ROLE_CUSTOMER,
   ROLE_RH,
   SEASON,
   SPOON_SOURCE,
@@ -71,6 +72,7 @@ const Company = require('../../models/Company')
 const User = require('../../models/User')
 const Team = require('../../models/Team')
 const TeamMember = require('../../models/TeamMember')
+const Coaching = require('../../models/Coaching')
 
 const filterDataUser = ({model, data, id, user}) => {
   if (model=='offer' && !id) {
@@ -337,6 +339,19 @@ USER_MODELS.forEach(m => {
     caster: {
       instance: 'ObjectID',
       options: {ref: 'quizzQuestion'}},
+  })
+  declareVirtualField({model: m, field: 'coachings', instance: 'Array',
+    multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'coaching'}},
+  })
+  declareVirtualField({model: m, field: 'latest_coachings', instance: 'Array',
+    requires: 'coachings',
+    multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'coaching'}},
   })
 })
 
@@ -793,6 +808,10 @@ const postCreate = ({model, params, data,user}) => {
       .then(questions => Promise.all(questions.map(question => userCoachingQuestion.create({coaching: data, question}))))
   }
 
+  if (['loggedUser', 'user'].includes(model) && data.role==ROLE_CUSTOMER) {
+    return Coaching.create({user: data})
+      .then(coaching => User.findByIdAndUpdate(data._id, {coaching}))
+  }
 
   return Promise.resolve(data)
 }
