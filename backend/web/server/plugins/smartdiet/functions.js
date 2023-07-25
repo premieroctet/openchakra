@@ -912,6 +912,14 @@ Object.keys(SPOON_SOURCE).forEach(source => {
   .catch(err => console.error(err))
 })
 
+// Create missings coachings for any CUSTOMER
+
+User.find({role: ROLE_CUSTOMER}).populate('coachings')
+ .then(users => users.filter(user => lodash.isEmpty(user.coachings)))
+ .then(users => Promise.all(users.map(user => Coaching.create({user}))))
+ .then(coachings => coachings.map(coaching => console.log(`Created missing coaching for ${coaching.user.email}`)))
+ .catch(err => console.error(err))
+
 module.exports={
   ensureChallengePipsConsistency,
 }
