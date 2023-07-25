@@ -353,6 +353,12 @@ USER_MODELS.forEach(m => {
       instance: 'ObjectID',
       options: {ref: 'coaching'}},
   })
+  declareVirtualField({model: m, field: 'diet_questions', instance: 'Array',
+    multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'quizzQuestion'}},
+  })
 })
 
 declareEnumField({model: 'company', field: 'activity', enumValues: COMPANY_ACTIVITY})
