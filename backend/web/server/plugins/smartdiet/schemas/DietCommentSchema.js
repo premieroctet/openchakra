@@ -51,7 +51,7 @@ const DietCommentSchema = new Schema(
 
 /* eslint-enable prefer-arrow-callback */
 // Returns an array of non null notes
-DietCommentSchema.virtual('_defined_notes').get(function() {
+DietCommentSchema.virtual('_defined_notes', {localField:'tagada', foreignField:'tagada'}).get(function() {
   return lodash([this.punctuality_note,this.attentive_note,this.responsiveness_note,
     this.relevance_note,this.global_note])
     .filter(v => !lodash.isNil(v))
