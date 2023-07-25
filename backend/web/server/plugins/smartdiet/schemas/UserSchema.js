@@ -520,7 +520,11 @@ UserSchema.virtual("coachings", {
   foreignField: "user" // is equal to foreignField
 })
 
+// Returns the current coaching if ate least one survey exists => condition to start
 UserSchema.virtual('latest_coachings', {localField:'tagada', foreignField:'tagada'}).get(function() {
+  if (lodash.isEmpty(this.surveys)) {
+    return []
+  }
   const latest=lodash(this.coachings).maxBy(coaching => coaching[CREATED_AT_ATTRIBUTE])
   return latest ? [latest]:[]
 });
