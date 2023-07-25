@@ -347,7 +347,7 @@ USER_MODELS.forEach(m => {
       options: {ref: 'coaching'}},
   })
   declareVirtualField({model: m, field: 'latest_coachings', instance: 'Array',
-    requires: 'coachings,surveys',
+    requires: 'coachings.appointments.start_date,coachings.appointments.objectives,surveys',
     multiple: true,
     caster: {
       instance: 'ObjectID',
