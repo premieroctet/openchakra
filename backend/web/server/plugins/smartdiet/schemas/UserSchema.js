@@ -526,7 +526,7 @@ UserSchema.virtual('latest_coachings', {localField:'tagada', foreignField:'tagad
 });
 
 UserSchema.virtual("diet_questions", {
-  ref: "quizzQuestions", // The Model to use
+  ref: "quizzQuestion", // The Model to use
   localField: "_id", // Find in Model, where localField
   foreignField: "diet_private", // is equal to foreignField
 })
