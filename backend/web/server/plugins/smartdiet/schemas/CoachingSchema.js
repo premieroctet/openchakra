@@ -1,7 +1,7 @@
+const { COACHING_MODE, ROLE_EXTERNAL_DIET } = require('../consts')
+const { CREATED_AT_ATTRIBUTE } = require('../../../../utils/consts')
 const mongoose = require('mongoose')
 const { schemaOptions } = require('../../../utils/schemas')
-const { ROLE_EXTERNAL_DIET } = require('../consts')
-const { COACHING_MODE } = require('../consts')
 const lodash=require('lodash')
 const {intersection}=require('../../../utils/database')
 
@@ -79,6 +79,15 @@ CoachingSchema.virtual("_all_diets", {
 CoachingSchema.virtual('available_diets', {localField:'tagada', foreignField:'tagada'}).get(function() {
   return lodash(this._all_diets)
   .orderBy(u => intersection(u.reasons, this.reasons), 'desc')
+  .value()
+})
+
+// Returns the current objectoves (i.e. the newest appointment's ones)
+CoachingSchema.virtual('current_objectives', {localField:'tagada', foreignField:'tagada'}).get(function() {
+  return lodash(this.appointments)
+  .orderBy(app => app[CREATED_AT_ATTRIBUTE].start_date, 'desc')
+  .head()
+  .map(u => u?.objectives || [])
   .value()
 })
 

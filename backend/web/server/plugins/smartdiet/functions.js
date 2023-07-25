@@ -620,6 +620,13 @@ declareVirtualField({model: 'coaching', field: 'available_diets', instance: 'Arr
     options: {ref: 'user'}
   },
 })
+declareVirtualField({model: 'coaching', field: 'current_objectives', instance: 'Array', multiple: true,
+  requires: 'appointments.objectives',
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'quizzQuestion'}
+  },
+})
 
 declareEnumField({model: 'userCoachingQuestion', field: 'status', enumValues: COACHING_QUESTION_STATUS})
 
