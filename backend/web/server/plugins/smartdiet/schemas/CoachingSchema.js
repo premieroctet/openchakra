@@ -70,15 +70,17 @@ CoachingSchema.virtual("_all_diets", {
   ref: "user", // The Model to use
   localField: "dummy", // Find in Model, where localField
   foreignField: "dummy", // is equal to foreignField
-  match: {role: ROLE_EXTERNAL_DIET},
-});
+  options: {
+    match: {role: ROLE_EXTERNAL_DIET},
+  },
+})
 
 // Returns available diets order by compatible reasons count
 CoachingSchema.virtual('available_diets', {localField:'tagada', foreignField:'tagada'}).get(function() {
   return lodash(this._all_diets)
   .orderBy(u => intersection(u.reasons, this.reasons), 'desc')
   .value()
-});
+})
 
 /* eslint-enable prefer-arrow-callback */
 
