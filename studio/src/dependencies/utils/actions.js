@@ -797,6 +797,7 @@ return Promise.allSettled(imagePromises)
       value: value._id,
     }
     return axios.post(url, body)
+      .then(res => res.data)
   },
 
   smartdiet_join_team: ({value}) => {

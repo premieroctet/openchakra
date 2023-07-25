@@ -111,7 +111,11 @@ const smartdietFinishSurvey = ({value}, user) => {
     .then(question => UserQuestion.exists({survey: question.survey, order:question.order+1}))
     .then(exists => {
       if (exists) { throw new BadRequestError(`Le questionnaire n'est pas terminé`)}
-      return true
+      return loadFromDb({model: 'user', id: user._id, fields:['latest_coachings'], user})
+       .then(users => {
+         const res=users[0]?.latest_coachings?.[0]
+         return res
+       })
     })
 }
 addAction('smartdiet_finish_survey', smartdietFinishSurvey)
