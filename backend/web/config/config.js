@@ -224,7 +224,7 @@ const displayConfig = () => {
 \tDisplay chat:${mustDisplayChat()} ${mustDisplayChat() ? getChatURL() : ''}\n\
 \tSendInBlue actif:${ENABLE_MAILING}\n\
 \tSendInBlue templates:${DATA_MODEL}\n\
-\tPayment plugin:${PAYMENT_PLUGIN}:${!!paymentPlugin}\n\
+\tPayment plugin:${PAYMENT_PLUGIN}:${!!paymentPlugin} keys is ${STRIPE_KEY?.slice(0,20)}...\n\
 `)
 }
 
