@@ -1,5 +1,3 @@
-const { ROLE_EXTERNAL_DIET } = require('./consts')
-
 const {
   ACTIVITY,
   COACHING_MODE,
@@ -24,6 +22,7 @@ const {
   QUIZZ_TYPE,
   ROLES,
   ROLE_CUSTOMER,
+  ROLE_EXTERNAL_DIET,
   ROLE_RH,
   SEASON,
   SPOON_SOURCE,
@@ -31,6 +30,7 @@ const {
   TARGET_TYPE,
   UNIT
 } = require('./consts')
+const { BadRequestError, ForbiddenError } = require('../../utils/errors')
 const SpoonGain = require('../../models/SpoonGain')
 
 const {
@@ -53,7 +53,6 @@ const Pip = require('../../models/Pip')
 const ChallengeUserPip = require('../../models/ChallengeUserPip')
 const ChallengeUserPipSchema = require('./schemas/ChallengeUserPipSchema')
 const ChallengePip = require('../../models/ChallengePip')
-const {BadRequestError} = require('../../utils/errors')
 const {
   getUserIndChallengeTrophy,
   getUserKeyProgress,
