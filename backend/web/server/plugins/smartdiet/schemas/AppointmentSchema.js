@@ -33,11 +33,6 @@ const AppointmentSchema = new Schema({
     ref: 'quizzQuestion',
     required: true,
   }],
-  food_documents: [{
-    type: Schema.Types.ObjectId,
-    ref: 'foodDocument',
-    required: true,
-  }],
   logbooks: [{
     type: Schema.Types.ObjectId,
     ref: 'userQuizz',
