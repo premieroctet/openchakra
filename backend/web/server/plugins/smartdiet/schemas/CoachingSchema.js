@@ -40,6 +40,11 @@ const CoachingSchema = new Schema({
     ref: 'quizz',
     required: false,
   },
+  food_documents: [{
+    type: Schema.Types.ObjectId,
+    ref: 'foodDocument',
+    required: true,
+  }],
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
