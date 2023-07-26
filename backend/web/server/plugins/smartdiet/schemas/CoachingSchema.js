@@ -45,6 +45,12 @@ const CoachingSchema = new Schema({
     ref: 'foodDocument',
     required: true,
   }],
+  // Logbooks & patient quizzs & progress
+  quizz: [{
+    type: Schema.Types.ObjectId,
+    ref: 'quizz',
+    required: true,
+  }],
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
