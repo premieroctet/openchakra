@@ -14,10 +14,6 @@ const QuizzQuestionSchema = new Schema({
     enum: Object.keys(QUIZZ_QUESTION_TYPE),
     required: [true, 'Le type est obligatoire'],
   },
-  index: {
-    type: Number,
-    required: [true, "L'index de la question est obligatoire"],
-  },
   enum_values: [{
     type: String,
   }],
