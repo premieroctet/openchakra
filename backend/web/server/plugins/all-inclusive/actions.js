@@ -377,6 +377,11 @@ const isActionAllowed = ({action, dataId, user, ...rest}) => {
       .populate('quotations')
       .then(mission => mission?.canAcceptQuotation(user))
   }
+  if (action=='alle_can_accept_quotation') {
+    return Mission.findById(dataId)
+      .populate('quotations')
+      .then(mission => mission?.canAcceptQuotation(user))
+  }
   if (action=='alle_refuse_quotation') {
     return Mission.findById(dataId)
       .populate('quotations')
