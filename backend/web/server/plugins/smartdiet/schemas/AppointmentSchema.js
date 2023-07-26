@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const {schemaOptions} = require('../../../utils/schemas')
+const {idEqual}=require('../../../utils/database')
 
 const Schema = mongoose.Schema
 
@@ -44,4 +45,7 @@ const AppointmentSchema = new Schema({
   }],
 }, schemaOptions)
 
+AppointmentSchema.virtual('order').get(function() {
+  return this.coaching.appointments?.findIndex(app => idEqual(app._id, this._id))+1
+})
 module.exports = AppointmentSchema
