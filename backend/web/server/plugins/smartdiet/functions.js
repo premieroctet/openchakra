@@ -1,3 +1,5 @@
+const { ROLE_EXTERNAL_DIET } = require('./consts')
+
 const {
   ACTIVITY,
   COACHING_MODE,
@@ -151,6 +153,12 @@ const preCreate = ({model, params, user}) => {
         if (moment().isAfter(moment(challenge.start_date))) { throw new BadRequestError(`Le challenge a déjà démarré`)}
         return {model, params}
       })
+  }
+  if (model=='quizzQuestion') {
+    if (user.role!=ROLE_EXTERNAL_DIET) {
+      throw new ForbiddenError(`Seule une diététicienne externe peut créer des objectifs`)
+    }
+    params.diet_private=user
   }
   return Promise.resolve({model, params})
 }
