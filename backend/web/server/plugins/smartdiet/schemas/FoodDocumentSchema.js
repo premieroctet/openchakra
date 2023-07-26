@@ -9,9 +9,13 @@ const FoodDocumentSchema = new Schema({
     type: String,
     required: [true, 'Le nom est obligatoire'],
   },
-  url: {
+  manual_url: {
     type: String,
-    required: [true, "L'URL' est obligatoire"],
+    required: false,
+  },
+  document: {
+    type: String,
+    required: false,
   },
   key: {
     type: Schema.Types.ObjectId,
@@ -24,5 +28,9 @@ const FoodDocumentSchema = new Schema({
     required: [true, 'Le type est obligatoire'],
   }
 }, schemaOptions)
+
+FoodDocumentSchema.virtual('url').get(function() {
+  return this.document || this.manual_url
+})
 
 module.exports = FoodDocumentSchema

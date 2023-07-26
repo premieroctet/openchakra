@@ -652,6 +652,7 @@ declareVirtualField({model: 'adminDashboard', field:'users_count', instance: 'Nu
 declareVirtualField({model: 'adminDashboard', field:'active_users_count', instance: 'Number'})
 
 declareEnumField({model: 'foodDocument', field: 'type', enumValues: FOOD_DOCUMENT_TYPE})
+declareVirtualField({model: 'foodDocument', field: 'url', type: 'String', requires:'manual_url,document'})
 
 declareVirtualField({model: 'quizz', field: 'questions', instance: 'company', multiple: false,
   caster: {
