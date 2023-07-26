@@ -510,7 +510,7 @@ UserSchema.virtual('profile_progress').get(function() {
 UserSchema.virtual("diet_objectives", {
   ref: "quizzQuestion", // The Model to use
   localField: "_id", // Find in Model, where localField
-  foreignField: "diet" // is equal to foreignField
+  foreignField: "diet_private" // is equal to foreignField
 });
 
 // Comments for diet
