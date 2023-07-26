@@ -401,7 +401,7 @@ const QUIZZ_TYPE_PATIENT="QUIZZ_TYPE_PATIENT"
 
 const QUIZZ_TYPE={
   [QUIZZ_TYPE_LOGBOOK]:'Journal',
-  [QUIZZ_TYPE_COACHING]:'Progression coaching',
+  [QUIZZ_TYPE_PROGRESS]:'Progression coaching',
   [QUIZZ_TYPE_PATIENT]:'Quizz patient',
 }
 
