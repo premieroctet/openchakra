@@ -14,6 +14,11 @@ const QuizzSchema = new Schema({
     enum: Object.keys(QUIZZ_TYPE),
     required: [true, 'Le type est obligatoire'],
   },
+  key: {
+    type: Schema.Types.ObjectId,
+    ref: 'key',
+    required: false,
+  },
   questions: [{
     type: Schema.Types.ObjectId,
     ref: 'quizzQuestion',
