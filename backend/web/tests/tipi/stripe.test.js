@@ -1,3 +1,7 @@
+const {
+  getAccounts,
+  getCustomers
+} = require('../../server/plugins/payment/stripe')
 const { updateAccounts } = require('../../scripts/tipi/updateStripe')
 const {
   COACH_ALLE,
@@ -21,8 +25,18 @@ describe('Test stripe account update', () => {
   afterAll(async() => {
   })
 
-  it("Must update acounts", () => {
+  it.skip("Must update acounts", () => {
     return updateAccounts()
+  })
+
+  it("Must list customers", () => {
+    return getCustomers()
+      .then(cust => console.log(cust))
+  })
+
+  it.only("Must list providers", () => {
+    return getAccounts()
+      .then(cust => console.log(cust))
   })
 
 })

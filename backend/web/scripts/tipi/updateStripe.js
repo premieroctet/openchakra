@@ -16,10 +16,10 @@ const User = require('../../server/models/User')
 const updateAccounts = () => {
     console.log(getDatabaseUri())
     return mongoose.connect(getDatabaseUri(), MONGOOSE_OPTIONS)
-      .then(() => User.find({role: {$in: [ROLE_TI, ROLE_COMPANY_BUYER]},payment_account_id: null}))
+      .then(() => User.find({role: {$in: [ROLE_TI, ROLE_COMPANY_BUYER]}}))
       .then(users => {
         const slices = users//.slice(0, 1)
-        console.log(`Got ${slices.map(u => u.email)} to upsert`)
+        console.log(`Got ${slices.length} to upsert`)
         return Promise.all(slices.map(user => {
           return (user.role == ROLE_TI ? paymentPlugin.upsertProvider(user) : paymentPlugin.upsertCustomer(user))
             .then(account_id => {
@@ -27,12 +27,18 @@ const updateAccounts = () => {
               user.payment_account_id = account_id
               return user.save()
             })
+            .catch(err => {
+              console.log(`${user.email}:${err}`)
+              throw err
+            })
         }))
       })
 }
 
 if (require.main === module) {
   updateAccounts()
+    .then(() => console.log('All OK'))
+    .catch(err => console.error(err))
     .finally(() => process.exit(0))
 }
 
