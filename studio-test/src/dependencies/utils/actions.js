@@ -574,6 +574,7 @@ return Promise.allSettled(imagePromises)
       context,
     }
     return axios.post(url, body)
+      .then(res => res.data)
   },
 
   alle_show_bill: ({ value, context, props, level, getComponentValue }) => {
