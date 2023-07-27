@@ -26,7 +26,8 @@ const {
   WITHINGS_CLIENT_ID,
   WITHINGS_CLIENT_SECRET,
   PAYMENT_PLUGIN,
-  STRIPE_KEY,
+  STRIPE_PUBLIC_KEY,
+  STRIPE_SECRET_KEY,
 } = require('../mode')
 
 const SITE_MODES = {
@@ -60,7 +61,8 @@ const getVivaWalletConfig = () => {
 
 const getStripeConfig = () => {
   return {
-    STRIPE_KEY
+    STRIPE_PUBLIC_KEY,
+    STRIPE_SECRET_KEY,
   }
 }
 
