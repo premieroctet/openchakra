@@ -186,15 +186,15 @@ setPreCreateData(preCreate)
 
 const postPutData = ({model, id, attribute, data, user}) => {
   if (model=='user') {
-    return User.findById(id)
+    return User.findById(user._id)
       .then(account => {
         if (attribute=='hidden' && value==false) {
           sendProfileOnline(account)
         }
-        if (account?.role==ROLE_TI) {
+        if (account.role==ROLE_TI) {
           return paymentPlugin.upsertProvider(account)
         }
-        if (account?.role==ROLE_COMPANY_BUYER) {
+        if (account.role==ROLE_COMPANY_BUYER) {
           return paymentPlugin.upsertCustomer(account)
         }
       })
