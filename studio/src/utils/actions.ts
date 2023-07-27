@@ -369,27 +369,27 @@ export const ACTIONS: IActions = {
     next: ['openPage'],
   },
   alle_create_quotation: {
-    label: 'AE Créer devis',
+    label: 'AE Create quotation',
     options: {},
     next: ['openPage'],
   },
   alle_refuse_mission: {
-    label: 'AE Refuser mission',
+    label: 'AE Refuse mission',
     options: {},
     next: ['openPage'],
   },
   alle_cancel_mission: {
-    label: 'AE Anuler mission',
+    label: 'AE Cancel mission',
     options: {},
     next: ['openPage'],
   },
   alle_send_quotation: {
-    label: 'AE Envoyer le devis',
+    label: 'AE Send quotation',
     options: {},
     next: ['openPage'],
   },
   alle_accept_quotation: {
-    label: 'AE Accepter le devis',
+    label: 'AE Accept quotation',
     options: {
       paymentSuccess: ({ pages }) => pagesList({pages}),
       paymentFailure: ({ pages }) => pagesList({pages}),
@@ -397,58 +397,58 @@ export const ACTIONS: IActions = {
     next: [],
   },
   alle_can_accept_quotation: {
-    label: 'AE Peut accepter le devis',
+    label: 'AE Can accept quotation',
     options: {
     },
     next: ['openPage'],
   },
   alle_refuse_quotation: {
-    label: 'AE Refuser le devis',
+    label: 'AE Refuse quotation',
     options: {},
     next: ['openPage'],
   },
   alle_show_quotation: {
-    label: 'AE Voir le devis',
+    label: 'AE Display quotation',
     options: {},
     next: ['openPage'],
   },
   alle_edit_quotation: {
-    label: 'AE Modifier le devis',
+    label: 'AE Modify quotation',
     options: {},
     next: ['openPage'],
   },
   alle_finish_mission: {
-    label: 'AE Terminer mission',
+    label: 'AE Finish mission',
     options: {},
     next: ['openPage'],
   },
   alle_store_bill: {
-    label: 'AE Déposer la facture',
+    label: 'AE Put bill',
     options: {},
     next: ['openPage'],
   },
   alle_show_bill: {
-    label: 'AE Voir la facture',
+    label: 'AE Display bill',
     options: {},
     next: ['openPage'],
   },
   alle_accept_bill: {
-    label: 'AE Accepter la facture',
+    label: 'AE Accept bill',
     options: {},
     next: ['openPage'],
   },
   alle_refuse_bill: {
-    label: 'AE Refuser la facture',
+    label: 'AE Refuse bill',
     options: {},
     next: ['openPage'],
   },
   alle_leave_comment: {
-    label: 'AE Laisser un commentaire',
+    label: 'AE Leave comment',
     options: {},
     next: ['openPage'],
   },
   alle_send_bill: {
-    label: 'AE Envoyer la facture',
+    label: 'AE Send bill',
     options: {},
     next: ['openPage'],
   },
