@@ -39,8 +39,8 @@ const clearAllProviders = () => {
 Promise.allSettled([clearAllCustomers(), clearAllProviders()])
   .then(res => {
     const results=lodash.flattenDeep(res.map(r => r.value))
-    const failed=results.filter(r => r.status=='rejected').map(r => r.reason)
-    console.log(JSON.stringify(failed.slice(0, 3), null, 2))
+    const failed=results.filter(r => r.status=='rejected').map(r => r.reason.raw.message)
+    console.log(JSON.stringify(failed, null, 2))
     console.log(`Failed:${failed.length}/${results.length}`)
   })
   .catch(err => console.error(err))

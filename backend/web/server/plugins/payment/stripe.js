@@ -68,6 +68,22 @@ const user2Data = (user, token_id) => ({
   },
 })
 
+const upsertBankAccount = (user, account_id) => {
+  if (!user.iban) { return Promise.resolve()}
+  const externalAccountParams={
+    object: 'bank_account',
+    account_number: user.iban,
+    country: 'fr',
+    currency: 'eur',
+  }
+  return SecretStripe.accounts.listExternalAccounts(account_id)
+    .then(({data})=> {
+      if (data.some(d => user.iban.endsWith(d.last4))) {return null}
+      return SecretStripe.accounts.createExternalAccount(account_id, {external_account: externalAccountParams})
+    })
+    .catch(err => console.error(err))
+}
+
 const upsertCustomer = user => {
   const data={
     email: user.email || undefined,
@@ -98,8 +114,9 @@ const upsertProvider = user => {
       return fn
     })
     .then(account => {
-      user.payment_account_id=account.id
-      return account.id
+      return upsertBankAccount(user, account.id)
+        .then(() => {console.log(`Bank ok`); return account.id})
+        .catch(err => {console.error(`Bank error ${err}`); return account.id})
     })
 }
 
@@ -109,7 +126,7 @@ const getCustomers = () => {
 }
 
 const deleteCustomer = id => {
-  return PublicStripe.customers.del(id)
+  return SecretStripe.customers.del(id)
 }
 
 const getProviders = () => {
