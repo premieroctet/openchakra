@@ -16,11 +16,11 @@ const User = require('../../server/models/User')
 const updateAccounts = () => {
     console.log(getDatabaseUri())
     return mongoose.connect(getDatabaseUri(), MONGOOSE_OPTIONS)
-      .then(() => User.find({role: {$in: [ROLE_TI, ROLE_COMPANY_BUYER]}}))
+      .then(() => User.find({role: {$in: [ROLE_TI, ROLE_COMPANY_BUYER]}, iban:{$ne:null}}))
       .then(users => {
         const slices = users//.slice(0, 1)
         console.log(`Got ${slices.length} to upsert`)
-        return Promise.all(slices.map(user => {
+        return Promise.allSettled(slices.map(user => {
           return (user.role == ROLE_TI ? paymentPlugin.upsertProvider(user) : paymentPlugin.upsertCustomer(user))
             .then(account_id => {
               console.log(`before save ${user.email}, id:${account_id}`)
