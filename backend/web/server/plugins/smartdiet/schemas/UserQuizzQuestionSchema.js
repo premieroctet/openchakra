@@ -4,16 +4,16 @@ const { SURVEY_ANSWER } = require('../consts')
 
 const Schema = mongoose.Schema
 
-const QuizzAnswerSchema = new Schema({
-  quizz_question :{
-    type: Schema.Types.ObjectId,
-    ref: 'quizzQuestion',
-    required: [true, 'La question est obligatoire'],
-  },
+const UserQuizzQuestionSchema = new Schema({
   user_quizz: {
     type: Schema.Types.ObjectId,
     ref: 'userQuizz',
-    required: [true, 'Le quizz user est obligatoire'],
+    required: [true, 'Le quizz modèle est obligatoire'],
+  },
+  quizz_question: {
+    type: Schema.Types.ObjectId,
+    ref: 'quizzQuestion',
+    required: [true, 'La question modèle est obligatoire'],
   },
   boolean_answer: {
     type: Boolean,
@@ -42,7 +42,10 @@ const QuizzAnswerSchema = new Schema({
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
+UserQuizzQuestionSchema.virtual('order', {localField:'tagada', foreigneField: 'tagada'}).get(function() {
+  return 0
+})
 /* eslint-enable prefer-arrow-callback */
 
 
-module.exports = QuizzAnswerSchema
+module.exports = UserQuizzQuestionSchema

@@ -547,8 +547,8 @@ const putAttribute = ({parent, attribute, value, user}) => {
         // Simple attribute => simple method
         return mongooseModel.findById(parent)
           .then(object => {
-            callPostPutData({model, id:parent, attribute, value, user})
             object[attribute]=value
+            callPostPutData({model, id:parent, attribute, value, user, data:object})
             return object.save()
           })
       }
@@ -604,6 +604,11 @@ const removeData = dataId => {
 // Compares ObjecTID/string with ObjectId/string
 const idEqual = (id1, id2) => {
   return JSON.stringify(id1)==JSON.stringify(id2)
+}
+
+// Returns intersection betwenn two sets of _id
+const differenceSet = (ids1, ids2) => {
+  return lodash.differenceBy(ids1, ids2, v => JSON.stringify(v._id || v))
 }
 
 // Checks wether ids intersect
@@ -686,4 +691,5 @@ module.exports = {
   getMongooseModels,
   setIntersects,
   intersection,
+  differenceSet,
 }

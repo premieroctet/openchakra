@@ -1,4 +1,26 @@
 const {
+  CREATED_AT_ATTRIBUTE,
+  UPDATED_AT_ATTRIBUTE
+} = require('../../../utils/consts')
+const UserQuizzQuestion = require('../../models/UserQuizzQuestion')
+const {
+  declareComputedField,
+  declareEnumField,
+  declareVirtualField,
+  differenceSet,
+  getModel,
+  idEqual,
+  loadFromDb,
+  setFilterDataUser,
+  setIntersects,
+  setPostCreateData,
+  setPostPutData,
+  setPreCreateData,
+  setPreprocessGet,
+  simpleCloneModel,
+} = require('../../utils/database')
+const QuizzQuestion = require('../../models/QuizzQuestion')
+const {
   ACTIVITY,
   COACHING_MODE,
   COACHING_QUESTION_STATUS,
@@ -32,21 +54,6 @@ const {
 } = require('./consts')
 const { BadRequestError, ForbiddenError } = require('../../utils/errors')
 const SpoonGain = require('../../models/SpoonGain')
-
-const {
-  declareComputedField,
-  declareEnumField,
-  declareVirtualField,
-  getModel,
-  idEqual,
-  loadFromDb,
-  setFilterDataUser,
-  setIntersects,
-  setPostCreateData,
-  setPreCreateData,
-  setPreprocessGet,
-  simpleCloneModel,
-} = require('../../utils/database')
 const CoachingQuestion = require('../../models/CoachingQuestion')
 const CollectiveChallenge = require('../../models/CollectiveChallenge')
 const Pip = require('../../models/Pip')
@@ -66,7 +73,6 @@ require('lodash.product')
 const lodash=require('lodash')
 const moment = require('moment')
 const UserSurvey = require('../../models/UserSurvey')
-const {CREATED_AT_ATTRIBUTE} = require('../../../utils/consts')
 const Offer = require('../../models/Offer')
 const Content = require('../../models/Content')
 const Company = require('../../models/Company')
@@ -74,6 +80,7 @@ const User = require('../../models/User')
 const Team = require('../../models/Team')
 const TeamMember = require('../../models/TeamMember')
 const Coaching = require('../../models/Coaching')
+const Appointment = require('../../models/Appointment')
 
 const filterDataUser = ({model, data, id, user}) => {
   if (model=='offer' && !id) {
@@ -164,6 +171,23 @@ const preCreate = ({model, params, user}) => {
 
 setPreCreateData(preCreate)
 
+const postPutData = params => {
+  const {model, attribute, id, value, data}=params
+  if (model=='appointment' && attribute=='objectives') {
+    return Promise.all([
+      Appointment.findById(id).populate('user_objectives'),
+      QuizzQuestion.find({_id: {$in: data.objectives.map(o => o._id)}}),
+    ])
+      .then(([appointment, questions]) => {
+        const templateQuestions=differenceSet(questions, appointment.user_objectives.map(q => q.quizz_question))
+        return Promise.all(templateQuestions.map(tp =>
+          UserQuizzQuestion.create({...lodash.omit(tp, [CREATED_AT_ATTRIBUTE, UPDATED_AT_ATTRIBUTE, '_id', 'id']), quizz_question: tp._id})))
+      })
+  }
+  return Promise.resolve(params)
+}
+
+setPostPutData(postPutData)
 
 const USER_MODELS=['user', 'loggedUser']
 USER_MODELS.forEach(m => {
@@ -663,14 +687,12 @@ declareEnumField({model: 'quizz', field: 'type', enumValues: QUIZZ_TYPE})
 
 declareEnumField({model: 'quizzQuestion', field: 'type', enumValues: QUIZZ_QUESTION_TYPE})
 
-declareVirtualField({model: 'userQuizz', field: 'answers', instance: 'company', multiple: false,
-  caster: {
-    instance: 'ObjectID',
-    options: {ref: 'quizzAnswer'}},
-})
-
 declareVirtualField({model: 'appointment', field:'order', instance: 'Number',
   requires: 'coaching.appointments',
+})
+
+declareVirtualField({model: 'userQuizzQuestion', field:'order', instance: 'Number',
+  requires: 'userQuizz.questions',
 })
 
 const getDataLiked = (user, params, data) => {

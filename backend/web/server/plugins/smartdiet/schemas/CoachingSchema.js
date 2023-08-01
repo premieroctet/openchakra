@@ -34,21 +34,21 @@ const CoachingSchema = new Schema({
     default: 0,
     required: true,
   },
-  progress_quizz: {
-    type: Schema.Types.ObjectId,
-    // TODO: check that target's category's type is TARGET_COACHING
-    ref: 'quizz',
-    required: false,
-  },
   food_documents: [{
     type: Schema.Types.ObjectId,
     ref: 'foodDocument',
     required: true,
   }],
-  // Logbooks & patient quizzs & progress
+  // Templates progress quizz & logbooks & patient quizzs
   quizz: [{
     type: Schema.Types.ObjectId,
     ref: 'quizz',
+    required: true,
+  }],
+  // User's progress quizz & logbooks & patient quizzs
+  user_quizz: [{
+    type: Schema.Types.ObjectId,
+    ref: 'userQuizz',
     required: true,
   }],
 }, schemaOptions)

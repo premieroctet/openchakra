@@ -622,6 +622,13 @@ export const ACTIONS: IActions = {
     },
   },
 
+  smartdiet_start_quizz: {
+    label: 'SM Start quizz',
+    options: {},
+    next: ['openPage'],
+  },
+
+
 }
 
 export const allowsActions = (component: IComponent) => {

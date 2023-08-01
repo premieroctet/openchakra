@@ -15,15 +15,11 @@ const UserQuizzSchema = new Schema({
     ref: 'quizz',
     required: true,
   },
+  questions: [{
+    type: Schema.Types.ObjectId,
+    ref: 'userQuizzQuestion',
+    required: true,
+  }],
 }, schemaOptions)
-
-/* eslint-disable prefer-arrow-callback */
-UserQuizzSchema.virtual('answers', {
-  ref: 'quizzAnswer', // The Model to use
-  localField: '_id', // Find in Model, where localField
-  foreignField: 'quizz', // is equal to foreignField
-})
-/* eslint-enable prefer-arrow-callback */
-
 
 module.exports = UserQuizzSchema
