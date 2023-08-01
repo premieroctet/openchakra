@@ -72,7 +72,7 @@ export const ACTIONS = {
     } else {
       window.location = url
     }
-    return
+    return Promise.resolve()
   },
 
   create: ({ value, context, props, level, getComponentValue }) => {
