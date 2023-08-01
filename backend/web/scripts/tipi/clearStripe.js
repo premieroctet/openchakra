@@ -22,17 +22,19 @@ const User = require('../../server/models/User')
 // Clear all customers
 const clearAllCustomers = () => {
   return getCustomers()
-  .then(custs => Promise.allSettled(custs.map(c => {
+  .then(custs => Promise.allSettled(custs.slice(0, 100).map(c => {
     console.log(`Deleting customer ${c.id}`)
-    return deleteProvider(c.id)
+    return deleteCustomer(c.id)
+      .then(() => User.findOneAndUpdate({payment_account_id: c.id}, {$unset: {payment_account_id:true}}))
   })))
 }
 
 const clearAllProviders = () => {
   return getProviders()
-    .then(custs => Promise.allSettled(custs.map(c => {
-      console.log(`Deleting provider ${c.id}`)
-      return deleteProvider(c.id)
+    .then(providers => Promise.allSettled(providers.slice(0, 100).map(p => {
+      console.log(`Deleting provider ${p.id}`)
+      return deleteProvider(p.id)
+        .then(() => User.findOneAndUpdate({payment_account_id: p.id}, {$unset: {payment_account_id:true}}))
     })))
 }
 
