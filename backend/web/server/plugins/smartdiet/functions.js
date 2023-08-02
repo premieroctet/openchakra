@@ -98,7 +98,6 @@ const filterDataUser = ({model, data, id, user}) => {
 setFilterDataUser(filterDataUser)
 
 const preprocessGet = ({model, fields, id, user, params}) => {
-  console.log(`preProcessGet:${JSON.stringify(params)}`)
   if (model=='loggedUser') {
     model='user'
     id = user?._id || 'INVALIDID'
@@ -171,17 +170,12 @@ const preCreate = ({model, params, user}) => {
 
 setPreCreateData(preCreate)
 
-const postPutData = params => {
-  const {model, attribute, id, value, data}=params
-  if (model=='appointment' && attribute=='objectives') {
-    return Promise.all([
-      Appointment.findById(id).populate('user_objectives'),
-      QuizzQuestion.find({_id: {$in: data.objectives.map(o => o._id)}}),
-    ])
-      .then(([appointment, questions]) => {
-        const templateQuestions=differenceSet(questions, appointment.user_objectives.map(q => q.quizz_question))
-        return Promise.all(templateQuestions.map(tp =>
-          UserQuizzQuestion.create({...lodash.omit(tp, [CREATED_AT_ATTRIBUTE, UPDATED_AT_ATTRIBUTE, '_id', 'id']), quizz_question: tp._id})))
+const postPutData = ({model, params, id, value, data}) => {
+  if (model=='coaching' && params.quizz) {
+    return Coaching.findById(id).populate(['quizz', 'user_quizz'])
+      .then(coaching => {
+        const missingUserQuizz=differenceSet(coaching.quizz, coaching.user_quizz)
+        console.log(`Missing user quizz:${missingUserQuizz}`)
       })
   }
   return Promise.resolve(params)
@@ -954,7 +948,7 @@ Object.keys(SPOON_SOURCE).forEach(source => {
     { $setOnInsert: { source, gain: 0 } },
     {upsert: true, runValidators: true},
   )
-  .then(res => !res && console.log(`Adding 0 sppon gain for missing source ${source}`))
+  .then(res => !res && console.debug(`Adding 0 sppon gain for missing source ${source}`))
   .catch(err => console.error(err))
 })
 

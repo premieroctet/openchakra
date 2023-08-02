@@ -400,7 +400,7 @@ router.post('/:model', passport.authenticate('cookie', {session: false}), (req, 
     })
 })
 
-router.put('/:model/:id', passport.authenticate('cookie', {session: false}), (req, res) => {
+const putFromRequest = (req, res) => {
   const model = req.params.model
   const id = req.params.id
   let params=lodash(req.body).mapValues(v => JSON.parse(v)).value()
@@ -411,16 +411,13 @@ router.put('/:model/:id', passport.authenticate('cookie', {session: false}), (re
   if (!model || !id) {
     return res.status(HTTP_CODES.BAD_REQUEST).json(`Model and id are required`)
   }
-  console.log(`Updating:${id} with ${JSON.stringify(params)}`)
-  // Update object instead of findByIdAndUpdate to ensure 'this' exists in required functions
-  return mongoose.connection.models[model]
-      .findById(id)
-      .then(data => {
-        Object.keys(params).forEach(k => data[k]=params[k])
-        return data.save()
-      })
-      .then(data => callPostPutData({model, params, data, user}))
-      .then(data => res.json(data))
+
+  return putToDb({model, id, params, user})
+    .then(res.json)
+}
+
+router.put('/:model/:id', passport.authenticate('cookie', {session: false}), (req, res) => {
+  return putFromRequest(req, res)
 })
 
 
