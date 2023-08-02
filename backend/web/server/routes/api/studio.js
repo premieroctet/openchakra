@@ -1,17 +1,3 @@
-const {
-  FUMOIR_MEMBER,
-  PAYMENT_FAILURE,
-  PAYMENT_SUCCESS
-} = require('../../plugins/fumoir/consts')
-const {
-  callFilterDataUser,
-  callPostCreateData,
-  callPostPutData,
-  callPreCreateData,
-  callPreprocessGet,
-  loadFromDb,
-  retainRequiredFields,
-} = require('../../utils/database')
 const path = require('path')
 const zlib=require('zlib')
 const {promises: fs} = require('fs')
@@ -23,6 +9,22 @@ const bcrypt = require('bcryptjs')
 const express = require('express')
 const mongoose = require('mongoose')
 const passport = require('passport')
+const {handleUploadedFile} = require('../../middlewares/uploadFile')
+const {resizeImage} = require('../../middlewares/resizeImage')
+const {
+  callFilterDataUser,
+  callPostCreateData,
+  callPostPutData,
+  callPreCreateData,
+  callPreprocessGet,
+  loadFromDb,
+  retainRequiredFields,
+} = require('../../utils/database')
+const {
+  FUMOIR_MEMBER,
+  PAYMENT_FAILURE,
+  PAYMENT_SUCCESS,
+} = require('../../plugins/fumoir/consts')
 const {date_str, datetime_str} = require('../../../utils/dateutils')
 const Payment = require('../../models/Payment')
 const {
@@ -40,7 +42,7 @@ try {
   require(`../../plugins/${getDataModel()}/functions`)
 }
 catch(err) {
-  if (err.code !== 'MODULE_NOT_FOUND') {throw err}
+  if (err.code !== 'MODULE_NOT_FOUND') { throw err }
   console.warn(`No functions module for ${getDataModel()}`)
 }
 
@@ -59,7 +61,7 @@ try{
   RES_TO_COME=require(`../../plugins/${getDataModel()}/consts`).RES_TO_COME
 }
 catch(err) {
-  if (err.code !== 'MODULE_NOT_FOUND') {throw err}
+  if (err.code !== 'MODULE_NOT_FOUND') { throw err }
   console.warn(`No consts module for ${getDataModel()}`)
 }
 
@@ -123,9 +125,16 @@ router.get('/roles', (req, res) => {
   return res.json(ROLES)
 })
 
+router.post('/uploadFiles', handleUploadedFile, resizeImage, (req, res) => {
+  console.log(req.file, req.body, 'studio upload files')
+})
+
 router.get('/action-allowed/:action', passport.authenticate('cookie', {session: false}), (req, res) => {
   const {action}=req.params
-  const query=lodash.mapValues(req.query, v => {try{return JSON.parse(v)} catch(e) {return v}})
+  const query=lodash.mapValues(req.query, v => {
+    try{ return JSON.parse(v) }
+    catch(e) { return v }
+  })
   const user=req.user
 
   return callAllowedAction({action, user, ...query})
@@ -283,7 +292,7 @@ router.get('/current-user', passport.authenticate('cookie', {session: false}), (
 
 router.post('/register', (req, res) => {
   const ip=req.headers['x-forwarded-for'] || req.socket.remoteAddress
-  const body={register_ip:ip, ...lodash.mapValues(req.body, v => JSON.parse(v))}
+  const body={register_ip: ip, ...lodash.mapValues(req.body, v => JSON.parse(v))}
   console.log(`Registering  on ${ip} with body ${JSON.stringify(body)}`)
   return ACTIONS.register(body)
     .then(result => res.json(result))
@@ -291,7 +300,7 @@ router.post('/register', (req, res) => {
 
 router.post('/register-and-login', (req, res) => {
   const ip=req.headers['x-forwarded-for'] || req.socket.remoteAddress
-  const body={register_ip:ip, ...lodash.mapValues(req.body, v => JSON.parse(v))}
+  const body={register_ip: ip, ...lodash.mapValues(req.body, v => JSON.parse(v))}
   console.log(`Registering & login on ${ip} with body ${JSON.stringify(body)}`)
   return ACTIONS.register(body)
     .then(result => {
@@ -354,7 +363,7 @@ router.get('/statTest', (req, res) => {
     .map(v => {
       const rad=v*Math.PI/180.0
       const cos=Math.cos(rad)
-      return ({x:v, y:cos})
+      return ({x: v, y: cos})
     })
   return res.json(data)
 })
@@ -413,13 +422,13 @@ router.put('/:model/:id', passport.authenticate('cookie', {session: false}), (re
   console.log(`Updating:${id} with ${JSON.stringify(params)}`)
   // Update object instead of findByIdAndUpdate to ensure 'this' exists in required functions
   return mongoose.connection.models[model]
-      .findById(id)
-      .then(data => {
-        Object.keys(params).forEach(k => data[k]=params[k])
-        return data.save()
-      })
-      .then(data => callPostPutData({model, params, data, user}))
-      .then(data => res.json(data))
+    .findById(id)
+    .then(data => {
+      Object.keys(params).forEach(k => data[k]=params[k])
+      return data.save()
+    })
+    .then(data => callPostPutData({model, params, data, user}))
+    .then(data => res.json(data))
 })
 
 

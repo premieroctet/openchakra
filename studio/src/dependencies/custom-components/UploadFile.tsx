@@ -31,8 +31,21 @@ const uploadFileToS3 = async (file: File) => {
     );
   }
 
+  const formData = new FormData();
+  formData.append('document', file)
+
+  const sendFile = await axios.post(`/myAlfred/api/studio/uploadFiles`, 
+    formData, 
+    {
+      headers: {
+      'Content-Type': 'multipart/form-data'
+      },
+    }
+  )
+
   const fileNameForS3 = s3Config.rootFolderName ? `${s3Config.rootFolderName}/public/${generateUUID()}${file.name}` : file.name
-  return await FileManager.createFile(fileNameForS3, file, '', file.type, [])
+  // return await FileManager.createFile(fileNameForS3, file, '', file.type, [])
+  return true
 }
 
 const uploadMultipleToS3 = async (folder: string, unzip: any) => {

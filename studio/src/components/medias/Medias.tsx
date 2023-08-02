@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
+import axios from 'axios'
+import config from '../../../env.json'
 import { uploadFile, listFiles, deleteFile } from '../../core/s3'
 import {
   Button,
@@ -69,11 +71,24 @@ const Medias = ({
 
   const handleUpload = async (event: React.ChangeEvent) => {
     event.preventDefault()
-    fileToUpload &&
-      (await uploadFile(fileToUpload?.name, fileToUpload)
-        .then(() => onClose())
-        .then(() => setFileToUpload(undefined))
-        .then(() => fetchFiles()))
+
+    const formData = new FormData();
+    formData.append('document', fileToUpload)
+
+
+  const sendFile = await axios.post(`${config.targetDomain}/myAlfred/api/studio/uploadFiles`, 
+    formData, 
+    {
+      headers: {
+      'Content-Type': 'multipart/form-data'
+      },
+    }
+  )
+    // fileToUpload &&
+    //   (await uploadFile(fileToUpload?.name, fileToUpload)
+    //     .then(() => onClose())
+    //     .then(() => setFileToUpload(undefined))
+    //     .then(() => fetchFiles()))
   }
 
   const handleFilters = (val: string) => {
@@ -132,7 +147,7 @@ const Medias = ({
           <ModalHeader>Choose your media</ModalHeader>
           <ModalCloseButton />
           <ModalBody display={'flex'} flexDirection={'column'}>
-            <UploadForm>
+            <UploadForm encType="multipart/form-data" method="post">
               <label htmlFor="uploadfile">
                 <div>
                   <img src="/images/backgroundMedias.svg" />
