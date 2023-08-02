@@ -417,6 +417,9 @@ return Promise.allSettled(imagePromises)
   })
 
   },
+  uploadFiles: () => {
+    console.log('uploadFiles studio test')
+  },
 
   deactivateAccount: ({value, props, level, getComponentValue}) => {
     const reason = getComponentValue(props.reason, level)

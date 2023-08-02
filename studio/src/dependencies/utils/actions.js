@@ -418,6 +418,10 @@ return Promise.allSettled(imagePromises)
 
   },
 
+  uploadFiles: () => {
+    console.log('uploadfiles actions')
+  }
+
   deactivateAccount: ({value, props, level, getComponentValue}) => {
     const reason = getComponentValue(props.reason, level)
     let url = `${API_ROOT}/action`
