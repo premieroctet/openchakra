@@ -27,6 +27,10 @@ const {
   WITHINGS_CLIENT_SECRET,
   PAYMENT_PLUGIN,
   STRIPE_KEY,
+  SMARTAGENDA_LOGIN,
+  SMARTAGENDA_PASSWORD,
+  SMARTAGENDA_API_ID,
+  SMARTAGENDA_API_KEY,
 } = require('../mode')
 
 const SITE_MODES = {
@@ -61,6 +65,15 @@ const getVivaWalletConfig = () => {
 const getStripeConfig = () => {
   return {
     STRIPE_KEY
+  }
+}
+
+const getSmartAgendaConfig = () => {
+  return {
+    SMARTAGENDA_LOGIN,
+    SMARTAGENDA_PASSWORD,
+    SMARTAGENDA_API_ID,
+    SMARTAGENDA_API_KEY,
   }
 }
 
@@ -378,4 +391,5 @@ module.exports = {
   getHostName,
   paymentPlugin,
   getProductionUrl,
+  getSmartAgendaConfig,
 }
