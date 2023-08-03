@@ -15,8 +15,7 @@ const {MONGOOSE_OPTIONS, loadFromDb} = require('../../server/utils/database')
 describe('Challenge.key.picture ', () => {
 
   beforeAll(async() => {
-    //await mongoose.connect(`mongodb://localhost/test${moment().unix()}`, MONGOOSE_OPTIONS)
-    await mongoose.connect(`mongodb://localhost/smartdiet`, MONGOOSE_OPTIONS)
+    await mongoose.connect(`mongodb://localhost/test${moment().unix()}`, MONGOOSE_OPTIONS)
   })
 
   afterAll(async() => {

@@ -16,6 +16,8 @@ require('../../server/models/RecipeIngredient')
 require('../../server/models/Ingredient')
 require('../../server/models/Recipe')
 require('../../server/models/MenuRecipe')
+require('../../server/models/UserQuizz')
+require('../../server/models/Quizz')
 
 
 describe('Shopping list computation', () => {

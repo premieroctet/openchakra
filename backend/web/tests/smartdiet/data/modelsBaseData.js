@@ -8,4 +8,7 @@ module.exports={
     cguAccepted: true, pseudo: 'S', phone: '0', email: 's',
   },
   COACHING_DATA: {},
+  APPOINTMENT_DATA: {
+    start_date: new Date(),
+  },
 }

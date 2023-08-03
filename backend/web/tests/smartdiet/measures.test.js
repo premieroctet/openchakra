@@ -12,6 +12,12 @@ const Measure=require('../../server/models/Measure')
 const User=require('../../server/models/User')
 require('../../server/models/Company')
 require('../../server/models/Key')
+require('../../server/models/Target')
+require('../../server/models/Category')
+require('../../server/models/Association')
+require('../../server/models/Question')
+require('../../server/models/UserQuizz')
+require('../../server/models/Quizz')
 
 describe('Measure model ', () => {
 
@@ -33,8 +39,8 @@ describe('Measure model ', () => {
     await Measure.create({"date" : new Date(), "chest" : 0, "waist" : 0, "hips" : 0, "thighs" : 0, "arms" : null, "weight" : null, "user" : user._id })
     await Measure.create({"date" : new Date(), "chest" : null, "waist" : 0, "hips" : 0, "thighs" : 0, "arms" : null, "weight" : 2, "user" : user._id })
     const measures=await Measure.find({user: user._id})
-    const users=await loadFromDb({model: 'user', fields:["last_measures"], id: user._id})
-    expect(users[0].last_measures).toMatchObject({chest:5, waist: 10, hips: null, thighs:15, arms: null, weight:2})
+    const users=await loadFromDb({model: 'user', fields:["last_measures"], id: user._id, user})
+    expect(users[0].last_measures[0]).toMatchObject({chest:5, waist: 10, hips: null, thighs:15, arms: null, weight:2})
   })
 
 })
