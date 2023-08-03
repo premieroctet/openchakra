@@ -1,23 +1,8 @@
 const multer = require('multer')
 
-const ALLOWED_MIME_TYPES = {
-  'image/jpg': 'jpg',
-  'image/jpeg': 'jpg',
-  'image/png': 'png',
-}
-
 const multerMemoryOptions = {
   storage: multer.memoryStorage(),
   limits: 48096, // 6Mo ?
-  fileFilter(req, file, next) {
-    const isPhoto = file.mimetype.startsWith('image/')
-    if(isPhoto) {
-      next(null, true)
-    }
-    else {
-      next({message: 'That filetype isn\'t allowed!'}, false)
-    }
-  },
 }
 
 const multerDiskOptions = {

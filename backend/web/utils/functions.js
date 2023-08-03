@@ -78,7 +78,14 @@ const valueBetween = (value, start, stop) => {
   return value>=start && value <=stop
 }
 
+const sanitizeFilename = (name) => {
+  return name.toLowerCase()
+      .replace(/ /gi, '-')
+      .normalize('NFD')
+      .replace(/\p{Diacritic}/gu, '')
+}
+
 module.exports = {
   computeDistanceKm, computeAverageNotes, computeSumSkills, rgbaToHex,
-  valueBetween,
+  valueBetween, sanitizeFilename,
 }
