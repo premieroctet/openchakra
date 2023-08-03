@@ -27,7 +27,7 @@ const CoachingSchema = new Schema({
     type: Schema.Types.ObjectId,
     // TODO: check that target's category's type is TARGET_COACHING
     ref: 'target',
-    required: false,
+    required: true,
   }],
   dummy: {
     type: Number,
@@ -98,6 +98,11 @@ CoachingSchema.virtual('current_objectives', {localField:'tagada', foreignField:
   return lodash(this.appointments)
    .orderBy(app => app[CREATED_AT_ATTRIBUTE].start_date, 'desc')
    .head()?.objectives || []
+})
+
+// Returns the progress quizz if any
+CoachingSchema.virtual('progress_quizz', {localField:'tagada', foreignField:'tagada'}).get(function() {
+  return this.user_quizz.find(uq => uq.quizz.type==QUIZZ_TYPE_PROGRESS)
 })
 
 /* eslint-enable prefer-arrow-callback */

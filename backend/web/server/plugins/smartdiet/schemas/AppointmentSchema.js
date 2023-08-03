@@ -38,11 +38,6 @@ const AppointmentSchema = new Schema({
     ref: 'userQuizzQuestion',
     required: true,
   }],
-  logbooks: [{
-    type: Schema.Types.ObjectId,
-    ref: 'userQuizz',
-    required: true,
-  }],
 }, schemaOptions)
 
 AppointmentSchema.virtual('order').get(function() {

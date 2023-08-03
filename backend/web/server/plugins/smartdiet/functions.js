@@ -170,12 +170,27 @@ const preCreate = ({model, params, user}) => {
 
 setPreCreateData(preCreate)
 
-const postPutData = ({model, params, id, value, data}) => {
-  if (model=='coaching' && params.quizz) {
-    return Coaching.findById(id).populate(['quizz', 'user_quizz'])
-      .then(coaching => {
-        const missingUserQuizz=differenceSet(coaching.quizz, coaching.user_quizz)
-        console.log(`Missing user quizz:${missingUserQuizz}`)
+const postPutData = ({model, params, id, value, data, user}) => {
+  if ((model=='coaching' && params.quizz)
+      || model=='appointment' && params.logbooks) {
+    const mongoModel=mongoose.models[model]
+    const tplQuizzAttribute=model=='coaching' ? 'quizz' : 'logbooks'
+    const userQuizzAttribute=model=='coaching' ? 'user_quizz' : 'user_logbooks'
+    return mongoModel.findById(id).populate([
+      {path: tplQuizzAttribute, populate:'questions'},
+      {path: userQuizzAttribute, populate: 'quizz'},
+      {path: 'coaching'}
+      ])
+      .then(object => {
+        const linkedUser=model=='coaching' ? object.user : object.coaching.user
+        const extraUserQuizz=object[userQuizzAttribute].filter(uq => !object[tplQuizzAttribute].some(q => idEqual(q._id, uq.quizz._id)))
+        const missingUserQuizz=differenceSet(object[tplQuizzAttribute], object[userQuizzAttribute].map(uq => uq.quizz))
+        const addQuizzs=Promise.all(missingUserQuizz.map(q => q.cloneAsUserQuizz(linkedUser)))
+        return addQuizzs
+          .then(quizzs => mongoModel.findByIdAndUpdate(id, {$addToSet:{[userQuizzAttribute]: quizzs}}))
+          .then(() => mongoModel.findByIdAndUpdate(id, {$pull:{[userQuizzAttribute]: extraUserQuizz}}))
+          .then(() => Promise.all(extraUserQuizz.map(q => q.delete())))
+          .then(() => mongoModel.findById(id))
       })
   }
   return Promise.resolve(params)
@@ -651,6 +666,13 @@ declareVirtualField({model: 'coaching', field: 'current_objectives', instance: '
     options: {ref: 'quizzQuestion'}
   },
 })
+declareVirtualField({model: 'coaching', field: 'progress_quizz', instance: 'userQuizz', multiple: false,
+  requires: 'user_quizz.quizz',
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'userQuizz'}
+  },
+})
 
 declareEnumField({model: 'userCoachingQuestion', field: 'status', enumValues: COACHING_QUESTION_STATUS})
 
@@ -941,19 +963,7 @@ Company.findOneAndUpdate(
   .catch(err => console.error(`Particular company upsert error:${err}`))
 
 
-// Ensure spoon gains table contains every source
-Object.keys(SPOON_SOURCE).forEach(source => {
-  SpoonGain.findOneAndUpdate(
-    {source},
-    { $setOnInsert: { source, gain: 0 } },
-    {upsert: true, runValidators: true},
-  )
-  .then(res => !res && console.debug(`Adding 0 sppon gain for missing source ${source}`))
-  .catch(err => console.error(err))
-})
-
 // Create missings coachings for any CUSTOMER
-
 User.find({role: ROLE_CUSTOMER}).populate('coachings')
  .then(users => users.filter(user => lodash.isEmpty(user.coachings)))
  .then(users => Promise.all(users.map(user => Coaching.create({user}))))

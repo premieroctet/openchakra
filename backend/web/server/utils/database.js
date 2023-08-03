@@ -207,6 +207,9 @@ const getExposedModels = () => {
 const buildPopulates = (modelName, fields) => {
   // Retain all ref fields
   const model=getModels()[modelName]
+  if (!model) {
+    throw new Error(`Unkown model ${modelName}`)
+  }
   const attributes=model.attributes
   let requiredFields=[...fields]
   // Add declared required fields for virtuals
@@ -635,8 +638,6 @@ const shareTargets = (obj1, obj2) => {
 }
 
 const putToDb = ({model, id, params, user}) => {
-  console.log(`Updating:${model}/${id} with ${JSON.stringify(params)}`)
-  // Update object instead of findByIdAndUpdate to ensure 'this' exists in required functions
   return mongoose.connection.models[model]
     .findById(id)
     .then(data => {
@@ -644,7 +645,7 @@ const putToDb = ({model, id, params, user}) => {
       Object.keys(params).forEach(k => { data[k]=params[k] })
       return data.save()
     })
-    .then(data => callPostPutData({model, params, data, user}))
+    .then(data => callPostPutData({model, id, params, data, user}))
 }
 
 const loadFromDb = ({model, fields, id, user, params}) => {
