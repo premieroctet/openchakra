@@ -2,7 +2,7 @@ const multer = require('multer')
 
 const multerMemoryOptions = {
   storage: multer.memoryStorage(),
-  limits: 48096, // 6Mo ?
+  limits: 90000, 
 }
 
 const multerDiskOptions = {

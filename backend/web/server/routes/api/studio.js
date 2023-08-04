@@ -12,6 +12,7 @@ const passport = require('passport')
 const {handleUploadedFile} = require('../../middlewares/uploadFile')
 const {resizeImage} = require('../../middlewares/resizeImage')
 const {sendFilesToAWS} = require('../../middlewares/sendToCloud')
+const {catchErrors} = require('../../utils/handlers/errorHandlers')
 const {
   callFilterDataUser,
   callPostCreateData,
@@ -126,9 +127,8 @@ router.get('/roles', (req, res) => {
   return res.json(ROLES)
 })
 
-router.post('/uploadFiles', handleUploadedFile, resizeImage, sendFilesToAWS, (req, res) => {
-  // console.log(req.file, req.body, 'studio upload files')
-  return res.status(200)
+router.post('/uploadFiles', handleUploadedFile, catchErrors(resizeImage), catchErrors(sendFilesToAWS), (req, res) => {
+  return res.status(201).json(true)
 })
 
 router.get('/action-allowed/:action', passport.authenticate('cookie', {session: false}), (req, res) => {

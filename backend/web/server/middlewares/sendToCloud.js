@@ -2,8 +2,8 @@ const AWS = require('aws-sdk')
 const {S3_ID,
   S3_SECRET,
   S3_REGION,
-  S3_BUCKET,
-  S3_ROOTPATH,} = require('../../mode')
+  S3_BUCKET
+} = require('../../mode')
 
 AWS.config.update({
   accessKeyId: S3_ID,
@@ -20,7 +20,7 @@ exports.sendFilesToAWS = async(req, res, next) => {
     return new Promise(async(resolve, reject) => {
       const params = {
         Bucket: S3_BUCKET,
-        Key: `${S3_ROOTPATH}/${document.filename}`,
+        Key: document.filename,
         Body: document.buffer,
         ContentType: document.mimetype,
         // ACL: 'public-read', // What's this ACL ?

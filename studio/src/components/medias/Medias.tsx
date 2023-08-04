@@ -72,23 +72,25 @@ const Medias = ({
   const handleUpload = async (event: React.ChangeEvent) => {
     event.preventDefault()
 
-    const formData = new FormData();
-    formData.append('document', fileToUpload)
-
-
-  const sendFile = await axios.post(`${config.targetDomain}/myAlfred/api/studio/uploadFiles`, 
-    formData, 
-    {
-      headers: {
-      'Content-Type': 'multipart/form-data'
-      },
+    if (fileToUpload) {
+      const formData = new FormData();
+      formData.append('document', fileToUpload)
+  
+      const sendFile = await axios.post(
+        `${config.targetDomain}/myAlfred/api/studio/uploadFiles`, 
+        formData, 
+        {
+          headers: {
+          'Content-Type': 'multipart/form-data'
+          },
+        }
+      )
+        .then(() => onClose())
+        .then(() => setFileToUpload(undefined))
+        .then(() => fetchFiles())
+        .catch(err => console.error(err))
     }
-  )
-    // fileToUpload &&
-    //   (await uploadFile(fileToUpload?.name, fileToUpload)
-    //     .then(() => onClose())
-    //     .then(() => setFileToUpload(undefined))
-    //     .then(() => fetchFiles()))
+    
   }
 
   const handleFilters = (val: string) => {

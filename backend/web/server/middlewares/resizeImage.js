@@ -1,11 +1,13 @@
 const sharp = require('sharp')
 const {IMAGES_WIDTHS_FOR_RESIZE} = require('../../utils/consts')
 const { sanitizeFilename } = require('../../utils/functions')
+const { S3_ROOTPATH } = require('../../mode')
 
 
 const IMAGE_FORMAT_TARGETTED = {
   extension: 'webp', // Available on all good browsers
-  mime: 'image/webp'
+  mime: 'image/webp',
+  options: { lossless: true, quality: 90 }
 }
 const THUMBNAILS_DIR = 'thumbnails'
 
@@ -40,8 +42,7 @@ exports.resizeImage = async(req, res, next) => {
         };
       })
       .catch(err => {
-        console.error('Error while obtaining image dimensions :', err);
-        res.status(500).json({ error: 'Error while obtaining image dimensions' });
+        throw Error('Error while obtaining image dimensions :', err);
       });
       
     const retainedImageSizes = IMAGES_WIDTHS_FOR_RESIZE
@@ -56,13 +57,13 @@ exports.resizeImage = async(req, res, next) => {
         availableSizes.push(width)
         const image = await sharp(req.file.buffer)
           .resize({width})
-          .toFormat(IMAGE_FORMAT_TARGETTED.extension)
+          .toFormat(IMAGE_FORMAT_TARGETTED.extension, IMAGE_FORMAT_TARGETTED.options)
           .toBuffer()
 
         const imageData = {
           filename: originalWidth === width // spread availables image dimensions on original file. Others in thumbnails dir
-            ? `${uploadedfilenamebase}_srscset:${availableSizes.join('*')}).${IMAGE_FORMAT_TARGETTED.extension}`
-            : `${THUMBNAILS_DIR}/${uploadedfilenamebase}_w:${width}.${IMAGE_FORMAT_TARGETTED.extension}`,
+            ? `${S3_ROOTPATH}/${uploadedfilenamebase}_srcset:${availableSizes.join('*')}.${IMAGE_FORMAT_TARGETTED.extension}`
+            : `${THUMBNAILS_DIR}/${S3_ROOTPATH}/${uploadedfilenamebase}_w:${width}.${IMAGE_FORMAT_TARGETTED.extension}`,
           mimetype: IMAGE_FORMAT_TARGETTED.mime,
           buffer: image,
         }
@@ -75,11 +76,16 @@ exports.resizeImage = async(req, res, next) => {
 
   } else {
     req.body.documents.push({
-      filename: uploadedfilename,
+      filename: `${S3_ROOTPATH}/${uploadedfilename}`,
       mimetype: req.file.mimetype,
       buffer: req.file.buffer,
     }) 
   }
 
   next()
+}
+
+
+function handleImageFormat() {
+
 }

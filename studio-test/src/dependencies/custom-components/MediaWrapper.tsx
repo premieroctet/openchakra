@@ -1,6 +1,7 @@
 import React from 'react'
 import {IconButton} from '@chakra-ui/react'
 import { DownloadIcon } from '@chakra-ui/icons'
+import { imageSrcPaths } from '../utils/misc'
 
 export const getExtension = (filename: string) =>
   filename.substring(filename.lastIndexOf('.') + 1, filename.length) || filename
@@ -148,14 +149,16 @@ export const mediaWrapper = ({
 
       )
     default:
+      const srcSet = imageSrcPaths(src)
       return (
         <>
         <img
           loading="lazy"
-          src={src}
+          src={src}  
           width={doc.width}
           height={doc.height}
           alt=""
+          srcSet={srcSet || ''}
         />
         <Comp />
         </>

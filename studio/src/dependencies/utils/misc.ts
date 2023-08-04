@@ -40,3 +40,38 @@ export const matcher = (pattern:string, elements:Array<any>, attribute:string) =
   return orResult
   */
 }
+
+
+export const imageSrcPaths = (originalSrc:string) => {
+
+  /**
+   * src filename example containing sizes: 
+   * https://******.amazonaws.com/devtest/studio/wappizy_srcset:500*1000*1920.webp
+   * 
+   * example of filepath derived for a smaller image
+   * https://******.amazonaws.com/thumbnails/devtest/studio/wappizy_w:500.webp
+   * 
+   */
+  let srcSet = undefined
+
+  const filePathParts = originalSrc.split("_srcset:");
+      
+      if (filePathParts.length > 1) {
+        const availableSizes = filePathParts[1].match(/\d+/g);
+        const availableSizesQty = availableSizes?.length
+        const rootPath:string = process.env.NEXT_PUBLIC_S3_ROOTPATH || process.env.REACT_APP_S3_ROOTPATH || ''
+        srcSet = availableSizes && availableSizes
+          .map((size, index) => {
+            const re = filePathParts.length > 0 ? filePathParts[0].split(rootPath) : []
+            const newpath = (index + 1) === availableSizesQty 
+              ? `${originalSrc} ${size}w`
+              : `${re[0]}thumbnails/${rootPath}${re[1]}_w:${size}.webp ${size}w`
+            
+            return newpath
+          })
+          .join(', ')
+      }
+      
+  return srcSet
+}
+
