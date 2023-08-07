@@ -42,7 +42,7 @@ export const matcher = (pattern:string, elements:Array<any>, attribute:string) =
 }
 
 
-export const imageSrcPaths = (originalSrc:string) => {
+export const imageSrcSetPaths = (originalSrc:string, withDimension=true) => {
 
   /**
    * src filename example containing sizes: 
@@ -55,6 +55,7 @@ export const imageSrcPaths = (originalSrc:string) => {
   let srcSet = undefined
 
   const filePathParts = originalSrc.split("_srcset:");
+  const filenameextension = originalSrc.substring(originalSrc.lastIndexOf('.') + 1, originalSrc.length)
       
       if (filePathParts.length > 1) {
         const availableSizes = filePathParts[1].match(/\d+/g);
@@ -64,12 +65,11 @@ export const imageSrcPaths = (originalSrc:string) => {
           .map((size, index) => {
             const re = filePathParts.length > 0 ? filePathParts[0].split(rootPath) : []
             const newpath = (index + 1) === availableSizesQty 
-              ? `${originalSrc} ${size}w`
-              : `${re[0]}thumbnails/${rootPath}${re[1]}_w:${size}.webp ${size}w`
+              ? `${originalSrc}${withDimension ? ` ${size}w` : ''}`
+              : `${re[0]}thumbnails/${rootPath}${re[1]}_w:${size}.${filenameextension}${withDimension ? ` ${size}w` : ''}`
             
             return newpath
           })
-          .join(', ')
       }
       
   return srcSet

@@ -102,7 +102,8 @@ const Medias = ({
   }
 
   const handleDelete = async (key: string) => {
-    await deleteFile(key).then(() => {
+    await deleteFile(key)
+    .then(() => {
       setImages(images.filter((img: s3media) => img.Key !== key))
     })
   }

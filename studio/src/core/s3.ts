@@ -1,6 +1,7 @@
 import AWS from 'aws-sdk'
 import { s3Config } from '~dependencies/utils/s3Config'
 import mime from 'mime-types'
+import { imageSrcSetPaths } from '../dependencies/utils/misc'
 
 export type ListFileResponse = {
   message: string
@@ -35,22 +36,28 @@ export const uploadFile = (filename: string, contents: any) => {
       return Promise.reject(err)
     })
 }
-export const deleteFile = (url: string) => {
-  // Setting up S3 upload parameters
-  const params = {
-    Bucket: 'my-alfred-data-test',
-    Key: url, // File name you want to delete as in S3
-  }
+export const deleteFile = async(url: string) => {
+  
+  // does this match with filename pattern
+  const filesToDelete = imageSrcSetPaths(url, false) || [url]
+  
+  const promiseDelete = filesToDelete.map(url => {
+    // Setting up S3 upload parameters
+    const params = {
+      Bucket: 'my-alfred-data-test',
+      Key: url, // File name you want to delete as in S3
+    }
+    return S3.deleteObject(params)
+      .promise()
+      .then(res => {
+        return Promise.resolve(res)
+      })
+      .catch(err => {
+        return Promise.reject(err)
+      })
+  })
 
-  // Uploading files to the bucket
-  return S3.deleteObject(params)
-    .promise()
-    .then(res => {
-      return Promise.resolve(res)
-    })
-    .catch(err => {
-      return Promise.reject(err)
-    })
+  return await Promise.all(promiseDelete)
 }
 
 export const listFiles = async () => {
