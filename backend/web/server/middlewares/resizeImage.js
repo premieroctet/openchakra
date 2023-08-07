@@ -21,13 +21,38 @@ exports.resizeImage = async(req, res, next) => {
   */
  
   req.body.documents = []
-  const ALLOWED_MIME_TYPES = { // we don't sharp .gif
-    'image/jpg': 'jpg',
-    'image/jpeg': 'jpg',
-    'image/png': 'png',
-    'image/webp': 'webp',
+  
+  const RETAINED_QUALITY = 100
+  const JPEG_SETTINGS = {
+    extension: 'jpg',
+    outputFormat: 'jpeg',
+    options: {
+      quality: RETAINED_QUALITY,
+      mozjpeg: true
+    }
   }
-  const isImage = Object.keys(ALLOWED_MIME_TYPES).includes(req.file.mimetype)
+  const IMAGE_SETTINGS = { // we don't sharp .gif
+    'image/jpg': JPEG_SETTINGS,
+    'image/jpeg': JPEG_SETTINGS,
+    'image/png': {
+      extension: 'png',
+      outputFormat: 'png',
+      options: {
+        quality: RETAINED_QUALITY,
+      }
+    },
+    'image/webp': {
+      extension: 'webp',
+      outputFormat: 'webp',
+      options: {
+        quality: RETAINED_QUALITY,
+        lossless: true,
+      }
+    }
+  }
+
+  const filemimetype = req.file.mimetype
+  const isImage = Object.keys(IMAGE_SETTINGS).includes(filemimetype)
   const uploadedfilename = sanitizeFilename(req.file.originalname)
   const uploadedfilenamebase = uploadedfilename.substring(0, uploadedfilename.lastIndexOf('.'))
  
@@ -57,14 +82,14 @@ exports.resizeImage = async(req, res, next) => {
         availableSizes.push(width)
         const image = await sharp(req.file.buffer)
           .resize({width})
-          .toFormat(IMAGE_FORMAT_TARGETTED.extension, IMAGE_FORMAT_TARGETTED.options)
+          .toFormat(IMAGE_SETTINGS[filemimetype].outputFormat, IMAGE_SETTINGS[filemimetype].options)
           .toBuffer()
 
         const imageData = {
           filename: originalWidth === width // spread availables image dimensions on original file. Others in thumbnails dir
-            ? `${S3_ROOTPATH}/${uploadedfilenamebase}_srcset:${availableSizes.join('*')}.${IMAGE_FORMAT_TARGETTED.extension}`
-            : `${THUMBNAILS_DIR}/${S3_ROOTPATH}/${uploadedfilenamebase}_w:${width}.${IMAGE_FORMAT_TARGETTED.extension}`,
-          mimetype: IMAGE_FORMAT_TARGETTED.mime,
+            ? `${S3_ROOTPATH}/${uploadedfilenamebase}_srcset:${availableSizes.join('*')}.${IMAGE_SETTINGS[filemimetype].extension}`
+            : `${THUMBNAILS_DIR}/${S3_ROOTPATH}/${uploadedfilenamebase}_w:${width}.${IMAGE_SETTINGS[filemimetype].extension}`,
+          mimetype: filemimetype,
           buffer: image,
         }
         req.body.documents.push(imageData)
