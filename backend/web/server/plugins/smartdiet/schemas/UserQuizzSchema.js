@@ -1,19 +1,33 @@
+const { QUIZZ_TYPE, SURVEY_ANSWER } = require('../consts')
 const mongoose = require('mongoose')
 const {schemaOptions} = require('../../../utils/schemas')
-const { SURVEY_ANSWER } = require('../consts')
 
 const Schema = mongoose.Schema
 
 const UserQuizzSchema = new Schema({
-  user: {
+  coaching: {
     type: Schema.Types.ObjectId,
-    ref: 'user',
+    ref: 'coaching',
     required: true,
   },
-  quizz: {
+  _quizz: {
     type: Schema.Types.ObjectId,
     ref: 'quizz',
     required: true,
+  },
+  name: {
+    type: String,
+    required: [true, 'Le nom est obligatoire'],
+  },
+  type: {
+    type: String,
+    enum: Object.keys(QUIZZ_TYPE),
+    required: [true, 'Le type est obligatoire'],
+  },
+  key: {
+    type: Schema.Types.ObjectId,
+    ref: 'key',
+    required: [true, 'La clé est obligatoire'],
   },
   questions: [{
     type: Schema.Types.ObjectId,

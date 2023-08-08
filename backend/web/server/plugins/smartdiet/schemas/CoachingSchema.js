@@ -1,4 +1,10 @@
-const { COACHING_MODE, ROLE_EXTERNAL_DIET } = require('../consts')
+const {
+  COACHING_MODE,
+  QUIZZ_TYPE_LOGBOOK,
+  QUIZZ_TYPE_PATIENT,
+  QUIZZ_TYPE_PROGRESS,
+  ROLE_EXTERNAL_DIET
+} = require('../consts')
 const { CREATED_AT_ATTRIBUTE } = require('../../../../utils/consts')
 const mongoose = require('mongoose')
 const { schemaOptions } = require('../../../utils/schemas')
@@ -40,15 +46,9 @@ const CoachingSchema = new Schema({
     required: true,
   }],
   // Templates progress quizz & logbooks & patient quizzs
-  quizz: [{
+  quizz_models: [{
     type: Schema.Types.ObjectId,
     ref: 'quizz',
-    required: true,
-  }],
-  // User's progress quizz & logbooks & patient quizzs
-  user_quizz: [{
-    type: Schema.Types.ObjectId,
-    ref: 'userQuizz',
     required: true,
   }],
 }, schemaOptions)
@@ -100,9 +100,44 @@ CoachingSchema.virtual('current_objectives', {localField:'tagada', foreignField:
    .head()?.objectives || []
 })
 
-// Returns the progress quizz if any
-CoachingSchema.virtual('progress_quizz', {localField:'tagada', foreignField:'tagada'}).get(function() {
-  return this.user_quizz.find(uq => uq.quizz.type==QUIZZ_TYPE_PROGRESS)
+// all diets (hidden)
+CoachingSchema.virtual("_all_diets", {
+  ref: "user", // The Model to use
+  localField: "dummy", // Find in Model, where localField
+  foreignField: "dummy", // is equal to foreignField
+  options: {
+    match: {role: ROLE_EXTERNAL_DIET},
+  },
+})
+
+// Patient quizz
+CoachingSchema.virtual("quizz", {
+  ref: "userQuizz", // The Model to use
+  localField: "dummy", // Find in Model, where localField
+  foreignField: "dummy", // is equal to foreignField
+  options: {
+    match: {type: QUIZZ_TYPE_PATIENT},
+  },
+})
+
+// Logbooks (i.e. journaux)
+CoachingSchema.virtual("logbooks", {
+  ref: "userQuizz", // The Model to use
+  localField: "dummy", // Find in Model, where localField
+  foreignField: "dummy", // is equal to foreignField
+  options: {
+    match: {type: QUIZZ_TYPE_LOGBOOK},
+  },
+})
+
+// Progress
+CoachingSchema.virtual("progress", {
+  ref: "userQuizz", // The Model to use
+  localField: "dummy", // Find in Model, where localField
+  foreignField: "dummy", // is equal to foreignField
+  options: {
+    match: {type: QUIZZ_TYPE_PROGRESS},
+  },
 })
 
 /* eslint-enable prefer-arrow-callback */

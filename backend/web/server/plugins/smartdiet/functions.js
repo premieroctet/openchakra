@@ -386,7 +386,7 @@ USER_MODELS.forEach(m => {
       options: {ref: 'coaching'}},
   })
   declareVirtualField({model: m, field: 'latest_coachings', instance: 'Array',
-    requires: 'coachings.appointments.start_date,coachings.appointments.objectives,surveys,coachings.food_documents.key.picture,coachings.appointments.objectives',
+    requires: 'coachings.quizz.key,coachings.user_quizz.quizz.key,coachings.appointments.start_date,coachings.appointments.objectives,surveys,coachings.food_documents.key.picture,coachings.appointments.objectives',
     multiple: true,
     caster: {
       instance: 'ObjectID',
@@ -666,8 +666,19 @@ declareVirtualField({model: 'coaching', field: 'current_objectives', instance: '
     options: {ref: 'quizzQuestion'}
   },
 })
-declareVirtualField({model: 'coaching', field: 'progress_quizz', instance: 'userQuizz', multiple: false,
-  requires: 'user_quizz.quizz',
+declareVirtualField({model: 'coaching', field: 'quizz', instance: 'userQuizz', multiple: false,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'userQuizz'}
+  },
+})
+declareVirtualField({model: 'coaching', field: 'progress', instance: 'userQuizz', multiple: false,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'userQuizz'}
+  },
+})
+declareVirtualField({model: 'coaching', field: 'logbooks', instance: 'userQuizz', multiple: false,
   caster: {
     instance: 'ObjectID',
     options: {ref: 'userQuizz'}
@@ -710,6 +721,8 @@ declareVirtualField({model: 'appointment', field:'order', instance: 'Number',
 declareVirtualField({model: 'userQuizzQuestion', field:'order', instance: 'Number',
   requires: 'userQuizz.questions',
 })
+
+declareEnumField({model: 'userQuizz', field: 'type', enumValues: QUIZZ_TYPE})
 
 const getDataLiked = (user, params, data) => {
   const liked=data?.likes?.some(l => idEqual(l._id, user?._id))
