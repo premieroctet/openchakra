@@ -5,11 +5,6 @@ const {schemaOptions} = require('../../../utils/schemas')
 const Schema = mongoose.Schema
 
 const UserQuizzSchema = new Schema({
-  coaching: {
-    type: Schema.Types.ObjectId,
-    ref: 'coaching',
-    required: true,
-  },
   quizz: {
     type: Schema.Types.ObjectId,
     ref: 'quizz',
@@ -27,7 +22,8 @@ const UserQuizzSchema = new Schema({
   key: {
     type: Schema.Types.ObjectId,
     ref: 'key',
-    required: [true, 'La clé est obligatoire'],
+    //required: [true, 'La clé est obligatoire'],
+    required: false,
   },
   questions: [{
     type: Schema.Types.ObjectId,

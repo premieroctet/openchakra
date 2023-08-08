@@ -32,10 +32,11 @@ const QuizzQuestionSchema = new Schema({
 /* eslint-disable prefer-arrow-callback */
 QuizzQuestionSchema.methods.cloneAsUserQuestion=function() {
   const params={
+    quizz_question: this,
     ...lodash.omit(this.toObject(), ['_id', 'id', CREATED_AT_ATTRIBUTE, UPDATED_AT_ATTRIBUTE]),
     diet: undefined,
   }
-  return mongoose.models.quizzQuestion.create(params)
+  return mongoose.models.userQuizzQuestion.create(params)
 }
 /* eslint-enable prefer-arrow-callback */
 

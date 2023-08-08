@@ -45,12 +45,32 @@ const CoachingSchema = new Schema({
     ref: 'foodDocument',
     required: true,
   }],
-  // Templates progress quizz & logbooks & patient quizzs
-  quizz_models: [{
+  //
+  logbook_templates: [{
     type: Schema.Types.ObjectId,
     ref: 'quizz',
     required: true,
   }],
+  logbooks: [{
+    type: Schema.Types.ObjectId,
+    ref: 'userQuizz',
+    required: true,
+  }],
+  quizz_templates: [{
+    type: Schema.Types.ObjectId,
+    ref: 'quizz',
+    required: true,
+  }],
+  quizz: [{
+    type: Schema.Types.ObjectId,
+    ref: 'userQuizz',
+    required: true,
+  }],
+  progress: {
+    type: Schema.Types.ObjectId,
+    ref: 'userQuizz',
+    required: false,
+  },
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
@@ -107,36 +127,6 @@ CoachingSchema.virtual("_all_diets", {
   foreignField: "dummy", // is equal to foreignField
   options: {
     match: {role: ROLE_EXTERNAL_DIET},
-  },
-})
-
-// Patient quizz
-CoachingSchema.virtual("quizz", {
-  ref: "userQuizz", // The Model to use
-  localField: "dummy", // Find in Model, where localField
-  foreignField: "dummy", // is equal to foreignField
-  options: {
-    match: {type: QUIZZ_TYPE_PATIENT},
-  },
-})
-
-// Logbooks (i.e. journaux)
-CoachingSchema.virtual("logbooks", {
-  ref: "userQuizz", // The Model to use
-  localField: "dummy", // Find in Model, where localField
-  foreignField: "dummy", // is equal to foreignField
-  options: {
-    match: {type: QUIZZ_TYPE_LOGBOOK},
-  },
-})
-
-// Progress
-CoachingSchema.virtual("progress", {
-  ref: "userQuizz", // The Model to use
-  localField: "dummy", // Find in Model, where localField
-  foreignField: "dummy", // is equal to foreignField
-  options: {
-    match: {type: QUIZZ_TYPE_PROGRESS},
   },
 })
 

@@ -563,6 +563,7 @@ const putAttribute = ({parent, attribute, value, user}) => {
 
       let query=mongooseModel.find({$or: [{_id: parent}, {origin: parent}]})
       query = populates.reduce((q, key) => q.populate(key), query)
+      const allModels=getModels()
       return query
         .then(objects => {
           return Promise.all(objects.map(object => {
@@ -570,6 +571,22 @@ const putAttribute = ({parent, attribute, value, user}) => {
             let obj=paths.length>1 ? lodash.get(object, paths.slice(0, paths.length-1)) : object
             lodash.set(obj, paths.slice(-1)[0], value)
             return obj.save({runValidators: true})
+              .then(obj => {
+                let subModel=model
+                paths.slice(0, -1).forEach(att => {
+                  const params=allModels[subModel].attributes[att]
+                  if (params.ref) {
+                    subModel=params.type
+                  }
+                })
+                const subData=lodash.get(object, paths.slice(0, -1).join('.'))
+                const subId=subData._id.toString()
+                const subAttr=paths.slice(-1)
+                callPostPutData({model:subModel, id: subId, attribute:subAttr, value,
+                  params:{[subAttr]:value},
+                  user, data: subData})
+                return obj
+              })
           }))
         })
     })

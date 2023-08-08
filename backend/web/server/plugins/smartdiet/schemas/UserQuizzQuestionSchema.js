@@ -5,11 +5,6 @@ const { SURVEY_ANSWER } = require('../consts')
 const Schema = mongoose.Schema
 
 const UserQuizzQuestionSchema = new Schema({
-  user_quizz: {
-    type: Schema.Types.ObjectId,
-    ref: 'userQuizz',
-    required: [true, 'Le quizz modèle est obligatoire'],
-  },
   quizz_question: {
     type: Schema.Types.ObjectId,
     ref: 'quizzQuestion',

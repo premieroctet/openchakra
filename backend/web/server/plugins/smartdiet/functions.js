@@ -171,26 +171,20 @@ const preCreate = ({model, params, user}) => {
 setPreCreateData(preCreate)
 
 const postPutData = ({model, params, id, value, data, user}) => {
-  if ((model=='coaching' && params.quizz)
-      || model=='appointment' && params.logbooks) {
-    const mongoModel=mongoose.models[model]
-    const tplQuizzAttribute=model=='coaching' ? 'quizz' : 'logbooks'
-    const userQuizzAttribute=model=='coaching' ? 'user_quizz' : 'user_logbooks'
-    return mongoModel.findById(id).populate([
-      {path: tplQuizzAttribute, populate:'questions'},
-      {path: userQuizzAttribute, populate: 'quizz'},
-      {path: 'coaching'}
+  if (model=='coaching' && params.logbook_templates) {
+    return mongoose.models.coaching.findById(id).populate([
+        {path: 'logbook_templates', populate:'questions'},
+        {path: 'logbooks', populate:{path: 'quizz', populate:'questions'}},
       ])
-      .then(object => {
-        const linkedUser=model=='coaching' ? object.user : object.coaching.user
-        const extraUserQuizz=object[userQuizzAttribute].filter(uq => !object[tplQuizzAttribute].some(q => idEqual(q._id, uq.quizz._id)))
-        const missingUserQuizz=differenceSet(object[tplQuizzAttribute], object[userQuizzAttribute].map(uq => uq.quizz))
-        const addQuizzs=Promise.all(missingUserQuizz.map(q => q.cloneAsUserQuizz(linkedUser)))
+      .then(coaching => {
+        const extraUserQuizz=coaching.logbooks.filter(uq => !coaching.logbook_templates.some(q => idEqual(q._id, uq.quizz._id)))
+        const missingUserQuizz=differenceSet(coaching.logbook_templates, coaching.logbooks.map(uq => uq.quizz))
+        const addQuizzs=Promise.all(missingUserQuizz.map(q => q.cloneAsUserQuizz(coaching)))
         return addQuizzs
-          .then(quizzs => mongoModel.findByIdAndUpdate(id, {$addToSet:{[userQuizzAttribute]: quizzs}}))
-          .then(() => mongoModel.findByIdAndUpdate(id, {$pull:{[userQuizzAttribute]: extraUserQuizz}}))
+          .then(quizzs => mongoose.models.coaching.findByIdAndUpdate(id, {$addToSet:{logbooks: quizzs}}))
+          .then(() => mongoose.models.coaching.findByIdAndUpdate(id, {$pull:{logbooks: {$in: extraUserQuizz}}}))
           .then(() => Promise.all(extraUserQuizz.map(q => q.delete())))
-          .then(() => mongoModel.findById(id))
+          .then(() => mongoose.models.coaching.findById(id))
       })
   }
   return Promise.resolve(params)
