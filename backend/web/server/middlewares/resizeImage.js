@@ -1,27 +1,16 @@
 const sharp = require('sharp')
-const {IMAGES_WIDTHS_FOR_RESIZE} = require('../../utils/consts')
-const { sanitizeFilename } = require('../../utils/functions')
+const {IMAGES_WIDTHS_FOR_RESIZE, IMAGE_SIZE_MARKER} = require('../../utils/consts')
+const { sanitizeFilename, generateUUID } = require('../../utils/functions')
 const { S3_ROOTPATH } = require('../../mode')
 
 
-const IMAGE_FORMAT_TARGETTED = {
-  extension: 'webp', // Available on all good browsers
-  mime: 'image/webp',
-  options: { lossless: true, quality: 90 }
-}
 const THUMBNAILS_DIR = 'thumbnails'
+const IMAGE_SIZE_SEPARATOR = '_'
 
 exports.resizeImage = async(req, res, next) => {
   if (!req.file) { return next() }
-  
-  /* Structure for documents (je garde req.documents, req.files, ou req.file ?) : 
-  - filename including pattern dimensions, 
-  - mimetype, 
-  - buffer 
-  */
  
   req.body.documents = []
-  
   const RETAINED_QUALITY = 100
   const JPEG_SETTINGS = {
     extension: 'jpg',
@@ -53,7 +42,9 @@ exports.resizeImage = async(req, res, next) => {
 
   const filemimetype = req.file.mimetype
   const isImage = Object.keys(IMAGE_SETTINGS).includes(filemimetype)
-  const uploadedfilename = sanitizeFilename(req.file.originalname)
+
+  // filename is prefixed with uuid, and sanitized
+  const uploadedfilename = `${generateUUID()}_${sanitizeFilename(req.file.originalname)}`
   const uploadedfilenamebase = uploadedfilename.substring(0, uploadedfilename.lastIndexOf('.'))
  
   if (isImage) {
@@ -87,7 +78,7 @@ exports.resizeImage = async(req, res, next) => {
 
         const imageData = {
           filename: originalWidth === width // spread availables image dimensions on original file. Others in thumbnails dir
-            ? `${S3_ROOTPATH}/${uploadedfilenamebase}_srcset:${availableSizes.join('*')}.${IMAGE_SETTINGS[filemimetype].extension}`
+            ? `${S3_ROOTPATH}/${uploadedfilenamebase}${IMAGE_SIZE_MARKER}${availableSizes.join(IMAGE_SIZE_SEPARATOR)}.${IMAGE_SETTINGS[filemimetype].extension}`
             : `${THUMBNAILS_DIR}/${S3_ROOTPATH}/${uploadedfilenamebase}_w:${width}.${IMAGE_SETTINGS[filemimetype].extension}`,
           mimetype: filemimetype,
           buffer: image,
@@ -104,7 +95,7 @@ exports.resizeImage = async(req, res, next) => {
       filename: `${S3_ROOTPATH}/${uploadedfilename}`,
       mimetype: req.file.mimetype,
       buffer: req.file.buffer,
-    }) 
+    })
   }
 
   next()
