@@ -1,4 +1,26 @@
 const {
+  CREATED_AT_ATTRIBUTE,
+  UPDATED_AT_ATTRIBUTE
+} = require('../../../utils/consts')
+const UserQuizzQuestion = require('../../models/UserQuizzQuestion')
+const {
+  declareComputedField,
+  declareEnumField,
+  declareVirtualField,
+  differenceSet,
+  getModel,
+  idEqual,
+  loadFromDb,
+  setFilterDataUser,
+  setIntersects,
+  setPostCreateData,
+  setPostPutData,
+  setPreCreateData,
+  setPreprocessGet,
+  simpleCloneModel,
+} = require('../../utils/database')
+const QuizzQuestion = require('../../models/QuizzQuestion')
+const {
   ACTIVITY,
   COACHING_MODE,
   COACHING_QUESTION_STATUS,
@@ -32,21 +54,6 @@ const {
 } = require('./consts')
 const { BadRequestError, ForbiddenError } = require('../../utils/errors')
 const SpoonGain = require('../../models/SpoonGain')
-
-const {
-  declareComputedField,
-  declareEnumField,
-  declareVirtualField,
-  getModel,
-  idEqual,
-  loadFromDb,
-  setFilterDataUser,
-  setIntersects,
-  setPostCreateData,
-  setPreCreateData,
-  setPreprocessGet,
-  simpleCloneModel,
-} = require('../../utils/database')
 const CoachingQuestion = require('../../models/CoachingQuestion')
 const CollectiveChallenge = require('../../models/CollectiveChallenge')
 const Pip = require('../../models/Pip')
@@ -66,7 +73,6 @@ require('lodash.product')
 const lodash=require('lodash')
 const moment = require('moment')
 const UserSurvey = require('../../models/UserSurvey')
-const {CREATED_AT_ATTRIBUTE} = require('../../../utils/consts')
 const Offer = require('../../models/Offer')
 const Content = require('../../models/Content')
 const Company = require('../../models/Company')
@@ -74,6 +80,7 @@ const User = require('../../models/User')
 const Team = require('../../models/Team')
 const TeamMember = require('../../models/TeamMember')
 const Coaching = require('../../models/Coaching')
+const Appointment = require('../../models/Appointment')
 
 const filterDataUser = ({model, data, id, user}) => {
   if (model=='offer' && !id) {
@@ -91,7 +98,6 @@ const filterDataUser = ({model, data, id, user}) => {
 setFilterDataUser(filterDataUser)
 
 const preprocessGet = ({model, fields, id, user, params}) => {
-  console.log(`preProcessGet:${JSON.stringify(params)}`)
   if (model=='loggedUser') {
     model='user'
     id = user?._id || 'INVALIDID'
@@ -164,6 +170,33 @@ const preCreate = ({model, params, user}) => {
 
 setPreCreateData(preCreate)
 
+const postPutData = ({model, params, id, value, data, user}) => {
+  if ((model=='coaching' && params.quizz)
+      || model=='appointment' && params.logbooks) {
+    const mongoModel=mongoose.models[model]
+    const tplQuizzAttribute=model=='coaching' ? 'quizz' : 'logbooks'
+    const userQuizzAttribute=model=='coaching' ? 'user_quizz' : 'user_logbooks'
+    return mongoModel.findById(id).populate([
+      {path: tplQuizzAttribute, populate:'questions'},
+      {path: userQuizzAttribute, populate: 'quizz'},
+      {path: 'coaching'}
+      ])
+      .then(object => {
+        const linkedUser=model=='coaching' ? object.user : object.coaching.user
+        const extraUserQuizz=object[userQuizzAttribute].filter(uq => !object[tplQuizzAttribute].some(q => idEqual(q._id, uq.quizz._id)))
+        const missingUserQuizz=differenceSet(object[tplQuizzAttribute], object[userQuizzAttribute].map(uq => uq.quizz))
+        const addQuizzs=Promise.all(missingUserQuizz.map(q => q.cloneAsUserQuizz(linkedUser)))
+        return addQuizzs
+          .then(quizzs => mongoModel.findByIdAndUpdate(id, {$addToSet:{[userQuizzAttribute]: quizzs}}))
+          .then(() => mongoModel.findByIdAndUpdate(id, {$pull:{[userQuizzAttribute]: extraUserQuizz}}))
+          .then(() => Promise.all(extraUserQuizz.map(q => q.delete())))
+          .then(() => mongoModel.findById(id))
+      })
+  }
+  return Promise.resolve(params)
+}
+
+setPostPutData(postPutData)
 
 const USER_MODELS=['user', 'loggedUser']
 USER_MODELS.forEach(m => {
@@ -633,6 +666,13 @@ declareVirtualField({model: 'coaching', field: 'current_objectives', instance: '
     options: {ref: 'quizzQuestion'}
   },
 })
+declareVirtualField({model: 'coaching', field: 'progress_quizz', instance: 'userQuizz', multiple: false,
+  requires: 'user_quizz.quizz',
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'userQuizz'}
+  },
+})
 
 declareEnumField({model: 'userCoachingQuestion', field: 'status', enumValues: COACHING_QUESTION_STATUS})
 
@@ -663,14 +703,12 @@ declareEnumField({model: 'quizz', field: 'type', enumValues: QUIZZ_TYPE})
 
 declareEnumField({model: 'quizzQuestion', field: 'type', enumValues: QUIZZ_QUESTION_TYPE})
 
-declareVirtualField({model: 'userQuizz', field: 'answers', instance: 'company', multiple: false,
-  caster: {
-    instance: 'ObjectID',
-    options: {ref: 'quizzAnswer'}},
-})
-
 declareVirtualField({model: 'appointment', field:'order', instance: 'Number',
   requires: 'coaching.appointments',
+})
+
+declareVirtualField({model: 'userQuizzQuestion', field:'order', instance: 'Number',
+  requires: 'userQuizz.questions',
 })
 
 const getDataLiked = (user, params, data) => {
@@ -925,19 +963,7 @@ Company.findOneAndUpdate(
   .catch(err => console.error(`Particular company upsert error:${err}`))
 
 
-// Ensure spoon gains table contains every source
-Object.keys(SPOON_SOURCE).forEach(source => {
-  SpoonGain.findOneAndUpdate(
-    {source},
-    { $setOnInsert: { source, gain: 0 } },
-    {upsert: true, runValidators: true},
-  )
-  .then(res => !res && console.log(`Adding 0 sppon gain for missing source ${source}`))
-  .catch(err => console.error(err))
-})
-
 // Create missings coachings for any CUSTOMER
-
 User.find({role: ROLE_CUSTOMER}).populate('coachings')
  .then(users => users.filter(user => lodash.isEmpty(user.coachings)))
  .then(users => Promise.all(users.map(user => Coaching.create({user}))))

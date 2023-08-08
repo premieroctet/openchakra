@@ -1,12 +1,12 @@
-const { splitRemaining } = require('../../utils/text')
 const lodash = require('lodash')
 const mongoose = require('mongoose')
-const { BadRequestError, NotFoundError } = require('./errors')
 const formatDuration = require('format-duration')
-const { UPDATED_AT_ATTRIBUTE, CREATED_AT_ATTRIBUTE, MODEL_ATTRIBUTES_DEPTH } = require('../../utils/consts')
+const {splitRemaining} = require('../../utils/text')
+const {UPDATED_AT_ATTRIBUTE, CREATED_AT_ATTRIBUTE, MODEL_ATTRIBUTES_DEPTH} = require('../../utils/consts')
 const UserSessionData = require('../models/UserSessionData')
 const Booking = require('../models/Booking')
 const {CURRENT, FINISHED} = require('../plugins/fumoir/consts')
+const {BadRequestError, NotFoundError} = require('./errors')
 
 // const { ROLES, STATUS } = require("../../utils/aftral_studio/consts");
 // TODO: Omporting Theme makes a cyclic import. Why ?
@@ -16,7 +16,7 @@ const MONGOOSE_OPTIONS = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
-  useFindAndModify: false
+  useFindAndModify: false,
 }
 
 // Utilities
@@ -77,7 +77,7 @@ const getAttributeCaracteristics = (modelName, att) => {
   const type =
     baseData.instance == 'ObjectID' ? baseData.options.ref : baseData.instance
   const ref = baseData.instance == 'ObjectID'
-  let enumValues = undefined
+  let enumValues
   if (!lodash.isEmpty(att.enumValues)) {
     enumValues=att.enumValues
   }
@@ -128,7 +128,7 @@ const getReferencedModelAttributes = (modelName, level) => {
   const res = getBaseModelAttributes(modelName)
     .filter(att => att.instance == 'ObjectID')
     .map(att =>
-      //getSimpleModelAttributes(att.options.ref).map(([attName, instance]) => [
+      // getSimpleModelAttributes(att.options.ref).map(([attName, instance]) => [
       getModelAttributes(att.options.ref, level-1).map(([attName, instance]) => [
         `${att.path}.${attName}`,
         instance,
@@ -159,7 +159,7 @@ const getModelAttributes = (modelName, level=MODEL_ATTRIBUTES_DEPTH) => {
     })
     // TODO: UGLY. Properly handle aliases
     if (modelName=='user') {
-      mongoose.models['loggedUser'].schema.virtual(multName).get(function() {
+      mongoose.models.loggedUser.schema.virtual(multName).get(function() {
         return this?.[name]?.length || 0
       })
     }
@@ -170,7 +170,7 @@ const getModelAttributes = (modelName, level=MODEL_ATTRIBUTES_DEPTH) => {
     }
   })
 
-  const attrsWithCounts=[...attrs, ...multipleAttrs.map(name => [multiple_name(name), {type:Number, multiple:false, ref:false}])]
+  const attrsWithCounts=[...attrs, ...multipleAttrs.map(name => [multiple_name(name), {type: Number, multiple: false, ref: false}])]
   attrsWithCounts.sort((att1, att2) => attributesComparator(att1[0], att2[0]))
   return attrsWithCounts
 }
@@ -194,10 +194,10 @@ const getExposedModels = () => {
   }
 
   const models=lodash(getModels())
-    .omitBy((v, k)=> k=='IdentityCounter')
+    .omitBy((v, k) => k=='IdentityCounter')
     .mapValues((v, modelName) => ({
       ...v,
-      attributes: lodash(v.attributes).omitBy((v, k) => isHidddenAttributeName(modelName, k))
+      attributes: lodash(v.attributes).omitBy((v, k) => isHidddenAttributeName(modelName, k)),
     }))
 
   return models.value()
@@ -207,6 +207,9 @@ const getExposedModels = () => {
 const buildPopulates = (modelName, fields) => {
   // Retain all ref fields
   const model=getModels()[modelName]
+  if (!model) {
+    throw new Error(`Unkown model ${modelName}`)
+  }
   const attributes=model.attributes
   let requiredFields=[...fields]
   // Add declared required fields for virtuals
@@ -228,14 +231,14 @@ const buildPopulates = (modelName, fields) => {
   // Retain ref attributes only
   const groupedAttributes=lodash(requiredFields)
     .groupBy(att => att.split('.')[0])
-    .pickBy((_,attName) => {if (!attributes[attName]){throw new Error(`Attribute ${modelName}.${attName} unknown`)}; return attributes[attName].ref===true})
+    .pickBy((_, attName) => { if (!attributes[attName]) { throw new Error(`Attribute ${modelName}.${attName} unknown`) } return attributes[attName].ref===true })
     .mapValues(attributes => attributes.map(att => att.split('.').slice(1).join('.')).filter(v => !lodash.isEmpty(v)))
 
-  /// Build populate using att and subpopulation
+  // / Build populate using att and subpopulation
   const pops=groupedAttributes.entries().map(([attributeName, fields]) => {
     const attType=attributes[attributeName].type
     const subPopulate=buildPopulates(attType, fields)
-    return {path: attributeName, populate: lodash.isEmpty(subPopulate)?undefined:subPopulate }
+    return {path: attributeName, populate: lodash.isEmpty(subPopulate)?undefined:subPopulate}
   })
   return pops.value()
 }
@@ -246,7 +249,7 @@ const getMongooseModels = () => {
   const models=conn.modelNames().map(name => conn.models[name])
   // Model with discriminator is a base model => set latest
   return lodash(models)
-    .sortBy(model => `${!!model.discriminators ? '1':'0'}:${model.modelName}`)
+    .sortBy(model => `${model.discriminators ? '1':'0'}:${model.modelName}`)
     .value()
 }
 /**
@@ -258,21 +261,20 @@ const getMongooseModels = () => {
 const getModel = (id, expectedModel) => {
   return Promise.all(getMongooseModels()
     .map(model => model.exists({_id: id})
-        .then(exists => (exists ? model.modelName : false))
+        .then(exists => (exists ? model.modelName : false)),
     )
   )
-  .then(res => {
-    const model=res.find(v => !!v)
-    if (!model) {
-      throw new Error(`Model not found for ${id}`)
-    }
-    if (expectedModel && !lodash.isEmpty(expectedModel)) {
-      if ((lodash.isString(expectedModel) && expectedModel!=model)
-      || (lodash.isArray(expectedModel) && !lodash.includes(expectedModel, model)))
-      throw new Error(`Found model ${model} for ${id}, ${JSON.stringify(expectedModel)} was expected`)
-    }
-    return model
-  })
+    .then(res => {
+      const model=res.find(v => !!v)
+      if (!model) {
+        throw new Error(`Model not found for ${id}`)
+      }
+      if (expectedModel && !lodash.isEmpty(expectedModel)) {
+        if ((lodash.isString(expectedModel) && expectedModel!=model)
+      || (lodash.isArray(expectedModel) && !lodash.includes(expectedModel, model))) { throw new Error(`Found model ${model} for ${id}, ${JSON.stringify(expectedModel)} was expected`) }
+      }
+      return model
+    })
 }
 
 const buildQuery = (model, id, fields) => {
@@ -281,7 +283,12 @@ const buildQuery = (model, id, fields) => {
   const select = lodash(fields)
     .map(att => att.split('.')[0])
     .uniq()
-    .filter(att => {if (!modelAttributes[att]) throw new Error(`Unknown attribute ${model}.${att}`); return modelAttributes[att].ref == false})
+    .filter(att => {
+      if (!modelAttributes[att]) {
+        throw new Error(`Unknown attribute ${model}.${att}`)
+      }
+      return modelAttributes[att].ref == false
+    })
     .map(att => [att, true])
     .fromPairs()
     .value()
@@ -547,8 +554,8 @@ const putAttribute = ({parent, attribute, value, user}) => {
         // Simple attribute => simple method
         return mongooseModel.findById(parent)
           .then(object => {
-            callPostPutData({model, id:parent, attribute, value, user})
             object[attribute]=value
+            callPostPutData({model, id: parent, attribute, value, user, data: object})
             return object.save()
           })
       }
@@ -606,6 +613,11 @@ const idEqual = (id1, id2) => {
   return JSON.stringify(id1)==JSON.stringify(id2)
 }
 
+// Returns intersection betwenn two sets of _id
+const differenceSet = (ids1, ids2) => {
+  return lodash.differenceBy(ids1, ids2, v => JSON.stringify(v._id || v))
+}
+
 // Checks wether ids intersect
 const intersection = (ids1, ids2) => {
   return lodash.intersectionBy(ids1, ids2, v => JSON.stringify(v._id || v)).length
@@ -623,6 +635,17 @@ const shareTargets = (obj1, obj2) => {
     throw new Error(`obj1 && obj2 must have targets:${!!obj1.targets}/${!!obj2.targets}`)
   }
   return lodash.intersectionBy(obj1.targets, obj2.targets, t => t._id.toString()).length>0
+}
+
+const putToDb = ({model, id, params, user}) => {
+  return mongoose.connection.models[model]
+    .findById(id)
+    .then(data => {
+      if (!data) {throw new NotFoundError(`${model}/${id} not found`)}
+      Object.keys(params).forEach(k => { data[k]=params[k] })
+      return data.save()
+    })
+    .then(data => callPostPutData({model, id, params, data, user}))
 }
 
 const loadFromDb = ({model, fields, id, user, params}) => {
@@ -686,4 +709,6 @@ module.exports = {
   getMongooseModels,
   setIntersects,
   intersection,
+  differenceSet,
+  putToDb,
 }

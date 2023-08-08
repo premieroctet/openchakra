@@ -20,6 +20,7 @@ require('../../server/models/Association')
 require('../../server/models/Key')
 require('../../server/models/Category')
 require('../../server/models/Question')
+require('../../server/models/UserQuizz')
 
 jest.setTimeout(10000)
 
@@ -30,7 +31,7 @@ describe('Survey ', () => {
   beforeAll(async() => {
     await mongoose.connect(`mongodb://localhost/test${moment().unix()}`, MONGOOSE_OPTIONS)
     const company=await Company.create({name: 'Company', size:100, activity: Object.keys(COMPANY_ACTIVITY)[0]})
-    user=await User.create({company, dataTreatmentAccepted:true,role:ROLE_CUSTOMER, cguAccepted:true, 
+    user=await User.create({company, dataTreatmentAccepted:true,role:ROLE_CUSTOMER, cguAccepted:true,
       pseudo: 'Seb', firstname: 'S', lastname: 'S', email: 'a@a.com'})
   })
 

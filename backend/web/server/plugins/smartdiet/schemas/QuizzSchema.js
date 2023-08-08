@@ -1,5 +1,10 @@
+const {
+  CREATED_AT_ATTRIBUTE,
+  UPDATED_AT_ATTRIBUTE
+} = require('../../../../utils/consts')
 const { QUIZZ_TYPE } = require('../consts')
 const mongoose = require('mongoose')
+const lodash = require('lodash')
 const {schemaOptions} = require('../../../utils/schemas')
 
 const Schema = mongoose.Schema
@@ -27,6 +32,18 @@ const QuizzSchema = new Schema({
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
+QuizzSchema.methods.cloneAsUserQuizz=function(user) {
+  return Promise.all(this.questions.map(q => q.cloneAsUserQuestion()))
+    .then(questions => {
+      const params={
+        ...lodash.omit(this.toObject(), ['_id', 'id', CREATED_AT_ATTRIBUTE, UPDATED_AT_ATTRIBUTE]),
+        quizz: this._id,
+        questions,
+        user
+      }
+      return mongoose.models.userQuizz.create(params)
+    })
+}
 /* eslint-enable prefer-arrow-callback */
 
 

@@ -8717,6 +8717,11 @@ moment-range@^4.0.2:
   dependencies:
     es6-symbol "^3.1.0"
 
+moment-round@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/moment-round/-/moment-round-1.0.1.tgz#5baf2b752e85d0f6a227c0a16f6fbe107c2a2d39"
+  integrity sha512-UXGqmPCOM1pCtD3RXTAgQkmTYLELDYw/u/hJerNssB4H2lqJvMT9ov1D//NXzsGkCZcUHnAEMzRCOtb67sU5PA==
+
 moment-timezone@^0.5.34:
   version "0.5.39"
   resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.39.tgz#342625a3b98810f04c8f4ea917e448d3525e600b"

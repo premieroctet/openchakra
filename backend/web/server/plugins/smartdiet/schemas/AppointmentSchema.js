@@ -33,9 +33,9 @@ const AppointmentSchema = new Schema({
     ref: 'quizzQuestion',
     required: true,
   }],
-  logbooks: [{
+  user_objectives: [{
     type: Schema.Types.ObjectId,
-    ref: 'userQuizz',
+    ref: 'userQuizzQuestion',
     required: true,
   }],
 }, schemaOptions)

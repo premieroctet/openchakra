@@ -108,7 +108,7 @@ require('./models/FoodDocument')
 require('./models/Quizz')
 require('./models/QuizzQuestion')
 require('./models/UserQuizz')
-require('./models/QuizzAnswer')
+require('./models/UserQuizzQuestion')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 

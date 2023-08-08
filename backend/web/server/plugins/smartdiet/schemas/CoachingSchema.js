@@ -27,28 +27,28 @@ const CoachingSchema = new Schema({
     type: Schema.Types.ObjectId,
     // TODO: check that target's category's type is TARGET_COACHING
     ref: 'target',
-    required: false,
+    required: true,
   }],
   dummy: {
     type: Number,
     default: 0,
     required: true,
   },
-  progress_quizz: {
-    type: Schema.Types.ObjectId,
-    // TODO: check that target's category's type is TARGET_COACHING
-    ref: 'quizz',
-    required: false,
-  },
   food_documents: [{
     type: Schema.Types.ObjectId,
     ref: 'foodDocument',
     required: true,
   }],
-  // Logbooks & patient quizzs & progress
+  // Templates progress quizz & logbooks & patient quizzs
   quizz: [{
     type: Schema.Types.ObjectId,
     ref: 'quizz',
+    required: true,
+  }],
+  // User's progress quizz & logbooks & patient quizzs
+  user_quizz: [{
+    type: Schema.Types.ObjectId,
+    ref: 'userQuizz',
     required: true,
   }],
 }, schemaOptions)
@@ -98,6 +98,11 @@ CoachingSchema.virtual('current_objectives', {localField:'tagada', foreignField:
   return lodash(this.appointments)
    .orderBy(app => app[CREATED_AT_ATTRIBUTE].start_date, 'desc')
    .head()?.objectives || []
+})
+
+// Returns the progress quizz if any
+CoachingSchema.virtual('progress_quizz', {localField:'tagada', foreignField:'tagada'}).get(function() {
+  return this.user_quizz.find(uq => uq.quizz.type==QUIZZ_TYPE_PROGRESS)
 })
 
 /* eslint-enable prefer-arrow-callback */
