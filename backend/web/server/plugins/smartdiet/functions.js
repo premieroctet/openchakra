@@ -666,19 +666,19 @@ declareVirtualField({model: 'coaching', field: 'current_objectives', instance: '
     options: {ref: 'quizzQuestion'}
   },
 })
-declareVirtualField({model: 'coaching', field: 'quizz', instance: 'userQuizz', multiple: false,
+declareVirtualField({model: 'coaching', field: 'quizz', instance: 'Array', multiple: true,
   caster: {
     instance: 'ObjectID',
     options: {ref: 'userQuizz'}
   },
 })
-declareVirtualField({model: 'coaching', field: 'progress', instance: 'userQuizz', multiple: false,
+declareVirtualField({model: 'coaching', field: 'progress', instance: 'Array', multiple: true,
   caster: {
     instance: 'ObjectID',
     options: {ref: 'userQuizz'}
   },
 })
-declareVirtualField({model: 'coaching', field: 'logbooks', instance: 'userQuizz', multiple: false,
+declareVirtualField({model: 'coaching', field: 'logbooks', instance: 'Array', multiple: true,
   caster: {
     instance: 'ObjectID',
     options: {ref: 'userQuizz'}
