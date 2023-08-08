@@ -10,7 +10,7 @@ const UserQuizzSchema = new Schema({
     ref: 'coaching',
     required: true,
   },
-  _quizz: {
+  quizz: {
     type: Schema.Types.ObjectId,
     ref: 'quizz',
     required: true,
