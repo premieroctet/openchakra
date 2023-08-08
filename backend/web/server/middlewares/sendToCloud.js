@@ -31,7 +31,7 @@ exports.sendFilesToAWS = async(req, res, next) => {
     })
   })
 
-  await Promise.all(documentsToSend)
+  req.body.result = await Promise.all(documentsToSend)
 
   next()
 }

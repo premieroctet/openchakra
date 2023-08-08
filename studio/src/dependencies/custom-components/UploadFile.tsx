@@ -6,7 +6,6 @@ import mime from 'mime'
 import styled from '@emotion/styled'
 import xmljs from 'xml-js'
 import { ACTIONS } from '../utils/actions';
-import { generateUUID } from '../utils/crypto';
 import { getExtension } from './MediaWrapper'
 import { s3Config, S3UrlRessource } from '../utils/s3Config'
 import FileManager from '../utils/S3filemanager'
@@ -34,18 +33,16 @@ const uploadFileToS3 = async (file: File) => {
   const formData = new FormData();
   formData.append('document', file)
 
-  const sendFile = await axios.post(`/myAlfred/api/studio/uploadFiles`, 
+  const uploadedFile = await axios.post(`/myAlfred/api/studio/uploadFiles`, 
     formData, 
     {
       headers: {
       'Content-Type': 'multipart/form-data'
       },
     }
-  )
+  ).catch(err => console.error(err))
 
-  const fileNameForS3 = s3Config.rootFolderName ? `${s3Config.rootFolderName}/public/${generateUUID()}${file.name}` : file.name
-  // return await FileManager.createFile(fileNameForS3, file, '', file.type, [])
-  return true
+  return uploadedFile
 }
 
 const uploadMultipleToS3 = async (folder: string, unzip: any) => {

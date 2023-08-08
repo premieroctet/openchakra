@@ -13,6 +13,7 @@ const {handleUploadedFile} = require('../../middlewares/uploadFile')
 const {resizeImage} = require('../../middlewares/resizeImage')
 const {sendFilesToAWS} = require('../../middlewares/sendToCloud')
 const {catchErrors} = require('../../utils/handlers/errorHandlers')
+const {IMAGE_SIZE_MARKER} = require('../../../utils/consts')
 const {
   callFilterDataUser,
   callPostCreateData,
@@ -128,7 +129,9 @@ router.get('/roles', (req, res) => {
 })
 
 router.post('/uploadFiles', handleUploadedFile, catchErrors(resizeImage), catchErrors(sendFilesToAWS), (req, res) => {
-  return res.status(201).json(true)
+  // filter original file to send 
+  const [srcFile] = req?.body?.result.filter(s3obj => s3obj.Location.includes(encodeURIComponent(IMAGE_SIZE_MARKER)))
+  return res.status(201).json(srcFile)
 })
 
 router.get('/action-allowed/:action', passport.authenticate('cookie', {session: false}), (req, res) => {
