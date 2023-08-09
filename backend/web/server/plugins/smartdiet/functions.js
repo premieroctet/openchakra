@@ -160,10 +160,9 @@ const preCreate = ({model, params, user}) => {
       })
   }
   if (model=='quizzQuestion') {
-    if (user.role!=ROLE_EXTERNAL_DIET) {
-      throw new ForbiddenError(`Seule une diététicienne externe peut créer des objectifs`)
+    if (user.role==ROLE_EXTERNAL_DIET) {
+      params.diet_private=user
     }
-    params.diet_private=user
   }
   return Promise.resolve({model, params})
 }
