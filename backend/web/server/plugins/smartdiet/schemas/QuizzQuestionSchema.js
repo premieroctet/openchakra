@@ -2,7 +2,10 @@ const {
   CREATED_AT_ATTRIBUTE,
   UPDATED_AT_ATTRIBUTE
 } = require('../../../../utils/consts')
-const { QUIZZ_QUESTION_TYPE, SURVEY_ANSWER } = require('../consts')
+const {
+  QUIZZ_QUESTION_TYPE, SURVEY_ANSWER, QUIZZ_QUESTION_TYPE_ENUM_SINGLE,
+  QUIZZ_QUESTION_TYPE_ENUM_MULTIPLE,
+ } = require('../consts')
 const mongoose = require('mongoose')
 const lodash = require('lodash')
 const {schemaOptions} = require('../../../utils/schemas')
@@ -21,6 +24,10 @@ const QuizzQuestionSchema = new Schema({
   },
   enum_values: [{
     type: String,
+    required: [
+      function() { return [QUIZZ_QUESTION_TYPE_ENUM_SINGLE, QUIZZ_QUESTION_TYPE_ENUM_MULTIPLE].includes(this.type)},
+      'Les réponses possibles sont obligatoires pour un QCM'
+    ],
   }],
   diet_private: {
     type: Schema.Types.ObjectId,
