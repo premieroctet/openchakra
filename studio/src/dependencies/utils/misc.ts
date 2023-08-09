@@ -54,7 +54,7 @@ export const imageSrcSetPaths = (originalSrc:string, withDimension=true) => {
    */
   let srcSet = undefined
 
-  const filePathParts = originalSrc.split("_srcset:");
+  const filePathParts = originalSrc.split(encodeURIComponent("_srcset:"));
   const filenameextension = originalSrc.substring(originalSrc.lastIndexOf('.') + 1, originalSrc.length)
       
       if (filePathParts.length > 1) {

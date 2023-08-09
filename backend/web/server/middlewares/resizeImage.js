@@ -1,7 +1,7 @@
 const sharp = require('sharp')
 const {IMAGES_WIDTHS_FOR_RESIZE, IMAGE_SIZE_MARKER} = require('../../utils/consts')
-const { sanitizeFilename, generateUUID } = require('../../utils/functions')
-const { S3_ROOTPATH } = require('../../mode')
+const {sanitizeFilename, generateUUID} = require('../../utils/functions')
+const {S3_ROOTPATH} = require('../../mode')
 
 
 const THUMBNAILS_DIR = 'thumbnails'
@@ -15,10 +15,11 @@ exports.resizeImage = async(req, res, next) => {
   const JPEG_SETTINGS = {
     extension: 'jpg',
     outputFormat: 'jpeg',
+    outputMime: 'image/jpeg',
     options: {
       quality: RETAINED_QUALITY,
-      mozjpeg: true
-    }
+      mozjpeg: true,
+    },
   }
   const IMAGE_SETTINGS = { // we don't sharp .gif
     'image/jpg': JPEG_SETTINGS,
@@ -26,18 +27,21 @@ exports.resizeImage = async(req, res, next) => {
     'image/png': {
       extension: 'png',
       outputFormat: 'png',
+      outputMime: 'image/png',
       options: {
         quality: RETAINED_QUALITY,
-      }
+      },
     },
+    'image/heic': JPEG_SETTINGS,
     'image/webp': {
       extension: 'webp',
       outputFormat: 'webp',
+      outputMime: 'image/webp',
       options: {
         quality: RETAINED_QUALITY,
         lossless: true,
-      }
-    }
+      },
+    },
   }
 
   const filemimetype = req.file.mimetype
@@ -54,12 +58,12 @@ exports.resizeImage = async(req, res, next) => {
       .metadata()
       .then(metadata => {
         return {
-          width: metadata.width
-        };
+          width: metadata.width,
+        }
       })
       .catch(err => {
-        throw Error('Error while obtaining image dimensions :', err);
-      });
+        throw Error('Error while obtaining image dimensions :', err)
+      })
       
     const retainedImageSizes = IMAGES_WIDTHS_FOR_RESIZE
       .filter(size => size < originalWidth)
@@ -75,12 +79,13 @@ exports.resizeImage = async(req, res, next) => {
           .resize({width})
           .toFormat(IMAGE_SETTINGS[filemimetype].outputFormat, IMAGE_SETTINGS[filemimetype].options)
           .toBuffer()
+          .catch(err => reject(err))
 
         const imageData = {
           filename: originalWidth === width // spread availables image dimensions on original file. Others in thumbnails dir
             ? `${S3_ROOTPATH}/${uploadedfilenamebase}${IMAGE_SIZE_MARKER}${availableSizes.join(IMAGE_SIZE_SEPARATOR)}.${IMAGE_SETTINGS[filemimetype].extension}`
             : `${THUMBNAILS_DIR}/${S3_ROOTPATH}/${uploadedfilenamebase}_w:${width}.${IMAGE_SETTINGS[filemimetype].extension}`,
-          mimetype: filemimetype,
+          mimetype: IMAGE_SETTINGS[filemimetype].outputMime,
           buffer: image,
         }
         req.body.documents.push(imageData)
@@ -89,8 +94,10 @@ exports.resizeImage = async(req, res, next) => {
     })
     
     await Promise.all(sharpImages)
+      .catch(err => console.error(err))
 
-  } else {
+  }
+  else {
     req.body.documents.push({
       filename: `${S3_ROOTPATH}/${uploadedfilename}`,
       mimetype: req.file.mimetype,
@@ -99,9 +106,4 @@ exports.resizeImage = async(req, res, next) => {
   }
 
   next()
-}
-
-
-function handleImageFormat() {
-
 }

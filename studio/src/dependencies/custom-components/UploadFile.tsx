@@ -1,40 +1,17 @@
 import { Box, Text } from '@chakra-ui/react'
-import JSZip from 'jszip'
 import React, { useState } from 'react';
 import axios from 'axios'
-import mime from 'mime'
 import styled from '@emotion/styled'
-import xmljs from 'xml-js'
 import { ACTIONS } from '../utils/actions';
-import { getExtension } from './MediaWrapper'
-import { s3Config, S3UrlRessource } from '../utils/s3Config'
-import FileManager from '../utils/S3filemanager'
 
-const uploadUrl = `/myAlfred/api/studio/action`
-
-function createFileFromBlob(folder: string, filename: string, fileData: Blob) {
-  const { fileInFolder } = S3UrlRessource({
-    filename,
-    folder,
-  })
-  return new File([fileData], fileInFolder, {
-    type: mime.getType(getExtension(filename)) || '',
-  })
-}
+const uploadUrl = `/myAlfred/api/studio/uploadFiles`
 
 const uploadFileToS3 = async (file: File) => {
-
-  if (!s3Config.rootFolderName) {
-    throw new Error(
-      `No root folder. Please fill in REACT_APP_S3_ROOTPATH`
-    );
-  }
 
   const formData = new FormData();
   formData.append('document', file)
 
-  const uploadedFile = await axios.post(`/myAlfred/api/studio/uploadFiles`, 
-    formData, 
+  const uploadedFile = await axios.post(uploadUrl, formData, 
     {
       headers: {
       'Content-Type': 'multipart/form-data'
@@ -45,31 +22,6 @@ const uploadFileToS3 = async (file: File) => {
   return uploadedFile
 }
 
-const uploadMultipleToS3 = async (folder: string, unzip: any) => {
-  for await (const filename of Object.keys(unzip.files)) {
-    const blob = await unzip.files[filename].async('blob')
-    if (!unzip.files[filename]?.dir) {
-      const file = createFileFromBlob(folder, filename, blob)
-      await uploadFileToS3(file)
-    }
-  }
-}
-
-const isScormZip = async (unzipped: any) => {
-  let scormVersion = null
-  // looking for scorm version in imsmanifest.xml
-  for (const filename of Object.keys(unzipped.files)) {
-    if (!unzipped.files[filename]?.dir) {
-      if (filename === 'imsmanifest.xml') {
-        const text = await unzipped.files[filename].async('string')
-        const imsmanifest = xmljs.xml2js(text, { compact: true })
-        //@ts-ignore
-        scormVersion = imsmanifest?.manifest?._attributes?.version
-      }
-    }
-  }
-  return scormVersion
-}
 
 const UploadFile = ({
   notifmsg,
@@ -93,13 +45,9 @@ const UploadFile = ({
   noautosave: boolean | null
   children: React.ReactNode
 }) => {
-  FileManager.initialize(
-    s3Config.region,
-    s3Config.bucketName,
-    s3Config.accessKeyId || '',
-    s3Config.secretAccessKey || '',
-  )
+  
   const [uploadInfo, setUploadInfo] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const [s3File, setS3File] = useState<string|null>()
 
   const onFileNameChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,7 +59,6 @@ const UploadFile = ({
   }
 
   const handleUpload = async (fileToUpload: File) => {
-      const typeOfUpload = getExtension(fileToUpload?.name)
 
       let paramsBack = {
         action: 'put',
@@ -120,54 +67,24 @@ const UploadFile = ({
         value: '',
       }
 
-      type scormVersion = {
-        attribute: string,
-        value: string | null,
-      }
-
-      let paramsScormVersion: scormVersion = {
-        ...paramsBack,
-        attribute: 'version',
-        value: null,
-      }
-
       setUploadInfo('')
 
-      const switchUploadType = async () => {
-        switch (typeOfUpload) {
-          case 'zip':
-            const unzipped = await JSZip.loadAsync(fileToUpload)
-            const scormVersion = await isScormZip(unzipped)
+      const uploadFile = async () => {
 
-            await uploadMultipleToS3(fileToUpload?.name, unzipped)
-
-            if (scormVersion) {
-              const { scormUrl } = S3UrlRessource({
-                folder: fileToUpload?.name,
-              })
-
-              paramsBack = { ...paramsBack, ...{ value: encodeURI(scormUrl) } }
-              paramsScormVersion = {
-                ...paramsScormVersion,
-                ...{ value: scormVersion },
-              }
-            }
-            break
-
-          default:
-            await uploadFileToS3(fileToUpload)
-              .then((result) => {
-                setS3File(result.Location)
-                paramsBack = { ...paramsBack, ...{ value: result?.Location } }
-              })
-              .catch(err => console.error(err))
-
-            if (attribute && notifmsg) {
-              setUploadInfo(okmsg)
-            }
-
-
-            break
+        setIsLoading(true)
+        await uploadFileToS3(fileToUpload)
+          .then((result) => {
+            // @ts-ignore
+            const filepath = result?.data?.Location
+            setS3File(filepath)
+            paramsBack = { ...paramsBack, value: filepath}
+            console.log('default upload', {paramsBack, result})
+          })
+          .catch(err => console.error(err))
+          .finally(() => setIsLoading(false))
+          
+        if (attribute && notifmsg) {
+          setUploadInfo(okmsg)
         }
       }
 
@@ -186,21 +103,13 @@ const UploadFile = ({
               setUploadInfo(okmsg)
             }
           })
-          .then(() => {
-            /* scorm file ? save version */
-            if (paramsScormVersion.value !== null) {
-              axios
-                .post(uploadUrl, paramsScormVersion)
-                .catch(err => console.error('scormversion not saved', err))
-            }
-          })
           .catch(e => {
             console.error(e)
-            setUploadInfo('Echec ajout ressource')
+            setUploadInfo('Échec ajout ressource')
           })
       }
 
-      await switchUploadType()
+      await uploadFile()
       if (dataSource) {
         await saveUrl()
         reload()
@@ -211,7 +120,8 @@ const UploadFile = ({
   const pr={...props, attribute, value: s3File}
 
   return (
-    <Box {...pr} data-value={s3File} display='flex' flexDirection='row'>
+    <>
+    <Box {...pr} data-value={s3File} display='flex' flexDirection='row' position={'relative'}>
       <form id="uploadressource">
         <UploadZone>
           <input type="file" onChange={onFileNameChange} />
@@ -222,9 +132,37 @@ const UploadFile = ({
       {uploadInfo &&
       // @ts-ignore
       <Text>{uploadInfo}</Text>} {/*Component status */}
+      {isLoading && <Loading />}
     </Box>
+    </>
   )
 }
+
+const Loading = styled.div`
+  display: block;
+  position: absolute;
+  z-index: 999;
+
+  &:after {
+    content: " ";
+    display: block;
+    min-width: 40px;
+    width: inherit;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    border: 6px solid #333;
+    border-color: #333 transparent #333 transparent;
+    animation: lds-dual-ring 1.2s linear infinite;
+  }
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+`
 
 const UploadZone = styled.label`
   input[type='file'] {

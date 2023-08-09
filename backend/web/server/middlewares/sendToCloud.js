@@ -2,7 +2,7 @@ const AWS = require('aws-sdk')
 const {S3_ID,
   S3_SECRET,
   S3_REGION,
-  S3_BUCKET
+  S3_BUCKET,
 } = require('../../mode')
 
 AWS.config.update({
@@ -26,12 +26,14 @@ exports.sendFilesToAWS = async(req, res, next) => {
         // ACL: 'public-read', // What's this ACL ?
       }
 
-      const result = await s3.upload(params).promise()
-      resolve(result)
+      await s3.upload(params).promise()
+        .then(res => resolve(res))
+        .catch(err => reject(err))
     })
   })
 
   req.body.result = await Promise.all(documentsToSend)
+    .catch(err => console.error(err))
 
   next()
 }

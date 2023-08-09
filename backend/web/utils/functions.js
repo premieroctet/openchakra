@@ -1,6 +1,6 @@
+const crypto = require('crypto')
 const {getDistance} = require('geolib')
 const {convertDistance} = require('geolib')
-const crypto = require('crypto')
 
 const isEmpty = require('../server/validation/is-empty')
 
@@ -79,28 +79,18 @@ const valueBetween = (value, start, stop) => {
   return value>=start && value <=stop
 }
 
-const sanitizeFilename = (name) => {
+const sanitizeFilename = name => {
   return name.toLowerCase()
-      .replace(/ /gi, '-')
-      .normalize('NFD')
-      .replace(/\p{Diacritic}/gu, '')
+    .replace(/ /gi, '-')
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
 }
 
 const generateUUID = () => {
-  
-  let pooruuid = new Uint32Array(1);
-  crypto.getRandomValues(pooruuid);
-
-  let uuid = `${pooruuid.at(0)}`
-
-  if (crypto && crypto.randomUUID) {
-    uuid = crypto.randomUUID()
-  }
-
-  return uuid
+  return crypto.randomUUID()
 }
 
 module.exports = {
   computeDistanceKm, computeAverageNotes, computeSumSkills, rgbaToHex,
-  valueBetween, sanitizeFilename, generateUUID
+  valueBetween, sanitizeFilename, generateUUID,
 }
