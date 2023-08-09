@@ -87,7 +87,7 @@ const filterDataUser = ({model, data, id, user}) => {
     return Offer.find({company: null})
       .then(offers => data.filter(d => offers.some(o => idEqual(d._id, o._id))))
   }
-  if (model=='user' && user.role==ROLE_RH) {
+  if (model=='user' && user?.role==ROLE_RH) {
     console.log(`I am RH`)
     data=data.filter(u => idEqual(id, user._id) || (user.company && idEqual(u.company?._id, user.company?._id)))
   }
@@ -383,7 +383,10 @@ USER_MODELS.forEach(m => {
       options: {ref: 'coaching'}},
   })
   declareVirtualField({model: m, field: 'latest_coachings', instance: 'Array',
-    requires: 'coachings.logbook_templates.key,coachings.logbooks.key,coachings.logbooks.questions.quizz_question.title,coachings.appointments.start_date,coachings.appointments.objectives,surveys,coachings.food_documents.key.picture,coachings.appointments.objectives',
+    requires: `coachings.logbook_templates.key,coachings.logbooks.key,coachings.logbooks.questions.quizz_question.title,\
+coachings.quizz_templates.key,coachings.quizz_templates.key,coachings.quizz.questions.quizz_question.title,\
+coachings.appointments.start_date,coachings.appointments.objectives,surveys,\
+coachings.food_documents.key.picture,coachings.appointments.objectives`,
     multiple: true,
     caster: {
       instance: 'ObjectID',
