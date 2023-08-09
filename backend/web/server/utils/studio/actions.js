@@ -28,7 +28,7 @@ const {DEFAULT_ROLE} = require(`../../plugins/${getDataModel()}/consts`)
 let ACTIONS = {
   put: ({parent, attribute, value}, user) => {
     const parsedValue=value ? JSON.parse(value) : value
-    return putAttribute({parent, attribute, value: parsedValue, user})
+    return putAttribute({id:parent, attribute, value: parsedValue, user})
   },
 
   publish: ({id}) => {

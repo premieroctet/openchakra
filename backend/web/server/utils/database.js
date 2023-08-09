@@ -538,30 +538,33 @@ const callPostPutData = data => {
   return postPutData(data)
 }
 
-const putAttribute = ({parent, attribute, value, user}) => {
+const putAttribute = ({id, attribute, value, user}) => {
   let model = null
-  return getModel(parent)
+  return getModel(id)
     .then(res => {
       model = res
       const setter=lodash.get(COMPUTED_FIELDS_SETTERS, `${model}.${attribute}`)
       if (setter) {
-        callPostPutData({model, id:parent, attribute, value, user})
-        return setter({id: parent, attribute, value, user})
+        callPostPutData({model, id, attribute, value, user})
+        return setter({id, attribute, value, user})
       }
       const mongooseModel = mongoose.connection.models[model]
 
       if (attribute.split('.').length==1) {
         // Simple attribute => simple method
-        return mongooseModel.findById(parent)
+        return mongooseModel.findById(id)
           .then(object => {
             object[attribute]=value
-            callPostPutData({model, id: parent, attribute, value, user, data: object})
             return object.save()
+              .then(obj => {
+                return callPostPutData({model, id, attribute, value, params:{[attribute]:value}, user, data: obj})
+                  .then(() => obj)
+              })
           })
       }
       const populates=buildPopulates(model, [attribute])
 
-      let query=mongooseModel.find({$or: [{_id: parent}, {origin: parent}]})
+      let query=mongooseModel.find({$or: [{_id: id}, {origin: id}]})
       query = populates.reduce((q, key) => q.populate(key), query)
       const allModels=getModels()
       return query

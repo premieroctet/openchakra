@@ -171,18 +171,22 @@ const preCreate = ({model, params, user}) => {
 setPreCreateData(preCreate)
 
 const postPutData = ({model, params, id, value, data, user}) => {
-  if (model=='coaching' && params.logbook_templates) {
+  if ((model=='coaching' && params.logbook_templates)
+    || (model=='coaching' && params.quizz_templates))
+  {
+    const tpl_attribute=params.logbook_templates ? 'logbook_templates': 'quizz_templates'
+    const inst_attribute=params.logbook_templates ?'logbooks': 'quizz'
     return mongoose.models.coaching.findById(id).populate([
-        {path: 'logbook_templates', populate:'questions'},
-        {path: 'logbooks', populate:{path: 'quizz', populate:'questions'}},
+        {path: tpl_attribute, populate:'questions'},
+        {path: inst_attribute, populate:{path: 'quizz', populate:'questions'}},
       ])
       .then(coaching => {
-        const extraUserQuizz=coaching.logbooks.filter(uq => !coaching.logbook_templates.some(q => idEqual(q._id, uq.quizz._id)))
-        const missingUserQuizz=differenceSet(coaching.logbook_templates, coaching.logbooks.map(uq => uq.quizz))
+        const extraUserQuizz=coaching[inst_attribute].filter(uq => !coaching[tpl_attribute].some(q => idEqual(q._id, uq.quizz._id)))
+        const missingUserQuizz=differenceSet(coaching[tpl_attribute], coaching[inst_attribute].map(uq => uq.quizz))
         const addQuizzs=Promise.all(missingUserQuizz.map(q => q.cloneAsUserQuizz(coaching)))
         return addQuizzs
-          .then(quizzs => mongoose.models.coaching.findByIdAndUpdate(id, {$addToSet:{logbooks: quizzs}}))
-          .then(() => mongoose.models.coaching.findByIdAndUpdate(id, {$pull:{logbooks: {$in: extraUserQuizz}}}))
+          .then(quizzs => mongoose.models.coaching.findByIdAndUpdate(id, {$addToSet:{[inst_attribute]: quizzs}}))
+          .then(() => mongoose.models.coaching.findByIdAndUpdate(id, {$pull:{[inst_attribute]: {$in: extraUserQuizz}}}))
           .then(() => Promise.all(extraUserQuizz.map(q => q.delete())))
           .then(() => mongoose.models.coaching.findById(id))
       })

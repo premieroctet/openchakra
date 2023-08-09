@@ -247,15 +247,14 @@ const getSession = id => {
   return getTraineeSession(id)
 }
 
-const putAttribute = ({parent, attribute, value, user}) => {
-  console.log(`Putting ${parent} ${attribute} to ${value}`)
+const putAttribute = ({id, attribute, value, user}) => {
   let model = null
-  return getModel(parent)
+  return getModel(id)
     .then(res => {
       model = res
       const mongooseModel = mongoose.connection.models[model]
       return mongooseModel.updateMany(
-        {$or: [{_id: parent}, {origin: parent}]},
+        {$or: [{_id: id}, {origin: id}]},
         {[attribute]: value},
         {runValidators: true},
       )
@@ -265,7 +264,7 @@ const putAttribute = ({parent, attribute, value, user}) => {
         // return setVirtualAttribute({model, parent, attribute, value, user})
         return setResourceAnnotation({
           model,
-          parent,
+          id,
           attribute,
           value,
           user,

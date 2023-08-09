@@ -225,7 +225,7 @@ describe.skip('Studio data function', () => {
     await addChildToParent(session._id, theme._id)
     session=await Session.findById(session._id).populate('themes')
     theme=session.themes[0]
-    await putAttribute({parent: theme._id.toString(), attribute: 'name', value: NAME})
+    await putAttribute({id: theme._id.toString(), attribute: 'name', value: NAME})
     const trSession=await Session.findOne({origin: session._id}).populate('themes')
     return expect(trSession.themes[0].name).toBe(NAME)
   })
@@ -235,7 +235,7 @@ describe.skip('Studio data function', () => {
     let program=await Program.findOne().populate('themes')
     let prgmResource=program.themes[0].resources[0]
     console.log(prgmResource.origin)
-    await putAttribute({parent: prgmResource.origin._id.toString(), attribute: 'name', value: NAME})
+    await putAttribute({id: prgmResource.origin._id.toString(), attribute: 'name', value: NAME})
     let newResource=await Program.findById(program._id).populate('themes').then(prgm => prgm.themes[0].resources[0])
     return expect(newResource.name).toBe(newResource.name)
   })
