@@ -10,6 +10,7 @@ const {
   callPreCreateData,
   callPreprocessGet,
   loadFromDb,
+  putToDb,
   retainRequiredFields,
 } = require('../../utils/database')
 const path = require('path')
@@ -413,7 +414,10 @@ const putFromRequest = (req, res) => {
   }
 
   return putToDb({model, id, params, user})
-    .then(res.json)
+    .then(data => {
+      // TODO Which data to return ?
+      return res.json()
+    })
 }
 
 router.put('/:model/:id', passport.authenticate('cookie', {session: false}), (req, res) => {
