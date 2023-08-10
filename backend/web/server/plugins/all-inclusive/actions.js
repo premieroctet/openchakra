@@ -287,7 +287,7 @@ const registerAction = props => {
       }
       sendWelcome({user, password: props.password})
       User.find({role:{$in:[ROLE_ALLE_ADMIN, ROLE_ALLE_SUPER_ADMIN]}})
-        .then(admins => users.map(admin => sendCompanyRegistered(user, admin)))
+        .then(admins => admins.map(admin => sendCompanyRegistered(user, admin)))
       if (user.role==ROLE_TI) {
         return paymentPlugin.upsertProvider(user)
       }

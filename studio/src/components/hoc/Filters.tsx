@@ -13,7 +13,10 @@ import React, { useState, useEffect } from 'react'
 import lodash from 'lodash'
 
 import { generateId } from '../../utils/generateId'
-import { getAvailableAttributes } from '../../utils/dataSources'
+import {
+  getAvailableAttributes,
+  getDataProviderDataType
+} from '../../utils/dataSources';
 import {
   getComponents,
   getSelectedComponent,
@@ -40,16 +43,34 @@ export const withFilters = Component => {
     const [modalOpen, setModalOpen] = useState(false)
 
     useEffect(() => {
+      if (!activeComponent || lodash.isEmpty(models) || lodash.isEmpty(components)) {
+        return
+      }
       try {
-        const attributes = getAvailableAttributes(
+        const model= getDataProviderDataType(
           activeComponent,
           components,
+          activeComponent.props.dataSource, // || components[activeComponent.parent].props.dataSource,
           models,
         )
-        setAttrs(attributes)
-      } catch (err) {
+        setAttrs(models[model.type].attributes)
+      }
+      catch (err) {
+        console.error(err)
+        try{
+        const parent=components[activeComponent.parent]
+        const model= getDataProviderDataType(
+          parent,
+          components,
+          parent.props.dataSource,
+          models,
+        )
+        setAttrs(models[model.type].attributes)
+      }
+      catch (err) {
         console.error(err)
       }
+    }
     }, [activeComponent, components, models])
 
     const onAddFilter = (filter: Filter) => {

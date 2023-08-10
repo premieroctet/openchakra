@@ -22,6 +22,7 @@ const AddressSchema = require('../../../models/AddressSchema')
     },
     siret: {
       type: String,
+      set: v => v?.replace(/ /g, ''),
       validate: [v => siret.isSIRET(v)||siret.isSIREN(v), 'Le SIRET ou SIREN est invalide'],
       required: false,
     },

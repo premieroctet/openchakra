@@ -33,7 +33,7 @@ export const OPERATORS = {
 
 const createFilters = (filterDef, props) => {
   return Object.entries(filterDef).map(([id, def]) => {
-    const targetValue = props[`condition${id}`]
+    const targetValue = props[`condition${id}`] || false
     const attribute = def.attribute
     const opFn = OPERATORS[def.type][def.operator]
     const vRef = def.value
@@ -51,8 +51,8 @@ export const getConditionalProperties = (props, dataSource) => {
       .map(cond => {
         const property = cond.match(/^conditions(.*)$/)[1]
         const filters = createFilters(props[cond], props)
-        const v = filters.map(f => f(dataSource)).find(v => !!v)
-        return v ? [property, v] : null
+        const v = filters.map(f => f(dataSource)).find(v => v!=null)
+        return v!=null ? [property, v] : null
       })
       .filter(v => !!v),
   )

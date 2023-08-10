@@ -86,7 +86,7 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
     return (
       <>
         {React.createElement(compPanel)}
-        <VisibilityPanel />
+        <VisibilityPanel name='visibility'/>
         <DataSourcePanel />
       </>
     )
@@ -94,7 +94,7 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
 
   return (
     <>
-      <VisibilityPanel />
+      <VisibilityPanel name='visibility'/>
       {type === 'Button' && <ButtonPanel />}
       {type === 'Checkbox' && <CheckboxPanel />}
       {type === 'Box' && <BoxPanel />}

@@ -1,6 +1,3 @@
-const { MIN_AGE } = require('../consts')
-
-const moment = require('moment')
 const {
   AVAILABILITY,
   COACHING,
@@ -10,6 +7,8 @@ const {
   COMPANY_STATUS,
   DEFAULT_ROLE,
   DEPARTEMENTS,
+  GENDER,
+  MIN_AGE,
   MISSION_STATUS_BILL_SENT,
   MISSION_STATUS_FINISHED,
   MISSION_STATUS_PAYMENT_PENDING,
@@ -18,8 +17,10 @@ const {
   ROLE_COMPANY_ADMIN,
   ROLE_COMPANY_BUYER,
   ROLE_TI,
-  UNACTIVE_REASON,
+  UNACTIVE_REASON
 } = require('../consts')
+
+const moment = require('moment')
 const { isEmailOk, isPhoneOk } = require('../../../../utils/sms')
 
 const Validator = require('validator')
@@ -56,10 +57,20 @@ const UserSchema = new Schema({
     validate: [value => isEmailOk(value), "L'email est invalide"],
     required: [true, "L'email est obligatoire"],
   },
+  admin_comment: {
+    type: String,
+    required: false,
+  },
   password: {
     type: String,
     required: [true, 'Le mot de passe est obligatoire'],
     set: pass => bcrypt.hashSync(pass, 10),
+  },
+  gender: {
+    type: String,
+    set: v => v || undefined,
+    enum: Object.keys(GENDER),
+    required: false,
   },
   cguAccepted: {
     type: Boolean,
@@ -125,6 +136,7 @@ const UserSchema = new Schema({
   },
   nationality: {
     type: String,
+    set: v => v || undefined, // To allow `null` value as empty
     enum: Object.keys(NATIONALITIES),
     required: false,
   },
@@ -170,6 +182,7 @@ const UserSchema = new Schema({
   },
   siret: {
     type: String,
+    set: v => v?.replace(/ /g, ''),
     validate: [v => siret.isSIRET(v)||siret.isSIREN(v), 'Le SIRET ou SIREN est invalide'],
     required: false,
   },
@@ -180,12 +193,20 @@ const UserSchema = new Schema({
   vat_subject: {
     type: Boolean,
   },
-  // Insurance type : décennale, tiers
+  // Insurance 1 type : décennale, tiers
   insurance_type: {
     type: String,
   },
-  // Insurance document
+  // Insurance 1 document
   insurance_report: {
+    type: String,
+  },
+  // Insurance 2 type : décennale, tiers
+  insurance2_type: {
+    type: String,
+  },
+  // Insurance 2 document
+  insurance2_report: {
     type: String,
   },
   company_activity: {
@@ -258,15 +279,21 @@ const PROFILE_ATTRIBUTES={
 
 UserSchema.virtual('profile_progress').get(function() {
   let filled=Object.keys(PROFILE_ATTRIBUTES).map(att => !!lodash.get(this, att))
+  if (this.role==ROLE_TI) {
+    filled.push(this.jobs?.length>0)
+  }
   return (filled.filter(v => !!v).length*1.0/filled.length)*100
 });
 
 UserSchema.virtual('missing_attributes').get(function() {
-  const missing=lodash(PROFILE_ATTRIBUTES)
+  let missing=lodash(PROFILE_ATTRIBUTES)
     .pickBy((name, att) => !lodash.get(this, att) && name)
     .values()
-    .join(',')
-  return missing ? `Informations manquantes:${missing}` : ''
+    .value()
+  if (this.role==ROLE_TI && !(this.jobs?.length>0)) {
+    missing.push('métier')
+  }
+  return missing ? `Informations manquantes : ${missing.join(', ').replace(/, ([^,]*)$/, ' et $1')}` : ''
 });
 
 UserSchema.virtual("jobs", {

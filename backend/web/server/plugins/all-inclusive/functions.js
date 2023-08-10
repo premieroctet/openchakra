@@ -7,10 +7,12 @@ const {
   sendMissionReminderTI,
   sendNewMission,
   sendProfileOnline,
+  sendProfileReminder,
   sendTipiSearch
 } = require('./mailing')
 const {
   AVAILABILITY,
+  BOOLEAN,
   COACHING,
   COACH_ALLE,
   COMPANY_ACTIVITY,
@@ -20,6 +22,7 @@ const {
   CONTRACT_TYPE,
   DEPARTEMENTS,
   EXPERIENCE,
+  GENDER,
   MISSING_QUOTATION_DELAY,
   MISSION_FREQUENCY,
   MISSION_REMINDER_DELAY,
@@ -181,7 +184,7 @@ const preCreate = ({model, params, user}) => {
 
 setPreCreateData(preCreate)
 
-const postPutData = ({model, id, attribute, value, user}) => {
+const postPutData = ({model, id, attribute, data, user}) => {
   if (model=='user') {
     return User.findById(id)
       .then(account => {
@@ -196,7 +199,7 @@ const postPutData = ({model, id, attribute, value, user}) => {
         }
       })
   }
-  return Promise.resolve(null)
+  return Promise.resolve(data)
 }
 
 setPostPutData(postPutData)
@@ -257,7 +260,7 @@ USER_MODELS.forEach(m => {
   })
   declareVirtualField({model: m, field: 'recommandations_count', instance: 'Number', requires: 'jobs'})
   declareVirtualField({model: m, field: 'recommandations_note', instance: 'Number', requires: 'jobs'})
-  declareVirtualField({model: m, field: 'comments_count', instance: 'Number', requires: 'jobs'})
+  declareVirtualField({model: m, field: 'comments_count', instance: 'Number', requires: 'missions.comments'})
   declareVirtualField({model: m, field: 'comments_note', instance: 'Number', requires: 'jobs'})
 
   declareVirtualField({model: m, field: 'revenue', instance: 'Number',
@@ -295,7 +298,9 @@ USER_MODELS.forEach(m => {
       options: {ref: 'recommandation'}}
   })
   declareVirtualField({model: m, field: 'search_text', type: 'String',
-    requires:'firstname,lastname,qualified_str,visible_str,company_name,coaching,zip_code,admin_validated'})
+    requires:'firstname,lastname,qualified_str,visible_str,company_name,coaching,zip_code,admin_validated'
+  })
+  declareEnumField({model: m, field: 'gender', instance: 'String', enumValues: GENDER})
 })
 
 
@@ -345,6 +350,8 @@ declareVirtualField({model: 'jobUser', field: 'comments', instance: 'Array', req
     options: {ref: 'comment'}}
 })
 declareVirtualField({model: 'jobUser', field: 'pinned', instance: 'Boolean', requires:'pins'})
+declareVirtualField({model: 'jobUser', field: 'recommandations_count', instance: 'Number', requires:'recommandations'})
+declareVirtualField({model: 'jobUser', field: 'rate_str', instance: 'String', requires:'on_quotation,rate'})
 
 
 declareEnumField({model: 'experience', field: 'contract_type', enumValues: CONTRACT_TYPE})
@@ -372,6 +379,7 @@ declareVirtualField({model: 'mission', field: 'gross_total', instance: 'Number',
 declareVirtualField({model: 'mission', field: 'aa', instance: 'Number', requires: 'quotations.aa'})
 declareVirtualField({model: 'mission', field: 'ti_total', instance: 'Number', requires: 'quotations.ti_total'})
 declareVirtualField({model: 'mission', field: 'vat_total', instance: 'Number', requires: 'quotations.vat_total'})
+declareEnumField({model: 'mission', field: 'recurrent', instance: 'String', enumValues: BOOLEAN})
 
 
 declareVirtualField({model: 'quotation', field: 'details', instance: 'Array', requires: '', multiple: true,
@@ -593,7 +601,7 @@ cron.schedule('*/5 * * * * *', async() => {
     })
 })
 
-// Daily notifications (every day at 8AM)
+// Daily notifications (every day at 8AM) for missions/quotations reminders
 cron.schedule('0 0 8 * * *', async() => {
   console.log('crnoning')
   // Pending quoations: not accepted after 2 days
@@ -606,5 +614,25 @@ cron.schedule('0 0 8 * * *', async() => {
       const soonMissions=missions.filter(m => m.status==MISSION_STATUS_QUOT_ACCEPTED && moment().diff(moment(m[CREATED_AT_ATTRIBUTE]), 'days')==MISSION_REMINDER_DELAY)
       Promise.allSettled(soonMissions.map(m => sendMissionReminderCustomer(m)))
       Promise.allSettled(soonMissions.map(m => sendMissionReminderTI(m)))
+    })
+})
+
+
+// Daily notifications (every day at 9PM) to complete profile
+cron.schedule('0 0 19 * * *', () => {
+  const today=moment().startOf('day')
+  const isTuesday=today.day()==2
+  console.log(`Checking uncomplete profiles, today is tuesday:${isTuesday}`)
+  // Pending quoations: not accepted after 2 days
+  return loadFromDb({model: 'user', fields: ['role', 'creation_date', 'email', 'profile_progress','missing_attributes']})
+    .then(users => {
+      const uncompleteProfiles=users
+        .filter(u => u.role==ROLE_TI)
+        .filter(u => isTuesday || today.diff(moment(u.creation_date).startOf('day'), 'days')==2)
+        .filter(u => u.profile_progress < 100)
+        .forEach(u => {
+          console.log(`Sending reminder mail to ${u.email}:${u.missing_attributes}`)
+          sendProfileReminder(u)
+        })
     })
 })

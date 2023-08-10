@@ -57,7 +57,7 @@ const isDynamicComponent = (comp: IComponent) => {
 }
 
 const isMaskableComponent = (comp: IComponent) => {
-  return !!comp.props.hiddenRoles
+  return !!comp.props.hiddenRoles || !!comp.props.conditionsvisibility
 }
 
 const getDynamicType = (comp: IComponent) => {
