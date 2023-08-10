@@ -8,9 +8,10 @@ import { List, Checkbox } from '@chakra-ui/react'
 import { getRoles } from '~core/selectors/roles'
 import { useSelector } from 'react-redux'
 import { MultiSelect } from 'react-multi-select-component'
+import { withFilters } from '../../hoc/Filters'
 
-const VisibilityPanel: React.FC = () => {
-  const hiddenRoles = usePropsSelector('hiddenRoles')
+const VisibilityPanel: React.FC = props => {
+  const hiddenRoles:string[] = usePropsSelector('hiddenRoles')
   const { setValue } = useForm()
   const roles = useSelector(getRoles)
 
@@ -42,4 +43,4 @@ const VisibilityPanel: React.FC = () => {
   )
 }
 
-export default memo(VisibilityPanel)
+export default memo(withFilters(VisibilityPanel))
