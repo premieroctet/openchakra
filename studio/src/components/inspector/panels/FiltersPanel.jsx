@@ -1,7 +1,8 @@
 import React from 'react'
-import { Button, Select, Input, Flex } from '@chakra-ui/react'
+import { Button, Select, Input, Flex, Box } from '@chakra-ui/react'
 import { useEffect, useState, memo } from 'react'
-import { OPERATORS, ValueComponent } from '../../../dependencies/utils/filters'
+import {Select as MultipleSelect} from 'chakra-react-select'
+import { getOperators, isOperatorMultiple, ValueComponent } from '../../../dependencies/utils/filters'
 import lodash from 'lodash'
 
 const FiltersPanel = ({ attributes, filter, onValidate }) => {
@@ -11,7 +12,7 @@ const FiltersPanel = ({ attributes, filter, onValidate }) => {
   const [value, setValue] = useState(filter?.value || null)
 
   useEffect(() => {
-    setOperators(OPERATORS[attributes[attribute]?.type] || [])
+    setOperators(getOperators(attributes[attribute]) || [])
   }, [attribute, attributes])
 
   useEffect(() => {
@@ -20,16 +21,21 @@ const FiltersPanel = ({ attributes, filter, onValidate }) => {
 
   const enumValues = attributes[attribute]?.enumValues
 
+  const enumMultiple=Object.entries(enumValues||{}).map(([k,v]) => ({value: k,label: v}))
+
+  const multipleChoiceEnabled = isOperatorMultiple(attributes[attribute], operator)
+
+  const type = attributes[attribute]?.enumValues ? 'Enum': attributes[attribute]?.type
+
   const onValidateInternal = () => {
     onValidate({ attribute, operator, value, type })
   }
 
-  const type = attributes[attribute]?.type
 
   return (
     <>
       <Flex>
-        <Select
+        <Select flex="1"
           onChange={ev => setAttribute(ev.target.value)}
           value={attribute}
         >
@@ -40,7 +46,7 @@ const FiltersPanel = ({ attributes, filter, onValidate }) => {
             </option>
           ))}
         </Select>
-        <Select onChange={ev => setOperator(ev.target.value)} value={operator}>
+        <Select  flex="1" onChange={ev => setOperator(ev.target.value)} value={operator}>
           <option />
           {Object.keys(operators).map(op => (
             <option key={op} value={op}>
@@ -50,11 +56,20 @@ const FiltersPanel = ({ attributes, filter, onValidate }) => {
         </Select>
         {attribute && operator ? (
           !lodash.isEmpty(enumValues) ? (
-            <>
-              <Select
+            <Box flex="3">
+              {multipleChoiceEnabled ?
+                <MultipleSelect
+                  isMulti
+                  onChange={ev => setValue(lodash.map(ev, 'value').join(','))}
+                  value={value?.split(',').map(v => enumMultiple.find(m => m.value==v)) || undefined}
+                  options={enumMultiple}
+                >
+                </MultipleSelect>
+                :
+                <Select
                 onChange={ev => setValue(ev.target.value)}
                 value={value || undefined}
-              >
+                >
                 <option value={null}/>
                 {Object.entries(enumValues).map(([k,v]) => (
                   <option key={k} value={k}>
@@ -62,7 +77,8 @@ const FiltersPanel = ({ attributes, filter, onValidate }) => {
                   </option>
                 ))}
               </Select>
-            </>
+              }
+            </Box>
           ) : (
             <ValueComponent
               onChange={ev => setValue(ev.target.value)}

@@ -20,6 +20,7 @@
     "aws-sdk": "^2.1257.0",
     "axios": "^1.2.0",
     "browser-fs-access": "^0.34.1",
+    "chakra-react-select": "^4.7.0",
     "chart.js": "^4.2.1",
     "codesandbox": "^2.1.11",
     "coloreact": "^0.3.1",

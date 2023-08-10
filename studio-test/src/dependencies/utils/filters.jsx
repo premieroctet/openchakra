@@ -29,13 +29,34 @@ export const OPERATORS = {
     after: (v, ref) => moment(v).isAfter(moment(ref)),
     'is empty': lodash.isNil,
   },
+  Enum: {
+    '=': (v, ref) => v == ref,
+    '<>': (v, ref) => v != ref,
+    in: (v, ref) => ref?.split(',').includes(v),
+    /**
+    'does not contain': (v, ref) =>
+      v?.toLowerCase()?.includes(ref?.toLowerCase()),
+    'is empty': lodash.isNil,
+    */
+  }
+}
+
+export const getOperators = att => {
+  if(att?.enumValues) {
+    return OPERATORS.Enum
+  }
+  return OPERATORS[att?.type]
+}
+
+export const isOperatorMultiple = (att, op) => {
+  return att?.enumValues && op=='in'
 }
 
 const createFilters = (filterDef, props) => {
   return Object.entries(filterDef).map(([id, def]) => {
     const targetValue = props[`condition${id}`] || false
     const attribute = def.attribute
-    const opFn = OPERATORS[def.type][def.operator]
+    const opFn = getOperators(def)[def.operator]
     const vRef = def.value
     return dataSource => {
       const dataValue = lodash.get(dataSource, attribute)
