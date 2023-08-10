@@ -54,7 +54,7 @@
     "xml-js": "^1.6.11"
   },
   "scripts": {
-    "dev": "next dev",
+    "dev": "NODE_ENV=development && node src/server.js",
     "build": "next build",
     "start": "NODE_ENV=production && node src/server.js",
     "lint": "next lint"

@@ -3,6 +3,7 @@
   "main": "server/server.js",
   "license": "UNLICENSED",
   "scripts": {
+    "futuredev": "NODE_OPTIONS=--openssl-legacy-provider nodemon -w config -w server -w package.json -w utils server/server.js",
     "dev": "nodemon -w mode.js -w config -w server -w package.json -w utils server/server.js",
     "certification": "nodemon -w . server_certif.js",
     "devreport": "nodemon --report-uncaught-exception --report-on-signal --report-on-fatalerror -w server -w package.json server/server.js",
