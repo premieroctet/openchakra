@@ -19,6 +19,12 @@ export const getPageFileName = (
   return normalizePageName(pages[pageId].pageName)
 }
 
+export const urlClean = (url: string) => url
+  .toLowerCase()
+  .replace(/ /gi, '-')
+  .normalize('NFD')
+  .replace(/\p{Diacritic}/gu, '')
+
 export const getPageUrl = (
   pageId: string,
   pages: { [key: string]: PageState },
@@ -27,11 +33,8 @@ export const getPageUrl = (
     if (!pages[pageId]) {
       throw new Error(`Page ${pageId} inconnue`)
     }
-    return pages?.[pageId]?.pageName
-      .toLowerCase()
-      .replace(/ /gi, '-')
-      .normalize('NFD')
-      .replace(/\p{Diacritic}/gu, '')
+    return pages?.[pageId]?.pageName && urlClean(pages?.[pageId]?.pageName)
+      
   } catch (err) {
     console.error(`getPageUrl ${pageId}:${err}`)
     return pageId
