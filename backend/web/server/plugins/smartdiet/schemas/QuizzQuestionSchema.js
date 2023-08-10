@@ -22,21 +22,18 @@ const QuizzQuestionSchema = new Schema({
     enum: Object.keys(QUIZZ_QUESTION_TYPE),
     required: [true, 'Le type est obligatoire'],
   },
-  enum_values: [{
-    type: String,
-    required: [
-      function() { return [QUIZZ_QUESTION_TYPE_ENUM_SINGLE, QUIZZ_QUESTION_TYPE_ENUM_MULTIPLE].includes(this.type)},
-      'Les réponses possibles sont obligatoires pour un QCM'
-    ],
-  }],
   diet_private: {
-    type: Schema.Types.ObjectId,
-    ref: 'user',
-    required: false,
   },
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
+
+QuizzQuestionSchema.virtual("available_answers", {
+  ref: "item", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: 'quizzQuestion' // is equal to foreignField
+});
+
 QuizzQuestionSchema.methods.cloneAsUserQuestion=function() {
   const params={
     quizz_question: this,

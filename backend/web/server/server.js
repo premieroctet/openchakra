@@ -109,6 +109,7 @@ require('./models/Quizz')
 require('./models/QuizzQuestion')
 require('./models/UserQuizz')
 require('./models/UserQuizzQuestion')
+require('./models/Item')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 

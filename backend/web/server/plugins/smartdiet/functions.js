@@ -713,6 +713,11 @@ declareVirtualField({model: 'quizz', field: 'questions', instance: 'company', mu
 declareEnumField({model: 'quizz', field: 'type', enumValues: QUIZZ_TYPE})
 
 declareEnumField({model: 'quizzQuestion', field: 'type', enumValues: QUIZZ_QUESTION_TYPE})
+declareVirtualField({model: 'quizzQuestion', field: 'available_answers', instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'item'}},
+})
 
 declareVirtualField({model: 'appointment', field:'order', instance: 'Number',
   requires: 'coaching.appointments',
@@ -721,6 +726,13 @@ declareVirtualField({model: 'appointment', field:'order', instance: 'Number',
 declareVirtualField({model: 'userQuizzQuestion', field:'order', instance: 'Number',
   requires: 'userQuizz.questions',
 })
+declareVirtualField({model: 'userQuizzQuestion', field: 'multiple_answers',
+  instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'item'}},
+})
+
 
 declareEnumField({model: 'userQuizz', field: 'type', enumValues: QUIZZ_TYPE})
 

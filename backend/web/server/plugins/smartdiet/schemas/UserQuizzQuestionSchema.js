@@ -27,19 +27,24 @@ const UserQuizzQuestionSchema = new Schema({
   numeric_answer: {
     type: Number,
   },
-  single_enum_answer: [{
-      type: String,
-  }],
-  multiple_enum_answer: [{
-      type: String,
-  }],
-
+  single_enum_answer: {
+    type: Schema.Types.ObjectId,
+    ref: 'item',
+    required: false,
+  },
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
 UserQuizzQuestionSchema.virtual('order', {localField:'tagada', foreigneField: 'tagada'}).get(function() {
   return 0
 })
+
+UserQuizzQuestionSchema.virtual("multiple_answers", {
+  ref: "item", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: 'userQuizzQuestion' // is equal to foreignField
+});
+
 /* eslint-enable prefer-arrow-callback */
 
 

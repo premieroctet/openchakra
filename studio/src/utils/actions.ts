@@ -74,6 +74,14 @@ export const ACTIONS: IActions = {
         components
           .filter(comp => comp.type=='Flex')
           .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      quizzQuestion: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      userQuizzQuestion: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
       ...Object.fromEntries(lodash.range(24).map((idx:number) => {
       return [
         `component_${idx}`,
