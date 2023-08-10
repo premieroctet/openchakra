@@ -384,7 +384,9 @@ USER_MODELS.forEach(m => {
   })
   declareVirtualField({model: m, field: 'latest_coachings', instance: 'Array',
     requires: `coachings.logbook_templates.key,coachings.logbooks.key,coachings.logbooks.questions.quizz_question.title,\
-coachings.quizz_templates.key,coachings.quizz_templates.key,coachings.quizz.key,coachings.quizz.questions.quizz_question.title,\
+coachings.quizz_templates.key,coachings.quizz_templates.key,coachings.quizz.key,\
+coachings.quizz.questions.quizz_question.title,coachings.quizz.questions.multiple_answers,\
+coachings.logbooks.questions.multiple_answers,\
 coachings.appointments.start_date,coachings.appointments.objectives,surveys,\
 coachings.food_documents.key.picture,coachings.appointments.objectives`,
     multiple: true,
