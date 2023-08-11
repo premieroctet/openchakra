@@ -21,7 +21,7 @@ const copyCode = (pageName: string, contents: Buffer) => {
 }
 
 const cleanPages = (pages:PageSettings[]) => {
-  return clean(pages.map(page => `${normalizePageName(page.pageName)}.js`))
+  return clean(pages.map(page => `${urlClean(page.pageName)}.js`))
 }
 
 export const deploy = (state: ProjectState, models: any) => {
