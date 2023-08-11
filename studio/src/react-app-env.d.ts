@@ -78,6 +78,7 @@ type ComponentType =
   | 'Stack'
   | 'Switch'
   | 'Tab'
+  | 'Tabs'
   | 'Table'
   | 'Tabs'
   | 'TabList'

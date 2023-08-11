@@ -12,17 +12,16 @@ import { withFilters } from '../../hoc/Filters'
 
 const VisibilityPanel: React.FC = props => {
   const hiddenRoles:string[] = usePropsSelector('hiddenRoles')
-  const { setValue } = useForm()
+  const { setValue, removeValue } = useForm()
   const roles = useSelector(getRoles)
 
-  const onRoleChange = event => {
-    const { name, checked } = event.target
-    const newRoles = checked
-      ? lodash([...hiddenRoles, name])
-          .uniq()
-          .value()
-      : hiddenRoles.filter(r => r != name)
-    setValue('hiddenRoles', newRoles)
+  const onRoleChange = values => {
+    if (values.length==0) {
+      removeValue('hiddenRoles')
+    }
+    else {
+      setValue('hiddenRoles', values.map(v => v.value))
+    }
   }
 
   const getPairs = rs => {
@@ -32,9 +31,9 @@ const VisibilityPanel: React.FC = props => {
   return (
     <FormControl htmlFor="hiddenRoles" label="Hidden for">
       <MultiSelect
-          options={[{value: NOT_CONNECTED, label: 'Non connect'}, ...getPairs(Object.keys(roles))]}
+          options={[{value: NOT_CONNECTED, label: 'Non connecté'}, ...getPairs(Object.keys(roles))]}
           value={getPairs(hiddenRoles)}
-          onChange={values => setValue('hiddenRoles', values.map(v => v.value))}
+          onChange={onRoleChange}
           labelledBy="Select"
           hasSelectAll={false}
           disableSearch={true}
