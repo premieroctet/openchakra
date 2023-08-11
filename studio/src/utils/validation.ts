@@ -1,16 +1,14 @@
 import lodash from 'lodash'
+
 import { ProjectState } from '~/core/models/project'
+
 import { getPageUrl } from './misc';
+import { getParentOfType, hasParentType } from './dataSources';
 import projectSchema from './projectSchema.json'
+
 const Validator = require('jsonschema').Validator
 import { CONTAINER_TYPE } from './dataSources'
 import {ACTIONS} from './actions'
-
-export const hasParentType = (comp: IComponent, comps: IComponents, type: ComponentType) => {
-  if (comp.type==type) {return true}
-  if (comp.id=='root') {return false}
-  return hasParentType(comps[comp.parent], comps, type)
-}
 
 const checkEmptyDataAttribute = (
   comp: IComponent,
@@ -125,6 +123,19 @@ const checkCardinality = (
   }
 }
 
+// In dynamic Tabs (i.e. having dataSource), maskability must be
+// managed in the Tab instead of the TabPanel
+const checkTabPanelMaskability = (
+  comp: IComponent,
+  icomponents: IComponents,
+) => {
+  if (comp.type=='TabPanel' && (comp.props.hiddenRoles || comp.props.conditionsvisibility)) {
+    if (getParentOfType(icomponents, comp, 'Tabs')?.props.dataSource) {
+      throw new Error(`Dynamic TabPanel's maskability must be managed by the corresponding Tab`)
+    }
+  }
+}
+
 export const validateComponent = (
   component: IComponent,
   components: IComponents,
@@ -138,6 +149,7 @@ export const validateComponent = (
     checkUnlinkedDataProvider,
     checkCardinality,
     checkActionsProperties,
+    checkTabPanelMaskability,
   ])
     .map(v => {
       try {
@@ -164,6 +176,7 @@ export const validateComponents = (icomponents: IComponents): IWarning[] => {
     checkUnlinkedDataProvider,
     checkCardinality,
     checkActionsProperties,
+    checkTabPanelMaskability,
   ])
     .map(v => {
       return components.map(c => {
