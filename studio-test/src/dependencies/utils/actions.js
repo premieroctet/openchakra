@@ -66,7 +66,7 @@ export const ACTIONS = {
     } else {
       window.location = url
     }
-    throw new Error('break')
+    return Promise.resolve()
   },
 
   create: ({ value, context, props, level, getComponentValue }) => {
