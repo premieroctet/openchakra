@@ -179,6 +179,9 @@ const buildBlock = ({
         if (tabParent?.props.dataSource) {
           childComponent.props.dataSource=tabParent?.props.dataSource
         }
+        if (tabParent?.props.attribute) {
+          childComponent.props.attribute=tabParent?.props.attribute
+        }
       }
       const dataProvider = components[childComponent.props.dataSource]
       const isDpValid=getValidDataProviders(components).find(dp => dp.id==childComponent.props.dataSource)
