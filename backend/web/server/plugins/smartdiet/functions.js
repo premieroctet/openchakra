@@ -388,7 +388,8 @@ coachings.quizz_templates.key,coachings.quizz_templates.key,coachings.quizz.key,
 coachings.quizz.questions.quizz_question.title,coachings.quizz.questions.multiple_answers,\
 coachings.logbooks.questions.multiple_answers,\
 coachings.appointments.start_date,coachings.appointments.objectives,surveys,\
-coachings.food_documents.key.picture,coachings.appointments.objectives`,
+coachings.food_documents.key.picture,coachings.appointments.objectives,\
+coachings.diet.picture,coachings.diet.fullname,coachings.diet.diet_availabilities.ranges`,
     multiple: true,
     caster: {
       instance: 'ObjectID',
