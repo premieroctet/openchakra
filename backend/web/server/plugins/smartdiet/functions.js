@@ -400,6 +400,13 @@ coachings.food_documents.key.picture,coachings.appointments.objectives`,
       instance: 'ObjectID',
       options: {ref: 'quizzQuestion'}},
   })
+  declareVirtualField({model: m, field: 'diet_availabilities', instance: 'Array',
+    requires: 'role',
+    multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'availability'}},
+  })
 })
 
 declareEnumField({model: 'company', field: 'activity', enumValues: COMPANY_ACTIVITY})
@@ -737,6 +744,10 @@ declareVirtualField({model: 'userQuizzQuestion', field: 'multiple_answers',
 
 
 declareEnumField({model: 'userQuizz', field: 'type', enumValues: QUIZZ_TYPE})
+
+declareVirtualField({model: 'range', field:'range_str', instance: 'String',
+  requires: 'day,start_time,duration',
+})
 
 const getDataLiked = (user, params, data) => {
   const liked=data?.likes?.some(l => idEqual(l._id, user?._id))

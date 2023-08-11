@@ -1,7 +1,8 @@
-const { CREATED_AT_ATTRIBUTE } = require('../../../../utils/consts')
 const {
   ACTIVITY,
   DIET_ACTIVITIES,
+  DIET_EXT_HOUR_RANGE,
+  DIET_EXT_OFFDAYS,
   DIET_REGISTRATION_STATUS,
   DIET_REGISTRATION_STATUS_TO_QUALIFY,
   EVENT_IND_CHALLENGE,
@@ -13,6 +14,7 @@ const {
   ROLE_RH,
   STATUS_FAMILY
 } = require('../consts')
+const { CREATED_AT_ATTRIBUTE } = require('../../../../utils/consts')
 
 const siret = require('siret')
 const luhn = require('luhn')
@@ -531,6 +533,35 @@ UserSchema.virtual("diet_questions", {
   localField: "_id", // Find in Model, where localField
   foreignField: "diet_private", // is equal to foreignField
 })
+
+// Returned availabilities/ranges are not store in database
+UserSchema.virtual('diet_availabilities', {localField:'tagada', foreignField:'tagada'}).get(function() {
+  if (this.role!=ROLE_EXTERNAL_DIET) {
+    return []
+  }
+  //Get unavailabilities from Smartagenda
+  const msg=`Computing availabilities for ${this.email}`
+  console.time(msg)
+  const generateRanges = day => {
+    const res=[]
+    let hour=DIET_EXT_HOUR_RANGE.min
+    while (hour<DIET_EXT_HOUR_RANGE.max) {
+      res.push(mongoose.models.range({day, start_time:hour, duration: 0.5}))
+      hour+=1
+    }
+    return res
+  }
+  const availabilities=lodash.range(7).map(day_idx => {
+    const day=moment().add(day_idx, 'day')
+    const ranges=DIET_EXT_OFFDAYS.includes(day.isoWeekday()) ? []: generateRanges(day)
+    return ({
+      date: day.startOf('day'),
+      ranges,
+    })
+  })
+  console.timeEnd(msg)
+  return availabilities
+});
 
 /* eslint-enable prefer-arrow-callback */
 

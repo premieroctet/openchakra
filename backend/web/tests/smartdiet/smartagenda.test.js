@@ -86,7 +86,7 @@ describe('SmartAgenda test ', () => {
     console.log(JSON.stringify(events, null, 2))
   })
 
-  it.only('must convert date', async() => {
+  it('must convert date', async() => {
     expect(() => smartDietToMoment('2023-01-09 30:23:15')).toThrow(/Incorrect moment/)
     expect(smartDietToMoment('2023-01-09 12:23:15').date()).toEqual(9)
   })

@@ -425,6 +425,12 @@ const QUIZZ_QUESTION_TYPE={
   [QUIZZ_QUESTION_TYPE_TEXT_MULTIPLE]: "Texte multiple",
 }
 
+// Diet's off days isoWeekDay'
+const DIET_EXT_OFFDAYS=[7]
+
+// Diet's off days isoWeekDay'
+const DIET_EXT_HOUR_RANGE={min: 9, max:18}
+
 module.exports={
   CONTENTS_TYPE,
   EVENT_TYPE,
@@ -485,6 +491,8 @@ module.exports={
   QUIZZ_QUESTION_TYPE,
   QUIZZ_TYPE_PATIENT,
   QUIZZ_TYPE_PROGRESS,
+  DIET_EXT_OFFDAYS,
+  DIET_EXT_HOUR_RANGE,
   QUIZZ_TYPE_LOGBOOK,
   QUIZZ_QUESTION_TYPE_TEXT_MULTIPLE,
 }
