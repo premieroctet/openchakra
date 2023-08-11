@@ -164,6 +164,12 @@ const preCreate = ({model, params, user}) => {
       params.diet_private=user
     }
   }
+  if (model=='appointment') {
+    return loadFromDb({model: 'user', id: user._id, fields:['latest_coachings']})
+      .then(([usr]) => {
+        return {model, params:{...params, coaching: usr.latest_coachings[0]._id}}
+      })
+  }
   return Promise.resolve({model, params})
 }
 
@@ -389,7 +395,9 @@ coachings.quizz.questions.quizz_question.title,coachings.quizz.questions.multipl
 coachings.logbooks.questions.multiple_answers,\
 coachings.appointments.start_date,coachings.appointments.objectives,surveys,\
 coachings.food_documents.key.picture,coachings.appointments.objectives,\
-coachings.diet.picture,coachings.diet.fullname,coachings.diet.diet_availabilities.ranges`,
+coachings.diet.picture,coachings.diet.fullname,coachings.diet.diet_availabilities.ranges,\
+coachings.appointments`,
+
     multiple: true,
     caster: {
       instance: 'ObjectID',
@@ -749,7 +757,13 @@ declareEnumField({model: 'userQuizz', field: 'type', enumValues: QUIZZ_TYPE})
 declareVirtualField({model: 'range', field:'range_str', instance: 'String',
   requires: 'day,start_time,duration',
 })
+declareVirtualField({model: 'range', field:'start_date', instance: 'String',
+  requires: 'day,start_time',
+})
+declareVirtualField({model: 'range', field:'end_date', instance: 'String',
+  requires: 'day,start_time,duration',
 
+})
 const getDataLiked = (user, params, data) => {
   const liked=data?.likes?.some(l => idEqual(l._id, user?._id))
   return Promise.resolve(liked)

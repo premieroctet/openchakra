@@ -26,5 +26,14 @@ RangeSchema.virtual('range_str').get(function() {
   return `${start.format('HH:mm')}->${end.format('HH:mm')}`
 })
 
+RangeSchema.virtual('start_date').get(function() {
+  return moment(this.day).startOf('day').add(this.start_time, 'hours')
+})
+
+RangeSchema.virtual('end_date').get(function() {
+  const start=moment(this.day).startOf('day').add(this.start_time, 'hours')
+  return end=moment(start).add(this.duration, 'hours')
+})
+
 
 module.exports = RangeSchema
