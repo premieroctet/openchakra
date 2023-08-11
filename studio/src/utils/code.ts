@@ -22,6 +22,7 @@ import {
   getDataProviderDataType,
   getFieldsForDataProvider,
   getParentOfType,
+  hasParentType,
   isSingleDataPage,
 } from './dataSources';
 import {
@@ -37,7 +38,6 @@ import {
   whatTheHexaColor,
 } from './misc';
 import { ProjectState, PageState } from '../core/models/project'
-import { hasParentType } from './validation';
 import { isJsonString } from '../dependencies/utils/misc'
 
 
