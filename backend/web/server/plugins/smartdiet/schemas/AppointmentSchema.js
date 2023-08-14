@@ -2,6 +2,11 @@ const mongoose = require('mongoose')
 const moment=require('moment')
 const {schemaOptions} = require('../../../utils/schemas')
 const {idEqual}=require('../../../utils/database')
+const {
+  APPOINTMENT_CURRENT,
+  APPOINTMENT_PAST,
+  APPOINTMENT_TO_COME
+} = require('../consts')
 
 const Schema = mongoose.Schema
 
