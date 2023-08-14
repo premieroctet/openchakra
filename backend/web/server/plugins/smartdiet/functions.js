@@ -748,6 +748,7 @@ declareVirtualField({model: 'quizzQuestion', field: 'available_answers', instanc
 declareVirtualField({model: 'appointment', field:'order', instance: 'Number',
   requires: 'coaching.appointments',
 })
+declareEnumField({model: 'appointment', field: 'status', enumValues: APPOINTMENT_STATUS})
 
 declareVirtualField({model: 'userQuizzQuestion', field:'order', instance: 'Number',
   requires: 'userQuizz.questions',
