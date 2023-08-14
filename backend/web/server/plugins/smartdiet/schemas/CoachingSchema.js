@@ -71,6 +71,10 @@ const CoachingSchema = new Schema({
     ref: 'userQuizz',
     required: false,
   },
+  // Food program URL
+  food_program: {
+    type: String,
+  },
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
