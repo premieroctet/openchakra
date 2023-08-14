@@ -165,8 +165,16 @@ const preCreate = ({model, params, user}) => {
     }
   }
   if (model=='appointment') {
-    return loadFromDb({model: 'user', id: user._id, fields:['latest_coachings']})
+    return loadFromDb({model: 'user', id: user._id, fields:['latest_coachings.appointments, latest_coachings.remaining_credits']})
       .then(([usr]) => {
+        // Check remaining credits
+        if (user.latest_coachings[0]?.remaining_credits<=0) {
+          throw new ForbiddenError(`Votre offre ne permet pas/plus de prendre un rendez-vous`)
+        }
+        // Check appointment to come
+        if (user.latest_coachings[0]?.appointments.find(a => moment(a.end_date).after(moment())) {
+          throw new ForbiddenError(`Vous avez déjà un rendez-vous à venir`)
+        }
         return {model, params:{...params, coaching: usr.latest_coachings[0]._id}}
       })
   }
