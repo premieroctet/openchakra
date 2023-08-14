@@ -44,4 +44,16 @@ const AppointmentSchema = new Schema({
 AppointmentSchema.virtual('order').get(function() {
   return this.coaching.appointments?.findIndex(app => idEqual(app._id, this._id))+1
 })
+
+AppointmentSchema.virtual('status').get(function() {
+  const now=moment()
+  const start=moment(this.start_date)
+  const end=moment(this.end_date)
+  return start.isAfter(now) ?
+    APPOINTMENT_TO_COME
+    : end.isBefore(now) ?
+    APPOINTMENT_PAST:
+    APPOINTMENT_CURRENT
+
+})
 module.exports = AppointmentSchema
