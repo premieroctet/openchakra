@@ -166,7 +166,7 @@ const preCreate = ({model, params, user}) => {
     }
   }
   if (model=='appointment') {
-    return loadFromDb({model: 'user', id: user._id, fields:['latest_coachings.appointments,latest_coachings.remaining_credits']})
+    return loadFromDb({model: 'user', id: user._id, fields:['latest_coachings.appointments', 'latest_coachings.remaining_credits']})
       .then(([usr]) => {
         // Check remaining credits
         const latest_coaching=user.latest_coachings[0]
