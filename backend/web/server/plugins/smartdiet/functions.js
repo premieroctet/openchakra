@@ -169,7 +169,7 @@ const preCreate = ({model, params, user}) => {
     return loadFromDb({model: 'user', id: user._id, fields:['latest_coachings.appointments', 'latest_coachings.remaining_credits']})
       .then(([usr]) => {
         // Check remaining credits
-        const latest_coaching=user.latest_coachings[0]
+        const latest_coaching=usr.latest_coachings[0]
         if (!latest_coaching) {
           throw new ForbiddenError(`Vous n'avez pas de coaching en cours`)
         }
