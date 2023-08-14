@@ -1,27 +1,6 @@
 const {
-  CREATED_AT_ATTRIBUTE,
-  UPDATED_AT_ATTRIBUTE
-} = require('../../../utils/consts')
-const UserQuizzQuestion = require('../../models/UserQuizzQuestion')
-const {
-  declareComputedField,
-  declareEnumField,
-  declareVirtualField,
-  differenceSet,
-  getModel,
-  idEqual,
-  loadFromDb,
-  setFilterDataUser,
-  setIntersects,
-  setPostCreateData,
-  setPostPutData,
-  setPreCreateData,
-  setPreprocessGet,
-  simpleCloneModel,
-} = require('../../utils/database')
-const QuizzQuestion = require('../../models/QuizzQuestion')
-const {
   ACTIVITY,
+  APPOINTMENT_STATUS,
   COACHING_MODE,
   COACHING_QUESTION_STATUS,
   COMPANY_ACTIVITY,
@@ -52,6 +31,28 @@ const {
   TARGET_TYPE,
   UNIT
 } = require('./consts')
+const {
+  CREATED_AT_ATTRIBUTE,
+  UPDATED_AT_ATTRIBUTE
+} = require('../../../utils/consts')
+const UserQuizzQuestion = require('../../models/UserQuizzQuestion')
+const {
+  declareComputedField,
+  declareEnumField,
+  declareVirtualField,
+  differenceSet,
+  getModel,
+  idEqual,
+  loadFromDb,
+  setFilterDataUser,
+  setIntersects,
+  setPostCreateData,
+  setPostPutData,
+  setPreCreateData,
+  setPreprocessGet,
+  simpleCloneModel,
+} = require('../../utils/database')
+const QuizzQuestion = require('../../models/QuizzQuestion')
 const { BadRequestError, ForbiddenError } = require('../../utils/errors')
 const SpoonGain = require('../../models/SpoonGain')
 const CoachingQuestion = require('../../models/CoachingQuestion')
@@ -168,11 +169,15 @@ const preCreate = ({model, params, user}) => {
     return loadFromDb({model: 'user', id: user._id, fields:['latest_coachings.appointments, latest_coachings.remaining_credits']})
       .then(([usr]) => {
         // Check remaining credits
-        if (user.latest_coachings[0]?.remaining_credits<=0) {
+        const latest_coaching=user.latest_coachings[0]
+        if (!latest_coaching) {
+          throw new ForbiddenError(`Vous n'avez pas de coaching en cours`)
+        }
+        if (latest_coaching.remaining_credits<=0) {
           throw new ForbiddenError(`Votre offre ne permet pas/plus de prendre un rendez-vous`)
         }
         // Check appointment to come
-        if (user.latest_coachings[0]?.appointments.find(a => moment(a.end_date).after(moment())) {
+        if (latest_coaching.appointments.find(a => moment(a.end_date).after(moment()))) {
           throw new ForbiddenError(`Vous avez déjà un rendez-vous à venir`)
         }
         return {model, params:{...params, coaching: usr.latest_coachings[0]._id}}
