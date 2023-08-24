@@ -16,6 +16,7 @@ const {
   GROUPS_CREDIT,
   HARDNESS,
   HOME_STATUS,
+  MEAL_POSITION,
   NUTRISCORE,
   PARTICULAR_COMPANY_NAME,
   PERIOD,
@@ -189,11 +190,10 @@ const preCreate = ({model, params, user}) => {
 setPreCreateData(preCreate)
 
 const postPutData = ({model, params, id, value, data, user}) => {
-  if ((model=='coaching' && params.logbook_templates)
-    || (model=='coaching' && params.quizz_templates))
+  if (model=='coaching' && params.quizz_templates)
   {
-    const tpl_attribute=params.logbook_templates ? 'logbook_templates': 'quizz_templates'
-    const inst_attribute=params.logbook_templates ?'logbooks': 'quizz'
+    const tpl_attribute='quizz_templates'
+    const inst_attribute='quizz'
     return mongoose.models.coaching.findById(id).populate([
         {path: tpl_attribute, populate:'questions'},
         {path: inst_attribute, populate:{path: 'quizz', populate:'questions'}},
@@ -402,14 +402,15 @@ USER_MODELS.forEach(m => {
       options: {ref: 'coaching'}},
   })
   declareVirtualField({model: m, field: 'latest_coachings', instance: 'Array',
-    requires: `coachings.logbook_templates.key,coachings.logbooks.key,coachings.logbooks.questions.quizz_question.title,\
+    requires: `coachings.logbooks.logbooks.key,coachings.logbooks.logbooks.questions.quizz_question.title,\
 coachings.quizz_templates.key,coachings.quizz_templates.key,coachings.quizz.key,\
 coachings.quizz.questions.quizz_question.title,coachings.quizz.questions.multiple_answers,\
-coachings.logbooks.questions.multiple_answers,\
+coachings.logbooks.logbooks.questions.multiple_answers,\
 coachings.appointments.start_date,coachings.appointments.objectives,surveys,\
 coachings.food_documents.key.picture,coachings.appointments.objectives,\
 coachings.diet.picture,coachings.diet.fullname,coachings.diet.diet_availabilities.ranges,\
-coachings.appointments`,
+coachings.appointments,coachings.appointments.status,coachings.appointments.start_date,coachings.appointments.end_date,\
+coachings.all_logbooks.logbooks.quizz,coachings.all_logbooks.day,coachings.appointments.logbooks,coachings.appointments.logbooks.questions`,
 
     multiple: true,
     caster: {
@@ -710,9 +711,10 @@ declareVirtualField({model: 'coaching', field: 'progress', instance: 'Array', mu
   },
 })
 declareVirtualField({model: 'coaching', field: 'logbooks', instance: 'Array', multiple: true,
+  requires: 'appointments.status',
   caster: {
     instance: 'ObjectID',
-    options: {ref: 'userQuizz'}
+    options: {ref: 'logbookDay'}
   },
 })
 
@@ -1039,6 +1041,41 @@ User.find({role: ROLE_CUSTOMER}).populate('coachings')
  .then(coachings => coachings.map(coaching => console.log(`Created missing coaching for ${coaching.user.email}`)))
  .catch(err => console.error(err))
 
+// Ensure coaching logbooks consistency
+const logbooksConsistency = () => {
+  return Coaching.find().populate([
+    {path: 'appointments', populate: {path: 'logbooks', populate: {path: 'questions'}}},
+    {path: 'all_logbooks', populate: {path: 'quizz'}},
+    ])
+    /**
+    .then(coachings => {
+      return Promise.all(coachings.map(coaching => {
+        const getLogbooksForDay = date => {
+          // Get the appontment juste before the date
+          const previous_appt=lodash(coaching.appointments)
+            .filter(a => a.end_date < date)
+            .maxBy(a => a.start_date)
+          return previous_appt?.logbooks || []
+        }
+        const startDay=moment().add(-6, 'day')
+        const userQUizzToCreate=Promise.allSettled(lodash.range(7).map(day_idx => {
+          const day=moment(startDay).add(day_idx, 'day')
+          // expected quizz templates
+          const expectedQuizz=getLogbooksForDay(day)
+          const userDayLogbooks=coaching.all_logbooks.filter(l => moment(l.day).isSame(day, 'day'))
+          const missingQuizz=expectedQuizz.filter(q => !userDayLogbooks.some(ud => idEqual(ud.quizz._id, ud._id)))
+          //console.log(`${day} missing quizz : ${lodash.map(missingQuizz, '_id')}`)
+
+          console.log(`Must duplicate ${JSON.stringify(missingQuizz,null,2)} for day ${day}`)
+          return Promise.allSettled(missingQuizz.map(q => q.cloneAsUserQuizz()))
+        }))
+      }))
+    })
+    */
+
+}
+
 module.exports={
   ensureChallengePipsConsistency,
+  logbooksConsistency,
 }
