@@ -44,7 +44,7 @@ const MenuRecipeSchema = new Schema({
 )
 
 MenuRecipeSchema.index(
-  { menu: 1, day: 1, period:1  },
+  { menu: 1, day: 1, period:1, position:1  },
   { unique: true, message: 'Un menu existe déjà pour ce repas' });
 
 module.exports = MenuRecipeSchema

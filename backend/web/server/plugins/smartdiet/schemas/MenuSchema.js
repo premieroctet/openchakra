@@ -39,7 +39,7 @@ MenuSchema.virtual('people_count').get(function() {
   return MENU_PEOPLE_COUNT
 })
 
-MenuSchema.virtual("recipes", {
+MenuSchema.virtual("_recipes", {
   ref: "menuRecipe", // The Model to use
   localField: "_id", // Find in Model, where localField
   foreignField: "menu" // is equal to foreignField
@@ -47,6 +47,15 @@ MenuSchema.virtual("recipes", {
 
 MenuSchema.virtual("shopping_list", {localField: 'tagada', foreignField: 'tagada'}).get(function() {
   return null
+})
+
+MenuSchema.virtual("recipes", {localField: 'tagada', foreignField: 'tagada'}).get(function() {
+  const POSITION_ORDER={
+    MEAL_POSITION_STARTER:0,
+    MEAL_POSITION_DISH:1,
+    MEAL_POSITION_DESSERT:2,
+  }
+  return lodash.sortBy(this._recipes, menuRecipe => parseInt(menuRecipe.day)*10+POSITION_ORDER[menuRecipe.position])
 })
 
 module.exports = MenuSchema
