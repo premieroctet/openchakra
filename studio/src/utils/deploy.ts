@@ -8,13 +8,12 @@ import { normalizePageName, urlClean } from './misc';
 import { validateComponents , validateProject} from './validation'
 
 // If true, build target project when comilation fixed
+// @ts-ignore
 const TARGET_BUILD = ['production', 'validation'].includes(process.env.NEXT_PUBLIC_MODE) || false
 
 console.log(`Starting in mode ${TARGET_BUILD}`)
 
 const copyCode = (pageName: string, contents: Buffer) => {
-
-  console.log(urlClean(pageName))
 
   return copyFile({
     contents: contents,
@@ -49,6 +48,7 @@ export const deploy = (state: ProjectState, models: any) => {
         codes,
       )
       return Promise.all(
+        // @ts-ignore
         namedCodes.map(([pageName, code]) => copyCode(pageName, code)),
       )
     })
@@ -65,11 +65,13 @@ export const deploy = (state: ProjectState, models: any) => {
       return cleanPages(pages)
     })
     .then(code => {
+      // @ts-ignore
       return copyCode('index', code)
     })
     .then(() => {
       return install()
     })
+    // @ts-ignore
     .then(() => {
       return TARGET_BUILD ? build().then(() => start()) : true
     })
