@@ -7,6 +7,7 @@ const {
 } = require('../consts')
 const mongoose = require('mongoose')
 const bcrypt=require('bcryptjs')
+const lodash=require('lodash')
 const {schemaOptions} = require('../../../utils/schemas')
 
 const Schema = mongoose.Schema
