@@ -37,15 +37,15 @@ const QuizzSchema = new Schema({
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
-QuizzSchema.methods.cloneAsUserQuizz=function(coaching) {
+QuizzSchema.methods.cloneAsUserQuizz=function() {
   return Promise.all(this.questions.map(q => q.cloneAsUserQuestion()))
     .then(questions => {
       const params={
         ...lodash.omit(this.toObject(), ['_id', 'id', CREATED_AT_ATTRIBUTE, UPDATED_AT_ATTRIBUTE]),
         quizz: this._id,
         questions,
-        coaching,
       }
+      console.log(`Here!!!`)
       return mongoose.models.userQuizz.create(params)
     })
 }

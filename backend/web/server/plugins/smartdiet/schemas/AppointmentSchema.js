@@ -22,7 +22,7 @@ const AppointmentSchema = new Schema({
   },
   end_date: {
     type: Date,
-    validate: [v => (!v || moment(v).isAfter(this.start_date)), 'La fin doit être postérieure au début'],
+    validate: [function(v) { return moment(v).isAfter(this.start_date)}, 'La fin doit être postérieure au début'],
     required: false,
   },
   synthesis: {
@@ -42,6 +42,11 @@ const AppointmentSchema = new Schema({
   user_objectives: [{
     type: Schema.Types.ObjectId,
     ref: 'userQuizzQuestion',
+    required: true,
+  }],
+  logbooks: [{
+    type: Schema.Types.ObjectId,
+    ref: 'quizz',
     required: true,
   }],
 }, schemaOptions)

@@ -1,10 +1,12 @@
 const {
+  APPOINTMENT_PAST,
   COACHING_MODE,
   QUIZZ_TYPE_LOGBOOK,
   QUIZZ_TYPE_PATIENT,
   QUIZZ_TYPE_PROGRESS,
   ROLE_EXTERNAL_DIET
 } = require('../consts')
+const moment = require('moment')
 const { CREATED_AT_ATTRIBUTE } = require('../../../../utils/consts')
 const mongoose = require('mongoose')
 const { schemaOptions } = require('../../../utils/schemas')
@@ -45,17 +47,6 @@ const CoachingSchema = new Schema({
     ref: 'foodDocument',
     required: true,
   }],
-  //
-  logbook_templates: [{
-    type: Schema.Types.ObjectId,
-    ref: 'quizz',
-    required: true,
-  }],
-  logbooks: [{
-    type: Schema.Types.ObjectId,
-    ref: 'userQuizz',
-    required: true,
-  }],
   quizz_templates: [{
     type: Schema.Types.ObjectId,
     ref: 'quizz',
@@ -75,6 +66,12 @@ const CoachingSchema = new Schema({
   food_program: {
     type: String,
   },
+  // All logbooks by day
+  all_logbooks: [{
+    type: Schema.Types.ObjectId,
+    ref: 'logbookDay',
+    required: true,
+  }],
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
@@ -132,6 +129,16 @@ CoachingSchema.virtual("_all_diets", {
   options: {
     match: {role: ROLE_EXTERNAL_DIET},
   },
+})
+
+const duplicateUserQuizz= id => {
+  return mongoose.models.quizz.findById(id).populate('questions')
+    .then(q => q.cloneAsUserQuizz(null))
+}
+
+// Returns the LogbookDay compléting if required
+CoachingSchema.virtual('logbooks', {localField:'tagada', foreignField:'tagada'}).get(function() {
+  return this.all_logbooks
 })
 
 /* eslint-enable prefer-arrow-callback */
