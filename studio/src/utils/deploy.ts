@@ -14,6 +14,8 @@ console.log(`Starting in mode ${TARGET_BUILD}`)
 
 const copyCode = (pageName: string, contents: Buffer) => {
 
+  console.log(urlClean(pageName))
+
   return copyFile({
     contents: contents,
     filePath: `${urlClean(pageName)}.js`,
@@ -59,11 +61,11 @@ export const deploy = (state: ProjectState, models: any) => {
       })
       return code
     })
-    .then(code => {
-      return copyCode('index', code)
-    })
     .then(() => {
       return cleanPages(pages)
+    })
+    .then(code => {
+      return copyCode('index', code)
     })
     .then(() => {
       return install()
