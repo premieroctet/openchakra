@@ -67,9 +67,8 @@ describe('Logbbooks management ', () => {
     expect(apps[0].logbooks).toHaveLength(1)
     expect(apps[1].logbooks).toHaveLength(2)
     const res=await logbooksConsistency()
-    console.log(JSON.stringify(res, null, 2))
-    const [loaded_user]=await loadFromDb({model: 'user', fields:['latest_coachings']})
-    const logbookDays=loaded_user.latest_coachings[0].logbooks
+    const [loaded_user]=await loadFromDb({model: 'user', fields:['latest_coachings.all_logbooks']})
+    const logbookDays=loaded_user.latest_coachings[0].all_logbooks
     console.log(`logbooks days:${JSON.stringify(logbookDays, null, 2)}`)
   })
 

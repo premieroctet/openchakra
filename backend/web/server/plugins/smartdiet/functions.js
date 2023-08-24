@@ -1,3 +1,4 @@
+const LogbookDay = require('../../models/LogbookDay')
 const {
   ACTIVITY,
   APPOINTMENT_STATUS,
@@ -190,6 +191,10 @@ const preCreate = ({model, params, user}) => {
 setPreCreateData(preCreate)
 
 const postPutData = ({model, params, id, value, data, user}) => {
+  if (model=='appointment' && params.logbooks) {
+    return logbooksConsistency()
+      .then(() => params)
+  }
   if (model=='coaching' && params.quizz_templates)
   {
     const tpl_attribute='quizz_templates'
@@ -1047,7 +1052,6 @@ const logbooksConsistency = () => {
     {path: 'appointments', populate: {path: 'logbooks', populate: {path: 'questions'}}},
     {path: 'all_logbooks', populate: {path: 'quizz'}},
     ])
-    /**
     .then(coachings => {
       return Promise.all(coachings.map(coaching => {
         const getLogbooksForDay = date => {
@@ -1058,21 +1062,21 @@ const logbooksConsistency = () => {
           return previous_appt?.logbooks || []
         }
         const startDay=moment().add(-6, 'day')
-        const userQUizzToCreate=Promise.allSettled(lodash.range(7).map(day_idx => {
+        const userQuizzToCreate=Promise.all(lodash.range(7).map(day_idx => {
           const day=moment(startDay).add(day_idx, 'day')
           // expected quizz templates
           const expectedQuizz=getLogbooksForDay(day)
           const userDayLogbooks=coaching.all_logbooks.filter(l => moment(l.day).isSame(day, 'day'))
           const missingQuizz=expectedQuizz.filter(q => !userDayLogbooks.some(ud => idEqual(ud.quizz._id, ud._id)))
-          //console.log(`${day} missing quizz : ${lodash.map(missingQuizz, '_id')}`)
-
-          console.log(`Must duplicate ${JSON.stringify(missingQuizz,null,2)} for day ${day}`)
-          return Promise.allSettled(missingQuizz.map(q => q.cloneAsUserQuizz()))
+          return Promise.all(missingQuizz.map(q => q.cloneAsUserQuizz()))
+            .then(createdQuizzs => Promise.all(createdQuizzs.map(q => LogbookDay.create({day, logbooks:[q]}))))
         }))
+        return userQuizzToCreate
+          .then(res => lodash.flatten(res).filter(r => !lodash.isEmpty(r)))
+          .then(res => {coaching.all_logbooks.push(...res); return coaching.save()})
       }))
-    })
-    */
 
+    })
 }
 
 module.exports={

@@ -45,7 +45,6 @@ QuizzSchema.methods.cloneAsUserQuizz=function() {
         quizz: this._id,
         questions,
       }
-      console.log(`Here!!!`)
       return mongoose.models.userQuizz.create(params)
     })
 }
