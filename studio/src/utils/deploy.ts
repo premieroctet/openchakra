@@ -13,7 +13,8 @@ const TARGET_BUILD = ['production', 'validation'].includes(process.env.NEXT_PUBL
 
 console.log(`Starting in mode ${TARGET_BUILD}`)
 
-const copyCode = (pageName: string, contents: Buffer) => {
+// @ts-ignore
+const copyCode = (pageName, contents) => {
 
   return copyFile({
     contents: contents,
