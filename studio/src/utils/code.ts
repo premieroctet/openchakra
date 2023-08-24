@@ -757,8 +757,7 @@ export const generateCode = async (
   ''
   */
   code = `import React, {useState, useEffect} from 'react';
-  import Metadata from './dependencies/Metadata';
-  import Filter from './dependencies/custom-components/Filter/Filter';
+  import Filter from '../dependencies/custom-components/Filter/Filter';
   import omit from 'lodash/omit';
   import Metadata from '../dependencies/Metadata';
   ${hooksCode ? `import axios from 'axios'` : ''}
