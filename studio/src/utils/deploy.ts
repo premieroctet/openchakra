@@ -13,9 +13,8 @@ const TARGET_BUILD = ['production', 'validation'].includes(process.env.NEXT_PUBL
 
 console.log(`Starting in mode ${TARGET_BUILD}`)
 
-// @ts-ignore
-const copyCode = (pageName, contents) => {
-
+const copyCode = (pageName: string, contents: Buffer) => {
+  
   return copyFile({
     contents: contents,
     filePath: `${urlClean(pageName)}.js`,
@@ -62,12 +61,12 @@ export const deploy = (state: ProjectState, models: any) => {
       })
       return code
     })
-    .then(() => {
-      return cleanPages(pages)
-    })
     .then(code => {
       // @ts-ignore
       return copyCode('index', code)
+    })
+    .then(() => {
+      return cleanPages(pages)
     })
     .then(() => {
       return install()
