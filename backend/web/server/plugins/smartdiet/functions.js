@@ -16,6 +16,7 @@ const {
   GROUPS_CREDIT,
   HARDNESS,
   HOME_STATUS,
+  MEAL_POSITION,
   NUTRISCORE,
   PARTICULAR_COMPANY_NAME,
   PERIOD,
@@ -612,6 +613,7 @@ declareEnumField({model: 'userQuestion', field: 'answer', enumValues: SURVEY_ANS
 
 declareEnumField({model: 'menuRecipe', field: 'day', enumValues: DAYS})
 declareEnumField({model: 'menuRecipe', field: 'period', enumValues: PERIOD})
+declareEnumField({model: 'menuRecipe', field: 'position', enumValues: MEAL_POSITION})
 
 declareVirtualField({model: 'userQuestion', field: 'index', instance: 'Number', requires:'survey.questions'})
 declareVirtualField({model: 'userQuestion', field: 'total', instance: 'Number', requires:'survey.questions'})
