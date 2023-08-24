@@ -112,6 +112,7 @@ require('./models/UserQuizzQuestion')
 require('./models/Item')
 require('./models/Range')
 require('./models/Availability')
+require('./models/LogbookDay')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 
