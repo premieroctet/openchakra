@@ -8,6 +8,7 @@ import useDispatch from '~hooks/useDispatch'
 import MenuActions from './MenuActions'
 import ResponsiveActions from './ResponsiveActions'
 import MediaDetails from './MediaDetails'
+import ProjectSettings from './ProjectSettings'
 
 interface activemenu {
   show: boolean
@@ -44,10 +45,11 @@ const Menu = () => {
       component: <MediaDetails />,
       payload: 'medias',
     },
-    // settings: {
-    //   title: 'Settings',
-    //   icon: '/icons/settings.svg',
-    // },
+    settings: {
+      title: 'Settings',
+      component: <ProjectSettings />,
+      icon: '/icons/settings.svg',
+    },
   }
 
   return (
