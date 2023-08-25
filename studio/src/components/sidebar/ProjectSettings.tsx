@@ -37,15 +37,6 @@ const ProjectSettings = () => {
     gaTag,
   })
 
-  const envvar = {
-    'PROJECT name (for project colors)': process.env.NEXT_PUBLIC_PROJECT,
-    'MODE': process.env.NEXT_PUBLIC_MODE,
-    'S3 ID': process.env.NEXT_PUBLIC_S3_ID,
-    'S3 KEY': process.env.NEXT_PUBLIC_S3_SECRET,
-    'S3 ROOTPATH': process.env.NEXT_PUBLIC_S3_ROOTPATH,
-    'S3 BUCKET': process.env.NEXT_PUBLIC_S3_BUCKET,
-    'BACKEND': process.env.NEXT_PUBLIC_BACKEND,
-  }
 
   const dispatch = useDispatch()
 
@@ -157,15 +148,6 @@ const ProjectSettings = () => {
         >
           Variables
         </Heading>
-
-        <dl style={{color: '#000'}}>
-          {Object.entries(envvar)
-            .map(([key, value]) => 
-              <React.Fragment key={key}>
-                <dt style={{fontWeight: 'bold', color: '#777'}}>{key}</dt>
-                <dd style={{wordBreak: 'break-all', marginBlockEnd: '.5em'}}>{value ? value : '❌'}</dd>
-              </React.Fragment>)}
-        </dl>
         
       </Box>
     )
