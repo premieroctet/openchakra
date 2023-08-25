@@ -222,6 +222,12 @@ const buildPopulates = (modelName, fields) => {
           added=true
         }
       }
+      let relies_on=lodash.get(DECLARED_VIRTUALS, `${modelName}.${directAttribute}.relies_on`) || null
+      if (relies_on) {
+        const search=new RegExp(`^${directAttribute}(\.|$)`)
+        const replace=(match, group1) => `${relies_on}${group1=='.'?'.':''}`
+	    requiredFields=requiredFields.map(f => f.replace(search, replace))
+      }
     })
   }
 
@@ -289,7 +295,7 @@ const buildQuery = (model, id, fields) => {
   const criterion = id ? {_id: id} : {}
   let query = mongoose.connection.models[model].find(criterion) //, select)
   const populates=buildPopulates(model, fields)
-  //console.log(`Populates for ${model}/${fields} is ${JSON.stringify(populates, null, 2)}`)
+  console.log(`Populates for ${model}/${fields} is ${JSON.stringify(populates, null, 2)}`)
   query = query.populate(populates)
   return query
 }

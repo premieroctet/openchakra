@@ -72,7 +72,7 @@ export const ACTIONS = {
     } else {
       window.location = url
     }
-    return
+    return Promise.resolve()
   },
 
   create: ({ value, context, props, level, getComponentValue }) => {
@@ -563,6 +563,7 @@ return Promise.allSettled(imagePromises)
       context,
     }
     return axios.post(url, body)
+      .then(res => res.data)
   },
 
   alle_store_bill: ({ value, context, props, level, getComponentValue }) => {
@@ -573,6 +574,7 @@ return Promise.allSettled(imagePromises)
       context,
     }
     return axios.post(url, body)
+      .then(res => res.data)
   },
 
   alle_show_bill: ({ value, context, props, level, getComponentValue }) => {
@@ -583,6 +585,7 @@ return Promise.allSettled(imagePromises)
       context,
     }
     return axios.post(url, body)
+    .then(res => res.data)
   },
 
   alle_accept_bill: ({ value, context, props, level, getComponentValue }) => {
@@ -593,6 +596,7 @@ return Promise.allSettled(imagePromises)
       context,
     }
     return axios.post(url, body)
+    .then(res => res.data)
   },
 
   alle_refuse_bill: ({ value, context, props, level, getComponentValue }) => {
@@ -603,6 +607,7 @@ return Promise.allSettled(imagePromises)
       context,
     }
     return axios.post(url, body)
+    .then(res => res.data)
   },
 
   alle_leave_comment: ({ value, context, props, level, getComponentValue }) => {
@@ -613,6 +618,7 @@ return Promise.allSettled(imagePromises)
       context,
     }
     return axios.post(url, body)
+      .then(res => res.data)
   },
 
   alle_send_bill: ({value}) => {
@@ -622,6 +628,7 @@ return Promise.allSettled(imagePromises)
       value,
     }
     return axios.post(url, body)
+    .then(res => res.data)
   },
 
   smartdiet_join_group: ({ value }) => {
