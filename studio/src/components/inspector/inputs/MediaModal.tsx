@@ -11,7 +11,7 @@ import Medias from '~components/medias/Medias'
 
 // {isOpen: boolean, onClose: ()=> void}
 
-const MediaModal = ({isOpen, onClose}: {isOpen: boolean, onClose: ()=> void}) => {
+const MediaModal = ({isOpen, onClose, setExternalValue}: {isOpen: boolean, onClose: ()=> void, setExternalValue?: any}) => {
 
     const { setValue } = useForm()
 
@@ -20,7 +20,7 @@ const MediaModal = ({isOpen, onClose}: {isOpen: boolean, onClose: ()=> void}) =>
         <ModalContent minW={'60vw'} maxH={'90vh'} overflowY={'scroll'}>
           <ModalCloseButton />
           <ModalBody display={'flex'} flexDirection={'column'}>
-          <Medias setMediaSrc={setValue} mediaPanelClose={onClose}/>
+          <Medias setMediaSrc={setExternalValue ? setExternalValue : setValue} mediaPanelClose={onClose}/>
           </ModalBody>
         </ModalContent>
         </Modal>)

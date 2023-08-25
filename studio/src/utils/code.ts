@@ -2,7 +2,6 @@ import {encode} from 'html-entities'
 import filter from 'lodash/filter'
 import isBoolean from 'lodash/isBoolean'
 import lodash from 'lodash'
-
 import icons from '~iconsList'
 import lucidicons from '~lucideiconsList'
 
@@ -43,6 +42,8 @@ import { isJsonString } from '../dependencies/utils/misc'
 
 //const HIDDEN_ATTRIBUTES=['dataSource', 'attribute']
 const HIDDEN_ATTRIBUTES: string[] = []
+
+const isProduction = process?.env?.NEXT_PUBLIC_MODE === 'production'
 
 export const getPageComponentName = (
   pageId: string,
@@ -688,8 +689,13 @@ export const generateCode = async (
     [key: string]: PageState
   },
   models: any,
+  project: ProjectState
 ) => {
   const { components, metaTitle, metaDescription, metaImageUrl } = pages[pageId]
+  const { settings } = project
+  const {description, metaImage, name, url, favicon32, gaTag} = Object.fromEntries(Object.entries(settings).map(([key, value]) => [key, isJsonString(value) ? JSON.parse(value) : value]))
+  
+
   const extraImports: string[] = []
   let hooksCode = buildHooks(components)
   let filterStates = buildFilterStates(components)
@@ -838,9 +844,13 @@ const ${componentName} = () => {
   return ${autoRedirect ? 'user===null && ': ''} (
     <>
     <Metadata
-      metaTitle={'${addBackslashes(metaTitle)}'}
-      metaDescription={'${addBackslashes(metaDescription)}'}
-      metaImageUrl={'${metaImageUrl}'}
+      metaTitle={'${metaTitle && addBackslashes(metaTitle)}'}
+      metaDescription={'${metaDescription ? addBackslashes(metaDescription) : addBackslashes(description)}'}
+      metaImageUrl={'${metaImageUrl ? addBackslashes(metaImageUrl) : addBackslashes(metaImage)}'}
+      metaName={'${name && addBackslashes(name)}'}
+      metaUrl={'${url}'}
+      metaFavicon32={'${favicon32 && addBackslashes(favicon32)}'}
+      metaGaTag={${isProduction ? `'${gaTag}'` : null}}
     />
     ${code}
     </>
