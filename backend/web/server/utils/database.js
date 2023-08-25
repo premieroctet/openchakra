@@ -225,6 +225,12 @@ const buildPopulates = (modelName, fields) => {
           added=true
         }
       }
+      let relies_on=lodash.get(DECLARED_VIRTUALS, `${modelName}.${directAttribute}.relies_on`) || null
+      if (relies_on) {
+        const search=new RegExp(`^${directAttribute}(\.|$)`)
+        const replace=(match, group1) => `${relies_on}${group1=='.'?'.':''}`
+	      requiredFields=requiredFields.map(f => f.replace(search, replace))
+      }
     })
   }
 
@@ -675,10 +681,9 @@ const loadFromDb = ({model, fields, id, user, params}) => {
         return data
       }
       return buildQuery(model, id, fields)
-        .lean({virtuals: true})
         .then(data => {
-          // Force duplicate children
-          data = JSON.parse(JSON.stringify(data))
+          // Lean all objects
+          data=data.map(d => d.toObject({virtuals: true}))
           // Remove extra virtuals
           //data = retainRequiredFields({data, fields})
           if (id && data.length == 0) { throw new NotFoundError(`Can't find ${model}:${id}`) }
