@@ -407,16 +407,8 @@ USER_MODELS.forEach(m => {
       options: {ref: 'coaching'}},
   })
   declareVirtualField({model: m, field: 'latest_coachings', instance: 'Array',
-    requires: `coachings.logbooks.logbooks.key,coachings.logbooks.logbooks.questions.quizz_question.title,\
-coachings.quizz_templates.key,coachings.quizz_templates.key,coachings.quizz.key,\
-coachings.quizz.questions.quizz_question.title,coachings.quizz.questions.multiple_answers,\
-coachings.logbooks.logbooks.questions.multiple_answers,\
-coachings.appointments.start_date,coachings.appointments.objectives,surveys,\
-coachings.food_documents.key.picture,coachings.appointments.objectives,\
-coachings.diet.picture,coachings.diet.fullname,coachings.diet.diet_availabilities.ranges,\
-coachings.appointments,coachings.appointments.status,coachings.appointments.start_date,coachings.appointments.end_date,\
-coachings.all_logbooks.logbooks.quizz,coachings.all_logbooks.day,coachings.appointments.logbooks,coachings.appointments.logbooks.questions`,
-
+  relies_on: 'coachings',
+  requires: 'coachings',
     multiple: true,
     caster: {
       instance: 'ObjectID',
@@ -683,7 +675,7 @@ declareVirtualField({model: 'coaching', field: 'appointments', instance: 'Array'
     options: {ref: 'appointment'}},
 })
 declareVirtualField({model: 'coaching', field: 'remaining_credits', instance: 'Number',
-  requires: 'user.offer.coaching_credit,spent_credits'}
+  requires: 'user.offer.coaching_credit,spent_credits,user.company.offers.coaching_credit'}
 )
 declareVirtualField({model: 'coaching', field: 'spent_credits', instance: 'Number', requires: 'appointments'})
 declareVirtualField({model: 'coaching', field: 'questions', instance: 'Array', multiple: true,

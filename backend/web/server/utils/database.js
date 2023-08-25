@@ -229,7 +229,7 @@ const buildPopulates = (modelName, fields) => {
       if (relies_on) {
         const search=new RegExp(`^${directAttribute}(\.|$)`)
         const replace=(match, group1) => `${relies_on}${group1=='.'?'.':''}`
-	    requiredFields=requiredFields.map(f => f.replace(search, replace))
+	      requiredFields=requiredFields.map(f => f.replace(search, replace))
       }
     })
   }
@@ -302,7 +302,7 @@ const buildQuery = (model, id, fields) => {
   const criterion = id ? {_id: id} : {}
   let query = mongoose.connection.models[model].find(criterion) //, select)
   const populates=buildPopulates(model, fields)
-  console.log(`Populates for ${model}/${fields} is ${JSON.stringify(populates, null, 2)}`)
+  //console.log(`Populates for ${model}/${fields} is ${JSON.stringify(populates, null, 2)}`)
   query = query.populate(populates)
   return query
 }
@@ -681,10 +681,9 @@ const loadFromDb = ({model, fields, id, user, params}) => {
         return data
       }
       return buildQuery(model, id, fields)
-        .lean({virtuals: true})
         .then(data => {
-          // Force duplicate children
-          data = JSON.parse(JSON.stringify(data))
+          // Lean all objects
+          data=data.map(d => d.toObject({virtuals: true}))
           // Remove extra virtuals
           //data = retainRequiredFields({data, fields})
           if (id && data.length == 0) { throw new NotFoundError(`Can't find ${model}:${id}`) }
