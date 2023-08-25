@@ -115,6 +115,13 @@ const withDynamicContainer = Component => {
         orgData = matcher(value, orgData, props.filterAttribute)
       }
     }
+    if (props.filterAttribute && props.filterConstant) {
+      const value=props.filterConstant
+      // TODO Check why value "null" comes as string
+      if (!(lodash.isNil(value) || value=="null")) {
+        orgData = matcher(value, orgData, props.filterAttribute)
+      }
+    }
     if (props.filterAttribute2 && props.filterValue2) {
       const value=props.getComponentValue(props.filterValue2, props.level)
       // TODO Check why value "null" comes as string

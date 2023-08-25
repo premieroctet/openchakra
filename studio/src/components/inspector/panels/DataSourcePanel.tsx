@@ -36,6 +36,7 @@ const DataSourcePanel: React.FC = () => {
   const contextFilter = usePropsSelector('contextFilter')
   const filterAttribute = usePropsSelector('filterAttribute')
   const filterValue = usePropsSelector('filterValue')
+  const filterConstant = usePropsSelector('filterConstant')
   const filterAttribute2 = usePropsSelector('filterAttribute2')
   const filterValue2 = usePropsSelector('filterValue2')
   const contextAttribute = usePropsSelector('contextAttribute')
@@ -345,6 +346,15 @@ const DataSourcePanel: React.FC = () => {
                     </option>
                   ))}
               </Select>
+            </FormControl>
+            <FormControl htmlFor="filterConstant" label="Filter constant">
+              <Input
+                id="filterConstant"
+                onChange={setValueFromEvent}
+                name="filterConstant"
+                size="xs"
+                value={filterConstant || ''}
+              />
             </FormControl>
             <FormControl htmlFor="filterAttribute2" label="Filter attribute 2">
               <Select
