@@ -55,6 +55,7 @@ const DataSourcePanel: React.FC = () => {
   const [isChart, setIsChart] = useState(false)
   const [availableSeries, setAvailableSeries] = useState([])
   const [dataType, setDataType] = useState('menu')
+  const filterComponents = lodash.range(5).map(idx => usePropsSelector(`filterComponent_${idx}`))
 
   useEffect(()=> {
     setIsChart(activeComponent?.type=='Chart')
@@ -471,6 +472,30 @@ const DataSourcePanel: React.FC = () => {
               ))}
             </Box>)
         }
+
+        { lodash.range(5).map((_,i)=> (
+          <>
+            <FormControl htmlFor={`series_${i}_attribute`} label={`Filter component ${i}`}>
+            <Select
+              id={`filterComponent_${i}`}
+              name={`filterComponent_${i}`}
+              onChange={setValueFromEvent}
+              size="xs"
+              value={filterComponents[i]}
+            >
+              <option value={undefined}></option>
+              {Object.values(components)
+                .filter(c => c.type=='Flex' &&  c.props?.isFilterComponent)
+                .map((component, i) => (
+                  <option key={`comp${i}`} value={component.id}>
+                    {`${component.id} (${component.type})`}
+                  </option>
+                ))}
+            </Select>
+            </FormControl>
+            </>
+          ))}
+
       </AccordionContainer>
     </Accordion>
   )

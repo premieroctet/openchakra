@@ -26,7 +26,8 @@ const {
   WITHINGS_CLIENT_ID,
   WITHINGS_CLIENT_SECRET,
   PAYMENT_PLUGIN,
-  STRIPE_KEY,
+  STRIPE_PUBLIC_KEY,
+  STRIPE_SECRET_KEY,
 } = require('../mode')
 
 const SITE_MODES = {
@@ -60,7 +61,8 @@ const getVivaWalletConfig = () => {
 
 const getStripeConfig = () => {
   return {
-    STRIPE_KEY
+    STRIPE_PUBLIC_KEY,
+    STRIPE_SECRET_KEY,
   }
 }
 
@@ -224,7 +226,7 @@ const displayConfig = () => {
 \tDisplay chat:${mustDisplayChat()} ${mustDisplayChat() ? getChatURL() : ''}\n\
 \tSendInBlue actif:${ENABLE_MAILING}\n\
 \tSendInBlue templates:${DATA_MODEL}\n\
-\tPayment plugin:${PAYMENT_PLUGIN}:${!!paymentPlugin}\n\
+Payment plugin:${PAYMENT_PLUGIN}:${!!paymentPlugin} keys is ${STRIPE_PUBLIC_KEY?.slice(0,20)}...${STRIPE_PUBLIC_KEY?.slice(-6)}\n\
 `)
 }
 

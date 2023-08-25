@@ -3,14 +3,30 @@
     "jsx": "preserve",
     "target": "ES6",
     "module": "commonjs",
-    "lib": ["es6", "DOM"],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "outDir": "build",
     "rootDir": "src",
-    "strict": true,
+    "strict": false,
     "noImplicitAny": true,
     "esModuleInterop": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "incremental": true,
+    "moduleResolution": "node",
+    "isolatedModules": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

@@ -2,7 +2,6 @@ import {encode} from 'html-entities'
 import filter from 'lodash/filter'
 import isBoolean from 'lodash/isBoolean'
 import lodash from 'lodash'
-
 import icons from '~iconsList'
 import lucidicons from '~lucideiconsList'
 
@@ -39,10 +38,13 @@ import {
 } from './misc';
 import { ProjectState, PageState } from '../core/models/project'
 import { isJsonString } from '../dependencies/utils/misc'
+import { key } from '../tests/utils/smartdiet_model.json';
 
 
 //const HIDDEN_ATTRIBUTES=['dataSource', 'attribute']
 const HIDDEN_ATTRIBUTES: string[] = []
+
+const isProduction = process?.env?.NEXT_PUBLIC_MODE === 'production'
 
 export const getPageComponentName = (
   pageId: string,
@@ -52,9 +54,9 @@ export const getPageComponentName = (
 }
 
 const isDynamicComponent = (components:IComponents, comp: IComponent): boolean => {
-  let isDynamic=!!comp.props.dataSource || !!comp.props.subDataSource
+  let isDynamic=(!!comp.props.dataSource || !!comp.props.subDataSource
     || (!!comp.props.action && !CONTAINER_TYPE.includes(comp.type))
-    || (comp.props.model && comp.props.attribute)
+    || (comp.props.model && comp.props.attribute)) && !(comp.type=='Flex' && comp.props.isFilterComponent)
   // Tabs: has dataSource but only TabList and TabPanels children must get the datasource
   if (comp.type=='Tabs') {
     return false
@@ -189,6 +191,8 @@ const buildBlock = ({
         ? `Dynamic${capitalize(childComponent.type)}`
         : isMaskableComponent(childComponent)
         ? `Maskable${capitalize(childComponent.type)}`
+        : (childComponent.type==='Flex' && JSON.parse(childComponent?.props?.isFilterComponent || 'false'))
+        ? 'Filter'
         : capitalize(childComponent.type)
       let propsContent = ''
 
@@ -422,6 +426,14 @@ const buildBlock = ({
         propsContent += ` displayEye`
       }
 
+      if (childComponent.type === 'Flex' && childComponent.props.isFilterComponent) {
+        const {props}=childComponent
+        const enums=models[props?.model]?.attributes?.[props.attribute]?.enumValues
+        if (enums) {
+          propsContent += ` enumValues='${JSON.stringify(enums)}'`
+        }
+      }
+
       if (
         typeof childComponent.props.children === 'string' &&
         childComponent.children.length === 0
@@ -596,14 +608,16 @@ const buildHooks = (components: IComponents) => {
   }
 
   useEffect(() => {
+    if (!process.browser) { return }
     ${dataProviders
       .map(dp => {
         const dataId = dp.id.replace(/comp-/, '')
         const dpFields = getDataProviderFields(dp).join(',')
         const idPart = dp.id === 'root' ? `\${id ? \`\${id}/\`: \`\`}` : ''
+        const urlRest='${new URLSearchParams(queryRest)}'
         const apiUrl = `/myAlfred/api/studio/${dp.props.model}/${idPart}${
-          dpFields ? `?fields=${dpFields}` : ''
-        }`
+          dpFields ? `?fields=${dpFields}&` : '?'
+        }${dp.id=='root' ? urlRest: ''}`
         let thenClause=dp.id=='root' && singlePage ?
          `.then(res => set${capitalize(dataId)}(res.data[0]))`
          :
@@ -640,7 +654,7 @@ const buildDynamics = (components: IComponents, extraImports: string[]) => {
   const groups = lodash.groupBy(dynamicComps, c => getDynamicType(c))
   Object.keys(groups).forEach(g =>
     extraImports.push(
-      `import withDynamic${g} from './dependencies/hoc/withDynamic${g}'`,
+      `import withDynamic${g} from '../dependencies/hoc/withDynamic${g}'`,
     ),
   )
 
@@ -669,7 +683,7 @@ const buildMaskable = (components: IComponents, extraImports: string[]) => {
     .uniq()
 
   extraImports.push(
-    `import withMaskability from './dependencies/hoc/withMaskability'`,
+    `import withMaskability from '../dependencies/hoc/withMaskability'`,
   )
   let code = types
     .map(type => `const Maskable${type}=withMaskability(${type})`)
@@ -683,8 +697,13 @@ export const generateCode = async (
     [key: string]: PageState
   },
   models: any,
+  project: ProjectState
 ) => {
   const { components, metaTitle, metaDescription, metaImageUrl } = pages[pageId]
+  const { settings } = project
+  const {description, metaImage, name, url, favicon32, gaTag} = Object.fromEntries(Object.entries(settings).map(([key, value]) => [key, isJsonString(value) ? JSON.parse(value) : value]))
+  
+
   const extraImports: string[] = []
   let hooksCode = buildHooks(components)
   let filterStates = buildFilterStates(components)
@@ -727,7 +746,7 @@ export const generateCode = async (
   )
   */
   const groupedComponents = lodash.groupBy(imports, c =>
-    module[c] ? '@chakra-ui/react' : `./dependencies/custom-components/${c}`,
+    module[c] ? '@chakra-ui/react' : `../dependencies/custom-components/${c}`,
   )
 
   const rootIdQuery = components.root?.props?.model
@@ -762,7 +781,9 @@ export const generateCode = async (
   ''
   */
   code = `import React, {useState, useEffect} from 'react';
-  import Metadata from './dependencies/Metadata';
+  import Filter from '../dependencies/custom-components/Filter/Filter';
+  import omit from 'lodash/omit';
+  import Metadata from '../dependencies/Metadata';
   ${hooksCode ? `import axios from 'axios'` : ''}
   ${Object.entries(groupedComponents)
     .map(([modName, components]) => {
@@ -786,10 +807,11 @@ import { ${lucideIconImports.join(',')} } from "lucide-react";`
     : ''
 }
 
-import {ensureToken} from './dependencies/utils/token'
-import {useLocation} from "react-router-dom"
-import { useUserContext } from './dependencies/context/user'
-import { getComponentDataValue } from './dependencies/utils/values'
+import {ensureToken} from '../dependencies/utils/token'
+import {useRouter} from 'next/router'
+import { useUserContext } from '../dependencies/context/user'
+import { getComponentDataValue } from '../dependencies/utils/values'
+
 ${extraImports.join('\n')}
 
 ${dynamics || ''}
@@ -797,8 +819,9 @@ ${maskable || ''}
 ${componentsCodes}
 
 const ${componentName} = () => {
-  const query = new URLSearchParams(useLocation().search)
-  const id=${rootIgnoreUrlParams ? 'null' : `query.get('${rootIdQuery}') || query.get('id')`}
+  const query = process.browser ? Object.fromEntries(new URL(window.location).searchParams) : {}
+  const id=${rootIgnoreUrlParams ? 'null' : 'query.id'}
+  const queryRest=omit(query, ['id'])
   const [componentsValues, setComponentsValues]=useState({})
 
   const setComponentValue = (compId, value) => {
@@ -830,9 +853,13 @@ const ${componentName} = () => {
   return ${autoRedirect ? 'user===null && ': ''} (
     <>
     <Metadata
-      metaTitle={'${addBackslashes(metaTitle)}'}
-      metaDescription={'${addBackslashes(metaDescription)}'}
-      metaImageUrl={'${metaImageUrl}'}
+      metaTitle={'${metaTitle && addBackslashes(metaTitle)}'}
+      metaDescription={'${metaDescription ? addBackslashes(metaDescription) : addBackslashes(description)}'}
+      metaImageUrl={'${metaImageUrl ? addBackslashes(metaImageUrl) : addBackslashes(metaImage)}'}
+      metaName={'${name && addBackslashes(name)}'}
+      metaUrl={'${url}'}
+      metaFavicon32={'${favicon32 && addBackslashes(favicon32)}'}
+      metaGaTag={${isProduction ? `'${gaTag}'` : null}}
     />
     ${code}
     </>

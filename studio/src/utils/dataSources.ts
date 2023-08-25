@@ -46,6 +46,7 @@ const ALL_DYNAMICS = lodash.flatten([
 
 export const allowsDataSource = (component: IComponent): boolean => {
   return ALL_DYNAMICS.includes(component.type)
+    && (!(component.type === 'Flex' && !!component?.props?.isFilterComponent))
 }
 
 export const isMultipleDispatcher = (component: IComponent): boolean => {
