@@ -179,7 +179,7 @@ const preCreate = ({model, params, user}) => {
           throw new ForbiddenError(`Votre offre ne permet pas/plus de prendre un rendez-vous`)
         }
         // Check appointment to come
-        if (latest_coaching.appointments.find(a => moment(a.end_date).after(moment()))) {
+        if (latest_coaching.appointments.find(a => moment(a.end_date).isAfter(moment()))) {
           throw new ForbiddenError(`Vous avez déjà un rendez-vous à venir`)
         }
         return {model, params:{...params, coaching: usr.latest_coachings[0]._id}}
