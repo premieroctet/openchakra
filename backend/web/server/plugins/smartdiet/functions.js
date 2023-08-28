@@ -408,7 +408,7 @@ USER_MODELS.forEach(m => {
   })
   declareVirtualField({model: m, field: 'latest_coachings', instance: 'Array',
   relies_on: 'coachings',
-  requires: 'coachings',
+  requires: 'coachings.all_logbooks.logbooks',
     multiple: true,
     caster: {
       instance: 'ObjectID',

@@ -138,7 +138,14 @@ const duplicateUserQuizz= id => {
 
 // Returns the LogbookDay compléting if required
 CoachingSchema.virtual('logbooks', {localField:'tagada', foreignField:'tagada'}).get(function() {
-  return this.all_logbooks
+  const startDay=moment().add(-6, 'day')
+  const lbd=lodash.range(7).map(day_idx => {
+    const day=moment(startDay).add(day_idx, 'day')
+    const foundLogbook=this.all_logbooks.find(l => day.isSame(l.day, 'day'))
+    console.log(`LB for day ${day}:${foundLogbook}`)
+    return foundLogbook || new mongoose.models.logbookDay({day})
+  })
+  return lbd
 })
 
 /* eslint-enable prefer-arrow-callback */
