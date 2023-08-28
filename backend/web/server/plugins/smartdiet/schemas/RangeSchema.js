@@ -32,7 +32,8 @@ RangeSchema.virtual('start_date').get(function() {
 
 RangeSchema.virtual('end_date').get(function() {
   const start=moment(this.day).startOf('day').add(this.start_time, 'hours')
-  return end=moment(start).add(this.duration, 'hours')
+  const end=moment(start).add(this.duration, 'hours')
+  return end
 })
 
 

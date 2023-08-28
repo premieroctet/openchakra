@@ -515,11 +515,16 @@ UserSchema.virtual("diet_objectives", {
   foreignField: "diet_private" // is equal to foreignField
 });
 
-// Comments for diet
 UserSchema.virtual("coachings", {
   ref: "coaching", // The Model to use
   localField: "_id", // Find in Model, where localField
   foreignField: "user" // is equal to foreignField
+})
+
+UserSchema.virtual("diet_coachings", {
+  ref: "coaching", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "diet", // is equal to foreignField
 })
 
 // Returns the current coaching if ate least one survey exists => condition to start
@@ -540,8 +545,6 @@ UserSchema.virtual('diet_availabilities', {localField:'tagada', foreignField:'ta
     return []
   }
   //Get unavailabilities from Smartagenda
-  const msg=`Computing availabilities for ${this.email}`
-  console.time(msg)
   const generateRanges = day => {
     const res=[]
     let hour=DIET_EXT_HOUR_RANGE.min
@@ -559,9 +562,13 @@ UserSchema.virtual('diet_availabilities', {localField:'tagada', foreignField:'ta
       ranges,
     })
   })
-  console.timeEnd(msg)
   return availabilities
 });
+
+// Returned availabilities/ranges are not store in database
+UserSchema.virtual('diet_appointments', {localField:'tagada', foreignField:'tagada'}).get(function() {
+  return lodash.flatten(this.diet_coachings?.map(c => c.appointments))
+})
 
 /* eslint-enable prefer-arrow-callback */
 
