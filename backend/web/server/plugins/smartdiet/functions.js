@@ -445,6 +445,14 @@ USER_MODELS.forEach(m => {
       options: {ref: 'appointment'}
     },
   })
+  declareVirtualField({model: m, field: 'diet_patients', instance: 'Array',
+    relies_on: 'diet_coachings.user',
+    multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'user'}
+    },
+  })
 })
 
 declareEnumField({model: 'company', field: 'activity', enumValues: COMPANY_ACTIVITY})
