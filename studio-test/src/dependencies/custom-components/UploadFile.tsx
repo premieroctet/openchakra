@@ -26,6 +26,7 @@ const uploadFileToS3 = async (file: File) => {
 const UploadFile = ({
   notifmsg,
   okmsg = 'Ressource ajoutée',
+  komsg = 'Échec ajout ressource',
   dataSource,
   attribute,
   value,
@@ -37,6 +38,7 @@ const UploadFile = ({
 }: {
   notifmsg: boolean
   okmsg: string
+  komsg: string
   dataSource: { _id: null } | null
   attribute: string
   value: string
@@ -78,14 +80,15 @@ const UploadFile = ({
             const filepath = result?.data?.Location
             setS3File(filepath)
             paramsBack = { ...paramsBack, value: filepath}
-            console.log('default upload', {paramsBack, result})
           })
           .catch(err => console.error(err))
-          .finally(() => setIsLoading(false))
+          .finally(() => {
+            setIsLoading(false)
+            if (attribute && notifmsg) {
+              typeof s3File === 'undefined' ? setUploadInfo(komsg) : setUploadInfo(okmsg)
+            }
+          })
           
-        if (attribute && notifmsg) {
-          setUploadInfo(okmsg)
-        }
       }
 
       const saveUrl = async () => {
@@ -111,7 +114,7 @@ const UploadFile = ({
 
       await uploadFile()
       if (dataSource) {
-        await saveUrl()
+        typeof s3File !== 'undefined' && await saveUrl()
         reload()
       }
     }
