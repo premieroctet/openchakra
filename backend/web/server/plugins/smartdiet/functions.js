@@ -1080,7 +1080,12 @@ const logbooksConsistency = coaching_id => {
           return Promise.all(missingQuizz.map(q => q.cloneAsUserQuizz()))
             .then(quizzs => Promise.all(quizzs.map(q => CoachingLogbook.create({day, logbook:q, coaching}))))
             // remove extra quizz
-            .then(quizzs => Promise.all(extraQuizz.map(q => q.delete())))
+            .then(quizzs => Promise.all(extraQuizz.map(q => {
+              // Remove user quizz
+              q.logbook.delete()
+              // Remove coaching logbook
+              q.delete()
+            })))
         }))
       }))
 
