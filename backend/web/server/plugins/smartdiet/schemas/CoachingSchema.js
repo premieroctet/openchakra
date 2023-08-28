@@ -141,7 +141,7 @@ CoachingSchema.virtual('logbooks', {localField:'tagada', foreignField:'tagada'})
   const startDay=moment().add(-6, 'day')
   const lbd=lodash.range(7).map(day_idx => {
     const day=moment(startDay).add(day_idx, 'day')
-    const foundLogbooks=this.all_logbooks.filter(l => day.isSame(l.day, 'day'))
+    const foundLogbooks=this.all_logbooks?.filter(l => day.isSame(l.day, 'day'))
     return new mongoose.models.logbookDay({day, logbooks:foundLogbooks.map(fl => fl.logbook)})
   })
   return lbd
