@@ -27,6 +27,10 @@ const MenuSchema = new Schema({
     default: new Date(),
     required: [true, 'La date de fin est obligatoire']
   },
+  document: {
+    type: String,
+    required: false,
+  }
 },
 {...schemaOptions, ...EVENT_DISCRIMINATOR}
 )
