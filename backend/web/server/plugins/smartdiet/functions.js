@@ -192,7 +192,8 @@ setPreCreateData(preCreate)
 
 const postPutData = ({model, params, id, value, data, user}) => {
   if (model=='appointment' && params.logbooks) {
-    return logbooksConsistency()
+    return Appointment.findById(id)
+      .then(appointment => logbooksConsistency(appointment.coaching._id))
       .then(() => params)
   }
   if (model=='coaching' && params.quizz_templates)
@@ -1040,12 +1041,15 @@ User.find({role: ROLE_CUSTOMER}).populate('coachings')
  .catch(err => console.error(err))
 
 // Ensure coaching logbooks consistency
-const logbooksConsistency = () => {
-  return Coaching.find().populate([
+const logbooksConsistency = coaching_id => {
+  const filter= coaching_id ? {_id: coaching_id}:{}
+  console.log(`Consistency for logbooks ${coaching_id || 'all'}`)
+  return Coaching.find(filter).populate([
     {path: 'appointments', populate: {path: 'logbooks', populate: {path: 'questions'}}},
     {path: 'all_logbooks', populate: {path: 'quizz'}},
     ])
     .then(coachings => {
+      console.log(`Consistency for ${coachings.length} logbooks`)
       return Promise.all(coachings.map(coaching => {
         const getLogbooksForDay = date => {
           // Get the appontment juste before the date
@@ -1055,18 +1059,37 @@ const logbooksConsistency = () => {
           return previous_appt?.logbooks || []
         }
         const startDay=moment().add(-6, 'day')
-        const userQuizzToCreate=Promise.all(lodash.range(7).map(day_idx => {
+        const logbookDays=Promise.all(lodash.range(7).map(day_idx => {
           const day=moment(startDay).add(day_idx, 'day')
+          console.log(`****** Day ${day}`)
           // expected quizz templates
           const expectedQuizz=getLogbooksForDay(day)
-          const userDayLogbooks=coaching.all_logbooks.filter(l => moment(l.day).isSame(day, 'day'))
-          const missingQuizz=expectedQuizz.filter(q => !userDayLogbooks.some(ud => idEqual(ud.quizz._id, ud._id)))
+          const userDayLogbooks=coaching.all_logbooks.find(l => moment(l.day).isSame(day, 'day'))
+          console.log(`Logboodkday is:${userDayLogbooks}`)
+          console.log(`Quizz for this date must be:${expectedQuizz.map(q => q._id)}`)
+          const missingQuizz=expectedQuizz.filter(q => !userDayLogbooks?.all_logbboks?.some(ud => idEqual(ud.quizz._id, ud._id)))
+          console.log(`Quizz to create:${missingQuizz.length}`)
           return Promise.all(missingQuizz.map(q => q.cloneAsUserQuizz()))
-            .then(createdQuizzs => Promise.all(createdQuizzs.map(q => LogbookDay.create({day, logbooks:[q]}))))
+            .then(quizzs => {
+              console.log(`Get ${quizzs.length} created quizz`)
+              let lbd=userDayLogbooks
+              if (!lbd) {
+                lbd=new LogbookDay({day, logbooks:[]})
+                console.log(`Created a new logbookday`)
+              }
+              lbd.logbooks.push(...quizzs)
+              console.log(`LBD after:${lbd}`)
+              return userDayLogbooks ? null : lbd.save()
+            })
+            .catch(console.err)
         }))
-        return userQuizzToCreate
-          .then(res => lodash.flatten(res).filter(r => !lodash.isEmpty(r)))
-          .then(res => {coaching.all_logbooks.push(...res); return coaching.save()})
+        return logbookDays
+          .then(res => {
+            console.log(`CReated logbooks : ${res}`)
+            res=res.filter(r => !!r)
+            coaching.all_logbooks.push(...res)
+            return coaching.save()
+          })
       }))
 
     })

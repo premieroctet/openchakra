@@ -38,6 +38,7 @@ const QuizzSchema = new Schema({
 
 /* eslint-disable prefer-arrow-callback */
 QuizzSchema.methods.cloneAsUserQuizz=function() {
+  console.log(`Cloning quizz:${this}`)
   return Promise.all(this.questions.map(q => q.cloneAsUserQuestion()))
     .then(questions => {
       const params={
@@ -46,6 +47,7 @@ QuizzSchema.methods.cloneAsUserQuizz=function() {
         questions,
       }
       return mongoose.models.userQuizz.create(params)
+        .then(q => {console.log(`Created quizz ${q}`); return q})
     })
 }
 /* eslint-enable prefer-arrow-callback */
