@@ -1,4 +1,5 @@
-const LogbookDay = require('../../models/LogbookDay')
+const CoachingLogbook = require('../../models/CoachingLogbook')
+
 const {
   ACTIVITY,
   APPOINTMENT_STATUS,
@@ -84,6 +85,7 @@ const Team = require('../../models/Team')
 const TeamMember = require('../../models/TeamMember')
 const Coaching = require('../../models/Coaching')
 const Appointment = require('../../models/Appointment')
+const cron=require('node-cron')
 
 const filterDataUser = ({model, data, id, user}) => {
   if (model=='offer' && !id) {
@@ -409,7 +411,7 @@ USER_MODELS.forEach(m => {
   })
   declareVirtualField({model: m, field: 'latest_coachings', instance: 'Array',
   relies_on: 'coachings',
-  requires: 'coachings.all_logbooks.logbooks',
+  requires: 'coachings.all_logbooks.logbook.quizz.questions',
     multiple: true,
     caster: {
       instance: 'ObjectID',
@@ -707,6 +709,13 @@ declareVirtualField({model: 'coaching', field: 'progress', instance: 'Array', mu
   caster: {
     instance: 'ObjectID',
     options: {ref: 'userQuizz'}
+  },
+})
+declareVirtualField({model: 'coaching', field: 'all_logbooks', instance: 'Array', multiple: true,
+  requires: 'appointments.status',
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'coachingLogbook'}
   },
 })
 declareVirtualField({model: 'coaching', field: 'logbooks', instance: 'Array', multiple: true,
@@ -1046,10 +1055,9 @@ const logbooksConsistency = coaching_id => {
   console.log(`Consistency for logbooks ${coaching_id || 'all'}`)
   return Coaching.find(filter).populate([
     {path: 'appointments', populate: {path: 'logbooks', populate: {path: 'questions'}}},
-    {path: 'all_logbooks', populate: {path: 'quizz'}},
+    {path: 'all_logbooks', populate: {path: 'logbook'}},
     ])
     .then(coachings => {
-      console.log(`Consistency for ${coachings.length} logbooks`)
       return Promise.all(coachings.map(coaching => {
         const getLogbooksForDay = date => {
           // Get the appontment juste before the date
@@ -1059,41 +1067,32 @@ const logbooksConsistency = coaching_id => {
           return previous_appt?.logbooks || []
         }
         const startDay=moment().add(-6, 'day')
-        const logbookDays=Promise.all(lodash.range(7).map(day_idx => {
+        const coachingLogbooks=Promise.all(lodash.range(7).map(day_idx => {
           const day=moment(startDay).add(day_idx, 'day')
-          console.log(`****** Day ${day}`)
           // expected quizz templates
           const expectedQuizz=getLogbooksForDay(day)
-          const userDayLogbooks=coaching.all_logbooks.find(l => moment(l.day).isSame(day, 'day'))
-          console.log(`Logboodkday is:${userDayLogbooks}`)
-          console.log(`Quizz for this date must be:${expectedQuizz.map(q => q._id)}`)
-          const missingQuizz=expectedQuizz.filter(q => !userDayLogbooks?.all_logbboks?.some(ud => idEqual(ud.quizz._id, ud._id)))
-          console.log(`Quizz to create:${missingQuizz.length}`)
+          const coachingLogbooks=coaching.all_logbooks.filter(l => moment(l.day).isSame(day, 'day'))
+          // Logbooks missing in patient's coaching
+          const missingQuizz=expectedQuizz.filter(q => !coachingLogbooks.some(cl => idEqual(cl.logbook.quizz._id, q._id)))
+          // Logbooks to remove from patient's coaching
+          const extraQuizz=coachingLogbooks.filter(l => !expectedQuizz.some(q => idEqual(q._id, l.logbook.quizz._id)))
+          // Add missing quizz
           return Promise.all(missingQuizz.map(q => q.cloneAsUserQuizz()))
-            .then(quizzs => {
-              console.log(`Get ${quizzs.length} created quizz`)
-              let lbd=userDayLogbooks
-              if (!lbd) {
-                lbd=new LogbookDay({day, logbooks:[]})
-                console.log(`Created a new logbookday`)
-              }
-              lbd.logbooks.push(...quizzs)
-              console.log(`LBD after:${lbd}`)
-              return userDayLogbooks ? null : lbd.save()
-            })
-            .catch(console.err)
+            .then(quizzs => Promise.all(quizzs.map(q => CoachingLogbook.create({day, logbook:q, coaching}))))
+            // remove extra quizz
+            .then(quizzs => Promise.all(extraQuizz.map(q => q.delete())))
         }))
-        return logbookDays
-          .then(res => {
-            console.log(`CReated logbooks : ${res}`)
-            res=res.filter(r => !!r)
-            coaching.all_logbooks.push(...res)
-            return coaching.save()
-          })
       }))
 
     })
 }
+
+// Ensure logbooks consistency each morning
+cron.schedule('0 0 1 * * *', async() => {
+  logbooksConsistency()
+    .then(() => console.log(`Logbooks consistency OK `))
+    .ctach(err => console.error(`Logbooks consistency error:${err}`))
+})
 
 module.exports={
   ensureChallengePipsConsistency,

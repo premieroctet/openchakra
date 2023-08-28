@@ -113,6 +113,7 @@ require('./models/Item')
 require('./models/Range')
 require('./models/Availability')
 require('./models/LogbookDay')
+require('./models/CoachingLogbook')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 

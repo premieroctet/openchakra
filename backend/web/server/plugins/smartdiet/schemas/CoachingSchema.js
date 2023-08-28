@@ -66,12 +66,6 @@ const CoachingSchema = new Schema({
   food_program: {
     type: String,
   },
-  // All logbooks by day
-  all_logbooks: [{
-    type: Schema.Types.ObjectId,
-    ref: 'logbookDay',
-    required: true,
-  }],
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
@@ -84,6 +78,12 @@ CoachingSchema.virtual('appointments', {
 
 CoachingSchema.virtual('questions', {
   ref: 'userCoachingQuestion',
+  localField: '_id',
+  foreignField: 'coaching',
+})
+
+CoachingSchema.virtual('all_logbooks', {
+  ref: 'coachingLogbook',
   localField: '_id',
   foreignField: 'coaching',
 })
@@ -141,9 +141,8 @@ CoachingSchema.virtual('logbooks', {localField:'tagada', foreignField:'tagada'})
   const startDay=moment().add(-6, 'day')
   const lbd=lodash.range(7).map(day_idx => {
     const day=moment(startDay).add(day_idx, 'day')
-    const foundLogbook=this.all_logbooks.find(l => day.isSame(l.day, 'day'))
-    //console.log(`LB for day ${day}:${foundLogbook}`)
-    return foundLogbook || new mongoose.models.logbookDay({day})
+    const foundLogbooks=this.all_logbooks.filter(l => day.isSame(l.day, 'day'))
+    return new mongoose.models.logbookDay({day, logbooks:foundLogbooks.map(fl => fl.logbook)})
   })
   return lbd
 })

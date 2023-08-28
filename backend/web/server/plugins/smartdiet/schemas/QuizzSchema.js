@@ -38,7 +38,6 @@ const QuizzSchema = new Schema({
 
 /* eslint-disable prefer-arrow-callback */
 QuizzSchema.methods.cloneAsUserQuizz=function() {
-  console.log(`Cloning quizz:${this}`)
   return Promise.all(this.questions.map(q => q.cloneAsUserQuestion()))
     .then(questions => {
       const params={
