@@ -438,7 +438,7 @@ USER_MODELS.forEach(m => {
     },
   })
   declareVirtualField({model: m, field: 'diet_appointments', instance: 'Array',
-    requires: 'diet_coachings.appointments,coachings.appointments,coachings.user.company,diet_coachings.user',
+    relies_on: 'diet_coachings.appointments',
     multiple: true,
     caster: {
       instance: 'ObjectID',
