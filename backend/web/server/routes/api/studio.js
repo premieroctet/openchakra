@@ -131,8 +131,11 @@ router.get('/roles', (req, res) => {
 
 router.post('/uploadFiles', handleUploadedFile, catchErrors(resizeImage), catchErrors(sendFilesToAWS), (req, res) => {
   // filter original file to send 
-  const [srcFile] = req?.body?.result.filter(s3obj => s3obj.Location.includes(encodeURIComponent(IMAGE_SIZE_MARKER)))
-  return res.status(201).json(srcFile)
+  const srcFiles = req?.body?.result && Array.isArray(req.body.result) &&  
+  req?.body?.result.filter(s3obj => s3obj.Location.includes(encodeURIComponent(IMAGE_SIZE_MARKER)))
+  
+  const srcFile = Array.isArray(srcFiles) ? srcFiles.at(0) : false
+  return srcFile ? res.status(201).json(srcFile) : res.status(444).json(srcFile)
 })
 
 router.get('/action-allowed/:action', passport.authenticate('cookie', {session: false}), (req, res) => {
