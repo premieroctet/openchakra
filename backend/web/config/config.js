@@ -1,6 +1,5 @@
 const isEmpty = require('../server/validation/is-empty')
 const {
-  MODE,
   TAWKTO_URL,
   DISABLE_ALFRED_SELF_REGISTER,
   DISABLE_ALFRED_PARTICULAR_REGISTER,
@@ -70,13 +69,13 @@ const paymentPlugin=PAYMENT_PLUGIN ? require(`../server/plugins/payment/${PAYMEN
 paymentPlugin?.init(getStripeConfig())
 
 const get_mode = () => {
-  if (!Object.values(MODES).includes(MODE)) {
+  if (!Object.values(MODES).includes(process.env.MODE)) {
     console.error(
-      `Incorrect startup mode ${MODE}, expecting ${Object.values(MODES)}`,
+      `Incorrect startup mode ${process.env.MODE}, expecting ${Object.values(MODES)}`,
     )
     process.exit(-1)
   }
-  return MODE
+  return process.env.MODE
 }
 
 const isProduction = () => {
@@ -232,9 +231,9 @@ Payment plugin:${PAYMENT_PLUGIN}:${!!paymentPlugin} keys is ${STRIPE_PUBLIC_KEY?
 
 const checkConfig = () => {
   return new Promise((resolve, reject) => {
-    if (!Object.values(MODES).includes(MODE)) {
+    if (!Object.values(MODES).includes(process.env.MODE)) {
       reject(
-        `MODE: ${MODE} inconnu, attendu ${JSON.stringiffy(
+        `MODE: ${process.env.MODE} inconnu, attendu ${JSON.stringiffy(
           Object.values(MODES),
         )}`,
       )
@@ -248,11 +247,11 @@ const checkConfig = () => {
     }
 
     if (!isDevelopment() && !HOSTNAME) {
-      reject(`HOSTNAME: obligatoire en mode ${MODE}`)
+      reject(`HOSTNAME: obligatoire en mode ${process.env.MODE}`)
     }
 
     if (isValidation() && isNaN(parseInt(PORT))) {
-      reject(`PORT: obligatoire en mode ${MODE}`)
+      reject(`PORT: obligatoire en mode ${process.env.MODE}`)
     }
 
     if (isEmpty(DATABASE_NAME)) {
