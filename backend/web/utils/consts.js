@@ -2,6 +2,15 @@ const crypto = require('crypto')
 
 const API_PATH = '/myAlfred/api'
 
+const NEEDED_VAR = [
+  'NEXT_PUBLIC_PROJECT_TARGETDOMAIN',
+  'NEXT_PUBLIC_PROJECT_FOLDERNAME',
+  // 'S3_ID',
+  // 'S3_SECRET',
+  // 'S3_REGION',
+  // 'S3_BUCKET',
+]
+
 const ALL_SERVICES = ['Tous les services', null]
 
 const ALF_CONDS = { // my alfred condiitons
@@ -219,9 +228,11 @@ const UPDATED_AT_ATTRIBUTE='update_date'
 
 const MODEL_ATTRIBUTES_DEPTH=4
 
+
 module.exports = {
   ALL_SERVICES, ALF_CONDS, CANCEL_MODE, CUSTOM_PRESTATIONS_FLTR,
   generate_id, GID_LEN, CESU,
+  NEEDED_VAR,
   SKILLS, LANGUAGES, MAX_DESCRIPTION_LENGTH, EXPIRATION_DELAY,
   CLOSE_NOTIFICATION_DELAY, ACCOUNT_MIN_AGE, COMPANY_SIZE, COMPANY_ACTIVITY,
   BUDGET_PERIOD, PRO, PART, CREASHOP_MODE,
