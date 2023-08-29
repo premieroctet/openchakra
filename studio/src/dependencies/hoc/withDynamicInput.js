@@ -77,7 +77,7 @@ const withDynamicInput = Component => {
 
       const parentProps=lodash.pick(props, 'id dataSource name dataSourceId value level model attribute noautosave readOnly context backend setComponentValue'.split(' '))
 
-      return (
+      return displayEye ? (
         <InputGroup {...parentProps}>
         <Component
         {...lodash.omit(props, ['id'])}
@@ -100,6 +100,8 @@ const withDynamicInput = Component => {
           </InputRightElement>}
         </InputGroup>
       )
+      :
+      (<Component {...props} onChange={onChange} />)
     }
 
     return displayEye ?
