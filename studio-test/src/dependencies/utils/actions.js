@@ -924,14 +924,7 @@ return Promise.allSettled(imagePromises)
           }
           return axios.post(url, body)
             .then(({data}) => {
-              const results=document.createElement('div')
-              results.id='import_results'
-              container.appendChild(results)
-              data.forEach(result => {
-                const d=document.createElement('h1')
-                d.textContent=result
-                results.appendChild(d)
-              })
+              alert(data.join('\n'))
             })
         }
         reader.readAsText(selectedFile);
