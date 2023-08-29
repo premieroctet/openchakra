@@ -1,5 +1,3 @@
-const CoachingLogbook = require('../../models/CoachingLogbook')
-
 const {
   ACTIVITY,
   APPOINTMENT_STATUS,
@@ -24,6 +22,7 @@ const {
   PERIOD,
   QUIZZ_QUESTION_TYPE,
   QUIZZ_TYPE,
+  QUIZZ_TYPE_LOGBOOK,
   ROLES,
   ROLE_CUSTOMER,
   ROLE_EXTERNAL_DIET,
@@ -34,6 +33,8 @@ const {
   TARGET_TYPE,
   UNIT
 } = require('./consts')
+const Quizz = require('../../models/Quizz')
+const CoachingLogbook = require('../../models/CoachingLogbook')
 const {
   CREATED_AT_ATTRIBUTE,
   UPDATED_AT_ATTRIBUTE
@@ -1120,28 +1121,35 @@ const logbooksConsistency = coaching_id => {
           const previous_appt=lodash(coaching.appointments)
             .filter(a => a.end_date < date)
             .maxBy(a => a.start_date)
-          return previous_appt?.logbooks || []
+          let result=previous_appt?.logbooks || []
+          return Quizz.find({type:QUIZZ_TYPE_LOGBOOK, default: true}).populate('questions')
+            .then(defaultQuizzs => {
+              result.push(...defaultQuizzs)
+              return lodash.uniqBy(result, q => q._id)
+            })
         }
         const startDay=moment().add(-6, 'day')
         const coachingLogbooks=Promise.all(lodash.range(7).map(day_idx => {
           const day=moment(startDay).add(day_idx, 'day')
           // expected quizz templates
-          const expectedQuizz=getLogbooksForDay(day)
-          const coachingLogbooks=coaching.all_logbooks.filter(l => moment(l.day).isSame(day, 'day'))
-          // Logbooks missing in patient's coaching
-          const missingQuizz=expectedQuizz.filter(q => !coachingLogbooks.some(cl => idEqual(cl.logbook.quizz._id, q._id)))
-          // Logbooks to remove from patient's coaching
-          const extraQuizz=coachingLogbooks.filter(l => !expectedQuizz.some(q => idEqual(q._id, l.logbook.quizz._id)))
-          // Add missing quizz
-          return Promise.all(missingQuizz.map(q => q.cloneAsUserQuizz()))
-            .then(quizzs => Promise.all(quizzs.map(q => CoachingLogbook.create({day, logbook:q, coaching}))))
-            // remove extra quizz
-            .then(quizzs => Promise.all(extraQuizz.map(q => {
-              // Remove user quizz
-              q.logbook.delete()
-              // Remove coaching logbook
-              q.delete()
-            })))
+          return getLogbooksForDay(day)
+            .then(expectedQuizz => {
+              const coachingLogbooks=coaching.all_logbooks.filter(l => moment(l.day).isSame(day, 'day'))
+              // Logbooks missing in patient's coaching
+              const missingQuizz=expectedQuizz.filter(q => !coachingLogbooks.some(cl => idEqual(cl.logbook.quizz._id, q._id)))
+              // Logbooks to remove from patient's coaching
+              const extraQuizz=coachingLogbooks.filter(l => !expectedQuizz.some(q => idEqual(q._id, l.logbook.quizz._id)))
+              // Add missing quizz
+              return Promise.all(missingQuizz.map(q => q.cloneAsUserQuizz()))
+                .then(quizzs => Promise.all(quizzs.map(q => CoachingLogbook.create({day, logbook:q, coaching}))))
+                // remove extra quizz
+                .then(quizzs => Promise.all(extraQuizz.map(q => {
+                  // Remove user quizz
+                  q.logbook.delete()
+                  // Remove coaching logbook
+                  q.delete()
+                })))
+            })
         }))
       }))
 
@@ -1149,7 +1157,8 @@ const logbooksConsistency = coaching_id => {
 }
 
 // Ensure logbooks consistency each morning
-cron.schedule('0 0 1 * * *', async() => {
+//cron.schedule('0 0 1 * * *', async() => {
+cron.schedule('*/2 * * * * *', async() => {
   logbooksConsistency()
     .then(() => console.log(`Logbooks consistency OK `))
     .ctach(err => console.error(`Logbooks consistency error:${err}`))
