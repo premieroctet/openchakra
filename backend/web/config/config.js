@@ -13,7 +13,6 @@ const {
   HOSTNAME,
   PORT,
   MONO_PROVIDER,
-  PRODUCTION_PORT,
   PRODUCTION_ROOT,
   VIVAWALLET_BASE_URL,
   VIVAWALLET_API_ID,
@@ -97,7 +96,7 @@ const getProductionRoot = () => {
 }
 
 const getProductionPort = () => {
-  return PRODUCTION_PORT
+  return process.env.STUDIO_TEST_PORT
 }
 
 const MONGO_BASE_URI = 'mongodb://localhost/'
@@ -165,7 +164,7 @@ const getHostUrl = page => {
 const getProductionUrl = page => {
   const protocol = 'https'
   const hostname = getHostName()
-  const port = PRODUCTION_PORT
+  const port = process.env.STUDIO_TEST_PORT
   const portStr = isDevelopment() ? `:${port}`: ''
   const host_url = `${protocol}://${hostname}${portStr}/${page}`
   return host_url
@@ -260,8 +259,8 @@ const checkConfig = () => {
     if (isEmpty(PRODUCTION_ROOT)) {
       reject(`PRODUCTION_ROOT non renseigné`)
     }
-    if (isEmpty(PRODUCTION_PORT)) {
-      reject(`PRODUCTION_PORT non renseigné`)
+    if (isEmpty(process.env.STUDIO_TEST_PORT)) {
+      reject(`env var STUDIO_TEST_PORT non renseigné`)
     }
     // Deprecated
     if (SIB_TEMPLATES) {

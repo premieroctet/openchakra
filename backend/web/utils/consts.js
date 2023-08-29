@@ -3,6 +3,10 @@ const crypto = require('crypto')
 const API_PATH = '/myAlfred/api'
 
 const NEEDED_VAR = [
+  'MODE',
+  'PORT',
+  'BACKEND_PORT',
+  'STUDIO_TEST_PORT',
   'NEXT_PUBLIC_PROJECT_TARGETDOMAIN',
   'NEXT_PUBLIC_PROJECT_FOLDERNAME',
   // 'S3_ID',

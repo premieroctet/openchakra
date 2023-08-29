@@ -32,7 +32,6 @@ const {
 const {callAllowedAction} = require('../../utils/studio/actions')
 const {
   getDataModel,
-  getProductionPort,
   getProductionRoot,
 } = require('../../../config/config')
 
@@ -78,7 +77,6 @@ const {getWebHookToken} = require('../../plugins/payment/vivaWallet')
 const router = express.Router()
 
 const PRODUCTION_ROOT = getProductionRoot()
-const PRODUCTION_PORT = getProductionPort()
 const PROJECT_CONTEXT_PATH = 'src/pages'
 
 
