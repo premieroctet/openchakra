@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import lodash from 'lodash'
-import util from 'util'
 import {InputGroup, InputRightElement} from '@chakra-ui/react'
 import {AiOutlineEye, AiOutlineEyeInvisible} from 'react-icons/ai'
 import { ACTIONS } from '../utils/actions'
@@ -56,7 +55,7 @@ const withDynamicInput = Component => {
             .catch(err => {
               console.error(err)
               if (!(err.response?.status==401) && err.code!='ERR_NETWORK') {
-                alert(err.response?.data || err)
+                console.log(err.response?.data || err)
               }
             })
         }
@@ -106,7 +105,7 @@ const withDynamicInput = Component => {
     return displayEye ?
       withDisplayEye(Component)
       :
-      <Component {...props} onChange={onChange}/>
+      <Component {...props} dataSource={dataSource} onChange={onChange}/>
   }
 
   return Internal

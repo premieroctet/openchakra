@@ -19,7 +19,7 @@ const sourceBucket = `${process.env.NEXT_PUBLIC_S3_BUCKET}`;
 const destinationBucket = `${process.env.NEXT_PUBLIC_S3_BUCKET}`;
 const sourceFolder = 'all-inclusive';
 const destinationFolder = 'all-inclusive/studio';
-const jsonFileToScan = `${__dirname}/JsonTipi2306.json`
+const jsonFileToScan = `${__dirname}/components - 2023-07-21T161800.724.json`
 
 
 let s3images = []
@@ -81,8 +81,11 @@ async function setImages () {
   })
 
   imagesSet.forEach((file) => {
-    const filenameUri = encodeURI(file)
-    const fileKey = `${sourceFolder}/${file}`;
+    const filenameUri = file.toLowerCase()
+    .replace(/ /gi, '-')
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
+    const fileKey = `${sourceFolder}/${encodeURI(file)}`;
     const destinationKey = `${destinationFolder}/${filenameUri}`;
 
     const params = {
