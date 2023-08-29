@@ -10,12 +10,17 @@ const MessageSchema = new Schema({
   sender: {
     type: Schema.Types.ObjectId,
     ref: 'user',
-    required: [true, "L'émetteur est obligatoire"],
+    required: [true, "L'expéditeur est obligatoire"],
+  },
+  receiver: {
+    type: Schema.Types.ObjectId,
+    ref: 'user',
+    required:[function(){!this.receiver && !this.group}, 'Un destinataire ou groupe est obligatoire'],
   },
   group: {
     type: Schema.Types.ObjectId,
     ref: 'group',
-    required: [true, 'Le groupe est obligatoire'],
+    required:[function(){!this.receiver && !this.group}, 'Un destinataire ou groupe est obligatoire'],
   },
   document: {
     type: String,

@@ -85,6 +85,7 @@ const Team = require('../../models/Team')
 const TeamMember = require('../../models/TeamMember')
 const Coaching = require('../../models/Coaching')
 const Appointment = require('../../models/Appointment')
+const Message = require('../../models/Message')
 const cron=require('node-cron')
 
 const filterDataUser = ({model, data, id, user}) => {
@@ -139,6 +140,38 @@ const preprocessGet = ({model, fields, id, user, params}) => {
         return ({model, fields, id, data:computed})
       })
   }
+  if (model=='conversation') {
+    const getPartner= (m, user) => {
+      return idEqual(m.sender._id, user._id) ? m.receiver : m.sender
+    }
+
+    // Get non-group messages (i.e. no group attribute)
+    return Message.find({$and:[{$or: [{sender: user._id}, {receiver: user._id}]},{group: null}]})
+      .populate({path: 'sender', populate: {path: 'company'}})
+      .populate({path: 'receiver', populate: {path: 'company'}})
+      .sort({CREATED_AT_ATTRIBUTE: 1})
+      .then(messages => {
+        if (id) {
+          messages=messages.filter(m => idEqual(getPartner(m, user)._id, id))
+          // If no messages for one parner, forge it
+          if (lodash.isEmpty(messages)) {
+            return User.findById(id).populate('company')
+              .then(partner => {
+                const data=[{_id: partner._id, partner, messages: []}]
+                return {model, fields, id, data}
+              })
+          }
+        }
+        console.log(messages)
+        const partnerMessages=lodash.groupBy(messages, m => getPartner(m, user)._id)
+        const convs=lodash(partnerMessages)
+          .values()
+          .map(msgs => { const partner=getPartner(msgs[0], user); return ({_id: partner._id, partner, messages: msgs}) })
+          .sortBy(CREATED_AT_ATTRIBUTE, 'asc')
+        return {model, fields, id, data: convs}
+      })
+  }
+
   return Promise.resolve({model, fields, id})
 
 }
