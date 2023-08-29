@@ -26,7 +26,11 @@ const importLead = leadData => {
   return Company.exists({code: company_code_re})
     .then(exists => {
       if (!exists) {return Promise.reject(`Aucune compagnie avec le code ${leadData.company_code}`)}
-      return Lead.create(leadData)
+      return Lead.updateOne(
+        {email: leadData.email},
+        {leadData},
+        {upsert: true}
+      )
     })
 }
 
@@ -40,7 +44,17 @@ const importLeads= text => {
       const mappedData=data.records.map(input => mapData(input, MAPPING))
       return Promise.allSettled(mappedData.map(importLead))
         .then(result => {
-          return result.map((r, index) => `Ligne ${index+2}: ${r.status=='fulfilled'?'Ok': `Erreur:${r.reason}`}`)
+          return result.map((r, index) => {
+            let msg=''
+            if (r.status=='rejected') {
+              msg=`Erreur:${r.reason}`
+            }
+            else {
+              const mongo_result=r.value
+              msg=mongo_result.upserted? `Prospect ajouté`: `Prospect mis à jour`
+            }
+            return `Ligne ${index+2}: ${msg}`
+          })
         })
     })
 }

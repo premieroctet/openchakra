@@ -27,16 +27,19 @@ describe('Prospects', () => {
     await mongoose.connection.close()
   })
 
-  it.only('must import leads', async() => {
+  it('must import leads', async() => {
     await Company.create({name: 'CARCEPT', code: 'CARCEPT', size:100, activity: Object.keys(COMPANY_ACTIVITY)[0]})
     let p=await Lead.find()
     expect(p).toHaveLength(0)
     const result=await importLeads(leadsData)
     expect(result).toHaveLength(2)
-    expect(result[0]).toMatch(/ok/i)
-    expect(result[1]).toMatch(/ok/i)
+    expect(result[0]).toMatch(/ajouté/i)
+    expect(result[1]).toMatch(/ajouté/i)
     p=await Lead.find()
     expect(p).toHaveLength(2)
+    const result2=await importLeads(leadsData)
+    expect(result2[0]).toMatch(/mis à jour/i)
+    expect(result2[1]).toMatch(/mis à jour/i)
   })
 
   it('must fail if no company prospects', async() => {
