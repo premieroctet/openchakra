@@ -199,7 +199,7 @@ const preCreate = ({model, params, user}) => {
   }
   if (model=='quizzQuestion') {
     if (user.role==ROLE_EXTERNAL_DIET) {
-      params.diet_private=user
+      params.diet_private=user._id
     }
   }
   if (model=='appointment') {
