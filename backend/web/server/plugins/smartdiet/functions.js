@@ -1157,8 +1157,7 @@ const logbooksConsistency = coaching_id => {
 }
 
 // Ensure logbooks consistency each morning
-//cron.schedule('0 0 1 * * *', async() => {
-cron.schedule('*/2 * * * * *', async() => {
+cron.schedule('0 0 1 * * *', async() => {
   logbooksConsistency()
     .then(() => console.log(`Logbooks consistency OK `))
     .ctach(err => console.error(`Logbooks consistency error:${err}`))
