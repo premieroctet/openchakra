@@ -1,3 +1,4 @@
+const { importLeads } = require('./leads')
 const Content = require('../../models/Content')
 const Webinar = require('../../models/Webinar')
 
@@ -177,6 +178,21 @@ const smartdietReadContent = ({value}, user) => {
     })
 }
 addAction('smartdiet_read_content', smartdietReadContent)
+
+const importModelData = ({model, data}) => {
+  if (model!='lead') {
+    throw new NotFoundError(`L'import du modèle ${model} n'est pas implémenté`)
+  }
+  return importLeads(data)
+  /**
+  return isActionAllowed({action: 'import_model_data', dataId: value, user})
+    .then(allowed => {
+      if (!allowed) throw new BadRequestError(`Vous ne pouvez accéder à ce contenu`)
+      return Content.findByIdAndUpdate(value, {$addToSet: {viewed_by: user._id}})
+    })
+  */
+}
+addAction('import_model_data', importModelData)
 
 
 const isActionAllowed = ({action, dataId, user}) => {

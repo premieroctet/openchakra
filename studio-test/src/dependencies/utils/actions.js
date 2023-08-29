@@ -892,4 +892,59 @@ return Promise.allSettled(imagePromises)
     window.location=thisUrl.toString()
   },
 
+  import_model_data: props => {
+    const prevResults=document.getElementById('import_results')
+    if (prevResults) {
+      prevResults.parentNode.removeChild(prevResults)
+    }
+    const prevInput=document.getElementById('import_data')
+    if (prevInput) {
+      prevInput.parentNode.removeChild(prevInput)
+    }
+    const container=document.getElementById(props.id).parentNode
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.name = 'file';
+    fileInput.style='display:none'
+    fileInput.id='import_data'
+
+    container.appendChild(fileInput)
+
+    fileInput.addEventListener('change', event => {
+      const selectedFile = event.target.files[0];
+      if (selectedFile) {
+        const reader = new FileReader();
+        reader.onload = event => {
+          const fileContents = event.target.result;
+          let url = `${API_ROOT}/action`
+          const body = {
+            action: 'import_model_data',
+            model: props.props.model,
+            data: fileContents,
+          }
+          return axios.post(url, body)
+            .then(({data}) => {
+              const results=document.createElement('div')
+              results.id='import_results'
+              container.appendChild(results)
+              data.forEach(result => {
+                const d=document.createElement('h1')
+                d.textContent=result
+                results.appendChild(d)
+              })
+            })
+        }
+        reader.readAsText(selectedFile);
+      }
+    })
+    fileInput.click()
+    return Promise.resolve(true)
+    /**
+    <form action="/upload" method="post" enctype="multipart/form-data">
+          <input type="file" name="file">
+          <button type="submit">Upload</button>
+        </form>
+    */
+  }
+
 }

@@ -114,6 +114,7 @@ require('./models/Range')
 require('./models/Availability')
 require('./models/LogbookDay')
 require('./models/CoachingLogbook')
+require('./models/Lead')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 

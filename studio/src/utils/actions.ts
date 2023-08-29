@@ -636,6 +636,13 @@ export const ACTIONS: IActions = {
     next: ['openPage'],
   },
 
+  import_model_data: {
+    label: 'Import data',
+    options: {
+      model: ({ models }) => Object.values(models).map(m => ({ key: m.name, label: m.name })),
+    },
+    next: ['openPage'],
+  },
 
 }
 
