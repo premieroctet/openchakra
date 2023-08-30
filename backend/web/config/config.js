@@ -1,8 +1,5 @@
 const isEmpty = require('../server/validation/is-empty')
 const {
-  TAWKTO_URL,
-  DISABLE_ALFRED_SELF_REGISTER,
-  DISABLE_ALFRED_PARTICULAR_REGISTER,
   SIB_TEMPLATES,
   DATABASE_NAME,
   HIDE_STORE_DIALOG,
@@ -102,7 +99,7 @@ const getProductionPort = () => {
 const MONGO_BASE_URI = 'mongodb://localhost/'
 
 const getChatURL = () => {
-  return TAWKTO_URL
+  return Boolean(process.env.TAWKTO_URL)
 }
 
 const getHostName = () => {
@@ -123,7 +120,7 @@ const getPort = () => {
 }
 
 const mustDisplayChat = () => {
-  return Boolean(TAWKTO_URL)
+  return Boolean(process.env.TAWKTO_URL)
 }
 
 const isDevelopment_nossl = () => {
@@ -202,11 +199,11 @@ const getSibApiKey = () => {
 }
 
 const canAlfredSelfRegister = () => {
-  return !isMonoProvider() && !DISABLE_ALFRED_SELF_REGISTER
+  return !isMonoProvider() && !process.env.DISABLE_ALFRED_SELF_REGISTER
 }
 
 const canAlfredParticularRegister = () => {
-  return !isMonoProvider() && !DISABLE_ALFRED_PARTICULAR_REGISTER
+  return !isMonoProvider() && !process.env.DISABLE_ALFRED_PARTICULAR_REGISTER
 }
 
 const displayConfig = () => {
@@ -224,7 +221,7 @@ const displayConfig = () => {
 \tDisplay chat:${mustDisplayChat()} ${mustDisplayChat() ? getChatURL() : ''}\n\
 \tSendInBlue actif:${ENABLE_MAILING}\n\
 \tSendInBlue templates:${DATA_MODEL}\n\
-Payment plugin:${PAYMENT_PLUGIN}:${!!paymentPlugin} keys is ${STRIPE_PUBLIC_KEY?.slice(0,20)}...${STRIPE_PUBLIC_KEY?.slice(-6)}\n\
+Payment plugin:${PAYMENT_PLUGIN}:${!!paymentPlugin} keys is ${STRIPE_PUBLIC_KEY?.slice(0, 20)}...${STRIPE_PUBLIC_KEY?.slice(-6)}\n\
 `)
 }
 
