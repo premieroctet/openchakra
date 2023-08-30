@@ -57,7 +57,7 @@ const {
   simpleCloneModel,
 } = require('../../utils/database')
 const QuizzQuestion = require('../../models/QuizzQuestion')
-const { BadRequestError, ForbiddenError } = require('../../utils/errors')
+const { BadRequestError, ForbiddenError, NotFoundError } = require('../../utils/errors')
 const SpoonGain = require('../../models/SpoonGain')
 const CoachingQuestion = require('../../models/CoachingQuestion')
 const CollectiveChallenge = require('../../models/CollectiveChallenge')
@@ -87,6 +87,7 @@ const TeamMember = require('../../models/TeamMember')
 const Coaching = require('../../models/Coaching')
 const Appointment = require('../../models/Appointment')
 const Message = require('../../models/Message')
+const Lead = require('../../models/Lead')
 const cron=require('node-cron')
 
 const filterDataUser = ({model, data, id, user}) => {
@@ -1156,6 +1157,19 @@ const logbooksConsistency = coaching_id => {
     })
 }
 
+const getRegisterCompany = props => {
+  if (!props.company_code || !props.email) { return Promise.remove(null)}
+  const code=new RegExp(`^\${props.company_code.replace(/[\t ]/g, '')}$`, 'i')
+  const mail=new RegExp(`^\${props.email.replace(/[\t ]/g, '').toLowerCase()}$`, 'i')
+  return Promise.all([Lead.findOne({email: mail}), Company.findOne({code})])
+    .then(([lead, company]) => {
+      if (!lead) {throw new ForbiddenError(`Non enregistré en tant que prospect`)}
+      if (!code.test(lead.company_code)) {throw new BadRequestError(`Le code entreprise est incorrect`)}
+      if (!company) {throw new NotFoundError(`L'entreprise de code ${props.company_code} est introuvable`)}
+      return company
+    })
+}
+
 // Ensure logbooks consistency each morning
 cron.schedule('0 0 1 * * *', async() => {
   logbooksConsistency()
@@ -1166,4 +1180,5 @@ cron.schedule('0 0 1 * * *', async() => {
 module.exports={
   ensureChallengePipsConsistency,
   logbooksConsistency,
+  getRegisterCompany,
 }

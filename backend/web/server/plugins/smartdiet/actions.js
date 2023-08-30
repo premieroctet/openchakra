@@ -7,6 +7,7 @@ const moment = require('moment')
 const IndividualChallenge = require('../../models/IndividualChallenge')
 const { BadRequestError, NotFoundError } = require('../../utils/errors')
 const { ensureChallengePipsConsistency } = require('./functions')
+const { getRegisterCompany } = require('./functions')
 const UserSurvey = require('../../models/UserSurvey')
 const UserQuestion = require('../../models/UserQuestion')
 const Question = require('../../models/Question')
@@ -66,13 +67,17 @@ addAction('smartdiet_shift_challenge', smartdietShiftChallenge)
 
 const defaultRegister=ACTIONS.register
 
-const register=props => {
+const register = props => {
   // No compay => set the particular one
-  if (!props.company) {
+  if (!props.company_code) {
     return Company.findOne({name: PARTICULAR_COMPANY_NAME})
       .then(partCompany => defaultRegister({...props, company: partCompany._id}))
   }
-  return defaultRegister(props)
+  // Check company code
+  return getRegisterCompany(props)
+   .then(company => {
+     return defaultRegister({...props, company: company._id})
+   })
 }
 addAction('register', register)
 
