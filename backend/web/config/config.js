@@ -2,8 +2,6 @@ const isEmpty = require('../server/validation/is-empty')
 const {
   SIB_TEMPLATES,
   HIDE_STORE_DIALOG,
-  SITE_MODE,
-  SKIP_FAILED_PAYMENT,
   HOSTNAME,
   PORT,
   MONO_PROVIDER,
@@ -90,13 +88,13 @@ const getProductionRoot = () => {
 }
 
 const getProductionPort = () => {
-  return process.env.STUDIO_TEST_PORT
+  return process.env?.STUDIO_TEST_PORT
 }
 
 const MONGO_BASE_URI = 'mongodb://localhost/'
 
 const getChatURL = () => {
-  return Boolean(process.env.TAWKTO_URL)
+  return Boolean(process.env?.TAWKTO_URL)
 }
 
 const getHostName = () => {
@@ -117,7 +115,7 @@ const getPort = () => {
 }
 
 const mustDisplayChat = () => {
-  return Boolean(process.env.TAWKTO_URL)
+  return Boolean(process.env?.TAWKTO_URL)
 }
 
 const isDevelopment_nossl = () => {
@@ -125,11 +123,11 @@ const isDevelopment_nossl = () => {
 }
 
 const isPlatform = () => {
-  return SITE_MODE == SITE_MODES.PLATFORM
+  return process.env?.SITE_MODE == SITE_MODES.PLATFORM
 }
 
 const isMarketplace = () => {
-  return SITE_MODE == SITE_MODES.MARKETPLACE
+  return process.env?.SITE_MODE == SITE_MODES.MARKETPLACE
 }
 
 const isMonoProvider = () => {
@@ -158,7 +156,7 @@ const getHostUrl = page => {
 const getProductionUrl = page => {
   const protocol = 'https'
   const hostname = getHostName()
-  const port = process.env.STUDIO_TEST_PORT
+  const port = process.env?.STUDIO_TEST_PORT
   const portStr = isDevelopment() ? `:${port}`: ''
   const host_url = `${protocol}://${hostname}${portStr}/${page}`
   return host_url
@@ -176,7 +174,7 @@ const completeConfig = {
     appName,
     serverPort,
     databaseUrl:
-      process.env.MONGODB_URI || `mongodb://localhost/${databaseName}`,
+      process.env?.MONGODB_URI || `mongodb://localhost/${databaseName}`,
     jsonOptions: {
       headers: {
         'Content-Type': 'application/json',
@@ -231,9 +229,9 @@ const checkConfig = () => {
         )}`,
       )
     }
-    if (!Object.values(SITE_MODES).includes(SITE_MODE)) {
+    if (!Object.values(SITE_MODES).includes(process.env?.SITE_MODE)) {
       reject(
-        `SITE_MODE: ${SITE_MODE} inconnu, attendu ${JSON.stringify(
+        `SITE_MODE: ${process.env?.SITE_MODE} inconnu, attendu ${JSON.stringify(
           Object.values(SITE_MODES),
         )}`,
       )
@@ -292,7 +290,7 @@ ONLY DEV & VALIDATION MODES
 Consider failed payment succeeded
 */
 const skipFailedPayment = () => {
-  return !isProduction() && !!SKIP_FAILED_PAYMENT
+  return !isProduction() && !!process.env?.SKIP_FAILED_PAYMENT
 }
 
 // DEV mode: allow https without certificate
