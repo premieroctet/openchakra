@@ -1,11 +1,6 @@
 const isEmpty = require('../server/validation/is-empty')
 const {
   SIB_TEMPLATES,
-  WITHINGS_CLIENT_ID,
-  WITHINGS_CLIENT_SECRET,
-  PAYMENT_PLUGIN,
-  STRIPE_PUBLIC_KEY,
-  STRIPE_SECRET_KEY,
 } = require('../mode')
 
 const SITE_MODES = {
@@ -39,22 +34,24 @@ const getVivaWalletConfig = () => {
 
 const getStripeConfig = () => {
   return {
-    STRIPE_PUBLIC_KEY,
-    STRIPE_SECRET_KEY,
+    STRIPE_PUBLIC_KEY: process.env?.STRIPE_PUBLIC_KEY,
+    STRIPE_SECRET_KEY: process.env?.STRIPE_SECRET_KEY,
   }
 }
 
-const paymentPlugin=PAYMENT_PLUGIN ? require(`../server/plugins/payment/${PAYMENT_PLUGIN}`) : null
+const paymentPlugin=process.env?.PAYMENT_PLUGIN
+  ? require(`../server/plugins/payment/${process.env?.PAYMENT_PLUGIN}`)
+  : null
 paymentPlugin?.init(getStripeConfig())
 
 const get_mode = () => {
-  if (!Object.values(MODES).includes(process.env.MODE)) {
+  if (!Object.values(MODES).includes(process.env?.MODE)) {
     console.error(
-      `Incorrect startup mode ${process.env.MODE}, expecting ${Object.values(MODES)}`,
+      `Incorrect startup mode ${process.env?.MODE}, expecting ${Object.values(MODES)}`,
     )
     process.exit(-1)
   }
-  return process.env.MODE
+  return process.env?.MODE
 }
 
 const isProduction = () => {
@@ -152,8 +149,8 @@ const getProductionUrl = page => {
 
 const getWithingsConfig = () => {
   return {
-    clientId: WITHINGS_CLIENT_ID,
-    clientSecret: WITHINGS_CLIENT_SECRET,
+    clientId: process.env?.WITHINGS_CLIENT_ID,
+    clientSecret: process.env?.WITHINGS_CLIENT_SECRET,
   }
 }
 
@@ -204,7 +201,7 @@ const displayConfig = () => {
 \tDisplay chat:${mustDisplayChat()} ${mustDisplayChat() ? getChatURL() : ''}\n\
 \tSendInBlue actif:${ENABLE_MAILING}\n\
 \tSendInBlue templates:${process.env?.DATA_MODEL}\n\
-Payment plugin:${PAYMENT_PLUGIN}:${!!paymentPlugin} keys is ${STRIPE_PUBLIC_KEY?.slice(0, 20)}...${STRIPE_PUBLIC_KEY?.slice(-6)}\n\
+Payment plugin:${process.env?.PAYMENT_PLUGIN}:${!!paymentPlugin} keys is ${process.env?.STRIPE_PUBLIC_KEY?.slice(0, 20)}...${process.env?.STRIPE_PUBLIC_KEY?.slice(-6)}\n\
 `)
 }
 
@@ -212,7 +209,7 @@ const checkConfig = () => {
   return new Promise((resolve, reject) => {
     if (!Object.values(MODES).includes(process.env.MODE)) {
       reject(
-        `MODE: ${process.env.MODE} inconnu, attendu ${JSON.stringiffy(
+        `MODE: ${process.env.MODE} inconnu, attendu ${JSON.stringify(
           Object.values(MODES),
         )}`,
       )
