@@ -3,7 +3,6 @@ const {
   SIB_TEMPLATES,
   HIDE_STORE_DIALOG,
   SITE_MODE,
-  DATA_MODEL,
   SKIP_FAILED_PAYMENT,
   HOSTNAME,
   PORT,
@@ -212,13 +211,13 @@ const displayConfig = () => {
     isPlatform() ? 'plateforme' : isMarketplace() ? 'marketplace' : 'inconnu'
   }\n\
 \tDatabase:${databaseName}\n\
-\tData model:${DATA_MODEL}\n\
+\tData model:${process.env?.DATA_MODEL}\n\
 \tServer prod:${SERVER_PROD}\n\
 \tServer port:${getPort()}\n\
 \tHost URL:${getHostUrl()}\n\
 \tDisplay chat:${mustDisplayChat()} ${mustDisplayChat() ? getChatURL() : ''}\n\
 \tSendInBlue actif:${ENABLE_MAILING}\n\
-\tSendInBlue templates:${DATA_MODEL}\n\
+\tSendInBlue templates:${process.env?.DATA_MODEL}\n\
 Payment plugin:${PAYMENT_PLUGIN}:${!!paymentPlugin} keys is ${STRIPE_PUBLIC_KEY?.slice(0, 20)}...${STRIPE_PUBLIC_KEY?.slice(-6)}\n\
 `)
 }
@@ -267,7 +266,7 @@ const checkConfig = () => {
     if (isEmpty(process.env?.SIB_APIKEY)) {
       reject(`SIB_APIKEY non renseigné`)
     }
-    if (isEmpty(DATA_MODEL)) {
+    if (isEmpty(process.env?.DATA_MODEL)) {
       reject(`DATA_MODEL non renseigné`)
     }
     displayConfig()
@@ -280,7 +279,7 @@ const getDatabaseUri = () => {
 }
 
 const getDataModel = () => {
-  return DATA_MODEL
+  return process.env?.DATA_MODEL
 }
 
 // Hide application installation popup
