@@ -1,7 +1,6 @@
 const isEmpty = require('../server/validation/is-empty')
 const {
   SIB_TEMPLATES,
-  HIDE_STORE_DIALOG,
   VIVAWALLET_BASE_URL,
   VIVAWALLET_API_ID,
   VIVAWALLET_API_KEY,
@@ -278,7 +277,7 @@ const getDataModel = () => {
 
 // Hide application installation popup
 const hideStoreDialog = () => {
-  return !!HIDE_STORE_DIALOG
+  return !!process.env?.HIDE_STORE_DIALOG
 }
 
 /**
