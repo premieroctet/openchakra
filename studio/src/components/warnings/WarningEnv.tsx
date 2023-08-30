@@ -21,8 +21,9 @@ const WarningEnv = () => {
 
     let missedParts = []
 
+    console.log('process.env.NEXT_PUBLIC_PROJECT_TARGETDOMAIN', process.env.NEXT_PUBLIC_PROJECT_TARGETDOMAIN)
     if (!process.env.NEXT_PUBLIC_PROJECT_TARGETDOMAIN || process.env.NEXT_PUBLIC_PROJECT_TARGETDOMAIN === '') {
-      alert(`Without NEXT_PUBLIC_PROJECT_TARGETDOMAIN, we're not gonna get anything`)
+      alert(`Without NEXT_PUBLIC_PROJECT_TARGETDOMAIN, we're not gonna get anything. Or backend server is down`)
       return
     }
 
