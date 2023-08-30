@@ -2,7 +2,6 @@ const isEmpty = require('../server/validation/is-empty')
 const {
   SIB_TEMPLATES,
   HIDE_STORE_DIALOG,
-  HOSTNAME,
   VIVAWALLET_BASE_URL,
   VIVAWALLET_API_ID,
   VIVAWALLET_API_KEY,
@@ -96,12 +95,12 @@ const getChatURL = () => {
 
 const getHostName = () => {
   if (isDevelopment()) {
-    return HOSTNAME || 'localhost'
+    return process.env?.HOSTNAME || 'localhost'
   }
-  if (!HOSTNAME) {
+  if (!process.env?.HOSTNAME) {
     throw new Error(`HOSTNAME config missing`)
   }
-  return HOSTNAME
+  return process.env?.HOSTNAME
 }
 
 const getPort = () => {
@@ -234,7 +233,7 @@ const checkConfig = () => {
       )
     }
 
-    if (!isDevelopment() && !HOSTNAME) {
+    if (!isDevelopment() && !process.env?.HOSTNAME) {
       reject(`HOSTNAME: obligatoire en mode ${process.env.MODE}`)
     }
 
