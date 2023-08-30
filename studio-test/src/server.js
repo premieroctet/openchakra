@@ -1,9 +1,11 @@
 const path=require('path')
-require('dotenv').config({ path: path.resolve(__dirname, '../../.env') })
+const myEnv = require('dotenv').config({ path: path.resolve(__dirname, '../../.env') })
+const dotenvExpand = require('dotenv-expand')
+dotenvExpand.expand(myEnv)
 const { createServer } = require('https')
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const express = require('express');
-const prod = ['production', 'validation'].includes(process.env.NEXT_PUBLIC_MODE)
+const prod = ['production', 'validation'].includes(process.env.MODE)
 const dev = !prod
 const port = parseInt(process.env.STUDIO_TEST_PORT, 10) || 3001;
 const next = require('next')
@@ -19,7 +21,7 @@ const app = express()
 const API_PATH = '/myAlfred/api'
 const isSecure = process.env.MODE === 'production'
 
-console.log(`Starting as ${process.env.NEXT_PUBLIC_MODE}; production next server is ${prod}`)
+console.log(`Starting as ${process.env.MODE}; production next server is ${prod}`)
 nextApp.prepare().then(() => {
 
   app.use(
