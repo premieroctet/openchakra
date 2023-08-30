@@ -29,7 +29,7 @@ const ProjectSettings = () => {
   } = useSelector(getFullComponents)
   
   const [projectSettings, setProjectSettings] = useState({
-    name: name || process.env.NEXT_PUBLIC_PROJECT || '', 
+    name: name || process.env.NEXT_PUBLIC_PROJECT_NAME || '', 
     url,
     description,
     favicon32,

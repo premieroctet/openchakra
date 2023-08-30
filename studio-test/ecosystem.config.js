@@ -1,7 +1,7 @@
 const path=require('path')
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
 
-const processName=`FRONT-${process.env.NEXT_PUBLIC_PROJECT || 'NO_NEXT_PUBLIC_PROJECT'}-${process.env.STUDIO_TEST_PORT}`.toUpperCase()
+const processName=`FRONT-${process.env.NEXT_PUBLIC_PROJECT_NAME || 'NO_NEXT_PUBLIC_PROJECT_NAME'}-${process.env.STUDIO_TEST_PORT}`.toUpperCase()
 
 module.exports = {
   apps: [{
