@@ -3,7 +3,6 @@ const {
   SIB_TEMPLATES,
   HIDE_STORE_DIALOG,
   HOSTNAME,
-  PORT,
   MONO_PROVIDER,
   VIVAWALLET_BASE_URL,
   VIVAWALLET_API_ID,
@@ -87,7 +86,7 @@ const getProductionRoot = () => {
 }
 
 const getProductionPort = () => {
-  return process.env?.STUDIO_TEST_PORT
+  return process.env?.FRONTEND_APP_PORT
 }
 
 const MONGO_BASE_URI = 'mongodb://localhost/'
@@ -107,10 +106,10 @@ const getHostName = () => {
 }
 
 const getPort = () => {
-  if (isValidation() && isNaN(parseInt(PORT))) {
-    throw new Error(`PORT config missing or not an integer`)
+  if (isValidation() && isNaN(parseInt(process.env?.BACKEND_PORT))) {
+    throw new Error(`BACKEND_PORT config missing or not an integer`)
   }
-  return PORT || 443
+  return process.env?.BACKEND_PORT || 443
 }
 
 const mustDisplayChat = () => {
@@ -136,7 +135,7 @@ const isMonoProvider = () => {
 const appName = 'myalfred'
 
 const databaseName = process.env?.DATABASE_NAME
-const serverPort = process.env?.PORT || 3122
+const serverPort = process.env?.BACKEND_PORT || 3122
 
 const SERVER_PROD = isProduction() || isDevelopment()
 
@@ -155,7 +154,7 @@ const getHostUrl = page => {
 const getProductionUrl = page => {
   const protocol = 'https'
   const hostname = getHostName()
-  const port = process.env?.STUDIO_TEST_PORT
+  const port = process.env?.FRONTEND_APP_PORT
   const portStr = isDevelopment() ? `:${port}`: ''
   const host_url = `${protocol}://${hostname}${portStr}/${page}`
   return host_url
@@ -240,7 +239,7 @@ const checkConfig = () => {
       reject(`HOSTNAME: obligatoire en mode ${process.env.MODE}`)
     }
 
-    if (isValidation() && isNaN(parseInt(PORT))) {
+    if (isValidation() && isNaN(parseInt(process.env?.BACKEND_PORT))) {
       reject(`PORT: obligatoire en mode ${process.env.MODE}`)
     }
 
@@ -250,8 +249,8 @@ const checkConfig = () => {
     if (isEmpty(process.env?.PRODUCTION_ROOT)) {
       reject(`PRODUCTION_ROOT non renseigné`)
     }
-    if (isEmpty(process.env?.STUDIO_TEST_PORT)) {
-      reject(`env var STUDIO_TEST_PORT non renseigné`)
+    if (isEmpty(process.env?.FRONTEND_APP_PORT)) {
+      reject(`env var FRONTEND_APP_PORT non renseigné`)
     }
     // Deprecated
     if (SIB_TEMPLATES) {
