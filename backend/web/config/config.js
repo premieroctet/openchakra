@@ -1,7 +1,6 @@
 const isEmpty = require('../server/validation/is-empty')
 const {
   SIB_TEMPLATES,
-  DATABASE_NAME,
   HIDE_STORE_DIALOG,
   SITE_MODE,
   DATA_MODEL,
@@ -140,8 +139,8 @@ const isMonoProvider = () => {
 
 const appName = 'myalfred'
 
-const databaseName = DATABASE_NAME
-const serverPort = process.env.PORT || 3122
+const databaseName = process.env?.DATABASE_NAME
+const serverPort = process.env?.PORT || 3122
 
 const SERVER_PROD = isProduction() || isDevelopment()
 
@@ -249,7 +248,7 @@ const checkConfig = () => {
       reject(`PORT: obligatoire en mode ${process.env.MODE}`)
     }
 
-    if (isEmpty(DATABASE_NAME)) {
+    if (isEmpty(process.env?.DATABASE_NAME)) {
       reject(`DATABASE_NAME non renseigné`)
     }
     if (isEmpty(PRODUCTION_ROOT)) {
@@ -277,7 +276,7 @@ const checkConfig = () => {
 }
 
 const getDatabaseUri = () => {
-  return `${MONGO_BASE_URI}${DATABASE_NAME}`
+  return `${MONGO_BASE_URI}${process.env?.DATABASE_NAME}`
 }
 
 const getDataModel = () => {
