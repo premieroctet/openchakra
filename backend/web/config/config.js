@@ -3,7 +3,6 @@ const {
   SIB_TEMPLATES,
   HIDE_STORE_DIALOG,
   HOSTNAME,
-  MONO_PROVIDER,
   VIVAWALLET_BASE_URL,
   VIVAWALLET_API_ID,
   VIVAWALLET_API_KEY,
@@ -129,7 +128,7 @@ const isMarketplace = () => {
 }
 
 const isMonoProvider = () => {
-  return MONO_PROVIDER
+  return Boolean(process.env?.MONO_PROVIDER)
 }
 
 const appName = 'myalfred'
