@@ -695,6 +695,26 @@ const loadFromDb = ({model, fields, id, user, params}) => {
 
 }
 
+const DATA_IMPORT_FN={}
+
+// Imports data for model. Delegated to plugins
+const importData=({model, data}) => {
+  if (!DATA_IMPORT_FN[model]) {
+    throw new BadRequestError(`Impossible d'importer le modèle ${model}`)
+  }
+  return DATA_IMPORT_FN[model](data)
+}
+
+const setImportDataFunction = ({model, fn}) => {
+  if (!model || !fn) {
+    throw new Error(`Import data function: expected model and function`)
+  }
+  if (!!DATA_IMPORT_FN[model]) {
+    throw new Error(`Import funciton already exists for model ${model}`)
+  }
+  DATA_IMPORT_FN[model]=fn
+}
+
 module.exports = {
   hasRefs,
   MONGOOSE_OPTIONS,
@@ -736,4 +756,6 @@ module.exports = {
   intersection,
   differenceSet,
   putToDb,
+  setImportDataFunction,
+  importData,
 }

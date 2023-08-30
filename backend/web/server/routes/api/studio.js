@@ -1,3 +1,4 @@
+const { createMemoryMulter } = require('../../utils/filesystem')
 const {
   FUMOIR_MEMBER,
   PAYMENT_FAILURE,
@@ -12,6 +13,7 @@ const {
   loadFromDb,
   putToDb,
   retainRequiredFields,
+  importData,
 } = require('../../utils/database')
 const path = require('path')
 const zlib=require('zlib')
@@ -375,6 +377,14 @@ router.post('/contact', (req, res) => {
         })
         .then(data => res.json(data))
     })
+})
+
+router.post('/import-data/:model', createMemoryMulter().single('file'), passport.authenticate('cookie', {session: false}), (req, res) => {
+  const {model}=req.params
+  const {file}=req
+  console.log(`Import ${model}:${file.buffer.length} bytes`)
+  return importData({model, data:file.buffer.toString()})
+    .then(result => res.json(result))
 })
 
 router.post('/:model', passport.authenticate('cookie', {session: false}), (req, res) => {

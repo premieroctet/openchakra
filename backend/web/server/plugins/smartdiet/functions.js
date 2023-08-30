@@ -1,4 +1,22 @@
 const {
+  declareComputedField,
+  declareEnumField,
+  declareVirtualField,
+  differenceSet,
+  getModel,
+  idEqual,
+  loadFromDb,
+  setFilterDataUser,
+  setImportDataFunction,
+  setIntersects,
+  setPostCreateData,
+  setPostPutData,
+  setPreCreateData,
+  setPreprocessGet,
+  simpleCloneModel,
+} = require('../../utils/database')
+const { importLeads } = require('./leads')
+const {
   ACTIVITY,
   APPOINTMENT_STATUS,
   COACHING_MODE,
@@ -40,22 +58,6 @@ const {
   UPDATED_AT_ATTRIBUTE
 } = require('../../../utils/consts')
 const UserQuizzQuestion = require('../../models/UserQuizzQuestion')
-const {
-  declareComputedField,
-  declareEnumField,
-  declareVirtualField,
-  differenceSet,
-  getModel,
-  idEqual,
-  loadFromDb,
-  setFilterDataUser,
-  setIntersects,
-  setPostCreateData,
-  setPostPutData,
-  setPreCreateData,
-  setPreprocessGet,
-  simpleCloneModel,
-} = require('../../utils/database')
 const QuizzQuestion = require('../../models/QuizzQuestion')
 const { BadRequestError, ForbiddenError, NotFoundError } = require('../../utils/errors')
 const SpoonGain = require('../../models/SpoonGain')
@@ -1169,6 +1171,8 @@ const getRegisterCompany = props => {
       return company
     })
 }
+
+setImportDataFunction({model: 'lead', fn: importLeads})
 
 // Ensure logbooks consistency each morning
 cron.schedule('0 0 1 * * *', async() => {

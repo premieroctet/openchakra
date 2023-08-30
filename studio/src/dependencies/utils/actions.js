@@ -901,43 +901,30 @@ return Promise.allSettled(imagePromises)
     if (prevInput) {
       prevInput.parentNode.removeChild(prevInput)
     }
+
     const container=document.getElementById(props.id).parentNode
+
+    const form=document.createElement('form');
+    container.appendChild(form)
+
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.name = 'file';
     fileInput.style='display:none'
     fileInput.id='import_data'
-
-    container.appendChild(fileInput)
+    form.appendChild(fileInput)
 
     fileInput.addEventListener('change', event => {
-      const selectedFile = event.target.files[0];
-      if (selectedFile) {
-        const reader = new FileReader();
-        reader.onload = event => {
-          const fileContents = event.target.result;
-          let url = `${API_ROOT}/action`
-          const body = {
-            action: 'import_model_data',
-            model: props.props.model,
-            data: fileContents,
-          }
-          return axios.post(url, body)
-            .then(({data}) => {
-              alert(data.join('\n'))
-            })
-        }
-        reader.readAsText(selectedFile);
-      }
+      const formData = new FormData(form);
+      axios.post(`${API_ROOT}/import-data/${props.props.model}`, formData)
+         .then(response => {
+           alert(`Response:${response.data.join('\n')}`)
+         })
+         .catch(error => alert('Error:', error))
+
     })
     fileInput.click()
     return Promise.resolve(true)
-    /**
-    <form action="/upload" method="post" enctype="multipart/form-data">
-          <input type="file" name="file">
-          <button type="submit">Upload</button>
-        </form>
-    */
   }
 
 }
