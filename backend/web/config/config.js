@@ -4,7 +4,6 @@ const {
   DATABASE_NAME,
   HIDE_STORE_DIALOG,
   SITE_MODE,
-  SIB_APIKEY,
   DATA_MODEL,
   SKIP_FAILED_PAYMENT,
   HOSTNAME,
@@ -195,15 +194,15 @@ const SIRET = {
 }
 
 const getSibApiKey = () => {
-  return SIB_APIKEY
+  return process.env?.SIB_APIKEY
 }
 
 const canAlfredSelfRegister = () => {
-  return !isMonoProvider() && !process.env.DISABLE_ALFRED_SELF_REGISTER
+  return !isMonoProvider() && !process.env?.DISABLE_ALFRED_SELF_REGISTER
 }
 
 const canAlfredParticularRegister = () => {
-  return !isMonoProvider() && !process.env.DISABLE_ALFRED_PARTICULAR_REGISTER
+  return !isMonoProvider() && !process.env?.DISABLE_ALFRED_PARTICULAR_REGISTER
 }
 
 const displayConfig = () => {
@@ -266,14 +265,11 @@ const checkConfig = () => {
       )
     }
     // TODO check database name correctness
-    if (isEmpty(SIB_APIKEY)) {
+    if (isEmpty(process.env?.SIB_APIKEY)) {
       reject(`SIB_APIKEY non renseigné`)
     }
     if (isEmpty(DATA_MODEL)) {
       reject(`DATA_MODEL non renseigné`)
-    }
-    if (isEmpty(SIB_APIKEY)) {
-      reject(`SIB_APIKEY non renseigné`)
     }
     displayConfig()
     resolve('Configuration OK')
