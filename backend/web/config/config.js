@@ -5,7 +5,6 @@ const {
   HOSTNAME,
   PORT,
   MONO_PROVIDER,
-  PRODUCTION_ROOT,
   VIVAWALLET_BASE_URL,
   VIVAWALLET_API_ID,
   VIVAWALLET_API_KEY,
@@ -84,7 +83,7 @@ const isDevelopment = () => {
 }
 
 const getProductionRoot = () => {
-  return PRODUCTION_ROOT
+  return process.env?.PRODUCTION_ROOT
 }
 
 const getProductionPort = () => {
@@ -248,10 +247,10 @@ const checkConfig = () => {
     if (isEmpty(process.env?.DATABASE_NAME)) {
       reject(`DATABASE_NAME non renseigné`)
     }
-    if (isEmpty(PRODUCTION_ROOT)) {
+    if (isEmpty(process.env?.PRODUCTION_ROOT)) {
       reject(`PRODUCTION_ROOT non renseigné`)
     }
-    if (isEmpty(process.env.STUDIO_TEST_PORT)) {
+    if (isEmpty(process.env?.STUDIO_TEST_PORT)) {
       reject(`env var STUDIO_TEST_PORT non renseigné`)
     }
     // Deprecated
