@@ -14,7 +14,7 @@ const CompanySchema = new Schema(
     },
     siret: {
       type: String,
-      set: v => v ? / /g.replace(v) : v,
+      set: v => v ? v.replace(/ /g, '') : v,
       validate: [v => siret.isSIRET(v)||siret.isSIREN(v) , 'Le siret/siren est invalide'],
       required: false,
     },
