@@ -28,11 +28,11 @@ const CompanySchema = new Schema(
     activity: {
       type: String,
       enum: Object.keys(COMPANY_ACTIVITY),
-      required: true,
+      required: [true, `L'activité est obligatoire`],
     },
     size: {
       type: Number,
-      required: true,
+      required: [true, `La taille est obligatoire`],
     },
     parent: {
       type: Schema.Types.ObjectId,
