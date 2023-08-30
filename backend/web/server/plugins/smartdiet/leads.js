@@ -28,7 +28,7 @@ const importLead = leadData => {
       if (!exists) {return Promise.reject(`Aucune compagnie avec le code ${leadData.company_code}`)}
       return Lead.updateOne(
         {email: leadData.email},
-        {leadData},
+        {...leadData},
         {upsert: true}
       )
     })
