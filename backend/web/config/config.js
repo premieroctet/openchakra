@@ -1,13 +1,6 @@
 const isEmpty = require('../server/validation/is-empty')
 const {
   SIB_TEMPLATES,
-  VIVAWALLET_BASE_URL,
-  VIVAWALLET_API_ID,
-  VIVAWALLET_API_KEY,
-  VIVAWALLET_CLIENT_ID,
-  VIVAWALLET_CLIENT_SECRET,
-  VIVAWALLET_MODE,
-  VIVAWALLET_SOURCE_CODE,
   WITHINGS_CLIENT_ID,
   WITHINGS_CLIENT_SECRET,
   PAYMENT_PLUGIN,
@@ -34,13 +27,13 @@ const PAYMENT_PLUGINS = {
 
 const getVivaWalletConfig = () => {
   return {
-    production: VIVAWALLET_MODE=='production',
-    baseUrl: VIVAWALLET_BASE_URL,
-    apiId: VIVAWALLET_API_ID,
-    apiKey: VIVAWALLET_API_KEY,
-    clientId: VIVAWALLET_CLIENT_ID,
-    clientSecret: VIVAWALLET_CLIENT_SECRET,
-    sourceCode: VIVAWALLET_SOURCE_CODE,
+    production: process.env?.VIVAWALLET_MODE=='production',
+    baseUrl: process.env?.VIVAWALLET_BASE_URL,
+    apiId: process.env?.VIVAWALLET_API_ID,
+    apiKey: process.env?.VIVAWALLET_API_KEY,
+    clientId: process.env?.VIVAWALLET_CLIENT_ID,
+    clientSecret: process.env?.VIVAWALLET_CLIENT_SECRET,
+    sourceCode: process.env?.VIVAWALLET_SOURCE_CODE,
   }
 }
 
