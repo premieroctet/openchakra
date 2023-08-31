@@ -193,7 +193,7 @@ const buildBlock = ({
         ? `Dynamic${capitalize(childComponent.type)}`
         : isMaskableComponent(childComponent)
         ? `Maskable${capitalize(childComponent.type)}`
-        : capitalize(childComponent.type)
+        : capitalize(getWappType(childComponent.type))
       let propsContent = ''
 
       // DIRTY: stateValue for RAdioGroup to get value
@@ -653,7 +653,7 @@ const buildDynamics = (components: IComponents, extraImports: string[]) => {
   let code = `${Object.keys(groups)
     .map(g => {
       return groups[g]
-        .map(comp => `const Dynamic${comp.type}=withDynamic${g}(${comp.type})`)
+        .map(comp => `const Dynamic${comp.type}=withDynamic${g}(${getWappType(comp.type)})`)
         .join('\n')
     })
     .join('\n')}
@@ -683,6 +683,10 @@ const buildMaskable = (components: IComponents, extraImports: string[]) => {
   return code
 }
 
+const getWappType = type => {
+  return `Wapp${type}`
+}
+
 export const generateCode = async (
   pageId: string,
   pages: {
@@ -694,9 +698,16 @@ export const generateCode = async (
   const { components, metaTitle, metaDescription, metaImageUrl } = pages[pageId]
   const { settings } = project
   const {description, metaImage, name, url, favicon32, gaTag} = Object.fromEntries(Object.entries(settings).map(([key, value]) => [key, isJsonString(value) ? JSON.parse(value) : value]))
-  
+
 
   const extraImports: string[] = []
+  const wappComponentsDeclaration = lodash(components)
+    .values()
+    .filter(v => v.id!='root')
+    .filter(v => v.type!='DataProvider')
+    .map(v => v.type)
+    .uniq()
+    .map(type => `const ${getWappType(type)}=withWappizy(${type})`)
   let hooksCode = buildHooks(components)
   let filterStates = buildFilterStates(components)
   let dynamics = buildDynamics(components, extraImports)
@@ -802,8 +813,10 @@ import {ensureToken} from '../dependencies/utils/token'
 import {useRouter} from 'next/router'
 import { useUserContext } from '../dependencies/context/user'
 import { getComponentDataValue } from '../dependencies/utils/values'
+import withWappizy from '../dependencies/hoc/withWappizy'
 
 ${extraImports.join('\n')}
+${wappComponentsDeclaration.join('\n')}
 
 ${dynamics || ''}
 ${maskable || ''}
