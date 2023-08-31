@@ -77,7 +77,7 @@ const Medias = ({
       formData.append('document', fileToUpload)
   
       const sendFile = await axios.post(
-        `${config.targetDomain}/myAlfred/api/studio/uploadFiles`, 
+        `${process.env?.NEXT_PUBLIC_PROJECT_TARGETDOMAIN}/myAlfred/api/studio/uploadFiles`, 
         formData, 
         {
           headers: {
