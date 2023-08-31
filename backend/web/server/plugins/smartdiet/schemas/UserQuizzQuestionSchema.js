@@ -1,7 +1,11 @@
+const {
+  ANSWER_STATUS_CORRECT,
+  ANSWER_STATUS_UNCORRECT,
+  SURVEY_ANSWER
+} = require('../consts')
 const { idEqual } = require('../../../utils/database')
 const mongoose = require('mongoose')
 const {schemaOptions} = require('../../../utils/schemas')
-const { SURVEY_ANSWER } = require('../consts')
 
 const Schema = mongoose.Schema
 
@@ -47,11 +51,25 @@ UserQuizzQuestionSchema.virtual("multiple_answers", {
 });
 
 // Message depending on success/error
-UserQuizzQuestionSchema.virtual("result_message").get(function()  {
+UserQuizzQuestionSchema.virtual("answer_status").get(function()  {
   if (this.single_enum_answer && this.quizz_question.correct_answer) {
     const correct=idEqual(this.single_enum_answer._id, this.quizz_question.correct_answer._id)
-    return correct ? this.quizz_question.success_message : this.quizz_question.error_message
+    return correct ? ANSWER_STATUS_CORRECT : ANSWER_STATUS_UNCORRECT
   }
+})
+
+// Message depending on success/error
+UserQuizzQuestionSchema.virtual("answer_message").get(function()  {
+  const question=this.quizz_question
+  if (!question) {
+    console.warn(`${this._id}:could not get quizz_question`)
+    return
+  }
+  const MESSAGES={
+    [ANSWER_STATUS_CORRECT]: question.success_message,
+    [ANSWER_STATUS_UNCORRECT]: question.error_message,
+  }
+  return MESSAGES[this.answer_status]
 })
 
 
