@@ -24,6 +24,7 @@ const {
   QUIZZ_QUESTION_TYPE,
   QUIZZ_TYPE,
   QUIZZ_TYPE_LOGBOOK,
+  QUIZZ_TYPE_PROGRESS,
   ROLES,
   ROLE_CUSTOMER,
   ROLE_EXTERNAL_DIET,
@@ -1020,6 +1021,24 @@ const postCreate = ({model, params, data,user}) => {
   if (['loggedUser', 'user'].includes(model) && data.role==ROLE_CUSTOMER) {
     return Coaching.create({user: data})
       .then(coaching => User.findByIdAndUpdate(data._id, {coaching}))
+  }
+  // Create coaching.progress if not present
+  if (model=='appointment') {
+    return Coaching.findById(data.coaching._id)
+      .then(coaching => {
+        if (coaching.progress) {
+          return data
+        }
+        return Quizz.findOne({type: QUIZZ_TYPE_PROGRESS}).populate('questions')
+          .then(q => {
+            if (!q)  {
+              return console.error(`No progress quizz found`);
+            }
+            return q.cloneAsUserQuizz()
+          })
+          .then(uq => {coaching.progress=uq?._id; return coaching.save()})
+          .then(()=> data)
+      })
   }
 
   return Promise.resolve(data)
