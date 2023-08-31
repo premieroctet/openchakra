@@ -1,4 +1,7 @@
-require('dotenv').config({ path: `../.env`});
+const myEnv = require('dotenv').config({ path: `../.env`});
+const dotenvExpand = require('dotenv-expand')
+dotenvExpand.expand(myEnv)
+
 module.exports = {
   webpack: (config) => {
     // load worker files as a urls by using Asset Modules

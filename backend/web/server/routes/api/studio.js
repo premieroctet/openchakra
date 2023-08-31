@@ -37,7 +37,6 @@ const {
 const {callAllowedAction} = require('../../utils/studio/actions')
 const {
   getDataModel,
-  getProductionPort,
   getProductionRoot,
 } = require('../../../config/config')
 
@@ -67,6 +66,7 @@ catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') { throw err }
   console.warn(`No consts module for ${getDataModel()}`)
 }
+const {NEEDED_VAR} = require('../../../utils/consts')
 
 const {sendCookie} = require('../../config/passport')
 const {
@@ -82,7 +82,6 @@ const {getWebHookToken} = require('../../plugins/payment/vivaWallet')
 const router = express.Router()
 
 const PRODUCTION_ROOT = getProductionRoot()
-const PRODUCTION_PORT = getProductionPort()
 const PROJECT_CONTEXT_PATH = 'src/pages'
 
 
@@ -372,6 +371,18 @@ router.get('/statTest', (req, res) => {
       return ({x: v, y: cos})
     })
   return res.json(data)
+})
+
+router.get('/checkenv', (req, res) => {
+  let missingVars = []
+  NEEDED_VAR.forEach(varname => {
+    const isMissing = typeof process.env[varname] === 'undefined' || process.env[varname] === ''
+    if (isMissing) {
+      missingVars.push(varname)
+    }
+  })
+
+  return res.json(missingVars)
 })
 
 router.post('/contact', (req, res) => {
