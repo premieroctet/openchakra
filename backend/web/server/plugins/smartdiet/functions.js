@@ -1,23 +1,6 @@
 const {
-  declareComputedField,
-  declareEnumField,
-  declareVirtualField,
-  differenceSet,
-  getModel,
-  idEqual,
-  loadFromDb,
-  setFilterDataUser,
-  setImportDataFunction,
-  setIntersects,
-  setPostCreateData,
-  setPostPutData,
-  setPreCreateData,
-  setPreprocessGet,
-  simpleCloneModel,
-} = require('../../utils/database')
-const { importLeads } = require('./leads')
-const {
   ACTIVITY,
+  ANSWER_STATUS,
   APPOINTMENT_STATUS,
   COACHING_MODE,
   COACHING_QUESTION_STATUS,
@@ -51,6 +34,24 @@ const {
   TARGET_TYPE,
   UNIT
 } = require('./consts')
+const {
+  declareComputedField,
+  declareEnumField,
+  declareVirtualField,
+  differenceSet,
+  getModel,
+  idEqual,
+  loadFromDb,
+  setFilterDataUser,
+  setImportDataFunction,
+  setIntersects,
+  setPostCreateData,
+  setPostPutData,
+  setPreCreateData,
+  setPreprocessGet,
+  simpleCloneModel,
+} = require('../../utils/database')
+const { importLeads } = require('./leads')
 const Quizz = require('../../models/Quizz')
 const CoachingLogbook = require('../../models/CoachingLogbook')
 const {
@@ -837,7 +838,7 @@ declareVirtualField({model: 'userQuizzQuestion', field: 'multiple_answers',
     options: {ref: 'item'}},
 })
 declareVirtualField({model: 'userQuizzQuestion', field:'answer_status', instance: 'String',
-  requires: 'single_enum_answer,quizz_question.correct_answer'
+  requires: 'single_enum_answer,quizz_question.correct_answer', enumValues: ANSWER_STATUS,
 })
 declareVirtualField({model: 'userQuizzQuestion', field:'answer_message', instance: 'String',
   requires: 'answer_status,quizz_question.success_message,quizz_question.error_message'
