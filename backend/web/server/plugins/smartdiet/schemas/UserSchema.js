@@ -51,6 +51,10 @@ const UserSchema = new Schema({
     type: String,
     required: false,
   },
+  description: {
+    type: String,
+    required: false,
+  },
   birthday: {
     type: Date,
     //required: [function() { return this.role==ROLE_CUSTOMER }, 'La date de naissance est obligatoire'],
