@@ -22,6 +22,22 @@ const QuizzQuestionSchema = new Schema({
     enum: Object.keys(QUIZZ_QUESTION_TYPE),
     required: [true, 'Le type est obligatoire'],
   },
+  // The correct answer for a single QCM
+  correct_answer: {
+    type: Schema.Types.ObjectId,
+    ref: 'item',
+    required: false,
+  },
+  // Message if answer is correct
+  success_message: {
+    type: String,
+    required: false,
+  },
+  // Message if answer is wrong
+  error_message: {
+    type: String,
+    required: false,
+  },
   diet_private: {
   },
 }, schemaOptions)

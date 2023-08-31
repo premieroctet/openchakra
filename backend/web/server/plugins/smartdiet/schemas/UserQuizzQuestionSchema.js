@@ -1,3 +1,4 @@
+const { idEqual } = require('../../../utils/database')
 const mongoose = require('mongoose')
 const {schemaOptions} = require('../../../utils/schemas')
 const { SURVEY_ANSWER } = require('../consts')
@@ -44,6 +45,15 @@ UserQuizzQuestionSchema.virtual("multiple_answers", {
   localField: "_id", // Find in Model, where localField
   foreignField: 'userQuizzQuestion' // is equal to foreignField
 });
+
+// Message depending on success/error
+UserQuizzQuestionSchema.virtual("result_message").get(function()  {
+  if (this.single_enum_answer && this.quizz_question.correct_answer) {
+    const correct=idEqual(this.single_enum_answer._id, this.quizz_question.correct_answer._id)
+    return correct ? this.quizz_question.success_message : this.quizz_question.error_message
+  }
+})
+
 
 /* eslint-enable prefer-arrow-callback */
 
