@@ -1,18 +1,22 @@
-const { NotFoundError } = require('../../utils/errors')
-
+const { bufferToString, guessDelimiter } = require('../../../utils/text')
+const { BadRequestError, NotFoundError } = require('../../utils/errors')
 const Company = require('../../models/Company')
 const Lead = require('../../models/Lead')
 const { extractData, guessFileType } = require('../../../utils/import')
-const { guessDelimiter } = require('../../../utils/text')
+const lodash=require('lodash')
 
 const MAPPING={
   'Prénom': 'firstname',
   'Nom': 'lastname',
   'Email': 'email',
+  'ID': 'identifier',
   'Code entreprise': 'company_code',
   'Source': 'source',
   'Téléphone': 'phone',
 }
+
+const MANDATORY_COLUMNS=Object.keys(MAPPING)
+
 const mapData = (input, mapping)  => {
   let output={}
   Object.entries(mapping).forEach(([src, dst])=> {
@@ -22,6 +26,7 @@ const mapData = (input, mapping)  => {
 }
 
 const importLead = leadData => {
+  console.log(`Handling ${leadData.email}`)
   const company_code_re=new RegExp(`^${leadData.company_code}$`, 'i')
   return Company.exists({code: company_code_re})
     .then(exists => {
@@ -34,13 +39,19 @@ const importLead = leadData => {
     })
 }
 
-const importLeads= text => {
-  return guessFileType(text)
+const importLeads= buffer => {
+  return guessFileType(buffer)
     .then(type => {
-      const delim=guessDelimiter(text)
-      return extractData(text, {format: type, delimiter:delim})
+      const delim=guessDelimiter(bufferToString(buffer))
+      console.log(`GUessed delimiter:'${delim}',type ${type}`)
+      return extractData(buffer, {format: type, delimiter:delim})
     })
     .then(data => {
+      console.log(`Import leads: got ${data.records.length}, columns ${data.headers.join('/')}`)
+      const missingColumns=lodash.difference(MANDATORY_COLUMNS, data.headers)
+      if (!lodash.isEmpty(missingColumns)) {
+        return [`Colonnes manquantes:${missingColumns.join(',')}`]
+      }
       const mappedData=data.records.map(input => mapData(input, MAPPING))
       return Promise.allSettled(mappedData.map(importLead))
         .then(result => {

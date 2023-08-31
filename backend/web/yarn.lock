@@ -3613,7 +3613,7 @@ binary@~0.3.0:
     buffers "~0.1.1"
     chainsaw "~0.1.0"
 
-bindings@^1.5.0:
+bindings@^1.3.0, bindings@^1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/bindings/-/bindings-1.5.0.tgz#10353c9e945334bc0511a6d90b38fbc7c9c504df"
   integrity sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==
@@ -4056,6 +4056,13 @@ catharsis@^0.9.0:
   integrity sha512-prMTQVpcns/tzFgFVkVp6ak6RykZyWb3gu8ckUpd6YkTlacOd3DXGJjIpD4Q6zJirizvaiAjSSHlOsA+6sNh2A==
   dependencies:
     lodash "^4.17.15"
+
+ced@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/ced/-/ced-2.0.0.tgz#6c85a28085380efbabae58af84ee213c1847e9b3"
+  integrity sha512-d5j+xsZDbSarov5iA8wrCoKNDeszm8qZqAYrSG+KxqX8X3RbVxCFAGtQJLo9yoquTWRbWlwPwdMqa/De99i3ew==
+  dependencies:
+    bindings "^1.3.0"
 
 chainsaw@~0.1.0:
   version "0.1.0"

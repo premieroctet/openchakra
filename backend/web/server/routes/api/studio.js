@@ -383,7 +383,7 @@ router.post('/import-data/:model', createMemoryMulter().single('file'), passport
   const {model}=req.params
   const {file}=req
   console.log(`Import ${model}:${file.buffer.length} bytes`)
-  return importData({model, data:file.buffer.toString()})
+  return importData({model, data:file.buffer})
     .then(result => res.json(result))
 })
 

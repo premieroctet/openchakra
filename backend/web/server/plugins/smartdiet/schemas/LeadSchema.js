@@ -23,6 +23,12 @@ const LeadSchema = new Schema({
     required: [true, 'L\'email est obligatoire'],
     set: v => v.toLowerCase().trim(),
   },
+  // Custom identifier
+  identifier: {
+    type: String,
+    set: v => v ? v.trim() : v,
+    required: false,
+  },
   company_code: {
     type: String,
     set: v => v ? v.replace(/ /g,'') : v,

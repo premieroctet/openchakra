@@ -918,7 +918,7 @@ return Promise.allSettled(imagePromises)
       const formData = new FormData(form);
       axios.post(`${API_ROOT}/import-data/${props.props.model}`, formData)
          .then(response => {
-           alert(`Response:${response.data.join('\n')}`)
+           alert(response.data.join('\n'))
          })
          .catch(error => alert('Error:', error))
 

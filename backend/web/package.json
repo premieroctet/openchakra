@@ -17,6 +17,7 @@
     "axios": "^0.24.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+    "ced": "^2.0.0",
     "console-stamp": "^0.2.9",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
