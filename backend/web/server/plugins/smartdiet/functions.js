@@ -837,7 +837,7 @@ declareVirtualField({model: 'userQuizzQuestion', field: 'multiple_answers',
     options: {ref: 'item'}},
 })
 declareVirtualField({model: 'userQuizzQuestion', field:'result_message', instance: 'String',
-  requires: 'single_enum_answer,quizzQuestion.correct_answer,quizzQuestion.success_message,quizzQuestion.error_message'
+  requires: 'single_enum_answer,quizz_question.correct_answer,quizz_question.success_message,quizz_question.error_message'
 })
 
 
