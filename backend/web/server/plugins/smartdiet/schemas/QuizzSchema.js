@@ -46,7 +46,6 @@ QuizzSchema.methods.cloneAsUserQuizz=function() {
         questions,
       }
       return mongoose.models.userQuizz.create(params)
-        .then(q => {console.log(`Created quizz ${q}`); return q})
     })
 }
 /* eslint-enable prefer-arrow-callback */

@@ -33,7 +33,8 @@ const setRecurseDataSource = (
     return []
   } else {
     return React.Children.map(element.props.children, function(child, index) {
-      const newSuffix = child?.props?.dataSourceId ? `${suffix}_${index}` : suffix
+      // DANGEROUS!!!!!!!! FOR QUIZZ !!!!!
+      const newSuffix = suffix//child?.props?.dataSourceId ? `${suffix}_${index}` : suffix
       const newId = child.props?.id ? `${child.props?.id}${suffix}` : undefined
       const level=newId ? newId.split(/(_.*)$/)[1] : undefined
       //if (child.props === undefined || (child.props.dataSourceId && child.props.dataSourceId!=dataSourceId)) {
@@ -129,6 +130,7 @@ const withDynamicContainer = Component => {
         orgData = matcher(value, orgData, props.filterAttribute2)
       }
     }
+
     let data = orgData
     if (!lodash.isNil(props?.limit)) {
     try {
