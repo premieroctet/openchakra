@@ -576,7 +576,7 @@ UserSchema.virtual('diet_appointments', {localField:'tagada', foreignField:'taga
 
 // Returned availabilities/ranges are not store in database
 UserSchema.virtual('diet_patients', {localField:'tagada', foreignField:'tagada'}).get(function() {
-  return lodash.uniqBy(this.diet_coachings?.map(c => c.user), u => u._id)
+  return lodash.uniqBy(this.diet_coachings?.map(c => c?.user), u => u?._id).filter(v => !!v)
 })
 
 /* eslint-enable prefer-arrow-callback */

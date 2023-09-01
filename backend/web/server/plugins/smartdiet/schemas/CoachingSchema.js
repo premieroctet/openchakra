@@ -4,6 +4,7 @@ const {
   QUIZZ_TYPE_LOGBOOK,
   QUIZZ_TYPE_PATIENT,
   QUIZZ_TYPE_PROGRESS,
+  ROLE_CUSTOMER,
   ROLE_EXTERNAL_DIET
 } = require('../consts')
 const moment = require('moment')
@@ -90,6 +91,9 @@ CoachingSchema.virtual('all_logbooks', {
 
 
 CoachingSchema.virtual('remaining_credits').get(function() {
+  if (this.role!=ROLE_CUSTOMER) {
+    return 0
+  }
   return (this.user.offer?.coaching_credit-this.spent_credits) || 0
 })
 

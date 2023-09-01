@@ -734,7 +734,7 @@ declareVirtualField({model: 'coaching', field: 'appointments', instance: 'Array'
     options: {ref: 'appointment'}},
 })
 declareVirtualField({model: 'coaching', field: 'remaining_credits', instance: 'Number',
-  requires: 'user.offer.coaching_credit,spent_credits,user.company.offers.coaching_credit'}
+  requires: 'user.offer.coaching_credit,spent_credits,user.company.offers.coaching_credit,user.role'}
 )
 declareVirtualField({model: 'coaching', field: 'spent_credits', instance: 'Number', requires: 'appointments'})
 declareVirtualField({model: 'coaching', field: 'questions', instance: 'Array', multiple: true,
