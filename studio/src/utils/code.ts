@@ -223,7 +223,6 @@ const buildBlock = ({
       if (['Checkbox', 'IconCheck', 'Radio'].includes(childComponent.type) && hasParentType(childComponent, components, 'CheckboxGroup')) {
         propsContent += ` insideGroup `
       }
-
       if (isDynamicComponent(components, childComponent)) {
         propsContent += ` backend='/'`
           let tp = null
@@ -278,6 +277,10 @@ const buildBlock = ({
       const propsNames = Object.keys(childComponent.props).filter(propName => {
         if (childComponent.type === 'Icon') {
           return propName !== 'icon'
+        }
+        // No index on Accordion => Unfolded by defautl
+        if (childComponent.type === 'Accordion') {
+          return propName !== 'index'
         }
         return true
       })
