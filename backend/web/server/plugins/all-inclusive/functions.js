@@ -36,6 +36,7 @@ const {
   QUOTATION_STATUS,
   ROLES,
   ROLE_ALLE_ADMIN,
+  ROLE_ALLE_SUPER_ADMIN,
   ROLE_COMPANY_ADMIN,
   ROLE_COMPANY_BUYER,
   ROLE_TI,
@@ -78,7 +79,8 @@ const postCreate = ({model, params, data}) => {
           sendMissionAskedSummary(mission)
         }
         else {
-          sendTipiSearch({admin, mission:mission.toObject()})
+          User.find({role: {$in: [ROLE_ALLE_ADMIN, ROLE_ALLE_SUPER_ADMIN]}})
+            .then(admins => Promise.allSettled(admins.map(admin => sendTipiSearch({admin, mission}))))
         }
     })
   }
@@ -86,7 +88,7 @@ const postCreate = ({model, params, data}) => {
     const contact=data
     const attachment=contact.document ? {url: contact.document} : null
     // TODO check sendMail return
-    User.find({role: ROLE_ALLE_ADMIN})
+    User.find({role: {$in: [ROLE_ALLE_ADMIN, ROLE_ALLE_SUPER_ADMIN]}})
       .then(users => Promise.allSettled(users.map(u => sendAskContact({
         user:{email: u.email},
         fields:{...contact.toObject({virtuals: true}), urgent: contact.urgent ? 'Oui':'Non', status: CONTACT_STATUS[contact.status]},
