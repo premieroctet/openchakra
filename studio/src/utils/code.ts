@@ -196,11 +196,8 @@ const buildBlock = ({
         : capitalize(getWappType(childComponent.type))
       let propsContent = ''
 
-      // DIRTY: stateValue for RAdioGroup to get value
-      if ((['RadioGroup', 'Input', 'Select']).includes(childComponent.type)) {
-        propsContent += ` setComponentValue={setComponentValue} `
-      }
       propsContent += ` getComponentValue={getComponentValue} `
+      propsContent += ` setComponentValue={setComponentValue} `
 
       // Set component id
       propsContent += ` id='${childComponent.id}' `

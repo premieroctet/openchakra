@@ -13,6 +13,12 @@ const withDynamicText = Component => {
       props,
       props.dataSource,
     )
+
+    const val=props.getComponentValue(props.id)
+    if (val!=value) {
+      console.log(`Setting `,props.id, value)
+      props.setComponentValue(props.id, value)
+    }
     return (
       <Component
         {...lodash.omit(props, ['children'])}
