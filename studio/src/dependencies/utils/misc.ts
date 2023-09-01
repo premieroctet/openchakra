@@ -60,7 +60,7 @@ export const imageSrcSetPaths = (originalSrc:string, withDimension=true) => {
       if (filePathParts.length > 1) {
         const availableSizes = filePathParts[1].match(/\d+/g);
         const availableSizesQty = availableSizes?.length
-        const rootPath:string = process.env.NEXT_PUBLIC_S3_ROOTPATH || process.env.REACT_APP_S3_ROOTPATH || ''
+        const rootPath:string = process.env.NEXT_PUBLIC_S3_ROOTPATH || ''
         srcSet = availableSizes && availableSizes
           .map((size, index) => {
             const re = filePathParts.length > 0 ? filePathParts[0].split(rootPath) : []
