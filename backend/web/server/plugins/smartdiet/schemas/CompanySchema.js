@@ -37,6 +37,13 @@ const CompanySchema = new Schema(
     parent: {
       type: Schema.Types.ObjectId,
       ref: "company",
+    },
+    // Check (or not) wether the account must satisfy lead's integrity
+    // during registration
+    registration_integrity: {
+      type: Boolean,
+      default: false,
+      required: true,
     }
   },
   schemaOptions,

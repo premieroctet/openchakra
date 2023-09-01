@@ -8,12 +8,14 @@ const {
   EVENT_IND_CHALLENGE,
   GENDER,
   NO_CREDIT_AVAILABLE,
+  REGISTRATION_WARNING,
   ROLES,
   ROLE_CUSTOMER,
   ROLE_EXTERNAL_DIET,
   ROLE_RH,
   STATUS_FAMILY
 } = require('../consts')
+const { isEmailOk } = require('../../../../utils/sms')
 const { CREATED_AT_ATTRIBUTE } = require('../../../../utils/consts')
 
 const siret = require('siret')
@@ -46,6 +48,7 @@ const UserSchema = new Schema({
     type: String,
     required: [true, 'L\'email est obligatoire'],
     set: v => v.toLowerCase().trim(),
+    validate: [isEmailOk, "L'email est invalide"],
   },
   phone: {
     type: String,
@@ -85,6 +88,7 @@ const UserSchema = new Schema({
   },
   password: {
     type: String,
+    validate: [function(v){ !lodash.isEmpty(v)}, "Le mot de passe est obligatoire"],
     required: [true, 'Le mot de passe est obligatoire'],
     default: 'invalid',
   },
@@ -242,10 +246,21 @@ const UserSchema = new Schema({
     ref: 'target',
     required: true,
   }],
-
+  // In case of integrity check company, warning
+  registration_warning: {
+    type: String,
+    enum: Object.keys(REGISTRATION_WARNING),
+    required: false,
+}
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
+
+// Mail unicity
+UserSchema.index(
+  { email: 1},
+  { unique: true, message: 'Un compte avec ce mail existe déjà' });
+
 // Required for register validation only
 UserSchema.virtual('password2').get(function() {
 })

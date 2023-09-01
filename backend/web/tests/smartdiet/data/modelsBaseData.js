@@ -5,7 +5,7 @@ module.exports={
     name: 'S', size: 10, activity: Object.keys(COMPANY_ACTIVITY)[0],
   },
   USER_DATA:{firstname: 'S', lastname: 'S', dataTreatmentAccepted: true,
-    cguAccepted: true, pseudo: 'S', phone: '0', email: 's',
+    cguAccepted: true, pseudo: 'S', phone: '0675774324', email: 's@s.com',
   },
   COACHING_DATA: {},
   APPOINTMENT_DATA: {

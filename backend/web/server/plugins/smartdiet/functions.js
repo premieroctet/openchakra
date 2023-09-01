@@ -1,3 +1,5 @@
+const { REGISTRATION_WARNING } = require('./consts')
+
 const {
   ACTIVITY,
   ANSWER_STATUS,
@@ -25,6 +27,8 @@ const {
   QUIZZ_TYPE,
   QUIZZ_TYPE_LOGBOOK,
   QUIZZ_TYPE_PROGRESS,
+  REGISTRATION_WARNING_CODE_MISSING,
+  REGISTRATION_WARNING_LEAD_MISSING,
   ROLES,
   ROLE_CUSTOMER,
   ROLE_EXTERNAL_DIET,
@@ -492,7 +496,9 @@ USER_MODELS.forEach(m => {
       options: {ref: 'user'}
     },
   })
+  declareEnumField({model: m, field: 'registration_warning', enumValues: REGISTRATION_WARNING})
 })
+// End user/loggedUser
 
 declareEnumField({model: 'company', field: 'activity', enumValues: COMPANY_ACTIVITY})
 declareVirtualField({model: 'company', field: 'administrators', instance: 'Array', multiple: true,
@@ -1122,12 +1128,11 @@ const computeStatistics= ({id, fields}) => {
 /** Upsert PARTICULARS company */
 Company.findOneAndUpdate(
   {name: PARTICULAR_COMPANY_NAME},
-  {activity: COMPANY_ACTIVITY_SERVICES_AUX_ENTREPRISES},
+  {name: PARTICULAR_COMPANY_NAME, activity: COMPANY_ACTIVITY_SERVICES_AUX_ENTREPRISES},
   {upsert: true},
 )
   .then(() => console.log(`Particular company upserted`))
   .catch(err => console.error(`Particular company upsert error:${err}`))
-
 
 // Create missings coachings for any CUSTOMER
 User.find({role: ROLE_CUSTOMER}).populate('coachings')
@@ -1187,15 +1192,54 @@ const logbooksConsistency = coaching_id => {
 }
 
 const getRegisterCompany = props => {
-  if (!props.company_code || !props.email) { return Promise.remove(null)}
-  const code=new RegExp(`^\${props.company_code.replace(/[\t ]/g, '')}$`, 'i')
-  const mail=new RegExp(`^\${props.email.replace(/[\t ]/g, '').toLowerCase()}$`, 'i')
-  return Promise.all([Lead.findOne({email: mail}), Company.findOne({code})])
+  // No email : FUCK YOU
+  if (!props.email) { return Promise.resolve({})}
+  const NO_COMPANY_NAME='NEVER'.repeat(10000)
+  const code_re=props.company_code ? new RegExp(`^${props.company_code.replace(/[\t ]/g, '')}$`, 'i') : NO_COMPANY_NAME
+  const mail_re=new RegExp(`^${props.email.replace(/[\t ]/g, '').toLowerCase()}$`, 'i')
+  const result={}
+  return Promise.all([Lead.findOne({email: mail_re}), Company.findOne({code:code_re})])
     .then(([lead, company]) => {
-      if (!lead) {throw new ForbiddenError(`Non enregistré en tant que prospect`)}
-      if (!code.test(lead.company_code)) {throw new BadRequestError(`Le code entreprise est incorrect`)}
-      if (!company) {throw new NotFoundError(`L'entreprise de code ${props.company_code} est introuvable`)}
-      return company
+      // If company not found, get form lead company code if any
+      if (!company && lead?.company_code) {
+        return Promise.all([lead, Company.findOne({code: lead.company_code})])
+      }
+      return [lead, company]
+    })
+    .then(([lead, company]) => {
+      // Bad company code
+      if (props.company_code && !company) {
+        throw new NotFoundError(`Code entreprise ${props.company_code} inconnu`)
+      }
+      // lead code differs from company code
+      if (lead?.company_code && company?.code && (lead.company_code != company.code)) {
+        throw new BadRequestError(`Code entreprise incorrect, contactez un administrateur`)
+      }
+      // lead code differs from entered code
+      if (lead?.company_code && props.company_code && (lead.company_code != props.company_code)) {
+        throw new BadRequestError(`Code entreprise incorrect, contactez un administrateur`)
+      }
+      // Code & lead match
+      if (company?.code && lead?.code && (company.code==lead.code)) {
+        return ({...result, ...company=company._id})
+      }
+      // Code & lead match
+      if (!company && !lead) {
+        return ({...result})
+      }
+
+      if (company?.registration_integrity) {
+        if (lead && !props.company_code) {
+          return ({...result, registration_warning: REGISTRATION_WARNING_CODE_MISSING})
+        }
+        if (!lead && !!company) {
+          return ({...result, registration_warning: REGISTRATION_WARNING_LEAD_MISSING})
+        }
+      }
+      else {
+        return ({...result, company: company._id})
+      }
+      return result
     })
 }
 
