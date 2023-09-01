@@ -141,7 +141,9 @@ router.get('/s3getfiles', catchErrors(getFilesFromAWS), async(req, res) => {
   return req.body.files ? res.status(200).json(req.body.files) : res.status(444)
 })
 
-router.post('/s3deletefile', catchErrors(deleteFileFromAWS), (req, res) => {})
+router.post('/s3deletefile', catchErrors(deleteFileFromAWS), (req, res) => {
+  return req.body?.filedeleted ? res.status(200).json(req.body.filedeleted) : res.status(400)
+})
 
 router.get('/action-allowed/:action', passport.authenticate('cookie', {session: false}), (req, res) => {
   const {action}=req.params

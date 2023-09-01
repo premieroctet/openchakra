@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import axios from 'axios'
-import { uploadFile, listFiles, deleteFile } from '../../core/s3'
 import {
   Button,
   Portal,
@@ -100,10 +99,12 @@ const Medias = ({
   }
 
   const handleDelete = async (key: string) => {
-    await deleteFile(key)
-    .then(() => {
-      setImages(images.filter((img: s3media) => img.Key !== key))
-    })
+    const res = await axios
+      .post(
+        `${process.env?.NEXT_PUBLIC_PROJECT_TARGETDOMAIN}/myAlfred/api/studio/s3deletefile`, {filetodelete: key})
+      .then(() => {
+        setImages(images.filter((img: s3media) => img.Key !== key))
+      })
   }
 
   const fetchFiles = async () => {

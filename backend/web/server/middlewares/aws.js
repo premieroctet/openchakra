@@ -58,5 +58,65 @@ exports.getFilesFromAWS = async (req, res, next) => {
 
 exports.deleteFileFromAWS = async (req, res, next) => {
 
+  try {
+    // does this match with filename pattern
+    const filesToDelete = imageSrcSetPaths(req.body.filetodelete, false)
+  
+    const promiseDelete = filesToDelete.map(url => {
+      // Setting up S3 upload parameters
+      const params = {
+        Bucket: process.env.S3_BUCKET,
+        Key: url, // File name you want to delete as in S3
+      }
+      return s3.deleteObject(params)
+        .promise()
+        .then(res => {
+          return Promise.resolve(res)
+        })
+        .catch(err => {
+          return Promise.reject(err)
+        })
+    })
+  
+    await Promise.all(promiseDelete)
+
+    req.body.filedeleted = true
+  } catch(err) {
+    throw new Error('Error while deleting an image from AWS S3', err)
+  }
+
   next()
+}
+
+const imageSrcSetPaths = (originalSrc, withDimension=true) => {
+
+  /**
+   * src filename example containing sizes: 
+   * https://******.amazonaws.com/devtest/studio/wappizy_srcset:500*1000*1920.webp
+   * 
+   * example of filepath derived for a smaller image
+   * https://******.amazonaws.com/thumbnails/devtest/studio/wappizy_w:500.webp
+   * 
+   */
+  let srcSet = undefined
+
+  const filePathParts = originalSrc.split("_srcset:") || originalSrc.split(encodeURIComponent("_srcset:"));
+  const filenameextension = originalSrc.substring(originalSrc.lastIndexOf('.') + 1, originalSrc.length)
+      
+      if (filePathParts.length > 1) {
+        const availableSizes = filePathParts[1].match(/\d+/g);
+        const availableSizesQty = availableSizes?.length
+        const rootPath = process.env.S3_ROOTPATH || ''
+        srcSet = availableSizes && availableSizes
+          .map((size, index) => {
+            const re = filePathParts.length > 0 ? filePathParts[0].split(rootPath) : []
+            const newpath = (index + 1) === availableSizesQty 
+              ? `${originalSrc}${withDimension ? ` ${size}w` : ''}`
+              : `${re[0]}thumbnails/${rootPath}${re[1]}_w:${size}.${filenameextension}${withDimension ? ` ${size}w` : ''}`
+            
+            return newpath
+          })
+      }
+      
+  return srcSet
 }
