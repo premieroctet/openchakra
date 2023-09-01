@@ -11,7 +11,7 @@ const mongoose = require('mongoose')
 const passport = require('passport')
 const {handleUploadedFile} = require('../../middlewares/uploadFile')
 const {resizeImage} = require('../../middlewares/resizeImage')
-const {sendFilesToAWS} = require('../../middlewares/sendToCloud')
+const {sendFilesToAWS, getFilesFromAWS, deleteFileFromAWS} = require('../../middlewares/aws')
 const {catchErrors} = require('../../utils/handlers/errorHandlers')
 const {IMAGE_SIZE_MARKER} = require('../../../utils/consts')
 const {
@@ -128,14 +128,20 @@ router.get('/roles', (req, res) => {
   return res.json(ROLES)
 })
 
-router.post('/uploadFiles', handleUploadedFile, catchErrors(resizeImage), catchErrors(sendFilesToAWS), (req, res) => {
+router.post('/s3uploadfile', handleUploadedFile, catchErrors(resizeImage), catchErrors(sendFilesToAWS), (req, res) => {
   // filter original file to send 
-  const srcFiles = req?.body?.result && Array.isArray(req.body.result) &&  
+  const srcFiles = req?.body?.result && Array.isArray(req.body.result) && 
   req?.body?.result.filter(s3obj => s3obj.Location.includes(encodeURIComponent(IMAGE_SIZE_MARKER)))
   
   const srcFile = Array.isArray(srcFiles) ? srcFiles.at(0) : false
   return srcFile ? res.status(201).json(srcFile) : res.status(444).json(srcFile)
 })
+
+router.get('/s3getfiles', catchErrors(getFilesFromAWS), async(req, res) => {
+  return req.body.files ? res.status(200).json(req.body.files) : res.status(444)
+})
+
+router.post('/s3deletefile', catchErrors(deleteFileFromAWS), (req, res) => {})
 
 router.get('/action-allowed/:action', passport.authenticate('cookie', {session: false}), (req, res) => {
   const {action}=req.params

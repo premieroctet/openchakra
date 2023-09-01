@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import axios from 'axios'
-import config from '../../../env.json'
 import { uploadFile, listFiles, deleteFile } from '../../core/s3'
 import {
   Button,
-  Input,
   Portal,
   Popover,
   PopoverTrigger,
@@ -77,7 +75,7 @@ const Medias = ({
       formData.append('document', fileToUpload)
   
       const sendFile = await axios.post(
-        `${process.env?.NEXT_PUBLIC_PROJECT_TARGETDOMAIN}/myAlfred/api/studio/uploadFiles`, 
+        `${process.env?.NEXT_PUBLIC_PROJECT_TARGETDOMAIN}/myAlfred/api/studio/s3uploadfile`, 
         formData, 
         {
           headers: {
@@ -109,9 +107,8 @@ const Medias = ({
   }
 
   const fetchFiles = async () => {
-    await listFiles().then(nimages => {
-      setImages(nimages?.data?.Contents)
-    })
+    const res = await axios.get(`${process.env?.NEXT_PUBLIC_PROJECT_TARGETDOMAIN}/myAlfred/api/studio/s3getfiles`)
+    setImages(res?.data || [])
   }
 
   useEffect(() => {
@@ -220,7 +217,7 @@ const Medias = ({
                 X
               </button>
               {mediaWrapper({ src: imgObj.publicUrl })}
-              <p>{imgObj.Key}</p>
+              <p><a target='_blank' href={imgObj.publicUrl}>{imgObj.Key}</a></p>
               {setMediaSrc && (
                 <Button
                   colorScheme={'teal'}
@@ -303,7 +300,7 @@ const MediaCard = styled.div`
   background-color: rgb(243, 243, 243);
   padding: 1rem;
   row-gap: 1rem;
-  border-radius: 2rem;
+  border-radius: 1rem;
   box-shadow: 0px 10px 5px rgba(199, 199, 199, 0.9);
 
   iframe {

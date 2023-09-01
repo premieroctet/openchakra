@@ -4,7 +4,7 @@ import axios from 'axios'
 import styled from '@emotion/styled'
 import { ACTIONS } from '../utils/actions';
 
-const uploadUrl = `/myAlfred/api/studio/uploadFiles`
+const uploadUrl = `/myAlfred/api/studio/s3uploadfile`
 
 const uploadFileToS3 = async (file: File) => {
 
