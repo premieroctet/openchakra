@@ -107,6 +107,13 @@ const filterDataUser = ({model, data, id, user}) => {
     console.log(`I am RH`)
     data=data.filter(u => idEqual(id, user._id) || (user.company && idEqual(u.company?._id, user.company?._id)))
   }
+  // Filter leads for RH
+  if (model=='lead' && user?.role==ROLE_RH) {
+    return User.findById(user?.id).populate('company')
+      .then(user => {
+        return data=data.filter(d => d.company_code==user?.company?.code)
+      })
+  }
   data=lodash.sortBy(data, ['order', 'fullname', 'name', 'label'])
   return Promise.resolve(data)
 }
