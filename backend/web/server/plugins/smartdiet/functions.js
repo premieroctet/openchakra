@@ -107,7 +107,9 @@ const filterDataUser = ({model, data, id, user}) => {
     console.log(`I am RH`)
     data=data.filter(u => idEqual(id, user._id) || (user.company && idEqual(u.company?._id, user.company?._id)))
   }
-  data=lodash.sortBy(data, ['order', 'fullname', 'name', 'label'])
+  if (!['category', 'key'].includes(model)) {
+    data=lodash.sortBy(data, ['order', 'fullname', 'name', 'label'])
+  }
   return Promise.resolve(data)
 }
 
