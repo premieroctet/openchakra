@@ -31,6 +31,7 @@ const {
   SMARTAGENDA_PASSWORD,
   SMARTAGENDA_API_ID,
   SMARTAGENDA_API_KEY,
+  SMARTAGENDA_URL_PART,
 } = require('../mode')
 
 const SITE_MODES = {
@@ -74,6 +75,7 @@ const getSmartAgendaConfig = () => {
     SMARTAGENDA_PASSWORD,
     SMARTAGENDA_API_ID,
     SMARTAGENDA_API_KEY,
+    SMARTAGENDA_URL_PART,
   }
 }
 

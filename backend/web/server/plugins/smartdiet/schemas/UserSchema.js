@@ -251,7 +251,11 @@ const UserSchema = new Schema({
     type: String,
     enum: Object.keys(REGISTRATION_WARNING),
     required: false,
-}
+  },
+  smartagenda_id: {
+    type: String,
+    required: false,
+  },
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */

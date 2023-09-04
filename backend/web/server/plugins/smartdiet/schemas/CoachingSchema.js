@@ -112,6 +112,13 @@ CoachingSchema.virtual("_all_diets", {
 })
 
 // Returns available diets order by compatible reasons count
+/* TODO Criterion :
+- remove if no smartagenda
+- remove if no availabilities in the 15 next days
+- remove if my company not in diet's customer_companies
+- remove if coaching not in diet's activities
+- keep then sort by reasons
+*/
 CoachingSchema.virtual('available_diets', {localField:'tagada', foreignField:'tagada'}).get(function() {
   return lodash(this._all_diets)
   .orderBy(u => intersection(u.reasons, this.reasons), 'desc')

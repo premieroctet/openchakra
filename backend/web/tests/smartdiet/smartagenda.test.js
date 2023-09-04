@@ -1,7 +1,10 @@
 const {
+  createAccount,
   createAppointment,
   deleteAppointment,
+  getAccount,
   getAccounts,
+  getAgenda,
   getAgendas,
   getAllData,
   getCustomerAppointments,
@@ -10,6 +13,7 @@ const {
   getEvents,
   getToken,
   smartDietToMoment,
+  upsertAccount,
 } = require('../../server/plugins/agenda/smartagenda')
 const axios = require('axios')
 const { PERIOD } = require('../../server/plugins/smartdiet/consts')
@@ -47,8 +51,27 @@ describe('SmartAgenda test ', () => {
 
   it('must get agenda', async() => {
     const agendas=await getAgendas()
-    console.log(agendas.map(a => a.mail))
+    //console.log(agendas.map(a => a.mail))
+    console.log(agendas)
     expect(agendas.length).toBeGreaterThan(0)
+  })
+
+  it.only('must get WA agenda', async() => {
+    const agenda=await getAgenda('wilfrid.albersdorfer@wappizy.com')
+    console.log(agenda)
+    expect(agenda).toBeTruthy()
+  })
+
+  it('must upsert account', async() => {
+    //const mail=`tugudu${moment().valueOf()}@mail.com`
+    const mail=`tugudu@mail.com`
+    const firstname=`First`
+    const lastname=`Last`
+    const account=await getAccount(mail)
+    console.log(`Got account ${account}`)
+    const id=account || undefined
+    const createdAccount=await upsertAccount({id, email: mail, firstname, lastname}).catch(console.error)
+    console.log(createdAccount)
   })
 
   it.skip('must get all data', async() => {
@@ -89,6 +112,11 @@ describe('SmartAgenda test ', () => {
   it('must convert date', async() => {
     expect(() => smartDietToMoment('2023-01-09 30:23:15')).toThrow(/Incorrect moment/)
     expect(smartDietToMoment('2023-01-09 12:23:15').date()).toEqual(9)
+  })
+
+  it('must find diet', async() => {
+    const diet=await getAgenda('diet@test.com')
+    console.log(diet)
   })
 
 })

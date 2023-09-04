@@ -15,9 +15,10 @@ const crypto=require('crypto')
 const moment=require('moment')
 require('moment-round')
 
-const SMARTAGENDA_CONFIG={
+const CONFIG={
   ...config.getSmartAgendaConfig(),
-  SMARTAGENDA_SHA1_PASSWORD: crypto.createHash('sha1').update(config.getSmartAgendaConfig().SMARTAGENDA_PASSWORD).digest('hex'),
+  SMARTAGENDA_SHA1_PASSWORD: crypto.createHash('sha1')
+    .update(config.getSmartAgendaConfig().SMARTAGENDA_PASSWORD).digest('hex'),
 }
 
 const MAX_RESULTS=1000
@@ -27,11 +28,11 @@ const ALL_DATA=//['pdo_type_indispo']
 pdo_events_supprime,pdo_type_indispo,pdo_agenda_type_rdv,pdo_ressource,pdo_form,
 pdo_form_champ,pdo_form_type_rdv,pdo_surveillance,pdo_envoi,pdo_journal,pdo_groupement`.replace(/\n/g, '').split(',')
 
-const TOKEN_URL='https://www.smartagenda.fr/pro/smartdiet/api/token'
-const BASE_URL='https://www.smartagenda.fr/pro/smartdiet/api'
-const ACCOUNT_URL='https://www.smartagenda.fr/pro/smartdiet/api/pdo_client'
-const AGENDAS_URL='https://www.smartagenda.fr/pro/smartdiet/api/pdo_agenda'
-const EVENTS_URL='https://www.smartagenda.fr/pro/smartdiet/api/pdo_events'
+const TOKEN_URL=`https://www.smartagenda.fr/pro/${CONFIG.SMARTAGENDA_URL_PART}/api/token`
+const BASE_URL=`https://www.smartagenda.fr/pro/${CONFIG.SMARTAGENDA_URL_PART}/api`
+const ACCOUNT_URL=`https://www.smartagenda.fr/pro/${CONFIG.SMARTAGENDA_URL_PART}/api/pdo_client`
+const AGENDAS_URL=`https://www.smartagenda.fr/pro/${CONFIG.SMARTAGENDA_URL_PART}/api/pdo_agenda`
+const EVENTS_URL=`https://www.smartagenda.fr/pro/${CONFIG.SMARTAGENDA_URL_PART}/api/pdo_events`
 
 // returns moment rounded to the nearest 15 minutes
 const momentToQuarter = m => {
@@ -63,30 +64,74 @@ const smartDietToMoment = sm => {
 
 const getToken = () => {
   const params={
-    login: SMARTAGENDA_CONFIG.SMARTAGENDA_LOGIN,
-    pwd: SMARTAGENDA_CONFIG.SMARTAGENDA_SHA1_PASSWORD,
-    api_id: SMARTAGENDA_CONFIG.SMARTAGENDA_API_ID,
-    api_key: SMARTAGENDA_CONFIG.SMARTAGENDA_API_KEY,
+    login: CONFIG.SMARTAGENDA_LOGIN,
+    pwd: CONFIG.SMARTAGENDA_SHA1_PASSWORD,
+    api_id: CONFIG.SMARTAGENDA_API_ID,
+    api_key: CONFIG.SMARTAGENDA_API_KEY,
   }
   return axios.get(TOKEN_URL, {params:params})
     .then(res => res.data.token)
 }
 
-const getAccounts = (filter) => {
-  let filters=filter?.email ? {
+// Account: customer
+const getAccount = email => {
+  if (!email) {
+    throw new Error(`Mail is required`)
+  }
+  let filters= {
     'filter[0][field]': 'mail',
     'filter[0][comp]': 'LIKE',
-    'filter[0][value]': `%${filter.email}%`,
-  }: {}
+    'filter[0][value]': `%${email}%`,
+  }
   return getToken()
     .then(token => axios.get(ACCOUNT_URL, {params:{token, nbresults: MAX_RESULTS, ...filters}}))
+    .then(({data}) => data[0]?.id || null)
+}
+
+// Accounts: customers
+const getAccounts = () => {
+  return getToken()
+    .then(token => axios.get(ACCOUNT_URL, {params:{token, nbresults: MAX_RESULTS}}))
     .then(res => res.data)
 }
 
-// I.e les diets
-const getAgendas = () => {
+// Agenda: diet
+const getAgenda = email => {
+  if (!email) {
+    throw new Error(`Mail is required`)
+  }
+  let filters= {
+    'filter[0][field]': 'mail',
+    'filter[0][comp]': 'LIKE',
+    'filter[0][value]': `%${email}%`,
+  }
   return getToken()
-    .then(token => axios.get(AGENDAS_URL, {params:{token}}))
+    .then(token => axios.get(AGENDAS_URL, {params:{token, nbresults: MAX_RESULTS, ...filters}}))
+    .then(({data}) => {
+      return data[0]?.id || null
+    })
+}
+
+// Account: customer
+const upsertAccount = ({id, email, firstname, lastname}) => {
+  if (!email || !firstname || !lastname) {
+    throw new Error(`mail/firstname/lastname are required`)
+  }
+  const params={mail: email, prenom: firstname, nom: lastname}
+  return getToken()
+    .then(token =>
+      id ? axios.put(ACCOUNT_URL, params, {params:{id, token, nbresults: MAX_RESULTS}})
+      : axios.post(ACCOUNT_URL, params, {params:{token, nbresults: MAX_RESULTS}})
+    )
+    .then(({data}) => {
+      return data?.id || null
+    })
+}
+
+// Agendas: diets
+const getAgendas = email => {
+  return getToken()
+    .then(token => axios.get(AGENDAS_URL, {params:{token, nbresults: MAX_RESULTS}}))
     .then(res => res.data)
 }
 
@@ -164,7 +209,9 @@ const deleteAppointment = app_id => {
 
 module.exports={
   getToken,
+  getAccount,
   getAccounts,
+  getAgenda,
   getAgendas,
   getEvents,
   getAllData,
@@ -174,4 +221,5 @@ module.exports={
   deleteAppointment,
   getDietUnavailabilities,
   smartDietToMoment,
+  upsertAccount,
 }
