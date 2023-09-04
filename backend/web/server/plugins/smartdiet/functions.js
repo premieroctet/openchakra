@@ -1232,7 +1232,7 @@ const getRegisterCompany = props => {
         if (lead && !props.company_code) {
           return ({...result, registration_warning: REGISTRATION_WARNING_CODE_MISSING})
         }
-        if (!lead && !!company) {
+        if (!lead) {
           return ({...result, registration_warning: REGISTRATION_WARNING_LEAD_MISSING})
         }
       }
