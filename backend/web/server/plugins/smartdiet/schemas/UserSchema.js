@@ -206,14 +206,14 @@ const UserSchema = new Schema({
   },
   siret: {
     type: String,
-    set: v => v ? / /g.replace(v) : v,
-    validate: [v => siret.isSIRET(v)||siret.isSIREN(v) , 'Le siret/siren est invalide'],
+    set: v => v ? v.replace(/ /g, '') : v,
+    validate: [v => !v || (siret.isSIRET(v)||siret.isSIREN(v)) , 'Le siret/siren est invalide'],
     required: false,
   },
   adeli: {
     type: String,
-    set: v => v ? / /g.replace(v) : v,
-    validate: [v => luhn.validate(v), 'Le numéro ADELI est invalide'],
+    set: v => v ? v.replace(/ /g, '') : v,
+    validate: [v => !v || luhn.validate(v), 'Le numéro ADELI est invalide'],
     required: false,
   },
   customer_companies: [{

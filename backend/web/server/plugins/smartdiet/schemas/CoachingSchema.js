@@ -91,7 +91,7 @@ CoachingSchema.virtual('all_logbooks', {
 
 
 CoachingSchema.virtual('remaining_credits').get(function() {
-  if (this.user.role!=ROLE_CUSTOMER) {
+  if (this.user?.role!=ROLE_CUSTOMER) {
     return 0
   }
   return (this.user?.offer?.coaching_credit-this.spent_credits) || 0
