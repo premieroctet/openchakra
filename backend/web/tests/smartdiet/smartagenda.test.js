@@ -11,6 +11,7 @@ const {
   getDietAppointments,
   getDietUnavailabilities,
   getEvents,
+  getAvailabilities,
   getToken,
   smartDietToMoment,
   upsertAccount,
@@ -56,7 +57,7 @@ describe('SmartAgenda test ', () => {
     expect(agendas.length).toBeGreaterThan(0)
   })
 
-  it.only('must get WA agenda', async() => {
+  it('must get WA agenda', async() => {
     const agenda=await getAgenda('wilfrid.albersdorfer@wappizy.com')
     console.log(agenda)
     expect(agenda).toBeTruthy()
@@ -74,7 +75,7 @@ describe('SmartAgenda test ', () => {
     console.log(createdAccount)
   })
 
-  it.skip('must get all data', async() => {
+  it('must get all data', async() => {
     const events=await getAllData()
     console.log(JSON.stringify(events, null, 2))
     expect(events).toBeTruthy()
@@ -117,6 +118,16 @@ describe('SmartAgenda test ', () => {
   it('must find diet', async() => {
     const diet=await getAgenda('diet@test.com')
     console.log(diet)
+  })
+
+  it.only('must get availabilities', async() => {
+    const diet=await getAgenda('solene.vanuxem+dietext@wappizy.com')
+    console.log(diet)
+    console.time('getAvailabilities')
+    const avails=await getAvailabilities(diet).catch(console.error)
+    console.timeEnd('getAvailabilities')
+    const today_avails=avails.filter(a => a.dj=="2023-09-06")
+    console.log(JSON.stringify(avails,null,2))
   })
 
 })

@@ -12,6 +12,7 @@ INFOS:
 const axios = require('axios')
 const config = require('../../../config/config')
 const crypto=require('crypto')
+const lodash=require('lodash')
 const moment=require('moment')
 require('moment-round')
 
@@ -33,6 +34,8 @@ const BASE_URL=`https://www.smartagenda.fr/pro/${CONFIG.SMARTAGENDA_URL_PART}/ap
 const ACCOUNT_URL=`https://www.smartagenda.fr/pro/${CONFIG.SMARTAGENDA_URL_PART}/api/pdo_client`
 const AGENDAS_URL=`https://www.smartagenda.fr/pro/${CONFIG.SMARTAGENDA_URL_PART}/api/pdo_agenda`
 const EVENTS_URL=`https://www.smartagenda.fr/pro/${CONFIG.SMARTAGENDA_URL_PART}/api/pdo_events`
+const APPOINTMENT_TYPE_URL=`https://www.smartagenda.fr/pro/${CONFIG.SMARTAGENDA_URL_PART}/api/pdo_type_rdv`
+const AVAILABILITIES_URL=`https://www.smartagenda.fr/pro/${CONFIG.SMARTAGENDA_URL_PART}/api/service/getAvailabilities`
 
 // returns moment rounded to the nearest 15 minutes
 const momentToQuarter = m => {
@@ -207,6 +210,34 @@ const deleteAppointment = app_id => {
     .then(res => res.data)
 }
 
+// c$Types rendez-vousAgendas: diets
+const getAppointmentTypes = () => {
+  return getToken()
+    .then(token => axios.get(APPOINTMENT_TYPE_URL, {params:{token, nbresults: MAX_RESULTS}}))
+    .then(res => res.data)
+}
+
+const getAvailabilities = diet_id => {
+  console.log(`Availabilities for ${diet_id}`)
+  const params={pdo_agenda_id: diet_id, pdo_type_rdv_id: 16, date_a_partir_de: '2023-09-01'}
+  return getToken()
+    .then(token =>
+      Promise.all([
+		axios.post(AVAILABILITIES_URL, params, {params:{token, nbresults: MAX_RESULTS}}),
+		getAppointmentTypes(),
+      ])
+    )
+    .then(([{data}, app_types]) => {
+      return lodash(data).map(d => d.det.map(detail => ({date: d.dj, duration: app_types.find(at => at.id==detail.idpr).duree, ...detail}))).flatten()
+    })
+    .then(data => data.map(d => lodash.pick(d, ['date', 'duration', 'idp'])))
+    .then(data => data.map(d => {
+      const start_date=moment(`${d.date}T${d.idp}`)
+      const end_date=moment(start_date).add(d.duration, 'minutes')
+      return ({start_date, end_date})
+    }))
+}
+
 module.exports={
   getToken,
   getAccount,
@@ -222,4 +253,5 @@ module.exports={
   getDietUnavailabilities,
   smartDietToMoment,
   upsertAccount,
+  getAvailabilities,
 }
