@@ -47,8 +47,8 @@ const UserSchema = new Schema({
   email: {
     type: String,
     required: [true, 'L\'email est obligatoire'],
-    set: v => v.toLowerCase().trim(),
-    validate: [isEmailOk, "L'email est invalide"],
+    set: v => v ? v.toLowerCase().trim() : v,
+    validate: [function(v) {v && isEmailOk(v)}, "L'email est invalide"],
   },
   phone: {
     type: String,
@@ -228,11 +228,11 @@ const UserSchema = new Schema({
   activities: [{
     type: String,
     enum: Object.keys(DIET_ACTIVITIES),
-    required: true,
+    required: false,
   }],
   registration_status: {
     type: String,
-    enum: Object.keys(DIET_REGISTRATION_STATUS),
+    enum: [null, ...Object.keys(DIET_REGISTRATION_STATUS)],
     default: function() {return this.role==ROLE_EXTERNAL_DIET ? DIET_REGISTRATION_STATUS_TO_QUALIFY : undefined},
     required: [function() {return this.role==ROLE_EXTERNAL_DIET}, 'Le statut de diet externe est obligatoire'],
   },

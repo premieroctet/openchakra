@@ -1,5 +1,3 @@
-const { REGISTRATION_WARNING } = require('./consts')
-
 const {
   ACTIVITY,
   ANSWER_STATUS,
@@ -10,6 +8,7 @@ const {
   COMPANY_ACTIVITY_SERVICES_AUX_ENTREPRISES,
   CONTENTS_TYPE,
   DAYS,
+  DIET_ACTIVITIES,
   DIET_REGISTRATION_STATUS,
   ECOSCORE,
   EVENT_TYPE,
@@ -27,6 +26,7 @@ const {
   QUIZZ_TYPE,
   QUIZZ_TYPE_LOGBOOK,
   QUIZZ_TYPE_PROGRESS,
+  REGISTRATION_WARNING,
   REGISTRATION_WARNING_CODE_MISSING,
   REGISTRATION_WARNING_LEAD_MISSING,
   ROLES,
@@ -497,6 +497,7 @@ USER_MODELS.forEach(m => {
     },
   })
   declareEnumField({model: m, field: 'registration_warning', enumValues: REGISTRATION_WARNING})
+  declareEnumField({model: m, field: 'activities', enumValues: DIET_ACTIVITIES})
 })
 // End user/loggedUser
 
