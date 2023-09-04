@@ -1227,9 +1227,9 @@ const getRegisterCompany = props => {
       if (lead?.company_code && props.company_code && (lead.company_code != props.company_code)) {
         throw new BadRequestError(`Code entreprise incorrect, contactez un administrateur`)
       }
-      // Code & lead match
-      if (company?.code && lead?.code && (company.code==lead.code)) {
-        return ({...result, ...company=company._id})
+      if (company?.code && lead?.company_code && (company.code==lead.company_code)) {
+        // Code & lead match
+        return ({...result, company:company._id})
       }
       // Code & lead match
       if (!company && !lead) {
