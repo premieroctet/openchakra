@@ -232,7 +232,7 @@ const UserSchema = new Schema({
   }],
   registration_status: {
     type: String,
-    enum: [null, ...Object.keys(DIET_REGISTRATION_STATUS)],
+    enum: Object.keys(DIET_REGISTRATION_STATUS),
     default: function() {return this.role==ROLE_EXTERNAL_DIET ? DIET_REGISTRATION_STATUS_TO_QUALIFY : undefined},
     required: [function() {return this.role==ROLE_EXTERNAL_DIET}, 'Le statut de diet externe est obligatoire'],
   },
