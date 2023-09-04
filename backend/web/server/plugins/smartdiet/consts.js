@@ -259,6 +259,7 @@ const UNIT_NOISETTE='UNIT_NOISETTE'
 const UNIT_POIGNEE='UNIT_POIGNEE'
 const UNIT_MIGNONETTE='UNIT_MIGNONETTE'
 const UNIT_SACHET='UNIT_SACHET'
+const UNIT_CUBE='UNIT_CUBE'
 const UNIT_UNITE='UNIT_UNITE'
 
 const UNIT={
@@ -280,6 +281,7 @@ const UNIT={
  [UNIT_POIGNEE]:'poignée',
  [UNIT_MIGNONETTE]:'mignonette',
  [UNIT_SACHET]:'sachet',
+ [UNIT_CUBE]:'cube',
  [UNIT_UNITE]:'',
 }
 
