@@ -16,7 +16,6 @@ const withDynamicText = Component => {
 
     const val=props.getComponentValue(props.id)
     if (val!=value) {
-      console.log(`Setting `,props.id, value)
       props.setComponentValue(props.id, value)
     }
     return (
