@@ -33,7 +33,11 @@ const QuizzSchema = new Schema({
   default: {
     type: Boolean,
     default: false,
-  }
+  },
+  origin_id: {
+    type: Number,
+    required: false,
+  },
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */

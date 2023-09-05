@@ -8,7 +8,7 @@ const Schema = mongoose.Schema
 const ItemSchema = new Schema({
   text: {
     type: String,
-    required: [true, 'Le texte est obligatoire'],
+    required: [true, 'Le texte de la réponse est obligatoire'],
   },
   // If item belongs to quizz question's available answers
   quizzQuestion: {
