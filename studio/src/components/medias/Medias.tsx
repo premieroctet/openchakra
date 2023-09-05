@@ -44,7 +44,7 @@ const Medias = ({
   setMediaSrc: any
   mediaPanelClose: any
 }) => {
-  const autorizedImagesExtensions = ['jpg', 'jpeg', 'png', 'svg', 'gif', 'webp']
+  const autorizedImagesExtensions = ['jpg', 'jpeg', 'png', 'svg', 'gif', 'webp', 'avif']
   const autorizedVideosExtensions = ['webm', 'mp4']
   const autorizedFilesExtensions = ['pdf', 'txt', 'doc', 'docx', 'xls', 'xlsx']
   const autorizedExtensions = [
