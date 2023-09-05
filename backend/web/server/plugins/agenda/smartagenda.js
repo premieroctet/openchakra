@@ -230,7 +230,7 @@ const getAvailabilities = ({diet_id, from, to, appointment_type}) => {
   if (!(diet_id && from && to && appointment_type)) {
     throw new Error(`diet_id/from/to/appointment_type are required`)
   }
-  const params={pdo_agenda_id: diet_id, pdo_type_rdv_id: appointment_type }
+  const params={pdo_agenda_id: diet_id, pdo_type_rdv_id: appointment_type, date_a_partir_de: from.format('YYYY-MM-DD') }
   return getToken()
     .then(token =>
       Promise.all([
@@ -272,8 +272,9 @@ cron.schedule('0 * * * * *', () => {
   console.log('Syncing availabilities from smartagenda')
   const start=moment().add(-7, 'days')
   const end=moment().add(7, 'days')
-  return Promise.all([Range.deleteMany({}), User.find({role: ROLE_EXTERNAL_DIET, smartagenda_id: {$ne: null}}), AppointmentType.find()])
-    .then(([_, diets, app_types]) => {
+  return Range.deleteMany()
+  .then(() => Promise.all([User.find({role: ROLE_EXTERNAL_DIET, smartagenda_id: {$ne: null}}), AppointmentType.find()]))
+    .then(([diets, app_types]) => {
       const combinations=lodash.product(diets, app_types)
       return Promise.allSettled(combinations.map(([diet, app_type]) => {
         return getAvailabilities({diet_id: diet.smartagenda_id, from: start, to: end, appointment_type: app_type.smartagenda_id})
