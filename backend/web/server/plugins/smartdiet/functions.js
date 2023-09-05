@@ -470,7 +470,8 @@ USER_MODELS.forEach(m => {
   })
   declareVirtualField({model: m, field: 'latest_coachings', instance: 'Array',
   relies_on: 'coachings',
-  requires: 'coachings.all_logbooks.logbook.quizz.questions,coachings.all_logbooks.logbook.questions,coachings.all_logbooks.logbook.questions.quizz_question,coachings.all_logbooks.logbook.questions.multiple_answers',
+  requires: 'coachings.all_logbooks.logbook.quizz.questions,coachings.all_logbooks.logbook.questions,coachings.all_logbooks.logbook.questions.quizz_question,coachings.all_logbooks.logbook.questions.multiple_answers,\
+coachings.diet.availability_ranges.appointment_type',
     multiple: true,
     caster: {
       instance: 'ObjectID',
@@ -483,7 +484,7 @@ USER_MODELS.forEach(m => {
       options: {ref: 'quizzQuestion'}},
   })
   declareVirtualField({model: m, field: 'diet_availabilities', instance: 'Array',
-    requires: 'role',
+    requires: 'role,availability_ranges.appointment_type',
     multiple: true,
     caster: {
       instance: 'ObjectID',
@@ -514,6 +515,13 @@ USER_MODELS.forEach(m => {
   })
   declareEnumField({model: m, field: 'registration_warning', enumValues: REGISTRATION_WARNING})
   declareEnumField({model: m, field: 'activities', enumValues: DIET_ACTIVITIES})
+  declareVirtualField({model: m, field: 'availability_ranges', instance: 'Array',
+    multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'range'}
+    },
+  })
 })
 // End user/loggedUser
 
@@ -872,14 +880,15 @@ declareVirtualField({model: 'userQuizzQuestion', field:'answer_message', instanc
 
 declareEnumField({model: 'userQuizz', field: 'type', enumValues: QUIZZ_TYPE})
 
+declareVirtualField({model: 'range', field:'day', instance: 'Date',requires: 'start_date'})
 declareVirtualField({model: 'range', field:'range_str', instance: 'String',
-  requires: 'day,start_time,duration',
+  requires: 'start_date,end_date',
 })
-declareVirtualField({model: 'range', field:'start_date', instance: 'String',
-  requires: 'day,start_time',
+declareVirtualField({model: 'range', field:'duration', instance: 'String',
+  requires: 'appointment_type',
 })
 declareVirtualField({model: 'range', field:'end_date', instance: 'String',
-  requires: 'day,start_time,duration',
+  requires: 'start_date,duration',
 
 })
 const getDataLiked = (user, params, data) => {

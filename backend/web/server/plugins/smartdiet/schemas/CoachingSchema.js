@@ -121,6 +121,7 @@ CoachingSchema.virtual("_all_diets", {
 */
 CoachingSchema.virtual('available_diets', {localField:'tagada', foreignField:'tagada'}).get(function() {
   return lodash(this._all_diets)
+  .filter(d => d.smartagenda_id)
   .orderBy(u => intersection(u.reasons, this.reasons), 'desc')
   .value()
 })

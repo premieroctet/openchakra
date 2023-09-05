@@ -9,11 +9,15 @@ INFOS:
 - pdo_events.apilnk_equipe_id: 'pdo_agenda/diet_id'
 - appointments start & end dates must be rounded at 1/4h
 */
+const Range = require('../../models/Range')
+const User = require('../../models/User')
+const { ROLE_EXTERNAL_DIET } = require('../smartdiet/consts')
 const AppointmentType = require('../../models/AppointmentType')
 const axios = require('axios')
 const config = require('../../../config/config')
 const crypto=require('crypto')
 const lodash=require('lodash')
+require('lodash.product')
 const moment=require('moment')
 require('moment-round')
 const cron=require('node-cron')
@@ -222,11 +226,11 @@ const getAppointmentTypes = () => {
     })
 }
 
-const getAvailabilities = ({diet_id, from, to}) => {
-  if (!(diet_id && from && to)) {
-    throw new Error(`diet_id/from/to are required`)
+const getAvailabilities = ({diet_id, from, to, appointment_type}) => {
+  if (!(diet_id && from && to && appointment_type)) {
+    throw new Error(`diet_id/from/to/appointment_type are required`)
   }
-  const params={pdo_agenda_id: diet_id, pdo_type_rdv_id: 16}
+  const params={pdo_agenda_id: diet_id, pdo_type_rdv_id: appointment_type }
   return getToken()
     .then(token =>
       Promise.all([
@@ -235,31 +239,56 @@ const getAvailabilities = ({diet_id, from, to}) => {
       ])
     )
     .then(([{data}, app_types]) => {
-      console.log(data.map(d => d.dj))
       data=data.filter(d => {
         const dt=moment(d.dj)
         return from.isBefore(dt) && to.isAfter(dt)
       })
-      return lodash(data).map(d => d.det.map(detail => ({date: d.dj, duration: app_types.find(at => at.id==detail.idpr).duree, ...detail}))).flatten()
+      return lodash.flatten(data.map(d => d.det.map(detail => ({date: d.dj, duration: app_types.find(at => at.id==detail.idpr).duree, ...detail}))))
     })
-    .then(data => data.map(d => lodash.pick(d, ['date', 'duration', 'idp'])))
+    .then(data => data.map(d => lodash.pick(d, ['date', 'duration', 'idp', 'idpr'])))
     .then(data => data.map(d => {
       const start_date=moment(`${d.date}T${d.idp}`)
       const end_date=moment(start_date).add(d.duration, 'minutes')
-      return ({start_date, end_date})
+      return ({start_date, end_date, idpr: d.idpr})
     }))
 }
 
-// Synchronize appointment types every hour
-cron.schedule('0 0 * * * *', () => {
+// Synchronize appointment types every minute
+cron.schedule('0 * * * * *', () => {
+  console.log('Syncing appointment types from smartagenda')
   return Promise.all([getAppointmentTypes(), AppointmentType.find()])
     .then(([smartagenda_types, local_types]) => {
+      smartagenda_types=smartagenda_types.filter(s => s.id>0)
       const missing=lodash.differenceWith(smartagenda_types, local_types, (sm, loc) => sm.id==loc.smartagenda_id)
       console.log(`Syncing ${missing.length} smartagenda appointment types`)
       const promises=missing.slice(0,5).map(sm => AppointmentType.create({title:sm.nom, duration: sm.duree, smartagenda_id: sm.id}))
       return Promise.allSettled(promises)
     })
     .then(res => res.length && console.log(res))
+})
+
+// Synchronize availabilities every minute
+cron.schedule('0 * * * * *', () => {
+  console.log('Syncing availabilities from smartagenda')
+  const start=moment().add(-7, 'days')
+  const end=moment().add(7, 'days')
+  return Promise.all([Range.deleteMany({}), User.find({role: ROLE_EXTERNAL_DIET, smartagenda_id: {$ne: null}}), AppointmentType.find()])
+    .then(([_, diets, app_types]) => {
+      const combinations=lodash.product(diets, app_types)
+      return Promise.allSettled(combinations.map(([diet, app_type]) => {
+        return getAvailabilities({diet_id: diet.smartagenda_id, from: start, to: end, appointment_type: app_type.smartagenda_id})
+          .then(avails => {
+            return Promise.all(avails.map(avail => {
+              return Range.create({
+                user: diet._id, appointment_type: app_type._id, start_date: avail.start_date
+              })
+            }))
+          })
+      }))
+    })
+    .then(() => Range.countDocuments())
+    .then(res => console.log(`Created ${res} availability ranges`))
+    .catch(console.error)
 })
 
 

@@ -562,27 +562,24 @@ UserSchema.virtual("diet_questions", {
   foreignField: "diet_private", // is equal to foreignField
 })
 
+UserSchema.virtual("availability_ranges", {
+  ref: "range", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "user", // is equal to foreignField
+})
+
 // Returned availabilities/ranges are not store in database
 UserSchema.virtual('diet_availabilities', {localField:'tagada', foreignField:'tagada'}).get(function() {
   if (this.role!=ROLE_EXTERNAL_DIET) {
     return []
   }
-  //Get unavailabilities from Smartagenda
-  const generateRanges = day => {
-    const res=[]
-    let hour=DIET_EXT_HOUR_RANGE.min
-    while (hour<DIET_EXT_HOUR_RANGE.max) {
-      res.push(mongoose.models.range({day, start_time:hour, duration: 0.5}))
-      hour+=1
-    }
-    return res
-  }
+
   const availabilities=lodash.range(7).map(day_idx => {
     const day=moment().add(day_idx, 'day')
-    const ranges=DIET_EXT_OFFDAYS.includes(day.isoWeekday()) ? []: generateRanges(day)
+    const ranges=this.availability_ranges?.filter(r => day.isSame(r.start_date, 'day')) || []
     return ({
-      date: day.startOf('day'),
-      ranges,
+      date: day,
+      ranges: lodash.orderBy(ranges, 'start_date'),
     })
   })
   return availabilities
