@@ -130,6 +130,7 @@ router.get('/roles', (req, res) => {
 
 router.post('/s3uploadfile', handleUploadedFile, catchErrors(resizeImage), catchErrors(sendFilesToAWS), (req, res) => {
   // filter original file to send 
+  // TODO : actuellement, ça prend pas autre chose que des images transformées
   const srcFiles = req?.body?.result && Array.isArray(req.body.result) && 
   req?.body?.result.filter(s3obj => s3obj.Location.includes(encodeURIComponent(IMAGE_SIZE_MARKER)))
   

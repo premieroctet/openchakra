@@ -1,3 +1,4 @@
+const THUMBNAILS_DIR = 'thumbnails'
 
 export function isJsonString(str: string) {
   try {
@@ -60,15 +61,19 @@ export const imageSrcSetPaths = (originalSrc:string, withDimension=true) => {
       if (filePathParts.length > 1) {
         const availableSizes = filePathParts[1].match(/\d+/g);
         const availableSizesQty = availableSizes?.length
-        const rootPath:string = process.env.NEXT_PUBLIC_S3_ROOTPATH || ''
         srcSet = availableSizes && availableSizes
           .map((size, index) => {
-            const re = filePathParts.length > 0 ? filePathParts[0].split(rootPath) : []
-            const newpath = (index + 1) === availableSizesQty 
-              ? `${originalSrc}${withDimension ? ` ${size}w` : ''}`
-              : `${re[0]}thumbnails/${rootPath}${re[1]}_w:${size}.${filenameextension}${withDimension ? ` ${size}w` : ''}`
-            
-            return newpath
+            if ((index + 1) === availableSizesQty) {
+              return `${originalSrc}${withDimension ? ` ${size}w` : ''}`
+            } else {
+              const shortFilepathParts = filePathParts[0].split('/')
+              // index to add thumbnails folder after https://******.amazonaws.com
+              const indexToPushThumbnails = 3
+              const thumbnailsFilepath = shortFilepathParts
+                .slice(0, indexToPushThumbnails)
+                .concat(THUMBNAILS_DIR, shortFilepathParts.slice(indexToPushThumbnails));
+              return `${thumbnailsFilepath.join('/')}_w:${size}.${filenameextension}${withDimension ? ` ${size}w` : ''}`
+            }
           })
       }
       

@@ -1,4 +1,5 @@
 const AWS = require('aws-sdk')
+const {THUMBNAILS_DIR} = require('../../../web/utils/consts')
 
 AWS.config.update({
   accessKeyId: process.env?.S3_ID,
@@ -40,7 +41,7 @@ exports.getFilesFromAWS = async (req, res, next) => {
   try {
     const data = await s3.listObjectsV2({
         Bucket: process.env.S3_BUCKET,
-        Prefix: `${process.env.S3_ROOTPATH || 'pictures'}`,
+        Prefix: `${process.env.S3_STUDIO_ROOTPATH || 'pictures'}`,
       })
       .promise()
 
@@ -78,7 +79,7 @@ exports.deleteFileFromAWS = async (req, res, next) => {
         })
     })
   
-    await Promise.all(promiseDelete)
+    await Promise.allSettled(promiseDelete)
 
     req.body.filedeleted = true
   } catch(err) {
@@ -103,20 +104,26 @@ const imageSrcSetPaths = (originalSrc, withDimension=true) => {
   const filePathParts = originalSrc.split("_srcset:") || originalSrc.split(encodeURIComponent("_srcset:"));
   const filenameextension = originalSrc.substring(originalSrc.lastIndexOf('.') + 1, originalSrc.length)
       
-      if (filePathParts.length > 1) {
-        const availableSizes = filePathParts[1].match(/\d+/g);
-        const availableSizesQty = availableSizes?.length
-        const rootPath = process.env.S3_ROOTPATH || ''
-        srcSet = availableSizes && availableSizes
-          .map((size, index) => {
-            const re = filePathParts.length > 0 ? filePathParts[0].split(rootPath) : []
-            const newpath = (index + 1) === availableSizesQty 
-              ? `${originalSrc}${withDimension ? ` ${size}w` : ''}`
-              : `${re[0]}thumbnails/${rootPath}${re[1]}_w:${size}.${filenameextension}${withDimension ? ` ${size}w` : ''}`
-            
-            return newpath
-          })
-      }
+  if (filePathParts.length > 1) {
+    const availableSizes = filePathParts[1].match(/\d+/g);
+    const availableSizesQty = availableSizes?.length
+    srcSet = availableSizes && availableSizes
+      .map((size, index) => {
+        if ((index + 1) === availableSizesQty) {
+          return `${originalSrc}${withDimension ? ` ${size}w` : ''}`
+        } else {
+          const shortFilepathParts = filePathParts[0].split('/')
+          // index to add thumbnails folder after https://******.amazonaws.com
+          const indexToPushThumbnails = 3
+          const thumbnailsFilepath = shortFilepathParts
+            .slice(0, indexToPushThumbnails)
+            .concat(THUMBNAILS_DIR, shortFilepathParts.slice(indexToPushThumbnails));
+          return `${thumbnailsFilepath.join('/')}_w:${size}.${filenameextension}${withDimension ? ` ${size}w` : ''}`
+        }
+      })
+  } else {
+    srcSet = [originalSrc]
+  }
       
   return srcSet
 }

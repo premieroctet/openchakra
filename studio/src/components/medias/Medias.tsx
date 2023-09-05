@@ -72,6 +72,7 @@ const Medias = ({
     if (fileToUpload) {
       const formData = new FormData();
       formData.append('document', fileToUpload)
+      formData.append('fromstudio', 'true')
   
       const sendFile = await axios.post(
         `${process.env?.NEXT_PUBLIC_PROJECT_TARGETDOMAIN}/myAlfred/api/studio/s3uploadfile`, 

@@ -1,14 +1,13 @@
 const sharp = require('sharp')
-const {IMAGES_WIDTHS_FOR_RESIZE, IMAGE_SIZE_MARKER} = require('../../utils/consts')
+const {IMAGES_WIDTHS_FOR_RESIZE, IMAGE_SIZE_MARKER, THUMBNAILS_DIR} = require('../../utils/consts')
 const {sanitizeFilename, generateUUID} = require('../../utils/functions')
-const {S3_ROOTPATH} = require('../../mode')
 
-
-const THUMBNAILS_DIR = 'thumbnails'
 const IMAGE_SIZE_SEPARATOR = '_'
 
 exports.resizeImage = async(req, res, next) => {
   if (!req.file) { return next() }
+
+  const isDocumentFromStudio = Boolean(req.body.fromstudio)
  
   req.body.documents = []
   const RETAINED_QUALITY = 100
@@ -46,9 +45,10 @@ exports.resizeImage = async(req, res, next) => {
 
   const filemimetype = req.file.mimetype
   const isImage = Object.keys(IMAGE_SETTINGS).includes(filemimetype)
-
+  
   // filename is prefixed with uuid, and sanitized
   const uploadedfilename = `${generateUUID()}_${sanitizeFilename(req.file.originalname)}`
+  const rootPath = isDocumentFromStudio ? process.env?.S3_STUDIO_ROOTPATH : process.env?.S3_PROD_ROOTPATH
   const uploadedfilenamebase = uploadedfilename.substring(0, uploadedfilename.lastIndexOf('.'))
  
   if (isImage) {
@@ -81,10 +81,11 @@ exports.resizeImage = async(req, res, next) => {
           .toBuffer()
           .catch(err => reject(err))
 
+
         const imageData = {
           filename: originalWidth === width // spread availables image dimensions on original file. Others in thumbnails dir
-            ? `${S3_ROOTPATH}/${uploadedfilenamebase}${IMAGE_SIZE_MARKER}${availableSizes.join(IMAGE_SIZE_SEPARATOR)}.${IMAGE_SETTINGS[filemimetype].extension}`
-            : `${THUMBNAILS_DIR}/${S3_ROOTPATH}/${uploadedfilenamebase}_w:${width}.${IMAGE_SETTINGS[filemimetype].extension}`,
+            ? `${rootPath}/${uploadedfilenamebase}${IMAGE_SIZE_MARKER}${availableSizes.join(IMAGE_SIZE_SEPARATOR)}.${IMAGE_SETTINGS[filemimetype].extension}`
+            : `${THUMBNAILS_DIR}/${rootPath}/${uploadedfilenamebase}_w:${width}.${IMAGE_SETTINGS[filemimetype].extension}`,
           mimetype: IMAGE_SETTINGS[filemimetype].outputMime,
           buffer: image,
         }
@@ -99,7 +100,7 @@ exports.resizeImage = async(req, res, next) => {
   }
   else {
     req.body.documents.push({
-      filename: `${S3_ROOTPATH}/${uploadedfilename}`,
+      filename: `${rootPath}/${uploadedfilename}`,
       mimetype: req.file.mimetype,
       buffer: req.file.buffer,
     })
