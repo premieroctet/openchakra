@@ -9,12 +9,14 @@ INFOS:
 - pdo_events.apilnk_equipe_id: 'pdo_agenda/diet_id'
 - appointments start & end dates must be rounded at 1/4h
 */
+const AppointmentType = require('../../models/AppointmentType')
 const axios = require('axios')
 const config = require('../../../config/config')
 const crypto=require('crypto')
 const lodash=require('lodash')
 const moment=require('moment')
 require('moment-round')
+const cron=require('node-cron')
 
 const CONFIG={
   ...config.getSmartAgendaConfig(),
@@ -248,6 +250,19 @@ const getAvailabilities = ({diet_id, from, to}) => {
     }))
 }
 
+// Synchronize appointment types every hour
+cron.schedule('0 0 * * * *', () => {
+  return Promise.all([getAppointmentTypes(), AppointmentType.find()])
+    .then(([smartagenda_types, local_types]) => {
+      const missing=lodash.differenceWith(smartagenda_types, local_types, (sm, loc) => sm.id==loc.smartagenda_id)
+      console.log(`Syncing ${missing.length} smartagenda appointment types`)
+      const promises=missing.slice(0,5).map(sm => AppointmentType.create({title:sm.nom, duration: sm.duree, smartagenda_id: sm.id}))
+      return Promise.allSettled(promises)
+    })
+    .then(res => res.length && console.log(res))
+})
+
+
 module.exports={
   getToken,
   getAccount,
@@ -264,4 +279,5 @@ module.exports={
   smartDietToMoment,
   upsertAccount,
   getAvailabilities,
+  getAppointmentTypes,
 }

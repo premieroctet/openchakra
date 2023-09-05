@@ -44,7 +44,13 @@ const CompanySchema = new Schema(
       type: Boolean,
       default: false,
       required: true,
-    }
+    },
+    // Allowed appointment types
+    appointment_types: [{
+      type: Schema.Types.ObjectId,
+      ref: 'appointmentType',
+      required: true,
+    }],
   },
   schemaOptions,
 )

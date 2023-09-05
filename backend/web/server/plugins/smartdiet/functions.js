@@ -1,10 +1,12 @@
 const {
   getAccount,
   getAgenda,
+  getAppointmentTypes,
   getDietAvailabilities,
   getDietUnavailabilities,
   upsertAccount
 } = require('../agenda/smartagenda')
+const AppointmentType = require('../../models/AppointmentType')
 const {
   ACTIVITY,
   ANSWER_STATUS,
