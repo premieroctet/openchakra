@@ -45,18 +45,11 @@ const AVAILABILITIES_URL=`https://www.smartagenda.fr/pro/${CONFIG.SMARTAGENDA_UR
 
 let APPOINTMENT_TYPES=null
 
-// returns moment rounded to the nearest 15 minutes
-const momentToQuarter = m => {
-  if (!m) { return m}
-  const res=moment(m).round(15, 'minutes')
-  return res
-}
-
 const SMARTDIET_DATE_FORMAT='YYYY-MM-DD HH:mm:00'
 // moment => 2000-01-01 12:00:00
 const momentToSmartDate = m => {
   if (!m) { return m}
-  const res=momentToQuarter(m).format('YYYY-MM-DD HH:mm:00')
+  const res=moment(m).format('YYYY-MM-DD HH:mm:00')
   return res
 }
 
@@ -272,19 +265,18 @@ cron.schedule('0 * * * * *', () => {
   console.log('Syncing availabilities from smartagenda')
   const start=moment().add(-7, 'days')
   const end=moment().add(7, 'days')
-  return Range.deleteMany()
-  .then(() => Promise.all([User.find({role: ROLE_EXTERNAL_DIET, smartagenda_id: {$ne: null}}), AppointmentType.find()]))
+  return Promise.all([User.find({role: ROLE_EXTERNAL_DIET, smartagenda_id: {$ne: null}}), AppointmentType.find()])
     .then(([diets, app_types]) => {
       const combinations=lodash.product(diets, app_types)
       return Promise.allSettled(combinations.map(([diet, app_type]) => {
         return getAvailabilities({diet_id: diet.smartagenda_id, from: start, to: end, appointment_type: app_type.smartagenda_id})
           .then(avails => {
             return Promise.all(avails.map(avail => {
-              return Range.create({
-                user: diet._id, appointment_type: app_type._id, start_date: avail.start_date
-              })
+              const params={ user: diet._id, appointment_type: app_type._id, start_date: avail.start_date }
+              return Range.findOneAndUpdate(params,params, {upsert: true})
             }))
           })
+          .catch(err => console.error(err.data.message))
       }))
     })
     .then(() => Range.countDocuments())
