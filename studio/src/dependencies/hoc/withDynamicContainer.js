@@ -182,7 +182,7 @@ const withDynamicContainer = Component => {
         <ArrowRightIcon style={{opacity: !hasNext() && '50%'}} onClick={next} />
       </Flex>
       :
-      <></>
+      null
     return (
       <Component {...lodash.omit(props, ['children'])}>
         {navigation}
