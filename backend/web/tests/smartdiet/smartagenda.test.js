@@ -43,7 +43,7 @@ describe('SmartAgenda test ', () => {
     expect(token).toBeTruthy()
   })
 
-  it('must get accounts', async() => {
+  it('must get accouonnts', async() => {
     const accounts=await getAccounts({email: 'sebastien.auvray@wappizy.com'})
     console.log(accounts)
     expect(accounts).toBeTruthy()
@@ -56,7 +56,7 @@ describe('SmartAgenda test ', () => {
     expect(agendas.length).toBeGreaterThan(0)
   })
 
-  it.only('must get WA agenda', async() => {
+  it('must get WA agenda', async() => {
     const agenda=await getAgenda('wilfrid.albersdorfer@wappizy.com')
     console.log(agenda)
     expect(agenda).toBeTruthy()
@@ -74,7 +74,7 @@ describe('SmartAgenda test ', () => {
     console.log(createdAccount)
   })
 
-  it.skip('must get all data', async() => {
+  it('must get all data', async() => {
     const events=await getAllData()
     console.log(JSON.stringify(events, null, 2))
     expect(events).toBeTruthy()
@@ -117,6 +117,12 @@ describe('SmartAgenda test ', () => {
   it('must find diet', async() => {
     const diet=await getAgenda('diet@test.com')
     console.log(diet)
+  })
+
+  it('must get diet events', async() => {
+    const diet=await getDiet(63)
+    console.log(diet.map(d => d.text))
+    console.log(diet.length)
   })
 
 })

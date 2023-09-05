@@ -1,4 +1,11 @@
 const {
+  getAccount,
+  getAgenda,
+  getDietAvailabilities,
+  getDietUnavailabilities,
+  upsertAccount
+} = require('../agenda/smartagenda')
+const {
   ACTIVITY,
   ANSWER_STATUS,
   APPOINTMENT_STATUS,
@@ -1257,7 +1264,38 @@ setImportDataFunction({model: 'lead', fn: importLeads})
 cron.schedule('0 0 1 * * *', async() => {
   logbooksConsistency()
     .then(() => console.log(`Logbooks consistency OK `))
-    .ctach(err => console.error(`Logbooks consistency error:${err}`))
+    .catch(err => console.error(`Logbooks consistency error:${err}`))
+})
+
+// Synchronize diets & customer smartagenda accounts
+cron.schedule('0 * * * * *', () => {
+  console.log(`Smartagenda accounts sync`)
+  return User.find({role: {$in: [ROLE_EXTERNAL_DIET, ROLE_CUSTOMER]}, smartagenda_id: null})
+    .then(users => {
+      return Promise.allSettled(users.map(user => {
+        const getFn = user.role==ROLE_EXTERNAL_DIET ? getAgenda : getAccount
+        return getFn({email: user.email})
+          .then(id => {
+            if (id) {
+              console.log(`User ${user.email}/${user.role} found in smartagenda with id ${id}`)
+              user.smartagenda_id=id
+              return user.save()
+            }
+            // Create only customers, not allowed to create diets through API
+            else if (user.role==ROLE_CUSTOMER) {
+              const attrs=lodash.pick(user, ['email', 'firstname','lastname'])
+              return upsertAccount(attrs)
+                .then(id => {
+                  console.log(`User ${user.email}/${user.role} created in smartagenda under id ${id}`)
+                  user.smartagenda_id=id
+                  return user.save()
+                })
+                .catch(console.error)
+            }
+          })
+          .catch(err => console.log(`User ${user.email}/${user.role} error ${err}`))
+      }))
+    })
 })
 
 module.exports={

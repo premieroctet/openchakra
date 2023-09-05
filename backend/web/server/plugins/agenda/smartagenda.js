@@ -23,8 +23,8 @@ const CONFIG={
 
 const MAX_RESULTS=1000
 
-const ALL_DATA=//['pdo_type_indispo']
-`pdo_client,pdo_agenda,pdo_groupe,pdo_type_rdv,pdo_events,pdo_events_ouverture,
+const ALL_DATA=
+`pdo_type_indispo,pdo_client,pdo_agenda,pdo_groupe,pdo_type_rdv,pdo_events,pdo_events_ouverture,
 pdo_events_supprime,pdo_type_indispo,pdo_agenda_type_rdv,pdo_ressource,pdo_form,
 pdo_form_champ,pdo_form_type_rdv,pdo_surveillance,pdo_envoi,pdo_journal,pdo_groupement`.replace(/\n/g, '').split(',')
 
@@ -33,6 +33,7 @@ const BASE_URL=`https://www.smartagenda.fr/pro/${CONFIG.SMARTAGENDA_URL_PART}/ap
 const ACCOUNT_URL=`https://www.smartagenda.fr/pro/${CONFIG.SMARTAGENDA_URL_PART}/api/pdo_client`
 const AGENDAS_URL=`https://www.smartagenda.fr/pro/${CONFIG.SMARTAGENDA_URL_PART}/api/pdo_agenda`
 const EVENTS_URL=`https://www.smartagenda.fr/pro/${CONFIG.SMARTAGENDA_URL_PART}/api/pdo_events`
+const EVENTS_OUVERTURE_URL=`https://www.smartagenda.fr/pro/${CONFIG.SMARTAGENDA_URL_PART}/api/pdo_events_ouverture`
 
 // returns moment rounded to the nearest 15 minutes
 const momentToQuarter = m => {
@@ -74,7 +75,7 @@ const getToken = () => {
 }
 
 // Account: customer
-const getAccount = email => {
+const getAccount = ({email}) => {
   if (!email) {
     throw new Error(`Mail is required`)
   }
@@ -96,7 +97,7 @@ const getAccounts = () => {
 }
 
 // Agenda: diet
-const getAgenda = email => {
+const getAgenda = ({email}) => {
   if (!email) {
     throw new Error(`Mail is required`)
   }
@@ -107,9 +108,7 @@ const getAgenda = email => {
   }
   return getToken()
     .then(token => axios.get(AGENDAS_URL, {params:{token, nbresults: MAX_RESULTS, ...filters}}))
-    .then(({data}) => {
-      return data[0]?.id || null
-    })
+    .then(({data}) => data[0]?.id || null)
 }
 
 // Account: customer
@@ -150,7 +149,7 @@ const getAllData = () => {
 }
 
 
-const getDietAppointments = diet_id => {
+const getDietUnavailabilities = diet_id => {
   const filter={
     'filter[0][field]':'equipe_id',
     'filter[0][comp]': '=',
@@ -161,17 +160,14 @@ const getDietAppointments = diet_id => {
     .then(res => res.data)
 }
 
-const getDietUnavailabilities = diet_id => {
+const getDietAvailabilities = diet_id => {
   const filter={
     'filter[0][field]':'equipe_id',
     'filter[0][comp]': '=',
     'filter[0][value]': diet_id,
-    'filter[1][field]':'presta_id',
-    'filter[1][comp]': '=',
-    'filter[1][value]': -1,
   }
   return getToken()
-    .then(token => axios.get(EVENTS_URL+'?sortdesc', {params:{token, nbresults: MAX_RESULTS, ...filter, sortby: 'start_date'}}))
+    .then(token => axios.get(EVENTS_OUVERTURE_URL+'?sortdesc', {params:{token, nbresults: MAX_RESULTS, ...filter, sortby: 'start_date'}}))
     .then(res => res.data)
 }
 
@@ -215,11 +211,11 @@ module.exports={
   getAgendas,
   getEvents,
   getAllData,
-  getDietAppointments,
   createAppointment,
   getCustomerAppointments,
   deleteAppointment,
   getDietUnavailabilities,
+  getDietAvailabilities,
   smartDietToMoment,
   upsertAccount,
 }
