@@ -11,6 +11,7 @@ const {
   getDietAppointments,
   getDietUnavailabilities,
   getEvents,
+  getAvailabilities,
   getToken,
   smartDietToMoment,
   upsertAccount,
@@ -119,10 +120,14 @@ describe('SmartAgenda test ', () => {
     console.log(diet)
   })
 
-  it('must get diet events', async() => {
-    const diet=await getDiet(63)
-    console.log(diet.map(d => d.text))
-    console.log(diet.length)
+  it.only('must get availabilities', async() => {
+    const diet=await getAgenda({email:'solene.vanuxem+dietext@wappizy.com'})
+    console.log(diet)
+    console.time('getAvailabilities')
+    const avails=await getAvailabilities({diet_id: diet, from:moment(), to:moment().add(7, 'days')}).catch(console.error)
+    console.timeEnd('getAvailabilities')
+    const today_avails=avails.filter(a => a.dj=="2023-09-06")
+    console.log(JSON.stringify(avails,null,2))
   })
 
 })

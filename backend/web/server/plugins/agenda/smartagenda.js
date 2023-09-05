@@ -12,6 +12,7 @@ INFOS:
 const axios = require('axios')
 const config = require('../../../config/config')
 const crypto=require('crypto')
+const lodash=require('lodash')
 const moment=require('moment')
 require('moment-round')
 
@@ -33,7 +34,10 @@ const BASE_URL=`https://www.smartagenda.fr/pro/${CONFIG.SMARTAGENDA_URL_PART}/ap
 const ACCOUNT_URL=`https://www.smartagenda.fr/pro/${CONFIG.SMARTAGENDA_URL_PART}/api/pdo_client`
 const AGENDAS_URL=`https://www.smartagenda.fr/pro/${CONFIG.SMARTAGENDA_URL_PART}/api/pdo_agenda`
 const EVENTS_URL=`https://www.smartagenda.fr/pro/${CONFIG.SMARTAGENDA_URL_PART}/api/pdo_events`
-const EVENTS_OUVERTURE_URL=`https://www.smartagenda.fr/pro/${CONFIG.SMARTAGENDA_URL_PART}/api/pdo_events_ouverture`
+const APPOINTMENT_TYPE_URL=`https://www.smartagenda.fr/pro/${CONFIG.SMARTAGENDA_URL_PART}/api/pdo_type_rdv`
+const AVAILABILITIES_URL=`https://www.smartagenda.fr/pro/${CONFIG.SMARTAGENDA_URL_PART}/api/service/getAvailabilities`
+
+let APPOINTMENT_TYPES=null
 
 // returns moment rounded to the nearest 15 minutes
 const momentToQuarter = m => {
@@ -113,7 +117,7 @@ const getAgenda = ({email}) => {
 
 // Account: customer
 const upsertAccount = ({id, email, firstname, lastname}) => {
-  if (!email || !firstname || !lastname) {
+  if (!(email && firstname && lastname)) {
     throw new Error(`mail/firstname/lastname are required`)
   }
   const params={mail: email, prenom: firstname, nom: lastname}
@@ -203,6 +207,47 @@ const deleteAppointment = app_id => {
     .then(res => res.data)
 }
 
+// c$Types rendez-vousAgendas: diets
+const getAppointmentTypes = () => {
+  if (APPOINTMENT_TYPES) {
+    return APPOINTMENT_TYPES
+  }
+  return getToken()
+    .then(token => axios.get(APPOINTMENT_TYPE_URL, {params:{token, nbresults: MAX_RESULTS}}))
+    .then(res => {
+      APPOINTMENT_TYPES=res.data
+      return APPOINTMENT_TYPES
+    })
+}
+
+const getAvailabilities = ({diet_id, from, to}) => {
+  if (!(diet_id && from && to)) {
+    throw new Error(`diet_id/from/to are required`)
+  }
+  const params={pdo_agenda_id: diet_id, pdo_type_rdv_id: 16}
+  return getToken()
+    .then(token =>
+      Promise.all([
+		    axios.post(AVAILABILITIES_URL, params, {params:{token, nbresults: MAX_RESULTS}}),
+		    getAppointmentTypes(),
+      ])
+    )
+    .then(([{data}, app_types]) => {
+      console.log(data.map(d => d.dj))
+      data=data.filter(d => {
+        const dt=moment(d.dj)
+        return from.isBefore(dt) && to.isAfter(dt)
+      })
+      return lodash(data).map(d => d.det.map(detail => ({date: d.dj, duration: app_types.find(at => at.id==detail.idpr).duree, ...detail}))).flatten()
+    })
+    .then(data => data.map(d => lodash.pick(d, ['date', 'duration', 'idp'])))
+    .then(data => data.map(d => {
+      const start_date=moment(`${d.date}T${d.idp}`)
+      const end_date=moment(start_date).add(d.duration, 'minutes')
+      return ({start_date, end_date})
+    }))
+}
+
 module.exports={
   getToken,
   getAccount,
@@ -218,4 +263,5 @@ module.exports={
   getDietAvailabilities,
   smartDietToMoment,
   upsertAccount,
+  getAvailabilities,
 }
