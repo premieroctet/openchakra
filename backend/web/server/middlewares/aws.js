@@ -12,7 +12,15 @@ const s3 = new AWS.S3()
 exports.sendFilesToAWS = async(req, res, next) => {
   if (!req.body.documents) { return next() }
 
+  const isdocumentToDownload = Boolean(req.body.downloadable)
+  
   const documentsToSend = req.body.documents.map(document => {
+    
+    const downloadParams = {
+      ContentType: 'application/octet-stream',
+      ContentDisposition: `attachment; filename=${document.filename}`
+    }
+    
     return new Promise(async(resolve, reject) => {
       const params = {
         Bucket: process.env?.S3_BUCKET,
@@ -22,7 +30,7 @@ exports.sendFilesToAWS = async(req, res, next) => {
         // ACL: 'public-read', // What's this ACL ?
       }
 
-      await s3.upload(params).promise()
+      await s3.upload(isdocumentToDownload ? {...params, ...downloadParams} : params).promise()
         .then(res => resolve(res))
         .catch(err => reject(err))
     })

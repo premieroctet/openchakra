@@ -736,6 +736,16 @@ return Promise.allSettled(imagePromises)
       return Promise.resolve((window.location = urlValue))
     }
   },
+  
+  download: ({value, props}) => {
+      const a = document.createElement('a');
+      a.download = value;
+      a.href = value;
+      // For Firefox https://stackoverflow.com/a/32226068
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+  },
 
   payMission: ({ context, props }) => {
     let url = `${API_ROOT}/action`
