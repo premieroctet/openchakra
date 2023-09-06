@@ -1,13 +1,10 @@
-const AWS = require('aws-sdk')
+const {Upload} = require("@aws-sdk/lib-storage")
+const {S3} = require("@aws-sdk/client-s3");
 const {THUMBNAILS_DIR} = require('../../../web/utils/consts')
 
-AWS.config.update({
-  accessKeyId: process.env?.S3_ID,
-  secretAccessKey: process.env?.S3_SECRET,
+const s3 = new S3({
   region: process.env?.S3_REGION,
 })
-
-const s3 = new AWS.S3()
 
 exports.sendFilesToAWS = async(req, res, next) => {
   if (!req.body.documents) { return next() }
@@ -30,7 +27,10 @@ exports.sendFilesToAWS = async(req, res, next) => {
         // ACL: 'public-read', // What's this ACL ?
       }
 
-      await s3.upload(isdocumentToDownload ? {...params, ...downloadParams} : params).promise()
+      await new Upload({
+        client: s3,
+        params: isdocumentToDownload ? {...params, ...downloadParams} : params
+      }).done()
         .then(res => resolve(res))
         .catch(err => reject(err))
     })
@@ -51,7 +51,6 @@ exports.getFilesFromAWS = async (req, res, next) => {
         Bucket: process.env.S3_BUCKET,
         Prefix: `${process.env.S3_STUDIO_ROOTPATH || 'pictures'}`,
       })
-      .promise()
 
     req.body.files = data.Contents?.map(e => ({
       ...e,
@@ -78,13 +77,12 @@ exports.deleteFileFromAWS = async (req, res, next) => {
         Key: url, // File name you want to delete as in S3
       }
       return s3.deleteObject(params)
-        .promise()
         .then(res => {
           return Promise.resolve(res)
         })
         .catch(err => {
           return Promise.reject(err)
-        })
+        });
     })
   
     await Promise.allSettled(promiseDelete)
