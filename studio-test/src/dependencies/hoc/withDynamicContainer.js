@@ -69,7 +69,7 @@ const withDynamicContainer = Component => {
   // TODO vomi
   const FILTER_ATTRIBUTES = ['code', 'name', 'short_name', 'description', 'title']
 
-  const internal = ({hiddenRoles, user, shuffle, limit, ...props}) => {
+  const internal = ({hiddenRoles, user, shuffle, limit, hidePagination, ...props}) => {
 
     limit = limit || DEFAULT_LIMIT
 
@@ -175,7 +175,7 @@ const withDynamicContainer = Component => {
       }
     }
 
-    const navigation=original_length > limit ?
+    const navigation=original_length > limit && !hidePagination ?
       <Flex justifyContent={'space-around'} style={{width: '100%'}} flex={'row'}>
         <ArrowLeftIcon style={{opacity: !hasPrev() && '50%'}} enabled={false} onClick={prev} />
         <Flex>{start}-{Math.min(start+limit, original_length)}/{original_length}</Flex>

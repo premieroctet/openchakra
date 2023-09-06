@@ -42,6 +42,7 @@ const DataSourcePanel: React.FC = () => {
   const contextAttribute = usePropsSelector('contextAttribute')
   const series_attributes = lodash.range(5).map(idx => usePropsSelector(`series_${idx}_attribute`))
   const series_labels = lodash.range(5).map(idx => usePropsSelector(`series_${idx}_label`))
+  const hidePagination = usePropsSelector('hidePagination')
   const shuffle = usePropsSelector('shuffle')
   const radioGroup = usePropsSelector('radioGroup')
   const [providers, setProviders] = useState<IComponent[]>([])
@@ -282,6 +283,16 @@ const DataSourcePanel: React.FC = () => {
               onChange={setValueFromEvent}
             />
           </FormControl>
+        )}
+        {CONTAINER_TYPE.includes(activeComponent ?.type) && (
+        <FormControl htmlFor="hidePagination" label='Hide pagination'>
+          <Checkbox
+            id="hidePagination"
+            name="hidePagination"
+            isChecked={hidePagination}
+            onChange={onCheckboxChange}
+          ></Checkbox>
+        </FormControl>
         )}
         {CONTAINER_TYPE.includes(activeComponent ?.type) && (
         <FormControl htmlFor="shuffle" label='Shuffle'>
