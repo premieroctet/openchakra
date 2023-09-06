@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
-
 const lodash=require('lodash')
+const moment=require('moment')
 const fs=require('fs')
 // Expects JSON
 const {
@@ -28,7 +28,6 @@ const upsertQuestion= q => {
   .then(() => QuizzQuestion.findOne({origin_id: q.id}))
   .then(created => {
     return Promise.all([q.firstanswer, q.secondanswer].map(answer => {
-      if (q.id==6) {console.log(q)}
       return Item.create({text: answer, quizzQuestion: created._id})
     }))
     .then(([item1, item2]) => {
@@ -39,7 +38,7 @@ const upsertQuestion= q => {
 }
 
 const importQuizz= ({quizzs , questions}) => {
-  const createQuizzs=quizzs.map(quizz => {
+  const createQuizzs=quizzs.map((quizz, index) => {
     const params={
       name: quizz.name,
       type: QUIZZ_TYPE_PATIENT,
@@ -64,8 +63,9 @@ const importQuizz= ({quizzs , questions}) => {
       })
   })
   return Promise.all(createQuizzs)
+    .then(() => Quizz.find({origin_id: {$ne: null}}))
+    .then(quizzs => Promise.all(quizzs.map((q, idx) => {q.creation_date=moment().add(-idx, 'second'); return q.save()})))
 }
-
 
 if (require.main === module) {
   const [quizzFile, questionsFile]=process.argv.slice(2, 4)
@@ -76,7 +76,7 @@ if (require.main === module) {
   const [quizzs, questions]=[quizzFile, questionsFile].map(filename => {
     return JSON.parse(fs.readFileSync(filename))
   })
-  return mongoose.connect('mongodb://localhost/smartdiet')
+  mongoose.connect('mongodb://localhost/smartdiet')
     .then(()=> importQuizz({quizzs, questions}))
     .then(console.log)
     .catch(console.error)

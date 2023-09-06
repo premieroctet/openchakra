@@ -26,10 +26,7 @@ describe('Prospects', () => {
 
   it('must import quizz', async() => {
     return importQuizz({quizzs: quizzs, questions: questions})
-      .then(res => {
-        return Quizz.find()
-          .then(console.log)
-      })
+      .then(console.log)
       .catch(console.error)
   })
 
