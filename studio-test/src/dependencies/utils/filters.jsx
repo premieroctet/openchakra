@@ -38,12 +38,26 @@ export const OPERATORS = {
       v?.toLowerCase()?.includes(ref?.toLowerCase()),
     'is empty': lodash.isNil,
     */
+  },
+  Ref: {
+    'exists': v => !lodash.isNil(v),
+    'not exists': v => lodash.isNil(v),
+  },
+  Array: {
+    'is empty': v => lodash.isEmpty(v),
+    'is not empty': v => !lodash.isEmpty(v),
   }
 }
 
 export const getOperators = att => {
   if(att?.enumValues) {
     return OPERATORS.Enum
+  }
+  if(att?.multiple) {
+    return OPERATORS.Array
+  }
+  if(att?.ref) {
+    return OPERATORS.Ref
   }
   return OPERATORS[att?.type]
 }
