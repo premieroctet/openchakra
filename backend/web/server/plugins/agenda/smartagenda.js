@@ -185,19 +185,24 @@ const getCustomerAppointments = customer_id => {
     .then(res => res.data)
 }
 
-const createAppointment = (diet_id, client_id, start_date, end_date) => {
+const createAppointment = (diet_id, client_id, presta_id, start_date, end_date) => {
+  if (!(diet_id || client_id || presta_id || start_date || end_date)) {
+    throw new Error(`diet_id, client_id, presta_id, start_date, end_date are required`)
+  }
+
   const data={
     equipe_id: diet_id,
     client_id: client_id,
-    presta_id: '0',
+    presta_id: presta_id,
     text: 'Un rendez-vous',
-    internet: 'App Smartdiet',
+    internet: 'O',
     start_date: momentToSmartDate(start_date),
     end_date: momentToSmartDate(end_date),}
 
   return getToken()
     .then(token => axios.post(`${EVENTS_URL}?token=${token}`, data))
     .then(res => res.data)
+    .then(err => {console.error(err.code, err.message); throw err})
 }
 
 const deleteAppointment = app_id => {

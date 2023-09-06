@@ -569,23 +569,6 @@ UserSchema.virtual("availability_ranges", {
 })
 
 // Returned availabilities/ranges are not store in database
-UserSchema.virtual('diet_availabilities', {localField:'tagada', foreignField:'tagada'}).get(function() {
-  if (this.role!=ROLE_EXTERNAL_DIET) {
-    return []
-  }
-
-  const availabilities=lodash.range(7).map(day_idx => {
-    const day=moment().add(day_idx, 'day')
-    const ranges=this.availability_ranges?.filter(r => day.isSame(r.start_date, 'day')) || []
-    return ({
-      date: day,
-      ranges: lodash.orderBy(ranges, 'start_date'),
-    })
-  })
-  return availabilities
-});
-
-// Returned availabilities/ranges are not store in database
 UserSchema.virtual('diet_appointments', {localField:'tagada', foreignField:'tagada'}).get(function() {
   return lodash.flatten(this.diet_coachings?.map(c => c.appointments))
 })

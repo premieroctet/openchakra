@@ -106,6 +106,7 @@ const Appointment = require('../../models/Appointment')
 const Message = require('../../models/Message')
 const Lead = require('../../models/Lead')
 const cron=require('node-cron')
+const {createAppointment}=require('../agenda/smartagenda')
 
 const filterDataUser = ({model, data, id, user}) => {
   if (model=='offer' && !id) {
@@ -229,7 +230,7 @@ const preCreate = ({model, params, user}) => {
     }
   }
   if (model=='appointment') {
-    return loadFromDb({model: 'user', id: user._id, fields:['latest_coachings.appointments', 'latest_coachings.remaining_credits']})
+    return loadFromDb({model: 'user', id: user._id, fields:['latest_coachings.appointments', 'latest_coachings.remaining_credits','latest_coachings.appointment_type']})
       .then(([usr]) => {
         // Check remaining credits
         const latest_coaching=usr.latest_coachings[0]
@@ -243,7 +244,7 @@ const preCreate = ({model, params, user}) => {
         if (latest_coaching.appointments.find(a => moment(a.end_date).isAfter(moment()))) {
           throw new ForbiddenError(`Vous avez déjà un rendez-vous à venir`)
         }
-        return {model, params:{...params, coaching: usr.latest_coachings[0]._id}}
+        return {model, params:{coaching: latest_coaching._id, appointment_type: latest_coaching.appointment_type._id, ...params }}
       })
   }
   return Promise.resolve({model, params})
@@ -482,13 +483,6 @@ coachings.diet.availability_ranges.appointment_type',
     caster: {
       instance: 'ObjectID',
       options: {ref: 'quizzQuestion'}},
-  })
-  declareVirtualField({model: m, field: 'diet_availabilities', instance: 'Array',
-    requires: 'role,availability_ranges.appointment_type',
-    multiple: true,
-    caster: {
-      instance: 'ObjectID',
-      options: {ref: 'availability'}},
   })
   declareVirtualField({model: m, field: 'diet_coachings', instance: 'Array',
     multiple: true,
@@ -819,6 +813,21 @@ declareVirtualField({model: 'coaching', field: 'logbooks', instance: 'Array', mu
     options: {ref: 'logbookDay'}
   },
 })
+declareVirtualField({model: 'coaching', field: 'diet_availabilities', instance: 'Array',
+  requires: 'diet,appointment_type,diet.availability_ranges.appointment_type,appointments',
+  multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'availability'}},
+})
+declareVirtualField({model: 'coaching', field: 'appointment_type', instance: 'Array',
+  requires: 'appointments,user.company.assessment_appointment_type,user.company.followup_appointment_type',
+  multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'availability'}},
+})
+
 
 declareEnumField({model: 'userCoachingQuestion', field: 'status', enumValues: COACHING_QUESTION_STATUS})
 
@@ -1056,21 +1065,32 @@ const postCreate = ({model, params, data,user}) => {
   }
   // Create coaching.progress if not present
   if (model=='appointment') {
-    return Coaching.findById(data.coaching._id)
+    const setProgressQuizz=Coaching.findById(data.coaching._id)
       .then(coaching => {
         if (coaching.progress) {
           return data
         }
         return Quizz.findOne({type: QUIZZ_TYPE_PROGRESS}).populate('questions')
           .then(q => {
-            if (!q)  {
-              return console.error(`No progress quizz found`);
-            }
+            if (!q)  {return console.error(`No progress quizz found`)}
             return q.cloneAsUserQuizz()
           })
           .then(uq => {coaching.progress=uq?._id; return coaching.save()})
           .then(()=> data)
       })
+
+    const createSmartagendaAppointment=Appointment.findById(data._id)
+      .populate({path: 'coaching', populate:['user', 'diet']})
+      .populate('appointment_type')
+      .then(appt => {
+        return createAppointment(appt.coaching.diet.smartagenda_id, appt.coaching.user.smartagenda_id,
+          appt.appointment_type.smartagenda_id, appt.start_date, appt.end_date)
+          .then(smart_appt => {appt.smartagenda_id=smart_appt.id; return appt.save()})
+      })
+    return Promise.allSettled([setProgressQuizz, createSmartagendaAppointment])
+      .then(console.log)
+      .catch(console.error)
+      .finally(() => data)
   }
 
   return Promise.resolve(data)

@@ -23,7 +23,15 @@ const AppointmentSchema = new Schema({
   end_date: {
     type: Date,
     validate: [function(v) { return moment(v).isAfter(this.start_date)}, 'La fin doit être postérieure au début'],
-    required: false,
+    required: true,
+  },
+  appointment_type: {
+    type: Schema.Types.ObjectId,
+    ref: 'appointmentType',
+    required: [true, 'La prestation est obligatoire'],
+  },
+  smartagenda_id: {
+    type: Number,
   },
   synthesis: {
     type: String,

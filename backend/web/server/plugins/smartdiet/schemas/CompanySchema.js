@@ -45,12 +45,18 @@ const CompanySchema = new Schema(
       default: false,
       required: true,
     },
-    // Allowed appointment types
-    appointment_types: [{
+    // Type prestation bilan
+    assessment_appointment_type: {
       type: Schema.Types.ObjectId,
       ref: 'appointmentType',
-      required: true,
-    }],
+      required: false,
+    },
+    // Type prestation suivi
+    followup_appointment_type: {
+      type: Schema.Types.ObjectId,
+      ref: 'appointmentType',
+      required: false,
+    },
   },
   schemaOptions,
 )

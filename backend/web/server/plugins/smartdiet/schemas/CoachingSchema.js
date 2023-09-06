@@ -12,7 +12,7 @@ const { CREATED_AT_ATTRIBUTE } = require('../../../../utils/consts')
 const mongoose = require('mongoose')
 const { schemaOptions } = require('../../../utils/schemas')
 const lodash=require('lodash')
-const {intersection}=require('../../../utils/database')
+const {intersection, idEqual}=require('../../../utils/database')
 
 const Schema = mongoose.Schema
 
@@ -159,6 +159,31 @@ CoachingSchema.virtual('logbooks', {localField:'tagada', foreignField:'tagada'})
   return lbd
 })
 
+// Returned availabilities are not store in database
+CoachingSchema.virtual('diet_availabilities', {localField:'tagada', foreignField:'tagada'}).get(function() {
+
+  if (!this.diet){
+    return []
+  }
+
+  const appType=this.appointment_type
+
+  const availabilities=lodash.range(7).map(day_idx => {
+    const day=moment().add(day_idx, 'day')
+    const ranges=this.diet.availability_ranges?.filter(r => day.isSame(r.start_date, 'day') && idEqual(r.appointment_type._id, appType?._id)) || []
+    return ({
+      date: day,
+      ranges: lodash.orderBy(ranges, 'start_date'),
+    })
+  })
+  return availabilities
+});
+
+// Returns the appointment type expected (1st appnt: assesment, others: followu)
+CoachingSchema.virtual('appointment_type', {localField:'tagada', foreignField:'tagada'}).get(function() {
+  const appType=lodash.isEmpty(this.appointments) ? this.user?.company?.assessment_appointment_type : this.user?.company?.followup_appointment_type
+  return appType
+})
 /* eslint-enable prefer-arrow-callback */
 
 
