@@ -25,8 +25,8 @@ const FiltersPanel = ({ attributes, filter, onValidate }) => {
 
   const multipleChoiceEnabled = isOperatorMultiple(attributes[attribute], operator)
 
-  const type = attributes[attribute]?.enumValues ? 'Enum': attributes[attribute]?.type
-
+  const type = attributes[attribute]?.multiple ? 'Array' : attributes[attribute]?.enumValues ? 'Enum': attributes[attribute]?.ref ? 'Ref' : attributes[attribute]?.type
+  
   const onValidateInternal = () => {
     onValidate({ attribute, operator, value, type })
   }
@@ -56,7 +56,7 @@ const FiltersPanel = ({ attributes, filter, onValidate }) => {
         </Select>
         {attribute && operator ? (
           !lodash.isEmpty(enumValues) ? (
-            <Box flex="3">
+            <Box flex="1">
               {multipleChoiceEnabled ?
                 <MultipleSelect
                   isMulti
