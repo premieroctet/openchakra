@@ -1,10 +1,51 @@
-const {Upload} = require("@aws-sdk/lib-storage")
-const {S3} = require("@aws-sdk/client-s3");
+const {Upload} = require('@aws-sdk/lib-storage')
+const {S3} = require('@aws-sdk/client-s3')
 const {THUMBNAILS_DIR} = require('../../../web/utils/consts')
 
 const s3 = new S3({
   region: process.env?.S3_REGION,
 })
+
+
+const imageSrcSetPaths = (originalSrc, withDimension=true) => {
+
+  /**
+   * src filename example containing sizes:
+   * https://******.amazonaws.com/devtest/studio/wappizy_srcset:500*1000*1920.webp
+   *
+   * example of filepath derived for a smaller image
+   * https://******.amazonaws.com/thumbnails/devtest/studio/wappizy_w:500.webp
+   *
+   */
+  let srcSet
+
+  const filePathParts = originalSrc.split('_srcset:') || originalSrc.split(encodeURIComponent('_srcset:'))
+  const filenameextension = originalSrc.substring(originalSrc.lastIndexOf('.') + 1, originalSrc.length)
+      
+  if (filePathParts.length > 1) {
+    const availableSizes = filePathParts[1].match(/\d+/g)
+    const availableSizesQty = availableSizes?.length
+    srcSet = availableSizes && availableSizes
+      .map((size, index) => {
+        if ((index + 1) === availableSizesQty) {
+          return `${originalSrc}${withDimension ? ` ${size}w` : ''}`
+        }
+        const shortFilepathParts = filePathParts[0].split('/')
+        // index to add thumbnails folder after https://******.amazonaws.com
+        const indexToPushThumbnails = 3
+        const thumbnailsFilepath = shortFilepathParts
+          .slice(0, indexToPushThumbnails)
+          .concat(THUMBNAILS_DIR, shortFilepathParts.slice(indexToPushThumbnails))
+        return `${thumbnailsFilepath.join('/')}_w:${size}.${filenameextension}${withDimension ? ` ${size}w` : ''}`
+        
+      })
+  }
+  else {
+    srcSet = [originalSrc]
+  }
+      
+  return srcSet
+}
 
 exports.sendFilesToAWS = async(req, res, next) => {
   if (!req.body.documents) { return next() }
@@ -15,7 +56,7 @@ exports.sendFilesToAWS = async(req, res, next) => {
     
     const downloadParams = {
       ContentType: 'application/octet-stream',
-      ContentDisposition: `attachment; filename=${document.filename}`
+      ContentDisposition: `attachment; filename=${document.filename}`,
     }
     
     return new Promise(async(resolve, reject) => {
@@ -29,7 +70,7 @@ exports.sendFilesToAWS = async(req, res, next) => {
 
       await new Upload({
         client: s3,
-        params: isdocumentToDownload ? {...params, ...downloadParams} : params
+        params: isdocumentToDownload ? {...params, ...downloadParams} : params,
       }).done()
         .then(res => resolve(res))
         .catch(err => reject(err))
@@ -42,29 +83,30 @@ exports.sendFilesToAWS = async(req, res, next) => {
   next()
 }
 
-exports.getFilesFromAWS = async (req, res, next) => {
+exports.getFilesFromAWS = async(req, res, next) => {
   
   const url = `https://${process.env.S3_BUCKET}.s3-${process.env.S3_REGION}.amazonaws.com`
 
   try {
     const data = await s3.listObjectsV2({
-        Bucket: process.env.S3_BUCKET,
-        Prefix: `${process.env.S3_STUDIO_ROOTPATH || 'pictures'}`,
-      })
+      Bucket: process.env.S3_BUCKET,
+      Prefix: `${process.env.S3_STUDIO_ROOTPATH || 'pictures'}`,
+    })
 
     req.body.files = data.Contents?.map(e => ({
       ...e,
       publicUrl: `${url}/${e.Key}`,
     }))
 
-  } catch (err) {
+  }
+  catch (err) {
     throw Error('Error while getting images from AWS S3 :', err)
   }
 
   next()
 }
 
-exports.deleteFileFromAWS = async (req, res, next) => {
+exports.deleteFileFromAWS = async(req, res, next) => {
 
   try {
     // does this match with filename pattern
@@ -82,54 +124,16 @@ exports.deleteFileFromAWS = async (req, res, next) => {
         })
         .catch(err => {
           return Promise.reject(err)
-        });
+        })
     })
   
     await Promise.allSettled(promiseDelete)
 
     req.body.filedeleted = true
-  } catch(err) {
+  }
+  catch(err) {
     throw new Error('Error while deleting an image from AWS S3', err)
   }
 
   next()
-}
-
-const imageSrcSetPaths = (originalSrc, withDimension=true) => {
-
-  /**
-   * src filename example containing sizes: 
-   * https://******.amazonaws.com/devtest/studio/wappizy_srcset:500*1000*1920.webp
-   * 
-   * example of filepath derived for a smaller image
-   * https://******.amazonaws.com/thumbnails/devtest/studio/wappizy_w:500.webp
-   * 
-   */
-  let srcSet = undefined
-
-  const filePathParts = originalSrc.split("_srcset:") || originalSrc.split(encodeURIComponent("_srcset:"));
-  const filenameextension = originalSrc.substring(originalSrc.lastIndexOf('.') + 1, originalSrc.length)
-      
-  if (filePathParts.length > 1) {
-    const availableSizes = filePathParts[1].match(/\d+/g);
-    const availableSizesQty = availableSizes?.length
-    srcSet = availableSizes && availableSizes
-      .map((size, index) => {
-        if ((index + 1) === availableSizesQty) {
-          return `${originalSrc}${withDimension ? ` ${size}w` : ''}`
-        } else {
-          const shortFilepathParts = filePathParts[0].split('/')
-          // index to add thumbnails folder after https://******.amazonaws.com
-          const indexToPushThumbnails = 3
-          const thumbnailsFilepath = shortFilepathParts
-            .slice(0, indexToPushThumbnails)
-            .concat(THUMBNAILS_DIR, shortFilepathParts.slice(indexToPushThumbnails));
-          return `${thumbnailsFilepath.join('/')}_w:${size}.${filenameextension}${withDimension ? ` ${size}w` : ''}`
-        }
-      })
-  } else {
-    srcSet = [originalSrc]
-  }
-      
-  return srcSet
 }

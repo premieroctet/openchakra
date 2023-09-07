@@ -1,4 +1,5 @@
 const sharp = require('sharp')
+const convert = require('heic-convert')
 const {IMAGES_WIDTHS_FOR_RESIZE, IMAGE_SIZE_MARKER, THUMBNAILS_DIR} = require('../../utils/consts')
 const {sanitizeFilename, generateUUID} = require('../../utils/functions')
 
@@ -50,6 +51,21 @@ exports.resizeImage = async(req, res, next) => {
   const uploadedfilename = `${generateUUID()}_${sanitizeFilename(req.file.originalname)}`
   const rootPath = isDocumentFromStudio ? process.env?.S3_STUDIO_ROOTPATH : process.env?.S3_PROD_ROOTPATH
   const uploadedfilenamebase = uploadedfilename.substring(0, uploadedfilename.lastIndexOf('.'))
+
+  const heicToJpeg = async buffer => {
+    return await convert({
+      buffer: buffer, // the HEIC file buffer
+      format: 'JPEG', // output format
+      quality: 1, // the jpeg compression quality, between 0 and 1
+    })
+  }
+
+  const switchbuffer = async buffer => {
+    if (filemimetype === 'image/heic') {
+      return await heicToJpeg(buffer)
+    }
+    return buffer
+  }
  
   if (isImage) {
     let availableSizes = []
@@ -64,7 +80,8 @@ exports.resizeImage = async(req, res, next) => {
       .catch(err => {
         throw Error('Error while obtaining image dimensions :', err)
       })
-      
+
+    const buffer = await switchbuffer(req.file.buffer)
     const retainedImageSizes = IMAGES_WIDTHS_FOR_RESIZE
       .filter(size => size < originalWidth)
       .sort((a, b) => a - b)
@@ -75,7 +92,7 @@ exports.resizeImage = async(req, res, next) => {
 
       return new Promise(async(resolve, reject) => {
         availableSizes.push(width)
-        const image = await sharp(req.file.buffer)
+        const image = await sharp(buffer)
           .resize({width})
           .toFormat(IMAGE_SETTINGS[filemimetype].outputFormat, IMAGE_SETTINGS[filemimetype].options)
           .toBuffer()
