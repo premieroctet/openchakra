@@ -21,7 +21,6 @@ class MAILJET_V6 {
       Variables: {...data},
     }
 
-    console.log(`Mailjet structure:${JSON.stringify(message, null, 2)}`)
     return this.smtpInstance
       .post('send', {version: 'v3.1'})
       .request({Messages: [message]})

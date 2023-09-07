@@ -230,6 +230,7 @@ const UserSchema = new Schema({
     enum: Object.keys(DIET_ACTIVITIES),
     required: false,
   }],
+  // TODO :set to ACTIVE when profile is 100%
   registration_status: {
     type: String,
     enum: Object.keys(DIET_REGISTRATION_STATUS),
