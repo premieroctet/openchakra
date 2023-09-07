@@ -129,14 +129,12 @@ router.get('/roles', (req, res) => {
 })
 
 router.post('/s3uploadfile', handleUploadedFile, catchErrors(resizeImage), catchErrors(sendFilesToAWS), (req, res) => {
-  // filter original file to send 
   const srcFiles = req?.body?.result
-  const isImageSource = Array.isArray(req.body.result) && req?.body?.result.filter(s3obj => s3obj.Location.includes(encodeURIComponent(IMAGE_SIZE_MARKER)))
+  // filter image original file
+  const imageSource = Array.isArray(req.body.result) && req?.body?.result.filter(s3obj => s3obj.Location.includes(encodeURIComponent(IMAGE_SIZE_MARKER)))
+  const srcFile = Array.isArray(imageSource) && imageSource.length >= 1 ? imageSource[0] : srcFiles[0]
 
-  const srcFile = isImageSource.length >= 1 ? srcFiles.at(0) : srcFiles[0]
-
-  console.log(srcFiles, isImageSource, srcFile)
-  return srcFile ? res.status(201).json(srcFile) : res.status(444).json(srcFile)
+  return srcFile ? res.status(201).json(srcFile?.Location || '') : res.status(444).json(srcFile)
 })
 
 router.get('/s3getfiles', catchErrors(getFilesFromAWS), async(req, res) => {

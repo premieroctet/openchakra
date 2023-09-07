@@ -80,7 +80,7 @@ const UploadFile = ({
         await uploadFileToS3(fileToUpload, downloadable)
           .then((result) => {
             // @ts-ignore
-            const filepath = result?.data?.Location
+            const filepath = result?.data
             setS3File(filepath)
             paramsBack = { ...paramsBack, value: filepath}
           })
