@@ -35,6 +35,7 @@
     "firebase-admin": "^11.7.0",
     "format-duration": "^2.0.0",
     "glob": "^7.1.4",
+    "heic-convert": "^1.2.4",
     "i18n-zipcodes": "^4.0.0",
     "i18next": "^20.6.0",
     "i18next-browser-languagedetector": "^6.1.4",
