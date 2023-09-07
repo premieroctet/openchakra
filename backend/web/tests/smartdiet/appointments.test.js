@@ -1,7 +1,9 @@
+const AppointmentType = require('../../server/models/AppointmentType')
 const moment=require('moment')
 const mongoose = require('mongoose')
 
 const {forceDataModelSmartdiet, buildAttributesException}=require('../utils')
+
 forceDataModelSmartdiet()
 
 require('../../server/plugins/smartdiet/functions')
@@ -21,6 +23,8 @@ require('../../server/models/Key')
 require('../../server/models/Category')
 require('../../server/models/Question')
 require('../../server/models/UserQuizz')
+require('../../server/models/Item')
+require('../../server/models/LogbookDay')
 
 jest.setTimeout(10000)
 
@@ -41,9 +45,10 @@ describe('Survey ', () => {
   })
 
   it('must return appointment.index', async() => {
+    const appt=await AppointmentType.create({smartagenda_id:5, duration:60, title: 'App type test'})
     const coaching=await Coaching.create({user})
-    const app1=await Appointment.create({coaching, start_date: moment()})
-    const app2=await Appointment.create({coaching, start_date: moment()})
+    const app1=await Appointment.create({coaching, start_date: moment(), end_date: moment().add(10, 'minutes'), appointment_type: appt._id})
+    const app2=await Appointment.create({coaching, start_date: moment(), end_date: moment().add(10, 'minutes'), appointment_type: appt._id})
     const appRead1=await loadFromDb({model: 'appointment', id:app1._id, fields:['start_date', 'order']})
     const appRead2=await loadFromDb({model: 'appointment', id:app2._id, fields:['start_date', 'order']})
     expect(appRead1[0].order).toEqual(1)

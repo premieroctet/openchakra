@@ -249,8 +249,7 @@ cron.schedule('0 * * * * *', () => {
   return Promise.all([getAppointmentTypes(), AppointmentType.find()])
     .then(([smartagenda_types, local_types]) => {
       smartagenda_types=smartagenda_types.filter(s => s.id>0)
-      //console.log(`Syncing ${smartagenda_types.length} smartagenda appointment types`)
-      console.log(`Prestation carcept: ${JSON.stringify(smartagenda_types.filter(p => /bilan.*carcept/i.test(p.nom)), null, 2)}`)
+      console.log(`Syncing ${smartagenda_types.length} smartagenda appointment types`)
       const promises=smartagenda_types.map(sm =>
         AppointmentType.findOneAndUpdate(
           {smartagenda_id: sm.id},
@@ -264,7 +263,8 @@ cron.schedule('0 * * * * *', () => {
 })
 
 // Synchronize availabilities every minute
-cron.schedule('0 * * * * *', () => {
+// DISABLED UNTIL SMARTAGENDA WEBHOOK
+false && cron.schedule('0 * * * * *', () => {
   console.log('Syncing availabilities from smartagenda')
   const start=moment().add(-7, 'days')
   const end=moment().add(7, 'days')
