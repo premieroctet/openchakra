@@ -825,7 +825,7 @@ declareVirtualField({model: 'coaching', field: 'appointment_type', instance: 'Ar
   multiple: true,
   caster: {
     instance: 'ObjectID',
-    options: {ref: 'availability'}},
+    options: {ref: 'appointmentType'}},
 })
 
 
