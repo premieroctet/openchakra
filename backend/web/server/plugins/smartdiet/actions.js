@@ -1,3 +1,9 @@
+const { sendForgotPassword } = require('./mailing')
+const {
+  ensureChallengePipsConsistency,
+  getRegisterCompany
+} = require('./functions')
+const { generatePassword } = require('../../../utils/passwords')
 const { importLeads } = require('./leads')
 const Content = require('../../models/Content')
 const Webinar = require('../../models/Webinar')
@@ -6,8 +12,6 @@ const { getHostName } = require('../../../config/config')
 const moment = require('moment')
 const IndividualChallenge = require('../../models/IndividualChallenge')
 const { BadRequestError, NotFoundError } = require('../../utils/errors')
-const { ensureChallengePipsConsistency } = require('./functions')
-const { getRegisterCompany } = require('./functions')
 const UserSurvey = require('../../models/UserSurvey')
 const UserQuestion = require('../../models/UserQuestion')
 const Question = require('../../models/Question')
@@ -199,6 +203,21 @@ const importModelData = ({model, data}) => {
   */
 }
 addAction('import_model_data', importModelData)
+
+const forgotPasswordAction=({context, parent, email}) => {
+  return User.findOne({email})
+   .then(user => {
+     if (!user) {
+       throw new BadRequestError(`Aucun compte n'est associé à cet email`)
+     }
+     const password=generatePassword()
+     user.password=password
+     return user.save()
+       .then(user => sendForgotPassword({user, password}))
+       .then(user => `Un email a été envoyé à l'adresse ${email}`)
+   })
+}
+addAction('forgotPassword', forgotPasswordAction)
 
 
 const isActionAllowed = ({action, dataId, user}) => {

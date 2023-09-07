@@ -1,4 +1,6 @@
+const { sendDietPreRegister } = require('./mailing')
 const {
+  createAppointment,
   getAccount,
   getAgenda,
   getAppointmentTypes,
@@ -106,7 +108,6 @@ const Appointment = require('../../models/Appointment')
 const Message = require('../../models/Message')
 const Lead = require('../../models/Lead')
 const cron=require('node-cron')
-const {createAppointment}=require('../agenda/smartagenda')
 
 const filterDataUser = ({model, data, id, user}) => {
   if (model=='offer' && !id) {
@@ -1062,6 +1063,10 @@ const postCreate = ({model, params, data,user}) => {
   if (['loggedUser', 'user'].includes(model) && data.role==ROLE_CUSTOMER) {
     return Coaching.create({user: data})
       .then(coaching => User.findByIdAndUpdate(data._id, {coaching}))
+  }
+  if (['user'].includes(model) && data.role==ROLE_EXTERNAL_DIET) {
+    sendDietPreRegister({user:data})
+    return Promise.resolve(data)
   }
   // Create coaching.progress if not present
   if (model=='appointment') {

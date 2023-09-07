@@ -65,6 +65,6 @@ class SIB_V3 {
   }
 }
 
-const SIB = new SIB_V3()
+const PROVIDER = new SIB_V3()
 
-module.exports = {SIB}
+module.exports = PROVIDER
