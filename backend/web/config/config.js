@@ -32,6 +32,9 @@ const {
   SMARTAGENDA_API_ID,
   SMARTAGENDA_API_KEY,
   SMARTAGENDA_URL_PART,
+  MAIL_PROVIDER,
+  MAILJET_PUBLIC_KEY,
+  MAILJET_PRIVATE_KEY,
 } = require('../mode')
 
 const SITE_MODES = {
@@ -212,8 +215,19 @@ const SIRET = {
   sirenUrl: 'https://api.insee.fr/entreprises/sirene/V3/siren',
 }
 
+const getMailProvider = () => {
+  return MAIL_PROVIDER
+}
+
 const getSibApiKey = () => {
   return SIB_APIKEY
+}
+
+const getMailjetConfig = () => {
+  return {
+    MAILJET_PUBLIC_KEY,
+    MAILJET_PRIVATE_KEY,
+  }
 }
 
 const canAlfredSelfRegister = () => {
@@ -394,4 +408,6 @@ module.exports = {
   paymentPlugin,
   getProductionUrl,
   getSmartAgendaConfig,
+  getMailProvider,
+  getMailjetConfig,
 }

@@ -1,12 +1,15 @@
 const {
   getDataModel,
   getHostUrl,
+  getMailProvider,
   isProduction,
   isValidation,
 } = require('../../config/config')
 const lodash=require('lodash')
 const {fillSms} = require('../../utils/sms')
-const {SIB} = require('./sendInBlue')
+
+const mailProvider=getMailProvider()
+const MAIL_HANDLER=require(mailProvider=='mailjet' ?  './mailjet' : './sendInBlue')
 
 let SMS_CONTENTS = {}
 
@@ -31,7 +34,7 @@ const sendNotification = ({notification, destinee, ccs, params, attachment}) => 
   let resultMail = true, resultSms = true
 
   if (enable_mails) {
-    resultMail = SIB.sendMail({index:notification, email:destinee.email, ccs, data:params, attachment})
+    resultMail = MAIL_HANDLER.sendMail({index:notification, email:destinee.email, ccs, data:params, attachment})
   }
 
   // Send SMS
@@ -42,7 +45,7 @@ const sendNotification = ({notification, destinee, ccs, params, attachment}) => 
       result = false
     }
     else {
-      resultSms = SIB.sendSms(destinee.phone, smsContents)
+      resultSms = MAIL_HANDLER.sendSms(destinee.phone, smsContents)
     }
   }
   return Promise.resolve(resultMail)
