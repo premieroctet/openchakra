@@ -43,8 +43,6 @@ const EVENTS_URL=`https://www.smartagenda.fr/pro/${CONFIG.SMARTAGENDA_URL_PART}/
 const APPOINTMENT_TYPE_URL=`https://www.smartagenda.fr/pro/${CONFIG.SMARTAGENDA_URL_PART}/api/pdo_type_rdv`
 const AVAILABILITIES_URL=`https://www.smartagenda.fr/pro/${CONFIG.SMARTAGENDA_URL_PART}/api/service/getAvailabilities`
 
-let APPOINTMENT_TYPES=null
-
 const SMARTDIET_DATE_FORMAT='YYYY-MM-DD HH:mm:00'
 // moment => 2000-01-01 12:00:00
 const momentToSmartDate = m => {
@@ -74,7 +72,7 @@ const getToken = () => {
     api_key: CONFIG.SMARTAGENDA_API_KEY,
   }
   return axios.get(TOKEN_URL, {params:params})
-    .then(res => res.data.token)
+    .then(({data}) => data.token)
 }
 
 // Account: customer
@@ -213,15 +211,9 @@ const deleteAppointment = app_id => {
 
 // c$Types rendez-vousAgendas: diets
 const getAppointmentTypes = () => {
-  if (APPOINTMENT_TYPES) {
-    return APPOINTMENT_TYPES
-  }
   return getToken()
     .then(token => axios.get(APPOINTMENT_TYPE_URL, {params:{token, nbresults: MAX_RESULTS}}))
-    .then(res => {
-      APPOINTMENT_TYPES=res.data
-      return APPOINTMENT_TYPES
-    })
+    .then(({data}) => data)
 }
 
 const getAvailabilities = ({diet_id, from, to, appointment_type}) => {
@@ -257,12 +249,18 @@ cron.schedule('0 * * * * *', () => {
   return Promise.all([getAppointmentTypes(), AppointmentType.find()])
     .then(([smartagenda_types, local_types]) => {
       smartagenda_types=smartagenda_types.filter(s => s.id>0)
-      const missing=lodash.differenceWith(smartagenda_types, local_types, (sm, loc) => sm.id==loc.smartagenda_id)
-      console.log(`Syncing ${missing.length} smartagenda appointment types`)
-      const promises=missing.slice(0,5).map(sm => AppointmentType.create({title:sm.nom, duration: sm.duree, smartagenda_id: sm.id}))
+      //console.log(`Syncing ${smartagenda_types.length} smartagenda appointment types`)
+      console.log(`Prestation carcept: ${JSON.stringify(smartagenda_types.filter(p => /bilan.*carcept/i.test(p.nom)), null, 2)}`)
+      const promises=smartagenda_types.map(sm =>
+        AppointmentType.findOneAndUpdate(
+          {smartagenda_id: sm.id},
+          {title:sm.nom, duration: sm.duree, smartagenda_id: sm.id},
+          {upsert:true, runValidators:true}
+        )
+      )
       return Promise.allSettled(promises)
     })
-    .then(res => res.length && console.log(res))
+    .then(res => res.length && console.log(`Updated/created ${res.length} appt types`))
 })
 
 // Synchronize availabilities every minute
@@ -270,7 +268,8 @@ cron.schedule('0 * * * * *', () => {
   console.log('Syncing availabilities from smartagenda')
   const start=moment().add(-7, 'days')
   const end=moment().add(7, 'days')
-  return Promise.all([User.find({role: ROLE_EXTERNAL_DIET, smartagenda_id: {$ne: null}}), AppointmentType.find()])
+  return Range.deleteMany({})
+    .then(() => Promise.all([User.find({role: ROLE_EXTERNAL_DIET, smartagenda_id: {$ne: null}}), AppointmentType.find()]))
     .then(([diets, app_types]) => {
       const combinations=lodash.product(diets, app_types)
       return Promise.allSettled(combinations.map(([diet, app_type]) => {
@@ -278,7 +277,7 @@ cron.schedule('0 * * * * *', () => {
           .then(avails => {
             return Promise.all(avails.map(avail => {
               const params={ user: diet._id, appointment_type: app_type._id, start_date: avail.start_date }
-              return Range.findOneAndUpdate(params,params, {upsert: true})
+              return Range.create(params)
             }))
           })
           .catch(err => console.error(err.data.message))
