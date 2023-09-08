@@ -986,6 +986,7 @@ const getUserContents = (user, params, data) => {
   const user_targets=lodash([data.objective_targets,data.health_targets,
     data.activity_target,data.specificity_targets,data.home_target])
     .flatten()
+    .filter(v => !!v)
     .value()
   return Promise.resolve(data._all_contents.filter(c => c.default || setIntersects(c.targets, user_targets)))
 }
