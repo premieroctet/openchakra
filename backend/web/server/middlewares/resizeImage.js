@@ -33,6 +33,7 @@ exports.resizeImage = async(req, res, next) => {
       },
     },
     'image/heic': JPEG_SETTINGS,
+    'image/heif': JPEG_SETTINGS,
     'image/webp': {
       extension: 'webp',
       outputFormat: 'webp',
@@ -61,7 +62,7 @@ exports.resizeImage = async(req, res, next) => {
   }
 
   const switchbuffer = async buffer => {
-    if (filemimetype === 'image/heic') {
+    if (['image/heic', 'image/heif'].includes(filemimetype)) {
       return await heicToJpeg(buffer)
     }
     return buffer
@@ -69,8 +70,9 @@ exports.resizeImage = async(req, res, next) => {
  
   if (isImage) {
     let availableSizes = []
+    const buffer = await switchbuffer(req.file.buffer)
     // watch out for original image width
-    const {width: originalWidth} = await sharp(req.file.buffer)
+    const {width: originalWidth} = await sharp(buffer)
       .metadata()
       .then(metadata => {
         return {
@@ -81,7 +83,6 @@ exports.resizeImage = async(req, res, next) => {
         throw Error('Error while obtaining image dimensions :', err)
       })
 
-    const buffer = await switchbuffer(req.file.buffer)
     const retainedImageSizes = IMAGES_WIDTHS_FOR_RESIZE
       .filter(size => size < originalWidth)
       .sort((a, b) => a - b)
