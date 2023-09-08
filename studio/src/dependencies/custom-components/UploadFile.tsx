@@ -78,11 +78,16 @@ const UploadFile = ({
 
         setIsLoading(true)
         await uploadFileToS3(fileToUpload, downloadable)
-          .then((result) => {
+          .then(async result => {
             // @ts-ignore
             const filepath = result?.data
             setS3File(filepath)
             paramsBack = { ...paramsBack, value: filepath}
+
+            if (dataSource) {
+              typeof filepath === 'string' && await saveUrl(filepath)
+              reload()
+            }
           })
           .catch(err => console.error(err))
           .finally(() => {
@@ -94,14 +99,14 @@ const UploadFile = ({
           
       }
 
-      const saveUrl = async () => {
+      const saveUrl = async (url:string) => {
         const promise=noautosave ?
           Promise.resolve(null)
           :
           ACTIONS.putValue({
             context: dataSource?._id,
             props: {attribute: attribute},
-            value: paramsBack.value,
+            value: url,
           })
         promise
           .then(() => {
@@ -116,10 +121,6 @@ const UploadFile = ({
       }
 
       await uploadFile()
-      if (dataSource) {
-        typeof s3File !== 'undefined' && await saveUrl()
-        reload()
-      }
     }
 
   // SAU to propagate attribute
