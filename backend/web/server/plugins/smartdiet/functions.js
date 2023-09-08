@@ -1,14 +1,8 @@
-const { sendDietPreRegister } = require('./mailing')
 const {
-  createAppointment,
-  getAccount,
-  getAgenda,
-  getAppointmentTypes,
-  getDietAvailabilities,
-  getDietUnavailabilities,
-  upsertAccount
-} = require('../agenda/smartagenda')
-const AppointmentType = require('../../models/AppointmentType')
+  sendDietPreRegister2Admin,
+  sendDietPreRegister2Diet
+} = require('./mailing')
+
 const {
   ACTIVITY,
   ANSWER_STATUS,
@@ -41,15 +35,27 @@ const {
   REGISTRATION_WARNING_CODE_MISSING,
   REGISTRATION_WARNING_LEAD_MISSING,
   ROLES,
+  ROLE_ADMIN,
   ROLE_CUSTOMER,
   ROLE_EXTERNAL_DIET,
   ROLE_RH,
+  ROLE_SUPER_ADMIN,
   SEASON,
   SPOON_SOURCE,
   SURVEY_ANSWER,
   TARGET_TYPE,
   UNIT
 } = require('./consts')
+const {
+  createAppointment,
+  getAccount,
+  getAgenda,
+  getAppointmentTypes,
+  getDietAvailabilities,
+  getDietUnavailabilities,
+  upsertAccount
+} = require('../agenda/smartagenda')
+const AppointmentType = require('../../models/AppointmentType')
 const {
   declareComputedField,
   declareEnumField,
@@ -1065,8 +1071,12 @@ const postCreate = ({model, params, data,user}) => {
       .then(coaching => User.findByIdAndUpdate(data._id, {coaching}))
   }
   if (['user'].includes(model) && data.role==ROLE_EXTERNAL_DIET) {
-    sendDietPreRegister({user:data})
-    return Promise.resolve(data)
+    return Promise.allSettled([
+      sendDietPreRegister2Diet({user:data}),
+      User.find({role: {$in: [ROLE_ADMIN, ROLE_SUPER_ADMIN]}})
+        .then(admins => Promise.allSettled(admins.map(admin => sendDietPreRegister2Admin({user:data, admin}))))
+    ])
+    .then(data => data)
   }
   // Create coaching.progress if not present
   if (model=='appointment') {

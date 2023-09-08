@@ -16,8 +16,8 @@ const SIB_IDS={
   */
   // DIETS
   DIET_PREREGISTER_2_DIET: 4852839,
-  /**
   DIET_PREREGISTER_2_ADMIN: 5034812,
+  /**
   DIET_VALIDATED_2_DIET: 5027161,
   DIET_NOT_VALIDATED_TO_DIET: 5033315,
   DIET_ACTIVATED_2_DIET:5033406,
@@ -40,7 +40,7 @@ const sendForgotPassword = ({user, password}) => {
   })
 }
 
-const sendDietPreRegister = ({user}) => {
+const sendDietPreRegister2Diet = ({user}) => {
   return sendNotification({
     notification: SIB_IDS.DIET_PREREGISTER_2_DIET,
     destinee: user,
@@ -50,7 +50,19 @@ const sendDietPreRegister = ({user}) => {
   })
 }
 
+const sendDietPreRegister2Admin = ({user, admin}) => {
+  return sendNotification({
+    notification: SIB_IDS.DIET_PREREGISTER_2_ADMIN,
+    destinee: admin,
+    params: {
+      FIRSTNAME: user.firstname,
+      LASTNAME: user.lastname,
+    },
+  })
+}
+
 module.exports = {
   sendForgotPassword,
-  sendDietPreRegister,
+  sendDietPreRegister2Diet,
+  sendDietPreRegister2Admin,
 }
