@@ -132,7 +132,7 @@ let ACTIONS = {
 
         return promise
           .then(()=> {
-            return User.create({...props, password: bcrypt.hashSync(props.password, 10)})
+            return User.create({...props})
           })
           .then(user => callPostCreateData({model: 'user', data:user}))
     })
