@@ -1,0 +1,129 @@
+# App Android / iOS
+
+Responsable: Richard
+
+## Mise en place
+
+Récupération d’une branche solito
+
+Se placer dans le dossier `studio-test-native/apps/expo` et installer le projet avec `yarn`
+
+NOTE: Préparer les fichiers nécessaires aux notifications via Firebase au besoin
+
+
+## Notifications
+
+### Firebase
+
+NOTE: 📖 [https://console.firebase.google.com](https://console.firebase.google.com/)
+
+A l’aide du compte dev@wappizy.com, créer un projet, et y inscrire les apps Android et iOS.
+
+Pour iOS, se rendre dans les paramètres du projet / cloud messaging pour y renseigner la **Clé d'authentification APNs** à l’aide des éléments suivants
+
+- fichier .p8
+- l’id de clé
+- l’id de l’équipe
+
+Firebase fournit les fichiers relatifs aux plateformes suivants: 
+
+- GoogleService-Info.plist (iOS)
+- google-services.json (Android)
+
+## App.tsx
+
+renseigner l’url du site dans BASE_URL_TO_POINT
+
+## Assets
+
+Renseigner les images du dossier assets : splash, icon, et adaptive-icon. Ils sont utilisés dans le fichier app.json suivant.
+
+## app.json
+
+Renseigner tous les éléments :
+
+[src, JavaScript]
+.app.json
+----
+{
+  "expo": {
+    "name": "SmartDiet",
+    "slug": "smartdiet",
+    "scheme": "smartdiet",
+    "version": "0.0.1",
+    "jsEngine": "hermes",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.smartdiet.app",
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "infoPlist": {
+        "NSCameraUsageDescription": "$(PRODUCT_NAME) souhaite accéder à l&apos;appareil photo. Autorisez l&apos;accès à votre caméra pour capturer des photos. Vous pouvez utiliser celles-ci pour votre profil et votre journal alimentaire.",
+        "NSPhotoLibraryUsageDescription": "$(PRODUCT_NAME) souhaite accéder à vos photos. Autorisez l&apos;accès à votre galerie pour charger des photos. Vous pouvez utiliser celles-ci dans votre profil et votre journal alimentaire.",
+        "UIBackgroundModes": [
+          "fetch",
+          "remote-notification"
+        ]
+      }
+    },
+    "android": {
+			/* Permissions de base sur Android : */
+      "permissions": ["android.permission.POST_NOTIFICATIONS"],
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.smartdiet.app",
+      "googleServicesFile": "./google-services.json"
+    },
+    "plugins": [
+      "@react-native-firebase/app",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static" // Nécessaire pour notif's
+          }
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "bfdb399e-44d0-48ef-9a21-0cb4f63b90a9"
+      }
+    }
+  }
+}
+----
+
+## Emulateur
+
+Afin de vérifier que tout est bien paramétré, et que le build se fait, lancer la commande suivante
+
+```bash
+npx expo run:android
+npx expo run:ios
+```
+
+## Expo
+
+Pour créer l’archive Android .aab ou iOS, il est nécessaire de sortir des fichiers .gitignore les fichiers googleService (expo exclut ces fichiers lors de l’envoi de la codebase)
+
+```bash
+eas build --platform ios
+# ou
+eas build --platform android 
+```

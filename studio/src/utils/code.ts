@@ -20,6 +20,8 @@ import {
   UPLOAD_TYPE,
   getDataProviderDataType,
   getFieldsForDataProvider,
+  getParentOfType,
+  hasParentType,
   isSingleDataPage,
 } from './dataSources';
 import {
@@ -35,7 +37,6 @@ import {
   whatTheHexaColor,
 } from './misc';
 import { ProjectState, PageState } from '../core/models/project'
-import { hasParentType } from './validation';
 import { isJsonString } from '../dependencies/utils/misc'
 import { key } from '../tests/utils/smartdiet_model.json';
 
@@ -52,15 +53,23 @@ export const getPageComponentName = (
   return normalizePageName(pages[pageId].pageName)
 }
 
-const isDynamicComponent = (comp: IComponent) => {
-  return (!!comp.props.dataSource || !!comp.props.subDataSource
+const isDynamicComponent = (components:IComponents, comp: IComponent): boolean => {
+  let isDynamic=(!!comp.props.dataSource || !!comp.props.subDataSource
     || (!!comp.props.action && !CONTAINER_TYPE.includes(comp.type))
-    || (comp.props.model && comp.props.attribute)
-  ) && !(comp.type=='Flex' && comp.props.isFilterComponent)
+    || (comp.props.model && comp.props.attribute)) && !(comp.type=='Flex' && comp.props.isFilterComponent)
+  // Tabs: has dataSource but only TabList and TabPanels children must get the datasource
+  if (comp.type=='Tabs') {
+    return false
+  }
+  if (['TabList', 'TabPanels'].includes(comp.type)) {
+    const tabParent=getParentOfType(components, comp, 'Tabs')
+    return tabParent ? tabParent.props.dataSource : false
+  }
+  return isDynamic
 }
 
 const isMaskableComponent = (comp: IComponent) => {
-  return !!comp.props.hiddenRoles
+  return !!comp.props.hiddenRoles || !!comp.props.conditionsvisibility
 }
 
 const getDynamicType = (comp: IComponent) => {
@@ -153,19 +162,32 @@ const buildBlock = ({
   let content = ''
   const singleData=isSingleDataPage(components)
   component.children.forEach((key: string) => {
-    let childComponent = components[key]
-    if (childComponent.type === 'DataProvider') {
+    let child = components[key]
+    if (child.type === 'DataProvider') {
       return
     }
-    if (!childComponent) {
+    if (!child) {
       throw new Error(`invalid component ${key}`)
-    } else if (forceBuildBlock || !childComponent.componentName) {
+    } else if (forceBuildBlock || !child.componentName) {
+
+      const childComponent={
+        ...lodash.cloneDeep(child),
+        props: lodash.cloneDeep(child.type=='Tabs' ? lodash.omit(child.props, ['dataSource']) : child.props),
+      }
+
+      // Force TabList && TabPanel's dataSource if parent Tabs has one
+      if (['TabList', 'TabPanels'].includes(childComponent.type)) {
+        const tabParent=getParentOfType(components, childComponent, 'Tabs')
+        if (tabParent?.props.dataSource) {
+          childComponent.props.dataSource=tabParent?.props.dataSource
+        }
+      }
       const dataProvider = components[childComponent.props.dataSource]
       const isDpValid=getValidDataProviders(components).find(dp => dp.id==childComponent.props.dataSource)
       const paramProvider = dataProvider?.id.replace(/comp-/, '')
       const subDataProvider = components[childComponent.props.subDataSource]
       const paramSubProvider = subDataProvider?.id.replace(/comp-/, '')
-      const componentName = isDynamicComponent(childComponent)
+      const componentName = isDynamicComponent(components, childComponent)
         ? `Dynamic${capitalize(childComponent.type)}`
         : isMaskableComponent(childComponent)
         ? `Maskable${capitalize(childComponent.type)}`
@@ -205,7 +227,7 @@ const buildBlock = ({
         propsContent += ` insideGroup `
       }
 
-      if (isDynamicComponent(childComponent)) {
+      if (isDynamicComponent(components, childComponent)) {
         propsContent += ` backend='/'`
           let tp = null
             try {
@@ -622,12 +644,13 @@ const isFilterComponent = (component: IComponent, components: IComponents) => {
 
 const buildDynamics = (components: IComponents, extraImports: string[]) => {
   const dynamicComps = lodash.uniqBy(
-    Object.values(components).filter(c => isDynamicComponent(c)),
+    Object.values(components).filter(c => isDynamicComponent(components, c)),
     c => c.type,
   )
   if (dynamicComps.length === 0) {
     return null
   }
+
   const groups = lodash.groupBy(dynamicComps, c => getDynamicType(c))
   Object.keys(groups).forEach(g =>
     extraImports.push(
@@ -701,6 +724,7 @@ export const generateCode = async (
 
   const lucideIconImports = [...new Set(getIconsImports(components, 'lucid'))]
   const iconImports = [...new Set(getIconsImports(components))]
+
 
 
 

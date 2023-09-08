@@ -7,7 +7,10 @@ export const CONTAINER_TYPE: ComponentType[] = [
   'Flex',
   'List',
   'Container',
-  'AccordionPanel'
+  'AccordionPanel',
+  'Tabs',
+  'TabList',
+  'TabPanels',
 ]
 export const TEXT_TYPE: ComponentType[] = [
   'Text',
@@ -272,4 +275,18 @@ export const getFieldsForDataProvider = (
       .value()
 
   return fields
+}
+
+export const getParentOfType = (components:IComponents, comp: IComponent, type: ComponentType): IComponent | null => {
+  if (comp.type==type) {
+    return comp
+  }
+  if (comp.id!='root') {
+    return getParentOfType(components, components[comp.parent], type)
+  }
+  return null
+}
+
+export const hasParentType = (comp: IComponent, comps: IComponents, type: ComponentType) => {
+  return !!getParentOfType(comps, comp, type)
 }

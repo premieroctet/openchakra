@@ -1,3 +1,4 @@
+const crypto = require('crypto')
 const {getDistance} = require('geolib')
 const {convertDistance} = require('geolib')
 
@@ -78,7 +79,18 @@ const valueBetween = (value, start, stop) => {
   return value>=start && value <=stop
 }
 
+const sanitizeFilename = name => {
+  return name.toLowerCase()
+    .replace(/ /gi, '-')
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
+}
+
+const generateUUID = () => {
+  return crypto.randomUUID()
+}
+
 module.exports = {
   computeDistanceKm, computeAverageNotes, computeSumSkills, rgbaToHex,
-  valueBetween,
+  valueBetween, sanitizeFilename, generateUUID,
 }

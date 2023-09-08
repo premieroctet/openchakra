@@ -2,6 +2,7 @@ import React from 'react'
 import { Button, Select, Input, Flex } from '@chakra-ui/react'
 import { useEffect, useState, memo } from 'react'
 import { OPERATORS, ValueComponent } from '../../../dependencies/utils/filters'
+import lodash from 'lodash'
 
 const FiltersPanel = ({ attributes, filter, onValidate }) => {
   const [attribute, setAttribute] = useState(filter?.attribute || null)
@@ -48,14 +49,15 @@ const FiltersPanel = ({ attributes, filter, onValidate }) => {
           ))}
         </Select>
         {attribute && operator ? (
-          enumValues?.length > 0 ? (
+          !lodash.isEmpty(enumValues) ? (
             <>
               <Select
                 onChange={ev => setValue(ev.target.value)}
                 value={value || undefined}
               >
-                {enumValues.map(v => (
-                  <option key={v} value={v}>
+                <option value={null}/>
+                {Object.entries(enumValues).map(([k,v]) => (
+                  <option key={k} value={k}>
                     {v}
                   </option>
                 ))}
