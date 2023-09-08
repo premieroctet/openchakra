@@ -11,15 +11,16 @@ export const mediaWrapper = ({
   htmlHeight,
   htmlWidth,
   isIframe = false,
-  canDownload,
+  visio,
+  downloadable,
 }: {
   src: string
   htmlHeight?: string
   htmlWidth?: string
   isIframe?: boolean
-  canDownload?: boolean
+  visio?: boolean
+  downloadable?: boolean
 }) => {
-  // const {htmlWidth, htmlHeight} = props
 
   /* TODO assign type to htmlWidth, htmlHeight */
   const doc = {
@@ -68,7 +69,7 @@ export const mediaWrapper = ({
   }
 
   const Comp = () =>
-    canDownload &&
+    downloadable &&
       (
       <div style={{display:'flex', justifyContent:'center'}} ><IconButton
         aria-label='download'
@@ -142,6 +143,7 @@ export const mediaWrapper = ({
           src={src}
           width={htmlWidth}
           height={htmlHeight}
+          allow={visio? "camera *;microphone *" : ''}
           allowFullScreen
         ></iframe>
         <Comp />

@@ -57,8 +57,8 @@ const Medias = ({
   const [mediaSearch, setMediaSearch] = useState<string>('')
   const [images, setImages] = useState<s3media[]>([])
   const { isOpen, onOpen, onClose } = useDisclosure()
-
   const [extfilters, setExtfilters] = useState<string[]>([])
+  const targetDomain = process.env?.PROJECT_TARGETDOMAIN
 
   const handledExtensions = new Set(
     images
@@ -75,7 +75,7 @@ const Medias = ({
       formData.append('fromstudio', 'true')
   
       const sendFile = await axios.post(
-        `${process.env?.NEXT_PUBLIC_PROJECT_TARGETDOMAIN}/myAlfred/api/studio/s3uploadfile`, 
+        `${targetDomain}/myAlfred/api/studio/s3uploadfile`, 
         formData, 
         {
           headers: {
@@ -102,14 +102,14 @@ const Medias = ({
   const handleDelete = async (key: string) => {
     const res = await axios
       .post(
-        `${process.env?.NEXT_PUBLIC_PROJECT_TARGETDOMAIN}/myAlfred/api/studio/s3deletefile`, {filetodelete: key})
+        `${targetDomain}/myAlfred/api/studio/s3deletefile`, {filetodelete: key})
       .then(() => {
         setImages(images.filter((img: s3media) => img.Key !== key))
       })
   }
 
   const fetchFiles = async () => {
-    const res = await axios.get(`${process.env?.NEXT_PUBLIC_PROJECT_TARGETDOMAIN}/myAlfred/api/studio/s3getfiles`)
+    const res = await axios.get(`${targetDomain}/myAlfred/api/studio/s3getfiles`)
     setImages(res?.data || [])
   }
 
