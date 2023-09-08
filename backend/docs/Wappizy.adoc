@@ -75,3 +75,22 @@ MONO_PROVIDER=true
 ----
 
 
+
+## Médias 
+
+### Images
+
+Les images sont stockées sur AWS s3. L'image d'origine est conservée, compressée lorsque format jpeg (avec mozjpeg) et celle-ci se voit retaillée en 3 tailles fixées dans les consts (500, 1000, 2000).
+
+Les types mime suivants sont pris en compte :
+
+* image/jpeg
+* image/png
+* image/png
+* image/heic
+* image/webp
+
+Les types heic/heif sont convertis en .jpeg à l'aide du package heic-convert. 
+
+TIP: Pour gagner en temps de traitement, installer libvips sur le serveur et supprimer le switch dans resizeImage.
+
