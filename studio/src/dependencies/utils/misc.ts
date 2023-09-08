@@ -1,3 +1,4 @@
+const THUMBNAILS_DIR = 'thumbnails'
 
 export function isJsonString(str: string) {
   try {
@@ -40,3 +41,42 @@ export const matcher = (pattern:string, elements:Array<any>, attribute:string) =
   return orResult
   */
 }
+
+
+export const imageSrcSetPaths = (originalSrc:string, withDimension=true) => {
+
+  /**
+   * src filename example containing sizes: 
+   * https://******.amazonaws.com/devtest/studio/wappizy_srcset:500*1000*1920.webp
+   * 
+   * example of filepath derived for a smaller image
+   * https://******.amazonaws.com/thumbnails/devtest/studio/wappizy_w:500.webp
+   * 
+   */
+  let srcSet = undefined
+
+  const filePathParts = originalSrc.split("_srcset:") || originalSrc.split(encodeURIComponent("_srcset:"));
+  const filenameextension = originalSrc.substring(originalSrc.lastIndexOf('.') + 1, originalSrc.length)
+      
+      if (filePathParts.length > 1) {
+        const availableSizes = filePathParts[1].match(/\d+/g);
+        const availableSizesQty = availableSizes?.length
+        srcSet = availableSizes && availableSizes
+          .map((size, index) => {
+            if ((index + 1) === availableSizesQty) {
+              return `${originalSrc}${withDimension ? ` ${size}w` : ''}`
+            } else {
+              const shortFilepathParts = filePathParts[0].split('/')
+              // index to add thumbnails folder after https://******.amazonaws.com
+              const indexToPushThumbnails = 3
+              const thumbnailsFilepath = shortFilepathParts
+                .slice(0, indexToPushThumbnails)
+                .concat(THUMBNAILS_DIR, shortFilepathParts.slice(indexToPushThumbnails));
+              return `${thumbnailsFilepath.join('/')}_w:${size}.${filenameextension}${withDimension ? ` ${size}w` : ''}`
+            }
+          })
+      }
+      
+  return srcSet
+}
+

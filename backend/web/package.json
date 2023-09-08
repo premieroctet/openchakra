@@ -15,6 +15,8 @@
     "test": "jest"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.405.0",
+    "@aws-sdk/lib-storage": "^3.405.0",
     "axios": "^0.24.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
@@ -33,6 +35,7 @@
     "firebase-admin": "^11.7.0",
     "format-duration": "^2.0.0",
     "glob": "^7.1.4",
+    "heic-convert": "^1.2.4",
     "i18n-zipcodes": "^4.0.0",
     "i18next": "^20.6.0",
     "i18next-browser-languagedetector": "^6.1.4",
@@ -68,6 +71,7 @@
     "react-html-parser": "^2.0.2",
     "react-i18next": "^11.11.4",
     "rrule": "^2.6.8",
+    "sharp": "^0.32.4",
     "sib-api-v3-sdk": "^7.2.2",
     "siret": "^1.0.1",
     "socket.io": "^2.4.1",
