@@ -30,7 +30,7 @@ const moment=require('moment')
 const { ForbiddenError } = require('../../../utils/errors')
 const {schemaOptions} = require('../../../utils/schemas')
 const lodash=require('lodash')
-const bcrypt=require('bcryptjs')
+const bcrypt = require('bcryptjs')
 
 const Schema = mongoose.Schema
 
@@ -90,7 +90,6 @@ const UserSchema = new Schema({
   password: {
     type: String,
     required: [true, 'Le mot de passe est obligatoire'],
-    default: 'invalid',
     set: pass => bcrypt.hashSync(pass, 10),
   },
   role: {
