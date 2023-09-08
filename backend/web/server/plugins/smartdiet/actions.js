@@ -219,6 +219,19 @@ const forgotPasswordAction=({context, parent, email}) => {
 }
 addAction('forgotPassword', forgotPasswordAction)
 
+const deactivateAccount = ({value, reason}, user) => {
+  console.log(`Value is ${value}`)
+  return isActionAllowed({action:'deactivateAccount', dataId:value?._id, user})
+    .then(ok => {
+      if (!ok) {return false}
+      return User.findByIdAndUpdate(
+        value._id,
+        {active: false}
+      )
+    })
+}
+addAction('deactivateAccount', deactivateAccount)
+
 
 const isActionAllowed = ({action, dataId, user}) => {
   // TODO: why can we get "undefined" ??

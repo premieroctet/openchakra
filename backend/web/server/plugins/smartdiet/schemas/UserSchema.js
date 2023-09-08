@@ -257,6 +257,11 @@ const UserSchema = new Schema({
     type: String,
     required: false,
   },
+  active: {
+    type: Boolean,
+    default: true,
+    required: true,
+  }
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
