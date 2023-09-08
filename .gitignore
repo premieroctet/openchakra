@@ -22,7 +22,7 @@ backend/web/fumoir*.json
 **/web/storage
 
 # misc
-**/.env
+**/.env*
 **/env.json
 npm-debug.log*
 yarn-debug.log*
