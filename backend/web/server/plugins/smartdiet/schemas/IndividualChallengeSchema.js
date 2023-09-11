@@ -37,7 +37,7 @@ const IndividualChallengeSchema = new Schema({
   spoons_count_for_trophy: {
     type: Number,
     default: 5,
-    required: [true, 'Le nombre de cuillères néecssaires pour un trophée est obligatoire'],
+    required: [true, 'Le nombre de cuillères nécessaires pour un trophée est obligatoire'],
   },
 },
 {...schemaOptions, ...EVENT_DISCRIMINATOR},
