@@ -222,7 +222,6 @@ const computeDataFieldName = (
     )
   }
 
-  console.log(`Comp ${component.id}: parent field name ${parentFieldName}`)
   const attrs=[]
   if (component.props.dataSource==dataSourceId) {
     if (component.props.attribute) {

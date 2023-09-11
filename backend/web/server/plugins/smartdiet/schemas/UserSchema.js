@@ -225,11 +225,27 @@ const UserSchema = new Schema({
     type: String,
     required: false,
   },
+  // TODO: handle multiple enum declaration
+  /**
   activities: [{
     type: String,
     enum: Object.keys(DIET_ACTIVITIES),
     required: false,
   }],
+  */
+  diet_coaching_enabled: {
+    type: Boolean,
+    required: false,
+  },
+  diet_visio_enabled: {
+    type: Boolean,
+    required: false,
+  },
+  diet_site_enabled: {
+    type: Boolean,
+    required: false,
+  },
+  // END TODO: handle multiple enum declaration
   // TODO :set to ACTIVE when profile is 100%
   registration_status: {
     type: String,

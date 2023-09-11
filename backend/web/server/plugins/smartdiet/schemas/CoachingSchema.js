@@ -122,6 +122,8 @@ CoachingSchema.virtual("_all_diets", {
 CoachingSchema.virtual('available_diets', {localField:'tagada', foreignField:'tagada'}).get(function() {
   const expected_app_type=this.appointment_type?._id
   return lodash(this._all_diets)
+    // Diets allowing coaching
+    .filter(d => d.diet_coaching_enabled)
     // Diets managing this company
     .filter(d => d.customer_companies?.map(c => c._id).includes(this.user?.company._id))
     // Diets having availability in the 15 next days for this kind of appointment
