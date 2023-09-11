@@ -9,12 +9,13 @@ INFOS:
 - pdo_events.apilnk_equipe_id: 'pdo_agenda/diet_id'
 - appointments start & end dates must be rounded at 1/4h
 */
+const config = require('../../../config/config')
+const { isDevelopment } = require('../../../config/config')
 const Range = require('../../models/Range')
 const User = require('../../models/User')
 const { ROLE_EXTERNAL_DIET } = require('../smartdiet/consts')
 const AppointmentType = require('../../models/AppointmentType')
 const axios = require('axios')
-const config = require('../../../config/config')
 const crypto=require('crypto')
 const lodash=require('lodash')
 require('lodash.product')
@@ -264,7 +265,7 @@ cron.schedule('0 * * * * *', () => {
 
 // Synchronize availabilities every minute
 // DISABLED UNTIL SMARTAGENDA WEBHOOK
-false && cron.schedule('0 * * * * *', () => {
+!isDevelopment() && cron.schedule('0 * * * * *', () => {
   console.log('Syncing availabilities from smartagenda')
   const start=moment().add(-7, 'days')
   const end=moment().add(7, 'days')

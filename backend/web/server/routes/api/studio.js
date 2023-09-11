@@ -127,6 +127,12 @@ router.get('/roles', (req, res) => {
   return res.json(ROLES)
 })
 
+// Hooks agenda modifications
+router.post('/agenda-hook', (req, res) => {
+  console.log(`Agenda hook received ${JSON.stringify(req.body)}`)
+  return res.json()
+})
+
 router.get('/action-allowed/:action', passport.authenticate('cookie', {session: false}), (req, res) => {
   const {action}=req.params
   const query=lodash.mapValues(req.query, v => {try{return JSON.parse(v)} catch(e) {return v}})
