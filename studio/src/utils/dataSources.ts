@@ -214,7 +214,7 @@ const computeDataFieldName = (
     dataSourceId,
   )
 
-  if (components[component.parent].type=='RadioGroup') {
+  if (['RadioGroup', 'CheckboxGroup'].includes(components[component.parent].type)) {
     parentFieldName = computeDataFieldName(
       components[components[component.parent].parent],
       components,
