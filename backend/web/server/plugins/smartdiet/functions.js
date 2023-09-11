@@ -775,7 +775,7 @@ declareVirtualField({model: 'coaching', field: '_all_diets', instance: 'Array', 
     options: {ref: 'user'}},
 })
 declareVirtualField({model: 'coaching', field: 'available_diets', instance: 'Array', multiple: true,
-  requires: '_all_diets.reasons',
+  requires: '_all_diets.reasons,_all_diets.customer_companies,_all_diets.availability_ranges,user.company,appointment_type',
   caster: {
     instance: 'ObjectID',
     options: {ref: 'user'}
@@ -986,6 +986,7 @@ const getUserContents = (user, params, data) => {
   const user_targets=lodash([data.objective_targets,data.health_targets,
     data.activity_target,data.specificity_targets,data.home_target])
     .flatten()
+    .filter(v => !!v)
     .value()
   return Promise.resolve(data._all_contents.filter(c => c.default || setIntersects(c.targets, user_targets)))
 }
