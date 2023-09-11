@@ -12,7 +12,6 @@ const passport = require('passport')
 const {handleUploadedFile} = require('../../middlewares/uploadFile')
 const {resizeImage} = require('../../middlewares/resizeImage')
 const {sendFilesToAWS, getFilesFromAWS, deleteFileFromAWS} = require('../../middlewares/aws')
-const {catchErrors} = require('../../utils/handlers/errorHandlers')
 const {IMAGE_SIZE_MARKER} = require('../../../utils/consts')
 const {
   callFilterDataUser,
@@ -128,7 +127,7 @@ router.get('/roles', (req, res) => {
   return res.json(ROLES)
 })
 
-router.post('/s3uploadfile', handleUploadedFile, catchErrors(resizeImage), catchErrors(sendFilesToAWS), (req, res) => {
+router.post('/s3uploadfile', handleUploadedFile, resizeImage, sendFilesToAWS, (req, res) => {
   const srcFiles = req?.body?.result
   // filter image original file
   const imageSource = Array.isArray(req.body.result) && req?.body?.result.filter(s3obj => s3obj.Location.includes(encodeURIComponent(IMAGE_SIZE_MARKER)))
@@ -137,11 +136,11 @@ router.post('/s3uploadfile', handleUploadedFile, catchErrors(resizeImage), catch
   return srcFile ? res.status(201).json(srcFile?.Location || '') : res.status(444).json(srcFile)
 })
 
-router.get('/s3getfiles', catchErrors(getFilesFromAWS), async(req, res) => {
+router.get('/s3getfiles', getFilesFromAWS, async(req, res) => {
   return req.body.files ? res.status(200).json(req.body.files) : res.status(444)
 })
 
-router.post('/s3deletefile', catchErrors(deleteFileFromAWS), (req, res) => {
+router.post('/s3deletefile', deleteFileFromAWS, (req, res) => {
   return req.body?.filedeleted ? res.status(200).json(req.body.filedeleted) : res.status(400)
 })
 
