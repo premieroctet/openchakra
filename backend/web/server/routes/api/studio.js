@@ -162,7 +162,7 @@ router.post('/file', (req, res) => {
     return res.status(HTTP_CODES.BAD_REQUEST).json()
   }
   const destpath = path.join(PRODUCTION_ROOT, projectName, PROJECT_CONTEXT_PATH, filePath)
-  const unzippedContents=zlib.inflateSync(new Buffer(contents, 'base64')).toString()
+  const unzippedContents=zlib.inflateSync(Buffer.from(contents, 'base64')).toString()
   console.log(`Copying in ${destpath}`)
   return fs
     .writeFile(destpath, unzippedContents)
