@@ -254,7 +254,7 @@ const UserSchema = new Schema({
     required: [function() {return this.role==ROLE_EXTERNAL_DIET}, 'Le statut de diet externe est obligatoire'],
   },
   signed_charter: {
-    type: Boolean,
+    type: String,
     required: false,
   },
   // Reasons offered by diet
