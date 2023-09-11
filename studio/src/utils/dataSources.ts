@@ -208,12 +208,21 @@ const computeDataFieldName = (
     return null
   }
 
-  const parentFieldName = computeDataFieldName(
+  let parentFieldName = computeDataFieldName(
     components[component.parent],
     components,
     dataSourceId,
   )
 
+  if (components[component.parent].type=='RadioGroup') {
+    parentFieldName = computeDataFieldName(
+      components[components[component.parent].parent],
+      components,
+      dataSourceId,
+    )
+  }
+
+  console.log(`Comp ${component.id}: parent field name ${parentFieldName}`)
   const attrs=[]
   if (component.props.dataSource==dataSourceId) {
     if (component.props.attribute) {
