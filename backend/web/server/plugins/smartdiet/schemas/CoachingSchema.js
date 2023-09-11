@@ -120,10 +120,14 @@ CoachingSchema.virtual("_all_diets", {
 - keep then sort by reasons
 */
 CoachingSchema.virtual('available_diets', {localField:'tagada', foreignField:'tagada'}).get(function() {
+  const expected_app_type=this.appointment_type?._id
   return lodash(this._all_diets)
-  .filter(d => d.smartagenda_id)
-  .orderBy(u => intersection(u.reasons, this.reasons), 'desc')
-  .value()
+    // Diets managing this company
+    .filter(d => d.customer_companies?.map(c => c._id).includes(this.user?.company._id))
+    // Diets having availability in the 15 next days for this kind of appointment
+    .filter(d => d.availability_ranges?.some(r => idEqual(r.appointment_type._id, expected_app_type)))
+    .orderBy(u => intersection(u.reasons, this.reasons), 'desc')
+    .value()
 })
 
 // Returns the current objectoves (i.e. the newest appointment's ones)
