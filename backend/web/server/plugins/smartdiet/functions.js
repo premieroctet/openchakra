@@ -775,7 +775,8 @@ declareVirtualField({model: 'coaching', field: '_all_diets', instance: 'Array', 
     options: {ref: 'user'}},
 })
 declareVirtualField({model: 'coaching', field: 'available_diets', instance: 'Array', multiple: true,
-  requires: '_all_diets.reasons,_all_diets.customer_companies,_all_diets.availability_ranges,user.company,appointment_type',
+  requires: `_all_diets.reasons,_all_diets.customer_companies,_all_diets.availability_ranges,\
+user.company,appointment_type,_all_diets.diet_coaching_enabled`,
   caster: {
     instance: 'ObjectID',
     options: {ref: 'user'}
