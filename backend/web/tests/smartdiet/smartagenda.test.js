@@ -1,3 +1,11 @@
+const Range = require('../../server/models/Range')
+const { MONGOOSE_OPTIONS } = require('../../server/utils/database')
+const { getDatabaseUri } = require('../../config/config')
+const User = require('../../server/models/User')
+require('../../server/models/Company')
+require('../../server/models/Content')
+require('../../server/models/Comment')
+
 const {
   createAccount,
   createAppointment,
@@ -45,7 +53,7 @@ describe('SmartAgenda test ', () => {
     expect(token).toBeTruthy()
   })
 
-  it('must get accouonnts', async() => {
+  it('must get accounts', async() => {
     const accounts=await getAccounts({email: 'sebastien.auvray@wappizy.com'})
     console.log(accounts)
     expect(accounts).toBeTruthy()
@@ -134,6 +142,17 @@ describe('SmartAgenda test ', () => {
   it('must get appointment types', async() => {
     const app_types=await getAppointmentTypes()
      expect(app_types).not.toHaveLength(0)
+  })
+
+  it.only('must check availabilities', async() => {
+    await mongoose.connect(getDatabaseUri(), MONGOOSE_OPTIONS)
+    let ranges=await Range.find().populate('user').populate('appointment_type')
+    console.log(ranges)
+    ranges=ranges
+      .filter(r => /dietext/.test(r.user.email))
+      .filter(r => /carcept/i.test(r.appointment_type.title))
+      .filter(r => /bilan/i.test(r.appointment_type.title))
+    console.log(JSON.stringify(ranges.map(r => [r.user._id, r.user.email, r.appointment_type.title]), null,2))
   })
 
 })

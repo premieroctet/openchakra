@@ -214,8 +214,7 @@ const deleteAppointment = app_id => {
 const getAppointmentTypes = () => {
   return getToken()
     .then(token => axios.get(APPOINTMENT_TYPE_URL, {params:{token, nbresults: MAX_RESULTS}}))
-    .then(({data}) => data)
-}
+    .then(({data}) => data.filter(d => d.id>0))}
 
 const getAvailabilities = ({diet_id, from, to, appointment_type}) => {
   if (!(diet_id && from && to && appointment_type)) {
