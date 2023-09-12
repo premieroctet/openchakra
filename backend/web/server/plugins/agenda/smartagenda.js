@@ -201,7 +201,6 @@ const createAppointment = (diet_id, client_id, presta_id, start_date, end_date) 
   return getToken()
     .then(token => axios.post(`${EVENTS_URL}?token=${token}`, data))
     .then(res => res.data)
-    .then(err => {console.error(err.code, err.message); throw err})
 }
 
 const deleteAppointment = app_id => {
@@ -264,7 +263,7 @@ cron.schedule('0 * * * * *', () => {
 
 // Synchronize availabilities every minute
 // DISABLED UNTIL SMARTAGENDA WEBHOOK
-!isDevelopment() && cron.schedule('10 * * * * *', () => {
+!isDevelopment() && cron.schedule('10,20,30,40,50 * * * * *', () => {
   console.log('Syncing availabilities from smartagenda')
   const start=moment().add(-7, 'days')
   const end=moment().add(7, 'days')
@@ -280,7 +279,7 @@ cron.schedule('0 * * * * *', () => {
               return Range.create(params)
             }))
           })
-          .catch(err => console.error(err.data.message))
+          .catch(err => console.error(`${msg_id}:${err.response.status},${err.response.data.message}`))
       }))
     })
     .then(() => Range.countDocuments())
