@@ -58,7 +58,7 @@ const Medias = ({
   const [images, setImages] = useState<s3media[]>([])
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [extfilters, setExtfilters] = useState<string[]>([])
-  const targetDomain = process.env?.NEXT_PUBLIC_PROJECT_TARGETDOMAIN
+  let targetDomain = process?.env?.NEXT_PUBLIC_PROJECT_TARGETDOMAIN
 
   const handledExtensions = new Set(
     images
@@ -114,6 +114,7 @@ const Medias = ({
   }
 
   useEffect(() => {
+    targetDomain = process?.env?.NEXT_PUBLIC_PROJECT_TARGETDOMAIN || ''
     fetchFiles()
   }, [])
 
