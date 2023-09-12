@@ -84,19 +84,19 @@ const getChatURL = () => {
 
 const getHostName = () => {
   if (isDevelopment()) {
-    return process.env.HOSTNAME || 'localhost'
+    return process.env.HOSTDOMAIN || 'localhost'
   }
-  if (!process.env.HOSTNAME) {
-    throw new Error(`HOSTNAME config missing`)
+  if (!process.env.HOSTDOMAIN) {
+    throw new Error(`HOSTDOMAIN config missing`)
   }
-  return process.env.HOSTNAME
+  return process.env.HOSTDOMAIN
 }
 
 const getPort = () => {
   if (isValidation() && isNaN(parseInt(process.env?.BACKEND_PORT))) {
     throw new Error(`BACKEND_PORT config missing or not an integer`)
   }
-  return process.env?.BACKEND_PORT || 443
+  return process.env.BACKEND_PORT || 443
 }
 
 const mustDisplayChat = () => {
@@ -222,8 +222,8 @@ const checkConfig = () => {
       )
     }
 
-    if (!isDevelopment() && !process.env.HOSTNAME) {
-      reject(`HOSTNAME: obligatoire en mode ${process.env.MODE}`)
+    if (!isDevelopment() && !process.env.HOSTDOMAIN) {
+      reject(`HOSTDOMAIN: obligatoire en mode ${process.env.MODE}`)
     }
 
     if (isValidation() && isNaN(parseInt(process.env?.BACKEND_PORT))) {
