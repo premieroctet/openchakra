@@ -1,5 +1,6 @@
 const {
   HOOK_DELETE,
+  HOOK_INSERT,
   createAppointment,
   getAccount,
   getAgenda,
