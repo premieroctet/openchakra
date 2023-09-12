@@ -1,5 +1,7 @@
 const path=require('path')
-require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
+myEnv = require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
+const dotenvExpand = require('dotenv-expand')
+dotenvExpand.expand(myEnv)
 
 const processName=`FRONT-${process.env.NEXT_PUBLIC_PROJECT_NAME || 'NO_NEXT_PUBLIC_PROJECT_NAME'}-${process.env.FRONTEND_APP_PORT}`.toUpperCase()
 
