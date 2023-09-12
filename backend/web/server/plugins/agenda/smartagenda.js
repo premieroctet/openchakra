@@ -261,6 +261,25 @@ cron.schedule('0 * * * * *', () => {
     .then(res => res.length && console.log(`Updated/created ${res.length} appt types`))
 })
 
+const upsertAvailabilities = diet_smartagenda_id => {
+  /**
+  return Range.deleteMany({smartagenda_id: diet_smartagenda_id})
+    .then(() => Promise.all([User.find({smartagenda_id: diet_smartagenda_id}), AppointmentType.find()]))
+    .then(([diets, app_types]) => {
+      const combinations=lodash.product(diets, app_types)
+      return Promise.allSettled(combinations.map(([diet, app_type]) => {
+        return getAvailabilities({diet_id: diet.smartagenda_id, from: start, to: end, appointment_type: app_type.smartagenda_id})
+          .then(avails => {
+            return Promise.all(avails.map(avail => {
+              const params={ user: diet._id, appointment_type: app_type._id, start_date: avail.start_date }
+              return Range.create(params)
+            }))
+          })
+          .catch(err => console.error(`${msg_id}:${err.response.status},${err.response.data.message}`))
+    })
+    */
+}
+
 // Synchronize availabilities every minute
 // DISABLED UNTIL SMARTAGENDA WEBHOOK
 !isDevelopment() && cron.schedule('10,20,30,40,50 * * * * *', () => {

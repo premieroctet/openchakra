@@ -2,6 +2,7 @@ const {
   HOOK_DELETE,
   HOOK_INSERT,
   createAppointment,
+  deleteAppointment,
   getAccount,
   getAgenda,
   getAppointmentTypes,
@@ -9,6 +10,24 @@ const {
   getDietUnavailabilities,
   upsertAccount
 } = require('../agenda/smartagenda')
+const {
+  declareComputedField,
+  declareEnumField,
+  declareVirtualField,
+  differenceSet,
+  getModel,
+  idEqual,
+  loadFromDb,
+  setFilterDataUser,
+  setImportDataFunction,
+  setIntersects,
+  setPostCreateData,
+  setPostDeleteData,
+  setPostPutData,
+  setPreCreateData,
+  setPreprocessGet,
+  simpleCloneModel,
+} = require('../../utils/database')
 const { getSmartAgendaConfig } = require('../../../config/config')
 
 const { sendDietPreRegister } = require('./mailing')
@@ -54,23 +73,6 @@ const {
   TARGET_TYPE,
   UNIT
 } = require('./consts')
-const {
-  declareComputedField,
-  declareEnumField,
-  declareVirtualField,
-  differenceSet,
-  getModel,
-  idEqual,
-  loadFromDb,
-  setFilterDataUser,
-  setImportDataFunction,
-  setIntersects,
-  setPostCreateData,
-  setPostPutData,
-  setPreCreateData,
-  setPreprocessGet,
-  simpleCloneModel,
-} = require('../../utils/database')
 const { importLeads } = require('./leads')
 const Quizz = require('../../models/Quizz')
 const CoachingLogbook = require('../../models/CoachingLogbook')
@@ -1108,6 +1110,14 @@ const postCreate = ({model, params, data,user}) => {
 
 setPostCreateData(postCreate)
 
+const postDelete = ({model, data}) => {
+  if (model=='appointment') {
+    deleteAppointment(data.smartagenda_id)
+  }
+}
+
+setPostDeleteData(postDelete)
+
 const ensureChallengePipsConsistency = () => {
   // Does every challenge have all pips ?
   return Promise.all([Pip.find({}, "_id"), CollectiveChallenge.find({}, "_id"),
@@ -1353,6 +1363,8 @@ const agendaHookFn = received => {
   if (action==HOOK_DELETE) {
     console.log(`Deleting appointment smartagenda_id ${objId}`)
     return Appointment.findOneAndDelete({smartagenda_id: parseInt(objId)})
+      .then(console.log)
+      .catch(console.error)
   }
   if (action==HOOK_INSERT) {
     return Promise.all([
