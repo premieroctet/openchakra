@@ -1,7 +1,5 @@
-const { HOOK_DELETE } = require('../agenda/smartagenda')
-
-const { sendDietPreRegister } = require('./mailing')
 const {
+  HOOK_DELETE,
   createAppointment,
   getAccount,
   getAgenda,
@@ -10,6 +8,9 @@ const {
   getDietUnavailabilities,
   upsertAccount
 } = require('../agenda/smartagenda')
+const { getSmartAgendaConfig } = require('../../../config/config')
+
+const { sendDietPreRegister } = require('./mailing')
 const AppointmentType = require('../../models/AppointmentType')
 const {
   ACTIVITY,
