@@ -190,7 +190,6 @@ const preprocessGet = ({model, fields, id, user, params}) => {
               })
           }
         }
-        console.log(messages)
         const partnerMessages=lodash.groupBy(messages, m => getPartner(m, user)._id)
         const convs=lodash(partnerMessages)
           .values()
