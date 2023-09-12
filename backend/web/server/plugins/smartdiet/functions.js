@@ -1352,7 +1352,7 @@ const agendaHookFn = received => {
   }
   if (action==HOOK_DELETE) {
     console.log(`Deleting appointment smartagenda_id ${objId}`)
-    return Appointment.findOneAndDelete({smartagenda_id: objId})
+    return Appointment.findOneAndDelete({smartagenda_id: parseInt(objId)})
   }
   if (action==HOOK_INSERT) {
     return Promise.all([
