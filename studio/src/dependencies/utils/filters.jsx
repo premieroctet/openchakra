@@ -21,7 +21,7 @@ export const OPERATORS = {
     '<>': (v, ref) => v != ref,
     contains: (v, ref) => v?.toLowerCase()?.includes(ref?.toLowerCase()),
     'does not contain': (v, ref) =>
-      v?.toLowerCase()?.includes(ref?.toLowerCase()),
+      !v?.toLowerCase()?.includes(ref?.toLowerCase()),
     'is empty': lodash.isNil,
   },
   Date: {
