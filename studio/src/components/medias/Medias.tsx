@@ -58,7 +58,7 @@ const Medias = ({
   const [images, setImages] = useState<s3media[]>([])
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [extfilters, setExtfilters] = useState<string[]>([])
-  const targetDomain = process.env?.PROJECT_TARGETDOMAIN
+  const targetDomain = process.env?.NEXT_PUBLIC_PROJECT_TARGETDOMAIN
 
   const handledExtensions = new Set(
     images
