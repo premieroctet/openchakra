@@ -16,7 +16,7 @@ PRODUCTION_ROOT='/home/***/***' # basepath of the app (backend, studio, studio-t
 DATABASE_NAME='whatever' # can be used for DATA_MODEL, NEXT_PUBLIC_PROJECT_NAME
 DATA_MODEL=$DATABASE_NAME
 SITE_MODE='marketplace' # marketplace | platform 
-HOSTNAME='coucoutente-validation.my-alfred.io'
+HOSTDOMAIN='coucoutente-validation.my-alfred.io'
 
 # FRONT 
 NEXT_PUBLIC_PROJECT_NAME=$DATABASE_NAME # used for colors theme, filename studio projects
