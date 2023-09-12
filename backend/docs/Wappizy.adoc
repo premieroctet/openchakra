@@ -27,6 +27,14 @@ NEXT_PUBLIC_VERSION=1
 NEXT_PUBLIC_DISABLE_STORAGE=false  # disable localstorage for wappizy projects json
 
 # Mail
+
+MAIL_PROVIDER= # mailjet | sendInBlue
+
+## Mailjet
+MAILJET_PUBLIC_KEY=
+MAILJET_PRIVATE_KEY=
+
+## Brevo (ex Sendinblue)
 SIB_APIKEY='zorg32'
 
 # AWS S3
