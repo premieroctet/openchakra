@@ -264,7 +264,7 @@ cron.schedule('0 * * * * *', () => {
 
 // Synchronize availabilities every minute
 // DISABLED UNTIL SMARTAGENDA WEBHOOK
-!isDevelopment() && cron.schedule('0 * * * * *', () => {
+!isDevelopment() && cron.schedule('10 * * * * *', () => {
   console.log('Syncing availabilities from smartagenda')
   const start=moment().add(-7, 'days')
   const end=moment().add(7, 'days')
