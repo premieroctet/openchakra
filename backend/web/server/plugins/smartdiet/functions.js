@@ -1335,8 +1335,13 @@ cron.schedule('0 * * * * *', () => {
     })
 })
 
+const agendaHookFn = data => {
+
+}
+
 module.exports={
   ensureChallengePipsConsistency,
   logbooksConsistency,
   getRegisterCompany,
+  agendaHookFn,
 }

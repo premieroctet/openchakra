@@ -39,8 +39,10 @@ const {
   getProductionRoot,
 } = require('../../../config/config')
 
+let agendaHookFn=null
 try {
   require(`../../plugins/${getDataModel()}/functions`)
+  agendaHookFn=require(`../../plugins/${getDataModel()}/functions`).agendaHookFn
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {throw err}
@@ -130,6 +132,9 @@ router.get('/roles', (req, res) => {
 // Hooks agenda modifications
 router.post('/agenda-hook', (req, res) => {
   console.log(`Agenda hook received ${JSON.stringify(req.body)}`)
+  if (agendaHookFn) {
+    agendaHookFn(req.body)
+  }
   return res.json()
 })
 
