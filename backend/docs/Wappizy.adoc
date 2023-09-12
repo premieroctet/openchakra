@@ -38,7 +38,6 @@ S3_STUDIO_ROOTPATH='devtest/meuble'
 S3_PROD_ROOTPATH=
 
 # Payments
-SKIP_FAILED_PAYMENT=true
 PAYMENT_PLUGIN='stripe' # stripe | vivawallet
 
 ## Vivawallet
