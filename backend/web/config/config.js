@@ -84,12 +84,12 @@ const getChatURL = () => {
 
 const getHostName = () => {
   if (isDevelopment()) {
-    return process.env?.HOSTNAME || 'localhost'
+    return process.env.HOSTNAME || 'localhost'
   }
-  if (!process.env?.HOSTNAME) {
+  if (!process.env.HOSTNAME) {
     throw new Error(`HOSTNAME config missing`)
   }
-  return process.env?.HOSTNAME
+  return process.env.HOSTNAME
 }
 
 const getPort = () => {
@@ -222,7 +222,7 @@ const checkConfig = () => {
       )
     }
 
-    if (!isDevelopment() && !process.env?.HOSTNAME) {
+    if (!isDevelopment() && !process.env.HOSTNAME) {
       reject(`HOSTNAME: obligatoire en mode ${process.env.MODE}`)
     }
 
