@@ -1,3 +1,5 @@
+const { HOOK_DELETE } = require('../agenda/smartagenda')
+
 const { sendDietPreRegister } = require('./mailing')
 const {
   createAppointment,
@@ -1335,8 +1337,32 @@ cron.schedule('0 * * * * *', () => {
     })
 })
 
-const agendaHookFn = data => {
+const agendaHookFn = received => {
+  // Check validity
+  console.log(`Received hook ${JSON.stringify(received)}`)
+  const {senderSite, action, objId, objClass, data:{presta_id, equipe_id, client_id}} = received
+  const AGENDA_NAME=getSmartAgendaConfig().SMARTAGENDA_URL_PART
+  if (!AGENDA_NAME==senderSite) {
+    throw new BadRequestError(`Got senderSite ${senderSite}, expected ${AGENDA_NAME}`)
+  }
+  if (objClass!='pdo_events') {
+    throw new BadRequestError(`Received hook for model ${objClass} but only pdo_events is handled`)
+  }
+  if (action==HOOK_DELETE) {
+    console.log(`Deleting appointment smartagenda_id ${objId}`)
+    return Appointment.findOneAndDelete({smartagenda_id: objId})
+  }
+  if (action==HOOK_INSERT) {
+    return Promise.all([
+      User.find({smartagenda_id: equipe_id, role: ROLE_EXTERNAL_DIET}),
+      User.find({smartagenda_id: equipe_id, role: ROLE_CUSTOMER}),
+      AppointmentType.find({smartagenda_id: presta_id})
+    ])
+    .then(([diet, user, appType]) => {
+      console.log(`Insert appointment with ${!!diet}, ${!!user}, ${appType}`)
 
+    })
+  }
 }
 
 module.exports={

@@ -289,6 +289,10 @@ cron.schedule('0 * * * * *', () => {
 })
 
 
+const HOOK_CREATE='insert'
+const HOOK_UPDATE='update'
+const HOOK_DELETE='delete'
+
 module.exports={
   getToken,
   getAccount,
@@ -306,4 +310,7 @@ module.exports={
   upsertAccount,
   getAvailabilities,
   getAppointmentTypes,
+  HOOK_CREATE,
+  HOOK_DELETE,
+  HOOK_UPDATE,
 }
