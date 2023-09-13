@@ -70,7 +70,6 @@ let tokenLimit=null
 
 const getToken = () => {
   if (storedToken && moment().isBefore(tokenLimit)) {
-    console.log(`Sending cache token`)
     return Promise.resolve(storedToken)
   }
  
@@ -84,7 +83,7 @@ const getToken = () => {
     .then(({data}) => {
       tokenLimit=moment().add(90, 'minutes')
       storedToken=data.token
-      console.log(`Sending new token, validity is ${tokenLimit}`)
+      console.log(`Creating new token, validity is ${tokenLimit}`)
       return storedToken
     })
 }
