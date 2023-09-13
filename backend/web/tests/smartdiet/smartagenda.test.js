@@ -5,7 +5,6 @@ const User = require('../../server/models/User')
 require('../../server/models/Company')
 require('../../server/models/Content')
 require('../../server/models/Comment')
-
 const {
   createAccount,
   createAppointment,
@@ -30,15 +29,16 @@ const { PERIOD } = require('../../server/plugins/smartdiet/consts')
 const moment = require('moment')
 const lodash=require('lodash')
 const {forceDataModelSmartdiet, buildAttributesException}=require('../utils')
+const {runPromisesWithDelay}=require('../../server/utils/concurrency')
 
 forceDataModelSmartdiet()
 
 const mongoose = require('mongoose')
 
-jest.setTimeout(1000000)
-
 const PAULINE_ID=56
 const SEB_ID=7996
+
+jest.setTimeout(200000)
 
 describe('SmartAgenda test ', () => {
 
@@ -144,7 +144,7 @@ describe('SmartAgenda test ', () => {
      expect(app_types).not.toHaveLength(0)
   })
 
-  it.only('must check availabilities', async() => {
+  it('must check availabilities', async() => {
     await mongoose.connect(getDatabaseUri(), MONGOOSE_OPTIONS)
     let ranges=await Range.find().populate('user').populate('appointment_type')
     console.log(ranges)
@@ -155,4 +155,15 @@ describe('SmartAgenda test ', () => {
     console.log(JSON.stringify(ranges.map(r => [r.user._id, r.user.email, r.appointment_type.title]), null,2))
   })
 
+  it.only('must sync availabilities', async() => {
+    const agendas=await getAgendas()
+    return getAppointmentTypes()
+      .then(appTypes => {
+         const agenda=agendas[1]
+         return runPromisesWithDelay(appTypes.map(appType => () => getAvailabilities({diet_id: agenda.id, from: moment().add(-7, 'days'), to: moment().add(7, 'days'), appointment_type:appType.id})), 0)
+         //return Promise.allSettled(appTypes.map(appType => getAvailabilities({diet_id: agenda.id, from: moment().add(-7, 'days'), to: moment().add(7, 'days'), appointment_type:appType.id})))
+          .then(res => console.log(res.map((r, idx) => `agenda ${agenda.id}, presta ${appTypes[idx].nom}:${r.status=='rejected' ? r.reason : r.value.length}`)))
+          .catch(console.error)
+      })
+  })
 })
