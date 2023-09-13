@@ -1,5 +1,5 @@
 const Mailjet = require('node-mailjet')
-const { getMailjetConfig } = require('../../config/config')
+const {getMailjetConfig} = require('../../config/config')
 const MAILJET_CONFIG = getMailjetConfig()
 
 class MAILJET_V6 {
@@ -11,7 +11,7 @@ class MAILJET_V6 {
     })
   }
 
-  sendMail({index, email, ccs, data, attachment=null}) {
+  sendMail({index, email, /** ccs,*/ data, attachment=null}) {
     console.log(`Sending mail template #${index} to ${email} with data ${JSON.stringify(data)}, attachment:${attachment ? 'yes' : 'no'}`)
     console.warn(`ccs is not already handled`)
     const message={
@@ -24,6 +24,21 @@ class MAILJET_V6 {
     return this.smtpInstance
       .post('send', {version: 'v3.1'})
       .request({Messages: [message]})
+  }
+
+  getContactLists() {
+    console.log(`Request contacts lists`)
+    return this.smtpInstance
+      .get('contactslist', {version: 'v3.1'})
+      .request()
+      .then(res => res.body)
+  }
+
+  getCampaigns() {
+    return this.smtpInstance
+      .get('campaign', {version: 'v3'})
+      .request({FromTS: '2018-01-01T00:00:00'})
+      .then(res => res.body)
   }
 
   /**
@@ -48,6 +63,7 @@ class MAILJET_V6 {
       })
   }
   */
+
 }
 
 const PROVIDER = new MAILJET_V6()
