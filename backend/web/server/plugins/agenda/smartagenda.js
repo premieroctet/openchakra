@@ -9,19 +9,20 @@ INFOS:
 - pdo_events.apilnk_equipe_id: 'pdo_agenda/diet_id'
 - appointments start & end dates must be rounded at 1/4h
 */
+const config = require('../../../config/config')
+const { isDevelopment } = require('../../../config/config')
 const Range = require('../../models/Range')
 const User = require('../../models/User')
 const { ROLE_EXTERNAL_DIET } = require('../smartdiet/consts')
 const AppointmentType = require('../../models/AppointmentType')
 const axios = require('axios')
-const config = require('../../../config/config')
 const crypto=require('crypto')
 const lodash=require('lodash')
 require('lodash.product')
 const moment=require('moment')
 require('moment-round')
 const cron=require('node-cron')
-
+const {runPromisesWithDelay}=require('../../utils/concurrency')
 const CONFIG={
   ...config.getSmartAgendaConfig(),
   SMARTAGENDA_SHA1_PASSWORD: crypto.createHash('sha1')
@@ -64,7 +65,14 @@ const smartDietToMoment = sm => {
   return res
 }
 
+let storedToken=null
+let tokenLimit=null
+
 const getToken = () => {
+  if (storedToken && moment().isBefore(tokenLimit)) {
+    return Promise.resolve(storedToken)
+  }
+ 
   const params={
     login: CONFIG.SMARTAGENDA_LOGIN,
     pwd: CONFIG.SMARTAGENDA_SHA1_PASSWORD,
@@ -72,7 +80,12 @@ const getToken = () => {
     api_key: CONFIG.SMARTAGENDA_API_KEY,
   }
   return axios.get(TOKEN_URL, {params:params})
-    .then(({data}) => data.token)
+    .then(({data}) => {
+      tokenLimit=moment().add(90, 'minutes')
+      storedToken=data.token
+      console.log(`Creating new token, validity is ${tokenLimit}`)
+      return storedToken
+    })
 }
 
 // Account: customer
@@ -149,40 +162,6 @@ const getAllData = () => {
     .then(res => Object.fromEntries(res.map((r, idx) => [ALL_DATA[idx], r.value])))
 }
 
-
-const getDietUnavailabilities = diet_id => {
-  const filter={
-    'filter[0][field]':'equipe_id',
-    'filter[0][comp]': '=',
-    'filter[0][value]': diet_id,
-  }
-  return getToken()
-    .then(token => axios.get(EVENTS_URL+'?sortdesc', {params:{token, nbresults: MAX_RESULTS, ...filter, sortby: 'start_date'}}))
-    .then(res => res.data)
-}
-
-const getDietAvailabilities = diet_id => {
-  const filter={
-    'filter[0][field]':'equipe_id',
-    'filter[0][comp]': '=',
-    'filter[0][value]': diet_id,
-  }
-  return getToken()
-    .then(token => axios.get(EVENTS_OUVERTURE_URL+'?sortdesc', {params:{token, nbresults: MAX_RESULTS, ...filter, sortby: 'start_date'}}))
-    .then(res => res.data)
-}
-
-const getCustomerAppointments = customer_id => {
-  const filter={
-    'filter[0][field]':'client_id',
-    'filter[0][comp]': '=',
-    'filter[0][value]': customer_id,
-  }
-  return getToken()
-    .then(token => axios.get(EVENTS_URL+'?sortdesc', {params:{token, nbresults: MAX_RESULTS, ...filter, sortby: 'start_date'}}))
-    .then(res => res.data)
-}
-
 const createAppointment = (diet_id, client_id, presta_id, start_date, end_date) => {
   if (!(diet_id || client_id || presta_id || start_date || end_date)) {
     throw new Error(`diet_id, client_id, presta_id, start_date, end_date are required`)
@@ -200,7 +179,6 @@ const createAppointment = (diet_id, client_id, presta_id, start_date, end_date) 
   return getToken()
     .then(token => axios.post(`${EVENTS_URL}?token=${token}`, data))
     .then(res => res.data)
-    .then(err => {console.error(err.code, err.message); throw err})
 }
 
 const deleteAppointment = app_id => {
@@ -213,14 +191,23 @@ const deleteAppointment = app_id => {
 const getAppointmentTypes = () => {
   return getToken()
     .then(token => axios.get(APPOINTMENT_TYPE_URL, {params:{token, nbresults: MAX_RESULTS}}))
-    .then(({data}) => data)
+    .then(({data}) => {
+      if (!data.filter) {
+        console.warn(`getAppointmentTypes returned ${JSON.stringify(data)}:returning []`)
+        return []
+      }
+       return data.filter(d => d.id>0)
+    })
 }
 
 const getAvailabilities = ({diet_id, from, to, appointment_type}) => {
+  console.log(`Geting avail for ${diet_id}/${appointment_type}`)
   if (!(diet_id && from && to && appointment_type)) {
     throw new Error(`diet_id/from/to/appointment_type are required`)
   }
+  
   const params={pdo_agenda_id: diet_id, pdo_type_rdv_id: appointment_type, date_a_partir_de: from.format('YYYY-MM-DD') }
+  
   return getToken()
     .then(token =>
       Promise.all([
@@ -229,6 +216,16 @@ const getAvailabilities = ({diet_id, from, to, appointment_type}) => {
       ])
     )
     .then(([{data}, app_types]) => {
+      // TODO Sometimes returned data is "". WTF ???
+      if (!data.filter) {
+        console.warn(`getAvailabilities diet ${diet_id},app type ${appointment_type} returned ${JSON.stringify(data)}:returning []`)
+        return []
+      }
+      // TODO No appointment types
+      if (app_types.length==0) {
+        console.warn(`getAvailabilities diet ${diet_id},app type ${appointment_type}: no appointment type:returning []`)
+        return []
+      }
       data=data.filter(d => {
         const dt=moment(d.dj)
         return from.isBefore(dt) && to.isAfter(dt)
@@ -241,6 +238,12 @@ const getAvailabilities = ({diet_id, from, to, appointment_type}) => {
       const end_date=moment(start_date).add(d.duration, 'minutes')
       return ({start_date, end_date, idpr: d.idpr})
     }))
+    .catch(err => {
+      if (err?.response?.status==404) {
+        return []
+      }
+      throw err
+    })
 }
 
 // Synchronize appointment types every minute
@@ -262,14 +265,10 @@ cron.schedule('0 * * * * *', () => {
     .then(res => res.length && console.log(`Updated/created ${res.length} appt types`))
 })
 
-// Synchronize availabilities every minute
-// DISABLED UNTIL SMARTAGENDA WEBHOOK
-false && cron.schedule('0 * * * * *', () => {
-  console.log('Syncing availabilities from smartagenda')
-  const start=moment().add(-7, 'days')
-  const end=moment().add(7, 'days')
-  return Range.deleteMany({})
-    .then(() => Promise.all([User.find({role: ROLE_EXTERNAL_DIET, smartagenda_id: {$ne: null}}), AppointmentType.find()]))
+const upsertAvailabilities = diet_smartagenda_id => {
+  /**
+  return Range.deleteMany({smartagenda_id: diet_smartagenda_id})
+    .then(() => Promise.all([User.find({smartagenda_id: diet_smartagenda_id}), AppointmentType.find()]))
     .then(([diets, app_types]) => {
       const combinations=lodash.product(diets, app_types)
       return Promise.allSettled(combinations.map(([diet, app_type]) => {
@@ -280,14 +279,42 @@ false && cron.schedule('0 * * * * *', () => {
               return Range.create(params)
             }))
           })
-          .catch(err => console.error(err.data.message))
-      }))
+          .catch(err => console.error(`${msg_id}:${err.response.status},${err.response.data.message}`))
+    })
+    */
+}
+
+// Synchronize availabilities every minute
+// DISABLED UNTIL SMARTAGENDA WEBHOOK
+cron.schedule('0 * * * * *', () => {
+  console.log('Syncing availabilities from smartagenda')
+  const start=moment().add(-7, 'days')
+  const end=moment().add(7, 'days')
+  return Range.deleteMany({})
+    .then(() => Promise.all([User.find({role: ROLE_EXTERNAL_DIET, smartagenda_id: {$ne: null}}), AppointmentType.find()]))
+    .then(([diets, app_types]) => {
+      const combinations=lodash.product(diets, app_types)
+      //return Promise.allSettled(combinations.map(([diet, app_type]) => {
+      return runPromisesWithDelay(combinations.map(([diet, app_type]) => () => {
+        return getAvailabilities({diet_id: diet.smartagenda_id, from: start, to: end, appointment_type: app_type.smartagenda_id})
+          .then(avails => {
+            return Promise.all(avails.map(avail => {
+              const params={ user: diet._id, appointment_type: app_type._id, start_date: avail.start_date }
+              return Range.create(params)
+            }))
+          })
+          .catch(err => console.error(`${msg_id}:${err.response.status},${err.response.data.message}`))
+      }), 0)
     })
     .then(() => Range.countDocuments())
     .then(res => console.log(`Created ${res} availability ranges`))
     .catch(console.error)
 })
 
+
+const HOOK_CREATE='insert'
+const HOOK_UPDATE='update'
+const HOOK_DELETE='delete'
 
 module.exports={
   getToken,
@@ -298,12 +325,12 @@ module.exports={
   getEvents,
   getAllData,
   createAppointment,
-  getCustomerAppointments,
   deleteAppointment,
-  getDietUnavailabilities,
-  getDietAvailabilities,
   smartDietToMoment,
   upsertAccount,
   getAvailabilities,
   getAppointmentTypes,
+  HOOK_CREATE,
+  HOOK_DELETE,
+  HOOK_UPDATE,
 }

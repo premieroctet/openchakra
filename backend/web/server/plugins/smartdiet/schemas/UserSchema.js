@@ -30,6 +30,7 @@ const moment=require('moment')
 const { ForbiddenError } = require('../../../utils/errors')
 const {schemaOptions} = require('../../../utils/schemas')
 const lodash=require('lodash')
+const bcrypt = require('bcryptjs')
 
 const Schema = mongoose.Schema
 
@@ -88,9 +89,8 @@ const UserSchema = new Schema({
   },
   password: {
     type: String,
-    validate: [function(v){ !lodash.isEmpty(v)}, "Le mot de passe est obligatoire"],
     required: [true, 'Le mot de passe est obligatoire'],
-    default: 'invalid',
+    set: pass => bcrypt.hashSync(pass, 10),
   },
   role: {
     type: String,
@@ -225,11 +225,27 @@ const UserSchema = new Schema({
     type: String,
     required: false,
   },
+  // TODO: handle multiple enum declaration
+  /**
   activities: [{
     type: String,
     enum: Object.keys(DIET_ACTIVITIES),
     required: false,
   }],
+  */
+  diet_coaching_enabled: {
+    type: Boolean,
+    required: false,
+  },
+  diet_visio_enabled: {
+    type: Boolean,
+    required: false,
+  },
+  diet_site_enabled: {
+    type: Boolean,
+    required: false,
+  },
+  // END TODO: handle multiple enum declaration
   // TODO :set to ACTIVE when profile is 100%
   registration_status: {
     type: String,
@@ -238,7 +254,7 @@ const UserSchema = new Schema({
     required: [function() {return this.role==ROLE_EXTERNAL_DIET}, 'Le statut de diet externe est obligatoire'],
   },
   signed_charter: {
-    type: Boolean,
+    type: String,
     required: false,
   },
   // Reasons offered by diet
@@ -257,6 +273,11 @@ const UserSchema = new Schema({
     type: String,
     required: false,
   },
+  active: {
+    type: Boolean,
+    default: true,
+    required: true,
+  }
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */

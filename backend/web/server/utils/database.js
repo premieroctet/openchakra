@@ -544,6 +544,17 @@ const callPostPutData = data => {
   return postPutData(data)
 }
 
+// Post delete data
+let postDeleteData = data => Promise.resolve(data)
+
+const setPostDeleteData = fn => {
+  postDeleteData = fn
+}
+
+const callPostDeleteData = data => {
+  return postDeleteData(data)
+}
+
 const putAttribute = ({id, attribute, value, user}) => {
   let model = null
   return getModel(id)
@@ -631,6 +642,7 @@ const removeData = dataId => {
           .then(() => data.delete())
       }
       return data.delete()
+        .then(d => callPostDeleteData({model, data:d}))
     })
 }
 
@@ -758,4 +770,5 @@ module.exports = {
   putToDb,
   setImportDataFunction,
   importData,
+  setPostDeleteData,
 }

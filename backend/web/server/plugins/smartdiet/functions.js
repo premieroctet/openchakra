@@ -1,7 +1,40 @@
 const {
   sendDietPreRegister2Admin,
-  sendDietPreRegister2Diet
+  sendDietPreRegister2Diet,
 } = require('./mailing')
+
+const {
+  HOOK_DELETE,
+  HOOK_INSERT,
+  createAppointment,
+  deleteAppointment,
+  getAccount,
+  getAgenda,
+  getAppointmentTypes,
+  upsertAccount
+} = require('../agenda/smartagenda')
+const {
+  declareComputedField,
+  declareEnumField,
+  declareVirtualField,
+  differenceSet,
+  getModel,
+  idEqual,
+  loadFromDb,
+  setFilterDataUser,
+  setImportDataFunction,
+  setIntersects,
+  setPostCreateData,
+  setPostDeleteData,
+  setPostPutData,
+  setPreCreateData,
+  setPreprocessGet,
+  simpleCloneModel,
+} = require('../../utils/database')
+const { getSmartAgendaConfig } = require('../../../config/config')
+
+const {  } = require('./mailing')
+const AppointmentType = require('../../models/AppointmentType')
 
 const {
   ACTIVITY,
@@ -46,33 +79,6 @@ const {
   TARGET_TYPE,
   UNIT
 } = require('./consts')
-const {
-  createAppointment,
-  getAccount,
-  getAgenda,
-  getAppointmentTypes,
-  getDietAvailabilities,
-  getDietUnavailabilities,
-  upsertAccount
-} = require('../agenda/smartagenda')
-const AppointmentType = require('../../models/AppointmentType')
-const {
-  declareComputedField,
-  declareEnumField,
-  declareVirtualField,
-  differenceSet,
-  getModel,
-  idEqual,
-  loadFromDb,
-  setFilterDataUser,
-  setImportDataFunction,
-  setIntersects,
-  setPostCreateData,
-  setPostPutData,
-  setPreCreateData,
-  setPreprocessGet,
-  simpleCloneModel,
-} = require('../../utils/database')
 const { importLeads } = require('./leads')
 const Quizz = require('../../models/Quizz')
 const CoachingLogbook = require('../../models/CoachingLogbook')
@@ -196,7 +202,6 @@ const preprocessGet = ({model, fields, id, user, params}) => {
               })
           }
         }
-        console.log(messages)
         const partnerMessages=lodash.groupBy(messages, m => getPartner(m, user)._id)
         const convs=lodash(partnerMessages)
           .values()
@@ -478,7 +483,7 @@ USER_MODELS.forEach(m => {
   })
   declareVirtualField({model: m, field: 'latest_coachings', instance: 'Array',
   relies_on: 'coachings',
-  requires: 'coachings.all_logbooks.logbook.quizz.questions,coachings.all_logbooks.logbook.questions,coachings.all_logbooks.logbook.questions.quizz_question,coachings.all_logbooks.logbook.questions.multiple_answers,\
+  requires: 'coachings.all_logbooks.logbook.quizz.questions,coachings.all_logbooks.logbook.questions,coachings.all_logbooks.logbook.questions.quizz_question.available_answers,coachings.all_logbooks.logbook.questions.multiple_answers,\
 coachings.diet.availability_ranges.appointment_type',
     multiple: true,
     caster: {
@@ -781,7 +786,8 @@ declareVirtualField({model: 'coaching', field: '_all_diets', instance: 'Array', 
     options: {ref: 'user'}},
 })
 declareVirtualField({model: 'coaching', field: 'available_diets', instance: 'Array', multiple: true,
-  requires: '_all_diets.reasons',
+  requires: `_all_diets.reasons,_all_diets.customer_companies,_all_diets.availability_ranges,\
+user.company,appointment_type,_all_diets.diet_coaching_enabled`,
   caster: {
     instance: 'ObjectID',
     options: {ref: 'user'}
@@ -992,6 +998,7 @@ const getUserContents = (user, params, data) => {
   const user_targets=lodash([data.objective_targets,data.health_targets,
     data.activity_target,data.specificity_targets,data.home_target])
     .flatten()
+    .filter(v => !!v)
     .value()
   return Promise.resolve(data._all_contents.filter(c => c.default || setIntersects(c.targets, user_targets)))
 }
@@ -1112,6 +1119,14 @@ const postCreate = ({model, params, data,user}) => {
 }
 
 setPostCreateData(postCreate)
+
+const postDelete = ({model, data}) => {
+  if (model=='appointment') {
+    deleteAppointment(data.smartagenda_id)
+  }
+}
+
+setPostDeleteData(postDelete)
 
 const ensureChallengePipsConsistency = () => {
   // Does every challenge have all pips ?
@@ -1344,8 +1359,39 @@ cron.schedule('0 * * * * *', () => {
     })
 })
 
+const agendaHookFn = received => {
+  // Check validity
+  console.log(`Received hook ${JSON.stringify(received)}`)
+  const {senderSite, action, objId, objClass, data:{presta_id, equipe_id, client_id}} = received
+  const AGENDA_NAME=getSmartAgendaConfig().SMARTAGENDA_URL_PART
+  if (!AGENDA_NAME==senderSite) {
+    throw new BadRequestError(`Got senderSite ${senderSite}, expected ${AGENDA_NAME}`)
+  }
+  if (objClass!='pdo_events') {
+    throw new BadRequestError(`Received hook for model ${objClass} but only pdo_events is handled`)
+  }
+  if (action==HOOK_DELETE) {
+    console.log(`Deleting appointment smartagenda_id ${objId}`)
+    return Appointment.findOneAndDelete({smartagenda_id: parseInt(objId)})
+      .then(console.log)
+      .catch(console.error)
+  }
+  if (action==HOOK_INSERT) {
+    return Promise.all([
+      User.find({smartagenda_id: equipe_id, role: ROLE_EXTERNAL_DIET}),
+      User.find({smartagenda_id: equipe_id, role: ROLE_CUSTOMER}),
+      AppointmentType.find({smartagenda_id: presta_id})
+    ])
+    .then(([diet, user, appType]) => {
+      console.log(`Insert appointment with ${!!diet}, ${!!user}, ${appType}`)
+
+    })
+  }
+}
+
 module.exports={
   ensureChallengePipsConsistency,
   logbooksConsistency,
   getRegisterCompany,
+  agendaHookFn,
 }

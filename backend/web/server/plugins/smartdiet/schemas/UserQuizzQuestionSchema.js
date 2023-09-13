@@ -62,7 +62,7 @@ UserQuizzQuestionSchema.virtual("answer_status").get(function()  {
 UserQuizzQuestionSchema.virtual("answer_message").get(function()  {
   const question=this.quizz_question
   if (!question) {
-    console.warn(`${this._id}:could not get quizz_question`)
+    //console.warn(`${this._id}:could not get quizz_question`)
     return
   }
   const MESSAGES={
