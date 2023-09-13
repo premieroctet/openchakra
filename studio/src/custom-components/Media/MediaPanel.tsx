@@ -61,7 +61,6 @@ const MediaPanel = () => {
       </FormControl>
       <SwitchControl label="Is iframe" name="isIframe" />
       <SwitchControl label="Visio (camera, micro)" name="visio" />
-      <SwitchControl label="Downloadable" name="downloadable" />
 
       <MediaModal isOpen={isOpen} onClose={onClose} />
     </>

@@ -50,14 +50,7 @@ const imageSrcSetPaths = (originalSrc, withDimension=true) => {
 exports.sendFilesToAWS = async(req, res, next) => {
   if (!req.body.documents) { return next() }
 
-  const isdocumentToDownload = Boolean(req.body.downloadable)
-  
   const documentsToSend = req.body.documents.map(document => {
-    
-    const downloadParams = {
-      ContentType: 'application/octet-stream',
-      ContentDisposition: `attachment; filename=${document.filename}`,
-    }
     
     return new Promise(async(resolve, reject) => {
       const params = {
@@ -65,12 +58,13 @@ exports.sendFilesToAWS = async(req, res, next) => {
         Key: document.filename,
         Body: document.buffer,
         ContentType: document.mimetype,
+        ContentDisposition: `attachment; filename=${document.filename}`,
         // ACL: 'public-read', // What's this ACL ?
       }
 
       await new Upload({
         client: s3,
-        params: isdocumentToDownload ? {...params, ...downloadParams} : params,
+        params,
       }).done()
         .then(res => resolve(res))
         .catch(err => reject(err))
