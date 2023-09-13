@@ -58,7 +58,6 @@ exports.sendFilesToAWS = async(req, res, next) => {
         Key: document.filename,
         Body: document.buffer,
         ContentType: document.mimetype,
-        ContentDisposition: `attachment; filename=${document.filename}`,
         // ACL: 'public-read', // What's this ACL ?
       }
 
