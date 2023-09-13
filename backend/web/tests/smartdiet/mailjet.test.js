@@ -23,14 +23,24 @@ describe('Mailjet', () => {
     })
   })
 
-  it('must get contacts lists', () => {
-    return mailjetProvider.getContactLists()
-      .then(res => console.log(res))
+  it('must get contacts lists', async() => {
+    const lists=await mailjetProvider.getContactsLists()
+    expect(lists.length).toBeGreaterThan(0)
   })
 
-  it('must get campaigns', () => {
-    return mailjetProvider.getCampaigns()
-      .then(res => console.log(res))
+  it.only('must add then remove a user to a contacts list', () => {
+    return mailjetProvider.getContactsLists()
+      .then(res => res.find(r => r.Name=='SmartDiet Académie'))
+      .then(list => {
+        return mailjetProvider.addContactToList({
+          fullname: 'test user', email: 'hello@wappizy.com', list: list.ID,
+        })
+          .then(() => list)
+      })
+      .then(list => mailjetProvider.removeContactFromList({
+        email: 'hello@wappizy.com', list: list.ID,
+      }),
+      )
   })
 
 })

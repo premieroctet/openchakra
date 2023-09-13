@@ -1,6 +1,12 @@
+/**
+As from https://dev.mailjet.com/email/reference/contacts/contact-list/
+*/
+
 const Mailjet = require('node-mailjet')
 const {getMailjetConfig} = require('../../config/config')
 const MAILJET_CONFIG = getMailjetConfig()
+
+const RESULTS_LIMIT=100
 
 class MAILJET_V6 {
 
@@ -10,6 +16,7 @@ class MAILJET_V6 {
       apiSecret: MAILJET_CONFIG.MAILJET_PRIVATE_KEY,
     })
   }
+
 
   sendMail({index, email, /** ccs,*/ data, attachment=null}) {
     console.log(`Sending mail template #${index} to ${email} with data ${JSON.stringify(data)}, attachment:${attachment ? 'yes' : 'no'}`)
@@ -26,19 +33,68 @@ class MAILJET_V6 {
       .request({Messages: [message]})
   }
 
-  getContactLists() {
-    console.log(`Request contacts lists`)
+  getContactsLists() {
     return this.smtpInstance
-      .get('contactslist', {version: 'v3.1'})
+      .get(`contactslist?Limit=${RESULTS_LIMIT}`, {version: 'v3'})
       .request()
-      .then(res => res.body)
+      .then(res => JSON.parse(JSON.stringify(res.body.Data)))
   }
 
-  getCampaigns() {
+  addContactToList({fullname, email, list}) {
     return this.smtpInstance
-      .get('campaign', {version: 'v3'})
-      .request({FromTS: '2018-01-01T00:00:00'})
-      .then(res => res.body)
+      .post('contactslist', {'version': 'v3'})
+      .id(list)
+      .action('managecontact')
+      .request({
+        'Email': email,
+        'Name': fullname,
+        'Action': 'addnoforce',
+      })
+      .then(res => JSON.parse(JSON.stringify(res.body.Data)))
+  }
+
+  removeContactFromList({email, list}) {
+    return this.smtpInstance
+      .post('contactslist', {'version': 'v3'})
+      .id(list)
+      .action('managecontact')
+      .request({
+        'Email': email,
+        'Action': 'remove',
+      })
+      .then(res => JSON.parse(JSON.stringify(res.body.Data)))
+  }
+
+  // Contacts are {email, fullname}
+  addContactsToList({contacts, list}) {
+    return this.smtpInstance
+      .post('contact', {'version': 'v3'})
+      .id(list)
+      .action('managemanycontacts')
+      .request({
+        Contacts: contacts.map(contact => ({Email: contact.email, Name: contact.fullname})),
+        ContactsLists: [{
+          ListID: list,
+          Action: 'addnoforce',
+        }],
+      })
+      .then(res => JSON.parse(JSON.stringify(res.body.Data)))
+  }
+
+
+  removeContactsFromList({emails, list}) {
+    return this.smtpInstance
+      .post('contact', {'version': 'v3'})
+      .id(list)
+      .action('managemanycontacts')
+      .request({
+        Contacts: emails.map(email => ({Email: email})),
+        ContactsLists: [{
+          ListID: list,
+          Action: 'remove',
+        }],
+      })
+      .then(res => JSON.parse(JSON.stringify(res.body.Data)))
   }
 
   /**
