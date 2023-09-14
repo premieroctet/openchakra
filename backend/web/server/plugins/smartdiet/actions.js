@@ -1,3 +1,7 @@
+const {
+  DAYS_BEFORE_IND_CHALL_ANSWER,
+  PARTICULAR_COMPANY_NAME
+} = require('./consts')
 const { sendForgotPassword } = require('./mailing')
 const {
   ensureChallengePipsConsistency,
@@ -24,7 +28,6 @@ const Company = require('../../models/Company')
 const CollectiveChallenge = require('../../models/CollectiveChallenge')
 const Team = require('../../models/Team')
 const TeamMember = require('../../models/TeamMember')
-const {PARTICULAR_COMPANY_NAME}=require('./consts')
 const lodash=require('lodash')
 
 const smartdiet_join_group = ({value, join}, user) => {
@@ -41,10 +44,10 @@ const smartdiet_event = action => ({value}, user) => {
     .then(() => getModel(value, ['webinar', 'individualChallenge', 'menu', 'collectiveChallenge']))
     .then(model=> {
       const dbAction=action==
-      'smartdiet_skip_event' ? {$addToSet: {skipped_events: value}, $pull: {registered_events: value, passed_events: value}}
-      : action=='smartdiet_join_event' ? {$addToSet: {registered_events: value}}
-      : action=='smartdiet_pass_event' ? {$addToSet: {passed_events: value, registered_events: value}}
-      : action=='smartdiet_fail_event' ? {$addToSet: {failed_events: value, registered_events: value}}
+      'smartdiet_skip_event' ? {$addToSet: {skipped_events: value}, $pull: {registered_events: {event: value}, passed_events: value}}
+      : action=='smartdiet_join_event' ? {$addToSet: {registered_events: {event: value}}}
+      : action=='smartdiet_pass_event' ? {$addToSet: {passed_events: value, registered_events: {event: value}}}
+      : action=='smartdiet_fail_event' ? {$addToSet: {failed_events: value, registered_events: {event: value}}}
       : action=='smartdiet_routine_challenge' ? {$addToSet: {routine_events: value}}
       : action=='smartdiet_replay_event' ? {$addToSet: {replayed_events: value}}
       :  null
@@ -248,7 +251,7 @@ const isActionAllowed = ({action, dataId, user}) => {
                 return false
               }
               if (user?.skipped_events?.some(r => idEqual(r._id, dataId))) { return false}
-              if (user?.registered_events?.some(r => idEqual(r._id, dataId))) {
+              if (user?.registered_events?.some(r => idEqual(r.event._id, dataId))) {
                 return ['collectiveChallenge','menu'].includes(modelName)
               }
               if (user?.passed_events?.some(r => idEqual(r._id, dataId))) { return false}
@@ -265,7 +268,7 @@ const isActionAllowed = ({action, dataId, user}) => {
             .then(([user]) => {
               if (modelName=='menu') { return false}
               if (user?.skipped_events?.some(r => idEqual(r._id, dataId))) { return false}
-              if (user?.registered_events?.some(r => idEqual(r._id, dataId))) { return false}
+              if (user?.registered_events?.some(r => idEqual(r.event._id, dataId))) { return false}
               if (user?.passed_events?.some(r => idEqual(r._id, dataId))) { return false}
               if (user?.failed_events?.some(r => idEqual(r._id, dataId))) { return false}
               return true
@@ -277,14 +280,18 @@ const isActionAllowed = ({action, dataId, user}) => {
               if (modelName=='menu') { return false}
               if (user?.skipped_events?.some(r => idEqual(r._id, dataId))) { return false}
               if (user?.routine_events?.some(r => idEqual(r._id, dataId))) { return false}
-              const isRegistered=user?.registered_events?.some(r => idEqual(r._id, dataId))
+              const registeredEvent=user?.registered_events?.find(r => idEqual(r.event._id, dataId))
               // Event must be registered except for past webinars
               if (modelName=='webinar') {
                 return Webinar.findById(dataId)
-                  .then(webinar => isRegistered || moment(webinar.end_date).isBefore(moment()))
+                  .then(webinar => !!registeredEvent || moment(webinar.end_date).isBefore(moment()))
+              }
+              /// Ind. chall can be passed or failed 7 days after registration
+              else if (modelName=='individualChallenge') {
+                return moment().diff(registeredEvent?.date, 'days')>=DAYS_BEFORE_IND_CHALL_ANSWER
               }
               else {
-                return isRegistered
+                return !!registeredEvent
               }
             })
           }
@@ -309,7 +316,12 @@ const isActionAllowed = ({action, dataId, user}) => {
               if (modelName=='webinar') { return false}
               if (user?.passed_events?.some(r => idEqual(r._id, dataId))) { return false}
               if (user?.skipped_events?.some(r => idEqual(r._id, dataId))) { return false}
-              if (!user?.registered_events?.some(r => idEqual(r._id, dataId))) { return false}
+              if (!user?.registered_events?.some(r => idEqual(r.event._id, dataId))) { return false}
+              const registeredEvent=user?.registered_events?.find(r => idEqual(r.event._id, dataId))
+              /// Ind. chall can be passed or failed 7 days after registration
+              if (modelName=='individualChallenge') {
+                return moment().diff(registeredEvent?.date, 'days')>=DAYS_BEFORE_IND_CHALL_ANSWER
+              }
               return true
             })
           }

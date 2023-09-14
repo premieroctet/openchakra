@@ -161,9 +161,16 @@ const UserSchema = new Schema({
     required: true,
   }],
   registered_events: [{
-    type: Schema.Types.ObjectId,
-    ref: 'event',
-    required: true,
+    event: {
+      type: Schema.Types.ObjectId,
+      ref: 'event',
+      required: true,
+    },
+    date: {
+      type: Date,
+      default: moment(),
+      required: true,
+    }
   }],
   failed_events: [{
     type: Schema.Types.ObjectId,
