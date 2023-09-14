@@ -1,3 +1,8 @@
+const { delayPromise } = require('../../utils/concurrency')
+const {
+  getSmartAgendaConfig,
+  isDevelopment
+} = require('../../../config/config')
 const {
   sendDietPreRegister2Admin,
   sendDietPreRegister2Diet,
@@ -31,10 +36,8 @@ const {
   setPreprocessGet,
   simpleCloneModel,
 } = require('../../utils/database')
-const { getSmartAgendaConfig } = require('../../../config/config')
-
-const {  } = require('./mailing')
 const AppointmentType = require('../../models/AppointmentType')
+require('../../models/LogbookDay')
 
 const {
   ACTIVITY,
@@ -120,6 +123,8 @@ const Appointment = require('../../models/Appointment')
 const Message = require('../../models/Message')
 const Lead = require('../../models/Lead')
 const cron=require('node-cron')
+const MAILJET_HANDLER=require('../../utils/mailjet')
+
 
 const filterDataUser = ({model, data, id, user}) => {
   if (model=='offer' && !id) {
@@ -127,7 +132,6 @@ const filterDataUser = ({model, data, id, user}) => {
       .then(offers => data.filter(d => offers.some(o => idEqual(d._id, o._id))))
   }
   if (model=='user' && user?.role==ROLE_RH) {
-    console.log(`I am RH`)
     data=data.filter(u => idEqual(id, user._id) || (user.company && idEqual(u.company?._id, user.company?._id)))
   }
   // Filter leads for RH
@@ -911,15 +915,24 @@ declareVirtualField({model: 'range', field:'duration', instance: 'String',
 })
 declareVirtualField({model: 'range', field:'end_date', instance: 'String',
   requires: 'start_date,duration',
-
 })
+
+declareVirtualField({model: 'lead', field:'fullname', instance: 'String',
+  requires: 'firstname,lastname',
+})
+declareVirtualField({model: 'lead', field: 'company',
+  instance: 'company', multiple: false,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'company'}},
+})
+
 const getDataLiked = (user, params, data) => {
   const liked=data?.likes?.some(l => idEqual(l._id, user?._id))
   return Promise.resolve(liked)
 }
 
 const setDataLiked= ({id, attribute, value, user}) => {
-  console.log(`Liking:${value}`)
   return getModel(id, ['comment', 'message', 'content'])
     .then(model => {
       if (value) {
@@ -939,7 +952,6 @@ const getDataPinned = (user, params, data) => {
 }
 
 const setDataPinned = ({id, attribute, value, user}) => {
-  console.log(`Pinnning:${value}`)
   return getModel(id, ['message', 'content'])
     .then(model => {
       if (value) {
@@ -1202,6 +1214,7 @@ const computeStatistics= ({id, fields}) => {
 }
 
 /** Upsert PARTICULARS company */
+/**
 Company.findOneAndUpdate(
   {name: PARTICULAR_COMPANY_NAME},
   {name: PARTICULAR_COMPANY_NAME, activity: COMPANY_ACTIVITY_SERVICES_AUX_ENTREPRISES},
@@ -1209,6 +1222,7 @@ Company.findOneAndUpdate(
 )
   .then(() => console.log(`Particular company upserted`))
   .catch(err => console.error(`Particular company upsert error:${err}`))
+*/
 
 // Create missings coachings for any CUSTOMER
 User.find({role: ROLE_CUSTOMER}).populate('coachings')
@@ -1329,7 +1343,7 @@ cron.schedule('0 0 1 * * *', async() => {
 })
 
 // Synchronize diets & customer smartagenda accounts
-cron.schedule('0 * * * * *', () => {
+!isDevelopment() && cron.schedule('0 * * * * *', () => {
   console.log(`Smartagenda accounts sync`)
   return User.find({role: {$in: [ROLE_EXTERNAL_DIET, ROLE_CUSTOMER]}, smartagenda_id: null})
     .then(users => {
@@ -1389,9 +1403,121 @@ const agendaHookFn = received => {
   }
 }
 
+/**
+Workflows for leads/users linked to companies EXCEPT Insuance companies
+*/
+// Mailjet contacts lists
+// Non registered
+
+const WORKFLOWS={
+  CL_LEAD_NOCOA_NOGROUP: {
+    id: '2414809',
+    filter: (lead, user) => {
+      return !!lead && !user
+        !(lead.company?.offers?.[0].coaching_credit>0) &&
+        !! lead.company?.groups_count
+    },
+  },
+  CL_LEAD_COA_NOGROUP: {
+    id: '2414810',
+    filter: (lead, user) => {
+      return !!lead && !user
+      && !!lead.company?.offers?.[0].coaching_credit
+      && !lead.company?.groups_count
+    }
+  },
+  CL_LEAD_NOCOA_GROUP: {
+    id: '2414811',
+    filter: (lead, user) => {
+      return !!lead && !user
+      && !lead.company?.offers?.[0].coaching_credit
+      && !!lead.company?.groups_count
+    }
+  },
+  CL_LEAD_COA_GROUP: {
+    id: '2414812',
+    filter: (lead, user) => {
+      return !!lead && !user && !!lead.company?.offers?.[0]
+      && !!lead.company?.offers?.[0].coaching_credit
+      && !!lead.company?.groups_count
+    }
+  },
+  // Registered
+  CL_REGISTERED: {
+    id: '2414813',
+    filter: (lead, user) => {
+      return !!user
+    }
+  },
+  // 1 month before coll chall
+  CL_REGISTERED_COLL_CHALL: {
+    id: '2414814',
+    filter: (lead, user) => {
+      return !!user?.company?.collective_challenges?.some(c => moment(c.start_date).diff(moment(), 'days')<30)
+    }
+  },
+  // After 1 week
+  CL_REGISTERED_FIRST_COA_APPT: {
+    id: '2414816',
+    filter: (lead, user) => {
+      return !!user?.latest_coachings[0]?.appointments?.some(a => moment().isAfter(moment(a.end_date)))
+    }
+  },
+}
+
+const computeWorkflowLists = () => {
+  return Promise.all([
+    Lead.find()
+      .populate({path: 'company', populate: [{path: 'groups_count'}, {path: 'groups'}, {path: 'offers'}]}),
+    User.find({role: ROLE_CUSTOMER})
+      .populate([{path: 'coachings', populate: ['appointments']}, {path: 'latest_coachings', populate: ['appointments']}])
+      .populate({path: 'company', populate: ['collective_challenges']}),
+    // TODO use this version after speeding it up
+    /**
+    loadFromDb({model: 'lead', fields:['company.offers', 'company.groups']}),
+    loadFromDb({model: 'user', fields:['latest_coachings.appointments', 'company.collective_challenges']}),
+    */
+  ])
+  .then(([leads, users]) => {
+    const allemails=lodash([...leads, ...users]).groupBy('email').mapValues(v => ([v.find(c => !c.role), v.find(c => !!c.role)]))
+    // Filter for each workflow
+    const entries=Object.entries(WORKFLOWS).map(([workflow_id, {id, filter}])=> {
+      const retained=allemails.pickBy(([lead, user]) => filter(lead, user)).keys().value()
+      // TODO: why do I need to call value() on retained ?
+      //const removed=allemails.keys().difference(retained)
+      const removed=allemails.keys().difference(retained).value()
+      return [workflow_id, {id, add: retained, remove: removed}]
+    })
+    return Object.fromEntries(entries)
+  })
+}
+
+const updateWorkflows= () => {
+  return computeWorkflowLists()
+    .then(lists => {
+      let promises=Object.values(lists).map(({id, add, remove})=> {
+        const result=[]
+        if (!lodash.isEmpty(add)) {
+          result.push(MAILJET_HANDLER.addContactsToList({list: id, contacts: add.map(a => ({email: a, fullname: 'tagada'}))}))
+        }
+        if (!lodash.isEmpty(remove)) {
+          result.push(MAILJET_HANDLER.removeContactsFromList({list: id, contacts: remove.map(a => ({email: a}))}))
+        }
+        return result
+      })
+      promises=lodash.flatten(promises).filter(v => !!v)
+      return Promise.all(promises)
+    })
+    .then(jobs => delayPromise(4000).then(() => jobs))
+    .then(jobs => Promise.all(jobs.map(job => MAILJET_HANDLER.checkContactsListsJob(job))))
+}
+
 module.exports={
   ensureChallengePipsConsistency,
   logbooksConsistency,
   getRegisterCompany,
   agendaHookFn,
+  computeWorkflowLists,
+  updateWorkflows,
+  WORKFLOWS,
 }

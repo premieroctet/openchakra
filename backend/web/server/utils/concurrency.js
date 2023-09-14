@@ -1,4 +1,4 @@
-function delayFn(ms) {
+function delayPromise(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
@@ -14,11 +14,11 @@ function runPromisesWithDelay(promises) {
     return promiseFn()
       .then(value => {
         results.push({ status: 'fulfilled', value });
-        return delayFn(delay); // Delay between promises (adjust as needed)
+        return delayPromise(delay); // Delay between promises (adjust as needed)
       })
       .catch(reason => {
         results.push({ status: 'rejected', reason });
-        return delayFn(delay); // Delay between promises (adjust as needed)
+        return delayPromise(delay); // Delay between promises (adjust as needed)
       })
       .then(() => processPromise(index + 1));
   }
@@ -27,5 +27,6 @@ function runPromisesWithDelay(promises) {
 }
 
 module.exports={
+  delayPromise,
   runPromisesWithDelay
-} 
+}

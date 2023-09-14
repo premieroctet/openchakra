@@ -72,7 +72,7 @@ const getToken = () => {
   if (storedToken && moment().isBefore(tokenLimit)) {
     return Promise.resolve(storedToken)
   }
- 
+
   const params={
     login: CONFIG.SMARTAGENDA_LOGIN,
     pwd: CONFIG.SMARTAGENDA_SHA1_PASSWORD,
@@ -205,9 +205,9 @@ const getAvailabilities = ({diet_id, from, to, appointment_type}) => {
   if (!(diet_id && from && to && appointment_type)) {
     throw new Error(`diet_id/from/to/appointment_type are required`)
   }
-  
+
   const params={pdo_agenda_id: diet_id, pdo_type_rdv_id: appointment_type, date_a_partir_de: from.format('YYYY-MM-DD') }
-  
+
   return getToken()
     .then(token =>
       Promise.all([
@@ -247,7 +247,7 @@ const getAvailabilities = ({diet_id, from, to, appointment_type}) => {
 }
 
 // Synchronize appointment types every minute
-cron.schedule('0 * * * * *', () => {
+!isDevelopment() && cron.schedule('0 * * * * *', () => {
   console.log('Syncing appointment types from smartagenda')
   return Promise.all([getAppointmentTypes(), AppointmentType.find()])
     .then(([smartagenda_types, local_types]) => {
@@ -286,7 +286,7 @@ const upsertAvailabilities = diet_smartagenda_id => {
 
 // Synchronize availabilities every minute
 // DISABLED UNTIL SMARTAGENDA WEBHOOK
-cron.schedule('0 * * * * *', () => {
+!isDevelopment() && cron.schedule('0 * * * * *', () => {
   console.log('Syncing availabilities from smartagenda')
   const start=moment().add(-7, 'days')
   const end=moment().add(7, 'days')

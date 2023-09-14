@@ -51,7 +51,16 @@ LeadSchema.index(
   { unique: true, message: 'Un prospect existe déjà avec cet email' });
 
 /* eslint-disable prefer-arrow-callback */
-// Required for register validation only
+LeadSchema.virtual('fullname').get(function() {
+  return `${this.firstname || ''} ${this.lastname || ''}`
+})
+
+LeadSchema.virtual("company", {
+  ref: "company", // The Model to use
+  localField: "company_code", // Find in Model, where localField
+  foreignField: "code", // is equal to foreignField
+  justOne: true,
+});
 /* eslint-enable prefer-arrow-callback */
 
 module.exports = LeadSchema

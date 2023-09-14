@@ -1,3 +1,5 @@
+const { isProduction } = require('../../config/config')
+
 /**
 As from https://dev.mailjet.com/email/reference/contacts/contact-list/
 */
@@ -40,7 +42,15 @@ class MAILJET_V6 {
       .then(res => JSON.parse(JSON.stringify(res.body.Data)))
   }
 
+  acceptEmail(email) {
+    return true
+  }
+
   addContactToList({fullname, email, list}) {
+    if (!this.acceptEmail(email)) {
+      console.warn(`Email ${email} refused in dev/validation mode`)
+      return Promise.resolve([])
+    }
     return this.smtpInstance
       .post('contactslist', {'version': 'v3'})
       .id(list)
@@ -51,9 +61,14 @@ class MAILJET_V6 {
         'Action': 'addnoforce',
       })
       .then(res => JSON.parse(JSON.stringify(res.body.Data)))
+      .catch(console.error)
   }
 
   removeContactFromList({email, list}) {
+    if (!this.acceptEmail(email)) {
+      console.warn(`Email refused in dev/validation mode`)
+      return Promise.resolve([])
+    }
     return this.smtpInstance
       .post('contactslist', {'version': 'v3'})
       .id(list)
@@ -66,35 +81,57 @@ class MAILJET_V6 {
   }
 
   // Contacts are {email, fullname}
+  // Returns a JobID isf successful
   addContactsToList({contacts, list}) {
+    const filteredContacts=contacts.filter(({email}) => this.acceptEmail(email))
+    if (filteredContacts.length!=contacts.length) {
+      console.log(`${contacts.length-filteredContacts.length} rejected emails `)
+    }
     return this.smtpInstance
-      .post('contact', {'version': 'v3'})
+      .post('contactslist', {'version': 'v3'})
       .id(list)
       .action('managemanycontacts')
       .request({
-        Contacts: contacts.map(contact => ({Email: contact.email, Name: contact.fullname})),
-        ContactsLists: [{
-          ListID: list,
-          Action: 'addnoforce',
-        }],
+        Action: 'addnoforce',
+        Contacts: filteredContacts.map(contact => ({Email: contact.email, Name: contact.fullname})),
       })
-      .then(res => JSON.parse(JSON.stringify(res.body.Data)))
+      .then(res => {
+        const jobId=res.body.Data[0].JobID
+        console.log(`Mailjet add ${filteredContacts.length} contacts to ${list}:jobId is ${jobId}`)
+        return jobId
+      })
   }
 
-
-  removeContactsFromList({emails, list}) {
+  checkContactsListsJob(jobId) {
     return this.smtpInstance
-      .post('contact', {'version': 'v3'})
+    .get(`contact`, {'version': 'v3'})
+    	.action("managemanycontacts")
+      .id(jobId)
+    	.request()
+      .then(res => {
+        console.log(`Mailjet job status ${jobId}:${JSON.stringify(res.body.Data)}`)
+        return res.body.Data
+      })
+    }
+
+  removeContactsFromList({contacts, list}) {
+    const filteredContacts=contacts.filter(({email}) => this.acceptEmail(email))
+    if (filteredContacts.length!=contacts.length) {
+      console.log(`${contacts.length-filteredContacts.length} rejected emails `)
+    }
+    return this.smtpInstance
+      .post('contactslist', {'version': 'v3'})
       .id(list)
       .action('managemanycontacts')
       .request({
-        Contacts: emails.map(email => ({Email: email})),
-        ContactsLists: [{
-          ListID: list,
-          Action: 'remove',
-        }],
+        Action: 'remove',
+        Contacts: filteredContacts.map(contact => ({Email: contact.email, Name: contact.fullname})),
       })
-      .then(res => JSON.parse(JSON.stringify(res.body.Data)))
+      .then(res => {
+        const jobId=res.body.Data[0].JobID
+        console.log(`Mailjet remove ${filteredContacts.length} contacts from ${list}:jobId is ${jobId}`)
+        return jobId
+      })
   }
 
   /**
@@ -122,6 +159,17 @@ class MAILJET_V6 {
 
 }
 
-const PROVIDER = new MAILJET_V6()
+class MAILJET_V6_TEST extends MAILJET_V6 {
+  constructor() {
+    super()
+  }
+
+  acceptEmail(email) {
+    return /@wappizy.com$/i.test(email)
+  }
+
+}
+
+const PROVIDER = isProduction() ? new MAILJET_V6() : new MAILJET_V6_TEST()
 
 module.exports = PROVIDER
