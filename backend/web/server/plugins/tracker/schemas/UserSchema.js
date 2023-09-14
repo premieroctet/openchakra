@@ -11,6 +11,7 @@ const lodash=require('lodash')
 const bcrypt = require('bcryptjs')
 const {ROLES, ROLE_CUSTOMER}=require('../consts')
 const Schema = mongoose.Schema
+const { isEmailOk, isPhoneOk } = require('../../../../utils/sms')
 
 const UserSchema = new Schema({
   firstname: {
