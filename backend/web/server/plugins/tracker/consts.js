@@ -4,7 +4,7 @@ const ROLE_DEV='ROLE_DEV'
 const ROLE_VALID='ROLE_VALID'
 
 const ROLES={
-  [ROLE_ADMIN]:'Admministrateur',
+  [ROLE_ADMIN]:'Administrateur',
   [ROLE_CUSTOMER]:'Client',
   [ROLE_DEV]:'Développeur',
   [ROLE_VALID]:'Valideur',
