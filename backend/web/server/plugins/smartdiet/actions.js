@@ -238,14 +238,22 @@ addAction('deactivateAccount', deactivateAccount)
 
 const isActionAllowed = ({action, dataId, user}) => {
   // TODO: why can we get "undefined" ??
+  if (action=='openPage') {
+    return Promise.resolve(true)
+  }
   const promise=dataId && dataId!="undefined" ? getModel(dataId) : Promise.resolve(null)
   return promise
     .then(modelName => {
       return mongoose.models[modelName].findById(dataId)
         .then(data => {
           if (action=='smartdiet_join_event') {
+            /**
+            TODO perfs
             return loadFromDb({model: 'user', id:user._id, fields:['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'webinars'], user})
             .then(([user]) => {
+              */
+            return User.findById(user._id).populate(['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'routine_events', 'webinars'])
+            .then(user => {
               // Indiv. challege before start_date: false
               if (modelName=='individualChallenge' && moment().isBefore(data.start_date)) {
                 return false
@@ -260,23 +268,35 @@ const isActionAllowed = ({action, dataId, user}) => {
             })
           }
           if (action=='smartdiet_skip_event') {
+            console.time(`action ${action} ${dataId}`)
             // Indiv. challege before start_date: false
             if (modelName=='individualChallenge' && moment().isBefore(data.start_date)) {
               return false
             }
+            /**
+            TODO perfs
             return loadFromDb({model: 'user', id:user._id, fields:['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'webinars'], user})
             .then(([user]) => {
+              */
+            return User.findById(user._id).populate(['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'routine_events', 'webinars'])
+            .then(user => {
               if (modelName=='menu') { return false}
               if (user?.skipped_events?.some(r => idEqual(r._id, dataId))) { return false}
               if (user?.registered_events?.some(r => idEqual(r.event._id, dataId))) { return false}
               if (user?.passed_events?.some(r => idEqual(r._id, dataId))) { return false}
               if (user?.failed_events?.some(r => idEqual(r._id, dataId))) { return false}
+              console.timeEnd(`action ${action} ${dataId}`)
               return true
             })
           }
           if (action=='smartdiet_pass_event') {
-            return loadFromDb({model: 'user', id:user._id, fields:['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'routine_events', 'webinars'], user})
+            /**
+            TODO perfs
+            return loadFromDb({model: 'user', id:user._id, fields:['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'webinars'], user})
             .then(([user]) => {
+              */
+            return User.findById(user._id).populate(['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'routine_events', 'webinars'])
+            .then(user => {
               if (modelName=='menu') { return false}
               if (user?.skipped_events?.some(r => idEqual(r._id, dataId))) { return false}
               if (user?.routine_events?.some(r => idEqual(r._id, dataId))) { return false}
@@ -300,8 +320,13 @@ const isActionAllowed = ({action, dataId, user}) => {
             if (modelName=='individualChallenge' && moment().isBefore(data.start_date)) {
               return false
             }
-            return loadFromDb({model: 'user', id:user._id, fields:['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'routine_events', 'webinars'], user})
+            /**
+            TODO perfs
+            return loadFromDb({model: 'user', id:user._id, fields:['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'webinars'], user})
             .then(([user]) => {
+              */
+            return User.findById(user._id).populate(['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'routine_events', 'webinars'])
+            .then(user => {
               if (modelName!='individualChallenge') { return false}
               if (user?.passed_events?.some(r => idEqual(r._id, dataId))) { return false}
               if (user?.skipped_events?.some(r => idEqual(r._id, dataId))) { return false}
@@ -310,8 +335,13 @@ const isActionAllowed = ({action, dataId, user}) => {
             })
           }
           if (action=='smartdiet_fail_event') {
+            /**
+            TODO perfs
             return loadFromDb({model: 'user', id:user._id, fields:['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'webinars'], user})
             .then(([user]) => {
+              */
+            return User.findById(user._id).populate(['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'routine_events', 'webinars'])
+            .then(user => {
               if (modelName=='menu') { return false}
               if (modelName=='webinar') { return false}
               if (user?.passed_events?.some(r => idEqual(r._id, dataId))) { return false}
