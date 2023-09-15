@@ -1,3 +1,4 @@
+const { datetime_str } = require('../../../utils/dateutils')
 const {
   sendAskContact,
   sendCommentReceived,
@@ -8,8 +9,11 @@ const {
   sendNewMission,
   sendProfileOnline,
   sendProfileReminder,
-  sendTipiSearch
+  sendTipiSearch,
+  sendUsersExtract
 } = require('./mailing')
+const {isDevelopment} = require('../../../config/config')
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const {
   AVAILABILITY,
   BOOLEAN,
@@ -586,6 +590,67 @@ AdminDashboard.exists({})
   .then(()=> console.log(`Only adminDashboard`))
   .catch(err=> console.error(`Only adminDashboard:${err}`))
 
+const getUsersList = () => {
+  const HEADERS=[
+    {title: 'Créé le', id:'created_format'},
+    {title: 'Prénom', id:'firstname'},
+    {title: 'Nom', id:'lastname'},
+    {title: 'Email', id:'email'},
+    {title: 'Département', id:'zip_code'},
+    {title: 'Métiers', id: 'job'},
+    {title: 'Masqué', id: 'visible_str'},
+    {title: 'Qualifié', id: 'qualified_str'},
+    {title: 'Accompagnement', id: 'coaching_alle'},
+    {title: '% complétude', id: 'profile_progress'},
+    {title: 'Assurance', id: 'insurance_type'},
+    {title: 'Document assurance', id: 'insurance_report'},
+  ]
+  return User.find().populate('jobs').lean({virtuals:true}).sort({creation_date:1})
+    .then(users => {
+      return users.map(u => ({
+        ...u,
+        job: u.jobs.map(j => j.name).join(','),
+        coaching_alle: u.coaching==COACH_ALLE ? 'oui':'non',
+        created_format: moment(u[CREATED_AT_ATTRIBUTE]).format('DD/MM/YY hh:mm'),
+      }))
+    })
+    .then(users => {
+      const csvStringifier = createCsvWriter({
+        header: HEADERS,
+        fieldDelimiter: ';',
+        path: 'AllTipis.csv',
+      });
+      return csvStringifier.csvStringifier.getHeaderString() + csvStringifier.csvStringifier.stringifyRecords(users)
+    })
+}
+
+const sendUsersList = () => {
+  return Promise.all([
+    User.find({role: {$in: [ROLE_ALLE_ADMIN, ROLE_ALLE_SUPER_ADMIN]}}),
+    getUsersList(),
+  ])
+  .then(([admins, contents]) => {
+    // TODO: contact only. Later will send to SUPER_ADMIN roles only
+    admins=admins.filter(a => /contact/.test(a.email))
+    const name=`Extraction TIPI du ${moment().format('DD/MM/YY HH:mm')}.csv`
+    const content=Buffer.from(contents).toString('base64')
+    const attachment={name, content}
+    return Promise.allSettled(admins.map(admin => sendUsersExtract(admin, attachment)))
+  })
+  .then(console.log)
+}
+
+!isDevelopment() && cron.schedule('0 8 * * * *', async() => {
+  // Send each monday and thursday
+  const DAYS=[1,4]
+  const today=moment().startOf('day').day()
+  if (DAYS.includes(today)) {
+    return sendUsersList()
+      .then(console.log)
+      .catch(console.error)
+  }
+})
+
 // Check payment status
 // Poll every minute
 cron.schedule('*/5 * * * * *', async() => {
@@ -638,3 +703,8 @@ cron.schedule('0 0 19 * * *', () => {
         })
     })
 })
+
+module.exports={
+  getUsersList,
+  sendUsersList,
+}
