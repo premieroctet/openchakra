@@ -1442,7 +1442,7 @@ Workflows for leads/users linked to companies EXCEPT Insuance companies
 
 const WORKFLOWS={
   CL_LEAD_NOCOA_NOGROUP: {
-    id: '2414809',
+    id: '2414827',
     filter: (lead, user) => {
       return !!lead && !user
         !(lead.company?.offers?.[0].coaching_credit>0) &&
@@ -1450,7 +1450,7 @@ const WORKFLOWS={
     },
   },
   CL_LEAD_COA_NOGROUP: {
-    id: '2414810',
+    id: '2414829',
     filter: (lead, user) => {
       return !!lead && !user
       && !!lead.company?.offers?.[0].coaching_credit
@@ -1458,7 +1458,7 @@ const WORKFLOWS={
     }
   },
   CL_LEAD_NOCOA_GROUP: {
-    id: '2414811',
+    id: '2414828',
     filter: (lead, user) => {
       return !!lead && !user
       && !lead.company?.offers?.[0].coaching_credit
@@ -1466,7 +1466,7 @@ const WORKFLOWS={
     }
   },
   CL_LEAD_COA_GROUP: {
-    id: '2414812',
+    id: '2414830',
     filter: (lead, user) => {
       return !!lead && !user && !!lead.company?.offers?.[0]
       && !!lead.company?.offers?.[0].coaching_credit
@@ -1475,21 +1475,21 @@ const WORKFLOWS={
   },
   // Registered
   CL_REGISTERED: {
-    id: '2414813',
+    id: '2414831',
     filter: (lead, user) => {
       return !!user
     }
   },
   // 1 month before coll chall
   CL_REGISTERED_COLL_CHALL: {
-    id: '2414814',
+    id: '2414833',
     filter: (lead, user) => {
       return !!user?.company?.collective_challenges?.some(c => moment(c.start_date).diff(moment(), 'days')<30)
     }
   },
   // After 1 week
   CL_REGISTERED_FIRST_COA_APPT: {
-    id: '2414816',
+    id: '2414832',
     filter: (lead, user) => {
       return !!user?.latest_coachings[0]?.appointments?.some(a => moment().isAfter(moment(a.end_date)))
     }
