@@ -1,15 +1,32 @@
+/*
+  update all image entries on s3 database which haven't been resized
+  
+  consider those consts in your main .env file
+  - DATABASE_NAME
+  - S3_REGION
+  - S3_BUCKET
+  - S3_PROD_ROOTPATH
+*/
+
+
 const path=require('path')
 const myEnv = require('dotenv').config({path: path.resolve(__dirname, '../../../.env')})
 const dotenvExpand = require('dotenv-expand')
 dotenvExpand.expand(myEnv)
-const sharp = require('sharp')
-const {fs} = require('fs/promises')
 const mongoose = require('mongoose')
+const sharp = require('sharp')
+const {Upload} = require('@aws-sdk/lib-storage')
+const {S3} = require('@aws-sdk/client-s3')
 const {sanitizeFilename, generateUUID} = require('../utils/functions')
 const {IMAGES_WIDTHS_FOR_RESIZE, IMAGE_SIZE_MARKER, THUMBNAILS_DIR} = require('../utils/consts')
-const {IMAGE_SETTINGS, IMAGE_SIZE_SEPARATOR, switchbuffer} = require('../server/middlewares/resizeImage')
+const {IMAGE_SETTINGS, IMAGE_SIZE_SEPARATOR, switchbuffer} = require('../server/utils/images')
 
 const rootPath = process.env?.S3_PROD_ROOTPATH
+const s3 = new S3({
+  region: process.env?.S3_REGION,
+})
+const database = process.env.DATABASE_NAME
+const url = `mongodb://localhost:27017/${database}`;
 
 const generateImageSet = async(awsurl, filename) => {
 
@@ -21,11 +38,11 @@ const generateImageSet = async(awsurl, filename) => {
 
   const isImage = Object.keys(IMAGE_SETTINGS).includes(filemimetype)
   const uploadedfilenamebase = filename.substring(0, filename.lastIndexOf('.'))
-
+  
   if (isImage) {
     let availableSizes = []
     let dataForAWS = []
-    const buffer = await switchbuffer(bufferfromaws)
+    const buffer = await switchbuffer(bufferfromaws, filemimetype)
       .catch(err => {throw new Error(err)})
     
       // watch out for original image width
@@ -74,10 +91,50 @@ const generateImageSet = async(awsurl, filename) => {
     await Promise.allSettled(sharpImages)
       .catch(err => console.error(err))
 
-    console.log(dataForAWS)
-
+    return dataForAWS
   }
-  
+
+  return false
+}
+
+const sendFilesToAws = async(data) => {
+  const documentsToSend = data.map(document => {
+    
+    return new Promise(async(resolve, reject) => {
+      const params = {
+        Bucket: process.env?.S3_BUCKET,
+        Key: document.filename,
+        Body: document.buffer,
+        ContentType: document.mimetype,
+      }
+
+      await new Upload({
+        client: s3,
+        params,
+      }).done()
+        .then(res => resolve(res))
+        .catch(err => reject(err))
+    })
+  })
+
+  return await Promise.all(documentsToSend)
+    .catch(err => {throw Error('Error while obtaining image dimensions :', err)})
+}
+
+const deletePreviousUrl = async(urlToDelete) => {
+
+  const params = {
+    Bucket: process.env.S3_BUCKET,
+    Key: urlToDelete, // File name you want to delete as in S3
+  }
+  return s3.deleteObject(params)
+    .then(res => {
+      return Promise.resolve(res)
+    })
+    .catch(err => {
+      return Promise.reject(err)
+    })
+
 }
 
 const generateFilename = (originalurl)  => {
@@ -87,9 +144,6 @@ const generateFilename = (originalurl)  => {
   return withUUID ? sanitizeFilename(filename) : `${generateUUID()}_${sanitizeFilename(filename)}`
 }
 
-
-
-const url = `mongodb://localhost:27017/${process.env.DATABASE_NAME}`;
 
 mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true});
 
@@ -101,20 +155,15 @@ mongoose.connection.on('open', function () {
       
       names.forEach(function(e,i,a) {
         mongoose.connection.db.collection(e.name, function(err, collection) {
-          
-          if (e.name === 'users') {
             
             collection.find().toArray(function(err, data) {
             
               data.forEach(async function(doc) {
-                
-                if (doc['email'] === 'hello+ti@wappizy.com') {
 
                 for (const key in doc) {
   
                   const currentValue = doc[key]
                   const isAwsFile = typeof currentValue === 'string' && currentValue.includes('amazonaws.com/')
-  
                   /* 
                     1. filter if image doesn't correspond to pattern with srcset
                     2. keep filename, and generate future filename
@@ -130,22 +179,21 @@ mongoose.connection.on('open', function () {
                     
                     if (filePathParts.length === 1) {  
                       const futurefilename = generateFilename(currentValue)
-                      const futureimage = generateImageSet(currentValue, futurefilename)
-                      
-                      
+                      const dataforAWS = await generateImageSet(currentValue, futurefilename).catch(err => console.error(err))
+
+                      if (dataforAWS) {
+                        const awsreturn = await sendFilesToAws(dataforAWS).catch(err => console.error(err))
+                        const [objectimageresized] = Array.isArray(awsreturn) && awsreturn.filter(s3obj => s3obj.Location.includes(encodeURIComponent(IMAGE_SIZE_MARKER)))
+                        await collection.updateOne({ _id: doc._id }, { $set: { [key]: objectimageresized.Location } })
+                          .catch(err => console.error(err));
+                        await deletePreviousUrl(currentValue)
+                          .catch(err => console.error(err))
+                      }
                     }
                   }
-  
-                    
-                  // await collection.updateOne({ _id: document._id }, { $set: { [key]: urlimageresized } });
-                  
                 }
-               }
               });
             });
-          }
-
-
         });
       });
     }
