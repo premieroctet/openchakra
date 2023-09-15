@@ -1,3 +1,49 @@
+const {
+  ACTIVITY,
+  ANSWER_STATUS,
+  APPOINTMENT_CURRENT,
+  APPOINTMENT_PAST,
+  APPOINTMENT_STATUS,
+  APPOINTMENT_TO_COME,
+  COACHING_MODE,
+  COACHING_QUESTION_STATUS,
+  COMPANY_ACTIVITY,
+  COMPANY_ACTIVITY_SERVICES_AUX_ENTREPRISES,
+  CONTENTS_TYPE,
+  DAYS,
+  DIET_ACTIVITIES,
+  DIET_REGISTRATION_STATUS,
+  ECOSCORE,
+  EVENT_TYPE,
+  EVENT_WEBINAR,
+  FOOD_DOCUMENT_TYPE,
+  GENDER,
+  GROUPS_CREDIT,
+  HARDNESS,
+  HOME_STATUS,
+  MEAL_POSITION,
+  NUTRISCORE,
+  PARTICULAR_COMPANY_NAME,
+  PERIOD,
+  QUIZZ_QUESTION_TYPE,
+  QUIZZ_TYPE,
+  QUIZZ_TYPE_LOGBOOK,
+  QUIZZ_TYPE_PROGRESS,
+  REGISTRATION_WARNING,
+  REGISTRATION_WARNING_CODE_MISSING,
+  REGISTRATION_WARNING_LEAD_MISSING,
+  ROLES,
+  ROLE_ADMIN,
+  ROLE_CUSTOMER,
+  ROLE_EXTERNAL_DIET,
+  ROLE_RH,
+  ROLE_SUPER_ADMIN,
+  SEASON,
+  SPOON_SOURCE,
+  SURVEY_ANSWER,
+  TARGET_TYPE,
+  UNIT
+} = require('./consts')
 const { delayPromise } = require('../../utils/concurrency')
 const {
   getSmartAgendaConfig,
@@ -38,50 +84,6 @@ const {
 } = require('../../utils/database')
 const AppointmentType = require('../../models/AppointmentType')
 require('../../models/LogbookDay')
-
-const {
-  ACTIVITY,
-  ANSWER_STATUS,
-  APPOINTMENT_STATUS,
-  COACHING_MODE,
-  COACHING_QUESTION_STATUS,
-  COMPANY_ACTIVITY,
-  COMPANY_ACTIVITY_SERVICES_AUX_ENTREPRISES,
-  CONTENTS_TYPE,
-  DAYS,
-  DIET_ACTIVITIES,
-  DIET_REGISTRATION_STATUS,
-  ECOSCORE,
-  EVENT_TYPE,
-  EVENT_WEBINAR,
-  FOOD_DOCUMENT_TYPE,
-  GENDER,
-  GROUPS_CREDIT,
-  HARDNESS,
-  HOME_STATUS,
-  MEAL_POSITION,
-  NUTRISCORE,
-  PARTICULAR_COMPANY_NAME,
-  PERIOD,
-  QUIZZ_QUESTION_TYPE,
-  QUIZZ_TYPE,
-  QUIZZ_TYPE_LOGBOOK,
-  QUIZZ_TYPE_PROGRESS,
-  REGISTRATION_WARNING,
-  REGISTRATION_WARNING_CODE_MISSING,
-  REGISTRATION_WARNING_LEAD_MISSING,
-  ROLES,
-  ROLE_ADMIN,
-  ROLE_CUSTOMER,
-  ROLE_EXTERNAL_DIET,
-  ROLE_RH,
-  ROLE_SUPER_ADMIN,
-  SEASON,
-  SPOON_SOURCE,
-  SURVEY_ANSWER,
-  TARGET_TYPE,
-  UNIT
-} = require('./consts')
 const { importLeads } = require('./leads')
 const Quizz = require('../../models/Quizz')
 const CoachingLogbook = require('../../models/CoachingLogbook')
@@ -593,11 +595,40 @@ declareVirtualField({model: 'content', field: 'search_text', instance: 'String',
 
 declareVirtualField({model: 'dietComment', field: '_defined_notes', instance: 'Number', multiple: 'true'})
 
+const getEventStatus = (user, params, data) => {
+  return getModel(data._id, ['event', 'menu', 'webinar', 'individualChallenge', 'collectiveChallenge'])
+   .then(modelName => {
+     console.log(data._id, modelName)
+     if (modelName=='individualChallenge') {
+       // Past if failed or passed or skipped or routine
+       console.log(JSON.stringify(user, null, 2))
+       if (['passed_events','failed_events', 'skipped_events', 'routine_events'].some(att => {
+         return user[att].some(e => idEqual(e._d, data._id))
+       })) {
+         return APPOINTMENT_PAST
+       }
+       if (user.registered_events.some(e => idEqual(e.event._id, data._id))) {
+         return APPOINTMENT_CURRENT
+       }
+       return APPOINTMENT_TO_COME
+     }
+     const now=moment()
+     return now.isAfter(data.end_date) ? APPOINTMENT_PAST:
+     now.isBefore(data.start_date) ? APPOINTMENT_TO_COME:
+     APPOINTMENT_CURRENT
+   })
+   .catch(console.error)
+  /**
+  console.log(data._id)
+  */
+}
+
 const EVENT_MODELS=['event', 'collectiveChallenge', 'individualChallenge', 'menu', 'webinar']
 EVENT_MODELS.forEach(m => {
   declareVirtualField({model: m, field: 'type', instance: 'String', enumValues: EVENT_TYPE})
-  declareVirtualField({model: m, field: 'duration', instance: 'Number', required:'start_date,end_date'})
-  declareVirtualField({model: m, field: 'status', instance: 'String', required:'start_date,end_date', enumValues: APPOINTMENT_STATUS})
+  declareVirtualField({model: m, field: 'duration', instance: 'Number', requires:'start_date,end_date'})
+  declareVirtualField({model: m, field: 'status', instance: 'String', requires:'start_date,end_date', enumValues: APPOINTMENT_STATUS})
+  declareComputedField(m, 'status', getEventStatus)
 })
 
 declareEnumField({model: 'individualChallenge', field: 'hardness', enumValues: HARDNESS})
@@ -702,8 +733,8 @@ declareVirtualField({model: 'key', field: 'user_surveys_progress', instance: 'Ar
     instance: 'ObjectID',
     options: {ref: 'chartPoint'}},
 })
-declareVirtualField({model: 'key', field: 'user_passed_challenges', instance: 'Number', required: 'passed_events'})
-declareVirtualField({model: 'key', field: 'user_passed_webinars', instance: 'Number', required: 'passed_events'})
+declareVirtualField({model: 'key', field: 'user_passed_challenges', instance: 'Number', requires: 'passed_events'})
+declareVirtualField({model: 'key', field: 'user_passed_webinars', instance: 'Number', requires: 'passed_events'})
 
 
 declareVirtualField({model: 'userSurvey', field: 'questions', instance: 'Array',

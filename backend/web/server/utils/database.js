@@ -696,12 +696,14 @@ const loadFromDb = ({model, fields, id, user, params}) => {
         .then(data => {
           // Lean all objects
           data=data.map(d => d.toObject({virtuals: true}))
+          // Force to plain object
+          data=JSON.parse(JSON.stringify(data))
           // Remove extra virtuals
           //data = retainRequiredFields({data, fields})
           if (id && data.length == 0) { throw new NotFoundError(`Can't find ${model}:${id}`) }
           return Promise.all(data.map(d => addComputedFields(fields,user, params, d, model)))
         })
-        .then(data =>  callFilterDataUser({model, data, id, user}))
+        .then(data => callFilterDataUser({model, data, id, user}))
         //.then(data =>  retainRequiredFields({data, fields}))
     })
 
