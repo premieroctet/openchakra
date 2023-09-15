@@ -384,7 +384,7 @@ UserSchema.virtual('current_individual_challenge', {localField: 'id', foreignFie
     ...(this.failed_events?.map(s => s._id)||[]),
   ]
   return (this._all_individual_challenges||[])
-    .filter(i => this.registered_events.some(r => idEqual(r._id, i._id)))
+    .filter(i => this.registered_events.some(r => idEqual(r.event._id, i._id)))
     .find(i => !exclude.some(e => idEqual(e._id, i._id)))
 })
 
@@ -515,7 +515,7 @@ UserSchema.methods.canView = function(content_id) {
 }
 
 UserSchema.methods.canJoinEvent = function(event_id) {
-  if (this.registered_events.some(e => idEqual(e._id, event_id))) {
+  if (this.registered_events.some(e => idEqual(e.event._id, event_id))) {
     return Promise.resolve(true)
   }
   return Promise.all([
@@ -524,7 +524,7 @@ UserSchema.methods.canJoinEvent = function(event_id) {
     mongoose.models.event.find({"_id": {$in: this.registered_events}}),
   ])
     .then(([{offers}, event, registered_events]) => {
-      const sameTypeEventsCount=registered_events.filter(e => e.type==event.type).length
+      const sameTypeEventsCount=registered_events.filter(e => e.event.type==event.type).length
       const limit=offers[0]?.getEventLimit(event.type)
       if (sameTypeEventsCount>=limit) {
         throw new ForbiddenError(NO_CREDIT_AVAILABLE)
