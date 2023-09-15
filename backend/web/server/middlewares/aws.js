@@ -19,7 +19,7 @@ const imageSrcSetPaths = (originalSrc, withDimension=true) => {
    */
   let srcSet
 
-  const filePathParts = originalSrc.split('_srcset:') || originalSrc.split(encodeURIComponent('_srcset:'))
+  const filePathParts = originalSrc.split('_srcset:')
   const filenameextension = originalSrc.substring(originalSrc.lastIndexOf('.') + 1, originalSrc.length)
       
   if (filePathParts.length > 1) {
