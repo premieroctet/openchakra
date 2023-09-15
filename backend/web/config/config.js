@@ -1,3 +1,7 @@
+const path=require('path')
+const myEnv = require('dotenv').config({path: path.resolve(__dirname, '../../../.env')})
+const dotenvExpand = require('dotenv-expand')
+dotenvExpand.expand(myEnv)
 const isEmpty = require('../server/validation/is-empty')
 const {
   SIB_TEMPLATES,
@@ -200,6 +204,7 @@ const displayConfig = () => {
 \tHost URL:${getHostUrl()}\n\
 \tDisplay chat:${mustDisplayChat()} ${mustDisplayChat() ? getChatURL() : ''}\n\
 \tSendInBlue actif:${ENABLE_MAILING}\n\
+\tSendInBlue key:${getSibApiKey()}\n\
 \tSendInBlue templates:${process.env?.DATA_MODEL}\n\
 Payment plugin:${process.env?.PAYMENT_PLUGIN}:${!!paymentPlugin} keys is ${process.env?.STRIPE_PUBLIC_KEY?.slice(0, 20)}...${process.env?.STRIPE_PUBLIC_KEY?.slice(-6)}\n\
 `)

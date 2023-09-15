@@ -29,7 +29,8 @@ class SIB_V3 {
     if (attachment) {
       emailData.attachment=[attachment]
     }
-    Object.assign(emailData.params, data)
+    // TODO Check why Brevo requires params not to be empty !!!
+    Object.assign(emailData.params, data || {dummy: 0})
 
     return this.smtpInstance.sendTransacEmail(emailData)
       .then(data => {
