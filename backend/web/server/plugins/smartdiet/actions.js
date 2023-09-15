@@ -268,7 +268,6 @@ const isActionAllowed = ({action, dataId, user}) => {
             })
           }
           if (action=='smartdiet_skip_event') {
-            console.time(`action ${action} ${dataId}`)
             // Indiv. challege before start_date: false
             if (modelName=='individualChallenge' && moment().isBefore(data.start_date)) {
               return false
@@ -285,7 +284,6 @@ const isActionAllowed = ({action, dataId, user}) => {
               if (user?.registered_events?.some(r => idEqual(r.event._id, dataId))) { return false}
               if (user?.passed_events?.some(r => idEqual(r._id, dataId))) { return false}
               if (user?.failed_events?.some(r => idEqual(r._id, dataId))) { return false}
-              console.timeEnd(`action ${action} ${dataId}`)
               return true
             })
           }
