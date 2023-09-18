@@ -30,71 +30,76 @@ const url = `mongodb://localhost:27017/${database}`;
 
 const generateImageSet = async(awsurl, filename) => {
 
-  const response = await fetch(awsurl);
-  const blob = await response.blob();
-  const {type:filemimetype} = blob
-  const arrayBuffer = await blob.arrayBuffer();
-  const bufferfromaws = Buffer.from(arrayBuffer);
+  try {
+    const blobby = await fetch(awsurl)
+      .then(res => res.blob() )
+      .catch(err => {throw Error('can not fetch aws url', awsurl, err)});
+    const {type:filemimetype} = blobby
+    const arrayBuffer = await blobby.arrayBuffer();
+    const bufferfromaws = Buffer.from(arrayBuffer);
 
-  const isImage = Object.keys(IMAGE_SETTINGS).includes(filemimetype)
-  const uploadedfilenamebase = filename.substring(0, filename.lastIndexOf('.'))
-  
-  if (isImage) {
-    let availableSizes = []
-    let dataForAWS = []
-    const buffer = await switchbuffer(bufferfromaws, filemimetype)
-      .catch(err => {throw new Error(err)})
+    const isImage = Object.keys(IMAGE_SETTINGS).includes(filemimetype)
+    const uploadedfilenamebase = filename.substring(0, filename.lastIndexOf('.'))
     
-      // watch out for original image width
-      const {width: originalWidth} = await sharp(buffer)
-      .metadata()
-      .then(metadata => {
-        return {
-          width: metadata.width,
-        }
-      })
-      .catch(err => {
-        throw Error('Error while obtaining image dimensions :', err)
-      })
-
-    const retainedImageSizes = IMAGES_WIDTHS_FOR_RESIZE
-      .filter(size => size < originalWidth)
-      .sort((a, b) => a - b)
+    if (isImage) {
+      let availableSizes = []
+      let dataForAWS = []
+      const buffer = await switchbuffer(bufferfromaws, filemimetype)
+        .catch(err => {throw new Error(err)})
       
-    const imagesSet = new Set([...retainedImageSizes, originalWidth])
-
-    const sharpImages = [...imagesSet].map(width => {
-
-      return new Promise(async(resolve, reject) => {
-        availableSizes.push(width)
-        const image = await sharp(buffer)
-        .resize({width})
-        .toFormat(IMAGE_SETTINGS[filemimetype].outputFormat, IMAGE_SETTINGS[filemimetype].options)
-        .toBuffer()
+        // watch out for original image width
+        const {width: originalWidth} = await sharp(buffer)
+        .metadata()
+        .then(metadata => {
+          return {
+            width: metadata.width,
+          }
+        })
         .catch(err => {
-          reject(err)
+          throw Error('Error while obtaining image dimensions :', err)
         })
 
-        const imageData = {
-          filename: originalWidth === width // spread availables image dimensions on original file. Others in thumbnails dir
-            ? `${rootPath}/${uploadedfilenamebase}${IMAGE_SIZE_MARKER}${availableSizes.join(IMAGE_SIZE_SEPARATOR)}.${IMAGE_SETTINGS[filemimetype].extension}`
-            : `${THUMBNAILS_DIR}/${rootPath}/${uploadedfilenamebase}_w:${width}.${IMAGE_SETTINGS[filemimetype].extension}`,
-          mimetype: IMAGE_SETTINGS[filemimetype].outputMime,
-          buffer: image,
-        }
+      const retainedImageSizes = IMAGES_WIDTHS_FOR_RESIZE
+        .filter(size => size < originalWidth)
+        .sort((a, b) => a - b)
         
-        dataForAWS.push(imageData)
-        resolve(image)
-      })
-    })
-    
-    await Promise.allSettled(sharpImages)
-      .catch(err => console.error(err))
+      const imagesSet = new Set([...retainedImageSizes, originalWidth])
 
-    return dataForAWS
+      const sharpImages = [...imagesSet].map(width => {
+
+        return new Promise(async(resolve, reject) => {
+          availableSizes.push(width)
+          const image = await sharp(buffer)
+          .resize({width})
+          .toFormat(IMAGE_SETTINGS[filemimetype].outputFormat, IMAGE_SETTINGS[filemimetype].options)
+          .toBuffer()
+          .catch(err => {
+            reject(err)
+          })
+
+          const imageData = {
+            filename: originalWidth === width // spread availables image dimensions on original file. Others in thumbnails dir
+              ? `${rootPath}/${uploadedfilenamebase}${IMAGE_SIZE_MARKER}${availableSizes.join(IMAGE_SIZE_SEPARATOR)}.${IMAGE_SETTINGS[filemimetype].extension}`
+              : `${THUMBNAILS_DIR}/${rootPath}/${uploadedfilenamebase}_w:${width}.${IMAGE_SETTINGS[filemimetype].extension}`,
+            mimetype: IMAGE_SETTINGS[filemimetype].outputMime,
+            buffer: image,
+          }
+
+          image && dataForAWS.push(imageData)
+          resolve(image)
+        })
+      })
+      
+      await Promise.allSettled(sharpImages)
+        .catch(err => console.error(err))
+
+      return dataForAWS
+    }
+  } catch (error) {
+    throw new Error(error)
   }
 
-  return false
+  return []
 }
 
 const sendFilesToAws = async(data) => {
@@ -118,7 +123,7 @@ const sendFilesToAws = async(data) => {
   })
 
   return await Promise.all(documentsToSend)
-    .catch(err => {throw Error('Error while obtaining image dimensions :', err)})
+    .catch(err => {throw Error('Error while uploading aws files :', err)})
 }
 
 const deletePreviousUrl = async(urlToDelete) => {
@@ -132,7 +137,7 @@ const deletePreviousUrl = async(urlToDelete) => {
       return Promise.resolve(res)
     })
     .catch(err => {
-      return Promise.reject(err)
+      throw new Error(err)
     })
 
 }
@@ -148,15 +153,20 @@ const generateFilename = (originalurl)  => {
 mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true});
 
 mongoose.connection.on('open', function () {
-  mongoose.connection.db.listCollections().toArray(function (err, names) {
+  mongoose.connection.db.listCollections().toArray(async function (err, names) {
     if (err) {
-      console.error(err);
+      throw new Error(err);
     } else {
       
-      names.forEach(function(e,i,a) {
-        mongoose.connection.db.collection(e.name, function(err, collection) {
+      const handleImages = names.map(async function(e,i,a) {
+        
+        return new Promise(async(resolveit, rejecting) => {
+          
+          mongoose.connection.db.collection(e.name, async function(err, collection) {
             
-            collection.find().toArray(function(err, data) {
+            console.log(`Collection ${e.name}`)
+
+            collection.find().toArray(async function(err, data) {
             
               data.forEach(async function(doc) {
 
@@ -170,8 +180,8 @@ mongoose.connection.on('open', function () {
                     3. Buffer actual image, and generate images 
                     4. get new filename and update in database
                     5. drop the old image
-                  */
-  
+                    */
+                  
                   if (isAwsFile) {
                     
                     /* does filename contains pattern with srcset (already with sizes) */
@@ -180,22 +190,31 @@ mongoose.connection.on('open', function () {
                     if (filePathParts.length === 1) {  
                       const futurefilename = generateFilename(currentValue)
                       const dataforAWS = await generateImageSet(currentValue, futurefilename).catch(err => console.error(err))
-
-                      if (dataforAWS) {
+                      
+                      if (dataforAWS && dataforAWS.length >= 1) {
                         const awsreturn = await sendFilesToAws(dataforAWS).catch(err => console.error(err))
                         const [objectimageresized] = Array.isArray(awsreturn) && awsreturn.filter(s3obj => s3obj.Location.includes(encodeURIComponent(IMAGE_SIZE_MARKER)))
+                        console.log(`new aws doc ${objectimageresized.Location}`)
                         await collection.updateOne({ _id: doc._id }, { $set: { [key]: objectimageresized.Location } })
                           .catch(err => console.error(err));
                         await deletePreviousUrl(currentValue)
-                          .catch(err => console.error(err))
+                          .catch(err => {
+                            console.log(`Couldn't delete the previous url`, err)
+                          })
+                        
                       }
                     }
                   }
                 }
               });
             });
-        });
+          });
+          resolveit(e.name)
+        })
       });
+
+      await Promise.allSettled(handleImages)
+        .catch(err => console.error(err))
     }
   });
 });
