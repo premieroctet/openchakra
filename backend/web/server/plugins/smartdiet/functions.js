@@ -1529,7 +1529,7 @@ const updateWorkflows= () => {
       let promises=Object.values(lists).map(({id, add, remove})=> {
         const result=[]
         if (!lodash.isEmpty(add)) {
-          result.push(MAILJET_HANDLER.addContactsToList({list: id, contacts: add.map(a => ({email: a, fullname: 'tagada'}))}))
+          result.push(MAILJET_HANDLER.addContactsToList({list: id, contacts: add.map(a => ({email: a, fullname: ''}))}))
         }
         if (!lodash.isEmpty(remove)) {
           result.push(MAILJET_HANDLER.removeContactsFromList({list: id, contacts: remove.map(a => ({email: a}))}))
@@ -1543,6 +1543,12 @@ const updateWorkflows= () => {
     .then(jobs => Promise.all(jobs.map(job => MAILJET_HANDLER.checkContactsListsJob(job))))
 }
 
+// Update workflows
+cron.schedule('0 0 8 * * *', async() => {
+  updateWorkflows()
+    .then(res => console.error(`Workflows:${res}`))
+    .catch(err => console.error(`Workflows error:${err}`))
+})
 module.exports={
   ensureChallengePipsConsistency,
   logbooksConsistency,
