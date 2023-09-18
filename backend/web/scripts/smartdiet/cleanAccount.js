@@ -31,6 +31,19 @@ const mongoose = require('mongoose')
 const lodash=require('lodash')
 const moment=require('moment')
 
+const checkDeleted = user => {
+  const id = user._id.toString()
+  return Promise.all(mongoose.modelNames().map(modelName => {
+    return mongoose.models[modelName].find()
+      .then(documents => documents.filter(doc => JSON.stringify(doc).includes(id)))
+      .then(docs => {
+        if (docs.length>0) {
+          console.log(`${user.email}(${user.id}) is still in the ${modelName} document(s):${JSON.stringify(docs)}`)
+        }
+      })
+  }))
+}
+
 /****** Have to remove:
 user_id from Content: viewed_by, likdes, pins, shares
 Coaching whose user is user_id / appointments linked to this coaching
@@ -43,9 +56,9 @@ const cleanAccount = email => {
     .then(() => User.findOne({email}))
     .then(user => {
       if (!user) { throw new Error(`${email} not found`)}
-      if (user.role != ROLE_CUSTOMER) { throw new Error(`${email} is not a customer`)}
+      //if (user.role != ROLE_CUSTOMER) { throw new Error(`${email} is not a customer`)}
       const id=user._id
-      console.log(`Removing ${email} '${id}`)
+      console.log(`Removing ${email} ${id}`)
       return Coaching.deleteMany({user: id})
         .then(() => Message.deleteMany({$or:[{sender: id}, {receiver: id}]}))
         .then(() => Message.updateMany({}, {$pull: {likes: id, pins: id}}))
@@ -59,6 +72,7 @@ const cleanAccount = email => {
         .then(() => Diploma.deleteMany({user: id}))
         .then(() => user.delete())
     })
+    .then(user => checkDeleted(user))
 }
 
 
@@ -74,6 +88,6 @@ if (!email) {
 console.log(`Cleaning account ${email}`)
 return mongoose.connect(getDatabaseUri(), MONGOOSE_OPTIONS)
   .then(() => cleanAccount(email))
-  .then(console.log)
+  //.then(console.log)
   .catch(console.error)
   .finally(() => process.exit())
