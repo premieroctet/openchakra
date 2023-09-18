@@ -42,6 +42,8 @@ Renseigner les images du dossier assets : splash, icon, et adaptive-icon. Ils so
 
 Renseigner tous les éléments :
 
+NOTE: Penser à changer la version avant de lancer un build (le version code s'incrémente tout seul via Expo)
+
 [src, JavaScript]
 .app.json
 ----
@@ -127,3 +129,10 @@ eas build --platform ios
 # ou
 eas build --platform android 
 ```
+
+
+## Issues
+
+### ça builde pas 
+
+Supprimer le dossier ios ou android selon et le dossier .expo à la racine du projet.
