@@ -1215,7 +1215,7 @@ const computeStatistics= ({id, fields}) => {
   const company_filter=id ? {_id: id} : {}
   return Company.find(company_filter)
     .populate([{path: 'webinars', select:'type'},{path: 'groups', populate: 'messages' }])
-    .populate({path: 'users', select: 'registered_events,replayed_events', populate:['registered_events','replayed_events']})
+    .populate({path: 'users', populate:['registered_events','replayed_events']})
     .then(comps => {
       const companies=lodash(comps)
       const webinars=companies.map(c => c.webinars).flatten()
@@ -1236,10 +1236,12 @@ const computeStatistics= ({id, fields}) => {
         .map('groups').flatten()
         .map('messages').flatten()
         .size()
+      const users_count=companies.map(c => c.users.filter(u => u.role==ROLE_CUSTOMER).length)
+        .sum()
       return ({
         company: id,
         webinars_count, average_webinar_registar, webinars_replayed_count,
-        groups_count, messages_count,
+        groups_count, messages_count, users_count,
       })
     })
 }
