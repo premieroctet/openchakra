@@ -1,3 +1,4 @@
+const lodash=require('lodash')
 const {
   WORKFLOWS,
   updateWorkflows
@@ -30,6 +31,8 @@ const {forceDataModelSmartdiet}=require('../utils')
 
 forceDataModelSmartdiet()
 const {computeWorkflowLists}=require('../../server/plugins/smartdiet/functions')
+const MAIL_HANDLER=require('../../server/utils/mailjet')
+
 require('../../server/models/Target')
 require('../../server/models/UserQuizz')
 require('../../server/models/Key')
@@ -139,7 +142,26 @@ describe('Worflows', () => {
     expect(result.CL_REGISTERED_FIRST_COA_APPT.add).not.toContain(DIET)
   })
 
-  it('Must update workflows', async() => {
-    await updateWorkflows()
+  it('Must compute workflows list', async() => {
+    const res=await computeWorkflowLists()
+    console.log(JSON.stringify(res, null,2))
+    const removed=Object.values(res).find(v => v.remove.length>0).remove
+    const added=Object.values(res).find(v => v.remove.length>0).remove
+    console.log(JSON.stringify(removed[0]))
+    expect(added.every(item => lodash.isObject(item))).toBe(true)
+    expect(removed.every(item => lodash.isObject(item))).toBe(true)
+  })
+
+  it.only('Must update workflows', async() => {
+    const res=await updateWorkflows()
+    console.log(res)
+  })
+
+  it.skip('must add to list with parameters', async() => {
+    const list=WORKFLOWS.CL_LEAD_COA_NOGROUP.id
+    //const properties={codeentreprise: 'Com hop12', credit_consult: 19, Client:'La compagnie', logo: 'hophophop'}
+    const properties={codeentreprise: 'Com hop12', credit_consult: 19, client: 'compagnie', logo: false}
+    const contacts=[{email: 'hello+testeasninogroup@wappizy.com', properties}]
+    await MAIL_HANDLER.addContactsToList({contacts, list})
   })
 })
