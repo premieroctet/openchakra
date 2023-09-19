@@ -11,9 +11,12 @@ INFOS:
 */
 const config = require('../../../config/config')
 const { isDevelopment } = require('../../../config/config')
+const {
+  AVAILABILITIES_RANGE_DAYS,
+  ROLE_EXTERNAL_DIET
+} = require('../smartdiet/consts')
 const Range = require('../../models/Range')
 const User = require('../../models/User')
-const { ROLE_EXTERNAL_DIET } = require('../smartdiet/consts')
 const AppointmentType = require('../../models/AppointmentType')
 const axios = require('axios')
 const crypto=require('crypto')
@@ -23,6 +26,7 @@ const moment=require('moment')
 require('moment-round')
 const cron=require('node-cron')
 const {runPromisesWithDelay}=require('../../utils/concurrency')
+
 const CONFIG={
   ...config.getSmartAgendaConfig(),
   SMARTAGENDA_SHA1_PASSWORD: crypto.createHash('sha1')
@@ -285,10 +289,11 @@ const upsertAvailabilities = diet_smartagenda_id => {
 
 // Synchronize availabilities every minute
 // DISABLED UNTIL SMARTAGENDA WEBHOOK
-!isDevelopment() && cron.schedule('0 * * * * *', () => {
+//!isDevelopment() && cron.schedule('0 * * * * *', () => {
+cron.schedule('0 * * * * *', () => {
   console.log('Syncing availabilities from smartagenda')
-  const start=moment().add(-7, 'days')
-  const end=moment().add(7, 'days')
+  const start=moment().add(0, 'days').startOf('day')
+  const end=moment().add(AVAILABILITIES_RANGE_DAYS, 'days').startOf('day')
   return Range.deleteMany({})
     .then(() => Promise.all([User.find({role: ROLE_EXTERNAL_DIET, smartagenda_id: {$ne: null}}), AppointmentType.find()]))
     .then(([diets, app_types]) => {
