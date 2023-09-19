@@ -1436,6 +1436,8 @@ const agendaHookFn = received => {
 
 /**
 Workflows for leads/users linked to companies EXCEPT Insuance companies
+INEA pas coaching
+ESANI coaching
 */
 // Mailjet contacts lists
 // Non registered
@@ -1444,7 +1446,7 @@ const WORKFLOWS={
   CL_LEAD_NOCOA_NOGROUP: {
     id: '2414827',
     filter: (lead, user) => {
-      return !!lead && !user
+      return !!lead && !user &&
         !(lead.company?.offers?.[0].coaching_credit>0) &&
         !! lead.company?.groups_count
     },
@@ -1452,25 +1454,25 @@ const WORKFLOWS={
   CL_LEAD_COA_NOGROUP: {
     id: '2414829',
     filter: (lead, user) => {
-      return !!lead && !user
-      && !!lead.company?.offers?.[0].coaching_credit
-      && !lead.company?.groups_count
+      return !!lead && !user &&
+      !!lead.company?.offers?.[0].coaching_credit &&
+      !lead.company?.groups_count
     }
   },
   CL_LEAD_NOCOA_GROUP: {
     id: '2414828',
     filter: (lead, user) => {
-      return !!lead && !user
-      && !lead.company?.offers?.[0].coaching_credit
-      && !!lead.company?.groups_count
+      return !!lead && !user &&
+      !lead.company?.offers?.[0].coaching_credit &&
+      !!lead.company?.groups_count
     }
   },
   CL_LEAD_COA_GROUP: {
     id: '2414830',
     filter: (lead, user) => {
-      return !!lead && !user && !!lead.company?.offers?.[0]
-      && !!lead.company?.offers?.[0].coaching_credit
-      && !!lead.company?.groups_count
+      return !!lead && !user && !!lead.company?.offers?.[0] &&
+      !!lead.company?.offers?.[0].coaching_credit &&
+      !!lead.company?.groups_count
     }
   },
   // Registered
