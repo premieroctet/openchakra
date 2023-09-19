@@ -201,7 +201,6 @@ const getAppointmentTypes = () => {
 }
 
 const getAvailabilities = ({diet_id, from, to, appointment_type}) => {
-  console.log(`Geting avail for ${diet_id}/${appointment_type}`)
   if (!(diet_id && from && to && appointment_type)) {
     throw new Error(`diet_id/from/to/appointment_type are required`)
   }
