@@ -1,6 +1,7 @@
 const {
   DAYS_BEFORE_IND_CHALL_ANSWER,
-  PARTICULAR_COMPANY_NAME
+  PARTICULAR_COMPANY_NAME,
+  ROLE_CUSTOMER
 } = require('./consts')
 const { sendForgotPassword } = require('./mailing')
 const {
@@ -77,15 +78,18 @@ const defaultRegister=ACTIONS.register
 const register = props => {
   // No compay => set the particular one
   // Check company code
-  return getRegisterCompany(props)
+  if (props.role==ROLE_CUSTOMER) {
+    return getRegisterCompany(props)
     .then(integrityProps => {
       if (!integrityProps.company) {
         return Company.findOne({name: PARTICULAR_COMPANY_NAME})
-          .then(company => ({...integrityProps, company: company._id}))
+        .then(company => ({...integrityProps, company: company._id}))
       }
       return integrityProps
     })
     .then(extraProps => defaultRegister({...props, ...extraProps}))
+  }
+  return defaultRegister({...props})
 }
 addAction('register', register)
 

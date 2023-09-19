@@ -1126,7 +1126,7 @@ const postCreate = ({model, params, data,user}) => {
       User.find({role: {$in: [ROLE_ADMIN, ROLE_SUPER_ADMIN]}})
         .then(admins => Promise.allSettled(admins.map(admin => sendDietPreRegister2Admin({user:data, admin}))))
     ])
-    .then(data => data)
+    .then(() => data)
   }
   // Create coaching.progress if not present
   if (model=='appointment') {
