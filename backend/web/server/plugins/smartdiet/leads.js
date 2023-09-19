@@ -41,13 +41,14 @@ const importLead = leadData => {
 }
 
 const importLeads= buffer => {
-  let leadsBefore=[]
+  let leadsBefore=null
   return guessFileType(buffer)
     .then(type => {
       const delim=guessDelimiter(bufferToString(buffer))
-      return Promise.all([Lead.find(), extractData(buffer, {format: type, delimiter:delim})])
+      return Promise.all([Lead.find().lean(), extractData(buffer, {format: type, delimiter:delim})])
     })
-    .then(([leadsBefore, data]) => {
+    .then(([leads, data]) => {
+      leadsBefore=leads
       console.log(`Import leads: got ${data.records.length}, columns ${data.headers.join('/')}`)
       const missingColumns=lodash.difference(MANDATORY_COLUMNS, data.headers)
       if (!lodash.isEmpty(missingColumns)) {
@@ -58,12 +59,14 @@ const importLeads= buffer => {
     })
     .then(result => {
       return Lead.find()
+        .lean()
         .then(leadsAfter => {
-          const newLeads=lodash.differenceBy(leadsAfter, leadsBefore, 'email')
+          const newLeads=leadsAfter.filter(l => !leadsBefore.map(l => l.email).includes(l.email))
           return Promise.allSettled(newLeads.map(lead => sendLeadOnboarding({lead})))
         })
         .then(res => {
           return result.map((r, index) => {
+            if (!r.status) {return r}
             const msg=r.status=='rejected' ? `Erreur:${r.reason}` :
               r.value.upserted ? `Prospect ajouté`: `Prospect mis à jour`
               return `Ligne ${index+2}: ${msg}`
