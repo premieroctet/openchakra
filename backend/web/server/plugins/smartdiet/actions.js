@@ -78,7 +78,7 @@ const defaultRegister=ACTIONS.register
 const register = props => {
   // No compay => set the particular one
   // Check company code
-  if (props.role==ROLE_CUSTOMER) {
+  if (!props.role || props.role==ROLE_CUSTOMER) {
     return getRegisterCompany(props)
     .then(integrityProps => {
       if (!integrityProps.company) {
