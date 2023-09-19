@@ -4,6 +4,7 @@ const {datetime_str} = require('../../../utils/dateutils')
 const SIB_IDS={
   // CUSTOMERS
   FORGOT_PASSWORD: 4995801, // OK
+  LEAD_ONBOARDING: 4982108,
   /**
   SATISFY_SURVEY: 4996126,
   CONSULTATION_BOUGHT_OK: 4830569,
@@ -61,8 +62,20 @@ const sendDietPreRegister2Admin = ({user, admin}) => {
   })
 }
 
+const sendLeadOnboarding = ({lead}) => {
+  return sendNotification({
+    notification: SIB_IDS.LEAD_ONBOARDING,
+    destinee: lead,
+    params: {
+      FIRSTNAME: lead.firstname,
+      CODEENTREPRISE: lead.company_code,
+    },
+  })
+}
+
 module.exports = {
   sendForgotPassword,
   sendDietPreRegister2Diet,
   sendDietPreRegister2Admin,
+  sendLeadOnboarding,
 }

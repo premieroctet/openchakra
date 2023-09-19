@@ -1,3 +1,4 @@
+const { sendLeadOnboarding } = require('./mailing')
 const { bufferToString, guessDelimiter } = require('../../../utils/text')
 const { BadRequestError, NotFoundError } = require('../../utils/errors')
 const Company = require('../../models/Company')
@@ -40,13 +41,13 @@ const importLead = leadData => {
 }
 
 const importLeads= buffer => {
+  let leadsBefore=[]
   return guessFileType(buffer)
     .then(type => {
       const delim=guessDelimiter(bufferToString(buffer))
-      console.log(`GUessed delimiter:'${delim}',type ${type}`)
-      return extractData(buffer, {format: type, delimiter:delim})
+      return Promise.all([Lead.find(), extractData(buffer, {format: type, delimiter:delim})])
     })
-    .then(data => {
+    .then(([leadsBefore, data]) => {
       console.log(`Import leads: got ${data.records.length}, columns ${data.headers.join('/')}`)
       const missingColumns=lodash.difference(MANDATORY_COLUMNS, data.headers)
       if (!lodash.isEmpty(missingColumns)) {
@@ -54,18 +55,23 @@ const importLeads= buffer => {
       }
       const mappedData=data.records.map(input => mapData(input, MAPPING))
       return Promise.allSettled(mappedData.map(importLead))
-        .then(result => {
+    })
+    .then(result => {
+      return Lead.find()
+        .then(leadsAfter => {
+          const newLeads=lodash.differenceBy(leadsAfter, leadsBefore, 'email')
+          return Promise.allSettled(newLeads.map(lead => sendLeadOnboarding({lead})))
+        })
+        .then(res => {
           return result.map((r, index) => {
-            let msg=''
-            if (r.status=='rejected') {
-              msg=`Erreur:${r.reason}`
-            }
-            else {
-              const mongo_result=r.value
-              msg=mongo_result.upserted? `Prospect ajouté`: `Prospect mis à jour`
-            }
-            return `Ligne ${index+2}: ${msg}`
-          })
+            const msg=r.status=='rejected' ? `Erreur:${r.reason}` :
+              r.value.upserted ? `Prospect ajouté`: `Prospect mis à jour`
+              return `Ligne ${index+2}: ${msg}`
+            })
+        })
+        .then(res => {
+          console.log(`Import result:${res}`)
+          return res
         })
     })
 }

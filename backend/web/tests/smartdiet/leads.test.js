@@ -1,3 +1,4 @@
+const { COMPANY_DATA } = require('./data/modelsBaseData')
 const { COMPANY_ACTIVITY } = require('../../server/plugins/smartdiet/consts')
 const Company = require('../../server/models/Company')
 const { importLeads } = require('../../server/plugins/smartdiet/leads')
@@ -19,7 +20,7 @@ describe('Prospects', () => {
   let leadsData
   beforeEach(async () => {
     await mongoose.connect(`mongodb://localhost/test${moment().unix()}`, MONGOOSE_OPTIONS)
-    leadsData=fs.readFileSync(path.resolve(__dirname, 'data/leads.csv')).toString()
+    leadsData=Buffer.from(fs.readFileSync(path.resolve(__dirname, 'data/leads.csv')).toString())
   })
 
   afterEach(async () => {
@@ -32,23 +33,26 @@ describe('Prospects', () => {
     let p=await Lead.find()
     expect(p).toHaveLength(0)
     const result=await importLeads(leadsData)
-    expect(result).toHaveLength(2)
+    expect(result).toHaveLength(3)
     expect(result[0]).toMatch(/ajouté/i)
     expect(result[1]).toMatch(/ajouté/i)
+    expect(result[2]).toMatch(/ajouté/i)
     p=await Lead.find()
-    expect(p).toHaveLength(2)
+    expect(p).toHaveLength(3)
     const result2=await importLeads(leadsData)
     expect(result2[0]).toMatch(/mis à jour/i)
     expect(result2[1]).toMatch(/mis à jour/i)
+    expect(result2[2]).toMatch(/mis à jour/i)
   })
 
   it('must fail if no company prospects', async() => {
     let p=await Lead.find()
     expect(p).toHaveLength(0)
     const result=await importLeads(leadsData)
-    expect(result).toHaveLength(2)
+    expect(result).toHaveLength(3)
     expect(result[0]).toMatch(/erreur.*compagnie/i)
     expect(result[1]).toMatch(/erreur.*compagnie/i)
+    expect(result[2]).toMatch(/erreur.*compagnie/i)
     p=await Lead.find()
     expect(p).toHaveLength(0)
   })
