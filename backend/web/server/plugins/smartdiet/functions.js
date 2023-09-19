@@ -1546,8 +1546,8 @@ const updateWorkflows= () => {
 // Update workflows
 cron.schedule('0 0 8 * * *', async() => {
   updateWorkflows()
-    .then(res => console.error(`Workflows:${res}`))
-    .catch(err => console.error(`Workflows error:${err}`))
+    .then(console.log)
+    .catch(console.error)
 })
 module.exports={
   ensureChallengePipsConsistency,
