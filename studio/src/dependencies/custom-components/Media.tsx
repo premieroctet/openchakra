@@ -8,20 +8,18 @@ const Media = ({
   htmlHeight,
   isIframe = false,
   visio = false,
-  downloadable,
 }:{
   src: string,
   htmlWidth: string,
   htmlHeight: string,
   isIframe: boolean,
   visio: boolean,
-  downloadable?: boolean
 }) => {
 
   return (
   <>
   {src ? <>
-    {mediaWrapper({src, htmlWidth, htmlHeight, isIframe, downloadable, visio})}
+    {mediaWrapper({src, htmlWidth, htmlHeight, isIframe, visio})}
     </> : null
   }
   </>

@@ -19,7 +19,7 @@ const imageSrcSetPaths = (originalSrc, withDimension=true) => {
    */
   let srcSet
 
-  const filePathParts = originalSrc.split('_srcset:') || originalSrc.split(encodeURIComponent('_srcset:'))
+  const filePathParts = originalSrc.split('_srcset:')
   const filenameextension = originalSrc.substring(originalSrc.lastIndexOf('.') + 1, originalSrc.length)
       
   if (filePathParts.length > 1) {
@@ -50,14 +50,7 @@ const imageSrcSetPaths = (originalSrc, withDimension=true) => {
 exports.sendFilesToAWS = async(req, res, next) => {
   if (!req.body.documents) { return next() }
 
-  const isdocumentToDownload = Boolean(req.body.downloadable)
-  
   const documentsToSend = req.body.documents.map(document => {
-    
-    const downloadParams = {
-      ContentType: 'application/octet-stream',
-      ContentDisposition: `attachment; filename=${document.filename}`,
-    }
     
     return new Promise(async(resolve, reject) => {
       const params = {
@@ -70,7 +63,7 @@ exports.sendFilesToAWS = async(req, res, next) => {
 
       await new Upload({
         client: s3,
-        params: isdocumentToDownload ? {...params, ...downloadParams} : params,
+        params,
       }).done()
         .then(res => resolve(res))
         .catch(err => reject(err))

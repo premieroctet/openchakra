@@ -1,9 +1,8 @@
 const sharp = require('sharp')
-const convert = require('heic-convert')
-const {IMAGES_WIDTHS_FOR_RESIZE, IMAGE_SIZE_MARKER, THUMBNAILS_DIR} = require('../../utils/consts')
 const {sanitizeFilename, generateUUID} = require('../../utils/functions')
+const {IMAGES_WIDTHS_FOR_RESIZE, IMAGE_SIZE_MARKER, THUMBNAILS_DIR} = require('../../utils/consts')
+const {IMAGE_SIZE_SEPARATOR, IMAGE_SETTINGS, switchbuffer} = require('../utils/images')
 
-const IMAGE_SIZE_SEPARATOR = '_'
 
 exports.resizeImage = async(req, res, next) => {
   if (!req.file) { return next() }
@@ -11,39 +10,6 @@ exports.resizeImage = async(req, res, next) => {
   const isDocumentFromStudio = Boolean(req.body.fromstudio)
  
   req.body.documents = []
-  const RETAINED_QUALITY = 100
-  const JPEG_SETTINGS = {
-    extension: 'jpg',
-    outputFormat: 'jpeg',
-    outputMime: 'image/jpeg',
-    options: {
-      quality: RETAINED_QUALITY,
-      mozjpeg: true,
-    },
-  }
-  const IMAGE_SETTINGS = { // we don't sharp .gif
-    'image/jpg': JPEG_SETTINGS,
-    'image/jpeg': JPEG_SETTINGS,
-    'image/png': {
-      extension: 'png',
-      outputFormat: 'png',
-      outputMime: 'image/png',
-      options: {
-        quality: RETAINED_QUALITY,
-      },
-    },
-    'image/heic': JPEG_SETTINGS,
-    'image/heif': JPEG_SETTINGS,
-    'image/webp': {
-      extension: 'webp',
-      outputFormat: 'webp',
-      outputMime: 'image/webp',
-      options: {
-        quality: RETAINED_QUALITY,
-        lossless: true,
-      },
-    },
-  }
 
   const filemimetype = req.file.mimetype
   const isImage = Object.keys(IMAGE_SETTINGS).includes(filemimetype)
@@ -52,25 +18,10 @@ exports.resizeImage = async(req, res, next) => {
   const uploadedfilename = `${generateUUID()}_${sanitizeFilename(req.file.originalname)}`
   const rootPath = isDocumentFromStudio ? process.env?.S3_STUDIO_ROOTPATH : process.env?.S3_PROD_ROOTPATH
   const uploadedfilenamebase = uploadedfilename.substring(0, uploadedfilename.lastIndexOf('.'))
-
-  const heicToJpeg = async buffer => {
-    return await convert({
-      buffer: buffer, // the HEIC file buffer
-      format: 'JPEG', // output format
-      quality: 1, // the jpeg compression quality, between 0 and 1
-    })
-  }
-
-  const switchbuffer = async buffer => {
-    if (['image/heic', 'image/heif'].includes(filemimetype)) {
-      return await heicToJpeg(buffer)
-    }
-    return buffer
-  }
  
   if (isImage) {
     let availableSizes = []
-    const buffer = await switchbuffer(req.file.buffer)
+    const buffer = await switchbuffer(req.file.buffer, filemimetype)
     // watch out for original image width
     const {width: originalWidth} = await sharp(buffer)
       .metadata()

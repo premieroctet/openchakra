@@ -6,11 +6,10 @@ import { ACTIONS } from '../utils/actions';
 
 const uploadUrl = `/myAlfred/api/studio/s3uploadfile`
 
-const uploadFileToS3 = async (file: File, downloadable:boolean) => {
+const uploadFileToS3 = async (file: File) => {
 
   const formData = new FormData();
   formData.append('document', file)
-  downloadable && formData.append('downloadable', 'true')
 
   const uploadedFile = await axios.post(uploadUrl, formData, 
     {
@@ -35,7 +34,6 @@ const UploadFile = ({
   children,
   reload,
   noautosave,
-  downloadable = false,
   ...props
 }: {
   notifmsg: boolean
@@ -47,7 +45,6 @@ const UploadFile = ({
   backend: string
   reload: any
   noautosave: boolean | null
-  downloadable: boolean,
   children: React.ReactNode
 }) => {
   
@@ -77,7 +74,7 @@ const UploadFile = ({
       const uploadFile = async () => {
 
         setIsLoading(true)
-        await uploadFileToS3(fileToUpload, downloadable)
+        await uploadFileToS3(fileToUpload)
           .then(async result => {
             // @ts-ignore
             const filepath = result?.data
