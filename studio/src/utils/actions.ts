@@ -435,11 +435,6 @@ export const ACTIONS: IActions = {
     options: {},
     next: ['openPage'],
   },
-  alle_show_bill: {
-    label: 'AE Display bill',
-    options: {},
-    next: ['openPage'],
-  },
   alle_accept_bill: {
     label: 'AE Accept bill',
     options: {},
