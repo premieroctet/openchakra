@@ -447,21 +447,6 @@ const filterDataUser = ({model, data, user}) => {
       ))
       .then(jobs => jobs.filter(v => !!v))
   }
-  // Filter
-  if (model=='user') {
-    if ([ROLE_TI, ROLE_COMPANY_BUYER].includes(user.role)) {
-      return User.findById(user._id).populate({path: '_missions', populate:{path: 'job', populate: 'user'}})
-        .then(loggedUser => {
-          const relatives=lodash(loggedUser.missions)
-            .map(m => [m.user?._id.toString(), m.job?.user?._id.toString()]).flatten().uniq().value()
-          return data.filter(d =>
-            ([ROLE_ALLE_ADMIN, ROLE_ALLE_SUPER_ADMIN].includes(d.role)
-            || relatives.includes(d._id.toString()))
-            && d._id.toString()!=user._id.toString()
-          )
-        })
-    }
-  }
   return data
 }
 
