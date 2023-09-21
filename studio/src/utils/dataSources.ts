@@ -209,11 +209,19 @@ const computeDataFieldName = (
     return null
   }
 
-  const parentFieldName = computeDataFieldName(
+  let parentFieldName = computeDataFieldName(
     components[component.parent],
     components,
     dataSourceId,
   )
+
+  if (['RadioGroup', 'CheckboxGroup'].includes(components[component.parent].type)) {
+    parentFieldName = computeDataFieldName(
+      components[components[component.parent].parent],
+      components,
+      dataSourceId,
+    )
+  }
 
   const attrs=[]
   if (component.props.dataSource==dataSourceId) {

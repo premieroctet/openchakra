@@ -74,6 +74,14 @@ export const ACTIONS: IActions = {
         components
           .filter(comp => comp.type=='Flex')
           .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      quizzQuestion: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      userQuizzQuestion: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
       ...Object.fromEntries(lodash.range(24).map((idx:number) => {
       return [
         `component_${idx}`,
@@ -573,6 +581,12 @@ export const ACTIONS: IActions = {
     next: ['openPage'],
   },
 
+  smartdiet_leave_team: {
+    label: 'SM Leave team',
+    options: {},
+    next: ['openPage'],
+  },
+
   smartdiet_find_team_member: {
     label: 'SM Find team member',
     options: {},
@@ -608,6 +622,29 @@ export const ACTIONS: IActions = {
   smartdiet_read_content: {
     label: 'SM Read content',
     options: {},
+    next: ['openPage'],
+  },
+
+  smartdiet_compute_shopping_list: {
+    label: 'SM Shopping list',
+    options: {
+      people: ({ components }) =>
+        components
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+    },
+  },
+
+  smartdiet_start_quizz: {
+    label: 'SM Start quizz',
+    options: {},
+    next: ['openPage'],
+  },
+
+  import_model_data: {
+    label: 'Import data',
+    options: {
+      model: ({ models }) => Object.values(models).map(m => ({ key: m.name, label: m.name })),
+    },
     next: ['openPage'],
   },
 

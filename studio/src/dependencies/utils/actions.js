@@ -81,7 +81,7 @@ export const ACTIONS = {
       [getComponent(c, level)?.getAttribute('attribute') || getComponent(c, level)?.getAttribute('data-attribute'),
         getComponentValue(c, level)||null]
     ))
-    'job,mission,quotation,group,parent,content,recipe,menu,pip,collectiveChallenge'.split(',').forEach(property => {
+    'job,mission,quotation,group,parent,content,recipe,menu,pip,collectiveChallenge,quizzQuestion,userQuizzQuestion'.split(',').forEach(property => {
       if (props[property]) {
         //const dataId=document.getElementById(`${props[property]}${level}`)?.getAttribute('_id')
         const dataId=getComponent(props[property], level)?.getAttribute('_id')||null
@@ -802,7 +802,7 @@ return Promise.allSettled(imagePromises)
     return axios.post(url, body)
       .then(res => {
         var searchParams = new URLSearchParams(window.location.search);
-        searchParams.set('userQuestion', res.data._id)
+        searchParams.set('id', res.data._id)
         window.location.search=searchParams.toString()
       })
   },
@@ -814,12 +814,22 @@ return Promise.allSettled(imagePromises)
       value: value._id,
     }
     return axios.post(url, body)
+      .then(res => res.data)
   },
 
   smartdiet_join_team: ({value}) => {
     let url = `${API_ROOT}/action`
     const body = {
       action: 'smartdiet_join_team',
+      value: value._id,
+    }
+    return axios.post(url, body)
+  },
+
+  smartdiet_leave_team: ({value}) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_leave_team',
       value: value._id,
     }
     return axios.post(url, body)
@@ -886,5 +896,51 @@ return Promise.allSettled(imagePromises)
     return axios.post(url, body)
       .then(res => ({model: 'content',value: res.data}))
   },
+
+  smartdiet_compute_shopping_list: ({props, level, getComponentValue}) => {
+    const people_count = getComponentValue(props.people, level)
+    const thisUrl=new URL(window.location)
+    if (people_count) {
+      thisUrl.searchParams.set('people_count', people_count)
+    } else {
+      thisUrl.searchParams.delete('people_count', null)
+    }
+    window.location=thisUrl.toString()
+  },
+
+  import_model_data: props => {
+    const prevResults=document.getElementById('import_results')
+    if (prevResults) {
+      prevResults.parentNode.removeChild(prevResults)
+    }
+    const prevInput=document.getElementById('import_data')
+    if (prevInput) {
+      prevInput.parentNode.removeChild(prevInput)
+    }
+
+    const container=document.getElementById(props.id).parentNode
+
+    const form=document.createElement('form');
+    container.appendChild(form)
+
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.name = 'file';
+    fileInput.style='display:none'
+    fileInput.id='import_data'
+    form.appendChild(fileInput)
+
+    fileInput.addEventListener('change', event => {
+      const formData = new FormData(form);
+      axios.post(`${API_ROOT}/import-data/${props.props.model}`, formData)
+         .then(response => {
+           alert(response.data.join('\n'))
+         })
+         .catch(error => alert('Error:', error))
+
+    })
+    fileInput.click()
+    return Promise.resolve(true)
+  }
 
 }

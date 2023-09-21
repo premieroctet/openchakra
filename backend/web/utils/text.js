@@ -1,3 +1,5 @@
+const ced = require('ced')
+
 const csv_string = require('csv-string')
 const stripBom = require('strip-bom')
 const moment=require('moment')
@@ -76,7 +78,8 @@ const normalizePhone = p => {
 }
 
 const bufferToString = buff => {
-  let text = buff.toString('utf-8')
+  const encoding=ced(buff)
+  let text = buff.toString(encoding)
   // For MAC files
   text = stripBom(text)
   return text

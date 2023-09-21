@@ -125,7 +125,7 @@ export const withFilters = Component => {
 
         <Component {...props} />
         {attrs && (
-          <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)}>
+          <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} size='x1'>
             <ModalContent>
               <ModalHeader>Add a condition</ModalHeader>
               <ModalCloseButton />

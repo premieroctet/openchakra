@@ -1,3 +1,5 @@
+const { callPostCreateData } = require('../database')
+
 const {
   getModel,
   loadFromDb,
@@ -26,7 +28,7 @@ const {DEFAULT_ROLE} = require(`../../plugins/${getDataModel()}/consts`)
 let ACTIONS = {
   put: ({parent, attribute, value}, user) => {
     const parsedValue=value ? JSON.parse(value) : value
-    return putAttribute({parent, attribute, value: parsedValue, user})
+    return putAttribute({id:parent, attribute, value: parsedValue, user})
   },
 
   publish: ({id}) => {
@@ -130,8 +132,9 @@ let ACTIONS = {
 
         return promise
           .then(()=> {
-            return User.create({...props, password: bcrypt.hashSync(props.password, 10)})
+            return User.create({...props})
           })
+          .then(user => callPostCreateData({model: 'user', data:user}))
     })
   },
 

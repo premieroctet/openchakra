@@ -1,3 +1,15 @@
+const {
+  DAYS_BEFORE_IND_CHALL_ANSWER,
+  PARTICULAR_COMPANY_NAME,
+  ROLE_CUSTOMER
+} = require('./consts')
+const { sendForgotPassword } = require('./mailing')
+const {
+  ensureChallengePipsConsistency,
+  getRegisterCompany
+} = require('./functions')
+const { generatePassword } = require('../../../utils/passwords')
+const { importLeads } = require('./leads')
 const Content = require('../../models/Content')
 const Webinar = require('../../models/Webinar')
 
@@ -5,7 +17,6 @@ const { getHostName } = require('../../../config/config')
 const moment = require('moment')
 const IndividualChallenge = require('../../models/IndividualChallenge')
 const { BadRequestError, NotFoundError } = require('../../utils/errors')
-const { ensureChallengePipsConsistency } = require('./functions')
 const UserSurvey = require('../../models/UserSurvey')
 const UserQuestion = require('../../models/UserQuestion')
 const Question = require('../../models/Question')
@@ -18,7 +29,6 @@ const Company = require('../../models/Company')
 const CollectiveChallenge = require('../../models/CollectiveChallenge')
 const Team = require('../../models/Team')
 const TeamMember = require('../../models/TeamMember')
-const {PARTICULAR_COMPANY_NAME}=require('./consts')
 const lodash=require('lodash')
 
 const smartdiet_join_group = ({value, join}, user) => {
@@ -35,10 +45,10 @@ const smartdiet_event = action => ({value}, user) => {
     .then(() => getModel(value, ['webinar', 'individualChallenge', 'menu', 'collectiveChallenge']))
     .then(model=> {
       const dbAction=action==
-      'smartdiet_skip_event' ? {$addToSet: {skipped_events: value}, $pull: {registered_events: value, passed_events: value}}
-      : action=='smartdiet_join_event' ? {$addToSet: {registered_events: value}}
-      : action=='smartdiet_pass_event' ? {$addToSet: {passed_events: value, registered_events: value}}
-      : action=='smartdiet_fail_event' ? {$addToSet: {failed_events: value, registered_events: value}}
+      'smartdiet_skip_event' ? {$addToSet: {skipped_events: value}, $pull: {registered_events: {event: value}, passed_events: value}}
+      : action=='smartdiet_join_event' ? {$addToSet: {registered_events: {event: value}}}
+      : action=='smartdiet_pass_event' ? {$addToSet: {passed_events: value, registered_events: {event: value}}}
+      : action=='smartdiet_fail_event' ? {$addToSet: {failed_events: value, registered_events: {event: value}}}
       : action=='smartdiet_routine_challenge' ? {$addToSet: {routine_events: value}}
       : action=='smartdiet_replay_event' ? {$addToSet: {replayed_events: value}}
       :  null
@@ -65,13 +75,21 @@ addAction('smartdiet_shift_challenge', smartdietShiftChallenge)
 
 const defaultRegister=ACTIONS.register
 
-const register=props => {
+const register = props => {
   // No compay => set the particular one
-  if (!props.company) {
-    return Company.findOne({name: PARTICULAR_COMPANY_NAME})
-      .then(partCompany => defaultRegister({...props, company: partCompany._id}))
+  // Check company code
+  if (props.role==ROLE_CUSTOMER) {
+    return getRegisterCompany(props)
+    .then(integrityProps => {
+      if (!integrityProps.company) {
+        return Company.findOne({name: PARTICULAR_COMPANY_NAME})
+        .then(company => ({...integrityProps, company: company._id}))
+      }
+      return integrityProps
+    })
+    .then(extraProps => defaultRegister({...props, ...extraProps}))
   }
-  return defaultRegister(props)
+  return defaultRegister({...props})
 }
 addAction('register', register)
 
@@ -111,7 +129,11 @@ const smartdietFinishSurvey = ({value}, user) => {
     .then(question => UserQuestion.exists({survey: question.survey, order:question.order+1}))
     .then(exists => {
       if (exists) { throw new BadRequestError(`Le questionnaire n'est pas terminé`)}
-      return true
+      return loadFromDb({model: 'user', id: user._id, fields:['latest_coachings'], user})
+       .then(users => {
+         const res=users[0]?.latest_coachings?.[0]
+         return res
+       })
     })
 }
 addAction('smartdiet_finish_survey', smartdietFinishSurvey)
@@ -127,8 +149,16 @@ const smartdietJoinTeam = ({value}, user) => {
         })
     })
 }
-
 addAction('smartdiet_join_team', smartdietJoinTeam)
+
+const smartdietLeaveTeam = ({value}, user) => {
+  return isActionAllowed({action: 'smartdiet_leave_team', dataId: value, user})
+    .then(allowed => {
+      if (!allowed) throw new BadRequestError(`Vous n'appartenez pas à cette équipe`)
+      return TeamMember.remove({team: value, user})
+    })
+}
+addAction('smartdiet_leave_team', smartdietLeaveTeam)
 
 const smartdietFindTeamMember = ({value}, user) => {
   return TeamMember.find({user}).populate('team')
@@ -166,101 +196,214 @@ const smartdietReadContent = ({value}, user) => {
 }
 addAction('smartdiet_read_content', smartdietReadContent)
 
+const importModelData = ({model, data}) => {
+  if (model!='lead') {
+    throw new NotFoundError(`L'import du modèle ${model} n'est pas implémenté`)
+  }
+  return importLeads(data)
+  /**
+  return isActionAllowed({action: 'import_model_data', dataId: value, user})
+    .then(allowed => {
+      if (!allowed) throw new BadRequestError(`Vous ne pouvez accéder à ce contenu`)
+      return Content.findByIdAndUpdate(value, {$addToSet: {viewed_by: user._id}})
+    })
+  */
+}
+addAction('import_model_data', importModelData)
+
+const forgotPasswordAction=({context, parent, email}) => {
+  return User.findOne({email})
+   .then(user => {
+     if (!user) {
+       throw new BadRequestError(`Aucun compte n'est associé à cet email`)
+     }
+     const password=generatePassword()
+     user.password=password
+     return user.save()
+       .then(user => sendForgotPassword({user, password}))
+       .then(user => `Un email a été envoyé à l'adresse ${email}`)
+   })
+}
+addAction('forgotPassword', forgotPasswordAction)
+
+const deactivateAccount = ({value, reason}, user) => {
+  console.log(`Value is ${value}`)
+  return isActionAllowed({action:'deactivateAccount', dataId:value?._id, user})
+    .then(ok => {
+      if (!ok) {return false}
+      return User.findByIdAndUpdate(
+        value._id,
+        {active: false}
+      )
+    })
+}
+addAction('deactivateAccount', deactivateAccount)
+
 
 const isActionAllowed = ({action, dataId, user}) => {
   // TODO: why can we get "undefined" ??
+  if (action=='openPage') {
+    return Promise.resolve(true)
+  }
   const promise=dataId && dataId!="undefined" ? getModel(dataId) : Promise.resolve(null)
   return promise
     .then(modelName => {
-      if (action=='smartdiet_join_event') {
-        return loadFromDb({model: 'user', id:user._id, fields:['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'webinars'], user})
-        .then(([user]) => {
-          if (user?.skipped_events?.some(r => idEqual(r._id, dataId))) { return false}
-          if (user?.registered_events?.some(r => idEqual(r._id, dataId))) { return ['collectiveChallenge','menu'].includes(modelName)}
-          if (user?.passed_events?.some(r => idEqual(r._id, dataId))) { return false}
-          if (user?.failed_events?.some(r => idEqual(r._id, dataId))) { return false}
-          return true
-        })
-      }
-      if (action=='smartdiet_skip_event') {
-        return loadFromDb({model: 'user', id:user._id, fields:['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'webinars'], user})
-        .then(([user]) => {
-          if (modelName=='menu') { return false}
-          if (user?.skipped_events?.some(r => idEqual(r._id, dataId))) { return false}
-          if (user?.registered_events?.some(r => idEqual(r._id, dataId))) { return false}
-          if (user?.passed_events?.some(r => idEqual(r._id, dataId))) { return false}
-          if (user?.failed_events?.some(r => idEqual(r._id, dataId))) { return false}
-          return true
-        })
-      }
-      if (action=='smartdiet_pass_event') {
-        return loadFromDb({model: 'user', id:user._id, fields:['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'webinars'], user})
-        .then(([user]) => {
-          if (modelName=='menu') { return false}
-          if (user?.skipped_events?.some(r => idEqual(r._id, dataId))) { return false}
-          const isRegistered=user?.registered_events?.some(r => idEqual(r._id, dataId))
-          // Event must be registered except for past webinars
-          if (modelName=='webinar') {
-            return Webinar.findById(dataId)
-              .then(webinar => isRegistered || moment(webinar.end_date).isBefore(moment()))
+      return mongoose.models[modelName].findById(dataId)
+        .then(data => {
+          if (action=='smartdiet_join_event') {
+            /**
+            TODO perfs
+            return loadFromDb({model: 'user', id:user._id, fields:['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'webinars'], user})
+            .then(([user]) => {
+              */
+            return User.findById(user._id).populate(['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'routine_events', 'webinars'])
+            .then(user => {
+              // Indiv. challege before start_date: false
+              if (modelName=='individualChallenge' && moment().isBefore(data.start_date)) {
+                return false
+              }
+              if (user?.skipped_events?.some(r => idEqual(r._id, dataId))) { return false}
+              if (user?.registered_events?.some(r => idEqual(r.event._id, dataId))) {
+                return ['collectiveChallenge','menu'].includes(modelName)
+              }
+              if (user?.passed_events?.some(r => idEqual(r._id, dataId))) { return false}
+              if (user?.failed_events?.some(r => idEqual(r._id, dataId))) { return false}
+              return true
+            })
           }
-          else {
-            return isRegistered
+          if (action=='smartdiet_skip_event') {
+            // Indiv. challege before start_date: false
+            if (modelName=='individualChallenge' && moment().isBefore(data.start_date)) {
+              return false
+            }
+            /**
+            TODO perfs
+            return loadFromDb({model: 'user', id:user._id, fields:['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'webinars'], user})
+            .then(([user]) => {
+              */
+            return User.findById(user._id).populate(['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'routine_events', 'webinars'])
+            .then(user => {
+              if (modelName=='menu') { return false}
+              if (user?.skipped_events?.some(r => idEqual(r._id, dataId))) { return false}
+              if (user?.registered_events?.some(r => idEqual(r.event._id, dataId))) { return false}
+              if (user?.passed_events?.some(r => idEqual(r._id, dataId))) { return false}
+              if (user?.failed_events?.some(r => idEqual(r._id, dataId))) { return false}
+              return true
+            })
           }
+          if (action=='smartdiet_pass_event') {
+            /**
+            TODO perfs
+            return loadFromDb({model: 'user', id:user._id, fields:['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'webinars'], user})
+            .then(([user]) => {
+              */
+            return User.findById(user._id).populate(['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'routine_events', 'webinars'])
+            .then(user => {
+              if (modelName=='menu') { return false}
+              if (user?.skipped_events?.some(r => idEqual(r._id, dataId))) { return false}
+              if (user?.routine_events?.some(r => idEqual(r._id, dataId))) { return false}
+              const registeredEvent=user?.registered_events?.find(r => idEqual(r.event._id, dataId))
+              // Event must be registered except for past webinars
+              if (modelName=='webinar') {
+                return Webinar.findById(dataId)
+                  .then(webinar => !!registeredEvent || moment(webinar.end_date).isBefore(moment()))
+              }
+              /// Ind. chall can be passed or failed 7 days after registration
+              else if (modelName=='individualChallenge') {
+                return moment().diff(registeredEvent?.date, 'days')>=DAYS_BEFORE_IND_CHALL_ANSWER
+              }
+              else {
+                return !!registeredEvent
+              }
+            })
+          }
+          if (action=='smartdiet_routine_challenge') {
+            // Indiv. challege before start_date: false
+            if (modelName=='individualChallenge' && moment().isBefore(data.start_date)) {
+              return false
+            }
+            /**
+            TODO perfs
+            return loadFromDb({model: 'user', id:user._id, fields:['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'webinars'], user})
+            .then(([user]) => {
+              */
+            return User.findById(user._id).populate(['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'routine_events', 'webinars'])
+            .then(user => {
+              if (modelName!='individualChallenge') { return false}
+              if (user?.registered_events?.some(r => idEqual(r.event._id, dataId))) { return false}
+              if (user?.passed_events?.some(r => idEqual(r._id, dataId))) { return false}
+              if (user?.skipped_events?.some(r => idEqual(r._id, dataId))) { return false}
+              if (user?.routine_events?.some(r => idEqual(r._id, dataId))) { return false}
+              return true
+            })
+          }
+          if (action=='smartdiet_fail_event') {
+            /**
+            TODO perfs
+            return loadFromDb({model: 'user', id:user._id, fields:['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'webinars'], user})
+            .then(([user]) => {
+              */
+            return User.findById(user._id).populate(['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'routine_events', 'webinars'])
+            .then(user => {
+              if (modelName=='menu') { return false}
+              if (modelName=='webinar') { return false}
+              if (user?.passed_events?.some(r => idEqual(r._id, dataId))) { return false}
+              if (user?.skipped_events?.some(r => idEqual(r._id, dataId))) { return false}
+              if (!user?.registered_events?.some(r => idEqual(r.event._id, dataId))) { return false}
+              const registeredEvent=user?.registered_events?.find(r => idEqual(r.event._id, dataId))
+              /// Ind. chall can be passed or failed 7 days after registration
+              if (modelName=='individualChallenge') {
+                return moment().diff(registeredEvent?.date, 'days')>=DAYS_BEFORE_IND_CHALL_ANSWER
+              }
+              return true
+            })
+          }
+          if (action=='smartdiet_next_question') {
+            return UserQuestion.findById(dataId).populate('question').populate('survey')
+              .then(question => {
+                // Not answered question: no next
+                if (lodash.isNil(question.answer)) { return false}
+                return UserQuestion.findOne({survey: question.survey, order: {$gt: question.order}})
+              })
+          }
+          if (action=='smartdiet_finish_survey') {
+            return UserQuestion.findById(dataId).populate('question').populate('survey')
+              .then(question => Promise.all([
+                UserQuestion.exists({survey: question.survey, order: {$gt: question.order}}),
+                !lodash.isNil(question.answer)
+              ]))
+              .then(([exists, answered]) => !exists && answered)
+          }
+          if (action=='smartdiet_join_team') {
+            // Get all teams of this team's collective challenge, then check if
+            // user in on one of them
+            return Team.findById(dataId, 'collectiveChallenge').populate({path: 'collectiveChallenge', populate: {path: 'teams', populate: 'members'}})
+              .then(team => team.collectiveChallenge)
+              .then(challenge => {
+                // Challenge not started yet
+                return moment(challenge.start_date).isAfter(moment())
+                // Not already in a team
+                && !challenge.teams.some(t => t.members.some(m => idEqual(m.user._id, user._id)))
+              })
+          }
+          if (action=='smartdiet_leave_team') {
+            // Check if I belong to this team
+            return TeamMember.exists({team: dataId, user: user._id})
+          }
+          if (action=='smartdiet_shift_challenge') {
+            // Get all teams of this team's collective challenge, then check if
+            // user in on one of them
+            return loadFromDb({model: 'user', id: user._id, fields:['current_individual_challenge','_all_individual_challenges','passed_events','failed_events'], user})
+              .then(([user]) => !user.current_individual_challenge)
+          }
+          if (action=='smartdiet_read_content') {
+            // Get all teams of this team's collective challenge, then check if
+            // user in on one of them
+            return user.canView(dataId)
+          }
+          return Promise.resolve(true)
         })
-      }
-      if (action=='smartdiet_fail_event') {
-        return loadFromDb({model: 'user', id:user._id, fields:['failed_events', 'skipped_events',  'registered_events', 'passed_events', 'webinars'], user})
-        .then(([user]) => {
-          if (modelName=='menu') { return false}
-          if (modelName=='webinar') { return false}
-          if (user?.passed_events?.some(r => idEqual(r._id, dataId))) { return false}
-          if (user?.skipped_events?.some(r => idEqual(r._id, dataId))) { return false}
-          if (!user?.registered_events?.some(r => idEqual(r._id, dataId))) { return false}
-          return true
-        })
-      }
-      if (action=='smartdiet_next_question') {
-        return UserQuestion.findById(dataId).populate('question').populate('survey')
-          .then(question => {
-            // Not answered question: no next
-            if (lodash.isNil(question.answer)) { return false}
-            return UserQuestion.findOne({survey: question.survey, order: {$gt: question.order}})
-          })
-      }
-      if (action=='smartdiet_finish_survey') {
-        return UserQuestion.findById(dataId).populate('question').populate('survey')
-          .then(question => Promise.all([
-            UserQuestion.exists({survey: question.survey, order: {$gt: question.order}}),
-            !lodash.isNil(question.answer)
-          ]))
-          .then(([exists, answered]) => !exists && answered)
-      }
-      if (action=='smartdiet_join_team') {
-        // Get all teams of this team's collective challenge, then check if
-        // user in on one of them
-        return Team.findById(dataId, 'collectiveChallenge').populate({path: 'collectiveChallenge', populate: {path: 'teams', populate: 'members'}})
-          .then(team => team.collectiveChallenge)
-          .then(challenge => {
-            // Challenge not started yet
-            return moment(challenge.start_date).isAfter(moment())
-            // Not already in a team
-            && !challenge.teams.some(t => t.members.some(m => idEqual(m.user._id, user._id)))
-          })
-      }
-      if (action=='smartdiet_shift_challenge') {
-        // Get all teams of this team's collective challenge, then check if
-        // user in on one of them
-        return loadFromDb({model: 'user', id: user._id, fields:['current_individual_challenge','_all_individual_challenges','passed_events','failed_events'], user})
-          .then(([user]) => !user.current_individual_challenge)
-      }
-      if (action=='smartdiet_read_content') {
-        // Get all teams of this team's collective challenge, then check if
-        // user in on one of them
-        return user.canView(dataId)
-      }
-      return Promise.resolve(true)
-  })
+    })
 }
 
 setAllowActionFn(isActionAllowed)

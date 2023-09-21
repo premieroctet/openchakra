@@ -26,36 +26,46 @@ const PAYMENT_PLUGINS = {
 
 const getVivaWalletConfig = () => {
   return {
-    production: process.env?.VIVAWALLET_MODE=='production',
-    baseUrl: process.env?.VIVAWALLET_BASE_URL,
-    apiId: process.env?.VIVAWALLET_API_ID,
-    apiKey: process.env?.VIVAWALLET_API_KEY,
-    clientId: process.env?.VIVAWALLET_CLIENT_ID,
-    clientSecret: process.env?.VIVAWALLET_CLIENT_SECRET,
-    sourceCode: process.env?.VIVAWALLET_SOURCE_CODE,
+    production: process.env.VIVAWALLET_MODE=='production',
+    baseUrl: process.env.VIVAWALLET_BASE_URL,
+    apiId: process.env.VIVAWALLET_API_ID,
+    apiKey: process.env.VIVAWALLET_API_KEY,
+    clientId: process.env.VIVAWALLET_CLIENT_ID,
+    clientSecret: process.env.VIVAWALLET_CLIENT_SECRET,
+    sourceCode: process.env.VIVAWALLET_SOURCE_CODE,
   }
 }
 
 const getStripeConfig = () => {
   return {
-    STRIPE_PUBLIC_KEY: process.env?.STRIPE_PUBLIC_KEY,
-    STRIPE_SECRET_KEY: process.env?.STRIPE_SECRET_KEY,
+    STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY,
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
   }
 }
 
-const paymentPlugin=process.env?.PAYMENT_PLUGIN
-  ? require(`../server/plugins/payment/${process.env?.PAYMENT_PLUGIN}`)
+const getSmartAgendaConfig = () => {
+  return {
+    SMARTAGENDA_LOGIN: process.env.SMARTAGENDA_LOGIN,
+    SMARTAGENDA_PASSWORD: process.env.SMARTAGENDA_PASSWORD,
+    SMARTAGENDA_API_ID: process.env.SMARTAGENDA_API_ID,
+    SMARTAGENDA_API_KEY: process.env.SMARTAGENDA_API_KEY,
+    SMARTAGENDA_URL_PART: process.env.SMARTAGENDA_URL_PART,
+  }
+}
+
+const paymentPlugin=process.env.PAYMENT_PLUGIN
+  ? require(`../server/plugins/payment/${process.env.PAYMENT_PLUGIN}`)
   : null
 paymentPlugin?.init(getStripeConfig())
 
 const get_mode = () => {
-  if (!Object.values(MODES).includes(process.env?.MODE)) {
+  if (!Object.values(MODES).includes(process.env.MODE)) {
     console.error(
-      `Incorrect startup mode ${process.env?.MODE}, expecting ${Object.values(MODES)}`,
+      `Incorrect startup mode ${process.env.MODE}, expecting ${Object.values(MODES)}`,
     )
     process.exit(-1)
   }
-  return process.env?.MODE
+  return process.env.MODE
 }
 
 const isProduction = () => {
@@ -73,17 +83,17 @@ const isDevelopment = () => {
 }
 
 const getProductionRoot = () => {
-  return process.env?.PRODUCTION_ROOT
+  return process.env.PRODUCTION_ROOT
 }
 
 const getProductionPort = () => {
-  return process.env?.FRONTEND_APP_PORT
+  return process.env.FRONTEND_APP_PORT
 }
 
 const MONGO_BASE_URI = 'mongodb://localhost/'
 
 const getChatURL = () => {
-  return Boolean(process.env?.TAWKTO_URL)
+  return Boolean(process.env.TAWKTO_URL)
 }
 
 const getHostName = () => {
@@ -97,14 +107,14 @@ const getHostName = () => {
 }
 
 const getPort = () => {
-  if (isValidation() && isNaN(parseInt(process.env?.BACKEND_PORT))) {
+  if (isValidation() && isNaN(parseInt(process.env.BACKEND_PORT))) {
     throw new Error(`BACKEND_PORT config missing or not an integer`)
   }
   return process.env.BACKEND_PORT || 443
 }
 
 const mustDisplayChat = () => {
-  return Boolean(process.env?.TAWKTO_URL)
+  return Boolean(process.env.TAWKTO_URL)
 }
 
 const isDevelopment_nossl = () => {
@@ -112,21 +122,21 @@ const isDevelopment_nossl = () => {
 }
 
 const isPlatform = () => {
-  return process.env?.SITE_MODE == SITE_MODES.PLATFORM
+  return process.env.SITE_MODE == SITE_MODES.PLATFORM
 }
 
 const isMarketplace = () => {
-  return process.env?.SITE_MODE == SITE_MODES.MARKETPLACE
+  return process.env.SITE_MODE == SITE_MODES.MARKETPLACE
 }
 
 const isMonoProvider = () => {
-  return Boolean(process.env?.MONO_PROVIDER)
+  return Boolean(process.env.MONO_PROVIDER)
 }
 
 const appName = 'myalfred'
 
-const databaseName = process.env?.DATABASE_NAME
-const serverPort = process.env?.BACKEND_PORT || 3122
+const databaseName = process.env.DATABASE_NAME
+const serverPort = process.env.BACKEND_PORT || 3122
 
 const SERVER_PROD = isProduction() || isDevelopment()
 
@@ -145,7 +155,7 @@ const getHostUrl = page => {
 const getProductionUrl = page => {
   const protocol = 'https'
   const hostname = getHostName()
-  const port = process.env?.FRONTEND_APP_PORT
+  const port = process.env.FRONTEND_APP_PORT
   const portStr = isDevelopment() ? `:${port}`: ''
   const host_url = `${protocol}://${hostname}${portStr}/${page}`
   return host_url
@@ -153,8 +163,8 @@ const getProductionUrl = page => {
 
 const getWithingsConfig = () => {
   return {
-    clientId: process.env?.WITHINGS_CLIENT_ID,
-    clientSecret: process.env?.WITHINGS_CLIENT_SECRET,
+    clientId: process.env.WITHINGS_CLIENT_ID,
+    clientSecret: process.env.WITHINGS_CLIENT_SECRET,
   }
 }
 
@@ -163,7 +173,7 @@ const completeConfig = {
     appName,
     serverPort,
     databaseUrl:
-      process.env?.MONGODB_URI || `mongodb://localhost/${databaseName}`,
+      process.env.MONGODB_URI || `mongodb://localhost/${databaseName}`,
     jsonOptions: {
       headers: {
         'Content-Type': 'application/json',
@@ -178,16 +188,27 @@ const SIRET = {
   sirenUrl: 'https://api.insee.fr/entreprises/sirene/V3/siren',
 }
 
+const getMailProvider = () => {
+  return process.env.MAIL_PROVIDER
+}
+
 const getSibApiKey = () => {
-  return process.env?.SIB_APIKEY
+  return process.env.SIB_APIKEY
+}
+
+const getMailjetConfig = () => {
+  return {
+    MAILJET_PUBLIC_KEY: process.env.MAILJET_PUBLIC_KEY,
+    MAILJET_PRIVATE_KEY: process.env.MAILJET_PRIVATE_KEY,
+  }
 }
 
 const canAlfredSelfRegister = () => {
-  return !isMonoProvider() && !process.env?.DISABLE_ALFRED_SELF_REGISTER
+  return !isMonoProvider() && !process.env.DISABLE_ALFRED_SELF_REGISTER
 }
 
 const canAlfredParticularRegister = () => {
-  return !isMonoProvider() && !process.env?.DISABLE_ALFRED_PARTICULAR_REGISTER
+  return !isMonoProvider() && !process.env.DISABLE_ALFRED_PARTICULAR_REGISTER
 }
 
 const displayConfig = () => {
@@ -198,15 +219,14 @@ const displayConfig = () => {
     isPlatform() ? 'plateforme' : isMarketplace() ? 'marketplace' : 'inconnu'
   }\n\
 \tDatabase:${databaseName}\n\
-\tData model:${process.env?.DATA_MODEL}\n\
+\tData model:${getDataModel()}\n\
 \tServer prod:${SERVER_PROD}\n\
 \tServer port:${getPort()}\n\
 \tHost URL:${getHostUrl()}\n\
 \tDisplay chat:${mustDisplayChat()} ${mustDisplayChat() ? getChatURL() : ''}\n\
 \tSendInBlue actif:${ENABLE_MAILING}\n\
-\tSendInBlue key:${getSibApiKey()}\n\
-\tSendInBlue templates:${process.env?.DATA_MODEL}\n\
-Payment plugin:${process.env?.PAYMENT_PLUGIN}:${!!paymentPlugin} keys is ${process.env?.STRIPE_PUBLIC_KEY?.slice(0, 20)}...${process.env?.STRIPE_PUBLIC_KEY?.slice(-6)}\n\
+\tSendInBlue templates:${getDataModel()}\n\
+Payment plugin:${process.env.PAYMENT_PLUGIN}:${!!paymentPlugin} keys is ${process.env.STRIPE_PUBLIC_KEY?.slice(0, 20)}...${process.env.STRIPE_PUBLIC_KEY?.slice(-6)}\n\
 `)
 }
 
@@ -219,9 +239,9 @@ const checkConfig = () => {
         )}`,
       )
     }
-    if (!Object.values(SITE_MODES).includes(process.env?.SITE_MODE)) {
+    if (!Object.values(SITE_MODES).includes(process.env.SITE_MODE)) {
       reject(
-        `SITE_MODE: ${process.env?.SITE_MODE} inconnu, attendu ${JSON.stringify(
+        `SITE_MODE: ${process.env.SITE_MODE} inconnu, attendu ${JSON.stringify(
           Object.values(SITE_MODES),
         )}`,
       )
@@ -231,17 +251,17 @@ const checkConfig = () => {
       reject(`HOSTDOMAIN: obligatoire en mode ${process.env.MODE}`)
     }
 
-    if (isValidation() && isNaN(parseInt(process.env?.BACKEND_PORT))) {
+    if (isValidation() && isNaN(parseInt(process.env.BACKEND_PORT))) {
       reject(`PORT: obligatoire en mode ${process.env.MODE}`)
     }
 
-    if (isEmpty(process.env?.DATABASE_NAME)) {
+    if (isEmpty(process.env.DATABASE_NAME)) {
       reject(`DATABASE_NAME non renseigné`)
     }
-    if (isEmpty(process.env?.PRODUCTION_ROOT)) {
+    if (isEmpty(process.env.PRODUCTION_ROOT)) {
       reject(`PRODUCTION_ROOT non renseigné`)
     }
-    if (isEmpty(process.env?.FRONTEND_APP_PORT)) {
+    if (isEmpty(process.env.FRONTEND_APP_PORT)) {
       reject(`env var FRONTEND_APP_PORT non renseigné`)
     }
     // Deprecated
@@ -251,10 +271,10 @@ const checkConfig = () => {
       )
     }
     // TODO check database name correctness
-    if (isEmpty(process.env?.SIB_APIKEY)) {
+    if (isEmpty(process.env.SIB_APIKEY)) {
       reject(`SIB_APIKEY non renseigné`)
     }
-    if (isEmpty(process.env?.DATA_MODEL)) {
+    if (isEmpty(process.env.DATA_MODEL)) {
       reject(`DATA_MODEL non renseigné`)
     }
     displayConfig()
@@ -263,16 +283,16 @@ const checkConfig = () => {
 }
 
 const getDatabaseUri = () => {
-  return `${MONGO_BASE_URI}${process.env?.DATABASE_NAME}`
+  return `${MONGO_BASE_URI}${process.env.DATABASE_NAME}`
 }
 
 const getDataModel = () => {
-  return process.env?.DATA_MODEL
+  return process.env.DATA_MODEL
 }
 
 // Hide application installation popup
 const hideStoreDialog = () => {
-  return !!process.env?.HIDE_STORE_DIALOG
+  return !!process.env.HIDE_STORE_DIALOG
 }
 
 /**
@@ -280,7 +300,7 @@ ONLY DEV & VALIDATION MODES
 Consider failed payment succeeded
 */
 const skipFailedPayment = () => {
-  return !isProduction() && !!process.env?.SKIP_FAILED_PAYMENT
+  return !isProduction() && !!process.env.SKIP_FAILED_PAYMENT
 }
 
 // DEV mode: allow https without certificate
@@ -357,4 +377,7 @@ module.exports = {
   getHostName,
   paymentPlugin,
   getProductionUrl,
+  getSmartAgendaConfig,
+  getMailProvider,
+  getMailjetConfig,
 }

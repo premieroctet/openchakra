@@ -1,0 +1,2181 @@
+[{
+  "id": 1,
+  "question": "Il existe 7 familles d'aliments",
+  "quiz_id": 1,
+  "position": 1,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "Les 7 familles d\u2019aliments sont en effet : l\u2019eau, les f\u00e9culents, les l\u00e9gumes et fruits, les produits laitiers, les viandes-poissons-\u0153ufs, les mati\u00e8res grasses et les produits sucr\u00e9s.https:\/\/www.vidal.fr\/sante\/nutrition\/equilibre-alimentaire-adulte\/equilibrer-alimentation\/representation.html"
+}, {
+  "id": 2,
+  "question": "La famille des fruits et l\u00e9gumes est la plus importante pour l\u2019organisme",
+  "quiz_id": 1,
+  "position": 2,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "La famille des fruits et l\u00e9gumes est en effet tr\u00e8s importante, mais l\u2019eau est l\u2019\u00e9l\u00e9ment indispensable pour la sant\u00e9. En effet, l\u2019organisme d\u2019un adulte est en moyenne compos\u00e9 de 65% d\u2019eau. https:\/\/www.cnrs.fr\/cw\/dossiers\/doseau\/decouv\/usages\/eauOrga.html"
+}, {
+  "id": 3,
+  "question": "Lentilles, patates douces et quinoa font partie de la famille des f\u00e9culents",
+  "quiz_id": 1,
+  "position": 3,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, ces aliments contiennent tous de l\u2019amidon, un glucide (ou sucre) particulier, caract\u00e9ristique des f\u00e9culents."
+}, {
+  "id": 4,
+  "question": "La cr\u00e8me fra\u00eeche est plac\u00e9e dans la famille des produits laitiers",
+  "quiz_id": 1,
+  "position": 4,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "La cr\u00e8me fra\u00eeche fait partie des mati\u00e8res grasses car elle ne contient que 2g de prot\u00e9ines, 30g de mati\u00e8res grasses et 67 mg de calcium pour 100g. A l\u2019inverse, les produits laitiers contiennent en moyenne 20g de prot\u00e9ines, 22g de mati\u00e8res grasses et 500mg de calcium pour 100g.https:\/\/ciqual.anses.fr\/#\/aliments\/19415\/creme-de-lait-30%-mg-semi-epaisse-uht"
+}, {
+  "id": 5,
+  "question": "Les noix sont plac\u00e9es dans la famille des mati\u00e8res grasses",
+  "quiz_id": 1,
+  "position": 5,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, les noix sont plac\u00e9es dans la famille des mati\u00e8res grasses car elles contiennent plus de 60% de mati\u00e8res grasses en moyenne, dont des om\u00e9ga 3 anti-inflammatoires et bons pour la circulation sanguine.https:\/\/ciqual.anses.fr\/#\/aliments\/15005\/noix-sechee-cerneaux"
+}, {
+  "id": 6,
+  "question": "Les charcuteries sont class\u00e9es dans la famille des mati\u00e8res grasses",
+  "quiz_id": 1,
+  "position": 6,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Bien que grasses, les charcuteries sont plac\u00e9es dans la famille des VPO (Viandes-Poissons-Oeufs). En effet, comme les viandes, elles contiennent environ 20% de prot\u00e9ines et sont sources de fer m\u00eame si leur moyenne est de 40% de mati\u00e8res grasses. A limiter cependant \u00e0 150 g max\/sem."
+}, {
+  "id": 7,
+  "question": "Les fruits secs (raisins, abricots, dattes\u2026) sont class\u00e9s dans la famille des fruits et l\u00e9gumes",
+  "quiz_id": 1,
+  "position": 7,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "Les fruits secs contiennent en moyenne 60% de sucres contre 12% pour les fruits frais. En effet, la d\u00e9shydratation du fruit frais va concentrer sa teneur en sucres mais va aussi diminuer son poids total par les pertes en eau. Ce qui explique que la quantit\u00e9 de sucres pour un nombre \u00e9gal de fruit est identique sec ou frais.\r\n2 abricot secs = environ 20 g = 12 g de sucres\r\n2 abricot frais = environ 100 g = 12 g de sucres"
+}, {
+  "id": 8,
+  "question": "Les institutions nutritionnelles recommandent de consommer 5 portions de fruits et l\u00e9gumes par jour pour \u00eatre en bonne sant\u00e9",
+  "quiz_id": 2,
+  "position": 1,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, il est recommand\u00e9 de consommer 5 portions de fruits et l\u00e9gumes par jour, pour leur richesse en eau, fibres et vitamines.\r\nPour les fruits, une portion moyenne correspond \u00e0 150 g soit une petite pomme. Pour un l\u00e9gume, il s\u2019agit plut\u00f4t de 200 g soit une grosse carotte.\r\nAinsi, vous pouvez par exemple consommer 2 portions de fruits et 3 portions de l\u00e9gumes par jour, ou inversement."
+}, {
+  "id": 9,
+  "question": "Il faut manger une portion de f\u00e9culents par repas",
+  "quiz_id": 2,
+  "position": 2,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, il est recommand\u00e9 de consommer une portion de f\u00e9culents par repas en privil\u00e9giant ceux \u00e9tant complets.\r\nTous les f\u00e9culents nous apportent  des glucides complexes (amidon). Parmi ces f\u00e9culents, certains sont particuli\u00e8rement sati\u00e9tog\u00e8nes ce qui permet d\u2019avoir de l\u2019\u00e9nergie sur plus long terme et de limiter les grignotages. Ils sont donc \u00e0 privil\u00e9gier."
+}, {
+  "id": 10,
+  "question": "Il faut manger 3 produits laitiers par semaine",
+  "quiz_id": 2,
+  "position": 3,
+  "firstanswer": "Faux",
+  "firstanswergood": true,
+  "secondanswer": "Vrai",
+  "secondanswergood": false,
+  "comments": "Il est recommand\u00e9 de consommer 2 produits laitiers par jour, dont un fromage, pour les adultes. En effet, ils sont riches en calcium, et sont sources de prot\u00e9ines de bonne qualit\u00e9. (cf PNNS4)"
+}, {
+  "id": 11,
+  "question": "Il faut manger 3 portions de VPO (viande, poisson, oeuf) par jour",
+  "quiz_id": 2,
+  "position": 4,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Il est recommand\u00e9 de consommer 1 \u00e0 2 portions de VPO par jour, soit 100 \u00e0 150 g pour 1 portion. En effet, ils sont riches en prot\u00e9ines et en fer de bonne qualit\u00e9."
+}, {
+  "id": 12,
+  "question": "Je dois boire au moins 1,5 litre d\u2019eau par jour",
+  "quiz_id": 2,
+  "position": 5,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, nous perdons en moyenne 2,6L d\u2019eau par jour et gr\u00e2ce \u00e0 une alimentation \u00e9quilibr\u00e9e, nous en apportons 1,3L. Il reste donc 1,3L d\u2019eau \u00e0 apporter sous-forme de boissons; mais pour anticiper les pertes li\u00e9es \u00e0 la transpiration, il est recommand\u00e9 de boire au moins 1,5L d\u2019eau par jour. Cette quantit\u00e9 pourra donc varier en fonction de la transpiration (temp\u00e9rature ext\u00e9rieure, sport, \u00e9motions)."
+}, {
+  "id": 13,
+  "question": "Je dois manger au moins 2 abats par mois",
+  "quiz_id": 2,
+  "position": 6,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Les abats sont int\u00e9ressants pour leur richesse exceptionnelle en fer. Cependant, leur consommation ne fait plus partie des recommandations."
+}, {
+  "id": 14,
+  "question": "Dans le cadre d\u2019une alimentation \u00e9quilibr\u00e9e, je peux manger 4 p\u00e2tisseries par semaine",
+  "quiz_id": 2,
+  "position": 7,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Les p\u00e2tisseries sont riches en sucres et mati\u00e8res grasses ; ainsi il est recommand\u00e9 de limiter leur consommation \u00e0 3 par semaine. (GEMRCN juillet 2015)"
+}, {
+  "id": 15,
+  "question": "Les institutions nutritionnelles recommandent de consommer 1 poisson gras par jour pour \u00eatre en bonne sant\u00e9",
+  "quiz_id": 2,
+  "position": 8,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Les institutions recommandent de consommer au moins 2 poissons par semaine dont 1 poisson gras. De plus, il est recommand\u00e9 de privil\u00e9gier les petits poissons plut\u00f4t que les gros pour limiter l\u2019ingestion de substances toxiques (car les gros mangent les petits, ce qui concentre les polluants). \r\nPrivil\u00e9giez par exemple les sardines, maquereaux, anchois et limitez les plus gros comme le saumon, la truite, le thon rouge ou le fl\u00e9tan."
+}, {
+  "id": 16,
+  "question": "Quelle est l'assiette la plus \u00e9quilibr\u00e9e parmi : \r\nAssiette A : 1\/8\u00e8me de camembert \/ 1 tranche de pain au levain \/ 1 portion de salade de m\u00e2che et vinaigrette \u00e0 l'huile de colza \/ 1 pomme au four\r\nAssiette B : 2 tranches de jambon blanc \/ 3 petites pommes de terre \u00e0 la vapeur \/ 1 po\u00eal\u00e9e de courgettes \u00e0 l'huile d'olive \/ 1 pomme au four",
+  "quiz_id": 3,
+  "position": 1,
+  "firstanswer": "Assiette A",
+  "firstanswergood": false,
+  "secondanswer": "Assiette B",
+  "secondanswergood": true,
+  "comments": "Assiette A : cette assiette n'est pas suffisante en terme d'\u00e9nergie, pour un individu en bonne sant\u00e9 (sans r\u00e9gime particulier ou pathologie).\r\n\r\nAssiette B: cette assiette est \u00e9quilibr\u00e9e. En effet, elle contient une portion de fruits et l\u00e9gumes, une portion de prot\u00e9ines animales, des f\u00e9culents et des mati\u00e8res grasses."
+}, {
+  "id": 17,
+  "question": "L'\u00e9quilibre alimentaire se construit sur une semaine et non sur un repas",
+  "quiz_id": 3,
+  "position": 2,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "Nous pouvons parler d\u2019\u00e9quilibre \u00e0 plusieurs niveaux : l\u2019\u00e9quilibre d\u2019un repas, d\u2019une journ\u00e9e ou d\u2019une semaine. Globalement, l\u2019\u00e9quilibre alimentaire se fait plut\u00f4t sur une semaine ; beaucoup de recommandations du PNNS (Programme National Nutrition Sant\u00e9) se basent sur cette fr\u00e9quence comme par exemple 3 p\u00e2tisseries par semaine. Cela laisse de la place pour quelques petits \u00e9carts."
+}, {
+  "id": 18,
+  "question": "Un petit d\u00e9jeuner \u00e9quilibr\u00e9 peut se composer d\u2019une boisson, d\u2019un produit c\u00e9r\u00e9alier et d\u2019un produit laitier",
+  "quiz_id": 3,
+  "position": 3,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, s'il est n\u00e9cessaire d\u2019apporter une boisson pour r\u00e9hydrater l\u2019organisme apr\u00e8s le je\u00fbne nocturne, on peut choisir deux aliments parmi les trois suivants voire m\u00eame prendre les trois  : un produit c\u00e9r\u00e9alier rassasiant pour avoir de l\u2019\u00e9nergie sur long terme, et\/ ou un produit laitier pour apporter du calcium mais aussi des prot\u00e9ines pour augmenter la sati\u00e9t\u00e9, et \/ ou un fruit pour apporter des vitamines.\r\nMati\u00e8res grasses et produits sucr\u00e9s ne sont pas indispensables d\u00e8s le petit-d\u00e9jeuner et seront apport\u00e9s aux autres repas de la journ\u00e9e.\r\nPrendre un petit d\u00e9jeuner \u00e9quilibr\u00e9 permet d\u2019\u00e9viter le grignotage dans la matin\u00e9e.\r\nhttps:\/\/www.mangerbouger.fr\/manger-mieux\/se-faire-plaisir-en-mangeant-equilibre\/manger-equilibre-ca-veut-dire-quoi-et-comment-y-arriver\/comment-rythmer-sa-journee-autour-de-3-repas#Ancre1"
+}, {
+  "id": 19,
+  "question": "Un plateau repas \u00e9quilibr\u00e9 peut NE pas contenir d'aliments du groupe VPO (viande-poisson-\u0153uf)",
+  "quiz_id": 3,
+  "position": 4,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "Il est recommand\u00e9 de consommer 1 \u00e0 2 portions de VPO (viande-poisson-\u0153uf) par jour, soit 100 \u00e0 150 g pour 1 portion. \r\nUn plateau repas \u00e9quilibr\u00e9 peut NE pas contenir d'aliments du groupe VPO (viande-poisson-\u0153uf) s' il contient un produit laitier, aussi source de prot\u00e9ines animales."
+}, {
+  "id": 20,
+  "question": "L'\u00e9quilibre alimentaire pr\u00e9voit 2 portions de fromage par jour, correspondant aux 2 produits laitiers",
+  "quiz_id": 3,
+  "position": 5,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Il est important de varier les sources. Ainsi, le fromage \u00e9tant gras et sal\u00e9, il est recommand\u00e9 de n\u2019en consommer qu\u2019une portion par jour et de privil\u00e9gier les laitages pour la seconde portion."
+}, {
+  "id": 21,
+  "question": "Il est recommand\u00e9 d'avoir au moins un fruit ou l\u00e9gume cru par repas, inclus le petit d\u00e9jeuner.",
+  "quiz_id": 3,
+  "position": 6,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, les l\u00e9gumes crus et les fruits (inclus dans les crudit\u00e9s) contiennent de la vitamine C qui est thermosensible (sensible \u00e0 la chaleur). Elle y sera alors en quantit\u00e9 plus importante que dans les cuidit\u00e9s (fruits et l\u00e9gumes cuits)."
+}, {
+  "id": 22,
+  "question": "Je peux me passer de p\u00e2tes en accompagnement si je mange une salade de lentilles en entr\u00e9e et un riz au lait en dessert",
+  "quiz_id": 3,
+  "position": 7,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, il est recommand\u00e9 de consommer 1 portion de f\u00e9culents par repas soit 200 \u00e0 250 g en moyenne (poids cuit) en accompagnement. Cette portion pourra alors \u00eatre fractionn\u00e9e en deux prises : 1 portion en entr\u00e9e et 1 autre portion en dessert soit 2 fois 100 \u00e0 150 g (poids cuit).\r\nIl est aussi possible de consommer 1 portion de f\u00e9culents en entr\u00e9e et un morceau de pain ou 1 portion de f\u00e9culents en dessert avec un morceau de pain.\""
+}, {
+  "id": 23,
+  "question": "Les fruits surgel\u00e9s ont les m\u00eames propri\u00e9t\u00e9s nutritionnelles que les fruits en conserve.",
+  "quiz_id": 4,
+  "position": 1,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Les fruits surgel\u00e9s contiennent davantage de vitamines et min\u00e9raux que les fruits en conserve. La surg\u00e9lation pr\u00e9serve bien les vitamines et min\u00e9raux  des fruits alors que la mise en conserve en perd  \u00e0 cause du proc\u00e9d\u00e9 mettant en eau les fruits puis les soumettant \u00e0 une forte chaleur. Certaines vitamines se dissolvent dans l'eau (solubilisation)  et d'autres ne survivent pas \u00e0 aux fortes temp\u00e9ratures. \r\nDe plus, le temps entre la r\u00e9colte et la surg\u00e9lation est en g\u00e9n\u00e9ral tr\u00e8s court, compar\u00e9 au temps entre la r\u00e9colte et la st\u00e9rilisation pour les fruits en conserve. Ceci pr\u00e9serve donc encore mieux les propri\u00e9t\u00e9s nutritionnelles des fruits surgel\u00e9s."
+}, {
+  "id": 24,
+  "question": "Les moules sont une bonne source de fer",
+  "quiz_id": 4,
+  "position": 2,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, \u00e0 poids \u00e9gal, il y a  environ 1, 5 fois plus de fer dans les moules que dans la viande rouge (source Ciqual 2020 : 3,99 mg pour 100 g pour les moules et 2,8 mg pour 100 g pour la viande rouge)"
+}, {
+  "id": 25,
+  "question": "Les noix s\u00e9ch\u00e9es sont riches en om\u00e9ga 3",
+  "quiz_id": 4,
+  "position": 3,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "Oui, il y en a autant que dans l\u2019huile de colza, r\u00e9put\u00e9e riche en om\u00e9ga 3. (Source Ciqual 2020:  7,5 g pour 100 g )"
+}, {
+  "id": 26,
+  "question": "Le chocolat \u00e0 forte teneur en cacao est riche en fer",
+  "quiz_id": 4,
+  "position": 4,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, il y en a 4 fois plus que dans la viande rouge m\u00eame s\u2019il s\u2019agit de fer v\u00e9g\u00e9tal et qu'il est moins bien absorb\u00e9. (5% en moyenne contre 15% d'absorption pour le fer d'origine animal) https:\/\/ciqual.anses.fr\/#\/aliments\/31074\/chocolat-noir-a-70%-cacao-minimum-extra-degustation-tablette"
+}, {
+  "id": 27,
+  "question": "Les fruits rouges sont une bonne source de vitamine C",
+  "quiz_id": 4,
+  "position": 5,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "L\u2019orange contient 47,5 mg de vitamine C pour 100 g  alors que  les fruits rouges, eux, en contiennent 87 mg pour 100 g."
+}, {
+  "id": 28,
+  "question": "L'huile de tournesol est une bonne source d'om\u00e9ga 3",
+  "quiz_id": 4,
+  "position": 6,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Compar\u00e9e \u00e0 l\u2019huile de colza, l\u2019huile de tournesol en contient 100 fois moins. Elle est en revanche riche en om\u00e9ga 6 que nous consommons au del\u00e0 des recommandations, donc \u00e0 mod\u00e9rer!"
+}, {
+  "id": 29,
+  "question": "Les fruits secs sont pauvres en fibres",
+  "quiz_id": 4,
+  "position": 7,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "A poids \u00e9gal, les fruits secs contiennent au moins 4 fois plus de fibres que les fruits frais."
+}, {
+  "id": 30,
+  "question": "Les fibres se trouvent dans les fruits, les l\u00e9gumes, les poissons gras et les l\u00e9gumes secs",
+  "quiz_id": 5,
+  "position": 1,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Les fibres se trouvent dans les fruits, les l\u00e9gumes et les l\u00e9gumes secs mais sont absentes des poissons gras."
+}, {
+  "id": 31,
+  "question": "Le calcium se trouve dans les l\u00e9gumes, les petits suisses, les amandes et la viande rouge",
+  "quiz_id": 5,
+  "position": 2,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Le calcium se trouve dans les l\u00e9gumes, les petits suisses et les amandes mais en tr\u00e8s faible quantit\u00e9 dans la viande rouge."
+}, {
+  "id": 32,
+  "question": "Le sucre se retrouve en quantit\u00e9 importante dans les betteraves, la papaye s\u00e8che et le chocolat",
+  "quiz_id": 5,
+  "position": 3,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Le sucre se retrouve en quantit\u00e9 importante dans la papaye s\u00e8che et le chocolat mais sa teneur est faible dans les betteraves. A savoir, la betterave est trois fois plus sucr\u00e9e que la moyenne des l\u00e9gumes."
+}, {
+  "id": 33,
+  "question": "Le sel se trouve dans le pain, les p\u00e2tes, la charcuterie et le fromage",
+  "quiz_id": 5,
+  "position": 4,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Le sel se trouve en quantit\u00e9 importante dans le pain, la charcuterie et le fromage  mais en quantit\u00e9 n\u00e9gligeable dans les p\u00e2tes."
+}, {
+  "id": 34,
+  "question": "Le fer se trouve dans la viande, les l\u00e9gumes secs et les moules",
+  "quiz_id": 5,
+  "position": 5,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, il y a en moyenne 2 mg de fer pour 100 g dans ces aliments alors que dans les autres aliments, il y en a en moyenne moins de 0,5 mg pour 100 g."
+}, {
+  "id": 35,
+  "question": "Il y a en moyenne la m\u00eame quantit\u00e9 de prot\u00e9ines dans 100 g de viande et dans 100 g de poisson",
+  "quiz_id": 6,
+  "position": 1,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "La teneur moyenne de prot\u00e9ines dans les viandes et poissons est presque identique et repr\u00e9sente en moyenne 18 g pour 100 g."
+}, {
+  "id": 36,
+  "question": "Il y a en moyenne la m\u00eame quantit\u00e9 de lipides (mati\u00e8res grasses) dans 1 c.s d'huile que dans 1 c.s de cr\u00e8me fra\u00eeche (non all\u00e9g\u00e9e)",
+  "quiz_id": 6,
+  "position": 2,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "L\u2019huile contient 100 % de lipides et la cr\u00e8me fra\u00eeche en contient 30%.\r\nComme 1 c.s d\u2019huile p\u00e8se 10 g et qu\u20191 c.s de cr\u00e8me fra\u00eeche p\u00e8se 30 g, il y a alors autant de lipides dans ces 2 portions."
+}, {
+  "id": 37,
+  "question": "Il y a en moyenne la m\u00eame quantit\u00e9 de glucides complexes dans 2 pommes de terre (de la taille d'un \u0153uf) que dans 4 c.s de riz blanc cuit.",
+  "quiz_id": 6,
+  "position": 3,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "Il y a autant de glucides complexes dans 100 g de riz cuit que dans 100 g de pommes de terre, soit 20 g.\r\nComme 2 pommes de terre de la taille d\u2019un \u0153uf font 100 g et que 4 c.s de riz cuit font \u00e9galement 100 g, il y a alors autant de glucides complexes dans ces 2 portions."
+}, {
+  "id": 38,
+  "question": "Il y a en moyenne la m\u00eame quantit\u00e9 de fibres dans une petite pomme que dans un  tiers de baguette classique",
+  "quiz_id": 6,
+  "position": 4,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "La baguette classique contient 3 g de fibres pour 100 g et la pomme 2 g pour 100 g. \r\nComme 1 petite pomme p\u00e8se 150 g en moyenne et qu\u2019un tiers de baguette classique p\u00e8se 80 g, cela repr\u00e9sente 2,5 g de fibres au total pour les 2 portions."
+}, {
+  "id": 39,
+  "question": "Il y a en moyenne la m\u00eame quantit\u00e9 de glucides complexes dans le bl\u00e9 et les lentilles.",
+  "quiz_id": 7,
+  "position": 1,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "Les lentilles s\u00e8ches contiennent en moyenne 50 g de glucides complexes pour 100 g et le bl\u00e9 sec en contient 60 g pour 100 g."
+}, {
+  "id": 40,
+  "question": "Il y a en moyenne la m\u00eame quantit\u00e9 de sucres dans 15 cerises que dans 250g de fraises",
+  "quiz_id": 7,
+  "position": 2,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "100 g de fraises contiennent 5,6 g de sucres et 100 g de cerises en contiennent 10 g. \r\nIl y a  environ 10 cerises dans 100 g, il faut donc 15 cerises pour avoir  la m\u00eame quantit\u00e9 de sucres que dans 250g de fraises , soit environ 15 g de sucres dans les 2 portions."
+}, {
+  "id": 41,
+  "question": "Il y a en moyenne la m\u00eame quantit\u00e9 de sucres dans 1 pomme que dans 2 kiwis",
+  "quiz_id": 7,
+  "position": 3,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "100 g de pommes contiennent 10 g de sucres et 100 g de kiwis en comptent 8 g. \r\nComme une pomme p\u00e8se environ 150 g et que 2 kiwis p\u00e8sent environ 200 g, cela repr\u00e9sente la m\u00eame quantit\u00e9 soit 15 g de sucres dans les 2 portions."
+}, {
+  "id": 42,
+  "question": "Il y a en moyenne la m\u00eame quantit\u00e9 de sucres dans 1 c.s de confiture que dans 4 bonbons",
+  "quiz_id": 7,
+  "position": 4,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "100 g de bonbons contiennent 85 g de sucre et 100 g de confiture en contiennent 60 g.\r\nComme 4 bonbons p\u00e8sent environ 20 g et qu\u2019une c.s de confiture p\u00e8se 30 g, ceci repr\u00e9sente la m\u00eame quantit\u00e9, soit 20 g de sucres dans les 2 portions."
+}, {
+  "id": 43,
+  "question": "L'artichaut est un l\u00e9gume d'\u00e9t\u00e9",
+  "quiz_id": 17,
+  "position": 1,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "Sa pleine saison est de mai \u00e0 septembre. C\u2019est donc un fruit de printemps ET d\u2019\u00e9t\u00e9."
+}, {
+  "id": 44,
+  "question": "La courgette est un l\u00e9gume d'hiver",
+  "quiz_id": 17,
+  "position": 2,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "La courgette est un l\u00e9gume d\u2019\u00e9t\u00e9 consomm\u00e9 de juin \u00e0 octobre."
+}, {
+  "id": 45,
+  "question": "Le poivron est un l\u00e9gume d'hiver",
+  "quiz_id": 17,
+  "position": 3,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Le poivron se consomme id\u00e9alement de juin \u00e0 septembre. C\u2019est donc un l\u00e9gume d\u2019\u00e9t\u00e9."
+}, {
+  "id": 46,
+  "question": "La figue est un fruit d'hiver",
+  "quiz_id": 17,
+  "position": 4,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "La figue est un fruit d\u2019\u00e9t\u00e9 et d\u2019automne se consommant entre juillet et octobre."
+}, {
+  "id": 47,
+  "question": "Le concombre est un l\u00e9gume d'hiver",
+  "quiz_id": 17,
+  "position": 5,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "La consommation id\u00e9ale du concombre s\u2019\u00e9tend d'avril \u00e0 octobre. C\u2019est donc plut\u00f4t un l\u00e9gume de printemps et d\u2019\u00e9t\u00e9."
+}, {
+  "id": 48,
+  "question": "L'abricot est un fruit d'\u00e9t\u00e9",
+  "quiz_id": 17,
+  "position": 6,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "L\u2019abricot se d\u00e9guste de juin \u00e0 ao\u00fbt."
+}, {
+  "id": 49,
+  "question": "Le pamplemousse est un fruit d'hiver",
+  "quiz_id": 17,
+  "position": 7,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, on peut le consommer de janvier \u00e0 avril."
+}, {
+  "id": 50,
+  "question": "La m\u00fbre est un fruit d'hiver",
+  "quiz_id": 17,
+  "position": 8,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "On peut consommer des m\u00fbres en ao\u00fbt et septembre, ce n\u2019est donc pas un fruit d\u2019hiver mais d\u2019\u00e9t\u00e9."
+}, {
+  "id": 51,
+  "question": "La partie la plus chaude du r\u00e9frig\u00e9rateur est la partie haute",
+  "quiz_id": 18,
+  "position": 1,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Dans la plupart des r\u00e9frig\u00e9rateurs nous retrouvons le moteur dans la partie basse. C\u2019est pourquoi cette zone est plus chaude."
+}, {
+  "id": 52,
+  "question": "Les restes se conservent dans la partie basse du r\u00e9frig\u00e9rateur",
+  "quiz_id": 18,
+  "position": 2,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Les restes font partie des denr\u00e9es pr\u00e9sentant des risques de contamination assez \u00e9lev\u00e9s. C\u2019est pourquoi il est pr\u00e9f\u00e9rable de les conserver dans la partie la plus froide du r\u00e9frig\u00e9rateur, c\u2019est-\u00e0-dire la partie haute."
+}, {
+  "id": 53,
+  "question": "Les huiles vierges riches en om\u00e9ga 3 (comme l'huile de colza ou de noix) se conservent au r\u00e9frig\u00e9rateur",
+  "quiz_id": 18,
+  "position": 3,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "Les huiles vierges sont compos\u00e9es de lipides tr\u00e8s fragiles, ne supportant pas la chaleur. Ces huiles ne serviront qu\u2019\u00e0 l\u2019assaisonnement. En revanche, on peut les trouver raffin\u00e9es et donc adapt\u00e9es \u00e0 la cuisson et \u00e0 une conservation plus longue \u00e0 temp\u00e9rature ambiante, elles seront toujours riches en om\u00e9ga 3 beaucoup moins en antioxydants et en vitamines."
+}, {
+  "id": 54,
+  "question": "Les restes peuvent se conserver 72h au r\u00e9frig\u00e9rateur",
+  "quiz_id": 18,
+  "position": 4,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "Les restes sont des denr\u00e9es \u00e0 risque et peuvent pr\u00e9senter des risques de contamination. Il ne faut donc pas les conserver plus de 3 jours apr\u00e8s leur r\u00e9alisation dans les \u00e9tages du haut du r\u00e9frig\u00e9rateur."
+}, {
+  "id": 55,
+  "question": "Un blender permet de r\u00e9aliser des pr\u00e9parations mix\u00e9es, de texture fluide",
+  "quiz_id": 19,
+  "position": 1,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, un blender est un type de mixeur. Vous pourrez alors r\u00e9aliser des smoothies, des milkshakes ou des potages par exemple."
+}, {
+  "id": 56,
+  "question": "Pour avoir une julienne de l\u00e9gumes, on peut utiliser une r\u00e2pe \u00e0 l\u00e9gumes",
+  "quiz_id": 19,
+  "position": 2,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "Une julienne de l\u00e9gumes d\u00e9signe des l\u00e9gumes taill\u00e9s en b\u00e2tonnets fins et r\u00e9guliers. Les cuisiniers la r\u00e9alisent la plupart du temps au couteau, or, il est possible d\u2019utiliser une r\u00e2pe \u00e0 l\u00e9gumes pour se faciliter la t\u00e2che."
+}, {
+  "id": 57,
+  "question": "Une mandoline permet de d\u00e9sosser un poulet",
+  "quiz_id": 19,
+  "position": 3,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Une mandoline est un coupe-l\u00e9gumes qui permet de r\u00e9aliser des lamelles plus ou moins fines. Il est \u00e9galement possible de trancher des fruits \u2026 mais pas de d\u00e9sosser un poulet !"
+}, {
+  "id": 58,
+  "question": "Pour faire une b\u00e9chamel, il faut pr\u00e9parer un roux",
+  "quiz_id": 19,
+  "position": 4,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, une b\u00e9chamel est une sauce blanche r\u00e9alis\u00e9e \u00e0 partir d\u2019un roux. Un roux est un m\u00e9lange \u00e0 part \u00e9gale de beurre et de farine que l\u2019on met \u00e0 chauffer ; il permettra de lier la sauce."
+}, {
+  "id": 59,
+  "question": "La p\u00e2te bris\u00e9e contient du jaune d\u2019\u0153uf tandis que la p\u00e2te sabl\u00e9e n'en contient pas",
+  "quiz_id": 19,
+  "position": 5,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "C\u2019est l\u2019inverse, la p\u00e2te bris\u00e9e contient de la farine, du beurre, de l\u2019eau et parfois du sucre si on la souhaite sucr\u00e9e. En revanche, la p\u00e2te sabl\u00e9e contient de la farine, du sucre, du beurre et du jaune d\u2019oeuf pour assurer la liaison."
+}, {
+  "id": 60,
+  "question": "Pour avoir une brunoise de l\u00e9gumes, on peut utiliser un fouet",
+  "quiz_id": 19,
+  "position": 6,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Une brunoise de l\u00e9gumes d\u00e9signe des l\u00e9gumes taill\u00e9s en tout petits d\u00e9s r\u00e9guliers. Pour ce faire, il suffit d\u2019utiliser un couteau bien aiguis\u00e9 et non un fouet !"
+}, {
+  "id": 61,
+  "question": "On peut faire ses yaourts maison juste avec un four, sans yaourti\u00e8re",
+  "quiz_id": 19,
+  "position": 7,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, pour r\u00e9aliser ses yaourts maison, il n\u2019est pas n\u00e9cessaire d\u2019avoir une yaourti\u00e8re. Il suffit de les cuire \u00e0 basse temp\u00e9rature du four (environ 40\u00b0C pendant 3 \u00e0 4 heures minimum, en fonction des recettes, puis \u00e0 laisser dans le four \u00e9teint entre 4 et 6 h suppl\u00e9mentaires. Privil\u00e9giez la cuisson le soir ! )"
+}, {
+  "id": 62,
+  "question": "En dehors des fruits, un clafoutis contient les m\u00eames ingr\u00e9dients qu'un flan p\u00e2tissier",
+  "quiz_id": 19,
+  "position": 8,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Un clafoutis contient une base d\u2019oeufs, de lait, de farine et de fruits. Le flan p\u00e2tissier aussi, mais il ne contient pas de fruits"
+}, {
+  "id": 63,
+  "question": "La cuisson \u00e0 l'eau pr\u00e9serve bien les vitamines et min\u00e9raux",
+  "quiz_id": 20,
+  "position": 1,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "La cuisson \u00e0 l\u2019eau est id\u00e9ale pour les bouillies et les soupes et permet de cuire sans ou avec peu de gras. Or, lorsqu\u2019on jette le bouillon, cela devient tout de suite beaucoup moins int\u00e9ressant ! Il y a en effet une migration des micronutriments dans l\u2019eau et nous perdons ainsi une grande partie des vitamines et min\u00e9raux\u2026\r\nDans le cas o\u00f9 l\u2019on ne consomme pas le bouillon, il est pr\u00e9f\u00e9rable de cuire les aliments dans leur peau et d\u2019\u00e9viter de les couper en petits morceaux."
+}, {
+  "id": 64,
+  "question": "La cuisson \u00e0 la vapeur pr\u00e9serve bien les vitamines et min\u00e9raux",
+  "quiz_id": 20,
+  "position": 2,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "La cuisson \u00e0 la vapeur douce, inf\u00e9rieure \u00e0 95\u00b0C, permet de conserver au mieux les vitamines, min\u00e9raux et antioxydants. Attention \u00e0 ne pas la confondre avec la cocotte-minute.\r\nLe temps de cuisson doit \u00eatre court ; de 2 \u00e0 5 minutes en moyenne pour les l\u00e9gumes et jusqu\u2019\u00e0 30 minutes pour des grosses pi\u00e8ces de viandes.\r\nA la vapeur, il est possible de presque tout cuire ; les viandes, poissons, l\u00e9gumineuses, c\u00e9r\u00e9ales, g\u00e2teaux ou m\u00eame le pain."
+}, {
+  "id": 65,
+  "question": "La cuisson au barbecue entra\u00eene la formation de compos\u00e9s toxiques pour l'organisme",
+  "quiz_id": 20,
+  "position": 3,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "Lorsque la nourriture est en contact direct avec une flamme, certains compos\u00e9s apparaissent comme les HAP et les AAH (Hydrocarbures Aromatiques Polycycliques et Amines Aromatiques H\u00e9t\u00e9rocycliques). Il s\u2019agit de mol\u00e9cules canc\u00e9rig\u00e8nes. Ainsi toute trace de carbonisation sur la viande est toxique.\r\nOn peut conclure que la cuisson au barbecue est peu int\u00e9ressante d\u2019un point de vue nutritionnel et sanitaire."
+}, {
+  "id": 66,
+  "question": "La cuisson \u00e0 la po\u00eale peut atteindre la m\u00eame temp\u00e9rature qu'une cuisson au four \u00e0 180\u00b0C",
+  "quiz_id": 20,
+  "position": 4,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "La cuisson \u00e0 la po\u00eale atteint des temp\u00e9ratures allant de 150\u00b0C \u00e0 350 \u00b0C environ."
+}, {
+  "id": 67,
+  "question": "La cuisson \u00e0 l'\u00e9touff\u00e9e des l\u00e9gumes consiste \u00e0 rajouter un filet d'eau au fur et \u00e0 mesure de leur cuisson",
+  "quiz_id": 20,
+  "position": 5,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "La cuisson \u00e0 l\u2019\u00e9touff\u00e9e ou \u00e0 l\u2019\u00e9tuv\u00e9e consiste en une cuisson dans un r\u00e9cipient clos, \u00e0 feu doux. Les aliments cuisent dans leur propre jus avec peu de pertes en vitamines et min\u00e9raux \u00e0 condition qu\u2019ils ne mijotent pas trop longtemps."
+}, {
+  "id": 68,
+  "question": "Les olives noires sont deux fois plus grasses que les olives vertes",
+  "quiz_id": 12,
+  "position": 1,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Les olives noires ne sont pas deux fois plus grasses que les vertes m\u00eame si elles  contiennent plus de lipides :  19,5%  contre 15,7% pour les olives vertes. Ceci est d\u00fb au degr\u00e9 de m\u00fbrissement des olives. L\u2019olive verte est r\u00e9colt\u00e9e avant qu\u2019elle ne soit r\u00e9ellement m\u00fbre ; l\u2019olive noire lorsque le fruit est totalement m\u00fbr, sans que ce soit une vari\u00e9t\u00e9 diff\u00e9rente."
+}, {
+  "id": 69,
+  "question": "Il y a autant de lipides (graisses) dans une cuill\u00e8re \u00e0 soupe d'huile que dans une vingtaine d'olives vertes",
+  "quiz_id": 12,
+  "position": 2,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "Dans une cuill\u00e8re \u00e0 soupe d\u2019huile, il y a 10 g de lipides. \r\nSachant qu\u2019une olive verte  p\u00e8se en moyenne 3 g et contient en moyenne 15% de lipides, 20 olives vertes correspondent \u00e0 60 g et 9,4 g de lipides. Il y a alors quasiment autant de graisses dans ces 2 portions."
+}, {
+  "id": 70,
+  "question": "Un verre de vin rouge et un demi de bi\u00e8re (25cl) sont \u00e9quivalents en unit\u00e9 d'alcool",
+  "quiz_id": 12,
+  "position": 3,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "Une unit\u00e9 d\u2019alcool correspond \u00e0 10 g d\u2019alcool pur. Dans les bars et restaurants, la quantit\u00e9 de boisson alcoolis\u00e9e qui vous sera servie dans un verre est \u201ccalibr\u00e9e\u201d en fonction de sa teneur en alcool. Chaque verre contient 1 unit\u00e9 d\u2019alcool. Ainsi, 1 verre de vin rouge de 10 cl contiendra autant d\u2019alcool qu\u2019un demi de bi\u00e8re de 25 cl. NB : attention la pinte est l'\u00e9quivalent de deux demi de bi\u00e8re."
+}, {
+  "id": 71,
+  "question": "Le champagne est la boisson alcoolis\u00e9e la moins calorique \u00e0 quantit\u00e9 d'alcool \u00e9gale avec une autre boisson alcoolis\u00e9e",
+  "quiz_id": 12,
+  "position": 4,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, le champagne fait partie des boissons alcoolis\u00e9es les moins caloriques, avec le vin blanc sec ou le vin rouge.\r\nUne fl\u00fbte de champagne contient en moyenne 70 kcal contre 128 kcal pour un verre de martini ou encore 140 kcal pour un verre de whisky\/cola."
+}, {
+  "id": 72,
+  "question": "Les chips contiennent plus d'un tiers de leur poids en graisses",
+  "quiz_id": 12,
+  "position": 5,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, les chips contiennent en moyenne 34% de graisses (lipides) soit un tiers de leur poids !"
+}, {
+  "id": 73,
+  "question": "100 g de biscuits ap\u00e9ritifs contiennent 2,5 c.s d'huile en moyenne",
+  "quiz_id": 12,
+  "position": 6,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, dans 100 g de biscuits ap\u00e9ritifs, il y a en moyenne 25 g de lipides, soit 2,5 cuill\u00e8res \u00e0 soupe d\u2019huile. Pensez \u00e0 regarder le poids sur l'emballage au prochain ap\u00e9ro."
+}, {
+  "id": 74,
+  "question": "J'ai besoin de plus d'iode quand je suis enceinte",
+  "quiz_id": 25,
+  "position": 1,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, la grossesse augmente les besoins en iode, n\u00e9cessaires au fonctionnement des hormones thyro\u00efdiennes. En cas de carence, il y a un risque de retard mental chez l\u2019enfant, appel\u00e9 cr\u00e9tinisme."
+}, {
+  "id": 75,
+  "question": "J'ai besoin de plus de vitamine B9 ou folate ou acide folique quand je suis enceinte",
+  "quiz_id": 25,
+  "position": 2,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, d\u00e8s le d\u00e9but de la grossesse, les besoins en vitamine B9 sont augment\u00e9s. Ils sont indispensables au bon d\u00e9veloppement du foetus, et en particulier \u00e0 la formation du syst\u00e8me nerveux du b\u00e9b\u00e9."
+}, {
+  "id": 76,
+  "question": "J'ai besoin de plus de fer quand je suis enceinte",
+  "quiz_id": 25,
+  "position": 3,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Pendant la grossesse, les besoins en fer sont identiques \u00e0 ceux d'une  femme avec des r\u00e8gles abondantes, soit 16 mg  par jour. En revanche , il faut faire attention \u00e0 en prendre  en quantit\u00e9 suffisante, car c'est la  carence num\u00e9ro 1 au monde  !"
+}, {
+  "id": 77,
+  "question": "J'ai besoin de plus de calcium quand je suis enceinte",
+  "quiz_id": 25,
+  "position": 4,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Les besoins en calcium sont identiques pour une femme enceinte \u00e0 ceux d'un adulte bien portant."
+}, {
+  "id": 78,
+  "question": "J'ai besoin de plus d'\u00e9nergie (donc de calories) quand je suis enceinte",
+  "quiz_id": 25,
+  "position": 5,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "Les besoins \u00e9nerg\u00e9tiques sont l\u00e9g\u00e8rement augment\u00e9s pendant une grossesse, mais attention toutefois \u00e0 ne pas manger 2 fois plus ! Il suffit g\u00e9n\u00e9ralement d\u2019ajouter une collation \u00e0 partir du 3\u00e8me trimestre de la grossesse."
+}, {
+  "id": 79,
+  "question": "J'ai besoin de plus de fibres quand je suis enceinte",
+  "quiz_id": 25,
+  "position": 6,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Pendant la grossesse, l'apport recommand\u00e9 en fibres est de 25 g  pour une femme enceinte comme pour un adulte bien portant. En revanche, il faut veiller \u00e0 cet apport quotidien car la constipation est fr\u00e9quente  enceinte, les intestins pouvant devenir paresseux."
+}, {
+  "id": 80,
+  "question": "J'ai besoin de plus de graisses (ou lipides) quand je suis enceinte",
+  "quiz_id": 25,
+  "position": 7,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Je n\u2019ai pas besoin de plus de lipides lorsque je suis enceinte mais je dois particuli\u00e8rement veiller \u00e0 leur qualit\u00e9. Je dois privil\u00e9gier les aliments sources d\u2019om\u00e9ga 3 comme une c.s d\u2019huile vierge de colza 2 fois par jour et deux portions de poisson dont un gras par semaine ."
+}, {
+  "id": 81,
+  "question": "J'ai besoin de plus de vitamine A quand je suis enceinte",
+  "quiz_id": 25,
+  "position": 8,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Hormis au dernier trimestre o\u00f9 les besoins sont l\u00e9g\u00e8rement augment\u00e9s, une femme enceinte a les m\u00eames besoins en vitamine A qu\u2019un adulte bien portant.\r\nIl faut veiller \u00e0 ne pas l\u2019apporter en exc\u00e8s car au del\u00e0 de  10 fois l'apport recommand\u00e9, elle a un effet t\u00e9ratog\u00e8ne (risques de malformations du foetus)."
+}, {
+  "id": 82,
+  "question": "J'ai besoin de plus de vitamine D quand je suis enceinte",
+  "quiz_id": 25,
+  "position": 9,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Les besoins en vitamine D sont identiques pur une femme enceinte et un adulte bien portant . En revanche, 80% des apports recommand\u00e9s en vitamine D ne seraient pas couverts pour la plupart d\u2019entre nous . Il est donc capital de veiller \u00e0 ces apports!"
+}, {
+  "id": 83,
+  "question": "Avec la cuisson \u00e0 la vapeur, on cuit des pommes de terre en 20 minutes environ",
+  "quiz_id": 21,
+  "position": 1,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, en fonction de leur taille, on peut cuire les pommes de terre \u00e0 la vapeur entre 10 et 25 minutes."
+}, {
+  "id": 84,
+  "question": "La dur\u00e9e n\u00e9cessaire pour avoir une cuisson dite \u201cbleue\u201d d\u2019une bavette est de 5 minutes par face",
+  "quiz_id": 21,
+  "position": 2,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Pour une cuisson \u201cbleue\u201d d\u2019une bavette, il suffit de la cuire 30 secondes par face, \u00e0 feu vif ; c\u2019est ce que l\u2019on appelle un aller-retour. A coeur, la viande atteint environ 50\u00b0C seulement. L\u2019ext\u00e9rieur sera saisi, mais l\u2019int\u00e9rieur restera cru, \u00e0 peine ti\u00e8de."
+}, {
+  "id": 85,
+  "question": "Pour un oeuf mollet, la dur\u00e9e de cuisson est de 9 minutes",
+  "quiz_id": 21,
+  "position": 3,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Avec ce temps de cuisson on obtiendra plut\u00f4t un oeuf dur! Un oeuf mollet se cuit en 6 minutes avec un d\u00e9part dans l\u2019eau bouillante."
+}, {
+  "id": 86,
+  "question": "La cuisson des moules met moins de 10 minutes",
+  "quiz_id": 21,
+  "position": 4,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, les moules se cuisent 5 \u00e0 10 minutes, \u00e0 feu vif, dans une casserole. Pour point de rep\u00e8re, d\u00e8s que celles-ci s\u2019ouvrent, c\u2019est qu\u2019elles sont cuites !\r\nA savoir que les moules peuvent aussi bien se d\u00e9guster crues."
+}, {
+  "id": 87,
+  "question": "A partir de l\u2019\u00e9bullition il faut environ 40 minutes pour cuire un tourteau",
+  "quiz_id": 21,
+  "position": 5,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Une fois l\u2019eau port\u00e9e \u00e0 \u00e9bullition, un tourteau cuit de 10 \u00e0 25 minutes maximum en fonction de son poids et de la cuisson d\u00e9sir\u00e9e."
+}, {
+  "id": 88,
+  "question": "La dur\u00e9e de cuisson des lentilles vertes \u00e0 l\u2019eau est de 30 minutes environ",
+  "quiz_id": 21,
+  "position": 6,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, les lentilles vertes se cuisent en moyenne 30 minutes, dans 3 fois leur volume en eau, avec un d\u00e9part \u00e0 l\u2019eau froide."
+}, {
+  "id": 89,
+  "question": "Un flan n\u00e9cessite environ 45 minutes de cuisson au four \u00e0 150 \u00b0C",
+  "quiz_id": 21,
+  "position": 7,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, la cuisson d\u2019un flan dure 45 minutes \u00e0 150\u00b0C (thermostat 5). La cuisson peut \u00eatre plus rapide, \u00e0 180\u00b0C (thermostat 6) il faut compter 35 minutes."
+}, {
+  "id": 90,
+  "question": "Un g\u00e2teau au yaourt n\u00e9cessite environ 30 minutes de cuisson au four \u00e0 180\u00b0C",
+  "quiz_id": 21,
+  "position": 8,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, pour un g\u00e2teau au yaourt, il faut compter 30 minutes de cuisson au four \u00e0 180\u00b0C."
+}, {
+  "id": 91,
+  "question": "Parmi les sources de calcium, on retrouve certaines eaux, les sardines, les fruits et l\u00e9gumes",
+  "quiz_id": 26,
+  "position": 1,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, la moyenne de calcium dans 100 g de l\u00e9gumes est de 40 mg, les plus riches \u00e9tant ceux \u00e0 feuilles vertes. Celle des fruits est de 30 mg de calcium pour 100 g. \r\nDans 100 g de sardines en bo\u00eete, on retrouve 300 mg de calcium, car nous consommons les ar\u00eates qui en sont riches ! \r\nSachant que pour les adultes, les apports recommand\u00e9s en calcium sont de 900 mg\/jour, avec 3 portions de l\u00e9gumes (400 g), 2 portions de fruits (300 g) et 2 sardines (100 g), on atteint 550 mg de calcium soit pr\u00e8s de 2\/3 des recommandations !"
+}, {
+  "id": 92,
+  "question": "Parmi les sources de vitamine B9, on retrouve les ch\u00e2taignes, les pois chiches, le melon, les noisettes",
+  "quiz_id": 26,
+  "position": 2,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "Pour 100 g des aliments suivants, la vitamine B9 se trouve \u00e0 hauteur de 70  \u00b5g dans les ch\u00e2taignes, 60 \u00b5g dans les noisettes, 36 \u00b5g dans les pois chiches et 23 \u00b5g dans le melon.\r\nA savoir que les apports recommand\u00e9s en vitamine B9 sont de 600 \u00b5g pour les femmes enceintes contre 330 \u00b5g  pour un adulte bien portant homme ou femme. Ceci explique qu'une femme  est syst\u00e9matiquement suppl\u00e9ment\u00e9e lorsqu'elle est enceinte!"
+}, {
+  "id": 93,
+  "question": "Parmi les sources d'iode, on retrouve la viande rouge, le boudin noir bien cuit, le soja",
+  "quiz_id": 26,
+  "position": 3,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "100 g de soja  ne contiennent que 0,6 \u00b5g d\u2019iode. Pour 100 g de viande rouge c\u2019est  10 fois plus  avec 6 \u00b5g ! Quant au boudin noir, il en contient 40 \u00b5g pour 100 g, soit pr\u00e8s d\u2019un quart des 200 \u00b5g recommand\u00e9s par jour pour une femme enceinte !"
+}, {
+  "id": 94,
+  "question": "Parmi les sources de fer, on retrouve le poisson, le sel, les \u0153ufs",
+  "quiz_id": 26,
+  "position": 4,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "En effet, le poisson et les oeufs sont sources de fer contrairement au sel.\r\n100 g de poisson contiennent 0,7 mg de fer, 100 g d\u2019oeufs en contiennent 1,8 mg alors que 100 g de sel n\u2019en contiennent que tr\u00e8s peu : 0,3 mg. \r\nSachant qu\u2019il faut 11 mg de fer par jour, si on est un homme ou une femme sans pertes menstruelles abondantes,  2 oeufs repr\u00e9sentent 16 % de  cet apport recommand\u00e9 quotidien."
+}, {
+  "id": 95,
+  "question": "Parmi les sources de vitamine D, on retrouve les produits laitiers entiers, les poissons gras et les \u0153ufs",
+  "quiz_id": 26,
+  "position": 5,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Au regard des recommandations nutritionnelles, les poissons gras sont une source importante de vitamine D avec des apports sup\u00e9rieurs \u00e0 10 \u00b5g en moyenne pour 100 g (pour le foie de morue, le tilapia, le fl\u00e9tan noir, la truite saumon\u00e9e, le hareng fum\u00e9 et les sardines). En revanche , les produits laitiers et les oeufs en contiennent  10 fois moins, il faudrait donc en  consommer une tr\u00e8s grande quantit\u00e9 sur la journ\u00e9e pour s'approcher des recommandations nutritionnelles"
+}, {
+  "id": 96,
+  "question": "Parmi les sources de fibres, on retrouve les l\u00e9gumes secs, les fruits secs, les graines ol\u00e9agineuses",
+  "quiz_id": 26,
+  "position": 6,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, les graines ol\u00e9agineuses sont la premi\u00e8re source de fibres, suivis des l\u00e9gumes secs, des l\u00e9gumes et des fruits.\r\nLes teneurs en fibres des graines ol\u00e9agineuses vont de 3 (noix de cajou grill\u00e9e sal\u00e9e) \u00e0 27 g (graine de lin) pour 100 g.\r\nDans les l\u00e9gumes secs cuits (haricots, pois cass\u00e9s, pois chiches, lentilles), on trouve de 6 \u00e0 17 g pour 100 g.\r\nDans les fruits secs, il y a entre 4g (raisins secs) et 10 g (figue s\u00e9ch\u00e9e) de fibres pour 100 g.\r\nNotons que les apports recommand\u00e9s en fibres sont de 25 g par jour, pour les adultes comme pour les femmes enceintes."
+}, {
+  "id": 97,
+  "question": "Pour pr\u00e9venir la list\u00e9riose, je fais attention \u00e0 ne pas manger de fromages au lait cru.",
+  "quiz_id": 27,
+  "position": 1,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "La list\u00e9riose est une infection due \u00e0 une bact\u00e9rie pr\u00e9sente dans la nature et qui se retrouve dans certains aliments d'origine animale consomm\u00e9s crus comme la viande, le poisson ou les oeufs, et les produits laitiers au lait cru, c'est-\u00e0-dire principalement les p\u00e2tes molles.\r\nChez la femme enceinte, la list\u00e9riose peut provoquer un avortement ou un accouchement pr\u00e9matur\u00e9."
+}, {
+  "id": 98,
+  "question": "Pendant la grossesse, j'\u00e9vite formellement les viandes et poisson crus, peu cuits, fum\u00e9s, marin\u00e9s, les charcuteries non cuites",
+  "quiz_id": 27,
+  "position": 2,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "Effectivement ces produits sont crus et d'origine animale , j'\u00e9vite de les consommer pour pr\u00e9venir la list\u00e9riose."
+}, {
+  "id": 99,
+  "question": "Je peux conserver et manger dans les 3 jours de la mayonnaise maison",
+  "quiz_id": 27,
+  "position": 3,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "La mayonnaise est un produit \u00e0 risque car elle contient de l\u2019oeuf cru, qui est \u00e0 \u00e9viter pendant la grossesse."
+}, {
+  "id": 100,
+  "question": "Je peux manger des crudit\u00e9s de fruits et l\u00e9gumes en dehors de chez moi s'ils sont bio",
+  "quiz_id": 27,
+  "position": 4,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "M\u00eame si elles sont bio, j\u2019\u00e9vite les crudit\u00e9s en dehors de chez moi car elles peuvent entra\u00eener la toxoplasmose si leur nettoyage est imparfait. Par pr\u00e9caution, je n\u2019en mange que chez moi.\r\nNB: l\u2019avantage des v\u00e9g\u00e9taux bio est qu\u2019ils contiennent bien moins de pesticides que ceux de l\u2019agriculture conventionnelle."
+}, {
+  "id": 101,
+  "question": "Je peux manger sans probl\u00e8me du Beaufort, du Comt\u00e9 ou du Brie au lait cru tant que j'enl\u00e8ve la cro\u00fbte",
+  "quiz_id": 27,
+  "position": 5,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "M\u00eame en \u00f4tant la cro\u00fbte des fromages, je dois \u00e9viter les fromages au lait cru \u00e0 p\u00e2te molle. \r\nIci je peux donc consommer le comt\u00e9 et le beaufort qui sont des fromages \u00e0 p\u00e2tes dures (cuites) mais pas le brie !"
+}, {
+  "id": 102,
+  "question": "Pour lutter contre les naus\u00e9es matinales, rien de mieux que de ne pas je\u00fbner trop longtemps",
+  "quiz_id": 28,
+  "position": 1,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "Lors de la grossesse, il y a des modifications hormonales importantes. Ainsi, la femme enceinte peut faire des hypoglyc\u00e9mies si les repas sont distants de plus de 5 heures environ. \r\nA cause du je\u00fbne nocturne, on peut donc avoir des hypoglyc\u00e9mies qui entra\u00eenent des naus\u00e9es.\r\nPour lutter contre les naus\u00e9es, on recommande en journ\u00e9e de manger toutes les 4 \u00e0 5 heures, donc de ne sauter aucun repas.\r\nPour lutter contre les naus\u00e9es matinales, il est important d\u2019avoir un repas suffisamment adapt\u00e9 le soir (en \u00e9nergie et en volume)."
+}, {
+  "id": 103,
+  "question": "Je dois manger plus de graisses pour lutter contre la constipation",
+  "quiz_id": 28,
+  "position": 2,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "M\u00eame si, en effet, une consommation importante de graisses favorise le transit, il n\u2019est pas recommand\u00e9 d\u2019augmenter leur apport car l\u2019exc\u00e8s entra\u00eene entre autre une prise de poids. \r\nAinsi, on pr\u00e9conise d\u2019augmenter sa consommation de fibres, d\u2019eau et de pratiquer une activit\u00e9 physique mod\u00e9r\u00e9e, comme la marche."
+}, {
+  "id": 104,
+  "question": "Pour lutter contre les remont\u00e9es acides, j'\u00e9vite les aliments piquants, acides, les boissons gazeuses",
+  "quiz_id": 28,
+  "position": 3,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, pour lutter contre les reflux, il est recommand\u00e9 de limiter les aliments \u00e9pic\u00e9s, \u00e0 go\u00fbt fort, acides, les graisses cuites, les boissons gazeuses et les excitants (caf\u00e9, th\u00e9). Il est \u00e9galement recommand\u00e9 de ne pas s\u2019allonger tout de suite apr\u00e8s le repas et de porter des v\u00eatements serr\u00e9s."
+}, {
+  "id": 105,
+  "question": "Pour lutter contre les fringales, je fractionne mon alimentation et je fais une collation",
+  "quiz_id": 28,
+  "position": 4,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, en fractionnant mon alimentation, je mangerai en moins grande quantit\u00e9, mais plusieurs fois dans la journ\u00e9e avec une collation dans l\u2019apr\u00e8s-midi. Ainsi, je limite les sensations de faim importantes et donc les fringales."
+}, {
+  "id": 106,
+  "question": "Je peux boire un verre d'alcool par semaine",
+  "quiz_id": 29,
+  "position": 1,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Lorsque je suis enceinte, je ne dois pas boire d\u2019alcool du tout. En effet, la barri\u00e8re foeto-placentaire est perm\u00e9able et le foetus pourrait \u00eatre intoxiqu\u00e9."
+}, {
+  "id": 107,
+  "question": "Je dois manger au moins 2 poissons gras par semaine pour leur apport en om\u00e9ga 3",
+  "quiz_id": 29,
+  "position": 2,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Il est recommand\u00e9 de consommer 2 poissons par semaine dont  seulement 1 gras, pour leur apport en om\u00e9ga 3. \r\nEn effet, je ne dois pas d\u00e9passer cette quantit\u00e9 car les poissons gras peuvent contenir des polluants toxiques comme les m\u00e9taux lourds. (PNNS)"
+}, {
+  "id": 108,
+  "question": "Pour les tartines du matin, je passe aux margarines enrichies en phytost\u00e9rol",
+  "quiz_id": 29,
+  "position": 3,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Ces margarines sont d\u00e9di\u00e9es aux personnes ayant du cholest\u00e9rol  et non aux femmes enceintes ! \r\nLes margarines contenant des phytost\u00e9rols permettent  r\u00e9ellement baisser le taux de cholest\u00e9rol sanguin \u00e0 court terme  mais  nous ne connaissons pas leurs impacts \u00e0 long terme sur le corps humain  et encore moins sur le foetus..."
+}, {
+  "id": 109,
+  "question": "Pour apporter du fer, je dois manger du foie bien cuit",
+  "quiz_id": 29,
+  "position": 4,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "M\u00eame si le foie contient une quantit\u00e9 tr\u00e8s importante de fer (n\u00e9cessaire pour une grossesse optimale), il contient \u00e9galement une quantit\u00e9 importante de vitamine A. Consomm\u00e9e \u00e0 doses tr\u00e8s \u00e9lev\u00e9es, la vitamine A est t\u00e9ratog\u00e8ne (favorise les malformations de l\u2019embryon). M\u00eame si en r\u00e9alit\u00e9 ces doses sont quasiment impossibles \u00e0 atteindre avec une alimentation normale, par pr\u00e9caution on recommande d'\u00e9viter la consommation de foie pendant la grossesse !"
+}, {
+  "id": 110,
+  "question": "Je peux boire 3 caf\u00e9s par jour maximum",
+  "quiz_id": 29,
+  "position": 5,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "La recommandation impose de ne pas d\u00e9passer 300 mg de caf\u00e9ine par jour, notamment \u00e0 cause de son effet acc\u00e9l\u00e9rateur du rythme cardiaque. Cette quantit\u00e9 correspond \u00e0 environ 3 caf\u00e9s  filtre par jour."
+}, {
+  "id": 111,
+  "question": "J\u2019ai besoin de plus de prot\u00e9ines.",
+  "quiz_id": 30,
+  "position": 1,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "En \u00e9tant v\u00e9g\u00e9tarien, je n\u2019ai pas besoin de plus de prot\u00e9ines. Cependant,  en excluant les produits animaux, je restreins mes sources en prot\u00e9ines et je dois alors veiller \u00e0 la qualit\u00e9 de celles-ci . En effet,   les prot\u00e9ines v\u00e9g\u00e9tales sont de moins bonne qualit\u00e9 que les prot\u00e9ines animales."
+}, {
+  "id": 112,
+  "question": "Si je ne mange pas d\u2019oeuf, pas de poisson et peu de produits laitiers je risque d'avoir un d\u00e9ficit en vitamine D d\u2019origine alimentaire.",
+  "quiz_id": 30,
+  "position": 2,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, la vitamine D alimentaire est une vitamine liposoluble qui se retrouve principalement dans les produits d\u2019origine animale. En ne consommant pas de viande, d\u2019oeufs ou de produits laitiers, je peux  \u00eatre en d\u00e9ficit voire une carence en vitamine D."
+}, {
+  "id": 113,
+  "question": "Pour am\u00e9liorer la qualit\u00e9 de synth\u00e8se  des prot\u00e9ines v\u00e9g\u00e9tales parle corps humain, je dois associer les l\u00e9gumes secs et les c\u00e9r\u00e9ales",
+  "quiz_id": 30,
+  "position": 3,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, les prot\u00e9ines v\u00e9g\u00e9tales \u00e9tant de moins bonne qualit\u00e9 (avec moins d'acides amin\u00e9s essentiels) que les prot\u00e9ines animales, je dois apprendre \u00e0 faire de la compl\u00e9mentation nutritionnelle. Cela consiste \u00e0 associer des c\u00e9r\u00e9ales et des l\u00e9gumineuses (ou l\u00e9gumes secs) qui ont des apports en acides amin\u00e9s diff\u00e9rents et compl\u00e9mentaires. Associ\u00e9es, elles formeront une qualit\u00e9 de prot\u00e9ine \u00e9quivalente \u00e0 celle d\u2019une prot\u00e9ine animale."
+}, {
+  "id": 114,
+  "question": "Je dois particuli\u00e8rement faire attention \u00e0 mes apports en vitamine B12",
+  "quiz_id": 30,
+  "position": 4,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "La vitamine B12 est n\u00e9cessaire \u00e0 la production des cellules, globules rouges et au bon fonctionnement du syst\u00e8me nerveux. Elle se trouve essentiellement dans les produits d\u2019origine animale. Si je consomme des produits laitiers, je ne suis pas expos\u00e9 \u00e0 un d\u00e9ficit en B12. Si je consomme en plus des oeufs et du poisson, je m\u2019assure une bonne couverture nutritionnelle en B12. Dans le cas contraire, une suppl\u00e9mentation est indispensable."
+}, {
+  "id": 115,
+  "question": "Le fer des aliments v\u00e9g\u00e9taux est aussi bien absorb\u00e9 que celui des aliments animaux",
+  "quiz_id": 30,
+  "position": 5,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Le fer des aliments animaux (ou fer h\u00e9minique) est mieux absorb\u00e9 que le fer des aliments v\u00e9g\u00e9taux (ou fer non h\u00e9minique). En effet, en moyenne, le fer animal est absorb\u00e9 autour de 15 %  contre 5 % pour le fer v\u00e9g\u00e9tal."
+}, {
+  "id": 116,
+  "question": "Je dois veiller \u00e0 mes apports en zinc",
+  "quiz_id": 31,
+  "position": 1,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, le zinc est  un antioxydant majeur et  il est indispensable au renouvellement des cellules. Il se trouve principalement dans les aliments d\u2019origine animale. Si j'en consomme peu, je dois veiller davantage \u00e0 mes apports. Dans les aliments d\u2019origine v\u00e9g\u00e9tale, le zinc se retrouve dans les amandes et noisettes,  le pain de seigle, les pois cass\u00e9s, le boulgour, les lentilles, les graines de s\u00e9same , de pavot, de courges, ou encore le cacao \u00e0 70% de cacao ."
+}, {
+  "id": 117,
+  "question": "Si je ne mange pas de poisson, je peux compenser mes apports en om\u00e9ga 3 par des huiles riches en om\u00e9ga 3",
+  "quiz_id": 31,
+  "position": 2,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Les om\u00e9ga 3 d\u2019origine animale sont diff\u00e9rents des om\u00e9ga 3 d\u2019origine v\u00e9g\u00e9tale. Ainsi, je ne peux substituer les uns aux autres. A noter que l'EPA et DHA- omega 3 source animale- sont absents des huiles riches en om\u00e9ga 3, pour que le corps en fabrique il me faut encore plus d'apport en om\u00e9ga 3!"
+}, {
+  "id": 118,
+  "question": "Les boissons v\u00e9g\u00e9tales de type  jus d\u2019amande, de soja, de ch\u00e2taigne\u2026 contiennent autant de calcium que le lait de vache",
+  "quiz_id": 31,
+  "position": 3,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "En effet, les boissons de ce type sont naturellement peu riches en calcium. Heureusement elles sont fr\u00e9quemment enrichies et peuvent contenir l'\u00e9quivalent en calcium du lait de vache. Attention cependant,  le calcium ajout\u00e9 sera moins bien absorb\u00e9 que le calcium contenu dans le lait de vache."
+}, {
+  "id": 119,
+  "question": "Je dois veiller \u00e0 mes apports en s\u00e9l\u00e9nium",
+  "quiz_id": 31,
+  "position": 4,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, le s\u00e9l\u00e9nium, antioxydant essentiel,  se trouve en majorit\u00e9 dans les produits d\u2019origine animale. Ainsi, en tant que v\u00e9g\u00e9tarien, je dois veiller \u00e0 mes apports ; je peux \u00e9galement trouver du s\u00e9l\u00e9nium dans les graines ol\u00e9agineuses."
+}, {
+  "id": 120,
+  "question": "Pour am\u00e9liorer la qualit\u00e9 des prot\u00e9ines v\u00e9g\u00e9tales entre elles, je dois associer les l\u00e9gumes secs et des graines ol\u00e9agineuses \u00e0 mon plat",
+  "quiz_id": 31,
+  "position": 5,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Comme vu pr\u00e9c\u00e9demment, les prot\u00e9ines v\u00e9g\u00e9tales \u00e9tant de moins bonne qualit\u00e9 que les prot\u00e9ines animales, je dois apprendre \u00e0 faire de la compl\u00e9mentation nutritionnelle. Cela consiste \u00e0 associer des c\u00e9r\u00e9ales et des l\u00e9gumineuses (ou l\u00e9gumes secs) et non des l\u00e9gumes secs et des graines ol\u00e9agineuses."
+}, {
+  "id": 122,
+  "question": "Je dois favoriser les aliments \u00e0 IG (Index Glyc\u00e9mique) haut apr\u00e8s l\u2019effort",
+  "quiz_id": 32,
+  "position": 1,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Apr\u00e8s l\u2019effort, la consommation de glucides est importante, peu importe l\u2019IG (Index Glyc\u00e9mique) de ces derniers. En les associant avec des prot\u00e9ines, on favorise l\u2019entr\u00e9e des glucides dans les cellules\r\nmusculaires afin de reconstituer les stocks en glycog\u00e8ne (forme de stockage du sucre)."
+}, {
+  "id": 123,
+  "question": "Les antioxydants sont particuli\u00e8rement retrouv\u00e9s dans les viandes blanches",
+  "quiz_id": 32,
+  "position": 2,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Les sources d\u2019antioxydants sont les aliments riches en zinc, s\u00e9l\u00e9nium, vitamines A, C, E et polyph\u00e9nols (dont les flavono\u00efdes et les tanins). Ces \u00e9l\u00e9ments se retrouvent en faible quantit\u00e9 dans les viandes blanches."
+}, {
+  "id": 124,
+  "question": "Je dois favoriser les aliments riches en fibres avant l\u2019effort",
+  "quiz_id": 32,
+  "position": 3,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Au contraire, avant l\u2019effort, je dois particuli\u00e8rement limiter mes apports en fibres afin d\u2019\u00e9viter les troubles digestifs pendant l\u2019effort."
+}, {
+  "id": 125,
+  "question": "Si je veux augmenter ma masse musculaire, je dois manger plus de prot\u00e9ines",
+  "quiz_id": 32,
+  "position": 4,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, pour augmenter sa masse musculaire, il est n\u00e9cessaire d\u2019augmenter ses apports en prot\u00e9ines ET d'y associer une activit\u00e9 physique ou sportive. \r\nEn augmentant uniquement ses apports en prot\u00e9ines sans faire de sport, c\u2019est alors la masse grasse qui augmente \u2026!"
+}, {
+  "id": 126,
+  "question": "Pour optimiser mon hydratation, je dois boire de l\u2019eau en petite quantit\u00e9 mais r\u00e9guli\u00e8rement",
+  "quiz_id": 32,
+  "position": 5,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, une bonne hydratation est indispensable \u00e0 l\u2019organisme, d\u2019autant plus pour un sportif qui aura plus de pertes hydriques. Ainsi, il est recommand\u00e9 de boire de petites quantit\u00e9s r\u00e9guli\u00e8rement. Boire beaucoup d\u2019eau d\u2019un seul coup n\u2019est pas l\u2019id\u00e9al ; l\u2019organisme ne sera pas capable de tout absorber et en \u00e9limine une partie tr\u00e8s vite et cela peut \u00e9galement provoquer des inconforts digestifs."
+}, {
+  "id": 127,
+  "question": "Je dois consid\u00e9rablement r\u00e9duire mes apports en graisses, voire ne pas en consommer du tout",
+  "quiz_id": 32,
+  "position": 6,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Les mati\u00e8res grasses sont indispensables \u00e0 l\u2019organisme ; il ne faut pas arr\u00eater d\u2019en consommer. En effet, \u00e0 titre d\u2019exemple, toutes les membranes des cellules qui composent notre corps sont form\u00e9es de mol\u00e9cules graisseuses \u2026 il est alors \u00e9vident que les graisses sont importantes et qu\u2019il faut en consommer. Le tout est d'en contr\u00f4ler les quantit\u00e9s consomm\u00e9es."
+}, {
+  "id": 128,
+  "question": "Je dois prendre des boissons \u00e9nergisantes pour assurer un bon effort physique",
+  "quiz_id": 33,
+  "position": 1,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Les boissons \u00e9nergisantes sont riches en sucres (trop pour effectuer un exercice physique), trop acidifiantes, riches en caf\u00e9ine (diur\u00e9tique) et pauvres en sodium, notamment. Elles ne sont donc pas recommand\u00e9es. Elles ne doivent pas \u00eatre confondues avec les boissons \u00e9nerg\u00e9tiques, contenant des glucides et des \u00e9lectrolytes en quantit\u00e9s plus ou moins adapt\u00e9es."
+}, {
+  "id": 129,
+  "question": "Consommer de la bi\u00e8re apr\u00e8s l\u2019effort favorise la r\u00e9cup\u00e9ration",
+  "quiz_id": 33,
+  "position": 2,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Consommer de la bi\u00e8re apr\u00e8s l\u2019effort pour favoriser la r\u00e9cup\u00e9ration est un mythe. La meilleure boisson de r\u00e9cup\u00e9ration reste l\u2019eau et bien au contraire, la bi\u00e8re ralentit la r\u00e9cup\u00e9ration de part l\u2019\u00e9thanol qu\u2019elle contient. De plus, sa richesse en potassium favorise l\u2019\u00e9limination urinaire et donc les pertes en eau."
+}, {
+  "id": 130,
+  "question": "Plus il fait chaud, plus je dois consommer du sucre dans ma boisson de l\u2019effort",
+  "quiz_id": 33,
+  "position": 3,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Au contraire, plus il fait froid, plus la consommation de sucre doit \u00eatre importante afin d\u2019assurer des apports \u00e9nerg\u00e9tiques suffisants."
+}, {
+  "id": 131,
+  "question": "Les eaux riches en bicarbonates sont \u00e0 favoriser pour une bonne r\u00e9cup\u00e9ration",
+  "quiz_id": 33,
+  "position": 4,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, les eaux riches en bicarbonates sont mieux absorb\u00e9es et assimil\u00e9es par l\u2019organisme que des eaux plus neutres ; elles permettent donc une meilleure hydratation apr\u00e8s l\u2019effort et une meilleure r\u00e9cup\u00e9ration."
+}, {
+  "id": 132,
+  "question": "Quand je fais du sport, je dois augmenter ma consommation de glucides",
+  "quiz_id": 33,
+  "position": 5,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En fonction de l\u2019intensit\u00e9, de la dur\u00e9e de l\u2019effort et de la temp\u00e9rature, je peux avoir besoin de plus de glucides qu'habituellement pour apporter l'\u00e9nergie n\u00e9cessaire au bon fonctionnement de mon organisme."
+}, {
+  "id": 133,
+  "question": "Il y a autant de sucres dans une c.s de confiture que dans 4 morceaux de sucres",
+  "quiz_id": 34,
+  "position": 1,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "100 g de confiture contiennent 60 g de sucre.\r\nComme 4 morceaux p\u00e8sent 20 g et qu\u2019une c.s de confiture p\u00e8se 30 g, ceci repr\u00e9sente la m\u00eame quantit\u00e9, soit 20 g de sucres dans les 2 portions."
+}, {
+  "id": 134,
+  "question": "Il y a autant de sucres dans une pomme que dans 3 rondelles d\u2019ananas",
+  "quiz_id": 34,
+  "position": 2,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "Sachant qu\u2019une petite pomme p\u00e8se environ 150 g et contient 12 % de glucides, soit 18 g de sucres et sachant que 3 rondelles d\u2019ananas p\u00e8sent 150 g et que l\u2019ananas Victoria  (comme en bo\u00eete) contient 14 % de glucides, il y a autant de sucres dans une petite pomme que dans 3 rondelles d\u2019ananas, \u00e0 savoir 20 g environ."
+}, {
+  "id": 135,
+  "question": "Il y a autant de glucides dans 6 cuill\u00e8res \u00e0 soupe de riz blanc cuit (200 g) que dans 4 cuill\u00e8re \u00e0 soupe de farine blanche rase.",
+  "quiz_id": 34,
+  "position": 3,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, il y a autant de glucides dans 200g de riz blanc cuit que dans 4 cuill\u00e8res \u00e0 soupe de farine blanche rase, \u00e0 savoir 30 g (car il y a 75 % de glucides dans la farine et 30 % de glucides dans le riz blanc cuit)."
+}, {
+  "id": 136,
+  "question": "Il y a autant de glucides dans 1\/4 de baguette que dans 1.5 grande tranche de pain de mie",
+  "quiz_id": 34,
+  "position": 4,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "La baguette et le pain de mie contiennent tous deux 55 % de glucides. Sachant qu\u2019\u00bc de baguette et qu\u20191,5 grande tranche de pain de mie p\u00e8sent tous deux 60 g, il y a autant de glucides dans ces deux aliments, \u00e0 savoir environ 35 g de glucides."
+}, {
+  "id": 137,
+  "question": "Il y a autant de glucides dans 150 g de p\u00e2tes cuites que dans 3 pommes de terre de la taille d\u2019un oeuf",
+  "quiz_id": 34,
+  "position": 5,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Selon la table Ciqual :\r\nP\u00e2tes s\u00e8ches standard, cuites, non sal\u00e9es : 25\/100g\r\nPomme de terre, cuite (aliment moyen) : 17,2 \/100g\r\nDonc 150 p\u00e2tes = 37,5g de glucides\r\n3 pommes de terre de la taille d'un oeuf = 150g = 25,8g de glucides.\r\n4 pommes de terre de la taille d'un oeuf sont donc \u00e9quivalentes \u00e0 150g de p\u00e2tes cuites."
+}, {
+  "id": 138,
+  "question": "Il y a autant de sucres dans une c.s de p\u00e2te \u00e0 tartiner que dans 4 morceaux de sucres",
+  "quiz_id": 34,
+  "position": 6,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "100 g de p\u00e2te \u00e0 tartiner contiennent 60 g de sucre.\r\nComme 4 morceaux p\u00e8sent 20 g et qu\u2019une c.s de p\u00e2te \u00e0 tartiner p\u00e8se 30 g, ceci repr\u00e9sente la m\u00eame quantit\u00e9, soit 20 g de sucres dans les 2 portions."
+}, {
+  "id": 139,
+  "question": "Je dois favoriser les p\u00e2tes bien cuites pour diminuer leur IG (Index Glyc\u00e9mique)",
+  "quiz_id": 35,
+  "position": 1,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Au contraire, pour diminuer l\u2019IG des p\u00e2tes, je dois favoriser une cuisson al dente."
+}, {
+  "id": 140,
+  "question": "Plus je mixe les aliments, plus leur IG (Index Glyc\u00e9mique) augmente",
+  "quiz_id": 35,
+  "position": 2,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, plus les aliments sont mix\u00e9s, plus leur IG augmente."
+}, {
+  "id": 141,
+  "question": "Ajouter des mati\u00e8res grasses \u00e0 mes f\u00e9culents augmente leur IG (Index Glyc\u00e9mique)",
+  "quiz_id": 35,
+  "position": 3,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Au contraire, ajouter des mati\u00e8res grasses \u00e0 mes f\u00e9culents abaisse leur IG (Index Glyc\u00e9mique)."
+}, {
+  "id": 142,
+  "question": "Les fibres permettent de diminuer l\u2019IG (Index Glyc\u00e9mique) d'un repas\/d'un aliment",
+  "quiz_id": 35,
+  "position": 4,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, les fibres diminuent l\u2019IG (Index Glyc\u00e9mique) d\u2019une pr\u00e9paration car elles ralentissent l\u2019absorption des glucides."
+}, {
+  "id": 143,
+  "question": "Les f\u00e9culents ont un IG (Index Glyc\u00e9mique) bas car ils sont compos\u00e9s de glucides complexes ou sucres lents",
+  "quiz_id": 35,
+  "position": 5,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "La pr\u00e9sence de glucides complexes (autrefois appel\u00e9s sucres lents) dans les f\u00e9culents ne suffit pas pour dire s\u2019ils sont \u00e0 un IG bas ou haut. En effet, c\u2019est la composition de l\u2019amidon contenu dans les f\u00e9culents qui d\u00e9terminera leur Index Glyc\u00e9mique."
+}, {
+  "id": 144,
+  "question": "La CG (Charge Glyc\u00e9mique) est similaire \u00e0 l\u2019IG (Index Glyc\u00e9mique) sauf qu\u2019elle tient compte de la quantit\u00e9 de glucides (sucres) dans l\u2019aliment",
+  "quiz_id": 35,
+  "position": 6,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, la charge glyc\u00e9mique est plus pr\u00e9cise car elle prend en compte la quantit\u00e9 de glucides de l\u2019aliment en fonction de la portion ing\u00e9r\u00e9e."
+}, {
+  "id": 145,
+  "question": "La patate douce a un IG (Index Glyc\u00e9mique) plus haut que la pomme de terre, voil\u00e0 pourquoi elle a un go\u00fbt plus sucr\u00e9",
+  "quiz_id": 35,
+  "position": 7,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Au contraire, c\u2019est la pomme de terre qui a un IG (Index Glyc\u00e9mique) plus haut que la patate douce. Cette caract\u00e9ristique n\u2019a pas de lien avec le go\u00fbt plus sucr\u00e9 de l\u2019aliment mais avec la composition de l\u2019amidon."
+}, {
+  "id": 146,
+  "question": "La baguette tradition a un IG (Index Glyc\u00e9mique) haut",
+  "quiz_id": 35,
+  "position": 8,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "La baguette tradition a un IG (Index Glyc\u00e9mique) mod\u00e9r\u00e9 et non haut, gr\u00e2ce \u00e0 la pr\u00e9sence de levain et de fibres. La baguette normale a donc un IG plus haut!"
+}, {
+  "id": 147,
+  "question": "Les om\u00e9ga 3 permettent de maintenir une bonne sant\u00e9 cardio-vasculaire",
+  "quiz_id": 36,
+  "position": 1,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, la consommation d\u2019om\u00e9ga 3 permet de diminuer la quantit\u00e9 de triglyc\u00e9rides dans le sang. Ce sont des graisses qui, en exc\u00e8s, participent au d\u00e9veloppement de maladies cardio-vasculaires.\r\nDe plus les om\u00e9ga 3 entra\u00eenent une diminution de la pression art\u00e9rielle chez les personnes pr\u00e9sentant une hypertension art\u00e9rielle."
+}, {
+  "id": 148,
+  "question": "Les margarines enrichies en phytost\u00e9rols permettent d'abaisser le taux de cholest\u00e9rol sanguin.",
+  "quiz_id": 36,
+  "position": 2,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "Consomm\u00e9s sur le court terme, \u00e0 hauteur de 2 g par jour, les \u00e9tudes montrent que les phytost\u00e9rols abaissent le taux de cholest\u00e9rol sanguin; cependant,  nous n'avons pas de recul sur le moyen terme et  une consommation dans une proportion  de 2 g de phytost\u00e9rols  correspond \u00e0 30 g de margarine. Ainsi, une telle quantit\u00e9 diminuerait la consommation des autres graisses notamment celles riches en om\u00e9ga 3, qui, elles, sont reconnues pour leurs b\u00e9n\u00e9fices au niveau cardio- vasculaire. A consommer avec mod\u00e9ration !"
+}, {
+  "id": 149,
+  "question": "On retrouve une grande quantit\u00e9 de cholest\u00e9rol dans les crustac\u00e9s",
+  "quiz_id": 36,
+  "position": 3,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, les fruits de mer sont riches en cholest\u00e9rol ; \u00e0 titre de comparaison, la teneur en cholest\u00e9rol pour les viandes varie de 20 \u00e0 120 mg pour 100 g contre de 75 \u00e0 160 mg pour 100 g pour les fruits de mer."
+}, {
+  "id": 150,
+  "question": "Les antioxydants permettent d\u2019avoir une bonne sant\u00e9 cardio-vasculaire",
+  "quiz_id": 36,
+  "position": 4,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "Les antioxydants permettent de lutter contre la production de radicaux libres, ces derniers \u00e9tant \u00e0 l\u2019origine de l\u2019oxydation des cellules. Donc les antioxydants luttent contre le vieillissement cellulaire et, de fait, contre les maladies associ\u00e9es au vieillissement, dont celles cardio-vasculaires."
+}, {
+  "id": 151,
+  "question": "Les fibres permettent de diminuer le taux de cholest\u00e9rol sanguin",
+  "quiz_id": 36,
+  "position": 5,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, les fibres limitent l\u2019absorption du cholest\u00e9rol et permettent donc de diminuer son taux dans le sang."
+}, {
+  "id": 152,
+  "question": "Adopter une alimentation \u00e0 IG (Index Glyc\u00e9mique) bas ne change rien \u00e0 la sant\u00e9 cardio-vasculaire",
+  "quiz_id": 36,
+  "position": 6,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Des \u00e9tudes ont montr\u00e9 qu\u2019une alimentation \u00e0 IG (Index Glyc\u00e9mique) \u00e9lev\u00e9 augmente le risque de maladies cardio-vasculaires. Ainsi, en adoptant une alimentation \u00e0 IG bas, je limite les risques et entretien une meilleure sant\u00e9 cardio-vasculaire."
+}, {
+  "id": 153,
+  "question": "Limiter ses apports en sel ne change rien \u00e0 la sant\u00e9 cardio-vasculaire",
+  "quiz_id": 36,
+  "position": 7,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Bien au contraire ! Une alimentation riche en sel augmente la tension art\u00e9rielle et donc fragilise la sant\u00e9 cardio-vasculaire. En effet, le sel favorise la r\u00e9tention d\u2019eau et donc de sang ;  avec plus de volume, le coeur travaille alors plus pour distribuer le sang dans l\u2019organisme, ce qui favorise sa fatigue pr\u00e9matur\u00e9e."
+}, {
+  "id": 154,
+  "question": "L\u2019huile de palme est \u00e0 proscrire pour avoir une bonne sant\u00e9 cardio-vasculaire",
+  "quiz_id": 36,
+  "position": 8,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "L\u2019huile de palme n\u2019est pas \u00e0 proscrire pour avoir une bonne sant\u00e9 cardio-vasculaire ; seule sa quantit\u00e9 sera \u00e0 limiter du fait de son profil nutritionnel riche en acides gras satur\u00e9s. Il faut, tant que possible, la choisir vierge et diversifier son alimentation."
+}, {
+  "id": 155,
+  "question": "Intol\u00e9rance alimentaire et allergie alimentaire sont identiques",
+  "quiz_id": 37,
+  "position": 1,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Une allergie implique un ph\u00e9nom\u00e8ne immunologique en r\u00e9ponse \u00e0 un allerg\u00e8ne, c\u2019est-\u00e0-dire que l\u2019organisme consid\u00e8re l\u2019allerg\u00e8ne comme un \u00e9l\u00e9ment \u00e9tranger et dangereux que le syst\u00e8me immunitaire va alors vouloir \u00e9liminer au plus vite.\r\nEn revanche, une intol\u00e9rance ne met pas du tout en jeu le syst\u00e8me immunitaire. Il s\u2019agit plut\u00f4t d\u2019une difficult\u00e9 du syst\u00e8me digestif \u00e0 dig\u00e9rer et\/ou absorber un aliment, pour diverses raisons en fonction de l\u2019intol\u00e9rance."
+}, {
+  "id": 156,
+  "question": "Avec l\u2019\u00e2ge, on synth\u00e9tise de moins en moins la lactase (mol\u00e9cule permettant de dig\u00e9rer le lactose)",
+  "quiz_id": 37,
+  "position": 2,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, \u00e0 l\u2019\u00e2ge adulte, la lactase est moins synth\u00e9tis\u00e9e que chez les enfants. Ainsi, une personne qui ne consomme que peu de lait depuis son enfance, n\u2019aura pas entretenu cette synth\u00e8se et aura probablement des troubles digestifs lorsqu\u2019il en consomme. Ce n\u2019est en rien une allergie, simplement, le corps n\u2019ayant pas cette mol\u00e9cule, il devient incapable de dig\u00e9rer le lait. Dans les fromages et produits laitiers, la quantit\u00e9 de lactose est bien inf\u00e9rieure, voire nulle, ce qui explique le fait que leur digestion soit mieux tol\u00e9r\u00e9e."
+}, {
+  "id": 157,
+  "question": "Plus un fromage est affin\u00e9, plus il contient du lactose",
+  "quiz_id": 37,
+  "position": 3,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Au contraire, plus un fromage est affin\u00e9 et moins il contient de lactose car c\u2019est lors de l\u2019affinage que les bact\u00e9ries lactiques consomment le lactose. \r\nDonc, le camembert, le comt\u00e9 ou la fourme d\u2019Ambert n\u2019en contiennent pas alors que les fromages frais tels que la faisselle ou le fromage blanc en contiennent."
+}, {
+  "id": 158,
+  "question": "Les sympt\u00f4mes de l\u2019intol\u00e9rance au lactose d\u00e9pendent de la quantit\u00e9 de lactose ing\u00e9r\u00e9",
+  "quiz_id": 37,
+  "position": 4,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, il y a une relation proportionnelle entre la quantit\u00e9 de lactose ing\u00e9r\u00e9 et les sympt\u00f4mes de l\u2019intol\u00e9rance. Plus il y a de lactose, plus les sympt\u00f4mes seront forts."
+}, {
+  "id": 159,
+  "question": "Les sympt\u00f4mes de l\u2019intol\u00e9rance au lactose d\u00e9pendent de la cuisson du lactose",
+  "quiz_id": 37,
+  "position": 5,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "La cuisson hydrolyse (ou d\u00e9compose) le lactose en glucose et galactose, ce qui facilite sa digestion.\r\nAinsi, chez une personne faiblement intol\u00e9rante, les aliments cuits contenant du lactose seront mieux tol\u00e9r\u00e9s. En revanche, cela pourrait ne pas \u00eatre suffisant pour les personnes fortement intol\u00e9rantes."
+}, {
+  "id": 160,
+  "question": "On peut d\u00e9lactoser un lait en y ajoutant des lactases",
+  "quiz_id": 37,
+  "position": 6,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, pour d\u00e9lactoser un lait, il est possible d\u2019y ajouter des lactases. Ainsi, le lactose sera d\u00e9compos\u00e9, comme \u201cdig\u00e9r\u00e9\u201d en glucose et galactose et l\u2019intol\u00e9rance sera att\u00e9nu\u00e9e."
+}, {
+  "id": 161,
+  "question": "Un intol\u00e9rant au lactose peut quand m\u00eame consommer des yaourts",
+  "quiz_id": 37,
+  "position": 7,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet,  m\u00eame si les yaourts contiennent du lactose,  lors de leur fabrication, la cuisson et la pr\u00e9sence de bact\u00e9ries lactiques permettent de faciliter la digestion de celui-ci.\r\nAinsi, un intol\u00e9rant au lactose pourra en consommer."
+}, {
+  "id": 162,
+  "question": "Le lactose est un glucide (ou sucre)",
+  "quiz_id": 37,
+  "position": 8,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "Le lactose est en effet un type de glucide, qui est en fait compos\u00e9 de 2 glucides : le glucose et le galactose."
+}, {
+  "id": 164,
+  "question": "Les galettes bretonnes, dites de bl\u00e9 noir et \u00e9labor\u00e9es avec du sarrasin sont \u00e0 proscrire",
+  "quiz_id": 38,
+  "position": 1,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Le sarrasin est en effet \u00e9galement appel\u00e9 bl\u00e9 noir, or il n\u2019a rien \u00e0 voir avec le bl\u00e9 ; c\u2019est un faux ami. Cette c\u00e9r\u00e9ale ne contient pas de gluten, \u00e0 l\u2019inverse du bl\u00e9. Ainsi, les personnes intol\u00e9rantes au gluten peuvent en consommer."
+}, {
+  "id": 165,
+  "question": "Les c\u00e9r\u00e9ales dont les premi\u00e8res lettres en majuscules \u00e9crivent le nom SABOT sont \u00e0 proscrire chez les intol\u00e9rants au gluten",
+  "quiz_id": 38,
+  "position": 2,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, ce moyen mn\u00e9motechnique permet aux  intol\u00e9rants au gluten de retenir quelles c\u00e9r\u00e9ales sont \u00e0  proscrire:  le Seigle, l\u2019Avoine, le Bl\u00e9, l\u2019Orge et le Triticale. Pour l\u2019avoine, une controverse existe sur son effet chez les personnes intol\u00e9rantes au gluten. (contamination par les pollens des cultures de bl\u00e9 et d'avoine souvent plant\u00e9es \u00e0 c\u00f4t\u00e9)"
+}, {
+  "id": 166,
+  "question": "L\u2019\u00e9peautre ne contient pas de gluten",
+  "quiz_id": 38,
+  "position": 3,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "L\u2019\u00e9peautre est une c\u00e9r\u00e9ale ancienne qui est un anc\u00eatre du bl\u00e9 et contient du gluten, mais en moins grande quantit\u00e9 que dans le bl\u00e9.\r\nIl existe le petit \u00e9peautre et le grand \u00e9peautre."
+}, {
+  "id": 167,
+  "question": "Le quinoa ne contient pas de gluten",
+  "quiz_id": 38,
+  "position": 4,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, le quinoa ne contient pas de gluten."
+}, {
+  "id": 168,
+  "question": "On peut diagnostiquer une intol\u00e9rance au gluten gr\u00e2ce \u00e0 une biopsie",
+  "quiz_id": 38,
+  "position": 5,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "Une biopsie de l\u2019intestin gr\u00eale permet en effet de poser le diagnostic d\u2019une intol\u00e9rance au gluten. Elle consiste au pr\u00e9l\u00e8vement d\u2019un petit morceau de tissu de l\u2019intestin gr\u00eale, lors d\u2019une fibroscopie. Lors de l\u2019analyse, on va rechercher la pr\u00e9sence d\u2019\u00e9ventuelles l\u00e9sions et\/ou une atrophie des villosit\u00e9s (petits \u201ccils\u201d pr\u00e9sents sur la paroi)."
+}, {
+  "id": 169,
+  "question": "Le nom de la pathologie associ\u00e9e \u00e0 l\u2019intol\u00e9rance au gluten est la maladie coeliaque",
+  "quiz_id": 38,
+  "position": 6,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, la maladie de l\u2019intol\u00e9rance au gluten s'appelle la maladie coeliaque. C\u2019est une maladie auto-immune de la muqueuse intestinale que l'on diagnostique avec un pr\u00e9l\u00e8vement appel\u00e9 biopsie."
+}, {
+  "id": 170,
+  "question": "Hypersensibilit\u00e9 et intol\u00e9rance au gluten sont identiques",
+  "quiz_id": 38,
+  "position": 7,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "L\u2019hypersensibilit\u00e9 et l\u2019intol\u00e9rance au gluten (ou maladie coeliaque) sont 2 choses diff\u00e9rentes.\r\nL\u2019hypersensibilit\u00e9 au gluten est repr\u00e9sent\u00e9e par des sympt\u00f4mes digestifs principalement, se rapprochant de l\u2019intol\u00e9rance mais dont la biopsie  se r\u00e9v\u00e8le n\u00e9gative. Les personnes \u00e9tant hypersensibles ne sont pas oblig\u00e9es de supprimer totalement les produits contenant du gluten en fonction du degr\u00e9 d'hypersensibilit\u00e9 qui varie d\u2019une personne \u00e0 l\u2019autre.\r\nL\u2019intol\u00e9rance au gluten ou maladie coeliaque \u00e0 proprement dit, est une maladie auto-immune de la muqueuse intestinale dont le traitement est l\u2019\u00e9viction totale de toute source alimentaire de gluten. Les sympt\u00f4mes sont g\u00e9n\u00e9ralement forts et tr\u00e8s handicapants ; la maladie est g\u00e9n\u00e9ralement pr\u00e9sente d\u00e8s l\u2019enfance."
+}, {
+  "id": 171,
+  "question": "Le gluten est une prot\u00e9ine",
+  "quiz_id": 38,
+  "position": 8,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, le gluten est une prot\u00e9ine, contenant plus pr\u00e9cis\u00e9ment  2 prot\u00e9ines: la gliadine et la glut\u00e9nine."
+}, {
+  "id": 172,
+  "question": "Je dois particuli\u00e8rement veiller \u00e0 mes apports en calcium",
+  "quiz_id": 39,
+  "position": 1,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, \u00e0 la m\u00e9nopause, le taux d\u2019oestrog\u00e8ne chute, il y a une diminution de la densit\u00e9 osseuse et le tissu osseux se d\u00e9t\u00e9riore ; les risques d\u2019ost\u00e9oporose sont alors augment\u00e9s et associ\u00e9s \u00e0 des risques de fractures. C\u2019est pourquoi, il est particuli\u00e8rement recommand\u00e9 de veiller \u00e0 ses apports en calcium, importants pour le maintien de la densit\u00e9 osseuse."
+}, {
+  "id": 173,
+  "question": "Je dois particuli\u00e8rement veiller \u00e0 mes apports en prot\u00e9ines",
+  "quiz_id": 39,
+  "position": 2,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, \u00e0 la m\u00e9nopause, il faut pr\u00e9venir la prise de poids, limiter la fonte musculaire et renforcer la densit\u00e9 osseuse. Les prot\u00e9ines sont alors importantes pour augmenter la sati\u00e9t\u00e9 des repas, entretenir le capital musculaire et osseux, en association avec une activit\u00e9 physique quotidienne."
+}, {
+  "id": 174,
+  "question": "Les om\u00e9ga 3 sont efficaces pour lutter contre les bouff\u00e9es de chaleur",
+  "quiz_id": 39,
+  "position": 3,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "Plusieurs \u00e9tudes ont montr\u00e9 que les om\u00e9ga 3 ont une action av\u00e9r\u00e9e sur les bouff\u00e9es de chaleur."
+}, {
+  "id": 175,
+  "question": "Les graines de lin sont efficaces pour lutter contre les bouff\u00e9es de chaleur",
+  "quiz_id": 39,
+  "position": 4,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "Les graines de lin sont une bonne source d'om\u00e9ga 3. Ceux-ci ont une action av\u00e9r\u00e9e sur les bouff\u00e9es de chaleur. Les \u00e9tudes se contredisent sur l'action des graines de lin contre les bouff\u00e9es de chaleur mais le nombre d'\u00e9tudes en faveur est sup\u00e9rieur \u00e0 celui en d\u00e9faveur."
+}, {
+  "id": 176,
+  "question": "Le soja est efficace pour lutter contre les bouff\u00e9es de chaleur",
+  "quiz_id": 39,
+  "position": 5,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, le soja contient des phytoestrog\u00e8nes, des hormones v\u00e9g\u00e9tales se rapprochant des oestrog\u00e8nes f\u00e9minins, qui permettent de lutter contre les bouff\u00e9es de chaleur. Attention toutefois aux exc\u00e8s car des risques peuvent \u00eatre associ\u00e9s \u00e0 une prise sur le long cours."
+}, {
+  "id": 177,
+  "question": "La consommation d\u2019alcool est efficace pour lutter contre les bouff\u00e9es de chaleur ?",
+  "quiz_id": 39,
+  "position": 6,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Au contraire, la consommation d\u2019alcool perturbe le taux de glucose sanguin (variations de glyc\u00e9mies), et peut majorer les bouff\u00e9es de chaleur."
+}, {
+  "id": 178,
+  "question": "Avoir une alimentation \u00e0 IG (Index Glyc\u00e9mique) bas est efficace pour lutter contre les bouff\u00e9es de chaleur",
+  "quiz_id": 39,
+  "position": 7,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "La variation de glyc\u00e9mie favorise les bouff\u00e9es de chaleur. Ainsi, avoir une alimentation \u00e0 IG (Index Glyc\u00e9mique) bas est efficace pour lutter contre ces derni\u00e8res."
+}, {
+  "id": 179,
+  "question": "La m\u00e9nopause entra\u00eene des effets sur la s\u00e9cheresse de la peau qui peut \u00eatre limit\u00e9e par une hydratation suffisante et un bon apport en antioxydant",
+  "quiz_id": 39,
+  "position": 8,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "La s\u00e9cheresse de la peau \u00e0 la m\u00e9nopause est due \u00e0 la baisse du taux d\u2019oestrog\u00e8nes.\r\nL\u2019hydratation de cette derni\u00e8re passe par une consommation d\u2019eau suffisante.\r\nLa consommation d\u2019antioxydants permet de lutter contre les ph\u00e9nom\u00e8nes d\u2019oxydation cellulaire, qui eux-m\u00eames interviennent sur la s\u00e9cheresse de la peau.\r\nA noter que les aliments les plus riches en antioxydants sont les fruits et l\u00e9gumes, \u00e9galement riches en eau !"
+}, {
+  "id": 180,
+  "question": "Pour convertir le sodium en sel, je multiplie la teneur en sodium par 2.5",
+  "quiz_id": 40,
+  "position": 1,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, pour obtenir la teneur en sel \u00e0 partir du sodium, je multiplie la teneur en sodium par 2,5.\r\nAinsi, 400 mg de sodium correspondent \u00e0 1 g de sel."
+}, {
+  "id": 181,
+  "question": "Il y a autant de sel dans 2 croissants que dans 8 biscottes",
+  "quiz_id": 40,
+  "position": 2,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, il y a autant de sel dans 2 croissants que dans 8 biscottes, \u00e0 savoir 1 g de sel environ, soit l\u2019\u00e9quivalent d\u2019un petit sachet individuel."
+}, {
+  "id": 182,
+  "question": "Les besoins en sel sont de 10 g par jour pour un adulte",
+  "quiz_id": 40,
+  "position": 3,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Les besoins en sel sont de 6 \u00e0 8 g par jour pour un adulte."
+}, {
+  "id": 183,
+  "question": "4 tranches de saucisson apportent 1g de sel",
+  "quiz_id": 40,
+  "position": 4,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, dans 4 tranches de saucisson, il y a environ 1 g de sel, soit l\u2019\u00e9quivalent d\u2019un petit sachet individuel."
+}, {
+  "id": 184,
+  "question": "Quand je fais du sport, je peux manger plus sal\u00e9 car je perds du sel en transpirant",
+  "quiz_id": 40,
+  "position": 5,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, la sueur contient du sel ; ainsi je peux manger un peu plus sal\u00e9 lorsque je fais du sport."
+}, {
+  "id": 185,
+  "question": "Pour limiter un exc\u00e8s de sel, je peux consommer des fruits et l\u00e9gumes",
+  "quiz_id": 40,
+  "position": 6,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, les fibres contenues dans les fruits et l\u00e9gumes permettent de limiter l\u2019absorption du sel.\r\nDe plus, ils sont riches en potassium ; ce min\u00e9ral permet de contrebalancer les apports en sodium (pour rappel, le sel contient du sodium)."
+}, {
+  "id": 186,
+  "question": "\u00bc de camembert et \u00bc de baguette apportent 1 g de sel chacun",
+  "quiz_id": 40,
+  "position": 7,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, il y a autant de sel dans \u00bc de baguette que dans \u00bc de camembert, \u00e0 savoir 1 g, ce qui correspond \u00e0 1 petit sachet individuel."
+}, {
+  "id": 187,
+  "question": "Afin d\u2019avoir le repas le plus \u00e9quilibr\u00e9 au restaurant chinois, je choisi :\r\nA: Rouleau de printemps - boeuf champignons noirs accompagn\u00e9 de riz - sorbet\r\nB: Nems - Porc au caramel accompagn\u00e9 de nouilles saut\u00e9es - perles de coco",
+  "quiz_id": 15,
+  "position": 1,
+  "firstanswer": "A",
+  "firstanswergood": true,
+  "secondanswer": "B",
+  "secondanswergood": false,
+  "comments": "En effet, le repas B contient une quantit\u00e9 importante de lipides \u00e0 cause des fritures (nems et nouilles) ainsi qu\u2019un apport cons\u00e9quent en sucres (caramel et perles de coco)."
+}, {
+  "id": 188,
+  "question": "Afin d\u2019avoir le repas le plus \u00e9quilibr\u00e9 au restaurant italien, je choisi :\r\nA: Caprese (salade de tomates et mozzarella) - P\u00e2tes au poulet, asperges et pleurotes - Panna cotta\r\nB: L\u00e9gumes grill\u00e9s - P\u00e2tes pomodoro (sauce tomate, oignons et basilic)",
+  "quiz_id": 15,
+  "position": 2,
+  "firstanswer": "A",
+  "firstanswergood": true,
+  "secondanswer": "B",
+  "secondanswergood": false,
+  "comments": "En effet, le repas B ne contient aucun apport en prot\u00e9ines d\u2019origine animale ; en effet, il n\u2019y a pas de viande (ou poisson ou oeuf) ni de produit laitier.\r\nNB : le repas B peut  \u00eatre r\u00e9\u00e9quilibr\u00e9 sur la journ\u00e9e ou le reste de la semaine."
+}, {
+  "id": 189,
+  "question": "Afin d\u2019avoir le repas le plus \u00e9quilibr\u00e9 au restaurant japonais, je choisi :\r\nA: Soupe miso - Brochette boeuf - fromage - Beignet banane-coco\r\nB: Sashimi - riz blanc - Salade de fruits",
+  "quiz_id": 15,
+  "position": 3,
+  "firstanswer": "A",
+  "firstanswergood": false,
+  "secondanswer": "B",
+  "secondanswergood": true,
+  "comments": "Le repas A contient une quantit\u00e9 de graisses plus importante avec moins de fruits que le repas B."
+}, {
+  "id": 190,
+  "question": "Afin d\u2019avoir le repas le plus \u00e9quilibr\u00e9 au restaurant oriental, je choisi :\r\nA: Tajine agneau, olives - Corne de gazelle\r\nB: Couscous poulet - Salade de fruits frais",
+  "quiz_id": 15,
+  "position": 4,
+  "firstanswer": "A",
+  "firstanswergood": false,
+  "secondanswer": "B",
+  "secondanswergood": true,
+  "comments": "Le repas A contient une quantit\u00e9 de graisses et de sucres plus importante avec une absence de fruits  par rapport au repas B."
+}, {
+  "id": 191,
+  "question": "Afin d\u2019avoir le repas le plus \u00e9quilibr\u00e9 \u00e0 la brasserie fran\u00e7aise, je choisi :\r\nA: Soupe de l\u00e9gumes, Quiche lorraine accompagn\u00e9e de sa salade, Cheesecake aux fruits rouges\r\nB: Feuillet\u00e9 au fromage, Papillote de poisson accompagn\u00e9e de l\u00e9gumes, Fromage blanc sucr\u00e9",
+  "quiz_id": 15,
+  "position": 5,
+  "firstanswer": "A",
+  "firstanswergood": false,
+  "secondanswer": "B",
+  "secondanswergood": true,
+  "comments": "Le repas A contient une quantit\u00e9 de graisses plus importante que le repas B."
+}, {
+  "id": 192,
+  "question": "Afin d\u2019avoir le repas le plus \u00e9quilibr\u00e9 au restaurant tha\u00ef, je choisi :\r\nA: Ravioli crevette vapeur, Kai pad king (\u00e9minc\u00e9 de poulet au gingembre saut\u00e9 au wok), Khao niao (riz gluant), Salade de fruits frais\r\nB: Kapao kung (Crevettes pimente\u0301es saute\u0301es au wok avec des feuilles de basilic thai) + Pad pak roam (l\u00e9gumes saut\u00e9s au wok), Sorbet",
+  "quiz_id": 15,
+  "position": 6,
+  "firstanswer": "A",
+  "firstanswergood": true,
+  "secondanswer": "B",
+  "secondanswergood": false,
+  "comments": "Le repas B ne contient pas de f\u00e9culents et est donc moins \u00e9quilibr\u00e9 que le repas A."
+}, {
+  "id": 193,
+  "question": "Afin d\u2019avoir le repas le plus \u00e9quilibr\u00e9 au restaurant indien, je choisi :\r\nA: Ra\u00efta (yaourt nature, concombre, oignons, piment et cumin) , Poulet tikka (poulet au yaourt, citron et \u00e9pices) + riz pulao (riz blanc aux l\u00e9gumes et aux \u00e9pices), Salade de fruits frais\r\nB: Naan nature (pain indien), Murgh Biryani (Blanc de poulet cuisine\u0301 au yaourt, aux tomates, aux e\u0301pinards ou petits pois et aux e\u0301pices) + riz aux \u00e9pices, Lassi (lait aux fruits mix\u00e9s)",
+  "quiz_id": 15,
+  "position": 7,
+  "firstanswer": "A",
+  "firstanswergood": true,
+  "secondanswer": "B",
+  "secondanswergood": false,
+  "comments": "Le repas B contient 2 sources de f\u00e9culents et la sauce d\u2019accompagnement est plus riche que celle du repas A. De plus, la quantit\u00e9 de sucre dans le dessert du repas B est sup\u00e9rieure au repas A."
+}, {
+  "id": 194,
+  "question": "Afin d\u2019avoir le repas le plus \u00e9quilibr\u00e9 en boulangerie, je choisi :\r\nA: Sandwich poulet crudit\u00e9 - Fromage blanc fruits rouges - Eau\r\nB: Salade de p\u00e2tes aux l\u00e9gumes grill\u00e9s - Flan coco - Jus de pomme",
+  "quiz_id": 15,
+  "position": 8,
+  "firstanswer": "A",
+  "firstanswergood": true,
+  "secondanswer": "B",
+  "secondanswergood": false,
+  "comments": "Le repas B est plus riche en sucres et moins en prot\u00e9ines."
+}, {
+  "id": 195,
+  "question": "J\u2019ai dans mon r\u00e9frig\u00e9rateur : des oeufs et du lait.\r\nIl me reste :  des poireaux, et rien dans mes placards.\r\nJe peux faire un flan de poireaux mais pas un clafoutis de poireaux.",
+  "quiz_id": 13,
+  "position": 1,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, pour r\u00e9aliser un flan de poireaux, il me faut des oeufs, du lait et des poireaux ! Je n\u2019ai pas besoin de farine, contrairement au clafoutis."
+}, {
+  "id": 196,
+  "question": "J\u2019ai dans mon r\u00e9frig\u00e9rateur et dans mes placards : du lait, de la farine, du beurre, du gruy\u00e8re r\u00e2p\u00e9, et du potiron.\r\nJe peux faire un flan de potiron mais pas un gratin de potiron.",
+  "quiz_id": 13,
+  "position": 2,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "En effet, pour faire un flan, des oeufs sont indispensables ! Mais je peux faire un gratin."
+}, {
+  "id": 197,
+  "question": "J\u2019ai dans mon placard et mon r\u00e9frig\u00e9rateur : du lait, de la farine, du beurre et des oeufs \r\nIl me reste : des courgettes\r\nJe peux faire un flan de courgettes mais pas un clafoutis de courgettes.",
+  "quiz_id": 13,
+  "position": 3,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "En effet, j'ai des oeufs et de la farine, je peux donc choisir l'un ou l'autre."
+}, {
+  "id": 198,
+  "question": "J\u2019ai de l\u2019eau\r\nIl me reste : des l\u00e9gumes\r\nJe peux faire un potage mais pas de velout\u00e9",
+  "quiz_id": 13,
+  "position": 4,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, pour un potage, je n\u2019ai besoin que d\u2019eau et de l\u00e9gumes, puis de sel et de poivre pour l\u2019assaisonnement.\r\nPour un velout\u00e9, j\u2019ai besoin de faire une liaison \u00e0 l\u2019oeuf ou de cr\u00e8me fra\u00eeche."
+}, {
+  "id": 199,
+  "question": "J\u2019ai dans mon r\u00e9frig\u00e9rateur : de l\u2019eau, des oeufs, de la cr\u00e8me fra\u00eeche\r\nIl me reste : des l\u00e9gumes\r\nJe peux faire un potage mais pas de velout\u00e9",
+  "quiz_id": 13,
+  "position": 5,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Un velout\u00e9 est un potage de l\u00e9gumes li\u00e9 avec de la cr\u00e8me et\/ou du jaune d\u2019oeuf. Dans ce cas, je peux donc faire les deux."
+}, {
+  "id": 200,
+  "question": "Avec uniquement le blanc de l'oeuf, je peux faire des financiers et de la mousse au chocolat",
+  "quiz_id": 13,
+  "position": 6,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Pour faire de la mousse au chocolat, j\u2019ai besoin des blancs ET des jaunes d\u2019oeufs alors que pour faire des financiers, j\u2019ai besoin uniquement de blancs d\u2019oeufs."
+}, {
+  "id": 201,
+  "question": "Avec uniquement du jaune d\u2019oeuf, je peux faire de la p\u00e2te sabl\u00e9e mais pas de la p\u00e2te feuillet\u00e9e",
+  "quiz_id": 13,
+  "position": 7,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Pour faire une p\u00e2te sabl\u00e9e, j\u2019ai en effet besoin de jaune d\u2019oeuf uniquement, en plus de la farine, du beurre.\r\nPour faire une p\u00e2te feuillet\u00e9e, je n\u2019ai pas besoin d\u2019oeuf, ni jaune ni blanc !"
+}, {
+  "id": 202,
+  "question": "Avec uniquement du jaune d\u2019oeuf, je peux faire de la cr\u00e8me br\u00fbl\u00e9e  mais pas d'\u00eele flottante",
+  "quiz_id": 13,
+  "position": 8,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, pour la cr\u00e8me br\u00fbl\u00e9e, seul le jaune d\u2019oeuf est n\u00e9cessaire. En revanche, l\u2019\u00eele flottante est principalement compos\u00e9e de blancs d\u2019oeufs mont\u00e9s en neige ; les jaunes seront utilis\u00e9s dans la r\u00e9alisation de la cr\u00e8me anglaise qui accompagne."
+}, {
+  "id": 203,
+  "question": "Le repas \u00e9quilibr\u00e9 parmi les suivants est le repas B :\r\nA: Salade de quinoa, avocat, mozzarella - Fromage blanc avec coulis de fruits rouges - Salade de fruits de saison\r\nB: Potage de l\u00e9gumes - Po\u00eal\u00e9e de courgettes et brocolis - Comt\u00e9 - Panna cotta fruit de la passion",
+  "quiz_id": 31,
+  "position": 6,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "En effet, le repas A comporte une portion de f\u00e9culents, un l\u00e9gume, un produit laitier et un fruit alors qu'il     manque une portion de f\u00e9culents dans le repas B."
+}, {
+  "id": 204,
+  "question": "Je peux boire une grande quantit\u00e9 d'eau pour emp\u00eacher une fringale.",
+  "quiz_id": 41,
+  "position": 1,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Boire une grande quantit\u00e9 d\u2019eau lorsque l\u2019on a faim peut la combler sur le moment. Or, ce ne serait que tromper ses sensations et ne pas \u00eatre en accord avec elles ! Un peu plus tard, frustration et faim reviendront  et avec elles, le \u201ccraquage\u201d incontr\u00f4l\u00e9 sera in\u00e9vitable. A terme, il y a m\u00eame des risques de pr\u00e9senter des troubles du comportement alimentaire."
+}, {
+  "id": 205,
+  "question": "Je dois m\u2019arr\u00eater de manger lorsque je commence \u00e0 avoir mal au ventre.",
+  "quiz_id": 41,
+  "position": 2,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Lorsque l\u2019on a mal au ventre, il est d\u00e9j\u00e0 \u201ctrop tard\u201d ! Le rassasiement est avant, c\u2019est une sensation importante \u00e0 retrouver pour \u00e9viter de trop manger pendant les repas. Bien \u00e9videmment, il convient \u00e9galement de bien mastiquer et de manger lentement."
+}, {
+  "id": 206,
+  "question": "La sensation de faim est diff\u00e9rente de l\u2019envie de manger.",
+  "quiz_id": 41,
+  "position": 3,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, la sensation de faim s\u2019installe progressivement et s\u2019accompagne de sympt\u00f4mes physiques. L\u2019envie est quant \u00e0 elle plut\u00f4t passag\u00e8re, elle va-et-vient et surtout, elle na\u00eet dans notre esprit avant tout, suite \u00e0 la vue ou \u00e0 l\u2019odeur de quelque chose par exemple. Elle peut aussi \u00eatre d\u2019origine \u00e9motionnelle."
+}, {
+  "id": 207,
+  "question": "Je dois toujours finir mon assiette.",
+  "quiz_id": 41,
+  "position": 4,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Finir son assiette est, pour certains d\u2019entre nous, grandement li\u00e9 \u00e0 notre \u00e9ducation et cela se comprend enti\u00e8rement. Le gaspillage alimentaire est en effet une cause noble pour laquelle nous avons tous un r\u00f4le \u00e0 jouer. Or, pour \u00eatre en accord avec nos sensations, il est important de savoir s\u2019arr\u00eater lorsque l\u2019on n'a plus faim. Ni une ni deux, on verse le reste dans une gamelle au r\u00e9frig\u00e9rateur, qui nous servira pour un autre repas. Ni gaspillage, ni surconsommation [et m\u00eame des \u00e9conomies], tout le monde sera content."
+}, {
+  "id": 208,
+  "question": "Je peux sauter un repas si je n\u2019ai pas faim.",
+  "quiz_id": 41,
+  "position": 5,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "Si je n\u2019ai pas faim, il n\u2019est en effet pas n\u00e9cessaire de prendre un repas. Je peux aussi simplement le d\u00e9caler \u00e0 plus tard."
+}, {
+  "id": 209,
+  "question": "Je ne dois pas manger de fruit le soir car c\u2019est riche en vitamine C et cela va m\u2019emp\u00eacher de dormir",
+  "quiz_id": 42,
+  "position": 1,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "La vitamine C stimule le syst\u00e8me immunitaire mais elle n\u2019est pas du tout \u201cexcitante\u201d."
+}, {
+  "id": 210,
+  "question": "La viande rouge le soir est d\u00e9conseill\u00e9e pour un bon endormissement",
+  "quiz_id": 42,
+  "position": 2,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "La viande rouge contient de la tyrosine, un acide amin\u00e9, composant de certaines prot\u00e9ines. Il a \u00e9t\u00e9 prouv\u00e9 que la pr\u00e9sence de cet acide amin\u00e9 emp\u00eache un bon endormissement.https:\/\/www.sante-et-nutrition.com\/nutrition-et-sommeil\/"
+}, {
+  "id": 211,
+  "question": "Trop manger le soir emp\u00eache un bon sommeil",
+  "quiz_id": 42,
+  "position": 3,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "La temp\u00e9rature interne de notre organisme conditionne les p\u00e9riodes de sommeil et d\u2019\u00e9veil.\r\nCertaines p\u00e9riodes sont propices \u00e0 une forte somnolence (vers 14h et le soir apr\u00e8s 22 h environ) ; on remarque \u00e0 ces moments un refroidissement de notre corps.\r\nLa digestion quant \u00e0 elle demande beaucoup d\u2019\u00e9nergie (surtout si le repas est copieux) \u00e0 l\u2019organisme et s\u2019accompagne d\u2019une augmentation de la temp\u00e9rature corporelle. Or, pour un bon endormissement, la temp\u00e9rature corporelle doit diminuer pour permettre un \u00e9tat de somnolence et entrer en phase d\u2019endormissement."
+}, {
+  "id": 212,
+  "question": "Boire de l\u2019alcool le soir me permet de mieux dormir",
+  "quiz_id": 42,
+  "position": 4,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Bien que la consommation d\u2019alcool puisse entra\u00eener un \u201ccoup de barre\u201d dans un premier temps, elle est loin de favoriser un sommeil r\u00e9parateur ! En effet, le sommeil sera d\u00e9grad\u00e9 et souvent perturb\u00e9, accompagn\u00e9 de plusieurs r\u00e9veils nocturnes. Cela correspond \u00e0 la disparition du sommeil profond en d\u00e9but de nuit - les phases 3 et 4 du sommeil disparaissent ! En fin de nuit, il y a un ph\u00e9nom\u00e8ne de compensation o\u00f9 l\u2019on a l\u2019impression de \u201cbien dormir\u201d, mais ce n\u2019est qu\u2019une illusion car le sommeil est bien moins r\u00e9parateur qu\u2019un d\u00e9but de nuit de bonne qualit\u00e9. L\u2019alcool peut \u00e9galement augmenter la temp\u00e9rature corporelle, ce qui diminue l\u2019endormissement."
+}, {
+  "id": 213,
+  "question": "Il est recommand\u00e9 de boire une tisane chaque soir avant de dormir",
+  "quiz_id": 42,
+  "position": 5,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Il peut \u00eatre recommand\u00e9 de boire une tisane aux vertus \u201cs\u00e9datives\u201d le soir, pour favoriser l\u2019endormissement comme une infusion (ou d\u00e9coction) de tilleul, coquelicot, basilic, marjolaine, verveine ou camomille. Pour autant toutes les tisanes n\u2019ont pas ces vertus voire m\u00eame la camomille et le tilleul en exc\u00e8s deviennent excitantes.\r\nEt attention toutefois \u00e0 ne pas en boire trop car vous pourriez avoir des risques de r\u00e9veils nocturnes pour aller uriner..."
+}, {
+  "id": 214,
+  "question": "Faire du sport le soir avant de dormir favorise le sommeil",
+  "quiz_id": 42,
+  "position": 6,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Il est vrai que la pratique d\u2019activit\u00e9 physique favorise un bon sommeil. Or, il est recommand\u00e9 de ne pas la pratiquer le soir, juste avant de dormir, car l\u2019endormissement risque alors d\u2019\u00eatre perturb\u00e9 !\r\nEn effet, l\u2019activit\u00e9 physique va augmenter notre temp\u00e9rature interne. Si elle est pratiqu\u00e9e en soir\u00e9e, il est recommand\u00e9 d\u2019attendre au moins 2 heures entre la s\u00e9ance de sport et le coucher, pour permettre \u00e0 l\u2019organisme de redescendre en temp\u00e9rature et favoriser un bon endormissement."
+}, {
+  "id": 215,
+  "question": "Les p\u00e2tes compl\u00e8tes sont plus sati\u00e9tog\u00e8nes que les p\u00e2tes non compl\u00e8tes",
+  "quiz_id": 10,
+  "position": 1,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, les p\u00e2tes compl\u00e8tes ont \u00e9t\u00e9 confectionn\u00e9es avec des grains de bl\u00e9 complets. Ces derniers contiennent encore l\u2019enveloppe de leur graine, ils sont donc plus riches en fibres. Cela augmente le temps de digestion et en fait des p\u00e2tes plus rassasiantes. C\u2019est le cas de tous les f\u00e9culents complets ou semi complets par rapport aux f\u00e9culents non complets."
+}, {
+  "id": 216,
+  "question": "La pomme de terre est plus sati\u00e9tog\u00e8ne que la patate douce",
+  "quiz_id": 10,
+  "position": 2,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Pour deux raisons . Le taux de fibres est 3 fois plus important dans la patate douce que dans la pomme de terre (4,9% vs 1,5%). Les glucides qui les composent sont de nature diff\u00e9rente ce qui entra\u00eene une assimilation plus glyc\u00e9miante pour la pomme de terre que pour la patate douce."
+}, {
+  "id": 217,
+  "question": "Tous les produits laitiers sont sati\u00e9tog\u00e8nes.",
+  "quiz_id": 10,
+  "position": 3,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "Les produits laitiers (lait, yaourts, laitages, fromage) se composent de prot\u00e9ines, lipides et glucides dans des proportions diff\u00e9rentes. Si les prot\u00e9ines et lipides n\u2019ont pas d\u2019impact sur l\u2019index glyc\u00e9mique (IG), les glucides en ont ; le glucide contenu dans les produits laitiers s\u2019appelle le lactose, comme son index glyc\u00e9mique (IG) est plus bas que les autres glucides, les produits laitiers sont plus rassasiants !"
+}, {
+  "id": 218,
+  "question": "Plus on cuit la viande, moins elle est sati\u00e9tog\u00e8ne.",
+  "quiz_id": 10,
+  "position": 4,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "La viande ne contient pas de glucide elle ne peut donc pas avoir d\u2019impact sur l\u2019IG. A ne pas confondre avec les f\u00e9culents qui, plus ils sont cuits, moins ils sont sati\u00e9tog\u00e8nes !"
+}, {
+  "id": 219,
+  "question": "Il faut manger en au moins 20 min pour ressentir la sati\u00e9t\u00e9",
+  "quiz_id": 10,
+  "position": 5,
+  "firstanswer": "Vrai",
+  "firstanswergood": true,
+  "secondanswer": "Faux",
+  "secondanswergood": false,
+  "comments": "En effet, la sensation de sati\u00e9t\u00e9 correspond \u00e0 un signal nerveux v\u00e9hicul\u00e9 par des homones (ghr\u00e9line) transmis de l\u2019estomac au cerveau lorsque l\u2019estomac se remplit. Il se d\u00e9clenche au minimum 20 min apr\u00e8s avoir commencer une prise alimentaire."
+}, {
+  "id": 220,
+  "question": "Intol\u00e9rance alimentaire et allergie alimentaire sont identiques",
+  "quiz_id": 38,
+  "position": 9,
+  "firstanswer": "Vrai",
+  "firstanswergood": false,
+  "secondanswer": "Faux",
+  "secondanswergood": true,
+  "comments": "Une allergie implique un ph\u00e9nom\u00e8ne immunologique en r\u00e9ponse \u00e0 un allerg\u00e8ne, c\u2019est-\u00e0-dire que l\u2019organisme consid\u00e8re l\u2019allerg\u00e8ne comme un \u00e9l\u00e9ment \u00e9tranger et dangereux que le syst\u00e8me immunitaire va alors vouloir \u00e9liminer au plus vite.\r\nEn revanche, une intol\u00e9rance ne met pas du tout en jeu le syst\u00e8me immunitaire. Il s\u2019agit plut\u00f4t d\u2019une difficult\u00e9 du syst\u00e8me digestif \u00e0 dig\u00e9rer et\/ou absorber un aliment, pour diverses raisons en fonction de l\u2019intol\u00e9rance."
+}]

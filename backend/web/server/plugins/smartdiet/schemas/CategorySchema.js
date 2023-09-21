@@ -18,6 +18,10 @@ const CategorySchema = new Schema({
     type: String,
     required: [true, 'L\'illustration est obligatoire'],
   },
+  order: {
+    type: Number,
+    required: false,
+  },
 }, schemaOptions)
 
 CategorySchema.virtual('targets', {

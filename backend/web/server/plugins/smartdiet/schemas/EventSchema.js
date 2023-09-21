@@ -1,5 +1,12 @@
+const {
+  APPOINTMENT_CURRENT,
+  APPOINTMENT_PAST,
+  APPOINTMENT_TO_COME,
+  EVENT_COLL_CHALLENGE,
+  EVENT_TYPE,
+  HOME_STATUS
+} = require('../consts')
 const moment = require('moment')
-const { EVENT_COLL_CHALLENGE, EVENT_TYPE, HOME_STATUS } = require('../consts')
 const mongoose = require('mongoose')
 const bcrypt=require('bcryptjs')
 const {schemaOptions} = require('../../../utils/schemas')
@@ -43,6 +50,7 @@ const EventSchema = new Schema({
   },
 }, schemaOptions)
 
+/* eslint-disable prefer-arrow-callback */
 EventSchema.virtual('type').get(function () {
   return null
 })
@@ -50,5 +58,12 @@ EventSchema.virtual('type').get(function () {
 EventSchema.virtual('duration').get(function () {
   return moment(this.end_date).diff(this.start_date, 'minutes')
 })
+
+EventSchema.virtual('status').get(function () {
+  return null
+})
+
+/* eslint-enable prefer-arrow-callback */
+
 
 module.exports = EventSchema

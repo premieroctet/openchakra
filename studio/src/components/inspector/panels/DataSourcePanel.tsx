@@ -36,11 +36,13 @@ const DataSourcePanel: React.FC = () => {
   const contextFilter = usePropsSelector('contextFilter')
   const filterAttribute = usePropsSelector('filterAttribute')
   const filterValue = usePropsSelector('filterValue')
+  const filterConstant = usePropsSelector('filterConstant')
   const filterAttribute2 = usePropsSelector('filterAttribute2')
   const filterValue2 = usePropsSelector('filterValue2')
   const contextAttribute = usePropsSelector('contextAttribute')
   const series_attributes = lodash.range(5).map(idx => usePropsSelector(`series_${idx}_attribute`))
   const series_labels = lodash.range(5).map(idx => usePropsSelector(`series_${idx}_label`))
+  const hidePagination = usePropsSelector('hidePagination')
   const shuffle = usePropsSelector('shuffle')
   const radioGroup = usePropsSelector('radioGroup')
   const [providers, setProviders] = useState<IComponent[]>([])
@@ -284,6 +286,16 @@ const DataSourcePanel: React.FC = () => {
           </FormControl>
         )}
         {CONTAINER_TYPE.includes(activeComponent ?.type) && (
+        <FormControl htmlFor="hidePagination" label='Hide pagination'>
+          <Checkbox
+            id="hidePagination"
+            name="hidePagination"
+            isChecked={hidePagination}
+            onChange={onCheckboxChange}
+          ></Checkbox>
+        </FormControl>
+        )}
+        {CONTAINER_TYPE.includes(activeComponent ?.type) && (
         <FormControl htmlFor="shuffle" label='Shuffle'>
           <Checkbox
             id="shuffle"
@@ -346,6 +358,15 @@ const DataSourcePanel: React.FC = () => {
                     </option>
                   ))}
               </Select>
+            </FormControl>
+            <FormControl htmlFor="filterConstant" label="Filter constant">
+              <Input
+                id="filterConstant"
+                onChange={setValueFromEvent}
+                name="filterConstant"
+                size="xs"
+                value={filterConstant || ''}
+              />
             </FormControl>
             <FormControl htmlFor="filterAttribute2" label="Filter attribute 2">
               <Select

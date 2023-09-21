@@ -18,6 +18,10 @@ const KeySchema = new Schema({
     type: String,
     required: false,
   },
+  order: {
+    type: Number,
+    required: false,
+  },
   spoons_count_for_trophy: {
     type: Number,
     required: [true, 'Le nombre de cuillères néecssaires pour un trophée est obligatoire']

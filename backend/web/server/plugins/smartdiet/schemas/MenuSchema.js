@@ -2,7 +2,8 @@ const {
   EVENT_DISCRIMINATOR,
   EVENT_MENU,
   EVENT_TYPE,
-  HARDNESS
+  HARDNESS,
+  MENU_PEOPLE_COUNT
 } = require('../consts')
 const mongoose = require('mongoose')
 const bcrypt=require('bcryptjs')
@@ -26,12 +27,20 @@ const MenuSchema = new Schema({
     default: new Date(),
     required: [true, 'La date de fin est obligatoire']
   },
+  document: {
+    type: String,
+    required: false,
+  }
 },
 {...schemaOptions, ...EVENT_DISCRIMINATOR}
 )
 
 MenuSchema.virtual('type').get(function() {
   return EVENT_MENU
+})
+
+MenuSchema.virtual('people_count').get(function() {
+  return MENU_PEOPLE_COUNT
 })
 
 MenuSchema.virtual("recipes", {

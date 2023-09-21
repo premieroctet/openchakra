@@ -34,15 +34,17 @@ const CheckboxGroupPreview = ({ component }: Props) => {
       console.error(err)
     }
   }
+
+  console.log(`DP is ${JSON.stringify(dp)}`)
   const values=dp?.enumValues || []
 
   if (props.dataSource && values && component.children?.length==0) {
   return (
-    <RadioGroup ref={ref} {...props}>
+    <CheckboxGroup ref={ref} {...props} style={{bgColor: 'red'}}>
       <Flex flexDirection={props.flexDirection} justifyContent={props.justifyContent}>
       {Object.keys(values).map((k, idx) => <Flex flexDirection='row'><Radio value={k} />{values[k]}</Flex>)}
       </Flex>
-    </RadioGroup>
+    </CheckboxGroup>
   )
   }
   else {

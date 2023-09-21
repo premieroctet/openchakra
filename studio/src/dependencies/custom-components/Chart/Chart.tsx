@@ -57,11 +57,20 @@ const OwnChart = (
       const font = isFontFamily ? props.fontFamily?.base : 'inherit'
       const isFontSize = props.hasOwnProperty('fontSize')
       const fontSize = isFontSize ? (parseInt(props.fontSize?.base, 10) || 12 ) : 14
-      
-
+    
       const options = {
         responsive: true,
         maintainAspectRatio: false,
+        scales: {
+          x: {
+            min: props.minX || undefined,
+            max: props.maxX || undefined,
+          },
+          y: {
+            min: props.minY || undefined,
+            max: props.maxY || undefined,
+          },
+        },
         plugins: {
             legend: {
               position: 'bottom' as const,
@@ -115,7 +124,7 @@ const OwnChart = (
       const FinalChart:TypedChartComponent<ChartType> = () => React.createElement(RetainedChart, {data, options})
 
   return (
-    <Box {...props}>
+    <Box id={id} {...props}>
       <FinalChart />
     </Box>    
   )

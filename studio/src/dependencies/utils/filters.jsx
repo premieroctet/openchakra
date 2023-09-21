@@ -21,7 +21,7 @@ export const OPERATORS = {
     '<>': (v, ref) => v != ref,
     contains: (v, ref) => v?.toLowerCase()?.includes(ref?.toLowerCase()),
     'does not contain': (v, ref) =>
-      v?.toLowerCase()?.includes(ref?.toLowerCase()),
+      !v?.toLowerCase()?.includes(ref?.toLowerCase()),
     'is empty': lodash.isNil,
   },
   Date: {
@@ -29,13 +29,48 @@ export const OPERATORS = {
     after: (v, ref) => moment(v).isAfter(moment(ref)),
     'is empty': lodash.isNil,
   },
+  Enum: {
+    '=': (v, ref) => v == ref,
+    '<>': (v, ref) => v != ref,
+    in: (v, ref) => ref?.split(',').includes(v),
+    /**
+    'does not contain': (v, ref) =>
+      v?.toLowerCase()?.includes(ref?.toLowerCase()),
+    'is empty': lodash.isNil,
+    */
+  },
+  Ref: {
+    'exists': v => !lodash.isNil(v),
+    'not exists': v => lodash.isNil(v),
+  },
+  Array: {
+    'is empty': v => lodash.isEmpty(v),
+    'is not empty': v => !lodash.isEmpty(v),
+  }
+}
+
+export const getOperators = att => {
+  if(att?.enumValues) {
+    return OPERATORS.Enum
+  }
+  if(att?.multiple) {
+    return OPERATORS.Array
+  }
+  if(att?.ref) {
+    return OPERATORS.Ref
+  }
+  return OPERATORS[att?.type]
+}
+
+export const isOperatorMultiple = (att, op) => {
+  return att?.enumValues && op=='in'
 }
 
 const createFilters = (filterDef, props) => {
   return Object.entries(filterDef).map(([id, def]) => {
     const targetValue = props[`condition${id}`] || false
     const attribute = def.attribute
-    const opFn = OPERATORS[def.type][def.operator]
+    const opFn = getOperators(def)[def.operator]
     const vRef = def.value
     return dataSource => {
       const dataValue = lodash.get(dataSource, attribute)

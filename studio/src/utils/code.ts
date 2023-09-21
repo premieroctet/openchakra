@@ -181,6 +181,9 @@ const buildBlock = ({
         if (tabParent?.props.dataSource) {
           childComponent.props.dataSource=tabParent?.props.dataSource
         }
+        if (tabParent?.props.attribute) {
+          childComponent.props.attribute=tabParent?.props.attribute
+        }
       }
       const dataProvider = components[childComponent.props.dataSource]
       const isDpValid=getValidDataProviders(components).find(dp => dp.id==childComponent.props.dataSource)
@@ -193,14 +196,11 @@ const buildBlock = ({
         ? `Maskable${capitalize(childComponent.type)}`
         : (childComponent.type==='Flex' && JSON.parse(childComponent?.props?.isFilterComponent || 'false'))
         ? 'Filter'
-        : capitalize(childComponent.type)
+        : capitalize(getWappType(childComponent.type))
       let propsContent = ''
 
-      // DIRTY: stateValue for RAdioGroup to get value
-      if ((['RadioGroup', 'Input', 'Select']).includes(childComponent.type)) {
-        propsContent += ` setComponentValue={setComponentValue} `
-      }
       propsContent += ` getComponentValue={getComponentValue} `
+      propsContent += ` setComponentValue={setComponentValue} `
 
       // Set component id
       propsContent += ` id='${childComponent.id}' `
@@ -226,7 +226,6 @@ const buildBlock = ({
       if (['Checkbox', 'IconCheck', 'Radio'].includes(childComponent.type) && hasParentType(childComponent, components, 'CheckboxGroup')) {
         propsContent += ` insideGroup `
       }
-
       if (isDynamicComponent(components, childComponent)) {
         propsContent += ` backend='/'`
           let tp = null
@@ -281,6 +280,10 @@ const buildBlock = ({
       const propsNames = Object.keys(childComponent.props).filter(propName => {
         if (childComponent.type === 'Icon') {
           return propName !== 'icon'
+        }
+        // No index on Accordion => Unfolded by defautl
+        if (childComponent.type === 'Accordion') {
+          return propName !== 'index'
         }
         return true
       })
@@ -661,7 +664,7 @@ const buildDynamics = (components: IComponents, extraImports: string[]) => {
   let code = `${Object.keys(groups)
     .map(g => {
       return groups[g]
-        .map(comp => `const Dynamic${comp.type}=withDynamic${g}(${comp.type})`)
+        .map(comp => `const Dynamic${comp.type}=withDynamic${g}(${getWappType(comp.type)})`)
         .join('\n')
     })
     .join('\n')}
@@ -691,6 +694,10 @@ const buildMaskable = (components: IComponents, extraImports: string[]) => {
   return code
 }
 
+const getWappType = type => {
+  return `Wapp${type}`
+}
+
 export const generateCode = async (
   pageId: string,
   pages: {
@@ -702,9 +709,15 @@ export const generateCode = async (
   const { components, metaTitle, metaDescription, metaImageUrl } = pages[pageId]
   const { settings } = project
   const {description, metaImage, name, url, favicon32, gaTag} = Object.fromEntries(Object.entries(settings).map(([key, value]) => [key, isJsonString(value) ? JSON.parse(value) : value]))
-  
 
   const extraImports: string[] = []
+  const wappComponentsDeclaration = lodash(components)
+    .values()
+    .filter(v => v.id!='root')
+    .filter(v => v.type!='DataProvider')
+    .map(v => v.type)
+    .uniq()
+    .map(type => `const ${getWappType(type)}=withWappizy(${type})`)
   let hooksCode = buildHooks(components)
   let filterStates = buildFilterStates(components)
   let dynamics = buildDynamics(components, extraImports)
@@ -811,8 +824,10 @@ import {ensureToken} from '../dependencies/utils/token'
 import {useRouter} from 'next/router'
 import { useUserContext } from '../dependencies/context/user'
 import { getComponentDataValue } from '../dependencies/utils/values'
+import withWappizy from '../dependencies/hoc/withWappizy'
 
 ${extraImports.join('\n')}
+${wappComponentsDeclaration.join('\n')}
 
 ${dynamics || ''}
 ${maskable || ''}

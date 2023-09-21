@@ -1,6 +1,10 @@
-import React from 'react'
+import React, {useState} from 'react'
 import lodash from 'lodash'
+import {ArrowLeftIcon, ArrowRightIcon } from '@chakra-ui/icons'
 import { matcher } from '../utils/misc';
+import {Flex} from '@chakra-ui/react'
+
+const DEFAULT_LIMIT=30
 
 const normalize = str => {
   str = str
@@ -32,7 +36,8 @@ const setRecurseDataSource = (
     return []
   } else {
     return React.Children.map(element.props.children, function(child, index) {
-      const newSuffix = child?.props?.dataSourceId ? `${suffix}_${index}` : suffix
+      // DANGEROUS!!!!!!!! FOR QUIZZ !!!!!
+      const newSuffix = suffix//child?.props?.dataSourceId ? `${suffix}_${index}` : suffix
       const newId = child.props?.id ? `${child.props?.id}${suffix}` : undefined
       const key = `${dataSource?._id}_${index}`
       const level=newId ? newId.split(/(_.*)$/)[1] : undefined
@@ -65,8 +70,11 @@ const withDynamicContainer = Component => {
   // TODO vomi
   const FILTER_ATTRIBUTES = ['code', 'name', 'short_name', 'description', 'title']
 
-  const internal = ({hiddenRoles, user, shuffle, ...props}) => {
+  const internal = ({hiddenRoles, user, shuffle, limit, hidePagination, ...props}) => {
 
+    limit = limit || DEFAULT_LIMIT
+
+    const [start, setStart]=useState(0)
     /** withMaskability */
     // TODO: in code.ts, generate withMaskability(withDynamic()) ...
     if (hiddenRoles) {
@@ -97,6 +105,16 @@ const withDynamicContainer = Component => {
       return null
     }
 
+    if (props.filterAttribute && props.filterConstant) {
+      const value=props.filterConstant
+      // TODO Check why value "null" comes as string
+      if (!(lodash.isNil(value) || value=="null")) {
+        orgData = matcher(value, orgData, props.filterAttribute)
+      }
+    }
+
+    const original_length=orgData.length
+
     if (props.contextFilter) {
       const contextIds = props.contextFilter.map(o => o._id.toString())
       orgData = orgData.filter(d => contextIds.includes(d._id))
@@ -122,16 +140,17 @@ const withDynamicContainer = Component => {
         orgData = matcher(value, orgData, props.filterAttribute2)
       }
     }
+
     let data = orgData
-    if (!lodash.isNil(props?.limit)) {
+
+    if (limit) {
     try {
-        data = orgData.slice(0, parseInt(props?.limit) || undefined)
+        data = orgData.slice(start, start+parseInt(limit) || undefined)
       }
       catch (err) {
         console.error(`Container ${props.id} can not slice ${JSON.stringify(orgData)}:${err}`)
       }
     }
-
 
     const [firstChild, secondChild] = React.Children.toArray(props.children).slice(0,2)
 
@@ -142,8 +161,32 @@ const withDynamicContainer = Component => {
         </Component>
       )
     }
+
+    const hasPrev = () => start>0
+    const hasNext = () => start+limit<=original_length
+
+    const prev= () => {
+      if (hasPrev()) {
+        setStart(start-limit)
+      }
+    }
+    const next= () => {
+      if (hasNext()) {
+        setStart(start+limit)
+      }
+    }
+
+    const navigation=original_length > limit && !hidePagination ?
+      <Flex justifyContent={'space-around'} style={{width: '100%'}} flex={'row'}>
+        <ArrowLeftIcon style={{opacity: !hasPrev() && '50%'}} enabled={false} onClick={prev} />
+        <Flex>{start}-{Math.min(start+limit, original_length)}/{original_length}</Flex>
+        <ArrowRightIcon style={{opacity: !hasNext() && '50%'}} onClick={next} />
+      </Flex>
+      :
+      null
     return (
       <Component {...lodash.omit(props, ['children'])}>
+        {navigation}
         {data.map((d, index) => {
           const newId = firstChild.props?.id
             ? `${firstChild.props?.id}_${index}`
@@ -163,6 +206,7 @@ const withDynamicContainer = Component => {
             </>
           )
         })}
+        {navigation}
       </Component>
     )
   }

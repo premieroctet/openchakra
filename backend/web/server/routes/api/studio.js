@@ -1,3 +1,21 @@
+const { createMemoryMulter } = require('../../utils/filesystem')
+const {
+  FUMOIR_MEMBER,
+  PAYMENT_FAILURE,
+  PAYMENT_SUCCESS
+} = require('../../plugins/fumoir/consts')
+const {
+  callFilterDataUser,
+  callPostCreateData,
+  callPostPutData,
+  callPreCreateData,
+  callPreprocessGet,
+  loadFromDb,
+  putToDb,
+  retainRequiredFields,
+  importData,
+} = require('../../utils/database')
+
 const path = require('path')
 const zlib=require('zlib')
 const {promises: fs} = require('fs')
@@ -13,20 +31,6 @@ const {handleUploadedFile} = require('../../middlewares/uploadFile')
 const {resizeImage} = require('../../middlewares/resizeImage')
 const {sendFilesToAWS, getFilesFromAWS, deleteFileFromAWS} = require('../../middlewares/aws')
 const {IMAGE_SIZE_MARKER} = require('../../../utils/consts')
-const {
-  callFilterDataUser,
-  callPostCreateData,
-  callPostPutData,
-  callPreCreateData,
-  callPreprocessGet,
-  loadFromDb,
-  retainRequiredFields,
-} = require('../../utils/database')
-const {
-  FUMOIR_MEMBER,
-  PAYMENT_FAILURE,
-  PAYMENT_SUCCESS,
-} = require('../../plugins/fumoir/consts')
 const {date_str, datetime_str} = require('../../../utils/dateutils')
 const Payment = require('../../models/Payment')
 const {
@@ -39,8 +43,10 @@ const {
   getProductionRoot,
 } = require('../../../config/config')
 
+let agendaHookFn=null
 try {
   require(`../../plugins/${getDataModel()}/functions`)
+  agendaHookFn=require(`../../plugins/${getDataModel()}/functions`).agendaHookFn
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') { throw err }
@@ -142,6 +148,15 @@ router.get('/s3getfiles', getFilesFromAWS, async(req, res) => {
 
 router.post('/s3deletefile', deleteFileFromAWS, (req, res) => {
   return req.body?.filedeleted ? res.status(200).json(req.body.filedeleted) : res.status(400)
+})
+
+// Hooks agenda modifications
+router.post('/agenda-hook', (req, res) => {
+  console.log(`Agenda hook received ${JSON.stringify(req.body)}`)
+  if (agendaHookFn) {
+    agendaHookFn(req.body)
+  }
+  return res.json()
 })
 
 router.get('/action-allowed/:action', passport.authenticate('cookie', {session: false}), (req, res) => {
@@ -411,6 +426,14 @@ router.post('/contact', (req, res) => {
     })
 })
 
+router.post('/import-data/:model', createMemoryMulter().single('file'), passport.authenticate('cookie', {session: false}), (req, res) => {
+  const {model}=req.params
+  const {file}=req
+  console.log(`Import ${model}:${file.buffer.length} bytes`)
+  return importData({model, data:file.buffer})
+    .then(result => res.json(result))
+})
+
 router.post('/:model', passport.authenticate('cookie', {session: false}), (req, res) => {
   const model = req.params.model
   let params=lodash(req.body).mapValues(v => JSON.parse(v)).value()
@@ -435,7 +458,7 @@ router.post('/:model', passport.authenticate('cookie', {session: false}), (req, 
     })
 })
 
-router.put('/:model/:id', passport.authenticate('cookie', {session: false}), (req, res) => {
+const putFromRequest = (req, res) => {
   const model = req.params.model
   const id = req.params.id
   let params=lodash(req.body).mapValues(v => JSON.parse(v)).value()
@@ -446,16 +469,16 @@ router.put('/:model/:id', passport.authenticate('cookie', {session: false}), (re
   if (!model || !id) {
     return res.status(HTTP_CODES.BAD_REQUEST).json(`Model and id are required`)
   }
-  console.log(`Updating:${id} with ${JSON.stringify(params)}`)
-  // Update object instead of findByIdAndUpdate to ensure 'this' exists in required functions
-  return mongoose.connection.models[model]
-    .findById(id)
+
+  return putToDb({model, id, params, user})
     .then(data => {
-      Object.keys(params).forEach(k => data[k]=params[k])
-      return data.save()
+      // TODO Which data to return ?
+      return res.json()
     })
-    .then(data => callPostPutData({model, params, data, user}))
-    .then(data => res.json(data))
+}
+
+router.put('/:model/:id', passport.authenticate('cookie', {session: false}), (req, res) => {
+  return putFromRequest(req, res)
 })
 
 
@@ -463,16 +486,15 @@ const loadFromRequest = (req, res) => {
   const model = req.params.model
   let fields = req.query.fields?.split(',') || []
   const id = req.params.id
-  const params = req.get('Referrer')
-    ? {...url.parse(req.get('Referrer'), true).query}
-    : {}
+  const params=lodash.omit({...req.query}, ['fields', 'id'])
   const user = req.user
 
-  console.log(`GET ${model}/${id} ${fields}`)
+  const logMsg=`GET ${model}/${id} ${fields} ...${JSON.stringify(params)}`
+  console.log(logMsg)
 
   return loadFromDb({model, fields, id, user, params})
     .then(data => {
-      console.log(`GET ${model}/${id} ${fields}: data sent`)
+      console.log(`${logMsg}: data sent`)
       res.json(data)
     })
 }

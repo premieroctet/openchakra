@@ -27,6 +27,9 @@ require('../../server/models/Target')
 require('../../server/models/Category')
 require('../../server/models/Pip')
 require('../../server/models/Menu')
+require('../../server/models/Association')
+require('../../server/models/UserQuizz')
+require('../../server/models/Quizz')
 
 const TROPHY_ON='trophy successful'
 const TROPHY_OFF='trophy failed'
