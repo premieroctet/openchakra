@@ -207,6 +207,9 @@ const getExposedModels = () => {
 const buildPopulates = (modelName, fields) => {
   // Retain all ref fields
   const model=getModels()[modelName]
+  if (!model) {
+    throw new Error(`Model ${modelName} not found`)
+  }
   const attributes=model.attributes
   let requiredFields=[...fields]
   // Add declared required fields for virtuals
