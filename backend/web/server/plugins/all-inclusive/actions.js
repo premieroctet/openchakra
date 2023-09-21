@@ -286,8 +286,10 @@ const registerAction = props => {
         throw new BadRequestError(`Pas de mail de création de compte défini pour le role ${props.role}`)
       }
       sendWelcome({user, password: props.password})
-      User.find({role:{$in:[ROLE_ALLE_ADMIN, ROLE_ALLE_SUPER_ADMIN]}})
-        .then(admins => admins.map(admin => sendCompanyRegistered(user, admin)))
+      if (user.role==ROLE_COMPANY_BUYER) {
+        User.find({role:{$in:[ROLE_ALLE_ADMIN, ROLE_ALLE_SUPER_ADMIN]}})
+          .then(admins => admins.map(admin => sendCompanyRegistered(user, admin)))
+      }
       if (user.role==ROLE_TI) {
         return paymentPlugin.upsertProvider(user)
       }
