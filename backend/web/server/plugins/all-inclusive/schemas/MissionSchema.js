@@ -62,12 +62,12 @@ const MissionSchema = new Schema({
   customer_location: {
     type: Boolean,
     default: false,
-    required: true,
+    required: [true, `Chez le client O/N est obligatoire`],
   },
   foreign_location: {
     type: Boolean,
     default: false,
-    required: true,
+    required: [true, `A distance O/N est obligatoire`],
   },
   recurrent: {
     type: String,
@@ -84,7 +84,7 @@ const MissionSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: "user",
-    required: true,
+    required: [true, `Le client est obligatoire`],
   },
   job: {
     type: Schema.Types.ObjectId,
@@ -146,7 +146,7 @@ const MissionSchema = new Schema({
   dummy: {
     type: Number,
     default: 0,
-    required: true,
+    required: [true, `Dummy est obligatoire`],
   },
 }, schemaOptions
 );

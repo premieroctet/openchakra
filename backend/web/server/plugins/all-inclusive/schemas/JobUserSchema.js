@@ -23,17 +23,18 @@ const JobUserSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: "user",
-    required: true,
+    required: [true, `Le TI est obligatoire`],
   },
   experience: {
     type: String,
     enum: Object.keys(EXPERIENCE),
     //required: [true, "L'expérience est obligatoire"]
   },
+  // No houy rate
   on_quotation: {
     type: Boolean,
     default: false,
-    required: true,
+    required: [true, `Le status sur devis O/N ets obligatoire`],
   },
   rate: {
     type: Number,
@@ -68,7 +69,7 @@ const JobUserSchema = new Schema({
   dummy: {
     type: Number,
     default: 0,
-    required: true,
+    required: [true, `Dummy est obligatoire`],
   },
 }, schemaOptions
 );
