@@ -103,7 +103,7 @@ const alle_accept_quotation = ({value, paymentSuccess, paymentFailure}, user) =>
     .then(([mission]) => {
       const [success_url, failure_url]=[paymentSuccess, paymentFailure].map(p => `https://${getHostName()}/${p}`)
       return paymentPlugin.createPayment({source_user: user, amount:mission.customer_total, fee:0,
-        destination_user: mission.job.user, description: 'Un test',
+        destination_user: mission.job.user, description: mission.name,
         success_url, failure_url,
     })
     .then(payment => {
@@ -373,6 +373,11 @@ const isActionAllowed = ({action, dataId, user, ...rest}) => {
       .then(quotation => quotation?.canSend(user))
   }
   if (action=='alle_accept_quotation') {
+    return Mission.findById(dataId)
+      .populate('quotations')
+      .then(mission => mission?.canAcceptQuotation(user))
+  }
+  if (action=='alle_can_accept_quotation') {
     return Mission.findById(dataId)
       .populate('quotations')
       .then(mission => mission?.canAcceptQuotation(user))

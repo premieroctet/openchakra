@@ -552,6 +552,10 @@ export const ACTIONS: IActions = {
       ],
     },
   },
+  download: {
+    label: 'Download',
+    options: {},
+  },
 
   smartdiet_start_survey: {
     label: 'SM Start survey',
@@ -648,4 +652,6 @@ export const ACTIONS: IActions = {
 
 export const allowsActions = (component: IComponent) => {
   return ['Button', 'IconButton', 'Flex'].includes(component.type)
+  && (!(component.type === 'Flex' && !!component.props.isFilterComponent))
+
 }

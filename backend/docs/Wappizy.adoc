@@ -9,22 +9,96 @@ A la racine du projet (openchakra ?), un seul fichier pour les gouverner :
 ----
 
 # BACK
-WHITELIST_DOMAINS = http://localhost:3000 http://localhost:6777 # needed for CORS, space between protocol+domains+port
-PORT=7247
-STUDIO_TEST_PORT=6777
+MODE='development' # production | development | validation
 BACKEND_PORT=443
-MODE='development' # production | development
+FRONTEND_APP_PORT=6777
+PRODUCTION_ROOT='/home/***/***' # basepath of the app (backend, studio, studio-test) 
+DATABASE_NAME='whatever' # can be used for DATA_MODEL, NEXT_PUBLIC_PROJECT_NAME
+DATA_MODEL=$DATABASE_NAME
+SITE_MODE='marketplace' # marketplace | platform 
+HOSTDOMAIN='coucoutente-validation.my-alfred.io'
 
 # FRONT 
-NEXT_PUBLIC_MODE='development' # production | development
-NEXT_PUBLIC_PROJECT=smartdiet
-NEXT_PUBLIC_BACKEND=https://localhost:443
-NEXT_PUBLIC_S3_ID=AKIA6QQ32HPKPCAEXLWR
-NEXT_PUBLIC_S3_SECRET=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
-NEXT_PUBLIC_S3_ROOTPATH=smartdiet/prod
+NEXT_PUBLIC_PROJECT_NAME=$DATABASE_NAME # used for colors theme, filename studio projects
+NEXT_PUBLIC_PROJECT_FOLDERNAME='studio-essai' # folder to copy generated files
+NEXT_PUBLIC_PROJECT_TARGETDOMAIN='https://localhost:${BACKEND_PORT}' # base url to call deploy phase, get models, roles...
+NEXT_PUBLIC_MODE=$MODE
+NEXT_PUBLIC_VERSION=1
 NEXT_PUBLIC_DISABLE_STORAGE=false  # disable localstorage for wappizy projects json
 
+# Mail
+
+MAIL_PROVIDER= # mailjet | sendInBlue
+
+## Mailjet
+MAILJET_PUBLIC_KEY=
+MAILJET_PRIVATE_KEY=
+
+## Brevo (ex Sendinblue)
+SIB_APIKEY='zorg32'
+
+# AWS S3
+AWS_ACCESS_KEY_ID=c5f1af41-5ecb-4c02-8976-4c1b048e44d7
+AWS_SECRET_ACCESS_KEY=c29121ed-f4cb-4f74-9318-7adb1bb11dae
+S3_REGION='eu-west-3'
+S3_BUCKET='my-data-test'
+S3_STUDIO_ROOTPATH='devtest/meuble'
+S3_PROD_ROOTPATH=
+
+# Payments
+PAYMENT_PLUGIN='stripe' # stripe | vivawallet
+
+## Vivawallet
+VIVAWALLET_MODE=
+VIVAWALLET_BASE_URL=
+VIVAWALLET_API_ID=
+VIVAWALLET_API_KEY=
+VIVAWALLET_CLIENT_ID=
+VIVAWALLET_CLIENT_SECRET=
+VIVAWALLET_SOURCE_CODE=
+
+## Stripe
+STRIPE_PUBLIC_KEY=
+STRIPE_SECRET_KEY=
+
 ## DEV
-NEXT_PUBLIC_BUGSNAG_API_KEY=18bc83982a86e6477448b6bc16c0c18e
+NEXT_PUBLIC_BUGSNAG_API_KEY=18bc83982a86e6477448b6bc16c0c18g
+
+# ssh copy file maybe one day
+NEXT_PUBLIC_PROJECT_TARGETUSER=
+NEXT_PUBLIC_PROJECT_TARGETKEY=
+
+# Specific
+WITHINGS_CLIENT_ID=
+WITHINGS_CLIENT_SECRET=
+
+# useless ?
+DISABLE_ALFRED_SELF_REGISTER=false
+DISABLE_ALFRED_PARTICULAR_REGISTER=false
+HIDE_EMPTY_EVALUATIONS=true
+HIDE_STORE_DIALOG=true
+TAWKTO_URL='https://embed.tawk.to/5de4db8c43be710e1d201adc/default'
+MONO_PROVIDER=true
 
 ----
+
+
+
+## Médias 
+
+### Images
+
+Les images sont stockées sur AWS s3. L'image d'origine est conservée, compressée lorsque format jpeg (avec mozjpeg) et celle-ci se voit retaillée en 3 tailles fixées dans les consts (500, 1000, 2000).
+
+Les types mime suivants sont pris en compte :
+
+* image/jpeg
+* image/png
+* image/png
+* image/heic
+* image/webp
+
+Les types heic/heif sont convertis en .jpeg à l'aide du package heic-convert. 
+
+TIP: Pour gagner en temps de traitement, installer libvips sur le serveur et supprimer le switch dans resizeImage.
+
