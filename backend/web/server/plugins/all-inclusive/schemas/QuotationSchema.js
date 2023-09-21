@@ -83,7 +83,7 @@ QuotationSchema.virtual('mer').get(function() {
   if (!this.mission.job) {
     return 0
   }
-  const mer_rate=this.mission.job.user.qualified ? MER_RATE : 0
+  const mer_rate=this.mission.job.user?.qualified ? MER_RATE : 0
   const mer=this.ht_total*mer_rate
   return mer
 })
