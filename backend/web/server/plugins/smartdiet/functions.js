@@ -18,6 +18,9 @@ const {
   EVENT_WEBINAR,
   FOOD_DOCUMENT_TYPE,
   GENDER,
+  GENDER_FEMALE,
+  GENDER_MALE,
+  GENDER_NON_BINARY,
   GROUPS_CREDIT,
   HARDNESS,
   HOME_STATUS,
@@ -893,6 +896,22 @@ declareVirtualField({model: 'adminDashboard', field:'average_group_answers', ins
 declareVirtualField({model: 'adminDashboard', field:'messages_count', instance: 'Number'})
 declareVirtualField({model: 'adminDashboard', field:'users_count', instance: 'Number'})
 declareVirtualField({model: 'adminDashboard', field:'active_users_count', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'leads_count', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'users_men_count', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'user_women_count', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'users_no_gender_count', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'weight_lost_total', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'weight_lost_average', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'centimeters_lost_total', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'centimeters_lost_average', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'age_average', instance: 'Number'})
+'chest,waist,weight,hips,arms,thighs'.split(',').forEach(measure_name => {
+  declareVirtualField({model: 'adminDashboard', field: `${measure_name}_evolution`, instance: 'measure', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'measure'}},
+  })
+})
 
 declareEnumField({model: 'foodDocument', field: 'type', enumValues: FOOD_DOCUMENT_TYPE})
 declareVirtualField({model: 'foodDocument', field: 'url', type: 'String', requires:'manual_url,document'})
@@ -1213,21 +1232,24 @@ const ensureChallengePipsConsistency = () => {
 const computeStatistics= ({id, fields}) => {
   console.log(`Computing stats for ${id} fields ${fields}`)
   const company_filter=id ? {_id: id} : {}
-  return Company.find(company_filter)
-    .populate([{path: 'webinars', select:'type'},{path: 'groups', populate: 'messages' }])
-    .populate({path: 'users', populate:['registered_events','replayed_events']})
-    .then(comps => {
+  return Promise.all([
+    Company.find(company_filter)
+      .populate([{path: 'webinars', select:'type'},{path: 'groups', populate: 'messages' }])
+      .populate({path: 'users', populate:[{path:'registered_events'},{path: 'replayed_events'},{path:'measures'}]}),
+    Lead.find()
+  ])
+    .then(([comps,leads]) => {
       const companies=lodash(comps)
+      const allUsers=companies
+        .map('users').flatten().filter(u => u.role==ROLE_CUSTOMER)
       const webinars=companies.map(c => c.webinars).flatten()
       const webinars_count=webinars.size()
-      const registered_count=companies
-        .map('users').flatten()
+      const registered_count=allUsers
         .map('registered_events').flatten()
         .filter(e => e.type==EVENT_WEBINAR)
         .size()
       const average_webinar_registar=registered_count*1.0/webinars_count
-      const webinars_replayed_count=companies
-        .map('users').flatten()
+      const webinars_replayed_count=allUsers
         .map('replayed_events').flatten()
         .filter(e => e.type==EVENT_WEBINAR)
         .size()
@@ -1236,12 +1258,54 @@ const computeStatistics= ({id, fields}) => {
         .map('groups').flatten()
         .map('messages').flatten()
         .size()
-      const users_count=companies.map(c => c.users.filter(u => u.role==ROLE_CUSTOMER).length)
-        .sum()
+      const users_count=allUsers.size()
+      const companyCodes=companies.map('code').filter(v => !!v).value()
+      const leads_count=leads.filter(l => companyCodes.includes(l.company_code)).length
+      const [users_men_count, user_women_count, users_no_gender_count]=[GENDER_MALE,GENDER_FEMALE,GENDER_NON_BINARY].map(gender => {
+        return allUsers.filter(u => u.gender==gender).size()
+      })
+
+      const get_measure_lost = (measures, measure_name) => {
+        const sortedMeasures=lodash(measures).filter(m => !!m[measure_name]).sortBy('date')
+        const firstMeasure=sortedMeasures.first()
+        const lastMeasure=sortedMeasures.last()
+        const delta=(lastMeasure?.[measure_name]-firstMeasure?.[measure_name]) || 0
+        return delta
+      }
+      const weight_lost_total=allUsers.map(u => get_measure_lost(u.measures, 'weight')).sum()
+      const weight_lost_average=Math.round(weight_lost_total*1.0/users_count*10)/10.0
+
+      const length_measures='arms,chest,hips,thighs,waist'.split(',')
+      const centimeters_lost_total=allUsers.map(u => length_measures.map(m => get_measure_lost(u.measures, m))).flatten().sum()
+      const centimeters_lost_average=Math.round(centimeters_lost_total*1.0/users_count*10)/10.0
+
+      let aged_users=allUsers.filter(u => !!u.birthday)
+      let age_average=aged_users.map(u => moment().diff(moment(u.birthday), 'year')).sum()/aged_users.size()
+      age_average=Math.round(age_average*10)/10.0
+
+
+      const get_latest_measure = (date, measures, measure_name) => {
+        const latestMeasure=lodash(measures).filter(m => !!m[measure_name] && date.isAfter(m.date)).sortBy('date').last()
+        return latestMeasure?.[measure_name]||0
+      }
+
+      const evolutions={}
+      'chest,waist,weight,hips,arms,thighs'.split(',').map(measure_name => {
+        const measure_evoluation=lodash.range(-11, 1).map(offset => {
+          const monthEnd=moment().add(offset, 'month').endOf('month')
+          const measure_total=allUsers.map(u => get_latest_measure(monthEnd, u.measures, measure_name)).sum()
+          return ({date: monthEnd, [measure_name]:measure_total})
+        })
+        evolutions[`${measure_name}_evolution`]=measure_evoluation
+      })
+
       return ({
         company: id,
         webinars_count, average_webinar_registar, webinars_replayed_count,
-        groups_count, messages_count, users_count,
+        groups_count, messages_count, users_count, leads_count, users_men_count,
+        user_women_count, users_no_gender_count, weight_lost_total, weight_lost_average,
+        centimeters_lost_total, centimeters_lost_average,
+        age_average, ...evolutions,
       })
     })
 }

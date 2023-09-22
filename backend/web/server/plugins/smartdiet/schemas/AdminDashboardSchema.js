@@ -17,5 +17,18 @@ AdminDashboardSchema.virtual('groups_count', {localFields:'tagada',foreignField:
 AdminDashboardSchema.virtual('messages_count', {localFields:'tagada',foreignField:'tagada'}).get(function() { return 0 })
 AdminDashboardSchema.virtual('users_count', {localFields:'tagada',foreignField:'tagada'}).get(function() { return 0 })
 //AdminDashboardSchema.virtual('active_users_count', {localFields:'tagada',foreignField:'tagada'}).get(function() { return 0 })
+AdminDashboardSchema.virtual('leads_count', {localFields:'tagada',foreignField:'tagada'}).get(function() { return 0 })
+AdminDashboardSchema.virtual('users_men_count', {localFields:'tagada',foreignField:'tagada'}).get(function() { return 0 })
+AdminDashboardSchema.virtual('user_women_count', {localFields:'tagada',foreignField:'tagada'}).get(function() { return 0 })
+AdminDashboardSchema.virtual('users_no_gender_count', {localFields:'tagada',foreignField:'tagada'}).get(function() { return 0 })
+AdminDashboardSchema.virtual('weight_lost_total', {localFields:'tagada',foreignField:'tagada'}).get(function() { return 0 })
+AdminDashboardSchema.virtual('weight_lost_average', {localFields:'tagada',foreignField:'tagada'}).get(function() { return 0 })
+AdminDashboardSchema.virtual('centimeters_lost_total', {localFields:'tagada',foreignField:'tagada'}).get(function() { return 0 })
+AdminDashboardSchema.virtual('centimeters_lost_average', {localFields:'tagada',foreignField:'tagada'}).get(function() { return 0 })
+AdminDashboardSchema.virtual('age_average', {localFields:'tagada',foreignField:'tagada'}).get(function() { return 0 })
+'chest,waist,weight,hips,arms,thighs'.split(',').forEach(measure_name => {
+  AdminDashboardSchema.virtual(`${measure_name}_evolution`, {localFields:'tagada',foreignField:'tagada'}).get(function() { return 0 })
+})
+
 
 module.exports = AdminDashboardSchema
