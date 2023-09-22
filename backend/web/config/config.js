@@ -3,9 +3,6 @@ const myEnv = require('dotenv').config({path: path.resolve(__dirname, '../../../
 const dotenvExpand = require('dotenv-expand')
 dotenvExpand.expand(myEnv)
 const isEmpty = require('../server/validation/is-empty')
-const {
-  SIB_TEMPLATES,
-} = require('../mode')
 
 const SITE_MODES = {
   MARKETPLACE: 'marketplace',
@@ -263,12 +260,6 @@ const checkConfig = () => {
     }
     if (isEmpty(process.env.FRONTEND_APP_PORT)) {
       reject(`env var FRONTEND_APP_PORT non renseigné`)
-    }
-    // Deprecated
-    if (SIB_TEMPLATES) {
-      console.warn(
-        `** deprecated SIB_TEMPLATE, using DATA_MODEL instead:remove it in configuration file`,
-      )
     }
     // TODO check database name correctness
     if (isEmpty(process.env.SIB_APIKEY)) {
