@@ -247,7 +247,8 @@ USER_MODELS.forEach(m => {
       options: {ref: 'mission'}}
   })
   declareVirtualField({model: m, field: 'missions', instance: 'Array', multiple: true,
-    requires: '_missions,_missions.user,_missions.job,_missions.job.user,_missions.quotations,_missions.quotations.details,_missions.comments,missions,missions.user,missions.job,missions.job.user,missions.quotations,missions.comments',
+    requires: '_missions,_missions.user.full_name,_missions.user.company_name,_missions.job.user.full_name,_missions.quotations,_missions.quotations.details,_missions.comments,missions,missions.user,missions.job,missions.job.user,missions.quotations,missions.comments,\
+_missions.comments.mission.job.user.full_name,_missions.comments.mission.user.company_name,_missions.comments.user.picture,_missions.comments.mission.job.user.picture',
     caster: {
       instance: 'ObjectID',
       options: {ref: 'mission'}}
