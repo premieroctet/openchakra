@@ -905,12 +905,10 @@ declareVirtualField({model: 'adminDashboard', field:'weight_lost_average', insta
 declareVirtualField({model: 'adminDashboard', field:'centimeters_lost_total', instance: 'Number'})
 declareVirtualField({model: 'adminDashboard', field:'centimeters_lost_average', instance: 'Number'})
 declareVirtualField({model: 'adminDashboard', field:'age_average', instance: 'Number'})
-'chest,waist,weight,hips,arms,thighs'.split(',').forEach(measure_name => {
-  declareVirtualField({model: 'adminDashboard', field: `${measure_name}_evolution`, instance: 'measure', multiple: true,
-    caster: {
-      instance: 'ObjectID',
-      options: {ref: 'measure'}},
-  })
+declareVirtualField({model: 'adminDashboard', field: `measures_evolution`, instance: 'measure', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'measure'}},
 })
 
 declareEnumField({model: 'foodDocument', field: 'type', enumValues: FOOD_DOCUMENT_TYPE})
@@ -1289,14 +1287,15 @@ const computeStatistics= ({id, fields}) => {
         return latestMeasure?.[measure_name]||0
       }
 
-      const evolutions={}
-      'chest,waist,weight,hips,arms,thighs'.split(',').map(measure_name => {
-        const measure_evoluation=lodash.range(-11, 1).map(offset => {
-          const monthEnd=moment().add(offset, 'month').endOf('month')
+      const measures_evolution=lodash.range(-11, 1).map(offset => {
+        const monthEnd=moment().add(offset, 'month').endOf('month')
+        const measures='chest,waist,weight,hips,arms,thighs'.split(',').map(measure_name => {
           const measure_total=allUsers.map(u => get_latest_measure(monthEnd, u.measures, measure_name)).sum()
-          return ({date: monthEnd, [measure_name]:measure_total})
+          return [measure_name, measure_total+20]
         })
-        evolutions[`${measure_name}_evolution`]=measure_evoluation
+        const data=Object.fromEntries(measures)
+        data.date=monthEnd
+        return data
       })
 
       return ({
@@ -1304,8 +1303,8 @@ const computeStatistics= ({id, fields}) => {
         webinars_count, average_webinar_registar, webinars_replayed_count,
         groups_count, messages_count, users_count, leads_count, users_men_count,
         user_women_count, users_no_gender_count, weight_lost_total, weight_lost_average,
-        centimeters_lost_total, centimeters_lost_average,
-        age_average, ...evolutions,
+        centimeters_lost_total, centimeters_lost_average, age_average,
+        measures_evolution,
       })
     })
 }

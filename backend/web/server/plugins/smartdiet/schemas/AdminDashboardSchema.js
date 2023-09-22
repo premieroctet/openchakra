@@ -26,9 +26,7 @@ AdminDashboardSchema.virtual('weight_lost_average', {localFields:'tagada',foreig
 AdminDashboardSchema.virtual('centimeters_lost_total', {localFields:'tagada',foreignField:'tagada'}).get(function() { return 0 })
 AdminDashboardSchema.virtual('centimeters_lost_average', {localFields:'tagada',foreignField:'tagada'}).get(function() { return 0 })
 AdminDashboardSchema.virtual('age_average', {localFields:'tagada',foreignField:'tagada'}).get(function() { return 0 })
-'chest,waist,weight,hips,arms,thighs'.split(',').forEach(measure_name => {
-  AdminDashboardSchema.virtual(`${measure_name}_evolution`, {localFields:'tagada',foreignField:'tagada'}).get(function() { return 0 })
-})
+AdminDashboardSchema.virtual(`measures_evolution`, {localFields:'tagada',foreignField:'tagada'}).get(function() { return 0 })
 
 
 module.exports = AdminDashboardSchema
