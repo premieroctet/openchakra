@@ -13,6 +13,7 @@ export const OPERATORS = {
     '>': (v, ref) => v > ref,
     '<>': (v, ref) => v != ref,
     'is empty': lodash.isNil,
+    'is not empty': v => !lodash.isEmpty,
   },
   String: {
     '=': (v, ref) => v == ref,
@@ -23,16 +24,20 @@ export const OPERATORS = {
     'does not contain': (v, ref) =>
       !v?.toLowerCase()?.includes(ref?.toLowerCase()),
     'is empty': lodash.isNil,
+    'is not empty': v => !lodash.isEmpty(v),
   },
   Date: {
     before: (v, ref) => moment(v).isBefore(moment(ref)),
     after: (v, ref) => moment(v).isAfter(moment(ref)),
     'is empty': lodash.isNil,
+    'is not empty': v => !lodash.isEmpty(v),
   },
   Enum: {
     '=': (v, ref) => v == ref,
     '<>': (v, ref) => v != ref,
     in: (v, ref) => ref?.split(',').includes(v),
+    'is empty': lodash.isNil,
+    'is not empty': v => !lodash.isEmpty(v),
     /**
     'does not contain': (v, ref) =>
       v?.toLowerCase()?.includes(ref?.toLowerCase()),
