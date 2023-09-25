@@ -1,3 +1,4 @@
+const { sendLeadOnboarding } = require('./mailing')
 const { bufferToString, guessDelimiter } = require('../../../utils/text')
 const { BadRequestError, NotFoundError } = require('../../utils/errors')
 const Company = require('../../models/Company')
@@ -40,13 +41,14 @@ const importLead = leadData => {
 }
 
 const importLeads= buffer => {
+  let leadsBefore=null
   return guessFileType(buffer)
     .then(type => {
       const delim=guessDelimiter(bufferToString(buffer))
-      console.log(`GUessed delimiter:'${delim}',type ${type}`)
-      return extractData(buffer, {format: type, delimiter:delim})
+      return Promise.all([Lead.find().lean(), extractData(buffer, {format: type, delimiter:delim})])
     })
-    .then(data => {
+    .then(([leads, data]) => {
+      leadsBefore=leads
       console.log(`Import leads: got ${data.records.length}, columns ${data.headers.join('/')}`)
       const missingColumns=lodash.difference(MANDATORY_COLUMNS, data.headers)
       if (!lodash.isEmpty(missingColumns)) {
@@ -54,18 +56,25 @@ const importLeads= buffer => {
       }
       const mappedData=data.records.map(input => mapData(input, MAPPING))
       return Promise.allSettled(mappedData.map(importLead))
-        .then(result => {
+    })
+    .then(result => {
+      return Lead.find()
+        .lean()
+        .then(leadsAfter => {
+          const newLeads=leadsAfter.filter(l => !leadsBefore.map(l => l.email).includes(l.email))
+          return Promise.allSettled(newLeads.map(lead => sendLeadOnboarding({lead})))
+        })
+        .then(res => {
           return result.map((r, index) => {
-            let msg=''
-            if (r.status=='rejected') {
-              msg=`Erreur:${r.reason}`
-            }
-            else {
-              const mongo_result=r.value
-              msg=mongo_result.upserted? `Prospect ajouté`: `Prospect mis à jour`
-            }
-            return `Ligne ${index+2}: ${msg}`
-          })
+            if (!r.status) {return r}
+            const msg=r.status=='rejected' ? `Erreur:${r.reason}` :
+              r.value.upserted ? `Prospect ajouté`: `Prospect mis à jour`
+              return `Ligne ${index+2}: ${msg}`
+            })
+        })
+        .then(res => {
+          console.log(`Import result:${res}`)
+          return res
         })
     })
 }

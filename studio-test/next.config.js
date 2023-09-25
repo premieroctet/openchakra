@@ -1,4 +1,8 @@
-require('dotenv').config({ path: `${__dirname}/.env`});
+const path=require('path')
+const myEnv = require('dotenv').config({ path: path.resolve(`${__dirname}/../.env`)});
+const dotenvExpand = require('dotenv-expand')
+const envvar = dotenvExpand.expand(myEnv)
+
 module.exports = {
   typescript: {
     // !! WARN !!
@@ -6,5 +10,8 @@ module.exports = {
     // your project has type errors.
     // !! WARN !!
     ignoreBuildErrors: true,
+  },
+  env: {
+    ...envvar.parsed
   },
 };

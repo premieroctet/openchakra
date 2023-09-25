@@ -1,3 +1,4 @@
+const { datetime_str } = require('../../../utils/dateutils')
 const {
   sendAskContact,
   sendCommentReceived,
@@ -8,8 +9,11 @@ const {
   sendNewMission,
   sendProfileOnline,
   sendProfileReminder,
-  sendTipiSearch
+  sendTipiSearch,
+  sendUsersExtract
 } = require('./mailing')
+const {isDevelopment} = require('../../../config/config')
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const {
   AVAILABILITY,
   BOOLEAN,
@@ -36,6 +40,7 @@ const {
   QUOTATION_STATUS,
   ROLES,
   ROLE_ALLE_ADMIN,
+  ROLE_ALLE_SUPER_ADMIN,
   ROLE_COMPANY_ADMIN,
   ROLE_COMPANY_BUYER,
   ROLE_TI,
@@ -78,7 +83,8 @@ const postCreate = ({model, params, data}) => {
           sendMissionAskedSummary(mission)
         }
         else {
-          sendTipiSearch({admin, mission:mission.toObject()})
+          User.find({role: {$in: [ROLE_ALLE_ADMIN, ROLE_ALLE_SUPER_ADMIN]}})
+            .then(admins => Promise.allSettled(admins.map(admin => sendTipiSearch({admin, mission}))))
         }
     })
   }
@@ -86,7 +92,7 @@ const postCreate = ({model, params, data}) => {
     const contact=data
     const attachment=contact.document ? {url: contact.document} : null
     // TODO check sendMail return
-    User.find({role: ROLE_ALLE_ADMIN})
+    User.find({role: {$in: [ROLE_ALLE_ADMIN, ROLE_ALLE_SUPER_ADMIN]}})
       .then(users => Promise.allSettled(users.map(u => sendAskContact({
         user:{email: u.email},
         fields:{...contact.toObject({virtuals: true}), urgent: contact.urgent ? 'Oui':'Non', status: CONTACT_STATUS[contact.status]},
@@ -186,15 +192,15 @@ setPreCreateData(preCreate)
 
 const postPutData = ({model, id, attribute, data, user}) => {
   if (model=='user') {
-    return User.findById(id)
+    return User.findById(user._id)
       .then(account => {
         if (attribute=='hidden' && value==false) {
           sendProfileOnline(account)
         }
-        if (account?.role==ROLE_TI) {
+        if (account.role==ROLE_TI) {
           return paymentPlugin.upsertProvider(account)
         }
-        if (account?.role==ROLE_COMPANY_BUYER) {
+        if (account.role==ROLE_COMPANY_BUYER) {
           return paymentPlugin.upsertCustomer(account)
         }
       })
@@ -391,8 +397,7 @@ declareVirtualField({model: 'quotation', field: 'total', instance: 'Number', req
 declareVirtualField({model: 'quotation', field: 'vat_total', instance: 'Number', requires: 'details.vat_total'})
 declareVirtualField({model: 'quotation', field: 'ht_total', instance: 'Number', requires: 'details.ht_total'})
 declareVirtualField({model: 'quotation', field: 'customer_total', instance: 'Number', requires: 'gross_total,mer,ht_total'})
-//declareVirtualField({model: 'quotation', field: 'mer', instance: 'Number', requires: 'mission.job.user.qualified,ht_total'})
-declareVirtualField({model: 'quotation', field: 'mer', instance: 'Number', requires: 'ht_total'})
+declareVirtualField({model: 'quotation', field: 'mer', instance: 'Number', requires: 'mission.job.user.qualified,ht_total'})
 declareVirtualField({model: 'quotation', field: 'gross_total', instance: 'Number', requires: 'details.total'})
 declareVirtualField({model: 'quotation', field: 'aa', instance: 'Number', requires: 'ht_total'})
 declareVirtualField({model: 'quotation', field: 'ti_total', instance: 'Number', requires: 'gross_total,aa'})
@@ -584,6 +589,67 @@ AdminDashboard.exists({})
   .then(()=> console.log(`Only adminDashboard`))
   .catch(err=> console.error(`Only adminDashboard:${err}`))
 
+const getUsersList = () => {
+  const HEADERS=[
+    {title: 'Créé le', id:'created_format'},
+    {title: 'Prénom', id:'firstname'},
+    {title: 'Nom', id:'lastname'},
+    {title: 'Email', id:'email'},
+    {title: 'Département', id:'zip_code'},
+    {title: 'Métiers', id: 'job'},
+    {title: 'Masqué', id: 'visible_str'},
+    {title: 'Qualifié', id: 'qualified_str'},
+    {title: 'Accompagnement', id: 'coaching_alle'},
+    {title: '% complétude', id: 'profile_progress'},
+    {title: 'Assurance', id: 'insurance_type'},
+    {title: 'Document assurance', id: 'insurance_report'},
+  ]
+  return User.find().populate('jobs').lean({virtuals:true}).sort({creation_date:1})
+    .then(users => {
+      return users.map(u => ({
+        ...u,
+        job: u.jobs.map(j => j.name).join(','),
+        coaching_alle: u.coaching==COACH_ALLE ? 'oui':'non',
+        created_format: moment(u[CREATED_AT_ATTRIBUTE]).format('DD/MM/YY hh:mm'),
+      }))
+    })
+    .then(users => {
+      const csvStringifier = createCsvWriter({
+        header: HEADERS,
+        fieldDelimiter: ';',
+        path: 'AllTipis.csv',
+      });
+      return csvStringifier.csvStringifier.getHeaderString() + csvStringifier.csvStringifier.stringifyRecords(users)
+    })
+}
+
+const sendUsersList = () => {
+  return Promise.all([
+    User.find({role: {$in: [ROLE_ALLE_ADMIN, ROLE_ALLE_SUPER_ADMIN]}}),
+    getUsersList(),
+  ])
+  .then(([admins, contents]) => {
+    // TODO: contact only. Later will send to SUPER_ADMIN roles only
+    admins=admins.filter(a => /contact/.test(a.email))
+    const name=`Extraction TIPI du ${moment().format('DD/MM/YY HH:mm')}.csv`
+    const content=Buffer.from(contents).toString('base64')
+    const attachment={name, content}
+    return Promise.allSettled(admins.map(admin => sendUsersExtract(admin, attachment)))
+  })
+  .then(console.log)
+}
+
+!isDevelopment() && cron.schedule('0 8 * * * *', async() => {
+  // Send each monday and thursday
+  const DAYS=[1,4]
+  const today=moment().startOf('day').day()
+  if (DAYS.includes(today)) {
+    return sendUsersList()
+      .then(console.log)
+      .catch(console.error)
+  }
+})
+
 // Check payment status
 // Poll every minute
 cron.schedule('*/5 * * * * *', async() => {
@@ -636,3 +702,8 @@ cron.schedule('0 0 19 * * *', () => {
         })
     })
 })
+
+module.exports={
+  getUsersList,
+  sendUsersList,
+}

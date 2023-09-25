@@ -60,10 +60,7 @@ EventSchema.virtual('duration').get(function () {
 })
 
 EventSchema.virtual('status').get(function () {
-  const now=moment()
-  return now.isAfter(this.end_date) ? APPOINTMENT_PAST:
-  now.isBefore(this.start_date) ? APPOINTMENT_TO_COME:
-  APPOINTMENT_CURRENT
+  return null
 })
 
 /* eslint-enable prefer-arrow-callback */

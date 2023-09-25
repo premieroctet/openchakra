@@ -52,7 +52,6 @@ const UserSchema = new Schema({
   },
   email: {
     type: String,
-    required: true,
     set: v => v?.toLowerCase().trim(),
     validate: [value => isEmailOk(value), "L'email est invalide"],
     required: [true, "L'email est obligatoire"],
@@ -126,13 +125,13 @@ const UserSchema = new Schema({
   hidden: {
     type: Boolean,
     default: function() { return this.role==ROLE_TI},
-    required: true,
+    required: [true, `Le status masqué O/N est obligatoire`],
   },
   // Agreed by AllE
   qualified: {
     type: Boolean,
     default: false,
-    required: true,
+    required: [true, `Le status qualifié O/N est obligatoire`],
   },
   nationality: {
     type: String,
@@ -246,7 +245,7 @@ const UserSchema = new Schema({
   dummy: {
     type: Number,
     default: 0,
-    required: true,
+    required: [true, `Dummy est obligatoire`],
   },
 }, schemaOptions
 );

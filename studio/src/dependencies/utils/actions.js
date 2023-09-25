@@ -417,7 +417,6 @@ return Promise.allSettled(imagePromises)
   })
 
   },
-
   deactivateAccount: ({value, props, level, getComponentValue}) => {
     const reason = getComponentValue(props.reason, level)
     let url = `${API_ROOT}/action`
@@ -564,6 +563,7 @@ return Promise.allSettled(imagePromises)
       context,
     }
     return axios.post(url, body)
+      .then(res => res.data)
   },
 
   alle_store_bill: ({ value, context, props, level, getComponentValue }) => {
@@ -574,6 +574,7 @@ return Promise.allSettled(imagePromises)
       context,
     }
     return axios.post(url, body)
+      .then(res => res.data)
   },
 
   alle_show_bill: ({ value, context, props, level, getComponentValue }) => {
@@ -584,6 +585,7 @@ return Promise.allSettled(imagePromises)
       context,
     }
     return axios.post(url, body)
+    .then(res => res.data)
   },
 
   alle_accept_bill: ({ value, context, props, level, getComponentValue }) => {
@@ -594,6 +596,7 @@ return Promise.allSettled(imagePromises)
       context,
     }
     return axios.post(url, body)
+    .then(res => res.data)
   },
 
   alle_refuse_bill: ({ value, context, props, level, getComponentValue }) => {
@@ -604,6 +607,7 @@ return Promise.allSettled(imagePromises)
       context,
     }
     return axios.post(url, body)
+    .then(res => res.data)
   },
 
   alle_leave_comment: ({ value, context, props, level, getComponentValue }) => {
@@ -614,6 +618,7 @@ return Promise.allSettled(imagePromises)
       context,
     }
     return axios.post(url, body)
+      .then(res => res.data)
   },
 
   alle_send_bill: ({value}) => {
@@ -623,6 +628,7 @@ return Promise.allSettled(imagePromises)
       value,
     }
     return axios.post(url, body)
+    .then(res => res.data)
   },
 
   smartdiet_join_group: ({ value }) => {
@@ -729,6 +735,16 @@ return Promise.allSettled(imagePromises)
     } else {
       return Promise.resolve((window.location = urlValue))
     }
+  },
+  
+  download: ({value, props}) => {
+      const a = document.createElement('a');
+      a.download = value;
+      a.href = value;
+      // For Firefox https://stackoverflow.com/a/32226068
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
   },
 
   payMission: ({ context, props }) => {

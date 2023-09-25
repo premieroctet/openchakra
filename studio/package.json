@@ -26,6 +26,7 @@
     "coloreact": "^0.3.1",
     "copy-to-clipboard": "^3.2.1",
     "dotenv": "^16.1.4",
+    "dotenv-expand": "^10.0.0",
     "framer-motion": "7.3.0",
     "html-entities": "^2.3.3",
     "immer": "^9.0.15",

@@ -544,6 +544,17 @@ const callPostPutData = data => {
   return postPutData(data)
 }
 
+// Post delete data
+let postDeleteData = data => Promise.resolve(data)
+
+const setPostDeleteData = fn => {
+  postDeleteData = fn
+}
+
+const callPostDeleteData = data => {
+  return postDeleteData(data)
+}
+
 const putAttribute = ({id, attribute, value, user}) => {
   let model = null
   return getModel(id)
@@ -631,6 +642,7 @@ const removeData = dataId => {
           .then(() => data.delete())
       }
       return data.delete()
+        .then(d => callPostDeleteData({model, data:d}))
     })
 }
 
@@ -684,12 +696,14 @@ const loadFromDb = ({model, fields, id, user, params}) => {
         .then(data => {
           // Lean all objects
           data=data.map(d => d.toObject({virtuals: true}))
+          // Force to plain object
+          data=JSON.parse(JSON.stringify(data))
           // Remove extra virtuals
           //data = retainRequiredFields({data, fields})
           if (id && data.length == 0) { throw new NotFoundError(`Can't find ${model}:${id}`) }
           return Promise.all(data.map(d => addComputedFields(fields,user, params, d, model)))
         })
-        .then(data =>  callFilterDataUser({model, data, id, user}))
+        .then(data => callFilterDataUser({model, data, id, user}))
         //.then(data =>  retainRequiredFields({data, fields}))
     })
 
@@ -758,4 +772,5 @@ module.exports = {
   putToDb,
   setImportDataFunction,
   importData,
+  setPostDeleteData,
 }

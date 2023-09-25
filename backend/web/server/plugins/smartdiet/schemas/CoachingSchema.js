@@ -1,5 +1,6 @@
 const {
   APPOINTMENT_PAST,
+  AVAILABILITIES_RANGE_DAYS,
   COACHING_MODE,
   QUIZZ_TYPE_LOGBOOK,
   QUIZZ_TYPE_PATIENT,
@@ -174,9 +175,11 @@ CoachingSchema.virtual('diet_availabilities', {localField:'tagada', foreignField
 
   const appType=this.appointment_type
 
-  const availabilities=lodash.range(7).map(day_idx => {
-    const day=moment().add(day_idx, 'day')
-    const ranges=this.diet.availability_ranges?.filter(r => day.isSame(r.start_date, 'day') && idEqual(r.appointment_type._id, appType?._id)) || []
+  const diet_availabilities=this.diet.availability_ranges
+
+  const availabilities=lodash.range(AVAILABILITIES_RANGE_DAYS).map(day_idx => {
+    const day=moment().add(day_idx, 'day').startOf('day')
+    const ranges=diet_availabilities?.filter(r => day.isSame(r.start_date, 'day') && idEqual(r.appointment_type._id, appType?._id)) || []
     return ({
       date: day,
       ranges: lodash.orderBy(ranges, 'start_date'),

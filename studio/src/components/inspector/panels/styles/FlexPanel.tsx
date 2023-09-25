@@ -1,7 +1,10 @@
-import React, { memo } from 'react'
 import { Select } from '@chakra-ui/react'
+import React, { memo } from 'react'
+
 import FormControl from '~components/inspector/controls/FormControl'
 import useBreakpoints from '~hooks/useBreakpoints'
+
+import SwitchControl from '../../controls/SwitchControl';
 
 const FlexPanel = ({ bkpt = 'base' }: { bkpt?: string }) => {
   const { responsiveValues, handleBreakpoints } = useBreakpoints([
@@ -63,6 +66,8 @@ const FlexPanel = ({ bkpt = 'base' }: { bkpt?: string }) => {
           <option>space-around</option>
         </Select>
       </FormControl>
+
+      <SwitchControl label={'Use as a filter'} name={'isFilterComponent'}/>
     </>
   )
 }

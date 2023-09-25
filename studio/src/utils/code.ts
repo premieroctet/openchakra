@@ -38,6 +38,7 @@ import {
 } from './misc';
 import { ProjectState, PageState } from '../core/models/project'
 import { isJsonString } from '../dependencies/utils/misc'
+import { key } from '../tests/utils/smartdiet_model.json';
 
 
 //const HIDDEN_ATTRIBUTES=['dataSource', 'attribute']
@@ -53,9 +54,9 @@ export const getPageComponentName = (
 }
 
 const isDynamicComponent = (components:IComponents, comp: IComponent): boolean => {
-  let isDynamic=!!comp.props.dataSource || !!comp.props.subDataSource
+  let isDynamic=(!!comp.props.dataSource || !!comp.props.subDataSource
     || (!!comp.props.action && !CONTAINER_TYPE.includes(comp.type))
-    || (comp.props.model && comp.props.attribute)
+    || (comp.props.model && comp.props.attribute)) && !(comp.type=='Flex' && comp.props.isFilterComponent)
   // Tabs: has dataSource but only TabList and TabPanels children must get the datasource
   if (comp.type=='Tabs') {
     return false
@@ -193,6 +194,8 @@ const buildBlock = ({
         ? `Dynamic${capitalize(childComponent.type)}`
         : isMaskableComponent(childComponent)
         ? `Maskable${capitalize(childComponent.type)}`
+        : (childComponent.type==='Flex' && JSON.parse(childComponent?.props?.isFilterComponent || 'false'))
+        ? 'Filter'
         : capitalize(getWappType(childComponent.type))
       let propsContent = ''
 
@@ -424,6 +427,14 @@ const buildBlock = ({
 
       if (childComponent.type === 'Input' && childComponent.props.type=='password') {
         propsContent += ` displayEye`
+      }
+
+      if (childComponent.type === 'Flex' && childComponent.props.isFilterComponent) {
+        const {props}=childComponent
+        const enums=models[props?.model]?.attributes?.[props.attribute]?.enumValues
+        if (enums) {
+          propsContent += ` enumValues='${JSON.stringify(enums)}'`
+        }
       }
 
       if (
@@ -699,7 +710,6 @@ export const generateCode = async (
   const { settings } = project
   const {description, metaImage, name, url, favicon32, gaTag} = Object.fromEntries(Object.entries(settings).map(([key, value]) => [key, isJsonString(value) ? JSON.parse(value) : value]))
 
-
   const extraImports: string[] = []
   const wappComponentsDeclaration = lodash(components)
     .values()
@@ -784,6 +794,7 @@ export const generateCode = async (
   ''
   */
   code = `import React, {useState, useEffect} from 'react';
+  import Filter from '../dependencies/custom-components/Filter/Filter';
   import omit from 'lodash/omit';
   import Metadata from '../dependencies/Metadata';
   ${hooksCode ? `import axios from 'axios'` : ''}

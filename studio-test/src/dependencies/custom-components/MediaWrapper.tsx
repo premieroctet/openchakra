@@ -1,6 +1,7 @@
 import React from 'react'
 import {IconButton} from '@chakra-ui/react'
 import { DownloadIcon } from '@chakra-ui/icons'
+import { imageSrcSetPaths } from '../utils/misc'
 
 export const getExtension = (filename: string) =>
   filename.substring(filename.lastIndexOf('.') + 1, filename.length) || filename
@@ -10,15 +11,16 @@ export const mediaWrapper = ({
   htmlHeight,
   htmlWidth,
   isIframe = false,
-  canDownload,
+  visio,
+  downloadable,
 }: {
   src: string
   htmlHeight?: string
   htmlWidth?: string
   isIframe?: boolean
-  canDownload?: boolean
+  visio?: boolean
+  downloadable?: boolean
 }) => {
-  // const {htmlWidth, htmlHeight} = props
 
   /* TODO assign type to htmlWidth, htmlHeight */
   const doc = {
@@ -35,7 +37,7 @@ export const mediaWrapper = ({
 
   const isVideoProvider = (src: string) => {
     /* Detect YouTube and Vimeo url videos */
-    const regex = /(http:|https:|)\/\/(player.|www.)?(vimeo\.com|youtu(be\.com|\.be|be\.googleapis\.com))\/(video\/|embed\/|watch\?v=|v\/)?([A-Za-z0-9._%-]*)(\&\S+)?/g
+    const regex = /(http:|https:|)\/\/(player.|www.|meet.)?(jit\.si|vimeo\.com|youtu(be\.com|\.be|be\.googleapis\.com))\/(video\/|embed\/|watch\?v=|v\/)?([A-Za-z0-9._%-]*)(\&\S+)?/g
     return regex.test(src)
   }
   function forceDownload(blob:any, filename:any) {
@@ -67,7 +69,7 @@ export const mediaWrapper = ({
   }
 
   const Comp = () =>
-    canDownload &&
+    downloadable &&
       (
       <div style={{display:'flex', justifyContent:'center'}} ><IconButton
         aria-label='download'
@@ -141,6 +143,7 @@ export const mediaWrapper = ({
           src={src}
           width={htmlWidth}
           height={htmlHeight}
+          allow={visio? "camera *;microphone *" : ''}
           allowFullScreen
         ></iframe>
         <Comp />
@@ -148,14 +151,16 @@ export const mediaWrapper = ({
 
       )
     default:
+      const srcSet = imageSrcSetPaths(src)
       return (
         <>
         <img
           loading="lazy"
-          src={src}
+          src={src}  
           width={doc.width}
           height={doc.height}
           alt=""
+          srcSet={(srcSet && srcSet.join(', ')) || ''}
         />
         <Comp />
         </>

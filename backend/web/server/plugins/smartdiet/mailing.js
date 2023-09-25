@@ -4,6 +4,7 @@ const {datetime_str} = require('../../../utils/dateutils')
 const SIB_IDS={
   // CUSTOMERS
   FORGOT_PASSWORD: 4995801, // OK
+  LEAD_ONBOARDING: 4982108,
   /**
   SATISFY_SURVEY: 4996126,
   CONSULTATION_BOUGHT_OK: 4830569,
@@ -16,8 +17,8 @@ const SIB_IDS={
   */
   // DIETS
   DIET_PREREGISTER_2_DIET: 4852839,
-  /**
   DIET_PREREGISTER_2_ADMIN: 5034812,
+  /**
   DIET_VALIDATED_2_DIET: 5027161,
   DIET_NOT_VALIDATED_TO_DIET: 5033315,
   DIET_ACTIVATED_2_DIET:5033406,
@@ -40,7 +41,7 @@ const sendForgotPassword = ({user, password}) => {
   })
 }
 
-const sendDietPreRegister = ({user}) => {
+const sendDietPreRegister2Diet = ({user}) => {
   return sendNotification({
     notification: SIB_IDS.DIET_PREREGISTER_2_DIET,
     destinee: user,
@@ -50,7 +51,31 @@ const sendDietPreRegister = ({user}) => {
   })
 }
 
+const sendDietPreRegister2Admin = ({user, admin}) => {
+  return sendNotification({
+    notification: SIB_IDS.DIET_PREREGISTER_2_ADMIN,
+    destinee: admin,
+    params: {
+      FIRSTNAME: user.firstname,
+      LASTNAME: user.lastname,
+    },
+  })
+}
+
+const sendLeadOnboarding = ({lead}) => {
+  return sendNotification({
+    notification: SIB_IDS.LEAD_ONBOARDING,
+    destinee: lead,
+    params: {
+      FIRSTNAME: lead.firstname,
+      CODEENTREPRISE: lead.company_code,
+    },
+  })
+}
+
 module.exports = {
   sendForgotPassword,
-  sendDietPreRegister,
+  sendDietPreRegister2Diet,
+  sendDietPreRegister2Admin,
+  sendLeadOnboarding,
 }

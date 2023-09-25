@@ -39,26 +39,27 @@ const setRecurseDataSource = (
       // DANGEROUS!!!!!!!! FOR QUIZZ !!!!!
       const newSuffix = suffix//child?.props?.dataSourceId ? `${suffix}_${index}` : suffix
       const newId = child.props?.id ? `${child.props?.id}${suffix}` : undefined
+      const key = `${dataSource?._id}_${index}`
       const level=newId ? newId.split(/(_.*)$/)[1] : undefined
       //if (child.props === undefined || (child.props.dataSourceId && child.props.dataSourceId!=dataSourceId)) {
         if (child.props === undefined) {
           return child
         } else if (React.Children.count(child.props.children) === 0) {
         if (isOtherSource(child, dataSourceId)) {
-          return React.cloneElement(child, { id: newId, level, key: newId})
+          return React.cloneElement(child, { id: newId, level, key})
         }
-        return React.cloneElement(child, {id: newId, level, dataSource, key: newId})
+        return React.cloneElement(child, {id: newId, level, dataSource, key})
       } else {
         if (isOtherSource(child, dataSourceId)) {
           return React.cloneElement(
             child,
-            { id: newId, level, key: newId },
+            { id: newId, level, key },
             setRecurseDataSource(child, dataSource, dataSourceId, newSuffix),
           )
         }
         return React.cloneElement(
           child,
-          { id: newId, level, dataSource, key: newId },
+          { id: newId, level, dataSource, key },
           setRecurseDataSource(child, dataSource, dataSourceId, newSuffix),
         )
       }
