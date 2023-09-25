@@ -98,10 +98,10 @@ const OwnChart = (
 
       const dateSeries=value?.some(v => !!v.date)
      const labels = value?.map(v => dateSeries ? moment(v.date).format('L') : v.x)
-     const series_data=value?.map(v => v.x ? ({x: v.x, y:v.y}) : ({x:moment(v.date).format('L'), y:v[attribute]}))
 
      const datasets=lodash.range(5).map(index => {
        const attribute=props[`series_${index}_attribute`]
+       const series_data=value?.map(v => v.x ? ({x: v.x, y:v.y}) : ({x:moment(v.date).format('L'), y:v[attribute]}))
        const label=props[`series_${index}_label`]
        const color=props[`series_${index}_color`]
        if ((!dateSeries || attribute) && label) {
