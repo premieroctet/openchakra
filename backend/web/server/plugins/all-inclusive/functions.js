@@ -201,7 +201,7 @@ const postPutData = ({model, id, attribute, data, user}) => {
           return !isDevelopment() && paymentPlugin.upsertProvider(account)
         }
         if (account.role==ROLE_COMPANY_BUYER) {
-          return !isDevelopment() &&paymentPlugin.upsertCustomer(account)
+          return !isDevelopment() && paymentPlugin.upsertCustomer(account)
         }
       })
   }
