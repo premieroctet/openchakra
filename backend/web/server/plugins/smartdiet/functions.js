@@ -161,8 +161,15 @@ const preprocessGet = ({model, fields, id, user, params}) => {
     fields.push('company')
   }
   if (model=='adminDashboard') {
+    if (![ROLE_SUPER_ADMIN, ROLE_ADMIN, ROLE_RH].includes(user.role)) {
+      return ({model, fields, id, data:[]})
+    }
+    if (user.role==ROLE_RH) {
+      id=user.company._id
+    }
     return computeStatistics({id, fields})
       .then(stats => ({model, fields, id, data:[stats]}))
+
   }
   if (model=='menu' && params?.people_count) {
     return loadFromDb({model:'menu', id, fields:[...(fields||[]), 'people_count']})
@@ -537,6 +544,7 @@ coachings.diet.availability_ranges.appointment_type',
       options: {ref: 'range'}
     },
   })
+  declareVirtualField({model: m, field: 'imc', instance: 'Number', requires:'measures,height'})
 })
 // End user/loggedUser
 
@@ -910,6 +918,8 @@ declareVirtualField({model: 'adminDashboard', field: `measures_evolution`, insta
     instance: 'ObjectID',
     options: {ref: 'measure'}},
 })
+declareVirtualField({model: 'adminDashboard', field:'imc_average', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'started_coachings', instance: 'Number'})
 
 declareEnumField({model: 'foodDocument', field: 'type', enumValues: FOOD_DOCUMENT_TYPE})
 declareVirtualField({model: 'foodDocument', field: 'url', type: 'String', requires:'manual_url,document'})
@@ -1233,7 +1243,7 @@ const computeStatistics= ({id, fields}) => {
   return Promise.all([
     Company.find(company_filter)
       .populate([{path: 'webinars', select:'type'},{path: 'groups', populate: 'messages' }])
-      .populate({path: 'users', populate:[{path:'registered_events'},{path: 'replayed_events'},{path:'measures'}]}),
+      .populate({path: 'users', populate:[{path:'registered_events'},{path: 'replayed_events'},{path:'measures'}, {path: 'coachings', populate:{path: 'appointments'}}]},),
     Lead.find()
   ])
     .then(([comps,leads]) => {
@@ -1270,7 +1280,7 @@ const computeStatistics= ({id, fields}) => {
         const delta=(lastMeasure?.[measure_name]-firstMeasure?.[measure_name]) || 0
         return delta
       }
-      const weight_lost_total=allUsers.map(u => get_measure_lost(u.measures, 'weight')).sum()
+      const weight_lost_total=Math.round(allUsers.map(u => get_measure_lost(u.measures, 'weight')).sum()*10.0)/10.0
       const weight_lost_average=Math.round(weight_lost_total*1.0/users_count*10)/10.0
 
       const length_measures='arms,chest,hips,thighs,waist'.split(',')
@@ -1298,13 +1308,17 @@ const computeStatistics= ({id, fields}) => {
         return data
       })
 
+      const imc_average=Math.round(allUsers.filter(u => !!u.imc).map('imc').mean()*10)/10.0
+
+      const started_coachings=allUsers.filter(u => u.coachings.some(c => c.appointments.length>0)).size()
+      //const started_coachings=0
       return ({
         company: id,
         webinars_count, average_webinar_registar, webinars_replayed_count,
         groups_count, messages_count, users_count, leads_count, users_men_count,
         user_women_count, users_no_gender_count, weight_lost_total, weight_lost_average,
         centimeters_lost_total, centimeters_lost_average, age_average,
-        measures_evolution,
+        measures_evolution, imc_average, started_coachings,
       })
     })
 }

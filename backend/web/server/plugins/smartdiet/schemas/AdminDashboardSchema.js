@@ -27,6 +27,8 @@ AdminDashboardSchema.virtual('centimeters_lost_total', {localFields:'tagada',for
 AdminDashboardSchema.virtual('centimeters_lost_average', {localFields:'tagada',foreignField:'tagada'}).get(function() { return 0 })
 AdminDashboardSchema.virtual('age_average', {localFields:'tagada',foreignField:'tagada'}).get(function() { return 0 })
 AdminDashboardSchema.virtual(`measures_evolution`, {localFields:'tagada',foreignField:'tagada'}).get(function() { return 0 })
+AdminDashboardSchema.virtual(`imc_average`, {localFields:'tagada',foreignField:'tagada'}).get(function() { return 0 })
+AdminDashboardSchema.virtual(`started_coachings`, {localFields:'tagada',foreignField:'tagada'}).get(function() { return 0 })
 
 
 module.exports = AdminDashboardSchema
