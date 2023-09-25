@@ -1,5 +1,11 @@
+const {
+  ISSUE_CATEGORY,
+  ISSUE_KIND,
+  ISSUE_PRIORITY,
+  ISSUE_STATUS,
+  ROLES
+} = require('./consts')
 const {declareVirtualField, declareEnumField, setPreprocessGet}=require('../../utils/database')
-const {ROLES, ISSUE_STATUS}=require('./consts')
 
 declareVirtualField({model: 'loggedUser', field: 'password2', type: 'String'})
 declareVirtualField({model: 'user', field: 'password2', type: 'String'})
@@ -14,6 +20,9 @@ declareVirtualField({model: 'company', field: 'users',
 })
 
 declareEnumField({model: 'issue', field: 'status', enumValues: ISSUE_STATUS})
+declareEnumField({model: 'issue', field: 'kind', enumValues: ISSUE_KIND})
+declareEnumField({model: 'issue', field: 'category', enumValues: ISSUE_CATEGORY})
+declareEnumField({model: 'issue', field: 'priority', enumValues: ISSUE_PRIORITY})
 
 const preprocessGet = ({model, fields, id, user, params}) => {
   if (model=='loggedUser') {
@@ -24,4 +33,3 @@ const preprocessGet = ({model, fields, id, user, params}) => {
 }
 
 setPreprocessGet(preprocessGet)
-
