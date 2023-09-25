@@ -118,6 +118,7 @@ require('./models/LogbookDay')
 require('./models/CoachingLogbook')
 require('./models/Lead')
 require('./models/AppointmentType')
+require('./models/GraphData')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 

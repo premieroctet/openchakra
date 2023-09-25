@@ -29,6 +29,8 @@ AdminDashboardSchema.virtual('age_average', {localFields:'tagada',foreignField:'
 AdminDashboardSchema.virtual(`measures_evolution`, {localFields:'tagada',foreignField:'tagada'}).get(function() { return 0 })
 AdminDashboardSchema.virtual(`imc_average`, {localFields:'tagada',foreignField:'tagada'}).get(function() { return 0 })
 AdminDashboardSchema.virtual(`started_coachings`, {localFields:'tagada',foreignField:'tagada'}).get(function() { return 0 })
+AdminDashboardSchema.virtual(`specificities_users`, {localFields:'tagada',foreignField:'tagada'}).get(function() { return 0 })
+AdminDashboardSchema.virtual(`reasons_users`, {localFields:'tagada',foreignField:'tagada'}).get(function() { return 0 })
 
 
 module.exports = AdminDashboardSchema

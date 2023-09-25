@@ -44,9 +44,13 @@ const {
   SEASON,
   SPOON_SOURCE,
   SURVEY_ANSWER,
+  TARGET_COACHING,
+  TARGET_SPECIFICITY,
   TARGET_TYPE,
   UNIT
 } = require('./consts')
+
+const Category = require('../../models/Category')
 const { delayPromise } = require('../../utils/concurrency')
 const {
   getSmartAgendaConfig,
@@ -913,13 +917,23 @@ declareVirtualField({model: 'adminDashboard', field:'weight_lost_average', insta
 declareVirtualField({model: 'adminDashboard', field:'centimeters_lost_total', instance: 'Number'})
 declareVirtualField({model: 'adminDashboard', field:'centimeters_lost_average', instance: 'Number'})
 declareVirtualField({model: 'adminDashboard', field:'age_average', instance: 'Number'})
-declareVirtualField({model: 'adminDashboard', field: `measures_evolution`, instance: 'measure', multiple: true,
+declareVirtualField({model: 'adminDashboard', field: `measures_evolution`, instance: 'Array', multiple: true,
   caster: {
     instance: 'ObjectID',
     options: {ref: 'measure'}},
 })
 declareVirtualField({model: 'adminDashboard', field:'imc_average', instance: 'Number'})
 declareVirtualField({model: 'adminDashboard', field:'started_coachings', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field: `specificities_users`, instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'graphData'}},
+})
+declareVirtualField({model: 'adminDashboard', field: `reasons_users`, instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'graphData'}},
+})
 
 declareEnumField({model: 'foodDocument', field: 'type', enumValues: FOOD_DOCUMENT_TYPE})
 declareVirtualField({model: 'foodDocument', field: 'url', type: 'String', requires:'manual_url,document'})
@@ -1243,13 +1257,17 @@ const computeStatistics= ({id, fields}) => {
   return Promise.all([
     Company.find(company_filter)
       .populate([{path: 'webinars', select:'type'},{path: 'groups', populate: 'messages' }])
-      .populate({path: 'users', populate:[{path:'registered_events'},{path: 'replayed_events'},{path:'measures'}, {path: 'coachings', populate:{path: 'appointments'}}]},),
-    Lead.find()
+      .populate({path: 'users', populate:[{path:'registered_events'},{path: 'replayed_events'},{path:'measures'}, {path: 'coachings', populate:{path: 'appointments'}}]}),
+    Lead.find(),
+    Category.find({type: TARGET_SPECIFICITY}).populate({path: 'targets'}),
+    Category.find({type: TARGET_COACHING}).populate({path: 'targets'}),
   ])
-    .then(([comps,leads]) => {
+    .then(([comps,leads, specif_categories, reasons_categories]) => {
       const companies=lodash(comps)
       const allUsers=companies
         .map('users').flatten().filter(u => u.role==ROLE_CUSTOMER)
+      const specificity_targets=lodash(specif_categories).map(c => c.targets).flatten()
+      const reasons_targets=lodash(reasons_categories).map(c => c.targets).flatten()
       const webinars=companies.map(c => c.webinars).flatten()
       const webinars_count=webinars.size()
       const registered_count=allUsers
@@ -1311,14 +1329,22 @@ const computeStatistics= ({id, fields}) => {
       const imc_average=Math.round(allUsers.filter(u => !!u.imc).map('imc').mean()*10)/10.0
 
       const started_coachings=allUsers.filter(u => u.coachings.some(c => c.appointments.length>0)).size()
-      //const started_coachings=0
+
+      const specificities_users=specificity_targets.map(target => {
+        return ({x: target.name, y:allUsers.filter(u => u.specificity_targets.some(t => t._id.equals(target._id))).size()})
+      })
+
+      const reasons_users=reasons_targets.map(target => {
+        return ({x: target.name, y:allUsers.filter(u => u.coachings.some(c =>  c.reasons.some(r => r._id.equals(target._id)))).size()})
+      })
+
       return ({
         company: id,
         webinars_count, average_webinar_registar, webinars_replayed_count,
         groups_count, messages_count, users_count, leads_count, users_men_count,
         user_women_count, users_no_gender_count, weight_lost_total, weight_lost_average,
         centimeters_lost_total, centimeters_lost_average, age_average,
-        measures_evolution, imc_average, started_coachings,
+        measures_evolution, imc_average, started_coachings, specificities_users, reasons_users,
       })
     })
 }
