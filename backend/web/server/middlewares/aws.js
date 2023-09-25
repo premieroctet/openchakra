@@ -3,7 +3,11 @@ const {S3} = require('@aws-sdk/client-s3')
 const {THUMBNAILS_DIR} = require('../../../web/utils/consts')
 
 const s3 = new S3({
-  region: process.env?.S3_REGION,
+  region: process.env.S3_REGION,
+  credentials: {
+    accessKeyId: process.env.S3_ID,
+    secretAccessKey: process.env.S3_SECRET,
+  }
 })
 
 
@@ -17,11 +21,12 @@ const imageSrcSetPaths = (originalSrc, withDimension=true) => {
    * https://******.amazonaws.com/thumbnails/devtest/studio/wappizy_w:500.webp
    *
    */
+
   let srcSet
 
   const filePathParts = originalSrc.split('_srcset:')
   const filenameextension = originalSrc.substring(originalSrc.lastIndexOf('.') + 1, originalSrc.length)
-      
+
   if (filePathParts.length > 1) {
     const availableSizes = filePathParts[1].match(/\d+/g)
     const availableSizesQty = availableSizes?.length
@@ -37,13 +42,13 @@ const imageSrcSetPaths = (originalSrc, withDimension=true) => {
           .slice(0, indexToPushThumbnails)
           .concat(THUMBNAILS_DIR, shortFilepathParts.slice(indexToPushThumbnails))
         return `${thumbnailsFilepath.join('/')}_w:${size}.${filenameextension}${withDimension ? ` ${size}w` : ''}`
-        
+
       })
   }
   else {
     srcSet = [originalSrc]
   }
-      
+
   return srcSet
 }
 
@@ -51,10 +56,10 @@ exports.sendFilesToAWS = async(req, res, next) => {
   if (!req.body.documents) { return next() }
 
   const documentsToSend = req.body.documents.map(document => {
-    
+
     return new Promise(async(resolve, reject) => {
       const params = {
-        Bucket: process.env?.S3_BUCKET,
+        Bucket: process.env.S3_BUCKET,
         Key: document.filename,
         Body: document.buffer,
         ContentType: document.mimetype,
@@ -66,18 +71,21 @@ exports.sendFilesToAWS = async(req, res, next) => {
         params,
       }).done()
         .then(res => resolve(res))
-        .catch(err => reject(err))
+        .catch(err => {
+          console.error(err)
+          return reject(err)
+        })
     })
   })
 
   req.body.result = await Promise.all(documentsToSend)
     .catch(err => console.error(err))
 
-  next()
+  return next()
 }
 
 exports.getFilesFromAWS = async(req, res, next) => {
-  
+
   const url = `https://${process.env.S3_BUCKET}.s3-${process.env.S3_REGION}.amazonaws.com`
 
   try {
@@ -104,7 +112,7 @@ exports.deleteFileFromAWS = async(req, res, next) => {
   try {
     // does this match with filename pattern
     const filesToDelete = imageSrcSetPaths(req.body.filetodelete, false)
-  
+
     const promiseDelete = filesToDelete.map(url => {
       // Setting up S3 upload parameters
       const params = {
@@ -119,7 +127,7 @@ exports.deleteFileFromAWS = async(req, res, next) => {
           return Promise.reject(err)
         })
     })
-  
+
     await Promise.allSettled(promiseDelete)
 
     req.body.filedeleted = true
