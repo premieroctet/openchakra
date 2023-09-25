@@ -8,15 +8,15 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 AWS.config.update({
-  accessKeyId: process.env.NEXT_PUBLIC_S3_ID,
-  secretAccessKey: process.env.NEXT_PUBLIC_S3_SECRET,
+  accessKeyId: process.env.S3_ID,
+  secretAccessKey: process.env.S3_SECRET,
   region: 'eu-west-3',
 });
 
 const s3 = new AWS.S3();
 
-const sourceBucket = `${process.env.NEXT_PUBLIC_S3_BUCKET}`;
-const destinationBucket = `${process.env.NEXT_PUBLIC_S3_BUCKET}`;
+const sourceBucket = `${process.env.S3_BUCKET}`;
+const destinationBucket = `${process.env.S3_BUCKET}`;
 const sourceFolder = 'all-inclusive';
 const destinationFolder = 'all-inclusive/studio';
 const jsonFileToScan = `${__dirname}/components - 2023-07-21T161800.724.json`
@@ -47,13 +47,13 @@ function findImages(data, parentKey = null) {
 async function scanS3ImagesInJSONFile () {
 
   let s3files = []
-  
+
   const jasonFile = await fs.readFile(jsonFileToScan, 'utf8', async(err, data) => {
     if (err) {
       console.error('Erreur lors de la lecture du fichier JSON :', err);
       return;
     }
-    
+
     return data
   });
 
@@ -105,10 +105,8 @@ async function setImages () {
     });
   });
 
-  
+
 }
 
 
 setImages()
-
-

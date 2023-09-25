@@ -30,8 +30,8 @@ git checkout -b $PROJECT_NAME
 
   echo -e "EXT_PUBLIC_VERSION=1" > .env
   echo -e "NEXT_PUBLIC_BUGSNAG_API_KEY=18bc83982a86e6477448b6bc16c0c18e" >> .env
-  echo -e "NEXT_PUBLIC_S3_ID=<S3_ID>" >> .env
-  echo -e "NEXT_PUBLIC_S3_SECRET=<S3_SECRET>" >> .env
+  echo -e "S3_ID=<S3_ID>" >> .env
+  echo -e "S3_SECRET=<S3_SECRET>" >> .env
   echo -e "NEXT_PUBLIC_S3_ROOTPATH=${PROJECT_NAME}" >> .env
   echo -e "NEXT_PUBLIC_PROJECT_NAME=${PROJECT_NAME}" >> .env
 
@@ -68,10 +68,10 @@ echo "**************************************************************************
 
 echo "Ajoutez le bloc suivant à la configuration nginx:"
 echo "************************************************************************************************"
-cat "$SCRIPTPATH/nginxfragment.txt" | 
-	sed -e "s/{PROJECT_NAME}/${PROJECT_NAME}/g" | 
-	sed -e "s/{FRONTEND_APP_PORT}/${FRONTEND_APP_PORT}/g" | 
-	sed -e "s/{BACKEND_PORT}/${BACKEND_PORT}/g" 
+cat "$SCRIPTPATH/nginxfragment.txt" |
+	sed -e "s/{PROJECT_NAME}/${PROJECT_NAME}/g" |
+	sed -e "s/{FRONTEND_APP_PORT}/${FRONTEND_APP_PORT}/g" |
+	sed -e "s/{BACKEND_PORT}/${BACKEND_PORT}/g"
 
 
 echo "************************************************************************************************"
@@ -79,5 +79,5 @@ echo -e "Ajoutez l'entrée suivante dans votre DNS:\n${PROJECT_NAME} IN CNAME my
 echo "************************************************************************************************"
 
 echo "************************************************************************************************"
-echo -e "Dans le fichier ${PROJECT_DIRECTORY}/studio/.env\nmettez à jour les entrées NEXT_PUBLIC_S3_ID et NEXT_PUBLIC_S3_SECRET"
+echo -e "Dans le fichier ${PROJECT_DIRECTORY}/.env\nmettez à jour les entrées S3_ID et S3_SECRET"
 echo "************************************************************************************************"

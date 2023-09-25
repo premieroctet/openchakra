@@ -208,6 +208,7 @@ const canAlfredParticularRegister = () => {
   return !isMonoProvider() && !process.env.DISABLE_ALFRED_PARTICULAR_REGISTER
 }
 
+// TODO: remove muistDisplayChat
 const displayConfig = () => {
   console.log(`Configuration is:\n\
 \tMode:${get_mode()}\n\
@@ -268,6 +269,25 @@ const checkConfig = () => {
     if (isEmpty(process.env.DATA_MODEL)) {
       reject(`DATA_MODEL non renseigné`)
     }
+    if (isEmpty(process.env.S3_ID)) {
+      reject(`S3_ID non renseigné`)
+    }
+    if (isEmpty(process.env.S3_SECRET)) {
+      reject(`S3_SECRET non renseigné`)
+    }
+    if (isEmpty(process.env.S3_BUCKET)) {
+      reject(`S3_BUCKET non renseigné`)
+    }
+    if (isEmpty(process.env.S3_REGION)) {
+      reject(`S3_REGION non renseigné`)
+    }
+    if (isEmpty(process.env.S3_PROD_ROOTPATH)) {
+      reject(`S3_PROD_ROOTPATH non renseigné`)
+    }
+    if (isEmpty(process.env.S3_STUDIO_ROOTPATH)) {
+      reject(`S3_STUDIO_ROOTPATH non renseigné`)
+    }
+
     displayConfig()
     resolve('Configuration OK')
   })
