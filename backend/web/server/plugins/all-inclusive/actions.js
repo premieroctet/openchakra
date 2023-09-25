@@ -286,10 +286,10 @@ const registerAction = props => {
           .then(admins => admins.map(admin => sendCompanyRegistered(user, admin)))
       }
       if (user.role==ROLE_TI) {
-        return paymentPlugin.upsertProvider(user)
+        return !isDevelopment() && paymentPlugin.upsertProvider(user)
       }
       if (user.role==ROLE_COMPANY_BUYER) {
-        return paymentPlugin.upsertCustomer(user)
+        return !isDevelopment() &&paymentPlugin.upsertCustomer(user)
       }
       return user
     })
