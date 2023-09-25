@@ -6,12 +6,12 @@ const Schema = mongoose.Schema;
 const ActivitySchema = new Schema({
   name: {
     type: String,
-    required: [true, 'Le nom est obligatoire']
+    required: [true, 'Le nom est obligatoire'],
   },
   job: {
     type: Schema.Types.ObjectId,
     ref: "jobUser",
-    required: true,
+    required: [true, `Le métier est obligatoire`],
   },
 }, schemaOptions
 );

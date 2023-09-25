@@ -18,6 +18,9 @@ const {
   EVENT_WEBINAR,
   FOOD_DOCUMENT_TYPE,
   GENDER,
+  GENDER_FEMALE,
+  GENDER_MALE,
+  GENDER_NON_BINARY,
   GROUPS_CREDIT,
   HARDNESS,
   HOME_STATUS,
@@ -41,9 +44,13 @@ const {
   SEASON,
   SPOON_SOURCE,
   SURVEY_ANSWER,
+  TARGET_COACHING,
+  TARGET_SPECIFICITY,
   TARGET_TYPE,
   UNIT
 } = require('./consts')
+
+const Category = require('../../models/Category')
 const { delayPromise } = require('../../utils/concurrency')
 const {
   getSmartAgendaConfig,
@@ -158,8 +165,15 @@ const preprocessGet = ({model, fields, id, user, params}) => {
     fields.push('company')
   }
   if (model=='adminDashboard') {
+    if (![ROLE_SUPER_ADMIN, ROLE_ADMIN, ROLE_RH].includes(user.role)) {
+      return ({model, fields, id, data:[]})
+    }
+    if (user.role==ROLE_RH) {
+      id=user.company._id
+    }
     return computeStatistics({id, fields})
       .then(stats => ({model, fields, id, data:[stats]}))
+
   }
   if (model=='menu' && params?.people_count) {
     return loadFromDb({model:'menu', id, fields:[...(fields||[]), 'people_count']})
@@ -534,6 +548,7 @@ coachings.diet.availability_ranges.appointment_type',
       options: {ref: 'range'}
     },
   })
+  declareVirtualField({model: m, field: 'imc', instance: 'Number', requires:'measures,height'})
 })
 // End user/loggedUser
 
@@ -893,6 +908,32 @@ declareVirtualField({model: 'adminDashboard', field:'average_group_answers', ins
 declareVirtualField({model: 'adminDashboard', field:'messages_count', instance: 'Number'})
 declareVirtualField({model: 'adminDashboard', field:'users_count', instance: 'Number'})
 declareVirtualField({model: 'adminDashboard', field:'active_users_count', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'leads_count', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'users_men_count', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'user_women_count', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'users_no_gender_count', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'weight_lost_total', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'weight_lost_average', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'centimeters_lost_total', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'centimeters_lost_average', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'age_average', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field: `measures_evolution`, instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'measure'}},
+})
+declareVirtualField({model: 'adminDashboard', field:'imc_average', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field:'started_coachings', instance: 'Number'})
+declareVirtualField({model: 'adminDashboard', field: `specificities_users`, instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'graphData'}},
+})
+declareVirtualField({model: 'adminDashboard', field: `reasons_users`, instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'graphData'}},
+})
 
 declareEnumField({model: 'foodDocument', field: 'type', enumValues: FOOD_DOCUMENT_TYPE})
 declareVirtualField({model: 'foodDocument', field: 'url', type: 'String', requires:'manual_url,document'})
@@ -1213,21 +1254,28 @@ const ensureChallengePipsConsistency = () => {
 const computeStatistics= ({id, fields}) => {
   console.log(`Computing stats for ${id} fields ${fields}`)
   const company_filter=id ? {_id: id} : {}
-  return Company.find(company_filter)
-    .populate([{path: 'webinars', select:'type'},{path: 'groups', populate: 'messages' }])
-    .populate({path: 'users', populate:['registered_events','replayed_events']})
-    .then(comps => {
+  return Promise.all([
+    Company.find(company_filter)
+      .populate([{path: 'webinars', select:'type'},{path: 'groups', populate: 'messages' }])
+      .populate({path: 'users', populate:[{path:'registered_events'},{path: 'replayed_events'},{path:'measures'}, {path: 'coachings', populate:{path: 'appointments'}}]}),
+    Lead.find(),
+    Category.find({type: TARGET_SPECIFICITY}).populate({path: 'targets'}),
+    Category.find({type: TARGET_COACHING}).populate({path: 'targets'}),
+  ])
+    .then(([comps,leads, specif_categories, reasons_categories]) => {
       const companies=lodash(comps)
+      const allUsers=companies
+        .map('users').flatten().filter(u => u.role==ROLE_CUSTOMER)
+      const specificity_targets=lodash(specif_categories).map(c => c.targets).flatten()
+      const reasons_targets=lodash(reasons_categories).map(c => c.targets).flatten()
       const webinars=companies.map(c => c.webinars).flatten()
       const webinars_count=webinars.size()
-      const registered_count=companies
-        .map('users').flatten()
+      const registered_count=allUsers
         .map('registered_events').flatten()
         .filter(e => e.type==EVENT_WEBINAR)
         .size()
       const average_webinar_registar=registered_count*1.0/webinars_count
-      const webinars_replayed_count=companies
-        .map('users').flatten()
+      const webinars_replayed_count=allUsers
         .map('replayed_events').flatten()
         .filter(e => e.type==EVENT_WEBINAR)
         .size()
@@ -1236,18 +1284,72 @@ const computeStatistics= ({id, fields}) => {
         .map('groups').flatten()
         .map('messages').flatten()
         .size()
-      const users_count=companies.map(c => c.users.filter(u => u.role==ROLE_CUSTOMER).length)
-        .sum()
+      const users_count=allUsers.size()
+      const companyCodes=companies.map('code').filter(v => !!v).value()
+      const leads_count=leads.filter(l => companyCodes.includes(l.company_code)).length
+      const [users_men_count, user_women_count, users_no_gender_count]=[GENDER_MALE,GENDER_FEMALE,GENDER_NON_BINARY].map(gender => {
+        return allUsers.filter(u => u.gender==gender).size()
+      })
+
+      const get_measure_lost = (measures, measure_name) => {
+        const sortedMeasures=lodash(measures).filter(m => !!m[measure_name]).sortBy('date')
+        const firstMeasure=sortedMeasures.first()
+        const lastMeasure=sortedMeasures.last()
+        const delta=(lastMeasure?.[measure_name]-firstMeasure?.[measure_name]) || 0
+        return delta
+      }
+      const weight_lost_total=Math.round(allUsers.map(u => get_measure_lost(u.measures, 'weight')).sum()*10.0)/10.0
+      const weight_lost_average=Math.round(weight_lost_total*1.0/users_count*10)/10.0
+
+      const length_measures='arms,chest,hips,thighs,waist'.split(',')
+      const centimeters_lost_total=allUsers.map(u => length_measures.map(m => get_measure_lost(u.measures, m))).flatten().sum()
+      const centimeters_lost_average=Math.round(centimeters_lost_total*1.0/users_count*10)/10.0
+
+      let aged_users=allUsers.filter(u => !!u.birthday)
+      let age_average=aged_users.map(u => moment().diff(moment(u.birthday), 'year')).sum()/aged_users.size()
+      age_average=Math.round(age_average*10)/10.0
+
+
+      const get_latest_measure = (date, measures, measure_name) => {
+        const latestMeasure=lodash(measures).filter(m => !!m[measure_name] && date.isAfter(m.date)).sortBy('date').last()
+        return latestMeasure?.[measure_name]||0
+      }
+
+      const measures_evolution=lodash.range(-11, 1).map(offset => {
+        const monthEnd=moment().add(offset, 'month').endOf('month')
+        const measures='chest,waist,weight,hips,arms,thighs'.split(',').map(measure_name => {
+          const measure_total=allUsers.map(u => get_latest_measure(monthEnd, u.measures, measure_name)).sum()
+          return [measure_name, measure_total+20]
+        })
+        const data=Object.fromEntries(measures)
+        data.date=monthEnd
+        return data
+      })
+
+      const imc_average=Math.round(allUsers.filter(u => !!u.imc).map('imc').mean()*10)/10.0
+
+      const started_coachings=allUsers.filter(u => u.coachings.some(c => c.appointments.length>0)).size()
+
+      const specificities_users=specificity_targets.map(target => {
+        return ({x: target.name, y:allUsers.filter(u => u.specificity_targets.some(t => t._id.equals(target._id))).size()})
+      })
+
+      const reasons_users=reasons_targets.map(target => {
+        return ({x: target.name, y:allUsers.filter(u => u.coachings.some(c =>  c.reasons.some(r => r._id.equals(target._id)))).size()})
+      })
+
       return ({
         company: id,
         webinars_count, average_webinar_registar, webinars_replayed_count,
-        groups_count, messages_count, users_count,
+        groups_count, messages_count, users_count, leads_count, users_men_count,
+        user_women_count, users_no_gender_count, weight_lost_total, weight_lost_average,
+        centimeters_lost_total, centimeters_lost_average, age_average,
+        measures_evolution, imc_average, started_coachings, specificities_users, reasons_users,
       })
     })
 }
 
 /** Upsert PARTICULARS company */
-/**
 Company.findOneAndUpdate(
   {name: PARTICULAR_COMPANY_NAME},
   {name: PARTICULAR_COMPANY_NAME, activity: COMPANY_ACTIVITY_SERVICES_AUX_ENTREPRISES},
@@ -1255,7 +1357,6 @@ Company.findOneAndUpdate(
 )
   .then(() => console.log(`Particular company upserted`))
   .catch(err => console.error(`Particular company upsert error:${err}`))
-*/
 
 // Create missings coachings for any CUSTOMER
 User.find({role: ROLE_CUSTOMER}).populate('coachings')

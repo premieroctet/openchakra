@@ -607,6 +607,15 @@ UserSchema.virtual('diet_patients', {localField:'tagada', foreignField:'tagada'}
   return lodash.uniqBy(this.diet_coachings?.map(c => c?.user), u => u?._id).filter(v => !!v)
 })
 
+// Returned availabilities/ranges are not store in database
+UserSchema.virtual('imc', {localField:'tagada', foreignField:'tagada'}).get(function() {
+  if (this.role==ROLE_CUSTOMER) {
+    const latestWeight=lodash(this.measures).filter(m => !!m.weight).sortBy('date').last()
+    const imc=latestWeight?.weight/Math.pow(this.height/100.0, 2) || undefined
+    return imc
+  }
+})
+
 /* eslint-enable prefer-arrow-callback */
 
 module.exports = UserSchema

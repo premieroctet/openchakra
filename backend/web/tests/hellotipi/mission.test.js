@@ -1,6 +1,15 @@
 const {
+  CUSTOMER_USER,
+  QUOTATION,
+  QUOTATION_DETAIL,
+  TI_USER
+} = require('./data/modelsBaseData')
+const Quotation = require('../../server/models/Quotation')
+const QuotationDetail = require('../../server/models/QuotationDetail')
+const { loadFromDb } = require('../../server/utils/database')
+const {
+  BOOLEAN_NO,
   COACHING,
-  QUOTATION_STATUS,
   MISSION_STATUS_ASKING,
   MISSION_STATUS_ASKING_ALLE,
   MISSION_STATUS_BILL_SENT,
@@ -12,6 +21,7 @@ const {
   MISSION_STATUS_QUOT_SENT,
   MISSION_STATUS_TI_REFUSED,
   MISSION_STATUS_TO_BILL,
+  QUOTATION_STATUS,
   ROLE_TI
 } = require('../../server/plugins/all-inclusive/consts')
 const JobUser = require('../../server/models/JobUser')
@@ -22,21 +32,22 @@ const mongoose = require('mongoose')
 const {forceDataModelAllInclusive}=require('../utils')
 
 forceDataModelAllInclusive()
+require('../../server/plugins/all-inclusive/functions')
+require('../../server/utils/database')
 const {MONGOOSE_OPTIONS} = require('../../server/utils/database')
 
 jest.setTimeout(20000)
 
-describe('Test quotations', () => {
+describe('Test missions quotations', () => {
 
-  let user, job
+  let ti, job, customer
 
   beforeAll(async() => {
     await mongoose.connect(`mongodb://localhost/test${moment().unix()}`, MONGOOSE_OPTIONS)
-    user=await User.create({role: ROLE_TI, coaching: Object.keys(COACHING)[0],
-      birthday: moment(), cguAccepted: true, password: 'hop', email:'tagada@a.com',
-      firstname: 'Seb', lastname: 'Auvray',
-    })
-    job=await JobUser.create({user, name: 'Job'})
+    ti=await User.create({...TI_USER})
+    job=await JobUser.create({user:ti, name: 'Job'})
+    customer=await User.create({...CUSTOMER_USER})
+    const mis=await Mission.create({name: 'Mission', description: 'Description de la mission', user:customer, recurrent: BOOLEAN_NO, job})
   })
 
   afterAll(async() => {
@@ -45,7 +56,6 @@ describe('Test quotations', () => {
   })
 
   it('must return status', async() => {
-    await Mission.create({name: 'Mission', description: 'Description de la mission', user})
     expect((await Mission.findOne()).status).toEqual(MISSION_STATUS_ASKING_ALLE)
     await Mission.findOneAndUpdate({}, {$set: {job}})
     expect((await Mission.findOne()).status).toEqual(MISSION_STATUS_ASKING)
@@ -69,4 +79,20 @@ describe('Test quotations', () => {
     expect((await Mission.findOne()).status).toEqual(MISSION_STATUS_DISPUTE)
   })
 
+  it.only('must compute proper mer', async() => {
+    let mission=await Mission.findOne()
+    let quotation=await Quotation.create({...QUOTATION, mission})
+    await QuotationDetail.create({...QUOTATION_DETAIL, quotation})
+    // Not qualified: mer must be null
+    // quotation=(await loadFromDb({model: 'quotation', fields: ['mer']}))[0]
+    // expect(quotation.mer).toBe(0)
+    // mission=(await loadFromDb({model: 'mission', fields: ['mer']}))[0]
+    // expect(quotation.mer).toBe(0)
+    // Qualified: mer must be >0
+    await User.updateMany({}, {qualified: true})
+    // quotation=(await loadFromDb({model: 'quotation', fields: ['mer']}))[0]
+    // expect(quotation.mer).toBeGreaterThan(0)
+    mission=(await loadFromDb({model: 'mission', fields: ['mer']}))[0]
+    expect(mission.mer).toBeGreaterThan(0)
+  })
 })

@@ -9,7 +9,7 @@ const UploadFilePanel = () => {
 
   return (
     <>
-      <SwitchControl label="Message de confirmation" name="notifmsg" />
+      <SwitchControl label="Confirmation Message" name="notifmsg" />
       {noticemsg && <TextControl name="okmsg" label="OK message" />}
     </>
   )

@@ -1,3 +1,6 @@
+const path=require('path')
+const myEnv = require('dotenv').config({path: path.resolve(__dirname, '../../../../.env')})
+const { displayConfig } = require('../../config/config')
 const moment = require('moment')
 const { CREATED_AT_ATTRIBUTE } = require('../../utils/consts')
 const {MONGOOSE_OPTIONS} = require('../../server/utils/database')
@@ -23,6 +26,7 @@ const HEADERS=[
   {title: 'Assurance', id: 'insurance_type'},
   {title: 'Document assurance', id: 'insurance_report'},
 ]
+
 console.log(`extracting all TIPIs`)
 mongoose.connect(getDatabaseUri(), MONGOOSE_OPTIONS)
   .then(() =>  User.find().populate('jobs').lean({virtuals:true}))

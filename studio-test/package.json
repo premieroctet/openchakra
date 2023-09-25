@@ -22,6 +22,7 @@
     "chart.js": "^4.2.1",
     "cors": "^2.8.5",
     "dotenv": "^16.1.4",
+    "dotenv-expand": "^10.0.0",
     "eslint": "8.41.0",
     "eslint-config-next": "13.4.4",
     "express": "^4.18.2",
@@ -54,7 +55,7 @@
     "xml-js": "^1.6.11"
   },
   "scripts": {
-    "dev": "next dev",
+    "dev": "NODE_ENV=development && node src/server.js",
     "build": "next build",
     "start": "NODE_ENV=production && node src/server.js",
     "lint": "next lint"

@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import styled from '@emotion/styled'
-import { uploadFile, listFiles, deleteFile } from '../../core/s3'
+import axios from 'axios'
 import {
   Button,
-  Input,
   Portal,
   Popover,
   PopoverTrigger,
@@ -45,7 +44,7 @@ const Medias = ({
   setMediaSrc: any
   mediaPanelClose: any
 }) => {
-  const autorizedImagesExtensions = ['jpg', 'jpeg', 'png', 'svg', 'gif']
+  const autorizedImagesExtensions = ['jpg', 'jpeg', 'png', 'svg', 'gif', 'webp', 'avif']
   const autorizedVideosExtensions = ['webm', 'mp4']
   const autorizedFilesExtensions = ['pdf', 'txt', 'doc', 'docx', 'xls', 'xlsx']
   const autorizedExtensions = [
@@ -58,8 +57,8 @@ const Medias = ({
   const [mediaSearch, setMediaSearch] = useState<string>('')
   const [images, setImages] = useState<s3media[]>([])
   const { isOpen, onOpen, onClose } = useDisclosure()
-
   const [extfilters, setExtfilters] = useState<string[]>([])
+  let targetDomain = process?.env?.NEXT_PUBLIC_PROJECT_TARGETDOMAIN
 
   const handledExtensions = new Set(
     images
@@ -69,11 +68,27 @@ const Medias = ({
 
   const handleUpload = async (event: React.ChangeEvent) => {
     event.preventDefault()
-    fileToUpload &&
-      (await uploadFile(fileToUpload?.name, fileToUpload)
+
+    if (fileToUpload) {
+      const formData = new FormData();
+      formData.append('document', fileToUpload)
+      formData.append('fromstudio', 'true')
+  
+      const sendFile = await axios.post(
+        `${targetDomain}/myAlfred/api/studio/s3uploadfile`, 
+        formData, 
+        {
+          headers: {
+          'Content-Type': 'multipart/form-data'
+          },
+        }
+      )
         .then(() => onClose())
         .then(() => setFileToUpload(undefined))
-        .then(() => fetchFiles()))
+        .then(() => fetchFiles())
+        .catch(err => console.error(err))
+    }
+    
   }
 
   const handleFilters = (val: string) => {
@@ -85,18 +100,21 @@ const Medias = ({
   }
 
   const handleDelete = async (key: string) => {
-    await deleteFile(key).then(() => {
-      setImages(images.filter((img: s3media) => img.Key !== key))
-    })
+    const res = await axios
+      .post(
+        `${targetDomain}/myAlfred/api/studio/s3deletefile`, {filetodelete: key})
+      .then(() => {
+        setImages(images.filter((img: s3media) => img.Key !== key))
+      })
   }
 
   const fetchFiles = async () => {
-    await listFiles().then(nimages => {
-      setImages(nimages?.data?.Contents)
-    })
+    const res = await axios.get(`${targetDomain}/myAlfred/api/studio/s3getfiles`)
+    setImages(res?.data || [])
   }
 
   useEffect(() => {
+    targetDomain = process?.env?.NEXT_PUBLIC_PROJECT_TARGETDOMAIN || ''
     fetchFiles()
   }, [])
 
@@ -132,7 +150,7 @@ const Medias = ({
           <ModalHeader>Choose your media</ModalHeader>
           <ModalCloseButton />
           <ModalBody display={'flex'} flexDirection={'column'}>
-            <UploadForm>
+            <UploadForm encType="multipart/form-data" method="post">
               <label htmlFor="uploadfile">
                 <div>
                   <img src="/images/backgroundMedias.svg" />
@@ -202,7 +220,7 @@ const Medias = ({
                 X
               </button>
               {mediaWrapper({ src: imgObj.publicUrl })}
-              <p>{imgObj.Key}</p>
+              <p><a target='_blank' href={imgObj.publicUrl}>{imgObj.Key}</a></p>
               {setMediaSrc && (
                 <Button
                   colorScheme={'teal'}
@@ -285,7 +303,7 @@ const MediaCard = styled.div`
   background-color: rgb(243, 243, 243);
   padding: 1rem;
   row-gap: 1rem;
-  border-radius: 2rem;
+  border-radius: 1rem;
   box-shadow: 0px 10px 5px rgba(199, 199, 199, 0.9);
 
   iframe {

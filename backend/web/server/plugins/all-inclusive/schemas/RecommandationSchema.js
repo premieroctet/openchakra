@@ -35,7 +35,7 @@ const RecommandationSchema = new Schema({
   dummy: {
     type: Number,
     default: 0,
-    required: true,
+    required: [true, `Dummy est obligatoire`],
   },
 }, schemaOptions
 );

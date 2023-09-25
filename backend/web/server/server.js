@@ -1,7 +1,9 @@
 const path = require('path')
-require('dotenv').config({path: path.resolve(__dirname, '../../../.env')})
 const https = require('https')
 const fs = require('fs')
+const myEnv = require('dotenv').config({path: path.resolve(__dirname, '../../../.env')})
+const dotenvExpand = require('dotenv-expand')
+dotenvExpand.expand(myEnv)
 const axios = require('axios')
 const mongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
@@ -116,6 +118,7 @@ require('./models/LogbookDay')
 require('./models/CoachingLogbook')
 require('./models/Lead')
 require('./models/AppointmentType')
+require('./models/GraphData')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 

@@ -1,6 +1,9 @@
-const {getDataModel, getPort}=require('./config/config')
+const path=require('path')
+myEnv = require('dotenv').config({ path: path.resolve(__dirname, '../../.env') })
+const dotenvExpand = require('dotenv-expand')
+dotenvExpand.expand(myEnv)
 
-const processName=`BACKEND-${getDataModel()}-${getPort()}`.toUpperCase()
+const processName=`BACKEND-${process.env.DATA_MODEL}-${process.env.BACKEND_PORT}`.toUpperCase()
 module.exports = {
   apps: [{
     name: processName,

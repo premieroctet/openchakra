@@ -35,6 +35,7 @@ const SIB_IDS={
   PROFILE_REMINDER: 61,
   ADMIN_ACCOUNT_CREATED: 63,
   TIPI_SEARCH: 65,
+  USERS_EXTRACTION: 70,
 }
 
 const SMS_CONTENTS={
@@ -394,6 +395,14 @@ const sendProfileReminder = user => {
   })
 }
 
+const sendUsersExtract = (user, attachment) => {
+  return sendNotification({
+    notification: SIB_IDS.USERS_EXTRACTION,
+    destinee: user,
+    attachment,
+  })
+}
+
 module.exports = {
   sendQuotationSentToCustomer,
   sendAccountCreatedToTIPI,
@@ -423,4 +432,5 @@ module.exports = {
   sendMissionReminderTI,
   sendProfileOnline,
   sendProfileReminder,
+  sendUsersExtract,
 }
