@@ -11,7 +11,7 @@ const uploadFileToS3 = async (file: File) => {
   const formData = new FormData();
   formData.append('document', file)
 
-  const uploadedFile = await axios.post(uploadUrl, formData, 
+  const uploadedFile = await axios.post(uploadUrl, formData,
     {
       headers: {
       'Content-Type': 'multipart/form-data'
@@ -47,7 +47,7 @@ const UploadFile = ({
   noautosave: boolean | null
   children: React.ReactNode
 }) => {
-  
+
   const [uploadInfo, setUploadInfo] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [s3File, setS3File] = useState<string|null>()
@@ -76,24 +76,24 @@ const UploadFile = ({
         setIsLoading(true)
         await uploadFileToS3(fileToUpload)
           .then(async result => {
+            setIsLoading(false)
             // @ts-ignore
             const filepath = result?.data
+            console.log(`s3 file:${filepath}`)
             setS3File(filepath)
             paramsBack = { ...paramsBack, value: filepath}
+            setUploadInfo(okmsg)
 
             if (dataSource) {
               typeof filepath === 'string' && await saveUrl(filepath)
               reload()
             }
           })
-          .catch(err => console.error(err))
-          .finally(() => {
-            setIsLoading(false)
-            if (attribute && notifmsg) {
-              typeof s3File === 'undefined' ? setUploadInfo(komsg) : setUploadInfo(okmsg)
-            }
+          .catch(err => {
+            console.error(err)
+            setUploadInfo(komsg)
           })
-          
+
       }
 
       const saveUrl = async (url:string) => {
