@@ -16,7 +16,7 @@ exports.resizeImage = async(req, res, next) => {
   
   // filename is prefixed with uuid, and sanitized
   const uploadedfilename = `${generateUUID()}_${sanitizeFilename(req.file.originalname)}`
-  const rootPath = isDocumentFromStudio ? process.env?.S3_STUDIO_ROOTPATH : process.env?.S3_PROD_ROOTPATH
+  const rootPath = isDocumentFromStudio ? process.env.S3_STUDIO_ROOTPATH : process.env.S3_PROD_ROOTPATH
   const uploadedfilenamebase = uploadedfilename.substring(0, uploadedfilename.lastIndexOf('.'))
  
   if (isImage) {
