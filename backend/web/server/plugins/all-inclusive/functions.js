@@ -198,10 +198,10 @@ const postPutData = ({model, id, attribute, data, user}) => {
           sendProfileOnline(account)
         }
         if (account.role==ROLE_TI) {
-          return paymentPlugin.upsertProvider(account)
+          return !isDevelopment() && paymentPlugin.upsertProvider(account)
         }
         if (account.role==ROLE_COMPANY_BUYER) {
-          return paymentPlugin.upsertCustomer(account)
+          return !isDevelopment() &&paymentPlugin.upsertCustomer(account)
         }
       })
   }
