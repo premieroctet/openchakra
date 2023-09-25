@@ -77,6 +77,10 @@ const defaultRegister=ACTIONS.register
 
 const register = props => {
   // No compay => set the particular one
+  if (!props.role) {
+    props.role=ROLE_CUSTOMER
+    console.log(`Setting role ${JSON.stringify(props.role)}`)
+  }
   // Check company code
   if (props.role==ROLE_CUSTOMER) {
     return getRegisterCompany(props)

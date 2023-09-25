@@ -1350,7 +1350,6 @@ const computeStatistics= ({id, fields}) => {
 }
 
 /** Upsert PARTICULARS company */
-/**
 Company.findOneAndUpdate(
   {name: PARTICULAR_COMPANY_NAME},
   {name: PARTICULAR_COMPANY_NAME, activity: COMPANY_ACTIVITY_SERVICES_AUX_ENTREPRISES},
@@ -1358,7 +1357,6 @@ Company.findOneAndUpdate(
 )
   .then(() => console.log(`Particular company upserted`))
   .catch(err => console.error(`Particular company upsert error:${err}`))
-*/
 
 // Create missings coachings for any CUSTOMER
 User.find({role: ROLE_CUSTOMER}).populate('coachings')
