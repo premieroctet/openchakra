@@ -287,7 +287,7 @@ const preCreate = ({model, params, user}) => {
         if (latest_coaching.appointments.find(a => moment(a.end_date).isAfter(moment()))) {
           throw new ForbiddenError(`Il existe déjà un rendez-vous à venir`)
         }
-        return {model, params:{user: customer_id, coaching: latest_coaching._id, appointment_type: latest_coaching.appointment_type._id, ...params }}
+        return {model, params:{coaching: latest_coaching._id, appointment_type: latest_coaching.appointment_type._id, ...params }}
       })
   }
   return Promise.resolve({model, params})
