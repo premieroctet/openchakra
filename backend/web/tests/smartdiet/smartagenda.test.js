@@ -1,10 +1,3 @@
-const Range = require('../../server/models/Range')
-const { MONGOOSE_OPTIONS } = require('../../server/utils/database')
-const { getDatabaseUri } = require('../../config/config')
-const User = require('../../server/models/User')
-require('../../server/models/Company')
-require('../../server/models/Content')
-require('../../server/models/Comment')
 const {
   createAccount,
   createAppointment,
@@ -22,8 +15,16 @@ const {
   getEvents,
   getToken,
   smartDietToMoment,
+  synchronizeAvailabilities,
   upsertAccount,
 } = require('../../server/plugins/agenda/smartagenda')
+const Range = require('../../server/models/Range')
+const { MONGOOSE_OPTIONS } = require('../../server/utils/database')
+const { getDatabaseUri } = require('../../config/config')
+const User = require('../../server/models/User')
+require('../../server/models/Company')
+require('../../server/models/Content')
+require('../../server/models/Comment')
 const axios = require('axios')
 const { PERIOD } = require('../../server/plugins/smartdiet/consts')
 const moment = require('moment')
@@ -156,14 +157,7 @@ describe('SmartAgenda test ', () => {
   })
 
   it.only('must sync availabilities', async() => {
-    const agendas=await getAgendas()
-    return getAppointmentTypes()
-      .then(appTypes => {
-         const agenda=agendas[1]
-         return runPromisesWithDelay(appTypes.map(appType => () => getAvailabilities({diet_id: agenda.id, from: moment().add(-7, 'days'), to: moment().add(7, 'days'), appointment_type:appType.id})), 0)
-         //return Promise.allSettled(appTypes.map(appType => getAvailabilities({diet_id: agenda.id, from: moment().add(-7, 'days'), to: moment().add(7, 'days'), appointment_type:appType.id})))
-          .then(res => console.log(res.map((r, idx) => `agenda ${agenda.id}, presta ${appTypes[idx].nom}:${r.status=='rejected' ? r.reason : r.value.length}`)))
-          .catch(console.error)
-      })
+    await mongoose.connect(getDatabaseUri(), MONGOOSE_OPTIONS)
+    return synchronizeAvailabilities()
   })
 })

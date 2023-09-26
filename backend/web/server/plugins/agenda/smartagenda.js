@@ -289,31 +289,31 @@ const upsertAvailabilities = diet_smartagenda_id => {
 
 // Synchronize availabilities every minute
 // DISABLED UNTIL SMARTAGENDA WEBHOOK
-//!isDevelopment() && cron.schedule('0 * * * * *', () => {
-cron.schedule('0 * * * * *', () => {
+!isDevelopment() && cron.schedule('0 * * * * *', () => {
+  synchronizeAvailabilities()
+})
+
+const synchronizeAvailabilities = () => {
   console.log('Syncing availabilities from smartagenda')
   const start=moment().add(0, 'days').startOf('day')
   const end=moment().add(AVAILABILITIES_RANGE_DAYS, 'days').startOf('day')
-  return Range.deleteMany({})
-    .then(() => Promise.all([User.find({role: ROLE_EXTERNAL_DIET, smartagenda_id: {$ne: null}}), AppointmentType.find()]))
+  return Promise.all([User.find({role: ROLE_EXTERNAL_DIET, smartagenda_id: {$ne: null}}), AppointmentType.find()])
     .then(([diets, app_types]) => {
       const combinations=lodash.product(diets, app_types)
       //return Promise.allSettled(combinations.map(([diet, app_type]) => {
       return runPromisesWithDelay(combinations.map(([diet, app_type]) => () => {
         return getAvailabilities({diet_id: diet.smartagenda_id, from: start, to: end, appointment_type: app_type.smartagenda_id})
-          .then(avails => {
-            return Promise.all(avails.map(avail => {
-              const params={ user: diet._id, appointment_type: app_type._id, start_date: avail.start_date }
-              return Range.create(params)
-            }))
-          })
-          .catch(err => console.error(`${msg_id}:${err.response.status},${err.response.data.message}`))
+          .then(avails => avails.map(avail => ({ user: diet._id, appointment_type: app_type._id, start_date: avail.start_date })))
       }), 0)
+    })
+    .then(results => {
+      const params=lodash(results).map(f => f.value || []).flatten().value()
+      return Range.deleteMany()
+        .then(() => Range.create(params, {runValidators: true}))
     })
     .then(() => Range.countDocuments())
     .then(res => console.log(`Created ${res} availability ranges`))
-    .catch(console.error)
-})
+}
 
 
 const HOOK_CREATE='insert'
@@ -337,4 +337,5 @@ module.exports={
   HOOK_CREATE,
   HOOK_DELETE,
   HOOK_UPDATE,
+  synchronizeAvailabilities,
 }
