@@ -166,7 +166,7 @@ const preprocessGet = ({model, fields, id, user, params}) => {
   }
   if (model=='adminDashboard') {
     if (![ROLE_SUPER_ADMIN, ROLE_ADMIN, ROLE_RH].includes(user.role)) {
-      return ({model, fields, id, data:[]})
+      return Promise.resolve({model, fields, id, data:[]})
     }
     if (user.role==ROLE_RH) {
       id=user.company._id
