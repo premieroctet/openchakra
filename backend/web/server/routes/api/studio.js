@@ -472,8 +472,7 @@ const putFromRequest = (req, res) => {
 
   return putToDb({model, id, params, user})
     .then(data => {
-      // TODO Which data to return ?
-      return res.json()
+      return res.json(data)
     })
 }
 
