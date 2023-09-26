@@ -1,6 +1,7 @@
 const {
   getHostName,
   getProductionUrl,
+  isDevelopment,
   paymentPlugin
 } = require('../../../config/config')
 const {
