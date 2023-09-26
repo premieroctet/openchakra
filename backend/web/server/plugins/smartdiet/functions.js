@@ -166,7 +166,7 @@ const preprocessGet = ({model, fields, id, user, params}) => {
   }
   if (model=='adminDashboard') {
     if (![ROLE_SUPER_ADMIN, ROLE_ADMIN, ROLE_RH].includes(user.role)) {
-      return ({model, fields, id, data:[]})
+      return Promise.resolve({model, fields, id, data:[]})
     }
     if (user.role==ROLE_RH) {
       id=user.company._id
@@ -262,19 +262,30 @@ const preCreate = ({model, params, user}) => {
     }
   }
   if (model=='appointment') {
-    return loadFromDb({model: 'user', id: user._id, fields:['latest_coachings.appointments', 'latest_coachings.remaining_credits','latest_coachings.appointment_type']})
+    if (![ROLE_EXTERNAL_DIET, ROLE_CUSTOMER].includes(user.role)) {
+      throw new ForbiddenError(`Seuls les rôles patient et diet peuvent prendre un rendez-vous`)
+    }
+    let customer_id
+    if (user.role==ROLE_EXTERNAL_DIET) {
+      if (!params.user) {throw new BadRequestError(`L'id du patent doit être fourni`)}
+      customer_id=params.user
+    }
+    else { //CUSTOMER
+      customer_id=user._id
+    }
+    return loadFromDb({model: 'user', id: customer_id, fields:['latest_coachings.appointments', 'latest_coachings.remaining_credits','latest_coachings.appointment_type']})
       .then(([usr]) => {
         // Check remaining credits
         const latest_coaching=usr.latest_coachings[0]
         if (!latest_coaching) {
-          throw new ForbiddenError(`Vous n'avez pas de coaching en cours`)
+          throw new ForbiddenError(`Aucun coaching en cours`)
         }
         if (latest_coaching.remaining_credits<=0) {
-          throw new ForbiddenError(`Votre offre ne permet pas/plus de prendre un rendez-vous`)
+          throw new ForbiddenError(`L'offre ne permet pas/plus de prendre un rendez-vous`)
         }
         // Check appointment to come
         if (latest_coaching.appointments.find(a => moment(a.end_date).isAfter(moment()))) {
-          throw new ForbiddenError(`Vous avez déjà un rendez-vous à venir`)
+          throw new ForbiddenError(`Il existe déjà un rendez-vous à venir`)
         }
         return {model, params:{coaching: latest_coaching._id, appointment_type: latest_coaching.appointment_type._id, ...params }}
       })

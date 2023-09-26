@@ -12,7 +12,7 @@ const AppointmentSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: 'user',
-    required: true,
+    required: [true, 'Le patient est obligatoire'],
   },
   type: { // Heartbeat, Blood pressure
     type: String,
