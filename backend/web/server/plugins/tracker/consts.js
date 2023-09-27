@@ -1,13 +1,9 @@
 const ROLE_ADMIN='ROLE_ADMIN'
 const ROLE_CUSTOMER='ROLE_CUSTOMER'
-const ROLE_DEV='ROLE_DEV'
-const ROLE_VALID='ROLE_VALID'
 
 const ROLES={
   [ROLE_ADMIN]:'Administrateur',
   [ROLE_CUSTOMER]:'Client',
-  [ROLE_DEV]:'Développeur',
-  [ROLE_VALID]:'Valideur',
 }
 
 const ISSUE_STATUS_NEW="ISSUE_STATUS_NEW"
