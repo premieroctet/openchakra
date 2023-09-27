@@ -198,10 +198,10 @@ const postPutData = ({model, id, attribute, data, user}) => {
           sendProfileOnline(account)
         }
         if (account.role==ROLE_TI) {
-          return paymentPlugin.upsertProvider(account)
+          return !isDevelopment() && paymentPlugin.upsertProvider(account)
         }
         if (account.role==ROLE_COMPANY_BUYER) {
-          return paymentPlugin.upsertCustomer(account)
+          return !isDevelopment() && paymentPlugin.upsertCustomer(account)
         }
       })
   }
@@ -215,7 +215,7 @@ const USER_MODELS=['user', 'loggedUser']
 USER_MODELS.forEach(m => {
   declareVirtualField({model: m, field: 'full_name', instance: 'String', requires: 'firstname,lastname'})
   declareEnumField({model: m, field: 'role', enumValues: ROLES})
-  declareVirtualField({model: m, field: 'profile_progress', instance: 'Number', requires: 'firstname,lastname,email,phone,birthday,nationality,picture,identity_proof_1,iban,company_name,company_status,siret,status_report,insurance_type,insurance_report,company_picture'})
+  declareVirtualField({model: m, field: 'profile_progress', instance: 'Number', requires: 'firstname,lastname,email,phone,birthday,nationality,picture,identity_proof_1,iban,company_name,company_status,siret,status_report,insurance_type,insurance_report,company_picture,jobs'})
   declareEnumField({model: m, field: 'coaching', enumValues: COACHING})
   declareVirtualField({model: m, field: 'password2', instance: 'String'})
   declareEnumField({model: m, field: 'availability', enumValues: AVAILABILITY})
@@ -247,7 +247,8 @@ USER_MODELS.forEach(m => {
       options: {ref: 'mission'}}
   })
   declareVirtualField({model: m, field: 'missions', instance: 'Array', multiple: true,
-    requires: '_missions,_missions.user,_missions.job,_missions.job.user,_missions.quotations,_missions.quotations.details,_missions.comments,missions,missions.user,missions.job,missions.job.user,missions.quotations,missions.comments',
+    requires: '_missions,_missions.user.full_name,_missions.user.company_name,_missions.job.user.full_name,_missions.quotations,_missions.quotations.details,_missions.comments,missions,missions.user,missions.job,missions.job.user,missions.quotations,missions.comments,\
+_missions.comments.mission.job.user.full_name,_missions.comments.mission.user.company_name,_missions.comments.user.picture,_missions.comments.mission.job.user.picture',
     caster: {
       instance: 'ObjectID',
       options: {ref: 'mission'}}
@@ -274,7 +275,8 @@ USER_MODELS.forEach(m => {
   declareVirtualField({model: m, field: 'revenue_to_come', instance: 'Number',
     requires: 'role,_missions.quotations.ti_total,_missions.status,missions.quotations.ti_total,missions.status'})
   declareVirtualField({model: m, field: 'accepted_quotations_count', instance: 'Number', requires: 'role,_missions.status,missions.status'})
-
+  declareVirtualField({model: m, field: 'pending_quotations_count', instance: 'Number', requires: 'role,_missions.status,missions.status'})
+  declareVirtualField({model: m, field: 'pending_bills_count', instance: 'Number', requires: 'role,_missions.status,missions.status'})
   declareVirtualField({model: m, field: 'spent', instance: 'Number',
     requires: 'role,_missions.quotations.customer_total,_missions.status,missions.quotations.customer_total,missions.status'})
   declareVirtualField({model: m, field: 'spent_to_come', instance: 'Number',
@@ -284,7 +286,11 @@ USER_MODELS.forEach(m => {
 
   declareVirtualField({model: m, field: 'profile_shares_count', instance: 'Number', requires: ''})
   declareEnumField({model: m, field: 'unactive_reason', enumValues: UNACTIVE_REASON})
-  declareVirtualField({model: m, field: 'missing_attributes', instance: 'String', requires: 'firstname,lastname,email,phone,birthday,nationality,picture,identity_proof_1,iban,company_name,company_status,siret,status_report,insurance_type,insurance_report,company_picture'})
+  declareVirtualField({model: m, field: 'missing_attributes', instance: 'String', requires: 'firstname,lastname,email,phone,birthday,nationality,picture,identity_proof_1,iban,company_name,company_status,siret,status_report,insurance_type,insurance_report,company_picture,jobs'})
+  declareVirtualField({model: m, field: 'missing_attributes_step_1', instance: 'String', requires: 'firstname,lastname,email,phone,birthday,nationality,picture,identity_proof_1,iban,company_name,company_status,siret,status_report,insurance_type,insurance_report,company_picture,jobs'})
+  declareVirtualField({model: m, field: 'missing_attributes_step_2', instance: 'String', requires: 'firstname,lastname,email,phone,birthday,nationality,picture,identity_proof_1,iban,company_name,company_status,siret,status_report,insurance_type,insurance_report,company_picture,jobs'})
+  declareVirtualField({model: m, field: 'missing_attributes_step_3', instance: 'String', requires: 'firstname,lastname,email,phone,birthday,nationality,picture,identity_proof_1,iban,company_name,company_status,siret,status_report,insurance_type,insurance_report,company_picture,jobs'})
+  declareVirtualField({model: m, field: 'missing_attributes_step_4', instance: 'String', requires: 'firstname,lastname,email,phone,birthday,nationality,picture,identity_proof_1,iban,company_name,company_status,siret,status_report,insurance_type,insurance_report,company_picture,jobs'})
   declareEnumField({model: m, field: 'zip_code', enumValues: DEPARTEMENTS})
   declareVirtualField({model: m, field: '_all_jobs', instance: 'Array', multiple: true,
     caster: {

@@ -84,14 +84,14 @@ describe('Test missions quotations', () => {
     let quotation=await Quotation.create({...QUOTATION, mission})
     await QuotationDetail.create({...QUOTATION_DETAIL, quotation})
     // Not qualified: mer must be null
-    // quotation=(await loadFromDb({model: 'quotation', fields: ['mer']}))[0]
-    // expect(quotation.mer).toBe(0)
-    // mission=(await loadFromDb({model: 'mission', fields: ['mer']}))[0]
-    // expect(quotation.mer).toBe(0)
+    quotation=(await loadFromDb({model: 'quotation', fields: ['mer']}))[0]
+    expect(quotation.mer).toBe(0)
+    mission=(await loadFromDb({model: 'mission', fields: ['mer']}))[0]
+    expect(quotation.mer).toBe(0)
     // Qualified: mer must be >0
     await User.updateMany({}, {qualified: true})
-    // quotation=(await loadFromDb({model: 'quotation', fields: ['mer']}))[0]
-    // expect(quotation.mer).toBeGreaterThan(0)
+    quotation=(await loadFromDb({model: 'quotation', fields: ['mer']}))[0]
+    expect(quotation.mer).toBeGreaterThan(0)
     mission=(await loadFromDb({model: 'mission', fields: ['mer']}))[0]
     expect(mission.mer).toBeGreaterThan(0)
   })
