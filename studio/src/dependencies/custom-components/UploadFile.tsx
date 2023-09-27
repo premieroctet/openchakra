@@ -84,7 +84,7 @@ const UploadFile = ({
             paramsBack = { ...paramsBack, value: filepath}
             setUploadInfo(okmsg)
 
-            if (dataSource) {
+            if (dataSource && !noautosave) {
               typeof filepath === 'string' && await saveUrl(filepath)
               reload()
             }
