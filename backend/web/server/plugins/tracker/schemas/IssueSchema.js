@@ -14,6 +14,11 @@ const Schema = mongoose.Schema
 
 const IssueSchema = new Schema(
   {
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: 'user',
+      required: [true, `Le créateur est obligatoire`],
+    },
     title: {
       type: String,
       required: [true, `Le titre est requis`],
@@ -36,9 +41,13 @@ const IssueSchema = new Schema(
       enum: Object.keys(ISSUE_CATEGORY),
       required: [true, 'La catégorie est obligatoire'],
     },
-    context: {
+    page: {
       type: String,
-      required: [true, 'Le contexte est obligatoire'],
+      required: false,
+    },
+    account: {
+      type: String,
+      required: false,
     },
     title: {
       type: String,
