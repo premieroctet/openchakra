@@ -13,6 +13,7 @@ const {
   MISSION_STATUS_FINISHED,
   MISSION_STATUS_PAYMENT_PENDING,
   MISSION_STATUS_QUOT_ACCEPTED,
+  MISSION_STATUS_QUOT_SENT,
   ROLES,
   ROLE_COMPANY_ADMIN,
   ROLE_COMPANY_BUYER,
@@ -437,6 +438,14 @@ UserSchema.virtual("revenue_to_come").get(function() {
 
 UserSchema.virtual("accepted_quotations_count").get(function() {
   return this.missions?.filter(m => m.status==MISSION_STATUS_QUOT_ACCEPTED ).length
+})
+
+UserSchema.virtual("pending_quotations_count").get(function() {
+  return this.missions?.filter(m => m.status==MISSION_STATUS_QUOT_SENT).length
+})
+
+UserSchema.virtual("pending_bills_count").get(function() {
+  return this.missions?.filter(m => m.status==MISSION_STATUS_BILL_SENT).length
 })
 
 UserSchema.virtual("profile_shares_count").get(function() {

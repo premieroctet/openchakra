@@ -275,7 +275,8 @@ _missions.comments.mission.job.user.full_name,_missions.comments.mission.user.co
   declareVirtualField({model: m, field: 'revenue_to_come', instance: 'Number',
     requires: 'role,_missions.quotations.ti_total,_missions.status,missions.quotations.ti_total,missions.status'})
   declareVirtualField({model: m, field: 'accepted_quotations_count', instance: 'Number', requires: 'role,_missions.status,missions.status'})
-
+  declareVirtualField({model: m, field: 'pending_quotations_count', instance: 'Number', requires: 'role,_missions.status,missions.status'})
+  declareVirtualField({model: m, field: 'pending_bills_count', instance: 'Number', requires: 'role,_missions.status,missions.status'})
   declareVirtualField({model: m, field: 'spent', instance: 'Number',
     requires: 'role,_missions.quotations.customer_total,_missions.status,missions.quotations.customer_total,missions.status'})
   declareVirtualField({model: m, field: 'spent_to_come', instance: 'Number',
