@@ -7,7 +7,6 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 const express = require('express');
 const prod = ['production', 'validation'].includes(process.env.MODE)
 const dev = !prod
-const port = parseInt(process.env?.FRONTEND_APP_PORT, 10) || 3001;
 const next = require('next')
 const bodyParser = require('body-parser')
 const nextApp = prod ? next({prod}) : next({dev})
@@ -17,17 +16,20 @@ const glob = require('glob')
 const cors = require('cors')
 const fs = require('fs')
 const app = express()
+const {checkConfig}=require('./config')
+
 
 const API_PATH = '/myAlfred/api'
-const isSecure = process.env?.MODE === 'production'
 
-console.log(`Starting as ${process.env?.MODE}; production next server is ${prod}`)
-nextApp.prepare().then(() => {
-
+console.log(`Starting as ${process.env.MODE}; production next server is ${prod}`)
+checkConfig()
+  .then(() => nextApp.prepare())
+  .then(() => {
+  const isSecure = process.env.MODE === 'production'
   app.use(
     API_PATH,
     createProxyMiddleware({
-      target: `https://localhost:${process.env?.BACKEND_PORT || '443'}`,
+      target: `https://localhost:${process.env.BACKEND_PORT}`,
       changeOrigin: true,
       pathFilter: API_PATH,
       secure: isSecure
@@ -58,6 +60,8 @@ nextApp.prepare().then(() => {
     key: fs.readFileSync(`${process.env.HOME}/.ssh/privkey.pem`),
   },
   app)
+
+  const port = parseInt(process.env.FRONTEND_APP_PORT, 10)
 
   httpsServer.listen(port, () => console.log(`running on https://localhost:${port}/`))
 
