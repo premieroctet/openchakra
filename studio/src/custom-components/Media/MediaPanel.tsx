@@ -20,6 +20,7 @@ const MediaPanel = () => {
   const htmlHeight = usePropsSelector('htmlHeight')
   const htmlWidth = usePropsSelector('htmlWidth')  
   const visio = usePropsSelector('visio')
+  const downloadable = usePropsSelector('downloadable')
 
   return (
     <>
@@ -61,6 +62,7 @@ const MediaPanel = () => {
       </FormControl>
       <SwitchControl label="Is iframe" name="isIframe" />
       <SwitchControl label="Visio (camera, micro)" name="visio" />
+      <SwitchControl label="Download allowed" name="downloadable" tooltip='hop'/>
 
       <MediaModal isOpen={isOpen} onClose={onClose} />
     </>
