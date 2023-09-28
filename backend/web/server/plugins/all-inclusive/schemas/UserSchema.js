@@ -300,7 +300,7 @@ UserSchema.virtual('profile_progress').get(function() {
 const compute_missing_attributes = (self, attributes) => {
   const filled=getFilledAttributes(self, attributes)
   const missing=lodash(attributes).difference(filled)
-  return missing.isEmpty()  ? null: missing.map(att => PROFILE_ATTRIBUTES[att]).join(', ').replace(/, ([^,]*)$/, ' et $1')
+  return missing.isEmpty()  ? null: `Information(s) manquante(s) : ${missing.map(att => PROFILE_ATTRIBUTES[att]).join(', ').replace(/, ([^,]*)$/, ' et $1')}`
 }
 
 UserSchema.virtual('missing_attributes').get(function() {
