@@ -1391,15 +1391,15 @@ const logbooksConsistency = coaching_id => {
           const previous_appt=lodash(coaching.appointments)
             .filter(a => a.end_date < date)
             .maxBy(a => a.start_date)
-          let result=previous_appt?.logbooks || []
+          const appt_logbooks=previous_appt ? [...previous_appt.logbooks] : []
           return Quizz.find({type:QUIZZ_TYPE_LOGBOOK, default: true}).populate('questions')
             .then(defaultQuizzs => {
-              result.push(...defaultQuizzs)
-              return lodash.uniqBy(result, q => q._id)
+              appt_logbooks.push(...defaultQuizzs)
+              return lodash.uniqBy(appt_logbooks, q => q._id.toString())
             })
         }
         const startDay=moment().add(-6, 'day')
-        const coachingLogbooks=Promise.all(lodash.range(7).map(day_idx => {
+        return Promise.all(lodash.range(7).map(day_idx => {
           const day=moment(startDay).add(day_idx, 'day')
           // expected quizz templates
           return getLogbooksForDay(day)
@@ -1417,7 +1417,7 @@ const logbooksConsistency = coaching_id => {
                   // Remove user quizz
                   q.logbook.delete()
                   // Remove coaching logbook
-                  q.delete()
+                  return q.delete()
                 })))
             })
         }))
