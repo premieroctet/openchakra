@@ -27,8 +27,9 @@ const JobUserSchema = new Schema({
   },
   experience: {
     type: String,
+    set: v => v || undefined,
     enum: Object.keys(EXPERIENCE),
-    //required: [true, "L'expérience est obligatoire"]
+    required: false,
   },
   // No houy rate
   on_quotation: {
