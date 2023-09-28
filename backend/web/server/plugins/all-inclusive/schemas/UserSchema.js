@@ -173,7 +173,7 @@ const UserSchema = new Schema({
   },
   company_name: {
     type: String,
-    required: [function() { return this.role==ROLE_COMPANY_BUYER}, "Le nom de l'entreprise' est obligatoire"],
+    required: [function() { return this.role==ROLE_COMPANY_BUYER}, `Le nom de l'entreprise est obligatoire`],
   },
   company_status: {
     type: String,
@@ -211,11 +211,13 @@ const UserSchema = new Schema({
   },
   company_activity: {
     type: String,
+    set: v => v || undefined,
     enum: Object.keys(COMPANY_ACTIVITY),
     required: false,
   },
   company_size: {
     type: String,
+    set: v => v || undefined,
     enum: Object.keys(COMPANY_SIZE),
     required: false,
   },
