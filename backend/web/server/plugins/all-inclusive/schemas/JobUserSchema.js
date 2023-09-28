@@ -145,7 +145,9 @@ JobUserSchema.virtual('recommandations_count').get(function() {
 
 
 JobUserSchema.virtual('rate_str').get(function() {
-  return this.on_quotation ?  "sur devis" : `${this.rate}€/h`
+  return this.on_quotation ?  "sur devis"
+  :  this.rate ? `${this.rate}€/h`
+  : null
 })
 /* eslint-enable prefer-arrow-callback */
 
