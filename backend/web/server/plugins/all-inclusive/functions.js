@@ -655,7 +655,6 @@ const sendUsersList = () => {
       .catch(console.error)
   }
 })
-
 // Check payment status
 // Poll every minute
 cron.schedule('*/5 * * * * *', async() => {
