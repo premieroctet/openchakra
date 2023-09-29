@@ -645,7 +645,7 @@ const sendUsersList = () => {
   .then(console.log)
 }
 
-!isDevelopment() && cron.schedule('0 8 * * * *', async() => {
+!isDevelopment() && cron.schedule('0 0 8 * * *', async() => {
   // Send each monday and thursday
   const DAYS=[1,4]
   const today=moment().startOf('day').day()
