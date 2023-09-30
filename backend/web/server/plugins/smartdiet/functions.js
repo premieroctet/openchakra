@@ -894,9 +894,9 @@ declareVirtualField({model: 'coaching', field: 'diet_availabilities', instance: 
     instance: 'ObjectID',
     options: {ref: 'availability'}},
 })
-declareVirtualField({model: 'coaching', field: 'appointment_type', instance: 'Array',
+declareVirtualField({model: 'coaching', field: 'appointment_type', instance: 'appointmentType',
   requires: 'appointments,user.company.assessment_appointment_type,user.company.followup_appointment_type',
-  multiple: true,
+  multiple: false,
   caster: {
     instance: 'ObjectID',
     options: {ref: 'appointmentType'}},
