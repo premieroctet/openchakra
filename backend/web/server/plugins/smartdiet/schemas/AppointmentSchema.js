@@ -63,7 +63,7 @@ const AppointmentSchema = new Schema({
 }, schemaOptions)
 
 AppointmentSchema.virtual('order').get(function() {
-  return this.coaching.appointments?.findIndex(app => idEqual(app._id, this._id))+1
+  return this.coaching?.appointments?.findIndex(app => idEqual(app._id, this._id))+1
 })
 
 AppointmentSchema.virtual('status').get(function() {
