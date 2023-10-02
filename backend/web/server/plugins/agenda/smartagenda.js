@@ -47,6 +47,7 @@ const AGENDAS_URL=`https://www.smartagenda.fr/pro/${CONFIG.SMARTAGENDA_URL_PART}
 const EVENTS_URL=`https://www.smartagenda.fr/pro/${CONFIG.SMARTAGENDA_URL_PART}/api/pdo_events`
 const APPOINTMENT_TYPE_URL=`https://www.smartagenda.fr/pro/${CONFIG.SMARTAGENDA_URL_PART}/api/pdo_type_rdv`
 const AVAILABILITIES_URL=`https://www.smartagenda.fr/pro/${CONFIG.SMARTAGENDA_URL_PART}/api/service/getAvailabilities`
+const VISIO_LINK_URL=`https://www.smartagenda.fr/pro/${CONFIG.SMARTAGENDA_URL_PART}/api/service/getVisioLink`
 
 const SMARTDIET_DATE_FORMAT='YYYY-MM-DD HH:mm:00'
 // moment => 2000-01-01 12:00:00
@@ -87,7 +88,7 @@ const getToken = () => {
     .then(({data}) => {
       tokenLimit=moment().add(90, 'minutes')
       storedToken=data.token
-      console.log(`Creating new token, validity is ${tokenLimit}`)
+      console.log(`Creating new token ${storedToken}, validity is ${tokenLimit}`)
       return storedToken
     })
 }
@@ -188,6 +189,14 @@ const createAppointment = (diet_id, client_id, presta_id, start_date, end_date) 
 const deleteAppointment = app_id => {
   return getToken()
     .then(token => axios.delete(`${EVENTS_URL}?token=${token}&id=${app_id}`))
+    .then(res => res.data)
+}
+
+const getAppointmentVisioLink = app_id => {
+  const params={pdo_events_id: app_id }
+
+  return getToken()
+    .then(token => axios.post(VISIO_LINK_URL, params, {params:{token, pdo_events_id: app_id, nbresults: MAX_RESULTS}}))
     .then(res => res.data)
 }
 
@@ -338,4 +347,5 @@ module.exports={
   HOOK_DELETE,
   HOOK_UPDATE,
   synchronizeAvailabilities,
+  getAppointmentVisioLink,
 }

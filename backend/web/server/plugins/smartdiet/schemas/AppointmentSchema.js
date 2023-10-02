@@ -33,6 +33,9 @@ const AppointmentSchema = new Schema({
   smartagenda_id: {
     type: Number,
   },
+  visio_url: {
+    type: String,
+  },
   synthesis: {
     type: String,
     required: false,
