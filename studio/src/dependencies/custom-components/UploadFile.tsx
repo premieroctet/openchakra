@@ -74,7 +74,6 @@ const UploadFile = ({
         setIsLoading(true)
         await uploadFileToS3(fileToUpload)
           .then(async result => {
-            setIsLoading(false)
             // @ts-ignore
             const filepath = result?.data
             console.log(`s3 file:${filepath}`)
@@ -91,7 +90,9 @@ const UploadFile = ({
             console.error(err)
             setUploadInfo(komsg)
           })
-
+          .finally(() => {
+            setIsLoading(false)
+          })
       }
 
       const saveUrl = async (url:string) => {
