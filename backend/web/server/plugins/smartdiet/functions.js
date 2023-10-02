@@ -1,4 +1,15 @@
 const {
+  HOOK_DELETE,
+  HOOK_INSERT,
+  createAppointment,
+  deleteAppointment,
+  getAccount,
+  getAgenda,
+  getAppointmentTypes,
+  getAppointmentVisioLink,
+  upsertAccount
+} = require('../agenda/smartagenda')
+const {
   ACTIVITY,
   ANSWER_STATUS,
   APPOINTMENT_CURRENT,
@@ -60,17 +71,6 @@ const {
   sendDietPreRegister2Admin,
   sendDietPreRegister2Diet,
 } = require('./mailing')
-
-const {
-  HOOK_DELETE,
-  HOOK_INSERT,
-  createAppointment,
-  deleteAppointment,
-  getAccount,
-  getAgenda,
-  getAppointmentTypes,
-  upsertAccount
-} = require('../agenda/smartagenda')
 const {
   declareComputedField,
   declareEnumField,
@@ -894,9 +894,9 @@ declareVirtualField({model: 'coaching', field: 'diet_availabilities', instance: 
     instance: 'ObjectID',
     options: {ref: 'availability'}},
 })
-declareVirtualField({model: 'coaching', field: 'appointment_type', instance: 'Array',
+declareVirtualField({model: 'coaching', field: 'appointment_type', instance: 'appointmentType',
   requires: 'appointments,user.company.assessment_appointment_type,user.company.followup_appointment_type',
-  multiple: true,
+  multiple: false,
   caster: {
     instance: 'ObjectID',
     options: {ref: 'appointmentType'}},
@@ -1202,7 +1202,14 @@ const postCreate = ({model, params, data,user}) => {
       .then(appt => {
         return createAppointment(appt.coaching.diet.smartagenda_id, appt.coaching.user.smartagenda_id,
           appt.appointment_type.smartagenda_id, appt.start_date, appt.end_date)
-          .then(smart_appt => {appt.smartagenda_id=smart_appt.id; return appt.save()})
+          .then(smart_appt => {
+            appt.smartagenda_id=smart_appt.id;
+            return getAppointmentVisioLink(smart_appt.id)
+          })
+          .then(url => {
+            appt.visio_url=url
+            return appt.save()
+          })
       })
     return Promise.allSettled([setProgressQuizz, createSmartagendaAppointment])
       .then(console.log)

@@ -698,6 +698,19 @@ const getWappType = type => {
   return `Wapp${type}`
 }
 
+const reloadOnBackScript = `
+useEffect(() => {
+   const handlePopstate = () => {
+     // This code will run when the user navigates back
+     window.location.reload(); // Reload the component
+   };
+   window.addEventListener('popstate', handlePopstate);
+   return () => {
+     // Cleanup: Remove the event listener when the component unmounts
+     window.removeEventListener('popstate', handlePopstate);
+   };
+ }, []);`
+
 export const generateCode = async (
   pageId: string,
   pages: {
@@ -833,7 +846,12 @@ ${dynamics || ''}
 ${maskable || ''}
 ${componentsCodes}
 
+
 const ${componentName} = () => {
+
+
+  /** Force reload on history.back */
+  ${reloadOnBackScript}
   const query = process.browser ? Object.fromEntries(new URL(window.location).searchParams) : {}
   const id=${rootIgnoreUrlParams ? 'null' : 'query.id'}
   const queryRest=omit(query, ['id'])

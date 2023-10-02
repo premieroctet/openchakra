@@ -402,7 +402,6 @@ const sendUsersExtract = (user, attachment) => {
     attachment,
   })
 }
-
 module.exports = {
   sendQuotationSentToCustomer,
   sendAccountCreatedToTIPI,

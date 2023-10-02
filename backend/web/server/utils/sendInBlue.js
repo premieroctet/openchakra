@@ -25,12 +25,15 @@ class SIB_V3 {
       emailData.cc=ccs.map(cc => ({email: cc}))
     }
     emailData.templateId = parseInt(index)
-    emailData.params = {}
+
     if (attachment) {
       emailData.attachment=[attachment]
     }
-    // TODO Check why Brevo requires params not to be empty !!!
-    Object.assign(emailData.params, data || {dummy: 0})
+    // Brevo requires params not to e mepty
+    if (data) {
+      emailData.params = {}
+      Object.assign(emailData.params, data)
+    }
 
     return this.smtpInstance.sendTransacEmail(emailData)
       .then(data => {

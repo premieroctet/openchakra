@@ -6,20 +6,18 @@ import { ACTIONS } from '../utils/actions';
 
 const uploadUrl = `/myAlfred/api/studio/s3uploadfile`
 
-const uploadFileToS3 = async (file: File) => {
+const uploadFileToS3 = (file: File) => {
 
   const formData = new FormData();
   formData.append('document', file)
 
-  const uploadedFile = await axios.post(uploadUrl, formData,
+  return axios.post(uploadUrl, formData,
     {
       headers: {
       'Content-Type': 'multipart/form-data'
       },
     }
-  ).catch(err => console.error(err))
-
-  return uploadedFile
+  )
 }
 
 
@@ -76,7 +74,6 @@ const UploadFile = ({
         setIsLoading(true)
         await uploadFileToS3(fileToUpload)
           .then(async result => {
-            setIsLoading(false)
             // @ts-ignore
             const filepath = result?.data
             console.log(`s3 file:${filepath}`)
@@ -93,7 +90,9 @@ const UploadFile = ({
             console.error(err)
             setUploadInfo(komsg)
           })
-
+          .finally(() => {
+            setIsLoading(false)
+          })
       }
 
       const saveUrl = async (url:string) => {

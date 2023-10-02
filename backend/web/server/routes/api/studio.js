@@ -27,7 +27,6 @@ const bcrypt = require('bcryptjs')
 const express = require('express')
 const mongoose = require('mongoose')
 const passport = require('passport')
-const {handleUploadedFile} = require('../../middlewares/uploadFile')
 const {resizeImage} = require('../../middlewares/resizeImage')
 const {sendFilesToAWS, getFilesFromAWS, deleteFileFromAWS} = require('../../middlewares/aws')
 const {IMAGE_SIZE_MARKER} = require('../../../utils/consts')
@@ -133,7 +132,7 @@ router.get('/roles', (req, res) => {
   return res.json(ROLES)
 })
 
-router.post('/s3uploadfile', handleUploadedFile, resizeImage, sendFilesToAWS, (req, res) => {
+router.post('/s3uploadfile', createMemoryMulter().single('document'), resizeImage, sendFilesToAWS, (req, res) => {
   const srcFiles = req?.body?.result
   // filter image original file
   const imageSource = Array.isArray(req.body.result) && req?.body?.result.filter(s3obj => s3obj.Location.includes(encodeURIComponent(IMAGE_SIZE_MARKER)))
