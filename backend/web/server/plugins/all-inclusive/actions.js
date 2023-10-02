@@ -1,6 +1,7 @@
 const {
   getHostName,
   getProductionUrl,
+  isDevelopment,
   paymentPlugin
 } = require('../../../config/config')
 const {
@@ -204,11 +205,6 @@ const alle_send_bill = ({value}, user) => {
 }
 addAction('alle_send_bill', alle_send_bill)
 
-const alle_show_bill = ({value}, user) => {
-  return isActionAllowed({action:'alle_show_bill', dataId:value?._id, user})
-}
-addAction('alle_show_bill', alle_show_bill)
-
 const alle_accept_bill = ({value}, user) => {
   return isActionAllowed({action:'alle_accept_bill', dataId:value?._id, user})
     .then(ok => {
@@ -291,10 +287,10 @@ const registerAction = props => {
           .then(admins => admins.map(admin => sendCompanyRegistered(user, admin)))
       }
       if (user.role==ROLE_TI) {
-        return paymentPlugin.upsertProvider(user)
+        return !isDevelopment() && paymentPlugin.upsertProvider(user)
       }
       if (user.role==ROLE_COMPANY_BUYER) {
-        return paymentPlugin.upsertCustomer(user)
+        return !isDevelopment() &&paymentPlugin.upsertCustomer(user)
       }
       return user
     })
@@ -413,11 +409,6 @@ const isActionAllowed = ({action, dataId, user, ...rest}) => {
     return Mission.findById(dataId)
       .populate('quotations')
       .then(mission => mission?.canSendBill(user))
-  }
-  if (action=='alle_show_bill') {
-    return Mission.findById(dataId)
-      .populate('quotations')
-      .then(mission => mission?.canShowBill(user))
   }
   if (action=='alle_accept_bill') {
     return Mission.findById(dataId)

@@ -23,12 +23,11 @@
 	"alle_edit_quotation",
 	"alle_finish_mission",
 	"alle_store_bill",
-	"alle_show_bill",
 	"alle_accept_bill",
 	"alle_refuse_bill",
 	"alle_leave_comment",
   ],
   "transitions": [
-    [TI, MISSION_STATUS_ASKING, alle_create_quotation, 
+    [TI, MISSION_STATUS_ASKING, alle_create_quotation,
   ]
 }

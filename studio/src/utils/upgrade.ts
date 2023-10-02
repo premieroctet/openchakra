@@ -2,7 +2,7 @@ import lodash from 'lodash'
 import { ProjectState } from '~core/models/project'
 import { getPageUrl } from '~utils/misc'
 
-export const CURRENT_VERSION=2
+export const CURRENT_VERSION=3
 
 const replaceLinks= (project: ProjectState) => {
   const pairs=Object.keys(project.pages).map(pId => [getPageUrl(pId, project.pages), pId])
@@ -29,8 +29,28 @@ const replaceLinks= (project: ProjectState) => {
   return project
 }
 
-const UPGRADES={
+export const updateDownloadableAttribute= (project: ProjectState) => {
+  const cloneProject=lodash.cloneDeep(project)
+  Object.values(cloneProject.pages).forEach(page => {
+    Object.values(page.components).forEach(component => {
+      if ('canDownload' in component.props) {
+        console.log('before', component.props)
+        component.props.downloadable=component.props.canDownload
+        delete component.props.canDownload
+        console.log('after', component.props)
+      }
+    })
+  })
+
+  return cloneProject
+}
+
+interface UpgradeFunctions {
+  [key: number]: (p: ProjectState) => ProjectState;
+}
+const UPGRADES: UpgradeFunctions={
   1: (p:ProjectState) => replaceLinks(p),
+  2: (p:ProjectState) => updateDownloadableAttribute(p),
 }
 
 export const upgradeProject = (project:ProjectState) => {

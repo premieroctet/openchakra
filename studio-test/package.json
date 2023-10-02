@@ -55,9 +55,9 @@
     "xml-js": "^1.6.11"
   },
   "scripts": {
-    "dev": "NODE_ENV=development && node src/server.js",
+    "dev": "NODE_ENV=development && nodemon -w ../.env -w src src/server.js",
     "build": "next build",
-    "start": "NODE_ENV=production && node src/server.js",
+    "start": "NODE_ENV=production && nodemon -w ../.env  src/server.js",
     "lint": "next lint"
   },
   "eslintConfig": {
