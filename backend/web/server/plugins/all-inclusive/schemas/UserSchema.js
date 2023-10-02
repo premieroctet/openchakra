@@ -173,7 +173,7 @@ const UserSchema = new Schema({
   },
   company_name: {
     type: String,
-    required: [function() { return this.role==ROLE_COMPANY_BUYER}, "Le nom de l'entreprise' est obligatoire"],
+    required: [function() { return this.role==ROLE_COMPANY_BUYER}, `Le nom de l'entreprise est obligatoire`],
   },
   company_status: {
     type: String,
@@ -211,11 +211,13 @@ const UserSchema = new Schema({
   },
   company_activity: {
     type: String,
+    set: v => v || undefined,
     enum: Object.keys(COMPANY_ACTIVITY),
     required: false,
   },
   company_size: {
     type: String,
+    set: v => v || undefined,
     enum: Object.keys(COMPANY_SIZE),
     required: false,
   },
@@ -283,9 +285,9 @@ const STEP_2=["company_name", "company_status", "siret", "status_report", "insur
 const STEP_3=["iban"]
 const STEP_4=["jobs"]
 
-const getFilledAttributes = (object, attributes) => {
+const getFilledAttributes = (self, attributes) => {
   // TODO: birthday (Date type) is considered empty by lodash
-  const filled=attributes.filter(att => att=='birthday' ? !lodash.isNil(lodash.get(object, att)) : !lodash.isEmpty(lodash.get(object, att)))
+  const filled=attributes.filter(att => att=='birthday' ? !lodash.isNil(lodash.get(self, att)) : !lodash.isEmpty(lodash.get(self, att)))
   return filled
 }
 
@@ -295,39 +297,30 @@ UserSchema.virtual('profile_progress').get(function() {
   return (filled.length*1.0/attributes.length)*100
 });
 
-UserSchema.virtual('missing_attributes').get(function() {
-  const attributes=Object.keys(PROFILE_ATTRIBUTES)
-  const filled=getFilledAttributes(this, attributes)
+const compute_missing_attributes = (self, attributes) => {
+  const filled=getFilledAttributes(self, attributes)
   const missing=lodash(attributes).difference(filled)
-  return missing ? `Informations manquantes : ${missing.map(att => PROFILE_ATTRIBUTES[att]).join(', ').replace(/, ([^,]*)$/, ' et $1')}` : ''
+  return missing.isEmpty()  ? null: `Information(s) manquante(s) : ${missing.map(att => PROFILE_ATTRIBUTES[att]).join(', ').replace(/, ([^,]*)$/, ' et $1')}`
+}
+
+UserSchema.virtual('missing_attributes').get(function() {
+  return compute_missing_attributes(this, Object.keys(PROFILE_ATTRIBUTES))
 });
 
 UserSchema.virtual('missing_attributes_step_1').get(function() {
-  const attributes=STEP_1
-  const filled=getFilledAttributes(this, attributes)
-  const missing=lodash(attributes).difference(filled)
-  return missing ? `Informations manquantes : ${missing.map(att => PROFILE_ATTRIBUTES[att]).join(', ').replace(/, ([^,]*)$/, ' et $1')}` : ''
+  return compute_missing_attributes(this, STEP_1)
 })
 
 UserSchema.virtual('missing_attributes_step_2').get(function() {
-  const attributes=STEP_2
-  const filled=getFilledAttributes(this, attributes)
-  const missing=lodash(attributes).difference(filled)
-  return missing ? `Informations manquantes : ${missing.map(att => PROFILE_ATTRIBUTES[att]).join(', ').replace(/, ([^,]*)$/, ' et $1')}` : ''
+  return compute_missing_attributes(this, STEP_2)
 })
 
 UserSchema.virtual('missing_attributes_step_3').get(function() {
-  const attributes=STEP_3
-  const filled=getFilledAttributes(this, attributes)
-  const missing=lodash(attributes).difference(filled)
-  return missing ? `Informations manquantes : ${missing.map(att => PROFILE_ATTRIBUTES[att]).join(', ').replace(/, ([^,]*)$/, ' et $1')}` : ''
+  return compute_missing_attributes(this, STEP_3)
 })
 
 UserSchema.virtual('missing_attributes_step_4').get(function() {
-  const attributes=STEP_4
-  const filled=getFilledAttributes(this, attributes)
-  const missing=lodash(attributes).difference(filled)
-  return missing ? `Informations manquantes : ${missing.map(att => PROFILE_ATTRIBUTES[att]).join(', ').replace(/, ([^,]*)$/, ' et $1')}` : ''
+  return compute_missing_attributes(this, STEP_4)
 })
 
 UserSchema.virtual("jobs", {

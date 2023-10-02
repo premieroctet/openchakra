@@ -27,8 +27,9 @@ const JobUserSchema = new Schema({
   },
   experience: {
     type: String,
+    set: v => v || undefined,
     enum: Object.keys(EXPERIENCE),
-    //required: [true, "L'expérience est obligatoire"]
+    required: false,
   },
   // No houy rate
   on_quotation: {
@@ -145,7 +146,9 @@ JobUserSchema.virtual('recommandations_count').get(function() {
 
 
 JobUserSchema.virtual('rate_str').get(function() {
-  return this.on_quotation ?  "sur devis" : `${this.rate}€/h`
+  return this.on_quotation ?  "sur devis"
+  :  this.rate ? `${this.rate}€/h`
+  : null
 })
 /* eslint-enable prefer-arrow-callback */
 
