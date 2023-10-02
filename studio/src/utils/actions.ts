@@ -226,7 +226,7 @@ export const ACTIONS: IActions = {
 
       ]})),
     },
-    next: ['openPage'],
+    next: ['openPage', 'previous'],
   },
   // Mettre un warning si les composants ne sont pas dans le même flex
   registerToEvent: {
@@ -271,12 +271,6 @@ export const ACTIONS: IActions = {
     },
     next: ['openPage'],
     required:['amount', 'mode']
-  },
-  // FUMOIR
-  // Mettre un warning si les composants ne sont pas dans le même flex
-  previous: {
-    label: 'Previous',
-    options: {},
   },
   // Register new User
   register: {
