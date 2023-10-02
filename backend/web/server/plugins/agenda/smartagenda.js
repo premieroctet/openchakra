@@ -197,7 +197,7 @@ const getAppointmentVisioLink = app_id => {
 
   return getToken()
     .then(token => axios.post(VISIO_LINK_URL, params, {params:{token, pdo_events_id: app_id, nbresults: MAX_RESULTS}}))
-    .then(res => res.data)
+    .then(({data}) => data.data.link)
 }
 
 // c$Types rendez-vousAgendas: diets

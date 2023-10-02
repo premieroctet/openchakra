@@ -1206,8 +1206,8 @@ const postCreate = ({model, params, data,user}) => {
             appt.smartagenda_id=smart_appt.id;
             return getAppointmentVisioLink(smart_appt.id)
           })
-          .then(({data}) => {
-            appt.visio_url=data.link
+          .then(url => {
+            appt.visio_url=url
             return appt.save()
           })
       })
