@@ -22,7 +22,7 @@ const MessageSchema = new Schema({
     ref: 'group',
     required:[function(){!this.receiver && !this.group}, 'Un destinataire ou groupe est obligatoire'],
   },
-  document: {
+  attachment: {
     type: String,
     required: false,
   },
