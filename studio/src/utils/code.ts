@@ -200,6 +200,7 @@ const buildBlock = ({
       let propsContent = ''
 
       propsContent += ` getComponentValue={getComponentValue} `
+      // DANGEROUS: no more setComponentValue
       //propsContent += ` setComponentValue={setComponentValue} `
 
       // Set component id
