@@ -15,6 +15,10 @@ const UserQuizzQuestionSchema = new Schema({
     ref: 'quizzQuestion',
     required: [true, 'La question modèle est obligatoire'],
   },
+  comment: {
+    type: String,
+    required: false,
+  },
   boolean_answer: {
     type: Boolean,
   },
