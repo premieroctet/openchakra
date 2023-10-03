@@ -200,8 +200,11 @@ const buildBlock = ({
       let propsContent = ''
 
       propsContent += ` getComponentValue={getComponentValue} `
-      // DANGEROUS: no more setComponentValue
-      //propsContent += ` setComponentValue={setComponentValue} `
+
+      // Forces refresh is this compnent's value is changed
+      if (isFilterComponent(childComponent, components)) {
+        propsContent += ` setComponentValue={setComponentValue} `
+      }
 
       // Set component id
       propsContent += ` id='${childComponent.id}' `
@@ -642,7 +645,7 @@ const buildHooks = (components: IComponents) => {
 
 const isFilterComponent = (component: IComponent, components: IComponents) => {
   return Object.values(components).some(
-    c => c.props?.textFilter == component.id,
+    c => (c.props?.textFilter == component.id || c.props?.filterValue == component.id || c.props?.filterValue2 == component.id)
   )
 }
 
