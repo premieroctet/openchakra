@@ -82,7 +82,7 @@ const register = props => {
     console.log(`Setting role ${JSON.stringify(props.role)}`)
   }
   // Check company code
-  if (props.role==ROLE_CUSTOMER) {
+  if (!props.role || props.role==ROLE_CUSTOMER) {
     return getRegisterCompany(props)
     .then(integrityProps => {
       if (!integrityProps.company) {
