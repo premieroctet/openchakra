@@ -200,7 +200,8 @@ const buildBlock = ({
       let propsContent = ''
 
       propsContent += ` getComponentValue={getComponentValue} `
-      propsContent += ` setComponentValue={setComponentValue} `
+      // DANGEROUS: no more setComponentValue
+      //propsContent += ` setComponentValue={setComponentValue} `
 
       // Set component id
       propsContent += ` id='${childComponent.id}' `
