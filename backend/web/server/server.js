@@ -27,6 +27,7 @@ const {
   config,
 } = require('../config/config')
 const {HTTP_CODES, parseError} = require('./utils/errors')
+require('./models/Answer')
 require('./models/ResetToken')
 require('./models/Program')
 require('./models/Theme')
@@ -119,6 +120,9 @@ require('./models/GraphData')
 require('./models/Issue')
 require('./models/Project')
 require('./models/UserProject')
+require('./models/OrderedArticles')
+require('./models/Module')
+require('./models/Article')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 
