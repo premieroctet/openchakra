@@ -1,6 +1,7 @@
 const {
   declareEnumField,
   declareVirtualField,
+  setPreCreateData,
   setPreprocessGet,
 } = require('../../utils/database')
 const {CONTENT_TYPE, QUESTION_TYPE, SEASON}=require('./consts')
@@ -15,21 +16,40 @@ const preprocessGet = ({model, fields, id, user, params}) => {
 
 setPreprocessGet(preprocessGet)
 
+const preCreate = ({model, params, user}) => {
+  if (model=='content') {
+    model=params.type
+  }
+  return Promise.resolve({model, params})
+}
 
-declareVirtualField({model: 'category', field: 'media', type: 'String',
+setPreCreateData(preCreate)
+
+
+declareVirtualField({model: 'category', field: 'media', instance: 'String',
   requires: 'internal_media,external_media',
 })
 
-const ALIASES=['content', 'module', 'article']
-ALIASES.forEach(alias => {
-  declareVirtualField({model: alias, field: 'media', type: 'String',
+const CONTENT_ALIASES=['content', 'module', 'article', 'orderedArticles', 'bestPractices', 'emergency', 'tip']
+CONTENT_ALIASES.forEach(alias => {
+  declareVirtualField({model: alias, field: 'media', instance: 'String',
     requires: 'internal_media,external_media',
   })
-  declareVirtualField({model: alias, field: 'thumbnail', type: 'String',
+  declareVirtualField({model: alias, field: 'thumbnail', instance: 'String',
     requires: 'internal_thumbnail,external_thumbnail',
   })
-  declareVirtualField({model: alias, field: 'type', type: 'String', enumValues: CONTENT_TYPE})
+  declareVirtualField({model: alias, field: 'type', instance: 'String', enumValues: CONTENT_TYPE})
   declareEnumField({model: alias, field: 'season', enumValues: SEASON})
+})
+
+const ARTICLES_ALIASES=['orderedArticles', 'bestPractices', 'emergency']
+ARTICLES_ALIASES.forEach(alias => {
+  declareVirtualField({model: alias, field: 'articles',
+    instance: 'Array', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: {ref: 'article'}},
+  })
 })
 
 declareVirtualField({model: 'question', field: 'available_answers',
@@ -45,11 +65,4 @@ declareVirtualField({model: 'quizz', field: 'questions',
   caster: {
     instance: 'ObjectID',
     options: {ref: 'question'}},
-})
-
-declareVirtualField({model: 'orderedArticles', field: 'articles',
-  instance: 'Array', multiple: true,
-  caster: {
-    instance: 'ObjectID',
-    options: {ref: 'article'}},
 })

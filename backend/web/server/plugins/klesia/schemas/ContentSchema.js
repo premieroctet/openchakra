@@ -34,11 +34,11 @@ const ContentSchema = new Schema({
     type: String,
     required: [true, `Le résumé est obligatoire`],
   },
-  category: {
+  category: [{
     type: Schema.Types.ObjectId,
     ref: 'category',
-    required: [true, 'La catégorie est obligatoire'],
-  },
+    required: true,
+  }],
   // read duration in minutes
   read_duration: {
     type: Number,
