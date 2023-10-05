@@ -131,6 +131,10 @@ QuotationSchema.virtual('gross_ht').get(function() {
   return lodash.sumBy(this.details, 'ht_total')
 })
 
+QuotationSchema.virtual('customer_ht').get(function() {
+  return this.gross_ht+this.mer_ht
+})
+
 QuotationSchema.virtual('customer_vat').get(function() {
   return this.gross_vat+this.mer_vat
 })

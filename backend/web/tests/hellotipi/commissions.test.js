@@ -53,6 +53,7 @@ describe('Compute commissions tests', () => {
     expect(loaded_quotation.mer_ht).toEqual(3)
     expect(loaded_quotation.mer_vat).toBeCloseTo(0.6)
     expect(loaded_quotation.mer_total).toEqual(3.6)
+    expect(loaded_quotation.customer_ht).toEqual(23)
     expect(loaded_quotation.customer_vat).toEqual(4.6)
     expect(loaded_quotation.customer_total).toEqual(27.6)
     // TI
@@ -74,6 +75,7 @@ describe('Compute commissions tests', () => {
     expect(loaded_mission.mer_ht).toEqual(3)
     expect(loaded_mission.mer_vat).toBeCloseTo(0.6)
     expect(loaded_mission.mer_total).toEqual(3.6)
+    expect(loaded_mission.customer_ht).toEqual(23)
     expect(loaded_mission.customer_vat).toEqual(4.6)
     expect(loaded_mission.customer_total).toEqual(27.6)
     // TI

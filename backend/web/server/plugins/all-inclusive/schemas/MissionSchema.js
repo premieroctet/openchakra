@@ -294,6 +294,7 @@ MissionSchema.virtual('aa_total').get(function() { return this.quotations?.[0]?.
 MissionSchema.virtual('aa_vat').get(function() { return this.quotations?.[0]?.aa_vat || 0 })
 MissionSchema.virtual('customer_total').get(function() { return this.quotations?.[0]?.customer_total || 0 })
 MissionSchema.virtual('customer_vat').get(function() { return this.quotations?.[0]?.customer_vat || 0 })
+MissionSchema.virtual('customer_ht').get(function() { return this.quotations?.[0]?.customer_ht || 0 })
 MissionSchema.virtual('gross_ht').get(function() { return this.quotations?.[0]?.gross_ht || 0 })
 MissionSchema.virtual('gross_total').get(function() { return this.quotations?.[0]?.gross_total || 0 })
 MissionSchema.virtual('gross_vat').get(function() { return this.quotations?.[0]?.gross_vat || 0 })
