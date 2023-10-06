@@ -32,7 +32,8 @@ declareVirtualField({model: 'category', field: 'media', instance: 'String',
 
 const USER_ALIASES=['user', 'loggedUser']
 USER_ALIASES.forEach(alias => {
-  declareVirtualField({model: alias, field: 'fullname', instance: 'String', enumValues: CONTENT_TYPE})
+  declareVirtualField({model: alias, field: 'fullname', instance: 'String'})
+  declareVirtualField({model: alias, field: 'password2', instance: 'String'})
 })
 
 const CONTENT_ALIASES=['content', 'module', 'article', 'orderedArticles', 'bestPractices', 'emergency', 'tip']
