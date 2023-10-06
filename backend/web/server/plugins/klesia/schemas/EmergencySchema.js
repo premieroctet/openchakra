@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const {schemaOptions} = require('../../../utils/schemas')
-const OrderedArticlesSchema=require('./OrderedArticlesSchema')
+const StepsContainerSchema=require('./StepsContainerSchema')
 
-// Emergency are exactly ordered articles
+// Emergency are exactly steps containers
 
-module.exports = OrderedArticlesSchema
+module.exports = StepsContainerSchema

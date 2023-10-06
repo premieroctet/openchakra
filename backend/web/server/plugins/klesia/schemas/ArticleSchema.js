@@ -16,11 +16,6 @@ const ArticleSchema = new Schema({
     type: Number,
     required: [function() { return !!this.orderedArticle }, `L'ordre est obligatoire`],
   },
-  orderedArticle: {
-    type: Schema.Types.ObjectId,
-    ref: 'orderedArticles',
-    required: false,
-  },
 }, schemaOptions)
 
 

@@ -39,7 +39,7 @@ USER_ALIASES.forEach(alias => {
   declareVirtualField({model: alias, field: 'password2', instance: 'String'})
 })
 
-const CONTENT_ALIASES=['content', 'module', 'article', 'orderedArticles', 'bestPractices', 'emergency', 'tip']
+const CONTENT_ALIASES=['content', 'module', 'article', 'stepsContainer', 'bestPractices', 'emergency', 'tip']
 CONTENT_ALIASES.forEach(alias => {
   declareVirtualField({model: alias, field: 'media', instance: 'String',
     requires: 'internal_media,external_media',
@@ -51,13 +51,13 @@ CONTENT_ALIASES.forEach(alias => {
   declareEnumField({model: alias, field: 'season', enumValues: SEASON})
 })
 
-const ARTICLES_ALIASES=['orderedArticles', 'bestPractices', 'emergency']
+const ARTICLES_ALIASES=['stepsContainer', 'bestPractices', 'emergency']
 ARTICLES_ALIASES.forEach(alias => {
-  declareVirtualField({model: alias, field: 'articles',
+  declareVirtualField({model: alias, field: 'steps',
     instance: 'Array', multiple: true,
     caster: {
       instance: 'ObjectID',
-      options: {ref: 'article'}},
+      options: {ref: 'step'}},
   })
 })
 
