@@ -72,3 +72,17 @@ declareVirtualField({model: 'quizz', field: 'questions',
     instance: 'ObjectID',
     options: {ref: 'question'}},
 })
+
+declareVirtualField({model: 'category', field: 'children',
+  instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'category'}},
+})
+
+declareVirtualField({model: 'category', field: 'contents',
+  instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'content'}},
+})
