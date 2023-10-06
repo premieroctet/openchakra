@@ -123,6 +123,9 @@ require('./models/UserProject')
 require('./models/OrderedArticles')
 require('./models/Module')
 require('./models/Article')
+require('./models/BestPractices')
+require('./models/Tip')
+require('./models/Emergency')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 

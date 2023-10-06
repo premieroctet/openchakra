@@ -34,7 +34,7 @@ const ContentSchema = new Schema({
     type: String,
     required: [true, `Le résumé est obligatoire`],
   },
-  category: [{
+  categories: [{
     type: Schema.Types.ObjectId,
     ref: 'category',
     required: true,

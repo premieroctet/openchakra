@@ -1,16 +1,18 @@
-const mongoose = require('mongoose')
-const {getDataModel} = require('../../config/config')
+const {getDataModel}=require('../../config/config')
 
-let OrderedArticlesSchema=null
+let OrderedArticles = null
 
 try {
-  OrderedArticlesSchema=require(`../plugins/${getDataModel()}/schemas/OrderedArticlesSchema`)
-  OrderedArticlesSchema.plugin(require('mongoose-lean-virtuals'))
+  const Content = require(`./Content`)
+  if (Content) {
+    const OrderedArticlesSchema=require(`../plugins/${getDataModel()}/schemas/OrderedArticlesSchema`)
+    OrderedArticlesSchema.plugin(require('mongoose-lean-virtuals'))
+    OrderedArticles = Content.discriminator('orderedArticles', OrderedArticlesSchema)
+  }
 }
-catch(err) {
+catch (err) {
   if (err.code !== 'MODULE_NOT_FOUND') {
     throw err
   }
 }
-
-module.exports = OrderedArticlesSchema ? mongoose.model('orderedArticles', OrderedArticlesSchema) : null
+module.exports = OrderedArticles
