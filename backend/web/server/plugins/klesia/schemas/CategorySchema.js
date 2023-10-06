@@ -20,8 +20,9 @@ const CategorySchema = new Schema({
     type: String,
     required: false,
   },
-  order: {
-    type: Number,
+  parent: {
+    type: Schema.Types.ObjectId,
+    ref: 'category',
     required: false,
   },
 }, schemaOptions)
