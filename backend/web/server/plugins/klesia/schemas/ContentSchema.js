@@ -46,6 +46,7 @@ const ContentSchema = new Schema({
   },
   season: {
     type: 'String',
+    set: v => v || undefined,
     enum: Object.keys(SEASON),
     required: false,
   }

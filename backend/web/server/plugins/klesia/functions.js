@@ -20,6 +20,9 @@ const preCreate = ({model, params, user}) => {
   if (model=='content') {
     model=params.type
   }
+  if (['article', 'quizz', 'module', 'bestPractices', 'emergency', 'tip']) {
+    params.creator=user
+  }
   return Promise.resolve({model, params})
 }
 
