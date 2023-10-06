@@ -109,7 +109,7 @@ QuotationSchema.virtual('aa_total').get(function() {
 })
 
 QuotationSchema.virtual('ti_vat').get(function() {
-  const ti_total=this.gross_vat+this.aa_vat
+  const ti_total=this.aa_vat
   return ti_total
 })
 
