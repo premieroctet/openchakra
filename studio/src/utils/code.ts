@@ -644,9 +644,23 @@ const buildHooks = (components: IComponents) => {
 }
 
 const isFilterComponent = (component: IComponent, components: IComponents) => {
-  return Object.values(components).some(
-    c => (c.props?.textFilter == component.id || c.props?.filterValue == component.id || c.props?.filterValue2 == component.id)
+
+  let result=Object.values(components).some(
+    c => (c.props?.textFilter == component.id || c.props?.filterValue == component.id
+      || c.props?.filterValue2 == component.id
+    )
   )
+
+  // Check if any compoennt has this component has a filter attribute
+  result = result ||Object.values(components).some(cmp => {
+    return Object.entries(cmp.props).some(([propName, propvalue]) => {
+      if (/^conditions/.test(propName)) {
+        const value=typeof(propvalue)=='string' ? JSON.parse(propvalue):propvalue
+        return Object.values(value).some((v:any) => v.attribute==component.id)
+      }
+    })
+  })
+  return result
 }
 
 const buildDynamics = (components: IComponents, extraImports: string[]) => {

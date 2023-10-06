@@ -1,11 +1,12 @@
-import React from 'react'
 import { Button, Select, Input, Flex, Box } from '@chakra-ui/react'
-import { useEffect, useState, memo } from 'react'
 import {Select as MultipleSelect} from 'chakra-react-select'
-import { getOperators, isOperatorMultiple, ValueComponent } from '../../../dependencies/utils/filters'
+import React, { memo, useEffect, useState } from 'react';
 import lodash from 'lodash'
 
-const FiltersPanel = ({ attributes, filter, onValidate }) => {
+import { components } from '../../../tests/data/dashboardAlfred.json';
+import { getOperators, isOperatorMultiple, ValueComponent } from '../../../dependencies/utils/filters'
+
+const FiltersPanel = ({ attributes, components, filter, onValidate }) => {
   const [attribute, setAttribute] = useState(filter?.attribute || null)
   const [operators, setOperators] = useState([])
   const [operator, setOperator] = useState(filter?.operator || null)
@@ -26,9 +27,10 @@ const FiltersPanel = ({ attributes, filter, onValidate }) => {
   const multipleChoiceEnabled = isOperatorMultiple(attributes[attribute], operator)
 
   const type = attributes[attribute]?.multiple ? 'Array' : attributes[attribute]?.enumValues ? 'Enum': attributes[attribute]?.ref ? 'Ref' : attributes[attribute]?.type
-  
+  const isComponent = !!attributes[attribute]?.isComponent
+
   const onValidateInternal = () => {
-    onValidate({ attribute, operator, value, type })
+    onValidate({ attribute, operator, value, type, isComponent })
   }
 
 

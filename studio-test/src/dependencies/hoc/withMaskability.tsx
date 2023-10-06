@@ -1,8 +1,6 @@
 import React from 'react'
 import { UserCtx } from '../context/user';
 import { getConditionalProperties } from '../utils/filters';
-import lodash from 'lodash'
-
 import { NOT_CONNECTED } from '../utils/misc';
 
 const withMaskability = (Component: React.FC<any>) => {
@@ -16,7 +14,8 @@ const withMaskability = (Component: React.FC<any>) => {
     user: UserCtx
     dataSource: any
   }) => {
-    const conditional_props=getConditionalProperties(props, dataSource)
+
+    const conditional_props=getConditionalProperties(props, dataSource, props.getComponentValue)
 
     if (conditional_props?.visibility==false) {
       return null

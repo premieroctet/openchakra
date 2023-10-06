@@ -71,26 +71,28 @@ export const isOperatorMultiple = (att, op) => {
   return att?.enumValues && op=='in'
 }
 
-const createFilters = (filterDef, props) => {
+const createFilters = (filterDef, props, componentValueGetter) => {
   return Object.entries(filterDef).map(([id, def]) => {
     const targetValue = props[`condition${id}`] || false
     const attribute = def.attribute
     const opFn = getOperators(def)[def.operator]
     const vRef = def.value
     return dataSource => {
-      const dataValue = lodash.get(dataSource, attribute)
+      const dataValue = def.isComponent ?
+        componentValueGetter(attribute)
+        :lodash.get(dataSource, attribute)
       return opFn(dataValue, vRef) ? targetValue : null
     }
   })
 }
 
-export const getConditionalProperties = (props, dataSource) => {
+export const getConditionalProperties = (props, dataSource, componentValueGetter) => {
   const conditions = Object.keys(props).filter(k => /^conditions/.test(k))
   const properties = Object.fromEntries(
     conditions
       .map(cond => {
         const property = cond.match(/^conditions(.*)$/)[1]
-        const filters = createFilters(props[cond], props)
+        const filters = createFilters(props[cond], props, componentValueGetter)
         const v = filters.map(f => f(dataSource)).find(v => v!=null)
         return v!=null ? [property, v] : null
       })
