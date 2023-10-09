@@ -89,10 +89,12 @@ declareVirtualField({model: 'category', field: 'children',
     instance: 'ObjectID',
     options: {ref: 'category'}},
 })
-
 declareVirtualField({model: 'category', field: 'contents',
   instance: 'Array', multiple: true,
   caster: {
     instance: 'ObjectID',
     options: {ref: 'content'}},
 })
+
+declareVirtualField({model: 'module', field: 'contents_count',
+  instance: 'Number', requires: 'contents'})
