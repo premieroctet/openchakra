@@ -40,7 +40,7 @@ USER_ALIASES.forEach(alias => {
   declareVirtualField({model: alias, field: 'password2', instance: 'String'})
 })
 
-const CONTENT_ALIASES=['content', 'module', 'article', 'stepsContainer', 'bestPractices', 'emergency', 'tip']
+const CONTENT_ALIASES=['content', 'module', 'article', 'bestPractices', 'emergency', 'tip', 'quizz']
 CONTENT_ALIASES.forEach(alias => {
   declareVirtualField({model: alias, field: 'media', instance: 'String',
     requires: 'internal_media,external_media',

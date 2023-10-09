@@ -4,10 +4,6 @@ const {schemaOptions} = require('../../../utils/schemas')
 const Schema = mongoose.Schema
 
 const QuizzSchema = new Schema({
-  name: {
-    type: String,
-    required: [true, 'Le nom est obligatoire'],
-  },
 }, schemaOptions)
 
 /* eslint-enable prefer-arrow-callback */
