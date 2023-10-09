@@ -22,7 +22,7 @@ const StepSchema = new Schema({
   },
   container: {
     type: Schema.Types.ObjectId,
-    ref: 'stepsContainer',
+    ref: 'content',
     required: [true, `Le parent est obligaoire`]
   },
   order: {
