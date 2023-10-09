@@ -32,7 +32,7 @@ const hasGroups = account => {
 }
 
 const isInsurance = account => {
-  return account?.company?.activity===COMPANY_ACTIVITY_ASSURANCE ? account : null
+  return account?.company?.activity===COMPANY_ACTIVITY_ASSURANCE
 }
 
 const _mapContactToMailJet = contact => ({
@@ -125,7 +125,7 @@ const WORKFLOWS={
     }
   },
   CL_ADHER_LEAD_COA_NOGROUP: {
-    id: '2414829',
+    id: '2414836',
     name: 'Mutuelle ESANI sans groupe',
     filter: (lead, user) => {
       return isLeadOnly(lead, user)
