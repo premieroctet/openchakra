@@ -1,4 +1,10 @@
 const {
+  WORKFLOWS,
+  computeWorkflowLists,
+  mapContactToMailJet,
+  updateWorkflows
+} = require('../../server/plugins/smartdiet/workflows')
+const {
   COMPANY_ACTIVITY_ASSURANCE,
   COMPANY_ACTIVITY_BANQUE,
   ROLE_EXTERNAL_DIET
@@ -13,11 +19,6 @@ const {
   OFFER_DATA,
   USER_DATA
 } = require('./data/modelsBaseData')
-const {
-  WORKFLOWS,
-  mapContactToMailJet,
-  updateWorkflows
-} = require('../../server/plugins/smartdiet/functions')
 const lodash=require('lodash')
 const AppointmentType = require('../../server/models/AppointmentType')
 const Appointment = require('../../server/models/Appointment')
@@ -34,7 +35,6 @@ const mongoose = require('mongoose')
 const {forceDataModelSmartdiet}=require('../utils')
 
 forceDataModelSmartdiet()
-const {computeWorkflowLists}=require('../../server/plugins/smartdiet/functions')
 const MAIL_HANDLER=require('../../server/utils/mailjet')
 
 require('../../server/models/Target')
@@ -184,8 +184,8 @@ describe('Worflows', () => {
     await MAIL_HANDLER.addContactsToList({contacts, list})
   })
 
-  it.only('Must display groups', async() => {
+  it('Must display groups', async() => {
     const allLists=await MAIL_HANDLER.getContactsLists()
-    console.log(allLists.filter(l => /adh/i.test(l.Name)))
+    //console.log(allLists.filter(l => /adh/i.test(l.Name)))
   })
 })
