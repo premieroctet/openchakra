@@ -1,8 +1,9 @@
-const lodash=require('lodash')
 const {
   WORKFLOWS,
+  mapContactToMailJet,
   updateWorkflows
 } = require('../../server/plugins/smartdiet/functions')
+const lodash=require('lodash')
 const AppointmentType = require('../../server/models/AppointmentType')
 const {
   APPOINTMENT_DATA,
@@ -17,10 +18,9 @@ const {
 const Appointment = require('../../server/models/Appointment')
 const Coaching = require('../../server/models/Coaching')
 const { ROLE_EXTERNAL_DIET } = require('../../server/plugins/smartdiet/consts')
-const CollectiveChallenge = require('../../server/models/CollectiveChallenge')
 const { MONGOOSE_OPTIONS, loadFromDb } = require('../../server/utils/database')
+const CollectiveChallenge = require('../../server/models/CollectiveChallenge')
 const Key = require('../../server/models/Key')
-const Group = require('../../server/models/Group')
 const Offer = require('../../server/models/Offer')
 const Company = require('../../server/models/Company')
 const Lead = require('../../server/models/Lead')
@@ -73,11 +73,11 @@ describe('Worflows', () => {
   })
 
   afterEach(async() => {
-    await Group.deleteMany({})
     await CollectiveChallenge.deleteMany({})
     await Coaching.deleteMany({})
     await Appointment.deleteMany({})
     offer.coaching_credit=0
+    offer.groups_unlimited=false
     await offer.save()
   })
 
@@ -94,7 +94,8 @@ describe('Worflows', () => {
   })
 
   it('must filter CL_SALAR_LEAD_NOCOA_GROUP', async() => {
-    await Group.create({...GROUP_DATA, key, moderator: anyUser, companies:[company._id]})
+    offer.groups_unlimited=true
+    await offer.save()
     const result=await computeWorkflowLists()
     expect(result.CL_SALAR_LEAD_NOCOA_GROUP.add).toEqual(emailContained(LEADONLY))
     expect(result.CL_SALAR_LEAD_NOCOA_GROUP.add).not.toEqual(emailContained(LEADUSER))
@@ -111,7 +112,7 @@ describe('Worflows', () => {
   })
 
   it('must filter CL_SALAR_LEAD_COA_GROUP', async() => {
-    await Group.create({...GROUP_DATA, key, moderator: anyUser, companies:[company._id]})
+    offer.groups_unlimited=true
     offer.coaching_credit=12
     await offer.save()
     const result=await computeWorkflowLists()
@@ -154,16 +155,15 @@ describe('Worflows', () => {
     expect(removed.every(item => lodash.isObject(item))).toBe(true)
   })
 
-  it.skip('Must update workflows', async() => {
+  it('Must update workflows', async() => {
     const res=await updateWorkflows()
-    console.log(res)
   })
 
   it('must add to list with parameters', async() => {
     const list=WORKFLOWS.CL_SALAR_LEAD_COA_NOGROUP.id
     //const properties={codeentreprise: 'Com hop12', credit_consult: 19, Client:'La compagnie', logo: 'hophophop'}
     const properties={codeentreprise: 'Com hop12', credit_consult: 19, client: 'compagnie', logo: false}
-    const contacts=[{email: 'hello+testeasninogroup@wappizy.com', properties}]
+    const contacts=[mapContactToMailJet({email: 'hello+testeasninogroup@wappizy.com', properties})]
     await MAIL_HANDLER.addContactsToList({contacts, list})
   })
 })

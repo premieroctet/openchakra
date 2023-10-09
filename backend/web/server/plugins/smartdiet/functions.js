@@ -1,15 +1,4 @@
 const {
-  HOOK_DELETE,
-  HOOK_INSERT,
-  createAppointment,
-  deleteAppointment,
-  getAccount,
-  getAgenda,
-  getAppointmentTypes,
-  getAppointmentVisioLink,
-  upsertAccount
-} = require('../agenda/smartagenda')
-const {
   ACTIVITY,
   ANSWER_STATUS,
   APPOINTMENT_CURRENT,
@@ -19,6 +8,7 @@ const {
   COACHING_MODE,
   COACHING_QUESTION_STATUS,
   COMPANY_ACTIVITY,
+  COMPANY_ACTIVITY_ASSURANCE,
   COMPANY_ACTIVITY_SERVICES_AUX_ENTREPRISES,
   CONTENTS_TYPE,
   DAYS,
@@ -60,6 +50,17 @@ const {
   TARGET_TYPE,
   UNIT
 } = require('./consts')
+const {
+  HOOK_DELETE,
+  HOOK_INSERT,
+  createAppointment,
+  deleteAppointment,
+  getAccount,
+  getAgenda,
+  getAppointmentTypes,
+  getAppointmentVisioLink,
+  upsertAccount
+} = require('../agenda/smartagenda')
 
 const Category = require('../../models/Category')
 const { delayPromise } = require('../../utils/concurrency')
@@ -1563,14 +1564,36 @@ INEA pas coaching
 // Mailjet contacts lists
 // Non registered
 
+const isLeadOnly = (lead, user) => {
+  return !!lead && !user
+}
+
+const isRegistered = (lead, user) => {
+  return !!user
+}
+
+const hasCoaching = account => {
+  return account.company?.offers?.[0].coaching_credit>0
+}
+
+const hasGroups = account => {
+  return !!account.company?.offers?.[0].groups_unlimited ||
+    account.company?.offers?.[0].groups_credit>0
+}
+
+const isInsurance = account => {
+  return account?.company?.activity===COMPANY_ACTIVITY_ASSURANCE ? account : null
+}
+
 const WORKFLOWS={
   CL_SALAR_LEAD_NOCOA_NOGROUP: {
     id: '2414827',
     name: 'INEA sans groupe',
     filter: (lead, user) => {
-      return !!lead && !user &&
-        !(lead.company?.offers?.[0].coaching_credit>0) &&
-        ! lead.company?.groups_count
+      return isLeadOnly(lead, user)
+        && !hasCoaching(lead)
+        && !hasGroups(lead)
+        && !isInsurance(lead)
         && lead
     },
   },
@@ -1578,9 +1601,10 @@ const WORKFLOWS={
     id: '2414829',
     name: 'ESANI sans groupe',
     filter: (lead, user) => {
-      return !!lead && !user &&
-      !!lead.company?.offers?.[0].coaching_credit &&
-      !lead.company?.groups_count
+      return isLeadOnly(lead, user)
+      && hasCoaching(lead)
+      && !hasGroups(lead)
+      && !isInsurance(lead)
       && lead
     }
   },
@@ -1588,22 +1612,22 @@ const WORKFLOWS={
     id: '2414828',
     name: 'INEA avec groupe',
     filter: (lead, user) => {
-      return !!lead && !user &&
-      !lead.company?.offers?.[0].coaching_credit &&
-      !!lead.company?.groups_count
+      return isLeadOnly(lead, user)
+      && !hasCoaching(lead)
+      && hasGroups(lead)
+      && !isInsurance(lead)
       && lead
-
     }
   },
   CL_SALAR_LEAD_COA_GROUP: {
     id: '2414830',
     name: 'ESANI avec groupe',
     filter: (lead, user) => {
-      return !!lead && !user && !!lead.company?.offers?.[0] &&
-      !!lead.company?.offers?.[0].coaching_credit &&
-      !!lead.company?.groups_count
+      return isLeadOnly(lead, user)
+      && hasCoaching(lead)
+      && hasGroups(lead)
+      && !isInsurance(lead)
       && lead
-
     }
   },
   // Registered
@@ -1611,7 +1635,9 @@ const WORKFLOWS={
     id: '2414831',
     name: 'inscrits motiv usage',
     filter: (lead, user) => {
-      return user
+      return isRegistered(lead, user)
+        && !isInsurance(user)
+        && user
     }
   },
   // 1 month before coll chall
@@ -1619,7 +1645,9 @@ const WORKFLOWS={
     id: '2414833',
     name: 'TEIRA challenge co',
     filter: (lead, user) => {
-      return !!user?.company?.collective_challenges?.some(c => moment(c.start_date).diff(moment(), 'days')<30) && user
+      return !!user?.company?.collective_challenges?.some(c => moment(c.start_date).diff(moment(), 'days')<30)
+        && !isInsurance(user)
+        && user
     }
   },
   // After 1 week
@@ -1627,12 +1655,14 @@ const WORKFLOWS={
     id: '2414832',
     name: 'inscrits CAO démarré',
     filter: (lead, user) => {
-      return !!user?.latest_coachings[0]?.appointments?.some(a => moment().isAfter(moment(a.end_date))) && user
+      return !!user?.latest_coachings[0]?.appointments?.some(a => moment().isAfter(moment(a.end_date)))
+      && !isInsurance(user)
+      && user
     }
   },
 }
 
-const mapContactToMailJet = contact => ({
+const _mapContactToMailJet = contact => ({
   Email: contact.email, Name: contact.fullname, Properties: {
     codeentreprise: contact.company?.code,
     credit_consult: contact.company?.offers?.[0].coaching_credit,
@@ -1640,6 +1670,11 @@ const mapContactToMailJet = contact => ({
     logo: contact.company?.picture,
   }
 })
+
+const mapContactToMailJet = contact => {
+  const res=_mapContactToMailJet(contact)
+  return res
+}
 
 const computeWorkflowLists = () => {
   return Promise.all([
@@ -1703,4 +1738,5 @@ module.exports={
   computeWorkflowLists,
   updateWorkflows,
   WORKFLOWS,
+  mapContactToMailJet,
 }
