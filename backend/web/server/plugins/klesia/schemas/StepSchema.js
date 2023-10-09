@@ -23,7 +23,7 @@ const StepSchema = new Schema({
   container: {
     type: Schema.Types.ObjectId,
     ref: 'content',
-    required: [true, `Le parent est obligaoire`]
+    required: [true, `Le parent est obligatoire`],
   },
   order: {
     type: Number,
@@ -31,5 +31,7 @@ const StepSchema = new Schema({
   },
 }, schemaOptions)
 
+/* eslint-disable prefer-arrow-callback */
+/* eslint-enable prefer-arrow-callback */
 
 module.exports = StepSchema

@@ -1,7 +1,7 @@
-const { isEmailOk } = require('../../../../utils/sms')
 const mongoose = require('mongoose')
-const {schemaOptions} = require('../../../utils/schemas')
 const bcrypt = require('bcryptjs')
+const {isEmailOk} = require('../../../../utils/sms')
+const {schemaOptions} = require('../../../utils/schemas')
 
 const Schema = mongoose.Schema
 
@@ -30,11 +30,14 @@ const UserSchema = new Schema(
   schemaOptions,
 )
 
-UserSchema.virtual("fullname").get(function() {
-  return `${this.firstname} ${this.lastname}`;
-});
+/* eslint-disable prefer-arrow-callback */
+UserSchema.virtual('fullname').get(function() {
+  return `${this.firstname} ${this.lastname}`
+})
 
 // For password checking only
-UserSchema.virtual("password2")
+UserSchema.virtual('password2')
+/* eslint-enable prefer-arrow-callback */
+
 
 module.exports = UserSchema

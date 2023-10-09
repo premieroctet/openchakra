@@ -6,7 +6,7 @@ const {
 } = require('../../utils/database')
 const {CONTENT_TYPE, QUESTION_TYPE, SEASON}=require('./consts')
 
-const preprocessGet = ({model, fields, id, user, params}) => {
+const preprocessGet = ({model, fields, id, user /** params */}) => {
   if (model=='loggedUser') {
     model='user'
     id = user?._id || 'INVALIDID'
@@ -21,7 +21,7 @@ const preCreate = ({model, params, user}) => {
     model=params.type
     params.type=undefined
   }
-  if (['article', 'quizz', 'module', 'bestPractices', 'emergency', 'tip']) {
+  if (['article', 'quizz', 'module', 'bestPractices', 'emergency', 'tip'].includes(model)) {
     params.creator=user
   }
   if (model=='question') {
@@ -34,11 +34,6 @@ const preCreate = ({model, params, user}) => {
 }
 
 setPreCreateData(preCreate)
-
-
-declareVirtualField({model: 'category', field: 'media', instance: 'String',
-  requires: 'internal_media,external_media',
-})
 
 const USER_ALIASES=['user', 'loggedUser']
 USER_ALIASES.forEach(alias => {
@@ -55,10 +50,11 @@ CONTENT_ALIASES.forEach(alias => {
     requires: 'internal_thumbnail,external_thumbnail',
   })
   declareVirtualField({model: alias, field: 'type', instance: 'String', enumValues: CONTENT_TYPE})
-  declareEnumField({model: alias, field: 'season', enumValues: SEASON})
+  declareEnumField({model: alias, field: 'season', instance: 'String', enumValues: SEASON})
+  declareVirtualField({model: alias, field: 'extra_info', instance: 'String'})
 })
 
-const ARTICLES_ALIASES=['stepsContainer', 'bestPractices', 'emergency']
+const ARTICLES_ALIASES=['bestPractices', 'emergency']
 ARTICLES_ALIASES.forEach(alias => {
   declareVirtualField({model: alias, field: 'steps',
     instance: 'Array', multiple: true,
@@ -95,6 +91,10 @@ declareVirtualField({model: 'category', field: 'contents',
     instance: 'ObjectID',
     options: {ref: 'content'}},
 })
+declareVirtualField({model: 'category', field: 'media', instance: 'String',
+  requires: 'internal_media,external_media',
+})
+
 
 declareVirtualField({model: 'module', field: 'contents_count',
   instance: 'Number', requires: 'contents'})
