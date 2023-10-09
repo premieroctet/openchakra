@@ -32,7 +32,7 @@ const ContentSchema = new Schema({
   },
   excerpt: {
     type: String,
-    required: [true, `Le résumé est obligatoire`],
+    required: [true, `L'extrait' est obligatoire`],
   },
   categories: [{
     type: Schema.Types.ObjectId,
@@ -61,7 +61,7 @@ ContentSchema.virtual('thumbnail').get(function() {
 })
 
 ContentSchema.virtual('type').get(function() {
-  return this._type
+  return this.__t
 })
 
 module.exports = ContentSchema

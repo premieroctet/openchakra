@@ -19,6 +19,7 @@ setPreprocessGet(preprocessGet)
 const preCreate = ({model, params, user}) => {
   if (model=='content') {
     model=params.type
+    params.type=undefined
   }
   if (['article', 'quizz', 'module', 'bestPractices', 'emergency', 'tip']) {
     params.creator=user

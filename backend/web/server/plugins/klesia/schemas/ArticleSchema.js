@@ -10,11 +10,7 @@ const ArticleSchema = new Schema({
   },
   conclusion: {
     type: String,
-    required: [true, `La conclusion est obligatoire`],
-  },
-  order: {
-    type: Number,
-    required: [function() { return !!this.orderedArticle }, `L'ordre est obligatoire`],
+    required: false,
   },
 }, schemaOptions)
 
