@@ -183,4 +183,9 @@ describe('Worflows', () => {
     const contacts=[mapContactToMailJet({email: 'hello+testeasninogroup@wappizy.com', properties})]
     await MAIL_HANDLER.addContactsToList({contacts, list})
   })
+
+  it.only('Must display groups', async() => {
+    const allLists=await MAIL_HANDLER.getContactsLists()
+    console.log(allLists.filter(l => /adh/i.test(l.Name)))
+  })
 })
