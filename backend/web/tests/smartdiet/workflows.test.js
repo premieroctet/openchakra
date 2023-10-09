@@ -1,23 +1,27 @@
 const {
+  COMPANY_ACTIVITY_ASSURANCE,
+  COMPANY_ACTIVITY_BANQUE,
+  ROLE_EXTERNAL_DIET
+} = require('../../server/plugins/smartdiet/consts')
+const {
+  APPOINTMENT_DATA,
+  COACHING_DATA,
+  COLLECTIVE_CHALLENGE_DATA,
+  COMPANY_NO_INSURANCE_DATA,
+  GROUP_DATA,
+  KEY_DATA,
+  OFFER_DATA,
+  USER_DATA
+} = require('./data/modelsBaseData')
+const {
   WORKFLOWS,
   mapContactToMailJet,
   updateWorkflows
 } = require('../../server/plugins/smartdiet/functions')
 const lodash=require('lodash')
 const AppointmentType = require('../../server/models/AppointmentType')
-const {
-  APPOINTMENT_DATA,
-  COACHING_DATA,
-  COLLECTIVE_CHALLENGE_DATA,
-  COMPANY_DATA,
-  GROUP_DATA,
-  KEY_DATA,
-  OFFER_DATA,
-  USER_DATA
-} = require('./data/modelsBaseData')
 const Appointment = require('../../server/models/Appointment')
 const Coaching = require('../../server/models/Coaching')
-const { ROLE_EXTERNAL_DIET } = require('../../server/plugins/smartdiet/consts')
 const { MONGOOSE_OPTIONS, loadFromDb } = require('../../server/utils/database')
 const CollectiveChallenge = require('../../server/models/CollectiveChallenge')
 const Key = require('../../server/models/Key')
@@ -57,7 +61,7 @@ describe('Worflows', () => {
 
   beforeAll(async() => {
     await mongoose.connect(`mongodb://localhost/test${moment().unix()}`, MONGOOSE_OPTIONS)
-    company=await Company.create({...COMPANY_DATA, code: 'COMPCODE'})
+    company=await Company.create({...COMPANY_NO_INSURANCE_DATA, code: 'COMPCODE'})
     offer=await Offer.create({...OFFER_DATA, company})
     key=await Key.create({...KEY_DATA})
     anyUser=await Lead.create({...USER_DATA, email: LEADONLY, company_code: company.code})
@@ -79,6 +83,8 @@ describe('Worflows', () => {
     offer.coaching_credit=0
     offer.groups_unlimited=false
     await offer.save()
+    company.activity=COMPANY_ACTIVITY_BANQUE
+    company=await company.save()
   })
 
   const emailContained = email => {
@@ -145,6 +151,17 @@ describe('Worflows', () => {
     expect(result.CL_SALAR_REGISTERED_FIRST_COA_APPT.add).not.toEqual(emailContained(LEADONLY))
     expect(result.CL_SALAR_REGISTERED_FIRST_COA_APPT.add).toEqual(emailContained(LEADUSER))
     expect(result.CL_SALAR_REGISTERED_FIRST_COA_APPT.add).not.toEqual(emailContained(DIET))
+  })
+
+  it('must filter CL_ADHER_LEAD_COA_NOGROUP', async() => {
+    offer.coaching_credit=12
+    await offer.save()
+    company.activity=COMPANY_ACTIVITY_ASSURANCE
+    await company.save()
+    const result=await computeWorkflowLists()
+    expect(result.CL_ADHER_LEAD_COA_NOGROUP.add).toEqual(emailContained(LEADONLY))
+    expect(result.CL_ADHER_LEAD_COA_NOGROUP.add).not.toEqual(emailContained(LEADUSER))
+    expect(result.CL_ADHER_LEAD_COA_NOGROUP.add).not.toEqual(emailContained(DIET))
   })
 
   it('Must compute workflows list', async() => {

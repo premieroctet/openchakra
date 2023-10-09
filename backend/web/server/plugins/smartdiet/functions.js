@@ -1660,6 +1660,17 @@ const WORKFLOWS={
       && user
     }
   },
+  CL_ADHER_LEAD_COA_NOGROUP: {
+    id: '2414829',
+    name: 'Mutuelle ESANI sans groupe',
+    filter: (lead, user) => {
+      return isLeadOnly(lead, user)
+      && hasCoaching(lead)
+      && !hasGroups(lead)
+      && isInsurance(lead)
+      && lead
+    }
+  },
 }
 
 const _mapContactToMailJet = contact => ({
