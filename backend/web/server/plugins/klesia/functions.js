@@ -24,6 +24,12 @@ const preCreate = ({model, params, user}) => {
   if (['article', 'quizz', 'module', 'bestPractices', 'emergency', 'tip']) {
     params.creator=user
   }
+  if (model=='question') {
+    params.quizz=params.parent
+  }
+  if (model=='step') {
+    params.container=params.parent
+  }
   return Promise.resolve({model, params})
 }
 
