@@ -49,9 +49,10 @@ class MAILJET_V6 {
   // Contacts are {email, fullname}
   // Returns a JobID isf successful
   addContactsToList({contacts, list}) {
-    const filteredContacts=contacts.filter(({Email}) => this.acceptEmail(Email))
+    const filteredContacts=contacts.filter(({email}) => this.acceptEmail(email))
     if (filteredContacts.length!=contacts.length) {
       console.log(`${contacts.length-filteredContacts.length} rejected emails `)
+      console.log(contacts, filteredContacts)
     }
     return this.smtpInstance
       .post('contactslist', {'version': 'v3'})

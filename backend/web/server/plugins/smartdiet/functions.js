@@ -1564,17 +1564,17 @@ INEA pas coaching
 // Non registered
 
 const WORKFLOWS={
-  CL_LEAD_NOCOA_NOGROUP: {
+  CL_SALAR_LEAD_NOCOA_NOGROUP: {
     id: '2414827',
     name: 'INEA sans groupe',
     filter: (lead, user) => {
       return !!lead && !user &&
         !(lead.company?.offers?.[0].coaching_credit>0) &&
-        !! lead.company?.groups_count
+        ! lead.company?.groups_count
         && lead
     },
   },
-  CL_LEAD_COA_NOGROUP: {
+  CL_SALAR_LEAD_COA_NOGROUP: {
     id: '2414829',
     name: 'ESANI sans groupe',
     filter: (lead, user) => {
@@ -1584,7 +1584,7 @@ const WORKFLOWS={
       && lead
     }
   },
-  CL_LEAD_NOCOA_GROUP: {
+  CL_SALAR_LEAD_NOCOA_GROUP: {
     id: '2414828',
     name: 'INEA avec groupe',
     filter: (lead, user) => {
@@ -1595,7 +1595,7 @@ const WORKFLOWS={
 
     }
   },
-  CL_LEAD_COA_GROUP: {
+  CL_SALAR_LEAD_COA_GROUP: {
     id: '2414830',
     name: 'ESANI avec groupe',
     filter: (lead, user) => {
@@ -1615,7 +1615,7 @@ const WORKFLOWS={
     }
   },
   // 1 month before coll chall
-  CL_REGISTERED_COLL_CHALL: {
+  CL_SALAR_REGISTERED_COLL_CHALL: {
     id: '2414833',
     name: 'TEIRA challenge co',
     filter: (lead, user) => {
@@ -1623,7 +1623,7 @@ const WORKFLOWS={
     }
   },
   // After 1 week
-  CL_REGISTERED_FIRST_COA_APPT: {
+  CL_SALAR_REGISTERED_FIRST_COA_APPT: {
     id: '2414832',
     name: 'inscrits CAO démarré',
     filter: (lead, user) => {
