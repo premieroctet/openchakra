@@ -25,15 +25,6 @@ const QuizzQuestionSchema = new Schema({
     ref: 'answer',
     required: false,
   }],
-  user_choice_answers: [{
-    type: Schema.Types.ObjectId,
-    ref: 'answer',
-    required: false,
-  }],
-  user_text_answer: {
-    type: String,
-    required: false,
-  },
   success_message: {
     type: String,
     required: false,
