@@ -20,9 +20,18 @@ const QuizzQuestionSchema = new Schema({
     required: [true, 'Le type est obligatoire'],
   },
   // The correct answer for a single QCM
-  correct_answer: {
+  correct_answers: [{
     type: Schema.Types.ObjectId,
     ref: 'answer',
+    required: false,
+  }],
+  user_choice_answers: [{
+    type: Schema.Types.ObjectId,
+    ref: 'answer',
+    required: false,
+  }],
+  user_text_answer: {
+    type: String,
     required: false,
   },
   success_message: {

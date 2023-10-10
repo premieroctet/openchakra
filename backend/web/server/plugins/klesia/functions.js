@@ -55,16 +55,14 @@ CONTENT_ALIASES.forEach(alias => {
   declareVirtualField({model: alias, field: 'type', instance: 'String', enumValues: CONTENT_TYPE})
   declareEnumField({model: alias, field: 'season', instance: 'String', enumValues: SEASON})
   declareVirtualField({model: alias, field: 'extra_info', instance: 'String'})
-})
-
-const ARTICLES_ALIASES=['bestPractices', 'emergency']
-ARTICLES_ALIASES.forEach(alias => {
+  // TODO Ugly but required to allow Content to return the steps
   declareVirtualField({model: alias, field: 'steps',
     instance: 'Array', multiple: true,
     caster: {
       instance: 'ObjectID',
       options: {ref: 'step'}},
   })
+
 })
 
 declareVirtualField({model: 'question', field: 'available_answers',
