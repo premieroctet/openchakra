@@ -27,6 +27,7 @@ const CategorySchema = new Schema({
   },
 }, schemaOptions)
 
+/* eslint-disable prefer-arrow-callback */
 CategorySchema.virtual('media').get(function() {
   return this.external_media || this.internal_media
 })
@@ -42,5 +43,6 @@ CategorySchema.virtual('contents', {
   localField: '_id', // Find in Model, where localField
   foreignField: 'categories', // is equal to foreignField
 })
+/* eslint-enable prefer-arrow-callback */
 
 module.exports = CategorySchema

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
-const {CONTENT_TYPE, SEASON} = require('../consts')
+const lodash = require('lodash')
+const {SEASON} = require('../consts')
 const {schemaOptions} = require('../../../utils/schemas')
 
 const Schema = mongoose.Schema
@@ -49,9 +50,10 @@ const ContentSchema = new Schema({
     set: v => v || undefined,
     enum: Object.keys(SEASON),
     required: false,
-  }
+  },
 }, schemaOptions)
 
+/* eslint-disable prefer-arrow-callback */
 ContentSchema.virtual('media').get(function() {
   return this.external_media || this.internal_media
 })
@@ -63,5 +65,15 @@ ContentSchema.virtual('thumbnail').get(function() {
 ContentSchema.virtual('type').get(function() {
   return this.__t
 })
+
+ContentSchema.virtual('extra_info').get(function() {
+  if (this.type=='module') {
+    const contents_length=this.contents?.length
+    if (!lodash.isNil(contents_length)) {
+      return `${contents_length} contenu(s)`
+    }
+  }
+})
+/* eslint-enable prefer-arrow-callback */
 
 module.exports = ContentSchema

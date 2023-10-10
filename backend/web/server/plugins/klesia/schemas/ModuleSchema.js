@@ -4,7 +4,7 @@ const {schemaOptions} = require('../../../utils/schemas')
 const Schema = mongoose.Schema
 
 const ModuleSchema = new Schema({
-  contents:[{
+  contents: [{
     type: Schema.Types.ObjectID,
     ref: 'content',
     required: true,
