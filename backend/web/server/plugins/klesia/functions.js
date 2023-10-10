@@ -30,6 +30,9 @@ const preCreate = ({model, params, user}) => {
   if (model=='step') {
     params.container=params.parent
   }
+  if (model=='answer') {
+    params.question=params.parent
+  }
   return Promise.resolve({model, params})
 }
 
