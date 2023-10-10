@@ -74,6 +74,16 @@ declareVirtualField({model: 'question', field: 'available_answers',
     options: {ref: 'answer'}},
 })
 declareEnumField({model: 'question', field: 'type', enumValues: QUESTION_TYPE})
+declareVirtualField({model: 'question', field: 'user_choice_answers',
+  instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'answer'}},
+})
+declareVirtualField({model: 'question', field: 'user_text_answer', instance: 'String'})
+declareVirtualField({model: 'question', field: 'user_numeric_answer', instance: 'Number'})
+declareVirtualField({model: 'question', field: 'correct', instance: 'Boolean', requires:'user_choice_answers,user_text_answer,user_numeric_answer,type,correct_answer'})
+declareVirtualField({model: 'question', field: 'message', instance: 'String', requires:'correct,success_message,error_message'})
 
 declareVirtualField({model: 'quizz', field: 'questions',
   instance: 'Array', multiple: true,
@@ -81,6 +91,8 @@ declareVirtualField({model: 'quizz', field: 'questions',
     instance: 'ObjectID',
     options: {ref: 'question'}},
 })
+declareVirtualField({model: 'quizz', field: 'percent_success', instance: 'Number', requires:'question.correct'})
+declareVirtualField({model: 'quizz', field: 'percent_message', instance: 'String', requires:'percent_success,message_under_33,message_under_66,message_under_100,message_100'})
 
 declareVirtualField({model: 'category', field: 'children',
   instance: 'Array', multiple: true,
