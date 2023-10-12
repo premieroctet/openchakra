@@ -479,7 +479,7 @@ const REGISTRATION_WARNING={
 const DAYS_BEFORE_IND_CHALL_ANSWER=7
 
 // Days today to diet availbilities end
-const AVAILABILITIES_RANGE_DAYS=14
+const AVAILABILITIES_RANGE_DAYS=21
 
 module.exports={
   CONTENTS_TYPE,
