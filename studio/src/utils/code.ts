@@ -706,7 +706,7 @@ const reloadOnBackScript = `
 useEffect(() => {
    const handlePopstate = () => {
      // This code will run when the user navigates back
-     window.location.reload(); // Reload the component
+     reload() // Reload the data
    };
    window.addEventListener('popstate', handlePopstate);
    return () => {
