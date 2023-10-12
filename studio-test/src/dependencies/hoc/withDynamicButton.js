@@ -16,6 +16,7 @@ const withDynamicButton = Component => {
 
     const [errorMessage, setErrorMessage]=useState(null)
     const [infoMessage, setInfoMessage]=useState(null)
+    const [insideAction, setInsideAction]=useState(false)
 
     const router = useRouter()
     const query = new URLSearchParams(router?.asPath)
@@ -47,6 +48,7 @@ const withDynamicButton = Component => {
         if (!ACTIONS[action]) {
           return setErrorMessage(`Undefined action ${action}`)
         }
+        setInsideAction(true)
         return ACTIONS[action]({
           ...props,
           value: value,
@@ -87,6 +89,9 @@ const withDynamicButton = Component => {
               setErrorMessage(err.response?.data || err)
             }
           })
+          .finally(() => {
+            setInsideAction(false)
+          })
       }
     }
     const conditionalProperties = getConditionalProperties(
@@ -104,6 +109,7 @@ const withDynamicButton = Component => {
         {...props}
         onClick={onClick}
         {...conditionalProperties}
+        isLoading={insideAction}
       />
       {errorMessage && <Error message={errorMessage} onClose={()=>setErrorMessage(null)}/>}
       {infoMessage && <Information message={infoMessage} onClose={()=>setInfoMessage(null)}/>}
