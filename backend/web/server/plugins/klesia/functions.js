@@ -80,7 +80,7 @@ declareVirtualField({model: 'question', field: 'user_choice_answers',
 })
 declareVirtualField({model: 'question', field: 'user_text_answer', instance: 'String'})
 declareVirtualField({model: 'question', field: 'user_numeric_answer', instance: 'Number'})
-declareVirtualField({model: 'question', field: 'correct', instance: 'Boolean', requires:'user_choice_answers,user_text_answer,user_numeric_answer,type,correct_answer'})
+declareVirtualField({model: 'question', field: 'correct', instance: 'Boolean', requires:'user_choice_answers,user_text_answer,user_numeric_answer,type,correct_answers'})
 declareVirtualField({model: 'question', field: 'message', instance: 'String', requires:'correct,success_message,error_message'})
 
 declareVirtualField({model: 'quizz', field: 'questions',
