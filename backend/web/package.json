@@ -118,5 +118,6 @@
     "systemjs-plugin-json": "^0.3.0",
     "tree-traversal": "^1.1.2"
   },
-  "version": "0.0.0"
+  "version": "0.0.0",
+  "packageManager": "yarn@3.6.4"
 }

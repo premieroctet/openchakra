@@ -27,6 +27,8 @@ backend/web/fumoir*.json
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+**/.yarn/
+**/.yarnrc.yml
 web/yarn.lock
 **/package-lock.json
 .DS_Store
