@@ -2,19 +2,27 @@ const admin = require('firebase-admin')
 const {getDataModel}=require('../../config/config')
 
 const firebaseConfig=require(`../../${getDataModel()}-firebase-adminsdk.json`)
+console.log(`Loaded firebase for project ${firebaseConfig.project_id}`)
+
 const app = admin.initializeApp({
   credential: admin.credential.cert(firebaseConfig),
 })
 
-const sendUserNotification = (user_id, message) => {
+const sendUserNotification = ({user, title, message}) => {
+
+  if (!user || !title || !message || !user._id) {
+    throw new Error(`Expected user (including _id), title, message`)
+  }
+
+  console.log(`Sending notification to ${user._id}:${title}/${message}`)
 
   const payload = {
     notification: {
-      title: 'Message personnel',
+      title: title,
       body: message,
     },
   }
-  const topic=`user_${user_id}`
+  const topic=`user_${user._id}`
 
   return app.messaging().sendToTopic(topic, payload)
     .then(response => {
@@ -23,10 +31,16 @@ const sendUserNotification = (user_id, message) => {
     })
 }
 
-const sendAppNotification = (message) => {
+const sendAppNotification = ({title, message}) => {
+  if (!user || !title || !message) {
+    throw new Error(`Expected title, message`)
+  }
+
+  console.log(`Sending notification to ALL:${title}/${message}`)
+
   const payload = {
     notification: {
-      title: 'Message général',
+      title: title,
       body: message,
     },
   }

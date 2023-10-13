@@ -24,7 +24,6 @@ const PAYMENT_PLUGINS = {
 const getVivaWalletConfig = () => {
   return {
     production: process.env.VIVAWALLET_MODE=='production',
-    baseUrl: process.env.VIVAWALLET_BASE_URL,
     apiId: process.env.VIVAWALLET_API_ID,
     apiKey: process.env.VIVAWALLET_API_KEY,
     clientId: process.env.VIVAWALLET_CLIENT_ID,

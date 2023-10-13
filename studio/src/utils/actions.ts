@@ -247,7 +247,7 @@ export const ACTIONS: IActions = {
     options: {
       redirect: ({ pages }) =>
         Object.values(pages).map(p => ({ key: p.pageId, label: p.pageName })),
-      color: ({ pages }) => colorsLis({pages})
+      color: ({ pages }) => colorsList({pages})
     },
   },
   payOrder: {

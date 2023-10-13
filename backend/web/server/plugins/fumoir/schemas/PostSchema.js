@@ -5,7 +5,7 @@ const Schema = mongoose.Schema
 const PostSchema = new Schema({
   contents: {
     type: String,
-    required: true,
+    required: [true, 'Le contenu est obligatoire'],
   },
   media: { // url S3
     type: String,
@@ -17,6 +17,7 @@ const PostSchema = new Schema({
   author: {
     type: Schema.Types.ObjectId,
     ref: 'user',
+    required: [true, "L'auteur est obligatoire"],
   },
 
 }, schemaOptions)
