@@ -293,8 +293,12 @@ const MISSION_REMINDER_DELAY=3
 const PENDING_QUOTATION_DELAY=2
 const MISSING_QUOTATION_DELAY=2
 
+// Commission on customer
 const MER_RATE=0.15
+// Commission on TI
 const AA_RATE=0.15
+// vat rate 20%
+const VAT_RATE=0.2
 
 const MIN_AGE=18
 
@@ -361,4 +365,5 @@ module.exports={
   MIN_AGE,
   BOOLEAN, BOOLEAN_NO, BOOLEAN_YES,
   GENDER,
+  VAT_RATE,
 }
