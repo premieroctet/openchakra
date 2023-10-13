@@ -87,12 +87,15 @@ export const withFilters = Component => {
     const compsToAdd={}
     comps.forEach(component => {
       try {
-        const model= getDataProviderDataType(
+        const model=component.props.model ? {type: component.props.model} : getDataProviderDataType(
           component,
           allComponents,
           component.props.dataSource, // || components[activeComponent.parent].props.dataSource,
           models,
         )
+        if (component.type=='RadioGroup') {
+          console.log(component.id, component.type, model)
+        }
         if (model && component.props?.attribute) {
           compsToAdd[component.id]={...models[model.type].attributes[component.props.attribute], isComponent: true}
         }

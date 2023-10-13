@@ -9,7 +9,7 @@ const withDynamicCheckboxGroup = Component => {
   const Internal = ({children, noautosave, ...props}) => {
     const dataSource=props.dataSource
     const enumValues=props.enum ? JSON.parse(props.enum) : null
-    const [internalValue, setInternalValue] = useState(lodash.get(props.dataSource, props.attribute).map(v => lodash.isObject(v) ?v._id : v))
+    const [internalValue, setInternalValue] = useState(props.dataSource ? lodash.get(props.dataSource, props.attribute).map(v => lodash.isObject(v) ?v._id : v) : [])
 
     const onChange = evValue => {
       setInternalValue(evValue)

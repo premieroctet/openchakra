@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
-const {CONTENT_TYPE, SEASON} = require('../consts')
+const lodash = require('lodash')
+const {SEASON} = require('../consts')
 const {schemaOptions} = require('../../../utils/schemas')
 
 const Schema = mongoose.Schema
@@ -32,7 +33,7 @@ const ContentSchema = new Schema({
   },
   excerpt: {
     type: String,
-    required: [true, `Le résumé est obligatoire`],
+    required: [true, `L'extrait' est obligatoire`],
   },
   categories: [{
     type: Schema.Types.ObjectId,
@@ -46,11 +47,13 @@ const ContentSchema = new Schema({
   },
   season: {
     type: 'String',
+    set: v => v || undefined,
     enum: Object.keys(SEASON),
     required: false,
-  }
+  },
 }, schemaOptions)
 
+/* eslint-disable prefer-arrow-callback */
 ContentSchema.virtual('media').get(function() {
   return this.external_media || this.internal_media
 })
@@ -60,7 +63,25 @@ ContentSchema.virtual('thumbnail').get(function() {
 })
 
 ContentSchema.virtual('type').get(function() {
-  return this._type
+  return this.__t
 })
+
+ContentSchema.virtual('extra_info').get(function() {
+  if (this.type=='module') {
+    const contents_length=this.contents?.length
+    if (!lodash.isNil(contents_length)) {
+      return `${contents_length} contenu(s)`
+    }
+  }
+})
+
+ContentSchema.virtual('steps', {
+  ref: 'step', // The Model to use
+  localField: '_id', // Find in Model, where localField
+  foreignField: 'container', // is equal to foreignField
+  options: {sort: {order: 1}},
+})
+
+/* eslint-enable prefer-arrow-callback */
 
 module.exports = ContentSchema

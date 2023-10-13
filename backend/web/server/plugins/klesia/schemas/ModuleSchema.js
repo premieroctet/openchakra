@@ -4,7 +4,7 @@ const {schemaOptions} = require('../../../utils/schemas')
 const Schema = mongoose.Schema
 
 const ModuleSchema = new Schema({
-  contents:[{
+  contents: [{
     type: Schema.Types.ObjectID,
     ref: 'content',
     required: true,
@@ -12,6 +12,9 @@ const ModuleSchema = new Schema({
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
+ModuleSchema.virtual('contents_count', function() {
+  return this.contents.length
+})
 /* eslint-enable prefer-arrow-callback */
 
 module.exports = ModuleSchema

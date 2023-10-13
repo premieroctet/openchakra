@@ -10,18 +10,11 @@ const ArticleSchema = new Schema({
   },
   conclusion: {
     type: String,
-    required: [true, `La conclusion est obligatoire`],
-  },
-  order: {
-    type: Number,
-    required: [function() { return !!this.orderedArticle }, `L'ordre est obligatoire`],
-  },
-  orderedArticle: {
-    type: Schema.Types.ObjectId,
-    ref: 'orderedArticles',
     required: false,
   },
 }, schemaOptions)
 
+/* eslint-disable prefer-arrow-callback */
+/* eslint-enable prefer-arrow-callback */
 
 module.exports = ArticleSchema

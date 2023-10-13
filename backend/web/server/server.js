@@ -120,12 +120,12 @@ require('./models/GraphData')
 require('./models/Issue')
 require('./models/Project')
 require('./models/UserProject')
-require('./models/OrderedArticles')
 require('./models/Module')
 require('./models/Article')
 require('./models/BestPractices')
 require('./models/Tip')
 require('./models/Emergency')
+require('./models/Step')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 

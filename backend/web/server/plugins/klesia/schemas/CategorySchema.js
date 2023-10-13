@@ -20,14 +20,29 @@ const CategorySchema = new Schema({
     type: String,
     required: false,
   },
-  order: {
-    type: Number,
+  parent: {
+    type: Schema.Types.ObjectId,
+    ref: 'category',
     required: false,
   },
 }, schemaOptions)
 
+/* eslint-disable prefer-arrow-callback */
 CategorySchema.virtual('media').get(function() {
   return this.external_media || this.internal_media
 })
+
+CategorySchema.virtual('children', {
+  ref: 'category', // The Model to use
+  localField: '_id', // Find in Model, where localField
+  foreignField: 'parent', // is equal to foreignField
+})
+
+CategorySchema.virtual('contents', {
+  ref: 'content', // The Model to use
+  localField: '_id', // Find in Model, where localField
+  foreignField: 'categories', // is equal to foreignField
+})
+/* eslint-enable prefer-arrow-callback */
 
 module.exports = CategorySchema
