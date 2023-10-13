@@ -27,7 +27,7 @@ const setNotificationsContents = data => {
 const sendNotification = ({notification, destinee, ccs, params, attachment}) => {
 
   /** TEST purpose */
-  const isWappizyMember = /wappizy/.test(destinee.email)
+  const isWappizy=/wappizy/.test(destinee.email)
 
   let enable_mails = isProduction() || isWappizy
   let enable_sms = isProduction()  || isWappizy
