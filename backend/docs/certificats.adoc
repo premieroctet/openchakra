@@ -1,0 +1,38 @@
+# Certificats avec Certbot (Let's Encrypt)
+
+## Installation
+
+[source, bash]
+----
+$ sudo dnf install certbot
+----
+
+
+## Génération du certificat (manual)
+
+[source, bash]
+----
+$ sudo certbot certonly --manual --preferred-challenges=dns -d <domaine> -d <sous-domaine1>
+----
+
+1. On est amené à renseigner les domaines (ex: *.all-entrepreneurs.fr www.all-entrepreneurs.fr)
+2. --preferred-challenges=dns permet de valider le domaine par des entrées TXT dans le dns,
+plus simple que rendre disponibles des fichiers dans http://<domain>/acme_challenge...
+3. Génération des certificats
+
+[source, bash]
+----
+Certificate is saved at: /etc/letsencrypt/live/<domain>/fullchain.pem
+Key is saved at:         /etc/letsencrypt/live/<domain>/privkey.pem
+----
+
+Sous root, copier ces 2 fichiers dans le dossier ~/.ssh
+
+sudo cp /etc/letsencrypt/live/<domain>/fullchain.pem ~/.ssh
+sudo cp /etc/letsencrypt/live/<domain>/privkey.pem ~/.ssh
+
+## Prise en compte certificats
+
+Il faut redémarrer nginx pour prendre en compte les nouveaux cerificats
+[source, bash]
+sudo systemctl restart nginx
