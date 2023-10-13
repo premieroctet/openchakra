@@ -265,23 +265,23 @@ const UNIT_UNITE='UNIT_UNITE'
 const UNIT={
  [UNIT_KG]:'kg',
  [UNIT_L]:'l',
- [UNIT_DOUZAINE]:'douzaine',
- [UNIT_CUILLERE_A_SOUPE]:'cuillère à soupe',
- [UNIT_CUILLERE_A_CAFE]:'cuillère à café',
+ [UNIT_DOUZAINE]:'douzaine(s)',
+ [UNIT_CUILLERE_A_SOUPE]:'cuillère(s) à soupe',
+ [UNIT_CUILLERE_A_CAFE]:'cuillère(s) à café',
  [UNIT_ML]:'ml',
  [UNIT_CL]:'cl',
  [UNIT_DL]:'dl',
  [UNIT_G]:'g',
- [UNIT_LIVRE]:'livre',
- [UNIT_PINCEE]:'pincée',
- [UNIT_VERRE_A_MOUTARDE]:'verre à moutarde',
- [UNIT_LOUCHE]:'louche',
- [UNIT_FILET]:'filet',
- [UNIT_NOISETTE]:'noisette',
- [UNIT_POIGNEE]:'poignée',
- [UNIT_MIGNONETTE]:'mignonette',
- [UNIT_SACHET]:'sachet',
- [UNIT_CUBE]:'cube',
+ [UNIT_LIVRE]:'livre(s)',
+ [UNIT_PINCEE]:'pincée(s)',
+ [UNIT_VERRE_A_MOUTARDE]:'verre(s) à moutarde',
+ [UNIT_LOUCHE]:'louche(s)',
+ [UNIT_FILET]:'filet(s)',
+ [UNIT_NOISETTE]:'noisette(s)',
+ [UNIT_POIGNEE]:'poignée(s)',
+ [UNIT_MIGNONETTE]:'mignonette(s)',
+ [UNIT_SACHET]:'sachet(s)',
+ [UNIT_CUBE]:'cube(s)',
  [UNIT_UNITE]:'',
 }
 
@@ -479,7 +479,7 @@ const REGISTRATION_WARNING={
 const DAYS_BEFORE_IND_CHALL_ANSWER=7
 
 // Days today to diet availbilities end
-const AVAILABILITIES_RANGE_DAYS=14
+const AVAILABILITIES_RANGE_DAYS=21
 
 module.exports={
   CONTENTS_TYPE,
@@ -491,6 +491,7 @@ module.exports={
   COMPANY_ACTIVITY,
   COMPANY_ACTIVITY_BANQUE,
   COMPANY_ACTIVITY_SERVICES_AUX_ENTREPRISES,
+  COMPANY_ACTIVITY_ASSURANCE,
   ROLE_CUSTOMER, ROLE_ADMIN, ROLE_RH, ROLE_SUPER_ADMIN,
   SPOON_SOURCE,
   EVENT_DISCRIMINATOR,

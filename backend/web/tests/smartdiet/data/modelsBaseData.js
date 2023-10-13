@@ -1,8 +1,11 @@
-const {COMPANY_ACTIVITY} = require('../../../server/plugins/smartdiet/consts')
+const {
+  COMPANY_ACTIVITY,
+  COMPANY_ACTIVITY_BANQUE
+} = require('../../../server/plugins/smartdiet/consts')
 
 module.exports={
-  COMPANY_DATA:{
-    name: 'S', size: 10, activity: Object.keys(COMPANY_ACTIVITY)[0],
+  COMPANY_NO_INSURANCE_DATA:{
+    name: 'S', size: 10, activity: COMPANY_ACTIVITY_BANQUE,
   },
   USER_DATA:{firstname: 'S', lastname: 'S', dataTreatmentAccepted: true,
     cguAccepted: true, pseudo: 'S', phone: '0675774324',

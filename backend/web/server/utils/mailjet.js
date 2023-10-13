@@ -52,6 +52,7 @@ class MAILJET_V6 {
     const filteredContacts=contacts.filter(({Email}) => this.acceptEmail(Email))
     if (filteredContacts.length!=contacts.length) {
       console.log(`${contacts.length-filteredContacts.length} rejected emails `)
+      console.log(contacts, filteredContacts)
     }
     return this.smtpInstance
       .post('contactslist', {'version': 'v3'})
