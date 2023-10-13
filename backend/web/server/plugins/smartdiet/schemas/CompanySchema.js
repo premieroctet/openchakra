@@ -1,3 +1,4 @@
+const siret = require('siret')
 const mongoose = require('mongoose')
 const {schemaOptions} = require('../../../utils/schemas')
 const lodash=require('lodash')
@@ -13,6 +14,9 @@ const CompanySchema = new Schema(
     },
     siret: {
       type: String,
+      set: v => v ? v.replace(/ /g, '') : v,
+      validate: [v => siret.isSIRET(v)||siret.isSIREN(v) , 'Le siret/siren est invalide'],
+      required: false,
     },
     code: {
       type: String,
@@ -24,16 +28,35 @@ const CompanySchema = new Schema(
     activity: {
       type: String,
       enum: Object.keys(COMPANY_ACTIVITY),
-      required: true,
+      required: [true, `L'activité est obligatoire`],
     },
     size: {
       type: Number,
-      required: true,
+      required: [true, `La taille est obligatoire`],
     },
     parent: {
       type: Schema.Types.ObjectId,
       ref: "company",
-    }
+    },
+    // Check (or not) wether the account must satisfy lead's integrity
+    // during registration
+    registration_integrity: {
+      type: Boolean,
+      default: false,
+      required: true,
+    },
+    // Type prestation bilan
+    assessment_appointment_type: {
+      type: Schema.Types.ObjectId,
+      ref: 'appointmentType',
+      required: false,
+    },
+    // Type prestation suivi
+    followup_appointment_type: {
+      type: Schema.Types.ObjectId,
+      ref: 'appointmentType',
+      required: false,
+    },
   },
   schemaOptions,
 )
@@ -69,7 +92,7 @@ CompanySchema.virtual("groups", {
   foreignField: "companies", // is equal to foreignField
 });
 
-CompanySchema.virtual('groups_count').get(function() {
+CompanySchema.virtual('groups_count', {localField: 'tagada', foreignField: 'tagada'}).get(function() {
   return this.groups?.length || 0
 })
 
@@ -101,7 +124,7 @@ CompanySchema.virtual('comments_count').get(function() {
   return mongoose.model('comment').find({pip: null})
     .populate('user')
     .then(comments => {
-      const count=lodash.filter(comments||[], c => c.user.company._id==this._id)?.length||0
+      const count=lodash.filter(comments||[], c => c.user?.company._id==this._id)?.length||0
       return count
     })
 })

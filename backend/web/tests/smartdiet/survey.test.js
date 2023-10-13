@@ -23,8 +23,8 @@ describe('Survey ', () => {
   })
 
   it('must ensure question.order unicity', async() => {
-    await Question.create({title: 'Title 1', order:1})
-    await Question.create({title: 'Title 2', order: 2})
+    await Question.create({title: 'Title 1', picture: 'hop', order:1})
+    await expect(Question.create({title: 'Title 2', picture: 'hop2', order:1})).rejects.toThrow(/duplicate/i);
   })
 
 })

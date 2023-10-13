@@ -74,6 +74,18 @@ export const ACTIONS: IActions = {
         components
           .filter(comp => comp.type=='Flex')
           .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      quizzQuestion: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      user: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      userQuizzQuestion: ({ components }) =>
+        components
+          .filter(comp => comp.type=='Flex')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
       ...Object.fromEntries(lodash.range(24).map((idx:number) => {
       return [
         `component_${idx}`,
@@ -214,7 +226,7 @@ export const ACTIONS: IActions = {
 
       ]})),
     },
-    next: ['openPage'],
+    next: ['openPage', 'previous'],
   },
   // Mettre un warning si les composants ne sont pas dans le même flex
   registerToEvent: {
@@ -259,12 +271,6 @@ export const ACTIONS: IActions = {
     },
     next: ['openPage'],
     required:['amount', 'mode']
-  },
-  // FUMOIR
-  // Mettre un warning si les composants ne sont pas dans le même flex
-  previous: {
-    label: 'Previous',
-    options: {},
   },
   // Register new User
   register: {
@@ -369,27 +375,27 @@ export const ACTIONS: IActions = {
     next: ['openPage'],
   },
   alle_create_quotation: {
-    label: 'AE Créer devis',
+    label: 'AE Create quotation',
     options: {},
     next: ['openPage'],
   },
   alle_refuse_mission: {
-    label: 'AE Refuser mission',
+    label: 'AE Refuse mission',
     options: {},
     next: ['openPage'],
   },
   alle_cancel_mission: {
-    label: 'AE Anuler mission',
+    label: 'AE Cancel mission',
     options: {},
     next: ['openPage'],
   },
   alle_send_quotation: {
-    label: 'AE Envoyer le devis',
+    label: 'AE Send quotation',
     options: {},
     next: ['openPage'],
   },
   alle_accept_quotation: {
-    label: 'AE Accepter le devis',
+    label: 'AE Accept quotation',
     options: {
       paymentSuccess: ({ pages }) => pagesList({pages}),
       paymentFailure: ({ pages }) => pagesList({pages}),
@@ -397,58 +403,53 @@ export const ACTIONS: IActions = {
     next: [],
   },
   alle_can_accept_quotation: {
-    label: 'AE Peut accepter le devis',
+    label: 'AE Can accept quotation',
     options: {
     },
     next: ['openPage'],
   },
   alle_refuse_quotation: {
-    label: 'AE Refuser le devis',
+    label: 'AE Refuse quotation',
     options: {},
     next: ['openPage'],
   },
   alle_show_quotation: {
-    label: 'AE Voir le devis',
+    label: 'AE Display quotation',
     options: {},
     next: ['openPage'],
   },
   alle_edit_quotation: {
-    label: 'AE Modifier le devis',
+    label: 'AE Modify quotation',
     options: {},
     next: ['openPage'],
   },
   alle_finish_mission: {
-    label: 'AE Terminer mission',
+    label: 'AE Finish mission',
     options: {},
     next: ['openPage'],
   },
   alle_store_bill: {
-    label: 'AE Déposer la facture',
-    options: {},
-    next: ['openPage'],
-  },
-  alle_show_bill: {
-    label: 'AE Voir la facture',
+    label: 'AE Put bill',
     options: {},
     next: ['openPage'],
   },
   alle_accept_bill: {
-    label: 'AE Accepter la facture',
+    label: 'AE Accept bill',
     options: {},
     next: ['openPage'],
   },
   alle_refuse_bill: {
-    label: 'AE Refuser la facture',
+    label: 'AE Refuse bill',
     options: {},
     next: ['openPage'],
   },
   alle_leave_comment: {
-    label: 'AE Laisser un commentaire',
+    label: 'AE Leave comment',
     options: {},
     next: ['openPage'],
   },
   alle_send_bill: {
-    label: 'AE Envoyer la facture',
+    label: 'AE Send bill',
     options: {},
     next: ['openPage'],
   },
@@ -544,6 +545,10 @@ export const ACTIONS: IActions = {
       ],
     },
   },
+  download: {
+    label: 'Download',
+    options: {},
+  },
 
   smartdiet_start_survey: {
     label: 'SM Start survey',
@@ -565,6 +570,12 @@ export const ACTIONS: IActions = {
 
   smartdiet_join_team: {
     label: 'SM Join team',
+    options: {},
+    next: ['openPage'],
+  },
+
+  smartdiet_leave_team: {
+    label: 'SM Leave team',
     options: {},
     next: ['openPage'],
   },
@@ -607,8 +618,33 @@ export const ACTIONS: IActions = {
     next: ['openPage'],
   },
 
+  smartdiet_compute_shopping_list: {
+    label: 'SM Shopping list',
+    options: {
+      people: ({ components }) =>
+        components
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+    },
+  },
+
+  smartdiet_start_quizz: {
+    label: 'SM Start quizz',
+    options: {},
+    next: ['openPage'],
+  },
+
+  import_model_data: {
+    label: 'Import data',
+    options: {
+      model: ({ models }) => Object.values(models).map(m => ({ key: m.name, label: m.name })),
+    },
+    next: ['openPage'],
+  },
+
 }
 
 export const allowsActions = (component: IComponent) => {
   return ['Button', 'IconButton', 'Flex'].includes(component.type)
+  && (!(component.type === 'Flex' && !!component.props.isFilterComponent))
+
 }

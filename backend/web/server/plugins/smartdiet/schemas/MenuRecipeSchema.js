@@ -4,6 +4,7 @@ const {
   EVENT_MENU,
   EVENT_TYPE,
   HARDNESS,
+  MEAL_POSITION,
   PERIOD
 } = require('../consts')
 const mongoose = require('mongoose')
@@ -32,9 +33,18 @@ const MenuRecipeSchema = new Schema({
     type: String,
     enum: Object.keys(PERIOD),
     required: [true, 'Le moment (déjeuner/dîner) est obligatoire']
-  }
+  },
+  position: {
+    type: String,
+    enum: Object.keys(MEAL_POSITION),
+    required: [true, 'Le moment (déjeuner/dîner) est obligatoire']
+  },
 },
 {...schemaOptions, ...EVENT_DISCRIMINATOR}
 )
+
+MenuRecipeSchema.index(
+  { menu: 1, day: 1, period:1, position:1  },
+  { unique: true, message: 'Un menu existe déjà pour ce repas' });
 
 module.exports = MenuRecipeSchema

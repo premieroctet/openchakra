@@ -25,11 +25,15 @@ class SIB_V3 {
       emailData.cc=ccs.map(cc => ({email: cc}))
     }
     emailData.templateId = parseInt(index)
-    emailData.params = {}
+
     if (attachment) {
       emailData.attachment=[attachment]
     }
-    Object.assign(emailData.params, data)
+    // Brevo requires params not to e mepty
+    if (data) {
+      emailData.params = {}
+      Object.assign(emailData.params, data)
+    }
 
     return this.smtpInstance.sendTransacEmail(emailData)
       .then(data => {
@@ -65,6 +69,6 @@ class SIB_V3 {
   }
 }
 
-const SIB = new SIB_V3()
+const PROVIDER = new SIB_V3()
 
-module.exports = {SIB}
+module.exports = PROVIDER

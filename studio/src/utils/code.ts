@@ -2,7 +2,6 @@ import {encode} from 'html-entities'
 import filter from 'lodash/filter'
 import isBoolean from 'lodash/isBoolean'
 import lodash from 'lodash'
-
 import icons from '~iconsList'
 import lucidicons from '~lucideiconsList'
 
@@ -21,6 +20,8 @@ import {
   UPLOAD_TYPE,
   getDataProviderDataType,
   getFieldsForDataProvider,
+  getParentOfType,
+  hasParentType,
   isSingleDataPage,
 } from './dataSources';
 import {
@@ -36,12 +37,14 @@ import {
   whatTheHexaColor,
 } from './misc';
 import { ProjectState, PageState } from '../core/models/project'
-import { hasParentType } from './validation';
 import { isJsonString } from '../dependencies/utils/misc'
+import { key } from '../tests/utils/smartdiet_model.json';
 
 
 //const HIDDEN_ATTRIBUTES=['dataSource', 'attribute']
 const HIDDEN_ATTRIBUTES: string[] = []
+
+const isProduction = process?.env?.NEXT_PUBLIC_MODE === 'production'
 
 export const getPageComponentName = (
   pageId: string,
@@ -50,14 +53,23 @@ export const getPageComponentName = (
   return normalizePageName(pages[pageId].pageName)
 }
 
-const isDynamicComponent = (comp: IComponent) => {
-  return !!comp.props.dataSource || !!comp.props.subDataSource
+const isDynamicComponent = (components:IComponents, comp: IComponent): boolean => {
+  let isDynamic=(!!comp.props.dataSource || !!comp.props.subDataSource
     || (!!comp.props.action && !CONTAINER_TYPE.includes(comp.type))
-    || (comp.props.model && comp.props.attribute)
+    || (comp.props.model && comp.props.attribute)) && !(comp.type=='Flex' && comp.props.isFilterComponent)
+  // Tabs: has dataSource but only TabList and TabPanels children must get the datasource
+  if (comp.type=='Tabs') {
+    return false
+  }
+  if (['TabList', 'TabPanels'].includes(comp.type)) {
+    const tabParent=getParentOfType(components, comp, 'Tabs')
+    return tabParent ? tabParent.props.dataSource : false
+  }
+  return isDynamic
 }
 
 const isMaskableComponent = (comp: IComponent) => {
-  return !!comp.props.hiddenRoles
+  return !!comp.props.hiddenRoles || !!comp.props.conditionsvisibility
 }
 
 const getDynamicType = (comp: IComponent) => {
@@ -150,30 +162,49 @@ const buildBlock = ({
   let content = ''
   const singleData=isSingleDataPage(components)
   component.children.forEach((key: string) => {
-    let childComponent = components[key]
-    if (childComponent.type === 'DataProvider') {
+    let child = components[key]
+    if (child.type === 'DataProvider') {
       return
     }
-    if (!childComponent) {
+    if (!child) {
       throw new Error(`invalid component ${key}`)
-    } else if (forceBuildBlock || !childComponent.componentName) {
+    } else if (forceBuildBlock || !child.componentName) {
+
+      const childComponent={
+        ...lodash.cloneDeep(child),
+        props: lodash.cloneDeep(child.type=='Tabs' ? lodash.omit(child.props, ['dataSource']) : child.props),
+      }
+
+      // Force TabList && TabPanel's dataSource if parent Tabs has one
+      if (['TabList', 'TabPanels'].includes(childComponent.type)) {
+        const tabParent=getParentOfType(components, childComponent, 'Tabs')
+        if (tabParent?.props.dataSource) {
+          childComponent.props.dataSource=tabParent?.props.dataSource
+        }
+        if (tabParent?.props.attribute) {
+          childComponent.props.attribute=tabParent?.props.attribute
+        }
+      }
       const dataProvider = components[childComponent.props.dataSource]
       const isDpValid=getValidDataProviders(components).find(dp => dp.id==childComponent.props.dataSource)
       const paramProvider = dataProvider?.id.replace(/comp-/, '')
       const subDataProvider = components[childComponent.props.subDataSource]
       const paramSubProvider = subDataProvider?.id.replace(/comp-/, '')
-      const componentName = isDynamicComponent(childComponent)
+      const componentName = isDynamicComponent(components, childComponent)
         ? `Dynamic${capitalize(childComponent.type)}`
         : isMaskableComponent(childComponent)
         ? `Maskable${capitalize(childComponent.type)}`
-        : capitalize(childComponent.type)
+        : (childComponent.type==='Flex' && JSON.parse(childComponent?.props?.isFilterComponent || 'false'))
+        ? 'Filter'
+        : capitalize(getWappType(childComponent.type))
       let propsContent = ''
 
-      // DIRTY: stateValue for RAdioGroup to get value
-      if ((['RadioGroup', 'Input', 'Select']).includes(childComponent.type)) {
+      propsContent += ` getComponentValue={getComponentValue} `
+
+      // Forces refresh is this compnent's value is changed
+      if (isFilterComponent(childComponent, components)) {
         propsContent += ` setComponentValue={setComponentValue} `
       }
-      propsContent += ` getComponentValue={getComponentValue} `
 
       // Set component id
       propsContent += ` id='${childComponent.id}' `
@@ -193,14 +224,13 @@ const buildBlock = ({
         propsContent += ` noautosave={true} `
       }
 
-      if (childComponent.type=='Radio' && hasParentType(childComponent, components, 'RadioGroup')) {
+      if (['Checkbox', 'IconCheck', 'Radio'].includes(childComponent.type) && hasParentType(childComponent, components, 'RadioGroup')) {
         propsContent += ` insideGroup `
       }
-      if (['Checkbox', 'IconCheck'].includes(childComponent.type) && hasParentType(childComponent, components, 'CheckboxGroup')) {
+      if (['Checkbox', 'IconCheck', 'Radio'].includes(childComponent.type) && hasParentType(childComponent, components, 'CheckboxGroup')) {
         propsContent += ` insideGroup `
       }
-
-      if (isDynamicComponent(childComponent)) {
+      if (isDynamicComponent(components, childComponent)) {
         propsContent += ` backend='/'`
           let tp = null
             try {
@@ -254,6 +284,10 @@ const buildBlock = ({
       const propsNames = Object.keys(childComponent.props).filter(propName => {
         if (childComponent.type === 'Icon') {
           return propName !== 'icon'
+        }
+        // No index on Accordion => Unfolded by defautl
+        if (childComponent.type === 'Accordion') {
+          return propName !== 'index'
         }
         return true
       })
@@ -397,6 +431,14 @@ const buildBlock = ({
 
       if (childComponent.type === 'Input' && childComponent.props.type=='password') {
         propsContent += ` displayEye`
+      }
+
+      if (childComponent.type === 'Flex' && childComponent.props.isFilterComponent) {
+        const {props}=childComponent
+        const enums=models[props?.model]?.attributes?.[props.attribute]?.enumValues
+        if (enums) {
+          propsContent += ` enumValues='${JSON.stringify(enums)}'`
+        }
       }
 
       if (
@@ -573,14 +615,16 @@ const buildHooks = (components: IComponents) => {
   }
 
   useEffect(() => {
+    if (!process.browser) { return }
     ${dataProviders
       .map(dp => {
         const dataId = dp.id.replace(/comp-/, '')
         const dpFields = getDataProviderFields(dp).join(',')
         const idPart = dp.id === 'root' ? `\${id ? \`\${id}/\`: \`\`}` : ''
+        const urlRest='${new URLSearchParams(queryRest)}'
         const apiUrl = `/myAlfred/api/studio/${dp.props.model}/${idPart}${
-          dpFields ? `?fields=${dpFields}` : ''
-        }`
+          dpFields ? `?fields=${dpFields}&` : '?'
+        }${dp.id=='root' ? urlRest: ''}`
         let thenClause=dp.id=='root' && singlePage ?
          `.then(res => set${capitalize(dataId)}(res.data[0]))`
          :
@@ -600,30 +644,45 @@ const buildHooks = (components: IComponents) => {
 }
 
 const isFilterComponent = (component: IComponent, components: IComponents) => {
-  return Object.values(components).some(
-    c => c.props?.textFilter == component.id,
+
+  let result=Object.values(components).some(
+    c => (c.props?.textFilter == component.id || c.props?.filterValue == component.id
+      || c.props?.filterValue2 == component.id
+    )
   )
+
+  // Check if any compoennt has this component has a filter attribute
+  result = result ||Object.values(components).some(cmp => {
+    return Object.entries(cmp.props).some(([propName, propvalue]) => {
+      if (/^conditions/.test(propName)) {
+        const value=typeof(propvalue)=='string' ? JSON.parse(propvalue):propvalue
+        return Object.values(value).some((v:any) => v.attribute==component.id)
+      }
+    })
+  })
+  return result
 }
 
 const buildDynamics = (components: IComponents, extraImports: string[]) => {
   const dynamicComps = lodash.uniqBy(
-    Object.values(components).filter(c => isDynamicComponent(c)),
+    Object.values(components).filter(c => isDynamicComponent(components, c)),
     c => c.type,
   )
   if (dynamicComps.length === 0) {
     return null
   }
+
   const groups = lodash.groupBy(dynamicComps, c => getDynamicType(c))
   Object.keys(groups).forEach(g =>
     extraImports.push(
-      `import withDynamic${g} from './dependencies/hoc/withDynamic${g}'`,
+      `import withDynamic${g} from '../dependencies/hoc/withDynamic${g}'`,
     ),
   )
 
   let code = `${Object.keys(groups)
     .map(g => {
       return groups[g]
-        .map(comp => `const Dynamic${comp.type}=withDynamic${g}(${comp.type})`)
+        .map(comp => `const Dynamic${comp.type}=withDynamic${g}(${getWappType(comp.type)})`)
         .join('\n')
     })
     .join('\n')}
@@ -645,7 +704,7 @@ const buildMaskable = (components: IComponents, extraImports: string[]) => {
     .uniq()
 
   extraImports.push(
-    `import withMaskability from './dependencies/hoc/withMaskability'`,
+    `import withMaskability from '../dependencies/hoc/withMaskability'`,
   )
   let code = types
     .map(type => `const Maskable${type}=withMaskability(${type})`)
@@ -653,16 +712,43 @@ const buildMaskable = (components: IComponents, extraImports: string[]) => {
   return code
 }
 
+const getWappType = type => {
+  return `Wapp${type}`
+}
+
+const reloadOnBackScript = `
+useEffect(() => {
+   const handlePopstate = () => {
+     // This code will run when the user navigates back
+     window.location.reload(); // Reload the component
+   };
+   window.addEventListener('popstate', handlePopstate);
+   return () => {
+     // Cleanup: Remove the event listener when the component unmounts
+     window.removeEventListener('popstate', handlePopstate);
+   };
+ }, []);`
+
 export const generateCode = async (
   pageId: string,
   pages: {
     [key: string]: PageState
   },
   models: any,
+  project: ProjectState
 ) => {
   const { components, metaTitle, metaDescription, metaImageUrl } = pages[pageId]
+  const { settings } = project
+  const {description, metaImage, name, url, favicon32, gaTag} = Object.fromEntries(Object.entries(settings).map(([key, value]) => [key, isJsonString(value) ? JSON.parse(value) : value]))
 
   const extraImports: string[] = []
+  const wappComponentsDeclaration = lodash(components)
+    .values()
+    .filter(v => v.id!='root')
+    .filter(v => v.type!='DataProvider')
+    .map(v => v.type)
+    .uniq()
+    .map(type => `const ${getWappType(type)}=withWappizy(${type})`)
   let hooksCode = buildHooks(components)
   let filterStates = buildFilterStates(components)
   let dynamics = buildDynamics(components, extraImports)
@@ -685,6 +771,7 @@ export const generateCode = async (
 
 
 
+
   const imports = [
     ...new Set(
       Object.keys(components)
@@ -703,7 +790,7 @@ export const generateCode = async (
   )
   */
   const groupedComponents = lodash.groupBy(imports, c =>
-    module[c] ? '@chakra-ui/react' : `./dependencies/custom-components/${c}`,
+    module[c] ? '@chakra-ui/react' : `../dependencies/custom-components/${c}`,
   )
 
   const rootIdQuery = components.root?.props?.model
@@ -738,7 +825,9 @@ export const generateCode = async (
   ''
   */
   code = `import React, {useState, useEffect} from 'react';
-  import Metadata from './dependencies/Metadata';
+  import Filter from '../dependencies/custom-components/Filter/Filter';
+  import omit from 'lodash/omit';
+  import Metadata from '../dependencies/Metadata';
   ${hooksCode ? `import axios from 'axios'` : ''}
   ${Object.entries(groupedComponents)
     .map(([modName, components]) => {
@@ -762,19 +851,28 @@ import { ${lucideIconImports.join(',')} } from "lucide-react";`
     : ''
 }
 
-import {ensureToken} from './dependencies/utils/token'
-import {useLocation} from "react-router-dom"
-import { useUserContext } from './dependencies/context/user'
-import { getComponentDataValue } from './dependencies/utils/values'
+import {ensureToken} from '../dependencies/utils/token'
+import {useRouter} from 'next/router'
+import { useUserContext } from '../dependencies/context/user'
+import { getComponentDataValue } from '../dependencies/utils/values'
+import withWappizy from '../dependencies/hoc/withWappizy'
+
 ${extraImports.join('\n')}
+${wappComponentsDeclaration.join('\n')}
 
 ${dynamics || ''}
 ${maskable || ''}
 ${componentsCodes}
 
+
 const ${componentName} = () => {
-  const query = new URLSearchParams(useLocation().search)
-  const id=${rootIgnoreUrlParams ? 'null' : `query.get('${rootIdQuery}') || query.get('id')`}
+
+
+  /** Force reload on history.back */
+  ${reloadOnBackScript}
+  const query = process.browser ? Object.fromEntries(new URL(window.location).searchParams) : {}
+  const id=${rootIgnoreUrlParams ? 'null' : 'query.id'}
+  const queryRest=omit(query, ['id'])
   const [componentsValues, setComponentsValues]=useState({})
 
   const setComponentValue = (compId, value) => {
@@ -806,9 +904,13 @@ const ${componentName} = () => {
   return ${autoRedirect ? 'user===null && ': ''} (
     <>
     <Metadata
-      metaTitle={'${addBackslashes(metaTitle)}'}
-      metaDescription={'${addBackslashes(metaDescription)}'}
-      metaImageUrl={'${metaImageUrl}'}
+      metaTitle={'${metaTitle && addBackslashes(metaTitle)}'}
+      metaDescription={'${metaDescription ? addBackslashes(metaDescription) : addBackslashes(description)}'}
+      metaImageUrl={'${metaImageUrl ? addBackslashes(metaImageUrl) : addBackslashes(metaImage)}'}
+      metaName={'${name && addBackslashes(name)}'}
+      metaUrl={'${url}'}
+      metaFavicon32={'${favicon32 && addBackslashes(favicon32)}'}
+      metaGaTag={${isProduction ? `'${gaTag}'` : null}}
     />
     ${code}
     </>

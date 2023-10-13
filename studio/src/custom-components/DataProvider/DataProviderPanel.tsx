@@ -27,6 +27,9 @@ const DataProviderPanel = () => {
     if (!value) {
       removeValue('cardinality')
     }
+    else {
+      setValue('cardinality', 'multiple')
+    }
   }
 
   const cbLabel = `Ignore '${model}' param in URL`

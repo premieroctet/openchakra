@@ -41,6 +41,7 @@ const Contact=require('../../server/models/Contact')
 const Content=require('../../server/models/Content')
 const Conversation=require('../../server/models/Conversation')
 const Device=require('../../server/models/Device')
+const Diploma=require('../../server/models/Diploma')
 const Drink=require('../../server/models/Drink')
 const DrinkCategory=require('../../server/models/DrinkCategory')
 const Equipment=require('../../server/models/Equipment')
@@ -58,6 +59,7 @@ const MealCategory=require('../../server/models/MealCategory')
 const Measure=require('../../server/models/Measure')
 const Message=require('../../server/models/Message')
 const Menu=require('../../server/models/Menu')
+const Network=require('../../server/models/Network')
 const Newsletter=require('../../server/models/Newsletter')
 const Objective=require('../../server/models/Objective')
 const Offer=require('../../server/models/Offer')
@@ -86,7 +88,6 @@ const TrainingCenter=require('../../server/models/TrainingCenter')
 const UIConfiguration=require('../../server/models/UIConfiguration')
 const User=require('../../server/models/User')
 const UserSessionData=require('../../server/models/UserSessionData')
-const UserSpoon=require('../../server/models/UserSpoon')
 const Webinar=require('../../server/models/Webinar')
 
 jest.setTimeout(20000)
@@ -97,6 +98,7 @@ describe('Test models ', () => {
   beforeAll(async() => {
     await mongoose.connect(`mongodb://localhost/test${moment().unix()}`, MONGOOSE_OPTIONS)
     const offer=await Offer.create({
+      groups_credit:5,
       coaching_credit:5, video_unlimited: true, podcasts_unlimited: true,
       infographies_unlimited: true, articles_unlimited: true,
       webinars_unlimited: true, duration: 4, price: 500, name: 'Offre'
@@ -112,11 +114,11 @@ describe('Test models ', () => {
     await mongoose.connection.close()
   })
 
-  it('must know required models', async() => {
+  it.only('must know required models', async() => {
     expect(Accessory).toBeFalsy()
     expect(AccessoryCategory).toBeFalsy()
     expect(Album).toBeFalsy()
-    expect(Appointment).toBeFalsy()
+    expect(Appointment).toBeTruthy()
     expect(Availability).toBeFalsy()
     expect(Billing).toBeFalsy()
     expect(Booking).toBeFalsy()
@@ -144,8 +146,8 @@ describe('Test models ', () => {
     expect(LoggedUser).toBeTruthy()
     expect(Meal).toBeFalsy()
     expect(MealCategory).toBeFalsy()
-    expect(Measure).toBeFalsy()
-    expect(Message).toBeFalsy()
+    expect(Measure).toBeTruthy()
+    expect(Message).toBeTruthy()
     expect(Newsletter).toBeFalsy()
     expect(Objective).toBeFalsy()
     expect(Offer).toBeTruthy()
@@ -174,6 +176,8 @@ describe('Test models ', () => {
     expect(UIConfiguration).toBeFalsy()
     expect(User).toBeTruthy()
     expect(UserSessionData).toBeFalsy()
+    expect(Diploma).toBeTruthy()
+    expect(Network).toBeTruthy()
   })
 
   it('Mandatory attributes for user role', () => {

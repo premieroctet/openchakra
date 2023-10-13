@@ -9,7 +9,9 @@ const withDynamicGroup = Component => {
   const Internal = ({children, noautosave, ...props}) => {
     const dataSource=props.dataSource
     const enumValues=props.enum ? JSON.parse(props.enum) : null
-    const [internalValue, setInternalValue] = useState(lodash.get(props.dataSource, props.attribute))
+    var val=lodash.get(props.dataSource, props.attribute)
+    val=val?._id || val
+    const [internalValue, setInternalValue] = useState(val)
 
     const onChange = evValue => {
       setInternalValue(evValue)

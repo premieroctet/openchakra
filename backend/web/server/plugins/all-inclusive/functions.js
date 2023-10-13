@@ -1,3 +1,4 @@
+const { datetime_str } = require('../../../utils/dateutils')
 const {
   sendAskContact,
   sendCommentReceived,
@@ -7,10 +8,15 @@ const {
   sendMissionReminderTI,
   sendNewMission,
   sendProfileOnline,
-  sendTipiSearch
+  sendProfileReminder,
+  sendTipiSearch,
+  sendUsersExtract
 } = require('./mailing')
+const {isDevelopment} = require('../../../config/config')
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const {
   AVAILABILITY,
+  BOOLEAN,
   COACHING,
   COACH_ALLE,
   COMPANY_ACTIVITY,
@@ -20,6 +26,7 @@ const {
   CONTRACT_TYPE,
   DEPARTEMENTS,
   EXPERIENCE,
+  GENDER,
   MISSING_QUOTATION_DELAY,
   MISSION_FREQUENCY,
   MISSION_REMINDER_DELAY,
@@ -33,6 +40,7 @@ const {
   QUOTATION_STATUS,
   ROLES,
   ROLE_ALLE_ADMIN,
+  ROLE_ALLE_SUPER_ADMIN,
   ROLE_COMPANY_ADMIN,
   ROLE_COMPANY_BUYER,
   ROLE_TI,
@@ -75,7 +83,8 @@ const postCreate = ({model, params, data}) => {
           sendMissionAskedSummary(mission)
         }
         else {
-          sendTipiSearch({admin, mission:mission.toObject()})
+          User.find({role: {$in: [ROLE_ALLE_ADMIN, ROLE_ALLE_SUPER_ADMIN]}})
+            .then(admins => Promise.allSettled(admins.map(admin => sendTipiSearch({admin, mission}))))
         }
     })
   }
@@ -83,7 +92,7 @@ const postCreate = ({model, params, data}) => {
     const contact=data
     const attachment=contact.document ? {url: contact.document} : null
     // TODO check sendMail return
-    User.find({role: ROLE_ALLE_ADMIN})
+    User.find({role: {$in: [ROLE_ALLE_ADMIN, ROLE_ALLE_SUPER_ADMIN]}})
       .then(users => Promise.allSettled(users.map(u => sendAskContact({
         user:{email: u.email},
         fields:{...contact.toObject({virtuals: true}), urgent: contact.urgent ? 'Oui':'Non', status: CONTACT_STATUS[contact.status]},
@@ -181,22 +190,22 @@ const preCreate = ({model, params, user}) => {
 
 setPreCreateData(preCreate)
 
-const postPutData = ({model, id, attribute, value, user}) => {
+const postPutData = ({model, id, attribute, data, user}) => {
   if (model=='user') {
-    return User.findById(id)
+    return User.findById(user._id)
       .then(account => {
         if (attribute=='hidden' && value==false) {
           sendProfileOnline(account)
         }
-        if (account?.role==ROLE_TI) {
-          return paymentPlugin.upsertProvider(account)
+        if (account.role==ROLE_TI) {
+          return !isDevelopment() && paymentPlugin.upsertProvider(account)
         }
-        if (account?.role==ROLE_COMPANY_BUYER) {
-          return paymentPlugin.upsertCustomer(account)
+        if (account.role==ROLE_COMPANY_BUYER) {
+          return !isDevelopment() && paymentPlugin.upsertCustomer(account)
         }
       })
   }
-  return Promise.resolve(null)
+  return Promise.resolve(data)
 }
 
 setPostPutData(postPutData)
@@ -206,7 +215,7 @@ const USER_MODELS=['user', 'loggedUser']
 USER_MODELS.forEach(m => {
   declareVirtualField({model: m, field: 'full_name', instance: 'String', requires: 'firstname,lastname'})
   declareEnumField({model: m, field: 'role', enumValues: ROLES})
-  declareVirtualField({model: m, field: 'profile_progress', instance: 'Number', requires: 'firstname,lastname,email,phone,birthday,nationality,picture,identity_proof_1,iban,company_name,company_status,siret,status_report,insurance_type,insurance_report,company_picture'})
+  declareVirtualField({model: m, field: 'profile_progress', instance: 'Number', requires: 'firstname,lastname,email,phone,birthday,nationality,picture,identity_proof_1,iban,company_name,company_status,siret,status_report,insurance_type,insurance_report,company_picture,jobs'})
   declareEnumField({model: m, field: 'coaching', enumValues: COACHING})
   declareVirtualField({model: m, field: 'password2', instance: 'String'})
   declareEnumField({model: m, field: 'availability', enumValues: AVAILABILITY})
@@ -238,7 +247,8 @@ USER_MODELS.forEach(m => {
       options: {ref: 'mission'}}
   })
   declareVirtualField({model: m, field: 'missions', instance: 'Array', multiple: true,
-    requires: '_missions,_missions.user,_missions.job,_missions.job.user,_missions.quotations,_missions.quotations.details,_missions.comments,missions,missions.user,missions.job,missions.job.user,missions.quotations,missions.comments',
+    requires: '_missions,_missions.user.full_name,_missions.user.company_name,_missions.job.user.full_name,_missions.quotations,_missions.quotations.details,_missions.comments,missions,missions.user,missions.job,missions.job.user,missions.quotations,missions.comments,\
+_missions.comments.mission.job.user.full_name,_missions.comments.mission.user.company_name,_missions.comments.user.picture,_missions.comments.mission.job.user.picture',
     caster: {
       instance: 'ObjectID',
       options: {ref: 'mission'}}
@@ -257,7 +267,7 @@ USER_MODELS.forEach(m => {
   })
   declareVirtualField({model: m, field: 'recommandations_count', instance: 'Number', requires: 'jobs'})
   declareVirtualField({model: m, field: 'recommandations_note', instance: 'Number', requires: 'jobs'})
-  declareVirtualField({model: m, field: 'comments_count', instance: 'Number', requires: 'jobs'})
+  declareVirtualField({model: m, field: 'comments_count', instance: 'Number', requires: 'missions.comments'})
   declareVirtualField({model: m, field: 'comments_note', instance: 'Number', requires: 'jobs'})
 
   declareVirtualField({model: m, field: 'revenue', instance: 'Number',
@@ -265,7 +275,8 @@ USER_MODELS.forEach(m => {
   declareVirtualField({model: m, field: 'revenue_to_come', instance: 'Number',
     requires: 'role,_missions.quotations.ti_total,_missions.status,missions.quotations.ti_total,missions.status'})
   declareVirtualField({model: m, field: 'accepted_quotations_count', instance: 'Number', requires: 'role,_missions.status,missions.status'})
-
+  declareVirtualField({model: m, field: 'pending_quotations_count', instance: 'Number', requires: 'role,_missions.status,missions.status'})
+  declareVirtualField({model: m, field: 'pending_bills_count', instance: 'Number', requires: 'role,_missions.status,missions.status'})
   declareVirtualField({model: m, field: 'spent', instance: 'Number',
     requires: 'role,_missions.quotations.customer_total,_missions.status,missions.quotations.customer_total,missions.status'})
   declareVirtualField({model: m, field: 'spent_to_come', instance: 'Number',
@@ -275,7 +286,11 @@ USER_MODELS.forEach(m => {
 
   declareVirtualField({model: m, field: 'profile_shares_count', instance: 'Number', requires: ''})
   declareEnumField({model: m, field: 'unactive_reason', enumValues: UNACTIVE_REASON})
-  declareVirtualField({model: m, field: 'missing_attributes', instance: 'String', requires: 'firstname,lastname,email,phone,birthday,nationality,picture,identity_proof_1,iban,company_name,company_status,siret,status_report,insurance_type,insurance_report,company_picture'})
+  declareVirtualField({model: m, field: 'missing_attributes', instance: 'String', requires: 'firstname,lastname,email,phone,birthday,nationality,picture,identity_proof_1,iban,company_name,company_status,siret,status_report,insurance_type,insurance_report,company_picture,jobs'})
+  declareVirtualField({model: m, field: 'missing_attributes_step_1', instance: 'String', requires: 'firstname,lastname,email,phone,birthday,nationality,picture,identity_proof_1,iban,company_name,company_status,siret,status_report,insurance_type,insurance_report,company_picture,jobs'})
+  declareVirtualField({model: m, field: 'missing_attributes_step_2', instance: 'String', requires: 'firstname,lastname,email,phone,birthday,nationality,picture,identity_proof_1,iban,company_name,company_status,siret,status_report,insurance_type,insurance_report,company_picture,jobs'})
+  declareVirtualField({model: m, field: 'missing_attributes_step_3', instance: 'String', requires: 'firstname,lastname,email,phone,birthday,nationality,picture,identity_proof_1,iban,company_name,company_status,siret,status_report,insurance_type,insurance_report,company_picture,jobs'})
+  declareVirtualField({model: m, field: 'missing_attributes_step_4', instance: 'String', requires: 'firstname,lastname,email,phone,birthday,nationality,picture,identity_proof_1,iban,company_name,company_status,siret,status_report,insurance_type,insurance_report,company_picture,jobs'})
   declareEnumField({model: m, field: 'zip_code', enumValues: DEPARTEMENTS})
   declareVirtualField({model: m, field: '_all_jobs', instance: 'Array', multiple: true,
     caster: {
@@ -295,7 +310,9 @@ USER_MODELS.forEach(m => {
       options: {ref: 'recommandation'}}
   })
   declareVirtualField({model: m, field: 'search_text', type: 'String',
-    requires:'firstname,lastname,qualified_str,visible_str,company_name,coaching,zip_code,admin_validated'})
+    requires:'firstname,lastname,qualified_str,visible_str,company_name,coaching,zip_code,admin_validated'
+  })
+  declareEnumField({model: m, field: 'gender', instance: 'String', enumValues: GENDER})
 })
 
 
@@ -345,6 +362,8 @@ declareVirtualField({model: 'jobUser', field: 'comments', instance: 'Array', req
     options: {ref: 'comment'}}
 })
 declareVirtualField({model: 'jobUser', field: 'pinned', instance: 'Boolean', requires:'pins'})
+declareVirtualField({model: 'jobUser', field: 'recommandations_count', instance: 'Number', requires:'recommandations'})
+declareVirtualField({model: 'jobUser', field: 'rate_str', instance: 'String', requires:'on_quotation,rate'})
 
 
 declareEnumField({model: 'experience', field: 'contract_type', enumValues: CONTRACT_TYPE})
@@ -372,6 +391,7 @@ declareVirtualField({model: 'mission', field: 'gross_total', instance: 'Number',
 declareVirtualField({model: 'mission', field: 'aa', instance: 'Number', requires: 'quotations.aa'})
 declareVirtualField({model: 'mission', field: 'ti_total', instance: 'Number', requires: 'quotations.ti_total'})
 declareVirtualField({model: 'mission', field: 'vat_total', instance: 'Number', requires: 'quotations.vat_total'})
+declareEnumField({model: 'mission', field: 'recurrent', instance: 'String', enumValues: BOOLEAN})
 
 
 declareVirtualField({model: 'quotation', field: 'details', instance: 'Array', requires: '', multiple: true,
@@ -383,8 +403,7 @@ declareVirtualField({model: 'quotation', field: 'total', instance: 'Number', req
 declareVirtualField({model: 'quotation', field: 'vat_total', instance: 'Number', requires: 'details.vat_total'})
 declareVirtualField({model: 'quotation', field: 'ht_total', instance: 'Number', requires: 'details.ht_total'})
 declareVirtualField({model: 'quotation', field: 'customer_total', instance: 'Number', requires: 'gross_total,mer,ht_total'})
-//declareVirtualField({model: 'quotation', field: 'mer', instance: 'Number', requires: 'mission.job.user.qualified,ht_total'})
-declareVirtualField({model: 'quotation', field: 'mer', instance: 'Number', requires: 'ht_total'})
+declareVirtualField({model: 'quotation', field: 'mer', instance: 'Number', requires: 'mission.job.user.qualified,ht_total'})
 declareVirtualField({model: 'quotation', field: 'gross_total', instance: 'Number', requires: 'details.total'})
 declareVirtualField({model: 'quotation', field: 'aa', instance: 'Number', requires: 'ht_total'})
 declareVirtualField({model: 'quotation', field: 'ti_total', instance: 'Number', requires: 'gross_total,aa'})
@@ -576,6 +595,66 @@ AdminDashboard.exists({})
   .then(()=> console.log(`Only adminDashboard`))
   .catch(err=> console.error(`Only adminDashboard:${err}`))
 
+const getUsersList = () => {
+  const HEADERS=[
+    {title: 'Créé le', id:'created_format'},
+    {title: 'Prénom', id:'firstname'},
+    {title: 'Nom', id:'lastname'},
+    {title: 'Email', id:'email'},
+    {title: 'Département', id:'zip_code'},
+    {title: 'Métiers', id: 'job'},
+    {title: 'Masqué', id: 'visible_str'},
+    {title: 'Qualifié', id: 'qualified_str'},
+    {title: 'Accompagnement', id: 'coaching_alle'},
+    {title: '% complétude', id: 'profile_progress'},
+    {title: 'Assurance', id: 'insurance_type'},
+    {title: 'Document assurance', id: 'insurance_report'},
+  ]
+  return User.find().populate('jobs').lean({virtuals:true}).sort({creation_date:1})
+    .then(users => {
+      return users.map(u => ({
+        ...u,
+        job: u.jobs.map(j => j.name).join(','),
+        coaching_alle: u.coaching==COACH_ALLE ? 'oui':'non',
+        created_format: moment(u[CREATED_AT_ATTRIBUTE]).format('DD/MM/YY hh:mm'),
+      }))
+    })
+    .then(users => {
+      const csvStringifier = createCsvWriter({
+        header: HEADERS,
+        fieldDelimiter: ';',
+        path: 'AllTipis.csv',
+      });
+      return csvStringifier.csvStringifier.getHeaderString() + csvStringifier.csvStringifier.stringifyRecords(users)
+    })
+}
+
+const sendUsersList = () => {
+  return Promise.all([
+    User.find({role: {$in: [ROLE_ALLE_ADMIN, ROLE_ALLE_SUPER_ADMIN]}}),
+    getUsersList(),
+  ])
+  .then(([admins, contents]) => {
+    // TODO: contact only. Later will send to SUPER_ADMIN roles only
+    admins=admins.filter(a => /contact/.test(a.email))
+    const name=`Extraction TIPI du ${moment().format('DD/MM/YY HH:mm')}.csv`
+    const content=Buffer.from(contents).toString('base64')
+    const attachment={name, content}
+    return Promise.allSettled(admins.map(admin => sendUsersExtract(admin, attachment)))
+  })
+  .then(console.log)
+}
+
+!isDevelopment() && cron.schedule('0 0 8 * * *', async() => {
+  // Send each monday and thursday
+  const DAYS=[1,4]
+  const today=moment().startOf('day').day()
+  if (DAYS.includes(today)) {
+    return sendUsersList()
+      .then(console.log)
+      .catch(console.error)
+  }
+})
 // Check payment status
 // Poll every minute
 cron.schedule('*/5 * * * * *', async() => {
@@ -593,7 +672,7 @@ cron.schedule('*/5 * * * * *', async() => {
     })
 })
 
-// Daily notifications (every day at 8AM)
+// Daily notifications (every day at 8AM) for missions/quotations reminders
 cron.schedule('0 0 8 * * *', async() => {
   console.log('crnoning')
   // Pending quoations: not accepted after 2 days
@@ -608,3 +687,28 @@ cron.schedule('0 0 8 * * *', async() => {
       Promise.allSettled(soonMissions.map(m => sendMissionReminderTI(m)))
     })
 })
+
+
+// Daily notifications (every day at 9PM) to complete profile
+cron.schedule('0 0 19 * * *', () => {
+  const today=moment().startOf('day')
+  const isTuesday=today.day()==2
+  console.log(`Checking uncomplete profiles, today is tuesday:${isTuesday}`)
+  // Pending quoations: not accepted after 2 days
+  return loadFromDb({model: 'user', fields: ['role', 'creation_date', 'email', 'profile_progress','missing_attributes']})
+    .then(users => {
+      const uncompleteProfiles=users
+        .filter(u => u.role==ROLE_TI)
+        .filter(u => isTuesday || today.diff(moment(u.creation_date).startOf('day'), 'days')==2)
+        .filter(u => u.profile_progress < 100)
+        .forEach(u => {
+          console.log(`Sending reminder mail to ${u.email}:${u.missing_attributes}`)
+          sendProfileReminder(u)
+        })
+    })
+})
+
+module.exports={
+  getUsersList,
+  sendUsersList,
+}

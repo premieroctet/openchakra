@@ -1,3 +1,9 @@
+const path = require('path')
+const https = require('https')
+const fs = require('fs')
+const myEnv = require('dotenv').config({path: path.resolve(__dirname, '../../../.env')})
+const dotenvExpand = require('dotenv-expand')
+dotenvExpand.expand(myEnv)
 const axios = require('axios')
 const mongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
@@ -14,8 +20,14 @@ const {
   getDatabaseUri,
   getHostUrl,
   getPort,
+  isProduction,
+  isValidation,
+  isDevelopment,
+  isDevelopment_nossl,
+  config,
 } = require('../config/config')
 const {HTTP_CODES, parseError} = require('./utils/errors')
+require('./models/Answer')
 require('./models/ResetToken')
 require('./models/Program')
 require('./models/Theme')
@@ -54,10 +66,8 @@ require('./models/Target')
 require('./models/PartnerApplication')
 require('./models/Spoon')
 require('./models/CollectiveChallenge')
-require('./models/PartnerApplication')
 require('./models/Gift')
 require('./models/SpoonGain')
-require('./models/Content')
 require('./models/Menu')
 require('./models/Webinar')
 require('./models/IndividualChallenge')
@@ -74,7 +84,6 @@ require('./models/Diploma')
 require('./models/Photo')
 require('./models/Mission')
 require('./models/QuotationDetail')
-require('./models/Contact')
 require('./models/Recipe')
 require('./models/Instrument')
 require('./models/Ingredient')
@@ -93,30 +102,43 @@ require('./models/Coaching')
 require('./models/Consultation')
 require('./models/CoachingQuestion')
 require('./models/UserCoachingQuestion')
+require('./models/Network')
+require('./models/DietComment')
+require('./models/FoodDocument')
+require('./models/Quizz')
+require('./models/QuizzQuestion')
+require('./models/UserQuizz')
+require('./models/UserQuizzQuestion')
+require('./models/Item')
+require('./models/Range')
+require('./models/Availability')
+require('./models/LogbookDay')
+require('./models/CoachingLogbook')
+require('./models/Lead')
+require('./models/AppointmentType')
+require('./models/GraphData')
+require('./models/Issue')
+require('./models/Project')
+require('./models/UserProject')
+require('./models/OrderedArticles')
+require('./models/Module')
+require('./models/Article')
+require('./models/BestPractices')
+require('./models/Tip')
+require('./models/Emergency')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 
 require('console-stamp')(console, '[dd/mm/yy HH:MM:ss.l]')
 
-const {
-  isProduction,
-  isValidation,
-  isDevelopment,
-  isDevelopment_nossl,
-} = require('../config/config')
 const dev = process.env.NODE_DEV !== 'production' // true false
 const prod = process.env.NODE_DEV === 'production' // true false
 const nextApp =
   isProduction() || isValidation() ? next({prod}) : next({dev})
 const routes = require('./routes')
 const routerHandler = routes.getRequestHandler(nextApp)
-const {config} = require('../config/config')
-const http = require('http')
-const https = require('https')
-const fs = require('fs')
 const studio = require('./routes/api/studio')
 const withings = require('./routes/api/withings')
-const path = require('path')
 const app = express()
 const {serverContextFromRequest} = require('./utils/serverContext')
 
@@ -138,9 +160,6 @@ checkConfig()
     app.use(bodyParser.urlencoded({extended: true}))
     app.use(bodyParser.json())
 
-    // Body POST limit
-    app.use(express.json({limit: '1mb'}))
-    app.use(express.urlencoded({limit: '1mb'}))
     // Passport middleware
     app.use(passport.initialize())
 

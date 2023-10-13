@@ -36,11 +36,13 @@ const DataSourcePanel: React.FC = () => {
   const contextFilter = usePropsSelector('contextFilter')
   const filterAttribute = usePropsSelector('filterAttribute')
   const filterValue = usePropsSelector('filterValue')
+  const filterConstant = usePropsSelector('filterConstant')
   const filterAttribute2 = usePropsSelector('filterAttribute2')
   const filterValue2 = usePropsSelector('filterValue2')
   const contextAttribute = usePropsSelector('contextAttribute')
   const series_attributes = lodash.range(5).map(idx => usePropsSelector(`series_${idx}_attribute`))
   const series_labels = lodash.range(5).map(idx => usePropsSelector(`series_${idx}_label`))
+  const hidePagination = usePropsSelector('hidePagination')
   const shuffle = usePropsSelector('shuffle')
   const radioGroup = usePropsSelector('radioGroup')
   const [providers, setProviders] = useState<IComponent[]>([])
@@ -55,6 +57,7 @@ const DataSourcePanel: React.FC = () => {
   const [isChart, setIsChart] = useState(false)
   const [availableSeries, setAvailableSeries] = useState([])
   const [dataType, setDataType] = useState('menu')
+  const filterComponents = lodash.range(5).map(idx => usePropsSelector(`filterComponent_${idx}`))
 
   useEffect(()=> {
     setIsChart(activeComponent?.type=='Chart')
@@ -283,6 +286,16 @@ const DataSourcePanel: React.FC = () => {
           </FormControl>
         )}
         {CONTAINER_TYPE.includes(activeComponent ?.type) && (
+        <FormControl htmlFor="hidePagination" label='Hide pagination'>
+          <Checkbox
+            id="hidePagination"
+            name="hidePagination"
+            isChecked={hidePagination}
+            onChange={onCheckboxChange}
+          ></Checkbox>
+        </FormControl>
+        )}
+        {CONTAINER_TYPE.includes(activeComponent ?.type) && (
         <FormControl htmlFor="shuffle" label='Shuffle'>
           <Checkbox
             id="shuffle"
@@ -345,6 +358,15 @@ const DataSourcePanel: React.FC = () => {
                     </option>
                   ))}
               </Select>
+            </FormControl>
+            <FormControl htmlFor="filterConstant" label="Filter constant">
+              <Input
+                id="filterConstant"
+                onChange={setValueFromEvent}
+                name="filterConstant"
+                size="xs"
+                value={filterConstant || ''}
+              />
             </FormControl>
             <FormControl htmlFor="filterAttribute2" label="Filter attribute 2">
               <Select
@@ -471,6 +493,30 @@ const DataSourcePanel: React.FC = () => {
               ))}
             </Box>)
         }
+
+        { lodash.range(5).map((_,i)=> (
+          <>
+            <FormControl htmlFor={`series_${i}_attribute`} label={`Filter component ${i}`}>
+            <Select
+              id={`filterComponent_${i}`}
+              name={`filterComponent_${i}`}
+              onChange={setValueFromEvent}
+              size="xs"
+              value={filterComponents[i]}
+            >
+              <option value={undefined}></option>
+              {Object.values(components)
+                .filter(c => c.type=='Flex' &&  c.props?.isFilterComponent)
+                .map((component, i) => (
+                  <option key={`comp${i}`} value={component.id}>
+                    {`${component.id} (${component.type})`}
+                  </option>
+                ))}
+            </Select>
+            </FormControl>
+            </>
+          ))}
+
       </AccordionContainer>
     </Accordion>
   )

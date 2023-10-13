@@ -2,11 +2,13 @@ const moment = require('moment')
 /**
 Paiement ; https://stripe.com/docs/connect/collect-then-transfer-guide?locale=fr-FR
 */
-let Stripe=null
+let PublicStripe=null
+let SecretStripe=null
 
 const init = config => {
   console.log(`init Stripe:${JSON.stringify(config)}`)
-  Stripe=require('stripe')(config.STRIPE_KEY)
+  PublicStripe=require('stripe')(config.STRIPE_PUBLIC_KEY)
+  SecretStripe=require('stripe')(config.STRIPE_SECRET_KEY)
 }
 
 const getUserGroup = user => {
@@ -66,6 +68,22 @@ const user2Data = (user, token_id) => ({
   },
 })
 
+const upsertBankAccount = (user, account_id) => {
+  if (!user.iban) { return Promise.resolve()}
+  const externalAccountParams={
+    object: 'bank_account',
+    account_number: user.iban,
+    country: 'fr',
+    currency: 'eur',
+  }
+  return SecretStripe.accounts.listExternalAccounts(account_id)
+    .then(({data})=> {
+      if (data.some(d => user.iban.endsWith(d.last4))) {return null}
+      return SecretStripe.accounts.createExternalAccount(account_id, {external_account: externalAccountParams})
+    })
+    .catch(err => console.error(err))
+}
+
 const upsertCustomer = user => {
   const data={
     email: user.email || undefined,
@@ -76,9 +94,9 @@ const upsertCustomer = user => {
     phone: user.phone?.trim().replace(/ /g, '').replace(/^0/, '+33'),
   }
   const fn=user.payment_account_id ?
-    Stripe.customers.update(user.payment_account_id, data)
+    SecretStripe.customers.update(user.payment_account_id, data)
     :
-    Stripe.customers.create(data)
+    SecretStripe.customers.create(data)
   return fn
     .then(account => {
       return account.id
@@ -86,36 +104,45 @@ const upsertCustomer = user => {
 }
 
 const upsertProvider = user => {
-  return Stripe.tokens.create(user2Token(user))
+  return PublicStripe.tokens.create(user2Token(user))
     .then(token => {
       const data=user2Data(user, token.id)
       const fn=user.payment_account_id ?
-        Stripe.accounts.update(user.payment_account_id, data)
+        SecretStripe.accounts.update(user.payment_account_id, data)
         :
-        Stripe.accounts.create({...data, country:'FR', type:'custom'})
+        SecretStripe.accounts.create({...data, country:'FR', type:'custom'})
       return fn
     })
     .then(account => {
-      user.payment_account_id=account.id
-      return account.id
+      return upsertBankAccount(user, account.id)
+        .then(() => {console.log(`Bank ok`); return account.id})
+        .catch(err => {console.error(`Bank error ${err}`); return account.id})
     })
 }
 
 const getCustomers = () => {
-  return Stripe.customers.list()
+  return SecretStripe.customers.list({limit: 10000})
     .then(result => result.data)
 }
 
-const getAccounts = () => {
-  return Stripe.accounts.list()
+const deleteCustomer = id => {
+  return SecretStripe.customers.del(id)
+}
+
+const getProviders = () => {
+  return SecretStripe.accounts.list({limit: 10000})
     .then(result => result.data)
+}
+
+const deleteProvider = id => {
+  return SecretStripe.accounts.del(id)
 }
 
 const createPayment = ({source_user, amount, fee, destination_user, description, success_url, failure_url}) => {
   if (!description) {
     throw new Error(`Description is required`)
   }
-  return Stripe.checkout.sessions.create({
+  return SecretStripe.checkout.sessions.create({
     line_items:[{
       price_data: {
         currency: 'eur',
@@ -140,7 +167,7 @@ const createPayment = ({source_user, amount, fee, destination_user, description,
 }
 
 const createTransfer = ({destination, amount}) => {
-  return Stripe.transfers.create({
+  return SecretStripe.transfers.create({
     amount: amount*100,
     currency: 'eur',
     destination: destination.payment_account_id,
@@ -148,7 +175,7 @@ const createTransfer = ({destination, amount}) => {
 }
 
 const getCheckout = id => {
-  return Stripe.checkout.sessions.list()
+  return SecretStripe.checkout.sessions.list()
     .then(checkouts => {
       return checkouts.data.find(c => c.id==id)
     })
@@ -160,7 +187,9 @@ module.exports={
   getCustomers,
   createPayment,
   upsertProvider,
-  getAccounts,
+  getProviders,
   createTransfer,
   getCheckout,
+  deleteCustomer,
+  deleteProvider,
 }

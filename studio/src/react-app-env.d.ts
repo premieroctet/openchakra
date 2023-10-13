@@ -1,7 +1,7 @@
 /// <reference types="react-scripts" />;
 declare module 'prettier/standalone'
 declare module 'coloreact'
-declare module 'browser-nativefs'
+declare module 'browser-fs-access'
 
 type ComponentType =
   | 'Accordion'
@@ -78,6 +78,7 @@ type ComponentType =
   | 'Stack'
   | 'Switch'
   | 'Tab'
+  | 'Tabs'
   | 'Table'
   | 'Tabs'
   | 'TabList'

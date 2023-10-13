@@ -45,7 +45,7 @@ const OwnChart = (
     : {
       isEditable: boolean
       name: string
-      value:{date:any, [key:string]: number}[]
+      value:{date:any, [key:string]: number, x:string, y:string}[]
       attribute: string
       id: string,
       chartType: ChartType,
@@ -57,11 +57,20 @@ const OwnChart = (
       const font = isFontFamily ? props.fontFamily?.base : 'inherit'
       const isFontSize = props.hasOwnProperty('fontSize')
       const fontSize = isFontSize ? (parseInt(props.fontSize?.base, 10) || 12 ) : 14
-      
 
       const options = {
         responsive: true,
         maintainAspectRatio: false,
+        scales: {
+          x: {
+            min: props.minX || undefined,
+            max: props.maxX || undefined,
+          },
+          y: {
+            min: props.minY || undefined,
+            max: props.maxY || undefined,
+          },
+        },
         plugins: {
             legend: {
               position: 'bottom' as const,
@@ -87,16 +96,18 @@ const OwnChart = (
       // @ts-ignore
       const RetainedChart = typesOfCharts[chartType]
 
-     const labels = value?.map(v => moment(v.date).format('L'))
-     //const data1 = value?.map(v => v.chest)
+      const dateSeries=value?.some(v => !!v.date)
+     const labels = value?.map(v => dateSeries ? moment(v.date).format('L') : v.x)
+
      const datasets=lodash.range(5).map(index => {
        const attribute=props[`series_${index}_attribute`]
+       const series_data=value?.map(v => v.x ? ({x: v.x, y:v.y}) : ({x:moment(v.date).format('L'), y:v[attribute]}))
        const label=props[`series_${index}_label`]
        const color=props[`series_${index}_color`]
-       if (attribute && label) {
+       if ((!dateSeries || attribute) && label) {
          return ({
            label,
-           data: value?.map(v => ({x:moment(v.date).format('L'), y:v[attribute]})),
+           data: series_data,
            spanGaps: true,
            backgroundColor: color,
            borderColor: color,
@@ -115,9 +126,9 @@ const OwnChart = (
       const FinalChart:TypedChartComponent<ChartType> = () => React.createElement(RetainedChart, {data, options})
 
   return (
-    <Box {...props}>
+    <Box id={id} {...props}>
       <FinalChart />
-    </Box>    
+    </Box>
   )
 
 }

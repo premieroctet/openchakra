@@ -1,6 +1,7 @@
 const {
   getHostName,
   getProductionUrl,
+  isDevelopment,
   paymentPlugin
 } = require('../../../config/config')
 const {
@@ -103,7 +104,7 @@ const alle_accept_quotation = ({value, paymentSuccess, paymentFailure}, user) =>
     .then(([mission]) => {
       const [success_url, failure_url]=[paymentSuccess, paymentFailure].map(p => `https://${getHostName()}/${p}`)
       return paymentPlugin.createPayment({source_user: user, amount:mission.customer_total, fee:0,
-        destination_user: mission.job.user, description: 'Un test',
+        destination_user: mission.job.user, description: mission.name,
         success_url, failure_url,
     })
     .then(payment => {
@@ -204,11 +205,6 @@ const alle_send_bill = ({value}, user) => {
 }
 addAction('alle_send_bill', alle_send_bill)
 
-const alle_show_bill = ({value}, user) => {
-  return isActionAllowed({action:'alle_show_bill', dataId:value?._id, user})
-}
-addAction('alle_show_bill', alle_show_bill)
-
 const alle_accept_bill = ({value}, user) => {
   return isActionAllowed({action:'alle_accept_bill', dataId:value?._id, user})
     .then(ok => {
@@ -286,13 +282,15 @@ const registerAction = props => {
         throw new BadRequestError(`Pas de mail de création de compte défini pour le role ${props.role}`)
       }
       sendWelcome({user, password: props.password})
-      User.find({role:{$in:[ROLE_ALLE_ADMIN, ROLE_ALLE_SUPER_ADMIN]}})
-        .then(admins => users.map(admin => sendCompanyRegistered(user, admin)))
+      if (user.role==ROLE_COMPANY_BUYER) {
+        User.find({role:{$in:[ROLE_ALLE_ADMIN, ROLE_ALLE_SUPER_ADMIN]}})
+          .then(admins => admins.map(admin => sendCompanyRegistered(user, admin)))
+      }
       if (user.role==ROLE_TI) {
-        return paymentPlugin.upsertProvider(user)
+        return !isDevelopment() && paymentPlugin.upsertProvider(user)
       }
       if (user.role==ROLE_COMPANY_BUYER) {
-        return paymentPlugin.upsertCustomer(user)
+        return !isDevelopment() &&paymentPlugin.upsertCustomer(user)
       }
       return user
     })
@@ -377,6 +375,11 @@ const isActionAllowed = ({action, dataId, user, ...rest}) => {
       .populate('quotations')
       .then(mission => mission?.canAcceptQuotation(user))
   }
+  if (action=='alle_can_accept_quotation') {
+    return Mission.findById(dataId)
+      .populate('quotations')
+      .then(mission => mission?.canAcceptQuotation(user))
+  }
   if (action=='alle_refuse_quotation') {
     return Mission.findById(dataId)
       .populate('quotations')
@@ -406,11 +409,6 @@ const isActionAllowed = ({action, dataId, user, ...rest}) => {
     return Mission.findById(dataId)
       .populate('quotations')
       .then(mission => mission?.canSendBill(user))
-  }
-  if (action=='alle_show_bill') {
-    return Mission.findById(dataId)
-      .populate('quotations')
-      .then(mission => mission?.canShowBill(user))
   }
   if (action=='alle_accept_bill') {
     return Mission.findById(dataId)

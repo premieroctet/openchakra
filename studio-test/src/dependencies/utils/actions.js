@@ -1,6 +1,7 @@
-import {jsPDF} from 'jspdf'
 import axios from 'axios'
 import lodash from 'lodash'
+import html2canvas from 'html2canvas'
+import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
 
 import {
   clearComponentValue,
@@ -52,9 +53,8 @@ export const ACTIONS = {
         return res
       })
   },
-  openPage: ({ value, level, model, query, props, getComponentValue }) => {
-    const queryParams = query
-    queryParams.delete('id')
+  openPage: ({ value, level, model, props, getComponentValue }) => {
+    const queryParams = new URLSearchParams()
     let url = `/${props.page}`
     if ('sourceId' in props) {
       const compValue=getComponentValue(props.sourceId, level)
@@ -63,7 +63,6 @@ export const ACTIONS = {
       }
     }
     else if (value && value._id) {
-      queryParams.set(model, value._id)
       queryParams.set('id', value._id)
     }
     url = `${url}?${queryParams.toString()}`
@@ -73,7 +72,7 @@ export const ACTIONS = {
     } else {
       window.location = url
     }
-    throw new Error('break')
+    return Promise.resolve()
   },
 
   create: ({ value, context, props, level, getComponentValue }) => {
@@ -82,7 +81,7 @@ export const ACTIONS = {
       [getComponent(c, level)?.getAttribute('attribute') || getComponent(c, level)?.getAttribute('data-attribute'),
         getComponentValue(c, level)||null]
     ))
-    'job,mission,quotation,group,parent,content,recipe,menu,pip,collectiveChallenge'.split(',').forEach(property => {
+    'job,mission,quotation,group,parent,content,recipe,menu,pip,collectiveChallenge,quizzQuestion,userQuizzQuestion,user'.split(',').forEach(property => {
       if (props[property]) {
         //const dataId=document.getElementById(`${props[property]}${level}`)?.getAttribute('_id')
         const dataId=getComponent(props[property], level)?.getAttribute('_id')||null
@@ -242,8 +241,7 @@ export const ACTIONS = {
         if (res.data.redirect) {
           let redirect=res.data.redirect
           redirect = /^http/.test(redirect) ? redirect : `/${redirect}`
-          window.location=redirect
-          throw new Error('break')
+          return window.location=redirect
         }
       })
   },
@@ -256,8 +254,7 @@ export const ACTIONS = {
         if (res.data.redirect) {
           let url=res.data.redirect
           url=/^http/.test(url) ? url : `/${url}`
-          window.location=url
-          throw new Error('break')
+          return window.location=url
         }
       })
   },
@@ -367,19 +364,59 @@ export const ACTIONS = {
   },
 
   savePagePDF: () => {
-    /** TODO Prints white pages
-    var doc = new jsPDF('p', 'pt','a4',true)
-    var elementHTML = document.querySelector("#root")
-    doc.html(document.body, {
-        callback: function(doc) {
-            // Save the PDF
-            doc.save('facture.pdf');
-        },
-    });
-    */
-    return window.print()
-  },
+    //return window.print()
 
+const images = document.getElementsByTagName('img');
+const imagePromises = [];
+
+for (let i = 0; i < images.length; i++) {
+  const image = images[i];
+  const imagePromise = new Promise((resolve, reject) => {
+       if (image.complete) {
+          resolve();
+        } else {
+          image.onload = resolve;
+          image.onerror = reject;
+        }
+
+  });
+  imagePromises.push(imagePromise);
+}
+
+return Promise.allSettled(imagePromises)
+  .then(res => {
+    return PDFDocument.create().then(pdfDoc => {
+
+    const page = pdfDoc.addPage();
+    const element = document.getElementById('root');
+    html2canvas(element, {ignoreElements: element => element.tagName.toLowerCase()=='button'}).then(canvas => {
+
+    const imgData = canvas.toDataURL('image/jpeg');
+    pdfDoc.embedJpg(imgData).then(jpgImage => {
+
+    const x_ratio=page.getWidth()/jpgImage.width
+    const { width, height } = jpgImage.scale(x_ratio);
+    page.drawImage(jpgImage, {
+      x: (page.getWidth() - width)/2,
+      y: page.getHeight() - height,
+      width,
+      height,
+    });
+
+    pdfDoc.save().then(pdfBytes => {
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'document2.pdf';
+      link.click();
+      return null
+    })
+  })
+  })
+  })
+  })
+
+  },
   deactivateAccount: ({value, props, level, getComponentValue}) => {
     const reason = getComponentValue(props.reason, level)
     let url = `${API_ROOT}/action`
@@ -470,8 +507,7 @@ export const ACTIONS = {
         if (res.data.redirect) {
           let redirect=res.data.redirect
           redirect = /^http/.test(redirect) ? redirect : `/${redirect}`
-          window.location=redirect
-          throw new Error('break')
+          return window.location=redirect
         }
       })
   },
@@ -483,6 +519,7 @@ export const ACTIONS = {
       value: value._id,
     }
     return axios.post(url, body)
+      .then(() => value)
   },
 
   alle_refuse_quotation: ({value}) => {
@@ -526,6 +563,7 @@ export const ACTIONS = {
       context,
     }
     return axios.post(url, body)
+      .then(res => res.data)
   },
 
   alle_store_bill: ({ value, context, props, level, getComponentValue }) => {
@@ -536,16 +574,7 @@ export const ACTIONS = {
       context,
     }
     return axios.post(url, body)
-  },
-
-  alle_show_bill: ({ value, context, props, level, getComponentValue }) => {
-    let url = `${API_ROOT}/action`
-    const body = {
-      action: 'alle_show_bill',
-      value,
-      context,
-    }
-    return axios.post(url, body)
+      .then(res => res.data)
   },
 
   alle_accept_bill: ({ value, context, props, level, getComponentValue }) => {
@@ -556,6 +585,7 @@ export const ACTIONS = {
       context,
     }
     return axios.post(url, body)
+    .then(res => res.data)
   },
 
   alle_refuse_bill: ({ value, context, props, level, getComponentValue }) => {
@@ -566,6 +596,7 @@ export const ACTIONS = {
       context,
     }
     return axios.post(url, body)
+    .then(res => res.data)
   },
 
   alle_leave_comment: ({ value, context, props, level, getComponentValue }) => {
@@ -576,6 +607,7 @@ export const ACTIONS = {
       context,
     }
     return axios.post(url, body)
+      .then(res => res.data)
   },
 
   alle_send_bill: ({value}) => {
@@ -585,6 +617,7 @@ export const ACTIONS = {
       value,
     }
     return axios.post(url, body)
+    .then(res => res.data)
   },
 
   smartdiet_join_group: ({ value }) => {
@@ -693,6 +726,16 @@ export const ACTIONS = {
     }
   },
 
+  download: ({value, props}) => {
+      const a = document.createElement('a');
+      a.download = value;
+      a.href = value;
+      // For Firefox https://stackoverflow.com/a/32226068
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+  },
+
   payMission: ({ context, props }) => {
     let url = `${API_ROOT}/action`
     const body = {action: 'payMission', context,...props}
@@ -701,8 +744,7 @@ export const ACTIONS = {
         if (res.data.redirect) {
           let url=res.data.redirect
           url=/^http/.test(url) ? url : `/${url}`
-          window.location=url
-          throw new Error('break')
+          return window.location=url
         }
       })
   },
@@ -749,7 +791,7 @@ export const ACTIONS = {
     return axios.post(url, body)
       .then(res => {
         var searchParams = new URLSearchParams(window.location.search);
-        searchParams.set('userQuestion', res.data._id)
+        searchParams.set('id', res.data._id)
         window.location.search=searchParams.toString()
       })
   },
@@ -761,12 +803,22 @@ export const ACTIONS = {
       value: value._id,
     }
     return axios.post(url, body)
+      .then(res => res.data)
   },
 
   smartdiet_join_team: ({value}) => {
     let url = `${API_ROOT}/action`
     const body = {
       action: 'smartdiet_join_team',
+      value: value._id,
+    }
+    return axios.post(url, body)
+  },
+
+  smartdiet_leave_team: ({value}) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_leave_team',
       value: value._id,
     }
     return axios.post(url, body)
@@ -797,8 +849,7 @@ export const ACTIONS = {
       if (res.data.redirect) {
         let redirect=res.data.redirect
         redirect = /^http/.test(redirect) ? redirect : `/${redirect}`
-        window.location=redirect
-        throw new Error('break')
+        return window.location=redirect
       }
       return {
         model: 'teamMember',
@@ -834,5 +885,51 @@ export const ACTIONS = {
     return axios.post(url, body)
       .then(res => ({model: 'content',value: res.data}))
   },
+
+  smartdiet_compute_shopping_list: ({props, level, getComponentValue}) => {
+    const people_count = getComponentValue(props.people, level)
+    const thisUrl=new URL(window.location)
+    if (people_count) {
+      thisUrl.searchParams.set('people_count', people_count)
+    } else {
+      thisUrl.searchParams.delete('people_count', null)
+    }
+    window.location=thisUrl.toString()
+  },
+
+  import_model_data: props => {
+    const prevResults=document.getElementById('import_results')
+    if (prevResults) {
+      prevResults.parentNode.removeChild(prevResults)
+    }
+    const prevInput=document.getElementById('import_data')
+    if (prevInput) {
+      prevInput.parentNode.removeChild(prevInput)
+    }
+
+    const container=document.getElementById(props.id).parentNode
+
+    const form=document.createElement('form');
+    container.appendChild(form)
+
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.name = 'file';
+    fileInput.style='display:none'
+    fileInput.id='import_data'
+    form.appendChild(fileInput)
+
+    fileInput.addEventListener('change', event => {
+      const formData = new FormData(form);
+      axios.post(`${API_ROOT}/import-data/${props.props.model}`, formData)
+         .then(response => {
+           alert(response.data.join('\n'))
+         })
+         .catch(error => alert('Error:', error))
+
+    })
+    fileInput.click()
+    return Promise.resolve(true)
+  }
 
 }

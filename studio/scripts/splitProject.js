@@ -11,5 +11,11 @@ const project=require(projectFile)
 Object.values(project.pages).forEach(page => {
   const fileName=`./${page.pageName}-${page.pageId}.json`
   console.log(fileName)
-  fs.writeFile(fileName, JSON.stringify(page, null, 2))
+  const project={
+    pages:{[page.pageId]:page},
+    activePage: page.pageId,
+    rootPage: page.pageId,
+    vesion: 2,
+  }
+  fs.writeFile(fileName, JSON.stringify(project, null, 2))
 })

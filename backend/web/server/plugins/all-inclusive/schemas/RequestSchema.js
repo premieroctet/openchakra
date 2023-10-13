@@ -11,7 +11,7 @@ const RequestSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: "user",
-    required: true,
+    required: [true, `Le client est obligatoire`],
   },
 }, schemaOptions
 );

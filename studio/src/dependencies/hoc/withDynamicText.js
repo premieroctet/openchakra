@@ -13,6 +13,7 @@ const withDynamicText = Component => {
       props,
       props.dataSource,
     )
+
     return (
       <Component
         {...lodash.omit(props, ['children'])}

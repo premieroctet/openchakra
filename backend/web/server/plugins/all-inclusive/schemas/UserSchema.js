@@ -1,6 +1,3 @@
-const { MIN_AGE } = require('../consts')
-
-const moment = require('moment')
 const {
   AVAILABILITY,
   COACHING,
@@ -10,16 +7,21 @@ const {
   COMPANY_STATUS,
   DEFAULT_ROLE,
   DEPARTEMENTS,
+  GENDER,
+  MIN_AGE,
   MISSION_STATUS_BILL_SENT,
   MISSION_STATUS_FINISHED,
   MISSION_STATUS_PAYMENT_PENDING,
   MISSION_STATUS_QUOT_ACCEPTED,
+  MISSION_STATUS_QUOT_SENT,
   ROLES,
   ROLE_COMPANY_ADMIN,
   ROLE_COMPANY_BUYER,
   ROLE_TI,
-  UNACTIVE_REASON,
+  UNACTIVE_REASON
 } = require('../consts')
+
+const moment = require('moment')
 const { isEmailOk, isPhoneOk } = require('../../../../utils/sms')
 
 const Validator = require('validator')
@@ -51,15 +53,24 @@ const UserSchema = new Schema({
   },
   email: {
     type: String,
-    required: true,
     set: v => v?.toLowerCase().trim(),
     validate: [value => isEmailOk(value), "L'email est invalide"],
     required: [true, "L'email est obligatoire"],
+  },
+  admin_comment: {
+    type: String,
+    required: false,
   },
   password: {
     type: String,
     required: [true, 'Le mot de passe est obligatoire'],
     set: pass => bcrypt.hashSync(pass, 10),
+  },
+  gender: {
+    type: String,
+    set: v => v || undefined,
+    enum: Object.keys(GENDER),
+    required: false,
   },
   cguAccepted: {
     type: Boolean,
@@ -115,16 +126,17 @@ const UserSchema = new Schema({
   hidden: {
     type: Boolean,
     default: function() { return this.role==ROLE_TI},
-    required: true,
+    required: [true, `Le status masqué O/N est obligatoire`],
   },
   // Agreed by AllE
   qualified: {
     type: Boolean,
     default: false,
-    required: true,
+    required: [true, `Le status qualifié O/N est obligatoire`],
   },
   nationality: {
     type: String,
+    set: v => v || undefined, // To allow `null` value as empty
     enum: Object.keys(NATIONALITIES),
     required: false,
   },
@@ -161,7 +173,7 @@ const UserSchema = new Schema({
   },
   company_name: {
     type: String,
-    required: [function() { return this.role==ROLE_COMPANY_BUYER}, "Le nom de l'entreprise' est obligatoire"],
+    required: [function() { return this.role==ROLE_COMPANY_BUYER}, `Le nom de l'entreprise est obligatoire`],
   },
   company_status: {
     type: String,
@@ -170,6 +182,7 @@ const UserSchema = new Schema({
   },
   siret: {
     type: String,
+    set: v => v?.replace(/ /g, ''),
     validate: [v => siret.isSIRET(v)||siret.isSIREN(v), 'Le SIRET ou SIREN est invalide'],
     required: false,
   },
@@ -180,21 +193,31 @@ const UserSchema = new Schema({
   vat_subject: {
     type: Boolean,
   },
-  // Insurance type : décennale, tiers
+  // Insurance 1 type : décennale, tiers
   insurance_type: {
     type: String,
   },
-  // Insurance document
+  // Insurance 1 document
   insurance_report: {
+    type: String,
+  },
+  // Insurance 2 type : décennale, tiers
+  insurance2_type: {
+    type: String,
+  },
+  // Insurance 2 document
+  insurance2_report: {
     type: String,
   },
   company_activity: {
     type: String,
+    set: v => v || undefined,
     enum: Object.keys(COMPANY_ACTIVITY),
     required: false,
   },
   company_size: {
     type: String,
+    set: v => v || undefined,
     enum: Object.keys(COMPANY_SIZE),
     required: false,
   },
@@ -225,7 +248,7 @@ const UserSchema = new Schema({
   dummy: {
     type: Number,
     default: 0,
-    required: true,
+    required: [true, `Dummy est obligatoire`],
   },
 }, schemaOptions
 );
@@ -246,7 +269,6 @@ const PROFILE_ATTRIBUTES={
   nationality : 'nationalité',
   picture : 'photo de profil',
   identity_proof_1 : "pièce d'identité",
-  iban : 'iban',
   company_name : 'nom de la société',
   company_status : 'statut',
   siret : 'siret',
@@ -254,20 +276,52 @@ const PROFILE_ATTRIBUTES={
   insurance_type : "type d'assurance",
   insurance_report : "justificatif d'assurance",
   company_picture : "logo de l'entreprise",
+  iban : 'iban',
+  jobs: 'métier',
+}
+
+const STEP_1=["firstname", "lastname", "email", "phone", "birthday", "nationality", "picture", "identity_proof_1"]
+const STEP_2=["company_name", "company_status", "siret", "status_report", "insurance_type", "insurance_report", "company_picture"]
+const STEP_3=["iban"]
+const STEP_4=["jobs"]
+
+const getFilledAttributes = (self, attributes) => {
+  // TODO: birthday (Date type) is considered empty by lodash
+  const filled=attributes.filter(att => att=='birthday' ? !lodash.isNil(lodash.get(self, att)) : !lodash.isEmpty(lodash.get(self, att)))
+  return filled
 }
 
 UserSchema.virtual('profile_progress').get(function() {
-  let filled=Object.keys(PROFILE_ATTRIBUTES).map(att => !!lodash.get(this, att))
-  return (filled.filter(v => !!v).length*1.0/filled.length)*100
+  const attributes=Object.keys(PROFILE_ATTRIBUTES)
+  const filled=getFilledAttributes(this, attributes)
+  return (filled.length*1.0/attributes.length)*100
 });
 
+const compute_missing_attributes = (self, attributes) => {
+  const filled=getFilledAttributes(self, attributes)
+  const missing=lodash(attributes).difference(filled)
+  return missing.isEmpty()  ? null: `Information(s) manquante(s) : ${missing.map(att => PROFILE_ATTRIBUTES[att]).join(', ').replace(/, ([^,]*)$/, ' et $1')}`
+}
+
 UserSchema.virtual('missing_attributes').get(function() {
-  const missing=lodash(PROFILE_ATTRIBUTES)
-    .pickBy((name, att) => !lodash.get(this, att) && name)
-    .values()
-    .join(',')
-  return missing ? `Informations manquantes:${missing}` : ''
+  return compute_missing_attributes(this, Object.keys(PROFILE_ATTRIBUTES))
 });
+
+UserSchema.virtual('missing_attributes_step_1').get(function() {
+  return compute_missing_attributes(this, STEP_1)
+})
+
+UserSchema.virtual('missing_attributes_step_2').get(function() {
+  return compute_missing_attributes(this, STEP_2)
+})
+
+UserSchema.virtual('missing_attributes_step_3').get(function() {
+  return compute_missing_attributes(this, STEP_3)
+})
+
+UserSchema.virtual('missing_attributes_step_4').get(function() {
+  return compute_missing_attributes(this, STEP_4)
+})
 
 UserSchema.virtual("jobs", {
   ref: "jobUser", // The Model to use
@@ -379,6 +433,14 @@ UserSchema.virtual("accepted_quotations_count").get(function() {
   return this.missions?.filter(m => m.status==MISSION_STATUS_QUOT_ACCEPTED ).length
 })
 
+UserSchema.virtual("pending_quotations_count").get(function() {
+  return this.missions?.filter(m => m.status==MISSION_STATUS_QUOT_SENT).length
+})
+
+UserSchema.virtual("pending_bills_count").get(function() {
+  return this.missions?.filter(m => m.status==MISSION_STATUS_BILL_SENT).length
+})
+
 UserSchema.virtual("profile_shares_count").get(function() {
   return 0
 })
@@ -435,9 +497,5 @@ UserSchema.virtual("search_text").get(function() {
   values=values.filter(v=>!!v)
   return values.join(' ')
 });
-
-UserSchema.virtual('offer', {localField:'tagada', foreignField: 'tagada'}).get(function() {
-  return this.company?.offers?.[0] || null
-})
 
 module.exports = UserSchema;

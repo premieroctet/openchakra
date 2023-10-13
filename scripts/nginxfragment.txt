@@ -11,7 +11,7 @@
         include /etc/nginx/default.d/*.conf;
 
             location / {
-               proxy_pass https://localhost:{STUDIO_TEST_PORT};
+               proxy_pass https://localhost:{FRONTEND_APP_PORT};
             }
 
             location /myAlfred/api {

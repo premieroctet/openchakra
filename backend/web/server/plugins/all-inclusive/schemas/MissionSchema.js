@@ -1,4 +1,6 @@
 const {
+  BOOLEAN,
+  BOOLEAN_YES,
   CUSTOMER_TIPS,
   MISSION_FREQUENCY,
   MISSION_FREQUENCY_UNKNOWN,
@@ -60,24 +62,29 @@ const MissionSchema = new Schema({
   customer_location: {
     type: Boolean,
     default: false,
-    required: true,
+    required: [true, `Chez le client O/N est obligatoire`],
   },
   foreign_location: {
     type: Boolean,
     default: false,
-    required: true,
+    required: [true, `A distance O/N est obligatoire`],
+  },
+  recurrent: {
+    type: String,
+    enum: Object.keys(BOOLEAN),
+    required: [true, 'La récurrence (oui/non) est obligatoire']
   },
   frequency: {
     type: String,
+    set: v => v || undefined, // To allow `null` value as empty
     enum: Object.keys(MISSION_FREQUENCY),
-    default: MISSION_FREQUENCY_UNKNOWN,
-    required: [true, 'La fréquence de mission est obligatoire']
+    required: [function() { return this.recurrent==BOOLEAN_YES}, 'La fréquence de mission est obligatoire']
   },
   // Customer
   user: {
     type: Schema.Types.ObjectId,
     ref: "user",
-    required: true,
+    required: [true, `Le client est obligatoire`],
   },
   job: {
     type: Schema.Types.ObjectId,
@@ -139,7 +146,7 @@ const MissionSchema = new Schema({
   dummy: {
     type: Number,
     default: 0,
-    required: true,
+    required: [true, `Dummy est obligatoire`],
   },
 }, schemaOptions
 );
@@ -181,7 +188,7 @@ MissionSchema.virtual('status').get(function() {
   return MISSION_STATUS_ASKING_ALLE
 })
 
-
+/* eslint-disable prefer-arrow-callback */
 MissionSchema.virtual("ti_tip").get(function() {
   return TI_TIPS[this.status] || ''
 })
@@ -306,6 +313,8 @@ MissionSchema.virtual('ti_total').get(function() {
 MissionSchema.virtual('vat_total').get(function() {
   return this.quotations?.[0]?.vat_total
 })
+
+/* eslint-enable prefer-arrow-callback */
 
 
 module.exports = MissionSchema;

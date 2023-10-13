@@ -9,7 +9,7 @@ const MessageSchema = new Schema({
   },
   content: {
     type: String,
-    required: true,
+    required: [true, `Le message est obligatoire`],
   },
   // Attachment URL
   attachment: {
@@ -21,12 +21,12 @@ const MessageSchema = new Schema({
   receiver: {
     type: Schema.Types.ObjectId,
     ref: 'user',
-    required: true,
+    required: [true, `Le destinataire est obligatoire`],
   },
   sender: {
     type: Schema.Types.ObjectId,
     ref: 'user',
-    required: true,
+    required: [true, `L'émetteur est obligatoire`],
   },
 }, schemaOptions)
 

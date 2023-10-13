@@ -7,7 +7,8 @@ const {
   EVENT_MENU,
   EVENT_TYPE,
   HARDNESS,
-  NUTRISCORE
+  NUTRISCORE,
+  SEASON
 } = require('../consts')
 
 const Schema = mongoose.Schema
@@ -114,6 +115,10 @@ const RecipeSchema = new Schema({
     type:String,
     required: false
   },
+  season: {
+    type:String,
+    enum: Object.keys(SEASON),
+  }
 },
 {...schemaOptions, ...EVENT_DISCRIMINATOR}
 )

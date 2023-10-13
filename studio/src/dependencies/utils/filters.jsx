@@ -13,6 +13,7 @@ export const OPERATORS = {
     '>': (v, ref) => v > ref,
     '<>': (v, ref) => v != ref,
     'is empty': lodash.isNil,
+    'is not empty': v => !lodash.isEmpty,
   },
   String: {
     '=': (v, ref) => v == ref,
@@ -21,38 +22,79 @@ export const OPERATORS = {
     '<>': (v, ref) => v != ref,
     contains: (v, ref) => v?.toLowerCase()?.includes(ref?.toLowerCase()),
     'does not contain': (v, ref) =>
-      v?.toLowerCase()?.includes(ref?.toLowerCase()),
+      !v?.toLowerCase()?.includes(ref?.toLowerCase()),
     'is empty': lodash.isNil,
+    'is not empty': v => !lodash.isEmpty(v),
   },
   Date: {
     before: (v, ref) => moment(v).isBefore(moment(ref)),
     after: (v, ref) => moment(v).isAfter(moment(ref)),
     'is empty': lodash.isNil,
+    'is not empty': v => !lodash.isEmpty(v),
   },
+  Enum: {
+    '=': (v, ref) => v == ref,
+    '<>': (v, ref) => v != ref,
+    in: (v, ref) => ref?.split(',').includes(v),
+    'is empty': lodash.isNil,
+    'is not empty': v => !lodash.isEmpty(v),
+    /**
+    'does not contain': (v, ref) =>
+      v?.toLowerCase()?.includes(ref?.toLowerCase()),
+    'is empty': lodash.isNil,
+    */
+  },
+  Ref: {
+    'exists': v => !lodash.isNil(v),
+    'not exists': v => lodash.isNil(v),
+  },
+  Array: {
+    'is empty': v => lodash.isEmpty(v),
+    'is not empty': v => !lodash.isEmpty(v),
+  }
 }
 
-const createFilters = (filterDef, props) => {
+export const getOperators = att => {
+  if(att?.enumValues) {
+    return OPERATORS.Enum
+  }
+  if(att?.multiple) {
+    return OPERATORS.Array
+  }
+  if(att?.ref) {
+    return OPERATORS.Ref
+  }
+  return OPERATORS[att?.type]
+}
+
+export const isOperatorMultiple = (att, op) => {
+  return att?.enumValues && op=='in'
+}
+
+const createFilters = (filterDef, props, componentValueGetter) => {
   return Object.entries(filterDef).map(([id, def]) => {
-    const targetValue = props[`condition${id}`]
+    const targetValue = props[`condition${id}`] || false
     const attribute = def.attribute
-    const opFn = OPERATORS[def.type][def.operator]
+    const opFn = getOperators(def)[def.operator]
     const vRef = def.value
     return dataSource => {
-      const dataValue = lodash.get(dataSource, attribute)
+      const dataValue = def.isComponent ?
+        componentValueGetter(attribute)
+        :lodash.get(dataSource, attribute)
       return opFn(dataValue, vRef) ? targetValue : null
     }
   })
 }
 
-export const getConditionalProperties = (props, dataSource) => {
+export const getConditionalProperties = (props, dataSource, componentValueGetter) => {
   const conditions = Object.keys(props).filter(k => /^conditions/.test(k))
   const properties = Object.fromEntries(
     conditions
       .map(cond => {
         const property = cond.match(/^conditions(.*)$/)[1]
-        const filters = createFilters(props[cond], props)
-        const v = filters.map(f => f(dataSource)).find(v => !!v)
-        return v ? [property, v] : null
+        const filters = createFilters(props[cond], props, componentValueGetter)
+        const v = filters.map(f => f(dataSource)).find(v => v!=null)
+        return v!=null ? [property, v] : null
       })
       .filter(v => !!v),
   )

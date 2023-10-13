@@ -32,8 +32,10 @@ const SIB_IDS={
   BILL_REFUSED: 58, // => TIPI
   MISSION_REMINDER_TI: 59, // => TI (3 days before mission start)
   MISSION_REMINDER_CUSTOMER: 60, // => CUSTOMER (3 days before mission start)
+  PROFILE_REMINDER: 61,
   ADMIN_ACCOUNT_CREATED: 63,
   TIPI_SEARCH: 65,
+  USERS_EXTRACTION: 70,
 }
 
 const SMS_CONTENTS={
@@ -381,6 +383,25 @@ const sendProfileOnline = user => {
   })
 }
 
+// => TI
+const sendProfileReminder = user => {
+  return sendNotification({
+    notification: SIB_IDS.PROFILE_REMINDER,
+    destinee: user,
+    params: {
+      user_firstname: user.firstname,
+      missing_attributes: user.missing_attributes,
+    },
+  })
+}
+
+const sendUsersExtract = (user, attachment) => {
+  return sendNotification({
+    notification: SIB_IDS.USERS_EXTRACTION,
+    destinee: user,
+    attachment,
+  })
+}
 module.exports = {
   sendQuotationSentToCustomer,
   sendAccountCreatedToTIPI,
@@ -409,4 +430,6 @@ module.exports = {
   sendMissionReminderCustomer,
   sendMissionReminderTI,
   sendProfileOnline,
+  sendProfileReminder,
+  sendUsersExtract,
 }

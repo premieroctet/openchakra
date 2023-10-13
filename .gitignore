@@ -3,12 +3,10 @@
 /.pnp
 .pnp.js
 
-**/studio-test/src/[A-Z]*.js
-**/studio-test/src/[A-Z]*.css
-# Mac .gitignore is case unsensitive :-|
-!studio-test/src/token.js
-!studio-test/src/index.js
-!studio-test/src/index.css
+**/studio-test/src/pages/*.js
+# Preserve _document.js & _app.tsx
+!studio-test/src/pages/_document.js
+!studio-test/src/pages/_app.tsx
 
 # testing
 /coverage
@@ -24,7 +22,7 @@ backend/web/fumoir*.json
 **/web/storage
 
 # misc
-**/.env
+**/.env*
 **/env.json
 npm-debug.log*
 yarn-debug.log*

@@ -23,16 +23,25 @@ const JobUserSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: "user",
-    required: true,
+    required: [true, `Le TI est obligatoire`],
   },
   experience: {
     type: String,
+    set: v => v || undefined,
     enum: Object.keys(EXPERIENCE),
-    //required: [true, "L'expérience est obligatoire"]
+    required: false,
+  },
+  // No houy rate
+  on_quotation: {
+    type: Boolean,
+    default: false,
+    required: [true, `Le status sur devis O/N ets obligatoire`],
   },
   rate: {
     type: Number,
-    //required: [true, 'Le taux horaire indicatif est obligatoire'],
+    set: function(v) {return this.on_quotation ? null : v},
+    //required: [function() { return !this.on_quotation}, 'Le taux horaire indicatif est obligatoire'],
+    required: false,
   },
   customer_location: {
     type: Boolean,
@@ -61,11 +70,12 @@ const JobUserSchema = new Schema({
   dummy: {
     type: Number,
     default: 0,
-    required: true,
+    required: [true, `Dummy est obligatoire`],
   },
 }, schemaOptions
 );
 
+/* eslint-disable prefer-arrow-callback */
 JobUserSchema.virtual("search_field").get(function() {
   let res=[this.name]
   if (this.skills) {
@@ -129,5 +139,17 @@ JobUserSchema.virtual("missions", {
 JobUserSchema.virtual('pinned').get(function() {
   return false
 })
+
+JobUserSchema.virtual('recommandations_count').get(function() {
+  return this.recommandations?.length || 0
+})
+
+
+JobUserSchema.virtual('rate_str').get(function() {
+  return this.on_quotation ?  "sur devis"
+  :  this.rate ? `${this.rate}€/h`
+  : null
+})
+/* eslint-enable prefer-arrow-callback */
 
 module.exports = JobUserSchema;

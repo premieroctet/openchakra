@@ -37,18 +37,21 @@ const IndividualChallengeSchema = new Schema({
   spoons_count_for_trophy: {
     type: Number,
     default: 5,
-    required: [true, 'Le nombre de cuillères néecssaires pour un trophée est obligatoire'],
+    required: [true, 'Le nombre de cuillères nécessaires pour un trophée est obligatoire'],
   },
 },
 {...schemaOptions, ...EVENT_DISCRIMINATOR},
 )
 
-IndividualChallengeSchema.virtual('type').get(() => {
+/* eslint-disable prefer-arrow-callback */
+
+IndividualChallengeSchema.virtual('type').get(function() {
   return EVENT_IND_CHALLENGE
 })
 
-IndividualChallengeSchema.virtual('trophy_picture').get(() => {
+IndividualChallengeSchema.virtual('trophy_picture').get(function()  {
   return ''
 })
+/* eslint-enable prefer-arrow-callback */
 
 module.exports = IndividualChallengeSchema

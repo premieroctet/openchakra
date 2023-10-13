@@ -47,7 +47,7 @@ const withDynamicSelect = Component => {
             <option key={v?._id} value={v?._id}>{lodash.get(v, subAttributeDisplay)}</option>
           ))
           :enumValues ?
-          Object.entries(enumValues).map(([k, v]) => (
+          lodash(enumValues).entries().sortBy(v => v[1]).value().map(([k, v]) => (
             <option key={k} value={k}>{v}</option>
           ))
           :

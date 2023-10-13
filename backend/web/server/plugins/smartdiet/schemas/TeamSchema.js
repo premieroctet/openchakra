@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const lodash=require('lodash')
 const bcrypt=require('bcryptjs')
 const { HOME_STATUS, CONTENTS_TYPE } = require('../consts')
 const {schemaOptions} = require('../../../utils/schemas')
@@ -13,7 +14,7 @@ const TeamSchema = new Schema({
   },
   name: {
     type: String,
-    set: v => v.trim(),
+    set: v => v?.trim(),
     required: [true, 'Le nom est obligatoire'],
   },
   picture: {
@@ -22,10 +23,16 @@ const TeamSchema = new Schema({
   },
 }, schemaOptions)
 
+/* eslint-disable prefer-arrow-callback */
 TeamSchema.virtual('members', {
     ref: 'teamMember',
     localField: '_id',
     foreignField: 'team',
 })
+
+TeamSchema.virtual('spoons_count').get(function() {
+  return lodash(this.members).sumBy(m => m.pips.filter(p => p.valid).length)
+})
+/* eslint-enable prefer-arrow-callback */
 
 module.exports = TeamSchema

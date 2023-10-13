@@ -19,7 +19,7 @@ const IngredientSchema = new Schema({
   },
   picture: {
     type: String,
-    required: [true, "L'illustration' est obligatoire"]
+    required: false,
   },
   unit: {
     type: String,

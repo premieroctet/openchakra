@@ -1,21 +1,24 @@
 import React, {useState, useEffect} from 'react'
 import axios from 'axios';
 import lodash from 'lodash'
-import { useLocation } from 'react-router-dom'
+import { useRouter } from 'next/router'
 import { ACTIONS } from '../utils/actions'
+import { MESSAGES } from '../utils/messages'
 import {
   extractFiltersFromProps,
   getConditionalProperties,
 } from '../utils/filters'
-import {Error} from '../utils/notifications'
+import {Error, Information} from '../utils/notifications'
 
 const withDynamicButton = Component => {
 
   const Internal = props => {
 
     const [errorMessage, setErrorMessage]=useState(null)
+    const [infoMessage, setInfoMessage]=useState(null)
 
-    const query = new URLSearchParams(useLocation().search)
+    const router = useRouter()
+    const query = new URLSearchParams(router?.asPath)
     let value = props.dataSource
     if (props.attribute) {
       value=lodash.get(value, props.attribute)
@@ -55,6 +58,9 @@ const withDynamicButton = Component => {
           model: props.dataModel,
         })
           .then(res => {
+            if (MESSAGES[action]) {
+              setInfoMessage(MESSAGES[action])
+            }
             if (!nextAction) {
               return true
             }
@@ -69,10 +75,10 @@ const withDynamicButton = Component => {
               model: props.dataModel,
               ...res,
             }
-            return ACTIONS[nextAction](params)
+            // UGLY!! Shoud block ain thread until dialog closed
+            return setTimeout(() => ACTIONS[nextAction](params), 1000)
           })
           .then(() => {
-            console.log('ok')
             props.reload()
           })
           .catch(err => {
@@ -100,6 +106,7 @@ const withDynamicButton = Component => {
         {...conditionalProperties}
       />
       {errorMessage && <Error message={errorMessage} onClose={()=>setErrorMessage(null)}/>}
+      {infoMessage && <Information message={infoMessage} onClose={()=>setInfoMessage(null)}/>}
       </>
     )
   }

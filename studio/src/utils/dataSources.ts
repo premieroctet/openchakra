@@ -7,7 +7,10 @@ export const CONTAINER_TYPE: ComponentType[] = [
   'Flex',
   'List',
   'Container',
-  'AccordionPanel'
+  'AccordionPanel',
+  'Tabs',
+  'TabList',
+  'TabPanels',
 ]
 export const TEXT_TYPE: ComponentType[] = [
   'Text',
@@ -43,6 +46,7 @@ const ALL_DYNAMICS = lodash.flatten([
 
 export const allowsDataSource = (component: IComponent): boolean => {
   return ALL_DYNAMICS.includes(component.type)
+    && (!(component.type === 'Flex' && !!component?.props?.isFilterComponent))
 }
 
 export const isMultipleDispatcher = (component: IComponent): boolean => {
@@ -205,11 +209,19 @@ const computeDataFieldName = (
     return null
   }
 
-  const parentFieldName = computeDataFieldName(
+  let parentFieldName = computeDataFieldName(
     components[component.parent],
     components,
     dataSourceId,
   )
+
+  if (['RadioGroup', 'CheckboxGroup'].includes(components[component.parent].type)) {
+    parentFieldName = computeDataFieldName(
+      components[components[component.parent].parent],
+      components,
+      dataSourceId,
+    )
+  }
 
   const attrs=[]
   if (component.props.dataSource==dataSourceId) {
@@ -271,4 +283,18 @@ export const getFieldsForDataProvider = (
       .value()
 
   return fields
+}
+
+export const getParentOfType = (components:IComponents, comp: IComponent, type: ComponentType): IComponent | null => {
+  if (comp.type==type) {
+    return comp
+  }
+  if (comp.id!='root') {
+    return getParentOfType(components, components[comp.parent], type)
+  }
+  return null
+}
+
+export const hasParentType = (comp: IComponent, comps: IComponents, type: ComponentType) => {
+  return !!getParentOfType(comps, comp, type)
 }

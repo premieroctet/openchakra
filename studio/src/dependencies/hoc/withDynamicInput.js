@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import lodash from 'lodash'
-import util from 'util'
 import {InputGroup, InputRightElement} from '@chakra-ui/react'
 import {AiOutlineEye, AiOutlineEyeInvisible} from 'react-icons/ai'
 import { ACTIONS } from '../utils/actions'
@@ -56,7 +55,7 @@ const withDynamicInput = Component => {
             .catch(err => {
               console.error(err)
               if (!(err.response?.status==401) && err.code!='ERR_NETWORK') {
-                alert(err.response?.data || err)
+                console.log(err.response?.data || err)
               }
             })
         }
@@ -70,35 +69,45 @@ const withDynamicInput = Component => {
       props={...props, type:visibilityType}
     }
 
-    const toggleSecret = () => {
-      setVisibilityType(visibilityType=='password' ? 'text' : 'password')
+    const withDisplayEye = Comp =>  {
+
+      const toggleSecret = () => {
+        setVisibilityType(visibilityType=='password' ? 'text' : 'password')
+      }
+
+      const parentProps=lodash.pick(props, 'id dataSource name dataSourceId value level model attribute noautosave readOnly context backend setComponentValue'.split(' '))
+
+      return displayEye ? (
+        <InputGroup {...parentProps}>
+        <Component
+        {...lodash.omit(props, ['id'])}
+        onChange={onChange}
+        />
+        {suggestions && (
+          <datalist id={`suggestions`}>
+            {JSON.parse(suggestions).map(sugg => (
+              <option key={sugg} value={sugg}/>
+            ))}
+          </datalist>
+        )}
+        {displayEye &&
+          <InputRightElement>
+            {visibilityType=='password' ?
+            <AiOutlineEye onClick={toggleSecret} title='Afficher le mot de passe'/>
+            :
+            <AiOutlineEyeInvisible onClick={toggleSecret} title='Masquer le mot de passe'/>
+          }
+          </InputRightElement>}
+        </InputGroup>
+      )
+      :
+      (<Component {...props} onChange={onChange} />)
     }
 
-    const parentProps=lodash.pick(props, 'id dataSource name dataSourceId value level model attribute noautosave readOnly context backend setComponentValue'.split(' '))
-
-    return (
-      <InputGroup {...parentProps}>
-      <Component
-      {...lodash.omit(props, ['id'])}
-      onChange={onChange}
-      />
-      {suggestions && (
-        <datalist id={`suggestions`}>
-          {JSON.parse(suggestions).map(sugg => (
-            <option key={sugg} value={sugg}/>
-          ))}
-        </datalist>
-      )}
-      {displayEye &&
-        <InputRightElement>
-          {visibilityType=='password' ?
-          <AiOutlineEye onClick={toggleSecret} title='Afficher le mot de passe'/>
-          :
-          <AiOutlineEyeInvisible onClick={toggleSecret} title='Masquer le mot de passe'/>
-        }
-        </InputRightElement>}
-      </InputGroup>
-    )
+    return displayEye ?
+      withDisplayEye(Component)
+      :
+      <Component {...props} dataSource={dataSource} onChange={onChange}/>
   }
 
   return Internal
