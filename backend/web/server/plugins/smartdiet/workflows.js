@@ -36,11 +36,12 @@ const isInsurance = account => {
 }
 
 const _mapContactToMailJet = contact => ({
-  Email: contact.email, Name: contact.fullname, Properties: {
+  Email: contact.email, Properties: {
     codeentreprise: contact.company?.code,
     credit_consult: contact.company?.offers?.[0].coaching_credit,
     client: contact.company?.name,
     logo: contact.company?.picture,
+    Name: contact.fullname, Firstname: contact.firstname, 
   }
 })
 
