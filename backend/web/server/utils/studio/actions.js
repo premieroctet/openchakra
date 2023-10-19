@@ -20,8 +20,14 @@ const Post = require('../../models/Post')
 const UserSessionData = require('../../models/UserSessionData')
 const {NotFoundError} = require('../errors')
 const Program = require('../../models/Program')
-const fumoirMailing = require('../../plugins/fumoir/mailing')
-const tipiMailing = require('../../plugins/all-inclusive/mailing')
+let fumoirMailing=null
+if (getDataModel()=='fumoir') {
+ fumoirMailing=require('../../plugins/fumoir/mailing')
+}
+let tipiMailing=null
+if (getDataModel()=='all-inclusive') {
+ tipiMailing = require('../../plugins/all-inclusive/mailing')
+}
 
 const {DEFAULT_ROLE} = require(`../../plugins/${getDataModel()}/consts`)
 
