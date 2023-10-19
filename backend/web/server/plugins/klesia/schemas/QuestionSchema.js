@@ -42,7 +42,7 @@ QuizzQuestionSchema.virtual('available_answers', {
   foreignField: 'question', // is equal to foreignField
 })
 
-QuizzQuestionSchema.virtual('user_choice_answers', function() {
+QuizzQuestionSchema.virtual('user_choice_answers', {localField: 'tagada', foreignField: 'tagada'}, function() {
 })
 
 QuizzQuestionSchema.virtual('user_text_answer', function() {
