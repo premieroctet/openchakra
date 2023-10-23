@@ -560,6 +560,7 @@ coachings.diet.availability_ranges.appointment_type',
     },
   })
   declareVirtualField({model: m, field: 'imc', instance: 'Number', requires:'measures,height'})
+  declareVirtualField({model: m, field: 'days_inactivity', instance: 'Number', requires:'last_activity'})
 })
 // End user/loggedUser
 
@@ -881,7 +882,7 @@ declareVirtualField({model: 'coaching', field: 'all_logbooks', instance: 'Array'
   },
 })
 declareVirtualField({model: 'coaching', field: 'logbooks', instance: 'Array', multiple: true,
-  requires: 'appointments.status',
+  requires: 'appointments.status,all_logbooks.logbook',
   caster: {
     instance: 'ObjectID',
     options: {ref: 'logbookDay'}
