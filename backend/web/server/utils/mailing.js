@@ -10,7 +10,7 @@ const lodash=require('lodash')
 const {fillSms} = require('../../utils/sms')
 
 const mailProvider=getMailProvider()
-const MAIL_HANDLER=require(mailProvider=='mailjet' ?  './mailjet' : './sendInBlue')
+const MAIL_HANDLER=require(`./${mailProvider}`)
 
 let SMS_CONTENTS = {}
 

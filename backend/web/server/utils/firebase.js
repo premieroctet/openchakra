@@ -6,15 +6,16 @@ const app = admin.initializeApp({
   credential: admin.credential.cert(firebaseConfig),
 })
 
-const sendUserNotification = (user_id, message) => {
+const sendUserNotification = ({user, title, message}) => {
 
   const payload = {
     notification: {
-      title: 'Message personnel',
+      title: title,
       body: message,
     },
   }
-  const topic=`user_${user_id}`
+
+  const topic=`user_${user._id}`
 
   return app.messaging().sendToTopic(topic, payload)
     .then(response => {
