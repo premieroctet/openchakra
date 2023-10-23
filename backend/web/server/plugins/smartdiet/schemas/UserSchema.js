@@ -284,6 +284,10 @@ const UserSchema = new Schema({
     type: Boolean,
     default: true,
     required: true,
+  },
+  last_activity: {
+    type: Date,
+    required: false,
   }
 }, schemaOptions)
 
@@ -614,6 +618,11 @@ UserSchema.virtual('imc', {localField:'tagada', foreignField:'tagada'}).get(func
     const imc=latestWeight?.weight/Math.pow(this.height/100.0, 2) || undefined
     return imc
   }
+})
+
+// Days to the lastest activity
+UserSchema.virtual('days_inactivity', {localField:'tagada', foreignField:'tagada'}).get(function() {
+  return moment().diff(moment(this.last_activity), 'days')
 })
 
 /* eslint-enable prefer-arrow-callback */
