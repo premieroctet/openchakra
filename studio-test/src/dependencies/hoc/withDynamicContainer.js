@@ -141,6 +141,10 @@ const withDynamicContainer = Component => {
       }
     }
 
+    if (props.sortAttribute) {
+      orgData = lodash.sortBy(orgData, props.sortAttribute)
+    }
+
     let data = orgData
 
     if (limit) {

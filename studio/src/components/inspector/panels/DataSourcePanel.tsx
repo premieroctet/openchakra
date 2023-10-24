@@ -39,7 +39,7 @@ const DataSourcePanel: React.FC = () => {
   const filterConstant = usePropsSelector('filterConstant')
   const filterAttribute2 = usePropsSelector('filterAttribute2')
   const filterValue2 = usePropsSelector('filterValue2')
-  const contextAttribute = usePropsSelector('contextAttribute')
+  const sortAttribute = usePropsSelector('sortAttribute')
   const series_attributes = lodash.range(5).map(idx => usePropsSelector(`series_${idx}_attribute`))
   const series_labels = lodash.range(5).map(idx => usePropsSelector(`series_${idx}_label`))
   const hidePagination = usePropsSelector('hidePagination')
@@ -272,6 +272,26 @@ const DataSourcePanel: React.FC = () => {
               ))}
             </Select>
           </FormControl>
+        )}
+        {CONTAINER_TYPE.includes(activeComponent ?.type) && filterAttributes && (
+          <>
+            <FormControl htmlFor="sortAttribute" label="Sort by">
+              <Select
+                id="sortAttribute"
+                onChange={setValueFromEvent}
+                name="sortAttribute"
+                size="xs"
+                value={sortAttribute || ''}
+              >
+                <option value={undefined}></option>
+                {Object.keys(filterAttributes).map((attribute, i) => (
+                  <option key={`attr${i}`} value={attribute}>
+                    {attribute}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
+          </>
         )}
         {CONTAINER_TYPE.includes(activeComponent ?.type) && (
           <FormControl htmlFor="limit" label="Limit">
