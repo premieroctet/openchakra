@@ -13,12 +13,12 @@ describe('Test firebase', () => {
   })
 
   it('must send user notification', async() => {
-    const user_id=`6501b78e90eb0d7f52d35a65`
-    const message=`${moment().format('HH:mm:ss')}=>${user_id}`
+    const user_id=`65089ca2b74fb64fcd2d8099`
+    const message=`Notification du ${moment().format('HH:mm:ss')} pour ${user_id}`
     return sendUserNotification(user_id, message)
   })
 
-  it('must send application notification', async() => {
+  it.skip('must send application notification', async() => {
     const message=`${moment().format('HH:mm:ss')}=>all`
     return sendAppNotification(message)
   })

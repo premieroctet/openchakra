@@ -158,12 +158,12 @@ describe('SmartAgenda test ', () => {
     console.log(JSON.stringify(ranges.map(r => [r.user._id, r.user.email, r.appointment_type.title]), null,2))
   })
 
-  it('must sync availabilities', async() => {
+  it.only('must sync availabilities', async() => {
     await mongoose.connect(getDatabaseUri(), MONGOOSE_OPTIONS)
     return synchronizeAvailabilities()
   })
 
-  it.only('must sync availabilities', async() => {
+  it('must sync availabilities', async() => {
     await mongoose.connect(getDatabaseUri(), MONGOOSE_OPTIONS)
     return Appointment.find({smartagenda_id: {$ne: null}})
      .then(apps => getAppointmentVisioLink(apps[1].smartagenda_id))

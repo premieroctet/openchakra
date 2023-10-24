@@ -1,5 +1,4 @@
 const ced = require('ced')
-
 const csv_string = require('csv-string')
 const stripBom = require('strip-bom')
 const moment=require('moment')
@@ -200,6 +199,10 @@ const splitRemaining = (pattern, delimiter) => {
   return [first, rest.join(delimiter)]
 }
 
+const formatDateTime = datetime => {
+  return moment(datetime).format(`[le] DD/MM/YY [à] HH:mm`)
+}
+
 module.exports = {
   normalize,
   matches,
@@ -223,4 +226,5 @@ module.exports = {
   formatPercent,
   formatDeadline,
   splitRemaining,
+  formatDateTime,
 }
