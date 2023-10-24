@@ -1,9 +1,9 @@
+const { sendForgotPassword, sendNewMessage } = require('./mailing')
 const {
   DAYS_BEFORE_IND_CHALL_ANSWER,
   PARTICULAR_COMPANY_NAME,
   ROLE_CUSTOMER
 } = require('./consts')
-const { sendForgotPassword } = require('./mailing')
 const {
   ensureChallengePipsConsistency,
   getRegisterCompany
@@ -243,6 +243,17 @@ const deactivateAccount = ({value, reason}, user) => {
 }
 addAction('deactivateAccount', deactivateAccount)
 
+// Override sendMessage for notification
+const orgSendMessage=ACTIONS.sendMessage
+
+const sendMessageOverride= ({destinee, contents, attachment}, sender) => {
+  return orgSendMessage({destinee, contents, attachment}, sender)
+    .then(message => {
+      sendNewMessage({user: message.receiver})
+      return message
+    })
+}
+addAction('sendMessage', sendMessageOverride)
 
 const isActionAllowed = ({action, dataId, user}) => {
   // TODO: why can we get "undefined" ??

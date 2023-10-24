@@ -1,3 +1,23 @@
+const {
+  sendDietPreRegister2Admin,
+  sendDietPreRegister2Diet,
+  sendInactivity15,
+  sendInactivity30,
+  sendInactivity45,
+  sendIndChallenge1,
+  sendIndChallenge2,
+  sendIndChallenge3,
+  sendIndChallenge5,
+  sendIndChallenge6,
+  sendNewWebinar,
+  sendSaturday1,
+  sendSaturday2,
+  sendSaturday3,
+  sendSaturday4,
+  sendWebinarIn3Days,
+} = require('./mailing')
+const { formatDateTime } = require('../../../utils/text')
+const Webinar = require('../../models/Webinar')
 const { updateWorkflows } = require('./workflows')
 const {
   ACTIVITY,
@@ -68,10 +88,6 @@ const {
   getSmartAgendaConfig,
   isDevelopment
 } = require('../../../config/config')
-const {
-  sendDietPreRegister2Admin,
-  sendDietPreRegister2Diet,
-} = require('./mailing')
 const {
   declareComputedField,
   declareEnumField,
@@ -560,6 +576,8 @@ coachings.diet.availability_ranges.appointment_type',
     },
   })
   declareVirtualField({model: m, field: 'imc', instance: 'Number', requires:'measures,height'})
+  declareVirtualField({model: m, field: 'days_inactivity', instance: 'Number'})
+
 })
 // End user/loggedUser
 
@@ -1143,12 +1161,6 @@ const postCreate = ({model, params, data,user}) => {
       .then(offer => Offer.create( {...simpleCloneModel(offer), company: data._id}))
       .then(offer => data)
   }
-  if (model=='booking') {
-    console.log(`Sending mail to ${data.booking_user.email} and admins for booking ${data._id}`)
-    sendNewBookingToMember({booking: data})
-    User.find({role: FUMOIR_MANAGER})
-      .then(managers => Promise.allSettled(managers.map(manager => sendNewBookingToManager({booking: data, manager}))))
-  }
   if (model=='collectiveChallenge') {
     return Pip.find()
       .then (pips => Promise.all(pips.map(p => ChallengePip.create({pip:p, collectiveChallenge:data}))))
@@ -1561,6 +1573,67 @@ cron.schedule('0 0 8 * * *', async() => {
     .then(console.log)
     .catch(console.error)
 })
+
+// Inactivity notifications
+cron.schedule('0 0 8 * * *', async() => {
+  const users=await User.find({role: ROLE_CUSTOMER}, {email:1, days_inactivity:1, last_activity:1})
+  // Inactivity notifications
+  const DURATIONS=[[15, sendInactivity15],[30, sendInactivity30],[45, sendInactivity45]]
+  DURATIONS.forEach(([duration, fn])=> {
+    const selected=users.filter(u => u.days_inactivity==duration)
+    selected.forEach(u => fn({user:u}).catch(console.error))
+  })
+})
+
+// Individual challenges notifications
+cron.schedule('0 0 8 * * *', async() => {
+  const users=await User.find({role: ROLE_CUSTOMER}, {email:1, registered_events:1})
+    .populate({path:'registered_events', populate: {path: 'event', match:{__t: 'individualChallenge'}}})
+
+  const hasChallengeStartedSince = (user, days) => {
+    return user.registered_events.some(re => moment().diff(re.date, 'days')==days)
+  }
+  // Individual challenges
+  const DURATIONS=[[1, sendIndChallenge1],[2, sendIndChallenge2],[3, sendIndChallenge3],
+  [5, sendIndChallenge5],[6, sendIndChallenge6]]
+  DURATIONS.forEach(([duration, fn])=> {
+    const selected=users.filter(u => hasChallengeStartedSince(u, duration))
+    selected.forEach(u => fn({user:u}).catch(console.error))
+  })
+})
+
+// New webinar for company
+cron.schedule('0 0 8 * * *', async() => {
+  const filter={[CREATED_AT_ATTRIBUTE]: {$gte: moment().add(-1,'day')}}
+  const webinars=await Webinar.find(filter)
+      .populate({path: 'companies', populate: {path: 'users', match: {role: ROLE_CUSTOMER}}})
+  webinars.forEach(webinar => {
+    const users=lodash.flattenDeep(webinar.companies?.map(c => c.users))
+    users.forEach(u => sendNewWebinar({user:u, title: webinar.name, datetime: formatDateTime(webinar.start_date)}).catch(console.error))
+  })
+})
+
+// Webinar in 3 days
+cron.schedule('0 0 8 * * *', async() => {
+  const filter={start_date: {$gte: moment().add(3,'day'), $lte: moment().add(4,'day')}}
+  const webinars=await Webinar.find(filter)
+      .populate({path: 'companies', populate: {path: 'users', match: {role: ROLE_CUSTOMER}}}).catch(console.error)
+  webinars.forEach(webinar => {
+    const users=lodash.flattenDeep(webinar.companies?.map(c => c.users))
+    users.forEach(u => sendWebinarIn3Days({user:u, title: webinar.name, datetime: formatDateTime(webinar.start_date)}).catch(console.error))
+  })
+})
+
+// Staurdays reminders (1-4th in month)
+cron.schedule('0 0 8 * * 6', async() => {
+  const customers=await User.find({role: ROLE_CUSTOMER})
+  const saturdayIndex=Math.floor((moment().date() - 1) / 7) + 1
+  const fn={1: sendSaturday1, 2: sendSaturday2, 3: sendSaturday3, 4: sendSaturday4}[saturdayIndex]
+  if (fn) {
+    customers.forEach(customer => fn({user:customer}).catch(console.error))
+  }
+})
+
 module.exports={
   ensureChallengePipsConsistency,
   logbooksConsistency,

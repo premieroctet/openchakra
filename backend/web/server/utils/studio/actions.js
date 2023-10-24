@@ -98,7 +98,6 @@ let ACTIONS = {
         getDataModel()=='fumoir' && fumoirMailing && fumoirMailing.sendNewMessage({member: m.receiver, partner: m.sender})
         loadFromDb({model: 'message', id:m._id, fields:['receiver.email','receiver.firstname']})
           .then(([message]) => {
-            console.log(`Message:${JSON.stringify(message)}`)
             getDataModel()=='all-inclusive' && tipiMailing && tipiMailing.sendNewMessage(message.receiver)
           })
         return m
