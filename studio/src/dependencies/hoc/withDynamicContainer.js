@@ -142,7 +142,8 @@ const withDynamicContainer = Component => {
     }
 
     if (props.sortAttribute) {
-      orgData = lodash.sortBy(orgData, props.sortAttribute)
+      const direction=props.sortDirection || 'asc'
+      orgData = lodash.orderBy(orgData, props.sortAttribute, direction)
     }
 
     let data = orgData

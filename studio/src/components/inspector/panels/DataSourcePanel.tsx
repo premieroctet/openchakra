@@ -40,6 +40,7 @@ const DataSourcePanel: React.FC = () => {
   const filterAttribute2 = usePropsSelector('filterAttribute2')
   const filterValue2 = usePropsSelector('filterValue2')
   const sortAttribute = usePropsSelector('sortAttribute')
+  const sortDirection = usePropsSelector('sortDirection')
   const series_attributes = lodash.range(5).map(idx => usePropsSelector(`series_${idx}_attribute`))
   const series_labels = lodash.range(5).map(idx => usePropsSelector(`series_${idx}_label`))
   const hidePagination = usePropsSelector('hidePagination')
@@ -289,6 +290,19 @@ const DataSourcePanel: React.FC = () => {
                     {attribute}
                   </option>
                 ))}
+              </Select>
+            </FormControl>
+            <FormControl htmlFor="sortDirection" label="Sort direction">
+              <Select
+                id="sortDirection"
+                onChange={setValueFromEvent}
+                name="sortDirection"
+                size="xs"
+                value={sortDirection || ''}
+              >
+                <option value={undefined}></option>
+                <option value={'asc'}>ascending</option>
+                <option value={'desc'}>descending</option>
               </Select>
             </FormControl>
           </>
