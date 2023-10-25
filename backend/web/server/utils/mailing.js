@@ -1,4 +1,11 @@
-const { sendUserNotification } = require('./firebase')
+let sendUserNotification=null
+console.log('loading')
+try {
+  sendUserNotification=require('./firebase').sendUserNotification
+}
+catch(err) {
+ console.warn('Could not get firebase module, stack follows', err)
+}
 const {
   getDataModel,
   getHostUrl,
@@ -67,6 +74,10 @@ const sendNotification = ({notification, destinee, ccs, params, attachment}) => 
       result = false
     }
     else {
+      if (!sendUserNotification) {
+        console.error(`No firebase plugin available, check server starupt warnings`)
+        return false
+      }
       resultSms = sendUserNotification({user: destinee, title:notif.title, message: notifMessage})
     }
   }
