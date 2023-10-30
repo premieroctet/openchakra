@@ -389,7 +389,7 @@ const retainRequiredFields = ({data, fields}) => {
   return pickedData
 }
 
-const addComputedFields = async(
+const addComputedFields = (
   fields,
   user,
   queryParams,
@@ -402,65 +402,46 @@ const addComputedFields = async(
     return data
   }
   const newPrefix = `${prefix}/${model}/${data._id}`
-  let newUser = user
-  if (model == 'user') {
-    newUser = await mongoose.connection.models.user.findById(data._id)
-  }
 
-  const compFields = COMPUTED_FIELDS_GETTERS[model] || {}
-  const presentCompFields = lodash(fields).map(f => f.split('.')[0]).filter(v => !!v).uniq().value()
+  return (model=='user' ? mongoose.models.user.findById(data._id) : Promise.resolve(user))
+    .then(newUser => {
+      // Compute direct attributes
+      // Handle references => sub
+      const refAttributes = getModelAttributes(model).filter(
+        ([attName, attParams]) => !attName.includes('.') && attParams.ref,
+      )
+      //for (const refAttribute of refAttributes) {
+      return Promise.allSettled(refAttributes.map(([attName, attParams]) => {
+        const requiredSubFields=fields
+          .filter(f => f.startsWith(`${attName}.`))
+          .map(f => splitRemaining(f, '.')[1])
 
-  const requiredCompFields = lodash.pick(compFields, presentCompFields)
-
-  // Compute direct attributes
-  const x = await Promise.allSettled(
-    Object.keys(requiredCompFields).map(f =>
-      requiredCompFields[f](newUser, queryParams, data).then(res => {
-        data[f] = res
-      }),
-    ),
-  )
-  // Handle references => sub
-  const refAttributes = getModelAttributes(model).filter(
-    att => !att[0].includes('.') && att[1].ref,
-  )
-  for (const refAttribute of refAttributes) {
-    const [attName, attParams]=refAttribute
-    const requiredSubFields=fields
-      .filter(f => f.startsWith(`${attName}.`))
-      .map(f => splitRemaining(f, '.')[1])
-
-    const children = data[attName]
-    if (children && !['program', 'origin'].includes(attName)) {
-      if (attParams.multiple) {
-        if (children.length > 0) {
-          await Promise.allSettled(
-            children.map(child =>
-              addComputedFields(
-                requiredSubFields,
-                newUser,
-                queryParams,
-                child,
-                attParams.type,
-                `${newPrefix}/${attName}`,
-              ),
+        const children = lodash.flatten([data[attName]]).filter(v => !!v)
+        return Promise.allSettled(
+          children.map(child =>
+            addComputedFields(
+              requiredSubFields,
+              newUser,
+              queryParams,
+              child,
+              attParams.type,
+              `${newPrefix}/${attName}`,
             ),
-          )
-        }
-      }
-      else if (children) {
-        await addComputedFields(
-          requiredSubFields,
-          newUser,
-          queryParams,
-          children,
-          attParams.type,
-          `${newPrefix}/${attName}`,
+          ),
         )
-      }
-    }
-  }
-  return data
+      }))
+      .then(() => {
+        const compFields = COMPUTED_FIELDS_GETTERS[model] || {}
+        const presentCompFields = lodash(fields).map(f => f.split('.')[0]).filter(v => !!v).uniq().value()
+        const requiredCompFields = lodash.pick(compFields, presentCompFields)
+
+        return Promise.allSettled(
+          Object.keys(requiredCompFields).map(f =>
+            requiredCompFields[f](newUser, queryParams, data).then(res => {data[f] = res})
+          ),
+      )})
+      .then(() => data)
+  })
 }
 
 const formatTime = timeMillis => {
