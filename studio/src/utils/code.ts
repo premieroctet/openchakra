@@ -38,13 +38,10 @@ import {
 } from './misc';
 import { ProjectState, PageState } from '../core/models/project'
 import { isJsonString } from '../dependencies/utils/misc'
-import { key } from '../tests/utils/smartdiet_model.json';
 
 
 //const HIDDEN_ATTRIBUTES=['dataSource', 'attribute']
 const HIDDEN_ATTRIBUTES: string[] = []
-
-const isProduction = process?.env?.NEXT_PUBLIC_MODE === 'production'
 
 export const getPageComponentName = (
   pageId: string,
@@ -910,7 +907,7 @@ const ${componentName} = () => {
       metaName={'${name && addBackslashes(name)}'}
       metaUrl={'${url}'}
       metaFavicon32={'${favicon32 && addBackslashes(favicon32)}'}
-      metaGaTag={${isProduction ? `'${gaTag}'` : null}}
+      metaGaTag={'${gaTag}'}
     />
     ${code}
     </>
