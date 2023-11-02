@@ -261,10 +261,6 @@ const checkConfig = () => {
     if (isEmpty(process.env.FRONTEND_APP_PORT)) {
       reject(`env var FRONTEND_APP_PORT non renseigné`)
     }
-    // TODO check database name correctness
-    if (isEmpty(process.env.SIB_APIKEY)) {
-      reject(`SIB_APIKEY non renseigné`)
-    }
     if (isEmpty(process.env.DATA_MODEL)) {
       reject(`DATA_MODEL non renseigné`)
     }
