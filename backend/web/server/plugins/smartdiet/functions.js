@@ -289,7 +289,10 @@ const preCreate = ({model, params, user}) => {
     else { //CUSTOMER
       customer_id=user._id
     }
-    return loadFromDb({model: 'user', id: customer_id, fields:['latest_coachings.appointments', 'latest_coachings.remaining_credits','latest_coachings.appointment_type']})
+    return loadFromDb({model: 'user', id: customer_id,
+      fields:['latest_coachings.appointments', 'latest_coachings.remaining_credits','latest_coachings.appointment_type'],
+      user
+    })
       .then(([usr]) => {
         // Check remaining credits
         const latest_coaching=usr.latest_coachings[0]
