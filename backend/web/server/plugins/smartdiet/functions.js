@@ -192,7 +192,7 @@ const preprocessGet = ({model, fields, id, user, params}) => {
 
   }
   if (model=='menu' && params?.people_count) {
-    return loadFromDb({model:'menu', id, fields:[...(fields||[]), 'people_count']})
+    return loadFromDb({model:'menu', id, user, fields:[...(fields||[]), 'people_count']})
       .then(menus => {
         const people_count=parseInt(params.people_count)
         const ratio=people_count/2
