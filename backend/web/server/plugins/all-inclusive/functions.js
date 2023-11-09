@@ -474,8 +474,8 @@ const filterDataUser = ({model, data, user}) => {
 setFilterDataUser(filterDataUser)
 
 
-const getDataPinned = (user, params, data) => {
-  const pinned=data?.pins?.some(l => idEqual(l._id, user?._id))
+const getDataPinned = (userId, params, data) => {
+  const pinned=data?.pins?.some(l => idEqual(l._id, userId))
   return Promise.resolve(pinned)
 }
 

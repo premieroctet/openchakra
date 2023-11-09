@@ -102,7 +102,7 @@ let ACTIONS = {
       .then(m => Message.findById(m._id).populate('sender').populate('receiver'))
       .then(m => {
         getDataModel()=='fumoir' && fumoirMailing && fumoirMailing.sendNewMessage({member: m.receiver, partner: m.sender})
-        loadFromDb({model: 'message', id:m._id, fields:['receiver.email','receiver.firstname']})
+        loadFromDb({model: 'message', id:m._id, fields:['receiver.email','receiver.firstname'], user:sender})
           .then(([message]) => {
             getDataModel()=='all-inclusive' && tipiMailing && tipiMailing.sendNewMessage(message.receiver)
           })

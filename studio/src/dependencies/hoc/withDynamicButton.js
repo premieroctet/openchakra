@@ -81,7 +81,13 @@ const withDynamicButton = Component => {
             return setTimeout(() => ACTIONS[nextAction](params), 1000)
           })
           .then(() => {
-            props.reload()
+            if (action!='openPage') {
+              console.log(`Action ${action} fires reload`)
+              props.reload()
+            }
+            else {
+              console.log(`Action ${action} does not fire reload`)
+            }
           })
           .catch(err => {
             console.error(err)

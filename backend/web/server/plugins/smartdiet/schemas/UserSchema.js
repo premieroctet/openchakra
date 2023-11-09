@@ -388,7 +388,7 @@ UserSchema.virtual('current_individual_challenge', {localField: 'id', foreignFie
     ...(this.failed_events?.map(s => s._id)||[]),
   ]
   return (this._all_individual_challenges||[])
-    .filter(i => this.registered_events.some(r => idEqual(r.event._id, i._id)))
+    .filter(i => this.registered_events.some(r => idEqual(r.event?._id, i._id)))
     .find(i => !exclude.some(e => idEqual(e._id, i._id)))
 })
 

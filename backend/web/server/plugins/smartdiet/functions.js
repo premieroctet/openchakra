@@ -1,4 +1,22 @@
 const {
+  declareComputedField,
+  declareEnumField,
+  declareVirtualField,
+  differenceSet,
+  getModel,
+  idEqual,
+  loadFromDb,
+  setFilterDataUser,
+  setImportDataFunction,
+  setIntersects,
+  setPostCreateData,
+  setPostDeleteData,
+  setPostPutData,
+  setPreCreateData,
+  setPreprocessGet,
+  simpleCloneModel,
+} = require('../../utils/database')
+const {
   sendDietPreRegister2Admin,
   sendDietPreRegister2Diet,
   sendInactivity15,
@@ -88,24 +106,6 @@ const {
   getSmartAgendaConfig,
   isDevelopment
 } = require('../../../config/config')
-const {
-  declareComputedField,
-  declareEnumField,
-  declareVirtualField,
-  differenceSet,
-  getModel,
-  idEqual,
-  loadFromDb,
-  setFilterDataUser,
-  setImportDataFunction,
-  setIntersects,
-  setPostCreateData,
-  setPostDeleteData,
-  setPostPutData,
-  setPreCreateData,
-  setPreprocessGet,
-  simpleCloneModel,
-} = require('../../utils/database')
 const AppointmentType = require('../../models/AppointmentType')
 require('../../models/LogbookDay')
 const { importLeads } = require('./leads')
@@ -192,7 +192,7 @@ const preprocessGet = ({model, fields, id, user, params}) => {
 
   }
   if (model=='menu' && params?.people_count) {
-    return loadFromDb({model:'menu', id, fields:[...(fields||[]), 'people_count']})
+    return loadFromDb({model:'menu', id, user, fields:[...(fields||[]), 'people_count']})
       .then(menus => {
         const people_count=parseInt(params.people_count)
         const ratio=people_count/2
@@ -289,7 +289,10 @@ const preCreate = ({model, params, user}) => {
     else { //CUSTOMER
       customer_id=user._id
     }
-    return loadFromDb({model: 'user', id: customer_id, fields:['latest_coachings.appointments', 'latest_coachings.remaining_credits','latest_coachings.appointment_type']})
+    return loadFromDb({model: 'user', id: customer_id,
+      fields:['latest_coachings.appointments', 'latest_coachings.remaining_credits','latest_coachings.appointment_type'],
+      user
+    })
       .then(([usr]) => {
         // Check remaining credits
         const latest_coaching=usr.latest_coachings[0]
@@ -638,13 +641,14 @@ declareVirtualField({model: 'content', field: 'search_text', instance: 'String',
 
 declareVirtualField({model: 'dietComment', field: '_defined_notes', instance: 'Number', multiple: 'true'})
 
-const getEventStatus = (user, params, data) => {
-  return getModel(data._id, ['event', 'menu', 'webinar', 'individualChallenge', 'collectiveChallenge'])
-   .then(modelName => {
-     console.log(data._id, modelName)
+const getEventStatus = (userId, params, data) => {
+  return Promise.all([
+    User.findById(userId, {registered_events:1, passed_events:1, failed_events:1, skipped_events:1, routine_events:1}),
+    getModel(data._id, ['event', 'menu', 'webinar', 'individualChallenge', 'collectiveChallenge'])
+  ])
+   .then(([user, modelName]) => {
      if (modelName=='individualChallenge') {
        // Past if failed or passed or skipped or routine
-       console.log(JSON.stringify(user, null, 2))
        if (['passed_events','failed_events', 'skipped_events', 'routine_events'].some(att => {
          return user[att].some(e => idEqual(e._d, data._id))
        })) {
@@ -1027,8 +1031,8 @@ declareVirtualField({model: 'lead', field: 'company',
     options: {ref: 'company'}},
 })
 
-const getDataLiked = (user, params, data) => {
-  const liked=data?.likes?.some(l => idEqual(l._id, user?._id))
+const getDataLiked = (userId, params, data) => {
+  const liked=data?.likes?.some(l => idEqual(l._id, userId))
   return Promise.resolve(liked)
 }
 
@@ -1046,8 +1050,8 @@ const setDataLiked= ({id, attribute, value, user}) => {
     })
 }
 
-const getDataPinned = (user, params, data) => {
-  const pinned=data?.pins?.some(l => idEqual(l._id, user._id))
+const getDataPinned = (userId, params, data) => {
+  const pinned=data?.pins?.some(l => idEqual(l._id, userId))
   return Promise.resolve(pinned)
 }
 
@@ -1065,11 +1069,11 @@ const setDataPinned = ({id, attribute, value, user}) => {
     })
 }
 
-const getPinnedMessages = (user, params, data) => {
-  return Promise.resolve(data.messages?.filter(m => m.pins?.some(p => idEqual(p._id, user._id))))
+const getPinnedMessages = (userId, params, data) => {
+  return Promise.resolve(data.messages?.filter(m => m.pins?.some(p => idEqual(p._id, userId))))
 }
 
-const getMenuShoppingList = (user, params, data) => {
+const getMenuShoppingList = (userId, params, data) => {
   const ingredients=lodash.flatten(data?.recipes.map(r => r.recipe?.ingredients).filter(v => !!v))
   const ingredientsGroup=lodash.groupBy(ingredients, i => i.ingredient._id)
   const result=lodash(ingredientsGroup)
@@ -1079,17 +1083,17 @@ const getMenuShoppingList = (user, params, data) => {
   return Promise.resolve(result)
 }
 
-const getUserKeySpoonsStr = (user, params, data) => {
-  return getUserKeySpoons(user, params, data)
+const getUserKeySpoonsStr = (userId, params, data) => {
+  return getUserKeySpoons(userId, params, data)
     .then(count => {
       return  `${count} cuillère${count > 1 ? 's' :''}`
     })
 }
 
-const getUserSurveysProgress = (user, params, data) => {
+const getUserSurveysProgress = (userId, params, data) => {
   // Get max possible answer
   const maxAnswer=lodash.maxBy(Object.keys(SURVEY_ANSWER), v => parseInt(v))
-  return UserSurvey.find({user: user})
+  return UserSurvey.find({user: userId})
     .sort({[CREATED_AT_ATTRIBUTE]: -1})
     .populate({path: 'questions', populate:{path: 'question'}})
     .lean({virtuals: true})
@@ -1106,7 +1110,7 @@ const getUserSurveysProgress = (user, params, data) => {
     .catch(err => console.error(err))
 }
 
-const getUserContents = (user, params, data) => {
+const getUserContents = (userId, params, data) => {
   const user_targets=lodash([data.objective_targets,data.health_targets,
     data.activity_target,data.specificity_targets,data.home_target])
     .flatten()
@@ -1115,16 +1119,16 @@ const getUserContents = (user, params, data) => {
   return Promise.resolve(data._all_contents.filter(c => c.default || setIntersects(c.targets, user_targets)))
 }
 
-const getUserPassedChallenges = (user, params, data) => {
-  return User.findById(user._id, 'passed_events')
+const getUserPassedChallenges = (userId, params, data) => {
+  return User.findById(userId, 'passed_events')
     .populate({path: 'passed_events', match:{"__t": "individualChallenge", key: data._id}})
     .then(res => {
       return res.passed_events?.length || 0
     })
 }
 
-const getUserPassedWebinars = (user, params, data) => {
-  return User.findById(user._id, 'passed_events')
+const getUserPassedWebinars = (userId, params, data) => {
+  return User.findById(userId, 'passed_events')
     .populate({path: 'passed_events', match:{"__t": "webinar", key: data._id}})
     .then(res => {
       return res.passed_events?.length || 0
