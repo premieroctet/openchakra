@@ -126,7 +126,6 @@ OfferSchema.methods.getContentLimit=function(type){
   }
   const att=TYPE_2_ATTRIBUTE[type]
   const limit=this[`${att}_unlimited`]? Number.MAX_VALUE : this[`${att}_credit`]
-  console.log(`Limit for ${type} is ${limit}`)
   return limit
 }
 
