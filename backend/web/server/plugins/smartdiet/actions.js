@@ -256,9 +256,12 @@ const sendMessageOverride= ({destinee, contents, attachment}, sender) => {
 addAction('sendMessage', sendMessageOverride)
 
 const isActionAllowed = ({action, dataId, user}) => {
-  // TODO: why can we get "undefined" ??
-  if (action=='openPage') {
+  // Handle fats actions
+  if (action=='openPage' || action=='previous') {
     return Promise.resolve(true)
+  }
+  if (action=='logout') {
+    return Promise.resolve(!!user)
   }
   const promise=dataId && dataId!="undefined" ? getModel(dataId) : Promise.resolve(null)
   return promise
