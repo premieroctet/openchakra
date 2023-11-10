@@ -68,7 +68,7 @@ export const ACTIONS = {
     url = `${url}?${queryParams.toString()}`
     // new page
     if (props.open && !(props.open === 'false')) {
-      window.open(url, 'blank')
+      window.open(url, '_blank')
     } else {
       window.location = url
     }
