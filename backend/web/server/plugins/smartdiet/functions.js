@@ -36,6 +36,12 @@ const {
 } = require('./mailing')
 const { formatDateTime } = require('../../../utils/text')
 const Webinar = require('../../models/Webinar')
+require('../../models/Target')
+require('../../models/UserQuizz')
+require('../../models/Key')
+require('../../models/Association')
+require('../../models/Item')
+require('../../models/Question')
 const { updateWorkflows } = require('./workflows')
 const {
   ACTIVITY,
@@ -91,6 +97,7 @@ const {
 const {
   HOOK_DELETE,
   HOOK_INSERT,
+  HOOK_UPDATE,
   createAppointment,
   deleteAppointment,
   getAccount,
@@ -1542,8 +1549,8 @@ cron.schedule('0 0 1 * * *', async() => {
 
 const agendaHookFn = received => {
   // Check validity
-  console.log(`Received hook ${JSON.stringify(received, null, 2)}`)
-  const {senderSite, action, objId, objClass, data:{obj:{presta_id, equipe_id, client_id}}} = received
+  console.log(`Received hook ${JSON.stringify(received)}`)
+  const {senderSite, action, objId, objClass, data:{obj:{presta_id, equipe_id, client_id, start_date_gmt, end_date_gmt}}} = received
   const AGENDA_NAME=getSmartAgendaConfig().SMARTAGENDA_URL_PART
   if (!AGENDA_NAME==senderSite) {
     throw new BadRequestError(`Got senderSite ${senderSite}, expected ${AGENDA_NAME}`)
@@ -1558,14 +1565,43 @@ const agendaHookFn = received => {
       .catch(console.error)
   }
   if (action==HOOK_INSERT) {
+    console.log(`Inserting appointment smartagenda_id ${objId}`)
     return Promise.all([
-      User.find({smartagenda_id: equipe_id, role: ROLE_EXTERNAL_DIET}),
-      User.find({smartagenda_id: equipe_id, role: ROLE_CUSTOMER}),
-      AppointmentType.find({smartagenda_id: presta_id})
+      User.findOne({smartagenda_id: equipe_id, role: ROLE_EXTERNAL_DIET}),
+      User.findOne({smartagenda_id: client_id, role: ROLE_CUSTOMER}),
+      AppointmentType.findOne({smartagenda_id: presta_id}),
     ])
-    .then(([diet, user, appType]) => {
-      console.log(`Insert appointment with ${!!diet}, ${!!user}, ${appType}`)
-
+    .then(([diet, user, appointment_type]) => {
+      if (!(diet && user && appointment_type)) {
+         throw new Error(`Insert appointment missing info:${!!diet} ${!!user} ${!!appointment_type}`)
+       }
+      return Coaching.find({user}).sort({[CREATED_AT_ATTRIBUTE]:-1})
+        .then(coachings => {
+          if (lodash.isEmpty(coachings)) {
+            throw new Error(`No coaching defined`)
+          }
+          return Appointment.create({
+            coaching: coachings[0],appointment_type, smartagenda_id: objId,
+            start_date: start_date_gmt, end_date: end_date_gmt
+          })
+        })
+    })
+  }
+  if (action==HOOK_UPDATE) {
+    console.log(`UPdateing appointment smartagenda_id ${objId}`)
+    return Promise.all([
+      Appointment.findOne({smartagenda_id: objId}),
+      AppointmentType.findOne({smartagenda_id: presta_id}),
+    ])
+    .then(([appointment, appointment_type]) => {
+      if (!(appointment && appointment_type))
+       {
+         throw new Error(`Update appointment missing info:${!!appointment} ${!!appointment_type}`)
+       }
+      return Appointment.updateOne(
+        {smartagenda_id: objId},
+        {appointment_type, start_date: start_date_gmt, end_date: end_date_gmt}
+      )
     })
   }
 }
