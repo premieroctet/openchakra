@@ -481,6 +481,14 @@ const DAYS_BEFORE_IND_CHALL_ANSWER=7
 // Days today to diet availbilities end
 const AVAILABILITIES_RANGE_DAYS=21
 
+// Weight in kg
+const MIN_WEIGHT=20
+const MAX_WEIGHT=300
+
+// Height in cm
+const MIN_HEIGHT=30
+const MAX_HEIGHT=300
+
 module.exports={
   CONTENTS_TYPE,
   EVENT_TYPE,
@@ -562,4 +570,5 @@ module.exports={
   GENDER_MALE, GENDER_FEMALE, GENDER_NON_BINARY,
   TARGET_SPECIFICITY, TARGET_COACHING,
   QUIZZ_TYPE_HEALTH,
+  MIN_WEIGHT, MAX_WEIGHT, MIN_HEIGHT, MAX_HEIGHT,
 }

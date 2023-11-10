@@ -1,3 +1,4 @@
+const { MAX_WEIGHT, MIN_WEIGHT } = require('../consts')
 const mongoose = require('mongoose')
 const {schemaOptions} = require('../../../utils/schemas')
 
@@ -31,6 +32,8 @@ const MeasureSchema = new Schema({
   },
   weight: {
     type: Number,
+    min: [MIN_WEIGHT, `Poids attendu entre ${MIN_WEIGHT} et ${MAX_WEIGHT} kg`],
+    max: [MAX_WEIGHT, `Poids attendu entre ${MIN_WEIGHT} et ${MAX_WEIGHT} kg`],
     required: false,
   },
   user: {

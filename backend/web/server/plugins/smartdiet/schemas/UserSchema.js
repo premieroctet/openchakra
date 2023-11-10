@@ -7,6 +7,8 @@ const {
   DIET_REGISTRATION_STATUS_TO_QUALIFY,
   EVENT_IND_CHALLENGE,
   GENDER,
+  MAX_HEIGHT,
+  MIN_HEIGHT,
   NO_CREDIT_AVAILABLE,
   REGISTRATION_WARNING,
   ROLES,
@@ -64,8 +66,11 @@ const UserSchema = new Schema({
     //required: [function() { return this.role==ROLE_CUSTOMER }, 'La date de naissance est obligatoire'],
     required: false,
   },
+  // Height in centimeters
   height: {
     type: Number,
+    min: [MIN_HEIGHT, `Taille attendue entre ${MIN_HEIGHT} et ${MAX_HEIGHT} cm`],
+    max: [MAX_HEIGHT, `Taille attendue entre ${MIN_HEIGHT} et ${MAX_HEIGHT} cm`],
     required: false,
   },
   pseudo: {
@@ -616,6 +621,9 @@ UserSchema.virtual('imc', {localField:'tagada', foreignField:'tagada'}).get(func
   if (this.role==ROLE_CUSTOMER) {
     const latestWeight=lodash(this.measures).filter(m => !!m.weight).sortBy('date').last()
     const imc=latestWeight?.weight/Math.pow(this.height/100.0, 2) || undefined
+    if (this.email=='omherm13@gmail.com') {
+      console.log(this._id, this.email, this.height, latestWeight)
+    }
     return imc
   }
 })
