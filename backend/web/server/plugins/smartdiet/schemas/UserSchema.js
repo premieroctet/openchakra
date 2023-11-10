@@ -621,9 +621,6 @@ UserSchema.virtual('imc', {localField:'tagada', foreignField:'tagada'}).get(func
   if (this.role==ROLE_CUSTOMER) {
     const latestWeight=lodash(this.measures).filter(m => !!m.weight).sortBy('date').last()
     const imc=latestWeight?.weight/Math.pow(this.height/100.0, 2) || undefined
-    if (this.email=='omherm13@gmail.com') {
-      console.log(this._id, this.email, this.height, latestWeight)
-    }
     return imc
   }
 })
