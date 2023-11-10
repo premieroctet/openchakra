@@ -344,7 +344,7 @@ const synchronizeAvailabilities = () => {
 }
 
 
-const HOOK_CREATE='insert'
+const HOOK_INSERT='insert'
 const HOOK_UPDATE='update'
 const HOOK_DELETE='delete'
 
@@ -362,7 +362,7 @@ module.exports={
   upsertAccount,
   getAvailabilities,
   getAppointmentTypes,
-  HOOK_CREATE,
+  HOOK_INSERT,
   HOOK_DELETE,
   HOOK_UPDATE,
   synchronizeAvailabilities,
