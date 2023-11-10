@@ -1543,7 +1543,7 @@ cron.schedule('0 0 1 * * *', async() => {
 const agendaHookFn = received => {
   // Check validity
   console.log(`Received hook ${JSON.stringify(received, null, 2)}`)
-  const {senderSite, action, objId, objClass, data:{presta_id, equipe_id, client_id}} = received
+  const {senderSite, action, objId, objClass, data:{obj:{presta_id, equipe_id, client_id}}} = received
   const AGENDA_NAME=getSmartAgendaConfig().SMARTAGENDA_URL_PART
   if (!AGENDA_NAME==senderSite) {
     throw new BadRequestError(`Got senderSite ${senderSite}, expected ${AGENDA_NAME}`)
