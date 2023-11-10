@@ -69,8 +69,13 @@ const UserSchema = new Schema({
   // Height in centimeters
   height: {
     type: Number,
-    min: [MIN_HEIGHT, `Taille attendue entre ${MIN_HEIGHT} et ${MAX_HEIGHT} cm`],
-    max: [MAX_HEIGHT, `Taille attendue entre ${MIN_HEIGHT} et ${MAX_HEIGHT} cm`],
+    validate: {
+      validator: function(value) {
+        // Check if the value is provided before applying the minimum check
+        return lodash.isNil(value) || lodash.inRange(value, MIN_HEIGHT, MAX_HEIGHT+1)
+      },
+      message: `Taille attendue entre ${MIN_HEIGHT} et ${MAX_HEIGHT} cm`,
+    },
     required: false,
   },
   pseudo: {
