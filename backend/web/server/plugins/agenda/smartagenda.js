@@ -218,7 +218,7 @@ Get availabilities for a diet and appontment type (i.e. prestation)
 As smartagenda only returns about one week of availabilities, call twice
 remaining_calls tells the number of recursive calls
 */
-const getAvailabilities = ({diet_id, from, to, appointment_type, remaining_calls=2}) => {
+const getAvailabilities = ({diet_id, from, to, appointment_type, remaining_calls=3}) => {
   if (!(diet_id && from && to && appointment_type)) {
     throw new Error(`diet_id/from/to/appointment_type are required`)
   }
