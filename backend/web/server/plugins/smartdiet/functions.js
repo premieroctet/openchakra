@@ -1551,8 +1551,8 @@ const agendaHookFn = received => {
   console.log(`Received hook ${JSON.stringify(received)}`)
   const {senderSite, action, objId, objClass, data:{obj:{presta_id, equipe_id, client_id, start_date_gmt, end_date_gmt}}} = received
   const AGENDA_NAME=getSmartAgendaConfig().SMARTAGENDA_URL_PART
-  if (!AGENDA_NAME==senderSite) {
-    throw new BadRequestError(`Got senderSite ${senderSite}, expected ${AGENDA_NAME}`)
+  if (AGENDA_NAME==senderSite) {
+    return console.log(`Event coming for ourself: skipping`)
   }
   if (objClass!='pdo_events') {
     throw new BadRequestError(`Received hook for model ${objClass} but only pdo_events is handled`)
