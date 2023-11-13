@@ -10,7 +10,8 @@ INFOS:
 - appointments start & end dates must be rounded at 1/4h
 */
 const config = require('../../../config/config')
-const { isDevelopment, isMaster } = require('../../../config/config')
+const { isDevelopment} = require('../../../config/config')
+const cron = require('../../utils/cron')
 const {
   AVAILABILITIES_RANGE_DAYS,
   ROLE_EXTERNAL_DIET
@@ -24,7 +25,6 @@ const lodash=require('lodash')
 require('lodash.product')
 const moment=require('moment')
 require('moment-round')
-const cron=require('node-cron')
 const {runPromisesWithDelay}=require('../../utils/concurrency')
 
 const CONFIG={
@@ -273,7 +273,8 @@ const getAvailabilities = ({diet_id, from, to, appointment_type, remaining_calls
 }
 
 // Synchronize appointment types every minute
-!isDevelopment() && isMaster() && cron.schedule('0 * * * * *', () => {
+//!isDevelopment() && cron.schedule('0 * * * * *', () => {
+cron.schedule('0 * * * * *', () => {
   console.log('Syncing appointment types from smartagenda')
   return Promise.all([getAppointmentTypes(), AppointmentType.find()])
     .then(([smartagenda_types, local_types]) => {
@@ -293,7 +294,7 @@ const getAvailabilities = ({diet_id, from, to, appointment_type, remaining_calls
 
 // Synchronize availabilities every minute
 // ENABLED UNTIL SMARTAGENDA WEBHOOK
-!isDevelopment() && isMaster() && cron.schedule('0 * * * * *', () => {
+!isDevelopment() && cron.schedule('0 * * * * *', () => {
   synchronizeAvailabilities()
 })
 

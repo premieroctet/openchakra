@@ -112,7 +112,6 @@ const { delayPromise } = require('../../utils/concurrency')
 const {
   getSmartAgendaConfig,
   isDevelopment,
-  isMaster,
 } = require('../../../config/config')
 const AppointmentType = require('../../models/AppointmentType')
 require('../../models/LogbookDay')
@@ -156,8 +155,7 @@ const Coaching = require('../../models/Coaching')
 const Appointment = require('../../models/Appointment')
 const Message = require('../../models/Message')
 const Lead = require('../../models/Lead')
-const cron=require('node-cron')
-
+const cron=require('../../utils/cron')
 
 const filterDataUser = ({model, data, id, user}) => {
   if (model=='offer' && !id) {
@@ -1511,14 +1509,14 @@ const getRegisterCompany = props => {
 setImportDataFunction({model: 'lead', fn: importLeads})
 
 // Ensure logbooks consistency each morning
-isMaster() && cron.schedule('0 0 1 * * *', async() => {
+cron.schedule('0 0 1 * * *', async() => {
   logbooksConsistency()
     .then(() => console.log(`Logbooks consistency OK `))
     .catch(err => console.error(`Logbooks consistency error:${err}`))
 })
 
 // Synchronize diets & customer smartagenda accounts
-!isDevelopment() && isMaster() && cron.schedule('0 * * * * *', () => {
+!isDevelopment() && cron.schedule('0 * * * * *', () => {
   console.log(`Smartagenda accounts sync`)
   return User.find({role: {$in: [ROLE_EXTERNAL_DIET, ROLE_CUSTOMER]}, smartagenda_id: null})
     .then(users => {
@@ -1608,14 +1606,14 @@ const agendaHookFn = received => {
 }
 
 // Update workflows
-isMaster() && cron.schedule('0 0 8 * * *', async() => {
+cron.schedule('0 0 8 * * *', async() => {
   updateWorkflows()
     .then(console.log)
     .catch(console.error)
 })
 
 // Inactivity notifications
-isMaster() && cron.schedule('0 0 8 * * *', async() => {
+cron.schedule('0 0 8 * * *', async() => {
   const users=await User.find({role: ROLE_CUSTOMER}, {email:1, days_inactivity:1, last_activity:1})
   // Inactivity notifications
   const DURATIONS=[[15, sendInactivity15],[30, sendInactivity30],[45, sendInactivity45]]
@@ -1626,7 +1624,7 @@ isMaster() && cron.schedule('0 0 8 * * *', async() => {
 })
 
 // Individual challenges notifications
-isMaster() && cron.schedule('0 0 8 * * *', async() => {
+cron.schedule('0 0 8 * * *', async() => {
   const users=await User.find({role: ROLE_CUSTOMER}, {email:1, registered_events:1})
     .populate({path:'registered_events', populate: {path: 'event', match:{__t: 'individualChallenge'}}})
 
@@ -1643,7 +1641,7 @@ isMaster() && cron.schedule('0 0 8 * * *', async() => {
 })
 
 // New webinar for company
-isMaster() && cron.schedule('0 0 8 * * *', async() => {
+cron.schedule('0 0 8 * * *', async() => {
   const filter={[CREATED_AT_ATTRIBUTE]: {$gte: moment().add(-1,'day')}}
   const webinars=await Webinar.find(filter)
       .populate({path: 'companies', populate: {path: 'users', match: {role: ROLE_CUSTOMER}}})
@@ -1654,7 +1652,7 @@ isMaster() && cron.schedule('0 0 8 * * *', async() => {
 })
 
 // Webinar in 3 days
-isMaster() && cron.schedule('0 0 8 * * *', async() => {
+cron.schedule('0 0 8 * * *', async() => {
   const filter={start_date: {$gte: moment().add(3,'day'), $lte: moment().add(4,'day')}}
   const webinars=await Webinar.find(filter)
       .populate({path: 'companies', populate: {path: 'users', match: {role: ROLE_CUSTOMER}}}).catch(console.error)
@@ -1665,7 +1663,7 @@ isMaster() && cron.schedule('0 0 8 * * *', async() => {
 })
 
 // Staurdays reminders (1-4th in month)
-isMaster() && cron.schedule('0 0 8 * * 6', async() => {
+cron.schedule('0 0 8 * * 6', async() => {
   const customers=await User.find({role: ROLE_CUSTOMER})
   const saturdayIndex=Math.floor((moment().date() - 1) / 7) + 1
   const fn={1: sendSaturday1, 2: sendSaturday2, 3: sendSaturday3, 4: sendSaturday4}[saturdayIndex]

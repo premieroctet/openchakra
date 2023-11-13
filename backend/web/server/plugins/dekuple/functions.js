@@ -1,6 +1,6 @@
+const cron = require('../../utils/cron')
 const lodash=require('lodash')
 const moment = require('moment')
-const cron = require('node-cron')
 const Measure = require('../../models/Measure')
 const Appointment = require('../../models/Appointment')
 const Reminder = require('../../models/Reminder')
@@ -32,9 +32,6 @@ const {
   WITHINGS_MEASURE_DIA,
   WITHINGS_MEASURE_SYS,
 } = require('./consts')
-const {
-  isMaster,
-} = require('../../../config/config')
 
 const preCreate = ({model, params, user}) => {
   if (['measure', 'appointment', 'reminder'].includes(model)) {
@@ -132,7 +129,7 @@ const updateTokens = user => {
 
 // Ensure Users tokens are up to date every hour
 // TODO It's a quick fix, should not have to request authorization each time
-isMaster() && cron.schedule('0 */30 * * * *', () => {
+cron.schedule('0 */30 * * * *', () => {
   const expirationMoment=moment().add(1, 'hour')
   User.find({$or: [{access_token: null}, {expires_at: {$lte: expirationMoment}}]})
     .then(users => {
@@ -155,7 +152,7 @@ isMaster() && cron.schedule('0 */30 * * * *', () => {
 })
 
 // Get all measures TODO should be notified by Withings
-isMaster() && cron.schedule('*/30 * * * * *', async() => {
+cron.schedule('*/30 * * * * *', async() => {
   console.log(`Getting measures`)
   const users=await User.find({}, {access_token: 1, email: 1})
     .populate({path: 'measures'})
@@ -190,7 +187,7 @@ isMaster() && cron.schedule('*/30 * * * * *', async() => {
 })
 
 // Get all devices TODO should be notified by Withings
-isMaster() && cron.schedule('24 */10 * * * *', async() => {
+cron.schedule('24 */10 * * * *', async() => {
   console.log(`Getting devices`)
   const users=await User.find({access_token: {$ne: null}})
     .populate('devices')
@@ -220,7 +217,7 @@ isMaster() && cron.schedule('24 */10 * * * *', async() => {
 
 // Send notifications for reminders & apppointments
 // Poll every minute
-isMaster() && cron.schedule('15 * * * * *', async() => {
+cron.schedule('15 * * * * *', async() => {
   let reminders=await Reminder.find({active: true}).populate('user')
   reminders=reminders.filter(r => r.shouldNotify())
   if (!lodash.isEmpty(reminders)) {

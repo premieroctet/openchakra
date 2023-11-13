@@ -1,3 +1,4 @@
+const cron = require('../../utils/cron')
 const { datetime_str } = require('../../../utils/dateutils')
 const {
   sendAskContact,
@@ -12,7 +13,8 @@ const {
   sendTipiSearch,
   sendUsersExtract
 } = require('./mailing')
-const {isDevelopment, isMaster} = require('../../../config/config')
+const {isDevelopment} = require('../../../config/config')
+
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const {
   AVAILABILITY,
@@ -62,7 +64,6 @@ const {
 const Contact = require('../../models/Contact')
 const AdminDashboard = require('../../models/AdminDashboard')
 const mongoose = require('mongoose')
-const cron=require('node-cron')
 const { paymentPlugin } = require('../../../config/config')
 const { BadRequestError } = require('../../utils/errors')
 const moment = require('moment')
@@ -660,7 +661,7 @@ const sendUsersList = () => {
   .then(console.log)
 }
 
-!isDevelopment() && isMaster() && cron.schedule('0 0 8 * * *', async() => {
+!isDevelopment() && cron.schedule('0 0 8 * * *', async() => {
   // Send each monday and thursday
   const DAYS=[1,4]
   const today=moment().startOf('day').day()
@@ -672,7 +673,7 @@ const sendUsersList = () => {
 })
 // Check payment status
 // Poll every minute
-isMaster() && cron.schedule('*/5 * * * * *', async() => {
+cron.schedule('*/5 * * * * *', async() => {
   return Mission.findOne({payin_id: {$ne:null}, payin_achieved: null})
     .then(mission => paymentPlugin.getCheckout(mission.payin_id))
     .then(payment => {
@@ -688,7 +689,7 @@ isMaster() && cron.schedule('*/5 * * * * *', async() => {
 })
 
 // Daily notifications (every day at 8AM) for missions/quotations reminders
-isMaster() && cron.schedule('0 0 8 * * *', async() => {
+cron.schedule('0 0 8 * * *', async() => {
   console.log('crnoning')
   // Pending quoations: not accepted after 2 days
   loadFromDb({model: 'mission', fields: ['user.firstname','user.email','status','job.user','job.user.full_name']})
@@ -705,7 +706,7 @@ isMaster() && cron.schedule('0 0 8 * * *', async() => {
 
 
 // Daily notifications (every day at 9PM) to complete profile
-isMaster() && cron.schedule('0 0 19 * * *', () => {
+cron.schedule('0 0 19 * * *', () => {
   const today=moment().startOf('day')
   const isTuesday=today.day()==2
   console.log(`Checking uncomplete profiles, today is tuesday:${isTuesday}`)
