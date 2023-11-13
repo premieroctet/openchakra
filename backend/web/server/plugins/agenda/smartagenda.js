@@ -328,8 +328,11 @@ const synchronizeAvailabilities = () => {
           })
         })
         // Get smartagenda availabilities for eahc diet/appointment type
-        return runPromisesWithDelay(combinations.map(([diet, app_type]) => () => {
-          return getAvailabilities({diet_id: diet.smartagenda_id, from: start, to: end, appointment_type: app_type.smartagenda_id})
+        return lodash.isEmpty(combinations) ?
+          Promise.resolve([])
+          :
+          runPromisesWithDelay(combinations.map(([diet, app_type]) => () => {
+            return getAvailabilities({diet_id: diet.smartagenda_id, from: start, to: end, appointment_type: app_type.smartagenda_id})
             .then(avails => avails.map(avail => ({ user: diet._id, appointment_type: app_type._id, start_date: avail.start_date })))
         }), 0)
         .then(results => {
