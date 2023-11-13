@@ -1579,10 +1579,14 @@ const agendaHookFn = received => {
           if (lodash.isEmpty(coachings)) {
             throw new Error(`No coaching defined`)
           }
-          return Appointment.create({
-            coaching: coachings[0],appointment_type, smartagenda_id: objId,
-            start_date: start_date_gmt, end_date: end_date_gmt
-          })
+          return Appointment.findOneAndUpdate(
+            {smartagenda_id: objId},
+            {
+              coaching: coachings[0],appointment_type, smartagenda_id: objId,
+              start_date: start_date_gmt, end_date: end_date_gmt
+            },
+            {upsert: true}
+          )
         })
     })
   }
