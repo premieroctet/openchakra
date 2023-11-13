@@ -1643,9 +1643,7 @@ isMaster() && cron.schedule('0 0 8 * * *', async() => {
 })
 
 // New webinar for company
-//isMaster() && cron.schedule('0 0 8 * * *', async() => {
-isMaster() && cron.schedule('*/2 * * * * *', async() => {
-  console.log('****** TESTING CRON')
+isMaster() && cron.schedule('0 0 8 * * *', async() => {
   const filter={[CREATED_AT_ATTRIBUTE]: {$gte: moment().add(-1,'day')}}
   const webinars=await Webinar.find(filter)
       .populate({path: 'companies', populate: {path: 'users', match: {role: ROLE_CUSTOMER}}})
