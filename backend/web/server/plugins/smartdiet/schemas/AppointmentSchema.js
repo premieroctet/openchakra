@@ -31,7 +31,7 @@ const AppointmentSchema = new Schema({
     required: [true, 'La prestation est obligatoire'],
   },
   smartagenda_id: {
-    type: Number,
+    type: String,
   },
   visio_url: {
     type: String,

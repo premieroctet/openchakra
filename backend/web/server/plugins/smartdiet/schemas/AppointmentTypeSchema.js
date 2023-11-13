@@ -21,7 +21,7 @@ const AppointmentTypeSchema = new Schema({
     required: [true, 'La durée est obligatoire'],
   },
   smartagenda_id: {
-    type: Number,
+    type: String,
     required: [true, `L'identifiant Smartagenda est obligatoire`],
   }
 }, schemaOptions)
