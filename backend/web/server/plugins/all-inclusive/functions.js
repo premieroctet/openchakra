@@ -12,7 +12,7 @@ const {
   sendTipiSearch,
   sendUsersExtract
 } = require('./mailing')
-const {isDevelopment} = require('../../../config/config')
+const {isDevelopment, isMaster} = require('../../../config/config')
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const {
   AVAILABILITY,
@@ -660,7 +660,7 @@ const sendUsersList = () => {
   .then(console.log)
 }
 
-!isDevelopment() && cron.schedule('0 0 8 * * *', async() => {
+!isDevelopment() && isMaster() && cron.schedule('0 0 8 * * *', async() => {
   // Send each monday and thursday
   const DAYS=[1,4]
   const today=moment().startOf('day').day()
@@ -672,7 +672,7 @@ const sendUsersList = () => {
 })
 // Check payment status
 // Poll every minute
-cron.schedule('*/5 * * * * *', async() => {
+isMaster() && cron.schedule('*/5 * * * * *', async() => {
   return Mission.findOne({payin_id: {$ne:null}, payin_achieved: null})
     .then(mission => paymentPlugin.getCheckout(mission.payin_id))
     .then(payment => {
@@ -688,7 +688,7 @@ cron.schedule('*/5 * * * * *', async() => {
 })
 
 // Daily notifications (every day at 8AM) for missions/quotations reminders
-cron.schedule('0 0 8 * * *', async() => {
+isMaster() && cron.schedule('0 0 8 * * *', async() => {
   console.log('crnoning')
   // Pending quoations: not accepted after 2 days
   loadFromDb({model: 'mission', fields: ['user.firstname','user.email','status','job.user','job.user.full_name']})
@@ -705,7 +705,7 @@ cron.schedule('0 0 8 * * *', async() => {
 
 
 // Daily notifications (every day at 9PM) to complete profile
-cron.schedule('0 0 19 * * *', () => {
+isMaster() && cron.schedule('0 0 19 * * *', () => {
   const today=moment().startOf('day')
   const isTuesday=today.day()==2
   console.log(`Checking uncomplete profiles, today is tuesday:${isTuesday}`)
