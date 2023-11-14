@@ -446,6 +446,7 @@ router.post('/:model', passport.authenticate('cookie', {session: false}), (req, 
     return res.status(HTTP_CODES.BAD_REQUEST).json(`Model is required`)
   }
 
+  console.log(`POST ${model} ${JSON.stringify(params)}`)
   return callPreCreateData({model, params, user})
     .then(({model, params}) => {
       return mongoose.connection.models[model]
