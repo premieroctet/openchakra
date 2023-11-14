@@ -261,7 +261,7 @@ setPreprocessGet(preprocessGet)
 
 const preCreate = ({model, params, user}) => {
   if (['diploma', 'comment', 'measure', 'content', 'collectiveChallenge', 'individualChallenge', 'webinar', 'menu'].includes(model)) {
-    params.user=user
+    params.user=params?.user || user
   }
   if (['message'].includes(model)) {
     params.sender=user
