@@ -1509,7 +1509,7 @@ const getRegisterCompany = props => {
 setImportDataFunction({model: 'lead', fn: importLeads})
 
 // Ensure logbooks consistency each morning
-cron.schedule('0 0 1 * * *', async() => {
+cron.schedule('0 0 4 * * *', async() => {
   logbooksConsistency()
     .then(() => console.log(`Logbooks consistency OK `))
     .catch(err => console.error(`Logbooks consistency error:${err}`))
