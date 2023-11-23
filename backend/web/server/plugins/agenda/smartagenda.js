@@ -257,7 +257,7 @@ const getAvailabilities = ({diet_id, from, to, appointment_type, remaining_calls
     }))
     .then(dispos => {
       const last_date=lodash.max(dispos.map(d => d.start_date))
-      if (remaining_calls==0) {
+      if (!last_date || remaining_calls==0) {
         return dispos
       }
       return getAvailabilities({diet_id, from:last_date, to, appointment_type,
@@ -265,6 +265,7 @@ const getAvailabilities = ({diet_id, from, to, appointment_type, remaining_calls
         .then(dispos2 => [...dispos, ...dispos2])
     })
     .catch(err => {
+      console.error(err)
       if (err?.response?.status==404) {
         return []
       }
