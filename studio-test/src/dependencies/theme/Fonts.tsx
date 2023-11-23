@@ -107,6 +107,41 @@ const Fonts = () => (
         font-weight: normal;
         font-style: normal;
       }
+      @font-face {
+        font-family: 'inter';
+        src: local('Inter'), 
+            url('fonts/Inter-Bold.ttf') format('truetype');
+        font-weight: bold;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: 'inter';
+        src: local('Inter'), 
+            url('fonts/Inter-Medium.ttf') format('truetype');
+        font-weight: medium;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: 'inter';
+        src: local('Inter'), 
+            url('fonts/Inter-Regular.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: 'inter';
+        src: local('Inter'), 
+            url('fonts/Inter-SemiBold.ttf') format('truetype');
+        font-weight: semibold;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: 'minion pro';
+        src: local('Inter'), 
+            url('fonts/MinionPro-Regular.otf') format('opentype');
+        font-weight: normal;
+        font-style: normal;
+      }
       `}
   />
 )
@@ -114,7 +149,9 @@ const Fonts = () => (
 export const fontsName = [
   'Crapaud',
   'berthold-akzidenz',
-  'berthold-akzidenz condensed'
+  'berthold-akzidenz condensed',
+  'inter',
+  'minion pro',
 ]
 
 export default Fonts
