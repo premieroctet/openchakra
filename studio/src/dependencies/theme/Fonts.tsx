@@ -108,14 +108,14 @@ const Fonts = () => (
         font-style: normal;
       }
       @font-face {
-        font-family: 'inter';
+        font-family: 'inter-bold';
         src: local('Inter'), 
             url('fonts/Inter-Bold.ttf') format('truetype');
         font-weight: bold;
         font-style: normal;
       }
       @font-face {
-        font-family: 'inter';
+        font-family: 'inter-medium';
         src: local('Inter'), 
             url('fonts/Inter-Medium.ttf') format('truetype');
         font-weight: medium;
@@ -129,7 +129,7 @@ const Fonts = () => (
         font-style: normal;
       }
       @font-face {
-        font-family: 'inter';
+        font-family: 'inter-semibold';
         src: local('Inter'), 
             url('fonts/Inter-SemiBold.ttf') format('truetype');
         font-weight: semibold;
@@ -151,6 +151,9 @@ export const fontsName = [
   'berthold-akzidenz',
   'berthold-akzidenz condensed',
   'inter',
+  'inter-bold',
+  'inter-medium',
+  'inter-semibold',
   'minion pro',
 ]
 
