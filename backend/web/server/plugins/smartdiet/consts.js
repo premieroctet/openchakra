@@ -271,7 +271,6 @@ const UNIT={
  [UNIT_CL]:'cl',
  [UNIT_DL]:'dl',
  [UNIT_G]:'g',
- //[UNIT_LIVRE]:'livre(s)',
  [UNIT_PINCEE]:'pincée(s)',
  [UNIT_VERRE_A_MOUTARDE]:'verre(s) à moutarde',
  [UNIT_LOUCHE]:'louche(s)',
