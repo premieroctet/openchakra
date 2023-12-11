@@ -92,7 +92,9 @@ const {
   TARGET_COACHING,
   TARGET_SPECIFICITY,
   TARGET_TYPE,
-  UNIT
+  UNIT,
+  MENU_PEOPLE_COUNT,
+  convertQuantity
 } = require('./consts')
 const {
   HOOK_DELETE,
@@ -196,31 +198,6 @@ const preprocessGet = ({model, fields, id, user, params}) => {
     return computeStatistics({id, fields})
       .then(stats => ({model, fields, id, data:[stats]}))
 
-  }
-  if (model=='menu' && params?.people_count) {
-    return loadFromDb({model:'menu', id, user, fields:[...(fields||[]), 'people_count']})
-      .then(menus => {
-        const people_count=parseInt(params.people_count)
-        const ratio=people_count/2
-        const computed=menus.map(m => {
-          return {
-            ...m,
-            people_count,
-            shopping_list: m.shopping_list.map(i => ({...i, quantity: i.quantity*ratio})),
-            recipes: m.recipes.map(recipe => ({
-              ...recipe,
-              recipe: {
-                ...recipe.recipe,
-                ingredients: recipe.recipe.ingredients.map(ing => ({
-                  ...ing,
-                  quantity: ing.quantity*ratio,
-                }))
-              }
-            }))
-          }
-        })
-        return ({model, fields, id, data:computed})
-      })
   }
   if (model=='conversation') {
     const getPartner= (m, user) => {
@@ -738,7 +715,7 @@ declareVirtualField({model: 'menu', field: 'recipes', instance: 'Array',
     options: {ref: 'menuRecipe'}},
 })
 declareVirtualField({model: 'menu', field: 'shopping_list', instance: 'Array',
-  requires: 'recipes.recipe.ingredients.ingredient',
+  requires: 'recipes.recipe.ingredients.ingredient.name',
   multiple: true,
   caster: {
     instance: 'ObjectID',
@@ -1080,11 +1057,21 @@ const getPinnedMessages = (userId, params, data) => {
 }
 
 const getMenuShoppingList = (userId, params, data) => {
+  console.log(params)
+  const people_count=parseInt(params.people_count) || MENU_PEOPLE_COUNT
+  const ratio=people_count/MENU_PEOPLE_COUNT
   const ingredients=lodash.flatten(data?.recipes.map(r => r.recipe?.ingredients).filter(v => !!v))
   const ingredientsGroup=lodash.groupBy(ingredients, i => i.ingredient._id)
   const result=lodash(ingredientsGroup)
-    .mapValues(ingrs=>({ingredient:ingrs[0].ingredient, quantity: lodash.sumBy(ingrs, 'quantity')}))
+    .mapValues(ingrs=>({ingredient:ingrs[0].ingredient, quantity: lodash.sumBy(ingrs, 'quantity')*ratio}))
     .values()
+    .map(({ingredient, quantity}) => {
+      const [newQuantity, newUunit]=convertQuantity(quantity, ingredient.unit)
+      return ({
+        ingredient: {...ingredient, unit:newUunit},
+        quantity: parseInt(newQuantity*100)/100,
+      })
+    })
     .value()
   return Promise.resolve(result)
 }

@@ -250,7 +250,6 @@ const UNIT_ML='UNIT_ML'
 const UNIT_CL='UNIT_CL'
 const UNIT_DL='UNIT_DL'
 const UNIT_G='UNIT_G'
-const UNIT_LIVRE='UNIT_LIVRE'
 const UNIT_PINCEE='UNIT_PINCEE'
 const UNIT_VERRE_A_MOUTARDE='UNIT_VERRE_A_MOUTARDE'
 const UNIT_LOUCHE='UNIT_LOUCHE'
@@ -272,7 +271,7 @@ const UNIT={
  [UNIT_CL]:'cl',
  [UNIT_DL]:'dl',
  [UNIT_G]:'g',
- [UNIT_LIVRE]:'livre(s)',
+ //[UNIT_LIVRE]:'livre(s)',
  [UNIT_PINCEE]:'pincée(s)',
  [UNIT_VERRE_A_MOUTARDE]:'verre(s) à moutarde',
  [UNIT_LOUCHE]:'louche(s)',
@@ -283,6 +282,21 @@ const UNIT={
  [UNIT_SACHET]:'sachet(s)',
  [UNIT_CUBE]:'cube(s)',
  [UNIT_UNITE]:'',
+}
+
+const UNIT_CONVERSIONS={
+  [UNIT_G]:{limit:1000, unit:UNIT_KG},
+  [UNIT_ML]:{limit:10, unit:UNIT_CL},
+  [UNIT_CL]:{limit:10, unit:UNIT_DL},
+  [UNIT_DL]:{limit:10, unit:UNIT_L},
+}
+
+const convertQuantity=(quantity, unit) => {
+  const conversion=UNIT_CONVERSIONS[unit]
+  if (quantity>=conversion?.limit) {
+    return convertQuantity(quantity/conversion.limit, conversion.unit)
+  }
+  return [quantity, unit]
 }
 
 const PARTICULAR_COMPANY_NAME='Adhérent particulier'
@@ -571,4 +585,5 @@ module.exports={
   TARGET_SPECIFICITY, TARGET_COACHING,
   QUIZZ_TYPE_HEALTH,
   MIN_WEIGHT, MAX_WEIGHT, MIN_HEIGHT, MAX_HEIGHT,
+  UNIT_CONVERSIONS,convertQuantity,
 }
