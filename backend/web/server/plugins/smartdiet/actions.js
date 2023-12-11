@@ -76,7 +76,7 @@ addAction('smartdiet_shift_challenge', smartdietShiftChallenge)
 const defaultRegister=ACTIONS.register
 
 const register = props => {
-  // No compay => set the particular one
+    // No compay => set the particular one
   if (!props.role) {
     props.role=ROLE_CUSTOMER
     console.log(`Setting role ${JSON.stringify(props.role)}`)
@@ -85,7 +85,7 @@ const register = props => {
   if (!props.role || props.role==ROLE_CUSTOMER) {
     return getRegisterCompany(props)
     .then(integrityProps => {
-      if (!integrityProps.company) {
+            if (!integrityProps.company) {
         return Company.findOne({name: PARTICULAR_COMPANY_NAME})
         .then(company => ({...integrityProps, company: company._id}))
       }
@@ -93,7 +93,7 @@ const register = props => {
     })
     .then(extraProps => defaultRegister({...props, ...extraProps}))
   }
-  return defaultRegister({...props})
+    return defaultRegister({...props})
 }
 addAction('register', register)
 

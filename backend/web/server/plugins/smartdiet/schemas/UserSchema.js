@@ -100,7 +100,7 @@ const UserSchema = new Schema({
   password: {
     type: String,
     required: [true, 'Le mot de passe est obligatoire'],
-    set: pass => bcrypt.hashSync(pass, 10),
+    set: pass => pass ? bcrypt.hashSync(pass, 10) : null,
   },
   role: {
     type: String,

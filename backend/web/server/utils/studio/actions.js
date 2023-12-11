@@ -115,7 +115,7 @@ let ACTIONS = {
   },
 
   register: props => {
-    console.log(`Register with ${JSON.stringify(props)}`)
+console.log(`Register with ${JSON.stringify(props)}`)
     return User.exists({email: props.email})
       .then(exists => {
         if (exists) {
@@ -127,7 +127,7 @@ let ACTIONS = {
           promise=validatePassword({...props})
         }
         else {
-          props.password=generatePassword()
+          //props.password=generatePassword()
           promise=Promise.resolve()
         }
 
@@ -137,6 +137,7 @@ let ACTIONS = {
 
         return promise
           .then(()=> {
+            console.log(`DB create with ${JSON.stringify(props)}`)
             return User.create({...props})
           })
           .then(user => callPostCreateData({model: 'user', data:user}))

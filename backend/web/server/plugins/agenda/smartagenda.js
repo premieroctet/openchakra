@@ -10,7 +10,6 @@ INFOS:
 - appointments start & end dates must be rounded at 1/4h
 */
 const config = require('../../../config/config')
-const { isDevelopment} = require('../../../config/config')
 const cron = require('../../utils/cron')
 const {
   AVAILABILITIES_RANGE_DAYS,
@@ -275,7 +274,7 @@ const getAvailabilities = ({diet_id, from, to, appointment_type, remaining_calls
 
 // Synchronize appointment types every minute
 //!isDevelopment() && cron.schedule('0 * * * * *', () => {
-cron.schedule('0 * * * * *', () => {
+!config.isDevelopment() && cron.schedule('0 * * * * *', () => {
   console.log('Syncing appointment types from smartagenda')
   return Promise.all([getAppointmentTypes(), AppointmentType.find()])
     .then(([smartagenda_types, local_types]) => {
@@ -295,7 +294,7 @@ cron.schedule('0 * * * * *', () => {
 
 // Synchronize availabilities every minute
 // ENABLED UNTIL SMARTAGENDA WEBHOOK
-!isDevelopment() && cron.schedule('0 * * * * *', () => {
+!config.isDevelopment() && cron.schedule('0 * * * * *', () => {
   synchronizeAvailabilities()
 })
 
