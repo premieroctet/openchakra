@@ -181,6 +181,12 @@ const buildBlock = ({
         if (tabParent?.props.attribute) {
           childComponent.props.attribute=tabParent?.props.attribute
         }
+        if (tabParent?.props.hidePagination) {
+          childComponent.props.hidePagination=tabParent?.props.hidePagination
+        }
+        if (tabParent?.props.limit) {
+          childComponent.props.limit=tabParent?.props.limit
+        }
       }
       const dataProvider = components[childComponent.props.dataSource]
       const isDpValid=getValidDataProviders(components).find(dp => dp.id==childComponent.props.dataSource)
