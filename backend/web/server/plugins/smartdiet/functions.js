@@ -885,7 +885,7 @@ declareVirtualField({model: 'coaching', field: 'all_logbooks', instance: 'Array'
   },
 })
 declareVirtualField({model: 'coaching', field: 'logbooks', instance: 'Array', multiple: true,
-  requires: 'appointments.status,all_logbooks.logbook.questions.quizz_question,all_logbooks.logbook.questions.multiple_answers,all_logbooks.logbook.questions.answer_status,all_logbooks.logbook.questions.answer_message',
+  requires: 'user,appointments.status,all_logbooks.logbook.questions.quizz_question,all_logbooks.logbook.questions.multiple_answers,all_logbooks.logbook.questions.answer_status,all_logbooks.logbook.questions.answer_message',
   caster: {
     instance: 'ObjectID',
     options: {ref: 'logbookDay'}

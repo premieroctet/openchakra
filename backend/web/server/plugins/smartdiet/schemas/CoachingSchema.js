@@ -157,7 +157,7 @@ const duplicateUserQuizz= id => {
 
 // Returns the LogbookDay compléting if required
 CoachingSchema.virtual('logbooks', {localField:'tagada', foreignField:'tagada'}).get(function() {
-  const startDay=moment(this.appointments[0]?.start_date)
+  const startDay=moment(this.user[CREATED_AT_ATTRIBUTE])
   const diff=moment().diff(startDay, 'days')
   const lbd=lodash.range(diff).map(day_idx => {
     const day=moment(startDay).add(day_idx, 'day')
