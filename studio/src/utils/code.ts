@@ -187,6 +187,9 @@ const buildBlock = ({
         if (tabParent?.props.limit) {
           childComponent.props.limit=tabParent?.props.limit
         }
+        if (tabParent?.props.scrollToday && childComponent.type=='TabList') {
+          childComponent.props.scrollToday=tabParent.props.scrollToday
+        }
       }
       const dataProvider = components[childComponent.props.dataSource]
       const isDpValid=getValidDataProviders(components).find(dp => dp.id==childComponent.props.dataSource)
