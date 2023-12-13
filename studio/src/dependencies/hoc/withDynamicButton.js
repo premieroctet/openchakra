@@ -58,6 +58,7 @@ const withDynamicButton = Component => {
           dataModel,
           query,
           model: props.dataModel,
+          fireClear: props.fireClear,
         })
           .then(res => {
             if (MESSAGES[action]) {
@@ -75,6 +76,7 @@ const withDynamicButton = Component => {
               dataModel,
               query,
               model: props.dataModel,
+              fireClear: props.fireClear,
               ...res,
             }
             // UGLY!! Shoud block ain thread until dialog closed

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import lodash from 'lodash'
 import {InputGroup, InputRightElement} from '@chakra-ui/react'
 import {AiOutlineEye, AiOutlineEyeInvisible} from 'react-icons/ai'
@@ -7,7 +7,7 @@ import useDebounce from '../hooks/useDebounce.hook'
 
 const withDynamicInput = Component => {
 
-  const Internal = ({ dataSource, dataSourceId, noautosave, readOnly, context, backend, suggestions, setComponentValue, displayEye, ...props }) => {
+  const Internal = ({ dataSource, dataSourceId, noautosave, readOnly, context, backend, suggestions, setComponentValue, displayEye, clearComponents, ...props }) => {
 
     let keptValue = (dataSourceId && lodash.get(dataSource, props.attribute)) || props.value
 
@@ -30,6 +30,12 @@ const withDynamicInput = Component => {
       }
     }
 
+    useEffect(() => {
+      if (!!props.model && clearComponents.includes(props.id)) {
+        console.log(`Clear ${props.id} contents`)
+        setInternalDataValue('')
+      }
+    }, [clearComponents])
     const [internalDataValue, setInternalDataValue] = useState(keptValue)
     const [visibilityType, setVisibilityType]= useState('password')
 

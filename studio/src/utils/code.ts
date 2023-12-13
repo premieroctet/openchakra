@@ -428,6 +428,9 @@ const buildBlock = ({
           }
         })
 
+      // Access to fire clear and clear notification
+      propsContent += " fireClearComponents={fireClearComponents} "
+      propsContent += " clearComponents={clearComponents} "
       if (isFilterComponent(childComponent, components)) {
         const stateName = childComponent.id.replace(/^comp-/, '')
         propsContent += ` onChange={ev => set${stateName}(ev.target.value)}`
@@ -620,6 +623,10 @@ const buildHooks = (components: IComponents) => {
   const reload = () => {
     setRefresh(!refresh)
   }
+
+  /** Clear copponents notifications  */
+  const [clearComponents, setClearComponents]=useState([])
+  const fireClearComponents = component_ids => setClearComponents(component_ids)
 
   useEffect(() => {
     if (!process.browser) { return }

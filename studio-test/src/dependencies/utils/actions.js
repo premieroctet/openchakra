@@ -75,15 +75,21 @@ export const ACTIONS = {
     return Promise.resolve()
   },
 
-  create: ({ value, context, props, level, getComponentValue }) => {
-    const components=lodash(props).pickBy((v, k) => /^component_/.test(k) && !!v).values()
-    const body = Object.fromEntries(components.map(c =>
-      [getComponent(c, level)?.getAttribute('attribute') || getComponent(c, level)?.getAttribute('data-attribute'),
-        getComponentValue(c, level)||null]
-    ))
+  create: ({ value, context, props, level, getComponentValue, fireClearComponents }) => {
+    const componentsIds=lodash(props).pickBy((v, k) => /^component_/.test(k) && !!v).values().value()
+    console.log('component ids', componentsIds)
+    const components=componentsIds.map(c => {
+      const comp=getComponent(c, level)
+      return comp
+    }).filter(c => !!c)
+    console.log('components', components)
+    const actualComponentIds=components.map(c => c.getAttribute('id'))
+    console.log('actual components ids', actualComponentIds)
+    const body = Object.fromEntries(components.map(c => {
+      return [c?.getAttribute('attribute') || c?.getAttribute('data-attribute'), getComponentValue(c.getAttribute('id'), level)||null]
+    }))
     'job,mission,quotation,group,parent,content,recipe,menu,pip,collectiveChallenge,quizzQuestion,userQuizzQuestion,user'.split(',').forEach(property => {
       if (props[property]) {
-        //const dataId=document.getElementById(`${props[property]}${level}`)?.getAttribute('_id')
         const dataId=getComponent(props[property], level)?.getAttribute('_id')||null
         body[property]=dataId
       }
@@ -91,11 +97,15 @@ export const ACTIONS = {
     const bodyJson=lodash.mapValues(body, v => JSON.stringify(v))
     let url = `${API_ROOT}/${props.model}?context=${context}`
     return axios.post(url, bodyJson)
-      .then(res => ({
-        model: props.model,
-        value: res.data,
-      }))
+      .then(res => {
+        fireClearComponents(actualComponentIds)
+        return {
+          model: props.model,
+          value: res.data,
+        }
+      })
   },
+
   levelUp: ({ value, props, context }) => {
     let url = `${API_ROOT}/action`
     return axios.post(url, {
@@ -215,17 +225,27 @@ export const ACTIONS = {
         return {_id: res.data}
       })
   },
-  save: ({ value, props, context, dataSource, level, getComponentValue }) => {
+  save: ({ value, props, context, dataSource, level, getComponentValue, fireClearComponents }) => {
     let url = `${API_ROOT}/${props.model}${dataSource?._id ? `/${dataSource._id}`:''}`
-    const components=lodash(props).pickBy((v, k) => /^component_/.test(k) && !!v).values()
-    const body = Object.fromEntries(components.map(c =>
-      [getComponent(c, level)?.getAttribute('attribute') || getComponent(c, level)?.getAttribute('data-attribute'), getComponentValue(c, level)||null]
-    ))
+    const componentsIds=lodash(props).pickBy((v, k) => /^component_/.test(k) && !!v).values().value()
+    const components=componentsIds.map(c => {
+      const comp=getComponent(c, level)
+      return comp
+    }).filter(c => !!c)
+    const actualComponentIds=components.map(c => c.getAttribute('id'))
+    const body = Object.fromEntries(components.map(c => {
+      return [c?.getAttribute('attribute') || c?.getAttribute('data-attribute'), getComponentValue(c.getAttribute('id'), level)||null]
+    }))
+
     const bodyJson=lodash.mapValues(body, v => JSON.stringify(v))
-    const httpAction=dataSource?._id ? axios.put : axios.post
+    const entityExists=!!dataSource?._id
+    const httpAction=entityExists ? axios.put : axios.post
     return httpAction(url, bodyJson)
     .then(res => {
-      components.forEach(c => clearComponentValue(c, level))
+      // In case of creation, fire clear components
+      if (!entityExists) {
+        fireClearComponents(actualComponentIds)
+      }
       return ({
         model: props.model,
         value: res.data,
