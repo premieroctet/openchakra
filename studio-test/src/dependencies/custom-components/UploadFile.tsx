@@ -28,7 +28,6 @@ const UploadFile = ({
   dataSource,
   attribute,
   value,
-  backend,
   children,
   reload,
   noautosave,
@@ -40,7 +39,6 @@ const UploadFile = ({
   dataSource: { _id: null } | null
   attribute: string
   value: string
-  backend: string
   reload: any
   noautosave: boolean | null
   children: React.ReactNode

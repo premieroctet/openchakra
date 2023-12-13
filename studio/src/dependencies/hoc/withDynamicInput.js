@@ -7,7 +7,7 @@ import useDebounce from '../hooks/useDebounce.hook'
 
 const withDynamicInput = Component => {
 
-  const Internal = ({ dataSource, dataSourceId, noautosave, readOnly, context, backend, suggestions, setComponentValue, displayEye, clearComponents, ...props }) => {
+  const Internal = ({ dataSource, dataSourceId, noautosave, readOnly, context, suggestions, setComponentValue, displayEye, clearComponents, ...props }) => {
 
     let keptValue = (dataSourceId && lodash.get(dataSource, props.attribute)) || props.value
 
@@ -52,7 +52,6 @@ const withDynamicInput = Component => {
             context: dataSource?._id,
             value: val,
             props,
-            backend,
           })
             .then(() => {
               setInternalDataValue(val)
@@ -81,7 +80,7 @@ const withDynamicInput = Component => {
         setVisibilityType(visibilityType=='password' ? 'text' : 'password')
       }
 
-      const parentProps=lodash.pick(props, 'id dataSource name dataSourceId value level model attribute noautosave readOnly context backend setComponentValue'.split(' '))
+      const parentProps=lodash.pick(props, 'id dataSource name dataSourceId value level model attribute noautosave readOnly context setComponentValue'.split(' '))
 
       return displayEye ? (
         <InputGroup {...parentProps}>

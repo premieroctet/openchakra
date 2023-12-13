@@ -238,7 +238,6 @@ const buildBlock = ({
         propsContent += ` insideGroup `
       }
       if (isDynamicComponent(components, childComponent)) {
-        propsContent += ` backend='/'`
           let tp = null
             try {
               tp =getDataProviderDataType(
@@ -434,9 +433,6 @@ const buildBlock = ({
       if (isFilterComponent(childComponent, components)) {
         const stateName = childComponent.id.replace(/^comp-/, '')
         propsContent += ` onChange={ev => set${stateName}(ev.target.value)}`
-      }
-      if (childComponent.type === 'Timer') {
-        propsContent += ` backend='/'`
       }
 
       if (childComponent.type === 'Input' && childComponent.props.type=='password') {

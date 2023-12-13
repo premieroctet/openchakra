@@ -32,7 +32,6 @@ const withDynamicButton = Component => {
     const nextActionProps = props.nextActionProps
       ? JSON.parse(props.nextActionProps)
       : {}
-    const backend = props.backend
     let onClick = props.onClick
 
     const [actionAllowed, setActionAllowed]=useState(true)
@@ -53,7 +52,6 @@ const withDynamicButton = Component => {
           ...props,
           value: value,
           props: actionProps,
-          backend,
           context,
           dataModel,
           query,
@@ -71,7 +69,6 @@ const withDynamicButton = Component => {
               ...props,
               value: res,
               props: nextActionProps,
-              backend,
               context,
               dataModel,
               query,
