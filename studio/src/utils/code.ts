@@ -187,9 +187,6 @@ const buildBlock = ({
         if (tabParent?.props.limit) {
           childComponent.props.limit=tabParent?.props.limit
         }
-        if (tabParent?.props.scrollToday && childComponent.type=='TabList') {
-          childComponent.props.scrollToday=tabParent.props.scrollToday
-        }
       }
       const dataProvider = components[childComponent.props.dataSource]
       const isDpValid=getValidDataProviders(components).find(dp => dp.id==childComponent.props.dataSource)
@@ -212,6 +209,10 @@ const buildBlock = ({
         propsContent += ` setComponentValue={setComponentValue} `
       }
 
+      // Always create lazy Tabs
+      if (childComponent.type=='Tabs') {
+        propsContent+=" isLazy "
+      }
       // Set component id
       propsContent += ` id='${childComponent.id}' `
       // Set reload function
