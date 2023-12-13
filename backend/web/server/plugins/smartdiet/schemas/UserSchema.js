@@ -33,6 +33,7 @@ const { ForbiddenError } = require('../../../utils/errors')
 const {schemaOptions} = require('../../../utils/schemas')
 const lodash=require('lodash')
 const bcrypt = require('bcryptjs')
+const IBANValidator = require('iban-validator-js')
 
 const Schema = mongoose.Schema
 
@@ -239,6 +240,22 @@ const UserSchema = new Schema({
     required: true,
   }],
   website: {
+    type: String,
+    required: false,
+  },
+  // Raison sociale pour les diets
+  company_name: {
+    type: String,
+    required: false,
+  },
+  // IBAN pour les diets
+  iban: {
+    type: String,
+    validate: [v => !v || IBANValidator.isValid(v), "L'IBAN est invalide"],
+    required: false,
+  },
+  // RIB pour les diets
+  rib: {
     type: String,
     required: false,
   },
