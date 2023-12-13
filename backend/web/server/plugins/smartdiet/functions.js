@@ -838,7 +838,7 @@ declareVirtualField({model: 'coaching', field: 'appointments', instance: 'Array'
 declareVirtualField({model: 'coaching', field: 'remaining_credits', instance: 'Number',
   requires: 'user.offer.coaching_credit,spent_credits,user.company.offers.coaching_credit,user.role'}
 )
-declareVirtualField({model: 'coaching', field: 'spent_credits', instance: 'Number', requires: 'appointments'})
+declareVirtualField({model: 'coaching', field: 'spent_credits', instance: 'Number'})
 declareVirtualField({model: 'coaching', field: 'questions', instance: 'Array', multiple: true,
   caster: {
     instance: 'ObjectID',
@@ -878,14 +878,13 @@ declareVirtualField({model: 'coaching', field: 'progress', instance: 'Array', mu
   },
 })
 declareVirtualField({model: 'coaching', field: 'all_logbooks', instance: 'Array', multiple: true,
-  requires: 'appointments.status',
   caster: {
     instance: 'ObjectID',
     options: {ref: 'coachingLogbook'}
   },
 })
 declareVirtualField({model: 'coaching', field: 'logbooks', instance: 'Array', multiple: true,
-  requires: 'user,appointments.status,all_logbooks.logbook.questions.quizz_question,all_logbooks.logbook.questions.multiple_answers,all_logbooks.logbook.questions.answer_status,all_logbooks.logbook.questions.answer_message',
+  requires: 'user,all_logbooks.logbook',
   caster: {
     instance: 'ObjectID',
     options: {ref: 'logbookDay'}
