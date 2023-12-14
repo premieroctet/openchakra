@@ -108,7 +108,7 @@ const withDynamicInput = Component => {
     return displayEye ?
       withDisplayEye(Component)
       :
-      <Component {...props} dataSource={dataSource} onChange={onChange}/>
+      <Component {...props} dataSource={dataSource} onChange={onChange} onBlur={props.reload} />
   }
 
   return Internal
