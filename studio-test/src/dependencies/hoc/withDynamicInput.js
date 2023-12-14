@@ -53,10 +53,6 @@ const withDynamicInput = Component => {
             value: val,
             props,
           })
-            .then(() => {
-              setInternalDataValue(val)
-              props.reload()
-            }) //props.reload())
             .catch(err => {
               console.error(err)
               if (!(err.response?.status==401) && err.code!='ERR_NETWORK') {
