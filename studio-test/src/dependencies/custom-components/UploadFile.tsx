@@ -1,5 +1,5 @@
 import { Box, Text } from '@chakra-ui/react'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios'
 import styled from '@emotion/styled'
 import { ACTIONS } from '../utils/actions';
@@ -22,6 +22,7 @@ const uploadFileToS3 = (file: File) => {
 
 
 const UploadFile = ({
+  model,
   notifmsg,
   okmsg = 'Ressource ajoutée',
   komsg = 'Échec ajout ressource',
@@ -31,8 +32,10 @@ const UploadFile = ({
   children,
   reload,
   noautosave,
+  clearComponents,
   ...props
 }: {
+  model: string
   notifmsg: boolean
   okmsg: string
   komsg: string
@@ -42,11 +45,20 @@ const UploadFile = ({
   reload: any
   noautosave: boolean | null
   children: React.ReactNode
+  clearComponents: [string]
 }) => {
 
   const [uploadInfo, setUploadInfo] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [s3File, setS3File] = useState<string|null>()
+
+  useEffect(() => {
+    if (!!model && clearComponents.includes(props.id)) {
+      console.log(`Clear ${props.id} contents`)
+      setS3File(null)
+      setUploadInfo('')
+    }
+  }, [clearComponents])
 
   const onFileNameChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
@@ -121,7 +133,6 @@ const UploadFile = ({
   const pr={...props, attribute, value: s3File}
 
   return (
-    <>
     <Box {...pr} data-value={s3File} display='flex' flexDirection='row' position={'relative'}>
       <form id="uploadressource">
         <UploadZone>
@@ -135,7 +146,6 @@ const UploadFile = ({
       <Text>{uploadInfo}</Text>} {/*Component status */}
       {isLoading && <Loading />}
     </Box>
-    </>
   )
 }
 

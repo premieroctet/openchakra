@@ -246,8 +246,8 @@ addAction('deactivateAccount', deactivateAccount)
 // Override sendMessage for notification
 const orgSendMessage=ACTIONS.sendMessage
 
-const sendMessageOverride= ({destinee, contents, attachment}, sender) => {
-  return orgSendMessage({destinee, contents, attachment}, sender)
+const sendMessageOverride= (params, sender) => {
+  return orgSendMessage(params, sender)
     .then(message => {
       sendNewMessage({user: message.receiver})
       return message

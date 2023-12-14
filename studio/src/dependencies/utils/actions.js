@@ -18,22 +18,23 @@ export const ACTIONS = {
     let url = `${API_ROOT}/login`
     return axios.post(url, { email, password })
   },
-  sendMessage: ({ value, props, level, getComponentValue }) => {
+  sendMessage: ({ value, props, level, getComponentValue, fireClearComponents }) => {
     const destinee = props.destinee ? getComponentValue(props.destinee, level) : value._id
-    const contents = getComponentValue(props.contents, level)
-    const attachment = getComponentValue(props.attachment, level)
+    const componentsIds=[props.contents, props.attachment]
+    const components=componentsIds.map(comp => comp=getComponent(comp, level)).filter(c => !!c)
+    const actualComponentIds=components.map(c => c.getAttribute('id'))
+    const body = Object.fromEntries(components.map(c => {
+      return [c?.getAttribute('attribute') || c?.getAttribute('data-attribute'), getComponentValue(c.getAttribute('id'), level)||null]
+    }))
     let url = `${API_ROOT}/action`
     return axios
       .post(url, {
         action: 'sendMessage',
         destinee,
-        contents,
-        attachment,
+        ...body,
       })
       .then(res => {
-        clearComponentValue(props.destinee, level)
-        clearComponentValue(props.contents, level)
-        clearComponentValue(props.attachment, level)
+        fireClearComponents(actualComponentIds)
         return res
       })
   },
@@ -82,9 +83,7 @@ export const ACTIONS = {
       const comp=getComponent(c, level)
       return comp
     }).filter(c => !!c)
-    console.log('components', components)
     const actualComponentIds=components.map(c => c.getAttribute('id'))
-    console.log('actual components ids', actualComponentIds)
     const body = Object.fromEntries(components.map(c => {
       return [c?.getAttribute('attribute') || c?.getAttribute('data-attribute'), getComponentValue(c.getAttribute('id'), level)||null]
     }))
