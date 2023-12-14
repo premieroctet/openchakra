@@ -116,7 +116,7 @@ const SOURCE_COMPUTE_FNS={
   [SPOON_SOURCE_WEBINAR_REPLAY]: ({source, key_filter, userId}) => {
     return User.findById(userId)
     .populate({path: 'replayed_events', match: {'__t': 'webinar', ...key_filter}})
-    .then(u => u.passed_events.length)
+    .then(u => u.replayed_events.length)
   },
 }
 
@@ -138,7 +138,9 @@ const computeSourceSpoonCount = ({source, key, userId}) => {
       return fn({source, key_filter, userId})
         .then(sourceSpoons => {
           const total=sourceSpoons*spoonGain.gain
-          //console.log(`User ${user.email}:key:${key?.name},source:${source},matched:${sourceSpoons},gain:${spoonGain.gain}=>${total}` )
+          if (sourceSpoons>0) {
+            console.log(`User ${userId}:key:${key?.name},source:${source},matched:${sourceSpoons},gain:${spoonGain.gain}=>${total}` )
+          }
           return total
         })
         .catch(err => console.error(err))
@@ -160,6 +162,10 @@ const getUserKeyTrophy = (userId, params, key) => {
 
 const getUserSpoons = (userId) => {
   return countUserSpoons(userId, null, null)
+    .then(res => {
+      console.log(res, 'spoons')
+      return res
+    })
 }
 
 const getUserKeySpoons = (userId, params, key) => {
