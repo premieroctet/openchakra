@@ -675,7 +675,9 @@ const loadFromDb = ({model, fields, id, user, params}) => {
       }
       return buildQuery(model, id, fields)
         // Lean, flattenMaps:true forces recursion
-        .lean({virtuals: true, flattenMaps: true})
+        //.lean({virtuals: true, flattenMaps: true})
+        .then(data => data.map(d => d.toObject()))
+        .then(data => JSON.parse(JSON.stringify(data)))
         .then(data => {
           if (id && data.length == 0) { throw new NotFoundError(`Can't find ${model}:${id}`) }
           return Promise.all(data.map(d => addComputedFields(fields,user._id, params, d, model)))
