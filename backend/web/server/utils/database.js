@@ -674,13 +674,9 @@ const loadFromDb = ({model, fields, id, user, params}) => {
         return data
       }
       return buildQuery(model, id, fields)
+        // Lean, flattenMaps:true forces recursion
+        .lean({virtuals: true, flattenMaps: true})
         .then(data => {
-          // Lean all objects
-          data=data.map(d => d.toObject({virtuals: true}))
-          // Force to plain object
-          data=JSON.parse(JSON.stringify(data))
-          // Remove extra virtuals
-          //data = retainRequiredFields({data, fields})
           if (id && data.length == 0) { throw new NotFoundError(`Can't find ${model}:${id}`) }
           return Promise.all(data.map(d => addComputedFields(fields,user._id, params, d, model)))
         })
