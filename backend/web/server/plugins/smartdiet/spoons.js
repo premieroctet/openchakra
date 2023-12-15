@@ -71,7 +71,7 @@ const SOURCE_COMPUTE_FNS={
   [SPOON_SOURCE_INDIVIDUAL_CHALLENGE_ROUTINE]: ({source, key_filter, userId}) => {
     return User.findById(userId)
       .populate({path: 'routine_events', match: {'__t': 'individualChallenge', ...key_filter}})
-      .then(u => u.passed_events.length)
+      .then(u => u.routine_events.length)
   },
   [SPOON_SOURCE_MEASURE_CHEST]: ({source, key_filter, userId}) => {
     if (!lodash.isEmpty(key_filter)) {return Promise.resolve(0)}
@@ -126,12 +126,12 @@ const computeSourceSpoonCount = ({source, key, userId}) => {
       // No gain or 0 for this source : return 0
       if (!spoonGain?.gain) {
         //throw new Error(`No defined gain for ${source}`)
-        //console.error(`No defined gain for ${source}`)
+        console.error(`No defined gain for ${source}`)
         return 0
       }
       const fn=SOURCE_COMPUTE_FNS[source]
       if (!fn) {
-        //console.error(`Missing compute spoon fn for ${source}`)
+        console.error(`Missing compute spoon fn for ${source}`)
         return 0
       }
       const key_filter=key ? {key: key._id}:{}
@@ -139,7 +139,7 @@ const computeSourceSpoonCount = ({source, key, userId}) => {
         .then(sourceSpoons => {
           const total=sourceSpoons*spoonGain.gain
           if (sourceSpoons>0) {
-            console.log(`User ${userId}:key:${key?.name},source:${source},matched:${sourceSpoons},gain:${spoonGain.gain}=>${total}` )
+            //console.log(`User ${userId}:key:${key?.name},source:${source},matched:${sourceSpoons},gain:${spoonGain.gain}=>${total}` )
           }
           return total
         })

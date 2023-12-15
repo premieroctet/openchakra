@@ -410,8 +410,12 @@ UserSchema.virtual("_all_individual_challenges", {
 
 // Ind. challenge registered still not failed or passed
 UserSchema.virtual('current_individual_challenge', {localField: 'id', foreignField: 'id'}).get(function() {
+  if (!this._all_individual_challenges?.length) {
+    return null
+  }
   const exclude=[
     ...(this.passed_events?.map(s => s._id)||[]),
+    ...(this.routine_events?.map(s => s._id)||[]),
     ...(this.failed_events?.map(s => s._id)||[]),
   ]
   return (this._all_individual_challenges||[])

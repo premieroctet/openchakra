@@ -1494,6 +1494,21 @@ const getRegisterCompany = props => {
 
 setImportDataFunction({model: 'lead', fn: importLeads})
 
+// Ensure all spoon gains are defined
+ensureSpoonGains = () => {
+  return Object.keys(SPOON_SOURCE).map(source => {
+    return SpoonGain.exists({source})
+      .then(exists => {
+        if (!exists) {
+          console.log(`Create missing spoon gain ${source} 0`)
+          return SpoonGain.create({source, gain:0})
+        }
+      })
+  })
+}
+
+ensureSpoonGains()
+
 // Ensure logbooks consistency each morning
 cron.schedule('0 0 4 * * *', async() => {
   logbooksConsistency()
