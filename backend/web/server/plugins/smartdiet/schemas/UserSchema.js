@@ -358,6 +358,7 @@ UserSchema.virtual("available_groups", {localField: 'id', foreignField: 'id'}).g
   return lodash(this.company?.groups)
     .filter(g => shareTargets(this, g))
     .differenceBy(this.registered_groups, g => g._id.toString())
+    .value()
 })
 
 UserSchema.virtual("registered_groups", {
@@ -437,6 +438,7 @@ UserSchema.virtual('individual_challenges', {localField: 'id', foreignField: 'id
     .filter(c => !exclude.some(excl => idEqual(excl._id, c._id)))
     .filter(c => !currentChallenge || idEqual(currentChallenge._id, c._id))
     .orderBy(['update_date'], ['asc'])
+    .value()
 })
 
 // User's ind. challenges are all expect the skipped ones and the passed ones
