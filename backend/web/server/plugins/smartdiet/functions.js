@@ -1392,14 +1392,18 @@ User.find({role: ROLE_CUSTOMER}).populate('coachings')
 
 // Ensure coaching logbooks consistency
 const logbooksConsistency = coaching_id => {
-  const filter= coaching_id ? {_id: coaching_id}:{}
   console.log(`Consistency for logbooks ${coaching_id || 'all'}`)
-  return Coaching.find(filter).populate([
+  const idFilter= coaching_id ? {_id: coaching_id}:{}
+  startDay=moment().add(-1, 'day')
+  const endDay=moment().add(1, 'days')
+  const logBooksFilter={$and:[{day: {$gt: startDay}}, {day: {$lt: endDay}}]}
+  console.log('between', startDay, 'and', endDay)
+  return Coaching.find(idFilter).populate([
     {path: 'appointments', populate: {path: 'logbooks', populate: {path: 'questions'}}},
-    {path: 'all_logbooks', populate: {path: 'logbook'}},
+    {path: 'all_logbooks', match: logBooksFilter, populate: {path: 'logbook'}},
     ])
     .then(coachings => {
-      return Promise.all(coachings.map(coaching => {
+      return Promise.all(coachings.map((coaching, idx) => {
         const getLogbooksForDay = date => {
           // Get the appontment juste before the date
           const previous_appt=lodash(coaching.appointments)
@@ -1412,9 +1416,12 @@ const logbooksConsistency = coaching_id => {
               return lodash.uniqBy(appt_logbooks, q => q._id.toString())
             })
         }
-        const startDay=moment().add(-6, 'day')
-        return Promise.all(lodash.range(7).map(day_idx => {
+        const diff=endDay.diff(startDay, 'days')
+        return Promise.all(lodash.range(diff).map(day_idx => {
           const day=moment(startDay).add(day_idx, 'day')
+          if (idx==0) {
+            console.log('for day', day)
+          }
           // expected quizz templates
           return getLogbooksForDay(day)
             .then(expectedQuizz => {
@@ -1510,7 +1517,7 @@ ensureSpoonGains = () => {
 ensureSpoonGains()
 
 // Ensure logbooks consistency each morning
-cron.schedule('0 0 4 * * *', async() => {
+cron.schedule('0 */15 * * * *', async() => {
   logbooksConsistency()
     .then(() => console.log(`Logbooks consistency OK `))
     .catch(err => console.error(`Logbooks consistency error:${err}`))
