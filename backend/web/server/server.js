@@ -127,6 +127,9 @@ require('./models/BestPractices')
 require('./models/Tip')
 require('./models/Emergency')
 require('./models/Step')
+require('./models/DeclineReason')
+require('./models/Interest')
+require('./models/Job')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 

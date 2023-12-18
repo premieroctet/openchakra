@@ -58,6 +58,11 @@ const CompanySchema = new Schema(
       ref: 'appointmentType',
       required: false,
     },
+    // Outbound call script
+    script: {
+      type: Text,
+      required: false,
+    }
   },
   schemaOptions,
 )

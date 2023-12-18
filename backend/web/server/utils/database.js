@@ -674,6 +674,7 @@ const loadFromDb = ({model, fields, id, user, params}) => {
         return data
       }
       return buildQuery(model, id, fields)
+        .limit(30)
         // Lean, flattenMaps:true forces recursion
         //.lean({virtuals: true, flattenMaps: true})
         .then(data => data.map(d => d.toObject()))

@@ -1,8 +1,9 @@
+const lodash=require('lodash')
 const { isEmailOk } = require('../../../../utils/sms')
-
 const { isPhoneOk } = require('../../../../utils/sms')
 const mongoose = require('mongoose')
 const { schemaOptions } = require('../../../utils/schemas')
+const { CALL_STATUS, CALL_DIRECTION } = require('../consts')
 
 const Schema = mongoose.Schema
 
@@ -45,6 +46,52 @@ const LeadSchema = new Schema({
     set: v => v?.replace(/^0/, '+33'),
     required: false,
   },
+  // Calls attributes
+  comment: {
+    type: String,
+    required: false,
+  },
+  call_status: {
+    type: String,
+    enum: Object.keys(CALL_STATUS),
+    required: false,
+  },
+  campain: {
+    type: String,
+    required: false,
+  },
+  operator: {
+    type: Schema.Types.ObjectId,
+    ref: "user",
+    required: false,
+  },
+  job: {
+    type: Schema.Types.ObjectId,
+    ref: "job",
+    required: false,
+  },
+  decline_reason: {
+    type: Schema.Types.ObjectId,
+    ref: "declineReason",
+    required: false,
+  },
+  next_call_date: {
+    type: Date,
+    required: false,
+  },
+  interested_in: {
+    type: Schema.Types.ObjectId,
+    ref: "interest",
+    required: false,
+  },
+  call_direction: {
+    type: String,
+    enum: Object.keys(CALL_DIRECTION)
+  },
+  consent: {
+    type: Boolean,
+    required: false,
+  },
 }, schemaOptions)
 
 LeadSchema.index(
@@ -61,6 +108,18 @@ LeadSchema.virtual("company", {
   localField: "company_code", // Find in Model, where localField
   foreignField: "code", // is equal to foreignField
 });
+
+// Corresponding registered user if any
+LeadSchema.virtual("registered_user", {
+  ref: "user", // The Model to use
+  localField: "email", // Find in Model, where localField
+  foreignField: "email", // is equal to foreignField
+});
+
+LeadSchema.virtual('registered').get(function() {
+  return !lodash.isEmpty(this.registered_user)
+})
+
 /* eslint-enable prefer-arrow-callback */
 
 module.exports = LeadSchema

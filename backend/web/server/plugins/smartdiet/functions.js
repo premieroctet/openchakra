@@ -94,7 +94,9 @@ const {
   TARGET_TYPE,
   UNIT,
   MENU_PEOPLE_COUNT,
-  convertQuantity
+  convertQuantity,
+  CALL_STATUS,
+  CALL_DIRECTION
 } = require('./consts')
 const {
   HOOK_DELETE,
@@ -1012,6 +1014,31 @@ declareVirtualField({model: 'lead', field: 'company',
     instance: 'ObjectID',
     options: {ref: 'company'}},
 })
+declareEnumField({model: 'lead', field: 'call_status', enumValues: CALL_STATUS})
+declareVirtualField({model: 'lead', field: 'job',
+  instance: 'job', multiple: false,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'job'}},
+})
+declareVirtualField({model: 'lead', field: 'declineReason',
+  instance: 'declineReason', multiple: false,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'declineReason'}},
+})
+declareEnumField({model: 'lead', field: 'call_direction', enumValues: CALL_DIRECTION})
+declareVirtualField({model: 'lead', field: 'registered_user',
+  instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'user'}},
+})
+declareVirtualField({model: 'lead', field:'registered', instance: 'Boolean',
+  requires: 'registered_user',
+})
+
+
 
 const getDataLiked = (userId, params, data) => {
   const liked=data?.likes?.some(l => idEqual(l._id, userId))
