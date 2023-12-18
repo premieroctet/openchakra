@@ -97,12 +97,12 @@ let ACTIONS = {
     return getSession(id)
   },
 
-  sendMessage: ({destinee, contents, attachment}, sender) => {
-    return Message.create({sender: sender._id, receiver: destinee, content: contents, attachment})
+  sendMessage: ({destinee, content, attachment}, sender) => {
+    return Message.create({sender: sender._id, receiver: destinee, content, attachment})
       .then(m => Message.findById(m._id).populate('sender').populate('receiver'))
       .then(m => {
         getDataModel()=='fumoir' && fumoirMailing && fumoirMailing.sendNewMessage({member: m.receiver, partner: m.sender})
-        loadFromDb({model: 'message', id:m._id, fields:['receiver.email','receiver.firstname']})
+        loadFromDb({model: 'message', id:m._id, fields:['receiver.email','receiver.firstname'], user:sender})
           .then(([message]) => {
             getDataModel()=='all-inclusive' && tipiMailing && tipiMailing.sendNewMessage(message.receiver)
           })
@@ -115,7 +115,7 @@ let ACTIONS = {
   },
 
   register: props => {
-    console.log(`Register with ${JSON.stringify(props)}`)
+console.log(`Register with ${JSON.stringify(props)}`)
     return User.exists({email: props.email})
       .then(exists => {
         if (exists) {
@@ -127,7 +127,7 @@ let ACTIONS = {
           promise=validatePassword({...props})
         }
         else {
-          props.password=generatePassword()
+          //props.password=generatePassword()
           promise=Promise.resolve()
         }
 
@@ -137,6 +137,7 @@ let ACTIONS = {
 
         return promise
           .then(()=> {
+            console.log(`DB create with ${JSON.stringify(props)}`)
             return User.create({...props})
           })
           .then(user => callPostCreateData({model: 'user', data:user}))

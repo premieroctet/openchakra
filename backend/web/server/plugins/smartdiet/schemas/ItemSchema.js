@@ -15,12 +15,14 @@ const ItemSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'quizzQuestion',
     required: false,
+    index: true,
   },
   // If item belongs to user quizz question's multiple answers
   userQuizzQuestion: {
     type: Schema.Types.ObjectId,
     ref: 'userQuizzQuestion',
     required: false,
+    index: true,
   },
 }, schemaOptions)
 

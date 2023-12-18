@@ -11,11 +11,9 @@ import axios from 'axios'
 
 const Timer = ({
   dataSource,
-  backend,
   ...props
 }: {
   dataSource: { _id: null } | null
-  backend: string
 }) => {
   const RESSOURCE_SENDING_PERIOD = 2000
   // const TIME_BEFORE_LOGOUT = 10000

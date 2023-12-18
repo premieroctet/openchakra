@@ -1,3 +1,4 @@
+const cron = require('../../utils/cron')
 const { datetime_str } = require('../../../utils/dateutils')
 const {
   sendAskContact,
@@ -13,6 +14,7 @@ const {
   sendUsersExtract
 } = require('./mailing')
 const {isDevelopment} = require('../../../config/config')
+
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const {
   AVAILABILITY,
@@ -62,7 +64,6 @@ const {
 const Contact = require('../../models/Contact')
 const AdminDashboard = require('../../models/AdminDashboard')
 const mongoose = require('mongoose')
-const cron=require('node-cron')
 const { paymentPlugin } = require('../../../config/config')
 const { BadRequestError } = require('../../utils/errors')
 const moment = require('moment')
@@ -474,8 +475,8 @@ const filterDataUser = ({model, data, user}) => {
 setFilterDataUser(filterDataUser)
 
 
-const getDataPinned = (user, params, data) => {
-  const pinned=data?.pins?.some(l => idEqual(l._id, user?._id))
+const getDataPinned = (userId, params, data) => {
+  const pinned=data?.pins?.some(l => idEqual(l._id, userId))
   return Promise.resolve(pinned)
 }
 

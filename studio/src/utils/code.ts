@@ -181,6 +181,12 @@ const buildBlock = ({
         if (tabParent?.props.attribute) {
           childComponent.props.attribute=tabParent?.props.attribute
         }
+        if (tabParent?.props.hidePagination) {
+          childComponent.props.hidePagination=tabParent?.props.hidePagination
+        }
+        if (tabParent?.props.limit) {
+          childComponent.props.limit=tabParent?.props.limit
+        }
       }
       const dataProvider = components[childComponent.props.dataSource]
       const isDpValid=getValidDataProviders(components).find(dp => dp.id==childComponent.props.dataSource)
@@ -203,6 +209,10 @@ const buildBlock = ({
         propsContent += ` setComponentValue={setComponentValue} `
       }
 
+      // Always create lazy Tabs
+      if (childComponent.type=='Tabs') {
+        propsContent+=" isLazy "
+      }
       // Set component id
       propsContent += ` id='${childComponent.id}' `
       // Set reload function
@@ -228,7 +238,6 @@ const buildBlock = ({
         propsContent += ` insideGroup `
       }
       if (isDynamicComponent(components, childComponent)) {
-        propsContent += ` backend='/'`
           let tp = null
             try {
               tp =getDataProviderDataType(
@@ -418,12 +427,12 @@ const buildBlock = ({
           }
         })
 
+      // Access to fire clear and clear notification
+      propsContent += " fireClearComponents={fireClearComponents} "
+      propsContent += " clearComponents={clearComponents} "
       if (isFilterComponent(childComponent, components)) {
         const stateName = childComponent.id.replace(/^comp-/, '')
         propsContent += ` onChange={ev => set${stateName}(ev.target.value)}`
-      }
-      if (childComponent.type === 'Timer') {
-        propsContent += ` backend='/'`
       }
 
       if (childComponent.type === 'Input' && childComponent.props.type=='password') {
@@ -610,6 +619,10 @@ const buildHooks = (components: IComponents) => {
   const reload = () => {
     setRefresh(!refresh)
   }
+
+  /** Clear copponents notifications  */
+  const [clearComponents, setClearComponents]=useState([])
+  const fireClearComponents = component_ids => setClearComponents(component_ids)
 
   useEffect(() => {
     if (!process.browser) { return }

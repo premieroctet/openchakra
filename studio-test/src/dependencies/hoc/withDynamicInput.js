@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import lodash from 'lodash'
 import {InputGroup, InputRightElement} from '@chakra-ui/react'
 import {AiOutlineEye, AiOutlineEyeInvisible} from 'react-icons/ai'
@@ -7,7 +7,7 @@ import useDebounce from '../hooks/useDebounce.hook'
 
 const withDynamicInput = Component => {
 
-  const Internal = ({ dataSource, dataSourceId, noautosave, readOnly, context, backend, suggestions, setComponentValue, displayEye, ...props }) => {
+  const Internal = ({ dataSource, dataSourceId, noautosave, readOnly, context, suggestions, setComponentValue, displayEye, clearComponents, ...props }) => {
 
     let keptValue = (dataSourceId && lodash.get(dataSource, props.attribute)) || props.value
 
@@ -30,6 +30,12 @@ const withDynamicInput = Component => {
       }
     }
 
+    useEffect(() => {
+      if (!!props.model && clearComponents.includes(props.id)) {
+        console.log(`Clear ${props.id} contents`)
+        setInternalDataValue('')
+      }
+    }, [clearComponents])
     const [internalDataValue, setInternalDataValue] = useState(keptValue)
     const [visibilityType, setVisibilityType]= useState('password')
 
@@ -46,12 +52,7 @@ const withDynamicInput = Component => {
             context: dataSource?._id,
             value: val,
             props,
-            backend,
           })
-            .then(() => {
-              setInternalDataValue(val)
-              props.reload()
-            }) //props.reload())
             .catch(err => {
               console.error(err)
               if (!(err.response?.status==401) && err.code!='ERR_NETWORK') {
@@ -75,7 +76,7 @@ const withDynamicInput = Component => {
         setVisibilityType(visibilityType=='password' ? 'text' : 'password')
       }
 
-      const parentProps=lodash.pick(props, 'id dataSource name dataSourceId value level model attribute noautosave readOnly context backend setComponentValue'.split(' '))
+      const parentProps=lodash.pick(props, 'id dataSource name dataSourceId value level model attribute noautosave readOnly context setComponentValue'.split(' '))
 
       return displayEye ? (
         <InputGroup {...parentProps}>
@@ -107,7 +108,7 @@ const withDynamicInput = Component => {
     return displayEye ?
       withDisplayEye(Component)
       :
-      <Component {...props} dataSource={dataSource} onChange={onChange}/>
+      <Component {...props} dataSource={dataSource} onChange={onChange} onBlur={props.reload} />
   }
 
   return Internal

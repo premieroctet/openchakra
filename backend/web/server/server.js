@@ -25,6 +25,7 @@ const {
   isDevelopment,
   isDevelopment_nossl,
   config,
+  getDataModel,
 } = require('../config/config')
 const {HTTP_CODES, parseError} = require('./utils/errors')
 require('./models/Answer')
@@ -138,7 +139,7 @@ const nextApp =
 const routes = require('./routes')
 const routerHandler = routes.getRequestHandler(nextApp)
 const studio = require('./routes/api/studio')
-const withings = require('./routes/api/withings')
+const withings = getDataModel()=='dekuple' ? require('./routes/api/withings') : null
 const app = express()
 const {serverContextFromRequest} = require('./utils/serverContext')
 
@@ -194,9 +195,8 @@ checkConfig()
     app.use(cors())
 
     // Check hostname is valid
-    app.use('/testping', (req, res) => res.json(RANDOM_ID))
     app.use('/myAlfred/api/studio', studio)
-    app.use('/myAlfred/api/withings', withings)
+    !!withings && app.use('/myAlfred/api/withings', withings)
 
     // const port = process.env.PORT || 5000;
     const rootPath = path.join(__dirname, '/..')
@@ -245,18 +245,6 @@ checkConfig()
     httpsServer.listen(getPort(), () => {
       console.log(`${config.appName} running on ${getHostUrl()}`)
       console.log(`Checking correct hostname`)
-      !isDevelopment() && axios
-        .get(new URL('/testping', getHostUrl()).toString())
-        .then(({data}) => {
-          if (data != RANDOM_ID) {
-            throw new Error(`Host ${getHostUrl()} is wrong`)
-          }
-          console.log(`Checked correct hostname OK`)
-        })
-        .catch(err => {
-          console.error(err)
-          process.exit(1)
-        })
     })
   })
   .catch(err => {

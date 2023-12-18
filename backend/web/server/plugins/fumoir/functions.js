@@ -173,7 +173,7 @@ const payEvent=({context, redirect, color}, user) => {
     })
     .then(([ev, payments]) => {
       if (!ev) { return false }
-      return getEventGuestsCount(user, null, ev)
+      return getEventGuestsCount(user._id, null, ev)
         .then(guests_count => {
           console.log(`guests count:${guests_count}`)
           const remainingToPay=ev.price*guests_count-lodash(payments).map('amount').sum()
@@ -577,27 +577,27 @@ declareVirtualField({model: 'invitation', field: 'paid_str', instance: 'String'}
 // TODO :fix declareVirtualField to allow single ref
 declareVirtualField({model: 'invitation', field: 'event', instance: 'String'})
 
-const getEventGuests = (user, params, data) => {
+const getEventGuests = (userId, params, data) => {
   return Event.findById(data._id)
     .populate({path: 'invitations', populate: 'member guest'})
     .then(event => {
       const m=event.invitations
-        .find(m => idEqual(m.member._id, user._id) && !!m.guest)
+        .find(m => idEqual(m.member._id, userId) && !!m.guest)
       return m ? [m.guest]:[]
     })
 }
 
 declareComputedField('event', 'guests', getEventGuests)
 
-const getEventRegistrationStatus = (user, params, data) => {
-  return Event.exists({_id: data._id, 'invitations.member': user._id})
+const getEventRegistrationStatus = (userId, params, data) => {
+  return Event.exists({_id: data._id, 'invitations.member': userId})
     .then(exists => exists ? 'Vous êtes inscrit': '')
 }
 
 declareComputedField('event', 'registration_status', getEventRegistrationStatus)
 
-const getEventGuestsCount = (user, params, data) => {
-  return getEventGuests(user, params, data)
+const getEventGuestsCount = (userId, params, data) => {
+  return getEventGuests(userId, params, data)
     .then(guests => {
       return guests.length
     })
@@ -609,7 +609,7 @@ const setEventGuestsCount = ({id, attribute, value, user}) => {
     if (value>event.max_guests_per_member) {
       throw new BadRequestError(`Vous ne pouvez inviter plus de ${event.max_guests_per_member} personnes`)
     }
-    return getEventGuests(user, null, {_id: id})
+    return getEventGuests(user._id, null, {_id: id})
       .then(guests => {
         if (guests.length>value) {
           throw new BadRequestError(`Vous avez déjà envoyé ${guests.length} invitations`)
@@ -634,7 +634,7 @@ const setEventGuestsCount = ({id, attribute, value, user}) => {
 
 declareComputedField('event', 'guests_count', getEventGuestsCount, setEventGuestsCount)
 
-const getInvitationPaidStr = (user, params, data) => {
+const getInvitationPaidStr = (userId, params, data) => {
   return Invitation.findById(data._id).populate([
     {path: 'member'},
     {path: 'guest'},

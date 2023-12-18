@@ -7,6 +7,7 @@ const {
   APPOINTMENT_PAST,
   APPOINTMENT_TO_COME
 } = require('../consts')
+const lodash=require('lodash')
 
 const Schema = mongoose.Schema
 
@@ -31,7 +32,7 @@ const AppointmentSchema = new Schema({
     required: [true, 'La prestation est obligatoire'],
   },
   smartagenda_id: {
-    type: Number,
+    type: String,
   },
   visio_url: {
     type: String,
@@ -63,7 +64,8 @@ const AppointmentSchema = new Schema({
 }, schemaOptions)
 
 AppointmentSchema.virtual('order').get(function() {
-  return this.coaching?.appointments?.findIndex(app => idEqual(app._id, this._id))+1
+  return lodash.sortBy(this.coaching?.appointments||[], 'start_date')
+   .findIndex(app => idEqual(app._id, this._id))+1
 })
 
 AppointmentSchema.virtual('status').get(function() {

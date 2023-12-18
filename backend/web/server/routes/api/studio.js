@@ -446,6 +446,7 @@ router.post('/:model', passport.authenticate('cookie', {session: false}), (req, 
     return res.status(HTTP_CODES.BAD_REQUEST).json(`Model is required`)
   }
 
+  console.log(`POST ${model} ${JSON.stringify(params)}`)
   return callPreCreateData({model, params, user})
     .then(({model, params}) => {
       return mongoose.connection.models[model]
@@ -489,10 +490,11 @@ const loadFromRequest = (req, res) => {
 
   const logMsg=`GET ${model}/${id} ${fields} ...${JSON.stringify(params)}`
   console.log(logMsg)
+  console.time(logMsg)
 
   return loadFromDb({model, fields, id, user, params})
     .then(data => {
-      console.log(`${logMsg}: data sent`)
+      console.timeEnd(logMsg)
       res.json(data)
     })
 }

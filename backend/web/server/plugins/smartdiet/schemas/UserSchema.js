@@ -7,6 +7,8 @@ const {
   DIET_REGISTRATION_STATUS_TO_QUALIFY,
   EVENT_IND_CHALLENGE,
   GENDER,
+  MAX_HEIGHT,
+  MIN_HEIGHT,
   NO_CREDIT_AVAILABLE,
   REGISTRATION_WARNING,
   ROLES,
@@ -31,6 +33,7 @@ const { ForbiddenError } = require('../../../utils/errors')
 const {schemaOptions} = require('../../../utils/schemas')
 const lodash=require('lodash')
 const bcrypt = require('bcryptjs')
+const IBANValidator = require('iban-validator-js')
 
 const Schema = mongoose.Schema
 
@@ -64,8 +67,16 @@ const UserSchema = new Schema({
     //required: [function() { return this.role==ROLE_CUSTOMER }, 'La date de naissance est obligatoire'],
     required: false,
   },
+  // Height in centimeters
   height: {
     type: Number,
+    validate: {
+      validator: function(value) {
+        // Check if the value is provided before applying the minimum check
+        return lodash.isNil(value) || lodash.inRange(value, MIN_HEIGHT, MAX_HEIGHT+1)
+      },
+      message: `Taille attendue entre ${MIN_HEIGHT} et ${MAX_HEIGHT} cm`,
+    },
     required: false,
   },
   pseudo: {
@@ -90,7 +101,7 @@ const UserSchema = new Schema({
   password: {
     type: String,
     required: [true, 'Le mot de passe est obligatoire'],
-    set: pass => bcrypt.hashSync(pass, 10),
+    set: pass => pass ? bcrypt.hashSync(pass, 10) : null,
   },
   role: {
     type: String,
@@ -232,6 +243,22 @@ const UserSchema = new Schema({
     type: String,
     required: false,
   },
+  // Raison sociale pour les diets
+  company_name: {
+    type: String,
+    required: false,
+  },
+  // IBAN pour les diets
+  iban: {
+    type: String,
+    validate: [v => !v || IBANValidator.isValid(v), "L'IBAN est invalide"],
+    required: false,
+  },
+  // RIB pour les diets
+  rib: {
+    type: String,
+    required: false,
+  },
   // TODO: handle multiple enum declaration
   /**
   activities: [{
@@ -331,6 +358,7 @@ UserSchema.virtual("available_groups", {localField: 'id', foreignField: 'id'}).g
   return lodash(this.company?.groups)
     .filter(g => shareTargets(this, g))
     .differenceBy(this.registered_groups, g => g._id.toString())
+    .value()
 })
 
 UserSchema.virtual("registered_groups", {
@@ -383,12 +411,16 @@ UserSchema.virtual("_all_individual_challenges", {
 
 // Ind. challenge registered still not failed or passed
 UserSchema.virtual('current_individual_challenge', {localField: 'id', foreignField: 'id'}).get(function() {
+  if (!this._all_individual_challenges?.length) {
+    return null
+  }
   const exclude=[
     ...(this.passed_events?.map(s => s._id)||[]),
+    ...(this.routine_events?.map(s => s._id)||[]),
     ...(this.failed_events?.map(s => s._id)||[]),
   ]
   return (this._all_individual_challenges||[])
-    .filter(i => this.registered_events.some(r => idEqual(r.event._id, i._id)))
+    .filter(i => this.registered_events.some(r => idEqual(r.event?._id, i._id)))
     .find(i => !exclude.some(e => idEqual(e._id, i._id)))
 })
 
@@ -406,6 +438,7 @@ UserSchema.virtual('individual_challenges', {localField: 'id', foreignField: 'id
     .filter(c => !exclude.some(excl => idEqual(excl._id, c._id)))
     .filter(c => !currentChallenge || idEqual(currentChallenge._id, c._id))
     .orderBy(['update_date'], ['asc'])
+    .value()
 })
 
 // User's ind. challenges are all expect the skipped ones and the passed ones

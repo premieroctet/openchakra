@@ -77,7 +77,7 @@ const isActionAllowed = ({action, dataId, user}) => {
     ])
       .then(([ev, payments]) => {
         if (!ev) { return false }
-        return getEventGuestsCount(user, {}, {_id: dataId})
+        return getEventGuestsCount(user._id, {}, {_id: dataId})
           .then(guests_count => {
             const already_paid=lodash(payments).map('amount').sum()
             const reminingToPay=ev.price*guests_count-already_paid
@@ -123,7 +123,7 @@ const isActionAllowed = ({action, dataId, user}) => {
         }
         if (event) {
           if (event.people_count>=event.max_people) { return false}
-          return getEventGuests(user, null, event)
+          return getEventGuests(user._id, null, event)
             .then(guests => guests.length==0)
         }
         if (booking) {

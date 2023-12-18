@@ -1,6 +1,6 @@
+const cron = require('../../utils/cron')
 const lodash=require('lodash')
 const moment = require('moment')
-const cron = require('node-cron')
 const Measure = require('../../models/Measure')
 const Appointment = require('../../models/Appointment')
 const Reminder = require('../../models/Reminder')

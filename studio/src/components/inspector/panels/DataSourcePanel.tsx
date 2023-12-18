@@ -44,6 +44,7 @@ const DataSourcePanel: React.FC = () => {
   const series_attributes = lodash.range(5).map(idx => usePropsSelector(`series_${idx}_attribute`))
   const series_labels = lodash.range(5).map(idx => usePropsSelector(`series_${idx}_label`))
   const hidePagination = usePropsSelector('hidePagination')
+  const scrollToday = usePropsSelector('scrollToday')
   const shuffle = usePropsSelector('shuffle')
   const radioGroup = usePropsSelector('radioGroup')
   const [providers, setProviders] = useState<IComponent[]>([])
@@ -325,6 +326,16 @@ const DataSourcePanel: React.FC = () => {
             id="hidePagination"
             name="hidePagination"
             isChecked={hidePagination}
+            onChange={onCheckboxChange}
+          ></Checkbox>
+        </FormControl>
+        )}
+        {activeComponent ?.type=='Tabs' && (
+        <FormControl htmlFor="scrollToday" label='Scroll today'>
+          <Checkbox
+            id="scrollToday"
+            name="scrollToday"
+            isChecked={scrollToday}
             onChange={onCheckboxChange}
           ></Checkbox>
         </FormControl>
