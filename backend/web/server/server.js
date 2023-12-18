@@ -247,7 +247,7 @@ checkConfig()
 
     httpsServer.listen(getPort(), () => {
       console.log(`${config.appName} running on ${getHostUrl()}`)
-      console.log(`Checking correct hostname`)
+      console.log(`Server started OK`)
     })
   })
   .catch(err => {
