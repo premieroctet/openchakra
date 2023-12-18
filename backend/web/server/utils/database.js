@@ -391,7 +391,7 @@ const retainRequiredFields = ({data, fields}) => {
 
 const addComputedFields = (
   fields,
-  user,
+  userId,
   queryParams,
   data,
   model,
@@ -403,8 +403,8 @@ const addComputedFields = (
   }
   const newPrefix = `${prefix}/${model}/${data._id}`
 
-  return (model=='user' ? mongoose.models.user.findById(data._id) : Promise.resolve(user))
-    .then(newUser => {
+  return Promise.resolve(model=='user' ? data._id : userId)
+    .then(newUserId => {
       // Compute direct attributes
       // Handle references => sub
       const refAttributes = getModelAttributes(model).filter(
@@ -421,7 +421,7 @@ const addComputedFields = (
           children.map(child =>
             addComputedFields(
               requiredSubFields,
-              newUser,
+              newUserId,
               queryParams,
               child,
               attParams.type,
@@ -437,7 +437,7 @@ const addComputedFields = (
 
         return Promise.allSettled(
           Object.keys(requiredCompFields).map(f =>
-            requiredCompFields[f](newUser, queryParams, data).then(res => {data[f] = res})
+            requiredCompFields[f](newUserId, queryParams, data).then(res => {data[f] = res})
           ),
       )})
       .then(() => data)
@@ -674,15 +674,12 @@ const loadFromDb = ({model, fields, id, user, params}) => {
         return data
       }
       return buildQuery(model, id, fields)
+        // Lean, flattenMaps:true forces recursion
+        //.lean({virtuals: true, flattenMaps: true})
+        .then(data => data.map(d => d.toObject()))
         .then(data => {
-          // Lean all objects
-          data=data.map(d => d.toObject({virtuals: true}))
-          // Force to plain object
-          data=JSON.parse(JSON.stringify(data))
-          // Remove extra virtuals
-          //data = retainRequiredFields({data, fields})
           if (id && data.length == 0) { throw new NotFoundError(`Can't find ${model}:${id}`) }
-          return Promise.all(data.map(d => addComputedFields(fields,user, params, d, model)))
+          return Promise.all(data.map(d => addComputedFields(fields,user._id, params, d, model)))
         })
         .then(data => callFilterDataUser({model, data, id, user}))
         //.then(data =>  retainRequiredFields({data, fields}))

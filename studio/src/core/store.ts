@@ -36,7 +36,7 @@ const thresholdCompressor =createTransform(
    (inboundState, key) => {
      const rawLength=JSON.stringify(inboundState).length
      if (rawLength>COMPRESS_THRESHOLD) {
-       console.log(`Storage length is ${rawLength}, compressing`)
+       console.log(`Storage length is ${rawLength}>${COMPRESS_THRESHOLD}, compressing`)
        return compressor.in(inboundState, key)
      }
      console.log(`Storage length is ${rawLength}, not compressing`)

@@ -4,7 +4,7 @@ import React, {useState} from 'react'
 import lodash from 'lodash'
 
 const withDynamicCheckbox = Component => {
-  const Internal = ({ dataSource, insideGroup, context, backend, contextAttribute, ...props }) => {
+  const Internal = ({ dataSource, insideGroup, context, contextAttribute, ...props }) => {
 
     const initialValue = lodash.get(dataSource, props.attribute || '_id')
     const [value, setValue]=useState((!contextAttribute && initialValue) || false)
@@ -18,7 +18,7 @@ const withDynamicCheckbox = Component => {
       const action=contextAttribute ?
         ACTIONS.addToContext({value: dataSource._id, context, append: !!ev.target.checked, contextAttribute})
         :
-        ACTIONS.putValue({context: dataSource?._id, value: !!ev.target.checked, props,backend})
+        ACTIONS.putValue({context: dataSource?._id, value: !!ev.target.checked, props})
 
       action.then(() => props.reload())
     }

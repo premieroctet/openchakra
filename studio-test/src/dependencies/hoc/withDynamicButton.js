@@ -32,7 +32,6 @@ const withDynamicButton = Component => {
     const nextActionProps = props.nextActionProps
       ? JSON.parse(props.nextActionProps)
       : {}
-    const backend = props.backend
     let onClick = props.onClick
 
     const [actionAllowed, setActionAllowed]=useState(true)
@@ -53,11 +52,11 @@ const withDynamicButton = Component => {
           ...props,
           value: value,
           props: actionProps,
-          backend,
           context,
           dataModel,
           query,
           model: props.dataModel,
+          fireClear: props.fireClear,
         })
           .then(res => {
             if (MESSAGES[action]) {
@@ -70,18 +69,24 @@ const withDynamicButton = Component => {
               ...props,
               value: res,
               props: nextActionProps,
-              backend,
               context,
               dataModel,
               query,
               model: props.dataModel,
+              fireClear: props.fireClear,
               ...res,
             }
             // UGLY!! Shoud block ain thread until dialog closed
             return setTimeout(() => ACTIONS[nextAction](params), 1000)
           })
           .then(() => {
-            props.reload()
+            if (action!='openPage') {
+              console.log(`Action ${action} fires reload`)
+              props.reload()
+            }
+            else {
+              console.log(`Action ${action} does not fire reload`)
+            }
           })
           .catch(err => {
             console.error(err)

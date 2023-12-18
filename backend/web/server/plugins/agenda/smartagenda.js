@@ -10,7 +10,7 @@ INFOS:
 - appointments start & end dates must be rounded at 1/4h
 */
 const config = require('../../../config/config')
-const { isDevelopment } = require('../../../config/config')
+const cron = require('../../utils/cron')
 const {
   AVAILABILITIES_RANGE_DAYS,
   ROLE_EXTERNAL_DIET
@@ -24,7 +24,6 @@ const lodash=require('lodash')
 require('lodash.product')
 const moment=require('moment')
 require('moment-round')
-const cron=require('node-cron')
 const {runPromisesWithDelay}=require('../../utils/concurrency')
 
 const CONFIG={
@@ -218,7 +217,7 @@ Get availabilities for a diet and appontment type (i.e. prestation)
 As smartagenda only returns about one week of availabilities, call twice
 remaining_calls tells the number of recursive calls
 */
-const getAvailabilities = ({diet_id, from, to, appointment_type, remaining_calls=2}) => {
+const getAvailabilities = ({diet_id, from, to, appointment_type, remaining_calls=3}) => {
   if (!(diet_id && from && to && appointment_type)) {
     throw new Error(`diet_id/from/to/appointment_type are required`)
   }
@@ -257,7 +256,7 @@ const getAvailabilities = ({diet_id, from, to, appointment_type, remaining_calls
     }))
     .then(dispos => {
       const last_date=lodash.max(dispos.map(d => d.start_date))
-      if (remaining_calls==0) {
+      if (!last_date || remaining_calls==0) {
         return dispos
       }
       return getAvailabilities({diet_id, from:last_date, to, appointment_type,
@@ -265,6 +264,7 @@ const getAvailabilities = ({diet_id, from, to, appointment_type, remaining_calls
         .then(dispos2 => [...dispos, ...dispos2])
     })
     .catch(err => {
+      console.error(err)
       if (err?.response?.status==404) {
         return []
       }
@@ -273,7 +273,8 @@ const getAvailabilities = ({diet_id, from, to, appointment_type, remaining_calls
 }
 
 // Synchronize appointment types every minute
-!isDevelopment() && cron.schedule('0 * * * * *', () => {
+//!isDevelopment() && cron.schedule('0 * * * * *', () => {
+!config.isDevelopment() && cron.schedule('0 * * * * *', () => {
   console.log('Syncing appointment types from smartagenda')
   return Promise.all([getAppointmentTypes(), AppointmentType.find()])
     .then(([smartagenda_types, local_types]) => {
@@ -293,7 +294,7 @@ const getAvailabilities = ({diet_id, from, to, appointment_type, remaining_calls
 
 // Synchronize availabilities every minute
 // ENABLED UNTIL SMARTAGENDA WEBHOOK
-!isDevelopment() && cron.schedule('0 * * * * *', () => {
+!config.isDevelopment() && cron.schedule('0 * * * * *', () => {
   synchronizeAvailabilities()
 })
 
@@ -327,8 +328,11 @@ const synchronizeAvailabilities = () => {
           })
         })
         // Get smartagenda availabilities for eahc diet/appointment type
-        return runPromisesWithDelay(combinations.map(([diet, app_type]) => () => {
-          return getAvailabilities({diet_id: diet.smartagenda_id, from: start, to: end, appointment_type: app_type.smartagenda_id})
+        return lodash.isEmpty(combinations) ?
+          Promise.resolve([])
+          :
+          runPromisesWithDelay(combinations.map(([diet, app_type]) => () => {
+            return getAvailabilities({diet_id: diet.smartagenda_id, from: start, to: end, appointment_type: app_type.smartagenda_id})
             .then(avails => avails.map(avail => ({ user: diet._id, appointment_type: app_type._id, start_date: avail.start_date })))
         }), 0)
         .then(results => {
@@ -344,7 +348,7 @@ const synchronizeAvailabilities = () => {
 }
 
 
-const HOOK_CREATE='insert'
+const HOOK_INSERT='insert'
 const HOOK_UPDATE='update'
 const HOOK_DELETE='delete'
 
@@ -362,7 +366,7 @@ module.exports={
   upsertAccount,
   getAvailabilities,
   getAppointmentTypes,
-  HOOK_CREATE,
+  HOOK_INSERT,
   HOOK_DELETE,
   HOOK_UPDATE,
   synchronizeAvailabilities,

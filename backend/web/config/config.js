@@ -3,6 +3,8 @@ const myEnv = require('dotenv').config({path: path.resolve(__dirname, '../../../
 const dotenvExpand = require('dotenv-expand')
 dotenvExpand.expand(myEnv)
 const isEmpty = require('../server/validation/is-empty')
+const pm2=require('pm2')
+const lodash=require('lodash')
 
 const SITE_MODES = {
   MARKETPLACE: 'marketplace',
@@ -343,6 +345,53 @@ const bookingUrl = (serviceUserId, extraParams = {}) => {
   return url
 }
 
+let _isMaster=undefined
+
+const isMaster = () => {
+  return _isMaster
+}
+
+const setMasterStatus = () => {
+  if (!lodash.isNil(_isMaster)) {
+    console.log(`Master already set, leaving`)
+    return
+  }
+  // Connect to the local PM2 instance
+  pm2.connect(function (err) {
+    if (err) {
+      console.log(`No PM2: I'm the master`);
+      _isMaster=true
+      return
+    }
+
+    // Get the list of processes
+    pm2.list(function (err, list) {
+      if (err) {
+        console.log(`No PM2 list: I'm the master`);
+        _isMaster=true
+        pm2.disconnect()
+        return
+      }
+
+      const processName=`BACKEND-${process.env.DATA_MODEL}-${process.env.BACKEND_PORT}`.toUpperCase()
+      const all_pids=lodash(list).filter(p => p.name==processName).map(p => p.pid)
+      const lowest_group_pid=all_pids.min()
+      console.log('master, my pid', process.pid, 'all pids', JSON.stringify(all_pids.value()), 'min pid', lowest_group_pid)
+      if (!lowest_group_pid) {
+        console.log(`No PM2 process ${processName}:I'm the master`)
+        _isMaster=true
+        return
+      }
+      _isMaster=process.pid==lowest_group_pid
+      console.log(`PM2 processes found: I'm ${_isMaster ? '': 'not ' }the master ()`)
+      pm2.disconnect();
+    });
+  })
+}
+
+// Delay master detection to ensure all PM2 processes have started
+setTimeout(setMasterStatus, 1000)
+
 // Public API
 module.exports = {
   databaseName: databaseName,
@@ -389,4 +438,5 @@ module.exports = {
   getSmartAgendaConfig,
   getMailProvider,
   getMailjetConfig,
+  isMaster,
 }

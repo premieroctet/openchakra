@@ -76,7 +76,7 @@ addAction('smartdiet_shift_challenge', smartdietShiftChallenge)
 const defaultRegister=ACTIONS.register
 
 const register = props => {
-  // No compay => set the particular one
+    // No compay => set the particular one
   if (!props.role) {
     props.role=ROLE_CUSTOMER
     console.log(`Setting role ${JSON.stringify(props.role)}`)
@@ -85,7 +85,7 @@ const register = props => {
   if (!props.role || props.role==ROLE_CUSTOMER) {
     return getRegisterCompany(props)
     .then(integrityProps => {
-      if (!integrityProps.company) {
+            if (!integrityProps.company) {
         return Company.findOne({name: PARTICULAR_COMPANY_NAME})
         .then(company => ({...integrityProps, company: company._id}))
       }
@@ -93,7 +93,7 @@ const register = props => {
     })
     .then(extraProps => defaultRegister({...props, ...extraProps}))
   }
-  return defaultRegister({...props})
+    return defaultRegister({...props})
 }
 addAction('register', register)
 
@@ -246,8 +246,8 @@ addAction('deactivateAccount', deactivateAccount)
 // Override sendMessage for notification
 const orgSendMessage=ACTIONS.sendMessage
 
-const sendMessageOverride= ({destinee, contents, attachment}, sender) => {
-  return orgSendMessage({destinee, contents, attachment}, sender)
+const sendMessageOverride= (params, sender) => {
+  return orgSendMessage(params, sender)
     .then(message => {
       sendNewMessage({user: message.receiver})
       return message
@@ -256,9 +256,12 @@ const sendMessageOverride= ({destinee, contents, attachment}, sender) => {
 addAction('sendMessage', sendMessageOverride)
 
 const isActionAllowed = ({action, dataId, user}) => {
-  // TODO: why can we get "undefined" ??
-  if (action=='openPage') {
+  // Handle fats actions
+  if (action=='openPage' || action=='previous') {
     return Promise.resolve(true)
+  }
+  if (action=='logout') {
+    return Promise.resolve(!!user)
   }
   const promise=dataId && dataId!="undefined" ? getModel(dataId) : Promise.resolve(null)
   return promise

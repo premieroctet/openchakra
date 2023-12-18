@@ -1,4 +1,22 @@
 const {
+  declareComputedField,
+  declareEnumField,
+  declareVirtualField,
+  differenceSet,
+  getModel,
+  idEqual,
+  loadFromDb,
+  setFilterDataUser,
+  setImportDataFunction,
+  setIntersects,
+  setPostCreateData,
+  setPostDeleteData,
+  setPostPutData,
+  setPreCreateData,
+  setPreprocessGet,
+  simpleCloneModel,
+} = require('../../utils/database')
+const {
   sendDietPreRegister2Admin,
   sendDietPreRegister2Diet,
   sendInactivity15,
@@ -18,6 +36,12 @@ const {
 } = require('./mailing')
 const { formatDateTime } = require('../../../utils/text')
 const Webinar = require('../../models/Webinar')
+require('../../models/Target')
+require('../../models/UserQuizz')
+require('../../models/Key')
+require('../../models/Association')
+require('../../models/Item')
+require('../../models/Question')
 const { updateWorkflows } = require('./workflows')
 const {
   ACTIVITY,
@@ -68,11 +92,14 @@ const {
   TARGET_COACHING,
   TARGET_SPECIFICITY,
   TARGET_TYPE,
-  UNIT
+  UNIT,
+  MENU_PEOPLE_COUNT,
+  convertQuantity
 } = require('./consts')
 const {
   HOOK_DELETE,
   HOOK_INSERT,
+  HOOK_UPDATE,
   createAppointment,
   deleteAppointment,
   getAccount,
@@ -86,26 +113,8 @@ const Category = require('../../models/Category')
 const { delayPromise } = require('../../utils/concurrency')
 const {
   getSmartAgendaConfig,
-  isDevelopment
+  isDevelopment,
 } = require('../../../config/config')
-const {
-  declareComputedField,
-  declareEnumField,
-  declareVirtualField,
-  differenceSet,
-  getModel,
-  idEqual,
-  loadFromDb,
-  setFilterDataUser,
-  setImportDataFunction,
-  setIntersects,
-  setPostCreateData,
-  setPostDeleteData,
-  setPostPutData,
-  setPreCreateData,
-  setPreprocessGet,
-  simpleCloneModel,
-} = require('../../utils/database')
 const AppointmentType = require('../../models/AppointmentType')
 require('../../models/LogbookDay')
 const { importLeads } = require('./leads')
@@ -148,8 +157,7 @@ const Coaching = require('../../models/Coaching')
 const Appointment = require('../../models/Appointment')
 const Message = require('../../models/Message')
 const Lead = require('../../models/Lead')
-const cron=require('node-cron')
-
+const cron=require('../../utils/cron')
 
 const filterDataUser = ({model, data, id, user}) => {
   if (model=='offer' && !id) {
@@ -191,31 +199,6 @@ const preprocessGet = ({model, fields, id, user, params}) => {
       .then(stats => ({model, fields, id, data:[stats]}))
 
   }
-  if (model=='menu' && params?.people_count) {
-    return loadFromDb({model:'menu', id, fields:[...(fields||[]), 'people_count']})
-      .then(menus => {
-        const people_count=parseInt(params.people_count)
-        const ratio=people_count/2
-        const computed=menus.map(m => {
-          return {
-            ...m,
-            people_count,
-            shopping_list: m.shopping_list.map(i => ({...i, quantity: i.quantity*ratio})),
-            recipes: m.recipes.map(recipe => ({
-              ...recipe,
-              recipe: {
-                ...recipe.recipe,
-                ingredients: recipe.recipe.ingredients.map(ing => ({
-                  ...ing,
-                  quantity: ing.quantity*ratio,
-                }))
-              }
-            }))
-          }
-        })
-        return ({model, fields, id, data:computed})
-      })
-  }
   if (model=='conversation') {
     const getPartner= (m, user) => {
       return idEqual(m.sender._id, user._id) ? m.receiver : m.sender
@@ -255,7 +238,7 @@ setPreprocessGet(preprocessGet)
 
 const preCreate = ({model, params, user}) => {
   if (['diploma', 'comment', 'measure', 'content', 'collectiveChallenge', 'individualChallenge', 'webinar', 'menu'].includes(model)) {
-    params.user=user
+    params.user=params?.user || user
   }
   if (['message'].includes(model)) {
     params.sender=user
@@ -289,7 +272,10 @@ const preCreate = ({model, params, user}) => {
     else { //CUSTOMER
       customer_id=user._id
     }
-    return loadFromDb({model: 'user', id: customer_id, fields:['latest_coachings.appointments', 'latest_coachings.remaining_credits','latest_coachings.appointment_type']})
+    return loadFromDb({model: 'user', id: customer_id,
+      fields:['latest_coachings.appointments', 'latest_coachings.remaining_credits','latest_coachings.appointment_type'],
+      user
+    })
       .then(([usr]) => {
         // Check remaining credits
         const latest_coaching=usr.latest_coachings[0]
@@ -638,13 +624,14 @@ declareVirtualField({model: 'content', field: 'search_text', instance: 'String',
 
 declareVirtualField({model: 'dietComment', field: '_defined_notes', instance: 'Number', multiple: 'true'})
 
-const getEventStatus = (user, params, data) => {
-  return getModel(data._id, ['event', 'menu', 'webinar', 'individualChallenge', 'collectiveChallenge'])
-   .then(modelName => {
-     console.log(data._id, modelName)
+const getEventStatus = (userId, params, data) => {
+  return Promise.all([
+    User.findById(userId, {registered_events:1, passed_events:1, failed_events:1, skipped_events:1, routine_events:1}),
+    getModel(data._id, ['event', 'menu', 'webinar', 'individualChallenge', 'collectiveChallenge'])
+  ])
+   .then(([user, modelName]) => {
      if (modelName=='individualChallenge') {
        // Past if failed or passed or skipped or routine
-       console.log(JSON.stringify(user, null, 2))
        if (['passed_events','failed_events', 'skipped_events', 'routine_events'].some(att => {
          return user[att].some(e => idEqual(e._d, data._id))
        })) {
@@ -728,7 +715,7 @@ declareVirtualField({model: 'menu', field: 'recipes', instance: 'Array',
     options: {ref: 'menuRecipe'}},
 })
 declareVirtualField({model: 'menu', field: 'shopping_list', instance: 'Array',
-  requires: 'recipes.recipe.ingredients.ingredient',
+  requires: 'recipes.recipe.ingredients.ingredient.name',
   multiple: true,
   caster: {
     instance: 'ObjectID',
@@ -851,7 +838,7 @@ declareVirtualField({model: 'coaching', field: 'appointments', instance: 'Array'
 declareVirtualField({model: 'coaching', field: 'remaining_credits', instance: 'Number',
   requires: 'user.offer.coaching_credit,spent_credits,user.company.offers.coaching_credit,user.role'}
 )
-declareVirtualField({model: 'coaching', field: 'spent_credits', instance: 'Number', requires: 'appointments'})
+declareVirtualField({model: 'coaching', field: 'spent_credits', instance: 'Number'})
 declareVirtualField({model: 'coaching', field: 'questions', instance: 'Array', multiple: true,
   caster: {
     instance: 'ObjectID',
@@ -891,14 +878,13 @@ declareVirtualField({model: 'coaching', field: 'progress', instance: 'Array', mu
   },
 })
 declareVirtualField({model: 'coaching', field: 'all_logbooks', instance: 'Array', multiple: true,
-  requires: 'appointments.status',
   caster: {
     instance: 'ObjectID',
     options: {ref: 'coachingLogbook'}
   },
 })
 declareVirtualField({model: 'coaching', field: 'logbooks', instance: 'Array', multiple: true,
-  requires: 'appointments.status,all_logbooks.logbook.questions.quizz_question,all_logbooks.logbook.questions.multiple_answers,all_logbooks.logbook.questions.answer_status,all_logbooks.logbook.questions.answer_message',
+    requires: 'all_logbooks.logbook.questions.multiple_answers,all_logbooks.logbook.questions.answer_status',
   caster: {
     instance: 'ObjectID',
     options: {ref: 'logbookDay'}
@@ -1027,8 +1013,8 @@ declareVirtualField({model: 'lead', field: 'company',
     options: {ref: 'company'}},
 })
 
-const getDataLiked = (user, params, data) => {
-  const liked=data?.likes?.some(l => idEqual(l._id, user?._id))
+const getDataLiked = (userId, params, data) => {
+  const liked=data?.likes?.some(l => idEqual(l._id, userId))
   return Promise.resolve(liked)
 }
 
@@ -1046,8 +1032,8 @@ const setDataLiked= ({id, attribute, value, user}) => {
     })
 }
 
-const getDataPinned = (user, params, data) => {
-  const pinned=data?.pins?.some(l => idEqual(l._id, user._id))
+const getDataPinned = (userId, params, data) => {
+  const pinned=data?.pins?.some(l => idEqual(l._id, userId))
   return Promise.resolve(pinned)
 }
 
@@ -1065,31 +1051,41 @@ const setDataPinned = ({id, attribute, value, user}) => {
     })
 }
 
-const getPinnedMessages = (user, params, data) => {
-  return Promise.resolve(data.messages?.filter(m => m.pins?.some(p => idEqual(p._id, user._id))))
+const getPinnedMessages = (userId, params, data) => {
+  return Promise.resolve(data.messages?.filter(m => m.pins?.some(p => idEqual(p._id, userId))))
 }
 
-const getMenuShoppingList = (user, params, data) => {
+const getMenuShoppingList = (userId, params, data) => {
+  console.log(params)
+  const people_count=parseInt(params.people_count) || MENU_PEOPLE_COUNT
+  const ratio=people_count/MENU_PEOPLE_COUNT
   const ingredients=lodash.flatten(data?.recipes.map(r => r.recipe?.ingredients).filter(v => !!v))
   const ingredientsGroup=lodash.groupBy(ingredients, i => i.ingredient._id)
   const result=lodash(ingredientsGroup)
-    .mapValues(ingrs=>({ingredient:ingrs[0].ingredient, quantity: lodash.sumBy(ingrs, 'quantity')}))
+    .mapValues(ingrs=>({ingredient:ingrs[0].ingredient, quantity: lodash.sumBy(ingrs, 'quantity')*ratio}))
     .values()
+    .map(({ingredient, quantity}) => {
+      const [newQuantity, newUunit]=convertQuantity(quantity, ingredient.unit)
+      return ({
+        ingredient: {...ingredient, unit:newUunit},
+        quantity: parseInt(newQuantity*100)/100,
+      })
+    })
     .value()
   return Promise.resolve(result)
 }
 
-const getUserKeySpoonsStr = (user, params, data) => {
-  return getUserKeySpoons(user, params, data)
+const getUserKeySpoonsStr = (userId, params, data) => {
+  return getUserKeySpoons(userId, params, data)
     .then(count => {
       return  `${count} cuillère${count > 1 ? 's' :''}`
     })
 }
 
-const getUserSurveysProgress = (user, params, data) => {
+const getUserSurveysProgress = (userId, params, data) => {
   // Get max possible answer
   const maxAnswer=lodash.maxBy(Object.keys(SURVEY_ANSWER), v => parseInt(v))
-  return UserSurvey.find({user: user})
+  return UserSurvey.find({user: userId})
     .sort({[CREATED_AT_ATTRIBUTE]: -1})
     .populate({path: 'questions', populate:{path: 'question'}})
     .lean({virtuals: true})
@@ -1106,7 +1102,7 @@ const getUserSurveysProgress = (user, params, data) => {
     .catch(err => console.error(err))
 }
 
-const getUserContents = (user, params, data) => {
+const getUserContents = (userId, params, data) => {
   const user_targets=lodash([data.objective_targets,data.health_targets,
     data.activity_target,data.specificity_targets,data.home_target])
     .flatten()
@@ -1115,16 +1111,16 @@ const getUserContents = (user, params, data) => {
   return Promise.resolve(data._all_contents.filter(c => c.default || setIntersects(c.targets, user_targets)))
 }
 
-const getUserPassedChallenges = (user, params, data) => {
-  return User.findById(user._id, 'passed_events')
+const getUserPassedChallenges = (userId, params, data) => {
+  return User.findById(userId, 'passed_events')
     .populate({path: 'passed_events', match:{"__t": "individualChallenge", key: data._id}})
     .then(res => {
       return res.passed_events?.length || 0
     })
 }
 
-const getUserPassedWebinars = (user, params, data) => {
-  return User.findById(user._id, 'passed_events')
+const getUserPassedWebinars = (userId, params, data) => {
+  return User.findById(userId, 'passed_events')
     .populate({path: 'passed_events', match:{"__t": "webinar", key: data._id}})
     .then(res => {
       return res.passed_events?.length || 0
@@ -1396,14 +1392,18 @@ User.find({role: ROLE_CUSTOMER}).populate('coachings')
 
 // Ensure coaching logbooks consistency
 const logbooksConsistency = coaching_id => {
-  const filter= coaching_id ? {_id: coaching_id}:{}
   console.log(`Consistency for logbooks ${coaching_id || 'all'}`)
-  return Coaching.find(filter).populate([
+  const idFilter= coaching_id ? {_id: coaching_id}:{}
+  startDay=moment().add(-1, 'day')
+  const endDay=moment().add(1, 'days')
+  const logBooksFilter={$and:[{day: {$gt: startDay}}, {day: {$lt: endDay}}]}
+  console.log('between', startDay, 'and', endDay)
+  return Coaching.find(idFilter).populate([
     {path: 'appointments', populate: {path: 'logbooks', populate: {path: 'questions'}}},
-    {path: 'all_logbooks', populate: {path: 'logbook'}},
+    {path: 'all_logbooks', match: logBooksFilter, populate: {path: 'logbook'}},
     ])
     .then(coachings => {
-      return Promise.all(coachings.map(coaching => {
+      return Promise.all(coachings.map((coaching, idx) => {
         const getLogbooksForDay = date => {
           // Get the appontment juste before the date
           const previous_appt=lodash(coaching.appointments)
@@ -1416,9 +1416,12 @@ const logbooksConsistency = coaching_id => {
               return lodash.uniqBy(appt_logbooks, q => q._id.toString())
             })
         }
-        const startDay=moment().add(-6, 'day')
-        return Promise.all(lodash.range(7).map(day_idx => {
+        const diff=endDay.diff(startDay, 'days')
+        return Promise.all(lodash.range(diff).map(day_idx => {
           const day=moment(startDay).add(day_idx, 'day')
+          if (idx==0) {
+            console.log('for day', day)
+          }
           // expected quizz templates
           return getLogbooksForDay(day)
             .then(expectedQuizz => {
@@ -1498,8 +1501,23 @@ const getRegisterCompany = props => {
 
 setImportDataFunction({model: 'lead', fn: importLeads})
 
+// Ensure all spoon gains are defined
+ensureSpoonGains = () => {
+  return Object.keys(SPOON_SOURCE).map(source => {
+    return SpoonGain.exists({source})
+      .then(exists => {
+        if (!exists) {
+          console.log(`Create missing spoon gain ${source} 0`)
+          return SpoonGain.create({source, gain:0})
+        }
+      })
+  })
+}
+
+ensureSpoonGains()
+
 // Ensure logbooks consistency each morning
-cron.schedule('0 0 1 * * *', async() => {
+cron.schedule('0 */15 * * * *', async() => {
   logbooksConsistency()
     .then(() => console.log(`Logbooks consistency OK `))
     .catch(err => console.error(`Logbooks consistency error:${err}`))
@@ -1539,29 +1557,62 @@ cron.schedule('0 0 1 * * *', async() => {
 const agendaHookFn = received => {
   // Check validity
   console.log(`Received hook ${JSON.stringify(received)}`)
-  const {senderSite, action, objId, objClass, data:{presta_id, equipe_id, client_id}} = received
+  const {senderSite, action, objId, objClass, data:{obj:{presta_id, equipe_id, client_id, start_date_gmt, end_date_gmt, internet}}} = received
   const AGENDA_NAME=getSmartAgendaConfig().SMARTAGENDA_URL_PART
-  if (!AGENDA_NAME==senderSite) {
-    throw new BadRequestError(`Got senderSite ${senderSite}, expected ${AGENDA_NAME}`)
+  if (AGENDA_NAME==senderSite && internet=="O") {
+    return console.log(`Event coming for ourself: skipping`)
   }
   if (objClass!='pdo_events') {
     throw new BadRequestError(`Received hook for model ${objClass} but only pdo_events is handled`)
   }
   if (action==HOOK_DELETE) {
     console.log(`Deleting appointment smartagenda_id ${objId}`)
-    return Appointment.findOneAndDelete({smartagenda_id: parseInt(objId)})
+    return Appointment.remove({smartagenda_id: objId})
       .then(console.log)
       .catch(console.error)
   }
   if (action==HOOK_INSERT) {
+    console.log(`Inserting appointment smartagenda_id ${objId}`)
     return Promise.all([
-      User.find({smartagenda_id: equipe_id, role: ROLE_EXTERNAL_DIET}),
-      User.find({smartagenda_id: equipe_id, role: ROLE_CUSTOMER}),
-      AppointmentType.find({smartagenda_id: presta_id})
+      User.findOne({smartagenda_id: equipe_id, role: ROLE_EXTERNAL_DIET}),
+      User.findOne({smartagenda_id: client_id, role: ROLE_CUSTOMER}),
+      AppointmentType.findOne({smartagenda_id: presta_id}),
     ])
-    .then(([diet, user, appType]) => {
-      console.log(`Insert appointment with ${!!diet}, ${!!user}, ${appType}`)
-
+    .then(([diet, user, appointment_type]) => {
+      if (!(diet && user && appointment_type)) {
+         throw new Error(`Insert appointment missing info:${!!diet} ${!!user} ${!!appointment_type}`)
+       }
+      return Coaching.find({user}).sort({[CREATED_AT_ATTRIBUTE]:-1})
+        .then(coachings => {
+          if (lodash.isEmpty(coachings)) {
+            throw new Error(`No coaching defined`)
+          }
+          return Appointment.findOneAndUpdate(
+            {smartagenda_id: objId},
+            {
+              coaching: coachings[0],appointment_type, smartagenda_id: objId,
+              start_date: start_date_gmt, end_date: end_date_gmt
+            },
+            {upsert: true}
+          )
+        })
+    })
+  }
+  if (action==HOOK_UPDATE) {
+    console.log(`UPdateing appointment smartagenda_id ${objId}`)
+    return Promise.all([
+      Appointment.findOne({smartagenda_id: objId}),
+      AppointmentType.findOne({smartagenda_id: presta_id}),
+    ])
+    .then(([appointment, appointment_type]) => {
+      if (!(appointment && appointment_type))
+       {
+         throw new Error(`Update appointment missing info:${!!appointment} ${!!appointment_type}`)
+       }
+      return Appointment.updateOne(
+        {smartagenda_id: objId},
+        {appointment_type, start_date: start_date_gmt, end_date: end_date_gmt}
+      )
     })
   }
 }
