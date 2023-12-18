@@ -60,7 +60,7 @@ const CompanySchema = new Schema(
     },
     // Outbound call script
     script: {
-      type: Text,
+      type: String,
       required: false,
     }
   },
