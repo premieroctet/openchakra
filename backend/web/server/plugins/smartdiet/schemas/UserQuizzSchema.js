@@ -5,6 +5,7 @@ const {schemaOptions} = require('../../../utils/schemas')
 const Schema = mongoose.Schema
 
 const UserQuizzSchema = new Schema({
+  // Reference quizz
   quizz: {
     type: Schema.Types.ObjectId,
     ref: 'quizz',
