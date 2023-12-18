@@ -377,10 +377,10 @@ const retainRequiredFields = ({data, fields}) => {
       .value(),
   ]
   const pickedData = lodash.pick(data, thisLevelFields)
-const nextLevelFields = fields
+  const nextLevelFields = fields
     .filter(f => f.includes('.'))
     .map(f => f.split('.')[0])
-    nextLevelFields.forEach(f => {
+  nextLevelFields.forEach(f => {
     pickedData[f] = retainRequiredFields({
       data: lodash.get(data, f),
       fields: fields
@@ -710,11 +710,9 @@ const loadFromDb = ({model, fields, id, user, params}) => {
         .then(data => {console.time(`Filtering model ${model}`); return data})
         .then(data => callFilterDataUser({model, data, id, user}))
         .then(data => {console.timeEnd(`Filtering model ${model}`); return data})
-        /**
         .then(data => {console.time(`Retain fields ${model}`); return data})
         .then(data =>  retainRequiredFields({data, fields}))
         .then(data => {console.timeEnd(`Retain fields ${model}`); return data})
-        */
     })
 
 }
