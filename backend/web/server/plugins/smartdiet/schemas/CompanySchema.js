@@ -152,4 +152,10 @@ CompanySchema.virtual("collective_challenges", {
   foreignField: "company", // is equal to foreignField
 });
 
+CompanySchema.virtual('leads', {
+  ref: 'lead', // The Model to use
+  localField: "code", // Find in Model, where localField
+  foreignField: "company_code", // is equal to foreignField
+});
+
 module.exports = CompanySchema
