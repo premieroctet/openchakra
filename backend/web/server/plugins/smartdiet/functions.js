@@ -609,6 +609,11 @@ declareVirtualField({model: 'company', field: 'users', instance: 'Array', multip
     instance: 'ObjectID',
     options: {ref: 'user'}},
 })
+declareVirtualField({model: 'company', field: 'leads', instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'lead'}},
+})
 
 
 declareEnumField({model: 'content', field: 'type', enumValues: CONTENTS_TYPE})
