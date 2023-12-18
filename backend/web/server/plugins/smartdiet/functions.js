@@ -884,8 +884,8 @@ declareVirtualField({model: 'coaching', field: 'all_logbooks', instance: 'Array'
   },
 })
 declareVirtualField({model: 'coaching', field: 'logbooks', instance: 'Array', multiple: true,
-  requires: 'user,all_logbooks.logbook',
-  caster: {
+requires: 'user,all_logbooks.logbook.questions.quizz_question,all_logbooks.logbook.questions.multiple_answers',  
+caster: {
     instance: 'ObjectID',
     options: {ref: 'logbookDay'}
   },
@@ -1392,14 +1392,18 @@ User.find({role: ROLE_CUSTOMER}).populate('coachings')
 
 // Ensure coaching logbooks consistency
 const logbooksConsistency = coaching_id => {
-  const filter= coaching_id ? {_id: coaching_id}:{}
   console.log(`Consistency for logbooks ${coaching_id || 'all'}`)
-  return Coaching.find(filter).populate([
+  const idFilter= coaching_id ? {_id: coaching_id}:{}
+  startDay=moment().add(-6, 'day')
+  const endDay=moment().add(6, 'days')
+  const logBooksFilter={$and:[{day: {$gt: startDay}}, {day: {$lt: endDay}}]}
+  return Coaching.find(idFilter).populate([
     {path: 'appointments', populate: {path: 'logbooks', populate: {path: 'questions'}}},
-    {path: 'all_logbooks', populate: {path: 'logbook'}},
+    {path: 'all_logbooks', match: logBooksFilter, populate: {path: 'logbook'}},
     ])
     .then(coachings => {
       return Promise.all(coachings.map(coaching => {
+        console.log(`coaching ${coaching._id}`)
         const getLogbooksForDay = date => {
           // Get the appontment juste before the date
           const previous_appt=lodash(coaching.appointments)
@@ -1412,7 +1416,6 @@ const logbooksConsistency = coaching_id => {
               return lodash.uniqBy(appt_logbooks, q => q._id.toString())
             })
         }
-        const startDay=moment().add(-6, 'day')
         return Promise.all(lodash.range(7).map(day_idx => {
           const day=moment(startDay).add(day_idx, 'day')
           // expected quizz templates
@@ -1510,7 +1513,8 @@ ensureSpoonGains = () => {
 ensureSpoonGains()
 
 // Ensure logbooks consistency each morning
-cron.schedule('0 0 4 * * *', async() => {
+//cron.schedule('0 0 4 * * *', async() => {
+cron.schedule('0 28 0 * * *', async() => {
   logbooksConsistency()
     .then(() => console.log(`Logbooks consistency OK `))
     .catch(err => console.error(`Logbooks consistency error:${err}`))

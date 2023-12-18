@@ -28,7 +28,7 @@ const withWappizy = Component => {
           const tabList=document.getElementById(childs[0].props.id)
           console.log('tabList', tabList, tabList.scrollWidth)
           tabList.scrollLeft=tabList.scrollWidth
-          }, 200);
+          }, 300);
       }, [children])
     }
 
