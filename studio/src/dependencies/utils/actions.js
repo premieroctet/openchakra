@@ -949,6 +949,16 @@ return Promise.allSettled(imagePromises)
     })
     fileInput.click()
     return Promise.resolve(true)
-  }
+  },
 
+  smartdiet_affect_lead: ({value}) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_affect_lead',
+      value: value._id,
+    }
+    return axios.post(url, body)
+  },
+  
+  
 }

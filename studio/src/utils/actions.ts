@@ -641,6 +641,12 @@ export const ACTIONS: IActions = {
     next: ['openPage'],
   },
 
+  smartdiet_affect_lead: {
+    label: 'SM Affect lead',
+    options: {},
+    next: [],
+  },
+
 }
 
 export const allowsActions = (component: IComponent) => {

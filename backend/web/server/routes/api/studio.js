@@ -166,8 +166,17 @@ router.get('/action-allowed/:action', passport.authenticate('cookie', {session: 
   })
   const user=req.user
 
+  const msg=`allowing action ${action} ${JSON.stringify(query)}`
+  console.time(msg)
   return callAllowedAction({action, user, ...query})
     .then(allowed => res.json(allowed))
+    .catch(err => {
+      console.error(err)
+      return res.json(false)
+    })
+    .finally(() => {
+      console.timeEnd(msg)
+    })
 })
 
 router.post('/file', (req, res) => {
@@ -285,11 +294,11 @@ router.post('/action', passport.authenticate('cookie', {session: false}), (req, 
     console.error(`Unkown action:${action}`)
     return res.status(404).json(`Unkown action:${action}`)
   }
+  console.log('Starting action', action)
 
   return actionFn(req.body, req.user, req.get('Referrer'))
-    .then(result => {
-      return res.json(result)
-    })
+    .then(result => res.json(result))
+    .finally(() => console.log('Ending starting action', action))
 })
 
 router.post('/anonymous-action', (req, res) => {

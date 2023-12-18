@@ -96,7 +96,8 @@ const {
   MENU_PEOPLE_COUNT,
   convertQuantity,
   CALL_STATUS,
-  CALL_DIRECTION
+  CALL_DIRECTION,
+  ROLE_SUPPORT
 } = require('./consts')
 const {
   HOOK_DELETE,
@@ -175,6 +176,10 @@ const filterDataUser = ({model, data, id, user}) => {
       .then(user => {
         return data=data.filter(d => d.company_code==user?.company?.code)
       })
+  }
+  // Return not affected leads or affected to me
+  if (model=='lead' && user?.role==ROLE_SUPPORT) {
+    return data=data.filter(lead => lodash.isNil(lead.operator) || idEqual(lead.operator._id, user._id))
   }
   data=lodash.sortBy(data, ['order', 'fullname', 'name', 'label'])
   return Promise.resolve(data)
