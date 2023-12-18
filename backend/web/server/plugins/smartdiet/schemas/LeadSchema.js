@@ -33,6 +33,7 @@ const LeadSchema = new Schema({
     type: String,
     set: v => v ? v.replace(/ /g,'') : v,
     required: false,
+    index: true,
   },
   source: {
     type: String,
@@ -59,7 +60,6 @@ LeadSchema.virtual("company", {
   ref: "company", // The Model to use
   localField: "company_code", // Find in Model, where localField
   foreignField: "code", // is equal to foreignField
-  justOne: true,
 });
 /* eslint-enable prefer-arrow-callback */
 

@@ -21,6 +21,7 @@ const CompanySchema = new Schema(
     code: {
       type: String,
       required: false,
+      index: true,
     },
     picture: {
       type: String,

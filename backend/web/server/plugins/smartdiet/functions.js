@@ -1007,7 +1007,7 @@ declareVirtualField({model: 'lead', field:'fullname', instance: 'String',
   requires: 'firstname,lastname',
 })
 declareVirtualField({model: 'lead', field: 'company',
-  instance: 'company', multiple: false,
+  instance: 'Array', multiple: true,
   caster: {
     instance: 'ObjectID',
     options: {ref: 'company'}},
