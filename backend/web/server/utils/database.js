@@ -7,6 +7,7 @@ const UserSessionData = require('../models/UserSessionData')
 const Booking = require('../models/Booking')
 const {CURRENT, FINISHED} = require('../plugins/fumoir/consts')
 const {BadRequestError, NotFoundError} = require('./errors')
+const NodeCache=require('node-cache')
 
 // const { ROLES, STATUS } = require("../../utils/aftral_studio/consts");
 // TODO: Omporting Theme makes a cyclic import. Why ?
@@ -366,6 +367,7 @@ const retainRequiredFields = ({data, fields}) => {
   if (!lodash.isObject(data)) {
     return data
   }
+
   const thisLevelFields = [
     'id',
     '_id',
@@ -389,6 +391,26 @@ const retainRequiredFields = ({data, fields}) => {
   return pickedData
 }
 
+const refAttributesCache=new NodeCache()
+
+const getRefAttributes = model => {
+  if (refAttributesCache.has(model)) {
+    return refAttributesCache.get(model)
+  }
+  const result=getModelAttributes(model).filter(
+    ([attName, attParams]) => !attName.includes('.') && attParams.ref,
+  )
+  refAttributesCache.set(model, result)
+  return result
+}
+
+const getRequiredSubFields = (fields, attName) => {
+  const result=fields
+    .filter(f => f.startsWith(`${attName}.`))
+    .map(f => splitRemaining(f, '.')[1])
+  return result
+}
+
 const addComputedFields = (
   fields,
   userId,
@@ -407,14 +429,9 @@ const addComputedFields = (
     .then(newUserId => {
       // Compute direct attributes
       // Handle references => sub
-      const refAttributes = getModelAttributes(model).filter(
-        ([attName, attParams]) => !attName.includes('.') && attParams.ref,
-      )
-      //for (const refAttribute of refAttributes) {
+      const refAttributes = getRefAttributes(model)
       return Promise.allSettled(refAttributes.map(([attName, attParams]) => {
-        const requiredSubFields=fields
-          .filter(f => f.startsWith(`${attName}.`))
-          .map(f => splitRemaining(f, '.')[1])
+        const requiredSubFields=getRequiredSubFields(fields, attName)
 
         const children = lodash.flatten([data[attName]]).filter(v => !!v)
         return Promise.allSettled(
@@ -673,16 +690,31 @@ const loadFromDb = ({model, fields, id, user, params}) => {
       if (data) {
         return data
       }
+      console.time(`Loading model ${model}`)
       return buildQuery(model, id, fields)
-        // Lean, flattenMaps:true forces recursion
-        //.lean({virtuals: true, flattenMaps: true})
+        .then(data => {console.timeEnd(`Loading model ${model}`); return data})
+        /**
+        .then(data => {console.time(`Leaning model ${model}`); return data})
         .then(data => data.map(d => d.toObject()))
+        .then(data => {console.timeEnd(`Leaning model ${model}`); return data})
+        */
+        .then(data => {console.time(`Leaning deep model ${model}`); return data})
+        .then(data => JSON.parse(JSON.stringify(data)))
+        .then(data => {console.timeEnd(`Leaning deep model ${model}`); return data})
+        .then(data => {console.time(`Compute model ${model}`); return data})
         .then(data => {
           if (id && data.length == 0) { throw new NotFoundError(`Can't find ${model}:${id}`) }
           return Promise.all(data.map(d => addComputedFields(fields,user._id, params, d, model)))
         })
+        .then(data => {console.timeEnd(`Compute model ${model}`); return data})
+        .then(data => {console.time(`Filtering model ${model}`); return data})
         .then(data => callFilterDataUser({model, data, id, user}))
-        //.then(data =>  retainRequiredFields({data, fields}))
+        .then(data => {console.timeEnd(`Filtering model ${model}`); return data})
+        /**
+        .then(data => {console.time(`Retain fields ${model}`); return data})
+        .then(data =>  retainRequiredFields({data, fields}))
+        .then(data => {console.timeEnd(`Retain fields ${model}`); return data})
+        */
     })
 
 }

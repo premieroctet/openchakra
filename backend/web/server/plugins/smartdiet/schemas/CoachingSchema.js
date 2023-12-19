@@ -159,7 +159,6 @@ const duplicateUserQuizz= id => {
 CoachingSchema.virtual('logbooks', {localField:'tagada', foreignField:'tagada'}).get(function() {
   const grouped=lodash(this.all_logbooks).sortBy(l => l.day).groupBy(l => l.day)
   const lbd=grouped.entries().map(([day, logbooks]) => mongoose.models.logbookDay({day, logbooks:logbooks?.map(fl => fl.logbook)}))
-  console.log(lbd[0])
   return lbd
 })
 
