@@ -3,7 +3,8 @@ const {
   DAYS_BEFORE_IND_CHALL_ANSWER,
   PARTICULAR_COMPANY_NAME,
   ROLE_CUSTOMER,
-  ROLE_SUPPORT
+  ROLE_SUPPORT,
+  CALL_STATUS_CALL_1
 } = require('./consts')
 const {
   ensureChallengePipsConsistency,
@@ -247,14 +248,9 @@ addAction('deactivateAccount', deactivateAccount)
 
 const affectLead = ({ value }, user) => {
   return isActionAllowed({ action: 'smartdiet_affect_lead', dataId: value, user })
-    .then(ok => {
-      if (!ok) { return false }
-      return Lead.findByIdAndUpdate(
-        value,
-        { operator: user._id }
-      )
-    })
+    .then(ok => ok && Lead.findByIdAndUpdate(value,{ operator: user._id, status: CALL_STATUS_CALL_1}))
 }
+
 addAction('smartdiet_affect_lead', affectLead)
 
 // Override sendMessage for notification
