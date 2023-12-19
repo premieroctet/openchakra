@@ -93,6 +93,10 @@ const OfferSchema = new Schema({
     type: Number,
     required: [true, 'Le crédit de coachings est obligatoire'],
   },
+  nutrition_credit: {
+    type: Number,
+    required: [true, 'Le crédit de conseils nutritionels est obligatoire'],
+  },
   hotdiet_available: {
     type: Boolean,
   },

@@ -189,6 +189,24 @@ CoachingSchema.virtual('appointment_type', {localField:'tagada', foreignField:'t
   const appType=lodash.isEmpty(this.appointments) ? this.user?.company?.assessment_appointment_type : this.user?.company?.followup_appointment_type
   return appType
 })
+
+CoachingSchema.virtual('nutrition_advices', {
+  ref: 'nutritionAdvice',
+  localField: '_id',
+  foreignField: 'coaching',
+})
+
+CoachingSchema.virtual('spent_nutrition_credits').get(function() {
+  return this.nutrition_advices?.length || 0
+})
+
+CoachingSchema.virtual('remaining_nutrition_credits').get(function() {
+  if (this.user?.role!=ROLE_CUSTOMER) {
+    return 0
+  }
+  return (this.user?.offer?.nutrition_credit-this.spent_nutrition_credits) || 0
+})
+
 /* eslint-enable prefer-arrow-callback */
 
 

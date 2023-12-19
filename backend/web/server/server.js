@@ -130,6 +130,7 @@ require('./models/Step')
 require('./models/DeclineReason')
 require('./models/Interest')
 require('./models/Job')
+require('./models/NutritionAdvice')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 

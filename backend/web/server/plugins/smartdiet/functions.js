@@ -267,36 +267,48 @@ const preCreate = ({model, params, user}) => {
       params.diet_private=user._id
     }
   }
-  if (model=='appointment') {
+  // Handle both nutrition advice & appointment
+  if (['nutritionAdvice', 'appointment'].includes(model)) {
+    const isAppointment=model=='appointment'
     if (![ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, ROLE_SUPPORT].includes(user.role)) {
       throw new ForbiddenError(`Seuls les rôles patient, diet et support peuvent prendre un rendez-vous`)
     }
     let customer_id, diet_id
     if (user.role!=ROLE_CUSTOMER) {
-      if (!params.user) {throw new BadRequestError(`L'id du patent doit être fourni`)}
+      if (!params.user) {throw new BadRequestError(`L'id du patient doit être fourni`)}
       customer_id=params.user
     }
     else { //CUSTOMER
       customer_id=user._id
     }
     return loadFromDb({model: 'user', id: customer_id,
-      fields:['latest_coachings.appointments', 'latest_coachings.remaining_credits','latest_coachings.appointment_type'],
+      fields:[
+        'coachings.appointments', 'coachings.remaining_credits','coachings.appointment_type',
+        'coachings.nutrition_advices', 'coachings.remaining_nutrition_credits',
+      ],
       user
     })
       .then(([usr]) => {
         // Check remaining credits
-        const latest_coaching=usr.latest_coachings[0]
+        const latest_coaching=lodash.maxBy(usr.coachings, c => c[CREATED_AT_ATTRIBUTE])
         if (!latest_coaching) {
           throw new ForbiddenError(`Aucun coaching en cours`)
         }
-        if (latest_coaching.remaining_credits<=0) {
+        console.log(latest_coaching.remaining_nutrition_credits)
+        if ((isAppointment && latest_coaching.remaining_credits<=0)
+          || (!isAppointment && latest_coaching.remaining_nutrition_credits<=0)) {
           throw new ForbiddenError(`L'offre ne permet pas/plus de prendre un rendez-vous`)
         }
         // Check appointment to come
-        if (latest_coaching.appointments.find(a => moment(a.end_date).isAfter(moment()))) {
+        if (isAppointment && latest_coaching.appointments.find(a => moment(a.end_date).isAfter(moment()))) {
           throw new ForbiddenError(`Il existe déjà un rendez-vous à venir`)
         }
-        return {model, params:{coaching: latest_coaching._id, appointment_type: latest_coaching.appointment_type._id, ...params }}
+        if (isAppointment) {
+          return {model, params:{coaching: latest_coaching._id, appointment_type: latest_coaching.appointment_type._id, ...params }}
+        }
+        else { // Nutrition advice
+          return {model, params:{coaching: latest_coaching._id, ...params }}
+        }
       })
   }
   return Promise.resolve({model, params})
@@ -850,7 +862,13 @@ declareVirtualField({model: 'coaching', field: 'appointments', instance: 'Array'
 declareVirtualField({model: 'coaching', field: 'remaining_credits', instance: 'Number',
   requires: 'user.offer.coaching_credit,spent_credits,user.company.offers.coaching_credit,user.role'}
 )
-declareVirtualField({model: 'coaching', field: 'spent_credits', instance: 'Number'})
+declareVirtualField({model: 'coaching', field: 'spent_credits', instance: 'Number', requires: 'appointments'})
+
+declareVirtualField({model: 'coaching', field: 'remaining_nutrition_credits', instance: 'Number',
+  requires: 'user.offer.nutrition_credit,spent_nutrition_credits,user.company.offers.nutrition_credit,user.role'}
+)
+declareVirtualField({model: 'coaching', field: 'spent_nutrition_credits', instance: 'Number', requires: 'nutrition_advices'})
+
 declareVirtualField({model: 'coaching', field: 'questions', instance: 'Array', multiple: true,
   caster: {
     instance: 'ObjectID',
@@ -915,6 +933,12 @@ declareVirtualField({model: 'coaching', field: 'appointment_type', instance: 'ap
   caster: {
     instance: 'ObjectID',
     options: {ref: 'appointmentType'}},
+})
+declareVirtualField({model: 'coaching', field: 'nutrition_advices', instance: 'Array',
+  multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'nutritionAdvice'}},
 })
 
 
@@ -1046,6 +1070,9 @@ declareVirtualField({model: 'lead', field: 'registered_user',
 })
 declareVirtualField({model: 'lead', field:'registered', instance: 'Boolean',
   requires: 'registered_user',
+})
+declareVirtualField({model: 'nutritionAdvice', field:'end_date', instance: 'Date',
+  requires: 'start_date,duration',
 })
 
 
