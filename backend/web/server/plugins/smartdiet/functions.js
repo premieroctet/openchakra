@@ -268,11 +268,11 @@ const preCreate = ({model, params, user}) => {
     }
   }
   if (model=='appointment') {
-    if (![ROLE_EXTERNAL_DIET, ROLE_CUSTOMER].includes(user.role)) {
-      throw new ForbiddenError(`Seuls les rôles patient et diet peuvent prendre un rendez-vous`)
+    if (![ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, ROLE_SUPPORT].includes(user.role)) {
+      throw new ForbiddenError(`Seuls les rôles patient, diet et support peuvent prendre un rendez-vous`)
     }
-    let customer_id
-    if (user.role==ROLE_EXTERNAL_DIET) {
+    let customer_id, diet_id
+    if (user.role!=ROLE_CUSTOMER) {
       if (!params.user) {throw new BadRequestError(`L'id du patent doit être fourni`)}
       customer_id=params.user
     }
@@ -1484,10 +1484,11 @@ const getRegisterCompany = props => {
   if (!props.email) { return Promise.resolve({})}
   const NO_COMPANY_NAME='NEVER'.repeat(10000)
   const code_re=props.company_code ? new RegExp(`^${props.company_code.replace(/[\t ]/g, '')}$`, 'i') : NO_COMPANY_NAME
-  const mail_re=new RegExp(`^${props.email.replace(/[\t ]/g, '').toLowerCase()}$`, 'i')
+  const mail_re=props.email
   const result={}
   return Promise.all([Lead.findOne({email: mail_re}), Company.findOne({code:code_re})])
     .then(([lead, company]) => {
+      console.log('mail', mail_re, 'lead', lead, 'company', company)
       // If company not found, get form lead company code if any
       if (!company && lead?.company_code) {
         return Promise.all([lead, Company.findOne({code: lead.company_code})])

@@ -115,7 +115,7 @@ let ACTIONS = {
   },
 
   register: props => {
-console.log(`Register with ${JSON.stringify(props)}`)
+    console.log(`Register with ${JSON.stringify(props)}`)
     return User.exists({email: props.email})
       .then(exists => {
         if (exists) {
