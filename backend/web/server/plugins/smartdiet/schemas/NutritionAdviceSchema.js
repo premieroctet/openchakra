@@ -16,7 +16,7 @@ const NutritionAdviceSchema = new Schema({
   },
   comment: {
     type: String,
-    required: false,
+    required: true,
   },
   food_document: {
     type: Schema.Types.ObjectId,

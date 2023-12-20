@@ -97,7 +97,11 @@ const {
   convertQuantity,
   CALL_STATUS,
   CALL_DIRECTION,
-  ROLE_SUPPORT
+  ROLE_SUPPORT,
+  COACHING_CONVERSION_STATUS,
+  COACHING_CONVERSION_TO_COME,
+  COACHING_CONVERSION_CANCELLED,
+  COACHING_CONVERSION_CONVERTED,
 } = require('./consts')
 const {
   HOOK_DELETE,
@@ -536,7 +540,7 @@ USER_MODELS.forEach(m => {
   declareVirtualField({model: m, field: 'latest_coachings', instance: 'Array',
   relies_on: 'coachings',
   requires: 'coachings.all_logbooks.logbook.quizz.questions,coachings.all_logbooks.logbook.questions,coachings.all_logbooks.logbook.questions.quizz_question.available_answers,coachings.all_logbooks.logbook.questions.multiple_answers,\
-coachings.diet.availability_ranges.appointment_type',
+coachings.diet.availability_ranges.appointment_type,coachings.nutrition_advices',
     multiple: true,
     caster: {
       instance: 'ObjectID',
@@ -1071,6 +1075,8 @@ declareVirtualField({model: 'lead', field: 'registered_user',
 declareVirtualField({model: 'lead', field:'registered', instance: 'Boolean',
   requires: 'registered_user',
 })
+declareEnumField({model: 'lead', field:'coaching_converted', enumValues: COACHING_CONVERSION_STATUS})
+
 declareVirtualField({model: 'nutritionAdvice', field:'end_date', instance: 'Date',
   requires: 'start_date,duration',
 })
@@ -1253,8 +1259,21 @@ const postCreate = ({model, params, data,user}) => {
   }
   // Create coaching.progress if not present
   if (model=='appointment') {
-    const setProgressQuizz=Coaching.findById(data.coaching._id)
+    const setProgressQuizz=Coaching.findById(data.coaching._id).populate('user')
       .then(coaching => {
+        /** If lead exists: 
+         * - if user is an operator, set coaching conversion status to TO_COME
+         * - if any user and lead is coaching cancelled, set status to TO_COME
+        */
+        const isOperator=user.role==ROLE_SUPPORT
+        const statusFilter=isOperator ? {} : {coaching_converted: COACHING_CONVERSION_CANCELLED}
+        Lead.findOneAndUpdate(
+          {email: coaching.user.email, ...statusFilter},
+          {coaching_converted: COACHING_CONVERSION_TO_COME}, 
+          {new: true, runValidators: true}
+        )
+        .then(console.log)
+        .catch(console.error)
         if (coaching.progress) {
           return data
         }
@@ -1288,6 +1307,13 @@ const postCreate = ({model, params, data,user}) => {
       .finally(() => data)
   }
 
+  // If operator created nuttrition advice, set lead nutrition converted
+  if (model=='nutritionAdvice' && user.role==ROLE_SUPPORT) {
+    Coaching.findById(data.coaching._id).populate('user')
+      .then(({user})=> Lead.findOneAndUpdate({email: user.email},{nutrition_converted: true}))
+      .then(res => `Nutrition conversion:${res}`)
+      .catch(err => `Nutrition conversion:${err}`)
+  }
   return Promise.resolve(data)
 }
 
@@ -1743,6 +1769,31 @@ cron.schedule('0 0 8 * * 6', async() => {
   if (fn) {
     customers.forEach(customer => fn({user:customer}).catch(console.error))
   }
+})
+
+
+/**
+ * For each lead in coaching to come status, set to caohing converted
+ * if his first appointment was today
+ */
+cron.schedule('0 0 1 * * *', async() => {
+  const checkLead = email => {
+    console.log(`Checking lead ${email} coaching conversion status`)
+    return User.findOne({email})
+      .populate({path: 'coachings', populate: 'appointments'})
+      .then(user => {
+        const appts=lodash(user?.coachings?.map(coaching => coaching.appointments)).flattenDeep().value()
+        if (appts.length==1 && moment(appts[0].start_date).isSame(moment(), 'day')) {
+          return Lead.findOneAndUpdate({email}, {coaching_converted: COACHING_CONVERSION_CONVERTED})
+        }
+        return Promise.resolve(false)
+      })
+      .then(res => !!res && `Lead ${email} coaching converted` || '')
+  }
+  return Lead.find({coaching_converted: COACHING_CONVERSION_TO_COME})
+    .then(leads => Promise.all(leads.map(lead => checkLead(lead.email))))
+    .then(console.log)
+    .catch(console.error)
 })
 
 module.exports={

@@ -3,7 +3,7 @@ const { isEmailOk } = require('../../../../utils/sms')
 const { isPhoneOk } = require('../../../../utils/sms')
 const mongoose = require('mongoose')
 const { schemaOptions } = require('../../../utils/schemas')
-const { CALL_STATUS, CALL_DIRECTION } = require('../consts')
+const { CALL_STATUS, CALL_DIRECTION, COACHING_CONVERSION_STATUS } = require('../consts')
 
 const Schema = mongoose.Schema
 
@@ -91,6 +91,15 @@ const LeadSchema = new Schema({
   consent: {
     type: Boolean,
     required: false,
+  },
+  nutrition_converted: {
+    type: Boolean,
+    default: false,
+    required: false,
+  },
+  coaching_converted: {
+    type: String,
+    enum: Object.keys(COACHING_CONVERSION_STATUS)
   },
 }, schemaOptions)
 

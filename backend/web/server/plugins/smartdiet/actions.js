@@ -282,7 +282,6 @@ const isActionAllowed = ({ action, dataId, user }) => {
   const promise = dataId && dataId != "undefined" ? getModel(dataId) : Promise.resolve(null)
   return promise
     .then(modelName => {
-      console.log('action', action, 'got model', modelName)
       return modelName ? mongoose.models[modelName].findById(dataId) : Promise.resolve(null)
         .then(data => {
           console.log('got data', data)
