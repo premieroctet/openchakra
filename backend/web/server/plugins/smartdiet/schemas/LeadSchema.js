@@ -79,11 +79,11 @@ const LeadSchema = new Schema({
     type: Date,
     required: false,
   },
-  interested_in: {
+  interested_in: [{
     type: Schema.Types.ObjectId,
     ref: "interest",
     required: false,
-  },
+  }],
   call_direction: {
     type: String,
     enum: Object.keys(CALL_DIRECTION)

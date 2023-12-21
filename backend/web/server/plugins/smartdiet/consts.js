@@ -518,7 +518,7 @@ const CALL_STATUS={
   [CALL_STATUS_CALL_3]:"Appel 3",
   [CALL_STATUS_RECALL]:"A rappeler",
   [CALL_STATUS_UNREACHABLE]:"Injoignable",
-  [CALL_STATUS_TO_RENEW]:"A contacter renouvelement",
+  [CALL_STATUS_TO_RENEW]:"A contacter renouvellement",
   [CALL_STATUS_NOT_INTERESTED]: "Non intéressé(e)",
 }
 

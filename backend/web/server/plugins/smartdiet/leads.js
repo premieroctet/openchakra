@@ -15,6 +15,7 @@ const MAPPING={
   'Code entreprise': 'company_code',
   'Source': 'source',
   'Téléphone': 'phone',
+  'Statut': 'call_status',
 }
 
 const MANDATORY_COLUMNS=Object.keys(MAPPING)
