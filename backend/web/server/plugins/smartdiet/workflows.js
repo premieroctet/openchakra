@@ -12,6 +12,7 @@ const lodash=require('lodash')
 const MAILJET_HANDLER=require('../../utils/mailjet')
 const User = require('../../models/User')
 const Lead = require('../../models/Lead')
+const { isDevelopment, isProduction } = require('../../../config/config')
 require('../../models/Group')
 
 const isLeadOnly = (lead, user) => {
@@ -167,6 +168,9 @@ const computeWorkflowLists = () => {
 }
 
 const updateWorkflows= () => {
+  if (!isProduction()) {
+    return Promise.resolve([])
+  }
   return computeWorkflowLists()
     .then(lists => {
       let promises=Object.values(lists).map(({id, add, remove})=> {

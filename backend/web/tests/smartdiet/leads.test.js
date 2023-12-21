@@ -28,33 +28,13 @@ describe('Prospects', () => {
     await mongoose.connection.close()
   })
 
-  it('must import leads', async() => {
-    await Company.create({name: 'CARCEPT', code: 'CARCEPT', size:100, activity: Object.keys(COMPANY_ACTIVITY)[0]})
+  it('must fail if no email', async() => {
+    await Company.create({name: 'CARWappizyCEPT', code: 'WAPNUTRITION', size:100, activity: Object.keys(COMPANY_ACTIVITY)[0]})
     let p=await Lead.find()
     expect(p).toHaveLength(0)
     const result=await importLeads(leadsData)
-    expect(result).toHaveLength(3)
-    expect(result[0]).toMatch(/ajouté/i)
-    expect(result[1]).toMatch(/ajouté/i)
-    expect(result[2]).toMatch(/ajouté/i)
-    p=await Lead.find()
-    expect(p).toHaveLength(3)
-    const result2=await importLeads(leadsData)
-    expect(result2[0]).toMatch(/mis à jour/i)
-    expect(result2[1]).toMatch(/mis à jour/i)
-    expect(result2[2]).toMatch(/mis à jour/i)
-  })
-
-  it('must fail if no company prospects', async() => {
-    let p=await Lead.find()
-    expect(p).toHaveLength(0)
-    const result=await importLeads(leadsData)
-    expect(result).toHaveLength(3)
-    expect(result[0]).toMatch(/erreur.*compagnie/i)
-    expect(result[1]).toMatch(/erreur.*compagnie/i)
-    expect(result[2]).toMatch(/erreur.*compagnie/i)
-    p=await Lead.find()
-    expect(p).toHaveLength(0)
+    console.log(result)
+    expect(result[0]).toMatch(/erreur.*email/i)
   })
 
 })

@@ -7,6 +7,7 @@ const Schema = mongoose.Schema
 const NutritionAdviceSchema = new Schema({
   start_date: {
     type: Date,
+    default: () => moment(),
     required: [true, 'La date de début est obligatoire']
   },
   duration: {

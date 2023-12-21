@@ -1,4 +1,16 @@
-﻿Nom;Prénom;Email;ID;Code entreprise;Source;Téléphone;;;;;
-Nprospect;Pprospect;Prospect@carcept.com;12345;CARCEPT;;;;;;;
-Nprospect;Pprospect;Prospect@carcept2.com;12345;CARCEPT;;;;;;;
-Wappizy;Jacques;hello+prospect@wappizy.com;12345;CARCEPT;;;;;;;
+﻿Nom,Prénom,Email,ID,Code entreprise,Source,Téléphone,Statut,Campagne,Appel entrant/sortant,Consentement
+Nomwa1,Prénomwa1,hello+nomwa1@wappizy.com,WA1,WAPNUTRITION,fichier client,0687377363,A contacter,campagne wa du 21/12/23,Entrant,Oui
+Nomwa2,Prénomwa2,hello+nomwa2@wappizy.com,WA2,WAPNUTRITION,fichier client,0687377364,A contacter renouvellement,campagne wa du 21/12/23,Sortant,
+Nomwa3,Prénomwa3,hello+nomwa3@wappizy.com,WA3,WAPNUTRITION,fichier client,0687377365,A contacter,campagne wa du 21/12/23,Entrant,Oui
+Nomwa4,Prénomwa4,hello+nomwa4@wappizy.com,WA4,WAPNUTRITION,fichier client,0687377366,A contacter renouvellement,campagne wa du 21/12/23,Sortant,
+Nomwa5,Prénomwa5,hello+nomwa5@wappizy.com,WA5,WAPNUTRITION,fichier client,0687377367,A contacter,campagne wa du 21/12/23,Entrant,Oui
+Nomwa6,Prénomwa6,hello+nomwa6@wappizy.com,WA6,WAPNUTRITION,fichier client,0687377368,A contacter renouvellement,campagne wa du 21/12/23,Sortant,
+Nomwa7,Prénomwa7,hello+nomwa7@wappizy.com,WA7,WAPNUTRITION,fichier client,0687377369,A contacter,campagne wa du 21/12/23,Entrant,Oui
+Nomwa8,Prénomwa8,hello+nomwa8@wappizy.com,WA8,WAPNUTRITION,fichier client,0687377370,A contacter renouvellement,campagne wa du 21/12/23,Sortant,
+Nomwa9,Prénomwa9,hello+nomwa9@wappizy.com,WA9,WAPNUTRITION,fichier client,0687377371,A contacter,campagne wa du 21/12/23,Entrant,Oui
+Nomwa10,Prénomwa10,hello+nomwa10@wappizy.com,WA10,WAPNUTRITION,fichier client,0687377372,A contacter renouvellement,campagne wa du 21/12/23,Sortant,
+Nomwa11,Prénomwa11,hello+nomwa11@wappizy.com,WA11,WAPNUTRITION,fichier client,0687377373,A contacter,campagne wa du 21/12/23,Entrant,Oui
+Nomwa12,Prénomwa12,hello+nomwa12@wappizy.com,WA12,WAPNUTRITION,fichier client,0687377374,A contacter renouvellement,campagne wa du 21/12/23,Sortant,
+Nomwa13,Prénomwa13,hello+nomwa13@wappizy.com,WA13,WAPNUTRITION,fichier client,0687377375,A contacter,campagne wa du 21/12/23,Entrant,Oui
+Nomwa14,Prénomwa14,hello+nomwa14@wappizy.com,WA14,WAPNUTRITION,fichier client,0687377376,A contacter renouvellement,campagne wa du 21/12/23,Sortant,
+Nomwa15,Prénomwa15,hello+nomwa15@wappizy.com,WA15,WAPNUTRITION,fichier client,0687377377,A contacter,campagne wa du 21/12/23,Entrant,Oui
