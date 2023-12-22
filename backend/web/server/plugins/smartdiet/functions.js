@@ -1065,6 +1065,12 @@ declareVirtualField({model: 'lead', field: 'declineReason',
     instance: 'ObjectID',
     options: {ref: 'declineReason'}},
 })
+declareVirtualField({model: 'lead', field: 'joinReason',
+  instance: 'joinReason', multiple: false,
+  caster: {
+    instance: 'ObjectID',
+    options: {ref: 'joinReason'}},
+})
 declareEnumField({model: 'lead', field: 'call_direction', enumValues: CALL_DIRECTION})
 declareVirtualField({model: 'lead', field: 'registered_user',
   instance: 'Array', multiple: true,

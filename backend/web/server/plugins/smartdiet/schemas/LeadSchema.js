@@ -75,6 +75,11 @@ const LeadSchema = new Schema({
     ref: "declineReason",
     required: false,
   },
+  join_reason: {
+    type: Schema.Types.ObjectId,
+    ref: "joinReason",
+    required: false,
+  },
   next_call_date: {
     type: Date,
     required: false,
