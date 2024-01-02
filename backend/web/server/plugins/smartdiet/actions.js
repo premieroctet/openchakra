@@ -282,9 +282,9 @@ const isActionAllowed = ({ action, dataId, user }) => {
   const promise = dataId && dataId != "undefined" ? getModel(dataId) : Promise.resolve(null)
   return promise
     .then(modelName => {
-      return modelName ? mongoose.models[modelName].findById(dataId) : Promise.resolve(null)
+      const promise=modelName ? mongoose.models[modelName].findById(dataId) : Promise.resolve(null)
+      return promise
         .then(data => {
-          console.log('got data', data)
           if (action == 'smartdiet_join_event') {
             /**
             TODO perfs
@@ -394,18 +394,18 @@ const isActionAllowed = ({ action, dataId, user }) => {
               })
           }
           if (action == 'smartdiet_next_question') {
-            return UserQuestion.findById(dataId).populate('question').populate('survey')
+            return UserQuestion.findById(dataId).populate('survey')
               .then(question => {
                 // Not answered question: no next
                 if (lodash.isNil(question.answer)) { return false }
-                return UserQuestion.findOne({ survey: question.survey, order: { $gt: question.order } })
+                return UserQuestion.exists({ survey: question.survey, order: { $gt: question.order } })
               })
           }
           if (action == 'smartdiet_finish_survey') {
-            return UserQuestion.findById(dataId).populate('question').populate('survey')
+            return UserQuestion.findById(dataId).populate('survey')
               .then(question => Promise.all([
                 UserQuestion.exists({ survey: question.survey, order: { $gt: question.order } }),
-                !lodash.isNil(question.answer)
+                Promise.resolve(!lodash.isNil(question.answer))
               ]))
               .then(([exists, answered]) => !exists && answered)
           }
