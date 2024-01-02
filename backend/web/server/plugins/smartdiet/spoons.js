@@ -32,6 +32,11 @@ const getUserIndChallengeTrophy = (userId, params, data) => {
     .then(spoons => (spoons>=data.spoons_count_for_trophy ? data.trophy_on_picture : data.trophy_off_picture))
 }
 
+const getObtainedTrophy = (userId, params, data) => {
+  return computeChallengeSpoons({challenge: data, userId})
+    .then(spoons => spoons>=data.spoons_count_for_trophy)
+}
+
 const SOURCE_COMPUTE_FNS={
   [SPOON_SOURCE_CONTENT_LIKE]: ({source, key_filter, userId}) => {
     return Content.countDocuments({...key_filter, likes: userId})
@@ -191,4 +196,5 @@ module.exports={
   getUserKeySpoons,
   getUserKeyProgress,
   getUserKeyReadContents,
+  getObtainedTrophy,
 }

@@ -52,6 +52,11 @@ IndividualChallengeSchema.virtual('type').get(function() {
 IndividualChallengeSchema.virtual('trophy_picture').get(function()  {
   return ''
 })
+
+IndividualChallengeSchema.virtual('obtained').get(function()  {
+  return false
+})
+
 /* eslint-enable prefer-arrow-callback */
 
 module.exports = IndividualChallengeSchema
