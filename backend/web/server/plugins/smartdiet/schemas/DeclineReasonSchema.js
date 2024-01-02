@@ -8,6 +8,7 @@ const Schema = mongoose.Schema
 const DeclineReasonSchema = new Schema({
   name: {
     type: String,
+    unique: true,
     required: [true, 'Le nom est obligatoire'],
   },
 }, schemaOptions
