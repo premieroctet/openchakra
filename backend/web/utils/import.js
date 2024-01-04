@@ -3,6 +3,7 @@ const lodash=require('lodash')
 const ExcelJS = require('exceljs')
 const {JSON_TYPE, TEXT_TYPE, XL_TYPE} = require('./consts')
 const {bufferToString} = require('./text')
+const mongoose=require('mongoose')
 
 const guessFileType = buffer => {
   return new Promise((resolve, reject) => {
@@ -115,4 +116,40 @@ const extractSample = (rawData, options) => {
     })
 }
 
-module.exports={extractData, guessFileType, getTabs, extractSample}
+const mapAttribute=({record, mappingFn}) => {
+  if (typeof mappingFn=='string') {
+    return record[mappingFn]
+  }
+  return mappingFn(record)
+}
+
+const mapRecord = ({record, mapping}) => {
+  const mappedArray=Object.entries(mapping).map(([k, v])=> [k, mapAttribute({record, mappingFn: v})])
+  const mapped=Object.fromEntries(mappedArray)
+  //console.log(record, 'mapped to', mapped)
+  return mapped
+}
+
+const importData = ({model, data, mapping}) => {
+  const msg=`Insert ${model}`
+  return Promise.all(data.map(record => mapRecord({record, mapping})))
+    .then(mappedData => {
+      console.log('Ready to insert', mappedData.length, model)
+      console.time(msg)
+      /**
+      const mongooseModel = mongoose.model(model)
+      return Promise.allSettled(mappedData.map(data => mongooseModel.create(data).then(res => console.log(`${data} inserted`)).catch(err => console.error(err, data))))
+      */
+      return Promise.allSettled(mappedData.map(data => mongoose.model(model).create(data)))
+        //.then(res => console.log(`${data} inserted`)).catch(err => console.error(err, data))))
+    })
+    .finally(()=> console.timeEnd(msg))
+}
+
+module.exports={
+  extractData, 
+  guessFileType, 
+  getTabs, 
+  extractSample,
+  importData,
+}

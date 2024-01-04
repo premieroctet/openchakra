@@ -175,7 +175,7 @@ const capitalize = text => {
 }
 
 const guessDelimiter = text => {
-  const delimiter=csv_string.detect(text)
+  const delimiter=csv_string.detect(text.toString())
   return delimiter
 }
 
