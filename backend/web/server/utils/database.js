@@ -205,8 +205,7 @@ const getExposedModels = () => {
 }
 
 function handleReliesOn(directAttribute, relies_on, requiredFields) {
-  // const search = new RegExp(`^${directAttribute}([\.|$])`)
-  const search = new RegExp(`^${directAttribute}(\.|$)`)
+  const search = new RegExp(`^${directAttribute}([\.|$])`)
   const replace = (match, group1) => `${relies_on}${group1 == '.' ? '.' : ''}`
   requiredFields = requiredFields.map(f => f.replace(search, replace))
   return requiredFields
