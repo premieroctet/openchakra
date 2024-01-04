@@ -68,4 +68,8 @@ KeySchema.virtual('trophy_picture').get(function () {
   return null
 })
 
+KeySchema.virtual('dummy').get(function () {
+  return 0
+})
+
 module.exports = KeySchema

@@ -654,6 +654,14 @@ coachings.diet.availability_ranges.appointment_type,coachings.nutrition_advices'
   })
   declareVirtualField({ model: m, field: 'imc', instance: 'Number', requires: 'measures,height' })
   declareVirtualField({ model: m, field: 'days_inactivity', instance: 'Number', requires: 'last_activity' })
+  declareVirtualField({
+    model: m, field: 'keys', instance: 'Array',
+    multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: { ref: 'key' }
+    },
+  })
 })
 // End user/loggedUser
 
@@ -908,6 +916,7 @@ declareVirtualField({
 })
 declareVirtualField({ model: 'key', field: 'user_passed_challenges', instance: 'Number', requires: 'passed_events' })
 declareVirtualField({ model: 'key', field: 'user_passed_webinars', instance: 'Number', requires: 'passed_events' })
+declareVirtualField({ model: 'key', field: 'dummy', instance: 'Number'})
 
 
 declareVirtualField({

@@ -634,6 +634,12 @@ UserSchema.virtual("availability_ranges", {
   foreignField: "user", // is equal to foreignField
 })
 
+UserSchema.virtual("keys", {
+  ref: "key", // The Model to use
+  localField: "dummy", // Find in Model, where localField
+  foreignField: "dummy", // is equal to foreignField
+})
+
 // Returned availabilities/ranges are not store in database
 UserSchema.virtual('diet_appointments', {localField:'tagada', foreignField:'tagada'}).get(function() {
   return lodash.flatten(this.diet_coachings?.map(c => c.appointments))
