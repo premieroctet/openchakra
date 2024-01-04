@@ -633,6 +633,9 @@ coachings.diet.availability_ranges.appointment_type,coachings.nutrition_advices'
       options: { ref: 'appointment' }
     },
   })
+  // TODO This causes error because of relies_on
+  //declareVirtualField({ model: m, field: 'diet_appointments_count', instance: 'Number', requires: 'diet_appointments'})
+  declareVirtualField({ model: m, field: 'diet_appointments_count', instance: 'Number', requires: 'diet_coachings'})
   declareVirtualField({
     model: m, field: 'diet_patients', instance: 'Array',
     relies_on: 'diet_coachings.user',
