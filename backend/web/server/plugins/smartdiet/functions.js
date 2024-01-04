@@ -645,6 +645,9 @@ coachings.diet.availability_ranges.appointment_type,coachings.nutrition_advices'
       options: { ref: 'user' }
     },
   })
+  // TODO This causes error because of relies_on
+  //declareVirtualField({ model: m, field: 'diet_patients_count', instance: 'Number', requires: 'diet_patients'})
+  declareVirtualField({ model: m, field: 'diet_patients_count', instance: 'Number', requires: 'diet_coachings.appointments'})
   declareEnumField({ model: m, field: 'registration_warning', enumValues: REGISTRATION_WARNING })
   declareEnumField({ model: m, field: 'activities', enumValues: DIET_ACTIVITIES })
   declareVirtualField({
