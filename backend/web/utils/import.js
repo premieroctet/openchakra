@@ -4,6 +4,8 @@ const ExcelJS = require('exceljs')
 const {JSON_TYPE, TEXT_TYPE, XL_TYPE} = require('./consts')
 const {bufferToString} = require('./text')
 const mongoose=require('mongoose')
+const { runPromisesWithDelay } = require('../server/utils/concurrency')
+const NodeCache = require('node-cache')
 
 const guessFileType = buffer => {
   return new Promise((resolve, reject) => {
@@ -120,7 +122,7 @@ const mapAttribute=({record, mappingFn}) => {
   if (typeof mappingFn=='string') {
     return record[mappingFn]
   }
-  return mappingFn(record)
+  return mappingFn({record})
 }
 
 const mapRecord = ({record, mapping}) => {
@@ -130,18 +132,54 @@ const mapRecord = ({record, mapping}) => {
   return mapped
 }
 
-const importData = ({model, data, mapping}) => {
-  const msg=`Insert ${model}`
+const displayResults= (results, records) => {
+  results.forEach((res, idx) => {
+    // if (res.status=='rejected') {
+    //   console.error(`${JSON.stringify(records[idx])}=>${res.reason}`)
+    // }
+    // if (res.status=='fulfilled') {
+    //   console.log(`${JSON.stringify(records[idx])}=>${JSON.stringify(res.value)}`)
+    // }
+  })
+}
+
+const dataCache = new NodeCache()
+
+const setCache = (model, sourceKey, destinationKey) => {
+  dataCache.set(`${model}/${sourceKey}`, destinationKey)
+}
+
+const getCache = (model, sourceKey) => {
+  const key=`${model}/${sourceKey}`
+  return dataCache.has(key) ? null : dataCache.get(key)
+}
+
+function upsertRecord(mongoModel, sourceKey, data) {
+  return mongoModel.findOne({[sourceKey]: data[sourceKey]})
+    .then(result => {
+      if (!result) {
+        return mongoModel.create({...data})
+      }
+      return mongoModel.updateOne({_id: result._id}, data, {runValidators: true})
+    })
+    .then(res => {
+      cache(mongoModel.modelName, data[sourceKey], result._id)
+      return res
+    })
+}
+
+const importData = ({model, data, mapping, sourceKey}) => {
+  console.log(`Ready to insert ${model}, ${data.length} source records, source key is ${sourceKey}`)
+  const msg=`Inserted ${model}, ${data.length} source records`
+  const mongoModel=mongoose.model(model)
   return Promise.all(data.map(record => mapRecord({record, mapping})))
     .then(mappedData => {
-      console.log('Ready to insert', mappedData.length, model)
       console.time(msg)
-      /**
-      const mongooseModel = mongoose.model(model)
-      return Promise.allSettled(mappedData.map(data => mongooseModel.create(data).then(res => console.log(`${data} inserted`)).catch(err => console.error(err, data))))
-      */
-      return Promise.allSettled(mappedData.map(data => mongoose.model(model).create(data)))
-        //.then(res => console.log(`${data} inserted`)).catch(err => console.error(err, data))))
+      return runPromisesWithDelay(mappedData.map(data => () => upsertRecord(mongoModel, sourceKey, data)))
+      .then(results => {
+          displayResults(results, mappedData)
+          return results
+        })
     })
     .finally(()=> console.timeEnd(msg))
 }
@@ -153,3 +191,4 @@ module.exports={
   extractSample,
   importData,
 }
+

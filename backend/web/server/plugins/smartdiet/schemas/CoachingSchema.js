@@ -150,11 +150,6 @@ CoachingSchema.virtual("_all_diets", {
   },
 })
 
-const duplicateUserQuizz= id => {
-  return mongoose.models.quizz.findById(id).populate('questions')
-    .then(q => q.cloneAsUserQuizz(null))
-}
-
 // Returns the LogbookDay compléting if required
 CoachingSchema.virtual('logbooks', {localField:'tagada', foreignField:'tagada'}).get(function() {
   const grouped=lodash(this.all_logbooks).sortBy(l => l.day).groupBy(l => l.day)
