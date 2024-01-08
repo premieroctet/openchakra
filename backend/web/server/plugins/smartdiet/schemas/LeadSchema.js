@@ -121,6 +121,7 @@ LeadSchema.virtual("company", {
   ref: "company", // The Model to use
   localField: "company_code", // Find in Model, where localField
   foreignField: "code", // is equal to foreignField
+  justOne: true,
 });
 
 // Corresponding registered user if any
