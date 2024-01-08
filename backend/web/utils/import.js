@@ -147,6 +147,7 @@ const dataCache = new NodeCache()
 
 const setCache = (model, sourceKey, destinationKey) => {
   dataCache.set(`${model}/${sourceKey}`, destinationKey)
+  //console.log(dataCache.keys())
 }
 
 const getCache = (model, sourceKey) => {
@@ -162,9 +163,9 @@ function upsertRecord(mongoModel, sourceKey, data) {
       }
       return mongoModel.updateOne({_id: result._id}, data, {runValidators: true})
     })
-    .then(res => {
-      cache(mongoModel.modelName, data[sourceKey], result._id)
-      return res
+    .then(result => {
+      setCache(mongoModel.modelName, data[sourceKey], result._id)
+      return result
     })
 }
 
