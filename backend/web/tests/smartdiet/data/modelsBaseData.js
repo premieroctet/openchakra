@@ -25,6 +25,7 @@ module.exports={
     price: 0,
     name: 'Offre test',
     duration: 365,
+    nutrition_credit: 5,
   },
   KEY_DATA: {
     name: 'Clé',
