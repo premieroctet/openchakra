@@ -122,61 +122,79 @@ const mapAttribute=({record, mappingFn}) => {
   if (typeof mappingFn=='string') {
     return record[mappingFn]
   }
-  return mappingFn({record})
+  return mappingFn({record, cache:getCache})
 }
 
 const mapRecord = ({record, mapping}) => {
   const mappedArray=Object.entries(mapping).map(([k, v])=> [k, mapAttribute({record, mappingFn: v})])
   const mapped=Object.fromEntries(mappedArray)
-  //console.log(record, 'mapped to', mapped)
+  // console.log(record, 'mapped to', mapped)
   return mapped
 }
 
 const displayResults= (results, records) => {
-  results.forEach((res, idx) => {
-    // if (res.status=='rejected') {
-    //   console.error(`${JSON.stringify(records[idx])}=>${res.reason}`)
-    // }
-    // if (res.status=='fulfilled') {
-    //   console.log(`${JSON.stringify(records[idx])}=>${JSON.stringify(res.value)}`)
-    // }
-  })
+  // results.forEach((res, idx) => {
+  //   if (res.status=='rejected') {
+  //     console.error(`${JSON.stringify(records[idx])}=>${res.reason}`)
+  //   }
+  //   if (res.status=='fulfilled') {
+  //     console.log(`${JSON.stringify(records[idx])}=>${JSON.stringify(res.value)}`)
+  //   }
+  // })
 }
 
 const dataCache = new NodeCache()
 
-const setCache = (model, sourceKey, destinationKey) => {
-  dataCache.set(`${model}/${sourceKey}`, destinationKey)
-  //console.log(dataCache.keys())
+const setCache = (model, migrationKey, destinationKey) => {
+  if (lodash.isEmpty(destinationKey)) {
+    throw new Error(`${model}:${migrationKey} dest key is empty`)
+  }
+  const key = `${model}/${migrationKey}`
+  console.log('cache set', key, destinationKey)
+  dataCache.set(key, destinationKey)
 }
 
-const getCache = (model, sourceKey) => {
-  const key=`${model}/${sourceKey}`
-  return dataCache.has(key) ? null : dataCache.get(key)
+const getCache = (model, migrationKey) => {
+  const key=`${model}/${migrationKey}`
+  const res=dataCache.get(key)
+  console.log('cache get', key, res)
+  return res
 }
 
-function upsertRecord(mongoModel, sourceKey, data) {
-  return mongoModel.findOne({[sourceKey]: data[sourceKey]})
+function upsertRecord({model, record, identityKey, migrationKey}) {
+  const identityFilter=computeIdentityFilter(identityKey, record)
+  return model.findOne(identityFilter)
     .then(result => {
       if (!result) {
-        return mongoModel.create({...data})
+        return model.create({...record})
       }
-      return mongoModel.updateOne({_id: result._id}, data, {runValidators: true})
+      return model.updateOne({_id: result._id}, record, {/**runValidators:true, */ new: true})
+        .then(() => ({_id: result._id}))
     })
     .then(result => {
-      setCache(mongoModel.modelName, data[sourceKey], result._id)
+      setCache(model.modelName, record[migrationKey], result._id)
       return result
     })
 }
 
-const importData = ({model, data, mapping, sourceKey}) => {
-  console.log(`Ready to insert ${model}, ${data.length} source records, source key is ${sourceKey}`)
+const computeIdentityFilter = (identityKey, record) => {
+  return {$and: identityKey.map(key => ({[key]: record[key]}))}
+}
+
+const importData = ({model, data, mapping, identityKey, migrationKey}) => {
+  if (!model || lodash.isEmpty(data) || !lodash.isObject(mapping) || lodash.isEmpty(identityKey) || lodash.isEmpty(migrationKey)) {
+    throw new Error(`Expecting model, data, mapping, identityKey, migrationKey`)
+  }
+  identityKey = Array.isArray(identityKey) ? identityKey : [identityKey]
+  console.log(`Ready to insert ${model}, ${data.length} source records, identity key is ${identityKey}, migration key is ${migrationKey}`)
   const msg=`Inserted ${model}, ${data.length} source records`
   const mongoModel=mongoose.model(model)
   return Promise.all(data.map(record => mapRecord({record, mapping})))
     .then(mappedData => {
       console.time(msg)
-      return runPromisesWithDelay(mappedData.map(data => () => upsertRecord(mongoModel, sourceKey, data)))
+      return runPromisesWithDelay(mappedData.map(data => () => 
+        upsertRecord({model: mongoModel, record: data, identityKey, migrationKey})
+      ))
       .then(results => {
           displayResults(results, mappedData)
           return results

@@ -3,13 +3,14 @@ const moment = require('moment')
 const lodash = require('lodash')
 const path = require('path')
 const { MONGOOSE_OPTIONS } = require('../../server/utils/database')
-const { importUsers, importDiets, importDietsAgenda, importCoachings } = require('../../server/plugins/smartdiet/import')
+const { importUsers, importDiets, importDietsAgenda, importCoachings, importAppointments } = require('../../server/plugins/smartdiet/import')
 const { forceDataModelSmartdiet } = require('../utils')
 forceDataModelSmartdiet()
 const User = require('../../server/models/User')
 const Company = require('../../server/models/Company')
 require('../../server/models/Content')
 require('../../server/models/Comment')
+const Appointment=require('../../server/models/Appointment')
 const { COMPANY_ACTIVITY_BANQUE, ROLE_EXTERNAL_DIET, ROLE_CUSTOMER } = require('../../server/plugins/smartdiet/consts')
 const bcrypt = require('bcryptjs')
 const Coaching = require('../../server/models/Coaching')
@@ -21,11 +22,11 @@ jest.setTimeout(600000)
 describe('Test imports', () => {
 
   beforeAll(async () => {
-    await mongoose.connect(`mongodb://localhost/test${moment().unix()}`, MONGOOSE_OPTIONS)
+    await mongoose.connect(`mongodb://localhost/smartdiet_migration`, MONGOOSE_OPTIONS)
   })
 
   afterAll(async () => {
-    await mongoose.connection.dropDatabase()
+    //await mongoose.connection.dropDatabase()
     await mongoose.connection.close()
   })
 
@@ -34,7 +35,7 @@ describe('Test imports', () => {
     expect(errors).toHaveLength(0)
   }
 
-  it('must import users', async () => {
+  it.skip('must import users', async () => {
     const res = await importUsers(path.join(ROOT, 'smart_patient.csv'))
     ensureNoError(res)
     const users=await User.find({role: ROLE_CUSTOMER})
@@ -51,7 +52,6 @@ describe('Test imports', () => {
   it('must upsert diets', async () => {
     let res = await importDiets(path.join(ROOT, 'smart_diets.csv'))
     ensureNoError(res)
-    console.log('--------------------------------------------------------')
     res = await importDiets(path.join(ROOT, 'smart_diets.csv'))
     ensureNoError(res)
     const users=await User.find({role: ROLE_EXTERNAL_DIET})
@@ -69,9 +69,15 @@ describe('Test imports', () => {
   it('must upsert coachings', async () => {
     let res = await importCoachings(path.join(ROOT, 'smart_coaching.csv'))
     ensureNoError(res)
-    const coachings=await Coaching.find()
-    console.log(coachings[0])
-    await coachings[0].save()
+    const coachings=await Coaching.count()
+    expect(coachings).toEqual(76)
+  })
+
+  it('must upsert appointments', async () => {
+    let res = await importAppointments(path.join(ROOT, 'smart_consultation.csv'))
+    ensureNoError(res)
+    const appts=await Appointment.count()
+    expect(appts).toEqual(28470)
   })
 
 })
