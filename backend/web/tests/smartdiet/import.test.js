@@ -3,7 +3,7 @@ const moment = require('moment')
 const lodash = require('lodash')
 const path = require('path')
 const { MONGOOSE_OPTIONS } = require('../../server/utils/database')
-const { importUsers, importDiets, importDietsAgenda, importCoachings, importAppointments } = require('../../server/plugins/smartdiet/import')
+const { importUsers, importDiets, importDietsAgenda, importCoachings, importAppointments, importCompanies } = require('../../server/plugins/smartdiet/import')
 const { forceDataModelSmartdiet } = require('../utils')
 forceDataModelSmartdiet()
 const User = require('../../server/models/User')
@@ -26,16 +26,26 @@ describe('Test imports', () => {
   })
 
   afterAll(async () => {
-    //await mongoose.connection.dropDatabase()
+    // await mongoose.connection.dropDatabase()
     await mongoose.connection.close()
   })
 
   const ensureNoError = result => {
-    const errors=result.filter(r => r.status=='rejected').map(r => r.reason)
-    expect(errors).toHaveLength(0)
+    const errors=result.filter(r => !r.success)
+    if (errors.length>0) {
+      console.error(JSON.stringify(errors.slice(0, 10)))
+    }
+    expect(errors.length).toEqual(0)
   }
 
-  it.skip('must import users', async () => {
+  it('must import companies', async () => {
+    const res = await importCompanies(path.join(ROOT, 'smart_project.csv'))
+    ensureNoError(res)
+    const companies=await Company.find()
+    expect(companies).toHaveLength(4)
+  })
+
+  it('must import users', async () => {
     const res = await importUsers(path.join(ROOT, 'smart_patient.csv'))
     ensureNoError(res)
     const users=await User.find({role: ROLE_CUSTOMER})
@@ -66,17 +76,17 @@ describe('Test imports', () => {
     expect(users.filter(u => !u.smartagenda_id).length).toBeGreaterThan(0)
   })
 
-  it('must upsert coachings', async () => {
+  it.only('must upsert coachings', async () => {
     let res = await importCoachings(path.join(ROOT, 'smart_coaching.csv'))
     ensureNoError(res)
-    const coachings=await Coaching.count()
+    const coachings=await Coaching.countDocuments()
     expect(coachings).toEqual(76)
   })
 
   it('must upsert appointments', async () => {
     let res = await importAppointments(path.join(ROOT, 'smart_consultation.csv'))
     ensureNoError(res)
-    const appts=await Appointment.count()
+    const appts=await Appointment.countDocuments()
     expect(appts).toEqual(28470)
   })
 

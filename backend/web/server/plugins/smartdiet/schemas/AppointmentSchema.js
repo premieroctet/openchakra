@@ -61,6 +61,10 @@ const AppointmentSchema = new Schema({
     ref: 'quizz',
     required: true,
   }],
+  migration_id: {
+    type: Number,
+    required: false,
+  },
 }, schemaOptions)
 
 AppointmentSchema.virtual('order').get(function() {

@@ -62,7 +62,11 @@ const CompanySchema = new Schema(
     script: {
       type: String,
       required: false,
-    }
+    },
+    migration_id: {
+      type: Number,
+      required: false,
+    },
   },
   schemaOptions,
 )

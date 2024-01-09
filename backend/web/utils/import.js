@@ -128,19 +128,7 @@ const mapAttribute=({record, mappingFn}) => {
 const mapRecord = ({record, mapping}) => {
   const mappedArray=Object.entries(mapping).map(([k, v])=> [k, mapAttribute({record, mappingFn: v})])
   const mapped=Object.fromEntries(mappedArray)
-  // console.log(record, 'mapped to', mapped)
   return mapped
-}
-
-const displayResults= (results, records) => {
-  // results.forEach((res, idx) => {
-  //   if (res.status=='rejected') {
-  //     console.error(`${JSON.stringify(records[idx])}=>${res.reason}`)
-  //   }
-  //   if (res.status=='fulfilled') {
-  //     console.log(`${JSON.stringify(records[idx])}=>${JSON.stringify(res.value)}`)
-  //   }
-  // })
 }
 
 const dataCache = new NodeCache()
@@ -150,14 +138,12 @@ const setCache = (model, migrationKey, destinationKey) => {
     throw new Error(`${model}:${migrationKey} dest key is empty`)
   }
   const key = `${model}/${migrationKey}`
-  console.log('cache set', key, destinationKey)
   dataCache.set(key, destinationKey)
 }
 
 const getCache = (model, migrationKey) => {
   const key=`${model}/${migrationKey}`
   const res=dataCache.get(key)
-  console.log('cache get', key, res)
   return res
 }
 
@@ -181,7 +167,7 @@ const computeIdentityFilter = (identityKey, record) => {
   return {$and: identityKey.map(key => ({[key]: record[key]}))}
 }
 
-const importData = ({model, data, mapping, identityKey, migrationKey}) => {
+const importData = ({model, data, mapping, identityKey, migrationKey, progressCb}) => {
   if (!model || lodash.isEmpty(data) || !lodash.isObject(mapping) || lodash.isEmpty(identityKey) || lodash.isEmpty(migrationKey)) {
     throw new Error(`Expecting model, data, mapping, identityKey, migrationKey`)
   }
@@ -191,13 +177,20 @@ const importData = ({model, data, mapping, identityKey, migrationKey}) => {
   const mongoModel=mongoose.model(model)
   return Promise.all(data.map(record => mapRecord({record, mapping})))
     .then(mappedData => {
+      const recordsCount=mappedData.length
       console.time(msg)
-      return runPromisesWithDelay(mappedData.map(data => () => 
-        upsertRecord({model: mongoModel, record: data, identityKey, migrationKey})
+      return runPromisesWithDelay(mappedData.map((data, index) => () => {
+        return upsertRecord({model: mongoModel, record: data, identityKey, migrationKey})
+          .finally(() => progressCb && progressCb(index, recordsCount))
+      }
       ))
       .then(results => {
-          displayResults(results, mappedData)
-          return results
+          const createResult=(result, index) => ({
+            index,
+            success: result.status=='fulfilled',
+            error: result.reason.message
+          })
+          return results.map((r, index) => createResult(r, index))
         })
     })
     .finally(()=> console.timeEnd(msg))

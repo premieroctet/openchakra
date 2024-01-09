@@ -6,7 +6,7 @@ const { guessDelimiter } = require('../../../utils/text')
 const Company=require('../../models/Company')
 const User=require('../../models/User')
 const AppointmentType=require('../../models/AppointmentType')
-const { ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, DIET_REGISTRATION_STATUS_ACTIVE, COMPANY_ACTIVITY_ASSURANCE } = require('./consts')
+const { ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, DIET_REGISTRATION_STATUS_ACTIVE, COMPANY_ACTIVITY_ASSURANCE, COMPANY_ACTIVITY_OTHER } = require('./consts')
 const { CREATED_AT_ATTRIBUTE } = require('../../../utils/consts')
 const AppointmentTypeSchema = require('./schemas/AppointmentTypeSchema')
 require('../../models/User')
@@ -23,7 +23,17 @@ const computePseudo = record => {
   return letters.join('').toUpperCase() || 'FAK'
 }
 
-const USER_MAPPING= company => ({
+const COMPANY_MAPPING= {
+  name: 'name',
+  size: () => 1,
+  activity: () => COMPANY_ACTIVITY_OTHER,
+  migration_id: 'SDPROJECTID',
+}
+
+const COMPANY_KEY='name'
+const COMPANY_MIGRATION_KEY='migration_id'
+
+const USER_MAPPING={
   role: () => ROLE_CUSTOMER,
   email: 'emailCanonical',
   firstname: ({record}) => record.firstname || 'inconnu',
@@ -31,10 +41,10 @@ const USER_MAPPING= company => ({
   dataTreatmentAccepted: () => true,
   cguAccepted: () => true,
   password: () => DEFAULT_PASSWORD,
-  company: () => company,
+  company: ({cache, record}) => cache('company', record.SDPROJECTID),
   pseudo: ({record}) => computePseudo(record),
   migration_id: 'SDPATIENTID'
-})
+}
 
 const USER_KEY='email'
 const USER_MIGRATION_KEY='migration_id'
@@ -82,23 +92,34 @@ const APPOINTMENT_MAPPING= prestation_id => ({
 const APPOINTMENT_KEY=['coaching', 'start_date']
 const APPOINTMENT_MIGRATION_KEY='migration_id'
 
+const progressCb = step => (index, total)=> {
+  step=step||1
+  if (step && index%step==0) {
+    console.log(`${index}/${total}`)
+  }
+}
+
+const importCompanies = async input_file => {
+  const contents=fs.readFileSync(input_file)
+  return Promise.all([guessFileType(contents), guessDelimiter(contents)])
+    .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
+    .then(({records}) => 
+      importData({model: 'company', data:records, mapping:COMPANY_MAPPING, identityKey: COMPANY_KEY, 
+        migrationKey: COMPANY_MIGRATION_KEY, progressCb: progressCb()}))
+}
+
 
 const importUsers = async input_file => {
   // Deactivate password encryption
   const schema=User.schema
   schema.paths.password.setters=[]
   // End deactivate password encryption
-  let company=await Company.findOne({name: COMPANY_NAME})
-  if (!company) {
-    company=await Company.create({name: COMPANY_NAME, activity: COMPANY_ACTIVITY_ASSURANCE, size: 500})
-  }
-  company=company._id
-
   const contents=fs.readFileSync(input_file)
   return Promise.all([guessFileType(contents), guessDelimiter(contents)])
     .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
     .then(({records}) => 
-      importData({model: 'user', data:records, mapping:USER_MAPPING(company), identityKey: USER_KEY, migrationKey: USER_MIGRATION_KEY})
+      importData({model: 'user', data:records, mapping:USER_MAPPING, identityKey: USER_KEY, 
+        migrationKey: USER_MIGRATION_KEY, progressCb: progressCb(1000)})
     )
 }
 
@@ -136,7 +157,8 @@ const importAppointments = async input_file => {
   // End deactivate password encryption
   let prestation=await AppointmentType.findOne({title: PRESTATION_NAME})
   if (!prestation) {
-    prestation=await AppointmentType.create({title: PRESTATION_NAME, duration: PRESTATION_DURATION, smartagenda_id: PRESTATION_SMARTAGENDA_ID})
+    prestation=await AppointmentType.create({title: PRESTATION_NAME, duration: PRESTATION_DURATION, 
+      smartagenda_id: PRESTATION_SMARTAGENDA_ID})
   }
   prestation=prestation._id
 
@@ -145,13 +167,14 @@ const importAppointments = async input_file => {
     .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
     .then(({records}) => 
       importData({model: 'appointment', data:records, mapping:APPOINTMENT_MAPPING(prestation), 
-      identityKey: APPOINTMENT_KEY, migrationKey: APPOINTMENT_MIGRATION_KEY}
+      identityKey: APPOINTMENT_KEY, migrationKey: APPOINTMENT_MIGRATION_KEY, progressCb: progressCb(1000)}
     ))
 }
 
 
 
 module.exports={
+  importCompanies,
   importUsers,
   importDiets,
   importDietsAgenda,

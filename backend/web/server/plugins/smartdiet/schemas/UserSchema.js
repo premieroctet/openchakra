@@ -315,7 +315,11 @@ const UserSchema = new Schema({
   last_activity: {
     type: Date,
     required: false,
-  }
+  },
+  migration_id: {
+    type: Number,
+    required: false,
+  },
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */

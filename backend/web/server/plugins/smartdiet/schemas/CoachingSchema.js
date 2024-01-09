@@ -68,6 +68,10 @@ const CoachingSchema = new Schema({
   food_program: {
     type: String,
   },
+  migration_id: {
+    type: Number,
+    required: false,
+  },
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
