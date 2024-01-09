@@ -204,6 +204,13 @@ const getExposedModels = () => {
   return models.value()
 }
 
+function handleReliesOn(directAttribute, relies_on, requiredFields) {
+  const search = new RegExp(`^${directAttribute}([\.|$])`)
+  const replace = (match, group1) => `${relies_on}${group1 == '.' ? '.' : ''}`
+  requiredFields = requiredFields.map(f => f.replace(search, replace))
+  return requiredFields
+}
+
 // TODO query.populates accepts an array of populates !!!!
 const buildPopulates = (modelName, fields) => {
   // Retain all ref fields
@@ -228,9 +235,7 @@ const buildPopulates = (modelName, fields) => {
       }
       let relies_on=lodash.get(DECLARED_VIRTUALS, `${modelName}.${directAttribute}.relies_on`) || null
       if (relies_on) {
-        const search=new RegExp(`^${directAttribute}(\.|$)`)
-        const replace=(match, group1) => `${relies_on}${group1=='.'?'.':''}`
-	      requiredFields=requiredFields.map(f => f.replace(search, replace))
+        requiredFields = handleReliesOn(directAttribute, relies_on, requiredFields)
       }
     })
   }
@@ -783,4 +788,6 @@ module.exports = {
   setImportDataFunction,
   importData,
   setPostDeleteData,
+  handleReliesOn,
 }
+

@@ -633,6 +633,9 @@ coachings.diet.availability_ranges.appointment_type,coachings.nutrition_advices'
       options: { ref: 'appointment' }
     },
   })
+  // TODO This causes error because of relies_on
+  //declareVirtualField({ model: m, field: 'diet_appointments_count', instance: 'Number', requires: 'diet_appointments'})
+  declareVirtualField({ model: m, field: 'diet_appointments_count', instance: 'Number', requires: 'diet_coachings'})
   declareVirtualField({
     model: m, field: 'diet_patients', instance: 'Array',
     relies_on: 'diet_coachings.user',
@@ -642,6 +645,9 @@ coachings.diet.availability_ranges.appointment_type,coachings.nutrition_advices'
       options: { ref: 'user' }
     },
   })
+  // TODO This causes error because of relies_on
+  //declareVirtualField({ model: m, field: 'diet_patients_count', instance: 'Number', requires: 'diet_patients'})
+  declareVirtualField({ model: m, field: 'diet_patients_count', instance: 'Number', requires: 'diet_coachings.appointments'})
   declareEnumField({ model: m, field: 'registration_warning', enumValues: REGISTRATION_WARNING })
   declareEnumField({ model: m, field: 'activities', enumValues: DIET_ACTIVITIES })
   declareVirtualField({
@@ -654,6 +660,14 @@ coachings.diet.availability_ranges.appointment_type,coachings.nutrition_advices'
   })
   declareVirtualField({ model: m, field: 'imc', instance: 'Number', requires: 'measures,height' })
   declareVirtualField({ model: m, field: 'days_inactivity', instance: 'Number', requires: 'last_activity' })
+  declareVirtualField({
+    model: m, field: 'keys', instance: 'Array',
+    multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: { ref: 'key' }
+    },
+  })
 })
 // End user/loggedUser
 
@@ -908,6 +922,7 @@ declareVirtualField({
 })
 declareVirtualField({ model: 'key', field: 'user_passed_challenges', instance: 'Number', requires: 'passed_events' })
 declareVirtualField({ model: 'key', field: 'user_passed_webinars', instance: 'Number', requires: 'passed_events' })
+declareVirtualField({ model: 'key', field: 'dummy', instance: 'Number'})
 
 
 declareVirtualField({
@@ -1224,7 +1239,7 @@ declareVirtualField({
 })
 declareVirtualField({
   model: 'lead', field: 'company',
-  instance: 'Array', multiple: true,
+  instance: 'Company', multiple: false,
   caster: {
     instance: 'ObjectID',
     options: { ref: 'company' }

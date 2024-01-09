@@ -634,14 +634,28 @@ UserSchema.virtual("availability_ranges", {
   foreignField: "user", // is equal to foreignField
 })
 
+UserSchema.virtual("keys", {
+  ref: "key", // The Model to use
+  localField: "dummy", // Find in Model, where localField
+  foreignField: "dummy", // is equal to foreignField
+})
+
 // Returned availabilities/ranges are not store in database
 UserSchema.virtual('diet_appointments', {localField:'tagada', foreignField:'tagada'}).get(function() {
   return lodash.flatten(this.diet_coachings?.map(c => c.appointments))
 })
 
+UserSchema.virtual('diet_appointments_count', {localField:'tagada', foreignField:'tagada'}).get(function() {
+  return this.diet_appointments?.length || 0
+})
+
 // Returned availabilities/ranges are not store in database
 UserSchema.virtual('diet_patients', {localField:'tagada', foreignField:'tagada'}).get(function() {
   return lodash.uniqBy(this.diet_coachings?.map(c => c?.user), u => u?._id).filter(v => !!v)
+})
+
+UserSchema.virtual('diet_patients_count', {localField:'tagada', foreignField:'tagada'}).get(function() {
+  return this.diet_patients?.length || 0
 })
 
 // Returned availabilities/ranges are not store in database
