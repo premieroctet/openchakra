@@ -90,7 +90,10 @@ const ContentSchema = new Schema({
     ref: 'content',
     required: true,
   }],
-
+  migration_id: {
+    type: Number,
+    required: false,
+  }
 }, schemaOptions)
 
 ContentSchema.virtual('likes_count').get(function() {

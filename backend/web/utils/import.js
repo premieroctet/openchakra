@@ -122,7 +122,8 @@ const mapAttribute=({record, mappingFn}) => {
   if (typeof mappingFn=='string') {
     return record[mappingFn]
   }
-  return mappingFn({record, cache:getCache})
+ const res=mappingFn({record, cache:getCache})
+ return res
 }
 
 const mapRecord = ({record, mapping}) => {
@@ -181,6 +182,7 @@ const importData = ({model, data, mapping, identityKey, migrationKey, progressCb
       console.time(msg)
       return runPromisesWithDelay(mappedData.map((data, index) => () => {
         return upsertRecord({model: mongoModel, record: data, identityKey, migrationKey})
+          // .catch(err => {console.error(err); throw err})
           .finally(() => progressCb && progressCb(index, recordsCount))
       }
       ))
@@ -188,12 +190,27 @@ const importData = ({model, data, mapping, identityKey, migrationKey, progressCb
           const createResult=(result, index) => ({
             index,
             success: result.status=='fulfilled',
-            error: result.reason.message
+            error: result.reason?.message || result.reason?._message || result.reason
           })
           return results.map((r, index) => createResult(r, index))
         })
     })
     .finally(()=> console.timeEnd(msg))
+}
+
+const prepareCache = () => {
+  const MODELS=mongoose.modelNames()
+  const promises=MODELS.map(modelName => {
+    return mongoose.model(modelName).find({migration_id: {$ne: null}}, {migration_id:1})
+      .then(data => {
+        const msg=`Caching ${modelName} ${data.length}`
+        console.time(msg)
+        data.forEach(d => setCache(modelName, d.migration_id.toString(), d._id.toString()))
+        console.timeEnd(msg)
+        return true
+      })
+  })
+  return Promise.all(promises)
 }
 
 module.exports={
@@ -202,5 +219,6 @@ module.exports={
   getTabs, 
   extractSample,
   importData,
+  prepareCache,
 }
 

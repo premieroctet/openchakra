@@ -6,17 +6,18 @@ const { guessDelimiter } = require('../../../utils/text')
 const Company=require('../../models/Company')
 const User=require('../../models/User')
 const AppointmentType=require('../../models/AppointmentType')
-const { ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, DIET_REGISTRATION_STATUS_ACTIVE, COMPANY_ACTIVITY_ASSURANCE, COMPANY_ACTIVITY_OTHER } = require('./consts')
+const { ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, DIET_REGISTRATION_STATUS_ACTIVE, COMPANY_ACTIVITY_ASSURANCE, COMPANY_ACTIVITY_OTHER, CONTENTS_ARTICLE, CONTENTS_DOCUMENT } = require('./consts')
 const { CREATED_AT_ATTRIBUTE } = require('../../../utils/consts')
 const AppointmentTypeSchema = require('./schemas/AppointmentTypeSchema')
 require('../../models/User')
 require('../../models/Coaching')
+const Key=require('../../models/Key')
 
 const DEFAULT_PASSWORD='DEFAULT'
-const COMPANY_NAME='COmpagnie import'
 const PRESTATION_DURATION=45
 const PRESTATION_NAME=`Générique ${PRESTATION_DURATION} minutes`
 const PRESTATION_SMARTAGENDA_ID=-1
+const KEY_NAME='Clé import'
 
 const computePseudo = record => {
   const letters=[record.firstname?.slice(0, 1), record.lastname?.slice(0, 2)].filter(v => !!v)
@@ -89,8 +90,37 @@ const APPOINTMENT_MAPPING= prestation_id => ({
   migration_id: 'SDCONSULTID',
 })
 
+
 const APPOINTMENT_KEY=['coaching', 'start_date']
 const APPOINTMENT_MIGRATION_KEY='migration_id'
+
+const CONTENT_TYPE_MAPPING={
+  1 : CONTENTS_ARTICLE,
+  4 : CONTENTS_DOCUMENT,
+}
+
+const CONTENT_MAPPING= key_id => ({
+  name: 'name',
+  type: ({record}) => CONTENT_TYPE_MAPPING[record.type],
+  duration: () => 0,
+  picture: () => 'unknown',
+  contents: 'url',
+  default: () => true,
+  creator: ({record, cache}) => cache('user', record.SDDIETID),
+  key : () => key_id,
+  migration_id: 'SDCONTENTID',
+})
+
+const CONTENT_KEY='name'
+const CONTENT_MIGRATION_KEY='migration_id'
+
+const CONTENT_PATIENT_MAPPING={
+  migration_id: 'SDCONTENTID',
+  viewed_by: ({cache, record}) => record.SDPATIENTID.split(',').map(id => cache('user', id)),
+}
+
+const CONTENT_PATIENT_KEY='migration_id'
+const CONTENT_PATIENT_MIGRATION_KEY='migration_id'
 
 const progressCb = step => (index, total)=> {
   step=step||1
@@ -146,7 +176,6 @@ const importDietsAgenda = async input_file => {
 }
 
 const importCoachings = async input_file => {
-  // End deactivate password encryption
   const contents=fs.readFileSync(input_file)
   return Promise.all([guessFileType(contents), guessDelimiter(contents)])
     .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
@@ -154,7 +183,6 @@ const importCoachings = async input_file => {
 }
 
 const importAppointments = async input_file => {
-  // End deactivate password encryption
   let prestation=await AppointmentType.findOne({title: PRESTATION_NAME})
   if (!prestation) {
     prestation=await AppointmentType.create({title: PRESTATION_NAME, duration: PRESTATION_DURATION, 
@@ -171,6 +199,28 @@ const importAppointments = async input_file => {
     ))
 }
 
+const importContents = async input_file => {
+  let key=await Key.findOne({name: KEY_NAME})
+  if (!key) {
+    key=await Key.create({
+      name: KEY_NAME, trophy_off_picture: 'N/A', trophy_on_picture: 'N/A', spoons_count_for_trophy: 0, picture: 'N/A',
+    })
+  }
+  key=key._id
+
+  const contents=fs.readFileSync(input_file)
+  return Promise.all([guessFileType(contents), guessDelimiter(contents)])
+    .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
+    .then(({records}) => importData({model: 'content', data:records, mapping:CONTENT_MAPPING(key), identityKey: CONTENT_KEY, migrationKey: CONTENT_MIGRATION_KEY}))
+}
+
+const importPatientContents = async input_file => {
+  const contents=fs.readFileSync(input_file)
+  return Promise.all([guessFileType(contents), guessDelimiter(contents)])
+    .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
+    .then(({records}) => importData({
+      model: 'content', data:records, mapping:CONTENT_PATIENT_MAPPING, identityKey: CONTENT_PATIENT_KEY, migrationKey: CONTENT_PATIENT_MIGRATION_KEY}))
+}
 
 
 module.exports={
@@ -180,4 +230,6 @@ module.exports={
   importDietsAgenda,
   importCoachings,
   importAppointments,
+  importContents,
+  importPatientContents,
 }
