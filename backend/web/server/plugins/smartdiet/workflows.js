@@ -168,11 +168,9 @@ const computeWorkflowLists = () => {
 }
 
 const updateWorkflows= () => {
-  if (!isProduction()) {
-    return Promise.resolve([])
-  }
   return computeWorkflowLists()
     .then(lists => {
+      console.log(`Lists`, Object.entries(lists).map(([key, entry])=> ([key, entry.id, entry.add.length])))
       let promises=Object.values(lists).map(({id, add, remove})=> {
         const result=[]
         if (!lodash.isEmpty(add)) {

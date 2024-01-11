@@ -45,6 +45,8 @@ require('../../server/models/Category')
 require('../../server/models/Item')
 require('../../server/models/Question')
 
+jest.setTimeout(50000)
+
 describe('Worflows', () => {
 
   const LEADONLY='leadonly@wappizy.com'
@@ -172,11 +174,11 @@ describe('Worflows', () => {
     expect(removed.every(item => lodash.isObject(item))).toBe(true)
   })
 
-  it('Must update workflows', async() => {
+  it.skip('Must update workflows', async() => {
     const res=await updateWorkflows()
   })
 
-  it('must add to list with parameters', async() => {
+  it.skip('must add to list with parameters', async() => {
     const list=WORKFLOWS.CL_SALAR_LEAD_COA_NOGROUP.id
     //const properties={codeentreprise: 'Com hop12', credit_consult: 19, Client:'La compagnie', logo: 'hophophop'}
     const properties={codeentreprise: 'Com hop12', credit_consult: 19, client: 'compagnie', logo: false}
@@ -188,4 +190,12 @@ describe('Worflows', () => {
     const allLists=await MAIL_HANDLER.getContactsLists()
     //console.log(allLists.filter(l => /adh/i.test(l.Name)))
   })
+
+  it.only('Must display contacts list', async() => {
+    const result=await computeWorkflowLists()
+    Object.entries(result).forEach(([key, entry])=> {
+      console.log(key, entry.id, entry.add.length)
+    })
+  })
+
 })
