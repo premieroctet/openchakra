@@ -1,5 +1,6 @@
 const csv_parse = require('csv-parse/lib/sync')
 const lodash=require('lodash')
+const moment=require('moment')
 const ExcelJS = require('exceljs')
 const {JSON_TYPE, TEXT_TYPE, XL_TYPE} = require('./consts')
 const {bufferToString} = require('./text')
@@ -135,7 +136,7 @@ const mapRecord = ({record, mapping}) => {
 const dataCache = new NodeCache()
 
 const setCache = (model, migrationKey, destinationKey) => {
-  if (lodash.isEmpty(destinationKey)) {
+  if (lodash.isNil(destinationKey)) {
     throw new Error(`${model}:${migrationKey} dest key is empty`)
   }
   const key = `${model}/${migrationKey}`
@@ -148,11 +149,18 @@ const getCache = (model, migrationKey) => {
   return res
 }
 
-function upsertRecord({model, record, identityKey, migrationKey}) {
+const countCache = (model) => {
+  return dataCache.keys().filter(k => k.startsWith(`${model}/`)).length
+}
+
+function upsertRecord({model, record, identityKey, migrationKey, updateOnly}) {
   const identityFilter=computeIdentityFilter(identityKey, record)
   return model.findOne(identityFilter)
     .then(result => {
       if (!result) {
+        if (updateOnly) {
+          throw new Error(`Could not find ${model.modelName} matching ${JSON.stringify(identityFilter)}`)
+        }
         return model.create({...record})
       }
       return model.updateOne({_id: result._id}, record, {/**runValidators:true, */ new: true})
@@ -168,7 +176,7 @@ const computeIdentityFilter = (identityKey, record) => {
   return {$and: identityKey.map(key => ({[key]: record[key]}))}
 }
 
-const importData = ({model, data, mapping, identityKey, migrationKey, progressCb}) => {
+const importData = ({model, data, mapping, identityKey, migrationKey, progressCb, updateOnly}) => {
   if (!model || lodash.isEmpty(data) || !lodash.isObject(mapping) || lodash.isEmpty(identityKey) || lodash.isEmpty(migrationKey)) {
     throw new Error(`Expecting model, data, mapping, identityKey, migrationKey`)
   }
@@ -181,7 +189,7 @@ const importData = ({model, data, mapping, identityKey, migrationKey, progressCb
       const recordsCount=mappedData.length
       console.time(msg)
       return runPromisesWithDelay(mappedData.map((data, index) => () => {
-        return upsertRecord({model: mongoModel, record: data, identityKey, migrationKey})
+        return upsertRecord({model: mongoModel, record: data, identityKey, migrationKey, updateOnly})
           // .catch(err => {console.error(err); throw err})
           .finally(() => progressCb && progressCb(index, recordsCount))
       }
@@ -192,7 +200,9 @@ const importData = ({model, data, mapping, identityKey, migrationKey, progressCb
             success: result.status=='fulfilled',
             error: result.reason?.message || result.reason?._message || result.reason
           })
-          return results.map((r, index) => createResult(r, index))
+          const mappedResults=results.map((r, index) => createResult(r, index))
+          console.log(lodash(mappedResults).countBy('success').value())
+          return mappedResults
         })
     })
     .finally(()=> console.timeEnd(msg))
@@ -201,16 +211,25 @@ const importData = ({model, data, mapping, identityKey, migrationKey, progressCb
 const prepareCache = () => {
   const MODELS=mongoose.modelNames()
   const promises=MODELS.map(modelName => {
-    return mongoose.model(modelName).find({migration_id: {$ne: null}}, {migration_id:1})
+    return mongoose.model(modelName).find({migration_id: {$ne: null}})
+      .populate('coaching')
       .then(data => {
         const msg=`Caching ${modelName} ${data.length}`
         console.time(msg)
         data.forEach(d => setCache(modelName, d.migration_id.toString(), d._id.toString()))
+        if (modelName=='appointment') {
+          const msg2=`Caching extra ${modelName} ${data.length}`
+          console.time(msg2)
+          data.forEach(d => setCache('consultation_patient', d.migration_id.toString(), d.coaching.user._id.toString()))
+          data.forEach(d => setCache('consultation_date', d.migration_id.toString(), moment(d.start_date).unix()))
+          console.timeEnd(msg2)
+        }
         console.timeEnd(msg)
-        return true
+        console.log('Cached', modelName, countCache(modelName))
       })
   })
   return Promise.all(promises)
+    .then(() => console.log('Cache keys', lodash.uniq(dataCache.keys().map(k=>k.split('/')[0]))))
 }
 
 module.exports={

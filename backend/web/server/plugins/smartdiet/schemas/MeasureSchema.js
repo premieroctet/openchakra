@@ -41,6 +41,10 @@ const MeasureSchema = new Schema({
     ref: 'user',
     required: [true, "L'utilisateur est obligatoire"],
   },
+  migration_id: {
+    type: Number,
+    required: false,
+  },
 }, schemaOptions)
 
 module.exports = MeasureSchema

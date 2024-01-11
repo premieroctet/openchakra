@@ -13,9 +13,10 @@ const Appointment=require('../../server/models/Appointment')
 const { COMPANY_ACTIVITY_BANQUE, ROLE_EXTERNAL_DIET, ROLE_CUSTOMER } = require('../../server/plugins/smartdiet/consts')
 const bcrypt = require('bcryptjs')
 const Coaching = require('../../server/models/Coaching')
-const { importUsers, importDiets, importDietsAgenda, importCoachings, importAppointments, importCompanies, importContents, importPatientContents } = require('../../server/plugins/smartdiet/import')
+const { importUsers, importDiets, importDietsAgenda, importCoachings, importAppointments, importCompanies, importContents, importPatientContents, importMeasures } = require('../../server/plugins/smartdiet/import')
 const { prepareCache } = require('../../utils/import')
 const Content = require('../../server/models/Content')
+const Measure = require('../../server/models/Measure')
 
 const ROOT = path.join(__dirname, './data/migration')
 
@@ -29,12 +30,14 @@ describe('Test imports', () => {
   })
 
   afterAll(async () => {
-    // await mongoose.connection.dropDatabase()
     await mongoose.connection.close()
   })
 
   const ensureNoError = result => {
     const errors=result.filter(r => !r.success)
+    if (errors.length>0) {
+      console.log(JSON.stringify(errors))
+    }
     expect(errors).toHaveLength(0)
   }
 
@@ -52,17 +55,8 @@ describe('Test imports', () => {
     expect(users.length).toEqual(12323)
   })
 
-  it('must import diets', async () => {
-    let res = await importDiets(path.join(ROOT, 'smart_diets.csv'))
-    ensureNoError(res)
-    const users=await User.find({role: ROLE_EXTERNAL_DIET})
-    expect(users.length).toEqual(53)
-  })
-
   it('must upsert diets', async () => {
     let res = await importDiets(path.join(ROOT, 'smart_diets.csv'))
-    ensureNoError(res)
-    res = await importDiets(path.join(ROOT, 'smart_diets.csv'))
     ensureNoError(res)
     const users=await User.find({role: ROLE_EXTERNAL_DIET})
     expect(users.length).toEqual(53)
@@ -92,7 +86,7 @@ describe('Test imports', () => {
 
   it('must upsert contents', async () => {
     let res = await importContents(path.join(ROOT, 'smart_content.csv'))
-    // ensureNoError(res)
+    ensureNoError(res)
     const contents=await Content.countDocuments()
     expect(contents).toEqual(2)
   })
@@ -100,9 +94,18 @@ describe('Test imports', () => {
   it('must upsert contents patients', async () => {
     //let res = await importPatientContents(path.join(ROOT, 'smart_patient_contents.csv'))
     let res = await importPatientContents(path.join(ROOT, 'smart_patient_contents_modified.csv'))
+    ensureNoError(res)
     const contents=await Content.find()
     expect(contents).toHaveLength(2)
     console.log(contents)
   })
 
+  it('must upsert measures', async () => {
+    let res = await importMeasures(path.join(ROOT, 'smart_measure.csv'))
+    ensureNoError(res)
+    const measures=await Measure.find()
+    expect(measures).toHaveLength(21986)
+  })
+
 })
+

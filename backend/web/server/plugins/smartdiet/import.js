@@ -1,12 +1,12 @@
 const fs=require('fs')
 const lodash=require('lodash')
 const moment=require('moment')
-const {extractData, guessFileType, importData}=require('../../../utils/import')
+const {extractData, guessFileType, importData, prepareCache}=require('../../../utils/import')
 const { guessDelimiter } = require('../../../utils/text')
 const Company=require('../../models/Company')
 const User=require('../../models/User')
 const AppointmentType=require('../../models/AppointmentType')
-const { ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, DIET_REGISTRATION_STATUS_ACTIVE, COMPANY_ACTIVITY_ASSURANCE, COMPANY_ACTIVITY_OTHER, CONTENTS_ARTICLE, CONTENTS_DOCUMENT } = require('./consts')
+const { ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, DIET_REGISTRATION_STATUS_ACTIVE, COMPANY_ACTIVITY_ASSURANCE, COMPANY_ACTIVITY_OTHER, CONTENTS_ARTICLE, CONTENTS_DOCUMENT, CONTENTS_VIDEO, CONTENTS_INFOGRAPHY, CONTENTS_PODCAST } = require('./consts')
 const { CREATED_AT_ATTRIBUTE } = require('../../../utils/consts')
 const AppointmentTypeSchema = require('./schemas/AppointmentTypeSchema')
 require('../../models/User')
@@ -85,7 +85,7 @@ const APPOINTMENT_MAPPING= prestation_id => ({
   coaching: ({cache, record}) => cache('coaching', record.SDPROGRAMID),
   start_date: 'date',
   end_date: ({record}) => moment(record.date).add(45, 'minutes'),
-  synthesis: 'comment',
+  synthesis: 'comments',
   appointment_type: () => prestation_id,
   migration_id: 'SDCONSULTID',
 })
@@ -96,17 +96,20 @@ const APPOINTMENT_MIGRATION_KEY='migration_id'
 
 const CONTENT_TYPE_MAPPING={
   1 : CONTENTS_ARTICLE,
+  2 : CONTENTS_VIDEO,
+  3 : CONTENTS_INFOGRAPHY,
   4 : CONTENTS_DOCUMENT,
+  5 : CONTENTS_PODCAST,
 }
 
 const CONTENT_MAPPING= key_id => ({
   name: 'name',
   type: ({record}) => CONTENT_TYPE_MAPPING[record.type],
-  duration: () => 0,
+  duration: () => 1,
   picture: () => 'unknown',
   contents: 'url',
   default: () => true,
-  creator: ({record, cache}) => cache('user', record.SDDIETID),
+  creator: ({record, cache}) => {const diet=cache('user', record.SDDIETID); if (!diet) {console.error('No diet for',record.SDDIETID)};return diet},
   key : () => key_id,
   migration_id: 'SDCONTENTID',
 })
@@ -116,11 +119,26 @@ const CONTENT_MIGRATION_KEY='migration_id'
 
 const CONTENT_PATIENT_MAPPING={
   migration_id: 'SDCONTENTID',
-  viewed_by: ({cache, record}) => record.SDPATIENTID.split(',').map(id => cache('user', id)),
+  viewed_by: ({cache, record}) => record.SDPATIENTID.split(',').map(id => cache('user', id)).filter(v => !!v),
 }
 
 const CONTENT_PATIENT_KEY='migration_id'
 const CONTENT_PATIENT_MIGRATION_KEY='migration_id'
+
+const MEASURE_MAPPING={
+  migration_id: 'SDCONSULTID',
+  date: ({cache, record}) => cache('consultation_date', record.SDCONSULTID),
+  chest: 'chest',
+  waist: 'waist',
+  hips: 'pelvis',
+  thighs: ({record}) => lodash.mean([parseInt(record.leftthigh), parseInt(record.rightthigh)].filter(v => !!v)) || undefined,
+  arms: () => undefined,
+  weight: 'weight',
+  user:({cache, record}) => cache('consultation_patient', record.SDCONSULTID),
+}
+
+const MEASURE_MAPPING_KEY='migration_id'
+const MEASURE_MAPPING_MIGRATION__KEY='migration_id'
 
 const progressCb = step => (index, total)=> {
   step=step||1
@@ -149,7 +167,7 @@ const importUsers = async input_file => {
     .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
     .then(({records}) => 
       importData({model: 'user', data:records, mapping:USER_MAPPING, identityKey: USER_KEY, 
-        migrationKey: USER_MIGRATION_KEY, progressCb: progressCb(1000)})
+        migrationKey: USER_MIGRATION_KEY, progressCb: progressCb(2000)})
     )
 }
 
@@ -172,14 +190,16 @@ const importDietsAgenda = async input_file => {
   const contents=fs.readFileSync(input_file)
   return Promise.all([guessFileType(contents), guessDelimiter(contents)])
     .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
-    .then(({records}) => importData({model: 'user', data:records, mapping:DIETS_AGENDA_MAPPING, identityKey: USER_KEY, migrationKey:AGENDA_MIGRATION_KEY}))
+    .then(({records}) => importData({model: 'user', data:records, mapping:DIETS_AGENDA_MAPPING, 
+    identityKey: USER_KEY, migrationKey:AGENDA_MIGRATION_KEY, updateOnly: true}))
 }
 
 const importCoachings = async input_file => {
   const contents=fs.readFileSync(input_file)
   return Promise.all([guessFileType(contents), guessDelimiter(contents)])
     .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
-    .then(({records}) => importData({model: 'coaching', data:records, mapping:COACHING_MAPPING, identityKey: COACHING_KEY, migrationKey: COACHING_MIGRATION_KEY}))
+    .then(({records}) => importData({model: 'coaching', data:records, mapping:COACHING_MAPPING, 
+    identityKey: COACHING_KEY, migrationKey: COACHING_MIGRATION_KEY, progressCb: progressCb(1000)}))
 }
 
 const importAppointments = async input_file => {
@@ -195,7 +215,7 @@ const importAppointments = async input_file => {
     .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
     .then(({records}) => 
       importData({model: 'appointment', data:records, mapping:APPOINTMENT_MAPPING(prestation), 
-      identityKey: APPOINTMENT_KEY, migrationKey: APPOINTMENT_MIGRATION_KEY, progressCb: progressCb(1000)}
+      identityKey: APPOINTMENT_KEY, migrationKey: APPOINTMENT_MIGRATION_KEY, progressCb: progressCb(2000)}
     ))
 }
 
@@ -219,8 +239,24 @@ const importPatientContents = async input_file => {
   return Promise.all([guessFileType(contents), guessDelimiter(contents)])
     .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
     .then(({records}) => importData({
-      model: 'content', data:records, mapping:CONTENT_PATIENT_MAPPING, identityKey: CONTENT_PATIENT_KEY, migrationKey: CONTENT_PATIENT_MIGRATION_KEY}))
+      model: 'content', data:records, mapping:CONTENT_PATIENT_MAPPING, identityKey: CONTENT_PATIENT_KEY, 
+      migrationKey: CONTENT_PATIENT_MIGRATION_KEY, updateOnly: true}))
 }
+
+const importMeasures = async input_file => {
+  return prepareCache()
+    .then(() => {
+      const contents=fs.readFileSync(input_file)
+      return Promise.all([guessFileType(contents), guessDelimiter(contents)])
+      .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
+      .then(({records}) => 
+        importData({
+          model: 'measure', data:records, mapping:MEASURE_MAPPING, identityKey: MEASURE_MAPPING_KEY, 
+          migrationKey: MEASURE_MAPPING_MIGRATION__KEY, progressCb: progressCb(2000)
+        })
+      )
+    })
+  }
 
 
 module.exports={
@@ -232,4 +268,5 @@ module.exports={
   importAppointments,
   importContents,
   importPatientContents,
+  importMeasures,
 }
