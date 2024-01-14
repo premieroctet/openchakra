@@ -1,6 +1,7 @@
 const fs=require('fs')
 const lodash=require('lodash')
 const moment=require('moment')
+const path=require('path')
 const {extractData, guessFileType, importData, prepareCache}=require('../../../utils/import')
 const { guessDelimiter } = require('../../../utils/text')
 const Company=require('../../models/Company')
@@ -18,6 +19,65 @@ const PRESTATION_DURATION=45
 const PRESTATION_NAME=`Générique ${PRESTATION_DURATION} minutes`
 const PRESTATION_SMARTAGENDA_ID=-1
 const KEY_NAME='Clé import'
+
+
+const fixDiets = async directory => {
+  const CPINDEX=8
+  const PATH=path.join(directory, 'smart_diets.csv')
+  const contents=fs.readFileSync(PATH).toString()
+  const splitted=contents.split('\n').map(l => l.split(';'))
+  splitted.forEach((l, idx) => idx !=0 && !lodash.isEmpty(l[CPINDEX]) && l[CPINDEX].length==4 ? l[CPINDEX]+='0' : {})
+  // console.log(splitted)
+  const fixed_str=splitted.map(l => l.join(';')).join('\n')
+  fs.writeFileSync(PATH, fixed_str)
+}
+
+const fixPatients = async directory => {
+  const REPLACES=[
+    [/\\"/g, "'"], [/\\\\/g, ''], [/orange\.f\\\n/g, 'orange.f'],
+    [/\@hotmailfr"/g, '@hotmail.fr"'], [/\@orange\.f"/g, '@orange.fr"'], [/\@hotmail\.fr2/g, '@hotmail.fr'],
+    [/\@gmailcom"/g, '@gmail.com"'], [/\@gmail\.c"/g, '@gmail.com"'], [/\@aolcom"/g, '@aol.com"'], [/\@orangefr"/g, '@orange.fr"'], 
+    [/@sfr"/g, '@sfr.fr"'], [/\@yahoofr/g, "@yahoo.fr"], [/\@hotmailcom"/g, 'hotmail.com"'], [/\@neuffr"/g, '@neuf.fr"'], 
+    [/\@msncom"/g, '@msn.com"'], [/\@gmail"/g, '@gmail.com"'], [/\@free.f"/g, '@free.fr"'], [/\@orange,fr/g, 'orange.fr'],
+    [/\@live\.f"/g, '@live.fr"'], [/\@yahoo\.f"/g, '@yahoo.fr"'], [/francksurgis\.\@live\.fr/, 'francksurgis@live.fr'],
+    [/\@outlook\.f"/g, '@outlook.fr"'], [/\@yahoo"/g, '@yahoo.fr"'], [/\@lapos"/g, '@laposte.net"'],
+
+  ]
+  const PATH=path.join(directory, 'smart_patient.csv')
+  const contents=fs.readFileSync(PATH).toString()
+  let fixed=contents
+  REPLACES.forEach(([search, replace]) => fixed=fixed.replace(search, replace))
+  fs.writeFileSync(PATH, fixed)
+}
+
+const fixAppointments = directory => {
+  const REPLACES=[
+    [/\\"/g, "'"], [/\\\\/g, ''],
+  ]
+  const PATH=path.join(directory, 'smart_consultation.csv')
+  const contents=fs.readFileSync(PATH).toString()
+  let fixed=contents
+  REPLACES.forEach(([search, replace]) => fixed=fixed.replace(search, replace))
+  fs.writeFileSync(PATH, fixed)
+}
+
+const fixQuizz = directory => {
+  const REPLACES=[
+    [/.qui/g, 'Equi'], [/Végétariens\//g, 'Végétariens /'], [/Apéro \!/g, 'Apéro'], [/Fr.quences/g, 'Fréquences'],
+  ]
+  const PATH=path.join(directory, 'smart_quiz.csv')
+  const contents=fs.readFileSync(PATH).toString()
+  let fixed=contents
+  REPLACES.forEach(([search, replace]) => fixed=fixed.replace(search, replace))
+  fs.writeFileSync(PATH, fixed)
+}
+
+const fixFiles = async directory => {
+  await fixDiets(directory)
+  await fixPatients(directory)
+  await fixAppointments(directory)
+  await fixQuizz(directory)
+}
 
 const computePseudo = record => {
   const letters=[record.firstname?.slice(0, 1), record.lastname?.slice(0, 2)].filter(v => !!v)
@@ -53,23 +113,17 @@ const USER_MIGRATION_KEY='migration_id'
 const DIET_MAPPING={
   role: () => ROLE_EXTERNAL_DIET,
   password: () => DEFAULT_PASSWORD,
-  firstname: 'firstname',
-  lastname: 'lastname',
-  email: ({record}) => `${record.firstname}.${record.lastname}@none.io`.toLowerCase().replace(/ /g, ''),
+  firstname: 'PRENOM',
+  lastname: 'NOM',
+  email: 'EMAIL',
   registration_status: () => DIET_REGISTRATION_STATUS_ACTIVE,
-  migration_id: 'SDDIETID'
+  smartagenda_id: 'ID AGENDA',
+  migration_id: 'SDID',
+  zip_code: 'CPCAB',
+  address: 'VILLECAB',
 }
 
 const DIET_MIGRATION_KEY='migration_id'
-
-const DIETS_AGENDA_MAPPING={
-  email: ({record}) => `${record.PRENOM}.${record.NOM}@none.io`.toLowerCase().replace(/ /g, ''),
-  smartagenda_id: 'AGENDA',
-  migration_id: 'AGENDA'
-}
-
-const AGENDA_IDENTITY_KEY=USER_KEY
-const AGENDA_MIGRATION_KEY='migration_id'
 
 const COACHING_MAPPING={
   [CREATED_AT_ATTRIBUTE]: ({record}) => moment(record.orderdate),
@@ -93,37 +147,6 @@ const APPOINTMENT_MAPPING= prestation_id => ({
 
 const APPOINTMENT_KEY=['coaching', 'start_date']
 const APPOINTMENT_MIGRATION_KEY='migration_id'
-
-const CONTENT_TYPE_MAPPING={
-  1 : CONTENTS_ARTICLE,
-  2 : CONTENTS_VIDEO,
-  3 : CONTENTS_INFOGRAPHY,
-  4 : CONTENTS_DOCUMENT,
-  5 : CONTENTS_PODCAST,
-}
-
-const CONTENT_MAPPING= key_id => ({
-  name: 'name',
-  type: ({record}) => CONTENT_TYPE_MAPPING[record.type],
-  duration: () => 1,
-  picture: () => 'unknown',
-  contents: 'url',
-  default: () => true,
-  creator: ({record, cache}) => {const diet=cache('user', record.SDDIETID); if (!diet) {console.error('No diet for',record.SDDIETID)};return diet},
-  key : () => key_id,
-  migration_id: 'SDCONTENTID',
-})
-
-const CONTENT_KEY='name'
-const CONTENT_MIGRATION_KEY='migration_id'
-
-const CONTENT_PATIENT_MAPPING={
-  migration_id: 'SDCONTENTID',
-  viewed_by: ({cache, record}) => record.SDPATIENTID.split(',').map(id => cache('user', id)).filter(v => !!v),
-}
-
-const CONTENT_PATIENT_KEY='migration_id'
-const CONTENT_PATIENT_MIGRATION_KEY='migration_id'
 
 const MEASURE_MAPPING={
   migration_id: 'SDCONSULTID',
@@ -182,18 +205,6 @@ const importDiets = async input_file => {
     .then(({records}) => importData({model: 'user', data:records, mapping:DIET_MAPPING, identityKey: USER_KEY, migrationKey: USER_MIGRATION_KEY}))
 }
 
-const importDietsAgenda = async input_file => {
-  // Deactivate password encryption
-  const schema=User.schema
-  schema.paths.password.setters=[]
-  // End deactivate password encryption
-  const contents=fs.readFileSync(input_file)
-  return Promise.all([guessFileType(contents), guessDelimiter(contents)])
-    .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
-    .then(({records}) => importData({model: 'user', data:records, mapping:DIETS_AGENDA_MAPPING, 
-    identityKey: USER_KEY, migrationKey:AGENDA_MIGRATION_KEY, updateOnly: true}))
-}
-
 const importCoachings = async input_file => {
   const contents=fs.readFileSync(input_file)
   return Promise.all([guessFileType(contents), guessDelimiter(contents)])
@@ -219,30 +230,6 @@ const importAppointments = async input_file => {
     ))
 }
 
-const importContents = async input_file => {
-  let key=await Key.findOne({name: KEY_NAME})
-  if (!key) {
-    key=await Key.create({
-      name: KEY_NAME, trophy_off_picture: 'N/A', trophy_on_picture: 'N/A', spoons_count_for_trophy: 0, picture: 'N/A',
-    })
-  }
-  key=key._id
-
-  const contents=fs.readFileSync(input_file)
-  return Promise.all([guessFileType(contents), guessDelimiter(contents)])
-    .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
-    .then(({records}) => importData({model: 'content', data:records, mapping:CONTENT_MAPPING(key), identityKey: CONTENT_KEY, migrationKey: CONTENT_MIGRATION_KEY}))
-}
-
-const importPatientContents = async input_file => {
-  const contents=fs.readFileSync(input_file)
-  return Promise.all([guessFileType(contents), guessDelimiter(contents)])
-    .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
-    .then(({records}) => importData({
-      model: 'content', data:records, mapping:CONTENT_PATIENT_MAPPING, identityKey: CONTENT_PATIENT_KEY, 
-      migrationKey: CONTENT_PATIENT_MIGRATION_KEY, updateOnly: true}))
-}
-
 const importMeasures = async input_file => {
   return prepareCache()
     .then(() => {
@@ -263,10 +250,8 @@ module.exports={
   importCompanies,
   importUsers,
   importDiets,
-  importDietsAgenda,
   importCoachings,
   importAppointments,
-  importContents,
-  importPatientContents,
   importMeasures,
+  fixFiles,
 }
