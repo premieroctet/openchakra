@@ -40,11 +40,7 @@ const QuizzQuestionSchema = new Schema({
   },
   diet_private: {
   },
-  origin_id: {
-    type: Number,
-    required: false,
-  },
-  origin_quizz_id: {
+  migration_id: {
     type: Number,
     required: false,
   },

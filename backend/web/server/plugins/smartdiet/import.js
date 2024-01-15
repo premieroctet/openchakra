@@ -7,12 +7,14 @@ const { guessDelimiter } = require('../../../utils/text')
 const Company=require('../../models/Company')
 const User=require('../../models/User')
 const AppointmentType=require('../../models/AppointmentType')
-const { ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, DIET_REGISTRATION_STATUS_ACTIVE, COMPANY_ACTIVITY_ASSURANCE, COMPANY_ACTIVITY_OTHER, CONTENTS_ARTICLE, CONTENTS_DOCUMENT, CONTENTS_VIDEO, CONTENTS_INFOGRAPHY, CONTENTS_PODCAST } = require('./consts')
+const { ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, DIET_REGISTRATION_STATUS_ACTIVE, COMPANY_ACTIVITY_ASSURANCE, COMPANY_ACTIVITY_OTHER, CONTENTS_ARTICLE, CONTENTS_DOCUMENT, CONTENTS_VIDEO, CONTENTS_INFOGRAPHY, CONTENTS_PODCAST, QUIZZ_TYPE_PATIENT, QUIZZ_QUESTION_TYPE_ENUM_SINGLE } = require('./consts')
 const { CREATED_AT_ATTRIBUTE } = require('../../../utils/consts')
 const AppointmentTypeSchema = require('./schemas/AppointmentTypeSchema')
 require('../../models/User')
 require('../../models/Coaching')
 const Key=require('../../models/Key')
+const QuizzQuestion = require('../../models/QuizzQuestion')
+const Quizz = require('../../models/Quizz')
 
 const DEFAULT_PASSWORD='DEFAULT'
 const PRESTATION_DURATION=45
@@ -20,6 +22,7 @@ const PRESTATION_NAME=`Générique ${PRESTATION_DURATION} minutes`
 const PRESTATION_SMARTAGENDA_ID=-1
 const KEY_NAME='Clé import'
 
+const QUIZZ_FACTOR=1000
 
 const fixDiets = async directory => {
   const CPINDEX=8
@@ -63,9 +66,21 @@ const fixAppointments = directory => {
 
 const fixQuizz = directory => {
   const REPLACES=[
-    [/.qui/g, 'Equi'], [/Végétariens\//g, 'Végétariens /'], [/Apéro \!/g, 'Apéro'], [/Fr.quences/g, 'Fréquences'],
+    [/.quilibre/g, 'Equilibre'], [/\/ Vegan/g, '/Vegan'], [/Apéro \!/g, 'Apéro'], [/Fr.quences/g, 'Fréquences'],
+    [/.quivalences/g, 'Equivalences'],
   ]
   const PATH=path.join(directory, 'smart_quiz.csv')
+  const contents=fs.readFileSync(PATH).toString()
+  let fixed=contents
+  REPLACES.forEach(([search, replace]) => fixed=fixed.replace(search, replace))
+  fs.writeFileSync(PATH, fixed)
+}
+
+const fixQuizzQuestions = directory => {
+  const REPLACES=[
+    [/\\"/g, "'"], [/\\\\/g, ''],
+  ]
+  const PATH=path.join(directory, 'smart_question.csv')
   const contents=fs.readFileSync(PATH).toString()
   let fixed=contents
   REPLACES.forEach(([search, replace]) => fixed=fixed.replace(search, replace))
@@ -77,6 +92,7 @@ const fixFiles = async directory => {
   await fixPatients(directory)
   await fixAppointments(directory)
   await fixQuizz(directory)
+  await fixQuizzQuestions(directory)
 }
 
 const computePseudo = record => {
@@ -163,6 +179,24 @@ const MEASURE_MAPPING={
 const MEASURE_MAPPING_KEY='migration_id'
 const MEASURE_MAPPING_MIGRATION__KEY='migration_id'
 
+const QUIZZ_MAPPING={
+  migration_id: 'SDQUIZID',
+  name: 'name',
+  type: () => QUIZZ_TYPE_PATIENT,
+}
+
+const QUIZZ_KEY='name'
+const QUIZZ_MIGRATION_KEY='migration_id'
+
+const QUIZZQUESTION_MAPPING={
+  migration_id: ({record}) => parseInt(record.SDQUIZID)*QUIZZ_FACTOR+parseInt(record.position),
+  title: 'question',
+  type: () => QUIZZ_QUESTION_TYPE_ENUM_SINGLE,
+}
+
+const QUIZZQUESTION_KEY='title'
+const QUIZZQUESTION_MIGRATION_KEY='migration_id'
+
 const progressCb = step => (index, total)=> {
   step=step||1
   if (step && index%step==0) {
@@ -242,9 +276,36 @@ const importMeasures = async input_file => {
           migrationKey: MEASURE_MAPPING_MIGRATION__KEY, progressCb: progressCb(2000)
         })
       )
-    })
-  }
+  })
+}
 
+const importQuizz = async input_file => {
+  const contents=fs.readFileSync(input_file)
+  return Promise.all([guessFileType(contents), guessDelimiter(contents)])
+    .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
+    .then(({records}) => importData({model: 'quizz', data:records, mapping:QUIZZ_MAPPING, 
+    identityKey: QUIZZ_KEY, migrationKey: QUIZZ_MIGRATION_KEY, progressCb: progressCb()}))
+}
+  
+const importQuizzQuestions = async input_file => {
+  const contents=fs.readFileSync(input_file)
+  return Promise.all([guessFileType(contents), guessDelimiter(contents)])
+    .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
+    .then(({records}) => importData({model: 'quizzQuestion', data:records, mapping:QUIZZQUESTION_MAPPING, 
+    identityKey: QUIZZQUESTION_KEY, migrationKey: QUIZZQUESTION_MIGRATION_KEY, progressCb: progressCb(20)})
+  )
+  // Attach questions to quizzs
+  .then(res=> QuizzQuestion.find()
+    .then(questions => lodash(questions)
+      .groupBy(q => Math.floor(q.migration_id/QUIZZ_FACTOR))
+      .mapValues(quizzQuestions => quizzQuestions.map(q => q._id))
+      .value()
+    )
+    .then(grouped => Object.keys(grouped).map(key => Quizz.findOneAndUpdate({migration_id: key}, {questions: grouped[key]})))
+    .then(queries => Promise.all(queries))
+    .then(() => res)
+  )
+}
 
 module.exports={
   importCompanies,
@@ -254,4 +315,6 @@ module.exports={
   importAppointments,
   importMeasures,
   fixFiles,
+  importQuizz,
+  importQuizzQuestions,
 }

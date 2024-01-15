@@ -149,6 +149,10 @@ const getCache = (model, migrationKey) => {
   return res
 }
 
+const getCacheKeys = () => {
+  return dataCache.keys()
+}
+
 const countCache = (model) => {
   return dataCache.keys().filter(k => k.startsWith(`${model}/`)).length
 }
@@ -239,5 +243,6 @@ module.exports={
   extractSample,
   importData,
   prepareCache,
+  getCacheKeys,
 }
 

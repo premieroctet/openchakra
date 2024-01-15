@@ -6,6 +6,8 @@ const { MONGOOSE_OPTIONS } = require('../../server/utils/database')
 const { forceDataModelSmartdiet } = require('../utils')
 forceDataModelSmartdiet()
 const User = require('../../server/models/User')
+const Quizz = require('../../server/models/Quizz')
+require('../../server/models/QuizzQuestion')
 const Company = require('../../server/models/Company')
 require('../../server/models/Content')
 require('../../server/models/Comment')
@@ -13,10 +15,12 @@ const Appointment=require('../../server/models/Appointment')
 const { COMPANY_ACTIVITY_BANQUE, ROLE_EXTERNAL_DIET, ROLE_CUSTOMER } = require('../../server/plugins/smartdiet/consts')
 const bcrypt = require('bcryptjs')
 const Coaching = require('../../server/models/Coaching')
-const { importUsers, importDiets, importDietsAgenda, importCoachings, importAppointments, importCompanies, importContents, importPatientContents, importMeasures, fixFiles } = require('../../server/plugins/smartdiet/import')
-const { prepareCache } = require('../../utils/import')
+const { importUsers, importDiets, importDietsAgenda, importCoachings, importAppointments, importCompanies, importContents, importPatientContents, importMeasures, fixFiles, importQuizz, importQuizzQuestions } = require('../../server/plugins/smartdiet/import')
+const { prepareCache, getCacheKeys } = require('../../utils/import')
 const Content = require('../../server/models/Content')
 const Measure = require('../../server/models/Measure')
+const fs=require('fs')
+const QuizzQuestion = require('../../server/models/QuizzQuestion')
 
 const ROOT = path.join(__dirname, './data/migration')
 
@@ -42,6 +46,27 @@ describe('Test imports', () => {
     }
     expect(errors).toHaveLength(count)
   }
+
+  // it('must check questions', async () => {
+  //   let quizs=fs.readFileSync(path.join(ROOT, 'smart_quiz.csv')).toString().split('\n').map(l => l.split(';')).filter(t => t.length>1)
+  //   let questions=fs.readFileSync(path.join(ROOT, 'smart_question.csv')).toString()
+  //   quizs.forEach(([id, title]) => {
+  //     if (lodash.isNil(id)) { return}
+  //     while (questions.includes(id)) {
+  //       questions=questions.replace(id, title)
+  //     }
+  //   })
+  //   questions=questions.split('\n').map(l => l.split(';').slice(0,2).join(';')).join('\n')
+  //   fs.writeFileSync('/tmp/expected', lodash.sortBy(questions.split('\n')).join('\n'))
+
+  //   await mongoose.connect(`mongodb://localhost/smartdiet`, MONGOOSE_OPTIONS)
+  //   let quizz=await Quizz.find().sort({name:1}).populate('questions')
+  //   quizz=quizz.filter(q => !q.name.includes('Journal') && !q.name.includes('Autre repas') && !q.name.includes("Bilan"))
+  //   quizz=lodash(quizz).map(quiz => quiz.questions?.map(ques => `"${quiz.name}";"${ques.title}"`)).flattenDeep().join('\n')
+  //   console.log(quizz)
+  //   // Remove unknown
+  //   fs.writeFileSync('/tmp/db', quizz.toString())
+  // })
 
   it('must fix files', async () => {
     await fixFiles(ROOT)
@@ -88,6 +113,23 @@ describe('Test imports', () => {
     ensureNbError(res)
     const measures=await Measure.find()
     expect(measures).toHaveLength(21986)
+  })
+
+  it('must upsert quizz', async () => {
+    let res = await importQuizz(path.join(ROOT, 'smart_quiz.csv'))
+    ensureNbError(res)
+    const quizz=await Quizz.find()
+    expect(quizz).toHaveLength(42)
+  })
+
+  it('must upsert quizz questions', async () => {
+    let res = await importQuizzQuestions(path.join(ROOT, 'smart_question.csv'))
+    ensureNbError(res)
+    const questions=await QuizzQuestion.find({migration_id: {$ne:null}})
+    expect(questions).toHaveLength(217)
+    const quizz=await Quizz.find()
+    expect(quizz.some(q => q.questions.length>0)).toBe(true)
+    expect(lodash.sum(quizz.map(q => q.children.length))).toEqual(questions.length)
   })
 
 })

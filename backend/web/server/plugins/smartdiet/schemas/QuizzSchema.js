@@ -38,6 +38,10 @@ const QuizzSchema = new Schema({
     type: Number,
     required: false,
   },
+  migration_id: {
+    type: Number,
+    required: false,
+  },
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
