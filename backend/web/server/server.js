@@ -147,6 +147,14 @@ const studio = require('./routes/api/studio')
 const withings = getDataModel()=='dekuple' ? require('./routes/api/withings') : null
 const app = express()
 const {serverContextFromRequest} = require('./utils/serverContext')
+let custom_router=null
+try {
+  custom_router=require(`./plugins/${getDataModel()}/routes`).router
+}
+catch(err) {
+  if (err.code !== 'MODULE_NOT_FOUND') { throw err }
+  console.warn(`No custom routes for ${getDataModel()}`)
+}
 
 // TODO Terminer les notifications
 // throw new Error(`\n${'*'.repeat(30)}\n  TERMINER LES NOTIFICATIONS\n${'*'.repeat(30)}`)
@@ -202,6 +210,7 @@ checkConfig()
     // Check hostname is valid
     app.use('/myAlfred/api/studio', studio)
     !!withings && app.use('/myAlfred/api/withings', withings)
+    !!custom_router && app.use(`/myAlfred/api/${getDataModel()}`, custom_router)
 
     // const port = process.env.PORT || 5000;
     const rootPath = path.join(__dirname, '/..')
