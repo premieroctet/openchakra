@@ -56,11 +56,12 @@ QuizzQuestionSchema.virtual("available_answers", {
 
 QuizzQuestionSchema.methods.cloneAsUserQuestion=function() {
   const params={
-    quizz_question: this,
+    quizz_question: this._id,
     ...lodash.omit(this.toObject(), ['_id', 'id', CREATED_AT_ATTRIBUTE, UPDATED_AT_ATTRIBUTE]),
     diet: undefined,
   }
-  return mongoose.models.userQuizzQuestion.create(params)
+  const model=mongoose.model('userQuizzQuestion')
+  return model.create(params)
 }
 /* eslint-enable prefer-arrow-callback */
 

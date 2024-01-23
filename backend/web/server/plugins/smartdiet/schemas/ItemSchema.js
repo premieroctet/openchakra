@@ -24,6 +24,10 @@ const ItemSchema = new Schema({
     required: false,
     index: true,
   },
+  migration_id: {
+    type: Number,
+    required: false,
+  },
 }, schemaOptions)
 
 module.exports = ItemSchema

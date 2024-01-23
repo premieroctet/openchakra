@@ -2,7 +2,7 @@ const csv_parse = require('csv-parse/lib/sync')
 const lodash=require('lodash')
 const moment=require('moment')
 const ExcelJS = require('exceljs')
-const {JSON_TYPE, TEXT_TYPE, XL_TYPE} = require('./consts')
+const {JSON_TYPE, TEXT_TYPE, XL_TYPE, CREATED_AT_ATTRIBUTE} = require('./consts')
 const {bufferToString} = require('./text')
 const mongoose=require('mongoose')
 const { runPromisesWithDelay } = require('../server/utils/concurrency')
@@ -153,6 +153,10 @@ const getCacheKeys = () => {
   return dataCache.keys()
 }
 
+const displayCache = () => {
+  console.log(dataCache)
+}
+
 const countCache = (model) => {
   return dataCache.keys().filter(k => k.startsWith(`${model}/`)).length
 }
@@ -194,7 +198,6 @@ const importData = ({model, data, mapping, identityKey, migrationKey, progressCb
       console.time(msg)
       return runPromisesWithDelay(mappedData.map((data, index) => () => {
         return upsertRecord({model: mongoModel, record: data, identityKey, migrationKey, updateOnly})
-          // .catch(err => {console.error(err); throw err})
           .finally(() => progressCb && progressCb(index, recordsCount))
       }
       ))
@@ -216,24 +219,29 @@ const prepareCache = () => {
   const MODELS=mongoose.modelNames()
   const promises=MODELS.map(modelName => {
     return mongoose.model(modelName).find({migration_id: {$ne: null}})
-      .populate('coaching')
+      .populate(['coaching', 'coachings'])
       .then(data => {
-        const msg=`Caching ${modelName} ${data.length}`
-        console.time(msg)
         data.forEach(d => setCache(modelName, d.migration_id.toString(), d._id.toString()))
         if (modelName=='appointment') {
-          const msg2=`Caching extra ${modelName} ${data.length}`
-          console.time(msg2)
           data.forEach(d => setCache('consultation_patient', d.migration_id.toString(), d.coaching.user._id.toString()))
           data.forEach(d => setCache('consultation_date', d.migration_id.toString(), moment(d.start_date).unix()))
-          console.timeEnd(msg2)
         }
-        console.timeEnd(msg)
-        console.log('Cached', modelName, countCache(modelName))
+        if (modelName=='user') {
+          data.forEach(user => {
+            const latest_coaching=lodash(user.coachings).maxBy(c => c[CREATED_AT_ATTRIBUTE])?._id
+            if (latest_coaching) {
+              setCache('user_coaching', user._id.toString(), latest_coaching)
+            }
+          })
+        }
+        return `${countCache(modelName)} ${modelName}`
       })
   })
+  const msg='Caching'
+  console.log(msg)
+  console.time(msg)
   return Promise.all(promises)
-    .then(() => console.log('Cache keys', lodash.uniq(dataCache.keys().map(k=>k.split('/')[0]))))
+    .then(res => {console.timeEnd(msg); console.log('Cached', res.join(','))})
 }
 
 module.exports={
@@ -244,5 +252,7 @@ module.exports={
   importData,
   prepareCache,
   getCacheKeys,
+  displayCache,
+  cache: getCache,
 }
 
