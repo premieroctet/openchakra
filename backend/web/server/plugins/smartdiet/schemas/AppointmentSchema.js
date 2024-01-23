@@ -24,7 +24,7 @@ const AppointmentSchema = new Schema({
   end_date: {
     type: Date,
     validate: [function(v) { return moment(v).isAfter(this.start_date)}, 'La fin doit être postérieure au début'],
-    required: true,
+    required: [true, 'La date de fin est obligatoire'],
   },
   appointment_type: {
     type: Schema.Types.ObjectId,
