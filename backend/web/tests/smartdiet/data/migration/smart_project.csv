@@ -1,5 +1,6 @@
-SDPROJECTID;name;authtype;subdomain
-"1";"Etude clinique routiers";"0";"carcept"
-"32";"KLESIA HDS";"0";"klesia-hds"
-"48";"KLESIA MCDEF";"0";"klesia-mcdef"
-"52";"Generali Vitality";"0";"generali-vitality"
+SDPROJECTID;name
+"1";"Etude clinique routiers"
+"32";"KLESIA HDS"
+"48";"KLESIA MCDEF"
+"52";"Generali Vitality"
+"55";"Kiplin"
