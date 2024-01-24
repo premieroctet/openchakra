@@ -1136,19 +1136,6 @@ declareVirtualField({ model: 'adminDashboard', field: 'leads_count', instance: '
 declareVirtualField({ model: 'adminDashboard', field: 'users_men_count', instance: 'Number' })
 declareVirtualField({ model: 'adminDashboard', field: 'user_women_count', instance: 'Number' })
 declareVirtualField({ model: 'adminDashboard', field: 'users_no_gender_count', instance: 'Number' })
-declareVirtualField({ model: 'adminDashboard', field: 'weight_lost_total', instance: 'Number' })
-declareVirtualField({ model: 'adminDashboard', field: 'weight_lost_average', instance: 'Number' })
-declareVirtualField({ model: 'adminDashboard', field: 'centimeters_lost_total', instance: 'Number' })
-declareVirtualField({ model: 'adminDashboard', field: 'centimeters_lost_average', instance: 'Number' })
-declareVirtualField({ model: 'adminDashboard', field: 'age_average', instance: 'Number' })
-declareVirtualField({
-  model: 'adminDashboard', field: `measures_evolution`, instance: 'Array', multiple: true,
-  caster: {
-    instance: 'ObjectID',
-    options: { ref: 'measure' }
-  },
-})
-declareVirtualField({ model: 'adminDashboard', field: 'imc_average', instance: 'Number' })
 declareVirtualField({ model: 'adminDashboard', field: 'started_coachings', instance: 'Number' })
 declareVirtualField({
   model: 'adminDashboard', field: `specificities_users`, instance: 'Array', multiple: true,
@@ -1578,11 +1565,16 @@ const ensureChallengePipsConsistency = () => {
 
 const computeStatistics = ({ id, fields }) => {
   console.log(`Computing stats for ${id} fields ${fields}`)
+  // No statistics computing for all companies => too long
+  if (!id) {
+    return Promise.resolve({})
+  }
   const company_filter = id ? { _id: id } : {}
   return Promise.all([
     Company.find(company_filter)
       .populate([{ path: 'webinars', select: 'type' }, { path: 'groups', populate: 'messages' }])
-      .populate({ path: 'users', populate: [{ path: 'registered_events' }, { path: 'replayed_events' }, { path: 'measures' }, { path: 'coachings', populate: { path: 'appointments' } }] }),
+      .populate({ path: 'users', populate: [
+        { path: 'registered_events' }, { path: 'replayed_events' }, { path: 'coachings', populate: { path: 'appointments' } }] }),
     Lead.find(),
     Category.find({ type: TARGET_SPECIFICITY }).populate({ path: 'targets' }),
     Category.find({ type: TARGET_COACHING }).populate({ path: 'targets' }),
@@ -1616,25 +1608,6 @@ const computeStatistics = ({ id, fields }) => {
         return allUsers.filter(u => u.gender == gender).size()
       })
 
-      const get_measure_lost = (measures, measure_name) => {
-        const sortedMeasures = lodash(measures).filter(m => !!m[measure_name]).sortBy('date')
-        const firstMeasure = sortedMeasures.first()
-        const lastMeasure = sortedMeasures.last()
-        const delta = (lastMeasure?.[measure_name] - firstMeasure?.[measure_name]) || 0
-        return delta
-      }
-      const weight_lost_total = Math.round(allUsers.map(u => get_measure_lost(u.measures, 'weight')).sum() * 10.0) / 10.0
-      const weight_lost_average = Math.round(weight_lost_total * 1.0 / users_count * 10) / 10.0
-
-      const length_measures = 'arms,chest,hips,thighs,waist'.split(',')
-      const centimeters_lost_total = allUsers.map(u => length_measures.map(m => get_measure_lost(u.measures, m))).flatten().sum()
-      const centimeters_lost_average = Math.round(centimeters_lost_total * 1.0 / users_count * 10) / 10.0
-
-      let aged_users = allUsers.filter(u => !!u.birthday)
-      let age_average = aged_users.map(u => moment().diff(moment(u.birthday), 'year')).sum() / aged_users.size()
-      age_average = Math.round(age_average * 10) / 10.0
-
-
       const get_latest_measure = (date, measures, measure_name) => {
         const latestMeasure = lodash(measures).filter(m => !!m[measure_name] && date.isAfter(m.date)).sortBy('date').last()
         return latestMeasure?.[measure_name] || 0
@@ -1651,8 +1624,6 @@ const computeStatistics = ({ id, fields }) => {
         return data
       })
 
-      const imc_average = Math.round(allUsers.filter(u => !!u.imc).map('imc').mean() * 10) / 10.0
-
       const started_coachings = allUsers.filter(u => u.coachings.some(c => c.appointments.length > 0)).size()
 
       const specificities_users = specificity_targets.map(target => {
@@ -1667,9 +1638,8 @@ const computeStatistics = ({ id, fields }) => {
         company: id,
         webinars_count, average_webinar_registar, webinars_replayed_count,
         groups_count, messages_count, users_count, leads_count, users_men_count,
-        user_women_count, users_no_gender_count, weight_lost_total, weight_lost_average,
-        centimeters_lost_total, centimeters_lost_average, age_average,
-        measures_evolution, imc_average, started_coachings, specificities_users, reasons_users,
+        user_women_count, users_no_gender_count,
+        started_coachings, specificities_users, reasons_users,
       })
     })
 }
