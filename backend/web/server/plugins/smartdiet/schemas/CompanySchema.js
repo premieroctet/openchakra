@@ -112,7 +112,7 @@ CompanySchema.virtual('likes_count').get(function() {
     .then(contents => {
       var count=0
       contents.forEach(content => {
-        count+=lodash.filter(content.likes||[], l => l.company._id==this._id)?.length || 0
+        count+=lodash.filter(content.likes||[], l => l.company?._id==this._id)?.length || 0
       });
       return count
     })
@@ -124,7 +124,7 @@ CompanySchema.virtual('shares_count').get(function() {
     .then(contents => {
       var count=0
       contents.forEach(content => {
-        count+=lodash.filter(content.shares||[], s => s.company._id==this._id)?.length||0
+        count+=lodash.filter(content.shares||[], s => s.company?._id==this._id)?.length||0
       });
       return count
     })
@@ -134,7 +134,7 @@ CompanySchema.virtual('comments_count').get(function() {
   return mongoose.model('comment').find({pip: null})
     .populate('user')
     .then(comments => {
-      const count=lodash.filter(comments||[], c => c.user?.company._id==this._id)?.length||0
+      const count=lodash.filter(comments||[], c => c.user?.company?._id==this._id)?.length||0
       return count
     })
 })
