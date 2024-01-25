@@ -1,4 +1,5 @@
 const csv_parse = require('csv-parse/lib/sync')
+const fs = require('fs')
 const lodash=require('lodash')
 const moment=require('moment')
 const ExcelJS = require('exceljs')
@@ -162,7 +163,7 @@ const countCache = (model) => {
 }
 
 function upsertRecord({model, record, identityKey, migrationKey, updateOnly}) {
-  const identityFilter=computeIdentityFilter(identityKey, record)
+  const identityFilter=computeIdentityFilter(identityKey, migrationKey, record)
   return model.findOne(identityFilter)
     .then(result => {
       if (!result) {
@@ -180,8 +181,12 @@ function upsertRecord({model, record, identityKey, migrationKey, updateOnly}) {
     })
 }
 
-const computeIdentityFilter = (identityKey, record) => {
-  return {$and: identityKey.map(key => ({[key]: record[key]}))}
+const computeIdentityFilter = (identityKey, migrationKey, record) => {
+  const filter={$or: [ 
+    {[migrationKey]: record[migrationKey]},
+    {$and: identityKey.map(key => ({[key]: record[key]}))}
+  ]}
+  return filter
 }
 
 const importData = ({model, data, mapping, identityKey, migrationKey, progressCb, updateOnly}) => {
@@ -216,15 +221,17 @@ const importData = ({model, data, mapping, identityKey, migrationKey, progressCb
 }
 
 const prepareCache = () => {
+  console.log('Preparing cache')
   const MODELS=mongoose.modelNames()
   const promises=MODELS.map(modelName => {
-    return mongoose.model(modelName).find({migration_id: {$ne: null}})
+    return mongoose.model(modelName).find({migration_id: {$ne: null}}, {coaching:1, coachings:1, migration_id:1, start_date:1 })
       .populate(['coaching', 'coachings'])
       .then(data => {
         data.forEach(d => setCache(modelName, d.migration_id.toString(), d._id.toString()))
         if (modelName=='appointment') {
           data.forEach(d => setCache('consultation_patient', d.migration_id.toString(), d.coaching.user._id.toString()))
           data.forEach(d => setCache('consultation_date', d.migration_id.toString(), moment(d.start_date).unix()))
+          data.forEach(d => setCache('appointment_coaching', d.migration_id.toString(), d.coaching._id))
         }
         if (modelName=='user') {
           data.forEach(user => {
@@ -254,5 +261,6 @@ module.exports={
   getCacheKeys,
   displayCache,
   cache: getCache,
+  setCache
 }
 

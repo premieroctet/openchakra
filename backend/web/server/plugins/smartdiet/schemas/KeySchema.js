@@ -34,6 +34,9 @@ const KeySchema = new Schema({
     type: String,
     required: [true, "L'illustration de trophée non obtenu est obligatoire"],
   },
+  migration_id: {
+    type: Number,
+  },
 }, schemaOptions)
 
 KeySchema.virtual('user_spoons').get(function(){

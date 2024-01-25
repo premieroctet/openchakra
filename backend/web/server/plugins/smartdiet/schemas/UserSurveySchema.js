@@ -10,6 +10,9 @@ const UserSurveySchema = new Schema({
     ref: 'user',
     required: true,
   },
+  migration_id: {
+    type: Number
+  }
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
