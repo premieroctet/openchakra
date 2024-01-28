@@ -166,6 +166,7 @@ const Appointment = require('../../models/Appointment')
 const Message = require('../../models/Message')
 const Lead = require('../../models/Lead')
 const cron = require('../../utils/cron')
+const Group = require('../../models/Group')
 
 const filterDataUser = ({ model, data, id, user }) => {
   if (model == 'offer' && !id) {
@@ -1576,102 +1577,41 @@ const ensureChallengePipsConsistency = () => {
     })
 }
 
-const computeStatistics = ({ id, fields }) => {
+const computeStatistics = async ({ id, fields }) => {
   console.log(`Computing stats for ${id} fields ${fields}`)
-  const company_filter = id ? { _id: id } : {}
-  return Promise.all([
-    Company.find(company_filter)
-      .populate([{ path: 'webinars', select: 'type' }, { path: 'groups', populate: 'messages' }])
-      .populate({ path: 'users', populate: [{ path: 'registered_events' }, { path: 'replayed_events' }, { path: 'measures' }, { path: 'coachings', populate: { path: 'appointments' } }] }),
-    Lead.find(),
-    Category.find({ type: TARGET_SPECIFICITY }).populate({ path: 'targets' }),
-    Category.find({ type: TARGET_COACHING }).populate({ path: 'targets' }),
-  ])
-    .then(([comps, leads, specif_categories, reasons_categories]) => {
-      const companies = lodash(comps)
-      const allUsers = companies
-        .map('users').flatten().filter(u => u.role == ROLE_CUSTOMER)
-      const specificity_targets = lodash(specif_categories).map(c => c.targets).flatten()
-      const reasons_targets = lodash(reasons_categories).map(c => c.targets).flatten()
-      const webinars = companies.map(c => c.webinars).flatten()
-      const webinars_count = webinars.size()
-      const registered_count = allUsers
-        .map('registered_events').flatten()
-        .filter(e => e.type == EVENT_WEBINAR)
-        .size()
-      const average_webinar_registar = registered_count * 1.0 / webinars_count
-      const webinars_replayed_count = allUsers
-        .map('replayed_events').flatten()
-        .filter(e => e.type == EVENT_WEBINAR)
-        .size()
-      const groups_count = companies.map('groups_count').sum()
-      const messages_count = companies
-        .map('groups').flatten()
-        .map('messages').flatten()
-        .size()
-      const users_count = allUsers.size()
-      const companyCodes = companies.map('code').filter(v => !!v).value()
-      const leads_count = leads.filter(l => companyCodes.includes(l.company_code)).length
-      const [users_men_count, user_women_count, users_no_gender_count] = [GENDER_MALE, GENDER_FEMALE, GENDER_NON_BINARY].map(gender => {
-        return allUsers.filter(u => u.gender == gender).size()
-      })
-
-      const get_measure_lost = (measures, measure_name) => {
-        const sortedMeasures = lodash(measures).filter(m => !!m[measure_name]).sortBy('date')
-        const firstMeasure = sortedMeasures.first()
-        const lastMeasure = sortedMeasures.last()
-        const delta = (lastMeasure?.[measure_name] - firstMeasure?.[measure_name]) || 0
-        return delta
-      }
-      const weight_lost_total = Math.round(allUsers.map(u => get_measure_lost(u.measures, 'weight')).sum() * 10.0) / 10.0
-      const weight_lost_average = Math.round(weight_lost_total * 1.0 / users_count * 10) / 10.0
-
-      const length_measures = 'arms,chest,hips,thighs,waist'.split(',')
-      const centimeters_lost_total = allUsers.map(u => length_measures.map(m => get_measure_lost(u.measures, m))).flatten().sum()
-      const centimeters_lost_average = Math.round(centimeters_lost_total * 1.0 / users_count * 10) / 10.0
-
-      let aged_users = allUsers.filter(u => !!u.birthday)
-      let age_average = aged_users.map(u => moment().diff(moment(u.birthday), 'year')).sum() / aged_users.size()
-      age_average = Math.round(age_average * 10) / 10.0
-
-
-      const get_latest_measure = (date, measures, measure_name) => {
-        const latestMeasure = lodash(measures).filter(m => !!m[measure_name] && date.isAfter(m.date)).sortBy('date').last()
-        return latestMeasure?.[measure_name] || 0
-      }
-
-      const measures_evolution = lodash.range(-11, 1).map(offset => {
-        const monthEnd = moment().add(offset, 'month').endOf('month')
-        const measures = 'chest,waist,weight,hips,arms,thighs'.split(',').map(measure_name => {
-          const measure_total = allUsers.map(u => get_latest_measure(monthEnd, u.measures, measure_name)).sum()
-          return [measure_name, measure_total + 20]
-        })
-        const data = Object.fromEntries(measures)
-        data.date = monthEnd
-        return data
-      })
-
-      const imc_average = Math.round(allUsers.filter(u => !!u.imc).map('imc').mean() * 10) / 10.0
-
-      const started_coachings = allUsers.filter(u => u.coachings.some(c => c.appointments.length > 0)).size()
-
-      const specificities_users = specificity_targets.map(target => {
-        return ({ x: target.name, y: allUsers.filter(u => u.specificity_targets.some(t => t._id.equals(target._id))).size() })
-      })
-
-      const reasons_users = reasons_targets.map(target => {
-        return ({ x: target.name, y: allUsers.filter(u => u.coachings.some(c => c.reasons.some(r => r._id.equals(target._id)))).size() })
-      })
-
-      return ({
-        company: id,
-        webinars_count, average_webinar_registar, webinars_replayed_count,
-        groups_count, messages_count, users_count, leads_count, users_men_count,
-        user_women_count, users_no_gender_count, weight_lost_total, weight_lost_average,
-        centimeters_lost_total, centimeters_lost_average, age_average,
-        measures_evolution, imc_average, started_coachings, specificities_users, reasons_users,
-      })
-    })
+  if (!id) {
+    return {}
+  }
+  const result={}
+  const company=await Company.findById(id)
+  result.company=id
+  result.groups_count=await Group.countDocuments({companies: id})
+  result.messages_count=lodash(await Group.find({companies: id}).populate('messages')).flatten().size()
+  result.users_count=await User.countDocuments({company: id})
+  result.user_women_count=await User.countDocuments({company: id, gender: GENDER_FEMALE})
+  result.users_men_count=await User.countDocuments({company: id, gender: GENDER_MALE})
+  result.users_no_gender_count=await User.countDocuments({company: id, gender: GENDER_NON_BINARY})
+  result.webinars_count=await Webinar.countDocuments({companies: id})
+  const webinars_replayed=(await User.aggregate([
+    {$match: { company: id }},
+    {$unwind: '$replayed_events'},
+    {$match: { 'replayed_events.__t': EVENT_WEBINAR }},
+    {$group: {_id: '$_id', webinarCount: { $sum: 1 }}}
+  ]))[0]?.webinarCount||0
+  result.webinars_replayed_count=webinars_replayed
+  const webinars_registered=(await User.aggregate([
+    {$match: { company: id }},
+    {$unwind: '$registered_events'},
+    {$match: { 'registered_events.__t': EVENT_WEBINAR }},
+    {$group: {_id: '$_id', webinarCount: { $sum: 1 }}}
+  ]))[0]?.webinarCount||0
+  result.average_webinar_registar=result.webinars_count ? webinars_registered*1.0/result.webinars_count : 0
+  const apptCoachings=await Appointment.distinct('coaching')
+  const coachings=await Coaching.distinct('user', {_id: {$in: apptCoachings}})
+  const users=await User.countDocuments({_id: {$in: coachings}, company: id})
+  result.started_coachings=users
+  result.leads_count=await Lead.countDocuments({company_code: company.code})
+  return result
 }
 
 /** Upsert PARTICULARS company */
