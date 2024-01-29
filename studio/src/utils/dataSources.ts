@@ -1,4 +1,5 @@
 import lodash from 'lodash'
+import { DEFAULT_LIMIT } from '~dependencies/utils/consts'
 
 export const CONTAINER_TYPE: ComponentType[] = [
   'Box',
@@ -263,6 +264,19 @@ const computeDataFieldName = (
     return result[0]
   }
   return result
+}
+
+export const getLimitsForDataProvider = (
+  dataProviderId: string,
+  components: IComponents,
+  getDynamicType: any,
+): string[] => {
+
+  const containers=Object.values(components)
+    .filter(comp => comp.props.dataSource==dataProviderId)
+    .filter(comp => getDynamicType(comp)=='Container')
+  // console.log(containers.map(c => computeDataFieldName(c, components, dataProviderId)))
+  return containers.map(c => [computeDataFieldName(c, components, dataProviderId), c.props.limit || DEFAULT_LIMIT])
 }
 
 // Traverse down-up from components to dataprovider to join all fields

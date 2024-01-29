@@ -212,7 +212,7 @@ function handleReliesOn(directAttribute, relies_on, requiredFields) {
 }
 
 // TODO query.populates accepts an array of populates !!!!
-const buildPopulates = (modelName, fields) => {
+const buildPopulates = ({modelName, fields, params, parentField}) => {
   // Retain all ref fields
   const model=getModels()[modelName]
   if (!model) {
@@ -249,8 +249,10 @@ const buildPopulates = (modelName, fields) => {
   // / Build populate using att and subpopulation
   const pops=groupedAttributes.entries().map(([attributeName, fields]) => {
     const attType=attributes[attributeName].type
-    const subPopulate=buildPopulates(attType, fields)
-    return {path: attributeName, populate: lodash.isEmpty(subPopulate)?undefined:subPopulate}
+    const subPopulate=buildPopulates({modelName: attType, fields, params, parentField: `${parentField ? parentField+'.' : ''}${attributeName}`})
+    const paramName = `limit.${parentField? parentField+'.' : ''}${attributeName}`
+    const limit=params[paramName]
+    return {path: attributeName, options: {limit}, populate: lodash.isEmpty(subPopulate)?undefined:subPopulate}
   })
   return pops.value()
 }
@@ -289,7 +291,7 @@ const getModel = (id, expectedModel) => {
     })
 }
 
-const buildQuery = (model, id, fields) => {
+const buildQuery = (model, id, fields, params) => {
   const modelAttributes = Object.fromEntries(getModelAttributes(model))
 
   const select = lodash(fields)
@@ -307,8 +309,11 @@ const buildQuery = (model, id, fields) => {
 
   const criterion = id ? {_id: id} : {}
   let query = mongoose.connection.models[model].find(criterion) //, select)
-  const populates=buildPopulates(model, fields)
-  //console.log(`Populates for ${model}/${fields} is ${JSON.stringify(populates, null, 2)}`)
+  if (params.limit) {
+     query=query.limit(parseInt(params.limit))
+  }
+  const populates=buildPopulates({modelName: model, fields, params})
+  // console.log(`Populates for ${model}/${fields} is ${JSON.stringify(populates, null, 2)}`)
   query = query.populate(populates)
   return query
 }
@@ -630,7 +635,7 @@ const putAttribute = ({id, attribute, value, user}) => {
               })
           })
       }
-      const populates=buildPopulates(model, [attribute])
+      const populates=buildPopulates({modelaName: model, fields:[attribute]})
 
       let query=mongooseModel.find({$or: [{_id: id}, {origin: id}]})
       query = populates.reduce((q, key) => q.populate(key), query)
@@ -744,7 +749,7 @@ const loadFromDb = ({model, fields, id, user, params}) => {
         return data
       }
       console.time(`Loading model ${model}`)
-      return buildQuery(model, id, fields)
+      return buildQuery(model, id, fields, params)
         .then(data => {console.timeEnd(`Loading model ${model}`); return data})
         /**
         .then(data => {console.time(`Leaning model ${model}`); return data})
@@ -763,11 +768,9 @@ const loadFromDb = ({model, fields, id, user, params}) => {
         .then(data => {console.time(`Filtering model ${model}`); return data})
         .then(data => callFilterDataUser({model, data, id, user}))
         .then(data => {console.timeEnd(`Filtering model ${model}`); return data})
-        /**
         .then(data => {console.time(`Retain fields ${model}`); return data})
         .then(data =>  retainRequiredFields({data, fields}))
         .then(data => {console.timeEnd(`Retain fields ${model}`); return data})
-        */
     })
 
 }

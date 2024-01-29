@@ -1615,7 +1615,7 @@ const computeStatistics = async ({ id, fields }) => {
 }
 
 /** Upsert PARTICULARS company */
-Company.findOneAndUpdate(
+!isDevelopment() && Company.findOneAndUpdate(
   { name: PARTICULAR_COMPANY_NAME },
   { name: PARTICULAR_COMPANY_NAME, activity: COMPANY_ACTIVITY_SERVICES_AUX_ENTREPRISES },
   { upsert: true },
@@ -1624,7 +1624,7 @@ Company.findOneAndUpdate(
   .catch(err => console.error(`Particular company upsert error:${err}`))
 
 // Create missings coachings for any CUSTOMER
-User.find({ role: ROLE_CUSTOMER }).populate('coachings')
+!isDevelopment() && User.find({ role: ROLE_CUSTOMER }).populate('coachings')
   .then(users => users.filter(user => lodash.isEmpty(user.coachings)))
   .then(users => Promise.all(users.map(user => Coaching.create({ user }))))
   .then(coachings => coachings.map(coaching => console.log(`Created missing coaching for ${coaching.user.email}`)))

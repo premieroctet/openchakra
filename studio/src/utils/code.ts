@@ -20,6 +20,7 @@ import {
   UPLOAD_TYPE,
   getDataProviderDataType,
   getFieldsForDataProvider,
+  getLimitsForDataProvider,
   getParentOfType,
   hasParentType,
   isSingleDataPage,
@@ -590,6 +591,12 @@ const buildHooks = (components: IComponents) => {
     return fields
   }
 
+  const getLimits = (dataProvider: IComponent) => {
+    const fields = getLimitsForDataProvider(dataProvider.id, components, getDynamicType)
+    return fields.map(([name, limit]) => `limit${name ? '.'+name : ''}=${limit}`)
+    return fields
+  }
+
   const dataProviders=getValidDataProviders(components)
   if (dataProviders.length === 0) {
     return ''
@@ -630,10 +637,13 @@ const buildHooks = (components: IComponents) => {
       .map(dp => {
         const dataId = dp.id.replace(/comp-/, '')
         const dpFields = getDataProviderFields(dp).join(',')
+        const limits = getLimits(dp)
         const idPart = dp.id === 'root' ? `\${id ? \`\${id}/\`: \`\`}` : ''
         const urlRest='${new URLSearchParams(queryRest)}'
         const apiUrl = `/myAlfred/api/studio/${dp.props.model}/${idPart}${
           dpFields ? `?fields=${dpFields}&` : '?'
+        }${
+          limits ? `${limits.join('&')}&` : ''
         }${dp.id=='root' ? urlRest: ''}`
         let thenClause=dp.id=='root' && singlePage ?
          `.then(res => set${capitalize(dataId)}(res.data[0]))`
