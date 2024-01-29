@@ -187,7 +187,8 @@ const filterDataUser = ({ model, data, id, user }) => {
   if (model == 'lead' && user?.role == ROLE_SUPPORT) {
     return data = data.filter(lead => lodash.isNil(lead.operator) || idEqual(lead.operator._id, user._id))
   }
-  data = lodash.sortBy(data, ['order', 'fullname', 'name', 'label'])
+  // TODO Do not sort anymore to not confuse pagination
+  // data = lodash.sortBy(data, ['order', 'fullname', 'name', 'label'])
   return Promise.resolve(data)
 }
 

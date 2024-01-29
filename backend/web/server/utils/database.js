@@ -250,9 +250,11 @@ const buildPopulates = ({modelName, fields, params, parentField}) => {
   const pops=groupedAttributes.entries().map(([attributeName, fields]) => {
     const attType=attributes[attributeName].type
     const subPopulate=buildPopulates({modelName: attType, fields, params, parentField: `${parentField ? parentField+'.' : ''}${attributeName}`})
-    const paramName = `limit.${parentField? parentField+'.' : ''}${attributeName}`
-    const limit=params[paramName]
-    return {path: attributeName, options: {limit}, populate: lodash.isEmpty(subPopulate)?undefined:subPopulate}
+    const limitParamName = `limit.${parentField? parentField+'.' : ''}${attributeName}`
+    const limit=params[limitParamName] ? parseInt(params[limitParamName])+1 : undefined
+    const pageParamName = `page.${parentField? parentField+'.' : ''}${attributeName}`
+    const page=params[pageParamName] ? parseInt(params[pageParamName])*parseInt(params[limitParamName]) : undefined
+    return {path: attributeName, options: {limit, skip:page}, populate: lodash.isEmpty(subPopulate)?undefined:subPopulate}
   })
   return pops.value()
 }
@@ -310,8 +312,9 @@ const buildQuery = (model, id, fields, params) => {
   const criterion = id ? {_id: id} : {}
   let query = mongoose.connection.models[model].find(criterion) //, select)
   if (params.limit) {
-     query=query.limit(parseInt(params.limit))
-  }
+    query=query.skip((params.page || 0)*parseInt(params.limit))
+    query=query.limit(parseInt(params.limit)+1)
+ }
   const populates=buildPopulates({modelName: model, fields, params})
   // console.log(`Populates for ${model}/${fields} is ${JSON.stringify(populates, null, 2)}`)
   query = query.populate(populates)

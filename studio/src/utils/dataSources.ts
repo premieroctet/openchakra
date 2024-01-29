@@ -186,7 +186,7 @@ export const getFilterAttributes = (
   return simpleAttributes
 }
 
-const computeDataFieldName = (
+export const computeDataFieldName = (
   component: IComponent,
   components: IComponents,
   dataSourceId: string,

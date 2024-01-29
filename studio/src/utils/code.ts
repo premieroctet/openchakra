@@ -18,6 +18,7 @@ import {
   SOURCE_TYPE,
   TEXT_TYPE,
   UPLOAD_TYPE,
+  computeDataFieldName,
   getDataProviderDataType,
   getFieldsForDataProvider,
   getLimitsForDataProvider,
@@ -209,7 +210,11 @@ const buildBlock = ({
       if (isFilterComponent(childComponent, components)) {
         propsContent += ` setComponentValue={setComponentValue} `
       }
-
+      if (getDynamicType(childComponent)=='Container' && childComponent.props.dataSource) {
+        propsContent += ` fullPath="${computeDataFieldName(childComponent, components, childComponent.props.dataSource) || ''}"`
+        propsContent += ` pagesIndex={pagesIndex} `
+        propsContent += ` setPagesIndex={setPagesIndex} `
+      }
       // Always create lazy Tabs
       if (childComponent.type=='Tabs') {
         propsContent+=" isLazy "
@@ -622,6 +627,18 @@ const buildHooks = (components: IComponents) => {
       .join(`\n`)
   code += `\n
   const [refresh, setRefresh]=useState(false)
+  const [pagesIndex, setPagesIndex]=useState({})
+    
+  const computePagesIndex = dataSourceId => {
+    let urlPart=Object.entries(pagesIndex)
+        .filter(([att, value]) => att==dataSourceId || att.startsWith(dataSourceId+'.'))
+        .map(([att, value]) => att.replace(dataSourceId, 'page')+'='+value)
+        .join('&')
+    if (urlPart.length>0) {
+      urlPart=urlPart+'&'
+    }
+    return urlPart
+  }
 
   const reload = () => {
     setRefresh(!refresh)
@@ -641,10 +658,7 @@ const buildHooks = (components: IComponents) => {
         const idPart = dp.id === 'root' ? `\${id ? \`\${id}/\`: \`\`}` : ''
         const urlRest='${new URLSearchParams(queryRest)}'
         const apiUrl = `/myAlfred/api/studio/${dp.props.model}/${idPart}${
-          dpFields ? `?fields=${dpFields}&` : '?'
-        }${
-          limits ? `${limits.join('&')}&` : ''
-        }${dp.id=='root' ? urlRest: ''}`
+          dpFields ? `?fields=${dpFields}&` : '?'}${limits ? `${limits.join('&')}&` : ''}\${computePagesIndex('${dataId}')}${dp.id=='root' ? urlRest: ''}`
         let thenClause=dp.id=='root' && singlePage ?
          `.then(res => set${capitalize(dataId)}(res.data[0]))`
          :
@@ -659,7 +673,7 @@ const buildHooks = (components: IComponents) => {
         return query
       })
       .join('\n')}
-  }, [get, ${isIdInDependencyArray ? 'id, ' : ''}refresh])\n`
+  }, [get, pagesIndex, ${isIdInDependencyArray ? 'id, ' : ''}refresh])\n`
   return code
 }
 
