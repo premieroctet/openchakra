@@ -108,6 +108,7 @@ const getDynamicType = (comp: IComponent) => {
   if (GROUP_TYPE.includes(comp.type)) {
     return comp.type
   }
+  return null
   throw new Error(`No dynamic found for ${comp.type}`)
 }
 
