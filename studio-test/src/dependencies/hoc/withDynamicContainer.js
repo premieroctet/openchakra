@@ -3,8 +3,7 @@ import lodash from 'lodash'
 import {ArrowLeftIcon, ArrowRightIcon } from '@chakra-ui/icons'
 import { matcher } from '../utils/misc';
 import {Flex} from '@chakra-ui/react'
-
-const DEFAULT_LIMIT=30
+import { DEFAULT_LIMIT } from '../utils/consts';
 
 const normalize = str => {
   str = str

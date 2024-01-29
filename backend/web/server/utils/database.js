@@ -212,7 +212,7 @@ function handleReliesOn(directAttribute, relies_on, requiredFields) {
 }
 
 // TODO query.populates accepts an array of populates !!!!
-const buildPopulates = (modelName, fields) => {
+const buildPopulates = ({modelName, fields, params, parentField}) => {
   // Retain all ref fields
   const model=getModels()[modelName]
   if (!model) {
@@ -249,8 +249,10 @@ const buildPopulates = (modelName, fields) => {
   // / Build populate using att and subpopulation
   const pops=groupedAttributes.entries().map(([attributeName, fields]) => {
     const attType=attributes[attributeName].type
-    const subPopulate=buildPopulates(attType, fields)
-    return {path: attributeName, populate: lodash.isEmpty(subPopulate)?undefined:subPopulate}
+    const subPopulate=buildPopulates({modelName: attType, fields, params, parentField: `${parentField ? parentField+'.' : ''}${attributeName}`})
+    const paramName = `limit.${parentField? parentField+'.' : ''}${attributeName}`
+    const limit=params[paramName]
+    return {path: attributeName, options: {limit}, populate: lodash.isEmpty(subPopulate)?undefined:subPopulate}
   })
   return pops.value()
 }
@@ -289,7 +291,7 @@ const getModel = (id, expectedModel) => {
     })
 }
 
-const buildQuery = (model, id, fields) => {
+const buildQuery = (model, id, fields, params) => {
   const modelAttributes = Object.fromEntries(getModelAttributes(model))
 
   const select = lodash(fields)
@@ -307,8 +309,11 @@ const buildQuery = (model, id, fields) => {
 
   const criterion = id ? {_id: id} : {}
   let query = mongoose.connection.models[model].find(criterion) //, select)
-  const populates=buildPopulates(model, fields)
-  //console.log(`Populates for ${model}/${fields} is ${JSON.stringify(populates, null, 2)}`)
+  if (params.limit) {
+     query=query.limit(parseInt(params.limit))
+  }
+  const populates=buildPopulates({modelName: model, fields, params})
+  // console.log(`Populates for ${model}/${fields} is ${JSON.stringify(populates, null, 2)}`)
   query = query.populate(populates)
   return query
 }
@@ -361,19 +366,14 @@ const cloneArray = ({data, withOrigin, forceData = {}}) => {
   )
 }
 
-/**
-mongoose returns virtuals even if they are not present in select clause
-=> keep only require fields in data hierarchy
-*/
-const retainRequiredFields = ({data, fields}) => {
-  if (lodash.isArray(data)) {
-    return data.map(d => retainRequiredFields({data: d, fields}))
-  }
-  if (!lodash.isObject(data)) {
-    return data
-  }
+const firstLevelFieldsCache=new NodeCache()
 
-  const thisLevelFields = [
+const getFirstLevelFields = fields => {
+  const key=fields.join('/')
+  if (firstLevelFieldsCache.has(key)) {
+    return firstLevelFieldsCache.get(key)
+  }
+  const result= [
     'id',
     '_id',
     ...lodash(fields)
@@ -381,16 +381,69 @@ const retainRequiredFields = ({data, fields}) => {
       .uniq()
       .value(),
   ]
-  const pickedData = lodash.pick(data, thisLevelFields)
-  const nextLevelFields = fields
+  firstLevelFieldsCache.set(key, result)
+  return result
+}
+
+const nextLevelFieldsCache=new NodeCache()
+
+const getNextLevelFields = fields => {
+  const key=fields.join('/')
+  if (nextLevelFieldsCache.has(key)) {
+    return nextLevelFieldsCache.get(key)
+  }
+  const result=fields
     .filter(f => f.includes('.'))
     .map(f => f.split('.')[0])
+
+  nextLevelFieldsCache.set(key, result)
+  return result
+}
+
+// TODO this causes bug bugChildrenTrainersTraineesCHioldren. Why ?
+const secondLevelFieldsCache=new NodeCache()
+
+function getSecondLevelFields(fields, f) {
+  const key=[...fields, f].join('/')
+  let result = secondLevelFieldsCache.get(key)
+  if (!result) {
+    result=fields
+      .filter(f2 => new RegExp(`^${f}\.`).test(f2))
+      .map(f2 => f2.replace(new RegExp(`^${f}\.`), ''))
+  
+    secondLevelFieldsCache.set(key, result)
+  }
+  return result
+}
+
+
+/**
+mongoose returns virtuals even if they are not present in select clause
+=> keep only require fields in data hierarchy
+*/
+const retainRequiredFields = ({data, fields, level}) => {
+  if (level===undefined) {
+    level=3
+  }
+
+  if (level==0) {
+    return data
+  }
+  if (lodash.isArray(data)) {
+    return data.map(d => retainRequiredFields({data: d, fields, level}))
+  }
+  if (!lodash.isObject(data)) {
+    return data
+  }
+
+  const thisLevelFields = getFirstLevelFields(fields)
+  const pickedData = lodash.pick(data, thisLevelFields)
+  const nextLevelFields = getNextLevelFields(fields)
   nextLevelFields.forEach(f => {
     pickedData[f] = retainRequiredFields({
-      data: lodash.get(data, f),
-      fields: fields
-        .filter(f2 => new RegExp(`^${f}\.`).test(f2))
-        .map(f2 => f2.replace(new RegExp(`^${f}\.`), '')),
+      data: data[f],
+      fields: getSecondLevelFields(fields, f),
+      level: level-1
     })
   })
   return pickedData
@@ -471,7 +524,7 @@ const formatTime = timeMillis => {
 }
 
 const declareComputedField = (model, field, getFn, setFn) => {
-  if (getFn) {
+    if (getFn) {
     lodash.set(COMPUTED_FIELDS_GETTERS, `${model}.${field}`, getFn)
   }
   if (setFn) {
@@ -480,7 +533,7 @@ const declareComputedField = (model, field, getFn, setFn) => {
 }
 
 const declareVirtualField=({model, field, ...rest}) => {
-  const enumValues=rest.enumValues ? Object.keys(rest.enumValues) : undefined
+    const enumValues=rest.enumValues ? Object.keys(rest.enumValues) : undefined
   lodash.set(DECLARED_VIRTUALS, `${model}.${field}`, {path: field, ...rest, enumValues})
   if (!lodash.isEmpty(rest.enumValues)) {
     declareEnumField({model, field, enumValues: rest.enumValues})
@@ -582,7 +635,7 @@ const putAttribute = ({id, attribute, value, user}) => {
               })
           })
       }
-      const populates=buildPopulates(model, [attribute])
+      const populates=buildPopulates({modelaName: model, fields:[attribute]})
 
       let query=mongooseModel.find({$or: [{_id: id}, {origin: id}]})
       query = populates.reduce((q, key) => q.populate(key), query)
@@ -696,7 +749,7 @@ const loadFromDb = ({model, fields, id, user, params}) => {
         return data
       }
       console.time(`Loading model ${model}`)
-      return buildQuery(model, id, fields)
+      return buildQuery(model, id, fields, params)
         .then(data => {console.timeEnd(`Loading model ${model}`); return data})
         /**
         .then(data => {console.time(`Leaning model ${model}`); return data})
@@ -715,11 +768,9 @@ const loadFromDb = ({model, fields, id, user, params}) => {
         .then(data => {console.time(`Filtering model ${model}`); return data})
         .then(data => callFilterDataUser({model, data, id, user}))
         .then(data => {console.timeEnd(`Filtering model ${model}`); return data})
-        /**
         .then(data => {console.time(`Retain fields ${model}`); return data})
         .then(data =>  retainRequiredFields({data, fields}))
         .then(data => {console.timeEnd(`Retain fields ${model}`); return data})
-        */
     })
 
 }

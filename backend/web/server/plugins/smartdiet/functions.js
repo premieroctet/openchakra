@@ -166,6 +166,7 @@ const Appointment = require('../../models/Appointment')
 const Message = require('../../models/Message')
 const Lead = require('../../models/Lead')
 const cron = require('../../utils/cron')
+const Group = require('../../models/Group')
 
 const filterDataUser = ({ model, data, id, user }) => {
   if (model == 'offer' && !id) {
@@ -1563,89 +1564,45 @@ const ensureChallengePipsConsistency = () => {
     })
 }
 
-const computeStatistics = ({ id, fields }) => {
+const computeStatistics = async ({ id, fields }) => {
   console.log(`Computing stats for ${id} fields ${fields}`)
-  // No statistics computing for all companies => too long
   if (!id) {
-    return Promise.resolve({})
+    return {}
   }
-  const company_filter = id ? { _id: id } : {}
-  return Promise.all([
-    Company.find(company_filter)
-      .populate([{ path: 'webinars', select: 'type' }, { path: 'groups', populate: 'messages' }])
-      .populate({ path: 'users', populate: [
-        { path: 'registered_events' }, { path: 'replayed_events' }, { path: 'coachings', populate: { path: 'appointments' } }] }),
-    Lead.find(),
-    Category.find({ type: TARGET_SPECIFICITY }).populate({ path: 'targets' }),
-    Category.find({ type: TARGET_COACHING }).populate({ path: 'targets' }),
-  ])
-    .then(([comps, leads, specif_categories, reasons_categories]) => {
-      const companies = lodash(comps)
-      const allUsers = companies
-        .map('users').flatten().filter(u => u.role == ROLE_CUSTOMER)
-      const specificity_targets = lodash(specif_categories).map(c => c.targets).flatten()
-      const reasons_targets = lodash(reasons_categories).map(c => c.targets).flatten()
-      const webinars = companies.map(c => c.webinars).flatten()
-      const webinars_count = webinars.size()
-      const registered_count = allUsers
-        .map('registered_events').flatten()
-        .filter(e => e.type == EVENT_WEBINAR)
-        .size()
-      const average_webinar_registar = registered_count * 1.0 / webinars_count
-      const webinars_replayed_count = allUsers
-        .map('replayed_events').flatten()
-        .filter(e => e.type == EVENT_WEBINAR)
-        .size()
-      const groups_count = companies.map('groups_count').sum()
-      const messages_count = companies
-        .map('groups').flatten()
-        .map('messages').flatten()
-        .size()
-      const users_count = allUsers.size()
-      const companyCodes = companies.map('code').filter(v => !!v).value()
-      const leads_count = leads.filter(l => companyCodes.includes(l.company_code)).length
-      const [users_men_count, user_women_count, users_no_gender_count] = [GENDER_MALE, GENDER_FEMALE, GENDER_NON_BINARY].map(gender => {
-        return allUsers.filter(u => u.gender == gender).size()
-      })
-
-      const get_latest_measure = (date, measures, measure_name) => {
-        const latestMeasure = lodash(measures).filter(m => !!m[measure_name] && date.isAfter(m.date)).sortBy('date').last()
-        return latestMeasure?.[measure_name] || 0
-      }
-
-      const measures_evolution = lodash.range(-11, 1).map(offset => {
-        const monthEnd = moment().add(offset, 'month').endOf('month')
-        const measures = 'chest,waist,weight,hips,arms,thighs'.split(',').map(measure_name => {
-          const measure_total = allUsers.map(u => get_latest_measure(monthEnd, u.measures, measure_name)).sum()
-          return [measure_name, measure_total + 20]
-        })
-        const data = Object.fromEntries(measures)
-        data.date = monthEnd
-        return data
-      })
-
-      const started_coachings = allUsers.filter(u => u.coachings.some(c => c.appointments.length > 0)).size()
-
-      const specificities_users = specificity_targets.map(target => {
-        return ({ x: target.name, y: allUsers.filter(u => u.specificity_targets.some(t => t._id.equals(target._id))).size() })
-      })
-
-      const reasons_users = reasons_targets.map(target => {
-        return ({ x: target.name, y: allUsers.filter(u => u.coachings.some(c => c.reasons.some(r => r._id.equals(target._id)))).size() })
-      })
-
-      return ({
-        company: id,
-        webinars_count, average_webinar_registar, webinars_replayed_count,
-        groups_count, messages_count, users_count, leads_count, users_men_count,
-        user_women_count, users_no_gender_count,
-        started_coachings, specificities_users, reasons_users,
-      })
-    })
+  const result={}
+  const company=await Company.findById(id)
+  result.company=id
+  result.groups_count=await Group.countDocuments({companies: id})
+  result.messages_count=lodash(await Group.find({companies: id}).populate('messages')).flatten().size()
+  result.users_count=await User.countDocuments({company: id})
+  result.user_women_count=await User.countDocuments({company: id, gender: GENDER_FEMALE})
+  result.users_men_count=await User.countDocuments({company: id, gender: GENDER_MALE})
+  result.users_no_gender_count=await User.countDocuments({company: id, gender: GENDER_NON_BINARY})
+  result.webinars_count=await Webinar.countDocuments({companies: id})
+  const webinars_replayed=(await User.aggregate([
+    {$match: { company: id }},
+    {$unwind: '$replayed_events'},
+    {$match: { 'replayed_events.__t': EVENT_WEBINAR }},
+    {$group: {_id: '$_id', webinarCount: { $sum: 1 }}}
+  ]))[0]?.webinarCount||0
+  result.webinars_replayed_count=webinars_replayed
+  const webinars_registered=(await User.aggregate([
+    {$match: { company: id }},
+    {$unwind: '$registered_events'},
+    {$match: { 'registered_events.__t': EVENT_WEBINAR }},
+    {$group: {_id: '$_id', webinarCount: { $sum: 1 }}}
+  ]))[0]?.webinarCount||0
+  result.average_webinar_registar=result.webinars_count ? webinars_registered*1.0/result.webinars_count : 0
+  const apptCoachings=await Appointment.distinct('coaching')
+  const coachings=await Coaching.distinct('user', {_id: {$in: apptCoachings}})
+  const users=await User.countDocuments({_id: {$in: coachings}, company: id})
+  result.started_coachings=users
+  result.leads_count=await Lead.countDocuments({company_code: company.code})
+  return result
 }
 
 /** Upsert PARTICULARS company */
-Company.findOneAndUpdate(
+!isDevelopment() && Company.findOneAndUpdate(
   { name: PARTICULAR_COMPANY_NAME },
   { name: PARTICULAR_COMPANY_NAME, activity: COMPANY_ACTIVITY_SERVICES_AUX_ENTREPRISES },
   { upsert: true },
@@ -1654,7 +1611,7 @@ Company.findOneAndUpdate(
   .catch(err => console.error(`Particular company upsert error:${err}`))
 
 // Create missings coachings for any CUSTOMER
-User.find({ role: ROLE_CUSTOMER }).populate('coachings')
+!isDevelopment() && User.find({ role: ROLE_CUSTOMER }).populate('coachings')
   .then(users => users.filter(user => lodash.isEmpty(user.coachings)))
   .then(users => Promise.all(users.map(user => Coaching.create({ user }))))
   .then(coachings => coachings.map(coaching => console.log(`Created missing coaching for ${coaching.user.email}`)))
