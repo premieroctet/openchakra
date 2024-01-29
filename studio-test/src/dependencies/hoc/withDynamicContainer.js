@@ -98,15 +98,16 @@ const withDynamicContainer = Component => {
       orgData = lodash.get(orgData, props.attribute)
     }
 
+    if (!lodash.isArray(orgData)) {
+      console.warn(`Container ${props.id}:expected array, got ${JSON.stringify(orgData)}`)
+      return null
+    }
+
+
     const _hasNext = orgData.length>limit
 
     if (shuffle) {
       orgData=lodash.shuffle(orgData)
-    }
-
-    if (!lodash.isArray(orgData)) {
-      console.warn(`Container ${props.id}:expected array, got ${JSON.stringify(orgData)}`)
-      return null
     }
 
     const original_length=orgData.length
