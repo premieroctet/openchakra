@@ -599,11 +599,7 @@ USER_MODELS.forEach(m => {
     },
   })
   declareVirtualField({
-    model: m, field: 'latest_coachings', instance: 'Array',
-    relies_on: 'coachings',
-    requires: 'coachings.all_logbooks.logbook.quizz.questions,coachings.all_logbooks.logbook.questions,coachings.all_logbooks.logbook.questions.quizz_question.available_answers,coachings.all_logbooks.logbook.questions.multiple_answers,\
-coachings.diet.availability_ranges.appointment_type,coachings.nutrition_advices',
-    multiple: true,
+    model: m, field: 'latest_coachings', instance: 'Array', multiple: true,
     caster: {
       instance: 'ObjectID',
       options: { ref: 'coaching' }

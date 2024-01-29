@@ -614,17 +614,19 @@ UserSchema.virtual("coachings", {
   foreignField: "user" // is equal to foreignField
 })
 
+UserSchema.virtual("latest_coachings", {
+  ref: "coaching", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "user", // is equal to foreignField
+  options: { sort: { creation_date: -1 } },
+  array: true,
+})
+
 UserSchema.virtual("diet_coachings", {
   ref: "coaching", // The Model to use
   localField: "_id", // Find in Model, where localField
   foreignField: "diet", // is equal to foreignField
 })
-
-// Returns the current coaching if ate least one survey exists => condition to start
-UserSchema.virtual('latest_coachings', {localField:'tagada', foreignField:'tagada'}).get(function() {
-  const latest=lodash(this.coachings).maxBy(coaching => coaching[CREATED_AT_ATTRIBUTE])
-  return latest ? [latest]:[]
-});
 
 UserSchema.virtual("diet_questions", {
   ref: "quizzQuestion", // The Model to use
