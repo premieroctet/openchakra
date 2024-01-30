@@ -633,18 +633,6 @@ const buildHooks = (components: IComponents) => {
 
   const objectsFilters=Object.fromEntries(dataProviders.map(dp => [dp.id, getFiltersObject(dp)]))
   
-  const buildFilterCode = `
-    const FILTER_ATTRIBUTES=${JSON.stringify(objectsFilters)}
-    const buildFilter = dpId => {
-      const filters=FILTER_ATTRIBUTES[dpId]
-      const constants=filters?.constants?.map(([att, value]) => \`filter.\${att}=\${value}\`) || []
-      const variables=filters?.variables?.filter(([att, comp]) => ![null, undefined].includes(componentsValues[comp]))
-        .map(([att, comp]) => \`filter.\${att}=\${componentsValues[comp]}\`)  || []
-      const allFilters=[...constants, ...variables]
-      return allFilters.length>0 ? allFilters.join('&')+'&' : ''
-    }
-  `
-
   const singlePage=isSingleDataPage(components)
 
   const isIdInDependencyArray = dataProviders.reduce((acc, curr, i) => {
@@ -654,7 +642,7 @@ const buildHooks = (components: IComponents) => {
     return acc
   }, false)
 
-  let code=buildFilterCode
+  let code=`const FILTER_ATTRIBUTES=${JSON.stringify(objectsFilters, null, 2)}\n`
   code += `const get=axios.get`
   code +=
     '\n' +
@@ -698,7 +686,7 @@ const buildHooks = (components: IComponents) => {
         const idPart = dp.id === 'root' ? `\${id ? \`\${id}/\`: \`\`}` : ''
         const urlRest='${new URLSearchParams(queryRest)}'
         const apiUrl = `/myAlfred/api/studio/${dp.props.model}/${idPart}${
-          dpFields ? `?fields=${dpFields}&` : '?'}${limits ? `${limits.join('&')}&` : ''}\${buildFilter('${dp.id}')}\${computePagesIndex('${dataId}')}${dp.id=='root' ? urlRest: ''}`
+          dpFields ? `?fields=${dpFields}&` : '?'}${limits ? `${limits.join('&')}&` : ''}\${buildFilter(FILTER_ATTRIBUTES, '${dp.id}')}\${computePagesIndex('${dataId}')}${dp.id=='root' ? urlRest: ''}`
         let thenClause=dp.id=='root' && singlePage ?
          `.then(res => set${capitalize(dataId)}(res.data[0]))`
          :
@@ -900,6 +888,7 @@ export const generateCode = async (
   */
   code = `import React, {useState, useEffect} from 'react';
   import Filter from '../dependencies/custom-components/Filter/Filter';
+  import {buildFilter} from '../dependencies/utils/filters'
   import omit from 'lodash/omit';
   import lodash from 'lodash';
   import Metadata from '../dependencies/Metadata';
