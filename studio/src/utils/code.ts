@@ -686,7 +686,7 @@ const buildHooks = (components: IComponents) => {
         const idPart = dp.id === 'root' ? `\${id ? \`\${id}/\`: \`\`}` : ''
         const urlRest='${new URLSearchParams(queryRest)}'
         const apiUrl = `/myAlfred/api/studio/${dp.props.model}/${idPart}${
-          dpFields ? `?fields=${dpFields}&` : '?'}${limits ? `${limits.join('&')}&` : ''}\${buildFilter(FILTER_ATTRIBUTES, '${dp.id}')}\${computePagesIndex('${dataId}')}${dp.id=='root' ? urlRest: ''}`
+          dpFields ? `?fields=${dpFields}&` : '?'}${limits ? `${limits.join('&')}&` : ''}\${buildFilter('${dp.id}', FILTER_ATTRIBUTES, componentsValues)}\${computePagesIndex('${dataId}')}${dp.id=='root' ? urlRest: ''}`
         let thenClause=dp.id=='root' && singlePage ?
          `.then(res => set${capitalize(dataId)}(res.data[0]))`
          :

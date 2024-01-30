@@ -123,7 +123,7 @@ export const getConditionsPropertyName = property => {
   return `conditions${property}`
 }
 
-export const buildFilter = (filterAttributes, dataSourceId) => {
+export const buildFilter = (dataSourceId, filterAttributes, componentsValues) => {
   const filters=filterAttributes[dataSourceId]
   const constants=filters?.constants?.map(([att, value]) => `filter.${att}=${value}`) || []
   const variables=filters?.variables?.filter(([att, comp]) => ![null, undefined].includes(componentsValues[comp]))
