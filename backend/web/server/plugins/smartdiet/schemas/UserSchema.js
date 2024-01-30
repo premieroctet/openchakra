@@ -474,6 +474,20 @@ UserSchema.virtual("past_menus", {
   foreignField: "dummy", // is equal to foreignField
   options: {
     match: {end_date:{$lt: moment()}},
+    limit: 6,
+    sort: { creation_date: -1 }
+  },
+});
+
+// Past menus
+UserSchema.virtual("future_menus", {
+  ref: "menu", // The Model to use
+  localField: "dummy", // Find in Model, where localField
+  foreignField: "dummy", // is equal to foreignField
+  options: {
+    match: {start_date:{$gt: moment()}},
+    limit: 6,
+    sort: { creation_date: 1 }
   },
 });
 

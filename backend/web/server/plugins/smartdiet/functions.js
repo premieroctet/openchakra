@@ -291,14 +291,15 @@ const preCreate = ({ model, params, user }) => {
     return loadFromDb({
       model: 'user', id: customer_id,
       fields: [
-        'coachings.appointments', 'coachings.remaining_credits', 'coachings.appointment_type',
-        'coachings.nutrition_advices', 'coachings.remaining_nutrition_credits',
+        'latest_coachings.appointments', 'latest_coachings.remaining_credits', 'latest_coachings.appointment_type',
+        'latest_coachings.nutrition_advices', 'latest_coachings.remaining_nutrition_credits',
       ],
-      user
+      user,
     })
       .then(([usr]) => {
+        console.log('Coaching for', user._id, JSON.stringify(usr.latest_coachings, null, 2))
         // Check remaining credits
-        const latest_coaching = lodash.maxBy(usr.coachings, c => c[CREATED_AT_ATTRIBUTE])
+        const latest_coaching = usr.latest_coachings[0]
         if (!latest_coaching) {
           throw new ForbiddenError(`Aucun coaching en cours`)
         }
@@ -462,6 +463,14 @@ USER_MODELS.forEach(m => {
   })
   declareVirtualField({
     model: m, field: 'past_menus', instance: 'Array',
+    multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: { ref: 'menu' }
+    },
+  })
+  declareVirtualField({
+    model: m, field: 'future_menus', instance: 'Array',
     multiple: true,
     caster: {
       instance: 'ObjectID',

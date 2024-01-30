@@ -166,17 +166,17 @@ router.get('/action-allowed/:action', passport.authenticate('cookie', {session: 
   })
   const user=req.user
 
-  const msg=`allowing action ${action} ${JSON.stringify(query)}`
-  console.time(msg)
+  // const msg=`allowing action ${action} ${JSON.stringify(query)}`
+  // console.time(msg)
   return callAllowedAction({action, user, ...query})
     .then(allowed => res.json(allowed))
     .catch(err => {
       console.error(err)
       return res.json(false)
     })
-    .finally(() => {
-      console.timeEnd(msg)
-    })
+    // .finally(() => {
+    //   console.timeEnd(msg)
+    // })
 })
 
 router.post('/file', (req, res) => {
