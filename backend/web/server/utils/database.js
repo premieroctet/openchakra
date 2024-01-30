@@ -293,6 +293,15 @@ const getModel = (id, expectedModel) => {
     })
 }
 
+const buildFilter = params => {
+  const filters=Object.entries(params).filter(([key]) => key.startsWith('filter.'))
+  return Object.fromEntries(filters.map(([attName, value]) => [attName.replace(/^filter\./, ''), new RegExp(value)]))
+}
+
+const buildSort = params => {
+  return {}
+}
+
 const buildQuery = (model, id, fields, params) => {
   const modelAttributes = Object.fromEntries(getModelAttributes(model))
 
@@ -309,15 +318,18 @@ const buildQuery = (model, id, fields, params) => {
     .fromPairs()
     .value()
 
-  const criterion = id ? {_id: id} : {}
+  let criterion = id ? {_id: id} : {}
+  criterion={...criterion, ...buildFilter(params)}
+  console.log('criterion is', criterion)
   let query = mongoose.connection.models[model].find(criterion) //, select)
+  query = query.collation({ locale: 'fr', strength: 2 })
   if (params?.limit) {
     query=query.skip((params.page || 0)*parseInt(params.limit))
     query=query.limit(parseInt(params.limit)+1)
  }
   const populates=buildPopulates({modelName: model, fields, params})
   // console.log(`Populates for ${model}/${fields} is ${JSON.stringify(populates, null, 2)}`)
-  query = query.populate(populates)
+  query = query.populate(populates).sort(buildSort(params))
   return query
 }
 

@@ -114,23 +114,13 @@ const withDynamicContainer = Component => {
 
     if (limit) {
       try {
-        // console.log('Limiting', JSON.stringify(orgData, null, 2))
         orgData = orgData.slice(0, limit)
-        console.log('Limited', JSON.stringify(orgData, null, 2))
       }
       catch (err) {
         console.error(`Container ${props.id} can not slice ${JSON.stringify(orgData)}:${err}`)
       }
       }
   
-    if (props.filterAttribute && props.filterConstant) {
-      const value=props.filterConstant
-      // TODO Check why value "null" comes as string
-      if (!(lodash.isNil(value) || value=="null")) {
-        orgData = matcher(value, orgData, props.filterAttribute)
-      }
-    }
-
     if (props.contextFilter) {
       const contextIds = props.contextFilter.map(o => o._id.toString())
       orgData = orgData.filter(d => contextIds.includes(d._id))
@@ -149,13 +139,13 @@ const withDynamicContainer = Component => {
         orgData = matcher(value, orgData, props.filterAttribute)
       }
     }
-    if (props.filterAttribute2 && props.filterValue2) {
-      const value=props.getComponentValue(props.filterValue2, props.level)
-      // TODO Check why value "null" comes as string
-      if (!(lodash.isNil(value) || value=="null")) {
-        orgData = matcher(value, orgData, props.filterAttribute2)
-      }
-    }
+    // if (props.filterAttribute2 && props.filterValue2) {
+    //   const value=props.getComponentValue(props.filterValue2, props.level)
+    //   // TODO Check why value "null" comes as string
+    //   if (!(lodash.isNil(value) || value=="null")) {
+    //     orgData = matcher(value, orgData, props.filterAttribute2)
+    //   }
+    // }
 
     if (props.sortAttribute) {
       const direction=props.sortDirection || 'asc'

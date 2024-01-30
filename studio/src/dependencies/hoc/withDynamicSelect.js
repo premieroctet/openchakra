@@ -26,7 +26,7 @@ const withDynamicSelect = Component => {
       const {value} = ev.target
       setInternalValue(value)
       if (setComponentValue) {
-        setComponentValue(value)
+        setComponentValue(props.id, value)
       }
       if (!noautosave) {
         ACTIONS.putValue({
