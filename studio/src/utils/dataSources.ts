@@ -1,5 +1,20 @@
 import lodash from 'lodash'
 import { DEFAULT_LIMIT } from '~dependencies/utils/consts'
+import NodeCache from 'node-cache'
+
+/**
+ * Functions calls during deploy
+    hasParentType=>398
+    getFieldsForDataProvider=>495
+    getLimitsForDataProvider=>495
+    getParentOfType=>4676
+    isSingleDataPage=>13648
+    getDataProviderDataType=>47378
+    computeDataFieldName=>54465
+
+    Deploy 47s
+ */
+export const functionsCache=new NodeCache()
 
 export const CONTAINER_TYPE: ComponentType[] = [
   'Box',
@@ -192,7 +207,7 @@ export const computeDataFieldName = (
   dataSourceId: string,
 ): any => {
 
-  // On dataProvider: break
+  // On dataProvider: break 
   // TODO: commented because returns null if Select has a model even if it has a subDataSource/subAttributeDisplay
   /**
   if (component.props.model) {
