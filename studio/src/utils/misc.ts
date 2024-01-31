@@ -3,6 +3,7 @@ import lucidicons from '~lucideiconsList'
 import icons from '~iconsList'
 import theme from '~dependencies/theme/theme'
 import { PageState } from '~core/models/project'
+import lodash from 'lodash' 
 
 export const capitalize = (value: string) => {
   return value.charAt(0).toUpperCase() + value.slice(1)
@@ -99,6 +100,16 @@ export const iconStuff = ({
 
   return {IconFromSet, iconProps}
 }
+
+export const sortComponents = (components: IComponents): IComponents => {
+  const res=lodash(components)
+    .entries()
+    .sortBy(([k, v]) => `${v.type}-${v.id}`)
+    .fromPairs()
+    .value()
+  return res
+}
+
 
 export const REDIRECT_COUNT=4
 export const REDIRECT_ROLE=`autoRedirectRole_`

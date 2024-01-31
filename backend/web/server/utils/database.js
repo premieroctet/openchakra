@@ -436,16 +436,9 @@ function getSecondLevelFields(fields, f) {
 mongoose returns virtuals even if they are not present in select clause
 => keep only require fields in data hierarchy
 */
-const retainRequiredFields = ({data, fields, level}) => {
-  if (level===undefined) {
-    level=3
-  }
-
-  if (level==0) {
-    return data
-  }
+const retainRequiredFields = ({data, fields}) => {
   if (lodash.isArray(data)) {
-    return data.map(d => retainRequiredFields({data: d, fields, level}))
+    return data.map(d => retainRequiredFields({data: d, fields}))
   }
   if (!lodash.isObject(data)) {
     return data
@@ -458,7 +451,6 @@ const retainRequiredFields = ({data, fields, level}) => {
     pickedData[f] = retainRequiredFields({
       data: data[f],
       fields: getSecondLevelFields(fields, f),
-      level: level-1
     })
   })
   return pickedData

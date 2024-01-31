@@ -6,7 +6,6 @@ import { build, copyFile, install, start, clean } from './http'
 import { generateCode, generateApp } from './code'
 import { normalizePageName, urlClean } from './misc';
 import { validateComponents , validateProject} from './validation'
-import { functionsCache } from './dataSources';
 
 // If true, build target project when comilation fixed
 // @ts-ignore

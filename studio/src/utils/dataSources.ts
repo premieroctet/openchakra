@@ -1,6 +1,5 @@
 import lodash from 'lodash'
 import { DEFAULT_LIMIT } from '~dependencies/utils/consts'
-import NodeCache from 'node-cache'
 
 /**
  * Functions calls during deploy
@@ -14,8 +13,6 @@ import NodeCache from 'node-cache'
 
     Deploy 47s
  */
-export const functionsCache=new NodeCache()
-
 export const CONTAINER_TYPE: ComponentType[] = [
   'Box',
   'Grid',
