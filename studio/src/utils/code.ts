@@ -620,7 +620,20 @@ const buildHooks = (components: IComponents) => {
         const filterValue=c.props.filterValue2
         return [`${fieldName ? fieldName+'.' : ''}${filterAttribute}`, filterValue]
       })
-    const res={constants: constantFilters, variables: variableFilters}
+    const ultraVariableFilters = Object.values(components)
+      .filter(c => c.props.dataSource==dataProvider.id && lodash.range(5).some(idx => !!c.props[`filterComponent_${idx}`]))
+      .map(c => {
+        return lodash.flatten(lodash.range(5).map(idx => {
+          const filterComponent=c.props[`filterComponent_${idx}`]
+          if (!filterComponent) { return []}
+          const fieldName=computeDataFieldName(c, components, dataProvider.id)
+          const filterAttribute=components[filterComponent].props.attribute
+          const filterValue=filterComponent
+          return [`${fieldName ? fieldName+'.' : ''}${filterAttribute}`, filterValue]
+          }))
+      })
+      // TODO get Filter component 0 => 4
+    const res={constants: constantFilters, variables: [...variableFilters, ...ultraVariableFilters]}
     return res
   }
 
@@ -710,6 +723,7 @@ const isFilterComponent = (component: IComponent, components: IComponents) => {
   let result=Object.values(components).some(
     c => (c.props?.textFilter == component.id || c.props?.filterValue == component.id
       || c.props?.filterValue2 == component.id
+      || lodash.range(5).some(idx => c.props[`filterComponent_${idx}`]==component.id)
     )
   )
 
