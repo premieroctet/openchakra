@@ -102,6 +102,7 @@ const {
   COACHING_CONVERSION_TO_COME,
   COACHING_CONVERSION_CANCELLED,
   COACHING_CONVERSION_CONVERTED,
+  RECIPE_TYPE,
 } = require('./consts')
 const {
   HOOK_DELETE,
@@ -859,6 +860,7 @@ declareVirtualField({
   },
 })
 declareEnumField({ model: 'recipe', field: 'season', enumValues: SEASON })
+declareVirtualField({ model: 'recipe', field: 'type', instance: 'String', requires: 'duration', enumValues: RECIPE_TYPE })
 
 declareVirtualField({
   model: 'menu', field: 'recipes', instance: 'Array',

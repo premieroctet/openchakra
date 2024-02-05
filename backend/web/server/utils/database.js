@@ -216,7 +216,8 @@ const buildPopulates = ({modelName, fields, params, parentField}) => {
   // Retain all ref fields
   const model=getModels()[modelName]
   if (!model) {
-    throw new Error(`Unkown model ${modelName}`)
+    console.warn(`Can not populate model ${modelName}`)
+    return undefined
   }
   const attributes=model.attributes
   let requiredFields=[...fields]
@@ -243,7 +244,12 @@ const buildPopulates = ({modelName, fields, params, parentField}) => {
   // Retain ref attributes only
   const groupedAttributes=lodash(requiredFields)
     .groupBy(att => att.split('.')[0])
-    .pickBy((_, attName) => { if (!attributes[attName]) { throw new Error(`Attribute ${modelName}.${attName} unknown`) } return attributes[attName].ref===true })
+    .pickBy((_, attName) => { 
+      if (!attributes[attName]) { 
+        throw new Error(`Attribute ${modelName}.${attName} unknown`)
+      } 
+      return attributes[attName].ref===true || !!DECLARED_VIRTUALS[modelName]?.[attName]
+    })
     .mapValues(attributes => attributes.map(att => att.split('.').slice(1).join('.')).filter(v => !lodash.isEmpty(v)))
 
   // / Build populate using att and subpopulation
@@ -326,8 +332,11 @@ const buildQuery = (model, id, fields, params) => {
   if (params?.limit) {
     query=query.skip((params.page || 0)*parseInt(params.limit))
     query=query.limit(parseInt(params.limit)+1)
- }
-  const populates=buildPopulates({modelName: model, fields, params})
+  }
+  // Include filter and limit params fields
+  const filterFields=Object.keys(params).filter(p => p.startsWith('filter.')).map(k => k.replace('filter.', ''))
+  // const filterLimitFields=para
+  const populates=buildPopulates({modelName: model, fields:[...filterFields, ...fields], params})
   // console.log(`Populates for ${model}/${fields} is ${JSON.stringify(populates, null, 2)}`)
   query = query.populate(populates).sort(buildSort(params))
   return query

@@ -8,7 +8,9 @@ const {
   EVENT_TYPE,
   HARDNESS,
   NUTRISCORE,
-  SEASON
+  SEASON,
+  RECIPE_TYPE_RECIPE,
+  RECIPE_TYPE_FAMILY
 } = require('../consts')
 
 const Schema = mongoose.Schema
@@ -127,6 +129,10 @@ RecipeSchema.virtual("ingredients", {
   ref: "recipeIngredient", // The Model to use
   localField: "_id", // Find in Model, where localField
   foreignField: "recipe" // is equal to foreignField
+})
+
+RecipeSchema.virtual("type", {localField: 'tagada', foreignField: 'tagada'}).get(function() {
+  return this.duration>0 ? RECIPE_TYPE_RECIPE : RECIPE_TYPE_FAMILY
 })
 
 module.exports = RecipeSchema
