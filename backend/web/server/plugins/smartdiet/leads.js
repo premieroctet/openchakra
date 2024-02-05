@@ -38,7 +38,10 @@ const MAPPING={
 
 }
 
-const MANDATORY_COLUMNS=Object.keys(MAPPING)
+// TODO mandatory for in/out calls
+//const MANDATORY_COLUMNS=Object.keys(MAPPING)
+// TODO mandatory for simple leads
+const MANDATORY_COLUMNS=['Prénom', 'Nom', 'Email']
 
 const VALID = () => true
 const IDENTITY = v => lodash.isEmpty(v) ? null : v
