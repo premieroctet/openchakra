@@ -163,8 +163,7 @@ const withDynamicContainer = Component => {
     }
 
     const getPageIndex = () => {
-      const res=props.pagesIndex[getPageIndexKey()] || 0
-      // console.log('page index', res)
+      const res=props.pagesIndex?.[getPageIndexKey()] || 0
       return res
     }
 
