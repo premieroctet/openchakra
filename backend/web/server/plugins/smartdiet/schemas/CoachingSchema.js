@@ -68,6 +68,10 @@ const CoachingSchema = new Schema({
   food_program: {
     type: String,
   },
+  migration_id: {
+    type: Number,
+    required: false,
+  },
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
@@ -149,11 +153,6 @@ CoachingSchema.virtual("_all_diets", {
     match: {role: ROLE_EXTERNAL_DIET},
   },
 })
-
-const duplicateUserQuizz= id => {
-  return mongoose.models.quizz.findById(id).populate('questions')
-    .then(q => q.cloneAsUserQuizz(null))
-}
 
 // Returns the LogbookDay compléting if required
 CoachingSchema.virtual('logbooks', {localField:'tagada', foreignField:'tagada'}).get(function() {

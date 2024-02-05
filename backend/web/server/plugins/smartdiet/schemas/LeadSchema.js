@@ -55,6 +55,7 @@ const LeadSchema = new Schema({
     type: String,
     enum: Object.keys(CALL_STATUS),
     required: false,
+    set: v => v || undefined,
   },
   campain: {
     type: String,
@@ -91,7 +92,9 @@ const LeadSchema = new Schema({
   }],
   call_direction: {
     type: String,
-    enum: Object.keys(CALL_DIRECTION)
+    enum: Object.keys(CALL_DIRECTION),
+    required: false,
+    set: v => v || undefined,
   },
   consent: {
     type: Boolean,

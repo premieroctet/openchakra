@@ -119,6 +119,9 @@ const OfferSchema = new Schema({
     ref: 'company',
     required: false,
   },
+  migration_id: {
+    type: Number,
+  },
 }, schemaOptions)
 
 OfferSchema.methods.getContentLimit=function(type){

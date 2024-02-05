@@ -50,9 +50,9 @@ const UserSchema = new Schema({
   },
   email: {
     type: String,
-    required: [true, 'L\'email est obligatoire'],
+    required: [true, `L'email est obligatoire`],
     set: v => v ? v.toLowerCase().trim() : v,
-    validate: [isEmailOk, "L'email est invalide"],
+    validate: [isEmailOk, v => `L'email '${v.value}' est invalide`],
   },
   phone: {
     type: String,
@@ -219,19 +219,19 @@ const UserSchema = new Schema({
   },
   zip_code: {
     type: String,
-    validate: [v => /^\d{5}$/.test(v), 'Le code postal est invalide'],
+    validate: [v => lodash.isEmpty(v) || /^\d{5}$/.test(v), v => `Le code postal '${v.value}' est invalide`],
     required: false,
   },
   siret: {
     type: String,
     set: v => v ? v.replace(/ /g, '') : v,
-    validate: [v => !v || (siret.isSIRET(v)||siret.isSIREN(v)) , 'Le siret/siren est invalide'],
+    validate: [v => !v || (siret.isSIRET(v)||siret.isSIREN(v)) , v => `Le siret/siren '${v.value}' est invalide`],
     required: false,
   },
   adeli: {
     type: String,
     set: v => v ? v.replace(/ /g, '') : v,
-    validate: [v => !v || luhn.validate(v), 'Le numéro ADELI est invalide'],
+    validate: [v => !v || luhn.validate(v), v => `Le numéro ADELI '${v.value}' est invalide`],
     required: false,
   },
   customer_companies: [{
@@ -251,7 +251,7 @@ const UserSchema = new Schema({
   // IBAN pour les diets
   iban: {
     type: String,
-    validate: [v => !v || IBANValidator.isValid(v), "L'IBAN est invalide"],
+    validate: [v => !v || IBANValidator.isValid(v), v => `L'IBAN '${v.value}' est invalide`],
     required: false,
   },
   // RIB pour les diets
@@ -315,7 +315,11 @@ const UserSchema = new Schema({
   last_activity: {
     type: Date,
     required: false,
-  }
+  },
+  migration_id: {
+    type: Number,
+    required: false,
+  },
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
