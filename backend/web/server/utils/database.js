@@ -248,7 +248,7 @@ const buildPopulates = ({modelName, fields, params, parentField}) => {
       if (!attributes[attName]) { 
         throw new Error(`Attribute ${modelName}.${attName} unknown`)
       } 
-      return attributes[attName].ref===true || !!DECLARED_VIRTUALS[modelName]?.[attName]
+      return attributes[attName].ref===true
     })
     .mapValues(attributes => attributes.map(att => att.split('.').slice(1).join('.')).filter(v => !lodash.isEmpty(v)))
 
@@ -333,10 +333,7 @@ const buildQuery = (model, id, fields, params) => {
     query=query.skip((params.page || 0)*parseInt(params.limit))
     query=query.limit(parseInt(params.limit)+1)
   }
-  // Include filter and limit params fields
-  const filterFields=Object.keys(params).filter(p => p.startsWith('filter.')).map(k => k.replace('filter.', ''))
-  // const filterLimitFields=para
-  const populates=buildPopulates({modelName: model, fields:[...filterFields, ...fields], params})
+  const populates=buildPopulates({modelName: model, fields:[...fields], params})
   // console.log(`Populates for ${model}/${fields} is ${JSON.stringify(populates, null, 2)}`)
   query = query.populate(populates).sort(buildSort(params))
   return query
