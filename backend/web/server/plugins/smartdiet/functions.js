@@ -292,15 +292,23 @@ const preCreate = ({ model, params, user }) => {
     return loadFromDb({
       model: 'user', id: customer_id,
       fields: [
-        'latest_coachings.appointments', 'latest_coachings.remaining_credits', 'latest_coachings.appointment_type',
-        'latest_coachings.nutrition_advices', 'latest_coachings.remaining_nutrition_credits', 'phone',
+        'latest_coachings.appointments', 'latest_coachings.reasons', 'latest_coachings.remaining_credits', 'latest_coachings.appointment_type',
+        'latest_coachings.nutrition_advices', 'latest_coachings.remaining_nutrition_credits', 'company.reasons', 'phone',
       ],
       user,
     })
       .then(([usr]) => {
         // Phone is required for appintment
-        if (lodash.isEmpty(user.phone)) {
+        if (lodash.isEmpty(usr.phone)) {
           throw new BadRequestError(`Le numéro de téléphone est obligatoire pour prendre rendez-vous`)
+        }
+        // If company has coaching reasons, check if the user coaching intersects at least one
+        const company_reasons=usr.company?.reasons
+        if (company_reasons?.length > 0) {
+          const user_reasons=usr.latest_coachings?.[0]?.reasons
+          if (!setIntersects(user_reasons, company_reasons)) {
+            throw new BadRequestError(`Vos motifs de consultation ne sont pas pris en charge par votre compagnie`)
+          }
         }
         // Check remaining credits
         const latest_coaching = usr.latest_coachings[0]

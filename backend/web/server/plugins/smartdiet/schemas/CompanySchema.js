@@ -67,6 +67,14 @@ const CompanySchema = new Schema(
       type: Number,
       required: false,
     },
+    // Coaching reasons this company applies on
+    reasons: [{
+      type: Schema.Types.ObjectId,
+      // TODO: check that target's category's type is TARGET_COACHING
+      ref: 'target',
+      required: true,
+    }],
+  
   },
   schemaOptions,
 )
