@@ -164,7 +164,7 @@ const countCache = (model) => {
 
 function upsertRecord({model, record, identityKey, migrationKey, updateOnly}) {
   const identityFilter=computeIdentityFilter(identityKey, migrationKey, record)
-  return model.findOne(identityFilter)
+  return model.findOne(identityFilter, {[migrationKey]:1})
     .then(result => {
       if (!result) {
         if (updateOnly) {
@@ -213,7 +213,7 @@ const importData = ({model, data, mapping, identityKey, migrationKey, progressCb
             error: result.reason?.message || result.reason?._message || result.reason
           })
           const mappedResults=results.map((r, index) => createResult(r, index))
-          console.log(lodash(mappedResults).countBy('success').value())
+          console.log(lodash(mappedResults).groupBy('success').mapValues(v => v.length).value())
           return mappedResults
         })
     })
@@ -224,13 +224,16 @@ const prepareCache = () => {
   console.log('Preparing cache')
   const MODELS=mongoose.modelNames()
   const promises=MODELS.map(modelName => {
+    const msg=`Caching ${modelName}`
+    // console.time(msg)
     return mongoose.model(modelName).find({migration_id: {$ne: null}}, {coaching:1, coachings:1, migration_id:1, start_date:1 })
       .populate(['coaching', 'coachings'])
       .then(data => {
+        // console.timeEnd(msg)
         data.forEach(d => setCache(modelName, d.migration_id.toString(), d._id.toString()))
         if (modelName=='appointment') {
           data.forEach(d => setCache('consultation_patient', d.migration_id.toString(), d.coaching.user._id.toString()))
-          data.forEach(d => setCache('consultation_date', d.migration_id.toString(), moment(d.start_date).unix()))
+          data.forEach(d => setCache('consultation_date', d.migration_id.toString(), moment(d.start_date)))
           data.forEach(d => setCache('appointment_coaching', d.migration_id.toString(), d.coaching._id))
         }
         if (modelName=='user') {
