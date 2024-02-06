@@ -146,7 +146,7 @@ describe('Test imports', () => {
     console.log(quizz.questions.map(q => q.title))
   })
 
-  it.only('must upsert keys', async () => {
+  it('must upsert keys', async () => {
     let res = await importKeys(path.join(ROOT, 'smart_criteria.csv'))
     ensureNbError(res)
     const keys=await Key.find({migration_id: {$ne: null}})
@@ -159,7 +159,7 @@ describe('Test imports', () => {
     expect(quizz.questions.length).toEqual(26)
   })
 
-  it.only('must upsert user progress quizz', async () => {
+  it('must upsert user progress quizz', async () => {
     let res = await importUserProgressQuizz(path.join(ROOT, 'smart_consultation_progress.csv'), 24000)
     const user=await User.findOne({email: PATIENT_EMAIL})
     const coachings=await Coaching.find({user}).populate('progress')
