@@ -1032,6 +1032,13 @@ declareVirtualField({
   },
 })
 declareVirtualField({
+  model: 'coaching', field: 'appointments_future', instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: { ref: 'appointment' }
+  },
+})
+declareVirtualField({
   model: 'coaching', field: 'remaining_credits', instance: 'Number',
   requires: 'user.offer.coaching_credit,spent_credits,user.company.offers.coaching_credit,user.role'
 }
