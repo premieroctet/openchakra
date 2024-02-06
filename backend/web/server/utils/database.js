@@ -300,7 +300,7 @@ const getModel = (id, expectedModel) => {
 }
 
 const buildFilter = params => {
-  const filters=Object.entries(params).filter(([key]) => key.startsWith('filter.'))
+  const filters=Object.entries(params || {}).filter(([key]) => key.startsWith('filter.'))
   return Object.fromEntries(filters.map(([attName, value]) => [attName.replace(/^filter\./, ''), new RegExp(value, 'i')]))
 }
 
