@@ -293,12 +293,15 @@ const preCreate = ({ model, params, user }) => {
       model: 'user', id: customer_id,
       fields: [
         'latest_coachings.appointments', 'latest_coachings.remaining_credits', 'latest_coachings.appointment_type',
-        'latest_coachings.nutrition_advices', 'latest_coachings.remaining_nutrition_credits',
+        'latest_coachings.nutrition_advices', 'latest_coachings.remaining_nutrition_credits', 'phone',
       ],
       user,
     })
       .then(([usr]) => {
-        console.log('Coaching for', user._id, JSON.stringify(usr.latest_coachings, null, 2))
+        // Phone is required for appintment
+        if (lodash.isEmpty(user.phone)) {
+          throw new BadRequestError(`Le numéro de téléphone est obligatoire pour prendre rendez-vous`)
+        }
         // Check remaining credits
         const latest_coaching = usr.latest_coachings[0]
         if (!latest_coaching) {
