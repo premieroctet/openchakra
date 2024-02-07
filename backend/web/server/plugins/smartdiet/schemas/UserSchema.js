@@ -665,6 +665,11 @@ UserSchema.virtual('diet_appointments', {localField:'tagada', foreignField:'taga
   return lodash.flatten(this.diet_coachings?.map(c => c.appointments))
 })
 
+UserSchema.virtual('diet_current_future_appointments', {localField:'tagada', foreignField:'tagada'}).get(function() {
+  const now=moment()
+  return lodash.flatten(this.diet_coachings?.map(c => c.appointments)).filter(a => now.isBefore(a.end_date))
+})
+
 UserSchema.virtual('diet_appointments_count', {localField:'tagada', foreignField:'tagada'}).get(function() {
   return this.diet_appointments?.length || 0
 })

@@ -652,6 +652,15 @@ USER_MODELS.forEach(m => {
       options: { ref: 'appointment' }
     },
   })
+  declareVirtualField({
+    model: m, field: 'diet_current_future_appointments', instance: 'Array',
+    relies_on: 'diet_coachings.appointments',
+    multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: { ref: 'appointment' }
+    },
+  })
   // TODO This causes error because of relies_on
   //declareVirtualField({ model: m, field: 'diet_appointments_count', instance: 'Number', requires: 'diet_appointments'})
   declareVirtualField({ model: m, field: 'diet_appointments_count', instance: 'Number', requires: 'diet_coachings'})
