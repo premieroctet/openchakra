@@ -632,7 +632,7 @@ UserSchema.virtual("latest_coachings", {
   ref: "coaching", // The Model to use
   localField: "_id", // Find in Model, where localField
   foreignField: "user", // is equal to foreignField
-  options: { sort: { creation_date: -1 } },
+  options: { sort: { creation_date: -1 }, limit:1 },
   array: true,
 })
 

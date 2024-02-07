@@ -253,6 +253,10 @@ const buildPopulates = ({modelName, fields, params, parentField}) => {
     .mapValues(attributes => attributes.map(att => att.split('.').slice(1).join('.')).filter(v => !lodash.isEmpty(v)))
 
   // / Build populate using att and subpopulation
+
+  // const select=Object.fromEntries(requiredFields.map(f => f.split('.')[0]).map(f => [f, 1]))
+  // console.log('Populates select is ', modelName, select)
+
   const pops=groupedAttributes.entries().map(([attributeName, fields]) => {
     const attType=attributes[attributeName].type
     const subPopulate=buildPopulates({modelName: attType, fields, params, parentField: `${parentField ? parentField+'.' : ''}${attributeName}`})
@@ -260,7 +264,7 @@ const buildPopulates = ({modelName, fields, params, parentField}) => {
     const limit=params?.[limitParamName] ? parseInt(params[limitParamName])+1 : undefined
     const pageParamName = `page.${parentField? parentField+'.' : ''}${attributeName}`
     const page=params?.[pageParamName] ? parseInt(params[pageParamName])*parseInt(params[limitParamName]) : undefined
-    return {path: attributeName, options: {limit, skip:page}, populate: lodash.isEmpty(subPopulate)?undefined:subPopulate}
+    return {path: attributeName, /** select, */options: {limit, skip:page}, populate: lodash.isEmpty(subPopulate)?undefined:subPopulate}
   })
   return pops.value()
 }
@@ -314,19 +318,14 @@ const buildQuery = (model, id, fields, params) => {
   const select = lodash(fields)
     .map(att => att.split('.')[0])
     .uniq()
-    .filter(att => {
-      if (!modelAttributes[att]) {
-        throw new Error(`Unknown attribute ${model}.${att}`)
-      }
-      return modelAttributes[att].ref == false
-    })
-    .map(att => [att, true])
+    .map(att => [att, 1])
     .fromPairs()
     .value()
 
   let criterion = id ? {_id: id} : {}
-  criterion={...criterion, ...buildFilter(params)}
+  // criterion={...criterion, ...buildFilter(params)}
   console.log('criterion is', criterion)
+  console.log('select is', select)
   let query = mongoose.connection.models[model].find(criterion) //, select)
   query = query.collation({ locale: 'fr', strength: 2 })
   if (params?.limit) {
@@ -334,7 +333,7 @@ const buildQuery = (model, id, fields, params) => {
     query=query.limit(parseInt(params.limit)+1)
   }
   const populates=buildPopulates({modelName: model, fields:[...fields], params})
-  // console.log(`Populates for ${model}/${fields} is ${JSON.stringify(populates, null, 2)}`)
+  // console.log(`Populates for ${model}/${fields} is ${JSON.stringify(populates)}`)
   query = query.populate(populates).sort(buildSort(params))
   return query
 }
@@ -781,9 +780,9 @@ const loadFromDb = ({model, fields, id, user, params}) => {
         .then(data => {console.time(`Filtering model ${model}`); return data})
         .then(data => callFilterDataUser({model, data, id, user}))
         .then(data => {console.timeEnd(`Filtering model ${model}`); return data})
-        .then(data => {console.time(`Retain fields ${model}`); return data})
-        .then(data =>  retainRequiredFields({data, fields}))
-        .then(data => {console.timeEnd(`Retain fields ${model}`); return data})
+        // .then(data => {console.time(`Retain fields ${model}`); return data})
+        // .then(data =>  retainRequiredFields({data, fields}))
+        // .then(data => {console.timeEnd(`Retain fields ${model}`); return data})
     })
 
 }

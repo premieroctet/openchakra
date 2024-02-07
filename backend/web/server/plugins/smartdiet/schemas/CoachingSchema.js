@@ -151,7 +151,7 @@ CoachingSchema.virtual('available_diets', {localField:'tagada', foreignField:'ta
 // Returns the current objectoves (i.e. the newest appointment's ones)
 CoachingSchema.virtual('current_objectives', {localField:'tagada', foreignField:'tagada'}).get(function() {
   return lodash(this.appointments)
-   .orderBy(app => app[CREATED_AT_ATTRIBUTE].start_date, 'desc')
+   .orderBy(app => app.start_date, 'desc')
    .head()?.objectives || []
 })
 
@@ -167,7 +167,8 @@ CoachingSchema.virtual("_all_diets", {
 
 // Returns the LogbookDay compléting if required
 CoachingSchema.virtual('logbooks', {localField:'tagada', foreignField:'tagada'}).get(function() {
-  const grouped=lodash(this.all_logbooks).sortBy(l => l.day).groupBy(l => l.day)
+  const minBack=moment().add(-15, 'days')
+  const grouped=lodash(this.all_logbooks).filter(l => minBack.isBefore(l.day)).sortBy(l => l.day).groupBy(l => l.day)
   const lbd=grouped.entries().map(([day, logbooks]) => mongoose.models.logbookDay({day, logbooks:logbooks?.map(fl => fl.logbook)}))
   return lbd
 })
