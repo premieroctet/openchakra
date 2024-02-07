@@ -323,7 +323,7 @@ const buildQuery = (model, id, fields, params) => {
     .value()
 
   let criterion = id ? {_id: id} : {}
-  // criterion={...criterion, ...buildFilter(params)}
+  criterion={...criterion, ...buildFilter(params)}
   console.log('criterion is', criterion)
   console.log('select is', select)
   let query = mongoose.connection.models[model].find(criterion) //, select)

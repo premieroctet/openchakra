@@ -167,8 +167,7 @@ CoachingSchema.virtual("_all_diets", {
 
 // Returns the LogbookDay compléting if required
 CoachingSchema.virtual('logbooks', {localField:'tagada', foreignField:'tagada'}).get(function() {
-  const minBack=moment().add(-15, 'days')
-  const grouped=lodash(this.all_logbooks).filter(l => minBack.isBefore(l.day)).sortBy(l => l.day).groupBy(l => l.day)
+  const grouped=lodash(this.all_logbooks).sortBy(l => l.day).groupBy(l => l.day)
   const lbd=grouped.entries().map(([day, logbooks]) => mongoose.models.logbookDay({day, logbooks:logbooks?.map(fl => fl.logbook)}))
   return lbd
 })
