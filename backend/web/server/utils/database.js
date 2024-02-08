@@ -349,7 +349,7 @@ const buildPopulates = ({modelName, fields, filters, limits, parentField, params
     })
     // TODO Fix page number
     const pageParamName = `page.${parentField? parentField+'.' : ''}${attributeName}`
-    const page=params?.[pageParamName] ? parseInt(params[pageParamName])*parseInt(params[limitParamName]) : undefined
+    const page=undefined //params?.[pageParamName] ? parseInt(params[pageParamName])*parseInt(params[limitParamName]) : undefined
     return {
       path: attributeName, 
       /** select, */
@@ -870,7 +870,7 @@ const loadFromDb = ({model, fields, id, user, params}) => {
         .then(data => {console.timeEnd(`Leaning model ${model}`); return data})
         */
         .then(data => {console.time(`Leaning deep model ${model}`); return data})
-        .then(data => JSON.parse(JSON.stringify(data)))
+        // .then(data => JSON.parse(JSON.stringify(data)))
         .then(data => {console.timeEnd(`Leaning deep model ${model}`); return data})
         .then(data => {console.time(`Compute model ${model}`); return data})
         .then(data => {
@@ -881,9 +881,9 @@ const loadFromDb = ({model, fields, id, user, params}) => {
         .then(data => {console.time(`Filtering model ${model}`); return data})
         .then(data => callFilterDataUser({model, data, id, user}))
         .then(data => {console.timeEnd(`Filtering model ${model}`); return data})
-        // .then(data => {console.time(`Retain fields ${model}`); return data})
-        // .then(data =>  retainRequiredFields({data, fields}))
-        // .then(data => {console.timeEnd(`Retain fields ${model}`); return data})
+        .then(data => {console.time(`Retain fields ${model}`); return data})
+        .then(data =>  retainRequiredFields({data, fields}))
+        .then(data => {console.timeEnd(`Retain fields ${model}`); return data})
     })
 
 }

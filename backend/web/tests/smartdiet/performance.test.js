@@ -88,11 +88,38 @@ describe('Performance ', () => {
     // expect(diet3.diet_appointments_count).toEqual(diet.diet_appointments.length)
   })
 
-  it.only('must load limits', async () => {
+  it('must load limits', async () => {
     const user=await User.findOne({role: ROLE_EXTERNAL_DIET})
     const companies=await loadFromDb({model: 'company', fields:['name'], params:{limit:3}, user})
     return expect(companies.length).toEqual(3)
   })
+
+  it('must speed up patients loading', async () => {
+    const user=await User.findOne({email: /stephanieb\.smartdiet/})
+    const fields=`diet_patients,diet_patients.fullname,diet_patients.picture,diet_patients.company.name`.split(',')
+    const params={'limit.diet_patients': '4', 'limit':30, 'limit.diet_current_future_appointments':'30'}
+    const [loggedUser]=await loadFromDb({model: 'loggedUser', fields, params, user})
+    expect(loggedUser.diet_patients.length).toEqual(1189)
+    expect(loggedUser.diet_patients.some(p => p.company?.name)).toBeTruthy()
+  }, 2000)
+
+  it.only('must speed up diet appointments loading', async () => {
+    const user=await User.findOne({email: /stephanieb\.smartdiet/})
+    const fields=`diet_appointments_count,diet_current_future_appointments.coaching.user.picture,diet_current_future_appointments.coaching.user.fullname,diet_current_future_appointments.coaching.user.company_name,diet_current_future_appointments.start_date,diet_current_future_appointments.end_date,diet_current_future_appointments.order,diet_current_future_appointments.appointment_type.title,diet_current_future_appointments.status,diet_current_future_appointments.visio_url,diet_current_future_appointments.coaching.user,diet_current_future_appointments,diet_current_future_appointments.coaching.user.phone`.split(',')
+    const params={'limit':30}
+    console.time('Loading current & future appointments')
+    const [loggedUser]=await loadFromDb({model: 'loggedUser', fields, params, user})
+    console.timeEnd('Loading current & future appointments')
+    expect(loggedUser.diet_appointments_count).toEqual(5164)
+    console.log(loggedUser.diet_current_future_appointments?.length)
+  }, 3000)
+
+  it('must speed up diet patients and appointments loading', async () => {
+    const user=await User.findOne({email: /stephanieb\.smartdiet/})
+    const fields=`diet_patients,diet_patients.fullname,diet_patients.picture,diet_patients.company.name,firstname,picture,diet_appointments_count,diet_patients_count,diet_current_future_appointments.coaching.user.picture,diet_current_future_appointments.coaching.user.fullname,diet_current_future_appointments.coaching.user.company_name,diet_current_future_appointments.start_date,diet_current_future_appointments.end_date,diet_current_future_appointments.order,diet_current_future_appointments.appointment_type.title,diet_current_future_appointments.status,diet_current_future_appointments.visio_url,diet_current_future_appointments.coaching.user,diet_current_future_appointments,diet_current_future_appointments.coaching.user.phone`.split(',')
+    const params={'limit.diet_patients': '4', 'limit':30, 'limit.diet_current_future_appointments':'30'}
+    const loggedUser=await loadFromDb({model: 'loggedUser', fields, params, user})
+  }, 2000)
 
 })
 

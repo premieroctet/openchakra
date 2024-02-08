@@ -320,6 +320,23 @@ const UserSchema = new Schema({
     type: Number,
     required: false,
   },
+  // TODO: set as computed virtual as soon as mongooose lean is fast enough
+  diet_patients: [{
+    type: Schema.Types.ObjectId,
+    ref: 'user',
+    required: true,
+  }],
+  diet_patients_count: {
+    type: Number,
+  },
+  diet_appointments_count: {
+    type: Number,
+  },
+  diet_current_future_appointments: [{
+    type: Schema.Types.ObjectId,
+    ref: 'appointment',
+    required: false,
+  }],
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
@@ -665,23 +682,32 @@ UserSchema.virtual('diet_appointments', {localField:'tagada', foreignField:'taga
   return lodash.flatten(this.diet_coachings?.map(c => c.appointments))
 })
 
+/**
 UserSchema.virtual('diet_current_future_appointments', {localField:'tagada', foreignField:'tagada'}).get(function() {
   const now=moment()
-  return lodash.flatten(this.diet_coachings?.map(c => c.appointments)).filter(a => now.isBefore(a.end_date))
+  return lodash.flatten(this.diet_coachings?.map(c => c.appointments || []) || []).filter(a => now.isBefore(a.end_date))
 })
+*/
 
+/**
 UserSchema.virtual('diet_appointments_count', {localField:'tagada', foreignField:'tagada'}).get(function() {
   return this.diet_appointments?.length || 0
 })
+*/
 
+/**
 // Returned availabilities/ranges are not store in database
 UserSchema.virtual('diet_patients', {localField:'tagada', foreignField:'tagada'}).get(function() {
-  return lodash.uniqBy(this.diet_coachings?.map(c => c?.user), u => u?._id).filter(v => !!v)
+  //return lodash.uniqBy(this.diet_coachings?.map(c => c?.user), u => u?._id).filter(v => !!v)
+  return null
 })
+*/
 
+/**
 UserSchema.virtual('diet_patients_count', {localField:'tagada', foreignField:'tagada'}).get(function() {
   return this.diet_patients?.length || 0
 })
+*/
 
 // Returned availabilities/ranges are not store in database
 UserSchema.virtual('imc', {localField:'tagada', foreignField:'tagada'}).get(function() {
