@@ -41,6 +41,82 @@ const hasRefs = (req, field, id) => {
   return model.exists({[attribute]: id})
 }
 
+
+/**
+ * QUERY FILTERS
+ */
+
+/** Extracts filters parameters from query params */
+const extractFilters = params => {
+  const FILTER_PATTERN = /^filter\./
+  let filters = lodash(params)
+    .pickBy((_, key) => FILTER_PATTERN.test(key))
+    .mapKeys((_, key) => key.replace(FILTER_PATTERN, ''))
+    .mapValues(v => new RegExp(v, 'i'))
+  return filters.value()
+}
+
+/**
+ * Build filters from attributues name and values
+ * Return filter on:
+ *  - 1st level attributes only (next levels will be handled in subsequent buildPopulates)
+ *  - not virtual or computed attributes
+ */
+const getCurrentFilter = (filters, modelName) => {
+  filters = lodash(filters)
+    // Use 1st level filters
+    .pickBy((_, key) => !/\./.test(key))
+    // Filter by non virtual && non computed attributes
+    .pickBy((_, key) => {
+      const modelAtt = `${modelName}.${key}`
+      return !lodash.get(DECLARED_VIRTUALS, modelAtt) && !lodash.get(COMPUTED_FIELDS_GETTERS, modelAtt)
+    })
+  return filters.value()
+}
+
+const getSubFilters = (filters, attributeName) => {
+  const ATTRIBUTE_PATTERN = new RegExp(`^${attributeName}(\.|$)`)
+  filters = lodash(filters)
+    // Use 1st level filters
+    .pickBy((_, key) => ATTRIBUTE_PATTERN.test(key))
+    .mapKeys((_, key) => key.replace(ATTRIBUTE_PATTERN, ''))
+  return filters.value()
+}
+
+/** Extracts filters parameters from query params */
+const extractLimits = params => {
+  const LIMIT_PATTERN = /^limit(\.|$)/
+  let filters = lodash(params)
+    .pickBy((_, key) => LIMIT_PATTERN.test(key))
+    .mapKeys((_, key) => key.replace(LIMIT_PATTERN, ''))
+    .mapValues(v =>parseInt(v))
+  return filters.value()
+}
+
+/** Extracts filters parameters from query params */
+const getCurrentLimit = limits => {
+  return limits['']
+}
+
+/**
+ * Build limits from attributues name and values
+ * Return filter on:
+ *  - 1st level attributes only (next levels will be handled in subsequent buildPopulates)
+ *  - not virtual or computed attributes
+ */
+const getSubLimits = (limits, attributeName) => {
+  const ATTRIBUTE_PATTERN = new RegExp(`^${attributeName}(\.|$)`)
+  limits = lodash(limits)
+    // Use 1st level filters
+    .pickBy((_, key) => ATTRIBUTE_PATTERN.test(key))
+    .mapKeys((_, key) => key.replace(ATTRIBUTE_PATTERN, ''))
+  return limits.value()
+}
+
+/**
+ * END QUERY FILTERS
+ */
+
 /**
 Compares attributes recursively :
 - 1st level attributes are sorted lexicographically
@@ -212,7 +288,7 @@ function handleReliesOn(directAttribute, relies_on, requiredFields) {
 }
 
 // TODO query.populates accepts an array of populates !!!!
-const buildPopulates = ({modelName, fields, params, parentField}) => {
+const buildPopulates = ({modelName, fields, filters, limits, parentField, params}) => {
   // Retain all ref fields
   const model=getModels()[modelName]
   if (!model) {
@@ -241,6 +317,10 @@ const buildPopulates = ({modelName, fields, params, parentField}) => {
     })
   }
 
+  // TODO passs filters and limits as object parameters in buildPopulates
+  // TODO filter populates
+  // TODO: re-add filters on UI
+
   // Retain ref attributes only
   const groupedAttributes=lodash(requiredFields)
     .groupBy(att => att.split('.')[0])
@@ -259,15 +339,28 @@ const buildPopulates = ({modelName, fields, params, parentField}) => {
 
   const pops=groupedAttributes.entries().map(([attributeName, fields]) => {
     const attType=attributes[attributeName].type
-    const subPopulate=buildPopulates({modelName: attType, fields, params, parentField: `${parentField ? parentField+'.' : ''}${attributeName}`})
-    const limitParamName = `limit.${parentField? parentField+'.' : ''}${attributeName}`
-    const limit=params?.[limitParamName] ? parseInt(params[limitParamName])+1 : undefined
+    limits=getSubLimits(limits, attributeName)
+    filters=getSubFilters(filters, attributeName)
+    const limit=getCurrentLimit(limits)
+    const match=getCurrentFilter(filters, attType)
+    const subPopulate=buildPopulates({
+      modelName: attType, fields, parentField: `${parentField ? parentField+'.' : ''}${attributeName}`,
+      filters, limits, params,
+    })
+    // TODO Fix page number
     const pageParamName = `page.${parentField? parentField+'.' : ''}${attributeName}`
     const page=params?.[pageParamName] ? parseInt(params[pageParamName])*parseInt(params[limitParamName]) : undefined
-    return {path: attributeName, /** select, */options: {limit, skip:page}, populate: lodash.isEmpty(subPopulate)?undefined:subPopulate}
+    return {
+      path: attributeName, 
+      /** select, */
+      match,
+      options: {limit, skip:page}, 
+      populate: lodash.isEmpty(subPopulate)?undefined:subPopulate
+    }
   })
   return pops.value()
 }
+
 
 // Returns mongoose models ordered using child classes first (using discriminators)
 const getMongooseModels = () => {
@@ -303,11 +396,6 @@ const getModel = (id, expectedModel) => {
     })
 }
 
-const buildFilter = params => {
-  const filters=Object.entries(params || {}).filter(([key]) => key.startsWith('filter.'))
-  return Object.fromEntries(filters.map(([attName, value]) => [attName.replace(/^filter\./, ''), new RegExp(value, 'i')]))
-}
-
 const buildSort = params => {
   return {}
 }
@@ -323,17 +411,27 @@ const buildQuery = (model, id, fields, params) => {
     .value()
 
   let criterion = id ? {_id: id} : {}
-  criterion={...criterion, ...buildFilter(params)}
-  console.log('criterion is', criterion)
+  const filters=extractFilters(params)
+  const limits=extractLimits(params)
+
+  // Add filter fields
+  fields=lodash.uniq([...fields, ...Object.keys(filters)])
+
+  const currentFilter=getCurrentFilter(filters)
+  criterion={...criterion, ...currentFilter}
   console.log('select is', select)
+  console.log('criterion is', criterion)
+  console.log('limits is', limits)
   let query = mongoose.connection.models[model].find(criterion) //, select)
   query = query.collation({ locale: 'fr', strength: 2 })
-  if (params?.limit) {
-    query=query.skip((params.page || 0)*parseInt(params.limit))
-    query=query.limit(parseInt(params.limit)+1)
+  const currentLimit=getCurrentLimit(limits)
+  if (currentLimit) {
+    console.log('Setting limit', currentLimit, 'skipping', (params.page || 0)*currentLimit)
+    query=query.skip((params.page || 0)*currentLimit)
+    query=query.limit(currentLimit+1)
   }
-  const populates=buildPopulates({modelName: model, fields:[...fields], params})
-  // console.log(`Populates for ${model}/${fields} is ${JSON.stringify(populates, null, 2)}`)
+  const populates=buildPopulates({modelName: model, fields:[...fields], filters, limits, params})
+  console.log(`Populates for ${model}/${fields} is ${JSON.stringify(populates, null, 2)}`)
   query = query.populate(populates).sort(buildSort(params))
   return query
 }
@@ -647,7 +745,7 @@ const putAttribute = ({id, attribute, value, user}) => {
               })
           })
       }
-      const populates=buildPopulates({modelaName: model, fields:[attribute]})
+      const populates=buildPopulates({modelName: model, fields:[attribute]})
 
       let query=mongooseModel.find({$or: [{_id: id}, {origin: id}]})
       query = populates.reduce((q, key) => q.populate(key), query)
@@ -755,6 +853,9 @@ const putToDb = ({model, id, params, user}) => {
 }
 
 const loadFromDb = ({model, fields, id, user, params}) => {
+  // Add filter fields to return them to client
+  const filters=extractFilters(params)
+  fields=lodash.uniq([...fields, ...Object.keys(filters)])
   return callPreprocessGet({model, fields, id, user, params})
     .then(({model, fields, id, data}) => {
       if (data) {
@@ -852,5 +953,6 @@ module.exports = {
   importData,
   setPostDeleteData,
   handleReliesOn,
+  extractFilters, getCurrentFilter, getSubFilters, extractLimits, getSubLimits,
 }
 
