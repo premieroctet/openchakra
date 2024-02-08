@@ -9,10 +9,6 @@ const {CURRENT, FINISHED} = require('../plugins/fumoir/consts')
 const {BadRequestError, NotFoundError} = require('./errors')
 const NodeCache=require('node-cache')
 
-// const { ROLES, STATUS } = require("../../utils/aftral_studio/consts");
-// TODO: Omporting Theme makes a cyclic import. Why ?
-// const Theme = require('../models/Theme');
-
 const LEAN_DATA=false
 
 const MONGOOSE_OPTIONS = {
@@ -600,11 +596,11 @@ const addComputedFields = (
       // Compute direct attributes
       // Handle references => sub
       const refAttributes = getRefAttributes(model)
-      return Promise.allSettled(refAttributes.map(([attName, attParams]) => {
+      return Promise.all(refAttributes.map(([attName, attParams]) => {
         const requiredSubFields=getRequiredSubFields(fields, attName)
 
         const children = lodash.flatten([data[attName]]).filter(v => !!v)
-        return Promise.allSettled(
+        return Promise.all(
           children.map(child =>
             addComputedFields(
               requiredSubFields,
@@ -622,9 +618,13 @@ const addComputedFields = (
         const presentCompFields = lodash(fields).map(f => f.split('.')[0]).filter(v => !!v).uniq().value()
         const requiredCompFields = lodash.pick(compFields, presentCompFields)
 
-        return Promise.allSettled(
+        return Promise.all(
           Object.keys(requiredCompFields).map(f =>
-            requiredCompFields[f](newUserId, queryParams, data).then(res => {data[f] = res})
+            requiredCompFields[f](newUserId, queryParams, data)
+              .then(res => {
+                data[f] = res
+                return data
+              })
           ),
       )})
       .then(() => data)
@@ -864,16 +864,17 @@ const putToDb = ({model, id, params, user}) => {
 }
 
 const lean = ({model, data}) => {
-  if (LEAN_DATA) {
-    console.time(`Leaning model ${model}`)
-    /** Original mongoose. Only leans 1st level
-     * const res=data.map(d => d.toObject()))
-     * */
-    const res=JSON.parse(JSON.stringify(data))
-    console.timeEnd(`Leaning model ${model}`)
-    return res
-  }
-  console.log('Lean disabled')
+  console.time(`Leaning model ${model}`)
+  /** Original mongoose. Only leans 1st level
+   * const res=data.map(d => d.toObject()))
+   * */
+  const res=JSON.parse(JSON.stringify(data))
+  console.timeEnd(`Leaning model ${model}`)
+  return res
+}
+
+const display = data => {
+  console.trace("Data", JSON.stringify(data))
   return data
 }
 
@@ -886,14 +887,18 @@ const loadFromDb = ({model, fields, id, user, params}) => {
       if (data) {
         return data
       }
+      // TODO UGLY but user_surveys_progress does not return if not leaned
+      const localLean=/user_surveys_progress/.test(fields.join(',')) || LEAN_DATA
       console.time(`Loading model ${model}`)
       return buildQuery(model, id, fields, params)
         .then(data => {console.timeEnd(`Loading model ${model}`); return data})
-        .then(data => lean({model, data}))
+        .then(data => localLean ? lean({model, data}) : data)
         .then(data => {console.time(`Compute model ${model}`); return data})
         .then(data => {
           if (id && data.length == 0) { throw new NotFoundError(`Can't find ${model}:${id}`) }
-          return Promise.all(data.map(d => addComputedFields(fields,user._id, params, d, model)))
+          return Promise.all(data.map(d => {
+            return addComputedFields(fields,user._id, params, d, model)
+          }))
         })
         .then(data => {console.timeEnd(`Compute model ${model}`); return data})
         .then(data => {console.time(`Filtering model ${model}`); return data})
