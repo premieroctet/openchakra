@@ -13,6 +13,8 @@ const NodeCache=require('node-cache')
 // TODO: Omporting Theme makes a cyclic import. Why ?
 // const Theme = require('../models/Theme');
 
+const LEAN_DATA=false
+
 const MONGOOSE_OPTIONS = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -342,7 +344,7 @@ const buildPopulates = ({modelName, fields, filters, limits, parentField, params
     limits=getSubLimits(limits, attributeName)
     filters=getSubFilters(filters, attributeName)
     const limit=getCurrentLimit(limits)
-    const match=getCurrentFilter(filters, attType)
+    const match=getCurrentFilter(filters, attType) 
     const subPopulate=buildPopulates({
       modelName: attType, fields, parentField: `${parentField ? parentField+'.' : ''}${attributeName}`,
       filters, limits, params,
@@ -352,7 +354,7 @@ const buildPopulates = ({modelName, fields, filters, limits, parentField, params
     const page=undefined //params?.[pageParamName] ? parseInt(params[pageParamName])*parseInt(params[limitParamName]) : undefined
     return {
       path: attributeName, 
-      /** select, */
+      // select,
       match,
       options: {limit, skip:page}, 
       populate: lodash.isEmpty(subPopulate)?undefined:subPopulate
@@ -422,7 +424,7 @@ const buildQuery = (model, id, fields, params) => {
   console.log('select is', select)
   console.log('criterion is', criterion)
   console.log('limits is', limits)
-  let query = mongoose.connection.models[model].find(criterion) //, select)
+  let query = mongoose.connection.models[model].find(criterion, select)
   query = query.collation({ locale: 'fr', strength: 2 })
   const currentLimit=getCurrentLimit(limits)
   if (currentLimit) {
@@ -633,17 +635,26 @@ const formatTime = timeMillis => {
   return formatDuration(timeMillis ? timeMillis / 60 : 0, {leading: true})
 }
 
-const declareComputedField = (model, field, getFn, setFn) => {
-    if (getFn) {
-    lodash.set(COMPUTED_FIELDS_GETTERS, `${model}.${field}`, getFn)
+const declareComputedField = ({model, field, getterFn, setterFn}) => {
+  if (!model || !field || !(getterFn || setterFn)) {
+    throw new Error(`${model}.${field} compute delcaration requires model, field and at least getter or setter`)
   }
-  if (setFn) {
-    lodash.set(COMPUTED_FIELDS_SETTERS, `${model}.${field}`, setFn)
+  // if (!LEAN_DATA && lodash.get(DECLARED_VIRTUALS, `${model}.${field}`)) {
+  //   throw new Error(`Virtual ${model}.${field} can not be computed because data are not leaned, declare it as plain attribute`)
+  // }
+  if (getterFn) {
+    lodash.set(COMPUTED_FIELDS_GETTERS, `${model}.${field}`, getterFn)
+  }
+  if (setterFn) {
+    lodash.set(COMPUTED_FIELDS_SETTERS, `${model}.${field}`, setterFn)
   }
 }
 
 const declareVirtualField=({model, field, ...rest}) => {
-    const enumValues=rest.enumValues ? Object.keys(rest.enumValues) : undefined
+  // if (!LEAN_DATA && lodash.get(COMPUTED_FIELDS_GETTERS, `${model}.${field}`)) {
+  //   throw new Error(`Virtual ${model}.${field} can not be computed because data are not leaned, declare it as plain attribute`)
+  // }
+  const enumValues=rest.enumValues ? Object.keys(rest.enumValues) : undefined
   lodash.set(DECLARED_VIRTUALS, `${model}.${field}`, {path: field, ...rest, enumValues})
   if (!lodash.isEmpty(rest.enumValues)) {
     declareEnumField({model, field, enumValues: rest.enumValues})
@@ -852,6 +863,20 @@ const putToDb = ({model, id, params, user}) => {
     .then(data => callPostPutData({model, id, params, data, user}))
 }
 
+const lean = ({model, data}) => {
+  if (LEAN_DATA) {
+    console.time(`Leaning model ${model}`)
+    /** Original mongoose. Only leans 1st level
+     * const res=data.map(d => d.toObject()))
+     * */
+    const res=JSON.parse(JSON.stringify(data))
+    console.timeEnd(`Leaning model ${model}`)
+    return res
+  }
+  console.log('Lean disabled')
+  return data
+}
+
 const loadFromDb = ({model, fields, id, user, params}) => {
   // Add filter fields to return them to client
   const filters=extractFilters(params)
@@ -864,14 +889,7 @@ const loadFromDb = ({model, fields, id, user, params}) => {
       console.time(`Loading model ${model}`)
       return buildQuery(model, id, fields, params)
         .then(data => {console.timeEnd(`Loading model ${model}`); return data})
-        /**
-        .then(data => {console.time(`Leaning model ${model}`); return data})
-        .then(data => data.map(d => d.toObject()))
-        .then(data => {console.timeEnd(`Leaning model ${model}`); return data})
-        */
-        .then(data => {console.time(`Leaning deep model ${model}`); return data})
-        // .then(data => JSON.parse(JSON.stringify(data)))
-        .then(data => {console.timeEnd(`Leaning deep model ${model}`); return data})
+        .then(data => lean({model, data}))
         .then(data => {console.time(`Compute model ${model}`); return data})
         .then(data => {
           if (id && data.length == 0) { throw new NotFoundError(`Can't find ${model}:${id}`) }
@@ -881,9 +899,9 @@ const loadFromDb = ({model, fields, id, user, params}) => {
         .then(data => {console.time(`Filtering model ${model}`); return data})
         .then(data => callFilterDataUser({model, data, id, user}))
         .then(data => {console.timeEnd(`Filtering model ${model}`); return data})
-        .then(data => {console.time(`Retain fields ${model}`); return data})
-        .then(data =>  retainRequiredFields({data, fields}))
-        .then(data => {console.timeEnd(`Retain fields ${model}`); return data})
+        // .then(data => {console.time(`Retain fields ${model}`); return data})
+        // .then(data =>  retainRequiredFields({data, fields}))
+        // .then(data => {console.timeEnd(`Retain fields ${model}`); return data})
     })
 
 }
