@@ -329,6 +329,11 @@ const UserSchema = new Schema({
   diet_patients_count: {
     type: Number,
   },
+  diet_appointments: [{
+    type: Schema.Types.ObjectId,
+    ref: 'appointment',
+    required: false,
+  }],
   diet_appointments_count: {
     type: Number,
   },
@@ -678,9 +683,9 @@ UserSchema.virtual("keys", {
 })
 
 // Returned availabilities/ranges are not store in database
-UserSchema.virtual('diet_appointments', {localField:'tagada', foreignField:'tagada'}).get(function() {
-  return lodash.flatten(this.diet_coachings?.map(c => c.appointments))
-})
+// UserSchema.virtual('diet_appointments', {localField:'tagada', foreignField:'tagada'}).get(function() {
+//   return lodash.flatten(this.diet_coachings?.map(c => c.appointments))
+// })
 
 /**
 UserSchema.virtual('diet_current_future_appointments', {localField:'tagada', foreignField:'tagada'}).get(function() {

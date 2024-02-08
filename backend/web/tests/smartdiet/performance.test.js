@@ -103,7 +103,7 @@ describe('Performance ', () => {
     expect(loggedUser.diet_patients.some(p => p.company?.name)).toBeTruthy()
   }, 2000)
 
-  it.only('must speed up diet appointments loading', async () => {
+  it('must speed up diet appointments loading', async () => {
     const user=await User.findOne({email: /stephanieb\.smartdiet/})
     const fields=`diet_appointments_count,diet_current_future_appointments.coaching.user.picture,diet_current_future_appointments.coaching.user.fullname,diet_current_future_appointments.coaching.user.company_name,diet_current_future_appointments.start_date,diet_current_future_appointments.end_date,diet_current_future_appointments.order,diet_current_future_appointments.appointment_type.title,diet_current_future_appointments.status,diet_current_future_appointments.visio_url,diet_current_future_appointments.coaching.user,diet_current_future_appointments,diet_current_future_appointments.coaching.user.phone`.split(',')
     const params={'limit':30}
@@ -120,6 +120,17 @@ describe('Performance ', () => {
     const params={'limit.diet_patients': '4', 'limit':30, 'limit.diet_current_future_appointments':'30'}
     const loggedUser=await loadFromDb({model: 'loggedUser', fields, params, user})
   }, 2000)
+
+  it.only('must load appointments order', async () => {
+    const user=await User.findOne({email: /stephanieb\.smart/})
+    const fields=`diet_appointments.order,diet_appointments.start_date`.split(',')
+    const [loadedUser]=await loadFromDb({
+      model: 'loggedUser', 
+      fields, 
+      user, 
+      params:{"limit.diet_appointments":"1","limit":"30"}})
+    expect(loadedUser.diet_appointments[0].order).toBeGreaterThan(0)
+  }, 3000)
 
 })
 

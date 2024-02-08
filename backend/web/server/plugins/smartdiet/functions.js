@@ -643,15 +643,15 @@ USER_MODELS.forEach(m => {
       options: { ref: 'coaching' }
     },
   })
-  declareVirtualField({
-    model: m, field: 'diet_appointments', instance: 'Array',
-    relies_on: 'diet_coachings.appointments',
-    multiple: true,
-    caster: {
-      instance: 'ObjectID',
-      options: { ref: 'appointment' }
-    },
-  })
+  // declareVirtualField({
+  //   model: m, field: 'diet_appointments', instance: 'Array',
+  //   relies_on: 'diet_coachings.appointments',
+  //   multiple: true,
+  //   caster: {
+  //     instance: 'ObjectID',
+  //     options: { ref: 'appointment' }
+  //   },
+  // })
   // declareVirtualField({
   //   model: m, field: 'diet_current_future_appointments', instance: 'Array',
   //   multiple: true,
@@ -811,7 +811,7 @@ EVENT_MODELS.forEach(m => {
   declareVirtualField({ model: m, field: 'type', instance: 'String', enumValues: EVENT_TYPE })
   declareVirtualField({ model: m, field: 'duration', instance: 'Number', requires: 'start_date,end_date' })
   declareVirtualField({ model: m, field: 'status', instance: 'String', requires: 'start_date,end_date', enumValues: APPOINTMENT_STATUS })
-  declareComputedField(m, 'status', getEventStatus)
+  declareComputedField({model: m, field: 'status', getterFn: getEventStatus})
 })
 
 declareEnumField({ model: 'individualChallenge', field: 'hardness', enumValues: HARDNESS })
@@ -1207,8 +1207,8 @@ declareVirtualField({
 })
 
 declareVirtualField({
-  model: 'appointment', field: 'order', instance: 'Number',
-  requires: 'coaching.appointments',
+model: 'appointment', field: 'order', instance: 'Number',
+requires: 'coaching.appointments',
 })
 declareVirtualField({
   model: 'appointment', field: 'status', instance: 'String',
@@ -1437,54 +1437,62 @@ const getDietPatientsCount = (userId, params, data) => {
     .then(users => users.length)
 }
 
+const getDietAppointments = (userId, params, data) => {
+  const limit=parseInt(params['limit.diet_appointments']) || Number.MAX_SAFE_INTEGER
+  const now=moment()
+  return Coaching.find({diet: userId}, {_id:1})
+    .then(coachings => Appointment.find({coaching: coachings})
+      .limit(limit)
+      .populate({path: 'coaching', populate: {path: 'user', populate: 'company'}})
+    )
+}
+
 const getDietAppointmentsCount = (userId, prams, data) => {
-  console.time('Counting apppointments')
   return Coaching.find({diet: userId}, {_id:1})
     .then(coachings => Appointment.countDocuments({coaching: coachings}))
-    .finally(() => console.timeEnd('Counting apppointments'))
 }
 
 const getDietCurrentFutureAppointments = (userId, params, data) => {
   const limit=parseInt(params['limit.diet_current_future_appointments']) || Number.MAX_SAFE_INTEGER
   const now=moment()
-  console.time('Getting current future apppointments')
   return Coaching.find({diet: userId}, {_id:1})
     .then(coachings => Appointment.find({coaching: coachings, end_date: {$gt: now}})
       .limit(limit)
       .populate({path: 'coaching', populate: {path: 'user', populate: 'company'}})
     )
-    .finally(() => console.timeEnd('Getting current future apppointments'))
 }
 
-declareComputedField('user', 'contents', getUserContents)
-declareComputedField('loggedUser', 'contents', getUserContents)
-declareComputedField('user', 'diet_patients', getDietPatients)
-declareComputedField('loggedUser', 'diet_patients', getDietPatients)
-declareComputedField('user', 'diet_patients_count', getDietPatientsCount)
-declareComputedField('loggedUser', 'diet_patients_count', getDietPatientsCount)
-declareComputedField('user', 'diet_appointments_count', getDietAppointmentsCount)
-declareComputedField('loggedUser', 'diet_current_future_appointments', getDietCurrentFutureAppointments)
-declareComputedField('user', 'diet_current_future_appointments', getDietCurrentFutureAppointments)
-declareComputedField('loggedUser', 'diet_appointments_count', getDietAppointmentsCount)
-declareComputedField('comment', 'liked', getDataLiked, setDataLiked)
-declareComputedField('message', 'liked', getDataLiked, setDataLiked)
-declareComputedField('content', 'liked', getDataLiked, setDataLiked)
-declareComputedField('message', 'pinned', getDataPinned, setDataPinned)
-declareComputedField('content', 'pinned', getDataPinned, setDataPinned)
-declareComputedField('group', 'pinned_messages', getPinnedMessages)
-declareComputedField('individualChallenge', 'trophy_picture', getUserIndChallengeTrophy)
-declareComputedField('individualChallenge', 'obtained', getObtainedTrophy)
-declareComputedField('key', 'trophy_picture', getUserKeyTrophy)
-declareComputedField('key', 'user_spoons', getUserKeySpoons)
-declareComputedField('key', 'user_spoons_str', getUserKeySpoonsStr)
-declareComputedField('key', 'user_progress', getUserKeyProgress)
-declareComputedField('key', 'user_read_contents', getUserKeyReadContents)
-declareComputedField('key', 'user_passed_challenges', getUserPassedChallenges)
-declareComputedField('key', 'user_passed_webinars', getUserPassedWebinars)
-declareComputedField('user', 'spoons_count', getUserSpoons)
-declareComputedField('loggedUser', 'spoons_count', getUserSpoons)
-declareComputedField('menu', 'shopping_list', getMenuShoppingList)
-declareComputedField('key', 'user_surveys_progress', getUserSurveysProgress)
+declareComputedField({model: 'user', field: 'contents', getterFn: getUserContents})
+declareComputedField({model: 'loggedUser', field: 'contents', getterFn: getUserContents})
+declareComputedField({model: 'user', field: 'diet_patients', getterFn: getDietPatients})
+declareComputedField({model: 'loggedUser', field: 'diet_patients', getterFn: getDietPatients})
+declareComputedField({model: 'user', field: 'diet_patients_count', getterFn: getDietPatientsCount})
+declareComputedField({model: 'loggedUser', field: 'diet_patients_count', getterFn: getDietPatientsCount})
+declareComputedField({model: 'user', field: 'diet_appointments', getterFn: getDietAppointments})
+declareComputedField({model: 'loggedUser', field: 'diet_appointments', getterFn: getDietAppointments})
+declareComputedField({model: 'user', field: 'diet_appointments_count', getterFn: getDietAppointmentsCount})
+declareComputedField({model: 'loggedUser', field: 'diet_appointments_count', getterFn: getDietAppointmentsCount})
+declareComputedField({model: 'user', field: 'diet_current_future_appointments', getterFn: getDietCurrentFutureAppointments})
+declareComputedField({model: 'loggedUser', field: 'diet_current_future_appointments', getterFn: getDietCurrentFutureAppointments})
+declareComputedField({model: 'comment', field: 'liked', getterFn: getDataLiked, setterFn: setDataLiked})
+declareComputedField({model: 'message', field: 'liked', getterFn: getDataLiked, setterFn: setDataLiked})
+declareComputedField({model: 'content', field: 'liked', getterFn: getDataLiked, setterFn: setDataLiked})
+declareComputedField({model: 'message', field: 'pinned', getterFn: getDataPinned, setterFn: setDataPinned})
+declareComputedField({model: 'content', field: 'pinned', getterFn: getDataPinned, setterFn: setDataPinned})
+declareComputedField({model: 'group', field: 'pinned_messages', getterFn: getPinnedMessages})
+declareComputedField({model: 'individualChallenge', field: 'trophy_picture', getterFn: getUserIndChallengeTrophy})
+declareComputedField({model: 'individualChallenge', field: 'obtained', getterFn: getObtainedTrophy})
+declareComputedField({model: 'key', field: 'trophy_picture', getterFn: getUserKeyTrophy})
+declareComputedField({model: 'key', field: 'user_spoons', getterFn: getUserKeySpoons})
+declareComputedField({model: 'key', field: 'user_spoons_str', getterFn: getUserKeySpoonsStr})
+declareComputedField({model: 'key', field: 'user_progress', getterFn: getUserKeyProgress})
+declareComputedField({model: 'key', field: 'user_read_contents', getterFn: getUserKeyReadContents})
+declareComputedField({model: 'key', field: 'user_passed_challenges', getterFn: getUserPassedChallenges})
+declareComputedField({model: 'key', field: 'user_passed_webinars', getterFn: getUserPassedWebinars})
+declareComputedField({model: 'user', field: 'spoons_count', getterFn: getUserSpoons})
+declareComputedField({model: 'loggedUser', field: 'spoons_count', getterFn: getUserSpoons})
+declareComputedField({model: 'menu', field: 'shopping_list', getterFn: getMenuShoppingList})
+declareComputedField({model: 'key', field: 'user_surveys_progress', getterFn: getUserSurveysProgress})
 
 
 const postCreate = ({ model, params, data, user }) => {

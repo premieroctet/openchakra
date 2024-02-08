@@ -65,7 +65,7 @@ const AppointmentSchema = new Schema({
     type: Number,
     required: false,
   },
-}, schemaOptions)
+  }, schemaOptions)
 
 AppointmentSchema.virtual('order').get(function() {
   return lodash.sortBy(this.coaching?.appointments||[], 'start_date')
