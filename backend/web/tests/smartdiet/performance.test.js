@@ -29,6 +29,7 @@ require('../../server/models/LogbookDay')
 require('../../server/models/Job')
 require('../../server/models/DeclineReason')
 require('../../server/models/JoinReason')
+require('../../server/models/ChartPoint')
 
 jest.setTimeout(100000)
 
@@ -121,7 +122,7 @@ describe('Performance ', () => {
     const loggedUser=await loadFromDb({model: 'loggedUser', fields, params, user})
   }, 2000)
 
-  it.only('must load appointments order', async () => {
+  it('must load appointments order', async () => {
     const user=await User.findOne({email: /stephanieb\.smart/})
     const fields=`diet_appointments.order,diet_appointments.start_date`.split(',')
     const [loadedUser]=await loadFromDb({
@@ -132,5 +133,11 @@ describe('Performance ', () => {
     expect(loadedUser.diet_appointments[0].order).toBeGreaterThan(0)
   }, 3000)
 
+  it.only('must load survey progress', async () => {
+    const user=await User.findOne({email: /hello\+user@/})
+    const fields=`name,user_surveys_progress,user_surveys_progress.value_1,picture`.split(',')
+    const keys= await loadFromDb({model: 'key', fields, user})
+    keys.every(k => expect(k.user_surveys_progress).toHaveLength(6))
+  })
 })
 

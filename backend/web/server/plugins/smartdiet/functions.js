@@ -938,14 +938,14 @@ declareVirtualField({ model: 'key', field: 'user_spoons', instance: 'Number' })
 declareVirtualField({ model: 'key', field: 'user_spoons_str', instance: 'String' })
 declareVirtualField({ model: 'key', field: 'user_progress', instance: 'Number' })
 declareVirtualField({ model: 'key', field: 'user_read_contents', instance: 'Number' })
-declareVirtualField({
-  model: 'key', field: 'user_surveys_progress', instance: 'Array',
-  multiple: true,
-  caster: {
-    instance: 'ObjectID',
-    options: { ref: 'chartPoint' }
-  },
-})
+// declareVirtualField({
+//   model: 'key', field: 'user_surveys_progress', instance: 'Array',
+//   multiple: true,
+//   caster: {
+//     instance: 'ObjectID',
+//     options: { ref: 'chartPoint' }
+//   },
+// })
 declareVirtualField({ model: 'key', field: 'user_passed_challenges', instance: 'Number', requires: 'passed_events' })
 declareVirtualField({ model: 'key', field: 'user_passed_webinars', instance: 'Number', requires: 'passed_events' })
 declareVirtualField({ model: 'key', field: 'dummy', instance: 'Number'})
@@ -1398,7 +1398,6 @@ const getUserSurveysProgress = (userId, params, data) => {
       date: s[CREATED_AT_ATTRIBUTE],
       value_1: (lodash.sumBy(s.questions, q => parseInt(q.answer) || 0) * 100.0 / (s.questions.length * maxAnswer)),
     })))
-    .catch(err => console.error(err))
 }
 
 const getUserContents = (userId, params, data) => {

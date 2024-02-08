@@ -37,6 +37,11 @@ const KeySchema = new Schema({
   migration_id: {
     type: Number,
   },
+  user_surveys_progress: [{
+      type: Schema.Types.ObjectId,
+      ref: 'chartPoint',
+      required: false,
+    }],
 }, schemaOptions)
 
 KeySchema.virtual('user_spoons').get(function(){
@@ -51,9 +56,9 @@ KeySchema.virtual('user_progress').get(function(){
   return null
 })
 
-KeySchema.virtual('user_surveys_progress', {localField: 'tagada', foreignField:'tagada'}).get(function(){
-  return null
-})
+// KeySchema.virtual('user_surveys_progress', {localField: 'tagada', foreignField:'tagada'}).get(function(){
+//   return null
+// })
 
 KeySchema.virtual('user_read_contents').get(function(){
   return null
