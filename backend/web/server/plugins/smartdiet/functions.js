@@ -1427,7 +1427,7 @@ const getUserPassedWebinars = (userId, params, data) => {
 }
 
 const getDietPatients = (userId, params, data) => {
-  const limit=parseInt(params['limit.diet_patients']) || undefined
+  const limit=parseInt(params['limit.diet_patients']) || Number.MAX_SAFE_INTEGER
   return Coaching.distinct('user', {diet: userId})
     .then(users => User.find({_id: users}).limit(limit).populate('company'))
 }
@@ -1445,15 +1445,15 @@ const getDietAppointmentsCount = (userId, prams, data) => {
 }
 
 const getDietCurrentFutureAppointments = (userId, params, data) => {
-  // TODO NOW
-  const limit=parseInt(params['limit.diet_current_future_appointments']) || undefined
+  const limit=parseInt(params['limit.diet_current_future_appointments']) || Number.MAX_SAFE_INTEGER
   const now=moment()
   console.time('Getting current future apppointments')
   return Coaching.find({diet: userId}, {_id:1})
-    .then(coachings => Appointment.find({coaching: coachings, end_date: {$gt: now}}.limit(limit))
+    .then(coachings => Appointment.find({coaching: coachings, end_date: {$gt: now}})
+      .limit(limit)
       .populate({path: 'coaching', populate: {path: 'user', populate: 'company'}})
     )
-    .finally(() => console.time('Getting current future apppointments'))
+    .finally(() => console.timeEnd('Getting current future apppointments'))
 }
 
 declareComputedField('user', 'contents', getUserContents)
