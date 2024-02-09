@@ -2016,4 +2016,5 @@ module.exports = {
   logbooksConsistency,
   getRegisterCompany,
   agendaHookFn,
+  computeStatistics,
 }

@@ -294,26 +294,7 @@ const buildPopulates = ({modelName, fields, filters, limits, parentField, params
     return undefined
   }
   const attributes=model.attributes
-  let requiredFields=[...fields]
-  // Add declared required fields for virtuals
-  let added=true
-  while (added) {
-    added=false
-    lodash(requiredFields).groupBy(f => f.split('.')[0]).keys().forEach(directAttribute => {
-      let required=lodash.get(DECLARED_VIRTUALS, `${modelName}.${directAttribute}.requires`) || null
-      if (required) {
-        required=required.split(',')
-        if (lodash.difference(required, requiredFields).length>0) {
-          requiredFields=lodash.uniq([...requiredFields, ...required])
-          added=true
-        }
-      }
-      let relies_on=lodash.get(DECLARED_VIRTUALS, `${modelName}.${directAttribute}.relies_on`) || null
-      if (relies_on) {
-        requiredFields = handleReliesOn(directAttribute, relies_on, requiredFields)
-      }
-    })
-  }
+  let requiredFields = getRequiredFields({model: modelName, fields})
 
   // TODO passs filters and limits as object parameters in buildPopulates
   // TODO filter populates
@@ -401,26 +382,20 @@ const buildSort = params => {
 const buildQuery = (model, id, fields, params) => {
   const modelAttributes = Object.fromEntries(getModelAttributes(model))
 
-  const select = lodash(fields)
-    .map(att => att.split('.')[0])
-    .uniq()
-    .map(att => [att, 1])
-    .fromPairs()
-    .value()
-
   let criterion = id ? {_id: id} : {}
   const filters=extractFilters(params)
   const limits=extractLimits(params)
 
   // Add filter fields
-  fields=lodash.uniq([...fields, ...Object.keys(filters)])
+  fields=getRequiredFields({model, fields:lodash.uniq([...fields, ...Object.keys(filters)])})
 
+  const select=lodash.uniq(fields.map(f => f.split('.')[0]))
   const currentFilter=getCurrentFilter(filters)
   criterion={...criterion, ...currentFilter}
   console.log('select is', select)
   console.log('criterion is', criterion)
   console.log('limits is', limits)
-  let query = mongoose.connection.models[model].find(criterion) //, select)
+  let query = mongoose.connection.models[model].find(criterion, select)
   query = query.collation({ locale: 'fr', strength: 2 })
   const currentLimit=getCurrentLimit(limits)
   if (currentLimit) {
@@ -518,6 +493,30 @@ const getNextLevelFields = fields => {
 
 // TODO this causes bug bugChildrenTrainersTraineesCHioldren. Why ?
 const secondLevelFieldsCache=new NodeCache()
+
+function getRequiredFields({model, fields}) {
+  let requiredFields = [...fields]
+  // Add declared required fields for virtuals
+  let added = true
+  while (added) {
+    added = false
+    lodash(requiredFields).groupBy(f => f.split('.')[0]).keys().forEach(directAttribute => {
+      let required = lodash.get(DECLARED_VIRTUALS, `${model}.${directAttribute}.requires`) || null
+      if (required) {
+        required = required.split(',')
+        if (lodash.difference(required, requiredFields).length > 0) {
+          requiredFields = lodash.uniq([...requiredFields, ...required])
+          added = true
+        }
+      }
+      let relies_on = lodash.get(DECLARED_VIRTUALS, `${model}.${directAttribute}.relies_on`) || null
+      if (relies_on) {
+        requiredFields = handleReliesOn(directAttribute, relies_on, requiredFields)
+      }
+    })
+  }
+  return requiredFields
+}
 
 function getSecondLevelFields(fields, f) {
   const key=[...fields, f].join('/')
@@ -878,7 +877,7 @@ const display = data => {
   return data
 }
 
-const loadFromDb = ({model, fields, id, user, params}) => {
+const loadFromDb = ({model, fields, id, user, params={}}) => {
   // Add filter fields to return them to client
   const filters=extractFilters(params)
   fields=lodash.uniq([...fields, ...Object.keys(filters)])
@@ -904,9 +903,9 @@ const loadFromDb = ({model, fields, id, user, params}) => {
         .then(data => {console.time(`Filtering model ${model}`); return data})
         .then(data => callFilterDataUser({model, data, id, user}))
         .then(data => {console.timeEnd(`Filtering model ${model}`); return data})
-        // .then(data => {console.time(`Retain fields ${model}`); return data})
-        // .then(data =>  retainRequiredFields({data, fields}))
-        // .then(data => {console.timeEnd(`Retain fields ${model}`); return data})
+        .then(data => {console.time(`Retain fields ${model}`); return data})
+        .then(data =>  retainRequiredFields({data, fields}))
+        .then(data => {console.timeEnd(`Retain fields ${model}`); return data})
     })
 
 }

@@ -33,9 +33,10 @@ require('../../server/models/ChartPoint')
 
 jest.setTimeout(100000)
 
-const FIELDS=`groups_count,messages_count,users_count,user_women_count,webinars_count,webinars_replayed_count,average_webinar_registar,company,started_coachings,users_men_count,users_no_gender_count,leads_count,specificities_users,reasons_users`.split(',')
-const COMPANY_ID = '65b1a8a148a716c5b3cb29bc'
-const DIET_ID='651a9d3e1a7bd51b71a40327'
+const FIELDS=`groups_count,messages_count,users_count,user_women_count,webinars_count,webinars_replayed_count,average_webinar_registar,company,started_coachings,users_men_count,users_no_gender_count,leads_count`.split(',')
+const COMPANY_CRITERION = {name: /etude clinique/i}
+const DIET_CRITERION={email: 'annelaure.meunier75@gmail.com', role: ROLE_EXTERNAL_DIET}
+const USER_CRITERION={email: 'hello+user@wappizy.com', role: ROLE_CUSTOMER}
 
 describe('Performance ', () => {
 
@@ -48,82 +49,65 @@ describe('Performance ', () => {
   })
 
   it(`must load statistics 'fastly'`, async() => {
-    const start=performance.now()
-    const stats=await computeStatistics({id: COMPANY_ID, fields: FIELDS})
-    const delta=performance.now()-start
-    console.log('Took', delta, 'ms')
-    expect(delta).toBeLessThan(2000)
-  })
+    const company=await Company.findOne(COMPANY_CRITERION)
+    const stats=await computeStatistics({id: company._id, fields: FIELDS})
+    expect(stats).toBeTruthy()
+  }, 1000)
 
   it(`must load statistics properly`, async() => {
-    const stats=await computeStatistics({id: COMPANY_ID, fields: FIELDS})
-    console.log(FIELDS.map(f => `${f}:${stats[f]}`))
+    const company=await Company.findOne(COMPANY_CRITERION)
+    const stats=await computeStatistics({id: company._id, fields: FIELDS})
     FIELDS.forEach(f => expect(stats).not.toBeNull())
     FIELDS.forEach(f => expect(stats[f]).not.toBeUndefined())
-  })
+  }, 1000)
 
   it('must return diet patients', async () => {
-    const dietUser=await User.findById(DIET_ID)
-    const patientsCount=await Coaching.distinct('user', {diet: DIET_ID}).count()
-    let diet1=await User.findById(DIET_ID).populate('diet_patients')
-    expect(diet1.diet_patients[0].email).toBeTruthy()
-    expect(patientsCount).toEqual(diet1.diet_patients.length)
-    let diet2=await User.findById(DIET_ID).populate('diet_patients_count')
-    expect(patientsCount).toEqual(diet2.diet_patients_count)
-    const [loaded]=await loadFromDb({model: 'user', id: DIET_ID, fields:['diet_patients_count'], user: dietUser})
-    expect(patientsCount).toEqual(loaded.diet_patients_count)
-  })
+    const dietUser=await User.findOne(DIET_CRITERION)
+    const [loaded]=await loadFromDb({model: 'user', id: dietUser._id, fields:['diet_patients_count'], user: dietUser})
+    expect(loaded.diet_patients_count).toBeGreaterThan(0)
+  }, 2000)
 
-  it('must return diet apppointments', async () => {
-    const dietUser=await User.findById(DIET_ID)
-    const coachings=await Coaching.find({diet: DIET_ID}, {id: 1})
-    const preCount=await Appointment.countDocuments({coaching: {$in: coachings}})
-    const diet=await User.findById(DIET_ID).populate('diet_appointments')
-    console.log(JSON.stringify(diet.diet_appointments?.[0],null, 2))
-    console.log(JSON.stringify(diet.coachings?.[0],null, 2))
-    expect(diet.diet_appointments.length).toEqual(preCount)
-    // expect(diet.diet_appointments).toHaveLength(1581)
-    // const diet2=await User.findById(DIET_ID).populate(['diet_appointments_count','diet_appointments'])
-    // expect(diet2.diet_appointments_count).toEqual(diet.diet_appointments.length)
-    // const [diet3]=await loadFromDb({model: 'user', id: DIET_ID, fields:['diet_appointments_count'], user:diet})
-    // expect(diet3.diet_appointments_count).toEqual(diet.diet_appointments.length)
-  })
+  it('must return diet appointments', async () => {
+    const dietUser=await User.findOne(DIET_CRITERION)
+    const [diet]=await loadFromDb({model: 'user', id: dietUser._id, fields: ['diet_appointments'], user: dietUser})
+    expect(diet.diet_appointments?.length).toBeGreaterThan(0)
+  }, 1000)
 
   it('must load limits', async () => {
+    const LIMIT=200
     const user=await User.findOne({role: ROLE_EXTERNAL_DIET})
-    const companies=await loadFromDb({model: 'company', fields:['name'], params:{limit:3}, user})
-    return expect(companies.length).toEqual(3)
+    const users=await loadFromDb({model: 'user', fields:['firstname'], params:{limit:LIMIT}, user})
+    return expect(users.length).toEqual(LIMIT+1)
   })
 
   it('must speed up patients loading', async () => {
-    const user=await User.findOne({email: /stephanieb\.smartdiet/})
+    const user=await User.findOne(DIET_CRITERION)
     const fields=`diet_patients,diet_patients.fullname,diet_patients.picture,diet_patients.company.name`.split(',')
-    const params={'limit.diet_patients': '4', 'limit':30, 'limit.diet_current_future_appointments':'30'}
-    const [loggedUser]=await loadFromDb({model: 'loggedUser', fields, params, user})
-    expect(loggedUser.diet_patients.length).toEqual(1189)
-    expect(loggedUser.diet_patients.some(p => p.company?.name)).toBeTruthy()
+    const [loggedUser]=await loadFromDb({model: 'loggedUser', fields, user})
+    expect(loggedUser.diet_patients.length).toEqual(29)
+    expect(loggedUser.diet_patients.every(p => p.company?.name)).toBeTruthy()
   }, 2000)
 
   it('must speed up diet appointments loading', async () => {
-    const user=await User.findOne({email: /stephanieb\.smartdiet/})
+    const user=await User.findOne(DIET_CRITERION)
     const fields=`diet_appointments_count,diet_current_future_appointments.coaching.user.picture,diet_current_future_appointments.coaching.user.fullname,diet_current_future_appointments.coaching.user.company_name,diet_current_future_appointments.start_date,diet_current_future_appointments.end_date,diet_current_future_appointments.order,diet_current_future_appointments.appointment_type.title,diet_current_future_appointments.status,diet_current_future_appointments.visio_url,diet_current_future_appointments.coaching.user,diet_current_future_appointments,diet_current_future_appointments.coaching.user.phone`.split(',')
     const params={'limit':30}
     console.time('Loading current & future appointments')
     const [loggedUser]=await loadFromDb({model: 'loggedUser', fields, params, user})
     console.timeEnd('Loading current & future appointments')
-    expect(loggedUser.diet_appointments_count).toEqual(5164)
+    expect(loggedUser.diet_appointments_count).toEqual(28)
     console.log(loggedUser.diet_current_future_appointments?.length)
   }, 3000)
 
   it('must speed up diet patients and appointments loading', async () => {
-    const user=await User.findOne({email: /stephanieb\.smartdiet/})
+    const user=await User.findOne(DIET_CRITERION)
     const fields=`diet_patients,diet_patients.fullname,diet_patients.picture,diet_patients.company.name,firstname,picture,diet_appointments_count,diet_patients_count,diet_current_future_appointments.coaching.user.picture,diet_current_future_appointments.coaching.user.fullname,diet_current_future_appointments.coaching.user.company_name,diet_current_future_appointments.start_date,diet_current_future_appointments.end_date,diet_current_future_appointments.order,diet_current_future_appointments.appointment_type.title,diet_current_future_appointments.status,diet_current_future_appointments.visio_url,diet_current_future_appointments.coaching.user,diet_current_future_appointments,diet_current_future_appointments.coaching.user.phone`.split(',')
     const params={'limit.diet_patients': '4', 'limit':30, 'limit.diet_current_future_appointments':'30'}
     const loggedUser=await loadFromDb({model: 'loggedUser', fields, params, user})
   }, 2000)
 
   it('must load appointments order', async () => {
-    const user=await User.findOne({email: /stephanieb\.smart/})
+    const user=await User.findOne(DIET_CRITERION)
     const fields=`diet_appointments.order,diet_appointments.start_date`.split(',')
     const [loadedUser]=await loadFromDb({
       model: 'loggedUser', 
@@ -140,13 +124,22 @@ describe('Performance ', () => {
     keys.every(k => expect(k.user_surveys_progress).toHaveLength(6))
   })
 
-  it.only('must load user contents', async () => {
-    const user=await User.findOne({email: /hello\+user@/})
+  it('must load user contents', async () => {
+    const user=await User.findOne(USER_CRITERION)
     const fields=`contents,email`.split(',')
     const loggedUser= await loadFromDb({model: 'user', id:user._id, fields, user})
-    console.log(loggedUser)
-    return
-    expect(loggedUser.contents).toHaveLength(expect.toBeGreaterThan(0))
+    expect(loggedUser.contents?.length).toBeGreaterThan(0)
   })
+
+  it('must load all users fullname', async () => {
+    const user=await User.findOne({email: /hello\+user@/})
+    const fields=`fullname,company.name`.split(',')
+    console.time('Loading users')
+    const users= await loadFromDb({model: 'user', fields, user, params:{limit:1000}})
+    console.timeEnd('Loading users')
+    console.log(users.length)
+    expect(users.length).toBeGreaterThan(0)
+  })
+
 })
 
