@@ -809,7 +809,8 @@ const EVENT_MODELS = ['event', 'collectiveChallenge', 'individualChallenge', 'me
 EVENT_MODELS.forEach(m => {
   declareVirtualField({ model: m, field: 'type', instance: 'String', enumValues: EVENT_TYPE })
   declareVirtualField({ model: m, field: 'duration', instance: 'Number', requires: 'start_date,end_date' })
-  declareVirtualField({ model: m, field: 'status', instance: 'String', requires: 'start_date,end_date', enumValues: APPOINTMENT_STATUS })
+  // declareVirtualField({ model: m, field: 'status', instance: 'String', requires: 'start_date,end_date', enumValues: APPOINTMENT_STATUS })
+  declareEnumField({ model: m, field: 'status', enumValues: APPOINTMENT_STATUS })
   declareComputedField({model: m, field: 'status', getterFn: getEventStatus})
 })
 

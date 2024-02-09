@@ -4,7 +4,8 @@ const {
   APPOINTMENT_TO_COME,
   EVENT_COLL_CHALLENGE,
   EVENT_TYPE,
-  HOME_STATUS
+  HOME_STATUS,
+  APPOINTMENT_STATUS
 } = require('../consts')
 const moment = require('moment')
 const mongoose = require('mongoose')
@@ -48,6 +49,10 @@ const EventSchema = new Schema({
     default: 0,
     required: true,
   },
+  status: {
+    type: String,
+    enum: Object.keys(APPOINTMENT_STATUS),
+  },
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
@@ -59,9 +64,9 @@ EventSchema.virtual('duration').get(function () {
   return moment(this.end_date).diff(this.start_date, 'minutes')
 })
 
-EventSchema.virtual('status').get(function () {
-  return null
-})
+// EventSchema.virtual('status').get(function () {
+//   return null
+// })
 
 /* eslint-enable prefer-arrow-callback */
 
