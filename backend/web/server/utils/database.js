@@ -420,7 +420,7 @@ const buildQuery = (model, id, fields, params) => {
   console.log('select is', select)
   console.log('criterion is', criterion)
   console.log('limits is', limits)
-  let query = mongoose.connection.models[model].find(criterion, select)
+  let query = mongoose.connection.models[model].find(criterion) //, select)
   query = query.collation({ locale: 'fr', strength: 2 })
   const currentLimit=getCurrentLimit(limits)
   if (currentLimit) {
