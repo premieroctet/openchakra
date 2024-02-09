@@ -180,7 +180,7 @@ CoachingSchema.virtual('diet_availabilities', {localField:'tagada', foreignField
   }
 
   const appType=this.appointment_type
-  const diet_availabilities=this.diet.availability_ranges.filter(r => idEqual(r.appointment_type._id, appType?._id))
+  const diet_availabilities=this.diet.availability_ranges?.filter(r => idEqual(r.appointment_type._id, appType?._id)) || []
 
   const availabilities=lodash.range(AVAILABILITIES_RANGE_DAYS).map(day_idx => {
     const day=moment().add(day_idx, 'day').startOf('day')
