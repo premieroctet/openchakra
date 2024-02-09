@@ -383,15 +383,14 @@ USER_MODELS.forEach(m => {
       options: { ref: 'content' }
     },
   })
-  declareVirtualField({
-    model: m, field: 'contents', instance: 'Array',
-    requires: '_all_contents.comments_count,_all_targets,targets,_all_contents.targets,objective_targets,health_targets,activity_target,specificity_targets,home_target,_all_contents.search_text,_all_contents.key',
-    multiple: true,
-    caster: {
-      instance: 'ObjectID',
-      options: { ref: 'content' }
-    },
-  })
+  // declareVirtualField({
+  //   model: m, field: 'contents', instance: 'Array',
+  //   multiple: true,
+  //   caster: {
+  //     instance: 'ObjectID',
+  //     options: { ref: 'content' }
+  //   },
+  // })
   declareVirtualField({
     model: m, field: 'webinars', instance: 'Array',
     requires: 'company,company.webinars,skipped_events,passed_events', multiple: true,
@@ -1400,13 +1399,15 @@ const getUserSurveysProgress = (userId, params, data) => {
     })))
 }
 
-const getUserContents = (userId, params, data) => {
-  const user_targets = lodash([data.objective_targets, data.health_targets,
-  data.activity_target, data.specificity_targets, data.home_target])
+const getUserContents = async (userId, params, data) => {
+  const user=await User.findById(data._id)
+  const user_targets = lodash([user.objective_targets, user.health_targets,
+    user.activity_target, user.specificity_targets, user.home_target])
     .flatten()
     .filter(v => !!v)
+    .map(t => t._id)
     .value()
-  return Promise.resolve(data._all_contents.filter(c => c.default || setIntersects(c.targets, user_targets)))
+  return Content.find({$or: [{default: true}, {targets: {$in: user_targets}}]})
 }
 
 const getUserPassedChallenges = (userId, params, data) => {

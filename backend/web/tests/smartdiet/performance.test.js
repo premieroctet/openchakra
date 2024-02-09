@@ -133,11 +133,20 @@ describe('Performance ', () => {
     expect(loadedUser.diet_appointments[0].order).toBeGreaterThan(0)
   }, 3000)
 
-  it.only('must load survey progress', async () => {
+  it('must load survey progress', async () => {
     const user=await User.findOne({email: /hello\+user@/})
     const fields=`name,user_surveys_progress,user_surveys_progress.value_1,picture`.split(',')
     const keys= await loadFromDb({model: 'key', fields, user})
     keys.every(k => expect(k.user_surveys_progress).toHaveLength(6))
+  })
+
+  it.only('must load user contents', async () => {
+    const user=await User.findOne({email: /hello\+user@/})
+    const fields=`contents,email`.split(',')
+    const loggedUser= await loadFromDb({model: 'user', id:user._id, fields, user})
+    console.log(loggedUser)
+    return
+    expect(loggedUser.contents).toHaveLength(expect.toBeGreaterThan(0))
   })
 })
 

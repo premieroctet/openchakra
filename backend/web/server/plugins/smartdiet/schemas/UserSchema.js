@@ -342,6 +342,11 @@ const UserSchema = new Schema({
     ref: 'appointment',
     required: false,
   }],
+  contents: [{
+    type: Schema.Types.ObjectId,
+    ref: 'content',
+    required: false,
+  }],
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
@@ -376,9 +381,14 @@ UserSchema.virtual("_all_contents", {
 });
 
 // Computed virtual
-UserSchema.virtual('contents', {localField: '_id', foreignField: '_id'}).get(function () {
-  return null
-})
+// UserSchema.virtual('contents', {localField: '_id', foreignField: '_id'}).get(function () {
+//   const user_targets = lodash([this.objective_targets, this.health_targets,
+//     this.activity_target, this.specificity_targets, this.home_target])
+//       .flatten()
+//       .filter(v => !!v)
+//       .value()
+//     return this._all_contents.filter(c => c.default || setIntersects(c.targets, user_targets))
+// })
 
 UserSchema.virtual("available_groups", {localField: 'id', foreignField: 'id'}).get(function () {
   return lodash(this.company?.groups)
