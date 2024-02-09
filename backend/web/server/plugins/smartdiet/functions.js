@@ -258,6 +258,9 @@ const preCreate = ({ model, params, user }) => {
   if (['message'].includes(model)) {
     params.sender = user
   }
+  if (['content'].includes(model)) {
+    params.creator = user
+  }
   if (['team'].includes(model)) {
     return Team.findOne({ name: params.name?.trim(), collectiveChallenge: params.collectiveChallenge }).populate('collectiveChallenge')
       .then(team => {

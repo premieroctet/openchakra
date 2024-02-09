@@ -70,7 +70,7 @@ const getCurrentFilter = (filters, modelName) => {
       const modelAtt = `${modelName}.${key}`
       return !lodash.get(DECLARED_VIRTUALS, modelAtt) && !lodash.get(COMPUTED_FIELDS_GETTERS, modelAtt)
     })
-  return filters.isEmpty() ? undefined : value()
+  return filters.isEmpty() ? undefined : filters.value()
 }
 
 const getSubFilters = (filters, attributeName) => {
