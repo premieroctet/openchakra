@@ -1439,9 +1439,10 @@ const getUserPassedWebinars = (userId, params, data) => {
 }
 
 const getDietPatients = (userId, params, data) => {
-  const limit=parseInt(params['limit.diet_patients'])+1 || Number.MAX_SAFE_INTEGER
+  const limit=parseInt(params['limit.diet_patients']) || Number.MAX_SAFE_INTEGER-1
+  const page=parseInt(params['page.diet_patients']) || 0
   return Coaching.distinct('user', {diet: userId})
-    .then(users => User.find({_id: users}).limit(limit).populate('company'))
+    .then(users => User.find({_id: users}).skip(page*limit).limit(limit+1).populate('company'))
 }
 
 const getDietPatientsCount = (userId, params, data) => {
@@ -1450,11 +1451,13 @@ const getDietPatientsCount = (userId, params, data) => {
 }
 
 const getDietAppointments = (userId, params, data) => {
-  const limit=parseInt(params['limit.diet_appointments'])+1 || Number.MAX_SAFE_INTEGER
+  const limit=parseInt(params['limit.diet_appointments']) || Number.MAX_SAFE_INTEGER-1
+  const page=parseInt(params['page.diet_appointments']) || 0
   const now=moment()
   return Coaching.find({diet: userId}, {_id:1})
     .then(coachings => Appointment.find({coaching: coachings})
-      .limit(limit)
+      .skip(page*limit)
+      .limit(limit+1)
       .populate({path: 'coaching', populate: {path: 'user', populate: 'company'}})
     )
 }
@@ -1465,12 +1468,14 @@ const getDietAppointmentsCount = (userId, prams, data) => {
 }
 
 const getDietCurrentFutureAppointments = (userId, params, data) => {
-  const limit=parseInt(params['limit.diet_current_future_appointments'])+1 || Number.MAX_SAFE_INTEGER
+  const limit=parseInt(params['limit.diet_current_future_appointments']) || Number.MAX_SAFE_INTEGER
+  const page=parseInt(params['page.diet_current_future_appointments']) || 0
   const now=moment()
   return Coaching.find({diet: userId}, {_id:1})
     .then(coachings => Appointment.find({coaching: coachings, end_date: {$gt: now}})
-      .limit(limit)
-      .populate({path: 'coaching', populate: {path: 'user', populate: 'company'}})
+      .skip(page*limit)
+      .limit(limit+1)
+      .populate({path: 'coaching', select: {_id:1}, populate: {path: 'user', populate: 'company'}})
     )
 }
 
