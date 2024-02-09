@@ -68,8 +68,10 @@ const getCurrentFilter = (filters, modelName) => {
     // Filter by non virtual && non computed attributes
     .pickBy((_, key) => {
       const modelAtt = `${modelName}.${key}`
+      console.log(modelAtt)
       return !lodash.get(DECLARED_VIRTUALS, modelAtt) && !lodash.get(COMPUTED_FIELDS_GETTERS, modelAtt)
     })
+  console.log(modelName, 'filter', filters.value())
   return filters.isEmpty() ? undefined : filters.value()
 }
 
@@ -391,7 +393,7 @@ const buildQuery = (model, id, fields, params) => {
   fields=getRequiredFields({model, fields:lodash.uniq([...fields, ...Object.keys(filters)])})
 
   const select=lodash.uniq(fields.map(f => f.split('.')[0]))
-  const currentFilter=getCurrentFilter(filters)
+  const currentFilter=getCurrentFilter(filters, model)
   criterion={...criterion, ...currentFilter}
   console.log('criterion is', criterion)
   console.log('projection is', select)

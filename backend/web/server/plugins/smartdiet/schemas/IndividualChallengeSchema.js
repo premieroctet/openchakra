@@ -39,6 +39,12 @@ const IndividualChallengeSchema = new Schema({
     default: 1,
     required: [true, 'Le nombre de cuillères nécessaires pour un trophée est obligatoire'],
   },
+  obtained: {
+    type: Boolean,
+  },
+  trophy_picture: {
+    type: String,
+  },
 },
 {...schemaOptions, ...EVENT_DISCRIMINATOR},
 )
@@ -49,13 +55,6 @@ IndividualChallengeSchema.virtual('type').get(function() {
   return EVENT_IND_CHALLENGE
 })
 
-IndividualChallengeSchema.virtual('trophy_picture').get(function()  {
-  return ''
-})
-
-IndividualChallengeSchema.virtual('obtained').get(function()  {
-  return false
-})
 
 /* eslint-enable prefer-arrow-callback */
 
