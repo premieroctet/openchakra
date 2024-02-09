@@ -59,6 +59,7 @@ const extractFilters = params => {
  * Return filter on:
  *  - 1st level attributes only (next levels will be handled in subsequent buildPopulates)
  *  - not virtual or computed attributes
+ * Return sundefind if no filter
  */
 const getCurrentFilter = (filters, modelName) => {
   filters = lodash(filters)
@@ -69,7 +70,7 @@ const getCurrentFilter = (filters, modelName) => {
       const modelAtt = `${modelName}.${key}`
       return !lodash.get(DECLARED_VIRTUALS, modelAtt) && !lodash.get(COMPUTED_FIELDS_GETTERS, modelAtt)
     })
-  return filters.value()
+  return filters.isEmpty() ? undefined : value()
 }
 
 const getSubFilters = (filters, attributeName) => {
@@ -393,6 +394,7 @@ const buildQuery = (model, id, fields, params) => {
   const currentFilter=getCurrentFilter(filters)
   criterion={...criterion, ...currentFilter}
   console.log('criterion is', criterion)
+  console.log('projection is', select)
   console.log('limits is', limits)
   let query = mongoose.connection.models[model].find(criterion, select)
   query = query.collation({ locale: 'fr', strength: 2 })

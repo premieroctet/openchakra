@@ -506,7 +506,6 @@ UserSchema.virtual("past_menus", {
   foreignField: "dummy", // is equal to foreignField
   options: {
     match: {end_date:{$lt: moment()}},
-    limit: 6,
     sort: { creation_date: -1 }
   },
 });

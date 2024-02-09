@@ -30,6 +30,9 @@ require('../../server/models/Job')
 require('../../server/models/DeclineReason')
 require('../../server/models/JoinReason')
 require('../../server/models/ChartPoint')
+require('../../server/models/Event')
+require('../../server/models/IndividualChallenge')
+require('../../server/models/Menu')
 
 jest.setTimeout(100000)
 
@@ -141,7 +144,7 @@ describe('Performance ', () => {
     expect(users.length).toBeGreaterThan(0)
   })
 
-  it.only('must load user logbooks', async () => {
+  it('must load user logbooks', async () => {
     const {id:userid}=await User.findOne({email: /hello\+user@/})
     const fields=`latest_coachings.logbooks.logbooks.day`.split(',')
     console.time('Loading users')
@@ -151,5 +154,32 @@ describe('Performance ', () => {
     expect(user.length).toBeGreaterThan(0)
   })
 
+  it('must load menus', async () => {
+    const user=await User.findOne({email: /hello\+user@/})
+    const fields=`individual_challenges.name,individual_challenges.description,collective_challenges.start_date,collective_challenges.end_date,collective_challenges.name,collective_challenges.picture,picture,past_webinars,passed_individual_challenges.trophy_on_picture,passed_individual_challenges.name,passed_individual_challenges,collective_challenges,past_webinars.picture,past_webinars.name,past_webinars.url,individual_challenges.key.picture,individual_challenges,available_menus.picture,available_menus.name,available_menus.start_date,available_menus.end_date,available_menus,past_menus,future_menus,individual_challenges.trick,passed_individual_challenges.description,past_webinars.duration,available_menus.document,passed_events,future_menus.picture,future_menus.name,future_menus.start_date,future_menus.end_date,future_menus.document,past_menus.picture,past_menus.name,past_menus.start_date,past_menus.end_date,past_menus.document,available_webinars,available_webinars.key.picture,available_webinars.picture,available_webinars.start_date,available_webinars.end_date,available_webinars.duration,available_webinars.name,available_webinars.description,individual_challenges.status,individual_challenges.hardness,passed_events.key.picture,passed_events.picture,passed_events.start_date,passed_events.end_date,passed_events.duration,passed_events.name,passed_events.description,passed_events.type`.split(',')
+    console.time('Loading users')
+    const [loggedUser] = await loadFromDb({model: 'user', fields, id: user._id, user, params:{limit:1000}})
+    console.timeEnd('Loading users')
+    expect(loggedUser.available_menus.length).toBeGreaterThan(0)
+  })
+
+  it('must load current, past && future menus', async () => {
+    const user=await User.findOne(USER_CRITERION)
+    const fields=`available_menus.start_date,available_menus.end_date`.split(',')
+    console.time('Loading users')
+    const [loggedUser] = await loadFromDb({model: 'user', fields, id: user._id, user, params:{limit:1000}})
+    console.timeEnd('Loading users')
+    console.log(loggedUser.available_menus.length)
+    loggedUser.available_menus.map(menu => expect(menu.start_date.getTime()).toBeLessThan(Date.now()))
+    loggedUser.available_menus.map(menu => expect(menu.end_date.getTime()).toBeGreaterThan(Date.now()))
+  })
+
+  it('must simple load current, past && future menus', async () => {
+    const loggedUser=await User.findOne(USER_CRITERION, {'available_menus':1, 'company':1, 'dummy':1}).populate('available_menus')
+    console.log(loggedUser.available_menus.length)
+    console.log(loggedUser.available_menus.map(m => m.name))
+    loggedUser.available_menus.map(menu => expect(menu.start_date.getTime()).toBeLessThan(Date.now()))
+    loggedUser.available_menus.map(menu => expect(menu.end_date.getTime()).toBeGreaterThan(Date.now()))
+  })
 })
 
