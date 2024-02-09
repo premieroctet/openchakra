@@ -155,16 +155,6 @@ CoachingSchema.virtual('current_objectives', {localField:'tagada', foreignField:
    .head()?.objectives || []
 })
 
-// all diets (hidden)
-CoachingSchema.virtual("_all_diets", {
-  ref: "user", // The Model to use
-  localField: "dummy", // Find in Model, where localField
-  foreignField: "dummy", // is equal to foreignField
-  options: {
-    match: {role: ROLE_EXTERNAL_DIET},
-  },
-})
-
 // Returns the LogbookDay compléting if required
 CoachingSchema.virtual('logbooks', {localField:'tagada', foreignField:'tagada'}).get(function() {
   const grouped=lodash(this.all_logbooks).sortBy(l => l.day).groupBy(l => l.day)

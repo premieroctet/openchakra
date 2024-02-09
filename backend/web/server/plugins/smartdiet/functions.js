@@ -377,6 +377,7 @@ USER_MODELS.forEach(m => {
   declareVirtualField({ model: m, field: 'spoons_count', instance: 'Number' })
   declareVirtualField({
     model: m, field: '_all_contents', instance: 'Array',
+    requires: 'dummy',
     multiple: true,
     caster: {
       instance: 'ObjectID',
@@ -417,7 +418,7 @@ USER_MODELS.forEach(m => {
   })
   declareVirtualField({
     model: m, field: '_all_events', instance: 'Array',
-    requires: '_all_menus,_all_individual_challenges,collective_challenges,_all_webinars',
+    requires: 'dummy, _all_menus,_all_individual_challenges,collective_challenges,_all_webinars',
     multiple: true,
     caster: {
       instance: 'ObjectID',
@@ -458,6 +459,7 @@ USER_MODELS.forEach(m => {
   })
   declareVirtualField({
     model: m, field: '_all_menus', instance: 'menu',
+    requires: 'dummy',
     multiple: true,
     caster: {
       instance: 'ObjectID',
@@ -466,6 +468,7 @@ USER_MODELS.forEach(m => {
   })
   declareVirtualField({
     model: m, field: 'available_menus', instance: 'Array',
+    requires: 'dummy',
     multiple: true,
     caster: {
       instance: 'ObjectID',
@@ -474,6 +477,7 @@ USER_MODELS.forEach(m => {
   })
   declareVirtualField({
     model: m, field: 'past_menus', instance: 'Array',
+    requires: 'dummy',
     multiple: true,
     caster: {
       instance: 'ObjectID',
@@ -482,6 +486,7 @@ USER_MODELS.forEach(m => {
   })
   declareVirtualField({
     model: m, field: 'future_menus', instance: 'Array',
+    requires: 'dummy',
     multiple: true,
     caster: {
       instance: 'ObjectID',
@@ -537,6 +542,7 @@ USER_MODELS.forEach(m => {
   })
   declareVirtualField({
     model: m, field: '_all_targets', instance: 'Array',
+    requires: 'dummy',
     multiple: true,
     caster: {
       instance: 'ObjectID',
@@ -686,6 +692,7 @@ USER_MODELS.forEach(m => {
   declareVirtualField({ model: m, field: 'days_inactivity', instance: 'Number', requires: 'last_activity' })
   declareVirtualField({
     model: m, field: 'keys', instance: 'Array',
+    requires: 'dummy',
     multiple: true,
     caster: {
       instance: 'ObjectID',
@@ -911,7 +918,7 @@ declareVirtualField({
 })
 declareVirtualField({
   model: 'group', field: 'pinned_messages', instance: 'Array',
-  requires: 'messages.pins,messages.pinned', multiple: true,
+  requires: 'dummy,messages.pins,messages.pinned', multiple: true,
   caster: {
     instance: 'ObjectID',
     options: { ref: 'message' }
@@ -1068,6 +1075,7 @@ declareVirtualField({
 declareEnumField({ model: 'coaching', field: 'mode', instance: 'String', enumValues: COACHING_MODE })
 declareVirtualField({
   model: 'coaching', field: '_all_diets', instance: 'Array', multiple: true,
+  requires: 'dummy',
   caster: {
     instance: 'ObjectID',
     options: { ref: 'user' }
@@ -1408,7 +1416,7 @@ const getUserContents = async (userId, params, data) => {
     .filter(v => !!v)
     .map(t => t._id)
     .value()
-  return Content.find({$or: [{default: true}, {targets: {$in: user_targets}}]})
+  return Content.find({targets: {$in: user_targets}})
 }
 
 const getUserPassedChallenges = (userId, params, data) => {
@@ -1428,7 +1436,7 @@ const getUserPassedWebinars = (userId, params, data) => {
 }
 
 const getDietPatients = (userId, params, data) => {
-  const limit=parseInt(params['limit.diet_patients']) || Number.MAX_SAFE_INTEGER
+  const limit=parseInt(params['limit.diet_patients'])+1 || Number.MAX_SAFE_INTEGER
   return Coaching.distinct('user', {diet: userId})
     .then(users => User.find({_id: users}).limit(limit).populate('company'))
 }
@@ -1439,7 +1447,7 @@ const getDietPatientsCount = (userId, params, data) => {
 }
 
 const getDietAppointments = (userId, params, data) => {
-  const limit=parseInt(params['limit.diet_appointments']) || Number.MAX_SAFE_INTEGER
+  const limit=parseInt(params['limit.diet_appointments'])+1 || Number.MAX_SAFE_INTEGER
   const now=moment()
   return Coaching.find({diet: userId}, {_id:1})
     .then(coachings => Appointment.find({coaching: coachings})
@@ -1454,7 +1462,7 @@ const getDietAppointmentsCount = (userId, prams, data) => {
 }
 
 const getDietCurrentFutureAppointments = (userId, params, data) => {
-  const limit=parseInt(params['limit.diet_current_future_appointments']) || Number.MAX_SAFE_INTEGER
+  const limit=parseInt(params['limit.diet_current_future_appointments'])+1 || Number.MAX_SAFE_INTEGER
   const now=moment()
   return Coaching.find({diet: userId}, {_id:1})
     .then(coachings => Appointment.find({coaching: coachings, end_date: {$gt: now}})

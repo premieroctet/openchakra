@@ -392,7 +392,6 @@ const buildQuery = (model, id, fields, params) => {
   const select=lodash.uniq(fields.map(f => f.split('.')[0]))
   const currentFilter=getCurrentFilter(filters)
   criterion={...criterion, ...currentFilter}
-  console.log('select is', select)
   console.log('criterion is', criterion)
   console.log('limits is', limits)
   let query = mongoose.connection.models[model].find(criterion, select)

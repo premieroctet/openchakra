@@ -518,8 +518,7 @@ UserSchema.virtual("future_menus", {
   foreignField: "dummy", // is equal to foreignField
   options: {
     match: {start_date:{$gt: moment()}},
-    limit: 6,
-    sort: { creation_date: 1 }
+    sort: { start_date: 1 }
   },
 });
 
