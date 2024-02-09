@@ -17,6 +17,18 @@ const AppointmentSchema = new Schema({
     ref: 'coaching',
     required: [true, 'Le coaching est obligatoire'],
   },
+  diet: {
+    type: Schema.Types.ObjectId,
+    ref: 'user',
+    index: true,
+    required: [true, 'La diet est obligatoire'],
+  },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'user',
+    index: true,
+    required: [true, 'Le patient est obligatoire'],
+  },
   start_date: {
     type: Date,
     required: [true, 'La date de début est obligatoire'],
@@ -73,6 +85,9 @@ AppointmentSchema.virtual('order').get(function() {
 })
 
 AppointmentSchema.virtual('status').get(function() {
+  // if (!this.start_date || !this.end_date) {
+  //   throw new Error('No start/end date')
+  // }
   const now=moment()
   const start=moment(this.start_date)
   const end=moment(this.end_date)

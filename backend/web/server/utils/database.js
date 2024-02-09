@@ -331,12 +331,14 @@ const buildPopulates = ({modelName, fields, filters, limits, parentField, params
     })
     // TODO Fix page number
     const pageParamName = `page.${parentField? parentField+'.' : ''}${attributeName}`
-    const page=undefined //params?.[pageParamName] ? parseInt(params[pageParamName])*parseInt(params[limitParamName]) : undefined
+    const page=params?.[pageParamName] ? parseInt(params[pageParamName]) : 0
+    const skip=page*limit
+    console.log('skip', skip)
     return {
       path: attributeName, 
       // select,
       match,
-      options: {limit, skip:page}, 
+      options: {limit, skip}, 
       populate: lodash.isEmpty(subPopulate)?undefined:subPopulate
     }
   })
@@ -638,6 +640,7 @@ const formatTime = timeMillis => {
 }
 
 const declareComputedField = ({model, field, getterFn, setterFn}) => {
+  return
   if (!model || !field || !(getterFn || setterFn)) {
     throw new Error(`${model}.${field} compute delcaration requires model, field and at least getter or setter`)
   }

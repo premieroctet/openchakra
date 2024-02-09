@@ -651,6 +651,23 @@ USER_MODELS.forEach(m => {
       options: { ref: 'coaching' }
     },
   })
+  declareVirtualField({
+    model: m, field: 'diet_appointments', instance: 'Array',
+    multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: { ref: 'appointment' }
+    },
+  })
+  declareVirtualField({model: m, field: 'diet_appointments_count', instance: 'Number'})
+  declareVirtualField({
+    model: m, field: 'diet_current_future_appointments', instance: 'Array',
+    multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: { ref: 'appointment' }
+    },
+  })
   // declareVirtualField({
   //   model: m, field: 'diet_appointments', instance: 'Array',
   //   relies_on: 'diet_coachings.appointments',
@@ -671,14 +688,15 @@ USER_MODELS.forEach(m => {
   // TODO This causes error because of relies_on
   //declareVirtualField({ model: m, field: 'diet_appointments_count', instance: 'Number', requires: 'diet_appointments'})
   // declareVirtualField({ model: m, field: 'diet_appointments_count', instance: 'Number', requires: 'diet_coachings'})
-  // declareVirtualField({
-  //   model: m, field: 'diet_patients', instance: 'Array',
-  //   multiple: true,
-  //   caster: {
-  //     instance: 'ObjectID',
-  //     options: { ref: 'user' }
-  //   },
-  // })
+  declareVirtualField({
+    model: m, field: 'diet_patients', instance: 'Array',
+    relies_on: 'diet_coachings.user',
+    multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: { ref: 'user' }
+    },
+  })
   // TODO This causes error because of relies_on
   //declareVirtualField({ model: m, field: 'diet_patients_count', instance: 'Number'})
   declareEnumField({ model: m, field: 'registration_warning', enumValues: REGISTRATION_WARNING })
@@ -1450,47 +1468,12 @@ const getDietPatientsCount = (userId, params, data) => {
     .then(users => users.length)
 }
 
-const getDietAppointments = (userId, params, data) => {
-  const limit=parseInt(params['limit.diet_appointments']) || Number.MAX_SAFE_INTEGER-1
-  const page=parseInt(params['page.diet_appointments']) || 0
-  const now=moment()
-  return Coaching.find({diet: userId}, {_id:1})
-    .then(coachings => Appointment.find({coaching: coachings})
-      .skip(page*limit)
-      .limit(limit+1)
-      .populate({path: 'coaching', populate: {path: 'user', populate: 'company'}})
-    )
-}
-
-const getDietAppointmentsCount = (userId, prams, data) => {
-  return Coaching.find({diet: userId}, {_id:1})
-    .then(coachings => Appointment.countDocuments({coaching: coachings}))
-}
-
-const getDietCurrentFutureAppointments = (userId, params, data) => {
-  const limit=parseInt(params['limit.diet_current_future_appointments']) || Number.MAX_SAFE_INTEGER
-  const page=parseInt(params['page.diet_current_future_appointments']) || 0
-  const now=moment()
-  return Coaching.find({diet: userId}, {_id:1})
-    .then(coachings => Appointment.find({coaching: coachings, end_date: {$gt: now}})
-      .skip(page*limit)
-      .limit(limit+1)
-      .populate({path: 'coaching', select: {_id:1}, populate: {path: 'user', populate: 'company'}})
-    )
-}
-
 declareComputedField({model: 'user', field: 'contents', getterFn: getUserContents})
 declareComputedField({model: 'loggedUser', field: 'contents', getterFn: getUserContents})
 declareComputedField({model: 'user', field: 'diet_patients', getterFn: getDietPatients})
 declareComputedField({model: 'loggedUser', field: 'diet_patients', getterFn: getDietPatients})
 declareComputedField({model: 'user', field: 'diet_patients_count', getterFn: getDietPatientsCount})
 declareComputedField({model: 'loggedUser', field: 'diet_patients_count', getterFn: getDietPatientsCount})
-declareComputedField({model: 'user', field: 'diet_appointments', getterFn: getDietAppointments})
-declareComputedField({model: 'loggedUser', field: 'diet_appointments', getterFn: getDietAppointments})
-declareComputedField({model: 'user', field: 'diet_appointments_count', getterFn: getDietAppointmentsCount})
-declareComputedField({model: 'loggedUser', field: 'diet_appointments_count', getterFn: getDietAppointmentsCount})
-declareComputedField({model: 'user', field: 'diet_current_future_appointments', getterFn: getDietCurrentFutureAppointments})
-declareComputedField({model: 'loggedUser', field: 'diet_current_future_appointments', getterFn: getDietCurrentFutureAppointments})
 declareComputedField({model: 'comment', field: 'liked', getterFn: getDataLiked, setterFn: setDataLiked})
 declareComputedField({model: 'message', field: 'liked', getterFn: getDataLiked, setterFn: setDataLiked})
 declareComputedField({model: 'content', field: 'liked', getterFn: getDataLiked, setterFn: setDataLiked})
@@ -2026,6 +2009,18 @@ cron.schedule('0 0 1 * * *', async () => {
     .then(console.log)
     .catch(console.error)
 })
+
+return Appointment.exists({$or: [{diet: null},{user: null}]})
+  .then(exists => {
+    console.log('DB to update:', exists)
+    if (exists) {
+      return Coaching.find({}, {user:1, diet:1})
+      .then(coachings => 
+        Promise.all(coachings.map(c => Appointment.updateMany({coaching: c}, {user:c.user, diet: c.diet}))) )
+      .then(console.log)
+      .catch(console.error)
+    }
+  })
 
 module.exports = {
   ensureChallengePipsConsistency,

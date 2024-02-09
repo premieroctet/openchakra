@@ -320,28 +320,9 @@ const UserSchema = new Schema({
     type: Number,
     required: false,
   },
-  // TODO: set as computed virtual as soon as mongooose lean is fast enough
-  diet_patients: [{
-    type: Schema.Types.ObjectId,
-    ref: 'user',
-    required: true,
-  }],
   diet_patients_count: {
     type: Number,
   },
-  diet_appointments: [{
-    type: Schema.Types.ObjectId,
-    ref: 'appointment',
-    required: false,
-  }],
-  diet_appointments_count: {
-    type: Number,
-  },
-  diet_current_future_appointments: [{
-    type: Schema.Types.ObjectId,
-    ref: 'appointment',
-    required: false,
-  }],
   contents: [{
     type: Schema.Types.ObjectId,
     ref: 'content',
@@ -690,10 +671,35 @@ UserSchema.virtual("keys", {
   foreignField: "dummy", // is equal to foreignField
 })
 
-// Returned availabilities/ranges are not store in database
-// UserSchema.virtual('diet_appointments', {localField:'tagada', foreignField:'tagada'}).get(function() {
-//   return lodash.flatten(this.diet_coachings?.map(c => c.appointments))
+UserSchema.virtual('diet_patients', {
+  ref: 'coaching', // Reference to the Coaching model
+  localField: '_id', // Field in the Diet model
+  foreignField: 'diet', // Field in the Coaching model
+  justOne: false,
+});
+
+// UserSchema.virtual('diet_patients', {localField: 'tagada', foreignField: 'tagada'}).get(function() {
+//   return lodash.uniqBy(this.diet_coachings?.map(a => a.user), u => u._id)
 // })
+
+UserSchema.virtual("diet_appointments", {
+  ref: "appointment", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "diet", // is equal to foreignField
+})
+
+UserSchema.virtual("diet_appointments_count", {
+  ref: "appointment", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "diet", // is equal to foreignField
+  count: true,
+})
+
+UserSchema.virtual("diet_current_future_appointments", {
+  ref: "appointment", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "diet", // is equal to foreignField
+})
 
 /**
 UserSchema.virtual('diet_current_future_appointments', {localField:'tagada', foreignField:'tagada'}).get(function() {
