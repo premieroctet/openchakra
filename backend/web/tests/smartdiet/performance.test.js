@@ -127,7 +127,7 @@ describe('Performance ', () => {
   it('must load user contents', async () => {
     const user=await User.findOne(USER_CRITERION)
     const fields=`contents,email`.split(',')
-    const loggedUser= await loadFromDb({model: 'user', id:user._id, fields, user})
+    const [loggedUser]= await loadFromDb({model: 'user', id:user._id, fields, user})
     expect(loggedUser.contents?.length).toBeGreaterThan(0)
   })
 
@@ -139,6 +139,16 @@ describe('Performance ', () => {
     console.timeEnd('Loading users')
     console.log(users.length)
     expect(users.length).toBeGreaterThan(0)
+  })
+
+  it.only('must load user logbooks', async () => {
+    const {id:userid}=await User.findOne({email: /hello\+user@/})
+    const fields=`latest_coachings.logbooks.logbooks.day`.split(',')
+    console.time('Loading users')
+    const [user] = await loadFromDb({model: 'user', fields, id: userid, user, params:{limit:1000}})
+    console.timeEnd('Loading users')
+    console.log(user.latest_coachings)
+    expect(user.length).toBeGreaterThan(0)
   })
 
 })
