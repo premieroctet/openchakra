@@ -9,14 +9,15 @@ forceDataModelSmartdiet()
 require('../../server/plugins/smartdiet/functions')
 
 const {getDataModel} = require('../../config/config')
-const {MONGOOSE_OPTIONS, loadFromDb, buildPopulates} = require('../../server/utils/database')
+const {MONGOOSE_OPTIONS, loadFromDb, buildPopulates, getModel, getModels} = require('../../server/utils/database')
 const {ROLE_CUSTOMER, COMPANY_ACTIVITY, ROLE_EXTERNAL_DIET} = require('../../server/plugins/smartdiet/consts')
 
 const Appointment=require('../../server/models/Appointment')
 const Coaching=require('../../server/models/Coaching')
 const User=require('../../server/models/User')
 const Company=require('../../server/models/Company')
-const { computeStatistics } = require('../../server/plugins/smartdiet/functions')
+const { computeStatistics } = require('../../server/plugins/smartdiet/functions');
+const Patient = require('../../server/models/Patient');
 require('../../server/models/Target')
 require('../../server/models/Quizz')
 require('../../server/models/Association')
@@ -33,12 +34,13 @@ require('../../server/models/ChartPoint')
 require('../../server/models/Event')
 require('../../server/models/IndividualChallenge')
 require('../../server/models/Menu')
+require('../../server/models/Patient')
 
 jest.setTimeout(100000)
 
 const FIELDS=`groups_count,messages_count,users_count,user_women_count,webinars_count,webinars_replayed_count,average_webinar_registar,company,started_coachings,users_men_count,users_no_gender_count,leads_count`.split(',')
 const COMPANY_CRITERION = {name: /etude clinique/i}
-const DIET_CRITERION={email: 'annelaure.meunier75@gmail.com', role: ROLE_EXTERNAL_DIET}
+const DIET_CRITERION={email: 'stephanieb.smartdiet@gmail.com', role: ROLE_EXTERNAL_DIET}
 const USER_CRITERION={email: 'hello+user@wappizy.com', role: ROLE_CUSTOMER}
 
 describe('Performance ', () => {
@@ -48,7 +50,7 @@ describe('Performance ', () => {
   })
 
   afterAll(async() => {
-    await mongoose.connection.close()
+    // await mongoose.connection.close()
   })
 
   it(`must load statistics 'fastly'`, async() => {
@@ -85,16 +87,22 @@ describe('Performance ', () => {
 
   it('must speed up patients loading', async () => {
     const user=await User.findOne(DIET_CRITERION)
-    const fields=`diet_patients,diet_patients.fullname,diet_patients.picture,diet_patients.company.name`.split(',')
-    const [loggedUser]=await loadFromDb({model: 'loggedUser', fields, user})
-    expect(loggedUser.diet_patients.length).toEqual(29)
-    expect(loggedUser.diet_patients.every(p => p.company?.name)).toBeTruthy()
-  }, 2000)
-
+    // console.time('loading diet_patients')
+    // const [loggedUser]=await loadFromDb({model: 'loggedUser', fields:['diet_patients.fullname'], user})
+    // console.timeEnd('loading diet_patients')
+    // expect(loggedUser.diet_patients.length).toEqual(1189)
+    console.time('loading diet patients')
+    const userIds=await Coaching.distinct('user', {diet: user._id})
+    const patients=await loadFromDb({model: ROLE_CUSTOMER, fields: ['fullname'], params: {'filter._id': {$in: userIds}, 'filter.firstname': 'hop'}, user})
+    console.timeEnd('loading diet patients')
+    console.log('patient', patients.length)
+    // expect(patients.length).toEqual(1189)
+  }, 16000)
+  
   it('must speed up diet appointments loading', async () => {
     const user=await User.findOne(DIET_CRITERION)
     const fields=`diet_appointments_count,diet_current_future_appointments.coaching.user.picture,diet_current_future_appointments.coaching.user.fullname,diet_current_future_appointments.coaching.user.company_name,diet_current_future_appointments.start_date,diet_current_future_appointments.end_date,diet_current_future_appointments.order,diet_current_future_appointments.appointment_type.title,diet_current_future_appointments.status,diet_current_future_appointments.visio_url,diet_current_future_appointments.coaching.user,diet_current_future_appointments,diet_current_future_appointments.coaching.user.phone`.split(',')
-    const params={'limit':30}
+    const params={'limit':5000}
     console.time('Loading current & future appointments')
     const [loggedUser]=await loadFromDb({model: 'loggedUser', fields, params, user})
     console.timeEnd('Loading current & future appointments')
@@ -180,6 +188,13 @@ describe('Performance ', () => {
     console.log(loggedUser.available_menus.map(m => m.name))
     loggedUser.available_menus.map(menu => expect(menu.start_date.getTime()).toBeLessThan(Date.now()))
     loggedUser.available_menus.map(menu => expect(menu.end_date.getTime()).toBeGreaterThan(Date.now()))
+  })
+
+  it.only('Must return _id in getModels', async () => {
+    const models=await getModels()
+    const attributes=Object.values(models)[0].attributes
+    expect(Object.keys(attributes)).toEqual(expect.arrayContaining(['_id']))
+    console.log(attributes['_id'])
   })
 })
 

@@ -261,6 +261,16 @@ const preCreate = ({ model, params, user }) => {
   if (['content'].includes(model)) {
     params.creator = user
   }
+  if (model==ROLE_CUSTOMER) {
+    console.log('ICI')
+    if (user.role==ROLE_EXTERNAL_DIET) {
+      return Coaching.distinct('user', {diet: user._id})
+        .then(ids => {
+          console.log(`Got ${ids.length} patients`)
+          params['filter._id']={$in: ids}
+      })
+    }
+  }
   if (['team'].includes(model)) {
     return Team.findOne({ name: params.name?.trim(), collectiveChallenge: params.collectiveChallenge }).populate('collectiveChallenge')
       .then(team => {
@@ -369,7 +379,7 @@ const postPutData = ({ model, params, id, value, data, user }) => {
 
 setPostPutData(postPutData)
 
-const USER_MODELS = ['user', 'loggedUser']
+const USER_MODELS = ['user', 'loggedUser', ROLE_CUSTOMER]
 USER_MODELS.forEach(m => {
   declareVirtualField({ model: m, field: 'fullname', instance: 'String', requires: 'firstname,lastname' })
   declareVirtualField({ model: m, field: 'password2', instance: 'String' })
@@ -1468,12 +1478,14 @@ const getDietPatientsCount = (userId, params, data) => {
     .then(users => users.length)
 }
 
-declareComputedField({model: 'user', field: 'contents', getterFn: getUserContents})
-declareComputedField({model: 'loggedUser', field: 'contents', getterFn: getUserContents})
-declareComputedField({model: 'user', field: 'diet_patients', getterFn: getDietPatients})
-declareComputedField({model: 'loggedUser', field: 'diet_patients', getterFn: getDietPatients})
-declareComputedField({model: 'user', field: 'diet_patients_count', getterFn: getDietPatientsCount})
-declareComputedField({model: 'loggedUser', field: 'diet_patients_count', getterFn: getDietPatientsCount})
+// declareComputedField({model: 'user', field: 'contents', getterFn: getUserContents})
+// declareComputedField({model: 'loggedUser', field: 'contents', getterFn: getUserContents})
+// declareComputedField({model: 'user', field: 'diet_patients', getterFn: getDietPatients})
+// declareComputedField({model: 'loggedUser', field: 'diet_patients', getterFn: getDietPatients})
+// declareComputedField({model: 'user', field: 'diet_patients_count', getterFn: getDietPatientsCount})
+// declareComputedField({model: 'user', field: 'spoons_count', getterFn: getUserSpoons})
+// declareComputedField({model: 'loggedUser', field: 'diet_patients_count', getterFn: getDietPatientsCount})
+// declareComputedField({model: 'loggedUser', field: 'spoons_count', getterFn: getUserSpoons})
 declareComputedField({model: 'comment', field: 'liked', getterFn: getDataLiked, setterFn: setDataLiked})
 declareComputedField({model: 'message', field: 'liked', getterFn: getDataLiked, setterFn: setDataLiked})
 declareComputedField({model: 'content', field: 'liked', getterFn: getDataLiked, setterFn: setDataLiked})
@@ -1489,8 +1501,6 @@ declareComputedField({model: 'key', field: 'user_progress', getterFn: getUserKey
 declareComputedField({model: 'key', field: 'user_read_contents', getterFn: getUserKeyReadContents})
 declareComputedField({model: 'key', field: 'user_passed_challenges', getterFn: getUserPassedChallenges})
 declareComputedField({model: 'key', field: 'user_passed_webinars', getterFn: getUserPassedWebinars})
-declareComputedField({model: 'user', field: 'spoons_count', getterFn: getUserSpoons})
-declareComputedField({model: 'loggedUser', field: 'spoons_count', getterFn: getUserSpoons})
 declareComputedField({model: 'menu', field: 'shopping_list', getterFn: getMenuShoppingList})
 declareComputedField({model: 'key', field: 'user_surveys_progress', getterFn: getUserSurveysProgress})
 
@@ -2010,17 +2020,23 @@ cron.schedule('0 0 1 * * *', async () => {
     .catch(console.error)
 })
 
-return Appointment.exists({$or: [{diet: null},{user: null}]})
-  .then(exists => {
-    console.log('DB to update:', exists)
-    if (exists) {
-      return Coaching.find({}, {user:1, diet:1})
-      .then(coachings => 
-        Promise.all(coachings.map(c => Appointment.updateMany({coaching: c}, {user:c.user, diet: c.diet}))) )
-      .then(console.log)
-      .catch(console.error)
-    }
+// return Appointment.exists({$or: [{diet: null},{user: null}]})
+Appointment.remove({coaching: null})
+  .then(() => Appointment.find({$or: [{diet: null},{user: null}]}).populate('coaching'))
+  .then(appts => {
+    console.log('DB to update:', !lodash.isEmpty(appts))
+    return Promise.all(appts.map(app => {
+      if (!app.caoching) {
+        return app.delete()
+      }
+      console.log(app.coaching.user, app.coaching.diet)
+      app.user=app.coaching.user
+      app.diet=app.coaching.diet
+      return app.save()
+    }))
   })
+  .then(console.log)
+  .catch(console.error)
 
 module.exports = {
   ensureChallengePipsConsistency,

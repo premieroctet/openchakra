@@ -71,7 +71,6 @@ const getCurrentFilter = (filters, modelName) => {
       console.log(modelAtt)
       return !lodash.get(DECLARED_VIRTUALS, modelAtt) && !lodash.get(COMPUTED_FIELDS_GETTERS, modelAtt)
     })
-  console.log(modelName, 'filter', filters.value())
   return filters.isEmpty() ? undefined : filters.value()
 }
 
@@ -396,6 +395,7 @@ const buildQuery = (model, id, fields, params) => {
 
   const select=lodash.uniq(fields.map(f => f.split('.')[0]))
   const currentFilter=getCurrentFilter(filters, model)
+  console.log('current filter', currentFilter)
   criterion={...criterion, ...currentFilter}
   console.log('criterion is', criterion)
   console.log('projection is', select)
@@ -893,11 +893,10 @@ const loadFromDb = ({model, fields, id, user, params={}}) => {
         return data
       }
       // TODO UGLY but user_surveys_progress does not return if not leaned
-      const localLean=/user_surveys_progress/.test(fields.join(',')) || LEAN_DATA
       console.time(`Loading model ${model}`)
       return buildQuery(model, id, fields, params)
         .then(data => {console.timeEnd(`Loading model ${model}`); return data})
-        .then(data => localLean ? lean({model, data}) : data)
+        .then(data => LEAN_DATA ? lean({model, data}) : data)
         .then(data => {console.time(`Compute model ${model}`); return data})
         .then(data => {
           if (id && data.length == 0) { throw new NotFoundError(`Can't find ${model}:${id}`) }

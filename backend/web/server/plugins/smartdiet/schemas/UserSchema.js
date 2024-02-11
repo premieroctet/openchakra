@@ -15,7 +15,8 @@ const {
   ROLE_CUSTOMER,
   ROLE_EXTERNAL_DIET,
   ROLE_RH,
-  STATUS_FAMILY
+  STATUS_FAMILY,
+  ROLE_DISCRIMINATOR,
 } = require('../consts')
 const { isEmailOk } = require('../../../../utils/sms')
 const { CREATED_AT_ATTRIBUTE } = require('../../../../utils/consts')
@@ -328,7 +329,7 @@ const UserSchema = new Schema({
     ref: 'content',
     required: false,
   }],
-}, schemaOptions)
+}, {...schemaOptions, ...ROLE_DISCRIMINATOR})
 
 /* eslint-disable prefer-arrow-callback */
 
@@ -670,17 +671,6 @@ UserSchema.virtual("keys", {
   localField: "dummy", // Find in Model, where localField
   foreignField: "dummy", // is equal to foreignField
 })
-
-UserSchema.virtual('diet_patients', {
-  ref: 'coaching', // Reference to the Coaching model
-  localField: '_id', // Field in the Diet model
-  foreignField: 'diet', // Field in the Coaching model
-  justOne: false,
-});
-
-// UserSchema.virtual('diet_patients', {localField: 'tagada', foreignField: 'tagada'}).get(function() {
-//   return lodash.uniqBy(this.diet_coachings?.map(a => a.user), u => u._id)
-// })
 
 UserSchema.virtual("diet_appointments", {
   ref: "appointment", // The Model to use
