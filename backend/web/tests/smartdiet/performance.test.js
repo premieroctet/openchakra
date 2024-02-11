@@ -193,8 +193,13 @@ describe('Performance ', () => {
   it.only('Must return _id in getModels', async () => {
     const models=await getModels()
     const attributes=Object.values(models)[0].attributes
-    expect(Object.keys(attributes)).toEqual(expect.arrayContaining(['_id']))
-    console.log(attributes['_id'])
+    expect(attributes['_id']).toEqual({
+      type: 'ObjectID',
+      multiple: false,
+      ref: false,
+      enumValues: undefined,
+      suggestions: undefined
+    })
   })
 })
 
