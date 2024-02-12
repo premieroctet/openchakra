@@ -2035,9 +2035,6 @@ Appointment.remove({coaching: null})
   .then(appts => {
     console.log('DB to update:', !lodash.isEmpty(appts))
     return Promise.all(appts.map(app => {
-      if (!app.caoching) {
-        return app.delete()
-      }
       console.log(app.coaching.user, app.coaching.diet)
       app.user=app.coaching.user
       app.diet=app.coaching.diet
