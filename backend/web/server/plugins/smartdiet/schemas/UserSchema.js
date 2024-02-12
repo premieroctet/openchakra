@@ -329,6 +329,9 @@ const UserSchema = new Schema({
     ref: 'content',
     required: false,
   }],
+  diet_appointments_count: {
+    type: Number,
+  }
 }, {...schemaOptions, ...ROLE_DISCRIMINATOR})
 
 /* eslint-disable prefer-arrow-callback */
@@ -678,29 +681,23 @@ UserSchema.virtual("diet_appointments", {
   foreignField: "diet", // is equal to foreignField
 })
 
-UserSchema.virtual("diet_appointments_count", {
-  ref: "appointment", // The Model to use
-  localField: "_id", // Find in Model, where localField
-  foreignField: "diet", // is equal to foreignField
-  count: true,
-})
+// UserSchema.virtual("diet_appointments_count", {
+//   ref: "appointment", // The Model to use
+//   localField: "_id", // Find in Model, where localField
+//   foreignField: "diet", // is equal to foreignField
+//   count: true,
+// })
 
-UserSchema.virtual("diet_current_future_appointments", {
-  ref: "appointment", // The Model to use
-  localField: "_id", // Find in Model, where localField
-  foreignField: "diet", // is equal to foreignField
-})
+// UserSchema.virtual("diet_current_future_appointments", {
+//   ref: "appointment", // The Model to use
+//   localField: "_id", // Find in Model, where localField
+//   foreignField: "diet", // is equal to foreignField
+// })
 
 /**
 UserSchema.virtual('diet_current_future_appointments', {localField:'tagada', foreignField:'tagada'}).get(function() {
   const now=moment()
   return lodash.flatten(this.diet_coachings?.map(c => c.appointments || []) || []).filter(a => now.isBefore(a.end_date))
-})
-*/
-
-/**
-UserSchema.virtual('diet_appointments_count', {localField:'tagada', foreignField:'tagada'}).get(function() {
-  return this.diet_appointments?.length || 0
 })
 */
 

@@ -50,7 +50,7 @@ const extractFilters = params => {
   let filters = lodash(params)
     .pickBy((_, key) => FILTER_PATTERN.test(key))
     .mapKeys((_, key) => key.replace(FILTER_PATTERN, ''))
-    .mapValues(v => new RegExp(v, 'i'))
+    .mapValues(v => lodash.isString(v) ? new RegExp(v, 'i') : v)
   return filters.value()
 }
 
@@ -198,7 +198,7 @@ const getSimpleModelAttributes = modelName => {
     att.path,
     getAttributeCaracteristics(modelName, att),
   ])
-  return atts
+  return [...atts, ['_id', {type: 'ObjectId', multiple: false, ref: false}] ]
 }
 
 const getReferencedModelAttributes = (modelName, level) => {
@@ -488,10 +488,10 @@ const getNextLevelFields = fields => {
   if (nextLevelFieldsCache.has(key)) {
     return nextLevelFieldsCache.get(key)
   }
-  const result=fields
+  const result=lodash.uniq(fields
     .filter(f => f.includes('.'))
     .map(f => f.split('.')[0])
-
+  )
   nextLevelFieldsCache.set(key, result)
   return result
 }
@@ -581,19 +581,44 @@ const getRequiredSubFields = (fields, attName) => {
   return result
 }
 
+const fieldsToComputeCache=new NodeCache()
+
+/**
+ * For a given model name anex fields, returns the array of fields and descendant fields
+ * that noeeds to be computed
+ */
+const getFieldsToCompute = ({model, fields}) => {
+  const key=`${model}/${fields}`
+  let result=fieldsToComputeCache.get(key)
+  if (result) {
+    return result
+  }
+  result=[]
+  const modelDef=getModels()[model]
+  const thisLevelFields=getFirstLevelFields(fields)
+  const nextLevelFields=getNextLevelFields(fields)
+  const thisLevelCompute=thisLevelFields.filter(f => !!lodash.get(COMPUTED_FIELDS_GETTERS, `${model}.${f}`))
+  result.push(...thisLevelCompute)
+  nextLevelFields.forEach(field => {
+    const subModel=modelDef.attributes[field].type
+    const nextFields=getSecondLevelFields(fields, field)
+    result.push(...getFieldsToCompute({model: subModel, fields:nextFields}).map(f => `${field}.${f}`))
+  })
+  fieldsToComputeCache.set(key, result)
+  return result
+}
+
 const addComputedFields = (
   fields,
   userId,
   queryParams,
   data,
   model,
-  prefix = '',
 ) => {
-
+  fields=getFieldsToCompute({model, fields})
   if (lodash.isEmpty(fields)) {
     return data
   }
-  const newPrefix = `${prefix}/${model}/${data._id}`
 
   return Promise.resolve(model=='user' ? data._id : userId)
     .then(newUserId => {
@@ -612,7 +637,6 @@ const addComputedFields = (
               queryParams,
               child,
               attParams.type,
-              `${newPrefix}/${attName}`,
             ),
           ),
         )
@@ -640,7 +664,6 @@ const formatTime = timeMillis => {
 }
 
 const declareComputedField = ({model, field, getterFn, setterFn}) => {
-  return
   if (!model || !field || !(getterFn || setterFn)) {
     throw new Error(`${model}.${field} compute delcaration requires model, field and at least getter or setter`)
   }
@@ -888,7 +911,7 @@ const loadFromDb = ({model, fields, id, user, params={}}) => {
   const filters=extractFilters(params)
   fields=lodash.uniq([...fields, ...Object.keys(filters)])
   return callPreprocessGet({model, fields, id, user, params})
-    .then(({model, fields, id, data}) => {
+    .then(({model, fields, id, data, params}) => {
       if (data) {
         return data
       }
@@ -981,5 +1004,6 @@ module.exports = {
   setPostDeleteData,
   handleReliesOn,
   extractFilters, getCurrentFilter, getSubFilters, extractLimits, getSubLimits,
+  getFieldsToCompute,
 }
 

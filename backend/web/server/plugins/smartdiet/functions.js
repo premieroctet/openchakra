@@ -203,6 +203,28 @@ const preprocessGet = ({ model, fields, id, user, params }) => {
   if (model == 'user') {
     fields.push('company')
   }
+  if (model == ROLE_CUSTOMER) {
+    if (user.role==ROLE_EXTERNAL_DIET) {
+      return Coaching.distinct('user', {diet: user._id})
+        .then(ids => ({model, fields, id, user, 
+          params: {...params, 'filter._id': {$in: ids}}
+        }))
+    }
+  }
+  if (model == 'appointment') {
+    let filter={}
+    if (user.role==ROLE_EXTERNAL_DIET) {
+      filter={diet: user._id}
+    }
+    else if (user.role==ROLE_CUSTOMER) {
+      filter={user: user._id}
+    }
+    return Appointment.find(filter, '_id')
+    .then(ids => ({model, fields, id, user, 
+      params: {...params, 'filter._id': {$in: ids}}
+    }))
+}
+
   if (model == 'adminDashboard') {
     if (![ROLE_SUPER_ADMIN, ROLE_ADMIN, ROLE_RH].includes(user.role)) {
       return Promise.resolve({ model, fields, id, data: [] })
@@ -245,7 +267,7 @@ const preprocessGet = ({ model, fields, id, user, params }) => {
       })
   }
 
-  return Promise.resolve({ model, fields, id })
+  return Promise.resolve({ model, fields, id, params })
 
 }
 
@@ -669,7 +691,8 @@ USER_MODELS.forEach(m => {
       options: { ref: 'appointment' }
     },
   })
-  declareVirtualField({model: m, field: 'diet_appointments_count', instance: 'Number'})
+  declareVirtualField({model: m, field: 'diet_appointments_count', instance: 'Number', requires: 'firstname'})
+  declareComputedField({model: 'user', field: 'diet_appointments_count', getterFn: async (userId, params, data) => Appointment.count({diet: userId})})
   declareVirtualField({
     model: m, field: 'diet_current_future_appointments', instance: 'Array',
     multiple: true,
@@ -695,20 +718,6 @@ USER_MODELS.forEach(m => {
   //     options: { ref: 'appointment' }
   //   },
   // })
-  // TODO This causes error because of relies_on
-  //declareVirtualField({ model: m, field: 'diet_appointments_count', instance: 'Number', requires: 'diet_appointments'})
-  // declareVirtualField({ model: m, field: 'diet_appointments_count', instance: 'Number', requires: 'diet_coachings'})
-  declareVirtualField({
-    model: m, field: 'diet_patients', instance: 'Array',
-    relies_on: 'diet_coachings.user',
-    multiple: true,
-    caster: {
-      instance: 'ObjectID',
-      options: { ref: 'user' }
-    },
-  })
-  // TODO This causes error because of relies_on
-  //declareVirtualField({ model: m, field: 'diet_patients_count', instance: 'Number'})
   declareEnumField({ model: m, field: 'registration_warning', enumValues: REGISTRATION_WARNING })
   declareEnumField({ model: m, field: 'activities', enumValues: DIET_ACTIVITIES })
   declareVirtualField({
@@ -1478,14 +1487,12 @@ const getDietPatientsCount = (userId, params, data) => {
     .then(users => users.length)
 }
 
-// declareComputedField({model: 'user', field: 'contents', getterFn: getUserContents})
-// declareComputedField({model: 'loggedUser', field: 'contents', getterFn: getUserContents})
-// declareComputedField({model: 'user', field: 'diet_patients', getterFn: getDietPatients})
-// declareComputedField({model: 'loggedUser', field: 'diet_patients', getterFn: getDietPatients})
-// declareComputedField({model: 'user', field: 'diet_patients_count', getterFn: getDietPatientsCount})
-// declareComputedField({model: 'user', field: 'spoons_count', getterFn: getUserSpoons})
-// declareComputedField({model: 'loggedUser', field: 'diet_patients_count', getterFn: getDietPatientsCount})
-// declareComputedField({model: 'loggedUser', field: 'spoons_count', getterFn: getUserSpoons})
+declareComputedField({model: 'user', field: 'contents', getterFn: getUserContents})
+declareComputedField({model: 'loggedUser', field: 'contents', getterFn: getUserContents})
+declareComputedField({model: 'user', field: 'diet_patients_count', getterFn: getDietPatientsCount})
+declareComputedField({model: 'user', field: 'spoons_count', getterFn: getUserSpoons})
+declareComputedField({model: 'loggedUser', field: 'diet_patients_count', getterFn: getDietPatientsCount})
+declareComputedField({model: 'loggedUser', field: 'spoons_count', getterFn: getUserSpoons})
 declareComputedField({model: 'comment', field: 'liked', getterFn: getDataLiked, setterFn: setDataLiked})
 declareComputedField({model: 'message', field: 'liked', getterFn: getDataLiked, setterFn: setDataLiked})
 declareComputedField({model: 'content', field: 'liked', getterFn: getDataLiked, setterFn: setDataLiked})
@@ -1825,7 +1832,7 @@ ensureSpoonGains = () => {
   })
 }
 
-ensureSpoonGains()
+!isDevelopment() && ensureSpoonGains()
 
 // Ensure logbooks consistency each morning
 //cron.schedule('0 */15 * * * *', async() => {
@@ -2021,7 +2028,7 @@ cron.schedule('0 0 1 * * *', async () => {
 })
 
 // return Appointment.exists({$or: [{diet: null},{user: null}]})
-Appointment.remove({coaching: null})
+false && Appointment.remove({coaching: null})
   .then(() => Appointment.find({$or: [{diet: null},{user: null}]}).populate('coaching'))
   .then(appts => {
     console.log('DB to update:', !lodash.isEmpty(appts))
