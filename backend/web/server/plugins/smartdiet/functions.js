@@ -698,7 +698,7 @@ USER_MODELS.forEach(m => {
     },
   })
   declareVirtualField({model: m, field: 'diet_appointments_count', instance: 'Number', requires: 'firstname'})
-  // declareComputedField({model: 'user', field: 'diet_appointments_count', getterFn: async (userId, params, data) => Appointment.count({diet: userId})})
+  declareComputedField({model: 'user', field: 'diet_appointments_count', getterFn: async (userId, params, data) => Appointment.count({diet: userId})})
   declareVirtualField({
     model: m, field: 'diet_current_future_appointments', instance: 'Array',
     multiple: true,
