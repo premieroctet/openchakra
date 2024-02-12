@@ -1714,13 +1714,6 @@ const computeStatistics = async ({ id, fields }) => {
   .then(() => console.log(`Particular company upserted`))
   .catch(err => console.error(`Particular company upsert error:${err}`))
 
-// Create missings coachings for any CUSTOMER
-!isDevelopment() && User.find({ role: ROLE_CUSTOMER }).populate('coachings')
-  .then(users => users.filter(user => lodash.isEmpty(user.coachings)))
-  .then(users => Promise.all(users.map(user => Coaching.create({ user }))))
-  .then(coachings => coachings.map(coaching => console.log(`Created missing coaching for ${coaching.user.email}`)))
-  .catch(err => console.error(err))
-
 // Ensure coaching logbooks consistency
 const logbooksConsistency = coaching_id => {
   const idFilter = coaching_id ? { _id: coaching_id } : {}
