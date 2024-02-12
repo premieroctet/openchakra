@@ -638,6 +638,20 @@ const buildHooks = (components: IComponents) => {
   }
 
 
+  const getSortParams = dataSourceId => {
+    const dsComponents=lodash(components).values()
+      .filter(c => getDynamicType(c)=='Container')
+      .filter(c => c.props?.dataSource?.replace(/^comp-/, '')==dataSourceId)
+      .filter(c => !!c.props?.sortAttribute && !!c.props.sortDirection)
+      .map(c => {
+        let fieldPath=computeDataFieldName(c, components, c.props.dataSource)
+        fieldPath = fieldPath ? `${fieldPath}.${c.props?.sortAttribute}` : c.props.sortAttribute
+        const fieldParam=`sort.${fieldPath}`
+        const order=c.props.sortDirection
+        return `${fieldParam}=${order}`
+      })
+    return dsComponents.join('&')
+  }
 
   const dataProviders=getValidDataProviders(components)
   if (dataProviders.length === 0) {
@@ -697,9 +711,10 @@ const buildHooks = (components: IComponents) => {
         const dpFields = getDataProviderFields(dp).join(',')
         const limits = getLimits(dp)
         const idPart = dp.id === 'root' ? `\${id ? \`\${id}/\`: \`\`}` : ''
+        const sortParams = getSortParams(dataId)
         const urlRest='${new URLSearchParams(queryRest)}'
         const apiUrl = `/myAlfred/api/studio/${dp.props.model}/${idPart}${
-          dpFields ? `?fields=${dpFields}&` : '?'}${limits ? `${limits.join('&')}&` : ''}\${buildFilter('${dp.id}', FILTER_ATTRIBUTES, componentsValues)}\${computePagesIndex('${dataId}')}${dp.id=='root' ? urlRest: ''}`
+          dpFields ? `?fields=${dpFields}&` : '?'}${limits ? `${limits.join('&')}&` : ''}${sortParams}&\${buildFilter('${dp.id}', FILTER_ATTRIBUTES, componentsValues)}\${computePagesIndex('${dataId}')}${dp.id=='root' ? urlRest: ''}`
         let thenClause=dp.id=='root' && singlePage ?
          `.then(res => set${capitalize(dataId)}(res.data[0]))`
          :

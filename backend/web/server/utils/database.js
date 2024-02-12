@@ -94,6 +94,15 @@ const extractLimits = params => {
 }
 
 /** Extracts filters parameters from query params */
+const extractSorts = params => {
+  const SORT_PATTERN = /^sort(\.|$)/
+  let sorts = lodash(params)
+    .pickBy((_, key) => SORT_PATTERN.test(key))
+    .mapKeys((_, key) => key.replace(SORT_PATTERN, ''))
+  return sorts.value()
+}
+
+/** Extracts filters parameters from query params */
 const getCurrentLimit = limits => {
   return limits['']
 }
@@ -288,7 +297,7 @@ function handleReliesOn(directAttribute, relies_on, requiredFields) {
 }
 
 // TODO query.populates accepts an array of populates !!!!
-const buildPopulates = ({modelName, fields, filters, limits, parentField, params}) => {
+const buildPopulates = ({modelName, fields, filters, limits, sorts, parentField, params}) => {
   // Retain all ref fields
   const model=getModels()[modelName]
   if (!model) {
@@ -322,11 +331,12 @@ const buildPopulates = ({modelName, fields, filters, limits, parentField, params
     const attType=attributes[attributeName].type
     limits=getSubLimits(limits, attributeName)
     filters=getSubFilters(filters, attributeName)
+    sorts=getSubFilters(sorts, attributeName)
     const limit=getCurrentLimit(limits)
     const match=getCurrentFilter(filters, attType) 
     const subPopulate=buildPopulates({
       modelName: attType, fields, parentField: `${parentField ? parentField+'.' : ''}${attributeName}`,
-      filters, limits, params,
+      filters, sorts, limits, params,
     })
     // TODO Fix page number
     const pageParamName = `page.${parentField? parentField+'.' : ''}${attributeName}`
@@ -337,7 +347,7 @@ const buildPopulates = ({modelName, fields, filters, limits, parentField, params
       path: attributeName, 
       // select,
       match,
-      options: {limit, skip}, 
+      options: {limit: limit ? {limit: limit+1} :undefined, skip, sort:sorts}, 
       populate: lodash.isEmpty(subPopulate)?undefined:subPopulate
     }
   })
@@ -389,24 +399,30 @@ const buildQuery = (model, id, fields, params) => {
   let criterion = id ? {_id: id} : {}
   const filters=extractFilters(params)
   const limits=extractLimits(params)
+  const sorts=extractSorts(params)
 
   // Add filter fields
   fields=getRequiredFields({model, fields:lodash.uniq([...fields, ...Object.keys(filters)])})
 
   const select=lodash.uniq(fields.map(f => f.split('.')[0]))
   const currentFilter=getCurrentFilter(filters, model)
-  console.log('current filter', Object.keys(currentFilter || {}))
+  const currentSort=getCurrentFilter(sorts, model)
   criterion={...criterion, ...currentFilter}
+  console.log('current filter', Object.keys(currentFilter || {}))
   console.log('criterion is', Object.keys(criterion), 'projection is', select, 'limits is', limits)
+  console.log('current sort', currentSort)
   let query = mongoose.connection.models[model].find(criterion, select)
   query = query.collation({ locale: 'fr', strength: 2 })
+  if (currentSort) {
+    query=query.sort(currentSort)
+  }
   const currentLimit=getCurrentLimit(limits)
   if (currentLimit) {
     console.log('Setting limit', currentLimit, 'skipping', (params.page || 0)*currentLimit)
     query=query.skip((params.page || 0)*currentLimit)
     query=query.limit(currentLimit+1)
   }
-  const populates=buildPopulates({modelName: model, fields:[...fields], filters, limits, params})
+  const populates=buildPopulates({modelName: model, fields:[...fields], filters, limits, sorts, params})
   console.log(`Populates for ${model}/${fields} is ${JSON.stringify(populates)}`)
   query = query.populate(populates).sort(buildSort(params))
   return query
