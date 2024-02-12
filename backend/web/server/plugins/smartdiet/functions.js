@@ -409,7 +409,10 @@ setPostPutData(postPutData)
 
 const USER_MODELS = ['user', 'loggedUser', ROLE_CUSTOMER]
 USER_MODELS.forEach(m => {
-  declareVirtualField({ model: m, field: 'fullname', instance: 'String', requires: 'firstname,lastname' })
+  declareVirtualField({ model: m, field: 'fullname', instance: 'String', requires: 'firstname,lastname', 
+    dbFilter: value => ({$or:[{firstname: value}, {lastname: value}]}),
+    dbSort: value => ({firstname: value, lastname: value}),
+  })
   declareVirtualField({ model: m, field: 'password2', instance: 'String' })
   declareEnumField({ model: m, field: 'home_status', enumValues: HOME_STATUS })
   declareEnumField({ model: m, field: 'role', enumValues: ROLES })

@@ -18,6 +18,7 @@ const MONGOOSE_OPTIONS = {
   useFindAndModify: false,
 }
 
+const COLLATION={ locale: 'fr', strength: 2 }
 // Utilities
 mongoose.set('useFindAndModify', false)
 mongoose.set('useCreateIndex', true)
@@ -54,6 +55,14 @@ const extractFilters = params => {
   return filters.value()
 }
 
+const getCurrentFilter = (filters, modelName) => {
+  return _mapSortOrFilters(filters, modelName, 'dbFilter')
+}
+
+const getCurrentSort = (filters, modelName) => {
+  return _mapSortOrFilters(filters, modelName, 'dbSort')
+}
+
 /**
  * Build filters from attributues name and values
  * Return filter on:
@@ -61,17 +70,26 @@ const extractFilters = params => {
  *  - not virtual or computed attributes
  * Return sundefind if no filter
  */
-const getCurrentFilter = (filters, modelName) => {
+const _mapSortOrFilters = (filters, modelName, attribute) => {
   filters = lodash(filters)
     // Use 1st level filters
     .pickBy((_, key) => !/\./.test(key))
     // Filter by non virtual && non computed attributes
-    .pickBy((_, key) => {
+    .entries()
+    .map(([key, value]) => {
       const modelAtt = `${modelName}.${key}`
-      console.log(modelAtt)
-      return !lodash.get(DECLARED_VIRTUALS, modelAtt) && !lodash.get(COMPUTED_FIELDS_GETTERS, modelAtt)
+      const virtualOrComputed=lodash.get(DECLARED_VIRTUALS, modelAtt) || lodash.get(COMPUTED_FIELDS_GETTERS, modelAtt)
+      if (virtualOrComputed) {
+        const dbFilter=virtualOrComputed[attribute]
+        if (dbFilter) {
+          return dbFilter(value)
+        }
+        console.warn(`No ${attribute} on virtual or computed ${modelAtt}`)
+      }
+      return {[key]: value}
     })
-  return filters.isEmpty() ? undefined : filters.value()
+  const result=filters.size()==0 ?undefined : filters.size()==1 ? filters.value()[0] : {$and: filters.value()}
+  return result
 }
 
 const getSubFilters = (filters, attributeName) => {
@@ -329,25 +347,26 @@ const buildPopulates = ({modelName, fields, filters, limits, sorts, parentField,
 
   const pops=groupedAttributes.entries().map(([attributeName, fields]) => {
     const attType=attributes[attributeName].type
-    limits=getSubLimits(limits, attributeName)
-    filters=getSubFilters(filters, attributeName)
-    sorts=getSubFilters(sorts, attributeName)
-    const limit=getCurrentLimit(limits)
-    const match=getCurrentFilter(filters, attType) 
+    const subLimits=getSubLimits(limits, attributeName)
+    const subFilters=getSubFilters(filters, attributeName)
+    const subSorts=getSubFilters(sorts, attributeName)
+    const limit=getCurrentLimit(subLimits)
+    const match=getCurrentFilter(subFilters, attType) 
+    const sort=getCurrentSort(subSorts, attType)
     const subPopulate=buildPopulates({
       modelName: attType, fields, parentField: `${parentField ? parentField+'.' : ''}${attributeName}`,
-      filters, sorts, limits, params,
+      filters:subFilters, sorts:subSorts, limits:subLimits, params,
     })
     // TODO Fix page number
     const pageParamName = `page.${parentField? parentField+'.' : ''}${attributeName}`
     const page=params?.[pageParamName] ? parseInt(params[pageParamName]) : 0
     const skip=page*limit
-    console.log('skip', skip)
     return {
       path: attributeName, 
       // select,
       match,
-      options: {limit: limit ? {limit: limit+1} :undefined, skip, sort:sorts}, 
+      options: {limit: limit ? limit+1 :undefined, skip, sort},
+      collation: COLLATION, 
       populate: lodash.isEmpty(subPopulate)?undefined:subPopulate
     }
   })
@@ -406,13 +425,11 @@ const buildQuery = (model, id, fields, params) => {
 
   const select=lodash.uniq(fields.map(f => f.split('.')[0]))
   const currentFilter=getCurrentFilter(filters, model)
-  const currentSort=getCurrentFilter(sorts, model)
+  const currentSort=getCurrentSort(sorts, model)
   criterion={...criterion, ...currentFilter}
-  console.log('current filter', Object.keys(currentFilter || {}))
-  console.log('criterion is', Object.keys(criterion), 'projection is', select, 'limits is', limits)
-  console.log('current sort', currentSort)
+  console.log('Query', model, fields, ': filter', currentFilter, 'criterion', Object.keys(criterion), 'projection', select, 'limits', limits, 'sort', currentSort)
   let query = mongoose.connection.models[model].find(criterion, select)
-  query = query.collation({ locale: 'fr', strength: 2 })
+  query = query.collation(COLLATION)
   if (currentSort) {
     query=query.sort(currentSort)
   }
@@ -423,7 +440,7 @@ const buildQuery = (model, id, fields, params) => {
     query=query.limit(currentLimit+1)
   }
   const populates=buildPopulates({modelName: model, fields:[...fields], filters, limits, sorts, params})
-  console.log(`Populates for ${model}/${fields} is ${JSON.stringify(populates)}`)
+  console.log(`Populates for ${model}/${fields} is ${JSON.stringify(populates, null, 2)}`)
   query = query.populate(populates).sort(buildSort(params))
   return query
 }
