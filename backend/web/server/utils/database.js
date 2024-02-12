@@ -395,11 +395,9 @@ const buildQuery = (model, id, fields, params) => {
 
   const select=lodash.uniq(fields.map(f => f.split('.')[0]))
   const currentFilter=getCurrentFilter(filters, model)
-  console.log('current filter', currentFilter)
+  console.log('current filter', Object.keys(currentFilter || {}))
   criterion={...criterion, ...currentFilter}
-  console.log('criterion is', criterion)
-  console.log('projection is', select)
-  console.log('limits is', limits)
+  console.log('criterion is', Object.keys(criterion), 'projection is', select, 'limits is', limits)
   let query = mongoose.connection.models[model].find(criterion, select)
   query = query.collation({ locale: 'fr', strength: 2 })
   const currentLimit=getCurrentLimit(limits)
@@ -409,7 +407,7 @@ const buildQuery = (model, id, fields, params) => {
     query=query.limit(currentLimit+1)
   }
   const populates=buildPopulates({modelName: model, fields:[...fields], filters, limits, params})
-  console.log(`Populates for ${model}/${fields} is ${JSON.stringify(populates, null, 2)}`)
+  console.log(`Populates for ${model}/${fields} is ${JSON.stringify(populates)}`)
   query = query.populate(populates).sort(buildSort(params))
   return query
 }

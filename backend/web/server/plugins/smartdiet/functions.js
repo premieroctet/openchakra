@@ -211,7 +211,7 @@ const preprocessGet = ({ model, fields, id, user, params }) => {
         }))
     }
   }
-  if (model == 'appointment') {
+  if (['appointment', 'currentFutureAppointment', 'pastAppointment'] .includes(model)) {
     let filter={}
     if (user.role==ROLE_EXTERNAL_DIET) {
       filter={diet: user._id}
@@ -219,11 +219,17 @@ const preprocessGet = ({ model, fields, id, user, params }) => {
     else if (user.role==ROLE_CUSTOMER) {
       filter={user: user._id}
     }
+    if (model=='currentFutureAppointment') {
+      filter={...filter, end_date: {$gte: moment()}}
+    }
+    if (model=='pastAppointment') {
+      filter={...filter, end_date: {$lt: moment()}}
+    }
     return Appointment.find(filter, '_id')
-    .then(ids => ({model, fields, id, user, 
+    .then(ids => ({model: 'appointment', fields, id, user, 
       params: {...params, 'filter._id': {$in: ids}}
     }))
-}
+  }
 
   if (model == 'adminDashboard') {
     if (![ROLE_SUPER_ADMIN, ROLE_ADMIN, ROLE_RH].includes(user.role)) {
@@ -692,7 +698,7 @@ USER_MODELS.forEach(m => {
     },
   })
   declareVirtualField({model: m, field: 'diet_appointments_count', instance: 'Number', requires: 'firstname'})
-  declareComputedField({model: 'user', field: 'diet_appointments_count', getterFn: async (userId, params, data) => Appointment.count({diet: userId})})
+  // declareComputedField({model: 'user', field: 'diet_appointments_count', getterFn: async (userId, params, data) => Appointment.count({diet: userId})})
   declareVirtualField({
     model: m, field: 'diet_current_future_appointments', instance: 'Array',
     multiple: true,
@@ -1254,13 +1260,16 @@ declareVirtualField({
   },
 })
 
-declareVirtualField({
-model: 'appointment', field: 'order', instance: 'Number',
-requires: 'coaching.appointments',
-})
-declareVirtualField({
-  model: 'appointment', field: 'status', instance: 'String',
-  requires: 'start_date,end_date', enumValues: APPOINTMENT_STATUS,
+const APP_MODELS=['appointment','currentFutureAppointment','pastAppointment']
+APP_MODELS.forEach(model => {
+  declareVirtualField({
+    model: model, field: 'order', instance: 'Number',
+    requires: 'coaching.appointments',
+  })
+  declareVirtualField({
+    model: model, field: 'status', instance: 'String',
+    requires: 'start_date,end_date', enumValues: APPOINTMENT_STATUS,
+  })
 })
 
 declareVirtualField({
