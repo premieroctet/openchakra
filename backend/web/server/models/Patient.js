@@ -1,20 +1,16 @@
-const {getDataModel}=require('../../config/config')
-const { ROLE_CUSTOMER } = require('../plugins/smartdiet/consts')
+const mongoose = require('mongoose')
+const {getDataModel} = require('../../config/config')
 
-let Patient = null
+let PatientSchema=null
 
 try {
-  const User = require(`./User`)
-  if (User) {
-    const PatientSchema=require(`../plugins/${getDataModel()}/schemas/PatientSchema`)
-    PatientSchema.plugin(require('mongoose-lean-virtuals'))
-    Patient = User.discriminator(ROLE_CUSTOMER, PatientSchema)
-  }
+  PatientSchema=require(`../plugins/${getDataModel()}/schemas/PatientSchema`)
+  PatientSchema.plugin(require('mongoose-lean-virtuals'))
 }
-catch (err) {
+catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') {
     throw err
   }
 }
 
-module.exports = Patient
+module.exports = PatientSchema ? mongoose.model('patient', PatientSchema) : null

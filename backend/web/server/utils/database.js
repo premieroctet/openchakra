@@ -427,7 +427,7 @@ const buildQuery = (model, id, fields, params) => {
   const currentFilter=getCurrentFilter(filters, model)
   const currentSort=getCurrentSort(sorts, model)
   criterion={...criterion, ...currentFilter}
-  console.log('Query', model, fields, ': filter', currentFilter, 'criterion', Object.keys(criterion), 'projection', select, 'limits', limits, 'sort', currentSort)
+  console.log('Query', model, fields, ': filter', JSON.stringify(currentFilter, null,2), 'criterion', Object.keys(criterion), 'projection', select, 'limits', limits, 'sort', currentSort)
   let query = mongoose.connection.models[model].find(criterion, select)
   query = query.collation(COLLATION)
   if (currentSort) {

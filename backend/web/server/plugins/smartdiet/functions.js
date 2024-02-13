@@ -278,6 +278,16 @@ const preprocessGet = ({ model, fields, id, user, params }) => {
       })
   }
 
+  if (model=='patient') {
+    if (user.role==ROLE_EXTERNAL_DIET) {
+      return Coaching.distinct('user', {diet: user._id})
+        .then(ids => {
+          console.log(`Got ${ids.length} patients`)
+          params['filter._id']={$in: ids}
+          return ({ model:'user', params, fields, id, user })
+        })
+    }
+  }
   return Promise.resolve({ model, fields, id, params })
 
 }
@@ -293,16 +303,6 @@ const preCreate = ({ model, params, user }) => {
   }
   if (['content'].includes(model)) {
     params.creator = user
-  }
-  if (model==ROLE_CUSTOMER) {
-    console.log('ICI')
-    if (user.role==ROLE_EXTERNAL_DIET) {
-      return Coaching.distinct('user', {diet: user._id})
-        .then(ids => {
-          console.log(`Got ${ids.length} patients`)
-          params['filter._id']={$in: ids}
-      })
-    }
   }
   if (['team'].includes(model)) {
     return Team.findOne({ name: params.name?.trim(), collectiveChallenge: params.collectiveChallenge }).populate('collectiveChallenge')
@@ -412,7 +412,7 @@ const postPutData = ({ model, params, id, value, data, user }) => {
 
 setPostPutData(postPutData)
 
-const USER_MODELS = ['user', 'loggedUser', ROLE_CUSTOMER]
+const USER_MODELS = ['user', 'loggedUser', 'patient']
 USER_MODELS.forEach(m => {
   declareVirtualField({ model: m, field: 'fullname', instance: 'String', requires: 'firstname,lastname', 
     dbFilter: value => ({$or:[{firstname: value}, {lastname: value}]}),

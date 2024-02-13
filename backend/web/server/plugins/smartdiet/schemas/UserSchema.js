@@ -16,7 +16,6 @@ const {
   ROLE_EXTERNAL_DIET,
   ROLE_RH,
   STATUS_FAMILY,
-  ROLE_DISCRIMINATOR,
 } = require('../consts')
 const { isEmailOk } = require('../../../../utils/sms')
 const { CREATED_AT_ATTRIBUTE } = require('../../../../utils/consts')
