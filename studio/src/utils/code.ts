@@ -578,7 +578,10 @@ const buildFilterStates = (components: IComponents) => {
   return filterComponents
     .map(c => {
       const stateName: any = c.id.replace(/^comp-/, '')
-      return `const [${stateName}, set${stateName}]=useState(null)`
+      return `const [${stateName}, set${stateName}]=useState(null)\n
+      useEffect(()=> {
+        setPagesIndex({}, () => reload())
+      }, [${stateName}])`
     })
     .join('\n')
 }
@@ -612,6 +615,14 @@ const buildHooks = (components: IComponents) => {
         const filterValue=c.props.filterConstant
         return [`${fieldName ? fieldName+'.' : ''}${filterAttribute}`, filterValue]
       })
+    const variableFilters2 = Object.values(components)
+    .filter(c => c.props.filterAttribute && c.props.filterValue && c.props.dataSource==dataProvider.id)
+    .map(c => {
+      const fieldName=computeDataFieldName(c, components, dataProvider.id)
+      const filterAttribute=c.props.filterAttribute
+      const filterValue=c.props.filterValue
+      return [`${fieldName ? fieldName+'.' : ''}${filterAttribute}`, filterValue]
+    })
     const variableFilters = Object.values(components)
       .filter(c => c.props.filterAttribute2 && c.props.filterValue2 && c.props.dataSource==dataProvider.id)
       .map(c => {
@@ -633,7 +644,7 @@ const buildHooks = (components: IComponents) => {
           }))
       })
       // TODO get Filter component 0 => 4
-    const res={constants: constantFilters, variables: [...variableFilters, ...ultraVariableFilters]}
+    const res={constants: constantFilters, variables: [...variableFilters, ...ultraVariableFilters, ...variableFilters2]}
     return res
   }
 
