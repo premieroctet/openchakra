@@ -620,6 +620,14 @@ const buildHooks = (components: IComponents) => {
         const filterValue=c.props.filterValue2
         return [`${fieldName ? fieldName+'.' : ''}${filterAttribute}`, filterValue]
       })
+    const variableFilters2 = Object.values(components)
+    .filter(c => c.props.filterAttribute && c.props.filterValue && c.props.dataSource==dataProvider.id)
+    .map(c => {
+      const fieldName=computeDataFieldName(c, components, dataProvider.id)
+      const filterAttribute=c.props.filterAttribute2
+      const filterValue=c.props.filterValue2
+      return [`${fieldName ? fieldName+'.' : ''}${filterAttribute}`, filterValue]
+    })
     const ultraVariableFilters = Object.values(components)
       .filter(c => c.props.dataSource==dataProvider.id && lodash.range(5).some(idx => !!c.props[`filterComponent_${idx}`]))
       .map(c => {

@@ -332,6 +332,9 @@ const UserSchema = new Schema({
   diet_appointments_count: {
     type: Number,
   },
+  spoons_count: {
+    type: Number,
+  },
 }, {...schemaOptions, ...ROLE_DISCRIMINATOR})
 
 /* eslint-disable prefer-arrow-callback */
@@ -347,10 +350,6 @@ UserSchema.virtual('password2').get(function() {
 
 UserSchema.virtual('fullname').get(function() {
   return `${this.firstname || ''} ${this.lastname || ''}`
-})
-
-UserSchema.virtual('spoons_count').get(function() {
-  return null
 })
 
 UserSchema.virtual("surveys", {

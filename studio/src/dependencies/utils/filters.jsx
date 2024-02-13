@@ -124,10 +124,19 @@ export const getConditionsPropertyName = property => {
 }
 
 export const buildFilter = (dataSourceId, filterAttributes, componentsValues) => {
+  // componentsValues store comp-XXX_0_1_2 while componentName is the studio's one (i.e. comp-XXX)
+  const getComponentValue= compId => {
+    const val=Object.entries(componentsValues).find(([comp, value]) => comp.startsWith(compId))?.[1]
+    return val
+  }
+  const log=/comp-/.test(dataSourceId) ? console.log : () => {}
+  log('Building filter for', dataSourceId)
+  log('components values', componentsValues)
   const filters=filterAttributes[dataSourceId]
   const constants=filters?.constants?.map(([att, value]) => `filter.${att}=${value}`) || []
-  const variables=filters?.variables?.filter(([att, comp]) => ![null, undefined].includes(componentsValues[comp]))
-    .map(([att, comp]) => `filter.${att}=${componentsValues[comp]}`)  || []
+  const variables=filters?.variables?.filter(([att, comp]) => ![null, undefined].includes(getComponentValue(comp)))
+    .map(([att, comp]) => `filter.${att}=${getComponentValue(comp)}`)  || []
   const allFilters=[...constants, ...variables]
+  log('constants', constants, 'variables', variables)
   return allFilters.length>0 ? allFilters.join('&')+'&' : ''
 }

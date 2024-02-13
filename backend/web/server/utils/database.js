@@ -52,6 +52,7 @@ const extractFilters = params => {
     .pickBy((_, key) => FILTER_PATTERN.test(key))
     .mapKeys((_, key) => key.replace(FILTER_PATTERN, ''))
     .mapValues(v => lodash.isString(v) ? new RegExp(v, 'i') : v)
+  console.log('********** FILTERS', filters.value())
   return filters.value()
 }
 
@@ -947,10 +948,11 @@ const loadFromDb = ({model, fields, id, user, params={}}) => {
         return data
       }
       // TODO UGLY but user_surveys_progress does not return if not leaned
+      const localLean=LEAN_DATA || fields.includes('user_surveys_progress')
       console.time(`Loading model ${model}`)
       return buildQuery(model, id, fields, params)
         .then(data => {console.timeEnd(`Loading model ${model}`); return data})
-        .then(data => LEAN_DATA ? lean({model, data}) : data)
+        .then(data => localLean ? lean({model, data}) : data)
         .then(data => {console.time(`Compute model ${model}`); return data})
         .then(data => {
           if (id && data.length == 0) { throw new NotFoundError(`Can't find ${model}:${id}`) }
