@@ -52,7 +52,6 @@ const extractFilters = params => {
     .pickBy((_, key) => FILTER_PATTERN.test(key))
     .mapKeys((_, key) => key.replace(FILTER_PATTERN, ''))
     .mapValues(v => lodash.isString(v) ? new RegExp(v, 'i') : v)
-  console.log('********** FILTERS', filters.value())
   return filters.value()
 }
 

@@ -338,7 +338,7 @@ const UserSchema = new Schema({
   spoons_count: {
     type: Number,
   },
-}, {...schemaOptions, ...ROLE_DISCRIMINATOR})
+}, {...schemaOptions})
 
 /* eslint-disable prefer-arrow-callback */
 
