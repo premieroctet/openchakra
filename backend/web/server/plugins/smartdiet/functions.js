@@ -2037,7 +2037,7 @@ cron.schedule('0 0 1 * * *', async () => {
 })
 
 // return Appointment.exists({$or: [{diet: null},{user: null}]})
-Appointment.remove({coaching: null})
+!isDevelopment() && Appointment.remove({coaching: null})
   .then(() => Appointment.find({$or: [{diet: null},{user: null}]}).populate('coaching'))
   .then(appts => {
     console.log('DB to update:', !lodash.isEmpty(appts))
