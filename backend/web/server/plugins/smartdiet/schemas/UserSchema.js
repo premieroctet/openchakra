@@ -335,6 +335,9 @@ const UserSchema = new Schema({
   spoons_count: {
     type: Number,
   },
+  spoons_count: {
+    type: Number,
+  },
 }, {...schemaOptions, ...ROLE_DISCRIMINATOR})
 
 /* eslint-disable prefer-arrow-callback */
@@ -351,7 +354,6 @@ UserSchema.virtual('password2').get(function() {
 UserSchema.virtual('fullname').get(function() {
   return `${this.firstname || ''} ${this.lastname || ''}`
 })
-
 
 UserSchema.virtual("surveys", {
   ref: "userSurvey", // The Model to use

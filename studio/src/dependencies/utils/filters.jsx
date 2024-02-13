@@ -134,5 +134,6 @@ export const buildFilter = (dataSourceId, filterAttributes, componentsValues) =>
   const variables=filters?.variables?.filter(([att, comp]) => ![null, undefined].includes(getComponentValue(comp)))
     .map(([att, comp]) => `filter.${att}=${getComponentValue(comp)}`)  || []
   const allFilters=[...constants, ...variables]
+  log('constants', constants, 'variables', variables)
   return allFilters.length>0 ? allFilters.join('&')+'&' : ''
 }

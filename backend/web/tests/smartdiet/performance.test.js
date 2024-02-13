@@ -314,6 +314,15 @@ describe('Performance ', () => {
       .sort({firstname: 'desc'}).limit(20)
     console.log(users.map(u => u.fullname).join('\n'))
   }, 3500)
+  it('Must return keys progress', async () => {
+    const user=await User.findOne(USER_CRITERION)
+    const fields=`user_surveys_progress,user_surveys_progress.value_1,picture`.split(',')
+    const params={} //{'limit.user_surveys_progress':1, 'limit.user_surveys_progress': 1, limit: 30}
+    const keys=await loadFromDb({model: 'key', fields, user, params})
+    keys.every(k => expect(k.user_surveys_progress?.length).toBeGreaterThan(0))
+    const expectedStructure={date: expect.anything(), value_1: expect.anything()}
+    keys.every(k => k.user_surveys_progress.every(p => expect(p).toEqual(expect.objectContaining(expectedStructure))))
+  }, 1000)
 
   it.only('Should filter by fullname', async () => {
     const fields='fullname,email,picture,phone,company.name'.split(',')
@@ -322,6 +331,5 @@ describe('Performance ', () => {
     const patients=await loadFromDb({model: 'user', fields, params, user:diet})
     console.log(patients)
   })
-
 })
 
