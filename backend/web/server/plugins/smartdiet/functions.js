@@ -196,6 +196,11 @@ const filterDataUser = ({ model, data, id, user }) => {
 setFilterDataUser(filterDataUser)
 
 const preprocessGet = ({ model, fields, id, user, params }) => {
+  // TODO Totally ugly. When asked for chartPoint, the studio should also require 'date' attribute => to fix in the studio
+  const chartPointField=fields.find(v => /value_1/.test(v))
+  if (chartPointField) {
+    fields=[...fields, chartPointField.replace(/value_1/, 'date')]
+  }
   if (model == 'loggedUser') {
     model = 'user'
     id = user?._id || 'INVALIDID'
@@ -409,7 +414,6 @@ USER_MODELS.forEach(m => {
   declareEnumField({ model: m, field: 'role', enumValues: ROLES })
   declareEnumField({ model: m, field: 'gender', enumValues: GENDER })
   declareEnumField({ model: m, field: 'activity', enumValues: ACTIVITY })
-  declareVirtualField({ model: m, field: 'spoons_count', instance: 'Number' })
   declareVirtualField({
     model: m, field: '_all_contents', instance: 'Array',
     requires: 'dummy',

@@ -293,10 +293,20 @@ describe('Performance ', () => {
     expect(toCompute).toEqual(['users.contents'])
   }, 3500)
 
-  it.only('Must return stephanoe b appointments count', async () => {
+  it('Must return stephanoe b appointments count', async () => {
     const fields=['appointments_count']
     const [user]=await loadFromDb({model: 'user', fields: ['diet_appointments_count'], id: diet._id, user: diet})
   }, 3500)
+
+  it.only('Must return keys progress', async () => {
+    const user=await User.findOne(USER_CRITERION)
+    const fields=`user_surveys_progress,user_surveys_progress.value_1,picture`.split(',')
+    const params={} //{'limit.user_surveys_progress':1, 'limit.user_surveys_progress': 1, limit: 30}
+    const keys=await loadFromDb({model: 'key', fields, user, params})
+    keys.every(k => expect(k.user_surveys_progress?.length).toBeGreaterThan(0))
+    const expectedStructure={date: expect.anything(), value_1: expect.anything()}
+    keys.every(k => k.user_surveys_progress.every(p => expect(p).toEqual(expect.objectContaining(expectedStructure))))
+  }, 1000)
 
 })
 

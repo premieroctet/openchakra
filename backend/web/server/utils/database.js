@@ -409,7 +409,7 @@ const buildQuery = (model, id, fields, params) => {
     query=query.limit(currentLimit+1)
   }
   const populates=buildPopulates({modelName: model, fields:[...fields], filters, limits, params})
-  console.log(`Populates for ${model}/${fields} is ${JSON.stringify(populates, null, 2)}`)
+  // console.log(`Populates for ${model}/${fields} is ${JSON.stringify(populates)}`)
   query = query.populate(populates).sort(buildSort(params))
   return query
 }
@@ -916,10 +916,11 @@ const loadFromDb = ({model, fields, id, user, params={}}) => {
         return data
       }
       // TODO UGLY but user_surveys_progress does not return if not leaned
+      const localLean=LEAN_DATA || fields.includes('user_surveys_progress')
       console.time(`Loading model ${model}`)
       return buildQuery(model, id, fields, params)
         .then(data => {console.timeEnd(`Loading model ${model}`); return data})
-        .then(data => LEAN_DATA ? lean({model, data}) : data)
+        .then(data => localLean ? lean({model, data}) : data)
         .then(data => {console.time(`Compute model ${model}`); return data})
         .then(data => {
           if (id && data.length == 0) { throw new NotFoundError(`Can't find ${model}:${id}`) }

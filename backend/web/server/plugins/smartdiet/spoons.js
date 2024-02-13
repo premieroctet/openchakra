@@ -167,10 +167,6 @@ const getUserKeyTrophy = (userId, params, key) => {
 
 const getUserSpoons = (userId) => {
   return countUserSpoons(userId, null, null)
-    .then(res => {
-      console.log(res, 'spoons')
-      return res
-    })
 }
 
 const getUserKeySpoons = (userId, params, key) => {
