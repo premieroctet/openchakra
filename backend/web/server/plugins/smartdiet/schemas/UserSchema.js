@@ -334,7 +334,7 @@ const UserSchema = new Schema({
   },
   spoons_count: {
     type: Number,
-  }
+  },
 }, {...schemaOptions, ...ROLE_DISCRIMINATOR})
 
 /* eslint-disable prefer-arrow-callback */
@@ -637,11 +637,11 @@ UserSchema.virtual("diet_objectives", {
   foreignField: "diet_private" // is equal to foreignField
 });
 
-UserSchema.virtual("coachings", {
-  ref: "coaching", // The Model to use
-  localField: "_id", // Find in Model, where localField
-  foreignField: "user" // is equal to foreignField
-})
+// UserSchema.virtual("coachings", {
+//   ref: "coaching", // The Model to use
+//   localField: "_id", // Find in Model, where localField
+//   foreignField: "user" // is equal to foreignField
+// })
 
 UserSchema.virtual("latest_coachings", {
   ref: "coaching", // The Model to use
@@ -675,45 +675,19 @@ UserSchema.virtual("keys", {
   foreignField: "dummy", // is equal to foreignField
 })
 
-UserSchema.virtual("diet_appointments", {
-  ref: "appointment", // The Model to use
-  localField: "_id", // Find in Model, where localField
-  foreignField: "diet", // is equal to foreignField
-})
+// UserSchema.virtual("diet_appointments", {
+//   ref: "appointment", // The Model to use
+//   localField: "_id", // Find in Model, where localField
+//   foreignField: "diet", // is equal to foreignField
+// })
 
+// TODO this should work !!!
 // UserSchema.virtual("diet_appointments_count", {
 //   ref: "appointment", // The Model to use
 //   localField: "_id", // Find in Model, where localField
 //   foreignField: "diet", // is equal to foreignField
 //   count: true,
 // })
-
-// UserSchema.virtual("diet_current_future_appointments", {
-//   ref: "appointment", // The Model to use
-//   localField: "_id", // Find in Model, where localField
-//   foreignField: "diet", // is equal to foreignField
-// })
-
-/**
-UserSchema.virtual('diet_current_future_appointments', {localField:'tagada', foreignField:'tagada'}).get(function() {
-  const now=moment()
-  return lodash.flatten(this.diet_coachings?.map(c => c.appointments || []) || []).filter(a => now.isBefore(a.end_date))
-})
-*/
-
-/**
-// Returned availabilities/ranges are not store in database
-UserSchema.virtual('diet_patients', {localField:'tagada', foreignField:'tagada'}).get(function() {
-  //return lodash.uniqBy(this.diet_coachings?.map(c => c?.user), u => u?._id).filter(v => !!v)
-  return null
-})
-*/
-
-/**
-UserSchema.virtual('diet_patients_count', {localField:'tagada', foreignField:'tagada'}).get(function() {
-  return this.diet_patients?.length || 0
-})
-*/
 
 // Returned availabilities/ranges are not store in database
 UserSchema.virtual('imc', {localField:'tagada', foreignField:'tagada'}).get(function() {

@@ -18,6 +18,7 @@ const MONGOOSE_OPTIONS = {
   useFindAndModify: false,
 }
 
+const COLLATION={ locale: 'fr', strength: 2 }
 // Utilities
 mongoose.set('useFindAndModify', false)
 mongoose.set('useCreateIndex', true)
@@ -54,6 +55,14 @@ const extractFilters = params => {
   return filters.value()
 }
 
+const getCurrentFilter = (filters, modelName) => {
+  return _mapSortOrFilters(filters, modelName, 'dbFilter')
+}
+
+const getCurrentSort = (filters, modelName) => {
+  return _mapSortOrFilters(filters, modelName, 'dbSort')
+}
+
 /**
  * Build filters from attributues name and values
  * Return filter on:
@@ -61,17 +70,26 @@ const extractFilters = params => {
  *  - not virtual or computed attributes
  * Return sundefind if no filter
  */
-const getCurrentFilter = (filters, modelName) => {
+const _mapSortOrFilters = (filters, modelName, attribute) => {
   filters = lodash(filters)
     // Use 1st level filters
     .pickBy((_, key) => !/\./.test(key))
     // Filter by non virtual && non computed attributes
-    .pickBy((_, key) => {
+    .entries()
+    .map(([key, value]) => {
       const modelAtt = `${modelName}.${key}`
-      console.log(modelAtt)
-      return !lodash.get(DECLARED_VIRTUALS, modelAtt) && !lodash.get(COMPUTED_FIELDS_GETTERS, modelAtt)
+      const virtualOrComputed=lodash.get(DECLARED_VIRTUALS, modelAtt) || lodash.get(COMPUTED_FIELDS_GETTERS, modelAtt)
+      if (virtualOrComputed) {
+        const dbFilter=virtualOrComputed[attribute]
+        if (dbFilter) {
+          return dbFilter(value)
+        }
+        console.warn(`No ${attribute} on virtual or computed ${modelAtt}`)
+      }
+      return {[key]: value}
     })
-  return filters.isEmpty() ? undefined : filters.value()
+  const result=filters.size()==0 ?undefined : filters.size()==1 ? filters.value()[0] : {$and: filters.value()}
+  return result
 }
 
 const getSubFilters = (filters, attributeName) => {
@@ -91,6 +109,15 @@ const extractLimits = params => {
     .mapKeys((_, key) => key.replace(LIMIT_PATTERN, ''))
     .mapValues(v =>parseInt(v))
   return filters.value()
+}
+
+/** Extracts filters parameters from query params */
+const extractSorts = params => {
+  const SORT_PATTERN = /^sort(\.|$)/
+  let sorts = lodash(params)
+    .pickBy((_, key) => SORT_PATTERN.test(key))
+    .mapKeys((_, key) => key.replace(SORT_PATTERN, ''))
+  return sorts.value()
 }
 
 /** Extracts filters parameters from query params */
@@ -288,7 +315,7 @@ function handleReliesOn(directAttribute, relies_on, requiredFields) {
 }
 
 // TODO query.populates accepts an array of populates !!!!
-const buildPopulates = ({modelName, fields, filters, limits, parentField, params}) => {
+const buildPopulates = ({modelName, fields, filters, limits, sorts, parentField, params}) => {
   // Retain all ref fields
   const model=getModels()[modelName]
   if (!model) {
@@ -320,24 +347,26 @@ const buildPopulates = ({modelName, fields, filters, limits, parentField, params
 
   const pops=groupedAttributes.entries().map(([attributeName, fields]) => {
     const attType=attributes[attributeName].type
-    limits=getSubLimits(limits, attributeName)
-    filters=getSubFilters(filters, attributeName)
-    const limit=getCurrentLimit(limits)
-    const match=getCurrentFilter(filters, attType) 
+    const subLimits=getSubLimits(limits, attributeName)
+    const subFilters=getSubFilters(filters, attributeName)
+    const subSorts=getSubFilters(sorts, attributeName)
+    const limit=getCurrentLimit(subLimits)
+    const match=getCurrentFilter(subFilters, attType) 
+    const sort=getCurrentSort(subSorts, attType)
     const subPopulate=buildPopulates({
       modelName: attType, fields, parentField: `${parentField ? parentField+'.' : ''}${attributeName}`,
-      filters, limits, params,
+      filters:subFilters, sorts:subSorts, limits:subLimits, params,
     })
     // TODO Fix page number
     const pageParamName = `page.${parentField? parentField+'.' : ''}${attributeName}`
     const page=params?.[pageParamName] ? parseInt(params[pageParamName]) : 0
     const skip=page*limit
-    console.log('skip', skip)
     return {
       path: attributeName, 
       // select,
       match,
-      options: {limit, skip}, 
+      options: {limit: limit ? limit+1 :undefined, skip, sort},
+      collation: COLLATION, 
       populate: lodash.isEmpty(subPopulate)?undefined:subPopulate
     }
   })
@@ -389,19 +418,21 @@ const buildQuery = (model, id, fields, params) => {
   let criterion = id ? {_id: id} : {}
   const filters=extractFilters(params)
   const limits=extractLimits(params)
+  const sorts=extractSorts(params)
 
   // Add filter fields
   fields=getRequiredFields({model, fields:lodash.uniq([...fields, ...Object.keys(filters)])})
 
   const select=lodash.uniq(fields.map(f => f.split('.')[0]))
   const currentFilter=getCurrentFilter(filters, model)
-  console.log('current filter', currentFilter)
+  const currentSort=getCurrentSort(sorts, model)
   criterion={...criterion, ...currentFilter}
-  console.log('criterion is', criterion)
-  console.log('projection is', select)
-  console.log('limits is', limits)
+  console.log('Query', model, fields, ': filter', currentFilter, 'criterion', Object.keys(criterion), 'projection', select, 'limits', limits, 'sort', currentSort)
   let query = mongoose.connection.models[model].find(criterion, select)
-  query = query.collation({ locale: 'fr', strength: 2 })
+  query = query.collation(COLLATION)
+  if (currentSort) {
+    query=query.sort(currentSort)
+  }
   const currentLimit=getCurrentLimit(limits)
   if (currentLimit) {
     console.log('Setting limit', currentLimit, 'skipping', (params.page || 0)*currentLimit)

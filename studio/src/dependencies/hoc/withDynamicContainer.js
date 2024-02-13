@@ -74,7 +74,7 @@ const withDynamicContainer = Component => {
     limit = limit || DEFAULT_LIMIT
 
     const getPageIndexKey= () => {
-      return `${props.dataSourceId}${props.fullPath ? '.'+props.fullPath : ''}`
+      return `${props.dataSourceId.replace(/^comp-/, '')}${props.fullPath ? '.'+props.fullPath : ''}`
     }
 
     /** withMaskability */

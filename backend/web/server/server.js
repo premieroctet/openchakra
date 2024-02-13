@@ -133,6 +133,8 @@ require('./models/Job')
 require('./models/NutritionAdvice')
 require('./models/JoinReason')
 require('./models/Patient')
+require('./models/CurrentFutureAppointment')
+require('./models/PastApppointment')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 

@@ -163,9 +163,9 @@ describe('Performance ', () => {
 
   it('must return diet appointments', async () => {
     const dietUser=await User.findOne(DIET_CRITERION)
-    const [diet]=await loadFromDb({model: 'user', id: dietUser._id, fields: ['diet_appointments'], user: dietUser})
-    expect(diet.diet_appointments?.length).toBeGreaterThan(0)
-  }, 1000)
+    const appts=await loadFromDb({model: 'appointment', id: dietUser._id, fields: ['start_date'], user: dietUser})
+    expect(appts.length).toBeGreaterThan(0)
+  }, 2000)
 
   it('must load limits', async () => {
     const LIMIT=200
@@ -294,6 +294,7 @@ describe('Performance ', () => {
   }, 3500)
 
   it('Must return stephanoe b appointments count', async () => {
+  it('Must return stephanoe b appointments count', async () => {
     const fields=['appointments_count']
     const [user]=await loadFromDb({model: 'user', fields: ['diet_appointments_count'], id: diet._id, user: diet})
   }, 3500)
@@ -307,6 +308,13 @@ describe('Performance ', () => {
     const expectedStructure={date: expect.anything(), value_1: expect.anything()}
     keys.every(k => k.user_surveys_progress.every(p => expect(p).toEqual(expect.objectContaining(expectedStructure))))
   }, 1000)
+
+  it('Must query with case insensitive', async () => {
+    const users=await User.find({}, {firstname:1, lastname:1})
+      .collation({locale: 'fr', strength:2})
+      .sort({firstname: 'desc'}).limit(20)
+    console.log(users.map(u => u.fullname).join('\n'))
+  }, 3500)
 
 })
 
