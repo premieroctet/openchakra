@@ -10,7 +10,7 @@ forceDataModelSmartdiet()
 require('../../server/plugins/smartdiet/functions')
 
 const {getDataModel} = require('../../config/config')
-const {MONGOOSE_OPTIONS, loadFromDb, buildPopulates, getModel, getModels, getFieldsToCompute} = require('../../server/utils/database')
+const {MONGOOSE_OPTIONS, loadFromDb, buildPopulates, getModel, getModels, getFieldsToCompute, getFirstLevelFields, getNextLevelFields, getSecondLevelFields} = require('../../server/utils/database')
 const {ROLE_CUSTOMER, COMPANY_ACTIVITY, ROLE_EXTERNAL_DIET, ROLE_SUPER_ADMIN} = require('../../server/plugins/smartdiet/consts')
 
 const Appointment=require('../../server/models/Appointment')
@@ -332,7 +332,7 @@ describe('Performance ', () => {
     console.log(patients)
   })
 
-  it.only('Must handle sorts', async () => {
+  it('Must handle sorts', async () => {
     const user=await User.findOne(DIET_CRITERION)
     const id="65c1fa450ac08c025b15a1cf"
     const url='https://localhost:4201/myAlfred/api/studio/user/65c1fa450ac08c025b15a1cf/?fields=latest_coachings.food_documents.key.picture,latest_coachings.food_documents.type,latest_coachings.food_documents.url,latest_coachings.food_documents,latest_coachings.food_documents.name,latest_coachings.food_documents.key.name,latest_coachings.user.fullname,latest_coachings.user.company.name,latest_coachings.spent_credits,latest_coachings.remaining_credits,latest_coachings.mode,latest_coachings.user,latest_coachings,latest_coachings.reasons.name,latest_coachings.reasons,latest_coachings.quizz.key.picture,latest_coachings.quizz.key.name,latest_coachings.quizz.type,latest_coachings.quizz.name,latest_coachings.quizz,latest_coachings.appointments.coaching.food_documents,latest_coachings.appointments,latest_coachings.appointments.coaching.quizz_templates,latest_coachings.appointments.logbooks,latest_coachings.food_program&limit.latest_coachings.food_documents=1000&limit.latest_coachings=30&limit.latest_coachings.reasons=30&limit.latest_coachings.quizz=300&limit.latest_coachings.appointments=1&limit.latest_coachings.appointments=1&limit.latest_coachings.appointments=1&sort.latest_coachings.food_documents.key.order=asc&sort.latest_coachings.quizz.key.order=asc&sort.latest_coachings.appointments.creation_date=desc&sort.latest_coachings.appointments.start_date=desc&sort.latest_coachings.appointments.start_date=desc&filter.latest_coachings.food_documents.type=FOOD_DOCUMENT_TYPE_NUTRITION&'
@@ -342,5 +342,23 @@ describe('Performance ', () => {
     console.log(JSON.stringify(loaded, null,2))
     expect(true).toBeTruthy()
   })
+
+  it('Must properly compute this levell and next level fields', async() => {
+    const fields=`appointments.objectives.title,appointments.order,appointments_future.status,appointments_future.start_date`.split(',')
+    const expected=['objectives.title', 'order' ].sort()
+    const received=getSecondLevelFields(fields, 'appointments').sort()
+    expect(received).toEqual(expected)
+  })
+
+  it.only('Must load spent credits on coaching', async () => {
+    const user=await User.find(DIET_CRITERION)
+    const fields={'spent_credits':1}
+    const coaching_id='6572ab01265dbd0316504798'
+    const simpleLoad=await Coaching.findById(coaching_id, fields).populate('spent_credits')
+    expect(simpleLoad.spent_credits).toBeGreaterThan(100)
+    const [coaching]=await loadFromDb({model: 'coaching', id: coaching_id, fields:Object.keys(fields), user})
+    expect(coaching.spent_credits).toBeGreaterThan(100)
+  })
+
 })
 

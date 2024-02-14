@@ -108,6 +108,7 @@ const UserSchema = new Schema({
     enum: Object.keys(ROLES),
     default: ROLE_CUSTOMER,
     required: [true, 'Le rôle est obligatoire'],
+    index: true,
   },
   cguAccepted: {
     type: Boolean,
@@ -350,7 +351,7 @@ UserSchema.index(
 UserSchema.virtual('password2').get(function() {
 })
 
-UserSchema.virtual('fullname').get(function() {
+UserSchema.virtual('fullname', {localField: 'tagada', foreignField: 'tagada'}).get(function() {
   return `${this.firstname || ''} ${this.lastname || ''}`
 })
 

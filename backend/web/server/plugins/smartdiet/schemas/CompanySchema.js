@@ -74,7 +74,10 @@ const CompanySchema = new Schema(
       ref: 'target',
       required: false,
     }],
-    },
+    contents_count: {
+      type: Number,
+    }
+  },
   schemaOptions,
 )
 
@@ -144,11 +147,6 @@ CompanySchema.virtual('comments_count').get(function() {
       const count=lodash.filter(comments||[], c => c.user?.company?._id==this._id)?.length||0
       return count
     })
-})
-
-CompanySchema.virtual('contents_count').get(function() {
-  // TODO WTF
-  return 0
 })
 
 CompanySchema.virtual("children", {

@@ -780,7 +780,6 @@ declareVirtualField({
 declareVirtualField({ model: 'company', field: 'likes_count', instance: 'Number' })
 declareVirtualField({ model: 'company', field: 'comments_count', instance: 'Number' })
 declareVirtualField({ model: 'company', field: 'shares_count', instance: 'Number' })
-declareVirtualField({ model: 'company', field: 'contents_count', instance: 'Number' })
 declareVirtualField({ model: 'company', field: 'groups_count', instance: 'Number', requires: 'groups' })
 declareVirtualField({
   model: 'company', field: 'children', instance: 'Array', multiple: true,
@@ -1109,14 +1108,14 @@ declareVirtualField({
   requires: 'user.offer.coaching_credit,spent_credits,user.company.offers.coaching_credit,user.role'
 }
 )
-declareVirtualField({ model: 'coaching', field: 'spent_credits', instance: 'Number', requires: 'appointments' })
+declareVirtualField({ model: 'coaching', field: 'spent_credits', instance: 'Number'})
 
 declareVirtualField({
   model: 'coaching', field: 'remaining_nutrition_credits', instance: 'Number',
   requires: 'user.offer.nutrition_credit,spent_nutrition_credits,user.company.offers.nutrition_credit,user.role'
 }
 )
-declareVirtualField({ model: 'coaching', field: 'spent_nutrition_credits', instance: 'Number', requires: 'nutrition_advices' })
+declareVirtualField({ model: 'coaching', field: 'spent_nutrition_credits', instance: 'Number'})
 
 declareVirtualField({
   model: 'coaching', field: 'questions', instance: 'Array', multiple: true,
@@ -2036,7 +2035,7 @@ cron.schedule('0 0 1 * * *', async () => {
     .catch(console.error)
 })
 
-// return Appointment.exists({$or: [{diet: null},{user: null}]})
+// Set user & diet on appointments
 !isDevelopment() && Appointment.remove({coaching: null})
   .then(() => Appointment.find({$or: [{diet: null},{user: null}]}).populate('coaching'))
   .then(appts => {
@@ -2048,8 +2047,8 @@ cron.schedule('0 0 1 * * *', async () => {
       return app.save()
     }))
   })
-  .then(console.log)
-  .catch(console.error)
+  .then(() => console.log(`Update appointments with user & diet OK`))
+  .catch(err => console.error(`Update appointments with user & diet`, err))
 
 module.exports = {
   ensureChallengePipsConsistency,

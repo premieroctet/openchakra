@@ -113,8 +113,14 @@ CoachingSchema.virtual('remaining_credits').get(function() {
   return (this.user?.offer?.coaching_credit-this.spent_credits) || 0
 })
 
-CoachingSchema.virtual('spent_credits').get(function() {
-  return this.appointments?.length || 0
+CoachingSchema.virtual('spent_credits', {
+  ref: 'appointment',
+  localField: '_id',
+  foreignField: 'coaching',
+  options: {
+    match: {end_date: {$lt: moment()}} 
+  },
+  count: true,
 })
 
 // all diets (hidden)
@@ -199,11 +205,14 @@ CoachingSchema.virtual('nutrition_advices', {
   foreignField: 'coaching',
 })
 
-CoachingSchema.virtual('spent_nutrition_credits').get(function() {
-  return this.nutrition_advices?.length || 0
+CoachingSchema.virtual('spent_nutrition_credits', {
+  ref: 'nutritionAdvice',
+  localField: '_id',
+  foreignField: 'coaching',
+  count: true,
 })
 
-CoachingSchema.virtual('remaining_nutrition_credits').get(function() {
+CoachingSchema.virtual('remaining_nutrition_credits', {localField: 'tagada', foreignField: 'tagada'}).get(function() {
   if (this.user?.role!=ROLE_CUSTOMER) {
     return 0
   }

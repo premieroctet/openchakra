@@ -1,3 +1,4 @@
+import moment from 'moment'
 import {encode} from 'html-entities'
 import filter from 'lodash/filter'
 import isBoolean from 'lodash/isBoolean'
@@ -926,7 +927,8 @@ export const generateCode = async (
   :
   ''
   */
-  code = `import React, {useState, useEffect} from 'react';
+  const header=`/**\n* Generated from ${pageId} on ${moment().format('L LT')}\n*/`
+  code = `${header}\nimport React, {useState, useEffect} from 'react';
   import Filter from '../dependencies/custom-components/Filter/Filter';
   import {buildFilter} from '../dependencies/utils/filters'
   import omit from 'lodash/omit';

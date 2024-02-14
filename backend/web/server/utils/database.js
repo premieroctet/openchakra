@@ -336,7 +336,8 @@ const buildPopulates = ({modelName, fields, filters, limits, sorts, parentField,
       if (!attributes[attName]) { 
         throw new Error(`Attribute ${modelName}.${attName} unknown`)
       } 
-      return attributes[attName].ref===true
+      const key=`${modelName}.${attName}`
+      return attributes[attName].ref===true || !!lodash.get(DECLARED_VIRTUALS, key)
     })
     .mapValues(attributes => attributes.map(att => att.split('.').slice(1).join('.')).filter(v => !lodash.isEmpty(v)))
 
@@ -427,7 +428,7 @@ const buildQuery = (model, id, fields, params) => {
   const currentFilter=getCurrentFilter(filters, model)
   const currentSort=getCurrentSort(sorts, model)
   criterion={...criterion, ...currentFilter}
-  console.log('Query', model, fields, ': filter', JSON.stringify(currentFilter, null,2), 'criterion', Object.keys(criterion), 'projection', select, 'limits', limits, 'sort', currentSort)
+  // console.log('Query', model, fields, ': filter', JSON.stringify(currentFilter, null,2), 'criterion', Object.keys(criterion), 'projection', select, 'limits', limits, 'sort', currentSort)
   let query = mongoose.connection.models[model].find(criterion, select)
   query = query.collation(COLLATION)
   if (currentSort) {
@@ -440,7 +441,7 @@ const buildQuery = (model, id, fields, params) => {
     query=query.limit(currentLimit+1)
   }
   const populates=buildPopulates({modelName: model, fields:[...fields], filters, limits, params})
-  // console.log(`Populates for ${model}/${fields} is ${JSON.stringify(populates)}`)
+  // console.log(`Populates for ${model}/${fields} is ${JSON.stringify(populates,null,2)}`)
   query = query.populate(populates).sort(buildSort(params))
   return query
 }
@@ -558,9 +559,10 @@ function getSecondLevelFields(fields, f) {
   const key=[...fields, f].join('/')
   let result = secondLevelFieldsCache.get(key)
   if (!result) {
+    const regEx=new RegExp(`^${f}\\.`)
     result=fields
-      .filter(f2 => new RegExp(`^${f}\.`).test(f2))
-      .map(f2 => f2.replace(new RegExp(`^${f}\.`), ''))
+      .filter(f2 => regEx.test(f2))
+      .map(f2 => f2.replace(regEx, ''))
   
     secondLevelFieldsCache.set(key, result)
   }
@@ -631,6 +633,9 @@ const getFieldsToCompute = ({model, fields}) => {
   const thisLevelCompute=thisLevelFields.filter(f => !!lodash.get(COMPUTED_FIELDS_GETTERS, `${model}.${f}`))
   result.push(...thisLevelCompute)
   nextLevelFields.forEach(field => {
+    if (!modelDef.attributes[field]) {
+      throw new BadRequestError(`No type for ${key} ${field}`)
+    }
     const subModel=modelDef.attributes[field].type
     const nextFields=getSecondLevelFields(fields, field)
     result.push(...getFieldsToCompute({model: subModel, fields:nextFields}).map(f => `${field}.${f}`))
@@ -937,6 +942,13 @@ const display = data => {
   return data
 }
 
+const ensureUniqueDataFound = (id, data) => {
+  if (id && lodash.isEmpty(data)) {
+    throw new NotFoundError(`Can't find ${model}:${id}`)
+  }
+  return data
+}
+
 const loadFromDb = ({model, fields, id, user, params={}}) => {
   // Add filter fields to return them to client
   const filters=extractFilters(params)
@@ -951,14 +963,10 @@ const loadFromDb = ({model, fields, id, user, params={}}) => {
       console.time(`Loading model ${model}`)
       return buildQuery(model, id, fields, params)
         .then(data => {console.timeEnd(`Loading model ${model}`); return data})
+        .then(data => ensureUniqueDataFound(id, data))
         .then(data => localLean ? lean({model, data}) : data)
         .then(data => {console.time(`Compute model ${model}`); return data})
-        .then(data => {
-          if (id && data.length == 0) { throw new NotFoundError(`Can't find ${model}:${id}`) }
-          return Promise.all(data.map(d => {
-            return addComputedFields(fields,user._id, params, d, model)
-          }))
-        })
+        .then(data => Promise.all(data.map(d => addComputedFields(fields,user._id, params, d, model))))
         .then(data => {console.timeEnd(`Compute model ${model}`); return data})
         .then(data => {console.time(`Filtering model ${model}`); return data})
         .then(data => callFilterDataUser({model, data, id, user}))
@@ -1036,6 +1044,6 @@ module.exports = {
   setPostDeleteData,
   handleReliesOn,
   extractFilters, getCurrentFilter, getSubFilters, extractLimits, getSubLimits,
-  getFieldsToCompute,
+  getFieldsToCompute, getFirstLevelFields, getNextLevelFields, getSecondLevelFields,
 }
 
