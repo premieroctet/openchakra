@@ -327,7 +327,7 @@ const preCreate = ({ model, params, user }) => {
     if (![ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, ROLE_SUPPORT].includes(user.role)) {
       throw new ForbiddenError(`Seuls les rôles patient, diet et support peuvent prendre un rendez-vous`)
     }
-    let customer_id, diet_id
+    let customer_id, diet
     if (user.role != ROLE_CUSTOMER) {
       if (!params.user) { throw new BadRequestError(`L'id du patient doit être fourni`) }
       customer_id = params.user
@@ -339,7 +339,7 @@ const preCreate = ({ model, params, user }) => {
       model: 'user', id: customer_id,
       fields: [
         'latest_coachings.appointments', 'latest_coachings.reasons', 'latest_coachings.remaining_credits', 'latest_coachings.appointment_type',
-        'latest_coachings.nutrition_advices', 'latest_coachings.remaining_nutrition_credits', 'company.reasons', 'phone',
+        'latest_coachings.nutrition_advices', 'latest_coachings.remaining_nutrition_credits', 'company.reasons', 'phone', 'latest_coachings.diet'
       ],
       user,
     })
@@ -367,14 +367,16 @@ const preCreate = ({ model, params, user }) => {
           throw new ForbiddenError(`L'offre ne permet pas/plus de prendre un rendez-vous`)
         }
         // Check appointment to come
-        if (isAppointment && latest_coaching.appointments.find(a => moment(a.end_date).isAfter(moment()))) {
-          throw new ForbiddenError(`Il existe déjà un rendez-vous à venir`)
+        const nextAppt=isAppointment && latest_coaching.appointments.find(a => moment(a.end_date).isAfter(moment()))
+        if (nextAppt) {
+          throw new ForbiddenError(`Un rendez-vous est déjà prévu le ${moment(nextAppt.start_date).format('L à LT')}`)
         }
+        diet=latest_coaching.diet
         if (isAppointment) {
-          return { model, params: { coaching: latest_coaching._id, appointment_type: latest_coaching.appointment_type._id, ...params } }
+          return { model, params: { user: customer_id, diet, coaching: latest_coaching._id, appointment_type: latest_coaching.appointment_type._id, ...params } }
         }
         else { // Nutrition advice
-          return { model, params: { coaching: latest_coaching._id, ...params } }
+          return { model, params: { user: customer_id, diet, coaching: latest_coaching._id, ...params } }
         }
       })
   }
