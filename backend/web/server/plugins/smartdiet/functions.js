@@ -118,7 +118,7 @@ const {
 } = require('../agenda/smartagenda')
 
 const Category = require('../../models/Category')
-const { delayPromise } = require('../../utils/concurrency')
+const { delayPromise, runPromisesWithDelay } = require('../../utils/concurrency')
 const {
   getSmartAgendaConfig,
   isDevelopment,
@@ -1099,6 +1099,13 @@ declareVirtualField({
   },
 })
 declareVirtualField({
+  model: 'coaching', field: 'latest_appointments', instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: { ref: 'appointment' }
+  },
+})
+declareVirtualField({
   model: 'coaching', field: 'appointments_future', instance: 'Array', multiple: true,
   caster: {
     instance: 'ObjectID',
@@ -1733,11 +1740,12 @@ const logbooksConsistency = coaching_id => {
     { path: 'all_logbooks', match: logBooksFilter, populate: { path: 'logbook', populate: 'quizz' } },
   ])
     .then(coachings => {
-      return Promise.all(coachings.map(coaching => {
+      return runPromisesWithDelay(coachings.map((coaching, idx) => () => {
+        console.log(`Updating caoching`, coaching._id, idx, '/', coachings.length)
         const getLogbooksForDay = date => {
-          // Get the appontment juste before the date
+          // Get the appointment juste before the date
           const previous_appt = lodash(coaching.appointments)
-            .filter(a => a.end_date < date)
+            .filter(a => a.end_date < date.endOf('day'))
             .maxBy(a => a.start_date)
           const appt_logbooks = previous_appt ? [...previous_appt.logbooks] : []
           return Quizz.find({ type: QUIZZ_TYPE_LOGBOOK, default: true }).populate('questions')
@@ -1770,6 +1778,7 @@ const logbooksConsistency = coaching_id => {
             })
         }))
       }))
+      .then(console.log)
 
     })
 }

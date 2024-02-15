@@ -84,6 +84,18 @@ CoachingSchema.virtual('appointments', {
 
 /* eslint-disable prefer-arrow-callback */
 // Required for register validation only
+CoachingSchema.virtual('latest_appointments', {
+  ref: 'appointment',
+  localField: '_id',
+  foreignField: 'coaching',
+  options: { 
+    match: {start_date: {$lt: moment()} },
+    sort: { start_date: -1 }, limit:1 
+  },
+})
+
+/* eslint-disable prefer-arrow-callback */
+// Required for register validation only
 CoachingSchema.virtual('appointments_future', {
   ref: 'appointment',
   localField: '_id',

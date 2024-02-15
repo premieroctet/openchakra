@@ -422,7 +422,7 @@ const buildQuery = (model, id, fields, params) => {
   const sorts=extractSorts(params)
 
   // Add filter fields
-  fields=getRequiredFields({model, fields:lodash.uniq([...fields, ...Object.keys(filters)])})
+  fields=getRequiredFields({model, fields:lodash.uniq([...fields, ...Object.keys(filters), ...Object.keys(sorts)])})
 
   const select=lodash.uniq(fields.map(f => f.split('.')[0]))
   const currentFilter=getCurrentFilter(filters, model)
