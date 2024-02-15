@@ -288,6 +288,12 @@ const preprocessGet = ({ model, fields, id, user, params }) => {
         })
     }
   }
+
+  if (model=='diet') {
+    params['filter.role']=ROLE_EXTERNAL_DIET
+    model='user'
+  }
+
   return Promise.resolve({ model, fields, id, params })
 
 }
@@ -414,7 +420,7 @@ const postPutData = ({ model, params, id, value, data, user }) => {
 
 setPostPutData(postPutData)
 
-const USER_MODELS = ['user', 'loggedUser', 'patient']
+const USER_MODELS = ['user', 'loggedUser', 'patient', 'diet']
 USER_MODELS.forEach(m => {
   declareVirtualField({ model: m, field: 'fullname', instance: 'String', requires: 'firstname,lastname', 
     dbFilter: value => ({$or:[{firstname: value}, {lastname: value}]}),
