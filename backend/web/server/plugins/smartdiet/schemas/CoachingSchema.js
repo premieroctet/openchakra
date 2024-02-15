@@ -165,7 +165,7 @@ CoachingSchema.virtual('current_objectives', DUMMY_REF).get(function() {
 CoachingSchema.virtual('logbooks', DUMMY_REF).get(function() {
   const grouped=lodash(this.all_logbooks).sortBy(l => l.day).groupBy(l => l.day)
   const lbd=grouped.entries().map(([day, logbooks]) => mongoose.models.logbookDay({day, logbooks:logbooks?.map(fl => fl.logbook)}))
-  return lbd
+  return lbd.value()
 })
 
 // Returned availabilities are not store in database
