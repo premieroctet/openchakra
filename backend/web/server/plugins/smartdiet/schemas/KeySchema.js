@@ -39,39 +39,32 @@ const KeySchema = new Schema({
     type: Number,
   },
   user_surveys_progress: [{
-      type: Schema.Types.ObjectId,
-      ref: 'chartPoint',
-      required: false,
-    }],
+    type: Schema.Types.ObjectId,
+    ref: 'chartPoint',
+    required: false,
+  }],
+  user_spoons: {
+    type: Number,
+  },
+  user_spoons_str: {
+    type: String,
+  },
+  user_progress: {
+    type: Number,
+  },
+  user_read_contents: {
+    type: Number,
+  },
+  user_passed_challenges: {
+    type: Number
+  },
+  user_passed_webinars: {
+    type: Number,
+  },
+  trophy_picture: {
+    type: String,
+  },
 }, schemaOptions)
-
-KeySchema.virtual('user_spoons', DUMMY_REF).get(function(){
-  return null
-})
-
-KeySchema.virtual('user_spoons_str', DUMMY_REF).get(function(){
-  return null
-})
-
-KeySchema.virtual('user_progress', DUMMY_REF).get(function(){
-  return null
-})
-
-KeySchema.virtual('user_read_contents', DUMMY_REF).get(function(){
-  return null
-})
-
-KeySchema.virtual('user_passed_challenges', DUMMY_REF).get(function(){
-  return null
-})
-
-KeySchema.virtual('user_passed_webinars', DUMMY_REF).get(function(){
-  return null
-})
-
-KeySchema.virtual('trophy_picture', DUMMY_REF).get(function () {
-  return null
-})
 
 KeySchema.virtual('dummy', DUMMY_REF).get(function () {
   return 0

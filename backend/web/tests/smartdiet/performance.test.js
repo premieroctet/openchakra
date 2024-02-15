@@ -17,7 +17,7 @@ const Appointment=require('../../server/models/Appointment')
 const Coaching=require('../../server/models/Coaching')
 const User=require('../../server/models/User')
 const Company=require('../../server/models/Company')
-const { computeStatistics } = require('../../server/plugins/smartdiet/functions');
+const { computeStatistics, logbooksConsistency } = require('../../server/plugins/smartdiet/functions');
 const Patient = require('../../server/models/Patient');
 require('../../server/models/Answer')
 require('../../server/models/ResetToken')
@@ -129,6 +129,8 @@ const FIELDS=`groups_count,messages_count,users_count,user_women_count,webinars_
 const COMPANY_CRITERION = {name: /etude clinique/i}
 const DIET_CRITERION={email: 'stephanieb.smartdiet@gmail.com', role: ROLE_EXTERNAL_DIET}
 const USER_CRITERION={email: 'hello+user@wappizy.com', role: ROLE_CUSTOMER}
+
+jest.setTimeout(500000)
 
 describe('Performance ', () => {
 
@@ -360,8 +362,25 @@ describe('Performance ', () => {
     expect(coaching.spent_credits).toBeGreaterThan(100)
   })
 
-  it.only('Must check integrity', async () => {
+  it('Must check integrity', async () => {
     await checkIntegrity()
+  })
+
+  it('Update logbooks', async () => {
+    const coaching_id='65089ca2b74fb64fcd2d809a'
+    console.time('consitency')
+    // await logbooksConsistency(coaching_id)
+    await logbooksConsistency()
+    console.timeEnd('consitency')
+  })
+
+  it.only('Must count users and diets', async () => {
+    const user=await User.findOne({role: ROLE_SUPER_ADMIN})
+    const fields=['firstname']
+    const diets=await loadFromDb({model: 'diet', fields, user})
+    const users=await loadFromDb({model: 'user', fields, user})
+    console.log('diets', diets.length)
+    console.log('user', users.length)
   })
 
 })

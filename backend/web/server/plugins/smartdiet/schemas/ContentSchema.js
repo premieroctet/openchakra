@@ -94,7 +94,13 @@ const ContentSchema = new Schema({
   migration_id: {
     type: Number,
     required: false,
-  }
+  },
+  liked: {
+    type: Boolean,
+  },
+  pinned: {
+    type: Boolean,
+  },
 }, schemaOptions)
 
 ContentSchema.virtual('likes_count', DUMMY_REF).get(function() {
@@ -119,14 +125,6 @@ ContentSchema.virtual('comments_count', {
   match: {parent: null},
   count: true,
 });
-
-ContentSchema.virtual('liked', DUMMY_REF).get(function() {
-  return false
-})
-
-ContentSchema.virtual('pinned', DUMMY_REF).get(function() {
-  return false
-})
 
 ContentSchema.virtual("search_text", DUMMY_REF).get(function() {
   const attributes='name,contents'.split(',')

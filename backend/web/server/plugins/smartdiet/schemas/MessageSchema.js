@@ -35,14 +35,12 @@ const MessageSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'user',
   }],
+  liked: {
+    type: Boolean
+  },
+  pinned: {
+    type: Boolean
+  },
 }, schemaOptions)
-
-MessageSchema.virtual('liked', DUMMY_REF).get(function() {
-  return false
-})
-
-MessageSchema.virtual('pinned', DUMMY_REF).get(function() {
-  return false
-})
 
 module.exports = MessageSchema

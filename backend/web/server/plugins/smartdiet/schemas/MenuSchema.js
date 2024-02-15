@@ -31,7 +31,11 @@ const MenuSchema = new Schema({
   document: {
     type: String,
     required: false,
-  }
+  },
+  shopping_list: [{
+    type: Schema.Types.ObjectId,
+    ref: 'recipeIngredient',
+  }],
 },
 {...schemaOptions, ...EVENT_DISCRIMINATOR}
 )
@@ -49,9 +53,5 @@ MenuSchema.virtual("recipes", {
   localField: "_id", // Find in Model, where localField
   foreignField: "menu" // is equal to foreignField
 });
-
-MenuSchema.virtual("shopping_list", DUMMY_REF).get(function() {
-  return null
-})
 
 module.exports = MenuSchema

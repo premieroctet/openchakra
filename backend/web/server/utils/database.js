@@ -703,9 +703,9 @@ const declareComputedField = ({model, field, getterFn, setterFn}) => {
   if (!model || !field || !(getterFn || setterFn)) {
     throw new Error(`${model}.${field} compute delcaration requires model, field and at least getter or setter`)
   }
-  // if (!LEAN_DATA && lodash.get(DECLARED_VIRTUALS, `${model}.${field}`)) {
-  //   throw new Error(`Virtual ${model}.${field} can not be computed because data are not leaned, declare it as plain attribute`)
-  // }
+  if (!LEAN_DATA && lodash.get(DECLARED_VIRTUALS, `${model}.${field}`)) {
+    throw new Error(`Virtual ${model}.${field} can not be computed because data are not leaned, declare it as plain attribute`)
+  }
   if (getterFn) {
     lodash.set(COMPUTED_FIELDS_GETTERS, `${model}.${field}`, getterFn)
   }
@@ -715,9 +715,9 @@ const declareComputedField = ({model, field, getterFn, setterFn}) => {
 }
 
 const declareVirtualField=({model, field, ...rest}) => {
-  // if (!LEAN_DATA && lodash.get(COMPUTED_FIELDS_GETTERS, `${model}.${field}`)) {
-  //   throw new Error(`Virtual ${model}.${field} can not be computed because data are not leaned, declare it as plain attribute`)
-  // }
+  if (!LEAN_DATA && lodash.get(COMPUTED_FIELDS_GETTERS, `${model}.${field}`)) {
+    throw new Error(`Virtual ${model}.${field} can not be computed because data are not leaned, declare it as plain attribute`)
+  }
   const enumValues=rest.enumValues ? Object.keys(rest.enumValues) : undefined
   lodash.set(DECLARED_VIRTUALS, `${model}.${field}`, {path: field, ...rest, enumValues})
   if (!lodash.isEmpty(rest.enumValues)) {
@@ -959,7 +959,7 @@ const loadFromDb = ({model, fields, id, user, params={}}) => {
         return data
       }
       // TODO UGLY but user_surveys_progress does not return if not leaned
-      const localLean=LEAN_DATA || fields.includes('user_surveys_progress')
+      const localLean=LEAN_DATA || fields.includes('user_surveys_progress') || fields.some(f => /shopping_list/.test(f))
       console.time(`Loading model ${model}`)
       return buildQuery(model, id, fields, params)
         .then(data => {console.timeEnd(`Loading model ${model}`); return data})

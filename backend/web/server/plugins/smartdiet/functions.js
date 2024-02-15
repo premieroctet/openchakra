@@ -168,6 +168,7 @@ const Message = require('../../models/Message')
 const Lead = require('../../models/Lead')
 const cron = require('../../utils/cron')
 const Group = require('../../models/Group')
+const MenuSchema = require('./schemas/MenuSchema')
 
 const filterDataUser = ({ model, data, id, user }) => {
   if (model == 'offer' && !id) {
@@ -712,7 +713,6 @@ USER_MODELS.forEach(m => {
       options: { ref: 'appointment' }
     },
   })
-  declareVirtualField({model: m, field: 'diet_appointments_count', instance: 'Number', requires: 'firstname'})
   declareComputedField({model: 'user', field: 'diet_appointments_count', getterFn: async (userId, params, data) => Appointment.count({diet: userId})})
   declareVirtualField({
     model: m, field: 'diet_current_future_appointments', instance: 'Array',
@@ -722,23 +722,6 @@ USER_MODELS.forEach(m => {
       options: { ref: 'appointment' }
     },
   })
-  // declareVirtualField({
-  //   model: m, field: 'diet_appointments', instance: 'Array',
-  //   relies_on: 'diet_coachings.appointments',
-  //   multiple: true,
-  //   caster: {
-  //     instance: 'ObjectID',
-  //     options: { ref: 'appointment' }
-  //   },
-  // })
-  // declareVirtualField({
-  //   model: m, field: 'diet_current_future_appointments', instance: 'Array',
-  //   multiple: true,
-  //   caster: {
-  //     instance: 'ObjectID',
-  //     options: { ref: 'appointment' }
-  //   },
-  // })
   declareEnumField({ model: m, field: 'registration_warning', enumValues: REGISTRATION_WARNING })
   declareEnumField({ model: m, field: 'activities', enumValues: DIET_ACTIVITIES })
   declareVirtualField({
@@ -836,8 +819,6 @@ declareVirtualField({
     options: { ref: 'comment' }
   },
 })
-declareVirtualField({ model: 'content', field: 'liked', instance: 'Boolean', requires: 'likes' })
-declareVirtualField({ model: 'content', field: 'pinned', instance: 'Boolean', requires: 'pins' })
 declareVirtualField({ model: 'content', field: 'comments_count', instance: 'Number', requires: 'comments' })
 declareVirtualField({ model: 'content', field: 'search_text', instance: 'String', requires: 'name,contents' })
 
@@ -882,14 +863,6 @@ EVENT_MODELS.forEach(m => {
 })
 
 declareEnumField({ model: 'individualChallenge', field: 'hardness', enumValues: HARDNESS })
-
-declareVirtualField({
-  model: 'individualChallenge', field: 'trophy_picture',
-  instance: 'String', requires: 'trophy_on_picture,trophy_off_picture,spoons_count_for_trophy'
-})
-declareVirtualField({
-  model: 'individualChallenge', field: 'obtained', instance: 'Boolean', requires: 'spoons_count_for_trophy'
-})
 
 declareEnumField({ model: 'category', field: 'type', enumValues: TARGET_TYPE })
 declareVirtualField({
@@ -954,15 +927,6 @@ declareVirtualField({
     options: { ref: 'menuRecipe' }
   },
 })
-declareVirtualField({
-  model: 'menu', field: 'shopping_list', instance: 'Array',
-  requires: 'recipes.recipe.ingredients.ingredient.name',
-  multiple: true,
-  caster: {
-    instance: 'ObjectID',
-    options: { ref: 'recipeIngredient' }
-  },
-})
 declareVirtualField({ model: 'menu', field: 'people_count', instance: 'Number' })
 
 declareEnumField({ model: 'ingredient', field: 'unit', enumValues: UNIT })
@@ -976,19 +940,9 @@ declareVirtualField({
     options: { ref: 'message' }
   },
 })
-declareVirtualField({
-  model: 'group', field: 'pinned_messages', instance: 'Array',
-  requires: 'dummy,messages.pins,messages.pinned', multiple: true,
-  caster: {
-    instance: 'ObjectID',
-    options: { ref: 'message' }
-  },
-})
 declareVirtualField({ model: 'group', field: 'users_count', instance: 'Number' })
 declareVirtualField({ model: 'group', field: 'messages_count', instance: 'Number', requires: 'messages' })
 
-declareVirtualField({ model: 'message', field: 'pinned', instance: 'Boolean', requires: 'pins' })
-declareVirtualField({ model: 'message', field: 'liked', instance: 'Boolean', requires: 'likes' })
 declareVirtualField({ model: 'message', field: 'likes_count', instance: 'Number', requires: 'likes' })
 
 declareVirtualField({
@@ -1000,21 +954,6 @@ declareVirtualField({
   },
 })
 
-declareVirtualField({ model: 'key', field: 'trophy_picture', instance: 'String', requires: 'spoons_count_for_trophy,trophy_on_picture,trophy_off_picture' })
-declareVirtualField({ model: 'key', field: 'user_spoons', instance: 'Number' })
-declareVirtualField({ model: 'key', field: 'user_spoons_str', instance: 'String' })
-declareVirtualField({ model: 'key', field: 'user_progress', instance: 'Number' })
-declareVirtualField({ model: 'key', field: 'user_read_contents', instance: 'Number' })
-// declareVirtualField({
-//   model: 'key', field: 'user_surveys_progress', instance: 'Array',
-//   multiple: true,
-//   caster: {
-//     instance: 'ObjectID',
-//     options: { ref: 'chartPoint' }
-//   },
-// })
-declareVirtualField({ model: 'key', field: 'user_passed_challenges', instance: 'Number', requires: 'passed_events' })
-declareVirtualField({ model: 'key', field: 'user_passed_webinars', instance: 'Number', requires: 'passed_events' })
 declareVirtualField({ model: 'key', field: 'dummy', instance: 'Number'})
 
 
@@ -1433,23 +1372,25 @@ const getPinnedMessages = (userId, params, data) => {
 }
 
 const getMenuShoppingList = (userId, params, data) => {
-  console.log(params)
-  const people_count = parseInt(params.people_count) || MENU_PEOPLE_COUNT
-  const ratio = people_count / MENU_PEOPLE_COUNT
-  const ingredients = lodash.flatten(data?.recipes.map(r => r.recipe?.ingredients).filter(v => !!v))
-  const ingredientsGroup = lodash.groupBy(ingredients, i => i.ingredient._id)
-  const result = lodash(ingredientsGroup)
-    .mapValues(ingrs => ({ ingredient: ingrs[0].ingredient, quantity: lodash.sumBy(ingrs, 'quantity') * ratio }))
-    .values()
-    .map(({ ingredient, quantity }) => {
-      const [newQuantity, newUunit] = convertQuantity(quantity, ingredient.unit)
-      return ({
-        ingredient: { ...ingredient, unit: newUunit },
-        quantity: parseInt(newQuantity * 100) / 100,
-      })
+  return mongoose.models.menu.findById(data._id).populate({path: 'recipes', populate: {path: 'recipe', populate: {path: 'ingredients', populate: {path: 'ingredient'}}}}).lean()
+    .then(data => {
+      const people_count = parseInt(params.people_count) || MENU_PEOPLE_COUNT
+      const ratio = people_count / MENU_PEOPLE_COUNT
+      const ingredients = lodash.flatten(data?.recipes.map(r => r.recipe?.ingredients).filter(v => !!v))
+      const ingredientsGroup = lodash.groupBy(ingredients, i => i.ingredient._id)
+      const result = lodash(ingredientsGroup)
+        .mapValues(ingrs => ({ ingredient: ingrs[0].ingredient, quantity: lodash.sumBy(ingrs, 'quantity') * ratio }))
+        .values()
+        .map(({ ingredient, quantity }) => {
+          const [newQuantity, newUunit] = convertQuantity(quantity, ingredient.unit)
+          return ({
+            ingredient: { ...ingredient, unit: newUunit },
+            quantity: parseInt(newQuantity * 100) / 100,
+          })
+        })
+        .value()
+      return Promise.resolve(result)
     })
-    .value()
-  return Promise.resolve(result)
 }
 
 const getUserKeySpoonsStr = (userId, params, data) => {
