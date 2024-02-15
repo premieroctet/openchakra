@@ -998,6 +998,24 @@ const setImportDataFunction = ({model, fn}) => {
   DATA_IMPORT_FN[model]=fn
 }
 
+const DUMMY_REF={localField: 'tagada', foreignField: 'tagada'}
+
+const checkIntegrity = () => {
+  const errors=[]
+  const models=mongoose.models
+  Object.entries(models).forEach(([modelName, model]) => {
+    const schema=model.schema
+    Object.values(schema.virtuals).filter(v => v.path!='id').forEach(virtual => {
+      if (!virtual.options?.localField || !virtual.options?.foreignField) {
+        errors.push(`Model "${modelName}" virtual attribute "${virtual.path}" requires localField and foreignField`)
+      }
+    })
+  })
+  if (!lodash.isEmpty(errors)) {
+    throw new Error(errors.join('\n'))
+  }
+}
+
 module.exports = {
   hasRefs,
   MONGOOSE_OPTIONS,
@@ -1045,5 +1063,6 @@ module.exports = {
   handleReliesOn,
   extractFilters, getCurrentFilter, getSubFilters, extractLimits, getSubLimits,
   getFieldsToCompute, getFirstLevelFields, getNextLevelFields, getSecondLevelFields,
+  DUMMY_REF, checkIntegrity,
 }
 

@@ -1035,7 +1035,7 @@ declareVirtualField({
     options: { ref: 'comment' }
   },
 })
-declareVirtualField({ model: 'pip', field: 'comments_count', instance: 'Number', requires: 'comments' })
+declareVirtualField({ model: 'pip', field: 'comments_count', instance: 'Number'})
 
 declareVirtualField({
   model: 'team', field: 'members', instance: 'Array', multiple: true,

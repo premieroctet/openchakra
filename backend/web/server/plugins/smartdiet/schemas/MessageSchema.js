@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const {schemaOptions} = require('../../../utils/schemas')
+const { DUMMY_REF } = require('../../../utils/database')
 const Schema = mongoose.Schema
 
 const MessageSchema = new Schema({
@@ -36,11 +37,11 @@ const MessageSchema = new Schema({
   }],
 }, schemaOptions)
 
-MessageSchema.virtual('liked').get(function() {
+MessageSchema.virtual('liked', DUMMY_REF).get(function() {
   return false
 })
 
-MessageSchema.virtual('pinned').get(function() {
+MessageSchema.virtual('pinned', DUMMY_REF).get(function() {
   return false
 })
 

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const moment=require('moment')
 const {schemaOptions} = require('../../../utils/schemas')
-const {idEqual}=require('../../../utils/database')
+const {idEqual, DUMMY_REF}=require('../../../utils/database')
 const {
   APPOINTMENT_CURRENT,
   APPOINTMENT_PAST,
@@ -79,15 +79,12 @@ const AppointmentSchema = new Schema({
   },
   }, schemaOptions)
 
-AppointmentSchema.virtual('order').get(function() {
+AppointmentSchema.virtual('order', DUMMY_REF).get(function() {
   return lodash.sortBy(this.coaching?.appointments||[], 'start_date')
    .findIndex(app => idEqual(app._id, this._id))+1
 })
 
-AppointmentSchema.virtual('status').get(function() {
-  // if (!this.start_date || !this.end_date) {
-  //   throw new Error('No start/end date')
-  // }
+AppointmentSchema.virtual('status', DUMMY_REF).get(function() {
   const now=moment()
   const start=moment(this.start_date)
   const end=moment(this.end_date)

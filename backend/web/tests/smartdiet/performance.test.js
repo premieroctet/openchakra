@@ -10,7 +10,7 @@ forceDataModelSmartdiet()
 require('../../server/plugins/smartdiet/functions')
 
 const {getDataModel} = require('../../config/config')
-const {MONGOOSE_OPTIONS, loadFromDb, buildPopulates, getModel, getModels, getFieldsToCompute, getFirstLevelFields, getNextLevelFields, getSecondLevelFields} = require('../../server/utils/database')
+const {MONGOOSE_OPTIONS, loadFromDb, buildPopulates, getModel, getModels, getFieldsToCompute, getFirstLevelFields, getNextLevelFields, getSecondLevelFields, checkIntegrity} = require('../../server/utils/database')
 const {ROLE_CUSTOMER, COMPANY_ACTIVITY, ROLE_EXTERNAL_DIET, ROLE_SUPER_ADMIN} = require('../../server/plugins/smartdiet/consts')
 
 const Appointment=require('../../server/models/Appointment')
@@ -350,7 +350,7 @@ describe('Performance ', () => {
     expect(received).toEqual(expected)
   })
 
-  it.only('Must load spent credits on coaching', async () => {
+  it('Must load spent credits on coaching', async () => {
     const user=await User.find(DIET_CRITERION)
     const fields={'spent_credits':1}
     const coaching_id='6572ab01265dbd0316504798'
@@ -358,6 +358,10 @@ describe('Performance ', () => {
     expect(simpleLoad.spent_credits).toBeGreaterThan(100)
     const [coaching]=await loadFromDb({model: 'coaching', id: coaching_id, fields:Object.keys(fields), user})
     expect(coaching.spent_credits).toBeGreaterThan(100)
+  })
+
+  it.only('Must check integrity', async () => {
+    await checkIntegrity()
   })
 
 })

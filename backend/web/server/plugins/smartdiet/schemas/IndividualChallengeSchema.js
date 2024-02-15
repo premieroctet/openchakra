@@ -5,6 +5,7 @@ const {
   HARDNESS,
 } = require('../consts')
 const {schemaOptions} = require('../../../utils/schemas')
+const { DUMMY_REF } = require('../../../utils/database')
 
 const Schema = mongoose.Schema
 
@@ -51,7 +52,7 @@ const IndividualChallengeSchema = new Schema({
 
 /* eslint-disable prefer-arrow-callback */
 
-IndividualChallengeSchema.virtual('type').get(function() {
+IndividualChallengeSchema.virtual('type', DUMMY_REF).get(function() {
   return EVENT_IND_CHALLENGE
 })
 

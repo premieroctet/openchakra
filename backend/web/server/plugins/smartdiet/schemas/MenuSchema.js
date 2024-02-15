@@ -8,6 +8,7 @@ const {
 const mongoose = require('mongoose')
 const bcrypt=require('bcryptjs')
 const {schemaOptions} = require('../../../utils/schemas')
+const { DUMMY_REF } = require('../../../utils/database')
 
 const Schema = mongoose.Schema
 
@@ -39,7 +40,7 @@ MenuSchema.virtual('type').get(function() {
   return EVENT_MENU
 })
 
-MenuSchema.virtual('people_count').get(function() {
+MenuSchema.virtual('people_count', DUMMY_REF).get(function() {
   return MENU_PEOPLE_COUNT
 })
 
@@ -49,7 +50,7 @@ MenuSchema.virtual("recipes", {
   foreignField: "menu" // is equal to foreignField
 });
 
-MenuSchema.virtual("shopping_list", {localField: 'tagada', foreignField: 'tagada'}).get(function() {
+MenuSchema.virtual("shopping_list", DUMMY_REF).get(function() {
   return null
 })
 

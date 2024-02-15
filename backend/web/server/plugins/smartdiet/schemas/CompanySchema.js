@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const {schemaOptions} = require('../../../utils/schemas')
 const lodash=require('lodash')
 const {COMPANY_ACTIVITY, COMPANY_SIZE}=require('../consts')
+const { DUMMY_REF } = require('../../../utils/database')
 
 const Schema = mongoose.Schema
 
@@ -116,7 +117,7 @@ CompanySchema.virtual('groups_count', {localField: 'tagada', foreignField: 'taga
   return this.groups?.length || 0
 })
 
-CompanySchema.virtual('likes_count').get(function() {
+CompanySchema.virtual('likes_count', DUMMY_REF).get(function() {
   return mongoose.model('content').find()
     .populate('likes')
     .then(contents => {
@@ -128,7 +129,7 @@ CompanySchema.virtual('likes_count').get(function() {
     })
 })
 
-CompanySchema.virtual('shares_count').get(function() {
+CompanySchema.virtual('shares_count', DUMMY_REF).get(function() {
   return mongoose.model('content').find()
     .populate('shares')
     .then(contents => {
@@ -140,7 +141,7 @@ CompanySchema.virtual('shares_count').get(function() {
     })
 })
 
-CompanySchema.virtual('comments_count').get(function() {
+CompanySchema.virtual('comments_count', DUMMY_REF).get(function() {
   return mongoose.model('comment').find({pip: null})
     .populate('user')
     .then(comments => {

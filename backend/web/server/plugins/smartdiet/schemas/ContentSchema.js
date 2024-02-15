@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const bcrypt=require('bcryptjs')
 const {HOME_STATUS, CONTENTS_TYPE} = require('../consts')
 const {schemaOptions} = require('../../../utils/schemas')
+const { DUMMY_REF } = require('../../../utils/database')
 
 const Schema = mongoose.Schema
 
@@ -96,11 +97,11 @@ const ContentSchema = new Schema({
   }
 }, schemaOptions)
 
-ContentSchema.virtual('likes_count').get(function() {
+ContentSchema.virtual('likes_count', DUMMY_REF).get(function() {
   return this.likes?.length || 0
 })
 
-ContentSchema.virtual('shares_count').get(function() {
+ContentSchema.virtual('shares_count', DUMMY_REF).get(function() {
   return this.shares?.length || 0
 })
 
@@ -111,19 +112,23 @@ ContentSchema.virtual('comments', {
   match: {parent: null},
 });
 
-ContentSchema.virtual('comments_count').get(function() {
-  return this.comments?.length || 0
-})
+ContentSchema.virtual('comments_count', {
+  ref: "comment", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "content", // is equal to foreignField
+  match: {parent: null},
+  count: true,
+});
 
-ContentSchema.virtual('liked').get(function() {
+ContentSchema.virtual('liked', DUMMY_REF).get(function() {
   return false
 })
 
-ContentSchema.virtual('pinned').get(function() {
+ContentSchema.virtual('pinned', DUMMY_REF).get(function() {
   return false
 })
 
-ContentSchema.virtual("search_text").get(function() {
+ContentSchema.virtual("search_text", DUMMY_REF).get(function() {
   const attributes='name,contents'.split(',')
   let values=attributes.map(att => this[att])
   values=values.filter(v=>!!v)

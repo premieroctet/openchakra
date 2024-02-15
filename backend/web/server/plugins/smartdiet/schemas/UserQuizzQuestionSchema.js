@@ -3,7 +3,7 @@ const {
   ANSWER_STATUS_UNCORRECT,
   SURVEY_ANSWER
 } = require('../consts')
-const { idEqual } = require('../../../utils/database')
+const { idEqual, DUMMY_REF } = require('../../../utils/database')
 const mongoose = require('mongoose')
 const {schemaOptions} = require('../../../utils/schemas')
 
@@ -44,7 +44,7 @@ const UserQuizzQuestionSchema = new Schema({
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
-UserQuizzQuestionSchema.virtual('order', {localField:'tagada', foreigneField: 'tagada'}).get(function() {
+UserQuizzQuestionSchema.virtual('order', DUMMY_REF).get(function() {
   return 0
 })
 
@@ -55,7 +55,7 @@ UserQuizzQuestionSchema.virtual("multiple_answers", {
 });
 
 // Message depending on success/error
-UserQuizzQuestionSchema.virtual("answer_status").get(function()  {
+UserQuizzQuestionSchema.virtual("answer_status", DUMMY_REF).get(function()  {
   if (this.single_enum_answer && this.quizz_question.correct_answer) {
     const correct=idEqual(this.single_enum_answer._id, this.quizz_question.correct_answer._id)
     return correct ? ANSWER_STATUS_CORRECT : ANSWER_STATUS_UNCORRECT
@@ -63,7 +63,7 @@ UserQuizzQuestionSchema.virtual("answer_status").get(function()  {
 })
 
 // Message depending on success/error
-UserQuizzQuestionSchema.virtual("answer_message").get(function()  {
+UserQuizzQuestionSchema.virtual("answer_message", DUMMY_REF).get(function()  {
   const question=this.quizz_question
   if (!question) {
     //console.warn(`${this._id}:could not get quizz_question`)

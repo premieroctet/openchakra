@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const lodash=require('lodash')
 const {schemaOptions} = require('../../../utils/schemas')
+const { DUMMY_REF } = require('../../../utils/database')
 
 const Schema = mongoose.Schema
 
@@ -23,12 +24,12 @@ ChallengePipSchema.virtual('userPips', {
   foreignField: 'pip',
 })
 
-ChallengePipSchema.virtual('spoons').get(function() {
+ChallengePipSchema.virtual('spoons', DUMMY_REF).get(function() {
   return lodash(this.userPips || []).sumBy(up => up.valid)*this.pip.spoons
 })
 
 // Pips to validate by diet
-ChallengePipSchema.virtual('pendingUserPips', {localField:'tagada', foreignField:'tagada'}).get(function() {
+ChallengePipSchema.virtual('pendingUserPips', DUMMY_REF).get(function() {
   return lodash(this.userPips || []).filter(up => !!up.proof && !up.valid)
 })
 
