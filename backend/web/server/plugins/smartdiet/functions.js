@@ -270,8 +270,8 @@ const preprocessGet = ({ model, fields, id, user, params }) => {
         const convs = lodash(partnerMessages)
           .values()
           .map(msgs => { const partner = getPartner(msgs[0], user); return ({ _id: partner._id, partner, messages: msgs }) })
-          .sortBy(CREATED_AT_ATTRIBUTE, 'asc')
-        return { model, fields, id, data: convs }
+          .orderBy(conv => lodash.maxBy(conv.messages, CREATED_AT_ATTRIBUTE)?.[CREATED_AT_ATTRIBUTE], 'desc')
+        return { model, fields, id, data: convs.value() }
       })
   }
 

@@ -19,6 +19,7 @@ const User=require('../../server/models/User')
 const Company=require('../../server/models/Company')
 const { computeStatistics, logbooksConsistency } = require('../../server/plugins/smartdiet/functions');
 const Patient = require('../../server/models/Patient');
+const { CREATED_AT_ATTRIBUTE } = require('../../utils/consts');
 require('../../server/models/Answer')
 require('../../server/models/ResetToken')
 require('../../server/models/Program')
@@ -383,7 +384,7 @@ describe('Performance ', () => {
     console.log('user', users.length)
   })
 
-  it.only('Must return passed individual challenges', async() => {
+  it('Must return passed individual challenges', async() => {
     const user=await User.findOne(USER_CRITERION)
     const urlOk='https://localhost:4201/myAlfred/api/studio/loggedUser/?fields=individual_challenges.name,individual_challenges.description,collective_challenges.start_date,collective_challenges.end_date,collective_challenges.name,collective_challenges.picture,passed_individual_challenges.trophy_picture,passed_individual_challenges.name,passed_individual_challenges,collective_challenges,individual_challenges.key.picture,individual_challenges,available_menus.picture,available_menus.name,available_menus.start_date,available_menus.end_date,available_menus,past_menus,future_menus,individual_challenges.trick,passed_individual_challenges.description,past_webinars.duration,available_menus.document,future_menus.picture,future_menus.name,future_menus.start_date,future_menus.end_date,future_menus.document,past_menus.picture,past_menus.name,past_menus.start_date,past_menus.end_date,past_menus.document,individual_challenges.status,individual_challenges.hardness,available_webinars.key.picture,available_webinars.picture,available_webinars.start_date,available_webinars.end_date,available_webinars.duration,available_webinars.name,available_webinars.description,available_webinars&limit.company.groups=30&limit=30&limit.past_webinars=30&limit.passed_individual_challenges=30&limit.collective_challenges=1&limit.individual_challenges=1'
     const urlNOK=`https://localhost:4201/myAlfred/api/studio/loggedUser/?fields=surveys.questions,surveys,passed_individual_challenges,passed_individual_challenges.trophy_picture,passed_individual_challenges.name,measures,picture&limit.surveys.questions=30&limit.surveys=1&limit.passed_individual_challenges=30&limit=30&limit=30&limit=30&sort.surveys.questions.order=asc&sort.surveys.update_date=desc&`
@@ -397,5 +398,12 @@ describe('Performance ', () => {
       expect(data.passed_individual_challenges.length).toEqual(4)
     }
   })
+
+  it.only('Must sort messages', async() => {
+    const user=await User.findOne(DIET_CRITERION)
+    const convs=await loadFromDb({model: 'conversation', fields: ['partner.fullname,messages.creation_date'], user})
+    console.log(convs.map(c => [lodash.maxBy(c.messages, CREATED_AT_ATTRIBUTE)?.[CREATED_AT_ATTRIBUTE], c.partner?.fullname] ))
+  })
+
 })
 
