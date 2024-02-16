@@ -1,3 +1,4 @@
+import moment from 'moment'
 import {encode} from 'html-entities'
 import filter from 'lodash/filter'
 import isBoolean from 'lodash/isBoolean'
@@ -18,8 +19,10 @@ import {
   SOURCE_TYPE,
   TEXT_TYPE,
   UPLOAD_TYPE,
+  computeDataFieldName,
   getDataProviderDataType,
   getFieldsForDataProvider,
+  getLimitsForDataProvider,
   getParentOfType,
   hasParentType,
   isSingleDataPage,
@@ -106,6 +109,7 @@ const getDynamicType = (comp: IComponent) => {
   if (GROUP_TYPE.includes(comp.type)) {
     return comp.type
   }
+  return null
   throw new Error(`No dynamic found for ${comp.type}`)
 }
 
@@ -208,7 +212,11 @@ const buildBlock = ({
       if (isFilterComponent(childComponent, components)) {
         propsContent += ` setComponentValue={setComponentValue} `
       }
-
+      if (getDynamicType(childComponent)=='Container' && childComponent.props.dataSource) {
+        propsContent += ` fullPath="${computeDataFieldName(childComponent, components, childComponent.props.dataSource) || ''}"`
+        propsContent += ` pagesIndex={pagesIndex} `
+        propsContent += ` setPagesIndex={setPagesIndex} `
+      }
       // Always create lazy Tabs
       if (childComponent.type=='Tabs') {
         propsContent+=" isLazy "
@@ -571,7 +579,10 @@ const buildFilterStates = (components: IComponents) => {
   return filterComponents
     .map(c => {
       const stateName: any = c.id.replace(/^comp-/, '')
-      return `const [${stateName}, set${stateName}]=useState(null)`
+      return `const [${stateName}, set${stateName}]=useState(null)\n
+      useEffect(()=> {
+        setPagesIndex({}, () => reload())
+      }, [${stateName}])`
     })
     .join('\n')
 }
@@ -590,11 +601,77 @@ const buildHooks = (components: IComponents) => {
     return fields
   }
 
+  const getLimits = (dataProvider: IComponent) => {
+    const fields = getLimitsForDataProvider(dataProvider.id, components, getDynamicType)
+    return fields.map(([name, limit]) => `limit${name ? '.'+name : ''}=${limit}`)
+    return fields
+  }
+
+  const getFiltersObject = (dataProvider: IComponent) => {
+    const constantFilters = Object.values(components)
+      .filter(c => c.props.filterAttribute && c.props.filterConstant && c.props.dataSource==dataProvider.id)
+      .map(c => {
+        const fieldName=computeDataFieldName(c, components, dataProvider.id)
+        const filterAttribute=c.props.filterAttribute
+        const filterValue=c.props.filterConstant
+        return [`${fieldName ? fieldName+'.' : ''}${filterAttribute}`, filterValue]
+      })
+    const variableFilters = Object.values(components)
+      .filter(c => c.props.filterAttribute2 && c.props.filterValue2 && c.props.dataSource==dataProvider.id)
+      .map(c => {
+        const fieldName=computeDataFieldName(c, components, dataProvider.id)
+        const filterAttribute=c.props.filterAttribute2
+        const filterValue=c.props.filterValue2
+        return [`${fieldName ? fieldName+'.' : ''}${filterAttribute}`, filterValue]
+      })
+    const variableFilters2 = Object.values(components)
+    .filter(c => c.props.filterAttribute && c.props.filterValue && c.props.dataSource==dataProvider.id)
+    .map(c => {
+      const fieldName=computeDataFieldName(c, components, dataProvider.id)
+      const filterAttribute=c.props.filterAttribute
+      const filterValue=c.props.filterValue
+      return [`${fieldName ? fieldName+'.' : ''}${filterAttribute}`, filterValue]
+    })
+    const ultraVariableFilters = Object.values(components)
+      .filter(c => c.props.dataSource==dataProvider.id && lodash.range(5).some(idx => !!c.props[`filterComponent_${idx}`]))
+      .map(c => {
+        return lodash.flatten(lodash.range(5).map(idx => {
+          const filterComponent=c.props[`filterComponent_${idx}`]
+          if (!filterComponent) { return []}
+          const fieldName=computeDataFieldName(c, components, dataProvider.id)
+          const filterAttribute=components[filterComponent].props.attribute
+          const filterValue=filterComponent
+          return [`${fieldName ? fieldName+'.' : ''}${filterAttribute}`, filterValue]
+          }))
+      })
+      // TODO get Filter component 0 => 4
+    const res={constants: constantFilters, variables: [...variableFilters, ...ultraVariableFilters, ...variableFilters2]}
+    return res
+  }
+
+
+  const getSortParams = dataSourceId => {
+    const dsComponents=lodash(components).values()
+      .filter(c => getDynamicType(c)=='Container')
+      .filter(c => c.props?.dataSource?.replace(/^comp-/, '')==dataSourceId)
+      .filter(c => !!c.props?.sortAttribute && !!c.props.sortDirection)
+      .map(c => {
+        let fieldPath=computeDataFieldName(c, components, c.props.dataSource)
+        fieldPath = fieldPath ? `${fieldPath}.${c.props?.sortAttribute}` : c.props.sortAttribute
+        const fieldParam=`sort.${fieldPath}`
+        const order=c.props.sortDirection
+        return `${fieldParam}=${order}`
+      })
+    return dsComponents.join('&')
+  }
+
   const dataProviders=getValidDataProviders(components)
   if (dataProviders.length === 0) {
     return ''
   }
 
+  const objectsFilters=Object.fromEntries(dataProviders.map(dp => [dp.id, getFiltersObject(dp)]))
+  
   const singlePage=isSingleDataPage(components)
 
   const isIdInDependencyArray = dataProviders.reduce((acc, curr, i) => {
@@ -604,7 +681,8 @@ const buildHooks = (components: IComponents) => {
     return acc
   }, false)
 
-  let code = `const get=axios.get`
+  let code=`const FILTER_ATTRIBUTES=${JSON.stringify(objectsFilters, null, 2)}\n`
+  code += `const get=axios.get`
   code +=
     '\n' +
     dataProviders
@@ -615,12 +693,25 @@ const buildHooks = (components: IComponents) => {
       .join(`\n`)
   code += `\n
   const [refresh, setRefresh]=useState(false)
+  const [pagesIndex, setPagesIndex]=useState({})
+    
+  const computePagesIndex = dataSourceId => {
+    let urlPart=Object.entries(pagesIndex)
+        .filter(([att, value]) => att==dataSourceId || att.startsWith(dataSourceId+'.'))
+        .map(([att, value]) => att.replace(dataSourceId, 'page')+'='+value)
+        .join('&')
+    if (urlPart.length>0) {
+      urlPart=urlPart+'&'
+    }
+    return urlPart
+  }
+
 
   const reload = () => {
     setRefresh(!refresh)
   }
 
-  /** Clear copponents notifications  */
+  /** Clear components notifications  */
   const [clearComponents, setClearComponents]=useState([])
   const fireClearComponents = component_ids => setClearComponents(component_ids)
 
@@ -630,11 +721,12 @@ const buildHooks = (components: IComponents) => {
       .map(dp => {
         const dataId = dp.id.replace(/comp-/, '')
         const dpFields = getDataProviderFields(dp).join(',')
+        const limits = getLimits(dp)
         const idPart = dp.id === 'root' ? `\${id ? \`\${id}/\`: \`\`}` : ''
+        const sortParams = getSortParams(dataId)
         const urlRest='${new URLSearchParams(queryRest)}'
         const apiUrl = `/myAlfred/api/studio/${dp.props.model}/${idPart}${
-          dpFields ? `?fields=${dpFields}&` : '?'
-        }${dp.id=='root' ? urlRest: ''}`
+          dpFields ? `?fields=${dpFields}&` : '?'}${limits ? `${limits.join('&')}&` : ''}${sortParams}&\${buildFilter('${dp.id}', FILTER_ATTRIBUTES, componentsValues)}\${computePagesIndex('${dataId}')}${dp.id=='root' ? urlRest: ''}`
         let thenClause=dp.id=='root' && singlePage ?
          `.then(res => set${capitalize(dataId)}(res.data[0]))`
          :
@@ -649,7 +741,7 @@ const buildHooks = (components: IComponents) => {
         return query
       })
       .join('\n')}
-  }, [get, ${isIdInDependencyArray ? 'id, ' : ''}refresh])\n`
+  }, [get, pagesIndex, ${isIdInDependencyArray ? 'id, ' : ''}refresh, componentsValues])\n`
   return code
 }
 
@@ -658,6 +750,7 @@ const isFilterComponent = (component: IComponent, components: IComponents) => {
   let result=Object.values(components).some(
     c => (c.props?.textFilter == component.id || c.props?.filterValue == component.id
       || c.props?.filterValue2 == component.id
+      || lodash.range(5).some(idx => c.props[`filterComponent_${idx}`]==component.id)
     )
   )
 
@@ -834,9 +927,12 @@ export const generateCode = async (
   :
   ''
   */
-  code = `import React, {useState, useEffect} from 'react';
+  const header=`/**\n* Generated from ${pageId} on ${moment().format('L LT')}\n*/`
+  code = `${header}\nimport React, {useState, useEffect} from 'react';
   import Filter from '../dependencies/custom-components/Filter/Filter';
+  import {buildFilter} from '../dependencies/utils/filters'
   import omit from 'lodash/omit';
+  import lodash from 'lodash';
   import Metadata from '../dependencies/Metadata';
   ${hooksCode ? `import axios from 'axios'` : ''}
   ${Object.entries(groupedComponents)
@@ -886,6 +982,13 @@ const ${componentName} = () => {
   const [componentsValues, setComponentsValues]=useState({})
 
   const setComponentValue = (compId, value) => {
+    const impactedDataSources=Object.entries(FILTER_ATTRIBUTES)
+      .filter(([k ,v]) => v?.variables?.some(([attName, comp]) => comp==compId))
+      .map(([k, v]) => k)
+    if (impactedDataSources.length>0) {
+      const newPagesIndexes=lodash.omitBy(pagesIndex, (v, k) => impactedDataSources.some(ds => k==ds || k.startsWith(ds+'.')))
+      setPagesIndex(newPagesIndexes)
+    }
     setComponentsValues(s=> ({...s, [compId]: value}))
   }
 

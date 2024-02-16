@@ -5,6 +5,7 @@ const {
   HARDNESS,
 } = require('../consts')
 const {schemaOptions} = require('../../../utils/schemas')
+const { DUMMY_REF } = require('../../../utils/database')
 
 const Schema = mongoose.Schema
 
@@ -39,23 +40,22 @@ const IndividualChallengeSchema = new Schema({
     default: 1,
     required: [true, 'Le nombre de cuillères nécessaires pour un trophée est obligatoire'],
   },
+  obtained: {
+    type: Boolean,
+  },
+  trophy_picture: {
+    type: String,
+  },
 },
 {...schemaOptions, ...EVENT_DISCRIMINATOR},
 )
 
 /* eslint-disable prefer-arrow-callback */
 
-IndividualChallengeSchema.virtual('type').get(function() {
+IndividualChallengeSchema.virtual('type', DUMMY_REF).get(function() {
   return EVENT_IND_CHALLENGE
 })
 
-IndividualChallengeSchema.virtual('trophy_picture').get(function()  {
-  return ''
-})
-
-IndividualChallengeSchema.virtual('obtained').get(function()  {
-  return false
-})
 
 /* eslint-enable prefer-arrow-callback */
 

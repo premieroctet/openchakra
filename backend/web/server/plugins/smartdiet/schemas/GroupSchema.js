@@ -46,6 +46,10 @@ const GroupSchema = new Schema({
     ref: 'key',
     required: [true, 'La clé est obligatoire'],
   },
+  pinned_messages: {
+    type: Schema.Types.ObjectId,
+    ref: 'message',
+  },
 }, schemaOptions)
 
 GroupSchema.virtual('messages', {
@@ -54,18 +58,18 @@ GroupSchema.virtual('messages', {
   foreignField: "group" // is equal to foreignField
 });
 
-GroupSchema.virtual('pinned_messages', {localField: 'dummy', foreignField: 'dummy'}).get(function () {
-  return []
-})
+GroupSchema.virtual('messages_count', {
+  ref: "message", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "group", // is equal to foreignField
+  count: true,
+});
+
 
 /* eslint-disable prefer-arrow-callback */
 
 GroupSchema.virtual('users_count', {localField: 'tagada', foreignField: 'tagada'}).get(function () {
   return this.users?.length||0
-})
-
-GroupSchema.virtual('messages_count', {localField: 'tagada', foreignField: 'tagada'}).get(function () {
-  return this.messages?.length||0
 })
 
 /* eslint-enable prefer-arrow-callback */

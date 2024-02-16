@@ -53,8 +53,12 @@ PipSchema.virtual('comments', {
   match: {parent: null},
 });
 
-PipSchema.virtual('comments_count').get(function() {
-  return this.comments?.length || 0
-})
+PipSchema.virtual('comments_count', {
+  ref: "comment", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "pip", // is equal to foreignField
+  match: {parent: null},
+  count: true,
+});
 
 module.exports = PipSchema

@@ -21,9 +21,10 @@ import { useForm } from '../../../hooks/useForm'
 import ColorsControl from '../controls/ColorsControl';
 import FormControl from '../controls/FormControl'
 import usePropsSelector from '../../../hooks/usePropsSelector'
+import { sortComponents } from '~utils/misc'
 
 const DataSourcePanel: React.FC = () => {
-  const components: IComponents = useSelector(getComponents)
+  const components: IComponents = sortComponents(useSelector(getComponents))
   const activeComponent: IComponent = useSelector(getSelectedComponent)
   const { setValueFromEvent, setValue, removeValue } = useForm()
   const dataSource = usePropsSelector('dataSource')
@@ -95,14 +96,17 @@ const DataSourcePanel: React.FC = () => {
       }
       catch (err) {
         console.error(err)
-        alert(err)
+        // TODO Should not raise exception
+        // alert(err)
       }
       try {
         const filterAttrs = getFilterAttributes(activeComponent, components, models)
         setFilterAttributes(filterAttrs)
       }
       catch (err) {
-        alert(err)
+        console.error(err)
+        // TODO Should not raise exception
+        // alert(err)
       }
       if (!subDataSource) {
         setSubAttributes({})
@@ -551,7 +555,7 @@ const DataSourcePanel: React.FC = () => {
             >
               <option value={undefined}></option>
               {Object.values(components)
-                .filter(c => c.type=='Flex' &&  c.props?.isFilterComponent)
+                .filter(c => !!c.props.model && !!c.props.attribute )
                 .map((component, i) => (
                   <option key={`comp${i}`} value={component.id}>
                     {`${component.id} (${component.type})`}

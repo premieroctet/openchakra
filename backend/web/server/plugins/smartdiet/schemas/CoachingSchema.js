@@ -13,7 +13,7 @@ const { CREATED_AT_ATTRIBUTE } = require('../../../../utils/consts')
 const mongoose = require('mongoose')
 const { schemaOptions } = require('../../../utils/schemas')
 const lodash=require('lodash')
-const {intersection, idEqual}=require('../../../utils/database')
+const {intersection, idEqual, DUMMY_REF}=require('../../../utils/database')
 
 const Schema = mongoose.Schema
 
@@ -82,6 +82,29 @@ CoachingSchema.virtual('appointments', {
   foreignField: 'coaching',
 })
 
+/* eslint-disable prefer-arrow-callback */
+// Required for register validation only
+CoachingSchema.virtual('latest_appointments', {
+  ref: 'appointment',
+  localField: '_id',
+  foreignField: 'coaching',
+  options: { 
+    match: {start_date: {$lt: moment()} },
+    sort: { start_date: -1 }, limit:1 
+  },
+})
+
+/* eslint-disable prefer-arrow-callback */
+// Required for register validation only
+CoachingSchema.virtual('appointments_future', {
+  ref: 'appointment',
+  localField: '_id',
+  foreignField: 'coaching',
+  options: {
+    match: {start_date: {$gt: moment()}}
+  }
+})
+
 CoachingSchema.virtual('questions', {
   ref: 'userCoachingQuestion',
   localField: '_id',
@@ -95,15 +118,21 @@ CoachingSchema.virtual('all_logbooks', {
 })
 
 
-CoachingSchema.virtual('remaining_credits').get(function() {
+CoachingSchema.virtual('remaining_credits', DUMMY_REF).get(function() {
   if (this.user?.role!=ROLE_CUSTOMER) {
     return 0
   }
   return (this.user?.offer?.coaching_credit-this.spent_credits) || 0
 })
 
-CoachingSchema.virtual('spent_credits').get(function() {
-  return this.appointments?.length || 0
+CoachingSchema.virtual('spent_credits', {
+  ref: 'appointment',
+  localField: '_id',
+  foreignField: 'coaching',
+  options: {
+    match: {end_date: {$lt: moment()}} 
+  },
+  count: true,
 })
 
 // all diets (hidden)
@@ -124,7 +153,7 @@ CoachingSchema.virtual("_all_diets", {
 - remove if coaching not in diet's activities
 - keep then sort by reasons
 */
-CoachingSchema.virtual('available_diets', {localField:'tagada', foreignField:'tagada'}).get(function() {
+CoachingSchema.virtual('available_diets', DUMMY_REF).get(function() {
   const expected_app_type=this.appointment_type?._id
   return lodash(this._all_diets)
     // Diets allowing coaching
@@ -138,53 +167,46 @@ CoachingSchema.virtual('available_diets', {localField:'tagada', foreignField:'ta
 })
 
 // Returns the current objectoves (i.e. the newest appointment's ones)
-CoachingSchema.virtual('current_objectives', {localField:'tagada', foreignField:'tagada'}).get(function() {
+CoachingSchema.virtual('current_objectives', DUMMY_REF).get(function() {
   return lodash(this.appointments)
    .orderBy(app => app[CREATED_AT_ATTRIBUTE].start_date, 'desc')
    .head()?.objectives || []
 })
 
-// all diets (hidden)
-CoachingSchema.virtual("_all_diets", {
-  ref: "user", // The Model to use
-  localField: "dummy", // Find in Model, where localField
-  foreignField: "dummy", // is equal to foreignField
-  options: {
-    match: {role: ROLE_EXTERNAL_DIET},
-  },
-})
-
 // Returns the LogbookDay compléting if required
-CoachingSchema.virtual('logbooks', {localField:'tagada', foreignField:'tagada'}).get(function() {
+CoachingSchema.virtual('logbooks', DUMMY_REF).get(function() {
   const grouped=lodash(this.all_logbooks).sortBy(l => l.day).groupBy(l => l.day)
   const lbd=grouped.entries().map(([day, logbooks]) => mongoose.models.logbookDay({day, logbooks:logbooks?.map(fl => fl.logbook)}))
-  return lbd
+  return lbd.value()
 })
 
 // Returned availabilities are not store in database
-CoachingSchema.virtual('diet_availabilities', {localField:'tagada', foreignField:'tagada'}).get(function() {
+CoachingSchema.virtual('diet_availabilities', DUMMY_REF).get(function() {
 
   if (!this.diet){
     return []
   }
 
   const appType=this.appointment_type
-
-  const diet_availabilities=this.diet.availability_ranges
+  const diet_availabilities=this.diet.availability_ranges?.filter(r => idEqual(r.appointment_type._id, appType?._id)) || []
 
   const availabilities=lodash.range(AVAILABILITIES_RANGE_DAYS).map(day_idx => {
     const day=moment().add(day_idx, 'day').startOf('day')
-    const ranges=diet_availabilities?.filter(r => day.isSame(r.start_date, 'day') && idEqual(r.appointment_type._id, appType?._id)) || []
+    const ranges=diet_availabilities?.filter(r => day.isSame(r.start_date, 'day')) || []
+    if (!ranges?.length) {
+      return null
+    }
     return ({
       date: day,
       ranges: lodash.orderBy(ranges, 'start_date'),
     })
   })
+  .filter(v => !!v)
   return availabilities
 });
 
 // Returns the appointment type expected (1st appnt: assesment, others: followu)
-CoachingSchema.virtual('appointment_type', {localField:'tagada', foreignField:'tagada'}).get(function() {
+CoachingSchema.virtual('appointment_type', DUMMY_REF).get(function() {
   const appType=lodash.isEmpty(this.appointments) ? this.user?.company?.assessment_appointment_type : this.user?.company?.followup_appointment_type
   return appType
 })
@@ -195,11 +217,14 @@ CoachingSchema.virtual('nutrition_advices', {
   foreignField: 'coaching',
 })
 
-CoachingSchema.virtual('spent_nutrition_credits').get(function() {
-  return this.nutrition_advices?.length || 0
+CoachingSchema.virtual('spent_nutrition_credits', {
+  ref: 'nutritionAdvice',
+  localField: '_id',
+  foreignField: 'coaching',
+  count: true,
 })
 
-CoachingSchema.virtual('remaining_nutrition_credits').get(function() {
+CoachingSchema.virtual('remaining_nutrition_credits', DUMMY_REF).get(function() {
   if (this.user?.role!=ROLE_CUSTOMER) {
     return 0
   }

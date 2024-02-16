@@ -4,6 +4,7 @@ const { isPhoneOk } = require('../../../../utils/sms')
 const mongoose = require('mongoose')
 const { schemaOptions } = require('../../../utils/schemas')
 const { CALL_STATUS, CALL_DIRECTION, COACHING_CONVERSION_STATUS } = require('../consts')
+const { DUMMY_REF } = require('../../../utils/database')
 
 const Schema = mongoose.Schema
 
@@ -116,7 +117,7 @@ LeadSchema.index(
   { unique: true, message: 'Un prospect existe déjà avec cet email' });
 
 /* eslint-disable prefer-arrow-callback */
-LeadSchema.virtual('fullname').get(function() {
+LeadSchema.virtual('fullname', DUMMY_REF).get(function() {
   return `${this.firstname || ''} ${this.lastname || ''}`
 })
 
@@ -134,7 +135,7 @@ LeadSchema.virtual("registered_user", {
   foreignField: "email", // is equal to foreignField
 });
 
-LeadSchema.virtual('registered').get(function() {
+LeadSchema.virtual('registered', DUMMY_REF).get(function() {
   return !lodash.isEmpty(this.registered_user)
 })
 

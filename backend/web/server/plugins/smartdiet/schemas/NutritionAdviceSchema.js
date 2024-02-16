@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const moment = require('moment')
 const {schemaOptions} = require('../../../utils/schemas')
+const { DUMMY_REF } = require('../../../utils/database')
 
 const Schema = mongoose.Schema
 
@@ -34,7 +35,7 @@ const NutritionAdviceSchema = new Schema({
 )
 
 /* eslint-disable prefer-arrow-callback */
-NutritionAdviceSchema.virtual('end_date').get(function() {
+NutritionAdviceSchema.virtual('end_date', DUMMY_REF).get(function() {
   const end=moment(this.start_date).add(this.duration, 'minutes')
   return end.isValid() ? end : null
 })

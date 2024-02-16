@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const {schemaOptions} = require('../../../utils/schemas')
+const { DUMMY_REF } = require('../../../utils/database')
 const Schema = mongoose.Schema
 
 const MessageSchema = new Schema({
@@ -34,14 +35,12 @@ const MessageSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'user',
   }],
+  liked: {
+    type: Boolean
+  },
+  pinned: {
+    type: Boolean
+  },
 }, schemaOptions)
-
-MessageSchema.virtual('liked').get(function() {
-  return false
-})
-
-MessageSchema.virtual('pinned').get(function() {
-  return false
-})
 
 module.exports = MessageSchema

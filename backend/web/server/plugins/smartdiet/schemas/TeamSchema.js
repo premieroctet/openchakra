@@ -3,6 +3,7 @@ const lodash=require('lodash')
 const bcrypt=require('bcryptjs')
 const { HOME_STATUS, CONTENTS_TYPE } = require('../consts')
 const {schemaOptions} = require('../../../utils/schemas')
+const { DUMMY_REF } = require('../../../utils/database')
 
 const Schema = mongoose.Schema
 
@@ -30,7 +31,7 @@ TeamSchema.virtual('members', {
     foreignField: 'team',
 })
 
-TeamSchema.virtual('spoons_count').get(function() {
+TeamSchema.virtual('spoons_count', DUMMY_REF).get(function() {
   return lodash(this.members).sumBy(m => m.pips.filter(p => p.valid).length)
 })
 /* eslint-enable prefer-arrow-callback */

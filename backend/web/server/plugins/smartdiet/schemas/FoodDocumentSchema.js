@@ -1,6 +1,7 @@
 const { FOOD_DOCUMENT_TYPE } = require('../consts')
 const mongoose = require('mongoose')
 const {schemaOptions} = require('../../../utils/schemas')
+const { DUMMY_REF } = require('../../../utils/database')
 
 const Schema = mongoose.Schema
 
@@ -29,7 +30,7 @@ const FoodDocumentSchema = new Schema({
   }
 }, schemaOptions)
 
-FoodDocumentSchema.virtual('url').get(function() {
+FoodDocumentSchema.virtual('url', DUMMY_REF).get(function() {
   return this.document || this.manual_url
 })
 

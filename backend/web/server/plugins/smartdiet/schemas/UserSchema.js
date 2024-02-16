@@ -15,7 +15,7 @@ const {
   ROLE_CUSTOMER,
   ROLE_EXTERNAL_DIET,
   ROLE_RH,
-  STATUS_FAMILY
+  STATUS_FAMILY,
 } = require('../consts')
 const { isEmailOk } = require('../../../../utils/sms')
 const { CREATED_AT_ATTRIBUTE } = require('../../../../utils/consts')
@@ -25,7 +25,8 @@ const luhn = require('luhn')
 const {
   idEqual,
   setIntersects,
-  shareTargets
+  shareTargets,
+  DUMMY_REF
 } = require('../../../utils/database')
 const mongoose = require('mongoose')
 const moment=require('moment')
@@ -108,6 +109,7 @@ const UserSchema = new Schema({
     enum: Object.keys(ROLES),
     default: ROLE_CUSTOMER,
     required: [true, 'Le rôle est obligatoire'],
+    index: true,
   },
   cguAccepted: {
     type: Boolean,
@@ -320,7 +322,24 @@ const UserSchema = new Schema({
     type: Number,
     required: false,
   },
-}, schemaOptions)
+  diet_patients_count: {
+    type: Number,
+  },
+  contents: [{
+    type: Schema.Types.ObjectId,
+    ref: 'content',
+    required: false,
+  }],
+  diet_appointments_count: {
+    type: Number,
+  },
+  spoons_count: {
+    type: Number,
+  },
+  spoons_count: {
+    type: Number,
+  },
+}, {...schemaOptions})
 
 /* eslint-disable prefer-arrow-callback */
 
@@ -330,15 +349,11 @@ UserSchema.index(
   { unique: true, message: 'Un compte avec ce mail existe déjà' });
 
 // Required for register validation only
-UserSchema.virtual('password2').get(function() {
+UserSchema.virtual('password2', DUMMY_REF).get(function() {
 })
 
-UserSchema.virtual('fullname').get(function() {
+UserSchema.virtual('fullname', DUMMY_REF).get(function() {
   return `${this.firstname || ''} ${this.lastname || ''}`
-})
-
-UserSchema.virtual('spoons_count').get(function() {
-  return null
 })
 
 UserSchema.virtual("surveys", {
@@ -354,11 +369,16 @@ UserSchema.virtual("_all_contents", {
 });
 
 // Computed virtual
-UserSchema.virtual('contents', {localField: '_id', foreignField: '_id'}).get(function () {
-  return null
-})
+// UserSchema.virtual('contents', {localField: '_id', foreignField: '_id'}).get(function () {
+//   const user_targets = lodash([this.objective_targets, this.health_targets,
+//     this.activity_target, this.specificity_targets, this.home_target])
+//       .flatten()
+//       .filter(v => !!v)
+//       .value()
+//     return this._all_contents.filter(c => c.default || setIntersects(c.targets, user_targets))
+// })
 
-UserSchema.virtual("available_groups", {localField: 'id', foreignField: 'id'}).get(function () {
+UserSchema.virtual("available_groups", DUMMY_REF).get(function () {
   return lodash(this.company?.groups)
     .filter(g => shareTargets(this, g))
     .differenceBy(this.registered_groups, g => g._id.toString())
@@ -372,15 +392,14 @@ UserSchema.virtual("registered_groups", {
 });
 
 // User's webinars are the company's ones
-UserSchema.virtual('_all_webinars', {localField:'_id', foreignField: '_id'}).get(function() {
+UserSchema.virtual('_all_webinars', DUMMY_REF).get(function() {
   return this.company?.webinars||[]
 })
 
 // User's webinars are the company's ones
-UserSchema.virtual('webinars', {localField:'_id', foreignField: '_id'}).get(function() {
+UserSchema.virtual('webinars', DUMMY_REF).get(function() {
   const exclude=[
     ...(this.skipped_events?.map(s => s._id)||[]),
-    ...(this.passed_events?.map(s => s._id)||[]),
   ]
   const res=lodash(this.company?.webinars || [])
     .filter(w => !exclude.some(excl => idEqual(excl._id, w._id)))
@@ -390,16 +409,16 @@ UserSchema.virtual('webinars', {localField:'_id', foreignField: '_id'}).get(func
 })
 
 // Webinars to come (i.e future, not skipped, not passed)
-UserSchema.virtual('available_webinars', {localField:'_id', foreignField: '_id'}).get(function() {
+UserSchema.virtual('available_webinars', DUMMY_REF).get(function() {
   const now=moment()
   const webinars=lodash(this.webinars)
     .filter(w => moment(w.end_date).isAfter(now))
-    .value()
-  return webinars
+    .first()
+  return webinars ? [webinars] : []
 })
 
 // Webinars finished
-UserSchema.virtual('past_webinars', {localField:'_id', foreignField: '_id'}).get(function() {
+UserSchema.virtual('past_webinars', DUMMY_REF).get(function() {
   const now=moment()
   const webinars=lodash(this._all_webinars)
     .filter(w => moment(w.end_date).isBefore(now))
@@ -414,7 +433,7 @@ UserSchema.virtual("_all_individual_challenges", {
 });
 
 // Ind. challenge registered still not failed or passed
-UserSchema.virtual('current_individual_challenge', {localField: 'id', foreignField: 'id'}).get(function() {
+UserSchema.virtual('current_individual_challenge', DUMMY_REF).get(function() {
   if (!this._all_individual_challenges?.length) {
     return null
   }
@@ -429,7 +448,7 @@ UserSchema.virtual('current_individual_challenge', {localField: 'id', foreignFie
 })
 
 // User's ind. challenges are all expect the skipped ones and the passed ones
-UserSchema.virtual('individual_challenges', {localField: 'id', foreignField: 'id'}).get(function() {
+UserSchema.virtual('individual_challenges', DUMMY_REF).get(function() {
   const exclude=[
     ...(this.skipped_events?.map(s => s._id)||[]),
     ...(this.passed_events?.map(s => s._id)||[]),
@@ -446,7 +465,7 @@ UserSchema.virtual('individual_challenges', {localField: 'id', foreignField: 'id
 })
 
 // User's ind. challenges are all expect the skipped ones and the passed ones
-UserSchema.virtual('passed_individual_challenges', {localField: 'id', foreignField: 'id'}).get(function() {
+UserSchema.virtual('passed_individual_challenges', DUMMY_REF).get(function() {
   const passed=this.passed_events?.map(s => s._id)||[]
   return this._all_individual_challenges?.filter(c => passed.find(p => idEqual(p._id, c._id)))||[]
 })
@@ -474,16 +493,28 @@ UserSchema.virtual("past_menus", {
   foreignField: "dummy", // is equal to foreignField
   options: {
     match: {end_date:{$lt: moment()}},
+    sort: { creation_date: -1 }
+  },
+});
+
+// Past menus
+UserSchema.virtual("future_menus", {
+  ref: "menu", // The Model to use
+  localField: "dummy", // Find in Model, where localField
+  foreignField: "dummy", // is equal to foreignField
+  options: {
+    match: {start_date:{$gt: moment()}},
+    sort: { start_date: 1 }
   },
 });
 
 // User's collective challenges are the company's ones
-UserSchema.virtual('collective_challenges', {localField:'tagada', foreignField:'tagada'}).get(function() {
+UserSchema.virtual('collective_challenges', DUMMY_REF).get(function() {
   return this.company?.collective_challenges || []
 })
 
 // User's events (even skipped or registered and so on)
-UserSchema.virtual('_all_events').get(function() {
+UserSchema.virtual('_all_events', DUMMY_REF).get(function() {
   return [
     ...(this._all_menus||[]), ...(this._all_individual_challenges||[]),
     ...(this.collective_challenges||[]), ...(this._all_webinars||[])]
@@ -496,7 +527,7 @@ UserSchema.virtual("measures", {
   foreignField: "user" // is equal to foreignField
 });
 
-UserSchema.virtual("last_measures", {localField: 'id', foreignField: 'id'}).get(function() {
+UserSchema.virtual("last_measures", DUMMY_REF).get(function() {
   if (lodash.isEmpty(this.measures)) {
     return null
   }
@@ -522,7 +553,7 @@ UserSchema.virtual("_all_targets", {
   foreignField: "dummy" // is equal to foreignField
 });
 
-UserSchema.virtual("targets", {localField: 'tagada', foreignField: 'tagada'}).get(function() {
+UserSchema.virtual("targets", DUMMY_REF).get(function() {
   const all_targets=[...(this.objective_targets||[]), ...(this.health_targets||[]),
     ...(this.specificity_targets||[])]
   if (this.home_target) {
@@ -535,7 +566,7 @@ UserSchema.virtual("targets", {localField: 'tagada', foreignField: 'tagada'}).ge
   return this._all_targets?.filter(t => all_target_ids.some(i => idEqual(i, t._id))) || []
 })
 
-UserSchema.virtual('offer', {localField: 'tagada', foreignField: 'tagada'}).get(function() {
+UserSchema.virtual('offer', DUMMY_REF).get(function() {
   return this.company?.offers?.[0] || null
 })
 
@@ -589,14 +620,14 @@ UserSchema.virtual("diet_comments", {
 });
 
 // Diet : average_note
-UserSchema.virtual('diet_average_note').get(function() {
+UserSchema.virtual('diet_average_note', DUMMY_REF).get(function() {
   return lodash(this.diet_comments)
     .map(c => c._defined_notes)
     .flatten()
     .mean()
 })
 
-UserSchema.virtual('profile_progress').get(function() {
+UserSchema.virtual('profile_progress', DUMMY_REF).get(function() {
   let filled=[this.diploma?.length>0, !!this.adeli, !!this.siret, !!this.signed_charter]
   return (filled.filter(v => !!v).length*1.0/filled.length)*100
 });
@@ -608,10 +639,18 @@ UserSchema.virtual("diet_objectives", {
   foreignField: "diet_private" // is equal to foreignField
 });
 
-UserSchema.virtual("coachings", {
+// UserSchema.virtual("coachings", {
+//   ref: "coaching", // The Model to use
+//   localField: "_id", // Find in Model, where localField
+//   foreignField: "user" // is equal to foreignField
+// })
+
+UserSchema.virtual("latest_coachings", {
   ref: "coaching", // The Model to use
   localField: "_id", // Find in Model, where localField
-  foreignField: "user" // is equal to foreignField
+  foreignField: "user", // is equal to foreignField
+  options: { sort: { creation_date: -1 }, limit:1 },
+  array: true,
 })
 
 UserSchema.virtual("diet_coachings", {
@@ -619,12 +658,6 @@ UserSchema.virtual("diet_coachings", {
   localField: "_id", // Find in Model, where localField
   foreignField: "diet", // is equal to foreignField
 })
-
-// Returns the current coaching if ate least one survey exists => condition to start
-UserSchema.virtual('latest_coachings', {localField:'tagada', foreignField:'tagada'}).get(function() {
-  const latest=lodash(this.coachings).maxBy(coaching => coaching[CREATED_AT_ATTRIBUTE])
-  return latest ? [latest]:[]
-});
 
 UserSchema.virtual("diet_questions", {
   ref: "quizzQuestion", // The Model to use
@@ -644,23 +677,19 @@ UserSchema.virtual("keys", {
   foreignField: "dummy", // is equal to foreignField
 })
 
-// Returned availabilities/ranges are not store in database
-UserSchema.virtual('diet_appointments', {localField:'tagada', foreignField:'tagada'}).get(function() {
-  return lodash.flatten(this.diet_coachings?.map(c => c.appointments))
-})
+// UserSchema.virtual("diet_appointments", {
+//   ref: "appointment", // The Model to use
+//   localField: "_id", // Find in Model, where localField
+//   foreignField: "diet", // is equal to foreignField
+// })
 
-UserSchema.virtual('diet_appointments_count', {localField:'tagada', foreignField:'tagada'}).get(function() {
-  return this.diet_appointments?.length || 0
-})
-
-// Returned availabilities/ranges are not store in database
-UserSchema.virtual('diet_patients', {localField:'tagada', foreignField:'tagada'}).get(function() {
-  return lodash.uniqBy(this.diet_coachings?.map(c => c?.user), u => u?._id).filter(v => !!v)
-})
-
-UserSchema.virtual('diet_patients_count', {localField:'tagada', foreignField:'tagada'}).get(function() {
-  return this.diet_patients?.length || 0
-})
+// TODO this should work !!!
+// UserSchema.virtual("diet_appointments_count", {
+//   ref: "appointment", // The Model to use
+//   localField: "_id", // Find in Model, where localField
+//   foreignField: "diet", // is equal to foreignField
+//   count: true,
+// })
 
 // Returned availabilities/ranges are not store in database
 UserSchema.virtual('imc', {localField:'tagada', foreignField:'tagada'}).get(function() {

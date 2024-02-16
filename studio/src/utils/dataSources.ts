@@ -1,5 +1,18 @@
 import lodash from 'lodash'
+import { DEFAULT_LIMIT } from '~dependencies/utils/consts'
 
+/**
+ * Functions calls during deploy
+    hasParentType=>398
+    getFieldsForDataProvider=>495
+    getLimitsForDataProvider=>495
+    getParentOfType=>4676
+    isSingleDataPage=>13648
+    getDataProviderDataType=>47378
+    computeDataFieldName=>54465
+
+    Deploy 47s
+ */
 export const CONTAINER_TYPE: ComponentType[] = [
   'Box',
   'Grid',
@@ -185,13 +198,13 @@ export const getFilterAttributes = (
   return simpleAttributes
 }
 
-const computeDataFieldName = (
+export const computeDataFieldName = (
   component: IComponent,
   components: IComponents,
   dataSourceId: string,
 ): any => {
 
-  // On dataProvider: break
+  // On dataProvider: break 
   // TODO: commented because returns null if Select has a model even if it has a subDataSource/subAttributeDisplay
   /**
   if (component.props.model) {
@@ -263,6 +276,19 @@ const computeDataFieldName = (
     return result[0]
   }
   return result
+}
+
+export const getLimitsForDataProvider = (
+  dataProviderId: string,
+  components: IComponents,
+  getDynamicType: any,
+): string[] => {
+
+  const containers=Object.values(components)
+    .filter(comp => comp.props.dataSource==dataProviderId)
+    .filter(comp => getDynamicType(comp)=='Container')
+  // console.log(containers.map(c => computeDataFieldName(c, components, dataProviderId)))
+  return containers.map(c => [computeDataFieldName(c, components, dataProviderId), c.props.limit || DEFAULT_LIMIT])
 }
 
 // Traverse down-up from components to dataprovider to join all fields

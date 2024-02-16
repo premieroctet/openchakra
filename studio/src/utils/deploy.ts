@@ -27,9 +27,11 @@ const cleanPages = (pages:PageSettings[]) => {
 
 export const deploy = (state: ProjectState, models: any) => {
   const pages = Object.values(state.pages)
+  const deployMsg='*********** DEPLOY'
+  console.time(deployMsg)
   return Promise.resolve(validateProject(state))
     .then(res => {
-      if (res) {
+            if (res) {
         throw new Error(JSON.stringify(res, null, 2))
       }
       return Promise.all(
@@ -43,6 +45,7 @@ export const deploy = (state: ProjectState, models: any) => {
       )
     })
     .then(codes => {
+      console.timeEnd(deployMsg)
       const namedCodes = lodash.zip(
         pages.map(nc => nc.pageName),
         codes,
@@ -53,13 +56,13 @@ export const deploy = (state: ProjectState, models: any) => {
       )
     })
     .then(async() => {
-      // generate again index
+            // generate again index
       const code = await generateCode(state.rootPage, state.pages, models, state)
       .catch(err => {
         console.error('generate index while deploying', err)
         return Promise.reject(`Page index :${err}`)
       })
-      return code
+return code
     })
     .then(code => {
       // @ts-ignore

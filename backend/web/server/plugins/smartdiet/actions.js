@@ -337,6 +337,7 @@ const isActionAllowed = ({ action, dataId, user }) => {
                 if (modelName == 'menu') { return false }
                 if (user?.skipped_events?.some(r => idEqual(r._id, dataId))) { return false }
                 if (user?.routine_events?.some(r => idEqual(r._id, dataId))) { return false }
+                if (modelName!='webinar' && user?.passed_events?.some(r => idEqual(r._id, dataId))) { return false }
                 const registeredEvent = user?.registered_events?.find(r => idEqual(r.event._id, dataId))
                 // Event must be registered except for past webinars
                 if (modelName == 'webinar') {

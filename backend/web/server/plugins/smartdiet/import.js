@@ -8,7 +8,7 @@ const { guessDelimiter } = require('../../../utils/text')
 const Company=require('../../models/Company')
 const User=require('../../models/User')
 const AppointmentType=require('../../models/AppointmentType')
-const { ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, DIET_REGISTRATION_STATUS_ACTIVE, COMPANY_ACTIVITY_ASSURANCE, COMPANY_ACTIVITY_OTHER, CONTENTS_ARTICLE, CONTENTS_DOCUMENT, CONTENTS_VIDEO, CONTENTS_INFOGRAPHY, CONTENTS_PODCAST, QUIZZ_TYPE_PATIENT, QUIZZ_QUESTION_TYPE_ENUM_SINGLE, QUIZZ_TYPE_PROGRESS, COACHING_QUESTION_STATUS, COACHING_QUESTION_STATUS_NOT_ADDRESSED, COACHING_QUESTION_STATUS_NOT_ACQUIRED, COACHING_QUESTION_STATUS_IN_PROGRESS, COACHING_QUESTION_STATUS_ACQUIRED } = require('./consts')
+const { ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, DIET_REGISTRATION_STATUS_ACTIVE, COMPANY_ACTIVITY_ASSURANCE, COMPANY_ACTIVITY_OTHER, CONTENTS_ARTICLE, CONTENTS_DOCUMENT, CONTENTS_VIDEO, CONTENTS_INFOGRAPHY, CONTENTS_PODCAST, QUIZZ_TYPE_PATIENT, QUIZZ_QUESTION_TYPE_ENUM_SINGLE, QUIZZ_TYPE_PROGRESS, COACHING_QUESTION_STATUS, COACHING_QUESTION_STATUS_NOT_ADDRESSED, COACHING_QUESTION_STATUS_NOT_ACQUIRED, COACHING_QUESTION_STATUS_IN_PROGRESS, COACHING_QUESTION_STATUS_ACQUIRED, GENDER_MALE, GENDER_FEMALE } = require('./consts')
 const { CREATED_AT_ATTRIBUTE } = require('../../../utils/consts')
 const AppointmentTypeSchema = require('./schemas/AppointmentTypeSchema')
 const Key=require('../../models/Key')
@@ -147,6 +147,8 @@ const USER_MAPPING={
   password: () => DEFAULT_PASSWORD,
   company: ({cache, record}) => cache('company', record.SDPROJECTID),
   pseudo: ({record}) => computePseudo(record),
+  gender: ({record}) => record.gender=="M" ? GENDER_MALE : record.gender=='F' ? GENDER_FEMALE : null,
+  birthday: ({record}) => moment(record.birthdate),
   migration_id: 'SDPATIENTID'
 }
 
@@ -182,7 +184,7 @@ const APPOINTMENT_MAPPING= prestation_id => ({
   coaching: ({cache, record}) => cache('coaching', record.SDPROGRAMID),
   start_date: 'date',
   end_date: ({record}) => moment(record.date).add(45, 'minutes'),
-  synthesis: 'comments',
+  note: 'comments',
   appointment_type: () => prestation_id,
   migration_id: 'SDCONSULTID',
 })
@@ -270,6 +272,7 @@ const KEY_KEY='name'
 const KEY_MIGRATION_KEY='migration_id'
 
 const progressCb = step => (index, total)=> {
+  return 
   step=step||(total/10)
   if (step && index%step==0) {
     console.log(`${index}/${total}`)
@@ -349,13 +352,16 @@ const importCoachings = async input_file => {
     // Set progress quizz
     .then(res => Promise.all([
       res,
-      Coaching.find({migration_id: {$ne: null}, progress:null}),
+      Coaching.find({[COACHING_MIGRATION_KEY]: {$ne: null}, progress:null}),
       Quizz.findOne({type: QUIZZ_TYPE_PROGRESS}).populate('questions')
     ]))
     .then(([res, coachings, progressQuizz])=> {
       const msg=`Create progress quizz and user surveys for ${coachings.length} coachings`
       console.log(msg)
       console.time(msg)
+      if (coachings.length==0) {
+        return []
+      }
       return runPromisesWithDelay(coachings.map(c => () => Promise.allSettled([ensureProgress(c, progressQuizz), ensureSurvey(c)])))
         .then(() => res)
         .finally(()=> console.timeEnd(msg))

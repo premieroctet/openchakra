@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const {schemaOptions} = require('../../../utils/schemas')
 const lodash=require('lodash')
 const {COMPANY_ACTIVITY, COMPANY_SIZE}=require('../consts')
+const { DUMMY_REF } = require('../../../utils/database')
 
 const Schema = mongoose.Schema
 
@@ -67,6 +68,16 @@ const CompanySchema = new Schema(
       type: Number,
       required: false,
     },
+    // Coaching reasons this company applies on
+    reasons: [{
+      type: Schema.Types.ObjectId,
+      // TODO: check that target's category's type is TARGET_COACHING
+      ref: 'target',
+      required: false,
+    }],
+    contents_count: {
+      type: Number,
+    }
   },
   schemaOptions,
 )
@@ -106,7 +117,7 @@ CompanySchema.virtual('groups_count', {localField: 'tagada', foreignField: 'taga
   return this.groups?.length || 0
 })
 
-CompanySchema.virtual('likes_count').get(function() {
+CompanySchema.virtual('likes_count', DUMMY_REF).get(function() {
   return mongoose.model('content').find()
     .populate('likes')
     .then(contents => {
@@ -118,7 +129,7 @@ CompanySchema.virtual('likes_count').get(function() {
     })
 })
 
-CompanySchema.virtual('shares_count').get(function() {
+CompanySchema.virtual('shares_count', DUMMY_REF).get(function() {
   return mongoose.model('content').find()
     .populate('shares')
     .then(contents => {
@@ -130,18 +141,13 @@ CompanySchema.virtual('shares_count').get(function() {
     })
 })
 
-CompanySchema.virtual('comments_count').get(function() {
+CompanySchema.virtual('comments_count', DUMMY_REF).get(function() {
   return mongoose.model('comment').find({pip: null})
     .populate('user')
     .then(comments => {
       const count=lodash.filter(comments||[], c => c.user?.company?._id==this._id)?.length||0
       return count
     })
-})
-
-CompanySchema.virtual('contents_count').get(function() {
-  // TODO WTF
-  return 0
 })
 
 CompanySchema.virtual("children", {

@@ -7,8 +7,8 @@ const constants=values.map(v => `${typeName}_${normalize(v).replace(/ /g, '_').t
 
 const pairs=lodash.zip(constants, values)
 
-pairs.map(([constant]) => console.log(`const ${constant}="${constant}"`))
+pairs.map(([constant]) => console.log(`const ${constant}=\`${constant}\``))
 
 console.log(`\nconst ${typeName}={`)
-pairs.map(([constant, value]) => console.log(`\  [${constant}]:"${value}",`))
+pairs.map(([constant, value]) => console.log(`\  [${constant}]:\`${value}\`,`))
 console.log('}')

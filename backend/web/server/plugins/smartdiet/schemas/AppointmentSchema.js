@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const moment=require('moment')
 const {schemaOptions} = require('../../../utils/schemas')
-const {idEqual}=require('../../../utils/database')
+const {idEqual, DUMMY_REF}=require('../../../utils/database')
 const {
   APPOINTMENT_CURRENT,
   APPOINTMENT_PAST,
@@ -17,12 +17,26 @@ const AppointmentSchema = new Schema({
     ref: 'coaching',
     required: [true, 'Le coaching est obligatoire'],
   },
+  diet: {
+    type: Schema.Types.ObjectId,
+    ref: 'user',
+    index: true,
+    required: [true, 'La diet est obligatoire'],
+  },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'user',
+    index: true,
+    required: [true, 'Le patient est obligatoire'],
+  },
   start_date: {
     type: Date,
+    index: true,
     required: [true, 'La date de début est obligatoire'],
   },
   end_date: {
     type: Date,
+    index: true,
     validate: [function(v) { return moment(v).isAfter(this.start_date)}, 'La fin doit être postérieure au début'],
     required: [true, 'La date de fin est obligatoire'],
   },
@@ -65,14 +79,14 @@ const AppointmentSchema = new Schema({
     type: Number,
     required: false,
   },
-}, schemaOptions)
+  }, schemaOptions)
 
-AppointmentSchema.virtual('order').get(function() {
+AppointmentSchema.virtual('order', DUMMY_REF).get(function() {
   return lodash.sortBy(this.coaching?.appointments||[], 'start_date')
    .findIndex(app => idEqual(app._id, this._id))+1
 })
 
-AppointmentSchema.virtual('status').get(function() {
+AppointmentSchema.virtual('status', DUMMY_REF).get(function() {
   const now=moment()
   const start=moment(this.start_date)
   const end=moment(this.end_date)

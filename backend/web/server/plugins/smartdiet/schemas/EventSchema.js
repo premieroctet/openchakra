@@ -4,12 +4,14 @@ const {
   APPOINTMENT_TO_COME,
   EVENT_COLL_CHALLENGE,
   EVENT_TYPE,
-  HOME_STATUS
+  HOME_STATUS,
+  APPOINTMENT_STATUS
 } = require('../consts')
 const moment = require('moment')
 const mongoose = require('mongoose')
 const bcrypt=require('bcryptjs')
 const {schemaOptions} = require('../../../utils/schemas')
+const { DUMMY_REF } = require('../../../utils/database')
 
 const Schema = mongoose.Schema
 
@@ -48,20 +50,24 @@ const EventSchema = new Schema({
     default: 0,
     required: true,
   },
+  status: {
+    type: String,
+    enum: Object.keys(APPOINTMENT_STATUS),
+  },
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
-EventSchema.virtual('type').get(function () {
+EventSchema.virtual('type', DUMMY_REF).get(function () {
   return null
 })
 
-EventSchema.virtual('duration').get(function () {
+EventSchema.virtual('duration', DUMMY_REF).get(function () {
   return moment(this.end_date).diff(this.start_date, 'minutes')
 })
 
-EventSchema.virtual('status').get(function () {
-  return null
-})
+// EventSchema.virtual('status').get(function () {
+//   return null
+// })
 
 /* eslint-enable prefer-arrow-callback */
 
