@@ -374,7 +374,7 @@ describe('Performance ', () => {
     console.timeEnd('consitency')
   })
 
-  it.only('Must count users and diets', async () => {
+  it('Must count users and diets', async () => {
     const user=await User.findOne({role: ROLE_SUPER_ADMIN})
     const fields=['firstname']
     const diets=await loadFromDb({model: 'diet', fields, user})
@@ -383,5 +383,19 @@ describe('Performance ', () => {
     console.log('user', users.length)
   })
 
+  it.only('Must return individual challenges', async() => {
+    const user=await User.findOne(USER_CRITERION)
+    // const url=`https://localhost:4201/myAlfred/api/studio/loggedUser/?fields=passed_individual_challenges.picture`
+    const url=`https://localhost:4201/myAlfred/api/studio/loggedUser/?fields=passed_individual_challenges.picture&limit.company.groups=30&limit=30&limit.past_webinars=30&limit.passed_individual_challenges=30&limit.collective_challenges=1&limit.individual_challenges=1&limit.available_menus=2&limit.past_menus=12&limit.future_menus=30&limit.collective_challenges=1&limit.company.groups=30&limit.available_webinars=1&sort.future_menus.start_date=desc&sort.collective_challenges.creation_date=desc&`
+    const fields=url.replace(/^.*fields=/, '').replace(/\&.*$/, '').split(',')
+    const params=url.split('&').filter(v => /^(limit|sort|filter)/.test(v)).map(v => v.split('='))
+    let data;
+    for (let index = params.length; index>=0; index--) {
+      const localParams=Object.fromEntries(params.slice(0, index))
+      console.log('Params', localParams)
+      data=(await loadFromDb({model: 'user', id: user._id, fields, params: localParams, user}))[0]
+      expect(data.passed_individual_challenges.length).toEqual(4)
+    }
+  })
 })
 

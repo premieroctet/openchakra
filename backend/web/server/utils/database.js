@@ -319,7 +319,7 @@ const buildPopulates = ({modelName, fields, filters, limits, sorts, parentField,
   // Retain all ref fields
   const model=getModels()[modelName]
   if (!model) {
-    console.warn(`Can not populate model ${modelName}`)
+    // console.warn(`Can not populate model ${modelName}`)
     return undefined
   }
   const attributes=model.attributes

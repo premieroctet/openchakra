@@ -400,7 +400,6 @@ UserSchema.virtual('_all_webinars', DUMMY_REF).get(function() {
 UserSchema.virtual('webinars', DUMMY_REF).get(function() {
   const exclude=[
     ...(this.skipped_events?.map(s => s._id)||[]),
-    ...(this.passed_events?.map(s => s._id)||[]),
   ]
   const res=lodash(this.company?.webinars || [])
     .filter(w => !exclude.some(excl => idEqual(excl._id, w._id)))
@@ -414,8 +413,8 @@ UserSchema.virtual('available_webinars', DUMMY_REF).get(function() {
   const now=moment()
   const webinars=lodash(this.webinars)
     .filter(w => moment(w.end_date).isAfter(now))
-    .value()
-  return webinars
+    .first()
+  return webinars ? [webinars] : []
 })
 
 // Webinars finished

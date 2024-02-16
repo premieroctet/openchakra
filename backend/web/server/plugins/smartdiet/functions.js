@@ -451,7 +451,7 @@ USER_MODELS.forEach(m => {
   // })
   declareVirtualField({
     model: m, field: 'webinars', instance: 'Array',
-    requires: 'company,company.webinars,skipped_events,passed_events', multiple: true,
+    requires: 'company,company.webinars.key,skipped_events,passed_events', multiple: true,
     caster: {
       instance: 'ObjectID',
       options: { ref: 'webinar' }
@@ -617,7 +617,7 @@ USER_MODELS.forEach(m => {
   })
   declareVirtualField({
     model: m, field: 'current_individual_challenge', instance: 'individualChallenge',
-    requires: 'registered_events,failed_events,passed_events',
+    requires: 'registered_events,failed_events,passed_events,passed_events,routine_events',
     multiple: false,
     caster: {
       instance: 'ObjectID',
