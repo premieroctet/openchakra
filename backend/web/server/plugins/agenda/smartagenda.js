@@ -264,8 +264,8 @@ const getAvailabilities = ({diet_id, from, to, appointment_type, remaining_calls
         .then(dispos2 => [...dispos, ...dispos2])
     })
     .catch(err => {
-      console.error(err)
       if (err?.response?.status==404) {
+        console.error(`No availabilities for ${diet_id}`)
         return []
       }
       throw err
@@ -332,9 +332,10 @@ const synchronizeAvailabilities = () => {
           Promise.resolve([])
           :
           runPromisesWithDelay(combinations.map(([diet, app_type]) => () => {
+            console.log(diet.email, diet.smartagenda_id, start, end, app_type.smartagenda_id)
             return getAvailabilities({diet_id: diet.smartagenda_id, from: start, to: end, appointment_type: app_type.smartagenda_id})
             .then(avails => avails.map(avail => ({ user: diet._id, appointment_type: app_type._id, start_date: avail.start_date })))
-        }), 0)
+        }), 100)
         .then(results => {
           const params=lodash(results).map(f => f.value || []).flatten().value()
           // Clear all then create new availabilities
