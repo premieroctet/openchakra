@@ -1995,7 +1995,7 @@ cron.schedule('0 0 1 * * *', async () => {
   .then(() => Appointment.find({$or: [{diet: null},{user: null}]}).populate('coaching'))
   .then(appts => {
     console.log('DB to update:', !lodash.isEmpty(appts))
-    return Promise.all(appts.map(app => {
+    return Promise.allSettled(appts.map(app => {
       console.log(app.coaching.user, app.coaching.diet)
       app.user=app.coaching.user
       app.diet=app.coaching.diet
