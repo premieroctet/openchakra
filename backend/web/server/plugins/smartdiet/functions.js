@@ -218,23 +218,19 @@ const preprocessGet = ({ model, fields, id, user, params }) => {
     }
   }
   if (['appointment', 'currentFutureAppointment', 'pastAppointment'] .includes(model)) {
-    let filter={}
     if (user.role==ROLE_EXTERNAL_DIET) {
-      filter={diet: user._id}
+      params['filter.diet']=user._id
     }
     else if (user.role==ROLE_CUSTOMER) {
-      filter={user: user._id}
+      params['filter.user']=user._id
     }
     if (model=='currentFutureAppointment') {
-      filter={...filter, end_date: {$gte: moment()}}
+      params['filter.end_date']={$gte: moment()}
     }
     if (model=='pastAppointment') {
-      filter={...filter, end_date: {$lt: moment()}}
+      params['filter.end_date']={$lt: moment()}
     }
-    return Appointment.find(filter, '_id')
-    .then(ids => ({model: 'appointment', fields, id, user, 
-      params: {...params, 'filter._id': {$in: ids}}
-    }))
+    return Promise.resolve({model: 'appointment', fields, id, user, params})
   }
 
   if (model == 'adminDashboard') {

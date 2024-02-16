@@ -31,10 +31,12 @@ const AppointmentSchema = new Schema({
   },
   start_date: {
     type: Date,
+    index: true,
     required: [true, 'La date de début est obligatoire'],
   },
   end_date: {
     type: Date,
+    index: true,
     validate: [function(v) { return moment(v).isAfter(this.start_date)}, 'La fin doit être postérieure au début'],
     required: [true, 'La date de fin est obligatoire'],
   },
