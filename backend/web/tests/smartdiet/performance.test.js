@@ -383,17 +383,17 @@ describe('Performance ', () => {
     console.log('user', users.length)
   })
 
-  it.only('Must return individual challenges', async() => {
+  it.only('Must return passed individual challenges', async() => {
     const user=await User.findOne(USER_CRITERION)
-    // const url=`https://localhost:4201/myAlfred/api/studio/loggedUser/?fields=passed_individual_challenges.picture`
-    const url=`https://localhost:4201/myAlfred/api/studio/loggedUser/?fields=passed_individual_challenges.picture&limit.company.groups=30&limit=30&limit.past_webinars=30&limit.passed_individual_challenges=30&limit.collective_challenges=1&limit.individual_challenges=1&limit.available_menus=2&limit.past_menus=12&limit.future_menus=30&limit.collective_challenges=1&limit.company.groups=30&limit.available_webinars=1&sort.future_menus.start_date=desc&sort.collective_challenges.creation_date=desc&`
-    const fields=url.replace(/^.*fields=/, '').replace(/\&.*$/, '').split(',')
+    const urlOk='https://localhost:4201/myAlfred/api/studio/loggedUser/?fields=individual_challenges.name,individual_challenges.description,collective_challenges.start_date,collective_challenges.end_date,collective_challenges.name,collective_challenges.picture,passed_individual_challenges.trophy_picture,passed_individual_challenges.name,passed_individual_challenges,collective_challenges,individual_challenges.key.picture,individual_challenges,available_menus.picture,available_menus.name,available_menus.start_date,available_menus.end_date,available_menus,past_menus,future_menus,individual_challenges.trick,passed_individual_challenges.description,past_webinars.duration,available_menus.document,future_menus.picture,future_menus.name,future_menus.start_date,future_menus.end_date,future_menus.document,past_menus.picture,past_menus.name,past_menus.start_date,past_menus.end_date,past_menus.document,individual_challenges.status,individual_challenges.hardness,available_webinars.key.picture,available_webinars.picture,available_webinars.start_date,available_webinars.end_date,available_webinars.duration,available_webinars.name,available_webinars.description,available_webinars&limit.company.groups=30&limit=30&limit.past_webinars=30&limit.passed_individual_challenges=30&limit.collective_challenges=1&limit.individual_challenges=1'
+    const urlNOK=`https://localhost:4201/myAlfred/api/studio/loggedUser/?fields=surveys.questions,surveys,passed_individual_challenges,passed_individual_challenges.trophy_picture,passed_individual_challenges.name,measures,picture&limit.surveys.questions=30&limit.surveys=1&limit.passed_individual_challenges=30&limit=30&limit=30&limit=30&sort.surveys.questions.order=asc&sort.surveys.update_date=desc&`
+    const url=urlNOK
+    const fields=url.replace(/^.*fields=/, '').replace(/\&.*$/, '').split(',').filter(f => !/past_/.test(f)).filter(f => !/webinar/.test(f)).sort()
     const params=url.split('&').filter(v => /^(limit|sort|filter)/.test(v)).map(v => v.split('='))
-    let data;
-    for (let index = params.length; index>=0; index--) {
-      const localParams=Object.fromEntries(params.slice(0, index))
-      console.log('Params', localParams)
-      data=(await loadFromDb({model: 'user', id: user._id, fields, params: localParams, user}))[0]
+    for (let index = fields.length+1; index >=0; index--  ) {
+      const localFields=lodash.uniq(['passed_individual_challenges.picture',...fields.slice(0, index)])
+      console.log(localFields)
+      const data=(await loadFromDb({model: 'user', id: user._id, fields: localFields, params, user}))[0]
       expect(data.passed_individual_challenges.length).toEqual(4)
     }
   })

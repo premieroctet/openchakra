@@ -508,7 +508,8 @@ USER_MODELS.forEach(m => {
   })
   declareVirtualField({
     model: m, field: 'passed_individual_challenges', instance: 'Array',
-    requires: '_all_individual_challenges,passed_events', multiple: true,
+    // TODO WTF available_menus is required to get passed_individual_challenges !!!
+    requires: '_all_individual_challenges,passed_events,registered_events,available_menus', multiple: true,
     caster: {
       instance: 'ObjectID',
       options: { ref: 'individualChallenge' }
