@@ -294,7 +294,7 @@ const getAvailabilities = ({diet_id, from, to, appointment_type, remaining_calls
 
 // Synchronize availabilities every minute
 // ENABLED UNTIL SMARTAGENDA WEBHOOK
-!config.isDevelopment() && cron.schedule('0 * * * * *', () => {
+!config.isDevelopment() && cron.schedule('0 */30 * * * *', () => {
   synchronizeAvailabilities()
 })
 
