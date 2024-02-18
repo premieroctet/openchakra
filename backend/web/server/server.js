@@ -136,6 +136,7 @@ require('./models/Patient')
 require('./models/CurrentFutureAppointment')
 require('./models/PastApppointment')
 require('./models/Diet')
+require('./models/Conversation')
 
 const {MONGOOSE_OPTIONS} = require('./utils/database')
 

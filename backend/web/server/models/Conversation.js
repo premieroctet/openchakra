@@ -8,7 +8,7 @@ try {
   ConversationSchema.plugin(require('mongoose-lean-virtuals'))
 }
 catch(err) {
-  if (err.code !== 'MODULE_NOT_FOUND') {
+    if (err.code !== 'MODULE_NOT_FOUND') {
     throw err
   }
 }

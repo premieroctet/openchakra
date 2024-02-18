@@ -168,7 +168,7 @@ const Message = require('../../models/Message')
 const Lead = require('../../models/Lead')
 const cron = require('../../utils/cron')
 const Group = require('../../models/Group')
-const MenuSchema = require('./schemas/MenuSchema')
+const Conversation = require('./models/Conversation')
 
 const filterDataUser = ({ model, data, id, user }) => {
   if (model == 'offer' && !id) {
@@ -2004,6 +2004,29 @@ cron.schedule('0 0 1 * * *', async () => {
   })
   .then(() => console.log(`Update appointments with user & diet OK`))
   .catch(err => console.error(`Update appointments with user & diet`, err))
+
+// Create conversations
+// console.log('KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK')
+// Conversation.create({})
+//   .then(console.log)
+//   .catch(console.error)
+/**
+Message.find()
+.then(() => Appointment.find({$or: [{diet: null},{user: null}]}).populate('coaching'))
+.then(appts => {
+  console.log('DB to update:', !lodash.isEmpty(appts))
+  return Promise.allSettled(appts.map(app => {
+    console.log(app.coaching.user, app.coaching.diet)
+    app.user=app.coaching.user
+    app.diet=app.coaching.diet
+    return app.save()
+  }))
+})
+.then(() => console.log(`Update appointments with user & diet OK`))
+.catch(err => console.error(`Update appointments with user & diet`, err))
+*/
+
+console.log('OK')
 
 module.exports = {
   ensureChallengePipsConsistency,

@@ -4,6 +4,11 @@ const { DUMMY_REF } = require('../../../utils/database')
 const Schema = mongoose.Schema
 
 const MessageSchema = new Schema({
+  conversation: {
+    type: Schema.Types.ObjectId,
+    ref: 'conversation',
+    required: [true, `La conversation est obligatoire`],
+  },
   content: {
     type: String,
     required: [true, 'Le message est obligatoire'],
