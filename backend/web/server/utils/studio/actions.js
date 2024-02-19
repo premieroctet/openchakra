@@ -97,8 +97,9 @@ let ACTIONS = {
     return getSession(id)
   },
 
-  sendMessage: ({destinee, content, attachment}, sender) => {
-    return Message.create({sender: sender._id, receiver: destinee, content, attachment})
+  sendMessage: (params, sender) => {
+    const {destinee, content, attachment}=params
+    return Message.create({...params, sender: sender._id, receiver: destinee, content, attachment})
       .then(m => Message.findById(m._id).populate('sender').populate('receiver'))
       .then(m => {
         getDataModel()=='fumoir' && fumoirMailing && fumoirMailing.sendNewMessage({member: m.receiver, partner: m.sender})

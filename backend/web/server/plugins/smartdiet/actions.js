@@ -33,6 +33,7 @@ const Team = require('../../models/Team')
 const TeamMember = require('../../models/TeamMember')
 const lodash = require('lodash')
 const Lead = require('../../models/Lead')
+const Conversation = require('../../models/Conversation')
 
 const smartdiet_join_group = ({ value, join }, user) => {
   return Group.findByIdAndUpdate(value, join ? { $addToSet: { users: user._id } } : { $pull: { users: user._id } })
@@ -257,11 +258,28 @@ addAction('smartdiet_affect_lead', affectLead)
 const orgSendMessage = ACTIONS.sendMessage
 
 const sendMessageOverride = (params, sender) => {
-  return orgSendMessage(params, sender)
-    .then(message => {
-      sendNewMessage({ user: message.receiver })
-      return message
+  // destinee may be a user or a conversation
+  return Conversation.findById(params.destinee)
+    .then(conv => {
+      // destinee id was a conversation
+      if (conv) {
+        return conv.getPartner(sender._id)
+          .then(partner => {
+            params.destinee=partner._id
+            return conv
+          })
+      }
+      else {
+        return Conversation.getFromUsers(sender._id, params.destinee)
+      }
     })
+    .then(conv => {
+      return orgSendMessage({...params, conversation: conv._id}, sender)
+      .then(message => {
+        sendNewMessage({ user: message.receiver })
+        return message
+      })
+      })
 }
 addAction('sendMessage', sendMessageOverride)
 

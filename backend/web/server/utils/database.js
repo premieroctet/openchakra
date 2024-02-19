@@ -944,7 +944,7 @@ const display = data => {
 
 const ensureUniqueDataFound = (id, data) => {
   if (id && lodash.isEmpty(data)) {
-    throw new NotFoundError(`Can't find ${model}:${id}`)
+    throw new NotFoundError(`Can't find id ${id}`)
   }
   return data
 }

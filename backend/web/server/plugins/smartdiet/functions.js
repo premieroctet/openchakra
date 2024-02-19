@@ -247,9 +247,14 @@ const preprocessGet = ({ model, fields, id, user, params }) => {
   if (model == 'conversation') {
     // Conversation id is the conversatio nid OR the other's one id
     if (id) {
-      return Conversation.findOne({_id: id})
-        .then(conv => conv ||Conversation.getFromUsers(user._id, id))
-        .then(conv => ({ model, fields, id: conv._id, params }))
+      return Conversation.findById(id)
+        .then(conv => {
+          const res=conv || Conversation.getFromUsers(user._id, id)
+          return res
+        })
+        .then(conv => {
+          return {model, fields, id: conv._id, params }
+        })
     }
     else {
       params['filter.users']=user._id
@@ -284,6 +289,8 @@ const preCreate = ({ model, params, user }) => {
   }
   if (['message'].includes(model)) {
     params.sender = user
+    return Conversation.getFromUsers(user, params.destinee)
+      .then(c => ({model, params:{...params, conversation: c._id}}))
   }
   if (['content'].includes(model)) {
     params.creator = user
@@ -1320,10 +1327,14 @@ declareVirtualField({model: 'conversation', field: 'latest_messages',instance: '
 declareVirtualField({model: 'conversation', field: 'messages_count',instance: 'Number'})
 
 
-const getConversationPartner = async (userId, params, data) => {
-  const conv=await Conversation.findById(data._id, {users:1})
-  const partnerId=idEqual(conv.users[0], userId) ? conv.users[1]._id : conv.users[0]._id
-  return User.findById(partnerId).populate('company')
+const getConversationPartner = (userId, params, data) => {
+  return Conversation.findById(data._id, {users:1})
+    .then(conv => {
+      return conv.getPartner(userId) 
+    })
+    .then(partner => {
+      return User.findById(partner._id).populate('company')
+    })
 }
 
 declareComputedField({model: 'conversation', field: 'partner', getterFn: getConversationPartner})

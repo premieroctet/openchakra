@@ -21,6 +21,7 @@ class FullExport(object):
         if documents and not doc in documents:
           continue
         d = None
+        print("Exporting", doc)
         out = open(os.path.join(directory, "{}.csv".format(doc)), "w", encoding='utf-8')
         keys=[]
         items = self.db.get_items(doc)
