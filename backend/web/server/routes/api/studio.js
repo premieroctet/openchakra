@@ -152,10 +152,10 @@ router.post('/s3deletefile', deleteFileFromAWS, (req, res) => {
 // Hooks agenda modifications
 router.post('/agenda-hook', (req, res) => {
   console.log(`Agenda hook received ${JSON.stringify(req.body)}`)
-  if (agendaHookFn) {
-    agendaHookFn(req.body)
-  }
-  return res.json()
+  return agendaHookFn ? agendaHookFn(req.body) : Promise.resolve()
+    .then(console.log)
+    .catch(console.error)
+    .finally(res.json())
 })
 
 router.get('/action-allowed/:action', passport.authenticate('cookie', {session: false}), (req, res) => {

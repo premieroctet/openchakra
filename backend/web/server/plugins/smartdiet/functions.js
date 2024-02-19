@@ -1865,26 +1865,29 @@ const agendaHookFn = received => {
     ])
       .then(([diet, user, appointment_type]) => {
         if (!(diet && user && appointment_type)) {
-          throw new Error(`Insert appointment missing info:${!!diet} ${!!user} ${!!appointment_type}`)
+          throw new BadRequestError(`Insert appointment missing info:diet ${equipe_id}=>${!!diet}, user ${client_id}=>${!!user} app type ${presta_id}=>${!!appointment_type}`)
         }
-        return Coaching.find({ user }).sort({ [CREATED_AT_ATTRIBUTE]: -1 })
-          .then(coachings => {
-            if (lodash.isEmpty(coachings)) {
+        return Coaching.findOne({ user }).sort({ [CREATED_AT_ATTRIBUTE]: -1 }).limit(1)
+          .then(coaching => {
+            if (!coaching) {
               throw new Error(`No coaching defined`)
             }
             return Appointment.findOneAndUpdate(
               { smartagenda_id: objId },
               {
-                coaching: coachings[0], appointment_type, smartagenda_id: objId,
-                start_date: start_date_gmt, end_date: end_date_gmt
+                coaching: coaching, appointment_type, smartagenda_id: objId,
+                start_date: start_date_gmt, end_date: end_date_gmt,
+                user, diet,
               },
-              { upsert: true }
+              { upsert: true, runValidators: true }
             )
           })
       })
+      .then(console.log)
+      .catch(console.error)
   }
   if (action == HOOK_UPDATE) {
-    console.log(`UPdateing appointment smartagenda_id ${objId}`)
+    console.log(`Updating appointment smartagenda_id ${objId}`)
     return Promise.all([
       Appointment.findOne({ smartagenda_id: objId }),
       AppointmentType.findOne({ smartagenda_id: presta_id }),
@@ -1898,6 +1901,8 @@ const agendaHookFn = received => {
           { appointment_type, start_date: start_date_gmt, end_date: end_date_gmt }
         )
       })
+      .then(console.log)
+      .catch(console.error)
   }
 }
 

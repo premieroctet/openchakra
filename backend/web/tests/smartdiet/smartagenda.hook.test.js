@@ -44,4 +44,9 @@ describe('SmartAgenda test ', () => {
     expect(appointments_count_after).toEqual(appointments_count-1)
   })
 
+  it.only('Must not crash on bad hook data', async() => {
+    const DATA={"sender":"smartagenda","senderSite":"devsmartdiet2","objClass":"pdo_events","objId":"1530","action":"insert","timestamp":"2023-11-13 16:39:05","data":{"obj":{"start_date":"2023-11-16 09:00:00","end_date":"2023-11-16 10:00:00","text":"Un rendez-vous","rec_type":"","event_pid":"0","event_length":"0","presta_id":"13","equipe_id":"14","ressource_id":"0","client_id":"7165","venu":"","internet":"O","client_montant":"","couleur":"","client_nom":"","client_prenom":"","client_adresse":"","client_telephone":"","client_portable":"","client_mail":"","client_date_naissance":"","client_infos":"","client_sexe":"","date_modification_date":"0000-00-00 00:00:00","date_creation":"2023-11-13 16:38:35","date_maj":"0000-00-00 00:00:00","client_code_postal":"","client_ville":"","montant_presta":"0.00","montant_produit":"0.00","c1":"","c2":"","c3":"","c4":"","c5":"","c6":"","c7":"","c8":"","c9":"","c10":"","cc1":"","cc2":"","cc3":"","cc4":"","cc5":"","cc6":"","cc7":"","cc8":"","cc9":"","cc10":"","recurrence":"","liste_attente":"","start_date_gmt":"2023-11-16T08:00:00Z","end_date_gmt":"2023-11-16T09:00:00Z","id":"1530"}},"hash":"fc6b93fb90f01dde1192300e2cd3c034aabef10726d17c42b7c97a2be960db36"}
+    await agendaHookFn(DATA)
+  })
+
 })
