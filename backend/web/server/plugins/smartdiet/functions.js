@@ -168,7 +168,7 @@ const Message = require('../../models/Message')
 const Lead = require('../../models/Lead')
 const cron = require('../../utils/cron')
 const Group = require('../../models/Group')
-const Conversation = require('./models/Conversation')
+const Conversation = require('../../models/Conversation')
 
 const filterDataUser = ({ model, data, id, user }) => {
   if (model == 'offer' && !id) {
@@ -245,34 +245,15 @@ const preprocessGet = ({ model, fields, id, user, params }) => {
 
   }
   if (model == 'conversation') {
-    const getPartner = (m, user) => {
-      return idEqual(m.sender._id, user._id) ? m.receiver : m.sender
+    // Conversation id is the conversatio nid OR the other's one id
+    if (id) {
+      return Conversation.findOne({_id: id})
+        .then(conv => conv ||Conversation.getFromUsers(user._id, id))
+        .then(conv => ({ model, fields, id: conv._id, params }))
     }
-
-    // Get non-group messages (i.e. no group attribute)
-    return Message.find({ $and: [{ $or: [{ sender: user._id }, { receiver: user._id }] }, { group: null }] })
-      .populate({ path: 'sender', populate: { path: 'company' } })
-      .populate({ path: 'receiver', populate: { path: 'company' } })
-      .sort({ CREATED_AT_ATTRIBUTE: 1 })
-      .then(messages => {
-        if (id) {
-          messages = messages.filter(m => idEqual(getPartner(m, user)._id, id))
-          // If no messages for one parner, forge it
-          if (lodash.isEmpty(messages)) {
-            return User.findById(id).populate('company')
-              .then(partner => {
-                const data = [{ _id: partner._id, partner, messages: [] }]
-                return { model, fields, id, data }
-              })
-          }
-        }
-        const partnerMessages = lodash.groupBy(messages, m => getPartner(m, user)._id)
-        const convs = lodash(partnerMessages)
-          .values()
-          .map(msgs => { const partner = getPartner(msgs[0], user); return ({ _id: partner._id, partner, messages: msgs }) })
-          .orderBy(conv => lodash.maxBy(conv.messages, CREATED_AT_ATTRIBUTE)?.[CREATED_AT_ATTRIBUTE], 'desc')
-        return { model, fields, id, data: convs.value() }
-      })
+    else {
+      params['filter.users']=user._id
+    }
   }
 
   if (model=='patient') {
@@ -1324,6 +1305,28 @@ declareVirtualField({
   requires: 'start_date,duration',
 })
 
+declareVirtualField({model: 'conversation', field: 'messages',instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: { ref: 'message' }
+  },
+})
+declareVirtualField({model: 'conversation', field: 'latest_messages',instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: { ref: 'message' }
+  },
+})
+declareVirtualField({model: 'conversation', field: 'messages_count',instance: 'Number'})
+
+
+const getConversationPartner = async (userId, params, data) => {
+  const conv=await Conversation.findById(data._id, {users:1})
+  const partnerId=idEqual(conv.users[0], userId) ? conv.users[1]._id : conv.users[0]._id
+  return User.findById(partnerId).populate('company')
+}
+
+declareComputedField({model: 'conversation', field: 'partner', getterFn: getConversationPartner})
 
 
 const getDataLiked = (userId, params, data) => {
@@ -2005,26 +2008,35 @@ cron.schedule('0 0 1 * * *', async () => {
   .then(() => console.log(`Update appointments with user & diet OK`))
   .catch(err => console.error(`Update appointments with user & diet`, err))
 
-// Create conversations
-// console.log('KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK')
-// Conversation.create({})
-//   .then(console.log)
-//   .catch(console.error)
-/**
-Message.find()
-.then(() => Appointment.find({$or: [{diet: null},{user: null}]}).populate('coaching'))
-.then(appts => {
-  console.log('DB to update:', !lodash.isEmpty(appts))
-  return Promise.allSettled(appts.map(app => {
-    console.log(app.coaching.user, app.coaching.diet)
-    app.user=app.coaching.user
-    app.diet=app.coaching.diet
-    return app.save()
-  }))
-})
-.then(() => console.log(`Update appointments with user & diet OK`))
-.catch(err => console.error(`Update appointments with user & diet`, err))
-*/
+// Remove messages linked to other than users :-|
+const conversationFilter={group:null}
+Message.find(conversationFilter).populate(['sender', 'receiver'])
+  .then(messages => {
+    // Remove messages having no sender or no receiver
+    const wrongMessages=messages.filter(m => (!m.sender || !m.receiver) || idEqual(m.sender._id, m.receiver._id))
+    console.log(wrongMessages.length, 'invalid messages to remove')
+    return Promise.all(wrongMessages.map(m => m.delete()))
+  })
+  .then(() => Message.find({...conversationFilter, conversation: null}, {sender:1, receiver:1}))
+  .then(messages => {
+    messages=messages.filter(m => m.sender._id != m.receiver._id)
+    const grouped=lodash.groupBy(messages, message => {
+      const sorted = [message.sender._id.toString(), message.receiver._id.toString()].sort();
+      return sorted.join('-');
+    })
+    // Create conversations for each unordered (sender, receiver) pair
+    return Promise.all(Object.keys(grouped).map(key => {
+      const [user1, user2]=key.split('-')
+      return Conversation.getFromUsers(user1, user2)
+    }))
+    // Update messages with their conversations
+    .then(conversations => Promise.all(conversations.map(conv => {
+      const filter={$or: [{sender: conv.users[0], receiver: conv.users[1]}, {sender: conv.users[1], receiver: conv.users[0]}]}
+      return Message.updateMany(filter, {conversation: conv})
+    })))
+  })
+  .then(res => console.log(lodash.sumBy(res, 'nModified'), 'messages updated'))
+  .catch(console.error)
 
 console.log('OK')
 
