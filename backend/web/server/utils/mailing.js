@@ -1,10 +1,9 @@
 let sendUserNotification=null
-console.log('loading')
 try {
   sendUserNotification=require('./firebase').sendUserNotification
 }
 catch(err) {
- console.warn('Could not get firebase module, stack follows', err)
+ console.warn('Could not get firebase module', err.message)
 }
 const {
   getDataModel,

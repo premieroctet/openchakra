@@ -1,5 +1,6 @@
 const lodash = require('lodash')
 const mongoose = require('mongoose')
+const moment=require('moment')
 const formatDuration = require('format-duration')
 const {splitRemaining} = require('../../utils/text')
 const {UPDATED_AT_ATTRIBUTE, CREATED_AT_ATTRIBUTE, MODEL_ATTRIBUTES_DEPTH} = require('../../utils/consts')
@@ -1016,6 +1017,16 @@ const checkIntegrity = () => {
   }
 }
 
+// Creates a date filter to match any hour in a day
+const getDateFilter = ({attribute, day}) => {
+  const start=moment(day).startOf('day')
+  const end=moment(day).endOf('day')
+  return {$and: [
+    {[attribute]: {$gt: start}}, 
+    {[attribute]: {$lt: end}}
+  ]}
+}
+
 module.exports = {
   hasRefs,
   MONGOOSE_OPTIONS,
@@ -1063,6 +1074,6 @@ module.exports = {
   handleReliesOn,
   extractFilters, getCurrentFilter, getSubFilters, extractLimits, getSubLimits,
   getFieldsToCompute, getFirstLevelFields, getNextLevelFields, getSecondLevelFields,
-  DUMMY_REF, checkIntegrity,
+  DUMMY_REF, checkIntegrity, getDateFilter,
 }
 

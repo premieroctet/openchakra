@@ -4,6 +4,7 @@ const {
   setSmsContents
 } = require('../../utils/mailing')
 const {datetime_str} = require('../../../utils/dateutils')
+const { formatDate, formatHour } = require('../../../utils/text')
 
 const SIB_IDS={
   // Firebase notifications
@@ -51,6 +52,9 @@ const SIB_IDS={
   APPOINTEMNT_REMINDER_2_DIET: 5035052, // reminds at 7PM the day before
   DIET_ACTIVATED_2_DIET: 5035013, // 1 week after activated
   */
+ // WEBINARS
+ WEBINAR_REMIND_J15: 5709827,
+ WEBINAR_REMIND_J: 5709849,
 }
 
 const NOTIFICATIONS_CONTENTS={
@@ -238,6 +242,33 @@ const sendNewMessage = ({user}) => {
   })
 }
 
+const sendWebinarJ15 = ({user, webinar}) => {
+  return sendNotification({
+    notification: SIB_IDS.WEBINAR_REMIND_J15,
+    destinee: user,
+    params: {
+      firstname: user.firstname,
+      web_lancement_date: formatDate(webinar.start_date),
+      web_lancement_heure: formatHour(webinar.start_date),
+      web_titre_werbinar: webinar.name,
+    },
+  })
+}
+
+const sendWebinarJ = ({user, webinar}) => {
+  return sendNotification({
+    notification: SIB_IDS.WEBINAR_REMIND_J,
+    destinee: user,
+    params: {
+      firstname: user.firstname,
+      web_lancement_date: formatDate(webinar.start_date),
+      web_lancement_heure: formatHour(webinar.start_date),
+      lien_web_lancement: webinar.url,
+      web_titre_werbinar: webinar.name,
+    },
+  })
+}
+
 module.exports = {
   sendForgotPassword,
   sendDietPreRegister2Diet,
@@ -248,5 +279,5 @@ module.exports = {
   sendIndChallenge6,
   sendNewWebinar, sendWebinarIn3Days,
   sendSaturday1, sendSaturday2, sendSaturday3, sendSaturday4,
-  sendNewMessage,
+  sendNewMessage, sendWebinarJ15, sendWebinarJ,
 }

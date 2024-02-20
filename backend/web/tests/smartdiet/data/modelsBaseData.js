@@ -8,7 +8,7 @@ module.exports={
     name: 'S', size: 10, activity: COMPANY_ACTIVITY_BANQUE,
   },
   USER_DATA:{firstname: 'S', lastname: 'S', dataTreatmentAccepted: true,
-    cguAccepted: true, pseudo: 'S', phone: '0675774324',
+    cguAccepted: true, pseudo: 'S', phone: '0675774324'
   },
   COACHING_DATA: {},
   APPOINTMENT_DATA: {
@@ -50,4 +50,9 @@ module.exports={
   APPOINTMENT_DATA: {
 
   },
+  WEBINAR_DATA: {
+    name: 'Un webinaire',
+    url: 'Une URL',
+    description: 'Description du webinaire',
+  }
 }

@@ -203,7 +203,15 @@ const splitRemaining = (pattern, delimiter) => {
 }
 
 const formatDateTime = datetime => {
-  return moment(datetime).format(`[le] DD/MM/YY [à] HH:mm`)
+  return `le ${formatDate(datetime)} à ${formatTime(datetime)}`
+}
+
+const formatDate = datetime => {
+  return moment(datetime).format(`DD/MM/YY`)
+}
+
+const formatHour = datetime => {
+  return moment(datetime).format(`HH:mm`)
 }
 
 module.exports = {
@@ -229,5 +237,5 @@ module.exports = {
   formatPercent,
   formatDeadline,
   splitRemaining,
-  formatDateTime,
+  formatDateTime, formatDate, formatHour,
 }

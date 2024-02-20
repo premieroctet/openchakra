@@ -15,6 +15,7 @@ const {
   setPreCreateData,
   setPreprocessGet,
   simpleCloneModel,
+  getDateFilter,
 } = require('../../utils/database')
 const {
   sendDietPreRegister2Admin,
@@ -33,6 +34,8 @@ const {
   sendSaturday3,
   sendSaturday4,
   sendWebinarIn3Days,
+  sendWebinarJ15,
+  sendWebinarJ,
 } = require('./mailing')
 const { formatDateTime } = require('../../../utils/text')
 const Webinar = require('../../models/Webinar')
@@ -1986,7 +1989,7 @@ cron.schedule('0 0 8 * * 6', async () => {
 
 
 /**
- * For each lead in coaching to come status, set to caohing converted
+ * For each lead in coaching to come status, set to coaching converted
  * if his first appointment was today
  */
 cron.schedule('0 0 1 * * *', async () => {
@@ -2005,6 +2008,32 @@ cron.schedule('0 0 1 * * *', async () => {
   }
   return Lead.find({ coaching_converted: COACHING_CONVERSION_TO_COME })
     .then(leads => Promise.all(leads.map(lead => checkLead(lead.email))))
+    .then(console.log)
+    .catch(console.error)
+})
+
+// Webinar reminders
+const webinarNotifications = async () => {
+  // Webinars in 15 days
+  const webinars15 = await Webinar.find(getDateFilter({ attribute: 'start_date', day: moment().add(15, 'day') }))
+  const res1 = await Promise.allSettled(webinars15.map(async (webinar) => {
+    const registered = await User.find({ 'registered_events.event': webinar })
+    return Promise.allSettled(registered.map(user => sendWebinarJ15({ user, webinar })))
+  }))
+  const webinars1 = await Webinar.find(getDateFilter({ attribute: 'start_date', day: moment() }))
+  const res2 = await Promise.allSettled(webinars1.map(async (webinar) => {
+    const registered = await User.find({ 'registered_events.event': webinar })
+    return Promise.allSettled(registered.map(user => sendWebinarJ({ user, webinar })))
+  }))
+  const allRes = lodash([...res1, ...res2]).map(v => v.value).flatten().groupBy('status').value()
+  if (allRes.rejected?.length>0) {
+    throw new Error(allRes.rejected.map(re => re.reason))
+  }
+  return allRes.fulfilled?.length || 0
+}
+
+cron.schedule('0 0 8 * * *', async () => {
+  await webinarNotifications()
     .then(console.log)
     .catch(console.error)
 })
@@ -2062,4 +2091,5 @@ module.exports = {
   getRegisterCompany,
   agendaHookFn,
   computeStatistics,
+  webinarNotifications,
 }
