@@ -357,12 +357,14 @@ UserSchema.virtual("surveys", {
   foreignField: "user" // is equal to foreignField
 });
 
-UserSchema.virtual("_all_contents", {
-  ref: "content", // The Model to use
-  localField: "dummy", // Find in Model, where localField
-  foreignField: "dummy" // is equal to foreignField
-});
+const computeTargets = user => {
+  const res=lodash([user.objective_targets,user.health_targets,user.activity_target,user.specificity_targets,user.home_target])
+    .flatten()
+    .filter(v => !!v)
+    .value()
+  return res
 
+}
 // Computed virtual
 UserSchema.virtual('contents', {
   ref: "content", // The Model to use
@@ -370,7 +372,7 @@ UserSchema.virtual('contents', {
   foreignField: "dummy", // is equal to foreignField
   options: {
     match : u => {
-      return {targets: {$in: u.targets}}
+      return {targets: {$in: computeTargets((u))}}
     }
   }
 })
@@ -545,11 +547,7 @@ UserSchema.virtual("pinned_contents", {
 });
 
 UserSchema.virtual("targets", DUMMY_REF).get(function() {
-  const res=lodash([this.objective_targets,this.health_targets,this.activity_target,this.specificity_targets,this.home_target])
-    .flatten()
-    .filter(v => !!v)
-    .value()
-  return res
+  return computeTargets(this)
 })
 
 UserSchema.virtual('offer', DUMMY_REF).get(function() {

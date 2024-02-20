@@ -420,17 +420,8 @@ USER_MODELS.forEach(m => {
   declareEnumField({ model: m, field: 'gender', enumValues: GENDER })
   declareEnumField({ model: m, field: 'activity', enumValues: ACTIVITY })
   declareVirtualField({
-    model: m, field: '_all_contents', instance: 'Array',
-    requires: 'dummy',
-    multiple: true,
-    caster: {
-      instance: 'ObjectID',
-      options: { ref: 'content' }
-    },
-  })
-  declareVirtualField({
     model: m, field: 'contents', instance: 'Array',
-    requires: 'targets,dummy',
+    requires: 'dummy,objective_targets,health_targets,activity_target,specificity_targets,home_target',
     multiple: true,
     caster: {
       instance: 'ObjectID',
@@ -586,7 +577,7 @@ USER_MODELS.forEach(m => {
       options: { ref: 'content' }
     },
   })
-  declareVirtualField({
+declareVirtualField({
     model: m, field: 'targets', instance: 'Array',
     requires: 'objective_targets,health_targets,activity_target,specificity_targets,home_target',
     multiple: true,
