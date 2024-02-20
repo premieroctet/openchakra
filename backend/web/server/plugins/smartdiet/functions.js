@@ -428,14 +428,15 @@ USER_MODELS.forEach(m => {
       options: { ref: 'content' }
     },
   })
-  // declareVirtualField({
-  //   model: m, field: 'contents', instance: 'Array',
-  //   multiple: true,
-  //   caster: {
-  //     instance: 'ObjectID',
-  //     options: { ref: 'content' }
-  //   },
-  // })
+  declareVirtualField({
+    model: m, field: 'contents', instance: 'Array',
+    requires: 'targets,dummy',
+    multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: { ref: 'content' }
+    },
+  })
   declareVirtualField({
     model: m, field: 'webinars', instance: 'Array',
     requires: 'company,company.webinars.key,skipped_events,passed_events', multiple: true,
@@ -586,17 +587,8 @@ USER_MODELS.forEach(m => {
     },
   })
   declareVirtualField({
-    model: m, field: '_all_targets', instance: 'Array',
-    requires: 'dummy',
-    multiple: true,
-    caster: {
-      instance: 'ObjectID',
-      options: { ref: 'target' }
-    },
-  })
-  declareVirtualField({
     model: m, field: 'targets', instance: 'Array',
-    requires: '_all_targets.contents,objective_targets,health_targets,activity_target,specificity_targets,home_target',
+    requires: 'objective_targets,health_targets,activity_target,specificity_targets,home_target',
     multiple: true,
     caster: {
       instance: 'ObjectID',
@@ -1472,8 +1464,8 @@ const getDietPatientsCount = (userId, params, data) => {
     .then(users => users.length)
 }
 
-declareComputedField({model: 'user', field: 'contents', getterFn: getUserContents})
-declareComputedField({model: 'loggedUser', field: 'contents', getterFn: getUserContents})
+// declareComputedField({model: 'user', field: 'contents', getterFn: getUserContents})
+// declareComputedField({model: 'loggedUser', field: 'contents', getterFn: getUserContents})
 declareComputedField({model: 'user', field: 'diet_patients_count', getterFn: getDietPatientsCount})
 declareComputedField({model: 'user', field: 'spoons_count', getterFn: getUserSpoons})
 declareComputedField({model: 'loggedUser', field: 'diet_patients_count', getterFn: getDietPatientsCount})

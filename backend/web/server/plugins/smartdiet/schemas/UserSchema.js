@@ -325,11 +325,6 @@ const UserSchema = new Schema({
   diet_patients_count: {
     type: Number,
   },
-  contents: [{
-    type: Schema.Types.ObjectId,
-    ref: 'content',
-    required: false,
-  }],
   diet_appointments_count: {
     type: Number,
   },
@@ -369,14 +364,16 @@ UserSchema.virtual("_all_contents", {
 });
 
 // Computed virtual
-// UserSchema.virtual('contents', {localField: '_id', foreignField: '_id'}).get(function () {
-//   const user_targets = lodash([this.objective_targets, this.health_targets,
-//     this.activity_target, this.specificity_targets, this.home_target])
-//       .flatten()
-//       .filter(v => !!v)
-//       .value()
-//     return this._all_contents.filter(c => c.default || setIntersects(c.targets, user_targets))
-// })
+UserSchema.virtual('contents', {
+  ref: "content", // The Model to use
+  localField: "dummy", // Find in Model, where localField
+  foreignField: "dummy", // is equal to foreignField
+  options: {
+    match : u => {
+      return {targets: {$in: u.targets}}
+    }
+  }
+})
 
 UserSchema.virtual("available_groups", DUMMY_REF).get(function () {
   return lodash(this.company?.groups)
@@ -547,23 +544,12 @@ UserSchema.virtual("pinned_contents", {
   foreignField: "pins" // is equal to foreignField
 });
 
-UserSchema.virtual("_all_targets", {
-  ref: "target", // The Model to use
-  localField: "dummy", // Find in Model, where localField
-  foreignField: "dummy" // is equal to foreignField
-});
-
 UserSchema.virtual("targets", DUMMY_REF).get(function() {
-  const all_targets=[...(this.objective_targets||[]), ...(this.health_targets||[]),
-    ...(this.specificity_targets||[])]
-  if (this.home_target) {
-    all_targets.push(this.home_target)
-  }
-  if (this.activity_target) {
-    all_targets.push(this.activity_target)
-  }
-  const all_target_ids=all_targets.map(t => t._id)
-  return this._all_targets?.filter(t => all_target_ids.some(i => idEqual(i, t._id))) || []
+  const res=lodash([this.objective_targets,this.health_targets,this.activity_target,this.specificity_targets,this.home_target])
+    .flatten()
+    .filter(v => !!v)
+    .value()
+  return res
 })
 
 UserSchema.virtual('offer', DUMMY_REF).get(function() {

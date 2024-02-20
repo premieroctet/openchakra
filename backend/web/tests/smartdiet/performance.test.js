@@ -406,8 +406,14 @@ describe('Performance ', () => {
     console.log(convs.map(c => [lodash.maxBy(c.messages, CREATED_AT_ATTRIBUTE)?.[CREATED_AT_ATTRIBUTE], c.partner?.fullname] ))
   })
 
-  it.only('Must update diet availabilities', async() => {
+  it('Must update diet availabilities', async() => {
     await synchronizeAvailabilities()
   })
+
+  it.only('Must load contents', async() => {
+    const user=await User.findOne(USER_CRITERION).populate('contents')
+    console.log(user.contents.length)
+  })
+
 })
 
