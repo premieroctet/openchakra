@@ -42,6 +42,7 @@
     "i18next-browser-languagedetector": "^6.1.4",
     "i18next-http-backend": "^1.4.1",
     "iban-validator-js": "^1.0.1",
+    "ics": "^3.7.2",
     "is-webview": "^1.0.1",
     "jsonwebtoken": "^8.5.1",
     "libphonenumber-js": "^1.9.49",

@@ -5,6 +5,7 @@ const {
 } = require('../../utils/mailing')
 const {datetime_str} = require('../../../utils/dateutils')
 const { formatDate, formatHour } = require('../../../utils/text')
+const { generateIcs } = require('../../../utils/ics')
 
 const SIB_IDS={
   // Firebase notifications
@@ -242,7 +243,8 @@ const sendNewMessage = ({user}) => {
   })
 }
 
-const sendWebinarJ15 = ({user, webinar}) => {
+const sendWebinarJ15 = async ({user, webinar}) => {
+  const att=await generateIcs({start: webinar.start_date, end: webinar.end_date, title: webinar.name, url: webinar.url}).catch(console.error)
   return sendNotification({
     notification: SIB_IDS.WEBINAR_REMIND_J15,
     destinee: user,
@@ -252,10 +254,12 @@ const sendWebinarJ15 = ({user, webinar}) => {
       web_lancement_heure: formatHour(webinar.start_date),
       web_titre_werbinar: webinar.name,
     },
+    attachment: att ? {name: 'webinaire.ics', content: Buffer.from(att).toString('base64')} : undefined
   })
 }
 
-const sendWebinarJ = ({user, webinar}) => {
+const sendWebinarJ = async ({user, webinar}) => {
+  const att=await generateIcs({start: webinar.start_date, end: webinar.end_date, title: webinar.name, url: webinar.url}).catch(console.error)
   return sendNotification({
     notification: SIB_IDS.WEBINAR_REMIND_J,
     destinee: user,
@@ -266,6 +270,7 @@ const sendWebinarJ = ({user, webinar}) => {
       lien_web_lancement: webinar.url,
       web_titre_werbinar: webinar.name,
     },
+    attachment: att ? {name: 'webinaire.ics', content: Buffer.from(att).toString('base64')} : undefined
   })
 }
 

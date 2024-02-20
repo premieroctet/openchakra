@@ -52,7 +52,7 @@ module.exports={
   },
   WEBINAR_DATA: {
     name: 'Un webinaire',
-    url: 'Une URL',
+    url: 'https://smartdiet.app',
     description: 'Description du webinaire',
   }
 }
