@@ -30,6 +30,10 @@ class MAILJET_V6 {
       Variables: {...data},
     }
 
+    if (attachment) {
+      message.Attachments=[{Filename: attachment.name, Base64Content: attachment.content, ContentType: "text/calendar"}]
+    }
+
     return this.smtpInstance
       .post('send', {version: 'v3.1'})
       .request({Messages: [message]})
@@ -100,29 +104,6 @@ class MAILJET_V6 {
         return jobId
       })
   }
-
-  /**
-  sendSms(number, data) {
-
-    console.log(`Sending SMS to ${number}, data:${JSON.stringify(data)}`)
-
-    const smsData = new SibApiV3Sdk.SendTransacSms()
-    smsData.sender = 'Contact'
-    smsData.recipient = number
-    smsData.content = data
-    smsData.type = 'transactional'
-
-    this.smsInstance.sendTransacSms(smsData)
-      .then(data => {
-        console.log(`SMS called successfully. Returned data: ${ JSON.stringify(data, null, 2)}`)
-        return true
-      })
-      .catch(err => {
-        console.error(`Error while sending ${JSON.stringify(smsData)}:${JSON.stringify(err.response.body)}`)
-        return false
-      })
-  }
-  */
 
 }
 
