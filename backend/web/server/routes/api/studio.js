@@ -158,6 +158,11 @@ router.post('/agenda-hook', (req, res) => {
     .finally(res.json())
 })
 
+router.post('/mailjet-hook', (req, res) => {
+  console.log(`Mailjet hook received ${JSON.stringify(req.body)}`)
+  return res.json()
+})
+
 router.get('/action-allowed/:action', passport.authenticate('cookie', {session: false}), (req, res) => {
   const {action}=req.params
   const query=lodash.mapValues(req.query, v => {

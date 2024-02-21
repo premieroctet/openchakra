@@ -192,10 +192,13 @@ describe('Worflows', () => {
   })
 
   it.only('Must display contacts list', async() => {
-    const result=await computeWorkflowLists()
-    Object.entries(result).forEach(([key, entry])=> {
-      console.log(key, entry.id, entry.add.length)
-    })
+    const result=await MAIL_HANDLER.getContactsLists()
+    console.log(result)
+    const listId=result[0].ID
+    console.log(listId)
+    const campaigns=await MAIL_HANDLER.getWorkflowsForContactsList({list:listId})
+    console.log(campaigns)
+    const res=await MAIL_HANDLER.addContactsToList({contacts: [{Email: 'sebastien.auvray@wappizy.com'}], list: listId})
   })
 
 })

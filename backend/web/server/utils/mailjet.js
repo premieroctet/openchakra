@@ -1,5 +1,5 @@
 const { isProduction } = require('../../config/config')
-
+const lodash=require('lodash')
 /**
 As from https://dev.mailjet.com/email/reference/contacts/contact-list/
 */
@@ -103,6 +103,13 @@ class MAILJET_V6 {
         //console.log(`Mailjet remove ${filteredContacts.length} contacts from ${list}:jobId is ${jobId}`)
         return jobId
       })
+  }
+
+  getWorkflowsForContactsList({list}) {
+    return this.smtpInstance
+      .get(`campaign?ContactsListID=${list}`, {version: 'v3'})
+      .request()
+      .then(res => lodash.uniq(res.body.Data.map(v => v.WorkflowID)))
   }
 
 }
