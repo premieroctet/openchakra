@@ -62,6 +62,11 @@ const LeadSchema = new Schema({
     type: String,
     required: false,
   },
+  // Did the lead open the 1st campain email
+  mail_opened: {
+    type: Boolean,
+    default: false,
+  },
   operator: {
     type: Schema.Types.ObjectId,
     ref: "user",

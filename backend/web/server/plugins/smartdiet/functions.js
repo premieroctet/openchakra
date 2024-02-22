@@ -1903,6 +1903,32 @@ const agendaHookFn = received => {
   }
 }
 
+/**
+ *   {
+    "event": "open",
+    "time": 1708609191,
+    "MessageID": 104145742346117660,
+    "Message_GUID": "4f7f7a42-e645-443f-ad96-3b7a34bb599f",
+    "email": "sebastien.auvray@wappizy.com",
+    "mj_campaign_id": 7657476082,
+    "mj_contact_id": 5754145803,
+    "customcampaign": "mj.nl=10755340",
+    "ip": "66.249.93.231",
+    "geo": "EU",
+    "agent": "Mozilla/5.0 (Windows NT 5.1; rv:11.0) Gecko Firefox/11.0 (via ggpht.com GoogleImageProxy)",
+    "CustomID": "",
+    "Payload": ""
+  }
+*/
+// On "open" event received, tag the lead as mailOpened
+const mailjetHookFn = received => {
+  events=received.filter(e => e.event=='open')
+  console.log('Mailjet received', events, ' "open" events')
+  const emails=events.map(e => e.email)
+  return Lead.updateMany({email: {$in: emails}}, {mail_opened: true})
+    .then(res => console.log(`Updated ${emails.length} leads open mail`))
+}
+
 // Update workflows
 cron.schedule('0 0 8 * * *', async () => {
   updateWorkflows()
@@ -2072,7 +2098,7 @@ module.exports = {
   ensureChallengePipsConsistency,
   logbooksConsistency,
   getRegisterCompany,
-  agendaHookFn,
+  agendaHookFn, mailjetHookFn,
   computeStatistics,
   webinarNotifications,
 }

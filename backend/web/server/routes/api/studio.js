@@ -43,9 +43,11 @@ const {
 } = require('../../../config/config')
 
 let agendaHookFn=null
+let mailjetHookFn=null
 try {
   require(`../../plugins/${getDataModel()}/functions`)
   agendaHookFn=require(`../../plugins/${getDataModel()}/functions`).agendaHookFn
+  mailjetHookFn=require(`../../plugins/${getDataModel()}/functions`).mailjetHookFn
 }
 catch(err) {
   if (err.code !== 'MODULE_NOT_FOUND') { throw err }
@@ -151,16 +153,21 @@ router.post('/s3deletefile', deleteFileFromAWS, (req, res) => {
 
 // Hooks agenda modifications
 router.post('/agenda-hook', (req, res) => {
+  // First return OK
+  res.json()
   console.log(`Agenda hook received ${JSON.stringify(req.body)}`)
   return agendaHookFn ? agendaHookFn(req.body) : Promise.resolve()
     .then(console.log)
     .catch(console.error)
-    .finally(res.json())
 })
 
 router.post('/mailjet-hook', (req, res) => {
+  // First return OK
+  res.json()
   console.log(`Mailjet hook received ${JSON.stringify(req.body, null, 2)}`)
-  return res.json()
+  return mailjetHookFn ? mailjetHookFn(req.body) : Promise.resolve()
+  .then(console.log)
+  .catch(console.error)
 })
 
 router.get('/action-allowed/:action', passport.authenticate('cookie', {session: false}), (req, res) => {
