@@ -1406,7 +1406,7 @@ const getUserSurveysProgress = (userId, params, data) => {
     .lean({ virtuals: true })
     // Keep surveys questions depending on current ky (==data)
     // TODO: try to filter in populate section above
-    .then(surveys => surveys.map(s => ({ ...s, questions: s.questions.filter(q => idEqual(q.question.key, data._id)) })))
+    .then(surveys => surveys.map(s => ({ ...s, questions: s.questions.filter(q => !!q.answer && idEqual(q.question.key, data._id)) })))
     // Keep surveys having still questions
     .then(surveys => surveys.filter(s => !lodash.isEmpty(s.questions)))
     // Keep questions progress
