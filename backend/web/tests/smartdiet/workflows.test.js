@@ -196,7 +196,7 @@ describe('Worflows', () => {
     console.log(result)
     const listId=result[0].ID
     console.log(listId)
-    const campaigns=await MAIL_HANDLER.getWorkflowsForContactsList({list:listId})
+    const campaigns=await MAIL_HANDLER.getWorkflowsForContactsList({list:listId}).catch(console.error)
     console.log(campaigns)
     const res=await MAIL_HANDLER.addContactsToList({contacts: [{Email: 'sebastien.auvray@wappizy.com'}], list: listId})
   })
