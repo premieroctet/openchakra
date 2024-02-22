@@ -4,6 +4,7 @@ const {
   setSmsContents
 } = require('../../utils/mailing')
 const {datetime_str} = require('../../../utils/dateutils')
+const moment=require('moment')
 const { formatDate, formatHour } = require('../../../utils/text')
 const { generateIcs } = require('../../../utils/ics')
 
@@ -54,6 +55,7 @@ const SIB_IDS={
   DIET_ACTIVATED_2_DIET: 5035013, // 1 week after activated
   */
  // WEBINARS
+ WEBINAR_REMIND_J21: 5709675,
  WEBINAR_REMIND_J15: 5709827,
  WEBINAR_REMIND_J: 5709849,
 }
@@ -243,6 +245,22 @@ const sendNewMessage = ({user}) => {
   })
 }
 
+const sendWebinarJ21 = async ({user, webinar}) => {
+  const att=await generateIcs({start: webinar.start_date, end: webinar.end_date, title: webinar.name, url: webinar.url}).catch(console.error)
+  return sendNotification({
+    notification: SIB_IDS.WEBINAR_REMIND_J21,
+    destinee: user,
+    params: {
+      firstname: user.firstname,
+      web_lancement_date: formatDate(webinar.start_date),
+      web_lancement_heure: formatHour(webinar.start_date),
+      web_titre_webinaire: webinar.name,
+      web_duree_webinaire: moment(webinar.end_date).diff(webinar.start_date, 'hour'),
+    },
+    attachment: att ? {name: 'webinaire.ics', content: Buffer.from(att).toString('base64')} : undefined
+  })
+}
+
 const sendWebinarJ15 = async ({user, webinar}) => {
   const att=await generateIcs({start: webinar.start_date, end: webinar.end_date, title: webinar.name, url: webinar.url}).catch(console.error)
   return sendNotification({
@@ -252,7 +270,8 @@ const sendWebinarJ15 = async ({user, webinar}) => {
       firstname: user.firstname,
       web_lancement_date: formatDate(webinar.start_date),
       web_lancement_heure: formatHour(webinar.start_date),
-      web_titre_werbinar: webinar.name,
+      web_titre_webinaire: webinar.name,
+      web_duree_webinaire: moment(webinar.end_date).diff(webinar.start_date, 'hour'),
     },
     attachment: att ? {name: 'webinaire.ics', content: Buffer.from(att).toString('base64')} : undefined
   })
@@ -267,8 +286,8 @@ const sendWebinarJ = async ({user, webinar}) => {
       firstname: user.firstname,
       web_lancement_date: formatDate(webinar.start_date),
       web_lancement_heure: formatHour(webinar.start_date),
+      web_duree_webinaire: moment(webinar.end_date).diff(webinar.start_date, 'hour'),
       lien_web_lancement: webinar.url,
-      web_titre_werbinar: webinar.name,
     },
     attachment: att ? {name: 'webinaire.ics', content: Buffer.from(att).toString('base64')} : undefined
   })
@@ -284,5 +303,5 @@ module.exports = {
   sendIndChallenge6,
   sendNewWebinar, sendWebinarIn3Days,
   sendSaturday1, sendSaturday2, sendSaturday3, sendSaturday4,
-  sendNewMessage, sendWebinarJ15, sendWebinarJ,
+  sendNewMessage, sendWebinarJ15, sendWebinarJ, sendWebinarJ21,
 }

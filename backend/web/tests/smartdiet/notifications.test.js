@@ -31,15 +31,19 @@ describe('Notifications ', () => {
     let res;
     res=await webinarNotifications()
     expect(res).toEqual(0)
-    const start_date=moment().add(15, 'day'), end_date=moment(start_date).add(1, 'hour')
-    const webinar15=await Webinar.create({...WEBINAR_DATA, start_date, end_date, user})
+
+    const start_date_21=moment().add(21, 'day'), end_date_21=moment(start_date_21).add(1, 'hour')
+    const webinar21=await Webinar.create({...WEBINAR_DATA, start_date: start_date_21, end_date: end_date_21, user})
+    await User.updateOne({}, {$push: {'registered_events': {event: webinar21}}})
+    const start_date_15=moment().add(15, 'day'), end_date_15=moment(start_date_15).add(1, 'hour')
+    const webinar15=await Webinar.create({...WEBINAR_DATA, start_date: start_date_15, end_date: end_date_15, user})
     await User.updateOne({}, {$push: {'registered_events': {event: webinar15}}})
-    res=await webinarNotifications()
-    expect(res).toEqual(1)
+
     const webinarToday=await Webinar.create({...WEBINAR_DATA, start_date:moment(), end_date:moment().add(1.5, 'hour'), user})
     await User.updateOne({}, {$push: {'registered_events': {event: webinarToday}}})
+    
     res=await webinarNotifications()
-    expect(res).toEqual(2)
+    expect(res).toEqual(3)
   })
 })
 

@@ -54,7 +54,7 @@ const mapContactToMailJet = contact => {
 const WORKFLOWS={
   CL_SALAR_LEAD_NOCOA_NOGROUP: {
     id: '2414827',
-    name: 'INEA sans groupe',
+    name: 'SAL NON INSC INEA sans groupe',
     filter: (lead, user) => {
       return isLeadOnly(lead, user)
         && !hasCoaching(lead)
@@ -65,7 +65,7 @@ const WORKFLOWS={
   },
   CL_SALAR_LEAD_COA_NOGROUP: {
     id: '2414829',
-    name: 'ESANI sans groupe',
+    name: 'SAL NON INSC ESANI sans groupe',
     filter: (lead, user) => {
       return isLeadOnly(lead, user)
       && hasCoaching(lead)

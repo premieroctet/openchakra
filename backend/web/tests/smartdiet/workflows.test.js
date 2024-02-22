@@ -192,13 +192,17 @@ describe('Worflows', () => {
   })
 
   it.only('Must display contacts list', async() => {
+    const email='sebastien.auvray@wappizy.com'
     const result=await MAIL_HANDLER.getContactsLists()
     console.log(result)
     const listId=result[0].ID
+    const res=await MAIL_HANDLER.addContactsToList({contacts: [{Email: email}], list: listId})
+    const id=await MAIL_HANDLER.getContactId(email)
+    console.log('ID is', id)
     console.log(listId)
-    const campaigns=await MAIL_HANDLER.getWorkflowsForContactsList({list:listId}).catch(console.error)
-    console.log(campaigns)
-    const res=await MAIL_HANDLER.addContactsToList({contacts: [{Email: 'sebastien.auvray@wappizy.com'}], list: listId})
+    // const campaigns=await MAIL_HANDLER.getWorkflowsForContactsList({list:listId}).catch(console.error)
+    // console.log(campaigns, campaigns.length, 'workflows', campaigns.map(c => c.WorkflowID))
+    await MAIL_HANDLER.removeContactsFromList({contacts: [{Email:email}], list: listId})
   })
 
 })

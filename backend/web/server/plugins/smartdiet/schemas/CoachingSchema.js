@@ -90,7 +90,8 @@ CoachingSchema.virtual('latest_appointments', {
   foreignField: 'coaching',
   options: { 
     match: {start_date: {$lt: moment()} },
-    sort: { start_date: -1 }, limit:1 
+    // sort: { start_date: -1 }, limit:1 
+    sort: { start_date: -1 },
   },
 })
 

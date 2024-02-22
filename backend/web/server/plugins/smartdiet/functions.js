@@ -36,6 +36,7 @@ const {
   sendWebinarIn3Days,
   sendWebinarJ15,
   sendWebinarJ,
+  sendWebinarJ21,
 } = require('./mailing')
 const { formatDateTime } = require('../../../utils/text')
 const Webinar = require('../../models/Webinar')
@@ -1923,7 +1924,7 @@ const agendaHookFn = received => {
 // On "open" event received, tag the lead as mailOpened
 const mailjetHookFn = received => {
   events=received.filter(e => e.event=='open')
-  console.log('Mailjet received', events, ' "open" events')
+  console.log('Mailjet received', events.length, ' "open" events')
   const emails=events.map(e => e.email)
   return Lead.updateMany({email: {$in: emails}}, {mail_opened: true})
     .then(res => console.log(`Updated ${emails.length} leads open mail`))
@@ -2023,18 +2024,25 @@ cron.schedule('0 0 1 * * *', async () => {
 
 // Webinar reminders
 const webinarNotifications = async () => {
+  // Webinars in 21 days
+  const webinars21 = await Webinar.find(getDateFilter({ attribute: 'start_date', day: moment().add(21, 'day') }))
+  const res1 = await Promise.allSettled(webinars21.map(async (webinar) => {
+    const registered = await User.find({ 'registered_events.event': webinar })
+    return Promise.allSettled(registered.map(user => sendWebinarJ21({ user, webinar })))
+  }))
   // Webinars in 15 days
   const webinars15 = await Webinar.find(getDateFilter({ attribute: 'start_date', day: moment().add(15, 'day') }))
-  const res1 = await Promise.allSettled(webinars15.map(async (webinar) => {
+  const res2 = await Promise.allSettled(webinars15.map(async (webinar) => {
     const registered = await User.find({ 'registered_events.event': webinar })
     return Promise.allSettled(registered.map(user => sendWebinarJ15({ user, webinar })))
   }))
+  // Webinars today
   const webinars1 = await Webinar.find(getDateFilter({ attribute: 'start_date', day: moment() }))
-  const res2 = await Promise.allSettled(webinars1.map(async (webinar) => {
+  const res3 = await Promise.allSettled(webinars1.map(async (webinar) => {
     const registered = await User.find({ 'registered_events.event': webinar })
     return Promise.allSettled(registered.map(user => sendWebinarJ({ user, webinar })))
   }))
-  const allRes = lodash([...res1, ...res2]).map(v => v.value).flatten().groupBy('status').value()
+  const allRes = lodash([...res1, ...res2, ...res3]).map(v => v.value).flatten().groupBy('status').value()
   if (allRes.rejected?.length>0) {
     throw new Error(allRes.rejected.map(re => re.reason))
   }

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const bcrypt=require('bcryptjs')
 const {MONGOOSE_OPTIONS} = require('../../server/utils/database')
-const PASSWD=bcrypt.hashSync('password', 10)
+const PASSWD=bcrypt.hashSync('Password1;', 10)
 
 // import all of our models - they need to be imported only once
 const User = require('../../server/models/User')
