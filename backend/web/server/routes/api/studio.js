@@ -159,7 +159,7 @@ router.post('/agenda-hook', (req, res) => {
 })
 
 router.post('/mailjet-hook', (req, res) => {
-  console.log(`Mailjet hook received ${JSON.stringify(req.body)}`)
+  console.log(`Mailjet hook received ${JSON.stringify(req.body, null, 2)}`)
   return res.json()
 })
 
