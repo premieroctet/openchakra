@@ -146,7 +146,7 @@ describe('Worflows', () => {
 
   it('must filter CL_SALAR_REGISTERED_FIRST_COA_APPT', async() => {
     const coaching=await Coaching.create({...COACHING_DATA, user: leadUser})
-    await Appointment.create({...APPOINTMENT_DATA, appointment_type: appointmentType,
+    await Appointment.create({...APPOINTMENT_DATA, appointment_type: appointmentType, user: leadUser, diet,
       start_date: moment().add(-3, 'hour'), end_date:moment().add(-2, 'hour'), coaching,
     })
     const result=await computeWorkflowLists()
@@ -191,7 +191,7 @@ describe('Worflows', () => {
     //console.log(allLists.filter(l => /adh/i.test(l.Name)))
   })
 
-  it.only('Must display contacts list', async() => {
+  it.skip('Must display contacts list', async() => {
     const email='sebastien.auvray@wappizy.com'
     const result=await MAIL_HANDLER.getContactsLists()
     console.log(result)
