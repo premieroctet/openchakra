@@ -181,7 +181,7 @@ const UserSchema = new Schema({
     },
     date: {
       type: Date,
-      default: moment(),
+      default: Date.now,
       required: true,
     }
   }],
@@ -390,6 +390,7 @@ UserSchema.virtual("registered_groups", {
   foreignField: "users" // is equal to foreignField
 });
 
+// TODO get rid of this
 // User's webinars are the company's ones
 UserSchema.virtual('_all_webinars', DUMMY_REF).get(function() {
   return this.company?.webinars||[]
@@ -416,14 +417,17 @@ UserSchema.virtual('available_webinars', DUMMY_REF).get(function() {
   return webinars ? [webinars] : []
 })
 
-// Webinars finished
-UserSchema.virtual('past_webinars', DUMMY_REF).get(function() {
-  const now=moment()
-  const webinars=lodash(this._all_webinars)
-    .filter(w => moment(w.end_date).isBefore(now))
-    .value()
-  return webinars
-})
+// Any past company webinar
+UserSchema.virtual("past_webinars", {
+  ref: "webinar", // The Model to use
+  localField: "company", // Find in Model, where localField
+  foreignField: "companies", // is equal to foreignField
+  options: {
+    match: () => {
+      return {end_date: {$lt: Date.now()}}
+    }
+  },
+});
 
 UserSchema.virtual("_all_individual_challenges", {
   ref: "individualChallenge", // The Model to use
@@ -481,7 +485,9 @@ UserSchema.virtual("available_menus", {
   localField: "dummy", // Find in Model, where localField
   foreignField: "dummy", // is equal to foreignField
   options: {
-    match: {$and:[{start_date: {$lt: moment()}}, {end_date:{$gt: moment()}}]},
+    match: () => {
+      return {start_date: {$lt: Date.now()}, end_date:{$gt: Date.now()}}
+    }
   },
 });
 
@@ -491,7 +497,9 @@ UserSchema.virtual("past_menus", {
   localField: "dummy", // Find in Model, where localField
   foreignField: "dummy", // is equal to foreignField
   options: {
-    match: {end_date:{$lt: moment()}},
+    match: () => {
+      return {end_date:{$lt: Date.now()}}
+    },
     sort: { creation_date: -1 }
   },
 });
@@ -502,7 +510,9 @@ UserSchema.virtual("future_menus", {
   localField: "dummy", // Find in Model, where localField
   foreignField: "dummy", // is equal to foreignField
   options: {
-    match: {start_date:{$gt: moment()}},
+    match: () => {
+      return {start_date:{$gt: Date.now()}}
+    },
     sort: { start_date: 1 }
   },
 });

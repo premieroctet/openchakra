@@ -89,9 +89,10 @@ CoachingSchema.virtual('latest_appointments', {
   localField: '_id',
   foreignField: 'coaching',
   options: { 
-    match: {start_date: {$lt: moment()} },
-    // sort: { start_date: -1 }, limit:1 
-    sort: { start_date: -1 },
+    match : () => {
+      return {start_date: {$lt: Date.now()}}
+    },
+    sort: { start_date: -1 }, limit:1 
   },
 })
 
@@ -102,7 +103,9 @@ CoachingSchema.virtual('appointments_future', {
   localField: '_id',
   foreignField: 'coaching',
   options: {
-    match: {start_date: {$gt: moment()}}
+    match : u => {
+      return {start_date: {$gt: Date.now()}}
+    },
   }
 })
 
@@ -131,7 +134,9 @@ CoachingSchema.virtual('spent_credits', {
   localField: '_id',
   foreignField: 'coaching',
   options: {
-    match: {end_date: {$lt: moment()}} 
+    match: () => {
+      return {end_date: {$lt: Date.now()}} 
+    }
   },
   count: true,
 })
