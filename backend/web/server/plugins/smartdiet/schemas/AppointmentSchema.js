@@ -5,7 +5,11 @@ const {idEqual, DUMMY_REF}=require('../../../utils/database')
 const {
   APPOINTMENT_CURRENT,
   APPOINTMENT_PAST,
-  APPOINTMENT_TO_COME
+  APPOINTMENT_TO_COME,
+  APPOINTMENT_STATUS,
+  APPOINTMENT_VALIDATION_PENDING,
+  APPOINTMENT_VALID,
+  APPOINTMENT_RABBIT
 } = require('../consts')
 const lodash=require('lodash')
 
@@ -79,6 +83,10 @@ const AppointmentSchema = new Schema({
     type: Number,
     required: false,
   },
+  validated: {
+    type: Boolean,
+    required: false,
+  },
   }, schemaOptions)
 
 AppointmentSchema.virtual('order', DUMMY_REF).get(function() {
@@ -88,13 +96,16 @@ AppointmentSchema.virtual('order', DUMMY_REF).get(function() {
 
 AppointmentSchema.virtual('status', DUMMY_REF).get(function() {
   const now=moment()
-  const start=moment(this.start_date)
-  const end=moment(this.end_date)
-  return start.isAfter(now) ?
-    APPOINTMENT_TO_COME
-    : end.isBefore(now) ?
-    APPOINTMENT_PAST:
-    APPOINTMENT_CURRENT
-
+  if (now.isBefore(this.start_date)) {
+    return APPOINTMENT_TO_COME
+  }
+  if (now.isBetween(this.start_date, this.end_date)) {
+    return APPOINTMENT_CURRENT
+  }
+  // Past appt
+  if (lodash.isNil(this.validated) ) {
+    return APPOINTMENT_VALIDATION_PENDING 
+  }
+  return this.validated ? APPOINTMENT_VALID : APPOINTMENT_RABBIT
 })
 module.exports = AppointmentSchema

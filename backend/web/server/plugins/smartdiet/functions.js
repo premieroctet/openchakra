@@ -1201,7 +1201,7 @@ APP_MODELS.forEach(model => {
   })
   declareVirtualField({
     model: model, field: 'status', instance: 'String',
-    requires: 'start_date,end_date', enumValues: APPOINTMENT_STATUS,
+    requires: 'start_date,end_date,validated', enumValues: APPOINTMENT_STATUS,
   })
 })
 

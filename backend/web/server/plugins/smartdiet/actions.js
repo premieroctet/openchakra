@@ -34,6 +34,7 @@ const TeamMember = require('../../models/TeamMember')
 const lodash = require('lodash')
 const Lead = require('../../models/Lead')
 const Conversation = require('../../models/Conversation')
+const Appointment = require('../../models/Appointment')
 
 const smartdiet_join_group = ({ value, join }, user) => {
   return Group.findByIdAndUpdate(value, join ? { $addToSet: { users: user._id } } : { $pull: { users: user._id } })
@@ -454,6 +455,12 @@ const isActionAllowed = ({ action, dataId, user }) => {
             // Get all teams of this team's collective challenge, then check if
             // user in on one of them
             return user.canView(dataId)
+          }
+          if (action == 'smartdiet_validate_appointment') {
+            return Appointment.exists({_id: dataId, validated: {$in: [null, undefined]}, end_date: {$lt: moment()}})
+          }
+          if (action == 'smartdiet_rabbit_appointment') {
+            return Appointment.exists({_id: dataId, validated: {$in: [null, undefined]}, end_date: {$lt: moment()}})
           }
           return Promise.resolve(true)
         })

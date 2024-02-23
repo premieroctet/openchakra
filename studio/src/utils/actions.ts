@@ -647,6 +647,18 @@ export const ACTIONS: IActions = {
     next: [],
   },
 
+  smartdiet_validate_appointment: {
+    label: 'SM appt. validate',
+    options: {},
+    next: ['openPage'],
+  },
+
+  smartdiet_rabbit_appointment: {
+    label: 'SM appt. rabbit',
+    options: {},
+    next: ['openPage'],
+  },
+
 }
 
 export const allowsActions = (component: IComponent) => {
