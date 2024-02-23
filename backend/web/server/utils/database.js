@@ -960,7 +960,7 @@ const loadFromDb = ({model, fields, id, user, params={}}) => {
         return data
       }
       // TODO UGLY but user_surveys_progress does not return if not leaned
-      const localLean=LEAN_DATA || fields.includes('user_surveys_progress') || fields.some(f => /shopping_list/.test(f))
+      const localLean=LEAN_DATA || fields.some(f => /user_surveys_progress/.test(f)) || fields.some(f => /shopping_list/.test(f))
       console.time(`Loading model ${model}`)
       return buildQuery(model, id, fields, params)
         .then(data => {console.timeEnd(`Loading model ${model}`); return data})
