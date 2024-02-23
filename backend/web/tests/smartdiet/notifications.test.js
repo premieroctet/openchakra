@@ -8,6 +8,7 @@ const User = require('../../server/models/User')
 const Company = require('../../server/models/Company')
 const { webinarNotifications } = require('../../server/plugins/smartdiet/functions')
 const Webinar = require('../../server/models/Webinar')
+const { sendAppointmentRemindTomorrow } = require('../../server/plugins/smartdiet/mailing')
 
 forceDataModelSmartdiet()
 
@@ -44,6 +45,17 @@ describe('Notifications ', () => {
     
     res=await webinarNotifications()
     expect(res).toEqual(3)
+  })
+
+  it.only('Must send SMS', async () => {
+    const user=({email: 'test@wappizy.com', phone: '+33675774324'})
+    const diet=({firstname: 'Sonia'})
+    const appointment={
+      start_date: moment().add(1, 'day'), 
+      end_date: moment().add(1, 'day').add(30, 'minute'),
+      user, diet
+    }
+    await sendAppointmentRemindTomorrow({appointment})
   })
 })
 

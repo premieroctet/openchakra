@@ -16,7 +16,20 @@ const lodash=require('lodash')
 const {fillSms} = require('../../utils/sms')
 
 const mailProvider=getMailProvider()
-const MAIL_HANDLER=require(`./${mailProvider}`)
+
+const mailHandlers=lodash(mailProvider).split(',')
+  .map(provider => provider=='brevo' ? 'sendInBlue' : provider)
+  .map(m => [m, require(`./${m}`)])
+  .fromPairs()
+  .value()
+
+console.log('***** Mail Handlers:', Object.keys(mailHandlers))
+
+const MAIL_HANDLER={
+  sendMail: (...params) => Promise.allSettled(Object.values(mailHandlers).map(m => m.sendMail(...params))).then(console.log),
+  sendSms: (...params) => Promise.allSettled(Object.values(mailHandlers).map(m => m.sendSms(...params))).then(console.log),
+  sendNotification: sendUserNotification,
+}
 
 let SMS_CONTENTS = {}
 

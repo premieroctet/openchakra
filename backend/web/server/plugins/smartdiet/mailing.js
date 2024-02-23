@@ -28,6 +28,8 @@ const SIB_IDS={
   SATURDAY_3:16,
   SATURDAY_4:17,
   NEW_MESSAGE:18,
+  // SMS
+  APPOINTMENT_REMIND_TOMORROW: 200,
   // CUSTOMERS
   FORGOT_PASSWORD: 4995801, // OK
   LEAD_ONBOARDING: 4982108,
@@ -59,6 +61,12 @@ const SIB_IDS={
  WEBINAR_REMIND_J15: 5709827,
  WEBINAR_REMIND_J: 5709849,
 }
+
+const SMS_CONTENTS={
+  [SIB_IDS.APPOINTMENT_REMIND_TOMORROW]: 'SmartDiet\nBonjour, nous vous rappelons votre rendez-vous du {{params.appointment_date}} à {{params.appointment_time}} avec {{params.diet_firstname}}',
+}
+
+setSmsContents(SMS_CONTENTS)
 
 const NOTIFICATIONS_CONTENTS={
   [SIB_IDS.INACTIVITY_15_DAYS]:{title: 'SmartDiet', message: `En panne d'idée ? Et si veniez prendre de l'inspiration pour vos prochains repas dans nos Top recettes`},
@@ -293,6 +301,18 @@ const sendWebinarJ = async ({user, webinar}) => {
   })
 }
 
+const sendAppointmentRemindTomorrow = async ({appointment}) => {
+  return sendNotification({
+    notification: SIB_IDS.APPOINTMENT_REMIND_TOMORROW,
+    destinee: appointment.user,
+    params: {
+      appointment_date: formatDate(appointment.start_date),
+      appointment_time: formatHour(appointment.start_date),
+      diet_firstname: appointment.diet.firstname,
+    },
+  })
+}
+
 module.exports = {
   sendForgotPassword,
   sendDietPreRegister2Diet,
@@ -304,4 +324,5 @@ module.exports = {
   sendNewWebinar, sendWebinarIn3Days,
   sendSaturday1, sendSaturday2, sendSaturday3, sendSaturday4,
   sendNewMessage, sendWebinarJ15, sendWebinarJ, sendWebinarJ21,
+  sendAppointmentRemindTomorrow,
 }

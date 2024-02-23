@@ -284,7 +284,7 @@ const checkConfig = () => {
     if (isEmpty(process.env.S3_STUDIO_ROOTPATH)) {
       reject(`S3_STUDIO_ROOTPATH non renseigné`)
     }
-    if (!!getMailProvider() && !['mailjet', 'sendInBlue'].includes(getMailProvider())) {
+    if (!!getMailProvider() && !getMailProvider().split(',').every(mp => ['mailjet', 'sendInBlue', 'brevo'].includes(mp))) {
       reject(`Mail provider ${getMailProvider()} incorrect`)
     }
 

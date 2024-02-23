@@ -37,6 +37,7 @@ const {
   sendWebinarJ15,
   sendWebinarJ,
   sendWebinarJ21,
+  sendAppointmentRemindTomorrow,
 } = require('./mailing')
 const { formatDateTime } = require('../../../utils/text')
 const Webinar = require('../../models/Webinar')
@@ -2053,6 +2054,13 @@ cron.schedule('0 0 8 * * *', async () => {
   await webinarNotifications()
     .then(console.log)
     .catch(console.error)
+})
+
+cron.schedule('0 0 10 * * *', async () => {
+  const filter=getDateFilter({attribute: 'start_date', day: moment().add(1, 'day')})
+  const appts=await Appointment.find(filter).populate('diet').catch(console.error)
+  console.log('Appointments tomorrow reminders:', appts.length)
+  await Promise.allSettled(appts.map(appt => sendAppointmentRemindTomorrow({appointment: appt})))
 })
 
 // Set user & diet on appointments

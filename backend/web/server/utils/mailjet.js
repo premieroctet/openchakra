@@ -39,6 +39,10 @@ class MAILJET_V6 {
       .request({Messages: [message]})
   }
 
+  sendSms() {
+    return Promise.reject('No SMS sent through Mailjet')
+  }
+
   getContactsLists() {
     return this.smtpInstance
       .get(`contactslist?Limit=${RESULTS_LIMIT}`, {version: 'v3'})
