@@ -1027,6 +1027,16 @@ const getDateFilter = ({attribute, day}) => {
   ]}
 }
 
+// Creates a date filter to match any moment in the month
+const getMonthFilter = ({attribute, month}) => {
+  const start=moment(month).startOf('month')
+  const end=moment(month).endOf('month')
+  return {$and: [
+    {[attribute]: {$gte: start}}, 
+    {[attribute]: {$lte: end}}
+  ]}
+}
+
 module.exports = {
   hasRefs,
   MONGOOSE_OPTIONS,
@@ -1074,6 +1084,6 @@ module.exports = {
   handleReliesOn,
   extractFilters, getCurrentFilter, getSubFilters, extractLimits, getSubLimits,
   getFieldsToCompute, getFirstLevelFields, getNextLevelFields, getSecondLevelFields,
-  DUMMY_REF, checkIntegrity, getDateFilter,
+  DUMMY_REF, checkIntegrity, getDateFilter, getMonthFilter,
 }
 

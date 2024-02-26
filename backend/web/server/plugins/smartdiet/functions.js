@@ -176,6 +176,7 @@ const cron = require('../../utils/cron')
 const Group = require('../../models/Group')
 const Conversation = require('../../models/Conversation')
 const UserQuizz = require('../../models/UserQuizz')
+const { computeBilling } = require('./billing')
 
 const filterDataUser = ({ model, data, id, user }) => {
   if (model == 'offer' && !id) {
@@ -249,7 +250,9 @@ const preprocessGet = ({ model, fields, id, user, params }) => {
     }
     return computeStatistics({ id, fields })
       .then(stats => ({ model, fields, id, data: [stats] }))
-
+  }
+  if (model=='billing') {
+    return computeBilling({diet:user, fields })
   }
   if (model == 'conversation') {
     // Conversation id is the conversatio nid OR the other's one id
