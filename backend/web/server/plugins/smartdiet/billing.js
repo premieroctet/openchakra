@@ -63,6 +63,9 @@ const computeBilling = async ({diet, fields}) => {
     current.followup_total=lodash(grouped[APPOINTMENT_TYPE_FOLLOWUP]||[]).sumBy('price')
     current.nutrition_count=grouped[APPOINTMENT_TYPE_NUTRITION]?.length || 0
     current.nutrition_total=lodash(grouped[APPOINTMENT_TYPE_NUTRITION]||[]).sumBy('price')
+    current.impact_count=grouped[APPOINTMENT_TYPE_IMPACT]?.length || 0
+    current.impact_total=lodash(grouped[APPOINTMENT_TYPE_IMPACT]||[]).sumBy('price')
+    current.total=current.assessment_total+current.followup_total+current.nutrition_total+current.impact_total
     data.push(current)
     currentDate.add(1, 'month')
   }

@@ -42,6 +42,10 @@ const BillingSchema = new Schema({
     type: Number,
     required: true,
   },
+  total: {
+    type: Number,
+    required: true,
+  },
 }, schemaOptions)
 
 module.exports = BillingSchema
