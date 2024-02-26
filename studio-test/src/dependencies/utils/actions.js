@@ -959,6 +959,15 @@ return Promise.allSettled(imagePromises)
     }
     return axios.post(url, body)
   },
-  
+
+  smartdiet_rabbit_appointment: ({value}) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_rabbit_appointment',
+      value: value._id,
+    }
+    return axios.post(url, body)
+  },
+
   
 }

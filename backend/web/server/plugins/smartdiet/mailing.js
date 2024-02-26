@@ -28,6 +28,7 @@ const SIB_IDS={
   SATURDAY_3:16,
   SATURDAY_4:17,
   NEW_MESSAGE:18,
+  VALIDATE_APPOINTMENT: 19,
   // SMS
   APPOINTMENT_REMIND_TOMORROW: 200,
   // CUSTOMERS
@@ -87,6 +88,7 @@ const NOTIFICATIONS_CONTENTS={
   [SIB_IDS.SATURDAY_3]:{title: 'SmartDiet', message: `Vous l'attendiez ? Le voilà, le nouveau menu de la semaine`},
   [SIB_IDS.SATURDAY_4]:{title: 'SmartDiet', message: `Rendez-vous sur votre application pour retrouver votre nouveau menu de la semaine`},
   [SIB_IDS.NEW_MESSAGE]:{title: 'SmartDiet', message: `Vous avez reçu un nouveau message !`},
+  [SIB_IDS.VALIDATE_APPOINTMENT]:{title: 'SmartDiet', message: `Vous n'avez pas encore renseigné de progression pour le rendez-vous du {{params.appointment_date}} à {{params.appointment_hour}} avec {{params.user_fullname}}`},
 }
 
 setNotificationsContents(NOTIFICATIONS_CONTENTS)
@@ -313,6 +315,18 @@ const sendAppointmentRemindTomorrow = async ({appointment}) => {
   })
 }
 
+const sendAppointmentNotValidated = async ({destinee, appointment}) => {
+  return sendNotification({
+    notification: SIB_IDS.VALIDATE_APPOINTMENT,
+    destinee,
+    params: {
+      appointment_date: formatDate(appointment.start_date),
+      appointment_hour: formatHour(appointment.start_date),
+      user_fullname: appointment.user.fullname,
+    },
+  })
+}
+
 module.exports = {
   sendForgotPassword,
   sendDietPreRegister2Diet,
@@ -324,5 +338,5 @@ module.exports = {
   sendNewWebinar, sendWebinarIn3Days,
   sendSaturday1, sendSaturday2, sendSaturday3, sendSaturday4,
   sendNewMessage, sendWebinarJ15, sendWebinarJ, sendWebinarJ21,
-  sendAppointmentRemindTomorrow,
+  sendAppointmentRemindTomorrow, sendAppointmentNotValidated,
 }

@@ -38,6 +38,7 @@ const {
   sendWebinarJ,
   sendWebinarJ21,
   sendAppointmentRemindTomorrow,
+  sendAppointmentNotValidated,
 } = require('./mailing')
 const { formatDateTime } = require('../../../utils/text')
 const Webinar = require('../../models/Webinar')
@@ -174,6 +175,7 @@ const Lead = require('../../models/Lead')
 const cron = require('../../utils/cron')
 const Group = require('../../models/Group')
 const Conversation = require('../../models/Conversation')
+const UserQuizz = require('../../models/UserQuizz')
 
 const filterDataUser = ({ model, data, id, user }) => {
   if (model == 'offer' && !id) {
@@ -381,7 +383,7 @@ const preCreate = ({ model, params, user }) => {
 
 setPreCreateData(preCreate)
 
-const postPutData = ({ model, params, id, value, data, user }) => {
+const postPutData = async ({ model, params, id, value, data, user }) => {
   if (model == 'appointment' && params.logbooks) {
     return Appointment.findById(id)
       .then(appointment => logbooksConsistency(appointment.coaching._id))
@@ -404,6 +406,16 @@ const postPutData = ({ model, params, id, value, data, user }) => {
           .then(() => Promise.all(extraUserQuizz.map(q => q.delete())))
           .then(() => mongoose.models.coaching.findById(id))
       })
+  }
+  // Validate appointment if this is a progress quizz answer
+  if (model=='userQuizzQuestion') {
+    const quizz=await UserQuizz.findOne({questions: id, type: QUIZZ_TYPE_PROGRESS})
+    const coaching=await Coaching.findOne({progress: quizz}).populate('latest_appointments')
+    const appt=coaching?.latest_appointments?.[0]
+    if (appt) {
+      appt.validated=true
+      await appt.save().catch(console.error)
+    }
   }
   return Promise.resolve(params)
 }
@@ -2062,6 +2074,15 @@ cron.schedule('0 0 10 * * *', async () => {
   console.log('Appointments tomorrow reminders:', appts.length)
   await Promise.allSettled(appts.map(appt => sendAppointmentRemindTomorrow({appointment: appt})))
 })
+
+// Send notifications for all appointments finished yesterday without validation/rabbit
+cron.schedule('0 0 10 * * *', async () => {
+  const filter=getDateFilter({attribute: 'end_date', day: moment().add(-1, 'day')})
+  const appts=await Appointment.find({...filter, validated: null}).populate(['diet', 'user']).catch(console.error)
+  console.log('Not validated appointments', appts.map(a => a._id))
+  await Promise.allSettled(appts.map(appt => sendAppointmentNotValidated({destinee: appt.diet, appointment: appt})))
+})
+
 
 // Set user & diet on appointments
 !isDevelopment() && Appointment.remove({coaching: null})

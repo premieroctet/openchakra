@@ -284,6 +284,13 @@ const sendMessageOverride = (params, sender) => {
 }
 addAction('sendMessage', sendMessageOverride)
 
+const setRabbitAppointment = ({value}, sender) => {
+  return Appointment.findByIdAndUpdate(value, {validated: false})
+}
+addAction('smartdiet_rabbit_appointment', setRabbitAppointment)
+
+
+
 const isActionAllowed = ({ action, dataId, user }) => {
   // Handle fast actions
   if (action == 'openPage' || action == 'previous') {
@@ -455,9 +462,6 @@ const isActionAllowed = ({ action, dataId, user }) => {
             // Get all teams of this team's collective challenge, then check if
             // user in on one of them
             return user.canView(dataId)
-          }
-          if (action == 'smartdiet_validate_appointment') {
-            return Appointment.exists({_id: dataId, validated: {$in: [null, undefined]}, end_date: {$lt: moment()}})
           }
           if (action == 'smartdiet_rabbit_appointment') {
             return Appointment.exists({_id: dataId, validated: {$in: [null, undefined]}, end_date: {$lt: moment()}})

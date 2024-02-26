@@ -90,7 +90,7 @@ const sendNotification = ({notification, destinee, ccs, params, attachment}) => 
         console.error(`No firebase plugin available, check server starupt warnings`)
         return false
       }
-      resultSms = sendUserNotification({user: destinee, title:notif.title, message: notifMessage})
+      resultSms = sendUserNotification({user: destinee, title:notif.title, message: notifMessage}).catch(console.error)
     }
   }
 
