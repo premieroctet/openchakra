@@ -2076,7 +2076,7 @@ const webinarNotifications = async () => {
   return allRes.fulfilled?.length || 0
 }
 
-cron.schedule('0 30 17 * * *', async () => {
+cron.schedule('0 0 8 * * *', async () => {
   await webinarNotifications()
     .then(console.log)
     .catch(console.error)
