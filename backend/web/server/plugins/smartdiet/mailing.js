@@ -300,6 +300,7 @@ const sendWebinarJ = async ({user, webinar}) => {
       web_lancement_date: formatDate(webinar.start_date),
       web_lancement_heure: formatHour(webinar.start_date),
       web_duree_webinaire: moment(webinar.end_date).diff(webinar.start_date, 'hour'),
+      web_titre_webinaire: webinar.name,
       lien_web_lancement: webinar.url,
     },
     attachment: att ? {name: 'webinaire.ics', content: Buffer.from(att).toString('base64')} : undefined

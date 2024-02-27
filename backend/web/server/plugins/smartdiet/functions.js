@@ -2041,22 +2041,32 @@ cron.schedule('0 0 1 * * *', async () => {
 
 // Webinar reminders
 const webinarNotifications = async () => {
+  const getLeadsAndUsers = async webinars => {
+    const companies=lodash(webinars).map(w => w.companies.map(c => c._id)).flatten().uniq()
+    const allCompanies=await Company.find({_id: companies}).populate('leads').populate({path: 'users', match: {role: ROLE_CUSTOMER}})
+    const allUsers=lodash(allCompanies)
+      .map(c => [c.users, c.leads])
+      .flattenDepth(2)
+
+      .uniqBy('email')
+    return allUsers
+  }
   // Webinars in 21 days
   const webinars21 = await Webinar.find(getDateFilter({ attribute: 'start_date', day: moment().add(21, 'day') }))
   const res1 = await Promise.allSettled(webinars21.map(async (webinar) => {
-    const registered = await User.find({ 'registered_events.event': webinar })
+    const registered = await getLeadsAndUsers(webinars21)
     return Promise.allSettled(registered.map(user => sendWebinarJ21({ user, webinar })))
   }))
   // Webinars in 15 days
   const webinars15 = await Webinar.find(getDateFilter({ attribute: 'start_date', day: moment().add(15, 'day') }))
   const res2 = await Promise.allSettled(webinars15.map(async (webinar) => {
-    const registered = await User.find({ 'registered_events.event': webinar })
+    const registered = await getLeadsAndUsers(webinars15)
     return Promise.allSettled(registered.map(user => sendWebinarJ15({ user, webinar })))
   }))
   // Webinars today
   const webinars1 = await Webinar.find(getDateFilter({ attribute: 'start_date', day: moment() }))
   const res3 = await Promise.allSettled(webinars1.map(async (webinar) => {
-    const registered = await User.find({ 'registered_events.event': webinar })
+    const registered = await getLeadsAndUsers(webinars1)
     return Promise.allSettled(registered.map(user => sendWebinarJ({ user, webinar })))
   }))
   const allRes = lodash([...res1, ...res2, ...res3]).map(v => v.value).flatten().groupBy('status').value()
@@ -2066,7 +2076,7 @@ const webinarNotifications = async () => {
   return allRes.fulfilled?.length || 0
 }
 
-cron.schedule('0 0 8 * * *', async () => {
+cron.schedule('0 30 17 * * *', async () => {
   await webinarNotifications()
     .then(console.log)
     .catch(console.error)
