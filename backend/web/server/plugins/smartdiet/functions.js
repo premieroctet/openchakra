@@ -253,7 +253,7 @@ const preprocessGet = ({ model, fields, id, user, params }) => {
       .then(stats => ({ model, fields, id, data: [stats] }))
   }
   if (model=='billing') {
-    return computeBilling({diet:user, fields })
+    return computeBilling({diet:user, fields, params })
   }
   if (model == 'conversation') {
     // Conversation id is the conversatio nid OR the other's one id

@@ -85,6 +85,7 @@ const AppointmentSchema = new Schema({
   },
   validated: {
     type: Boolean,
+    index: true,
     required: false,
   },
   }, schemaOptions)
