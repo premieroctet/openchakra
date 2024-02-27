@@ -17,7 +17,7 @@ const {
   ROLE_RH,
   STATUS_FAMILY,
 } = require('../consts')
-const { isEmailOk } = require('../../../../utils/sms')
+const { isEmailOk, isPhoneOk } = require('../../../../utils/sms')
 const { CREATED_AT_ATTRIBUTE } = require('../../../../utils/consts')
 
 const siret = require('siret')
@@ -57,6 +57,8 @@ const UserSchema = new Schema({
   },
   phone: {
     type: String,
+    validate: [value => isPhoneOk(value), 'Le numéro de téléphone doit commencer par 0 ou +33'],
+    set: v => v?.replace(/^0/, '+33'),
     required: false,
   },
   description: {
