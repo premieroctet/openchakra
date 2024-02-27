@@ -2072,7 +2072,7 @@ cron.schedule('0 0 8 * * *', async () => {
 })
 
 // Send reminder for user appointments
-cron.schedule('0 26 10 * * *', async () => {
+cron.schedule('0 40 10 * * *', async () => {
   const filter=getDateFilter({attribute: 'start_date', day: moment().add(1, 'day')})
   const appts=await Appointment.find(filter).populate(['diet', 'user']).catch(console.error)
   console.log('Appointments tomorrow reminders:', appts.length)
