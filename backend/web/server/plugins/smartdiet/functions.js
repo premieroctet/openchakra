@@ -177,6 +177,7 @@ const Group = require('../../models/Group')
 const Conversation = require('../../models/Conversation')
 const UserQuizz = require('../../models/UserQuizz')
 const { computeBilling } = require('./billing')
+const { isPhoneOk } = require('../../../utils/sms')
 
 const filterDataUser = ({ model, data, id, user }) => {
   if (model == 'offer' && !id) {
@@ -2132,6 +2133,23 @@ Message.find(conversationFilter).populate(['sender', 'receiver'])
   })
   .then(res => console.log(lodash.sumBy(res, 'nModified'), 'messages updated'))
   .catch(console.error)
+
+// Normalize all phone numbers
+const normalizePhone = user => {
+  if (!isPhoneOk(user.phone)) {
+    console.error(`Invalid phone`, user.phone, 'for', user.email, 'resetting')
+    user.phone=null
+  }
+  else {
+    user.phone=user.phone.replace(/^0/, '+33')
+    console.log(`Normalized for`, user.email, 'to', user.phone)
+  }
+  return user.save()
+}
+
+User.find({phone: {$ne:null}})
+  .then(users => Promise.allSettled(users.map(u => normalizePhone(u))))
+      .then(res => console.log(JSON.stringify(lodash.groupBy(res, 'status').rejected)))
 
 console.log('OK')
 
