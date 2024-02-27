@@ -39,7 +39,7 @@ class MAILJET_V6 {
       .request({Messages: [message]})
   }
 
-  sendSms() {
+  sendSms(/** number, data, contact*/) {
     return Promise.reject('No SMS sent through Mailjet')
   }
 

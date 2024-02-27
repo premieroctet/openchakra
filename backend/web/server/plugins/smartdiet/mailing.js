@@ -1,7 +1,8 @@
 const {
   sendNotification,
   setNotificationsContents,
-  setSmsContents
+  setSmsContents,
+  setSmsContact
 } = require('../../utils/mailing')
 const {datetime_str} = require('../../../utils/dateutils')
 const moment=require('moment')
@@ -64,7 +65,7 @@ const SIB_IDS={
 }
 
 const SMS_CONTENTS={
-  [SIB_IDS.APPOINTMENT_REMIND_TOMORROW]: 'SmartDiet\nBonjour, nous vous rappelons votre rendez-vous du {{params.appointment_date}} à {{params.appointment_time}} avec {{params.diet_firstname}}',
+  [SIB_IDS.APPOINTMENT_REMIND_TOMORROW]: 'Bonjour, nous vous rappelons votre rendez-vous du {{params.appointment_date}} à {{params.appointment_time}} avec {{params.diet_firstname}}',
 }
 
 setSmsContents(SMS_CONTENTS)
@@ -92,6 +93,8 @@ const NOTIFICATIONS_CONTENTS={
 }
 
 setNotificationsContents(NOTIFICATIONS_CONTENTS)
+
+setSmsContact('SmartDiet')
 
 const sendForgotPassword = ({user, password}) => {
   return sendNotification({

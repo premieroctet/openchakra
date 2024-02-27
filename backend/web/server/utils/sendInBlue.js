@@ -47,12 +47,12 @@ class SIB_V3 {
       })
   }
 
-  sendSms(number, data) {
+  sendSms(number, data, contact) {
 
     console.log(`SendInBlue/Brevo sending SMS to ${number}, data:${JSON.stringify(data)}`)
 
     const smsData = new SibApiV3Sdk.SendTransacSms()
-    smsData.sender = 'Contact'
+    smsData.sender = contact || 'Contact'
     smsData.recipient = number
     smsData.content = data
     smsData.type = 'transactional'

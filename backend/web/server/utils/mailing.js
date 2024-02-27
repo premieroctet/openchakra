@@ -17,6 +17,12 @@ const {fillSms} = require('../../utils/sms')
 
 const mailProvider=getMailProvider()
 
+let smsContact=null
+
+const setSmsContact = contact => {
+  smsContact=contact
+}
+
 const mailHandlers=lodash(mailProvider).split(',')
   .map(provider => provider=='brevo' ? 'sendInBlue' : provider)
   .map(m => [m, require(`./${m}`)])
@@ -27,7 +33,7 @@ console.log('***** Mail Handlers:', Object.keys(mailHandlers))
 
 const MAIL_HANDLER={
   sendMail: (...params) => Promise.allSettled(Object.values(mailHandlers).map(m => m.sendMail(...params))).then(console.log),
-  sendSms: (...params) => Promise.allSettled(Object.values(mailHandlers).map(m => m.sendSms(...params))).then(console.log),
+  sendSms: (...params) => Promise.allSettled(Object.values(mailHandlers).map(m => m.sendSms(...params, smsContact))).then(console.log),
   sendNotification: sendUserNotification,
 }
 
@@ -102,4 +108,5 @@ module.exports = {
   sendNotification,
   setSmsContents,
   setNotificationsContents,
+  setSmsContact,
 }
