@@ -819,6 +819,17 @@ const getWappType = type => {
   return `Wapp${type}`
 }
 
+const storeRedirectCode=`
+useEffect(() => {
+  if (user===false) {
+    return
+  }
+  if (user===null) {
+    storeAndRedirect()
+  }
+}, [user])
+`
+
 const reloadOnBackScript = `
 useEffect(() => {
    const handlePopstate = () => {
@@ -957,7 +968,7 @@ import { ${lucideIconImports.join(',')} } from "lucide-react";`
     : ''
 }
 
-import {ensureToken} from '../dependencies/utils/token'
+import {ensureToken, storeAndRedirect} from '../dependencies/utils/token'
 import {useRouter} from 'next/router'
 import { useUserContext } from '../dependencies/context/user'
 import { getComponentDataValue } from '../dependencies/utils/values'
@@ -1011,9 +1022,10 @@ const ${componentName} = () => {
   const {user}=useUserContext()
   ${autoRedirect}
 
+
   ${hooksCode}
   ${filterStates}
-
+  ${components.root.props.allowNotConnected=="true" ? '' : storeRedirectCode}
   return ${autoRedirect ? 'user===null && ': ''} (
     <>
     <Metadata

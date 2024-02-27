@@ -5,6 +5,7 @@ import { getModelNames } from '~core/selectors/dataSources'
 import { useForm } from '../../hooks/useForm'
 import FormControl from '../../components/inspector/controls/FormControl'
 import usePropsSelector from '../../hooks/usePropsSelector'
+import SwitchControl from '~components/inspector/controls/SwitchControl'
 
 const capitalize = (word: string) => {
   return word.replace(/\w\S*/g, w => w.replace(/^\w/, c => c.toUpperCase()))
@@ -15,6 +16,7 @@ const DataProviderPanel = () => {
   const model = usePropsSelector('model')
   const cardinality = usePropsSelector('cardinality')
   const ignoreUrlParams = usePropsSelector('ignoreUrlParams')
+  const allowNotConnected = usePropsSelector('allowNotConnected')
   const modelNames = useSelector(getModelNames)
 
   const setIgnoreUrlParams = (event:React.ChangeEvent<HTMLInputElement>) => {
@@ -35,6 +37,7 @@ const DataProviderPanel = () => {
   const cbLabel = `Ignore '${model}' param in URL`
   return (
     <>
+      <SwitchControl label={'Allow not connected'} name={'allowNotConnected'}/>
       <FormControl htmlFor="model" label="Model">
         <Select
           id="model"
