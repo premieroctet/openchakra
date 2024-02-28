@@ -93,7 +93,7 @@ const AppointmentSchema = new Schema({
 AppointmentSchema.virtual('order', DUMMY_REF).get(function() {
   return lodash.sortBy(this.coaching?.appointments||[], 'start_date')
    .findIndex(app => idEqual(app._id, this._id))+1
-})
+   })
 
 AppointmentSchema.virtual('status', DUMMY_REF).get(function() {
   const now=moment()

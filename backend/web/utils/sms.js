@@ -18,6 +18,8 @@ const fillSms = (pattern, values) => {
   return pattern
 }
 
+const PHONE_REGEX=/^\+33[67]\d{8}$/
+
 const isPhoneOk = value => {
   const corrected=value?.replace(/ /g, '')
   return /(^0[67]\d{8}$)|(^\+33[67]\d{8}$)/.test(corrected)
@@ -34,4 +36,4 @@ const isEmailOk = value => {
   return Validator.isEmail(value)
 }
 
-module.exports = {fillSms, isPhoneOk, isEmailOk, isInternationalPhoneOK}
+module.exports = {fillSms, isPhoneOk, isEmailOk, isInternationalPhoneOK, PHONE_REGEX}

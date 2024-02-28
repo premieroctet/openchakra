@@ -24,6 +24,7 @@ const PriceListSchema = new Schema({
   },
   impact: {
     type: Number,
+    default: 0,
     required: [true, `Le tarif d'étude d'impact est obligatoire`]
   },
 }, schemaOptions)
