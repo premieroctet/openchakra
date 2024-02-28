@@ -25,7 +25,7 @@ const updateCoachingStatus = async coaching_id => {
       coaching.status=COACHING_STATUS_DROPPED
     }
     // Latest appointment was a valid
-    if (latest_appointment.validated===true) {
+    if (coaching.remaining_credits>0 && latest_appointment.validated===true) {
       coaching.status=COACHING_STATUS_STOPPED
     }
   }
