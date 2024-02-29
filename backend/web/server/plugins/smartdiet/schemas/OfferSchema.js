@@ -123,15 +123,23 @@ const OfferSchema = new Schema({
     ref: 'company',
     required: false,
   },
+  validity_start: {
+    type: Date,
+    required: [function(){return !!this.company},  `La date de début de validité est obligatoire`],
+  },
+  validity_end: {
+    type: Date,
+    required: [function(){return !!this.company},  `La date de fin de validité est obligatoire`],
+  },
   assessment_quizz: {
     type: Schema.Types.ObjectId,
     ref: 'quizz',
-    required: true,
+    required: [function(){return !!this.company},  `Le modèle de quizz bilan est obligatoire`],
   },
   impact_quizz: {
     type: Schema.Types.ObjectId,
     ref: 'quizz',
-    required: true,
+    required: [function(){return !!this.company && !!this.impact},  `Le modèle de quizz d'impact est obligatoire`],
   },
   migration_id: {
     type: Number,

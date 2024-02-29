@@ -111,6 +111,7 @@ const {
   RECIPE_TYPE,
   APPOINTMENT_TYPE_ASSESSMENT,
   APPOINTMENT_TYPE_FOLLOWUP,
+  COACHING_STATUS,
 } = require('./consts')
 const {
   HOOK_DELETE,
@@ -1038,13 +1039,13 @@ declareVirtualField({
 }
 )
 declareVirtualField({ model: 'coaching', field: 'spent_credits', instance: 'Number'})
-
 declareVirtualField({
   model: 'coaching', field: 'remaining_nutrition_credits', instance: 'Number',
   requires: 'user.offer.nutrition_credit,spent_nutrition_credits,user.company.offers.nutrition_credit,user.role'
 }
 )
 declareVirtualField({ model: 'coaching', field: 'spent_nutrition_credits', instance: 'Number'})
+declareEnumField({ model: 'coaching', field: 'status', enumValues: COACHING_STATUS})
 
 declareVirtualField({
   model: 'coaching', field: 'questions', instance: 'Array', multiple: true,
@@ -2189,7 +2190,7 @@ mongoose.connection.collection('coachings')
 /**
  * TODO Set offers on coachings
  */
-Coaching.find({offer: null})
+false && Coaching.find({offer: null})
   .populate({path: 'user', populate: {path: 'company', populate: 'offers'}})
   .then(coachings => {
     console.log(coachings.filter(c => c.user?.company?.offers?.length>0).map(c => `${c._id},${c.user?._id},${c.user?.company?.offers.map(o => o._id)}`))
