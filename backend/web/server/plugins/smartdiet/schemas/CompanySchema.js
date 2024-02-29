@@ -59,12 +59,6 @@ const CompanySchema = new Schema(
       ref: 'appointmentType',
       required: false,
     },
-    // Type prestation bilan
-    impact_appointment_type: {
-      type: Schema.Types.ObjectId,
-      ref: 'appointmentType',
-      required: false,
-    },
     // Outbound call script
     script: {
       type: String,

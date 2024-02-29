@@ -114,10 +114,24 @@ const OfferSchema = new Schema({
     default : 0,
     required: true,
   },
+  impact: {
+    type: Boolean,
+    required: [true, `La possibilité d'étude d'impact doit être renseignée`]
+  },
   company: {
     type: Schema.Types.ObjectId,
     ref: 'company',
     required: false,
+  },
+  assessment_quizz: {
+    type: Schema.Types.ObjectId,
+    ref: 'quizz',
+    required: true,
+  },
+  impact_quizz: {
+    type: Schema.Types.ObjectId,
+    ref: 'quizz',
+    required: true,
   },
   migration_id: {
     type: Number,

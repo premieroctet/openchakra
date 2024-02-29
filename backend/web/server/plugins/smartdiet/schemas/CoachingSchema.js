@@ -6,7 +6,9 @@ const {
   QUIZZ_TYPE_PATIENT,
   QUIZZ_TYPE_PROGRESS,
   ROLE_CUSTOMER,
-  ROLE_EXTERNAL_DIET
+  ROLE_EXTERNAL_DIET,
+  COACHING_STATUS,
+  COACHING_STATUS_NOT_STARTED
 } = require('../consts')
 const moment = require('moment')
 const { CREATED_AT_ATTRIBUTE } = require('../../../../utils/consts')
@@ -49,16 +51,16 @@ const CoachingSchema = new Schema({
     ref: 'foodDocument',
     required: true,
   }],
-  quizz_templates: [{
-    type: Schema.Types.ObjectId,
-    ref: 'quizz',
-    required: true,
-  }],
-  quizz: [{
+  assessment_quizz: {
     type: Schema.Types.ObjectId,
     ref: 'userQuizz',
     required: true,
-  }],
+  },
+  impact_quizz: {
+    type: Schema.Types.ObjectId,
+    ref: 'userQuizz',
+    required: true,
+  },
   progress: {
     type: Schema.Types.ObjectId,
     ref: 'userQuizz',
@@ -71,6 +73,17 @@ const CoachingSchema = new Schema({
   migration_id: {
     type: Number,
     required: false,
+  },
+  status: {
+    type: String,
+    enum: Object.keys(COACHING_STATUS),
+    default: COACHING_STATUS_NOT_STARTED,
+    required: [true, `Le status du coaching est obligatoire`],
+  },
+  offer: {
+    type: Schema.Types.ObjectId,
+    ref: 'offer',
+    required: [true, `L'offre est obligatoire`],
   },
 }, schemaOptions)
 
@@ -126,7 +139,7 @@ CoachingSchema.virtual('remaining_credits', DUMMY_REF).get(function() {
   if (this.user?.role!=ROLE_CUSTOMER) {
     return 0
   }
-  return (this.user?.offer?.coaching_credit-this.spent_credits) || 0
+  return (this.offer?.coaching_credit-this.spent_credits) || 0
 })
 
 CoachingSchema.virtual('spent_credits', {

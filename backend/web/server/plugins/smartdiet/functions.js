@@ -109,6 +109,8 @@ const {
   COACHING_CONVERSION_CANCELLED,
   COACHING_CONVERSION_CONVERTED,
   RECIPE_TYPE,
+  APPOINTMENT_TYPE_ASSESSMENT,
+  APPOINTMENT_TYPE_FOLLOWUP,
 } = require('./consts')
 const {
   HOOK_DELETE,
@@ -177,7 +179,9 @@ const Group = require('../../models/Group')
 const Conversation = require('../../models/Conversation')
 const UserQuizz = require('../../models/UserQuizz')
 const { computeBilling } = require('./billing')
-const { isPhoneOk } = require('../../../utils/sms')
+const { isPhoneOk, PHONE_REGEX } = require('../../../utils/sms')
+const NodeCache=require('node-cache')
+const { updateCoachingStatus } = require('./coaching')
 
 const filterDataUser = ({ model, data, id, user }) => {
   if (model == 'offer' && !id) {
@@ -392,24 +396,6 @@ const postPutData = async ({ model, params, id, value, data, user }) => {
     return Appointment.findById(id)
       .then(appointment => logbooksConsistency(appointment.coaching._id))
       .then(() => params)
-  }
-  if (model == 'coaching' && params.quizz_templates) {
-    const tpl_attribute = 'quizz_templates'
-    const inst_attribute = 'quizz'
-    return mongoose.models.coaching.findById(id).populate([
-      { path: tpl_attribute, populate: 'questions' },
-      { path: inst_attribute, populate: { path: 'quizz', populate: 'questions' } },
-    ])
-      .then(coaching => {
-        const extraUserQuizz = coaching[inst_attribute].filter(uq => !coaching[tpl_attribute].some(q => idEqual(q._id, uq.quizz._id)))
-        const missingUserQuizz = differenceSet(coaching[tpl_attribute], coaching[inst_attribute].map(uq => uq.quizz))
-        const addQuizzs = Promise.all(missingUserQuizz.map(q => q.cloneAsUserQuizz(coaching)))
-        return addQuizzs
-          .then(quizzs => mongoose.models.coaching.findByIdAndUpdate(id, { $addToSet: { [inst_attribute]: quizzs } }))
-          .then(() => mongoose.models.coaching.findByIdAndUpdate(id, { $pull: { [inst_attribute]: { $in: extraUserQuizz } } }))
-          .then(() => Promise.all(extraUserQuizz.map(q => q.delete())))
-          .then(() => mongoose.models.coaching.findById(id))
-      })
   }
   // Validate appointment if this is a progress quizz answer
   if (model=='userQuizzQuestion') {
@@ -1498,7 +1484,7 @@ declareComputedField({model: 'menu', field: 'shopping_list', getterFn: getMenuSh
 declareComputedField({model: 'key', field: 'user_surveys_progress', getterFn: getUserSurveysProgress})
 
 
-const postCreate = ({ model, params, data, user }) => {
+const postCreate = async ({ model, params, data, user }) => {
   // Create company => duplicate offer
   if (model == 'company') {
     return Offer.findById(params.offer)
@@ -1537,6 +1523,7 @@ const postCreate = ({ model, params, data, user }) => {
       .then(() => data)
   }
   // Create coaching.progress if not present
+  // Create assessment quizz if this is the first appointment
   if (model == 'appointment') {
     const setProgressQuizz = Coaching.findById(data.coaching._id).populate('user')
       .then(coaching => {
@@ -1580,13 +1567,27 @@ const postCreate = ({ model, params, data, user }) => {
             return appt.save()
           })
       })
-    return Promise.allSettled([setProgressQuizz, createSmartagendaAppointment])
+
+    // If this is an assessment appointment, create the assessment_quizz
+    const apptType=await getAppointmentType(data.appointment_type)
+    if (apptType==APPOINTMENT_TYPE_ASSESSMENT) {
+      const coaching=await Coaching.findById(data.coaching._id).populate('offer')
+      if (!coaching.assessment_quizz) {
+        const quizz=await Quizz.findById(coaching.offer.assessment_quizz).poulate('questions')
+        const userQuizz=await quizz.cloneAsUserQuizz()
+        coaching.assessment_quizz=userQuizz
+        await coaching.save()
+      }
+    }
+
+    await updateCoachingStatus(data.coaching._id)
+    return Promise.allSettled([setProgressQuizz, createSmartagendaAppointment, assQuizz])
       .then(console.log)
       .catch(console.error)
       .finally(() => data)
   }
 
-  // If operator created nuttrition advice, set lead nutrition converted
+  // If operator created nutrition advice, set lead nutrition converted
   if (model == 'nutritionAdvice' && user.role == ROLE_SUPPORT) {
     Coaching.findById(data.coaching._id).populate('user')
       .then(({ user }) => Lead.findOneAndUpdate({ email: user.email }, { nutrition_converted: true }))
@@ -1799,6 +1800,21 @@ const getRegisterCompany = props => {
 }
 
 setImportDataFunction({ model: 'lead', fn: importLeads })
+
+// Keep app types for 30 seconds only to manage company changes
+const appTypes=new NodeCache({stdTTL: 60})
+
+const getAppointmentType = async ({appointmentType}) => {
+  const key=appointmentType.toString()
+  let result=appTypes.get(key)
+  if (result) {
+    return result
+  }
+  const assessment=await Company.exists({assessment_appointment_type: appointmentType})
+  result=assessment ? APPOINTMENT_TYPE_ASSESSMENT : APPOINTMENT_TYPE_FOLLOWUP
+  appTypes.set(key, result)
+  return result
+}
 
 // Ensure all spoon gains are defined
 ensureSpoonGains = () => {
@@ -2146,22 +2162,38 @@ Message.find(conversationFilter).populate(['sender', 'receiver'])
 
 // Normalize all phone numbers
 const normalizePhone = user => {
+  console.log('for user', user)
   if (!isPhoneOk(user.phone)) {
     console.error(`Invalid phone`, user.phone, 'for', user.email, 'resetting')
     user.phone=null
+    return user.save()
   }
-  else {
-    user.phone=user.phone.replace(/^0/, '+33')
-    console.log(`Normalized for`, user.email, 'to', user.phone)
-  }
+  user.phone=user.phone.replace(/^0/, '+33').replace(/ /g, '')
+  console.log(`Normalized for`, user.email, 'to', user.phone)
   return user.save()
 }
 
-User.find({phone: {$ne:null}})
+// Normalize user phones
+User.find({phone: {$ne:null, $not: {$regex: PHONE_REGEX}}})
   .then(users => Promise.allSettled(users.map(u => normalizePhone(u))))
       .then(res => console.log(JSON.stringify(lodash.groupBy(res, 'status').rejected)))
 
-console.log('OK')
+/** Rename coachings.quizz to coachings.assessment_quizz
+ * use collection because Coaching.quizz attribute was removed from schema
+ * */
+mongoose.connection.collection('coachings')
+  .updateMany({quizz: {$exists: true}}, { $rename: { quizz: 'assessment_quizz' } })
+  .then(({matchedCount, modifiedCount}) => console.log(`Coachings.quizz=>Coaching.assessment_quizz modified`, modifiedCount, '/', matchedCount))
+  .catch(err => console.error(`Coachings.quizz=>Coaching.assessment_quizz`, err))
+
+/**
+ * TODO Set offers on coachings
+ */
+Coaching.find({offer: null})
+  .populate({path: 'user', populate: {path: 'company', populate: 'offers'}})
+  .then(coachings => {
+    console.log(coachings.filter(c => c.user?.company?.offers?.length>0).map(c => `${c._id},${c.user?._id},${c.user?.company?.offers.map(o => o._id)}`))
+  })
 
 module.exports = {
   ensureChallengePipsConsistency,
@@ -2170,4 +2202,5 @@ module.exports = {
   agendaHookFn, mailjetHookFn,
   computeStatistics,
   webinarNotifications,
+  getAppointmentType,
 }
