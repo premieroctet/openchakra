@@ -7,8 +7,14 @@ const updateCoachingStatus = async coaching_id => {
   // Started it 1 appointment
   if (coaching.status==COACHING_STATUS_NOT_STARTED && coaching.appointements.length>0) {
     coaching.status=COACHING_STATUS_STARTED
-    // TODO coaching set progress quizz
+    // Set progress quizz
+    const progressTemplate=await Quizz.findOne({ type: QUIZZ_TYPE_PROGRESS }).populate('questions')
+    const progressUser = await progressTemplate.cloneAsUserQuizz()
+    coaching.progress = progressUser._id
     // TODO coaching set assessment quizz
+    const assessmentTemplate=await Quizz.findById(coaching.offer.assessment_quizz).populate('questions')
+    const assessmentUser=await assessmentTemplate.cloneAsUserQuizz()
+    coaching.assessment_quizz = assessmentUser._id
   }
 
   // Finished if no more credit

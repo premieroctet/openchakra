@@ -116,6 +116,7 @@ const OfferSchema = new Schema({
   },
   impact: {
     type: Boolean,
+    default: false,
     required: [true, `La possibilité d'étude d'impact doit être renseignée`]
   },
   company: {

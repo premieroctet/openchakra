@@ -34,6 +34,7 @@ const CompanySchema = new Schema(
     },
     size: {
       type: Number,
+      default: 0,
       required: [true, `La taille est obligatoire`],
     },
     parent: {

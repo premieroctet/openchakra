@@ -29,6 +29,11 @@ const checkModel = model => {
     })
 }
 
+const loadSaveModel = model => {
+  return mongoose.models[model.name].find()
+    .then(records => Promise.all(records.map(record => record.save().catch(err => {console.log(record, err.message); throw err}))))
+}
+
 const checkConsistency = () => {
   const modelsFolder=path.join(__dirname, '../../server/models')
   const files=fs.readdirSync(modelsFolder)
@@ -36,15 +41,16 @@ const checkConsistency = () => {
   return Promise.all(files.map(f => require(path.join(modelsFolder, f))))
     .then(() => mongoose.connect(getDatabaseUri(), MONGOOSE_OPTIONS))
     .then(() => getModels())
-    .then(models => {
-      // Grab references attributes
-      return lodash(models)
-        .values()
-        .map(model => ({...model, attributes: lodash(model.attributes).pickBy((params, att) => !att.includes('.') && params.ref).value()}))
-        .filter(model => !lodash.isEmpty(model.attributes))
-        .value()
-    })
-    .then(models => Promise.all(models.map(model => checkModel(model))))
+    // .then(models => {
+    //   // Grab references attributes
+    //   return lodash(models)
+    //     .values()
+    //     .map(model => ({...model, attributes: lodash(model.attributes).pickBy((params, att) => !att.includes('.') && params.ref).value()}))
+    //     .filter(model => !lodash.isEmpty(model.attributes))
+    //     .value()
+    // })
+    // .then(models => Promise.all(models.map(model => checkModel(model))))
+    .then(models => Promise.all(Object.values(models).map(model => loadSaveModel(model))))
 
 }
 

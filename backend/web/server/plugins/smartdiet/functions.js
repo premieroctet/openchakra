@@ -1542,16 +1542,7 @@ const postCreate = async ({ model, params, data, user }) => {
         )
           .then(console.log)
           .catch(console.error)
-        if (coaching.progress) {
-          return data
-        }
-        return Quizz.findOne({ type: QUIZZ_TYPE_PROGRESS }).populate('questions')
-          .then(q => {
-            if (!q) { return console.error(`No progress quizz found`) }
-            return q.cloneAsUserQuizz()
-          })
-          .then(uq => { coaching.progress = uq?._id; return coaching.save() })
-          .then(() => data)
+        return updateCoachingStatus(coaching._id)
       })
 
     const createSmartagendaAppointment = Appointment.findById(data._id)
@@ -2164,7 +2155,7 @@ Message.find(conversationFilter).populate(['sender', 'receiver'])
 
 // Normalize all phone numbers
 const normalizePhone = user => {
-  console.log('for user', user)
+  console.log('Normalize for user', user)
   if (!isPhoneOk(user.phone)) {
     console.error(`Invalid phone`, user.phone, 'for', user.email, 'resetting')
     user.phone=null
@@ -2180,13 +2171,19 @@ User.find({phone: {$ne:null, $not: {$regex: PHONE_REGEX}}})
   .then(users => Promise.allSettled(users.map(u => normalizePhone(u))))
       .then(res => console.log(JSON.stringify(lodash.groupBy(res, 'status').rejected)))
 
-/** Rename coachings.quizz to coachings.assessment_quizz
+/** Extract HEALTH QUIZZ from coachings quizz, set it to assessment_quizz
  * use collection because Coaching.quizz attribute was removed from schema
  * */
-mongoose.connection.collection('coachings')
-  .updateMany({quizz: {$exists: true}}, { $rename: { quizz: 'assessment_quizz' } })
-  .then(({matchedCount, modifiedCount}) => console.log(`Coachings.quizz=>Coaching.assessment_quizz modified`, modifiedCount, '/', matchedCount))
-  .catch(err => console.error(`Coachings.quizz=>Coaching.assessment_quizz`, err))
+Coaching.find()
+  .populate({path: 'quizz', match: {type: /(HEALTH|ASSESSMENT)/}})
+  .then(coachings => {
+    const withAssessmentQuizz=coachings.filter(c => c.quizz?.length>0)
+    return Promise.all(withAssessmentQuizz.map(c => {
+      const healthQuizz=c.quizz[0]._id
+      console.log('coaching', c._id, 'health quizz', healthQuizz)
+      return Coaching.findByIdAndUpdate(c._id, {$set: {assessment_quizz: healthQuizz}, $pull: {quizz: healthQuizz}})
+    }))
+  })
 
 /** Rename quizzs types HEALTH to ASSESSMENT
  * */
@@ -2202,14 +2199,27 @@ mongoose.connection.collection('userquizzs')
   .then(({matchedCount, modifiedCount}) => console.log(`userquizz type HEALTH=>ASSESSMENT modified`, modifiedCount, '/', matchedCount))
   .catch(err => console.error(`userquizz type HEALTH=>ASSESSMENT`, err))
 
-/**
- * TODO Set offers on coachings
- */
-false && Coaching.find({offer: null})
+/** Set offers on coachings
+ * */
+Coaching.find({offer: null})
   .populate({path: 'user', populate: {path: 'company', populate: 'offers'}})
-  .then(coachings => {
-    console.log(coachings.filter(c => c.user?.company?.offers?.length>0).map(c => `${c._id},${c.user?._id},${c.user?.company?.offers.map(o => o._id)}`))
-  })
+  .then(coachings => Promise.all(coachings.map(coaching => {
+    // Remove coachings with deleted users
+    if (!coaching.user) {
+      return coaching.delete()
+    }
+    if (coaching.user?.company.name==PARTICULAR_COMPANY_NAME) {
+      return
+    }
+    coaching.offer=coaching.user?.company.offers[0]
+    if (!coaching.offer) {
+      console.error('coaching without offer', coaching)
+    }
+    else {
+      console.log('saved coaching', coaching._id, 'offer', coaching.offer._id)
+      return coaching.save()
+    }
+  })))
 
 module.exports = {
   ensureChallengePipsConsistency,

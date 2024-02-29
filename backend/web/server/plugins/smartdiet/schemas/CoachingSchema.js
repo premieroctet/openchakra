@@ -51,20 +51,30 @@ const CoachingSchema = new Schema({
     ref: 'foodDocument',
     required: true,
   }],
-  assessment_quizz: {
+  quizz_templates: [{
+    type: Schema.Types.ObjectId,
+    ref: 'quizz',
+    required: true,
+  }],
+  quizz: [{
     type: Schema.Types.ObjectId,
     ref: 'userQuizz',
     required: true,
+  }],
+  assessment_quizz: {
+    type: Schema.Types.ObjectId,
+    ref: 'userQuizz',
+    required: [function() { this.status!=COACHING_STATUS_NOT_STARTED},`Le questionnaire bilan est obligatoire`],
   },
   impact_quizz: {
     type: Schema.Types.ObjectId,
     ref: 'userQuizz',
-    required: true,
+    required: false,
   },
   progress: {
     type: Schema.Types.ObjectId,
     ref: 'userQuizz',
-    required: false,
+    required: [function() { this.status!=COACHING_STATUS_NOT_STARTED},`Le questionnaire progression est obligatoire`],
   },
   // Food program URL
   food_program: {
