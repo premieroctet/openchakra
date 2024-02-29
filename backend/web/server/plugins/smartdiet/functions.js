@@ -1513,7 +1513,7 @@ const postCreate = async ({ model, params, data, user }) => {
   }
 
   if (['loggedUser', 'user'].includes(model) && data.role == ROLE_CUSTOMER) {
-    return Coaching.create({ user: data })
+    return Coaching.create({ user: data})
       .then(coaching => User.findByIdAndUpdate(data._id, { coaching }))
   }
   if (['user'].includes(model) && data.role == ROLE_EXTERNAL_DIET) {

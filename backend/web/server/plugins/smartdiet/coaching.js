@@ -15,6 +15,9 @@ const updateCoachingStatus = async coaching_id => {
     const assessmentTemplate=await Quizz.findById(coaching.offer.assessment_quizz).populate('questions')
     const assessmentUser=await assessmentTemplate.cloneAsUserQuizz()
     coaching.assessment_quizz = assessmentUser._id
+    // Set offer
+    const company=await Company.findById(caoaching.user.company).populate('offers')
+    coaching.offer=company.offers?.[0]
   }
 
   // Finished if no more credit
