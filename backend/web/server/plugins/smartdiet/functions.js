@@ -112,6 +112,7 @@ const {
   APPOINTMENT_TYPE_ASSESSMENT,
   APPOINTMENT_TYPE_FOLLOWUP,
   COACHING_STATUS,
+  QUIZZ_TYPE_ASSESSMENT,
 } = require('./consts')
 const {
   HOOK_DELETE,
@@ -2186,6 +2187,20 @@ mongoose.connection.collection('coachings')
   .updateMany({quizz: {$exists: true}}, { $rename: { quizz: 'assessment_quizz' } })
   .then(({matchedCount, modifiedCount}) => console.log(`Coachings.quizz=>Coaching.assessment_quizz modified`, modifiedCount, '/', matchedCount))
   .catch(err => console.error(`Coachings.quizz=>Coaching.assessment_quizz`, err))
+
+/** Rename quizzs types HEALTH to ASSESSMENT
+ * */
+mongoose.connection.collection('quizzs')
+  .updateMany({type: 'QUIZZ_TYPE_HEALTH'}, {$set: {type: QUIZZ_TYPE_ASSESSMENT}})
+  .then(({matchedCount, modifiedCount}) => console.log(`quizz type HEALTH=>ASSESSMENT modified`, modifiedCount, '/', matchedCount))
+  .catch(err => console.error(`quizz type HEALTH=>ASSESSMENT`, err))
+
+/** Rename userquizzs types HEALTH to ASSESSMENT
+ * */
+mongoose.connection.collection('userquizzs')
+  .updateMany({type: 'QUIZZ_TYPE_HEALTH'}, {$set: {type: QUIZZ_TYPE_ASSESSMENT}})
+  .then(({matchedCount, modifiedCount}) => console.log(`userquizz type HEALTH=>ASSESSMENT modified`, modifiedCount, '/', matchedCount))
+  .catch(err => console.error(`userquizz type HEALTH=>ASSESSMENT`, err))
 
 /**
  * TODO Set offers on coachings
