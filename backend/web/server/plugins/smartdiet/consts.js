@@ -425,7 +425,7 @@ const QUIZZ_TYPE={
   [QUIZZ_TYPE_PROGRESS]:'Progression coaching',
   [QUIZZ_TYPE_PATIENT]:'Quizz patient',
   [QUIZZ_TYPE_ASSESSMENT]:`Questionnaire bilan`,
-  [QUIZZ_TYPE_IMPACT]:`Questionnaire d'impact`,
+  [QUIZZ_TYPE_IMPACT]:`Questionnaire impact`,
 }
 
 const QUIZZ_QUESTION_TYPE_BOOLEAN="QUIZZ_QUESTION_TYPE_BOOLEAN"
