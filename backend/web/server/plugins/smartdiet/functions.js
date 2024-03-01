@@ -1562,18 +1562,6 @@ const postCreate = async ({ model, params, data, user }) => {
           })
       })
 
-    // If this is an assessment appointment, create the assessment_quizz
-    const apptType=await getAppointmentType(data.appointment_type)
-    if (apptType==APPOINTMENT_TYPE_ASSESSMENT) {
-      const coaching=await Coaching.findById(data.coaching._id).populate('offer')
-      if (!coaching.assessment_quizz) {
-        const quizz=await Quizz.findById(coaching.offer.assessment_quizz).poulate('questions')
-        const userQuizz=await quizz.cloneAsUserQuizz()
-        coaching.assessment_quizz=userQuizz
-        await coaching.save()
-      }
-    }
-
     await updateCoachingStatus(data.coaching._id)
     return Promise.allSettled([setProgressQuizz, createSmartagendaAppointment, assQuizz])
       .then(console.log)
