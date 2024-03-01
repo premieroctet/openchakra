@@ -78,6 +78,10 @@ const CompanySchema = new Schema(
     }],
     contents_count: {
       type: Number,
+    },
+    // A survey is required to start a coaching
+    coaching_requires_survey: {
+      type: Boolean,
     }
   },
   schemaOptions,

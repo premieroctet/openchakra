@@ -315,6 +315,8 @@ const isActionAllowed = async ({ action, dataId, user, actionProps }) => {
     const loadedUser=await User.findById(user._id)
       .populate({path: 'latest_coachings', populate: 'appointments'})
       .populate({path: 'company', populate: 'offers'})
+      .populate({path: 'surveys'})
+
     const latest_coaching=loadedUser.latest_coachings?.[0] || null
     if (latest_coaching) {
       if (![COACHING_STATUS_DROPPED, COACHING_STATUS_FINISHED, COACHING_STATUS_STOPPED].includes(latest_coaching?.status)) {
@@ -327,6 +329,10 @@ const isActionAllowed = async ({ action, dataId, user, actionProps }) => {
     }
     if (!loadedUser.company?.offers?.[0]?.coaching_credit) {
       throw new Error(`Vous n'avez pas de crédit de coaching`)
+    }
+    // Some companies require surveuy to start a coaching
+    if (loadedUser.company.coaching_requires_survey && !lodash.isEmpty(loadedUser.surveys)) {
+      throw new Error(`Vous devez remplir le questionnaire pour démarrer un coaching`)
     }
     return true
   }
