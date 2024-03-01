@@ -4,7 +4,10 @@ const {
   PARTICULAR_COMPANY_NAME,
   ROLE_CUSTOMER,
   ROLE_SUPPORT,
-  CALL_STATUS_CALL_1
+  CALL_STATUS_CALL_1,
+  COACHING_STATUS_DROPPED,
+  COACHING_STATUS_FINISHED,
+  COACHING_STATUS_STOPPED
 } = require('./consts')
 const {
   ensureChallengePipsConsistency,
@@ -291,7 +294,7 @@ addAction('smartdiet_rabbit_appointment', setRabbitAppointment)
 
 
 
-const isActionAllowed = ({ action, dataId, user }) => {
+const isActionAllowed = async ({ action, dataId, user, actionProps }) => {
   // Handle fast actions
   if (action == 'openPage' || action == 'previous') {
     return Promise.resolve(true)
@@ -304,6 +307,28 @@ const isActionAllowed = ({ action, dataId, user }) => {
       return Promise.reject(`Seul le support peut s'affecter des prospects`)
     }
     return Lead.exists({_id: dataId, operator: null})
+  }
+  // Can i start a new coaching ?
+  // TODO: send nothing instead of "undefined" for dataId
+  if( action=='save' && actionProps?.model=='coaching' && (lodash.isEmpty(dataId) || dataId=="undefined")) {
+    // Must customer
+    const loadedUser=await User.findById(user._id)
+      .populate({path: 'latest_coachings', populate: 'appointments'})
+      .populate({path: 'company', populate: 'offers'})
+    const latest_coaching=loadedUser.latest_coachings?.[0] || null
+    if (latest_coaching) {
+      if (![COACHING_STATUS_DROPPED, COACHING_STATUS_FINISHED, COACHING_STATUS_STOPPED].includes(latest_coaching?.status)) {
+        throw new Error(`Vous avez déjà un coaching en cours`)
+      }
+      const latestApptDate = lodash.maxBy(latest_coaching.appointments, 'end_date')?.end_date
+      if (latestApptDate && moment().isSame(latestApptDate, 'year')) {
+        throw new Error(`Vous avez déjà utilisé un coaching cette année`)
+      }
+    }
+    if (!loadedUser.company?.offers?.[0]?.coaching_credit) {
+      throw new Error(`Vous n'avez pas de crédit de coaching`)
+    }
+    return true
   }
   const promise = dataId && dataId != "undefined" ? getModel(dataId) : Promise.resolve(null)
   return promise

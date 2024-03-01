@@ -93,8 +93,7 @@ const CoachingSchema = new Schema({
   offer: {
     type: Schema.Types.ObjectId,
     ref: 'offer',
-    // required: [true, `L'offre est obligatoire`],
-    required: false,
+    required: [true, `L'offre est obligatoire`],
   },
 }, schemaOptions)
 

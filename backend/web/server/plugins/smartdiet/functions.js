@@ -347,7 +347,7 @@ const preCreate = ({ model, params, user }) => {
       model: 'user', id: customer_id,
       fields: [
         'latest_coachings.appointments', 'latest_coachings.reasons', 'latest_coachings.remaining_credits', 'latest_coachings.appointment_type',
-        'latest_coachings.nutrition_advices', 'latest_coachings.remaining_nutrition_credits', 'company.reasons', 'phone', 'latest_coachings.diet'
+        'latest_coachings.nutrition_advices', 'latest_coachings.remaining_nutrition_credits', 'company.reasons', 'phone', 'latest_coachings.diet',
       ],
       user,
     })
@@ -369,6 +369,7 @@ const preCreate = ({ model, params, user }) => {
         if (!latest_coaching) {
           throw new ForbiddenError(`Aucun coaching en cours`)
         }
+        console.log('reamining coaching credits', latest_coaching.remaining_credits)
         console.log(latest_coaching.remaining_nutrition_credits)
         if ((isAppointment && latest_coaching.remaining_credits <= 0)
           || (!isAppointment && latest_coaching.remaining_nutrition_credits <= 0)) {
@@ -1036,7 +1037,7 @@ declareVirtualField({
 })
 declareVirtualField({
   model: 'coaching', field: 'remaining_credits', instance: 'Number',
-  requires: 'user.offer.coaching_credit,spent_credits,user.company.offers.coaching_credit,user.role'
+  requires: 'offer.coaching_credit,spent_credits,user.role'
 }
 )
 declareVirtualField({ model: 'coaching', field: 'spent_credits', instance: 'Number'})
@@ -1512,10 +1513,6 @@ const postCreate = async ({ model, params, data, user }) => {
       .then(questions => Promise.all(questions.map(question => userCoachingQuestion.create({ coaching: data, question }))))
   }
 
-  if (['loggedUser', 'user'].includes(model) && data.role == ROLE_CUSTOMER) {
-    return Coaching.create({ user: data})
-      .then(coaching => User.findByIdAndUpdate(data._id, { coaching }))
-  }
   if (['user'].includes(model) && data.role == ROLE_EXTERNAL_DIET) {
     return Promise.allSettled([
       sendDietPreRegister2Diet({ user: data }),

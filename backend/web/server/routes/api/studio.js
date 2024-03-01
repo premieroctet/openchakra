@@ -183,12 +183,9 @@ router.get('/action-allowed/:action', passport.authenticate('cookie', {session: 
   return callAllowedAction({action, user, ...query})
     .then(allowed => res.json(allowed))
     .catch(err => {
-      console.error(err)
+      console.error(err.message)
       return res.json(false)
     })
-    // .finally(() => {
-    //   console.timeEnd(msg)
-    // })
 })
 
 router.post('/file', (req, res) => {
