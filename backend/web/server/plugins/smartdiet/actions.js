@@ -310,7 +310,10 @@ const isActionAllowed = async ({ action, dataId, user, actionProps }) => {
   }
   // Can i start a new coaching ?
   // TODO: send nothing instead of "undefined" for dataId
-  if( action=='save' && actionProps?.model=='coaching' && (lodash.isEmpty(dataId) || dataId=="undefined")) {
+  if (['save', 'create'].includes(action) && actionProps?.model=='coaching' && (lodash.isEmpty(dataId) || dataId=="undefined")) {
+    if (!user.role==ROLE_CUSTOMER) {
+      throw new Error(`Vous devez être un patient pour démarrer un coaching`)    
+    }
     // Must customer
     const loadedUser=await User.findById(user._id)
       .populate({path: 'latest_coachings', populate: 'appointments'})
