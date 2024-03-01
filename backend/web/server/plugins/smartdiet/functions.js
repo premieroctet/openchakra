@@ -2212,30 +2212,15 @@ Coaching.find({offer: null})
     }
   })))
 
-Coaching.find()
-  .populate('user')
+  CoachingLogbook.distinct('coaching')
+  .then(coachingIds => Coaching.find({_id: coachingIds}, {user:1}))
   .then(coachings => {
-    const toRemove=coachings.filter(c => !c.user)
-    const toKeep=coachings.filter(c => !!c.user)
-    const lbCollection=mongoose.connection.collection('coachinglogbooks')
-    console.log('coachings to remove', toRemove.length, 'coachings to keep', toKeep.length)
-    return Promise.all([CoachingLogbook.countDocuments(), CoachingLogbook.countDocuments({coaching: {$nin: coachings}})])
-      .then(([all, toRemove]) => console.log('logbooks', all, 'to remove', toRemove))
-  })
+    console.log('starting move', coachings.length,'logbooks from coaching to user')
+    return Promise.all(coachings.map(coaching => CoachingLogbook.updateMany({coaching: coaching._id}, {$set: {user: coaching.user}, $unset: {coaching: 1}})))
+
+ })
   .then(console.log)
   .catch(console.error)
-// Link coaching logbooks from coaching to user
-// CoachingLogbook.find({coaching: {$exists: true}})
-//   .populate({path: 'coaching'})
-//   .then(logbooks => {
-//     console.log('before', logbooks.length)
-//     const toDelete = logbooks.filter(l => lodash.isEmpty(l.coaching?.user))
-//     const toKeep = logbooks.filter(l => !lodash.isEmpty(l.coaching?.user))
-//     console.log('to delete', toDelete.length)
-//     console.log('to keep', toKeep.length)
-//     // return Promise.all(toKeep.map(logbook => console.log(logbook)))
-//   })
-//   .catch(console.error)
 
 module.exports = {
   ensureChallengePipsConsistency,
