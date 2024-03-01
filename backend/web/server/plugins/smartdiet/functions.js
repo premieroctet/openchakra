@@ -300,7 +300,11 @@ const preprocessGet = ({ model, fields, id, user, params }) => {
 
 setPreprocessGet(preprocessGet)
 
-const preCreate = ({ model, params, user }) => {
+const preCreate = async ({ model, params, user }) => {
+  if (model=='coaching') {
+    params.user=user._id
+    params.offer=(await Company.findById(user.company).populate('offers')).offers[0]
+  }
   if (['diploma', 'comment', 'measure', 'content', 'collectiveChallenge', 'individualChallenge', 'webinar', 'menu'].includes(model)) {
     params.user = params?.user || user
   }
