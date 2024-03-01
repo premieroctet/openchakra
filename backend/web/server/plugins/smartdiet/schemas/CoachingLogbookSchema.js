@@ -11,6 +11,11 @@ const CoachingLogbookSchema = new Schema({
     ref: 'coaching',
     required: true,
   },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'user',
+    required: true,
+  },
   day: {
     type: Date,
     set: d => moment(d).startOf('day'),
