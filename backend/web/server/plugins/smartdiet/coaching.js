@@ -1,5 +1,5 @@
+const Coaching = require("../../models/Coaching")
 const { COACHING_STATUS_NOT_STARTED, COACHING_STATUS_STARTED, COACHING_STATUS_FINISHED, COACHING_END_DELAY, COACHING_STATUS_DROPPED, COACHING_STATUS_STOPPED } = require("./consts")
-const CoachingSchema = require("./schemas/CoachingSchema")
 
 const updateCoachingStatus = async coaching_id => {
   const coaching=await Coaching.findById(coaching_id).populate(['appointments', 'offer', 'spent_credits', 'user', 'latest_appointments'])
