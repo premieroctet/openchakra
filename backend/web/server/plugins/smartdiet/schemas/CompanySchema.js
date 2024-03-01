@@ -99,6 +99,19 @@ CompanySchema.virtual("offers", {
   foreignField: "company", // is equal to foreignField
 });
 
+CompanySchema.virtual("current_offer", {
+  ref: "offer", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "company", // is equal to foreignField
+  options: { 
+    match : () => {
+      return {validity_start: {$lt: Date.now()}}
+    },
+    sort: { validity_start: -1 }, limit:1 
+  },
+  justOne: true,
+});
+
 CompanySchema.virtual("webinars", {
   ref: "webinar", // The Model to use
   localField: "_id", // Find in Model, where localField

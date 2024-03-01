@@ -184,6 +184,7 @@ const { computeBilling } = require('./billing')
 const { isPhoneOk, PHONE_REGEX } = require('../../../utils/sms')
 const NodeCache=require('node-cache')
 const { updateCoachingStatus } = require('./coaching')
+const { tokenize } = require('protobufjs')
 
 const filterDataUser = ({ model, data, id, user }) => {
   if (model == 'offer' && !id) {
@@ -725,6 +726,22 @@ declareVirtualField({
       options: { ref: 'key' }
     },
   })
+  declareVirtualField({
+    model: 'm', field: 'all_logbooks', instance: 'Array', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: { ref: 'coachingLogbook' }
+    },
+  })
+  declareVirtualField({
+    model: 'm', field: 'logbooks', instance: 'Array', multiple: true,
+    requires: 'all_logbooks.logbook.questions.multiple_answers,all_logbooks.logbook.questions.answer_status',
+    caster: {
+      instance: 'ObjectID',
+      options: { ref: 'logbookDay' }
+    },
+  })
+  
 })
 // End user/loggedUser
 
@@ -1098,21 +1115,6 @@ declareVirtualField({
   caster: {
     instance: 'ObjectID',
     options: { ref: 'userQuizz' }
-  },
-})
-declareVirtualField({
-  model: 'coaching', field: 'all_logbooks', instance: 'Array', multiple: true,
-  caster: {
-    instance: 'ObjectID',
-    options: { ref: 'coachingLogbook' }
-  },
-})
-declareVirtualField({
-  model: 'coaching', field: 'logbooks', instance: 'Array', multiple: true,
-  requires: 'all_logbooks.logbook.questions.multiple_answers,all_logbooks.logbook.questions.answer_status',
-  caster: {
-    instance: 'ObjectID',
-    options: { ref: 'logbookDay' }
   },
 })
 declareVirtualField({
@@ -2209,6 +2211,31 @@ Coaching.find({offer: null})
       return coaching.save()
     }
   })))
+
+Coaching.find()
+  .populate('user')
+  .then(coachings => {
+    const toRemove=coachings.filter(c => !c.user)
+    const toKeep=coachings.filter(c => !!c.user)
+    const lbCollection=mongoose.connection.collection('coachinglogbooks')
+    console.log('coachings to remove', toRemove.length, 'coachings to keep', toKeep.length)
+    return Promise.all([CoachingLogbook.countDocuments(), CoachingLogbook.countDocuments({coaching: {$nin: coachings}})])
+      .then(([all, toRemove]) => console.log('logbooks', all, 'to remove', toRemove))
+  })
+  .then(console.log)
+  .catch(console.error)
+// Link coaching logbooks from coaching to user
+// CoachingLogbook.find({coaching: {$exists: true}})
+//   .populate({path: 'coaching'})
+//   .then(logbooks => {
+//     console.log('before', logbooks.length)
+//     const toDelete = logbooks.filter(l => lodash.isEmpty(l.coaching?.user))
+//     const toKeep = logbooks.filter(l => !lodash.isEmpty(l.coaching?.user))
+//     console.log('to delete', toDelete.length)
+//     console.log('to keep', toKeep.length)
+//     // return Promise.all(toKeep.map(logbook => console.log(logbook)))
+//   })
+//   .catch(console.error)
 
 module.exports = {
   ensureChallengePipsConsistency,

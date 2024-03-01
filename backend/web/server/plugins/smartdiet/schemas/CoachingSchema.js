@@ -1,10 +1,6 @@
 const {
-  APPOINTMENT_PAST,
   AVAILABILITIES_RANGE_DAYS,
   COACHING_MODE,
-  QUIZZ_TYPE_LOGBOOK,
-  QUIZZ_TYPE_PATIENT,
-  QUIZZ_TYPE_PROGRESS,
   ROLE_CUSTOMER,
   ROLE_EXTERNAL_DIET,
   COACHING_STATUS,
@@ -138,12 +134,6 @@ CoachingSchema.virtual('questions', {
   foreignField: 'coaching',
 })
 
-CoachingSchema.virtual('all_logbooks', {
-  ref: 'coachingLogbook',
-  localField: '_id',
-  foreignField: 'coaching',
-})
-
 
 CoachingSchema.virtual('remaining_credits', DUMMY_REF).get(function() {
   if (this.user?.role!=ROLE_CUSTOMER) {
@@ -200,13 +190,6 @@ CoachingSchema.virtual('current_objectives', DUMMY_REF).get(function() {
   return lodash(this.appointments)
    .orderBy(app => app[CREATED_AT_ATTRIBUTE].start_date, 'desc')
    .head()?.objectives || []
-})
-
-// Returns the LogbookDay compléting if required
-CoachingSchema.virtual('logbooks', DUMMY_REF).get(function() {
-  const grouped=lodash(this.all_logbooks).sortBy(l => l.day).groupBy(l => l.day)
-  const lbd=grouped.entries().map(([day, logbooks]) => mongoose.models.logbookDay({day, logbooks:logbooks?.map(fl => fl.logbook)}))
-  return lbd.value()
 })
 
 // Returned availabilities are not store in database
