@@ -215,6 +215,13 @@ export const validateProject = (project: ProjectState): IWarning[] => {
   if (loginPage?.components.root?.props?.allowNotConnected!='true') {
     return [`Login page '${loginPage.pageName}' must allow not connected`]
   }
+  const indexPage=project.pages[project.rootPage]
+  // Login page must allow not connected
+  if (indexPage?.components.root?.props?.allowNotConnected!='true') {
+    return [`Index page '${indexPage.pageName}' must allow not connected`]
+  }
+
+
   const warningsComponents = lodash(pages)
     .map(p => [p.pageName, validateComponents(p.components)])
     .fromPairs()
