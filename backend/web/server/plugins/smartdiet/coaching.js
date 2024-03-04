@@ -2,7 +2,9 @@ const Coaching = require("../../models/Coaching")
 const { COACHING_STATUS_NOT_STARTED, COACHING_STATUS_STARTED, COACHING_STATUS_FINISHED, COACHING_END_DELAY, COACHING_STATUS_DROPPED, COACHING_STATUS_STOPPED } = require("./consts")
 
 const updateCoachingStatus = async coaching_id => {
+  console.log('Update coaching status',coaching_id)
   const coaching=await Coaching.findById(coaching_id).populate(['appointments', 'offer', 'spent_credits', 'user', 'latest_appointments'])
+  console.log('FOund coaching', !!coaching)
 
   // Started it 1 appointment
   if (coaching.status==COACHING_STATUS_NOT_STARTED && coaching.appointements.length>0) {

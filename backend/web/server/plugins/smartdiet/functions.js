@@ -1637,8 +1637,9 @@ const computeStatistics = async ({ id, fields }) => {
     return {}
   }
   const result={}
-  const company=await Company.findById(id)
-  result.company=id
+  const companies=await Company.find({_id: id})
+  result.company=id?.toString()
+  const companyUsers=await User.find({company: id}, {_id:1})
   result.groups_count=await Group.countDocuments({companies: id})
   result.messages_count=lodash(await Group.find({companies: id}).populate('messages')).flatten().size()
   result.users_count=await User.countDocuments({company: id})
@@ -1664,7 +1665,21 @@ const computeStatistics = async ({ id, fields }) => {
   const coachings=await Coaching.distinct('user', {_id: {$in: apptCoachings}})
   const users=await User.countDocuments({_id: {$in: coachings}, company: id})
   result.started_coachings=users
-  result.leads_count=await Lead.countDocuments({company_code: company.code})
+  result.leads_count=await Lead.countDocuments({company_code: companies.map(c => c.code)})
+  const specificities=lodash(await User.find({company: id}).populate('specificity_targets'))
+    .map(u => u.specificity_targets.map(t => t.name))
+    .flatten()
+    .countBy()
+    .entries().map(([k, v]) => ({x: k, y: v}))
+    .orderBy(['y'], ['asc'])
+  result.specificities_users=specificities.value()
+  const reasons=lodash(await Coaching.find({user: companyUsers}).populate('reasons'))
+    .map(u => u.reasons.map(t => t.name))
+    .flatten()
+    .countBy()
+    .entries().map(([k, v]) => ({x: k, y: v}))
+    .orderBy(['y'], ['asc'])
+  result.reasons_users=reasons.value()
   return result
 }
 
@@ -2213,6 +2228,11 @@ Coaching.find({offer: null})
       return coaching.save()
     }
   })))
+
+Coaching.find({status: null}, {_id:1})
+  .then(coachings =>  Promise.all(coachings.map(coaching => updateCoachingStatus(coaching._id))))
+  .then(console.log)
+  .catch(console.error)
 
   CoachingLogbook.distinct('coaching')
   .then(coachingIds => Coaching.find({_id: coachingIds}, {user:1}))

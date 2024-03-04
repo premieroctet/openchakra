@@ -128,7 +128,7 @@ require('../../server/models/JoinReason')
 require('../../server/models/Patient')
 
 const FIELDS=`groups_count,messages_count,users_count,user_women_count,webinars_count,webinars_replayed_count,average_webinar_registar,company,started_coachings,users_men_count,users_no_gender_count,leads_count`.split(',')
-const COMPANY_CRITERION = {name: /etude clinique/i}
+const COMPANY_CRITERION = {name: /antinea/i}
 const DIET_CRITERION={email: 'stephanieb.smartdiet@gmail.com', role: ROLE_EXTERNAL_DIET}
 const USER_CRITERION={email: 'hello+user@wappizy.com', role: ROLE_CUSTOMER}
 
@@ -146,11 +146,43 @@ describe('Performance ', () => {
     // await mongoose.connection.close()
   })
 
-  it(`must load statistics 'fastly'`, async() => {
+  it.only(`must load statistics 'fastly'`, async() => {
     const company=await Company.findOne(COMPANY_CRITERION)
+    const EXPECTED={
+      company: '64f6e863bd73a54eaeed3e9d',
+      groups_count: 0,
+      messages_count: 0,
+      users_count: 49,
+      user_women_count: 38,
+      users_men_count: 7,
+      users_no_gender_count: 0,
+      webinars_count: 1,
+      webinars_replayed_count: 0,
+      average_webinar_registar: 0,
+      started_coachings: 8,
+      leads_count: 87,
+      specificities_users: [
+        { x: 'Force physique', y: 1 },
+        { x: 'Mobilité', y: 6 },
+        { x: 'Horaires décalés', y: 17 },
+        { x: 'Concentration', y: 26 },
+        { x: 'Télétravail', y: 30 },
+        { x: 'Sédentarité', y: 38 }
+      ],
+      reasons_users: [
+        { x: 'Troubles du Comportement Alimentaire', y: 4 },
+        { x: 'Digestion', y: 6 },
+        { x: 'Sport', y: 7 },
+        { x: 'Santé', y: 8 },
+        { x: 'Rééquilibrage alimentaire', y: 15 },
+        { x: 'Poids', y: 17 }
+      ]
+    }
+
     const stats=await computeStatistics({id: company._id, fields: FIELDS})
     expect(stats).toBeTruthy()
-  }, 1000)
+    expect(stats).toEqual(EXPECTED)
+  }, 2000)
 
   it(`must load statistics properly`, async() => {
     const company=await Company.findOne(COMPANY_CRITERION)
@@ -368,7 +400,7 @@ describe('Performance ', () => {
     await checkIntegrity()
   })
 
-  it.only('Update logbooks', async () => {
+  it('Update logbooks', async () => {
     console.time('consistency')
     await logbooksConsistency()
     console.timeEnd('consitency')
