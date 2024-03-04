@@ -819,13 +819,13 @@ const getWappType = type => {
   return `Wapp${type}`
 }
 
-const storeRedirectCode=`
+const storeRedirectCode= (loginUrl:string) => `
 useEffect(() => {
   if (user===false) {
     return
   }
   if (user===null) {
-    storeAndRedirect()
+    storeAndRedirect('${loginUrl}')
   }
 }, [user])
 `
@@ -855,6 +855,8 @@ export const generateCode = async (
   const { settings } = project
   const {description, metaImage, name, url, favicon32, gaTag} = Object.fromEntries(Object.entries(settings).map(([key, value]) => [key, isJsonString(value) ? JSON.parse(value) : value]))
 
+  const loginPage=Object.values(pages).find(page => page.components?.root?.props?.tag=='LOGIN')!
+  const loginUrl=loginPage ? '/'+getPageUrl(loginPage.pageId, pages) : ''
   const extraImports: string[] = []
   const wappComponentsDeclaration = lodash(components)
     .values()
@@ -1025,7 +1027,7 @@ const ${componentName} = () => {
 
   ${hooksCode}
   ${filterStates}
-  ${components.root.props.allowNotConnected=="true" ? '' : storeRedirectCode}
+  ${components.root.props.allowNotConnected=="true" ? '' : storeRedirectCode(loginUrl)}
   return ${autoRedirect ? 'user===null && ': ''} (
     <>
     <Metadata

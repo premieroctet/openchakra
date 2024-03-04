@@ -1,4 +1,4 @@
-import { Select, Checkbox } from '@chakra-ui/react'
+import { Select, Checkbox, Input } from '@chakra-ui/react'
 import { useSelector } from 'react-redux'
 import React, { memo } from 'react'
 import { getModelNames } from '~core/selectors/dataSources'
@@ -14,6 +14,7 @@ const capitalize = (word: string) => {
 const DataProviderPanel = () => {
   const { setValueFromEvent, setValue, removeValue } = useForm()
   const model = usePropsSelector('model')
+  const tag = usePropsSelector('tag')
   const cardinality = usePropsSelector('cardinality')
   const ignoreUrlParams = usePropsSelector('ignoreUrlParams')
   const allowNotConnected = usePropsSelector('allowNotConnected')
@@ -34,10 +35,30 @@ const DataProviderPanel = () => {
     }
   }
 
+  const onTagChange = ev => {
+    const {value}=ev.target
+    if (/^[a-zA-Z_]*$/.test(value)) {
+      setValue('tag', value.toUpperCase())
+    }
+    else {
+      setValue('tag', tag)
+    }
+  }
+
   const cbLabel = `Ignore '${model}' param in URL`
   return (
     <>
       <SwitchControl label={'Allow not connected'} name={'allowNotConnected'}/>
+      <FormControl htmlFor="tag" label="Tag">
+        <Input
+          id="tag"
+          name="tag"
+          size="xs"
+          value={tag}
+          type="text"
+          onChange={onTagChange}
+        />
+      </FormControl>
       <FormControl htmlFor="model" label="Model">
         <Select
           id="model"
