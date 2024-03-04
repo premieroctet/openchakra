@@ -402,7 +402,7 @@ setPreCreateData(preCreate)
 const postPutData = async ({ model, params, id, value, data, user }) => {
   if (model == 'appointment' && params.logbooks) {
     return Appointment.findById(id)
-      .then(appointment => logbooksConsistency(appointment.coaching._id))
+      .then(appointment => logbooksConsistency(appointment.user._id))
       .then(() => params)
   }
   // Validate appointment if this is a progress quizz answer
@@ -1676,22 +1676,22 @@ const computeStatistics = async ({ id, fields }) => {
   .then(() => console.log(`Particular company upserted`))
   .catch(err => console.error(`Particular company upsert error:${err}`))
 
-// Ensure coaching logbooks consistency
-const logbooksConsistency = coaching_id => {
-  const idFilter = coaching_id ? { _id: coaching_id } : {}
+// Ensure user logbooks consistency
+const logbooksConsistency = user_id => {
+  const idFilter = user_id ? { _id: user_id } : {}
   const startDay = moment().add(-1, 'day')
   const endDay = moment().add(1, 'days')
   const logBooksFilter = { $and: [{ day: { $gte: startDay.startOf('day') } }, { day: { $lte: endDay.endOf('day') } }] }
-  return Coaching.find(idFilter).populate([
+  return User.find(idFilter).populate([
     { path: 'appointments', populate: { path: 'logbooks', populate: { path: 'questions' } } },
     { path: 'all_logbooks', match: logBooksFilter, populate: { path: 'logbook', populate: 'quizz' } },
   ])
-    .then(coachings => {
-      return runPromisesWithDelay(coachings.map((coaching, idx) => () => {
-        console.log(`Updating caoching`, coaching._id, idx, '/', coachings.length)
+    .then(users => {
+      return runPromisesWithDelay(users.map((user, idx) => () => {
+        console.log(`Updating user`, user._id, idx, '/', users.length)
         const getLogbooksForDay = date => {
           // Get the appointment juste before the date
-          const previous_appt = lodash(coaching.appointments)
+          const previous_appt = lodash(user.appointments)
             .filter(a => a.end_date < date.endOf('day'))
             .maxBy(a => a.start_date)
           const appt_logbooks = previous_appt ? [...previous_appt.logbooks] : []
@@ -1707,14 +1707,15 @@ const logbooksConsistency = coaching_id => {
           // expected quizz templates
           return getLogbooksForDay(day)
             .then(expectedQuizz => {
-              const coachingLogbooks = coaching.all_logbooks.filter(l => moment(l.day).isSame(day, 'day'))
+              const userLogBooks = user.all_logbooks.filter(l => moment(l.day).isSame(day, 'day'))
               // Logbooks missing in patient's coaching
-              const missingQuizz = expectedQuizz.filter(q => !coachingLogbooks.some(cl => idEqual(cl.logbook.quizz._id, q._id)))
+              const missingQuizz = expectedQuizz.filter(q => !userLogBooks.some(cl => idEqual(cl.logbook.quizz._id, q._id)))
+              console.log('missing quizzs', missingQuizz.length)
               // Logbooks to remove from patient's coaching
-              const extraQuizz = coachingLogbooks.filter(l => !expectedQuizz.some(q => idEqual(q._id, l.logbook.quizz._id)))
+              const extraQuizz = userLogBooks.filter(l => !expectedQuizz.some(q => idEqual(q._id, l.logbook.quizz._id)))
               // Add missing quizz
               return Promise.all(missingQuizz.map(q => q.cloneAsUserQuizz()))
-                .then(quizzs => Promise.all(quizzs.map(q => CoachingLogbook.create({ day, logbook: q, coaching }))))
+                .then(quizzs => Promise.all(quizzs.map(q => CoachingLogbook.create({ day, logbook: q, user }))))
                 // remove extra quizz
                 .then(quizzs => Promise.all(extraQuizz.map(q => {
                   // Remove user quizz
@@ -2214,11 +2215,15 @@ Coaching.find({offer: null})
 
   CoachingLogbook.distinct('coaching')
   .then(coachingIds => Coaching.find({_id: coachingIds}, {user:1}))
+  // Link logbooks to user instead of coaching
   .then(coachings => {
     console.log('starting move', coachings.length,'logbooks from coaching to user')
-    return Promise.all(coachings.map(coaching => CoachingLogbook.updateMany({coaching: coaching._id}, {$set: {user: coaching.user}, $unset: {coaching: 1}})))
-
- })
+    return runPromisesWithDelay(coachings.map(coaching => () => {
+      console.log('Updating logbooks for coaching', coaching._id)
+      return CoachingLogbook.updateMany({coaching: coaching._id}, {$set: {user: coaching.user}, $unset: {coaching: 1}})
+    }))
+  })
+  // .then(() => CoachingLogbook.remove({coaching: {$ne: null}}))
   .then(console.log)
   .catch(console.error)
 
