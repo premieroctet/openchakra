@@ -6,12 +6,12 @@ const {schemaOptions} = require('../../../utils/schemas')
 const Schema = mongoose.Schema
 
 const CoachingLogbookSchema = new Schema({
-  // coaching: {
-  //   type: Schema.Types.ObjectId,
-  //   ref: 'coaching',
-  //   // required: true,
-  //   index: true,
-  // },
+  coaching: {
+    type: Schema.Types.ObjectId,
+    ref: 'coaching',
+    // required: true,
+    index: true,
+  },
   user: {
     type: Schema.Types.ObjectId,
     ref: 'user',
