@@ -21,6 +21,7 @@ export const ACTIONS = {
         const cookies=new Cookies()
         const redirect=cookies.get('redirect')
         if (redirect) {
+          cookies.remove('redirect')          
           window.location=redirect
         }
         return res
