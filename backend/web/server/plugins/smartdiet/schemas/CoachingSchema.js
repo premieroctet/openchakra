@@ -19,11 +19,13 @@ const CoachingSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: 'user',
+    index: true,
     required: [true, 'Le patient est obligatoire'],
   },
   diet: {
     type: Schema.Types.ObjectId,
     ref: 'user',
+    index: true,
     required: false,
   },
   mode: {

@@ -1566,7 +1566,7 @@ const postCreate = async ({ model, params, data, user }) => {
       })
 
     await updateCoachingStatus(data.coaching._id)
-    return Promise.allSettled([setProgressQuizz, createSmartagendaAppointment, assQuizz])
+    return Promise.allSettled([setProgressQuizz, createSmartagendaAppointment])
       .then(console.log)
       .catch(console.error)
       .finally(() => data)
