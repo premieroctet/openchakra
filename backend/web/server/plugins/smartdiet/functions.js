@@ -727,14 +727,14 @@ declareVirtualField({
     },
   })
   declareVirtualField({
-    model: 'm', field: 'all_logbooks', instance: 'Array', multiple: true,
+    model: m, field: 'all_logbooks', instance: 'Array', multiple: true,
     caster: {
       instance: 'ObjectID',
       options: { ref: 'coachingLogbook' }
     },
   })
   declareVirtualField({
-    model: 'm', field: 'logbooks', instance: 'Array', multiple: true,
+    model: m, field: 'logbooks', instance: 'Array', multiple: true,
     requires: 'all_logbooks.logbook.questions.multiple_answers,all_logbooks.logbook.questions.answer_status',
     caster: {
       instance: 'ObjectID',
@@ -806,6 +806,7 @@ declareVirtualField({
     options: { ref: 'lead' }
   },
 })
+declareVirtualField({model: 'company', field: 'current_offer', instance: 'offer'})
 
 
 declareEnumField({ model: 'content', field: 'type', enumValues: CONTENTS_TYPE })
