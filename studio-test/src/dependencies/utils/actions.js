@@ -2,7 +2,7 @@ import axios from 'axios'
 import lodash from 'lodash'
 import html2canvas from 'html2canvas'
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
-
+import Cookies from 'universal-cookie'
 import {
   clearComponentValue,
   getComponent,
@@ -17,6 +17,14 @@ export const ACTIONS = {
     const password = getComponentValue(props.password, level)
     let url = `${API_ROOT}/login`
     return axios.post(url, { email, password })
+      .then(res => {
+        const cookies=new Cookies()
+        const redirect=cookies.get('redirect')
+        if (redirect) {
+          window.location=redirect
+        }
+        return res
+      })
   },
   sendMessage: ({ value, props, level, getComponentValue, fireClearComponents }) => {
     const destinee = props.destinee ? getComponentValue(props.destinee, level) : value._id

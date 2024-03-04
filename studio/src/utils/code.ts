@@ -819,6 +819,17 @@ const getWappType = type => {
   return `Wapp${type}`
 }
 
+const storeRedirectCode= (loginUrl:string) => `
+useEffect(() => {
+  if (user===false) {
+    return
+  }
+  if (user===null) {
+    storeAndRedirect('${loginUrl}')
+  }
+}, [user])
+`
+
 const reloadOnBackScript = `
 useEffect(() => {
    const handlePopstate = () => {
@@ -844,6 +855,8 @@ export const generateCode = async (
   const { settings } = project
   const {description, metaImage, name, url, favicon32, gaTag} = Object.fromEntries(Object.entries(settings).map(([key, value]) => [key, isJsonString(value) ? JSON.parse(value) : value]))
 
+  const loginPage=Object.values(pages).find(page => page.components?.root?.props?.tag=='LOGIN')!
+  const loginUrl=loginPage ? '/'+getPageUrl(loginPage.pageId, pages) : ''
   const extraImports: string[] = []
   const wappComponentsDeclaration = lodash(components)
     .values()
@@ -957,7 +970,7 @@ import { ${lucideIconImports.join(',')} } from "lucide-react";`
     : ''
 }
 
-import {ensureToken} from '../dependencies/utils/token'
+import {ensureToken, storeAndRedirect} from '../dependencies/utils/token'
 import {useRouter} from 'next/router'
 import { useUserContext } from '../dependencies/context/user'
 import { getComponentDataValue } from '../dependencies/utils/values'
@@ -1011,9 +1024,10 @@ const ${componentName} = () => {
   const {user}=useUserContext()
   ${autoRedirect}
 
+
   ${hooksCode}
   ${filterStates}
-
+  ${components.root.props.allowNotConnected=="true" ? '' : storeRedirectCode(loginUrl)}
   return ${autoRedirect ? 'user===null && ': ''} (
     <>
     <Metadata

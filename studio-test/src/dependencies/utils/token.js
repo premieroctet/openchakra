@@ -26,4 +26,11 @@ const clearToken = () => {
   store.remove(KEY)
 }
 
-export {ensureToken, clearToken}
+const storeAndRedirect = loginUrl => {
+  const fullPath=`${window.location.pathname}${window.location.search}`
+  const cookies=new Cookies()
+  cookies.set('redirect', fullPath)
+  window.location=loginUrl
+}
+
+export {ensureToken, clearToken, storeAndRedirect}
