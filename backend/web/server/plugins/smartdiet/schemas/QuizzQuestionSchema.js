@@ -17,6 +17,10 @@ const QuizzQuestionSchema = new Schema({
     type: String,
     required: [true, 'Le titre est obligatoire'],
   },
+  // Title for synthesis
+  synthesis_label: {
+    type: String
+  },
   type: {
     type: String,
     enum: Object.keys(QUIZZ_QUESTION_TYPE),
