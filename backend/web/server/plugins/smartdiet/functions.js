@@ -109,6 +109,10 @@ const {
   COACHING_CONVERSION_CANCELLED,
   COACHING_CONVERSION_CONVERTED,
   RECIPE_TYPE,
+  APPOINTMENT_TYPE_ASSESSMENT,
+  APPOINTMENT_TYPE_FOLLOWUP,
+  COACHING_STATUS,
+  QUIZZ_TYPE_ASSESSMENT,
 } = require('./consts')
 const {
   HOOK_DELETE,
@@ -177,7 +181,10 @@ const Group = require('../../models/Group')
 const Conversation = require('../../models/Conversation')
 const UserQuizz = require('../../models/UserQuizz')
 const { computeBilling } = require('./billing')
-const { isPhoneOk } = require('../../../utils/sms')
+const { isPhoneOk, PHONE_REGEX } = require('../../../utils/sms')
+const NodeCache=require('node-cache')
+const { updateCoachingStatus } = require('./coaching')
+const { tokenize } = require('protobufjs')
 
 const filterDataUser = ({ model, data, id, user }) => {
   if (model == 'offer' && !id) {
@@ -294,7 +301,11 @@ const preprocessGet = ({ model, fields, id, user, params }) => {
 
 setPreprocessGet(preprocessGet)
 
-const preCreate = ({ model, params, user }) => {
+const preCreate = async ({ model, params, user }) => {
+  if (model=='coaching') {
+    params.user=user._id
+    params.offer=(await Company.findById(user.company).populate('offers')).offers[0]
+  }
   if (['diploma', 'comment', 'measure', 'content', 'collectiveChallenge', 'individualChallenge', 'webinar', 'menu'].includes(model)) {
     params.user = params?.user || user
   }
@@ -341,7 +352,7 @@ const preCreate = ({ model, params, user }) => {
       model: 'user', id: customer_id,
       fields: [
         'latest_coachings.appointments', 'latest_coachings.reasons', 'latest_coachings.remaining_credits', 'latest_coachings.appointment_type',
-        'latest_coachings.nutrition_advices', 'latest_coachings.remaining_nutrition_credits', 'company.reasons', 'phone', 'latest_coachings.diet'
+        'latest_coachings.nutrition_advices', 'latest_coachings.remaining_nutrition_credits', 'company.reasons', 'phone', 'latest_coachings.diet',
       ],
       user,
     })
@@ -363,6 +374,7 @@ const preCreate = ({ model, params, user }) => {
         if (!latest_coaching) {
           throw new ForbiddenError(`Aucun coaching en cours`)
         }
+        console.log('reamining coaching credits', latest_coaching.remaining_credits)
         console.log(latest_coaching.remaining_nutrition_credits)
         if ((isAppointment && latest_coaching.remaining_credits <= 0)
           || (!isAppointment && latest_coaching.remaining_nutrition_credits <= 0)) {
@@ -390,26 +402,8 @@ setPreCreateData(preCreate)
 const postPutData = async ({ model, params, id, value, data, user }) => {
   if (model == 'appointment' && params.logbooks) {
     return Appointment.findById(id)
-      .then(appointment => logbooksConsistency(appointment.coaching._id))
+      .then(appointment => logbooksConsistency(appointment.user._id))
       .then(() => params)
-  }
-  if (model == 'coaching' && params.quizz_templates) {
-    const tpl_attribute = 'quizz_templates'
-    const inst_attribute = 'quizz'
-    return mongoose.models.coaching.findById(id).populate([
-      { path: tpl_attribute, populate: 'questions' },
-      { path: inst_attribute, populate: { path: 'quizz', populate: 'questions' } },
-    ])
-      .then(coaching => {
-        const extraUserQuizz = coaching[inst_attribute].filter(uq => !coaching[tpl_attribute].some(q => idEqual(q._id, uq.quizz._id)))
-        const missingUserQuizz = differenceSet(coaching[tpl_attribute], coaching[inst_attribute].map(uq => uq.quizz))
-        const addQuizzs = Promise.all(missingUserQuizz.map(q => q.cloneAsUserQuizz(coaching)))
-        return addQuizzs
-          .then(quizzs => mongoose.models.coaching.findByIdAndUpdate(id, { $addToSet: { [inst_attribute]: quizzs } }))
-          .then(() => mongoose.models.coaching.findByIdAndUpdate(id, { $pull: { [inst_attribute]: { $in: extraUserQuizz } } }))
-          .then(() => Promise.all(extraUserQuizz.map(q => q.delete())))
-          .then(() => mongoose.models.coaching.findById(id))
-      })
   }
   // Validate appointment if this is a progress quizz answer
   if (model=='userQuizzQuestion') {
@@ -732,6 +726,22 @@ declareVirtualField({
       options: { ref: 'key' }
     },
   })
+  declareVirtualField({
+    model: m, field: 'all_logbooks', instance: 'Array', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: { ref: 'coachingLogbook' }
+    },
+  })
+  declareVirtualField({
+    model: m, field: 'logbooks', instance: 'Array', multiple: true,
+    requires: 'all_logbooks.logbook.questions.multiple_answers,all_logbooks.logbook.questions.answer_status',
+    caster: {
+      instance: 'ObjectID',
+      options: { ref: 'logbookDay' }
+    },
+  })
+  
 })
 // End user/loggedUser
 
@@ -796,6 +806,7 @@ declareVirtualField({
     options: { ref: 'lead' }
   },
 })
+declareVirtualField({model: 'company', field: 'current_offer', instance: 'offer'})
 
 
 declareEnumField({ model: 'content', field: 'type', enumValues: CONTENTS_TYPE })
@@ -1048,17 +1059,17 @@ declareVirtualField({
 })
 declareVirtualField({
   model: 'coaching', field: 'remaining_credits', instance: 'Number',
-  requires: 'user.offer.coaching_credit,spent_credits,user.company.offers.coaching_credit,user.role'
+  requires: 'offer.coaching_credit,spent_credits,user.role'
 }
 )
 declareVirtualField({ model: 'coaching', field: 'spent_credits', instance: 'Number'})
-
 declareVirtualField({
   model: 'coaching', field: 'remaining_nutrition_credits', instance: 'Number',
   requires: 'user.offer.nutrition_credit,spent_nutrition_credits,user.company.offers.nutrition_credit,user.role'
 }
 )
 declareVirtualField({ model: 'coaching', field: 'spent_nutrition_credits', instance: 'Number'})
+declareEnumField({ model: 'coaching', field: 'status', enumValues: COACHING_STATUS})
 
 declareVirtualField({
   model: 'coaching', field: 'questions', instance: 'Array', multiple: true,
@@ -1105,21 +1116,6 @@ declareVirtualField({
   caster: {
     instance: 'ObjectID',
     options: { ref: 'userQuizz' }
-  },
-})
-declareVirtualField({
-  model: 'coaching', field: 'all_logbooks', instance: 'Array', multiple: true,
-  caster: {
-    instance: 'ObjectID',
-    options: { ref: 'coachingLogbook' }
-  },
-})
-declareVirtualField({
-  model: 'coaching', field: 'logbooks', instance: 'Array', multiple: true,
-  requires: 'all_logbooks.logbook.questions.multiple_answers,all_logbooks.logbook.questions.answer_status',
-  caster: {
-    instance: 'ObjectID',
-    options: { ref: 'logbookDay' }
   },
 })
 declareVirtualField({
@@ -1498,7 +1494,7 @@ declareComputedField({model: 'menu', field: 'shopping_list', getterFn: getMenuSh
 declareComputedField({model: 'key', field: 'user_surveys_progress', getterFn: getUserSurveysProgress})
 
 
-const postCreate = ({ model, params, data, user }) => {
+const postCreate = async ({ model, params, data, user }) => {
   // Create company => duplicate offer
   if (model == 'company') {
     return Offer.findById(params.offer)
@@ -1524,10 +1520,6 @@ const postCreate = ({ model, params, data, user }) => {
       .then(questions => Promise.all(questions.map(question => userCoachingQuestion.create({ coaching: data, question }))))
   }
 
-  if (['loggedUser', 'user'].includes(model) && data.role == ROLE_CUSTOMER) {
-    return Coaching.create({ user: data })
-      .then(coaching => User.findByIdAndUpdate(data._id, { coaching }))
-  }
   if (['user'].includes(model) && data.role == ROLE_EXTERNAL_DIET) {
     return Promise.allSettled([
       sendDietPreRegister2Diet({ user: data }),
@@ -1537,6 +1529,7 @@ const postCreate = ({ model, params, data, user }) => {
       .then(() => data)
   }
   // Create coaching.progress if not present
+  // Create assessment quizz if this is the first appointment
   if (model == 'appointment') {
     const setProgressQuizz = Coaching.findById(data.coaching._id).populate('user')
       .then(coaching => {
@@ -1553,16 +1546,7 @@ const postCreate = ({ model, params, data, user }) => {
         )
           .then(console.log)
           .catch(console.error)
-        if (coaching.progress) {
-          return data
-        }
-        return Quizz.findOne({ type: QUIZZ_TYPE_PROGRESS }).populate('questions')
-          .then(q => {
-            if (!q) { return console.error(`No progress quizz found`) }
-            return q.cloneAsUserQuizz()
-          })
-          .then(uq => { coaching.progress = uq?._id; return coaching.save() })
-          .then(() => data)
+        return updateCoachingStatus(coaching._id)
       })
 
     const createSmartagendaAppointment = Appointment.findById(data._id)
@@ -1580,13 +1564,15 @@ const postCreate = ({ model, params, data, user }) => {
             return appt.save()
           })
       })
-    return Promise.allSettled([setProgressQuizz, createSmartagendaAppointment])
+
+    await updateCoachingStatus(data.coaching._id)
+    return Promise.allSettled([setProgressQuizz, createSmartagendaAppointment, assQuizz])
       .then(console.log)
       .catch(console.error)
       .finally(() => data)
   }
 
-  // If operator created nuttrition advice, set lead nutrition converted
+  // If operator created nutrition advice, set lead nutrition converted
   if (model == 'nutritionAdvice' && user.role == ROLE_SUPPORT) {
     Coaching.findById(data.coaching._id).populate('user')
       .then(({ user }) => Lead.findOneAndUpdate({ email: user.email }, { nutrition_converted: true }))
@@ -1691,22 +1677,22 @@ const computeStatistics = async ({ id, fields }) => {
   .then(() => console.log(`Particular company upserted`))
   .catch(err => console.error(`Particular company upsert error:${err}`))
 
-// Ensure coaching logbooks consistency
-const logbooksConsistency = coaching_id => {
-  const idFilter = coaching_id ? { _id: coaching_id } : {}
+// Ensure user logbooks consistency
+const logbooksConsistency = user_id => {
+  const idFilter = user_id ? { _id: user_id } : {}
   const startDay = moment().add(-1, 'day')
   const endDay = moment().add(1, 'days')
   const logBooksFilter = { $and: [{ day: { $gte: startDay.startOf('day') } }, { day: { $lte: endDay.endOf('day') } }] }
-  return Coaching.find(idFilter).populate([
+  return User.find(idFilter).populate([
     { path: 'appointments', populate: { path: 'logbooks', populate: { path: 'questions' } } },
     { path: 'all_logbooks', match: logBooksFilter, populate: { path: 'logbook', populate: 'quizz' } },
   ])
-    .then(coachings => {
-      return runPromisesWithDelay(coachings.map((coaching, idx) => () => {
-        console.log(`Updating caoching`, coaching._id, idx, '/', coachings.length)
+    .then(users => {
+      return runPromisesWithDelay(users.map((user, idx) => () => {
+        console.log(`Updating user`, user._id, idx, '/', users.length)
         const getLogbooksForDay = date => {
           // Get the appointment juste before the date
-          const previous_appt = lodash(coaching.appointments)
+          const previous_appt = lodash(user.appointments)
             .filter(a => a.end_date < date.endOf('day'))
             .maxBy(a => a.start_date)
           const appt_logbooks = previous_appt ? [...previous_appt.logbooks] : []
@@ -1722,14 +1708,15 @@ const logbooksConsistency = coaching_id => {
           // expected quizz templates
           return getLogbooksForDay(day)
             .then(expectedQuizz => {
-              const coachingLogbooks = coaching.all_logbooks.filter(l => moment(l.day).isSame(day, 'day'))
+              const userLogBooks = user.all_logbooks.filter(l => moment(l.day).isSame(day, 'day'))
               // Logbooks missing in patient's coaching
-              const missingQuizz = expectedQuizz.filter(q => !coachingLogbooks.some(cl => idEqual(cl.logbook.quizz._id, q._id)))
+              const missingQuizz = expectedQuizz.filter(q => !userLogBooks.some(cl => idEqual(cl.logbook.quizz._id, q._id)))
+              console.log('missing quizzs', missingQuizz.length)
               // Logbooks to remove from patient's coaching
-              const extraQuizz = coachingLogbooks.filter(l => !expectedQuizz.some(q => idEqual(q._id, l.logbook.quizz._id)))
+              const extraQuizz = userLogBooks.filter(l => !expectedQuizz.some(q => idEqual(q._id, l.logbook.quizz._id)))
               // Add missing quizz
               return Promise.all(missingQuizz.map(q => q.cloneAsUserQuizz()))
-                .then(quizzs => Promise.all(quizzs.map(q => CoachingLogbook.create({ day, logbook: q, coaching }))))
+                .then(quizzs => Promise.all(quizzs.map(q => CoachingLogbook.create({ day, logbook: q, user }))))
                 // remove extra quizz
                 .then(quizzs => Promise.all(extraQuizz.map(q => {
                   // Remove user quizz
@@ -1799,6 +1786,21 @@ const getRegisterCompany = props => {
 }
 
 setImportDataFunction({ model: 'lead', fn: importLeads })
+
+// Keep app types for 30 seconds only to manage company changes
+const appTypes=new NodeCache({stdTTL: 60})
+
+const getAppointmentType = async ({appointmentType}) => {
+  const key=appointmentType.toString()
+  let result=appTypes.get(key)
+  if (result) {
+    return result
+  }
+  const assessment=await Company.exists({assessment_appointment_type: appointmentType})
+  result=assessment ? APPOINTMENT_TYPE_ASSESSMENT : APPOINTMENT_TYPE_FOLLOWUP
+  appTypes.set(key, result)
+  return result
+}
 
 // Ensure all spoon gains are defined
 ensureSpoonGains = () => {
@@ -2146,22 +2148,85 @@ Message.find(conversationFilter).populate(['sender', 'receiver'])
 
 // Normalize all phone numbers
 const normalizePhone = user => {
+  console.log('Normalize for user', user)
   if (!isPhoneOk(user.phone)) {
     console.error(`Invalid phone`, user.phone, 'for', user.email, 'resetting')
     user.phone=null
+    return user.save()
   }
-  else {
-    user.phone=user.phone.replace(/^0/, '+33')
-    console.log(`Normalized for`, user.email, 'to', user.phone)
-  }
+  user.phone=user.phone.replace(/^0/, '+33').replace(/ /g, '')
+  console.log(`Normalized for`, user.email, 'to', user.phone)
   return user.save()
 }
 
-User.find({phone: {$ne:null}})
+// Normalize user phones
+User.find({phone: {$ne:null, $not: {$regex: PHONE_REGEX}}})
   .then(users => Promise.allSettled(users.map(u => normalizePhone(u))))
       .then(res => console.log(JSON.stringify(lodash.groupBy(res, 'status').rejected)))
 
-console.log('OK')
+/** Extract HEALTH QUIZZ from coachings quizz, set it to assessment_quizz
+ * use collection because Coaching.quizz attribute was removed from schema
+ * */
+Coaching.find()
+  .populate({path: 'quizz', match: {type: /(HEALTH|ASSESSMENT)/}})
+  .then(coachings => {
+    const withAssessmentQuizz=coachings.filter(c => c.quizz?.length>0)
+    return Promise.all(withAssessmentQuizz.map(c => {
+      const healthQuizz=c.quizz[0]._id
+      console.log('coaching', c._id, 'health quizz', healthQuizz)
+      return Coaching.findByIdAndUpdate(c._id, {$set: {assessment_quizz: healthQuizz}, $pull: {quizz: healthQuizz}})
+    }))
+  })
+
+/** Rename quizzs types HEALTH to ASSESSMENT
+ * */
+mongoose.connection.collection('quizzs')
+  .updateMany({type: 'QUIZZ_TYPE_HEALTH'}, {$set: {type: QUIZZ_TYPE_ASSESSMENT}})
+  .then(({matchedCount, modifiedCount}) => console.log(`quizz type HEALTH=>ASSESSMENT modified`, modifiedCount, '/', matchedCount))
+  .catch(err => console.error(`quizz type HEALTH=>ASSESSMENT`, err))
+
+/** Rename userquizzs types HEALTH to ASSESSMENT
+ * */
+mongoose.connection.collection('userquizzs')
+  .updateMany({type: 'QUIZZ_TYPE_HEALTH'}, {$set: {type: QUIZZ_TYPE_ASSESSMENT}})
+  .then(({matchedCount, modifiedCount}) => console.log(`userquizz type HEALTH=>ASSESSMENT modified`, modifiedCount, '/', matchedCount))
+  .catch(err => console.error(`userquizz type HEALTH=>ASSESSMENT`, err))
+
+/** Set offers on coachings
+ * */
+Coaching.find({offer: null})
+  .populate({path: 'user', populate: {path: 'company', populate: 'offers'}})
+  .then(coachings => Promise.all(coachings.map(coaching => {
+    // Remove coachings with deleted users
+    if (!coaching.user) {
+      return coaching.delete()
+    }
+    if (coaching.user?.company.name==PARTICULAR_COMPANY_NAME) {
+      return
+    }
+    coaching.offer=coaching.user?.company.offers[0]
+    if (!coaching.offer) {
+      console.error('coaching without offer', coaching)
+    }
+    else {
+      console.log('saved coaching', coaching._id, 'offer', coaching.offer._id)
+      return coaching.save()
+    }
+  })))
+
+  CoachingLogbook.distinct('coaching')
+  .then(coachingIds => Coaching.find({_id: coachingIds}, {user:1}))
+  // Link logbooks to user instead of coaching
+  .then(coachings => {
+    console.log('starting move', coachings.length,'logbooks from coaching to user')
+    return runPromisesWithDelay(coachings.map(coaching => () => {
+      console.log('Updating logbooks for coaching', coaching._id)
+      return CoachingLogbook.updateMany({coaching: coaching._id}, {$set: {user: coaching.user}, $unset: {coaching: 1}})
+    }))
+  })
+  // .then(() => CoachingLogbook.remove({coaching: {$ne: null}}))
+  .then(console.log)
+  .catch(console.error)
 
 module.exports = {
   ensureChallengePipsConsistency,
@@ -2170,4 +2235,5 @@ module.exports = {
   agendaHookFn, mailjetHookFn,
   computeStatistics,
   webinarNotifications,
+  getAppointmentType,
 }

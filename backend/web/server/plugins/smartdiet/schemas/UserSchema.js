@@ -353,6 +353,23 @@ UserSchema.virtual('fullname', DUMMY_REF).get(function() {
   return `${this.firstname || ''} ${this.lastname || ''}`
 })
 
+/** Logbooks
+ * */
+UserSchema.virtual('all_logbooks', {
+  ref: 'coachingLogbook',
+  localField: '_id',
+  foreignField: 'user',
+})
+
+// Returns the LogbookDay compléting if required
+UserSchema.virtual('logbooks', DUMMY_REF).get(function() {
+  const grouped=lodash(this.all_logbooks).sortBy(l => l.day).groupBy(l => l.day)
+  const lbd=grouped.entries().map(([day, logbooks]) => mongoose.models.logbookDay({day, logbooks:logbooks?.map(fl => fl.logbook)}))
+  return lbd.value()
+})
+
+
+
 UserSchema.virtual("surveys", {
   ref: "userSurvey", // The Model to use
   localField: "_id", // Find in Model, where localField

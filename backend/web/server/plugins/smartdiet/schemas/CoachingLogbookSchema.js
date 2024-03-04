@@ -6,9 +6,15 @@ const {schemaOptions} = require('../../../utils/schemas')
 const Schema = mongoose.Schema
 
 const CoachingLogbookSchema = new Schema({
-  coaching: {
+  // coaching: {
+  //   type: Schema.Types.ObjectId,
+  //   ref: 'coaching',
+  //   // required: true,
+  //   index: true,
+  // },
+  user: {
     type: Schema.Types.ObjectId,
-    ref: 'coaching',
+    ref: 'user',
     required: true,
   },
   day: {

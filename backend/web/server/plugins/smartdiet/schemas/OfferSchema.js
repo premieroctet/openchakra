@@ -114,10 +114,33 @@ const OfferSchema = new Schema({
     default : 0,
     required: true,
   },
+  impact: {
+    type: Boolean,
+    default: false,
+    required: [true, `La possibilité d'étude d'impact doit être renseignée`]
+  },
   company: {
     type: Schema.Types.ObjectId,
     ref: 'company',
     required: false,
+  },
+  validity_start: {
+    type: Date,
+    required: [function(){return !!this.company},  `La date de début de validité est obligatoire`],
+  },
+  validity_end: {
+    type: Date,
+    required: [function(){return !!this.company},  `La date de fin de validité est obligatoire`],
+  },
+  assessment_quizz: {
+    type: Schema.Types.ObjectId,
+    ref: 'quizz',
+    required: [function(){return !!this.company},  `Le modèle de quizz bilan est obligatoire`],
+  },
+  impact_quizz: {
+    type: Schema.Types.ObjectId,
+    ref: 'quizz',
+    required: [function(){return !!this.company && !!this.impact},  `Le modèle de quizz d'impact est obligatoire`],
   },
   migration_id: {
     type: Number,

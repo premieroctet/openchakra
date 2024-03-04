@@ -1,12 +1,10 @@
 const {
-  APPOINTMENT_PAST,
   AVAILABILITIES_RANGE_DAYS,
   COACHING_MODE,
-  QUIZZ_TYPE_LOGBOOK,
-  QUIZZ_TYPE_PATIENT,
-  QUIZZ_TYPE_PROGRESS,
   ROLE_CUSTOMER,
-  ROLE_EXTERNAL_DIET
+  ROLE_EXTERNAL_DIET,
+  COACHING_STATUS,
+  COACHING_STATUS_NOT_STARTED
 } = require('../consts')
 const moment = require('moment')
 const { CREATED_AT_ATTRIBUTE } = require('../../../../utils/consts')
@@ -59,10 +57,20 @@ const CoachingSchema = new Schema({
     ref: 'userQuizz',
     required: true,
   }],
-  progress: {
+  assessment_quizz: {
+    type: Schema.Types.ObjectId,
+    ref: 'userQuizz',
+    required: [function() { this.status!=COACHING_STATUS_NOT_STARTED},`Le questionnaire bilan est obligatoire`],
+  },
+  impact_quizz: {
     type: Schema.Types.ObjectId,
     ref: 'userQuizz',
     required: false,
+  },
+  progress: {
+    type: Schema.Types.ObjectId,
+    ref: 'userQuizz',
+    required: [function() { this.status!=COACHING_STATUS_NOT_STARTED},`Le questionnaire progression est obligatoire`],
   },
   // Food program URL
   food_program: {
@@ -71,6 +79,17 @@ const CoachingSchema = new Schema({
   migration_id: {
     type: Number,
     required: false,
+  },
+  status: {
+    type: String,
+    enum: Object.keys(COACHING_STATUS),
+    default: COACHING_STATUS_NOT_STARTED,
+    required: [true, `Le status du coaching est obligatoire`],
+  },
+  offer: {
+    type: Schema.Types.ObjectId,
+    ref: 'offer',
+    required: [true, `L'offre est obligatoire`],
   },
 }, schemaOptions)
 
@@ -115,18 +134,12 @@ CoachingSchema.virtual('questions', {
   foreignField: 'coaching',
 })
 
-CoachingSchema.virtual('all_logbooks', {
-  ref: 'coachingLogbook',
-  localField: '_id',
-  foreignField: 'coaching',
-})
-
 
 CoachingSchema.virtual('remaining_credits', DUMMY_REF).get(function() {
   if (this.user?.role!=ROLE_CUSTOMER) {
     return 0
   }
-  return (this.user?.offer?.coaching_credit-this.spent_credits) || 0
+  return (this.offer?.coaching_credit-this.spent_credits) || 0
 })
 
 CoachingSchema.virtual('spent_credits', {
@@ -177,13 +190,6 @@ CoachingSchema.virtual('current_objectives', DUMMY_REF).get(function() {
   return lodash(this.appointments)
    .orderBy(app => app[CREATED_AT_ATTRIBUTE].start_date, 'desc')
    .head()?.objectives || []
-})
-
-// Returns the LogbookDay compléting if required
-CoachingSchema.virtual('logbooks', DUMMY_REF).get(function() {
-  const grouped=lodash(this.all_logbooks).sortBy(l => l.day).groupBy(l => l.day)
-  const lbd=grouped.entries().map(([day, logbooks]) => mongoose.models.logbookDay({day, logbooks:logbooks?.map(fl => fl.logbook)}))
-  return lbd.value()
 })
 
 // Returned availabilities are not store in database

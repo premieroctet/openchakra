@@ -368,10 +368,8 @@ describe('Performance ', () => {
     await checkIntegrity()
   })
 
-  it('Update logbooks', async () => {
-    const coaching_id='65089ca2b74fb64fcd2d809a'
-    console.time('consitency')
-    // await logbooksConsistency(coaching_id)
+  it.only('Update logbooks', async () => {
+    console.time('consistency')
     await logbooksConsistency()
     console.timeEnd('consitency')
   })
@@ -410,7 +408,7 @@ describe('Performance ', () => {
     await synchronizeAvailabilities()
   })
 
-  it.only('Must load contents', async() => {
+  it('Must load contents', async() => {
     const user=await User.findOne(USER_CRITERION).populate('contents')
     console.log(user.contents.length)
   })

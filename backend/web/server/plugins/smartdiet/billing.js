@@ -1,14 +1,14 @@
 const lodash=require('lodash')
 const moment=require('moment')
 const { ForbiddenError } = require("../../utils/errors")
-const { ROLE_EXTERNAL_DIET, APPOINTMENT_TYPE, APPOINTMENT_TYPE_ASSESSMENT, APPOINTMENT_TYPE_FOLLOWUP, APPOINTMENT_TYPE_NUTRITION, APPOINTMENT_TYPE_IMPACT } = require("./consts")
+const { ROLE_EXTERNAL_DIET, APPOINTMENT_TYPE, APPOINTMENT_TYPE_ASSESSMENT, APPOINTMENT_TYPE_FOLLOWUP, APPOINTMENT_TYPE_NUTRITION } = require("./consts")
 const Appointment = require("../../models/Appointment")
 const Coaching = require("../../models/Coaching")
 const NutritionAdvice = require("../../models/NutritionAdvice")
 const PriceList = require("../../models/PriceList")
 const { getDateFilter, getMonthFilter } = require('../../utils/database')
 const Company = require('../../models/Company')
-const NodeCache=require('node-cache')
+const { getAppointmentType } = require('./functions')
 
 const getPrices = async () => {
   return await PriceList.find().sort({date: 1})
@@ -18,28 +18,11 @@ const PRICES_MAPPING={
   [APPOINTMENT_TYPE_ASSESSMENT]: 'assessment',
   [APPOINTMENT_TYPE_FOLLOWUP]: 'followup',
   [APPOINTMENT_TYPE_NUTRITION]: 'nutrition',
-  [APPOINTMENT_TYPE_IMPACT]: 'impact',
 }
 
 const getAppointmentPrice = ({pricesList, appointment}) => {
   const prices=lodash(pricesList).filter(p => moment(p.date).isBefore(appointment.start_date)).maxBy('date')
   return prices?.[PRICES_MAPPING[appointment.type]]||undefined
-}
-
-// Keep app types for 30 seconds only to manage company changes
-const appTypes=new NodeCache({stdTTL: 60})
-
-const getAppointmentType = async ({appointmentType}) => {
-  const key=appointmentType.toString()
-  let result=appTypes.get(key)
-  if (result) {
-    return result
-  }
-  const assessment=await Company.exists({assessment_appointment_type: appointmentType})
-  const impact=await Company.exists({impact_appointment_type: appointmentType})
-  result=assessment ? APPOINTMENT_TYPE_ASSESSMENT : impact ? APPOINTMENT_TYPE_IMPACT : APPOINTMENT_TYPE_FOLLOWUP
-  appTypes.set(key, result)
-  return result
 }
 
 const computeBilling = async ({diet, fields, params}) => {
@@ -83,8 +66,8 @@ const computeBilling = async ({diet, fields, params}) => {
     current.followup_total=lodash(grouped[APPOINTMENT_TYPE_FOLLOWUP]||[]).sumBy('price')
     current.nutrition_count=grouped[APPOINTMENT_TYPE_NUTRITION]?.length || 0
     current.nutrition_total=lodash(grouped[APPOINTMENT_TYPE_NUTRITION]||[]).sumBy('price')
-    current.impact_count=grouped[APPOINTMENT_TYPE_IMPACT]?.length || 0
-    current.impact_total=lodash(grouped[APPOINTMENT_TYPE_IMPACT]||[]).sumBy('price')
+    current.impact_count=0
+    current.impact_total=0
     current.total=current.assessment_total+current.followup_total+current.nutrition_total+current.impact_total
     data.push(current)
   }

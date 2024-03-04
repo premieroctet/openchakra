@@ -34,6 +34,7 @@ const CompanySchema = new Schema(
     },
     size: {
       type: Number,
+      default: 0,
       required: [true, `La taille est obligatoire`],
     },
     parent: {
@@ -59,12 +60,6 @@ const CompanySchema = new Schema(
       ref: 'appointmentType',
       required: false,
     },
-    // Type prestation bilan
-    impact_appointment_type: {
-      type: Schema.Types.ObjectId,
-      ref: 'appointmentType',
-      required: false,
-    },
     // Outbound call script
     script: {
       type: String,
@@ -83,6 +78,10 @@ const CompanySchema = new Schema(
     }],
     contents_count: {
       type: Number,
+    },
+    // A survey is required to start a coaching
+    coaching_requires_survey: {
+      type: Boolean,
     }
   },
   schemaOptions,
@@ -98,6 +97,19 @@ CompanySchema.virtual("offers", {
   ref: "offer", // The Model to use
   localField: "_id", // Find in Model, where localField
   foreignField: "company", // is equal to foreignField
+});
+
+CompanySchema.virtual("current_offer", {
+  ref: "offer", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "company", // is equal to foreignField
+  options: { 
+    match : () => {
+      return {validity_start: {$lt: Date.now()}}
+    },
+    sort: { validity_start: -1 }, limit:1 
+  },
+  justOne: true,
 });
 
 CompanySchema.virtual("webinars", {
