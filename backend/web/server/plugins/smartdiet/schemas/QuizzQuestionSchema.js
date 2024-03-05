@@ -21,6 +21,10 @@ const QuizzQuestionSchema = new Schema({
   synthesis_label: {
     type: String
   },
+  // Category
+  category: {
+    type: String
+  },
   type: {
     type: String,
     enum: Object.keys(QUIZZ_QUESTION_TYPE),
