@@ -41,6 +41,11 @@ const UserQuizzQuestionSchema = new Schema({
     ref: 'item',
     required: false,
   },
+  qcm_answers: [{
+    type: Schema.Types.ObjectId,
+    ref: 'item',
+    required: false,
+  }],
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
