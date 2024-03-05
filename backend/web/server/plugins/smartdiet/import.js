@@ -8,7 +8,7 @@ const { guessDelimiter } = require('../../../utils/text')
 const Company=require('../../models/Company')
 const User=require('../../models/User')
 const AppointmentType=require('../../models/AppointmentType')
-const { ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, DIET_REGISTRATION_STATUS_ACTIVE, COMPANY_ACTIVITY_ASSURANCE, COMPANY_ACTIVITY_OTHER, CONTENTS_ARTICLE, CONTENTS_DOCUMENT, CONTENTS_VIDEO, CONTENTS_INFOGRAPHY, CONTENTS_PODCAST, QUIZZ_TYPE_PATIENT, QUIZZ_QUESTION_TYPE_ENUM_SINGLE, QUIZZ_TYPE_PROGRESS, COACHING_QUESTION_STATUS, COACHING_QUESTION_STATUS_NOT_ADDRESSED, COACHING_QUESTION_STATUS_NOT_ACQUIRED, COACHING_QUESTION_STATUS_IN_PROGRESS, COACHING_QUESTION_STATUS_ACQUIRED, GENDER_MALE, GENDER_FEMALE } = require('./consts')
+const { ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, DIET_REGISTRATION_STATUS_ACTIVE, COMPANY_ACTIVITY_ASSURANCE, COMPANY_ACTIVITY_OTHER, CONTENTS_ARTICLE, CONTENTS_DOCUMENT, CONTENTS_VIDEO, CONTENTS_INFOGRAPHY, CONTENTS_PODCAST, QUIZZ_TYPE_PATIENT, QUIZZ_QUESTION_TYPE_ENUM_SINGLE, QUIZZ_TYPE_PROGRESS, COACHING_QUESTION_STATUS, COACHING_QUESTION_STATUS_NOT_ADDRESSED, COACHING_QUESTION_STATUS_NOT_ACQUIRED, COACHING_QUESTION_STATUS_IN_PROGRESS, COACHING_QUESTION_STATUS_ACQUIRED, GENDER_MALE, GENDER_FEMALE, COACHING_STATUS_NOT_STARTED } = require('./consts')
 const { CREATED_AT_ATTRIBUTE } = require('../../../utils/consts')
 const AppointmentTypeSchema = require('./schemas/AppointmentTypeSchema')
 const Key=require('../../models/Key')
@@ -22,6 +22,8 @@ const Appointment = require('../../models/Appointment')
 const UserSurvey = require('../../models/UserSurvey')
 const { runPromisesWithDelay } = require('../../utils/concurrency')
 const NodeCache = require('node-cache')
+const Offer = require('../../models/Offer')
+const { updateCoachingStatus } = require('./coaching')
 
 const DEFAULT_PASSWORD='DEFAULT'
 const PRESTATION_DURATION=45
@@ -51,6 +53,7 @@ const fixPatients = async directory => {
     [/\@msncom"/g, '@msn.com"'], [/\@gmail"/g, '@gmail.com"'], [/\@free.f"/g, '@free.fr"'], [/\@orange,fr/g, 'orange.fr'],
     [/\@live\.f"/g, '@live.fr"'], [/\@yahoo\.f"/g, '@yahoo.fr"'], [/francksurgis\.\@live\.fr/, 'francksurgis@live.fr'],
     [/\@outlook\.f"/g, '@outlook.fr"'], [/\@yahoo"/g, '@yahoo.fr"'], [/\@lapos"/g, '@laposte.net"'], [/\@lapost"/g, '@laposte.net"'],
+    [/yanis69240hotmail.com/, 'yanis69240@hotmail.com']
 
   ]
   const PATH=path.join(directory, 'smart_patient.csv')
@@ -117,13 +120,21 @@ const COMPANY_MAPPING= {
 const COMPANY_KEY='name'
 const COMPANY_MIGRATION_KEY='migration_id'
 
+const SMART_OFFER_MAPPING= {
+  1 : {name: 'Offre bilan', coaching_credit: 1, duration: 1*30},
+  2 : {name: 'Offre un mois', coaching_credit: 2, duration: 1*30},
+  3:  {name: 'Offre 3 mois', coaching_credit: 4, duration: 3*30},
+  4:  {name: 'Offre 6 mois', coaching_credit: 7, duration: 6*30},
+  10: {name: 'Offre illimitée', coaching_credit: 99, duration: 99*30},
+}
+
 const OFFER_MAPPING= {
-  name: 'name',
+  name: ({record}) => SMART_OFFER_MAPPING[record.SDPROGRAMTYPE]?.name,
   price: () => 1,
-  duration: () => 12,
   groups_credit: () => 0,
   nutrition_credit: () => 3,
-  coaching_credit: () => 7,
+  duration: ({record}) => SMART_OFFER_MAPPING[record.SDPROGRAMTYPE]?.duration,
+  coaching_credit: ({record}) => SMART_OFFER_MAPPING[record.SDPROGRAMTYPE]?.coaching_credit,
   infographies_unlimited: () => true,
   infographies_unlimited: () => true,
   articles_unlimited: () => true,
@@ -131,7 +142,8 @@ const OFFER_MAPPING= {
   video_unlimited: () => true,
   webinars_credit: () => 4,
   company: ({cache, record}) => cache('company', record.SDPROJECTID),
-  migration_id: 'SDPROJECTID',
+  validity_start: () => moment(),
+  migration_id: 'SDPROGRAMTYPE',
 }
 
 const OFFER_KEY='name'
@@ -147,8 +159,8 @@ const USER_MAPPING={
   password: () => DEFAULT_PASSWORD,
   company: ({cache, record}) => cache('company', record.SDPROJECTID),
   pseudo: ({record}) => computePseudo(record),
-  gender: ({record}) => record.gender=="M" ? GENDER_MALE : record.gender=='F' ? GENDER_FEMALE : null,
-  birthday: ({record}) => moment(record.birthdate),
+  gender: ({record}) => record.gender=="M" ? GENDER_MALE : record.gender=='F' ? GENDER_FEMALE : undefined,
+  birthday: ({record}) => lodash.isEmpty(record.birthdate) ? null:  moment(record.birthdate),
   migration_id: 'SDPATIENTID'
 }
 
@@ -173,6 +185,7 @@ const DIET_MIGRATION_KEY='migration_id'
 const COACHING_MAPPING={
   [CREATED_AT_ATTRIBUTE]: ({record}) => moment(record.orderdate),
   user: ({cache, record}) => cache('user', record.SDPATIENTID),
+  offer: ({cache, record}) => cache('offer', record.SDPROGRAMTYPE),
   migration_id: 'SDPROGRAMID',
   diet: ({cache, record}) => cache('user', record.SDDIETID),
 }
@@ -187,6 +200,17 @@ const APPOINTMENT_MAPPING= prestation_id => ({
   note: 'comments',
   appointment_type: () => prestation_id,
   migration_id: 'SDCONSULTID',
+  diet: async ({cache, record}) => {
+    let diet=await User.findById(cache('user', record.SDDIETID))
+    if (!diet) {
+      diet=(await Coaching.findById(cache('coaching', record.SDPROGRAMID)))?.diet
+    }
+    return diet
+  },
+  user: async ({cache, record}) => {
+    return (await Coaching.findById(cache('coaching', record.SDPROGRAMID)))?.user
+  }
+
 })
 
 
@@ -272,7 +296,6 @@ const KEY_KEY='name'
 const KEY_MIGRATION_KEY='migration_id'
 
 const progressCb = step => (index, total)=> {
-  return 
   step=step||(total/10)
   if (step && index%step==0) {
     console.log(`${index}/${total}`)
@@ -292,9 +315,11 @@ const importOffers = async input_file => {
   const contents=fs.readFileSync(input_file)
   return Promise.all([guessFileType(contents), guessDelimiter(contents)])
     .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
-    .then(({records}) => 
-      importData({model: 'offer', data:records, mapping:OFFER_MAPPING, identityKey: OFFER_KEY, 
-        migrationKey: OFFER_MIGRATION_KEY, progressCb: progressCb()}))
+    .then(({records}) => {
+      records=lodash.uniqBy(records, 'SDPROGRAMTYPE')
+      return importData({model: 'offer', data:records, mapping:OFFER_MAPPING, identityKey: OFFER_KEY, 
+        migrationKey: OFFER_MIGRATION_KEY, progressCb: progressCb()})
+    })
 }
 
 
@@ -308,7 +333,7 @@ const importUsers = async input_file => {
     .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
     .then(({records}) => 
       importData({model: 'user', data:records, mapping:USER_MAPPING, identityKey: USER_KEY, 
-        migrationKey: USER_MIGRATION_KEY, progressCb: progressCb(2000)})
+        migrationKey: USER_MIGRATION_KEY, progressCb: progressCb(1000)})
     )
 }
 
@@ -366,6 +391,8 @@ const importCoachings = async input_file => {
         .then(() => res)
         .finally(()=> console.timeEnd(msg))
     })
+    .then(() => Coaching.find({migration_id: {$ne:null}, status: COACHING_STATUS_NOT_STARTED}, {_id:1}))
+    .then(coachings => Promise.all(coachings.map(coaching => updateCoachingStatus(coaching._id))))
 }
 
 const importAppointments = async input_file => {

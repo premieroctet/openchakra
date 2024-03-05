@@ -1,4 +1,4 @@
-const moment=require('moment')
+ const moment=require('moment')
 const lodash=require('lodash')
 const Coaching = require("../../models/Coaching")
 const Company = require("../../models/Company")
@@ -8,9 +8,7 @@ const { COACHING_STATUS_NOT_STARTED, COACHING_STATUS_STARTED, COACHING_STATUS_FI
 } = require("./consts")
 
 const updateCoachingStatus = async coaching_id => {
-  console.log('Update coaching status',coaching_id)
   const coaching=await Coaching.findById(coaching_id).populate(['appointments', 'offer', 'spent_credits', 'user', 'latest_appointments'])
-  console.log('FOund coaching', !!coaching)
 
   if (lodash.isEmpty(coaching.appointments)) {
     coaching.status=COACHING_STATUS_NOT_STARTED

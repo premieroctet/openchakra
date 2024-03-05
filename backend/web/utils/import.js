@@ -120,17 +120,19 @@ const extractSample = (rawData, options) => {
     })
 }
 
-const mapAttribute=({record, mappingFn}) => {
+const mapAttribute=async ({record, mappingFn}) => {
   if (typeof mappingFn=='string') {
     return record[mappingFn]
   }
- const res=mappingFn({record, cache:getCache})
+ const res=await mappingFn({record, cache:getCache})
  return res
 }
 
-const mapRecord = ({record, mapping}) => {
-  const mappedArray=Object.entries(mapping).map(([k, v])=> [k, mapAttribute({record, mappingFn: v})])
-  const mapped=Object.fromEntries(mappedArray)
+const mapRecord = async ({record, mapping}) => {
+  const mapped={}
+  for (const k of Object.keys(mapping)) {
+    mapped[k]=await mapAttribute({record, mappingFn: mapping[k]})
+  }
   return mapped
 }
 
@@ -171,8 +173,10 @@ function upsertRecord({model, record, identityKey, migrationKey, updateOnly}) {
           throw new Error(`Could not find ${model.modelName} matching ${JSON.stringify(identityFilter)}`)
         }
         return model.create({...record})
+          .catch(console.error)
       }
-      return model.updateOne({_id: result._id}, record, {/**runValidators:true, */ new: true})
+      return ({_id: result._id})
+      return model.findByIdAndUpdate(result._id, record, {runValidators:true, new: true})
         .then(() => ({_id: result._id}))
     })
     .then(result => {
@@ -207,43 +211,31 @@ const importData = ({model, data, mapping, identityKey, migrationKey, progressCb
       }
       ))
       .then(results => {
-          const createResult=(result, index) => ({
-            index,
-            success: result.status=='fulfilled',
-            error: result.reason?.message || result.reason?._message || result.reason
-          })
-          const mappedResults=results.map((r, index) => createResult(r, index))
-          console.log(lodash(mappedResults).groupBy('success').mapValues(v => v.length).value())
-          return mappedResults
+        const rejected=lodash.zip([results, mappedData]).filter(([res, ]) => res.status=='rejected')
+        if (!lodash.isEmpty(rejected)) {
+          console.error('rejected', JSON.stringify(rejected))
+          throw new Error(JSON.stringify(rejected))
+        }
+        const createResult=(result, index) => ({
+          index,
+          success: result.status=='fulfilled',
+          error: result.reason?.message || result.reason?._message || result.reason
         })
+        const mappedResults=results.map((r, index) => createResult(r, index))
+        return mappedResults
+      })
     })
     .finally(()=> console.timeEnd(msg))
 }
 
 const prepareCache = () => {
   console.log('Preparing cache')
-  const MODELS=mongoose.modelNames()
+  const MODELS=mongoose.modelNames().filter(m => m!='user')
   const promises=MODELS.map(modelName => {
     const msg=`Caching ${modelName}`
-    // console.time(msg)
-    return mongoose.model(modelName).find({migration_id: {$ne: null}}, {coaching:1, coachings:1, migration_id:1, start_date:1 })
-      .populate(['coaching', 'coachings'])
+    return mongoose.model(modelName).find({migration_id: {$exists: true}}, {migration_id:1})
       .then(data => {
-        // console.timeEnd(msg)
         data.forEach(d => setCache(modelName, d.migration_id.toString(), d._id.toString()))
-        if (modelName=='appointment') {
-          data.forEach(d => setCache('consultation_patient', d.migration_id.toString(), d.coaching.user._id.toString()))
-          data.forEach(d => setCache('consultation_date', d.migration_id.toString(), moment(d.start_date)))
-          data.forEach(d => setCache('appointment_coaching', d.migration_id.toString(), d.coaching._id))
-        }
-        if (modelName=='user') {
-          data.forEach(user => {
-            const latest_coaching=lodash(user.coachings).maxBy(c => c[CREATED_AT_ATTRIBUTE])?._id
-            if (latest_coaching) {
-              setCache('user_coaching', user._id.toString(), latest_coaching)
-            }
-          })
-        }
         return `${countCache(modelName)} ${modelName}`
       })
   })

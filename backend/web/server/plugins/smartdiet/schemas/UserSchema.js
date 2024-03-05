@@ -53,6 +53,7 @@ const UserSchema = new Schema({
     type: String,
     required: [true, `L'email est obligatoire`],
     set: v => v ? v.toLowerCase().trim() : v,
+    index: true,
     validate: [isEmailOk, v => `L'email '${v.value}' est invalide`],
   },
   phone: {
@@ -67,7 +68,6 @@ const UserSchema = new Schema({
   },
   birthday: {
     type: Date,
-    //required: [function() { return this.role==ROLE_CUSTOMER }, 'La date de naissance est obligatoire'],
     required: false,
   },
   // Height in centimeters
@@ -85,7 +85,7 @@ const UserSchema = new Schema({
   pseudo: {
     type: String,
     set: v => v?.trim(),
-    required: [function() { return this.role==ROLE_CUSTOMER }, 'Le pseudo est obligatoire'],
+    required: [function() { return this?.role==ROLE_CUSTOMER }, 'Le pseudo est obligatoire'],
   },
   picture: {
     type: String,
@@ -94,7 +94,7 @@ const UserSchema = new Schema({
   company: {
     type: Schema.Types.ObjectId,
     ref: 'company',
-    required: [function() { return this.role==ROLE_CUSTOMER }, 'La compagnie est obligatoire'],
+    required: [function() { return this?.role==ROLE_CUSTOMER }, 'La compagnie est obligatoire'],
   },
   company_code: {
     type: String,
@@ -115,19 +115,11 @@ const UserSchema = new Schema({
   },
   cguAccepted: {
     type: Boolean,
-    validate: {
-      validator: function(v) { return this.role!=ROLE_CUSTOMER || !!v },
-      message: 'Vous devez accepter les CGU',
-    },
-    required: [function() { return this.role==ROLE_CUSTOMER }, 'Vous devez accepter les CGU'],
+    required: [function() { return this?.role==ROLE_CUSTOMER }, 'Vous devez accepter les CGU'],
   },
   dataTreatmentAccepted: {
     type: Boolean,
-    validate: {
-      validator: function(v) { return this.role!=ROLE_CUSTOMER || !!v },
-      message: 'Vous devez accepter le traitement des données',
-    },
-    required: [function() { return this.role==ROLE_CUSTOMER }, 'Vous devez accepter le traitement des données'],
+    required: [function() { return this?.role==ROLE_CUSTOMER }, 'Vous devez accepter le traitement des données'],
   },
   child_count: {
     type: Number,
@@ -137,7 +129,6 @@ const UserSchema = new Schema({
   gender: {
     type: String,
     enum: Object.keys(GENDER),
-    //required: [function() { return this.role==ROLE_CUSTOMER }, 'Le genre est obligatoire'],
     required: false,
   },
   objective_targets: [{
@@ -288,8 +279,8 @@ const UserSchema = new Schema({
   registration_status: {
     type: String,
     enum: Object.keys(DIET_REGISTRATION_STATUS),
-    default: function() {return this.role==ROLE_EXTERNAL_DIET ? DIET_REGISTRATION_STATUS_TO_QUALIFY : undefined},
-    required: [function() {return this.role==ROLE_EXTERNAL_DIET}, 'Le statut de diet externe est obligatoire'],
+    default: function() {return this?.role==ROLE_EXTERNAL_DIET ? DIET_REGISTRATION_STATUS_TO_QUALIFY : undefined},
+    required: [function() {return this?.role==ROLE_EXTERNAL_DIET}, 'Le statut de diet externe est obligatoire'],
   },
   signed_charter: {
     type: String,
@@ -318,10 +309,6 @@ const UserSchema = new Schema({
   },
   last_activity: {
     type: Date,
-    required: false,
-  },
-  migration_id: {
-    type: Number,
     required: false,
   },
   diet_patients_count: {

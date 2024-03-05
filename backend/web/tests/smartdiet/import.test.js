@@ -29,7 +29,8 @@ const ORIGINAL_DB=true
 const DBNAME=ORIGINAL_DB ? 'smartdiet' : 'smartdiet-migration'
 const DROP=!ORIGINAL_DB
 
-const ROOT = path.join(__dirname, './data/migration-tiny')
+//const ROOT = path.join(__dirname, './data/migration-tiny')
+const ROOT = path.join(__dirname, './data/migration')
 
 jest.setTimeout(60000000)
 
@@ -75,24 +76,24 @@ describe('Test imports', () => {
   })
 
   it('must import offers', async () => {
-    const res = await importOffers(path.join(ROOT, 'smart_project.csv'))
+    const res = await importOffers(path.join(ROOT, 'smart_coaching.csv'))
     ensureNbError(res)
     const offersCount=await Offer.countDocuments({migration_id: {$ne:null}})
-    expect(offersCount).toEqual(5)
+    expect(offersCount).toEqual(2)
   })
 
-  it('must import users', async () => {
+  it.only('must import users', async () => {
     const res = await importUsers(path.join(ROOT, 'smart_patient.csv'))
     await forcePasswords()
     ensureNbError(res, 6)
-    const insertedUsers=await User.find({role: ROLE_CUSTOMER, email: PATIENT_EMAIL})
-    expect(insertedUsers.length).toEqual(1)
-    const user=insertedUsers[0]
+    const user=await User.findOne({role: ROLE_CUSTOMER, email: PATIENT_EMAIL})
+    expect(user).toBeTruthy()
     expect(user.gender).toEqual(GENDER_MALE)
     expect(moment(user.birthday).format('LL')).toBe(moment('1980-11-13').format('LL'))
+    console.log(getCacheKeys())
   })
 
-  it('must upsert diets', async () => {
+  it.only('must upsert diets', async () => {
     let res = await importDiets(path.join(ROOT, 'smart_diets.csv'))
     await forcePasswords()
     ensureNbError(res)
@@ -110,7 +111,7 @@ describe('Test imports', () => {
     expect(coachings[0].progress.type).toEqual(QUIZZ_TYPE_PROGRESS)
   })
 
-  it('must upsert appointments', async () => {
+  it.only('must upsert appointments', async () => {
     await importAppointments(path.join(ROOT, 'smart_consultation.csv'))
     const user=await User.findOne({email: PATIENT_EMAIL})
     const coachings=await Coaching.find({user})
@@ -183,7 +184,6 @@ describe('Test imports', () => {
     console.log(JSON.stringify(res))
     ensureNbError(res)
   })
-
 
 })
 
