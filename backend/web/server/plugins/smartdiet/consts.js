@@ -577,7 +577,7 @@ const COACHING_STATUS_STOPPED=`COACHING_STATUS_STOPPED`
 const COACHING_STATUS={
   [COACHING_STATUS_NOT_STARTED]:`Non démarré`, // Not any appointment yet
   [COACHING_STATUS_STARTED]:`Démarré`, // At least one appointment
-  [COACHING_STATUS_FINISHED]:`Termminé`, // No more credits
+  [COACHING_STATUS_FINISHED]:`Terminé`, // No more credits
   [COACHING_STATUS_DROPPED]:`Abandonné`, // 3 months after a "rabbit" appointment
   [COACHING_STATUS_STOPPED]:`Arrêté`, // remaining credits 3 montyhs after the last appointment 
 }
