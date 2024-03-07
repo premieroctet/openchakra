@@ -187,9 +187,8 @@ describe('Test imports', () => {
   })
 
   // TODO Fix it
-  it.only('must upsert patients objectives', async () => {
+  it('must upsert patients objectives', async () => {
     let res = await importUserObjectives(path.join(ROOT, 'smart_objective.csv'))
-    console.log(JSON.stringify(res))
   })
   
 })
