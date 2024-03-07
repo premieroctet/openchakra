@@ -24,6 +24,7 @@ const { runPromisesWithDelay } = require('../../utils/concurrency')
 const NodeCache = require('node-cache')
 const Offer = require('../../models/Offer')
 const { updateCoachingStatus } = require('./coaching')
+const { DefaultDeserializer } = require('v8')
 
 const DEFAULT_PASSWORD='DEFAULT'
 const PRESTATION_DURATION=45
@@ -97,12 +98,24 @@ const fixQuizzQuestions = directory => {
   fs.writeFileSync(PATH, fixed)
 }
 
+const fixObjectives = directory => {
+  const REPLACES=[
+    [/\\"/g, "'"], [/\\\\/g, ''],
+  ]
+  const PATH=path.join(directory, 'smart_objective.csv')
+  const contents=fs.readFileSync(PATH).toString()
+  let fixed=contents
+  REPLACES.forEach(([search, replace]) => fixed=fixed.replace(search, replace))
+  fs.writeFileSync(PATH, fixed)
+}
+
 const fixFiles = async directory => {
   await fixDiets(directory)
   await fixPatients(directory)
   await fixAppointments(directory)
   await fixQuizz(directory)
   await fixQuizzQuestions(directory)
+  await fixObjectives(directory)
 }
 
 const computePseudo = record => {
@@ -201,14 +214,14 @@ const APPOINTMENT_MAPPING= prestation_id => ({
   appointment_type: () => prestation_id,
   migration_id: 'SDCONSULTID',
   diet: async ({cache, record}) => {
-    let diet=await User.findById(cache('user', record.SDDIETID))
+    let diet=cache('user', record.SDDIETID)
     if (!diet) {
-      diet=(await Coaching.findById(cache('coaching', record.SDPROGRAMID)))?.diet
+      diet=(await Coaching.findById(cache('coaching', record.SDPROGRAMID), {diet:1}))?.diet
     }
     return diet
   },
   user: async ({cache, record}) => {
-    return (await Coaching.findById(cache('coaching', record.SDPROGRAMID)))?.user
+    return (await Coaching.findById(cache('coaching', record.SDPROGRAMID), {user:1}))?.user
   }
 
 })
@@ -219,14 +232,16 @@ const APPOINTMENT_MIGRATION_KEY='migration_id'
 
 const MEASURE_MAPPING={
   migration_id: 'SDCONSULTID',
-  date: ({cache, record}) => cache('consultation_date', record.SDCONSULTID),
+  date: async ({cache, record}) => (await Appointment.findById(cache('appointment', record.SDCONSULTID), {start_date:1}))?.start_date,
   chest: 'chest',
   waist: 'waist',
   hips: 'pelvis',
   thighs: ({record}) => lodash.mean([parseInt(record.leftthigh), parseInt(record.rightthigh)].filter(v => !!v)) || undefined,
   arms: () => undefined,
   weight: 'weight',
-  user:({cache, record}) => cache('consultation_patient', record.SDCONSULTID),
+  user: async ({cache, record}) => {
+    return (await Appointment.findById(cache('appointment', record.SDCONSULTID), {user:1}))?.user
+  },
 }
 
 const MEASURE_MAPPING_KEY='migration_id'
@@ -368,6 +383,11 @@ const ensureSurvey = coaching => {
 }
 
 
+function updateImportedCoachingStatus() {
+  return Coaching.find({ [COACHING_MIGRATION_KEY]: { $ne: null } }).limit(20)
+    .then(coachings => runPromisesWithDelay(coachings.map(coaching => () => updateCoachingStatus(coaching._id))))
+}
+
 const importCoachings = async input_file => {
   const contents=fs.readFileSync(input_file)
   return Promise.all([guessFileType(contents), guessDelimiter(contents)])
@@ -375,24 +395,9 @@ const importCoachings = async input_file => {
     .then(({records}) => importData({model: 'coaching', data:records, mapping:COACHING_MAPPING, 
       identityKey: COACHING_KEY, migrationKey: COACHING_MIGRATION_KEY, progressCb: progressCb(1000)}))
     // Set progress quizz
-    .then(res => Promise.all([
-      res,
-      Coaching.find({[COACHING_MIGRATION_KEY]: {$ne: null}, progress:null}),
-      Quizz.findOne({type: QUIZZ_TYPE_PROGRESS}).populate('questions')
-    ]))
-    .then(([res, coachings, progressQuizz])=> {
-      const msg=`Create progress quizz and user surveys for ${coachings.length} coachings`
-      console.log(msg)
-      console.time(msg)
-      if (coachings.length==0) {
-        return []
-      }
-      return runPromisesWithDelay(coachings.map(c => () => Promise.allSettled([ensureProgress(c, progressQuizz), ensureSurvey(c)])))
-        .then(() => res)
-        .finally(()=> console.timeEnd(msg))
-    })
-    .then(() => Coaching.find({migration_id: {$ne:null}, status: COACHING_STATUS_NOT_STARTED}, {_id:1}))
-    .then(coachings => Promise.all(coachings.map(coaching => updateCoachingStatus(coaching._id))))
+    .then(res => updateImportedCoachingStatus()
+    .then(() => res)
+    )
 }
 
 const importAppointments = async input_file => {
@@ -410,6 +415,13 @@ const importAppointments = async input_file => {
       importData({model: 'appointment', data:records, mapping:APPOINTMENT_MAPPING(prestation), 
       identityKey: APPOINTMENT_KEY, migrationKey: APPOINTMENT_MIGRATION_KEY, progressCb: progressCb(2000)}
     ))
+    .then(res => {
+      console.log('Updating coachings')
+      console.time('Updating coachings')
+      return updateImportedCoachingStatus()
+        .then(() => res)
+        .finally(()=>console.timeEnd('Updating coachings'))
+    })
 }
 
 const importMeasures = async input_file => {
@@ -531,6 +543,7 @@ const importProgressQuizz = async input_file => {
           throw new Error(`Missing question:${record.name}`)
         }
         question.migration_id=record.SDCRITERIAID
+        setCache('quizzQuestion', record.SDCRITERIAID, question._id)
         return question.save()
       }))
     )
@@ -587,6 +600,32 @@ const importUserProgressQuizz = async (input_file, fromIndex) => {
       })))
 }
 
+const importUserObjectives = async input_file => {
+  const contents=fs.readFileSync(input_file)
+  return await Promise.all([guessFileType(contents), guessDelimiter(contents)])
+    .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
+    .then(({records}) => runPromisesWithDelay(records.map((record, idx) => async () => {
+      if (idx%1000==0) {
+        console.log(idx, '/', records.length)
+      }
+      const dt=moment(record.date)
+      const user=cache('user', record.SDPATIENTID)
+      const appointments=await Appointment.find({user}, {start_date:1})
+      const nearestAppt=lodash.minBy(appointments, app => Math.abs(dt.diff(app.start_date, 'minute')))
+      if (!user) {
+        throw new Error('no user for', record.SDPATIENTID)
+      }
+      if (!nearestAppt) {
+        throw new Error('no nearest appt for', record.SDPATIENTID)
+      }
+      let question=await QuizzQuestion.findOne({title: record.objective})
+      if (!question) {
+        question=await QuizzQuestion.create({title: record.objective, type: QUIZZ_QUESTION_TYPE_ENUM_SINGLE})
+      }
+      return Appointment.findByIdAndUpdate(nearestAppt._id, {$addToSet: {objectives: question}})
+    })))
+}
+
 
 module.exports={
   importCompanies,
@@ -604,4 +643,6 @@ module.exports={
   importKeys,
   importProgressQuizz,
   importUserProgressQuizz,
+  importUserObjectives,
 }
+

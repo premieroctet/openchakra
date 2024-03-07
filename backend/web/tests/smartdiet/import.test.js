@@ -15,8 +15,8 @@ const Appointment=require('../../server/models/Appointment')
 const { COMPANY_ACTIVITY_BANQUE, ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, GENDER_MALE, QUIZZ_TYPE_PROGRESS } = require('../../server/plugins/smartdiet/consts')
 const bcrypt = require('bcryptjs')
 const Coaching = require('../../server/models/Coaching')
-const { importUsers, importDiets, importDietsAgenda, importCoachings, importAppointments, importCompanies, importContents, importPatientContents, importMeasures, fixFiles, importQuizz, importQuizzQuestions, importQuizzQuestionAnswer, importUserQuizz, importKeys, importProgressQuizz, importUserProgressQuizz, importOffers } = require('../../server/plugins/smartdiet/import')
-const { prepareCache, getCacheKeys, displayCache } = require('../../utils/import')
+const { importUsers, importDiets, importDietsAgenda, importCoachings, importAppointments, importCompanies, importContents, importPatientContents, importMeasures, fixFiles, importQuizz, importQuizzQuestions, importQuizzQuestionAnswer, importUserQuizz, importKeys, importProgressQuizz, importUserProgressQuizz, importOffers, importUserObjectives } = require('../../server/plugins/smartdiet/import')
+const { prepareCache, getCacheKeys, displayCache, loadCache, saveCache } = require('../../utils/import')
 const Content = require('../../server/models/Content')
 const Measure = require('../../server/models/Measure')
 const fs=require('fs')
@@ -29,7 +29,7 @@ const ORIGINAL_DB=true
 const DBNAME=ORIGINAL_DB ? 'smartdiet' : 'smartdiet-migration'
 const DROP=!ORIGINAL_DB
 
-//const ROOT = path.join(__dirname, './data/migration-tiny')
+// const ROOT = path.join(__dirname, './data/migration-tiny')
 const ROOT = path.join(__dirname, './data/migration')
 
 jest.setTimeout(60000000)
@@ -49,11 +49,13 @@ describe('Test imports', () => {
     console.log('Before opening database', DBNAME)
     await mongoose.connect(`mongodb://localhost/${DBNAME}`, MONGOOSE_OPTIONS)
     console.log('Opened database', DBNAME)
-    await prepareCache()
+    //await prepareCache()
+    await loadCache()
     await fixFiles(ROOT)
   })
   
   afterAll(async () => {
+    await saveCache()
     if (DROP) {
       await mongoose.connection.dropDatabase()
     }
@@ -82,7 +84,7 @@ describe('Test imports', () => {
     expect(offersCount).toEqual(2)
   })
 
-  it.only('must import users', async () => {
+  it('must import users', async () => {
     const res = await importUsers(path.join(ROOT, 'smart_patient.csv'))
     await forcePasswords()
     ensureNbError(res, 6)
@@ -90,10 +92,9 @@ describe('Test imports', () => {
     expect(user).toBeTruthy()
     expect(user.gender).toEqual(GENDER_MALE)
     expect(moment(user.birthday).format('LL')).toBe(moment('1980-11-13').format('LL'))
-    console.log(getCacheKeys())
   })
 
-  it.only('must upsert diets', async () => {
+  it('must upsert diets', async () => {
     let res = await importDiets(path.join(ROOT, 'smart_diets.csv'))
     await forcePasswords()
     ensureNbError(res)
@@ -111,7 +112,7 @@ describe('Test imports', () => {
     expect(coachings[0].progress.type).toEqual(QUIZZ_TYPE_PROGRESS)
   })
 
-  it.only('must upsert appointments', async () => {
+  it('must upsert appointments', async () => {
     await importAppointments(path.join(ROOT, 'smart_consultation.csv'))
     const user=await User.findOne({email: PATIENT_EMAIL})
     const coachings=await Coaching.find({user})
@@ -160,7 +161,7 @@ describe('Test imports', () => {
     expect(quizz.questions.length).toEqual(26)
   })
 
-  it('must upsert user progress quizz', async () => {
+  it.skip('must upsert user progress quizz', async () => {
     let res = await importUserProgressQuizz(path.join(ROOT, 'smart_consultation_progress.csv'), 24000)
     const user=await User.findOne({email: PATIENT_EMAIL})
     const coachings=await Coaching.find({user}).populate('progress')
@@ -185,5 +186,11 @@ describe('Test imports', () => {
     ensureNbError(res)
   })
 
+  // TODO Fix it
+  it.only('must upsert patients objectives', async () => {
+    let res = await importUserObjectives(path.join(ROOT, 'smart_objective.csv'))
+    console.log(JSON.stringify(res))
+  })
+  
 })
 

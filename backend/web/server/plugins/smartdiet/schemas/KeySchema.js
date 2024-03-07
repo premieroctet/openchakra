@@ -37,6 +37,7 @@ const KeySchema = new Schema({
   },
   migration_id: {
     type: Number,
+    index: true,
   },
   user_surveys_progress: [{
     type: Schema.Types.ObjectId,

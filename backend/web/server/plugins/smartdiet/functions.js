@@ -2202,14 +2202,14 @@ mongoose.connection.collection('quizzs')
 
 /** Rename userquizzs types HEALTH to ASSESSMENT
  * */
-mongoose.connection.collection('userquizzs')
+!isDevelopment() && mongoose.connection.collection('userquizzs')
   .updateMany({type: 'QUIZZ_TYPE_HEALTH'}, {$set: {type: QUIZZ_TYPE_ASSESSMENT}})
   .then(({matchedCount, modifiedCount}) => console.log(`userquizz type HEALTH=>ASSESSMENT modified`, modifiedCount, '/', matchedCount))
   .catch(err => console.error(`userquizz type HEALTH=>ASSESSMENT`, err))
 
 /** Set offers on coachings
  * */
-Coaching.find({offer: null})
+!isDevelopment() && Coaching.find({offer: null})
   .populate({path: 'user', populate: {path: 'company', populate: 'offers'}})
   .then(coachings => Promise.all(coachings.map(coaching => {
     // Remove coachings with deleted users
@@ -2229,12 +2229,12 @@ Coaching.find({offer: null})
     }
   })))
 
-Coaching.find({status: null}, {_id:1})
+!isDevelopment() && Coaching.find({status: null}, {_id:1})
   .then(coachings =>  Promise.all(coachings.map(coaching => updateCoachingStatus(coaching._id))))
   .then(console.log)
   .catch(console.error)
 
-  CoachingLogbook.distinct('coaching')
+!isDevelopment() && CoachingLogbook.distinct('coaching')
   .then(coachingIds => Coaching.find({_id: coachingIds}, {user:1}))
   // Link logbooks to user instead of coaching
   .then(coachings => {

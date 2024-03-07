@@ -11,7 +11,8 @@ const UserSurveySchema = new Schema({
     required: true,
   },
   migration_id: {
-    type: Number
+    type: Number,
+    index: true,
   }
 }, schemaOptions)
 

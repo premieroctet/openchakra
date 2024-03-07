@@ -50,6 +50,7 @@ const QuizzQuestionSchema = new Schema({
   },
   migration_id: {
     type: Number,
+    index: true,
     required: false,
   },
 }, schemaOptions)

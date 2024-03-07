@@ -8,6 +8,7 @@ const { COACHING_STATUS_NOT_STARTED, COACHING_STATUS_STARTED, COACHING_STATUS_FI
 } = require("./consts")
 
 const updateCoachingStatus = async coaching_id => {
+  console.log('update coaching status', coaching_id)
   const coaching=await Coaching.findById(coaching_id).populate(['appointments', 'offer', 'spent_credits', 'user', 'latest_appointments'])
 
   if (lodash.isEmpty(coaching.appointments)) {
@@ -50,8 +51,10 @@ const updateCoachingStatus = async coaching_id => {
     }
   }
 
+  console.log('updated coaching status', coaching_id)
   // Save if modified
   if (coaching.isModified('status')) {
+    console.log('saving')
     return coaching.save()
   }
 }

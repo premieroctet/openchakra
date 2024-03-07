@@ -144,6 +144,7 @@ const OfferSchema = new Schema({
   },
   migration_id: {
     type: Number,
+    index: true,
   },
 }, schemaOptions)
 

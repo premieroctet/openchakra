@@ -175,7 +175,7 @@ function upsertRecord({model, record, identityKey, migrationKey, updateOnly}) {
         return model.create({...record})
           .catch(console.error)
       }
-      return ({_id: result._id})
+      // return ({_id: result._id})
       return model.findByIdAndUpdate(result._id, record, {runValidators:true, new: true})
         .then(() => ({_id: result._id}))
     })
@@ -225,7 +225,10 @@ const importData = ({model, data, mapping, identityKey, migrationKey, progressCb
         return mappedResults
       })
     })
-    .finally(()=> console.timeEnd(msg))
+    .finally(()=> {
+      saveCache()
+      console.timeEnd(msg)
+    })
 }
 
 const prepareCache = () => {
@@ -246,6 +249,24 @@ const prepareCache = () => {
     .then(res => {console.timeEnd(msg); console.log('Cached', res.join(','))})
 }
 
+const CACHE_PATH='/tmp/migration-cache'
+
+const loadCache= () => {
+  if (!fs.existsSync(CACHE_PATH)) {
+    return 
+  }
+  const contents=JSON.parse(fs.readFileSync(CACHE_PATH).toString())
+  const formatted=Object.entries(contents).map(([key, val]) => ({key, val}))
+  dataCache.mset(formatted)  
+  console.log('Loaded from cache', formatted.length, 'keys')
+}
+
+const saveCache= () => {
+  const data=dataCache.mget(dataCache.keys())
+  fs.writeFileSync(CACHE_PATH, JSON.stringify(data, null,2))
+  console.log('Saved to cache', Object.keys(data).length, 'keys')
+}
+
 module.exports={
   extractData, 
   guessFileType, 
@@ -256,6 +277,7 @@ module.exports={
   getCacheKeys,
   displayCache,
   cache: getCache,
-  setCache
+  setCache,
+  loadCache, saveCache,
 }
 
