@@ -13,7 +13,7 @@ const MAILJET_HANDLER=require('../../utils/mailjet')
 const User = require('../../models/User')
 const Lead = require('../../models/Lead')
 const { isDevelopment, isProduction } = require('../../../config/config')
-require('../../models/Group')
+require('../../plugins/smartdiet/functions')
 
 const isLeadOnly = (lead, user) => {
   return !!lead && !user
@@ -24,27 +24,45 @@ const isRegistered = (lead, user) => {
 }
 
 const isESANI = account => {
+  if (!account) {
+    throw new Error('isESANI: account is null')
+  }
   return account.company?.offers?.[0].coaching_credit>0
 }
 
 const isINEA = account => {
+  if (!account) {
+    throw new Error('isINEA: account is null')
+  }
   return !isESANI(account)
 }
 
 const hasGroups = account => {
+  if (!account) {
+    throw new Error('hasGroups: account is null')
+  }
   return !!account.company?.offers?.[0].groups_unlimited ||
     account.company?.offers?.[0].groups_credit>0
 }
 
 const isInsurance = account => {
+  if (!account) {
+    throw new Error('isInsurance: account is null')
+  }
   return account?.company?.activity===COMPANY_ACTIVITY_ASSURANCE
 }
 
 const mailOpened = account => {
+  if (!account) {
+    throw new Error('mailOpened: account is null')
+  }
   return !!account.mail_opened
 }
 
 const coachingStarted = user => {
+  if (!user) {
+    throw new Error('coachingStarted: account is null')
+  }
   return !!user?.latest_coachings[0]?.appointments?.find(a => moment(a.end_date).isBefore(moment()))
 }
 
@@ -68,8 +86,8 @@ const WORKFLOWS={
     id: '2415607',
     name: 'ADH NON INSC INEA SS GRP MAIL NON OUVERT',
     filter: (lead, user) => {
-      return isInsurance(lead)
-        && isLeadOnly(lead, user)
+      return isLeadOnly(lead, user)
+        && isInsurance(lead)
         && isINEA(lead)
         && !hasGroups(lead)
         && !mailOpened(lead)
@@ -80,8 +98,8 @@ const WORKFLOWS={
     id: '2414836',
     name: 'ADH NON INSC ESANI SS GRP MAIL NON OUVERT',
     filter: (lead, user) => {
-      return isInsurance(lead)
-        && isLeadOnly(lead, user)
+      return isLeadOnly(lead, user)
+        && isInsurance(lead)
         && isESANI(lead)
         && !hasGroups(lead)
         && !mailOpened(lead)
@@ -92,8 +110,8 @@ const WORKFLOWS={
     id: '2414827',
     name: 'SAL NON INSC INEA SS GRP',
     filter: (lead, user) => {
-      return !isInsurance(lead)
-        && isLeadOnly(lead, user)
+      return isLeadOnly(lead, user)
+        && !isInsurance(lead)
         && isINEA(lead)
         && !hasGroups(lead)
         && lead
@@ -103,8 +121,8 @@ const WORKFLOWS={
     id: '2414829',
     name: 'SAL NON INSC ESANI SS GRP',
     filter: (lead, user) => {
-      return !isInsurance(lead)
-        && isLeadOnly(lead, user)
+      return isLeadOnly(lead, user)
+        && !isInsurance(lead)
         && isESANI(lead)
         && !hasGroups(lead)
         && lead
@@ -114,8 +132,8 @@ const WORKFLOWS={
     id: '2416408',
     name: 'ADH NON INSC INEA SS GRP MAIL OUVERT',
     filter: (lead, user) => {
-      return isInsurance(lead)
-        && isLeadOnly(lead, user)
+      return isLeadOnly(lead, user)
+        && isInsurance(lead)
         && isINEA(lead)
         && !hasGroups(lead)
         && mailOpened(lead)
@@ -126,8 +144,8 @@ const WORKFLOWS={
     id: '2416407',
     name: 'SAL NON INSC ESANI sans groupe mail ouvert',
     filter: (lead, user) => {
-      return isInsurance(lead)
-        && isLeadOnly(lead, user)
+      return isLeadOnly(lead, user)
+        && isInsurance(lead)
         && isESANI(lead)
         && !hasGroups(lead)
         && mailOpened(lead)
@@ -140,7 +158,7 @@ const WORKFLOWS={
     name: 'SAL/ADH INSC INEA NO COA DEM',
     filter: (lead, user) => {
       return isRegistered(lead, user)
-        && isINEA(lead)
+        && isINEA(user)
         && !coachingStarted(user)
         && user
     }
@@ -151,7 +169,7 @@ const WORKFLOWS={
     name: 'SAL/ADH INSC INEA NO CAO DEM',
     filter: (lead, user) => {
       return isRegistered(lead, user)
-        && isESANI(lead)
+        && isESANI(user)
         && !coachingStarted(user)
         && user
     }
@@ -180,9 +198,9 @@ const WORKFLOWS={
     id: '2414828',
     name: 'INEA avec groupe',
     filter: (lead, user) => {
-      return !isInsurance(lead)
+      return isLeadOnly(lead, user)
       && !mailOpened(lead)
-      && isLeadOnly(lead, user)
+      && !isInsurance(lead)
       && isINEA(lead)
       && hasGroups(lead)
       && lead
@@ -192,9 +210,9 @@ const WORKFLOWS={
     id: '2414830',
     name: 'ESANI avec groupe',
     filter: (lead, user) => {
-      return !isInsurance(lead)
+      return isLeadOnly(lead, user)
       && !mailOpened(lead)
-      && isLeadOnly(lead, user)
+      && !isInsurance(lead)
       && isESANI(lead)
       && hasGroups(lead)
       && lead
@@ -204,8 +222,8 @@ const WORKFLOWS={
     id: '2416441',
     name: 'SAL INEA GRP MAIL OUVERT',
     filter: (lead, user) => {
-      return !isInsurance(lead)
-      && isLeadOnly(lead, user)
+      return isLeadOnly(lead, user)
+      && !isInsurance(lead)
       && isINEA(lead)
       && hasGroups(lead)
       && mailOpened(lead)
@@ -216,8 +234,8 @@ const WORKFLOWS={
     id: '2416442',
     name: 'SAL ESANI GRP MAIL OUVERT',
     filter: (lead, user) => {
-      return !isInsurance(lead)
-      && isLeadOnly(lead, user)
+      return isLeadOnly(lead, user)
+      && !isInsurance(lead)
       && isESANI(lead)
       && hasGroups(lead)
       && mailOpened(lead)
