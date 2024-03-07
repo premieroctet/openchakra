@@ -129,10 +129,7 @@ const {
 
 const Category = require('../../models/Category')
 const { delayPromise, runPromisesWithDelay } = require('../../utils/concurrency')
-const {
-  getSmartAgendaConfig,
-  isDevelopment,
-} = require('../../../config/config')
+const {getSmartAgendaConfig} = require('../../../config/config')
 const AppointmentType = require('../../models/AppointmentType')
 require('../../models/LogbookDay')
 const { importLeads } = require('./leads')
@@ -182,7 +179,6 @@ const Conversation = require('../../models/Conversation')
 const UserQuizz = require('../../models/UserQuizz')
 const { computeBilling } = require('./billing')
 const { isPhoneOk, PHONE_REGEX } = require('../../../utils/sms')
-const NodeCache=require('node-cache')
 const { updateCoachingStatus } = require('./coaching')
 const { tokenize } = require('protobufjs')
 
@@ -1684,7 +1680,7 @@ const computeStatistics = async ({ id, fields }) => {
 }
 
 /** Upsert PARTICULARS company */
-!isDevelopment() && Company.findOneAndUpdate(
+Company.findOneAndUpdate(
   { name: PARTICULAR_COMPANY_NAME },
   { name: PARTICULAR_COMPANY_NAME, activity: COMPANY_ACTIVITY_SERVICES_AUX_ENTREPRISES },
   { upsert: true },
@@ -1802,21 +1798,6 @@ const getRegisterCompany = props => {
 
 setImportDataFunction({ model: 'lead', fn: importLeads })
 
-// Keep app types for 30 seconds only to manage company changes
-const appTypes=new NodeCache({stdTTL: 60})
-
-const getAppointmentType = async ({appointmentType}) => {
-  const key=appointmentType.toString()
-  let result=appTypes.get(key)
-  if (result) {
-    return result
-  }
-  const assessment=await Company.exists({assessment_appointment_type: appointmentType})
-  result=assessment ? APPOINTMENT_TYPE_ASSESSMENT : APPOINTMENT_TYPE_FOLLOWUP
-  appTypes.set(key, result)
-  return result
-}
-
 // Ensure all spoon gains are defined
 ensureSpoonGains = () => {
   return Object.keys(SPOON_SOURCE).map(source => {
@@ -1830,18 +1811,18 @@ ensureSpoonGains = () => {
   })
 }
 
-!isDevelopment() && ensureSpoonGains()
+ensureSpoonGains()
 
 // Ensure logbooks consistency each morning
 //cron.schedule('0 */15 * * * *', async() => {
-!isDevelopment() && cron.schedule('0 0 * * * *', async () => {
+cron.schedule('0 0 * * * *', async () => {
   logbooksConsistency()
     .then(() => console.log(`Logbooks consistency OK `))
     .catch(err => console.error(`Logbooks consistency error:${err}`))
 })
 
 // Synchronize diets & customer smartagenda accounts
-!isDevelopment() && cron.schedule('0 * * * * *', () => {
+cron.schedule('0 * * * * *', () => {
   console.log(`Smartagenda accounts sync`)
   return User.find({ role: { $in: [ROLE_EXTERNAL_DIET, ROLE_CUSTOMER] }, smartagenda_id: null })
     .then(users => {
@@ -2117,7 +2098,7 @@ cron.schedule('0 0 10 * * *', async () => {
 
 
 // Set user & diet on appointments
-!isDevelopment() && Appointment.remove({coaching: null})
+Appointment.remove({coaching: null})
   .then(() => Appointment.find({$or: [{diet: null},{user: null}]}).populate('coaching'))
   .then(appts => {
     console.log('DB to update:', !lodash.isEmpty(appts))
@@ -2255,5 +2236,4 @@ module.exports = {
   agendaHookFn, mailjetHookFn,
   computeStatistics,
   webinarNotifications,
-  getAppointmentType,
 }

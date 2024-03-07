@@ -1,5 +1,6 @@
 const lodash=require('lodash')
 const moment=require('moment')
+const NodeCache=require('node-cache')
 const { ForbiddenError } = require("../../utils/errors")
 const { ROLE_EXTERNAL_DIET, APPOINTMENT_TYPE, APPOINTMENT_TYPE_ASSESSMENT, APPOINTMENT_TYPE_FOLLOWUP, APPOINTMENT_TYPE_NUTRITION } = require("./consts")
 const Appointment = require("../../models/Appointment")
@@ -8,7 +9,21 @@ const NutritionAdvice = require("../../models/NutritionAdvice")
 const PriceList = require("../../models/PriceList")
 const { getDateFilter, getMonthFilter } = require('../../utils/database')
 const Company = require('../../models/Company')
-const { getAppointmentType } = require('./functions')
+
+// Keep app types for 30 seconds only to manage company changes
+const appTypes=new NodeCache({stdTTL: 60})
+
+const getAppointmentType = async ({appointmentType}) => {
+  const key=appointmentType.toString()
+  let result=appTypes.get(key)
+  if (result) {
+    return result
+  }
+  const assessment=await Company.exists({assessment_appointment_type: appointmentType})
+  result=assessment ? APPOINTMENT_TYPE_ASSESSMENT : APPOINTMENT_TYPE_FOLLOWUP
+  appTypes.set(key, result)
+  return result
+}
 
 const getPrices = async () => {
   return await PriceList.find().sort({date: 1})
