@@ -18,10 +18,16 @@ const updateCoachingStatus = async coaching_id => {
     coaching.status=COACHING_STATUS_STARTED
     // Set progress quizz
     const progressTemplate=await Quizz.findOne({ type: QUIZZ_TYPE_PROGRESS }).populate('questions')
+    if (!progressTemplate) {
+      throw new Error('No progress template')
+    }
     const progressUser = await progressTemplate.cloneAsUserQuizz()
     coaching.progress = progressUser._id
     // TODO coaching set assessment quizz
     const assessmentTemplate=await Quizz.findById(coaching.offer.assessment_quizz).populate('questions')
+    if (!assessmentTemplate) {
+      throw new Error('No assessment template for', coaching.offer)
+    }
     const assessmentUser=await assessmentTemplate.cloneAsUserQuizz()
     coaching.assessment_quizz = assessmentUser._id
     // Set offer
