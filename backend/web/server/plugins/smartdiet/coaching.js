@@ -56,7 +56,7 @@ const updateCoachingStatus = async coaching_id => {
     if (lastValidated && afterDelay && creditsRemain) {
       coaching.status=COACHING_STATUS_STOPPED
     }
-    if (!creditsRemain && lastValidated) {
+    if (!creditsRemain && lastValidated && moment().isAfter(latest_appointment.end_date)) {
       coaching.status=COACHING_STATUS_FINISHED
     }
   }

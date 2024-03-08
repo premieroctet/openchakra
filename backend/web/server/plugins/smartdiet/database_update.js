@@ -169,7 +169,7 @@ const setCoachingAssQuizz = async () => {
     .populate({path: 'quizz'})
     .then(coachings => {
       const withAssessmentQuizz=coachings.filter(c => c.quizz?.some(q => q.type==QUIZZ_TYPE_ASSESSMENT))
-      log('moving health quizz for ', withAssessmentQuizz.length, 'coachings')
+      log('moving health quizz for', withAssessmentQuizz.length, 'coachings')
       return Promise.all(withAssessmentQuizz.map(c => {
         const healthQuizz=c.quizz.find(q => q.type==QUIZZ_TYPE_ASSESSMENT)._id
         return Coaching.findOneAndUpdate({_id: c._id}, {$set: {assessment_quizz: healthQuizz}, $pull: {quizz: healthQuizz}}, {runValidators: true})
