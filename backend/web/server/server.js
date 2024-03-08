@@ -163,6 +163,15 @@ catch(err) {
   console.warn(`No custom routes for ${getDataModel()}`)
 }
 
+let db_update_fn=null
+try {
+  db_update_fn=require(`./plugins/${getDataModel()}/database_update`)
+}
+catch(err) {
+  if (err.code !== 'MODULE_NOT_FOUND') { throw err }
+  console.warn(`No database updates required for ${getDataModel()}`)
+}
+
 // TODO Terminer les notifications
 // throw new Error(`\n${'*'.repeat(30)}\n  TERMINER LES NOTIFICATIONS\n${'*'.repeat(30)}`)
 // checkConfig
@@ -170,6 +179,7 @@ checkConfig()
   .then(() => {
     return mongoose.connect(getDatabaseUri(), MONGOOSE_OPTIONS)
       .then(conn => autoIncrement.initialize(conn))
+      .then(() => db_update_fn && db_update_fn())
   })
   // Connect to MongoDB
   .then(() => {
