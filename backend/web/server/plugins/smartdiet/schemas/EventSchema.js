@@ -65,6 +65,14 @@ EventSchema.virtual('duration', DUMMY_REF).get(function () {
   return moment(this.end_date).diff(this.start_date, 'minutes')
 })
 
+EventSchema.virtual('registered_count', {
+  ref: 'user',
+  localField: '_id',
+  foreignField: 'registered_events.event',
+  count: true,
+})
+
+
 // EventSchema.virtual('status').get(function () {
 //   return null
 // })
