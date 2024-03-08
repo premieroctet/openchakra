@@ -1493,9 +1493,14 @@ declareComputedField({model: 'key', field: 'user_surveys_progress', getterFn: ge
 const postCreate = async ({ model, params, data, user }) => {
   // Create company => duplicate offer
   if (model == 'company') {
-    return Offer.findById(params.offer)
-      .then(offer => Offer.create({ ...simpleCloneModel(offer), company: data._id }))
-      .then(offer => data)
+    const validity_start=moment()
+    const validity_end=moment().add(1, 'year')
+    const assessment_quizz=await Quizz.findOne({type: QUIZZ_TYPE_ASSESSMENT})
+    const offer=await Offer.findById(params.offer)
+    const name=`Offre ${offer.name} pour ${data.name}`
+    console.log(`Offer name is`, name)
+    await Offer.create({...simpleCloneModel(offer), company: data._id, name,assessment_quizz, validity_start, validity_end})
+    return data
   }
   if (model == 'collectiveChallenge') {
     return Pip.find()
