@@ -205,6 +205,7 @@ const setOffersOnCoachings = () => {
 }
 
 const databaseUpdate = async () => {
+  console.log('************ UPDATING DATABASE')
   await normalizePhones()
   await renameHealthQuizzTypes()
   await setAppointmentsDietAndUser()
