@@ -3,7 +3,7 @@ const mongoose=require('mongoose')
 const moment=require('moment')
 const { PHONE_REGEX, isPhoneOk } = require("../../../utils/sms")
 const User = require("../../models/User")
-const { QUIZZ_TYPE_ASSESSMENT, PARTICULAR_COMPANY_NAME } = require('./consts')
+const { QUIZZ_TYPE_ASSESSMENT, PARTICULAR_COMPANY_NAME, COACHING_STATUS_NOT_STARTED } = require('./consts')
 const Appointment = require('../../models/Appointment')
 const Company = require('../../models/Company')
 const CoachingLogbook = require('../../models/CoachingLogbook')
@@ -178,7 +178,7 @@ const setCoachingAssQuizz = async () => {
 }
 
 const setOffersOnCoachings = () => {
-  log('set offers on coachingsz')
+  log('set offers on coachings')
 /** Set offers on coachings */
   return Coaching.find({offer: null})
     .populate({path: 'user', populate: {path: 'company', populate: 'current_offer'}})
@@ -188,6 +188,7 @@ const setOffersOnCoachings = () => {
         return coaching.delete()
       }
       coaching.offer=coaching.user?.company.current_offer
+      coaching.status=COACHING_STATUS_NOT_STARTED
       if (!coaching.offer) {
         error('coaching without offer', coaching)
       }
