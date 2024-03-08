@@ -8,7 +8,10 @@ const { COACHING_STATUS_NOT_STARTED, COACHING_STATUS_STARTED, COACHING_STATUS_FI
 } = require("./consts")
 
 const updateCoachingStatus = async coaching_id => {
+
   const coaching=await Coaching.findById(coaching_id).populate(['appointments', 'offer', 'spent_credits', 'user', 'latest_appointments'])
+
+  const orgStatus=coaching.status
 
   if (lodash.isEmpty(coaching.appointments)) {
     coaching.status=COACHING_STATUS_NOT_STARTED
@@ -35,29 +38,26 @@ const updateCoachingStatus = async coaching_id => {
     coaching.offer=company.offers?.[0]
   }
 
-  // Finished if no more credit
-  if (coaching.remaining_credits===0) {
-    coaching.status=COACHING_STATUS_FINISHED
-    // TODO coaching set impact quizz if exists in offer
-  }
-
   const latest_appointment=coaching.latest_appointments?.[0]
   if (latest_appointment) {
-    // stopped or dropped if latest coaching was COACHING_END_DELAY months before
-    if (moment().diff(latest_appointment.end_date, 'month')>=COACHING_END_DELAY) {
-      // Latest appointment was a rabbit
-      if (latest_appointment.validated===false) {
-        coaching.status=COACHING_STATUS_DROPPED
-      }
-      // Latest appointment was a valid
-      if (coaching.remaining_credits>0 && latest_appointment.validated===true) {
-        coaching.status=COACHING_STATUS_STOPPED
-      }
+    const creditsRemain=coaching.remaining_credits>0
+    const afterDelay=moment().diff(latest_appointment?.end_date, 'month')>=COACHING_END_DELAY
+    const lastValidated=latest_appointment?.validated==true
+
+    if (!lastValidated && (afterDelay || !creditsRemain)) {
+      coaching.status=COACHING_STATUS_DROPPED
+    }
+    if (lastValidated && afterDelay && creditsRemain) {
+      coaching.status=COACHING_STATUS_STOPPED
+    }
+    if (!creditsRemain && lastValidated) {
+      coaching.status=COACHING_STATUS_FINISHED
     }
   }
 
   // Save if modified
   if (coaching.isModified('status')) {
+    console.log('Coaching', coaching._id, 'status', orgStatus, '=>', coaching.status)
     return coaching.save()
   }
 }

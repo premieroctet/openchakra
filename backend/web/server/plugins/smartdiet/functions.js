@@ -1957,6 +1957,14 @@ cron.schedule('0 0 8 * * *', async () => {
     .catch(console.error)
 })
 
+// Update coaching status
+cron.schedule('0 0 * * * *', async () => {
+  console.log('Updating coaching status')
+  return Coaching.find({}, {_id:1})
+    .then(coachings => coachings.map(c => updateCoachingStatus(c._id)))
+    .catch(console.error)
+})
+
 // Inactivity notifications
 cron.schedule('0 0 8 * * *', async () => {
   const users = await User.find({ role: ROLE_CUSTOMER }, { email: 1, days_inactivity: 1, last_activity: 1 })
@@ -2016,7 +2024,6 @@ cron.schedule('0 0 8 * * 6', async () => {
     customers.forEach(customer => fn({ user: customer }).catch(console.error))
   }
 })
-
 
 /**
  * For each lead in coaching to come status, set to coaching converted
