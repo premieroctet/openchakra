@@ -165,13 +165,13 @@ const setCoachingAssQuizz = async () => {
   /** Extract HEALTH QUIZZ from coachings quizz, set it to assessment_quizz
    * use collection because Coaching.quizz attribute was removed from schema
    * */
-  return Coaching.find({assessment_quizz: null})
-    .populate({path: 'quizz', populate: 'quizz'})
+  return Coaching.find()
+    .populate({path: 'quizz'})
     .then(coachings => {
-      const withAssessmentQuizz=coachings.filter(c => c.quizz?.some(q => q.quizz.type==QUIZZ_TYPE_ASSESSMENT))
+      const withAssessmentQuizz=coachings.filter(c => c.quizz?.some(q => q.type==QUIZZ_TYPE_ASSESSMENT))
       log('moving health quizz for ', withAssessmentQuizz.length, 'coachings')
       return Promise.all(withAssessmentQuizz.map(c => {
-        const healthQuizz=c.quizz[0]._id
+        const healthQuizz=c.quizz.find(q => q.type==QUIZZ_TYPE_ASSESSMENT)._id
         return Coaching.findOneAndUpdate({_id: c._id}, {$set: {assessment_quizz: healthQuizz}, $pull: {quizz: healthQuizz}}, {runValidators: true})
       }))
     })
@@ -212,8 +212,8 @@ const databaseUpdate = async () => {
   await upgradeOffers()
   await upgradeParticularCompanyOffer()
   await upgradeCompanyOffers()
-  await setCoachingAssQuizz()
   await setOffersOnCoachings()
+  await setCoachingAssQuizz()
 }
 
 module.exports=databaseUpdate
