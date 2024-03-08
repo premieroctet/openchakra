@@ -26,6 +26,8 @@ const {
   isDevelopment_nossl,
   config,
   getDataModel,
+  isMaster,
+  setMasterStatus,
 } = require('../config/config')
 const {HTTP_CODES, parseError} = require('./utils/errors')
 require('./models/Answer')
@@ -154,6 +156,7 @@ const studio = require('./routes/api/studio')
 const withings = getDataModel()=='dekuple' ? require('./routes/api/withings') : null
 const app = express()
 const {serverContextFromRequest} = require('./utils/serverContext')
+const { delayedPromise } = require('../utils/promise')
 let custom_router=null
 try {
   custom_router=require(`./plugins/${getDataModel()}/routes`).router
@@ -163,13 +166,24 @@ catch(err) {
   console.warn(`No custom routes for ${getDataModel()}`)
 }
 
+let db_update_fn=null
+try {
+  db_update_fn=require(`./plugins/${getDataModel()}/database_update`)
+}
+catch(err) {
+  if (err.code !== 'MODULE_NOT_FOUND') { throw err }
+  console.warn(`No database updates required for ${getDataModel()}`)
+}
+
 // TODO Terminer les notifications
 // throw new Error(`\n${'*'.repeat(30)}\n  TERMINER LES NOTIFICATIONS\n${'*'.repeat(30)}`)
 // checkConfig
 checkConfig()
+  .then(() => delayedPromise(5000, setMasterStatus))
   .then(() => {
     return mongoose.connect(getDatabaseUri(), MONGOOSE_OPTIONS)
       .then(conn => autoIncrement.initialize(conn))
+      .then(() => isMaster() && db_update_fn && db_update_fn())
   })
   // Connect to MongoDB
   .then(() => {

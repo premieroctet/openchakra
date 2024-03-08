@@ -37,6 +37,7 @@ const OfferSchema = new Schema({
   },
   webinars_credit: {
     type: Number,
+    default: 0,
     required: [function() {return !this?.webinars_unlimited}, 'Le crédit de webinars est obligatoire'],
   },
   webinars_unlimited: {
@@ -46,6 +47,7 @@ const OfferSchema = new Schema({
   },
   infographies_credit: {
     type: Number,
+    default: 0,
     required: [function() {return !this?.infographies_unlimited}, "Le crédit d'infographies est obligatoire"],
   },
   infographies_unlimited: {
@@ -55,6 +57,7 @@ const OfferSchema = new Schema({
   },
   articles_credit: {
     type: Number,
+    default: 0,
     required: [function() {return !this?.articles_unlimited}, 'Le crédit d\'articles est obligatoire'],
   },
   articles_unlimited: {
@@ -64,6 +67,7 @@ const OfferSchema = new Schema({
   },
   podcasts_credit: {
     type: Number,
+    default: 0,
     required: [function() {return !this?.podcasts_unlimited}, 'Le crédit de podcasts est obligatoire'],
   },
   podcasts_unlimited: {
@@ -73,6 +77,7 @@ const OfferSchema = new Schema({
   },
   video_credit: {
     type: Number,
+    default: 0,
     required: [function() {return !this?.video_unlimited}, 'Le crédit de vidéos est obligatoire'],
   },
   video_unlimited: {
@@ -81,27 +86,34 @@ const OfferSchema = new Schema({
     required: true,
   },
   collective_challenge_available: {
+    default: false,
     type: Boolean,
   },
   individual_challenge_available: {
+    default: false,
     type: Boolean,
   },
   online_coaching_available: {
+    default: false,
     type: Boolean,
   },
   coaching_credit: {
     type: Number,
+    default: 0,
     required: [true, 'Le crédit de coachings est obligatoire'],
   },
   nutrition_credit: {
     type: Number,
+    default: 0,
     required: [true, 'Le crédit de conseils nutritionels est obligatoire'],
   },
   hotdiet_available: {
+    default: false,
     type: Boolean,
   },
   groups_credit: {
     type: Number,
+    default: 0,
     required: [function() {return !this?.groups_unlimited}, 'Le crédit de groupes est obligatoire'],
   },
   groups_unlimited: {

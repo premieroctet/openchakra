@@ -129,10 +129,7 @@ const {
 
 const Category = require('../../models/Category')
 const { delayPromise, runPromisesWithDelay } = require('../../utils/concurrency')
-const {
-  getSmartAgendaConfig,
-  isDevelopment,
-} = require('../../../config/config')
+const {getSmartAgendaConfig} = require('../../../config/config')
 const AppointmentType = require('../../models/AppointmentType')
 require('../../models/LogbookDay')
 const { importLeads } = require('./leads')
@@ -182,7 +179,6 @@ const Conversation = require('../../models/Conversation')
 const UserQuizz = require('../../models/UserQuizz')
 const { computeBilling } = require('./billing')
 const { isPhoneOk, PHONE_REGEX } = require('../../../utils/sms')
-const NodeCache=require('node-cache')
 const { updateCoachingStatus } = require('./coaching')
 const { tokenize } = require('protobufjs')
 
@@ -860,6 +856,7 @@ EVENT_MODELS.forEach(m => {
   // declareVirtualField({ model: m, field: 'status', instance: 'String', requires: 'start_date,end_date', enumValues: APPOINTMENT_STATUS })
   declareEnumField({ model: m, field: 'status', enumValues: APPOINTMENT_STATUS })
   declareComputedField({model: m, field: 'status', getterFn: getEventStatus})
+  declareVirtualField({ model: m, field: 'registered_count', instance: 'Number'})
 })
 
 declareEnumField({ model: 'individualChallenge', field: 'hardness', enumValues: HARDNESS })
@@ -1497,9 +1494,14 @@ declareComputedField({model: 'key', field: 'user_surveys_progress', getterFn: ge
 const postCreate = async ({ model, params, data, user }) => {
   // Create company => duplicate offer
   if (model == 'company') {
-    return Offer.findById(params.offer)
-      .then(offer => Offer.create({ ...simpleCloneModel(offer), company: data._id }))
-      .then(offer => data)
+    const validity_start=moment()
+    const validity_end=moment().add(1, 'year')
+    const assessment_quizz=await Quizz.findOne({type: QUIZZ_TYPE_ASSESSMENT})
+    const offer=await Offer.findById(params.offer)
+    const name=`Offre ${offer.name} pour ${data.name}`
+    console.log(`Offer name is`, name)
+    await Offer.create({...simpleCloneModel(offer), company: data._id, name,assessment_quizz, validity_start, validity_end})
+    return data
   }
   if (model == 'collectiveChallenge') {
     return Pip.find()
@@ -1632,30 +1634,28 @@ const ensureChallengePipsConsistency = () => {
 }
 
 const computeStatistics = async ({ id, fields }) => {
-  console.log(`Computing stats for ${id} fields ${fields}`)
-  if (!id) {
-    return {}
-  }
+  console.log(`Computing stats for ${id || 'all companies'} fields ${fields}`)
   const result={}
-  const companies=await Company.find({_id: id})
+  const filter=id ? id : {$ne: null}
+  const companies=await Company.find({_id: filter})
   result.company=id?.toString()
-  const companyUsers=await User.find({company: id}, {_id:1})
-  result.groups_count=await Group.countDocuments({companies: id})
-  result.messages_count=lodash(await Group.find({companies: id}).populate('messages')).flatten().size()
-  result.users_count=await User.countDocuments({company: id})
-  result.user_women_count=await User.countDocuments({company: id, gender: GENDER_FEMALE})
-  result.users_men_count=await User.countDocuments({company: id, gender: GENDER_MALE})
-  result.users_no_gender_count=await User.countDocuments({company: id, gender: GENDER_NON_BINARY})
-  result.webinars_count=await Webinar.countDocuments({companies: id})
+  const companyUsers=await User.find({company: filter}, {_id:1})
+  result.groups_count=await Group.countDocuments({companies: filter})
+  result.messages_count=lodash(await Group.find({companies: filter}).populate('messages')).flatten().size()
+  result.users_count=await User.countDocuments({company: filter})
+  result.user_women_count=await User.countDocuments({company: filter, gender: GENDER_FEMALE})
+  result.users_men_count=await User.countDocuments({company: filter, gender: GENDER_MALE})
+  result.users_no_gender_count=await User.countDocuments({company: filter, gender: GENDER_NON_BINARY})
+  result.webinars_count=await Webinar.countDocuments({companies: filter})
   const webinars_replayed=(await User.aggregate([
-    {$match: { company: id }},
+    {$match: { company: filter }},
     {$unwind: '$replayed_events'},
     {$match: { 'replayed_events.__t': EVENT_WEBINAR }},
     {$group: {_id: '$_id', webinarCount: { $sum: 1 }}}
   ]))[0]?.webinarCount||0
   result.webinars_replayed_count=webinars_replayed
   const webinars_registered=(await User.aggregate([
-    {$match: { company: id }},
+    {$match: { company: filter }},
     {$unwind: '$registered_events'},
     {$match: { 'registered_events.__t': EVENT_WEBINAR }},
     {$group: {_id: '$_id', webinarCount: { $sum: 1 }}}
@@ -1663,28 +1663,32 @@ const computeStatistics = async ({ id, fields }) => {
   result.average_webinar_registar=result.webinars_count ? webinars_registered*1.0/result.webinars_count : 0
   const apptCoachings=await Appointment.distinct('coaching')
   const coachings=await Coaching.distinct('user', {_id: {$in: apptCoachings}})
-  const users=await User.countDocuments({_id: {$in: coachings}, company: id})
+  const users=await User.countDocuments({_id: {$in: coachings}, company: filter})
   result.started_coachings=users
   result.leads_count=await Lead.countDocuments({company_code: companies.map(c => c.code)})
-  const specificities=lodash(await User.find({company: id}).populate('specificity_targets'))
+  const specificities=lodash(await User.find({company: filter}).populate('specificity_targets'))
     .map(u => u.specificity_targets.map(t => t.name))
     .flatten()
     .countBy()
-    .entries().map(([k, v]) => ({x: k, y: v}))
+    .entries()
+    .filter(([k, v]) => v>0)
+    .map(([k, v]) => ({x: k, y: v}))
     .orderBy(['y'], ['asc'])
   result.specificities_users=specificities.value()
   const reasons=lodash(await Coaching.find({user: companyUsers}).populate('reasons'))
     .map(u => u.reasons.map(t => t.name))
     .flatten()
     .countBy()
-    .entries().map(([k, v]) => ({x: k, y: v}))
+    .entries()
+    .filter(([k, v]) => v>0)
+    .map(([k, v]) => ({x: k, y: v}))
     .orderBy(['y'], ['asc'])
   result.reasons_users=reasons.value()
   return result
 }
 
 /** Upsert PARTICULARS company */
-!isDevelopment() && Company.findOneAndUpdate(
+Company.findOneAndUpdate(
   { name: PARTICULAR_COMPANY_NAME },
   { name: PARTICULAR_COMPANY_NAME, activity: COMPANY_ACTIVITY_SERVICES_AUX_ENTREPRISES },
   { upsert: true },
@@ -1802,21 +1806,6 @@ const getRegisterCompany = props => {
 
 setImportDataFunction({ model: 'lead', fn: importLeads })
 
-// Keep app types for 30 seconds only to manage company changes
-const appTypes=new NodeCache({stdTTL: 60})
-
-const getAppointmentType = async ({appointmentType}) => {
-  const key=appointmentType.toString()
-  let result=appTypes.get(key)
-  if (result) {
-    return result
-  }
-  const assessment=await Company.exists({assessment_appointment_type: appointmentType})
-  result=assessment ? APPOINTMENT_TYPE_ASSESSMENT : APPOINTMENT_TYPE_FOLLOWUP
-  appTypes.set(key, result)
-  return result
-}
-
 // Ensure all spoon gains are defined
 ensureSpoonGains = () => {
   return Object.keys(SPOON_SOURCE).map(source => {
@@ -1830,18 +1819,18 @@ ensureSpoonGains = () => {
   })
 }
 
-!isDevelopment() && ensureSpoonGains()
+ensureSpoonGains()
 
 // Ensure logbooks consistency each morning
 //cron.schedule('0 */15 * * * *', async() => {
-!isDevelopment() && cron.schedule('0 0 * * * *', async () => {
+cron.schedule('0 0 * * * *', async () => {
   logbooksConsistency()
     .then(() => console.log(`Logbooks consistency OK `))
     .catch(err => console.error(`Logbooks consistency error:${err}`))
 })
 
 // Synchronize diets & customer smartagenda accounts
-!isDevelopment() && cron.schedule('0 * * * * *', () => {
+cron.schedule('0 * * * * *', () => {
   console.log(`Smartagenda accounts sync`)
   return User.find({ role: { $in: [ROLE_EXTERNAL_DIET, ROLE_CUSTOMER] }, smartagenda_id: null })
     .then(users => {
@@ -1971,6 +1960,14 @@ cron.schedule('0 0 8 * * *', async () => {
     .catch(console.error)
 })
 
+// Update coaching status
+cron.schedule('0 0 * * * *', async () => {
+  console.log('Updating coaching status')
+  return Coaching.find({}, {_id:1})
+    .then(coachings => coachings.map(c => updateCoachingStatus(c._id)))
+    .catch(console.error)
+})
+
 // Inactivity notifications
 cron.schedule('0 0 8 * * *', async () => {
   const users = await User.find({ role: ROLE_CUSTOMER }, { email: 1, days_inactivity: 1, last_activity: 1 })
@@ -2030,7 +2027,6 @@ cron.schedule('0 0 8 * * 6', async () => {
     customers.forEach(customer => fn({ user: customer }).catch(console.error))
   }
 })
-
 
 /**
  * For each lead in coaching to come status, set to coaching converted
@@ -2116,138 +2112,6 @@ cron.schedule('0 0 10 * * *', async () => {
 })
 
 
-// Set user & diet on appointments
-!isDevelopment() && Appointment.remove({coaching: null})
-  .then(() => Appointment.find({$or: [{diet: null},{user: null}]}).populate('coaching'))
-  .then(appts => {
-    console.log('DB to update:', !lodash.isEmpty(appts))
-    return Promise.allSettled(appts.map(app => {
-      console.log(app.coaching.user, app.coaching.diet)
-      app.user=app.coaching.user
-      app.diet=app.coaching.diet
-      return app.save()
-    }))
-  })
-  .then(() => console.log(`Update appointments with user & diet OK`))
-  .catch(err => console.error(`Update appointments with user & diet`, err))
-
-// Remove messages linked to other than users :-|
-const conversationFilter={group:null}
-Message.find(conversationFilter).populate(['sender', 'receiver'])
-  .then(messages => {
-    // Remove messages having no sender or no receiver
-    const wrongMessages=messages.filter(m => (!m.sender || !m.receiver) || idEqual(m.sender._id, m.receiver._id))
-    console.log(wrongMessages.length, 'invalid messages to remove')
-    return Promise.all(wrongMessages.map(m => m.delete()))
-  })
-  .then(() => Message.find({...conversationFilter, conversation: null}, {sender:1, receiver:1}))
-  .then(messages => {
-    messages=messages.filter(m => m.sender._id != m.receiver._id)
-    const grouped=lodash.groupBy(messages, message => {
-      const sorted = [message.sender._id.toString(), message.receiver._id.toString()].sort();
-      return sorted.join('-');
-    })
-    // Create conversations for each unordered (sender, receiver) pair
-    return Promise.all(Object.keys(grouped).map(key => {
-      const [user1, user2]=key.split('-')
-      return Conversation.getFromUsers(user1, user2)
-    }))
-    // Update messages with their conversations
-    .then(conversations => Promise.all(conversations.map(conv => {
-      const filter={$or: [{sender: conv.users[0], receiver: conv.users[1]}, {sender: conv.users[1], receiver: conv.users[0]}]}
-      return Message.updateMany(filter, {conversation: conv})
-    })))
-  })
-  .then(res => console.log(lodash.sumBy(res, 'nModified'), 'messages updated'))
-  .catch(console.error)
-
-// Normalize all phone numbers
-const normalizePhone = user => {
-  console.log('Normalize for user', user)
-  if (!isPhoneOk(user.phone)) {
-    console.error(`Invalid phone`, user.phone, 'for', user.email, 'resetting')
-    user.phone=null
-    return user.save()
-  }
-  user.phone=user.phone.replace(/^0/, '+33').replace(/ /g, '')
-  console.log(`Normalized for`, user.email, 'to', user.phone)
-  return user.save()
-}
-
-// Normalize user phones
-User.find({phone: {$ne:null, $not: {$regex: PHONE_REGEX}}})
-  .then(users => Promise.allSettled(users.map(u => normalizePhone(u))))
-      .then(res => console.log(JSON.stringify(lodash.groupBy(res, 'status').rejected)))
-
-/** Extract HEALTH QUIZZ from coachings quizz, set it to assessment_quizz
- * use collection because Coaching.quizz attribute was removed from schema
- * */
-Coaching.find()
-  .populate({path: 'quizz', match: {type: /(HEALTH|ASSESSMENT)/}})
-  .then(coachings => {
-    const withAssessmentQuizz=coachings.filter(c => c.quizz?.length>0)
-    return Promise.all(withAssessmentQuizz.map(c => {
-      const healthQuizz=c.quizz[0]._id
-      console.log('coaching', c._id, 'health quizz', healthQuizz)
-      return Coaching.findByIdAndUpdate(c._id, {$set: {assessment_quizz: healthQuizz}, $pull: {quizz: healthQuizz}})
-    }))
-  })
-
-/** Rename quizzs types HEALTH to ASSESSMENT
- * */
-mongoose.connection.collection('quizzs')
-  .updateMany({type: 'QUIZZ_TYPE_HEALTH'}, {$set: {type: QUIZZ_TYPE_ASSESSMENT}})
-  .then(({matchedCount, modifiedCount}) => console.log(`quizz type HEALTH=>ASSESSMENT modified`, modifiedCount, '/', matchedCount))
-  .catch(err => console.error(`quizz type HEALTH=>ASSESSMENT`, err))
-
-/** Rename userquizzs types HEALTH to ASSESSMENT
- * */
-!isDevelopment() && mongoose.connection.collection('userquizzs')
-  .updateMany({type: 'QUIZZ_TYPE_HEALTH'}, {$set: {type: QUIZZ_TYPE_ASSESSMENT}})
-  .then(({matchedCount, modifiedCount}) => console.log(`userquizz type HEALTH=>ASSESSMENT modified`, modifiedCount, '/', matchedCount))
-  .catch(err => console.error(`userquizz type HEALTH=>ASSESSMENT`, err))
-
-/** Set offers on coachings
- * */
-!isDevelopment() && Coaching.find({offer: null})
-  .populate({path: 'user', populate: {path: 'company', populate: 'offers'}})
-  .then(coachings => Promise.all(coachings.map(coaching => {
-    // Remove coachings with deleted users
-    if (!coaching.user) {
-      return coaching.delete()
-    }
-    if (coaching.user?.company.name==PARTICULAR_COMPANY_NAME) {
-      return
-    }
-    coaching.offer=coaching.user?.company.offers[0]
-    if (!coaching.offer) {
-      console.error('coaching without offer', coaching)
-    }
-    else {
-      console.log('saved coaching', coaching._id, 'offer', coaching.offer._id)
-      return coaching.save()
-    }
-  })))
-
-!isDevelopment() && Coaching.find({status: null}, {_id:1})
-  .then(coachings =>  Promise.all(coachings.map(coaching => updateCoachingStatus(coaching._id))))
-  .then(console.log)
-  .catch(console.error)
-
-!isDevelopment() && CoachingLogbook.distinct('coaching')
-  .then(coachingIds => Coaching.find({_id: coachingIds}, {user:1}))
-  // Link logbooks to user instead of coaching
-  .then(coachings => {
-    console.log('starting move', coachings.length,'logbooks from coaching to user')
-    return runPromisesWithDelay(coachings.map(coaching => () => {
-      console.log('Updating logbooks for coaching', coaching._id)
-      return CoachingLogbook.updateMany({coaching: coaching._id}, {$set: {user: coaching.user}, $unset: {coaching: 1}})
-    }))
-  })
-  // .then(() => CoachingLogbook.remove({coaching: {$ne: null}}))
-  .then(console.log)
-  .catch(console.error)
-
 module.exports = {
   ensureChallengePipsConsistency,
   logbooksConsistency,
@@ -2255,5 +2119,4 @@ module.exports = {
   agendaHookFn, mailjetHookFn,
   computeStatistics,
   webinarNotifications,
-  getAppointmentType,
 }
