@@ -1634,30 +1634,28 @@ const ensureChallengePipsConsistency = () => {
 }
 
 const computeStatistics = async ({ id, fields }) => {
-  console.log(`Computing stats for ${id} fields ${fields}`)
-  if (!id) {
-    return {}
-  }
+  console.log(`Computing stats for ${id || 'all companies'} fields ${fields}`)
   const result={}
-  const companies=await Company.find({_id: id})
+  const filter=id ? id : {$ne: null}
+  const companies=await Company.find({_id: filter})
   result.company=id?.toString()
-  const companyUsers=await User.find({company: id}, {_id:1})
-  result.groups_count=await Group.countDocuments({companies: id})
-  result.messages_count=lodash(await Group.find({companies: id}).populate('messages')).flatten().size()
-  result.users_count=await User.countDocuments({company: id})
-  result.user_women_count=await User.countDocuments({company: id, gender: GENDER_FEMALE})
-  result.users_men_count=await User.countDocuments({company: id, gender: GENDER_MALE})
-  result.users_no_gender_count=await User.countDocuments({company: id, gender: GENDER_NON_BINARY})
-  result.webinars_count=await Webinar.countDocuments({companies: id})
+  const companyUsers=await User.find({company: filter}, {_id:1})
+  result.groups_count=await Group.countDocuments({companies: filter})
+  result.messages_count=lodash(await Group.find({companies: filter}).populate('messages')).flatten().size()
+  result.users_count=await User.countDocuments({company: filter})
+  result.user_women_count=await User.countDocuments({company: filter, gender: GENDER_FEMALE})
+  result.users_men_count=await User.countDocuments({company: filter, gender: GENDER_MALE})
+  result.users_no_gender_count=await User.countDocuments({company: filter, gender: GENDER_NON_BINARY})
+  result.webinars_count=await Webinar.countDocuments({companies: filter})
   const webinars_replayed=(await User.aggregate([
-    {$match: { company: id }},
+    {$match: { company: filter }},
     {$unwind: '$replayed_events'},
     {$match: { 'replayed_events.__t': EVENT_WEBINAR }},
     {$group: {_id: '$_id', webinarCount: { $sum: 1 }}}
   ]))[0]?.webinarCount||0
   result.webinars_replayed_count=webinars_replayed
   const webinars_registered=(await User.aggregate([
-    {$match: { company: id }},
+    {$match: { company: filter }},
     {$unwind: '$registered_events'},
     {$match: { 'registered_events.__t': EVENT_WEBINAR }},
     {$group: {_id: '$_id', webinarCount: { $sum: 1 }}}
@@ -1665,21 +1663,25 @@ const computeStatistics = async ({ id, fields }) => {
   result.average_webinar_registar=result.webinars_count ? webinars_registered*1.0/result.webinars_count : 0
   const apptCoachings=await Appointment.distinct('coaching')
   const coachings=await Coaching.distinct('user', {_id: {$in: apptCoachings}})
-  const users=await User.countDocuments({_id: {$in: coachings}, company: id})
+  const users=await User.countDocuments({_id: {$in: coachings}, company: filter})
   result.started_coachings=users
   result.leads_count=await Lead.countDocuments({company_code: companies.map(c => c.code)})
-  const specificities=lodash(await User.find({company: id}).populate('specificity_targets'))
+  const specificities=lodash(await User.find({company: filter}).populate('specificity_targets'))
     .map(u => u.specificity_targets.map(t => t.name))
     .flatten()
     .countBy()
-    .entries().map(([k, v]) => ({x: k, y: v}))
+    .entries()
+    .filter(([k, v]) => v>0)
+    .map(([k, v]) => ({x: k, y: v}))
     .orderBy(['y'], ['asc'])
   result.specificities_users=specificities.value()
   const reasons=lodash(await Coaching.find({user: companyUsers}).populate('reasons'))
     .map(u => u.reasons.map(t => t.name))
     .flatten()
     .countBy()
-    .entries().map(([k, v]) => ({x: k, y: v}))
+    .entries()
+    .filter(([k, v]) => v>0)
+    .map(([k, v]) => ({x: k, y: v}))
     .orderBy(['y'], ['asc'])
   result.reasons_users=reasons.value()
   return result
