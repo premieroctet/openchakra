@@ -345,13 +345,14 @@ const bookingUrl = (serviceUserId, extraParams = {}) => {
   return url
 }
 
-let _isMaster=isDevelopment() ? true :  undefined
+let _isMaster=undefined
 
 const isMaster = () => {
   return _isMaster
 }
 
-const setMasterStatus = () => {
+const setMasterStatus = async () => {
+  console.log('starting the promise')
   if (!lodash.isNil(_isMaster)) {
     console.log(`Master already set, leaving`)
     return
@@ -388,9 +389,6 @@ const setMasterStatus = () => {
     });
   })
 }
-
-// Delay master detection to ensure all PM2 processes have started
-!isDevelopment() && setTimeout(setMasterStatus, 1000)
 
 // Public API
 module.exports = {
@@ -439,4 +437,5 @@ module.exports = {
   getMailProvider,
   getMailjetConfig,
   isMaster,
+  setMasterStatus,
 }
