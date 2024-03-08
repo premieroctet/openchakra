@@ -26,6 +26,7 @@ const {
   isDevelopment_nossl,
   config,
   getDataModel,
+  isMaster,
 } = require('../config/config')
 const {HTTP_CODES, parseError} = require('./utils/errors')
 require('./models/Answer')
@@ -179,7 +180,7 @@ checkConfig()
   .then(() => {
     return mongoose.connect(getDatabaseUri(), MONGOOSE_OPTIONS)
       .then(conn => autoIncrement.initialize(conn))
-      .then(() => db_update_fn && db_update_fn())
+      .then(() => isMaster() && db_update_fn && db_update_fn())
   })
   // Connect to MongoDB
   .then(() => {
