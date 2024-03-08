@@ -20,22 +20,28 @@ const updateCoachingStatus = async coaching_id => {
   if (coaching.status==COACHING_STATUS_NOT_STARTED && coaching.appointments.length>0) {
     coaching.status=COACHING_STATUS_STARTED
     // Set progress quizz
-    const progressTemplate=await Quizz.findOne({ type: QUIZZ_TYPE_PROGRESS }).populate('questions')
-    if (!progressTemplate) {
-      throw new Error('No progress template')
+    if (!coaching.progress) {
+      const progressTemplate=await Quizz.findOne({ type: QUIZZ_TYPE_PROGRESS }).populate('questions')
+      if (!progressTemplate) {
+        throw new Error('No progress template')
+      }
+      const progressUser = await progressTemplate.cloneAsUserQuizz()
+      coaching.progress = progressUser._id
     }
-    const progressUser = await progressTemplate.cloneAsUserQuizz()
-    coaching.progress = progressUser._id
     // TODO coaching set assessment quizz
-    const assessmentTemplate=await Quizz.findById(coaching.offer.assessment_quizz).populate('questions')
-    if (!assessmentTemplate) {
-      throw new Error('No assessment template for', coaching.offer)
+    if (!coaching.assessment_quizz) {
+      const assessmentTemplate=await Quizz.findById(coaching.offer.assessment_quizz).populate('questions')
+      if (!assessmentTemplate) {
+        throw new Error('No assessment template for', coaching.offer)
+      }
+      const assessmentUser=await assessmentTemplate.cloneAsUserQuizz()
+      coaching.assessment_quizz = assessmentUser._id
     }
-    const assessmentUser=await assessmentTemplate.cloneAsUserQuizz()
-    coaching.assessment_quizz = assessmentUser._id
     // Set offer
-    const company=await Company.findById(coaching.user.company).populate('offers')
-    coaching.offer=company.offers?.[0]
+    if (!coaching.offer) {
+      const company=await Company.findById(coaching.user.company).populate('offers')
+      coaching.offer=company.offers?.[0]
+    }
   }
 
   const latest_appointment=coaching.latest_appointments?.[0]
