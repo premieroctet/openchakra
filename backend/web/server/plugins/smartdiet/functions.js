@@ -1715,21 +1715,22 @@ Company.findOneAndUpdate(
   .catch(err => console.error(`Particular company upsert error:${err}`))
 
 // Ensure user logbooks consistency
-const logbooksConsistency = user_id => {
+const logbooksConsistency = async user_id => {
   const idFilter = user_id ? { _id: user_id } : {}
   const startDay = moment().add(-1, 'day')
   const endDay = moment().add(1, 'days')
   const logBooksFilter = { $and: [{ day: { $gte: startDay.startOf('day') } }, { day: { $lte: endDay.endOf('day') } }] }
-  return User.find(idFilter).populate([
-    { path: 'appointments', populate: { path: 'logbooks', populate: { path: 'questions' } } },
+  return User.find(idFilter).populate(
     { path: 'all_logbooks', match: logBooksFilter, populate: { path: 'logbook', populate: 'quizz' } },
-  ])
+  )
     .then(users => {
-      return runPromisesWithDelay(users.map((user, idx) => () => {
-        console.log(`Updating user`, user._id, idx, '/', users.length)
+      return runPromisesWithDelay(users.map((user, idx) => async () => {
+        const appointments=await Appointment.find({user})
+          .populate({ path: 'logbooks', populate: { path: 'questions'}})
+
         const getLogbooksForDay = date => {
           // Get the appointment juste before the date
-          const previous_appt = lodash(user.appointments)
+          const previous_appt = lodash(appointments)
             .filter(a => a.end_date < date.endOf('day'))
             .maxBy(a => a.start_date)
           const appt_logbooks = previous_appt ? [...previous_appt.logbooks] : []
