@@ -15,7 +15,7 @@ const Appointment=require('../../server/models/Appointment')
 const { COMPANY_ACTIVITY_BANQUE, ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, GENDER_MALE, QUIZZ_TYPE_PROGRESS } = require('../../server/plugins/smartdiet/consts')
 const bcrypt = require('bcryptjs')
 const Coaching = require('../../server/models/Coaching')
-const { importUsers, importDiets, importDietsAgenda, importCoachings, importAppointments, importCompanies, importContents, importPatientContents, importMeasures, fixFiles, importQuizz, importQuizzQuestions, importQuizzQuestionAnswer, importUserQuizz, importKeys, importProgressQuizz, importUserProgressQuizz, importOffers, importUserObjectives } = require('../../server/plugins/smartdiet/import')
+const { importUsers, importDiets, importDietsAgenda, importCoachings, importAppointments, importCompanies, importContents, importPatientContents, importMeasures, fixFiles, importQuizz, importQuizzQuestions, importQuizzQuestionAnswer, importUserQuizz, importKeys, importProgressQuizz, importUserProgressQuizz, importOffers, importUserObjectives, importUserAssessmentId, importUserImpactId } = require('../../server/plugins/smartdiet/import')
 const { prepareCache, getCacheKeys, displayCache, loadCache, saveCache } = require('../../utils/import')
 const Content = require('../../server/models/Content')
 const Measure = require('../../server/models/Measure')
@@ -192,7 +192,7 @@ describe('Test imports', () => {
   })
 
   // TODO Fix it
-  it('must upsert patients assessment and impact ids', async () => {
+  it.only('must upsert patients assessment and impact ids', async () => {
     await importUserAssessmentId(path.join(ROOT, 'smart_summary_reference.csv'))
     await importUserImpactId(path.join(ROOT, 'smart_second_summary_reference.csv'))
   })

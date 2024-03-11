@@ -94,6 +94,24 @@ const CoachingSchema = new Schema({
     ref: 'offer',
     required: [true, `L'offre est obligatoire`],
   },
+  smartdiet_assessment_id: {
+    type: Number,
+    index: true,
+    required: false,
+  },
+  smartdiet_assessment_document: {
+    type: String,
+    required: false,
+  },
+  smartdiet_impact_id: {
+    type: Number,
+    index: true,
+    required: false,
+  },
+  smartdiet_impact_document: {
+    type: String,
+    required: false,
+  },
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */

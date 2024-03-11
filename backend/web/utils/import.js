@@ -168,6 +168,7 @@ function upsertRecord({model, record, identityKey, migrationKey, updateOnly}) {
   const identityFilter=computeIdentityFilter(identityKey, migrationKey, record)
   return model.findOne(identityFilter, {[migrationKey]:1})
     .then(result => {
+      // console.log('getting', model, JSON.stringify(identityFilter), 'got', result)
       if (!result) {
         if (updateOnly) {
           throw new Error(`Could not find ${model.modelName} matching ${JSON.stringify(identityFilter)}`)
@@ -231,24 +232,6 @@ const importData = ({model, data, mapping, identityKey, migrationKey, progressCb
     })
 }
 
-const prepareCache = () => {
-  console.log('Preparing cache')
-  const MODELS=mongoose.modelNames().filter(m => m!='user')
-  const promises=MODELS.map(modelName => {
-    const msg=`Caching ${modelName}`
-    return mongoose.model(modelName).find({migration_id: {$exists: true}}, {migration_id:1})
-      .then(data => {
-        data.forEach(d => setCache(modelName, d.migration_id.toString(), d._id.toString()))
-        return `${countCache(modelName)} ${modelName}`
-      })
-  })
-  const msg='Caching'
-  console.log(msg)
-  console.time(msg)
-  return Promise.all(promises)
-    .then(res => {console.timeEnd(msg); console.log('Cached', res.join(','))})
-}
-
 const CACHE_PATH='/tmp/migration-cache'
 
 const loadCache= () => {
@@ -273,7 +256,6 @@ module.exports={
   getTabs, 
   extractSample,
   importData,
-  prepareCache,
   getCacheKeys,
   displayCache,
   cache: getCache,

@@ -3,7 +3,7 @@ const lodash=require('lodash')
 const moment=require('moment')
 const path=require('path')
 const crypto = require('crypto')
-const {extractData, guessFileType, importData, prepareCache, cache, getCacheKeys, setCache}=require('../../../utils/import')
+const {extractData, guessFileType, importData, cache, setCache}=require('../../../utils/import')
 const { guessDelimiter } = require('../../../utils/text')
 const Company=require('../../models/Company')
 const User=require('../../models/User')
@@ -310,8 +310,25 @@ const KEY_MAPPING={
 const KEY_KEY='name'
 const KEY_MIGRATION_KEY='migration_id'
 
+
+const ASSESSMENT_MAPPING={
+  migration_id: ({record, cache}) => cache('usercoaching', record.SDPATIENTID),
+  smartdiet_assessment_id: 'SDSUMMARYID',
+}
+
+const ASSESSMENT_KEY='smartdiet_assessment_id'
+const ASSESSMENT_MIGRATION_KEY='migration_id'
+
+const IMPACT_MAPPING={
+  migration_id: ({record, cache}) => cache('usercoaching', record.SDPATIENTID),
+  smartdiet_impact_id: 'SDSECONDSUMMARYID',
+}
+
+const IMPACT_KEY='smartdiet_impact_id'
+const IMPACT_MIGRATION_KEY='migration_id'
+
 const progressCb = step => (index, total)=> {
-  step=step||(total/10)
+  step=step||Math.floor(total/10)
   if (step && index%step==0) {
     console.log(`${index}/${total}`)
   }
@@ -384,7 +401,7 @@ const ensureSurvey = coaching => {
 
 
 function updateImportedCoachingStatus() {
-  return Coaching.find({ [COACHING_MIGRATION_KEY]: { $ne: null } }).limit(20)
+  return Coaching.find({ [COACHING_MIGRATION_KEY]: { $ne: null } })
     .then(coachings => runPromisesWithDelay(coachings.map(coaching => () => updateCoachingStatus(coaching._id))))
 }
 
@@ -392,12 +409,12 @@ const importCoachings = async input_file => {
   const contents=fs.readFileSync(input_file)
   return Promise.all([guessFileType(contents), guessDelimiter(contents)])
     .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
-    .then(({records}) => importData({model: 'coaching', data:records, mapping:COACHING_MAPPING, 
-      identityKey: COACHING_KEY, migrationKey: COACHING_MIGRATION_KEY, progressCb: progressCb(1000)}))
-    // Set progress quizz
-    .then(res => updateImportedCoachingStatus()
-    .then(() => res)
-    )
+    .then(({records}) => {
+      // Map SM patient to its SM coaching
+      records.forEach(record => setCache('usercoaching', record.SDPATIENTID, record.SDPROGRAMID))
+      return importData({model: 'coaching', data:records, mapping:COACHING_MAPPING, 
+      identityKey: COACHING_KEY, migrationKey: COACHING_MIGRATION_KEY, progressCb: progressCb(1000)})
+    })
 }
 
 const importAppointments = async input_file => {
@@ -415,28 +432,18 @@ const importAppointments = async input_file => {
       importData({model: 'appointment', data:records, mapping:APPOINTMENT_MAPPING(prestation), 
       identityKey: APPOINTMENT_KEY, migrationKey: APPOINTMENT_MIGRATION_KEY, progressCb: progressCb(2000)}
     ))
-    .then(res => {
-      console.log('Updating coachings')
-      console.time('Updating coachings')
-      return updateImportedCoachingStatus()
-        .then(() => res)
-        .finally(()=>console.timeEnd('Updating coachings'))
-    })
 }
 
 const importMeasures = async input_file => {
-  return prepareCache()
-    .then(() => {
-      const contents=fs.readFileSync(input_file)
-      return Promise.all([guessFileType(contents), guessDelimiter(contents)])
-      .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
-      .then(({records}) => 
-        importData({
-          model: 'measure', data:records, mapping:MEASURE_MAPPING, identityKey: MEASURE_MAPPING_KEY, 
-          migrationKey: MEASURE_MAPPING_MIGRATION__KEY, progressCb: progressCb(2000)
-        })
-      )
-  })
+  const contents=fs.readFileSync(input_file)
+  return Promise.all([guessFileType(contents), guessDelimiter(contents)])
+  .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
+  .then(({records}) => 
+    importData({
+      model: 'measure', data:records, mapping:MEASURE_MAPPING, identityKey: MEASURE_MAPPING_KEY, 
+      migrationKey: MEASURE_MAPPING_MIGRATION__KEY, progressCb: progressCb(2000)
+    })
+  )
 }
 
 const importQuizz = async input_file => {
@@ -626,6 +633,23 @@ const importUserObjectives = async input_file => {
     })))
 }
 
+const importUserAssessmentId = async input_file => {
+  const contents=fs.readFileSync(input_file)
+  return Promise.all([guessFileType(contents), guessDelimiter(contents)])
+    .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
+    .then(({records}) => importData({model: 'coaching', data:records, mapping:ASSESSMENT_MAPPING, 
+    identityKey: ASSESSMENT_KEY, migrationKey: ASSESSMENT_MIGRATION_KEY, progressCb: progressCb()}))
+}
+
+const importUserImpactId = async input_file => {
+  const contents=fs.readFileSync(input_file)
+  return Promise.all([guessFileType(contents), guessDelimiter(contents)])
+    .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
+    .then(({records}) => importData({model: 'coaching', data:records, mapping:IMPACT_MAPPING, 
+    identityKey: IMPACT_KEY, migrationKey: IMPACT_MIGRATION_KEY, progressCb: progressCb()}))
+}
+
+
 
 module.exports={
   importCompanies,
@@ -644,5 +668,7 @@ module.exports={
   importProgressQuizz,
   importUserProgressQuizz,
   importUserObjectives,
+  importUserAssessmentId,
+  importUserImpactId,
 }
 
