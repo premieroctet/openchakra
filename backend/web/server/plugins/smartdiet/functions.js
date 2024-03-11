@@ -39,6 +39,7 @@ const {
   sendWebinarJ21,
   sendAppointmentRemindTomorrow,
   sendAppointmentNotValidated,
+  sendWebinarDayAfter,
 } = require('./mailing')
 const { formatDateTime } = require('../../../utils/text')
 const Webinar = require('../../models/Webinar')
@@ -1715,21 +1716,22 @@ Company.findOneAndUpdate(
   .catch(err => console.error(`Particular company upsert error:${err}`))
 
 // Ensure user logbooks consistency
-const logbooksConsistency = user_id => {
+const logbooksConsistency = async user_id => {
   const idFilter = user_id ? { _id: user_id } : {}
   const startDay = moment().add(-1, 'day')
   const endDay = moment().add(1, 'days')
   const logBooksFilter = { $and: [{ day: { $gte: startDay.startOf('day') } }, { day: { $lte: endDay.endOf('day') } }] }
-  return User.find(idFilter).populate([
-    { path: 'appointments', populate: { path: 'logbooks', populate: { path: 'questions' } } },
+  return User.find(idFilter).populate(
     { path: 'all_logbooks', match: logBooksFilter, populate: { path: 'logbook', populate: 'quizz' } },
-  ])
+  )
     .then(users => {
-      return runPromisesWithDelay(users.map((user, idx) => () => {
-        console.log(`Updating user`, user._id, idx, '/', users.length)
+      return runPromisesWithDelay(users.map((user, idx) => async () => {
+        const appointments=await Appointment.find({user})
+          .populate({ path: 'logbooks', populate: { path: 'questions'}})
+
         const getLogbooksForDay = date => {
           // Get the appointment juste before the date
-          const previous_appt = lodash(user.appointments)
+          const previous_appt = lodash(appointments)
             .filter(a => a.end_date < date.endOf('day'))
             .maxBy(a => a.start_date)
           const appt_logbooks = previous_appt ? [...previous_appt.logbooks] : []
@@ -2100,7 +2102,13 @@ const webinarNotifications = async () => {
     const registered = await getLeadsAndUsers(webinars1)
     return Promise.allSettled(registered.map(user => sendWebinarJ({ user, webinar })))
   }))
-  const allRes = lodash([...res1, ...res2, ...res3]).map(v => v.value).flatten().groupBy('status').value()
+  // Webinars today
+  const webinarsAfter = await Webinar.find(getDateFilter({ attribute: 'start_date', day: moment().add(-1, 'day') }))
+  const res4 = await Promise.allSettled(webinarsAfter.map(async (webinar) => {
+    const registered = await getLeadsAndUsers(webinars1)
+    return Promise.allSettled(registered.map(user => sendWebinarDayAfter({ user, webinar })))
+  }))
+  const allRes = lodash([...res1, ...res2, ...res3, ...res4]).map(v => v.value).flatten().groupBy('status').value()
   if (allRes.rejected?.length>0) {
     throw new Error(allRes.rejected.map(re => re.reason))
   }
