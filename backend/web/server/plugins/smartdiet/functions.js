@@ -401,6 +401,24 @@ const postPutData = async ({ model, params, id, value, data, user }) => {
       .then(appointment => logbooksConsistency(appointment.user._id))
       .then(() => params)
   }
+  if (model == 'coaching' && params.quizz_templates) {
+    const tpl_attribute = 'quizz_templates'
+    const inst_attribute = 'quizz'
+    return mongoose.models.coaching.findById(id).populate([
+      { path: tpl_attribute, populate: 'questions' },
+      { path: inst_attribute, populate: { path: 'quizz', populate: 'questions' } },
+    ])
+      .then(coaching => {
+        const extraUserQuizz = coaching[inst_attribute].filter(uq => !coaching[tpl_attribute].some(q => idEqual(q._id, uq.quizz._id)))
+        const missingUserQuizz = differenceSet(coaching[tpl_attribute], coaching[inst_attribute].map(uq => uq.quizz))
+        const addQuizzs = Promise.all(missingUserQuizz.map(q => q.cloneAsUserQuizz(coaching)))
+        return addQuizzs
+          .then(quizzs => mongoose.models.coaching.findByIdAndUpdate(id, { $addToSet: { [inst_attribute]: quizzs } }))
+          .then(() => mongoose.models.coaching.findByIdAndUpdate(id, { $pull: { [inst_attribute]: { $in: extraUserQuizz } } }))
+          .then(() => Promise.all(extraUserQuizz.map(q => q.delete())))
+          .then(() => mongoose.models.coaching.findById(id))
+      })
+  }
   // Validate appointment if this is a progress quizz answer
   if (model=='userQuizzQuestion') {
     const quizz=await UserQuizz.findOne({questions: id, type: QUIZZ_TYPE_PROGRESS})
