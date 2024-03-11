@@ -39,6 +39,7 @@ const {
   sendWebinarJ21,
   sendAppointmentRemindTomorrow,
   sendAppointmentNotValidated,
+  sendWebinarDayAfter,
 } = require('./mailing')
 const { formatDateTime } = require('../../../utils/text')
 const Webinar = require('../../models/Webinar')
@@ -2101,7 +2102,13 @@ const webinarNotifications = async () => {
     const registered = await getLeadsAndUsers(webinars1)
     return Promise.allSettled(registered.map(user => sendWebinarJ({ user, webinar })))
   }))
-  const allRes = lodash([...res1, ...res2, ...res3]).map(v => v.value).flatten().groupBy('status').value()
+  // Webinars today
+  const webinarsAfter = await Webinar.find(getDateFilter({ attribute: 'start_date', day: moment().add(-1, 'day') }))
+  const res4 = await Promise.allSettled(webinarsAfter.map(async (webinar) => {
+    const registered = await getLeadsAndUsers(webinars1)
+    return Promise.allSettled(registered.map(user => sendWebinarDayAfter({ user, webinar })))
+  }))
+  const allRes = lodash([...res1, ...res2, ...res3, ...res4]).map(v => v.value).flatten().groupBy('status').value()
   if (allRes.rejected?.length>0) {
     throw new Error(allRes.rejected.map(re => re.reason))
   }

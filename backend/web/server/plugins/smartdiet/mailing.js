@@ -62,6 +62,7 @@ const SIB_IDS={
  WEBINAR_REMIND_J21: 5709675,
  WEBINAR_REMIND_J15: 5709827,
  WEBINAR_REMIND_J: 5709849,
+ WEBINAR_DAYAFTER: 5758429,
 }
 
 const SMS_CONTENTS={
@@ -307,6 +308,23 @@ const sendWebinarJ = async ({user, webinar}) => {
   })
 }
 
+const sendWebinarDayAfter = async ({user, webinar}) => {
+  const att=await generateIcs({start: webinar.start_date, end: webinar.end_date, title: webinar.name, url: webinar.url}).catch(console.error)
+  return sendNotification({
+    notification: SIB_IDS.WEBINAR_REMIND_J,
+    destinee: user,
+    params: {
+      firstname: user.firstname,
+      web_lancement_date: formatDate(webinar.start_date),
+      web_lancement_heure: formatHour(webinar.start_date),
+      web_duree_webinaire: moment(webinar.end_date).diff(webinar.start_date, 'hour'),
+      web_titre_webinaire: webinar.name,
+      lien_web_lancement: webinar.url,
+    },
+    attachment: att ? {name: 'webinaire.ics', content: Buffer.from(att).toString('base64')} : undefined
+  })
+}
+
 const sendAppointmentRemindTomorrow = async ({appointment}) => {
   return sendNotification({
     notification: SIB_IDS.APPOINTMENT_REMIND_TOMORROW,
@@ -339,7 +357,7 @@ module.exports = {
   sendInactivity15, sendInactivity30, sendInactivity45,
   sendIndChallenge1, sendIndChallenge2, sendIndChallenge3, sendIndChallenge5,
   sendIndChallenge6,
-  sendNewWebinar, sendWebinarIn3Days,
+  sendNewWebinar, sendWebinarIn3Days, sendWebinarDayAfter,
   sendSaturday1, sendSaturday2, sendSaturday3, sendSaturday4,
   sendNewMessage, sendWebinarJ15, sendWebinarJ, sendWebinarJ21,
   sendAppointmentRemindTomorrow, sendAppointmentNotValidated,
