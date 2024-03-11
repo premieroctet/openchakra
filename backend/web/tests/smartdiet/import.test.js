@@ -192,7 +192,7 @@ describe('Test imports', () => {
   })
 
   // TODO Fix it
-  it.only('must upsert patients assessment and impact ids', async () => {
+  it('must upsert patients assessment and impact ids', async () => {
     await importUserAssessmentId(path.join(ROOT, 'smart_summary_reference.csv'))
     await importUserImpactId(path.join(ROOT, 'smart_second_summary_reference.csv'))
   })

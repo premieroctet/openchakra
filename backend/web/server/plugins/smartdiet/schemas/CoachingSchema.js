@@ -112,6 +112,11 @@ const CoachingSchema = new Schema({
     type: String,
     required: false,
   },
+  smartdiet_patient_id: {
+    type: Number,
+    index: true,
+    required: false,
+  }
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */

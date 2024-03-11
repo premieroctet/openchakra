@@ -653,6 +653,18 @@ export const ACTIONS: IActions = {
     next: ['openPage'],
   },
 
+  smartdiet_download_assessment: {
+    label: 'Downaload assessment',
+    options: {},
+    next: ['openPage'],
+  },
+
+  smartdiet_download_impact: {
+    label: 'Downaload impact',
+    options: {},
+    next: ['openPage'],
+  },
+
 }
 
 export const allowsActions = (component: IComponent) => {

@@ -978,5 +978,23 @@ return Promise.allSettled(imagePromises)
     return axios.post(url, body)
   },
 
+  smartdiet_download_assessment: ({value}) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_download_assessment',
+      value: value._id,
+    }
+    return axios.post(url, body)
+  },
+
+  smartdiet_download_impact: ({value}) => {
+    let url = `${API_ROOT}/action`
+    const body = {
+      action: 'smartdiet_download_impact',
+      value: value._id,
+    }
+    return axios.post(url, body)
+  },
+
   
 }

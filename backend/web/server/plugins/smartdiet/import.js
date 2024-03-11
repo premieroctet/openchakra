@@ -201,6 +201,7 @@ const COACHING_MAPPING={
   offer: ({cache, record}) => cache('offer', record.SDPROGRAMTYPE),
   migration_id: 'SDPROGRAMID',
   diet: ({cache, record}) => cache('user', record.SDDIETID),
+  smartdiet_patient_id: 'SDPATIENTID',
 }
 
 const COACHING_KEY=['user', CREATED_AT_ATTRIBUTE]
@@ -365,7 +366,7 @@ const importUsers = async input_file => {
     .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
     .then(({records}) => 
       importData({model: 'user', data:records, mapping:USER_MAPPING, identityKey: USER_KEY, 
-        migrationKey: USER_MIGRATION_KEY, progressCb: progressCb(1000)})
+        migrationKey: USER_MIGRATION_KEY, progressCb: progressCb()})
     )
 }
 
@@ -413,7 +414,7 @@ const importCoachings = async input_file => {
       // Map SM patient to its SM coaching
       records.forEach(record => setCache('usercoaching', record.SDPATIENTID, record.SDPROGRAMID))
       return importData({model: 'coaching', data:records, mapping:COACHING_MAPPING, 
-      identityKey: COACHING_KEY, migrationKey: COACHING_MIGRATION_KEY, progressCb: progressCb(1000)})
+      identityKey: COACHING_KEY, migrationKey: COACHING_MIGRATION_KEY, progressCb: progressCb()})
     })
 }
 
@@ -430,7 +431,7 @@ const importAppointments = async input_file => {
     .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
     .then(({records}) => 
       importData({model: 'appointment', data:records, mapping:APPOINTMENT_MAPPING(prestation), 
-      identityKey: APPOINTMENT_KEY, migrationKey: APPOINTMENT_MIGRATION_KEY, progressCb: progressCb(2000)}
+      identityKey: APPOINTMENT_KEY, migrationKey: APPOINTMENT_MIGRATION_KEY, progressCb: progressCb()}
     ))
 }
 
@@ -441,7 +442,7 @@ const importMeasures = async input_file => {
   .then(({records}) => 
     importData({
       model: 'measure', data:records, mapping:MEASURE_MAPPING, identityKey: MEASURE_MAPPING_KEY, 
-      migrationKey: MEASURE_MAPPING_MIGRATION__KEY, progressCb: progressCb(2000)
+      migrationKey: MEASURE_MAPPING_MIGRATION__KEY, progressCb: progressCb()
     })
   )
 }
@@ -459,7 +460,7 @@ const importQuizzQuestions = async input_file => {
   return Promise.all([guessFileType(contents), guessDelimiter(contents)])
     .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
     .then(({records}) => importData({model: 'quizzQuestion', data:records, mapping:QUIZZQUESTION_MAPPING, 
-    identityKey: QUIZZQUESTION_KEY, migrationKey: QUIZZQUESTION_MIGRATION_KEY, progressCb: progressCb(20)})
+    identityKey: QUIZZQUESTION_KEY, migrationKey: QUIZZQUESTION_MIGRATION_KEY, progressCb: progressCb()})
   )
   // Attach questions to quizzs
   .then(res=> QuizzQuestion.find({migration_id: {$ne: null}})
