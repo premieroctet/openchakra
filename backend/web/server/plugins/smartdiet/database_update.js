@@ -157,7 +157,8 @@ const upgradeCompanyOffers = async () => {
   const companies=await Company.find().populate('offers')
   const noOffersCompanies=companies.filter(c => lodash.isEmpty(c.offers))
   if (!lodash.isEmpty(noOffersCompanies)) {
-    throw new Error(`Companies without offer ${noOffersCompanies.map(c => c.name)}`)
+    // throw new Error(`Companies without offer ${noOffersCompanies.map(c => c.name)}`)
+    console.error(`Companies without offer ${noOffersCompanies.map(c => c.name)}`)
   }
 }
 
@@ -198,9 +199,12 @@ const setOffersOnCoachings = () => {
       }
     })))
     .then(() => {
-      return Coaching.find({}, {_id:1})
-        .then(coachings =>  Promise.allSettled(coachings.map(coaching => updateCoachingStatus(coaching._id)
-          .catch(err => console.error(`Coaching ${coaching._id}:${err}`)))))
+      return Coaching.find({status: COACHING_STATUS_NOT_STARTED}, {_id:1})
+        .then(coachings => {
+          console.log('Updating', coachings.length, 'coaching status')
+          return runPromisesWithDelay(coachings.map(coaching => () => updateCoachingStatus(coaching._id)
+            .catch(err => console.error(`Coaching ${coaching._id}:${err}`))))
+          })
       })
 }
 

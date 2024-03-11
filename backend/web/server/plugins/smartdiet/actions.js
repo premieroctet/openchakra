@@ -299,7 +299,7 @@ const downloadSmartdietDocument = ({type, patientId, documentId}) => {
   const config=getSmartdietAPIConfig()
   console.log('API config', config)
   const encodedCredentials = Buffer.from(`${config.login}:${config.password}`).toString('base64')
-  const url = 'https://pro.smartdiet.fr/agenda-notifications'
+  const url = 'https://pro.smartdiet.fr/ws/patient-summary'
 
   const postData = {
     resourceType: type,

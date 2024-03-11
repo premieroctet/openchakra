@@ -15,7 +15,7 @@ const Appointment=require('../../server/models/Appointment')
 const { COMPANY_ACTIVITY_BANQUE, ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, GENDER_MALE, QUIZZ_TYPE_PROGRESS } = require('../../server/plugins/smartdiet/consts')
 const bcrypt = require('bcryptjs')
 const Coaching = require('../../server/models/Coaching')
-const { importUsers, importDiets, importDietsAgenda, importCoachings, importAppointments, importCompanies, importContents, importPatientContents, importMeasures, fixFiles, importQuizz, importQuizzQuestions, importQuizzQuestionAnswer, importUserQuizz, importKeys, importProgressQuizz, importUserProgressQuizz, importOffers, importUserObjectives, importUserAssessmentId, importUserImpactId } = require('../../server/plugins/smartdiet/import')
+const { importUsers, importDiets, importDietsAgenda, importCoachings, importAppointments, importCompanies, importContents, importPatientContents, importMeasures, fixFiles, importQuizz, importQuizzQuestions, importQuizzQuestionAnswer, importUserQuizz, importKeys, importProgressQuizz, importUserProgressQuizz, importOffers, importUserObjectives, importUserAssessmentId, importUserImpactId, importConversations, importMessages, updateImportedCoachingStatus, updateDietCompanies } = require('../../server/plugins/smartdiet/import')
 const { prepareCache, getCacheKeys, displayCache, loadCache, saveCache } = require('../../utils/import')
 const Content = require('../../server/models/Content')
 const Measure = require('../../server/models/Measure')
@@ -23,6 +23,7 @@ const fs=require('fs')
 const QuizzQuestion = require('../../server/models/QuizzQuestion')
 const Key = require('../../server/models/Key')
 const Offer = require('../../server/models/Offer')
+const { isDevelopment } = require('../../config/config')
 require('../../server/models/Item')
 
 const ORIGINAL_DB=true
@@ -35,8 +36,10 @@ const ROOT = path.join(__dirname, './data/migration')
 jest.setTimeout(60000000)
 
 const forcePasswords = () => {
-  const password=bcrypt.hashSync('Password1;')
-  return User.updateMany({}, {$set: {password}})
+  if (isDevelopment()) {
+    const password=bcrypt.hashSync('Password1;')
+    return User.updateMany({}, {$set: {password}})
+  }
 }
 
 const PATIENT_EMAIL = 'lonza85@live.fr'
@@ -55,6 +58,8 @@ describe('Test imports', () => {
   })
   
   afterAll(async () => {
+    await updateImportedCoachingStatus()
+    await updateDietCompanies()
     await saveCache()
     if (DROP) {
       await mongoose.connection.dropDatabase()
@@ -70,6 +75,7 @@ describe('Test imports', () => {
     }
     expect(errors.length).toEqual(count)
   }
+
   it('must import companies', async () => {
     const res = await importCompanies(path.join(ROOT, 'smart_project.csv'))
     ensureNbError(res)
@@ -161,7 +167,7 @@ describe('Test imports', () => {
     expect(quizz.questions.length).toEqual(26)
   })
 
-  it.skip('must upsert user progress quizz', async () => {
+  it('must upsert user progress quizz', async () => {
     let res = await importUserProgressQuizz(path.join(ROOT, 'smart_consultation_progress.csv'), 24000)
     const user=await User.findOne({email: PATIENT_EMAIL})
     const coachings=await Coaching.find({user}).populate('progress')
@@ -179,10 +185,9 @@ describe('Test imports', () => {
     console.log(lodash(getCacheKeys()).filter(k => k.split('/')[0]=='user_coaching').uniq().value())
   })
 
-  // TODO Fix it
+  //TODO Fix it
   it('must upsert patients quizzs', async () => {
     let res = await importUserQuizz(path.join(ROOT, 'smart_patient_quiz.csv'))
-    console.log(JSON.stringify(res))
     ensureNbError(res)
   })
 
@@ -191,10 +196,14 @@ describe('Test imports', () => {
     let res = await importUserObjectives(path.join(ROOT, 'smart_objective.csv'))
   })
 
-  // TODO Fix it
   it('must upsert patients assessment and impact ids', async () => {
     await importUserAssessmentId(path.join(ROOT, 'smart_summary_reference.csv'))
     await importUserImpactId(path.join(ROOT, 'smart_second_summary_reference.csv'))
+  })
+
+  it.only('must upsert conversation', async () => {
+    await importConversations(path.join(ROOT, 'conversation.csv'))
+    await importMessages(path.join(ROOT, 'message.csv'))
   })
   
 })

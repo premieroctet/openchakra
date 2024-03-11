@@ -654,13 +654,13 @@ export const ACTIONS: IActions = {
   },
 
   smartdiet_download_assessment: {
-    label: 'Downaload assessment',
+    label: 'Download assessment',
     options: {},
     next: ['openPage'],
   },
 
   smartdiet_download_impact: {
-    label: 'Downaload impact',
+    label: 'Download impact',
     options: {},
     next: ['openPage'],
   },

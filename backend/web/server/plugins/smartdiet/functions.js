@@ -1160,6 +1160,7 @@ declareVirtualField({
     options: { ref: 'nutritionAdvice' }
   },
 })
+declareVirtualField({model: 'coaching', field: '_last_appointment', instance: 'appointment'})
 
 
 declareEnumField({ model: 'userCoachingQuestion', field: 'status', enumValues: COACHING_QUESTION_STATUS })
@@ -1850,7 +1851,7 @@ cron.schedule('0 0 * * * *', async () => {
 })
 
 // Synchronize diets & customer smartagenda accounts
-cron.schedule('0 * * * * *', () => {
+cron.schedule('0 0 * * * *', () => {
   console.log(`Smartagenda accounts sync`)
   return User.find({ role: { $in: [ROLE_EXTERNAL_DIET, ROLE_CUSTOMER] }, smartagenda_id: null })
     .then(users => {

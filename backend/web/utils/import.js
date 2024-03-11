@@ -227,6 +227,7 @@ const importData = ({model, data, mapping, identityKey, migrationKey, progressCb
       })
     })
     .finally(()=> {
+      delete mongoose.model(model)
       saveCache()
       console.timeEnd(msg)
     })

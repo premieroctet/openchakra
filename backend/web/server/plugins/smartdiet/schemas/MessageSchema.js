@@ -46,6 +46,11 @@ const MessageSchema = new Schema({
   pinned: {
     type: Boolean
   },
+  migration_id: {
+    type: Number,
+    index: true,
+    required: false,
+  },
 }, schemaOptions)
 
 module.exports = MessageSchema

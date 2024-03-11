@@ -8,13 +8,15 @@ const { guessDelimiter } = require('../../../utils/text')
 const Company=require('../../models/Company')
 const User=require('../../models/User')
 const AppointmentType=require('../../models/AppointmentType')
-const { ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, DIET_REGISTRATION_STATUS_ACTIVE, COMPANY_ACTIVITY_ASSURANCE, COMPANY_ACTIVITY_OTHER, CONTENTS_ARTICLE, CONTENTS_DOCUMENT, CONTENTS_VIDEO, CONTENTS_INFOGRAPHY, CONTENTS_PODCAST, QUIZZ_TYPE_PATIENT, QUIZZ_QUESTION_TYPE_ENUM_SINGLE, QUIZZ_TYPE_PROGRESS, COACHING_QUESTION_STATUS, COACHING_QUESTION_STATUS_NOT_ADDRESSED, COACHING_QUESTION_STATUS_NOT_ACQUIRED, COACHING_QUESTION_STATUS_IN_PROGRESS, COACHING_QUESTION_STATUS_ACQUIRED, GENDER_MALE, GENDER_FEMALE, COACHING_STATUS_NOT_STARTED } = require('./consts')
+const { ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, DIET_REGISTRATION_STATUS_ACTIVE, COMPANY_ACTIVITY_ASSURANCE, COMPANY_ACTIVITY_OTHER, CONTENTS_ARTICLE, CONTENTS_DOCUMENT, CONTENTS_VIDEO, CONTENTS_INFOGRAPHY, CONTENTS_PODCAST, QUIZZ_TYPE_PATIENT, QUIZZ_QUESTION_TYPE_ENUM_SINGLE, QUIZZ_TYPE_PROGRESS, COACHING_QUESTION_STATUS, COACHING_QUESTION_STATUS_NOT_ADDRESSED, COACHING_QUESTION_STATUS_NOT_ACQUIRED, COACHING_QUESTION_STATUS_IN_PROGRESS, COACHING_QUESTION_STATUS_ACQUIRED, GENDER_MALE, GENDER_FEMALE, COACHING_STATUS_NOT_STARTED, QUIZZ_TYPE_ASSESSMENT } = require('./consts')
 const { CREATED_AT_ATTRIBUTE } = require('../../../utils/consts')
 const AppointmentTypeSchema = require('./schemas/AppointmentTypeSchema')
 const Key=require('../../models/Key')
 const QuizzQuestion = require('../../models/QuizzQuestion')
 require('../../models/UserQuizz')
 require('../../models/UserQuizzQuestion')
+require('../../models/Conversation')
+require('../../models/Message')
 const Quizz = require('../../models/Quizz')
 const Coaching = require('../../models/Coaching')
 const { idEqual } = require('../../utils/database')
@@ -109,6 +111,59 @@ const fixObjectives = directory => {
   fs.writeFileSync(PATH, fixed)
 }
 
+const fixMessages = directory => {
+  const REPLACES=[
+    [/\\"/g, "'"], [/\\\\/g, ''],
+  ]
+  const PATH=path.join(directory, 'smart_message.csv')
+  const contents=fs.readFileSync(PATH).toString()
+  let fixed=contents
+  REPLACES.forEach(([search, replace]) => fixed=fixed.replace(search, replace))
+  fs.writeFileSync(PATH, fixed)
+}
+
+const loadRecords = async path =>  {
+  const contents=fs.readFileSync(path)
+  const [format, delimiter]=await Promise.all([guessFileType(contents), guessDelimiter(contents)])
+  const {records} = await extractData(contents, {format, delimiter})
+  return records
+}
+
+const getMessageId = (threadId, date) => {
+  return `${threadId}${moment(date).unix()}`
+}
+
+const generateMessages = async directory =>{
+  const THREADS=path.join(directory, 'smart_thread.csv')
+  const MESSAGES=path.join(directory, 'smart_message.csv')
+  const records=await loadRecords(MESSAGES)
+  const conversations=lodash(records)
+    .groupBy('SDTHREADID')
+    .mapValues(msgs => lodash.uniq(msgs.map(m => m.SDSENDERID)))
+    .entries()
+    .filter(([threadId, users]) => users.length==2)
+    .fromPairs()
+    .value()
+  
+  // Generate conversation
+  const convContents=['SDTHREADID;USER1;USER2']
+  Object.entries(conversations).forEach(conv => convContents.push([conv[0], conv[1][0], conv[1][1]].join(';')))
+  fs.writeFileSync(path.join(directory, 'conversation.csv'), convContents.join('\n'))
+
+  // Generate messages
+  const messContents=['MESSAGEID;SDTHREADID;SENDER;RECEIVER;DATE;MESSAGE']
+  records.forEach(message => {
+    const users=conversations[message.SDTHREADID]
+    if (users) {
+      const sender=message.SDSENDERID
+      const receiver=users[0]==sender ? users[1] : users[0]
+      const msgId=getMessageId(message.SDTHREADID, message.datetime)
+      messContents.push([msgId,message.SDTHREADID,sender, receiver, message.datetime, message.message].join(';'))
+    }
+  })
+  fs.writeFileSync(path.join(directory, 'message.csv'), messContents.join('\n'))
+}
+
 const fixFiles = async directory => {
   await fixDiets(directory)
   await fixPatients(directory)
@@ -116,6 +171,8 @@ const fixFiles = async directory => {
   await fixQuizz(directory)
   await fixQuizzQuestions(directory)
   await fixObjectives(directory)
+  await fixMessages(directory)
+  await generateMessages(directory)
 }
 
 const computePseudo = record => {
@@ -156,6 +213,7 @@ const OFFER_MAPPING= {
   webinars_credit: () => 4,
   company: ({cache, record}) => cache('company', record.SDPROJECTID),
   validity_start: () => moment(),
+  assessment_quizz: async () => await Quizz.findOne({type: QUIZZ_TYPE_ASSESSMENT}),
   migration_id: 'SDPROGRAMTYPE',
 }
 
@@ -223,7 +281,8 @@ const APPOINTMENT_MAPPING= prestation_id => ({
   },
   user: async ({cache, record}) => {
     return (await Coaching.findById(cache('coaching', record.SDPROGRAMID), {user:1}))?.user
-  }
+  },
+  validated: ({cache, record}) => moment(record.date).isBefore(moment()),
 
 })
 
@@ -328,11 +387,54 @@ const IMPACT_MAPPING={
 const IMPACT_KEY='smartdiet_impact_id'
 const IMPACT_MIGRATION_KEY='migration_id'
 
+const CONVERSATION_MAPPING={
+  migration_id: 'SDTHREADID',
+  users: ({cache, record}) => [cache('user', record.USER1), cache('user', record.USER2)],
+}
+
+const CONVERSATION_KEY='migration_id'
+const CONVERSATION_MIGRATION_KEY='migration_id'
+
+const MESSAGE_MAPPING={
+  migration_id: ({record}) => getMessageId(record.SDTHREADID, record.DATE),
+  conversation: ({cache, record}) => cache('conversation', record.SDTHREADID),
+  receiver: ({cache, record}) => cache('user', record.RECEIVER),
+  sender: ({cache, record}) => cache('user', record.SENDER),
+  content: 'MESSAGE',
+  [CREATED_AT_ATTRIBUTE]: 'DATE',
+}
+
+const MESSAGE_KEY='migration_id'
+const MESSAGE_MIGRATION_KEY='migration_id'
+
 const progressCb = step => (index, total)=> {
   step=step||Math.floor(total/10)
   if (step && index%step==0) {
     console.log(`${index}/${total}`)
   }
+}
+
+const updateImportedCoachingStatus = async () => {
+  const coachings=await Coaching.find({status: COACHING_STATUS_NOT_STARTED, migration_id: {$ne: null}}, {_id:1})
+  const step=Math.floor(coachings.length/20)
+  await runPromisesWithDelay(coachings.map((coaching, idx) => () => {
+    if (idx%step==0) {
+      console.log(idx, '/', coachings.length, '(', Math.ceil(idx/coachings.length*100),'%)')
+    }
+    return updateCoachingStatus(coaching._id)
+      .catch(err => console.error(`Coaching ${coaching._id}:${err}`))
+  }))
+}
+
+const updateDietCompanies = async () => {
+  const diets=await User.find({role: ROLE_EXTERNAL_DIET, 'customer_companies.0': {$exists: false}})
+  console.log('Updating', diets.length, 'diets companies')
+  const res=await runPromisesWithDelay(diets.map(diet => async () => {
+    const appts=await Appointment.find({diet}).populate('user')
+    const companies=lodash(appts).map(appt => appt.user.company._id).uniq()
+    console.log('diet', diet._id, 'appts', appts.length, 'companies are', companies.value().length)
+    await User.findByIdAndUpdate(diet, {$addToSet: {customer_companies: companies.value()}})
+  }))
 }
 
 const importCompanies = async input_file => {
@@ -400,11 +502,6 @@ const ensureSurvey = coaching => {
   )
 }
 
-
-function updateImportedCoachingStatus() {
-  return Coaching.find({ [COACHING_MIGRATION_KEY]: { $ne: null } })
-    .then(coachings => runPromisesWithDelay(coachings.map(coaching => () => updateCoachingStatus(coaching._id))))
-}
 
 const importCoachings = async input_file => {
   const contents=fs.readFileSync(input_file)
@@ -617,8 +714,8 @@ const importUserObjectives = async input_file => {
         console.log(idx, '/', records.length)
       }
       const dt=moment(record.date)
-      const user=cache('user', record.SDPATIENTID)
-      const appointments=await Appointment.find({user}, {start_date:1})
+      const userId=cache('user', record.SDPATIENTID)
+      const appointments=await Appointment.find({user: user_id}, {start_date:1})
       const nearestAppt=lodash.minBy(appointments, app => Math.abs(dt.diff(app.start_date, 'minute')))
       if (!user) {
         throw new Error('no user for', record.SDPATIENTID)
@@ -650,6 +747,22 @@ const importUserImpactId = async input_file => {
     identityKey: IMPACT_KEY, migrationKey: IMPACT_MIGRATION_KEY, progressCb: progressCb()}))
 }
 
+const importConversations = async input_file => {
+  const contents=fs.readFileSync(input_file)
+  return Promise.all([guessFileType(contents), guessDelimiter(contents)])
+    .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
+    .then(({records}) => importData({model: 'conversation', data:records, mapping:CONVERSATION_MAPPING, 
+    identityKey: CONVERSATION_KEY, migrationKey: CONVERSATION_MIGRATION_KEY, progressCb: progressCb()}))
+}
+
+const importMessages = async input_file => {
+  const contents=fs.readFileSync(input_file)
+  return Promise.all([guessFileType(contents), guessDelimiter(contents)])
+    .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
+    .then(({records}) => importData({model: 'message', data:records, mapping:MESSAGE_MAPPING, 
+    identityKey: MESSAGE_KEY, migrationKey: MESSAGE_MIGRATION_KEY, progressCb: progressCb()}))
+}
+
 
 
 module.exports={
@@ -671,5 +784,9 @@ module.exports={
   importUserObjectives,
   importUserAssessmentId,
   importUserImpactId,
+  importConversations,
+  importMessages,
+  updateImportedCoachingStatus,
+  updateDietCompanies,
 }
 
