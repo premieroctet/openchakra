@@ -190,6 +190,12 @@ describe('Test imports', () => {
   it('must upsert patients objectives', async () => {
     let res = await importUserObjectives(path.join(ROOT, 'smart_objective.csv'))
   })
+
+  // TODO Fix it
+  it('must upsert patients assessment and impact ids', async () => {
+    await importUserAssessmentId(path.join(ROOT, 'smart_summary_reference.csv'))
+    await importUserImpactId(path.join(ROOT, 'smart_second_summary_reference.csv'))
+  })
   
 })
 
