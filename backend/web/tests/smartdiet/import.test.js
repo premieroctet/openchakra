@@ -12,7 +12,7 @@ const Company = require('../../server/models/Company')
 require('../../server/models/Content')
 require('../../server/models/Comment')
 const Appointment=require('../../server/models/Appointment')
-const { COMPANY_ACTIVITY_BANQUE, ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, GENDER_MALE, QUIZZ_TYPE_PROGRESS } = require('../../server/plugins/smartdiet/consts')
+const { COMPANY_ACTIVITY_BANQUE, ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, GENDER_MALE, QUIZZ_TYPE_PROGRESS, DIET_REGISTRATION_STATUS_ACTIVE } = require('../../server/plugins/smartdiet/consts')
 const bcrypt = require('bcryptjs')
 const Coaching = require('../../server/models/Coaching')
 const { importUsers, importDiets, importDietsAgenda, importCoachings, importAppointments, importCompanies, importContents, importPatientContents, importMeasures, fixFiles, importQuizz, importQuizzQuestions, importQuizzQuestionAnswer, importUserQuizz, importKeys, importProgressQuizz, importUserProgressQuizz, importOffers, importUserObjectives, importUserAssessmentId, importUserImpactId, importConversations, importMessages, updateImportedCoachingStatus, updateDietCompanies } = require('../../server/plugins/smartdiet/import')
@@ -24,10 +24,11 @@ const QuizzQuestion = require('../../server/models/QuizzQuestion')
 const Key = require('../../server/models/Key')
 const Offer = require('../../server/models/Offer')
 const { isDevelopment } = require('../../config/config')
+const { CREATED_AT_ATTRIBUTE } = require('../../utils/consts')
 require('../../server/models/Item')
 
 const ORIGINAL_DB=true
-const DBNAME=ORIGINAL_DB ? 'smartdiet' : 'smartdiet-migration'
+const DBNAME=ORIGINAL_DB ? 'smartdiet' : `test${moment().unix()}`
 const DROP=!ORIGINAL_DB
 
 // const ROOT = path.join(__dirname, './data/migration-tiny')
@@ -100,12 +101,21 @@ describe('Test imports', () => {
     expect(moment(user.birthday).format('LL')).toBe(moment('1980-11-13').format('LL'))
   })
 
-  it('must upsert diets', async () => {
+  it.only('must upsert diets', async () => {
     let res = await importDiets(path.join(ROOT, 'smart_diets.csv'))
     await forcePasswords()
     ensureNbError(res)
-    const diets=await User.find({role: ROLE_EXTERNAL_DIET, email: DIET_EMAIL})
-    expect(diets.length).toEqual(1)
+    const diets=await User.find({role: ROLE_EXTERNAL_DIET})
+    expect(diets.filter(d => !!d.phone).length).toBeGreaterThan(diets.length/2)
+    expect(diets.filter(d => !!d.adeli).length).toBeGreaterThan(diets.length/4)
+    expect(diets.filter(d => !!d.siret).length).toBeGreaterThan(diets.length/4)
+    expect(diets.filter(d => !!d.city).length).toBeGreaterThan(diets.length/2)
+    expect(diets.filter(d => !!d.birthday).length).toBeGreaterThan(diets.length/2)
+    expect(diets.filter(d => !!d[CREATED_AT_ATTRIBUTE]).length).toBeGreaterThan(diets.length/2)
+    expect(diets.filter(d => d.registration_status==DIET_REGISTRATION_STATUS_ACTIVE).length).toBeGreaterThan(diets.length/2)
+    expect(diets.filter(d => !!d.diet_visio_enabled).length).toBeGreaterThan(200)
+    expect(diets.filter(d => !!d.diet_coaching_enabled).length).toBeGreaterThan(10)
+    expect(diets.filter(d => !!d.diet_site_enabled).length).toBeGreaterThan(200)
   })
 
   it('must upsert coachings', async () => {
@@ -201,7 +211,7 @@ describe('Test imports', () => {
     await importUserImpactId(path.join(ROOT, 'smart_second_summary_reference.csv'))
   })
 
-  it.only('must upsert conversation', async () => {
+  it('must upsert conversation', async () => {
     await importConversations(path.join(ROOT, 'conversation.csv'))
     await importMessages(path.join(ROOT, 'message.csv'))
   })

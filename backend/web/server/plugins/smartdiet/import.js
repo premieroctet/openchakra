@@ -1,4 +1,5 @@
 const fs=require('fs')
+const siret = require('siret')
 const lodash=require('lodash')
 const moment=require('moment')
 const path=require('path')
@@ -8,7 +9,7 @@ const { guessDelimiter } = require('../../../utils/text')
 const Company=require('../../models/Company')
 const User=require('../../models/User')
 const AppointmentType=require('../../models/AppointmentType')
-const { ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, DIET_REGISTRATION_STATUS_ACTIVE, COMPANY_ACTIVITY_ASSURANCE, COMPANY_ACTIVITY_OTHER, CONTENTS_ARTICLE, CONTENTS_DOCUMENT, CONTENTS_VIDEO, CONTENTS_INFOGRAPHY, CONTENTS_PODCAST, QUIZZ_TYPE_PATIENT, QUIZZ_QUESTION_TYPE_ENUM_SINGLE, QUIZZ_TYPE_PROGRESS, COACHING_QUESTION_STATUS, COACHING_QUESTION_STATUS_NOT_ADDRESSED, COACHING_QUESTION_STATUS_NOT_ACQUIRED, COACHING_QUESTION_STATUS_IN_PROGRESS, COACHING_QUESTION_STATUS_ACQUIRED, GENDER_MALE, GENDER_FEMALE, COACHING_STATUS_NOT_STARTED, QUIZZ_TYPE_ASSESSMENT } = require('./consts')
+const { ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, DIET_REGISTRATION_STATUS_ACTIVE, COMPANY_ACTIVITY_ASSURANCE, COMPANY_ACTIVITY_OTHER, CONTENTS_ARTICLE, CONTENTS_DOCUMENT, CONTENTS_VIDEO, CONTENTS_INFOGRAPHY, CONTENTS_PODCAST, QUIZZ_TYPE_PATIENT, QUIZZ_QUESTION_TYPE_ENUM_SINGLE, QUIZZ_TYPE_PROGRESS, COACHING_QUESTION_STATUS, COACHING_QUESTION_STATUS_NOT_ADDRESSED, COACHING_QUESTION_STATUS_NOT_ACQUIRED, COACHING_QUESTION_STATUS_IN_PROGRESS, COACHING_QUESTION_STATUS_ACQUIRED, GENDER_MALE, GENDER_FEMALE, COACHING_STATUS_NOT_STARTED, QUIZZ_TYPE_ASSESSMENT, DIET_REGISTRATION_STATUS_REFUSED } = require('./consts')
 const { CREATED_AT_ATTRIBUTE } = require('../../../utils/consts')
 const AppointmentTypeSchema = require('./schemas/AppointmentTypeSchema')
 const Key=require('../../models/Key')
@@ -27,6 +28,7 @@ const NodeCache = require('node-cache')
 const Offer = require('../../models/Offer')
 const { updateCoachingStatus } = require('./coaching')
 const { DefaultDeserializer } = require('v8')
+const { isPhoneOk } = require('../../../utils/sms')
 
 const DEFAULT_PASSWORD='DEFAULT'
 const PRESTATION_DURATION=45
@@ -37,12 +39,24 @@ const KEY_NAME='Clé import'
 const QUIZZ_FACTOR=100
 
 const fixDiets = async directory => {
+  const normalizeTel = tel => {
+    if (tel?.length==9) {
+      tel=`0${tel}`
+    }
+    if (!isPhoneOk(tel)) {
+      tel=null
+    }
+    return tel
+  }
   const CPINDEX=8
+  const TELINDEX=13
   const PATH=path.join(directory, 'smart_diets.csv')
   const contents=fs.readFileSync(PATH).toString()
   const splitted=contents.split('\n').map(l => l.split(';'))
+  // Fix zip code
   splitted.forEach((l, idx) => idx !=0 && !lodash.isEmpty(l[CPINDEX]) && l[CPINDEX].length==4 ? l[CPINDEX]+='0' : {})
-  // console.log(splitted)
+  // Fix phone
+  splitted.forEach((l, idx) => idx !=0 ? l[TELINDEX]=normalizeTel(l[TELINDEX]) : {})
   const fixed_str=splitted.map(l => l.join(';')).join('\n')
   fs.writeFileSync(PATH, fixed_str)
 }
@@ -249,6 +263,16 @@ const DIET_MAPPING={
   migration_id: 'SDID',
   zip_code: 'CPCAB',
   address: 'VILLECAB',
+  phone: 'TEL',
+  adeli: 'ADELI',
+  city: 'VILLECAB',
+  siret: ({record}) => siret.isSIRET(record.SIRET)||siret.isSIREN(record.SIRET) ? record.SIRET : null,
+  birthday: 'NEE LE',
+  [CREATED_AT_ATTRIBUTE]: 'CREE LE',
+  registration_status: ({record}) => +record['Compte activé']==1 ? DIET_REGISTRATION_STATUS_ACTIVE : DIET_REGISTRATION_STATUS_REFUSED,
+  diet_coaching_enabled: ({record}) => +record['TELECONSULT?']==1,
+  diet_visio_enabled: ({record}) => +record['CONFS?']==1,
+  diet_site_enabled: ({record}) => +record['ATELIERS?']==1,
 }
 
 const DIET_MIGRATION_KEY='migration_id'
@@ -432,7 +456,6 @@ const updateDietCompanies = async () => {
   const res=await runPromisesWithDelay(diets.map(diet => async () => {
     const appts=await Appointment.find({diet}).populate('user')
     const companies=lodash(appts).map(appt => appt.user.company._id).uniq()
-    console.log('diet', diet._id, 'appts', appts.length, 'companies are', companies.value().length)
     await User.findByIdAndUpdate(diet, {$addToSet: {customer_companies: companies.value()}})
   }))
 }

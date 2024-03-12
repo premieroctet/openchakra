@@ -212,6 +212,10 @@ const UserSchema = new Schema({
     type: String,
     required: false,
   },
+  city: {
+    type: String,
+    required: false,
+  },
   zip_code: {
     type: String,
     validate: [v => lodash.isEmpty(v) || /^\d{5}$/.test(v), v => `Le code postal '${v.value}' est invalide`],
@@ -226,7 +230,6 @@ const UserSchema = new Schema({
   adeli: {
     type: String,
     set: v => v ? v.replace(/ /g, '') : v,
-    validate: [v => !v || luhn.validate(v), v => `Le numéro ADELI '${v.value}' est invalide`],
     required: false,
   },
   customer_companies: [{
