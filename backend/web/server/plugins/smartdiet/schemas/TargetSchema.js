@@ -23,6 +23,11 @@ const TargetSchema = new Schema({
     default: 0,
     required: true,
   },
+  migration_id: {
+    type: Number,
+    index: true,
+    required: false,
+  }
 }, schemaOptions)
 
 TargetSchema.virtual("contents", {

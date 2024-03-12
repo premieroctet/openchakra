@@ -18,6 +18,7 @@ require('../../models/UserQuizz')
 require('../../models/UserQuizzQuestion')
 require('../../models/Conversation')
 require('../../models/Message')
+require('../../models/Target')
 const Quizz = require('../../models/Quizz')
 const Coaching = require('../../models/Coaching')
 const { idEqual } = require('../../utils/database')
@@ -38,27 +39,14 @@ const KEY_NAME='Clé import'
 
 const QUIZZ_FACTOR=100
 
-const fixDiets = async directory => {
-  const normalizeTel = tel => {
-    if (tel?.length==9) {
-      tel=`0${tel}`
-    }
-    if (!isPhoneOk(tel)) {
-      tel=null
-    }
-    return tel
+const normalizeTel = tel => {
+  if (tel?.length==9) {
+    tel=`0${tel}`
   }
-  const CPINDEX=8
-  const TELINDEX=13
-  const PATH=path.join(directory, 'smart_diets.csv')
-  const contents=fs.readFileSync(PATH).toString()
-  const splitted=contents.split('\n').map(l => l.split(';'))
-  // Fix zip code
-  splitted.forEach((l, idx) => idx !=0 && !lodash.isEmpty(l[CPINDEX]) && l[CPINDEX].length==4 ? l[CPINDEX]+='0' : {})
-  // Fix phone
-  splitted.forEach((l, idx) => idx !=0 ? l[TELINDEX]=normalizeTel(l[TELINDEX]) : {})
-  const fixed_str=splitted.map(l => l.join(';')).join('\n')
-  fs.writeFileSync(PATH, fixed_str)
+  if (!isPhoneOk(tel)) {
+    tel=null
+  }
+  return tel
 }
 
 const fixPatients = async directory => {
@@ -136,6 +124,36 @@ const fixMessages = directory => {
   fs.writeFileSync(PATH, fixed)
 }
 
+const fixSummary = directory => {
+  const REPLACES=[ [/\r/g, ''], [/\\"/g, "'"], [/\\\\/g, ''],]
+  const PATH=path.join(directory, 'smart_summary.csv')
+  const contents=fs.readFileSync(PATH).toString()
+  let fixed=contents
+  REPLACES.forEach(([search, replace]) => fixed=fixed.replace(search, replace))
+  fs.writeFileSync(PATH, fixed)
+}
+
+const fixSpecs = directory => {
+  const REPLACES=[
+    ['Allergies et intolérances alim', 'Gluten'],
+    ['Autres troubles de santé (pathologies)','Hypertension Artérielle (HTA)'],
+    [ 'Maternité', 'Grossesse' ],
+    [ 'Perte de poids', 'Perdre du poids' ],
+    [ 'Prise de poids', 'Prendre du poids' ],
+    [ 'Rééquilibrage alimentaire', 'Rééquilibrage alimentaire' ],
+    [ 'Sportifs', 'Compétition' ],
+    [ 'TCA / Comportemental', 'Compulsion alimentaire' ],
+    [ 'Troubles digestifs', 'Syndrome de l’intestin irritable (SII)' ],
+    [ 'Troubles hormonaux', 'Hyperthyroïdie' ],
+    [ 'Végétariens et végétaliens', 'Végétarisme' ]
+  ]
+  const PATH=path.join(directory, 'smart_spec.csv')
+  const contents=fs.readFileSync(PATH).toString()
+  let fixed=contents
+  REPLACES.forEach(([search, replace]) => fixed=fixed.replace(search, replace))
+  fs.writeFileSync(PATH, fixed)
+}
+
 const loadRecords = async path =>  {
   const contents=fs.readFileSync(path)
   const [format, delimiter]=await Promise.all([guessFileType(contents), guessDelimiter(contents)])
@@ -179,14 +197,15 @@ const generateMessages = async directory =>{
 }
 
 const fixFiles = async directory => {
-  await fixDiets(directory)
   await fixPatients(directory)
   await fixAppointments(directory)
   await fixQuizz(directory)
   await fixQuizzQuestions(directory)
   await fixObjectives(directory)
   await fixMessages(directory)
+  await fixSummary(directory)
   await generateMessages(directory)
+  await fixSpecs(directory)
 }
 
 const computePseudo = record => {
@@ -234,7 +253,7 @@ const OFFER_MAPPING= {
 const OFFER_KEY='name'
 const OFFER_MIGRATION_KEY='migration_id'
 
-const USER_MAPPING={
+const PATIENT_MAPPING={
   role: () => ROLE_CUSTOMER,
   email: 'emailCanonical',
   firstname: ({record}) => record.firstname || 'inconnu',
@@ -246,35 +265,49 @@ const USER_MAPPING={
   pseudo: ({record}) => computePseudo(record),
   gender: ({record}) => record.gender=="M" ? GENDER_MALE : record.gender=='F' ? GENDER_FEMALE : undefined,
   birthday: ({record}) => lodash.isEmpty(record.birthdate) ? null:  moment(record.birthdate),
-  migration_id: 'SDPATIENTID'
+  phone: ({record}) => normalizeTel(record.phone),
+  migration_id: 'SDPATIENTID',
+  source: () => 'import',
 }
 
-const USER_KEY='email'
-const USER_MIGRATION_KEY='migration_id'
+const PATIENT_KEY='email'
+const PATIENT_MIGRATION_KEY='migration_id'
+
+const HEIGHT_MAPPING={
+  migration_id: 'patient_id',
+  _id: ({cache, record}) => cache('user', record.patient_id),
+  height: 'height',
+}
+
+const HEIGHT_KEY='_id'
+const HEIGHT_MIGRATION_KEY='migration_id'
 
 const DIET_MAPPING={
   role: () => ROLE_EXTERNAL_DIET,
   password: () => DEFAULT_PASSWORD,
-  firstname: 'PRENOM',
-  lastname: 'NOM',
-  email: 'EMAIL',
-  registration_status: () => DIET_REGISTRATION_STATUS_ACTIVE,
-  smartagenda_id: 'ID AGENDA',
+  firstname: 'firstname',
+  lastname: 'lastname',
+  email: 'email',
+  smartagenda_id: 'smartagendaid',
   migration_id: 'SDID',
-  zip_code: 'CPCAB',
-  address: 'VILLECAB',
-  phone: 'TEL',
-  adeli: 'ADELI',
-  city: 'VILLECAB',
-  siret: ({record}) => siret.isSIRET(record.SIRET)||siret.isSIREN(record.SIRET) ? record.SIRET : null,
-  birthday: 'NEE LE',
-  [CREATED_AT_ATTRIBUTE]: 'CREE LE',
-  registration_status: ({record}) => +record['Compte activé']==1 ? DIET_REGISTRATION_STATUS_ACTIVE : DIET_REGISTRATION_STATUS_REFUSED,
-  diet_coaching_enabled: ({record}) => +record['TELECONSULT?']==1,
-  diet_visio_enabled: ({record}) => +record['CONFS?']==1,
-  diet_site_enabled: ({record}) => +record['ATELIERS?']==1,
+  zip_code: ({record}) => record.cp?.length==4 ? record.cp+'0' : record.cp,
+  address: 'address',
+  phone: ({record}) => normalizeTel(record.TEL),
+  adeli: 'adelinumber',
+  city: 'city',
+  siret: ({record}) => siret.isSIRET(record.siret)||siret.isSIREN(record.siret) ? record.siret : null,
+  birthday: 'birthdate',
+  [CREATED_AT_ATTRIBUTE]: ({record}) => moment(record['created_at']),
+  registration_status: ({record}) => +record.enabled==1 ? DIET_REGISTRATION_STATUS_ACTIVE : DIET_REGISTRATION_STATUS_REFUSED,
+  diet_coaching_enabled: ({record}) => +record.hasteleconsultation==1,
+  diet_visio_enabled: ({record}) => +record.easewithconfs==1,
+  diet_site_enabled: ({record}) => +record.hasatelier==1,
+  diet_admin_comment: 'comments',
+  description: 'annonce',
+  source: () => 'import',
 }
 
+const DIET_KEY='email'
 const DIET_MIGRATION_KEY='migration_id'
 
 const COACHING_MAPPING={
@@ -306,8 +339,7 @@ const APPOINTMENT_MAPPING= prestation_id => ({
   user: async ({cache, record}) => {
     return (await Coaching.findById(cache('coaching', record.SDPROGRAMID), {user:1}))?.user
   },
-  validated: ({cache, record}) => moment(record.date).isBefore(moment()),
-
+  validated: ({record}) => +record.status>1,
 })
 
 
@@ -431,6 +463,14 @@ const MESSAGE_MAPPING={
 const MESSAGE_KEY='migration_id'
 const MESSAGE_MIGRATION_KEY='migration_id'
 
+const SPEC_MAPPING={
+  migration_id: 'SPECID',
+  name: 'name',
+}
+
+const SPEC_KEY='name'
+const SPEC_MIGRATION_KEY='migration_id'
+
 const progressCb = step => (index, total)=> {
   step=step||Math.floor(total/10)
   if (step && index%step==0) {
@@ -481,7 +521,7 @@ const importOffers = async input_file => {
 }
 
 
-const importUsers = async input_file => {
+const importPatients = async input_file => {
   // Deactivate password encryption
   const schema=User.schema
   schema.paths.password.setters=[]
@@ -490,8 +530,8 @@ const importUsers = async input_file => {
   return Promise.all([guessFileType(contents), guessDelimiter(contents)])
     .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
     .then(({records}) => 
-      importData({model: 'user', data:records, mapping:USER_MAPPING, identityKey: USER_KEY, 
-        migrationKey: USER_MIGRATION_KEY, progressCb: progressCb()})
+      importData({model: 'user', data:records, mapping:PATIENT_MAPPING, identityKey: PATIENT_KEY, 
+        migrationKey: PATIENT_MIGRATION_KEY, progressCb: progressCb()})
     )
 }
 
@@ -503,7 +543,9 @@ const importDiets = async input_file => {
   const contents=fs.readFileSync(input_file)
   return Promise.all([guessFileType(contents), guessDelimiter(contents)])
     .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
-    .then(({records}) => importData({model: 'user', data:records, mapping:DIET_MAPPING, identityKey: USER_KEY, migrationKey: USER_MIGRATION_KEY}))
+    .then(({records}) => importData({
+      model: 'user', data:records, mapping:DIET_MAPPING, identityKey: DIET_KEY, migrationKey: DIET_MIGRATION_KEY
+    }))
 }
 
 const ensureProgress = (coaching, progressTmpl) => {
@@ -750,7 +792,8 @@ const importUserObjectives = async input_file => {
       if (!question) {
         question=await QuizzQuestion.create({title: record.objective, type: QUIZZ_QUESTION_TYPE_ENUM_SINGLE})
       }
-      return Appointment.findByIdAndUpdate(nearestAppt._id, {$addToSet: {objectives: question}})
+      const userQuestion=await question.cloneAsUserQuestion()
+      return Appointment.findByIdAndUpdate(nearestAppt._id, {$addToSet: {objectives: question, user_objectives: userQuestion}})
     })))
 }
 
@@ -786,12 +829,52 @@ const importMessages = async input_file => {
     identityKey: MESSAGE_KEY, migrationKey: MESSAGE_MIGRATION_KEY, progressCb: progressCb()}))
 }
 
+const importSpecs = async input_file => {
+  const contents=fs.readFileSync(input_file)
+  return Promise.all([guessFileType(contents), guessDelimiter(contents)])
+    .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
+    .then(({records}) => importData({model: 'target', data:records, mapping:SPEC_MAPPING, 
+    identityKey: SPEC_KEY, migrationKey: SPEC_MIGRATION_KEY, progressCb: progressCb()})
+  )
+}
+
+const importDietSpecs = async input_file => {
+  const contents=fs.readFileSync(input_file)
+  const records=await loadRecords(input_file)
+  return runPromisesWithDelay(records.map(record => async () => {
+    const diet_id=cache('user', record.DIETID)
+    const target_id=cache('target', record.SPECID)
+    if (!diet_id) {
+      throw new Error(`No diet id ${record.DIETID}`)
+    }
+    if (!target_id) {
+      throw new Error(`No spec id ${record.SPECID}`)
+    }
+    return User.findByIdAndUpdate(diet_id, {$addToSet: {objective_targets: target_id}})
+  }))
+  .then(res =>  {
+    const errors=res.filter(r => r.status=='rejected').map(r => r.reason)
+    if (!lodash.isEmpty(errors)) {
+      throw new Error(errors)
+    }
+    return res.map(r => r.value)
+  })
+}
+
+const importPatientHeight = async input_file => {
+  const contents=fs.readFileSync(input_file)
+  return Promise.all([guessFileType(contents), guessDelimiter(contents)])
+    .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
+    .then(({records}) => importData({model: 'user', data:records, mapping:HEIGHT_MAPPING, 
+    identityKey: HEIGHT_KEY, migrationKey: HEIGHT_MIGRATION_KEY, progressCb: progressCb()})
+  )
+}
 
 
 module.exports={
   importCompanies,
   importOffers,
-  importUsers,
+  importPatients,
   importDiets,
   importCoachings,
   importAppointments,
@@ -811,5 +894,6 @@ module.exports={
   importMessages,
   updateImportedCoachingStatus,
   updateDietCompanies,
+  importSpecs, importDietSpecs, importPatientHeight,
 }
 

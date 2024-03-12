@@ -15,7 +15,7 @@ const Appointment=require('../../server/models/Appointment')
 const { COMPANY_ACTIVITY_BANQUE, ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, GENDER_MALE, QUIZZ_TYPE_PROGRESS, DIET_REGISTRATION_STATUS_ACTIVE } = require('../../server/plugins/smartdiet/consts')
 const bcrypt = require('bcryptjs')
 const Coaching = require('../../server/models/Coaching')
-const { importUsers, importDiets, importDietsAgenda, importCoachings, importAppointments, importCompanies, importContents, importPatientContents, importMeasures, fixFiles, importQuizz, importQuizzQuestions, importQuizzQuestionAnswer, importUserQuizz, importKeys, importProgressQuizz, importUserProgressQuizz, importOffers, importUserObjectives, importUserAssessmentId, importUserImpactId, importConversations, importMessages, updateImportedCoachingStatus, updateDietCompanies } = require('../../server/plugins/smartdiet/import')
+const { importDiets, importCoachings, importAppointments, importCompanies, importMeasures, fixFiles, importQuizz, importQuizzQuestions, importQuizzQuestionAnswer, importUserQuizz, importKeys, importProgressQuizz, importUserProgressQuizz, importOffers, importUserObjectives, importUserAssessmentId, importUserImpactId, importConversations, importMessages, updateImportedCoachingStatus, updateDietCompanies, importSpecs, importDietSpecs, importPatients, importPatientHeight } = require('../../server/plugins/smartdiet/import')
 const { prepareCache, getCacheKeys, displayCache, loadCache, saveCache } = require('../../utils/import')
 const Content = require('../../server/models/Content')
 const Measure = require('../../server/models/Measure')
@@ -91,8 +91,8 @@ describe('Test imports', () => {
     expect(offersCount).toEqual(2)
   })
 
-  it('must import users', async () => {
-    const res = await importUsers(path.join(ROOT, 'smart_patient.csv'))
+  it('must import patients', async () => {
+    const res = await importPatients(path.join(ROOT, 'smart_patient.csv')).catch(console.error)
     await forcePasswords()
     ensureNbError(res, 6)
     const user=await User.findOne({role: ROLE_CUSTOMER, email: PATIENT_EMAIL})
@@ -101,7 +101,11 @@ describe('Test imports', () => {
     expect(moment(user.birthday).format('LL')).toBe(moment('1980-11-13').format('LL'))
   })
 
-  it.only('must upsert diets', async () => {
+  it('must import patients heights', async () => {
+    await importPatientHeight(path.join(ROOT, 'smart_summary.csv')).catch(console.error)
+  })
+
+  it('must upsert diets', async () => {
     let res = await importDiets(path.join(ROOT, 'smart_diets.csv'))
     await forcePasswords()
     ensureNbError(res)
@@ -202,7 +206,7 @@ describe('Test imports', () => {
   })
 
   // TODO Fix it
-  it('must upsert patients objectives', async () => {
+  it.only('must upsert patients objectives', async () => {
     let res = await importUserObjectives(path.join(ROOT, 'smart_objective.csv'))
   })
 
@@ -215,6 +219,14 @@ describe('Test imports', () => {
     await importConversations(path.join(ROOT, 'conversation.csv'))
     await importMessages(path.join(ROOT, 'message.csv'))
   })
-  
+
+  it('must upsert specs', async () => {
+    await importSpecs(path.join(ROOT, 'smart_spec.csv'))
+  })
+
+  it('must upsert diet specs', async () => {
+    await importDietSpecs(path.join(ROOT, 'smart_diets_specs.csv'))
+  })
+
 })
 

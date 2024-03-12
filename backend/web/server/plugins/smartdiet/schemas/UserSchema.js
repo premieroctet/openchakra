@@ -326,6 +326,15 @@ const UserSchema = new Schema({
   spoons_count: {
     type: Number,
   },
+  diet_admin_comment: {
+    type: String,
+    required: false,
+  },
+  // Created from...
+  source: {
+    type: String,
+    required: false,
+  },
 }, {...schemaOptions})
 
 /* eslint-disable prefer-arrow-callback */
