@@ -39,6 +39,7 @@ const MeasureSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: 'user',
+    index: true,
     required: [true, "L'utilisateur est obligatoire"],
   },
   migration_id: {

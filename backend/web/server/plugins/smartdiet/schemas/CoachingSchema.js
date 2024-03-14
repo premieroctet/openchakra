@@ -51,11 +51,13 @@ const CoachingSchema = new Schema({
   }],
   quizz_templates: [{
     type: Schema.Types.ObjectId,
+    index: true,
     ref: 'quizz',
     required: true,
   }],
   quizz: [{
     type: Schema.Types.ObjectId,
+    index: true,
     ref: 'userQuizz',
     required: true,
   }],
@@ -172,9 +174,6 @@ CoachingSchema.virtual('questions', {
 
 
 CoachingSchema.virtual('remaining_credits', DUMMY_REF).get(function() {
-  if (this.user?.role!=ROLE_CUSTOMER) {
-    return 0
-  }
   return (this.offer?.coaching_credit-this.spent_credits) || 0
 })
 

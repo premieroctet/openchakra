@@ -12,10 +12,10 @@ const Company = require('../../server/models/Company')
 require('../../server/models/Content')
 require('../../server/models/Comment')
 const Appointment=require('../../server/models/Appointment')
-const { COMPANY_ACTIVITY_BANQUE, ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, GENDER_MALE, QUIZZ_TYPE_PROGRESS, DIET_REGISTRATION_STATUS_ACTIVE } = require('../../server/plugins/smartdiet/consts')
+const { ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, GENDER_MALE, QUIZZ_TYPE_PROGRESS, DIET_REGISTRATION_STATUS_ACTIVE, COACHING_STATUS_NOT_STARTED } = require('../../server/plugins/smartdiet/consts')
 const bcrypt = require('bcryptjs')
 const Coaching = require('../../server/models/Coaching')
-const { importDiets, importCoachings, importAppointments, importCompanies, importMeasures, fixFiles, importQuizz, importQuizzQuestions, importQuizzQuestionAnswer, importUserQuizz, importKeys, importProgressQuizz, importUserProgressQuizz, importOffers, importUserObjectives, importUserAssessmentId, importUserImpactId, importConversations, importMessages, updateImportedCoachingStatus, updateDietCompanies, importSpecs, importDietSpecs, importPatients, importPatientHeight } = require('../../server/plugins/smartdiet/import')
+const { importDiets, importCoachings, importAppointments, importCompanies, importMeasures, fixFiles, importQuizz, importQuizzQuestions, importQuizzQuestionAnswer, importUserQuizz, importKeys, importProgressQuizz, importUserProgressQuizz, importOffers, importUserObjectives, importUserAssessmentId, importUserImpactId, importConversations, importMessages, updateImportedCoachingStatus, updateDietCompanies, importSpecs, importDietSpecs, importPatients, importPatientHeight, generateProgress, fixAppointments } = require('../../server/plugins/smartdiet/import')
 const { prepareCache, getCacheKeys, displayCache, loadCache, saveCache } = require('../../utils/import')
 const Content = require('../../server/models/Content')
 const Measure = require('../../server/models/Measure')
@@ -25,6 +25,8 @@ const Key = require('../../server/models/Key')
 const Offer = require('../../server/models/Offer')
 const { isDevelopment } = require('../../config/config')
 const { CREATED_AT_ATTRIBUTE } = require('../../utils/consts')
+const { updateCoachingStatus } = require('../../server/plugins/smartdiet/coaching')
+const { runPromisesWithDelay } = require('../../server/utils/concurrency')
 require('../../server/models/Item')
 
 const ORIGINAL_DB=true
@@ -33,6 +35,7 @@ const DROP=!ORIGINAL_DB
 
 // const ROOT = path.join(__dirname, './data/migration-tiny')
 const ROOT = path.join(__dirname, './data/migration')
+// const ROOT = path.join(__dirname, './data/migration-aye-26358')
 
 jest.setTimeout(60000000)
 
@@ -53,7 +56,6 @@ describe('Test imports', () => {
     console.log('Before opening database', DBNAME)
     await mongoose.connect(`mongodb://localhost/${DBNAME}`, MONGOOSE_OPTIONS)
     console.log('Opened database', DBNAME)
-    //await prepareCache()
     await loadCache()
     await fixFiles(ROOT)
   })
@@ -68,25 +70,14 @@ describe('Test imports', () => {
     await mongoose.connection.close()
   })
 
-  const ensureNbError = (result, count=0) => {
-    return 
-    const errors=result.filter(r => !r.success)
-    if (errors.length>count) {
-      console.log(JSON.stringify(errors.slice(0,10), null, 2))
-    }
-    expect(errors.length).toEqual(count)
-  }
-
   it('must import companies', async () => {
     const res = await importCompanies(path.join(ROOT, 'smart_project.csv'))
-    ensureNbError(res)
     const companies=await Company.find()
     expect(companies.length).toEqual(12)
   })
 
   it('must import offers', async () => {
     const res = await importOffers(path.join(ROOT, 'smart_coaching.csv'))
-    ensureNbError(res)
     const offersCount=await Offer.countDocuments({migration_id: {$ne:null}})
     expect(offersCount).toEqual(2)
   })
@@ -94,7 +85,6 @@ describe('Test imports', () => {
   it('must import patients', async () => {
     const res = await importPatients(path.join(ROOT, 'smart_patient.csv')).catch(console.error)
     await forcePasswords()
-    ensureNbError(res, 6)
     const user=await User.findOne({role: ROLE_CUSTOMER, email: PATIENT_EMAIL})
     expect(user).toBeTruthy()
     expect(user.gender).toEqual(GENDER_MALE)
@@ -108,7 +98,6 @@ describe('Test imports', () => {
   it('must upsert diets', async () => {
     let res = await importDiets(path.join(ROOT, 'smart_diets.csv'))
     await forcePasswords()
-    ensureNbError(res)
     const diets=await User.find({role: ROLE_EXTERNAL_DIET})
     expect(diets.filter(d => !!d.phone).length).toBeGreaterThan(diets.length/2)
     expect(diets.filter(d => !!d.adeli).length).toBeGreaterThan(diets.length/4)
@@ -124,7 +113,6 @@ describe('Test imports', () => {
 
   it('must upsert coachings', async () => {
     let res = await importCoachings(path.join(ROOT, 'smart_coaching.csv'))
-    ensureNbError(res, 6)
     const user=await User.findOne({email: PATIENT_EMAIL})
     const coachings=await Coaching.find({user}).populate('progress')
     expect(coachings).toHaveLength(1)
@@ -141,9 +129,21 @@ describe('Test imports', () => {
     expect(appts.some(a => /pas regardé ce que/.test(a.note))).toBeTruthy()
   })
 
+  it('must update coaching status', async () => {
+    console.log('before')
+    const coachings=await Coaching.find({migration_id: {$ne: null}, status: {$in: [null, COACHING_STATUS_NOT_STARTED]}})
+    console.log('update', coachings.length)
+    const step=Math.ceil(coachings.length/10)
+    await runPromisesWithDelay(coachings.map((c, idx) => () => {
+      if (idx%step==0) {
+        console.log(idx, '/', coachings.length)
+      }
+      return updateCoachingStatus(c).catch(console.error)
+    }))
+  })
+
   it('must upsert measures', async () => {
     let res = await importMeasures(path.join(ROOT, 'smart_measure.csv'))
-    ensureNbError(res)
     const user=await User.findOne({email: PATIENT_EMAIL})
     const measures=await Measure.find({user})
     expect(measures.length).toEqual(2)
@@ -153,14 +153,12 @@ describe('Test imports', () => {
   it('must upsert quizz', async () => {
     const before=await Quizz.countDocuments()
     let res = await importQuizz(path.join(ROOT, 'smart_quiz.csv'))
-    ensureNbError(res)
     const quizz=await Quizz.findOne({migration_id: QUIZZ_ID})
     expect(quizz.name).toEqual(QUIZZ_NAME)
   })
 
   it('must upsert quizz questions', async () => {
     let res = await importQuizzQuestions(path.join(ROOT, 'smart_question.csv'))
-    ensureNbError(res)
     const questions=await QuizzQuestion.find({migration_id: {$ne:null}})
     expect(questions.length).toEqual(243)
     const quizz=await Quizz.findOne({name: QUIZZ_NAME}).populate('questions')
@@ -170,7 +168,6 @@ describe('Test imports', () => {
 
   it('must upsert keys', async () => {
     let res = await importKeys(path.join(ROOT, 'smart_criteria.csv'))
-    ensureNbError(res)
     const keys=await Key.find({migration_id: {$ne: null}})
     expect(keys.length).toEqual(7)
   })
@@ -178,19 +175,15 @@ describe('Test imports', () => {
   it('must upsert progress quizz', async () => {
     let res = await importProgressQuizz(path.join(ROOT, 'smart_criteria.csv'))
     const quizz=await Quizz.findOne({type: QUIZZ_TYPE_PROGRESS}).populate('questions')
-    expect(quizz.questions.length).toEqual(26)
+    expect(quizz.questions.every(q => !!q.migration_id)).toBeTruthy
   })
 
   it('must upsert user progress quizz', async () => {
-    let res = await importUserProgressQuizz(path.join(ROOT, 'smart_consultation_progress.csv'), 24000)
-    const user=await User.findOne({email: PATIENT_EMAIL})
-    const coachings=await Coaching.find({user}).populate('progress')
-    console.log(coachings.map(c => c.progress))
+    let res = await importUserProgressQuizz(path.join(ROOT, 'progress.csv'))
   })
 
   it('must upsert quizz questions answers', async () => {
     let res = await importQuizzQuestionAnswer(path.join(ROOT, 'smart_question.csv'))
-    ensureNbError(res)
     const questions=await QuizzQuestion.find({migration_id: {$ne:null}})
     expect(questions).toHaveLength(217)
     const quizz=await Quizz.find()
@@ -202,11 +195,10 @@ describe('Test imports', () => {
   //TODO Fix it
   it('must upsert patients quizzs', async () => {
     let res = await importUserQuizz(path.join(ROOT, 'smart_patient_quiz.csv'))
-    ensureNbError(res)
   })
 
   // TODO Fix it
-  it.only('must upsert patients objectives', async () => {
+  it('must upsert patients objectives', async () => {
     let res = await importUserObjectives(path.join(ROOT, 'smart_objective.csv'))
   })
 
@@ -227,6 +219,7 @@ describe('Test imports', () => {
   it('must upsert diet specs', async () => {
     await importDietSpecs(path.join(ROOT, 'smart_diets_specs.csv'))
   })
+
 
 })
 

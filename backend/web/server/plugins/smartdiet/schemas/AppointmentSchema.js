@@ -19,6 +19,7 @@ const AppointmentSchema = new Schema({
   coaching: {
     type: Schema.Types.ObjectId,
     ref: 'coaching',
+    index: true,
     required: [true, 'Le coaching est obligatoire'],
   },
   diet: {
@@ -46,6 +47,7 @@ const AppointmentSchema = new Schema({
   },
   appointment_type: {
     type: Schema.Types.ObjectId,
+    index: true,
     ref: 'appointmentType',
     required: [true, 'La prestation est obligatoire'],
   },
@@ -66,6 +68,7 @@ const AppointmentSchema = new Schema({
   // For each new appointment, copy the ones from the previous
   objectives: [{
     type: Schema.Types.ObjectId,
+    index: true,
     ref: 'quizzQuestion',
     required: true,
   }],
