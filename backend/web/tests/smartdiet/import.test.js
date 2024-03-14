@@ -57,12 +57,12 @@ describe('Test imports', () => {
     await mongoose.connect(`mongodb://localhost/${DBNAME}`, MONGOOSE_OPTIONS)
     console.log('Opened database', DBNAME)
     await loadCache()
-    // await fixFiles(ROOT)
+    await fixFiles(ROOT)
   })
   
   afterAll(async () => {
-    // await updateImportedCoachingStatus()
-    // await updateDietCompanies()
+    await updateImportedCoachingStatus()
+    await updateDietCompanies()
     await saveCache()
     if (DROP) {
       await mongoose.connection.dropDatabase()
