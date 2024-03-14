@@ -9,10 +9,15 @@ const { guessDelimiter, normalize } = require('../../../utils/text')
 const Company=require('../../models/Company')
 const User=require('../../models/User')
 const AppointmentType=require('../../models/AppointmentType')
-const { ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, DIET_REGISTRATION_STATUS_ACTIVE, COMPANY_ACTIVITY_ASSURANCE, COMPANY_ACTIVITY_OTHER, CONTENTS_ARTICLE, CONTENTS_DOCUMENT, CONTENTS_VIDEO, CONTENTS_INFOGRAPHY, CONTENTS_PODCAST, QUIZZ_TYPE_PATIENT, QUIZZ_QUESTION_TYPE_ENUM_SINGLE, QUIZZ_TYPE_PROGRESS, COACHING_QUESTION_STATUS, COACHING_QUESTION_STATUS_NOT_ADDRESSED, COACHING_QUESTION_STATUS_NOT_ACQUIRED, COACHING_QUESTION_STATUS_IN_PROGRESS, COACHING_QUESTION_STATUS_ACQUIRED, GENDER_MALE, GENDER_FEMALE, COACHING_STATUS_NOT_STARTED, QUIZZ_TYPE_ASSESSMENT, DIET_REGISTRATION_STATUS_REFUSED, FOOD_DOCUMENT_TYPE, FOOD_DOCUMENT_TYPE_ARTICLE, FOOD_DOCUMENT_TYPE_NUTRITION, GENDER } = require('./consts')
+const {
+  ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, DIET_REGISTRATION_STATUS_ACTIVE, COMPANY_ACTIVITY_OTHER, QUIZZ_TYPE_PATIENT, 
+  QUIZZ_QUESTION_TYPE_ENUM_SINGLE, QUIZZ_TYPE_PROGRESS, COACHING_QUESTION_STATUS, COACHING_QUESTION_STATUS_NOT_ADDRESSED, 
+  COACHING_QUESTION_STATUS_NOT_ACQUIRED, COACHING_QUESTION_STATUS_IN_PROGRESS, COACHING_QUESTION_STATUS_ACQUIRED, 
+  GENDER_MALE, GENDER_FEMALE, COACHING_STATUS_NOT_STARTED, QUIZZ_TYPE_ASSESSMENT, DIET_REGISTRATION_STATUS_REFUSED, 
+  FOOD_DOCUMENT_TYPE_NUTRITION, GENDER 
+} = require('./consts')
 const { CREATED_AT_ATTRIBUTE, TEXT_TYPE } = require('../../../utils/consts')
-const AppointmentTypeSchema = require('./schemas/AppointmentTypeSchema')
-const Key=require('../../models/Key')
+require('../../models/Key')
 const QuizzQuestion = require('../../models/QuizzQuestion')
 require('../../models/UserQuizz')
 require('../../models/UserQuizzQuestion')
@@ -21,6 +26,7 @@ require('../../models/Message')
 require('../../models/Target')
 require('../../models/FoodDocument')
 require('../../models/NutritionAdvice')
+require('../../models/Network')
 const Quizz = require('../../models/Quizz')
 const Coaching = require('../../models/Coaching')
 const { idEqual } = require('../../utils/database')
@@ -28,9 +34,8 @@ const Appointment = require('../../models/Appointment')
 const UserSurvey = require('../../models/UserSurvey')
 const { runPromisesWithDelay } = require('../../utils/concurrency')
 const NodeCache = require('node-cache')
-const Offer = require('../../models/Offer')
+require('../../models/Offer')
 const { updateCoachingStatus } = require('./coaching')
-const { DefaultDeserializer } = require('v8')
 const { isPhoneOk } = require('../../../utils/sms')
 const UserQuizzQuestion = require('../../models/UserQuizzQuestion')
 const { getFilesFromAWS } = require('../../middlewares/aws')
@@ -607,6 +612,14 @@ raison : ${NUT_REASON[record.reason]}, ${+record.coaching>0 ? 'a mené à un coa
 const NUTADVICE_KEY='migration_id'
 const NUTADVICE_MIGRATION_KEY='migration_id'
 
+const NETWORK_MAPPING={
+  migration_id: 'SDNETWORKID',
+  name: 'name',
+}
+
+const NETWORK_KEY='name'
+const NETWORK_MIGRATION_KEY='migration_id'
+
 const progressCb = step => (index, total)=> {
   step=step||Math.floor(total/10)
   if (step && index%step==0) {
@@ -1095,6 +1108,26 @@ const importRibPictures = async directory => {
   .then(() => console.log('found', found, 'not found', diets.length-found))
 }
 
+const importNetworks = async input_file => {
+  return loadRecords(input_file)
+    .then(records => importData({model: 'network', data:records, mapping: NETWORK_MAPPING, 
+      identityKey: NETWORK_KEY, migrationKey: NETWORK_MIGRATION_KEY, progressCb: progressCb()}
+    )
+  )
+}
+
+const importDietNetworks = async input_file => {
+  let notfound=0
+  return loadRecords(input_file)
+    .then(records => runPromisesWithDelay(records.map(record => async () => {
+      const dietId=cache('user', record.SDDIETID)
+      const networkId=cache('network', record.SDNETWORKID)
+      !dietId && notfound++
+      return User.findByIdAndUpdate(dietId, {$addToSet: {networks: networkId}})
+    }))
+    .then(() => console.log(notfound))
+  )
+}
 
 module.exports={
   importCompanies,
@@ -1124,5 +1157,6 @@ module.exports={
   importUserFoodDocuments,
   importNutAdvices,
   importDiplomaPictures, importProfilePictures, importRibPictures,
+  importNetworks, importDietNetworks,
 }
 
