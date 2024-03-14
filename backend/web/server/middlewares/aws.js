@@ -101,7 +101,7 @@ exports.getFilesFromAWS = async(req, res, next) => {
 
   }
   catch (err) {
-    throw Error('Error while getting images from AWS S3 :', err)
+    throw Error(`Error while getting images from AWS S3 : ${err}`)
   }
 
   next()

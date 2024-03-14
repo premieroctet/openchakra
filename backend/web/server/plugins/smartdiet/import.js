@@ -5,7 +5,7 @@ const moment=require('moment')
 const path=require('path')
 const crypto = require('crypto')
 const {extractData, guessFileType, importData, cache, setCache}=require('../../../utils/import')
-const { guessDelimiter } = require('../../../utils/text')
+const { guessDelimiter, normalize } = require('../../../utils/text')
 const Company=require('../../models/Company')
 const User=require('../../models/User')
 const AppointmentType=require('../../models/AppointmentType')
@@ -33,6 +33,7 @@ const { updateCoachingStatus } = require('./coaching')
 const { DefaultDeserializer } = require('v8')
 const { isPhoneOk } = require('../../../utils/sms')
 const UserQuizzQuestion = require('../../models/UserQuizzQuestion')
+const { getFilesFromAWS } = require('../../middlewares/aws')
 
 const DEFAULT_PASSWORD='DEFAULT'
 const PRESTATION_DURATION=45
@@ -241,7 +242,7 @@ const generateProgress = async directory => {
   const consulPath=path.join(directory, 'smart_consultation.csv')
   const consultProgressPath = path.join(directory, 'smart_consultation_progress.csv')
   const outputPath = path.join(directory, 'progress.csv')
-  
+
   console.time('Progress')
   let consultations=await loadRecords(consulPath)
   let progress=await loadRecords(consultProgressPath)
@@ -1044,6 +1045,56 @@ const importNutAdvices = async input_file => {
   )
 }
 
+const filesCache=new NodeCache()
+
+const getDirectoryFiles= directory => {
+  let files=filesCache.get(directory)
+  if (!files) {
+    const fileNames=fs.readdirSync(directory)
+    files=Object.fromEntries(fileNames.map(filename => [normalize(filename).replace(/[\s-]/g, '').split('.')[0], filename]))
+    filesCache.set(directory, files)
+  }
+  return files
+}
+const findFileForDiet = async (directory, diet) => {
+  const normalizedDietName=normalize(diet.fullname).replace(/[\s-]/g, '')
+  const files=getDirectoryFiles(directory)
+  return files[normalizedDietName]
+}
+
+const importProfilePictures = async directory => {
+  const req={body: {}}
+  await getFilesFromAWS(req, null, () => {})
+  console.log(req.body.files.filter(({Key}) => !/studio/.test(Key)))
+  const diets=await User.find({role: ROLE_EXTERNAL_DIET})
+  let found=0
+  return runPromisesWithDelay(diets.map(diet => async () => {
+    const filename=await findFileForDiet(directory, diet).catch(console.error)
+    found += (filename ? 1 : 0)
+  }))
+  .then(() => console.log('found', found, 'not found', diets.length-found))
+}
+
+const importDiplomaPictures = async directory => {
+  const diets=await User.find({role: ROLE_EXTERNAL_DIET})
+  let found=0
+  return runPromisesWithDelay(diets.map(diet => async () => {
+    const filename=await findFileForDiet(directory, diet).catch(console.error)
+    found += (filename ? 1 : 0)
+  }))
+  .then(() => console.log('found', found, 'not found', diets.length-found))
+}
+
+const importRibPictures = async directory => {
+  const diets=await User.find({role: ROLE_EXTERNAL_DIET})
+  let found=0
+  return runPromisesWithDelay(diets.map(diet => async () => {
+    const filename=await findFileForDiet(directory, diet).catch(console.error)
+    found += (filename ? 1 : 0)
+  }))
+  .then(() => console.log('found', found, 'not found', diets.length-found))
+}
+
 
 module.exports={
   importCompanies,
@@ -1072,5 +1123,6 @@ module.exports={
   importFoodDocuments,
   importUserFoodDocuments,
   importNutAdvices,
+  importDiplomaPictures, importProfilePictures, importRibPictures,
 }
 
