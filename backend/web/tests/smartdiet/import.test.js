@@ -15,7 +15,7 @@ const Appointment=require('../../server/models/Appointment')
 const { ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, GENDER_MALE, QUIZZ_TYPE_PROGRESS, DIET_REGISTRATION_STATUS_ACTIVE, COACHING_STATUS_NOT_STARTED } = require('../../server/plugins/smartdiet/consts')
 const bcrypt = require('bcryptjs')
 const Coaching = require('../../server/models/Coaching')
-const { importDiets, importCoachings, importAppointments, importCompanies, importMeasures, fixFiles, importQuizz, importQuizzQuestions, importQuizzQuestionAnswer, importUserQuizz, importKeys, importProgressQuizz, importUserProgressQuizz, importOffers, importUserObjectives, importUserAssessmentId, importUserImpactId, importConversations, importMessages, updateImportedCoachingStatus, updateDietCompanies, importSpecs, importDietSpecs, importPatients, importPatientHeight, generateProgress, fixAppointments } = require('../../server/plugins/smartdiet/import')
+const { importDiets, importCoachings, importAppointments, importCompanies, importMeasures, fixFiles, importQuizz, importQuizzQuestions, importQuizzQuestionAnswer, importUserQuizz, importKeys, importProgressQuizz, importUserProgressQuizz, importOffers, importUserObjectives, importUserAssessmentId, importUserImpactId, importConversations, importMessages, updateImportedCoachingStatus, updateDietCompanies, importSpecs, importDietSpecs, importPatients, importPatientHeight, generateProgress, fixAppointments, importFoodDocuments, importUserFoodDocuments } = require('../../server/plugins/smartdiet/import')
 const { prepareCache, getCacheKeys, displayCache, loadCache, saveCache } = require('../../utils/import')
 const Content = require('../../server/models/Content')
 const Measure = require('../../server/models/Measure')
@@ -57,12 +57,12 @@ describe('Test imports', () => {
     await mongoose.connect(`mongodb://localhost/${DBNAME}`, MONGOOSE_OPTIONS)
     console.log('Opened database', DBNAME)
     await loadCache()
-    await fixFiles(ROOT)
+    // await fixFiles(ROOT)
   })
   
   afterAll(async () => {
-    await updateImportedCoachingStatus()
-    await updateDietCompanies()
+    // await updateImportedCoachingStatus()
+    // await updateDietCompanies()
     await saveCache()
     if (DROP) {
       await mongoose.connection.dropDatabase()
@@ -218,6 +218,14 @@ describe('Test imports', () => {
 
   it('must upsert diet specs', async () => {
     await importDietSpecs(path.join(ROOT, 'smart_diets_specs.csv'))
+  })
+
+  it('must upsert food documents', async () => {
+    await importFoodDocuments(path.join(ROOT, 'smart_fiche.csv'))
+  })
+
+  it('must upsert user food documents', async () => {
+    await importUserFoodDocuments(path.join(ROOT, 'smart_patient_fiches.csv'))
   })
 
 

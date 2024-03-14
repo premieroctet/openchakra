@@ -9,7 +9,7 @@ const { guessDelimiter } = require('../../../utils/text')
 const Company=require('../../models/Company')
 const User=require('../../models/User')
 const AppointmentType=require('../../models/AppointmentType')
-const { ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, DIET_REGISTRATION_STATUS_ACTIVE, COMPANY_ACTIVITY_ASSURANCE, COMPANY_ACTIVITY_OTHER, CONTENTS_ARTICLE, CONTENTS_DOCUMENT, CONTENTS_VIDEO, CONTENTS_INFOGRAPHY, CONTENTS_PODCAST, QUIZZ_TYPE_PATIENT, QUIZZ_QUESTION_TYPE_ENUM_SINGLE, QUIZZ_TYPE_PROGRESS, COACHING_QUESTION_STATUS, COACHING_QUESTION_STATUS_NOT_ADDRESSED, COACHING_QUESTION_STATUS_NOT_ACQUIRED, COACHING_QUESTION_STATUS_IN_PROGRESS, COACHING_QUESTION_STATUS_ACQUIRED, GENDER_MALE, GENDER_FEMALE, COACHING_STATUS_NOT_STARTED, QUIZZ_TYPE_ASSESSMENT, DIET_REGISTRATION_STATUS_REFUSED } = require('./consts')
+const { ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, DIET_REGISTRATION_STATUS_ACTIVE, COMPANY_ACTIVITY_ASSURANCE, COMPANY_ACTIVITY_OTHER, CONTENTS_ARTICLE, CONTENTS_DOCUMENT, CONTENTS_VIDEO, CONTENTS_INFOGRAPHY, CONTENTS_PODCAST, QUIZZ_TYPE_PATIENT, QUIZZ_QUESTION_TYPE_ENUM_SINGLE, QUIZZ_TYPE_PROGRESS, COACHING_QUESTION_STATUS, COACHING_QUESTION_STATUS_NOT_ADDRESSED, COACHING_QUESTION_STATUS_NOT_ACQUIRED, COACHING_QUESTION_STATUS_IN_PROGRESS, COACHING_QUESTION_STATUS_ACQUIRED, GENDER_MALE, GENDER_FEMALE, COACHING_STATUS_NOT_STARTED, QUIZZ_TYPE_ASSESSMENT, DIET_REGISTRATION_STATUS_REFUSED, FOOD_DOCUMENT_TYPE, FOOD_DOCUMENT_TYPE_ARTICLE, FOOD_DOCUMENT_TYPE_NUTRITION } = require('./consts')
 const { CREATED_AT_ATTRIBUTE, TEXT_TYPE } = require('../../../utils/consts')
 const AppointmentTypeSchema = require('./schemas/AppointmentTypeSchema')
 const Key=require('../../models/Key')
@@ -19,6 +19,7 @@ require('../../models/UserQuizzQuestion')
 require('../../models/Conversation')
 require('../../models/Message')
 require('../../models/Target')
+require('../../models/FoodDocument')
 const Quizz = require('../../models/Quizz')
 const Coaching = require('../../models/Coaching')
 const { idEqual } = require('../../utils/database')
@@ -230,6 +231,18 @@ const generateProgress = async directory => {
   console.timeEnd('Progress')
 }
 
+
+const fixFoodDocuments = async directory => {
+  const REPLACES=[
+    [/\\"/g, "'"], [/\\\\/g, ''],
+  ]
+  const input_path=path.join(directory, 'smart_fiche.csv')
+  const contents=fs.readFileSync(input_path).toString()
+  let fixed=contents
+  REPLACES.forEach(([search, replace]) => fixed=fixed.replace(search, replace))
+  fs.writeFileSync(input_path, fixed)
+}
+
 const fixFiles = async directory => {
   console.log('Fixing files')
   await fixPatients(directory)
@@ -242,6 +255,7 @@ const fixFiles = async directory => {
   await generateMessages(directory)
   await fixSpecs(directory)
   await generateProgress(directory)
+  await fixFoodDocuments(directory)
   console.log('Fixed files')
 }
 
@@ -452,11 +466,12 @@ const hashStringToDecimal = inputString => {
   const hashedString = hash.digest('hex')
   const decimalNumber = BigInt('0x' + hashedString)
   const res=parseInt(decimalNumber%BigInt(1000000000))
+  console.log(inputString, res)
   return res
 }
 
 const KEY_MAPPING={
-  migration_id: ({record}) => hashStringToDecimal(record.name),
+  migration_id: ({record}) => hashStringToDecimal(record.smartpoint),
   name: 'smartpoint',
   text: 'secondanswer',
 }
@@ -508,6 +523,32 @@ const SPEC_MAPPING={
 
 const SPEC_KEY='name'
 const SPEC_MIGRATION_KEY='migration_id'
+
+const SMART_POINT_MAPPING={
+  0: `Je gère`,
+  1: `Je bouge`,
+  2: `Je dors`,
+  3: `Je gère`,
+  4: `J'équilibre`,
+  5: `Je m'organise`,
+  6: `J'achète`,
+  7: `Je ressens`,
+}
+
+const FOOD_DOCUMENT_MAPPING={
+  migration_id: 'IDFICHESD',
+  name: 'name',
+  description: 'description',
+  type: () => FOOD_DOCUMENT_TYPE_NUTRITION,
+  key: ({record, cache}) => {
+    const keyStr=SMART_POINT_MAPPING[record.smartpoint];
+    const keyId=hashStringToDecimal(keyStr)
+    return cache('key', keyId)
+  }
+}
+
+const FOOD_DOCUMENT_KEY='name'
+const FODD_DOCUMENT_MIGRATION_KEY='migration_id'
 
 const progressCb = step => (index, total)=> {
   step=step||Math.floor(total/10)
@@ -793,7 +834,6 @@ const importUserProgressQuizz = async (input_file) => {
       const log=idx%200 ? () => {} : console.log
       log(idx,'/', records.length)
       const coachingId=cache('coaching', record.SDPROGRAMID)
-      console.log(record.SDPROGRAMID, coachingId)
       const progress=await getProgress(coachingId)
       const question=progress.questions.find(q => q.migration_id==record.SDCRITERIAID)
       if (!!question.single_enum_answer) {
@@ -903,12 +943,43 @@ const importDietSpecs = async input_file => {
 }
 
 const importPatientHeight = async input_file => {
-  const contents=fs.readFileSync(input_file)
-  return Promise.all([guessFileType(contents), guessDelimiter(contents)])
-    .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
-    .then(({records}) => importData({model: 'user', data:records, mapping:HEIGHT_MAPPING, 
+  return loadRecords(input_file)
+    .then(records => importData({model: 'user', data:records, mapping:HEIGHT_MAPPING, 
     identityKey: HEIGHT_KEY, migrationKey: HEIGHT_MIGRATION_KEY, progressCb: progressCb()})
   )
+}
+
+const importFoodDocuments = async input_file => {
+  return loadRecords(input_file)
+    .then(records => importData({model: 'foodDocument', data:records, mapping:FOOD_DOCUMENT_MAPPING, 
+      identityKey: FOOD_DOCUMENT_KEY, migrationKey: FODD_DOCUMENT_MIGRATION_KEY, progressCb: progressCb()}
+    )
+  )
+}
+
+const importUserFoodDocuments = async input_file => {
+  const coachingCache=new NodeCache()
+  // Maps SD ID to WAPP coaching id
+  const getCoaching = async sdpatientid => {
+    let res=coachingCache.get(sdpatientid)
+    if (!res) {
+      const userId=cache('user', sdpatientid)
+      console.log('user id', userId)
+      res=(await Coaching.findOne({user: userId}).sort({[CREATED_AT_ATTRIBUTE]: -1}).limit(1))?._id
+      coachingCache.set(sdpatientid, res)
+    }
+    return res
+  }
+  return loadRecords(input_file)
+    .then(records => runPromisesWithDelay(records.map((record, idx) => async () => {
+      idx%1000==0 && console.log(idx, '/', records.length)
+      const ficheId=cache('foodDocument', record.SDFICHEID)
+      const coachingId=await getCoaching(record.SDPATIENTID)
+      console.log(coachingId, ficheId)
+      await Coaching.findByIdAndUpdate(coachingId, {$addToSet: {food_documents: ficheId}})
+        .then(console.log)
+        .catch(console.error)
+    })))
 }
 
 
@@ -936,5 +1007,7 @@ module.exports={
   updateImportedCoachingStatus,
   updateDietCompanies,
   importSpecs, importDietSpecs, importPatientHeight,
+  importFoodDocuments,
+  importUserFoodDocuments,
 }
 
