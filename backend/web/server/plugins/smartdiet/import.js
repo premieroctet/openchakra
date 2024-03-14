@@ -9,7 +9,7 @@ const { guessDelimiter } = require('../../../utils/text')
 const Company=require('../../models/Company')
 const User=require('../../models/User')
 const AppointmentType=require('../../models/AppointmentType')
-const { ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, DIET_REGISTRATION_STATUS_ACTIVE, COMPANY_ACTIVITY_ASSURANCE, COMPANY_ACTIVITY_OTHER, CONTENTS_ARTICLE, CONTENTS_DOCUMENT, CONTENTS_VIDEO, CONTENTS_INFOGRAPHY, CONTENTS_PODCAST, QUIZZ_TYPE_PATIENT, QUIZZ_QUESTION_TYPE_ENUM_SINGLE, QUIZZ_TYPE_PROGRESS, COACHING_QUESTION_STATUS, COACHING_QUESTION_STATUS_NOT_ADDRESSED, COACHING_QUESTION_STATUS_NOT_ACQUIRED, COACHING_QUESTION_STATUS_IN_PROGRESS, COACHING_QUESTION_STATUS_ACQUIRED, GENDER_MALE, GENDER_FEMALE, COACHING_STATUS_NOT_STARTED, QUIZZ_TYPE_ASSESSMENT, DIET_REGISTRATION_STATUS_REFUSED, FOOD_DOCUMENT_TYPE, FOOD_DOCUMENT_TYPE_ARTICLE, FOOD_DOCUMENT_TYPE_NUTRITION } = require('./consts')
+const { ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, DIET_REGISTRATION_STATUS_ACTIVE, COMPANY_ACTIVITY_ASSURANCE, COMPANY_ACTIVITY_OTHER, CONTENTS_ARTICLE, CONTENTS_DOCUMENT, CONTENTS_VIDEO, CONTENTS_INFOGRAPHY, CONTENTS_PODCAST, QUIZZ_TYPE_PATIENT, QUIZZ_QUESTION_TYPE_ENUM_SINGLE, QUIZZ_TYPE_PROGRESS, COACHING_QUESTION_STATUS, COACHING_QUESTION_STATUS_NOT_ADDRESSED, COACHING_QUESTION_STATUS_NOT_ACQUIRED, COACHING_QUESTION_STATUS_IN_PROGRESS, COACHING_QUESTION_STATUS_ACQUIRED, GENDER_MALE, GENDER_FEMALE, COACHING_STATUS_NOT_STARTED, QUIZZ_TYPE_ASSESSMENT, DIET_REGISTRATION_STATUS_REFUSED, FOOD_DOCUMENT_TYPE, FOOD_DOCUMENT_TYPE_ARTICLE, FOOD_DOCUMENT_TYPE_NUTRITION, GENDER } = require('./consts')
 const { CREATED_AT_ATTRIBUTE, TEXT_TYPE } = require('../../../utils/consts')
 const AppointmentTypeSchema = require('./schemas/AppointmentTypeSchema')
 const Key=require('../../models/Key')
@@ -20,6 +20,7 @@ require('../../models/Conversation')
 require('../../models/Message')
 require('../../models/Target')
 require('../../models/FoodDocument')
+require('../../models/NutritionAdvice')
 const Quizz = require('../../models/Quizz')
 const Coaching = require('../../models/Coaching')
 const { idEqual } = require('../../utils/database')
@@ -40,6 +41,45 @@ const PRESTATION_SMARTAGENDA_ID=-1
 const KEY_NAME='Clé import'
 
 const QUIZZ_FACTOR=100
+
+const NUT_JOB={
+  0: '',
+  1: 'Administratif',
+  2: 'Chauffeur longue distance',
+  3: 'Chauffeur moyenne distance',
+  4: 'Manutention',
+  5: 'Opérationnel',
+  6: 'Logistique',
+  7: 'Acheteur',
+  8: 'Apprenti',
+  9: 'Sans activité',
+  10: 'Handicapé',
+  11: 'Retraité(e)',
+  12: 'Accident du travail',
+  13: 'Pas de réponse',
+}
+
+const NUT_SUBJECT={
+  1: `Equilibre alimentaire`,
+  2: `Problématiques organisationnelles sur le terrain (achats de denrées, stockage, ...)`,
+  3: `Problématiques organisationnelles à la maison (menu, liste de course..)`,
+  4: `Comportements alimentaires`,
+  5: `Perte/Prise de poids`,
+  6: `Pathologies`,
+  7: `Autre`,
+}
+
+const NUT_REASON={
+  0: `Aucune`,
+  1: `Déjà suivi sur cette thématique`,
+  2: `Hors cible`,
+  3: `Je n'ai pas le temps`,
+  4: `Je ne souhaite pas échanger avec une diététicienne`,
+  5: `Le format ne me convient pas`,
+  6: `Autre motif/sans réponse`,
+  7: `N'a pas besoin - tout est clair`,
+}
+
 
 const normalizeTel = tel => {
   if (tel?.length==9) {
@@ -550,6 +590,22 @@ const FOOD_DOCUMENT_MAPPING={
 const FOOD_DOCUMENT_KEY='name'
 const FODD_DOCUMENT_MIGRATION_KEY='migration_id'
 
+const getGender = gender => GENDER[+gender==1 ? GENDER_MALE : +gender==2 ? GENDER_FEMALE : undefined]
+
+const NUTADVICE_MAPPING={
+  migration_id: ({record}) => parseInt(`${record.SDDIETID}${moment(record.DATE).unix()}`),
+  start_date: 'DATE',
+  diet: ({cache, record}) => cache('user', record.SDDIETID),
+  patient_email: 'email',
+  comment: ({record}) => {
+    return `${getGender(record.gender)} ${record.age} ans, ${NUT_JOB[record.job_type]}, sujet : ${NUT_SUBJECT[record.SUBJECT]}, \
+raison : ${NUT_REASON[record.reason]}, ${+record.coaching>0 ? 'a mené à un coaching' : `n'a pas mené à un coaching`}`
+  }
+}
+
+const NUTADVICE_KEY='migration_id'
+const NUTADVICE_MIGRATION_KEY='migration_id'
+
 const progressCb = step => (index, total)=> {
   step=step||Math.floor(total/10)
   if (step && index%step==0) {
@@ -964,7 +1020,6 @@ const importUserFoodDocuments = async input_file => {
     let res=coachingCache.get(sdpatientid)
     if (!res) {
       const userId=cache('user', sdpatientid)
-      console.log('user id', userId)
       res=(await Coaching.findOne({user: userId}).sort({[CREATED_AT_ATTRIBUTE]: -1}).limit(1))?._id
       coachingCache.set(sdpatientid, res)
     }
@@ -975,11 +1030,18 @@ const importUserFoodDocuments = async input_file => {
       idx%1000==0 && console.log(idx, '/', records.length)
       const ficheId=cache('foodDocument', record.SDFICHEID)
       const coachingId=await getCoaching(record.SDPATIENTID)
-      console.log(coachingId, ficheId)
       await Coaching.findByIdAndUpdate(coachingId, {$addToSet: {food_documents: ficheId}})
         .then(console.log)
         .catch(console.error)
     })))
+}
+
+const importNutAdvices = async input_file => {
+  return loadRecords(input_file)
+    .then(records => importData({model: 'nutritionAdvice', data:records, mapping:NUTADVICE_MAPPING, 
+      identityKey: NUTADVICE_KEY, migrationKey: NUTADVICE_MIGRATION_KEY, progressCb: progressCb()}
+    )
+  )
 }
 
 
@@ -1009,5 +1071,6 @@ module.exports={
   importSpecs, importDietSpecs, importPatientHeight,
   importFoodDocuments,
   importUserFoodDocuments,
+  importNutAdvices,
 }
 

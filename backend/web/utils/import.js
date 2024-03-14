@@ -168,7 +168,6 @@ function upsertRecord({model, record, identityKey, migrationKey, updateOnly}) {
   const identityFilter=computeIdentityFilter(identityKey, migrationKey, record)
   return model.findOne(identityFilter, {[migrationKey]:1})
     .then(result => {
-      // console.log('getting', model, JSON.stringify(identityFilter), 'got', result)
       if (!result) {
         if (updateOnly) {
           throw new Error(`Could not find ${model.modelName} matching ${JSON.stringify(identityFilter)}`)
