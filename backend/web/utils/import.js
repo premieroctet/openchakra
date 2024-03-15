@@ -120,18 +120,18 @@ const extractSample = (rawData, options) => {
     })
 }
 
-const mapAttribute=async ({record, mappingFn}) => {
+const mapAttribute=async ({record, mappingFn, ...rest}) => {
   if (typeof mappingFn=='string') {
     return record[mappingFn]
   }
- const res=await mappingFn({record, cache:getCache})
+ const res=await mappingFn({record, cache:getCache, ...rest})
  return res
 }
 
-const mapRecord = async ({record, mapping}) => {
+const mapRecord = async ({record, mapping, ...rest}) => {
   const mapped={}
   for (const k of Object.keys(mapping)) {
-    mapped[k]=await mapAttribute({record, mappingFn: mapping[k]})
+    mapped[k]=await mapAttribute({record, mappingFn: mapping[k], ...rest})
   }
   return mapped
 }
@@ -193,7 +193,7 @@ const computeIdentityFilter = (identityKey, migrationKey, record) => {
   return filter
 }
 
-const importData = ({model, data, mapping, identityKey, migrationKey, progressCb, updateOnly}) => {
+const importData = ({model, data, mapping, identityKey, migrationKey, progressCb, updateOnly, ...rest}) => {
   if (!model || lodash.isEmpty(data) || !lodash.isObject(mapping) || lodash.isEmpty(identityKey) || lodash.isEmpty(migrationKey)) {
     throw new Error(`Expecting model, data, mapping, identityKey, migrationKey`)
   }
@@ -201,7 +201,7 @@ const importData = ({model, data, mapping, identityKey, migrationKey, progressCb
   console.log(`Ready to insert ${model}, ${data.length} source records, identity key is ${identityKey}, migration key is ${migrationKey}`)
   const msg=`Inserted ${model}, ${data.length} source records`
   const mongoModel=mongoose.model(model)
-  return Promise.all(data.map(record => mapRecord({record, mapping})))
+  return Promise.all(data.map(record => mapRecord({record, mapping, ...rest})))
     .then(mappedData => {
       const recordsCount=mappedData.length
       console.time(msg)

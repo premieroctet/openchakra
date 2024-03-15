@@ -15,7 +15,7 @@ const Appointment=require('../../server/models/Appointment')
 const { ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, GENDER_MALE, QUIZZ_TYPE_PROGRESS, DIET_REGISTRATION_STATUS_ACTIVE, COACHING_STATUS_NOT_STARTED } = require('../../server/plugins/smartdiet/consts')
 const bcrypt = require('bcryptjs')
 const Coaching = require('../../server/models/Coaching')
-const { importDiets, importCoachings, importAppointments, importCompanies, importMeasures, fixFiles, importQuizz, importQuizzQuestions, importQuizzQuestionAnswer, importUserQuizz, importKeys, importProgressQuizz, importUserProgressQuizz, importOffers, importUserObjectives, importUserAssessmentId, importUserImpactId, importConversations, importMessages, updateImportedCoachingStatus, updateDietCompanies, importSpecs, importDietSpecs, importPatients, importPatientHeight, generateProgress, fixAppointments, importFoodDocuments, importUserFoodDocuments, importNutAdvices, importProfilePictures, importDiplomaPictures, importRibPictures, importNetworks, importDietNetworks } = require('../../server/plugins/smartdiet/import')
+const { importDiets, importCoachings, importAppointments, importCompanies, importMeasures, fixFiles, importQuizz, importQuizzQuestions, importQuizzQuestionAnswer, importUserQuizz, importKeys, importProgressQuizz, importUserProgressQuizz, importOffers, importUserObjectives, importUserAssessmentId, importUserImpactId, importConversations, importMessages, updateImportedCoachingStatus, updateDietCompanies, importSpecs, importDietSpecs, importPatients, importPatientHeight, generateProgress, fixAppointments, importFoodDocuments, importUserFoodDocuments, importNutAdvices, importNetworks, importDietNetworks, importDiploma } = require('../../server/plugins/smartdiet/import')
 const { prepareCache, getCacheKeys, displayCache, loadCache, saveCache } = require('../../utils/import')
 const Content = require('../../server/models/Content')
 const Measure = require('../../server/models/Measure')
@@ -96,7 +96,11 @@ describe('Test imports', () => {
   })
 
   it('must upsert diets', async () => {
-    let res = await importDiets(path.join(ROOT, 'smart_diets.csv'))
+    let res = await importDiets(
+      path.join(ROOT, 'smart_diets.csv'), 
+      path.join(ROOT, 'pictures', 'diets', 'dietpics'),
+      path.join(ROOT, 'pictures', 'diets', 'dietribs'),
+    )
     await forcePasswords()
     const diets=await User.find({role: ROLE_EXTERNAL_DIET})
     expect(diets.filter(d => !!d.phone).length).toBeGreaterThan(diets.length/2)
@@ -105,7 +109,7 @@ describe('Test imports', () => {
     expect(diets.filter(d => !!d.city).length).toBeGreaterThan(diets.length/2)
     expect(diets.filter(d => !!d.birthday).length).toBeGreaterThan(diets.length/2)
     expect(diets.filter(d => !!d[CREATED_AT_ATTRIBUTE]).length).toBeGreaterThan(diets.length/2)
-    expect(diets.filter(d => d.registration_status==DIET_REGISTRATION_STATUS_ACTIVE).length).toBeGreaterThan(diets.length/2)
+    expect(diets.filter(d => d.registration_status==DIET_REGISTRATION_STATUS_ACTIVE).length).toBeGreaterThan(diets.length/10)
     expect(diets.filter(d => !!d.diet_visio_enabled).length).toBeGreaterThan(200)
     expect(diets.filter(d => !!d.diet_coaching_enabled).length).toBeGreaterThan(10)
     expect(diets.filter(d => !!d.diet_site_enabled).length).toBeGreaterThan(200)
@@ -232,24 +236,19 @@ describe('Test imports', () => {
     await importNutAdvices(path.join(ROOT, 'smart_nutadvice.csv'))
   })
 
-  it('must import profile pictures', async () => {
-    await importProfilePictures(path.join(ROOT, 'pictures', 'diets', 'dietpics'))
-  })
-
-  it('must import diploma pictures', async () => {
-    await importDiplomaPictures(path.join(ROOT, 'pictures', 'diets', 'dietdiplomes'))
-  })
-
-  it('must import rib pictures', async () => {
-    await importRibPictures(path.join(ROOT, 'pictures', 'diets', 'dietribs'))
-  })
-
-  it.only('must import networks', async () => {
+  it('must import networks', async () => {
     await importNetworks(path.join(ROOT, 'smart_networks.csv'))
   })
 
-  it.only('must import diet networks', async () => {
+  it('must import diet networks', async () => {
     await importDietNetworks(path.join(ROOT, 'smart_diets_networks.csv'))
+  })
+
+  it('must upsert diploma', async () => {
+    let res = await importDiploma(
+      path.join(ROOT, 'smart_diets.csv'), 
+      path.join(ROOT, 'pictures', 'diets', 'dietdiplomes')
+    )
   })
 
 })

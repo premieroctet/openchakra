@@ -1,6 +1,9 @@
 const {Upload} = require('@aws-sdk/lib-storage')
 const {S3} = require('@aws-sdk/client-s3')
 const {THUMBNAILS_DIR} = require('../../../web/utils/consts')
+const fs=require('fs')
+const mime=require('mime-types')
+const path=require('path')
 
 const s3 = new S3({
   region: process.env.S3_REGION,
@@ -50,6 +53,36 @@ const imageSrcSetPaths = (originalSrc, withDimension=true) => {
   }
 
   return srcSet
+}
+
+exports.sendFileToAWS = async (fullpath, type) => {
+
+  const filename=path.join(process.env.S3_PROD_ROOTPATH, type, path.basename(fullpath))
+  const contents=fs.readFileSync(fullpath)
+  let mimeType=mime.lookup(fullpath)
+  if (!mimeType && /\.peg$/i.test(filename)) {
+    mimeType=mime.lookup('jpg')
+  }
+
+  if (!contents || !mimeType) {
+    console.error(`No contents or mime for`, type, fullpath)
+    return null
+  }
+
+  const params = {
+    Bucket: process.env.S3_BUCKET,
+    Key: filename,
+    Body: contents,
+    ContentType: mimeType,
+    // ACL: 'public-read', // What's this ACL ?
+  }
+
+  const upload=new Upload({client: s3,params})
+  const res=await upload.done()
+
+  // console.log('sending s3 param', params, 'res is', res)
+
+  return res
 }
 
 exports.sendFilesToAWS = async(req, res, next) => {

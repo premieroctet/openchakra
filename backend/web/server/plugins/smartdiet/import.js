@@ -14,7 +14,7 @@ const {
   QUIZZ_QUESTION_TYPE_ENUM_SINGLE, QUIZZ_TYPE_PROGRESS, COACHING_QUESTION_STATUS, COACHING_QUESTION_STATUS_NOT_ADDRESSED, 
   COACHING_QUESTION_STATUS_NOT_ACQUIRED, COACHING_QUESTION_STATUS_IN_PROGRESS, COACHING_QUESTION_STATUS_ACQUIRED, 
   GENDER_MALE, GENDER_FEMALE, COACHING_STATUS_NOT_STARTED, QUIZZ_TYPE_ASSESSMENT, DIET_REGISTRATION_STATUS_REFUSED, 
-  FOOD_DOCUMENT_TYPE_NUTRITION, GENDER 
+  FOOD_DOCUMENT_TYPE_NUTRITION, GENDER, DIET_REGISTRATION_STATUS_VALID, DIET_REGISTRATION_STATUS_PENDING 
 } = require('./consts')
 const { CREATED_AT_ATTRIBUTE, TEXT_TYPE } = require('../../../utils/consts')
 require('../../models/Key')
@@ -27,6 +27,7 @@ require('../../models/Target')
 require('../../models/FoodDocument')
 require('../../models/NutritionAdvice')
 require('../../models/Network')
+require('../../models/Diploma')
 const Quizz = require('../../models/Quizz')
 const Coaching = require('../../models/Coaching')
 const { idEqual } = require('../../utils/database')
@@ -38,7 +39,8 @@ require('../../models/Offer')
 const { updateCoachingStatus } = require('./coaching')
 const { isPhoneOk } = require('../../../utils/sms')
 const UserQuizzQuestion = require('../../models/UserQuizzQuestion')
-const { getFilesFromAWS } = require('../../middlewares/aws')
+const mime = require('mime-types')
+const { sendFilesToAWS, sendFileToAWS } = require('../../middlewares/aws')
 
 const DEFAULT_PASSWORD='DEFAULT'
 const PRESTATION_DURATION=45
@@ -88,13 +90,14 @@ const NUT_REASON={
 
 
 const normalizeTel = tel => {
-  if (tel?.length==9) {
-    tel=`0${tel}`
+  let newTel=tel
+  if (newTel?.length==9) {
+    newTel=`0${newTel}`
   }
-  if (!isPhoneOk(tel)) {
-    tel=null
+  if (!isPhoneOk(newTel)) {
+    newTel=null
   }
-  return tel
+  return newTel
 }
 
 const fixPatients = async directory => {
@@ -110,6 +113,15 @@ const fixPatients = async directory => {
 
   ]
   const PATH=path.join(directory, 'smart_patient.csv')
+  const contents=fs.readFileSync(PATH).toString()
+  let fixed=contents
+  REPLACES.forEach(([search, replace]) => fixed=fixed.replace(search, replace))
+  fs.writeFileSync(PATH, fixed)
+}
+
+const fixDiets = directory => {
+  const REPLACES=[['UPPER(lastname)', 'lastname'], [/\\"/g, "'"], [/\\\\/g, ''],]
+  const PATH=path.join(directory, 'smart_diets.csv')
   const contents=fs.readFileSync(PATH).toString()
   let fixed=contents
   REPLACES.forEach(([search, replace]) => fixed=fixed.replace(search, replace))
@@ -292,6 +304,7 @@ const fixFoodDocuments = async directory => {
 const fixFiles = async directory => {
   console.log('Fixing files')
   await fixPatients(directory)
+  await fixDiets(directory)
   await fixAppointments(directory)
   await fixQuizz(directory)
   await fixQuizzQuestions(directory)
@@ -384,6 +397,13 @@ const HEIGHT_MAPPING={
 const HEIGHT_KEY='_id'
 const HEIGHT_MIGRATION_KEY='migration_id'
 
+const DIET_STATUS_MAPPING={
+  0: DIET_REGISTRATION_STATUS_PENDING,
+  1: DIET_REGISTRATION_STATUS_PENDING,
+  2: DIET_REGISTRATION_STATUS_ACTIVE,
+  3: DIET_REGISTRATION_STATUS_REFUSED,
+  4: DIET_REGISTRATION_STATUS_VALID,
+}
 const DIET_MAPPING={
   role: () => ROLE_EXTERNAL_DIET,
   password: () => DEFAULT_PASSWORD,
@@ -394,18 +414,20 @@ const DIET_MAPPING={
   migration_id: 'SDID',
   zip_code: ({record}) => record.cp?.length==4 ? record.cp+'0' : record.cp,
   address: 'address',
-  phone: ({record}) => normalizeTel(record.TEL),
+  phone: ({record}) => normalizeTel(record.phone),
   adeli: 'adelinumber',
   city: 'city',
   siret: ({record}) => siret.isSIRET(record.siret)||siret.isSIREN(record.siret) ? record.siret : null,
   birthday: 'birthdate',
   [CREATED_AT_ATTRIBUTE]: ({record}) => moment(record['created_at']),
-  registration_status: ({record}) => +record.enabled==1 ? DIET_REGISTRATION_STATUS_ACTIVE : DIET_REGISTRATION_STATUS_REFUSED,
+  registration_status: ({record}) => DIET_STATUS_MAPPING[+record.status],
   diet_coaching_enabled: ({record}) => +record.hasteleconsultation==1,
   diet_visio_enabled: ({record}) => +record.easewithconfs==1,
   diet_site_enabled: ({record}) => +record.hasatelier==1,
   diet_admin_comment: 'comments',
   description: 'annonce',
+  picture: async ({record, picturesDirectory}) => {return await getS3FileForDiet(picturesDirectory, record.firstname, record.lastname, 'profil')},
+  rib: async ({record, ribDirectory}) => {return await getS3FileForDiet(ribDirectory, record.firstname, record.lastname, 'rib')},
   source: () => 'import',
 }
 
@@ -620,6 +642,18 @@ const NETWORK_MAPPING={
 const NETWORK_KEY='name'
 const NETWORK_MIGRATION_KEY='migration_id'
 
+const DIPLOMA_MAPPING={
+  migration_id: 'SDID',
+  name: 'othergrade',
+  date: 'diplomedate',
+  user: ({cache, record}) => cache('user', record.SDID),
+  picture: async ({record, diplomaDirectory}) => {return await getS3FileForDiet(diplomaDirectory, record.firstname, record.lastname, 'diploma')},
+}
+
+const DIPLOMA_KEY='name'
+const DIPLOMA_MIGRATION_KEY='migration_id'
+
+
 const progressCb = step => (index, total)=> {
   step=step||Math.floor(total/10)
   if (step && index%step==0) {
@@ -680,14 +714,15 @@ const importPatients = async input_file => {
     )
 }
 
-const importDiets = async input_file => {
+const importDiets = async (input_file, pictures_directory, rib_directory) => {
   // Deactivate password encryption
   const schema=User.schema
   schema.paths.password.setters=[]
   // End deactivate password encryption
   return loadRecords(input_file)
     .then(records =>  importData({
-      model: 'user', data:records, mapping:DIET_MAPPING, identityKey: DIET_KEY, migrationKey: DIET_MIGRATION_KEY
+      model: 'user', data:records, mapping:DIET_MAPPING, identityKey: DIET_KEY, migrationKey: DIET_MIGRATION_KEY, 
+      picturesDirectory: pictures_directory, ribDirectory: rib_directory,
     }))
 }
 
@@ -891,6 +926,7 @@ const importUserProgressQuizz = async (input_file) => {
   const getProgress = async (coachingId) => {
     let result=progressCache.get(coachingId)
     if (!result) {
+      progressCache.flushAll()
       result=await Coaching.findById(coachingId)
         .populate({path: 'progress', select: {questions:1}, populate: {path: 'questions'}})
       progressCache.set(coachingId, result.progress)
@@ -900,24 +936,15 @@ const importUserProgressQuizz = async (input_file) => {
 
   return loadRecords(input_file)
     .then(records => runPromisesWithDelay(records.map((record, idx) => async () => {
-      console.time('update progress')
-      const log=idx%200 ? () => {} : console.log
-      log(idx,'/', records.length)
+      idx%200==0 && console.log(idx,'/', records.length)
       const coachingId=cache('coaching', record.SDPROGRAMID)
       const progress=await getProgress(coachingId)
       const question=progress.questions.find(q => q.migration_id==record.SDCRITERIAID)
-      if (!!question.single_enum_answer) {
-        return
-      }
       const answer_id=await getCriterionAnswer(record.SDCRITERIAID, record.status)
       if (!question || !answer_id) {
-        console.error(`Not found: Question ${question}: answer ${answer_id}`)
         throw new Error(`Question ${question}: answer ${answer_id}`)
       }
-      question.single_enum_answer=answer_id
-      const res=question.save()
-      console.timeEnd('update progress')
-      return 
+      return UserQuizzQuestion.findByIdAndUdate(question._id, {single_enum_answer: answer_id})
     })))
 }
 
@@ -1069,43 +1096,22 @@ const getDirectoryFiles= directory => {
   }
   return files
 }
-const findFileForDiet = async (directory, diet) => {
-  const normalizedDietName=normalize(diet.fullname).replace(/[\s-]/g, '')
+
+const findFileForDiet = async (directory, firstname, lastname) => {
+  const normalizedDietName=normalize([firstname, lastname].join(' ')).replace(/[\s-]/g, '')
   const files=getDirectoryFiles(directory)
-  return files[normalizedDietName]
+  const found=files[normalizedDietName]
+  // !!found && console.log('Found file', found, 'for', firstname, lastname)
+  return !!found ? path.join(directory, found) : null
 }
 
-const importProfilePictures = async directory => {
-  const req={body: {}}
-  await getFilesFromAWS(req, null, () => {})
-  console.log(req.body.files.filter(({Key}) => !/studio/.test(Key)))
-  const diets=await User.find({role: ROLE_EXTERNAL_DIET})
-  let found=0
-  return runPromisesWithDelay(diets.map(diet => async () => {
-    const filename=await findFileForDiet(directory, diet).catch(console.error)
-    found += (filename ? 1 : 0)
-  }))
-  .then(() => console.log('found', found, 'not found', diets.length-found))
-}
-
-const importDiplomaPictures = async directory => {
-  const diets=await User.find({role: ROLE_EXTERNAL_DIET})
-  let found=0
-  return runPromisesWithDelay(diets.map(diet => async () => {
-    const filename=await findFileForDiet(directory, diet).catch(console.error)
-    found += (filename ? 1 : 0)
-  }))
-  .then(() => console.log('found', found, 'not found', diets.length-found))
-}
-
-const importRibPictures = async directory => {
-  const diets=await User.find({role: ROLE_EXTERNAL_DIET})
-  let found=0
-  return runPromisesWithDelay(diets.map(diet => async () => {
-    const filename=await findFileForDiet(directory, diet).catch(console.error)
-    found += (filename ? 1 : 0)
-  }))
-  .then(() => console.log('found', found, 'not found', diets.length-found))
+const getS3FileForDiet = async (directory, firstname, lastname, type) => {
+  const fullpath=await findFileForDiet(directory, firstname, lastname)
+  if (fullpath) {
+    const s3File=await sendFileToAWS(fullpath, type)
+    // console.log('in S3 got', firstname, lastname, s3File.Location)
+    return s3File?.Location
+  }
 }
 
 const importNetworks = async input_file => {
@@ -1126,6 +1132,15 @@ const importDietNetworks = async input_file => {
       return User.findByIdAndUpdate(dietId, {$addToSet: {networks: networkId}})
     }))
     .then(() => console.log(notfound))
+  )
+}
+
+const importDiploma = async (input_file, diploma_directory) => {
+  return loadRecords(input_file)
+    .then(records => importData({model: 'diploma', data:records, mapping: DIPLOMA_MAPPING, 
+      identityKey: DIPLOMA_KEY, migrationKey: DIPLOMA_MIGRATION_KEY, progressCb: progressCb(), diplomaDirectory: diploma_directory}
+    )
+    .then(console.log)
   )
 }
 
@@ -1156,7 +1171,6 @@ module.exports={
   importFoodDocuments,
   importUserFoodDocuments,
   importNutAdvices,
-  importDiplomaPictures, importProfilePictures, importRibPictures,
-  importNetworks, importDietNetworks,
+  importNetworks, importDietNetworks, importDiploma,
 }
 
