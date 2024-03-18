@@ -755,8 +755,14 @@ declareVirtualField({
       instance: 'ObjectID',
       options: { ref: 'logbookDay' }
     },
+  }),
+  declareVirtualField({
+    model: m, field: 'nutrition_advices', instance: 'Array', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: { ref: 'nutritionAdvice' }
+    },
   })
-  
 })
 // End user/loggedUser
 
