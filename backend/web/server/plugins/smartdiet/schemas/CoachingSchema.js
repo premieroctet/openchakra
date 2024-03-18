@@ -258,12 +258,6 @@ CoachingSchema.virtual('appointment_type', DUMMY_REF).get(function() {
   return appType
 })
 
-CoachingSchema.virtual('nutrition_advices', {
-  ref: 'nutritionAdvice',
-  localField: '_id',
-  foreignField: 'coaching',
-})
-
 CoachingSchema.virtual('spent_nutrition_credits', {
   ref: 'nutritionAdvice',
   localField: '_id',

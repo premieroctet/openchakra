@@ -755,8 +755,14 @@ declareVirtualField({
       instance: 'ObjectID',
       options: { ref: 'logbookDay' }
     },
+  }),
+  declareVirtualField({
+    model: m, field: 'nutrition_advices', instance: 'Array', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: { ref: 'nutritionAdvice' }
+    },
   })
-  
 })
 // End user/loggedUser
 
@@ -1323,6 +1329,14 @@ declareVirtualField({
   requires: 'registered_user',
 })
 declareEnumField({ model: 'lead', field: 'coaching_converted', enumValues: COACHING_CONVERSION_STATUS })
+declareVirtualField({
+  model: 'lead', field: 'nutrition_advices',
+  instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: { ref: 'nutritionAdvice' }
+  },
+})
 
 declareVirtualField({
   model: 'nutritionAdvice', field: 'end_date', instance: 'Date',

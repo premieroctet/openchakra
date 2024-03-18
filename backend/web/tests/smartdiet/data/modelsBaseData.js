@@ -1,14 +1,19 @@
 const {
   COMPANY_ACTIVITY,
-  COMPANY_ACTIVITY_BANQUE
+  COMPANY_ACTIVITY_BANQUE,
+  ROLE_EXTERNAL_DIET
 } = require('../../../server/plugins/smartdiet/consts')
 
 module.exports={
   COMPANY_NO_INSURANCE_DATA:{
     name: 'S', size: 10, activity: COMPANY_ACTIVITY_BANQUE,
   },
-  USER_DATA:{firstname: 'S', lastname: 'S', dataTreatmentAccepted: true,
+  USER_DATA:{
+    firstname: 'Patient', lastname: 'Patient', dataTreatmentAccepted: true,
     cguAccepted: true, pseudo: 'S', phone: '0675774324'
+  },
+  DIET_DATA:{
+    firstname: 'Diet', lastname: 'Diet', role: ROLE_EXTERNAL_DIET
   },
   COACHING_DATA: {},
   APPOINTMENT_DATA: {

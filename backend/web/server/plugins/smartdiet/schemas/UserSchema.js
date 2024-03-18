@@ -717,6 +717,12 @@ UserSchema.virtual('days_inactivity', {localField:'tagada', foreignField:'tagada
   return moment().diff(moment(this.last_activity), 'days')
 })
 
+UserSchema.virtual("nutrition_advices", {
+  ref: "nutritionAdvice", // The Model to use
+  localField: function() {return this.role==ROLE_EXTERNAL_DIET ?  "_id" : "email"}, // Find in Model, where localField
+  foreignField: function() {return this.role==ROLE_EXTERNAL_DIET ?  "diet" : "patient_email"}, // is equal to foreignField
+})
+
 /* eslint-enable prefer-arrow-callback */
 
 module.exports = UserSchema
