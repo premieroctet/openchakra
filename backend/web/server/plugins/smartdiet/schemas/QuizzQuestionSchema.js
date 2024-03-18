@@ -15,6 +15,7 @@ const Schema = mongoose.Schema
 const QuizzQuestionSchema = new Schema({
   title: {
     type: String,
+    index: true,
     required: [true, 'Le titre est obligatoire'],
   },
   // Title for synthesis

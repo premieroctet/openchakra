@@ -110,9 +110,6 @@ const replaceInFile = (path, replaces) => {
     console.log('Updated', path)
     fs.writeFileSync(path, fixed)
   }
-  else{
-    console.log('No need to update', path)
-  }
 }
 
 const fixPatients = async directory => {
@@ -196,7 +193,6 @@ const fixSpecs = directory => {
 
 const loadRecords = async path =>  {
   const msg=`Loading records from ${path}`
-  console.log(msg)
   console.time(msg)
   const contents=fs.readFileSync(path)
   const {records} = await extractData(contents, {format: TEXT_TYPE, delimiter: ';'})
@@ -215,7 +211,7 @@ const generateMessages = async directory =>{
   const OUTPUT=path.join(directory, 'message.csv')
 
   if (isNewerThan(OUTPUT, THREADS) && isNewerThan(OUTPUT, MESSAGES)) {
-    console.log('No need to generate', OUTPUT)
+    // console.log('No need to generate', OUTPUT)
     return
   }
   console.log('Generating', OUTPUT)
@@ -254,7 +250,7 @@ const generateProgress = async directory => {
   const outputPath = path.join(directory, 'progress.csv')
 
   if (isNewerThan(outputPath, consulPath) && isNewerThan(outputPath, consultProgressPath)) {
-    console.log('No need to generate', outputPath)
+    // console.log('No need to generate', outputPath)
     return
   }
   console.log('Generating', outputPath)
@@ -636,9 +632,14 @@ const NETWORK_MAPPING={
 const NETWORK_KEY='name'
 const NETWORK_MIGRATION_KEY='migration_id'
 
+const GRADE_MAPPING={
+  0: 'BTS',
+  1: 'DUT',
+}
+
 const DIPLOMA_MAPPING={
   migration_id: 'SDID',
-  name: 'othergrade',
+  name: ({record}) => GRADE_MAPPING[+record.grade],
   date: 'diplomedate',
   user: ({cache, record}) => cache('user', record.SDID),
   picture: async ({record, diplomaDirectory}) => {
@@ -648,8 +649,18 @@ const DIPLOMA_MAPPING={
   },
 }
 
-const DIPLOMA_KEY='name'
+const DIPLOMA_KEY='migration_id'
 const DIPLOMA_MIGRATION_KEY='migration_id'
+
+
+const OTHER_DIPLOMA_MAPPING={
+  migration_id: ({record}) => (+record.SDID)*10,
+  name: 'othergrade',
+  user: ({cache, record}) => cache('user', record.SDID),
+}
+
+const OTHER_DIPLOMA_KEY='migration_id'
+const OTHER_DIPLOMA_MIGRATION_KEY='migration_id'
 
 
 const progressCb = step => (index, total)=> {
@@ -752,6 +763,8 @@ const importCoachings = async input_file => {
       return importData({model: 'coaching', data:records, mapping:COACHING_MAPPING, 
       identityKey: COACHING_KEY, migrationKey: COACHING_MIGRATION_KEY, progressCb: progressCb()})
     })
+    .then(() => Coaching.find({migration_id: {$ne: null}}, {user:1}))
+    .then(coachings => Promise.all(coachings.map(ensureSurvey)))
 }
 
 const importAppointments = async input_file => {
@@ -955,20 +968,18 @@ const importUserProgressQuizz = async (input_file) => {
 }
 
 const importUserObjectives = async input_file => {
-  const contents=fs.readFileSync(input_file)
-  return await Promise.all([guessFileType(contents), guessDelimiter(contents)])
-    .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
-    .then(({records}) => runPromisesWithDelay(records.map((record, idx) => async () => {
+  return loadRecords(input_file)
+    .then(records => runPromisesWithDelay(records.map((record, idx) => async () => {
       if (idx%1000==0) {
         console.log(idx, '/', records.length)
       }
       const dt=moment(record.date)
       const userId=cache('user', record.SDPATIENTID)
-      const appointments=await Appointment.find({user: user_id}, {start_date:1})
-      const nearestAppt=lodash.minBy(appointments, app => Math.abs(dt.diff(app.start_date, 'minute')))
-      if (!user) {
+      if (!userId) {
         throw new Error('no user for', record.SDPATIENTID)
       }
+      const appointments=await Appointment.find({user: userId}, {start_date:1}).catch(console.error)
+      const nearestAppt=lodash.minBy(appointments, app => Math.abs(dt.diff(app.start_date, 'minute')))
       if (!nearestAppt) {
         throw new Error('no nearest appt for', record.SDPATIENTID)
       }
@@ -978,6 +989,7 @@ const importUserObjectives = async input_file => {
       }
       const userQuestion=await question.cloneAsUserQuestion()
       return Appointment.findByIdAndUpdate(nearestAppt._id, {$addToSet: {objectives: question, user_objectives: userQuestion}})
+        .then(() => null)
     })))
 }
 
@@ -1151,6 +1163,15 @@ const importDiploma = async (input_file, diploma_directory) => {
   )
 }
 
+const importOtherDiploma = async (input_file) => {
+  return loadRecords(input_file)
+    .then(records => importData({model: 'diploma', data:records, mapping: OTHER_DIPLOMA_MAPPING, 
+      identityKey: OTHER_DIPLOMA_KEY, migrationKey: OTHER_DIPLOMA_MIGRATION_KEY, progressCb: progressCb()}
+    )
+    .then(console.log)
+  )
+}
+
 module.exports={
   importCompanies,
   importOffers,
@@ -1179,5 +1200,6 @@ module.exports={
   importUserFoodDocuments,
   importNutAdvices,
   importNetworks, importDietNetworks, importDiploma,
+  importOtherDiploma,
 }
 

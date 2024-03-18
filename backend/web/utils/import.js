@@ -173,9 +173,7 @@ function upsertRecord({model, record, identityKey, migrationKey, updateOnly}) {
           throw new Error(`Could not find ${model.modelName} matching ${JSON.stringify(identityFilter)}`)
         }
         return model.create({...record})
-          .catch(console.error)
       }
-      // return ({_id: result._id})
       return model.findByIdAndUpdate(result._id, record, {runValidators:true, new: true})
         .then(() => ({_id: result._id}))
     })

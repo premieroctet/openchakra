@@ -56,8 +56,6 @@ const imageSrcSetPaths = (originalSrc, withDimension=true) => {
 }
 
 exports.sendFileToAWS = async (fullpath, type) => {
-
-  console.log('send file')
   const filename=path.join(process.env.S3_PROD_ROOTPATH, type, path.basename(fullpath))
   const contents=fs.readFileSync(fullpath)
   let mimeType=mime.lookup(fullpath)
