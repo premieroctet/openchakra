@@ -27,6 +27,7 @@ const { isDevelopment } = require('../../config/config')
 const { CREATED_AT_ATTRIBUTE } = require('../../utils/consts')
 const { updateCoachingStatus } = require('../../server/plugins/smartdiet/coaching')
 const { runPromisesWithDelay } = require('../../server/utils/concurrency')
+const UserQuizz = require('../../server/models/UserQuizz')
 require('../../server/models/Item')
 
 const ORIGINAL_DB=true
@@ -180,6 +181,26 @@ describe('Test imports', () => {
     let res = await importProgressQuizz(path.join(ROOT, 'smart_criteria.csv'))
     const quizz=await Quizz.findOne({type: QUIZZ_TYPE_PROGRESS}).populate('questions')
     expect(quizz.questions.every(q => !!q.migration_id)).toBeTruthy
+  })
+
+  it('must attach progress quizz to its coaching', async () => {
+    const quizzs=await UserQuizz.find({type: QUIZZ_TYPE_PROGRESS})
+    let found=0
+    await runPromisesWithDelay(quizzs.map((q, idx) => async () => {
+      idx%500==0 && console.log(idx, '/', quizzs.length)
+      coaching=await Coaching.findOne({progress: q._id}, {_id:1})
+      if (!!coaching  && !q.coaching) {
+        found+=1
+        console.log('add')
+        q.coaching=coaching ._id
+        await q.save()
+      }
+      if (!coaching  && !!q.coaching) {
+        console.log('remove')
+        await q.delete()
+      }
+    }))
+    console.log('found', found, '/', quizzs.length)
   })
 
   it('must upsert user progress quizz', async () => {

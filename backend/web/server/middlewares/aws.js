@@ -57,6 +57,7 @@ const imageSrcSetPaths = (originalSrc, withDimension=true) => {
 
 exports.sendFileToAWS = async (fullpath, type) => {
 
+  console.log('send file')
   const filename=path.join(process.env.S3_PROD_ROOTPATH, type, path.basename(fullpath))
   const contents=fs.readFileSync(fullpath)
   let mimeType=mime.lookup(fullpath)
@@ -78,9 +79,9 @@ exports.sendFileToAWS = async (fullpath, type) => {
   }
 
   const upload=new Upload({client: s3,params})
-  const res=await upload.done()
+  const res=await upload.done().catch(console.error)
 
-  // console.log('sending s3 param', params, 'res is', res)
+  console.log('res is', res)
 
   return res
 }

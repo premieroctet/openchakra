@@ -14,7 +14,7 @@ const {
   QUIZZ_QUESTION_TYPE_ENUM_SINGLE, QUIZZ_TYPE_PROGRESS, COACHING_QUESTION_STATUS, COACHING_QUESTION_STATUS_NOT_ADDRESSED, 
   COACHING_QUESTION_STATUS_NOT_ACQUIRED, COACHING_QUESTION_STATUS_IN_PROGRESS, COACHING_QUESTION_STATUS_ACQUIRED, 
   GENDER_MALE, GENDER_FEMALE, COACHING_STATUS_NOT_STARTED, QUIZZ_TYPE_ASSESSMENT, DIET_REGISTRATION_STATUS_REFUSED, 
-  FOOD_DOCUMENT_TYPE_NUTRITION, GENDER, DIET_REGISTRATION_STATUS_VALID, DIET_REGISTRATION_STATUS_PENDING 
+  FOOD_DOCUMENT_TYPE_NUTRITION, GENDER, DIET_REGISTRATION_STATUS_VALID, DIET_REGISTRATION_STATUS_PENDING, COACHING_CONVERSION_CANCELLED 
 } = require('./consts')
 const { CREATED_AT_ATTRIBUTE, TEXT_TYPE } = require('../../../utils/consts')
 require('../../models/Key')
@@ -41,6 +41,8 @@ const { isPhoneOk } = require('../../../utils/sms')
 const UserQuizzQuestion = require('../../models/UserQuizzQuestion')
 const mime = require('mime-types')
 const { sendFilesToAWS, sendFileToAWS } = require('../../middlewares/aws')
+const UserQuizz = require('../../models/UserQuizz')
+const { isNewerThan } = require('../../utils/filesystem')
 
 const DEFAULT_PASSWORD='DEFAULT'
 const PRESTATION_DURATION=45
@@ -100,6 +102,19 @@ const normalizeTel = tel => {
   return newTel
 }
 
+const replaceInFile = (path, replaces) => {
+  const contents=fs.readFileSync(path).toString()
+  let fixed=contents
+  replaces.forEach(([search, replace]) => fixed=fixed.replace(search, replace))
+  if (fixed!=contents) {
+    console.log('Updated', path)
+    fs.writeFileSync(path, fixed)
+  }
+  else{
+    console.log('No need to update', path)
+  }
+}
+
 const fixPatients = async directory => {
   const REPLACES=[
     [/\\"/g, "'"], [/\\\\/g, ''], [/orange\.f\\\n/g, 'orange.f'],
@@ -112,31 +127,20 @@ const fixPatients = async directory => {
     [/yanis69240hotmail.com/, 'yanis69240@hotmail.com']
 
   ]
-  const PATH=path.join(directory, 'smart_patient.csv')
-  const contents=fs.readFileSync(PATH).toString()
-  let fixed=contents
-  REPLACES.forEach(([search, replace]) => fixed=fixed.replace(search, replace))
-  fs.writeFileSync(PATH, fixed)
+
+  replaceInFile(path.join(directory, 'smart_patient.csv'), REPLACES)
 }
 
 const fixDiets = directory => {
-  const REPLACES=[['UPPER(lastname)', 'lastname'], [/\\"/g, "'"], [/\\\\/g, ''],]
-  const PATH=path.join(directory, 'smart_diets.csv')
-  const contents=fs.readFileSync(PATH).toString()
-  let fixed=contents
-  REPLACES.forEach(([search, replace]) => fixed=fixed.replace(search, replace))
-  fs.writeFileSync(PATH, fixed)
+  const REPLACES=[['UPPER(lastname)', 'lastname'], [/\\""/g, "'"], [/\\"/g, "'"], [/\\\\/g, ''],]
+  replaceInFile(path.join(directory, 'smart_diets.csv'), REPLACES)
 }
 
 const fixAppointments = directory => {
   const REPLACES=[
     [/\\"/g, "'"], [/\\\\/g, ''],
   ]
-  const PATH=path.join(directory, 'smart_consultation.csv')
-  const contents=fs.readFileSync(PATH).toString()
-  let fixed=contents
-  REPLACES.forEach(([search, replace]) => fixed=fixed.replace(search, replace))
-  fs.writeFileSync(PATH, fixed)
+  replaceInFile(path.join(directory, 'smart_consultation.csv'), REPLACES)
 }
 
 const fixQuizz = directory => {
@@ -144,53 +148,33 @@ const fixQuizz = directory => {
     [/.quilibre/g, 'Equilibre'], [/\/ Vegan/g, '/Vegan'], [/Apéro \!/g, 'Apéro'], [/Fr.quences/g, 'Fréquences'],
     [/.quivalences/g, 'Equivalences'],
   ]
-  const PATH=path.join(directory, 'smart_quiz.csv')
-  const contents=fs.readFileSync(PATH).toString()
-  let fixed=contents
-  REPLACES.forEach(([search, replace]) => fixed=fixed.replace(search, replace))
-  fs.writeFileSync(PATH, fixed)
+  replaceInFile(path.join(directory, 'smart_quiz.csv'), REPLACES)
 }
 
 const fixQuizzQuestions = directory => {
   const REPLACES=[
     [/\\"/g, "'"], [/\\\\/g, ''],
   ]
-  const PATH=path.join(directory, 'smart_question.csv')
-  const contents=fs.readFileSync(PATH).toString()
-  let fixed=contents
-  REPLACES.forEach(([search, replace]) => fixed=fixed.replace(search, replace))
-  fs.writeFileSync(PATH, fixed)
+  replaceInFile(path.join(directory, 'smart_question.csv'), REPLACES)
 }
 
 const fixObjectives = directory => {
   const REPLACES=[
     [/\\"/g, "'"], [/\\\\/g, ''],
   ]
-  const PATH=path.join(directory, 'smart_objective.csv')
-  const contents=fs.readFileSync(PATH).toString()
-  let fixed=contents
-  REPLACES.forEach(([search, replace]) => fixed=fixed.replace(search, replace))
-  fs.writeFileSync(PATH, fixed)
+  replaceInFile(path.join(directory, 'smart_objective.csv'), REPLACES)
 }
 
 const fixMessages = directory => {
   const REPLACES=[
     [/\\"/g, "'"], [/\\\\/g, ''],
   ]
-  const PATH=path.join(directory, 'smart_message.csv')
-  const contents=fs.readFileSync(PATH).toString()
-  let fixed=contents
-  REPLACES.forEach(([search, replace]) => fixed=fixed.replace(search, replace))
-  fs.writeFileSync(PATH, fixed)
+  replaceInFile(path.join(directory, 'smart_message.csv'), REPLACES)
 }
 
 const fixSummary = directory => {
   const REPLACES=[ [/\r/g, ''], [/\\"/g, "'"], [/\\\\/g, ''],]
-  const PATH=path.join(directory, 'smart_summary.csv')
-  const contents=fs.readFileSync(PATH).toString()
-  let fixed=contents
-  REPLACES.forEach(([search, replace]) => fixed=fixed.replace(search, replace))
-  fs.writeFileSync(PATH, fixed)
+  replaceInFile(path.join(directory, 'smart_summary.csv'), REPLACES)
 }
 
 const fixSpecs = directory => {
@@ -207,16 +191,16 @@ const fixSpecs = directory => {
     [ 'Troubles hormonaux', 'Hyperthyroïdie' ],
     [ 'Végétariens et végétaliens', 'Végétarisme' ]
   ]
-  const PATH=path.join(directory, 'smart_spec.csv')
-  const contents=fs.readFileSync(PATH).toString()
-  let fixed=contents
-  REPLACES.forEach(([search, replace]) => fixed=fixed.replace(search, replace))
-  fs.writeFileSync(PATH, fixed)
+  replaceInFile(path.join(directory, 'smart_spec.csv'), REPLACES)
 }
 
 const loadRecords = async path =>  {
+  const msg=`Loading records from ${path}`
+  console.log(msg)
+  console.time(msg)
   const contents=fs.readFileSync(path)
   const {records} = await extractData(contents, {format: TEXT_TYPE, delimiter: ';'})
+  console.timeEnd(msg)
   return records
 }
 
@@ -227,6 +211,15 @@ const getMessageId = (threadId, date) => {
 const generateMessages = async directory =>{
   const THREADS=path.join(directory, 'smart_thread.csv')
   const MESSAGES=path.join(directory, 'smart_message.csv')
+
+  const OUTPUT=path.join(directory, 'message.csv')
+
+  if (isNewerThan(OUTPUT, THREADS) && isNewerThan(OUTPUT, MESSAGES)) {
+    console.log('No need to generate', OUTPUT)
+    return
+  }
+  console.log('Generating', OUTPUT)
+
   const records=await loadRecords(MESSAGES)
   const conversations=lodash(records)
     .groupBy('SDTHREADID')
@@ -252,7 +245,7 @@ const generateMessages = async directory =>{
       messContents.push([msgId,message.SDTHREADID,sender, receiver, message.datetime, message.message].join(';'))
     }
   })
-  fs.writeFileSync(path.join(directory, 'message.csv'), messContents.join('\n'))
+  fs.writeFileSync(OUTPUT, messContents.join('\n'))
 }
 
 const generateProgress = async directory => {
@@ -260,7 +253,12 @@ const generateProgress = async directory => {
   const consultProgressPath = path.join(directory, 'smart_consultation_progress.csv')
   const outputPath = path.join(directory, 'progress.csv')
 
-  console.time('Progress')
+  if (isNewerThan(outputPath, consulPath) && isNewerThan(outputPath, consultProgressPath)) {
+    console.log('No need to generate', outputPath)
+    return
+  }
+  console.log('Generating', outputPath)
+
   let consultations=await loadRecords(consulPath)
   let progress=await loadRecords(consultProgressPath)
 
@@ -294,11 +292,7 @@ const fixFoodDocuments = async directory => {
   const REPLACES=[
     [/\\"/g, "'"], [/\\\\/g, ''],
   ]
-  const input_path=path.join(directory, 'smart_fiche.csv')
-  const contents=fs.readFileSync(input_path).toString()
-  let fixed=contents
-  REPLACES.forEach(([search, replace]) => fixed=fixed.replace(search, replace))
-  fs.writeFileSync(input_path, fixed)
+  replaceInFile(path.join(directory, 'smart_fiche.csv'), REPLACES)
 }
 
 const fixFiles = async directory => {
@@ -647,7 +641,11 @@ const DIPLOMA_MAPPING={
   name: 'othergrade',
   date: 'diplomedate',
   user: ({cache, record}) => cache('user', record.SDID),
-  picture: async ({record, diplomaDirectory}) => {return await getS3FileForDiet(diplomaDirectory, record.firstname, record.lastname, 'diploma')},
+  picture: async ({record, diplomaDirectory}) => {
+    const url=await getS3FileForDiet(diplomaDirectory, record.firstname, record.lastname, 'diploma')
+      .catch(err => console.error(record, err))
+    return url
+  },
 }
 
 const DIPLOMA_KEY='name'
@@ -926,25 +924,33 @@ const importUserProgressQuizz = async (input_file) => {
   const getProgress = async (coachingId) => {
     let result=progressCache.get(coachingId)
     if (!result) {
-      progressCache.flushAll()
-      result=await Coaching.findById(coachingId)
-        .populate({path: 'progress', select: {questions:1}, populate: {path: 'questions'}})
+      result=await UserQuizz.findOne({coaching: coachingId})
+        .populate('questions')
       progressCache.set(coachingId, result.progress)
     }
     return result
   }
 
+  const SLICE=0
   return loadRecords(input_file)
-    .then(records => runPromisesWithDelay(records.map((record, idx) => async () => {
-      idx%200==0 && console.log(idx,'/', records.length)
+    .then(records => runPromisesWithDelay(records.slice(SLICE).map((record, idx) => async () => {
+      if (idx%500==0)  {
+        console.log(idx,'/', records.length-SLICE)
+        if (global.gc) {
+          console.log('gc')
+          global.gc();
+      }
+      }
       const coachingId=cache('coaching', record.SDPROGRAMID)
       const progress=await getProgress(coachingId)
       const question=progress.questions.find(q => q.migration_id==record.SDCRITERIAID)
       const answer_id=await getCriterionAnswer(record.SDCRITERIAID, record.status)
       if (!question || !answer_id) {
+        console.log(`Question ${question}: answer ${answer_id}`)
         throw new Error(`Question ${question}: answer ${answer_id}`)
       }
-      return UserQuizzQuestion.findByIdAndUdate(question._id, {single_enum_answer: answer_id})
+      question.single_enum_answer=answer_id
+      return question.save().then(() => null)
     })))
 }
 
@@ -1109,6 +1115,7 @@ const getS3FileForDiet = async (directory, firstname, lastname, type) => {
   const fullpath=await findFileForDiet(directory, firstname, lastname)
   if (fullpath) {
     const s3File=await sendFileToAWS(fullpath, type)
+      .catch(err => console.error('err on', fullpath))
     // console.log('in S3 got', firstname, lastname, s3File.Location)
     return s3File?.Location
   }

@@ -3,6 +3,7 @@ const path = require('path')
 const crypto = require('crypto')
 const multer = require('multer')
 const {IMAGE_EXTENSIONS, TEXT_EXTENSIONS, XL_EXTENSIONS, PDF_EXTENSIONS} = require('../../utils/consts')
+const { fixFiles } = require('../plugins/smartdiet/import')
 
 const ensureDirectoryExists = dirName => {
   const rootDir = path.join(path.dirname(require.main.filename), '..')
@@ -90,6 +91,11 @@ const createMemoryMulter = fileFilter => {
   return upload
 }
 
+// Check if first exists and is newer than second (dependencies)
+const isNewerThan= (first, second) => {
+  return fs.existsSync(first) && fs.existsSync(second) && fs.statSync(first).mtimeMs>fs.statSync(second).mtimeMs
+}
+
 module.exports = {
   createDiskMulter,
   createMemoryMulter,
@@ -97,4 +103,5 @@ module.exports = {
   TEXT_FILTER,
   XL_FILTER,
   PDF_FILTER,
+  isNewerThan,
 }

@@ -31,6 +31,12 @@ const UserQuizzSchema = new Schema({
     ref: 'userQuizzQuestion',
     required: true,
   }],
+  coaching: {
+    type: Schema.Types.ObjectId,
+    index: true,
+    ref: 'coaching',
+    required: false,
+  }
 }, schemaOptions)
 
 module.exports = UserQuizzSchema
