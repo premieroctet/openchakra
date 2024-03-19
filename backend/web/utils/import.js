@@ -199,8 +199,10 @@ const importData = ({model, data, mapping, identityKey, migrationKey, progressCb
   console.log(`Ready to insert ${model}, ${data.length} source records, identity key is ${identityKey}, migration key is ${migrationKey}`)
   const msg=`Inserted ${model}, ${data.length} source records`
   const mongoModel=mongoose.model(model)
+  console.time('Mapping records')
   return Promise.all(data.map(record => mapRecord({record, mapping, ...rest})))
     .then(mappedData => {
+      console.timeEnd('Mapping records')
       const recordsCount=mappedData.length
       console.time(msg)
       return runPromisesWithDelay(mappedData.map((data, index) => () => {

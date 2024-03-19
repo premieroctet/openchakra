@@ -45,9 +45,15 @@ const UserQuizz = require('../../models/UserQuizz')
 const { isNewerThan } = require('../../utils/filesystem')
 
 const DEFAULT_PASSWORD='DEFAULT'
-const PRESTATION_DURATION=45
-const PRESTATION_NAME=`Générique ${PRESTATION_DURATION} minutes`
-const PRESTATION_SMARTAGENDA_ID=-1
+
+const ASS_PRESTATION_DURATION=45
+const ASS_PRESTATION_NAME=`Bilan générique ${ASS_PRESTATION_DURATION} minutes`
+const ASS_PRESTATION_SMARTAGENDA_ID=-1
+
+const FOLLOWUP_PRESTATION_DURATION=15
+const FOLLOWUP_PRESTATION_NAME=`Suivi générique ${FOLLOWUP_PRESTATION_DURATION} minutes`
+const FOLLOWUP_PRESTATION_SMARTAGENDA_ID=-2
+
 const KEY_NAME='Clé import'
 
 const QUIZZ_FACTOR=100
@@ -133,11 +139,47 @@ const fixDiets = directory => {
   replaceInFile(path.join(directory, 'smart_diets.csv'), REPLACES)
 }
 
-const fixAppointments = directory => {
+const fixAppointments = async directory => {
+  const INPUT=path.join(directory, 'smart_consultation.csv')
+  const MIS_INPUT=path.join(directory, 'smart_mis.csv')
+  const EO_INPUT=path.join(directory, 'smart_eo.csv')
+  const OUTPUT=path.join(directory, 'consultation.csv')
   const REPLACES=[
     [/\\"/g, "'"], [/\\\\/g, ''],
   ]
-  replaceInFile(path.join(directory, 'smart_consultation.csv'), REPLACES)
+  replaceInFile(INPUT, REPLACES)
+  let records=await loadRecords(INPUT)
+
+  if (isNewerThan(OUTPUT, INPUT) && isNewerThan(OUTPUT, MIS_INPUT) && isNewerThan(OUTPUT, EO_INPUT)) {
+    console.log('no need to generate appts')
+    return 
+  }
+  console.log('Generating appts')
+  // Remove MIS appointments
+  console.log('records before MIS filter', records.length)
+  const mis=(await loadRecords(MIS_INPUT)).map(record => record.SDCONSULTID)
+  records=records.filter(r => !mis.includes(r.SDCONSULTID))
+  console.log('records after MIS filter', records.length)
+
+  // Remove EO appointments
+  console.log('records before EO filter', records.length)
+  const eo=(await loadRecords(EO_INPUT)).map(record => record.SDCONSULTID)
+  records=records.filter(r => !eo.includes(r.SDCONSULTID))
+  console.log('records after EO filter', records.length)
+  
+  const firstAppointments=lodash(records).groupBy('SDPROGRAMID')
+    .mapValues(consults => lodash.minBy(consults, c => moment(c.date)).SDCONSULTID)
+    .value()
+  const ASS_HEADER='assessment'
+  const keys=[...Object.keys(records[0]), ASS_HEADER]
+  const result=[keys.join(';')]
+  records.forEach(record => {
+    const line=keys.map(k => k==ASS_HEADER ? (firstAppointments[record.SDPROGRAMID]==record.SDCONSULTID ? "1" : "0"): record[k])
+    result.push(line.join(';'))
+  })
+
+  
+  fs.writeFileSync(OUTPUT, result.join('\n'))
 }
 
 const fixQuizz = directory => {
@@ -250,7 +292,7 @@ const generateProgress = async directory => {
   const outputPath = path.join(directory, 'progress.csv')
 
   if (isNewerThan(outputPath, consulPath) && isNewerThan(outputPath, consultProgressPath)) {
-    // console.log('No need to generate', outputPath)
+    console.log('No need to generate', outputPath)
     return
   }
   console.log('Generating', outputPath)
@@ -436,12 +478,12 @@ const COACHING_MAPPING={
 const COACHING_KEY=['user', CREATED_AT_ATTRIBUTE]
 const COACHING_MIGRATION_KEY='migration_id'
 
-const APPOINTMENT_MAPPING= prestation_id => ({
+const APPOINTMENT_MAPPING= (assessment_id, followup_id) => ({
   coaching: ({cache, record}) => cache('coaching', record.SDPROGRAMID),
   start_date: 'date',
   end_date: ({record}) => moment(record.date).add(45, 'minutes'),
   note: 'comments',
-  appointment_type: () => prestation_id,
+  appointment_type: ({record}) => +record.assessment ? assessment_id : followup_id,
   migration_id: 'SDCONSULTID',
   diet: async ({cache, record}) => {
     let diet=cache('user', record.SDDIETID)
@@ -768,19 +810,24 @@ const importCoachings = async input_file => {
 }
 
 const importAppointments = async input_file => {
-  let prestation=await AppointmentType.findOne({title: PRESTATION_NAME})
-  if (!prestation) {
-    prestation=await AppointmentType.create({title: PRESTATION_NAME, duration: PRESTATION_DURATION, 
-      smartagenda_id: PRESTATION_SMARTAGENDA_ID})
+  let assessemntType=await AppointmentType.findOne({title: ASS_PRESTATION_NAME})
+  if (!assessemntType) {
+    assessemntType=await AppointmentType.create({title: ASS_PRESTATION_NAME, duration: ASS_PRESTATION_DURATION, 
+      smartagenda_id: ASS_PRESTATION_SMARTAGENDA_ID})
   }
-  prestation=prestation._id
 
-  const contents=fs.readFileSync(input_file)
+  let followupType=await AppointmentType.findOne({title: FOLLOWUP_PRESTATION_NAME})
+  if (!followupType) {
+    followupType=await AppointmentType.create({title: FOLLOWUP_PRESTATION_NAME, duration: FOLLOWUP_PRESTATION_DURATION, 
+      smartagenda_id: FOLLOWUP_PRESTATION_SMARTAGENDA_ID})
+  }
+
   return loadRecords(input_file)
-    .then(records => 
-      importData({model: 'appointment', data:records, mapping:APPOINTMENT_MAPPING(prestation), 
-      identityKey: APPOINTMENT_KEY, migrationKey: APPOINTMENT_MIGRATION_KEY, progressCb: progressCb()}
-    ))
+    .then(records => {
+      const mapping=APPOINTMENT_MAPPING(assessemntType._id, followupType._id)
+      return importData({model: 'appointment', data:records, mapping, 
+        identityKey: APPOINTMENT_KEY, migrationKey: APPOINTMENT_MIGRATION_KEY, progressCb: progressCb()})
+    })
 }
 
 const importMeasures = async input_file => {

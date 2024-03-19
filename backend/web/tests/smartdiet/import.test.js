@@ -126,7 +126,7 @@ describe('Test imports', () => {
   })
 
   it('must upsert appointments', async () => {
-    await importAppointments(path.join(ROOT, 'smart_consultation.csv'))
+    await importAppointments(path.join(ROOT, 'consultation.csv'))
     const user=await User.findOne({email: PATIENT_EMAIL})
     const coachings=await Coaching.find({user})
     const appts=await Appointment.find({coaching: coachings})
