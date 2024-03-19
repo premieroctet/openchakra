@@ -73,7 +73,30 @@ exports.sendFileToAWS = async (fullpath, type) => {
     Key: filename,
     Body: contents,
     ContentType: mimeType,
-    // ACL: 'public-read', // What's this ACL ?
+  }
+
+  const upload=new Upload({client: s3,params})
+  const res=await upload.done().catch(console.error)
+
+  console.log('res is', res)
+
+  return res
+}
+
+exports.sendBufferToAWS = async ({filename, buffer, type, mimeType}) => {
+  const fullfilename=path.join(process.env.S3_PROD_ROOTPATH, type, filename)
+  const contents=buffer
+
+  if (!buffer?.length || !mimeType) {
+    console.error(`No contents or mime for`, type, fullpath)
+    return null
+  }
+
+  const params = {
+    Bucket: process.env.S3_BUCKET,
+    Key: fullfilename,
+    Body: contents,
+    ContentType: mimeType,
   }
 
   const upload=new Upload({client: s3,params})

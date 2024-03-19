@@ -40,6 +40,7 @@ const Lead = require('../../models/Lead')
 const Conversation = require('../../models/Conversation')
 const Appointment = require('../../models/Appointment')
 const Coaching = require('../../models/Coaching')
+const { sendBufferToAWS } = require('../../middlewares/aws')
 
 const smartdiet_join_group = ({ value, join }, user) => {
   return Group.findByIdAndUpdate(value, join ? { $addToSet: { users: user._id } } : { $pull: { users: user._id } })
@@ -312,23 +313,32 @@ const downloadSmartdietDocument = ({type, patientId, documentId}) => {
   return axios.post(url, postData, {
     headers: {
       'Authorization': `Basic ${encodedCredentials}`,
-      // 'Content-Type': 'application/json', // adjust content type if needed
+      'Content-Type': 'application/json',
     }
-  })  
+  })
+  .then(({data}) => Buffer.from(data, 'base64'))
 }
 
 
 const downloadAssessment = async ({value}, sender) => {
   const coaching=await Coaching.findById(value).populate('user')
-  return downloadSmartdietDocument({type: 'summary', patientId: coaching.smartdiet_patient_id, documentId: coaching.smartdiet_assessment_id})
+  const buffer=await downloadSmartdietDocument({type: 'summary', patientId: coaching.smartdiet_patient_id, documentId: coaching.smartdiet_assessment_id})
+
+  const s3File=await sendBufferToAWS({filename: `checkup_${coaching._id}.pdf`, buffer, type: 'document', mimeType: 'application/pdf', })
+  console.log('got file', s3File?.Location)
+  return Coaching.findByIdAndUpdate(value, {smartdiet_assessment_document: s3File?.Location}, {runValidators: true, new: true}).catch(console.error)
 }
 addAction('smartdiet_download_assessment', downloadAssessment)
 
 const downloadImpact = async ({value}, sender) => {
   const coaching=await Coaching.findById(value).populate('user')
-  return downloadSmartdietDocument({type: 'secondsummary', patientId: coaching.smartdiet_patient_id, documentId: coaching.smartdiet_impact_id})
+  const buffer=await downloadSmartdietDocument({type: 'secondsummary', patientId: coaching.smartdiet_patient_id, documentId: coaching.smartdiet_impact_id})
+
+  const s3File=await sendBufferToAWS({filename: `impact_${coaching._id}.pdf`, buffer, type: 'document', mimeType: 'application/pdf', })
+  console.log('got file', s3File?.Location)
+  return Coaching.findByIdAndUpdate(value, {smartdiet_impact_document: s3File?.Location}, {runValidators: true, new: true}).catch(console.error)
 }
-addAction('smartdiet_adownload_impact', downloadImpact)
+addAction('smartdiet_download_impact', downloadImpact)
 
 
 
@@ -341,7 +351,7 @@ const isActionAllowed = async ({ action, dataId, user, actionProps }) => {
     const attributePrefix= action == 'smartdiet_download_assessment' ? 'smartdiet_assessment': 'smartdiet_impact'
     const idAttribute=`${attributePrefix}_id`
     const documentAttribute=`${attributePrefix}_document`
-    return Coaching.exists({_id: dataId, [idAttribute]: {$ne:null}})
+    return Coaching.exists({_id: dataId, [idAttribute]: {$ne:null}, [documentAttribute]: null})
   }
   if (action == 'logout') {
     return Promise.resolve(!!user)
