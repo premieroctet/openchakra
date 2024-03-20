@@ -127,7 +127,7 @@ const fixPatients = async directory => {
     [/\@msncom"/g, '@msn.com"'], [/\@gmail"/g, '@gmail.com"'], [/\@free.f"/g, '@free.fr"'], [/\@orange,fr/g, 'orange.fr'],
     [/\@live\.f"/g, '@live.fr"'], [/\@yahoo\.f"/g, '@yahoo.fr"'], [/francksurgis\.\@live\.fr/, 'francksurgis@live.fr'],
     [/\@outlook\.f"/g, '@outlook.fr"'], [/\@yahoo"/g, '@yahoo.fr"'], [/\@lapos"/g, '@laposte.net"'], [/\@lapost"/g, '@laposte.net"'],
-    [/yanis69240hotmail.com/, 'yanis69240@hotmail.com']
+    [/yanis69240hotmail.com/g, 'yanis69240@hotmail.com']
 
   ]
 
@@ -566,7 +566,6 @@ const hashStringToDecimal = inputString => {
   const hashedString = hash.digest('hex')
   const decimalNumber = BigInt('0x' + hashedString)
   const res=parseInt(decimalNumber%BigInt(1000000000))
-  console.log(inputString, res)
   return res
 }
 
@@ -888,12 +887,10 @@ const importUserQuizz = async input_file => {
       log(idx, '/', records.length)
       const userId=cache('user', record.SDPATIENTID)
       const quizzId=cache('quizz', record.SDQUIZID)
-      console.log('quizzid', quizzId)
       const coaching=await Coaching.findOne({user: userId}).sort({ [CREATED_AT_ATTRIBUTE]: -1 }).limit(1)
         .populate('quizz_templates')
         .populate('quizz')
       if (!coaching) {
-        console.log('no coaching')
         return Promise.reject(`No coaching for user ${record.SDPATIENTID}/${userId}`)
       }
       // Check if template exists
@@ -903,7 +900,6 @@ const importUserQuizz = async input_file => {
         const quizz=await Quizz.findById(quizzId).populate({path: 'questions', populate: 'available_answers'})
         const cloned=await quizz.cloneAsUserQuizz()
         coaching.quizz.push(cloned._id)
-        console.log(quizz.questions.length, cloned.questions.length)
         await coaching.save()
         return Promise.all(ORDERS.map(async (attribute, index) => {
           const answer=parseInt(record[attribute])
@@ -945,7 +941,6 @@ const importProgressQuizz = async input_file => {
         if (!question) {
           throw new Error(`Missing question:${record.name}`)
         }
-        console.log('setting', question._id, 'to', record.SDCRITERIAID)
         question.migration_id=record.SDCRITERIAID
         setCache('quizzQuestion', record.SDCRITERIAID, question._id)
         return question.save()
@@ -1006,7 +1001,6 @@ const importUserProgressQuizz = async (input_file) => {
       const question=progress.questions.find(q => q.migration_id==record.SDCRITERIAID)
       const answer_id=await getCriterionAnswer(record.SDCRITERIAID, record.status)
       if (!question || !answer_id) {
-        console.log(`Question ${question}: answer ${answer_id}`)
         throw new Error(`Question ${question}: answer ${answer_id}`)
       }
       question.single_enum_answer=answer_id
