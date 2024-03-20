@@ -300,8 +300,15 @@ setPreprocessGet(preprocessGet)
 
 const preCreate = async ({ model, params, user }) => {
   if (model=='coaching') {
+    const offer=(await Company.findById(user.company).populate('current_offer'))?.current_offer
+    if (!offer) {
+      throw new Error(`Votre compagnie n'a aucune offre en cours`)
+    }
+    if (!offer.coaching_credit>0) {
+      throw new Error(`Vous n'avez pas de crédit de coaching`)
+    }
     params.user=user._id
-    params.offer=(await Company.findById(user.company).populate('offers')).offers[0]
+    params.offer=offer
   }
   if (['diploma', 'comment', 'measure', 'content', 'collectiveChallenge', 'individualChallenge', 'webinar', 'menu'].includes(model)) {
     params.user = params?.user || user
