@@ -364,7 +364,7 @@ const isActionAllowed = async ({ action, dataId, user, actionProps }) => {
   }
   // Can i start a new coaching ?
   // TODO: send nothing instead of "undefined" for dataId
-  if (['save', 'create'].includes(action) && actionProps?.model=='coaching' && (lodash.isEmpty(dataId) || dataId=="undefined")) {
+  if (['save', 'create'].includes(action) && actionProps?.model=='coaching' && (action=='create' || (lodash.isEmpty(dataId) || dataId=="undefined"))) {
     if (!user.role==ROLE_CUSTOMER) {
       throw new Error(`Vous devez être un patient pour démarrer un coaching`)    
     }
