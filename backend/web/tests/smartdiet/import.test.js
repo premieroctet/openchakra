@@ -74,7 +74,7 @@ describe('Test imports', () => {
   it('must import companies', async () => {
     const res = await importCompanies(path.join(ROOT, 'smart_project.csv'))
     const companies=await Company.find()
-    expect(companies.length).toEqual(12)
+    expect(companies.length).toEqual(13)
   })
 
   it('must import offers', async () => {
@@ -96,7 +96,7 @@ describe('Test imports', () => {
     await importPatientHeight(path.join(ROOT, 'smart_summary.csv')).catch(console.error)
   })
 
-  it('must upsert diets', async () => {
+  it('must import diets', async () => {
     let res = await importDiets(
       path.join(ROOT, 'smart_diets.csv'), 
       path.join(ROOT, 'pictures', 'diets', 'dietpics'),
@@ -114,6 +114,9 @@ describe('Test imports', () => {
     expect(diets.filter(d => !!d.diet_visio_enabled).length).toBeGreaterThan(200)
     expect(diets.filter(d => !!d.diet_coaching_enabled).length).toBeGreaterThan(10)
     expect(diets.filter(d => !!d.diet_site_enabled).length).toBeGreaterThan(200)
+    const dietsTest=await User.find({role:ROLE_EXTERNAL_DIET, lastname: /bertrand/i, firstname: /charlotte/i})
+    expect(dietsTest).toHaveLength(1)
+    expect(dietsTest[0].registration_status).toEqual(DIET_REGISTRATION_STATUS_ACTIVE)
   })
 
   it('must upsert coachings', async () => {

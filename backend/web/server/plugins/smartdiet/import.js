@@ -125,7 +125,7 @@ const fixPatients = async directory => {
     [/\@gmailcom"/g, '@gmail.com"'], [/\@gmail\.c"/g, '@gmail.com"'], [/\@aolcom"/g, '@aol.com"'], [/\@orangefr"/g, '@orange.fr"'], 
     [/@sfr"/g, '@sfr.fr"'], [/\@yahoofr/g, "@yahoo.fr"], [/\@hotmailcom"/g, 'hotmail.com"'], [/\@neuffr"/g, '@neuf.fr"'], 
     [/\@msncom"/g, '@msn.com"'], [/\@gmail"/g, '@gmail.com"'], [/\@free.f"/g, '@free.fr"'], [/\@orange,fr/g, 'orange.fr'],
-    [/\@live\.f"/g, '@live.fr"'], [/\@yahoo\.f"/g, '@yahoo.fr"'], [/francksurgis\.\@live\.fr/, 'francksurgis@live.fr'],
+    [/\@live\.f"/g, '@live.fr"'], [/\@yahoo\.f"/g, '@yahoo.fr"'], [/francksurgis\.\@live\.fr/g, 'francksurgis@live.fr'],
     [/\@outlook\.f"/g, '@outlook.fr"'], [/\@yahoo"/g, '@yahoo.fr"'], [/\@lapos"/g, '@laposte.net"'], [/\@lapost"/g, '@laposte.net"'],
     [/yanis69240hotmail.com/g, 'yanis69240@hotmail.com']
 
@@ -135,7 +135,7 @@ const fixPatients = async directory => {
 }
 
 const fixDiets = directory => {
-  const REPLACES=[['UPPER(lastname)', 'lastname'], [/\\""/g, "'"], [/\\"/g, "'"], [/\\\\/g, ''],]
+  const REPLACES=[['UPPER(lastname)', 'lastname'], [/\\"/g, "'"], ]
   replaceInFile(path.join(directory, 'smart_diets.csv'), REPLACES)
 }
 
@@ -1214,6 +1214,7 @@ const importOtherDiploma = async (input_file) => {
 }
 
 module.exports={
+  loadRecords,
   importCompanies,
   importOffers,
   importPatients,
