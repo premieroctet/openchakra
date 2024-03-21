@@ -312,7 +312,7 @@ const getDietAppointmentTypes= diet => {
 
 const synchronizeAvailabilities = () => {
   console.log('Syncing availabilities from smartagenda')
-  const start=moment().add(0, 'days').startOf('day')
+  const start=moment().add(1, 'days').startOf('day')
   const end=moment().add(AVAILABILITIES_RANGE_DAYS, 'days').startOf('day')
   return User.find({role: ROLE_EXTERNAL_DIET, smartagenda_id:{$ne :null}})
     .then(diets => Promise.all(diets.map(d => getDietAppointmentTypes(d)))
