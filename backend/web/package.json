@@ -49,6 +49,7 @@
     "lodash": "^4.17.21",
     "lodash.product": "^18.10.0",
     "luhn": "^2.4.1",
+    "mime-types": "^2.1.35",
     "moment": "^2.29.1",
     "moment-range": "^4.0.2",
     "moment-round": "^1.0.1",

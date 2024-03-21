@@ -300,8 +300,15 @@ setPreprocessGet(preprocessGet)
 
 const preCreate = async ({ model, params, user }) => {
   if (model=='coaching') {
+    const offer=(await Company.findById(user.company).populate('current_offer'))?.current_offer
+    if (!offer) {
+      throw new Error(`Votre compagnie n'a aucune offre en cours`)
+    }
+    if (!offer.coaching_credit>0) {
+      throw new Error(`Vous n'avez pas de crédit de coaching`)
+    }
     params.user=user._id
-    params.offer=(await Company.findById(user.company).populate('offers')).offers[0]
+    params.offer=offer
   }
   if (['diploma', 'comment', 'measure', 'content', 'collectiveChallenge', 'individualChallenge', 'webinar', 'menu'].includes(model)) {
     params.user = params?.user || user
@@ -349,7 +356,7 @@ const preCreate = async ({ model, params, user }) => {
       model: 'user', id: customer_id,
       fields: [
         'latest_coachings.appointments', 'latest_coachings.reasons', 'latest_coachings.remaining_credits', 'latest_coachings.appointment_type',
-        'latest_coachings.nutrition_advices', 'latest_coachings.remaining_nutrition_credits', 'company.reasons', 'phone', 'latest_coachings.diet',
+        'nutrition_advices', 'company.current_offer', 'company.reasons', 'phone', 'latest_coachings.diet',
       ],
       user,
     })
@@ -371,14 +378,16 @@ const preCreate = async ({ model, params, user }) => {
         if (!latest_coaching) {
           throw new ForbiddenError(`Aucun coaching en cours`)
         }
-        console.log('reamining coaching credits', latest_coaching.remaining_credits)
-        console.log(latest_coaching.remaining_nutrition_credits)
+
+        const remaining_nut=usr.company?.current_offer?.nutrition_credit-usr.nutrition_advices?.length
+        console.log('reamining coaching credits', remaining_nut)
         if ((isAppointment && latest_coaching.remaining_credits <= 0)
-          || (!isAppointment && latest_coaching.remaining_nutrition_credits <= 0)) {
+          || (!isAppointment && !(remaining_nut > 0))) {
           throw new ForbiddenError(`L'offre ne permet pas/plus de prendre un rendez-vous`)
         }
         // Check appointment to come
         const nextAppt=isAppointment && latest_coaching.appointments.find(a => moment(a.end_date).isAfter(moment()))
+        console.log('next appt', nextAppt)
         if (nextAppt) {
           throw new ForbiddenError(`Un rendez-vous est déjà prévu le ${moment(nextAppt.start_date).format('L à LT')}`)
         }
@@ -755,8 +764,14 @@ declareVirtualField({
       instance: 'ObjectID',
       options: { ref: 'logbookDay' }
     },
+  }),
+  declareVirtualField({
+    model: m, field: 'nutrition_advices', instance: 'Array', multiple: true,
+    caster: {
+      instance: 'ObjectID',
+      options: { ref: 'nutritionAdvice' }
+    },
   })
-  
 })
 // End user/loggedUser
 
@@ -1160,6 +1175,7 @@ declareVirtualField({
     options: { ref: 'nutritionAdvice' }
   },
 })
+declareVirtualField({model: 'coaching', field: '_last_appointment', instance: 'appointment'})
 
 
 declareEnumField({ model: 'userCoachingQuestion', field: 'status', enumValues: COACHING_QUESTION_STATUS })
@@ -1322,6 +1338,14 @@ declareVirtualField({
   requires: 'registered_user',
 })
 declareEnumField({ model: 'lead', field: 'coaching_converted', enumValues: COACHING_CONVERSION_STATUS })
+declareVirtualField({
+  model: 'lead', field: 'nutrition_advices',
+  instance: 'Array', multiple: true,
+  caster: {
+    instance: 'ObjectID',
+    options: { ref: 'nutritionAdvice' }
+  },
+})
 
 declareVirtualField({
   model: 'nutritionAdvice', field: 'end_date', instance: 'Date',
@@ -1655,26 +1679,25 @@ const ensureChallengePipsConsistency = () => {
 const computeStatistics = async ({ id, fields }) => {
   console.log(`Computing stats for ${id || 'all companies'} fields ${fields}`)
   const result={}
-  const filter=id ? id : {$ne: null}
-  const companies=await Company.find({_id: filter})
+  const idFilter=id ? mongoose.Types.ObjectId(id) : {$ne: null}
+  const companies=await Company.find({_id: idFilter})
   result.company=id?.toString()
-  const companyUsers=await User.find({company: filter}, {_id:1})
-  result.groups_count=await Group.countDocuments({companies: filter})
-  result.messages_count=lodash(await Group.find({companies: filter}).populate('messages')).flatten().size()
-  result.users_count=await User.countDocuments({company: filter})
-  result.user_women_count=await User.countDocuments({company: filter, gender: GENDER_FEMALE})
-  result.users_men_count=await User.countDocuments({company: filter, gender: GENDER_MALE})
-  result.users_no_gender_count=await User.countDocuments({company: filter, gender: GENDER_NON_BINARY})
-  result.webinars_count=await Webinar.countDocuments({companies: filter})
+  result.groups_count=await Group.countDocuments({companies: idFilter})
+  result.messages_count=lodash(await Group.find({companies: idFilter}).populate('messages')).flatten().size()
+  result.users_count=await User.countDocuments({company: idFilter})
+  result.user_women_count=await User.countDocuments({company: idFilter, gender: GENDER_FEMALE})
+  result.users_men_count=await User.countDocuments({company: idFilter, gender: GENDER_MALE})
+  result.users_no_gender_count=await User.countDocuments({company: idFilter, gender: GENDER_NON_BINARY})
+  result.webinars_count=await Webinar.countDocuments({companies: idFilter})
   const webinars_replayed=(await User.aggregate([
-    {$match: { company: filter }},
+    {$match: { company: idFilter }},
     {$unwind: '$replayed_events'},
     {$match: { 'replayed_events.__t': EVENT_WEBINAR }},
     {$group: {_id: '$_id', webinarCount: { $sum: 1 }}}
   ]))[0]?.webinarCount||0
   result.webinars_replayed_count=webinars_replayed
   const webinars_registered=(await User.aggregate([
-    {$match: { company: filter }},
+    {$match: { company: idFilter }},
     {$unwind: '$registered_events'},
     {$match: { 'registered_events.__t': EVENT_WEBINAR }},
     {$group: {_id: '$_id', webinarCount: { $sum: 1 }}}
@@ -1682,27 +1705,56 @@ const computeStatistics = async ({ id, fields }) => {
   result.average_webinar_registar=result.webinars_count ? webinars_registered*1.0/result.webinars_count : 0
   const apptCoachings=await Appointment.distinct('coaching')
   const coachings=await Coaching.distinct('user', {_id: {$in: apptCoachings}})
-  const users=await User.countDocuments({_id: {$in: coachings}, company: filter})
+  const users=await User.countDocuments({_id: {$in: coachings}, company: idFilter})
   result.started_coachings=users
   result.leads_count=await Lead.countDocuments({company_code: companies.map(c => c.code)})
-  const specificities=lodash(await User.find({company: filter}).populate('specificity_targets'))
-    .map(u => u.specificity_targets.map(t => t.name))
-    .flatten()
-    .countBy()
-    .entries()
-    .filter(([k, v]) => v>0)
-    .map(([k, v]) => ({x: k, y: v}))
-    .orderBy(['y'], ['asc'])
-  result.specificities_users=specificities.value()
-  const reasons=lodash(await Coaching.find({user: companyUsers}).populate('reasons'))
-    .map(u => u.reasons.map(t => t.name))
-    .flatten()
-    .countBy()
-    .entries()
-    .filter(([k, v]) => v>0)
-    .map(([k, v]) => ({x: k, y: v}))
-    .orderBy(['y'], ['asc'])
-  result.reasons_users=reasons.value()
+  const specificities_count=await User.aggregate([
+    { $match: { role: ROLE_CUSTOMER, company: idFilter}},
+    { $unwind: "$specificity_targets" },
+    { $group: { _id: "$specificity_targets", count: { $sum: 1 }}},
+    { $lookup: {
+        from: "targets", // Target collection
+        localField: "_id",
+        foreignField: "_id",
+        as: "target"
+      }
+    },
+    { $unwind: "$target"},
+    { $project: {
+        _id: 0,
+        name: "$target.name",
+        count: 1
+      }
+    },
+    { $sort: { count: 1 } } // Sort by count in descending order
+  ])
+  result.specificities_users=specificities_count.map(({count, name})=> ({x:name, y:count}))
+  let userMatch={$match: {_id: {$exists: true}}}
+  if (result.company) {
+    const companyUsers=(await User.find({company: idFilter}, {_id:1})).map(({_id}) => _id)
+    userMatch={$match: {user: {$in: companyUsers}}}
+  }
+  const reasons_count=await Coaching.aggregate([
+    userMatch,
+    { $unwind: "$reasons" },
+    { $group: { _id: "$reasons", count: { $sum: 1 }}},
+    { $lookup: {
+        from: "targets", // Target collection
+        localField: "_id",
+        foreignField: "_id",
+        as: "target"
+      }
+    },
+    { $unwind: "$target"},
+    { $project: {
+        _id: 0,
+        name: "$target.name",
+        count: 1
+      }
+    },
+    { $sort: { count: 1 } } // Sort by count in descending order
+  ])
+  result.reasons_users=reasons_count.map(({count, name})=> ({x:name, y:count}))
   return result
 }
 
@@ -1850,7 +1902,7 @@ cron.schedule('0 0 * * * *', async () => {
 })
 
 // Synchronize diets & customer smartagenda accounts
-cron.schedule('0 * * * * *', () => {
+cron.schedule('0 0 * * * *', () => {
   console.log(`Smartagenda accounts sync`)
   return User.find({ role: { $in: [ROLE_EXTERNAL_DIET, ROLE_CUSTOMER] }, smartagenda_id: null })
     .then(users => {

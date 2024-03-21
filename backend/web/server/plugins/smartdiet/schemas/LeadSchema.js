@@ -22,7 +22,7 @@ const LeadSchema = new Schema({
   email: {
     type: String,
     validate: [isEmailOk, v => `L'email '${v?.value}' est invalide`],
-    required: [true, 'L\'email est obligatoire'],
+    required: [true, `L'email est obligatoire`],
     set: v => v?.toLowerCase().trim(),
   },
   // Custom identifier
@@ -43,7 +43,7 @@ const LeadSchema = new Schema({
   },
   phone: {
     type: String,
-    validate: [value => !value || isPhoneOk(value), v => `Le numéro de téléphone '${v?.value}'' doit commencer par 0 ou +33`],
+    validate: [value => !value || isPhoneOk(value), v => `Le numéro de téléphone '${v?.value}' doit commencer par 0 ou +33`],
     set: v => v?.replace(/^0/, '+33'),
     required: false,
   },
@@ -142,6 +142,12 @@ LeadSchema.virtual("registered_user", {
 
 LeadSchema.virtual('registered', DUMMY_REF).get(function() {
   return !lodash.isEmpty(this.registered_user)
+})
+
+LeadSchema.virtual("nutrition_advices", {
+  ref: "nutritionAdvice", // The Model to use
+  localField: 'email',
+  foreignField: 'patient_email',
 })
 
 /* eslint-enable prefer-arrow-callback */

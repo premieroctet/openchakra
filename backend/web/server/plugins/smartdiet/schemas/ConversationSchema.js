@@ -16,6 +16,11 @@ const ConversationSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
   },
+  migration_id: { // Smartdiet THREADID
+    type: Number,
+    index: true,
+    required: false,
+  }
 },
 schemaOptions)
 

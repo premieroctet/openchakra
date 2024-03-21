@@ -51,11 +51,13 @@ const CoachingSchema = new Schema({
   }],
   quizz_templates: [{
     type: Schema.Types.ObjectId,
+    index: true,
     ref: 'quizz',
     required: true,
   }],
   quizz: [{
     type: Schema.Types.ObjectId,
+    index: true,
     ref: 'userQuizz',
     required: true,
   }],
@@ -80,6 +82,7 @@ const CoachingSchema = new Schema({
   },
   migration_id: {
     type: Number,
+    index: true,
     required: false,
   },
   status: {
@@ -93,6 +96,29 @@ const CoachingSchema = new Schema({
     ref: 'offer',
     required: [true, `L'offre est obligatoire`],
   },
+  smartdiet_assessment_id: {
+    type: Number,
+    index: true,
+    required: false,
+  },
+  smartdiet_assessment_document: {
+    type: String,
+    required: false,
+  },
+  smartdiet_impact_id: {
+    type: Number,
+    index: true,
+    required: false,
+  },
+  smartdiet_impact_document: {
+    type: String,
+    required: false,
+  },
+  smartdiet_patient_id: {
+    type: Number,
+    index: true,
+    required: false,
+  }
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */
@@ -117,6 +143,16 @@ CoachingSchema.virtual('latest_appointments', {
   },
 })
 
+CoachingSchema.virtual('_last_appointment', {
+  ref: 'appointment',
+  localField: '_id',
+  foreignField: 'coaching',
+  options: { 
+    sort: { start_date: -1 }, limit:1 
+  },
+  justOne: true,
+})
+
 /* eslint-disable prefer-arrow-callback */
 // Required for register validation only
 CoachingSchema.virtual('appointments_future', {
@@ -138,9 +174,6 @@ CoachingSchema.virtual('questions', {
 
 
 CoachingSchema.virtual('remaining_credits', DUMMY_REF).get(function() {
-  if (this.user?.role!=ROLE_CUSTOMER) {
-    return 0
-  }
   return (this.offer?.coaching_credit-this.spent_credits) || 0
 })
 
@@ -223,12 +256,6 @@ CoachingSchema.virtual('diet_availabilities', DUMMY_REF).get(function() {
 CoachingSchema.virtual('appointment_type', DUMMY_REF).get(function() {
   const appType=lodash.isEmpty(this.appointments) ? this.user?.company?.assessment_appointment_type : this.user?.company?.followup_appointment_type
   return appType
-})
-
-CoachingSchema.virtual('nutrition_advices', {
-  ref: 'nutritionAdvice',
-  localField: '_id',
-  foreignField: 'coaching',
 })
 
 CoachingSchema.virtual('spent_nutrition_credits', {

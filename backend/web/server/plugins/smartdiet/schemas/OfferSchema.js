@@ -38,7 +38,7 @@ const OfferSchema = new Schema({
   webinars_credit: {
     type: Number,
     default: 0,
-    required: [function() {return !this.webinars_unlimited}, 'Le crédit de webinars est obligatoire'],
+    required: [function() {return !this?.webinars_unlimited}, 'Le crédit de webinars est obligatoire'],
   },
   webinars_unlimited: {
     type: Boolean,
@@ -48,7 +48,7 @@ const OfferSchema = new Schema({
   infographies_credit: {
     type: Number,
     default: 0,
-    required: [function() {return !this.infographies_unlimited}, "Le crédit d'infographies est obligatoire"],
+    required: [function() {return !this?.infographies_unlimited}, "Le crédit d'infographies est obligatoire"],
   },
   infographies_unlimited: {
     type: Boolean,
@@ -58,7 +58,7 @@ const OfferSchema = new Schema({
   articles_credit: {
     type: Number,
     default: 0,
-    required: [function() {return !this.articles_unlimited}, 'Le crédit d\'articles est obligatoire'],
+    required: [function() {return !this?.articles_unlimited}, 'Le crédit d\'articles est obligatoire'],
   },
   articles_unlimited: {
     type: Boolean,
@@ -68,7 +68,7 @@ const OfferSchema = new Schema({
   podcasts_credit: {
     type: Number,
     default: 0,
-    required: [function() {return !this.podcasts_unlimited}, 'Le crédit de podcasts est obligatoire'],
+    required: [function() {return !this?.podcasts_unlimited}, 'Le crédit de podcasts est obligatoire'],
   },
   podcasts_unlimited: {
     type: Boolean,
@@ -78,7 +78,7 @@ const OfferSchema = new Schema({
   video_credit: {
     type: Number,
     default: 0,
-    required: [function() {return !this.video_unlimited}, 'Le crédit de vidéos est obligatoire'],
+    required: [function() {return !this?.video_unlimited}, 'Le crédit de vidéos est obligatoire'],
   },
   video_unlimited: {
     type: Boolean,
@@ -114,7 +114,7 @@ const OfferSchema = new Schema({
   groups_credit: {
     type: Number,
     default: 0,
-    required: [function() {return !this.groups_unlimited}, 'Le crédit de groupes est obligatoire'],
+    required: [function() {return !this?.groups_unlimited}, 'Le crédit de groupes est obligatoire'],
   },
   groups_unlimited: {
     type: Boolean,
@@ -138,24 +138,25 @@ const OfferSchema = new Schema({
   },
   validity_start: {
     type: Date,
-    required: [function(){return !!this.company},  `La date de début de validité est obligatoire`],
+    required: [function(){return !!this?.company},  `La date de début de validité est obligatoire`],
   },
-  validity_end: {
-    type: Date,
-    required: [function(){return !!this.company},  `La date de fin de validité est obligatoire`],
-  },
+  // validity_end: {
+  //   type: Date,
+  //   required: [function(){return !!this?.company},  `La date de fin de validité est obligatoire`],
+  // },
   assessment_quizz: {
     type: Schema.Types.ObjectId,
     ref: 'quizz',
-    required: [function(){return !!this.company},  `Le modèle de quizz bilan est obligatoire`],
+    required: [function(){return !!this?.company && !this?.migration_id},  `Le modèle de quizz bilan est obligatoire`],
   },
   impact_quizz: {
     type: Schema.Types.ObjectId,
     ref: 'quizz',
-    required: [function(){return !!this.company && !!this.impact},  `Le modèle de quizz d'impact est obligatoire`],
+    required: [function(){return !!this?.company && !!this?.impact},  `Le modèle de quizz d'impact est obligatoire`],
   },
   migration_id: {
     type: Number,
+    index: true,
   },
 }, schemaOptions)
 

@@ -46,6 +46,10 @@ const UserQuizzQuestionSchema = new Schema({
     ref: 'item',
     required: false,
   }],
+  migration_id: {
+    type: Number,
+    required: false,
+  },
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */

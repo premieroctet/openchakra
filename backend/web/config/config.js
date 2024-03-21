@@ -51,6 +51,13 @@ const getSmartAgendaConfig = () => {
   }
 }
 
+const getSmartdietAPIConfig = () => {
+  return {
+    login: process.env.SMARTDIET_API_LOGIN,
+    password: process.env.SMARTDIET_API_PASSWORD,
+  }
+}
+
 const paymentPlugin=process.env.PAYMENT_PLUGIN
   ? require(`../server/plugins/payment/${process.env.PAYMENT_PLUGIN}`)
   : null
@@ -441,4 +448,5 @@ module.exports = {
   getMailjetConfig,
   isMaster,
   setMasterStatus,
+  getSmartdietAPIConfig,
 }

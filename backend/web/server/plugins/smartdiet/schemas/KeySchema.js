@@ -25,7 +25,7 @@ const KeySchema = new Schema({
   },
   spoons_count_for_trophy: {
     type: Number,
-    required: [true, 'Le nombre de cuillères néecssaires pour un trophée est obligatoire']
+    required: [true, 'Le nombre de cuillères nécessaires pour un trophée est obligatoire']
   },
   trophy_on_picture: {
     type: String,
@@ -37,6 +37,7 @@ const KeySchema = new Schema({
   },
   migration_id: {
     type: Number,
+    index: true,
   },
   user_surveys_progress: [{
     type: Schema.Types.ObjectId,

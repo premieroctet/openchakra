@@ -21,7 +21,10 @@ const fillSms = (pattern, values) => {
 const PHONE_REGEX=/^\+33[67]\d{8}$/
 
 const isPhoneOk = value => {
-  const corrected=value?.replace(/ /g, '')
+  if (!value) {
+    return false
+  }
+  const corrected=value.replace(/ /g, '')?.replace(/\u00A0/g, '')
   return /(^0[67]\d{8}$)|(^\+33[67]\d{8}$)/.test(corrected)
 }
 

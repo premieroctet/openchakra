@@ -28,7 +28,21 @@ const NutritionAdviceSchema = new Schema({
   coaching: {
     type: Schema.Types.ObjectId,
     ref: 'coaching',
-    required: [true, 'Le coaching est obligatoire'],
+    required: [function() {return !this?.diet}, `Le coaching est obligatoire`],
+  },
+  diet: {
+    type: Schema.Types.ObjectId,
+    ref: 'coaching',
+    required: [function() {return !this?.coaching}, `La diet est obligatoire`],
+  },
+  patient_email: {
+    type: String,
+    required: [function() {return !this?.coaching}, `L'email du patient est obligatoire`],
+  },
+  migration_id: {
+    type: Number,
+    index: true,
+    required: false,
   },
 },
 {...schemaOptions}

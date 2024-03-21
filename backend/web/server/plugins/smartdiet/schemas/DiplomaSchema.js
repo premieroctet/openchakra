@@ -12,7 +12,7 @@ const DiplomaSchema = new Schema({
     type: Date,
     required: false,
   },
-  document: {
+  picture: {
     type: String,
     required: false,
   },
@@ -20,6 +20,10 @@ const DiplomaSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'user',
     required: [true, "L'utilisateur est obligatoire"],
+  },
+  migration_id: {
+    type: Number,
+    required: false,
   },
 }, schemaOptions
 );

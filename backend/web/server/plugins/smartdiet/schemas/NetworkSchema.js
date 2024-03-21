@@ -9,6 +9,10 @@ const NetworkSchema = new Schema({
     set: v => v?.trim(),
     required: [true, 'Le nom est obligatoire'],
   },
+  migration_id: {
+    type: Number,
+    required: false,
+  },
 }, schemaOptions)
 
 /* eslint-disable prefer-arrow-callback */

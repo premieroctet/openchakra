@@ -67,6 +67,7 @@ const CompanySchema = new Schema(
     },
     migration_id: {
       type: Number,
+      index: true,
       required: false,
     },
     // Coaching reasons this company applies on

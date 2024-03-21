@@ -46,7 +46,7 @@ const computeBilling = async ({diet, fields, params}) => {
   }
   const prices=await getPrices()
   const appointments=await Appointment.find({diet}, {start_date:1}).catch(console.error)
-  const nutAdvices=await Coaching.find({diet}, {start_date:1}).populate('nutrition_advices')
+  const nutAdvices=await NutritionAdvice.find({diet}, {start_date:1})
   const minDate=lodash.minBy([...appointments, ...nutAdvices], obj => obj.start_date)?.start_date
 
   if (!minDate) {
@@ -70,8 +70,8 @@ const computeBilling = async ({diet, fields, params}) => {
     const appts=await Appointment.find({...monthFilter, validated: true, diet}, {appointment_type:1, start_date:1})
     const types=await Promise.all(appts.map(a => getAppointmentType({appointmentType: a.appointment_type})))
     let typedAppts=appts.map((a, idx) => ({...a, type:types[idx]}))
-    const nutCoachings=await Coaching.find({diet}).populate({path: 'nutrition_advices', match: monthFilter})
-    typedAppts=[...typedAppts, ...lodash.flatten(nutCoachings.map(n => n.nutrition_advices)).map(n => ({...n.toObject(), type: APPOINTMENT_TYPE_NUTRITION}))]
+    const nutAdvices=await NutritionAdvice.find({diet, ...monthFilter})
+    typedAppts=[...typedAppts, ...nutAdvices.map(n => ({...n.toObject(), type: APPOINTMENT_TYPE_NUTRITION}))]
     typedAppts=typedAppts.map(appt => ({...appt, price:getAppointmentPrice({pricesList: prices, appointment:appt})}))
 
     const grouped=lodash.groupBy(typedAppts, 'type')
@@ -80,7 +80,7 @@ const computeBilling = async ({diet, fields, params}) => {
     current.followup_count=grouped[APPOINTMENT_TYPE_FOLLOWUP]?.length || 0
     current.followup_total=lodash(grouped[APPOINTMENT_TYPE_FOLLOWUP]||[]).sumBy('price')
     current.nutrition_count=grouped[APPOINTMENT_TYPE_NUTRITION]?.length || 0
-    current.nutrition_total=lodash(grouped[APPOINTMENT_TYPE_NUTRITION]||[]).sumBy('price')
+    current.nutrition_total=lodash(grouped[APPOINTMENT_TYPE_NUTRITION]||[]).sumBy('price') || 0
     current.impact_count=0
     current.impact_total=0
     current.total=current.assessment_total+current.followup_total+current.nutrition_total+current.impact_total

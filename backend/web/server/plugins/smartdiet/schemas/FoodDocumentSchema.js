@@ -10,6 +10,10 @@ const FoodDocumentSchema = new Schema({
     type: String,
     required: [true, 'Le nom est obligatoire'],
   },
+  description: {
+    type: String,
+    required: false,
+  },
   manual_url: {
     type: String,
     required: false,
