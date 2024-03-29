@@ -31,7 +31,7 @@ export const TEXT_TYPE: ComponentType[] = [
   'Badge',
   'ListItem',
 ]
-export const ACTION_TYPE: ComponentType[] = ['Button', 'IconButton']
+export const ACTION_TYPE: ComponentType[] = ['Button', 'IconButton', 'Calendar']
 export const IMAGE_TYPE: ComponentType[] = ['Image', 'Avatar', 'Media']
 export const PROGRESS_TYPE: ComponentType[] = ['Progress', 'CircularProgress']
 export const DATE_TYPE: ComponentType[] = ['Date']
