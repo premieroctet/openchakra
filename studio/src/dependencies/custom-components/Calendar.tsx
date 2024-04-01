@@ -18,7 +18,11 @@ const WCalendar = props => {
 
   const [date, setDate] = React.useState()
 
-  const handleSelectDate = selected => setDate(selected)
+  const handleSelectDate = selected => {
+    setDate(selected)
+    props.setComponentValue && props.setComponentValue(props.id, selected)
+    props.onClick && props.onClick()
+  }
 
   const theme = useMemo(() => extendTheme(CalendarDefaultTheme, {
     components: {
@@ -46,8 +50,10 @@ const WCalendar = props => {
   }), [props.borderRadius, props.backgroundColor])
   
   return (
-    <ChakraProvider theme={theme} >
+    <ChakraProvider {...props} theme={theme} data-value={date}>
+      <pre>{JSON.stringify(props.getComponentValue?.(props.id), null, 2)}</pre>
       <Calendar 
+        {...props}
         value={{start: date}} 
         onSelectDate={handleSelectDate}
         singleDateSelection        
