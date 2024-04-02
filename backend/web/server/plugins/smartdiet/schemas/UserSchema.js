@@ -651,11 +651,11 @@ UserSchema.virtual("diet_objectives", {
   foreignField: "diet_private" // is equal to foreignField
 });
 
-// UserSchema.virtual("coachings", {
-//   ref: "coaching", // The Model to use
-//   localField: "_id", // Find in Model, where localField
-//   foreignField: "user" // is equal to foreignField
-// })
+UserSchema.virtual("coachings", {
+  ref: "coaching", // The Model to use
+  localField: "_id", // Find in Model, where localField
+  foreignField: "user" // is equal to foreignField
+})
 
 UserSchema.virtual("latest_coachings", {
   ref: "coaching", // The Model to use
