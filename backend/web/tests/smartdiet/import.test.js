@@ -78,12 +78,6 @@ describe('Test imports', () => {
     expect(companies.length).toEqual(13)
   })
 
-  it('must import offers', async () => {
-    const res = await importOffers(path.join(ROOT, 'smart_coaching.csv'))
-    const offersCount=await Offer.countDocuments({migration_id: {$ne:null}})
-    expect(offersCount).toEqual(2)
-  })
-
   it('must import patients', async () => {
     const res = await importPatients(path.join(ROOT, 'smart_patient.csv')).catch(console.error)
     await forcePasswords()
@@ -98,6 +92,13 @@ describe('Test imports', () => {
 
   it('must import patients heights', async () => {
     await importPatientHeight(path.join(ROOT, 'smart_summary.csv')).catch(console.error)
+  })
+
+  it('must import one offer per imported company', async () => {
+    const res = await importOffers(path.join(ROOT, 'smart_coaching.csv'))
+    const offersCount=await Offer.countDocuments({migration_id: {$ne:null}})
+    const migratedCompanyCount=await Company.countDocuments({migration_id: {$ne: null}})
+    expect(offersCount).toEqual(migratedCompanyCount)
   })
 
   it('must import diets', async () => {

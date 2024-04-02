@@ -154,6 +154,7 @@ const OfferSchema = new Schema({
     ref: 'quizz',
     required: [function(){return !!this?.company && !!this?.impact},  `Le modèle de quizz d'impact est obligatoire`],
   },
+  // Migration id : company smart id * 1000 + smart program type
   migration_id: {
     type: Number,
     index: true,

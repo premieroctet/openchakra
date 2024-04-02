@@ -129,6 +129,7 @@ const UserSchema = new Schema({
   gender: {
     type: String,
     enum: Object.keys(GENDER),
+    validate : v => v || undefined,
     required: false,
   },
   objective_targets: [{

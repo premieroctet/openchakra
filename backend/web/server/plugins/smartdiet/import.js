@@ -374,7 +374,10 @@ const SMART_OFFER_MAPPING= {
 }
 
 const OFFER_MAPPING= {
-  name: ({record}) => SMART_OFFER_MAPPING[record.SDPROGRAMTYPE]?.name,
+  name: async ({cache, record}) => {
+    const user=await User.findById(cache('user', record.SDPATIENTID)).populate('company')
+    return `${SMART_OFFER_MAPPING[record.SDPROGRAMTYPE]?.name} pour ${user?.company?.name} `
+  },
   price: () => 1,
   groups_credit: () => 0,
   nutrition_credit: () => 3,
@@ -386,10 +389,18 @@ const OFFER_MAPPING= {
   podcasts_unlimited: () => true,
   video_unlimited: () => true,
   webinars_credit: () => 4,
-  company: ({cache, record}) => cache('company', record.SDPROJECTID),
-  validity_start: () => moment(),
+  company: async ({cache, record}) => {
+    const user=await User.findById(cache('user', record.SDPATIENTID))
+    return user?.company
+  },
+  validity_start: () => '01/01/2019',
   assessment_quizz: async () => await Quizz.findOne({type: QUIZZ_TYPE_ASSESSMENT}),
-  migration_id: 'SDPROGRAMTYPE',
+  // migration_id: company smart id * 1000 + smart program type
+  migration_id: async ({cache, record}) => {
+    const user=await User.findById(cache('user', record.SDPATIENTID)).populate('company')
+    const mig_id=user?.company?.migration_id*1000+(+record.SDPROGRAMTYPE)
+    return mig_id
+  },
 }
 
 const OFFER_KEY='name'
@@ -744,7 +755,6 @@ const importCompanies = async input_file => {
 const importOffers = async input_file => {
   return loadRecords(input_file)
     .then(records => {
-      records=lodash.uniqBy(records, 'SDPROGRAMTYPE')
       return importData({model: 'offer', data:records, mapping:OFFER_MAPPING, identityKey: OFFER_KEY, 
         migrationKey: OFFER_MIGRATION_KEY, progressCb: progressCb()})
     })
