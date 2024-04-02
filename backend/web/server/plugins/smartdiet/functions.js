@@ -356,7 +356,7 @@ const preCreate = async ({ model, params, user }) => {
       model: 'user', id: customer_id,
       fields: [
         'latest_coachings.appointments', 'latest_coachings.reasons', 'latest_coachings.remaining_credits', 'latest_coachings.appointment_type',
-        'latest_coachings.nutrition_advices', 'latest_coachings.remaining_nutrition_credits', 'company.reasons', 'phone', 'latest_coachings.diet',
+        'nutrition_advices', 'company.current_offer', 'company.reasons', 'phone', 'latest_coachings.diet',
       ],
       user,
     })
@@ -378,14 +378,16 @@ const preCreate = async ({ model, params, user }) => {
         if (!latest_coaching) {
           throw new ForbiddenError(`Aucun coaching en cours`)
         }
-        console.log('reamining coaching credits', latest_coaching.remaining_credits)
-        console.log(latest_coaching.remaining_nutrition_credits)
+
+        const remaining_nut=usr.company?.current_offer?.nutrition_credit-usr.nutrition_advices?.length
+        console.log('reamining coaching credits', remaining_nut)
         if ((isAppointment && latest_coaching.remaining_credits <= 0)
-          || (!isAppointment && latest_coaching.remaining_nutrition_credits <= 0)) {
+          || (!isAppointment && !(remaining_nut > 0))) {
           throw new ForbiddenError(`L'offre ne permet pas/plus de prendre un rendez-vous`)
         }
         // Check appointment to come
         const nextAppt=isAppointment && latest_coaching.appointments.find(a => moment(a.end_date).isAfter(moment()))
+        console.log('next appt', nextAppt)
         if (nextAppt) {
           throw new ForbiddenError(`Un rendez-vous est déjà prévu le ${moment(nextAppt.start_date).format('L à LT')}`)
         }
