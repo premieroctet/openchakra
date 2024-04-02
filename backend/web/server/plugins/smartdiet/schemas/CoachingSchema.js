@@ -47,7 +47,7 @@ const CoachingSchema = new Schema({
   food_documents: [{
     type: Schema.Types.ObjectId,
     ref: 'foodDocument',
-    required: true,
+    required: false,
   }],
   quizz_templates: [{
     type: Schema.Types.ObjectId,

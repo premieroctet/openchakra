@@ -335,6 +335,10 @@ const UserSchema = new Schema({
     type: String,
     required: false,
   },
+  // comment on user from diet
+  diet_comment: {
+    type: String,
+  },
 }, {...schemaOptions})
 
 /* eslint-disable prefer-arrow-callback */

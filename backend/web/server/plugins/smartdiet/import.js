@@ -97,8 +97,8 @@ const NUT_REASON={
 }
 
 
-const normalizeTel = tel => {
-  let newTel=tel
+const normalizePhone = tel => {
+  let newTel=tel?.replace(/ /g, '')
   if (newTel?.length==9) {
     newTel=`0${newTel}`
   }
@@ -412,7 +412,8 @@ const PATIENT_MAPPING={
   pseudo: ({record}) => computePseudo(record),
   gender: ({record}) => GENDER_MAPPING[record.gender],
   birthday: ({record}) => lodash.isEmpty(record.birthdate) ? null:  moment(record.birthdate),
-  phone: ({record}) => normalizeTel(record.phone),
+  phone: ({record}) => normalizePhone(record.phone),
+  diet_comment: 'comments',
   migration_id: 'SDPATIENTID',
   source: () => 'import',
 }
@@ -446,7 +447,7 @@ const DIET_MAPPING={
   migration_id: 'SDID',
   zip_code: ({record}) => record.cp?.length==4 ? record.cp+'0' : record.cp,
   address: 'address',
-  phone: ({record}) => normalizeTel(record.phone),
+  phone: ({record}) => normalizePhone(record.phone),
   adeli: 'adelinumber',
   city: 'city',
   siret: ({record}) => siret.isSIRET(record.siret)||siret.isSIREN(record.siret) ? record.siret : null,
@@ -1243,5 +1244,6 @@ module.exports={
   importNutAdvices,
   importNetworks, importDietNetworks, importDiploma,
   importOtherDiploma,
+  generateMessages,
 }
 
