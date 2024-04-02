@@ -185,13 +185,13 @@ describe('Test imports', () => {
     expect(keys.length).toEqual(7)
   })
 
-  it('must upsert progress quizz', async () => {
+  it.only('must upsert progress quizz', async () => {
     let res = await importProgressQuizz(path.join(ROOT, 'smart_criteria.csv'))
     const quizz=await Quizz.findOne({type: QUIZZ_TYPE_PROGRESS}).populate('questions')
     expect(quizz.questions.every(q => !!q.migration_id)).toBeTruthy
   })
 
-  it('must attach progress quizz to its coaching', async () => {
+  it.only('must attach progress quizz to its coaching', async () => {
     const quizzs=await UserQuizz.find({type: QUIZZ_TYPE_PROGRESS})
     let found=0
     await runPromisesWithDelay(quizzs.map((q, idx) => async () => {
@@ -211,7 +211,7 @@ describe('Test imports', () => {
     console.log('found', found, '/', quizzs.length)
   })
 
-  it('must upsert user progress quizz', async () => {
+  it.only('must upsert user progress quizz', async () => {
     let res = await importUserProgressQuizz(path.join(ROOT, 'progress.csv'))
   })
 
