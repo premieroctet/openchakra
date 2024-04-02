@@ -299,6 +299,10 @@ const preprocessGet = ({ model, fields, id, user, params }) => {
 setPreprocessGet(preprocessGet)
 
 const preCreate = async ({ model, params, user }) => {
+  if (model=='coachingLogbook') {
+    return logbooksConsistency(user._id, params.day)
+      .then(() => ({data: {_id: moment(params.day).unix()}}))
+  }
   if (model=='coaching') {
     const offer=(await Company.findById(user.company).populate('current_offer'))?.current_offer
     if (!offer) {
@@ -1768,10 +1772,10 @@ Company.findOneAndUpdate(
   .catch(err => console.error(`Particular company upsert error:${err}`))
 
 // Ensure user logbooks consistency
-const logbooksConsistency = async user_id => {
+const logbooksConsistency = async (user_id, day) => {
   const idFilter = user_id ? { _id: user_id } : {}
-  const startDay = moment().add(-1, 'day')
-  const endDay = moment().add(1, 'days')
+  const startDay = day ? moment(day) : moment().add(-1, 'day')
+  const endDay = day ? moment(day).add(1, 'day') : moment().add(1, 'days')
   const logBooksFilter = { $and: [{ day: { $gte: startDay.startOf('day') } }, { day: { $lte: endDay.endOf('day') } }] }
   return User.find(idFilter).populate(
     { path: 'all_logbooks', match: logBooksFilter, populate: { path: 'logbook', populate: 'quizz' } },

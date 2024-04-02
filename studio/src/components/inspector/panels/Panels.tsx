@@ -89,6 +89,7 @@ const Panels: React.FC<{ component: IComponent; isRoot: boolean }> = ({
         {React.createElement(compPanel)}
         <VisibilityPanel name='visibility'/>
         <DataSourcePanel />
+        {allowsActions(component) && <ActionsPanel />}
       </>
     )
   }

@@ -466,7 +466,10 @@ router.post('/:model', passport.authenticate('cookie', {session: false}), (req, 
 
   console.log(`POST ${model} ${JSON.stringify(params)}`)
   return callPreCreateData({model, params, user})
-    .then(({model, params}) => {
+    .then(({model, params, data}) => {
+      if (data) {
+        return res.json(data)
+      }
       return mongoose.connection.models[model]
         .create([params], {runValidators: true})
         .then(([data]) => {

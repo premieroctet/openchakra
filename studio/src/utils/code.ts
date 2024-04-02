@@ -209,7 +209,7 @@ const buildBlock = ({
       propsContent += ` getComponentValue={getComponentValue} `
 
       // Forces refresh is this compnent's value is changed
-      if (isFilterComponent(childComponent, components)) {
+      if (isFilterComponent(childComponent, components) || childComponent.type=='Calendar') {
         propsContent += ` setComponentValue={setComponentValue} `
       }
       if (getDynamicType(childComponent)=='Container' && childComponent.props.dataSource) {
