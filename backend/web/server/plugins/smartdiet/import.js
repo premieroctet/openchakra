@@ -43,7 +43,7 @@ const mime = require('mime-types')
 const { sendFilesToAWS, sendFileToAWS } = require('../../middlewares/aws')
 const UserQuizz = require('../../models/UserQuizz')
 const { isNewerThan } = require('../../utils/filesystem')
-
+const pairing =require('@progstream/cantor-pairing')
 const DEFAULT_PASSWORD='DEFAULT'
 
 const ASS_PRESTATION_DURATION=45
@@ -250,40 +250,61 @@ const generateMessages = async directory =>{
   const THREADS=path.join(directory, 'smart_thread.csv')
   const MESSAGES=path.join(directory, 'smart_message.csv')
 
-  const OUTPUT=path.join(directory, 'message.csv')
+  const CONVERSATIONS_OUTPUT=path.join(directory, 'wapp_conversations.csv')
+  const MESSAGES_OUTPUT=path.join(directory, 'wapp_messages.csv')
 
-  if (isNewerThan(OUTPUT, THREADS) && isNewerThan(OUTPUT, MESSAGES)) {
+  if (isNewerThan(CONVERSATIONS_OUTPUT, THREADS) 
+      && isNewerThan(CONVERSATIONS_OUTPUT, MESSAGES)
+      && isNewerThan(MESSAGES_OUTPUT, THREADS)
+      && isNewerThan(MESSAGES_OUTPUT, MESSAGES)
+  ) {
     // console.log('No need to generate', OUTPUT)
     return
   }
-  console.log('Generating', OUTPUT)
+  console.log('Generating', CONVERSATIONS_OUTPUT, 'and', MESSAGES_OUTPUT)
 
-  const records=await loadRecords(MESSAGES)
-  const conversations=lodash(records)
-    .groupBy('SDTHREADID')
-    .mapValues(msgs => lodash.uniq(msgs.map(m => m.SDSENDERID)))
-    .entries()
-    .filter(([threadId, users]) => users.length==2)
-    .fromPairs()
-    .value()
+  const messages=await loadRecords(MESSAGES)
+  const threads=await loadRecords(THREADS)
+  const threadCreators=lodash(threads).map(({SDTHREADID, SDCREATORID})=> [SDTHREADID, SDCREATORID]).fromPairs().value()
+
+  const createCantorKey = (user1, user2) => {
+    const users=[parseInt(user1), parseInt(user2)].sort()
+    return pairing.pair(...users)
+  }
+
+  const conversations=lodash(messages)
+    .map(r => ({...r, SDCREATORID: threadCreators[r.SDTHREADID]}))
+    .map(({SDCREATORID, SDSENDERID, SDTHREADID}) => ({CONVID: createCantorKey(SDCREATORID, SDSENDERID), SDTHREADID, SDSENDERID, SDCREATORID}))
+    .sortBy('SDTHREADID')
+
+    fs.writeFileSync(CONVERSATIONS_OUTPUT, 'SDCONVID;SDUSER1;SDUSER2\n'+conversations.value().map(v => JSON.stringify(v)).join('\n'))
+  // const updatedMessages= messages.map(m => {...m, SDRECEIVERID: })
+
+  // const conversations=lodash(records)
+  //   .groupBy('SDTHREADID')
+  //   .mapValues(msgs => lodash.uniq(msgs.map(m => m.SDSENDERID)))
+  //   .entries()
+  //   .filter(([threadId, users]) => users.length==2)
+  //   .fromPairs()
+  //   .value()
   
-  // Generate conversation
-  const convContents=['SDTHREADID;USER1;USER2']
-  Object.entries(conversations).forEach(conv => convContents.push([conv[0], conv[1][0], conv[1][1]].join(';')))
-  fs.writeFileSync(path.join(directory, 'conversation.csv'), convContents.join('\n'))
+  // // Generate conversation
+  // const convContents=['SDTHREADID;USER1;USER2']
+  // Object.entries(conversations).forEach(conv => convContents.push([conv[0], conv[1][0], conv[1][1]].join(';')))
+  // fs.writeFileSync(path.join(directory, 'conversation.csv'), convContents.join('\n'))
 
-  // Generate messages
-  const messContents=['MESSAGEID;SDTHREADID;SENDER;RECEIVER;DATE;MESSAGE']
-  records.forEach(message => {
-    const users=conversations[message.SDTHREADID]
-    if (users) {
-      const sender=message.SDSENDERID
-      const receiver=users[0]==sender ? users[1] : users[0]
-      const msgId=getMessageId(message.SDTHREADID, message.datetime)
-      messContents.push([msgId,message.SDTHREADID,sender, receiver, message.datetime, message.message].join(';'))
-    }
-  })
-  fs.writeFileSync(OUTPUT, messContents.join('\n'))
+  // // Generate messages
+  // const messContents=['MESSAGEID;SDTHREADID;SENDER;RECEIVER;DATE;MESSAGE']
+  // records.forEach(message => {
+  //   const users=conversations[message.SDTHREADID]
+  //   if (users) {
+  //     const sender=message.SDSENDERID
+  //     const receiver=users[0]==sender ? users[1] : users[0]
+  //     const msgId=getMessageId(message.SDTHREADID, message.datetime)
+  //     messContents.push([msgId,message.SDTHREADID,sender, receiver, message.datetime, message.message].join(';'))
+  //   }
+  // })
+  // fs.writeFileSync(OUTPUT, messContents.join('\n'))
 }
 
 const generateProgress = async directory => {

@@ -55,25 +55,29 @@ const QUIZZ_ID = 17
 describe('Test imports', () => {
 
   beforeAll(async () => {
-    console.log('Before opening database', DBNAME)
-    await mongoose.connect(`mongodb://localhost/${DBNAME}`, MONGOOSE_OPTIONS)
-    console.log('Opened database', DBNAME)
-    await loadCache()
-    await fixFiles(ROOT)
+    // console.log('Before opening database', DBNAME)
+    // await mongoose.connect(`mongodb://localhost/${DBNAME}`, MONGOOSE_OPTIONS)
+    // console.log('Opened database', DBNAME)
+    // await loadCache()
+    // await fixFiles(ROOT)
   })
   
   afterEach(async () => {
-    await saveCache()
+    // await saveCache()
   })
 
   afterAll(async () => {
-    await updateImportedCoachingStatus()
-    await updateDietCompanies()
-    await saveCache()
-    if (DROP) {
-      await mongoose.connection.dropDatabase()
-    }
-    await mongoose.connection.close()
+    // await updateImportedCoachingStatus()
+    // await updateDietCompanies()
+    // await saveCache()
+    // if (DROP) {
+    //   await mongoose.connection.dropDatabase()
+    // }
+    // await mongoose.connection.close()
+  })
+
+  it.only('Must generate messages', async () => {
+    return generateMessages(ROOT)
   })
 
   it('must import companies', async () => {
@@ -225,7 +229,7 @@ describe('Test imports', () => {
   })
 
 
-  it.only('must upsert user progress quizz', async () => {
+  it('must upsert user progress quizz', async () => {
     let res = await importUserProgressQuizz(path.join(ROOT, 'progress.csv'))
   })
 
@@ -244,7 +248,7 @@ describe('Test imports', () => {
     await importUserImpactId(path.join(ROOT, 'smart_second_summary_reference.csv'))
   })
 
-  it('must upsert conversation', async () => {
+  it.only('must upsert conversation', async () => {
     await importConversations(path.join(ROOT, 'conversation.csv'))
     await importMessages(path.join(ROOT, 'message.csv'))
   })
